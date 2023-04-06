@@ -4,12 +4,13 @@ import { useRouter } from 'vue-router';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
+import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { selectReactionForResource } from '../../reaction/reaction-count';
 import { Screen } from '../../screen/screen-service';
 import { useCommonStore } from '../../store/common-store';
+import { kThemeBg, kThemeBgOffset } from '../../theme/variables';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate, $ngettext } from '../../translate/translate.service';
@@ -120,6 +121,20 @@ const ownerIndicatorTooltipText = computed(() => {
 					username: resourceOwnerUsername,
 			  });
 	}
+});
+
+const ownerIndicatorIcons = computed(() => {
+	const icons: Jolticon[] = [];
+
+	if (comment.value.has_owner_like) {
+		icons.push('heart-filled');
+	}
+
+	if (comment.value.has_owner_reply) {
+		icons.push('comment-filled');
+	}
+
+	return icons;
 });
 
 function onUpvoteClick() {
@@ -234,37 +249,60 @@ function showLikers() {
 				</AppTranslate>
 			</AppButton>
 		</template>
+
+		<!-- Owner interaction indicator -->
 		<span
 			v-if="showOwnerInteraction && resourceOwner"
 			v-app-tooltip="ownerIndicatorTooltipText"
-			:style="{ marginLeft: '16px', position: 'relative' }"
+			:style="{
+				marginLeft: `16px`,
+				position: `relative`,
+			}"
 		>
 			<AppUserAvatarImg
 				:user="resourceOwner"
 				:style="{
-					width: '24px',
-					height: '24px',
-					display: 'inline-block',
-					'margin-top': '-8px',
-					'padding-top': '8px',
+					position: `relative`,
+					zIndex: 1,
+					width: `24px`,
+					height: `24px`,
+					display: `inline-block`,
+					marginTop: `-8px`,
+					paddingTop: `8px`,
 				}"
-				class="_owner-reply-avatar"
+				class="_owner-reply-avatar _owner-reply-avatar-with-reply"
 				:class="{ '_owner-reply-avatar-with-reply': comment.has_owner_reply }"
 			/>
+
+			<!-- The vertical track that we put the indicators in. -->
 			<span
 				:style="{
-					position: 'absolute',
+					position: `absolute`,
 					zIndex: 2,
-					bottom: '-10px',
-					right: '0px',
+					display: `flex`,
+					flexDirection: `column`,
+					justifyContent: `center`,
+					bottom: `-10px`,
+					right: `-16px`,
+					gap: `2px`,
 				}"
 			>
-				<AppJolticon
-					v-if="comment.has_owner_like"
-					notice
-					icon="heart-filled"
-					class="jolticon-075x"
-				/>
+				<span
+					v-for="icon of ownerIndicatorIcons"
+					:key="icon"
+					:style="{
+						display: `flex`,
+						alignItems: `center`,
+						justifyContent: `center`,
+						width: `18px`,
+						height: `18px`,
+						backgroundColor: kThemeBgOffset,
+						border: `2px solid ${kThemeBg}`,
+						borderRadius: `50%`,
+					}"
+				>
+					<AppJolticon notice :icon="icon" :style="{ fontSize: `10px` }" />
+				</span>
 			</span>
 		</span>
 	</span>
@@ -283,9 +321,6 @@ function showLikers() {
 		margin-left: -6px
 
 ._owner-reply-avatar
-	position: relative
-	z-index: 1
-
 	&::after
 		content: ''
 		position: absolute
@@ -297,7 +332,6 @@ function showLikers() {
 		background-color: var(--theme-bg-offset)
 		rounded-corners-lg()
 
-._owner-reply-avatar-with-reply
 	&::before
 		content: ''
 		position: absolute
