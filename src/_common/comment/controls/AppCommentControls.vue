@@ -9,6 +9,7 @@ import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { selectReactionForResource } from '../../reaction/reaction-count';
 import { Screen } from '../../screen/screen-service';
+import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate, $ngettext } from '../../translate/translate.service';
@@ -49,6 +50,7 @@ const { model, comment, children, showReply, canReply, canReact } = toRefs(props
 
 const router = useRouter();
 const { resourceOwner } = useCommentWidget()!;
+const { user } = useCommonStore();
 
 const votingTooltip = computed(() => {
 	const userHasVoted = !!comment.value.user_vote;
@@ -92,6 +94,33 @@ const hasDownvote = computed(
 const showOwnerInteraction = computed(
 	() => comment.value.has_owner_like || comment.value.has_owner_reply
 );
+
+const ownerIndicatorTooltipText = computed(() => {
+	const isOwner = !!user.value?.id && user.value?.id === resourceOwner.value?.id;
+	const resourceOwnerUsername = resourceOwner.value
+		? '@' + resourceOwner.value.username
+		: 'The owner';
+
+	if (comment.value.has_owner_like && comment.value.has_owner_reply) {
+		return isOwner
+			? $gettext(`You liked this and replied`)
+			: $gettextInterpolate(`%{ username } liked this and replied`, {
+					username: resourceOwnerUsername,
+			  });
+	} else if (comment.value.has_owner_like) {
+		return isOwner
+			? $gettext(`You liked this`)
+			: $gettextInterpolate(`%{ username } liked this`, {
+					username: resourceOwnerUsername,
+			  });
+	} else if (comment.value.has_owner_reply) {
+		return isOwner
+			? $gettext(`You replied to this`)
+			: $gettextInterpolate(`%{ username } replied`, {
+					username: resourceOwnerUsername,
+			  });
+	}
+});
 
 function onUpvoteClick() {
 	voteComment(CommentVote.VOTE_UPVOTE);
@@ -207,6 +236,7 @@ function showLikers() {
 		</template>
 		<span
 			v-if="showOwnerInteraction && resourceOwner"
+			v-app-tooltip="ownerIndicatorTooltipText"
 			:style="{ marginLeft: '16px', position: 'relative' }"
 		>
 			<AppUserAvatarImg
@@ -219,6 +249,7 @@ function showLikers() {
 					'padding-top': '8px',
 				}"
 				class="_owner-reply-avatar"
+				:class="{ '_owner-reply-avatar-with-reply': comment.has_owner_reply }"
 			/>
 			<span
 				:style="{
@@ -255,6 +286,18 @@ function showLikers() {
 	position: relative
 	z-index: 1
 
+	&::after
+		content: ''
+		position: absolute
+		z-index: -1
+		top: 4px
+		left: -4px
+		width: 32px
+		height: 32px
+		background-color: var(--theme-bg-offset)
+		rounded-corners-lg()
+
+._owner-reply-avatar-with-reply
 	&::before
 		content: ''
 		position: absolute
@@ -266,15 +309,4 @@ function showLikers() {
 		border-top: 8px solid transparent
 		border-bottom: 8px solid transparent
 		border-right: 8px solid var(--theme-bg-offset)
-
-	&::after
-		content: ''
-		position: absolute
-		z-index: -1
-		top: 4px
-		left: -4px
-		width: 32px
-		height: 32px
-		background-color: var(--theme-bg-offset)
-		rounded-corners-lg()
 </style>
