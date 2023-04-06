@@ -5,6 +5,8 @@ export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued messag
 
 export type ChatMessageType = 'content' | 'sticker' | 'invite';
 
+// TODO(realtime-reactions) See what comments is doing. this needs to implement ReactionableModel.
+// See how reactions are displayed and interacted with (AppReactionList, ReactionCount, etc)
 export class ChatMessage implements ModelStoreModel {
 	declare id: number;
 	declare user_id: number;
@@ -19,6 +21,8 @@ export class ChatMessage implements ModelStoreModel {
 	declare showAvatar?: boolean;
 	declare dateSplit?: boolean;
 	declare is_automated?: boolean;
+
+	// TODO(realtime-reactions) Add reaction counts similar to how comment-model does it.
 
 	// Used for rendering.
 	_collapsable = false;

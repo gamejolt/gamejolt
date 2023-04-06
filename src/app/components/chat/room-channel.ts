@@ -9,9 +9,6 @@ import {
 	shallowReadonly,
 	watch,
 } from 'vue';
-import { arrayRemove } from '../../../utils/array';
-import { CancelToken } from '../../../utils/cancel-token';
-import { run } from '../../../utils/utils';
 import { Background } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
@@ -21,6 +18,9 @@ import { getModel, storeModel, storeModelList } from '../../../_common/model/mod
 import { UnknownModelData } from '../../../_common/model/model.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
+import { arrayRemove } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
+import { run } from '../../../utils/utils';
 import {
 	ChatClient,
 	isInChatRoom,
@@ -141,6 +141,8 @@ export function createChatRoomChannel(
 	channelController.listenTo('kick_member', _onMemberKicked);
 	channelController.listenTo('fireside_start', _onFiresideStart);
 	channelController.listenTo('fireside_update', _onFiresideUpdate);
+
+	// TODO(realtime-reactions) listen to realtime changes to reactions (call the event "reactions")
 
 	const { channel, isClosed } = channelController;
 

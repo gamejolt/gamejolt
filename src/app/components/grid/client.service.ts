@@ -1,9 +1,5 @@
 import { Channel } from 'phoenix';
 import { markRaw, reactive } from 'vue';
-import { arrayRemove } from '../../../utils/array';
-import { createLogger } from '../../../utils/logging';
-import { sleep } from '../../../utils/utils';
-import { uuidv4 } from '../../../utils/uuid';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { ensureConfig } from '../../../_common/config/config.service';
@@ -21,8 +17,8 @@ import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
 import {
-	createSocketController,
 	SocketController,
+	createSocketController,
 } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
@@ -30,14 +26,18 @@ import { $gettext, $gettextInterpolate } from '../../../_common/translate/transl
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
+import { arrayRemove } from '../../../utils/array';
+import { createLogger } from '../../../utils/logging';
+import { sleep } from '../../../utils/utils';
+import { uuidv4 } from '../../../utils/uuid';
 import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
-import { createGridCommunityChannel, GridCommunityChannel } from './community-channel';
+import { GridCommunityChannel, createGridCommunityChannel } from './community-channel';
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
-import { createGridNotificationChannel, GridNotificationChannel } from './notification-channel';
+import { GridNotificationChannel, createGridNotificationChannel } from './notification-channel';
 
 export const onFiresideStart = new EventTopic<Model>();
 
@@ -79,6 +79,11 @@ export interface ClearNotificationsEventData extends ClearNotificationsPayload {
  * These resolvers get resolved in the connect function once Grid connected.
  */
 let connectionResolvers: (() => void)[] = [];
+
+// TODO(realtime-reactions) Make functions that allow callers to specify a callback to run when the client connects or reconnects.
+// This will be used by CommentStoreModel to request the comments channel to be initialized.
+
+function onConnected(client: GridClient, cb: () => void): void {}
 
 /**
  * Resolves once Grid is fully connected.
@@ -230,6 +235,9 @@ export class GridClient {
 
 		// Now connect to our chat channels.
 		await connectChat(this.chat!);
+
+		// TODO(realtime-reactions) implement reconnecting to channels that
+		// watch for realtime changes in reaction counts.
 	}
 
 	markConnected() {
