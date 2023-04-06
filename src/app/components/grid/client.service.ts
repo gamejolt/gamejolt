@@ -74,26 +74,14 @@ export interface ClearNotificationsEventData extends ClearNotificationsPayload {
 	currentCount: number;
 }
 
+export type OnConnectedHandler = (grid: GridClient) => void;
+export type DeregisterOnConnected = () => void;
+
 /**
  * List of resolvers waiting for grid to connect.
  * These resolvers get resolved in the connect function once Grid connected.
  */
 let connectionResolvers: (() => void)[] = [];
-
-// TODO(realtime-reactions) Make functions that allow callers to specify a callback to run when the client connects or reconnects.
-// This will be used by CommentStoreModel to request the comments channel to be initialized.
-export type DeregisterOnConnected = () => void;
-
-export function registerOnConnected(client: GridClient, cb: () => void): DeregisterOnConnected {
-	// register.
-
-	// need to make grid client call cancelToken when it disconnects finally, to
-	// allow any more cleanup needed by the caller.
-
-	return () => {
-		// deregister.
-	};
-}
 
 /**
  * Resolves once Grid is fully connected.
@@ -154,6 +142,16 @@ export class GridClient {
 	 * because users that feature posts should not get notified about those exact posts.
 	 */
 	featuredPostIds: Set<number> = new Set<number>();
+
+	/**
+	 * Callbacks to run when this grid client gets connected.
+	 */
+	onConnectedHandlers: OnConnectedHandler[] = [];
+
+	registerOnConnected(cb: OnConnectedHandler): DeregisterOnConnected {
+		this.onConnectedHandlers.push(cb);
+		return () => arrayRemove(this.onConnectedHandlers, i => i === cb);
+	}
 
 	init() {
 		this.socketController = markRaw(
