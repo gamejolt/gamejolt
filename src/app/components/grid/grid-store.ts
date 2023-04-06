@@ -1,6 +1,6 @@
 import { computed, inject, InjectionKey, ref, watch } from 'vue';
-import { bangRef } from '../../../utils/vue';
 import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
+import { bangRef } from '../../../utils/vue';
 import { AppStore } from '../../store';
 import { setChatFocused } from '../chat/client';
 import { GridClientLazy } from '../lazy';
@@ -115,6 +115,19 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 				_bootstrapResolvers.push(resolve);
 			}
 		});
+	}
+
+	/**
+	 * Function that calls a callback whenever the current instance of grid gets
+	 * connected.
+	 *
+	 * This function is different from `whenGridBootstrapped` because
+	 * bootstrapped is called as soon as we have a grid instance. it doesnt have
+	 * to be connected yet while this function is called every time the current
+	 * grid instance is connected.
+	 */
+	function whenGridConnects(cb: (client: GridClient) => void) {
+		// TODO(realtime-reactions) implement this.
 	}
 
 	return { grid, chat, chatUnsafe, loadGrid, clearGrid, whenGridBootstrapped };

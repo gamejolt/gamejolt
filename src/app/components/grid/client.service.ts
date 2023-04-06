@@ -82,8 +82,18 @@ let connectionResolvers: (() => void)[] = [];
 
 // TODO(realtime-reactions) Make functions that allow callers to specify a callback to run when the client connects or reconnects.
 // This will be used by CommentStoreModel to request the comments channel to be initialized.
+export type DeregisterOnConnected = () => void;
 
-function onConnected(client: GridClient, cb: () => void): void {}
+export function registerOnConnected(client: GridClient, cb: () => void): DeregisterOnConnected {
+	// register.
+
+	// need to make grid client call cancelToken when it disconnects finally, to
+	// allow any more cleanup needed by the caller.
+
+	return () => {
+		// deregister.
+	};
+}
 
 /**
  * Resolves once Grid is fully connected.
@@ -268,6 +278,10 @@ export class GridClient {
 		this.firesideChannels = [];
 		this.firesideDMChannels = [];
 		this.notificationChannel = null;
+
+		// TODO(realtime-reactions) invoke cancel token from registerOnConnected
+		// here, but only if its the "final" disconnect (as in, not part of a
+		// reconnect).
 
 		clearChat(this.chat!);
 

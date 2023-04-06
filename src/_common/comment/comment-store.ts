@@ -19,12 +19,6 @@ export class CommentStoreModel {
 	overviewNeedsRefresh = false;
 
 	/**
-	 * Keeps track of how many "things" wants reactions to be realtime for this
-	 * comment store model.
-	 */
-	reactionLocks = 0;
-
-	/**
 	 * Components that get a lock on this comment store can use this metadata to
 	 * store information for their own purposes. The store itself doesn't use
 	 * it.
@@ -64,31 +58,6 @@ export class CommentStoreModel {
 
 	afterModification() {
 		this.overviewNeedsRefresh = true;
-	}
-
-	// TODO(realtime-reactions) call these two functions when displaying comments anywhere on the site.
-	// A good place to start looking for these is lock `lockCommentStore` and `releaseCommentStore`
-
-	lockReactions() {
-		if (this.reactionLocks == 0) {
-			// TODO(realtime-reactions) initialize grid channel for this comment store for reactions.
-		}
-
-		++this.reactionLocks;
-	}
-
-	releaseReactions() {
-		--this.reactionLocks;
-		if (this.reactionLocks < 0) {
-			console.warn(
-				`Called releaseReactions() too many times for comment store model: ${this.resource}/${this.resourceId}`
-			);
-			return;
-		}
-
-		if (this.reactionLocks == 0) {
-			// TODO(realtime-reactions) destroy grid channel for this comment store for reactions.
-		}
 	}
 }
 

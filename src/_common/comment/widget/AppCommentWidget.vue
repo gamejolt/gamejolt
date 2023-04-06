@@ -13,6 +13,7 @@ import {
 	watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
+import { useGridStore } from '../../../app/components/grid/grid-store';
 import { illNoComments } from '../../../app/img/ill/illustrations';
 import AppAlertBox from '../../alert/AppAlertBox.vue';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
@@ -62,6 +63,8 @@ let incrementer = 0;
 export type CommentWidgetController = ReturnType<typeof createCommentWidget>;
 
 const Key: InjectionKey<CommentWidgetController> = Symbol('comment-widget');
+
+const { whenGridBootstrapped } = useGridStore();
 
 export function createCommentWidget(options: {
 	model: Ref<Model & CommentableModel>;
@@ -163,6 +166,13 @@ export function createCommentWidget(options: {
 		const resource = getCommentModelResourceName(model.value);
 		const resourceId = model.value.id;
 		store.value = lockCommentStore(commentManager, resource, resourceId);
+		// TODO(realtime-reactions) this is going to import routes from app
+		// section. need to check this doesnt screw things up. check by:
+		// - making sure the build goes through
+		// - checking ssr renders properly
+		whenGridBootstrapped().then(grid => {
+			// TODO(realtime-reactions) initialize grid channel for this comment store for reactions.
+		});
 
 		// Keep track of how many comment widgets have a lock on this store. We
 		// need this data when closing the last widget to do some tear down
@@ -191,6 +201,8 @@ export function createCommentWidget(options: {
 		}
 
 		releaseCommentStore(commentManager, store.value);
+		// TODO(realtime-reactions) destroy grid channel for this comment store for reactions.
+
 		store.value = null;
 	}
 
