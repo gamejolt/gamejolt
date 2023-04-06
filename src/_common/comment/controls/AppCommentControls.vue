@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
-import AppUserAvatarBubble from '../../../app/components/user/AppUserAvatarBubble.vue';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { LikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { selectReactionForResource } from '../../reaction/reaction-count';
 import { Screen } from '../../screen/screen-service';
-import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate, $ngettext } from '../../translate/translate.service';
+import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 import { addCommentVote, Comment, removeCommentVote } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
 import { CommentVote } from '../vote/vote-model';
@@ -46,8 +46,6 @@ const props = defineProps({
 });
 
 const { model, comment, children, showReply, canReply, canReact } = toRefs(props);
-
-const { reactionsData } = useCommonStore();
 
 const router = useRouter();
 const { resourceOwner } = useCommentWidget()!;
@@ -89,6 +87,10 @@ const hasUpvote = computed(
 
 const hasDownvote = computed(
 	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVote.VOTE_DOWNVOTE
+);
+
+const showOwnerInteraction = computed(
+	() => comment.value.has_owner_like || comment.value.has_owner_reply
 );
 
 function onUpvoteClick() {
@@ -154,26 +156,6 @@ function showLikers() {
 				@click="showLikers()"
 			>
 				{{ formatFuzzynumber(comment.votes) }}
-
-				<span
-					v-if="comment.has_owner_like && resourceOwner"
-					:style="{ display: 'inline-block', 'margin-left': '8px' }"
-				>
-					<AppUserAvatarBubble
-						v-app-tooltip="
-							$gettextInterpolate(`Liked by @%{ username }`, {
-								username: resourceOwner.username,
-							})
-						"
-						:user="resourceOwner"
-						show-frame
-						disable-link
-						:style="{
-							width: '24px',
-							height: '24px',
-						}"
-					/>
-				</span>
 			</a>
 			<span v-else class="blip-missing" />
 
@@ -222,28 +204,38 @@ function showLikers() {
 					+ %{ count } reply
 				</AppTranslate>
 			</AppButton>
-			<span
-				v-if="comment.has_owner_reply && resourceOwner"
+		</template>
+		<span
+			v-if="showOwnerInteraction && resourceOwner"
+			:style="{ marginLeft: '16px', position: 'relative' }"
+		>
+			<AppUserAvatarImg
+				:user="resourceOwner"
 				:style="{
-					'margin-left': '16px',
+					width: '24px',
+					height: '24px',
+					display: 'inline-block',
+					'margin-top': '-8px',
+					'padding-top': '8px',
+				}"
+				class="_owner-reply-avatar"
+			/>
+			<span
+				:style="{
+					position: 'absolute',
+					zIndex: 2,
+					bottom: '-10px',
+					right: '0px',
 				}"
 			>
-				<AppUserAvatarBubble
-					:user="resourceOwner"
-					show-verified
-					show-frame
-					bg-color="bg-offset"
-					:style="{
-						width: '24px',
-						height: '24px',
-						display: 'inline-block',
-						'margin-top': '-8px',
-						'padding-top': '8px',
-					}"
-					class="_owner-reply-avatar"
+				<AppJolticon
+					v-if="comment.has_owner_like"
+					notice
+					icon="heart-filled"
+					class="jolticon-075x"
 				/>
 			</span>
-		</template>
+		</span>
 	</span>
 </template>
 
