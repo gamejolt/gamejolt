@@ -243,9 +243,6 @@ export class GridClient {
 
 		// Now connect to our chat channels.
 		await connectChat(this.chat!);
-
-		// TODO(realtime-reactions) implement reconnecting to channels that
-		// watch for realtime changes in reaction counts.
 	}
 
 	markConnected() {
@@ -254,6 +251,14 @@ export class GridClient {
 			resolver();
 		}
 		connectionResolvers = [];
+
+		for (const handler of this.onConnectedHandlers) {
+			try {
+				handler(this);
+			} catch (e) {
+				this.logger.error('Error during connection handler for grid', e);
+			}
+		}
 	}
 
 	async disconnect() {

@@ -148,7 +148,7 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 	/**
 	 * Function that calls a callback whenever the current instance of grid gets
 	 * connected. If grid was already connected when this was called, the
-	 * callback will be ivoked immediately.
+	 * callback will be invoked immediately.
 	 *
 	 * This function is different from `whenGridBootstrapped` because
 	 * bootstrapped is called as soon as we have a grid instance regardless of
