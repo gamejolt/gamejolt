@@ -137,7 +137,7 @@ export function createCommentWidget(options: {
 	// need to check this doesnt screw things up:
 	// - make sure the build goes through
 	// - check ssr renders properly
-	const { whenGridConnected } = useGridStore();
+	const { grid, whenGridConnected } = useGridStore();
 
 	let _deregisterReactions: DeregisterOnConnected | null = null;
 
@@ -262,6 +262,8 @@ export function createCommentWidget(options: {
 			? `parent comment ${threadCommentId.value}`
 			: 'comments';
 		console.log(`joining reactions channel for ${subject} on ${resource}/${resourceId}...`);
+
+		grid.value?.listenToCommentsReactions(resource, resourceId, subject);
 
 		// TODO(realtime-notifications) implement this.
 		//

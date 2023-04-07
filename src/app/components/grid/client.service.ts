@@ -1,5 +1,9 @@
 import { Channel } from 'phoenix';
 import { markRaw, reactive } from 'vue';
+import { arrayRemove } from '../../../utils/array';
+import { createLogger } from '../../../utils/logging';
+import { sleep } from '../../../utils/utils';
+import { uuidv4 } from '../../../utils/uuid';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { ensureConfig } from '../../../_common/config/config.service';
@@ -17,8 +21,8 @@ import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
 import {
-	SocketController,
 	createSocketController,
+	SocketController,
 } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
@@ -26,18 +30,15 @@ import { $gettext, $gettextInterpolate } from '../../../_common/translate/transl
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
-import { arrayRemove } from '../../../utils/array';
-import { createLogger } from '../../../utils/logging';
-import { sleep } from '../../../utils/utils';
-import { uuidv4 } from '../../../utils/uuid';
 import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
-import { GridCommunityChannel, createGridCommunityChannel } from './community-channel';
+import { createGridCommentsChannel, GridCommentsChannel } from './comments-channel';
+import { createGridCommunityChannel, GridCommunityChannel } from './community-channel';
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
-import { GridNotificationChannel, createGridNotificationChannel } from './notification-channel';
+import { createGridNotificationChannel, GridNotificationChannel } from './notification-channel';
 
 export const onFiresideStart = new EventTopic<Model>();
 
@@ -126,6 +127,9 @@ export class GridClient {
 	firesideChannels: GridFiresideChannel[] = [];
 	firesideDMChannels: GridFiresideDMChannel[] = [];
 	notificationChannel: GridNotificationChannel | null = null;
+
+	commentsChannel: GridCommentsChannel | null = null;
+
 	/**
 	 * @see `deregisterViewingCommunity` doc-block for explanation.
 	 */
@@ -243,6 +247,8 @@ export class GridClient {
 
 		// Now connect to our chat channels.
 		await connectChat(this.chat!);
+
+		const commentsChannel = createGridCommentsChannel(this, { userId: user.value.id });
 	}
 
 	markConnected() {
@@ -531,6 +537,10 @@ export class GridClient {
 			dmChannel.channelController.leave();
 			arrayRemove(this.firesideDMChannels, i => i === channel);
 		}
+	}
+
+	async listenToCommentsReactions(resource: string, resourceId: string, parentCommentId: string) {
+		this.commentsChannel?.listenToCommentsReactions(resource, resourceId, parentCommentId);
 	}
 
 	recordFeaturedPost(post: FiresidePost) {
