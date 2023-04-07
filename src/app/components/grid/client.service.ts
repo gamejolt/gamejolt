@@ -34,7 +34,6 @@ import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
-import { createGridCommunityChannel, GridCommunityChannel } from './community-channel';
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
 import { createGridNotificationChannel, GridNotificationChannel } from './notification-channel';
@@ -119,7 +118,6 @@ export class GridClient {
 	bootstrapTimestamp = 0;
 	bootstrapDelay = 1;
 	chat: ChatClient | null = null;
-	communityChannels: GridCommunityChannel[] = [];
 	firesideChannels: GridFiresideChannel[] = [];
 	firesideDMChannels: GridFiresideDMChannel[] = [];
 	notificationChannel: GridNotificationChannel | null = null;
@@ -217,6 +215,7 @@ export class GridClient {
 		else if (user.value) {
 			const notificationChannel = createGridNotificationChannel(this, {
 				userId: user.value.id,
+				router,
 			});
 			await notificationChannel.joinPromise;
 			this.notificationChannel = markRaw(notificationChannel);
@@ -256,7 +255,6 @@ export class GridClient {
 		this.bootstrapReceived = false;
 		this.bootstrapTimestamp = 0;
 
-		this.communityChannels = [];
 		this.firesideChannels = [];
 		this.firesideDMChannels = [];
 		this.notificationChannel = null;
@@ -477,21 +475,15 @@ export class GridClient {
 			return;
 		}
 
-		const communityChannel = createGridCommunityChannel(this, {
-			communityId: community.id,
-			router,
+		this.notificationChannel?.joinCommunity({
+			community_id: community.id,
 		});
-
-		await communityChannel.joinPromise;
-		return communityChannel;
 	}
 
 	async leaveCommunity(community: Community) {
-		const channel = this.communityChannels.find(i => i.communityId === community.id);
-		if (channel) {
-			channel.channelController.leave();
-			arrayRemove(this.communityChannels, i => i === channel);
-		}
+		this.notificationChannel?.leaveCommunity({
+			community_id: community.id,
+		});
 	}
 
 	async leaveFireside(fireside: Fireside) {
