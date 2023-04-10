@@ -1,5 +1,6 @@
 import { markRaw, shallowReadonly } from 'vue';
 import { Router } from 'vue-router';
+import { arrayRemove } from '../../../utils/array';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
@@ -44,13 +45,22 @@ export function createGridCommunityChannel(
 		async onJoin() {
 			client.communityChannels.push(markRaw(c));
 		},
+		onLeave() {
+			arrayRemove(client.communityChannels, i => i.communityId === communityId);
+		},
 	});
 
 	const c = shallowReadonly({
 		channelController,
 		communityId,
 		joinPromise,
+
+		leave,
 	});
+
+	function leave() {
+		channelController.leave();
+	}
 
 	function _onFeature(payload: FeaturePayload) {
 		// Suppress notification if the user featured that post.

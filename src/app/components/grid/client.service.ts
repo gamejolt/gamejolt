@@ -1,6 +1,5 @@
 import { Channel } from 'phoenix';
 import { markRaw, reactive } from 'vue';
-import { arrayRemove } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
 import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
@@ -489,9 +488,7 @@ export class GridClient {
 	async leaveCommunity(community: Community) {
 		const channel = this.communityChannels.find(i => i.communityId === community.id);
 		if (channel) {
-			// TODO(fireside-reconnects): Should we make all the channels add/remove themselves to the grid client?
-			channel.channelController.leave();
-			arrayRemove(this.communityChannels, i => i === channel);
+			channel.leave();
 		}
 	}
 
