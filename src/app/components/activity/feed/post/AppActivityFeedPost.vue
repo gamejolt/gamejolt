@@ -19,20 +19,22 @@ import {
 	createStickerTargetController,
 	provideStickerTargetController,
 } from '../../../../../_common/sticker/target/target-controller';
+import { kThemeGjOverlayNotice } from '../../../../../_common/theme/variables';
+import { styleBorderRadiusCircle } from '../../../../../_styles/mixins';
+import AppContentTargets from '../../../content/AppContentTargets.vue';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
-import AppPollVoting from '../../../poll/voting/voting.vue';
+import AppPollVoting from '../../../poll/AppPollVoting.vue';
 import AppPostContent from '../../../post/AppPostContent.vue';
 import AppPostHeader from '../../../post/AppPostHeader.vue';
-import AppPostTargets from '../../../post/AppPostTargets.vue';
 import AppPostControls from '../../../post/controls/AppPostControls.vue';
 import { useActivityFeedInterface } from '../AppActivityFeed.vue';
 import { feedShouldBlockPost } from '../feed-service';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
-import AppActivityFeedPostBlocked from './blocked/blocked.vue';
-import AppActivityFeedPostMedia from './media/media.vue';
+import AppActivityFeedPostBlocked from './AppActivityFeedPostBlocked.vue';
+import AppActivityFeedPostMedia from './AppActivityFeedPostMedia.vue';
+import AppActivityFeedPostVideo from './AppActivityFeedPostVideo.vue';
 import AppActivityFeedPostText from './text/text.vue';
-import AppActivityFeedPostVideo from './video/video.vue';
 
 const props = defineProps({
 	item: {
@@ -228,14 +230,33 @@ function onPostUnpinned(item: EventItem) {
 				@show="onUnhideBlock"
 			/>
 			<div v-else class="-item" @click.capture="onClickCapture" @click="onClick">
-				<AppBackground :background="post.background" :darken="overlay" bleed>
+				<div
+					v-if="isNew"
+					:style="{
+						...styleBorderRadiusCircle,
+						position: `absolute`,
+						top: `6px`,
+						left: `6px`,
+						width: `12px`,
+						height: `12px`,
+						zIndex: 2,
+						backgroundColor: kThemeGjOverlayNotice,
+						filter: `drop-shadow(0 0 1px ${kThemeGjOverlayNotice})`,
+					}"
+				/>
+
+				<AppBackground
+					:background="post.background"
+					:darken="overlay"
+					:fade-opacity="post.hasAnyMedia ? 0.2 : undefined"
+					bleed
+				>
 					<AppPostHeader
 						:post="post"
 						follow-location="feed"
 						:feed="feed"
 						:show-pinned="shouldShowIsPinned"
 						:date-link="linkResolved"
-						:is-new="isNew"
 					/>
 
 					<AppActivityFeedPostVideo
@@ -272,11 +293,7 @@ function onPostUnpinned(item: EventItem) {
 							/>
 
 							<div v-if="post.hasPoll" class="-poll" @click.stop>
-								<AppPollVoting
-									:poll="post.poll"
-									:game="post.game"
-									:user="post.user"
-								/>
+								<AppPollVoting :post="post" :poll="post.poll" />
 							</div>
 						</AppStickerControlsOverlay>
 					</AppPostContent>
@@ -289,7 +306,7 @@ function onPostUnpinned(item: EventItem) {
 							@show="scrollToStickers"
 						/>
 
-						<AppPostTargets
+						<AppContentTargets
 							v-if="communities.length || realms.length"
 							class="-communities -controls-buffer"
 							:communities="communities"

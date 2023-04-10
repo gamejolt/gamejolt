@@ -42,3 +42,25 @@ export const kFontSizeH3 = new CSSPixelValue(21);
 export const kFontSizeH4 = new CSSPixelValue(18);
 export const kFontSizeH5 = new CSSPixelValue(kFontSizeBase.value);
 export const kFontSizeH6 = new CSSPixelValue(13);
+
+export const kLineHeightBase = 1.428571429;
+export const kLineHeightComputed = new CSSPixelValue(
+	Math.floor(kFontSizeBase.value * kLineHeightBase)
+);
+
+// Animations
+export const kWeakEaseIn = `cubic-bezier(0.55, 0.085, 0.68, 0.53)`;
+export const kWeakEaseOut = `cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+export const kWeakEaseInOut = `cubic-bezier(0.455, 0.03, 0.515, 0.955)`;
+// Quart
+export const kEaseIn = `cubic-bezier(0.895, 0.03, 0.685, 0.22)`;
+export const kEaseOut = `cubic-bezier(0.165, 0.84, 0.44, 1)`;
+export const kEaseInOut = `cubic-bezier(0.77, 0, 0.175, 1)`;
+// Expo
+export const kStrongEaseIn = `cubic-bezier(0.95, 0.05, 0.795, 0.035)`;
+export const kStrongEaseOut = `cubic-bezier(0.19, 1, 0.2, 1)`;
+export const kStrongEaseInOut = `cubic-bezier(1, 0, 0, 1)`;
+// Back Easing
+export const kEaseInBack = `cubic-bezier(0.6, -0.28, 0.735, 0.045)`;
+export const kEaseOutBack = `cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
+export const kEaseInOutBack = `cubic-bezier(0.68, -0.55, 0.265, 1.55)`;

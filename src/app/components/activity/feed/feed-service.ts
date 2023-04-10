@@ -21,6 +21,7 @@ const MaxCachedCount = 3;
 interface ActivityFeedCachedState {
 	href?: string;
 	view: ActivityFeedView;
+	cacheTag?: string;
 }
 
 function getTabForPost(post: FiresidePost) {
@@ -37,7 +38,8 @@ function postFromEventItem(eventItem: EventItem) {
 	return eventItem.action as FiresidePost;
 }
 
-type BootstrapOptions = ActivityFeedViewOptions & ActivityFeedStateOptions;
+type CacheTagOptions = { cacheTag?: string };
+type BootstrapOptions = ActivityFeedViewOptions & ActivityFeedStateOptions & CacheTagOptions;
 
 export class ActivityFeedService {
 	private static cache: ActivityFeedCachedState[] = [];
@@ -56,12 +58,12 @@ export class ActivityFeedService {
 		return url;
 	}
 
-	static routeInit(isRouteBootstrapped: boolean) {
+	static routeInit(isRouteBootstrapped: boolean, options?: CacheTagOptions) {
 		// Try to pull the feed from cache if they are going back to this route.
 		// We don't want to pull from cache if they go back and forth between
 		// feed tabs, though.
 		if (!isRouteBootstrapped) {
-			return this.bootstrapFeedFromCache();
+			return this.bootstrapFeedFromCache(options);
 		}
 		return null;
 	}
@@ -293,6 +295,7 @@ export class ActivityFeedService {
 		const cachedState: ActivityFeedCachedState = {
 			href,
 			view,
+			cacheTag: options.cacheTag,
 		};
 
 		// Keep it trimmed.
@@ -302,7 +305,7 @@ export class ActivityFeedService {
 		return cachedState;
 	}
 
-	private static findCachedState() {
+	private static findCachedState(options?: CacheTagOptions) {
 		const historyState = HistoryCache.getHistoryState();
 		if (!historyState) {
 			return undefined;
@@ -313,11 +316,11 @@ export class ActivityFeedService {
 		// Note that we have to check the history state key AND the actual URL.
 		// If you replace a route with vue, the history state key stays the
 		// same, even though the route changes.
-		return this.cache.find(i => i.href === href);
+		return this.cache.find(i => i.cacheTag === options?.cacheTag && i.href === href);
 	}
 
-	static bootstrapFeedFromCache() {
-		const state = this.findCachedState();
+	static bootstrapFeedFromCache(options?: CacheTagOptions) {
+		const state = this.findCachedState(options);
 		if (state) {
 			// Reset bootstrapped items so that we can go "back" to this feed
 			// really fast.

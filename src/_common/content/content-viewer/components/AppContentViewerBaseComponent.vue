@@ -5,6 +5,7 @@ import { ContentObject } from '../../content-object';
 import AppContentViewerHardBreak from './AppContentViewerHardBreak.vue';
 import AppContentViewerParagraph from './AppContentViewerParagraph.vue';
 import { AppContentViewerBlockquote } from './blockquote';
+import { AppContentViewerChatInvite } from './chat-invite';
 import { AppContentViewerCodeBlock } from './code/code';
 import { AppContentViewerEmbed } from './embed';
 import { AppContentViewerGif } from './gif';
@@ -51,6 +52,8 @@ function getComponentType(data: ContentObject): any {
 			return AppContentViewerGif;
 		case 'sticker':
 			return AppContentViewerSticker;
+		case 'chatInvite':
+			return AppContentViewerChatInvite;
 	}
 }
 

@@ -1,9 +1,14 @@
 import { Node, NodeSpec } from 'prosemirror-model';
 
-const assetPaths = import.meta.globEager('../../../../../emoji/*.png');
-
 export const gjEmoji = {
-	attrs: { type: { default: 'grin' } },
+	attrs: {
+		id: {
+			default: undefined,
+		},
+		type: {
+			default: undefined,
+		},
+	},
 	group: 'inline',
 	inline: true,
 	draggable: true,
@@ -11,22 +16,32 @@ export const gjEmoji = {
 	marks: '',
 
 	// The emoji is rendered as an img to make it selectable without content.
-	toDOM: (node: Node) => [
-		'img',
-		{
-			'emoji-type': node.attrs.type,
-			class: 'emoji',
-			title: ':' + node.attrs.type + ':',
-			src: assetPaths[`../../../../../emoji/${node.attrs.type}.png`].default,
-		},
-	],
+	toDOM: (node: Node) => {
+		const { id, type } = node.attrs;
 
+		return [
+			'img',
+			{
+				'emoji-id': id,
+				'emoji-type': type,
+			},
+		];
+	},
 	parseDOM: [
 		{
-			tag: 'img[emoji-type]',
+			tag: 'img[emoji-id]',
 			getAttrs: (domNode: Element) => {
+				const result: Record<string, any> = {};
+				const id = parseInt(domNode.getAttribute('emoji-id') || '0', 10);
 				const type = domNode.getAttribute('emoji-type');
-				return { type };
+
+				if (id) {
+					result.id = id;
+				}
+				if (type) {
+					result.type = type;
+				}
+				return result;
 			},
 		},
 	],

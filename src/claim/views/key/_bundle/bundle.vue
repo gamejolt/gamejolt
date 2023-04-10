@@ -1,4 +1,5 @@
 <script lang="ts">
+import { defineAsyncComponent } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
@@ -8,7 +9,9 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 
 @Options({
 	components: {
-		AppGameThumbnail,
+		AppGameThumbnail: defineAsyncComponent(
+			() => import('../../../../_common/game/thumbnail/AppGameThumbnail.vue')
+		),
 	},
 })
 export default class AppKeyBundle extends Vue {

@@ -1,12 +1,13 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
+import { ContextCapabilities } from '../../../_common/content/content-context';
 import { ContentDocument } from '../../../_common/content/content-document';
-import AppContentEditor from '../../../_common/content/content-editor/content-editor.vue';
+import AppContentEditor from '../../../_common/content/content-editor/AppContentEditor.vue';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
-import { AppTimeAgo } from '../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import { User } from '../../../_common/user/user.model';
 
 @Options({
@@ -38,10 +39,14 @@ export default class RouteContent extends BaseRouteComponent {
 	lastEdit!: number;
 	resourceTitle!: string;
 	resourceUrl!: string;
+	resourceType!: string;
 	resourceId!: number;
 	ownerName!: string;
 	ownerUrl!: string;
+	maxLength!: number;
+	contentCapabilities!: ContextCapabilities;
 	logReason = '';
+	currentContentLength = 0;
 
 	camelCase(str: string) {
 		return str.replace(/-([a-z])/gi, function (_all, letter) {
@@ -56,6 +61,10 @@ export default class RouteContent extends BaseRouteComponent {
 	}
 
 	get canSubmit() {
+		if (this.currentContentLength > this.maxLength) {
+			return false;
+		}
+
 		return this.logReason.length > 0 || !this.requireLog;
 	}
 
@@ -81,9 +90,14 @@ export default class RouteContent extends BaseRouteComponent {
 		this.resourceUrl = $payload.resourceUrl;
 		this.ownerName = $payload.ownerName;
 		this.ownerUrl = $payload.ownerUrl;
+		this.resourceType = $payload.resourceType;
 		this.resourceId =
 			$payload.resourceId || parseInt(this.$route.params.resourceId.toString(), 10);
 		this.requireLog = $payload.requireLog;
+		this.maxLength = $payload.maxLength;
+		this.contentCapabilities = ContextCapabilities.fromPayloadList(
+			$payload.contentCapabilities
+		);
 
 		this.isHydrated = true;
 	}
@@ -95,6 +109,7 @@ export default class RouteContent extends BaseRouteComponent {
 
 	onUpdate(source: string) {
 		this.contentJson = source;
+		this.currentContentLength = ContentDocument.fromJson(this.contentJson).getLength();
 	}
 
 	async submit() {
@@ -159,6 +174,12 @@ export default class RouteContent extends BaseRouteComponent {
 						class="content-editor-moderate"
 						:value="contentJson"
 						:content-context="contentContext"
+						:capabilities="contentCapabilities"
+						:model-data="{
+							type: 'resource',
+							resource: resourceType,
+							resourceId,
+						}"
 						:model-id="resourceId"
 						:max-height="800"
 						@input="onUpdate"
@@ -172,7 +193,7 @@ export default class RouteContent extends BaseRouteComponent {
 						id="log-reason"
 						rows="2"
 						class="log-field"
-						placeholder="Reason for editing"
+						:placeholder="'Reason for editing' + (requireLog ? ' (required)' : '')"
 						:value="logReason"
 						@input="onChangeLogReason"
 					/>

@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { computed, inject, PropType, ref, toRefs } from 'vue';
 import AppButton from '../../button/AppButton.vue';
-import AppMessageThreadAdd from '../../message-thread/add/add.vue';
+import { FormCommentLazy } from '../../lazy';
+import AppMessageThreadAdd from '../../message-thread/AppMessageThreadAdd.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import { Model } from '../../model/model.service';
@@ -11,7 +12,6 @@ import { $gettext } from '../../translate/translate.service';
 import AppCommentDisabledCheck from '../AppCommentDisabledCheck.vue';
 import { Comment, CommentableModel, getCommentModelResourceName } from '../comment-model';
 import { CommentStoreManagerKey, getCommentStore, onCommentAdd } from '../comment-store';
-import FormComment from '../FormComment.vue';
 import AppCommentWidget from '../widget/AppCommentWidget.vue';
 
 const props = defineProps({
@@ -113,7 +113,7 @@ function onEditorBlur() {
 				:class="{ '-thread-editor-focus': isEditorFocused }"
 				hide-message-split
 			>
-				<FormComment
+				<FormCommentLazy
 					:model="model"
 					:parent-id="parent?.id"
 					:placeholder="$gettext(`Leave a reply...`)"

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { PropType, toRef } from 'vue';
+import { PropType, ref, toRef, toRefs, watch } from 'vue';
 import { FocusToken } from '../../../utils/focus-token';
 import { ContentContext, ContextCapabilities } from '../../content/content-context';
-import AppContentEditor from '../../content/content-editor/content-editor.vue';
+import AppContentEditor from '../../content/content-editor/AppContentEditor.vue';
 import { ContentRules } from '../../content/content-editor/content-rules';
+import { ContentEditorModelData } from '../../content/content-owner';
 import {
 	createFormControl,
 	defineFormControlEmits,
@@ -17,9 +18,9 @@ const props = defineProps({
 		type: String as PropType<ContentContext>,
 		required: true,
 	},
-	contextCapabilitiesOverride: {
+	capabilities: {
 		type: Object as PropType<ContextCapabilities>,
-		default: undefined,
+		required: true,
 	},
 	placeholder: {
 		type: String,
@@ -27,6 +28,10 @@ const props = defineProps({
 	},
 	autofocus: {
 		type: Boolean,
+	},
+	modelData: {
+		type: [Object, null] as PropType<ContentEditorModelData | null>,
+		required: true,
 	},
 	modelId: {
 		type: Number,
@@ -63,6 +68,23 @@ const props = defineProps({
 	},
 });
 
+const {
+	contentContext,
+	capabilities,
+	placeholder,
+	autofocus,
+	modelData,
+	modelId,
+	minHeight,
+	tempResourceContextData,
+	compact,
+	singleLineMode,
+	maxHeight,
+	displayRules,
+	focusEnd,
+	focusToken,
+} = toRefs(props);
+
 const emit = defineEmits({
 	...defineFormControlEmits(),
 	focus: () => true,
@@ -79,6 +101,44 @@ const { id, controlVal, applyValue } = createFormControl({
 	onChange: val => emit('changed', val),
 });
 
+const contextCapabilities = ref({
+	capabilities: capabilities.value,
+	key: -1,
+});
+
+function makeCapabilities(newCapabilities: ContextCapabilities) {
+	const key = contextCapabilities.value.key * -1;
+	contextCapabilities.value = {
+		capabilities: newCapabilities,
+		key,
+	};
+}
+
+function onCapabilitiesOverrideChanged(newCapabilities: ContextCapabilities) {
+	const current = contextCapabilities.value.capabilities;
+
+	// Create new capabilities if our placeholder state is changing or the count
+	// of capabilities changed.
+	if (
+		current.isPlaceholder !== newCapabilities.isPlaceholder ||
+		current.capabilities.length !== newCapabilities.capabilities.length
+	) {
+		makeCapabilities(newCapabilities);
+		return;
+	}
+
+	// If lengths are the same, sort the lists and convert them to strings.
+	// Check if they're the same.
+	const joiner = ',';
+	const currentString = current.toStringList().join(joiner);
+	const proposedString = newCapabilities.toStringList().join(joiner);
+	if (currentString !== proposedString) {
+		makeCapabilities(newCapabilities);
+	}
+}
+
+watch(() => capabilities?.value, onCapabilitiesOverrideChanged);
+
 function onChange(value: string) {
 	applyValue(value);
 }
@@ -93,14 +153,16 @@ function onChange(value: string) {
 		<AppContentEditor
 			:id="id"
 			ref="editor"
+			:key="contextCapabilities.key"
 			class="fill-bg form-control content-editor-form-control"
 			:class="{ '-compact': compact }"
 			:name="name"
 			:content-context="contentContext"
-			:context-capabilities-override="contextCapabilitiesOverride"
+			:capabilities="contextCapabilities.capabilities"
 			:placeholder="placeholder"
-			:disabled="disabled"
+			:disabled="disabled || contextCapabilities.capabilities.isPlaceholder"
 			:autofocus="autofocus"
+			:model-data="modelData"
 			:model-id="modelId"
 			:value="controlVal"
 			:min-height="minHeight"

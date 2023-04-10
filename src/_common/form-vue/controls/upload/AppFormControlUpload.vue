@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { formatNumber } from '../../../filters/number';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
+import { Model } from '../../../model/model.service';
 import AppProgressBar from '../../../progress/AppProgressBar.vue';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { useForm } from '../../AppForm.vue';
@@ -33,6 +34,12 @@ const props = defineProps({
 	accept: {
 		type: String,
 		default: null,
+	},
+	/**
+	 * Attempts to fix overflow issues with filenames.
+	 */
+	fixOverflow: {
+		type: Boolean,
 	},
 });
 
@@ -80,7 +87,7 @@ const files = computed(() => {
 const isEmpty = computed(() => files.value.length === 0);
 
 const progress = computed(() => {
-	const progressEvent = form.formModel._progress as ProgressEvent | null;
+	const progressEvent = form.formModel._progress as Model['_progress'];
 	if (!progressEvent) {
 		return undefined;
 	}
@@ -285,6 +292,7 @@ defineExpose<AppFormControlUploadInterface>({
 				:multiple="multiple"
 				:accept="accept"
 				:value="controlVal"
+				:fix-overflow="fixOverflow"
 				@input="onChange"
 			/>
 		</div>

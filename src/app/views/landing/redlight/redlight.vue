@@ -66,7 +66,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 	readonly slogan = this.slogans[getRandomInt(0, this.slogans.length)];
 	readonly chosenHandle = this.handles[getRandomInt(0, this.handles.length)];
 	readonly tweet = `Hey @${this.chosenHandle}! I think your games would be a good fit for Game Jolt #redlight #gamedev`;
-	readonly assetPaths = import.meta.globEager('./*.(svg|png)');
+	readonly assetPaths = import.meta.glob('./*.(svg|png)', { eager: true, as: 'url' });
 
 	readonly Screen = Screen;
 
@@ -102,7 +102,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 					<img
 						:width="1068 / (Screen.isXs ? 4 : 2)"
 						:height="108 / (Screen.isXs ? 4 : 2)"
-						:src="assetPaths['./logo.png'].default"
+						:src="assetPaths['./logo.png']"
 						alt="Redlight"
 					/>
 				</h1>
@@ -159,7 +159,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<img :src="assetPaths['./laptop.svg'].default" alt="" />
+								<img :src="assetPaths['./laptop.svg']" alt="" />
 							</div>
 
 							<p class="text-center">
@@ -173,7 +173,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<img :src="assetPaths['./poster.svg'].default" alt="" />
+								<img :src="assetPaths['./poster.svg']" alt="" />
 							</div>
 
 							<p class="text-center">
@@ -189,7 +189,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<img :src="assetPaths['./shout.svg'].default" alt="" />
+								<img :src="assetPaths['./shout.svg']" alt="" />
 							</div>
 
 							<p class="text-center">
@@ -259,7 +259,7 @@ export default class RouteLandingRedlight extends BaseRouteComponent {
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<img :src="assetPaths['./redlight-comic.png'].default" alt="" />
+								<img :src="assetPaths['./redlight-comic.png']" alt="" />
 							</div>
 						</div>
 					</div>

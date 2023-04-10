@@ -1,6 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+import draggable from 'vuedraggable';
 import { useAdsController } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { formatNumber } from '../../../../_common/filters/number';
@@ -20,6 +21,7 @@ let idCounter = 0;
 		AppGameThumbnail,
 		AppGameThumbnailControls,
 		AppAdWidget,
+		draggable,
 	},
 })
 export default class AppGameGrid extends Vue {
@@ -30,7 +32,10 @@ export default class AppGameGrid extends Vue {
 	@Prop({ type: Boolean, default: false }) scrollable!: boolean;
 	@Prop({ type: Boolean, default: false }) forceScrollable!: boolean;
 	@Prop({ type: Boolean, default: false }) showAds!: boolean;
+	@Prop({ type: Boolean, default: false }) canReorder!: boolean;
 	@Prop(String) eventLabel?: string;
+
+	@Emit('sort') emitSort(_games: Game[]) {}
 
 	ads = setup(() => useAdsController());
 
@@ -40,7 +45,7 @@ export default class AppGameGrid extends Vue {
 	readonly Screen = Screen;
 
 	get shouldShowAds() {
-		return this.showAds && this.ads.shouldShow;
+		return !this.canReorder && this.showAds && this.ads.shouldShow;
 	}
 
 	get isScrollable() {
@@ -67,6 +72,10 @@ export default class AppGameGrid extends Vue {
 		}
 
 		return games.slice(0, chunkSize);
+	}
+
+	set processedGames(games: Game[]) {
+		this.emitSort(games);
 	}
 
 	get rowSize() {
@@ -149,33 +158,58 @@ export default class AppGameGrid extends Vue {
 					</div>
 				</div>
 
-				<!--
-					Keep the end div and the opening div together below. If you
-					don't it will not wrap correctly in the DOM since it adds the
-					space.
-				-->
-				<template v-for="(game, i) of processedGames" :key="game.id">
-					<div v-if="shouldShowAd(i)" class="game-grid-ad">
-						<div class="game-grid-ad-inner">
-							<AppAdWidget
-								size="rectangle"
-								placement="content"
-								:meta="{ staticSize: true }"
-							/>
+				<template v-if="canReorder">
+					<draggable
+						v-model="processedGames"
+						v-bind="{ delay: 100, delayOnTouchOnly: true }"
+						item-key="id"
+					>
+						<template #item="{ element }">
+							<div class="game-grid-item">
+								<AppGameThumbnail
+									v-app-track-event="
+										eventLabel ? 'game-grid:click:' + eventLabel : undefined
+									"
+									:game="element"
+								>
+									<slot name="thumbnail-controls" :game="element">
+										<AppGameThumbnailControls :game="element" />
+									</slot>
+								</AppGameThumbnail>
+							</div>
+						</template>
+					</draggable>
+				</template>
+
+				<template v-else>
+					<!--
+						Keep the end div and the opening div together below. If you
+						don't it will not wrap correctly in the DOM since it adds the
+						space.
+					-->
+					<template v-for="(game, i) of processedGames" :key="game.id">
+						<div v-if="shouldShowAd(i)" class="game-grid-ad">
+							<div class="game-grid-ad-inner">
+								<AppAdWidget
+									size="rectangle"
+									placement="content"
+									:meta="{ staticSize: true }"
+								/>
+							</div>
 						</div>
-					</div>
-					<div class="game-grid-item">
-						<AppGameThumbnail
-							v-app-track-event="
-								eventLabel ? 'game-grid:click:' + eventLabel : undefined
-							"
-							:game="game"
-						>
-							<slot name="thumbnail-controls" :game="game">
-								<AppGameThumbnailControls :game="game" />
-							</slot>
-						</AppGameThumbnail>
-					</div>
+						<div class="game-grid-item">
+							<AppGameThumbnail
+								v-app-track-event="
+									eventLabel ? 'game-grid:click:' + eventLabel : undefined
+								"
+								:game="game"
+							>
+								<slot name="thumbnail-controls" :game="game">
+									<AppGameThumbnailControls :game="game" />
+								</slot>
+							</AppGameThumbnail>
+						</div>
+					</template>
 				</template>
 			</div>
 		</div>

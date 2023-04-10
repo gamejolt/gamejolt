@@ -162,11 +162,11 @@ export const configShowSearchAutocomplete = new ConfigOptionBoolean(
 	true
 );
 
-/**
- * Shows post lead content below recommended post cards that have media
- * attached.
- */
-export const configNextUpPostLeads = new ConfigOptionBoolean('web_next_up_post_leads', false);
+export const configHomeFeedSwitcher = new ConfigOptionBoolean('web_home_feed_switcher', false, {
+	conditions: {
+		join: true,
+	},
+});
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());

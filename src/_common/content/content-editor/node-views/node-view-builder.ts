@@ -3,6 +3,7 @@ import { Decoration, EditorView, NodeView } from 'prosemirror-view';
 import { ContentEditorController } from '../content-editor-controller';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 import { EmbedNodeView } from './embed';
+import { EmojiNodeView } from './emoji';
 import { GifNodeView } from './gif';
 import { MediaItemNodeView } from './media-item';
 import { MediaUploadNodeView } from './media-upload';
@@ -37,6 +38,11 @@ export function buildEditorNodeViews(c: ContentEditorController): NodeViewList {
 	if (capabilities.gif) {
 		nodeViews.gif = function (node, view, getPos) {
 			return new GifNodeView(c, node, view, getPos);
+		};
+	}
+	if (capabilities.emoji) {
+		nodeViews.gjEmoji = function (node, view, getPos) {
+			return new EmojiNodeView(c, node, view, getPos);
 		};
 	}
 

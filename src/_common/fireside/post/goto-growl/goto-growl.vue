@@ -2,7 +2,7 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { RouteLocationRaw } from 'vue-router';
 import { Game } from '../../../game/game.model';
-import { AppTimeAgo } from '../../../time/ago/ago';
+import AppTimeAgo from '../../../time/AppTimeAgo.vue';
 import { FiresidePost } from '../post-model';
 
 export type Action = 'add' | 'publish' | 'scheduled-publish';
@@ -114,22 +114,22 @@ export default class AppFiresidePostGotoGrowl extends Vue {
 	<div>
 		<h4 class="section-header">
 			<span v-if="action === 'publish'">
-				<AppTranslate>Your post was published!</AppTranslate>
+				{{ $gettext(`Your post was published!`) }}
 			</span>
 			<span v-else-if="action === 'scheduled-publish'">
-				<AppTranslate>Your scheduled post was published!</AppTranslate>
+				{{ $gettext(`Your scheduled post was published!`) }}
 			</span>
 			<span v-else-if="isActive">
 				<AppJolticon icon="share-airplane" />
-				<AppTranslate>Your post was added!</AppTranslate>
+				{{ $gettext(`Your post was added!`) }}
 			</span>
 			<span v-else-if="isDraft">
 				<AppJolticon icon="edit" />
-				<AppTranslate>Your post was saved as a draft.</AppTranslate>
+				{{ $gettext(`Your post was saved as a draft.`) }}
 			</span>
 			<span v-else>
 				<AppJolticon icon="calendar-grid" />
-				<AppTranslate>Your post was scheduled.</AppTranslate>
+				{{ $gettext(`Your post was scheduled.`) }}
 			</span>
 		</h4>
 
@@ -142,22 +142,23 @@ export default class AppFiresidePostGotoGrowl extends Vue {
 		<div class="-controls">
 			<router-link :to="post.routeLocation">
 				<AppButton @click="onClickedView">
-					<AppTranslate>View Post</AppTranslate>
+					{{ $gettext(`View Post`) }}
 				</AppButton>
 			</router-link>
+			{{ ' ' }}
 			<router-link v-if="isDraft" :to="draftsLocation">
 				<AppButton @click="onClickedView">
-					<AppTranslate>All Drafts</AppTranslate>
+					{{ $gettext(`All Drafts`) }}
 				</AppButton>
 			</router-link>
 			<router-link v-else-if="isScheduled" :to="scheduledLocation">
 				<AppButton @click="onClickedView">
-					<AppTranslate>All Scheduled Posts</AppTranslate>
+					{{ $gettext(`All Scheduled Posts`) }}
 				</AppButton>
 			</router-link>
 			<router-link v-else-if="shouldShowCommunityRedirect" :to="communityLocation">
 				<AppButton @click="onClickedView">
-					<AppTranslate>Go to Community</AppTranslate>
+					{{ $gettext(`Go to Community`) }}
 				</AppButton>
 			</router-link>
 		</div>

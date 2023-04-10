@@ -5,7 +5,7 @@ $-tag-padding-horizontal = 6px
 $-tag-offset = ($-tag-font-size * 0.5) + ($-tag-padding-vertical * 2)
 $-anim-size = 8px
 $-border-color = var(--theme-fg)
-$-zindex-community = 1
+$-zindex-targetables = 1
 $-zindex-tag = 2
 $-zindex-link = 3
 $-zindex-popper = 4
@@ -41,27 +41,25 @@ $-zindex-popper = 4
 .-avatar
 	width: 100%
 	flex: none
+	img-circle()
 
-	&
-	&-inner
-	&-img
-		img-circle()
+.-avatar-inner
+	padding-top: 100%
+	position: relative
+	img-circle()
 
-	&-inner
-		padding-top: 100%
-		position: relative
-
-	&-img
-		background-color: var(--theme-bg)
-		border: $border-width-large solid $-border-color
-		position: absolute
-		top: 0
-		right: 0
-		bottom: 0
-		left: 0
-		display: flex
-		justify-content: center
-		align-items: center
+.-avatar-img
+	background-color: var(--theme-bg)
+	border: $border-width-large solid $-border-color
+	position: absolute
+	top: 0
+	right: 0
+	bottom: 0
+	left: 0
+	display: flex
+	justify-content: center
+	align-items: center
+	img-circle()
 
 .-extras
 	img-circle()
@@ -81,40 +79,52 @@ $-zindex-popper = 4
 		background-color: var(--theme-bi-bg)
 		color: var(--theme-bi-fg)
 
-	&-header
-		font-size: $font-size-tiny
-		font-weight: normal
-		letter-spacing: 0.1em
-		line-height: 1
-		text-transform: uppercase
-		margin-top: 0
-		margin-bottom: 0
-
-		.-img
-			width: $list-group-icon-width * 0.8
-			height: $list-group-icon-width * 0.8
-			border-radius: 50%
-			display: inline-block
-			position: relative
-			left: -($list-group-icon-width - 1px)
-			top: -2px
-			margin-right: -($list-group-icon-width - 5px)
-
 	.jolticon
 		margin: 0
+
+.-extras-header
+	font-size: $font-size-tiny
+	font-weight: normal
+	letter-spacing: 0.1em
+	line-height: 1
+	text-transform: uppercase
+	margin-top: 0
+	margin-bottom: 0
+
+	.-img
+		width: $list-group-icon-width * 0.8
+		height: $list-group-icon-width * 0.8
+		border-radius: 50%
+		display: inline-block
+		position: relative
+		left: -($list-group-icon-width - 1px)
+		top: 6px
+		margin-right: -($list-group-icon-width - 5px)
 
 .-community
 	elevate-1()
 	img-circle()
 	width: 25%
 	height: @width
-	border: $border-width-large solid $-border-color
+	border: $border-width-base solid $-border-color
+	background-color: $-border-color
+	position: absolute
+	bottom: $-tag-offset + 2px
+	right: 5%
+	z-index: $-zindex-targetables
+
+.-realm
+	elevate-1()
+	rounded-corners()
+	overflow: hidden
+	width: 25%
+	border: $border-width-base solid $-border-color
 	background-color: $-border-color
 	position: absolute
 	bottom: $-tag-offset + 2px
 	left: 5%
-	margin-left: -2px
-	z-index: $-zindex-community
+	margin-bottom: -2px
+	z-index: $-zindex-targetables
 
 .-tag
 	rounded-corners()
@@ -127,13 +137,13 @@ $-zindex-popper = 4
 	bottom: -($-tag-offset)
 	z-index: $-zindex-tag
 
-	&.-live
-		background-color: $gj-overlay-notice
-		color: $white
-
 	.jolticon
 		font-size: $-tag-font-size
 		margin: 0
+
+.-tag.-live
+	background-color: $gj-overlay-notice
+	color: $white
 
 .-title
 	line-clamp(2)
@@ -152,26 +162,34 @@ $-zindex-popper = 4
 	hr
 		margin: 12px -8px
 
-	&-row
-		display: flex
-		flex-direction: row
-		align-items: center
-		grid-gap: 4px
+.-tooltip-row
+	display: flex
+	flex-direction: row
+	align-items: center
+	grid-gap: 4px
 
-		&:not(:last-child)
-			margin-bottom: 4px
+	&:not(:last-child)
+		margin-bottom: 4px
 
-	&-img
-		flex: none
-		width: 16px
-		height: 16px
+.-tooltip-img-community
+.-tooltip-img-user
+	flex: none
+	height: 16px
+	width: 16px
 
-	&-members
-		font-weight: 700
+.-tooltip-img-realm
+	rounded-corners-sm()
+	overflow: hidden
+	flex: none
+	height: 16px
+	width: 12px
 
-	&-user
-	&-community
-		font-size: $font-size-small
+.-tooltip-members
+	font-weight: 700
 
-	&-community
-		color: var(--theme-fg-muted)
+.-tooltip-user
+	font-size: $font-size-small
+
+.-tooltip-muted
+	font-size: $font-size-small
+	color: var(--theme-fg-muted)

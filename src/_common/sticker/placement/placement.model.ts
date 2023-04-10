@@ -1,4 +1,3 @@
-import { Comment, CommentableModel } from '../../comment/comment-model';
 import { Model } from '../../model/model.service';
 import { Sticker } from '../sticker.model';
 
@@ -9,7 +8,7 @@ export class StickerPlacement extends Model {
 
 	sticker!: Sticker;
 
-	target_data!: PlacementTargetData;
+	target_data!: StickerPlacementTargetData;
 	is_charged!: boolean;
 
 	constructor(data: any = {}) {
@@ -27,18 +26,6 @@ export class StickerPlacement extends Model {
 
 Model.create(StickerPlacement);
 
-export function canPlaceStickerOnComment(
-	model: CommentableModel,
-	comment: Comment,
-	parentComment?: Comment
-) {
-	if (comment.user.hasAnyBlock === true || parentComment?.user.hasAnyBlock === true) {
-		return false;
-	}
-
-	return model.canInteractWithComments;
-}
-
-interface PlacementTargetData {
+export interface StickerPlacementTargetData {
 	host_user_id?: number;
 }

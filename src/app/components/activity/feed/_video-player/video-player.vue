@@ -17,6 +17,7 @@ import {
 	SettingVideoPlayerFeedAutoplay,
 	SettingVideoPlayerVolume,
 } from '../../../../../_common/settings/settings.service';
+import AppVideo, { VideoSourceArray } from '../../../../../_common/video/AppVideo.vue';
 import {
 	createVideoPlayerController,
 	scrubVideoVolume,
@@ -25,7 +26,6 @@ import {
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
 import { createDenseReadableTimestamp } from '../../../../../_common/video/player/player.vue';
-import AppVideo, { VideoSourceArray } from '../../../../../_common/video/video.vue';
 import { AppVideoPlayerShakaLazy } from '../../../lazy';
 import { ActivityFeedItem } from '../item-service';
 import { ActivityFeedKey, ActivityFeedView, InviewConfigFocused } from '../view';

@@ -1,5 +1,5 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
-import { defineConfig, UserConfig as ViteUserConfigActual } from 'vite';
+import { defineConfig, UserConfig as ViteUserConfig } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import {
@@ -12,16 +12,6 @@ import { readFromViteEnv } from './scripts/build/vite-runner';
 
 const path = require('path') as typeof import('path');
 const fs = require('fs-extra') as typeof import('fs-extra');
-
-type ViteUserConfig = ViteUserConfigActual & {
-	// This is an experimental feature, and as of time of writing
-	// does not exists with the type definition the package exports.
-	// They do work tho: https://vitejs.dev/guide/ssr.html#ssr-externals
-	ssr?: {
-		external?: (string | RegExp)[];
-		noExternal?: (string | RegExp)[];
-	};
-};
 
 type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 
@@ -121,6 +111,8 @@ export default defineConfig(async () => {
 			// it only worked during build, but not during serve. Looks like Vite
 			// tried parsing index.html before vite-plugin-html processed it, which
 			// meant Vite was seeing invalid looking html and died.
+			//
+			// Note: This may have been fixed by https://github.com/vitejs/vite/pull/6901
 			{
 				name: 'gj:index-interpolations',
 				enforce: 'pre',
@@ -326,6 +318,11 @@ export default defineConfig(async () => {
 						// Example of using socat for that is in the README.md
 						port: process.platform === 'darwin' ? 8443 : 443,
 
+						// Need to do this since vite might bind to ipv6 or
+						// ipv4. This forces it into ipv4 always so that our
+						// hosts file matches.
+						host: '127.0.0.1',
+
 						https: {
 							pfx: path.resolve(__dirname, 'development.gamejolt.com.pfx'),
 							passphrase: 'yame yolt',
@@ -397,7 +394,7 @@ export default defineConfig(async () => {
 					if (
 						gjOpts.environment === 'production' &&
 						gjOpts.buildType === 'build' &&
-						['web', 'ssr'].includes(gjOpts.platform)
+						['web'].includes(gjOpts.platform)
 					) {
 						return <RollupOptions>{
 							output: {
@@ -409,8 +406,8 @@ export default defineConfig(async () => {
 
 					// For the mobile app build, we currently can't load
 					// cross-origin requests, so we want to essentially make
-					// just one big JS chunk.
-					if (gjOpts.platform === 'mobile') {
+					// just one big JS chunk. SSR also works better this way.
+					if (['mobile', 'ssr'].includes(gjOpts.platform)) {
 						return <RollupOptions>{
 							output: {
 								// Vite itself sets manualChunks so that it can
@@ -501,6 +498,15 @@ export default defineConfig(async () => {
 			GJ_VERSION: JSON.stringify(gjOpts.version),
 			GJ_WITH_UPDATER: JSON.stringify(gjOpts.withUpdater),
 			GJ_HAS_ROUTER: JSON.stringify(gjOpts.currentSectionConfig.hasRouter),
+
+			// In SSR builds Vite is not doing the NODE_ENV replacements. Our
+			// code expects the build to replace these so that the code gets
+			// tree shaken out and not run.
+			...onlyInSSR({
+				'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+				'global.process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+				'globalThis.process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+			}),
 		},
 
 		...onlyInSSR<ViteUserConfig>({
@@ -515,6 +521,10 @@ export default defineConfig(async () => {
 			//
 			// More info: https://vitejs.dev/guide/ssr.html#ssr-externals
 			ssr: {
+				// Vite now makes nodejs module builds by default. We need to
+				// tell it to make a commonjs build so that our current server
+				// code can use it.
+				format: 'cjs',
 				noExternal: [
 					// These modules for whatever reason don't work being
 					// required server-side directly and must be bundled into

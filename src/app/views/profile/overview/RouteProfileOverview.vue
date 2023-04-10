@@ -34,7 +34,6 @@ import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Game } from '../../../../_common/game/game.model';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import '../../../../_common/lazy/placeholder/placeholder.styl';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { LinkedAccount, Provider } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
@@ -57,7 +56,7 @@ import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { unfollowUser, User } from '../../../../_common/user/user.model';
 import { openChatRoom } from '../../../components/chat/client';
-import AppCommentOverview from '../../../components/comment/overview/overview.vue';
+import AppCommentOverview from '../../../components/comment/AppCommentOverview.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
@@ -69,7 +68,7 @@ import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.v
 import AppUserVerifiedWrapper from '../../../components/user/AppUserVerifiedWrapper.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useAppStore } from '../../../store/index';
-import { useProfileRouteController } from '../profile.vue';
+import { useProfileRouteController } from '../RouteProfile.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -192,14 +191,6 @@ const twitterAccount = computed(() => {
 
 const twitchAccount = computed(() => {
 	return getLinkedAccount(LinkedAccount.PROVIDER_TWITCH);
-});
-
-const tumblrAccount = computed(() => {
-	const account = getLinkedAccount(LinkedAccount.PROVIDER_TUMBLR);
-	if (account && account.tumblrSelectedBlog) {
-		return account;
-	}
-	return null;
 });
 
 const addCommentPlaceholder = computed(() => {
@@ -790,16 +781,6 @@ async function onFriendRequestReject() {
 										{{ ' ' }}
 										<span>@</span>
 										{{ twitterAccount.name }}
-									</AppLinkExternal>
-								</div>
-								<div v-if="tumblrAccount && tumblrAccount.tumblrSelectedBlog">
-									<AppLinkExternal
-										class="link-unstyled"
-										:href="tumblrAccount.tumblrSelectedBlog.url"
-									>
-										<AppJolticon :icon="tumblrAccount.icon" />
-										{{ ' ' }}
-										{{ tumblrAccount.tumblrSelectedBlog.title }}
 									</AppLinkExternal>
 								</div>
 							</template>

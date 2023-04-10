@@ -28,132 +28,132 @@ $-cover-buttons-height = $button-md-line-height + 20px
 	margin: 0
 	border-bottom: 0
 
-	&-cover
+.page-header-cover
+	position: relative
+	padding-bottom: 0
+
+	> .container
 		position: relative
-		padding-bottom: 0
 
-		> .container
-			position: relative
-
-		&-buttons
-			margin-bottom: $grid-gutter-width
-			text-align: center
-
-		&.has-cover-image
-		&.is-editable
-			padding: 0
-
-			.page-header-content
-				text-shadow: 1px 1px 1px rgba($black, 0.5)
-
-				@media $media-sm-up
-					position: absolute
-					bottom: 0
-					left: ($grid-gutter-width / 2)
-					right: @left
-
-		// When no image, we want to make sure it has enough separation between
-		// the bottom content, otherwise it looks very cluttered.
-		&.has-cover-buttons
-			padding-top: 80px
-
-		// When there is an image, we want to overlay it on top of the image.
-		&.has-cover-image.has-cover-buttons
-			padding-top: 0
-
-		.page-header-cover-buttons
-			change-bg('darkest')
-			position: absolute
-			margin-bottom: 0
-			left: 0
-			right: 0
-			top: 0
-			height: ($-cover-buttons-height / 2)
-			text-align: center
-
-			&-inner
-				change-bg('darkest')
-				position: relative
-				display: inline-flex
-				height: $-cover-buttons-height
-				padding-top: 7px
-
-			&-edge
-				$-half = ($-cover-buttons-height / 2)
-				position: absolute
-				bottom: 0
-				width: $-half
-				height: $-half
-
-				path
-					theme-prop('fill', 'darkest')
-
-				&.-left
-					left: -($-half) + 1px
-
-				&.-right
-					right: -($-half) + 1px
-
-	&-content
-		padding-bottom: 10px
-
-		// On XS it behaves more like a well.
-		@media $media-xs
-			padding-top: 15px
-			padding-bottom: $grid-gutter-width-xs
-
-	&-spotlight
-		img-circle()
-		position: absolute
-		width: $page-header-spotlight-size
-		height: @width
-		bottom: -20px // this just seems to look the best
-		left: -(@width + $page-header-spotlight-margin / 2)
-		border: 5px solid $white
-		background-color: $white
-		z-index: $zindex-page-header-nav + 1
-		display: flex
-		align-items: center
-		justify-content: center
-		overflow: hidden
-
-		// When there's a nav, we want to push the avatar to be half over the header, and half over
-		// the nav.
-		.has-nav &
-			bottom: -((@width / 2) + 5px)
-
-		&.dark
-			change-bg('darker')
-			theme-prop('border-color', 'gray')
-
-		img
-			max-width: 100%
-			height: auto
-
-	&-nav
-		position: relative
+	&.has-cover-image
+	&.is-editable
 		padding: 0
 
-		@media $media-sm-up
-			// On bigger sizes we need to put it above the media bar, otherwise it's below.
-			// If we do this in XS as well, any of the popovers in it will get covered by the
-			// full-page shade that shows.
-			z-index: $zindex-page-header-nav
+		.page-header-content
+			text-shadow: 1px 1px 1px rgba($black, 0.5)
 
-		@media $media-lg
-			height: 63px
-			// Force on to GPU.
-			// For some reason Chrome wasn't repainting when it would disappear.
-			// This fixes the Chrome bug. Odd.
-			transform: translate3d(0, 0, 0)
+			@media $media-sm-up
+				position: absolute
+				bottom: 0
+				left: ($grid-gutter-width / 2)
+				right: @left
 
-	&-controls
-		clearfix()
-		margin-top: 13px
-		margin-bottom: $grid-gutter-width-xs
+	// When no image, we want to make sure it has enough separation between
+	// the bottom content, otherwise it looks very cluttered.
+	&.has-cover-buttons
+		padding-top: 80px
 
-		@media $media-lg
-			margin-bottom: 0
+	// When there is an image, we want to overlay it on top of the image.
+	&.has-cover-image.has-cover-buttons
+		padding-top: 0
+
+.page-header-cover-buttons
+	change-bg('darkest')
+	position: absolute
+	margin-bottom: 0
+	left: 0
+	right: 0
+	top: 0
+	height: ($-cover-buttons-height / 2)
+	text-align: center
+
+.page-header-cover-buttons-inner
+	change-bg('darkest')
+	position: relative
+	display: inline-flex
+	height: $-cover-buttons-height
+	padding-top: 7px
+
+.page-header-cover-buttons-edge
+	$-half = ($-cover-buttons-height / 2)
+	position: absolute
+	bottom: 0
+	width: $-half
+	height: $-half
+
+	path
+		theme-prop('fill', 'darkest')
+
+	&.-left
+		left: -($-half) + 1px
+
+	&.-right
+		right: -($-half) + 1px
+
+.page-header-content
+	padding-bottom: 10px
+
+	// On XS it behaves more like a well.
+	@media $media-xs
+		padding-top: 15px
+		padding-bottom: $grid-gutter-width-xs
+
+.page-header-spotlight
+	position: absolute
+	width: $page-header-spotlight-size
+	height: @width
+	bottom: -20px // this just seems to look the best
+	left: -(@width + $page-header-spotlight-margin / 2)
+	z-index: $zindex-page-header-nav + 1
+
+	// When there's a nav, we want to push the avatar to be half over the header, and half over
+	// the nav.
+	.has-nav &
+		bottom: -((@width / 2) + 5px)
+
+.page-header-spotlight-bubble
+	img-circle()
+	border: 5px solid $white
+	background-color: $white
+	display: flex
+	align-items: center
+	justify-content: center
+	overflow: hidden
+	width: 100%
+	height: 100%
+
+	img
+		max-width: 100%
+		height: auto
+
+	&.dark
+		change-bg('darker')
+		theme-prop('border-color', 'gray')
+
+.page-header-nav
+	position: relative
+	padding: 0
+
+	@media $media-sm-up
+		// On bigger sizes we need to put it above the media bar, otherwise it's below.
+		// If we do this in XS as well, any of the popovers in it will get covered by the
+		// full-page shade that shows.
+		z-index: $zindex-page-header-nav
+
+	@media $media-lg
+		height: 63px
+		// Force on to GPU.
+		// For some reason Chrome wasn't repainting when it would disappear.
+		// This fixes the Chrome bug. Odd.
+		transform: translate3d(0, 0, 0)
+
+.page-header-controls
+	clearfix()
+	margin-top: 13px
+	margin-bottom: $grid-gutter-width-xs
+
+	@media $media-lg
+		margin-bottom: 0
 
 .-cover-img
 	@media $media-sm-up

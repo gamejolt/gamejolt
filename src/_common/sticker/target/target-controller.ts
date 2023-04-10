@@ -20,14 +20,14 @@ import { FiresidePost } from '../../fireside/post/post-model';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
 import { StickerLayerController } from '../layer/layer-controller';
-import { StickerPlacement } from '../placement/placement.model';
+import { StickerPlacement, StickerPlacementTargetData } from '../placement/placement.model';
 import { CustomStickerPlacementRequest } from '../sticker-store';
 import { ValidStickerResource } from './AppStickerTarget.vue';
 
 const StickerTargetParentControllerKey: InjectionKey<MaybeRef<StickerTargetController>> =
 	Symbol('sticker-target-parent');
 
-type StickerTargetModel = FiresidePost | Comment | MediaItem | Fireside;
+type StickerTargetModel = FiresidePost | MediaItem | Fireside;
 
 export type StickerTargetController = {
 	isInview: Ref<boolean>;
@@ -46,6 +46,7 @@ export type StickerTargetController = {
 	isLive: boolean;
 
 	placeStickerCallback?: CustomStickerPlacementRequest;
+	targetData: ComputedRef<StickerPlacementTargetData | undefined>;
 	isCreator: ComputedRef<boolean>;
 };
 
@@ -54,11 +55,12 @@ interface StickerTargetOptions {
 	parent?: MaybeRef<StickerTargetController | null>;
 	isLive?: boolean;
 	placeStickerCallback?: CustomStickerPlacementRequest;
+	targetData?: MaybeComputedRef<StickerPlacementTargetData>;
 }
 
 export function createStickerTargetController(
 	model: StickerTargetModel,
-	{ isCreator, parent, isLive = false, placeStickerCallback }: StickerTargetOptions
+	{ isCreator, parent, isLive = false, placeStickerCallback, targetData }: StickerTargetOptions
 ) {
 	model = reactive(model) as StickerTargetModel;
 	const isInview = ref(false);
@@ -118,6 +120,7 @@ export function createStickerTargetController(
 		parent: refParent,
 		isLive,
 		placeStickerCallback,
+		targetData: computed(() => unref(targetData)),
 		isCreator: computed(() => unref(isCreator)),
 	});
 

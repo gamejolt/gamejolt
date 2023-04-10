@@ -16,6 +16,7 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import socialImage from '../../../img/social/social-share-header.png';
+import { updateHomeRouteAnalyticsPath } from '../../home/RouteHome.vue';
 import AppHomeDefault from './AppHomeDefault.vue';
 import AppHomeSlider from './AppHomeSlider.vue';
 
@@ -107,6 +108,8 @@ const { isBootstrapped } = createAppRoute({
 				: [];
 			HistoryCache.store(route, creatorPosts.value, CachedCreatorsKey);
 		}
+
+		updateHomeRouteAnalyticsPath(route, user.value);
 	},
 });
 </script>

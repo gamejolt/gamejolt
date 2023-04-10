@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { createContentEditorAppAdapter } from '../_common/content/content-editor/app-adapter';
-import AppContentEditor from '../_common/content/content-editor/content-editor.vue';
+import AppContentEditor from '../_common/content/content-editor/AppContentEditor.vue';
 import AppTheme from '../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../_common/theme/theme.store';
 
@@ -17,11 +17,13 @@ const adapter = createContentEditorAppAdapter({ themeStore });
 			ref="editor"
 			:key="adapter.capabilitiesKey"
 			:controller="adapter.controller"
-			:content-context="adapter.context"
+			:content-context="adapter.controller.contentContext"
+			:capabilities="adapter.controller.contextCapabilities"
 			:value="adapter.initialContent"
 			:placeholder="adapter.placeholder"
 			:min-height="0"
 			:max-height="0"
+			:model-data="null"
 			@input="adapter.onContentChange($event)"
 		/>
 	</div>

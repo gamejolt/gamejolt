@@ -1,5 +1,6 @@
 <script lang="ts">
 import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
+import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import {
@@ -25,6 +26,8 @@ export default class FormForumTopic extends mixins(Wrapper) {
 	readonly validateContentRequired = validateContentRequired;
 	readonly validateContentMaxLength = validateContentMaxLength;
 	readonly validateContentNoActiveUploads = validateContentNoActiveUploads;
+
+	capabilities = ContextCapabilities.fromPayloadList([]);
 
 	@Emit('cancel')
 	emitCancel() {}
@@ -56,6 +59,8 @@ export default class FormForumTopic extends mixins(Wrapper) {
 		<AppFormGroup name="text_content" :label="$gettext('Topic Content')">
 			<AppFormControlContent
 				content-context="forum-post"
+				:capabilities="capabilities"
+				:model-data="null"
 				:validators="[validateContentRequired(), validateContentNoActiveUploads()]"
 			/>
 

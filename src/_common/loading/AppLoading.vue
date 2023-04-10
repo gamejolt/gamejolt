@@ -2,7 +2,7 @@
 import { computed, toRefs } from 'vue';
 import { $gettext } from '../translate/translate.service';
 
-const images = import.meta.globEager('./*.gif');
+const images = import.meta.glob('./*.gif', { eager: true, as: 'url' });
 
 const props = defineProps({
 	label: {
@@ -35,7 +35,7 @@ const img = computed(() => {
 		(noColor.value ? '-bw' : '') +
 		(big.value ? '-2x' : '');
 
-	return images[`./${img}.gif`].default;
+	return images[`./${img}.gif`];
 });
 </script>
 
@@ -49,7 +49,7 @@ const img = computed(() => {
 			'loading-centered': centered,
 		}"
 	>
-		<img :src="img" alt="Loading" :title="$gettext(`Loading...`)" />
+		<img :src="img" alt="" :title="$gettext(`Loading...`)" />
 		<span class="loading-label" :class="{ 'sr-only': hideLabel }">
 			{{ label }}
 		</span>

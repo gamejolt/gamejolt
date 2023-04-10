@@ -27,7 +27,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 	}
 
 	readonly imageJolt = imageJolt;
-	readonly assetPaths = import.meta.globEager('./*.(svg|png)');
+	readonly assetPaths = import.meta.glob('./*.(svg|png)', { eager: true, as: 'url' });
 }
 </script>
 
@@ -64,7 +64,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg :src="assetPaths['./gamers.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./gamers.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Gamers</h4>
@@ -78,7 +78,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg :src="assetPaths['./lpers.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./lpers.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Let's Players</h4>
@@ -94,7 +94,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<AppThemeSvg :src="assetPaths['./developers.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./developers.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Studios</h4>
@@ -183,7 +183,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<AppThemeSvg :src="assetPaths['./discover.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./discover.svg']" alt="" />
 							</div>
 						</div>
 					</div>
@@ -195,7 +195,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
-								<AppThemeSvg :src="assetPaths['./interact.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./interact.svg']" alt="" />
 							</div>
 						</div>
 						<div class="col-md-1" />
@@ -257,7 +257,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<AppThemeSvg :src="assetPaths['./support.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./support.svg']" alt="" />
 							</div>
 						</div>
 					</div>
@@ -269,7 +269,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
-								<AppThemeSvg :src="assetPaths['./feeds.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./feeds.svg']" alt="" />
 							</div>
 						</div>
 						<div class="col-md-1" />
@@ -347,7 +347,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 						<div class="col-md-1" />
 						<div class="col-sm-5">
 							<div class="landing-graphic-full hidden-xs">
-								<AppThemeSvg :src="assetPaths['./organize.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./organize.svg']" alt="" />
 							</div>
 						</div>
 					</div>
@@ -359,10 +359,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
-								<AppThemeSvg
-									:src="assetPaths['./achievements.svg'].default"
-									alt=""
-								/>
+								<AppThemeSvg :src="assetPaths['./achievements.svg']" alt="" />
 							</div>
 						</div>
 						<div class="col-md-1" />
@@ -398,7 +395,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg :src="assetPaths['./friends.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./friends.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Friends</h4>
@@ -412,7 +409,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
-								<AppThemeSvg :src="assetPaths['./chat.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./chat.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Chat</h4>
@@ -427,7 +424,7 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 
 						<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-0">
 							<div class="landing-graphic">
-								<AppThemeSvg :src="assetPaths['./forums.svg'].default" alt="" />
+								<AppThemeSvg :src="assetPaths['./forums.svg']" alt="" />
 							</div>
 
 							<h4 class="text-center">Forums</h4>
@@ -466,25 +463,25 @@ export default class RouteLandingLearn extends BaseRouteComponent {
 					<div class="landing-graphic-full">
 						<img
 							class="visible-lg"
-							:src="assetPaths['./device-montage.png'].default"
+							:src="assetPaths['./device-montage.png']"
 							alt=""
 							style="margin: 0 auto; max-width: none; width: 912px; height: 484px"
 						/>
 						<img
 							class="visible-md"
-							:src="assetPaths['./device-montage.png'].default"
+							:src="assetPaths['./device-montage.png']"
 							alt=""
 							style="margin: 0 auto; max-width: none; width: 912px; height: 484px"
 						/>
 						<img
 							class="visible-sm"
-							:src="assetPaths['./device-montage.png'].default"
+							:src="assetPaths['./device-montage.png']"
 							alt=""
 							style="margin: 0 auto; max-width: none; width: 684px; height: 363px"
 						/>
 						<img
 							class="visible-xs"
-							:src="assetPaths['./device-montage.png'].default"
+							:src="assetPaths['./device-montage.png']"
 							alt=""
 							style="margin: 0 auto; max-width: none; width: 228px; height: 121px"
 						/>

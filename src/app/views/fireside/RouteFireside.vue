@@ -12,7 +12,7 @@ import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/join.vue';
 import AppBackground from '../../../_common/background/AppBackground.vue';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { Fireside } from '../../../_common/fireside/fireside.model';
+import { canDeviceViewFiresides, Fireside } from '../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
@@ -108,7 +108,7 @@ const isShowingStreamOverlay = computed(() => c.value?.isShowingStreamOverlay.va
 const popperTeleportId = computed(() => c.value?.popperTeleportId.value);
 
 const cannotViewReason = computed(() => {
-	if (!isBootstrapped.value || Screen.isDesktop) {
+	if (!isBootstrapped.value || canDeviceViewFiresides()) {
 		return undefined;
 	}
 
@@ -158,6 +158,8 @@ const shouldShowBanner = computed(() => {
 
 	return isPersonallyStreaming.value;
 });
+
+const statusMessageMaxWidth = computed(() => `calc(min(100%, 500px))`);
 
 // If the fireside's status ever changes to setup-failed, we want to direct to a
 // 404 page.
@@ -415,7 +417,14 @@ function onClickStreamingBanner() {
 
 						<template v-if="cannotViewReason === 'get-app'">
 							<div class="-view-blocked">
-								<AppIllustration :asset="illMobileKikkerstein" :max-width="90">
+								<AppIllustration
+									:style="{
+										maxWidth: statusMessageMaxWidth,
+									}"
+									:max-text-width="statusMessageMaxWidth"
+									:asset="illMobileKikkerstein"
+									:max-width="90"
+								>
 									<h2 class="-view-blocked-heading">
 										{{
 											$gettext(
@@ -426,7 +435,7 @@ function onClickStreamingBanner() {
 
 									<AppSpacer vertical :scale="6" />
 
-									<AppMobileAppButtons source="fireside" />
+									<AppMobileAppButtons source="fireside" wrap />
 
 									<AppSpacer vertical :scale="6" />
 
@@ -450,7 +459,13 @@ function onClickStreamingBanner() {
 						</template>
 						<template v-if="cannotViewReason === 'needs-resize'">
 							<div class="-view-blocked">
-								<AppIllustration :asset="illNoCommentsSmall">
+								<AppIllustration
+									:style="{
+										maxWidth: statusMessageMaxWidth,
+									}"
+									:max-text-width="statusMessageMaxWidth"
+									:asset="illNoCommentsSmall"
+								>
 									<h2 class="-view-blocked-heading">
 										{{ $gettext(`This window size is unsupported`) }}
 									</h2>
@@ -469,7 +484,13 @@ function onClickStreamingBanner() {
 							<template v-if="routeStatus === 'loading' || routeStatus === 'initial'">
 								<div key="loading" class="-message-wrapper">
 									<div class="-message">
-										<AppIllustration :asset="illEndOfFeed">
+										<AppIllustration
+											:style="{
+												maxWidth: statusMessageMaxWidth,
+											}"
+											:max-text-width="statusMessageMaxWidth"
+											:asset="illEndOfFeed"
+										>
 											<AppLoading
 												centered
 												:label="$gettext(`Traveling to the fireside...`)"
@@ -503,7 +524,13 @@ function onClickStreamingBanner() {
 							<template v-else-if="routeStatus === 'expired'">
 								<div key="expired" class="-message-wrapper">
 									<div class="-message">
-										<AppIllustration :asset="illNoCommentsSmall">
+										<AppIllustration
+											:style="{
+												maxWidth: statusMessageMaxWidth,
+											}"
+											:max-text-width="statusMessageMaxWidth"
+											:asset="illNoCommentsSmall"
+										>
 											<p>
 												{{
 													$gettext(`This fireside's fire has burned out.`)
@@ -523,7 +550,13 @@ function onClickStreamingBanner() {
 							<template v-else-if="routeStatus === 'setup-failed'">
 								<div key="setup-failed" class="-message-wrapper">
 									<div class="-message">
-										<AppIllustration :asset="illMaintenance">
+										<AppIllustration
+											:style="{
+												maxWidth: statusMessageMaxWidth,
+											}"
+											:max-text-width="statusMessageMaxWidth"
+											:asset="illMaintenance"
+										>
 											<p>
 												{{ $gettext(`Could not reach this fireside.`) }}
 												<br />
@@ -541,7 +574,13 @@ function onClickStreamingBanner() {
 							<!-- <template v-else-if="routeStatus === 'disconnected'">
 								<div key="disconnected" class="-message-wrapper">
 									<div class="-message">
-										<AppIllustration :asset="illNoCommentsSmall">
+										<AppIllustration
+											:style="{
+												maxWidth: statusMessageMaxWidth,
+											}"
+											:max-text-width="statusMessageMaxWidth"
+											:asset="illNoCommentsSmall"
+										>
 											<p>
 												{{
 													$gettext(
@@ -683,8 +722,7 @@ function onClickStreamingBanner() {
 														icon-color="notice"
 														icon="remove"
 														:overlay="overlayText"
-														@click="extinguishFireside(c!, 'fireplace')
-													"
+														@click="extinguishFireside(c!, 'fireplace')"
 													>
 														{{ $gettext(`Extinguish fireside`) }}
 													</AppButton>
@@ -782,6 +820,9 @@ $-center-guide-width = 400px
 	height: 100%
 	padding: 16px 32px 116px
 	text-align: center
+
+	@media $media-xs
+		padding: 8px 16px
 
 .-view-blocked-heading
 	font-size: 21px

@@ -24,7 +24,7 @@ import { execShell } from './build/utils';
 	});
 
 	// Intended values for main and node-remote keys.
-	const propertyMain = 'https://development.gamejolt.com/';
+	const propertyMain = 'https://development.gamejolt.com';
 	const propertyNodeRemote = 'https://development.gamejolt.com';
 
 	let newPackageJsonStr = updateJsonProperty(oldPackageJsonStr, 'main', propertyMain);

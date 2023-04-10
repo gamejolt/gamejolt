@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
+import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
@@ -9,6 +10,7 @@ import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import {
 	validateAvailability,
+	validateContentMaxLength,
 	validateMaxLength,
 	validateMinLength,
 	validateUsername,
@@ -46,6 +48,9 @@ const allowUsernameChange = ref(false);
 const originalBio = ref('');
 const allowBioChange = ref(false);
 
+const bioCapabilities = ref(ContextCapabilities.getPlaceholder());
+const bioLengthLimit = ref(5_000);
+
 const bootstrappedAvatar = ref(false);
 const hasSelectedAvatar = ref(false);
 
@@ -73,6 +78,8 @@ const form: FormController<FormModel> = createForm({
 	onLoad(payload) {
 		allowUsernameChange.value = payload.allowUsernameChange || true;
 		allowBioChange.value = payload.allowBioChange || true;
+		bioCapabilities.value = ContextCapabilities.fromPayloadList(payload.contentCapabilities);
+		bioLengthLimit.value = payload.lengthLimit;
 	},
 	async onSubmit() {
 		// If the user did not change their avatar (or bio) it means they either accepted
@@ -187,10 +194,17 @@ async function chooseAvatar() {
 						v-if="form.isLoaded"
 						class="-bio-input anim-fade-in"
 						content-context="user-bio"
+						:capabilities="bioCapabilities"
 						:disabled="!allowBioChange"
+						:model-data="{
+							type: 'resource',
+							resource: 'User',
+							resourceId: user.id,
+						}"
 						:model-id="user.id"
 						:placeholder="$gettext(`Tell people about yourself`)"
 						:max-height="0"
+						:validators="[validateContentMaxLength(bioLengthLimit)]"
 					/>
 					<div v-else class="-bio-input-placeholder" />
 				</AppFormGroup>

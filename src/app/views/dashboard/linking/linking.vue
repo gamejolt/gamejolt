@@ -3,7 +3,7 @@ import { Options } from 'vue-property-decorator';
 import { Client } from '../../../../_common/client/safe-exports';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { AppProgressPoller } from '../../../../_common/progress/poller/poller';
+import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 @Options({
@@ -26,10 +26,7 @@ export default class RouteDashLinking extends BaseRouteComponent {
 	}
 
 	completed(response: any) {
-		const routeName =
-			response.resource === 'Game'
-				? 'dash.games.manage.game.linked-accounts.link-callback'
-				: 'dash.account.linked-accounts.link-callback';
+		const routeName = 'dash.account.linked-accounts.link-callback';
 
 		const routeParams: { [k: string]: string } =
 			response.resource === 'Game' ? { id: response['resource-id'] } : {};

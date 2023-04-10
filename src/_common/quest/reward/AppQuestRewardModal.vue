@@ -10,8 +10,7 @@ import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import AppThemeSvg from '../../theme/svg/AppThemeSvg.vue';
 import AppQuestThumbnail from '../AppQuestThumbnail.vue';
-import illBackpackClosed from '../ill/backpack-closed.svg';
-import illBackpackOpen from '../ill/backpack-open.svg';
+import { illBackpackClosed, illBackpackOpen } from '../ill/illustrations';
 import { Quest } from '../quest-model';
 
 export interface QuestRewardData {
@@ -39,9 +38,9 @@ export interface QuestRewardData {
 	icon: Jolticon;
 
 	/**
-	 * Exp rewards shouldn't show an 'x' after their count.
+	 * If we should show an 'x' character after the reward amount.
 	 */
-	isExp?: boolean;
+	xAfterCount: boolean;
 
 	/**
 	 * Backend will return this along with the quest reward model. Lets us know
@@ -224,11 +223,11 @@ function playAnimation(
 					</span>
 
 					<div
-						v-for="({ img_url, name, amount, icon, isExp }, i) of rewards"
+						v-for="({ img_url, name, amount, icon, xAfterCount }, i) of rewards"
 						:key="i"
 						class="-quest-title-header"
 					>
-						{{ amount + (isExp ? ' ' : 'x ') }}
+						{{ amount + (xAfterCount ? 'x ' : ' ') }}
 
 						<img v-if="img_url" class="-reward-img" :src="img_url" alt="" />
 						<AppJolticon v-else :icon="icon" />
@@ -243,18 +242,22 @@ function playAnimation(
 					<div
 						ref="backpackEnter"
 						class="-backpack-enter"
-						:style="{ animationDuration: DurationBackpackEnter + 'ms' }"
+						:style="{
+							animationDuration: `${DurationBackpackEnter}ms`,
+							width: '${illBackpackClosed.width}px',
+							height: '${illBackpackClosed.height}px',
+						}"
 					>
-						<AppThemeSvg :src="illBackpackClosed" strict-colors />
+						<AppThemeSvg :src="illBackpackClosed.path" strict-colors />
 						<div
 							ref="backpackOpen"
 							class="-backpack-open"
 							:style="{
-								animationDuration: DurationBackpackOpen + 'ms',
-								animationDelay: DelayBackpackOpen + 'ms',
+								animationDuration: `${DurationBackpackOpen}ms`,
+								animationDelay: `${DelayBackpackOpen}ms`,
 							}"
 						>
-							<AppThemeSvg :src="illBackpackOpen" strict-colors />
+							<AppThemeSvg :src="illBackpackOpen.path" strict-colors />
 						</div>
 						<AppPopcornKettle class="-kettle" :controller="kettleController" />
 					</div>
@@ -342,8 +345,6 @@ $-z-backpack = 1
 	animation-name: anim-backpack-enter
 	animation-fill-mode: both
 	animation-timing-function: $weak-ease-out
-	width: 512px
-	height: 512px
 	max-width: 100vw
 	max-height: 100vw
 	transform: translateY(25%)

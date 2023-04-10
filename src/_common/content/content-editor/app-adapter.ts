@@ -1,6 +1,7 @@
 import { markRaw, reactive } from 'vue';
 import { objectPick } from '../../../utils/object';
 import { assertNever } from '../../../utils/utils';
+import { Emoji } from '../../emoji/emoji.model';
 import { MediaItem } from '../../media-item/media-item-model';
 import { Theme } from '../../theme/theme.model';
 import { ThemeStore } from '../../theme/theme.store';
@@ -29,9 +30,12 @@ import {
 import { ContentEditorService } from './content-editor.service';
 import { createMediaUploadTask } from './media-upload-task';
 
+const GJEditorAdapterKey = 'gjEditor' as const;
+const GJEditorHandler = 'GJEditorHandler' as const;
+
 export function createContentEditorAppAdapter({ themeStore }: { themeStore: ThemeStore }) {
 	const c = reactive(new ContentEditorAppAdapter(() => themeStore)) as ContentEditorAppAdapter;
-	(window as any).gjEditor = c;
+	(window as any)[GJEditorAdapterKey] = c;
 	return c;
 }
 
@@ -58,7 +62,9 @@ export class ContentEditorAppAdapter {
 		return {
 			postMessage: (message: string) => {
 				if (win.flutter_inappwebview) {
-					win.flutter_inappwebview.callHandler('gjEditor', message);
+					win.flutter_inappwebview.callHandler(GJEditorAdapterKey, message);
+				} else if (win[GJEditorHandler]) {
+					win[GJEditorHandler].postMessage(message);
 				} else {
 					console.log('Sending message over channel:', message);
 				}
@@ -86,9 +92,7 @@ export class ContentEditorAppAdapter {
 
 		this.controller = createContentEditor({
 			contentContext: this.context!,
-			contextCapabilities: capabilities
-				? ContextCapabilities.fromStringList(capabilities)
-				: undefined,
+			contextCapabilities: ContextCapabilities.fromPayloadList(capabilities),
 		});
 
 		this.capabilitiesKey = Math.random();
@@ -154,7 +158,7 @@ export function editorGetAppAdapter() {
 		throw new Error(`Tried getting app adapter in non-app build.`);
 	}
 
-	const adapter = (window as any).gjEditor as ContentEditorAppAdapter | undefined;
+	const adapter = (window as any)[GJEditorAdapterKey] as ContentEditorAppAdapter | undefined;
 	if (!adapter) {
 		throw new Error(`Tried getting app adapter before it was initialized.`);
 	}
@@ -343,7 +347,12 @@ export class ContentEditorAppAdapterMessage {
 				return editorInsertCodeBlock(controller);
 
 			case 'emoji':
-				return editorInsertEmoji(controller, this.data.type);
+				return editorInsertEmoji(
+					controller,
+					typeof this.data.emoji === 'string'
+						? this.data.emoji
+						: new Emoji(this.data.emoji)
+				);
 
 			case 'gif':
 				return editorInsertGif(controller, this.data.result);
@@ -413,9 +422,7 @@ export class ContentEditorAppAdapterMessage {
 				const { capabilities } = this.data;
 
 				controller.contextCapabilities = markRaw(
-					capabilities
-						? ContextCapabilities.fromStringList(capabilities)
-						: ContextCapabilities.getForContext(controller.contentContext)
+					ContextCapabilities.fromPayloadList(capabilities)
 				);
 
 				// Force the editor to rebuild when we alter the capabilities.

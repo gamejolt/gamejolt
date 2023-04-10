@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref, watch, watchEffect } from 'vue';
+import { arrayRemove } from '../../../../utils/array';
 import { Background } from '../../../../_common/background/background.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { Community } from '../../../../_common/community/community.model';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat/chat-settings.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FIRESIDE_ROLES } from '../../../../_common/fireside/role/role.model';
@@ -17,12 +19,14 @@ import AppFormControlToggleButton from '../../../../_common/form-vue/controls/to
 import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { Realm } from '../../../../_common/realm/realm-model';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import {
 	extinguishFireside,
 	publishFireside,
@@ -53,12 +57,55 @@ const {
 	canReport,
 } = c;
 
+const selectedCommunities = ref<{ community: Community }[]>([]);
+const targetableCommunities = computed(() => selectedCommunities.value.map(i => i.community));
+const selectedRealms = ref<Realm[]>([]);
+const maxRealms = ref(0);
+
 const form: FormController<Fireside> = createForm({
 	warnOnDiscard: false,
 	modelClass: Fireside,
 	// Just wrapping in a ref to make the form happy. It never actually changes.
 	model: ref(fireside),
+	loadUrl: `/web/dash/fireside/save/${fireside.hash}`,
+	onLoad: response => {
+		maxRealms.value = response.maxRealms;
+	},
+	onInit: () => {
+		selectedCommunities.value = fireside.community_links.map(i => {
+			return { community: i.community };
+		});
+		selectedRealms.value = fireside.realms.map(i => i.realm);
+	},
+	onSubmit: () => form.formModel.$saveWithRealms(selectedRealms.value.map(i => i.id)),
+	onSubmitSuccess: () => {
+		fireside.assign(form.formModel);
+	},
 });
+
+function attachRealm(realm: Realm, append = true) {
+	// Do nothing if that realm is already attached.
+	if (selectedRealms.value.find(i => i.id === realm.id)) {
+		return;
+	}
+
+	if (append) {
+		selectedRealms.value.push(realm);
+	} else {
+		selectedRealms.value.unshift(realm);
+	}
+	form.changed = true;
+}
+
+function removeRealm(realm: Realm) {
+	const removed = arrayRemove(selectedRealms.value, i => i.id === realm.id, {
+		onMissing: () => console.warn('Attempted to remove a realm that is not attached'),
+	});
+
+	if (removed.length) {
+		form.changed = true;
+	}
+}
 
 const settingsForm: FormController<FiresideChatSettings> = createForm({
 	warnOnDiscard: false,
@@ -253,6 +300,29 @@ function onClickChatMods() {
 								/>
 
 								<AppFormControlErrors />
+							</AppFormGroup>
+
+							<AppSpacer vertical :scale="6" />
+
+							<AppFormGroup
+								name="targetables"
+								class="sans-margin-bottom"
+								:label="$gettext(`Tagged to`)"
+								small
+							>
+								<AppContentTargets
+									:communities="selectedCommunities"
+									:max-communities="1"
+									:realms="selectedRealms"
+									:max-realms="maxRealms"
+									:targetable-communities="targetableCommunities"
+									can-add-realm
+									can-remove-realms
+									no-community-channels
+									bg-color-offset
+									@remove-realm="removeRealm"
+									@select-realm="attachRealm"
+								/>
 							</AppFormGroup>
 
 							<AppSpacer vertical :scale="6" />

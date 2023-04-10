@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { Connection } from '../../../../_common/connection/connection-service';
@@ -10,7 +9,6 @@ import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Notification } from '../../../../_common/notification/notification-model';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { useEventSubscription } from '../../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useAppStore } from '../../../store';
 import { NotificationsFilterModal } from '../../../views/notifications/filter/modal.service';
@@ -20,34 +18,17 @@ import {
 	SUPPORTED_NOTIFICATION_FEED_TYPES,
 } from '../../../views/notifications/RouteNotifications.vue';
 import { ActivityFeedView } from '../../activity/feed/view';
-import { onNewStickers } from '../../grid/client.service';
 import { useGridStore } from '../../grid/grid-store';
 import { AppActivityFeedLazy } from '../../lazy';
-import AppShellNotificationPopoverStickerNavItem from './sticker-nav-item/AppShellNotificationPopoverStickerNavItem.vue';
-
-interface StickerAnimationData {
-	key: string;
-	stickerImg: string;
-}
 
 const route = useRoute();
 const router = useRouter();
-const {
-	notificationState,
-	unreadNotificationsCount,
-	hasNewUnlockedStickers,
-	markNotificationsAsRead,
-} = useAppStore();
+const { notificationState, unreadNotificationsCount, markNotificationsAsRead } = useAppStore();
 const { grid } = useGridStore();
 
-const newStickerAnimContainer = ref<HTMLDivElement>();
 const isShowing = ref(false);
 const isLoading = ref(true);
 const feed = ref<ActivityFeedView>();
-const totalStickersCount = ref(0);
-const animatingStickers = ref<StickerAnimationData[]>([]);
-
-useEventSubscription(onNewStickers, _onNewStickersHandler);
 
 /**
  * This loads in lazily, so we want to capture it once it bootstraps into the
@@ -126,42 +107,11 @@ async function onShow() {
 		}
 	}
 
-	const countPayload = await Api.sendRequest(`/web/stickers/user-count`);
-	totalStickersCount.value = countPayload.count;
-
 	isLoading.value = false;
 }
 
 function onHide() {
 	isShowing.value = false;
-}
-
-/**
- * Handles the Grid event of new sticker unlocks to show animations.
- */
-async function _onNewStickersHandler(stickerImgUrls: string[]) {
-	for (const stickerImgUrl of stickerImgUrls) {
-		const key = Date.now().toString();
-
-		animatingStickers.value.push({
-			key,
-			stickerImg: stickerImgUrl,
-		});
-
-		setTimeout(() => removeStickerAnimation(key), 1500);
-
-		// Sleep for slightly less than animation duration (~1.5s). This
-		// slightly overlays the animations which results in a smoother and
-		// faster unlock experience.
-		await sleep(1300);
-	}
-}
-
-function removeStickerAnimation(key: string) {
-	const index = animatingStickers.value.findIndex(i => i.key === key);
-	if (index !== -1) {
-		animatingStickers.value.splice(index, 1);
-	}
 }
 
 function onClickFilter() {
@@ -196,15 +146,6 @@ function onClickFilter() {
 				{{ unreadNotificationsCount }}
 			</span>
 			<AppJolticon icon="bell-filled" />
-			<div ref="newStickerAnimContainer" class="-new-sticker-anim-container">
-				<div
-					v-for="{ key, stickerImg } in animatingStickers"
-					:key="key"
-					class="-new-sticker"
-				>
-					<img class="-new-sticker-img" :src="stickerImg" />
-				</div>
-			</div>
 		</a>
 
 		<template v-if="feed && isShowing" #header>
@@ -227,11 +168,6 @@ function onClickFilter() {
 					<AppLoading centered />
 				</template>
 				<template v-else>
-					<AppShellNotificationPopoverStickerNavItem
-						v-if="totalStickersCount > 0"
-						:sticker-count="totalStickersCount"
-						:has-new="hasNewUnlockedStickers"
-					/>
 					<template v-if="!feed || !feed.hasItems">
 						<div class="alert">
 							{{ $gettext(`You don't have any notifications yet.`) }}
@@ -255,8 +191,6 @@ function onClickFilter() {
 </template>
 
 <style lang="stylus" scoped>
-$-new-sticker-size = 32px
-
 ::v-deep(.timeline-list-item-split)
 	full-bleed()
 
@@ -270,56 +204,4 @@ $-new-sticker-size = 32px
 	display: flex
 	justify-content: flex-end
 	gap: 12px
-
-.-new-sticker-anim-container
-	position: absolute
-	left: 14px
-	top: 16px
-	user-select: none
-	pointer-events: none
-	z-index: 3
-
-.-new-sticker
-	position: fixed
-	width: $-new-sticker-size
-	height: $-new-sticker-size
-	animation-name: anim
-	animation-duration: 1.5s
-	animation-iteration-count: 1
-	animation-fill-mode: forwards
-	animation-timing-function: ease-out
-	z-index: 4
-	user-select: none
-	pointer-events: none
-
-	&-img
-		display: block
-		width: $-new-sticker-size
-		height: $-new-sticker-size
-
-@keyframes anim
-	0%
-		transform: none
-		opacity: 0.5
-
-	50%
-		transform: translateY(100px) scale(1.5)
-		opacity: 1
-
-	55%
-		transform: translateY(100px) scale(1.7) rotateZ(-20deg)
-
-	60%
-		transform: translateY(100px) scale(1.9) rotateZ(20deg)
-
-	65%
-		transform: translateY(100px) scale(2.1) rotateZ(-20deg)
-
-	70%
-		transform: translateY(100px) scale(2.3) rotateZ(20deg)
-		opacity: 1
-
-	100%
-		transform: translateY(0) scale(0)
-		opacity: 0
 </style>

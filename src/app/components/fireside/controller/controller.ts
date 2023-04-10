@@ -32,10 +32,6 @@ import {
 } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Background } from '../../../../_common/background/background.model';
-import {
-	canCommunityEjectFireside,
-	canCommunityFeatureFireside,
-} from '../../../../_common/community/community.model';
 import { ContentFocus } from '../../../../_common/content-focus/content-focus.service';
 import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device.service';
 import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
@@ -56,12 +52,15 @@ import {
 	destroyFiresideRTC,
 	FiresideRTC,
 	FiresideRTCHost,
-	setHosts,
 	setListableHostIds,
 } from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { getModel } from '../../../../_common/model/model-store.service';
+import checkPayloadActions, {
+	PayloadAction,
+	PayloadActionDataKey,
+} from '../../../../_common/payload/payload-actions.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { onFiresideStickerPlaced, StickerStore } from '../../../../_common/sticker/sticker-store';
@@ -71,7 +70,11 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
 import { ChatRoom } from '../../chat/room';
-import { ChatRoomChannel, createChatRoomChannel } from '../../chat/room-channel';
+import {
+	ChatRoomChannel,
+	createChatRoomChannel,
+	PlaceStickerPayload,
+} from '../../chat/room-channel';
 import { createGridFiresideChannel, GridFiresideChannel } from '../../grid/fireside-channel';
 import { createGridFiresideDMChannel, GridFiresideDMChannel } from '../../grid/fireside-dm-channel';
 import { GridStore } from '../../grid/grid-store';
@@ -129,14 +132,14 @@ export type FiresideController = ReturnType<typeof createFiresideController>;
 export function createFiresideController(
 	fireside: Fireside,
 	options: {
-		isMuted?: boolean;
+		isPreviewMode?: boolean;
 		commonStore: CommonStore;
 		stickerStore: StickerStore;
 		gridStore: GridStore;
 		router: Router;
 	}
 ) {
-	const { isMuted = false, commonStore, gridStore, stickerStore, router } = options;
+	const { isPreviewMode = false, commonStore, gridStore, stickerStore, router } = options;
 	const { user } = commonStore;
 	const { grid, loadGrid } = gridStore;
 
@@ -158,6 +161,41 @@ export function createFiresideController(
 	const hosts = ref([]) as Ref<FiresideRTCHost[]>;
 
 	/**
+	 * Performs actions on the new lists of hosts before assigning them to our
+	 * existing list.
+	 *
+	 * - Assigns cached following state for User models.
+	 * - Merges existing streaming uids with new ones.
+	 */
+	function upsertHosts(newHosts: FiresideRTCHost[]) {
+		logger.info('updating hosts in controller');
+
+		// We want to merge the streaming uids of our existing hosts with the new ones.
+		// Note: I'm not 100% sure why we want that. My guess is because we freeze the
+		// streaming uid on the RTCUser instances, but we still want to match against the
+		// same RTCHost with their new streaming uids?
+		for (const newHost of newHosts) {
+			// Assign cached following state.
+			const { is_following, dogtags } = fetchedHostUserData.get(newHost.user.id) || {};
+			newHost.user.is_following = is_following === true;
+			newHost.user.dogtags = dogtags;
+
+			// Merge streaming uids.
+			const prevHost = hosts.value.find(i => i.user.id === newHost.user.id);
+			if (prevHost) {
+				logger.info(`merging streaming uids of host ${newHost.user.id}`);
+
+				// Transfer over all previously assigned uids to the new host.
+				const newUids = arrayUnique([...prevHost.uids, ...newHost.uids]);
+				arrayAssignAll(newHost.uids, newUids);
+			}
+		}
+
+		logger.info('new hosts after merging uids', JSON.stringify(newHosts));
+		arrayAssignAll(hosts.value, newHosts);
+	}
+
+	/**
 	 * Map of userId and data that we specifically requested to supplement
 	 * models from grid notifications.
 	 *
@@ -177,6 +215,10 @@ export function createFiresideController(
 	 */
 	const hostBackgrounds = ref(new Map<number, Background>());
 
+	const targetData = computed(() => {
+		return { host_user_id: rtc.value?.focusedUser?.userModel?.id };
+	});
+
 	const stickerTargetController = createStickerTargetController(fireside, {
 		isLive: true,
 		isCreator: computed(() => {
@@ -186,9 +228,10 @@ export function createFiresideController(
 			}
 			return user.is_creator === true;
 		}),
+		targetData,
 		placeStickerCallback: async data => {
 			const roomChannel = chatChannel.value;
-			const targetUserId = rtc.value?.focusedUser?.userModel?.id;
+			const targetUserId = targetData.value.host_user_id;
 			const errorResponse = { success: false };
 
 			if (!roomChannel || !targetUserId) {
@@ -205,13 +248,34 @@ export function createFiresideController(
 				}
 			}
 
-			const result = await roomChannel.pushPlaceSticker(targetUserId, stickerData);
+			let payload: Partial<PlaceStickerPayload> = {};
+			try {
+				payload = await roomChannel.pushPlaceSticker(targetUserId, stickerData);
 
-			const placement = result.stickerPlacement;
-			if (placement) {
-				onFiresideStickerPlaced.next(placement);
+				const { stickerPlacement, success = true, unlockedPack } = payload;
+
+				if (stickerPlacement) {
+					onFiresideStickerPlaced.next(stickerPlacement);
+				}
+
+				if (unlockedPack) {
+					const type = PayloadAction.UNLOCK_STICKER_PACK;
+					checkPayloadActions({
+						actions: [
+							{
+								type,
+								data: {
+									[PayloadActionDataKey[type]]: unlockedPack,
+								},
+							},
+						],
+					});
+				}
+
+				return { ...payload, success };
+			} catch (e) {
+				return { ...payload, ...errorResponse };
 			}
-			return { ...result, success: true };
 		},
 	});
 
@@ -296,12 +360,6 @@ export function createFiresideController(
 	const isOwner = computed(() => !!user.value && user.value.id === fireside.user.id);
 	const canManageCohosts = computed(
 		() => isOwner.value || fireside.hasPerms('fireside-collaborators')
-	);
-	const canCommunityFeature = computed(
-		() => !!fireside.community && canCommunityFeatureFireside(fireside.community)
-	);
-	const canCommunityEject = computed(
-		() => !!fireside.community && canCommunityEjectFireside(fireside.community)
 	);
 
 	const canEdit = computed(() => isOwner.value || fireside.hasPerms('fireside-edit'));
@@ -481,7 +539,7 @@ export function createFiresideController(
 				hosts,
 				listableHostIds,
 				hostBackgrounds,
-				{ isMuted }
+				{ isPreviewMode }
 			);
 		} else if (rtc.value) {
 			logger.info('Destroying old rtc');
@@ -593,38 +651,6 @@ export function createFiresideController(
 					logger.info('rtc was not set, nothing to do');
 				}
 			}
-		)
-	);
-
-	_unwatches.push(
-		watch(
-			hosts,
-			(newHosts, prevHosts) => {
-				logger.info('updating hosts in controller');
-
-				// We want to merge the streaming uids of our existing hosts with the new ones.
-				// Note: I'm not 100% sure why we want that. My guess is because we freeze the
-				// streaming uid on the RTCUser instances, but we still want to match against the
-				// same RTCHost with their new streaming uids?
-				for (const newHost of newHosts) {
-					const prevHost = prevHosts.find(i => i.user.id === newHost.user.id);
-					if (prevHost) {
-						logger.info(`merging streaming uids of host ${newHost.user.id}`);
-
-						// Transfer over all previously assigned uids to the new host.
-						const newUids = arrayUnique([...prevHost.uids, ...newHost.uids]);
-						arrayAssignAll(newHost.uids, newUids);
-					}
-				}
-
-				logger.info('new hosts after merging uids', JSON.stringify(newHosts));
-
-				if (rtc.value) {
-					logger.info('updating hosts in rtc');
-					setHosts(rtc.value, newHosts);
-				}
-			},
-			{ deep: true }
 		)
 	);
 
@@ -795,12 +821,13 @@ export function createFiresideController(
 	const controller = shallowReadonly({
 		fireside,
 		agoraStreamingInfo,
-		hosts,
+		hosts: shallowReadonly(hosts),
+		upsertHosts,
 		fetchedHostUserData,
 		listableHostIds,
 		hostBackgrounds,
 		stickerTargetController,
-		isMuted,
+		isPreviewMode,
 		rtc,
 		revalidateRTC,
 		assignHostBackgroundData,
@@ -830,8 +857,6 @@ export function createFiresideController(
 		canStream,
 		isOwner,
 		canManageCohosts,
-		canCommunityFeature,
-		canCommunityEject,
 		canEdit,
 		canPublish,
 		canExtinguish,
@@ -1011,6 +1036,9 @@ export function createFiresideController(
 								showInfoGrowl($gettext(`You've been kicked from the fireside.`));
 								router.push({ name: 'home' });
 							}
+						},
+						firesideSocketParams: {
+							fireside_viewing_mode: isPreviewMode ? 'preview' : 'full',
 						},
 					});
 
@@ -1246,6 +1274,7 @@ export async function updateFiresideData(
 		user,
 		status,
 		hosts,
+		upsertHosts,
 		chatUsers,
 		chatSettings,
 		rtc,
@@ -1315,10 +1344,7 @@ export async function updateFiresideData(
 		// After updating hosts need to check if we transitioned into or out of
 		// being a host.
 		const wasHost = hosts.value.some(i => i.user.id === user.value?.id);
-		hosts.value = _assignFollowingStateToHosts(
-			c,
-			_getHostsFromStreamingInfo(payload.streamingInfo)
-		);
+		upsertHosts(_getHostsFromStreamingInfo(payload.streamingInfo));
 		chatUsers.value?.assignFiresideHostData(hosts.value);
 		const isHost = hosts.value.some(i => i.user.id === user.value?.id);
 
@@ -1465,7 +1491,17 @@ function isListableHostStreaming(hosts: FiresideRTCHost[], listableHostIds: Set<
  * Returns `false` if there was an error, `true` if not.
  */
 async function _fetchForFiresideStreaming(c: FiresideController, { assignStatus = true }) {
-	const { fireside, status, agoraStreamingInfo, hosts, chatUsers, listableHostIds, logger } = c;
+	const {
+		fireside,
+		status,
+		agoraStreamingInfo,
+		hosts,
+		upsertHosts,
+		chatUsers,
+		listableHostIds,
+		logger,
+	} = c;
+
 	try {
 		const payload = await Api.sendRequest<FullStreamingPayload>(
 			`/web/fireside/fetch-for-streaming/${fireside.hash}`,
@@ -1495,7 +1531,7 @@ async function _fetchForFiresideStreaming(c: FiresideController, { assignStatus 
 		newStreamingInfo.streamingUid = payload.streamingUid;
 		agoraStreamingInfo.value = newStreamingInfo;
 
-		hosts.value = _assignFollowingStateToHosts(c, _getHostsFromStreamingInfo(payload));
+		upsertHosts(_getHostsFromStreamingInfo(payload));
 		chatUsers.value?.assignFiresideHostData(hosts.value);
 
 		listableHostIds.value = new Set(payload.listableHostIds ?? []);
@@ -1542,11 +1578,11 @@ function _getHostsFromStreamingInfo(streamingInfo: StreamingInfoPayload) {
 	const result: FiresideRTCHost[] = [];
 
 	for (const field of ['hosts', 'unlistedHosts'] as const) {
-		const isUnlisted = field === 'unlistedHosts';
 		if (!streamingInfo[field]) {
 			continue;
 		}
 
+		const isUnlisted = field === 'unlistedHosts';
 		const streamingUids = streamingInfo.streamingUids ?? {};
 		const streamingHostIds = streamingInfo.streamingHostIds ?? [];
 		const hostUsers = User.populate(streamingInfo[field] ?? []) as User[];
@@ -1566,17 +1602,4 @@ function _getHostsFromStreamingInfo(streamingInfo: StreamingInfoPayload) {
 	}
 
 	return result;
-}
-
-/**
- * Loops over hosts and sets their `is_following` state to whatever value we've
- * fetched previously.
- */
-function _assignFollowingStateToHosts(c: FiresideController, hosts: FiresideRTCHost[]) {
-	hosts.forEach(i => {
-		const { is_following, dogtags } = c.fetchedHostUserData.get(i.user.id) || {};
-		i.user.is_following = is_following === true;
-		i.user.dogtags = dogtags;
-	});
-	return hosts;
 }

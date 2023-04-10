@@ -4,11 +4,11 @@ import { RouterLink } from 'vue-router';
 import { html as termsTemplate } from '../../../../lib/terms/distribution-agreement/global.md';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatDate } from '../../../../_common/filters/date';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { UserStripeManagedAccount } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
+import AppFinancialsTosScroller from './AppFinancialsTosScroller.vue';
 
 const props = defineProps({
 	account: {
@@ -24,7 +24,6 @@ const emit = defineEmits({
 const { account } = toRefs(props);
 
 const checked = ref(false);
-const showAgreement = ref(false);
 
 const hasSigned = computed(() => account?.value && account.value.tos_signed_developer > 0);
 
@@ -43,45 +42,18 @@ const agreementLink = computed(() =>
 
 function onAccept() {
 	emit('accepted');
-	showAgreement.value = false;
 }
 </script>
 
 <template>
 	<fieldset>
 		<legend>
-			<span
+			<AppFinancialsCheckmark
 				v-if="hasSigned"
-				v-app-tooltip="$gettext(`You have completed this section.`)"
-				class="pull-right done-icon"
-			>
-				<AppJolticon icon="check" big />
-			</span>
-			<AppTranslate>Developer Distribution Agreement</AppTranslate>
+				:tooltip="$gettext(`You have completed this section.`)"
+			/>
+			{{ $gettext(`Developer Distribution Agreement`) }}
 		</legend>
-
-		<template v-if="!hasSigned && !showAgreement">
-			<div class="form-group">
-				<div class="small">
-					<div>
-						<AppTranslate>
-							If you would like to sell games on the Marketplace, you must accept the
-							Distribution Agreement.
-						</AppTranslate>
-					</div>
-					<div>
-						<RouterLink class="link-help" :to="{ name: 'landing.marketplace' }">
-							<AppTranslate>Learn more</AppTranslate>
-						</RouterLink>
-					</div>
-				</div>
-				<br />
-
-				<AppButton primary @click="showAgreement = true">
-					<AppTranslate>Show Developer Distribution Agreement</AppTranslate>
-				</AppButton>
-			</div>
-		</template>
 
 		<template v-if="hasSigned">
 			<div class="form-group">
@@ -95,7 +67,7 @@ function onAccept() {
 					</AppTranslate>
 					<br />
 					<AppLinkExternal :href="agreementLink">
-						<AppTranslate>View Distribution Agreement</AppTranslate>
+						{{ $gettext(`View Distribution Agreement`) }}
 					</AppLinkExternal>
 				</p>
 			</div>
@@ -104,39 +76,52 @@ function onAccept() {
 		<template v-if="hasSignedOldAgreement">
 			<div class="form-group">
 				<div class="alert alert-notice">
-					<AppTranslate>
-						You have signed an older version of the Distribution Agreement. To continue
-						selling your games without disruption, you must accept the new agreement.
-					</AppTranslate>
+					{{
+						$gettext(
+							`You have signed an older version of the Distribution Agreement. To continue selling your games without disruption, you must accept the new agreement.`
+						)
+					}}
 				</div>
-
-				<AppButton v-if="!showAgreement" primary @click="showAgreement = true">
-					<AppTranslate>Show New Distribution Agreement</AppTranslate>
-				</AppButton>
 			</div>
 		</template>
 
-		<div v-if="showAgreement" class="form-group">
-			<div class="tos-scroller">
+		<div v-if="!hasSigned || hasSignedOldAgreement" class="form-group">
+			<div class="small">
+				<div>
+					{{
+						$gettext(
+							`If you would like to sell games on the Marketplace, you must accept the Distribution Agreement.`
+						)
+					}}
+				</div>
+				<div>
+					<RouterLink class="link-help" :to="{ name: 'landing.marketplace' }">
+						{{ $gettext(`Learn more`) }}
+					</RouterLink>
+				</div>
+			</div>
+			<br />
+
+			<AppFinancialsTosScroller>
 				<!-- eslint-disable-next-line vue/no-v-html -->
 				<div v-html="termsTemplate" />
-			</div>
+			</AppFinancialsTosScroller>
 			<br />
 
 			<div class="checkbox">
 				<label>
 					<input v-model="checked" type="checkbox" />
-					<AppTranslate>
-						By checking this box and clicking the button below marked "I Agree," I agree
-						that I have read, understand, and agree to be bound by the terms of this
-						agreement.
-					</AppTranslate>
+					{{
+						$gettext(
+							`By checking this box and clicking the button below marked "I agree," I agree that I have read, understand, and agree to be bound by the terms of this agreement.`
+						)
+					}}
 				</label>
 			</div>
 			<br />
 
 			<AppButton primary solid :disabled="!checked" @click="onAccept()">
-				<AppTranslate>I Agree</AppTranslate>
+				{{ $gettext(`I agree`) }}
 			</AppButton>
 		</div>
 	</fieldset>

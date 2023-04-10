@@ -5,7 +5,7 @@
 	top: $shell-top-nav-height
 	bottom: 0
 	z-index: $zindex-shell-pane
-	width: $shell-content-sidebar-width
+	width: var(--shell-content-sidebar-width)
 	transition: transform 300ms $weak-ease-out
 	will-change: transform
 
@@ -16,7 +16,7 @@
 	// Span the remaining width on xs devices, leaving a 50px buffer to allow clicking the backdrop.
 	@media $media-xs
 		width: unset
-		max-width: $shell-content-sidebar-width
+		max-width: var(--shell-content-sidebar-width)
 		right: 48px
 
 .shell-pane-right

@@ -29,7 +29,7 @@ import { QuestStore } from './quest';
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
 type UnreadItemType = 'activity' | 'notifications';
-type TogglableLeftPane = '' | 'chat' | 'context' | 'library' | 'mobile';
+type TogglableLeftPane = '' | 'chat' | 'context' | 'library' | 'mobile' | 'backpack';
 
 export const AppStoreKey: InjectionKey<AppStore> = Symbol('app-store');
 
@@ -66,7 +66,6 @@ export function createAppStore({
 	/** Unread items in the notification feed. */
 	const unreadNotificationsCount = ref(0);
 	const hasNewFriendRequests = ref(false);
-	const hasNewUnlockedStickers = ref(false);
 
 	const notificationState = ref<ActivityFeedState>();
 
@@ -346,10 +345,6 @@ export function createAppStore({
 		hasNewFriendRequests.value = has;
 	}
 
-	function setHasNewUnlockedStickers(has: boolean) {
-		hasNewUnlockedStickers.value = has;
-	}
-
 	function _setBootstrapped() {
 		isBootstrapped.value = true;
 		_bootstrapResolver.value?.();
@@ -533,7 +528,6 @@ export function createAppStore({
 		unreadActivityCount,
 		unreadNotificationsCount,
 		hasNewFriendRequests,
-		hasNewUnlockedStickers,
 		notificationState,
 		mobileCbarShowing,
 		lastOpenLeftPane,
@@ -570,7 +564,6 @@ export function createAppStore({
 		incrementNotificationCount,
 		setNotificationCount,
 		setHasNewFriendRequests,
-		setHasNewUnlockedStickers,
 		joinCommunity,
 		leaveCommunity,
 		setActiveCommunity,

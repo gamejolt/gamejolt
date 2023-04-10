@@ -1,5 +1,15 @@
-import { InjectionKey, shallowRef } from '@vue/runtime-core';
-import { computed, ComputedRef, inject, provide, ref, Ref, ShallowRef, toRaw } from 'vue';
+import {
+	computed,
+	ComputedRef,
+	inject,
+	InjectionKey,
+	provide,
+	ref,
+	Ref,
+	shallowRef,
+	ShallowRef,
+	toRaw,
+} from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { ScrollController } from '../../scroll/AppScrollScroller.vue';
 import { isStickerTargetMine, StickerStore } from '../sticker-store';
@@ -50,9 +60,7 @@ export function createStickerLayerController(store: StickerStore) {
 	 */
 	const _isActiveLayer = computed(() => toRaw(store.activeLayer.value) === toRaw(c));
 
-	const isShowingDrawer = computed(
-		() => store.isDrawerOpen.value && !store.hideDrawer.value && _isActiveLayer.value
-	);
+	const isShowingDrawer = computed(() => store.isDrawerOpen.value && _isActiveLayer.value);
 
 	/**
 	 * Returns true if all sticker targets in the layer belong to a creator and

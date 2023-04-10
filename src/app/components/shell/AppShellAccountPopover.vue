@@ -15,13 +15,13 @@ import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { UserWallet } from '../../../_common/user/wallet/wallet.model';
 import { useAppStore } from '../../store';
 import { routeDashCreator } from '../../views/dashboard/creator/creator.route';
+import AppUserAvatarBubble from '../user/AppUserAvatarBubble.vue';
 import { UserTokenModal } from '../user/token-modal/token-modal.service';
 
-const { logout, hasNewUnlockedStickers } = useAppStore();
+const { logout } = useAppStore();
 const { user } = useCommonStore();
 const { isDark, setDark } = useThemeStore();
 
@@ -86,7 +86,7 @@ function quit() {
 		@hide="onHide()"
 	>
 		<a class="navbar-item navbar-avatar" :class="{ active: isShowing }">
-			<AppUserAvatarImg :user="user" />
+			<AppUserAvatarBubble :user="user" disable-link show-frame />
 		</a>
 
 		<template v-if="isShowing" #popover>
@@ -119,13 +119,6 @@ function quit() {
 						<div class="-quick-action-label">
 							{{ $gettext(`Creator HUD`) }}
 						</div>
-					</RouterLink>
-					<RouterLink class="-quick-action" :to="{ name: 'dash.stickers' }">
-						<AppJolticon class="-quick-action-icon" icon="sticker-filled" />
-						<div class="-quick-action-label">
-							<AppTranslate>Stickers</AppTranslate>
-						</div>
-						<div v-if="hasNewUnlockedStickers" class="-quick-action-new" />
 					</RouterLink>
 					<RouterLink
 						class="-quick-action"

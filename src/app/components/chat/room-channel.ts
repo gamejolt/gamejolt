@@ -7,7 +7,8 @@ import { Background } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
 import { MarkObject } from '../../../_common/content/mark-object';
-import { storeModel, storeModelList } from '../../../_common/model/model-store.service';
+import { Fireside } from '../../../_common/fireside/fireside.model';
+import { getModel, storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
@@ -27,6 +28,8 @@ export type ChatRoomChannel = ReturnType<typeof createChatRoomChannel>;
 interface JoinPayload {
 	room: UnknownModelData;
 	messages: UnknownModelData[];
+	fireside: UnknownModelData | null;
+	streaming_users: UnknownModelData[];
 }
 
 interface RoomPresence {
@@ -57,6 +60,25 @@ interface OwnerSyncPayload {
 	owner_id: number;
 }
 
+export interface PlaceStickerPayload {
+	stickerPlacement: StickerPlacement;
+	success?: boolean;
+	unlockedPack?: UnknownModelData;
+}
+
+interface StartFiresidePayload {
+	fireside: UnknownModelData;
+}
+
+interface UpdateFiresidePayload {
+	fireside: UnknownModelData | null;
+	streaming_users: UnknownModelData[];
+}
+
+interface FiresideSocketParams {
+	fireside_viewing_mode: string;
+}
+
 export function createChatRoomChannel(
 	client: ChatClient,
 	options: {
@@ -73,10 +95,15 @@ export function createChatRoomChannel(
 		 * logic.
 		 */
 		afterMemberKick?: (data: ChatRoomMemberKickedPayload) => void;
+
+		/**
+		 * Fireside socket params to pass to the socket controller.
+		 */
+		firesideSocketParams?: FiresideSocketParams;
 	}
 ) {
 	const { socketController } = client;
-	const { roomId, instanced, afterMemberKick } = options;
+	const { roomId, instanced, afterMemberKick, firesideSocketParams } = options;
 
 	// This is because the join set its up async, but all the functionality that
 	// attaches to this channel will be called after the room is set up. So we
@@ -87,7 +114,11 @@ export function createChatRoomChannel(
 	let _freezeMessageLimitRemovals = false;
 	let _queuedMessageLimit: number | undefined = undefined;
 
-	const channelController = createSocketChannelController(`room:${roomId}`, socketController);
+	const channelController = createSocketChannelController(
+		`room:${roomId}`,
+		socketController,
+		firesideSocketParams
+	);
 	channelController.listenTo('message', _onMsg);
 	channelController.listenTo('user_updated', _onUserUpdated);
 	channelController.listenTo('message_update', _onUpdateMsg);
@@ -99,6 +130,8 @@ export function createChatRoomChannel(
 	channelController.listenTo('owner_sync', _onOwnerSync);
 	channelController.listenTo('room_update', _onRoomUpdate);
 	channelController.listenTo('kick_member', _onMemberKicked);
+	channelController.listenTo('fireside_start', _onFiresideStart);
+	channelController.listenTo('fireside_update', _onFiresideUpdate);
 
 	const { channel, isClosed } = channelController;
 
@@ -119,6 +152,11 @@ export function createChatRoomChannel(
 			messages.reverse();
 			processNewChatOutput(room.value, messages, true);
 			room.value.messagesPopulated = true;
+
+			room.value.updateFireside(
+				response.fireside ? new Fireside(response.fireside) : null,
+				response.streaming_users.map(x => new ChatUser(x))
+			);
 
 			// Don't push for guests.
 			if (client.currentUser && client.isFocused) {
@@ -157,6 +195,7 @@ export function createChatRoomChannel(
 		pushStartTyping,
 		pushStopTyping,
 		pushPlaceSticker,
+		pushStartFireside,
 		getMemberWatchLock,
 		leave,
 	});
@@ -166,7 +205,14 @@ export function createChatRoomChannel(
 	}
 
 	function _onMsg(data: Partial<ChatMessage>) {
-		const message = storeModel(ChatMessage, data);
+		let message = getModel(ChatMessage, data.id!);
+		const storedMessage = message !== undefined;
+		message = storeModel(ChatMessage, data);
+
+		// If we already stored the message before, just update its data and return.
+		if (storedMessage) {
+			return;
+		}
 
 		// If we receive a message from the currently logged in user on this
 		// room channel, we ignore it.
@@ -182,7 +228,7 @@ export function createChatRoomChannel(
 			// assume that they wouldn't try and use two windows to send
 			// messages in the same room at the same time.
 			const hasQueuedMessages = room.value.queuedMessages.length > 0;
-			const hasReceivedMessage = room.value.messages.some(i => i.id === message.id);
+			const hasReceivedMessage = room.value.messages.some(i => i.id === message!.id);
 			if (hasQueuedMessages || hasReceivedMessage) {
 				return;
 			}
@@ -312,6 +358,18 @@ export function createChatRoomChannel(
 
 	function _onOwnerSync(data: OwnerSyncPayload) {
 		room.value.owner_id = data.owner_id;
+	}
+
+	function _onFiresideStart(data: StartFiresidePayload) {
+		room.value.updateFireside(new Fireside(data.fireside), []);
+	}
+
+	function _onFiresideUpdate(data: UpdateFiresidePayload) {
+		room.value.updateFireside(
+			// This returns `null` when the Fireside is expired.
+			data.fireside ? new Fireside(data.fireside) : null,
+			data.streaming_users.map(x => new ChatUser(x))
+		);
 	}
 
 	function _syncPresentUsers(presence: Presence) {
@@ -474,11 +532,7 @@ export function createChatRoomChannel(
 	 * Places a sticker on a particular target user in the room.
 	 */
 	function pushPlaceSticker(targetUserId: number, stickerData: any) {
-		interface Payload {
-			stickerPlacement: StickerPlacement;
-		}
-
-		return channelController.push<Payload>(
+		return channelController.push<PlaceStickerPayload>(
 			'place_sticker',
 			{
 				...stickerData,
@@ -488,6 +542,10 @@ export function createChatRoomChannel(
 			// error out)
 			5_000
 		);
+	}
+
+	function pushStartFireside() {
+		return channelController.push<StartFiresidePayload>('start_fireside');
 	}
 
 	// Currently this only works for firesides. But if you want to get

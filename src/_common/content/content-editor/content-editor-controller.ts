@@ -6,6 +6,8 @@ import { inject, InjectionKey, markRaw, nextTick, reactive, unref, watch } from 
 import { isImage } from '../../../utils/image';
 import { uuidv4 } from '../../../utils/uuid';
 import { MaybeRef } from '../../../utils/vue';
+import { GJ_EMOJIS } from '../../emoji/AppEmoji.vue';
+import { Emoji } from '../../emoji/emoji.model';
 import { MediaItem } from '../../media-item/media-item-model';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
@@ -41,20 +43,13 @@ export function createContentEditor(options: {
 	contentContext: ContentContext;
 	singleLineMode?: MaybeRef<boolean>;
 	disabled?: MaybeRef<boolean>;
-
-	/**
-	 * If this is passed in, we'll use these directly instead of generating from
-	 * the ContentContext.
-	 */
-	contextCapabilities?: ContextCapabilities;
+	contextCapabilities: ContextCapabilities;
 }): ContentEditorController {
 	const { contentContext, singleLineMode, disabled } = options;
 
 	const c = reactive(new ContentEditorController(contentContext)) as ContentEditorController;
 
-	c.contextCapabilities = markRaw(
-		options.contextCapabilities ?? ContextCapabilities.getForContext(c.contentContext)
-	);
+	c.contextCapabilities = markRaw(options.contextCapabilities);
 	c.schema = markRaw(generateEditorSchema(c.contextCapabilities));
 	c.plugins = markRaw(createEditorPlugins(c));
 
@@ -110,7 +105,6 @@ export class ContentEditorController {
 
 	stateCounter = 0;
 	isFocused = false;
-	emojiPanelVisible = false;
 
 	/**
 	 * Gets updated through the update-is-empty-plugin.
@@ -887,12 +881,22 @@ export function editorShowEmojiPanel(c: ContentEditorController) {
 	c._emojiPanel?.show();
 }
 
-export function editorInsertEmoji(c: ContentEditorController, emojiType: string) {
+export function editorInsertEmoji(
+	c: ContentEditorController,
+	emoji: Emoji | (typeof GJ_EMOJIS)[number]
+) {
 	if (!c.capabilities.emoji) {
 		return;
 	}
 
-	_insertNewInlineNode(c, schema => schema.nodes.gjEmoji.create({ type: emojiType }));
+	const options: any = {};
+	if (typeof emoji === 'string') {
+		options.type = emoji;
+	} else {
+		options.id = emoji.id;
+	}
+
+	_insertNewInlineNode(c, schema => schema.nodes.gjEmoji.create(options));
 }
 
 export function editorInsertGif(c: ContentEditorController, gif: SearchResult) {

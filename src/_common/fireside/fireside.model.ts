@@ -3,16 +3,19 @@ import { Api } from '../api/api.service';
 import { Collaboratable } from '../collaborator/collaboratable';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
+import { Screen } from '../screen/screen-service';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
 import { Sticker } from '../sticker/sticker.model';
 import { UserBlock } from '../user/block/block.model';
 import { User } from '../user/user.model';
 import { FiresideCommunity } from './community/community.model';
+import { FiresideRealm } from './realm/realm.model';
 import { FiresideRole } from './role/role.model';
 
 export class Fireside extends Collaboratable(Model) {
 	user!: User;
 	community_links: FiresideCommunity[] = [];
+	realms: FiresideRealm[] = [];
 	header_media_item: MediaItem | null = null;
 	role: FiresideRole | null = null;
 	user_block?: UserBlock | null;
@@ -57,6 +60,21 @@ export class Fireside extends Collaboratable(Model) {
 		return null;
 	}
 
+	get hasRealms() {
+		return this.realms.length !== 0;
+	}
+
+	get primaryRealmLink() {
+		if (this.hasRealms) {
+			return this.realms[0];
+		}
+		return null;
+	}
+
+	get realm() {
+		return this.primaryRealmLink?.realm ?? null;
+	}
+
 	constructor(data: any = {}) {
 		super(data);
 
@@ -78,6 +96,10 @@ export class Fireside extends Collaboratable(Model) {
 
 		if (data.community_links) {
 			this.community_links = FiresideCommunity.populate(data.community_links);
+		}
+
+		if (data.realms) {
+			this.realms = FiresideRealm.populate(data.realms);
 		}
 
 		if (data.sticker_counts) {
@@ -122,6 +144,16 @@ export class Fireside extends Collaboratable(Model) {
 		return this.$_save(`/web/dash/fireside/save/` + this.hash, 'fireside');
 	}
 
+	$saveWithRealms(realmIds: number[]) {
+		return this.$_save(`/web/dash/fireside/save/${this.hash}`, 'fireside', {
+			data: {
+				title: this.title,
+				realm_ids: realmIds,
+			},
+			allowComplexData: ['realm_ids'],
+		});
+	}
+
 	$publish({ autoFeature }: { autoFeature?: boolean } = {}) {
 		return this.$_save(`/web/dash/fireside/publish/` + this.hash, 'fireside', {
 			data: {
@@ -163,4 +195,12 @@ export function inviteFiresideHost(fireside: Fireside, hostId: number) {
 
 export function removeFiresideHost(fireside: Fireside, hostId: number) {
 	return Api.sendRequest(`/web/dash/fireside/remove-host/${fireside.id}`, { host_id: hostId });
+}
+
+export function canDeviceViewFiresides() {
+	return Screen.isDesktop;
+}
+
+export function canDeviceCreateFiresides() {
+	return canDeviceViewFiresides();
 }

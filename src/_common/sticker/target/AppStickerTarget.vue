@@ -18,8 +18,8 @@ import { StickerLayerItem } from '../layer/layer-item';
 import { StickerPlacement } from '../placement/placement.model';
 import {
 	assignStickerStoreItem,
+	closeStickerDrawer,
 	PointerPosition,
-	setStickerDrawerOpen,
 	useStickerStore,
 } from '../sticker-store';
 import { getStickerModelResourceName, StickerTargetController } from './target-controller';
@@ -89,7 +89,7 @@ onBeforeUnmount(() => {
 	// Close the sticker drawer if the placement (or drawer itself) has become
 	// invalid.
 	if (wasAttemptingPlacement || !hasOtherLayers) {
-		setStickerDrawerOpen(stickerStore, false, null);
+		closeStickerDrawer(stickerStore);
 	}
 });
 
@@ -165,6 +165,7 @@ function onPlaceDrawerSticker(pointer: PointerPosition) {
 		position_y: (pointer.y - rect.y) / rect.height,
 		rotation: Math.random(),
 		sticker: storeSticker.value,
+		target_data: controller.value.targetData.value,
 	});
 
 	assignStickerStoreItem(stickerStore, stickerPlacement, controller.value);

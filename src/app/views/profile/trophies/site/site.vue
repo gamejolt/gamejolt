@@ -7,7 +7,7 @@ import { populateTrophies } from '../../../../../_common/user/trophy/trophy-util
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppTrophyCard from '../../../../components/trophy/card/card.vue';
 import AppTrophyListPaged from '../../../../components/trophy/list/paged/paged.vue';
-import { useProfileRouteController } from '../../profile.vue';
+import { useProfileRouteController } from '../../RouteProfile.vue';
 
 @Options({
 	name: 'RouteProfileTrophiesSite',

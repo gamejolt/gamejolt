@@ -29,7 +29,7 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 
 	readonly formatNumber = formatNumber;
 	readonly imageJolt = imageJolt;
-	readonly assetPaths = import.meta.globEager('./*.svg');
+	readonly assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
 
 	get routeTitle() {
 		return this.$gettext(`Game API`);
@@ -114,7 +114,7 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 					<div class="col-lg-4">
 						<div class="landing-graphic">
 							<AppThemeSvg
-								:src="assetPaths['./leaderboards.svg'].default"
+								:src="assetPaths['./leaderboards.svg']"
 								alt="Leaderboards"
 							/>
 						</div>
@@ -130,10 +130,7 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 
 					<div class="col-lg-4">
 						<div class="landing-graphic">
-							<AppThemeSvg
-								:src="assetPaths['./trophies.svg'].default"
-								alt="Trophies"
-							/>
+							<AppThemeSvg :src="assetPaths['./trophies.svg']" alt="Trophies" />
 						</div>
 
 						<h4 class="text-center">Trophies</h4>
@@ -147,7 +144,7 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 					<div class="col-lg-4">
 						<div class="landing-graphic">
 							<AppThemeSvg
-								:src="assetPaths['./data-storage.svg'].default"
+								:src="assetPaths['./data-storage.svg']"
 								alt="Data Storage"
 							/>
 						</div>
@@ -165,10 +162,7 @@ export default class RouteLandingGameApi extends BaseRouteComponent {
 
 					<div class="col-lg-4 col-centered-lg">
 						<div class="landing-graphic">
-							<AppThemeSvg
-								:src="assetPaths['./sessions.svg'].default"
-								alt="Sessions"
-							/>
+							<AppThemeSvg :src="assetPaths['./sessions.svg']" alt="Sessions" />
 						</div>
 
 						<h4 class="text-center">Sessions</h4>

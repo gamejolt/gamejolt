@@ -7,6 +7,7 @@ import AppCard from '../../../../../_common/card/AppCard.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatCurrency } from '../../../../../_common/filters/currency';
 import { formatNumber } from '../../../../../_common/filters/number';
+import { imageGems } from '../../../../../_common/img/images';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import {
@@ -19,7 +20,6 @@ import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserWallet } from '../../../../../_common/user/wallet/wallet.model';
 import { showWalletWithdrawModal } from '../../../../components/wallet/withdraw/withdraw-modal.service';
-import { imageGems } from '../../../../img/images';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 import marketplaceImage from './marketplace.png';
 
@@ -155,7 +155,7 @@ async function withdraw() {
 							v-if="gemWallet.available_balance >= gemWallet.minimum_payout_balance"
 						>
 							<AppSpacer vertical :scale="2" />
-							<AppAlertBox icon="thumbs-up" color="highlight">
+							<AppAlertBox icon="thumbs-up" color="primary">
 								<AppTranslate>
 									Party time! 🎆 🤸 You've reached the minimum withdrawal amount.
 									We'll be depositing your gems into your preferred payment method
@@ -341,7 +341,7 @@ async function withdraw() {
 				</AppCard>
 			</template>
 
-			<AppAlertBox v-if="marketplaceRevenuePendingWithdraw > 0" color="highlight">
+			<AppAlertBox v-if="marketplaceRevenuePendingWithdraw > 0" color="primary">
 				<div v-translate="{ amount: formatCurrency(marketplaceRevenuePendingWithdraw) }">
 					You have pending withdrawals amounting to
 					<b>%{ amount }</b>.

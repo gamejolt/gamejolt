@@ -1,5 +1,10 @@
+import { defineAsyncComponent } from 'vue';
 import { bootstrapCommon } from '../_common/bootstrap';
+import { setChatInviteComponent } from '../_common/content/content-viewer/components/chat-invite';
 import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
+import { addModalBackdropCheck } from '../_common/modal/AppModal.vue';
+import checkPayloadActions from '../_common/payload/payload-actions.service';
+import { assignPayloadActionsChecker } from '../_common/payload/payload-service';
 import { Registry } from '../_common/registry/registry.service';
 import { Scroll } from '../_common/scroll/scroll.service';
 import { createSidebarStore, SidebarStoreKey } from '../_common/sidebar/sidebar.store';
@@ -55,6 +60,17 @@ export async function createApp() {
 		await bootstrapClient(app, appStore, commonStore);
 	}
 
+	// The content viewer component that renders this lives in _common, but it
+	// needs to render a component from app. Set the component it should render
+	// here.
+	const AppContentChatInview = defineAsyncComponent(
+		() => import('./components/content/components/AppContentChatInvite.vue')
+	);
+	setChatInviteComponent(AppContentChatInview);
+
+	// PayloadService doesn't play nice with importing certain things.
+	assignPayloadActionsChecker(checkPayloadActions);
+
 	GamePlayModal.init({ canMinimize: true });
 
 	Registry.setConfig('Game', { maxItems: 100 });
@@ -63,6 +79,9 @@ export async function createApp() {
 
 	// The height of the top nav bar.
 	Scroll.setOffsetTop(56);
+
+	// Set up the modals to not dismiss when sticker drawer is active.
+	addModalBackdropCheck(() => !stickerStore.isDrawerOpen.value);
 
 	return { app, router };
 }

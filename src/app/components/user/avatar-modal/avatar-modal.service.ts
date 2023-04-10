@@ -5,7 +5,7 @@ export class UserAvatarModal {
 	static async show() {
 		return await showModal<void>({
 			modalId: 'UserAvatar',
-			component: defineAsyncComponent(() => import('./avatar-modal.vue')),
+			component: defineAsyncComponent(() => import('./UserAvatarModal.vue')),
 			size: 'sm',
 			noBackdropClose: true,
 		});

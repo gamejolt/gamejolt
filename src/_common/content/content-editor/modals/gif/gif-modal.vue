@@ -3,12 +3,15 @@ import { nextTick } from 'vue';
 import { mixins, Options } from 'vue-property-decorator';
 import { shallowSetup } from '../../../../../utils/vue';
 import { Api } from '../../../../api/api.service';
+import { showErrorGrowl } from '../../../../growls/growls.service';
+import AppJolticon from '../../../../jolticon/AppJolticon.vue';
 import AppLoading from '../../../../loading/AppLoading.vue';
 import { AppModalInterface } from '../../../../modal/AppModal.vue';
 import { BaseModal } from '../../../../modal/base';
 import { Ruler } from '../../../../ruler/ruler-service';
 import { Screen } from '../../../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../../../scroll/AppScrollScroller.vue';
+import { $gettext } from '../../../../translate/translate.service';
 import { Category, ContentEditorGifModal, SearchResult } from './gif-modal.service';
 import mascotImage from './mascot-complete.png';
 
@@ -29,6 +32,8 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 	// To make sure parallel search requests don't step on each other, this keeps the last term, so all previous searches will cancel.
 	currentSearchTerm = '';
 	currentSearchPage = 0;
+	maxPages = 3;
+	perPage = 12;
 	isLastPage = false;
 	hasError = false;
 	contentScroller = shallowSetup(() => createScroller());
@@ -50,11 +55,15 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 	}
 
 	get reachedLastPage() {
-		return this.currentSearchPage === 3 || this.isLastPage;
+		return this.currentSearchPage === this.maxPages || this.isLastPage;
 	}
 
 	get shouldShowMoreButton() {
 		return Screen.isXs && this.searchValue.length > 0 && !this.isLoading;
+	}
+
+	get isFavorites() {
+		return this.currentSearchTerm.toLowerCase().trim() === 'favorites';
 	}
 
 	async mounted() {
@@ -102,8 +111,16 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 		try {
 			const payload = await Api.sendRequest(url, undefined, { detach: true });
 			if (this.currentSearchTerm === term) {
+				if (payload.maxPages) {
+					this.maxPages = payload.maxPages;
+				}
+				if (payload.perPage) {
+					this.perPage = payload.perPage;
+				}
+
 				if (payload.results) {
-					this.isLastPage = payload.results.length === 0;
+					this.isLastPage =
+						payload.results.length === 0 || payload.results.length < this.perPage;
 
 					for (const result of payload.results) {
 						if (this.searchResults.every(i => i.id !== result.id)) {
@@ -114,7 +131,13 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 						this.searchResults[i].index = i;
 					}
 				}
+
 				this.isLoading = false;
+
+				// After getting more items, wait for items to build and check
+				// if we should load again.
+				await nextTick();
+				this.onContainerScroll();
 			}
 		} catch (error) {
 			console.error(error);
@@ -243,6 +266,25 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 		this.loadingCategories = true;
 		this.populateCategories();
 	}
+
+	async toggleFavorite(searchResult: SearchResult) {
+		const toggleTo = !searchResult.favorite;
+		searchResult.favorite = toggleTo;
+
+		const url =
+			`/web/content/tenor/` +
+			(toggleTo ? 'add-favorite' : 'remove-favorite') +
+			`/${searchResult.id}`;
+		const response = await Api.sendRequest(url, {});
+		if (!response.success) {
+			showErrorGrowl(
+				$gettext(
+					`Sorry, you have reached the maximum number of favorite GIFs. To add more, please remove some from your Favorites list.`
+				)
+			);
+			searchResult.favorite = !toggleTo;
+		}
+	}
 }
 </script>
 
@@ -312,7 +354,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 							@click="onClickCategory(category.searchterm)"
 						>
 							<div class="category">
-								<img :src="category.previewGif" />
+								<img v-if="category.previewGif" :src="category.previewGif" />
 								<div class="category-text">
 									<span>{{ category.searchterm }}</span>
 								</div>
@@ -332,6 +374,16 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 							>
 								<div class="search-result">
 									<img :src="searchResult.previewGif" />
+									<div
+										class="search-result-favorite-icon"
+										@click.stop="toggleFavorite(searchResult)"
+									>
+										<AppJolticon
+											:icon="searchResult.favorite ? 'heart-filled' : 'heart'"
+											big
+											:notice="searchResult.favorite"
+										/>
+									</div>
 								</div>
 							</div>
 							<template v-if="isLoading">
@@ -353,7 +405,16 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 						<div v-if="reachedLastPage" class="end-of-scroll">
 							<img :src="mascotImage" title="♥" />
 							<span class="text-muted">
-								These are not the GIFs you are looking for!
+								<template v-if="isFavorites">
+									{{
+										$gettext(
+											`Looks like you'll need to favorite some more GIFs!`
+										)
+									}}
+								</template>
+								<template v-else>
+									{{ $gettext(`These are not the GIFs you are looking for!`) }}
+								</template>
 							</span>
 						</div>
 						<div v-else-if="shouldShowMoreButton" class="more-container">

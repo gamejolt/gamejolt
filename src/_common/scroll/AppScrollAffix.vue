@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, nextTick, PropType, ref, toRefs } from 'vue';
 import { Ruler } from '../ruler/ruler-service';
 import { onScreenResize } from '../screen/screen-service';
 import { useEventSubscription } from '../system/event/event-topic';
@@ -41,7 +41,7 @@ const height = ref(0);
 const InviewConfig = _createInviewConfig();
 
 // If we resized, then the element dimensions most likely changed.
-useEventSubscription(onScreenResize, () => {
+useEventSubscription(onScreenResize, async () => {
 	// Always save dimensions, even if disabled, since we need to make
 	// sure that if they enable at any point we're ready to affix it
 	// properly.
@@ -51,6 +51,7 @@ useEventSubscription(onScreenResize, () => {
 
 	// Pull from the placeholder which should be the source of the
 	// true width now.
+	await nextTick();
 	if (placeholder.value) {
 		width.value = Ruler.outerWidth(placeholder.value);
 	}
@@ -135,7 +136,7 @@ function _createInviewConfig() {
 			}"
 			:class="cssClasses"
 		>
-			<slot />
+			<slot :affixed="isAffixed" />
 		</div>
 	</AppScrollInview>
 </template>

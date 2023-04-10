@@ -9,6 +9,7 @@ import { Background } from '../../../../_common/background/background.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
+import { ContextCapabilities } from '../../../../_common/content/content-context';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
@@ -41,9 +42,7 @@ import {
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
-import { LinkedAccount } from '../../../../_common/linked-account/linked-account.model';
 import { MediaItem } from '../../../../_common/media-item/media-item-model';
-import { Popper } from '../../../../_common/popper/popper.service';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -53,20 +52,15 @@ import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import {
-	$gettext,
-	$gettextInterpolate,
-	$ngettext,
-} from '../../../../_common/translate/translate.service';
+import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppPostTargets from '../../post/AppPostTargets.vue';
-import { POST_TARGET_HEIGHT } from '../../post/target/AppPostTarget.vue';
+import AppContentTargets from '../../content/AppContentTargets.vue';
+import { CONTENT_TARGET_HEIGHT } from '../../content/target/AppContentTarget.vue';
 import AppFormPostMedia from './_media/media.vue';
 import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
 type FormPostModel = FiresidePost & {
 	mediaItemIds: number[];
-	publishToPlatforms: number[] | null;
 	key_group_ids: number[];
 	video_id: number;
 	attached_communities: { community_id: number; channel_id: number }[];
@@ -129,7 +123,7 @@ const { defaultCommunity, defaultChannel, defaultRealm, overlay, model } = toRef
 const { user } = useCommonStore();
 
 const wasPublished = ref(false);
-const attachmentType = ref('');
+const attachmentType = ref<typeof FiresidePost.TYPE_VIDEO | typeof FiresidePost.TYPE_MEDIA>();
 const enabledAttachments = ref(false);
 const longEnabled = ref(false);
 const maxFilesize = ref(0);
@@ -137,10 +131,11 @@ const maxWidth = ref(0);
 const maxHeight = ref(0);
 const now = ref(0);
 
+const leadContentCapabilities = ref(ContextCapabilities.getPlaceholder());
+const articleContentCapabilities = ref(ContextCapabilities.getPlaceholder());
+
 const keyGroups = ref<KeyGroup[]>([]);
 const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] } | null>(null);
-const linkedAccounts = ref<LinkedAccount[]>([]);
-const publishToPlatforms = ref<number[] | null>(null);
 
 const maxCommunities = ref(0);
 const attachedCommunities = ref<{ community: Community; channel: CommunityChannel }[]>([]);
@@ -160,7 +155,6 @@ const articleLengthLimit = ref(50_000);
 const isUploadingPastedImage = ref(false);
 const scrollingKey = ref(1);
 const uploadingVideoStatus = ref(VideoStatus.IDLE);
-const hasChangedBackground = ref(false);
 const isShowingMoreOptions = ref(false);
 
 const form: FormController<FormPostModel> = createForm({
@@ -183,9 +177,11 @@ const form: FormController<FormPostModel> = createForm({
 			enableVideo();
 		} else if (_model.hasMedia) {
 			enableImages();
-		} else if (attachmentType.value !== '') {
+		} else if (attachmentType.value) {
 			enabledAttachments.value = true;
-		} else if (form.formModel.background) {
+		}
+
+		if (form.formModel.background) {
 			// Assign the background_id directly instead of calling
 			// [assignBackgroundId], otherwise it'll always assign `null` as we
 			// haven't loaded our eligible backgrounds yet.
@@ -236,6 +232,14 @@ const form: FormController<FormPostModel> = createForm({
 	onLoad(payload) {
 		// Pull any post information that may not already be loaded in.
 		form.formModel.article_content = payload.post.article_content;
+
+		leadContentCapabilities.value = ContextCapabilities.fromPayloadList(
+			payload.leadContentCapabilities
+		);
+
+		articleContentCapabilities.value = ContextCapabilities.fromPayloadList(
+			payload.articleContentCapabilities
+		);
 
 		keyGroups.value = KeyGroup.populate(payload.keyGroups);
 		wasPublished.value = payload.wasPublished;
@@ -294,17 +298,6 @@ const form: FormController<FormPostModel> = createForm({
 				community => !community.isBlocked && community.postableChannels.length > 0
 			);
 		}
-
-		linkedAccounts.value = LinkedAccount.populate(payload.linkedAccounts);
-		publishToPlatforms.value = payload.publishToPlatforms || null;
-
-		if (publishToPlatforms.value) {
-			for (const accountId of publishToPlatforms.value) {
-				(form.formModel[
-					`linked_account_${accountId}` as keyof typeof form.formModel
-				] as any) = true;
-			}
-		}
 	},
 
 	onSubmitError(payload: any) {
@@ -355,13 +348,7 @@ const form: FormController<FormPostModel> = createForm({
 			form.formModel.article_content = '';
 		}
 
-		form.formModel.publishToPlatforms = publishToPlatforms.value;
-
 		form.formModel.poll_duration = pollDuration.value * 60; // site-api expects duration in seconds.
-
-		if (form.formModel.hasAnyMedia) {
-			assignBackgroundId(null);
-		}
 
 		return form.formModel.$save();
 	},
@@ -381,47 +368,6 @@ const mainActionText = computed(() => {
 	} else {
 		return $gettext('Post');
 	}
-});
-
-const backgroundsDisabledText = computed(() => {
-	if (!form.formModel.hasAnyMedia) {
-		return undefined;
-	}
-
-	var vidCount = 0;
-	var imgCount = 0;
-	const media = [...form.formModel.media, ...form.formModel.videos];
-	for (const item of media) {
-		if (item instanceof FiresidePostVideo) {
-			++vidCount;
-			if (vidCount > 1) {
-				break;
-			}
-		} else if (item instanceof MediaItem) {
-			++imgCount;
-			if (imgCount > 1) {
-				break;
-			}
-		}
-	}
-
-	if (vidCount > 0) {
-		return $ngettext(
-			`Remove your video to add a background`,
-			`Remove your videos to add a background`,
-			vidCount
-		);
-	}
-
-	if (imgCount > 0) {
-		return $ngettext(
-			`Remove your image to add a background`,
-			`Remove your images to add a background`,
-			vidCount
-		);
-	}
-
-	return undefined;
 });
 
 const isEditing = computed(() => wasPublished.value || isSavedDraftPost.value);
@@ -474,28 +420,9 @@ const scheduledTimezoneOffset = computed(() => {
 
 const isScheduling = computed(() => form.formModel.isScheduled);
 
-const isPublishingToPlatforms = computed(
-	() => !wasPublished.value && publishToPlatforms.value !== null
-);
-
-const hasPublishedToPlatforms = computed(
-	() => wasPublished.value && publishToPlatforms.value !== null
-);
-
 const leadLengthPercent = computed(
 	() => 100 - (form.formModel.leadLength / leadLengthLimit.value) * 100
 );
-
-const platformRestrictions = computed(() => {
-	// Platform restriction errors returned from server are prefixed with
-	// 'platform-restriction-'.
-	return Object.keys(form.serverErrors)
-		.filter(i => i.indexOf('platform-restriction-') === 0)
-		.map(i => {
-			const key = i.substr('platform-restriction-'.length);
-			return getPlatformRestrictionTitle(key);
-		});
-});
 
 const canAddCommunity = computed(
 	() =>
@@ -593,31 +520,6 @@ watch(incompleteDefaultCommunity, () => {
 	}
 });
 
-watch(
-	() => form.formModel.hasAnyMedia,
-	() => {
-		if (!form.isLoaded) {
-			return;
-		}
-
-		let id: number | null = null;
-
-		if (!form.formModel.hasAnyMedia) {
-			// If a post is being edited and already has a background, we should
-			// default back to that unless they specifically changed the
-			// background themselves.
-			const usablePostBackgroundId = hasChangedBackground.value
-				? null
-				: model.value.background?.id || null;
-
-			// Use the post background, if applicable, or try finding a
-			// background that matches our Pref.
-			id = usablePostBackgroundId ?? _getMatchingBackgroundIdFromPref();
-		}
-		assignBackgroundId(id);
-	}
-);
-
 // When toggling the "Comments enabled?" checkbox back and forth.
 watch(
 	() => form.formModel._comments_enabled,
@@ -636,11 +538,21 @@ watch(
 	}
 );
 
-function attachIncompleteCommunity(community: Community, channel: CommunityChannel) {
+function attachIncompleteCommunity(community: Community, channel?: CommunityChannel) {
+	if (!channel) {
+		console.warn('Attempt to attach a community without a channel');
+		return;
+	}
+
 	attachCommunity(community, channel, false);
 }
 
-function attachCommunity(community: Community, channel: CommunityChannel, append = true) {
+function attachCommunity(community: Community, channel?: CommunityChannel, append = true) {
+	if (!channel) {
+		console.warn('Attempt to attach a community without a channel');
+		return;
+	}
+
 	// Do nothing if that community is already attached.
 	if (attachedCommunities.value.find(i => i.community.id === community.id)) {
 		return;
@@ -655,8 +567,6 @@ function attachCommunity(community: Community, channel: CommunityChannel, append
 }
 
 function attachRealm(realm: Realm, append = true) {
-	Popper.hideAll();
-
 	// Do nothing if that realm is already attached.
 	if (attachedRealms.value.find(i => i.id === realm.id)) {
 		return;
@@ -679,17 +589,15 @@ async function scrollToAdd() {
 }
 
 function removeCommunity(community: Community) {
-	const idx = attachedCommunities.value.findIndex(i => i.community.id === community.id);
-	if (idx === -1) {
-		console.warn('Attempted to remove a community that is not attached');
-		return;
-	}
-
-	attachedCommunities.value.splice(idx, 1);
+	arrayRemove(attachedCommunities.value, i => i.community.id === community.id, {
+		onMissing: () => console.warn('Attempted to remove a community that is not attached'),
+	});
 }
 
 function removeRealm(realm: Realm) {
-	arrayRemove(attachedRealms.value, i => i.id === realm.id);
+	arrayRemove(attachedRealms.value, i => i.id === realm.id, {
+		onMissing: () => console.warn('Attempted to remove a realm that is not attached'),
+	});
 }
 
 function onDraftSubmit() {
@@ -753,7 +661,7 @@ function enableVideo() {
 
 function disableAttachments() {
 	enabledAttachments.value = false;
-	attachmentType.value = '';
+	attachmentType.value = undefined;
 
 	form.formModel.media = [];
 	form.formModel.videos = [];
@@ -830,72 +738,6 @@ function removeSchedule() {
 	form.formModel.scheduled_for_timezone = null;
 	form.formModel.scheduled_for = null;
 	form.changed = true;
-}
-
-async function addPublishingToPlatforms() {
-	publishToPlatforms.value = [];
-}
-
-function removePublishingToPlatforms() {
-	publishToPlatforms.value = null;
-}
-
-function isLinkedAccountActive(id: number) {
-	return publishToPlatforms.value && publishToPlatforms.value.indexOf(id) !== -1;
-}
-
-async function changeLinkedAccount(id: number) {
-	if (!publishToPlatforms.value) {
-		return;
-	}
-
-	const isActive = isLinkedAccountActive(id);
-	if (isActive) {
-		arrayRemove(publishToPlatforms.value, i => i === id);
-	} else {
-		publishToPlatforms.value.push(id);
-	}
-
-	form.changed = true;
-}
-
-function getLinkedAccountDisplayName(account: LinkedAccount) {
-	switch (account.provider) {
-		case LinkedAccount.PROVIDER_FACEBOOK:
-			return account.facebookSelectedPage && account.facebookSelectedPage.name;
-
-		case LinkedAccount.PROVIDER_TUMBLR:
-			return account.tumblrSelectedBlog && account.tumblrSelectedBlog.title;
-
-		default:
-			return account.name;
-	}
-}
-
-function getPlatformRestrictionTitle(restriction: string) {
-	switch (restriction) {
-		case 'twitter-lead-too-long':
-			return $gettext(`Your post lead is too long for a tweet.`);
-		case 'twitter-gif-file-size-too-large':
-			return $gettext(`Twitter doesn't allow GIFs larger than 15MB in filesize.`);
-		case 'twitter-too-many-media-items-1-animation':
-			return $gettext(`Twitter only allows one GIF per tweet.`);
-		case 'twitter-too-many-media-items-4-images':
-			return $gettext(`Twitter only allows a max of 4 images per tweet.`);
-		case 'twitter-image-file-size-too-large':
-			return $gettext(`Twitter doesn't allow images larger than 5MB in filesize.`);
-		case 'facebook-media-item-photo-too-large':
-			return $gettext(`Facebook doesn't allow images larger than 10MB in filesize.`);
-		case 'tumblr-media-item-photo-too-large':
-			return $gettext(`Tumblr doesn't allow images larger than 10MB in filesize.`);
-	}
-
-	// We do not have the restriction listed here, try and make the topic
-	// somewhat readable.
-	return $gettextInterpolate(
-		`Your post can't be published to the platforms you've selected. Error: %{ error }`,
-		{ error: restriction }
-	);
 }
 
 function timezoneByName(timezone: string) {
@@ -1101,12 +943,18 @@ function _getMatchingBackgroundIdFromPref() {
 		>
 			<AppFormControlContent
 				content-context="fireside-post-lead"
+				:capabilities="leadContentCapabilities"
 				autofocus
 				:placeholder="
 					!longEnabled
 						? $gettext(`What's new?`)
 						: $gettext(`Write a summary for your article...`)
 				"
+				:model-data="{
+					type: 'resource',
+					resource: 'Fireside_Post',
+					resourceId: model.id,
+				}"
 				:model-id="model.id"
 				:min-height="72"
 				:validators="[validateContentRequired(), validateContentMaxLength(leadLengthLimit)]"
@@ -1140,8 +988,6 @@ function _getMatchingBackgroundIdFromPref() {
 					<AppFormControlBackground
 						:backgrounds="backgrounds"
 						:tile-size="40"
-						:disabled-text="backgroundsDisabledText"
-						:disabled="!!backgroundsDisabledText"
 						@changed="onBackgroundChanged"
 					/>
 				</AppFormGroup>
@@ -1166,6 +1012,12 @@ function _getMatchingBackgroundIdFromPref() {
 					<AppFormControlContent
 						:placeholder="$gettext(`Write your article here...`)"
 						content-context="fireside-post-article"
+						:capabilities="articleContentCapabilities"
+						:model-data="{
+							type: 'resource',
+							resource: 'Fireside_Post',
+							resourceId: model.id,
+						}"
 						:model-id="model.id"
 						:validators="[
 							validateContentNoActiveUploads(),
@@ -1413,75 +1265,6 @@ function _getMatchingBackgroundIdFromPref() {
 		</template>
 
 		<!-- Other platforms -->
-		<div v-if="isPublishingToPlatforms" class="well fill-offset full-bleed">
-			<fieldset>
-				<AppFormLegend compact deletable @delete="removePublishingToPlatforms()">
-					<AppTranslate>Publish your post to other platforms</AppTranslate>
-				</AppFormLegend>
-
-				<div v-if="!linkedAccounts.length" class="alert">
-					<AppTranslate>You can publish this post to other platforms!</AppTranslate>
-					{{ ' ' }}
-					<AppTranslate v-if="!model.game">
-						Set up your linked accounts in your user account.
-					</AppTranslate>
-					<AppTranslate v-else>
-						Set up your linked accounts either in your game dashboard, or your user
-						account.
-					</AppTranslate>
-				</div>
-				<div v-else class="-linked-accounts">
-					<AppFormGroup
-						v-for="account of linkedAccounts"
-						:key="account.id"
-						:name="`linked_account_${account.id}`"
-						:label="$gettext(`Linked Account`)"
-						hide-label
-					>
-						<div class="-linked-account">
-							<div class="-linked-account-icon">
-								<AppJolticon
-									v-app-tooltip="account.providerDisplayName"
-									:icon="account.icon"
-									big
-								/>
-							</div>
-
-							<div class="-linked-account-label">
-								{{ getLinkedAccountDisplayName(account) }}
-							</div>
-
-							<div class="-linked-account-toggle">
-								<AppFormControlToggle @changed="changeLinkedAccount(account.id)" />
-							</div>
-						</div>
-					</AppFormGroup>
-				</div>
-			</fieldset>
-		</div>
-
-		<div v-if="hasPublishedToPlatforms" class="alert">
-			<strong>
-				<AppTranslate>This post has been published to other platforms.</AppTranslate>
-			</strong>
-			<AppTranslate>
-				Any edits made to this post will not be reflected on those other platforms.
-			</AppTranslate>
-		</div>
-
-		<template v-if="platformRestrictions.length">
-			<div
-				v-for="restriction of platformRestrictions"
-				:key="restriction"
-				class="alert alert-notice full-bleed anim-fade-in"
-			>
-				<strong>
-					{{ restriction }}
-				</strong>
-			</div>
-		</template>
-
-		<!-- Other platforms -->
 		<div v-if="isShowingMoreOptions" class="well fill-offset full-bleed">
 			<fieldset>
 				<AppFormLegend compact>
@@ -1517,13 +1300,15 @@ function _getMatchingBackgroundIdFromPref() {
 
 		<!-- Communities/Realms -->
 		<template v-if="form.isLoaded">
-			<AppPostTargets
-				class="-post-targets"
+			<AppContentTargets
+				class="-content-targets"
 				:communities="attachedCommunities"
 				:realms="attachedRealms"
 				:targetable-communities="possibleCommunities"
 				:can-add-community="canAddCommunity"
 				:can-add-realm="canAddRealm"
+				:max-communities="maxCommunities"
+				:max-realms="maxRealms"
 				:incomplete-community="incompleteDefaultCommunity || undefined"
 				:can-remove-communities="!wasPublished"
 				can-remove-realms
@@ -1531,13 +1316,14 @@ function _getMatchingBackgroundIdFromPref() {
 				@remove-realm="removeRealm"
 				@select-community="attachCommunity"
 				@select-incomplete-community="attachIncompleteCommunity"
+				@select-realm="attachRealm"
 			/>
 		</template>
 		<template v-else>
-			<div class="-post-targets-placeholder">
+			<div class="-content-targets-placeholder">
 				<div
-					class="-post-target-placeholder"
-					:style="{ height: POST_TARGET_HEIGHT + 'px' }"
+					class="-content-target-placeholder"
+					:style="{ height: CONTENT_TARGET_HEIGHT + 'px' }"
 				/>
 			</div>
 		</template>
@@ -1649,16 +1435,6 @@ function _getMatchingBackgroundIdFromPref() {
 					circle
 					icon="key-diagonal"
 					@click="enableAccessPermissions()"
-				/>
-
-				<AppButton
-					v-if="!wasPublished && !isPublishingToPlatforms"
-					v-app-tooltip="$gettext(`Publish to other platforms`)"
-					sparse
-					trans
-					circle
-					icon="share-airplane"
-					@click="addPublishingToPlatforms()"
 				/>
 
 				<AppButton
@@ -1813,13 +1589,13 @@ function _getMatchingBackgroundIdFromPref() {
 .-linked-account-toggle
 	flex: none
 
-.-post-targets
+.-content-targets
 	margin: 10px 0
 
-.-post-targets-placeholder
+.-content-targets-placeholder
 	margin: 10px 0 14px
 
-.-post-target-placeholder
+.-content-target-placeholder
 	change-bg('bg-subtle')
 	rounded-corners()
 	width: 138px

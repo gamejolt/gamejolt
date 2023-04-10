@@ -5,7 +5,7 @@ import { ChatUser } from '../user';
 
 export class ChatInviteModal {
 	static async show(room: ChatRoom, friends: ChatUser[], initialUser?: ChatUser) {
-		return await showModal({
+		return await showModal<boolean | undefined>({
 			modalId: 'ChatInvite',
 			size: 'sm',
 			component: defineAsyncComponent(() => import('./invite-modal.vue')),

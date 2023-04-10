@@ -5,6 +5,7 @@ import { AuthModal } from '../../../../_common/auth/auth-modal.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { Realm } from '../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
@@ -12,13 +13,23 @@ import { FiresideAddModal } from '../add-modal/add-modal.service';
 import AppFiresideAvatarBase from './AppFiresideAvatarBase.vue';
 
 const props = defineProps({
+	/**
+	 * Initial community to populate the content targets with.
+	 */
 	community: {
 		type: Object as PropType<Community>,
 		default: undefined,
 	},
+	/**
+	 * Initial realms to populate the content targets with.
+	 */
+	realms: {
+		type: Array as PropType<Realm[]>,
+		default: () => [],
+	},
 });
 
-const { community } = toRefs(props);
+const { community, realms } = toRefs(props);
 const { user } = useCommonStore();
 const router = useRouter();
 
@@ -39,7 +50,10 @@ async function onClick() {
 		return;
 	}
 
-	const fireside = await FiresideAddModal.show({ community: community?.value });
+	const fireside = await FiresideAddModal.show({
+		community: community?.value,
+		realms: realms.value,
+	});
 	if (fireside instanceof Fireside) {
 		router.push(fireside.routeLocation);
 	}

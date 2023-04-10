@@ -6,7 +6,7 @@ import { BaseModal } from '../../../../_common/modal/base';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { SiteTrophy } from '../../../../_common/site/trophy/trophy.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppTimeAgo } from '../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';

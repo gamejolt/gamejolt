@@ -1,24 +1,24 @@
 <script lang="ts">
 import { computed } from 'vue';
-import { RouteParamsRaw, RouteRecordName, RouterLink } from 'vue-router';
+import { RouteParamsRaw, RouteRecordName } from 'vue-router';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
 import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
-import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import AppSheetButton from '../../../../_common/sheet/AppSheetButton.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { kThemeBg, kThemeBiBg, kThemeBiFg, kThemeFg } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
-import { styleBorderRadiusLg, styleWhen } from '../../../../_styles/mixins';
-import { kFontSizeLarge, kGridGutterWidth } from '../../../../_styles/variables';
+import { kGridGutterWidth } from '../../../../_styles/variables';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
+import { routeLandingHelpCategory } from '../../landing/help/help.route';
 import { routeDashAccountBlocks } from '../account/blocks/blocks.route';
 import { routeDashAccountChatCommands } from '../account/chat-commands/chat-commands.route';
 import { routeDashAccountChatTimers } from '../account/chat-timers/chat-timers.route';
 import { routeDashAccountReferrals } from '../account/referrals/referrals.route';
 import { routeDashAccountWallet } from '../account/wallet/wallet.route';
 import { routeDashAnalytics } from '../analytics/analytics.route';
+import { routeDashStickers } from '../stickers/stickers.route';
 import { routeDashSupporters } from '../supporters/supporters.route';
 
 export default {
@@ -63,6 +63,11 @@ const buttons = computed<Button[]>(() => [
 		icon: 'gem',
 	},
 	{
+		to: routeDashStickers.name!,
+		label: $gettext(`Custom stickers`),
+		icon: 'sticker-filled',
+	},
+	{
 		to: routeDashAccountReferrals.name!,
 		label: $gettext(`Referrals`),
 		icon: 'users',
@@ -81,6 +86,14 @@ const buttons = computed<Button[]>(() => [
 		to: routeDashAccountBlocks.name!,
 		label: $gettext(`Blocked users`),
 		icon: 'friend-remove-2',
+	},
+	{
+		to: routeLandingHelpCategory.name!,
+		routeParams: {
+			category: 'creators',
+		},
+		label: $gettext(`Help and FAQs`),
+		icon: 'help-circle',
 	},
 ]);
 </script>
@@ -106,37 +119,9 @@ const buttons = computed<Button[]>(() => [
 					}"
 				>
 					<template v-for="{ to, routeParams, label, icon } of buttons" :key="to">
-						<AppOnHover v-slot="{ binding, hovered }">
-							<RouterLink
-								v-bind="binding"
-								class="elevate-1"
-								:style="{
-									...styleBorderRadiusLg,
-									display: `flex`,
-									flexDirection: `column`,
-									height: `150px`,
-									padding: `16px`,
-									backgroundColor: kThemeBg,
-									color: kThemeFg,
-									...styleWhen(hovered, {
-										backgroundColor: kThemeBiBg,
-										color: kThemeBiFg,
-									}),
-								}"
-								:to="{ name: to, params: routeParams }"
-							>
-								<div
-									:style="{
-										fontWeight: `bold`,
-										fontSize: kFontSizeLarge.px,
-									}"
-								>
-									{{ label }}
-								</div>
-								<div :style="{ flex: `auto` }" />
-								<AppJolticon :style="{ fontSize: `40px` }" :icon="icon" />
-							</RouterLink>
-						</AppOnHover>
+						<AppSheetButton :to="{ name: to, params: routeParams }" :icon="icon">
+							{{ label }}
+						</AppSheetButton>
 					</template>
 				</div>
 

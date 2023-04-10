@@ -28,7 +28,6 @@ const ssrManifest = require(path.join(webBuildPath, 'ssr-manifest.json'));
 // a new node context, and its more efficient reading it from disk once and copying it
 // over to the new node context than to read it from disk for every request.
 const serverBundleFile = path.join(serverBuildPath, 'server.js');
-// const serverVMScript = bundleRunner.getPreparedScript(serverBundleFile);
 const serverBundle = bundleRunner.compileModule(serverBundleFile);
 
 const server = express();
@@ -59,36 +58,7 @@ server.use(async (req, res) => {
 		console.log(context);
 
 		const s = Date.now();
-		// const vm = bundleRunner.getNewContext();
-		// const createApp = vm.run(serverVMScript).default;
 
-		// const app = await createApp(context);
-
-		// console.log('created app');
-
-		// passing SSR context object which will be available via useSSRContext()
-		// @vitejs/plugin-vue injects code into a component's setup() that registers
-		// itself on renderCtx.modules. After the render, renderCtx.modules would contain all the
-		// components that have been instantiated during this render call.
-		// vm.sandbox.app = app;
-		// vm.sandbox.context = context;
-		// vm.sandbox.serverBundleFile = serverBundleFile;
-		// const renderFunc = vm.run(
-		// 	`
-		// 	module.exports = async function () {
-		// 		const createApp = require(serverBundleFile).default;
-		// 		const app = await createApp(context);
-
-		// 		const { renderToString } = require('vue/server-renderer');
-		// 		const renderCtx = {};
-		// 		const appHtml = await renderToString(app, renderCtx);
-		// 		return [appHtml, renderCtx];
-		// 	};
-		// `,
-		// 	path.resolve(path.join(__dirname, 'server-sandbox.js'))
-		// );
-
-		// const [appHtml, renderCtx] = await renderFunc();
 		const createApp = serverBundle();
 		const [appHtml, renderCtx] = await createApp(context);
 

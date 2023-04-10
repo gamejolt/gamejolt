@@ -40,7 +40,6 @@ import { GridFiresideDMChannel } from './fireside-dm-channel';
 import { createGridNotificationChannel, GridNotificationChannel } from './notification-channel';
 
 export const onFiresideStart = new EventTopic<Model>();
-export const onNewStickers = new EventTopic<string[]>();
 
 type ClearNotificationsType =
 	// For the user's activity feed.
@@ -54,8 +53,6 @@ type ClearNotificationsType =
 	// For an individual community channel.
 	| 'community-channel'
 	| 'friend-requests'
-	// For the user's unviewed automatically unlocked stickers.
-	| 'stickers'
 	// A quest became available and is ready to be accepted.
 	| 'new-quest'
 	// A quest has updated progress or rewards available to claim.
@@ -218,10 +215,12 @@ export class GridClient {
 		}
 		// User connections expected to handle a bunch of notification stuff.
 		else if (user.value) {
-			const channel = createGridNotificationChannel(this, { userId: user.value.id });
-			await channel.joinPromise;
+			const notificationChannel = createGridNotificationChannel(this, {
+				userId: user.value.id,
+			});
+			await notificationChannel.joinPromise;
+			this.notificationChannel = markRaw(notificationChannel);
 
-			this.notificationChannel = markRaw(channel);
 			this.markConnected();
 
 			logger.info('Subscribing to community channels...');
@@ -279,12 +278,16 @@ export class GridClient {
 	}
 
 	spawnNotification(notification: Notification) {
-		// Only increment counts if the notification would show in the feed.
-		if (notification.is_notification_feed_item) {
-			const feedType = notification.feedType;
-			if (feedType !== '') {
-				this.appStore.incrementNotificationCount({ count: 1, type: feedType });
-			}
+		const feedType = notification.feedType;
+
+		// Activity feed types should always increment. Notification feed types
+		// require extra checks.
+		const wantsCountIncrement =
+			feedType === 'activity' ||
+			(feedType === 'notifications' && notification.is_notification_feed_item);
+
+		if (wantsCountIncrement) {
+			this.appStore.incrementNotificationCount({ count: 1, type: feedType });
 		}
 
 		// In Client when the feed notifications setting is disabled, don't show them notifications.
@@ -440,9 +443,6 @@ export class GridClient {
 				break;
 			case 'friend-requests':
 				this.appStore.setHasNewFriendRequests(false);
-				break;
-			case 'stickers':
-				this.appStore.setHasNewUnlockedStickers(false);
 				break;
 			case 'new-quest':
 				{

@@ -26,7 +26,7 @@ import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Notification } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
 import { SupporterAction } from '../../../../../_common/supporters/action.model';
-import { AppTimeAgo } from '../../../../../_common/time/ago/ago';
+import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophy } from '../../../../../_common/trophy/base-trophy.model';
@@ -93,6 +93,7 @@ const hasDetails = computed(() => {
 		Notification.TYPE_QUEST_NOTIFICATION,
 		Notification.TYPE_GAME_TROPHY_ACHIEVED,
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
+		Notification.TYPE_POLL_ENDED,
 	].includes(type);
 });
 
@@ -176,6 +177,13 @@ function onMarkRead() {
 										<AppJolticon icon="quest-log" />
 									</div>
 								</template>
+								<template
+									v-else-if="notification.type === Notification.TYPE_POLL_ENDED"
+								>
+									<div class="-avatar-icon">
+										<AppJolticon icon="pedestals-numbers" />
+									</div>
+								</template>
 							</template>
 
 							<div class="-container">
@@ -226,6 +234,16 @@ function onMarkRead() {
 														(notification.action_model as SupporterAction).message?.content
 													"
 												/>
+												<span
+													v-else-if="
+														notification.type ===
+														Notification.TYPE_POLL_ENDED
+													"
+												>
+													{{
+														(notification.from_model as FiresidePost).getShortLead()
+													}}
+												</span>
 												<span
 													v-else-if="
 														notification.type ===

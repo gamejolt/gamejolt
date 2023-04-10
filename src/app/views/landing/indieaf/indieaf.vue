@@ -31,7 +31,7 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 
 	state: 'bogus' | 'indie' = 'bogus';
 
-	readonly assetPaths = import.meta.globEager('./*.(svg|jpg|png)');
+	readonly assetPaths = import.meta.glob('./*.(svg|jpg|png)', { eager: true, as: 'url' });
 
 	get routeTitle() {
 		return `Get Indie.AF // Freakin' legit customizable game sites`;
@@ -63,11 +63,7 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 			<div class="container">
 				<p class="lead">Don't you want to be</p>
 
-				<img
-					class="img-responsive indieaf-logo"
-					:src="assetPaths['./header.jpg'].default"
-					alt=""
-				/>
+				<img class="img-responsive indieaf-logo" :src="assetPaths['./header.jpg']" alt="" />
 			</div>
 		</div>
 
@@ -123,14 +119,14 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 							<div class="col-xs-7">
 								<img
 									class="img-responsive"
-									:src="assetPaths['./site-io.jpg'].default"
+									:src="assetPaths['./site-io.jpg']"
 									alt=""
 								/>
 							</div>
 							<div class="col-xs-5">
 								<img
 									class="img-responsive"
-									:src="assetPaths['./bogusdude.svg'].default"
+									:src="assetPaths['./bogusdude.svg']"
 									alt=""
 								/>
 							</div>
@@ -139,14 +135,14 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 							<div class="col-xs-7">
 								<img
 									class="img-responsive"
-									:src="assetPaths['./site-af.jpg'].default"
+									:src="assetPaths['./site-af.jpg']"
 									alt=""
 								/>
 							</div>
 							<div class="col-xs-5">
 								<img
 									class="img-responsive"
-									:src="assetPaths['./cooldude.svg'].default"
+									:src="assetPaths['./cooldude.svg']"
 									alt=""
 								/>
 							</div>
@@ -166,21 +162,13 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 						<br />
 
 						<div class="indieaf-vs-row">
-							<img
-								class="indieaf-vs-img"
-								:src="assetPaths['./vs.png'].default"
-								alt=""
-							/>
+							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
 							<div class="indieaf-vs-col left"><strong>gamejolt.io</strong></div>
 							<div class="indieaf-vs-col right"><strong>indie.af</strong></div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img
-								class="indieaf-vs-img"
-								:src="assetPaths['./vs.png'].default"
-								alt=""
-							/>
+							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
 							<div class="indieaf-vs-col left">Trendy, but also bogus</div>
 							<div class="indieaf-vs-col right">
 								Not bogus, not trendy. Radical AF!
@@ -188,11 +176,7 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img
-								class="indieaf-vs-img"
-								:src="assetPaths['./vs.png'].default"
-								alt=""
-							/>
+							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
 							<div class="indieaf-vs-col left">
 								Sounds like
 								<em>ew</em>
@@ -201,41 +185,25 @@ export default class RouteLandingIndieaf extends BaseRouteComponent {
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img
-								class="indieaf-vs-img"
-								:src="assetPaths['./vs.png'].default"
-								alt=""
-							/>
+							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
 							<div class="indieaf-vs-col left">Child's play</div>
 							<div class="indieaf-vs-col right">Grown up AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img
-								class="indieaf-vs-img"
-								:src="assetPaths['./vs.png'].default"
-								alt=""
-							/>
+							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
 							<div class="indieaf-vs-col left">People wonder why it's not .com</div>
 							<div class="indieaf-vs-col right">.af AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img
-								class="indieaf-vs-img"
-								:src="assetPaths['./vs.png'].default"
-								alt=""
-							/>
+							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
 							<div class="indieaf-vs-col left">Over saturated</div>
 							<div class="indieaf-vs-col right">No one is using AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
-							<img
-								class="indieaf-vs-img"
-								:src="assetPaths['./vs.png'].default"
-								alt=""
-							/>
+							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
 							<div class="indieaf-vs-col left">
 								Are you a startup, or are you indie?
 							</div>

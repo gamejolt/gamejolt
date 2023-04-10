@@ -1,6 +1,6 @@
 import type { IAgoraRTC, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
 import { markRaw, reactive, Ref } from 'vue';
-import { arrayAssignAll, arrayRemove } from '../../../utils/array';
+import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
 import { Background } from '../../background/background.model';
@@ -61,7 +61,7 @@ export interface AgoraStreamingInfo {
 	chatToken: string;
 }
 
-type Options = { isMuted?: boolean };
+type Options = { isPreviewMode?: boolean };
 
 export class FiresideRTC {
 	constructor(
@@ -79,12 +79,12 @@ export class FiresideRTC {
 		public readonly hosts: FiresideRTCHost[],
 		public readonly listableHostIds: Set<number>,
 		public readonly hostBackgrounds: Map<number, Background>,
-		{ isMuted }: Options
+		{ isPreviewMode }: Options
 	) {
-		this.isMuted = isMuted ?? false;
+		this.isPreviewMode = isPreviewMode ?? false;
 	}
 
-	readonly isMuted;
+	readonly isPreviewMode;
 
 	generation = new CancelToken();
 
@@ -263,10 +263,6 @@ async function _recreateFiresideRTC(rtc: FiresideRTC) {
 	rtc.log('Trace(recreate)');
 	await destroyFiresideRTC(rtc);
 	return _setup(rtc);
-}
-
-export function setHosts(rtc: FiresideRTC, newHosts: FiresideRTCHost[]) {
-	arrayAssignAll(rtc.hosts, newHosts);
 }
 
 export function setListableHostIds(rtc: FiresideRTC, listableHostIds: Set<number>) {

@@ -33,7 +33,12 @@ export const SOCIAL_ACTION_FOLLOW = 'follow';
 
 export type CommunityOpenSource = 'communityChunk' | 'card' | 'cbar' | 'thumbnail';
 export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'homeBanner' | 'cbar';
-export type PostOpenSource = 'realmChunk' | 'communityChunk' | 'postRecommendation' | 'feed';
+export type PostOpenSource =
+	| 'realmChunk'
+	| 'communityChunk'
+	| 'postRecommendation'
+	| 'feed'
+	| 'help';
 export type PostControlsLocation = 'feed' | 'broadcast' | 'postPage';
 export type UserFollowLocation =
 	| 'feed'
@@ -134,19 +139,30 @@ export function initAnalyticsRouter(router: Router) {
 		next();
 	});
 
-	onRouteChangeAfter.subscribe(() => {
-		const route = router.currentRoute.value;
-		const analyticsPath = route.meta.analyticsPath as string | undefined;
+	onRouteChangeAfter.subscribe(() => trackPageViewAfterRoute(router));
+}
 
-		// Track the page view using the analyticsPath if we have one
-		// assigned to the route meta.
-		if (analyticsPath) {
-			_trackPageview(analyticsPath);
-			return;
-		}
+/**
+ * Tracks the page view for the current route.
+ *
+ * If there's an `analyticsPath` assigned to the route meta, we'll use that
+ * instead.
+ *
+ * NOTE: This is typically called automatically by the router, but may need to
+ * be called manually for certain routes that don't trigger a full route change.
+ */
+export function trackPageViewAfterRoute(router: Router) {
+	const route = router.currentRoute.value;
+	const analyticsPath = route.meta.analyticsPath as string | undefined;
 
-		_trackPageview(route.fullPath);
-	});
+	// Track the page view using the analyticsPath if we have one assigned to
+	// the route meta.
+	if (analyticsPath) {
+		_trackPageview(analyticsPath);
+		return;
+	}
+
+	_trackPageview(route.fullPath);
 }
 
 function _trackPageview(path?: string) {
@@ -533,6 +549,28 @@ export function trackFiresideSidebarCollapse(collapsed: boolean, trigger: string
 
 export function trackFiresideStopStreaming(trigger: string) {
 	trackFiresideAction({ action: 'stop-streaming', trigger: trigger });
+}
+
+export function trackHomeFeedSwitch({
+	path,
+	isActive: is_active,
+	realmId: realm_id,
+	realmIndex: realm_index,
+	realmCount: realm_count,
+}: {
+	path: string;
+	isActive: boolean;
+	realmId: number | undefined;
+	realmIndex: number | undefined;
+	realmCount: number | undefined;
+}) {
+	_trackEvent('home_feed_switch', {
+		path,
+		is_active,
+		realm_id,
+		realm_index,
+		realm_count,
+	});
 }
 
 /**

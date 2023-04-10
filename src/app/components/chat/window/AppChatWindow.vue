@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref, shallowRef, toRefs, watch, watchEffect } from 'vue';
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
+import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { formatNumber } from '../../../../_common/filters/number';
+import { canDeviceCreateFiresides, Fireside } from '../../../../_common/fireside/fireside.model';
+import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { getModel } from '../../../../_common/model/model-store.service';
@@ -42,11 +46,15 @@ const emit = defineEmits({
 const { roomId } = toRefs(props);
 const { closeChatPane } = useAppStore();
 const { chatUnsafe: chat } = useGridStore();
+const router = useRouter();
 
 // Set up the room with connection logic.
 let destroyed = false;
 const room = shallowRef(getModel(ChatRoom, roomId.value));
 const roomChannel = shallowRef<ChatRoomChannel>();
+
+const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
+const maxContentLength = ref(1_000);
 
 async function joinChannel() {
 	roomChannel.value = createChatRoomChannel(chat.value, {
@@ -54,13 +62,25 @@ async function joinChannel() {
 		instanced: false,
 	});
 
-	await roomChannel.value.joinPromise;
+	const payloads = await Promise.all([
+		roomChannel.value.joinPromise,
+		Api.sendRequest(`/web/chat/rooms/get-message-content-capabilities/${roomId.value}`),
+	]);
 
 	// Short circuit if this component is gone by the time the connection was
 	// finished.
-	if (!destroyed) {
-		room.value = roomChannel.value.room.value;
+	if (destroyed) {
+		return;
 	}
+
+	const inputPayload = payloads[1];
+	maxContentLength.value = inputPayload.lengthLimit;
+	contentCapabilities.value = ContextCapabilities.fromPayloadList(
+		inputPayload.contentCapabilities
+	);
+
+	// Set the room after everything else is set up.
+	room.value = roomChannel.value.room.value;
 }
 
 onMounted(() => {
@@ -88,9 +108,24 @@ watch(
 let showSettingsOnMembersBack = false;
 
 const friendAddJolticonVersion = ref<1 | 2>(1);
-const sidebar = ref<SidebarTab | undefined>(
+
+/**
+ * The sidebar that we want to be displayed.
+ */
+const preferredSidebar = ref<SidebarTab | undefined>(
 	!Screen.isXs && SettingChatGroupShowMembers.get() ? 'members' : undefined
 );
+
+/**
+ * The sidebar we're actually displaying. Ignores 'members' sidebar when there's
+ * nothing worth showing.
+ */
+const sidebar = computed(() => {
+	if (room.value?.isPmRoom && preferredSidebar.value === 'members') {
+		return undefined;
+	}
+	return preferredSidebar.value;
+});
 
 watch(sidebar, (value, oldValue) => {
 	if (!value) {
@@ -103,16 +138,50 @@ watch(sidebar, (value, oldValue) => {
 	}
 });
 
-const isShowingUsers = computed(() => sidebar.value === 'members');
+const isShowingUsers = computed(() => preferredSidebar.value === 'members');
 const memberCollection = computed(() => room.value!.memberCollection);
 const membersCount = computed(() => formatNumber(room.value?.member_count || 0));
 const roomTitle = computed(() => (!room.value ? $gettext(`Chat`) : getChatRoomTitle(room.value)));
 const showMembersViewButton = computed(() =>
 	!room.value ? false : !room.value.isPmRoom && !Screen.isXs
 );
+const isStartingFireside = ref(false);
 
 // Sync with the setting.
 watchEffect(() => SettingChatGroupShowMembers.set(isShowingUsers.value));
+
+async function startFireside() {
+	if (!room.value) {
+		return;
+	}
+	if (isStartingFireside.value) {
+		return;
+	}
+
+	isStartingFireside.value = true;
+
+	try {
+		const payload = await roomChannel.value?.pushStartFireside();
+		if (payload && payload.fireside) {
+			const fireside = new Fireside(payload.fireside);
+			router.push(fireside.routeLocation);
+		}
+	} catch (e) {
+		console.error('Error starting Fireside in room', e);
+		const error = e as any;
+		switch (error.reason) {
+			case 'already-active':
+				showErrorGrowl($gettext(`You already have an active livestream.`));
+				break;
+
+			default:
+				showErrorGrowl($gettext(`Could not start a new livestream, try again later.`));
+				break;
+		}
+	}
+
+	isStartingFireside.value = false;
+}
 
 function addGroup() {
 	if (!room.value) {
@@ -132,7 +201,7 @@ function addGroup() {
 	ChatInviteModal.show(room.value, invitableUsers, initialUser);
 }
 
-function addMembers() {
+async function addMembers() {
 	if (!room.value) {
 		return;
 	}
@@ -140,11 +209,16 @@ function addMembers() {
 	// Filter out the room members as we don't want to add them again.
 	const members = memberCollection.value.users.map(i => i.id);
 	const invitableUsers = chat.value.friendsList.users.filter(({ id }) => !members.includes(id));
-	ChatInviteModal.show(room.value, invitableUsers);
+	const result = await ChatInviteModal.show(room.value, invitableUsers);
+	if (result) {
+		showSuccessGrowl(
+			$gettext(`Sent invites to users. They will be added to the chat once they accept.`)
+		);
+	}
 }
 
 function toggleSidebar(val: SidebarTab) {
-	sidebar.value = sidebar.value === val ? undefined : val;
+	preferredSidebar.value = sidebar.value === val ? undefined : val;
 }
 
 function close() {
@@ -159,10 +233,10 @@ function close() {
 
 function onMobileAppBarBack() {
 	if (showSettingsOnMembersBack) {
-		sidebar.value = 'settings';
+		preferredSidebar.value = 'settings';
 		showSettingsOnMembersBack = false;
 	} else {
-		sidebar.value = undefined;
+		preferredSidebar.value = undefined;
 	}
 }
 </script>
@@ -244,6 +318,18 @@ function onMobileAppBarBack() {
 					<template #actions>
 						<template v-if="room">
 							<AppButton
+								v-if="room && !room.fireside && canDeviceCreateFiresides()"
+								v-app-tooltip="$gettext(`Start livestream/video call`)"
+								class="_header-control anim-fade-in"
+								trans
+								icon="video-camera"
+								sparse
+								circle
+								:disabled="isStartingFireside"
+								@click="startFireside()"
+							/>
+
+							<AppButton
 								v-app-tooltip="
 									room.isPmRoom
 										? $gettext('Create group chat')
@@ -317,6 +403,8 @@ function onMobileAppBarBack() {
 						<div v-if="room" class="_send-container">
 							<AppChatWindowSend
 								:room="room"
+								:capabilities="contentCapabilities"
+								:max-content-length="maxContentLength"
 								@focus-change="emit('focus-change', $event)"
 							/>
 						</div>

@@ -2,8 +2,8 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
 import { arrayRemove } from '../../../../../utils/array';
-import { canCreateFiresides } from '../../../../../_common/community/community.model';
-import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import { canCommunityCreateFiresides } from '../../../../../_common/community/community.model';
+import { canDeviceCreateFiresides, Fireside } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
@@ -76,6 +76,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	finishedLoading = false;
 	previewFiresides: Fireside[] = [];
 	userFireside: Fireside | null = null;
+	userHasFireside = false;
 
 	get community() {
 		return this.routeStore.community;
@@ -117,7 +118,11 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get canCreateFireside() {
-		return canCreateFiresides(this.community);
+		return (
+			!this.userHasFireside &&
+			canCommunityCreateFiresides(this.community) &&
+			canDeviceCreateFiresides()
+		);
 	}
 
 	get firesidesGridColumns() {
@@ -131,8 +136,11 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 	}
 
 	get displayablePreviewFiresides() {
-		const perRow = this.firesidesGridColumns - (this.canCreateFireside ? 1 : 0);
-		return Object.freeze(this.previewFiresides.slice(0, perRow));
+		const previewable = this.userFireside
+			? [this.userFireside, ...this.previewFiresides]
+			: this.previewFiresides;
+
+		return previewable.slice(0, this.firesidesGridColumns - (this.canCreateFireside ? 1 : 0));
 	}
 
 	@Watch('communityState.hasUnreadFeaturedPosts', { immediate: true })
@@ -171,6 +179,8 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		if ($payload.userFireside) {
 			this.userFireside = new Fireside($payload.userFireside);
 		}
+
+		this.userHasFireside = $payload.userHasFireside;
 
 		if ($payload.previewFiresides) {
 			this.previewFiresides = Fireside.populate($payload.previewFiresides);
@@ -245,7 +255,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 		<AppCommunitiesViewPageContainer>
 			<template #default>
-				<div v-if="displayablePreviewFiresides.length > 0 || community.allow_firesides">
+				<div v-if="displayablePreviewFiresides.length > 0">
 					<div class="-firesides-header">
 						<h4 class="section-header">
 							<AppTranslate>Firesides</AppTranslate>

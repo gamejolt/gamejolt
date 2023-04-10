@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { computed, PropType, toRefs } from 'vue';
+import { canDeviceCreateFiresides, Fireside } from '../../../../_common/fireside/fireside.model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
+import { Realm } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
@@ -30,16 +31,25 @@ const props = defineProps({
 	showPlaceholders: {
 		type: Boolean,
 	},
+	initialRealm: {
+		type: Object as PropType<Realm>,
+		default: undefined,
+	},
 });
+
+const { firesides, isLoading, featuredFireside, userFireside, showPlaceholders, initialRealm } =
+	toRefs(props);
 
 const emit = defineEmits({
 	'request-refresh': () => true,
 });
 
+const canCreateFireside = computed(() => !userFireside.value && canDeviceCreateFiresides());
+
 const displayFiresides = computed(() => {
-	const list = [...props.firesides];
-	if (props.userFireside) {
-		list.unshift(props.userFireside);
+	const list = [...firesides.value];
+	if (userFireside.value) {
+		list.unshift(userFireside.value);
 	}
 
 	return shouldDisplaySingleRow.value ? list.slice(0, gridColumns.value) : list;
@@ -55,9 +65,12 @@ const gridStyling = computed(() => ({
 }));
 
 function onFiresideExpired() {
-	// When a fireside expired while showing it here, refresh the list.
-	// It will be excluded from the next fetch.
-	emit('request-refresh');
+	// When a fireside expired while showing it here, refresh the list. It will
+	// be excluded from the next fetch.
+	//
+	// TODO: Do this in a more efficient way. Can't be sending automatic polling
+	// requests when we're having firesides that are persistent.
+	// emit('request-refresh');
 }
 </script>
 
@@ -93,7 +106,11 @@ function onFiresideExpired() {
 						<AppFiresideAvatarBase v-for="i of gridColumns" :key="i" is-placeholder />
 					</div>
 					<div v-else key="list" :style="gridStyling">
-						<AppFiresideAvatarAdd v-if="!userFireside" key="add" />
+						<AppFiresideAvatarAdd
+							v-if="canCreateFireside"
+							key="add"
+							:realms="initialRealm ? [initialRealm] : undefined"
+						/>
 						<AppFiresideAvatar
 							v-for="fireside of displayFiresides"
 							:key="fireside.id"
