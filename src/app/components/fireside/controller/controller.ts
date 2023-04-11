@@ -577,26 +577,38 @@ export function createFiresideController(
 	 */
 	const _unwatches: (() => void)[] = [];
 
+	const _hasGridConnection = computed(() => grid.value?.connected === true);
+	const _hasAgoraConnections = computed(() => {
+		// Channels are created after rtc is initialized - don't assume they're
+		// defined here.
+		const videoState = rtc.value?.videoChannel?._connectionState;
+		const chatState = rtc.value?.chatChannel?._connectionState;
+		const validValues: (typeof videoState | typeof chatState)[] = ['CONNECTED', 'CONNECTING'];
+		return validValues.includes(videoState) && validValues.includes(chatState);
+	});
+
 	// Set up watchers to initiate connection once grid boots up. When a
 	// connection is dropped or any other error on the socket we immediately
 	// become disconnected and then queue up for reconnecting.
+	//
+	// This should also check Agora connection states, as Grid and Agora may
+	// react to disconnects at different times.
+	let _isRejoining = false;
 	_unwatches.push(
-		watch(
-			() => grid.value?.connected || false,
-			isConnected => {
-				logger.info(
-					'grid.connected watcher triggered: ' +
-						(isConnected ? 'connected' : 'disconnected')
-				);
+		watch([_hasGridConnection, _hasAgoraConnections], values => {
+			const isConnected = values.every(i => i);
+			logger.info(
+				'grid.connected watcher triggered: ' + (isConnected ? 'connected' : 'disconnected')
+			);
 
-				if (!isConnected) {
-					_disconnect();
-					isReconnecting.value = true;
-				} else {
-					_tryJoin();
-				}
+			if (!isConnected) {
+				_disconnect();
+				isReconnecting.value = true;
+			} else if (!_isRejoining) {
+				_isRejoining = true;
+				_tryJoin().finally(() => (_isRejoining = false));
 			}
-		)
+		})
 	);
 
 	// Since we're not doing a deep watch, this'll only trigger when the actual
@@ -941,7 +953,7 @@ export function createFiresideController(
 			await sleep(250);
 		}
 
-		_join();
+		return _join();
 	}
 
 	async function _join() {
@@ -1069,6 +1081,7 @@ export function createFiresideController(
 
 		_setupExpiryInfoInterval();
 		updateFiresideExpiryValues(controller);
+		isReconnecting.value = false;
 	}
 
 	function _disconnect() {
