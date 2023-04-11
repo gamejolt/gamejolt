@@ -116,7 +116,7 @@ const stats = computed(() => {
 		[`Members`]: rtc.value?.listableStreamingUsers.length ?? 0,
 	};
 
-	const focusedId = user?.uid;
+	const focusedId = user?.userId;
 	if (!focusedId) {
 		return stats;
 	}
@@ -162,20 +162,22 @@ onUnmounted(() => {
 });
 
 function updateVideoStats() {
-	const videoClient = rtc.value?.videoChannel.agoraClient;
-	remoteVideoStats.value = videoClient?.getRemoteVideoStats() || {};
-	localVideoStats.value = videoClient?.getLocalVideoStats() || {};
+	// TODO(oven)
+	return;
+	// const videoClient = rtc.value?.videoChannel.agoraClient;
+	// remoteVideoStats.value = videoClient?.getRemoteVideoStats() || {};
+	// localVideoStats.value = videoClient?.getLocalVideoStats() || {};
 
-	if (!hasTabSwitcher.value) {
-		return;
-	}
+	// if (!hasTabSwitcher.value) {
+	// 	return;
+	// }
 
-	remoteDesktopAudioStats.value = videoClient?.getRemoteAudioStats() || {};
-	localDesktopAudioStats.value = videoClient?.getLocalAudioStats() || {};
+	// remoteDesktopAudioStats.value = videoClient?.getRemoteAudioStats() || {};
+	// localDesktopAudioStats.value = videoClient?.getLocalAudioStats() || {};
 
-	const chatClient = rtc.value?.chatChannel.agoraClient;
-	remoteMicStats.value = chatClient?.getRemoteAudioStats() || {};
-	localMicStats.value = chatClient?.getLocalAudioStats() || {};
+	// const chatClient = rtc.value?.chatChannel.agoraClient;
+	// remoteMicStats.value = chatClient?.getRemoteAudioStats() || {};
+	// localMicStats.value = chatClient?.getLocalAudioStats() || {};
 }
 </script>
 

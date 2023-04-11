@@ -48,7 +48,7 @@ const padding = computed(() => {
 
 const uid = computed(() => {
 	if (host.value instanceof FiresideRTCUser) {
-		return host.value.uid;
+		return host.value.userId;
 	} else {
 		return undefined;
 	}
@@ -80,7 +80,7 @@ const isActive = computed(() => {
 		return false;
 	}
 
-	return rtc.value.focusedUser.uid === uid.value;
+	return rtc.value.focusedUser.userId === uid.value;
 });
 </script>
 

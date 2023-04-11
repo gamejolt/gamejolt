@@ -1,17 +1,10 @@
-import {
-	IAgoraRTCRemoteUser,
-	ILocalAudioTrack,
-	ILocalVideoTrack,
-	IRemoteAudioTrack,
-	IRemoteVideoTrack,
-} from 'agora-rtc-sdk-ng';
-import { markRaw, reactive, toRaw, watch, WatchStopHandle } from 'vue';
+import OvenPlayerStatic, { OvenPlayer } from 'ovenplayer';
+import { WatchStopHandle, reactive, toRaw, watch } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
 import { User } from '../../user/user.model';
 import { Fireside } from '../fireside.model';
-import { updateTrackPlaybackDevice } from './producer';
-import { chooseFocusedRTCUser, FiresideRTC } from './rtc';
+import { FiresideRTC, chooseFocusedRTCUser } from './rtc';
 
 export type FiresideVideoFit = 'cover' | 'contain' | 'fill' | undefined;
 export class FiresideVideoPlayStatePlaying {
@@ -52,30 +45,44 @@ export class FiresideVideoLock {
 	released = false;
 }
 
+/**
+ * This is a user in the FiresideRTC. It can be the local user or a remote user.
+ */
 export class FiresideRTCUser {
 	constructor(
 		public readonly rtc: FiresideRTC,
-		public readonly uid: number,
+		public readonly userId: number,
 		public readonly isLocal: boolean
 	) {
 		this.remoteMicAudioMuted = rtc.isMuted;
 	}
 
-	// These won't be assigned if this is the local user.
-	remoteVideoUser: IAgoraRTCRemoteUser | null = null;
-	remoteChatUser: IAgoraRTCRemoteUser | null = null;
+	// // These won't be assigned if this is the local user.
+	// remoteVideoUser: IAgoraRTCRemoteUser | null = null;
+	// remoteChatUser: IAgoraRTCRemoteUser | null = null;
 
-	_videoTrack: ILocalVideoTrack | IRemoteVideoTrack | null = null;
-	_desktopAudioTrack: ILocalAudioTrack | IRemoteAudioTrack | null = null;
-	_micAudioTrack: ILocalAudioTrack | IRemoteAudioTrack | null = null;
+	/**
+	 * This won't be assigned if this is a local user.
+	 */
+	_videoPlayer: OvenPlayer | null = null;
+
+	/**
+	 * Only assigned for local users. Holds the MediaStream for the video channel.
+	 */
+	_videoMediaStream: MediaStream | null = null;
+	/**
+	 * Only assigned for local users. Holds the MediaStream for the chat channel.
+	 */
+	_chatMediaStream: MediaStream | null = null;
 
 	videoPlayState: FiresideVideoPlayState = new FiresideVideoPlayStateStopped();
 	queuedVideoPlayState: FiresideVideoPlayState | null = null;
 	readonly videoLocks: FiresideVideoLock[] = [];
 
-	hasMicAudio = false;
-	hasVideo = false;
-	hasDesktopAudio = false;
+	// TODO(oven)
+	hasMicAudio = true;
+	hasVideo = true;
+	hasDesktopAudio = true;
 
 	pausedFrameData: ImageData | null = null;
 	videoAspectRatio = 16 / 9;
@@ -107,8 +114,12 @@ export class FiresideRTCUser {
 	_unwatchIsListed: WatchStopHandle | null = null;
 	_unwatchPrefableFields: WatchStopHandle | null = null;
 
+	get isRemote() {
+		return !this.isLocal;
+	}
+
 	get _rtcHost() {
-		return this.rtc.hosts.find(host => host.uids.includes(this.uid));
+		return this.rtc.hosts.find(host => host.uids.includes(this.userId));
 	}
 
 	get userModel() {
@@ -172,8 +183,8 @@ export class FiresideRTCUser {
 	}
 }
 
-export function createRemoteFiresideRTCUser(rtc: FiresideRTC, uid: number) {
-	const user = reactive(new FiresideRTCUser(rtc, uid, false)) as FiresideRTCUser;
+export function createRemoteFiresideRTCUser(rtc: FiresideRTC, userId: number) {
+	const user = reactive(new FiresideRTCUser(rtc, userId, false)) as FiresideRTCUser;
 
 	user._unwatchIsListed = watch(
 		() => user.isListed,
@@ -185,24 +196,26 @@ export function createRemoteFiresideRTCUser(rtc: FiresideRTC, uid: number) {
 			);
 
 			if (!isListed) {
-				stopMicAudioPlayback(user);
+				_stopMicAudioPlayback(user);
 				return;
 			}
 
 			// Find all other remote users.
-			const otherUsers = rtc.listableStreamingUsers.filter(i => !i.isLocal && i.uid !== uid);
+			const otherUsers = rtc.listableStreamingUsers.filter(
+				i => !i.isLocal && i.userId !== userId
+			);
 			const isOnlyUser = otherUsers.length === 0;
 
 			if (isOnlyUser) {
 				// If this is the only user, we can safely start our playback.
-				startMicAudioPlayback(user);
+				_startMicAudioPlayback(user);
 			} else if (otherUsers.every(i => i.remoteMicAudioMuted)) {
 				// Mute this user if all other listed users are muted.
-				stopMicAudioPlayback(user);
+				_stopMicAudioPlayback(user);
 			} else {
 				// If any listed users are unmuted, unmute ourselves when
 				// becoming listed.
-				startMicAudioPlayback(user);
+				_startMicAudioPlayback(user);
 			}
 		}
 	);
@@ -225,8 +238,8 @@ export function createRemoteFiresideRTCUser(rtc: FiresideRTC, uid: number) {
 	return user;
 }
 
-export function createLocalFiresideRTCUser(rtc: FiresideRTC, uid: number) {
-	return reactive(new FiresideRTCUser(rtc, uid, true)) as FiresideRTCUser;
+export function createLocalFiresideRTCUser(rtc: FiresideRTC, userId: number) {
+	return reactive(new FiresideRTCUser(rtc, userId, true)) as FiresideRTCUser;
 }
 
 export function initRemoteFiresideRTCUserPrefs(user: FiresideRTCUser) {
@@ -308,8 +321,11 @@ export function saveFiresideRTCUserPrefs(user: FiresideRTCUser) {
 }
 
 export function cleanupFiresideRTCUser(user: FiresideRTCUser) {
-	user.remoteVideoUser = null;
-	user.remoteChatUser = null;
+	// user.remoteVideoUser = null;
+	// user.remoteChatUser = null;
+
+	user._videoPlayer?.remove();
+	user._videoPlayer = null;
 
 	user._unwatchIsListed?.();
 	user._unwatchIsListed = null;
@@ -319,7 +335,7 @@ export function cleanupFiresideRTCUser(user: FiresideRTCUser) {
 }
 
 function _userIdForLog(user: FiresideRTCUser) {
-	return `(user: ${user.userModel?.id ?? 'n/a'}, uid: ${user.uid})`;
+	return `(user: ${user.userModel?.id ?? 'n/a'}, uid: ${user.userId})`;
 }
 
 export function setUserHasVideo(user: FiresideRTCUser, hasVideo: boolean) {
@@ -346,10 +362,10 @@ export function setUserHasMicAudio(user: FiresideRTCUser, hasMicAudio: boolean) 
 		user.hasMicAudio = true;
 
 		if (!user.remoteMicAudioMuted) {
-			startMicAudioPlayback(user);
+			_startMicAudioPlayback(user);
 		}
 	} else {
-		stopMicAudioPlayback(user);
+		_stopMicAudioPlayback(user);
 		user.hasMicAudio = false;
 		chooseFocusedRTCUser(user.rtc);
 	}
@@ -450,38 +466,61 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 	if (newState instanceof FiresideVideoPlayStatePlaying) {
 		try {
 			// If they're a remote user, we need to subscribe to their video first.
-			if (user.remoteVideoUser) {
-				user._videoTrack = markRaw(
-					await rtc.videoChannel.agoraClient.subscribe(user.remoteVideoUser, 'video')
-				);
+			if (user.isRemote) {
+				const streamName = `${rtc.fireside.id}:${user.userId}`;
+
+				user._videoPlayer = OvenPlayerStatic.create(newState.element, {
+					autoFallback: false,
+					autoStart: false,
+					sources: [
+						{
+							label: 'WebRTC',
+							type: 'webrtc',
+							file: `wss://oven.development.gamejolt.com:3334/app/${streamName}?transport=tcp`,
+						},
+					],
+				});
+
+				// Wait for next tick before playing so that any video playback elements
+				// are first deregistered.
+				await sleep(0);
+
+				// TODO(oven)
+				// user._videoTrack?.play(newState.element, {
+				// 	// Don't mirror any tracks - local or remote.
+				// 	mirror: false,
+				// 	fit: newState.videoFit,
+				// });
+				user._videoPlayer?.play();
+			} else if (user.isLocal) {
+				const videoElem = document.createElement('video');
+				videoElem.autoplay = true;
+				videoElem.srcObject = user._videoMediaStream!;
+				newState.element.appendChild(videoElem);
 			}
 
-			// Wait for next tick before playing so that any video playback elements
-			// are first deregistered.
-			await sleep(0);
-
-			user._videoTrack?.play(newState.element, {
-				// Don't mirror any tracks - local or remote.
-				mirror: false,
-				fit: newState.videoFit,
-			});
+			// TODO(oven): we need to handle lower quality thumbnail views when they're not the active user
 
 			setupFiresideVideoElementListeners(newState.element, user);
-
-			// TODO: Test to make sure this doesn't fail if we're trying to set against a local user.
-			rtc.videoChannel.agoraClient.setRemoteVideoStreamType(
-				user.uid,
-				newState.isLowBitrate ? 1 : 0
-			);
 		} catch (e) {
 			rtc.logError(`Failed to subscribe to video for user ${_userIdForLog(user)}`, e);
 		}
 	} else if (newState instanceof FiresideVideoPlayStateStopped) {
 		try {
-			if (user._videoTrack?.isPlaying) {
+			if (user._videoPlayer) {
+				// TODO(oven): do we still need this?
+				// if (user._videoPlayer?.getState() === 'playing') {
 				try {
-					user.pausedFrameData = user._videoTrack.getCurrentFrameData();
-					user._videoTrack.stop();
+					// user.pausedFrameData = user._videoTrack.getCurrentFrameData();
+					// user._videoTrack.stop();
+					user._videoPlayer.pause();
+
+					// TODO(oven): we may not need to do the below? if we pause
+					// the stream above, it might stop streaming data through
+					// with oven.
+
+					// user._videoPlayer.remove();
+					// user._videoPlayer = null;
 				} catch (e) {
 					rtc.logWarning(
 						`Got an error while stopping a video track for user ${_userIdForLog(
@@ -490,20 +529,8 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 						e
 					);
 				}
-			}
-
-			// Only unsubscribe for remote users.
-			if (user.remoteVideoUser) {
-				await rtc.videoChannel.agoraClient.unsubscribe(user.remoteVideoUser, 'video');
-
-				// TODO: we might want to set the video track to null even
-				// before unsubscribing. this is because unsubscribe may fail if
-				// we already left the channel or it got disconnected for some
-				// reason. in these cases the video track should still get
-				// unset, however I don't know what happens if the error is
-				// literally with unsubscribing, and the video track remains
-				// intact.
-				user._videoTrack = null;
+			} else if (user._videoMediaStream) {
+				// TODO(oven): handle local stream stopping
 			}
 
 			// Make sure all the locks are released (just in case).
@@ -534,68 +561,88 @@ export async function setVideoPlayback(user: FiresideRTCUser, newState: Fireside
 	}
 }
 
-export async function startDesktopAudioPlayback(user: FiresideRTCUser) {
+export function setDesktopAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
+	// This can get called multiple times if we're adjusting with an audio
+	// slider. If there's no change, do nothing.
+	if (user.remoteDesktopAudioMuted === !isPlaying) {
+		return;
+	}
+
+	user.remoteDesktopAudioMuted = !isPlaying;
+
+	// TODO(oven)
+	return;
+
+	if (user.remoteDesktopAudioMuted) {
+		_stopDesktopAudioPlayback(user);
+	} else {
+		_startDesktopAudioPlayback(user);
+	}
+}
+
+function _startDesktopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 
 	rtc.log(`${_userIdForLog(user)} -> startDesktopAudioPlayback`);
 
-	if (!user.isListed) {
-		const err = new Error('Attempted to start desktop audio playback for unlisted user');
-		rtc.logError(err.message);
-		console.error(err);
-		return;
-	}
+	// if (!user.isListed) {
+	// 	const err = new Error('Attempted to start desktop audio playback for unlisted user');
+	// 	rtc.logError(err.message);
+	// 	console.error(err);
+	// 	return;
+	// }
 
-	try {
-		// Only subscribe for remote users.
-		if (user.remoteVideoUser) {
-			user._desktopAudioTrack = markRaw(
-				await rtc.videoChannel.agoraClient.subscribe(user.remoteVideoUser, 'audio')
-			);
+	// try {
+	// 	// Only subscribe for remote users.
+	// 	if (user.remoteVideoUser) {
+	// 		user._desktopAudioTrack = markRaw(
+	// 			await rtc.videoChannel.agoraClient.subscribe(user.remoteVideoUser, 'audio')
+	// 		);
 
-			// Make sure the track is using their playback device if they have
-			// chosen one in the producer.
-			if (rtc.producer) {
-				updateTrackPlaybackDevice(rtc.producer, user._desktopAudioTrack);
-			}
+	// 		// Make sure the track is using their playback device if they have
+	// 		// chosen one in the producer.
+	// 		if (rtc.producer) {
+	// 			updateTrackPlaybackDevice(rtc.producer, user._desktopAudioTrack);
+	// 		}
 
-			user._desktopAudioTrack.play();
-		}
+	// 		user._desktopAudioTrack.play();
+	// 	}
 
-		setUserDesktopAudioVolume(user, user.desktopPlaybackVolumeLevel);
-	} catch (e) {
-		rtc.logError('Failed to start desktop audio playback, attempting to gracefully stop.', e);
+	// 	setUserDesktopAudioVolume(user, user.desktopPlaybackVolumeLevel);
+	// } catch (e) {
+	// 	rtc.logError('Failed to start desktop audio playback, attempting to gracefully stop.', e);
 
-		stopDesktopAudioPlayback(user);
-		throw e;
-	}
+	// 	stopDesktopAudioPlayback(user);
+	// 	throw e;
+	// }
 }
 
-export async function stopDesktopAudioPlayback(user: FiresideRTCUser) {
+function _stopDesktopAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 
 	rtc.log(`${_userIdForLog(user)} -> stopDesktopAudioPlayback`);
+	// TODO(oven)
 
-	if (user._desktopAudioTrack?.isPlaying === true) {
-		rtc.log('Stopping existing desktop audio track');
-		try {
-			user._desktopAudioTrack.stop();
-		} catch (e) {
-			rtc.logWarning('Failed to stop desktop audio track playback', e);
-		}
-	}
+	// if (user._desktopAudioTrack?.isPlaying === true) {
+	// 	rtc.log('Stopping existing desktop audio track');
+	// 	try {
+	// 		user._desktopAudioTrack.stop();
+	// 	} catch (e) {
+	// 		rtc.logWarning('Failed to stop desktop audio track playback', e);
+	// 	}
+	// }
 
-	// Only unsubscribe for remote users.
-	if (user.remoteVideoUser) {
-		try {
-			user._desktopAudioTrack = null;
-			await rtc.videoChannel.agoraClient.unsubscribe(user.remoteVideoUser, 'audio');
-		} catch (e) {
-			rtc.logWarning(
-				`Failed to unsubscribe to desktop audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.`
-			);
-		}
-	}
+	// // Only unsubscribe for remote users.
+	// if (user.remoteVideoUser) {
+	// 	try {
+	// 		user._desktopAudioTrack = null;
+	// 		await rtc.videoChannel.agoraClient.unsubscribe(user.remoteVideoUser, 'audio');
+	// 	} catch (e) {
+	// 		rtc.logWarning(
+	// 			`Failed to unsubscribe to desktop audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.`
+	// 		);
+	// 	}
+	// }
 }
 
 export function setMicAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
@@ -606,126 +653,114 @@ export function setMicAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
 	}
 
 	user.remoteMicAudioMuted = !isPlaying;
+	// TODO(oven)
 
-	if (user.remoteMicAudioMuted) {
-		stopMicAudioPlayback(user);
-	} else {
-		startMicAudioPlayback(user);
-	}
+	// if (user.remoteMicAudioMuted) {
+	// 	stopMicAudioPlayback(user);
+	// } else {
+	// 	startMicAudioPlayback(user);
+	// }
 }
 
-export function setDesktopAudioPlayback(user: FiresideRTCUser, isPlaying: boolean) {
-	// This can get called multiple times if we're adjusting with an audio
-	// slider. If there's no change, do nothing.
-	if (user.remoteDesktopAudioMuted === !isPlaying) {
-		return;
-	}
-
-	user.remoteDesktopAudioMuted = !isPlaying;
-
-	if (user.remoteDesktopAudioMuted) {
-		stopDesktopAudioPlayback(user);
-	} else {
-		startDesktopAudioPlayback(user);
-	}
-}
-
-export async function startMicAudioPlayback(user: FiresideRTCUser) {
+function _startMicAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 
 	rtc.log(`${_userIdForLog(user)} -> startAudioPlayback`);
+	// TODO(oven)
 
-	if (!user.remoteChatUser) {
-		return;
-	}
+	// if (!user.remoteChatUser) {
+	// 	return;
+	// }
 
-	if (!user.isListed) {
-		const err = new Error('Attempted to start mic audio playback for unlisted user');
-		rtc.logWarning(err.message);
-		console.warn(err);
-		return;
-	}
+	// if (!user.isListed) {
+	// 	const err = new Error('Attempted to start mic audio playback for unlisted user');
+	// 	rtc.logWarning(err.message);
+	// 	console.warn(err);
+	// 	return;
+	// }
 
-	try {
-		user._micAudioTrack = markRaw(
-			await rtc.chatChannel.agoraClient.subscribe(user.remoteChatUser, 'audio')
-		);
+	// try {
+	// 	user._micAudioTrack = markRaw(
+	// 		await rtc.chatChannel.agoraClient.subscribe(user.remoteChatUser, 'audio')
+	// 	);
 
-		// Make sure the track is using their playback device if they have
-		// chosen one in the producer.
-		if (rtc.producer) {
-			updateTrackPlaybackDevice(rtc.producer, user._micAudioTrack);
-		}
+	// 	// Make sure the track is using their playback device if they have
+	// 	// chosen one in the producer.
+	// 	if (rtc.producer) {
+	// 		updateTrackPlaybackDevice(rtc.producer, user._micAudioTrack);
+	// 	}
 
-		// Set their mic volume to our preference before playing.
-		setUserMicrophoneAudioVolume(user, user.micPlaybackVolumeLevel);
+	// 	// Set their mic volume to our preference before playing.
+	// 	setUserMicrophoneAudioVolume(user, user.micPlaybackVolumeLevel);
 
-		user._micAudioTrack.play();
-	} catch (e) {
-		rtc.logError('Failed to start video playback, attempting to gracefully stop.', e);
+	// 	user._micAudioTrack.play();
+	// } catch (e) {
+	// 	rtc.logError('Failed to start video playback, attempting to gracefully stop.', e);
 
-		stopMicAudioPlayback(user);
-		throw e;
-	}
+	// 	stopMicAudioPlayback(user);
+	// 	throw e;
+	// }
 }
 
-export async function stopMicAudioPlayback(user: FiresideRTCUser) {
+async function _stopMicAudioPlayback(user: FiresideRTCUser) {
 	const { rtc } = user;
 
 	rtc.log(`${_userIdForLog(user)} -> stopAudioPlayback`);
+	// TODO(oven)
 
-	if (!user.remoteChatUser) {
-		return;
-	}
+	// if (!user.remoteChatUser) {
+	// 	return;
+	// }
 
-	if (user._micAudioTrack?.isPlaying) {
-		rtc.log('Stopping existing audio track');
-		try {
-			user._micAudioTrack.stop();
-		} catch (e) {
-			rtc.logWarning('Failed to stop mic audio track playback', e);
-		}
-	}
+	// if (user._micAudioTrack?.isPlaying) {
+	// 	rtc.log('Stopping existing audio track');
+	// 	try {
+	// 		user._micAudioTrack.stop();
+	// 	} catch (e) {
+	// 		rtc.logWarning('Failed to stop mic audio track playback', e);
+	// 	}
+	// }
 
-	try {
-		user._micAudioTrack = null;
-		await rtc.chatChannel.agoraClient.unsubscribe(user.remoteChatUser, 'audio');
-	} catch (e) {
-		rtc.logWarning(
-			`Failed to unsubscribe to mic audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.`
-		);
-	}
+	// try {
+	// 	user._micAudioTrack = null;
+	// 	await rtc.chatChannel.agoraClient.unsubscribe(user.remoteChatUser, 'audio');
+	// } catch (e) {
+	// 	rtc.logWarning(
+	// 		`Failed to unsubscribe to mic audio. Most of the times this is not an error. We attempt to unsubscribe even when we know the user should normally be unsubscribed.`
+	// 	);
+	// }
 }
 
 export function updateVolumeLevel(user: FiresideRTCUser) {
-	// Ignore remote users that have no active track.
-	if (
-		(user._micAudioTrack?.isPlaying !== true && !user.isLocal) ||
-		(user.isLocal && user.rtc.producer?.micMuted.value === true)
-	) {
-		user.volumeLevel = 0;
-		return;
-	}
-
-	const level = user._micAudioTrack?.getVolumeLevel() || 0;
-
-	// Treat the user as speaking when their volume level is above a certain
-	// threshold.
-	if (level > 0.6) {
-		user.volumeLevel = 1;
-	} else {
-		user.volumeLevel = 0;
-	}
+	// TODO(oven)
+	// // Ignore remote users that have no active track.
+	// if (
+	// 	(user._micAudioTrack?.isPlaying !== true && !user.isLocal) ||
+	// 	(user.isLocal && user.rtc.producer?.micMuted.value === true)
+	// ) {
+	// 	user.volumeLevel = 0;
+	// 	return;
+	// }
+	// const level = user._micAudioTrack?.getVolumeLevel() || 0;
+	// // Treat the user as speaking when their volume level is above a certain
+	// // threshold.
+	// if (level > 0.6) {
+	// 	user.volumeLevel = 1;
+	// } else {
+	// 	user.volumeLevel = 0;
+	// }
 }
 
 /** Expects a value from 0 to 1 */
 export function setUserMicrophoneAudioVolume(user: FiresideRTCUser, percent: number) {
-	user._micAudioTrack?.setVolume(Math.round(percent * 100));
+	// TODO(oven)
+	// user._micAudioTrack?.setVolume(Math.round(percent * 100));
 	user.micPlaybackVolumeLevel = percent;
 }
 
 /** Expects a value from 0 to 1 */
 export function setUserDesktopAudioVolume(user: FiresideRTCUser, percent: number) {
-	user._desktopAudioTrack?.setVolume(Math.round(percent * 100));
+	// TODO(oven)
+	// user._desktopAudioTrack?.setVolume(Math.round(percent * 100));
 	user.desktopPlaybackVolumeLevel = percent;
 }

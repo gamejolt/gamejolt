@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed, ref, watch, watchEffect } from 'vue';
-import { arrayRemove } from '../../../../utils/array';
 import { Background } from '../../../../_common/background/background.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { Community } from '../../../../_common/community/community.model';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat/chat-settings.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FIRESIDE_ROLES } from '../../../../_common/fireside/role/role.model';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import { onRTCUserJoined, onRTCUserLeft } from '../../../../_common/fireside/rtc/rtc';
+import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -26,6 +26,7 @@ import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { arrayRemove } from '../../../../utils/array';
 import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import {
 	extinguishFireside,
@@ -55,12 +56,49 @@ const {
 	canPublish,
 	canExtinguish,
 	canReport,
+	rtc,
 } = c;
 
 const selectedCommunities = ref<{ community: Community }[]>([]);
 const targetableCommunities = computed(() => selectedCommunities.value.map(i => i.community));
 const selectedRealms = ref<Realm[]>([]);
 const maxRealms = ref(0);
+
+// TODO(oven)
+const hostsForm: FormController<{ host1: number; host2: number; host3: number }> = createForm({
+	onSubmit: () => {
+		const data = hostsForm.formModel;
+
+		const toCreate: number[] = [];
+		const toRemove: number[] = [];
+
+		for (const userId of Object.values(data)) {
+			if (!userId) {
+				continue;
+			}
+
+			if (!rtc.value!._remoteStreamingUsers.some(i => i.userId === userId)) {
+				toCreate.push(userId);
+			}
+		}
+
+		for (const user of rtc.value!._remoteStreamingUsers) {
+			if (!Object.values(data).includes(user.userId)) {
+				toRemove.push(user.userId);
+			}
+		}
+
+		for (const userId of toCreate) {
+			onRTCUserJoined(rtc.value!, userId);
+		}
+
+		for (const userId of toRemove) {
+			onRTCUserLeft(rtc.value!, userId);
+		}
+
+		return Promise.resolve(true);
+	},
+});
 
 const form: FormController<Fireside> = createForm({
 	warnOnDiscard: false,
@@ -271,6 +309,22 @@ function onClickChatMods() {
 							</a>
 						</div>
 					</template>
+
+					<AppForm :controller="hostsForm">
+						<AppFormGroup name="host1" small optional>
+							<AppFormControl type="number" />
+						</AppFormGroup>
+
+						<AppFormGroup name="host2" small optional>
+							<AppFormControl type="number" />
+						</AppFormGroup>
+
+						<AppFormGroup name="host3" small optional>
+							<AppFormControl type="number" />
+						</AppFormGroup>
+
+						<AppFormButton>Apply</AppFormButton>
+					</AppForm>
 
 					<!-- Shown to guests and chat mods (since they can't do anything yet) -->
 					<AppFiresideShare v-if="!canStream" class="-share" primary />

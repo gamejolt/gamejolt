@@ -1,9 +1,3 @@
-<script lang="ts">
-const UIHideTimeout = 2000;
-const UIHideTimeoutMovement = 2000;
-const UITransitionTime = 200;
-</script>
-
 <script lang="ts" setup>
 import { computed, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -20,12 +14,15 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
-import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
 import AppFiresideStreamStats from '../../../components/fireside/stream/stream-stats/AppFiresideStreamStats.vue';
-import AppFiresideHeader from '../AppFiresideHeader.vue';
 import AppFiresideBottomBar from '../_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideBottomBarHostAvatar from '../_bottom-bar/AppFiresideBottomBarHostAvatar.vue';
+import AppFiresideHeader from '../AppFiresideHeader.vue';
+
+const UIHideTimeout = 2000;
+const UIHideTimeoutMovement = 2000;
+const UITransitionTime = 200;
 
 const props = defineProps({
 	rtcUser: {
@@ -148,8 +145,10 @@ const hasVideo = computed(() => {
 	return true;
 });
 
+// TODO(oven)
 const isLoadingVideo = computed(
-	() => hasVideo.value && rtc.value?.videoChannel.isConnected !== true
+	() => false
+	// () => hasVideo.value && rtc.value?.videoChannel.isConnected !== true
 );
 
 // When we want to darken the whole stream overlay instead of only sections.
@@ -168,7 +167,8 @@ const shouldPlayDesktopAudio = computed(() => {
 
 	return (
 		hasVideo.value &&
-		rtc.value.videoChannel.isConnected &&
+		// TODO(oven)
+		// rtc.value.videoChannel.isConnected &&
 		rtcUser.value.hasDesktopAudio &&
 		!rtc.value.videoPaused
 	);
@@ -354,7 +354,7 @@ async function togglePinStream() {
 				</div>
 			</template>
 			<template v-else>
-				<div :key="rtcUser.uid" :style="{ width: '100%', height: '100%' }">
+				<div :key="rtcUser.userId" :style="{ width: '100%', height: '100%' }">
 					<template v-if="shouldShowVideo">
 						<div v-if="shouldHideStreamVideo" class="-video-hidden-notice">
 							<strong>
@@ -372,7 +372,9 @@ async function togglePinStream() {
 						</template>
 					</template>
 
-					<AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" />
+					<!-- TODO(oven) -->
+					<!-- <AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" /> -->
+
 					<AppFiresideStreamStats
 						v-if="!noStats && shouldShowVideoStats"
 						class="-stream-stats"

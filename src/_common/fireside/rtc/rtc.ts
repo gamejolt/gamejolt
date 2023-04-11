@@ -1,42 +1,30 @@
-import type { IAgoraRTC, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
-import { markRaw, reactive, Ref } from 'vue';
+import { Ref, reactive } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
 import { Background } from '../../background/background.model';
-import { importNoSSR } from '../../code-splitting';
-import { Navigate } from '../../navigate/navigate.service';
 import { User } from '../../user/user.model';
 import { Fireside } from '../fireside.model';
+import { FiresideRTCChannel, setChannelToken } from './channel';
+import { FiresideRTCProducer, cleanupFiresideRTCProducer, updateSetIsStreaming } from './producer';
 import {
-	createFiresideRTCChannel,
-	destroyChannel,
-	FiresideRTCChannel,
-	joinChannel,
-	setChannelToken,
-} from './channel';
-import { cleanupFiresideRTCProducer, FiresideRTCProducer, updateSetIsStreaming } from './producer';
-import {
-	cleanupFiresideRTCUser,
-	createRemoteFiresideRTCUser,
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
+	cleanupFiresideRTCUser,
+	createRemoteFiresideRTCUser,
 	initRemoteFiresideRTCUserPrefs,
-	setUserHasDesktopAudio,
-	setUserHasMicAudio,
-	setUserHasVideo,
+	setDesktopAudioPlayback,
+	setMicAudioPlayback,
 	setVideoPlayback,
-	stopDesktopAudioPlayback,
-	stopMicAudioPlayback,
 	updateVolumeLevel,
 } from './user';
 
-let AgoraRTC: IAgoraRTC | null = null;
-const AgoraRTCLoader = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default).then(
-	myAgoraRTC => {
-		AgoraRTC = myAgoraRTC;
-	}
-);
+// let AgoraRTC: IAgoraRTC | null = null;
+// const AgoraRTCLoader = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default).then(
+// 	myAgoraRTC => {
+// 		AgoraRTC = myAgoraRTC;
+// 	}
+// );
 
 export const FiresideRTCKey = Symbol();
 
@@ -54,10 +42,14 @@ export interface AgoraStreamingInfo {
 	appId: string;
 	streamingUid: number;
 	videoChannelName: string;
-	// The video token may either be the audience token or the cohost token
+	/**
+	 * The video token may either be the audience token or the cohost token.
+	 */
 	videoToken: string;
 	chatChannelName: string;
-	// The chat token may either be the audience token or the cohost token
+	/**
+	 * The chat token may either be the audience token or the cohost token.
+	 */
 	chatToken: string;
 }
 
@@ -96,7 +88,9 @@ export class FiresideRTC {
 	shouldShowMutedIndicator = false;
 
 	// These channels will get created immediately during _setup.
+	/** @deprecated */
 	videoChannel!: FiresideRTCChannel;
+	/** @deprecated */
 	chatChannel!: FiresideRTCChannel;
 
 	/**
@@ -140,10 +134,10 @@ export class FiresideRTC {
 	 * Note: the local user is set if they are currently streaming.
 	 */
 	get _allStreamingUsers() {
-		// If we are streaming from a different tab then we will already have a remote user
-		// correlating to the same gj user our local user correlates to.
-		// This is apparently intended, but i don't know why.
-		return this.localUser // formatting
+		// If we are streaming from a different tab then we will already have a
+		// remote user correlating to the same gj user our local user correlates
+		// to.
+		return this.localUser
 			? [this.localUser, ...this._remoteStreamingUsers]
 			: [...this._remoteStreamingUsers];
 	}
@@ -162,12 +156,15 @@ export class FiresideRTC {
 
 	get isFocusingMe() {
 		return (
-			!!this.focusedUser && !!this.localUser && this.focusedUser.uid === this.localUser.uid
+			!!this.focusedUser &&
+			!!this.localUser &&
+			this.focusedUser.userId === this.localUser.userId
 		);
 	}
 
 	get isPoorNetworkQuality() {
-		return this.videoChannel.isPoorNetworkQuality || this.chatChannel.isPoorNetworkQuality;
+		return false;
+		// return this.videoChannel.isPoorNetworkQuality || this.chatChannel.isPoorNetworkQuality;
 	}
 }
 
@@ -230,8 +227,8 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 			rtc._allStreamingUsers.map(user =>
 				Promise.all([
 					setVideoPlayback(user, new FiresideVideoPlayStateStopped()),
-					stopDesktopAudioPlayback(user),
-					stopMicAudioPlayback(user),
+					setDesktopAudioPlayback(user, false),
+					setMicAudioPlayback(user, false),
 				])
 			)
 		);
@@ -240,15 +237,15 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 		rtc.logWarning(e);
 	}
 
-	const { videoChannel, chatChannel } = rtc;
-	try {
-		await Promise.all([destroyChannel(videoChannel), destroyChannel(chatChannel)]);
-	} catch (e) {
-		rtc.logError(`Failed to destroy the Fireside RTC. Reloading...`, e);
-		// reload the page, anything we do now is no longer reliable.
-		Navigate.reload();
-		return;
-	}
+	// const { videoChannel, chatChannel } = rtc;
+	// try {
+	// 	await Promise.all([destroyChannel(videoChannel), destroyChannel(chatChannel)]);
+	// } catch (e) {
+	// 	rtc.logError(`Failed to destroy the Fireside RTC. Reloading...`, e);
+	// 	// reload the page, anything we do now is no longer reliable.
+	// 	Navigate.reload();
+	// 	return;
+	// }
 
 	if (rtc.volumeLevelInterval !== null) {
 		clearInterval(rtc.volumeLevelInterval);
@@ -329,11 +326,12 @@ async function _setup(rtc: FiresideRTC) {
 	rtc.generation.cancel();
 	rtc.generation = gen;
 
-	// Wait for Agora to be fully initialized.
-	await AgoraRTCLoader;
-	gen.assert();
+	// TODO(oven)
+	// // Wait for Agora to be fully initialized.
+	// await AgoraRTCLoader;
+	// gen.assert();
 
-	_createChannels(rtc);
+	// _createChannels(rtc);
 
 	for (let i = 0; i < 5; i++) {
 		try {
@@ -382,165 +380,222 @@ function _finalizeSetup(rtc: FiresideRTC) {
 	rtc.finalizeSetupFn?.();
 }
 
-function _createChannels(rtc: FiresideRTC) {
-	rtc.log('Trace(createChannels)');
+// function _createChannels(rtc: FiresideRTC) {
+// 	rtc.log('Trace(createChannels)');
 
-	if (!AgoraRTC) {
-		throw new Error('Expected AgoraRTC to be resolved by now');
-	}
+// 	if (!AgoraRTC) {
+// 		throw new Error('Expected AgoraRTC to be resolved by now');
+// 	}
 
-	(AgoraRTC as any).setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
+// 	(AgoraRTC as any).setParameter('AUDIO_SOURCE_VOLUME_UPDATE_INTERVAL', 100);
 
-	// If we fail to autoplay, pause the stream so we have to interact with the
-	// DOM to play it.
-	AgoraRTC.onAutoplayFailed = async () => {
-		if (rtc._hasAutoplayError) {
-			return;
-		}
-		rtc._hasAutoplayError = true;
+// 	// If we fail to autoplay, pause the stream so we have to interact with the
+// 	// DOM to play it.
+// 	AgoraRTC.onAutoplayFailed = async () => {
+// 		if (rtc._hasAutoplayError) {
+// 			return;
+// 		}
+// 		rtc._hasAutoplayError = true;
 
-		// Pause videos and indicate that the video is currently playing in a
-		// muted state.
-		const wasPaused = rtc.videoPaused;
-		rtc.videoPaused = true;
-		rtc.shouldShowMutedIndicator = true;
+// 		// Pause videos and indicate that the video is currently playing in a
+// 		// muted state.
+// 		const wasPaused = rtc.videoPaused;
+// 		rtc.videoPaused = true;
+// 		rtc.shouldShowMutedIndicator = true;
 
-		// Any document interaction seems sufficient to cause the audio to play
-		// once all the stream subscriptions are active.
-		window.document.addEventListener(
-			'click',
-			async () => {
-				rtc._hasAutoplayError = false;
-				rtc.shouldShowMutedIndicator = false;
+// 		// Any document interaction seems sufficient to cause the audio to play
+// 		// once all the stream subscriptions are active.
+// 		window.document.addEventListener(
+// 			'click',
+// 			async () => {
+// 				rtc._hasAutoplayError = false;
+// 				rtc.shouldShowMutedIndicator = false;
 
-				// Wait a moment in case the way they triggered this way by
-				// clicking the play button.
-				await sleep(0);
-				// Set [videoPaused] to its previous state if we're still
-				// paused.
-				if (rtc.videoPaused) {
-					rtc.videoPaused = wasPaused;
-				}
-			},
-			{
-				once: true,
-				capture: true,
-				passive: true,
-			}
-		);
-	};
+// 				// Wait a moment in case the way they triggered this way by
+// 				// clicking the play button.
+// 				await sleep(0);
+// 				// Set [videoPaused] to its previous state if we're still
+// 				// paused.
+// 				if (rtc.videoPaused) {
+// 					rtc.videoPaused = wasPaused;
+// 				}
+// 			},
+// 			{
+// 				once: true,
+// 				capture: true,
+// 				passive: true,
+// 			}
+// 		);
+// 	};
 
-	rtc.volumeLevelInterval = setInterval(() => _updateVolumeLevels(rtc), 100);
+// 	rtc.volumeLevelInterval = setInterval(() => _updateVolumeLevels(rtc), 100);
 
-	rtc.videoChannel = createFiresideRTCChannel(
-		rtc,
-		rtc.videoChannelName,
-		rtc.videoToken,
-		AgoraRTC,
-		{
-			onTrackPublish(remoteUser, mediaType) {
-				rtc.log('Got user published (video channel)');
+// 	rtc.videoChannel = createFiresideRTCChannel(
+// 		rtc,
+// 		rtc.videoChannelName,
+// 		rtc.videoToken,
+// 		AgoraRTC,
+// 		{
+// 			onTrackPublish(remoteUser, mediaType) {
+// 				rtc.log('Got user published (video channel)');
 
-				const user = _findOrAddRemoteUser(rtc, remoteUser);
-				if (!user) {
-					rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-					return;
-				}
+// 				const user = _findOrAddRemoteUser(rtc, remoteUser);
+// 				if (!user) {
+// 					rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+// 					return;
+// 				}
 
-				user.remoteVideoUser = markRaw(remoteUser);
+// 				user.remoteVideoUser = markRaw(remoteUser);
 
-				if (mediaType === 'video') {
-					setUserHasVideo(user, true);
-				} else {
-					setUserHasDesktopAudio(user, true);
-				}
+// 				if (mediaType === 'video') {
+// 					setUserHasVideo(user, true);
+// 				} else {
+// 					setUserHasDesktopAudio(user, true);
+// 				}
 
-				_finalizeSetup(rtc);
-			},
-			onTrackUnpublish(remoteUser, mediaType) {
-				rtc.log('Got user unpublished (video channel)');
+// 				_finalizeSetup(rtc);
+// 			},
+// 			onTrackUnpublish(remoteUser, mediaType) {
+// 				rtc.log('Got user unpublished (video channel)');
 
-				// Ideally we'd like to check _remoteStreamingUsers but I don't trust Agora
-				// to actually emit these events only for remote users.
-				// If it gets emitted for a local user we'll throw.
-				const user = rtc._allStreamingUsers.find(i => i.uid === remoteUser.uid);
-				if (!user) {
-					rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-					return;
-				}
+// 				// Ideally we'd like to check _remoteStreamingUsers but I don't trust Agora
+// 				// to actually emit these events only for remote users.
+// 				// If it gets emitted for a local user we'll throw.
+// 				const user = rtc._allStreamingUsers.find(i => i.userId === remoteUser.uid);
+// 				if (!user) {
+// 					rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+// 					return;
+// 				}
 
-				// Safeguard against Agora emitting these events for local users.
-				if (user.isLocal) {
-					throw new Error('Expected to be handling remote users here');
-				}
+// 				// Safeguard against Agora emitting these events for local users.
+// 				if (user.isLocal) {
+// 					throw new Error('Expected to be handling remote users here');
+// 				}
 
-				if (mediaType === 'video') {
-					setUserHasVideo(user, false);
-				} else {
-					setUserHasDesktopAudio(user, false);
-				}
+// 				if (mediaType === 'video') {
+// 					setUserHasVideo(user, false);
+// 				} else {
+// 					setUserHasDesktopAudio(user, false);
+// 				}
 
-				_removeUserIfNeeded(rtc, user);
-			},
-		}
-	);
+// 				_removeUserIfNeeded(rtc, user);
+// 			},
+// 		}
+// 	);
 
-	rtc.chatChannel = createFiresideRTCChannel(rtc, rtc.chatChannelName, rtc.chatToken, AgoraRTC, {
-		onTrackPublish(remoteUser, mediaType) {
-			rtc.log('got user published (audio chat channel)');
+// 	rtc.chatChannel = createFiresideRTCChannel(rtc, rtc.chatChannelName, rtc.chatToken, AgoraRTC, {
+// 		onTrackPublish(remoteUser, mediaType) {
+// 			rtc.log('got user published (audio chat channel)');
 
-			if (mediaType !== 'audio') {
-				rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
-				return;
-			}
+// 			if (mediaType !== 'audio') {
+// 				rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
+// 				return;
+// 			}
 
-			const user = _findOrAddRemoteUser(rtc, remoteUser);
-			if (!user) {
-				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-				return;
-			}
+// 			const user = _findOrAddRemoteUser(rtc, remoteUser);
+// 			if (!user) {
+// 				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+// 				return;
+// 			}
 
-			user.remoteChatUser = markRaw(remoteUser);
-			setUserHasMicAudio(user, true);
+// 			user.remoteChatUser = markRaw(remoteUser);
+// 			setUserHasMicAudio(user, true);
 
-			_finalizeSetup(rtc);
-		},
-		onTrackUnpublish(remoteUser, mediaType) {
-			rtc.log('Got user unpublished (audio channel)');
+// 			_finalizeSetup(rtc);
+// 		},
+// 		onTrackUnpublish(remoteUser, mediaType) {
+// 			rtc.log('Got user unpublished (audio channel)');
 
-			// This should never trigger.
-			if (mediaType !== 'audio') {
-				rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
-				return;
-			}
+// 			// This should never trigger.
+// 			if (mediaType !== 'audio') {
+// 				rtc.logWarning('Unexpected media type: ' + mediaType + '. Ignoring');
+// 				return;
+// 			}
 
-			// Ideally we'd like to check _remoteStreamingUsers but I don't trust Agora
-			// to actually emit these events only for remote users.
-			// If it gets emitted for a local user we'll throw.
-			const user = rtc._allStreamingUsers.find(i => i.uid === remoteUser.uid);
-			if (!user) {
-				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
-				return;
-			}
+// 			// Ideally we'd like to check _remoteStreamingUsers but I don't trust Agora
+// 			// to actually emit these events only for remote users.
+// 			// If it gets emitted for a local user we'll throw.
+// 			const user = rtc._allStreamingUsers.find(i => i.userId === remoteUser.uid);
+// 			if (!user) {
+// 				rtc.logWarning(`Couldn't find remote user locally`, remoteUser);
+// 				return;
+// 			}
 
-			// Safeguard against Agora emitting these events for local users.
-			if (user.isLocal) {
-				throw new Error('Expected to be handling remote users here');
-			}
+// 			// Safeguard against Agora emitting these events for local users.
+// 			if (user.isLocal) {
+// 				throw new Error('Expected to be handling remote users here');
+// 			}
 
-			setUserHasMicAudio(user, false);
-			_removeUserIfNeeded(rtc, user);
-		},
-	});
-}
+// 			setUserHasMicAudio(user, false);
+// 			_removeUserIfNeeded(rtc, user);
+// 		},
+// 	});
+// }
 
 async function _join(rtc: FiresideRTC) {
 	rtc.log('Trace(join)');
 
-	await Promise.all([
-		joinChannel(rtc.videoChannel, rtc.videoToken),
-		joinChannel(rtc.chatChannel, rtc.chatToken),
-	]);
+	// TODO(oven)
+	// await Promise.all([
+	// 	joinChannel(rtc.videoChannel, rtc.videoToken),
+	// 	joinChannel(rtc.chatChannel, rtc.chatToken),
+	// ]);
+}
+
+/**
+ * Should be called when an RTC user joins the fireside. Will set them up with a
+ * [FiresideRTCUser].
+ */
+export function onRTCUserJoined(rtc: FiresideRTC, userId: number) {
+	rtc.log('RTC user joined', userId);
+
+	const user = _findOrAddRemoteUser(rtc, userId);
+	if (!user) {
+		rtc.logWarning(`Couldn't find remote user locally`, userId);
+		return;
+	}
+
+	// TODO(oven)
+	// user.remoteVideoUser = markRaw(remoteUser);
+
+	// if (mediaType === 'video') {
+	// 	setUserHasVideo(user, true);
+	// } else {
+	// 	setUserHasDesktopAudio(user, true);
+	// }
+
+	_finalizeSetup(rtc);
+}
+
+/**
+ * Should be called when an RTC user leaves the fireside. Will completely tear
+ * them down.
+ */
+export function onRTCUserLeft(rtc: FiresideRTC, userId: number) {
+	rtc.log('RTC user left', userId);
+
+	// Ideally we'd like to check _remoteStreamingUsers but I don't trust Agora
+	// to actually emit these events only for remote users.
+	// If it gets emitted for a local user we'll throw.
+	const user = rtc._allStreamingUsers.find(i => i.userId === userId);
+	if (!user) {
+		rtc.logWarning(`Couldn't find remote user locally`, userId);
+		return;
+	}
+
+	// Safeguard against Agora emitting these events for local users.
+	if (user.isLocal) {
+		throw new Error('Expected to be handling remote users here');
+	}
+
+	// TODO(oven)
+	// if (mediaType === 'video') {
+	// 	setUserHasVideo(user, false);
+	// } else {
+	// 	setUserHasDesktopAudio(user, false);
+	// }
+
+	_removeUserIfNeeded(rtc, user);
 }
 
 export function chooseFocusedRTCUser(rtc: FiresideRTC) {
@@ -570,19 +625,14 @@ export function chooseFocusedRTCUser(rtc: FiresideRTC) {
 	rtc.focusedUser = bestUser;
 }
 
-function _findOrAddRemoteUser(rtc: FiresideRTC, remoteUser: IAgoraRTCRemoteUser) {
-	if (typeof remoteUser.uid !== 'number') {
-		rtc.logWarning('Expected remote user uid to be numeric');
-		return null;
-	}
-
+function _findOrAddRemoteUser(rtc: FiresideRTC, userId: number) {
 	// We are checking _allStreamingUsers here just as a safeguard against Agora.
 	// if we don't use _allStreamingUsers we'll end up inserting the local user
 	// into _remoteStreamingUsers.
-	let user = rtc._allStreamingUsers.find(i => i.uid === remoteUser.uid);
+	let user = rtc._allStreamingUsers.find(i => i.userId === userId);
 
 	if (!user) {
-		user = createRemoteFiresideRTCUser(rtc, remoteUser.uid);
+		user = createRemoteFiresideRTCUser(rtc, userId);
 		rtc._remoteStreamingUsers.push(user);
 		// Need to do this after we add the user to our list, otherwise we won't
 		// be able to find a User during this call and nothing will happen.
@@ -606,10 +656,10 @@ function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
 		// NOTE: Always compare something like [uid] or wrap objects in [toRaw]
 		// when checking equality. If we don't we may end up comparing a proxy
 		// of the object to the raw object, failing the quality check.
-		return i.uid === user.uid;
+		return i.userId === user.userId;
 	});
 
-	if (rtc.focusedUser?.uid === user.uid) {
+	if (rtc.focusedUser?.userId === user.userId) {
 		rtc.focusedUser = null;
 		chooseFocusedRTCUser(rtc);
 	}

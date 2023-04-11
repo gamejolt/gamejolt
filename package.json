@@ -75,6 +75,8 @@
 		"jstimezonedetect": "1.0.7",
 		"minimist": "1.2.8",
 		"node-fetch": "2.6.7",
+		"ovenlivekit": "1.1.0",
+		"ovenplayer": "0.10.26",
 		"phoenix": "1.5.1",
 		"polished": "4.1.4",
 		"prettier": "2.8.4",

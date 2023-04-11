@@ -26,13 +26,21 @@ const DefaultAudienceLevel: AudienceLatencyLevelType = 2;
 export class FiresideRTCChannel {
 	constructor(public readonly rtc: FiresideRTC, public readonly channel: string) {}
 
+	/** @deprecated */
 	agoraClient!: IAgoraRTCClient;
 	token: string | null = null;
 
+	/** @deprecated */
 	_localVideoTrack: ILocalVideoTrack | null = null;
+	/** @deprecated */
 	_localAudioTrack: ILocalAudioTrack | null = null;
+	/** @deprecated */
 	_networkQuality: NetworkQuality | null = null;
+	/** @deprecated */
 	_connectionState: ConnectionState | null = null;
+
+	localVideoStream: MediaStream | null = null;
+	localAudioStream: MediaStream | null = null;
 
 	/**
 	 * Whether or not we have a track published in this channel. This will
@@ -158,47 +166,47 @@ export async function setChannelToken(channel: FiresideRTCChannel, token: string
 export async function setChannelVideoTrack(
 	channel: FiresideRTCChannel,
 	{
-		trackBuilder,
+		streamBuilder,
 		onTrackClose,
 	}: {
-		trackBuilder: () => Promise<ILocalVideoTrack | null>;
+		streamBuilder: () => Promise<MediaStream | null>;
 		onTrackClose?: () => Promise<void>;
 	}
 ) {
 	const { agoraClient, rtc } = channel;
 	const generation = channel.rtc.generation;
 
-	if (channel._localVideoTrack !== null) {
-		rtc.log(`Local video track already exists.`);
+	if (channel._localVideoStream !== null) {
+		rtc.log(`Local video stream already exists.`);
 
-		const localTrack = channel._localVideoTrack;
-		channel._localVideoTrack = null;
+		const localStream = channel._localVideoStream;
+		channel._localVideoStream = null;
 
-		const isPublished = _isTrackPublished(channel, localTrack);
+		const isPublished = _isTrackPublished(channel, localStream);
 		if (isPublished) {
 			rtc.log(`Local video is already published. Unpublishing first.`);
-			await agoraClient.unpublish(localTrack);
+			await agoraClient.unpublish(localStream);
 			generation.assert();
 		}
 
 		rtc.log(`Closing previous local video track.`);
-		localTrack.close();
+		localStream.close();
 
 		await onTrackClose?.();
 	}
 
 	rtc.log(`Getting new video track.`);
-	let newTrack: ILocalVideoTrack | null = null;
+	let newStream: MediaStream | null = null;
 	try {
-		newTrack = await trackBuilder();
+		newStream = await streamBuilder();
 	} catch (e) {
 		showErrorGrowl({
 			message: $gettext(`Something went wrong trying to use that video device.`),
 		});
-		channel._localVideoTrack = null;
+		channel._localVideoStream = null;
 		return;
 	}
-	channel._localVideoTrack = newTrack ? markRaw(newTrack) : null;
+	channel._localVideoStream = newStream ? markRaw(newStream) : null;
 	generation.assert();
 
 	// Only publish if we are streaming.

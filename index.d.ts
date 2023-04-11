@@ -5,6 +5,8 @@ import './typings/environment.d.ts';
 import './typings/html.d.ts';
 import './typings/markdown.d.ts';
 import './typings/nwjs.d.ts';
+import './typings/ovenlivekit.d.ts';
+import './typings/ovenplayer.d.ts';
 import './typings/router.d.ts';
 import './typings/shaka.d.ts';
 import './typings/translate.d.ts';

@@ -54,8 +54,8 @@ const desktopVolumeBeforeScrub = ref<number>();
 
 const isLoadingFollowState = ref(false);
 
-const isFocused = computed(() => rtc.value?.focusedUser?.uid === host.value.uid);
-const isMe = computed(() => rtc.value?.localUser?.uid === host.value.uid);
+const isFocused = computed(() => rtc.value?.focusedUser?.userId === host.value.userId);
+const isMe = computed(() => rtc.value?.localUser?.userId === host.value.userId);
 const showingVideoThumb = computed(() => {
 	if (isMe.value && rtc.value?.producer?.videoMuted.value) {
 		return false;

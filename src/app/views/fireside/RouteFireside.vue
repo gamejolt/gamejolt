@@ -617,7 +617,7 @@ function onClickStreamingBanner() {
 										>
 											<template v-if="focusedUser">
 												<AppStickerTarget
-													:key="focusedUser.uid"
+													:key="focusedUser.userId"
 													class="-video-inner -abs-stretch"
 													:controller="c.stickerTargetController"
 												>

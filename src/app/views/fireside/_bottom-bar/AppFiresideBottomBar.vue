@@ -64,7 +64,7 @@ const micTooltip = computed(() => {
 		return undefined;
 	}
 
-	if (!_user._micAudioTrack) {
+	if (!_user.hasMicAudio) {
 		return $gettext(`No microphone selected`);
 	}
 
@@ -81,7 +81,7 @@ const videoTooltip = computed(() => {
 		return undefined;
 	}
 
-	if (!_user._videoTrack) {
+	if (!_user.hasVideo) {
 		return $gettext(`No video selected`);
 	}
 
@@ -101,7 +101,7 @@ const micIcon = computed<Jolticon>(() => {
 	}
 
 	const _user = localUser.value;
-	if (!_user || !_user._micAudioTrack || producer.value?.micMuted.value) {
+	if (!_user || !_user.hasMicAudio || producer.value?.micMuted.value) {
 		return disabled;
 	}
 	return enabled;
@@ -116,7 +116,7 @@ const videoIcon = computed<Jolticon>(() => {
 	}
 
 	const _user = localUser.value;
-	if (!_user || !_user._videoTrack || producer.value?.videoMuted.value) {
+	if (!_user || !_user.hasVideo || producer.value?.videoMuted.value) {
 		return disabled;
 	}
 	return enabled;
@@ -256,7 +256,7 @@ async function onClickStopStreaming() {
 						v-app-tooltip="micTooltip"
 						:active="localUser?.hasMicAudio && !producerMicMuted"
 						:icon="micIcon"
-						:disabled="!localUser?._micAudioTrack"
+						:disabled="!localUser?.hasMicAudio"
 						@click="onClickMic"
 					/>
 
@@ -264,7 +264,7 @@ async function onClickStopStreaming() {
 						v-app-tooltip="videoTooltip"
 						:active="localUser?.hasVideo && !producerVideoMuted"
 						:icon="videoIcon"
-						:disabled="!localUser?._videoTrack"
+						:disabled="!localUser?.hasVideo"
 						@click="onClickVideo"
 					/>
 

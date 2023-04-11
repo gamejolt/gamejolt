@@ -39,7 +39,7 @@ const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers 
 			<template v-if="focusedUser">
 				<AppFiresideBottomBarHost
 					v-for="host of listableStreamingUsers"
-					:key="host.uid"
+					:key="host.userId"
 					class="-host-thumb"
 					:host="host"
 				/>

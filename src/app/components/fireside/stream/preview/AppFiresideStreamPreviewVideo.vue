@@ -82,7 +82,7 @@ onBeforeUnmount(() => cleanupController());
 
 <template>
 	<div class="-stream-preview-video theme-dark">
-		<div v-if="focusedUser && shouldShowVideo" :key="focusedUser.uid">
+		<div v-if="focusedUser && shouldShowVideo" :key="focusedUser.userId">
 			<AppFiresideStreamVideo class="-stream-preview-video-inner" :rtc-user="focusedUser" />
 
 			<div class="-overlay">

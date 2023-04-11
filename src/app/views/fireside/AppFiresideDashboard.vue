@@ -115,7 +115,7 @@ function toggleVideoStats() {
 					>
 						<template v-if="localUser">
 							<AppStickerTarget
-								:key="localUser.uid"
+								:key="localUser.userId"
 								class="-video-inner"
 								:controller="stickerTargetController"
 							>
