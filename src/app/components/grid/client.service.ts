@@ -1,6 +1,5 @@
 import { Channel } from 'phoenix';
 import { markRaw, reactive } from 'vue';
-import { arrayRemove } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
 import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
@@ -489,22 +488,7 @@ export class GridClient {
 	async leaveCommunity(community: Community) {
 		const channel = this.communityChannels.find(i => i.communityId === community.id);
 		if (channel) {
-			channel.channelController.leave();
-			arrayRemove(this.communityChannels, i => i === channel);
-		}
-	}
-
-	async leaveFireside(fireside: Fireside) {
-		const channel = this.firesideChannels.find(i => i.firesideHash === fireside.hash);
-		if (channel) {
-			channel.channelController.leave();
-			arrayRemove(this.firesideChannels, i => i === channel);
-		}
-
-		const dmChannel = this.firesideDMChannels.find(i => i.firesideHash === fireside.hash);
-		if (dmChannel) {
-			dmChannel.channelController.leave();
-			arrayRemove(this.firesideDMChannels, i => i === channel);
+			channel.leave();
 		}
 	}
 

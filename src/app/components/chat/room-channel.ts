@@ -1,14 +1,5 @@
 import { Presence } from 'phoenix';
-import {
-	computed,
-	ComputedRef,
-	markRaw,
-	onMounted,
-	onUnmounted,
-	ref,
-	shallowReadonly,
-	watch,
-} from 'vue';
+import { computed, markRaw, onMounted, onUnmounted, Ref, ref, shallowReadonly, watch } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { run } from '../../../utils/utils';
@@ -637,7 +628,7 @@ class ChatRoomChannelLock {
  * Convenience for getting a member collection and releasing the lock on
  * component unmount.
  */
-export function useChatRoomMembers(room: ComputedRef<ChatRoom | undefined>) {
+export function useChatRoomMembers(room: Ref<ChatRoom | undefined>) {
 	let lock: ChatRoomChannelLock | undefined;
 	const mounted = ref(false);
 

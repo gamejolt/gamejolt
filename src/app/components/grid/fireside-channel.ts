@@ -1,4 +1,5 @@
-import { shallowReadonly, triggerRef } from 'vue';
+import { markRaw, shallowReadonly, triggerRef } from 'vue';
+import { arrayRemove } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
 import { Background } from '../../../_common/background/background.model';
 import { FiresideChatSettings } from '../../../_common/fireside/chat/chat-settings.model';
@@ -30,6 +31,7 @@ export type GridFiresideChannel = Readonly<{
 		chatSettings: FiresideChatSettings
 	) => Promise<UpdateChatSettingsPayload>;
 	pushUpdateHost: (data: UpdateHostData) => Promise<any>;
+	leave: () => void;
 }>;
 
 interface UpdateHostData {
@@ -96,6 +98,7 @@ export function createGridFiresideChannel(
 
 	const joinPromise = channelController.join({
 		async onJoin(response: JoinPayload) {
+			client.firesideChannels.push(markRaw(c));
 			chatSettings.value.assign(response.chat_settings);
 
 			// We need to initialize background data for all hosts.
@@ -108,15 +111,24 @@ export function createGridFiresideChannel(
 				}
 			}
 		},
+		onLeave() {
+			arrayRemove(client.firesideChannels, i => i.firesideHash === firesideHash);
+		},
 	});
 
 	const c = shallowReadonly<GridFiresideChannel>({
 		channelController,
 		firesideHash,
 		joinPromise,
+
 		pushUpdateChatSettings,
 		pushUpdateHost,
+		leave,
 	});
+
+	function leave() {
+		channelController.leave();
+	}
 
 	async function _onUpdate(payload: UpdatePayload) {
 		logger.info('Fireside update message:', payload);
