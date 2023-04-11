@@ -258,12 +258,14 @@ export function createCommentWidget(options: {
 	function _joinReactionsChannel(): void {
 		const resource = getCommentModelResourceName(model.value);
 		const resourceId = model.value.id;
-		const subject = threadCommentId.value
-			? `parent comment ${threadCommentId.value}`
-			: 'comments';
-		console.log(`joining reactions channel for ${subject} on ${resource}/${resourceId}...`);
+		const commentId = threadCommentId.value ? `${threadCommentId.value}` : '0';
+		console.log(`joining reactions channel for ${commentId} on ${resource}/${resourceId}...`);
 
-		grid.value?.listenToCommentsReactions(resource, resourceId, subject);
+		grid.value?.startListeningToCommentsReactions({
+			resourceType: resource,
+			resourceId: resourceId,
+			parentCommentId: commentId,
+		});
 
 		// TODO(realtime-notifications) implement this.
 		//
@@ -274,10 +276,14 @@ export function createCommentWidget(options: {
 	function _leaveReactionsChannel(): void {
 		const resource = getCommentModelResourceName(model.value);
 		const resourceId = model.value.id;
-		const subject = threadCommentId.value
-			? `parent comment ${threadCommentId.value}`
-			: 'comments';
-		console.log(`leaving reactions channel for ${subject} on ${resource}/${resourceId}...`);
+		const commentId = threadCommentId.value ? `${threadCommentId.value}` : '0';
+		console.log(`leaving reactions channel for ${commentId} on ${resource}/${resourceId}...`);
+
+		grid.value?.stopListeningToCommentsReactions({
+			resourceType: resource,
+			resourceId: resourceId,
+			parentCommentId: commentId,
+		});
 
 		_deregisterReactions?.();
 

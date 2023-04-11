@@ -71,6 +71,12 @@ interface ClearNotificationsData {
 	questId?: number;
 }
 
+interface CommentTopicPayload {
+	resourceType: string;
+	resourceId: number;
+	parentCommentId: string;
+}
+
 export interface ClearNotificationsEventData extends ClearNotificationsPayload {
 	currentCount: number;
 }
@@ -238,17 +244,18 @@ export class GridClient {
 			await notificationChannel.joinPromise;
 			this.notificationChannel = markRaw(notificationChannel);
 
-			this.markConnected();
-
 			logger.info('Subscribing to community channels...');
 
 			await Promise.all(this.appStore.communities.value.map(i => this.joinCommunity(i)));
+
+			const commentsChannel = createGridCommentsChannel(this, { userId: user.value.id });
+			await commentsChannel.joinPromise;
+			this.commentsChannel = markRaw(commentsChannel);
+			this.markConnected();
 		}
 
 		// Now connect to our chat channels.
 		await connectChat(this.chat!);
-
-		const commentsChannel = createGridCommentsChannel(this, { userId: user.value.id });
 	}
 
 	markConnected() {
@@ -539,8 +546,23 @@ export class GridClient {
 		}
 	}
 
-	async listenToCommentsReactions(resource: string, resourceId: string, parentCommentId: string) {
-		this.commentsChannel?.listenToCommentsReactions(resource, resourceId, parentCommentId);
+	async startListeningToCommentsReactions(data: CommentTopicPayload) {
+		if (this.commentsChannel) {
+			this.commentsChannel.startListeningToCommentsReactions(data);
+		} else {
+			console.log('comments channel is null');
+		}
+		if (this.notificationChannel) {
+			console.log('notificationChannel is not null');
+		} else {
+			console.log('notificationChannel is null');
+		}
+	}
+
+	async stopListeningToCommentsReactions(data: CommentTopicPayload) {
+		if (this.commentsChannel) {
+			this.commentsChannel.stopListeningToCommentsReactions(data);
+		}
 	}
 
 	recordFeaturedPost(post: FiresidePost) {
