@@ -4,10 +4,10 @@ import { GridClient } from './client.service';
 
 export type GridCommentsChannel = ReturnType<typeof createGridCommentsChannel>;
 
-interface CommentTopicPayload {
-	resourceType: string;
-	resourceId: number;
-	parentCommentId: string;
+export interface CommentTopicPayload {
+	resource: string;
+	resource_id: number;
+	parent_comment_id: number;
 }
 
 interface UpdateReactionPayload {
@@ -19,7 +19,6 @@ export function createGridCommentsChannel(client: GridClient, options: { userId:
 
 	const { userId } = options;
 	const channelController = createSocketChannelController(`comment:${userId}`, socketController);
-	console.log(`done joining?`);
 	channelController.listenTo('update-reaction', _onUpdateReaction);
 
 	const joinPromise = channelController.join({
@@ -43,15 +42,10 @@ export function createGridCommentsChannel(client: GridClient, options: { userId:
 	}
 
 	function startListeningToCommentsReactions(data: CommentTopicPayload) {
-		console.log('sending event to joltex');
-		return channelController.push('follow_comment', {
-			topic: `comments:${data.resourceType}:${data.resourceId}:${data.parentCommentId}`,
-		});
+		return channelController.push('follow_comment', data);
 	}
 	function stopListeningToCommentsReactions(data: CommentTopicPayload) {
-		return channelController.push('unfollow_comment', {
-			topic: `comments:${data.resourceType}:${data.resourceId}:${data.parentCommentId}`,
-		});
+		return channelController.push('unfollow_comment', data);
 	}
 
 	return c;

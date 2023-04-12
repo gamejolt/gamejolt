@@ -34,7 +34,11 @@ import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
-import { createGridCommentsChannel, GridCommentsChannel } from './comments-channel';
+import {
+	CommentTopicPayload,
+	createGridCommentsChannel,
+	GridCommentsChannel,
+} from './comments-channel';
 import { createGridCommunityChannel, GridCommunityChannel } from './community-channel';
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
@@ -69,12 +73,6 @@ interface ClearNotificationsData {
 	channelId?: number;
 	communityId?: number;
 	questId?: number;
-}
-
-interface CommentTopicPayload {
-	resourceType: string;
-	resourceId: number;
-	parentCommentId: string;
 }
 
 export interface ClearNotificationsEventData extends ClearNotificationsPayload {
@@ -549,13 +547,6 @@ export class GridClient {
 	async startListeningToCommentsReactions(data: CommentTopicPayload) {
 		if (this.commentsChannel) {
 			this.commentsChannel.startListeningToCommentsReactions(data);
-		} else {
-			console.log('comments channel is null');
-		}
-		if (this.notificationChannel) {
-			console.log('notificationChannel is not null');
-		} else {
-			console.log('notificationChannel is null');
 		}
 	}
 

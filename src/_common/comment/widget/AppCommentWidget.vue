@@ -258,39 +258,29 @@ export function createCommentWidget(options: {
 	function _joinReactionsChannel(): void {
 		const resource = getCommentModelResourceName(model.value);
 		const resourceId = model.value.id;
-		const commentId = threadCommentId.value ? `${threadCommentId.value}` : '0';
+		const commentId = threadCommentId.value ? threadCommentId.value : 0;
 		console.log(`joining reactions channel for ${commentId} on ${resource}/${resourceId}...`);
 
 		grid.value?.startListeningToCommentsReactions({
-			resourceType: resource,
-			resourceId: resourceId,
-			parentCommentId: commentId,
+			resource: resource,
+			resource_id: resourceId,
+			parent_comment_id: commentId,
 		});
-
-		// TODO(realtime-notifications) implement this.
-		//
-		// Note: this needs to handle attempting to join/leave during an ongoing
-		// join/leave operation. Use cancel tokens.
 	}
 
 	function _leaveReactionsChannel(): void {
 		const resource = getCommentModelResourceName(model.value);
 		const resourceId = model.value.id;
-		const commentId = threadCommentId.value ? `${threadCommentId.value}` : '0';
+		const commentId = threadCommentId.value ? threadCommentId.value : 0;
 		console.log(`leaving reactions channel for ${commentId} on ${resource}/${resourceId}...`);
 
 		grid.value?.stopListeningToCommentsReactions({
-			resourceType: resource,
-			resourceId: resourceId,
-			parentCommentId: commentId,
+			resource: resource,
+			resource_id: resourceId,
+			parent_comment_id: commentId,
 		});
 
 		_deregisterReactions?.();
-
-		// TODO(realtime-notifications) implement this.
-		//
-		// Note: this needs to handle attempting to join/leave during an ongoing
-		// join/leave operation. Use cancel tokens.
 	}
 
 	function setSort(sort: string) {
