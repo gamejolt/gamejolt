@@ -89,7 +89,7 @@ onUnmounted(() => {
 		<Teleport :to="currentPortal" :disabled="!currentPortal">
 			<div>
 				<div ref="ovenPlayerElem" />
-				<video ref="videoStreamElem" autoplay />
+				<video ref="videoStreamElem" autoplay muted />
 			</div>
 		</Teleport>
 	</div>
