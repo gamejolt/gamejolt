@@ -43,6 +43,7 @@ function _comparePlayState(a_: FiresideVideoPlayState, b_: FiresideVideoPlayStat
 
 export class FiresideVideoLock {
 	released = false;
+	constructor(public readonly target: HTMLElement) {}
 }
 
 /**
@@ -375,8 +376,8 @@ export function setUserHasMicAudio(user: FiresideRTCUser, hasMicAudio: boolean) 
  * This should be called before playing a video. [releaseVideoLock] must be
  * called when you no longer need to be playing the video.
  */
-export function getVideoLock(user: FiresideRTCUser) {
-	const lock = new FiresideVideoLock();
+export function getVideoLock(user: FiresideRTCUser, target: HTMLElement) {
+	const lock = new FiresideVideoLock(target);
 	user.videoLocks.push(lock);
 	return lock;
 }
@@ -400,11 +401,6 @@ export function releaseVideoLock(user: FiresideRTCUser, lock: FiresideVideoLock)
 		// actual raw class value for equality.
 		return toRaw(i) === toRaw(lock);
 	});
-
-	// When there's no more locks, stop the video.
-	if (!user.videoLocks.length) {
-		setVideoPlayback(user, new FiresideVideoPlayStateStopped());
-	}
 }
 
 export function setupFiresideVideoElementListeners(element: HTMLElement, user: FiresideRTCUser) {
@@ -428,6 +424,7 @@ export function setupFiresideVideoElementListeners(element: HTMLElement, user: F
 export async function setVideoPlayback(user: FiresideRTCUser, newState: FiresideVideoPlayState) {
 	const { rtc } = user;
 
+	// TODO(oven): we may always need this if we're doing audio through the video player
 	// If user doesn't have a video stream to subscribe/unsubscribe to, nothing to do.
 	if (!user.hasVideo) {
 		rtc.log('No video or no video client');

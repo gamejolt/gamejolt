@@ -1,7 +1,6 @@
 <script lang="ts">
 import { computed, customRef, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
-import { debounce } from '../../../utils/utils';
 import {
 	trackFiresideAction,
 	trackFiresideSidebarCollapse,
@@ -34,15 +33,17 @@ import AppTheme from '../../../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { debounce } from '../../../utils/utils';
 import AppFiresideProvider from '../../components/fireside/AppFiresideProvider.vue';
 import {
-	createFiresideController,
-	extinguishFireside,
 	FiresideController,
 	FiresideSidebar,
+	createFiresideController,
+	extinguishFireside,
 	publishFireside,
 	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
+import AppFiresideStreamUser from '../../components/fireside/stream/AppFiresideStreamUser.vue';
 import { useGridStore } from '../../components/grid/grid-store';
 import {
 	illEndOfFeed,
@@ -70,6 +71,7 @@ export default {
 		resolver: async ({ route }) =>
 			Api.sendRequest(`/web/fireside/fetch/${route.params.hash}?meta=1`),
 	}),
+	components: { AppFiresideStreamUser },
 };
 </script>
 
@@ -652,6 +654,13 @@ function onClickStreamingBanner() {
 										</div>
 										<!-- Local dashboard -->
 										<AppFiresideDashboard v-else />
+
+										<!-- This loads all the user streams and we Teleport them into the correct places from here -->
+										<AppFiresideStreamUser
+											v-for="rtcUser of rtc.listableStreamingUsers"
+											:key="rtcUser.userId"
+											:rtc-user="rtcUser"
+										/>
 									</div>
 									<div v-else class="-video-container">
 										<AppTheme class="-center-guide" :force-dark="overlayText">
@@ -683,8 +692,7 @@ function onClickStreamingBanner() {
 														icon-color="notice"
 														icon="remove"
 														:overlay="overlayText"
-														@click="extinguishFireside(c!, 'fireplace')
-													"
+														@click="extinguishFireside(c!, 'fireplace')"
 													>
 														{{ $gettext(`Extinguish fireside`) }}
 													</AppButton>

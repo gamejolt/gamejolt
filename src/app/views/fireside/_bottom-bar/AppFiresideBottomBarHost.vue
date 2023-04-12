@@ -22,7 +22,7 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
-import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
+import AppFiresideStreamVideoPortal from '../../../components/fireside/stream/AppFiresideStreamVideoPortal.vue';
 import AppFiresideBottomBarHostAvatar from './AppFiresideBottomBarHostAvatar.vue';
 
 const props = defineProps({
@@ -260,7 +260,7 @@ function onUserCardUnhovered() {
 				<div class="-click-capture" @click="onClick">
 					<div class="-video-thumb" :class="{ '-hidden': !showingVideoThumb }">
 						<template v-if="showingVideoThumb">
-							<AppFiresideStreamVideo
+							<AppFiresideStreamVideoPortal
 								v-if="canShowThumbStream"
 								:rtc-user="host"
 								video-fit="cover"

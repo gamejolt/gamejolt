@@ -5,7 +5,7 @@ import { debounce, sleep } from '../../../utils/utils';
 import { Background } from '../../background/background.model';
 import { User } from '../../user/user.model';
 import { Fireside } from '../fireside.model';
-import { FiresideRTCChannel, setChannelToken } from './channel';
+import { FiresideRTCChannel } from './channel';
 import { FiresideRTCProducer, cleanupFiresideRTCProducer, updateSetIsStreaming } from './producer';
 import {
 	FiresideRTCUser,
@@ -295,28 +295,29 @@ export async function applyRTCTokens(rtc: FiresideRTC, videoToken: string, chatT
 	rtc.videoToken = videoToken;
 	rtc.chatToken = chatToken;
 
-	const isVideoDisconnected = rtc.videoChannel.isDisconnected;
-	const isAudioDisconnected = rtc.chatChannel.isDisconnected;
+	// TODO(oven): do we need this? should we do it another way?
+	// const isVideoDisconnected = rtc.videoChannel.isDisconnected;
+	// const isAudioDisconnected = rtc.chatChannel.isDisconnected;
 
-	// If only one of the clients is fully disconnected, just nuke em both and retry.
-	if (isVideoDisconnected !== isAudioDisconnected) {
-		rtc.logError(
-			`Only one of the clients (video or audio) is connected. Recreating both to get them in sync`
-		);
-		_recreateFiresideRTC(rtc);
-		return;
-	}
+	// // If only one of the clients is fully disconnected, just nuke em both and retry.
+	// if (isVideoDisconnected !== isAudioDisconnected) {
+	// 	rtc.logError(
+	// 		`Only one of the clients (video or audio) is connected. Recreating both to get them in sync`
+	// 	);
+	// 	_recreateFiresideRTC(rtc);
+	// 	return;
+	// }
 
-	if (isVideoDisconnected || isAudioDisconnected) {
-		rtc.log(`Got new tokens. Applying by joining...`);
-		await _join(rtc);
-	} else {
-		rtc.log(`Got new tokens. Applying by renewing...`);
-		await Promise.all([
-			setChannelToken(rtc.videoChannel, videoToken),
-			setChannelToken(rtc.chatChannel, chatToken),
-		]);
-	}
+	// if (isVideoDisconnected || isAudioDisconnected) {
+	// 	rtc.log(`Got new tokens. Applying by joining...`);
+	// 	await _join(rtc);
+	// } else {
+	// 	rtc.log(`Got new tokens. Applying by renewing...`);
+	// 	await Promise.all([
+	// 		setChannelToken(rtc.videoChannel, videoToken),
+	// 		setChannelToken(rtc.chatChannel, chatToken),
+	// 	]);
+	// }
 }
 
 async function _setup(rtc: FiresideRTC) {
@@ -645,10 +646,11 @@ function _findOrAddRemoteUser(rtc: FiresideRTC, userId: number) {
 }
 
 function _removeUserIfNeeded(rtc: FiresideRTC, user: FiresideRTCUser) {
-	// We remove once all their tracks are gone.
-	if (user.hasVideo || user.hasDesktopAudio || user.hasMicAudio) {
-		return;
-	}
+	// TODO(oven): check to make sure we don't need this anymore
+	// // We remove once all their tracks are gone.
+	// if (user.hasVideo || user.hasDesktopAudio || user.hasMicAudio) {
+	// 	return;
+	// }
 
 	cleanupFiresideRTCUser(user);
 

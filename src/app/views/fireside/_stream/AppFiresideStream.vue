@@ -14,7 +14,7 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
-import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
+import AppFiresideStreamVideoPortal from '../../../components/fireside/stream/AppFiresideStreamVideoPortal.vue';
 import AppFiresideStreamStats from '../../../components/fireside/stream/stream-stats/AppFiresideStreamStats.vue';
 import AppFiresideBottomBar from '../_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideBottomBarHostAvatar from '../_bottom-bar/AppFiresideBottomBarHostAvatar.vue';
@@ -365,7 +365,7 @@ async function togglePinStream() {
 							</strong>
 						</div>
 						<template v-else>
-							<AppFiresideStreamVideo
+							<AppFiresideStreamVideoPortal
 								class="-video-player -click-target"
 								:rtc-user="rtcUser"
 							/>

@@ -9,7 +9,7 @@ import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list
 import { User } from '../../../../../_common/user/user.model';
 import { useGridStore } from '../../../grid/grid-store';
 import { createFiresideController, provideFiresideController } from '../../controller/controller';
-import AppFiresideStreamVideo from '../AppFiresideStreamVideo.vue';
+import AppFiresideStreamVideoPortal from '../AppFiresideStreamVideoPortal.vue';
 
 const props = defineProps({
 	fireside: {
@@ -83,7 +83,10 @@ onBeforeUnmount(() => cleanupController());
 <template>
 	<div class="-stream-preview-video theme-dark">
 		<div v-if="focusedUser && shouldShowVideo" :key="focusedUser.userId">
-			<AppFiresideStreamVideo class="-stream-preview-video-inner" :rtc-user="focusedUser" />
+			<AppFiresideStreamVideoPortal
+				class="-stream-preview-video-inner"
+				:rtc-user="focusedUser"
+			/>
 
 			<div class="-overlay">
 				<div v-if="showLive" class="-center">
