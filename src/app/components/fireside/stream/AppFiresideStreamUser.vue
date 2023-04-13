@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import OvenPlayerStatic from 'ovenplayer';
-import { computed, markRaw, onMounted, onUnmounted, PropType, ref } from 'vue';
+import { PropType, computed, markRaw, onMounted, onUnmounted, ref } from 'vue';
 import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 
 const props = defineProps({
@@ -87,14 +87,7 @@ onUnmounted(() => {
 		"
 	>
 		<Teleport :to="currentPortal" :disabled="!currentPortal">
-			<!-- Center content -->
-			<div
-				:style="{
-					display: `flex`,
-					height: `100%`,
-					width: `100%`,
-				}"
-			>
+			<div>
 				<div ref="ovenPlayerElem" />
 				<video ref="videoStreamElem" autoplay muted />
 			</div>
