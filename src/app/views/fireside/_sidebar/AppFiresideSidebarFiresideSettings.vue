@@ -65,40 +65,41 @@ const selectedRealms = ref<Realm[]>([]);
 const maxRealms = ref(0);
 
 // TODO(oven)
-const hostsForm: FormController<{ host1: number; host2: number; host3: number }> = createForm({
-	onSubmit: () => {
-		const data = hostsForm.formModel;
+const hostsForm: FormController<{ host1: number; host2: number; host3: number; host4: number }> =
+	createForm({
+		onSubmit: () => {
+			const data = hostsForm.formModel;
 
-		const toCreate: number[] = [];
-		const toRemove: number[] = [];
+			const toCreate: number[] = [];
+			const toRemove: number[] = [];
 
-		for (const userId of Object.values(data)) {
-			if (!userId) {
-				continue;
+			for (const userId of Object.values(data)) {
+				if (!userId) {
+					continue;
+				}
+
+				if (!rtc.value!._remoteStreamingUsers.some(i => i.userId === userId)) {
+					toCreate.push(userId);
+				}
 			}
 
-			if (!rtc.value!._remoteStreamingUsers.some(i => i.userId === userId)) {
-				toCreate.push(userId);
+			for (const user of rtc.value!._remoteStreamingUsers) {
+				if (!Object.values(data).includes(user.userId)) {
+					toRemove.push(user.userId);
+				}
 			}
-		}
 
-		for (const user of rtc.value!._remoteStreamingUsers) {
-			if (!Object.values(data).includes(user.userId)) {
-				toRemove.push(user.userId);
+			for (const userId of toCreate) {
+				onRTCUserJoined(rtc.value!, userId);
 			}
-		}
 
-		for (const userId of toCreate) {
-			onRTCUserJoined(rtc.value!, userId);
-		}
+			for (const userId of toRemove) {
+				onRTCUserLeft(rtc.value!, userId);
+			}
 
-		for (const userId of toRemove) {
-			onRTCUserLeft(rtc.value!, userId);
-		}
-
-		return Promise.resolve(true);
-	},
-});
+			return Promise.resolve(true);
+		},
+	});
 
 const form: FormController<Fireside> = createForm({
 	warnOnDiscard: false,
@@ -320,6 +321,10 @@ function onClickChatMods() {
 						</AppFormGroup>
 
 						<AppFormGroup name="host3" small optional>
+							<AppFormControl type="number" />
+						</AppFormGroup>
+
+						<AppFormGroup name="host4" small optional>
 							<AppFormControl type="number" />
 						</AppFormGroup>
 
