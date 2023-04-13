@@ -25,6 +25,10 @@
 a .jolticon
 	cursor: pointer
 
+.jolticon-075x
+	margin: 0 1px
+	font-size: $jolticon-size * 0.75
+
 .jolticon.big
 .jolticon-2x
 	margin: 0 4px
@@ -39,9 +43,17 @@ a .jolticon
 	font-size: $jolticon-size * 4
 
 .jolticon.highlight
-	theme-prop('color', 'highlight', true)
+	theme-prop(
+		'color',
+		'highlight',
+		true
+	)
 
 .jolticon.notice
-	theme-prop('color', 'notice', true)
+	theme-prop(
+		'color',
+		'notice',
+		true
+	)
 
 @import './jolticon-icon-definitions'
