@@ -257,6 +257,7 @@ function showLikers() {
 			:style="{
 				marginLeft: `16px`,
 				position: `relative`,
+				zIndex: 1,
 			}"
 		>
 			<AppUserAvatarImg
