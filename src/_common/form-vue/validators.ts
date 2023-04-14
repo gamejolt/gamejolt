@@ -36,7 +36,7 @@ const _urlPathRegex = /^[\w-]+$/;
 const _hashtagRegex = /^[\w_]+$/;
 
 /** Alphanumeric, only 1 underscore in a row. */
-const _emojiNameRegex = /^([a-z0-9]+_{0,1})+$/;
+const _emojiShortNameRegex = /^([a-zA-Z0-9]+_{0,1})+$/;
 
 /**
  * Semver version strings
@@ -174,7 +174,7 @@ export const validateHashtag = (): FormValidator<string> => async value => {
 };
 
 export const validateEmojiName = (): FormValidator<string> => async value => {
-	if (value && !_emojiNameRegex.test(value)) {
+	if (value && !_emojiShortNameRegex.test(value)) {
 		let message = '';
 		if (value.includes('__')) {
 			message = `Only one underscore (_) may be used in a row.`;
