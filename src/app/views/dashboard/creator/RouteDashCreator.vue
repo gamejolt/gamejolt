@@ -1,16 +1,21 @@
 <script lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { RouteParamsRaw, RouteRecordName } from 'vue-router';
+import { Api } from '../../../../_common/api/api.service';
+import AppCreatorExperienceBar from '../../../../_common/creator/experience/AppCreatorExperienceBar.vue';
+import { CreatorExperience } from '../../../../_common/creator/experience/experience.model';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
 import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
+import { ModelData } from '../../../../_common/model/model.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppSheetButton from '../../../../_common/sheet/AppSheetButton.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { User } from '../../../../_common/user/user.model';
 import { kGridGutterWidth } from '../../../../_styles/variables';
+import { RouteLocationRedirect } from '../../../../utils/router';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
+import { routeLandingCreators } from '../../landing/creators/creators.route';
 import { routeLandingHelpCategory } from '../../landing/help/help.route';
 import { routeDashAccountBlocks } from '../account/blocks/blocks.route';
 import { routeDashAccountChatCommands } from '../account/chat-commands/chat-commands.route';
@@ -23,16 +28,41 @@ import { routeDashSupporters } from '../supporters/supporters.route';
 
 export default {
 	...defineAppRouteOptions({
-		resolver: async () => User.touch(),
+		resolver: async () => {
+			try {
+				return await Api.sendRequest(`/web/dash/creators`, undefined, {
+					noErrorRedirect: true,
+				});
+			} catch (error) {
+				// TODO: if forbidden, go to creator landing. if unauth, go to login with redirect to here. otherwise, go to dash with error message (creator, but we broke).
+				// Redirect away if no permissions.
+				return new RouteLocationRedirect({
+					name: routeLandingCreators.name,
+				});
+			}
+		},
 	}),
 };
+
+interface InitPayload {
+	experience: ModelData<CreatorExperience> | null;
+}
 </script>
 
 <script lang="ts" setup>
 const { user } = useCommonStore();
 
-createAppRoute({
+const experience = ref<CreatorExperience | null>(null);
+
+const { isBootstrapped } = createAppRoute({
 	routeTitle: computed(() => $gettext(`Creator HUD`)),
+	onResolved({ payload }: { payload: InitPayload }) {
+		if (payload.experience) {
+			experience.value = new CreatorExperience(payload.experience);
+		} else {
+			experience.value = null;
+		}
+	},
 });
 
 interface Button {
@@ -99,15 +129,26 @@ const buttons = computed<Button[]>(() => [
 </script>
 
 <template>
-	<AppShellPageBackdrop v-if="user">
+	<AppShellPageBackdrop v-if="user && isBootstrapped">
 		<section class="section">
 			<div class="container">
-				<h1 class="text-center">
+				<h1 class="text-center _heading">
 					<span :style="{ marginRight: `8px` }">
 						<AppJolticon icon="dashboard" big middle />
 					</span>
 					{{ $gettext(`Creator HUD`) }}
 				</h1>
+
+				<div v-if="experience" :style="{ display: 'flex', justifyContent: 'center' }">
+					<div class="fill-bg _level-container full-bleed-xs">
+						<AppCreatorExperienceBar
+							:level="experience.current_level"
+							:xp="experience.current_level_xp"
+							:required-xp="experience.current_level_xp_required"
+							:is-max-level="experience.is_max_level"
+						/>
+					</div>
+				</div>
 
 				<AppSpacer vertical :scale="10" />
 
@@ -136,3 +177,21 @@ const buttons = computed<Button[]>(() => [
 		</section>
 	</AppShellPageBackdrop>
 </template>
+
+<style lang="stylus" scoped>
+._heading
+	margin-top: 0
+	margin-bottom: 32px
+
+	@media $media-mobile
+		margin-bottom: 20px
+
+._level-container
+	max-width: 640px
+	flex-grow: 1
+	padding: 10px
+
+	@media $media-md-up
+		rounded-corners-lg()
+		elevate-1()
+</style>
