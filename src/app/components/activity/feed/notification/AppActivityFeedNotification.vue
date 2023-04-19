@@ -22,6 +22,8 @@ import {
 	NotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
+import AppCreatorLevelBadge from '../../../../../_common/creator/experience/AppCreatorLevelBadge.vue';
+import { CreatorExperienceLevel } from '../../../../../_common/creator/experience/level.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Notification } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
@@ -94,6 +96,7 @@ const hasDetails = computed(() => {
 		Notification.TYPE_GAME_TROPHY_ACHIEVED,
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
 		Notification.TYPE_POLL_ENDED,
+		Notification.TYPE_CREATOR_LEVEL_UP,
 	].includes(type);
 });
 
@@ -184,6 +187,19 @@ function onMarkRead() {
 										<AppJolticon icon="pedestals-numbers" />
 									</div>
 								</template>
+								<template
+									v-else-if="
+										notification.type === Notification.TYPE_CREATOR_LEVEL_UP &&
+										notification.action_model instanceof CreatorExperienceLevel
+									"
+								>
+									<div class="-avatar-icon">
+										<AppCreatorLevelBadge
+											:level="notification.action_model.level.toString()"
+											sm
+										/>
+									</div>
+								</template>
 							</template>
 
 							<div class="-container">
@@ -241,7 +257,9 @@ function onMarkRead() {
 													"
 												>
 													{{
-														(notification.from_model as FiresidePost).getShortLead()
+														(
+															notification.from_model as FiresidePost
+														).getShortLead()
 													}}
 												</span>
 												<span
@@ -251,7 +269,9 @@ function onMarkRead() {
 													"
 												>
 													{{
-														(notification.action_model as FiresidePostCommunity).fireside_post?.getShortLead()
+														(
+															notification.action_model as FiresidePostCommunity
+														).fireside_post?.getShortLead()
 													}}
 												</span>
 												<span
@@ -268,7 +288,11 @@ function onMarkRead() {
 														Notification.TYPE_COMMUNITY_USER_NOTIFICATION
 													"
 												>
-													{{ (notification.to_model as FiresidePost).getShortLead() }}
+													{{
+														(
+															notification.to_model as FiresidePost
+														).getShortLead()
+													}}
 												</span>
 												<span
 													v-else-if="
@@ -279,7 +303,11 @@ function onMarkRead() {
 													"
 												>
 													{{
-														(notification.action_model as UserGameTrophy | UserSiteTrophy).trophy?.description
+														(
+															notification.action_model as
+																| UserGameTrophy
+																| UserSiteTrophy
+														).trophy?.description
 													}}
 												</span>
 												<span
@@ -289,7 +317,26 @@ function onMarkRead() {
 													"
 													class="tiny text-muted"
 												>
-													{{ (notification.action_model as QuestNotification).subtitle }}
+													{{
+														(
+															notification.action_model as QuestNotification
+														).subtitle
+													}}
+												</span>
+												<span
+													v-else-if="
+														notification.type ===
+															Notification.TYPE_CREATOR_LEVEL_UP &&
+														notification.action_model instanceof
+															CreatorExperienceLevel &&
+														notification.action_model.perk !== null
+													"
+												>
+													{{
+														$gettext(
+															`Click to see the perk you've unlocked.`
+														)
+													}}
 												</span>
 											</AppFadeCollapse>
 										</div>
