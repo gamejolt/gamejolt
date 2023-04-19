@@ -1,5 +1,4 @@
 import { computed, inject, InjectionKey, ref, Ref, watch } from 'vue';
-import { getCurrentServerTime } from '../../utils/server-time';
 import { Api } from '../../_common/api/api.service';
 import { Quest, QuestRepeatType } from '../../_common/quest/quest-model';
 import { User } from '../../_common/user/user.model';
@@ -24,14 +23,7 @@ export function createQuestStore({
 	const newQuestIds = ref<QuestIdSet>(new Set());
 	const questActivityIds = ref<QuestIdSet>(new Set());
 
-	const dailyResetDate = ref<number>();
-	const isDailyStale = ref(false);
-
 	const _allQuests = ref<Quest[]>([]);
-
-	/** The UTC hour that we'll refresh quests at */
-	let _questResetHour: number | undefined;
-	let _dailyQuestExpiryTicker: number | undefined;
 
 	const dailyQuests = computed(() =>
 		_allQuests.value.filter(i => i.repeat_type === QuestRepeatType.daily)
@@ -40,24 +32,12 @@ export function createQuestStore({
 		_allQuests.value.filter(i => i.repeat_type !== QuestRepeatType.daily)
 	);
 
-	// Set up a window interval to check if our daily quests are stale or not.
-	_setDailyTicker();
-
-	// Reset this store when we lose our current user. If we have a new login,
-	// set up our daily expiry interval again.
+	// Reset this store when we lose our current user.
 	watch(
 		() => user.value,
 		user => {
 			if (user) {
-				if (!_dailyQuestExpiryTicker) {
-					_setDailyTicker();
-				}
 				return;
-			}
-
-			isDailyStale.value = false;
-			if (_dailyQuestExpiryTicker) {
-				window.clearInterval(_dailyQuestExpiryTicker);
 			}
 
 			assignQuests([]);
@@ -68,36 +48,6 @@ export function createQuestStore({
 			_isLoadingDailyQuests.value = false;
 		}
 	);
-
-	watch(
-		() => isDailyStale.value,
-		isStale => {
-			if (isStale) {
-				addNewQuestIds([-1]);
-			} else {
-				clearNewQuestIds([-1], { pushView: false });
-			}
-		}
-	);
-
-	function _setDailyTicker() {
-		if (import.meta.env.SSR || _dailyQuestExpiryTicker) {
-			return;
-		}
-
-		_dailyQuestExpiryTicker = window.setInterval(() => {
-			const expiry = dailyResetDate.value;
-			if (!expiry || isDailyStale.value) {
-				return;
-			}
-
-			if (expiry - 1000 > getCurrentServerTime()) {
-				return;
-			}
-
-			isDailyStale.value = true;
-		}, 1000);
-	}
 
 	async function fetchDailyQuests() {
 		if (_isLoadingDailyQuests.value) {
@@ -121,77 +71,19 @@ export function createQuestStore({
 
 			const oldNonDaily = quests.value;
 			_allQuests.value = [...newDailyQuests, ...oldNonDaily];
-			_checkDailyQuestExpiry();
 		} finally {
 			_isLoadingDailyQuests.value = false;
 			isLoading.value = false;
 		}
 	}
 
-	function _checkDailyQuestExpiry() {
-		const questEndsOn = dailyQuests.value.find(i => !!i.ends_on)?.ends_on;
-		const hasQuestExpiry = questEndsOn !== undefined;
-
-		let hour = _questResetHour ?? 9;
-		if (hasQuestExpiry) {
-			const d = new Date(questEndsOn);
-			hour = d.getUTCHours();
-			hour += d.getUTCMinutes() / 60;
-			hour += d.getUTCSeconds() / 60 / 60;
-		}
-
-		if (_questResetHour === undefined) {
-			setDailyResetHour(hour);
-		}
-
-		const resetTime = dailyResetDate.value ?? getCurrentServerTime();
-		isDailyStale.value = hasQuestExpiry && questEndsOn < resetTime;
-
-		if (!isDailyStale.value) {
-			setDailyResetHour(hour);
-		}
-	}
-
 	function assignQuests(newQuests: Quest[]) {
 		_allQuests.value = newQuests;
-		_checkDailyQuestExpiry();
 		hasLoaded.value = true;
 	}
 
 	function updateQuest(data: Quest) {
 		_allQuests.value.find(i => i.id === data.id)?.assign(data);
-	}
-
-	function setDailyResetHour(newHour: number) {
-		const prevResetHour = _questResetHour;
-		_questResetHour = newHour;
-
-		const date = new Date(getCurrentServerTime());
-		let utcNowHours = date.getUTCHours();
-		utcNowHours += date.getUTCMinutes() / 60;
-		utcNowHours += date.getUTCSeconds() / 60 / 60;
-
-		const resetHour = _questResetHour!;
-		const min = (resetHour % 1) * 60;
-		const sec = (min % 1) * 60;
-		const ms = (sec % 1) * 1000;
-		date.setUTCHours(Math.floor(resetHour), min, sec, ms);
-
-		// Set the expiry date to tomorrow if we're already past our reset time.
-		if (date.getTime() < getCurrentServerTime()) {
-			// Set our daily quests as stale if the new reset hour is now before
-			// our current hour.
-			if (
-				prevResetHour !== undefined &&
-				resetHour < utcNowHours &&
-				utcNowHours < prevResetHour
-			) {
-				isDailyStale.value = true;
-			}
-			date.setUTCDate(date.getUTCDate() + 1);
-		}
-
-		dailyResetDate.value = date.getTime();
 	}
 
 	function addNewQuestIds(ids: number[]) {
@@ -246,12 +138,12 @@ export function createQuestStore({
 	const c = {
 		isLoading,
 		hasLoaded,
-		/** Only quests that are {@link QuestRepeatType.daily} */
+		/** Only quests that are {@link QuestRepeatType.daily}. */
 		dailyQuests,
-		/** All quests, other than {@link QuestRepeatType.daily} */
+		/** All quests, other than {@link QuestRepeatType.daily}. */
 		quests,
 		allQuests: computed(() => _allQuests.value),
-		/** Overwrites our existing {@link _allQuests} before checking any expiry data */
+		/** Overwrites our existing {@link _allQuests} and marks this as bootstrapped. */
 		assignQuests,
 		fetchDailyQuests,
 		/**
@@ -259,15 +151,12 @@ export function createQuestStore({
 		 * it.
 		 */
 		updateQuest,
-		setDailyResetHour,
-		dailyResetDate,
-		isDailyStale,
+		newQuestIds,
+		questActivityIds,
 		addNewQuestIds,
 		addQuestActivityIds,
 		clearNewQuestIds,
 		clearQuestActivityIds,
-		newQuestIds,
-		questActivityIds,
 	};
 	return c;
 }

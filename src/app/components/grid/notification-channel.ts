@@ -1,11 +1,11 @@
 import { computed, reactive, shallowReadonly } from 'vue';
-import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Notification } from '../../../_common/notification/notification-model';
 import { QuestNotification } from '../../../_common/quest/quest-notification-model';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
+import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
 import { GridClient, onFiresideStart } from './client.service';
 
@@ -35,7 +35,6 @@ interface JoinPayload {
 	unreadCommunities: number[];
 	newQuestIds: number[];
 	questActivityIds: number[];
-	questResetHour: number;
 	charge: ChargeData;
 }
 
@@ -130,7 +129,6 @@ export function createGridNotificationChannel(client: GridClient, options: { use
 			const questStore = appStore.getQuestStore();
 			questStore.addNewQuestIds(payload.newQuestIds);
 			questStore.addQuestActivityIds(payload.questActivityIds);
-			questStore.setDailyResetHour(payload.questResetHour);
 
 			const {
 				charge,
