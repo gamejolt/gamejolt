@@ -1,13 +1,17 @@
 import { ModelStoreModel, storeModel } from '../../../_common/model/model-store.service';
+import { ReactionableModel, ReactionCount } from '../../../_common/reaction/reaction-count';
 import { ChatUser } from './user';
 
+import { Model } from '../../../_common/model/model.service';
+
+//'../model/model.service';
 export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued message should be displayed as such.
 
 export type ChatMessageType = 'content' | 'sticker' | 'invite';
 
 // TODO(realtime-reactions) See what comments is doing. this needs to implement ReactionableModel.
 // See how reactions are displayed and interacted with (AppReactionList, ReactionCount, etc)
-export class ChatMessage implements ModelStoreModel {
+export class ChatMessage extends Model implements ModelStoreModel, ReactionableModel {
 	declare id: number;
 	declare user_id: number;
 	declare user: ChatUser;
@@ -21,7 +25,7 @@ export class ChatMessage implements ModelStoreModel {
 	declare showAvatar?: boolean;
 	declare dateSplit?: boolean;
 	declare is_automated?: boolean;
-
+	declare reaction_counts: ReactionCount[];
 	// TODO(realtime-reactions) Add reaction counts similar to how comment-model does it.
 
 	// Used for rendering.
@@ -32,7 +36,12 @@ export class ChatMessage implements ModelStoreModel {
 	_isProcessing = false;
 	_error = false; // When an error was received trying to send the message.
 
+	get typename__() {
+		return 'Message';
+	}
+
 	constructor(data: any) {
+		super(data);
 		this.update(data);
 	}
 
@@ -57,6 +66,10 @@ export class ChatMessage implements ModelStoreModel {
 
 		if (this.is_automated === undefined) {
 			this.is_automated = false;
+		}
+
+		if (this.reaction_counts) {
+			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
 		}
 	}
 

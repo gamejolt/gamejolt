@@ -11,7 +11,8 @@ export interface CommentTopicPayload {
 }
 
 interface UpdateReactionPayload {
-	comment_id: number;
+	emoji_id: number;
+	delta: number;
 }
 
 export function createGridCommentsChannel(client: GridClient, options: { userId: number }) {
@@ -19,7 +20,7 @@ export function createGridCommentsChannel(client: GridClient, options: { userId:
 
 	const { userId } = options;
 	const channelController = createSocketChannelController(`comment:${userId}`, socketController);
-	channelController.listenTo('update-reaction', _onUpdateReaction);
+	channelController.listenTo('update-reactions', _onUpdateReaction);
 
 	const joinPromise = channelController.join({
 		async onJoin() {

@@ -88,6 +88,12 @@ interface FiresideSocketParams {
 	fireside_viewing_mode: string;
 }
 
+// move this to reaction-count.ts or any other payload lib?
+interface UpdateReactionPayload {
+	emoji_id: number;
+	delta: number;
+}
+
 export function createChatRoomChannel(
 	client: ChatClient,
 	options: {
@@ -141,6 +147,7 @@ export function createChatRoomChannel(
 	channelController.listenTo('kick_member', _onMemberKicked);
 	channelController.listenTo('fireside_start', _onFiresideStart);
 	channelController.listenTo('fireside_update', _onFiresideUpdate);
+	channelController.listenTo('update-reactions', _onUpdateReaction);
 
 	// TODO(realtime-reactions) listen to realtime changes to reactions (call the event "reactions")
 
@@ -381,6 +388,10 @@ export function createChatRoomChannel(
 			data.fireside ? new Fireside(data.fireside) : null,
 			data.streaming_users.map(x => new ChatUser(x))
 		);
+	}
+
+	function _onUpdateReaction(payload: UpdateReactionPayload) {
+		console.log('roomChannel: getting update-reaction event', payload);
 	}
 
 	function _syncPresentUsers(presence: Presence) {
