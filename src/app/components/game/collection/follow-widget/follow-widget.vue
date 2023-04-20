@@ -72,10 +72,7 @@ export default class AppGameCollectionFollowWidget extends Vue {
 	}
 
 	get tooltip() {
-		if (
-			this.collection.type === GameCollection.TYPE_DEVELOPER ||
-			this.collection.type === GameCollection.TYPE_JAM
-		) {
+		if (this.collection.type === GameCollection.TYPE_DEVELOPER) {
 			return undefined;
 		}
 
@@ -142,7 +139,6 @@ export default class AppGameCollectionFollowWidget extends Vue {
 		<template v-if="!circle">
 			<template v-if="!isFollowing">
 				<AppTranslate v-if="collection.type === 'developer'">Follow Developer</AppTranslate>
-				<AppTranslate v-else-if="collection.type === 'jam'">Follow Jam</AppTranslate>
 				<AppTranslate v-else>Follow Playlist</AppTranslate>
 			</template>
 			<template v-else>
