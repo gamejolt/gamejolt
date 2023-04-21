@@ -105,7 +105,13 @@ declare module 'ovenplayer' {
 		getSources(): OvenPlayerSource[] | OvenPlayerPlayList;
 		getCurrentSource(): number;
 		setCurrentSource(index: number): void;
-		getQualityLevels(): object[];
+		getQualityLevels(): {
+			index: number;
+			label: string;
+			bitrate?: string;
+			height?: number;
+			width?: number;
+		}[];
 		getCurrentQuality(): number;
 		setCurrentQuality(index: number): void;
 		isAutoQuality(): boolean;

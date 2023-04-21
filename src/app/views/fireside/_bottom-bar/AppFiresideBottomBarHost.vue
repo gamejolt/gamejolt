@@ -5,8 +5,8 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import {
 	FiresideRTCUser,
 	saveFiresideRTCUserPrefs,
-	setDesktopAudioPlayback,
-	setMicAudioPlayback,
+	setDesktopAudioPlayState,
+	setMicAudioPlayState,
 	setUserDesktopAudioVolume,
 	setUserMicrophoneAudioVolume,
 } from '../../../../_common/fireside/rtc/user';
@@ -87,19 +87,19 @@ function onClick() {
 }
 
 function muteMic() {
-	setMicAudioPlayback(host.value, false);
+	setMicAudioPlayState(host.value, false);
 }
 
 function unmuteMic() {
-	setMicAudioPlayback(host.value, true);
+	setMicAudioPlayState(host.value, true);
 }
 
 function muteDesktop() {
-	setDesktopAudioPlayback(host.value, false);
+	setDesktopAudioPlayState(host.value, false);
 }
 
 function unmuteDesktop() {
-	setDesktopAudioPlayback(host.value, true);
+	setDesktopAudioPlayState(host.value, true);
 }
 
 function _handleScrub(
@@ -264,7 +264,7 @@ function onUserCardUnhovered() {
 								v-if="canShowThumbStream"
 								:rtc-user="host"
 								video-fit="cover"
-								low-bitrate
+								quality="low"
 							/>
 							<AppJolticon v-else icon="camera" />
 						</template>
@@ -309,11 +309,9 @@ function onUserCardUnhovered() {
 
 					<div class="-host-audio">
 						<div class="-host-audio-col">
-							<AppTranslate> Microphone </AppTranslate>
+							<AppTranslate>Microphone</AppTranslate>
 							<AppSlider
-								:percent="
-									host.remoteMicAudioMuted ? 0 : host.micPlaybackVolumeLevel
-								"
+								:percent="host.micAudioPlayState ? host.micPlaybackVolumeLevel : 0"
 								@scrub="onMicAudioScrub"
 							/>
 						</div>
@@ -335,9 +333,9 @@ function onUserCardUnhovered() {
 								<AppTranslate> Desktop/Game </AppTranslate>
 								<AppSlider
 									:percent="
-										host.remoteDesktopAudioMuted
-											? 0
-											: host.desktopPlaybackVolumeLevel
+										host.desktopAudioPlayState
+											? host.desktopPlaybackVolumeLevel
+											: 0
 									"
 									@scrub="onDesktopAudioScrub"
 								/>

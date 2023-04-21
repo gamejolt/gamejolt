@@ -5,6 +5,9 @@ import {
 	getOwnDesktopAudioVolume,
 	getOwnMicAudioVolume,
 } from '../../../../../_common/fireside/rtc/producer';
+import { kThemeLink } from '../../../../../_common/theme/variables';
+import { styleWhen } from '../../../../../_styles/mixins';
+import { kBorderRadiusBase } from '../../../../../_styles/variables';
 
 const props = defineProps({
 	producer: {
@@ -46,32 +49,33 @@ const volumePercent = computed(
 </script>
 
 <template>
-	<div class="-volume-meter" :class="{ '-attached': attachedToControl }">
-		<div class="-fill" :style="{ width: volumePercent }" />
+	<div
+		:style="{
+			position: `relative`,
+			height: `5px`,
+			overflow: `hidden`,
+			backgroundColor: `rgba(0, 0, 0, 0.5)`,
+			borderRadius: kBorderRadiusBase.px,
+			...styleWhen(attachedToControl, {
+				borderTopLeftRadius: 0,
+				borderTopRightRadius: 0,
+			}),
+		}"
+	>
+		<div
+			class="-fill"
+			:style="{
+				backgroundColor: kThemeLink,
+				position: `absolute`,
+				top: `-1px`,
+				bottom: `-1px`,
+				left: `-1px`,
+				width: volumePercent,
+				minWidth: `5px`,
+				transition: `width 100ms cubic-bezier(0.39, 0.58, 0.57, 1)`,
+				willChange: `width`,
+				borderRadius: `0px ${kBorderRadiusBase.px} ${kBorderRadiusBase.px} 0px`,
+			}"
+		/>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-volume-meter
-	position: relative
-	height: 5px
-	overflow: hidden
-	background-color: rgba(0, 0, 0, 0.5)
-	border-radius: $border-radius-base
-
-	.-fill
-		background-color: var(--theme-link)
-		position: absolute
-		top: -1px
-		bottom: -1px
-		left: -1px
-		width: 0
-		min-width: 5px
-		transition: width 100ms cubic-bezier(0.39, 0.58, 0.57, 1)
-		will-change: width
-		border-radius: 0px $border-radius-base $border-radius-base 0px
-
-.-attached
-	border-top-left-radius: 0
-	border-top-right-radius: 0
-</style>

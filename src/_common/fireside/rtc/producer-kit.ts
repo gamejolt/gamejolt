@@ -1,19 +1,13 @@
-import OvenLiveKitStatic from 'ovenlivekit';
+import OvenLiveKitStatic, { OvenLiveKitCodec } from 'ovenlivekit';
 import { markRaw, ref, shallowReadonly, shallowRef } from 'vue';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { $gettext } from '../../translate/translate.service';
+import { VolumeMonitor, createVolumeMonitor } from '../volume-monitor';
 import { FiresideRTC } from './rtc';
-
-// type OnTrackPublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
-// type OnTrackUnpublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
-
-// // Everyone on ultra-low latency to try to mitigate the amount of delay between
-// // chat audio and video.
-// const DefaultAudienceLevel: AudienceLatencyLevelType = 2;
 
 export type FiresideRTCProducerKit = ReturnType<typeof createFiresideRTCProducerKit>;
 
-export function createFiresideRTCProducerKit(rtc: FiresideRTC) {
+export function createFiresideRTCProducerKit(rtc: FiresideRTC, streamType: 'video' | 'chat') {
 	const ovenClient = OvenLiveKitStatic.create({
 		callbacks: {
 			error: error => console.error(error),
@@ -30,14 +24,30 @@ export function createFiresideRTCProducerKit(rtc: FiresideRTC) {
 	});
 
 	const localStream = shallowRef<MediaStream | null>(null);
+	const volumeMonitor = shallowRef<VolumeMonitor | null>(null);
 	const isConnected = ref(false);
 
 	return shallowReadonly({
 		rtc,
+		streamType,
 		ovenClient,
 		localStream,
+		volumeMonitor,
 		isConnected,
 	});
+}
+
+export async function destroyFiresideRTCProducerKit({
+	volumeMonitor,
+	isConnected,
+}: FiresideRTCProducerKit) {
+	await volumeMonitor.value?.close();
+	volumeMonitor.value = null;
+
+	isConnected.value = false;
+
+	// TODO(oven): do we want to also call onStreamClose?
+	// TODO(oven): do we want to also call stop streaming on the ovenclient?
 }
 
 export async function setKitMediaStream(
@@ -50,23 +60,26 @@ export async function setKitMediaStream(
 		onStreamClose?: () => Promise<void>;
 	}
 ) {
-	const { ovenClient, rtc, localStream, isConnected } = kit;
+	const { ovenClient, rtc, localStream, volumeMonitor } = kit;
 	const generation = rtc.generation;
 
 	if (localStream.value !== null) {
 		rtc.log(`Local stream already exists.`);
 
+		// Stop monitoring the volume.
+		await volumeMonitor.value?.close();
 		localStream.value = null;
 
-		// TODO(oven)
-		if (isConnected.value) {
-			rtc.log(`Local stream is already published. Unpublishing first.`);
-			ovenClient.stopStreaming();
-			generation.assert();
-		}
-
-		// rtc.log(`Closing previous local video track.`);
-		// localStream.value.close();
+		// This will close the websocket, stop streaming, and remove the input
+		// stream from oven client. It will stop all the tracks from the input
+		// stream and remove them from the stream. That basically resets us
+		// completely and we can add the new stream in. When
+		// getUserMedia/getDisplayMedia is called on the oven client again, it
+		// will add the new stream into it.
+		//
+		// From what I can tell, everything that this calls happens
+		// synchronously, so we don't need to await anything.
+		ovenClient.remove();
 
 		await onStreamClose?.();
 	}
@@ -79,13 +92,22 @@ export async function setKitMediaStream(
 		showErrorGrowl({
 			message: $gettext(`Something went wrong trying to use that video device.`),
 		});
-		localStream.value = null;
 		return;
 	}
-	localStream.value = newStream ? markRaw(newStream) : null;
+
 	generation.assert();
 
-	// TODO(oven)
+	localStream.value = newStream ? markRaw(newStream) : null;
+
+	// There won't be an audio track if they're just streaming their video
+	// without desktop audio.
+	if (newStream && newStream.getAudioTracks().length > 0) {
+		volumeMonitor.value = createVolumeMonitor(newStream);
+	}
+
+	// TODO(oven): for oven we would want to hook into the rtc and input stream
+	// and modify so that we are streaming out the new tracks.
+
 	// // Only publish if we are streaming.
 	// if (localStream.value !== null && channel._isPublished) {
 	// 	rtc.log(`Publishing new video track.`);
@@ -93,4 +115,60 @@ export async function setKitMediaStream(
 	// }
 
 	generation.assert();
+}
+
+export function startKitStreaming({
+	ovenClient,
+	streamType,
+	localStream,
+	rtc,
+}: FiresideRTCProducerKit) {
+	if (!localStream.value) {
+		rtc.log('No local stream to start streaming with. Skipping.');
+		return;
+	}
+
+	let bitrate = 5_000;
+	let codec: OvenLiveKitCodec = 'H264';
+	const parts = window.location.search.replace('?', '').split('&');
+
+	for (const part of parts) {
+		const [key, value] = part.split('=');
+		if (!key || !value) {
+			continue;
+		}
+
+		if (key === 'bitrate') {
+			bitrate = parseInt(value) || bitrate;
+			rtc.log(`Override bitrate: ${bitrate}`);
+		} else if (key === 'codec' && ['VP8', 'H264'].includes(value)) {
+			codec = value as OvenLiveKitCodec;
+			rtc.log(`Override codec: ${codec}`);
+		}
+	}
+
+	const [connectionUrl, connectionConfig] =
+		streamType === 'video'
+			? [
+					`wss://stream-origin-01.development.gamejolt.com:3334/video/${rtc.userId}?direction=send&transport=tcp`,
+					{
+						// iceServers: null,
+						// iceTransportPolicy: null,
+						maxVideoBitrate: bitrate,
+						preferredVideoFormat: codec,
+					},
+			  ]
+			: [
+					`wss://stream-origin-01.development.gamejolt.com:3334/chat/${rtc.userId}?direction=send&transport=tcp`,
+					{
+						// iceServers: null,
+						// iceTransportPolicy: null,
+					},
+			  ];
+
+	ovenClient.startStreaming(connectionUrl, connectionConfig);
+}
+
+export function stopKitStreaming({ ovenClient }: FiresideRTCProducerKit) {
+	ovenClient.stopStreaming();
 }

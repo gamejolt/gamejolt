@@ -2,7 +2,7 @@
 import { computed, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import { FiresideRTCUser, setDesktopAudioPlayback } from '../../../../_common/fireside/rtc/user';
+import { FiresideRTCUser, setDesktopAudioPlayState } from '../../../../_common/fireside/rtc/user';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -160,20 +160,6 @@ const shouldDarkenAll = computed(() => {
 	return videoPaused.value;
 });
 
-const shouldPlayDesktopAudio = computed(() => {
-	if (!rtc.value) {
-		return false;
-	}
-
-	return (
-		hasVideo.value &&
-		// TODO(oven)
-		// rtc.value.videoChannel.isConnected &&
-		rtcUser.value.hasDesktopAudio &&
-		!rtc.value.videoPaused
-	);
-});
-
 const shouldShowVideoStats = computed(() => {
 	if (!rtc.value) {
 		return false;
@@ -229,7 +215,7 @@ function togglePlayback() {
 }
 
 function unmuteDesktopAudio() {
-	setDesktopAudioPlayback(rtcUser.value, true);
+	setDesktopAudioPlayState(rtcUser.value, true);
 }
 
 function animateStickerStreak() {
@@ -372,9 +358,6 @@ async function togglePinStream() {
 						</template>
 					</template>
 
-					<!-- TODO(oven) -->
-					<!-- <AppFiresideDesktopAudio v-if="shouldPlayDesktopAudio" :rtc-user="rtcUser" /> -->
-
 					<AppFiresideStreamStats
 						v-if="!noStats && shouldShowVideoStats"
 						class="-stream-stats"
@@ -391,7 +374,13 @@ async function togglePinStream() {
 			</div>
 		</template>
 
-		<div class="-overlay" :class="{ '-darken': shouldDarkenAll }" @click.capture="onOverlayTap">
+		<!-- TODO(oven) -->
+		<div
+			v-if="false"
+			class="-overlay"
+			:class="{ '-darken': shouldDarkenAll }"
+			@click.capture="onOverlayTap"
+		>
 			<template v-if="shouldShowUI">
 				<template v-if="videoPaused || showMutedIndicator">
 					<transition>

@@ -1,11 +1,11 @@
 import { computed, ref, Ref, shallowReadonly } from 'vue';
-import { importNoSSR } from '../code-splitting';
+import { createLogger } from '../../utils/logging';
 import { configCanStreamDesktopVideo } from '../config/config.service';
 import { getDeviceBrowser } from '../device/device.service';
-import { hasDesktopVideoCaptureSupport } from '../fireside/rtc/device-capabilities';
-import { PRODUCER_DESKTOP_VIDEO_DEVICE_ID } from '../fireside/rtc/producer';
+import { hasDesktopVideoCaptureSupport } from './rtc/device-capabilities';
+import { PRODUCER_DESKTOP_VIDEO_DEVICE_ID } from './rtc/producer';
 
-const AgoraRTCLazy = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default);
+const logger = createLogger('MediaDeviceService');
 
 export type MediaDeviceType = 'webcam' | 'mic' | 'speaker';
 
@@ -50,6 +50,18 @@ async function _getUserMedia() {
 	});
 }
 
+async function _getDevicesOfKind(kind: MediaDeviceKind): Promise<MediaDeviceInfo[]> {
+	return (await navigator.mediaDevices.enumerateDevices())
+		.filter(
+			// Only get devices if we managed to fetch info for them.
+			device => device.kind === kind && device.deviceId && device.label
+		)
+		.map(device => Object.freeze(device.toJSON()));
+}
+
+// TODO(oven): we might need to interface with the Permissions API to figure out
+// if we need to prompt for permissions or something?
+
 function createMediaDeviceService() {
 	const webcamsWasPrompted = ref(false);
 	const webcams = ref([]) as Ref<readonly MediaDeviceInfo[]>;
@@ -62,6 +74,11 @@ function createMediaDeviceService() {
 	const speakersWasPrompted = ref(false);
 	const speakers = ref([]) as Ref<readonly MediaDeviceInfo[]>;
 	const speakersPermissionError = ref(false);
+
+	// React when devices change.
+	navigator.mediaDevices.addEventListener('devicechange', () => {
+		detectDevices();
+	});
 
 	const hasWebcamPermissions = computed(
 		() =>
@@ -98,16 +115,14 @@ function createMediaDeviceService() {
 			...(options || {}),
 		};
 
-		console.log('detecting webcams', effectiveOptions);
+		logger.info('detecting webcams', effectiveOptions);
 
 		if (webcamsWasPrompted.value && effectiveOptions.skipIfPrompted) {
-			console.log('skipping because was already prompted');
+			logger.info('skipping because was already prompted');
 			return;
 		}
 
 		try {
-			const AgoraRTC = await AgoraRTCLazy;
-			const newCameras = await AgoraRTC.getCameras(!effectiveOptions.prompt);
 			let filteredCameras: MediaDeviceInfo[] = [];
 
 			// We fake a webcam for their desktop video capture if
@@ -121,55 +136,13 @@ function createMediaDeviceService() {
 				});
 			}
 
-			filteredCameras = filteredCameras.concat(
-				newCameras
-					.filter(
-						// Only get devices if we managed to fetch info for them.
-						deviceInfo => deviceInfo.deviceId && deviceInfo.label && deviceInfo.kind
-					)
-					.map(deviceInfo => Object.freeze(deviceInfo.toJSON()))
-			);
+			filteredCameras = filteredCameras.concat(await _getDevicesOfKind('videoinput'));
 
 			webcams.value = Object.freeze(filteredCameras);
 			webcamsPermissionError.value = false;
-			console.log('Got webcams: ', webcams.value);
+			logger.info('Got webcams: ', webcams.value);
 		} catch (e) {
-			console.warn('Error while getting webcams: ', e);
-			webcams.value = [];
-			webcamsPermissionError.value = _isPermissionError(e);
-		} finally {
-			webcamsWasPrompted.value ||= effectiveOptions.prompt;
-		}
-	}
-
-	async function detectDisplays(options?: Partial<DetectionOptions>): Promise<void> {
-		const effectiveOptions = {
-			...DefaultDetectionOptions,
-			...(options || {}),
-		};
-
-		console.log('detecting webcams', effectiveOptions);
-
-		if (webcamsWasPrompted.value && effectiveOptions.skipIfPrompted) {
-			console.log('skipping because was already prompted');
-			return;
-		}
-
-		try {
-			const AgoraRTC = await AgoraRTCLazy;
-			const newCameras = await AgoraRTC.getCameras(!effectiveOptions.prompt);
-			webcams.value = Object.freeze(
-				newCameras
-					.filter(
-						// Only get devices if we managed to fetch info for them.
-						deviceInfo => deviceInfo.deviceId && deviceInfo.label && deviceInfo.kind
-					)
-					.map(deviceInfo => Object.freeze(deviceInfo.toJSON()))
-			);
-			webcamsPermissionError.value = false;
-			console.log('Got webcams: ', webcams.value);
-		} catch (e) {
-			console.warn('Error while getting webcams: ', e);
+			logger.warn('Error while getting webcams: ', e);
 			webcams.value = [];
 			webcamsPermissionError.value = _isPermissionError(e);
 		} finally {
@@ -183,28 +156,19 @@ function createMediaDeviceService() {
 			...(options || {}),
 		};
 
-		console.log('detecting mics', effectiveOptions);
+		logger.info('detecting mics', effectiveOptions);
 
 		if (micsWasPrompted.value && effectiveOptions.skipIfPrompted) {
-			console.log('skipping because was already prompted');
+			logger.info('skipping because was already prompted');
 			return;
 		}
 
 		try {
-			const AgoraRTC = await AgoraRTCLazy;
-			const newMics = await AgoraRTC.getMicrophones(!effectiveOptions.prompt);
-			mics.value = Object.freeze([
-				...newMics
-					.filter(
-						// Only get devices if we managed to fetch info for them.
-						deviceInfo => deviceInfo.deviceId && deviceInfo.label && deviceInfo.kind
-					)
-					.map(deviceInfo => Object.freeze(deviceInfo.toJSON())),
-			]);
+			mics.value = Object.freeze(await _getDevicesOfKind('audioinput'));
 			micsPermissionError.value = false;
-			console.log('Got mics: ', mics.value);
+			logger.info('Got mics: ', mics.value);
 		} catch (e) {
-			console.warn('Error while getting mics: ', e);
+			logger.warn('Error while getting mics: ', e);
 			mics.value = [];
 			micsPermissionError.value = _isPermissionError(e);
 		} finally {
@@ -218,28 +182,19 @@ function createMediaDeviceService() {
 			...(options || {}),
 		};
 
-		console.log('detecting speakers', effectiveOptions);
+		logger.info('detecting speakers', effectiveOptions);
 
 		if (speakersWasPrompted.value && effectiveOptions.skipIfPrompted) {
-			console.log('skipping because was already prompted');
+			logger.info('skipping because was already prompted');
 			return;
 		}
 
 		try {
-			const AgoraRTC = await AgoraRTCLazy;
-			const newSpeakers = await AgoraRTC.getPlaybackDevices(!effectiveOptions.prompt);
-			speakers.value = Object.freeze(
-				newSpeakers
-					.filter(
-						// Only get devices if we managed to fetch info for them.
-						deviceInfo => deviceInfo.deviceId && deviceInfo.label && deviceInfo.kind
-					)
-					.map(deviceInfo => Object.freeze(deviceInfo.toJSON()))
-			);
+			speakers.value = Object.freeze(await _getDevicesOfKind('audiooutput'));
 			speakersPermissionError.value = false;
-			console.log('Got speakers: ', speakers.value);
+			logger.info('Got speakers: ', speakers.value);
 		} catch (e) {
-			console.warn('Error while getting speakers: ', e);
+			logger.warn('Error while getting speakers: ', e);
 			speakers.value = [];
 			speakersPermissionError.value = _isPermissionError(e);
 		} finally {
@@ -248,19 +203,11 @@ function createMediaDeviceService() {
 	}
 
 	function _isPermissionError(e: any) {
-		return _asAgoraError(e)?.code === 'PERMISSION_DENIED';
+		// TODO(oven): is there a way to check for permission error?
+		logger.error('Error while getting devices: ', e);
+		// return e?.code === 'PERMISSION_DENIED';
+		return true;
 	}
-
-	function _asAgoraError(e: any): { name: 'AgoraRTCException'; code: string } | null {
-		const isAgoraError =
-			typeof e === 'object' &&
-			Object.prototype.hasOwnProperty.call(e, 'name') &&
-			Object.prototype.hasOwnProperty.call(e, 'code') &&
-			e.name === 'AgoraRTCException';
-
-		return isAgoraError ? e : null;
-	}
-
 	return shallowReadonly({
 		webcamsWasPrompted: computed(() => webcamsWasPrompted.value),
 		webcams: computed(() => webcams.value),
@@ -280,24 +227,9 @@ function createMediaDeviceService() {
 
 		detectDevices,
 		detectWebcams,
-		detectDisplays,
 		detectMics,
 		detectSpeakers,
 	});
 }
 
 export const MediaDeviceService = createMediaDeviceService();
-
-AgoraRTCLazy.then(AgoraRTC => {
-	AgoraRTC.onCameraChanged = async () => {
-		await MediaDeviceService.detectWebcams({ prompt: false, skipIfPrompted: false });
-	};
-
-	AgoraRTC.onMicrophoneChanged = async () => {
-		await MediaDeviceService.detectMics({ prompt: false, skipIfPrompted: false });
-	};
-
-	AgoraRTC.onPlaybackDeviceChanged = async () => {
-		await MediaDeviceService.detectSpeakers({ prompt: false, skipIfPrompted: false });
-	};
-});

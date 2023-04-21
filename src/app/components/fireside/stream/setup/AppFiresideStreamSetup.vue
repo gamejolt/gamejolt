@@ -1,22 +1,19 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import { RouterLink } from 'vue-router';
-import { sleep } from '../../../../../utils/utils';
-import { MediaDeviceService } from '../../../../../_common/agora/media-device.service';
-import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
+import { MediaDeviceService } from '../../../../../_common/fireside/media-device.service';
 import { hasDesktopAudioCaptureSupport } from '../../../../../_common/fireside/rtc/device-capabilities';
 import {
 	clearSelectedRecordingDevices,
-	ProducerResetDeviceCallback,
 	PRODUCER_DEFAULT_GROUP_AUDIO,
 	PRODUCER_UNSET_DEVICE,
+	ProducerResetDeviceCallback,
 	setSelectedDesktopAudioStreaming,
 	setSelectedGroupAudioDeviceId,
 	setSelectedMicDeviceId,
 	setSelectedWebcamDeviceId,
-	setVideoPreviewElement,
 	startStreaming,
 	stopStreaming,
 } from '../../../../../_common/fireside/rtc/producer';
@@ -36,7 +33,9 @@ import {
 } from '../../../../../_common/settings/settings.service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { sleep } from '../../../../../utils/utils';
 import { FiresideController, shouldPromoteAppForStreaming } from '../../controller/controller';
+import AppFiresideStreamSetupVideoPreview from './AppFiresideStreamSetupVideoPreview.vue';
 import AppFiresideStreamSetupVolumeMeter from './AppFiresideStreamSetupVolumeMeter.vue';
 
 type FormModel = {
@@ -75,6 +74,7 @@ const { hidePublishControls, showLoading } = toRefs(props);
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { rtc, isShowingStreamSetup, canBrowserSelectSpeakers, shouldHideStreamVideoPreview } =
 	props.c;
+
 const {
 	hasWebcamPermissions,
 	webcamsWasPrompted,
@@ -96,7 +96,6 @@ const isLoading = computed(() => isStarting.value || showLoading.value);
 
 const shouldShowAdvanced = ref(false);
 let _didDetectDevices = false;
-const videoPreviewElem = ref<HTMLDivElement>();
 
 // Store the producer locally and work off of this instance. We will close the
 // modal if the producer changes.
@@ -309,18 +308,6 @@ function _initFromSettings() {
 watch(isInvalidConfig, isInvalid => emit('isInvalid', isInvalid), {
 	immediate: true,
 });
-
-watch(
-	[canStreamVideo, videoPreviewElem],
-	([canStreamVideo, videoPreviewElem]) => {
-		if (!videoPreviewElem) {
-			return;
-		}
-
-		setVideoPreviewElement(localProducer, canStreamVideo ? videoPreviewElem ?? null : null);
-	},
-	{ immediate: true }
-);
 
 watch(producer, producer => {
 	// The only way this should trigger is if we get removed as a cohost while
@@ -691,26 +678,10 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 
 						<AppSpacer vertical :scale="2" />
 
-						<AppAspectRatio class="-video-preview" :ratio="16 / 9">
-							<div
-								v-if="!shouldHideStreamVideoPreview"
-								ref="videoPreviewElem"
-								class="-video-preview-portal"
-							/>
-							<div v-else-if="hasWebcamDevice" class="-video-preview-text">
-								<span>
-									<AppTranslate>
-										We're hiding this video to conserve your system resources
-									</AppTranslate>
-								</span>
-							</div>
-
-							<div v-if="!hasWebcamDevice" class="-video-preview-text">
-								<span>
-									<AppTranslate>No video source selected</AppTranslate>
-								</span>
-							</div>
-						</AppAspectRatio>
+						<AppFiresideStreamSetupVideoPreview
+							:producer="localProducer"
+							:hide-preview="shouldHideStreamVideoPreview"
+						/>
 
 						<p class="help-block">
 							<AppTranslate>
@@ -906,41 +877,6 @@ function _getDeviceFromId(id: string | undefined, deviceType: 'mic' | 'webcam' |
 .-split
 	margin-top: 24px
 	margin-bottom: 24px
-
-.-video-preview
-	position: relative
-	rounded-corners()
-	margin: auto
-	overflow: hidden
-	background-color: var(--theme-darkest)
-
-// Attach it to the audio indicator
-.-video-preview-with-audio
-	border-bottom-left-radius: 0
-	border-bottom-right-radius: 0
-
-.-video-preview-portal
-	height: 100%
-
-	::v-deep(> div)
-		// Unset agora background color nobody asked for
-		background-color: transparent !important
-
-.-video-preview-text
-	position: absolute
-	top: 0
-	right: 0
-	bottom: 0
-	left: 0
-	display: flex
-	align-items: center
-	justify-content: center
-	color: white
-	font-weight: 700
-	font-size: 13px
-	z-index: 1
-	padding: 16px
-	text-align: center
 
 .-control-with-meter
 	border-bottom-left-radius: 0

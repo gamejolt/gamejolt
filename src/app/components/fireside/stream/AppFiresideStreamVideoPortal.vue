@@ -4,6 +4,7 @@ import {
 	FiresideRTCUser,
 	FiresideVideoFit,
 	FiresideVideoLock,
+	FiresideVideoQuality,
 	getVideoLock,
 	releaseVideoLock,
 } from '../../../../_common/fireside/rtc/user';
@@ -14,8 +15,9 @@ const props = defineProps({
 		type: Object as PropType<FiresideRTCUser>,
 		required: true,
 	},
-	lowBitrate: {
-		type: Boolean,
+	quality: {
+		type: String as PropType<FiresideVideoQuality>,
+		default: 'high',
 	},
 	videoFit: {
 		type: String as PropType<FiresideVideoFit>,
@@ -23,7 +25,7 @@ const props = defineProps({
 	},
 });
 
-const { rtcUser, lowBitrate, videoFit } = toRefs(props);
+const { rtcUser, quality, videoFit } = toRefs(props);
 const { rtc, isFullscreen } = useFiresideController()!;
 
 let _videoLock: FiresideVideoLock | null = null;
@@ -102,11 +104,7 @@ function _getLock() {
 		_releaseLock();
 	}
 
-	_videoLock = getVideoLock(rtcUser.value, outputElem.value!);
-	// setVideoPlayback(
-	// 	rtcUser.value,
-	// 	new FiresideVideoPlayStatePlaying(videoElem.value!, lowBitrate.value, videoFit.value)
-	// );
+	_videoLock = getVideoLock(rtcUser.value, outputElem.value!, quality.value);
 }
 
 function _releaseLock() {

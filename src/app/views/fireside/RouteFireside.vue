@@ -43,7 +43,7 @@ import {
 	publishFireside,
 	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
-import AppFiresideStreamUser from '../../components/fireside/stream/AppFiresideStreamUser.vue';
+import AppFiresideStreamHost from '../../components/fireside/stream/host/AppFiresideStreamHost.vue';
 import { useGridStore } from '../../components/grid/grid-store';
 import {
 	illEndOfFeed,
@@ -71,7 +71,6 @@ export default {
 		resolver: async ({ route }) =>
 			Api.sendRequest(`/web/fireside/fetch/${route.params.hash}?meta=1`),
 	}),
-	components: { AppFiresideStreamUser },
 };
 </script>
 
@@ -656,7 +655,7 @@ function onClickStreamingBanner() {
 										<AppFiresideDashboard v-else />
 
 										<!-- This loads all the user streams and we Teleport them into the correct places from here -->
-										<AppFiresideStreamUser
+										<AppFiresideStreamHost
 											v-for="rtcUser of rtc.listableStreamingUsers"
 											:key="rtcUser.userId"
 											:rtc-user="rtcUser"

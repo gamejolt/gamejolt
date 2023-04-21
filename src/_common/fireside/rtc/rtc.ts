@@ -5,26 +5,17 @@ import { debounce, sleep } from '../../../utils/utils';
 import { Background } from '../../background/background.model';
 import { User } from '../../user/user.model';
 import { Fireside } from '../fireside.model';
-import { FiresideRTCChannel } from './channel';
 import { FiresideRTCProducer, cleanupFiresideRTCProducer, updateSetIsStreaming } from './producer';
 import {
 	FiresideRTCUser,
-	FiresideVideoPlayStateStopped,
 	cleanupFiresideRTCUser,
 	createRemoteFiresideRTCUser,
 	initRemoteFiresideRTCUserPrefs,
-	setDesktopAudioPlayback,
-	setMicAudioPlayback,
-	setVideoPlayback,
+	setDesktopAudioPlayState,
+	setMicAudioPlayState,
+	setVideoPlayState,
 	updateVolumeLevel,
 } from './user';
-
-// let AgoraRTC: IAgoraRTC | null = null;
-// const AgoraRTCLoader = importNoSSR(async () => (await import('agora-rtc-sdk-ng')).default).then(
-// 	myAgoraRTC => {
-// 		AgoraRTC = myAgoraRTC;
-// 	}
-// );
 
 export const FiresideRTCKey = Symbol();
 
@@ -86,12 +77,6 @@ export class FiresideRTC {
 	 */
 	_hasAutoplayError = false;
 	shouldShowMutedIndicator = false;
-
-	// These channels will get created immediately during _setup.
-	/** @deprecated */
-	videoChannel!: FiresideRTCChannel;
-	/** @deprecated */
-	chatChannel!: FiresideRTCChannel;
 
 	/**
 	 * The list of FiresideRTCUsers that currently have an agora stream published.
@@ -161,11 +146,6 @@ export class FiresideRTC {
 			this.focusedUser.userId === this.localUser.userId
 		);
 	}
-
-	get isPoorNetworkQuality() {
-		return false;
-		// return this.videoChannel.isPoorNetworkQuality || this.chatChannel.isPoorNetworkQuality;
-	}
 }
 
 export function createFiresideRTC(
@@ -226,9 +206,9 @@ export async function destroyFiresideRTC(rtc: FiresideRTC) {
 		await Promise.all(
 			rtc._allStreamingUsers.map(user =>
 				Promise.all([
-					setVideoPlayback(user, new FiresideVideoPlayStateStopped()),
-					setDesktopAudioPlayback(user, false),
-					setMicAudioPlayback(user, false),
+					setVideoPlayState(user, false),
+					setDesktopAudioPlayState(user, false),
+					setMicAudioPlayState(user, false),
 				])
 			)
 		);
@@ -326,13 +306,6 @@ async function _setup(rtc: FiresideRTC) {
 	const gen = new CancelToken();
 	rtc.generation.cancel();
 	rtc.generation = gen;
-
-	// TODO(oven)
-	// // Wait for Agora to be fully initialized.
-	// await AgoraRTCLoader;
-	// gen.assert();
-
-	// _createChannels(rtc);
 
 	for (let i = 0; i < 5; i++) {
 		try {

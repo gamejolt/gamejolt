@@ -34,7 +34,8 @@ export const hasDesktopAudioCaptureSupport = run(() => {
 	return winVer > 10 || (winVer == 10 && buildNum >= 19043);
 });
 
+// TODO(oven)
 /**
  * Whether or not we're able to capture video from their desktop.
  */
-export const hasDesktopVideoCaptureSupport = GJ_IS_DESKTOP_APP;
+export const hasDesktopVideoCaptureSupport = /* GJ_IS_DESKTOP_APP */ true;

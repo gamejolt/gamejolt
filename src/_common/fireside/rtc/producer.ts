@@ -1,6 +1,4 @@
-import { OvenLiveKitCodec } from 'ovenlivekit';
 import { computed, markRaw, ref, shallowRef } from 'vue';
-import { MediaDeviceService } from '../../agora/media-device.service';
 import { trackFiresideStopStreaming } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
 import type { ASGController } from '../../client/asg/asg';
@@ -8,7 +6,14 @@ import { startDesktopAudioCapture } from '../../client/safe-exports';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { $gettext } from '../../translate/translate.service';
-import { createFiresideRTCProducerKit, setKitMediaStream } from './producer-kit';
+import { MediaDeviceService } from '../media-device.service';
+import {
+	createFiresideRTCProducerKit,
+	destroyFiresideRTCProducerKit,
+	setKitMediaStream,
+	startKitStreaming,
+	stopKitStreaming,
+} from './producer-kit';
 import { FiresideRTC, applyRTCTokens, chooseFocusedRTCUser } from './rtc';
 import {
 	createLocalFiresideRTCUser,
@@ -53,8 +58,6 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
 
 	const isStreaming = ref(false);
 
-	const _videoPreviewElement = shallowRef<HTMLDivElement | null>(null);
-
 	const isBusy = ref(false);
 	const _busyPromise = shallowRef<Promise<any>>(Promise.resolve());
 
@@ -64,8 +67,8 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
 	const canStreamVideo = computed(() => rtc.role?.can_stream_video === true);
 	const canStreamAudio = computed(() => rtc.role?.can_stream_audio === true);
 
-	const localVideoKit = shallowRef(createFiresideRTCProducerKit(rtc));
-	const localChatKit = shallowRef(createFiresideRTCProducerKit(rtc));
+	const localVideoKit = shallowRef(createFiresideRTCProducerKit(rtc, 'video'));
+	const localChatKit = shallowRef(createFiresideRTCProducerKit(rtc, 'chat'));
 
 	/**
 	 * Indicates that our mic isn't actually broadcasting, and is only displayed
@@ -134,7 +137,6 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
 		micMuted,
 		videoMuted,
 
-		_videoPreviewElement,
 		_busyPromise,
 		_tokenRenewInterval,
 		_areTokensRenewing,
@@ -155,6 +157,8 @@ export function cleanupFiresideRTCProducer({
 	_tokenRenewInterval,
 	streamingASG,
 	rtc,
+	localVideoKit,
+	localChatKit,
 }: FiresideRTCProducer) {
 	console.log('[FIRESIDE-RTC] Trace(cleanupFiresideRTCProducer)');
 
@@ -170,12 +174,15 @@ export function cleanupFiresideRTCProducer({
 	// If we were streaming desktop audio, make sure it's closed, since Agora
 	// isn't gonna call this for us.
 	if (streamingASG.value) {
+		// TODO(oven): we might not have to do this if we are able to call the
+		// onStreamClose callback during producer kit destruction.
 		rtc.log(`Force stopping desktop audio streaming through ASG.`);
 		streamingASG.value.stop();
 		streamingASG.value = null;
 	}
 
-	// TODO(oven): clean up the ovenlivekit instance
+	destroyFiresideRTCProducerKit(localChatKit.value);
+	destroyFiresideRTCProducerKit(localVideoKit.value);
 }
 
 async function _renewTokens(producer: FiresideRTCProducer) {
@@ -409,8 +416,6 @@ function _updateVideoStream(producer: FiresideRTCProducer) {
 				let width = 1280;
 				let height = 720;
 				let fps = 30;
-				let bitrate = 4_000;
-				let mode = 'detail' as 'motion' | 'detail';
 				const parts = window.location.search.replace('?', '').split('&');
 
 				for (const part of parts) {
@@ -428,144 +433,80 @@ function _updateVideoStream(producer: FiresideRTCProducer) {
 					} else if (key === 'fps') {
 						fps = _parseInt(value, fps);
 						rtc.log(`Override fps: ${fps}`);
-					} else if (key === 'bitrate') {
-						bitrate = _parseInt(value, bitrate);
-						rtc.log(`Override bitrate: ${bitrate}`);
-					} else if (key === 'mode' && (value === 'motion' || value === 'detail')) {
-						mode = value;
-						rtc.log(`Override mode: ${mode}`);
 					}
 				}
 
-				// const AgoraRTC = await AgoraRTCLazy;
-
-				// Test code below.
-
-				// nw.Screen.Init();
-
-				// const track = await new Promise<ILocalVideoTrack>((resolve, reject) => {
-				// 	nw.Screen.chooseDesktopMedia(['window', 'screen'], function (streamId) {
-				// 		navigator.webkitGetUserMedia(
-				// 			{
-				// 				audio: false,
-				// 				video: {
-				// 					mandatory: {
-				// 						chromeMediaSource: 'desktop',
-				// 						chromeMediaSourceId: streamId,
-				// 						maxWidth: 1920,
-				// 						maxHeight: 1080,
-				// 					},
-				// 					optional: [],
-				// 				},
-				// 			},
-				// 			(stream: MediaStream) => {
-				// 				const track = AgoraRTC.createCustomVideoTrack({
-				// 					optimizationMode: mode,
-				// 					// encoderConfig: {
-				// 					// 	bitrateMax: bitrate,
-				// 					// 	width: { max: width, ideal: width },
-				// 					// 	height: { max: height, ideal: height },
-				// 					// 	frameRate: { max: fps },
-				// 					// },
-				// 					bitrateMax: bitrate,
-				// 					mediaStreamTrack: stream.getVideoTracks()[0],
-				// 				});
-
-				// 				resolve(track);
-				// 			},
-				// 			() => {
-				// 				console.error('nope');
-				// 				reject();
-				// 			}
-				// 		);
-				// 	});
-				// });
-
-				// const stream = await navigator.mediaDevices.getDisplayMedia({
-				// 	audio: false,
-				// 	video: {
-				// 		width: { max: width, ideal: width },
-				// 		height: { max: height, ideal: height },
-				// 		frameRate: { max: fps, ideal: fps },
-				// 	},
-				// });
-
-				// const track = AgoraRTC.createCustomVideoTrack({
-				// 	optimizationMode: mode,
-				// 	bitrateMax: bitrate,
-				// 	mediaStreamTrack: stream.getVideoTracks()[0],
-				// });
-
 				try {
-					// // If they've chosen to use their desktop video source, we
-					// // need to show them a selector window.
-					// if (deviceId === PRODUCER_DESKTOP_VIDEO_DEVICE_ID) {
-					// 	console.log(`Prompting them to choose a desktop video source.`);
-
-					// 	const stream = await navigator.mediaDevices.getDisplayMedia({
-					// 		audio: false,
-					// 		video: {
-					// 			width: { max: width, ideal: width },
-					// 			height: { max: height, ideal: height },
-					// 			frameRate: { max: fps, ideal: fps },
-					// 		},
-					// 	});
-
-					// 	const videoTrack = stream.getVideoTracks()[0];
-
-					// 	console.info('Track settings:');
-					// 	console.info(JSON.stringify(videoTrack.getSettings(), null, 2));
-					// 	console.info('Track constraints:');
-					// 	console.info(JSON.stringify(videoTrack.getConstraints(), null, 2));
-
-					// 	const track = AgoraRTC.createCustomVideoTrack({
-					// 		optimizationMode: mode,
-					// 		bitrateMax: bitrate,
-					// 		mediaStreamTrack: videoTrack,
-					// 	});
-
-					// 	rtc.log(`Video desktop source track ID: ${track.getTrackId()}`);
-
-					// 	return track;
-					// }
-
-					// const track = await AgoraRTC.createCameraVideoTrack({
-					// 	cameraId: deviceId,
-					// 	optimizationMode: mode,
-					// 	encoderConfig: {
-					// 		bitrateMax: bitrate,
-					// 		width: { max: width, ideal: width },
-					// 		height: { max: height, ideal: height },
-					// 		frameRate: { max: fps },
-					// 	},
-					// });
-
 					const { ovenClient } = localVideoKit.value;
 
-					const stream = await ovenClient.getUserMedia({
-						video: {
-							width: { max: width, ideal: width },
-							height: { max: height, ideal: height },
-							frameRate: { max: fps },
-							deviceId: {
-								exact: videoDeviceId,
-							},
-						},
-						audio: desktopAudioDeviceId
-							? {
-									// We disable all of this since we don't
-									// want the desktop audio getting distorted.
-									// We want it to go through unprocessed.
-									autoGainControl: false,
-									echoCancellation: false,
-									noiseSuppression: false,
-									deviceId: {
-										exact: desktopAudioDeviceId,
-									},
-							  }
-							: false,
-					});
+					let stream: MediaStream | null = null;
+					const isScreenSharing = videoDeviceId === PRODUCER_DESKTOP_VIDEO_DEVICE_ID;
 
+					// We first try to get their user media. This would be
+					// either their webcam or a mic device for their desktop
+					// audio. If they're screensharing without desktop audio,
+					// this won't run.
+					if (!isScreenSharing || desktopAudioDeviceId) {
+						stream = await ovenClient.getUserMedia({
+							video: !isScreenSharing
+								? {
+										width: { max: width, ideal: width },
+										height: { max: height, ideal: height },
+										frameRate: { max: fps },
+										deviceId: {
+											exact: videoDeviceId,
+										},
+								  }
+								: false,
+							audio: desktopAudioDeviceId
+								? {
+										// We disable all of this since we don't
+										// want the desktop audio getting distorted.
+										// We want it to go through unprocessed.
+										autoGainControl: false,
+										echoCancellation: false,
+										noiseSuppression: false,
+										deviceId: {
+											exact: desktopAudioDeviceId,
+										},
+								  }
+								: false,
+						});
+					}
+
+					// If they've decided to screenshare, we need to pull it
+					// through getDisplayMedia.
+					if (isScreenSharing) {
+						const desktopVideoStream = await ovenClient.getDisplayMedia({
+							video: {
+								width: { max: width, ideal: width },
+								height: { max: height, ideal: height },
+								frameRate: { max: fps, ideal: fps },
+							},
+						});
+
+						if (!stream) {
+							// This would mean that they don't have desktop
+							// audio, so we can just use this stream directly.
+							stream = desktopVideoStream;
+						} else {
+							// If they already have a stream, just add this
+							// video track into it. The stream we're adding in
+							// to will only have an audio track.
+							for (const track of desktopVideoStream.getVideoTracks()) {
+								stream.addTrack(track);
+							}
+						}
+					}
+
+					// This should never happen with the above logic.
+					if (!stream) {
+						throw new Error(`No stream was created.`);
+					}
+
+					// In this case they don't have a device ID for their
+					// desktop audio and instead just want ASG to pull their
+					// desktop audio.
 					if (shouldStreamDesktopAudio) {
 						rtc.log(`Creating desktop audio track from ASG.`);
 
@@ -613,11 +554,6 @@ function _updateVideoStream(producer: FiresideRTCProducer) {
 
 		// No need to await on this. its not essential.
 		updateSetIsStreaming(producer);
-
-		// TODO(oven): we should be able to automatically do this by setting the video preview element in the ovenlivekit
-		// if (_videoPreviewElement.value) {
-		// 	previewChannelVideo(producer.rtc.localUser, videoChannel, _videoPreviewElement.value);
-		// }
 	});
 }
 
@@ -687,155 +623,12 @@ function _updateChatStream(producer: FiresideRTCProducer) {
 			},
 		});
 
-		// TODO(oven)
-		// await setChannelAudioTrack(chatChannel, {
-		// 	async trackBuilder() {
-		// 		if (!deviceId) {
-		// 			return null;
-		// 		}
-
-		// 		const AgoraRTC = await AgoraRTCLazy;
-		// 		try {
-		// 			const track = await AgoraRTC.createMicrophoneAudioTrack({
-		// 				microphoneId: deviceId,
-		// 			});
-		// 			track.setVolume(100);
-
-		// 			rtc.log(`Mic track ID: ${track.getTrackId()}`);
-
-		// 			return track;
-		// 		} catch (e) {
-		// 			const clearDevice = producer._resetDeviceCallback.value;
-		// 			if (deviceId && clearDevice) {
-		// 				clearDevice('mic');
-		// 			}
-
-		// 			throw e;
-		// 		}
-		// 	},
-		// });
-
 		streamingMicDeviceId.value = deviceId;
 
 		// No need to await on this. its not essential.
 		updateSetIsStreaming(producer);
 	});
 }
-
-// function _updateDesktopAudioTrack(producer: FiresideRTCProducer) {
-// 	return _doBusyWork(producer, async () => {
-// 		// TODO(oven)
-// 		return;
-
-// 		const {
-// 			hasDesktopAudioDevice,
-// 			shouldStreamDesktopAudio,
-// 			selectedDesktopAudioDeviceId,
-// 			streamingDesktopAudioDeviceId,
-// 			streamingASG,
-// 			rtc,
-// 		} = producer;
-// 		const { mics } = MediaDeviceService;
-
-// 		let deviceId: string | null = null;
-// 		if (hasDesktopAudioDevice.value) {
-// 			const deviceExists = !!mics.value.find(
-// 				i => i.deviceId === selectedDesktopAudioDeviceId.value
-// 			);
-// 			deviceId = deviceExists ? selectedDesktopAudioDeviceId.value : null;
-// 		}
-
-// 		// Freeze the state we want to be in.
-// 		const shouldStream = shouldStreamDesktopAudio.value;
-
-// 		if (
-// 			shouldStream === !!streamingASG.value &&
-// 			deviceId === streamingDesktopAudioDeviceId.value
-// 		) {
-// 			rtc.log(`Desktop audio already set up properly, skipping.`);
-// 			return;
-// 		}
-
-// 		rtc.log(`Setting desktop audio device.`, {
-// 			shouldStream,
-// 			deviceId,
-// 		});
-
-// 		// TODO(oven)
-// 		// await setChannelAudioTrack(videoChannel, {
-// 		// 	async trackBuilder() {
-// 		// 		if (!shouldStream && !deviceId) {
-// 		// 			return null;
-// 		// 		}
-
-// 		// 		const AgoraRTC = await AgoraRTCLazy;
-// 		// 		let track: ILocalAudioTrack | undefined;
-
-// 		// 		// If a device was set for streaming, we want to use that
-// 		// 		// instead of using ASG.
-// 		// 		try {
-// 		// 			if (shouldStream) {
-// 		// 				rtc.log(`Creating desktop audio track from ASG.`);
-
-// 		// 				const generator = new MediaStreamTrackGenerator({ kind: 'audio' });
-// 		// 				streamingASG.value = await startDesktopAudioCapture(generator.writable);
-
-// 		// 				track = AgoraRTC.createCustomAudioTrack({
-// 		// 					mediaStreamTrack: generator,
-// 		// 					encoderConfig: 'high_quality_stereo',
-// 		// 				});
-// 		// 			} else if (deviceId) {
-// 		// 				rtc.log(`Creating desktop audio track from microphone source.`);
-
-// 		// 				track = await AgoraRTC.createMicrophoneAudioTrack({
-// 		// 					microphoneId: deviceId,
-// 		// 					// We disable all this so that it doesn't affect the desktop audio in any way.
-// 		// 					AEC: false,
-// 		// 					AGC: false,
-// 		// 					ANS: false,
-// 		// 					encoderConfig: 'high_quality_stereo',
-// 		// 				});
-// 		// 			} else {
-// 		// 				rtc.log(`Invalid state detected for desktop audio track.`);
-// 		// 				return null;
-// 		// 			}
-
-// 		// 			track.setVolume(100);
-
-// 		// 			rtc.log(`Desktop audio track ID: ${track.getTrackId()}`);
-
-// 		// 			return track;
-// 		// 		} catch (e) {
-// 		// 			const clearDevice = producer._resetDeviceCallback.value;
-// 		// 			if (deviceId && clearDevice) {
-// 		// 				clearDevice('desktopAudio');
-// 		// 			}
-
-// 		// 			throw e;
-// 		// 		}
-// 		// 	},
-// 		// 	async onTrackClose() {
-// 		// 		// Only need to close the track if we're streaming the desktop
-// 		// 		// audio with ASG.
-// 		// 		if (!streamingASG.value) {
-// 		// 			return;
-// 		// 		}
-
-// 		// 		rtc.log(`Stop streaming desktop audio through ASG.`);
-
-// 		// 		await streamingASG.value.stop();
-// 		// 		streamingASG.value = null;
-
-// 		// 		rtc.log(`Stopped streaming desktop audio ASG.`);
-// 		// 	},
-// 		// });
-
-// 		// No need to await on this. its not essential.
-// 		updateSetIsStreaming(producer);
-
-// 		streamingDesktopAudioDeviceId.value = deviceId;
-// 	});
-// }
 
 export function setSelectedGroupAudioDeviceId(producer: FiresideRTCProducer, newSpeakerId: string) {
 	const { selectedGroupAudioDeviceId } = producer;
@@ -921,6 +714,7 @@ function _updateGroupAudioTrack(producer: FiresideRTCProducer) {
 	});
 }
 
+// TODO(oven)
 // function _updateRemoteUserPlaybackDevice(
 // 	producer: FiresideRTCProducer,
 // 	remoteUser: IAgoraRTCRemoteUser
@@ -1018,38 +812,23 @@ export async function updateSetIsStreaming(
 	return response;
 }
 
-export function setVideoPreviewElement(
-	producer: FiresideRTCProducer,
-	element: HTMLDivElement | null
-) {
-	const { _videoPreviewElement } = producer;
-
-	if (_videoPreviewElement.value && _videoPreviewElement.value !== element) {
-		_videoPreviewElement.value.innerHTML = '';
-	}
-
-	producer._videoPreviewElement.value = element;
-	if (element) {
-		// previewChannelVideo(producer.rtc.localUser, videoChannel, element);
-	}
-}
-
 export function getOwnDesktopAudioVolume({
-	rtc: { videoChannel, generation },
+	localVideoKit,
+	rtc: { generation },
 }: FiresideRTCProducer) {
 	if (generation.isCanceled) {
 		return 0;
 	}
 
-	return videoChannel._localAudioTrack?.getVolumeLevel() || 0;
+	return localVideoKit.value.volumeMonitor.value?.getVolume() || 0;
 }
 
-export function getOwnMicAudioVolume({ rtc: { chatChannel, generation } }: FiresideRTCProducer) {
+export function getOwnMicAudioVolume({ localChatKit, rtc: { generation } }: FiresideRTCProducer) {
 	if (generation.isCanceled) {
 		return 0;
 	}
 
-	return chatChannel._localAudioTrack?.getVolumeLevel() || 0;
+	return localChatKit.value.volumeMonitor.value?.getVolume() || 0;
 }
 
 export async function startStreaming(producer: FiresideRTCProducer) {
@@ -1057,7 +836,7 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 		const {
 			isStreaming,
 			rtc,
-			rtc: { generation, fireside },
+			rtc: { generation },
 			localVideoKit,
 			localChatKit,
 		} = producer;
@@ -1081,52 +860,9 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 			return;
 		}
 
-		let bitrate = 4_000;
-		let codec: OvenLiveKitCodec = 'VP8';
-		const parts = window.location.search.replace('?', '').split('&');
-
-		for (const part of parts) {
-			const [key, value] = part.split('=');
-			if (!key || !value) {
-				continue;
-			}
-
-			if (key === 'bitrate') {
-				bitrate = _parseInt(value, bitrate);
-				rtc.log(`Override bitrate: ${bitrate}`);
-			} else if (key === 'codec' && ['VP8', 'H264'].includes(value)) {
-				codec = value as OvenLiveKitCodec;
-				rtc.log(`Override codec: ${codec}`);
-			}
-		}
-
 		try {
-			// await Promise.all([
-			// 	startChannelStreaming(videoChannel),
-			// 	startChannelStreaming(chatChannel),
-			// ]);
-
-			const streamName = `${rtc.userId}`;
-
-			localVideoKit.value.ovenClient.startStreaming(
-				`wss://oven.development.gamejolt.com:3334/app/${streamName}?direction=send&transport=tcp`,
-				{
-					// iceServers: null,
-					// iceTransportPolicy: null,
-					maxVideoBitrate: bitrate,
-					preferredVideoFormat: codec,
-				}
-			);
-
-			// localChatKit.value.ovenClient.startStreaming(
-			// 	'wss://oven.development.gamejolt.com:3334/app/stream-chat?direction=send',
-			// 	{
-			// 		// iceServers: null,
-			// 		// iceTransportPolicy: null,
-			// 		// maxVideoBitrate: bitrate,
-			// 		// preferredVideoFormat: codec,
-			// 	}
-			// );
+			startKitStreaming(localVideoKit.value);
+			startKitStreaming(localChatKit.value);
 
 			rtc.log(`Started streaming.`);
 		} catch (err) {
@@ -1144,7 +880,7 @@ export function stopStreaming(producer: FiresideRTCProducer, logData: string) {
 
 async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean) {
 	const busyWork = async () => {
-		const { isStreaming, micMuted, videoMuted, rtc, localVideoKit } = producer;
+		const { isStreaming, micMuted, videoMuted, rtc, localVideoKit, localChatKit } = producer;
 
 		if (!isStreaming.value) {
 			return;
@@ -1157,12 +893,8 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 		// Failure here should end up forcing the app to reload to make
 		// absolutely sure they aren't streaming by accident.
 		try {
-			// await Promise.all([
-			// 	stopChannelStreaming(videoChannel),
-			// 	stopChannelStreaming(chatChannel),
-			// ]);
-
-			localVideoKit.value.ovenClient.stopStreaming();
+			stopKitStreaming(localVideoKit.value);
+			stopKitStreaming(localChatKit.value);
 
 			// TODO(big-pp-event) I don't fully understand what this is supposed
 			// to do and why we want to call this after the streams are stopped.

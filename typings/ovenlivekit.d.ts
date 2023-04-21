@@ -6,6 +6,15 @@ declare module 'ovenlivekit' {
 	}
 
 	export interface OvenLiveKit {
+		inputStream: MediaStream | null;
+		webSocket: WebSocket | null;
+		peerConnection: RTCPeerConnection | null;
+		connectionConfig: OvenLiveKitConnectionConfig;
+		videoElement: HTMLVideoElement | null;
+		connectionUrl: string | null;
+		callbacks: OvenLiveKitCallbackConfig;
+		webSocketClosedByUser: boolean;
+
 		attachMedia(videoElement: HTMLVideoElement): void;
 		getUserMedia(constraints: MediaStreamConstraints): Promise<MediaStream>;
 		getDisplayMedia(constraints: MediaStreamConstraints): Promise<MediaStream>;
