@@ -1,9 +1,11 @@
+import { AxiosError } from 'axios';
 import { arrayRemove } from '../../utils/array';
 import { getCurrentServerTime } from '../../utils/server-time';
 import { Api } from '../api/api.service';
 import { EmojiSelectorModal } from '../emoji/selector-modal/modal.service';
 import { showErrorGrowl } from '../growls/growls.service';
 import { Model } from '../model/model.service';
+import { PayloadError } from '../payload/payload-service';
 import { $gettext } from '../translate/translate.service';
 
 export abstract class ReactionableModel extends Model {
@@ -127,14 +129,23 @@ export async function toggleReactionOnResource({
 			throw response;
 		}
 	} catch (e) {
-		if (isReacting) {
-			showErrorGrowl($gettext(`You can't react to this right now. Please try again later.`));
-		} else {
-			showErrorGrowl(
-				$gettext(
-					`You can't remove your reaction from this right now. Please try again later.`
-				)
+		let errorMessage = '';
+
+		if (!isReacting) {
+			errorMessage = $gettext(
+				`You can't remove your reaction from this right now. Please try again later.`
 			);
+		} else if (
+			(e instanceof AxiosError && e.response?.status === 403) ||
+			(e instanceof PayloadError && e.status === 403)
+		) {
+			errorMessage = $gettext(`You haven't unlocked this reaction yet.`);
+		} else {
+			errorMessage = $gettext(`You can't react to this right now. Please try again later.`);
+		}
+
+		if (errorMessage) {
+			showErrorGrowl(errorMessage);
 		}
 
 		const wasReacted = !isReacting;
