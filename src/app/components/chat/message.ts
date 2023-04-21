@@ -1,5 +1,5 @@
 import { ModelStoreModel, storeModel } from '../../../_common/model/model-store.service';
-import { ReactionableModel, ReactionCount } from '../../../_common/reaction/reaction-count';
+import { ReactionCount, ReactionableModel } from '../../../_common/reaction/reaction-count';
 import { ChatUser } from './user';
 
 import { Model } from '../../../_common/model/model.service';
@@ -37,7 +37,7 @@ export class ChatMessage extends Model implements ModelStoreModel, ReactionableM
 	_error = false; // When an error was received trying to send the message.
 
 	get typename__() {
-		return 'Message';
+		return 'Chat_Message';
 	}
 
 	constructor(data: any) {

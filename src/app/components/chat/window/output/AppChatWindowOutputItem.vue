@@ -9,6 +9,8 @@ import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJoltic
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppPopper, { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
+import AppReactionList from '../../../../../_common/reaction/list/AppReactionList.vue';
+import { selectReactionForResource } from '../../../../../_common/reaction/reaction-count';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
@@ -65,6 +67,10 @@ const props = defineProps({
 		type: Array as PropType<PopperPlacementType[]>,
 		default: undefined,
 	},
+	canReact: {
+		type: Boolean,
+		default: true,
+	},
 });
 
 const emit = defineEmits({
@@ -72,7 +78,7 @@ const emit = defineEmits({
 	hidePopper: () => true,
 });
 
-const { message, room, maxContentWidth } = toRefs(props);
+const { message, room, maxContentWidth, canReact } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
 
 let canClearFocus = false;
@@ -124,7 +130,9 @@ const messageState = computed<{ icon?: Jolticon; display: string; tooltip?: stri
 	return null;
 });
 
-const shouldShowMessageOptions = computed(() => canRemoveMessage.value || canEditMessage.value);
+const shouldShowMessageOptions = computed(
+	() => canRemoveMessage.value || canEditMessage.value || canReact.value
+);
 
 const dataAnchorWidth = computed(() => {
 	const itemWidth = 40;
@@ -353,6 +361,14 @@ async function onMessageClick() {
 						<AppJolticon v-if="messageState.icon" :icon="messageState.icon" />
 						<AppTranslate>{{ messageState.display }}</AppTranslate>
 					</span>
+
+					<div v-if="message.reaction_counts.length" class="_reactions-container">
+						<AppReactionList
+							:model="message"
+							:click-action="canReact ? 'toggle' : undefined"
+							context-action="show-details"
+						/>
+					</div>
 				</div>
 
 				<div v-if="!message.showMeta" class="-floating-data-left">
@@ -397,6 +413,15 @@ async function onMessageClick() {
 									@click="removeMessage"
 								>
 									<AppJolticon icon="trash-can" />
+								</a>
+
+								<a
+									v-if="canReact"
+									v-app-tooltip="$gettext('Add Reaction')"
+									class="-message-actions-item"
+									@click="selectReactionForResource(message)"
+								>
+									<AppJolticon icon="add-reaction" />
 								</a>
 							</template>
 						</div>
@@ -610,6 +635,9 @@ $-min-item-width = 24px
 .-overlay-text
 	color: white
 	overlay-text-shadow()
+
+._reactions-container
+	margin-bottom: -8px
 
 // Desktop (mouse)
 @media not screen and (pointer: coarse)
