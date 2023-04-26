@@ -1,6 +1,4 @@
 import { computed, reactive, shallowReadonly } from 'vue';
-import { TabLeaderInterface } from '../../../utils/tab-leader';
-import { Analytics } from '../../../_common/analytics/analytics.service';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
@@ -11,6 +9,7 @@ import { QuestNotification } from '../../../_common/quest/quest-notification-mod
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
 import { GridClient, onFiresideStart } from './client.service';
 
@@ -81,11 +80,7 @@ interface ClearNotificationsData {
 }
 
 interface SubscriptionCommunityData {
-	community_id?: number;
-}
-
-interface StickerUnlockPayload {
-	sticker_img_urls: string[];
+	community_id: number;
 }
 
 interface PostUpdatedPayload {
@@ -349,11 +344,6 @@ export function createGridNotificationChannel(
 			),
 			icon: fireside.user.img_avatar,
 			onClick: () => {
-				Analytics.trackEvent(
-					'grid',
-					'notification-click',
-					'fireside-featured-in-community'
-				);
 				router.push(fireside.routeLocation);
 			},
 			system: true,
