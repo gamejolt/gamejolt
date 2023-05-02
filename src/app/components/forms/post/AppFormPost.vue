@@ -950,6 +950,11 @@ function _getMatchingBackgroundIdFromPref() {
 						? $gettext(`What's new?`)
 						: $gettext(`Write a summary for your article...`)
 				"
+				:model-data="{
+					type: 'resource',
+					resource: 'Fireside_Post',
+					resourceId: model.id,
+				}"
 				:model-id="model.id"
 				:min-height="72"
 				:validators="[validateContentRequired(), validateContentMaxLength(leadLengthLimit)]"
@@ -1008,6 +1013,11 @@ function _getMatchingBackgroundIdFromPref() {
 						:placeholder="$gettext(`Write your article here...`)"
 						content-context="fireside-post-article"
 						:capabilities="articleContentCapabilities"
+						:model-data="{
+							type: 'resource',
+							resource: 'Fireside_Post',
+							resourceId: model.id,
+						}"
 						:model-id="model.id"
 						:validators="[
 							validateContentNoActiveUploads(),

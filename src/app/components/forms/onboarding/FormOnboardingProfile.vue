@@ -196,6 +196,11 @@ async function chooseAvatar() {
 						content-context="user-bio"
 						:capabilities="bioCapabilities"
 						:disabled="!allowBioChange"
+						:model-data="{
+							type: 'resource',
+							resource: 'User',
+							resourceId: user.id,
+						}"
 						:model-id="user.id"
 						:placeholder="$gettext(`Tell people about yourself`)"
 						:max-height="0"

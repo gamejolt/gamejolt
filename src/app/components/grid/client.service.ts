@@ -1,9 +1,5 @@
 import { Channel } from 'phoenix';
 import { markRaw, reactive } from 'vue';
-import { arrayRemove } from '../../../utils/array';
-import { createLogger } from '../../../utils/logging';
-import { sleep } from '../../../utils/utils';
-import { uuidv4 } from '../../../utils/uuid';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { ensureConfig } from '../../../_common/config/config.service';
@@ -30,6 +26,9 @@ import { $gettext, $gettextInterpolate } from '../../../_common/translate/transl
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
+import { createLogger } from '../../../utils/logging';
+import { sleep } from '../../../utils/utils';
+import { uuidv4 } from '../../../utils/uuid';
 import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';

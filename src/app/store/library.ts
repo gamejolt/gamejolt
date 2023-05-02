@@ -47,20 +47,10 @@ export function createLibraryStore({ router }: { router: Router }) {
 	);
 
 	/**
-	 * These are their followed jams.
-	 */
-	const jamPlaylists = computed(() =>
-		collections.value.filter(item => item.type === GameCollection.TYPE_JAM)
-	);
-
-	/**
 	 * These are playlists that don't belong to a folder.
 	 */
 	const mainPlaylists = computed(() =>
-		collections.value.filter(
-			item =>
-				item.type !== GameCollection.TYPE_DEVELOPER && item.type !== GameCollection.TYPE_JAM
-		)
+		collections.value.filter(item => item.type !== GameCollection.TYPE_DEVELOPER)
 	);
 
 	/**
@@ -76,10 +66,6 @@ export function createLibraryStore({ router }: { router: Router }) {
 				$gettext('Followed Developers'),
 				developerPlaylists
 			);
-		}
-
-		if (jamPlaylists.value.length) {
-			folders.jams = new GamePlaylistFolder($gettext('Followed Jams'), jamPlaylists);
 		}
 
 		return folders;
@@ -119,7 +105,6 @@ export function createLibraryStore({ router }: { router: Router }) {
 		developerCollection,
 		ownedCollection,
 		developerPlaylists,
-		jamPlaylists,
 		mainPlaylists,
 		playlistFolders,
 		bootstrap,

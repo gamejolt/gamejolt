@@ -25,7 +25,7 @@ import { Screen } from '../../../screen/screen-service';
 import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../translate/translate.service';
 import AppStickerStackItem from '../../stack/AppStickerStackItem.vue';
-import { CreatorStickersMap, sortStickerCounts, useStickerStore } from '../../sticker-store';
+import { CreatorStickersMap, sortStickerStacks, useStickerStore } from '../../sticker-store';
 import { Sticker, StickerStack } from '../../sticker.model';
 import AppStickerPack from '../AppStickerPack.vue';
 import { UserStickerPack } from '../user_pack.model';
@@ -261,7 +261,7 @@ function sortMyStickers(newStickers: Sticker[]) {
 		const existing = myStickers.find(cb);
 
 		if (existing) {
-			++existing.count;
+			existing.count = (existing.count ?? 0) + 1;
 		} else {
 			myStickers.push({
 				count: 1,
@@ -290,7 +290,7 @@ function sortMyStickers(newStickers: Sticker[]) {
 		}
 	}
 
-	const data = sortStickerCounts({
+	const data = sortStickerStacks({
 		eventStickers: newEventStickers,
 		creatorStickers: newCreatorStickers,
 		generalStickers: newGeneralStickers,

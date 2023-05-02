@@ -571,36 +571,6 @@ function onClickStreamingBanner() {
 									</div>
 								</div>
 							</template>
-							<template v-else-if="routeStatus === 'disconnected'">
-								<div key="disconnected" class="-message-wrapper">
-									<div class="-message">
-										<AppIllustration
-											:style="{
-												maxWidth: statusMessageMaxWidth,
-											}"
-											:max-text-width="statusMessageMaxWidth"
-											:asset="illNoCommentsSmall"
-										>
-											<p>
-												{{
-													$gettext(
-														`You have been disconnected from fireside services.`
-													)
-												}}
-												<br />
-												<br />
-												<small>
-													{{
-														$gettext(
-															`We are actively trying to reconnect you, but you can also try refreshing the page.`
-														)
-													}}
-												</small>
-											</p>
-										</AppIllustration>
-									</div>
-								</div>
-							</template>
 							<template v-else-if="routeStatus === 'blocked'">
 								<div key="blocked" class="-message-wrapper">
 									<div class="-message">

@@ -60,6 +60,7 @@ export default class FormForumTopic extends mixins(Wrapper) {
 			<AppFormControlContent
 				content-context="forum-post"
 				:capabilities="capabilities"
+				:model-data="null"
 				:validators="[validateContentRequired(), validateContentNoActiveUploads()]"
 			/>
 

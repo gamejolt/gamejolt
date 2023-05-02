@@ -3,7 +3,6 @@ import { computed, PropType, toRefs } from 'vue';
 import { RouteLocationDefinition } from '../../../../../utils/router';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
 import AppGameFollowWidget from '../../../../../_common/game/follow-widget/follow-widget.vue';
-import { Jam } from '../../../../../_common/jam/jam.model';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTheme from '../../../../../_common/theme/AppTheme.vue';
@@ -52,14 +51,6 @@ const shouldShowJoinCommunity = computed(() => {
 	return false;
 });
 
-const shouldShowJamViewGames = computed(() => {
-	if (!item?.value?.jam) {
-		return false;
-	}
-
-	return item?.value.jam.getPeriod() >= Jam.PERIOD_RUNNING;
-});
-
 const location = computed((): RouteLocationDefinition | undefined => {
 	if (item?.value?.game) {
 		return {
@@ -67,13 +58,6 @@ const location = computed((): RouteLocationDefinition | undefined => {
 			params: {
 				id: item?.value.game.id + '',
 				slug: item?.value.game.slug,
-			},
-		};
-	} else if (item?.value?.jam) {
-		return {
-			name: 'library.collection.jam',
-			params: {
-				id: item?.value.jam.url,
 			},
 		};
 	} else if (item?.value?.community) {
@@ -189,20 +173,6 @@ const bannerMediaItem = computed(() => {
 										primary
 										location="homeBanner"
 									/>
-								</template>
-								<template v-else-if="item.jam">
-									<AppButton
-										v-if="shouldShowJamViewGames"
-										primary
-										solid
-										:to="location"
-									>
-										{{ $gettext(`View games`) }}
-									</AppButton>
-									&nbsp;
-									<AppButton solid :href="item.jam.fullUrl" target="_blank">
-										{{ $gettext(`View jam page`) }}
-									</AppButton>
 								</template>
 								<template v-else-if="item.hero_button_url">
 									<AppButton solid :href="item.hero_button_url" target="_blank">

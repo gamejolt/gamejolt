@@ -4,9 +4,9 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import {
-	getLinkedAccountProviderDisplayName,
 	LinkedAccount,
 	Provider,
+	getLinkedAccountProviderDisplayName,
 } from '../../../../../_common/linked-account/linked-account.model';
 import AppLinkedAccount from '../../../../../_common/linked-account/linked-account.vue';
 import { LinkedAccounts } from '../../../../../_common/linked-account/linked-accounts.service';
@@ -39,10 +39,6 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 
 	get facebookAccount() {
 		return this.getAccount(LinkedAccount.PROVIDER_FACEBOOK);
-	}
-
-	get twitterAccount() {
-		return this.getAccount(LinkedAccount.PROVIDER_TWITTER);
 	}
 
 	get googleAccount() {
@@ -139,16 +135,6 @@ export default class RouteDashAccountLinkedAccounts extends BaseRouteComponent {
 					:account="facebookAccount"
 					:disabled="loading"
 					provider="facebook"
-					@link="onLink"
-					@sync="onLink"
-					@unlink="onUnlink"
-				/>
-			</div>
-			<div class="col-md-8 col-lg-6">
-				<AppLinkedAccount
-					:account="twitterAccount"
-					:disabled="loading"
-					provider="twitter"
 					@link="onLink"
 					@sync="onLink"
 					@unlink="onUnlink"

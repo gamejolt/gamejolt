@@ -7,6 +7,7 @@ import { Fireside } from '../fireside/fireside.model';
 import { FiresidePost } from '../fireside/post/post-model';
 import { showErrorGrowl } from '../growls/growls.service';
 import { setModalBodyWrapper } from '../modal/modal.service';
+import { ModelData } from '../model/model.service';
 import { EventTopic } from '../system/event/event-topic';
 import { $gettext } from '../translate/translate.service';
 import { User } from '../user/user.model';
@@ -14,6 +15,7 @@ import AppStickerLayer from './layer/AppStickerLayer.vue';
 import { getCollidingStickerTarget, StickerLayerController } from './layer/layer-controller';
 import { UserStickerPack } from './pack/user_pack.model';
 import { StickerPlacement } from './placement/placement.model';
+import { StickerCount } from './sticker-count';
 import { Sticker, StickerStack } from './sticker.model';
 import { ValidStickerResource } from './target/AppStickerTarget.vue';
 import {
@@ -261,9 +263,10 @@ async function _initializeDrawerContent(store: StickerStore, layer: StickerLayer
 		cost: payload.chargeCost,
 	});
 
-	const data = getStickerCountsFromPayloadData({
+	const data = getStickerStacksFromPayloadData({
 		stickerCounts: payload.stickerCounts,
 		stickers: payload.stickers,
+		unownedStickerMasteries: null,
 	});
 
 	eventStickers.value = data.eventStickers;
@@ -280,23 +283,55 @@ interface SortedStickerStacks {
 	generalStickers: CreatorStickersList;
 }
 
+export enum StickerSortMethod {
+	rarity = 'Rarity',
+	mastery = 'Mastery',
+}
+
 /**
  * Returns sorted lists of stickers.
  * ```
  */
-export function getStickerCountsFromPayloadData({
+export function getStickerStacksFromPayloadData({
 	stickerCounts,
 	stickers,
+	unownedStickerMasteries,
+	sorting,
 }: {
-	stickerCounts: any[];
-	stickers: any[];
+	stickerCounts: ModelData<StickerCount>[];
+	stickers: ModelData<Sticker>[];
+	unownedStickerMasteries: ModelData<Sticker>[] | null | undefined;
+	sorting?: StickerSortMethod;
 }): SortedStickerStacks {
 	const eventStickers: CreatorStickersList = [];
 	const creatorStickers: CreatorStickersMap = new Map();
 	const generalStickers: CreatorStickersList = [];
 
+	const unownedMasteries = Sticker.populate(unownedStickerMasteries || []);
+
+	const addItemToList = (item: StickerStack) => {
+		const stickerCreator = item.sticker.owner_user;
+
+		if (item.sticker.isCreatorSticker && stickerCreator) {
+			if (creatorStickers.has(stickerCreator.id)) {
+				creatorStickers.get(stickerCreator.id)!.push(item);
+			} else {
+				creatorStickers.set(stickerCreator.id, [item]);
+			}
+		} else if (item.sticker.is_event) {
+			eventStickers.push(item);
+		} else {
+			generalStickers.push(item);
+		}
+	};
+
 	stickerCounts.forEach((stickerCountPayload: any) => {
-		const stickerData = stickers.find((i: Sticker) => i.id === stickerCountPayload.sticker_id);
+		const stickerData = stickers.find(
+			(i: ModelData<Sticker>) => i.id === stickerCountPayload.sticker_id
+		);
+		if (!stickerData) {
+			return;
+		}
 
 		const item: StickerStack = {
 			count: stickerCountPayload.count,
@@ -304,44 +339,96 @@ export function getStickerCountsFromPayloadData({
 			sticker: new Sticker(stickerData),
 		};
 
-		const creator = item.sticker.owner_user;
-		if (item.sticker.isCreatorSticker && creator) {
-			if (creatorStickers.has(creator.id)) {
-				creatorStickers.get(creator.id)!.push(item);
-			} else {
-				creatorStickers.set(creator.id, [item]);
-			}
-		} else if (item.sticker.is_event) {
-			eventStickers.push(item);
-		} else {
-			generalStickers.push(item);
-		}
+		addItemToList(item);
 	});
 
-	return sortStickerCounts({
+	unownedMasteries.forEach(sticker => {
+		const item: StickerStack = {
+			count: null,
+			sticker_id: sticker.id,
+			sticker,
+		};
+
+		addItemToList(item);
+	});
+
+	return sortStickerStacks({
 		eventStickers,
 		creatorStickers,
 		generalStickers,
+		sorting,
 	});
 }
 
 /**
- * Sorts stickers in place. Moves "new" stickers to the start of their parent
- * array.
+ * Sorts stickers in place.
  */
-export function sortStickerCounts({
+export function sortStickerStacks({
 	eventStickers,
 	creatorStickers,
 	generalStickers,
+	sorting = StickerSortMethod.rarity,
 }: {
 	eventStickers: CreatorStickersList;
 	creatorStickers: CreatorStickersMap;
 	generalStickers: CreatorStickersList;
+	sorting?: StickerSortMethod;
 }): SortedStickerStacks {
 	const lists = [eventStickers, ...creatorStickers.values(), generalStickers];
+
 	lists.forEach(list => {
-		list.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
+		switch (sorting) {
+			case StickerSortMethod.rarity:
+				list.sort((a, b) => {
+					const aCount = a.count ?? 0;
+					const bCount = b.count ?? 0;
+					const aMastery = a.sticker.mastery;
+					const bMastery = b.sticker.mastery;
+
+					// If this sticker has no count, compare by mastery. Sort
+					// items nearest to completion to the front.
+					if (
+						aCount <= 0 &&
+						bCount <= 0 &&
+						typeof aMastery === 'number' &&
+						typeof bMastery === 'number'
+					) {
+						return numberSort(bMastery, aMastery);
+					}
+
+					if (aCount <= 0 || bCount <= 0) {
+						return numberSort(bCount, aCount);
+					}
+
+					const aRarity = a.sticker.rarity;
+					const bRarity = b.sticker.rarity;
+					return numberSort(bRarity, aRarity);
+				});
+				break;
+
+			case StickerSortMethod.mastery:
+				list.sort((a, b) => {
+					const aMastery = a.sticker.mastery;
+					const bMastery = b.sticker.mastery;
+					const aIsNumber = typeof aMastery === 'number';
+					const bIsNumber = typeof bMastery === 'number';
+
+					if (aIsNumber && !bIsNumber) {
+						return -1;
+					} else if (!aIsNumber && bIsNumber) {
+						return 1;
+					} else if (aIsNumber && bIsNumber) {
+						return numberSort(bMastery, aMastery);
+					}
+
+					const aRarity = a.sticker.rarity;
+					const bRarity = b.sticker.rarity;
+					return numberSort(bRarity, aRarity);
+				});
+				break;
+		}
 	});
+
 	return { eventStickers, creatorStickers, generalStickers };
 }
 
@@ -531,7 +618,7 @@ export function alterStickerStoreItemCount(
 	});
 
 	// This shouldn't ever trigger
-	if (!drawerItem) {
+	if (!drawerItem || typeof drawerItem.count !== 'number') {
 		return;
 	}
 

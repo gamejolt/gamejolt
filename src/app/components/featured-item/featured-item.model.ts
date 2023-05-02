@@ -1,13 +1,11 @@
 import { Community } from '../../../_common/community/community.model';
 import { Game } from '../../../_common/game/game.model';
-import { Jam } from '../../../_common/jam/jam.model';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
 import { Model } from '../../../_common/model/model.service';
 
 export class FeaturedItem extends Model {
 	// Hero:
 	declare game?: Game | null;
-	declare jam?: Jam | null;
 	declare community?: Community | null;
 	declare hero_text: string | null;
 	declare hero_button_text: string | null;
@@ -24,9 +22,6 @@ export class FeaturedItem extends Model {
 
 		if (data.game) {
 			this.game = new Game(data.game);
-		}
-		if (data.jam) {
-			this.jam = new Jam(data.jam);
 		}
 		if (data.community) {
 			this.community = new Community(data.community);

@@ -31,8 +31,6 @@ export class Environment {
 	static helpDocsBaseUrl = 'https://gamejolt.com/help-docs';
 	static clientSectionUrl = '';
 
-	static jamsBaseUrl = 'http://jams.gamejolt.com';
-	static jamsIoBaseUrl = 'http://jams.gamejolt.io';
 	static firesideBaseUrl = 'http://fireside.gamejolt.com';
 	static devBaseUrl = 'http://dev.gamejolt.com';
 	static gameserverUrl = (isSecure ? 'https' : 'http') + '://gamejolt.net';
@@ -66,8 +64,6 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.helpBaseUrl = 'https://development.gamejolt.com/help';
 	Environment.helpDocsBaseUrl = 'https://development.gamejolt.com/help-docs';
 
-	Environment.jamsBaseUrl = 'https://jams.development.gamejolt.com';
-	Environment.jamsIoBaseUrl = 'https://jams.development.gamejolt.io';
 	Environment.firesideBaseUrl = 'https://fireside.development.gamejolt.com';
 	Environment.devBaseUrl = 'https://dev.development.gamejolt.com';
 	Environment.gameserverUrl = 'https://development.gamejolt.net';

@@ -56,6 +56,7 @@ import {
 } from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { getModel } from '../../../../_common/model/model-store.service';
 import checkPayloadActions, {
 	PayloadAction,
 	PayloadActionDataKey,
@@ -68,6 +69,7 @@ import { CommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
+import { ChatRoom } from '../../chat/room';
 import {
 	ChatRoomChannel,
 	createChatRoomChannel,
@@ -87,7 +89,6 @@ export const shouldPromoteAppForStreaming = computed(
 
 export type RouteStatus =
 	| 'initial' // Initial status when route loads.
-	| 'disconnected' // Disconnected from the fireside (chat/client channels).
 	| 'loading' // Initiated loading to connect to relevant channels.
 	| 'unauthorized' // Cannot join because user is not logged in/has no cookie.
 	| 'expired' // Fireside has expired.
@@ -131,14 +132,14 @@ export type FiresideController = ReturnType<typeof createFiresideController>;
 export function createFiresideController(
 	fireside: Fireside,
 	options: {
-		isMuted?: boolean;
+		isPreviewMode?: boolean;
 		commonStore: CommonStore;
 		stickerStore: StickerStore;
 		gridStore: GridStore;
 		router: Router;
 	}
 ) {
-	const { isMuted = false, commonStore, gridStore, stickerStore, router } = options;
+	const { isPreviewMode = false, commonStore, gridStore, stickerStore, router } = options;
 	const { user } = commonStore;
 	const { grid, loadGrid } = gridStore;
 
@@ -147,6 +148,12 @@ export function createFiresideController(
 	fireside = reactive(fireside) as Fireside;
 
 	const agoraStreamingInfo = ref<AgoraStreamingInfo>();
+
+	/**
+	 * If we were online and then got disconnected, we'll go into a reconnecting
+	 * flow and this will get set.
+	 */
+	const isReconnecting = ref(false);
 
 	/**
 	 * The hosts that are allowed to stream in the fireside.
@@ -280,7 +287,6 @@ export function createFiresideController(
 	const gridDMChannel = shallowRef<GridFiresideDMChannel>();
 	const chatChannel = shallowRef<ChatRoomChannel>();
 	let _expiryInterval: NodeJS.Timer | undefined;
-	let _gridPreviousConnectedState: boolean | undefined = undefined;
 
 	const isHoveringOverlayControl = ref(false);
 	const shownUserCardHover = ref<number>();
@@ -295,7 +301,7 @@ export function createFiresideController(
 	const focusedUser = computed(() => rtc.value?.focusedUser);
 
 	const chat = computed(() => grid.value?.chat ?? undefined);
-	const chatRoom = computed(() => chatChannel.value?.room.value);
+	const chatRoom = shallowRef(getModel(ChatRoom, fireside.chat_room_id));
 
 	const chatUsers = computed(() => {
 		if (!chatRoom.value) {
@@ -520,14 +526,6 @@ export function createFiresideController(
 		return isListableHostStreaming(myHosts, myListableHostIds);
 	});
 
-	const _wantsRTCProducer = computed(() => {
-		if (!rtc.value) {
-			return false;
-		}
-
-		return !!fireside.role?.canStream;
-	});
-
 	const revalidateRTC = () => {
 		logger.info('wantsRTC changed to ' + (_wantsRTC.value ? 'true' : 'false'));
 
@@ -541,7 +539,7 @@ export function createFiresideController(
 				hosts,
 				listableHostIds,
 				hostBackgrounds,
-				{ isMuted }
+				{ isPreviewMode }
 			);
 		} else if (rtc.value) {
 			logger.info('Destroying old rtc');
@@ -564,12 +562,6 @@ export function createFiresideController(
 		return rtc.value;
 	};
 
-	function _onChatUsersChanged() {
-		// Assign our fireside host data anytime our chat users change from
-		// unset to set.
-		chatUsers.value?.assignFiresideHostData(hosts.value);
-	}
-
 	function assignHostBackgroundData(userId: number, background: Background | undefined) {
 		if (!background) {
 			hostBackgrounds.value.delete(userId);
@@ -578,62 +570,113 @@ export function createFiresideController(
 		}
 	}
 
-	// Sync we're not doing a deep watch, this'll only trigger when the actual
-	// instance changes (unset to set).
-	const _unwatchChatUsers = watch(chatUsers, _onChatUsersChanged);
+	/**
+	 * We set up a bunch of watchers in this controller. When destroying it we
+	 * need to clean them up. Add any watches in here to deregister during
+	 * cleanup.
+	 */
+	const _unwatches: (() => void)[] = [];
 
-	const _unwatchWantsRTC = watch(_wantsRTC, revalidateRTC);
-
-	const _unwatchWantsRTCProducer = watch(_wantsRTCProducer, async newWantsRTCProducer => {
-		logger.info('wantsRTCProducer changed to ' + (newWantsRTCProducer ? 'true' : 'false'));
-
-		if (newWantsRTCProducer) {
-			// Do not create the producer if it already exists.
-			// This should never happen normally.
-			rtc.value!.producer ??= markRaw(createFiresideRTCProducer(rtc.value!));
-		} else if (rtc.value) {
-			const prevProducer = rtc.value.producer;
-			rtc.value.producer = null;
-
-			if (prevProducer) {
-				logger.info('Tearing down old producer');
-				// Ideally we'd like to not await here because we want the producer
-				// to be considered "torn down" immediately. It simplifies logic for handling it.
-				// We can't avoid awaiting here tho because if the producer instance
-				// is in a busy state at the moment we want do dispose it, it'll queue up stopping
-				// the streams, then cleanupFiresideRTCProducer gets called which sets _isStreaming
-				// to false, and THEN when the streams actually attempt to stop it'd think they
-				// already stopped, and will not run the teardown logic for them..
-				await stopStreaming(prevProducer, 'auto-lost-perms');
-				// TODO(big-pp-event) is there a way to make absolutely sure nothing keeps a reference
-				// to producer past this point? theres nothing in the producer class that prevents attempting
-				// to start streaming from a cleanup-up instance of producer.
-				cleanupFiresideRTCProducer(prevProducer);
-			} else {
-				logger.info('rtc.producer was not set, nothing to do');
-			}
-		} else {
-			logger.info('rtc was not set, nothing to do');
-		}
+	const _hasGridConnection = computed(() => grid.value?.connected === true);
+	const _hasAgoraConnections = computed(() => {
+		// Channels are created after rtc is initialized - don't assume they're
+		// defined here.
+		const videoState = rtc.value?.videoChannel?._connectionState;
+		const chatState = rtc.value?.chatChannel?._connectionState;
+		const validValues: (typeof videoState | typeof chatState)[] = ['CONNECTED', 'CONNECTING'];
+		return validValues.includes(videoState) && validValues.includes(chatState);
 	});
-
-	const _unwatchListableHostIdsChanged = watch(
-		listableHostIds,
-		newListableHostIds => {
-			if (rtc.value) {
-				logger.info('setting listableHostIds', JSON.stringify(newListableHostIds));
-				setListableHostIds(rtc.value, newListableHostIds);
-			}
-		},
-		{ deep: true }
-	);
 
 	// Set up watchers to initiate connection once grid boots up. When a
 	// connection is dropped or any other error on the socket we immediately
-	// become disconnected and then queue up for restarting.
-	const _unwatchGridConnection = watch(
-		() => grid.value?.connected,
-		() => _watchGrid
+	// become disconnected and then queue up for reconnecting.
+	//
+	// This should also check Agora connection states, as Grid and Agora may
+	// react to disconnects at different times.
+	let _isRejoining = false;
+	_unwatches.push(
+		watch([_hasGridConnection, _hasAgoraConnections], values => {
+			const isConnected = values.every(i => i);
+			logger.info(
+				'grid.connected watcher triggered: ' + (isConnected ? 'connected' : 'disconnected')
+			);
+
+			if (!isConnected) {
+				_disconnect();
+				isReconnecting.value = true;
+			} else if (!_isRejoining) {
+				_isRejoining = true;
+				_tryJoin().finally(() => (_isRejoining = false));
+			}
+		})
+	);
+
+	// Since we're not doing a deep watch, this'll only trigger when the actual
+	// instance changes (unset to set).
+	_unwatches.push(
+		watch(chatUsers, () => {
+			// Assign our fireside host data anytime our chat users change from
+			// unset to set.
+			chatUsers.value?.assignFiresideHostData(hosts.value);
+		})
+	);
+
+	_unwatches.push(watch(_wantsRTC, revalidateRTC));
+	_unwatches.push(
+		watch(
+			() => {
+				if (!rtc.value) {
+					return false;
+				}
+
+				return !!fireside.role?.canStream;
+			},
+			async wantsRTCProducer => {
+				logger.info('wantsRTCProducer changed to ' + (wantsRTCProducer ? 'true' : 'false'));
+
+				if (wantsRTCProducer) {
+					// Do not create the producer if it already exists.
+					// This should never happen normally.
+					rtc.value!.producer ??= markRaw(createFiresideRTCProducer(rtc.value!));
+				} else if (rtc.value) {
+					const prevProducer = rtc.value.producer;
+					rtc.value.producer = null;
+
+					if (prevProducer) {
+						logger.info('Tearing down old producer');
+						// Ideally we'd like to not await here because we want the producer
+						// to be considered "torn down" immediately. It simplifies logic for handling it.
+						// We can't avoid awaiting here tho because if the producer instance
+						// is in a busy state at the moment we want do dispose it, it'll queue up stopping
+						// the streams, then cleanupFiresideRTCProducer gets called which sets _isStreaming
+						// to false, and THEN when the streams actually attempt to stop it'd think they
+						// already stopped, and will not run the teardown logic for them..
+						await stopStreaming(prevProducer, 'auto-lost-perms');
+						// TODO(big-pp-event) is there a way to make absolutely sure nothing keeps a reference
+						// to producer past this point? theres nothing in the producer class that prevents attempting
+						// to start streaming from a cleanup-up instance of producer.
+						cleanupFiresideRTCProducer(prevProducer);
+					} else {
+						logger.info('rtc.producer was not set, nothing to do');
+					}
+				} else {
+					logger.info('rtc was not set, nothing to do');
+				}
+			}
+		)
+	);
+
+	_unwatches.push(
+		watch(
+			listableHostIds,
+			newListableHostIds => {
+				if (rtc.value) {
+					logger.info('setting listableHostIds', JSON.stringify(newListableHostIds));
+					setListableHostIds(rtc.value, newListableHostIds);
+				}
+			},
+			{ deep: true }
+		)
 	);
 
 	const sidebarHome: FiresideSidebar = 'chat';
@@ -698,22 +741,24 @@ export function createFiresideController(
 		},
 	}));
 
-	const _unwatchSidebar = watch(
-		() => [sidebar, collapseSidebar],
-		() => {
-			const collapse = collapseSidebar.value;
-			const isHome = isSidebarHome.value;
+	_unwatches.push(
+		watch(
+			() => [sidebar, collapseSidebar],
+			() => {
+				const collapse = collapseSidebar.value;
+				const isHome = isSidebarHome.value;
 
-			if (collapse === isHome) {
-				return;
-			}
+				if (collapse === isHome) {
+					return;
+				}
 
-			if (!isHome) {
-				collapseSidebar.value = false;
-			} else if (collapse) {
-				_sidebar.value = sidebarHome;
+				if (!isHome) {
+					collapseSidebar.value = false;
+				} else if (collapse) {
+					_sidebar.value = sidebarHome;
+				}
 			}
-		}
+		)
 	);
 
 	const _isFullscreen = ref(false);
@@ -794,11 +839,12 @@ export function createFiresideController(
 		listableHostIds,
 		hostBackgrounds,
 		stickerTargetController,
-		isMuted,
+		isPreviewMode,
 		rtc,
 		revalidateRTC,
 		assignHostBackgroundData,
 		status,
+		isReconnecting,
 		focusedUser,
 		chat,
 		chatSettings,
@@ -878,32 +924,18 @@ export function createFiresideController(
 		_tryJoin();
 	}
 
-	function _watchGrid() {
-		logger.info(
-			'grid.connected watcher triggered: ' +
-				(grid.value?.connected ? 'connected' : 'disconnected')
-		);
-
-		if (grid.value?.connected) {
-			_tryJoin();
-		}
-		// Only disconnect when not connected and it previous registered a
-		// different state. This watcher runs once initially when grid is not
-		// connected, and we don't want to call disconnect in that case.
-		else if (grid.value && _gridPreviousConnectedState !== undefined) {
-			_disconnect();
-		}
-
-		_gridPreviousConnectedState = grid.value?.connected ?? undefined;
-	}
-
 	async function _tryJoin() {
-		// Only try to join when disconnected (or for the first "initial" load).
-		if (status.value !== 'disconnected' && status.value !== 'initial') {
+		// Only try to join when reconnecting (or for the first "initial" load).
+		if (!isReconnecting.value && status.value !== 'initial') {
 			return;
 		}
 
-		status.value = 'loading';
+		// We only want to set the status to loading if they haven't connected
+		// yet. If they have and then we change the status, the whole page will
+		// essentially get reloaded.
+		if (status.value === 'initial') {
+			status.value = 'loading';
+		}
 
 		// Make sure the services are connected.
 		while (!grid.value?.connected) {
@@ -921,7 +953,7 @@ export function createFiresideController(
 			await sleep(250);
 		}
 
-		_join();
+		return _join();
 	}
 
 	async function _join() {
@@ -977,14 +1009,12 @@ export function createFiresideController(
 				run(async () => {
 					logger.info('Trying to connect to fireside channel.');
 
-					const newChannel = createGridFiresideChannel(grid.value!, controller, {
+					gridChannel.value = createGridFiresideChannel(grid.value!, controller, {
 						firesideHash: fireside.hash,
 						stickerStore,
 					});
 
-					await newChannel.joinPromise;
-					gridChannel.value = newChannel;
-					grid.value!.firesideChannels.push(markRaw(newChannel));
+					await gridChannel.value.joinPromise;
 
 					logger.info('Connected to fireside channel.');
 				}),
@@ -997,14 +1027,12 @@ export function createFiresideController(
 
 					logger.info('Trying to connect to fireside DM channel.');
 
-					const newChannel = createGridFiresideDMChannel(grid.value!, controller, {
+					gridDMChannel.value = createGridFiresideDMChannel(grid.value!, controller, {
 						firesideHash: fireside.hash,
 						user: user.value,
 					});
 
-					await newChannel.joinPromise;
-					gridDMChannel.value = newChannel;
-					grid.value!.firesideDMChannels.push(markRaw(newChannel));
+					await gridDMChannel.value.joinPromise;
 
 					logger.info('Connected to fireside DM channel.');
 				}),
@@ -1012,10 +1040,8 @@ export function createFiresideController(
 				run(async () => {
 					logger.info('Trying to connect to chat room.');
 
-					const roomId = fireside.chat_room_id;
-
-					const newChannel = createChatRoomChannel(chat.value!, {
-						roomId,
+					chatChannel.value = createChatRoomChannel(chat.value!, {
+						roomId: fireside.chat_room_id,
 						instanced: true,
 						afterMemberKick: data => {
 							if (user.value && data.user_id === user.value.id) {
@@ -1023,10 +1049,13 @@ export function createFiresideController(
 								router.push({ name: 'home' });
 							}
 						},
+						firesideSocketParams: {
+							fireside_viewing_mode: isPreviewMode ? 'preview' : 'full',
+						},
 					});
 
-					await newChannel.joinPromise;
-					chatChannel.value = newChannel;
+					await chatChannel.value.joinPromise;
+					chatRoom.value = chatChannel.value.room.value;
 
 					logger.info('Connected to chat room.');
 				}),
@@ -1052,29 +1081,29 @@ export function createFiresideController(
 
 		_setupExpiryInfoInterval();
 		updateFiresideExpiryValues(controller);
+		isReconnecting.value = false;
 	}
 
 	function _disconnect() {
-		if (status.value === 'disconnected') {
+		// Already reconnecting, so don't disconnect again.
+		if (isReconnecting.value) {
 			return;
 		}
 
 		logger.info(`Disconnecting from fireside.`);
-		status.value = 'disconnected';
 
 		_clearExpiryCheck();
 		_destroyExpiryInfoInterval();
 
 		if (grid.value?.connected) {
-			if (gridChannel.value || gridDMChannel.value) {
-				grid.value.leaveFireside(fireside);
-			}
-			gridChannel.value = undefined;
-			gridDMChannel.value = undefined;
-
+			gridChannel.value?.leave();
+			gridDMChannel.value?.leave();
 			chatChannel.value?.leave();
-			chatChannel.value = undefined;
 		}
+
+		gridChannel.value = undefined;
+		gridDMChannel.value = undefined;
+		chatChannel.value = undefined;
 
 		logger.info(`Disconnected from fireside.`);
 	}
@@ -1124,12 +1153,8 @@ export function createFiresideController(
 		// These watchers are used to figure out
 		// when we need to destroy rtc and rtc producer. we want
 		// to make sure these are still destroyed even if the watchers are disposed.
-		_unwatchChatUsers();
-		_unwatchWantsRTC();
-		_unwatchWantsRTCProducer();
-		_unwatchListableHostIdsChanged();
-		_unwatchGridConnection();
-		_unwatchSidebar();
+		_unwatches.forEach(i => i());
+		_unwatches.splice(0, Infinity);
 
 		if (rtc.value) {
 			destroyFiresideRTC(rtc.value);

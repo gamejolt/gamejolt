@@ -201,9 +201,15 @@ export function styleLineClamp(lines = 2): CSSProperties {
 	};
 }
 
-export function styleFlexCenter(direction?: 'row' | 'column'): CSSProperties {
+export function styleFlexCenter({
+	display = 'flex',
+	direction,
+}: {
+	display?: 'flex' | 'inline-flex';
+	direction?: CSSProperties['flex-direction'];
+} = {}): CSSProperties {
 	return {
-		display: `flex`,
+		display,
 		alignItems: `center`,
 		justifyContent: `center`,
 		...styleWhen(!!direction, {

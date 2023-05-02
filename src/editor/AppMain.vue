@@ -23,6 +23,7 @@ const adapter = createContentEditorAppAdapter({ themeStore });
 			:placeholder="adapter.placeholder"
 			:min-height="0"
 			:max-height="0"
+			:model-data="null"
 			@input="adapter.onContentChange($event)"
 		/>
 	</div>

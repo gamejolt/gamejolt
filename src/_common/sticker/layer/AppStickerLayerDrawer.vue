@@ -152,7 +152,7 @@ watch(isLoading, onIsLoadingChange, { immediate: true });
 onMounted(() => {
 	calculateStickersPerRow();
 
-	_escapeCallback = () => setStickerDrawerOpen(stickerStore, false, null);
+	_escapeCallback = () => closeStickerDrawer(stickerStore);
 	EscapeStack.register(_escapeCallback);
 });
 
@@ -168,6 +168,9 @@ function _chunkStickers(stickers: StickerStack[]) {
 
 	let current: StickerStack[] = [];
 	for (const i of stickers) {
+		if (typeof i.count !== 'number') {
+			continue;
+		}
 		current.push(i);
 
 		if (current.length >= maxStickersPerSheet.value) {
@@ -224,7 +227,7 @@ function goPrev() {
 }
 
 function assignTouchedSticker(sticker: StickerStack) {
-	if (!isDrawerOpen.value || storeSticker.value || sticker.count <= 0) {
+	if (!isDrawerOpen.value || storeSticker.value || !sticker.count) {
 		return;
 	}
 
@@ -429,7 +432,7 @@ function onContentDimensionsChanged() {
 											:key="item.sticker.id"
 											:style="styleStickers"
 											:sticker="item.sticker"
-											:count="item.count"
+											:count="item.count || undefined"
 											:size="stickerSize"
 											show-creator
 											@mousedown="assignTouchedSticker(item)"

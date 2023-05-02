@@ -1,14 +1,5 @@
 import { Presence } from 'phoenix';
-import {
-	computed,
-	ComputedRef,
-	markRaw,
-	onMounted,
-	onUnmounted,
-	ref,
-	shallowReadonly,
-	watch,
-} from 'vue';
+import { computed, markRaw, onMounted, onUnmounted, Ref, ref, shallowReadonly, watch } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { run } from '../../../utils/utils';
@@ -84,6 +75,10 @@ interface UpdateFiresidePayload {
 	streaming_users: UnknownModelData[];
 }
 
+interface FiresideSocketParams {
+	fireside_viewing_mode: string;
+}
+
 export function createChatRoomChannel(
 	client: ChatClient,
 	options: {
@@ -100,10 +95,15 @@ export function createChatRoomChannel(
 		 * logic.
 		 */
 		afterMemberKick?: (data: ChatRoomMemberKickedPayload) => void;
+
+		/**
+		 * Fireside socket params to pass to the socket controller.
+		 */
+		firesideSocketParams?: FiresideSocketParams;
 	}
 ) {
 	const { socketController } = client;
-	const { roomId, instanced, afterMemberKick } = options;
+	const { roomId, instanced, afterMemberKick, firesideSocketParams } = options;
 
 	// This is because the join set its up async, but all the functionality that
 	// attaches to this channel will be called after the room is set up. So we
@@ -114,7 +114,11 @@ export function createChatRoomChannel(
 	let _freezeMessageLimitRemovals = false;
 	let _queuedMessageLimit: number | undefined = undefined;
 
-	const channelController = createSocketChannelController(`room:${roomId}`, socketController);
+	const channelController = createSocketChannelController(
+		`room:${roomId}`,
+		socketController,
+		firesideSocketParams
+	);
 	channelController.listenTo('message', _onMsg);
 	channelController.listenTo('user_updated', _onUserUpdated);
 	channelController.listenTo('message_update', _onUpdateMsg);
@@ -624,7 +628,7 @@ class ChatRoomChannelLock {
  * Convenience for getting a member collection and releasing the lock on
  * component unmount.
  */
-export function useChatRoomMembers(room: ComputedRef<ChatRoom | undefined>) {
+export function useChatRoomMembers(room: Ref<ChatRoom | undefined>) {
 	let lock: ChatRoomChannelLock | undefined;
 	const mounted = ref(false);
 

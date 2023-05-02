@@ -83,9 +83,6 @@ export default class FormGameRelease
 	buildDownloadCounts!: { [buildId: number]: number };
 
 	@Prop(Boolean)
-	areBuildsLockedByJam!: boolean;
-
-	@Prop(Boolean)
 	areWebBuildsLockedBySellable!: boolean;
 
 	controller = shallowSetup(() => {
@@ -208,7 +205,9 @@ export default class FormGameRelease
 
 	async savePublished() {
 		const result = await ModalConfirm.show(
-			this.$gettext('Are you sure you want to publish this release? All of its builds will become active on your game page.')
+			this.$gettext(
+				'Are you sure you want to publish this release? All of its builds will become active on your game page.'
+			)
 		);
 
 		if (!result) {
@@ -289,10 +288,7 @@ export default class FormGameRelease
 
 <template>
 	<AppForm class="game-release-form" :controller="form">
-		<AppFormGroup
-			name="version_number"
-			:title="$gettext('Version Number')"
-		>
+		<AppFormGroup name="version_number" :title="$gettext('Version Number')">
 			<div class="help-block">
 				<p v-translate>
 					Version numbers are how you label releases.
@@ -351,18 +347,7 @@ export default class FormGameRelease
 
 			<br />
 
-			<div v-if="areBuildsLockedByJam" class="alert alert-notice sans-margin">
-				<AppJolticon icon="notice" />
-				<strong>
-					<AppTranslate>
-						Your game is part of a jam that locks builds during voting.
-					</AppTranslate>
-				</strong>
-				<AppTranslate>
-					You will not be able to add new builds until the voting period ends.
-				</AppTranslate>
-			</div>
-			<div v-else class="row">
+			<div class="row">
 				<div class="col-sm-6">
 					<h5 class="sans-margin-top">
 						<strong><AppTranslate>Upload Downloadable Build</AppTranslate></strong>
@@ -419,7 +404,9 @@ export default class FormGameRelease
 			<template v-else-if="isScheduling && timezones">
 				<AppFormGroup name="scheduled_for_timezone" :label="$gettext(`Timezone`)">
 					<p class="help-block">
-						<AppTranslate>All time selection below will use this timezone.</AppTranslate>
+						<AppTranslate
+							>All time selection below will use this timezone.</AppTranslate
+						>
 					</p>
 
 					<p class="help-block">

@@ -121,6 +121,11 @@ function skipAutotag() {
 				:placeholder="$gettext(`Write your game description here...`)"
 				content-context="game-description"
 				:capabilities="descriptionContentCapabilities"
+				:model-data="{
+					type: 'resource',
+					resource: 'Game',
+					resourceId: model.id,
+				}"
 				:model-id="model.id"
 				:validators="[
 					validateContentRequired(),
