@@ -46,6 +46,10 @@ export function setTimezoneOffsetCookie() {
 		return;
 	}
 
+	if (import.meta.env.SSR) {
+		return;
+	}
+
 	const cookieName = 'gjtz';
 
 	// Negate the offset, because this function returns the offset from UTC to local time.
