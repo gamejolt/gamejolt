@@ -1,3 +1,5 @@
+import { Environment } from '../environment/environment.service';
+
 export function getCookie(name: string): Promise<string | undefined> {
 	return new Promise(resolve => {
 		// Within Client we have to access it this way.
@@ -33,6 +35,12 @@ export function getCookie(name: string): Promise<string | undefined> {
 }
 
 export function userAgreedToCookies() {
+	if (import.meta.env.SSR) {
+		return false;
+	}
+	if (GJ_IS_DESKTOP_APP) {
+		return true;
+	}
 	return !!window.localStorage.getItem('banner:cookie');
 }
 
@@ -43,10 +51,6 @@ export function setUserAgreedToCookies() {
 export function setTimezoneOffsetCookie() {
 	// Only track if user agreed to cookies.
 	if (!userAgreedToCookies()) {
-		return;
-	}
-
-	if (import.meta.env.SSR) {
 		return;
 	}
 
@@ -61,5 +65,19 @@ export function setTimezoneOffsetCookie() {
 	const expiresTimestamp = Date.now() + 1000 * 60 * 60 * 24 * 7;
 	const expires = new Date(expiresTimestamp).toUTCString();
 
-	document.cookie = `${cookieName}=${offsetSeconds}; expires=${expires}; path=/`;
+	if (GJ_IS_DESKTOP_APP) {
+		const win = nw.Window.get();
+		win.cookies.set(
+			{
+				name: cookieName,
+				value: offsetSeconds.toString(),
+				expirationDate: Math.floor(expiresTimestamp / 1000),
+				url: Environment.baseUrl,
+				path: '/',
+			},
+			() => {}
+		);
+	} else {
+		document.cookie = `${cookieName}=${offsetSeconds}; expires=${expires}; path=/`;
+	}
 }
