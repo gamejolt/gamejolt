@@ -1,0 +1,37 @@
+name: Build Frontend
+
+on:
+  push:
+    branches:
+      - main
+      - actions-frontend-build
+
+jobs:
+  build-frontend:
+    runs-on: buildjet-2vcpu-ubuntu-2204
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.4.2'
+          cache: yarn
+
+      - run: yarn install
+      - run: yarn run client:build
+      - run: cd build/web && tar cvf web-build.tar .
+      - run: cd ../..
+      - run: cd build/ssr && tar cvf ssr-build.tar .
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: web-build
+          path: build/web/web-build.tar
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ssr-build
+          path: build/ssr/ssr-build.tar
