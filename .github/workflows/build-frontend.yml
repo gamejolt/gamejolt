@@ -21,7 +21,7 @@ jobs:
           cache: yarn
 
       - run: yarn install
-      - run: yarn run client:build
+      - run: yarn run web:build
       - run: cd build/web && tar cvf web-build.tar .
       - run: cd ../..
       - run: cd build/ssr && tar cvf ssr-build.tar .
