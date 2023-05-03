@@ -31,3 +31,31 @@ export function getCookie(name: string): Promise<string | undefined> {
 		}
 	});
 }
+
+export function userAgreedToCookies() {
+	return !!window.localStorage.getItem('banner:cookie');
+}
+
+export function setUserAgreedToCookies() {
+	window.localStorage.setItem('banner:cookie', Date.now() + '');
+}
+
+export function setTimezoneOffsetCookie() {
+	// Only track if user agreed to cookies.
+	if (!userAgreedToCookies()) {
+		return;
+	}
+
+	const cookieName = 'gjtz';
+
+	// Negate the offset, because this function returns the offset from UTC to local time.
+	// Example, UTC offset +01:00 is -3600 seconds.
+	// But we want to know how far away a user's timezone is from UTC, so we want 3600.
+	// * 60 to turn from minutes to seconds.
+	const offsetSeconds = new Date().getTimezoneOffset() * -60;
+
+	const expiresTimestamp = Date.now() + 1000 * 60 * 60 * 24 * 7;
+	const expires = new Date(expiresTimestamp).toUTCString();
+
+	document.cookie = `${cookieName}=${offsetSeconds}; expires=${expires}; path=/`;
+}
