@@ -11,8 +11,18 @@ defineProps({
 		type: Boolean,
 	},
 	maxWidth: {
-		type: Number,
-		default: 0,
+		type: [Number, String],
+		default: undefined,
+		validator: value =>
+			(typeof value === 'number' && value >= 0) ||
+			(typeof value === 'string' && value.length > 0),
+	},
+	maxTextWidth: {
+		type: [Number, String],
+		default: 500,
+		validator: value =>
+			(typeof value === 'number' && value >= 0) ||
+			(typeof value === 'string' && value.length > 0),
 	},
 });
 
@@ -30,7 +40,7 @@ const hasContent = computed(() => !!slots.default);
 			:style="
 				maxWidth
 					? {
-							maxWidth: `${maxWidth}px`,
+							maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth,
 							height: 'auto',
 					  }
 					: undefined
@@ -38,7 +48,14 @@ const hasContent = computed(() => !!slots.default);
 			:src="asset.path"
 		/>
 
-		<div v-if="hasContent" class="-text" :class="{ '-sm': sm }">
+		<div
+			v-if="hasContent"
+			class="-text"
+			:class="{ '-sm': sm }"
+			:style="{
+				maxWidth: typeof maxTextWidth === 'number' ? `${maxTextWidth}px` : maxTextWidth,
+			}"
+		>
 			<slot />
 		</div>
 	</div>
@@ -62,7 +79,6 @@ $-font-size = 19px
 .-text
 	color: var(--theme-fg-muted)
 	font-size: $-font-size-xs
-	max-width: 500px
 
 	@media $media-sm-up
 		&:not(.-sm)

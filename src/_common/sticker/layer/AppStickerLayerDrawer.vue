@@ -14,8 +14,8 @@ import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
 import {
+	closeStickerDrawer,
 	commitStickerStoreItemPlacement,
-	setStickerDrawerOpen,
 	setStickerStoreActiveItem,
 	useStickerStore,
 } from '../sticker-store';
@@ -25,7 +25,7 @@ import AppStickerLayerDrawerItem from './AppStickerLayerDrawerItem.vue';
 const stickerStore = useStickerStore();
 const {
 	sticker: storeSticker,
-	drawerItems: items,
+	allStickers: items,
 	stickerSize,
 	drawerHeight,
 	isHoveringDrawer,
@@ -152,7 +152,7 @@ watch(isLoading, onIsLoadingChange, { immediate: true });
 onMounted(() => {
 	calculateStickersPerRow();
 
-	_escapeCallback = () => setStickerDrawerOpen(stickerStore, false, null);
+	_escapeCallback = () => closeStickerDrawer(stickerStore);
 	EscapeStack.register(_escapeCallback);
 });
 
@@ -168,6 +168,9 @@ function _chunkStickers(stickers: StickerStack[]) {
 
 	let current: StickerStack[] = [];
 	for (const i of stickers) {
+		if (typeof i.count !== 'number') {
+			continue;
+		}
 		current.push(i);
 
 		if (current.length >= maxStickersPerSheet.value) {
@@ -197,7 +200,7 @@ async function onClickPlace() {
 }
 
 function onClickMargin() {
-	setStickerDrawerOpen(stickerStore, false, null);
+	closeStickerDrawer(stickerStore);
 }
 
 // VueTouch things - START
@@ -224,7 +227,7 @@ function goPrev() {
 }
 
 function assignTouchedSticker(sticker: StickerStack) {
-	if (!isDrawerOpen.value || storeSticker.value || sticker.count <= 0) {
+	if (!isDrawerOpen.value || storeSticker.value || !sticker.count) {
 		return;
 	}
 
@@ -402,67 +405,70 @@ function onContentDimensionsChanged() {
 			class="-drawer-outer anim-fade-in-up"
 			:style="{ ...styleOuter, display: !showPlaceButton ? undefined : 'none' }"
 		>
-			<component
-				:is="Screen.isPointerMouse ? AppScrollScroller : 'div'"
-				:style="styleDimensions"
-			>
-				<AppLoadingFade :is-loading="isLoading">
-					<component
-						:is="drawerNavigationComponent"
-						class="-scroller"
-						v-bind="drawerNavigationProps"
-						@panstart="panStart"
-						@pan="pan"
-						@panend="panEnd"
-					>
-						<div ref="slider" class="-drawer-inner">
-							<template v-if="hasStickers">
-								<div
-									v-for="(sheet, index) in stickerSheets"
-									:key="index"
-									class="-sheet"
-									:style="styleSheet"
-								>
-									<AppStickerLayerDrawerItem
-										v-for="item of sheet"
-										:key="item.sticker.id"
-										:style="styleStickers"
-										:sticker="item.sticker"
-										:count="item.count"
-										:size="stickerSize"
-										@mousedown="assignTouchedSticker(item)"
-										@touchstart="assignTouchedSticker(item)"
-									/>
-								</div>
-							</template>
-							<template v-else-if="hasLoaded">
-								<div class="text-center">
-									<p class="lead" style="padding: 0 16px">
-										{{
-											$gettext(
-												`Oh no! Looks like you don't have any stickers.`
-											)
-										}}
-									</p>
+			<AppLoadingFade :is-loading="isLoading">
+				<component
+					:is="Screen.isPointerMouse ? AppScrollScroller : 'div'"
+					:style="styleDimensions"
+				>
+					<AppLoadingFade :is-loading="isLoading">
+						<component
+							:is="drawerNavigationComponent"
+							class="-scroller"
+							v-bind="drawerNavigationProps"
+							@panstart="panStart"
+							@pan="pan"
+							@panend="panEnd"
+						>
+							<div ref="slider" class="-drawer-inner">
+								<template v-if="hasStickers">
+									<div
+										v-for="(sheet, index) in stickerSheets"
+										:key="index"
+										class="-sheet"
+										:style="styleSheet"
+									>
+										<AppStickerLayerDrawerItem
+											v-for="item of sheet"
+											:key="item.sticker.id"
+											:style="styleStickers"
+											:sticker="item.sticker"
+											:count="item.count || undefined"
+											:size="stickerSize"
+											show-creator
+											@mousedown="assignTouchedSticker(item)"
+											@touchstart="assignTouchedSticker(item)"
+										/>
+									</div>
+								</template>
+								<template v-else-if="hasLoaded">
+									<div class="text-center">
+										<p class="lead" style="padding: 0 16px">
+											{{
+												$gettext(
+													`Oh no! Looks like you don't have any stickers.`
+												)
+											}}
+										</p>
 
-									<AppButton block trans @click="showVendingMachineModal()">
-										{{ $gettext(`Purchase packs`) }}
-									</AppButton>
-								</div>
-							</template>
-							<template v-else>
-								<div />
-							</template>
+										<AppButton block trans @click="showVendingMachineModal()">
+											{{ $gettext(`Purchase packs`) }}
+										</AppButton>
+									</div>
+								</template>
+								<template v-else>
+									<div />
+								</template>
+							</div>
+						</component>
+						<div v-if="!Screen.isPointerMouse">
+							<AppEventItemMediaIndicator
+								:count="stickerSheets.length"
+								:current="sheetPage"
+							/>
 						</div>
-					</component>
-					<div v-if="!Screen.isPointerMouse">
-						<AppEventItemMediaIndicator
-							:count="stickerSheets.length"
-							:current="sheetPage"
-						/>
-					</div>
-				</AppLoadingFade>
-			</component>
+					</AppLoadingFade>
+				</component>
+			</AppLoadingFade>
 		</div>
 
 		<div class="-margin" @click="onClickMargin()" />

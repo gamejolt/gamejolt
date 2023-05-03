@@ -7,6 +7,7 @@ import { Fireside } from '../fireside/fireside.model';
 import { FiresidePost } from '../fireside/post/post-model';
 import { showErrorGrowl } from '../growls/growls.service';
 import { setModalBodyWrapper } from '../modal/modal.service';
+import { ModelData } from '../model/model.service';
 import { EventTopic } from '../system/event/event-topic';
 import { $gettext } from '../translate/translate.service';
 import { User } from '../user/user.model';
@@ -14,6 +15,7 @@ import AppStickerLayer from './layer/AppStickerLayer.vue';
 import { getCollidingStickerTarget, StickerLayerController } from './layer/layer-controller';
 import { UserStickerPack } from './pack/user_pack.model';
 import { StickerPlacement } from './placement/placement.model';
+import { StickerCount } from './sticker-count';
 import { Sticker, StickerStack } from './sticker.model';
 import { ValidStickerResource } from './target/AppStickerTarget.vue';
 import {
@@ -29,6 +31,9 @@ interface StickerStreak {
 	count: number;
 }
 
+export type CreatorStickersMap = Map<number, CreatorStickersList>;
+export type CreatorStickersList = StickerStack[];
+
 export type StickerStore = ReturnType<typeof createStickerStore>;
 
 export function createStickerStore(options: { user: Ref<User | null> }) {
@@ -36,17 +41,22 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 	const layers = shallowReactive<StickerLayerController[]>([]);
 	const targetController = shallowRef<StickerTargetController | null>(null);
 
-	const drawerItems = shallowRef<StickerStack[]>([]);
-	const stickerPacks = ref<UserStickerPack[]>([]);
+	const eventStickers = ref([]) as Ref<CreatorStickersList>;
+	const creatorStickers = ref<CreatorStickersMap>(new Map());
+	const generalStickers = ref([]) as Ref<CreatorStickersList>;
+
+	const stickerPacks = ref([]) as Ref<UserStickerPack[]>;
 
 	const placedItem = shallowRef<StickerPlacement | null>(null);
 	const sticker = shallowRef<Sticker | null>(null);
 	const streak = shallowRef<StickerStreak | null>(null);
 
+	const allStickers = computed(() =>
+		[eventStickers.value, ...creatorStickers.value.values(), generalStickers.value].flat()
+	);
+
 	const drawerHeight = ref(0);
 	const stickerSize = ref(64);
-	const stickerCurrency = ref<number | null>(null);
-	const stickerCost = ref<number | null>(null);
 
 	const currentCharge = ref(0);
 	const chargeLimit = ref(7);
@@ -65,7 +75,6 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 	const isHoveringDrawer = ref(false);
 	const isLoading = ref(false);
 	const hasLoaded = ref(false);
-	const hideDrawer = ref(false);
 
 	const _waitingForFrame = ref(false);
 	const _onPointerMove = shallowRef<((event: MouseEvent | TouchEvent) => void) | null>(null);
@@ -131,15 +140,16 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 
 	const c = {
 		layers,
-		drawerItems,
+		eventStickers,
+		creatorStickers,
+		generalStickers,
+		allStickers,
 		stickerPacks,
 		targetController,
 		placedItem,
 		sticker,
 		drawerHeight,
 		stickerSize,
-		stickerCurrency,
-		stickerCost,
 		currentCharge,
 		chargeLimit,
 		chargeCost,
@@ -150,7 +160,6 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 		isHoveringDrawer,
 		isLoading,
 		hasLoaded,
-		hideDrawer,
 		_waitingForFrame,
 		_onPointerMove,
 		_onPointerUp,
@@ -204,65 +213,49 @@ export function setStickerStreak(store: StickerStore, sticker: Sticker, count: n
 	};
 }
 
-/**
- * Toggle the shell drawer, initializing the state when opening or resetting it
- * when closing.
- */
-export function setStickerDrawerOpen(
-	store: StickerStore,
-	shouldOpen: boolean,
-	preferredLayer: StickerLayerController | null
-) {
-	const { isDrawerOpen, layers, activeLayer } = store;
-
-	if (shouldOpen === isDrawerOpen.value) {
+export function openStickerDrawer(store: StickerStore, layer: StickerLayerController) {
+	const { isDrawerOpen, activeLayer } = store;
+	if (isDrawerOpen.value) {
 		return;
 	}
 
-	if (shouldOpen) {
-		let _chosenLayer = preferredLayer;
-		// In reverse order, check layers and use the first one that marked itself
-		// as active.
-		if (!_chosenLayer && layers.length > 0) {
-			for (let i = layers.length; i > 0; --i) {
-				const layer = layers[i - 1];
-				if (layer.isActive.value) {
-					_chosenLayer = layer;
-					break;
-				}
-			}
-		}
+	activeLayer.value = layer;
 
-		activeLayer.value = _chosenLayer;
-
-		isDrawerOpen.value = true;
-		_initializeDrawerContent(store);
-	} else {
-		_resetStickerStore(store);
-	}
+	isDrawerOpen.value = true;
+	_initializeDrawerContent(store, layer);
 }
 
-export function setStickerDrawerHidden(store: StickerStore, shouldHide: boolean) {
-	store.hideDrawer.value = shouldHide;
-
-	// Everytime we un-hide the drawer we want to fetch their new stickers since they may have unlocked more.
-	if (!shouldHide) {
-		_initializeDrawerContent(store);
+export function closeStickerDrawer(store: StickerStore) {
+	const { isDrawerOpen } = store;
+	if (!isDrawerOpen.value) {
+		return;
 	}
+
+	_resetStickerStore(store);
 }
 
 /**
  * Send an API request to get the user stickers.
  */
-async function _initializeDrawerContent(store: StickerStore) {
-	const { isLoading, stickerCost, stickerCurrency, drawerItems, hasLoaded, setChargeData } =
+async function _initializeDrawerContent(store: StickerStore, layer: StickerLayerController) {
+	const { isLoading, hasLoaded, setChargeData, eventStickers, creatorStickers, generalStickers } =
 		store;
 
 	isLoading.value = true;
-	const payload = await Api.sendRequest('/web/stickers/dash');
 
-	stickerCost.value = payload.stickerCost;
-	stickerCurrency.value = payload.balance;
+	const layerItem = layer.layerItems.value.find(i => i.controller.children.value.length === 0);
+	if (!layerItem) {
+		throw new Error('Could not find a primary sticker controller for the given layer.');
+	}
+
+	const { model, targetData } = layerItem.controller;
+	const resourceType = getStickerModelResourceName(model);
+
+	let url = `/web/stickers/placeable/${resourceType}/${model.id}`;
+	if (targetData.value?.host_user_id) {
+		url += `?hostUserId=${targetData.value.host_user_id}`;
+	}
+	const payload = await Api.sendRequest(url);
 
 	setChargeData({
 		charge: payload.currentCharge,
@@ -270,87 +263,173 @@ async function _initializeDrawerContent(store: StickerStore) {
 		cost: payload.chargeCost,
 	});
 
-	drawerItems.value = getStickerCountsFromPayloadData({
+	const data = getStickerStacksFromPayloadData({
 		stickerCounts: payload.stickerCounts,
 		stickers: payload.stickers,
-	}).flat();
+		unownedStickerMasteries: null,
+	});
+
+	eventStickers.value = data.eventStickers;
+	creatorStickers.value = data.creatorStickers;
+	generalStickers.value = data.generalStickers;
+
 	isLoading.value = false;
 	hasLoaded.value = true;
 }
 
+interface SortedStickerStacks {
+	eventStickers: CreatorStickersList;
+	creatorStickers: CreatorStickersMap;
+	generalStickers: CreatorStickersList;
+}
+
+export enum StickerSortMethod {
+	rarity = 'Rarity',
+	mastery = 'Mastery',
+}
+
 /**
- * Returns sorted lists of stickers. Provide {@link newStickerIds} to sort new
- * stickers to the top of their lists.
- *
- * Call `.flat()` on the result to flatten to a single list.
- *
- * ```
- * const result: [
- *          eventStickers: StickerStack[],
- *          generalStickers: StickerStack[]
- *      ];
+ * Returns sorted lists of stickers.
  * ```
  */
-export function getStickerCountsFromPayloadData({
+export function getStickerStacksFromPayloadData({
 	stickerCounts,
 	stickers,
-	newStickerIds,
+	unownedStickerMasteries,
+	sorting,
 }: {
-	stickerCounts: any[];
-	stickers: any[];
-	newStickerIds?: number[];
-}) {
-	const eventStickers: StickerStack[] = [];
-	const generalStickers: StickerStack[] = [];
+	stickerCounts: ModelData<StickerCount>[];
+	stickers: ModelData<Sticker>[];
+	unownedStickerMasteries: ModelData<Sticker>[] | null | undefined;
+	sorting?: StickerSortMethod;
+}): SortedStickerStacks {
+	const eventStickers: CreatorStickersList = [];
+	const creatorStickers: CreatorStickersMap = new Map();
+	const generalStickers: CreatorStickersList = [];
+
+	const unownedMasteries = Sticker.populate(unownedStickerMasteries || []);
+
+	const addItemToList = (item: StickerStack) => {
+		const stickerCreator = item.sticker.owner_user;
+
+		if (item.sticker.isCreatorSticker && stickerCreator) {
+			if (creatorStickers.has(stickerCreator.id)) {
+				creatorStickers.get(stickerCreator.id)!.push(item);
+			} else {
+				creatorStickers.set(stickerCreator.id, [item]);
+			}
+		} else if (item.sticker.is_event) {
+			eventStickers.push(item);
+		} else {
+			generalStickers.push(item);
+		}
+	};
 
 	stickerCounts.forEach((stickerCountPayload: any) => {
-		const stickerData = stickers.find((i: Sticker) => i.id === stickerCountPayload.sticker_id);
+		const stickerData = stickers.find(
+			(i: ModelData<Sticker>) => i.id === stickerCountPayload.sticker_id
+		);
+		if (!stickerData) {
+			return;
+		}
 
-		const stickerCount = {
+		const item: StickerStack = {
 			count: stickerCountPayload.count,
 			sticker_id: stickerCountPayload.sticker_id,
 			sticker: new Sticker(stickerData),
-		} as StickerStack;
+		};
 
-		if (stickerCount.sticker.is_event) {
-			eventStickers.push(stickerCount);
-		} else {
-			generalStickers.push(stickerCount);
-		}
+		addItemToList(item);
 	});
 
-	return sortStickerCounts({
+	unownedMasteries.forEach(sticker => {
+		const item: StickerStack = {
+			count: null,
+			sticker_id: sticker.id,
+			sticker,
+		};
+
+		addItemToList(item);
+	});
+
+	return sortStickerStacks({
 		eventStickers,
+		creatorStickers,
 		generalStickers,
-		newStickerIds,
+		sorting,
 	});
 }
 
 /**
- * Sorts stickers in place. Moves "new" stickers to the start of their parent
- * array.
+ * Sorts stickers in place.
  */
-export function sortStickerCounts({
+export function sortStickerStacks({
 	eventStickers,
+	creatorStickers,
 	generalStickers,
-	newStickerIds,
+	sorting = StickerSortMethod.rarity,
 }: {
-	eventStickers: StickerStack[];
-	generalStickers: StickerStack[];
-	newStickerIds?: number[];
-}) {
-	const lists = [eventStickers, generalStickers];
-	lists.forEach(list => {
-		list.sort((a, b) => numberSort(b.sticker.rarity, a.sticker.rarity));
+	eventStickers: CreatorStickersList;
+	creatorStickers: CreatorStickersMap;
+	generalStickers: CreatorStickersList;
+	sorting?: StickerSortMethod;
+}): SortedStickerStacks {
+	const lists = [eventStickers, ...creatorStickers.values(), generalStickers];
 
-		// Sort all "new" stickers to the top of their groups.
-		if (newStickerIds && newStickerIds.length > 0) {
-			const newStickers = list.filter(x => newStickerIds.includes(x.sticker_id));
-			list = list.filter(x => !newStickers.includes(x));
-			list.unshift(...newStickers);
+	lists.forEach(list => {
+		switch (sorting) {
+			case StickerSortMethod.rarity:
+				list.sort((a, b) => {
+					const aCount = a.count ?? 0;
+					const bCount = b.count ?? 0;
+					const aMastery = a.sticker.mastery;
+					const bMastery = b.sticker.mastery;
+
+					// If this sticker has no count, compare by mastery. Sort
+					// items nearest to completion to the front.
+					if (
+						aCount <= 0 &&
+						bCount <= 0 &&
+						typeof aMastery === 'number' &&
+						typeof bMastery === 'number'
+					) {
+						return numberSort(bMastery, aMastery);
+					}
+
+					if (aCount <= 0 || bCount <= 0) {
+						return numberSort(bCount, aCount);
+					}
+
+					const aRarity = a.sticker.rarity;
+					const bRarity = b.sticker.rarity;
+					return numberSort(bRarity, aRarity);
+				});
+				break;
+
+			case StickerSortMethod.mastery:
+				list.sort((a, b) => {
+					const aMastery = a.sticker.mastery;
+					const bMastery = b.sticker.mastery;
+					const aIsNumber = typeof aMastery === 'number';
+					const bIsNumber = typeof bMastery === 'number';
+
+					if (aIsNumber && !bIsNumber) {
+						return -1;
+					} else if (!aIsNumber && bIsNumber) {
+						return 1;
+					} else if (aIsNumber && bIsNumber) {
+						return numberSort(bMastery, aMastery);
+					}
+
+					const aRarity = a.sticker.rarity;
+					const bRarity = b.sticker.rarity;
+					return numberSort(bRarity, aRarity);
+				});
+				break;
 		}
 	});
-	return lists;
+
+	return { eventStickers, creatorStickers, generalStickers };
 }
 
 /**
@@ -366,7 +445,6 @@ function _resetStickerStore(store: StickerStore) {
 	store.isDrawerOpen.value = false;
 	store.isHoveringDrawer.value = false;
 	store.drawerHeight.value = 0;
-	store.hideDrawer.value = false;
 
 	store._waitingForFrame.value = false;
 	store._updateGhostPosition.value = null;
@@ -512,7 +590,7 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 			parent.value.model.assign(payloadParent);
 		}
 
-		setStickerDrawerOpen(store, false, null);
+		closeStickerDrawer(store);
 
 		// Update our sticker charge after a successful placement.
 		if (isCharged) {
@@ -520,7 +598,7 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 		}
 	} catch (e) {
 		console.error(e);
-		setStickerDrawerOpen(store, false, null);
+		closeStickerDrawer(store);
 		showErrorGrowl($gettext(`Failed to place sticker.`));
 	}
 
@@ -535,12 +613,12 @@ export function alterStickerStoreItemCount(
 	sticker: Sticker,
 	returnToDrawer = false
 ) {
-	const drawerItem = store.drawerItems.value.find(i => {
+	const drawerItem = store.allStickers.value.find(i => {
 		return i.sticker.id === sticker.id;
 	});
 
 	// This shouldn't ever trigger
-	if (!drawerItem) {
+	if (!drawerItem || typeof drawerItem.count !== 'number') {
 		return;
 	}
 

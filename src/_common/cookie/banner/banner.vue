@@ -1,6 +1,11 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-property-decorator';
 import { Environment } from '../../environment/environment.service';
+import {
+	setTimezoneOffsetCookie,
+	setUserAgreedToCookies,
+	userAgreedToCookies,
+} from '../cookie.service';
 
 @Options({})
 export default class AppCookieBanner extends Vue {
@@ -13,12 +18,15 @@ export default class AppCookieBanner extends Vue {
 			return false;
 		}
 
-		return !this.forceClosed && !window.localStorage.getItem('banner:cookie');
+		return !this.forceClosed && !userAgreedToCookies();
 	}
 
 	close() {
 		this.forceClosed = true;
-		window.localStorage.setItem('banner:cookie', Date.now() + '');
+		setUserAgreedToCookies();
+
+		// Might as well set the timezone offset cookie once we have permission.
+		setTimezoneOffsetCookie();
 	}
 }
 </script>

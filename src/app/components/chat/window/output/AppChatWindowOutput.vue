@@ -4,19 +4,31 @@ import { useResizeObserver } from '../../../../../utils/resize-observer';
 import { debounce } from '../../../../../utils/utils';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { Background } from '../../../../../_common/background/background.model';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { formatDate } from '../../../../../_common/filters/date';
+import { canDeviceViewFiresides } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
+import AppOnHover from '../../../../../_common/on/AppOnHover.vue';
 import { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
 import AppScrollScroller, {
 	createScroller,
 } from '../../../../../_common/scroll/AppScrollScroller.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useEventSubscription } from '../../../../../_common/system/event/event-topic';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { kThemeBiBg, kThemeBiFg } from '../../../../../_common/theme/variables';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import {
+	styleBorderRadiusBase,
+	styleElevate,
+	styleLineClamp,
+	styleWhen,
+} from '../../../../../_styles/mixins';
+import { CSSPixelValue, kFontFamilyHeading, kFontSizeBase } from '../../../../../_styles/variables';
 import { illNoChat } from '../../../../img/ill/illustrations';
 import { useGridStore } from '../../../grid/grid-store';
+import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
 import { loadOlderChatMessages, onNewChatMessage } from '../../client';
 import { TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';
@@ -95,6 +107,10 @@ const shouldShowNewMessagesButton = computed(() => {
 });
 
 const roomChannel = computed(() => chat.value.roomChannels.get(room.value.id));
+
+const fireside = computed(() => room.value.fireside);
+const streamingUsers = computed(() => room.value.firesideStreamingUsers);
+const showFiresideBanner = computed(() => !!fireside.value && canDeviceViewFiresides());
 
 useEventSubscription(onNewChatMessage, async message => {
 	// When the user sent a message, we want the chat to scroll all the way down
@@ -323,6 +339,17 @@ function _updateMaxContentWidth(width: number) {
 		100
 	);
 }
+
+const firesideBannerMargin = new CSSPixelValue(8);
+const minFiresideBannerHeight = new CSSPixelValue(40);
+
+/**
+ * Margin added to the scroller content top so the banner doesn't obscure the
+ * oldest messages.
+ */
+const bannerScrollerMargin = computed(
+	() => new CSSPixelValue(firesideBannerMargin.value * 2 + minFiresideBannerHeight.value)
+);
 </script>
 
 <template>
@@ -332,32 +359,49 @@ function _updateMaxContentWidth(width: number) {
 	need to autoscroll if the content changes within the scroller.
 	-->
 	<AppBackground class="chat-window-output" :background="background" darken>
-		<div ref="widthWatcher" class="-width-watcher" />
+		<div ref="widthWatcher" class="_width-watcher" />
 
 		<AppScrollScroller
 			v-app-observe-dimensions="tryAutoscroll"
 			:controller="scroller"
-			class="-scroller"
+			class="_scroller"
 			@scroll="queueOnScroll"
 		>
 			<div
 				v-app-observe-dimensions="tryAutoscroll"
-				class="-container anim-fade-in no-animate-leave"
+				class="_container anim-fade-in no-animate-leave"
+				:style="{
+					...styleWhen(!!fireside && showFiresideBanner, {
+						marginTop: bannerScrollerMargin.px,
+					}),
+				}"
 			>
-				<div v-if="shouldShowIntro" class="-intro">
+				<div v-if="shouldShowIntro" class="_intro">
 					<AppIllustration
 						:asset="illNoChat"
-						:class="{ '-illustration-overlay': overlay }"
+						:class="{ '_illustration-overlay': overlay }"
 					>
-						<AppTranslate v-if="room.isPmRoom">
-							Your friend is still loading. Encourage them with a message!
-						</AppTranslate>
-						<AppTranslate v-else-if="room.isFiresideRoom">
-							Waiting for folks to load in. Spark the discussion with a message!
-						</AppTranslate>
-						<AppTranslate v-else>
-							Waiting for friends to load in. Encourage them with a message!
-						</AppTranslate>
+						<div v-if="room.isPmRoom">
+							{{
+								$gettext(
+									`Your friend is still loading. Encourage them with a message!`
+								)
+							}}
+						</div>
+						<div v-else-if="room.isFiresideRoom">
+							{{
+								$gettext(
+									`Waiting for folks to load in. Spark the discussion with a message!`
+								)
+							}}
+						</div>
+						<div v-else>
+							{{
+								$gettext(
+									`Waiting for friends to load in. Encourage them with a message!`
+								)
+							}}
+						</div>
 					</AppIllustration>
 				</div>
 
@@ -365,17 +409,17 @@ function _updateMaxContentWidth(width: number) {
 
 				<div v-app-observe-dimensions="tryAutoscroll">
 					<div v-for="message of allMessages" :key="message.id">
-						<div v-if="message.dateSplit" class="-date-split">
-							<span class="-bar" />
-							<span class="-message">
+						<div v-if="message.dateSplit" class="_date-split">
+							<span class="_bar" />
+							<span class="_message">
 								{{ formatDate(message.logged_on, 'mediumDate') }}
 							</span>
-							<span class="-bar" />
+							<span class="_bar" />
 						</div>
 
 						<hr
 							v-if="!message.dateSplit && message.showMeta"
-							class="-new-user-spacing"
+							class="_new-user-spacing"
 						/>
 
 						<AppChatWindowOutputItem
@@ -393,10 +437,101 @@ function _updateMaxContentWidth(width: number) {
 			</div>
 		</AppScrollScroller>
 
-		<div v-if="shouldShowNewMessagesButton" class="-new-messages">
-			<div class="-new-messages-tap-target" @click.stop="onClickNewMessages">
-				<div class="-new-messages-button">
-					<AppTranslate>New Messages</AppTranslate>
+		<AppOnHover v-if="fireside && showFiresideBanner">
+			<template #default="{ hovered, binding }">
+				<div
+					:style="{
+						position: `absolute`,
+						left: `12px`,
+						right: `12px`,
+						top: firesideBannerMargin.px,
+						zIndex: 2,
+					}"
+				>
+					<RouterLink :to="fireside.routeLocation">
+						<div
+							v-bind="binding"
+							:style="{
+								...styleElevate(2),
+								...styleBorderRadiusBase,
+								backgroundColor: kThemeBiBg,
+								width: `100%`,
+								minHeight: minFiresideBannerHeight.px,
+								padding: `4px`,
+								display: `flex`,
+								alignItems: `center`,
+							}"
+						>
+							<div
+								:style="{
+									...styleLineClamp(1),
+									fontSize: kFontSizeBase.px,
+									fontWeight: `bold`,
+									fontFamily: kFontFamilyHeading,
+									color: kThemeBiFg,
+									marginLeft: `4px`,
+								}"
+							>
+								{{ fireside.title }}
+							</div>
+
+							<template v-if="streamingUsers.length">
+								<div
+									:style="{
+										display: `inline-flex`,
+										marginLeft: `8px`,
+									}"
+								>
+									<div
+										v-for="(streamer, index) in streamingUsers"
+										:key="streamer.id"
+										:style="{
+											position: `relative`,
+											width: `10px`,
+											zIndex: streamingUsers.length - index,
+										}"
+									>
+										<AppUserAvatarBubble
+											v-app-tooltip="`@${streamer.username}`"
+											:style="{
+												width: `16px`,
+												height: `16px`,
+											}"
+											:user="streamer"
+											disable-link
+											smoosh
+										/>
+									</div>
+								</div>
+							</template>
+
+							<div
+								:style="{
+									flex: `auto`,
+									minWidth: `8px`,
+								}"
+							/>
+
+							<AppButton
+								:style="{
+									flex: `none`,
+								}"
+								overlay
+								trans
+								:force-hover="hovered"
+							>
+								{{ $gettext(`View`) }}
+							</AppButton>
+						</div>
+					</RouterLink>
+				</div>
+			</template>
+		</AppOnHover>
+
+		<div v-if="shouldShowNewMessagesButton" class="_new-messages">
+			<div class="_new-messages-tap-target" @click.stop="onClickNewMessages">
+				<div class="_new-messages-button">
+					{{ $gettext(`New messages`) }}
 				</div>
 			</div>
 		</div>
@@ -409,20 +544,21 @@ function _updateMaxContentWidth(width: number) {
 	height: 100%
 	width: 100%
 
-.-width-watcher
+._width-watcher
 	position: absolute
 	left: 0
 	right: 0
 	z-index: -1
 
-.-scroller
+._scroller
 	position: absolute
 	left: 0
 	top: 0
 	right: 0
 	bottom: 0
+	z-index: 0
 
-.-new-messages
+._new-messages
 	position: absolute
 	bottom: 0
 	left: 0
@@ -430,10 +566,10 @@ function _updateMaxContentWidth(width: number) {
 	display: inline-flex
 	justify-content: center
 
-.-new-messages-tap-target
+._new-messages-tap-target
 	padding: 8px
 
-.-new-messages-button
+._new-messages-button
 	rounded-corners()
 	cursor: pointer
 	padding: 2px 4px
@@ -441,11 +577,11 @@ function _updateMaxContentWidth(width: number) {
 	background-color: var(--theme-bi-bg)
 	color: var(--theme-bi-fg)
 
-.-container
+._container
 	padding: $chat-room-window-padding
 	position: relative
 
-.-date-split
+._date-split
 	position: relative
 	display: flex
 	align-items: center
@@ -455,12 +591,12 @@ function _updateMaxContentWidth(width: number) {
 	text-align: center
 	cursor: default
 
-	& > .-bar
+	& > ._bar
 		background-color: rgba($black, 0.5)
 		flex: auto
 		height: $border-width-base
 
-	& > .-message
+	& > ._message
 		rounded-corners()
 		background-color: rgba($black, 0.5)
 		color: white
@@ -470,45 +606,22 @@ function _updateMaxContentWidth(width: number) {
 		font-size: 13px
 		z-index: 1
 
-.-new-user-spacing
+._new-user-spacing
 	margin-top: 0
 	margin-bottom: 0
 	border: none
 	height: 8px
 
-.-intro
+._intro
 	display: flex
 	align-items: center
 	justify-content: center
 
-.-illustration-overlay
+._illustration-overlay
 	font-weight: bold
 
 	&
 	*
 		overlay-text-shadow()
 		color: white
-
-.-message-chunk
-	position: relative
-
-.-avatar-scroller
-	position: absolute
-	left: 0
-	top: 0
-	bottom: 0
-	width: 48px
-	display: flex
-	justify-content: center
-	z-index: 4
-
-.-avatar
-	display: flex
-	align-items: center
-	justify-content: center
-
-.-avatar-img
-	z-index: 1
-	img-circle()
-	elevate-1()
 </style>

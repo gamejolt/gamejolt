@@ -7,14 +7,15 @@ import AppButton from './button/AppButton.vue';
 import { initSafeExportsForClient as initCommonSafeExportsForClient } from './client/safe-exports';
 import { ensureConfig } from './config/config.service';
 import { initConnectionService } from './connection/connection-service';
+import { setTimezoneOffsetCookie } from './cookie/cookie.service';
 import AppJolticon from './jolticon/AppJolticon.vue';
 import AppLinkExternal from './link/AppLinkExternal.vue';
 import AppLinkHelp from './link/AppLinkHelp.vue';
 import { initMetaService } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';
-import { commonStore, CommonStoreKey } from './store/common-store';
-import { createThemeStore, ThemeStoreKey } from './theme/theme.store';
+import { CommonStoreKey, commonStore } from './store/common-store';
+import { ThemeStoreKey, createThemeStore } from './theme/theme.store';
 import { initTranslations } from './translate/translate.service';
 
 export type BootstrapOptions<T = Component> = {
@@ -66,6 +67,7 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 	initAnalytics({ commonStore });
 	Payload.init({ commonStore });
 	initConnectionService({ commonStore });
+	setTimezoneOffsetCookie();
 
 	if (router) {
 		initMetaService(router);

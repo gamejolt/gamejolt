@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
+import { styleTextOverflow, styleWhen } from '../../../../_styles/mixins';
 
 export interface AppFormControlUploadFileInterface {
 	showFileSelect: () => void;
@@ -24,6 +25,12 @@ defineProps({
 	accept: {
 		type: String,
 		default: null,
+	},
+	/**
+	 * Attempts to fix overflow issues with filenames.
+	 */
+	fixOverflow: {
+		type: Boolean,
 	},
 });
 
@@ -67,6 +74,12 @@ defineExpose<AppFormControlUploadFileInterface>({
 	<input
 		:id="id"
 		ref="root"
+		:style="
+			styleWhen(fixOverflow, {
+				...styleTextOverflow,
+				width: `100%`,
+			})
+		"
 		:name="name"
 		type="file"
 		:accept="accept"

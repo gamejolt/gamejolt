@@ -3,7 +3,7 @@ import { ChatUser } from './user';
 
 export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued message should be displayed as such.
 
-export type ChatMessageType = 'content' | 'sticker';
+export type ChatMessageType = 'content' | 'sticker' | 'invite';
 
 export class ChatMessage implements ModelStoreModel {
 	declare id: number;

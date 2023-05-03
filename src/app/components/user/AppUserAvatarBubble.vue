@@ -135,6 +135,10 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 						:style="{
 							...styleBorderRadiusCircle,
 							...styleChangeBg(bgColor),
+							// Some containers end up adjusting the size of this avatar
+							// and break things, even if width and height on the parent
+							// are assigned to 1:1 ratios.
+							lineHeight: 0,
 						}"
 					>
 						<slot>

@@ -11,7 +11,9 @@ export type ContentHydrationType =
 	| 'username'
 	| 'soundcloud-track-url'
 	| 'soundcloud-track-id'
-	| 'sticker-id';
+	| 'emoji-id'
+	| 'sticker-id'
+	| 'chat-invite';
 
 export type ContentHydrationDataEntry = {
 	type: ContentHydrationType;

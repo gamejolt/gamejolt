@@ -467,7 +467,7 @@ export class NotificationText {
 				if (notification.action_model instanceof Fireside) {
 					return _process(
 						$gettextInterpolate(
-							`<em>%{ subject }</em> is live!.`,
+							`<em>%{ subject }</em> is live!`,
 							this.getTranslationValues(notification),
 							!plaintext
 						)
@@ -504,7 +504,7 @@ export class NotificationText {
 					case 2:
 						return _process(
 							$gettextInterpolate(
-								`<em>%{ user1 }</em> and <em>%{ user2 }</em> are live!.`,
+								`<em>%{ user1 }</em> and <em>%{ user2 }</em> are live!`,
 								userInterpolates,
 								!plaintext
 							)

@@ -33,7 +33,10 @@ async function main() {
 
 	// Replace all instances of `import.meta.url` since it only works in a
 	// module context.
-	editorJs = editorJs.replace(/import\.meta\.url/g, 'window.location.href');
+	editorJs = editorJs.replace(
+		/import\.meta\.url/g,
+		"(`${window.location.href}`.replace('editor.html', '') + 'assets/')"
+	);
 
 	await fs.writeFile(editorJsPath, editorJs, 'utf8');
 

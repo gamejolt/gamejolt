@@ -151,7 +151,7 @@ function getImageFilters({ hovered }: { hovered: boolean }) {
 					>
 						<div
 							:style="{
-								...styleFlexCenter('row'),
+								...styleFlexCenter({ direction: 'row' }),
 								position: `relative`,
 								width: `${tileSize}px`,
 								height: `${tileSize}px`,

@@ -1,13 +1,13 @@
 import { computed, reactive, shallowReadonly } from 'vue';
-import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Notification } from '../../../_common/notification/notification-model';
 import { QuestNotification } from '../../../_common/quest/quest-notification-model';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
+import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
-import { GridClient, onFiresideStart, onNewStickers } from './client.service';
+import { GridClient, onFiresideStart } from './client.service';
 
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
 
@@ -33,10 +33,8 @@ interface JoinPayload {
 	notificationUnreadCount: number;
 	unreadFeaturedCommunities: { [communityId: number]: number };
 	unreadCommunities: number[];
-	hasNewUnlockedStickers: boolean;
 	newQuestIds: number[];
 	questActivityIds: number[];
-	questResetHour: number;
 	charge: ChargeData;
 }
 
@@ -58,8 +56,6 @@ type ClearNotificationsType =
 	// For an individual community channel.
 	| 'community-channel'
 	| 'friend-requests'
-	// For the user's unviewed automatically unlocked stickers.
-	| 'stickers'
 	// A quest became available and is ready to be accepted.
 	| 'new-quest'
 	// A quest has updated progress or rewards available to claim.
@@ -75,10 +71,6 @@ interface ClearNotificationsData {
 	channelId?: number;
 	communityId?: number;
 	questId?: number;
-}
-
-interface StickerUnlockPayload {
-	sticker_img_urls: string[];
 }
 
 interface PostUpdatedPayload {
@@ -106,7 +98,6 @@ export function createGridNotificationChannel(client: GridClient, options: { use
 
 	channelController.listenTo('new-notification', _onNewNotification);
 	channelController.listenTo('clear-notifications', _onClearNotifications);
-	channelController.listenTo('sticker-unlock', _onStickerUnlock);
 	channelController.listenTo('post-updated', _onPostUpdated);
 
 	const joinPromise = channelController.join({
@@ -134,13 +125,10 @@ export function createGridNotificationChannel(client: GridClient, options: { use
 			});
 
 			appStore.setHasNewFriendRequests(payload.hasNewFriendRequests);
-			appStore.setHasNewUnlockedStickers(payload.hasNewUnlockedStickers);
-			appStore.setHasNewUnlockedStickers(payload.hasNewUnlockedStickers);
 
 			const questStore = appStore.getQuestStore();
 			questStore.addNewQuestIds(payload.newQuestIds);
 			questStore.addQuestActivityIds(payload.questActivityIds);
-			questStore.setDailyResetHour(payload.questResetHour);
 
 			const {
 				charge,
@@ -249,14 +237,6 @@ export function createGridNotificationChannel(client: GridClient, options: { use
 		}
 
 		client.clearNotifications(payload.type, payload.data);
-	}
-
-	function _onStickerUnlock(payload: StickerUnlockPayload) {
-		if (!appStore.hasNewUnlockedStickers.value) {
-			appStore.setHasNewUnlockedStickers(true);
-		}
-
-		onNewStickers.next(payload.sticker_img_urls);
 	}
 
 	function _onPostUpdated(payload: PostUpdatedPayload) {

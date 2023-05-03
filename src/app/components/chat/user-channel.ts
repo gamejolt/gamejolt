@@ -119,6 +119,8 @@ export function createChatUserChannel(
 		isTabLeader,
 		pushGroupAdd,
 		pushGroupLeave,
+		pushInviteAccept,
+		pushInviteDecline,
 		joinPromise,
 	});
 
@@ -220,7 +222,11 @@ export function createChatUserChannel(
 
 	function _onGroupAdd(data: GroupAddPayload) {
 		const newGroup = storeModel(ChatRoom, { chat: client, ...data.room });
-		client.groupRooms.push(newGroup);
+
+		// Only push to room list if it's not already there.
+		if (client.groupRooms.every(x => x.id !== newGroup.id)) {
+			client.groupRooms.push(newGroup);
+		}
 	}
 
 	function _onUpdateTitle(data: UpdateGroupTitlePayload) {
@@ -240,7 +246,7 @@ export function createChatUserChannel(
 	}
 
 	/**
-	 * Makes a new group with an initial set of users.
+	 * Makes a new group and sends invites to join that room to the users in members.
 	 */
 	function pushGroupAdd(members: number[]) {
 		return channelController.push<{ room: UnknownModelData }>('group_add', {
@@ -253,6 +259,18 @@ export function createChatUserChannel(
 	 */
 	function pushGroupLeave(roomId: number) {
 		return channelController.push<void>('group_leave', { room_id: roomId });
+	}
+
+	function pushInviteAccept(inviteId: number) {
+		return channelController.push<{ room_id: number }>('invite_accept', {
+			invite_id: inviteId,
+		});
+	}
+
+	function pushInviteDecline(inviteId: number) {
+		return channelController.push<void>('invite_decline', {
+			invite_id: inviteId,
+		});
 	}
 
 	return c;

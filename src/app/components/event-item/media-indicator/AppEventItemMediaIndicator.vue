@@ -1,4 +1,11 @@
 <script lang="ts" setup>
+import { CSSProperties, PropType } from 'vue';
+import {
+	styleBorderRadiusCircle,
+	styleChangeBg,
+	styleFlexCenter,
+} from '../../../../_styles/mixins';
+
 defineProps({
 	count: {
 		type: Number,
@@ -8,36 +15,38 @@ defineProps({
 		type: Number,
 		required: true,
 	},
+	innerStyles: {
+		type: Object as PropType<CSSProperties>,
+		default: undefined,
+	},
 });
 </script>
 
 <template>
-	<div class="event-item-media-indicator">
+	<div
+		:style="{
+			...styleFlexCenter({ direction: 'row' }),
+		}"
+	>
 		<div
-			v-for="i of count"
-			:key="i"
-			class="-dot"
-			:class="{
-				'-active': current === i,
+			:style="{
+				display: `inline-flex`,
+				alignItems: `center`,
+				flexWrap: `wrap`,
+				gap: `4px`,
+				...innerStyles,
 			}"
-		/>
+		>
+			<div
+				v-for="i of count"
+				:key="i"
+				:style="{
+					...styleChangeBg(current === i ? 'primary' : 'bg-subtle'),
+					...styleBorderRadiusCircle,
+					width: `6px`,
+					height: `6px`,
+				}"
+			/>
+		</div>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.event-item-media-indicator
-	display: flex
-	justify-content: center
-	align-items: center
-
-.-dot
-	change-bg('bg-subtle')
-	margin-right: 2px
-	margin-left: 2px
-	width: 6px
-	height: 6px
-	border-radius: 50%
-
-.-active
-	change-bg('link')
-</style>
