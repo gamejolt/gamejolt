@@ -1,8 +1,5 @@
 import { Channel } from 'phoenix';
 import { markRaw, reactive } from 'vue';
-import { createLogger } from '../../../utils/logging';
-import { sleep } from '../../../utils/utils';
-import { uuidv4 } from '../../../utils/uuid';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { ensureConfig } from '../../../_common/config/config.service';
@@ -29,11 +26,14 @@ import { $gettext, $gettextInterpolate } from '../../../_common/translate/transl
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
+import { createLogger } from '../../../utils/logging';
+import { sleep } from '../../../utils/utils';
+import { uuidv4 } from '../../../utils/uuid';
 import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
-import { createGridCommunityChannel, GridCommunityChannel } from './community-channel';
+
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
 import { createGridNotificationChannel, GridNotificationChannel } from './notification-channel';
@@ -118,7 +118,6 @@ export class GridClient {
 	bootstrapTimestamp = 0;
 	bootstrapDelay = 1;
 	chat: ChatClient | null = null;
-	communityChannels: GridCommunityChannel[] = [];
 	firesideChannels: GridFiresideChannel[] = [];
 	firesideDMChannels: GridFiresideDMChannel[] = [];
 	notificationChannel: GridNotificationChannel | null = null;
@@ -216,15 +215,12 @@ export class GridClient {
 		else if (user.value) {
 			const notificationChannel = createGridNotificationChannel(this, {
 				userId: user.value.id,
+				router,
 			});
 			await notificationChannel.joinPromise;
 			this.notificationChannel = markRaw(notificationChannel);
 
 			this.markConnected();
-
-			logger.info('Subscribing to community channels...');
-
-			await Promise.all(this.appStore.communities.value.map(i => this.joinCommunity(i)));
 		}
 
 		// Now connect to our chat channels.
@@ -255,7 +251,6 @@ export class GridClient {
 		this.bootstrapReceived = false;
 		this.bootstrapTimestamp = 0;
 
-		this.communityChannels = [];
 		this.firesideChannels = [];
 		this.firesideDMChannels = [];
 		this.notificationChannel = null;
@@ -476,20 +471,17 @@ export class GridClient {
 			return;
 		}
 
-		const communityChannel = createGridCommunityChannel(this, {
-			communityId: community.id,
-			router,
+		this.notificationChannel?.joinCommunity({
+			community_id: community.id,
 		});
 
-		await communityChannel.joinPromise;
-		return communityChannel;
+		return;
 	}
 
 	async leaveCommunity(community: Community) {
-		const channel = this.communityChannels.find(i => i.communityId === community.id);
-		if (channel) {
-			channel.leave();
-		}
+		this.notificationChannel?.leaveCommunity({
+			community_id: community.id,
+		});
 	}
 
 	recordFeaturedPost(post: FiresidePost) {

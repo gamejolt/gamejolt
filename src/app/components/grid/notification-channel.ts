@@ -1,14 +1,20 @@
 import { computed, reactive, shallowReadonly } from 'vue';
 import { importNoSSR } from '../../../_common/code-splitting';
+import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { QuestNotification } from '../../../_common/quest/quest-notification-model';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
+import { commonStore } from '../../../_common/store/common-store';
+import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+
 import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
 import { GridClient, onFiresideStart } from './client.service';
 
+import { Router } from 'vue-router';
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
 
 export type GridNotificationChannel = ReturnType<typeof createGridNotificationChannel>;
@@ -73,6 +79,10 @@ interface ClearNotificationsData {
 	questId?: number;
 }
 
+interface SubscriptionCommunityData {
+	community_id: number;
+}
+
 interface PostUpdatedPayload {
 	post_id: number;
 	/** Contains payload data for a `FiresidePost` resource. */
@@ -83,9 +93,29 @@ interface PostUpdatedPayload {
 	was_scheduled: boolean;
 }
 
-export function createGridNotificationChannel(client: GridClient, options: { userId: number }) {
+// from community channel
+interface FeaturePayload {
+	community_id: string;
+	post_id: string;
+}
+
+interface FeatureFiresidePayload {
+	community_id: string;
+	fireside_id: string;
+	fireside_data: any;
+}
+
+interface NewPostPayload {
+	community_id: string;
+	channel_id: string;
+}
+
+export function createGridNotificationChannel(
+	client: GridClient,
+	options: { userId: number; router: Router }
+) {
 	const { socketController, appStore } = client;
-	const { userId } = options;
+	const { userId, router } = options;
 	const { communityStates, stickerStore } = appStore;
 
 	let _tabLeader: TabLeaderInterface | null = null;
@@ -99,6 +129,11 @@ export function createGridNotificationChannel(client: GridClient, options: { use
 	channelController.listenTo('new-notification', _onNewNotification);
 	channelController.listenTo('clear-notifications', _onClearNotifications);
 	channelController.listenTo('post-updated', _onPostUpdated);
+
+	// from community channel
+	channelController.listenTo('feature', _onFeature);
+	channelController.listenTo('new-post', _onNewPost);
+	channelController.listenTo('feature-fireside', _onFeatureFireside);
 
 	const joinPromise = channelController.join({
 		async onJoin(payload: JoinPayload) {
@@ -186,6 +221,8 @@ export function createGridNotificationChannel(client: GridClient, options: { use
 		joinPromise,
 
 		pushViewNotifications,
+		joinCommunity,
+		leaveCommunity,
 		pushCommunityBootstrap,
 	});
 
@@ -251,6 +288,67 @@ export function createGridNotificationChannel(client: GridClient, options: { use
 		}
 	}
 
+	// from community channel
+	function _onFeature(payload: FeaturePayload) {
+		console.log('[community chnl test] Capturing feature event with ' + payload);
+		// Suppress notification if the user featured that post.
+		if (payload.post_id) {
+			const postId = parseInt(payload.post_id, 10);
+			if (client.featuredPostIds.has(postId)) {
+				return;
+			}
+		}
+
+		const communityState = appStore.communityStates.value.getCommunityState(
+			parseInt(payload.community_id, 10)
+		);
+		communityState.hasUnreadFeaturedPosts = true;
+
+		// Only increment when we use the activity feed as the home feed, as it
+		// includes the community items only at that point.
+		if (!shouldUseFYPDefault()) {
+			appStore.incrementNotificationCount({ count: 1, type: 'activity' });
+		}
+	}
+
+	function _onNewPost(payload: NewPostPayload) {
+		const channelId = parseInt(payload.channel_id, 10);
+		const communityState = appStore.communityStates.value.getCommunityState(
+			parseInt(payload.community_id, 10)
+		);
+		communityState.markChannelUnread(channelId);
+	}
+
+	function _onFeatureFireside(payload: FeatureFiresidePayload) {
+		const fireside = new Fireside(payload.fireside_data);
+		if (!fireside.community) {
+			console.error('Featured fireside must have a community, but it does not.');
+			return;
+		}
+
+		if (commonStore.user.value && fireside.user.id === commonStore.user.value.id) {
+			console.log('Suppress featured fireside notification for fireside owner.');
+			return;
+		}
+
+		showInfoGrowl({
+			title: $gettext(`New Featured Fireside!`),
+			message: $gettextInterpolate(
+				`@%{ username }'s fireside %{ firesideTitle } was featured in %{ communityName }!`,
+				{
+					username: fireside.user.username,
+					firesideTitle: fireside.title,
+					communityName: fireside.community.name,
+				}
+			),
+			icon: fireside.user.img_avatar,
+			onClick: () => {
+				router.push(fireside.routeLocation);
+			},
+			system: true,
+		});
+	}
+
 	/**
 	 * Clear notification status for a particular notification type.
 	 */
@@ -262,6 +360,18 @@ export function createGridNotificationChannel(client: GridClient, options: { use
 			type,
 			data,
 			clientId: client.clientId,
+		});
+	}
+
+	function joinCommunity(data: SubscriptionCommunityData) {
+		return channelController.push('follow_community', {
+			community_id: data.community_id,
+		});
+	}
+
+	function leaveCommunity(data: SubscriptionCommunityData) {
+		return channelController.push('unfollow_community', {
+			community_id: data.community_id,
 		});
 	}
 
