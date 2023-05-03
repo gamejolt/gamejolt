@@ -1,7 +1,5 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
-import { useResizeObserver } from '../../../../../utils/resize-observer';
-import { debounce } from '../../../../../utils/utils';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { Background } from '../../../../../_common/background/background.model';
 import AppButton from '../../../../../_common/button/AppButton.vue';
@@ -26,6 +24,8 @@ import {
 	styleWhen,
 } from '../../../../../_styles/mixins';
 import { CSSPixelValue, kFontFamilyHeading, kFontSizeBase } from '../../../../../_styles/variables';
+import { useResizeObserver } from '../../../../../utils/resize-observer';
+import { debounce } from '../../../../../utils/utils';
 import { illNoChat } from '../../../../img/ill/illustrations';
 import { useGridStore } from '../../../grid/grid-store';
 import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
