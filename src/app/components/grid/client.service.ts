@@ -471,7 +471,7 @@ export class GridClient {
 			return;
 		}
 
-		this.notificationChannel?.join_community({
+		this.notificationChannel?.joinCommunity({
 			community_id: community.id,
 		});
 
@@ -479,23 +479,9 @@ export class GridClient {
 	}
 
 	async leaveCommunity(community: Community) {
-		this.notificationChannel?.leave_community({
+		this.notificationChannel?.leaveCommunity({
 			community_id: community.id,
 		});
-	}
-
-	async leaveFireside(fireside: Fireside) {
-		const channel = this.firesideChannels.find(i => i.firesideHash === fireside.hash);
-		if (channel) {
-			channel.channelController.leave();
-			arrayRemove(this.firesideChannels, i => i === channel);
-		}
-
-		const dmChannel = this.firesideDMChannels.find(i => i.firesideHash === fireside.hash);
-		if (dmChannel) {
-			dmChannel.channelController.leave();
-			arrayRemove(this.firesideDMChannels, i => i === channel);
-		}
 	}
 
 	recordFeaturedPost(post: FiresidePost) {

@@ -221,8 +221,8 @@ export function createGridNotificationChannel(
 		joinPromise,
 
 		pushViewNotifications,
-		join_community,
-		leave_community,
+		joinCommunity,
+		leaveCommunity,
 		pushCommunityBootstrap,
 	});
 
@@ -363,13 +363,13 @@ export function createGridNotificationChannel(
 		});
 	}
 
-	function join_community(data: SubscriptionCommunityData = {}) {
+	function joinCommunity(data: SubscriptionCommunityData) {
 		return channelController.push('follow_community', {
 			community_id: data.community_id,
 		});
 	}
 
-	function leave_community(data: SubscriptionCommunityData = {}) {
+	function leaveCommunity(data: SubscriptionCommunityData) {
 		return channelController.push('unfollow_community', {
 			community_id: data.community_id,
 		});
