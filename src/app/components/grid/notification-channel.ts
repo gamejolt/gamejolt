@@ -9,6 +9,7 @@ import { QuestNotification } from '../../../_common/quest/quest-notification-mod
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+
 import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
 import { GridClient, onFiresideStart } from './client.service';
@@ -40,7 +41,6 @@ interface JoinPayload {
 	unreadCommunities: number[];
 	newQuestIds: number[];
 	questActivityIds: number[];
-	questResetHour: number;
 	charge: ChargeData;
 }
 
@@ -164,7 +164,6 @@ export function createGridNotificationChannel(
 			const questStore = appStore.getQuestStore();
 			questStore.addNewQuestIds(payload.newQuestIds);
 			questStore.addQuestActivityIds(payload.questActivityIds);
-			questStore.setDailyResetHour(payload.questResetHour);
 
 			const {
 				charge,

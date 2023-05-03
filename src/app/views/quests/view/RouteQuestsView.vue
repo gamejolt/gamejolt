@@ -1,7 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
@@ -19,6 +18,7 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
 import { User } from '../../../../_common/user/user.model';
+import { numberSort } from '../../../../utils/array';
 import AppQuestTimer from '../../../components/quest/AppQuestTimer.vue';
 import { useQuestStore } from '../../../store/quest';
 
@@ -202,7 +202,7 @@ function onNewQuest(data: Quest) {
 					<div class="-quest-type">{{ quest.questType }}</div>
 					<div class="-quest-title">{{ quest.title }}</div>
 					<template v-if="quest.ends_on">
-						<AppQuestTimer :date="quest.ends_on" />
+						<AppQuestTimer :ends-on="quest.ends_on" />
 					</template>
 				</div>
 				<AppSpacer vertical :scale="4" />
