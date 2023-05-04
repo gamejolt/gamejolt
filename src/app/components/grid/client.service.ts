@@ -17,8 +17,8 @@ import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
 import {
-	createSocketController,
 	SocketController,
+	createSocketController,
 } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
@@ -33,10 +33,9 @@ import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
-
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
-import { createGridNotificationChannel, GridNotificationChannel } from './notification-channel';
+import { GridNotificationChannel, createGridNotificationChannel } from './notification-channel';
 
 export const onFiresideStart = new EventTopic<Model>();
 

@@ -9,7 +9,6 @@ import { QuestNotification } from '../../../_common/quest/quest-notification-mod
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
-
 import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
 import { GridClient, onFiresideStart } from './client.service';
