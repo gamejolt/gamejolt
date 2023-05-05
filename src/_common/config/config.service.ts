@@ -157,11 +157,6 @@ export const configShowStoreInMoreMenu = new ConfigOptionBoolean(
 	false
 );
 
-export const configShowSearchAutocomplete = new ConfigOptionBoolean(
-	'web_show_search_autocomplete',
-	true
-);
-
 export const configHomeFeedSwitcher = new ConfigOptionBoolean('web_home_feed_switcher', false, {
 	conditions: {
 		join: true,
