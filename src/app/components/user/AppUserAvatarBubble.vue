@@ -89,9 +89,7 @@ const chatAvatarStyles: CSSProperties = {
 	height: `100%`,
 };
 
-const avatarFrame = computed(() =>
-	isChatUser(user.value) ? null : user.value?.avatar_frame || null
-);
+const avatarFrame = computed(() => user.value?.avatar_frame || null);
 
 const maySmooshFrame = computed(
 	() => !isChatUser(user.value) && !!user.value?.avatar_frame && showFrame.value && smoosh.value

@@ -1,4 +1,5 @@
 import { objectOmit } from '../../../utils/object';
+import { AvatarFrame } from '../../../_common/avatar/frame.model';
 import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
 import { ModelStoreModel } from '../../../_common/model/model-store.service';
 import { $gettext } from '../../../_common/translate/translate.service';
@@ -18,6 +19,8 @@ export class ChatUser implements ModelStoreModel {
 	declare is_verified: boolean;
 	declare is_creator?: boolean;
 
+	declare avatar_frame?: AvatarFrame;
+
 	isOnline = false;
 	role: CHAT_ROLES | null = null;
 
@@ -36,6 +39,10 @@ export class ChatUser implements ModelStoreModel {
 	update(data: any) {
 		// Exclude our `url` getter when assigning.
 		Object.assign(this, objectOmit(data, ['url']));
+
+		if (data.avatar_frame) {
+			this.avatar_frame = new AvatarFrame(data.avatar_frame);
+		}
 	}
 
 	get url() {

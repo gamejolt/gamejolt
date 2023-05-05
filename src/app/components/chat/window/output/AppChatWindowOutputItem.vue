@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, reactive, ref, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
 import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
@@ -15,9 +15,10 @@ import AppScrollInview, {
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { styleElevate } from '../../../../../_styles/mixins';
 import { kChatRoomWindowPaddingH } from '../../../../styles/variables';
 import { useGridStore } from '../../../grid/grid-store';
-import AppUserVerifiedWrapper from '../../../user/AppUserVerifiedWrapper.vue';
+import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
 import {
 	removeMessage as chatRemoveMessage,
 	retryFailedQueuedMessage,
@@ -74,6 +75,11 @@ const emit = defineEmits({
 
 const { message, room, maxContentWidth } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
+
+const avatarSizeStyles: CSSProperties = {
+	width: ChatWindowAvatarSize.px,
+	height: ChatWindowAvatarSize.px,
+};
 
 let canClearFocus = false;
 let isFocused = false;
@@ -263,7 +269,13 @@ async function onMessageClick() {
 	>
 		<AppScrollInview
 			v-if="shouldShowAvatar"
-			class="-avatar"
+			:style="{
+				...avatarSizeStyles,
+				position: `absolute`,
+				left: 0,
+				bottom: 0,
+				zIndex: 1,
+			}"
 			tag="a"
 			:config="InviewConfig"
 			@outview="isShowingAvatarPopper ? ++popperHideTrigger : undefined"
@@ -275,14 +287,17 @@ async function onMessageClick() {
 				@show="onAvatarPopperVisible(true)"
 				@hide="onAvatarPopperVisible(false)"
 			>
-				<AppUserVerifiedWrapper :user="message.user" small>
-					<img
-						class="-avatar-img img-responsive"
-						:src="message.user.img_avatar"
-						alt=""
-						draggable="false"
-					/>
-				</AppUserVerifiedWrapper>
+				<AppUserAvatarBubble
+					:style="{
+						...styleElevate(1),
+						...avatarSizeStyles,
+					}"
+					:user="message.user"
+					disable-link
+					show-verified
+					show-frame
+					verified-size="small"
+				/>
 
 				<template #popover>
 					<AppChatUserPopover :user="message.user" :room="room" />
@@ -425,29 +440,17 @@ $-min-item-width = 24px
 			theme-prop('background', 'darker', true)
 			max-height: 4px !important
 
-.-avatar
-	position: absolute
-	left: 0
-	bottom: 0
-	width: add-unit(v-bind(ChatWindowAvatarSize), px)
-	height: add-unit(v-bind(ChatWindowAvatarSize), px)
-	z-index: 1
-
-	.-avatar-img
-		img-circle()
-		elevate-1()
-
 .-item-container-wrapper
 	display: flex
 	align-items: flex-start
 	outline: 0
-	margin-left: add-unit(v-bind(ChatWindowLeftGutterSize), px)
+	margin-left: v-bind('ChatWindowLeftGutterSize.px')
 	flex: auto
 	min-width: 0
 
 	@media $media-xs
 		// On small screens, reduce the left side margin to make more space for the actual messages.
-		margin-left: add-unit(calc(v-bind(ChatWindowAvatarSize) + 12), px)
+		margin-left: add-unit(calc(v-bind('ChatWindowAvatarSize.value') + 12), px)
 
 .-item-container
 	position: relative
@@ -567,7 +570,7 @@ $-min-item-width = 24px
 	position: absolute
 	right: 100%
 	transform: translate3d(-50%, 0, 0)
-	width: add-unit(v-bind('ChatWindowLeftGutterSize + kChatRoomWindowPaddingH.value'), px)
+	width: add-unit(v-bind('ChatWindowLeftGutterSize.value + kChatRoomWindowPaddingH.value'), px)
 	display: flex
 	justify-content: center
 

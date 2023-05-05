@@ -589,7 +589,7 @@ $-button-height = 40px
 	min-width: 0
 
 	@media $media-sm-up
-		margin-left: add-unit(v-bind(ChatWindowLeftGutterSize), px)
+		margin-left: v-bind('ChatWindowLeftGutterSize.px')
 
 .-send-button-container
 	display: flex

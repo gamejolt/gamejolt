@@ -3,6 +3,7 @@ import { computed, CSSProperties, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { kThemeDarkest } from '../../../../_common/theme/variables';
@@ -180,7 +181,7 @@ async function onClickDemoteModerator() {
 	}
 }
 
-const styleStatus: CSSProperties = {
+const statusStyles: CSSProperties = {
 	marginTop: `8px`,
 	display: `flex`,
 	fontFamily: kFontFamilyTiny,
@@ -271,11 +272,11 @@ const styleStatusIcon: CSSProperties = {
 				</div>
 			</div>
 
-			<div v-if="isOnline !== null" :style="styleStatus">
+			<div v-if="isOnline !== null" :style="statusStyles">
 				<AppChatUserOnlineStatus
 					:style="{
 						marginRight: `4px`,
-						height: `100%`,
+						alignSelf: `stretch`,
 					}"
 					:is-online="isOnline"
 					:size="12"
@@ -284,12 +285,12 @@ const styleStatusIcon: CSSProperties = {
 				<span>{{ isOnline ? $gettext(`Online`) : $gettext(`Offline`) }}</span>
 			</div>
 
-			<div v-if="isOwner" :style="styleStatus">
+			<div v-if="isOwner" :style="statusStyles">
 				<AppJolticon :style="styleStatusIcon" icon="crown" />
 				&nbsp;
 				{{ $gettext(`Room owner`) }}
 			</div>
-			<div v-else-if="isModerator" :style="styleStatus">
+			<div v-else-if="isModerator" :style="statusStyles">
 				<AppJolticon :style="styleStatusIcon" icon="star" />
 				&nbsp;
 				{{ $gettext(`Moderator`) }}

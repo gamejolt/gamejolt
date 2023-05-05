@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import { styleBorderRadiusCircle, styleChangeBg } from '../../../../_styles/mixins';
 import { ChatUser } from '../../chat/user';
 import AppChatListItem from '../../chat/_list/AppChatListItem.vue';
+import AppUserAvatarBubble from '../../user/AppUserAvatarBubble.vue';
 
 defineProps({
 	user: {
@@ -28,13 +30,30 @@ const emit = defineEmits({
 		@click="emit('click')"
 	>
 		<template #leading>
-			<div class="-member-avatar">
-				<img class="-member-avatar-img" :src="user.img_avatar" />
-			</div>
+			<AppUserAvatarBubble
+				:style="{
+					width: `100%`,
+					height: `100%`,
+				}"
+				:user="user"
+				disable-link
+				show-frame
+				smoosh
+			/>
 		</template>
 
 		<template #leading-float>
-			<AppUserVerifiedTick class="-verified-tick" :user="user" small vertical-align />
+			<AppUserVerifiedTick
+				:style="{
+					...styleChangeBg('bg'),
+					...styleBorderRadiusCircle,
+					padding: `1px`,
+					transform: `translate(2px, 2px)`,
+				}"
+				:user="user"
+				small
+				vertical-align
+			/>
 		</template>
 
 		<template #title>
@@ -47,16 +66,3 @@ const emit = defineEmits({
 		</template>
 	</AppChatListItem>
 </template>
-
-<style lang="stylus" scoped>
-.-member-avatar
-.-member-avatar-img
-	width: 100%
-	height: 100%
-
-.-verified-tick
-	change-bg(bg)
-	img-circle()
-	padding: 1px
-	transform: translate(2px, 2px)
-</style>
