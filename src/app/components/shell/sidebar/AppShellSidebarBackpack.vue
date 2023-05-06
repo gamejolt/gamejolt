@@ -25,6 +25,7 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vu
 import { styleBorderRadiusLg, styleChangeBg, styleTextOverflow } from '../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../_styles/variables';
 import { illPointyThing } from '../../../img/ill/illustrations';
+import { routeCollections } from '../../../views/collections/collections.route';
 import { routeQuests } from '../../../views/quests/quests.route';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
@@ -124,19 +125,22 @@ function sortStickers(sorting: StickerSortMethod) {
 			</div>
 
 			<AppSpacer vertical :scale="4" />
-			<RouterLink class="link-unstyled" :to="{ name: routeQuests.name }">
+			<RouterLink class="link-unstyled _quest-link" :to="{ name: routeQuests.name }">
 				<div
-					class="well"
+					class="well _quest-text"
 					:style="{
 						...styleBorderRadiusLg,
 						...styleChangeBg('bg-offset'),
 					}"
 				>
-					{{
-						$gettext(
-							`Complete quests to earn coins that you can use to purchase packs!`
-						)
-					}}
+					<AppJolticon icon="quest-log" big />
+					<span>
+						{{
+							$gettext(
+								`Complete quests to earn coins that you can use to purchase packs!`
+							)
+						}}
+					</span>
 				</div>
 			</RouterLink>
 
@@ -306,6 +310,15 @@ function sortStickers(sorting: StickerSortMethod) {
 					{{ $gettext(`Get packs`) }}
 				</AppButton>
 			</div>
+
+			<hr />
+			<AppButton
+				block
+				solid
+				:to="{ name: routeCollections.name, params: { username: 'me' } }"
+			>
+				{{ $gettext(`Browse Collections`) }}
+			</AppButton>
 		</AppForm>
 	</div>
 </template>
@@ -345,4 +358,13 @@ function sortStickers(sorting: StickerSortMethod) {
 	gap: var(--half-pad)
 	grid-template-columns: repeat(auto-fill, minmax(56px, 1fr))
 	margin-bottom: $line-height-computed
+
+._quest-link:hover
+	text-decoration: none
+
+._quest-text
+	display: flex
+	gap: 16px
+	align-items: center
+	elevate-hover-1()
 </style>

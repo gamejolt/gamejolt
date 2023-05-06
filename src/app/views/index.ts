@@ -1,5 +1,6 @@
 import { initRouter } from '../../utils/router';
 import { routeBadgeFeatured } from './badge/featured/featured.route';
+import { routeCollections } from './collections/collections.route';
 import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
@@ -49,6 +50,7 @@ const routes = [
 	routeRealmsView,
 	routeQuests,
 	routeLandingCreators,
+	routeCollections,
 ];
 
 export const router = initRouter(routes);

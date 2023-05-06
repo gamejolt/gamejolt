@@ -17,6 +17,7 @@ import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { UserWallet } from '../../../_common/user/wallet/wallet.model';
 import { useAppStore } from '../../store';
+import { routeCollections } from '../../views/collections/collections.route';
 import { routeDashCreator } from '../../views/dashboard/creator/creator.route';
 import AppUserAvatarBubble from '../user/AppUserAvatarBubble.vue';
 import { UserTokenModal } from '../user/token-modal/token-modal.service';
@@ -118,6 +119,15 @@ function quit() {
 						<AppJolticon class="-quick-action-icon" icon="dashboard" />
 						<div class="-quick-action-label">
 							{{ $gettext(`Creator HUD`) }}
+						</div>
+					</RouterLink>
+					<RouterLink
+						class="-quick-action"
+						:to="{ name: routeCollections.name, params: { username: 'me' } }"
+					>
+						<AppJolticon class="-quick-action-icon" icon="books" />
+						<div class="-quick-action-label">
+							{{ $gettext(`Collections`) }}
 						</div>
 					</RouterLink>
 					<RouterLink
