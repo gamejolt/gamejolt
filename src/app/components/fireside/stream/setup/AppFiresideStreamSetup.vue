@@ -72,8 +72,13 @@ const { hidePublishControls, showLoading } = toRefs(props);
 
 // The controller will never change.
 // eslint-disable-next-line vue/no-setup-props-destructure
-const { rtc, isShowingStreamSetup, canBrowserSelectSpeakers, shouldHideStreamVideoPreview } =
-	props.c;
+const {
+	rtc,
+	isShowingStreamSetup,
+	canBrowserSelectSpeakers,
+	shouldHideStreamVideoPreview,
+	gridChannel,
+} = props.c;
 
 const {
 	hasWebcamPermissions,
@@ -461,7 +466,7 @@ async function onClickStartStreaming() {
 	isStarting.value = true;
 
 	try {
-		await startStreaming(localProducer);
+		await startStreaming(localProducer, gridChannel.value!);
 	} catch {}
 
 	isStarting.value = false;

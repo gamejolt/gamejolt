@@ -1,7 +1,7 @@
 import { inject, InjectionKey, provide, toRaw } from 'vue';
-import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
-import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
+import { FiresideRTCHost } from '../../../_common/fireside/rtc/host';
 import { storeModel } from '../../../_common/model/model-store.service';
+import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
 import { ChatClient, isUserOnline } from './client';
 import { ChatRoom } from './room';
 import { ChatUser } from './user';
@@ -151,12 +151,13 @@ export class ChatUserCollection {
 		this.recollect();
 	}
 
+	// TODO(oven)?
 	assignFiresideHostData(data: FiresideRTCHost[]) {
 		this.doBatchWork(() => {
 			this._firesideHosts.clear();
 
 			for (const hostData of data) {
-				const freshHostId = hostData.user.id;
+				const freshHostId = hostData.userModel.id;
 
 				// Store the new host set so we can use it when chat members get
 				// added or updated.

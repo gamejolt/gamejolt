@@ -13,8 +13,8 @@ import type {
 import { markRaw, reactive } from 'vue';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { $gettext } from '../../translate/translate.service';
+import { FiresideRTCHost, setupFiresideVideoElementListeners } from './host';
 import { FiresideRTC } from './rtc';
-import { FiresideRTCUser, setupFiresideVideoElementListeners } from './user';
 
 type OnTrackPublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
 type OnTrackUnpublish = (remoteUser: IAgoraRTCRemoteUser, mediaType: 'audio' | 'video') => void;
@@ -219,7 +219,7 @@ export async function setChannelVideoTrack(
 }
 
 export function previewChannelVideo(
-	user: FiresideRTCUser | null,
+	user: FiresideRTCHost | null,
 	channel: FiresideRTCChannel,
 	element: HTMLDivElement
 ) {

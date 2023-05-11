@@ -1,7 +1,7 @@
-import { objectOmit } from '../../../utils/object';
 import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
 import { ModelStoreModel } from '../../../_common/model/model-store.service';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { objectOmit } from '../../../utils/object';
 import { tryGetRoomRole } from './client';
 import { ChatMessage } from './message';
 import { CHAT_ROLES } from './role';

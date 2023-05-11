@@ -1,4 +1,5 @@
 import { computed, markRaw, ref, shallowRef } from 'vue';
+import { GridFiresideChannel } from '../../../app/components/grid/fireside-channel';
 import { trackFiresideStopStreaming } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
 import type { ASGController } from '../../client/asg/asg';
@@ -8,21 +9,19 @@ import { Navigate } from '../../navigate/navigate.service';
 import { $gettext } from '../../translate/translate.service';
 import { MediaDeviceService } from '../media-device.service';
 import {
+	createLocalFiresideRTCHost,
+	setUserHasDesktopAudio,
+	setUserHasMicAudio,
+	setUserHasVideo,
+} from './host';
+import {
 	createFiresideRTCProducerKit,
 	destroyFiresideRTCProducerKit,
 	setKitMediaStream,
 	startKitStreaming,
 	stopKitStreaming,
 } from './producer-kit';
-import { FiresideRTC, applyRTCTokens, chooseFocusedRTCUser } from './rtc';
-import {
-	createLocalFiresideRTCUser,
-	setUserHasDesktopAudio,
-	setUserHasMicAudio,
-	setUserHasVideo,
-} from './user';
-
-const RENEW_TOKEN_INTERVAL = 60_000;
+import { FiresideRTC, chooseFocusedRTCUser } from './rtc';
 
 export const PRODUCER_UNSET_DEVICE = 'unset';
 export const PRODUCER_DEFAULT_GROUP_AUDIO = 'default';
@@ -142,7 +141,7 @@ export function createFiresideRTCProducer(rtc: FiresideRTC) {
 		_areTokensRenewing,
 	};
 
-	_tokenRenewInterval.value = setInterval(() => _renewTokens(producer), RENEW_TOKEN_INTERVAL);
+	// _tokenRenewInterval.value = setInterval(() => _renewTokens(producer), RENEW_TOKEN_INTERVAL);
 
 	return producer;
 }
@@ -185,67 +184,67 @@ export function cleanupFiresideRTCProducer({
 	destroyFiresideRTCProducerKit(localVideoKit.value);
 }
 
-async function _renewTokens(producer: FiresideRTCProducer) {
-	const {
-		_areTokensRenewing,
-		isStreaming,
-		rtc,
-		rtc: { fireside, generation },
-	} = producer;
+// async function _renewTokens(producer: FiresideRTCProducer) {
+// 	const {
+// 		_areTokensRenewing,
+// 		isStreaming,
+// 		rtc,
+// 		rtc: { fireside, generation },
+// 	} = producer;
 
-	if (_areTokensRenewing.value) {
-		return;
-	}
+// 	if (_areTokensRenewing.value) {
+// 		return;
+// 	}
 
-	_areTokensRenewing.value = true;
+// 	_areTokensRenewing.value = true;
 
-	async function _updateHostTokens() {
-		rtc.log(`Renewing streaming tokens.`);
+// 	async function _updateHostTokens() {
+// 		rtc.log(`Renewing streaming tokens.`);
 
-		const response = await Api.sendRequest(
-			'/web/dash/fireside/generate-streaming-tokens/' + fireside.id,
-			{ streaming_uid: rtc.streamingUid },
-			{ detach: true }
-		);
+// 		const response = await Api.sendRequest(
+// 			'/web/dash/fireside/generate-streaming-tokens/' + fireside.id,
+// 			{ streaming_uid: rtc.streamingUid },
+// 			{ detach: true }
+// 		);
 
-		if (response?.success !== true) {
-			throw new Error(response);
-		}
+// 		if (response?.success !== true) {
+// 			throw new Error(response);
+// 		}
 
-		// Don't error out, but don't renew either.
-		if (generation.isCanceled) {
-			return;
-		}
+// 		// Don't error out, but don't renew either.
+// 		if (generation.isCanceled) {
+// 			return;
+// 		}
 
-		const { videoToken, chatToken } = response;
-		await applyRTCTokens(rtc, videoToken, chatToken);
-	}
+// 		const { videoToken, chatToken } = response;
+// 		await applyRTCTokens(rtc, videoToken, chatToken);
+// 	}
 
-	async function _updateAudienceTokens() {
-		// We only do this if we're currently streaming.
-		if (!isStreaming.value) {
-			return;
-		}
+// 	async function _updateAudienceTokens() {
+// 		// We only do this if we're currently streaming.
+// 		if (!isStreaming.value) {
+// 			return;
+// 		}
 
-		rtc.log(`Renewing audience tokens.`);
+// 		rtc.log(`Renewing audience tokens.`);
 
-		const response = await updateSetIsStreaming(producer);
+// 		const response = await updateSetIsStreaming(producer);
 
-		if (response?.success !== true) {
-			throw new Error(response);
-		}
+// 		if (response?.success !== true) {
+// 			throw new Error(response);
+// 		}
 
-		return response;
-	}
+// 		return response;
+// 	}
 
-	try {
-		await Promise.all([_updateHostTokens(), _updateAudienceTokens()]);
-	} catch (e) {
-		rtc.logWarning(`Got error while renewing tokens.`, e);
-	} finally {
-		_areTokensRenewing.value = false;
-	}
-}
+// 	try {
+// 		await Promise.all([_updateHostTokens(), _updateAudienceTokens()]);
+// 	} catch (e) {
+// 		rtc.logWarning(`Got error while renewing tokens.`, e);
+// 	} finally {
+// 		_areTokensRenewing.value = false;
+// 	}
+// }
 
 /**
  * Sets the muted state for a specific broadcasting channel. Toggles if [mute]
@@ -831,7 +830,7 @@ export function getOwnMicAudioVolume({ localChatKit, rtc: { generation } }: Fire
 	return localChatKit.value.volumeMonitor.value?.getVolume() || 0;
 }
 
-export async function startStreaming(producer: FiresideRTCProducer) {
+export async function startStreaming(producer: FiresideRTCProducer, channel: GridFiresideChannel) {
 	await _doBusyWork(producer, async () => {
 		const {
 			isStreaming,
@@ -839,30 +838,52 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 			rtc: { generation },
 			localVideoKit,
 			localChatKit,
+			streamingWebcamDeviceId,
+			streamingDesktopAudioDeviceId,
+			streamingMicDeviceId,
+			shouldStreamDesktopAudio,
 		} = producer;
 
-		if (isStreaming.value) {
-			return;
-		}
-		isStreaming.value = true;
+		// if (isStreaming.value) {
+		// 	return;
+		// }
+		// isStreaming.value = true;
 
-		const response = await updateSetIsStreaming(producer);
+		// const response = await updateSetIsStreaming(producer);
 
-		if (response?.success !== true || generation.isCanceled) {
-			rtc.logWarning(`Couldn't start streaming.`, response);
+		// if (response?.success !== true || generation.isCanceled) {
+		// 	rtc.logWarning(`Couldn't start streaming.`, response);
 
-			showErrorGrowl(
-				$gettext(
-					`Couldn't start streaming. Either fireside has ended, your permissions to stream have been revoked or you have a running stream elsewhere.`
-				)
-			);
-			isStreaming.value = false;
-			return;
-		}
+		// 	showErrorGrowl(
+		// 		$gettext(
+		// 			`Couldn't start streaming. Either fireside has ended, your permissions to stream have been revoked or you have a running stream elsewhere.`
+		// 		)
+		// 	);
+		// 	isStreaming.value = false;
+		// 	return;
+		// }
 
 		try {
+			await channel.pushSetStream({
+				is_streaming_video: streamingWebcamDeviceId.value !== PRODUCER_UNSET_DEVICE,
+				is_streaming_audio_desktop:
+					shouldStreamDesktopAudio.value ||
+					streamingDesktopAudioDeviceId.value !== PRODUCER_UNSET_DEVICE,
+				is_streaming_audio_mic: streamingMicDeviceId.value !== PRODUCER_UNSET_DEVICE,
+			});
+
 			startKitStreaming(localVideoKit.value);
 			startKitStreaming(localChatKit.value);
+
+			// has_video: selectedWebcamDeviceId.value !== PRODUCER_UNSET_DEVICE,
+			// // && rtc.videoChannel._localVideoTrack !== null,
+			// has_mic_audio: selectedMicDeviceId.value !== PRODUCER_UNSET_DEVICE,
+			// // && rtc.chatChannel._localAudioTrack !== null,
+			// has_desktop_audio:
+			// 	shouldStreamDesktopAudio.value ||
+			// 	selectedDesktopAudioDeviceId.value !== PRODUCER_UNSET_DEVICE,
+
+			isStreaming.value = true;
 
 			rtc.log(`Started streaming.`);
 		} catch (err) {
@@ -917,7 +938,7 @@ async function _stopStreaming(producer: FiresideRTCProducer, becomeBusy: boolean
 
 /**
  * While we're streaming, anytime our local tracks change, we want to sync a
- * fake [FiresideRTCUser] to show us as part of the fireside.
+ * fake [FiresideRTCHost] to show us as part of the fireside.
  */
 function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	// TODO(oven)
@@ -965,7 +986,7 @@ function _syncLocalUserToRTC(producer: FiresideRTCProducer) {
 	const chatStream = localChatKit.value.localStream.value;
 
 	// Upsert the user's local streams.
-	user ??= createLocalFiresideRTCUser(rtc, userId!);
+	user ??= createLocalFiresideRTCHost(rtc, userId!);
 	user._videoMediaStream = videoStream ? markRaw(videoStream) : null;
 	user._chatMediaStream = chatStream ? markRaw(chatStream) : null;
 

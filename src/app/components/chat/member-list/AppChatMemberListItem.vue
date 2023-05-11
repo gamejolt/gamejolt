@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import AppFiresideLiveTag from '../../../../_common/fireside/AppFiresideLiveTag.vue';
-import { FiresideRTCHost } from '../../../../_common/fireside/rtc/rtc';
+import { FiresideRTCHost } from '../../../../_common/fireside/rtc/host';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { kThemeBg, kThemeFg, kThemePrimary } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { useGridStore } from '../../grid/grid-store';
+import AppChatListItem from '../_list/AppChatListItem.vue';
 import { isUserOnline } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser, getChatUserRoleData } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 import AppChatUserPopover from '../user-popover/AppChatUserPopover.vue';
-import AppChatListItem from '../_list/AppChatListItem.vue';
 
 const props = defineProps({
 	user: {
@@ -52,6 +52,7 @@ const isLiveFiresideHost = computed(() => {
 		return false;
 	}
 
+	// TODO(oven)
 	return !host.value.needsPermissionToView && host.value.isLive;
 });
 </script>

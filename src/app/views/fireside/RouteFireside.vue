@@ -98,6 +98,7 @@ const rtc = computed(() => c.value?.rtc.value);
 const canPublish = computed(() => c.value?.canPublish.value === true);
 const canStream = computed(() => c.value?.canStream.value === true);
 const canExtinguish = computed(() => c.value?.canExtinguish.value === true);
+const streamingHosts = computed(() => c.value?.streamingHosts.value || []);
 const isStreaming = computed(() => c.value?.isStreaming.value === true);
 const isPersonallyStreaming = computed(() => c.value?.isPersonallyStreaming.value === true);
 
@@ -591,12 +592,7 @@ function onClickStreamingBanner() {
 							<div v-else class="-video-wrapper">
 								<div class="-video-padding">
 									<div
-										v-if="
-											c.isStreaming.value &&
-											c.chatRoom.value &&
-											rtc &&
-											rtc.listableStreamingUsers.length > 0
-										"
+										v-if="c.isStreaming.value && c.chatRoom.value && rtc"
 										ref="videoContainer"
 										v-app-observe-dimensions="debounceDimensionsChange"
 										class="-video-container"
@@ -656,9 +652,9 @@ function onClickStreamingBanner() {
 
 										<!-- This loads all the user streams and we Teleport them into the correct places from here -->
 										<AppFiresideStreamHost
-											v-for="rtcUser of rtc.listableStreamingUsers"
-											:key="rtcUser.userId"
-											:rtc-user="rtcUser"
+											v-for="host of streamingHosts"
+											:key="host.userId"
+											:host="host"
 										/>
 									</div>
 									<div v-else class="-video-container">

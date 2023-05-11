@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { PropType, computed, watchEffect } from 'vue';
-import { FiresideRTCUser } from '../../../../../_common/fireside/rtc/user';
+import { FiresideRTCHost } from '../../../../../_common/fireside/rtc/host';
 import { createFiresideStreamHostPlayer } from './player-controller';
 
 const props = defineProps({
-	rtcUser: {
-		type: Object as PropType<FiresideRTCUser>,
+	host: {
+		type: Object as PropType<FiresideRTCHost>,
 		required: true,
 	},
 });
@@ -14,26 +14,26 @@ const props = defineProps({
 // everything.
 //
 // eslint-disable-next-line vue/no-setup-props-destructure
-const { rtcUser } = props;
-const { rtc } = rtcUser;
+const { host } = props;
+const { rtc } = host;
 
-const { player, playerElem } = createFiresideStreamHostPlayer(rtcUser, 'video');
+const { player, playerElem } = createFiresideStreamHostPlayer(host, 'video');
 
 /**
  * Their desktop audio will be muted if they're not the focused user, or if it's
  * been specifically muted.
  */
 const isDesktopAudioMuted = computed(
-	() => rtc.focusedUser?.userId !== rtcUser.userId || !rtcUser.desktopAudioPlayState
+	() => rtc.focusedUser?.userId !== host.userId || !host.desktopAudioPlayState
 );
 
 /**
  * Video quality is determined by the current video lock.
  */
-const videoQuality = computed(() => rtcUser.currentVideoLock?.quality);
+const videoQuality = computed(() => host.currentVideoLock?.quality);
 
 watchEffect(() => {
-	if (rtcUser.videoPlayState) {
+	if (host.videoPlayState) {
 		player.value?.play();
 	} else {
 		player.value?.stop();
@@ -45,7 +45,7 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
-	player.value?.setVolume(Math.round(rtcUser.desktopPlaybackVolumeLevel * 100));
+	player.value?.setVolume(Math.round(host.desktopPlaybackVolumeLevel * 100));
 });
 
 watchEffect(() => {
@@ -54,7 +54,7 @@ watchEffect(() => {
 			return;
 		}
 
-		rtc.log(`Setting video to "${desiredQuality}" version for user: `, rtcUser.userId);
+		rtc.log(`Setting video to "${desiredQuality}" version for user: `, host.userId);
 
 		const qualityLevels = player.value.getQualityLevels();
 		const quality = qualityLevels.find(i => i.label === desiredQuality);
@@ -63,7 +63,7 @@ watchEffect(() => {
 		} else {
 			rtc.logError(
 				`Could not find "${desiredQuality}" video version for user: `,
-				rtcUser.userId
+				host.userId
 			);
 		}
 	};

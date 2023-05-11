@@ -27,6 +27,7 @@ const {
 	setSidebar,
 	sidebarHome,
 	isDraft,
+	gridChannel,
 } = c;
 
 const isStartingStream = ref(false);
@@ -43,7 +44,7 @@ async function onClickStartStreaming() {
 	isStartingStream.value = true;
 
 	try {
-		await startStreaming(_producer);
+		await startStreaming(_producer, gridChannel.value!);
 	} catch {
 		showErrorGrowl($gettext(`Something went wrong when starting your stream.`));
 	}

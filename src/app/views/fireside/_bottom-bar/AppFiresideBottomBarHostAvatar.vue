@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { shade } from 'polished';
 import { computed, PropType, toRefs } from 'vue';
+import { FiresideRTCHost } from '../../../../_common/fireside/rtc/host';
 import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
-import { FiresideRTCUser } from '../../../../_common/fireside/rtc/user';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
@@ -12,7 +12,7 @@ const BandWidth = 3;
 
 const props = defineProps({
 	host: {
-		type: Object as PropType<FiresideRTCUser | FiresideRTCProducer>,
+		type: Object as PropType<FiresideRTCHost | FiresideRTCProducer>,
 		required: true,
 	},
 	fillParent: {
@@ -29,7 +29,7 @@ const { user } = useCommonStore();
 const { rtc } = useFiresideController()!;
 
 const padding = computed(() => {
-	if (!(host.value instanceof FiresideRTCUser)) {
+	if (!(host.value instanceof FiresideRTCHost)) {
 		return '';
 	}
 
@@ -47,7 +47,7 @@ const padding = computed(() => {
 });
 
 const uid = computed(() => {
-	if (host.value instanceof FiresideRTCUser) {
+	if (host.value instanceof FiresideRTCHost) {
 		return host.value.userId;
 	} else {
 		return undefined;
@@ -55,7 +55,7 @@ const uid = computed(() => {
 });
 
 const userModel = computed(() => {
-	if (host.value instanceof FiresideRTCUser) {
+	if (host.value instanceof FiresideRTCHost) {
 		return host.value.userModel;
 	} else {
 		return user.value;

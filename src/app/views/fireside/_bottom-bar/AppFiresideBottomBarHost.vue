@@ -3,13 +3,13 @@ import { computed, PropType, Ref, ref, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
-	FiresideRTCUser,
-	saveFiresideRTCUserPrefs,
+	FiresideRTCHost,
+	saveFiresideRTCHostPrefs,
 	setDesktopAudioPlayState,
 	setMicAudioPlayState,
 	setUserDesktopAudioVolume,
 	setUserMicrophoneAudioVolume,
-} from '../../../../_common/fireside/rtc/user';
+} from '../../../../_common/fireside/rtc/host';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopcornKettle from '../../../../_common/popcorn/AppPopcornKettle.vue';
 import { createPopcornKettleController } from '../../../../_common/popcorn/popcorn-kettle-controller';
@@ -27,7 +27,7 @@ import AppFiresideBottomBarHostAvatar from './AppFiresideBottomBarHostAvatar.vue
 
 const props = defineProps({
 	host: {
-		type: Object as PropType<FiresideRTCUser>,
+		type: Object as PropType<FiresideRTCHost>,
 		required: true,
 	},
 });
@@ -110,7 +110,7 @@ function _handleScrub(
 		mute: () => void;
 		unmute: () => void;
 		currentPlaybackVolume: number;
-		setVolume: (user: FiresideRTCUser, volume: number) => void;
+		setVolume: (user: FiresideRTCHost, volume: number) => void;
 	}
 ) {
 	const { percent, stage } = scrubData;
@@ -140,7 +140,7 @@ function _handleScrub(
 		volumeBeforeScrub.value = undefined;
 
 		isScrubbing.value = false;
-		saveFiresideRTCUserPrefs(host.value);
+		saveFiresideRTCHostPrefs(host.value);
 	}
 }
 

@@ -1,9 +1,9 @@
 import OvenPlayerStatic, { OvenPlayer } from 'ovenplayer';
 import { computed, markRaw, onMounted, onUnmounted, ref, shallowReadonly, shallowRef } from 'vue';
-import { FiresideRTCUser } from '../../../../../_common/fireside/rtc/user';
+import { FiresideRTCHost } from '../../../../../_common/fireside/rtc/host';
 
 export function createFiresideStreamHostPlayer(
-	rtcUser: FiresideRTCUser,
+	host: FiresideRTCHost,
 	playerType: 'video' | 'chat'
 ) {
 	const _isPlayerReady = ref(false);
@@ -13,15 +13,15 @@ export function createFiresideStreamHostPlayer(
 	const readyPlayer = computed(() => (_isPlayerReady.value && _player.value) || null);
 
 	onMounted(() => {
-		if (!rtcUser.isRemote) {
+		if (!host.isRemote) {
 			throw new Error(`Host players only work for remote users.`);
 		}
 
 		if (
-			(playerType === 'video' && rtcUser._videoPlayer) ||
-			(playerType === 'chat' && rtcUser._chatPlayer)
+			(playerType === 'video' && host._videoPlayer) ||
+			(playerType === 'chat' && host._chatPlayer)
 		) {
-			throw new Error(`Already have ${playerType} player for ${rtcUser.userId}!`);
+			throw new Error(`Already have ${playerType} player for ${host.userId}!`);
 		}
 
 		// We will handle setting up the player in the "ready" event. At that
@@ -37,7 +37,7 @@ export function createFiresideStreamHostPlayer(
 								{
 									label: 'WebRTC',
 									type: 'webrtc',
-									file: `wss://stream-edge-01.development.gamejolt.com:3334/video/${rtcUser.userId}/abr?transport=tcp`,
+									file: `wss://stream-edge-01.development.gamejolt.com:3334/video/${host.userId}/abr?transport=tcp`,
 								},
 								// {
 								// 	label: 'LLHLS',
@@ -49,21 +49,21 @@ export function createFiresideStreamHostPlayer(
 								{
 									label: 'WebRTC',
 									type: 'webrtc',
-									file: `wss://stream-edge-01.development.gamejolt.com:3334/chat/${rtcUser.userId}?transport=tcp`,
+									file: `wss://stream-edge-01.development.gamejolt.com:3334/chat/${host.userId}?transport=tcp`,
 								},
 						  ],
 			})
 		);
 
 		_player.value.on('ready', () => {
-			rtcUser.rtc.log(`Video player ready for user: `, rtcUser.userId);
+			host.rtc.log(`Video player ready for user: `, host.userId);
 			_isPlayerReady.value = true;
 		});
 
 		if (playerType === 'video') {
-			rtcUser._videoPlayer = _player.value;
+			host._videoPlayer = _player.value;
 		} else if (playerType === 'chat') {
-			rtcUser._chatPlayer = _player.value;
+			host._chatPlayer = _player.value;
 		}
 	});
 
@@ -71,9 +71,9 @@ export function createFiresideStreamHostPlayer(
 		_player.value?.remove();
 
 		if (playerType === 'video') {
-			rtcUser._videoPlayer = null;
+			host._videoPlayer = null;
 		} else if (playerType === 'chat') {
-			rtcUser._chatPlayer = null;
+			host._chatPlayer = null;
 		}
 	});
 

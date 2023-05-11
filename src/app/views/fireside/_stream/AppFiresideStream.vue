@@ -2,7 +2,7 @@
 import { computed, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import { FiresideRTCUser, setDesktopAudioPlayState } from '../../../../_common/fireside/rtc/user';
+import { FiresideRTCHost, setDesktopAudioPlayState } from '../../../../_common/fireside/rtc/host';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -26,7 +26,7 @@ const UITransitionTime = 200;
 
 const props = defineProps({
 	rtcUser: {
-		type: Object as PropType<FiresideRTCUser>,
+		type: Object as PropType<FiresideRTCHost>,
 		required: true,
 	},
 	hasHeader: {

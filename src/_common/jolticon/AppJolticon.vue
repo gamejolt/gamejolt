@@ -1,7 +1,7 @@
 <script lang="ts">
 import { PropType } from 'vue';
 
-export type Jolticon = typeof Jolticons[number];
+export type Jolticon = (typeof Jolticons)[number];
 
 export const Jolticons = [
 	'active',

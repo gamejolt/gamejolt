@@ -1,6 +1,5 @@
 <script lang="ts">
 import { computed, onMounted, onUnmounted, PropType, ref, toRefs } from 'vue';
-import { sleep } from '../../../../../utils/utils';
 import {
 	inviteFiresideHost,
 	removeFiresideHost,
@@ -8,8 +7,9 @@ import {
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
-import { ChatUser } from '../../../../components/chat/user';
+import { sleep } from '../../../../../utils/utils';
 import AppChatList from '../../../../components/chat/_list/AppChatList.vue';
+import { ChatUser } from '../../../../components/chat/user';
 import { FiresideController } from '../../../../components/fireside/controller/controller';
 import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
 import { useChatRoomMembers } from '../../../chat/room-channel';
@@ -57,7 +57,7 @@ const users = computed(() => {
 
 	switch (section.value) {
 		case 'currentHosts': {
-			return hosts.value.reduce((result, { user }) => {
+			return hosts.value.reduce((result, { userModel: user }) => {
 				if (user && isHost(user) && !_isMe(user)) {
 					result.push(user);
 				}
@@ -94,7 +94,7 @@ function isUserProcessing(user: ChatUser | User) {
 }
 
 function isHost(user: ChatUser | User) {
-	return hosts.value.some(i => i.user.id === user.id);
+	return hosts.value.some(i => i.userModel.id === user.id);
 }
 
 async function processUser(user: ChatUser | User) {
