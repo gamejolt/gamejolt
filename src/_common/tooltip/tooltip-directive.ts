@@ -1,11 +1,11 @@
-import { Component, Directive } from 'vue';
+import { Directive } from 'vue';
 import {
 	TooltipController,
 	TooltipDirectiveValue,
 	makeTooltipController,
 } from './tooltip-controller';
 
-const state = new WeakMap<HTMLElement | Component, TooltipController>();
+const state = new WeakMap<HTMLElement, TooltipController>();
 
 /**
  * Use the 'touchable' modifier to allow toggle usage for mobile.
