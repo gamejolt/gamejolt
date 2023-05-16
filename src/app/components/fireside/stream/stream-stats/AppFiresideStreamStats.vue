@@ -45,7 +45,11 @@ const props = defineProps({
 
 const { noAbs, hasTabSwitcher } = toRefs(props);
 
-const { rtc } = useFiresideController()!;
+const {
+	streamingHosts,
+	focusedHost,
+	isPersonallyStreaming,
+} = useFiresideController()!;
 
 const remoteVideoStats = shallowRef<{ [id: number]: any }>({});
 const localVideoStats = shallowRef<{ [k: string]: any }>({});
@@ -59,12 +63,10 @@ let statsInterval: NodeJS.Timer | null = null;
 
 const statType = ref<StatsType>('Video');
 
-const focusedUser = computed(() => rtc.value?.focusedUser);
-
 const tabs = computed(() => {
 	const result: StatsType[] = [];
 
-	const { hasVideo, hasDesktopAudio, hasMicAudio } = focusedUser.value || {};
+	const { hasVideo, hasDesktopAudio, hasMicAudio } = focusedHost.value || {};
 	if (hasVideo) {
 		result.push('Video');
 	}
@@ -88,11 +90,12 @@ watch(
 	{ deep: true }
 );
 
+const isLocalStream = computed(() =>
+	Boolean(focusedHost.value?.isMe && isPersonallyStreaming.value)
+);
+
 const stats = computed(() => {
-	const user = focusedUser.value;
-	const isLocal = user?.isLocal === true;
-	// TODO(fireside-producer-dashboard) pretty non-video stats
-	if (isLocal) {
+	if (isLocalStream.value) {
 		const uglyStats = Object.assign({}, localVideoStats.value);
 		const prettyStats: Record<string, any> = {};
 
@@ -113,10 +116,10 @@ const stats = computed(() => {
 	}
 
 	const stats: Record<string, any> = {
-		[`Members`]: rtc.value?.listableStreamingUsers.length ?? 0,
+		[`Members`]: streamingHosts.value.length || 0,
 	};
 
-	const focusedId = user?.userId;
+	const focusedId = focusedHost.value?.userId;
 	if (!focusedId) {
 		return stats;
 	}
@@ -128,21 +131,15 @@ const stats = computed(() => {
 
 	switch (type) {
 		case 'Video':
-			Object.assign(
-				stats,
-				isLocal ? localVideoStats.value : remoteVideoStats.value[focusedId]
-			);
+			Object.assign(stats, remoteVideoStats.value[focusedId]);
 			break;
 
 		case 'Desktop Audio':
-			Object.assign(
-				stats,
-				isLocal ? localDesktopAudioStats.value : remoteDesktopAudioStats.value[focusedId]
-			);
+			Object.assign(stats, remoteDesktopAudioStats.value[focusedId]);
 			break;
 
 		case 'Mic':
-			Object.assign(stats, isLocal ? localMicStats.value : remoteMicStats.value[focusedId]);
+			Object.assign(stats, remoteMicStats.value[focusedId]);
 			break;
 	}
 
@@ -183,7 +180,7 @@ function updateVideoStats() {
 
 <template>
 	<div class="fireside-stream-stats" :class="{ '-abs': !noAbs }">
-		<template v-if="!focusedUser?.isLocal">
+		<template v-if="!isLocalStream">
 			<div v-if="hasTabSwitcher" class="-tab-bar">
 				<a
 					v-for="option of tabs"

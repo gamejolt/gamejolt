@@ -73,11 +73,11 @@ const { hidePublishControls, showLoading } = toRefs(props);
 // The controller will never change.
 // eslint-disable-next-line vue/no-setup-props-destructure
 const {
-	rtc,
 	isShowingStreamSetup,
 	canBrowserSelectSpeakers,
 	shouldHideStreamVideoPreview,
 	gridChannel,
+	producer,
 } = props.c;
 
 const {
@@ -91,10 +91,6 @@ const {
 	speakersWasPrompted,
 	speakers,
 } = MediaDeviceService;
-
-// This could potentially get cleared out if the user loses their hosting
-// permissions in the middle of streaming.
-const producer = computed(() => rtc.value?.producer ?? undefined);
 
 const isStarting = ref(false);
 const isLoading = computed(() => isStarting.value || showLoading.value);
@@ -377,7 +373,7 @@ watch(
 		// is valid.
 		if ((isInvalidConfig.value && isPersonallyStreaming.value) || !_didDetectDevices) {
 			// TODO: show error status on the form model values that do not
-			// match with whats set on firesideHostRtc.
+			// match with whats set on fireside host.
 			return;
 		}
 

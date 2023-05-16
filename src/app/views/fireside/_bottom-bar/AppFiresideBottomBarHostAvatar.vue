@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { shade } from 'polished';
 import { computed, PropType, toRefs } from 'vue';
-import { FiresideRTCHost } from '../../../../_common/fireside/rtc/host';
-import { FiresideRTCProducer } from '../../../../_common/fireside/rtc/producer';
+import { FiresideHost } from '../../../../_common/fireside/rtc/host';
+import { FiresideProducer } from '../../../../_common/fireside/rtc/producer';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
@@ -12,7 +12,7 @@ const BandWidth = 3;
 
 const props = defineProps({
 	host: {
-		type: Object as PropType<FiresideRTCHost | FiresideRTCProducer>,
+		type: Object as PropType<FiresideHost | FiresideProducer>,
 		required: true,
 	},
 	fillParent: {
@@ -26,10 +26,10 @@ const props = defineProps({
 
 const { host } = toRefs(props);
 const { user } = useCommonStore();
-const { rtc } = useFiresideController()!;
+const { focusedHost } = useFiresideController()!;
 
 const padding = computed(() => {
-	if (!(host.value instanceof FiresideRTCHost)) {
+	if (!(host.value instanceof FiresideHost)) {
 		return '';
 	}
 
@@ -47,7 +47,7 @@ const padding = computed(() => {
 });
 
 const uid = computed(() => {
-	if (host.value instanceof FiresideRTCHost) {
+	if (host.value instanceof FiresideHost) {
 		return host.value.userId;
 	} else {
 		return undefined;
@@ -55,7 +55,7 @@ const uid = computed(() => {
 });
 
 const userModel = computed(() => {
-	if (host.value instanceof FiresideRTCHost) {
+	if (host.value instanceof FiresideHost) {
 		return host.value.userModel;
 	} else {
 		return user.value;
@@ -75,13 +75,9 @@ const imgColorTint = computed(() => {
 	}
 });
 
-const isActive = computed(() => {
-	if (!rtc.value || !rtc.value.focusedUser) {
-		return false;
-	}
-
-	return rtc.value.focusedUser.userId === uid.value;
-});
+const isActive = computed(() =>
+	focusedHost.value ? focusedHost.value.userId === uid.value : false
+);
 </script>
 
 <template>

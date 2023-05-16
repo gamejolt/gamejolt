@@ -76,7 +76,7 @@ export default class AppFiresideBadge extends Vue {
 	get canExpandPreview() {
 		// We want to react to showPreview changes. If showPreview is null,
 		// we'll probably never want to show the preview and shouldn't even let
-		// it connect to the RTC.
+		// it connect to the stream.
 		return this.showPreview !== null;
 	}
 

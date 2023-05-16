@@ -1,321 +1,331 @@
-import { Ref, reactive } from 'vue';
-import { CancelToken } from '../../../utils/cancel-token';
-import { debounce, sleep } from '../../../utils/utils';
-import { Fireside } from '../fireside.model';
-import {
-	FiresideRTCHost,
-	setDesktopAudioPlayState,
-	setMicAudioPlayState,
-	setVideoPlayState,
-	updateVolumeLevel,
-} from './host';
-import { FiresideRTCProducer, cleanupFiresideRTCProducer } from './producer';
+// export class FiresideRTC {
+// 	constructor(
+// 		public readonly fireside: Fireside,
+// 		public readonly userId: number | null,
+// 		public readonly listableHostIds: Set<number>,
+// 		{ isMuted }: Options
+// 	) {
+// 		this.isMuted = isMuted ?? false;
+// 	}
 
-export const FiresideRTCKey = Symbol();
+// 	readonly isMuted;
 
-type Options = { isMuted?: boolean };
+// 	generation = new CancelToken();
 
-export class FiresideRTC {
-	constructor(
-		public readonly fireside: Fireside,
-		public readonly userId: number | null,
-		public readonly listableHostIds: Set<number>,
-		{ isMuted }: Options
-	) {
-		this.isMuted = isMuted ?? false;
-	}
+// 	/**
+// 	 *  Safari keeps [AgoraRTC.onAutoplayFailed] looping, so I'm assigning
+// 	 *  to this to ensure we only trigger the failure callback once.
+// 	 */
+// 	_hasAutoplayError = false;
+// 	shouldShowMutedIndicator = false;
 
-	readonly isMuted;
+// 	/**
+// 	 * The list of {@link FiresideRTCHost}s that currently have an agora stream published.
+// 	 *
+// 	 * @deprecated
+// 	 */
+// 	readonly _remoteStreamingUsers: FiresideRTCHost[] = [];
+// 	focusedUser: FiresideRTCHost | null = null;
 
-	generation = new CancelToken();
+// 	videoPaused = false;
+// 	volumeLevelInterval: NodeJS.Timer | null = null;
+// 	shouldShowVideoThumbnails = false;
+// 	shouldShowVideoStats = false;
+// 	producer: FiresideRTCProducer | null = null;
 
-	/**
-	 *  Safari keeps [AgoraRTC.onAutoplayFailed] looping, so I'm assigning
-	 *  to this to ensure we only trigger the failure callback once.
-	 */
-	_hasAutoplayError = false;
-	shouldShowMutedIndicator = false;
+// 	setupFinalized = false;
+// 	finalizeSetupFn: (() => void) | null = null;
 
-	/**
-	 * The list of {@link FiresideRTCHost}s that currently have an agora stream published.
-	 *
-	 * @deprecated
-	 */
-	readonly _remoteStreamingUsers: FiresideRTCHost[] = [];
-	focusedUser: FiresideRTCHost | null = null;
+// 	log(message: any, ...optionalParams: any[]) {
+// 		console.log('[FIRESIDE-RTC] ' + message, ...optionalParams);
+// 	}
 
-	videoPaused = false;
-	volumeLevelInterval: NodeJS.Timer | null = null;
-	shouldShowVideoThumbnails = false;
-	shouldShowVideoStats = false;
-	producer: FiresideRTCProducer | null = null;
+// 	logWarning(message: any, ...optionalParams: any[]) {
+// 		console.warn('[FIRESIDE-RTC] ' + message, ...optionalParams);
+// 	}
 
-	setupFinalized = false;
-	finalizeSetupFn: (() => void) | null = null;
+// 	logError(message: any, ...optionalParams: any[]) {
+// 		console.error('[FIRESIDE-RTC] ' + message, ...optionalParams);
+// 	}
 
-	log(message: any, ...optionalParams: any[]) {
-		console.log('[FIRESIDE-RTC] ' + message, ...optionalParams);
-	}
+// 	/**
+// 	 * The local {@link FiresideRTCHost} if they're currently streaming.
+// 	 */
+// 	localUser: FiresideRTCHost | null = null;
 
-	logWarning(message: any, ...optionalParams: any[]) {
-		console.warn('[FIRESIDE-RTC] ' + message, ...optionalParams);
-	}
+// 	get role() {
+// 		return this.fireside.role;
+// 	}
 
-	logError(message: any, ...optionalParams: any[]) {
-		console.error('[FIRESIDE-RTC] ' + message, ...optionalParams);
-	}
+// 	/**
+// 	 * Remote users + the local user prepended if it is set.
+// 	 * Note: the local user is set if they are currently streaming.
+// 	 *
+// 	 * @deprecated
+// 	 */
+// 	get _allStreamingUsers() {
+// 		// If we are streaming from a different tab then we will already have a
+// 		// remote user correlating to the same gj user our local user correlates
+// 		// to.
+// 		return this.localUser
+// 			? [this.localUser, ...this._remoteStreamingUsers]
+// 			: [...this._remoteStreamingUsers];
+// 	}
 
-	/**
-	 * The local {@link FiresideRTCHost} if they're currently streaming.
-	 */
-	localUser: FiresideRTCHost | null = null;
+// 	/**
+// 	 * @deprecated
+// 	 */
+// 	get listableStreamingUsers() {
+// 		return this._allStreamingUsers.filter(rtcUser => rtcUser.isListed);
+// 	}
 
-	get role() {
-		return this.fireside.role;
-	}
+// 	/**
+// 	 * If the current user is currently streaming in this fireside. This will
+// 	 * only return valid data once everything gets subscribed to.
+// 	 */
+// 	get isPersonallyStreaming() {
+// 		return this.localUser !== null;
+// 	}
 
-	/**
-	 * Remote users + the local user prepended if it is set.
-	 * Note: the local user is set if they are currently streaming.
-	 *
-	 * @deprecated
-	 */
-	get _allStreamingUsers() {
-		// If we are streaming from a different tab then we will already have a
-		// remote user correlating to the same gj user our local user correlates
-		// to.
-		return this.localUser
-			? [this.localUser, ...this._remoteStreamingUsers]
-			: [...this._remoteStreamingUsers];
-	}
+// 	get isFocusingMe() {
+// 		return (
+// 			!!this.focusedUser &&
+// 			!!this.localUser &&
+// 			this.focusedUser.userId === this.localUser.userId
+// 		);
+// 	}
+// }
 
-	/**
-	 * @deprecated
-	 */
-	get listableStreamingUsers() {
-		return this._allStreamingUsers.filter(rtcUser => rtcUser.isListed);
-	}
+// /**
+//  * Basically a mixin. Will be used to extend the {@link FiresideController} with
+//  * RTC functionality.
+//  */
+// export function createRTCForFireside(options: {
+// 	fireside: Fireside;
+// 	// agoraStreamingInfo: AgoraStreamingInfo,
+// 	// listableHostIds: Ref<Set<number>>,
+// 	// hostBackgrounds: Ref<Map<number, Background>>,
+// 	hosts: Ref<FiresideRTCHost[]>;
+// 	isMuted: boolean;
+// }) {
+// 	const { fireside, hosts } = options;
+// 	const isMuted = ref(options.isMuted || false);
 
-	/**
-	 * If the current user is currently streaming in this fireside. This will
-	 * only return valid data once everything gets subscribed to.
-	 */
-	get isPersonallyStreaming() {
-		return this.localUser !== null;
-	}
+// 	const generation = ref(new CancelToken());
 
-	get isFocusingMe() {
-		return (
-			!!this.focusedUser &&
-			!!this.localUser &&
-			this.focusedUser.userId === this.localUser.userId
-		);
-	}
-}
+// 	/**
+// 	 *  Safari keeps [AgoraRTC.onAutoplayFailed] looping, so I'm assigning
+// 	 *  to this to ensure we only trigger the failure callback once.
+// 	 */
+// 	const _hasAutoplayError = ref(false);
+// 	const shouldShowMutedIndicator = ref(false);
 
-export function createFiresideRTC(
-	fireside: Fireside,
-	userId: number | null,
-	// agoraStreamingInfo: AgoraStreamingInfo,
-	listableHostIds: Ref<Set<number>>,
-	// hostBackgrounds: Ref<Map<number, Background>>,
-	options: Options = {}
-) {
-	const rtc = reactive(
-		new FiresideRTC(
-			fireside,
-			userId,
-			// agoraStreamingInfo.appId,
-			// agoraStreamingInfo.streamingUid,
-			// agoraStreamingInfo.videoChannelName,
-			// agoraStreamingInfo.videoToken,
-			// agoraStreamingInfo.chatChannelName,
-			// agoraStreamingInfo.chatToken,
-			// Stop typescript from complaining about Vue types.
-			//
-			// `reactive` will unwrap refs, but the type is still technically
-			// wrong until the class is constructed and `reactive` can unwrap
-			// the fields.
-			listableHostIds as unknown as Set<number>,
-			// hostBackgrounds as unknown as Map<number, Background>,
-			options
-		)
-	) as FiresideRTC;
+// 	/**
+// 	 * The list of {@link FiresideRTCHost}s that currently have an agora stream published.
+// 	 *
+// 	 * @deprecated
+// 	 */
+// 	const _remoteStreamingUsers = ref([]) as Ref<FiresideRTCHost[]>;
+// 	const focusedUser = ref(null) as Ref<FiresideRTCHost | null>;
 
-	_setup(rtc);
-	return rtc;
-}
+// 	const videoPaused = ref(false);
+// 	const volumeLevelInterval = ref(null) as Ref<NodeJS.Timer | null>;
+// 	const shouldShowVideoThumbnails = ref(false);
+// 	const shouldShowVideoStats = ref(false);
+// 	const producer = shallowRef<FiresideRTCProducer | null>(null);
 
-export async function destroyFiresideRTC(rtc: FiresideRTC) {
-	rtc.log('Trace(destroy)');
+// 	const setupFinalized = ref(false);
+// 	const finalizeSetupFn = shallowRef<(() => void) | null>(null);
 
-	// Don't assign a new one so that we stay in a canceled state.
-	rtc.generation.cancel();
+// 	function log(message: any, ...optionalParams: any[]) {
+// 		console.log('[FIRESIDE-RTC] ' + message, ...optionalParams);
+// 	}
 
-	const wasStreaming = !!rtc.producer?.isStreaming.value;
-	if (rtc.producer) {
-		// TODO(oven)
-		// if (wasStreaming) {
-		// 	// cleanupFiresideRTCProducer does not call stopStreaming,
-		// 	// so some teardown logic needs to be done here.
-		// 	// The actual streams are closed and destroyed later in this function.
-		// 	updateSetIsStreaming(rtc.producer, { isStreaming: false });
-		// }
+// 	function logWarning(message: any, ...optionalParams: any[]) {
+// 		console.warn('[FIRESIDE-RTC] ' + message, ...optionalParams);
+// 	}
 
-		cleanupFiresideRTCProducer(rtc.producer);
-		rtc.producer = null;
-	}
+// 	function logError(message: any, ...optionalParams: any[]) {
+// 		console.error('[FIRESIDE-RTC] ' + message, ...optionalParams);
+// 	}
 
-	try {
-		await Promise.all(
-			rtc._allStreamingUsers.map(user =>
-				Promise.all([
-					setVideoPlayState(user, false),
-					setDesktopAudioPlayState(user, false),
-					setMicAudioPlayState(user, false),
-				])
-			)
-		);
-	} catch (e) {
-		rtc.logWarning('Error while stopping playback. Ignoring.');
-		rtc.logWarning(e);
-	}
+// 	/**
+// 	 * The local {@link FiresideRTCHost} if they're currently streaming.
+// 	 */
+// 	const localUser = ref(null) as Ref<FiresideRTCHost | null>;
 
-	// const { videoChannel, chatChannel } = rtc;
-	// try {
-	// 	await Promise.all([destroyChannel(videoChannel), destroyChannel(chatChannel)]);
-	// } catch (e) {
-	// 	rtc.logError(`Failed to destroy the Fireside RTC. Reloading...`, e);
-	// 	// reload the page, anything we do now is no longer reliable.
-	// 	Navigate.reload();
-	// 	return;
-	// }
+// 	const role = computed(() => fireside.role);
 
-	if (rtc.volumeLevelInterval !== null) {
-		clearInterval(rtc.volumeLevelInterval);
-		rtc.volumeLevelInterval = null;
-	}
+// 	/**
+// 	 * Remote users + the local user prepended if it is set.
+// 	 * Note: the local user is set if they are currently streaming.
+// 	 *
+// 	 * @deprecated
+// 	 */
+// 	const _allStreamingUsers = computed(() => {
+// 		// If we are streaming from a different tab then we will already have a
+// 		// remote user correlating to the same gj user our local user correlates
+// 		// to.
+// 		return localUser.value
+// 			? [localUser.value, ..._remoteStreamingUsers.value]
+// 			: [..._remoteStreamingUsers.value];
+// 	});
 
-	rtc.focusedUser = null;
-}
+// 	/**
+// 	 * @deprecated
+// 	 */
+// 	const listableStreamingUsers = computed(() => {
+// 		return _allStreamingUsers.value;
+// 	});
 
-async function _recreateFiresideRTC(rtc: FiresideRTC) {
-	rtc.log('Trace(recreate)');
-	await destroyFiresideRTC(rtc);
-	return _setup(rtc);
-}
+// 	/**
+// 	 * If the current user is currently streaming in this fireside. This will
+// 	 * only return valid data once everything gets subscribed to.
+// 	 */
+// 	const isPersonallyStreaming = computed(() => {
+// 		return localUser.value !== null;
+// 	});
 
-export function setListableHostIds(rtc: FiresideRTC, listableHostIds: Set<number>) {
-	rtc.listableHostIds.clear();
-	for (const id of listableHostIds) {
-		rtc.listableHostIds.add(id);
-	}
-}
+// 	const isFocusingMe = computed(() => {
+// 		return (
+// 			!!focusedUser.value &&
+// 			!!localUser.value &&
+// 			focusedUser.value.userId === localUser.value.userId
+// 		);
+// 	});
 
-/**
- * Renews specifically for audience tokens. If they're a host, this will
- * essentially be ignored.
- */
-export async function applyAudienceRTCTokens(
-	rtc: FiresideRTC,
-	videoToken: string,
-	chatToken: string
-) {
-	if (rtc.role?.canStream) {
-		return;
-	}
+// 	return shallowReadonly({
+// 		isMuted,
+// 		generation,
+// 		_hasAutoplayError,
+// 		shouldShowMutedIndicator,
+// 		_remoteStreamingUsers,
+// 		focusedUser,
+// 		videoPaused,
+// 		volumeLevelInterval,
+// 		shouldShowVideoThumbnails,
+// 		shouldShowVideoStats,
+// 		producer,
+// 		setupFinalized,
+// 		finalizeSetupFn,
+// 		log,
+// 		logWarning,
+// 		logError,
+// 		localUser,
+// 		role,
+// 		_allStreamingUsers,
+// 		listableStreamingUsers,
+// 		isPersonallyStreaming,
+// 		isFocusingMe,
+// 	});
 
-	return await applyRTCTokens(rtc, videoToken, chatToken);
-}
+// 	// const rtc = reactive(
+// 	// 	new FiresideRTC(
+// 	// 		fireside,
+// 	// 		userId,
+// 	// 		// agoraStreamingInfo.appId,
+// 	// 		// agoraStreamingInfo.streamingUid,
+// 	// 		// agoraStreamingInfo.videoChannelName,
+// 	// 		// agoraStreamingInfo.videoToken,
+// 	// 		// agoraStreamingInfo.chatChannelName,
+// 	// 		// agoraStreamingInfo.chatToken,
+// 	// 		// Stop typescript from complaining about Vue types.
+// 	// 		//
+// 	// 		// `reactive` will unwrap refs, but the type is still technically
+// 	// 		// wrong until the class is constructed and `reactive` can unwrap
+// 	// 		// the fields.
+// 	// 		listableHostIds as unknown as Set<number>,
+// 	// 		// hostBackgrounds as unknown as Map<number, Background>,
+// 	// 		options
+// 	// 	)
+// 	// ) as FiresideRTC;
+// }
 
-/**
- * These tokens may either be audience tokens or host streaming tokens.
- */
-export async function applyRTCTokens(rtc: FiresideRTC, videoToken: string, chatToken: string) {
-	rtc.log('Trace(renewToken)');
+// export async function destroyFiresideRTC(rtc: FiresideRTC) {
+// 	rtc.log('Trace(destroy)');
 
-	rtc.log(`Renewing tokens.`);
-	rtc.videoToken = videoToken;
-	rtc.chatToken = chatToken;
+// 	// Don't assign a new one so that we stay in a canceled state.
+// 	rtc.generation.cancel();
 
-	// TODO(oven): do we need this? should we do it another way?
-	// const isVideoDisconnected = rtc.videoChannel.isDisconnected;
-	// const isAudioDisconnected = rtc.chatChannel.isDisconnected;
+// 	const wasStreaming = !!rtc.producer?.isStreaming.value;
+// 	if (rtc.producer) {
+// 		// TODO(oven)
+// 		// if (wasStreaming) {
+// 		// 	// cleanupFiresideRTCProducer does not call stopStreaming,
+// 		// 	// so some teardown logic needs to be done here.
+// 		// 	// The actual streams are closed and destroyed later in this function.
+// 		// 	updateSetIsStreaming(rtc.producer, { isStreaming: false });
+// 		// }
 
-	// // If only one of the clients is fully disconnected, just nuke em both and retry.
-	// if (isVideoDisconnected !== isAudioDisconnected) {
-	// 	rtc.logError(
-	// 		`Only one of the clients (video or audio) is connected. Recreating both to get them in sync`
-	// 	);
-	// 	_recreateFiresideRTC(rtc);
-	// 	return;
-	// }
+// 		cleanupFiresideRTCProducer(rtc.producer);
+// 		rtc.producer = null;
+// 	}
 
-	// if (isVideoDisconnected || isAudioDisconnected) {
-	// 	rtc.log(`Got new tokens. Applying by joining...`);
-	// 	await _join(rtc);
-	// } else {
-	// 	rtc.log(`Got new tokens. Applying by renewing...`);
-	// 	await Promise.all([
-	// 		setChannelToken(rtc.videoChannel, videoToken),
-	// 		setChannelToken(rtc.chatChannel, chatToken),
-	// 	]);
-	// }
-}
+// 	try {
+// 		await Promise.all(
+// 			rtc._allStreamingUsers.map(user =>
+// 				Promise.all([
+// 					setVideoPlayState(user, false),
+// 					setDesktopAudioPlayState(user, false),
+// 					setMicAudioPlayState(user, false),
+// 				])
+// 			)
+// 		);
+// 	} catch (e) {
+// 		rtc.logWarning('Error while stopping playback. Ignoring.');
+// 		rtc.logWarning(e);
+// 	}
 
-async function _setup(rtc: FiresideRTC) {
-	rtc.log('Trace(setup)');
+// 	// const { videoChannel, chatChannel } = rtc;
+// 	// try {
+// 	// 	await Promise.all([destroyChannel(videoChannel), destroyChannel(chatChannel)]);
+// 	// } catch (e) {
+// 	// 	rtc.logError(`Failed to destroy the Fireside RTC. Reloading...`, e);
+// 	// 	// reload the page, anything we do now is no longer reliable.
+// 	// 	Navigate.reload();
+// 	// 	return;
+// 	// }
 
-	const gen = new CancelToken();
-	rtc.generation.cancel();
-	rtc.generation = gen;
+// 	if (rtc.volumeLevelInterval !== null) {
+// 		clearInterval(rtc.volumeLevelInterval);
+// 		rtc.volumeLevelInterval = null;
+// 	}
 
-	for (let i = 0; i < 5; i++) {
-		try {
-			await _join(rtc);
-			break;
-		} catch (e) {
-			rtc.logError('Failed to join');
-			rtc.logError(e);
-			await sleep(2000);
-			gen.assert();
-			rtc.log('Retrying...');
-		}
-	}
-}
+// 	rtc.focusedUser = null;
+// }
 
-/**
- * Before doing some stuff (like choosing the best initial stream to show) we
- * want some of the system to initialize (subscribe to hosts and stuff). This
- * allows us to do a sort of delayed setup.
- */
-function _finalizeSetup(rtc: FiresideRTC) {
-	if (rtc.setupFinalized) {
-		// Run the debounced finalizeSetupFn again if the focusedUser doesn't
-		// exist or match any of our current hosts.
-		if (!rtc.focusedUser && rtc.finalizeSetupFn) {
-			rtc.finalizeSetupFn?.();
-		}
-		return;
-	}
+// /**
+//  * Before doing some stuff (like choosing the best initial stream to show) we
+//  * want some of the system to initialize (subscribe to hosts and stuff). This
+//  * allows us to do a sort of delayed setup.
+//  */
+// function _finalizeSetup(rtc: FiresideRTC) {
+// 	if (rtc.setupFinalized) {
+// 		// Run the debounced finalizeSetupFn again if the focusedUser doesn't
+// 		// exist or match any of our current hosts.
+// 		if (!rtc.focusedUser && rtc.finalizeSetupFn) {
+// 			rtc.finalizeSetupFn?.();
+// 		}
+// 		return;
+// 	}
 
-	rtc.finalizeSetupFn ??= debounce(() => {
-		// We dont want side effects from canceled rtc instances.
-		if (rtc.generation.isCanceled) {
-			return;
-		}
+// 	rtc.finalizeSetupFn ??= debounce(() => {
+// 		// We dont want side effects from canceled rtc instances.
+// 		if (rtc.generation.isCanceled) {
+// 			return;
+// 		}
 
-		chooseFocusedRTCUser(rtc);
+// 		chooseFocusedRTCUser(rtc);
 
-		if (!rtc.setupFinalized) {
-			rtc.setupFinalized = true;
-			rtc.log(`Setup finalized.`);
-		}
-	}, 500);
+// 		if (!rtc.setupFinalized) {
+// 			rtc.setupFinalized = true;
+// 			rtc.log(`Setup finalized.`);
+// 		}
+// 	}, 500);
 
-	rtc.log(`Debouncing finalize setup.`);
-	rtc.finalizeSetupFn?.();
-}
+// 	rtc.log(`Debouncing finalize setup.`);
+// 	rtc.finalizeSetupFn?.();
+// }
 
 // function _createChannels(rtc: FiresideRTC) {
 // 	rtc.log('Trace(createChannels)');
@@ -469,50 +479,34 @@ function _finalizeSetup(rtc: FiresideRTC) {
 // 	});
 // }
 
-async function _join(rtc: FiresideRTC) {
-	rtc.log('Trace(join)');
+// export function chooseFocusedRTCUser(rtc: FiresideRTC) {
+// 	// We only choose a new focused user if the current one is unset or is unlisted.
+// 	if (rtc.focusedUser) {
+// 		return;
+// 	}
 
-	// TODO(oven)
-	// await Promise.all([
-	// 	joinChannel(rtc.videoChannel, rtc.videoToken),
-	// 	joinChannel(rtc.chatChannel, rtc.chatToken),
-	// ]);
-}
+// 	let bestUser: FiresideHost | null = null;
+// 	let bestScore = -1;
 
-export function chooseFocusedRTCUser(rtc: FiresideRTC) {
-	// We only choose a new focused user if the current one is unset or is unlisted.
-	if (rtc.focusedUser) {
-		// Unfocus an unlisted focused user.
-		// TODO(big-pp-event) check that this works.
-		if (!rtc.focusedUser.isListed) {
-			rtc.focusedUser = null;
-		} else {
-			return;
-		}
-	}
+// 	for (const user of rtc.listableStreamingUsers) {
+// 		const score =
+// 			(user.hasVideo ? 4 : 0) + (user.hasMicAudio ? 2 : 0) + (user.hasDesktopAudio ? 1 : 0);
+// 		if (score > bestScore) {
+// 			bestUser = user;
+// 			bestScore = score;
+// 		}
+// 	}
 
-	let bestUser: FiresideRTCHost | null = null;
-	let bestScore = -1;
+// 	rtc.focusedUser = bestUser;
+// }
 
-	for (const user of rtc.listableStreamingUsers) {
-		const score =
-			(user.hasVideo ? 4 : 0) + (user.hasMicAudio ? 2 : 0) + (user.hasDesktopAudio ? 1 : 0);
-		if (score > bestScore) {
-			bestUser = user;
-			bestScore = score;
-		}
-	}
-
-	rtc.focusedUser = bestUser;
-}
-
-function _updateVolumeLevels(rtc: FiresideRTC) {
-	/**
-	 * Checking against {@link rtc._allStreamingUsers} which includes the local
-	 * user. Change to {@link rtc._remoteStreamingUsers} if we want to disable
-	 * host thumb indicators for self.
-	 */
-	for (const user of rtc._allStreamingUsers) {
-		updateVolumeLevel(user);
-	}
-}
+// function _updateVolumeLevels(rtc: FiresideRTC) {
+// 	/**
+// 	 * Checking against {@link rtc._allStreamingUsers} which includes the local
+// 	 * user. Change to {@link rtc._remoteStreamingUsers} if we want to disable
+// 	 * host thumb indicators for self.
+// 	 */
+// 	for (const user of rtc._allStreamingUsers) {
+// 		updateVolumeLevel(user);
+// 	}
+// }

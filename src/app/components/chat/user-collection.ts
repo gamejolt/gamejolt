@@ -1,5 +1,5 @@
 import { inject, InjectionKey, provide, toRaw } from 'vue';
-import { FiresideRTCHost } from '../../../_common/fireside/rtc/host';
+import { FiresideHost } from '../../../_common/fireside/rtc/host';
 import { storeModel } from '../../../_common/model/model-store.service';
 import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
 import { ChatClient, isUserOnline } from './client';
@@ -30,7 +30,7 @@ export class ChatUserCollection {
 	private _byId = new Map<number, ChatUser>();
 	private _byRoomId = new Map<number, ChatUser>();
 	private _doingWork = false;
-	private _firesideHosts = new Map<number, FiresideRTCHost>();
+	private _firesideHosts = new Map<number, FiresideHost>();
 
 	get count() {
 		return this._users.length;
@@ -105,7 +105,7 @@ export class ChatUserCollection {
 		return this._byRoomId.get(roomId);
 	}
 
-	getFiresideHost(input: number | ChatUser): FiresideRTCHost | undefined {
+	getFiresideHost(input: number | ChatUser): FiresideHost | undefined {
 		const userId = typeof input === 'number' ? input : input.id;
 		return this._firesideHosts.get(userId);
 	}
@@ -152,7 +152,7 @@ export class ChatUserCollection {
 	}
 
 	// TODO(oven)?
-	assignFiresideHostData(data: FiresideRTCHost[]) {
+	assignFiresideHostData(data: FiresideHost[]) {
 		this.doBatchWork(() => {
 			this._firesideHosts.clear();
 
@@ -300,7 +300,7 @@ const SortingGroup = {
 
 function _getSortingGroupIndex(
 	user: ChatUser | null | undefined,
-	firesideHost: FiresideRTCHost | undefined
+	firesideHost: FiresideHost | undefined
 ): keyof typeof SortingGroup {
 	if (!user) {
 		return 'user';

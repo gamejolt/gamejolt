@@ -1,13 +1,22 @@
 import OvenLiveKitStatic, { OvenLiveKitCodec } from 'ovenlivekit';
 import { markRaw, ref, shallowReadonly, shallowRef } from 'vue';
+import { createLogger } from '../../../utils/logging';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { $gettext } from '../../translate/translate.service';
 import { VolumeMonitor, createVolumeMonitor } from '../volume-monitor';
-import { FiresideRTC } from './rtc';
+import { FiresideHost } from './host';
 
-export type FiresideRTCProducerKit = ReturnType<typeof createFiresideRTCProducerKit>;
+export type FiresideProducerKit = ReturnType<typeof createFiresideProducerKit>;
 
-export function createFiresideRTCProducerKit(rtc: FiresideRTC, streamType: 'video' | 'chat') {
+export function createFiresideProducerKit({
+	streamType,
+	host,
+}: {
+	streamType: 'video' | 'chat';
+	host: FiresideHost;
+}) {
+	const logger = createLogger('Fireside Producer Kit');
+
 	const ovenClient = OvenLiveKitStatic.create({
 		callbacks: {
 			error: error => console.error(error),
@@ -28,19 +37,20 @@ export function createFiresideRTCProducerKit(rtc: FiresideRTC, streamType: 'vide
 	const isConnected = ref(false);
 
 	return shallowReadonly({
-		rtc,
 		streamType,
+		host,
 		ovenClient,
 		localStream,
 		volumeMonitor,
 		isConnected,
+		logger,
 	});
 }
 
-export async function destroyFiresideRTCProducerKit({
+export async function destroyFiresideProducerKit({
 	volumeMonitor,
 	isConnected,
-}: FiresideRTCProducerKit) {
+}: FiresideProducerKit) {
 	await volumeMonitor.value?.close();
 	volumeMonitor.value = null;
 
@@ -51,7 +61,7 @@ export async function destroyFiresideRTCProducerKit({
 }
 
 export async function setKitMediaStream(
-	kit: FiresideRTCProducerKit,
+	{ ovenClient, localStream, volumeMonitor, logger }: FiresideProducerKit,
 	{
 		streamBuilder,
 		onStreamClose,
@@ -60,11 +70,8 @@ export async function setKitMediaStream(
 		onStreamClose?: () => Promise<void>;
 	}
 ) {
-	const { ovenClient, rtc, localStream, volumeMonitor } = kit;
-	const generation = rtc.generation;
-
 	if (localStream.value !== null) {
-		rtc.log(`Local stream already exists.`);
+		logger.info(`Local stream already exists.`);
 
 		// Stop monitoring the volume.
 		await volumeMonitor.value?.close();
@@ -84,7 +91,7 @@ export async function setKitMediaStream(
 		await onStreamClose?.();
 	}
 
-	rtc.log(`Getting new stream.`);
+	logger.info(`Getting new stream.`);
 	let newStream: MediaStream | null = null;
 	try {
 		newStream = await streamBuilder();
@@ -94,8 +101,6 @@ export async function setKitMediaStream(
 		});
 		return;
 	}
-
-	generation.assert();
 
 	localStream.value = newStream ? markRaw(newStream) : null;
 
@@ -113,18 +118,17 @@ export async function setKitMediaStream(
 	// 	rtc.log(`Publishing new video track.`);
 	// 	await agoraClient.publish(localStream.value);
 	// }
-
-	generation.assert();
 }
 
 export function startKitStreaming({
+	host,
 	ovenClient,
 	streamType,
 	localStream,
-	rtc,
-}: FiresideRTCProducerKit) {
+	logger,
+}: FiresideProducerKit) {
 	if (!localStream.value) {
-		rtc.log('No local stream to start streaming with. Skipping.');
+		logger.info('No local stream to start streaming with. Skipping.');
 		return;
 	}
 
@@ -140,17 +144,17 @@ export function startKitStreaming({
 
 		if (key === 'bitrate') {
 			bitrate = parseInt(value) || bitrate;
-			rtc.log(`Override bitrate: ${bitrate}`);
+			logger.info(`Override bitrate: ${bitrate}`);
 		} else if (key === 'codec' && ['VP8', 'H264'].includes(value)) {
 			codec = value as OvenLiveKitCodec;
-			rtc.log(`Override codec: ${codec}`);
+			logger.info(`Override codec: ${codec}`);
 		}
 	}
 
 	const [connectionUrl, connectionConfig] =
 		streamType === 'video'
 			? [
-					`wss://stream-origin-01.development.gamejolt.com:3334/video/${rtc.userId}?direction=send&transport=tcp`,
+					`wss://stream-origin-01.development.gamejolt.com:3334/video/${host.userId}?direction=send&transport=tcp`,
 					{
 						// iceServers: null,
 						// iceTransportPolicy: null,
@@ -159,7 +163,7 @@ export function startKitStreaming({
 					},
 			  ]
 			: [
-					`wss://stream-origin-01.development.gamejolt.com:3334/chat/${rtc.userId}?direction=send&transport=tcp`,
+					`wss://stream-origin-01.development.gamejolt.com:3334/chat/${host.userId}?direction=send&transport=tcp`,
 					{
 						// iceServers: null,
 						// iceTransportPolicy: null,
@@ -169,6 +173,6 @@ export function startKitStreaming({
 	ovenClient.startStreaming(connectionUrl, connectionConfig);
 }
 
-export function stopKitStreaming({ ovenClient }: FiresideRTCProducerKit) {
+export function stopKitStreaming({ ovenClient }: FiresideProducerKit) {
 	ovenClient.stopStreaming();
 }

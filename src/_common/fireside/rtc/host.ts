@@ -1,11 +1,11 @@
 import { OvenPlayer } from 'ovenplayer';
 import { WatchStopHandle, reactive, toRaw, watch } from 'vue';
 import type { FiresideController } from '../../../app/components/fireside/controller/controller';
+import { chooseFocusedHost } from '../../../app/components/fireside/controller/controller';
 import { arrayRemove } from '../../../utils/array';
 import { Background } from '../../background/background.model';
 import { User } from '../../user/user.model';
 import { Fireside } from '../fireside.model';
-import { FiresideRTC, chooseFocusedRTCUser } from './rtc';
 
 export type FiresideVideoQuality = 'low' | 'high';
 export type FiresideVideoFit = 'cover' | 'contain' | 'fill' | undefined;
@@ -20,16 +20,18 @@ export class FiresideVideoLock {
 }
 
 /**
- * This is a user in the FiresideRTC. It can be the local user or a remote user.
+ * This is a host in the fireside. They can be streaming or not. It's basically
+ * anyone with permissions.
  */
-export class FiresideRTCHost {
-	constructor(
-		public readonly rtc: FiresideRTC,
-		public readonly userId: number,
-		public readonly isLocal: boolean
-	) {
-		this.micAudioPlayState = rtc.isMuted;
+export class FiresideHost {
+	constructor(options: { userId: number; isMe: boolean; isMuted: boolean }) {
+		this.userId = options.userId;
+		this.isMe = options.isMe;
+		this.micAudioPlayState = options.isMuted;
 	}
+
+	public readonly userId: number;
+	public readonly isMe: boolean;
 
 	/**
 	 * **Only assigned for remote users.** Holds the OvenPlayer instance for the
@@ -100,12 +102,7 @@ export class FiresideRTCHost {
 	 */
 	desktopPlaybackVolumeLevel = 0.75;
 
-	_unwatchIsListed: WatchStopHandle | null = null;
 	_unwatchPrefableFields: WatchStopHandle | null = null;
-
-	get isRemote() {
-		return !this.isLocal;
-	}
 
 	get isLive() {
 		return this.hasDesktopAudio || this.hasMicAudio || this.hasVideo;
@@ -128,126 +125,21 @@ export class FiresideRTCHost {
 	get currentVideoLock() {
 		return this.videoLocks.length > 0 ? this.videoLocks[this.videoLocks.length - 1] : null;
 	}
-
-	// TODO(oven): check this
-	get isListed() {
-		// Local user is always listable.
-		if (this.isLocal) {
-			return true;
-		}
-
-		// If you're able to stream you should be able to see the other
-		// streamers always.
-		//
-		// TODO(unlisted-fireside-hosts) its better to solve this in backend by
-		// syncing listable host ids.
-		if (this.rtc.fireside.role?.canStream) {
-			return true;
-		}
-
-		// If the host is not unlisted at all we can early out.
-		if (!this.needsPermissionToView) {
-			return true;
-		}
-
-		// Our own user is never unlisted.
-		if (this.userId === this.rtc.userId) {
-			return true;
-		}
-
-		// If the host isn't explicitly listable, we want to treat it as if they
-		// were unlistable to avoid showing a stream for a host we simply did
-		// not receive the listable hosts for in time.
-		return this.rtc.listableHostIds.has(this.userId);
-	}
 }
 
-function _createRemoteFiresideRTCHost(rtc: FiresideRTC, data: any) {
-	const user = reactive(new FiresideRTCHost(rtc, data.user_id, false)) as FiresideRTCHost;
+export function syncFiresideHost(controller: FiresideController, userId: number, data: any) {
+	const { logger, hosts } = controller;
+	logger.info('Syncing fireside host', userId, data);
 
-	user._unwatchIsListed = watch(
-		() => user.isListed,
-		(isListed, wasListed) => {
-			rtc.log(
-				`${_userIdForLog(user)} -> isListed transitioned from ${
-					wasListed ? 'true' : 'false'
-				} to ${isListed ? 'true' : 'false'}`
-			);
-
-			// TODO(oven): question I have, does initializing the user with the
-			// saved prefs do similar things to the below code?
-
-			// if (!isListed) {
-			// 	_stopMicAudioPlayback(user);
-			// 	return;
-			// }
-
-			// // Find all other remote users.
-			// const otherUsers = rtc.listableStreamingUsers.filter(
-			// 	i => !i.isLocal && i.userId !== userId
-			// );
-			// const isOnlyUser = otherUsers.length === 0;
-
-			// if (isOnlyUser) {
-			// 	// If this is the only user, we can safely start our playback.
-			// 	_startMicAudioPlayback(user);
-			// } else if (otherUsers.every(i => i.remoteMicAudioMuted)) {
-			// 	// Mute this user if all other listed users are muted.
-			// 	_stopMicAudioPlayback(user);
-			// } else {
-			// 	// If any listed users are unmuted, unmute ourselves when
-			// 	// becoming listed.
-			// 	_startMicAudioPlayback(user);
-			// }
-		}
-	);
-
-	user._unwatchPrefableFields = watch(
-		() => [
-			user.micAudioPlayState,
-			user.desktopAudioPlayState,
-			// These should be done in their respective scrubbers so we don't
-			// trigger events crazy often.
-			//
-			// user.micPlaybackVolumeLevel,
-			// user.desktopPlaybackVolumeLevel,
-		],
-		() => {
-			saveFiresideRTCHostPrefs(user);
-		}
-	);
-
-	return user;
-}
-
-export function createLocalFiresideRTCHost(rtc: FiresideRTC, userId: number) {
-	return reactive(new FiresideRTCHost(rtc, userId, true)) as FiresideRTCHost;
-}
-
-export function syncRTCHost(controller: FiresideController, userId: number, data: any) {
-	const rtc = controller.rtc.value!;
-
-	rtc.log('Syncing fireside host', userId, data);
-
-	// // We are checking _allStreamingUsers here just as a safeguard against Agora.
-	// // if we don't use _allStreamingUsers we'll end up inserting the local user
-	// // into _remoteStreamingUsers.
-	// let host = rtc._allStreamingUsers.find(i => i.userId === userId);
-
-	let host = controller.hosts.value.find(i => i.userId === userId);
+	let host = hosts.value.find(i => i.userId === userId);
 
 	let wasNew = false;
 	if (!host) {
-		host = _createRemoteFiresideRTCHost(rtc, data);
+		host = _createFiresideHost(controller, data);
 		wasNew = true;
-	} else if (host.isLocal) {
-		throw new Error('Expected to be handling remote users here');
 	}
 
-	if (!host) {
-		rtc.logWarning(`Couldn't find remote user locally`, userId);
-		return;
-	}
+	const wasLive = host.isLive;
 
 	// TODO(oven): this is actually a chat user model coming in
 	host.userModel = new User(data.user);
@@ -257,88 +149,90 @@ export function syncRTCHost(controller: FiresideController, userId: number, data
 	host.hasVideo = data.is_streaming_video;
 
 	if (wasNew) {
-		controller.hosts.value.push(host);
-		initRemoteFiresideRTCHostPrefs(host);
+		hosts.value.push(host);
+		_initRemoteHostPrefs(controller, host);
 	}
 
-	// TODO(oven)
-	// user.remoteVideoUser = markRaw(remoteUser);
+	// TODO(oven): when they stop streaming, we may want to consider them
+	// offline so that prefable watchers get destroyed.
 
-	// if (mediaType === 'video') {
-	// 	setUserHasVideo(user, true);
-	// } else {
-	// 	setUserHasDesktopAudio(user, true);
-	// }
-
-	// TODO(oven): call finalize
-	// _finalizeSetup(rtc);
+	// If the host went live or offline, we need to re-choose the focused host.
+	if (wasLive !== host.isLive) {
+		chooseFocusedHost(controller);
+	}
 }
 
-export function removeRTCHost(controller: FiresideController, userId: number) {
-	const rtc = controller.rtc.value!;
+function _createFiresideHost(controller: FiresideController, data: any) {
+	const { isMuted, user } = controller;
 
-	rtc.log('RTC user left', userId);
+	const isMe = Boolean(user.value && user.value.id === data.user_id);
+
+	const host = reactive(
+		new FiresideHost({
+			userId: data.user_id,
+			isMe,
+			isMuted: isMuted.value,
+		})
+	) as FiresideHost;
+
+	host._unwatchPrefableFields = watch(
+		() => [
+			host.micAudioPlayState,
+			host.desktopAudioPlayState,
+			// These should be done in their respective scrubbers so we don't
+			// trigger events crazy often.
+			//
+			// user.micPlaybackVolumeLevel,
+			// user.desktopPlaybackVolumeLevel,
+		],
+		() => {
+			saveFiresideHostPrefs(controller, host);
+		}
+	);
+
+	return host;
+}
+
+// TODO(oven): this isn't being called since we don't have this implemented in grid just yet
+export function removeFiresideHost(controller: FiresideController, userId: number) {
+	const { logger, hosts, focusedHost } = controller;
+
+	logger.info('Fireside host left', userId);
 
 	// Ideally we'd like to check _remoteStreamingUsers but I don't trust Agora
 	// to actually emit these events only for remote users.
 	// If it gets emitted for a local user we'll throw.
-	const user = controller.hosts.value.find(i => i.userId === userId);
+	const user = hosts.value.find(i => i.userId === userId);
 	if (!user) {
-		rtc.logWarning(`Couldn't find remote user locally`, userId);
+		logger.warn(`Couldn't find remote host locally`, userId);
 		return;
 	}
-
-	if (user.isLocal) {
-		throw new Error('Expected to be handling remote users here');
-	}
-
-	// TODO(oven)
-	// if (mediaType === 'video') {
-	// 	setUserHasVideo(user, false);
-	// } else {
-	// 	setUserHasDesktopAudio(user, false);
-	// }
-
-	// user.remoteVideoUser = null;
-	// user.remoteChatUser = null;
-
-	user._unwatchIsListed?.();
-	user._unwatchIsListed = null;
 
 	user._unwatchPrefableFields?.();
 	user._unwatchPrefableFields = null;
 
 	arrayRemove(controller.hosts.value, i => i.userId === user.userId);
 
-	if (rtc.focusedUser?.userId === user.userId) {
-		rtc.focusedUser = null;
-		chooseFocusedRTCUser(rtc);
+	if (focusedHost.value?.userId === user.userId) {
+		focusedHost.value = null;
+		chooseFocusedHost(controller);
 	}
 }
 
-export function initRemoteFiresideRTCHostPrefs(user: FiresideRTCHost) {
-	// Ignore local user and RTC controllers that disable audio.
-	if (user.isLocal || user.rtc.isMuted) {
+function _initRemoteHostPrefs({ fireside, isMuted }: FiresideController, host: FiresideHost) {
+	// Ignore controllers that disable audio.
+	if (isMuted.value) {
 		return;
 	}
 
-	const {
-		userModel,
-		rtc,
-		rtc: { fireside },
-	} = user;
+	const { userModel } = host;
 
-	if (!userModel) {
-		rtc.log(`Tried initializing RTC user options without a user model - ignoring.`);
-		return;
-	}
-
-	const existingOptions = sessionStorage.getItem(_getFiresideRTCHostPrefKey(fireside, userModel));
+	const existingOptions = sessionStorage.getItem(_getHostPrefKey(fireside, userModel));
 	if (!existingOptions) {
 		return;
 	}
 
-	const options: FiresideRTCHostPrefs = JSON.parse(existingOptions);
+	const options: FiresideHostPrefs = JSON.parse(existingOptions);
 	const {
 		desktopPlaybackVolumeLevel,
 		micPlaybackVolumeLevel,
@@ -347,79 +241,41 @@ export function initRemoteFiresideRTCHostPrefs(user: FiresideRTCHost) {
 	} = options;
 
 	if (remoteMicAudioMuted !== undefined) {
-		setMicAudioPlayState(user, !remoteMicAudioMuted);
+		setMicAudioPlayState(host, !remoteMicAudioMuted);
 	}
 	if (remoteDesktopAudioMuted !== undefined) {
-		setDesktopAudioPlayState(user, !remoteDesktopAudioMuted);
+		setDesktopAudioPlayState(host, !remoteDesktopAudioMuted);
 	}
 	if (micPlaybackVolumeLevel !== undefined) {
-		setUserMicrophoneAudioVolume(user, micPlaybackVolumeLevel);
+		setUserMicrophoneAudioVolume(host, micPlaybackVolumeLevel);
 	}
 	if (desktopPlaybackVolumeLevel !== undefined) {
-		setUserDesktopAudioVolume(user, desktopPlaybackVolumeLevel);
+		setUserDesktopAudioVolume(host, desktopPlaybackVolumeLevel);
 	}
 }
 
-function _getFiresideRTCHostPrefKey(fireside: Fireside, userModel: User) {
+function _getHostPrefKey(fireside: Fireside, userModel: User) {
 	return `${fireside.id}-${userModel.id}`;
 }
 
-interface FiresideRTCHostPrefs {
+interface FiresideHostPrefs {
 	remoteMicAudioMuted: boolean | undefined;
 	remoteDesktopAudioMuted: boolean | undefined;
 	micPlaybackVolumeLevel: number | undefined;
 	desktopPlaybackVolumeLevel: number | undefined;
 }
 
-export function saveFiresideRTCHostPrefs(user: FiresideRTCHost) {
-	const {
-		userModel,
-		rtc: { fireside },
-	} = user;
+export function saveFiresideHostPrefs({ fireside }: FiresideController, host: FiresideHost) {
+	const { userModel } = host;
 
-	if (!userModel) {
-		return;
-	}
-
-	const options: FiresideRTCHostPrefs = {
-		remoteMicAudioMuted: !user.micAudioPlayState,
-		remoteDesktopAudioMuted: !user.desktopAudioPlayState,
-		micPlaybackVolumeLevel: user.micPlaybackVolumeLevel,
-		desktopPlaybackVolumeLevel: user.desktopPlaybackVolumeLevel,
+	const options: FiresideHostPrefs = {
+		remoteMicAudioMuted: !host.micAudioPlayState,
+		remoteDesktopAudioMuted: !host.desktopAudioPlayState,
+		micPlaybackVolumeLevel: host.micPlaybackVolumeLevel,
+		desktopPlaybackVolumeLevel: host.desktopPlaybackVolumeLevel,
 	};
 
-	sessionStorage.setItem(
-		_getFiresideRTCHostPrefKey(fireside, userModel),
-		JSON.stringify(options)
-	);
-}
-
-function _userIdForLog(user: FiresideRTCHost) {
-	return `(user: ${user.userModel?.id ?? 'n/a'}, uid: ${user.userId})`;
-}
-
-export function setUserHasVideo(user: FiresideRTCHost, hasVideo: boolean) {
-	user.hasVideo = hasVideo;
-
-	if (!hasVideo) {
-		chooseFocusedRTCUser(user.rtc);
-	}
-}
-
-export function setUserHasDesktopAudio(user: FiresideRTCHost, hasDesktopAudio: boolean) {
-	user.hasDesktopAudio = hasDesktopAudio;
-
-	if (!hasDesktopAudio) {
-		chooseFocusedRTCUser(user.rtc);
-	}
-}
-
-export function setUserHasMicAudio(user: FiresideRTCHost, hasMicAudio: boolean) {
-	user.hasMicAudio = hasMicAudio;
-
-	if (!hasMicAudio) {
-		chooseFocusedRTCUser(user.rtc);
-	}
+	sessionStorage.setItem(_getHostPrefKey(fireside, userModel), JSON.stringify(options));
 }
 
 /**
@@ -427,7 +283,7 @@ export function setUserHasMicAudio(user: FiresideRTCHost, hasMicAudio: boolean) 
  * called when you no longer need to be playing the video.
  */
 export function getVideoLock(
-	user: FiresideRTCHost,
+	user: FiresideHost,
 	target: HTMLElement,
 	quality: FiresideVideoQuality
 ) {
@@ -440,7 +296,7 @@ export function getVideoLock(
  * Should be called to release the video lock back to the system. If this was
  * the last lock, the video will be unsubscribed from.
  */
-export function releaseVideoLock(user: FiresideRTCHost, lock: FiresideVideoLock) {
+export function releaseVideoLock(user: FiresideHost, lock: FiresideVideoLock) {
 	if (lock.released) {
 		return;
 	}
@@ -461,18 +317,15 @@ export function releaseVideoLock(user: FiresideRTCHost, lock: FiresideVideoLock)
  * Used to set the playback state of the video stream for this user. This will
  * only set the state. It's up to the components to react to this state.
  */
-export async function setVideoPlayState(user: FiresideRTCHost, isPlaying: boolean) {
-	const { rtc } = user;
-
+export async function setVideoPlayState(user: FiresideHost, isPlaying: boolean) {
 	if (user.videoPlayState === isPlaying) {
 		return;
 	}
 
-	rtc.log('Setting new playback state.', { isPlaying });
 	user.videoPlayState = isPlaying;
 }
 
-export function setDesktopAudioPlayState(user: FiresideRTCHost, isPlaying: boolean) {
+export function setDesktopAudioPlayState(user: FiresideHost, isPlaying: boolean) {
 	// This can get called multiple times if we're adjusting with an audio
 	// slider. If there's no change, do nothing.
 	if (user.desktopAudioPlayState === !isPlaying) {
@@ -482,7 +335,7 @@ export function setDesktopAudioPlayState(user: FiresideRTCHost, isPlaying: boole
 	user.desktopAudioPlayState = !isPlaying;
 }
 
-export function setMicAudioPlayState(user: FiresideRTCHost, isPlaying: boolean) {
+export function setMicAudioPlayState(user: FiresideHost, isPlaying: boolean) {
 	// This can get called multiple times if we're adjusting with an audio
 	// slider. If there's no change, do nothing.
 	if (user.micAudioPlayState === isPlaying) {
@@ -492,7 +345,7 @@ export function setMicAudioPlayState(user: FiresideRTCHost, isPlaying: boolean) 
 	user.micAudioPlayState = isPlaying;
 }
 
-export function updateVolumeLevel(user: FiresideRTCHost) {
+export function updateVolumeLevel(user: FiresideHost) {
 	// TODO(oven)
 	// // Ignore remote users that have no active track.
 	// if (
@@ -513,11 +366,11 @@ export function updateVolumeLevel(user: FiresideRTCHost) {
 }
 
 /** Expects a value from 0 to 1 */
-export function setUserMicrophoneAudioVolume(user: FiresideRTCHost, percent: number) {
+export function setUserMicrophoneAudioVolume(user: FiresideHost, percent: number) {
 	user.micPlaybackVolumeLevel = percent;
 }
 
 /** Expects a value from 0 to 1 */
-export function setUserDesktopAudioVolume(user: FiresideRTCHost, percent: number) {
+export function setUserDesktopAudioVolume(user: FiresideHost, percent: number) {
 	user.desktopPlaybackVolumeLevel = percent;
 }

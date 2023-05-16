@@ -1,6 +1,6 @@
 import { shallowReadonly } from 'vue';
 import { FiresideChatSettings } from '../../../_common/fireside/chat/chat-settings.model';
-import { syncRTCHost } from '../../../_common/fireside/rtc/host';
+import { syncFiresideHost } from '../../../_common/fireside/rtc/host';
 import {
 	SocketChannelController,
 	createSocketChannelController,
@@ -75,7 +75,7 @@ export function createGridFiresideChannel(
 	options: { firesideHash: string; stickerStore: StickerStore }
 ): GridFiresideChannel {
 	const { socketController } = client;
-	const { chatSettings, rtc } = firesideController;
+	const { chatSettings, focusedHost } = firesideController;
 	const { firesideHash, stickerStore } = options;
 
 	const logger = createLogger('Fireside');
@@ -95,7 +95,7 @@ export function createGridFiresideChannel(
 
 			if (response.hosts) {
 				for (const hostData of response.hosts) {
-					syncRTCHost(firesideController, hostData.user_id, hostData);
+					syncFiresideHost(firesideController, hostData.user_id, hostData);
 				}
 			}
 		},
@@ -160,12 +160,7 @@ export function createGridFiresideChannel(
 	function _onStickerPlacement(payload: StickerPlacementPayload) {
 		logger.info('Grid sticker placement received.', payload, payload.streak);
 
-		const { rtc, stickerTargetController, fireside, user } = firesideController;
-		// Ignore placements if we don't have an RTC set up.
-		if (!rtc.value) {
-			logger.info(`Received grid sticker placement while we have no RTC`);
-			return;
-		}
+		const { stickerTargetController, fireside, user } = firesideController;
 
 		const placement = new StickerPlacement(payload.sticker_placement);
 		const {
@@ -183,9 +178,9 @@ export function createGridFiresideChannel(
 			return;
 		}
 
-		const focusedUserId = rtc.value?.focusedUser?.userModel?.id;
+		const focusedHostId = focusedHost.value?.userModel?.id;
 
-		if (focusedUserId === host_user_id) {
+		if (focusedHostId === host_user_id) {
 			// Display the live sticker only if we're watching the target host.
 			addStickerToTarget(stickerTargetController, placement);
 		}
@@ -196,7 +191,7 @@ export function createGridFiresideChannel(
 
 	function _onUpdateHost(payload: HostPayload) {
 		logger.info('Grid host update received.', payload);
-		syncRTCHost(firesideController, payload.user_id, payload);
+		syncFiresideHost(firesideController, payload.user_id, payload);
 	}
 
 	/**

@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { PropType, computed, watchEffect } from 'vue';
-import { FiresideRTCHost } from '../../../../../_common/fireside/rtc/host';
+import { FiresideHost } from '../../../../../_common/fireside/rtc/host';
+import { useFiresideController } from '../../controller/controller';
 import { createFiresideStreamHostPlayer } from './player-controller';
 
 const props = defineProps({
 	host: {
-		type: Object as PropType<FiresideRTCHost>,
+		type: Object as PropType<FiresideHost>,
 		required: true,
 	},
 });
@@ -15,16 +16,20 @@ const props = defineProps({
 //
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { host } = props;
-const { rtc } = host;
 
-const { player, playerElem } = createFiresideStreamHostPlayer(host, 'video');
+const { focusedHost, logger } = useFiresideController()!;
+const { player, playerElem } = createFiresideStreamHostPlayer({
+	host,
+	logger,
+	playerType: 'video',
+});
 
 /**
  * Their desktop audio will be muted if they're not the focused user, or if it's
  * been specifically muted.
  */
 const isDesktopAudioMuted = computed(
-	() => rtc.focusedUser?.userId !== host.userId || !host.desktopAudioPlayState
+	() => focusedHost.value?.userId !== host.userId || !host.desktopAudioPlayState
 );
 
 /**
@@ -54,16 +59,17 @@ watchEffect(() => {
 			return;
 		}
 
-		rtc.log(`Setting video to "${desiredQuality}" version for user: `, host.userId);
+		logger.info(`Setting video to "${desiredQuality}" version for user: `, host.userId);
 
 		const qualityLevels = player.value.getQualityLevels();
 		const quality = qualityLevels.find(i => i.label === desiredQuality);
 		if (quality) {
 			player.value.setCurrentQuality(quality.index);
 		} else {
-			rtc.logError(
+			logger.error(
 				`Could not find "${desiredQuality}" video version for user: `,
-				host.userId
+				host.userId,
+				qualityLevels
 			);
 		}
 	};

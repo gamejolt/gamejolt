@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import AppFiresideLiveTag from '../../../../_common/fireside/AppFiresideLiveTag.vue';
-import { FiresideRTCHost } from '../../../../_common/fireside/rtc/host';
+import { FiresideHost } from '../../../../_common/fireside/rtc/host';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { kThemeBg, kThemeFg, kThemePrimary } from '../../../../_common/theme/variables';
@@ -25,7 +25,7 @@ const props = defineProps({
 		required: true,
 	},
 	host: {
-		type: Object as PropType<FiresideRTCHost>,
+		type: Object as PropType<FiresideHost>,
 		default: undefined,
 	},
 	horizontalPadding: {

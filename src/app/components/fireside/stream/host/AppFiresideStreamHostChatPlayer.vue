@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { PropType, watchEffect } from 'vue';
-import { FiresideRTCHost } from '../../../../../_common/fireside/rtc/host';
+import { FiresideHost } from '../../../../../_common/fireside/rtc/host';
+import { useFiresideController } from '../../controller/controller';
 import { createFiresideStreamHostPlayer } from './player-controller';
 
 const props = defineProps({
 	host: {
-		type: Object as PropType<FiresideRTCHost>,
+		type: Object as PropType<FiresideHost>,
 		required: true,
 	},
 });
@@ -16,7 +17,12 @@ const props = defineProps({
 // eslint-disable-next-line vue/no-setup-props-destructure
 const { host } = props;
 
-const { player, playerElem } = createFiresideStreamHostPlayer(host, 'chat');
+const { logger } = useFiresideController()!;
+const { player, playerElem } = createFiresideStreamHostPlayer({
+	host,
+	logger,
+	playerType: 'chat',
+});
 
 watchEffect(() => {
 	if (host.micAudioPlayState) {

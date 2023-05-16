@@ -32,13 +32,13 @@ defineProps({
 const stickerLayer = useStickerLayer();
 const c = useFiresideController()!;
 const {
-	rtc,
 	user,
 	stickerCount,
 	canStream,
 	canManageCohosts,
 	isStreaming,
 	isPersonallyStreaming,
+	producer,
 	sidebar,
 	setSidebar,
 	activeBottomBarControl,
@@ -52,23 +52,23 @@ const { isAllCreator } = layer || {};
 
 const canPlaceStickers = computed(() => !!user.value && !Screen.isMobile && isStreaming.value);
 
-const producer = computed(() => rtc.value?.producer);
-const localUser = computed(() => rtc.value?.localUser);
-
-const producerMicMuted = computed(() => producer.value?.micMuted.value === true);
-const producerVideoMuted = computed(() => producer.value?.videoMuted.value === true);
+// TODO(oven): we might need to check the streaming devices instead of their selected ones here.
+// I think we want to know if they're currently streaming using one of these devices so they can toggle on/off and stuff.
+const hasMicDevice = computed(() => producer.value?.hasMicDevice.value === true);
+const hasWebcamDevice = computed(() => producer.value?.hasWebcamDevice.value === true);
+const micMuted = computed(() => producer.value?.micMuted.value === true);
+const videoMuted = computed(() => producer.value?.videoMuted.value === true);
 
 const micTooltip = computed(() => {
-	const _user = localUser.value;
-	if (!_user || !producer.value) {
+	if (!producer.value) {
 		return undefined;
 	}
 
-	if (!_user.hasMicAudio) {
+	if (!hasMicDevice.value) {
 		return $gettext(`No microphone selected`);
 	}
 
-	if (producer.value.micMuted.value) {
+	if (micMuted.value) {
 		return $gettext(`Unmute microphone`);
 	}
 
@@ -76,16 +76,15 @@ const micTooltip = computed(() => {
 });
 
 const videoTooltip = computed(() => {
-	const _user = localUser.value;
-	if (!_user || !producer.value) {
+	if (!producer.value) {
 		return undefined;
 	}
 
-	if (!_user.hasVideo) {
+	if (!hasWebcamDevice.value) {
 		return $gettext(`No video selected`);
 	}
 
-	if (producer.value.videoMuted.value) {
+	if (videoMuted.value) {
 		return $gettext(`Show video`);
 	}
 
@@ -96,14 +95,10 @@ const micIcon = computed<Jolticon>(() => {
 	const disabled = 'microphone-off';
 	const enabled = 'microphone';
 
-	if (!isPersonallyStreaming.value) {
+	if (!producer.value || !hasMicDevice.value || micMuted.value) {
 		return disabled;
 	}
 
-	const _user = localUser.value;
-	if (!_user || !_user.hasMicAudio || producer.value?.micMuted.value) {
-		return disabled;
-	}
 	return enabled;
 });
 
@@ -111,14 +106,10 @@ const videoIcon = computed<Jolticon>(() => {
 	const disabled = 'video-camera-off';
 	const enabled = 'video-camera';
 
-	if (!isPersonallyStreaming.value) {
+	if (!producer.value || !hasWebcamDevice.value || videoMuted.value) {
 		return disabled;
 	}
 
-	const _user = localUser.value;
-	if (!_user || !_user.hasVideo || producer.value?.videoMuted.value) {
-		return disabled;
-	}
 	return enabled;
 });
 
@@ -128,17 +119,12 @@ async function onClickMic() {
 		return;
 	}
 
-	if (!isPersonallyStreaming.value) {
+	if (!_producer.isStreaming) {
 		toggleStreamSettings();
 		return;
 	}
 
-	const _user = localUser.value;
-	if (!_user) {
-		return;
-	}
-
-	if (!_user.hasVideo || producerVideoMuted.value) {
+	if (!hasWebcamDevice.value || videoMuted.value) {
 		const shouldStopStreaming = await ModalConfirm.show(
 			$gettext(
 				`Disabling this will stop your current stream. Are you sure you want to stop streaming?`
@@ -152,7 +138,7 @@ async function onClickMic() {
 		return;
 	}
 
-	if (_user.hasMicAudio) {
+	if (hasMicDevice.value) {
 		setProducerDeviceMuted(_producer, 'mic');
 	} else {
 		toggleStreamSettings();
@@ -171,12 +157,7 @@ async function onClickVideo() {
 		return;
 	}
 
-	const _user = localUser.value;
-	if (!_user) {
-		return;
-	}
-
-	if (!_user.hasMicAudio || producerMicMuted.value) {
+	if (!hasMicDevice.value || micMuted.value) {
 		const shouldStopStreaming = await _confirmStopStreaming(true);
 		if (shouldStopStreaming) {
 			stopStreaming(_producer, 'last-input-video');
@@ -184,7 +165,7 @@ async function onClickVideo() {
 		return;
 	}
 
-	if (_user.hasVideo) {
+	if (hasWebcamDevice.value) {
 		setProducerDeviceMuted(_producer, 'video');
 	} else {
 		toggleStreamSettings();
@@ -251,27 +232,27 @@ async function onClickStopStreaming() {
 					@click="toggleStreamSettings"
 				/>
 
-				<template v-if="isPersonallyStreaming">
+				<template v-if="isPersonallyStreaming && producer">
 					<AppFiresideBottomBarButton
 						v-app-tooltip="micTooltip"
-						:active="localUser?.hasMicAudio && !producerMicMuted"
+						:active="producer.hasMicDevice.value && !micMuted"
 						:icon="micIcon"
-						:disabled="!localUser?.hasMicAudio"
+						:disabled="!producer.hasMicDevice.value"
 						@click="onClickMic"
 					/>
 
 					<AppFiresideBottomBarButton
 						v-app-tooltip="videoTooltip"
-						:active="localUser?.hasVideo && !producerVideoMuted"
+						:active="producer.hasWebcamDevice.value && !videoMuted"
 						:icon="videoIcon"
-						:disabled="!localUser?.hasVideo"
+						:disabled="!producer.hasWebcamDevice.value"
 						@click="onClickVideo"
 					/>
 
 					<AppFiresideBottomBarButton
 						v-app-tooltip="$gettext(`Stop streaming`)"
 						icon="hang-up"
-						:disabled="producer?.isBusy.value"
+						:disabled="producer.isBusy.value"
 						active-color="overlay-notice"
 						active
 						@click="onClickStopStreaming"
@@ -279,7 +260,7 @@ async function onClickStopStreaming() {
 				</template>
 			</div>
 
-			<div v-if="rtc" class="-hosts">
+			<div class="-hosts">
 				<AppScrollScroller horizontal>
 					<div class="-group">
 						<AppFiresideBottomBarHosts @stream-settings="toggleStreamSettings()" />

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType, computed, onBeforeUnmount, ref, toRefs, watchEffect } from 'vue';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import { FiresideRTCProducer } from '../../../../../_common/fireside/rtc/producer';
+import { FiresideProducer } from '../../../../../_common/fireside/rtc/producer';
 import { kThemeDarkest } from '../../../../../_common/theme/variables';
 import { styleBorderRadiusBase } from '../../../../../_styles/mixins';
 import { kFontSizeSmall } from '../../../../../_styles/variables';
@@ -10,7 +10,7 @@ const videoElem = ref<HTMLVideoElement>();
 
 const props = defineProps({
 	producer: {
-		type: Object as PropType<FiresideRTCProducer>,
+		type: Object as PropType<FiresideProducer>,
 		required: true,
 	},
 	hidePreview: {

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, PropType, ref, toRefs } from 'vue';
 import {
-	FiresideRTCProducer,
+	FiresideProducer,
 	getOwnDesktopAudioVolume,
 	getOwnMicAudioVolume,
 } from '../../../../../_common/fireside/rtc/producer';
@@ -11,7 +11,7 @@ import { kBorderRadiusBase } from '../../../../../_styles/variables';
 
 const props = defineProps({
 	producer: {
-		type: Object as PropType<FiresideRTCProducer>,
+		type: Object as PropType<FiresideProducer>,
 		required: true,
 	},
 	type: {

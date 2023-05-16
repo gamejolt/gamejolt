@@ -5,8 +5,7 @@ import { useFiresideController } from '../../../components/fireside/controller/c
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
-const c = useFiresideController()!;
-const { chatRoom } = c;
+const { chatRoom } = useFiresideController()!;
 const { memberCollection } = useChatRoomMembers(chatRoom);
 </script>
 
@@ -21,7 +20,6 @@ const { memberCollection } = useChatRoomMembers(chatRoom);
 				v-if="chatRoom && memberCollection"
 				:collection="memberCollection"
 				:room="chatRoom"
-				:fireside-controller="c"
 				hide-filter
 			/>
 		</template>

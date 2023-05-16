@@ -3,8 +3,8 @@ import { computed, PropType, Ref, ref, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
-	FiresideRTCHost,
-	saveFiresideRTCHostPrefs,
+	FiresideHost,
+	saveFiresideHostPrefs,
 	setDesktopAudioPlayState,
 	setMicAudioPlayState,
 	setUserDesktopAudioVolume,
@@ -27,7 +27,7 @@ import AppFiresideBottomBarHostAvatar from './AppFiresideBottomBarHostAvatar.vue
 
 const props = defineProps({
 	host: {
-		type: Object as PropType<FiresideRTCHost>,
+		type: Object as PropType<FiresideHost>,
 		required: true,
 	},
 });
@@ -36,14 +36,18 @@ useEventSubscription(onFiresideStickerPlaced, onStickerPlaced);
 
 const { host } = toRefs(props);
 
+const controller = useFiresideController()!;
 const {
 	isFullscreen,
 	popperTeleportId,
-	rtc,
 	fetchedHostUserData,
 	shownUserCardHover,
 	isShowingStreamSetup,
-} = useFiresideController()!;
+	isPersonallyStreaming,
+	videoPaused,
+	focusedHost,
+	producer,
+} = controller;
 const kettleController = createPopcornKettleController();
 
 const isScrubbingMic = ref(false);
@@ -54,24 +58,23 @@ const desktopVolumeBeforeScrub = ref<number>();
 
 const isLoadingFollowState = ref(false);
 
-const isFocused = computed(() => rtc.value?.focusedUser?.userId === host.value.userId);
-const isMe = computed(() => rtc.value?.localUser?.userId === host.value.userId);
+const isFocused = computed(() => focusedHost.value?.userId === host.value.userId);
 const showingVideoThumb = computed(() => {
-	if (isMe.value && rtc.value?.producer?.videoMuted.value) {
+	if (host.value.isMe && producer.value?.videoMuted.value) {
 		return false;
 	}
 	return !isFocused.value && host.value.hasVideo;
 });
 
 const canShowThumbStream = computed(() => {
-	if (!rtc.value || rtc.value.videoPaused) {
+	if (!videoPaused.value) {
 		return false;
 	}
 
 	// We need to hide the video preview if we have the stream setup open,
 	// otherwise it'll end up clearing the preview in the setup form when this
 	// thumb stream shows.
-	if (host.value.isLocal) {
+	if (host.value.isMe && isPersonallyStreaming.value) {
 		return !isShowingStreamSetup.value;
 	}
 
@@ -79,11 +82,11 @@ const canShowThumbStream = computed(() => {
 });
 
 function onClick() {
-	if (isFocused.value || !rtc.value) {
+	if (isFocused.value) {
 		return;
 	}
 
-	rtc.value.focusedUser = host.value;
+	focusedHost.value = host.value;
 }
 
 function muteMic() {
@@ -110,7 +113,7 @@ function _handleScrub(
 		mute: () => void;
 		unmute: () => void;
 		currentPlaybackVolume: number;
-		setVolume: (user: FiresideRTCHost, volume: number) => void;
+		setVolume: (user: FiresideHost, volume: number) => void;
 	}
 ) {
 	const { percent, stage } = scrubData;
@@ -140,7 +143,7 @@ function _handleScrub(
 		volumeBeforeScrub.value = undefined;
 
 		isScrubbing.value = false;
-		saveFiresideRTCHostPrefs(host.value);
+		saveFiresideHostPrefs(controller, host.value);
 	}
 }
 
@@ -205,7 +208,7 @@ async function onUserCardShow() {
 	}
 
 	// Don't fetch for self or if we already have cached following state.
-	if (host.value.isLocal || fetchedHostUserData.get(user.id) !== undefined) {
+	if (host.value.isMe || fetchedHostUserData.get(user.id) !== undefined) {
 		return;
 	}
 
@@ -303,7 +306,7 @@ function onUserCardUnhovered() {
 				</div>
 			</template>
 
-			<template v-if="!isMe" #trailing>
+			<template v-if="!host.isMe" #trailing>
 				<div class="-host-controls">
 					<hr />
 

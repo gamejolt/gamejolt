@@ -22,19 +22,18 @@ const {
 	canBrowserStream,
 	isStreamingElsewhere,
 	isPersonallyStreaming,
-	rtc,
 	shouldShowDesktopAppPromo,
 	setSidebar,
 	sidebarHome,
 	isDraft,
 	gridChannel,
+	producer,
 } = c;
 
 const isStartingStream = ref(false);
 const isInvalidConfig = ref(true);
 
-const producer = computed(() => rtc.value?.producer);
-const isProducerBusy = computed(() => !!producer.value?.isBusy?.value);
+const isProducerBusy = computed(() => !!producer.value?.isBusy.value);
 
 async function onClickStartStreaming() {
 	const _producer = producer.value;

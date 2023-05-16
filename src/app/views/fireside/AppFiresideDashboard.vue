@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { debounce } from '../../../utils/utils';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../_common/popper/popper.service';
@@ -8,6 +7,7 @@ import { Ruler } from '../../../_common/ruler/ruler-service';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import AppTheme from '../../../_common/theme/AppTheme.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { debounce } from '../../../utils/utils';
 import {
 	toggleStreamVideoStats,
 	useFiresideController,
@@ -17,12 +17,14 @@ import AppFiresideStream from './_stream/AppFiresideStream.vue';
 
 const c = useFiresideController()!;
 const {
-	rtc,
 	stickerTargetController,
 	collapseSidebar,
 	background,
 	isFullscreen,
 	popperTeleportId,
+	localHost,
+	producer,
+	shouldShowVideoStats,
 } = c;
 
 const videoContainer = ref<HTMLDivElement>();
@@ -31,12 +33,11 @@ const videoWidth = ref(0);
 const videoHeight = ref(0);
 
 const overlayText = computed(() => !!background.value || isFullscreen.value);
-const localUser = computed(() => rtc.value?.localUser);
-const producer = computed(() => rtc.value?.producer);
-const videoAspectRatio = computed(() => localUser.value?.videoAspectRatio || 0.5625);
-const shouldShowVideoStats = computed(() => rtc.value?.shouldShowVideoStats === true);
+const videoAspectRatio = computed(() => localHost.value?.videoAspectRatio || 0.5625);
 
-const singleCol = computed(() => !localUser.value?.hasVideo || producer.value?.videoMuted.value);
+const singleCol = computed(
+	() => !producer.value?.hasWebcamDevice.value || producer.value?.videoMuted.value
+);
 
 onMounted(() => {
 	onDimensionsChange();
@@ -82,7 +83,7 @@ function toggleVideoStats() {
 <template>
 	<div class="fireside-dashboard">
 		<AppTheme
-			v-if="localUser"
+			v-if="localHost"
 			class="-producer-dash"
 			:class="{ '-single-col': singleCol, '-overlay-text': overlayText }"
 			:force-dark="overlayText"
@@ -113,9 +114,9 @@ function toggleVideoStats() {
 							height: videoHeight + 'px',
 						}"
 					>
-						<template v-if="localUser">
+						<template v-if="localHost">
 							<AppStickerTarget
-								:key="localUser.userId"
+								:key="localHost.userId"
 								class="-video-inner"
 								:controller="stickerTargetController"
 							>
@@ -124,8 +125,9 @@ function toggleVideoStats() {
 									trigger="right-click"
 									:to="`#${popperTeleportId}`"
 								>
+									<!-- TODO(oven): use producer? -->
 									<AppFiresideStream
-										:rtc-user="localUser"
+										:host="localHost"
 										:has-header="isFullscreen"
 										:has-hosts="isFullscreen"
 										:sidebar-collapsed="collapseSidebar"

@@ -1,15 +1,18 @@
 <script lang="ts" setup>
-import { PropType, onBeforeUnmount, onMounted, ref } from 'vue';
-import { FiresideRTCHost } from '../../../../../_common/fireside/rtc/host';
+import { PropType, computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { FiresideHost } from '../../../../../_common/fireside/rtc/host';
+import { useFiresideController } from '../../controller/controller';
 import AppFiresideStreamHostChatPlayer from './AppFiresideStreamHostChatPlayer.vue';
 import AppFiresideStreamHostVideoPlayer from './AppFiresideStreamHostVideoPlayer.vue';
 
 const props = defineProps({
 	host: {
-		type: Object as PropType<FiresideRTCHost>,
+		type: Object as PropType<FiresideHost>,
 		required: true,
 	},
 });
+
+const { producer } = useFiresideController()!;
 
 // We want to freeze the user. If it changed out from under us ever, it would
 // break everything.
@@ -17,17 +20,23 @@ const props = defineProps({
 // eslint-disable-next-line vue/no-setup-props-destructure
 const host = props.host;
 
-const videoStreamElem = ref<HTMLVideoElement>();
+const localVideoStreamElem = ref<HTMLVideoElement>();
+
+/**
+ * Will return a MediaStream of their local video stream if this host is them,
+ * and they are currently streaming in this tab.
+ */
+const localVideoStream = computed(() => (host.isMe && producer.value?.videoStream.value) || null);
 
 onMounted(() => {
-	if (host.isLocal) {
-		videoStreamElem.value!.srcObject = host._videoMediaStream!;
+	if (localVideoStream.value) {
+		localVideoStreamElem.value!.srcObject = localVideoStream.value;
 	}
 });
 
 onBeforeUnmount(() => {
-	if (videoStreamElem.value) {
-		videoStreamElem.value.srcObject = null;
+	if (localVideoStreamElem.value) {
+		localVideoStreamElem.value.srcObject = null;
 	}
 });
 </script>
@@ -45,12 +54,12 @@ onBeforeUnmount(() => {
 	>
 		<Teleport :to="host.currentVideoLock?.target" :disabled="!host.currentVideoLock">
 			<div>
-				<template v-if="host.isRemote">
+				<template v-if="!localVideoStream">
 					<AppFiresideStreamHostVideoPlayer :host="host" />
 					<AppFiresideStreamHostChatPlayer :host="host" />
 				</template>
 				<template v-else>
-					<video ref="videoStreamElem" autoplay muted />
+					<video ref="localVideoStreamElem" autoplay muted />
 				</template>
 			</div>
 		</Teleport>

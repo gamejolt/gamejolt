@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
 import AppFiresideBottomBarHost from './AppFiresideBottomBarHost.vue';
@@ -10,24 +9,27 @@ const emit = defineEmits({
 });
 
 const c = useFiresideController()!;
-const { rtc, isPersonallyStreaming, isStreamingElsewhere, canStream, focusedUser } = c;
-
-const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers ?? []);
+const {
+	isPersonallyStreaming,
+	isStreamingElsewhere,
+	canStream,
+	focusedHost,
+	streamingHosts,
+	producer,
+} = c;
 </script>
 
 <template>
 	<div class="bottom-bar-hosts">
 		<div class="-hosts">
-			<div
-				v-if="!isPersonallyStreaming && !isStreamingElsewhere && canStream && rtc?.producer"
-			>
+			<div v-if="!isPersonallyStreaming && !isStreamingElsewhere && canStream && producer">
 				<a
 					v-app-tooltip="$gettext(`Click to open stream settings`)"
 					class="-host-thumb"
 					@click="emit('streamSettings')"
 				>
 					<div class="-host-thumb-producer">
-						<AppFiresideBottomBarHostAvatar :host="rtc.producer" />
+						<AppFiresideBottomBarHostAvatar :host="producer" />
 					</div>
 				</a>
 			</div>
@@ -36,9 +38,9 @@ const listableStreamingUsers = computed(() => rtc.value?.listableStreamingUsers 
 			do this, we could have a conflict with the video preview and the
 			primary video stream trying to play at the same time (showing a gray
 			screen). -->
-			<template v-if="focusedUser">
+			<template v-if="focusedHost">
 				<AppFiresideBottomBarHost
-					v-for="host of listableStreamingUsers"
+					v-for="host of streamingHosts"
 					:key="host.userId"
 					class="-host-thumb"
 					:host="host"

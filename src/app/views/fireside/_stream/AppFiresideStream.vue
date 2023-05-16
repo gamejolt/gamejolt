@@ -2,7 +2,7 @@
 import { computed, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import { FiresideRTCHost, setDesktopAudioPlayState } from '../../../../_common/fireside/rtc/host';
+import { FiresideHost, setDesktopAudioPlayState } from '../../../../_common/fireside/rtc/host';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -25,8 +25,8 @@ const UIHideTimeoutMovement = 2000;
 const UITransitionTime = 200;
 
 const props = defineProps({
-	rtcUser: {
-		type: Object as PropType<FiresideRTCHost>,
+	host: {
+		type: Object as PropType<FiresideHost>,
 		required: true,
 	},
 	hasHeader: {
@@ -44,20 +44,24 @@ const props = defineProps({
 	},
 });
 
-const { rtcUser, hasHeader, hasHosts, sidebarCollapsed } = toRefs(props);
+const { host, hasHeader, hasHosts, sidebarCollapsed } = toRefs(props);
 
 const c = useFiresideController()!;
 const {
-	rtc,
 	shownUserCardHover,
 	shouldHideStreamVideo,
 	isHoveringOverlayControl,
 	isShowingStreamSetup,
 	isShowingStreamOverlay,
+	isFocusingMe,
 	isFullscreen,
 	pinStreamVideo,
 	canFullscreen,
 	toggleFullscreen,
+	producer,
+	shouldShowVideoStats,
+	videoPaused,
+	shouldShowMutedIndicator,
 } = c;
 
 const { streak: stickerStreak } = useStickerStore();
@@ -93,7 +97,7 @@ const shouldShowUI = computed(() => {
 		videoPaused.value ||
 		shownUserCardHover.value ||
 		isHoveringOverlayControl.value ||
-		showMutedIndicator.value ||
+		shouldShowMutedIndicator.value ||
 		isHovered.value ||
 		hideUITimer.value
 	);
@@ -107,8 +111,6 @@ const overlayPaddingRight = computed(() => {
 	return chatWidth.value + 'px';
 });
 
-const producer = computed(() => rtc.value?.producer);
-const isFocusingMe = computed(() => rtcUser.value.isLocal);
 const hasPinVideoToggle = computed(
 	() =>
 		isFocusingMe.value &&
@@ -120,26 +122,20 @@ const hasPinVideoToggle = computed(
  * We can only show local videos in one place at a time. This will re-grab the
  * video feed when it gets rebuilt.
  */
-const shouldShowVideo = computed(() => !(isShowingStreamSetup.value && rtc.value?.isFocusingMe));
+const shouldShowVideo = computed(() => !(isShowingStreamSetup.value && isFocusingMe.value));
 
 /**
  * When the stream setup menu is showing its own stream, display a message
  * letting them know they can see their stream in the setup menu instead of
  * here.
  */
-const showVideoPreviewMessage = computed(
-	() => !!rtc.value && rtc.value.isFocusingMe && isShowingStreamSetup.value
-);
-
-const videoPaused = computed(() => rtc.value?.videoPaused === true);
-
-const showMutedIndicator = computed(() => rtc.value?.shouldShowMutedIndicator === true);
+const showVideoPreviewMessage = computed(() => isFocusingMe.value && isShowingStreamSetup.value);
 
 const hasVideo = computed(() => {
-	if (!rtcUser.value.hasVideo || !rtcUser.value.isListed) {
+	if (!host.value.hasVideo) {
 		return false;
 	}
-	if (rtcUser.value.isLocal && producer.value) {
+	if (host.value.isMe && producer.value?.isStreaming.value) {
 		return !producer.value.videoMuted.value;
 	}
 	return true;
@@ -158,13 +154,6 @@ const shouldDarkenAll = computed(() => {
 	}
 
 	return videoPaused.value;
-});
-
-const shouldShowVideoStats = computed(() => {
-	if (!rtc.value) {
-		return false;
-	}
-	return rtc.value.shouldShowVideoStats;
 });
 
 watch(stickerStreak, onStreakCountChanged);
@@ -215,7 +204,7 @@ function togglePlayback() {
 }
 
 function unmuteDesktopAudio() {
-	setDesktopAudioPlayState(rtcUser.value, true);
+	setDesktopAudioPlayState(host.value, true);
 }
 
 function animateStickerStreak() {
@@ -288,11 +277,11 @@ function clearPointerIgnore() {
 }
 
 function pauseVideo() {
-	rtc.value!.videoPaused = false;
+	videoPaused.value = false;
 }
 
 function unpauseVideo() {
-	rtc.value!.videoPaused = true;
+	videoPaused.value = true;
 }
 
 function onStreakCountChanged() {
@@ -340,7 +329,7 @@ async function togglePinStream() {
 				</div>
 			</template>
 			<template v-else>
-				<div :key="rtcUser.userId" :style="{ width: '100%', height: '100%' }">
+				<div :key="host.userId" :style="{ width: '100%', height: '100%' }">
 					<template v-if="shouldShowVideo">
 						<div v-if="shouldHideStreamVideo" class="-video-hidden-notice">
 							<strong>
@@ -353,7 +342,7 @@ async function togglePinStream() {
 						<template v-else>
 							<AppFiresideStreamVideoPortal
 								class="-video-player -click-target"
-								:rtc-user="rtcUser"
+								:rtc-user="host"
 							/>
 						</template>
 					</template>
@@ -369,7 +358,7 @@ async function togglePinStream() {
 		<template v-else>
 			<div class="-overlay -visible-center">
 				<div class="-host-wrapper">
-					<AppFiresideBottomBarHostAvatar class="-host" :host="rtcUser" />
+					<AppFiresideBottomBarHostAvatar class="-host" :host="host" />
 				</div>
 			</div>
 		</template>
@@ -382,7 +371,7 @@ async function togglePinStream() {
 			@click.capture="onOverlayTap"
 		>
 			<template v-if="shouldShowUI">
-				<template v-if="videoPaused || showMutedIndicator">
+				<template v-if="videoPaused || shouldShowMutedIndicator">
 					<transition>
 						<div
 							ref="pausedElement"
@@ -390,7 +379,7 @@ async function togglePinStream() {
 						>
 							<AppJolticon
 								class="-paused-indicator-icon"
-								:icon="showMutedIndicator ? 'audio-mute' : 'play'"
+								:icon="shouldShowMutedIndicator ? 'audio-mute' : 'play'"
 							/>
 						</div>
 					</transition>
@@ -496,7 +485,7 @@ async function togglePinStream() {
 									/>
 
 									<AppButton
-										v-if="rtcUser.showDesktopAudioMuted"
+										v-if="host.showDesktopAudioMuted"
 										v-app-tooltip="$gettext(`Ummute video`)"
 										class="-button-lg"
 										circle
@@ -507,14 +496,14 @@ async function togglePinStream() {
 										@click.capture.stop="unmuteDesktopAudio"
 									/>
 
-									<div v-if="rtcUser.userModel" class="-user-tag">
+									<div v-if="host.userModel" class="-user-tag">
 										<AppUserAvatar
 											class="-user-tag-avatar"
-											:user="rtcUser.userModel"
+											:user="host.userModel"
 											disable-link
 										/>
 										<span class="-user-tag-username">
-											@{{ rtcUser.userModel.username }}
+											@{{ host.userModel.username }}
 										</span>
 									</div>
 								</div>

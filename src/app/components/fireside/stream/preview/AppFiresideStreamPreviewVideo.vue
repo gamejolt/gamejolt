@@ -39,22 +39,24 @@ const c = createFiresideController(props.fireside, {
 });
 provideFiresideController(c);
 
-const { rtc, isShowingStreamSetup, isStreaming, cleanup: cleanupController } = c;
+const {
+	streamingHosts,
+	isShowingStreamSetup,
+	isStreaming,
+	focusedHost,
+	isFocusingMe,
+	destroy: destroyController,
+} = c;
 
 const cohosts = computed(() => {
 	const result: User[] = [];
 
-	for (const rtcUser of rtc.value?.listableStreamingUsers ?? []) {
-		// Since we're iterating over listable users they will always have their userModel.
-		const userModel = rtcUser.userModel!;
+	for (const host of streamingHosts.value ?? []) {
+		const userModel = host.userModel!;
 
-		// Filter out creator of the fireside.
-		//
-		// TODO(big-pp-event) why are we doing this?
-		//
-		// Note: this would probably not exclude the remote instance of the
-		// creator of the fireside. Intentional?
-		if (userModel !== props.fireside.user) {
+		// Filter out creator of the fireside since they're the main host, not a
+		// cohost.
+		if (userModel.id !== props.fireside.user.id) {
 			result.push(userModel);
 		}
 	}
@@ -62,30 +64,27 @@ const cohosts = computed(() => {
 	return result;
 });
 
-const focusedUser = computed(() => rtc.value?.focusedUser);
-
-const hasVideo = computed(() => focusedUser.value?.hasVideo === true);
+const hasVideo = computed(() => focusedHost.value?.hasVideo === true);
 
 const shouldShowVideo = computed(() => {
 	// We can only show local videos in one place at a time. This will
 	// re-grab the video feed when it gets rebuilt.
-	return hasVideo.value && !(isShowingStreamSetup.value && rtc.value?.isFocusingMe);
+	return hasVideo.value && !(isShowingStreamSetup.value && isFocusingMe.value);
 });
 
 watch([isStreaming, hasVideo], () => {
 	emit('changed', hasVideo.value, isStreaming.value);
 });
 
-// TODO(big-pp-event) should we use onUnmounted here?
-onBeforeUnmount(() => cleanupController());
+onBeforeUnmount(() => destroyController());
 </script>
 
 <template>
 	<div class="-stream-preview-video theme-dark">
-		<div v-if="focusedUser && shouldShowVideo" :key="focusedUser.userId">
+		<div v-if="focusedHost && shouldShowVideo" :key="focusedHost.userId">
 			<AppFiresideStreamVideoPortal
 				class="-stream-preview-video-inner"
-				:rtc-user="focusedUser"
+				:rtc-user="focusedHost"
 			/>
 
 			<div class="-overlay">

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, PropType, ref, toRefs } from 'vue';
 import {
-	FiresideRTCHost,
+	FiresideHost,
 	FiresideVideoFit,
 	FiresideVideoLock,
 	FiresideVideoQuality,
@@ -12,7 +12,7 @@ import { useFiresideController } from '../controller/controller';
 
 const props = defineProps({
 	rtcUser: {
-		type: Object as PropType<FiresideRTCHost>,
+		type: Object as PropType<FiresideHost>,
 		required: true,
 	},
 	quality: {

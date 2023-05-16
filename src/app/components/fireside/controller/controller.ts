@@ -32,18 +32,13 @@ import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { FiresideChatSettings } from '../../../../_common/fireside/chat/chat-settings.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { FiresideRole } from '../../../../_common/fireside/role/role.model';
-import { FiresideRTCHost } from '../../../../_common/fireside/rtc/host';
+import { FiresideHost } from '../../../../_common/fireside/rtc/host';
 import {
-	cleanupFiresideRTCProducer,
-	createFiresideRTCProducer,
+	createFiresideProducer,
+	destroyFiresideProducer,
+	FiresideProducer,
 	stopStreaming,
 } from '../../../../_common/fireside/rtc/producer';
-import {
-	createFiresideRTC,
-	destroyFiresideRTC,
-	FiresideRTC,
-	setListableHostIds,
-} from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -129,7 +124,7 @@ export function createFiresideController(
 		router: Router;
 	}
 ) {
-	const { isMuted = false, commonStore, gridStore, stickerStore, router } = options;
+	const { commonStore, gridStore, stickerStore, router } = options;
 	const { user } = commonStore;
 	const { grid, loadGrid } = gridStore;
 
@@ -140,8 +135,9 @@ export function createFiresideController(
 	/**
 	 * The hosts that are allowed to stream in the fireside.
 	 */
-	const hosts = ref([]) as Ref<FiresideRTCHost[]>;
+	const hosts = ref([]) as Ref<FiresideHost[]>;
 	const streamingHosts = computed(() => hosts.value.filter(host => host.isLive));
+	const focusedHost = ref(null) as Ref<FiresideHost | null>;
 
 	// TODO(oven): get this syncing correctly with our new models
 	// /**
@@ -189,24 +185,19 @@ export function createFiresideController(
 	const fetchedHostUserData = new Map<number, FetchedUserData>();
 
 	/**
-	 * Which hosts the current user is able to list.
-	 */
-	const listableHostIds = ref(new Set<number>());
-
-	/**
 	 * Mapping of user id to the background they have selected. Gets updated
 	 * through events over {@link GridFiresideChannel}.
 	 */
 	const hostBackgrounds = ref(new Map<number, Background>());
 
 	const targetData = computed(() => {
-		return { host_user_id: rtc.value?.focusedUser?.userModel?.id };
+		return { host_user_id: focusedHost.value?.userModel?.id };
 	});
 
 	const stickerTargetController = createStickerTargetController(fireside, {
 		isLive: true,
 		isCreator: computed(() => {
-			const user = rtc.value?.focusedUser?.userModel;
+			const user = focusedHost.value?.userModel;
 			if (!user) {
 				return false;
 			}
@@ -249,8 +240,8 @@ export function createFiresideController(
 	});
 
 	const chatSettings = ref(new FiresideChatSettings()) as Ref<FiresideChatSettings>;
-	const rtc = ref<FiresideRTC>();
 	const status = ref<RouteStatus>('initial');
+	const isMuted = ref(options.isMuted || false);
 
 	const gridChannel = shallowRef<GridFiresideChannel>();
 	const chatChannel = shallowRef<ChatRoomChannel>();
@@ -266,8 +257,6 @@ export function createFiresideController(
 	const expiresProgressValue = ref<number>();
 
 	const _isExtending = ref(false);
-
-	const focusedUser = computed(() => rtc.value?.focusedUser);
 
 	const chat = computed(() => grid.value?.chat ?? undefined);
 	const chatRoom = computed(() => chatChannel.value?.room.value);
@@ -295,49 +284,75 @@ export function createFiresideController(
 	});
 
 	const isDraft = computed(() => fireside?.is_draft ?? true);
+	// TODO(oven): better name
 	const isStreaming = computed(() => streamingHosts.value.length > 0);
 
-	const isPersonallyStreaming = computed(() => rtc.value?.isPersonallyStreaming ?? false);
-
 	// TODO(oven)
+	/**
+	 *  Safari keeps [AgoraRTC.onAutoplayFailed] looping, so I'm assigning
+	 *  to this to ensure we only trigger the failure callback once.
+	 */
+	const _hasAutoplayError = ref(false);
+	const shouldShowMutedIndicator = ref(false);
+
+	const videoPaused = ref(false);
+	const volumeLevelInterval = ref(null) as Ref<NodeJS.Timer | null>;
+	const shouldShowVideoThumbnails = ref(false);
+	const shouldShowVideoStats = ref(false);
+	const producer = shallowRef<FiresideProducer | null>(null);
+
+	const setupFinalized = ref(false);
+	const finalizeSetupFn = shallowRef<(() => void) | null>(null);
+
+	/**
+	 * The current user's {@link FiresideHost} if they're a host/cohost in this
+	 * fireside. This will be set regardless of if they're streaming or not.
+	 *
+	 * To check if they're currently streaming in this tab, you can call into
+	 * the {@link FiresideProducer}.
+	 */
+	const localHost = computed(
+		() => (user.value && hosts.value.find(i => i.userId === user.value!.id)) || null
+	);
+
+	const isFocusingMe = computed(() => focusedHost.value?.isMe === true);
+
+	/**
+	 * If the current user is currently streaming in this fireside.
+	 */
+	const isPersonallyStreaming = computed(() => producer.value?.isStreaming.value === true);
+
+	/**
+	 * Whether the current user is streaming in this fireside in a different
+	 * client.
+	 */
 	const isStreamingElsewhere = computed(() => {
-		if (!rtc.value?.userId) {
+		if (isPersonallyStreaming.value) {
 			return false;
 		}
 
-		const user = rtc.value.listableStreamingUsers.find(
-			i => !i.isLocal && i.userModel?.id === rtc.value?.userId
-		);
-		if (!user) {
-			return false;
-		}
-
-		// User is in the list of RTC users, but they are not streaming locally.
-		return !isPersonallyStreaming.value;
+		// User is in the list of hosts, but they are not streaming locally.
+		return !!localHost.value?.isLive;
 	});
 
 	const shouldShowStreamingOptions = computed(
 		() => canStream.value || isPersonallyStreaming.value
 	);
 
-	const canStream = computed(() => {
-		return (
-			!!rtc.value?.producer &&
-			!!(Screen.isDesktop || (user.value && user.value.permission_level >= 4))
-		);
-	});
-
 	const isOwner = computed(() => !!user.value && user.value.id === fireside.user.id);
+
+	const canStream = computed(() =>
+		Boolean(
+			producer.value && (Screen.isDesktop || (user.value && user.value.permission_level >= 4))
+		)
+	);
 	const canManageCohosts = computed(
 		() => isOwner.value || fireside.hasPerms('fireside-collaborators')
 	);
-
 	const canEdit = computed(() => isOwner.value || fireside.hasPerms('fireside-edit'));
-
 	const canPublish = computed(() => {
 		return status.value === 'joined' && isDraft.value && fireside.hasPerms('fireside-publish');
 	});
-
 	const _canExtend = computed(() => {
 		return (
 			status.value === 'joined' &&
@@ -346,7 +361,6 @@ export function createFiresideController(
 			fireside.hasPerms('fireside-extend')
 		);
 	});
-
 	const canExtinguish = computed(() => isOwner.value || fireside.hasPerms('fireside-extinguish'));
 	const canReport = computed(() => !!user.value && !isOwner.value);
 
@@ -392,7 +406,7 @@ export function createFiresideController(
 		// If we have no focused user, we want to try to use the background of
 		// the logged in user, since they might be setting up their stream at
 		// the moment before anyone else is streaming.
-		return focusedUser.value ? focusedUser.value.background : rtc.value?.localUser?.background;
+		return focusedHost.value ? focusedHost.value.background : localHost.value?.background;
 	});
 
 	const shouldShowDesktopAppPromo = ref(shouldPromoteAppForStreaming.value);
@@ -422,14 +436,14 @@ export function createFiresideController(
 		// manually, or we're not streaming.
 		if (
 			ContentFocus.isWindowFocused ||
-			rtc.value?.videoPaused === true ||
+			videoPaused.value === true ||
 			!isPersonallyStreaming.value
 		) {
 			return false;
 		}
 
 		// Only hide if we're focusing our own stream.
-		return focusedUser.value?.isLocal === true;
+		return isFocusingMe.value;
 	});
 
 	/**
@@ -450,87 +464,6 @@ export function createFiresideController(
 	 */
 	const _isSafari = computed(() => _browser.value.indexOf('safari') !== -1);
 
-	// const _wantsRTC = computed(() => {
-	// 	logger.info('recomputing wantsRTC');
-
-	// 	const myStatus = status.value;
-	// 	const agoraInfo = agoraStreamingInfo.value;
-	// 	const myHosts = hosts.value;
-	// 	const myRoleCanStream = fireside.role?.canStream;
-	// 	const myListableHostIds = listableHostIds.value;
-
-	// 	// Only initialize RTC when we are fully connected.
-	// 	if (myStatus !== 'joined') {
-	// 		logger.info('status not joined');
-	// 		return false;
-	// 	}
-
-	// 	// We have to have valid looking agora streaming credentials.
-	// 	if (!agoraInfo || !agoraInfo.videoToken || !agoraInfo.chatToken) {
-	// 		logger.info('agora streaming value sucks');
-	// 		return false;
-	// 	}
-
-	// 	// If we don't have hosts, we shouldnt initialize RTC.
-	// 	if (!myHosts || myHosts.length === 0) {
-	// 		logger.info('no hosts gtfo');
-	// 		return false;
-	// 	}
-
-	// 	if (myRoleCanStream) {
-	// 		logger.info('i can stream, so create rtc ahead of time');
-	// 		return true;
-	// 	}
-
-	// 	// A listable host must be streaming.
-	// 	logger.info('checking listable host ids');
-	// 	return isListableHostStreaming(myHosts, myListableHostIds);
-	// });
-
-	const _wantsRTCProducer = computed(() => {
-		if (!rtc.value) {
-			return false;
-		}
-
-		return !!fireside.role?.canStream;
-	});
-
-	// const revalidateRTC = () => {
-	// 	logger.info('wantsRTC changed to ' + (_wantsRTC.value ? 'true' : 'false'));
-
-	// 	if (_wantsRTC.value) {
-	// 		// Note: since revalidateRTC may be called outside of watcher flow,
-	// 		// we need to avoid recreating rtc if it already exists.
-	// 		rtc.value ??= createFiresideRTC(
-	// 			fireside,
-	// 			user.value?.id ?? null,
-	// 			agoraStreamingInfo.value!,
-	// 			hosts,
-	// 			listableHostIds,
-	// 			hostBackgrounds,
-	// 			{ isMuted }
-	// 		);
-	// 	} else if (rtc.value) {
-	// 		logger.info('Destroying old rtc');
-
-	// 		destroyFiresideRTC(rtc.value);
-
-	// 		// Note: this would trigger the wantsRTCProducer watcher, but it
-	// 		// won't actually run the cleanup since rtc.value got unset. It's a
-	// 		// bit of a meme, but the way the producer gets destroyed in this
-	// 		// case is through the destroyFiresideRTC above.
-	// 		//
-	// 		// TODO(big-pp-event) this way of destroying the producer will not
-	// 		// end up clearing recording devices. this is because it does not
-	// 		// call stopStreaming..
-	// 		rtc.value = undefined;
-	// 	} else {
-	// 		logger.info('rtc was not set, nothing to do');
-	// 	}
-
-	// 	return rtc.value;
-	// };
-
 	function _onChatUsersChanged() {
 		// Assign our fireside host data anytime our chat users change from
 		// unset to set.
@@ -549,50 +482,47 @@ export function createFiresideController(
 	// instance changes (unset to set).
 	const _unwatchChatUsers = watch(chatUsers, _onChatUsersChanged);
 
-	// const _unwatchWantsRTC = watch(_wantsRTC, revalidateRTC);
+	const _unwatchWantsRTCProducer = watch(
+		() => Boolean(fireside.role?.canStream && localHost.value),
+		async newWantsRTCProducer => {
+			logger.info('wantsRTCProducer changed to ' + (newWantsRTCProducer ? 'true' : 'false'));
 
-	const _unwatchWantsRTCProducer = watch(_wantsRTCProducer, async newWantsRTCProducer => {
-		logger.info('wantsRTCProducer changed to ' + (newWantsRTCProducer ? 'true' : 'false'));
-
-		if (newWantsRTCProducer) {
-			// Do not create the producer if it already exists.
-			// This should never happen normally.
-			rtc.value!.producer ??= markRaw(createFiresideRTCProducer(rtc.value!));
-		} else if (rtc.value) {
-			const prevProducer = rtc.value.producer;
-			rtc.value.producer = null;
-
-			if (prevProducer) {
-				logger.info('Tearing down old producer');
-				// Ideally we'd like to not await here because we want the producer
-				// to be considered "torn down" immediately. It simplifies logic for handling it.
-				// We can't avoid awaiting here tho because if the producer instance
-				// is in a busy state at the moment we want do dispose it, it'll queue up stopping
-				// the streams, then cleanupFiresideRTCProducer gets called which sets _isStreaming
-				// to false, and THEN when the streams actually attempt to stop it'd think they
-				// already stopped, and will not run the teardown logic for them..
-				await stopStreaming(prevProducer, 'auto-lost-perms');
-				// TODO(big-pp-event) is there a way to make absolutely sure nothing keeps a reference
-				// to producer past this point? theres nothing in the producer class that prevents attempting
-				// to start streaming from a cleanup-up instance of producer.
-				cleanupFiresideRTCProducer(prevProducer);
+			if (newWantsRTCProducer) {
+				// Do not create the producer if it already exists. This should
+				// never happen normally.
+				producer.value ??= markRaw(
+					createFiresideProducer({
+						fireside,
+						gridChannel,
+						localHost,
+					})
+				);
 			} else {
-				logger.info('rtc.producer was not set, nothing to do');
-			}
-		} else {
-			logger.info('rtc was not set, nothing to do');
-		}
-	});
+				const prevProducer = producer.value;
+				producer.value = null;
 
-	const _unwatchListableHostIdsChanged = watch(
-		listableHostIds,
-		newListableHostIds => {
-			if (rtc.value) {
-				logger.info('setting listableHostIds', JSON.stringify(newListableHostIds));
-				setListableHostIds(rtc.value, newListableHostIds);
+				if (prevProducer) {
+					logger.info('Tearing down old producer.');
+
+					// Ideally we'd like to not await here because we want the producer
+					// to be considered "torn down" immediately. It simplifies logic for handling it.
+					// We can't avoid awaiting here tho because if the producer instance
+					// is in a busy state at the moment we want do dispose it, it'll queue up stopping
+					// the streams, then cleanupFiresideRTCProducer gets called which sets _isStreaming
+					// to false, and THEN when the streams actually attempt to stop it'd think they
+					// already stopped, and will not run the teardown logic for them..
+					await stopStreaming(prevProducer, 'auto-lost-perms');
+
+					// TODO(big-pp-event) is there a way to make absolutely sure nothing keeps a reference
+					// to producer past this point? theres nothing in the producer class that prevents attempting
+					// to start streaming from a cleanup-up instance of producer.
+					destroyFiresideProducer(prevProducer);
+				} else {
+					logger.info('Producer was not set, nothing to do.');
+				}
 			}
 		},
-		{ deep: true }
+		{ immediate: true }
 	);
 
 	// Set up watchers to initiate connection once grid boots up. When a
@@ -756,17 +686,11 @@ export function createFiresideController(
 		fireside,
 		hosts,
 		streamingHosts,
-		// syncHosts,
 		fetchedHostUserData,
-		listableHostIds,
 		hostBackgrounds,
 		stickerTargetController,
-		isMuted,
-		rtc,
-		// revalidateRTC,
 		assignHostBackgroundData,
 		status,
-		focusedUser,
 		chat,
 		chatSettings,
 		gridChannel,
@@ -783,7 +707,6 @@ export function createFiresideController(
 		stickerCount,
 		isDraft,
 		isStreaming,
-		isPersonallyStreaming,
 		isStreamingElsewhere,
 		shouldShowStreamingOptions,
 		canStream,
@@ -801,12 +724,26 @@ export function createFiresideController(
 		shouldHideStreamVideo,
 		pinStreamVideo,
 		logger,
+		isMuted,
+		_hasAutoplayError,
+		shouldShowMutedIndicator,
+		focusedHost,
+		videoPaused,
+		volumeLevelInterval,
+		shouldShowVideoThumbnails,
+		shouldShowVideoStats,
+		producer,
+		setupFinalized,
+		finalizeSetupFn,
+		localHost,
+		isPersonallyStreaming,
+		isFocusingMe,
 
 		_isExtending,
 		_canExtend,
 
 		checkExpiry,
-		cleanup,
+		destroy,
 		retry,
 
 		isFullscreen: computed(() => _isFullscreen.value),
@@ -936,9 +873,6 @@ export function createFiresideController(
 			fireside.role = new FiresideRole(rolePayload.role);
 		}
 
-		// --- Setup the RTC controller.
-		_setupRTC();
-
 		// --- Join channels.
 
 		try {
@@ -993,6 +927,8 @@ export function createFiresideController(
 
 		status.value = 'joined';
 		logger.info(`Successfully joined fireside.`);
+
+		chooseFocusedHost(controller);
 
 		// Set up the expiry interval to check if the fireside is expired.
 		_clearExpiryCheck();
@@ -1057,20 +993,12 @@ export function createFiresideController(
 		_updateInterval = setInterval(() => updateFiresideExpiryValues(controller), 1000);
 	}
 
-	function _setupRTC() {
-		// Note: since revalidateRTC may be called outside of watcher flow,
-		// we need to avoid recreating rtc if it already exists.
-		rtc.value ??= createFiresideRTC(fireside, user.value?.id ?? null, listableHostIds, {
-			isMuted,
-		});
-	}
-
 	/**
-	 * Cleanup should be called when you no longer want the controller. It
+	 * destroy should be called when you no longer want the controller. It
 	 * shouldn't be used to disconnect.
 	 */
-	async function cleanup() {
-		logger.info('controller cleanup called');
+	async function destroy() {
+		logger.info('Destroying controller.');
 
 		stickerStore.streak.value = null;
 
@@ -1081,14 +1009,32 @@ export function createFiresideController(
 		// when we need to destroy rtc and rtc producer. we want
 		// to make sure these are still destroyed even if the watchers are disposed.
 		_unwatchChatUsers();
-		// _unwatchWantsRTC();
 		_unwatchWantsRTCProducer();
-		_unwatchListableHostIdsChanged();
 		_unwatchGridConnection();
 		_unwatchSidebar();
 
-		if (rtc.value) {
-			destroyFiresideRTC(rtc.value);
+		const wasStreaming = !!producer.value?.isStreaming.value;
+		if (producer.value) {
+			if (wasStreaming) {
+				// TODO(oven)
+				// 	// cleanupFiresideRTCProducer does not call stopStreaming,
+				// 	// so some teardown logic needs to be done here.
+				// 	// The actual streams are closed and destroyed later in this function.
+				// 	updateSetIsStreaming(rtc.producer, { isStreaming: false });
+			}
+
+			destroyFiresideProducer(producer.value);
+			producer.value = null;
+		}
+
+		// This should remove all the players and stop everything from
+		// streaming.
+		focusedHost.value = null;
+		hosts.value = [];
+
+		if (volumeLevelInterval.value !== null) {
+			clearInterval(volumeLevelInterval.value);
+			volumeLevelInterval.value = null;
 		}
 
 		if (_isFullscreen.value) {
@@ -1127,6 +1073,30 @@ export function _getGuestToken() {
 	return token;
 }
 
+/**
+ * Tries choosing the best host to switch to if there's no focused host set.
+ */
+export function chooseFocusedHost({ focusedHost, streamingHosts }: FiresideController) {
+	// We only choose a new focused user if the current one is unset.
+	if (focusedHost.value) {
+		return;
+	}
+
+	let bestHost: FiresideHost | null = null;
+	let bestScore = -1;
+
+	for (const host of streamingHosts.value) {
+		const score =
+			(host.hasVideo ? 4 : 0) + (host.hasMicAudio ? 2 : 0) + (host.hasDesktopAudio ? 1 : 0);
+		if (score > bestScore) {
+			bestHost = host;
+			bestScore = score;
+		}
+	}
+
+	focusedHost.value = bestHost;
+}
+
 export function getFiresideLink(c: FiresideController, router: Router) {
 	if (!c.fireside) {
 		return;
@@ -1141,11 +1111,8 @@ export function copyFiresideLink(c: FiresideController, router: Router) {
 	}
 }
 
-export function toggleStreamVideoStats(c: FiresideController) {
-	if (!c.rtc.value) {
-		return;
-	}
-	c.rtc.value.shouldShowVideoStats = !c.rtc.value.shouldShowVideoStats;
+export function toggleStreamVideoStats({ shouldShowVideoStats }: FiresideController) {
+	shouldShowVideoStats.value = !shouldShowVideoStats.value;
 }
 
 export async function publishFireside(
@@ -1221,9 +1188,7 @@ export async function updateFiresideData(
 		syncHosts,
 		chatUsers,
 		chatSettings,
-		rtc,
-		// revalidateRTC,
-		cleanup,
+		destroy: cleanup,
 		logger,
 		checkExpiry,
 	} = c;
@@ -1417,25 +1382,11 @@ export function updateFiresideExpiryValues(c: FiresideController) {
 	}
 }
 
-function isListableHostStreaming(hosts: FiresideRTCHost[], listableHostIds: Set<number>): boolean {
-	return hosts.some(i => {
-		if (!i.isLive) {
-			return false;
-		}
-
-		if (!i.needsPermissionToView) {
-			return true;
-		}
-
-		return listableHostIds?.has(i.userModel.id);
-	});
-}
-
 /**
  * Returns `false` if there was an error, `true` if not.
  */
 async function _fetchForFiresideStreaming(c: FiresideController, { assignStatus = true }) {
-	const { fireside, status, hosts, syncHosts, chatUsers, listableHostIds, logger } = c;
+	const { fireside, status, hosts, syncHosts, chatUsers, logger } = c;
 
 	try {
 		const payload = await Api.sendRequest<FullStreamingPayload>(

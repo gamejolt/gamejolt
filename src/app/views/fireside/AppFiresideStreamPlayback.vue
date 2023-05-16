@@ -1,17 +1,10 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { useFiresideController } from '../../components/fireside/controller/controller';
 
-const { rtc } = useFiresideController()!;
-
-const videoPaused = computed(() => rtc.value?.videoPaused === true);
+const { videoPaused } = useFiresideController()!;
 
 function togglePlayback() {
-	if (!rtc.value) {
-		return;
-	}
-
 	if (videoPaused.value) {
 		_pauseVideo();
 	} else {
@@ -20,11 +13,11 @@ function togglePlayback() {
 }
 
 function _pauseVideo() {
-	rtc.value!.videoPaused = false;
+	videoPaused.value = false;
 }
 
 function _unpauseVideo() {
-	rtc.value!.videoPaused = true;
+	videoPaused.value = true;
 }
 </script>
 

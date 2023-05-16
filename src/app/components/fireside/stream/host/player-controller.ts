@@ -1,11 +1,17 @@
 import OvenPlayerStatic, { OvenPlayer } from 'ovenplayer';
 import { computed, markRaw, onMounted, onUnmounted, ref, shallowReadonly, shallowRef } from 'vue';
-import { FiresideRTCHost } from '../../../../../_common/fireside/rtc/host';
+import { FiresideHost } from '../../../../../_common/fireside/rtc/host';
+import { Logger } from '../../../../../utils/logging';
 
-export function createFiresideStreamHostPlayer(
-	host: FiresideRTCHost,
-	playerType: 'video' | 'chat'
-) {
+export function createFiresideStreamHostPlayer({
+	host,
+	playerType,
+	logger,
+}: {
+	host: FiresideHost;
+	playerType: 'video' | 'chat';
+	logger: Logger;
+}) {
 	const _isPlayerReady = ref(false);
 	const _player = shallowRef<OvenPlayer | null>(null);
 	const playerElem = ref<HTMLDivElement>();
@@ -13,10 +19,6 @@ export function createFiresideStreamHostPlayer(
 	const readyPlayer = computed(() => (_isPlayerReady.value && _player.value) || null);
 
 	onMounted(() => {
-		if (!host.isRemote) {
-			throw new Error(`Host players only work for remote users.`);
-		}
-
 		if (
 			(playerType === 'video' && host._videoPlayer) ||
 			(playerType === 'chat' && host._chatPlayer)
@@ -56,7 +58,7 @@ export function createFiresideStreamHostPlayer(
 		);
 
 		_player.value.on('ready', () => {
-			host.rtc.log(`Video player ready for user: `, host.userId);
+			logger.info(`Video player ready for user: `, host.userId);
 			_isPlayerReady.value = true;
 		});
 

@@ -94,7 +94,6 @@ const videoHeight = ref(0);
 const fireside = computed(() => c.value?.fireside || payloadFireside.value);
 const payloadFireside = ref<Fireside>();
 
-const rtc = computed(() => c.value?.rtc.value);
 const canPublish = computed(() => c.value?.canPublish.value === true);
 const canStream = computed(() => c.value?.canStream.value === true);
 const canExtinguish = computed(() => c.value?.canExtinguish.value === true);
@@ -102,7 +101,7 @@ const streamingHosts = computed(() => c.value?.streamingHosts.value || []);
 const isStreaming = computed(() => c.value?.isStreaming.value === true);
 const isPersonallyStreaming = computed(() => c.value?.isPersonallyStreaming.value === true);
 
-const focusedUser = computed(() => c.value?.focusedUser.value);
+const focusedHost = computed(() => c.value?.focusedHost.value);
 const background = computed(() => c.value?.background.value);
 
 const isFullscreen = computed(() => c.value?.isFullscreen.value === true);
@@ -140,7 +139,7 @@ const collapseSidebar = customRef<boolean>((track, trigger) => ({
 const videoFillColor = computed(() =>
 	!background.value && isFullscreen.value ? 'black' : undefined
 );
-const focusedUserVideoAspectRatio = computed(() => focusedUser.value?.videoAspectRatio);
+const focusedHostVideoAspectRatio = computed(() => focusedHost.value?.videoAspectRatio);
 
 const chatWidth = computed(() => {
 	if (isFullscreen.value && collapseSidebar.value) {
@@ -210,7 +209,7 @@ const { isBootstrapped } = createAppRoute({
 		setPageTheme();
 	},
 	onDestroyed() {
-		c.value?.cleanup();
+		c.value?.destroy();
 		themeStore.clearPageTheme(FiresideThemeKey);
 
 		beforeEachDeregister?.();
@@ -230,7 +229,7 @@ function onDimensionsChange() {
 	const { width, height } = Ruler.offset(videoContainer.value);
 	const containerRatio = width / height;
 
-	let receiveRatio = focusedUserVideoAspectRatio.value || 16 / 9;
+	let receiveRatio = focusedHostVideoAspectRatio.value || 16 / 9;
 
 	const minRatio = 0.5;
 	const maxRatio = 2;
@@ -269,10 +268,10 @@ function onClickRetry() {
 
 watch(isPersonallyStreaming, onIsPersonallyStreamingChanged);
 
-watch(focusedUserVideoAspectRatio, onDimensionsChange);
+watch(focusedHostVideoAspectRatio, onDimensionsChange);
 
 watch(
-	() => focusedUser.value?.userModel?.id,
+	() => focusedHost.value?.userModel?.id,
 	() => {
 		const { stickers, newStickers } = c.value?.stickerTargetController ?? {};
 		// Clear any current live stickers when changing the focused user.
@@ -592,7 +591,7 @@ function onClickStreamingBanner() {
 							<div v-else class="-video-wrapper">
 								<div class="-video-padding">
 									<div
-										v-if="c.isStreaming.value && c.chatRoom.value && rtc"
+										v-if="isStreaming"
 										ref="videoContainer"
 										v-app-observe-dimensions="debounceDimensionsChange"
 										class="-video-container"
@@ -604,51 +603,47 @@ function onClickStreamingBanner() {
 										}"
 									>
 										<!-- Remote videos -->
+										<!-- Local dashboard -->
+										<AppFiresideDashboard
+											v-if="isPersonallyStreaming && focusedHost?.isMe"
+										/>
 										<div
-											v-if="!focusedUser?.isLocal"
+											v-else-if="focusedHost"
 											class="-video-inner"
 											:style="{
 												width: videoWidth + 'px',
 												height: videoHeight + 'px',
 											}"
 										>
-											<template v-if="focusedUser">
-												<AppStickerTarget
-													:key="focusedUser.userId"
-													class="-video-inner -abs-stretch"
-													:controller="c.stickerTargetController"
+											<AppStickerTarget
+												:key="focusedHost.userId"
+												class="-video-inner -abs-stretch"
+												:controller="c.stickerTargetController"
+											>
+												<AppPopper
+													trigger="right-click"
+													:to="`#${popperTeleportId}`"
 												>
-													<AppPopper
-														trigger="right-click"
-														:to="`#${popperTeleportId}`"
-													>
-														<AppFiresideStream
-															:rtc-user="focusedUser"
-															:has-header="isFullscreen"
-															:has-hosts="isFullscreen"
-															:sidebar-collapsed="collapseSidebar"
-														/>
+													<AppFiresideStream
+														:host="focusedHost"
+														:has-header="isFullscreen"
+														:has-hosts="isFullscreen"
+														:sidebar-collapsed="collapseSidebar"
+													/>
 
-														<template #popover>
-															<div class="list-group">
-																<a
-																	class="list-group-item"
-																	@click="toggleVideoStats()"
-																>
-																	{{
-																		$gettext(
-																			`Toggle Video Stats`
-																		)
-																	}}
-																</a>
-															</div>
-														</template>
-													</AppPopper>
-												</AppStickerTarget>
-											</template>
+													<template #popover>
+														<div class="list-group">
+															<a
+																class="list-group-item"
+																@click="toggleVideoStats()"
+															>
+																{{ $gettext(`Toggle Video Stats`) }}
+															</a>
+														</div>
+													</template>
+												</AppPopper>
+											</AppStickerTarget>
 										</div>
-										<!-- Local dashboard -->
-										<AppFiresideDashboard v-else />
 
 										<!-- This loads all the user streams and we Teleport them into the correct places from here -->
 										<AppFiresideStreamHost
