@@ -4,12 +4,12 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { useFiresideController } from '../../components/fireside/controller/controller';
 
 const c = useFiresideController()!;
-const { isDraft, isStreaming, expiresProgressValue, expiresDurationText } = c;
+const { isDraft, hasStreams, expiresProgressValue, expiresDurationText } = c;
 </script>
 
 <template>
 	<div
-		v-if="!isDraft && !isStreaming && expiresProgressValue !== undefined"
+		v-if="!isDraft && !hasStreams && expiresProgressValue !== undefined"
 		class="fireside-stats"
 	>
 		<div class="-burnout-bar">

@@ -284,8 +284,7 @@ export function createFiresideController(
 	});
 
 	const isDraft = computed(() => fireside?.is_draft ?? true);
-	// TODO(oven): better name
-	const isStreaming = computed(() => streamingHosts.value.length > 0);
+	const hasStreams = computed(() => streamingHosts.value.length > 0);
 
 	// TODO(oven)
 	/**
@@ -706,7 +705,7 @@ export function createFiresideController(
 		chatUsers,
 		stickerCount,
 		isDraft,
-		isStreaming,
+		hasStreams,
 		isStreamingElsewhere,
 		shouldShowStreamingOptions,
 		canStream,

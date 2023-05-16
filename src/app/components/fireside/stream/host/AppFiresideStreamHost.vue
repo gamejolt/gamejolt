@@ -23,10 +23,17 @@ const host = props.host;
 const localVideoStreamElem = ref<HTMLVideoElement>();
 
 /**
+ * Whether this host is them and they're currently streaming in this client.
+ */
+const isLocallyStreaming = computed(() => host.isMe && producer.value?.isStreaming.value === true);
+
+/**
  * Will return a MediaStream of their local video stream if this host is them,
  * and they are currently streaming in this tab.
  */
-const localVideoStream = computed(() => (host.isMe && producer.value?.videoStream.value) || null);
+const localVideoStream = computed(
+	() => (isLocallyStreaming.value && producer.value?.videoStream.value) || null
+);
 
 onMounted(() => {
 	if (localVideoStream.value) {
@@ -54,12 +61,15 @@ onBeforeUnmount(() => {
 	>
 		<Teleport :to="host.currentVideoLock?.target" :disabled="!host.currentVideoLock">
 			<div>
-				<template v-if="!localVideoStream">
-					<AppFiresideStreamHostVideoPlayer :host="host" />
-					<AppFiresideStreamHostChatPlayer :host="host" />
+				<template v-if="isLocallyStreaming">
+					<!-- We only need to render out video streams. If they're only streaming audio, nothing will get rendered. -->
+					<template v-if="localVideoStream">
+						<video ref="localVideoStreamElem" autoplay muted />
+					</template>
 				</template>
 				<template v-else>
-					<video ref="localVideoStreamElem" autoplay muted />
+					<AppFiresideStreamHostVideoPlayer v-if="host.hasVideo" :host="host" />
+					<AppFiresideStreamHostChatPlayer v-if="host.hasMicAudio" :host="host" />
 				</template>
 			</div>
 		</Teleport>

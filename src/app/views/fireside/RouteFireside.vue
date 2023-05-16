@@ -98,7 +98,7 @@ const canPublish = computed(() => c.value?.canPublish.value === true);
 const canStream = computed(() => c.value?.canStream.value === true);
 const canExtinguish = computed(() => c.value?.canExtinguish.value === true);
 const streamingHosts = computed(() => c.value?.streamingHosts.value || []);
-const isStreaming = computed(() => c.value?.isStreaming.value === true);
+const hasStreams = computed(() => c.value?.hasStreams.value === true);
 const isPersonallyStreaming = computed(() => c.value?.isPersonallyStreaming.value === true);
 
 const focusedHost = computed(() => c.value?.focusedHost.value);
@@ -385,21 +385,21 @@ function onClickStreamingBanner() {
 							</strong>
 
 							<component
-								:is="isStreaming ? 'a' : 'span'"
+								:is="hasStreams ? 'a' : 'span'"
 								v-if="canPublish"
 								v-app-tooltip="
-									!isStreaming
+									!hasStreams
 										? $gettext(
 												`Someone needs to be streaming to make the fireside public`
 										  )
 										: undefined
 								"
 								class="-status-banner-action"
-								:class="{ 'text-muted': !isStreaming }"
+								:class="{ 'text-muted': !hasStreams }"
 								:style="{
-									cursor: isStreaming ? undefined : 'not-allowed',
+									cursor: hasStreams ? undefined : 'not-allowed',
 								}"
-								@click="isStreaming ? onClickPublish() : undefined"
+								@click="hasStreams ? onClickPublish() : undefined"
 							>
 								{{ $gettext(`Make fireside public`) }}
 							</component>
@@ -591,7 +591,7 @@ function onClickStreamingBanner() {
 							<div v-else class="-video-wrapper">
 								<div class="-video-padding">
 									<div
-										v-if="isStreaming"
+										v-if="hasStreams"
 										ref="videoContainer"
 										v-app-observe-dimensions="debounceDimensionsChange"
 										class="-video-container"

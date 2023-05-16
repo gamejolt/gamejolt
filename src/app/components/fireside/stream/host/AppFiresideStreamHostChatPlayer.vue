@@ -26,6 +26,7 @@ const { player, playerElem } = createFiresideStreamHostPlayer({
 
 watchEffect(() => {
 	if (host.micAudioPlayState) {
+		player.value?.setMute(false);
 		player.value?.play();
 	} else {
 		player.value?.stop();

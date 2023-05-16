@@ -42,7 +42,7 @@ provideFiresideController(c);
 const {
 	streamingHosts,
 	isShowingStreamSetup,
-	isStreaming,
+	hasStreams,
 	focusedHost,
 	isFocusingMe,
 	destroy: destroyController,
@@ -72,8 +72,8 @@ const shouldShowVideo = computed(() => {
 	return hasVideo.value && !(isShowingStreamSetup.value && isFocusingMe.value);
 });
 
-watch([isStreaming, hasVideo], () => {
-	emit('changed', hasVideo.value, isStreaming.value);
+watch([hasStreams, hasVideo], () => {
+	emit('changed', hasVideo.value, hasStreams.value);
 });
 
 onBeforeUnmount(() => destroyController());

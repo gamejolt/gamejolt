@@ -27,7 +27,7 @@ export class FiresideHost {
 	constructor(options: { userId: number; isMe: boolean; isMuted: boolean }) {
 		this.userId = options.userId;
 		this.isMe = options.isMe;
-		this.micAudioPlayState = options.isMuted;
+		this.micAudioPlayState = !options.isMuted;
 	}
 
 	public readonly userId: number;
@@ -77,9 +77,9 @@ export class FiresideHost {
 	// TODO(oven): eh?
 	videoAspectRatio = 16 / 9;
 
-	videoPlayState = false;
-	micAudioPlayState = false;
-	desktopAudioPlayState = false;
+	videoPlayState = true;
+	micAudioPlayState = true;
+	desktopAudioPlayState = true;
 
 	/**
 	 * Scaled from 0 to 1, this is the mic volume level data that we're
@@ -219,7 +219,10 @@ export function removeFiresideHost(controller: FiresideController, userId: numbe
 	}
 }
 
-function _initRemoteHostPrefs({ fireside, isMuted }: FiresideController, host: FiresideHost) {
+function _initRemoteHostPrefs(
+	{ fireside, isMuted, logger }: FiresideController,
+	host: FiresideHost
+) {
 	// Ignore controllers that disable audio.
 	if (isMuted.value) {
 		return;
@@ -239,6 +242,8 @@ function _initRemoteHostPrefs({ fireside, isMuted }: FiresideController, host: F
 		remoteDesktopAudioMuted,
 		remoteMicAudioMuted,
 	} = options;
+
+	logger.info(`Applying remote host prefs for ${host.userId}`, options);
 
 	if (remoteMicAudioMuted !== undefined) {
 		setMicAudioPlayState(host, !remoteMicAudioMuted);

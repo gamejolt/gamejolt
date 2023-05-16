@@ -894,11 +894,10 @@ export async function startStreaming(producer: FiresideProducer) {
 			startKitStreaming(localChatKit.value);
 
 			await _gridChannel.value.pushSetStream({
-				is_streaming_video: streamingWebcamDeviceId.value !== PRODUCER_UNSET_DEVICE,
+				is_streaming_video: streamingWebcamDeviceId.value !== null,
 				is_streaming_audio_desktop:
-					shouldStreamDesktopAudio.value ||
-					streamingDesktopAudioDeviceId.value !== PRODUCER_UNSET_DEVICE,
-				is_streaming_audio_mic: streamingMicDeviceId.value !== PRODUCER_UNSET_DEVICE,
+					shouldStreamDesktopAudio.value || streamingDesktopAudioDeviceId.value !== null,
+				is_streaming_audio_mic: streamingMicDeviceId.value !== null,
 			});
 
 			logger.info(`Started streaming.`);

@@ -48,7 +48,7 @@ const {
 	chatRoom,
 	hostBackgrounds,
 	gridChannel,
-	isStreaming,
+	hasStreams,
 	isOwner,
 	canEdit,
 	canStream,
@@ -451,7 +451,7 @@ function onClickChatMods() {
 				<AppButton
 					v-if="canPublish"
 					v-app-tooltip="
-						isStreaming
+						hasStreams
 							? undefined
 							: $gettext(`Firesides need someone to be streaming to go public!`)
 					"
@@ -459,7 +459,7 @@ function onClickChatMods() {
 					primary
 					solid
 					block
-					:disabled="!isStreaming"
+					:disabled="!hasStreams"
 					@click="onClickPublish"
 				>
 					{{ $gettext(`Make fireside public`) }}

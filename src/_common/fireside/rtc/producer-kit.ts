@@ -15,7 +15,7 @@ export function createFiresideProducerKit({
 	streamType: 'video' | 'chat';
 	host: FiresideHost;
 }) {
-	const logger = createLogger('Fireside Producer Kit');
+	const logger = createLogger(`Fireside Producer Kit (${streamType})`);
 
 	const ovenClient = OvenLiveKitStatic.create({
 		callbacks: {

@@ -36,7 +36,7 @@ const {
 	stickerCount,
 	canStream,
 	canManageCohosts,
-	isStreaming,
+	hasStreams,
 	isPersonallyStreaming,
 	producer,
 	sidebar,
@@ -50,7 +50,7 @@ const { canChargeSticker } = stickerStore;
 const layer = useStickerLayer();
 const { isAllCreator } = layer || {};
 
-const canPlaceStickers = computed(() => !!user.value && !Screen.isMobile && isStreaming.value);
+const canPlaceStickers = computed(() => !!user.value && !Screen.isMobile && hasStreams.value);
 
 // TODO(oven): we might need to check the streaming devices instead of their selected ones here.
 // I think we want to know if they're currently streaming using one of these devices so they can toggle on/off and stuff.
