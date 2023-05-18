@@ -7,9 +7,11 @@ import {
 	styleWhen,
 } from '../../../_styles/mixins';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import AppCurrencyPill from '../../currency/AppCurrencyPill.vue';
+import AppCurrencyPillList from '../../currency/AppCurrencyPillList.vue';
+import { CurrencyCostData, CurrencyType } from '../../currency/currency-type';
 import { shorthandReadableTime } from '../../filters/duration';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
+import { InventoryShopProductSalePricing } from '../../inventory/shop/inventory-shop-product-sale-pricing.model';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppPopperConfirmWrapper from '../../popper/confirm-wrapper/AppPopperConfirmWrapper.vue';
 import { StickerPack } from './pack.model';
@@ -21,7 +23,6 @@ export const StickerPackRatio = 2 / 3;
 interface StickerPackDetails {
 	name?: boolean;
 	cost?: boolean;
-	contents?: boolean;
 }
 
 type PackDetailsOptions = boolean | StickerPackDetails;
@@ -49,13 +50,18 @@ const props = defineProps({
 		type: Number,
 		default: undefined,
 	},
+	costOverride: {
+		type: Array as PropType<InventoryShopProductSalePricing[]>,
+		default: undefined,
+	},
 });
 
 const emit = defineEmits({
-	clickPack: () => true,
+	clickPack: (_currencyOptions: CurrencyCostData) => true,
 });
 
-const { pack, showDetails, canClickPack, forceElevate, hoverTitle, expiryInfo } = toRefs(props);
+const { pack, showDetails, canClickPack, forceElevate, hoverTitle, expiryInfo, costOverride } =
+	toRefs(props);
 
 const showName = computed(() => {
 	if (!showDetails.value) {
@@ -71,9 +77,27 @@ const showCost = computed(() => {
 	return showDetails.value === true || showDetails.value.cost === true;
 });
 
+const currencyOptions = computed(() => {
+	const result: CurrencyCostData = {};
+
+	if (costOverride?.value) {
+		for (const pricing of costOverride.value) {
+			const currency = pricing.knownCurrencyType;
+			if (currency) {
+				result[currency.id] = { currency, amount: pricing.price };
+			}
+		}
+	} else {
+		const currency = CurrencyType.coins;
+		result[currency.id] = { currency, amount: pack.value.cost_coins };
+	}
+
+	return result;
+});
+
 function onClickPack() {
 	if (canClickPack.value) {
-		emit('clickPack');
+		emit('clickPack', currencyOptions.value);
 	}
 }
 
@@ -137,7 +161,13 @@ const overlayedStyle: CSSProperties = {
 					right: '4px',
 				}"
 			>
-				<AppCurrencyPill currency="coins" :amount="pack.cost_coins" />
+				<AppCurrencyPillList
+					:currencies="currencyOptions"
+					direction="column"
+					cross-align="flex-end"
+					:gap="4"
+					overlay
+				/>
 			</div>
 
 			<div

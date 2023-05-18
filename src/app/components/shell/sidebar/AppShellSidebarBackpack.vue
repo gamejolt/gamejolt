@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-import { run } from '../../../../utils/utils';
-import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCurrencyPill from '../../../../_common/currency/AppCurrencyPill.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -12,20 +9,18 @@ import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerLayerDrawerItem from '../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
 import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
-import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.model';
+import { UserStickerPack } from '../../../../_common/sticker/pack/user-pack.model';
 import {
 	getStickerStacksFromPayloadData,
 	sortStickerStacks,
 	StickerSortMethod,
 	useStickerStore,
 } from '../../../../_common/sticker/sticker-store';
-import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { styleBorderRadiusLg, styleChangeBg, styleTextOverflow } from '../../../../_styles/mixins';
+import { styleTextOverflow } from '../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../_styles/variables';
 import { illPointyThing } from '../../../img/ill/illustrations';
-import { routeQuests } from '../../../views/quests/quests.route';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
 type FormModel = {
@@ -34,7 +29,6 @@ type FormModel = {
 
 const { stickerPacks, eventStickers, creatorStickers, generalStickers, allStickers } =
 	useStickerStore();
-const { coinBalance } = useCommonStore();
 
 const form: FormController<FormModel> = createForm({
 	loadUrl: `/mobile/sticker`,
@@ -47,17 +41,6 @@ const form: FormController<FormModel> = createForm({
 		},
 	},
 	sanitizeComplexData: false,
-	onInit() {
-		run(async () => {
-			const payload = await Api.sendFieldsRequest(
-				'/mobile/me',
-				{ coinBalance: true },
-				{ detach: true }
-			);
-
-			coinBalance.value = payload.coinBalance;
-		});
-	},
 	async onLoad(payload) {
 		stickerPacks.value = UserStickerPack.populate(payload.ownedPacks);
 
@@ -103,42 +86,9 @@ function sortStickers(sorting: StickerSortMethod) {
 <template>
 	<div id="shell-sidebar-backpack" class="fill-offset">
 		<AppForm :controller="form">
-			<div
-				:style="{
-					display: 'flex',
-					alignItems: 'center',
-					gap: '12px',
-				}"
-			>
-				<AppButton block solid @click="onClickVendingMachine()">
-					{{ $gettext(`Get packs`) }}
-				</AppButton>
-
-				<AppCurrencyPill
-					:style="{
-						flex: 'none',
-					}"
-					currency="coins"
-					:amount="coinBalance"
-				/>
-			</div>
-
-			<AppSpacer vertical :scale="4" />
-			<RouterLink class="link-unstyled" :to="{ name: routeQuests.name }">
-				<div
-					class="well"
-					:style="{
-						...styleBorderRadiusLg,
-						...styleChangeBg('bg-offset'),
-					}"
-				>
-					{{
-						$gettext(
-							`Complete quests to earn coins that you can use to purchase packs!`
-						)
-					}}
-				</div>
-			</RouterLink>
+			<AppButton block solid @click="onClickVendingMachine()">
+				{{ $gettext(`Open Shop`) }}
+			</AppButton>
 
 			<AppSpacer vertical :scale="4" />
 

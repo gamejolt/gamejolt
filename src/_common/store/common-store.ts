@@ -39,6 +39,7 @@ export function createCommonStore() {
 
 	// Wallet currencies.
 	const coinBalance = ref(0);
+	const joltbuxBalance = ref(0);
 
 	const isUserTimedOut = computed(() => {
 		return (
@@ -77,6 +78,7 @@ export function createCommonStore() {
 		userBootstrapped.value = true;
 		reactionsData.value = new Map();
 		coinBalance.value = 0;
+		joltbuxBalance.value = 0;
 	}
 
 	function setConsents(newConsents: UserConsents) {
@@ -117,6 +119,7 @@ export function createCommonStore() {
 		clearError,
 		redirect,
 		coinBalance,
+		joltbuxBalance,
 	};
 }
 

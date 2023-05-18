@@ -1,3 +1,4 @@
+import { IllustrationAsset } from '../../../_common/illustration/AppIllustration.vue';
 import illChargeOrbEmptyPath from './charge-orb-empty.png';
 import illCreatorInfographicPath from './creator-infographic.png';
 import illEndOfFeedPath from './end-of-feed.png';
@@ -9,19 +10,6 @@ import illNoCommentsPath from './no-comments.png';
 import illPointyThingPath from './pointy-thing.png';
 import illStreamingJellyPath from './streaming-jelly.png';
 import illTimeOutPath from './time-out.png';
-
-/**
- * Run all the assets through https://squoosh.app/
- *
- * Choose OxiPNG and to reduce the color palette. We can do that since we have
- * limited colors and it doesn't degrade the images.
- */
-
-export interface IllustrationAsset {
-	path: string;
-	width: number;
-	height: number;
-}
 
 export const illStreamingJelly: IllustrationAsset = {
 	path: illStreamingJellyPath,

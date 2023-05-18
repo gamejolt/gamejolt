@@ -13,7 +13,7 @@ import { $gettext } from '../translate/translate.service';
 import { User } from '../user/user.model';
 import AppStickerLayer from './layer/AppStickerLayer.vue';
 import { getCollidingStickerTarget, StickerLayerController } from './layer/layer-controller';
-import { UserStickerPack } from './pack/user_pack.model';
+import { UserStickerPack } from './pack/user-pack.model';
 import { StickerPlacement } from './placement/placement.model';
 import { StickerCount } from './sticker-count';
 import { Sticker, StickerStack } from './sticker.model';
