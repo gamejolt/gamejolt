@@ -1,3 +1,4 @@
+import { GamePackage } from '../game/package/package.model';
 import { LinkedKey } from '../linked-key/linked-key.model';
 import { Model } from '../model/model.service';
 import { SellablePricing } from './pricing/pricing.model';
@@ -16,10 +17,11 @@ export class Sellable extends Model {
 	is_owned?: boolean;
 	linked_key_providers: string[] = [];
 
+	resource_type!: string | null;
+	resource_model!: GamePackage | null;
+
 	// keys settings
 	linked_keys?: LinkedKey[];
-
-	game_package_id?: number;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -35,6 +37,14 @@ export class Sellable extends Model {
 		if (data.linked_key_providers) {
 			// Just an array of strings.
 			this.linked_key_providers = data.linked_key_providers || [];
+		}
+
+		if (data.resource && data.resource_type) {
+			switch (data.resource_type) {
+				case 'Game_Package':
+					this.resource_model = new GamePackage(data.resource);
+					break;
+			}
 		}
 	}
 }
