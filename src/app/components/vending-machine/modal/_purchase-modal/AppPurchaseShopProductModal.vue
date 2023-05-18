@@ -140,13 +140,12 @@ const { shopProduct, currencyOptions } = toRefs(props);
 
 const modal = useModal()!;
 
-// TODO(mtx-checkout) can probably remove this - figure out what to do as we're
-// finalizing purchase flow.
-const processingPurchaseCurrencyId = ref<string>();
-
 const { stickerPacks } = useStickerStore();
 const { coinBalance, joltbuxBalance } = useCommonStore();
+
 const balanceRefs = { coinBalance, joltbuxBalance };
+
+const processingPurchaseCurrencyId = ref<string>();
 
 const currencyOptionsList = computed(() => Object.entries(currencyOptions.value));
 

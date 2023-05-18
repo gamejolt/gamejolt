@@ -25,17 +25,13 @@ import { $gettext, $gettextInterpolate } from '../../translate/translate.service
 import AppMicrotransactionPaymentForm from '../payment-form/AppMicrotransactionPaymentForm.vue';
 import { MicrotransactionProduct } from '../product.model';
 
-// TODO(mtx-checkout) Remove or finish this: purchase flow, prices for MtxProducts, etc.
+const { joltbuxBalance } = useCommonStore();
 
 const isLoading = ref(true);
 const hasError = ref(false);
-
 const mtxProducts = ref([]) as Ref<MicrotransactionProduct[]>;
-
 const selectedProduct = ref(null) as Ref<MicrotransactionProduct | null>;
 const isProcessingPayment = ref(false);
-
-const { joltbuxBalance } = useCommonStore();
 
 onMounted(async () => {
 	isLoading.value = true;
