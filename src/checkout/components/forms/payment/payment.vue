@@ -204,11 +204,11 @@ export default class FormPayment extends mixins(Wrapper) implements FormOnSubmit
 				data.save_card = this.formModel.save_card;
 			}
 
-			return Api.sendRequest('/web/checkout/charge/' + this.order.id, data);
+			return Api.sendRequest('/web/checkout/charge/' + this.order.hash, data);
 		} else {
 			// Existing/saved card
 			const data = { payment_source: this.formModel.selectedCard };
-			return Api.sendRequest('/web/checkout/charge/' + this.order.id, data);
+			return Api.sendRequest('/web/checkout/charge/' + this.order.hash, data);
 		}
 	}
 }

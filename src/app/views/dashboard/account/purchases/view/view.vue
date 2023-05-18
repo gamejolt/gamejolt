@@ -1,12 +1,9 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { arrayGroupBy, arrayIndexBy } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
 import { formatCurrency } from '../../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../../_common/filters/date';
-import { Game } from '../../../../../../_common/game/game.model';
-import { GamePackage } from '../../../../../../_common/game/package/package.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { Geo } from '../../../../../../_common/geo/geo.service';
 import { Order } from '../../../../../../_common/order/order.model';
@@ -18,23 +15,23 @@ import {
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { useAccountRouteController } from '../../RouteDashAccount.vue';
+import AppGamePackagePreview from './AppGamePackagePreview.vue';
 
 @Options({
 	name: 'RouteDashAccountPurchasesView',
 	components: {
 		AppGameThumbnailImg,
+		AppGamePackagePreview,
 	},
 })
 @OptionsForRoute({
-	deps: { params: ['id'] },
-	resolver: ({ route }) => Api.sendRequest('/web/dash/purchases/' + route.params.id),
+	deps: { params: ['hash'] },
+	resolver: ({ route }) => Api.sendRequest('/web/dash/purchases/order/' + route.params.hash),
 })
 export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
 	order: Order = null as any;
-	packages: GamePackage[] = [];
-	games: Game[] = [];
 
 	readonly Geo = Geo;
 	readonly OrderPayment = OrderPayment;
@@ -44,14 +41,6 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 
 	get routeTitle() {
 		return this.routeStore.heading;
-	}
-
-	get gamesById() {
-		return arrayIndexBy(this.games, 'id');
-	}
-
-	get packagesBySellable() {
-		return arrayGroupBy(this.packages, 'sellable_id');
 	}
 
 	get firstRefund() {
@@ -76,8 +65,6 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 
 	routeResolved($payload: any) {
 		this.order = new Order($payload.order);
-		this.games = Game.populate($payload.games);
-		this.packages = GamePackage.populate($payload.packages);
 	}
 }
 </script>
@@ -113,7 +100,7 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 		<hr />
 
 		<div class="row">
-			<div class="col-sm-4">
+			<div v-if="billingAddress" class="col-sm-4">
 				<h4 class="section-header">
 					<AppTranslate>Billing</AppTranslate>
 				</h4>
@@ -210,72 +197,12 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 				<small>{{ formatCurrency(item.amount) }}</small>
 			</h4>
 
-			<div
-				v-for="firstPackage of [packagesBySellable[item.sellable.id][0]]"
-				:key="firstPackage.id"
-			>
-				<div class="row">
-					<div class="col-xs-2">
-						<router-link
-							style="display: block"
-							:to="{
-								name: 'discover.games.view.overview',
-								params: {
-									slug: gamesById[firstPackage.game_id].slug,
-									id: firstPackage.game_id,
-								},
-							}"
-						>
-							<AppGameThumbnailImg animate :game="gamesById[firstPackage.game_id]" />
-						</router-link>
-					</div>
-					<div class="col-xs-10">
-						<p>
-							<router-link
-								:to="{
-									name: 'discover.games.view.overview',
-									params: {
-										slug: gamesById[firstPackage.game_id].slug,
-										id: firstPackage.game_id,
-									},
-								}"
-							>
-								{{ gamesById[firstPackage.game_id].title }}
-							</router-link>
-							<br />
-							<span class="small">
-								<AppTranslate>by</AppTranslate>
-								{{ ' ' }}
-								<router-link
-									:to="{
-										name: 'profile.overview',
-										params: {
-											username:
-												gamesById[firstPackage.game_id].developer.username,
-										},
-									}"
-								>
-									{{ gamesById[firstPackage.game_id].developer.display_name }}
-								</router-link>
-							</span>
-						</p>
-
-						<p />
-
-						<h5 class="sans-margin">
-							<AppTranslate>Packages</AppTranslate>
-						</h5>
-
-						<div class="small text-muted">
-							<div v-for="pkg of packagesBySellable[item.sellable.id]" :key="pkg.id">
-								- {{ pkg.title || gamesById[pkg.game_id].title }}
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<br />
-			</div>
+			<template v-if="item.sellable.resource_type === 'Game_Package'">
+				<AppGamePackagePreview
+					:game="item.sellable.resource_model.game"
+					:game-package="item.sellable.resource_model"
+				/>
+			</template>
 		</div>
 	</div>
 </template>
