@@ -1,5 +1,6 @@
 import { GamePackage } from '../game/package/package.model';
 import { LinkedKey } from '../linked-key/linked-key.model';
+import { MicrotransactionProduct } from '../microtransaction/product.model';
 import { Model } from '../model/model.service';
 import { SellablePricing } from './pricing/pricing.model';
 
@@ -18,7 +19,7 @@ export class Sellable extends Model {
 	linked_key_providers: string[] = [];
 
 	resource_type!: string | null;
-	resource_model!: GamePackage | null;
+	resource_model!: GamePackage | MicrotransactionProduct | null;
 
 	// keys settings
 	linked_keys?: LinkedKey[];
@@ -43,6 +44,9 @@ export class Sellable extends Model {
 			switch (data.resource_type) {
 				case 'Game_Package':
 					this.resource_model = new GamePackage(data.resource);
+					break;
+				case 'Microtransaction_Product':
+					this.resource_model = new MicrotransactionProduct(data.resource);
 					break;
 			}
 		}

@@ -202,6 +202,7 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 					:game="item.sellable.resource_model.game"
 					:game-package="item.sellable.resource_model"
 				/>
+				<!-- TODO: MTX product visualization -->
 			</template>
 		</div>
 	</div>
