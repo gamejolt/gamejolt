@@ -2,6 +2,8 @@ import { IllustrationAsset } from '../../../_common/illustration/AppIllustration
 import illChargeOrbEmptyPath from './charge-orb-empty.png';
 import illCreatorInfographicPath from './creator-infographic.png';
 import illEndOfFeedPath from './end-of-feed.png';
+import illExtremeSadnessSmallPath from './extreme-sadness-small.png';
+import illExtremeSadnessPath from './extreme-sadness.png';
 import illMaintenancePath from './maintenance.png';
 import illMobileKikkersteinPath from './mobile-kikkerstein.png';
 import illNoChatPath from './no-chat.png';
@@ -75,4 +77,16 @@ export const illPointyThing: IllustrationAsset = {
 	path: illPointyThingPath,
 	width: 383,
 	height: 278,
+};
+
+export const illExtremeSadness: IllustrationAsset = {
+	path: illExtremeSadnessPath,
+	width: 331,
+	height: 357,
+};
+
+export const illExtremeSadnessSmall: IllustrationAsset = {
+	path: illExtremeSadnessSmallPath,
+	width: 166,
+	height: 179,
 };
