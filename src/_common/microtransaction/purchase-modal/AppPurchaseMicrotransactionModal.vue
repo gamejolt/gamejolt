@@ -38,8 +38,9 @@ onMounted(async () => {
 	hasError.value = false;
 
 	try {
+		const storeType = GJ_IS_DESKTOP_APP ? 'desktop' : 'web';
 		const response = await Api.sendRequest(
-			`/web/checkout/microtransactions/products`,
+			`/web/checkout/microtransactions/products/${storeType}`,
 			undefined,
 			{ detach: true }
 		);
