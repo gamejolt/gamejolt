@@ -1,61 +1,59 @@
-import { ref, Ref } from 'vue';
+import { ref } from 'vue';
 import { getCurrentServerTime } from '../../utils/server-time';
 import { Api } from '../api/api.service';
 
 class FeatureToggle {
-	declare _lastFetchTime: number;
-	declare readonly _fetchInterval: number;
+	_lastFetchTime: number;
+	readonly _fetchTimeout: number;
+
+	_valueRef = ref<boolean | undefined>(this.defaultValue);
 
 	constructor(
 		public readonly name: string,
 		private readonly defaultValue: boolean,
 		{
-			fetchInterval = 0,
+			fetchTimeout = 0,
 		}: {
-			fetchInterval?: number;
+			fetchTimeout?: number;
 		} = {}
 	) {
 		this._lastFetchTime = 0;
-		this._fetchInterval = fetchInterval;
+		this._fetchTimeout = fetchTimeout;
 	}
 
 	get value() {
-		if (typeof featureToggleValues.value[this.name] === 'boolean') {
-			return featureToggleValues.value[this.name];
-		}
-		return this.defaultValue;
+		return this._valueRef.value ?? this.defaultValue;
 	}
 }
 
-const featureToggleValues = ref({}) as Ref<Record<string, boolean>>;
-
 export const featureMicrotransactions = new FeatureToggle('microtransactions', false, {
-	fetchInterval: 1_000 * 60,
+	fetchTimeout: 1_000 * 60,
 });
 
 export async function fetchFeatureToggles(
 	features: FeatureToggle[],
 	{
-		ignoreInterval = false,
+		ignoreInterval: ignoreFetchTimeout = false,
 	}: {
 		ignoreInterval?: boolean;
 	} = {}
 ) {
 	try {
 		const now = getCurrentServerTime();
-		const fieldsKeys: string[] = [];
-		const fields = features.reduce((result, i) => {
-			const lastFetched = i._lastFetchTime;
-			if (ignoreInterval || !lastFetched || now - lastFetched >= i._fetchInterval) {
-				i._lastFetchTime = now;
-				fieldsKeys.push(i.name);
-				result[i.name] = true;
+		let count = 0;
+
+		const fields: Record<string, true> = {};
+
+		for (const feature of features) {
+			const lastFetched = feature._lastFetchTime;
+			if (ignoreFetchTimeout || !lastFetched || now - lastFetched >= feature._fetchTimeout) {
+				++count;
+				feature._lastFetchTime = now;
+				fields[feature.name] = true;
 			}
+		}
 
-			return result;
-		}, {} as Record<string, true>);
-
-		if (!fieldsKeys.length) {
+		if (!count) {
 			// No features to fetch.
 			return;
 		}
@@ -64,15 +62,16 @@ export async function fetchFeatureToggles(
 			detach: true,
 		});
 
-		for (const field of fieldsKeys) {
-			const value = response[field];
+		for (const feature of features) {
+			const value = response[feature.name];
+
 			if (typeof value === 'boolean') {
 				// Use the value backend responded with for this feature.
-				featureToggleValues.value[field] = value;
+				feature._valueRef.value = value;
 			} else {
 				// Remove any backend-provided feature, causing this to fall
 				// back to the default.
-				delete featureToggleValues.value[field];
+				feature._valueRef.value = undefined;
 			}
 		}
 	} catch (e) {
