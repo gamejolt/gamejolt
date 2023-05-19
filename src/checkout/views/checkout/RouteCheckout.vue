@@ -1,25 +1,29 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { CSSProperties, computed, ref } from 'vue';
 import { Api } from '../../../_common/api/api.service';
+import AppAspectRatio from '../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { Game } from '../../../_common/game/game.model';
 import { GamePackage } from '../../../_common/game/package/package.model';
 import { showErrorGrowl } from '../../../_common/growls/growls.service';
+import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import AppMediaItemCover from '../../../_common/media-item/cover/cover.vue';
+import { MicrotransactionProduct } from '../../../_common/microtransaction/product.model';
 import { ModelData } from '../../../_common/model/model.service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { Order } from '../../../_common/order/order.model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import { Screen } from '../../../_common/screen/screen-service';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { styleFlexCenter, styleMaxWidthForOptions } from '../../../_styles/mixins';
 import FormPayment from '../../components/forms/payment/payment.vue';
 
 export default {
 	...defineAppRouteOptions({
 		resolver: ({ route }) => Api.sendRequest('/web/checkout/' + route.params.orderHash),
 	}),
-	components: { AppLoading, AppMediaItemCover, FormPayment },
 };
 
 const CheckoutThemeKey = 'checkout';
@@ -76,8 +80,7 @@ const orderSubtitle = computed(() => {
 		return maybeGame.value.developer.display_name;
 	}
 
-	// TODO: mtx sellable subtitle.
-	return 'test';
+	return null;
 });
 
 const maybeGame = computed(() => {
@@ -95,6 +98,30 @@ const maybeGame = computed(() => {
 	}
 
 	return null;
+});
+
+const maybeMicrotransaction = computed(() => {
+	if (!order.value) {
+		return null;
+	}
+
+	for (const orderItem of order.value.items) {
+		if (orderItem.sellable.resource_model instanceof MicrotransactionProduct) {
+			return orderItem.sellable.resource_model;
+		}
+	}
+
+	return null;
+});
+
+const headingStyles = computed<CSSProperties | undefined>(() => {
+	if (maybeMicrotransaction.value) {
+		return {
+			marginTop: `16px`,
+		};
+	}
+
+	return undefined;
 });
 
 const { isBootstrapped } = createAppRoute({
@@ -155,14 +182,39 @@ function onFormSubmit(_formModel: any, response: any) {
 					:media-item="maybeGame.header_media_item"
 				/>
 			</div>
+			<div v-else-if="maybeMicrotransaction" :style="styleFlexCenter()">
+				<div
+					:style="{
+						...styleMaxWidthForOptions({
+							ratio: 1,
+							maxWidth: 160,
+							maxHeight: Screen.height * 0.3,
+						}),
+						flex: `auto`,
+					}"
+				>
+					<AppAspectRatio :ratio="1">
+						<AppImgResponsive
+							:style="{
+								width: `100%`,
+								height: `100%`,
+								objectFit: `contain`,
+							}"
+							:src="maybeMicrotransaction.media_item.mediaserver_url"
+						/>
+					</AppAspectRatio>
+				</div>
+			</div>
 
 			<div class="text-center">
-				<h1>
+				<h1 :style="headingStyles">
 					{{ orderTitle }}
 				</h1>
-				<h4>
-					{{ $gettext(`by`) }}
-					{{ ' ' }}
+				<h4 v-if="orderSubtitle">
+					<template v-if="maybeGame">
+						{{ $gettext(`by`) }}
+						{{ ' ' }}
+					</template>
 					{{ orderSubtitle }}
 				</h4>
 			</div>

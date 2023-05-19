@@ -458,7 +458,13 @@ async function doCheckout(setupData: any, chargeData: any) {
 												v-app-tooltip="$gettext('Select another card')"
 												:class="{ disabled: isLoadingMethods }"
 											>
-												<AppJolticon icon="chevron-down" />
+												<AppJolticon
+													:style="{
+														verticalAlign: `middle`,
+														cursor: `pointer`,
+													}"
+													icon="chevron-down"
+												/>
 											</span>
 
 											<template #popover>
@@ -652,30 +658,11 @@ async function doCheckout(setupData: any, chargeData: any) {
 </template>
 
 <style lang="stylus" scoped>
-
 .form-group
 	margin-bottom: $font-size-base
 
 ::v-deep(label)
 	font-family: $font-family-base !important
-
-.amount-input
-	position: relative
-	display: inline-block
-
-	input
-		display: inline-block
-		width: 120px
-		margin-right: 10px
-		padding-left: 25px
-
-.amount-input-currency
-	theme-prop('color', 'light')
-	position: absolute
-	content: '$'
-	top: 7px
-	left: 10px
-	z-index: 2
 
 .saved-card
 .saved-card-more
@@ -722,10 +709,6 @@ async function doCheckout(setupData: any, chargeData: any) {
 	padding-right: 0
 	line-height: 40px
 	text-align: center
-
-	.jolticon
-		vertical-align: middle
-		cursor: pointer
 
 .saved-card-label
 	font-size: $font-size-tiny
