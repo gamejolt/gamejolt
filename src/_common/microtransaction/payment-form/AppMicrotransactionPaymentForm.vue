@@ -33,7 +33,6 @@ type CheckoutStep = 'primary' | 'address';
 // TODO(mtx-checkout) look over this component again
 
 interface FormModel {
-	amount: number;
 	country: string;
 	region: string;
 	street1: string;
@@ -77,28 +76,17 @@ const pricing = computed(() => sellable.value.pricings[0]);
 const formattedAmount = computed(() => formatCurrency(pricing.value.amount));
 
 const hasSufficientWalletFunds = computed(() => {
-	if (!form.formModel.amount || form.formModel.amount <= 0) {
+	const sellableAmount = pricing.value.amount;
+	if (!sellableAmount) {
 		return true;
 	}
 
 	// When we're filling in the address, pull that tax. Otherwise, when we're
 	// on the main page, check the wallet tax amount for their saved address.
 	const taxAmount = checkoutStep.value === 'address' ? addressTaxAmount.value : walletTax.value;
-	const sellableAmount = pricing.value.amount;
 
-	// The formModel amount is a decimal.
-	const currentAmount = form.formModel.amount * 100;
-
-	// Paid products have to be more than the amount of the product base price.
-	if (
-		sellable.value.type === Sellable.TYPE_PAID &&
-		walletBalance.value < sellableAmount + taxAmount
-	) {
-		return false;
-	}
-
-	// All products have to be more than they've entered into the box.
-	if (walletBalance.value < currentAmount + taxAmount) {
+	// Can't afford if cost + tax is more than our balance.
+	if (walletBalance.value < sellableAmount + taxAmount) {
 		return false;
 	}
 
@@ -108,17 +96,13 @@ const hasSufficientWalletFunds = computed(() => {
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
 	model: ref({
-		amount: 1,
 		country: '',
 		region: '',
 		street1: '',
 		postcode: '',
 	}),
-	loadUrl: computed(() => '/web/checkout/methods?amount=' + form.formModel.amount * 100),
+	loadUrl: computed(() => '/web/checkout/methods?amount=' + pricing.value.amount),
 	onInit() {
-		// If they don't have a default pricing amount set for this sellable,
-		// just do $1.
-		form.formModel.amount = pricing.value.amount ? pricing.value.amount / 100 : 1;
 		form.formModel.country = 'us';
 	},
 	onLoad(response) {
@@ -147,7 +131,7 @@ const form: FormController<FormModel> = createForm({
 			payment_method: checkoutType.value,
 			sellable_id: sellable.value.id,
 			pricing_id: pricing.value.id,
-			amount: form.formModel.amount * 100,
+			amount: pricing.value.amount,
 
 			country: form.formModel.country,
 			street1: form.formModel.street1,
@@ -202,7 +186,7 @@ watch(
 watch(() => form.formModel.region, getAddressTax);
 
 watch(
-	() => form.formModel.amount,
+	() => pricing.value.amount,
 	() => {
 		isLoadingMethods.value = true;
 		form.reload();
@@ -236,7 +220,7 @@ async function getAddressTax() {
 	}
 
 	const data = {
-		amount: form.formModel.amount * 100,
+		amount: pricing.value.amount,
 		country: form.formModel.country,
 		region: form.formModel.region,
 	};
@@ -266,7 +250,7 @@ function checkoutSavedCard(card: any) {
 		payment_method: 'cc-stripe',
 		sellable_id: sellable.value.id,
 		pricing_id: pricing.value.id,
-		amount: form.formModel.amount * 100,
+		amount: pricing.value.amount,
 	};
 
 	return doCheckout(data, { payment_source: card.id });
@@ -277,7 +261,7 @@ function checkoutWallet() {
 		payment_method: 'wallet',
 		sellable_id: sellable.value.id,
 		pricing_id: pricing.value.id,
-		amount: form.formModel.amount * 100,
+		amount: pricing.value.amount,
 	};
 
 	if (addresses.value.length) {
@@ -356,10 +340,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 								{{ formattedAmount }}
 							</span>
 
-							<AppFormControlErrors
-								v-if="'!isNameYourPrice'.length || form.formModel.amount > 0"
-								:label="$gettext(`price`)"
-							/>
+							<AppFormControlErrors :label="$gettext(`price`)" />
 						</div>
 					</AppFormGroup>
 
@@ -659,11 +640,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 							>
 								{{ $gettext(`Buy Using Wallet`) }}
 								<small v-if="calculatedAddressTax">
-									{{
-										formatCurrency(
-											form.formModel.amount * 100 + addressTaxAmount
-										)
-									}}
+									{{ formatCurrency(pricing.amount + addressTaxAmount) }}
 								</small>
 							</AppButton>
 						</div>
