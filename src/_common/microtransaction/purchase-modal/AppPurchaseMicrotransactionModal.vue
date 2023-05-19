@@ -7,7 +7,7 @@ import {
 	kFontSizeLarge,
 	kLineHeightBase,
 } from '../../../_styles/variables';
-import { illExtremeSadnessSmall } from '../../../app/img/ill/illustrations';
+import { illExtremeSadness } from '../../../app/img/ill/illustrations';
 import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
 import { formatCurrency } from '../../filters/currency';
@@ -19,6 +19,7 @@ import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import { Screen } from '../../screen/screen-service';
+import AppSpacer from '../../spacer/AppSpacer.vue';
 import { useCommonStore } from '../../store/common-store';
 import { kThemeFg10 } from '../../theme/variables';
 import { $gettext, $gettextInterpolate } from '../../translate/translate.service';
@@ -137,17 +138,26 @@ const placeholderStyles: CSSProperties = {
 				:style="{
 					display: `flex`,
 					gap: `12px`,
+					alignItems: `center`,
 				}"
 			>
 				<template v-if="selectedProduct">
-					<AppButton
-						:disabled="isProcessingPayment"
-						sparse
-						trans
-						circle
-						icon="chevron-left"
-						@click="selectedProduct = null"
-					/>
+					<div
+						:style="{
+							height: 0,
+							display: `inline-flex`,
+							alignItems: `center`,
+						}"
+					>
+						<AppButton
+							:disabled="isProcessingPayment"
+							sparse
+							trans
+							circle
+							icon="chevron-left"
+							@click="selectedProduct = null"
+						/>
+					</div>
 				</template>
 
 				<h2 class="modal-title sans-margin-bottom">
@@ -163,6 +173,28 @@ const placeholderStyles: CSSProperties = {
 
 		<div class="modal-body">
 			<template v-if="selectedProduct && selectedProduct.sellable">
+				<template v-if="selectedProduct.product_type === 'joltbux'">
+					<div :style="[itemStyles]">
+						<div :style="itemLeadingStyles">
+							<AppImgResponsive
+								:src="selectedProduct.media_item.mediaserver_url"
+								:style="{
+									width: `100%`,
+									height: `100%`,
+									objectFit: `cover`,
+									objectPosition: `center`,
+								}"
+							/>
+						</div>
+
+						<div :style="itemTitleStyles">
+							{{ selectedProduct.display_name }}
+						</div>
+					</div>
+
+					<AppSpacer vertical :scale="3" />
+				</template>
+
 				<AppMicrotransactionPaymentForm
 					:sellable="selectedProduct.sellable"
 					@bought="onBought(selectedProduct)"
@@ -207,7 +239,7 @@ const placeholderStyles: CSSProperties = {
 					</template>
 					<template v-else-if="!mtxProducts.length">
 						<AppIllustration
-							:asset="illExtremeSadnessSmall"
+							:asset="illExtremeSadness"
 							:max-width="Screen.width * 0.75"
 						>
 							{{

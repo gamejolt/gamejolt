@@ -55,10 +55,7 @@ export class InventoryShopProductSale implements ModelStoreModel {
 				continue;
 			}
 
-			result[currency.id] = {
-				currency,
-				amount: pricing.price,
-			};
+			result[currency.id] = [currency, pricing.price];
 		}
 		return result;
 	}

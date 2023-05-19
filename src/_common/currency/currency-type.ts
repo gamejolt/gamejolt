@@ -17,7 +17,7 @@ class CurrencyData {
 }
 
 export type Currency = CurrencyData;
-export type CurrencyCostData = Record<string, { currency: Currency; amount: number }>;
+export type CurrencyCostData = Record<string, [currency: Currency, amount: number]>;
 
 export const CurrencyType = {
 	coins: new CurrencyData('$COIN', 'Coins', imageCoins, imageCoinsSmall),

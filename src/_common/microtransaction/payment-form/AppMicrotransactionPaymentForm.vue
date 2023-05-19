@@ -335,7 +335,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 					}"
 				>
 					<AppFormGroup name="amount" label-class="col-sm-4">
-						<div class="col-sm-8">
+						<div class="form-control-static col-sm-8">
 							<span>
 								{{ formattedAmount }}
 							</span>
@@ -365,7 +365,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 								If they have any wallet funds, we try let them checkout with their wallet.
 								If they don't have enough funds in their wallet for the order, we give 'em a message.
 							-->
-							<AppExpand :when="form.valid">
+							<AppExpand class="form-control-static" :when="form.valid">
 								<div v-if="user && walletBalance > 0 && hasSufficientWalletFunds">
 									<span
 										class="saved-card"

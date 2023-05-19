@@ -84,12 +84,12 @@ const currencyOptions = computed(() => {
 		for (const pricing of costOverride.value) {
 			const currency = pricing.knownCurrencyType;
 			if (currency) {
-				result[currency.id] = { currency, amount: pricing.price };
+				result[currency.id] = [currency, pricing.price];
 			}
 		}
 	} else {
 		const currency = CurrencyType.coins;
-		result[currency.id] = { currency, amount: pack.value.cost_coins };
+		result[currency.id] = [currency, pack.value.cost_coins];
 	}
 
 	return result;

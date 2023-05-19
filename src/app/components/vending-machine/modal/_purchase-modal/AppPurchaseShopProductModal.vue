@@ -162,11 +162,11 @@ const joltbuxEntry = computed(() => {
  * Joltbux to purchase.
  */
 const showPurchaseJoltbuxButton = computed(() => {
-	const currency = joltbuxEntry.value?.currency;
-	const amount = joltbuxEntry.value?.amount;
-	if (!currency || amount === undefined) {
+	if (!joltbuxEntry.value) {
 		return false;
 	}
+
+	const [currency, amount] = joltbuxEntry.value;
 	return !canAffordCurrency(currency, amount, balanceRefs);
 });
 
@@ -267,13 +267,14 @@ function handleStickerPackPurchase(product: UserStickerPack) {
 					}"
 				>
 					<AppButton
-						v-for="[id, { currency, amount }] in currencyOptionsList"
+						v-for="[id, [currency, amount]] in currencyOptionsList"
 						:key="id"
 						:disabled="
 							!!processingPurchaseCurrencyId ||
 							!canAffordCurrency(currency, amount, balanceRefs)
 						"
 						:defined-slots="['icon']"
+						lg
 						solid
 						block
 						@click="() => purchaseProduct({ shopProduct, currency, balanceRefs })"
