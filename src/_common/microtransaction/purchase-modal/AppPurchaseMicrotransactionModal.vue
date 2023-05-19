@@ -1,12 +1,7 @@
 <script lang="ts" setup>
 import { CSSProperties, Ref, onMounted, ref } from 'vue';
-import { styleBorderRadiusBase, styleWhen } from '../../../_styles/mixins';
-import {
-	kBorderWidthBase,
-	kFontFamilyHeading,
-	kFontSizeLarge,
-	kLineHeightBase,
-} from '../../../_styles/variables';
+import { styleWhen } from '../../../_styles/mixins';
+import { kBorderWidthBase } from '../../../_styles/variables';
 import { illExtremeSadness } from '../../../app/img/ill/illustrations';
 import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
@@ -14,7 +9,6 @@ import { formatCurrency } from '../../filters/currency';
 import { formatNumber } from '../../filters/number';
 import { showSuccessGrowl } from '../../growls/growls.service';
 import AppIllustration from '../../illustration/AppIllustration.vue';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
@@ -23,6 +17,7 @@ import AppSpacer from '../../spacer/AppSpacer.vue';
 import { useCommonStore } from '../../store/common-store';
 import { kThemeFg10 } from '../../theme/variables';
 import { $gettext, $gettextInterpolate } from '../../translate/translate.service';
+import AppMicrotransactionItem from '../AppMicrotransactionItem.vue';
 import AppMicrotransactionPaymentForm from '../payment-form/AppMicrotransactionPaymentForm.vue';
 import { MicrotransactionProduct } from '../product.model';
 
@@ -83,45 +78,8 @@ function onBought(product: MicrotransactionProduct) {
 	modal.dismiss();
 }
 
-const itemStyles: CSSProperties = {
-	display: `flex`,
-	alignItems: `flex-start`,
-	gap: `12px`,
-	padding: `8px 0`,
-};
-
 const itemBorderSeperatorStyles: CSSProperties = {
 	borderBottom: `solid ${kBorderWidthBase.px} ${kThemeFg10}`,
-};
-
-const itemLeadingStyles: CSSProperties = {
-	width: `48px`,
-	height: `48px`,
-	flex: `none`,
-};
-
-const titleFontSize = kFontSizeLarge;
-const itemTitleStyles: CSSProperties = {
-	flex: `auto`,
-	minWidth: 0,
-	fontSize: titleFontSize.px,
-	fontFamily: kFontFamilyHeading,
-	minHeight: `48px`,
-	display: `inline-flex`,
-	alignItems: `center`,
-	alignSelf: `center`,
-};
-
-const itemTrailingStyles: CSSProperties = {
-	minHeight: `48px`,
-	display: `flex`,
-	alignItems: `center`,
-	flex: `none`,
-};
-
-const placeholderStyles: CSSProperties = {
-	background: kThemeFg10,
-	...styleBorderRadiusBase,
 };
 </script>
 
@@ -174,23 +132,7 @@ const placeholderStyles: CSSProperties = {
 		<div class="modal-body">
 			<template v-if="selectedProduct && selectedProduct.sellable">
 				<template v-if="selectedProduct.product_type === 'joltbux'">
-					<div :style="[itemStyles]">
-						<div :style="itemLeadingStyles">
-							<AppImgResponsive
-								:src="selectedProduct.media_item.mediaserver_url"
-								:style="{
-									width: `100%`,
-									height: `100%`,
-									objectFit: `cover`,
-									objectPosition: `center`,
-								}"
-							/>
-						</div>
-
-						<div :style="itemTitleStyles">
-							{{ selectedProduct.display_name }}
-						</div>
-					</div>
+					<AppMicrotransactionItem :item="selectedProduct" />
 
 					<AppSpacer vertical :scale="3" />
 				</template>
@@ -209,33 +151,13 @@ const placeholderStyles: CSSProperties = {
 			<template v-else>
 				<AppLoadingFade :is-loading="isLoading">
 					<template v-if="isLoading">
-						<div
+						<AppMicrotransactionItem
 							v-for="i in 3"
 							:key="i"
-							:style="[itemStyles, styleWhen(i < 3, itemBorderSeperatorStyles)]"
-						>
-							<div :style="[itemLeadingStyles, placeholderStyles]" />
-
-							<div
-								:style="[
-									itemTitleStyles,
-									placeholderStyles,
-									{ height: titleFontSize.value * kLineHeightBase + 'px' },
-								]"
-							/>
-
-							<div :style="itemTrailingStyles">
-								<div
-									:style="[
-										placeholderStyles,
-										{
-											height: `36px`,
-											width: `48px`,
-										},
-									]"
-								/>
-							</div>
-						</div>
+							:style="styleWhen(i < 3, itemBorderSeperatorStyles)"
+							:defined-slots="['trailing']"
+							is-placeholder
+						/>
 					</template>
 					<template v-else-if="!mtxProducts.length">
 						<AppIllustration
@@ -249,40 +171,29 @@ const placeholderStyles: CSSProperties = {
 							}}
 						</AppIllustration>
 					</template>
-					<div
+					<AppMicrotransactionItem
 						v-for="(item, index) in mtxProducts"
 						v-else
 						:key="item.id"
-						:style="[
-							itemStyles,
-							styleWhen(index < mtxProducts.length - 1, itemBorderSeperatorStyles),
-						]"
+						:item="item"
+						:defined-slots="
+							item.sellable && item.sellable.pricings.length ? ['trailing'] : false
+						"
+						:style="
+							styleWhen(index < mtxProducts.length - 1, itemBorderSeperatorStyles)
+						"
 					>
-						<div :style="itemLeadingStyles">
-							<AppImgResponsive
-								:src="item.media_item.mediaserver_url"
-								:style="{
-									width: `100%`,
-									height: `100%`,
-									objectFit: `cover`,
-									objectPosition: `center`,
-								}"
-							/>
-						</div>
-
-						<div :style="itemTitleStyles">
-							{{ item.display_name }}
-						</div>
-
-						<div
-							v-if="!!item.sellable && item.sellable.pricings[0]"
-							:style="itemTrailingStyles"
-						>
-							<AppButton solid primary @click="selectedProduct = item">
+						<template #trailing>
+							<AppButton
+								v-if="item.sellable && item.sellable.pricings.length"
+								solid
+								primary
+								@click="selectedProduct = item"
+							>
 								{{ formatCurrency(item.sellable.pricings[0].amount) }}
 							</AppButton>
-						</div>
-					</div>
+						</template>
+					</AppMicrotransactionItem>
 				</AppLoadingFade>
 			</template>
 		</div>
