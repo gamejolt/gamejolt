@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Ref, onMounted, ref } from 'vue';
+import { CSSProperties, Ref, onMounted, ref } from 'vue';
 import { styleBorderRadiusBase, styleWhen } from '../../../_styles/mixins';
 import {
 	kBorderWidthBase,
@@ -81,6 +81,47 @@ function onBought(product: MicrotransactionProduct) {
 	showSuccessGrowl(message || $gettext(`Your purchase was successful`));
 	modal.dismiss();
 }
+
+const itemStyles: CSSProperties = {
+	display: `flex`,
+	alignItems: `flex-start`,
+	gap: `12px`,
+	padding: `8px 0`,
+};
+
+const itemBorderSeperatorStyles: CSSProperties = {
+	borderBottom: `solid ${kBorderWidthBase.px} ${kThemeFg10}`,
+};
+
+const itemLeadingStyles: CSSProperties = {
+	width: `48px`,
+	height: `48px`,
+	flex: `none`,
+};
+
+const titleFontSize = kFontSizeLarge;
+const itemTitleStyles: CSSProperties = {
+	flex: `auto`,
+	minWidth: 0,
+	fontSize: titleFontSize.px,
+	fontFamily: kFontFamilyHeading,
+	minHeight: `48px`,
+	display: `inline-flex`,
+	alignItems: `center`,
+	alignSelf: `center`,
+};
+
+const itemTrailingStyles: CSSProperties = {
+	minHeight: `48px`,
+	display: `flex`,
+	alignItems: `center`,
+	flex: `none`,
+};
+
+const placeholderStyles: CSSProperties = {
+	background: kThemeFg10,
+	...styleBorderRadiusBase,
+};
 </script>
 
 <template>
@@ -135,56 +176,31 @@ function onBought(product: MicrotransactionProduct) {
 			</template>
 			<template v-else>
 				<AppLoadingFade :is-loading="isLoading">
-					<!-- TODO(mtx-checkout) const/computed stylings for real items and placeholders -->
 					<template v-if="isLoading">
 						<div
 							v-for="i in 3"
 							:key="i"
-							:style="{
-								display: `flex`,
-								alignItems: `flex-start`,
-								gap: `12px`,
-								padding: `8px 0`,
-								...styleWhen(i < 3, {
-									borderBottom: `solid ${kBorderWidthBase.px} ${kThemeFg10}`,
-								}),
-							}"
+							:style="[itemStyles, styleWhen(i < 3, itemBorderSeperatorStyles)]"
 						>
-							<div
-								:style="{
-									width: `48px`,
-									height: `48px`,
-									flex: `none`,
-									background: kThemeFg10,
-									...styleBorderRadiusBase,
-								}"
-							/>
+							<div :style="[itemLeadingStyles, placeholderStyles]" />
 
 							<div
-								:style="{
-									flex: `auto`,
-									alignSelf: `center`,
-									height: kFontSizeLarge.value * kLineHeightBase + 'px',
-									background: kThemeFg10,
-									...styleBorderRadiusBase,
-								}"
+								:style="[
+									itemTitleStyles,
+									placeholderStyles,
+									{ height: titleFontSize.value * kLineHeightBase + 'px' },
+								]"
 							/>
 
-							<div
-								:style="{
-									minHeight: `48px`,
-									display: `flex`,
-									alignItems: `center`,
-									flex: `none`,
-								}"
-							>
+							<div :style="itemTrailingStyles">
 								<div
-									:style="{
-										height: `36px`,
-										width: `48px`,
-										background: kThemeFg10,
-										...styleBorderRadiusBase,
-									}"
+									:style="[
+										placeholderStyles,
+										{
+											height: `36px`,
+											width: `48px`,
+										},
+									]"
 								/>
 							</div>
 						</div>
@@ -205,23 +221,12 @@ function onBought(product: MicrotransactionProduct) {
 						v-for="(item, index) in mtxProducts"
 						v-else
 						:key="item.id"
-						:style="{
-							display: `flex`,
-							alignItems: `flex-start`,
-							gap: `12px`,
-							padding: `8px 0`,
-							...styleWhen(index < mtxProducts.length - 1, {
-								borderBottom: `solid ${kBorderWidthBase.px} ${kThemeFg10}`,
-							}),
-						}"
+						:style="[
+							itemStyles,
+							styleWhen(index < mtxProducts.length - 1, itemBorderSeperatorStyles),
+						]"
 					>
-						<div
-							:style="{
-								width: `48px`,
-								height: `48px`,
-								flex: `none`,
-							}"
-						>
+						<div :style="itemLeadingStyles">
 							<AppImgResponsive
 								:src="item.media_item.mediaserver_url"
 								:style="{
@@ -233,28 +238,13 @@ function onBought(product: MicrotransactionProduct) {
 							/>
 						</div>
 
-						<div
-							:style="{
-								flex: `auto`,
-								minWidth: 0,
-								fontSize: kFontSizeLarge.px,
-								fontFamily: kFontFamilyHeading,
-								minHeight: `48px`,
-								display: `inline-flex`,
-								alignItems: `center`,
-							}"
-						>
+						<div :style="itemTitleStyles">
 							{{ item.display_name }}
 						</div>
 
 						<div
 							v-if="!!item.sellable && item.sellable.pricings[0]"
-							:style="{
-								minHeight: `48px`,
-								display: `flex`,
-								alignItems: `center`,
-								flex: `none`,
-							}"
+							:style="itemTrailingStyles"
 						>
 							<AppButton solid primary @click="selectedProduct = item">
 								{{ formatCurrency(item.sellable.pricings[0].amount) }}
