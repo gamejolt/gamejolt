@@ -36,10 +36,13 @@ import AppStickerPack, {
 import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
 import { useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import AppTheme from '../../../../_common/theme/AppTheme.vue';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
 import {
 	kThemeBgActual,
 	kThemeBgBackdrop,
 	kThemeBgOffset,
+	kThemeFg,
 	kThemeFg10,
 } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -69,7 +72,9 @@ import imageVance from './vance.png';
 
 const { stickerPacks } = useStickerStore();
 const { clearPanes } = useAppStore();
+const { isDark } = useThemeStore();
 const { coinBalance, joltbuxBalance } = useCommonStore();
+
 const balanceRefs = { coinBalance, joltbuxBalance };
 
 const modal = useModal()!;
@@ -235,7 +240,7 @@ const currencyCardImgStyles: CSSProperties = {
 </script>
 
 <template>
-	<AppModal>
+	<AppModal force-theme="dark">
 		<div :style="containerStyles">
 			<AppModalFloatingHeader>
 				<template #modal-controls>
@@ -246,205 +251,215 @@ const currencyCardImgStyles: CSSProperties = {
 			</AppModalFloatingHeader>
 
 			<div class="modal-body _wrapper">
-				<AppLoadingFade
-					class="fill-offset"
-					:style="loadingFadeStyles"
-					:content-styles="{
-						...loadingFadeStyles,
-						padding: `12px`,
-					}"
-					:is-loading="isLoading"
-				>
-					<div
-						:style="{
-							display: `flex`,
-							gap: `12px`,
-							marginBottom: `12px`,
+				<AppTheme :force-dark="isDark" :force-light="!isDark">
+					<AppLoadingFade
+						class="fill-offset"
+						:style="loadingFadeStyles"
+						:content-styles="{
+							...loadingFadeStyles,
+							padding: `12px`,
 						}"
+						:is-loading="isLoading"
 					>
-						<template
-							v-for="{ currency, amount } of currencyCardData"
-							:key="currency.id"
+						<div
+							:style="{
+								display: `flex`,
+								gap: `12px`,
+								marginBottom: `12px`,
+							}"
 						>
-							<AppOnHover>
-								<template #default="{ binding, hovered }">
-									<div
-										v-bind="binding"
-										:style="{
-											...styleBorderRadiusBase,
-											...styleElevate(1),
-											backgroundColor: kThemeBgOffset,
-											padding: `12px`,
-											flex: `auto`,
-											display: `flex`,
-											flexDirection: `column`,
-											alignItems: `center`,
-											gap: `8px`,
-											cursor: `pointer`,
-											...styleWhen(hovered, {
-												...styleElevate(2),
-												backgroundColor: kThemeBgBackdrop,
-											}),
-											// Need this to override the style from the `styleElevate` functions.
-											transition: `background-color 200ms ${kStrongEaseOut}, box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important`,
-										}"
-										@click="onClickCurrencyCard(currency)"
-									>
+							<template
+								v-for="{ currency, amount } of currencyCardData"
+								:key="currency.id"
+							>
+								<AppOnHover>
+									<template #default="{ binding, hovered }">
 										<div
-											class="text-center"
+											v-bind="binding"
 											:style="{
-												fontFamily: kFontFamilyDisplay,
-												fontSize: kFontSizeH3.px,
-											}"
-										>
-											{{ currency.label }}
-										</div>
-
-										<div
-											:style="{
-												...styleMaxWidthForOptions({
-													ratio: 1,
-													maxWidth: Screen.isXs ? 64 : 128,
-													maxHeight: Screen.height * 0.2,
+												...styleBorderRadiusBase,
+												...styleElevate(1),
+												backgroundColor: kThemeBgOffset,
+												padding: `12px`,
+												flex: `auto`,
+												display: `flex`,
+												flexDirection: `column`,
+												alignItems: `center`,
+												gap: `8px`,
+												cursor: `pointer`,
+												color: kThemeFg,
+												...styleWhen(hovered, {
+													...styleElevate(2),
+													backgroundColor: kThemeBgBackdrop,
 												}),
-												width: `100%`,
+												// Need this to override the style from the `styleElevate` functions.
+												transition: `background-color 200ms ${kStrongEaseOut}, box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important`,
 											}"
+											@click="onClickCurrencyCard(currency)"
 										>
-											<AppAspectRatio
-												:ratio="1"
+											<div
+												class="text-center"
 												:style="{
-													...styleBorderRadiusCircle,
-													backgroundColor: kThemeFg10,
+													fontFamily: kFontFamilyDisplay,
+													fontSize: kFontSizeH3.px,
+												}"
+											>
+												{{ currency.label }}
+											</div>
+
+											<div
+												:style="{
+													...styleMaxWidthForOptions({
+														ratio: 1,
+														maxWidth: Screen.isXs ? 64 : 128,
+														maxHeight: Screen.height * 0.2,
+													}),
 													width: `100%`,
 												}"
-												:inner-styles="{
-													...styleFlexCenter(),
-													padding: `16px`,
-												}"
-												show-overflow
 											>
-												<AppCurrencyImg
-													asset-size="large"
-													:currency="currency"
-													:max-width="0"
-													:style="currencyCardImgStyles"
-													:ill-styles="currencyCardImgStyles"
-												/>
-											</AppAspectRatio>
-										</div>
+												<AppAspectRatio
+													:ratio="1"
+													:style="{
+														...styleBorderRadiusCircle,
+														backgroundColor: kThemeFg10,
+														width: `100%`,
+													}"
+													:inner-styles="{
+														...styleFlexCenter(),
+														padding: `16px`,
+													}"
+													show-overflow
+												>
+													<AppCurrencyImg
+														asset-size="large"
+														:currency="currency"
+														:max-width="0"
+														:style="currencyCardImgStyles"
+														:ill-styles="currencyCardImgStyles"
+													/>
+												</AppAspectRatio>
+											</div>
 
-										<div
-											class="text-center"
-											:style="{
-												...styleOverlayTextShadow,
-												fontStyle: 'italic',
-												fontFamily: kFontFamilyHeading,
-											}"
-										>
-											{{ formatNumber(amount) }}
-										</div>
-
-										<AppButton
-											block
-											solid
-											:force-hover="hovered"
-											:style="{
-												pointerEvents: `none`,
-											}"
-										>
-											{{
-												$gettextInterpolate(`Get %{ label }`, {
-													label: currency.label,
-												})
-											}}
-										</AppButton>
-									</div>
-								</template>
-							</AppOnHover>
-						</template>
-					</div>
-
-					<div
-						class="_items"
-						:style="
-							styleWhen(!isLoading && !availableProducts.length, {
-								gridTemplateColumns: '1fr',
-								alignContent: 'center',
-							})
-						"
-					>
-						<template v-if="isLoading">
-							<AppAspectRatio
-								v-for="i in 3"
-								:key="i"
-								:ratio="StickerPackRatio"
-								show-overflow
-							>
-								<div class="_pack-placeholder" />
-							</AppAspectRatio>
-						</template>
-						<template v-else-if="availableProducts.length">
-							<template
-								v-for="shopProduct in availableProducts"
-								:key="shopProduct.id"
-							>
-								<div
-									v-if="shopProduct.stickerPack"
-									:style="{
-										position: 'relative',
-									}"
-								>
-									<AppStickerPack
-										class="_pack"
-										:pack="shopProduct.stickerPack"
-										show-details
-										:expiry-info="shopProduct.ends_on"
-										:can-click-pack="!productProcessing"
-										:cost-override="shopProduct.pricings"
-										@click-pack="
-											purchasePack(shopProduct, shopProduct.validPricingsData)
-										"
-									>
-										<template #overlay>
 											<div
-												v-if="!canPurchaseProduct(shopProduct)"
-												class="_radius-lg _text-shadow"
+												class="text-center"
 												:style="{
-													position: 'absolute',
-													top: 0,
-													right: 0,
-													bottom: 0,
-													left: 0,
-													fontSize: '13px',
-													padding: '12px',
-													zIndex: 2,
-													display: 'grid',
-													justifyContent: 'center',
-													alignContent: 'center',
-													textAlign: 'center',
-													fontWeight: 'bold',
-													color: `white`,
-													backgroundColor: 'rgba(0, 0, 0, 0.45)',
+													...styleOverlayTextShadow,
+													fontStyle: 'italic',
+													fontFamily: kFontFamilyHeading,
+												}"
+											>
+												{{ formatNumber(amount) }}
+											</div>
+
+											<AppButton
+												block
+												solid
+												:force-hover="hovered"
+												:style="{
+													pointerEvents: `none`,
 												}"
 											>
 												{{
-													$gettext(
-														`You don't have enough funds to purchase this`
-													)
+													$gettextInterpolate(`Get %{ label }`, {
+														label: currency.label,
+													})
 												}}
-											</div>
-										</template>
-									</AppStickerPack>
-								</div>
+											</AppButton>
+										</div>
+									</template>
+								</AppOnHover>
 							</template>
-						</template>
-						<AppIllustration v-else :asset="illNoCommentsSmall">
-							<div>
-								{{ $gettext(`There are no sticker packs available for purchase.`) }}
-							</div>
-						</AppIllustration>
-					</div>
-				</AppLoadingFade>
+						</div>
+
+						<div
+							class="_items"
+							:style="
+								styleWhen(!isLoading && !availableProducts.length, {
+									gridTemplateColumns: '1fr',
+									alignContent: 'center',
+								})
+							"
+						>
+							<template v-if="isLoading">
+								<AppAspectRatio
+									v-for="i in 3"
+									:key="i"
+									:ratio="StickerPackRatio"
+									show-overflow
+								>
+									<div class="_pack-placeholder" />
+								</AppAspectRatio>
+							</template>
+							<template v-else-if="availableProducts.length">
+								<template
+									v-for="shopProduct in availableProducts"
+									:key="shopProduct.id"
+								>
+									<div
+										v-if="shopProduct.stickerPack"
+										:style="{
+											position: 'relative',
+										}"
+									>
+										<AppStickerPack
+											class="_pack"
+											:pack="shopProduct.stickerPack"
+											show-details
+											:expiry-info="shopProduct.ends_on"
+											:can-click-pack="!productProcessing"
+											:cost-override="shopProduct.pricings"
+											@click-pack="
+												purchasePack(
+													shopProduct,
+													shopProduct.validPricingsData
+												)
+											"
+										>
+											<template #overlay>
+												<div
+													v-if="!canPurchaseProduct(shopProduct)"
+													class="_radius-lg _text-shadow"
+													:style="{
+														position: 'absolute',
+														top: 0,
+														right: 0,
+														bottom: 0,
+														left: 0,
+														fontSize: '13px',
+														padding: '12px',
+														zIndex: 2,
+														display: 'grid',
+														justifyContent: 'center',
+														alignContent: 'center',
+														textAlign: 'center',
+														fontWeight: 'bold',
+														color: `white`,
+														backgroundColor: 'rgba(0, 0, 0, 0.45)',
+													}"
+												>
+													{{
+														$gettext(
+															`You don't have enough funds to purchase this`
+														)
+													}}
+												</div>
+											</template>
+										</AppStickerPack>
+									</div>
+								</template>
+							</template>
+							<AppIllustration v-else :asset="illNoCommentsSmall">
+								<div>
+									{{
+										$gettext(
+											`There are no sticker packs available for purchase.`
+										)
+									}}
+								</div>
+							</AppIllustration>
+						</div>
+					</AppLoadingFade>
+				</AppTheme>
 
 				<AppScrollAffix
 					:style="{
@@ -488,11 +503,15 @@ const currencyCardImgStyles: CSSProperties = {
 
 						<!-- Rounded corner decorators -->
 						<div class="_output-corner-tl">
-							<div class="_output-corner-tl-border" />
+							<AppTheme>
+								<div class="_output-corner-tl-border" />
+							</AppTheme>
 							<div class="_output-corner-bg" />
 						</div>
 						<div class="_output-corner-tr">
-							<div class="_output-corner-tr-border" />
+							<AppTheme>
+								<div class="_output-corner-tr-border" />
+							</AppTheme>
 							<div class="_output-corner-bg" />
 						</div>
 					</div>
