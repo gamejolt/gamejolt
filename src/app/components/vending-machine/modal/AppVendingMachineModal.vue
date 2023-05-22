@@ -111,8 +111,9 @@ run(async () => {
 		: [];
 	const validNewProducts = newProducts.filter(i => !!i.product);
 	if (newProducts.length !== validNewProducts.length) {
-		// TODO(mtx-checkout) logging
-		console.warn(`Got some products that we don't support yet.`);
+		console.warn(`Got some products that we don't support yet.`, {
+			'missing-count': newProducts.length - validNewProducts.length,
+		});
 	}
 	availableProducts.value = validNewProducts;
 

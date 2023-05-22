@@ -30,7 +30,6 @@ export class InventoryShopProductSale implements ModelStoreModel {
 					break;
 
 				default:
-					// TODO(mtx-checkout) logging
 					console.warn('Unsupported product type', data.product_type);
 					break;
 			}

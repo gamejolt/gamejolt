@@ -106,7 +106,6 @@ export async function purchaseShopProduct({
 			}
 			onItemPurchased?.pack?.(pack);
 		} else {
-			// TODO(mtx-checkout) logging
 			console.error('No product model found after purchasing product', {
 				currency_type: pricing.knownCurrencyType,
 				pricing_id: pricing.id,
@@ -114,7 +113,6 @@ export async function purchaseShopProduct({
 			});
 		}
 	} catch (e) {
-		// TODO(mtx-checkout) logging
 		console.error('Error purchasing product', {
 			currency_type: pricing.knownCurrencyType,
 			pricing_id: pricing.id,

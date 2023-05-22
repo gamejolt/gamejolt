@@ -30,8 +30,6 @@ import { $gettext } from '../../translate/translate.service';
 type CheckoutType = 'cc-stripe' | 'paypal' | 'wallet';
 type CheckoutStep = 'primary' | 'address';
 
-// TODO(mtx-checkout) look over this component again
-
 interface FormModel {
 	country: string;
 	region: string;
