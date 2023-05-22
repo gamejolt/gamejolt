@@ -143,11 +143,13 @@ export default class RouteDashAccountPurchasesView extends BaseRouteComponent {
 				</h4>
 				<div v-for="payment of order.payments" :key="payment.id">
 					<template v-if="payment.method === OrderPayment.METHOD_CC_STRIPE">
-						<span class="tag">
-							{{ payment.stripe_payment_source.brand }}
-						</span>
-						****
-						{{ payment.stripe_payment_source.last4 }}
+						<template v-if="payment.stripe_payment_source">
+							<span class="tag">
+								{{ payment.stripe_payment_source.brand }}
+							</span>
+							****
+							{{ payment.stripe_payment_source.last4 }}
+						</template>
 					</template>
 					<template v-else-if="payment.method === OrderPayment.METHOD_PAYPAL">
 						<span class="tag"> PayPal </span>
