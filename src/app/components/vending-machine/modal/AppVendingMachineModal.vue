@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { CSSProperties, Ref, computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -23,7 +22,6 @@ import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { useModal } from '../../../../_common/modal/modal.service';
 import { storeModelList } from '../../../../_common/model/model-store.service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
@@ -64,21 +62,18 @@ import {
 } from '../../../../_styles/variables';
 import { run } from '../../../../utils/utils';
 import { illNoCommentsSmall } from '../../../img/ill/illustrations';
-import { useAppStore } from '../../../store/index';
-import { routeQuests } from '../../../views/quests/quests.route';
+import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
 import { purchaseShopProduct } from './_purchase-modal/AppPurchaseShopProductModal.vue';
 import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
 import imageVance from './vance.png';
 
 const { stickerPacks } = useStickerStore();
-const { clearPanes } = useAppStore();
 const { isDark } = useThemeStore();
 const { coinBalance, joltbuxBalance } = useCommonStore();
 
 const balanceRefs = { coinBalance, joltbuxBalance };
 
 const modal = useModal()!;
-const router = useRouter();
 
 const availableProducts = ref([]) as Ref<InventoryShopProductSale[]>;
 const isLoading = ref(true);
@@ -182,29 +177,16 @@ async function purchasePack(
 }
 
 async function onClickCurrencyCard(currency: Currency) {
-	if (currency.id === CurrencyType.coins.id) {
-		// TODO(mtx-checkout) better modal for this
-		const result = await ModalConfirm.show(
-			$gettext(`You can earn coins by completing quests! Do you want to go to your quests?`),
-			$gettext(`Looking for Coins?`),
-			'yes'
-		);
-
-		if (!result) {
-			return;
-		}
-
-		// Go to quests page if we're not already there.
-		if (router.currentRoute.value.name !== routeQuests.name) {
-			router.push({ name: routeQuests.name });
-			return;
-		}
-
-		// Already on quests page, close the modal and any open shell sidebar.
-		modal.dismiss();
-		clearPanes();
-	} else {
+	if (currency.id === CurrencyType.joltbux.id) {
 		showPurchaseMicrotransactionModal();
+	} else if (currency.id === CurrencyType.coins.id) {
+		const isRedirecting = await showGetCoinsRedirectModal();
+
+		if (isRedirecting) {
+			modal.dismiss();
+		}
+	} else {
+		console.error('Unknown currency type', currency);
 	}
 }
 
