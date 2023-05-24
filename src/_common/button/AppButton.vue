@@ -1,6 +1,8 @@
 <script lang="ts" setup>
-import { computed, PropType, useAttrs } from 'vue';
+import { computed, PropType, toRefs, useAttrs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
+import { kJolticonSize } from '../../_styles/variables';
+import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 
 const props = defineProps({
@@ -64,7 +66,14 @@ const props = defineProps({
 	forceHover: {
 		type: Boolean,
 	},
+	/**
+	 * Allows a custom icon to be built into the button. Does nothing if
+	 * {@link icon} is set.
+	 */
+	...defineDynamicSlotProps(['icon'], false),
 });
+
+const { dynamicSlots } = toRefs(props);
 
 const attrs = useAttrs();
 
@@ -76,6 +85,8 @@ const ourTag = computed(() => {
 	}
 	return props.tag;
 });
+
+const { hasSlot } = useDynamicSlots(dynamicSlots);
 </script>
 
 <template>
@@ -109,6 +120,9 @@ const ourTag = computed(() => {
 			:icon="icon"
 			:big="lg"
 		/>
+		<div v-else-if="hasSlot('icon')" class="-icon" :style="{ display: `inline-block` }">
+			<slot name="icon" :size="lg ? kJolticonSize.value * 2 : kJolticonSize.value" />
+		</div>
 		<slot />
 	</component>
 </template>

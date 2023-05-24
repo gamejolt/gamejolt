@@ -1,9 +1,9 @@
+import { Api } from '../../api/api.service';
 import { Model } from '../../model/model.service';
+import { Sellable } from '../../sellable/sellable.model';
 import { GameBuild } from '../build/build.model';
 import { Game } from '../game.model';
-import { Api } from '../../api/api.service';
 import { GameRelease } from '../release/release.model';
-import { Sellable } from '../../sellable/sellable.model';
 
 export class GamePackage extends Model {
 	static readonly STATUS_HIDDEN = 'hidden';
@@ -30,13 +30,29 @@ export class GamePackage extends Model {
 	has_browser_builds?: boolean;
 	is_in_paid_sellable?: boolean;
 
+	/** The game for this package, matching the game id. Will only be rarely populated.  */
+	game!: Game | null;
+
 	// These fields get added only during GamePackagePayloadModel.
 	_releases?: GameRelease[];
 	_builds?: GameBuild[];
 	_sellable?: Sellable;
 
+	constructor(data: any = {}) {
+		super(data);
+
+		if (data.game) {
+			this.game = new Game(data.game);
+		} else {
+			this.game = null;
+		}
+	}
+
 	static $saveSort(gameId: number, packagesSort: any) {
-		return Api.sendRequest('/web/dash/developer/games/packages/save-sort/' + gameId, packagesSort);
+		return Api.sendRequest(
+			'/web/dash/developer/games/packages/save-sort/' + gameId,
+			packagesSort
+		);
 	}
 
 	shouldShowNamePrice() {
@@ -45,7 +61,10 @@ export class GamePackage extends Model {
 
 	$save() {
 		if (!this.id) {
-			return this.$_save('/web/dash/developer/games/packages/save/' + this.game_id, 'gamePackage');
+			return this.$_save(
+				'/web/dash/developer/games/packages/save/' + this.game_id,
+				'gamePackage'
+			);
 		} else {
 			return this.$_save(
 				'/web/dash/developer/games/packages/save/' + this.game_id + '/' + this.id,

@@ -4,6 +4,7 @@ import { OrderItem } from './item/item.model';
 import { OrderPayment } from './payment/payment.model';
 
 export class Order extends Model {
+	hash!: string;
 	is_gift!: boolean;
 	currency_code!: string;
 	completed_on!: number;

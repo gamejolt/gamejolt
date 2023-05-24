@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import { Game } from '../../../../../../_common/game/game.model';
-import AppMediaItemCover from '../../../../../../_common/media-item/cover/cover.vue';
+import AppMediaItemCover from '../../../../../../_common/media-item/cover/AppMediaItemCover.vue';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
 	BaseRouteComponent,

@@ -1,5 +1,5 @@
 import { StickerPackOpenModal } from '../sticker/pack/open-modal/modal.service';
-import { UserStickerPack } from '../sticker/pack/user_pack.model';
+import { UserStickerPack } from '../sticker/pack/user-pack.model';
 
 export const PayloadAction = {
 	UNLOCK_STICKER_PACK: 'unlock-sticker-pack',

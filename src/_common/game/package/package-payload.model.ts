@@ -26,15 +26,15 @@ export class GamePackagePayloadModel {
 			? GameExternalPackage.populate(payload.externalPackages)
 			: [];
 
-		let indexedPackages: { [k: number]: GamePackage } = {};
-		let indexedReleases: { [k: number]: GameRelease } = {};
-		let indexedSellables: { [k: number]: Sellable } = {};
+		const indexedPackages: { [k: number]: GamePackage } = {};
+		const indexedReleases: { [k: number]: GameRelease } = {};
+		const indexedSellables: { [k: number]: Sellable } = {};
 
 		this.packages.forEach(p => (indexedPackages[p.id] = p));
 		this.releases.forEach(r => (indexedReleases[r.id] = r));
-		this.sellables.forEach(s => (indexedSellables[s.game_package_id!] = s));
+		this.sellables.forEach(s => (indexedSellables[s.resource_model!.id] = s));
 
-		for (let _package of this.packages) {
+		for (const _package of this.packages) {
 			_package._releases = this.releases.filter(r => r.game_package_id === _package.id);
 			_package._builds = this.builds.filter(b => b.game_package_id === _package.id);
 			_package._sellable = indexedSellables[_package.id];
@@ -45,14 +45,14 @@ export class GamePackagePayloadModel {
 			}
 		}
 
-		for (let release of this.releases) {
+		for (const release of this.releases) {
 			release._package = indexedPackages[release.game_package_id];
 			release._builds = (release._package!._builds || []).filter(
 				b => b.game_release_id === release.id
 			);
 		}
 
-		for (let build of this.builds) {
+		for (const build of this.builds) {
 			build._package = indexedPackages[build.game_package_id];
 			build._release = indexedReleases[build.game_release_id];
 			build._launch_options = this.launchOptions.filter(l => l.game_build_id === build.id);

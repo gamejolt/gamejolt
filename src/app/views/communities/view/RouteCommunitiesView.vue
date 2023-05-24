@@ -1,7 +1,6 @@
 <script lang="ts">
 import { computed, provide, ref, watch } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
-import { enforceLocation } from '../../../../utils/router';
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
@@ -12,18 +11,21 @@ import { Api } from '../../../../_common/api/api.service';
 import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import { Community, isEditingCommunity } from '../../../../_common/community/community.model';
 import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
+import AppMediaItemCover from '../../../../_common/media-item/cover/AppMediaItemCover.vue';
 import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { ContextPane, useSidebarStore } from '../../../../_common/sidebar/sidebar.store';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { enforceLocation } from '../../../../utils/router';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
 import { CommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
 import { useGridStore } from '../../../components/grid/grid-store';
 import AppShellContentWithSidebar from '../../../components/shell/AppShellContentWithSidebar.vue';
 import { useAppStore } from '../../../store/index';
+import AppCommunitiesViewContext from './_context/context.vue';
+import AppMobileHeader from './_mobile-header/mobile-header.vue';
 import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
 import {
 	CommunityRouteStore,
@@ -31,8 +33,6 @@ import {
 	setChannelPathFromRoute,
 	setCommunity,
 } from './view.store';
-import AppCommunitiesViewContext from './_context/context.vue';
-import AppMobileHeader from './_mobile-header/mobile-header.vue';
 
 export const CommunityThemeKey = 'community';
 

@@ -60,7 +60,7 @@ export default class RouteDashAccountPurchasesList extends BaseRouteComponent {
 							<router-link
 								:to="{
 									name: 'dash.account.purchases.view',
-									params: { id: order.id },
+									params: { hash: order.hash },
 								}"
 							>
 								{{ order.id }}
