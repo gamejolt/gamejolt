@@ -8,7 +8,7 @@ import { GamePackage } from '../../../_common/game/package/package.model';
 import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
-import AppMediaItemCover from '../../../_common/media-item/cover/cover.vue';
+import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';
 import { MicrotransactionProduct } from '../../../_common/microtransaction/product.model';
 import { ModelData } from '../../../_common/model/model.service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
@@ -16,9 +16,11 @@ import { Order } from '../../../_common/order/order.model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { useThemeStore } from '../../../_common/theme/theme.store';
+import { kThemeFgMuted } from '../../../_common/theme/variables';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 import { styleFlexCenter, styleMaxWidthForOptions } from '../../../_styles/mixins';
-import FormPayment from '../../components/forms/payment/payment.vue';
+import { kFontFamilyDisplay, kLineHeightComputed } from '../../../_styles/variables';
+import FormPayment from '../../components/forms/FormPayment.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -114,16 +116,6 @@ const maybeMicrotransaction = computed(() => {
 	return null;
 });
 
-const headingStyles = computed<CSSProperties | undefined>(() => {
-	if (maybeMicrotransaction.value) {
-		return {
-			marginTop: `16px`,
-		};
-	}
-
-	return undefined;
-});
-
 const { isBootstrapped } = createAppRoute({
 	routeTitle,
 	onResolved({ payload }: { payload: Payload }) {
@@ -152,7 +144,7 @@ function setTheme() {
 	});
 }
 
-function onFormSubmit(_formModel: any, response: any) {
+function onFormSubmit(response: any) {
 	let redirect: string | null = response.redirectUrl;
 
 	if (GJ_IS_DESKTOP_APP && redirect) {
@@ -167,15 +159,20 @@ function onFormSubmit(_formModel: any, response: any) {
 
 	Navigate.goto(redirect);
 }
+
+const headingStyles = computed<CSSProperties>(() => ({
+	marginTop: maybeMicrotransaction.value ? `16px` : kLineHeightComputed.value * 2 + 'px',
+	marginBottom: 0,
+	fontFamily: kFontFamilyDisplay,
+}));
 </script>
 
 <template>
-	<section class="container _section">
+	<section class="container" :style="{ overflow: `hidden` }">
 		<template v-if="!isBootstrapped">
 			<AppLoading big centered />
 		</template>
 		<template v-else>
-			<!-- TODO: have some kind of visual for MTX sellables. -->
 			<div v-if="maybeGame" class="_game-cover">
 				<AppMediaItemCover
 					v-if="maybeGame.header_media_item"
@@ -210,7 +207,15 @@ function onFormSubmit(_formModel: any, response: any) {
 				<h1 :style="headingStyles">
 					{{ orderTitle }}
 				</h1>
-				<h4 v-if="orderSubtitle">
+				<h4
+					v-if="orderSubtitle"
+					:style="{
+						color: kThemeFgMuted,
+						marginTop: 0,
+						marginBottom: kLineHeightComputed.px,
+						fontFamily: kFontFamilyDisplay,
+					}"
+				>
 					<template v-if="maybeGame">
 						{{ $gettext(`by`) }}
 						{{ ' ' }}
@@ -220,15 +225,12 @@ function onFormSubmit(_formModel: any, response: any) {
 			</div>
 			<br />
 
-			<FormPayment :cards="cards" :order="order" @submit="onFormSubmit" />
+			<FormPayment v-if="order" :cards="cards" :order="order" @submit="onFormSubmit" />
 		</template>
 	</section>
 </template>
 
 <style lang="stylus" scoped>
-._section
-	overflow: hidden
-
 ._game-cover
 	margin-top: -($grid-gutter-width / 2)
 	margin-right: -($grid-gutter-width-xs / 2)
@@ -237,14 +239,4 @@ function onFormSubmit(_formModel: any, response: any) {
 	@media $media-sm-up
 		margin-right: -($grid-gutter-width / 2)
 		margin-left: -($grid-gutter-width / 2)
-
-h1
-	margin-top: $line-height-computed * 2
-	margin-bottom: 0
-
-h4
-	theme-prop('color', 'fg-muted')
-	margin-top: 0
-	margin-bottom: $line-height-computed
-	font-family: $font-family-base
 </style>

@@ -327,8 +327,10 @@ const currencyCardImgStyles: CSSProperties = {
 												class="text-center"
 												:style="{
 													...styleOverlayTextShadow,
-													fontStyle: 'italic',
+													fontWeight: `bold`,
+													fontSize: `17px`,
 													fontFamily: kFontFamilyHeading,
+													marginBottom: `8px`,
 												}"
 											>
 												{{ formatNumber(amount) }}

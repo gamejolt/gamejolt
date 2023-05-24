@@ -5,14 +5,14 @@ import {
 	TooltipDirectiveValue,
 } from './tooltip-controller';
 
-const state = new WeakMap<HTMLElement, TooltipController>();
+const state = new WeakMap<any, TooltipController>();
 
 /**
  * Use the 'touchable' modifier to allow toggle usage for mobile.
  * Never attach a 'touchable' modifier to a link.
  * It will stop the link from working.
  */
-export const vAppTooltip: Directive<HTMLElement, TooltipDirectiveValue> = {
+export const vAppTooltip: Directive<any, TooltipDirectiveValue> = {
 	beforeMount(el, binding) {
 		const tooltip = makeTooltipController(el, binding);
 		state.set(el, tooltip);
