@@ -1,15 +1,14 @@
-import { CSSProperties, toRefs, onMounted, computed, StyleValue } from 'vue';
 <script lang="ts" setup>
 import { CSSProperties, PropType, StyleValue, computed, onMounted, toRefs } from 'vue';
 import { styleBorderRadiusBase } from '../../_styles/mixins';
 import { kFontFamilyHeading, kFontSizeLarge, kLineHeightBase } from '../../_styles/variables';
-import { defineSlotHelperProps, getSlotHelpers } from '../component-helpers';
+import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import { kThemeFg10 } from '../theme/variables';
 import { MicrotransactionProduct } from './product.model';
 
 const props = defineProps({
-	...defineSlotHelperProps(['trailing'], false),
+	...defineDynamicSlotProps(['trailing'], false),
 	item: {
 		type: Object as PropType<MicrotransactionProduct>,
 		default: undefined,
@@ -19,7 +18,7 @@ const props = defineProps({
 	},
 });
 
-const { item, isPlaceholder, definedSlots } = toRefs(props);
+const { item, isPlaceholder, dynamicSlots } = toRefs(props);
 
 onMounted(() => {
 	if (!item?.value && !isPlaceholder.value) {
@@ -27,7 +26,7 @@ onMounted(() => {
 	}
 });
 
-const { hasSlot } = getSlotHelpers(definedSlots);
+const { hasSlot } = useDynamicSlots(dynamicSlots);
 
 const itemStyles = computed<CSSProperties>(() => {
 	return { display: `flex`, alignItems: `flex-start`, gap: `12px`, padding: `8px 0` };

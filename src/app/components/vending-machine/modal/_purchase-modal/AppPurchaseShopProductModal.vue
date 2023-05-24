@@ -73,12 +73,12 @@ export async function purchaseShopProduct({
 		);
 
 		if (response.success === false) {
-			throw 'Failed to purchase product';
+			throw new Error(`Failed to purchase product`);
 		}
 
 		const rawProduct = response.product;
 		if (!rawProduct) {
-			throw 'Product returned from backend is empty';
+			throw new Error(`Product returned from backend is empty`);
 		}
 
 		const newBalance = response.new_balance;
@@ -102,7 +102,7 @@ export async function purchaseShopProduct({
 		if (shopProduct.stickerPack) {
 			const pack = new UserStickerPack(rawProduct);
 			if (pack == null) {
-				throw 'No sticker pack found after purchasing product';
+				throw new Error(`No sticker pack found after purchasing product`);
 			}
 			onItemPurchased?.pack?.(pack);
 		} else {
@@ -137,7 +137,6 @@ const props = defineProps({
 const { shopProduct, currencyOptions } = toRefs(props);
 
 const modal = useModal()!;
-
 const { stickerPacks } = useStickerStore();
 const { coinBalance, joltbuxBalance } = useCommonStore();
 
@@ -271,7 +270,7 @@ function handleStickerPackPurchase(product: UserStickerPack) {
 							!!processingPurchaseCurrencyId ||
 							!canAffordCurrency(currency, amount, balanceRefs)
 						"
-						:defined-slots="['icon']"
+						:dynamic-slots="['icon']"
 						lg
 						solid
 						block

@@ -27,16 +27,16 @@ const { gamePackage, game } = toRefs(props);
 		</div>
 		<div class="col-xs-10">
 			<p>
-				<router-link :to="game.routeLocation">
+				<RouterLink :to="game.routeLocation">
 					{{ game.title }}
-				</router-link>
+				</RouterLink>
 				<br />
 				<span class="small">
 					{{ $gettext(`by`) }}
 					{{ ' ' }}
-					<router-link :to="game.developer.routeLocation">
+					<RouterLink :to="game.developer.routeLocation">
 						{{ game.developer.display_name }}
-					</router-link>
+					</RouterLink>
 				</span>
 			</p>
 

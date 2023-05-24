@@ -10,21 +10,21 @@ export type ComponentProps<C extends Component> = C extends new (...args: any) =
 	? Omit<InstanceType<C>['$props'], keyof VNodeProps | keyof AllowedComponentProps>
 	: never;
 
-type DefinedSlots<T extends string> = T[] | boolean;
+type DynamicSlots<T extends string> = T[] | boolean;
 
 /**
- * Adds a `definedSlots` prop that a parent component can use to determine what
+ * Adds a `dynamicSlots` prop that a parent component can use to determine what
  * slot content, or components wrapping the slot, should be shown at any point.
  *
- * For use with {@link getSlotHelpers}.
+ * For use with {@link useDynamicSlots}.
  */
-export function defineSlotHelperProps<T extends string>(
+export function defineDynamicSlotProps<T extends string>(
 	validValues: T[],
 	defaultValue: (() => T[]) | boolean
 ) {
 	return {
-		definedSlots: {
-			type: [Array, Boolean] as PropType<DefinedSlots<T>>,
+		dynamicSlots: {
+			type: [Array, Boolean] as PropType<DynamicSlots<T>>,
 			default: defaultValue,
 			validator: (value: unknown) => {
 				if (typeof value === 'boolean') {
@@ -44,23 +44,23 @@ export function defineSlotHelperProps<T extends string>(
  * NOTE: Nothing in this actually checks if a slot has content being passed into
  * it.
  *
- * For use with {@link defineSlotHelperProps}.
+ * For use with {@link defineDynamicSlotProps}.
  */
-export function getSlotHelpers<T extends string>(definedSlots: Ref<DefinedSlots<T>>) {
+export function useDynamicSlots<T extends string>(dynamicSlots: Ref<DynamicSlots<T>>) {
 	return {
 		hasSlot(slot: T) {
 			// Booleans should be returned directly.
-			if (typeof definedSlots.value === 'boolean') {
-				return definedSlots.value;
+			if (typeof dynamicSlots.value === 'boolean') {
+				return dynamicSlots.value;
 			}
-			return definedSlots.value.includes(slot);
+			return dynamicSlots.value.includes(slot);
 		},
 		hasAnySlot: computed(() => {
 			// Booleans should be returned directly.
-			if (typeof definedSlots.value === 'boolean') {
-				return definedSlots.value;
+			if (typeof dynamicSlots.value === 'boolean') {
+				return dynamicSlots.value;
 			}
-			return definedSlots.value.length > 0;
+			return dynamicSlots.value.length > 0;
 		}),
 	};
 }

@@ -12,6 +12,7 @@ import AppIllustration from '../../illustration/AppIllustration.vue';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
+import { storeModelList } from '../../model/model-store.service';
 import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import { useCommonStore } from '../../store/common-store';
@@ -47,9 +48,9 @@ onMounted(async () => {
 
 		if (response.products && Array.isArray(response.products)) {
 			// Only show products that have a valid price.
-			mtxProducts.value = MicrotransactionProduct.populate<MicrotransactionProduct>(
-				response.products
-			).filter(i => !!i.sellable && i.sellable.pricings.length);
+			mtxProducts.value = storeModelList(MicrotransactionProduct, response.products).filter(
+				i => !!i.sellable && i.sellable.pricings.length
+			);
 		}
 	} catch (e) {
 		console.error('Error loading products', e);
@@ -155,7 +156,7 @@ const itemBorderSeperatorStyles: CSSProperties = {
 							v-for="i in 3"
 							:key="i"
 							:style="styleWhen(i < 3, itemBorderSeperatorStyles)"
-							:defined-slots="['trailing']"
+							:dynamic-slots="['trailing']"
 							is-placeholder
 						/>
 					</template>
@@ -176,7 +177,7 @@ const itemBorderSeperatorStyles: CSSProperties = {
 						v-else
 						:key="item.id"
 						:item="item"
-						:defined-slots="
+						:dynamic-slots="
 							item.sellable && item.sellable.pricings.length ? ['trailing'] : false
 						"
 						:style="

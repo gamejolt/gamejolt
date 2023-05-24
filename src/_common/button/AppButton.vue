@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs, useAttrs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 import { kJolticonSize } from '../../_styles/variables';
-import { defineSlotHelperProps, getSlotHelpers } from '../component-helpers';
+import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 
 const props = defineProps({
@@ -70,10 +70,10 @@ const props = defineProps({
 	 * Allows a custom icon to be built into the button. Does nothing if
 	 * {@link icon} is set.
 	 */
-	...defineSlotHelperProps(['icon'], false),
+	...defineDynamicSlotProps(['icon'], false),
 });
 
-const { definedSlots } = toRefs(props);
+const { dynamicSlots } = toRefs(props);
 
 const attrs = useAttrs();
 
@@ -86,7 +86,7 @@ const ourTag = computed(() => {
 	return props.tag;
 });
 
-const { hasSlot } = getSlotHelpers(definedSlots);
+const { hasSlot } = useDynamicSlots(dynamicSlots);
 </script>
 
 <template>

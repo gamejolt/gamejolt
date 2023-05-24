@@ -1,6 +1,7 @@
 import { GamePackage } from '../game/package/package.model';
 import { LinkedKey } from '../linked-key/linked-key.model';
 import { MicrotransactionProduct } from '../microtransaction/product.model';
+import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
 import { SellablePricing } from './pricing/pricing.model';
 
@@ -46,7 +47,7 @@ export class Sellable extends Model {
 					this.resource_model = new GamePackage(data.resource);
 					break;
 				case 'Microtransaction_Product':
-					this.resource_model = new MicrotransactionProduct(data.resource);
+					this.resource_model = storeModel(MicrotransactionProduct, data.resource);
 					break;
 			}
 		}

@@ -59,7 +59,7 @@ const hasVisiblePayment = computed(() => {
 const { isBootstrapped } = createAppRoute({
 	routeTitle: heading,
 	onInit() {
-		heading.value = $gettext(`Order Details`);
+		heading.value = $gettext(`Order details`);
 	},
 	onResolved({ payload }) {
 		order.value = new Order(payload.order);

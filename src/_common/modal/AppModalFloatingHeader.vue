@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { toRefs } from 'vue';
-import { defineSlotHelperProps, getSlotHelpers } from '../component-helpers';
+import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 
 const props = defineProps({
-	...defineSlotHelperProps(['title', 'bottom'], true),
+	...defineDynamicSlotProps(['title', 'bottom'], true),
 });
 
-const { definedSlots } = toRefs(props);
+const { dynamicSlots } = toRefs(props);
 
-const { hasSlot, hasAnySlot } = getSlotHelpers(definedSlots);
+const { hasSlot, hasAnySlot } = useDynamicSlots(dynamicSlots);
 </script>
 
 <template>
