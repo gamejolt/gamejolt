@@ -27,6 +27,7 @@ import { FormCommentLazy } from '../../lazy';
 import AppLoading from '../../loading/AppLoading.vue';
 import AppMessageThread from '../../message-thread/AppMessageThread.vue';
 import AppMessageThreadAdd from '../../message-thread/AppMessageThreadAdd.vue';
+import { storeModel } from '../../model/model-store.service';
 import { Model } from '../../model/model.service';
 import AppNavTabList from '../../nav/tab-list/tab-list.vue';
 import { useCommonStore } from '../../store/common-store';
@@ -39,17 +40,17 @@ import {
 	getCommentModelResourceName,
 } from '../comment-model';
 import {
+	commentStoreFetch,
+	commentStoreFetchThread,
+	commentStoreHandleAdd,
+	commentStoreHandleEdit,
+	commentStoreHandleRemove,
 	CommentStoreManagerKey,
 	CommentStoreModel,
-	fetchCommentThread,
-	fetchStoreComments,
+	commentStorePin,
+	commentStoreSort,
 	lockCommentStore,
-	onCommentAdd as onCommentStoreAdd,
-	onCommentEdit as onCommentStoreEdit,
-	onCommentRemove as onCommentStoreRemove,
-	pinComment as pinStoreComment,
 	releaseCommentStore,
-	setCommentSort,
 } from '../comment-store';
 import {
 	CommentStoreSliceView,
@@ -164,7 +165,7 @@ export function createCommentWidget(options: {
 		// Filter comments based on the 'initialTab' prop. This allows us to set the comment
 		// sorting to the "You" tab when you leave a comment from an event item.
 		if (store.value && initialTab.value) {
-			setCommentSort(store.value, initialTab.value);
+			commentStoreSort(store.value, initialTab.value);
 		}
 
 		await _fetchComments();
@@ -203,7 +204,7 @@ export function createCommentWidget(options: {
 		// comment widget. This way if you open up a new comment widget in the
 		// future, we'll correctly start at the "hot" sort.
 		if (metadata.widgetLocks === 0) {
-			setCommentSort(store.value, Comment.SORT_HOT);
+			commentStoreSort(store.value, Comment.SORT_HOT);
 		}
 
 		releaseCommentStore(commentManager, store.value);
@@ -222,15 +223,16 @@ export function createCommentWidget(options: {
 
 			let payload: any;
 			if (isThreadView.value && threadCommentId.value) {
-				payload = await fetchCommentThread(store.value, threadCommentId.value);
+				payload = await commentStoreFetchThread(store.value, threadCommentId.value);
+
 				// It's possible that the thread comment is actually a child. In
 				// that case, update the view's parent ID to the returned parent
 				// ID.
 				if (storeView.value instanceof CommentStoreThreadView) {
-					storeView.value.parentCommentId = new Comment(payload.parent).id;
+					storeView.value.parentCommentId = storeModel(Comment, payload.parent).id;
 				}
 			} else {
-				payload = await fetchStoreComments(store.value, currentPage.value);
+				payload = await commentStoreFetch(store.value, currentPage.value);
 			}
 
 			isLoading.value = false;
@@ -289,7 +291,7 @@ export function createCommentWidget(options: {
 		}
 
 		currentPage.value = 1;
-		setCommentSort(store.value, sort);
+		commentStoreSort(store.value, sort);
 		_fetchComments();
 	}
 
@@ -299,7 +301,7 @@ export function createCommentWidget(options: {
 	}
 
 	function onCommentAdd(comment: Comment) {
-		onCommentStoreAdd(commentManager, comment);
+		commentStoreHandleAdd(commentManager, comment);
 		options.onAdd(comment);
 
 		if (store.value) {
@@ -314,17 +316,17 @@ export function createCommentWidget(options: {
 	}
 
 	function onCommentEdit(comment: Comment) {
-		onCommentStoreEdit(commentManager, comment);
+		commentStoreHandleEdit(commentManager, comment);
 		options.onEdit(comment);
 	}
 
 	function onCommentRemove(comment: Comment) {
-		onCommentStoreRemove(commentManager, comment);
+		commentStoreHandleRemove(commentManager, comment);
 		options.onRemove(comment);
 	}
 
 	function pinComment(comment: Comment) {
-		return pinStoreComment(commentManager, comment);
+		return commentStorePin(commentManager, comment);
 	}
 
 	// Reinitialize anytime model changes.

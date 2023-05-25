@@ -21,7 +21,10 @@ import {
 	canCommentOnModel,
 	Comment,
 	CommentableModel,
+	followComment,
 	getCommentBlockReason,
+	removeComment,
+	unfollowComment,
 } from '../comment-model';
 import AppCommentControls from '../controls/AppCommentControls.vue';
 import { useCommentWidget } from './AppCommentWidget.vue';
@@ -196,7 +199,7 @@ function commentEdited(comment: Comment) {
 	onCommentEdit(comment);
 }
 
-async function removeComment() {
+async function doRemoveComment() {
 	isEditing.value = false;
 	Popper.hideAll();
 
@@ -209,7 +212,7 @@ async function removeComment() {
 	}
 
 	try {
-		await comment.value.$remove();
+		await removeComment(comment.value);
 	} catch (err) {
 		console.warn('Failed to remove comment');
 		return;
@@ -220,9 +223,9 @@ async function removeComment() {
 
 function onFollowClick() {
 	if (!comment.value.subscription) {
-		comment.value.$follow();
+		followComment(comment.value);
 	} else {
-		comment.value.$removeFollow();
+		unfollowComment(comment.value);
 	}
 }
 
@@ -311,7 +314,11 @@ function onUnhideBlock() {
 							<AppTranslate v-if="comment.subscription">Following</AppTranslate>
 							<AppTranslate v-else>Follow Thread</AppTranslate>
 						</a>
-						<a v-if="canRemove" class="list-group-item has-icon" @click="removeComment">
+						<a
+							v-if="canRemove"
+							class="list-group-item has-icon"
+							@click="doRemoveComment"
+						>
 							<AppJolticon icon="remove" notice />
 							<AppTranslate>Remove Comment</AppTranslate>
 						</a>

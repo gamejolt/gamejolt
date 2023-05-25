@@ -1,9 +1,8 @@
 <script lang="ts">
-import { computed, inject, InjectionKey, provide, ref } from '@vue/runtime-core';
+import { computed, inject, InjectionKey, provide, ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { Router, useRouter } from 'vue-router';
-import { enforceLocation } from '../../../../../utils/router';
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
@@ -14,12 +13,12 @@ import { Api } from '../../../../../_common/api/api.service';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
 import { Comment } from '../../../../../_common/comment/comment-model';
 import {
+	commentStoreCount,
 	CommentStoreManager,
 	CommentStoreManagerKey,
 	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
-	setCommentCount,
 } from '../../../../../_common/comment/comment-store';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -34,6 +33,7 @@ import { GameSong } from '../../../../../_common/game/song/song.model';
 import { GameVideo } from '../../../../../_common/game/video/video.model';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
 import { LinkedAccount } from '../../../../../_common/linked-account/linked-account.model';
+import { storeModelList } from '../../../../../_common/model/model-store.service';
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
 import { Registry } from '../../../../../_common/registry/registry.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
@@ -48,6 +48,7 @@ import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { User } from '../../../../../_common/user/user.model';
 import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import { enforceLocation } from '../../../../../utils/router';
 import AppGameCoverButtons from '../../../../components/game/cover-buttons/cover-buttons.vue';
 import AppGameMaturityBlock from '../../../../components/game/maturity-block/maturity-block.vue';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
@@ -266,7 +267,7 @@ function createController({ router }: { router: Router }) {
 
 		linkedAccounts.value = LinkedAccount.populate(payload.linkedAccounts);
 
-		overviewComments.value = Comment.populate(payload.comments);
+		overviewComments.value = storeModelList(Comment, payload.comments);
 
 		partnerKey.value = payload.partnerReferredKey || '';
 		partner.value = payload.partnerReferredBy ? new User(payload.partnerReferredBy) : undefined;
@@ -534,7 +535,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 			this.commentStore = null;
 		}
 		this.commentStore = lockCommentStore(this.commentManager, 'Game', this.game!.id);
-		setCommentCount(this.commentStore, payload.commentsCount || 0);
+		commentStoreCount(this.commentStore, payload.commentsCount || 0);
 	}
 
 	routeDestroyed() {

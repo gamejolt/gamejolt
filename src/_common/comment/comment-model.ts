@@ -5,7 +5,13 @@ import { Environment } from '../environment/environment.service';
 import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import { showErrorGrowl } from '../growls/growls.service';
-import { ModelStoreModel } from '../model/model-store.service';
+import {
+	ModelStoreModel,
+	RemovableModel,
+	removeModel,
+	saveModel,
+	storeModel,
+} from '../model/model-store.service';
 import { Model } from '../model/model.service';
 import { ReactionCount, ReactionableModel } from '../reaction/reaction-count';
 import { Subscription } from '../subscription/subscription.model';
@@ -18,7 +24,7 @@ export interface CommentableModel {
 	canInteractWithComments: boolean;
 }
 
-export class Comment extends Model implements ModelStoreModel, ReactionableModel {
+export class Comment implements ModelStoreModel, RemovableModel, ReactionableModel {
 	static readonly STATUS_REMOVED = 0;
 	static readonly STATUS_VISIBLE = 1;
 	static readonly STATUS_SPAM = 2;
@@ -28,30 +34,33 @@ export class Comment extends Model implements ModelStoreModel, ReactionableModel
 	static readonly SORT_NEW = 'new';
 	static readonly SORT_YOU = 'you';
 
-	parent_id!: number;
-	resource!: 'Game' | 'Fireside_Post' | 'User';
-	resource_id!: number;
-	user!: User;
-	votes!: number;
-	user_vote?: CommentVote;
-	status!: number;
-	posted_on!: number;
-	modified_on?: number;
-	lang!: string;
-	subscription?: Subscription;
-	is_pinned!: boolean;
-	comment_content!: string;
+	declare id: number;
+	declare parent_id?: number;
+	declare resource: 'Game' | 'Fireside_Post' | 'User';
+	declare resource_id: number;
+	declare user: User;
+	declare votes: number;
+	declare user_vote?: CommentVote;
+	declare status: number;
+	declare posted_on: number;
+	declare modified_on?: number;
+	declare lang: string;
+	declare subscription?: Subscription;
+	declare is_pinned: boolean;
+	declare comment_content: string;
 	reaction_counts: ReactionCount[] = [];
 	supporters: User[] = [];
 
 	isFollowPending = false;
+	_removed = false;
 
-	constructor(data: any = {}) {
-		super(data);
+	constructor(data: any) {
 		this.update(data);
 	}
 
 	update(data: any): void {
+		Object.assign(this, data);
+
 		if (data.user) {
 			this.user = new User(data.user);
 		}
@@ -80,67 +89,14 @@ export class Comment extends Model implements ModelStoreModel, ReactionableModel
 	get permalink() {
 		return Environment.baseUrl + '/x/permalink/comment/' + this.id;
 	}
-
-	$save() {
-		if (!this.id) {
-			return this.$_save(`/comments/save`, 'comment', {
-				detach: true,
-			});
-		} else {
-			return this.$_save(`/comments/save/${this.id}`, 'comment', {
-				detach: true,
-			});
-		}
-	}
-
-	$remove() {
-		if (!this.id) {
-			throw new Error('Tried removing a comment that does not exist');
-		} else {
-			return this.$_remove(`/comments/remove/${this.id}`, {
-				detach: true,
-			});
-		}
-	}
-
-	async $follow() {
-		if (this.subscription || this.isFollowPending) {
-			return;
-		}
-		this.isFollowPending = true;
-
-		const subscription = await Subscription.$subscribe(this.id);
-		this.subscription = subscription;
-		this.isFollowPending = false;
-	}
-
-	async $removeFollow() {
-		if (!this.subscription || this.isFollowPending) {
-			return;
-		}
-		this.isFollowPending = true;
-
-		await this.subscription.$remove();
-		this.subscription = undefined;
-		this.isFollowPending = false;
-	}
-
-	// applies pin operation to current comment and returns the comment that
-	// got unpinned (or null if that didn't happen)
-	async $pin(): Promise<Comment | null> {
-		const result = await this.$_save(`/comments/pin/${this.id}`, 'comment');
-		return result['otherComment'] ? new Comment(result['otherComment']) : null;
-	}
 }
-
-Model.create(Comment);
 
 export async function fetchComment(id: number) {
 	try {
 		const payload = await Api.sendRequest(`/comments/get-comment/${id}`, null, {
 			detach: true,
 		});
-		return new Comment(payload.comment);
+		return storeModel(Comment, payload.comment);
 	} catch (e) {
 		// Probably removed.
 	}
@@ -193,14 +149,15 @@ export function canCommentOnModel(model: CommentableModel, parentComment?: Comme
 	return model.canMakeComment;
 }
 
-/**
- * @param options scrollId is a timestamp that controls where fetching starts (posted_on)
- */
 export async function fetchComments(
 	resource: string,
 	resourceId: number,
 	sort: string,
-	options: { scrollId?: number | null; page?: number | null }
+	options: {
+		/** is a timestamp that controls where fetching starts (posted_on) */
+		scrollId?: number | null;
+		page?: number | null;
+	}
 ) {
 	const { scrollId, page } = options;
 	let query = '';
@@ -228,6 +185,64 @@ export async function getCommentUrl(commentId: number): Promise<string> {
 	}
 
 	return response.url;
+}
+
+export async function saveComment(data: Partial<Comment>) {
+	const { model } = await saveModel(Comment, {
+		url: !data.id ? `/comments/save` : `/comments/save/${data.id}`,
+		field: 'comment',
+		data,
+		requestOptions: {
+			detach: true,
+		},
+	});
+
+	return model;
+}
+
+export async function removeComment(comment: Comment) {
+	if (!comment.id) {
+		throw new Error('Tried removing a comment that does not exist');
+	}
+
+	return removeModel(comment, `/comments/remove/${comment.id}`, {
+		detach: true,
+	});
+}
+
+export async function followComment(comment: Comment) {
+	if (comment.subscription || comment.isFollowPending) {
+		return;
+	}
+	comment.isFollowPending = true;
+
+	const subscription = await Subscription.$subscribe(comment.id);
+	comment.subscription = subscription;
+	comment.isFollowPending = false;
+}
+
+export async function unfollowComment(comment: Comment) {
+	if (!comment.subscription || comment.isFollowPending) {
+		return;
+	}
+	comment.isFollowPending = true;
+
+	await comment.subscription.$remove();
+	comment.subscription = undefined;
+	comment.isFollowPending = false;
+}
+
+/**
+ * Applies pin operation to current comment and returns the comment that got
+ * unpinned (or null if that didn't happen).
+ */
+export async function pinComment(comment: Comment) {
+	const { response } = await saveModel(Comment, {
+		url: `/comments/pin/${comment.id}`,
+		field: 'comment',
+	});
+
+	return response['otherComment'] ? storeModel(Comment, response['otherComment']) : null;
 }
 
 export async function addCommentVote(comment: Comment, vote: number) {

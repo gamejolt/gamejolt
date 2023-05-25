@@ -9,11 +9,11 @@ import AppAnimElectricity from '../../../../_common/animation/AppAnimElectricity
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
+	commentStoreCount,
 	CommentStoreManagerKey,
 	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
-	setCommentCount,
 } from '../../../../_common/comment/comment-store';
 import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
@@ -107,7 +107,7 @@ const shouldShowFollowState = ref(
 const commentStore = ref<CommentStoreModel | null>(
 	lockCommentStore(commentManager, 'Fireside_Post', post.value.id)
 );
-setCommentCount(commentStore.value!, post.value.comment_count);
+commentStoreCount(commentStore.value!, post.value.comment_count);
 
 const isShowingFollow = computed(() => {
 	if (!shouldShowFollow.value || !shouldShowFollowState.value || !post.value) {

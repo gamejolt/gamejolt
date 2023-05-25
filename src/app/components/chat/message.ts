@@ -23,7 +23,7 @@ export class ChatMessage implements ModelStoreModel, ReactionableModel {
 	declare showAvatar?: boolean;
 	declare dateSplit?: boolean;
 	declare is_automated?: boolean;
-	declare reaction_counts: ReactionCount[];
+	reaction_counts: ReactionCount[] = [];
 	// TODO(realtime-reactions) Add reaction counts similar to how comment-model does it.
 
 	// Used for rendering.

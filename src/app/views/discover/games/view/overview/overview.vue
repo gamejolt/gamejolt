@@ -1,15 +1,14 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
-import { getAbsoluteLink } from '../../../../../../utils/router';
+import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
 import { useAdsController } from '../../../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
-import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
 import AppCard from '../../../../../../_common/card/AppCard.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
-import { canCommentOnModel, Comment } from '../../../../../../_common/comment/comment-model';
+import { Comment, canCommentOnModel } from '../../../../../../_common/comment/comment-model';
 import {
 	CommentStoreManager,
 	CommentStoreManagerKey,
@@ -32,6 +31,7 @@ import AppGameSoundtrackCard from '../../../../../../_common/game/soundtrack/car
 import { HistoryTick } from '../../../../../../_common/history-tick/history-tick-service';
 import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/placeholder';
 import { Meta } from '../../../../../../_common/meta/meta-service';
+import { storeModelList } from '../../../../../../_common/model/model-store.service';
 import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
 import {
 	BaseRouteComponent,
@@ -39,6 +39,7 @@ import {
 } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../../../_common/share/card/AppShareCard.vue';
+import { getAbsoluteLink } from '../../../../../../utils/router';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
@@ -344,7 +345,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 				'/web/discover/games/comment-overview/' + this.game.id
 			);
 
-			this.routeStore.setOverviewComments(Comment.populate($payload.comments));
+			this.routeStore.setOverviewComments(storeModelList(Comment, $payload.comments));
 		}
 	}
 }

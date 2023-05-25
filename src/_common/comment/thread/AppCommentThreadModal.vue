@@ -11,7 +11,7 @@ import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext } from '../../translate/translate.service';
 import AppCommentDisabledCheck from '../AppCommentDisabledCheck.vue';
 import { Comment, CommentableModel, getCommentModelResourceName } from '../comment-model';
-import { CommentStoreManagerKey, getCommentStore, onCommentAdd } from '../comment-store';
+import { commentStoreHandleAdd, CommentStoreManagerKey, getCommentStore } from '../comment-store';
 import AppCommentWidget from '../widget/AppCommentWidget.vue';
 
 const props = defineProps({
@@ -62,7 +62,7 @@ const parent = computed(() => {
 });
 
 function _onCommentAdd(comment: Comment) {
-	onCommentAdd(commentManager, comment);
+	commentStoreHandleAdd(commentManager, comment);
 	emit('add', comment);
 }
 
