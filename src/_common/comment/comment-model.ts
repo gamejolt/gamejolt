@@ -5,8 +5,9 @@ import { Environment } from '../environment/environment.service';
 import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import { showErrorGrowl } from '../growls/growls.service';
+import { ModelStoreModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
-import { ReactionableModel, ReactionCount } from '../reaction/reaction-count';
+import { ReactionCount, ReactionableModel } from '../reaction/reaction-count';
 import { Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
 import { CommentVote } from './vote/vote-model';
@@ -17,7 +18,7 @@ export interface CommentableModel {
 	canInteractWithComments: boolean;
 }
 
-export class Comment extends Model implements ReactionableModel {
+export class Comment extends Model implements ModelStoreModel, ReactionableModel {
 	static readonly STATUS_REMOVED = 0;
 	static readonly STATUS_VISIBLE = 1;
 	static readonly STATUS_SPAM = 2;
@@ -45,17 +46,12 @@ export class Comment extends Model implements ReactionableModel {
 
 	isFollowPending = false;
 
-	get typename__() {
-		return 'Comment';
-	}
-
-	get permalink() {
-		return Environment.baseUrl + '/x/permalink/comment/' + this.id;
-	}
-
 	constructor(data: any = {}) {
 		super(data);
+		this.update(data);
+	}
 
+	update(data: any): void {
 		if (data.user) {
 			this.user = new User(data.user);
 		}
@@ -75,6 +71,14 @@ export class Comment extends Model implements ReactionableModel {
 		if (data.supporters) {
 			this.supporters = User.populate(data.supporters);
 		}
+	}
+
+	get resourceName() {
+		return 'Comment';
+	}
+
+	get permalink() {
+		return Environment.baseUrl + '/x/permalink/comment/' + this.id;
 	}
 
 	$save() {

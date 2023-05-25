@@ -3,15 +3,13 @@ import { getCurrentServerTime } from '../../utils/server-time';
 import { Api } from '../api/api.service';
 import { EmojiSelectorModal } from '../emoji/selector-modal/modal.service';
 import { showErrorGrowl } from '../growls/growls.service';
-import { Model } from '../model/model.service';
 import { $gettext } from '../translate/translate.service';
 
-export abstract class ReactionableModel extends Model {
-	declare reaction_counts: ReactionCount[];
+export interface ReactionableModel {
+	id: number;
+	reaction_counts: ReactionCount[];
 
-	get typename__(): string {
-		throw new Error('ReactionableModel must implement typename__');
-	}
+	get resourceName(): string;
 }
 
 export class ReactionCount {
@@ -50,7 +48,7 @@ export async function selectReactionForResource(model: ReactionableModel) {
 		type: 'reactions',
 		modelData: {
 			type: 'resource',
-			resource: model.typename__,
+			resource: model.resourceName,
 			resourceId: model.id,
 		},
 	});
@@ -111,7 +109,7 @@ export async function toggleReactionOnResource({
 		const response = await Api.sendRequest(
 			`/web/reactions/${action}`,
 			{
-				resource: model.typename__,
+				resource: model.resourceName,
 				resourceId: model.id,
 				emojiId: emojiId,
 				timestamp: getCurrentServerTime(),

@@ -2,8 +2,6 @@ import { ModelStoreModel, storeModel } from '../../../_common/model/model-store.
 import { ReactionCount, ReactionableModel } from '../../../_common/reaction/reaction-count';
 import { ChatUser } from './user';
 
-import { Model } from '../../../_common/model/model.service';
-
 //'../model/model.service';
 export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued message should be displayed as such.
 
@@ -11,7 +9,7 @@ export type ChatMessageType = 'content' | 'sticker' | 'invite';
 
 // TODO(realtime-reactions) See what comments is doing. this needs to implement ReactionableModel.
 // See how reactions are displayed and interacted with (AppReactionList, ReactionCount, etc)
-export class ChatMessage extends Model implements ModelStoreModel, ReactionableModel {
+export class ChatMessage implements ModelStoreModel, ReactionableModel {
 	declare id: number;
 	declare user_id: number;
 	declare user: ChatUser;
@@ -36,12 +34,11 @@ export class ChatMessage extends Model implements ModelStoreModel, ReactionableM
 	_isProcessing = false;
 	_error = false; // When an error was received trying to send the message.
 
-	get typename__() {
+	get resourceName() {
 		return 'Chat_Message';
 	}
 
 	constructor(data: any) {
-		super(data);
 		this.update(data);
 	}
 
