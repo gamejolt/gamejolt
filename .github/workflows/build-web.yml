@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - frontend-build-on-gh
 
 jobs:
   build-frontend:
