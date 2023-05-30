@@ -1,9 +1,9 @@
+import { pathExists, pathExistsSync, readJson, unlink } from 'fs-extra';
 import { reactive } from 'vue';
 import { Primitives, Properties } from '../../../../utils/utils';
 import { LocalDbModel } from './model.service';
 
 const writeFileAtomic = require('write-file-atomic') as typeof import('write-file-atomic');
-const fs = require('fs-extra') as typeof import('fs-extra');
 
 type Data<T> = {
 	version: number;
@@ -49,14 +49,14 @@ export class Collection<T extends LocalDbModel<T>> {
 	}
 
 	async load() {
-		if (!(await fs.pathExists(this.file))) {
+		if (!(await pathExists(this.file))) {
 			console.log(`${this.file} doesnt exist, initializing new data`);
 			this.data = { version: this.version, objects: {}, groups: {} };
 			return;
 		}
 
 		console.log(`reading ${this.file}`);
-		const data = await fs.readJson(this.file);
+		const data = await readJson(this.file);
 
 		let version = 0;
 		if (typeof data !== 'object' || !('version' in data)) {
@@ -150,8 +150,8 @@ export class Collection<T extends LocalDbModel<T>> {
 	}
 
 	async clear() {
-		if (fs.pathExistsSync(this.file)) {
-			await fs.unlink(this.file);
+		if (pathExistsSync(this.file)) {
+			await unlink(this.file);
 		}
 
 		const emptyGroups: DataGroups<T> = {};

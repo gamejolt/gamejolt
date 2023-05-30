@@ -13,8 +13,8 @@ import { AppActivityFeedLazy } from '../../components/lazy';
 import { illNoComments } from '../../img/ill/illustrations';
 import { useAppStore } from '../../store/index';
 import { routeDiscoverHome } from '../discover/home/home.route';
-import { shouldUseFYPDefault } from './home-feed.service';
 import { RouteActivityFeedController } from './RouteHomeFeed.vue';
+import { shouldUseFYPDefault } from './home-feed.service';
 
 function getFetchUrl() {
 	let url = '/web/dash/activity/activity';

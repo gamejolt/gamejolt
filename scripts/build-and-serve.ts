@@ -16,7 +16,7 @@
  *              By default this is 127.0.0.1 which only allows local connections.
  */
 
-import * as fs from 'fs-extra';
+import { readFileSync, remove } from 'fs-extra';
 import { acquirePrebuiltFFmpeg } from './build/desktop-app/ffmpeg-prebuilt';
 import { deactivateJsonProperty, patchPackageJson, updateJsonProperty } from './build/packageJson';
 import { gjSectionConfigs, type GjSectionName } from './build/section-config';
@@ -72,7 +72,7 @@ function initializeHttpServer(
 		})
 	);
 
-	app.use('/favicon.ico', (req, res) => {
+	app.use('/favicon.ico', (_req, res) => {
 		res.status(404).end();
 	});
 
@@ -84,7 +84,7 @@ function initializeHttpServer(
 	const server = useHttps
 		? https.createServer(
 				{
-					pfx: fs.readFileSync(path.join(projectRoot, 'development.gamejolt.com.pfx')),
+					pfx: readFileSync(path.join(projectRoot, 'development.gamejolt.com.pfx')),
 					passphrase: 'yame yolt',
 				},
 				app
@@ -178,11 +178,11 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 
 				// Clean the build folder to start fresh.
 				console.log('Cleaning up old build dir');
-				await fs.remove(frontendBuildDir);
+				await remove(frontendBuildDir);
 
 				const desktopAppSectionNames = Object.entries(gjSectionConfigs)
-					.filter(([k, v]) => v.desktopApp)
-					.map(([k, v]) => k as GjSectionName);
+					.filter(([_k, v]) => v.desktopApp)
+					.map(([k, _v]) => k as GjSectionName);
 
 				for (const sectionName of desktopAppSectionNames) {
 					const argsForSection = Object.assign({}, args, {

@@ -7,10 +7,13 @@ For common tasks like running the frontend or building the desktop app we have p
 >
 > This command parses all supported command line flags and arguments to customize how vite runs. These are documented in `scripts/build/vite-wrapper.ts`.
 
-## Web
+## Web - Running
 - `yarn dev` - Runs the web frontend targetting the production environment with HMR enabled. While running this the website will be accessible through https://development.gamejolt.com. Changes you make to the source code while using this command will update the website in real time. This may cause refreshes. If this is undesired, see `yarn build:dev`
 
-- `yarn devd` - Same as `yarn dev` only targets the development environment.
+- `yarn devd` - Same as `yarn dev` only targets the development environment. This is meant to be used by Game Jolt employees.
+
+## Web - Building
+- `yarn web:build` - Builds the frontend and SSR in preparation of distribution. This builds production ready versions.
 
 ## Desktop App - Running
 - `yarn client:dev` - Similar to `yarn dev` only for serving the desktop app. This by itself will not launch the client. Use `yarn client` for that while this command is running.
@@ -28,10 +31,10 @@ For common tasks like running the frontend or building the desktop app we have p
 
   __The workaround:__
 
-  Edit `package.json` file and change the `main` field to `https://development.gamejolt.com/login` and then run the client using the `auth` section. Then after logging in, close the client, revert the change to `package.json` back to `https://development.gamejolt.com/` and run the `app` section normally.
+  Run the client using the `auth` section and log in. You will be redirected to a white screen. This is fine, now run with the `app` section normally.
 
 ## Desktop App - Building
-Run `yarn client:build` and then `yarn client:package` to produce a fully desktop app build.
+Run `yarn client:build` and then `yarn client:package` to produce a full desktop app build.
 
 - `yarn client:build` - Builds the desktop app in preparation of distribution. Use `--staging` to build a staging version of the desktop app. This enables some debug information and features that are useful to troubleshoot the desktop app release. After running this command the next step is to bundle it as an nwjs application using `yarn client:package`.
 

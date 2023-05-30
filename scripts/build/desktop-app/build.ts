@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra';
+import { remove } from 'fs-extra';
 import * as path from 'path';
 import { gjSectionConfigs, GjSectionName } from '../section-config';
 import { createTarGz, packageJson, runShell } from '../utils';
@@ -10,8 +10,8 @@ import { NwBuilder } from './nwjs-builder';
 const rootDir = path.resolve(__dirname, '..', '..', '..');
 
 const clientSections = Object.entries(gjSectionConfigs)
-	.filter(([k, v]) => v.desktopApp)
-	.map(([k, v]) => k as GjSectionName);
+	.filter(([_k, v]) => v.desktopApp)
+	.map(([k, _v]) => k as GjSectionName);
 
 export type ClientBuildOptions = {
 	environment: Options['environment'];
@@ -28,7 +28,7 @@ export async function buildClient(options: ClientBuildOptions) {
 
 	// Clean the build folder to start fresh.
 	console.log('Cleaning up old client build dir');
-	await fs.remove(frontendBuildDir);
+	await remove(frontendBuildDir);
 
 	for (const section of clientSections) {
 		await buildSection(section, options);
@@ -89,7 +89,7 @@ export async function packageClient(options: ClientPackageOptions) {
 
 	// Clean the build folder to start fresh.
 	console.log('Cleaning up old nwjs build dir');
-	await fs.remove(clientBuildDir);
+	await remove(clientBuildDir);
 
 	console.log('Building NW.js');
 	const nwBuilder = new NwBuilder({

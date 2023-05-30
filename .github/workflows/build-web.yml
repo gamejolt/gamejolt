@@ -1,0 +1,29 @@
+name: Build Web + SSR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.4.2'
+          cache: yarn
+
+      - run: yarn install
+      - run: yarn run web:build
+      - run: cd build && tar cvf web-build.tar web ssr
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: web-build
+          path: build/web-build.tar
