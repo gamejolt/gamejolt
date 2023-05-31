@@ -16,7 +16,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '18.16.0'
+          node-version: '16.20.0'
           cache: yarn
 
       - run: yarn install
@@ -56,7 +56,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '18.16.0'
+          node-version: '16.20.0'
           cache: yarn
 
       - uses: actions/setup-go@v2
@@ -125,7 +125,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '18.16.0'
+          node-version: '16.20.0'
           cache: yarn
 
       - uses: actions/setup-go@v2
@@ -181,7 +181,7 @@ jobs:
 
   #     - uses: actions/setup-node@v2
   #       with:
-  #         node-version: '18.16.0'
+  #         node-version: '16.20.0'
   #         cache: yarn
 
   #     - uses: actions/setup-go@v2
