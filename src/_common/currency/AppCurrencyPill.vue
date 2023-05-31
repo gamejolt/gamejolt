@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import { styleChangeBg } from '../../_styles/mixins';
+import { PropType } from 'vue';
+import { styleChangeBg, styleWhen } from '../../_styles/mixins';
 import { formatNumber } from '../filters/number';
-import { imageCoins, imageGems } from '../img/images';
 import { ThemeColor } from '../theme/variables';
+import AppCurrencyImg from './AppCurrencyImg.vue';
+import { Currency } from './currency-type';
 
-const props = defineProps({
+defineProps({
 	currency: {
-		type: String as PropType<'coins' | 'gems'>,
+		type: Object as PropType<Currency>,
 		required: true,
 	},
 	amount: {
@@ -18,16 +19,9 @@ const props = defineProps({
 		type: String as PropType<ThemeColor>,
 		default: 'bg-offset' as ThemeColor,
 	},
-});
-
-const { currency } = toRefs(props);
-
-const image = computed(() => {
-	if (currency.value === 'coins') {
-		return imageCoins;
-	} else if (currency.value === 'gems') {
-		return imageGems;
-	}
+	overlay: {
+		type: Boolean,
+	},
 });
 </script>
 
@@ -41,9 +35,14 @@ const image = computed(() => {
 			fontWeight: 'bold',
 			borderRadius: '50px',
 			gap: '4px',
+			...styleWhen(overlay, {
+				backgroundColor: `rgba(0, 0, 0, 0.87)`,
+				color: `white`,
+			}),
 		}"
 	>
-		<img v-if="image" :src="image" width="20" height="20" alt="Coins" />
+		<AppCurrencyImg :currency="currency" asset-size="small" />
+
 		{{ formatNumber(amount) }}
 	</div>
 </template>

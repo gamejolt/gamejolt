@@ -252,3 +252,46 @@ export const styleOverlayTextShadow: CSSProperties = {
 export const styleFiresideOverlayTextShadow: CSSProperties = {
 	textShadow: `0px 4px 4px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(0, 0, 0, 0.15), 0px 1px 8px rgba(0, 0, 0, 0.09)`,
 };
+
+type MaxWidthForOptionsResult = { maxWidth?: string };
+
+/**
+ * Returns a max-width CSS binding based on the given options.
+ *
+ * Returns an empty result if max-width can't be determined.
+ */
+export function styleMaxWidthForOptions(_: {
+	ratio: number;
+	maxWidth: number;
+}): MaxWidthForOptionsResult;
+export function styleMaxWidthForOptions(_: {
+	ratio: number;
+	maxHeight: number;
+}): MaxWidthForOptionsResult;
+export function styleMaxWidthForOptions(_: {
+	ratio: number;
+	maxWidth: number;
+	maxHeight: number;
+}): MaxWidthForOptionsResult;
+export function styleMaxWidthForOptions(options: {
+	ratio: number;
+	maxWidth?: number;
+	maxHeight?: number;
+}): MaxWidthForOptionsResult {
+	const { ratio, maxWidth, maxHeight } = options;
+	const result: MaxWidthForOptionsResult = {};
+
+	// A positive aspect ratio is required to calculate max width.
+	if (!ratio) {
+		return result;
+	}
+
+	if (maxWidth && maxHeight) {
+		result.maxWidth = `${Math.min(maxWidth, maxHeight * ratio)}px`;
+	} else if (maxWidth) {
+		result.maxWidth = `${maxWidth}px`;
+	} else if (maxHeight) {
+		result.maxWidth = `${maxHeight * ratio}px`;
+	}
+	return result;
+}

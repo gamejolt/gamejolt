@@ -43,6 +43,8 @@ export const kFontSizeH4 = new CSSPixelValue(18);
 export const kFontSizeH5 = new CSSPixelValue(kFontSizeBase.value);
 export const kFontSizeH6 = new CSSPixelValue(13);
 
+export const kJolticonSize = new CSSPixelValue(16);
+
 export const kLineHeightBase = 1.428571429;
 export const kLineHeightComputed = new CSSPixelValue(
 	Math.floor(kFontSizeBase.value * kLineHeightBase)

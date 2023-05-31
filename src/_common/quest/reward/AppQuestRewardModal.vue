@@ -1,6 +1,7 @@
 <script lang="ts">
 import { nextTick, onMounted, onUnmounted, PropType, ref, Ref, toRefs } from 'vue';
 import { sleep } from '../../../utils/utils';
+import { illBackpackClosed, illBackpackOpen } from '../../img/ill/illustrations';
 import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
@@ -10,7 +11,6 @@ import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import AppThemeSvg from '../../theme/svg/AppThemeSvg.vue';
 import AppQuestThumbnail from '../AppQuestThumbnail.vue';
-import { illBackpackClosed, illBackpackOpen } from '../ill/illustrations';
 import { Quest } from '../quest-model';
 
 export interface QuestRewardData {

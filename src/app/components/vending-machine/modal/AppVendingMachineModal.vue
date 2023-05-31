@@ -1,16 +1,30 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import { run } from '../../../../utils/utils';
+import { CSSProperties, Ref, computed, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCurrencyPill from '../../../../_common/currency/AppCurrencyPill.vue';
+import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
+import {
+	Currency,
+	CurrencyCostData,
+	CurrencyType,
+	canAffordCurrency,
+} from '../../../../_common/currency/currency-type';
+import {
+	featureMicrotransactions,
+	fetchFeatureToggles,
+} from '../../../../_common/features/features.service';
+import { formatNumber } from '../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import { InventoryShopProductSale } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
+import { showPurchaseMicrotransactionModal } from '../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
+import { storeModelList } from '../../../../_common/model/model-store.service';
+import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -18,106 +32,166 @@ import AppStickerPack, {
 	StickerPackRatio,
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
-import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
-import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.model';
 import { useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { kThemeBgActual } from '../../../../_common/theme/variables';
+import AppTheme from '../../../../_common/theme/AppTheme.vue';
+import { useThemeStore } from '../../../../_common/theme/theme.store';
+import {
+	kThemeBgActual,
+	kThemeBgBackdrop,
+	kThemeBgOffset,
+	kThemeFg,
+	kThemeFg10,
+} from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { styleWhen } from '../../../../_styles/mixins';
+import {
+	styleBorderRadiusBase,
+	styleBorderRadiusCircle,
+	styleBorderRadiusLg,
+	styleElevate,
+	styleFlexCenter,
+	styleMaxWidthForOptions,
+	styleOverlayTextShadow,
+	styleWhen,
+} from '../../../../_styles/mixins';
+import {
+	kFontFamilyDisplay,
+	kFontFamilyHeading,
+	kFontSizeH3,
+	kStrongEaseOut,
+} from '../../../../_styles/variables';
+import { run } from '../../../../utils/utils';
 import { illNoCommentsSmall } from '../../../img/ill/illustrations';
-
+import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
+import { purchaseShopProduct } from './_purchase-modal/AppPurchaseShopProductModal.vue';
+import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
 import imageVance from './vance.png';
 
-const { coinBalance } = useCommonStore();
 const { stickerPacks } = useStickerStore();
+const { isDark } = useThemeStore();
+const { coinBalance, joltbuxBalance } = useCommonStore();
+
+const balanceRefs = { coinBalance, joltbuxBalance };
+
 const modal = useModal()!;
 
-const isPurchasingPack = ref(false);
+const availableProducts = ref([]) as Ref<InventoryShopProductSale[]>;
 const isLoading = ref(true);
+const productProcessing = ref<number>();
 
-const availablePacks = ref<StickerPack[]>([]);
+const currencyCardData = computed(() => {
+	const result = [{ currency: CurrencyType.coins, amount: coinBalance.value }];
+	if (featureMicrotransactions.value) {
+		result.push({ currency: CurrencyType.joltbux, amount: joltbuxBalance.value });
+	}
+	return result;
+});
 
 run(async () => {
 	const p = await Promise.all([
-		Api.sendFieldsRequest(
-			'/mobile/sticker',
-			{
-				availablePacks: true,
-			},
-			{ detach: true }
-		),
+		Api.sendRequest('/web/inventory/shop/sales', undefined, { detach: true }),
 		Api.sendFieldsRequest(
 			'/mobile/me',
 			{
 				coinBalance: true,
+				buxBalance: true,
 			},
 			{ detach: true }
 		),
 	]);
 
 	const payload = p[0];
-	availablePacks.value = StickerPack.populate(payload.availablePacks);
+	const newProducts = payload.sales
+		? storeModelList(InventoryShopProductSale, payload.sales)
+		: [];
+	const validNewProducts = newProducts.filter(i => !!i.product);
+	if (newProducts.length !== validNewProducts.length) {
+		console.warn(`Got some products that we don't support yet.`, {
+			missingCount: newProducts.length - validNewProducts.length,
+		});
+	}
+	availableProducts.value = validNewProducts;
 
 	const mePayload = p[1];
 	coinBalance.value = mePayload.coinBalance;
+	joltbuxBalance.value = mePayload.buxBalance;
+
+	await fetchFeatureToggles([featureMicrotransactions]);
 
 	isLoading.value = false;
 });
 
-async function purchasePack(pack: StickerPack) {
-	if (isPurchasingPack.value) {
+function canPurchaseProduct(shopProduct: InventoryShopProductSale) {
+	return (
+		shopProduct.validPricings.filter(
+			i =>
+				!!i.knownCurrencyType &&
+				canAffordCurrency(i.knownCurrencyType, i.price, balanceRefs)
+		).length > 0
+	);
+}
+
+async function purchasePack(
+	shopProduct: InventoryShopProductSale,
+	currencyOptions: CurrencyCostData
+) {
+	if (productProcessing.value) {
+		return;
+	}
+	const currencyOptionsList = Object.entries(currencyOptions);
+	if (currencyOptionsList.length === 0) {
+		showErrorGrowl($gettext(`This pack is not available for purchase right now.`));
+		return;
+	}
+	if (!canPurchaseProduct(shopProduct)) {
 		return;
 	}
 
-	if (pack.cost_coins > coinBalance.value) {
-		showErrorGrowl($gettext(`You don't have enough coins to purchase this.`));
-		return;
-	}
+	productProcessing.value = shopProduct.id;
 
-	isPurchasingPack.value = true;
-
-	try {
-		const payload = await Api.sendRequest(
-			`/web/stickers/purchase-pack/${pack.id}`,
-			{},
-			{ detach: true }
-		);
-
-		const rawNewPack = payload.pack;
-		if (!rawNewPack) {
-			throw Error('No pack was returned when trying to purchase one.');
-		}
-
-		const newPack = new UserStickerPack(rawNewPack);
-
-		let newBalance = payload.coinBalance;
-		if (typeof newBalance !== 'number') {
-			newBalance = coinBalance.value - pack.cost_coins;
-		}
-		coinBalance.value = Math.max(newBalance, 0);
-
-		stickerPacks.value.push(newPack);
-
-		// Show the PackOpen modal. This should ask them if they want to open
-		// right away or save their pack for later.
-		StickerPackOpenModal.show({
-			pack: newPack,
-			openImmediate: false,
+	if (currencyOptionsList.length === 1 && !!currencyOptions[CurrencyType.coins.id]) {
+		// Purchase immediately with coins if it's our only option.
+		await purchaseShopProduct({
+			shopProduct,
+			currency: CurrencyType.coins,
+			balanceRefs,
+			onItemPurchased: {
+				pack(pack) {
+					if (stickerPacks.value.some(i => i.id === pack.id)) {
+						return;
+					}
+					stickerPacks.value.push(pack);
+					StickerPackOpenModal.show({
+						pack,
+						openImmediate: false,
+					});
+				},
+			},
 		});
-	} catch (e) {
-		console.error('Error while purchasing pack.', e);
+	} else {
+		// Show a modal to let the user choose which currency to use.
+		await showPurchaseShopProductModal({ shopProduct, currencyOptions });
+	}
 
-		showErrorGrowl(
-			$gettext(`Something went wrong trying to purchase that pack. Try again later.`)
-		);
-	} finally {
-		isPurchasingPack.value = false;
+	productProcessing.value = undefined;
+}
+
+async function onClickCurrencyCard(currency: Currency) {
+	if (currency.id === CurrencyType.joltbux.id) {
+		showPurchaseMicrotransactionModal();
+	} else if (currency.id === CurrencyType.coins.id) {
+		const isRedirecting = await showGetCoinsRedirectModal();
+
+		if (isRedirecting) {
+			modal.dismiss();
+		}
+	} else {
+		console.error('Unknown currency type', currency);
 	}
 }
 
 // Make the vending machine content full-height for phone sizes.
-const containerStyles = computed(() =>
+const containerStyles = computed<CSSProperties>(() =>
 	styleWhen(Screen.isXs, {
 		display: `flex`,
 		flexDirection: `column`,
@@ -126,32 +200,33 @@ const containerStyles = computed(() =>
 );
 
 // Make the vending machine content full-height for phone sizes.
-const loadingFadeStyles = computed(() =>
-	styleWhen(Screen.isXs, {
-		flex: `auto`,
-		display: `flex`,
-		flexDirection: `column`,
-	})
-);
+const loadingFadeStyles = computed<CSSProperties>(() => {
+	return {
+		...styleBorderRadiusLg,
+		...styleWhen(Screen.isXs, {
+			flex: `auto`,
+			display: `flex`,
+			flexDirection: `column`,
+		}),
+		minHeight: `calc(min(45vh, 800px))`,
+		// Handled around the Vending Vance illustration.
+		borderBottomLeftRadius: 0,
+		borderBottomRightRadius: 0,
+	};
+});
 
-// Make the vending machine content full-height for phone sizes.
-const loadingFadeContentStyles = loadingFadeStyles;
+const currencyCardImgStyles: CSSProperties = {
+	objectFit: `contain`,
+	width: `100%`,
+	height: `100%`,
+};
 </script>
 
 <template>
-	<AppModal>
+	<AppModal force-theme="dark">
 		<div :style="containerStyles">
 			<AppModalFloatingHeader>
 				<template #modal-controls>
-					<AppCurrencyPill
-						:style="{
-							alignSelf: 'flex-end',
-							marginRight: 'auto',
-						}"
-						currency="coins"
-						:amount="coinBalance"
-					/>
-
 					<AppButton @click="modal.dismiss()">
 						{{ $gettext(`Close`) }}
 					</AppButton>
@@ -159,80 +234,217 @@ const loadingFadeContentStyles = loadingFadeStyles;
 			</AppModalFloatingHeader>
 
 			<div class="modal-body _wrapper">
-				<AppLoadingFade
-					:style="loadingFadeStyles"
-					:content-styles="loadingFadeContentStyles"
-					:is-loading="isLoading"
-				>
-					<div
-						class="_packs"
-						:style="
-							styleWhen(!isLoading && !availablePacks.length, {
-								gridTemplateColumns: '1fr',
-								alignContent: 'center',
-							})
-						"
+				<AppTheme :force-dark="isDark" :force-light="!isDark">
+					<AppLoadingFade
+						class="fill-offset"
+						:style="loadingFadeStyles"
+						:content-styles="{
+							...loadingFadeStyles,
+							padding: `12px`,
+						}"
+						:is-loading="isLoading"
 					>
-						<template v-if="isLoading">
-							<AppAspectRatio
-								v-for="i in 3"
-								:key="i"
-								:ratio="StickerPackRatio"
-								show-overflow
+						<div
+							:style="{
+								display: `flex`,
+								gap: `12px`,
+								marginBottom: `12px`,
+							}"
+						>
+							<template
+								v-for="{ currency, amount } of currencyCardData"
+								:key="currency.id"
 							>
-								<div class="_pack-placeholder" />
-							</AppAspectRatio>
-						</template>
-						<template v-else-if="availablePacks.length">
-							<template v-for="pack in availablePacks" :key="pack.id">
-								<div
-									:style="{
-										position: 'relative',
-									}"
-								>
-									<AppStickerPack
-										class="_pack"
-										:pack="pack"
-										:can-click-pack="coinBalance >= pack.cost_coins"
-										show-details
-										:expiry-info="pack.ends_on"
-										@click-pack="purchasePack(pack)"
-									>
-										<template #overlay>
+								<AppOnHover>
+									<template #default="{ binding, hovered }">
+										<div
+											v-bind="binding"
+											:style="{
+												...styleBorderRadiusBase,
+												...styleElevate(1),
+												backgroundColor: kThemeBgOffset,
+												padding: `12px`,
+												flex: `auto`,
+												display: `flex`,
+												flexDirection: `column`,
+												alignItems: `center`,
+												gap: `8px`,
+												cursor: `pointer`,
+												color: kThemeFg,
+												...styleWhen(hovered, {
+													...styleElevate(2),
+													backgroundColor: kThemeBgBackdrop,
+												}),
+												// Need this to override the style from the `styleElevate` functions.
+												transition: `background-color 200ms ${kStrongEaseOut}, box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important`,
+											}"
+											@click="onClickCurrencyCard(currency)"
+										>
 											<div
-												v-if="coinBalance < pack.cost_coins"
-												class="_radius-lg _text-shadow"
+												class="text-center"
 												:style="{
-													position: 'absolute',
-													top: 0,
-													right: 0,
-													bottom: 0,
-													left: 0,
-													fontSize: '13px',
-													padding: '8px',
-													zIndex: 2,
-													display: 'grid',
-													justifyContent: 'center',
-													alignContent: 'center',
-													textAlign: 'center',
-													fontWeight: 'bold',
-													backgroundColor: 'rgba(0, 0, 0, 0.45)',
+													fontFamily: kFontFamilyDisplay,
+													fontSize: kFontSizeH3.px,
 												}"
 											>
-												{{ $gettext(`Insufficient coin balance`) }}
+												{{ currency.label }}
 											</div>
-										</template>
-									</AppStickerPack>
-								</div>
+
+											<div
+												:style="{
+													...styleMaxWidthForOptions({
+														ratio: 1,
+														maxWidth: Screen.isXs ? 64 : 128,
+														maxHeight: Screen.height * 0.2,
+													}),
+													width: `100%`,
+												}"
+											>
+												<AppAspectRatio
+													:ratio="1"
+													:style="{
+														...styleBorderRadiusCircle,
+														backgroundColor: kThemeFg10,
+														width: `100%`,
+													}"
+													:inner-styles="{
+														...styleFlexCenter(),
+														padding: `16px`,
+													}"
+													show-overflow
+												>
+													<AppCurrencyImg
+														asset-size="large"
+														:currency="currency"
+														:max-width="0"
+														:style="currencyCardImgStyles"
+														:ill-styles="currencyCardImgStyles"
+													/>
+												</AppAspectRatio>
+											</div>
+
+											<div
+												class="text-center"
+												:style="{
+													...styleOverlayTextShadow,
+													fontWeight: `bold`,
+													fontSize: `17px`,
+													fontFamily: kFontFamilyHeading,
+													marginBottom: `8px`,
+												}"
+											>
+												{{ formatNumber(amount) }}
+											</div>
+
+											<AppButton
+												block
+												solid
+												:force-hover="hovered"
+												:style="{
+													pointerEvents: `none`,
+												}"
+											>
+												{{
+													$gettextInterpolate(`Get %{ label }`, {
+														label: currency.label,
+													})
+												}}
+											</AppButton>
+										</div>
+									</template>
+								</AppOnHover>
 							</template>
-						</template>
-						<AppIllustration v-else :asset="illNoCommentsSmall">
-							<div>
-								{{ $gettext(`There are no sticker packs available for purchase.`) }}
-							</div>
-						</AppIllustration>
-					</div>
-				</AppLoadingFade>
+						</div>
+
+						<div
+							class="_items"
+							:style="
+								styleWhen(!isLoading && !availableProducts.length, {
+									gridTemplateColumns: '1fr',
+									alignContent: 'center',
+								})
+							"
+						>
+							<template v-if="isLoading">
+								<AppAspectRatio
+									v-for="i in 3"
+									:key="i"
+									:ratio="StickerPackRatio"
+									show-overflow
+								>
+									<div class="_pack-placeholder" />
+								</AppAspectRatio>
+							</template>
+							<template v-else-if="availableProducts.length">
+								<template
+									v-for="shopProduct in availableProducts"
+									:key="shopProduct.id"
+								>
+									<div
+										v-if="shopProduct.stickerPack"
+										:style="{
+											position: 'relative',
+										}"
+									>
+										<AppStickerPack
+											class="_pack"
+											:pack="shopProduct.stickerPack"
+											show-details
+											:expiry-info="shopProduct.ends_on"
+											:can-click-pack="!productProcessing"
+											:cost-override="shopProduct.pricings"
+											@click-pack="
+												purchasePack(
+													shopProduct,
+													shopProduct.validPricingsData
+												)
+											"
+										>
+											<template #overlay>
+												<div
+													v-if="!canPurchaseProduct(shopProduct)"
+													class="_radius-lg _text-shadow"
+													:style="{
+														position: 'absolute',
+														top: 0,
+														right: 0,
+														bottom: 0,
+														left: 0,
+														fontSize: '13px',
+														padding: '12px',
+														zIndex: 2,
+														display: 'grid',
+														justifyContent: 'center',
+														alignContent: 'center',
+														textAlign: 'center',
+														fontWeight: 'bold',
+														color: `white`,
+														backgroundColor: 'rgba(0, 0, 0, 0.45)',
+													}"
+												>
+													{{
+														$gettext(
+															`You don't have enough funds to purchase this`
+														)
+													}}
+												</div>
+											</template>
+										</AppStickerPack>
+									</div>
+								</template>
+							</template>
+							<AppIllustration v-else :asset="illNoCommentsSmall">
+								<div>
+									{{
+										$gettext(
+											`There are no sticker packs available for purchase.`
+										)
+									}}
+								</div>
+							</AppIllustration>
+						</div>
+					</AppLoadingFade>
+				</AppTheme>
 
 				<AppScrollAffix
 					:style="{
@@ -244,32 +456,47 @@ const loadingFadeContentStyles = loadingFadeStyles;
 				>
 					<div
 						:style="{
+							...styleFlexCenter({ direction: 'column' }),
 							position: 'relative',
 							backgroundColor: kThemeBgActual,
 						}"
 					>
 						<!-- vance -->
 						<AppSpacer vertical :scale="4" />
-						<AppAspectRatio :ratio="1000 / 250">
-							<img
-								:src="imageVance"
-								:style="{
-									width: `100%`,
-									height: `100%`,
-									userSelect: `none`,
-								}"
-								alt="Vending Vance"
-							/>
-						</AppAspectRatio>
+						<div
+							:style="{
+								...styleMaxWidthForOptions({
+									ratio: 1000 / 250,
+									maxHeight: Math.max(Screen.height * 0.15, 80),
+								}),
+								width: `100%`,
+							}"
+						>
+							<AppAspectRatio :ratio="1000 / 250">
+								<img
+									:src="imageVance"
+									:style="{
+										width: `100%`,
+										height: `100%`,
+										userSelect: `none`,
+									}"
+									alt="Vending Vance"
+								/>
+							</AppAspectRatio>
+						</div>
 						<AppSpacer vertical :scale="4" />
 
 						<!-- Rounded corner decorators -->
 						<div class="_output-corner-tl">
-							<div class="_output-corner-tl-border" />
+							<AppTheme>
+								<div class="_output-corner-tl-border" />
+							</AppTheme>
 							<div class="_output-corner-bg" />
 						</div>
 						<div class="_output-corner-tr">
-							<div class="_output-corner-tr-border" />
+							<AppTheme>
+								<div class="_output-corner-tr-border" />
+							</AppTheme>
 							<div class="_output-corner-bg" />
 						</div>
 					</div>
@@ -301,21 +528,15 @@ const loadingFadeContentStyles = loadingFadeStyles;
 	margin-right: auto
 	font-weight: bold
 
-._packs
+._items
 	--pack-min-width: 200px
-	rounded-corners-lg()
-	change-bg(bg-offset)
 	color: var(--theme-fg)
 	position: relative
 	overflow: hidden
-	min-height: calc(min(45vh, 800px))
 	display: grid
 	grid-template-columns: repeat(auto-fill, minmax(var(--pack-min-width), 1fr))
 	align-content: start
 	gap: 12px
-	padding: 12px
-	border-bottom-left-radius: 0
-	border-bottom-right-radius: 0
 	flex: auto
 
 	@media $media-xs

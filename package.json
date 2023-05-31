@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "1.28.10",
+	"version": "1.29.0",
 	"scripts": {
 		"check": "tsc --noEmit",
 		"lint": "eslint --ext .js,.vue src",
@@ -62,7 +62,6 @@
 		"broadcast-channel": "3.1.0",
 		"chart.js": "3.7.0",
 		"cropperjs": "1.5.5",
-		"css-element-queries": "1.2.3",
 		"date-fns": "2.29.3",
 		"eslint-plugin-vue": "9.9.0",
 		"eslint": "8.33.0",
