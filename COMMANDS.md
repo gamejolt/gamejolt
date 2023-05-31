@@ -49,6 +49,15 @@ Run `yarn ssr:client` and `yarn ssr:server` and after both are done run `yarn ss
 
 - `yarn ssr` - Serves the SSR build on http://development.gamejolt.com:3501. Disable javascript in the browser while hitting this.
 
+### SSR In Dev
+Similar to SSR only slightly different commands:
+
+- `yarn ssr:client --environment development`
+
+- `yarn ssr:server --environment development`
+
+- `NODE_ENV=development NODE_EXTRA_CA_CERTS=gamejoltCA.crt yarn ssr`
+
 ## Misc
 - `yarn build` - Builds the frontend repo to disk. Builds go to `/build/<platform>`, for example when building web, files will go to `/build/web`, and when building the desktop app they will go to `/build/desktop`.
 
