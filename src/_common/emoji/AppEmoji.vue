@@ -39,10 +39,6 @@ const props = defineProps({
 		required: true,
 		validator: (val: any) => val instanceof Emoji || GJ_EMOJIS.includes(val),
 	},
-	// TODO(reactions) remove
-	rtxEnabled: {
-		type: Boolean,
-	},
 });
 
 const { emoji } = toRefs(props);
@@ -71,12 +67,6 @@ const src = computed(() => {
 			},
 			styleWhen(typeof emoji === 'string', {
 				imageRendering: `pixelated`,
-			}),
-			styleWhen(rtxEnabled, {
-				width: `${emojiBaseSize.value * 2}px`,
-				height: `auto`,
-				minHeight: `40px`,
-				maxHeight: `${emojiBaseSize.value * 2}px`,
 			}),
 		]"
 		:src="src"

@@ -1,3 +1,4 @@
+import { getCurrentServerTime } from '../../utils/server-time';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { QuestObjective } from './quest-objective-model';
@@ -85,7 +86,7 @@ export class Quest extends Model {
 			return true;
 		}
 
-		return !!this.ends_on && this.ends_on < Date.now();
+		return !!this.ends_on && this.ends_on < getCurrentServerTime();
 	}
 
 	get isIncomplete() {

@@ -29,7 +29,7 @@ export default class RouteAuthLinkedAccountPoll extends BaseRouteComponent {
 	completed(response: any) {
 		// Redirect them off to complete their social login like normal.
 
-		const validProviders = ['facebook', 'twitch', 'twitter', 'google'];
+		const validProviders = ['facebook', 'twitch', 'google'];
 		const provider = response.provider;
 		if (validProviders.indexOf(provider) !== -1) {
 			this.$router.push({

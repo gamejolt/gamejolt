@@ -17,8 +17,8 @@ import {
 import { Geo, Region } from '../../../geo/geo.service';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import { HistoryTick } from '../../../history-tick/history-tick-service';
-import AppLoadingFade from '../../../loading/AppLoadingFade.vue';
 import AppLoading from '../../../loading/AppLoading.vue';
+import AppLoadingFade from '../../../loading/AppLoadingFade.vue';
 import { Navigate } from '../../../navigate/navigate.service';
 import { OrderPayment } from '../../../order/payment/payment.model';
 import AppPopper from '../../../popper/AppPopper.vue';
@@ -325,8 +325,8 @@ export default class FormGamePackagePayment
 		this.isProcessing = true;
 
 		setupData['source'] = HistoryTick.getSource('Game', this.package.game_id) || null;
-		setupData['os'] = getDeviceArch();
-		setupData['arch'] = getDeviceOS();
+		setupData['os'] = getDeviceOS();
+		setupData['arch'] = getDeviceArch();
 		setupData['ref'] = this.partnerKey || null;
 
 		try {
@@ -339,7 +339,7 @@ export default class FormGamePackagePayment
 			}
 
 			response = await Api.sendRequest(
-				'/web/checkout/charge/' + response.cart.id,
+				'/web/checkout/charge/' + response.cart.hash,
 				chargeData,
 				{
 					detach: true,
@@ -398,7 +398,7 @@ export default class FormGamePackagePayment
 		if (GJ_IS_DESKTOP_APP) {
 			// Our checkout can be done in client.
 			if (this.checkoutType === OrderPayment.METHOD_CC_STRIPE) {
-				Navigate.goto(Environment.checkoutBaseUrl + '/checkout/' + response.cart.id);
+				Navigate.goto(Environment.checkoutBaseUrl + '/checkout/' + response.cart.hash);
 			} else {
 				// Otherwise we have to open in browser.
 				Navigate.gotoExternal(response.redirectUrl);

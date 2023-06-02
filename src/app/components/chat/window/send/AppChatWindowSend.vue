@@ -112,6 +112,9 @@ const isSendButtonDisabled = computed(() => {
 		return true;
 	}
 
+	// Manually check for if media is uploading here. We don't want to put the
+	// rule directly on the form cause showing form errors for the media upload
+	// is sort of disruptive for chat messages.
 	return !FormValidatorContentNoMediaUpload(form.formModel.content ?? '');
 });
 
@@ -266,18 +269,7 @@ async function submitMessage() {
 }
 
 async function onSubmit() {
-	if (!form.valid) {
-		return;
-	}
-
-	if (nextMessageTimeout.value !== null) {
-		return;
-	}
-
-	// Manually check for if media is uploading here.
-	// We don't want to put the rule directly on the form cause showing form errors
-	// for the media upload is sort of disruptive for chat messages.
-	if (!FormValidatorContentNoMediaUpload(form.formModel.content)) {
+	if (isSendButtonDisabled.value) {
 		return;
 	}
 
@@ -597,7 +589,7 @@ $-button-height = 40px
 	min-width: 0
 
 	@media $media-sm-up
-		margin-left: add-unit(v-bind(ChatWindowLeftGutterSize), px)
+		margin-left: v-bind('ChatWindowLeftGutterSize.px')
 
 .-send-button-container
 	display: flex

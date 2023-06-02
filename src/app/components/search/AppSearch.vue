@@ -12,16 +12,12 @@ import {
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
-import { arrayRemove } from '../../../utils/array';
-import { createFocusToken } from '../../../utils/focus-token';
-import {
-	trackExperimentEngagement,
-	trackSearch,
-} from '../../../_common/analytics/analytics.service';
-import { configShowSearchAutocomplete } from '../../../_common/config/config.service';
+import { trackSearch } from '../../../_common/analytics/analytics.service';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import AppShortkey from '../../../_common/shortkey/AppShortkey.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { arrayRemove } from '../../../utils/array';
+import { createFocusToken } from '../../../utils/focus-token';
 import AppSearchInput from './AppSearchInput.vue';
 import { Search } from './search-service';
 
@@ -57,9 +53,7 @@ function createSearchController({
 	const keydownSpies = ref([] as SearchKeydownSpy[]);
 	const focusToken = createFocusToken();
 
-	const shouldShowAutocomplete = computed(
-		() => !autocompleteDisabled.value && configShowSearchAutocomplete.value
-	);
+	const shouldShowAutocomplete = computed(() => !autocompleteDisabled.value);
 	const isEmpty = computed(() => !query.value.trim());
 
 	onMounted(() => {
@@ -162,8 +156,6 @@ function onFocus() {
 	if (shouldShowAutocomplete.value) {
 		isShowingAutocomplete.value = true;
 	}
-
-	trackExperimentEngagement(configShowSearchAutocomplete);
 }
 
 function onBlur() {

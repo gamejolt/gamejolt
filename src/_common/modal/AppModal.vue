@@ -33,6 +33,10 @@ defineProps({
 		type: Object as PropType<Theme>,
 		default: undefined,
 	},
+	forceTheme: {
+		type: String as PropType<'dark' | 'light'>,
+		default: undefined,
+	},
 });
 
 const emit = defineEmits({
@@ -160,6 +164,8 @@ function scrollTo(offsetY: number) {
 				<AppTheme
 					class="modal-content"
 					:theme="theme"
+					:force-dark="forceTheme === 'dark'"
+					:force-light="forceTheme === 'light'"
 					@mouseover="isHoveringContent = true"
 					@mouseout="isHoveringContent = false"
 				>

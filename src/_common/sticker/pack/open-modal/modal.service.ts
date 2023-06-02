@@ -1,6 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../../modal/modal.service';
-import { UserStickerPack } from '../user_pack.model';
+import { UserStickerPack } from '../user-pack.model';
 
 interface StickerPackOpenModalOptions {
 	pack: UserStickerPack;

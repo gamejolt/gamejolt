@@ -186,10 +186,6 @@ const hasCommunitiesSection = computed(() => {
 	return !Screen.isMobile && communitiesCount.value > 0;
 });
 
-const twitterAccount = computed(() => {
-	return getLinkedAccount(LinkedAccount.PROVIDER_TWITTER);
-});
-
 const twitchAccount = computed(() => {
 	return getLinkedAccount(LinkedAccount.PROVIDER_TWITCH);
 });
@@ -771,17 +767,6 @@ async function onFriendRequestReject() {
 										<AppJolticon :icon="twitchAccount.icon" />
 										{{ ' ' }}
 										{{ twitchAccount.name }}
-									</AppLinkExternal>
-								</div>
-								<div v-if="twitterAccount">
-									<AppLinkExternal
-										class="link-unstyled"
-										:href="twitterAccount.platformLink"
-									>
-										<AppJolticon :icon="twitterAccount.icon" />
-										{{ ' ' }}
-										<span>@</span>
-										{{ twitterAccount.name }}
 									</AppLinkExternal>
 								</div>
 							</template>

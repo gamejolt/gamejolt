@@ -6,7 +6,6 @@ export async function showVendingMachineModal() {
 	return await showModal<void>({
 		modalId: 'VendingMachine',
 		component: defineAsyncComponent(() => import('./AppVendingMachineModal.vue')),
-		props: {},
 		size: computed(() => (Screen.height < 1080 ? 'sm' : 'lg')),
 	});
 }

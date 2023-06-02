@@ -8,7 +8,7 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { ComponentProps } from '../../../../_common/component-helpers';
 import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
+import AppMediaItemCover from '../../../../_common/media-item/cover/AppMediaItemCover.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';

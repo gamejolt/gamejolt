@@ -50,6 +50,8 @@ export class Comment implements ModelStoreModel, RemovableModel, ReactionableMod
 	declare comment_content: string;
 	reaction_counts: ReactionCount[] = [];
 	supporters: User[] = [];
+	has_owner_like!: boolean;
+	has_owner_reply!: boolean;
 
 	isFollowPending = false;
 	_removed = false;
@@ -277,6 +279,7 @@ export async function addCommentVote(comment: Comment, vote: number) {
 		comment.votes -= operation;
 		comment.user_vote = previousVote;
 		showErrorGrowl(`Can't do that now. Try again later?`);
+		return null;
 	} finally {
 		trackCommentVote(vote, { failed, toggled: false });
 	}
@@ -303,6 +306,7 @@ export async function removeCommentVote(comment: Comment) {
 		comment.user_vote = previousVote;
 		++comment.votes;
 		showErrorGrowl(`Can't do that now. Try again later?`);
+		return null;
 	} finally {
 		trackCommentVote(previousVote.vote, { failed, toggled: true });
 	}

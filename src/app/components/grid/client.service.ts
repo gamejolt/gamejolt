@@ -1,9 +1,5 @@
 import { Channel } from 'phoenix';
 import { markRaw, reactive } from 'vue';
-import { arrayRemove } from '../../../utils/array';
-import { createLogger } from '../../../utils/logging';
-import { sleep } from '../../../utils/utils';
-import { uuidv4 } from '../../../utils/uuid';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import { ensureConfig } from '../../../_common/config/config.service';
@@ -21,8 +17,8 @@ import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
 import {
-	createSocketController,
 	SocketController,
+	createSocketController,
 } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
@@ -30,19 +26,21 @@ import { $gettext, $gettextInterpolate } from '../../../_common/translate/transl
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
+import { createLogger } from '../../../utils/logging';
+import { sleep } from '../../../utils/utils';
+import { uuidv4 } from '../../../utils/uuid';
 import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import {
 	CommentTopicPayload,
-	createGridCommentsChannel,
 	GridCommentsChannel,
+	createGridCommentsChannel,
 } from './comments-channel';
-import { createGridCommunityChannel, GridCommunityChannel } from './community-channel';
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
-import { createGridNotificationChannel, GridNotificationChannel } from './notification-channel';
+import { GridNotificationChannel, createGridNotificationChannel } from './notification-channel';
 
 export const onFiresideStart = new EventTopic<Model>();
 
@@ -127,7 +125,6 @@ export class GridClient {
 	bootstrapTimestamp = 0;
 	bootstrapDelay = 1;
 	chat: ChatClient | null = null;
-	communityChannels: GridCommunityChannel[] = [];
 	firesideChannels: GridFiresideChannel[] = [];
 	firesideDMChannels: GridFiresideDMChannel[] = [];
 	notificationChannel: GridNotificationChannel | null = null;
@@ -202,7 +199,7 @@ export class GridClient {
 	}
 
 	private async connect() {
-		const { isGuest, guestToken, logger } = this;
+		const { isGuest, guestToken } = this;
 		const { user } = commonStore;
 
 		const didConnect = await this.socketController.connect({
@@ -238,13 +235,10 @@ export class GridClient {
 		else if (user.value) {
 			const notificationChannel = createGridNotificationChannel(this, {
 				userId: user.value.id,
+				router,
 			});
 			await notificationChannel.joinPromise;
 			this.notificationChannel = markRaw(notificationChannel);
-
-			logger.info('Subscribing to community channels...');
-
-			await Promise.all(this.appStore.communities.value.map(i => this.joinCommunity(i)));
 
 			const commentsChannel = createGridCommentsChannel(this, { userId: user.value.id });
 			await commentsChannel.joinPromise;
@@ -288,7 +282,6 @@ export class GridClient {
 		this.bootstrapReceived = false;
 		this.bootstrapTimestamp = 0;
 
-		this.communityChannels = [];
 		this.firesideChannels = [];
 		this.firesideDMChannels = [];
 		this.notificationChannel = null;
@@ -513,35 +506,17 @@ export class GridClient {
 			return;
 		}
 
-		const communityChannel = createGridCommunityChannel(this, {
-			communityId: community.id,
-			router,
+		this.notificationChannel?.joinCommunity({
+			community_id: community.id,
 		});
 
-		await communityChannel.joinPromise;
-		return communityChannel;
+		return;
 	}
 
 	async leaveCommunity(community: Community) {
-		const channel = this.communityChannels.find(i => i.communityId === community.id);
-		if (channel) {
-			channel.channelController.leave();
-			arrayRemove(this.communityChannels, i => i === channel);
-		}
-	}
-
-	async leaveFireside(fireside: Fireside) {
-		const channel = this.firesideChannels.find(i => i.firesideHash === fireside.hash);
-		if (channel) {
-			channel.channelController.leave();
-			arrayRemove(this.firesideChannels, i => i === channel);
-		}
-
-		const dmChannel = this.firesideDMChannels.find(i => i.firesideHash === fireside.hash);
-		if (dmChannel) {
-			dmChannel.channelController.leave();
-			arrayRemove(this.firesideDMChannels, i => i === channel);
-		}
+		this.notificationChannel?.leaveCommunity({
+			community_id: community.id,
+		});
 	}
 
 	async startListeningToCommentsReactions(data: CommentTopicPayload) {
