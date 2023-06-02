@@ -29,8 +29,6 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '../../../../_common/sticker/pack/AppStickerPack.vue';
-import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
-import { useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
@@ -64,8 +62,6 @@ import {
 import { illNoCommentsSmall } from '../../../img/ill/illustrations';
 import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
 import AppVendingMachineProduct from './_product/AppVendingMachineProduct.vue';
-import { showNewProductModal } from './_product/modal/modal.service';
-import { purchaseShopProduct } from './_purchase-modal/AppPurchaseShopProductModal.vue';
 import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
 import imageVance from './vance.png';
 
@@ -80,7 +76,6 @@ interface ProductChunk {
 	type: keyof ProductChunks;
 }
 
-const { stickerPacks } = useStickerStore();
 const { isDark } = useThemeStore();
 const { coinBalance, joltbuxBalance } = useCommonStore();
 
@@ -209,46 +204,12 @@ async function purchaseProduct(shopProduct: InventoryShopProductSale) {
 
 	productProcessing.value = shopProduct.id;
 
-	function onItemPurchased() {
-		return init();
-	}
-
-	if (currencyOptionsList.length === 1 && !!currencyOptions[CurrencyType.coins.id]) {
-		// Purchase immediately with coins if it's our only option.
-		await purchaseShopProduct({
-			shopProduct,
-			currency: CurrencyType.coins,
-			balanceRefs,
-			onItemPurchased: {
-				pack(pack) {
-					if (stickerPacks.value.some(i => i.id === pack.id)) {
-						return;
-					}
-					stickerPacks.value.push(pack);
-					StickerPackOpenModal.show({
-						pack,
-						openImmediate: false,
-					});
-				},
-				avatarFrame(product) {
-					showNewProductModal({ product });
-				},
-				background(product) {
-					showNewProductModal({ product });
-				},
-				all() {
-					onItemPurchased();
-				},
-			},
-		});
-	} else {
-		// Show a modal to let the user choose which currency to use.
-		await showPurchaseShopProductModal({
-			shopProduct,
-			currencyOptions,
-			onItemPurchased,
-		});
-	}
+	// Show a modal to let the user choose which currency to use.
+	await showPurchaseShopProductModal({
+		shopProduct,
+		currencyOptions,
+		onItemPurchased: () => init(),
+	});
 
 	productProcessing.value = undefined;
 }
