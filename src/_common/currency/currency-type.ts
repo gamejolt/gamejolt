@@ -7,7 +7,7 @@ class CurrencyData {
 	public smallAsset: IllustrationAsset | string;
 
 	constructor(
-		public readonly id: string,
+		public readonly id: '$COIN' | '$GEM' | '$BUX',
 		public readonly label: string,
 		public readonly asset: IllustrationAsset | string,
 		smallAsset?: CurrencyData['smallAsset']
@@ -17,7 +17,9 @@ class CurrencyData {
 }
 
 export type Currency = CurrencyData;
-export type CurrencyCostData = Record<string, [currency: Currency, amount: number]>;
+export type CurrencyCostData = Partial<
+	Record<CurrencyData['id'], [currency: Currency, amount: number]>
+>;
 
 export const CurrencyType = {
 	coins: new CurrencyData('$COIN', 'Coins', imageCoins, imageCoinsSmall),

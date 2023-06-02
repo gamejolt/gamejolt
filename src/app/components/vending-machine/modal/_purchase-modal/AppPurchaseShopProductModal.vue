@@ -1,13 +1,16 @@
 <script lang="ts">
-import { computed, PropType, Ref, ref, toRefs } from 'vue';
+import { PropType, Ref, computed, ref, toRefs } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
+import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import AppBackground from '../../../../../_common/background/AppBackground.vue';
+import { Background } from '../../../../../_common/background/background.model';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import {
-	canAffordCurrency,
 	Currency,
 	CurrencyCostData,
 	CurrencyType,
+	canAffordCurrency,
 } from '../../../../../_common/currency/currency-type';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
@@ -26,7 +29,14 @@ import { UserStickerPack } from '../../../../../_common/sticker/pack/user-pack.m
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
-import { styleFlexCenter, styleMaxWidthForOptions } from '../../../../../_styles/mixins';
+import { UserAvatarFrame } from '../../../../../_common/user/user-avatar/frame/frame.model';
+import {
+	styleBorderRadiusLg,
+	styleFlexCenter,
+	styleMaxWidthForOptions,
+} from '../../../../../_styles/mixins';
+import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
+import { showNewProductModal } from '../_product/modal/modal.service';
 
 interface PurchaseData {
 	shopProduct: InventoryShopProductSale;
@@ -39,7 +49,12 @@ interface PurchaseData {
 
 interface PurchaseDataCallbacks {
 	beforeRequest?: () => void;
-	onItemPurchased?: { pack?: (item: UserStickerPack) => void };
+	onItemPurchased?: {
+		pack?: (product: UserStickerPack) => void;
+		avatarFrame?: (product: UserAvatarFrame) => void;
+		background?: (product: Background) => void;
+		all?: (product: UserStickerPack | UserAvatarFrame | Background | null) => void;
+	};
 }
 
 export async function purchaseShopProduct({
@@ -99,12 +114,17 @@ export async function purchaseShopProduct({
 			}
 		}
 
+		let item: UserStickerPack | UserAvatarFrame | Background | null = null;
+
 		if (shopProduct.stickerPack) {
-			const pack = new UserStickerPack(rawProduct);
-			if (pack == null) {
-				throw new Error(`No sticker pack found after purchasing product`);
-			}
-			onItemPurchased?.pack?.(pack);
+			item = new UserStickerPack(rawProduct);
+			onItemPurchased?.pack?.(item);
+		} else if (shopProduct.avatarFrame) {
+			item = new UserAvatarFrame(rawProduct);
+			onItemPurchased?.avatarFrame?.(item);
+		} else if (shopProduct.background) {
+			item = new Background(rawProduct);
+			onItemPurchased?.background?.(item);
 		} else {
 			console.error('No product model found after purchasing product', {
 				currency_type: pricing.knownCurrencyType,
@@ -112,6 +132,8 @@ export async function purchaseShopProduct({
 				product_id: shopProduct.id,
 			});
 		}
+
+		onItemPurchased?.all?.(item);
 	} catch (e) {
 		console.error('Error purchasing product', {
 			currency_type: pricing.knownCurrencyType,
@@ -132,13 +154,17 @@ const props = defineProps({
 		type: Object as PropType<CurrencyCostData>,
 		required: true,
 	},
+	onItemPurchased: {
+		type: Function as PropType<() => void>,
+		required: true,
+	},
 });
 
-const { shopProduct, currencyOptions } = toRefs(props);
+const { shopProduct, currencyOptions, onItemPurchased } = toRefs(props);
 
 const modal = useModal()!;
 const { stickerPacks } = useStickerStore();
-const { coinBalance, joltbuxBalance } = useCommonStore();
+const { user: myUser, coinBalance, joltbuxBalance } = useCommonStore();
 
 const balanceRefs = { coinBalance, joltbuxBalance };
 
@@ -187,9 +213,18 @@ async function purchaseProduct(options: PurchaseData) {
 	await purchaseShopProduct({
 		...options,
 		onItemPurchased: {
-			pack(item) {
-				handleStickerPackPurchase(item);
+			pack(product) {
+				handleStickerPackPurchase(product);
+			},
+			avatarFrame(product) {
+				showNewProductModal({ product });
+			},
+			background(product) {
+				showNewProductModal({ product });
+			},
+			all() {
 				modal.dismiss();
+				onItemPurchased.value();
 			},
 		},
 	});
@@ -215,6 +250,17 @@ function handleStickerPackPurchase(product: UserStickerPack) {
 		openImmediate: false,
 	});
 }
+
+function getItemStyles(ratio: number) {
+	return {
+		...styleMaxWidthForOptions({
+			ratio,
+			maxWidth: 320,
+			maxHeight: Screen.height / 3,
+		}),
+		width: `100%`,
+	};
+}
 </script>
 
 <template>
@@ -227,23 +273,35 @@ function handleStickerPackPurchase(product: UserStickerPack) {
 
 		<div class="modal-body">
 			<div :style="styleFlexCenter({ direction: 'column' })">
-				<template v-if="shopProduct.stickerPack">
-					<AppStickerPack
-						:style="{
-							...styleMaxWidthForOptions({
-								ratio: StickerPackRatio,
-								maxWidth: 160,
-								maxHeight: Screen.height / 4,
-							}),
-							width: `100%`,
-						}"
-						:pack="shopProduct.stickerPack"
-						:show-details="{
-							name: true,
-						}"
+				<AppStickerPack
+					v-if="shopProduct.stickerPack"
+					:style="getItemStyles(StickerPackRatio)"
+					:pack="shopProduct.stickerPack"
+					:show-details="{
+						name: true,
+					}"
+				/>
+				<template v-else-if="shopProduct.avatarFrame">
+					<AppUserAvatarBubble
+						:style="getItemStyles(1)"
+						:user="myUser"
+						:frame-override="shopProduct.avatarFrame"
+						show-frame
+						smoosh
+						disable-link
 					/>
-					<AppSpacer vertical :scale="4" />
 				</template>
+				<template v-else-if="shopProduct.background">
+					<AppBackground
+						:style="getItemStyles(1)"
+						:background="shopProduct.background"
+						:background-style="styleBorderRadiusLg"
+					>
+						<AppAspectRatio :ratio="1" />
+					</AppBackground>
+				</template>
+
+				<AppSpacer vertical :scale="4" />
 
 				<template v-if="currencyOptionsList.length !== 1">
 					<div class="text-center">
@@ -253,6 +311,7 @@ function handleStickerPackPurchase(product: UserStickerPack) {
 								: $gettext(`Choose a purchase option`)
 						}}
 					</div>
+
 					<AppSpacer vertical :scale="3" />
 				</template>
 
@@ -266,6 +325,10 @@ function handleStickerPackPurchase(product: UserStickerPack) {
 					<AppButton
 						v-for="[id, [currency, amount]] in currencyOptionsList"
 						:key="id"
+						:style="{
+							// Remove automatic margin from adjacent <button> elements.
+							margin: 0,
+						}"
 						:disabled="
 							!!processingPurchaseCurrencyId ||
 							!canAffordCurrency(currency, amount, balanceRefs)
@@ -297,7 +360,7 @@ function handleStickerPackPurchase(product: UserStickerPack) {
 				</template>
 
 				<template v-if="showPackHelpDocsLink">
-					<AppSpacer vertical :scale="3" />
+					<AppSpacer vertical :scale="6" />
 
 					<div class="text-center">
 						<AppLinkHelpDocs category="drop-rates">

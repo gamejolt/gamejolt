@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, nextTick, PropType, ref, Ref, StyleValue, toRefs, watch } from 'vue';
+import { styleAbsoluteFill } from '../../../_styles/mixins';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { Screen } from '../../screen/screen-service';
 import AppTheme from '../../theme/AppTheme.vue';
@@ -51,7 +52,7 @@ const effectiveOverlayRadius = computed(() => {
 	if (!radius) {
 		return;
 	}
-	if (typeof radius === 'number' || Number.parseFloat(radius)) {
+	if (typeof radius === 'number') {
 		return `${radius}px`;
 	}
 	return radius;
@@ -139,6 +140,15 @@ function onConfirm() {
 	>
 		<div class="-popper-confirm-child">
 			<slot />
+		</div>
+
+		<div
+			:style="{
+				...styleAbsoluteFill({ zIndex: 2 }),
+				borderRadius: effectiveOverlayRadius,
+			}"
+		>
+			<slot name="overlay-children" />
 		</div>
 
 		<AppTheme
