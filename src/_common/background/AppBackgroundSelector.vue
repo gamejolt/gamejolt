@@ -88,6 +88,7 @@ function onSelect(item: Background | undefined) {
 						width: `100%`,
 						height: `100%`,
 					}"
+					alt=""
 				/>
 				<AppImgResponsive v-else :src="item.media_item.mediaserver_url" />
 			</a>
