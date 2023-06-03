@@ -6,12 +6,10 @@ import {
 	styleElevate,
 	styleWhen,
 } from '../../../_styles/mixins';
-import { kBorderRadiusLg } from '../../../_styles/variables';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import { shorthandReadableTime } from '../../filters/duration';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import AppPopperConfirmWrapper from '../../popper/confirm-wrapper/AppPopperConfirmWrapper.vue';
 import { StickerPack } from './pack.model';
 
 export const StickerPackRatio = 2 / 3;
@@ -39,10 +37,6 @@ const props = defineProps({
 	forceElevate: {
 		type: Boolean,
 	},
-	hoverTitle: {
-		type: String,
-		default: undefined,
-	},
 	expiryInfo: {
 		type: Number,
 		default: undefined,
@@ -53,7 +47,7 @@ const emit = defineEmits({
 	clickPack: () => true,
 });
 
-const { pack, showDetails, canClickPack, forceElevate, hoverTitle, expiryInfo } = toRefs(props);
+const { pack, showDetails, canClickPack, forceElevate, expiryInfo } = toRefs(props);
 
 const showName = computed(() => {
 	if (!showDetails.value) {
@@ -82,23 +76,16 @@ const overlayedStyle: CSSProperties = {
 	<!-- AppStickerPack -->
 	<div>
 		<div :style="{ position: `relative` }">
-			<AppAspectRatio :ratio="StickerPackRatio" show-overflow>
-				<AppPopperConfirmWrapper
-					:style="{
-						width: `100%`,
-						height: `100%`,
-					}"
-					:overlay-radius="kBorderRadiusLg.px"
-					:disabled="!canClickPack"
-					:initial-text="hoverTitle"
-					@confirm="onClickPack()"
-				>
+			<component :is="canClickPack ? 'a' : 'div'" @click="onClickPack()">
+				<AppAspectRatio :ratio="StickerPackRatio" show-overflow>
 					<AppMediaItemBackdrop
 						:style="{
 							...styleWhen(forceElevate, styleElevate(1)),
 							...styleWhen(canClickPack, {
 								cursor: `pointer`,
 							}),
+							width: `100%`,
+							height: `100%`,
 						}"
 						:media-item="pack.media_item"
 						radius="lg"
@@ -115,10 +102,8 @@ const overlayedStyle: CSSProperties = {
 							ondragstart="return false"
 						/>
 					</AppMediaItemBackdrop>
-				</AppPopperConfirmWrapper>
-			</AppAspectRatio>
-
-			<slot name="overlay-children" />
+				</AppAspectRatio>
+			</component>
 
 			<div
 				v-if="expiryInfo"
@@ -136,6 +121,8 @@ const overlayedStyle: CSSProperties = {
 					})
 				}}
 			</div>
+
+			<slot name="overlay-children" />
 		</div>
 
 		<div

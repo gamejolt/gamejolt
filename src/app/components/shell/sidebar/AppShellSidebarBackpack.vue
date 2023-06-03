@@ -84,10 +84,7 @@ async function onClickVendingMachine() {
 }
 
 function openPack(pack: UserStickerPack) {
-	StickerPackOpenModal.show({
-		pack,
-		openImmediate: true,
-	});
+	StickerPackOpenModal.show({ pack });
 }
 
 function sortStickers(sorting: StickerSortMethod) {
@@ -148,7 +145,6 @@ function sortStickers(sorting: StickerSortMethod) {
 					}"
 					:expiry-info="userPack.expires_on"
 					can-click-pack
-					:hover-title="$gettext(`Open`)"
 					@click-pack="openPack(userPack)"
 				/>
 			</div>

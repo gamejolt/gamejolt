@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType } from 'vue';
+import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
-import AppPopperConfirmWrapper from '../../../../../_common/popper/confirm-wrapper/AppPopperConfirmWrapper.vue';
 import AppStickerPack from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { styleOverlayTextShadow } from '../../../../../_styles/mixins';
@@ -11,7 +10,7 @@ import { kBorderRadiusLg } from '../../../../../_styles/variables';
 import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
 import AppProductCurrencyTags from './AppProductCurrencyTags.vue';
 
-defineProps({
+const props = defineProps({
 	shopProduct: {
 		type: Object as PropType<InventoryShopProductSale>,
 		required: true,
@@ -31,11 +30,23 @@ defineProps({
 	},
 });
 
+const { shopProduct, canPurchase, disablePurchases } = toRefs(props);
+
 const emit = defineEmits({
 	purchase: (_shopProduct: InventoryShopProductSale) => true,
 });
 
 const { user: myUser } = useCommonStore();
+
+const canPerformAction = computed(() => !disablePurchases.value && canPurchase.value);
+
+function onClickProduct() {
+	if (!canPerformAction.value) {
+		return;
+	}
+
+	emit('purchase', shopProduct.value);
+}
 
 const popperConfirmRadius = kBorderRadiusLg;
 
@@ -75,10 +86,10 @@ const currencyTagStyles: CSSProperties = {
 		<template v-if="shopProduct.stickerPack">
 			<AppStickerPack
 				:pack="shopProduct.stickerPack"
-				show-details
 				:expiry-info="shopProduct.ends_on"
-				:can-click-pack="!disablePurchases && canPurchase"
-				@click-pack="emit('purchase', shopProduct)"
+				:can-click-pack="canPerformAction"
+				show-details
+				@click-pack="onClickProduct()"
 			>
 				<template #overlay-children>
 					<AppProductCurrencyTags
@@ -93,11 +104,7 @@ const currencyTagStyles: CSSProperties = {
 			</AppStickerPack>
 		</template>
 		<template v-else-if="shopProduct.avatarFrame">
-			<AppPopperConfirmWrapper
-				:disabled="disablePurchases || !canPurchase"
-				:overlay-radius="popperConfirmRadius.px"
-				@confirm="emit('purchase', shopProduct)"
-			>
+			<component :is="canPerformAction ? 'a' : 'div'" @click="onClickProduct()">
 				<AppUserAvatarBubble
 					:user="myUser"
 					:frame-override="shopProduct.avatarFrame"
@@ -106,24 +113,15 @@ const currencyTagStyles: CSSProperties = {
 					disable-link
 				/>
 
-				<template #overlay-children>
-					<AppProductCurrencyTags
-						:style="currencyTagStyles"
-						:shop-product="shopProduct"
-					/>
+				<AppProductCurrencyTags :style="currencyTagStyles" :shop-product="shopProduct" />
 
-					<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
-						{{ $gettext(`You don't have enough funds to purchase this`) }}
-					</div>
-				</template>
-			</AppPopperConfirmWrapper>
+				<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
+					{{ $gettext(`You don't have enough funds to purchase this`) }}
+				</div>
+			</component>
 		</template>
 		<template v-else-if="shopProduct.background">
-			<AppPopperConfirmWrapper
-				:disabled="disablePurchases || !canPurchase"
-				:overlay-radius="popperConfirmRadius.px"
-				@confirm="emit('purchase', shopProduct)"
-			>
+			<component :is="canPerformAction ? 'a' : 'div'" @click="onClickProduct()">
 				<AppAspectRatio :ratio="1">
 					<AppBackground
 						:background="shopProduct.background"
@@ -136,17 +134,12 @@ const currencyTagStyles: CSSProperties = {
 					</AppBackground>
 				</AppAspectRatio>
 
-				<template #overlay-children>
-					<AppProductCurrencyTags
-						:style="currencyTagStyles"
-						:shop-product="shopProduct"
-					/>
+				<AppProductCurrencyTags :style="currencyTagStyles" :shop-product="shopProduct" />
 
-					<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
-						{{ $gettext(`You don't have enough funds to purchase this`) }}
-					</div>
-				</template>
-			</AppPopperConfirmWrapper>
+				<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
+					{{ $gettext(`You don't have enough funds to purchase this`) }}
+				</div>
+			</component>
 		</template>
 	</div>
 </template>
