@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-import { CSSProperties, Ref, computed, ref } from 'vue';
+import { CSSProperties, Ref, computed, onMounted, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
 import {
 	Currency,
-	CurrencyCostData,
 	CurrencyType,
 	canAffordCurrency,
 } from '../../../../_common/currency/currency-type';
@@ -18,6 +17,7 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { InventoryShopProductSale } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../_common/modal/AppModal.vue';
@@ -28,11 +28,7 @@ import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppStickerPack, {
-	StickerPackRatio,
-} from '../../../../_common/sticker/pack/AppStickerPack.vue';
-import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
-import { useStickerStore } from '../../../../_common/sticker/sticker-store';
+import { StickerPackRatio } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
@@ -42,12 +38,15 @@ import {
 	kThemeBgOffset,
 	kThemeFg,
 	kThemeFg10,
+	kThemeFgMuted,
 } from '../../../../_common/theme/variables';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
 	styleBorderRadiusBase,
 	styleBorderRadiusCircle,
 	styleBorderRadiusLg,
+	styleChangeBg,
 	styleElevate,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
@@ -60,14 +59,23 @@ import {
 	kFontSizeH3,
 	kStrongEaseOut,
 } from '../../../../_styles/variables';
-import { run } from '../../../../utils/utils';
 import { illNoCommentsSmall } from '../../../img/ill/illustrations';
 import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
-import { purchaseShopProduct } from './_purchase-modal/AppPurchaseShopProductModal.vue';
+import AppVendingMachineProduct from './_product/AppVendingMachineProduct.vue';
 import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
 import imageVance from './vance.png';
 
-const { stickerPacks } = useStickerStore();
+interface ProductChunks {
+	packs?: ProductChunk;
+	avatarFrames?: ProductChunk;
+	backgrounds?: ProductChunk;
+}
+
+interface ProductChunk {
+	items: InventoryShopProductSale[];
+	type: keyof ProductChunks;
+}
+
 const { isDark } = useThemeStore();
 const { coinBalance, joltbuxBalance } = useCommonStore();
 
@@ -75,9 +83,21 @@ const balanceRefs = { coinBalance, joltbuxBalance };
 
 const modal = useModal()!;
 
-const availableProducts = ref([]) as Ref<InventoryShopProductSale[]>;
-const isLoading = ref(true);
+const availableProducts = ref({}) as Ref<ProductChunks>;
+
+const isLoading = ref(false);
 const productProcessing = ref<number>();
+
+const hasProducts = computed(() => {
+	const e = availableProducts.value;
+
+	return (
+		(e.packs?.items.length ||
+			e.avatarFrames?.items.length ||
+			e.backgrounds?.items.length ||
+			0) > 0
+	);
+});
 
 const currencyCardData = computed(() => {
 	const result = [{ currency: CurrencyType.coins, amount: coinBalance.value }];
@@ -87,7 +107,12 @@ const currencyCardData = computed(() => {
 	return result;
 });
 
-run(async () => {
+async function init() {
+	if (isLoading.value) {
+		return;
+	}
+	isLoading.value = true;
+
 	const p = await Promise.all([
 		Api.sendRequest('/web/inventory/shop/sales', undefined, { detach: true }),
 		Api.sendFieldsRequest(
@@ -104,13 +129,41 @@ run(async () => {
 	const newProducts = payload.sales
 		? storeModelList(InventoryShopProductSale, payload.sales)
 		: [];
-	const validNewProducts = newProducts.filter(i => !!i.product);
-	if (newProducts.length !== validNewProducts.length) {
+
+	const productChunks: ProductChunks = {};
+	const missingItems: InventoryShopProductSale[] = [];
+
+	for (const shopProduct of newProducts) {
+		let key: keyof ProductChunks | null = null;
+
+		if (shopProduct.stickerPack) {
+			key = 'packs';
+		} else if (shopProduct.avatarFrame) {
+			key = 'avatarFrames';
+		} else if (shopProduct.background) {
+			key = 'backgrounds';
+		}
+
+		if (!key) {
+			missingItems.push(shopProduct);
+			continue;
+		}
+
+		const items = (productChunks[key]?.items || []).concat(shopProduct);
+		productChunks[key] = { type: key, items };
+	}
+
+	if (missingItems.length > 0) {
 		console.warn(`Got some products that we don't support yet.`, {
-			missingCount: newProducts.length - validNewProducts.length,
+			missingCount: missingItems.length,
+			types: missingItems.reduce((result, i) => {
+				result.set(i.product_type, (result.get(i.product_type) || 0) + 1);
+				return result;
+			}, new Map<string, number>()),
 		});
 	}
-	availableProducts.value = validNewProducts;
+
+	availableProducts.value = productChunks;
 
 	const mePayload = p[1];
 	coinBalance.value = mePayload.coinBalance;
@@ -119,6 +172,10 @@ run(async () => {
 	await fetchFeatureToggles([featureMicrotransactions]);
 
 	isLoading.value = false;
+}
+
+onMounted(() => {
+	init();
 });
 
 function canPurchaseProduct(shopProduct: InventoryShopProductSale) {
@@ -131,13 +188,11 @@ function canPurchaseProduct(shopProduct: InventoryShopProductSale) {
 	);
 }
 
-async function purchasePack(
-	shopProduct: InventoryShopProductSale,
-	currencyOptions: CurrencyCostData
-) {
+async function purchaseProduct(shopProduct: InventoryShopProductSale) {
 	if (productProcessing.value) {
 		return;
 	}
+	const currencyOptions = shopProduct.validPricingsData;
 	const currencyOptionsList = Object.entries(currencyOptions);
 	if (currencyOptionsList.length === 0) {
 		showErrorGrowl($gettext(`This pack is not available for purchase right now.`));
@@ -149,29 +204,12 @@ async function purchasePack(
 
 	productProcessing.value = shopProduct.id;
 
-	if (currencyOptionsList.length === 1 && !!currencyOptions[CurrencyType.coins.id]) {
-		// Purchase immediately with coins if it's our only option.
-		await purchaseShopProduct({
-			shopProduct,
-			currency: CurrencyType.coins,
-			balanceRefs,
-			onItemPurchased: {
-				pack(pack) {
-					if (stickerPacks.value.some(i => i.id === pack.id)) {
-						return;
-					}
-					stickerPacks.value.push(pack);
-					StickerPackOpenModal.show({
-						pack,
-						openImmediate: false,
-					});
-				},
-			},
-		});
-	} else {
-		// Show a modal to let the user choose which currency to use.
-		await showPurchaseShopProductModal({ shopProduct, currencyOptions });
-	}
+	// Show a modal to let the user choose which currency to use.
+	await showPurchaseShopProductModal({
+		shopProduct,
+		currencyOptions,
+		onItemPurchased: () => init(),
+	});
 
 	productProcessing.value = undefined;
 }
@@ -187,6 +225,23 @@ async function onClickCurrencyCard(currency: Currency) {
 		}
 	} else {
 		console.error('Unknown currency type', currency);
+	}
+}
+
+function getTooltipText(type: ProductChunk['type']) {
+	switch (type) {
+		case 'packs':
+			return $gettext(
+				`Sticker packs contain a random set of stickers which you can collect and place on content throughout Game Jolt.`
+			);
+
+		case 'avatarFrames':
+			return $gettext(`Equip an avatar frame to make yourself stand out in the community.`);
+
+		case 'backgrounds':
+			return $gettext(
+				`Backgrounds can be added to your posts to make your content stand out in the feeds.`
+			);
 	}
 }
 
@@ -233,22 +288,30 @@ const currencyCardImgStyles: CSSProperties = {
 				</template>
 			</AppModalFloatingHeader>
 
-			<div class="modal-body _wrapper">
+			<div
+				class="modal-body"
+				:style="{
+					paddingTop: `0`,
+					paddingBottom: `0`,
+					flex: `auto`,
+					display: `flex`,
+					flexDirection: `column`,
+				}"
+			>
 				<AppTheme :force-dark="isDark" :force-light="!isDark">
 					<AppLoadingFade
 						class="fill-offset"
 						:style="loadingFadeStyles"
 						:content-styles="{
 							...loadingFadeStyles,
-							padding: `12px`,
 						}"
 						:is-loading="isLoading"
 					>
 						<div
 							:style="{
 								display: `flex`,
+								padding: `12px`,
 								gap: `12px`,
-								marginBottom: `12px`,
 							}"
 						>
 							<template
@@ -357,89 +420,98 @@ const currencyCardImgStyles: CSSProperties = {
 						</div>
 
 						<div
-							class="_items"
-							:style="
-								styleWhen(!isLoading && !availableProducts.length, {
+							:style="[
+								styleWhen(!hasProducts, {
+									padding: `12px`,
+								}),
+								styleWhen(!hasProducts && !isLoading, {
 									gridTemplateColumns: '1fr',
 									alignContent: 'center',
-								})
-							"
+								}),
+							]"
 						>
-							<template v-if="isLoading">
+							<div v-if="isLoading && !hasProducts" class="_items">
 								<AppAspectRatio
 									v-for="i in 3"
 									:key="i"
 									:ratio="StickerPackRatio"
 									show-overflow
 								>
-									<div class="_pack-placeholder" />
-								</AppAspectRatio>
-							</template>
-							<template v-else-if="availableProducts.length">
-								<template
-									v-for="shopProduct in availableProducts"
-									:key="shopProduct.id"
-								>
 									<div
-										v-if="shopProduct.stickerPack"
 										:style="{
-											position: 'relative',
+											...styleBorderRadiusLg,
+											...styleChangeBg('bg-subtle'),
+											...styleElevate(1),
+											width: `100%`,
+											height: `100%`,
 										}"
-									>
-										<AppStickerPack
-											class="_pack"
-											:pack="shopProduct.stickerPack"
-											show-details
-											:expiry-info="shopProduct.ends_on"
-											:can-click-pack="!productProcessing"
-											:cost-override="shopProduct.pricings"
-											@click-pack="
-												purchasePack(
-													shopProduct,
-													shopProduct.validPricingsData
-												)
-											"
+									/>
+								</AppAspectRatio>
+							</div>
+							<template v-else-if="hasProducts">
+								<template v-for="chunk in availableProducts" :key="chunk.type">
+									<template v-if="chunk && chunk.items.length">
+										<h3
+											:style="{
+												marginTop: 0,
+												marginBottom: `8px`,
+												padding: `12px 16px`,
+												background: `linear-gradient(to right, ${
+													isDark ? 'rgba(0,0,0,0.26)' : 'rgba(0,0,0,0.12)'
+												} 0%, rgba(0,0,0,0) 100%)`,
+												fontWeight: `bold`,
+												display: `flex`,
+												gap: `12px`,
+												alignItems: `center`,
+											}"
 										>
-											<template #overlay>
-												<div
-													v-if="!canPurchaseProduct(shopProduct)"
-													class="_radius-lg _text-shadow"
-													:style="{
-														position: 'absolute',
-														top: 0,
-														right: 0,
-														bottom: 0,
-														left: 0,
-														fontSize: '13px',
-														padding: '12px',
-														zIndex: 2,
-														display: 'grid',
-														justifyContent: 'center',
-														alignContent: 'center',
-														textAlign: 'center',
-														fontWeight: 'bold',
-														color: `white`,
-														backgroundColor: 'rgba(0, 0, 0, 0.45)',
-													}"
-												>
-													{{
-														$gettext(
-															`You don't have enough funds to purchase this`
-														)
-													}}
-												</div>
+											<template v-if="chunk.type === 'packs'">
+												{{ $gettext(`Sticker packs`) }}
 											</template>
-										</AppStickerPack>
-									</div>
+											<template v-else-if="chunk.type === 'avatarFrames'">
+												{{ $gettext(`Avatar frames`) }}
+											</template>
+											<template v-else-if="chunk.type === 'backgrounds'">
+												{{ $gettext(`Backgrounds`) }}
+											</template>
+
+											<AppJolticon
+												v-app-tooltip.touchable="getTooltipText(chunk.type)"
+												icon="help-circle"
+												:style="{
+													color: kThemeFgMuted,
+													fontSize: `inherit`,
+													margin: `0 0 0 auto`,
+												}"
+											/>
+										</h3>
+
+										<AppSpacer vertical :scale="2" />
+
+										<div
+											class="_items"
+											:style="{
+												padding: `0 12px 16px`,
+											}"
+										>
+											<template
+												v-for="shopProduct in chunk.items"
+												:key="shopProduct.id"
+											>
+												<AppVendingMachineProduct
+													:shop-product="shopProduct"
+													:can-purchase="canPurchaseProduct(shopProduct)"
+													:disable-purchases="!!productProcessing"
+													@purchase="purchaseProduct($event)"
+												/>
+											</template>
+										</div>
+									</template>
 								</template>
 							</template>
 							<AppIllustration v-else :asset="illNoCommentsSmall">
 								<div>
-									{{
-										$gettext(
-											`There are no sticker packs available for purchase.`
-										)
-									}}
+									{{ $gettext(`There are no items available for purchase.`) }}
 								</div>
 							</AppIllustration>
 						</div>
@@ -461,7 +533,7 @@ const currencyCardImgStyles: CSSProperties = {
 							backgroundColor: kThemeBgActual,
 						}"
 					>
-						<!-- vance -->
+						<!-- Vance -->
 						<AppSpacer vertical :scale="4" />
 						<div
 							:style="{
@@ -507,27 +579,6 @@ const currencyCardImgStyles: CSSProperties = {
 </template>
 
 <style lang="stylus" scoped>
-._wrapper
-	padding-top: 0
-	padding-bottom: 0
-	flex: auto
-	display: flex
-	flex-direction: column
-
-._radius-lg
-	rounded-corners-lg()
-
-._text-shadow
-	overlay-text-shadow()
-
-._balance
-	change-bg(bg-offset)
-	rounded-corners-lg()
-	padding: 2px 6px
-	align-self: flex-end
-	margin-right: auto
-	font-weight: bold
-
 ._items
 	--pack-min-width: 200px
 	color: var(--theme-fg)
@@ -542,16 +593,6 @@ const currencyCardImgStyles: CSSProperties = {
 	@media $media-xs
 		--pack-min-width: 140px
 
-._pack-placeholder
-	rounded-corners-lg()
-	change-bg(bg-subtle)
-	elevate-1()
-	width: 100%
-	height: 100%
-
-._pack
-	z-index: 1
-
 ._output-corner-tl
 ._output-corner-tr
 	width: 12px
@@ -560,15 +601,15 @@ const currencyCardImgStyles: CSSProperties = {
 	top: -12px
 	z-index: 3
 
-._output-corner-tl-border
-._output-corner-tr-border
-	border: 6px solid var(--theme-bg-offset)
-
 ._output-corner-tl
 	left: 0
 
 ._output-corner-tr
 	right: 0
+
+._output-corner-tl-border
+._output-corner-tr-border
+	border: 6px solid var(--theme-bg-offset)
 
 ._output-corner-tl-border
 	border-bottom-left-radius: 12px
