@@ -24,7 +24,6 @@ export class ChatMessage implements ModelStoreModel, ReactionableModel {
 	declare dateSplit?: boolean;
 	declare is_automated?: boolean;
 	reaction_counts: ReactionCount[] = [];
-	// TODO(realtime-reactions) Add reaction counts similar to how comment-model does it.
 
 	// Used for rendering.
 	_collapsable = false;
@@ -65,7 +64,7 @@ export class ChatMessage implements ModelStoreModel, ReactionableModel {
 			this.is_automated = false;
 		}
 
-		if (this.reaction_counts) {
+		if (data.reaction_counts) {
 			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
 		}
 	}

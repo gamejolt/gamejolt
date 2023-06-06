@@ -7,11 +7,81 @@ import { showErrorGrowl } from '../growls/growls.service';
 import { PayloadError } from '../payload/payload-service';
 import { $gettext } from '../translate/translate.service';
 
+export interface EmojiDelta {
+	emoji_id: number;
+	emoji_short_name: string;
+	emoji_prefix: string;
+	emoji_img_url: string;
+
+	// user ids which reacted / unreacted to this emoji
+	delta_inc: number[];
+	delta_dec: number[];
+}
+
 export interface ReactionableModel {
 	id: number;
 	reaction_counts: ReactionCount[];
 
 	get resourceName(): string;
+}
+
+interface EmojiIdAndCount {
+	emoji_id: number;
+	count: number;
+}
+const ReactionQueue = new WeakMap<ReactionableModel, EmojiIdAndCount[]>();
+
+export async function updateReactionCount(
+	model: ReactionableModel,
+	emojiId: number,
+	emojiShortName: string,
+	emojiPrefix: string,
+	emojiImgUrl: string,
+	deltaInc: number[],
+	deltaDec: number[],
+	current_user_id: number
+) {
+	let countMod = deltaInc.length - deltaDec.length;
+	const selfReactionQueue = ReactionQueue.get(model) ?? [];
+	if (selfReactionQueue.length) {
+		const selfReacted = selfReactionQueue.find(i => i.emoji_id === emojiId);
+		if (selfReacted) {
+			countMod = countMod - selfReacted.count;
+			arrayRemove(selfReactionQueue, i => i.emoji_id === emojiId);
+			ReactionQueue.set(model, selfReactionQueue);
+		}
+	}
+
+	if (countMod == 0) {
+		return;
+	}
+
+	const existingReaction = model.reaction_counts.find(i => i.id === emojiId);
+	if (existingReaction) {
+		if (existingReaction.count + countMod <= 0) {
+			arrayRemove(model.reaction_counts, i => i.id === emojiId);
+		} else {
+			existingReaction.count = existingReaction.count + countMod;
+
+			existingReaction.did_react =
+				// we haven't reacted yet and now we're in the deltaInc list => did_react = true
+				(!existingReaction.did_react && deltaInc.includes(current_user_id)) ||
+				// we have reacted and now we're not in the deltaDec list => did_react = true
+				(existingReaction.did_react && !deltaDec.includes(current_user_id));
+			// everything else is false
+		}
+	} else {
+		model.reaction_counts.push(
+			new ReactionCount({
+				id: emojiId,
+				img_url: emojiImgUrl,
+				prefix: emojiPrefix,
+				short_name: emojiShortName,
+				count: countMod,
+				did_react: deltaInc.includes(current_user_id),
+			})
+		);
+	}
 }
 
 export class ReactionCount {
@@ -83,6 +153,7 @@ export async function toggleReactionOnResource({
 }) {
 	const existingReaction = model.reaction_counts.find(i => i.id === emojiId);
 
+	// this means the reaction is new or the user never reacted to it before
 	const isReacting = !existingReaction || !existingReaction.did_react;
 	const countMod = isReacting ? 1 : -1;
 
@@ -106,6 +177,10 @@ export async function toggleReactionOnResource({
 				})
 			);
 		}
+
+		const selfReactionQueue = ReactionQueue.get(model) ?? [];
+		selfReactionQueue.push({ emoji_id: emojiId, count: countMod });
+		ReactionQueue.set(model, selfReactionQueue);
 
 		const action = isReacting ? 'react' : 'unreact';
 		const response = await Api.sendRequest(

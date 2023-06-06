@@ -7,6 +7,7 @@ import { MarkObject } from '../../../_common/content/mark-object';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { getModel, storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
+import { EmojiDelta, updateReactionCount } from '../../../_common/reaction/reaction-count';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
 import { arrayRemove } from '../../../utils/array';
@@ -79,10 +80,9 @@ interface FiresideSocketParams {
 	fireside_viewing_mode: string;
 }
 
-// move this to reaction-count.ts or any other payload lib?
-interface UpdateReactionPayload {
-	emoji_id: number;
-	delta: number;
+interface UpdateChatMessageReactionPayload {
+	deltas: EmojiDelta[];
+	chat_message_id: number;
 }
 
 export function createChatRoomChannel(
@@ -381,8 +381,24 @@ export function createChatRoomChannel(
 		);
 	}
 
-	function _onUpdateReaction(payload: UpdateReactionPayload) {
-		console.log('roomChannel: getting update-reaction event', payload);
+	function _onUpdateReaction(payload: UpdateChatMessageReactionPayload) {
+		const message = getModel(ChatMessage, payload.chat_message_id!);
+		if (message === undefined) {
+			return;
+		}
+
+		for (const emoji_delta of payload.deltas) {
+			updateReactionCount(
+				message,
+				emoji_delta.emoji_id,
+				emoji_delta.emoji_short_name,
+				emoji_delta.emoji_prefix,
+				emoji_delta.emoji_img_url,
+				emoji_delta.delta_inc,
+				emoji_delta.delta_dec,
+				client.currentUser ? client.currentUser.id : 0
+			);
+		}
 	}
 
 	function _syncPresentUsers(presence: Presence) {
