@@ -463,6 +463,7 @@ const currencyCardImgStyles: CSSProperties = {
 												display: `flex`,
 												gap: `12px`,
 												alignItems: `center`,
+												color: kThemeFg,
 											}"
 										>
 											<template v-if="chunk.type === 'packs'">
