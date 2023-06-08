@@ -95,8 +95,6 @@ const {
 
 const chatAvatarStyles: CSSProperties = {
 	...styleBorderRadiusCircle,
-	width: `100%`,
-	height: `100%`,
 };
 
 const avatarFrame = computed(() => frameOverride?.value || user.value?.avatar_frame || null);
@@ -153,12 +151,18 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 						<slot>
 							<template v-if="isChatUser(user)">
 								<img
+									class="_img"
 									:style="chatAvatarStyles"
 									:src="user.img_avatar || imageGuestAvatar"
 									alt=""
 								/>
 							</template>
-							<AppUserAvatarImg v-else :user="user" />
+							<AppUserAvatarImg
+								v-else
+								class="_img"
+								:style="chatAvatarStyles"
+								:user="user"
+							/>
 						</slot>
 					</div>
 				</AppAvatarFrame>
@@ -166,3 +170,11 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 		</component>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+._img
+	&
+	::v-deep(img)
+		width: 100%
+		height: 100%
+</style>

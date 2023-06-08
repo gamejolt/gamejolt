@@ -15,7 +15,6 @@ import {
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
-import AppLinkHelpDocs from '../../../../../_common/link/AppLinkHelpDocs.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
@@ -35,6 +34,7 @@ import {
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 } from '../../../../../_styles/mixins';
+import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.route';
 import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
 import { showNewProductModal } from '../_product/modal/modal.service';
 
@@ -295,7 +295,7 @@ function getItemStyles(ratio: number) {
 					<AppBackground
 						:style="getItemStyles(1)"
 						:background="shopProduct.background"
-						:background-style="styleBorderRadiusLg"
+						:backdrop-style="styleBorderRadiusLg"
 						darken
 					>
 						<AppAspectRatio :ratio="1" />
@@ -364,9 +364,16 @@ function getItemStyles(ratio: number) {
 					<AppSpacer vertical :scale="6" />
 
 					<div class="text-center">
-						<AppLinkHelpDocs category="drop-rates">
+						<RouterLink
+							:to="{
+								name: routeLandingHelpRedirect.name,
+								params: {
+									path: 'drop-rates',
+								},
+							}"
+						>
 							{{ $gettext(`Learn more about packs`) }}
-						</AppLinkHelpDocs>
+						</RouterLink>
 					</div>
 				</template>
 			</div>

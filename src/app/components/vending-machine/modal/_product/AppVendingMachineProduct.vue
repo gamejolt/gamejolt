@@ -125,8 +125,12 @@ const currencyTagStyles: CSSProperties = {
 				<AppAspectRatio :ratio="1">
 					<AppBackground
 						:background="shopProduct.background"
-						:background-style="{
+						:backdrop-style="{
 							borderRadius: popperConfirmRadius.px,
+						}"
+						:background-style="{
+							backgroundSize: `100% auto`,
+							backgroundPosition: `center`,
 						}"
 						darken
 					>
