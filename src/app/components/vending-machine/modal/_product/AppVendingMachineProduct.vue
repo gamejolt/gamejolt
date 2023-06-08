@@ -60,7 +60,7 @@ const notEnoughFundsOverlayStyles: CSSProperties = {
 	left: 0,
 	fontSize: `13px`,
 	padding: `12px`,
-	zIndex: 2,
+	zIndex: 3,
 	display: `grid`,
 	justifyContent: `center`,
 	alignContent: `center`,
@@ -74,6 +74,7 @@ const currencyTagStyles: CSSProperties = {
 	position: `absolute`,
 	bottom: `4px`,
 	right: `4px`,
+	zIndex: 2,
 };
 </script>
 
@@ -125,8 +126,12 @@ const currencyTagStyles: CSSProperties = {
 				<AppAspectRatio :ratio="1">
 					<AppBackground
 						:background="shopProduct.background"
-						:background-style="{
+						:backdrop-style="{
 							borderRadius: popperConfirmRadius.px,
+						}"
+						:background-style="{
+							backgroundSize: `100% auto`,
+							backgroundPosition: `center`,
 						}"
 						darken
 					>
