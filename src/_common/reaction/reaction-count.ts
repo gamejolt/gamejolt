@@ -31,6 +31,38 @@ interface EmojiIdAndCount {
 }
 const ReactionQueue = new WeakMap<ReactionableModel, EmojiIdAndCount[]>();
 
+function applyReaction(
+	model: ReactionableModel,
+	existingReaction: ReactionCount | undefined,
+	countMod: number,
+	emojiId: number,
+	emojiImgUrl: string,
+	emojiPrefix: string,
+	emojiShortName: string,
+	didReact: boolean
+) {
+	console.debug('applyReaction:', model, existingReaction, countMod, emojiId, didReact);
+	if (existingReaction) {
+		if (existingReaction.count + countMod <= 0) {
+			arrayRemove(model.reaction_counts, i => i.id === emojiId);
+		} else {
+			existingReaction.count = existingReaction.count + countMod;
+			existingReaction.did_react = didReact;
+		}
+	} else if (countMod > 0) {
+		model.reaction_counts.push(
+			new ReactionCount({
+				id: emojiId,
+				img_url: emojiImgUrl,
+				prefix: emojiPrefix,
+				short_name: emojiShortName,
+				count: countMod,
+				did_react: didReact,
+			})
+		);
+	}
+}
+
 export async function updateReactionCount(
 	model: ReactionableModel,
 	emojiId: number,
@@ -41,6 +73,8 @@ export async function updateReactionCount(
 	deltaDec: number[],
 	current_user_id: number
 ) {
+	console.debug('updateReaction');
+
 	let countMod = deltaInc.length - deltaDec.length;
 	const selfReactionQueue = ReactionQueue.get(model) ?? [];
 	if (selfReactionQueue.length) {
@@ -52,36 +86,35 @@ export async function updateReactionCount(
 		}
 	}
 
+	// if current reaction update is carrying only our own reaction,
+	// we can skip the update as it had been handled
 	if (countMod == 0) {
 		return;
 	}
 
 	const existingReaction = model.reaction_counts.find(i => i.id === emojiId);
-	if (existingReaction) {
-		if (existingReaction.count + countMod <= 0) {
-			arrayRemove(model.reaction_counts, i => i.id === emojiId);
-		} else {
-			existingReaction.count = existingReaction.count + countMod;
+	const user_reacting = deltaInc.includes(current_user_id);
+	const user_unreacting = deltaDec.includes(current_user_id);
 
-			existingReaction.did_react =
-				// we haven't reacted yet and now we're in the deltaInc list => did_react = true
-				(!existingReaction.did_react && deltaInc.includes(current_user_id)) ||
-				// we have reacted and now we're not in the deltaDec list => did_react = true
-				(existingReaction.did_react && !deltaDec.includes(current_user_id));
-			// everything else is false
-		}
-	} else {
-		model.reaction_counts.push(
-			new ReactionCount({
-				id: emojiId,
-				img_url: emojiImgUrl,
-				prefix: emojiPrefix,
-				short_name: emojiShortName,
-				count: countMod,
-				did_react: deltaInc.includes(current_user_id),
-			})
-		);
-	}
+	const didReact =
+		(existingReaction &&
+			// user haven't reacted before and is now reacting
+			((!existingReaction.did_react && user_reacting) ||
+				// user reacted before and maintaining reaction
+				(existingReaction.did_react && !user_unreacting))) ||
+		// fresh reaction
+		user_reacting;
+
+	applyReaction(
+		model,
+		existingReaction,
+		countMod,
+		emojiId,
+		emojiImgUrl,
+		emojiPrefix,
+		emojiShortName,
+		didReact
+	);
 }
 
 export class ReactionCount {
@@ -151,34 +184,28 @@ export async function toggleReactionOnResource({
 	shortName: string;
 	imgUrl: string;
 }) {
+	console.debug('toggleReactionOnResource inputs:', model, emojiId, prefix, shortName, imgUrl);
 	const existingReaction = model.reaction_counts.find(i => i.id === emojiId);
 
 	// this means the reaction is new or the user never reacted to it before
 	const isReacting = !existingReaction || !existingReaction.did_react;
 	const countMod = isReacting ? 1 : -1;
+	console.debug('countMod:', countMod);
 
+	let selfReactionQueue: EmojiIdAndCount[] = [];
 	try {
-		if (existingReaction) {
-			if (existingReaction.count + countMod <= 0) {
-				arrayRemove(model.reaction_counts, i => i.id === emojiId);
-			} else {
-				existingReaction.count = existingReaction.count + countMod;
-				existingReaction.did_react = isReacting;
-			}
-		} else if (isReacting) {
-			model.reaction_counts.push(
-				new ReactionCount({
-					id: emojiId,
-					count: 1,
-					img_url: imgUrl,
-					prefix: prefix,
-					short_name: shortName,
-					did_react: true,
-				})
-			);
-		}
+		applyReaction(
+			model,
+			existingReaction,
+			countMod,
+			emojiId,
+			imgUrl,
+			prefix,
+			shortName,
+			isReacting
+		);
 
-		const selfReactionQueue = ReactionQueue.get(model) ?? [];
+		selfReactionQueue = ReactionQueue.get(model) ?? [];
 		selfReactionQueue.push({ emoji_id: emojiId, count: countMod });
 		ReactionQueue.set(model, selfReactionQueue);
 
@@ -221,27 +248,22 @@ export async function toggleReactionOnResource({
 			showErrorGrowl(errorMessage);
 		}
 
-		const wasReacted = !isReacting;
-		if (existingReaction) {
-			const newCount = existingReaction.count - countMod;
+		// revert the reaction change
+		applyReaction(
+			model,
+			existingReaction,
+			existingReaction ? existingReaction.count - countMod : 1,
+			emojiId,
+			imgUrl,
+			prefix,
+			shortName,
+			!isReacting
+		);
 
-			if (newCount <= 0) {
-				arrayRemove(model.reaction_counts, i => i.id === emojiId);
-			} else {
-				existingReaction.count = newCount;
-				existingReaction.did_react = wasReacted;
-			}
-		} else if (wasReacted) {
-			model.reaction_counts.push(
-				new ReactionCount({
-					id: emojiId,
-					count: 1,
-					img_url: imgUrl,
-					prefix: prefix,
-					short_name: shortName,
-					did_react: true,
-				})
-			);
+		// revert self reaction queue
+		if (selfReactionQueue.length) {
+			selfReactionQueue.pop();
+			ReactionQueue.set(model, selfReactionQueue);
 		}
 	}
 }
