@@ -82,6 +82,7 @@ const currencyTagStyles: CSSProperties = {
 	<div
 		:style="{
 			position: `relative`,
+			zIndex: 1,
 		}"
 	>
 		<template v-if="shopProduct.stickerPack">
