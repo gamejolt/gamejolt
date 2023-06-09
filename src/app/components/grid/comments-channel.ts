@@ -25,12 +25,8 @@ export function createGridCommentsChannel(client: GridClient, options: { userId:
 	channelController.listenTo('update-reactions', _onUpdateReaction);
 
 	const joinPromise = channelController.join({
-		async onJoin() {
-			console.log('commentsChannel: joined comments channel');
-		},
-		onLeave() {
-			console.log('commentsChannel: left comments channel');
-		},
+		async onJoin() {},
+		onLeave() {},
 	});
 
 	const c = shallowReadonly({

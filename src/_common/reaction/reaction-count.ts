@@ -41,7 +41,6 @@ function applyReaction(
 	emojiShortName: string,
 	didReact: boolean
 ) {
-	console.debug('applyReaction:', model, existingReaction, countMod, emojiId, didReact);
 	if (existingReaction) {
 		if (existingReaction.count + countMod <= 0) {
 			arrayRemove(model.reaction_counts, i => i.id === emojiId);
@@ -73,8 +72,6 @@ export async function updateReactionCount(
 	deltaDec: number[],
 	current_user_id: number
 ) {
-	console.debug('updateReaction');
-
 	let countMod = deltaInc.length - deltaDec.length;
 	const selfReactionQueue = ReactionQueue.get(model) ?? [];
 	if (selfReactionQueue.length) {
@@ -184,13 +181,11 @@ export async function toggleReactionOnResource({
 	shortName: string;
 	imgUrl: string;
 }) {
-	console.debug('toggleReactionOnResource inputs:', model, emojiId, prefix, shortName, imgUrl);
 	const existingReaction = model.reaction_counts.find(i => i.id === emojiId);
 
 	// this means the reaction is new or the user never reacted to it before
 	const isReacting = !existingReaction || !existingReaction.did_react;
 	const countMod = isReacting ? 1 : -1;
-	console.debug('countMod:', countMod);
 
 	let selfReactionQueue: EmojiIdAndCount[] = [];
 	try {
