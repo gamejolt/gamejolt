@@ -296,6 +296,10 @@ function getItemStyles(ratio: number) {
 						:style="getItemStyles(1)"
 						:background="shopProduct.background"
 						:backdrop-style="styleBorderRadiusLg"
+						:background-style="{
+							backgroundSize: `cover`,
+							backgroundPosition: `center`,
+						}"
 						darken
 					>
 						<AppAspectRatio :ratio="1" />
