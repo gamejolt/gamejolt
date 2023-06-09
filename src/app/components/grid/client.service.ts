@@ -26,6 +26,7 @@ import { $gettext, $gettextInterpolate } from '../../../_common/translate/transl
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
+import { arrayRemove } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
 import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
