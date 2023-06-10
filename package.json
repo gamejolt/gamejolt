@@ -55,7 +55,7 @@
 		"@typescript-eslint/eslint-plugin": "5.51.0",
 		"@typescript-eslint/parser": "5.51.0",
 		"@vitejs/plugin-vue": "4.0.0",
-		"agora-rtc-sdk-ng": "4.15.1",
+		"agora-rtc-sdk-ng": "4.17.2",
 		"autoprefixer": "10.4.2",
 		"autosize": "5.0.1",
 		"broadcast-channel": "3.1.0",
