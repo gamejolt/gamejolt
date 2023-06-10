@@ -15,6 +15,11 @@ const fs = require('fs-extra') as typeof import('fs-extra');
 
 type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 
+// I'm troubleshooting an issue where some browsers complain about invalid
+// syntax with an agora related module. When this flag is enabled it'll bundle
+// up the web frontend differently in order to try and debug this issue.
+const troubleshootingFiresides = true;
+
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
 	const gjOpts = readFromViteEnv(process.env);
@@ -74,7 +79,6 @@ export default defineConfig(async () => {
 	const onlyInSSR = emptyUnless(() => gjOpts.platform === 'ssr');
 	const notInSSR = emptyUnless(() => gjOpts.platform !== 'ssr');
 	const onlyInDesktopApp = emptyUnless(() => gjOpts.platform === 'desktop');
-	const onlyInMobileApp = emptyUnless(() => gjOpts.platform === 'mobile');
 
 	// These will be imported in all styl files.
 	const stylusOptions = {
@@ -373,16 +377,24 @@ export default defineConfig(async () => {
 		},
 
 		build: {
-			// We want to target the oldest browsers that vite will let us.
-			...onlyInMobileApp({
-				target: 'es2015',
-			}),
+			...() => {
+				// For mobile we want to target the oldest browsers that vite will let us.
+				if (gjOpts.platform === 'mobile') {
+					return { target: 'es2015' };
+				} else if (troubleshootingFiresides) {
+					return { target: 'es2020' };
+				}
+
+				return {};
+			},
 
 			// Never inline stuff.
 			assetsInlineLimit: 0,
 
 			// Only minify in production so we can debug our stuff.
-			minify: gjOpts.environment === 'production' && gjOpts.buildType === 'build',
+			minify:
+				(gjOpts.environment === 'production' && gjOpts.buildType === 'build') ||
+				troubleshootingFiresides,
 
 			rollupOptions: {
 				...(() => {
