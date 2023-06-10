@@ -399,12 +399,13 @@ export default defineConfig(async () => {
 						// Update this when you want to force cache busting for
 						// all of our assets regardless of if their contents
 						// changed.
-						const hashVersion = '2';
+						const hashVersion = '';
+						// const hashVersion = '-v2';
 
 						return <RollupOptions>{
 							output: {
-								chunkFileNames: `assets/[hash]-v${hashVersion}.js`,
-								assetFileNames: `assets/[hash]-v${hashVersion}.[ext]`,
+								chunkFileNames: `assets/[hash]${hashVersion}.js`,
+								assetFileNames: `assets/[hash]${hashVersion}.[ext]`,
 							},
 						};
 					}
