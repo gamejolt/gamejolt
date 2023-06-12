@@ -7,6 +7,12 @@ const ScalingTile = 'tile';
 const DefaultScale = 2.0;
 
 export class Background extends Model {
+	declare scaling: string;
+	declare media_item: MediaItem;
+	declare scale: number;
+	declare name?: string;
+	declare rarity?: number;
+
 	constructor(data: any = {}) {
 		super(data);
 
@@ -20,10 +26,6 @@ export class Background extends Model {
 			this.scale = DefaultScale;
 		}
 	}
-
-	declare scaling: string;
-	declare media_item: MediaItem;
-	declare scale: number;
 
 	get cssBackgroundImage() {
 		if (!this.media_item) {
