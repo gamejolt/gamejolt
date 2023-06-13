@@ -1,7 +1,10 @@
 import { shallowReadonly } from 'vue';
 import { Comment } from '../../../_common/comment/comment-model';
 import { getModel } from '../../../_common/model/model-store.service';
-import { EmojiDelta, updateReactionCount } from '../../../_common/reaction/reaction-count';
+import {
+	EmojiDelta,
+	updateReactionCountForAnEmoji,
+} from '../../../_common/reaction/reaction-count';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { GridClient } from './client.service';
 export type GridCommentsChannel = ReturnType<typeof createGridCommentsChannel>;
@@ -42,7 +45,7 @@ export function createGridCommentsChannel(client: GridClient, options: { userId:
 			return;
 		}
 		for (const emoji_delta of payload.deltas) {
-			updateReactionCount(
+			updateReactionCountForAnEmoji(
 				comment,
 				emoji_delta.emoji_id,
 				emoji_delta.emoji_short_name,

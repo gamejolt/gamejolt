@@ -7,7 +7,10 @@ import { MarkObject } from '../../../_common/content/mark-object';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { getModel, storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
-import { EmojiDelta, updateReactionCount } from '../../../_common/reaction/reaction-count';
+import {
+	EmojiDelta,
+	updateReactionCountForAnEmoji,
+} from '../../../_common/reaction/reaction-count';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
 import { arrayRemove } from '../../../utils/array';
@@ -388,7 +391,7 @@ export function createChatRoomChannel(
 		}
 
 		for (const emoji_delta of payload.deltas) {
-			updateReactionCount(
+			updateReactionCountForAnEmoji(
 				message,
 				emoji_delta.emoji_id,
 				emoji_delta.emoji_short_name,

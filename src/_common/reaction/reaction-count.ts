@@ -62,7 +62,7 @@ function applyReaction(
 	}
 }
 
-export async function updateReactionCount(
+export async function updateReactionCountForAnEmoji(
 	model: ReactionableModel,
 	emojiId: number,
 	emojiShortName: string,
@@ -73,20 +73,16 @@ export async function updateReactionCount(
 	current_user_id: number
 ) {
 	let countMod = deltaInc.length - deltaDec.length;
-	const selfReactionQueue = ReactionQueue.get(model) ?? [];
-	if (selfReactionQueue.length) {
-		const selfReacted = selfReactionQueue.find(i => i.emoji_id === emojiId);
-		if (selfReacted) {
-			countMod = countMod - selfReacted.count;
-			arrayRemove(selfReactionQueue, i => i.emoji_id === emojiId);
-			ReactionQueue.set(model, selfReactionQueue);
-		}
-	}
 
-	// if current reaction update is carrying only our own reaction,
-	// we can skip the update as it had been handled
-	if (countMod == 0) {
-		return;
+	// we need to cancel out the self reactions (applied earlier) from the payload we receive
+	const modelSelfReactionQueue = ReactionQueue.get(model) ?? [];
+	if (modelSelfReactionQueue.length) {
+		const emojiSelfReactionQueue = modelSelfReactionQueue.find(i => i.emoji_id === emojiId);
+		if (emojiSelfReactionQueue) {
+			countMod = countMod - emojiSelfReactionQueue.count;
+			arrayRemove(modelSelfReactionQueue, i => i.emoji_id === emojiId);
+			ReactionQueue.set(model, modelSelfReactionQueue);
+		}
 	}
 
 	const existingReaction = model.reaction_counts.find(i => i.id === emojiId);
@@ -101,6 +97,14 @@ export async function updateReactionCount(
 				(existingReaction.did_react && !user_unreacting))) ||
 		// fresh reaction
 		user_reacting;
+
+	// if the nett count is 0, no need to update the UI only if
+	if (countMod == 0) {
+		// this is a new reaction or user's did_react on the emoji is the same as before
+		if (!existingReaction || existingReaction.did_react === didReact) {
+			return;
+		}
+	}
 
 	applyReaction(
 		model,
@@ -187,7 +191,6 @@ export async function toggleReactionOnResource({
 	const isReacting = !existingReaction || !existingReaction.did_react;
 	const countMod = isReacting ? 1 : -1;
 
-	let selfReactionQueue: EmojiIdAndCount[] = [];
 	try {
 		applyReaction(
 			model,
@@ -200,11 +203,17 @@ export async function toggleReactionOnResource({
 			isReacting
 		);
 
-		selfReactionQueue = ReactionQueue.get(model) ?? [];
-		selfReactionQueue.push({ emoji_id: emojiId, count: countMod });
-		ReactionQueue.set(model, selfReactionQueue);
+		const modelSelfReactionQueue = ReactionQueue.get(model) ?? [];
+		const emojiSelfReactionQueue = modelSelfReactionQueue.find(i => i.emoji_id === emojiId);
+		if (emojiSelfReactionQueue) {
+			emojiSelfReactionQueue.count = emojiSelfReactionQueue.count + countMod;
+		} else {
+			modelSelfReactionQueue.push({ emoji_id: emojiId, count: countMod });
+			ReactionQueue.set(model, modelSelfReactionQueue);
+		}
 
 		const action = isReacting ? 'react' : 'unreact';
+
 		const response = await Api.sendRequest(
 			`/web/reactions/${action}`,
 			{
@@ -243,22 +252,27 @@ export async function toggleReactionOnResource({
 			showErrorGrowl(errorMessage);
 		}
 
-		// revert the reaction change
+		// revert self reaction queue
+		const modelSelfReactionQueue = ReactionQueue.get(model) ?? [];
+		if (modelSelfReactionQueue.some(i => i.emoji_id === emojiId)) {
+			arrayRemove(modelSelfReactionQueue, i => i.emoji_id === emojiId);
+			ReactionQueue.set(model, modelSelfReactionQueue);
+		}
+
+		const revertOnExistingReaction = existingReaction
+			? existingReaction
+			: model.reaction_counts.find(i => i.id === emojiId);
+
+		// revert the reaction UI change
 		applyReaction(
 			model,
-			existingReaction,
-			existingReaction ? existingReaction.count - countMod : 1,
+			revertOnExistingReaction,
+			isReacting ? -1 : 1,
 			emojiId,
 			imgUrl,
 			prefix,
 			shortName,
 			!isReacting
 		);
-
-		// revert self reaction queue
-		if (selfReactionQueue.length) {
-			selfReactionQueue.pop();
-			ReactionQueue.set(model, selfReactionQueue);
-		}
 	}
 }
