@@ -82,7 +82,7 @@ export async function updateReactionCountForAnEmoji(
 	let updateDidReact = false;
 
 	if (existingReaction) {
-		// emoji.did_react will need to be updated if user_reacting_count and user_unreacting_count are not equal,
+		// emoji.did_react will need to be updated if user_reacting_count and user_unreacting_count are not equal
 		if (user_reacting_count != user_unreacting_count) {
 			didReact = !existingReaction.did_react;
 			updateDidReact = true;
