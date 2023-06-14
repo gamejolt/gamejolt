@@ -315,9 +315,6 @@ export class ActivityFeedView {
 	 *
 	 * NOTE: This currently sends a "load more" request with no scrollId, which
 	 * should fetch the first page of items.
-	 *
-	 * TODO(feed-reload) TODO{Jonathan} Test this with all feed endpoints, see
-	 * if we need to split [url] and [moreUrl] data.
 	 */
 	async reload() {
 		this.state.isLoadingNew = true;
