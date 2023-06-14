@@ -74,6 +74,23 @@ export async function updateReactionCountForAnEmoji(
 ) {
 	let countMod = deltaInc.length - deltaDec.length;
 
+	const existingReaction = model.reaction_counts.find(i => i.id === emojiId);
+	const user_reacting_count = deltaInc.filter(id => id === current_user_id).length;
+	const user_unreacting_count = deltaDec.filter(id => id === current_user_id).length;
+
+	let didReact = user_reacting_count > 0;
+	let updateDidReact = false;
+
+	if (existingReaction) {
+		// emoji.did_react will need to be updated if user_reacting_count and user_unreacting_count are not equal,
+		if (user_reacting_count != user_unreacting_count) {
+			didReact = !existingReaction.did_react;
+			updateDidReact = true;
+		} else {
+			didReact = existingReaction.did_react;
+		}
+	}
+
 	// we need to cancel out the self reactions (applied earlier) from the payload we receive
 	const modelSelfReactionQueue = ReactionQueue.get(model) ?? [];
 	if (modelSelfReactionQueue.length) {
@@ -82,28 +99,13 @@ export async function updateReactionCountForAnEmoji(
 			countMod = countMod - emojiSelfReactionQueue.count;
 			arrayRemove(modelSelfReactionQueue, i => i.emoji_id === emojiId);
 			ReactionQueue.set(model, modelSelfReactionQueue);
+			updateDidReact = false;
 		}
 	}
 
-	const existingReaction = model.reaction_counts.find(i => i.id === emojiId);
-	const user_reacting = deltaInc.includes(current_user_id);
-	const user_unreacting = deltaDec.includes(current_user_id);
-
-	const didReact =
-		(existingReaction &&
-			// user haven't reacted before and is now reacting
-			((!existingReaction.did_react && user_reacting) ||
-				// user reacted before and maintaining reaction
-				(existingReaction.did_react && !user_unreacting))) ||
-		// fresh reaction
-		user_reacting;
-
-	// if the nett count is 0, no need to update the UI only if
-	if (countMod == 0) {
-		// this is a new reaction or user's did_react on the emoji is the same as before
-		if (!existingReaction || existingReaction.did_react === didReact) {
-			return;
-		}
+	// if the nett count is 0 and did_react never changed, we don't need to update the UI
+	if (countMod == 0 && !updateDidReact) {
+		return;
 	}
 
 	applyReaction(
