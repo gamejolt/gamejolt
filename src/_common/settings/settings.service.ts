@@ -96,8 +96,6 @@ export const SettingFeedNotifications = new BooleanSetting('feed-notifications',
 // Video Players
 export const SettingVideoPlayerVolume = new NumberSetting('video-player-volume', 1);
 export const SettingVideoPlayerMuted = new BooleanSetting('video-player-muted', false);
-export const SettingVideoPlayerFeedVolume = new NumberSetting('video-player-feed-volume', 0);
-export const SettingVideoPlayerFeedMuted = new BooleanSetting('video-player-feed-muted', true);
 export const SettingVideoPlayerFeedAutoplay = new BooleanSetting(
 	'video-player-feed-autoplay',
 	true
