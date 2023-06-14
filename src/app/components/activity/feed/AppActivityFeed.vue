@@ -176,7 +176,7 @@ async function loadNew() {
 		return;
 	}
 
-	await feed.value.loadNew();
+	await feed.value.reload();
 	feed.value.newCount = 0;
 	emit('load-new');
 	// Make sure this is after the emitter so we remove the button before resetting

@@ -282,12 +282,14 @@ export class ActivityFeedView {
 		}
 	}
 
-	private _getRequestBody(type: 'more' | 'new') {
+	private _getRequestBody(type: 'more' | 'new' | 'reload') {
 		const body = {
 			...this.extraData,
 		};
-
-		if (type === 'more') {
+		if (type === 'reload') {
+			body.scrollId = undefined;
+			body.scrollDirection = ScrollDirectionFrom;
+		} else if (type === 'more') {
 			body.scrollId = this.state.endScrollId;
 			body.scrollDirection = ScrollDirectionFrom;
 		} else if (type === 'new') {
@@ -306,6 +308,48 @@ export class ActivityFeedView {
 			};
 		}
 		return options;
+	}
+
+	/**
+	 * Reloads the feed, clearing all items and starting over.
+	 *
+	 * NOTE: This currently sends a "load more" request with no scrollId, which
+	 * should fetch the first page of items.
+	 *
+	 * TODO(feed-reload) TODO{Jonathan} Test this with all feed endpoints, see
+	 * if we need to split [url] and [moreUrl] data.
+	 */
+	async reload() {
+		this.state.isLoadingNew = true;
+
+		const response = await Api.sendRequest(
+			this.state.loadMoreUrl,
+			this._getRequestBody('reload'),
+			this._getRequestOptions()
+		);
+
+		this.state.isLoadingNew = false;
+
+		if (response.perPage) {
+			this.itemsPerPage = response.perPage;
+		}
+
+		if (!response.items || !response.items.length) {
+			return;
+		}
+
+		// Clear everything and start over from scratch.
+		this.clear();
+
+		if (this.state.feedType === 'Notification') {
+			this.prepend(Notification.populate(response.items));
+		} else if (this.state.feedType === 'EventItem') {
+			this.prepend(EventItem.populate(response.items));
+		}
+
+		if (response.unreadWatermark) {
+			this.state.notificationWatermark = response.unreadWatermark;
+		}
 	}
 
 	async loadMore() {
