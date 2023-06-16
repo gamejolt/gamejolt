@@ -35,7 +35,7 @@ type FormModel = {
 const { stickerPacks, eventStickers, creatorStickers, generalStickers, allStickers } =
 	useStickerStore();
 
-const { coinBalance, joltbuxBalance } = useCommonStore();
+const { coinBalance, joltbuxBalance, setInitialPackWatermarkStorageValue } = useCommonStore();
 
 const form: FormController<FormModel> = createForm({
 	loadUrl: `/mobile/sticker`,
@@ -49,6 +49,8 @@ const form: FormController<FormModel> = createForm({
 	},
 	sanitizeComplexData: false,
 	onInit() {
+		setInitialPackWatermarkStorageValue(false);
+
 		run(async () => {
 			const payload = await Api.sendFieldsRequest(
 				'/mobile/me',

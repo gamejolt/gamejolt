@@ -1,62 +1,63 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
+import { computed, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import { authOnJoin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
+import { configInitialPackWatermark } from '../../../../_common/config/config.service';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { $gettext } from '../../../../_common/translate/translate.service';
 
-@Options({
-	name: 'RouteJoinAlmost',
-	components: {
-		AppProgressPoller,
-		AppLoading,
+export default {
+	...defineAppRouteOptions({}),
+};
+</script>
+
+<script lang="ts" setup>
+const { setInitialPackWatermarkStorageValue } = useCommonStore();
+
+const username = ref<string | null>(null);
+const password = ref<string | null>(null);
+
+const isGamejoltSignup = computed(() => username.value || password.value);
+
+createAppRoute({
+	routeTitle: $gettext('Almost there!'),
+	onInit: () => {
+		username.value = sessionStorage.getItem('signup-username');
+		password.value = sessionStorage.getItem('signup-password');
 	},
-})
-@OptionsForRoute()
-export default class RouteJoinAlmost extends BaseRouteComponent {
-	username: string | null = null;
-	password: string | null = null;
+});
 
-	get routeTitle() {
-		return this.$gettext('Almost there!');
+async function onAuthorized() {
+	if (!isGamejoltSignup.value) {
+		return;
 	}
 
-	get isGamejoltSignup() {
-		return this.username || this.password;
-	}
+	// Now that they're authorized, we try to log them in with the credentials they used to sign up.
+	const response = await Api.sendRequest('/web/auth/login', {
+		username: username.value,
+		password: password.value,
+	});
 
-	routeCreated() {
-		this.username = sessionStorage.getItem('signup-username');
-		this.password = sessionStorage.getItem('signup-password');
-	}
+	sessionStorage.removeItem('signup-username');
+	sessionStorage.removeItem('signup-password');
 
-	async onAuthorized() {
-		if (!this.isGamejoltSignup) {
-			return;
-		}
-
-		// Now that they're authorized, we try to log them in with the credentials they used to sign up.
-		const response = await Api.sendRequest('/web/auth/login', {
-			username: this.username,
-			password: this.password,
+	if (!response.success || !response.user) {
+		showErrorGrowl({
+			message: $gettext(`Couldn't log you in for some reason.`),
+			sticky: true,
 		});
+		return;
+	}
 
-		sessionStorage.removeItem('signup-username');
-		sessionStorage.removeItem('signup-password');
+	// If it worked, redirect to onboarding flow. They're good to go!
+	authOnJoin('email');
+	redirectToOnboarding();
 
-		if (!response.success || !response.user) {
-			showErrorGrowl({
-				message: this.$gettext(`Couldn't log you in for some reason.`),
-				sticky: true,
-			});
-			return;
-		}
-
-		// If it worked, redirect to onboarding flow. They're good to go!
-		authOnJoin('email');
-		redirectToOnboarding();
+	if (configInitialPackWatermark.value) {
+		setInitialPackWatermarkStorageValue(true);
 	}
 }
 </script>

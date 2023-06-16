@@ -1,5 +1,5 @@
-import { h } from 'vue';
-import { Options } from 'vue-property-decorator';
+<script lang="ts">
+import { useRouter } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import {
 	authOnJoin,
@@ -7,34 +7,43 @@ import {
 	redirectToDashboard,
 	redirectToOnboarding,
 } from '../../../../../../_common/auth/auth.service';
+import { configInitialPackWatermark } from '../../../../../../_common/config/config.service';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
+	createAppRoute,
+	defineAppRouteOptions,
 } from '../../../../../../_common/route/route-component';
+import { useCommonStore } from '../../../../../../_common/store/common-store';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 
-@Options({
-	name: 'RouteAuthLinkedAccountGoogleCallback',
-})
-@OptionsForRoute({
-	lazy: true,
-	resolver({ route }) {
-		const { code, state } = route.query;
-		return Api.sendRequest(
-			'/web/auth/linked-accounts/link_callback/google?code=' + code + '&state=' + state,
-			{}
-		);
-	},
-})
-export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteComponent {
-	routeResolved($payload: any) {
-		if (!$payload.success) {
-			switch ($payload.reason) {
+export default {
+	...defineAppRouteOptions({
+		lazy: true,
+		resolver({ route }) {
+			const { code, state } = route.query;
+			return Api.sendRequest(
+				'/web/auth/linked-accounts/link_callback/google?code=' + code + '&state=' + state,
+				{}
+			);
+		},
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+const { setInitialPackWatermarkStorageValue } = useCommonStore();
+
+const router = useRouter();
+
+createAppRoute({
+	onResolved({ payload }) {
+		if (!payload.success) {
+			switch (payload.reason) {
 				case 'no-email':
 					showErrorGrowl({
 						sticky: true,
-						message: this.$gettext(
+						message: $gettext(
 							`Your Google account did not return an email address. Make sure you have verified it with Google.`
 						),
 					});
@@ -43,7 +52,7 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 				case 'duplicate-email':
 					showErrorGrowl({
 						sticky: true,
-						message: this.$gettext(
+						message: $gettext(
 							`The email address on this Google account is already in use. Perhaps you already have an account?`
 						),
 					});
@@ -52,7 +61,7 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 				case 'no-unique-username':
 					showErrorGrowl({
 						sticky: true,
-						message: this.$gettext(
+						message: $gettext(
 							`Could not create a username for your account. Perhaps you already have an account?`
 						),
 					});
@@ -61,7 +70,7 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 				case 'invalid-google-account':
 					showErrorGrowl({
 						sticky: true,
-						message: this.$gettext(
+						message: $gettext(
 							'This Google account does not support Sign Up with Google.'
 						),
 					});
@@ -70,26 +79,30 @@ export default class RouteAuthLinkedAccountGoogleCallback extends BaseRouteCompo
 				default:
 					showErrorGrowl({
 						sticky: true,
-						title: this.$gettext('Login Failed'),
-						message: this.$gettext('Unable to log in with Google.'),
+						title: $gettext('Login Failed'),
+						message: $gettext('Unable to log in with Google.'),
 					});
 					break;
 			}
-			this.$router.push({ name: 'auth.join' });
+			router.push({ name: 'auth.join' });
 			return;
 		}
 
-		if ($payload.accountCreated) {
+		if (payload.accountCreated) {
 			authOnJoin('google');
 			redirectToOnboarding();
+			if (configInitialPackWatermark.value) {
+				setInitialPackWatermarkStorageValue(true);
+			}
 			return;
 		}
 
 		authOnLogin('google');
 		redirectToDashboard();
-	}
+	},
+});
+</script>
 
-	render() {
-		return h(AuthLinkedAccountProcessing);
-	}
-}
+<template>
+	<AuthLinkedAccountProcessing />
+</template>
