@@ -13,6 +13,7 @@ import {
 } from '../../../../_common/fireside/post/video/video-model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { vAppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
@@ -29,12 +30,16 @@ import {
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppVideoPlayer from '../../../../_common/video/player/player.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
+import { styleWhen } from '../../../../_styles/mixins';
+import { kGridGutterWidth } from '../../../../_styles/variables';
+import { debounce } from '../../../../utils/utils';
 import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPollVoting from '../../../components/poll/AppPollVoting.vue';
 import AppPostControls from '../../../components/post/controls/AppPostControls.vue';
+import { kShellTopNavHeight } from '../../../styles/variables';
 import AppPostPageContent from './AppPostPageContent.vue';
 import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
 
@@ -53,6 +58,8 @@ const { post, communityNotifications } = toRefs(props);
 
 const route = useRoute();
 const router = useRouter();
+
+const minPageHeight = ref<number>();
 
 const stickerTargetController = shallowRef<StickerTargetController>(
 	createStickerTargetController(post.value, {
@@ -138,6 +145,11 @@ function onVideoPlay() {
 		$viewPostVideo(video.value);
 	}
 }
+
+const debounceFloatingRightDimensions = debounce(
+	(entries: ResizeObserverEntry[]) => (minPageHeight.value = entries[0].contentRect.height),
+	100
+);
 </script>
 
 <template>
@@ -151,6 +163,11 @@ function onVideoPlay() {
 			:key="post.id"
 			class="-section section-thin"
 			:class="{ '_sans-padding-top': !!background }"
+			:style="
+				styleWhen(!!minPageHeight && !video, {
+					minHeight: `${minPageHeight}px`,
+				})
+			"
 		>
 			<AppBackground :background="background" darken>
 				<div v-if="video" class="container-xl">
@@ -308,14 +325,33 @@ function onVideoPlay() {
 				</template>
 
 				<template v-if="!Screen.isMobile" #right>
-					<div class="_side-col">
+					<div
+						v-app-observe-dimensions="debounceFloatingRightDimensions"
+						:style="
+							// Videos are allowed to use the whole screen width,
+							// so we can only make this float when there's no video.
+							styleWhen(!video, {
+								position: `absolute`,
+								zIndex: 1,
+								top: kShellTopNavHeight.px,
+								right: `${kGridGutterWidth.value / 2}px`,
+								minWidth: `calc(25% - ${kGridGutterWidth.value * 2}px)`,
+								maxWidth: `calc(25% - 50px - ${kGridGutterWidth.value}px)`,
+								...styleWhen(Screen.isMd, {
+									maxWidth: `calc(33% - 50px - ${kGridGutterWidth.value}px)`,
+								}),
+							})
+						"
+					>
+						<div :style="{ height: `${kGridGutterWidth.value / 2}px` }" />
+						<AppAdWidget size="rectangle" placement="side" />
+
 						<div class="_share">
 							<AppShareCard resource="post" :url="post.url" offset-color />
 						</div>
 
-						<AppAdWidget size="rectangle" placement="side" />
-
 						<AppPostPageRecommendations :key="post.id" :post="post" />
+						<div :style="{ height: `${kGridGutterWidth.value / 2}px` }" />
 					</div>
 				</template>
 			</AppPageContainer>
