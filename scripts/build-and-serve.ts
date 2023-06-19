@@ -72,7 +72,7 @@ function initializeHttpServer(
 		})
 	);
 
-	app.use('/favicon.ico', (req, res) => {
+	app.use('/favicon.ico', (_req, res) => {
 		res.status(404).end();
 	});
 
@@ -84,7 +84,14 @@ function initializeHttpServer(
 	const server = useHttps
 		? https.createServer(
 				{
-					pfx: fs.readFileSync(path.join(projectRoot, 'development.gamejolt.com.pfx')),
+					pfx: fs.readFileSync(
+						path.join(
+							projectRoot,
+							gjOpts.section === 'gameserver'
+								? 'development.gamejolt.net.pfx'
+								: 'development.gamejolt.com.pfx'
+						)
+					),
 					passphrase: 'yame yolt',
 				},
 				app
@@ -181,8 +188,8 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 				await fs.remove(frontendBuildDir);
 
 				const desktopAppSectionNames = Object.entries(gjSectionConfigs)
-					.filter(([k, v]) => v.desktopApp)
-					.map(([k, v]) => k as GjSectionName);
+					.filter(([_k, v]) => v.desktopApp)
+					.map(([k, _v]) => k as GjSectionName);
 
 				for (const sectionName of desktopAppSectionNames) {
 					const argsForSection = Object.assign({}, args, {

@@ -55,4 +55,7 @@ Run `yarn ssr:client` and `yarn ssr:server` and after both are done run `yarn ss
 
 - `yarn build:devd` - Same as `yarn build:dev` only targetting the development environment.
 
+- `yarn gameserver:build:devd` - Same as `yarn build:devd` only builds and
+  serves the gameserver. This only works against the development environment.
+
 - `yarn tsscript` - Utility script to execute other scripts that are written in typescript. You shouldn't need to use this directly.

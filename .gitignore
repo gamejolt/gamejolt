@@ -28,6 +28,10 @@ development.gamejolt.com.csr
 development.gamejolt.com.crt
 development.gamejolt.com.key
 development.gamejolt.com.pfx
+development.gamejolt.net.csr
+development.gamejolt.net.crt
+development.gamejolt.net.key
+development.gamejolt.net.pfx
 
 # Prebuilt ffmpeg binaries while serving client locally
 /ffmpeg.dll
