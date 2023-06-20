@@ -22,7 +22,6 @@ import {
 	NotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
-import AppCreatorLevelBadge from '../../../../../_common/creator/experience/AppCreatorLevelBadge.vue';
 import { CreatorExperienceLevel } from '../../../../../_common/creator/experience/level.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Notification } from '../../../../../_common/notification/notification-model';
@@ -194,10 +193,7 @@ function onMarkRead() {
 									"
 								>
 									<div class="-avatar-icon">
-										<AppCreatorLevelBadge
-											:level="notification.action_model.level.toString()"
-											sm
-										/>
+										<AppJolticon icon="sparkles" />
 									</div>
 								</template>
 							</template>
@@ -329,12 +325,12 @@ function onMarkRead() {
 															Notification.TYPE_CREATOR_LEVEL_UP &&
 														notification.action_model instanceof
 															CreatorExperienceLevel &&
-														notification.action_model.perk !== null
+														notification.action_model.ability !== null
 													"
 												>
 													{{
 														$gettext(
-															`Click to see the perk you've unlocked.`
+															`Click to see the ability you've unlocked.`
 														)
 													}}
 												</span>

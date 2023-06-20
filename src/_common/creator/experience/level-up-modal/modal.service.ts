@@ -10,8 +10,7 @@ export class CreatorExperienceLevelUpModal {
 			props: {
 				level,
 			},
-			noBackdrop: true,
-			size: 'full',
+			size: 'sm',
 		});
 	}
 }

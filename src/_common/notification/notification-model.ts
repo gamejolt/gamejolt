@@ -12,6 +12,7 @@ import {
 	CommunityUserNotification,
 	NotificationType,
 } from '../community/user-notification/user-notification.model';
+import { CreatorExperienceLevelUpModal } from '../creator/experience/level-up-modal/modal.service';
 import { CreatorExperienceLevel } from '../creator/experience/level.model';
 import { Environment } from '../environment/environment.service';
 import { EventItem } from '../event-item/event-item.model';
@@ -469,7 +470,7 @@ export class Notification extends Model {
 			}
 		} else if (this.type === Notification.TYPE_CREATOR_LEVEL_UP) {
 			if (this.action_model instanceof CreatorExperienceLevel) {
-				// SHOW MODAL.
+				CreatorExperienceLevelUpModal.show(this.action_model);
 			}
 		}
 	}

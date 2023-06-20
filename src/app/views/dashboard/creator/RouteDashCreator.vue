@@ -2,21 +2,25 @@
 import { computed, ref } from 'vue';
 import { RouteParamsRaw, RouteRecordName } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
-import AppCreatorExperienceBar from '../../../../_common/creator/experience/AppCreatorExperienceBar.vue';
+import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { CreatorExperience } from '../../../../_common/creator/experience/experience.model';
+import { formatNumber } from '../../../../_common/filters/number';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
 import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
 import { ModelData } from '../../../../_common/model/model.service';
+import AppCircularProgress from '../../../../_common/progress/AppCircularProgress.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppSheetButton from '../../../../_common/sheet/AppSheetButton.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import { kThemeFgMuted } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { styleAbsoluteFill, styleFlexCenter } from '../../../../_styles/mixins';
 import { kGridGutterWidth } from '../../../../_styles/variables';
 import { RouteLocationRedirect } from '../../../../utils/router';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import { routeLandingCreators } from '../../landing/creators/creators.route';
-import { routeLandingHelpCategory } from '../../landing/help/help.route';
+import { routeLandingHelpCategory, routeLandingHelpRedirect } from '../../landing/help/help.route';
 import { routeDashAccountBlocks } from '../account/blocks/blocks.route';
 import { routeDashAccountChatCommands } from '../account/chat-commands/chat-commands.route';
 import { routeDashAccountChatTimers } from '../account/chat-timers/chat-timers.route';
@@ -34,8 +38,7 @@ export default {
 					noErrorRedirect: true,
 				});
 			} catch (error) {
-				// TODO: if forbidden, go to creator landing. if unauth, go to login with redirect to here. otherwise, go to dash with error message (creator, but we broke).
-				// Redirect away if no permissions.
+				// Redirect away if the request fails.
 				return new RouteLocationRedirect({
 					name: routeLandingCreators.name,
 				});
@@ -126,6 +129,13 @@ const buttons = computed<Button[]>(() => [
 		icon: 'help-circle',
 	},
 ]);
+
+const creatorNextUnlock = computed(() => {
+	if (experience.value) {
+		return experience.value.ability_on_level_up;
+	}
+	return null;
+});
 </script>
 
 <template>
@@ -139,16 +149,86 @@ const buttons = computed<Button[]>(() => [
 					{{ $gettext(`Creator HUD`) }}
 				</h1>
 
-				<div v-if="experience" :style="{ display: 'flex', justifyContent: 'center' }">
-					<div class="fill-bg _level-container full-bleed-xs">
-						<AppCreatorExperienceBar
-							:level="experience.current_level"
-							:xp="experience.current_level_xp"
-							:required-xp="experience.current_level_xp_required"
-							:is-max-level="experience.is_max_level"
-						/>
+				<template v-if="experience">
+					<div :style="styleFlexCenter({ direction: `column` })">
+						<div
+							:style="{
+								width: `120px`,
+							}"
+						>
+							<AppAspectRatio :ratio="1" show-overflow>
+								<div
+									:style="{
+										...styleFlexCenter({
+											direction: `column`,
+										}),
+										width: `100%`,
+										height: `100%`,
+										position: `relative`,
+									}"
+								>
+									<div>{{ experience.current_level }}</div>
+									<div>{{ $gettext(`level`) }}</div>
+
+									<AppCircularProgress
+										:style="styleAbsoluteFill()"
+										:percent="
+											Math.min(
+												1,
+												Math.max(
+													0,
+													experience.current_level_xp /
+														experience.current_level_xp_required
+												)
+											)
+										"
+										:stroke-width="8"
+									/>
+								</div>
+							</AppAspectRatio>
+						</div>
+
+						<AppSpacer vertical :scale="2" />
+						<template v-if="experience.is_max_level">
+							<div :style="{ color: kThemeFgMuted }">
+								{{ $gettext(`You've reached the max level... for now.`) }}
+							</div>
+
+							<div>
+								{{ $gettext(`Check back later for more rewards!`) }}
+							</div>
+						</template>
+						<template v-else>
+							<div :style="{ color: kThemeFgMuted }">
+								{{
+									`${formatNumber(experience.current_level_xp)}/${formatNumber(
+										experience.current_level_xp_required
+									)} EXP`
+								}}
+							</div>
+
+							<div v-if="creatorNextUnlock">
+								{{ $gettext(`Next unlock`) }}:
+								<!-- TODO(creator-score) readable ability -->
+								<span>
+									{{ creatorNextUnlock }}
+								</span>
+							</div>
+						</template>
+						<AppSpacer vertical :scale="4" />
+
+						<RouterLink
+							class="link-help"
+							:to="{
+								name: routeLandingHelpRedirect.name,
+								// TODO(creator-score) help docs
+								params: { path: 'creator-score' },
+							}"
+						>
+							{{ $gettext(`Learn how creator leveling works`) }}
+						</RouterLink>
 					</div>
-				</div>
+				</template>
 
 				<AppSpacer vertical :scale="10" />
 
@@ -185,13 +265,4 @@ const buttons = computed<Button[]>(() => [
 
 	@media $media-mobile
 		margin-bottom: 20px
-
-._level-container
-	max-width: 640px
-	flex-grow: 1
-	padding: 10px
-
-	@media $media-md-up
-		rounded-corners-lg()
-		elevate-1()
 </style>

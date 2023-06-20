@@ -2,7 +2,8 @@ import { Model } from '../../model/model.service';
 
 export class CreatorExperienceLevel extends Model {
 	declare level: number;
-	declare perk: string | null;
+	// TODO(creator-score) display string field for abilities
+	declare ability: string | null;
 	declare added_on: number;
 }
 
