@@ -2,9 +2,8 @@
 import { computed, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import { authOnJoin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
-import { configInitialPackWatermark } from '../../../../_common/config/config.service';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 
 export default {
@@ -19,8 +18,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { setInitialPackWatermarkStorageValue } = useCommonStore();
-
 const isSuccess = ref(false);
 
 const routeTitle = computed(() => {
@@ -46,10 +43,6 @@ const { isBootstrapped } = createAppRoute({
 		// Redirect them to onboarding.
 		authOnJoin('email');
 		redirectToOnboarding();
-
-		if (configInitialPackWatermark.value) {
-			setInitialPackWatermarkStorageValue(true);
-		}
 	},
 });
 </script>

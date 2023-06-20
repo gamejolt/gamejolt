@@ -2,11 +2,9 @@
 import { computed, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import { authOnJoin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
-import { configInitialPackWatermark } from '../../../../_common/config/config.service';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 
 export default {
@@ -15,8 +13,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { setInitialPackWatermarkStorageValue } = useCommonStore();
-
 const username = ref<string | null>(null);
 const password = ref<string | null>(null);
 
@@ -55,10 +51,6 @@ async function onAuthorized() {
 	// If it worked, redirect to onboarding flow. They're good to go!
 	authOnJoin('email');
 	redirectToOnboarding();
-
-	if (configInitialPackWatermark.value) {
-		setInitialPackWatermarkStorageValue(true);
-	}
 }
 </script>
 
@@ -67,37 +59,42 @@ async function onAuthorized() {
 		<h2 class="section-header">
 			<!-- signups with gamejolt required a captcha to be solved. lets congratulate them \o/ -->
 			<template v-if="isGamejoltSignup">
-				<AppTranslate>Almost there, human!</AppTranslate>
+				{{ $gettext(`Almost there, human!`) }}
 				<br />
 				(ヽ° - °)ヽ┳━┳
 			</template>
 			<template v-else>
-				<AppTranslate>Almost there!</AppTranslate>
+				{{ $gettext(`Almost there!`) }}
 			</template>
 		</h2>
 
 		<p>
-			<AppTranslate>
-				Before you can log in to Game Jolt, you need to verify the email address on your
-				account.
-			</AppTranslate>
+			{{
+				$gettext(
+					`Before you can log in to Game Jolt, you need to verify the email address on your account.`
+				)
+			}}
 		</p>
 		<p>
-			<AppTranslate>
-				We've sent you an email with instructions on how to authorize your account.
-			</AppTranslate>
+			{{
+				$gettext(
+					`We've sent you an email with instructions on how to authorize your account.`
+				)
+			}}
 		</p>
 		<p class="small text-muted">
-			<AppTranslate>
-				If you don't see an email within 10 minutes, please check your spam folder. It might
-				have gobbled it up.
-			</AppTranslate>
+			{{
+				$gettext(
+					`If you don't see an email within 10 minutes, please check your spam folder. It might have gobbled it up.`
+				)
+			}}
 		</p>
 		<p class="small text-muted">
-			<AppTranslate>
-				Note that you have a week to authorize your account. After that, it will be deleted
-				and you'll have to sign up again.
-			</AppTranslate>
+			{{
+				$gettext(
+					`Note that you have a week to authorize your account. After that, it will be deleted and you'll have to sign up again.`
+				)
+			}}
 		</p>
 
 		<!--

@@ -7,13 +7,11 @@ import {
 	redirectToDashboard,
 	redirectToOnboarding,
 } from '../../../../../../_common/auth/auth.service';
-import { configInitialPackWatermark } from '../../../../../../_common/config/config.service';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 
@@ -32,8 +30,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { setInitialPackWatermarkStorageValue } = useCommonStore();
-
 const router = useRouter();
 
 createAppRoute({
@@ -74,9 +70,6 @@ createAppRoute({
 		if (payload.accountCreated) {
 			authOnJoin('twitch');
 			redirectToOnboarding();
-			if (configInitialPackWatermark.value) {
-				setInitialPackWatermarkStorageValue(true);
-			}
 			return;
 		}
 
