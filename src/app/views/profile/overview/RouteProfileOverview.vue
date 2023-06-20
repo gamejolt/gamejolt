@@ -1,11 +1,9 @@
 <script lang="ts">
 import { computed, inject, ref } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
-import { numberSort } from '../../../../utils/array';
-import { removeQuery } from '../../../../utils/router';
+import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import AppAnimElectricity from '../../../../_common/animation/AppAnimElectricity.vue';
 import { Api } from '../../../../_common/api/api.service';
-import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
@@ -54,7 +52,9 @@ import { UserFriendship } from '../../../../_common/user/friendship/friendship.m
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { unfollowUser, User } from '../../../../_common/user/user.model';
+import { User, unfollowUser } from '../../../../_common/user/user.model';
+import { numberSort } from '../../../../utils/array';
+import { removeQuery } from '../../../../utils/router';
 import { openChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/AppCommentOverview.vue';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
@@ -183,10 +183,6 @@ const hasGamesSection = computed(() => {
 
 const hasCommunitiesSection = computed(() => {
 	return !Screen.isMobile && communitiesCount.value > 0;
-});
-
-const twitterAccount = computed(() => {
-	return getLinkedAccount(LinkedAccount.PROVIDER_TWITTER);
 });
 
 const twitchAccount = computed(() => {
@@ -770,17 +766,6 @@ async function onFriendRequestReject() {
 										<AppJolticon :icon="twitchAccount.icon" />
 										{{ ' ' }}
 										{{ twitchAccount.name }}
-									</AppLinkExternal>
-								</div>
-								<div v-if="twitterAccount">
-									<AppLinkExternal
-										class="link-unstyled"
-										:href="twitterAccount.platformLink"
-									>
-										<AppJolticon :icon="twitterAccount.icon" />
-										{{ ' ' }}
-										<span>@</span>
-										{{ twitterAccount.name }}
 									</AppLinkExternal>
 								</div>
 							</template>

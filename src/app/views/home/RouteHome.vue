@@ -3,13 +3,16 @@ import { defineAsyncComponent } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
 import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
+import { showSuccessGrowl } from '../../../_common/growls/growls.service';
 import {
 	asyncRouteLoader,
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../_common/route/route-component';
 import { useCommonStore } from '../../../_common/store/common-store';
+import { $gettextInterpolate } from '../../../_common/translate/translate.service';
 import { User } from '../../../_common/user/user.model';
+import { objectOmit } from '../../../utils/object';
 import { IntentService } from '../../components/intent/intent.service';
 import { RealmPathHistoryStateKey } from './feed-switcher/AppHomeFeedSwitcher.vue';
 import { HomeFeedService } from './home-feed.service';
@@ -85,6 +88,29 @@ const route = useRoute();
 
 createAppRoute({
 	routeTitle: null,
+	onInit() {
+		const query = router.currentRoute.value.query;
+		const mtxProduct = query['mtx-product'];
+		const mtxType = Array.isArray(mtxProduct) ? mtxProduct[0] : mtxProduct;
+		if (!mtxType) {
+			return;
+		}
+
+		router.replace({
+			...router.currentRoute.value,
+			query: objectOmit(query, ['mtx-product']),
+		});
+
+		const type = mtxType[0].toUpperCase() + mtxType.substring(1);
+		const lastChar = type[type.length - 1].toLowerCase();
+
+		let message = `%{ type } was added to your account.`;
+		if (lastChar === 'x' || lastChar === 's') {
+			message = `%{ type } were added to your account.`;
+		}
+
+		showSuccessGrowl($gettextInterpolate(message, { type }));
+	},
 	onResolved() {
 		updateHomeRouteAnalyticsPath(route, user.value);
 	},

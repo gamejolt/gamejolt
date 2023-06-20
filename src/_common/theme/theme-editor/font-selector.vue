@@ -111,7 +111,7 @@ export default class AppThemeEditorFontSelector extends Vue {
 	}
 
 	private async getFontList(): Promise<FontDefinition[]> {
-		const response = await Api.sendRequest('/jams/manage/jams/theme/get-font-list', null, {
+		const response = await Api.sendRequest('/sites-io/get-font-list', null, {
 			detach: true,
 			processPayload: false,
 		});

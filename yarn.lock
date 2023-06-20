@@ -1215,10 +1215,10 @@ acorn@^8.8.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.8.2.tgz#1b2f25db02af965399b9776b0c2c391276d37c4a"
   integrity sha512-xjIYgE8HBrkpd/sJqOGNspf8uHG+NOHGOw6a/Urj8taM2EXfdNAH2oFcPeIFfsv3+kz/mJrS5VuMqbNLjCa2vw==
 
-agora-rtc-sdk-ng@4.15.1:
-  version "4.15.1"
-  resolved "https://registry.yarnpkg.com/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.15.1.tgz#32b34c707de260a183b1c17fe6502c2d907f55cf"
-  integrity sha512-U1I1jOjs9NJSDPAsFuRUgiFgKRx8/J5rH12zNaAGyyXt3A+MPfYAccgfvlJIEhWn02ey97xXDklvufGercJcvw==
+agora-rtc-sdk-ng@4.17.2:
+  version "4.17.2"
+  resolved "https://registry.yarnpkg.com/agora-rtc-sdk-ng/-/agora-rtc-sdk-ng-4.17.2.tgz#acf889ce33a6e923c47730b21d1383f829647eb7"
+  integrity sha512-ErIHOYgf3R/ya3gVCCBKRw3RMdATmoM/8aUGOob4g0VHBBkVDEf9JT0RW2jQgtwm61jszWof+wo2duQDBgTfpw==
   dependencies:
     agora-rte-extension "^1.2.3"
 
@@ -1722,11 +1722,6 @@ cross-spawn@^7.0.1, cross-spawn@^7.0.2:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
-
-css-element-queries@1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/css-element-queries/-/css-element-queries-1.2.3.tgz#e14940b1fcd4bf0da60ea4145d05742d7172e516"
-  integrity sha512-QK9uovYmKTsV2GXWQiMOByVNrLn2qz6m3P7vWpOR4IdD6I3iXoDw5qtgJEN3Xq7gIbdHVKvzHjdAtcl+4Arc4Q==
 
 cssesc@^3.0.0:
   version "3.0.0"

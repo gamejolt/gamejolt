@@ -29,7 +29,6 @@ export default class AppGameCollectionThumbnail extends Vue {
 			</AppTranslate>
 			<AppTranslate v-else-if="collection.type === 'owned'">Owned Games</AppTranslate>
 			<AppTranslate v-else-if="collection.type === 'recommended'">Daily Mix</AppTranslate>
-			<AppTranslate v-else-if="collection.type === 'jam'">Jam</AppTranslate>
 		</span>
 
 		<AppJolticon icon="playlist" />

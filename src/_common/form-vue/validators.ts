@@ -35,6 +35,9 @@ const _urlPathRegex = /^[\w-]+$/;
 /** Alphanumeric, underscores. */
 const _hashtagRegex = /^[\w_]+$/;
 
+/** Alphanumeric, only 1 underscore in a row. */
+const _emojiShortNameRegex = /^([a-zA-Z0-9]+_{0,1})+$/;
+
 /**
  * Semver version strings
  * https://github.com/sindresorhus/semver-regex/blob/master/index.js
@@ -164,6 +167,23 @@ export const validateHashtag = (): FormValidator<string> => async value => {
 		return {
 			type: 'hashtag',
 			message: `Please use only letters, numbers, and underscores (_).`,
+		};
+	}
+
+	return null;
+};
+
+export const validateEmojiName = (): FormValidator<string> => async value => {
+	if (value && !_emojiShortNameRegex.test(value)) {
+		let message = '';
+		if (value.includes('__')) {
+			message = `Only one underscore (_) may be used in a row.`;
+		} else {
+			message = `Please use only letters, numbers, and underscores (_).`;
+		}
+		return {
+			type: 'emoji_name',
+			message,
 		};
 	}
 
@@ -438,6 +458,35 @@ export const validateImageMaxDimensions =
 			return {
 				type: 'max_img_dimensions',
 				message,
+			};
+		}
+
+		return null;
+	};
+
+export const validateImageAspectRatio =
+	({ ratio }: { ratio: number }): FormValidator<File | File[]> =>
+	async files => {
+		if (!ratio) {
+			throw new Error(`Aspect ratio must be greater than 0.`);
+		}
+
+		const result = await _validateFiles(files, async file => {
+			const dimensions = await getImgDimensions(file);
+			const [width, height] = dimensions;
+
+			const imgRatio = width / height;
+			if (imgRatio - ratio > 0.01 || imgRatio - ratio < -0.01) {
+				return false;
+			}
+
+			return true;
+		});
+
+		if (!result) {
+			return {
+				type: 'img_ratio',
+				message: `Uh oh, L + Ratio! The aspect ratio of your {} must be ${ratio}.`,
 			};
 		}
 

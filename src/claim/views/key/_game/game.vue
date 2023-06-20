@@ -9,7 +9,7 @@ import { CustomMessage as CustomGameMessage, Game } from '../../../../_common/ga
 import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { KeyGroup } from '../../../../_common/key-group/key-group.model';
-import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
+import AppMediaItemCover from '../../../../_common/media-item/cover/AppMediaItemCover.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 

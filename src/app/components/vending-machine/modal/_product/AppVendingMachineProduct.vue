@@ -1,0 +1,182 @@
+<script lang="ts" setup>
+import { CSSProperties, PropType, computed, toRefs } from 'vue';
+import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import AppBackground from '../../../../../_common/background/AppBackground.vue';
+import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import AppStickerPack from '../../../../../_common/sticker/pack/AppStickerPack.vue';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import { styleOverlayTextShadow } from '../../../../../_styles/mixins';
+import { kBorderRadiusLg } from '../../../../../_styles/variables';
+import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
+import AppProductCurrencyTags from './AppProductCurrencyTags.vue';
+
+const props = defineProps({
+	shopProduct: {
+		type: Object as PropType<InventoryShopProductSale>,
+		required: true,
+	},
+	/**
+	 * Whether or not the user has enough funds to purchase this product.
+	 */
+	canPurchase: {
+		type: Boolean,
+		required: true,
+	},
+	/**
+	 * Used to prevent further purchases while we're processing one.
+	 */
+	disablePurchases: {
+		type: Boolean,
+	},
+});
+
+const { shopProduct, canPurchase, disablePurchases } = toRefs(props);
+
+const emit = defineEmits({
+	purchase: (_shopProduct: InventoryShopProductSale) => true,
+});
+
+const { user: myUser } = useCommonStore();
+
+const canPerformAction = computed(() => !disablePurchases.value && canPurchase.value);
+const name = computed(() => {
+	const product = shopProduct.value;
+	if (product.stickerPack) {
+		// This is handled in the AppStickerPack component.
+		return null;
+	} else if (product.avatarFrame) {
+		return product.avatarFrame.name || '';
+	} else if (product.background) {
+		return product.background.name || '';
+	}
+
+	return null;
+});
+
+function onClickProduct() {
+	if (!canPerformAction.value) {
+		return;
+	}
+
+	emit('purchase', shopProduct.value);
+}
+
+const popperConfirmRadius = kBorderRadiusLg;
+
+const notEnoughFundsOverlayStyles: CSSProperties = {
+	...styleOverlayTextShadow,
+	borderRadius: popperConfirmRadius.px,
+	position: `absolute`,
+	top: 0,
+	right: 0,
+	bottom: 0,
+	left: 0,
+	fontSize: `13px`,
+	padding: `12px`,
+	zIndex: 3,
+	display: `grid`,
+	justifyContent: `center`,
+	alignContent: `center`,
+	textAlign: `center`,
+	fontWeight: `bold`,
+	color: `white`,
+	backgroundColor: `rgba(0, 0, 0, 0.45)`,
+};
+
+const currencyTagStyles: CSSProperties = {
+	position: `absolute`,
+	bottom: `4px`,
+	right: `4px`,
+	zIndex: 2,
+};
+</script>
+
+<template>
+	<div>
+		<div
+			:style="{
+				position: `relative`,
+				zIndex: 1,
+			}"
+		>
+			<template v-if="shopProduct.stickerPack">
+				<AppStickerPack
+					:pack="shopProduct.stickerPack"
+					:expiry-info="shopProduct.ends_on"
+					:can-click-pack="canPerformAction"
+					show-details
+					@click-pack="onClickProduct()"
+				>
+					<template #overlay-children>
+						<AppProductCurrencyTags
+							:style="currencyTagStyles"
+							:shop-product="shopProduct"
+						/>
+
+						<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
+							{{ $gettext(`You don't have enough funds to purchase this`) }}
+						</div>
+					</template>
+				</AppStickerPack>
+			</template>
+			<template v-else-if="shopProduct.avatarFrame">
+				<component :is="canPerformAction ? 'a' : 'div'" @click="onClickProduct()">
+					<AppUserAvatarBubble
+						:user="myUser"
+						:frame-override="shopProduct.avatarFrame"
+						show-frame
+						smoosh
+						disable-link
+					/>
+
+					<AppProductCurrencyTags
+						:style="currencyTagStyles"
+						:shop-product="shopProduct"
+					/>
+
+					<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
+						{{ $gettext(`You don't have enough funds to purchase this`) }}
+					</div>
+				</component>
+			</template>
+			<template v-else-if="shopProduct.background">
+				<component :is="canPerformAction ? 'a' : 'div'" @click="onClickProduct()">
+					<AppAspectRatio :ratio="1">
+						<AppBackground
+							:background="shopProduct.background"
+							:backdrop-style="{
+								borderRadius: popperConfirmRadius.px,
+							}"
+							:background-style="{
+								backgroundSize: `contain`,
+								backgroundPosition: `center`,
+							}"
+							darken
+						>
+							<AppAspectRatio :ratio="1" />
+						</AppBackground>
+					</AppAspectRatio>
+
+					<AppProductCurrencyTags
+						:style="currencyTagStyles"
+						:shop-product="shopProduct"
+					/>
+
+					<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
+						{{ $gettext(`You don't have enough funds to purchase this`) }}
+					</div>
+				</component>
+			</template>
+		</div>
+
+		<div
+			v-if="name && name.length"
+			:style="{
+				marginTop: `8px`,
+				fontWeight: 700,
+			}"
+		>
+			{{ name }}
+		</div>
+	</div>
+</template>

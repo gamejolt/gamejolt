@@ -1,6 +1,7 @@
 <script lang="ts">
 import { nextTick, onMounted, onUnmounted, PropType, ref, Ref, toRefs } from 'vue';
 import { sleep } from '../../../utils/utils';
+import { illBackpackClosed, illBackpackOpen } from '../../img/ill/illustrations';
 import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
@@ -10,7 +11,6 @@ import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import AppThemeSvg from '../../theme/svg/AppThemeSvg.vue';
 import AppQuestThumbnail from '../AppQuestThumbnail.vue';
-import { illBackpackClosed, illBackpackOpen } from '../ill/illustrations';
 import { Quest } from '../quest-model';
 
 export interface QuestRewardData {
@@ -38,9 +38,9 @@ export interface QuestRewardData {
 	icon: Jolticon;
 
 	/**
-	 * Exp rewards shouldn't show an 'x' after their count.
+	 * If we should show an 'x' character after the reward amount.
 	 */
-	isExp?: boolean;
+	xAfterCount: boolean;
 
 	/**
 	 * Backend will return this along with the quest reward model. Lets us know
@@ -223,11 +223,11 @@ function playAnimation(
 					</span>
 
 					<div
-						v-for="({ img_url, name, amount, icon, isExp }, i) of rewards"
+						v-for="({ img_url, name, amount, icon, xAfterCount }, i) of rewards"
 						:key="i"
 						class="-quest-title-header"
 					>
-						{{ amount + (isExp ? ' ' : 'x ') }}
+						{{ amount + (xAfterCount ? 'x ' : ' ') }}
 
 						<img v-if="img_url" class="-reward-img" :src="img_url" alt="" />
 						<AppJolticon v-else :icon="icon" />

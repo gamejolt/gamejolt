@@ -147,7 +147,6 @@ const hasTrailing = computed(() =>
 	font-size: $font-size-base
 
 .-leading-inner
-	img-circle()
 	overflow: hidden
 	position: absolute
 	left: 0
@@ -155,11 +154,13 @@ const hasTrailing = computed(() =>
 	right: 0
 	bottom: 0
 	display: flex
+	z-index: 0
 
 .-leading-float
 	position: absolute
 	right: -2px
 	bottom: @right
+	z-index: 1
 
 .-title
 	flex: auto

@@ -9,7 +9,6 @@ const name = 'forums.channels.view';
 
 const routeForumsChannelsRedirects: RouteRecordRaw[] = [
 	{ path: `${path}2`, redirect: { name, params: { name: 'gj-feedback', sort: 'active' } } },
-	{ path: `${path}7`, redirect: { name, params: { name: 'jams', sort: 'active' } } },
 	{ path: `${path}1`, redirect: { name, params: { name: 'casual', sort: 'active' } } },
 	{ path: `${path}3`, redirect: { name, params: { name: 'casual', sort: 'active' } } },
 	{ path: `${path}4`, redirect: { name, params: { name: 'coding', sort: 'active' } } },

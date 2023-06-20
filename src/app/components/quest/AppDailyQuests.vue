@@ -51,22 +51,10 @@ const props = defineProps({
 	},
 });
 
-const {
-	disableOnExpiry,
-	singleRow,
-	activeQuestId,
-	forceLoading,
-	showCharge,
-	constrainChargeTooltip,
-} = toRefs(props);
+const { singleRow, activeQuestId, forceLoading, showCharge, constrainChargeTooltip } =
+	toRefs(props);
 
-const {
-	dailyQuests,
-	fetchDailyQuests,
-	isLoading: isQuestStoreLoading,
-	isDailyStale,
-	dailyResetDate,
-} = useQuestStore();
+const { dailyQuests, fetchDailyQuests, isLoading: isQuestStoreLoading } = useQuestStore();
 
 const { currentCharge, chargeLimit } = useStickerStore();
 
@@ -75,13 +63,11 @@ const header = ref<HTMLElement>();
 
 const showChargeTooltip = ref(false);
 
-const disableItems = computed(() => disableOnExpiry.value && isDailyStale.value);
 const isLoading = computed(() => isQuestStoreLoading.value || forceLoading.value);
 const hasQuests = computed(() => displayQuests.value.length > 0);
 
 const displayCharge = computed(() => {
 	const current = Math.min(currentCharge.value, chargeLimit.value);
-
 	return `${current}/${chargeLimit.value}`;
 });
 
@@ -100,20 +86,30 @@ const displayQuests = computed(() => {
 	return dailyQuests.value.slice(0, limit);
 });
 
+const questEndsOnDate = computed(() => {
+	let soonestExpiry: number | null = null;
+
+	for (const quest of dailyQuests.value) {
+		if (!quest.ends_on) {
+			continue;
+		}
+
+		if (!soonestExpiry) {
+			soonestExpiry = quest.ends_on;
+		} else if (quest.ends_on < soonestExpiry) {
+			soonestExpiry = quest.ends_on;
+		}
+	}
+
+	return soonestExpiry;
+});
+
 const showPlaceholders = computed(() => {
 	if (isLoading.value) {
 		return displayQuests.value.length === 0;
 	}
 	return false;
 });
-
-function onListClick() {
-	if (!disableItems.value || isLoading.value) {
-		return;
-	}
-
-	fetchDailyQuests();
-}
 </script>
 
 <template>
@@ -132,7 +128,7 @@ function onListClick() {
 						:class="{
 							'-overcharge': chargeOrbStyle === 'overcharge',
 						}"
-						:style="{ marginRight: dailyResetDate ? '12px' : undefined }"
+						:style="{ marginRight: questEndsOnDate ? '12px' : undefined }"
 						:trigger="Screen.isPointerMouse ? 'hover' : 'focus'"
 						inline
 						@show="showChargeTooltip = true"
@@ -175,7 +171,7 @@ function onListClick() {
 					/>
 				</template>
 
-				<AppQuestTimer v-if="dailyResetDate" :date="dailyResetDate" :ended="isDailyStale">
+				<AppQuestTimer v-if="questEndsOnDate" :ends-on="questEndsOnDate">
 					<template #ended>
 						<a class="link-unstyled" @click="fetchDailyQuests">
 							<AppTranslate> Refresh </AppTranslate>
@@ -186,13 +182,7 @@ function onListClick() {
 		</div>
 
 		<div class="-list">
-			<div
-				class="-list-grid"
-				:class="{
-					'-expired': disableItems,
-				}"
-				@click="onListClick"
-			>
+			<div class="-list-grid">
 				<template v-if="showPlaceholders">
 					<div v-for="i of 3" :key="'p-' + i" class="-placeholder-daily" />
 				</template>
@@ -202,7 +192,6 @@ function onListClick() {
 						:key="i"
 						:quest="quest"
 						:active="activeQuestId === quest.id"
-						:is-disabled="disableItems"
 						compact-stack
 					/>
 				</template>
@@ -227,12 +216,6 @@ $-placeholder-height = 150px
 	display: grid
 	grid-gap: 16px
 	grid-template-columns: repeat(3, minmax(0, 1fr))
-
-.-expired
-	opacity: 0.6
-
-	&:hover
-		cursor: pointer
 
 .-placeholder-daily
 	background-color: var(--theme-bg-subtle)

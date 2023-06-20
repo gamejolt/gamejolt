@@ -3,6 +3,7 @@ import { Api } from '../api/api.service';
 import { Collaboratable } from '../collaborator/collaboratable';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
+import { Screen } from '../screen/screen-service';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
 import { Sticker } from '../sticker/sticker.model';
 import { UserBlock } from '../user/block/block.model';
@@ -19,7 +20,6 @@ export class Fireside extends Collaboratable(Model) {
 	role: FiresideRole | null = null;
 	user_block?: UserBlock | null;
 	sticker_counts: StickerCount[] = [];
-	supporters: User[] = [];
 
 	hash!: string;
 	title!: string;
@@ -103,10 +103,6 @@ export class Fireside extends Collaboratable(Model) {
 
 		if (data.sticker_counts) {
 			this.sticker_counts = constructStickerCounts(data.sticker_counts);
-		}
-
-		if (data.supporters) {
-			this.supporters = User.populate(data.supporters);
 		}
 	}
 
@@ -194,4 +190,12 @@ export function inviteFiresideHost(fireside: Fireside, hostId: number) {
 
 export function removeFiresideHost(fireside: Fireside, hostId: number) {
 	return Api.sendRequest(`/web/dash/fireside/remove-host/${fireside.id}`, { host_id: hostId });
+}
+
+export function canDeviceViewFiresides() {
+	return Screen.isDesktop;
+}
+
+export function canDeviceCreateFiresides() {
+	return canDeviceViewFiresides();
 }

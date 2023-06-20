@@ -7,11 +7,9 @@ import {
 	styleWhen,
 } from '../../../_styles/mixins';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import AppCurrencyPill from '../../currency/AppCurrencyPill.vue';
 import { shorthandReadableTime } from '../../filters/duration';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import AppPopperConfirmWrapper from '../../popper/confirm-wrapper/AppPopperConfirmWrapper.vue';
 import { StickerPack } from './pack.model';
 
 export const StickerPackRatio = 2 / 3;
@@ -20,9 +18,6 @@ export const StickerPackRatio = 2 / 3;
 <script lang="ts" setup>
 interface StickerPackDetails {
 	name?: boolean;
-	cost?: boolean;
-	contents?: boolean;
-	expiry?: boolean;
 }
 
 type PackDetailsOptions = boolean | StickerPackDetails;
@@ -42,8 +37,8 @@ const props = defineProps({
 	forceElevate: {
 		type: Boolean,
 	},
-	hoverTitle: {
-		type: String,
+	expiryInfo: {
+		type: Number,
 		default: undefined,
 	},
 });
@@ -52,27 +47,13 @@ const emit = defineEmits({
 	clickPack: () => true,
 });
 
-const { pack, showDetails, canClickPack, forceElevate } = toRefs(props);
+const { pack, showDetails, canClickPack, forceElevate, expiryInfo } = toRefs(props);
 
 const showName = computed(() => {
 	if (!showDetails.value) {
 		return false;
 	}
 	return showDetails.value === true || showDetails.value.name === true;
-});
-
-const showCost = computed(() => {
-	if (!showDetails.value) {
-		return false;
-	}
-	return showDetails.value === true || showDetails.value.cost === true;
-});
-
-const showExpiry = computed(() => {
-	if (!showDetails.value) {
-		return false;
-	}
-	return showDetails.value === true || showDetails.value.expiry === true;
 });
 
 function onClickPack() {
@@ -95,57 +76,37 @@ const overlayedStyle: CSSProperties = {
 	<!-- AppStickerPack -->
 	<div>
 		<div :style="{ position: `relative` }">
-			<AppAspectRatio :ratio="StickerPackRatio" show-overflow>
-				<AppPopperConfirmWrapper
-					:style="{
-						width: `100%`,
-						height: `100%`,
-					}"
-					:overlay-radius="12"
-					:disabled="!canClickPack"
-					:initial-text="hoverTitle"
-					@confirm="onClickPack()"
-				>
+			<component :is="canClickPack ? 'a' : 'div'" @click="onClickPack()">
+				<AppAspectRatio :ratio="StickerPackRatio" show-overflow>
 					<AppMediaItemBackdrop
 						:style="{
 							...styleWhen(forceElevate, styleElevate(1)),
 							...styleWhen(canClickPack, {
 								cursor: `pointer`,
 							}),
+							width: `100%`,
+							height: `100%`,
 						}"
 						:media-item="pack.media_item"
 						radius="lg"
 					>
 						<AppImgResponsive
 							:src="pack.media_item.mediaserver_url"
-							alt=""
 							:style="{
 								width: `100%`,
 								height: `100%`,
 								objectFit: `cover`,
 							}"
+							alt=""
 							draggable="false"
 							ondragstart="return false"
 						/>
 					</AppMediaItemBackdrop>
-
-					<slot name="overlay" />
-				</AppPopperConfirmWrapper>
-			</AppAspectRatio>
+				</AppAspectRatio>
+			</component>
 
 			<div
-				v-if="showCost"
-				:style="{
-					position: `absolute`,
-					bottom: '4px',
-					right: '4px',
-				}"
-			>
-				<AppCurrencyPill currency="coins" :amount="pack.cost_coins" />
-			</div>
-
-			<div
-				v-if="showExpiry && pack.ends_on"
+				v-if="expiryInfo"
 				:style="{
 					...overlayedStyle,
 					right: `4px`,
@@ -153,12 +114,15 @@ const overlayedStyle: CSSProperties = {
 				}"
 			>
 				{{
-					shorthandReadableTime(pack.ends_on, {
+					shorthandReadableTime(expiryInfo, {
 						allowFuture: true,
 						precision: 'rough',
+						nowText: $gettext(`Expired`),
 					})
 				}}
 			</div>
+
+			<slot name="overlay-children" />
 		</div>
 
 		<div

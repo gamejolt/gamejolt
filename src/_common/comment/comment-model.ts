@@ -6,7 +6,7 @@ import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import { showErrorGrowl } from '../growls/growls.service';
 import { Model } from '../model/model.service';
-import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
+import { ReactionableModel, ReactionCount } from '../reaction/reaction-count';
 import { Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
 import { CommentVote } from './vote/vote-model';
@@ -17,7 +17,7 @@ export interface CommentableModel {
 	canInteractWithComments: boolean;
 }
 
-export class Comment extends Model {
+export class Comment extends Model implements ReactionableModel {
 	static readonly STATUS_REMOVED = 0;
 	static readonly STATUS_VISIBLE = 1;
 	static readonly STATUS_SPAM = 2;
@@ -40,10 +40,15 @@ export class Comment extends Model {
 	subscription?: Subscription;
 	is_pinned!: boolean;
 	comment_content!: string;
-	sticker_counts: StickerCount[] = [];
-	supporters: User[] = [];
+	reaction_counts: ReactionCount[] = [];
+	has_owner_like!: boolean;
+	has_owner_reply!: boolean;
 
 	isFollowPending = false;
+
+	get typename__() {
+		return 'Comment';
+	}
 
 	get permalink() {
 		return Environment.baseUrl + '/x/permalink/comment/' + this.id;
@@ -64,12 +69,8 @@ export class Comment extends Model {
 			this.subscription = new Subscription(data.subscription);
 		}
 
-		if (data.sticker_counts) {
-			this.sticker_counts = constructStickerCounts(data.sticker_counts);
-		}
-
-		if (data.supporters) {
-			this.supporters = User.populate(data.supporters);
+		if (data.reaction_counts) {
+			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
 		}
 	}
 
@@ -254,6 +255,7 @@ export async function addCommentVote(comment: Comment, vote: number) {
 		comment.votes -= operation;
 		comment.user_vote = previousVote;
 		showErrorGrowl(`Can't do that now. Try again later?`);
+		return null;
 	} finally {
 		trackCommentVote(vote, { failed, toggled: false });
 	}
@@ -280,6 +282,7 @@ export async function removeCommentVote(comment: Comment) {
 		comment.user_vote = previousVote;
 		++comment.votes;
 		showErrorGrowl(`Can't do that now. Try again later?`);
+		return null;
 	} finally {
 		trackCommentVote(previousVote.vote, { failed, toggled: true });
 	}

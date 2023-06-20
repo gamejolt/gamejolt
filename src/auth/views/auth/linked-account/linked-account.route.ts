@@ -3,7 +3,6 @@ import { routeAuthLinkedAccountFacebookCallback } from './facebook/callback/call
 import { routeAuthLinkedAccountGoogleCallback } from './google/callback/callback.route';
 import { routeAuthLinkedAccountPoll } from './poll/poll.route';
 import { routeAuthLinkedAccountTwitchCallback } from './twitch/callback/callback.route';
-import { routeAuthLinkedAccountTwitterCallback } from './twitter/callback/callback.route';
 
 export const routeAuthLinkedAccount: RouteRecordRaw = {
 	name: 'auth.linked-account',
@@ -14,7 +13,6 @@ export const routeAuthLinkedAccount: RouteRecordRaw = {
 	},
 	children: [
 		routeAuthLinkedAccountPoll,
-		routeAuthLinkedAccountTwitterCallback,
 		routeAuthLinkedAccountFacebookCallback,
 		routeAuthLinkedAccountGoogleCallback,
 		routeAuthLinkedAccountTwitchCallback,

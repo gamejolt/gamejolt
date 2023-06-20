@@ -28,7 +28,7 @@ const props = defineProps({
 });
 
 const { rtcUser, lowBitrate, videoFit } = toRefs(props);
-const { rtc, isFullscreen } = useFiresideController()!;
+const { rtc, isFullscreen, isReconnecting } = useFiresideController()!;
 
 let _videoLock: FiresideVideoLock | null = null;
 
@@ -95,7 +95,7 @@ onBeforeUnmount(() => {
 });
 
 watch(pausedFrameData, _onFrameDataChange);
-watch(shouldPlayVideo, _onShouldPlayVideoChange);
+watch([shouldPlayVideo, isReconnecting], _onShouldPlayVideoChange);
 
 function _getLocks() {
 	// Just in case this is called when we already have a lock, queue it up for
@@ -144,6 +144,12 @@ function _onFrameDataChange() {
 }
 
 function _onShouldPlayVideoChange() {
+	// Ignore changes to this when we're reconnecting. If we're establishing
+	// locks, we want to make sure we do it while we're actually connected.
+	if (isReconnecting.value) {
+		return;
+	}
+
 	if (shouldPlayVideo.value) {
 		_getLocks();
 	} else {

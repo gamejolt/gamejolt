@@ -1,4 +1,5 @@
-import { shallowReadonly } from 'vue';
+import { markRaw, shallowReadonly } from 'vue';
+import { arrayRemove } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
 import { chooseFocusedRTCUser } from '../../../_common/fireside/rtc/rtc';
 import {
@@ -13,6 +14,7 @@ export type GridFiresideDMChannel = Readonly<{
 	channelController: SocketChannelController;
 	firesideHash: string;
 	joinPromise: Promise<void>;
+	leave: () => void;
 }>;
 
 interface ListableHostsPayload {
@@ -36,13 +38,26 @@ export function createGridFiresideDMChannel(
 
 	channelController.listenTo('update', _onListableHosts);
 
-	const joinPromise = channelController.join();
+	const joinPromise = channelController.join({
+		async onJoin() {
+			client.firesideDMChannels.push(markRaw(c));
+		},
+		onLeave() {
+			arrayRemove(client.firesideDMChannels, i => i.firesideHash === firesideHash);
+		},
+	});
 
 	const c = shallowReadonly({
 		channelController,
 		firesideHash,
 		joinPromise,
+
+		leave,
 	});
+
+	function leave() {
+		channelController.leave();
+	}
 
 	async function _onListableHosts(payload: ListableHostsPayload) {
 		logger.info('Grid listable hosts.', payload);

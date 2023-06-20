@@ -201,15 +201,47 @@ export function styleLineClamp(lines = 2): CSSProperties {
 	};
 }
 
-export function styleFlexCenter(direction?: 'row' | 'column'): CSSProperties {
+export function styleFlexCenter({
+	display = 'flex',
+	direction,
+}: {
+	display?: 'flex' | 'inline-flex';
+	direction?: CSSProperties['flex-direction'];
+} = {}): CSSProperties {
 	return {
-		display: `flex`,
+		display,
 		alignItems: `center`,
 		justifyContent: `center`,
 		...styleWhen(!!direction, {
 			flexDirection: direction,
 		}),
 	};
+}
+
+export function styleAbsoluteFill({
+	top = 0,
+	right = 0,
+	bottom = 0,
+	left = 0,
+	zIndex,
+}: {
+	top?: CSSProperties['top'];
+	right?: CSSProperties['right'];
+	bottom?: CSSProperties['bottom'];
+	left?: CSSProperties['left'];
+	zIndex?: CSSProperties['zIndex'];
+} = {}) {
+	const result: CSSProperties = {
+		position: `absolute`,
+		top,
+		left,
+		right,
+		bottom,
+	};
+	if (zIndex !== undefined) {
+		result.zIndex = zIndex;
+	}
+	return result;
 }
 
 export const styleOverlayTextShadow: CSSProperties = {
@@ -220,3 +252,46 @@ export const styleOverlayTextShadow: CSSProperties = {
 export const styleFiresideOverlayTextShadow: CSSProperties = {
 	textShadow: `0px 4px 4px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(0, 0, 0, 0.15), 0px 1px 8px rgba(0, 0, 0, 0.09)`,
 };
+
+type MaxWidthForOptionsResult = { maxWidth?: string };
+
+/**
+ * Returns a max-width CSS binding based on the given options.
+ *
+ * Returns an empty result if max-width can't be determined.
+ */
+export function styleMaxWidthForOptions(_: {
+	ratio: number;
+	maxWidth: number;
+}): MaxWidthForOptionsResult;
+export function styleMaxWidthForOptions(_: {
+	ratio: number;
+	maxHeight: number;
+}): MaxWidthForOptionsResult;
+export function styleMaxWidthForOptions(_: {
+	ratio: number;
+	maxWidth: number;
+	maxHeight: number;
+}): MaxWidthForOptionsResult;
+export function styleMaxWidthForOptions(options: {
+	ratio: number;
+	maxWidth?: number;
+	maxHeight?: number;
+}): MaxWidthForOptionsResult {
+	const { ratio, maxWidth, maxHeight } = options;
+	const result: MaxWidthForOptionsResult = {};
+
+	// A positive aspect ratio is required to calculate max width.
+	if (!ratio) {
+		return result;
+	}
+
+	if (maxWidth && maxHeight) {
+		result.maxWidth = `${Math.min(maxWidth, maxHeight * ratio)}px`;
+	} else if (maxWidth) {
+		result.maxWidth = `${maxWidth}px`;
+	} else if (maxHeight) {
+		result.maxWidth = `${maxHeight * ratio}px`;
+	}
+	return result;
+}

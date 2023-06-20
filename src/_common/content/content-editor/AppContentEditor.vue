@@ -21,6 +21,7 @@ import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
 import {
+	ContentEditorModelData,
 	ContentOwnerController,
 	ContentOwnerControllerKey,
 	createContentOwnerController,
@@ -36,7 +37,7 @@ import {
 import { ContentRules } from './content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
 import AppContentEditorBlockControls from './controls/block-controls.vue';
-import AppContentEditorControlsEmoji from './controls/emoji/emoji.vue';
+import AppContentEditorControlsEmoji from './controls/emoji/AppContentEditorControlsEmoji.vue';
 import AppContentEditorControlsGif from './controls/gif/gif.vue';
 import AppContentEditorInsetControls from './controls/inset-controls.vue';
 import AppContentEditorControlsMentionAutocomplete from './controls/mention/autocomplete.vue';
@@ -76,9 +77,13 @@ const props = defineProps({
 	disabled: {
 		type: Boolean,
 	},
+	modelData: {
+		type: [Object, null] as PropType<ContentEditorModelData | null>,
+		required: true,
+	},
 	modelId: {
 		type: Number,
-		default: null,
+		default: undefined,
 	},
 	minHeight: {
 		type: Number,
@@ -130,6 +135,7 @@ const props = defineProps({
 const {
 	contentContext,
 	capabilities,
+	modelData,
 	controller: inheritedController,
 	value,
 	placeholder,
@@ -170,8 +176,9 @@ const ownerController = ref<ContentOwnerController>(
 		context: controller_.value.contentContext,
 		capabilities: computed(() => controller_.value.contextCapabilities),
 		contentRules: computed(() => displayRules?.value),
+		getModelData: () => modelData?.value || undefined,
 		getModelId: async () => {
-			if (modelId.value === null) {
+			if (modelId?.value === undefined || modelId.value === null) {
 				if (!tempModelId_) {
 					tempModelId_ = await ContentTempResource.getTempModelId(
 						contentContext.value,
@@ -241,8 +248,7 @@ const shouldShowTextControls = computed(() => {
 	return (
 		!controller_.value.disabled &&
 		controller_.value.isFocused &&
-		contextCapabilities.value.hasAnyText &&
-		!controller_.value.emojiPanelVisible
+		contextCapabilities.value.hasAnyText
 	);
 });
 
@@ -251,7 +257,8 @@ const shouldShowEmojiPanel = computed(() => {
 		!GJ_IS_MOBILE_APP &&
 		!controller_.value.disabled &&
 		contextCapabilities.value.emoji &&
-		controller_.value.isFocused
+		controller_.value.isFocused &&
+		!!modelData.value
 	);
 });
 
@@ -317,6 +324,10 @@ watch(value, () => {
 });
 
 onMounted(async () => {
+	if (!GJ_IS_MOBILE_APP && !modelData.value) {
+		console.warn('Model data is required for content editors.');
+	}
+
 	// We have to wait a frame here before we can start using the $refs.doc
 	// variable. Due to the scroller around it also initializing on mounted,
 	// we have to wait for it to finish. The scroller v-ifs the slot element
@@ -421,13 +432,6 @@ async function highlightCurrentSelection() {
 	++controller_.value.stateCounter;
 }
 
-function onEmojiPanelVisibilityChanged(visible: boolean) {
-	controller_.value.emojiPanelVisible = visible;
-	if (controller_.value.emojiPanelVisible) {
-		highlightCurrentSelection();
-	}
-}
-
 function onInsertMention() {
 	highlightCurrentSelection();
 	controller_.value.canShowMentionSuggestions = 0; // Hide control
@@ -498,10 +502,7 @@ function focus() {
 						<AppContentEditorControlsGif v-if="shouldShowGifButton" />
 					</transition>
 					<transition name="fade">
-						<AppContentEditorControlsEmoji
-							v-if="shouldShowEmojiPanel"
-							@visibility-change="onEmojiPanelVisibilityChanged"
-						/>
+						<AppContentEditorControlsEmoji v-if="shouldShowEmojiPanel" />
 					</transition>
 				</AppContentEditorInsetControls>
 			</AppScrollScroller>
@@ -671,7 +672,4 @@ function focus() {
 // Add a minimal margin to media items so they don't directly border the top of the editor
 ::v-deep(.media-item)
 	margin-top: ($line-height-computed / 3)
-
-::v-deep(img.emoji)
-	border-radius: 0
 </style>

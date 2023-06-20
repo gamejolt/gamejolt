@@ -23,8 +23,8 @@ import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '../variables';
 					position: `absolute`,
 					left: 0,
 					bottom: 0,
-					width: `${ChatWindowAvatarSize}px`,
-					height: `${ChatWindowAvatarSize}px`,
+					width: ChatWindowAvatarSize.px,
+					height: ChatWindowAvatarSize.px,
 					backgroundColor: kThemeBgSubtle,
 				}"
 			/>
@@ -32,7 +32,7 @@ import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '../variables';
 				class="elevate-1"
 				:style="{
 					...styleBorderRadiusLg,
-					marginLeft: `${ChatWindowLeftGutterSize}px`,
+					marginLeft: ChatWindowLeftGutterSize.px,
 					backgroundColor: kThemeBg,
 					maxWidth: `100%`,
 					width: `300px`,

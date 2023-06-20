@@ -106,7 +106,7 @@ $-zindex-popper = 4
 	img-circle()
 	width: 25%
 	height: @width
-	border: $border-width-large solid $-border-color
+	border: $border-width-base solid $-border-color
 	background-color: $-border-color
 	position: absolute
 	bottom: $-tag-offset + 2px
@@ -115,8 +115,10 @@ $-zindex-popper = 4
 
 .-realm
 	elevate-1()
+	rounded-corners()
+	overflow: hidden
 	width: 25%
-	border: $border-width-large solid $-border-color
+	border: $border-width-base solid $-border-color
 	background-color: $-border-color
 	position: absolute
 	bottom: $-tag-offset + 2px
@@ -176,6 +178,8 @@ $-zindex-popper = 4
 	width: 16px
 
 .-tooltip-img-realm
+	rounded-corners-sm()
+	overflow: hidden
 	flex: none
 	height: 16px
 	width: 12px

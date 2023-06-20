@@ -1,5 +1,6 @@
 import Axios, { AxiosRequestConfig } from 'axios';
 import { ref } from 'vue';
+import { setTimezoneOffsetCookie } from '../cookie/cookie.service';
 import { Environment } from '../environment/environment.service';
 import { Payload } from '../payload/payload-service';
 
@@ -297,6 +298,9 @@ export class Api {
 		if (!requestInfo.method) {
 			requestInfo.method = requestInfo.data ? 'POST' : 'GET';
 		}
+
+		// Update the timezone cookie for every request.
+		setTimezoneOffsetCookie();
 
 		return Axios(requestInfo);
 	}
