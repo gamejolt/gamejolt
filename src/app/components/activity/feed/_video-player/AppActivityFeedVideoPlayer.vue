@@ -149,6 +149,7 @@ function setVideoShouldLoadTimer() {
 		>
 			<template #controls-peek>
 				<div
+					v-if="player && player.duration"
 					:style="{
 						marginLeft: `auto`,
 					}"
