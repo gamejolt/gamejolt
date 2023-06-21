@@ -28,7 +28,7 @@ import {
 	StickerTargetController,
 } from '../../../../_common/sticker/target/target-controller';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppVideoPlayer from '../../../../_common/video/player/player.vue';
+import AppVideoPlayer from '../../../../_common/video/player/AppVideoPlayer.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 import { styleWhen } from '../../../../_styles/mixins';
 import { kGridGutterWidth } from '../../../../_styles/variables';

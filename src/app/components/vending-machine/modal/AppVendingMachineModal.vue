@@ -4,6 +4,7 @@ import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
+import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
 import {
 	Currency,
 	CurrencyType,
@@ -282,9 +283,34 @@ const currencyCardImgStyles: CSSProperties = {
 		<div :style="containerStyles">
 			<AppModalFloatingHeader>
 				<template #modal-controls>
-					<AppButton @click="modal.dismiss()">
-						{{ $gettext(`Close`) }}
-					</AppButton>
+					<div
+						:style="{
+							display: `flex`,
+							width: `100%`,
+						}"
+					>
+						<AppCurrencyPillList
+							:style="{
+								marginTop: `8px`,
+							}"
+							:currencies="{
+								[CurrencyType.joltbux.id]: [CurrencyType.joltbux, joltbuxBalance],
+								[CurrencyType.coins.id]: [CurrencyType.coins, coinBalance],
+							}"
+							direction="row"
+							:gap="8"
+						/>
+
+						<AppButton
+							:style="{
+								marginLeft: `auto`,
+								alignSelf: `flex-start`,
+							}"
+							@click="modal.dismiss()"
+						>
+							{{ $gettext(`Close`) }}
+						</AppButton>
+					</div>
 				</template>
 			</AppModalFloatingHeader>
 

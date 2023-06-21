@@ -1,5 +1,5 @@
-import { h } from 'vue';
-import { Options } from 'vue-property-decorator';
+<script lang="ts">
+import { useRouter } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import {
 	authOnJoin,
@@ -9,60 +9,65 @@ import {
 } from '../../../../../../_common/auth/auth.service';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
+	createAppRoute,
+	defineAppRouteOptions,
 } from '../../../../../../_common/route/route-component';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 
-@Options({
-	name: 'RouteAuthLinkedAccountFacebookCallback',
-})
-@OptionsForRoute({
-	lazy: true,
-	resolver({ route }) {
-		const { code, state } = route.query;
-		return Api.sendRequest(
-			'/web/auth/linked-accounts/link_callback/facebook?code=' + code + '&state=' + state,
-			{}
-		);
-	},
-})
-export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteComponent {
-	routeResolved($payload: any) {
-		if (!$payload.success) {
-			if ($payload.reason && $payload.reason === 'no-email') {
+export default {
+	...defineAppRouteOptions({
+		lazy: true,
+		resolver({ route }) {
+			const { code, state } = route.query;
+			return Api.sendRequest(
+				'/web/auth/linked-accounts/link_callback/facebook?code=' + code + '&state=' + state,
+				{}
+			);
+		},
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+const router = useRouter();
+
+createAppRoute({
+	onResolved({ payload }) {
+		if (!payload.success) {
+			if (payload.reason && payload.reason === 'no-email') {
 				showErrorGrowl({
 					sticky: true,
-					message: this.$gettext(
+					message: $gettext(
 						`Your Facebook account did not return an email address. Make sure you have verified it with Facebook.`
 					),
 				});
-			} else if ($payload.reason && $payload.reason === 'duplicate-email') {
+			} else if (payload.reason && payload.reason === 'duplicate-email') {
 				showErrorGrowl({
 					sticky: true,
-					message: this.$gettext(
+					message: $gettext(
 						`The email address on this Facebook account is already in use. Perhaps you already have an account?`
 					),
 				});
-			} else if ($payload.reason && $payload.reason === 'no-unique-username') {
+			} else if (payload.reason && payload.reason === 'no-unique-username') {
 				showErrorGrowl({
 					sticky: true,
-					message: this.$gettext(
+					message: $gettext(
 						`Could not create a username for your account. Perhaps you already have an account?`
 					),
 				});
 			} else {
 				showErrorGrowl({
 					sticky: true,
-					title: this.$gettext('Login Failed'),
-					message: this.$gettext('Unable to log in with Facebook.'),
+					title: $gettext('Login Failed'),
+					message: $gettext('Unable to log in with Facebook.'),
 				});
 			}
-			this.$router.push({ name: 'auth.join' });
+			router.push({ name: 'auth.join' });
 			return;
 		}
 
-		if ($payload.accountCreated) {
+		if (payload.accountCreated) {
 			authOnJoin('facebook');
 			redirectToOnboarding();
 			return;
@@ -70,9 +75,10 @@ export default class RouteAuthLinkedAccountFacebookCallback extends BaseRouteCom
 
 		authOnLogin('facebook');
 		redirectToDashboard();
-	}
+	},
+});
+</script>
 
-	render() {
-		return h(AuthLinkedAccountProcessing);
-	}
-}
+<template>
+	<AuthLinkedAccountProcessing />
+</template>

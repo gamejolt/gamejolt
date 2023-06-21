@@ -3,8 +3,8 @@ import { computed, PropType, ref, toRefs } from 'vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../../../_common/fireside/post/video/video-model';
 import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
+import AppActivityFeedVideoPlayer from '../_video-player/AppActivityFeedVideoPlayer.vue';
 import { ActivityFeedItem } from '../item-service';
-import AppActivityFeedVideoPlayer from '../_video-player/video-player.vue';
 
 const props = defineProps({
 	item: {
@@ -59,7 +59,6 @@ function onVideoProcessingError(err: string | Error) {
 		<template v-if="!hasVideoProcessingError">
 			<template v-if="!video.is_processing && video.posterMediaItem">
 				<AppActivityFeedVideoPlayer
-					class="-video"
 					:feed-item="item"
 					:manifests="video.manifestSources"
 					:media-item="video.posterMediaItem"

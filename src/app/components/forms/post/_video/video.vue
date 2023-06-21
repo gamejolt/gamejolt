@@ -22,7 +22,7 @@ import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-servi
 import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
-import AppVideoPlayer from '../../../../../_common/video/player/player.vue';
+import AppVideoPlayer from '../../../../../_common/video/player/AppVideoPlayer.vue';
 import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 
 interface FormModel {
@@ -451,6 +451,7 @@ export default class AppFormPostVideo
 			<template v-else-if="videoStatus === 'complete'">
 				<AppVideoPlayer
 					class="-video-player"
+					context="feed"
 					:media-item="videoMediaItem"
 					:manifests="videoManifestSources"
 				/>
