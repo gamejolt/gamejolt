@@ -11,12 +11,12 @@ import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { useAppStore } from '../../../store';
-import { NotificationsFilterModal } from '../../../views/notifications/filter/modal.service';
-import { routeNotifications } from '../../../views/notifications/notifications.route';
 import {
 	NOTIFICATION_FILTER_FIELD,
 	SUPPORTED_NOTIFICATION_FEED_TYPES,
 } from '../../../views/notifications/RouteNotifications.vue';
+import { NotificationsFilterModal } from '../../../views/notifications/filter/modal.service';
+import { routeNotifications } from '../../../views/notifications/notifications.route';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { useGridStore } from '../../grid/grid-store';
 import { AppActivityFeedLazy } from '../../lazy';
@@ -45,6 +45,9 @@ watch(
 				// Some default value before the real feed data gets populated
 				// on show.
 				itemsPerPage: 15,
+				extraData: {
+					[NOTIFICATION_FILTER_FIELD]: SUPPORTED_NOTIFICATION_FEED_TYPES,
+				},
 			});
 		} else {
 			feed.value = undefined;
@@ -99,7 +102,7 @@ async function onShow() {
 		// If it is already bootstrapped, we just want to load new items if
 		// there is any.
 		else if (unreadNotificationsCount.value > 0) {
-			await feed.value.loadNew(unreadNotificationsCount.value);
+			await feed.value.reload();
 		}
 
 		if (unreadNotificationsCount.value > 0) {
