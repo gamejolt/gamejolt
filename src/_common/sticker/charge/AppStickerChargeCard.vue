@@ -7,6 +7,7 @@ import AppAnimChargeOrb from '../../animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
+import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
@@ -40,6 +41,9 @@ const props = defineProps({
 	paddingV: {
 		type: Number,
 		default: 16,
+	},
+	isLoading: {
+		type: Boolean,
 	},
 });
 
@@ -111,30 +115,36 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 				</div>
 
 				<AppSpacer v-if="headerCharge" vertical :scale="4" />
-
-				<div
-					class="-center-grid"
-					:class="{
-						'-decorator': headerCharge,
+				<AppLoadingFade
+					:style="{
+						width: '100%',
 					}"
+					:is-loading="isLoading"
 				>
-					<AppAnimElectricity
-						class="-orbs"
-						:style="gridStyling"
-						:disabled="!canChargeSticker"
+					<div
+						class="-center-grid"
+						:class="{
+							'-decorator': headerCharge,
+						}"
 					>
-						<AppAspectRatio v-for="i of chargeLimit" :key="i" :ratio="1">
-							<img
-								v-if="currentCharge < i"
-								class="-orb-empty"
-								:src="illChargeOrbEmpty.path"
-								draggable="false"
-								alt=""
-							/>
-							<AppAnimChargeOrb v-else class="-abs-fill" use-random-offset />
-						</AppAspectRatio>
-					</AppAnimElectricity>
-				</div>
+						<AppAnimElectricity
+							class="-orbs"
+							:style="gridStyling"
+							:disabled="!canChargeSticker"
+						>
+							<AppAspectRatio v-for="i of chargeLimit" :key="i" :ratio="1">
+								<img
+									v-if="currentCharge < i"
+									class="-orb-empty"
+									:src="illChargeOrbEmpty.path"
+									draggable="false"
+									alt=""
+								/>
+								<AppAnimChargeOrb v-else class="-abs-fill" use-random-offset />
+							</AppAspectRatio>
+						</AppAnimElectricity>
+					</div>
+				</AppLoadingFade>
 			</div>
 
 			<div v-if="showFullyChargedText" :class="{ '-small': headerCharge }">
