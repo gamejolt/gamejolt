@@ -1,8 +1,7 @@
 <script lang="ts">
-import { computed, inject, ref } from 'vue';
+import { Ref, computed, inject, ref } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
-import AppAnimElectricity from '../../../../_common/animation/AppAnimElectricity.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -26,7 +25,6 @@ import AppCommunityVerifiedTick from '../../../../_common/community/verified-tic
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { formatFuzzynumberOverThreshold } from '../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import { Game } from '../../../../_common/game/game.model';
@@ -42,16 +40,17 @@ import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { kThemeFgMuted } from '../../../../_common/theme/variables';
+import AppTopSupportersCard, {
+	OwnSupport,
+	TopSupporter,
+} from '../../../../_common/supporters/AppTopSupportersCard.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { showUserFiresideFollowModal } from '../../../../_common/user/fireside/modal/follow-modal.service';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { User, unfollowUser } from '../../../../_common/user/user.model';
 import { numberSort } from '../../../../utils/array';
 import { removeQuery } from '../../../../utils/router';
@@ -65,7 +64,6 @@ import AppPageContainer from '../../../components/page-container/AppPageContaine
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import { TrophyModal } from '../../../components/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.vue';
-import AppUserVerifiedWrapper from '../../../components/user/AppUserVerifiedWrapper.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useAppStore } from '../../../store/index';
 import { useProfileRouteController } from '../RouteProfile.vue';
@@ -85,11 +83,6 @@ const FiresideScrollInviewConfig = new ScrollInviewConfig({
 	emitsOn: 'partial-overlap',
 	trackFocused: false,
 });
-
-interface TopSupporter {
-	user: User;
-	value: number;
-}
 
 const {
 	isOverviewLoaded,
@@ -126,7 +119,9 @@ const isLoadingAllCommunities = ref(false);
 const games = ref<Game[]>([]);
 const communities = ref<Community[]>([]);
 const allCommunities = ref<Community[] | null>(null);
-const topSupporters = ref<TopSupporter[]>([]);
+const supportersData = ref() as Ref<
+	{ supporters: TopSupporter[]; ownSupport: OwnSupport } | undefined
+>;
 const overviewComments = ref<Comment[]>([]);
 const linkedAccounts = ref<LinkedAccount[]>([]);
 const knownFollowers = ref<User[]>([]);
@@ -308,7 +303,7 @@ createAppRoute({
 		allCommunities.value = null;
 		linkedAccounts.value = [];
 		overviewComments.value = [];
-		topSupporters.value = [];
+		supportersData.value = undefined;
 	},
 	onResolved({ payload }) {
 		Meta.description = payload.metaDescription;
@@ -328,6 +323,7 @@ createAppRoute({
 		linkedAccounts.value = LinkedAccount.populate(payload.linkedAccounts);
 		overviewComments.value = Comment.populate(payload.comments);
 
+		let supporters: TopSupporter[] = [];
 		if (payload.topSupporters && Array.isArray(payload.topSupporters)) {
 			const supportersData: Partial<TopSupporter>[] = payload.topSupporters;
 			const newSupporters: TopSupporter[] = [];
@@ -341,12 +337,15 @@ createAppRoute({
 				}
 			}
 
-			topSupporters.value = newSupporters
-				.sort((a, b) => numberSort(b.value, a.value))
-				.slice(0, 3);
-		} else {
-			topSupporters.value = [];
+			supporters = newSupporters.sort((a, b) => numberSort(b.value, a.value)).slice(0, 3);
 		}
+		supportersData.value = {
+			supporters,
+			ownSupport: {
+				lastPeriod: payload.ownSupport?.lastPeriod || 0,
+				total: payload.ownSupport?.total || 0,
+			},
+		};
 
 		if (routeUser.value) {
 			CommentThreadModal.showFromPermalink(router, routeUser.value, 'shouts');
@@ -608,72 +607,11 @@ async function onFriendRequestReject() {
 						</template>
 
 						<!-- Top supporters -->
-						<template v-if="topSupporters.length">
-							<div class="clearfix">
-								<h4 class="section-header">
-									<span>
-										{{ $gettext(`Top supporters`) }}
-									</span>
-
-									<div
-										v-app-tooltip.touchable="
-											$gettext(
-												`Top supporters that placed a charged sticker in the last 30 days`
-											)
-										"
-										:style="{
-											display: 'inline-block',
-											minHeight: '100%',
-											paddingLeft: '4px',
-											paddingRight: '4px',
-										}"
-									>
-										<AppJolticon
-											:style="{
-												fontSize: '14px',
-												color: kThemeFgMuted,
-											}"
-											icon="help-circle"
-										/>
-									</div>
-								</h4>
-							</div>
-
-							<div class="_supporters-card">
-								<RouterLink
-									v-for="{ user, value } of topSupporters"
-									:key="user.id"
-									class="_supporter"
-									:to="user.routeLocation"
-								>
-									<div class="_supporter-avatar">
-										<AppAspectRatio :ratio="1" show-overflow>
-											<AppUserVerifiedWrapper :user="user">
-												<AppUserAvatarImg :user="user" />
-											</AppUserVerifiedWrapper>
-										</AppAspectRatio>
-									</div>
-
-									<AppSpacer vertical :scale="2" />
-
-									<div
-										v-app-tooltip="'@' + user.username"
-										class="_supporter-username"
-									>
-										{{ '@' + user.username }}
-									</div>
-
-									<AppSpacer vertical :scale="2" />
-
-									<AppAnimElectricity
-										class="_supporter-value"
-										shock-anim="wide-rect"
-									>
-										{{ formatFuzzynumberOverThreshold(value, 10_000) }}
-									</AppAnimElectricity>
-								</RouterLink>
-							</div>
-
+						<template v-if="supportersData && supportersData.supporters.length">
+							<AppTopSupportersCard
+								:supporters="supportersData.supporters"
+								:own-support="supportersData.ownSupport"
+							/>
 							<br />
 						</template>
 					</template>
