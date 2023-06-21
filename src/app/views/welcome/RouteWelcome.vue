@@ -2,6 +2,7 @@
 import { computed, markRaw, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
+import { configInitialPackWatermark } from '../../../_common/config/config.service';
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
 import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
@@ -21,7 +22,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { user } = useCommonStore();
+const { user, setInitialPackWatermarkStorageValue } = useCommonStore();
 const router = useRouter();
 
 const steps = [markRaw(FormOnboardingProfile), markRaw(FormOnboardingRealms)];
@@ -48,6 +49,10 @@ createAppRoute({
 
 		isSocialRegistration.value = payload.isSocialRegistration || false;
 		inviteUser.value = payload.inviteUser && new User(payload.inviteUser);
+
+		if (configInitialPackWatermark.value) {
+			setInitialPackWatermarkStorageValue(true);
+		}
 	},
 });
 

@@ -163,6 +163,15 @@ export const configHomeFeedSwitcher = new ConfigOptionBoolean('web_home_feed_swi
 	},
 });
 
+/**
+ * Shows a notification blip on the Backpack cbar item when a user signs up.
+ */
+export const configInitialPackWatermark = new ConfigOptionBoolean('initial_pack_watermark', false, {
+	conditions: {
+		join: true,
+	},
+});
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }

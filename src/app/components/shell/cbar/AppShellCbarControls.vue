@@ -11,7 +11,7 @@ import { useGridStore } from '../../grid/grid-store';
 import AppShellCbarItem from './AppShellCbarItem.vue';
 
 const { activeCommunity, visibleLeftPane, toggleLeftPane } = useAppStore();
-const { user } = useCommonStore();
+const { user, showInitialPackWatermark } = useCommonStore();
 const { theme } = useThemeStore();
 const { chat } = useGridStore();
 
@@ -69,6 +69,7 @@ const highlight = computed(() => {
 				class="-control"
 				:highlight="highlight"
 				:is-active="visibleLeftPane === 'backpack'"
+				:show-blip="showInitialPackWatermark"
 				is-control
 			>
 				<a
