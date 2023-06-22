@@ -9,7 +9,9 @@ import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMed
 import AppQuestActionButton from '../../../../_common/quest/AppQuestActionButton.vue';
 import AppQuestObjective from '../../../../_common/quest/AppQuestObjective.vue';
 import AppProgressBarQuest from '../../../../_common/quest/AppQuestProgress.vue';
+import AppQuestReward from '../../../../_common/quest/AppQuestReward.vue';
 import { Quest } from '../../../../_common/quest/quest-model';
+import { QuestReward } from '../../../../_common/quest/quest-reward-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
@@ -55,6 +57,30 @@ const objectives = computed(() => {
 		return [];
 	}
 	return _quest.objectives.sort((a, b) => numberSort(a.sort, b.sort));
+});
+
+const rewards = computed(() => {
+	const _quest = quest.value;
+	if (!_quest) {
+		return [];
+	}
+
+	const rewards = new Map<string, QuestReward>();
+
+	for (const reward of _quest.rewards) {
+		const rewardKey = reward.getGroupKey();
+		if (rewards.has(rewardKey)) {
+			rewards.get(rewardKey)!.amount += reward.amount;
+		} else {
+			const fakeReward = new QuestReward({
+				...reward,
+				amount: reward.amount,
+			});
+			rewards.set(rewardKey, fakeReward);
+		}
+	}
+
+	return rewards.values();
 });
 
 createAppRoute({
@@ -241,17 +267,26 @@ function onNewQuest(data: Quest) {
 			</section>
 
 			<section class="section">
-				<div class="-objectives-header">Objectives</div>
+				<div class="_objectives-header">Objectives</div>
 
-				<div :key="quest.id" class="-objectives">
+				<div :key="quest.id" class="_objectives">
 					<template v-for="objective of objectives" :key="objective.id">
 						<AppSpacer vertical :scale="4" />
 
 						<AppQuestObjective
-							class="-objective"
+							class="_objective"
 							:quest="quest"
 							:objective="objective"
 						/>
+					</template>
+				</div>
+			</section>
+
+			<section v-if="quest.rewards.length > 0" class="section" :style="{ paddingTop: '0' }">
+				<div class="_rewards-header">Rewards</div>
+				<div :key="quest.id" class="_rewards">
+					<template v-for="reward of rewards" :key="reward.id">
+						<AppQuestReward :reward="reward" class="anim-fade-in-right stagger" />
 					</template>
 				</div>
 			</section>
@@ -415,17 +450,28 @@ $-font-size = $font-size-small
 .-friends-list
 	margin-right: 16px
 
-.-objectives-header
+._objectives-header
 	text-transform: uppercase
 	color: var(--theme-fg-muted)
 	font-size: $font-size-tiny
 	font-weight: 600
 
-.-objectives
+._objectives
 	display: flex
 	flex-direction: column
 	width: 100%
 
-.-objective
+._objective
 	flex: auto
+
+._rewards-header
+	text-transform: uppercase
+	color: var(--theme-fg-muted)
+	font-size: $font-size-tiny
+	font-weight: 600
+
+._rewards
+	margin-top: 12px
+	display: flex
+	grid-gap: 12px
 </style>
