@@ -192,9 +192,11 @@ function createController() {
 }
 
 const ProfileThemeKey = 'profile';
+</script>
 
-export default {
-	...defineAppRouteOptions({
+<script lang="ts" setup>
+defineOptions(
+	defineAppRouteOptions({
 		cache: true,
 		lazy: true,
 		deps: { params: ['username'], query: ['intent'] },
@@ -219,11 +221,9 @@ export default {
 			}
 			return Api.sendRequest('/web/profile/@' + route.params.username);
 		},
-	}),
-};
-</script>
+	})
+);
 
-<script lang="ts" setup>
 const routeStore = createController();
 provide(Key, routeStore);
 
