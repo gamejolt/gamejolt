@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, Ref, computed, onBeforeUnmount, ref, toRefs, watch } from 'vue';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { MediaItem } from '../../../../../_common/media-item/media-item-model';
 import AppScrollInview, {
 	createScrollInview,
@@ -14,8 +15,8 @@ import {
 	createVideoPlayerController,
 	queueVideoTimeChange,
 } from '../../../../../_common/video/player/controller';
-import { styleBorderRadiusBase } from '../../../../../_styles/mixins';
-import { kFontSizeSmall } from '../../../../../_styles/variables';
+import { styleBorderRadiusBase, styleOverlayTextShadow } from '../../../../../_styles/mixins';
+import { kFontSizeLarge, kFontSizeSmall } from '../../../../../_styles/variables';
 import { InviewConfigFocused } from '../view';
 
 /**
@@ -149,31 +150,40 @@ function setVideoShouldLoadTimer() {
 		>
 			<template #controls-peek>
 				<div
-					v-if="player && player.duration"
+					v-if="player"
 					:style="{
-						marginLeft: `auto`,
+						marginLeft: `8px`,
+						marginRight: `8px`,
+						display: `flex`,
+						alignItems: `center`,
+						width: `100%`,
+						height: `40px`,
 					}"
 				>
-					<div
+					<AppJolticon
+						v-if="player.muted"
+						icon="audio-mute"
 						:style="{
-							display: `inline-flex`,
-							justifyContent: `center`,
-							alignItems: `center`,
-							marginRight: `8px`,
-							height: `40px`,
+							...styleOverlayTextShadow,
+							fontSize: kFontSizeLarge.px,
+							color: `white`,
+							margin: 0,
+						}"
+					/>
+
+					<div :style="{ flex: `1 0 12px` }" />
+
+					<div
+						v-if="player.duration"
+						:style="{
+							...styleBorderRadiusBase,
+							backgroundColor: `rgba(0,0,0,0.4)`,
+							color: `white`,
+							padding: `4px 8px`,
+							fontSize: kFontSizeSmall.px,
 						}"
 					>
-						<div
-							:style="{
-								...styleBorderRadiusBase,
-								backgroundColor: `rgba(0,0,0,0.4)`,
-								color: `white`,
-								padding: `4px 8px`,
-								fontSize: kFontSizeSmall.px,
-							}"
-						>
-							{{ remainingTime }}
-						</div>
+						{{ remainingTime }}
 					</div>
 				</div>
 			</template>
