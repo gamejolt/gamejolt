@@ -24,6 +24,8 @@ const fallbackIcon = computed(() => {
 
 	if (reward.value.type === QuestRewardTypes.randomSticker) {
 		return 'sticker';
+	} else if (reward.value.type === QuestRewardTypes.siteTrophy) {
+		return 'trophy';
 	}
 
 	return 'gift';
@@ -46,6 +48,8 @@ const subtitle = computed(() => {
 				return $gettext(`Avatar Frame`);
 			}
 			break;
+		case QuestRewardTypes.siteTrophy:
+			return $gettext(`Trophy`);
 	}
 
 	return null;
