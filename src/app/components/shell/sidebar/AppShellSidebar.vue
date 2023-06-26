@@ -9,6 +9,7 @@ import AppShellSidebarBackpack from './AppShellSidebarBackpack.vue';
 import AppShellSidebarContext from './AppShellSidebarContext.vue';
 import AppShellSidebarLibrary from './AppShellSidebarLibrary.vue';
 import AppShellSidebarMobile from './AppShellSidebarMobile.vue';
+import AppShellSidebarQuests from './AppShellSidebarQuests.vue';
 
 const AppShellSidebarChat = defineAsyncComponent(() => import('./AppShellSidebarChat.vue'));
 
@@ -46,6 +47,7 @@ watch(
 		<AppShellSidebarContext v-else-if="visibleLeftPane === 'context'" />
 		<AppShellSidebarMobile v-else-if="visibleLeftPane === 'mobile'" />
 		<AppShellSidebarBackpack v-else-if="visibleLeftPane === 'backpack'" />
+		<AppShellSidebarQuests v-else-if="visibleLeftPane === 'quests'" />
 	</component>
 </template>
 

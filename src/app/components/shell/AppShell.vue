@@ -11,9 +11,11 @@ import { useSidebarStore } from '../../../_common/sidebar/sidebar.store';
 import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue';
 import { closeStickerDrawer, useStickerStore } from '../../../_common/sticker/sticker-store';
 import { useBannerStore } from '../../store/banner';
-import { useAppStore } from '../../store/index';
+import { TogglableLeftPane, useAppStore } from '../../store/index';
+import { useQuestStore } from '../../store/quest';
 import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
 import { useGridStore } from '../grid/grid-store';
+import AppQuestWindow from '../quest/window/AppQuestWindow.vue';
 import AppShellBanner from './AppShellBanner.vue';
 import AppShellBody from './AppShellBody.vue';
 import AppShellHotBottom from './AppShellHotBottom.vue';
@@ -38,6 +40,7 @@ const {
 	unreadNotificationsCount,
 	showContextPane,
 	clearPanes,
+	toggleLeftPane,
 } = useAppStore();
 
 const { hasBanner } = useBannerStore();
@@ -52,6 +55,14 @@ const stickerStore = useStickerStore();
 
 const { chat } = useGridStore();
 
+const { activeQuest } = useQuestStore();
+const activeQuestId = computed(() =>
+	typeof activeQuest.value === 'number' ? activeQuest.value : activeQuest.value?.id
+);
+const activeQuestResource = computed(() =>
+	typeof activeQuest.value === 'number' ? undefined : activeQuest.value || undefined
+);
+
 const route = useRoute();
 const router = useRouter();
 
@@ -60,45 +71,124 @@ const ssrShouldShowSidebar = computed(
 	() => import.meta.env.SSR && String(route.name).indexOf('communities.view') === 0
 );
 
-const sidebarWidth = computed(() => {
-	const base = 270;
+const sidebarWidthBase = 270 as const;
+const sidebarWidthLg = 470 as const;
 
+/**
+ * Width of the current left sidebar.
+ */
+const sidebarWidth = computed(() => {
 	switch (visibleLeftPane.value) {
 		case 'backpack':
-			return base + 200;
+		case 'quests':
+			return sidebarWidthLg;
 
 		default:
-			return base;
+			return sidebarWidthBase;
 	}
 });
 
 const shellCSSVariables = computed(() => {
 	const cbarWidth = CBAR_WIDTH;
 	const sidebarPadding = 12;
-	const sidebarWidthBase = sidebarWidth.value;
 
 	return [
 		`--shell-cbar-width: ${cbarWidth}px`,
 		`--shell-content-sidebar-padding: ${sidebarPadding}px`,
-		`--shell-content-sidebar-width-base: ${sidebarWidthBase}px`,
-		`--shell-content-sidebar-width: ${sidebarWidthBase + sidebarPadding * 2}px`,
+		`--shell-content-sidebar-width-base: ${sidebarWidthBase + sidebarPadding * 2}px`,
+		`--shell-content-sidebar-width-lg: ${sidebarWidthLg + sidebarPadding * 2}px`,
+		`--shell-content-sidebar-width: ${sidebarWidth.value + sidebarPadding * 2}px`,
 	];
 });
 
+type HashEventResult = false | { sidebar: TogglableLeftPane | undefined };
+
+const hashEvents: {
+	[key: string]: {
+		sidebar: TogglableLeftPane | undefined;
+		handler: (trailingValue: string | undefined) => HashEventResult;
+	};
+} = {
+	quest: {
+		sidebar: 'quests',
+		handler(trailingValue) {
+			const questId = trailingValue ? parseInt(trailingValue, 10) : -1;
+			if (questId > 0) {
+				activeQuest.value = questId;
+			} else {
+				activeQuest.value = null;
+			}
+
+			const sidebar = 'quests';
+			if (visibleLeftPane.value !== sidebar) {
+				toggleLeftPane(sidebar);
+			}
+			return { sidebar };
+		},
+	},
+};
+
+function handleHashEvents(): HashEventResult {
+	const hash = router.currentRoute.value.hash;
+	// Do nothing if there's no hash.
+	if (!hash) {
+		return false;
+	}
+
+	const hashParts = hash.split('-');
+	const eventKey = hashParts[0].substring(1);
+	const trailingValue = hashParts.length > 1 ? hashParts[1] : undefined;
+
+	let hashEventResult: HashEventResult = false;
+	if (eventKey in hashEvents) {
+		hashEventResult = hashEvents[eventKey].handler(trailingValue);
+	}
+
+	if (hashEventResult) {
+		router.replace({
+			...router.currentRoute.value,
+			hash: '',
+		});
+		return hashEventResult;
+	}
+
+	return false;
+}
+
 onMounted(() => {
-	router.afterEach(async () => {
+	handleHashEvents();
+
+	router.afterEach(async (_to, from, _failure) => {
 		// Wait for any contextPane state to be changed.
 		await nextTick();
 
+		let hashEventResult = handleHashEvents();
+		if (!hashEventResult && from.hash) {
+			// If our current route navigation doesn't include a hash event, we
+			// need to check the previous one to know if our [router.replace()]
+			// call triggered this again.
+			const hashKey = from.hash.split('-')[0].substring(1);
+			if (hashKey in hashEvents) {
+				hashEventResult = { sidebar: hashEvents[hashKey].sidebar };
+			}
+		}
+
+		const hashEventSidebar = (hashEventResult && hashEventResult.sidebar) || false;
+
 		// Show any context panes that are set to show on route change.
 		if (shouldShowSidebarOnRouteChange.value) {
-			showContextPane();
+			// Only show the context pane if our handled hash event didn't
+			// affect any sidebars.
+			if (!hashEventSidebar) {
+				showContextPane();
+			}
 			showContextOnRouteChange(false);
 			return;
 		}
 
-		// Hide all panes if we aren't showing one on route change.
-		if (shouldHideSidebarOnRouteChange.value) {
+		// Hide all panes if our hash event didn't touch sidebars and we aren't
+		// showing one on route change.
+		if (!hashEventSidebar && shouldHideSidebarOnRouteChange.value) {
 			clearPanes();
 		}
 
@@ -153,6 +243,12 @@ watch([totalChatNotificationsCount, unreadActivityCount, unreadNotificationsCoun
 			v-if="visibleLeftPane === 'chat' && chat && chat.populated && chat.activeRoomId"
 			:key="chat.activeRoomId"
 			:room-id="chat.activeRoomId"
+		/>
+		<AppQuestWindow
+			v-else-if="visibleLeftPane === 'quests' && activeQuestId"
+			:key="activeQuestId"
+			:quest-id="activeQuestId"
+			:resource="activeQuestResource"
 		/>
 
 		<div v-if="GJ_IS_DESKTOP_APP" key="shell-client">
@@ -214,6 +310,16 @@ html, body
 	bottom: 0
 
 	@media $media-sm-up
+		top: $shell-top-nav-height
+		left: calc(var(--shell-content-sidebar-width) + var(--shell-cbar-width))
+
+.quest-window
+	top: 0
+	left: 0
+	right: 0
+	bottom: 0
+
+	@media $media-md-up
 		top: $shell-top-nav-height
 		left: calc(var(--shell-content-sidebar-width) + var(--shell-cbar-width))
 
@@ -281,9 +387,9 @@ body.has-hot-bottom
 
 #shell-body.has-content-sidebar
 	#footer
-		margin-left: var(--shell-content-sidebar-width)
+		margin-left: var(--shell-content-sidebar-width-base)
 
 	&.has-cbar
 		#footer
-			margin-left: calc(var(--shell-content-sidebar-width) + var(--shell-cbar-width))
+			margin-left: calc(var(--shell-content-sidebar-width-base) + var(--shell-cbar-width))
 </style>

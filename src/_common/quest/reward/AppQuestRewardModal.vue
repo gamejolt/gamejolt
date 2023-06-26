@@ -321,7 +321,8 @@ $-z-backpack = 1
 
 .-quest-title-header
 	font-size: calc(min(32px, 3vh))
-	font-family: 'Germania'
+	font-family: $font-family-base
+	font-weight: bold
 
 	img
 		height: calc(min(32px, 3vh))

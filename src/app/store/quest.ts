@@ -1,13 +1,39 @@
 import { computed, inject, InjectionKey, ref, Ref, watch } from 'vue';
 import { Api } from '../../_common/api/api.service';
-import { Quest, QuestRepeatType } from '../../_common/quest/quest-model';
+import { storeModelList } from '../../_common/model/model-store.service';
+import { Quest, QuestRepeatType, QuestSeries } from '../../_common/quest/quest-model';
+import { $gettext } from '../../_common/translate/translate.service';
 import { User } from '../../_common/user/user.model';
+import { numberSort } from '../../utils/array';
+import { run } from '../../utils/utils';
 import { GridClient } from '../components/grid/client.service';
 
 export type QuestStore = ReturnType<typeof createQuestStore>;
 type QuestIdSet = Set<number>;
 
 export const QuestStoreKey: InjectionKey<QuestStore> = Symbol('quest-store');
+
+const questChunkSorting = {
+	'Daily Quests': 0,
+	'Intro Quests': 1,
+	'Weekly Quests': 2,
+	'Active Quests': 3,
+	'Available Quests': 4,
+	'Expired Quests': 5,
+} as const;
+
+interface QuestChunk {
+	/**
+	 * Used to sort quest chunks.
+	 */
+	type: keyof typeof questChunkSorting;
+
+	/**
+	 * Translated label for the chunk.
+	 */
+	label: string;
+	quests: Quest[];
+}
 
 export function createQuestStore({
 	user,
@@ -16,7 +42,7 @@ export function createQuestStore({
 	user: Ref<User | null>;
 	grid: Ref<GridClient | undefined>;
 }) {
-	const isLoading = ref(true);
+	const isLoading = ref(false);
 	const hasLoaded = ref(false);
 	const _isLoadingDailyQuests = ref(false);
 
@@ -28,9 +54,60 @@ export function createQuestStore({
 	const dailyQuests = computed(() =>
 		_allQuests.value.filter(i => i.repeat_type === QuestRepeatType.daily)
 	);
-	const quests = computed(() =>
-		_allQuests.value.filter(i => i.repeat_type !== QuestRepeatType.daily)
-	);
+
+	const questChunks = computed(() => {
+		const items = _allQuests.value
+			.filter(i => i.repeat_type !== QuestRepeatType.daily)
+			.reduce((chunks, quest) => {
+				const [type, label] = run<[keyof typeof questChunkSorting, string]>(() => {
+					if (quest.canAccept) {
+						return ['Available Quests', $gettext('Available Quests')];
+					} else if (quest.isExpired) {
+						return ['Expired Quests', $gettext('Expired Quests')];
+					}
+
+					switch (quest.series) {
+						// We filter these out. This is just for safer typing.
+						case QuestSeries.dailyQuest:
+							return ['Daily Quests', $gettext('Daily Quests')];
+
+						case QuestSeries.helloWorld:
+							return ['Intro Quests', $gettext('Intro Quests')];
+
+						case QuestSeries.weeklyQuest:
+							return ['Weekly Quests', $gettext('Weekly Quests')];
+
+						case QuestSeries.worldEvent:
+						default:
+							return ['Active Quests', $gettext('Active Quests')];
+					}
+				});
+
+				const chunk = chunks.find(i => i.type === type);
+				if (chunk) {
+					chunk.quests.push(quest);
+				} else {
+					chunks.push({
+						type,
+						label,
+						quests: [quest],
+					});
+				}
+				return chunks;
+			}, [] as QuestChunk[]);
+
+		items.sort((a, b) => numberSort(questChunkSorting[a.type], questChunkSorting[b.type]));
+
+		for (const chunk of items) {
+			chunk.quests.sort((a, b) => numberSort(a.started_on, b.started_on));
+		}
+		return items;
+	});
+
+	/**
+	 * The quest or quest ID that should be showing in the quest window.
+	 */
+	const activeQuest = ref(null) as Ref<number | Quest | null>;
 
 	// Reset this store when we lose our current user.
 	watch(
@@ -66,10 +143,10 @@ export function createQuestStore({
 			);
 
 			const newDailyQuests: Quest[] = payload.dailyQuests
-				? Quest.populate(payload.dailyQuests)
+				? storeModelList(Quest, payload.dailyQuests)
 				: [];
 
-			const oldNonDaily = quests.value;
+			const oldNonDaily = questChunks.value.map(i => i.quests).flat();
 			_allQuests.value = [...newDailyQuests, ...oldNonDaily];
 		} finally {
 			_isLoadingDailyQuests.value = false;
@@ -80,10 +157,6 @@ export function createQuestStore({
 	function assignQuests(newQuests: Quest[]) {
 		_allQuests.value = newQuests;
 		hasLoaded.value = true;
-	}
-
-	function updateQuest(data: Quest) {
-		_allQuests.value.find(i => i.id === data.id)?.assign(data);
 	}
 
 	function addNewQuestIds(ids: number[]) {
@@ -141,16 +214,12 @@ export function createQuestStore({
 		/** Only quests that are {@link QuestRepeatType.daily}. */
 		dailyQuests,
 		/** All quests, other than {@link QuestRepeatType.daily}. */
-		quests,
+		questChunks,
 		allQuests: computed(() => _allQuests.value),
+		activeQuest,
 		/** Overwrites our existing {@link _allQuests} and marks this as bootstrapped. */
 		assignQuests,
 		fetchDailyQuests,
-		/**
-		 * Finds any existing quest with a matching id and assigns new data to
-		 * it.
-		 */
-		updateQuest,
 		newQuestIds,
 		questActivityIds,
 		addNewQuestIds,

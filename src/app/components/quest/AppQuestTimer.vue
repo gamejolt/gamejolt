@@ -1,8 +1,8 @@
 <script lang="ts">
-import { computed, onMounted, onUnmounted, ref, toRefs } from 'vue';
+import { PropType, computed, onMounted, onUnmounted, ref, toRefs } from 'vue';
 import { shorthandReadableTime } from '../../../_common/filters/duration';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { getCurrentServerTime } from '../../../utils/server-time';
 </script>
 
@@ -12,13 +12,25 @@ const props = defineProps({
 		type: Number,
 		required: true,
 	},
+	nowText: {
+		type: String,
+		default: 'now',
+		validator: val => typeof val === 'string' && val.length > 0,
+	},
+	tag: {
+		type: String as PropType<'span' | 'div'>,
+		default: 'span',
+		validator: val => val === 'span' || val === 'div',
+	},
 });
 
 const { endsOn } = toRefs(props);
 
-const currentTime = ref(getCurrentServerTime());
-const readableTime = ref(getReadableTime());
 let interval: NodeJS.Timer | null = null;
+
+const currentTime = ref(getCurrentServerTime());
+const readableTimeRough = ref(getReadableTime('rough'));
+const readableTimeExact = ref(getReadableTime('exact'));
 
 const hasEnded = computed(() => endsOn.value - currentTime.value <= 0);
 
@@ -36,10 +48,10 @@ onUnmounted(() => {
 	}
 });
 
-function getReadableTime() {
+function getReadableTime(precision: 'rough' | 'exact') {
 	return shorthandReadableTime(endsOn.value, {
 		allowFuture: true,
-		precision: 'rough',
+		precision,
 		joiner: ', ',
 		nowText: 'now',
 	});
@@ -47,20 +59,23 @@ function getReadableTime() {
 
 function updateTimer() {
 	currentTime.value = getCurrentServerTime();
-	readableTime.value = getReadableTime();
+	readableTimeRough.value = getReadableTime('rough');
+	readableTimeExact.value = getReadableTime('exact');
 }
 </script>
 
 <template>
 	<span v-if="hasEnded">
 		<slot name="ended">
-			<AppTranslate class="text-muted"> This quest has ended </AppTranslate>
+			<span class="text-muted">
+				{{ $gettext(`This quest has ended`) }}
+			</span>
 		</slot>
 	</span>
-	<span v-else-if="endsOn">
+	<span v-else-if="endsOn" v-app-tooltip.touchable="readableTimeExact">
 		<AppJolticon class="small text-muted" icon="clock" />
 		<span class="text-muted">
-			{{ ' ' + readableTime }}
+			{{ ' ' + readableTimeRough }}
 		</span>
 	</span>
 </template>
