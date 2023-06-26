@@ -76,6 +76,8 @@ export class Quest extends Model {
 	declare progress_percent: number;
 	declare is_new: boolean;
 	declare has_activity: boolean;
+	declare current_stage: number;
+	declare total_stages: number;
 	objectives: QuestObjective[] = [];
 	rewards: QuestReward[] = [];
 

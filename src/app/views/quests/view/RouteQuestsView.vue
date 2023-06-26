@@ -233,6 +233,19 @@ function onNewQuest(data: Quest) {
 				</div>
 				<AppSpacer vertical :scale="4" />
 
+				<div v-if="quest.total_stages > 1">
+					<strong>
+						{{
+							$gettextInterpolate(`Stage %{currentStage}/%{totalStages}`, {
+								currentStage: quest.current_stage,
+								totalStages: quest.total_stages,
+							})
+						}}
+					</strong>
+
+					<AppSpacer vertical :scale="2" />
+				</div>
+
 				<AppContentViewer
 					v-if="quest.description_content"
 					:source="quest.description_content"
