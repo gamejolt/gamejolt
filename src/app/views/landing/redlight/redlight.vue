@@ -1,12 +1,12 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
+import { AppAuthJoinLazy } from '../../../../_common/lazy';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { AppAuthJoinLazy } from '../../../components/lazy';
 import socialImage from './social.png';
 
 function getRandomInt(min: number, max: number) {

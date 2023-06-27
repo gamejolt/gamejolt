@@ -15,7 +15,7 @@ import AppScrollInview, {
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
-import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
+import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
 import { tryGetRoomRole } from '../../../chat/client';
 import { ChatRole } from '../../../chat/role';
 import { ChatRoom } from '../../../chat/room';
@@ -286,7 +286,7 @@ async function toggleModerator(user: ChatUser) {
 <template>
 	<AppLoadingFade :is-loading="section === 'currentMods' && isLoading && !chatMods.length">
 		<AppChatList :entries="users" :hide-filter="section === 'currentMods'">
-			<template #default="{ item }: { item: ChatUser }">
+			<template #default="{ item }">
 				<AppFiresideChatModsItem
 					:user="item"
 					:is-processing="isUserProcessing(item)"

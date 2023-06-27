@@ -12,7 +12,7 @@ import AppStickerChargeTooltipHandler from '../../../_common/sticker/charge/AppS
 import { useStickerStore } from '../../../_common/sticker/sticker-store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { illChargeOrbEmpty } from '../../img/ill/illustrations';
+import { illChargeOrbEmpty } from '../../../_common/illustration/illustrations';
 import { useQuestStore } from '../../store/quest';
 import { useGridStore } from '../grid/grid-store';
 import AppQuestTimer from './AppQuestTimer.vue';

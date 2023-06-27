@@ -1,15 +1,14 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import type { ChatUser } from '../../../app/components/chat/user';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
-import AppUserCreatorBadge from '../creator/AppUserCreatorBadge.vue';
-import { User } from '../user.model';
+import AppJolticon from '../jolticon/AppJolticon.vue';
+import { vAppTooltip } from '../tooltip/tooltip-directive';
+import { $gettext } from '../translate/translate.service';
+import AppUserCreatorBadge from './creator/AppUserCreatorBadge.vue';
+import { UserCommonFields } from './user.model';
 
 const props = defineProps({
 	user: {
-		type: Object as PropType<User | ChatUser>,
+		type: Object as PropType<UserCommonFields>,
 		required: true,
 	},
 	highlight: {

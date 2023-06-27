@@ -1,29 +1,22 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
-import { vAppTooltip } from '../../../tooltip/tooltip-directive';
-import { User } from '../../user.model';
-import AppUserVerifiedTick from '../../verified-tick/AppUserVerifiedTick.vue';
-import AppUserAvatar from '../AppUserAvatar.vue';
+<script lang="ts" setup>
+import { PropType } from 'vue';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import AppUserVerifiedTick from '../AppUserVerifiedTick.vue';
+import { UserCommonFields } from '../user.model';
+import AppUserAvatar from './AppUserAvatar.vue';
 
-@Options({
-	components: {
-		AppUserAvatar,
-		AppUserVerifiedTick,
+defineProps({
+	users: {
+		type: Array as PropType<UserCommonFields[]>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	sm: {
+		type: Boolean,
 	},
-})
-export default class AppUserAvatarList extends Vue {
-	@Prop(Array)
-	users!: User[];
-
-	@Prop(Boolean)
-	sm?: boolean;
-
-	@Prop(Boolean)
-	inline?: boolean;
-}
+	inline: {
+		type: Boolean,
+	},
+});
 </script>
 
 <template>

@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
-import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
+import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
 import { User } from '../../../../_common/user/user.model';
 
 const props = defineProps({

@@ -1,5 +1,5 @@
 import { Router } from 'vue-router';
-import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
+import { TrophyModal } from '../trophy/modal/modal.service';
 import { SupporterMessageModal } from '../../app/views/dashboard/supporters/message/modal.service';
 import { routeDashSupporters } from '../../app/views/dashboard/supporters/supporters.route';
 import type { RouteLocationDefinition } from '../../utils/router';

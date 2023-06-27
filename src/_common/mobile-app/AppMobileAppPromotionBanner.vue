@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { illMobileKikkerstein } from '../../app/img/ill/illustrations';
+import { illMobileKikkerstein } from '../illustration/illustrations';
 import { trackAppPromotionClick } from '../analytics/analytics.service';
 import AppButton from '../button/AppButton.vue';
 import { Screen } from '../screen/screen-service';

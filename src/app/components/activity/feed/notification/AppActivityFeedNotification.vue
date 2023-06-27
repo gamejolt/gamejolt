@@ -34,7 +34,7 @@ import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { User } from '../../../../../_common/user/user.model';
-import { getTrophyImg } from '../../../trophy/thumbnail/thumbnail.vue';
+import { getTrophyImg } from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
 
@@ -241,7 +241,9 @@ function onMarkRead() {
 													"
 												>
 													{{
-														(notification.from_model as FiresidePost).getShortLead()
+														(
+															notification.from_model as FiresidePost
+														).getShortLead()
 													}}
 												</span>
 												<span
@@ -251,7 +253,9 @@ function onMarkRead() {
 													"
 												>
 													{{
-														(notification.action_model as FiresidePostCommunity).fireside_post?.getShortLead()
+														(
+															notification.action_model as FiresidePostCommunity
+														).fireside_post?.getShortLead()
 													}}
 												</span>
 												<span
@@ -268,7 +272,11 @@ function onMarkRead() {
 														Notification.TYPE_COMMUNITY_USER_NOTIFICATION
 													"
 												>
-													{{ (notification.to_model as FiresidePost).getShortLead() }}
+													{{
+														(
+															notification.to_model as FiresidePost
+														).getShortLead()
+													}}
 												</span>
 												<span
 													v-else-if="
@@ -279,7 +287,11 @@ function onMarkRead() {
 													"
 												>
 													{{
-														(notification.action_model as UserGameTrophy | UserSiteTrophy).trophy?.description
+														(
+															notification.action_model as
+																| UserGameTrophy
+																| UserSiteTrophy
+														).trophy?.description
 													}}
 												</span>
 												<span
@@ -289,7 +301,11 @@ function onMarkRead() {
 													"
 													class="tiny text-muted"
 												>
-													{{ (notification.action_model as QuestNotification).subtitle }}
+													{{
+														(
+															notification.action_model as QuestNotification
+														).subtitle
+													}}
 												</span>
 											</AppFadeCollapse>
 										</div>

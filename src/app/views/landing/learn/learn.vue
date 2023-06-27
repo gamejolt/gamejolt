@@ -1,11 +1,11 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
+import { AppAuthJoinLazy } from '../../../../_common/lazy';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { AppAuthJoinLazy } from '../../../components/lazy';
 import { imageJolt } from '../../../img/images';
 
 @Options({

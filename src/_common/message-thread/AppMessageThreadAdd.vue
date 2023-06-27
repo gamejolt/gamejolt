@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppUserAvatarBubble from '../../app/components/user/AppUserAvatarBubble.vue';
 import { useCommonStore } from '../store/common-store';
 import AppTimelineListItem from '../timeline-list/item/item.vue';
+import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
 
 defineProps({
 	hideMessageSplit: {

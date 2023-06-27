@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import { User } from '../../../../../_common/user/user.model';
 import { ChatUser } from '../../../../components/chat/user';
 import AppChatManageUserItem from '../../chat/AppChatManageUserItem.vue';
 
 defineProps({
 	user: {
-		type: Object as PropType<ChatUser>,
+		type: Object as PropType<ChatUser | User>,
 		required: true,
 	},
 	isProcessing: {

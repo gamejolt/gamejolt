@@ -32,7 +32,7 @@ import { uuidv4 } from '../../../utils/uuid';
 import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
-import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
+import { getTrophyImg } from '../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
 import { GridNotificationChannel, createGridNotificationChannel } from './notification-channel';

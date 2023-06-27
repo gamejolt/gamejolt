@@ -10,7 +10,7 @@ import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivi
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { useGridStore } from '../../components/grid/grid-store';
 import { AppActivityFeedLazy } from '../../components/lazy';
-import { illNoComments } from '../../img/ill/illustrations';
+import { illNoComments } from '../../../_common/illustration/illustrations';
 import { useAppStore } from '../../store/index';
 import { routeDiscoverHome } from '../discover/home/home.route';
 import { RouteActivityFeedController } from './RouteHomeFeed.vue';

@@ -1,38 +1,34 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
-import { formatNumber } from '../../../../_common/filters/number';
-import { GameTrophy } from '../../../../_common/game/trophy/trophy.model';
-import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { UserGameTrophy } from '../../../../_common/user/trophy/game-trophy.model';
-import AppTrophyThumbnail from '../thumbnail/thumbnail.vue';
+<script lang="ts" setup>
+import { PropType, computed, toRefs } from 'vue';
+import { formatNumber } from '../../filters/number';
+import { GameTrophy } from '../../game/trophy/trophy.model';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
+import AppTimeAgo from '../../time/AppTimeAgo.vue';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import { UserGameTrophy } from '../../user/trophy/game-trophy.model';
+import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
 
-@Options({
-	components: {
-		AppTrophyThumbnail,
-		AppTimeAgo,
+const props = defineProps({
+	trophies: {
+		type: Array as PropType<GameTrophy[]>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	achieved: {
+		type: Array as PropType<UserGameTrophy[]>,
+		required: true,
 	},
-})
-export default class AppTrophyList extends Vue {
-	@Prop(Array) trophies!: GameTrophy[];
-	@Prop(Array) achieved!: UserGameTrophy[];
+});
 
-	readonly formatNumber = formatNumber;
+const { achieved } = toRefs(props);
 
-	get achievedIndexed() {
-		return UserGameTrophy.indexAchieved(this.achieved);
-	}
-}
+const achievedIndexed = computed(() => UserGameTrophy.indexAchieved(achieved.value));
 </script>
 
 <template>
 	<div class="trophy-list">
 		<div v-for="trophy of trophies" :key="trophy.id" class="trophy-list-item">
 			<div class="trophy-list-item-thumbnail">
-				<AppTrophyThumbnail :trophy="trophy" :is-achieved="!!achievedIndexed[trophy.id]" />
+				<AppTrophyThumbnail :trophy="trophy" />
 			</div>
 
 			<div class="trophy-list-item-content">
@@ -53,7 +49,7 @@ export default class AppTrophyList extends Vue {
 
 				<div v-else class="trophy-list-item-description small text-muted">
 					<em>
-						<AppTranslate>Achieve this trophy to view the description.</AppTranslate>
+						{{ $gettext(`Achieve this trophy to view the description.`) }}
 					</em>
 				</div>
 
@@ -64,12 +60,7 @@ export default class AppTrophyList extends Vue {
 					>
 						<AppJolticon icon="exp" class="middle" />
 						{{ ' ' + formatNumber(trophy.experience) + ' ' }}
-						<AppTranslate
-							class="small"
-							translate-comment="As in abbreviation for experience. If one doesnt exist for your language, or if its not a short word just leave it as EXP."
-						>
-							EXP
-						</AppTranslate>
+						{{ $gettext(`EXP`) }}
 					</span>
 
 					<template v-if="achievedIndexed[trophy.id]">
@@ -77,7 +68,7 @@ export default class AppTrophyList extends Vue {
 						<br class="visible-xs" />
 
 						<span class="tag tag-highlight">
-							<AppTranslate>Achieved!</AppTranslate>
+							{{ $gettext(`Achieved!`) }}
 						</span>
 						<span class="dot-separator" />
 						<small class="text-muted">

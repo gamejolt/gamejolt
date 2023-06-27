@@ -16,7 +16,7 @@ import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
-import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
+import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
 import { User } from '../../../../_common/user/user.model';
 import { numberSort } from '../../../../utils/array';
 import AppQuestTimer from '../../../components/quest/AppQuestTimer.vue';
