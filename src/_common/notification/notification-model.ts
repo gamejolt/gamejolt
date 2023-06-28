@@ -1,5 +1,6 @@
 import { Router } from 'vue-router';
 import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
+import { routeDashAccountEdit } from '../../app/views/dashboard/account/edit/edit.route';
 import { SupporterMessageModal } from '../../app/views/dashboard/supporters/message/modal.service';
 import { routeDashSupporters } from '../../app/views/dashboard/supporters/supporters.route';
 import type { RouteLocationDefinition } from '../../utils/router';
@@ -40,6 +41,7 @@ import { UserFriendship } from '../user/friendship/friendship.model';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
 import { UserBaseTrophy } from '../user/trophy/user-base-trophy.model';
+import { UserAvatarFrame } from '../user/user-avatar/frame/frame.model';
 import { User } from '../user/user.model';
 
 function getRouteLocationForModel(
@@ -86,6 +88,7 @@ export class Notification extends Model {
 	static TYPE_CHARGED_STICKER = 'charged-sticker';
 	static TYPE_SUPPORTER_MESSAGE = 'supporter-message';
 	static TYPE_POLL_ENDED = 'poll-ended';
+	static TYPE_UNLOCKED_AVATAR_FRAME = 'unlocked-avatar-frame';
 
 	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
@@ -108,6 +111,7 @@ export class Notification extends Model {
 		Notification.TYPE_CHARGED_STICKER,
 		Notification.TYPE_SUPPORTER_MESSAGE,
 		Notification.TYPE_POLL_ENDED,
+		Notification.TYPE_UNLOCKED_AVATAR_FRAME,
 	];
 
 	user_id!: number;
@@ -143,7 +147,8 @@ export class Notification extends Model {
 		| QuestNotification
 		| StickerPlacement
 		| SupporterAction
-		| Poll;
+		| Poll
+		| UserAvatarFrame;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -263,6 +268,8 @@ export class Notification extends Model {
 			this.is_user_based = true;
 		} else if (this.type === Notification.TYPE_POLL_ENDED) {
 			this.action_model = new Poll(data.action_resource_model);
+		} else if (this.type === Notification.TYPE_UNLOCKED_AVATAR_FRAME) {
+			this.action_model = new UserAvatarFrame(data.action_resource_model);
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -370,6 +377,16 @@ export class Notification extends Model {
 				if (this.from_model) {
 					return getRouteLocationForModel(this.from_model);
 				}
+				break;
+			}
+
+			case Notification.TYPE_UNLOCKED_AVATAR_FRAME: {
+				const r = routeDashAccountEdit;
+				return {
+					name: r.name,
+					path: r.path,
+					query: { avatar: this.action_resource_id },
+				};
 			}
 		}
 
