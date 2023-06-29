@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Ref, computed, onMounted, ref, toRefs } from 'vue';
-import { styleWhen } from '../../_styles/mixins';
+import { styleAbsoluteFill, styleFlexCenter, styleWhen } from '../../_styles/mixins';
 import { kBorderWidthLg } from '../../_styles/variables';
 import { debounceWithMaxTimeout } from '../../utils/utils';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
@@ -16,9 +16,17 @@ const props = defineProps({
 		type: Number,
 		default: kBorderWidthLg.value * 2,
 	},
+	transitionMs: {
+		type: Number,
+		default: 500,
+	},
 });
 
 const { percent, strokeWidth } = toRefs(props);
+
+const emit = defineEmits({
+	'after-transition': () => true,
+});
 
 const root = ref() as Ref<HTMLDivElement>;
 const parentSize = ref<number>(0);
@@ -55,12 +63,24 @@ const debounceDimensionsChanged = debounceWithMaxTimeout(onDimensionsChanged, 10
 		}"
 	>
 		<AppAspectRatio :ratio="1" show-overflow>
+			<div
+				:style="[
+					styleAbsoluteFill(),
+					styleFlexCenter({
+						direction: `column`,
+					}),
+				]"
+			>
+				<slot />
+			</div>
+
 			<svg
 				v-if="parentSize > 0"
 				:width="parentSize"
 				:height="parentSize"
 				:viewBox="`0 0 ${parentSize} ${parentSize}`"
 				:style="{
+					...styleAbsoluteFill(),
 					transform: `rotate(-90deg)`,
 				}"
 			>
@@ -86,10 +106,11 @@ const debounceDimensionsChanged = debounceWithMaxTimeout(onDimensionsChanged, 10
 						strokeLinecap: `round`,
 						strokeDasharray: trackLength,
 						...styleWhen(!indeterminate, {
-							transition: `stroke-dashoffset 0.5s ease-in-out`,
+							transition: `stroke-dashoffset ${transitionMs}ms ease-in-out`,
 							strokeDashoffset: `${trackLength * (-safePercent + 1) + strokeWidth}px`,
 						}),
 					}"
+					@transitionend="emit('after-transition')"
 				/>
 			</svg>
 		</AppAspectRatio>

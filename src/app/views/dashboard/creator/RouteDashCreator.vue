@@ -34,9 +34,11 @@ export default {
 	...defineAppRouteOptions({
 		resolver: async () => {
 			try {
-				return await Api.sendRequest(`/web/dash/creators`, undefined, {
-					noErrorRedirect: true,
-				});
+				return await Api.sendFieldsRequest(
+					`/mobile/dash/creators/experience`,
+					{ experience: true },
+					{ noErrorRedirect: true }
+				);
 			} catch (error) {
 				// Redirect away if the request fails.
 				return new RouteLocationRedirect({
@@ -132,7 +134,7 @@ const buttons = computed<Button[]>(() => [
 
 const creatorNextUnlock = computed(() => {
 	if (experience.value) {
-		return experience.value.ability_on_level_up;
+		return experience.value.ability_on_level_up_display;
 	}
 	return null;
 });
@@ -209,7 +211,6 @@ const creatorNextUnlock = computed(() => {
 
 							<div v-if="creatorNextUnlock">
 								{{ $gettext(`Next unlock`) }}:
-								<!-- TODO(creator-score) readable ability -->
 								<span>
 									{{ creatorNextUnlock }}
 								</span>

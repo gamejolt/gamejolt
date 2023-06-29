@@ -16,14 +16,6 @@ import {
 	watch,
 } from 'vue';
 import { Router } from 'vue-router';
-import { arrayAssignAll, arrayUnique } from '../../../../utils/array';
-import { createLogger } from '../../../../utils/logging';
-import { objectPick } from '../../../../utils/object';
-import { getAbsoluteLink } from '../../../../utils/router';
-import { getCurrentServerTime, updateServerTimeOffset } from '../../../../utils/server-time';
-import { run, sleep } from '../../../../utils/utils';
-import { uuidv4 } from '../../../../utils/uuid';
-import { MaybeRef } from '../../../../utils/vue';
 import {
 	trackFiresideExtinguish,
 	trackFiresidePublish,
@@ -59,7 +51,7 @@ import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service'
 import { getModel } from '../../../../_common/model/model-store.service';
 import checkPayloadActions, {
 	PayloadAction,
-	PayloadActionDataKey,
+	PayloadActionDataFields,
 } from '../../../../_common/payload/payload-actions.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
@@ -68,6 +60,14 @@ import { createStickerTargetController } from '../../../../_common/sticker/targe
 import { CommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
+import { arrayAssignAll, arrayUnique } from '../../../../utils/array';
+import { createLogger } from '../../../../utils/logging';
+import { objectPick } from '../../../../utils/object';
+import { getAbsoluteLink } from '../../../../utils/router';
+import { getCurrentServerTime, updateServerTimeOffset } from '../../../../utils/server-time';
+import { run, sleep } from '../../../../utils/utils';
+import { uuidv4 } from '../../../../utils/uuid';
+import { MaybeRef } from '../../../../utils/vue';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
 import { ChatRoom } from '../../chat/room';
 import {
@@ -265,7 +265,7 @@ export function createFiresideController(
 							{
 								type,
 								data: {
-									[PayloadActionDataKey[type]]: unlockedPack,
+									[PayloadActionDataFields[type].pack]: unlockedPack,
 								},
 							},
 						],

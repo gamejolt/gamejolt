@@ -13,6 +13,7 @@ import AppModalPortal from '../modal/AppModalPortal.vue';
 import AppScrollInviewParent from '../scroll/inview/AppScrollInviewParent.vue';
 import AppTheme from '../theme/AppTheme.vue';
 import AppTooltipPortal from '../tooltip/AppTooltipPortal.vue';
+import AppShellNotice from './notice/AppShellNotice.vue';
 </script>
 
 <template>
@@ -27,6 +28,7 @@ import AppTooltipPortal from '../tooltip/AppTooltipPortal.vue';
 			<AppTheme />
 			<AppLoadingBar />
 			<AppGrowls />
+			<AppShellNotice />
 			<AppModalPortal />
 		</AppScrollInviewParent>
 	</div>

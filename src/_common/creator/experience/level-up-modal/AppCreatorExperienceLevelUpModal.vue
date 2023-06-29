@@ -87,7 +87,7 @@ onMounted(async () => {
 			<AppSpacer vertical :scale="4" />
 
 			<div
-				v-if="level.ability"
+				v-if="level.ability_display"
 				class="sheet sans-margin-bottom"
 				:style="{
 					...styleChangeBg('bg-offset'),
@@ -98,8 +98,7 @@ onMounted(async () => {
 				</div>
 
 				<div>
-					<!-- TODO(creator-score) readable ability -->
-					{{ level.ability }}
+					{{ level.ability_display }}
 				</div>
 			</div>
 		</div>
