@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { run } from '../../../../utils/utils';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCurrencyPill from '../../../../_common/currency/AppCurrencyPill.vue';
+import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
+import { CurrencyType } from '../../../../_common/currency/currency-type';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -12,7 +12,7 @@ import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerLayerDrawerItem from '../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
 import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
-import { UserStickerPack } from '../../../../_common/sticker/pack/user_pack.model';
+import { UserStickerPack } from '../../../../_common/sticker/pack/user-pack.model';
 import {
 	getStickerStacksFromPayloadData,
 	sortStickerStacks,
@@ -22,10 +22,10 @@ import {
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { styleBorderRadiusLg, styleChangeBg, styleTextOverflow } from '../../../../_styles/mixins';
+import { styleTextOverflow } from '../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../_styles/variables';
+import { run } from '../../../../utils/utils';
 import { illPointyThing } from '../../../img/ill/illustrations';
-import { routeQuests } from '../../../views/quests/quests.route';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
 type FormModel = {
@@ -34,7 +34,8 @@ type FormModel = {
 
 const { stickerPacks, eventStickers, creatorStickers, generalStickers, allStickers } =
 	useStickerStore();
-const { coinBalance } = useCommonStore();
+
+const { coinBalance, joltbuxBalance, setInitialPackWatermarkStorageValue } = useCommonStore();
 
 const form: FormController<FormModel> = createForm({
 	loadUrl: `/mobile/sticker`,
@@ -48,14 +49,21 @@ const form: FormController<FormModel> = createForm({
 	},
 	sanitizeComplexData: false,
 	onInit() {
+		setInitialPackWatermarkStorageValue(false);
+
 		run(async () => {
 			const payload = await Api.sendFieldsRequest(
 				'/mobile/me',
-				{ coinBalance: true },
+				{ coinBalance: true, buxBalance: true },
 				{ detach: true }
 			);
 
-			coinBalance.value = payload.coinBalance;
+			if (typeof payload.coinBalance === 'number') {
+				coinBalance.value = payload.coinBalance;
+			}
+			if (typeof payload.buxBalance === 'number') {
+				joltbuxBalance.value = payload.buxBalance;
+			}
 		});
 	},
 	async onLoad(payload) {
@@ -78,10 +86,7 @@ async function onClickVendingMachine() {
 }
 
 function openPack(pack: UserStickerPack) {
-	StickerPackOpenModal.show({
-		pack,
-		openImmediate: true,
-	});
+	StickerPackOpenModal.show({ pack });
 }
 
 function sortStickers(sorting: StickerSortMethod) {
@@ -103,42 +108,29 @@ function sortStickers(sorting: StickerSortMethod) {
 <template>
 	<div id="shell-sidebar-backpack" class="fill-offset">
 		<AppForm :controller="form">
+			<AppCurrencyPillList
+				:currencies="{
+					[CurrencyType.joltbux.id]: [CurrencyType.joltbux, joltbuxBalance],
+					[CurrencyType.coins.id]: [CurrencyType.coins, coinBalance],
+				}"
+				direction="row"
+				:gap="8"
+				wrap
+			/>
+
+			<AppSpacer vertical :scale="2" />
+
 			<div
 				:style="{
-					display: 'flex',
-					alignItems: 'center',
-					gap: '12px',
+					display: `flex`,
+					alignItems: `flex-start`,
+					gap: `12px`,
 				}"
 			>
 				<AppButton block solid @click="onClickVendingMachine()">
-					{{ $gettext(`Get packs`) }}
+					{{ $gettext(`Open Shop`) }}
 				</AppButton>
-
-				<AppCurrencyPill
-					:style="{
-						flex: 'none',
-					}"
-					currency="coins"
-					:amount="coinBalance"
-				/>
 			</div>
-
-			<AppSpacer vertical :scale="4" />
-			<RouterLink class="link-unstyled" :to="{ name: routeQuests.name }">
-				<div
-					class="well"
-					:style="{
-						...styleBorderRadiusLg,
-						...styleChangeBg('bg-offset'),
-					}"
-				>
-					{{
-						$gettext(
-							`Complete quests to earn coins that you can use to purchase packs!`
-						)
-					}}
-				</div>
-			</RouterLink>
 
 			<AppSpacer vertical :scale="4" />
 
@@ -155,7 +147,6 @@ function sortStickers(sorting: StickerSortMethod) {
 					}"
 					:expiry-info="userPack.expires_on"
 					can-click-pack
-					:hover-title="$gettext(`Open`)"
 					@click-pack="openPack(userPack)"
 				/>
 			</div>

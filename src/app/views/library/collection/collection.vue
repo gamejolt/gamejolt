@@ -9,7 +9,6 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
 import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
 import { Game } from '../../../../_common/game/game.model';
-import { Jam } from '../../../../_common/jam/jam.model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
@@ -111,7 +110,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	collection: GameCollection = null as any;
 	bundle: GameBundle | null = null;
 	playlist: GamePlaylist | null = null;
-	jam: Jam | null = null;
 	user: User | null = null;
 
 	filtering: GameFilteringContainer | null = null;
@@ -184,8 +182,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 				}
 			} else if (this.type === GameCollection.TYPE_BUNDLE && this.bundle) {
 				return this.bundle.title;
-			} else if (this.type === GameCollection.TYPE_JAM && this.jam) {
-				return 'Jam games entered into ' + this.jam.name;
 			}
 		}
 
@@ -230,7 +226,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 
 		this.followerCount = $payload.followerCount || 0;
 		this.bundle = $payload.bundle ? new GameBundle($payload.bundle) : null;
-		this.jam = $payload.jam ? new Jam($payload.jam) : null;
 
 		this.user = null;
 		if (this.type === 'followed' || this.type === 'owned' || this.type === 'recommended') {
@@ -637,23 +632,6 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 							<template v-else-if="type === 'bundle' && bundle">
 								<h1>{{ bundle.title }}</h1>
 								<p class="text-muted small">{{ bundle.description }}</p>
-							</template>
-
-							<!--
-								Jam
-							-->
-							<template v-else-if="type === 'jam' && jam">
-								<h1>{{ jam.name }}</h1>
-								<p class="text-muted small">
-									<AppTranslate :translate-params="{ jam: jam.name }">
-										These are the jam games entered into %{ jam }.
-									</AppTranslate>
-								</p>
-								<p>
-									<AppButton :href="jam.fullUrl" target="_blank">
-										<AppTranslate>View Jam Page</AppTranslate>
-									</AppButton>
-								</p>
 							</template>
 						</div>
 					</transition>

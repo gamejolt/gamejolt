@@ -1,38 +1,31 @@
 <script lang="ts">
 import { computed, onMounted, onUnmounted, ref, toRefs } from 'vue';
-import { getCurrentServerTime } from '../../../utils/server-time';
 import { shorthandReadableTime } from '../../../_common/filters/duration';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { getCurrentServerTime } from '../../../utils/server-time';
 </script>
 
 <script lang="ts" setup>
 const props = defineProps({
-	date: {
+	endsOn: {
 		type: Number,
 		required: true,
 	},
-	ended: {
-		type: Boolean,
-		default: undefined,
-	},
 });
 
-const { date, ended } = toRefs(props);
+const { endsOn } = toRefs(props);
 
 const currentTime = ref(getCurrentServerTime());
 const readableTime = ref(getReadableTime());
 let interval: NodeJS.Timer | null = null;
 
-const hasEnded = computed(() => {
-	if (ended?.value === undefined) {
-		return date.value - currentTime.value <= 0;
-	}
-	return ended.value;
-});
+const hasEnded = computed(() => endsOn.value - currentTime.value <= 0);
 
 onMounted(() => {
-	interval = setInterval(() => updateTimer(), 1000);
+	if (!interval) {
+		interval = setInterval(updateTimer, 1_000);
+	}
 	updateTimer();
 });
 
@@ -44,7 +37,7 @@ onUnmounted(() => {
 });
 
 function getReadableTime() {
-	return shorthandReadableTime(date.value, {
+	return shorthandReadableTime(endsOn.value, {
 		allowFuture: true,
 		precision: 'rough',
 		joiner: ', ',
@@ -64,7 +57,7 @@ function updateTimer() {
 			<AppTranslate class="text-muted"> This quest has ended </AppTranslate>
 		</slot>
 	</span>
-	<span v-else-if="date">
+	<span v-else-if="endsOn">
 		<AppJolticon class="small text-muted" icon="clock" />
 		<span class="text-muted">
 			{{ ' ' + readableTime }}

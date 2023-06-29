@@ -7,7 +7,6 @@ const routes: Array<[string, string]> = [
 	['owned', '/@:id/owned'],
 	['recommended', '/@:id/recommended'],
 	['bundle', '/library/bundle/:slug/:id(\\d+)/games'],
-	['jam', '/jam/:id/games'],
 ];
 
 export const routeLibraryCollectionRoutes: RouteRecordRaw[] = routes.map(route => {

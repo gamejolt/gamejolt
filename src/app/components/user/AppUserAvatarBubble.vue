@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { CSSProperties, PropType, computed, toRaw, toRefs } from 'vue';
 import AppAvatarFrame from '../../../_common/avatar/AppAvatarFrame.vue';
+import { AvatarFrame } from '../../../_common/avatar/frame.model';
 import { ComponentProps } from '../../../_common/component-helpers';
 import { Environment } from '../../../_common/environment/environment.service';
 import { imageGuestAvatar } from '../../../_common/img/images';
@@ -52,6 +53,14 @@ const props = defineProps({
 		type: Boolean,
 	},
 	/**
+	 * Allows overriding the avatar frame to display something other than what
+	 * the User has equipped.
+	 */
+	frameOverride: {
+		type: Object as PropType<AvatarFrame>,
+		default: undefined,
+	},
+	/**
 	 * Allows extra inset to be added/removed from the avatar frame.
 	 *
 	 * Has no effect if {@link showFrame} is `false`.
@@ -79,23 +88,17 @@ const {
 	verifiedOffset,
 	verifiedSize,
 	showFrame,
+	frameOverride,
 	frameInset,
 	smoosh,
 } = toRefs(props);
 
 const chatAvatarStyles: CSSProperties = {
 	...styleBorderRadiusCircle,
-	width: `100%`,
-	height: `100%`,
 };
 
-const avatarFrame = computed(() =>
-	isChatUser(user.value) ? null : user.value?.avatar_frame || null
-);
-
-const maySmooshFrame = computed(
-	() => !isChatUser(user.value) && !!user.value?.avatar_frame && showFrame.value && smoosh.value
-);
+const avatarFrame = computed(() => frameOverride?.value || user.value?.avatar_frame || null);
+const maySmooshFrame = computed(() => !!avatarFrame.value && showFrame.value && smoosh.value);
 
 const href = computed(() => {
 	if (disableLink.value || !user.value) {
@@ -110,7 +113,9 @@ const href = computed(() => {
 });
 
 function isChatUser(user: typeof props.user): user is ChatUser {
-	return user instanceof ChatUser;
+	// Proxy values will always fail these instanceof checks, so we need to
+	// check the raw value.
+	return toRaw(user) instanceof ChatUser;
 }
 </script>
 
@@ -146,12 +151,18 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 						<slot>
 							<template v-if="isChatUser(user)">
 								<img
+									class="_img"
 									:style="chatAvatarStyles"
 									:src="user.img_avatar || imageGuestAvatar"
 									alt=""
 								/>
 							</template>
-							<AppUserAvatarImg v-else :user="user" />
+							<AppUserAvatarImg
+								v-else
+								class="_img"
+								:style="chatAvatarStyles"
+								:user="user"
+							/>
 						</slot>
 					</div>
 				</AppAvatarFrame>
@@ -159,3 +170,11 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 		</component>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+._img
+	&
+	::v-deep(img)
+		width: 100%
+		height: 100%
+</style>

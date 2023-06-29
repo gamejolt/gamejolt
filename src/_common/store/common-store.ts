@@ -1,4 +1,6 @@
 import { computed, inject, InjectionKey, ref, Ref } from 'vue';
+import { trackExperimentEngagement } from '../analytics/analytics.service';
+import { configInitialPackWatermark } from '../config/config.service';
 import { EmojiGroup } from '../emoji/emoji-group.model';
 import { Environment } from '../environment/environment.service';
 import '../model/model.service';
@@ -39,6 +41,46 @@ export function createCommonStore() {
 
 	// Wallet currencies.
 	const coinBalance = ref(0);
+	const joltbuxBalance = ref(0);
+
+	/**
+	 * Shows a notification blip on the Backpack cbar item.
+	 */
+	const showInitialPackWatermark = ref(false);
+
+	function getInitialPackWatermarkStorageKey() {
+		if (!user.value) {
+			return null;
+		}
+		return `${configInitialPackWatermark.name}/${user.value.id}`;
+	}
+
+	function getInitialPackWatermarkStorageValue() {
+		if (!configInitialPackWatermark.value) {
+			return false;
+		}
+		const key = getInitialPackWatermarkStorageKey();
+		if (!key) {
+			return false;
+		}
+		return localStorage.getItem(key) === '1';
+	}
+
+	function setInitialPackWatermarkStorageValue(value: boolean) {
+		showInitialPackWatermark.value = value;
+
+		const key = getInitialPackWatermarkStorageKey();
+		if (!key) {
+			console.error('Invalid key for initial pack watermark storage.');
+			return;
+		}
+
+		if (value) {
+			localStorage.setItem(key, '1');
+		} else {
+			localStorage.removeItem(key);
+		}
+	}
 
 	const isUserTimedOut = computed(() => {
 		return (
@@ -51,6 +93,11 @@ export function createCommonStore() {
 			user.value.assign(newUser);
 		} else {
 			user.value = new User(newUser);
+
+			trackExperimentEngagement(configInitialPackWatermark);
+			if (getInitialPackWatermarkStorageValue()) {
+				showInitialPackWatermark.value = true;
+			}
 		}
 
 		if (newUser.timeout) {
@@ -77,6 +124,8 @@ export function createCommonStore() {
 		userBootstrapped.value = true;
 		reactionsData.value = new Map();
 		coinBalance.value = 0;
+		joltbuxBalance.value = 0;
+		showInitialPackWatermark.value = false;
 	}
 
 	function setConsents(newConsents: UserConsents) {
@@ -117,6 +166,9 @@ export function createCommonStore() {
 		clearError,
 		redirect,
 		coinBalance,
+		joltbuxBalance,
+		showInitialPackWatermark,
+		setInitialPackWatermarkStorageValue,
 	};
 }
 

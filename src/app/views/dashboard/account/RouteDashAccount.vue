@@ -1,19 +1,19 @@
 <script lang="ts">
 import { computed, inject, InjectionKey, provide, ref } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
-import { bangRef } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAvatarFrame from '../../../../_common/avatar/AppAvatarFrame.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ComponentProps } from '../../../../_common/component-helpers';
 import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import AppMediaItemCover from '../../../../_common/media-item/cover/cover.vue';
+import AppMediaItemCover from '../../../../_common/media-item/cover/AppMediaItemCover.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import { bangRef } from '../../../../utils/vue';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
 import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';

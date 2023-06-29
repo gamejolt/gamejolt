@@ -42,6 +42,7 @@ import { UserFriendship } from '../user/friendship/friendship.model';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
 import { UserBaseTrophy } from '../user/trophy/user-base-trophy.model';
+import { UserAvatarFrame } from '../user/user-avatar/frame/frame.model';
 import { User } from '../user/user.model';
 
 function getRouteLocationForModel(
@@ -89,6 +90,7 @@ export class Notification extends Model {
 	static TYPE_SUPPORTER_MESSAGE = 'supporter-message';
 	static TYPE_POLL_ENDED = 'poll-ended';
 	static TYPE_CREATOR_LEVEL_UP = 'creator-level-up';
+	static TYPE_UNLOCKED_AVATAR_FRAME = 'unlocked-avatar-frame';
 
 	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
@@ -112,6 +114,7 @@ export class Notification extends Model {
 		Notification.TYPE_SUPPORTER_MESSAGE,
 		Notification.TYPE_POLL_ENDED,
 		Notification.TYPE_CREATOR_LEVEL_UP,
+		Notification.TYPE_UNLOCKED_AVATAR_FRAME,
 	];
 
 	user_id!: number;
@@ -148,7 +151,8 @@ export class Notification extends Model {
 		| StickerPlacement
 		| SupporterAction
 		| Poll
-		| CreatorExperienceLevel;
+		| CreatorExperienceLevel
+		| UserAvatarFrame;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -270,6 +274,8 @@ export class Notification extends Model {
 			this.action_model = new Poll(data.action_resource_model);
 		} else if (this.type === Notification.TYPE_CREATOR_LEVEL_UP) {
 			this.action_model = new CreatorExperienceLevel(data.action_resource_model);
+		} else if (this.type === Notification.TYPE_UNLOCKED_AVATAR_FRAME) {
+			this.action_model = new UserAvatarFrame(data.action_resource_model);
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -384,6 +390,14 @@ export class Notification extends Model {
 				// Don't return a location here, we'll instead show a modal in the
 				// `go` function.
 				return '';
+			}
+
+			case Notification.TYPE_UNLOCKED_AVATAR_FRAME: {
+				return {
+					name: 'dash.account.edit',
+					path: 'profile/edit',
+					query: { avatar: this.action_resource_id },
+				};
 			}
 		}
 

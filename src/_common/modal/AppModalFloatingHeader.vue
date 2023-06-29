@@ -1,5 +1,15 @@
 <script lang="ts" setup>
+import { toRefs } from 'vue';
+import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
+
+const props = defineProps({
+	...defineDynamicSlotProps(['title', 'bottom'], true),
+});
+
+const { dynamicSlots } = toRefs(props);
+
+const { hasSlot, hasAnySlot } = useDynamicSlots(dynamicSlots);
 </script>
 
 <template>
@@ -8,8 +18,8 @@ import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 			<slot name="modal-controls" />
 		</div>
 
-		<div class="-floating-top">
-			<div class="-sans-padding-horizontal modal-header">
+		<div v-if="hasAnySlot" class="-floating-top">
+			<div v-if="hasSlot('title')" class="-sans-padding-horizontal modal-header">
 				<h2 class="modal-title">
 					<div class="-title">
 						<slot name="title" />
@@ -17,7 +27,7 @@ import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 				</h2>
 			</div>
 
-			<slot name="bottom" />
+			<slot v-if="hasSlot('bottom')" name="bottom" />
 		</div>
 	</AppScrollAffix>
 </template>

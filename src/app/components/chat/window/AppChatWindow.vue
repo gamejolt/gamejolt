@@ -1,5 +1,15 @@
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, ref, shallowRef, toRefs, watch, watchEffect } from 'vue';
+import {
+	computed,
+	CSSProperties,
+	onMounted,
+	onUnmounted,
+	ref,
+	shallowRef,
+	toRefs,
+	watch,
+	watchEffect,
+} from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -13,12 +23,15 @@ import { getModel } from '../../../../_common/model/model-store.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
+import { kThemeBacklight, kThemeBacklightFg } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import { styleBorderRadiusCircle, styleFlexCenter } from '../../../../_styles/mixins';
 import { useAppStore } from '../../../store';
 import { useGridStore } from '../../grid/grid-store';
+import AppUserAvatarBubble from '../../user/AppUserAvatarBubble.vue';
 import { closeChatRoom } from '../client';
 import FormChatRoomSettings from '../FormChatRoomSettings.vue';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
@@ -47,6 +60,21 @@ const { roomId } = toRefs(props);
 const { closeChatPane } = useAppStore();
 const { chatUnsafe: chat } = useGridStore();
 const router = useRouter();
+
+const headerAvatarSizeStyles: CSSProperties = {
+	width: `36px`,
+	height: `36px`,
+};
+
+const headerAvatarBackgroundColor = kThemeBacklight;
+const headerAvatarJolticonColor = kThemeBacklightFg;
+
+const headerAvatarStyles: CSSProperties = {
+	...styleBorderRadiusCircle,
+	...headerAvatarSizeStyles,
+	...styleFlexCenter(),
+	backgroundColor: headerAvatarBackgroundColor,
+};
 
 // Set up the room with connection logic.
 let destroyed = false;
@@ -269,12 +297,14 @@ function onMobileAppBarBack() {
 						/>
 
 						<template v-if="room">
-							<span
-								v-if="!room.isPmRoom"
-								class="_header-avatar anim-fade-in-enlarge no-animate-xs"
-							>
-								<div class="_header-icon">
-									<AppJolticon icon="users" />
+							<span v-if="!room.isPmRoom" class="anim-fade-in-enlarge no-animate-xs">
+								<div :style="headerAvatarStyles">
+									<AppJolticon
+										:style="{
+											color: headerAvatarJolticonColor,
+										}"
+										icon="users"
+									/>
 								</div>
 							</span>
 							<RouterLink
@@ -282,9 +312,25 @@ function onMobileAppBarBack() {
 								class="anim-fade-in-enlarge no-animate-xs"
 								:to="room.user.url"
 							>
-								<img class="_header-icon" :src="room.user.img_avatar" alt="" />
+								<AppUserAvatarBubble
+									:style="{
+										...headerAvatarSizeStyles,
+										position: `relative`,
+										zIndex: 0,
+									}"
+									:user="room.user"
+									disable-link
+									show-frame
+									smoosh
+								/>
 								<AppChatUserOnlineStatus
 									class="_online-status"
+									:style="{
+										position: `absolute`,
+										right: 0,
+										bottom: 0,
+										zIndex: 1,
+									}"
 									:is-online="room.user.isOnline"
 									:size="12"
 									:segment-width="1.5"
@@ -549,23 +595,6 @@ $-zindex-sidebar-mobile = 10
 
 ._header
 	z-index: $-zindex-header
-
-._header-icon
-	img-circle()
-	display: flex
-	align-items: center
-	justify-content: center
-	width: 36px
-	height: 36px
-	background-color: var(--theme-backlight)
-
-	::v-deep(.jolticon)
-		color: var(--theme-backlight-fg)
-
-._online-status
-	position: absolute
-	right: 0
-	bottom: 0
 
 ._header-name
 	text-overflow()

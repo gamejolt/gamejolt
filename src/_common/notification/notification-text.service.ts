@@ -587,6 +587,10 @@ export class NotificationText {
 				}
 				break;
 			}
+
+			case Notification.TYPE_UNLOCKED_AVATAR_FRAME: {
+				return _process($gettext(`You unlocked a new <em>avatar frame</em>!`));
+			}
 		}
 
 		// When the notification type has no implementation, we log and don't show it (return undefined).

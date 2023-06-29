@@ -396,10 +396,16 @@ export default defineConfig(async () => {
 						gjOpts.buildType === 'build' &&
 						['web'].includes(gjOpts.platform)
 					) {
+						// Update this when you want to force cache busting for
+						// all of our assets regardless of if their contents
+						// changed.
+						const hashVersion = '';
+						// const hashVersion = '-v2';
+
 						return <RollupOptions>{
 							output: {
-								chunkFileNames: 'assets/[hash].js',
-								assetFileNames: 'assets/[hash].[ext]',
+								chunkFileNames: `assets/[hash]${hashVersion}.js`,
+								assetFileNames: `assets/[hash]${hashVersion}.[ext]`,
 							},
 						};
 					}

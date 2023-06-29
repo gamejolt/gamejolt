@@ -4,7 +4,7 @@ import { Environment } from '../environment/environment.service';
 import { Navigate } from '../navigate/navigate.service';
 import Onboarding from '../onboarding/onboarding.service';
 
-export type AuthMethod = 'email' | 'google' | 'facebook' | 'twitch' | 'twitter' | 'apple';
+export type AuthMethod = 'email' | 'google' | 'facebook' | 'twitch' | 'apple';
 
 export function redirectToOnboarding() {
 	if (import.meta.env.SSR) {

@@ -41,7 +41,6 @@ export class Comment extends Model implements ReactionableModel {
 	is_pinned!: boolean;
 	comment_content!: string;
 	reaction_counts: ReactionCount[] = [];
-	supporters: User[] = [];
 	has_owner_like!: boolean;
 	has_owner_reply!: boolean;
 
@@ -72,10 +71,6 @@ export class Comment extends Model implements ReactionableModel {
 
 		if (data.reaction_counts) {
 			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
-		}
-
-		if (data.supporters) {
-			this.supporters = User.populate(data.supporters);
 		}
 	}
 

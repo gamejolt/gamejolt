@@ -3,9 +3,12 @@ import { computed, PropType, toRefs } from 'vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { kThemeBacklight, kThemeBacklightFg } from '../../../../_common/theme/variables';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { styleBorderRadiusCircle } from '../../../../_styles/mixins';
 import { useGridStore } from '../../grid/grid-store';
+import AppUserAvatarBubble from '../../user/AppUserAvatarBubble.vue';
 import { isUserOnline, leaveGroupRoom, openChatRoom } from '../client';
 import AppChatNotificationSettings from '../notification-settings/notification-settings.vue';
 import { ChatRoom, getChatRoomTitle } from '../room';
@@ -94,10 +97,42 @@ async function leaveRoom() {
 		@click="onClick"
 	>
 		<template #leading>
-			<div class="-avatar">
-				<img v-if="user" class="-avatar-img" :src="user.img_avatar" />
-				<div v-else class="-avatar-icon">
-					<AppJolticon icon="users" />
+			<div
+				:style="{
+					width: `100%`,
+					height: `100%`,
+				}"
+			>
+				<AppUserAvatarBubble
+					v-if="user"
+					:style="{
+						width: `100%`,
+						height: `100%`,
+					}"
+					:user="user"
+					disable-link
+					show-frame
+					smoosh
+				/>
+				<div
+					v-else
+					:style="{
+						...styleBorderRadiusCircle,
+						width: `100%`,
+						height: `100%`,
+						display: `inline-flex`,
+						alignItems: `center`,
+						justifyContent: `center`,
+						verticalAlign: `middle`,
+						backgroundColor: kThemeBacklight,
+					}"
+				>
+					<AppJolticon
+						:style="{
+							color: `${kThemeBacklightFg} !important`,
+						}"
+						icon="users"
+					/>
 				</div>
 			</div>
 		</template>
@@ -140,21 +175,3 @@ async function leaveRoom() {
 		</template>
 	</AppChatListItem>
 </template>
-
-<style lang="stylus" scoped>
-.-avatar
-.-avatar-img
-.-avatar-icon
-	width: 100%
-	height: 100%
-
-.-avatar-icon
-	display: inline-flex
-	align-items: center
-	justify-content: center
-	vertical-align: middle
-	background-color: var(--theme-backlight)
-
-	::v-deep(.jolticon)
-		color: var(--theme-backlight-fg) !important
-</style>
