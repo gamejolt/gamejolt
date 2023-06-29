@@ -65,17 +65,22 @@ function updateTimer() {
 </script>
 
 <template>
-	<span v-if="hasEnded">
+	<span v-if="hasEnded" class="AppQuestTimer">
 		<slot name="ended">
 			<span class="text-muted">
 				{{ $gettext(`This quest has ended`) }}
 			</span>
 		</slot>
 	</span>
-	<span v-else-if="endsOn" v-app-tooltip.touchable="readableTimeExact">
+	<span v-else-if="endsOn" v-app-tooltip.touchable="readableTimeExact" class="AppQuestTimer">
 		<AppJolticon class="small text-muted" icon="clock" />
 		<span class="text-muted">
 			{{ ' ' + readableTimeRough }}
 		</span>
 	</span>
 </template>
+
+<style lang="stylus" scoped>
+.AppQuestTimer
+	white-space: nowrap
+</style>
