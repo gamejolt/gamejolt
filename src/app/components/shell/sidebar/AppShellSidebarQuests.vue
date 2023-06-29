@@ -20,6 +20,7 @@ const {
 	questChunks,
 	allQuests,
 	newQuestIds,
+	newQuestIdsForView,
 	questActivityIds,
 	clearNewQuestIds,
 	clearQuestActivityIds,
@@ -77,6 +78,10 @@ async function init() {
 			// Insert the daily quests to the front of our new quests.
 			newQuests.unshift(...storeModelList(Quest, payload.dailyQuests));
 		}
+
+		newQuestIdsForView.value = new Set(
+			newQuests.filter(i => i.canAccept && i.is_new).map(i => i.id)
+		);
 
 		assignQuests(newQuests);
 		clearUnknownWatermarks();

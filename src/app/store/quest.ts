@@ -16,10 +16,11 @@ export const QuestStoreKey: InjectionKey<QuestStore> = Symbol('quest-store');
 const questChunkSorting = {
 	'Daily Quests': 0,
 	'Intro Quests': 1,
-	'Weekly Quests': 2,
-	'Active Quests': 3,
-	'Available Quests': 4,
-	'Expired Quests': 5,
+	'New Quests': 2,
+	'Weekly Quests': 3,
+	'Active Quests': 4,
+	'Available Quests': 5,
+	'Expired Quests': 6,
 } as const;
 
 interface QuestChunk {
@@ -46,6 +47,10 @@ export function createQuestStore({
 	const hasLoaded = ref(false);
 	const _isLoadingDailyQuests = ref(false);
 
+	/**
+	 * Quest IDs that should be shown in the "New Quests" section.
+	 */
+	const newQuestIdsForView = ref<QuestIdSet>(new Set());
 	const newQuestIds = ref<QuestIdSet>(new Set());
 	const questActivityIds = ref<QuestIdSet>(new Set());
 
@@ -61,8 +66,13 @@ export function createQuestStore({
 			.reduce((chunks, quest) => {
 				const [type, label] = run<[keyof typeof questChunkSorting, string]>(() => {
 					if (quest.canAccept) {
+						if (newQuestIdsForView.value.has(quest.id)) {
+							return ['New Quests', $gettext('New Quests')];
+						}
 						return ['Available Quests', $gettext('Available Quests')];
-					} else if (quest.isExpired) {
+					}
+
+					if (quest.isExpired) {
 						return ['Expired Quests', $gettext('Expired Quests')];
 					}
 
@@ -118,6 +128,7 @@ export function createQuestStore({
 			}
 
 			assignQuests([]);
+			newQuestIdsForView.value.clear();
 			clearNewQuestIds('all', { pushView: false });
 			clearQuestActivityIds('all', { pushView: false });
 			isLoading.value = true;
@@ -221,6 +232,7 @@ export function createQuestStore({
 		assignQuests,
 		fetchDailyQuests,
 		newQuestIds,
+		newQuestIdsForView,
 		questActivityIds,
 		addNewQuestIds,
 		addQuestActivityIds,
