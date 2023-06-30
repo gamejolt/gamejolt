@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from 'vue';
-import { showModal } from '../../../../../../_common/modal/modal.service';
-import { SupporterAction } from '../../../../../../_common/supporters/action.model';
-import { SupporterMessage } from '../../../../../../_common/supporters/message.model';
+import { showModal } from '../../../modal/modal.service';
+import { SupporterAction } from '../../action.model';
+import { SupporterMessage } from '../../message.model';
 
 interface DoSupporterMessageModalOptions {
 	model?: SupporterMessage;

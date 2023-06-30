@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import ContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import { SupporterAction } from '../../../../../_common/supporters/action.model';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppUserAvatarImg from '../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import AppButton from '../../button/AppButton.vue';
+import AppContentViewer from '../../content/content-viewer/AppContentViewer.vue';
+import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppModal from '../../modal/AppModal.vue';
+import { useModal } from '../../modal/modal.service';
+import AppSpacer from '../../spacer/AppSpacer.vue';
+import { $gettext } from '../../translate/translate.service';
+import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
+import { SupporterAction } from '../action.model';
 
 const props = defineProps({
 	action: {
@@ -68,7 +68,7 @@ const content = computed(() => action.value.message?.content);
 				{{ $gettext(`Message`) }}
 			</h6>
 
-			<ContentViewer v-if="content" class="-message-viewer" :source="content" />
+			<AppContentViewer v-if="content" class="-message-viewer" :source="content" />
 			<div v-else class="fill-bg well">
 				{{ $gettext(`This creator thanked you for supporting them.`) }}
 			</div>

@@ -1,6 +1,4 @@
 import { Router } from 'vue-router';
-import { SupporterMessageModal } from '../../app/views/dashboard/supporters/message/modal.service';
-import { routeDashSupporters } from '../../app/views/dashboard/supporters/supporters.route';
 import type { RouteLocationDefinition } from '../../utils/router';
 import { isKnownRoute } from '../../utils/router';
 import { assertNever } from '../../utils/utils';
@@ -36,6 +34,7 @@ import { Sellable } from '../sellable/sellable.model';
 import { StickerPlacement } from '../sticker/placement/placement.model';
 import { Subscription } from '../subscription/subscription.model';
 import { SupporterAction } from '../supporters/action.model';
+import { SupporterMessageModal } from '../supporters/message/modal.service';
 import { $gettext, Translate } from '../translate/translate.service';
 import { TrophyModal } from '../trophy/modal/modal.service';
 import { UserFriendship } from '../user/friendship/friendship.model';
@@ -369,7 +368,10 @@ export class Notification extends Model {
 				return getRouteLocationForModel(this.action_model as QuestNotification);
 
 			case Notification.TYPE_CHARGED_STICKER: {
-				return routeDashSupporters;
+				return {
+					name: 'dash.supporters',
+					path: 'supporters',
+				};
 			}
 
 			case Notification.TYPE_SUPPORTER_MESSAGE: {
