@@ -5,7 +5,7 @@ import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { illMobileKikkerstein } from '../../../../img/ill/illustrations';
+import { illMobileKikkerstein } from '../../../../../_common/illustration/illustrations';
 import { useAppStore } from '../../../../store/index';
 
 const modal = useModal()!;

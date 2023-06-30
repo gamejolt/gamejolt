@@ -16,7 +16,7 @@ import {
 	CommunityCompetitionEntryModal,
 	CommunityCompetitionEntryModalHashDeregister,
 } from '../../../../components/community/competition/entry/modal/modal.service';
-import { illNoComments } from '../../../../img/ill/illustrations';
+import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,

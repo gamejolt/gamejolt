@@ -17,7 +17,7 @@ import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { TrophyDifficulty } from '../../../../../../../_common/trophy/base-trophy.model';
 import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
-import AppTrophyThumbnail from '../../../../../../components/trophy/thumbnail/thumbnail.vue';
+import AppTrophyThumbnail from '../../../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
 @Options({

@@ -1,17 +1,17 @@
-import { IllustrationAsset } from '../../../_common/illustration/AppIllustration.vue';
-import illChargeOrbEmptyPath from './charge-orb-empty.png';
-import illCreatorInfographicPath from './creator-infographic.png';
-import illEndOfFeedPath from './end-of-feed.png';
-import illExtremeSadnessSmallPath from './extreme-sadness-small.png';
-import illExtremeSadnessPath from './extreme-sadness.png';
-import illMaintenancePath from './maintenance.png';
-import illMobileKikkersteinPath from './mobile-kikkerstein.png';
-import illNoChatPath from './no-chat.png';
-import illNoCommentsSmallPath from './no-comments-small.png';
-import illNoCommentsPath from './no-comments.png';
-import illPointyThingPath from './pointy-thing.png';
-import illStreamingJellyPath from './streaming-jelly.png';
-import illTimeOutPath from './time-out.png';
+import { IllustrationAsset } from './AppIllustration.vue';
+import illChargeOrbEmptyPath from './img/charge-orb-empty.png';
+import illCreatorInfographicPath from './img/creator-infographic.png';
+import illEndOfFeedPath from './img/end-of-feed.png';
+import illExtremeSadnessSmallPath from './img/extreme-sadness-small.png';
+import illExtremeSadnessPath from './img/extreme-sadness.png';
+import illMaintenancePath from './img/maintenance.png';
+import illMobileKikkersteinPath from './img/mobile-kikkerstein.png';
+import illNoChatPath from './img/no-chat.png';
+import illNoCommentsSmallPath from './img/no-comments-small.png';
+import illNoCommentsPath from './img/no-comments.png';
+import illPointyThingPath from './img/pointy-thing.png';
+import illStreamingJellyPath from './img/streaming-jelly.png';
+import illTimeOutPath from './img/time-out.png';
 
 export const illStreamingJelly: IllustrationAsset = {
 	path: illStreamingJellyPath,

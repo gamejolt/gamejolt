@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, toRefs } from 'vue';
-import { kThemeFg } from '../../../_common/theme/variables';
-import { User } from '../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
-import { styleBorderRadiusCircle, styleChangeBg } from '../../../_styles/mixins';
-import { ChatUser } from '../chat/user';
+import { styleChangeBg } from '../../_styles/mixins';
+import { kThemeFg } from '../theme/variables';
+import AppUserVerifiedTick from './AppUserVerifiedTick.vue';
+import { UserCommonFields } from './user.model';
 
 interface PositionData {
 	vPos: 'top' | 'bottom';
@@ -17,7 +16,7 @@ type PositionCorner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
 const props = defineProps({
 	user: {
-		type: [Object, null] as PropType<User | ChatUser | null>,
+		type: [Object, null] as PropType<UserCommonFields | null>,
 		required: true,
 	},
 	position: {
@@ -108,10 +107,10 @@ const floatingTickPositionStyles = computed(() => {
 			v-if="user && !hideTick"
 			:style="{
 				...styleChangeBg('bg'),
-				...styleBorderRadiusCircle,
 				...floatingTickPositionStyles,
 				margin: 0,
 				padding: `1px`,
+				borderRadius: `50%`,
 				color: kThemeFg,
 				zIndex: 2,
 			}"

@@ -2,7 +2,7 @@
 import { CSSProperties, Ref, onMounted, ref } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
 import { kBorderWidthBase } from '../../../_styles/variables';
-import { illExtremeSadness } from '../../../app/img/ill/illustrations';
+import { illExtremeSadness } from '../../illustration/illustrations';
 import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
 import { formatCurrency } from '../../filters/currency';

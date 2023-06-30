@@ -15,6 +15,7 @@ import type { UserSiteTrophy } from '../../../../../_common/user/trophy/site-tro
 import { computed, PropType, ref, toRefs } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
+import { AvatarFrame } from '../../../../../_common/avatar/frame.model';
 import '../../../../../_common/comment/comment.styl';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
@@ -33,8 +34,9 @@ import { BaseTrophy } from '../../../../../_common/trophy/base-trophy.model';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
+import { UserAvatarFrame } from '../../../../../_common/user/user-avatar/frame/frame.model';
 import { User } from '../../../../../_common/user/user.model';
-import { getTrophyImg } from '../../../trophy/thumbnail/thumbnail.vue';
+import { getTrophyImg } from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
 
@@ -94,6 +96,7 @@ const hasDetails = computed(() => {
 		Notification.TYPE_GAME_TROPHY_ACHIEVED,
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
 		Notification.TYPE_POLL_ENDED,
+		Notification.TYPE_UNLOCKED_AVATAR_FRAME,
 	].includes(type);
 });
 
@@ -103,6 +106,15 @@ const trophyImg = computed(() => {
 		notification.value.action_model.trophy instanceof BaseTrophy
 	) {
 		return getTrophyImg(notification.value.action_model.trophy);
+	}
+});
+
+const avatarFrameImg = computed(() => {
+	if (
+		notification.value.action_model instanceof UserAvatarFrame &&
+		notification.value.action_model.avatar_frame instanceof AvatarFrame
+	) {
+		return notification.value.action_model.avatar_frame.image_url;
 	}
 });
 
@@ -184,6 +196,14 @@ function onMarkRead() {
 										<AppJolticon icon="pedestals-numbers" />
 									</div>
 								</template>
+								<template
+									v-else-if="
+										notification.type ===
+										Notification.TYPE_UNLOCKED_AVATAR_FRAME
+									"
+								>
+									<img class="img-circle -trophy-img" :src="avatarFrameImg" />
+								</template>
 							</template>
 
 							<div class="-container">
@@ -241,7 +261,9 @@ function onMarkRead() {
 													"
 												>
 													{{
-														(notification.from_model as FiresidePost).getShortLead()
+														(
+															notification.from_model as FiresidePost
+														).getShortLead()
 													}}
 												</span>
 												<span
@@ -251,7 +273,9 @@ function onMarkRead() {
 													"
 												>
 													{{
-														(notification.action_model as FiresidePostCommunity).fireside_post?.getShortLead()
+														(
+															notification.action_model as FiresidePostCommunity
+														).fireside_post?.getShortLead()
 													}}
 												</span>
 												<span
@@ -268,7 +292,11 @@ function onMarkRead() {
 														Notification.TYPE_COMMUNITY_USER_NOTIFICATION
 													"
 												>
-													{{ (notification.to_model as FiresidePost).getShortLead() }}
+													{{
+														(
+															notification.to_model as FiresidePost
+														).getShortLead()
+													}}
 												</span>
 												<span
 													v-else-if="
@@ -279,7 +307,11 @@ function onMarkRead() {
 													"
 												>
 													{{
-														(notification.action_model as UserGameTrophy | UserSiteTrophy).trophy?.description
+														(
+															notification.action_model as
+																| UserGameTrophy
+																| UserSiteTrophy
+														).trophy?.description
 													}}
 												</span>
 												<span
@@ -289,7 +321,19 @@ function onMarkRead() {
 													"
 													class="tiny text-muted"
 												>
-													{{ (notification.action_model as QuestNotification).subtitle }}
+													{{
+														(
+															notification.action_model as QuestNotification
+														).subtitle
+													}}
+												</span>
+												<span
+													v-else-if="
+														notification.type ===
+														Notification.TYPE_UNLOCKED_AVATAR_FRAME
+													"
+												>
+													{{ $gettext(`Click to equip!`) }}
 												</span>
 											</AppFadeCollapse>
 										</div>

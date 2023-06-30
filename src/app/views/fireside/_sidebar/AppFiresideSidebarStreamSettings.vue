@@ -13,7 +13,10 @@ import {
 	useFiresideController,
 } from '../../../components/fireside/controller/controller';
 import AppFiresideStreamSetup from '../../../components/fireside/stream/setup/AppFiresideStreamSetup.vue';
-import { illNoCommentsSmall, illStreamingJelly } from '../../../img/ill/illustrations';
+import {
+	illNoCommentsSmall,
+	illStreamingJelly,
+} from '../../../../_common/illustration/illustrations';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 

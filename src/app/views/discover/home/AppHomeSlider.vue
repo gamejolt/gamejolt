@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs, watch } from 'vue';
-import { arrayShuffle } from '../../../../utils/array';
-import { useFullscreenHeight } from '../../../../utils/fullscreen';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { AppAuthJoinLazy } from '../../../../_common/lazy';
 import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { AppAuthJoinLazy } from '../../../components/lazy';
+import { arrayShuffle } from '../../../../utils/array';
+import { useFullscreenHeight } from '../../../../utils/fullscreen';
 import { imageGameJoltLogo } from '../../../img/images';
 import AppHomeFsPost from './_home-slider/AppHomeFsPost.vue';
 import AppHomeFsPostMeta from './_home-slider/AppHomeFsPostMeta.vue';

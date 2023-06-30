@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import { illChargeOrbEmpty } from '../../../app/img/ill/illustrations';
 import { routeLandingCreators } from '../../../app/views/landing/creators/creators.route';
 import AppAnimChargeOrb from '../../animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
+import { illChargeOrbEmpty } from '../../illustration/illustrations';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import { Screen } from '../../screen/screen-service';
@@ -106,7 +106,7 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 
 					<RouterLink
 						v-if="headerCharge"
-						:to="routeLandingCreators"
+						:to="{ name: routeLandingCreators.name }"
 						class="link-muted"
 						:style="{ float: 'right' }"
 					>

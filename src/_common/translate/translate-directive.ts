@@ -1,12 +1,11 @@
-import { Directive, VNode } from '@vue/runtime-core';
-import { DirectiveBinding } from 'vue';
+import { Directive, DirectiveBinding, VNode } from 'vue';
 import { $gettextInterpolate, getTranslation, getTranslationLang } from './translate.service';
 
 // TODO(vue3): I think we should get rid of this since there's no way the
 // translations will work with the way vue does the scope stuff.
 
-export const TranslateDirective: Directive<HTMLElement, Record<string, string | number>> = {
-	beforeMount(el, binding, vnode) {
+export const TranslateDirective: Directive<unknown, Record<string, string | number>> = {
+	beforeMount(el: HTMLElement, binding, vnode) {
 		// Make sure that vue knows not to reuse this node when v-ifing or
 		// anything, since we store the inner HTML into the msgid property and
 		// don't watch that for changes. We always use the initial value that
@@ -25,7 +24,7 @@ export const TranslateDirective: Directive<HTMLElement, Record<string, string | 
 
 		_updateTranslation(el, binding, vnode);
 	},
-	updated(el, binding, vnode) {
+	updated(el: HTMLElement, binding, vnode) {
 		let shouldUpdate = false;
 
 		// If the language changed.

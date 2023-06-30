@@ -18,8 +18,8 @@ import AppContentViewer from '../../../_common/content/content-viewer/AppContent
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import { Model } from '../../../_common/model/model.service';
 import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
-import { illNoCommentsSmall } from '../../img/ill/illustrations';
-import AppUserAvatarBubble from '../user/AppUserAvatarBubble.vue';
+import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
+import { illNoCommentsSmall } from '../../../_common/illustration/illustrations';
 
 const props = defineProps({
 	comments: {

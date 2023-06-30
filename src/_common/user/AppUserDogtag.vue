@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, PropType, toRefs } from 'vue';
-import { DogtagData } from '../../../_common/dogtag/dogtag-data';
+import { DogtagData } from '../dogtag/dogtag-data';
 </script>
 
 <script lang="ts" setup>
@@ -54,7 +54,7 @@ const classes = computed(() => {
 		color: $white
 
 .user-dogtag-guy
-		animation-name: user-dogtag-guy
-		animation-duration: 5s
-		animation-iteration-count: infinite
+	animation-name: user-dogtag-guy
+	animation-duration: 5s
+	animation-iteration-count: infinite
 </style>
