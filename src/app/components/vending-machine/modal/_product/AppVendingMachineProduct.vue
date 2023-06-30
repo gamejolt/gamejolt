@@ -5,9 +5,9 @@ import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppStickerPack from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
+import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleOverlayTextShadow } from '../../../../../_styles/mixins';
 import { kBorderRadiusLg } from '../../../../../_styles/variables';
-import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
 import AppProductCurrencyTags from './AppProductCurrencyTags.vue';
 
 const props = defineProps({

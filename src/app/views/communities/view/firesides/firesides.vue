@@ -8,7 +8,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/rout
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
 import AppFiresideAvatarBase from '../../../../components/fireside/avatar/AppFiresideAvatarBase.vue';
-import { illNoComments } from '../../../../img/ill/illustrations';
+import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 

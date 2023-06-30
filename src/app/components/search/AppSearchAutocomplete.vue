@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
-import { debounce } from '../../../utils/utils';
 import { trackSearch, trackSearchAutocomplete } from '../../../_common/analytics/analytics.service';
 import { Community } from '../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
@@ -9,9 +8,10 @@ import { Game } from '../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import AppRealmThumbnail from '../../../_common/realm/AppRealmThumbnail.vue';
 import { Realm } from '../../../_common/realm/realm-model';
+import AppUserVerifiedTick from '../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import { debounce } from '../../../utils/utils';
 import type { LocalDbGame as LocalDbGameType } from '../client/local-db/game/game.model';
 import { LocalDbGame } from '../client/safe-exports';
 import { SearchKeydownSpy, useSearchController } from './AppSearch.vue';

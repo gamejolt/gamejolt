@@ -3,11 +3,11 @@ import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import { vAppTrackEvent } from '../../analytics/track-event.directive';
 import { useCommonStore } from '../../store/common-store';
+import AppUserVerifiedTick from '../AppUserVerifiedTick.vue';
 import AppUserCardHover from '../card/AppUserCardHover.vue';
 import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
 import { User } from '../user.model';
-import AppUserVerifiedTick from '../verified-tick/AppUserVerifiedTick.vue';
 
 defineProps({
 	user: {

@@ -19,7 +19,26 @@ export const CreatorStatusCreator = 1;
 export const CreatorStatusApplied = 2;
 export const CreatorStatusSuspended = 3;
 
-export class User extends Model implements ContentContainerModel, CommentableModel {
+/**
+ * When you have code that needs to work on either User | ChatUser, you can use
+ * this interface to specify it only works with the fields that are common to
+ * both.
+ */
+export interface UserCommonFields {
+	id: number;
+	username: string;
+	display_name: string;
+	img_avatar: string;
+	permission_level: number;
+	is_verified: boolean;
+	is_creator?: boolean;
+	avatar_frame?: AvatarFrame;
+}
+
+export class User
+	extends Model
+	implements UserCommonFields, ContentContainerModel, CommentableModel
+{
 	static readonly TYPE_GAMER = 'User';
 	static readonly TYPE_DEVELOPER = 'Developer';
 

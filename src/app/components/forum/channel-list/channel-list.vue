@@ -1,15 +1,15 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { arrayIndexByFunc } from '../../../../utils/array';
 import { formatNumber } from '../../../../_common/filters/number';
 import { ForumCategory } from '../../../../_common/forum/category/category.model';
 import { ForumChannel } from '../../../../_common/forum/channel/channel.model';
 import { ForumPost } from '../../../../_common/forum/post/post.model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
+import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import { arrayIndexByFunc } from '../../../../utils/array';
 
 @Options({
 	components: {

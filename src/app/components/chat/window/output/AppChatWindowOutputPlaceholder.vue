@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { kThemeBg, kThemeBgSubtle } from '../../../../../_common/theme/variables';
-import { styleBorderRadiusCircle, styleBorderRadiusLg } from '../../../../../_styles/mixins';
+import { styleBorderRadiusLg } from '../../../../../_styles/mixins';
 import { kChatRoomWindowPadding } from '../../../../styles/variables';
 import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '../variables';
 </script>
@@ -19,12 +19,12 @@ import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '../variables';
 		>
 			<div
 				:style="{
-					...styleBorderRadiusCircle,
 					position: `absolute`,
 					left: 0,
 					bottom: 0,
 					width: ChatWindowAvatarSize.px,
 					height: ChatWindowAvatarSize.px,
+					borderRadius: `50%`,
 					backgroundColor: kThemeBgSubtle,
 				}"
 			/>

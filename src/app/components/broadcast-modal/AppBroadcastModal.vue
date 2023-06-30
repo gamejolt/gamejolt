@@ -6,6 +6,7 @@ import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model';
 import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
+import { AppCommentWidgetLazy } from '../../../_common/lazy';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
 import AppModal from '../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../_common/modal/modal.service';
@@ -16,7 +17,6 @@ import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import AppVideo from '../../../_common/video/AppVideo.vue';
 import AppVideoPlayer from '../../../_common/video/player/AppVideoPlayer.vue';
 import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
-import { AppCommentWidgetLazy } from '../lazy';
 import AppPollVoting from '../poll/AppPollVoting.vue';
 import AppPostControls from '../post/controls/AppPostControls.vue';
 

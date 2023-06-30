@@ -1,29 +1,23 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRaw, toRefs } from 'vue';
-import AppAvatarFrame from '../../../_common/avatar/AppAvatarFrame.vue';
-import { AvatarFrame } from '../../../_common/avatar/frame.model';
-import { ComponentProps } from '../../../_common/component-helpers';
-import { Environment } from '../../../_common/environment/environment.service';
-import { imageGuestAvatar } from '../../../_common/img/images';
-import { ThemeColor } from '../../../_common/theme/variables';
-import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { User } from '../../../_common/user/user.model';
-import { styleBorderRadiusCircle, styleChangeBg } from '../../../_styles/mixins';
-import { ChatUser } from '../chat/user';
-import AppUserVerifiedWrapper from './AppUserVerifiedWrapper.vue';
+import { PropType, computed, toRefs } from 'vue';
+import { styleChangeBg } from '../../../_styles/mixins';
+import AppAvatarFrame from '../../avatar/AppAvatarFrame.vue';
+import { AvatarFrame } from '../../avatar/frame.model';
+import { ComponentProps } from '../../component-helpers';
+import { Environment } from '../../environment/environment.service';
+import { ThemeColor } from '../../theme/variables';
+import AppUserVerifiedWrapper from '../AppUserVerifiedWrapper.vue';
+import { UserCommonFields } from '../user.model';
+import AppUserAvatarImg from './AppUserAvatarImg.vue';
 
 const props = defineProps({
 	user: {
-		type: [Object, null] as PropType<User | ChatUser | null>,
+		type: [Object, null] as PropType<UserCommonFields | null>,
 		required: true,
 	},
 	bgColor: {
 		type: String as PropType<ThemeColor>,
 		default: 'bg',
-	},
-	link: {
-		type: String,
-		default: undefined,
 	},
 	disableLink: {
 		type: Boolean,
@@ -82,7 +76,6 @@ const props = defineProps({
 const {
 	user,
 	bgColor,
-	link,
 	disableLink,
 	showVerified,
 	verifiedOffset,
@@ -93,10 +86,6 @@ const {
 	smoosh,
 } = toRefs(props);
 
-const chatAvatarStyles: CSSProperties = {
-	...styleBorderRadiusCircle,
-};
-
 const avatarFrame = computed(() => frameOverride?.value || user.value?.avatar_frame || null);
 const maySmooshFrame = computed(() => !!avatarFrame.value && showFrame.value && smoosh.value);
 
@@ -105,18 +94,8 @@ const href = computed(() => {
 		return undefined;
 	}
 
-	if (!link?.value) {
-		return Environment.wttfBaseUrl + user.value.url;
-	} else if (link.value === 'dashboard') {
-		return Environment.wttfBaseUrl;
-	}
+	return Environment.wttfBaseUrl + '/@' + user.value.username;
 });
-
-function isChatUser(user: typeof props.user): user is ChatUser {
-	// Proxy values will always fail these instanceof checks, so we need to
-	// check the raw value.
-	return toRaw(user) instanceof ChatUser;
-}
 </script>
 
 <template>
@@ -140,8 +119,8 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 				>
 					<div
 						:style="{
-							...styleBorderRadiusCircle,
 							...styleChangeBg(bgColor),
+							borderRadius: `50%`,
 							// Some containers end up adjusting the size of this avatar
 							// and break things, even if width and height on the parent
 							// are assigned to 1:1 ratios.
@@ -149,18 +128,9 @@ function isChatUser(user: typeof props.user): user is ChatUser {
 						}"
 					>
 						<slot>
-							<template v-if="isChatUser(user)">
-								<img
-									class="_img"
-									:style="chatAvatarStyles"
-									:src="user.img_avatar || imageGuestAvatar"
-									alt=""
-								/>
-							</template>
 							<AppUserAvatarImg
-								v-else
 								class="_img"
-								:style="chatAvatarStyles"
+								:style="{ borderRadius: `50%` }"
 								:user="user"
 							/>
 						</slot>

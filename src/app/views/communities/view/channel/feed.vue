@@ -9,7 +9,7 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { useGridStore } from '../../../../components/grid/grid-store';
-import { illNoComments } from '../../../../img/ill/illustrations';
+import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import { useAppStore } from '../../../../store';
 import {
 	CommunityRouteStore,

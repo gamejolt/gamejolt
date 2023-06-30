@@ -1,10 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType } from 'vue';
-import {
-	styleBorderRadiusCircle,
-	styleChangeBg,
-	styleFlexCenter,
-} from '../../../../_styles/mixins';
+import { styleChangeBg, styleFlexCenter } from '../../_styles/mixins';
 
 defineProps({
 	count: {
@@ -42,9 +38,9 @@ defineProps({
 				:key="i"
 				:style="{
 					...styleChangeBg(current === i ? 'primary' : 'bg-subtle'),
-					...styleBorderRadiusCircle,
 					width: `6px`,
 					height: `6px`,
+					borderRadius: `50%`,
 				}"
 			/>
 		</div>
