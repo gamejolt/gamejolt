@@ -2,14 +2,13 @@
 import { PropType } from 'vue';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { User } from '../../../../_common/user/user.model';
+import { UserCommonFields } from '../../../../_common/user/user.model';
 import { styleChangeBg } from '../../../../_styles/mixins';
 import AppChatListItem from '../../chat/_list/AppChatListItem.vue';
-import { ChatUser } from '../../chat/user';
 
 defineProps({
 	user: {
-		type: Object as PropType<ChatUser | User>,
+		type: Object as PropType<UserCommonFields>,
 		required: true,
 	},
 });
