@@ -1,10 +1,10 @@
 <script lang="ts">
 import { PropType, Ref, computed, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
-import { AppVideoPlayerShakaLazy } from '../../../app/components/lazy';
 import { formatNumber } from '../../filters/number';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
+import { AppVideoPlayerShakaLazy } from '../../lazy';
 import AppLoading from '../../loading/AppLoading.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItem } from '../../media-item/media-item-model';

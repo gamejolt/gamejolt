@@ -14,6 +14,7 @@ import {
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { vAppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
+import { AppCommentWidgetLazy } from '../../../../_common/lazy';
 import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
@@ -35,7 +36,6 @@ import { kGridGutterWidth } from '../../../../_styles/variables';
 import { debounce } from '../../../../utils/utils';
 import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
-import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPollVoting from '../../../components/poll/AppPollVoting.vue';
 import AppPostControls from '../../../components/post/controls/AppPostControls.vue';

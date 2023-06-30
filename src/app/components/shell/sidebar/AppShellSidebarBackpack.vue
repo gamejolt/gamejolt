@@ -25,7 +25,7 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vu
 import { styleTextOverflow } from '../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../_styles/variables';
 import { run } from '../../../../utils/utils';
-import { illPointyThing } from '../../../img/ill/illustrations';
+import { illPointyThing } from '../../../../_common/illustration/illustrations';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
 type FormModel = {

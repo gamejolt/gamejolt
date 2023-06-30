@@ -19,12 +19,12 @@ import {
 import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '../../../../../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppUserVerifiedTick from '../../../../../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
 import { CommunityCompetitionEntryModal } from '../../../../../../../../components/community/competition/entry/modal/modal.service';
-import { illNoCommentsSmall } from '../../../../../../../../img/ill/illustrations';
+import { illNoCommentsSmall } from '../../../../../../../../../_common/illustration/illustrations';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
 
 type Payload = {

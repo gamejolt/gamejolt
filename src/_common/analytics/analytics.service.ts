@@ -8,7 +8,6 @@ import {
 } from 'firebase/analytics';
 import { unref, watch } from 'vue';
 import { Router } from 'vue-router';
-import { FiresideSidebar } from '../../app/components/fireside/controller/controller';
 import { arrayRemove } from '../../utils/array';
 import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';
@@ -529,8 +528,8 @@ export function trackFiresideSidebarButton({
 	current,
 	trigger,
 }: {
-	previous: FiresideSidebar;
-	current: FiresideSidebar;
+	previous: string;
+	current: string;
 	trigger: string;
 }) {
 	trackFiresideAction({

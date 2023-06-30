@@ -14,7 +14,7 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { getParam } from '../../../utils/router';
 import { sleep } from '../../../utils/utils';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
-import { illNoComments, illNoCommentsSmall } from '../../img/ill/illustrations';
+import { illNoComments, illNoCommentsSmall } from '../../../_common/illustration/illustrations';
 import { useQuestStore } from '../../store/quest';
 
 export default {

@@ -45,7 +45,6 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
 	styleBorderRadiusBase,
-	styleBorderRadiusCircle,
 	styleBorderRadiusLg,
 	styleChangeBg,
 	styleElevate,
@@ -60,7 +59,7 @@ import {
 	kFontSizeH3,
 	kStrongEaseOut,
 } from '../../../../_styles/variables';
-import { illNoCommentsSmall } from '../../../img/ill/illustrations';
+import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
 import AppVendingMachineProduct from './_product/AppVendingMachineProduct.vue';
 import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
@@ -392,9 +391,9 @@ const currencyCardImgStyles: CSSProperties = {
 												<AppAspectRatio
 													:ratio="1"
 													:style="{
-														...styleBorderRadiusCircle,
 														backgroundColor: kThemeFg10,
 														width: `100%`,
+														borderRadius: `50%`,
 													}"
 													:inner-styles="{
 														...styleFlexCenter(),

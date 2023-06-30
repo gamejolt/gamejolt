@@ -6,15 +6,15 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { kThemeBg, kThemeFg, kThemePrimary } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { useGridStore } from '../../grid/grid-store';
-import AppUserAvatarBubble from '../../user/AppUserAvatarBubble.vue';
+import AppChatListItem from '../_list/AppChatListItem.vue';
 import { isUserOnline } from '../client';
 import { ChatRoom } from '../room';
 import { ChatUser, getChatUserRoleData } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 import AppChatUserPopover from '../user-popover/AppChatUserPopover.vue';
-import AppChatListItem from '../_list/AppChatListItem.vue';
 
 const props = defineProps({
 	user: {

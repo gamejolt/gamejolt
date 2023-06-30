@@ -3,16 +3,16 @@ import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { formatFuzzynumber } from '../../../../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../../../../_common/filters/number';
+import AppGameRatingWidget from '../../../../../../../_common/game/rating/AppGameRatingWidget.vue';
 import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
 import { LikersModal } from '../../../../../../../_common/likers/modal.service';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import AppRatingWidget from '../../../../../../components/rating/widget/widget.vue';
 import { useGameRouteController } from '../../view.vue';
 
 @Options({
 	components: {
 		AppLazyPlaceholder,
-		AppRatingWidget,
+		AppGameRatingWidget,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -86,7 +86,7 @@ export default class AppDiscoverGamesViewOverviewStatbar extends Vue {
 			</a>
 			<div class="-split" />
 			<div class="-rating">
-				<AppRatingWidget :game="game" :user-rating="userRating" hide-count />
+				<AppGameRatingWidget :game="game" :user-rating="userRating" hide-count />
 			</div>
 		</template>
 	</div>

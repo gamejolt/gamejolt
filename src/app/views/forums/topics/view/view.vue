@@ -1,9 +1,8 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { enforceLocation } from '../../../../../utils/router';
-import { Api } from '../../../../../_common/api/api.service';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
+import { Api } from '../../../../../_common/api/api.service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
@@ -23,9 +22,10 @@ import { vAppScrollTo } from '../../../../../_common/scroll/to/to.directive';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import { enforceLocation } from '../../../../../utils/router';
 import FormForumPost from '../../../../components/forms/forum/post/post.vue';
 import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';

@@ -1,34 +1,32 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppCard from '../../../../_common/card/AppCard.vue';
-import { formatNumber } from '../../../../_common/filters/number';
-import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
+<script lang="ts" setup>
+import { computed, toRefs } from 'vue';
+import AppCard from '../card/AppCard.vue';
+import { formatNumber } from '../filters/number';
+import AppJolticon from '../jolticon/AppJolticon.vue';
+import AppProgressBar from '../progress/AppProgressBar.vue';
 
-@Options({
-	components: {
-		AppCard,
-		AppProgressBar,
+const props = defineProps({
+	total: {
+		type: Number,
+		required: true,
 	},
-})
-export default class AppTrophyCompletion extends Vue {
-	@Prop(Number)
-	total!: number;
+	achieved: {
+		type: Number,
+		required: true,
+	},
+	experience: {
+		type: Number,
+		required: true,
+	},
+	isLoggedInUser: {
+		type: Boolean,
+		default: true,
+	},
+});
 
-	@Prop(Number)
-	achieved!: number;
+const { achieved, total } = toRefs(props);
 
-	@Prop(Number)
-	experience!: number;
-
-	@Prop({ type: Boolean, default: true })
-	isLoggedInUser!: boolean;
-
-	readonly formatNumber = formatNumber;
-
-	get completionRate() {
-		return Math.ceil((this.achieved / this.total) * 100);
-	}
-}
+const completionRate = computed(() => Math.ceil((achieved.value / total.value) * 100));
 </script>
 
 <template>
@@ -71,7 +69,7 @@ export default class AppTrophyCompletion extends Vue {
 					<div class="stat-big stat-big-smaller" style="margin-bottom: 0">
 						<div class="stat-big-digit">{{ formatNumber(completionRate) }}%</div>
 						<div class="stat-big-label">
-							<AppTranslate>Completion</AppTranslate>
+							{{ $gettext('Completion') }}
 						</div>
 					</div>
 				</div>
@@ -82,14 +80,14 @@ export default class AppTrophyCompletion extends Vue {
 							{{ formatNumber(experience) }}
 						</div>
 						<div class="stat-big-label">
-							<AppTranslate>EXP Gained</AppTranslate>
+							{{ $gettext('EXP Gained') }}
 						</div>
 					</div>
 				</div>
 			</div>
 		</template>
 		<template v-else>
-			<AppTranslate>You haven't achieved any trophies for this game yet!</AppTranslate>
+			{{ $gettext(`You haven't achieved any trophies for this game yet!`) }}
 		</template>
 	</AppCard>
 </template>

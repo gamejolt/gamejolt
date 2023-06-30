@@ -21,11 +21,13 @@ import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
+import AppUserDogtag from '../../../_common/user/AppUserDogtag.vue';
 import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatar from '../../../_common/user/user-avatar/AppUserAvatar.vue';
+import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { User } from '../../../_common/user/user.model';
 import { kFontFamilyBase } from '../../../_styles/variables';
 import { isUserOnline } from '../../components/chat/client';
@@ -33,8 +35,6 @@ import { useGridStore } from '../../components/grid/grid-store';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
-import AppUserAvatarBubble from '../../components/user/AppUserAvatarBubble.vue';
-import AppUserDogtag from '../../components/user/AppUserDogtag.vue';
 import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 
@@ -192,9 +192,11 @@ function createController() {
 }
 
 const ProfileThemeKey = 'profile';
+</script>
 
-export default {
-	...defineAppRouteOptions({
+<script lang="ts" setup>
+defineOptions(
+	defineAppRouteOptions({
 		cache: true,
 		lazy: true,
 		deps: { params: ['username'], query: ['intent'] },
@@ -219,11 +221,9 @@ export default {
 			}
 			return Api.sendRequest('/web/profile/@' + route.params.username);
 		},
-	}),
-};
-</script>
+	})
+);
 
-<script lang="ts" setup>
 const routeStore = createController();
 provide(Key, routeStore);
 

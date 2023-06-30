@@ -33,12 +33,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import {
-	styleBorderRadiusCircle,
-	styleBorderRadiusLg,
-	styleChangeBg,
-	styleFlexCenter,
-} from '../../../../_styles/mixins';
+import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '../../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../../_styles/variables';
 
 type FormModel = Partial<Sticker> & {
@@ -396,10 +391,10 @@ async function onClickIsActive() {
 						<div
 							v-else
 							:style="{
-								...styleBorderRadiusCircle,
 								...styleChangeBg('bg-subtle'),
 								width: `100%`,
 								height: `100%`,
+								borderRadius: `50%`,
 							}"
 						/>
 					</div>

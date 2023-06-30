@@ -2,6 +2,7 @@
 import { PropType } from 'vue';
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { styleTextOverflow } from '../../../../_styles/mixins';
 import { ChatClient } from '../client';

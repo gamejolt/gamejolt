@@ -8,7 +8,6 @@ import {
 	styleTextOverflow,
 } from '../../_styles/mixins';
 import { kBorderWidthSm, kFontSizeSmall, kFontSizeTiny } from '../../_styles/variables';
-import AppUserAvatarBubble from '../../app/components/user/AppUserAvatarBubble.vue';
 import AppAnimElectricity from '../animation/AppAnimElectricity.vue';
 import { formatFuzzynumberOverThreshold } from '../filters/fuzzynumber';
 import AppJolticon from '../jolticon/AppJolticon.vue';
@@ -17,6 +16,7 @@ import { useCommonStore } from '../store/common-store';
 import { kThemeFg, kThemeFg10, kThemeFgMuted } from '../theme/variables';
 import { vAppTooltip } from '../tooltip/tooltip-directive';
 import AppUserCardHover from '../user/card/AppUserCardHover.vue';
+import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
 import { User } from '../user/user.model';
 
 export interface TopSupporter {

@@ -13,7 +13,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
 import AppFiresideAvatarBase from '../../../../components/fireside/avatar/AppFiresideAvatarBase.vue';
-import { illNoComments } from '../../../../img/ill/illustrations';
+import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import { RealmRoutePayload, useRealmRouteStore } from '../view.store';
 
 export default {

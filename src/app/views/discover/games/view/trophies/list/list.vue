@@ -11,8 +11,8 @@ import {
 } from '../../../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { UserGameTrophy } from '../../../../../../../_common/user/trophy/game-trophy.model';
-import AppTrophyCompletion from '../../../../../../components/trophy/completion/completion.vue';
-import AppTrophyList from '../../../../../../components/trophy/list/list.vue';
+import AppTrophyCompletion from '../../../../../../../_common/trophy/AppTrophyCompletion.vue';
+import AppTrophyList from '../../../../../../../_common/trophy/list/AppTrophyList.vue';
 import { useGameRouteController } from '../../view.vue';
 
 @Options({

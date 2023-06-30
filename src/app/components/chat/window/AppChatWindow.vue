@@ -27,11 +27,11 @@ import { kThemeBacklight, kThemeBacklightFg } from '../../../../_common/theme/va
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
-import { styleBorderRadiusCircle, styleFlexCenter } from '../../../../_styles/mixins';
+import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleFlexCenter } from '../../../../_styles/mixins';
 import { useAppStore } from '../../../store';
 import { useGridStore } from '../../grid/grid-store';
-import AppUserAvatarBubble from '../../user/AppUserAvatarBubble.vue';
 import { closeChatRoom } from '../client';
 import FormChatRoomSettings from '../FormChatRoomSettings.vue';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
@@ -70,9 +70,9 @@ const headerAvatarBackgroundColor = kThemeBacklight;
 const headerAvatarJolticonColor = kThemeBacklightFg;
 
 const headerAvatarStyles: CSSProperties = {
-	...styleBorderRadiusCircle,
 	...headerAvatarSizeStyles,
 	...styleFlexCenter(),
+	borderRadius: `50%`,
 	backgroundColor: headerAvatarBackgroundColor,
 };
 
