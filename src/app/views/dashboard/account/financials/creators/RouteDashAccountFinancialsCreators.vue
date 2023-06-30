@@ -12,7 +12,7 @@ import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { userCanAccessCreatorForm } from '../../../../../../_common/user/user.model';
 import FormFinancialsCreator from '../../../../../components/forms/financials/FormFinancialsCreator.vue';
-import { illEndOfFeed } from '../../../../../img/ill/illustrations';
+import { illEndOfFeed } from '../../../../../../_common/illustration/illustrations';
 import { routeLandingCreators } from '../../../../landing/creators/creators.route';
 
 export default {

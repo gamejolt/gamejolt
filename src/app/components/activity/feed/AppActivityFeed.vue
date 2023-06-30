@@ -17,7 +17,7 @@ import AppScrollInview, {
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { illEndOfFeed } from '../../../img/ill/illustrations';
+import { illEndOfFeed } from '../../../../_common/illustration/illustrations';
 import AppActivityFeedItem from './item/AppActivityFeedItem.vue';
 import AppActivityFeedNewButton from './new-button/new-button.vue';
 import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from './view';

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { illNoCommentsSmall } from '../../../../app/img/ill/illustrations';
+import { illNoCommentsSmall } from '../../../illustration/illustrations';
 import AppAlertBox from '../../../alert/AppAlertBox.vue';
 import { Api } from '../../../api/api.service';
 import AppForm, { createForm, FormController } from '../../../form-vue/AppForm.vue';

@@ -10,10 +10,6 @@ export function styleWhen(condition: boolean | null | undefined, style: CSSPrope
 	return condition ? style : {};
 }
 
-export const styleBorderRadiusCircle: CSSProperties = {
-	borderRadius: `50%`,
-};
-
 export const styleBorderRadiusBase: CSSProperties = {
 	borderRadius: kBorderRadiusBase.px,
 };

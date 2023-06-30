@@ -5,9 +5,9 @@ import { ForumTopic } from '../../../../_common/forum/topic/topic.model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 
 @Options({
 	components: {

@@ -1,5 +1,4 @@
 import { Router } from 'vue-router';
-import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
 import { SupporterMessageModal } from '../../app/views/dashboard/supporters/message/modal.service';
 import { routeDashSupporters } from '../../app/views/dashboard/supporters/supporters.route';
 import type { RouteLocationDefinition } from '../../utils/router';
@@ -38,6 +37,7 @@ import { StickerPlacement } from '../sticker/placement/placement.model';
 import { Subscription } from '../subscription/subscription.model';
 import { SupporterAction } from '../supporters/action.model';
 import { $gettext, Translate } from '../translate/translate.service';
+import { TrophyModal } from '../trophy/modal/modal.service';
 import { UserFriendship } from '../user/friendship/friendship.model';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../user/trophy/site-trophy.model';

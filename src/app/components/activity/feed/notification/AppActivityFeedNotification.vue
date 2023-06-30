@@ -37,7 +37,7 @@ import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-tro
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { UserAvatarFrame } from '../../../../../_common/user/user-avatar/frame/frame.model';
 import { User } from '../../../../../_common/user/user.model';
-import { getTrophyImg } from '../../../trophy/thumbnail/thumbnail.vue';
+import { getTrophyImg } from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
 

@@ -8,7 +8,7 @@ import AppMediaItemPost from '../../../../../_common/media-item/post/post.vue';
 import { kThemeBgActual } from '../../../../../_common/theme/variables';
 import AppTouch, { AppTouchInput } from '../../../../../_common/touch/AppTouch.vue';
 import { styleBorderRadiusLg, styleElevate, styleWhen } from '../../../../../_styles/mixins';
-import AppEventItemMediaIndicator from '../../../event-item/media-indicator/AppEventItemMediaIndicator.vue';
+import AppEventItemMediaIndicator from '../../../../../_common/pagination/AppPageIndicator.vue';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
 

@@ -6,15 +6,14 @@ import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service'
 import { kThemeBacklight, kThemeBacklightFg } from '../../../../_common/theme/variables';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { styleBorderRadiusCircle } from '../../../../_styles/mixins';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { useGridStore } from '../../grid/grid-store';
-import AppUserAvatarBubble from '../../user/AppUserAvatarBubble.vue';
+import AppChatListItem from '../_list/AppChatListItem.vue';
 import { isUserOnline, leaveGroupRoom, openChatRoom } from '../client';
 import AppChatNotificationSettings from '../notification-settings/notification-settings.vue';
 import { ChatRoom, getChatRoomTitle } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
-import AppChatListItem from '../_list/AppChatListItem.vue';
 
 const props = defineProps({
 	item: {
@@ -117,9 +116,9 @@ async function leaveRoom() {
 				<div
 					v-else
 					:style="{
-						...styleBorderRadiusCircle,
 						width: `100%`,
 						height: `100%`,
+						borderRadius: `50%`,
 						display: `inline-flex`,
 						alignItems: `center`,
 						justifyContent: `center`,

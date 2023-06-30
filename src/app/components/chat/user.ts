@@ -1,14 +1,15 @@
-import { objectOmit } from '../../../utils/object';
 import { AvatarFrame } from '../../../_common/avatar/frame.model';
 import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
 import { ModelStoreModel } from '../../../_common/model/model-store.service';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { UserCommonFields } from '../../../_common/user/user.model';
+import { objectOmit } from '../../../utils/object';
 import { tryGetRoomRole } from './client';
 import { ChatMessage } from './message';
 import { CHAT_ROLES } from './role';
 import { ChatRoom } from './room';
 
-export class ChatUser implements ModelStoreModel {
+export class ChatUser implements UserCommonFields, ModelStoreModel {
 	declare id: number;
 	declare room_id: number;
 	declare last_message_on: number;

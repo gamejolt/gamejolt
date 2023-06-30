@@ -62,8 +62,8 @@ import AppGameListPlaceholder from '../../../components/game/list/placeholder/pl
 import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import { TrophyModal } from '../../../components/trophy/modal/modal.service';
-import AppTrophyThumbnail from '../../../components/trophy/thumbnail/thumbnail.vue';
+import { TrophyModal } from '../../../../_common/trophy/modal/modal.service';
+import AppTrophyThumbnail from '../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useAppStore } from '../../../store/index';
 import { useProfileRouteController } from '../RouteProfile.vue';
