@@ -8,17 +8,19 @@ import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
+import { SettingTwitterMoad } from '../../../../../_common/settings/settings.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
-import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
+import AppTwitterMoad from '../../../../components/twitter-moad/AppTwitterMoad.vue';
 import { useAppStore } from '../../../../store';
-import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
 import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
 
 @Options({
 	components: {
@@ -30,6 +32,7 @@ import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
 		AppBlockedNotice,
 		AppExpand,
 		AppIllustration,
+		AppTwitterMoad,
 	},
 })
 export default class AppCommunitiesViewFeed extends Vue {
@@ -128,6 +131,10 @@ export default class AppCommunitiesViewFeed extends Vue {
 		return message;
 	}
 
+	get twitterMoad() {
+		return SettingTwitterMoad.get();
+	}
+
 	onLoadedNew() {
 		// Mark the community/channel as read after loading new posts.
 		Api.sendRequest(
@@ -221,6 +228,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 		</AppNavTabList>
 
 		<AppActivityFeedPlaceholder v-if="!feed" />
+		<AppTwitterMoad v-else-if="twitterMoad" />
 		<template v-else>
 			<AppActivityFeed
 				v-if="feed.hasItems"

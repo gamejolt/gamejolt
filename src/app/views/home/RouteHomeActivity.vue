@@ -1,16 +1,18 @@
 <script lang="ts" setup>
-import { inject, ref, watch } from 'vue';
+import { computed, inject, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import { illNoComments } from '../../../_common/illustration/illustrations';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import { SettingTwitterMoad } from '../../../_common/settings/settings.service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { useGridStore } from '../../components/grid/grid-store';
 import { AppActivityFeedLazy } from '../../components/lazy';
-import { illNoComments } from '../../../_common/illustration/illustrations';
+import AppTwitterMoad from '../../components/twitter-moad/AppTwitterMoad.vue';
 import { useAppStore } from '../../store/index';
 import { routeDiscoverHome } from '../discover/home/home.route';
 import { RouteActivityFeedController } from './RouteHomeFeed.vue';
@@ -50,6 +52,8 @@ watch(
 	{ immediate: true }
 );
 
+const twitterMoad = computed(() => SettingTwitterMoad.get());
+
 createAppRoute({
 	onInit() {
 		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);
@@ -87,7 +91,8 @@ function onLoadedNew() {
 <template>
 	<AppActivityFeedPlaceholder v-if="!feed || !feed.isBootstrapped" />
 	<div v-else>
-		<div v-if="!feed.hasItems">
+		<AppTwitterMoad v-if="twitterMoad" />
+		<div v-else-if="!feed.hasItems">
 			<AppIllustration :asset="illNoComments">
 				{{ $gettext(`You don't have any activity yet.`) }}
 				<br />

@@ -37,6 +37,7 @@ import {
 	OptionsForRoute,
 } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
+import { SettingTwitterMoad } from '../../../../../../_common/settings/settings.service';
 import AppShareCard from '../../../../../../_common/share/card/AppShareCard.vue';
 import { getAbsoluteLink } from '../../../../../../utils/router';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
@@ -52,6 +53,7 @@ import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPageContainer from '../../../../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../../../../components/post/add-button/AppPostAddButton.vue';
 import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
+import AppTwitterMoad from '../../../../../components/twitter-moad/AppTwitterMoad.vue';
 import AppUserKnownFollowers from '../../../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useGameRouteController } from '../view.vue';
 import AppDiscoverGamesViewOverviewSupporters from './AppDiscoverGamesViewOverviewSupporters.vue';
@@ -87,6 +89,7 @@ import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
 		AppShareCard,
 		AppGameListPlaceholder,
 		AppGameList,
+		AppTwitterMoad,
 	},
 })
 @OptionsForRoute({
@@ -269,6 +272,10 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		}
 
 		return getAbsoluteLink(this.$router, this.game.getUrl());
+	}
+
+	get twitterMoad() {
+		return SettingTwitterMoad.get();
 	}
 
 	routeCreated() {
@@ -606,6 +613,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 				<AppPostAddButton v-if="hasDevlogPerms" :game="game" @add="onPostAdded" />
 
 				<AppActivityFeedPlaceholder v-if="!feed || !feed.isBootstrapped" />
+				<AppTwitterMoad v-else-if="twitterMoad" />
 				<template v-else>
 					<AppActivityFeed v-if="feed.hasItems" :feed="feed" show-ads />
 					<div v-else class="alert">
