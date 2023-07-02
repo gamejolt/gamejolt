@@ -10,6 +10,7 @@ import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
+import { SettingTwitterMoad } from '../../../../../_common/settings/settings.service';
 import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import { kLineHeightComputed } from '../../../../../_styles/variables';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
@@ -18,6 +19,7 @@ import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresid
 import AppFiresideAvatarAdd from '../../../../components/fireside/avatar/AppFiresideAvatarAdd.vue';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
+import AppTwitterMoad from '../../../../components/twitter-moad/AppTwitterMoad.vue';
 import { routeRealmsViewFiresides } from '../firesides/firesides.route';
 import { useRealmRouteStore } from '../view.store';
 
@@ -93,6 +95,8 @@ const appRoute = createAppRoute({
 	},
 });
 
+const twitterMoad = ref(SettingTwitterMoad.get());
+
 function onPostAdded(post: FiresidePost) {
 	ActivityFeedService.onPostAdded({
 		feed: feed.value!,
@@ -158,6 +162,7 @@ function onPostAdded(post: FiresidePost) {
 			@add="onPostAdded"
 		/>
 
-		<AppActivityFeedLazy v-if="feed?.isBootstrapped" :feed="feed" show-ads />
+		<AppTwitterMoad v-if="twitterMoad" />
+		<AppActivityFeedLazy v-else-if="feed?.isBootstrapped" :feed="feed" show-ads />
 	</div>
 </template>

@@ -1,16 +1,17 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { getQuery } from '../../../../utils/router';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/AppCommunityThumbnail.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { SettingTwitterMoad } from '../../../../_common/settings/settings.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
 import AppUserCard from '../../../../_common/user/card/AppUserCard.vue';
+import { getQuery } from '../../../../utils/router';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
@@ -18,6 +19,7 @@ import AppGameList from '../../../components/game/list/list.vue';
 import { AppActivityFeedLazy as AppActivityFeed } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import { sendSearch } from '../../../components/search/search-service';
+import AppTwitterMoad from '../../../components/twitter-moad/AppTwitterMoad.vue';
 import { routeSearchRealms } from '../realms/realms.route';
 import { useSearchRouteController } from '../RouteSearch.vue';
 
@@ -30,6 +32,7 @@ export default {
 		cache: true,
 		resolver: ({ route }) => sendSearch(getQuery(route, 'q') ?? ''),
 	}),
+	components: { AppTwitterMoad },
 };
 </script>
 
@@ -85,6 +88,8 @@ const slicedRealms = computed(() => {
 
 	return searchPayload.value.realms.slice(0, count);
 });
+
+const twitterMoad = computed(() => SettingTwitterMoad.get());
 </script>
 
 <template>
@@ -244,7 +249,8 @@ const slicedRealms = computed(() => {
 			</template>
 
 			<!-- Posts -->
-			<template v-if="feed && feed.hasItems">
+			<AppTwitterMoad v-if="twitterMoad" />
+			<template v-else-if="feed && feed.hasItems">
 				<h3 class="-heading">
 					<AppTranslate>Posts</AppTranslate>
 				</h3>
