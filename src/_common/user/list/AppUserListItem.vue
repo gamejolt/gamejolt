@@ -6,7 +6,6 @@ import { useCommonStore } from '../../store/common-store';
 import AppUserCardHover from '../card/AppUserCardHover.vue';
 import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
 import AppUserAvatarBubble from '../user-avatar/AppUserAvatarBubble.vue';
-import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
 import { User } from '../user.model';
 
 defineProps({
@@ -43,9 +42,7 @@ const { user: sessionUser } = useCommonStore();
 		}"
 	>
 		<component :is="userHoverCard ? AppUserCardHover : 'div'" :user="user" class="-avatar">
-			<AppUserAvatarBubble :user="user" show-frame show-verified>
-				<AppUserAvatarImg :user="user" />
-			</AppUserAvatarBubble>
+			<AppUserAvatarBubble :user="user" show-frame show-verified />
 		</component>
 
 		<div class="-label">
