@@ -6,10 +6,8 @@ import { Api } from '../../../../../_common/api/api.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
-import { SettingTwitterMoad } from '../../../../../_common/settings/settings.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
@@ -17,8 +15,8 @@ import { ActivityFeedService } from '../../../../components/activity/feed/feed-s
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
-import AppTwitterMoad from '../../../../components/twitter-moad/AppTwitterMoad.vue';
 import AppUserSpawnDay from '../../../../components/user/spawn-day/spawn-day.vue';
+import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import { useProfileRouteController } from '../../RouteProfile.vue';
 
 function isLikeFeed(route: RouteLocationNormalized) {
@@ -40,7 +38,6 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppPostAddButton,
 		AppUserSpawnDay,
 		AppIllustration,
-		AppTwitterMoad,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -100,10 +97,6 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 		return this.isOwner
 			? this.$gettext(`You've made your liked posts private, so only you can see this.`)
 			: this.$gettext(`This user has made their liked posts private.`);
-	}
-
-	get twitterMoad() {
-		return (this.tab === 'active' || this.tab === 'likes') && SettingTwitterMoad.get();
 	}
 
 	routeCreated() {
@@ -233,7 +226,6 @@ export default class RouteProfileOverviewFeed extends BaseRouteComponent {
 			</p>
 		</AppIllustration>
 		<AppActivityFeedPlaceholder v-else-if="!feed || !feed.isBootstrapped" />
-		<AppTwitterMoad v-else-if="twitterMoad" />
 		<template v-else>
 			<AppActivityFeed
 				v-if="feed.hasItems"

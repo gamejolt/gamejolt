@@ -115,6 +115,3 @@ export const SettingStreamProducerDesktopAudioDevice = new StringSetting(
 );
 export const SettingStreamProducerGroupAudio = new StringSetting('stream-producer-group-audio', '');
 export const SettingPostBackgroundId = new NumberSetting('post-background-id', -1);
-
-// Make GJ behave more like Twitter.
-export const SettingTwitterMoad = new BooleanSetting('twitter-moad', false);

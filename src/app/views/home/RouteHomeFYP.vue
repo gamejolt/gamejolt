@@ -1,19 +1,17 @@
 <script lang="ts">
-import { computed, inject, ref } from 'vue';
+import { inject, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { configFYPExperiment } from '../../../_common/config/config.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
-import { illNoComments } from '../../../_common/illustration/illustrations';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { SettingTwitterMoad } from '../../../_common/settings/settings.service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { AppActivityFeedLazy } from '../../components/lazy';
-import AppTwitterMoad from '../../components/twitter-moad/AppTwitterMoad.vue';
+import { illNoComments } from '../../../_common/illustration/illustrations';
 import { routeDiscoverHome } from '../discover/home/home.route';
 import { RouteActivityFeedController } from './RouteHomeFeed.vue';
 
@@ -35,8 +33,6 @@ export default {
 const { feed } = inject<RouteActivityFeedController>('route-activity-feed')!;
 
 const isBootstrapped = ref(false);
-
-const twitterMoad = computed(() => SettingTwitterMoad.get());
 
 createAppRoute({
 	onInit() {
@@ -67,8 +63,7 @@ createAppRoute({
 <template>
 	<AppActivityFeedPlaceholder v-if="!feed || !feed.isBootstrapped" />
 	<div v-else>
-		<AppTwitterMoad v-if="twitterMoad" />
-		<div v-else-if="!feed.hasItems">
+		<div v-if="!feed.hasItems">
 			<AppIllustration :asset="illNoComments">
 				{{
 					$gettext(

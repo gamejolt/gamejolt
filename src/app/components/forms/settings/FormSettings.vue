@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ClientAutoStart } from '../../../../_common/client/safe-exports';
-import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
@@ -20,7 +20,6 @@ import {
 	SettingRestrictedBrowsing,
 	SettingThemeAlwaysOurs,
 	SettingThemeDark,
-	SettingTwitterMoad,
 } from '../../../../_common/settings/settings.service';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
@@ -41,7 +40,6 @@ type FormModel = {
 	theme_dark: boolean;
 	theme_always_ours: boolean;
 	sticker_sounds: boolean;
-	twitter_moad: boolean;
 };
 
 const { setDark, setAlwaysOurs } = useThemeStore();
@@ -60,7 +58,6 @@ const form: FormController<FormModel> = createForm({
 		form.formModel['feed_notifications'] = SettingFeedNotifications.get();
 		form.formModel['theme_dark'] = SettingThemeDark.get();
 		form.formModel['theme_always_ours'] = SettingThemeAlwaysOurs.get();
-		form.formModel['twitter_moad'] = SettingTwitterMoad.get();
 
 		if (GJ_IS_DESKTOP_APP) {
 			form.formModel['game_install_dir'] = SettingGameInstallDir.get();
@@ -89,7 +86,6 @@ function _onChange() {
 	SettingFeedNotifications.set(form.formModel.feed_notifications);
 	SettingThemeDark.set(form.formModel.theme_dark);
 	SettingThemeAlwaysOurs.set(form.formModel.theme_always_ours);
-	SettingTwitterMoad.set(form.formModel.twitter_moad);
 
 	setDark(form.formModel.theme_dark);
 	setAlwaysOurs(form.formModel.theme_always_ours);
@@ -308,15 +304,6 @@ watch(
 					<AppTranslate>
 						Don't switch to other themes when viewing profiles, games or communities.
 					</AppTranslate>
-				</p>
-			</AppFormGroup>
-
-			<AppFormGroup name="twitter_moad" :label="$gettext('Enable Twitter Experience?')">
-				<template #inline-control>
-					<AppFormControlToggle />
-				</template>
-				<p class="help-block">
-					<AppTranslate>Make your Game Jolt experience more like Twitter.</AppTranslate>
 				</p>
 			</AppFormGroup>
 		</fieldset>
