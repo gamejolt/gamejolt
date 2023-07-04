@@ -138,6 +138,7 @@ export function createCommentWidget(options: {
 	// need to check this doesnt screw things up:
 	// - make sure the build goes through
 	// - check ssr renders properly
+
 	const { grid, whenGridConnected } = useGridStore();
 
 	let _deregisterReactions: DeregisterOnConnected | null = null;
@@ -178,8 +179,9 @@ export function createCommentWidget(options: {
 
 		if (_deregisterReactions) {
 			console.error('Expected to not have a reaction handler yet');
+		} else {
+			_deregisterReactions = whenGridConnected(_joinReactionsChannel);
 		}
-		_deregisterReactions = whenGridConnected(_joinReactionsChannel);
 
 		// Keep track of how many comment widgets have a lock on this store. We
 		// need this data when closing the last widget to do some tear down
@@ -282,7 +284,10 @@ export function createCommentWidget(options: {
 			parent_comment_id: commentId,
 		});
 
-		_deregisterReactions?.();
+		if (_deregisterReactions) {
+			_deregisterReactions();
+			_deregisterReactions = null;
+		}
 	}
 
 	function setSort(sort: string) {

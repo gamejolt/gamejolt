@@ -156,6 +156,10 @@ const dataAnchorWidth = computed(() => {
 	if (canEditMessage.value) {
 		++itemCount;
 	}
+	if (canReact.value) {
+		++itemCount;
+		// is this okay?
+	}
 	if (!itemCount) {
 		return 0;
 	}
@@ -377,11 +381,12 @@ async function onMessageClick() {
 						<AppTranslate>{{ messageState.display }}</AppTranslate>
 					</span>
 
-					<div v-if="message.reaction_counts.length" class="_reactions-container">
+					<div v-if="message.reaction_counts.length">
 						<AppReactionList
 							:model="message"
 							:click-action="canReact ? 'toggle' : undefined"
 							context-action="show-details"
+							sans-margin-bottom
 						/>
 					</div>
 				</div>
@@ -639,8 +644,7 @@ $-min-item-width = 24px
 	color: white
 	overlay-text-shadow()
 
-._reactions-container
-	margin-bottom: -8px
+
 
 // Desktop (mouse)
 @media not screen and (pointer: coarse)

@@ -8,8 +8,8 @@ import { Fireside } from '../../../_common/fireside/fireside.model';
 import { getModel, storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
 import {
-	EmojiDelta,
-	updateReactionCountForAnEmoji,
+	updateReactionCount,
+	UpdateReactionPayload,
 } from '../../../_common/reaction/reaction-count';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
@@ -83,11 +83,6 @@ interface FiresideSocketParams {
 	fireside_viewing_mode: string;
 }
 
-interface UpdateChatMessageReactionPayload {
-	deltas: EmojiDelta[];
-	chat_message_id: number;
-}
-
 export function createChatRoomChannel(
 	client: ChatClient,
 	options: {
@@ -142,8 +137,6 @@ export function createChatRoomChannel(
 	channelController.listenTo('fireside_start', _onFiresideStart);
 	channelController.listenTo('fireside_update', _onFiresideUpdate);
 	channelController.listenTo('update-reactions', _onUpdateReaction);
-
-	// TODO(realtime-reactions) listen to realtime changes to reactions (call the event "reactions")
 
 	const { channel, isClosed } = channelController;
 
@@ -384,23 +377,19 @@ export function createChatRoomChannel(
 		);
 	}
 
-	function _onUpdateReaction(payload: UpdateChatMessageReactionPayload) {
-		const message = getModel(ChatMessage, payload.chat_message_id!);
+	function _onUpdateReaction(payload: UpdateReactionPayload) {
+		const message = getModel(ChatMessage, payload.resource_id!);
 		if (message === undefined) {
 			return;
 		}
 
 		for (const emoji_delta of payload.deltas) {
-			updateReactionCountForAnEmoji(
-				message,
-				emoji_delta.emoji_id,
-				emoji_delta.emoji_short_name,
-				emoji_delta.emoji_prefix,
-				emoji_delta.emoji_img_url,
-				emoji_delta.delta_inc,
-				emoji_delta.delta_dec,
-				client.currentUser ? client.currentUser.id : 0
-			);
+			updateReactionCount({
+				emoji_data: emoji_delta.emoji_data,
+				user_deltas: emoji_delta.user_deltas,
+				current_user_id: client.currentUser ? client.currentUser.id : 0,
+				model: message,
+			});
 		}
 	}
 

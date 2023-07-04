@@ -44,6 +44,10 @@ const props = defineProps({
 		type: Number,
 		default: 24,
 	},
+	sansMarginBottom: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const {
@@ -183,6 +187,9 @@ const scrollerMarginBottom = new CSSPixelValue(12);
 			:style="{
 				display: `inline-block`,
 				margin: `4px 0 8px 0`,
+				...styleWhen(sansMarginBottom, {
+					marginBottom: 0,
+				}),
 				...styleWhen(useScroller, {
 					display: `block`,
 				}),

@@ -48,10 +48,11 @@ export class Comment implements ModelStoreModel, RemovableModel, ReactionableMod
 	declare subscription?: Subscription;
 	declare is_pinned: boolean;
 	declare comment_content: string;
+	declare has_owner_like: boolean;
+	declare has_owner_reply: boolean;
+
 	reaction_counts: ReactionCount[] = [];
 	supporters: User[] = [];
-	has_owner_like!: boolean;
-	has_owner_reply!: boolean;
 
 	isFollowPending = false;
 	_removed = false;

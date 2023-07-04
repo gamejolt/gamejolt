@@ -286,6 +286,7 @@ export class GridClient {
 		this.firesideChannels = [];
 		this.firesideDMChannels = [];
 		this.notificationChannel = null;
+		this.commentsChannel = null;
 
 		// TODO(realtime-reactions) invoke cancel token from registerOnConnected
 		// here, but only if its the "final" disconnect (as in, not part of a

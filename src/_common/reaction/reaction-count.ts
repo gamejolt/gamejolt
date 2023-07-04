@@ -7,15 +7,41 @@ import { showErrorGrowl } from '../growls/growls.service';
 import { PayloadError } from '../payload/payload-service';
 import { $gettext } from '../translate/translate.service';
 
-export interface EmojiDelta {
+interface EmojiData {
 	emoji_id: number;
 	emoji_short_name: string;
 	emoji_prefix: string;
 	emoji_img_url: string;
+}
 
-	// user ids which reacted / unreacted to this emoji
+interface UserDeltas {
 	delta_inc: number[];
 	delta_dec: number[];
+}
+
+interface EmojiDelta {
+	emoji_data: EmojiData;
+	user_deltas: UserDeltas;
+}
+
+export interface UpdateReactionPayload {
+	deltas: EmojiDelta[];
+	resource_id: number;
+}
+
+export interface UpdateReactionCountPayload {
+	emoji_data: EmojiData;
+	user_deltas: UserDeltas;
+	current_user_id: number;
+	model: ReactionableModel;
+}
+
+interface ApplyReactionPayload {
+	existing_reaction: ReactionCount | undefined;
+	model: ReactionableModel;
+	count_mod: number;
+	emoji_data: EmojiData;
+	did_react: boolean;
 }
 
 export interface ReactionableModel {
@@ -29,95 +55,89 @@ interface EmojiIdAndCount {
 	emoji_id: number;
 	count: number;
 }
-const ReactionQueue = new WeakMap<ReactionableModel, EmojiIdAndCount[]>();
+const ModelsPendingReactions = new WeakMap<ReactionableModel, EmojiIdAndCount[]>();
 
-function applyReaction(
-	model: ReactionableModel,
-	existingReaction: ReactionCount | undefined,
-	countMod: number,
-	emojiId: number,
-	emojiImgUrl: string,
-	emojiPrefix: string,
-	emojiShortName: string,
-	didReact: boolean
-) {
-	if (existingReaction) {
-		if (existingReaction.count + countMod <= 0) {
-			arrayRemove(model.reaction_counts, i => i.id === emojiId);
+function applyReaction({
+	existing_reaction,
+	count_mod,
+	did_react,
+	model,
+	emoji_data,
+}: ApplyReactionPayload) {
+	if (existing_reaction) {
+		if (existing_reaction.count + count_mod <= 0) {
+			arrayRemove(model.reaction_counts, i => i.id === emoji_data.emoji_id);
 		} else {
-			existingReaction.count = existingReaction.count + countMod;
-			existingReaction.did_react = didReact;
+			existing_reaction.count = existing_reaction.count + count_mod;
+			existing_reaction.did_react = did_react;
 		}
-	} else if (countMod > 0) {
+	} else if (count_mod > 0) {
 		model.reaction_counts.push(
 			new ReactionCount({
-				id: emojiId,
-				img_url: emojiImgUrl,
-				prefix: emojiPrefix,
-				short_name: emojiShortName,
-				count: countMod,
-				did_react: didReact,
+				id: emoji_data.emoji_id,
+				img_url: emoji_data.emoji_img_url,
+				prefix: emoji_data.emoji_prefix,
+				short_name: emoji_data.emoji_short_name,
+				count: count_mod,
+				did_react: did_react,
 			})
 		);
 	}
 }
 
-export async function updateReactionCountForAnEmoji(
-	model: ReactionableModel,
-	emojiId: number,
-	emojiShortName: string,
-	emojiPrefix: string,
-	emojiImgUrl: string,
-	deltaInc: number[],
-	deltaDec: number[],
-	current_user_id: number
-) {
-	let countMod = deltaInc.length - deltaDec.length;
+export async function updateReactionCount({
+	emoji_data,
+	user_deltas,
+	current_user_id,
+	model,
+}: UpdateReactionCountPayload) {
+	let countMod = user_deltas.delta_inc.length - user_deltas.delta_dec.length;
 
-	const existingReaction = model.reaction_counts.find(i => i.id === emojiId);
-	const user_reacting_count = deltaInc.filter(id => id === current_user_id).length;
-	const user_unreacting_count = deltaDec.filter(id => id === current_user_id).length;
+	const existingReaction = model.reaction_counts.find(i => i.id === emoji_data.emoji_id);
+	const userReactingCount = user_deltas.delta_inc.filter(id => id === current_user_id).length;
+	const userUnreactingCount = user_deltas.delta_dec.filter(id => id === current_user_id).length;
 
-	let didReact = user_reacting_count > 0;
-	let updateDidReact = false;
+	let didReact = userReactingCount > 0;
+	let updateDidReactIndicator = false;
 
 	if (existingReaction) {
-		// emoji.did_react will need to be updated if user_reacting_count and user_unreacting_count are not equal
-		if (user_reacting_count != user_unreacting_count) {
+		// emoji.did_react will need to be updated if userReactingCount and userUnreactingCount are not equal
+		if (userReactingCount !== userUnreactingCount) {
 			didReact = !existingReaction.did_react;
-			updateDidReact = true;
+			updateDidReactIndicator = true;
 		} else {
 			didReact = existingReaction.did_react;
 		}
 	}
 
-	// we need to cancel out the self reactions (applied earlier) from the payload we receive
-	const modelSelfReactionQueue = ReactionQueue.get(model) ?? [];
-	if (modelSelfReactionQueue.length) {
-		const emojiSelfReactionQueue = modelSelfReactionQueue.find(i => i.emoji_id === emojiId);
-		if (emojiSelfReactionQueue) {
-			countMod = countMod - emojiSelfReactionQueue.count;
-			arrayRemove(modelSelfReactionQueue, i => i.emoji_id === emojiId);
-			ReactionQueue.set(model, modelSelfReactionQueue);
-			updateDidReact = false;
+	// we need to cancel out the self reactions made earlier in toggleReactionOnResource()
+	// as we the payload we receive from the grid will include our own reactions
+	const pendingReactions = ModelsPendingReactions.get(model);
+	if (pendingReactions && pendingReactions.length) {
+		const pendingEmojiReaction = pendingReactions.find(i => i.emoji_id === emoji_data.emoji_id);
+		if (pendingEmojiReaction) {
+			countMod = countMod - pendingEmojiReaction.count;
+			arrayRemove(pendingReactions, i => i.emoji_id === emoji_data.emoji_id);
+
+			// having pendingEmojiReaction means we have reacted to this emoji in this client/tab,
+			// thus did_react indicator would have been updated locally
+			updateDidReactIndicator = false;
 		}
 	}
 
-	// if the nett count is 0 and did_react never changed, we don't need to update the UI
-	if (countMod == 0 && !updateDidReact) {
+	// even if the nett count is 0, we still need to update the did_react state if the user's
+	// did_react state has been changed (user's reaction from diff tab)
+	if (countMod == 0 && !updateDidReactIndicator) {
 		return;
 	}
 
-	applyReaction(
-		model,
-		existingReaction,
-		countMod,
-		emojiId,
-		emojiImgUrl,
-		emojiPrefix,
-		emojiShortName,
-		didReact
-	);
+	applyReaction({
+		existing_reaction: existingReaction,
+		count_mod: countMod,
+		did_react: didReact,
+		model: model,
+		emoji_data: emoji_data,
+	});
 }
 
 export class ReactionCount {
@@ -194,24 +214,28 @@ export async function toggleReactionOnResource({
 	const countMod = isReacting ? 1 : -1;
 
 	try {
-		applyReaction(
-			model,
-			existingReaction,
-			countMod,
-			emojiId,
-			imgUrl,
-			prefix,
-			shortName,
-			isReacting
-		);
+		applyReaction({
+			existing_reaction: existingReaction,
+			count_mod: countMod,
+			did_react: isReacting,
+			model: model,
+			emoji_data: {
+				emoji_id: emojiId,
+				emoji_short_name: shortName,
+				emoji_prefix: prefix,
+				emoji_img_url: imgUrl,
+			},
+		});
 
-		const modelSelfReactionQueue = ReactionQueue.get(model) ?? [];
-		const emojiSelfReactionQueue = modelSelfReactionQueue.find(i => i.emoji_id === emojiId);
-		if (emojiSelfReactionQueue) {
-			emojiSelfReactionQueue.count = emojiSelfReactionQueue.count + countMod;
+		// user might have reacted to this emoji before and
+		// if it's still in the pending queue we need to update the count
+		const pendingReactions = ModelsPendingReactions.get(model) ?? [];
+		const pendingEmojiReaction = pendingReactions.find(i => i.emoji_id === emojiId);
+		if (pendingEmojiReaction) {
+			pendingEmojiReaction.count = pendingEmojiReaction.count + countMod;
 		} else {
-			modelSelfReactionQueue.push({ emoji_id: emojiId, count: countMod });
-			ReactionQueue.set(model, modelSelfReactionQueue);
+			pendingReactions.push({ emoji_id: emojiId, count: countMod });
+			ModelsPendingReactions.set(model, pendingReactions); // is this needed?
 		}
 
 		const action = isReacting ? 'react' : 'unreact';
@@ -255,10 +279,12 @@ export async function toggleReactionOnResource({
 		}
 
 		// revert self reaction queue
-		const modelSelfReactionQueue = ReactionQueue.get(model) ?? [];
-		if (modelSelfReactionQueue.some(i => i.emoji_id === emojiId)) {
-			arrayRemove(modelSelfReactionQueue, i => i.emoji_id === emojiId);
-			ReactionQueue.set(model, modelSelfReactionQueue);
+		const pendingReactions = ModelsPendingReactions.get(model) ?? [];
+		const pendingEmojiReaction = pendingReactions.find(i => i.emoji_id === emojiId);
+		if (pendingEmojiReaction) {
+			// revert current failed attempt of reacting to the emoji.
+			// the emoji might have pending reactions from earlier successful attempts which we want to preserve.
+			pendingEmojiReaction.count = pendingEmojiReaction.count - countMod;
 		}
 
 		const revertOnExistingReaction = existingReaction
@@ -266,15 +292,17 @@ export async function toggleReactionOnResource({
 			: model.reaction_counts.find(i => i.id === emojiId);
 
 		// revert the reaction UI change
-		applyReaction(
-			model,
-			revertOnExistingReaction,
-			isReacting ? -1 : 1,
-			emojiId,
-			imgUrl,
-			prefix,
-			shortName,
-			!isReacting
-		);
+		applyReaction({
+			existing_reaction: revertOnExistingReaction,
+			count_mod: -countMod,
+			did_react: !isReacting,
+			model: model,
+			emoji_data: {
+				emoji_id: emojiId,
+				emoji_short_name: shortName,
+				emoji_prefix: prefix,
+				emoji_img_url: imgUrl,
+			},
+		});
 	}
 }

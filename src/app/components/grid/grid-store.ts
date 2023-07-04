@@ -185,7 +185,7 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 			newHandler.gridDeregister = curGrid.registerOnConnected(cbSafe);
 
 			if (curGrid.connected) {
-				newHandler.fn(curGrid);
+				cbSafe();
 			}
 		});
 
