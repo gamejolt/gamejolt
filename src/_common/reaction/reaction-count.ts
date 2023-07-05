@@ -19,28 +19,17 @@ interface UserDeltas {
 	delta_dec: number[];
 }
 
-interface EmojiDelta {
-	emoji_data: EmojiData;
-	user_deltas: UserDeltas;
-}
+export interface EmojiDelta extends EmojiData, UserDeltas {}
 
-export interface UpdateReactionPayload {
-	deltas: EmojiDelta[];
-	resource_id: number;
-}
-
-export interface UpdateReactionCountPayload {
-	emoji_data: EmojiData;
-	user_deltas: UserDeltas;
+export interface UpdateReactionCountPayload extends EmojiData, UserDeltas {
 	current_user_id: number;
 	model: ReactionableModel;
 }
 
-interface ApplyReactionPayload {
+interface ApplyReactionPayload extends EmojiData {
 	existing_reaction: ReactionCount | undefined;
 	model: ReactionableModel;
 	count_mod: number;
-	emoji_data: EmojiData;
 	did_react: boolean;
 }
 
@@ -62,11 +51,14 @@ function applyReaction({
 	count_mod,
 	did_react,
 	model,
-	emoji_data,
+	emoji_id,
+	emoji_img_url,
+	emoji_prefix,
+	emoji_short_name,
 }: ApplyReactionPayload) {
 	if (existing_reaction) {
 		if (existing_reaction.count + count_mod <= 0) {
-			arrayRemove(model.reaction_counts, i => i.id === emoji_data.emoji_id);
+			arrayRemove(model.reaction_counts, i => i.id === emoji_id);
 		} else {
 			existing_reaction.count = existing_reaction.count + count_mod;
 			existing_reaction.did_react = did_react;
@@ -74,10 +66,10 @@ function applyReaction({
 	} else if (count_mod > 0) {
 		model.reaction_counts.push(
 			new ReactionCount({
-				id: emoji_data.emoji_id,
-				img_url: emoji_data.emoji_img_url,
-				prefix: emoji_data.emoji_prefix,
-				short_name: emoji_data.emoji_short_name,
+				id: emoji_id,
+				img_url: emoji_img_url,
+				prefix: emoji_prefix,
+				short_name: emoji_short_name,
 				count: count_mod,
 				did_react: did_react,
 			})
@@ -86,16 +78,20 @@ function applyReaction({
 }
 
 export async function updateReactionCount({
-	emoji_data,
-	user_deltas,
+	emoji_id,
+	emoji_img_url,
+	emoji_prefix,
+	emoji_short_name,
+	delta_inc,
+	delta_dec,
 	current_user_id,
 	model,
 }: UpdateReactionCountPayload) {
-	let countMod = user_deltas.delta_inc.length - user_deltas.delta_dec.length;
+	let countMod = delta_inc.length - delta_dec.length;
 
-	const existingReaction = model.reaction_counts.find(i => i.id === emoji_data.emoji_id);
-	const userReactingCount = user_deltas.delta_inc.filter(id => id === current_user_id).length;
-	const userUnreactingCount = user_deltas.delta_dec.filter(id => id === current_user_id).length;
+	const existingReaction = model.reaction_counts.find(i => i.id === emoji_id);
+	const userReactingCount = delta_inc.filter(id => id === current_user_id).length;
+	const userUnreactingCount = delta_dec.filter(id => id === current_user_id).length;
 
 	let didReact = userReactingCount > 0;
 	let updateDidReactIndicator = false;
@@ -114,10 +110,10 @@ export async function updateReactionCount({
 	// as we the payload we receive from the grid will include our own reactions
 	const pendingReactions = ModelsPendingReactions.get(model);
 	if (pendingReactions && pendingReactions.length) {
-		const pendingEmojiReaction = pendingReactions.find(i => i.emoji_id === emoji_data.emoji_id);
+		const pendingEmojiReaction = pendingReactions.find(i => i.emoji_id === emoji_id);
 		if (pendingEmojiReaction) {
 			countMod = countMod - pendingEmojiReaction.count;
-			arrayRemove(pendingReactions, i => i.emoji_id === emoji_data.emoji_id);
+			arrayRemove(pendingReactions, i => i.emoji_id === emoji_id);
 
 			// having pendingEmojiReaction means we have reacted to this emoji in this client/tab,
 			// thus did_react indicator would have been updated locally
@@ -136,7 +132,10 @@ export async function updateReactionCount({
 		count_mod: countMod,
 		did_react: didReact,
 		model: model,
-		emoji_data: emoji_data,
+		emoji_id: emoji_id,
+		emoji_img_url: emoji_img_url,
+		emoji_prefix: emoji_prefix,
+		emoji_short_name: emoji_short_name,
 	});
 }
 
@@ -219,12 +218,10 @@ export async function toggleReactionOnResource({
 			count_mod: countMod,
 			did_react: isReacting,
 			model: model,
-			emoji_data: {
-				emoji_id: emojiId,
-				emoji_short_name: shortName,
-				emoji_prefix: prefix,
-				emoji_img_url: imgUrl,
-			},
+			emoji_id: emojiId,
+			emoji_short_name: shortName,
+			emoji_prefix: prefix,
+			emoji_img_url: imgUrl,
 		});
 
 		// user might have reacted to this emoji before and
@@ -297,12 +294,10 @@ export async function toggleReactionOnResource({
 			count_mod: -countMod,
 			did_react: !isReacting,
 			model: model,
-			emoji_data: {
-				emoji_id: emojiId,
-				emoji_short_name: shortName,
-				emoji_prefix: prefix,
-				emoji_img_url: imgUrl,
-			},
+			emoji_id: emojiId,
+			emoji_short_name: shortName,
+			emoji_prefix: prefix,
+			emoji_img_url: imgUrl,
 		});
 	}
 }
