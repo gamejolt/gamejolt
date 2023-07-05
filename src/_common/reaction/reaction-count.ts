@@ -123,7 +123,7 @@ export async function updateReactionCount({
 
 	// even if the nett count is 0, we still need to update the did_react state if the user's
 	// did_react state has been changed (user's reaction from diff tab)
-	if (countMod == 0 && !updateDidReactIndicator) {
+	if (countMod === 0 && !updateDidReactIndicator) {
 		return;
 	}
 
