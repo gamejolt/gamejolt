@@ -208,6 +208,8 @@ function close() {
 }
 
 function onNewQuest(data: Quest) {
+	localQuest.value = data;
+
 	if (!data.is_new) {
 		clearNewQuestIds([data.id], { pushView: true });
 	}
