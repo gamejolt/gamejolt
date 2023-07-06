@@ -16,6 +16,7 @@ import { routeLibrary } from './library/library.route';
 import { routeNotifications } from './notifications/notifications.route';
 import { routePost } from './post/post.route';
 import { routeProfile } from './profile/profile.route';
+import { routeQuests } from './quests/quests.route';
 import { routeRealmsView } from './realms/view/view.route';
 import { routeSearch } from './search/search.route';
 import { routeStyleguide } from './styleguide/styleguide.route';
@@ -46,6 +47,7 @@ const routes = [
 	routeFireside,
 	routeFiresideRedirect,
 	routeRealmsView,
+	routeQuests,
 	routeLandingCreators,
 ];
 
