@@ -5,12 +5,12 @@ import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue'
 import AppShortkey from '../../../../_common/shortkey/AppShortkey.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useAppStore } from '../../../store';
-import AppShellSidebarBackpack from './AppShellSidebarBackpack.vue';
-import AppShellSidebarContext from './AppShellSidebarContext.vue';
-import AppShellSidebarLibrary from './AppShellSidebarLibrary.vue';
-import AppShellSidebarMobile from './AppShellSidebarMobile.vue';
-import AppShellSidebarQuests from './AppShellSidebarQuests.vue';
 
+const AppShellSidebarBackpack = defineAsyncComponent(() => import('./AppShellSidebarBackpack.vue'));
+const AppShellSidebarContext = defineAsyncComponent(() => import('./AppShellSidebarContext.vue'));
+const AppShellSidebarLibrary = defineAsyncComponent(() => import('./AppShellSidebarLibrary.vue'));
+const AppShellSidebarMobile = defineAsyncComponent(() => import('./AppShellSidebarMobile.vue'));
+const AppShellSidebarQuests = defineAsyncComponent(() => import('./AppShellSidebarQuests.vue'));
 const AppShellSidebarChat = defineAsyncComponent(() => import('./AppShellSidebarChat.vue'));
 
 const { visibleLeftPane, checkBackdrop, toggleLeftPane } = useAppStore();

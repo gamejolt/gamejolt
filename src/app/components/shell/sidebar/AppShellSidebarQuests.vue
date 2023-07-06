@@ -2,12 +2,12 @@
 import { computed, onMounted } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import { illNoComments, illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { storeModelList } from '../../../../_common/model/model-store.service';
 import { Quest } from '../../../../_common/quest/quest-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { illNoComments, illNoCommentsSmall } from '../../../img/ill/illustrations';
 import { useQuestStore } from '../../../store/quest';
 import AppDailyQuests from '../../quest/AppDailyQuests.vue';
 import AppQuestLogItem from './_quests/AppQuestLogItem.vue';

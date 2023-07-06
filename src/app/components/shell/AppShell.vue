@@ -1,28 +1,27 @@
 <script lang="ts">
-import { computed, defineAsyncComponent, nextTick, onMounted, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { computed, defineAsyncComponent, nextTick, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { AppClientBase } from '../../../_common/client/safe-exports';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Meta } from '../../../_common/meta/meta-service';
 import AppMinbar from '../../../_common/minbar/minbar.vue';
 import AppMobileAppPromotionBanner from '../../../_common/mobile-app/AppMobileAppPromotionBanner.vue';
 import { Screen, triggerOnScreenResize } from '../../../_common/screen/screen-service';
-import { useSidebarStore } from '../../../_common/sidebar/sidebar.store';
 import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue';
-import { closeStickerDrawer, useStickerStore } from '../../../_common/sticker/sticker-store';
 import { useBannerStore } from '../../store/banner';
-import { TogglableLeftPane, useAppStore } from '../../store/index';
+import { useAppStore } from '../../store/index';
 import { useQuestStore } from '../../store/quest';
 import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
 import { useGridStore } from '../grid/grid-store';
-import AppQuestWindow from '../quest/window/AppQuestWindow.vue';
 import AppShellBanner from './AppShellBanner.vue';
 import AppShellBody from './AppShellBody.vue';
 import AppShellHotBottom from './AppShellHotBottom.vue';
 import AppShellTopNav from './AppShellTopNav.vue';
 import AppShellCbar from './cbar/AppShellCbar.vue';
+import { initShellRoutes } from './shell-routes';
 import AppShellSidebar from './sidebar/AppShellSidebar.vue';
 
+const AppQuestWindow = defineAsyncComponent(() => import('../quest/window/AppQuestWindow.vue'));
 const AppChatWindow = defineAsyncComponent(() => import('../chat/window/AppChatWindow.vue'));
 
 export const CBAR_WIDTH = 70;
@@ -38,20 +37,9 @@ const {
 	visibleRightPane,
 	unreadActivityCount,
 	unreadNotificationsCount,
-	showContextPane,
-	clearPanes,
-	toggleLeftPane,
 } = useAppStore();
 
 const { hasBanner } = useBannerStore();
-
-const {
-	showOnRouteChange: shouldShowSidebarOnRouteChange,
-	hideOnRouteChange: shouldHideSidebarOnRouteChange,
-	showContextOnRouteChange,
-} = useSidebarStore();
-
-const stickerStore = useStickerStore();
 
 const { chat } = useGridStore();
 
@@ -64,7 +52,8 @@ const activeQuestResource = computed(() =>
 );
 
 const route = useRoute();
-const router = useRouter();
+
+initShellRoutes();
 
 const totalChatNotificationsCount = computed(() => chat.value?.roomNotificationsCount ?? 0);
 const ssrShouldShowSidebar = computed(
@@ -99,101 +88,6 @@ const shellCSSVariables = computed(() => {
 		`--shell-content-sidebar-width-lg: ${sidebarWidthLg + sidebarPadding * 2}px`,
 		`--shell-content-sidebar-width: ${sidebarWidth.value + sidebarPadding * 2}px`,
 	];
-});
-
-type HashEventResult = false | { sidebar: TogglableLeftPane | undefined };
-
-const hashEvents: {
-	[key: string]: {
-		sidebar: TogglableLeftPane | undefined;
-		handler: (trailingValue: string | undefined) => HashEventResult;
-	};
-} = {
-	quest: {
-		sidebar: 'quests',
-		handler(trailingValue) {
-			const questId = trailingValue ? parseInt(trailingValue, 10) : -1;
-			if (questId > 0) {
-				activeQuest.value = questId;
-			} else {
-				activeQuest.value = null;
-			}
-
-			const sidebar = 'quests';
-			if (visibleLeftPane.value !== sidebar) {
-				toggleLeftPane(sidebar);
-			}
-			return { sidebar };
-		},
-	},
-};
-
-function handleHashEvents(): HashEventResult {
-	const hash = router.currentRoute.value.hash;
-	// Do nothing if there's no hash.
-	if (!hash) {
-		return false;
-	}
-
-	const hashParts = hash.split('-');
-	const eventKey = hashParts[0].substring(1);
-	const trailingValue = hashParts.length > 1 ? hashParts[1] : undefined;
-
-	let hashEventResult: HashEventResult = false;
-	if (eventKey in hashEvents) {
-		hashEventResult = hashEvents[eventKey].handler(trailingValue);
-	}
-
-	if (hashEventResult) {
-		router.replace({
-			...router.currentRoute.value,
-			hash: '',
-		});
-		return hashEventResult;
-	}
-
-	return false;
-}
-
-onMounted(() => {
-	handleHashEvents();
-
-	router.afterEach(async (_to, from, _failure) => {
-		// Wait for any contextPane state to be changed.
-		await nextTick();
-
-		let hashEventResult = handleHashEvents();
-		if (!hashEventResult && from.hash) {
-			// If our current route navigation doesn't include a hash event, we
-			// need to check the previous one to know if our [router.replace()]
-			// call triggered this again.
-			const hashKey = from.hash.split('-')[0].substring(1);
-			if (hashKey in hashEvents) {
-				hashEventResult = { sidebar: hashEvents[hashKey].sidebar };
-			}
-		}
-
-		const hashEventSidebar = (hashEventResult && hashEventResult.sidebar) || false;
-
-		// Show any context panes that are set to show on route change.
-		if (shouldShowSidebarOnRouteChange.value) {
-			// Only show the context pane if our handled hash event didn't
-			// affect any sidebars.
-			if (!hashEventSidebar) {
-				showContextPane();
-			}
-			showContextOnRouteChange(false);
-			return;
-		}
-
-		// Hide all panes if our hash event didn't touch sidebars and we aren't
-		// showing one on route change.
-		if (!hashEventSidebar && shouldHideSidebarOnRouteChange.value) {
-			clearPanes();
-		}
-
-		closeStickerDrawer(stickerStore);
-	});
 });
 
 // Since the cbar takes up width from the whole screen, we want to trigger a
@@ -303,26 +197,6 @@ html, body
 .growl-container
 	bottom: 10px
 
-.chat-window
-	top: 0
-	left: 0
-	right: 0
-	bottom: 0
-
-	@media $media-sm-up
-		top: $shell-top-nav-height
-		left: calc(var(--shell-content-sidebar-width) + var(--shell-cbar-width))
-
-.quest-window
-	top: 0
-	left: 0
-	right: 0
-	bottom: 0
-
-	@media $media-md-up
-		top: $shell-top-nav-height
-		left: calc(var(--shell-content-sidebar-width) + var(--shell-cbar-width))
-
 //
 // And now for the long list of positioning shell elements.
 //
@@ -339,6 +213,7 @@ html, body
 
 	&.has-banner
 		--shell-top: $shell-top-nav-height * 2
+		--scroll-affix-top: $shell-top-nav-height * 2
 
 		#shell-top-nav
 			top: $shell-top-nav-height
@@ -350,11 +225,7 @@ html, body
 		#shell-body
 			padding-top: $shell-top-nav-height * 2
 
-		@media $media-sm-up
-			.chat-window
-				top: $shell-top-nav-height * 2
 
-		--scroll-affix-top: $shell-top-nav-height * 2
 
 	&.has-cbar
 		--shell-left: var(--shell-cbar-width)

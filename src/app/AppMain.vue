@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, provide, reactive, watch } from '@vue/runtime-core';
+import { onMounted, provide, reactive, watch } from 'vue';
 import { RouterView } from 'vue-router';
 import { createAdsController } from '../_common/ad/ad-store';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
