@@ -67,7 +67,7 @@ export async function purchaseShopProduct({
 	const { coinBalance, joltbuxBalance } = balanceRefs;
 	const pricing = shopProduct.validPricings.find(i => i.knownCurrencyType?.id === currency.id);
 
-	if (!pricing || !canAffordCurrency(currency, pricing.price, balanceRefs)) {
+	if (!pricing || !canAffordCurrency(currency.id, pricing.price, balanceRefs)) {
 		showErrorGrowl(
 			$gettextInterpolate(`You don't have enough %{ label } to purchase this product.`, {
 				label: currency.label,
@@ -180,6 +180,18 @@ const joltbuxEntry = computed(() => {
 	}
 });
 
+const canPurchaseAny = computed(() => {
+	const options = currencyOptionsList.value;
+	if (options.length === 0) {
+		return false;
+	}
+	for (const [, [currency, amount]] of currencyOptionsList.value) {
+		if (canAffordCurrency(currency.id, amount, balanceRefs)) {
+			return true;
+		}
+	}
+});
+
 /**
  * Show when we have a Joltbux purchase option and the user doesn't have enough
  * Joltbux to purchase.
@@ -190,7 +202,7 @@ const showPurchaseJoltbuxButton = computed(() => {
 	}
 
 	const [currency, amount] = joltbuxEntry.value;
-	return !canAffordCurrency(currency, amount, balanceRefs);
+	return !canAffordCurrency(currency.id, amount, balanceRefs);
 });
 
 /**
@@ -308,17 +320,16 @@ function getItemStyles(ratio: number) {
 
 				<AppSpacer vertical :scale="4" />
 
-				<template v-if="currencyOptionsList.length !== 1">
-					<div class="text-center">
-						{{
-							!currencyOptionsList.length
-								? $gettext(`This item is not available for purchase`)
-								: $gettext(`Choose a purchase option`)
-						}}
-					</div>
+				<div v-if="currencyOptionsList.length !== 1" class="text-center">
+					<template v-if="!currencyOptionsList.length">
+						{{ $gettext(`This item is not available for purchase`) }}
+					</template>
+					<template v-else>
+						{{ $gettext(`Choose a purchase option`) }}
+					</template>
 
 					<AppSpacer vertical :scale="3" />
-				</template>
+				</div>
 
 				<div
 					:style="{
@@ -336,7 +347,7 @@ function getItemStyles(ratio: number) {
 						}"
 						:disabled="
 							!!processingPurchaseCurrencyId ||
-							!canAffordCurrency(currency, amount, balanceRefs)
+							!canAffordCurrency(currency.id, amount, balanceRefs)
 						"
 						:dynamic-slots="['icon']"
 						lg
@@ -355,6 +366,14 @@ function getItemStyles(ratio: number) {
 						{{ formatNumber(amount) }}
 					</AppButton>
 				</div>
+
+				<template v-if="!canPurchaseAny">
+					<AppSpacer vertical :scale="3" />
+
+					<div class="text-center">
+						{{ $gettext(`You don't have enough funds to purchase this`) }}
+					</div>
+				</template>
 
 				<template v-if="showPurchaseJoltbuxButton">
 					<AppSpacer vertical :scale="3" />

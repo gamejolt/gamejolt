@@ -32,15 +32,19 @@ export function getCurrencyTypeFromIdentifier(id: string): Currency | undefined 
 }
 
 export function canAffordCurrency(
-	type: Currency,
+	currencyId: CurrencyData['id'],
 	amount: number,
 	{ coinBalance, joltbuxBalance }: { coinBalance: Ref<number>; joltbuxBalance: Ref<number> }
 ) {
-	switch (type.id) {
+	switch (currencyId) {
 		case CurrencyType.coins.id:
 			return coinBalance.value >= amount;
 		case CurrencyType.joltbux.id:
 			return joltbuxBalance.value >= amount;
+		case CurrencyType.gems.id:
+			return false;
+		default:
+			console.warn('Unexpected [currencyId] value', currencyId);
 	}
 
 	return false;
