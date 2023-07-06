@@ -10,6 +10,7 @@ import { createSocketChannelController } from '../../../_common/socket/socket-co
 import { commonStore } from '../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 import { TabLeaderInterface } from '../../../utils/tab-leader';
+import { addNewQuestIds, addQuestActivityIds } from '../../store/quest';
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
 import { GridClient, onFiresideStart } from './client.service';
 
@@ -161,8 +162,8 @@ export function createGridNotificationChannel(
 			appStore.setHasNewFriendRequests(payload.hasNewFriendRequests);
 
 			const questStore = appStore.getQuestStore();
-			questStore.addNewQuestIds(payload.newQuestIds);
-			questStore.addQuestActivityIds(payload.questActivityIds);
+			addNewQuestIds(questStore, payload.newQuestIds);
+			addQuestActivityIds(questStore, payload.questActivityIds);
 
 			const {
 				charge,
@@ -250,11 +251,11 @@ export function createGridNotificationChannel(
 				const questStore = appStore.getQuestStore();
 				const model = notification.action_model;
 				if (model.is_new) {
-					questStore.addNewQuestIds([model.quest_id]);
+					addNewQuestIds(questStore, [model.quest_id]);
 				}
 
 				if (model.has_activity) {
-					questStore.addQuestActivityIds([model.quest_id]);
+					addQuestActivityIds(questStore, [model.quest_id]);
 				}
 				client.spawnNotification(notification);
 				break;

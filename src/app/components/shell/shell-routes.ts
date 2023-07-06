@@ -45,7 +45,7 @@ export function initShellRoutes() {
 				if (questId > 0) {
 					activeQuest.value = questId;
 				} else {
-					activeQuest.value = null;
+					activeQuest.value = undefined;
 				}
 
 				const sidebar = 'quests';

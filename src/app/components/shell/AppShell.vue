@@ -43,13 +43,7 @@ const { hasBanner } = useBannerStore();
 
 const { chat } = useGridStore();
 
-const { activeQuest } = useQuestStore();
-const activeQuestId = computed(() =>
-	typeof activeQuest.value === 'number' ? activeQuest.value : activeQuest.value?.id
-);
-const activeQuestResource = computed(() =>
-	typeof activeQuest.value === 'number' ? undefined : activeQuest.value || undefined
-);
+const { activeQuestId, activeQuestResource } = useQuestStore();
 
 const route = useRoute();
 

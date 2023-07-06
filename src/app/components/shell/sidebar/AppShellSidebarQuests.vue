@@ -1,35 +1,98 @@
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments, illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import { storeModelList } from '../../../../_common/model/model-store.service';
-import { Quest } from '../../../../_common/quest/quest-model';
+import { Quest, QuestRepeatType, QuestSeries } from '../../../../_common/quest/quest-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { useQuestStore } from '../../../store/quest';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import { numberSort } from '../../../../utils/array';
+import { run } from '../../../../utils/utils';
+import { fetchAllQuests, useQuestStore } from '../../../store/quest';
 import AppDailyQuests from '../../quest/AppDailyQuests.vue';
 import AppQuestLogItem from './_quests/AppQuestLogItem.vue';
 
-const {
-	isLoading,
-	hasLoaded,
-	assignQuests,
-	dailyQuests,
-	questChunks,
-	allQuests,
-	newQuestIds,
-	newQuestIdsForView,
-	questActivityIds,
-	clearNewQuestIds,
-	clearQuestActivityIds,
-	activeQuest,
-} = useQuestStore();
+const questChunkSorting = {
+	'Daily Quests': 0,
+	'Intro Quests': 1,
+	'New Quests': 2,
+	'Weekly Quests': 3,
+	'Active Quests': 4,
+	'Available Quests': 5,
+	'Expired Quests': 6,
+} as const;
 
-const activeQuestId = computed(() =>
-	typeof activeQuest.value === 'number' ? activeQuest.value : activeQuest.value?.id
-);
+interface QuestChunk {
+	/**
+	 * Used to sort quest chunks.
+	 */
+	type: keyof typeof questChunkSorting;
+
+	/**
+	 * Translated label for the chunk.
+	 */
+	label: string;
+	quests: Quest[];
+}
+
+const questStore = useQuestStore();
+const { isLoading, hasLoaded, dailyQuests, allQuests, newQuestIdsForView, activeQuestId } =
+	questStore;
+
+const questChunks = computed(() => {
+	const items = allQuests.value
+		.filter(i => i.repeat_type !== QuestRepeatType.daily)
+		.reduce((chunks, quest) => {
+			const [type, label] = run<[keyof typeof questChunkSorting, string]>(() => {
+				if (quest.canAccept) {
+					if (newQuestIdsForView.value.has(quest.id)) {
+						return ['New Quests', $gettext('New Quests')];
+					}
+					return ['Available Quests', $gettext('Available Quests')];
+				}
+
+				if (quest.isExpired) {
+					return ['Expired Quests', $gettext('Expired Quests')];
+				}
+
+				switch (quest.series) {
+					// We filter these out. This is just for safer typing.
+					case QuestSeries.dailyQuest:
+						return ['Daily Quests', $gettext('Daily Quests')];
+
+					case QuestSeries.helloWorld:
+						return ['Intro Quests', $gettext('Intro Quests')];
+
+					case QuestSeries.weeklyQuest:
+						return ['Weekly Quests', $gettext('Weekly Quests')];
+
+					case QuestSeries.worldEvent:
+					default:
+						return ['Active Quests', $gettext('Active Quests')];
+				}
+			});
+
+			const chunk = chunks.find(i => i.type === type);
+			if (chunk) {
+				chunk.quests.push(quest);
+			} else {
+				chunks.push({
+					type,
+					label,
+					quests: [quest],
+				});
+			}
+			return chunks;
+		}, [] as QuestChunk[]);
+
+	items.sort((a, b) => numberSort(questChunkSorting[a.type], questChunkSorting[b.type]));
+
+	for (const chunk of items) {
+		chunk.quests.sort((a, b) => numberSort(a.started_on, b.started_on));
+	}
+	return items;
+});
 
 const hasQuests = computed(() => {
 	if (dailyQuests.value.length) {
@@ -44,77 +107,9 @@ const hasQuests = computed(() => {
 	return false;
 });
 
-async function init() {
-	if (isLoading.value) {
-		return;
-	}
-	isLoading.value = true;
-
-	try {
-		const payload = await Api.sendFieldsRequest(
-			`/mobile/quest`,
-			{
-				quests: true,
-				dailyQuests: true,
-			},
-			{ detach: true }
-		);
-
-		const newQuests: Quest[] = [];
-		if (payload.quests) {
-			newQuests.push(
-				...storeModelList(Quest, payload.quests).filter((i: Quest) => {
-					// We may get both daily quests and other quests when
-					// requesting `quests`, but that may not include daily
-					// quests that are in a completed state.
-					//
-					// Filter out any daily quests from here and insert the
-					// result from the `dailyQuests` field instead.
-					return !i.isDaily;
-				})
-			);
-		}
-		if (payload.dailyQuests) {
-			// Insert the daily quests to the front of our new quests.
-			newQuests.unshift(...storeModelList(Quest, payload.dailyQuests));
-		}
-
-		newQuestIdsForView.value = new Set(
-			newQuests.filter(i => i.canAccept && i.is_new).map(i => i.id)
-		);
-
-		assignQuests(newQuests);
-		clearUnknownWatermarks();
-	} catch (e) {
-		console.error('Failed to load Quest sidebar data.', e);
-	}
-	isLoading.value = false;
-	hasLoaded.value = true;
-}
-
 onMounted(async () => {
-	await init();
+	await fetchAllQuests(questStore);
 });
-
-function clearUnknownWatermarks() {
-	const _newIds = [...newQuestIds.value.values()];
-	const _activityIds = [...questActivityIds.value.values()];
-	const _currentQuestIds = new Set(allQuests.value.map(i => i.id));
-
-	for (const id of _newIds) {
-		if (!_currentQuestIds.has(id)) {
-			clearNewQuestIds([id], { pushView: false });
-		}
-	}
-
-	for (const id of _activityIds) {
-		if (!_currentQuestIds.has(id)) {
-			clearQuestActivityIds([id], { pushView: false });
-		}
-	}
-
-	_currentQuestIds.clear();
-}
 </script>
 
 <template>

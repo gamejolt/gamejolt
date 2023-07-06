@@ -58,7 +58,7 @@ const props = defineProps({
 
 const { questId, resource } = toRefs(props);
 
-const { clearNewQuestIds, clearQuestActivityIds, activeQuest } = useQuestStore();
+const { clearNewQuestIds, clearQuestActivityIds, activeQuest, activeQuestId } = useQuestStore();
 
 const isLoading = ref(false);
 const hasError = ref(false);
@@ -194,17 +194,15 @@ onMounted(async () => {
 onUnmounted(async () => {
 	// Wait a tick in case a different quest window was opened and changed the activeQuestId.
 	await nextTick();
-	const activeQuestId =
-		typeof activeQuest.value === 'number' ? activeQuest.value : activeQuest.value?.id;
 
-	if (activeQuestId === questId.value) {
-		activeQuest.value = null;
+	if (activeQuestId.value === questId.value) {
+		activeQuest.value = undefined;
 	}
 });
 
 function close() {
 	// Causes the shell to v-if this away.
-	activeQuest.value = null;
+	activeQuest.value = undefined;
 }
 
 function onNewQuest(data: Quest) {

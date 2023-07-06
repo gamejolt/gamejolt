@@ -3,6 +3,7 @@ import { CSSProperties, PropType, computed, ref, toRefs, watch } from 'vue';
 import AppAnimChargeOrb from '../../../_common/animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../../_common/animation/AppAnimElectricity.vue';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import { illChargeOrbEmpty } from '../../../_common/illustration/illustrations';
 import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppStickerChargeTooltip from '../../../_common/sticker/charge/AppStickerChargeTooltip.vue';
@@ -12,8 +13,7 @@ import { useStickerStore } from '../../../_common/sticker/sticker-store';
 import { kThemeFg } from '../../../_common/theme/variables';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { styleWhen } from '../../../_styles/mixins';
-import { illChargeOrbEmpty } from '../../../_common/illustration/illustrations';
-import { useQuestStore } from '../../store/quest';
+import { fetchDailyQuests, useQuestStore } from '../../store/quest';
 import { useGridStore } from '../grid/grid-store';
 import AppQuestLogItem from '../shell/sidebar/_quests/AppQuestLogItem.vue';
 import AppQuestTimer from './AppQuestTimer.vue';
@@ -80,7 +80,8 @@ if (isLoadingCharge.value) {
 	);
 }
 
-const { dailyQuests, fetchDailyQuests, isLoading: isQuestStoreLoading } = useQuestStore();
+const questStore = useQuestStore();
+const { dailyQuests, isLoading: isQuestStoreLoading } = questStore;
 
 const { currentCharge, chargeLimit } = useStickerStore();
 
@@ -140,6 +141,10 @@ const showPlaceholders = computed(() => {
 	}
 	return false;
 });
+
+function onRefresh() {
+	fetchDailyQuests(questStore);
+}
 </script>
 
 <template>
@@ -206,7 +211,7 @@ const showPlaceholders = computed(() => {
 
 				<AppQuestTimer v-if="questEndsOnDate" :ends-on="questEndsOnDate">
 					<template #ended>
-						<a class="link-unstyled" @click="fetchDailyQuests">
+						<a class="link-unstyled" @click="onRefresh">
 							{{ $gettext(`Refresh`) }}
 						</a>
 					</template>
