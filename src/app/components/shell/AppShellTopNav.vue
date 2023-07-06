@@ -26,6 +26,7 @@ import { styleWhen } from '../../../_styles/mixins';
 import { run } from '../../../utils/utils';
 import { imageGameJoltLogo, imageJolt } from '../../img/images';
 import { useAppStore } from '../../store/index';
+import { useQuestStore } from '../../store/quest';
 import { useGridStore } from '../grid/grid-store';
 import AppSearch from '../search/AppSearch.vue';
 import { CBAR_WIDTH } from './AppShell.vue';
@@ -42,6 +43,7 @@ const AppShellAltMenuPopover = defineAsyncComponent(() => import('./AppShellAltM
 const { visibleLeftPane, hasCbar, unreadActivityCount, toggleCbarMenu } = useAppStore();
 const { isUserTimedOut, user, userBootstrapped } = useCommonStore();
 const { chat } = useGridStore();
+const { questActivityIds } = useQuestStore();
 
 const left = ref<HTMLDivElement>();
 const right = ref<HTMLDivElement>();
@@ -119,7 +121,7 @@ run(async () => {
 						{{ chat.roomNotificationsCount }}
 					</div>
 					<div
-						v-else-if="configInitialPackWatermark.value"
+						v-else-if="configInitialPackWatermark.value || questActivityIds.size > 0"
 						:style="{
 							width: `16px`,
 							height: `16px`,
