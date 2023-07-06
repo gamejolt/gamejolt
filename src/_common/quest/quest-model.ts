@@ -2,6 +2,7 @@ import { getCurrentServerTime } from '../../utils/server-time';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { QuestObjective } from './quest-objective-model';
+import { QuestReward } from './quest-reward-model';
 
 export const QuestStatus = {
 	inactive: 0,
@@ -54,6 +55,10 @@ export class Quest extends Model {
 		if (data.objectives) {
 			this.objectives = QuestObjective.populate(data.objectives);
 		}
+
+		if (data.rewards) {
+			this.rewards = QuestReward.populate(data.rewards);
+		}
 	}
 
 	declare status: number;
@@ -71,7 +76,10 @@ export class Quest extends Model {
 	declare progress_percent: number;
 	declare is_new: boolean;
 	declare has_activity: boolean;
+	declare current_stage: number;
+	declare total_stages: number;
 	objectives: QuestObjective[] = [];
+	rewards: QuestReward[] = [];
 
 	get isActive() {
 		return this.status === QuestStatus.active;

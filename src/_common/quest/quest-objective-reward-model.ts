@@ -4,7 +4,7 @@ import { Model } from '../model/model.service';
 import { SiteTrophy } from '../site/trophy/trophy.model';
 import { StickerReward } from '../sticker/sticker-reward-model';
 
-const QuestRewardTypes = {
+export const QuestRewardTypes = {
 	exp: 0,
 	sticker: 1,
 	siteTrophy: 2,
