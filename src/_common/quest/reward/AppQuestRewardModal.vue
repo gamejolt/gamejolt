@@ -320,9 +320,12 @@ $-z-backpack = 1
 	font-size: calc(min(16px, 1.5vh))
 
 .-quest-title-header
-	font-size: calc(min(32px, 3vh))
 	font-family: $font-family-base
 	font-weight: bold
+
+	&
+	::v-deep(.jolticon)
+		font-size: calc(min(32px, 3vh))
 
 	img
 		height: calc(min(32px, 3vh))
