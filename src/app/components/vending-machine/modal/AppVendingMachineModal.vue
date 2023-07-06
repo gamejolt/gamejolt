@@ -4,6 +4,7 @@ import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
+import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
 import {
 	Currency,
 	CurrencyType,
@@ -44,7 +45,6 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
 	styleBorderRadiusBase,
-	styleBorderRadiusCircle,
 	styleBorderRadiusLg,
 	styleChangeBg,
 	styleElevate,
@@ -59,7 +59,7 @@ import {
 	kFontSizeH3,
 	kStrongEaseOut,
 } from '../../../../_styles/variables';
-import { illNoCommentsSmall } from '../../../img/ill/illustrations';
+import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
 import AppVendingMachineProduct from './_product/AppVendingMachineProduct.vue';
 import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
@@ -282,9 +282,34 @@ const currencyCardImgStyles: CSSProperties = {
 		<div :style="containerStyles">
 			<AppModalFloatingHeader>
 				<template #modal-controls>
-					<AppButton @click="modal.dismiss()">
-						{{ $gettext(`Close`) }}
-					</AppButton>
+					<div
+						:style="{
+							display: `flex`,
+							width: `100%`,
+						}"
+					>
+						<AppCurrencyPillList
+							:style="{
+								marginTop: `8px`,
+							}"
+							:currencies="{
+								[CurrencyType.joltbux.id]: [CurrencyType.joltbux, joltbuxBalance],
+								[CurrencyType.coins.id]: [CurrencyType.coins, coinBalance],
+							}"
+							direction="row"
+							:gap="8"
+						/>
+
+						<AppButton
+							:style="{
+								marginLeft: `auto`,
+								alignSelf: `flex-start`,
+							}"
+							@click="modal.dismiss()"
+						>
+							{{ $gettext(`Close`) }}
+						</AppButton>
+					</div>
 				</template>
 			</AppModalFloatingHeader>
 
@@ -366,9 +391,9 @@ const currencyCardImgStyles: CSSProperties = {
 												<AppAspectRatio
 													:ratio="1"
 													:style="{
-														...styleBorderRadiusCircle,
 														backgroundColor: kThemeFg10,
 														width: `100%`,
+														borderRadius: `50%`,
 													}"
 													:inner-styles="{
 														...styleFlexCenter(),

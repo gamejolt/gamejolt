@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppUserAvatarBubble from '../../../app/components/user/AppUserAvatarBubble.vue';
-import AppUserDogtag from '../../../app/components/user/AppUserDogtag.vue';
 import { getMediaserverUrlForBounds } from '../../../utils/image';
 import AppButton from '../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
@@ -11,7 +9,9 @@ import AppLoading from '../../loading/AppLoading.vue';
 import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
+import AppUserDogtag from '../AppUserDogtag.vue';
 import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
+import AppUserAvatarBubble from '../user-avatar/AppUserAvatarBubble.vue';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
 import { User } from '../user.model';
 

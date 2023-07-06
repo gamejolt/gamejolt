@@ -11,7 +11,7 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTabBar from '../../../../_common/tab-bar/AppTabBar.vue';
 import AppTabBarItem from '../../../../_common/tab-bar/AppTabBarItem.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { illMaintenance, illNoCommentsSmall } from '../../../img/ill/illustrations';
+import { illMaintenance, illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import { useAppStore } from '../../../store';
 import { closeChatRoom, openChatRoom } from '../../chat/client';
 import { sortByLastMessageOn } from '../../chat/user-collection';

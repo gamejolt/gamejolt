@@ -1,14 +1,17 @@
 <script lang="ts" setup>
 import { computed, defineAsyncComponent, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { run } from '../../../utils/utils';
 import {
 	trackAppPromotionClick,
 	trackExperimentEngagement,
 } from '../../../_common/analytics/analytics.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { AppClientHistoryNavigator } from '../../../_common/client/safe-exports';
-import { configShowStoreInMoreMenu, ensureConfig } from '../../../_common/config/config.service';
+import {
+	configInitialPackWatermark,
+	configShowStoreInMoreMenu,
+	ensureConfig,
+} from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -17,7 +20,9 @@ import { vAppObserveDimensions } from '../../../_common/observe-dimensions/obser
 import { Screen } from '../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
+import { kThemeGjOverlayNotice } from '../../../_common/theme/variables';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { run } from '../../../utils/utils';
 import { imageGameJoltLogo, imageJolt } from '../../img/images';
 import { useAppStore } from '../../store/index';
 import { useGridStore } from '../grid/grid-store';
@@ -113,6 +118,20 @@ run(async () => {
 					>
 						{{ chat.roomNotificationsCount }}
 					</div>
+					<div
+						v-else-if="configInitialPackWatermark.value"
+						:style="{
+							width: `16px`,
+							height: `16px`,
+							pointerEvents: `none`,
+							position: `absolute`,
+							zIndex: 2,
+							top: 0,
+							right: 0,
+							borderRadius: `50%`,
+							background: kThemeGjOverlayNotice,
+						}"
+					/>
 				</a>
 
 				<!-- History Navigator (for desktop app) -->

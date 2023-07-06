@@ -14,14 +14,14 @@ import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
+import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserAvatarFrame } from '../../../../../../_common/user/user-avatar/frame/frame.model';
 import {
 	styleAbsoluteFill,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 } from '../../../../../../_styles/mixins';
-import { illPointyThing } from '../../../../../img/ill/illustrations';
-import AppUserAvatarBubble from '../../../../user/AppUserAvatarBubble.vue';
+import { illPointyThing } from '../../../../../../_common/illustration/illustrations';
 
 const props = defineProps({
 	product: {

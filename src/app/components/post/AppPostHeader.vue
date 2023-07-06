@@ -9,9 +9,9 @@ import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
+import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import AppActivityFeedPostTime from '../activity/feed/post/AppActivityFeedPostTime.vue';
 import { ActivityFeedView } from '../activity/feed/view';
-import AppUserAvatarBubble from '../user/AppUserAvatarBubble.vue';
 
 const props = defineProps({
 	post: {

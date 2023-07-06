@@ -9,9 +9,9 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/rout
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import AppTrophyCard from '../../../../components/trophy/card/card.vue';
-import AppTrophyCompletion from '../../../../components/trophy/completion/completion.vue';
-import AppTrophyListPaged from '../../../../components/trophy/list/paged/paged.vue';
+import AppTrophyCard from '../../../../../_common/trophy/AppTrophyCard.vue';
+import AppTrophyCompletion from '../../../../../_common/trophy/AppTrophyCompletion.vue';
+import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
 import { useProfileRouteController } from '../../RouteProfile.vue';
 
 type CompletionData = {

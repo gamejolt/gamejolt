@@ -13,7 +13,7 @@ import {
 	watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
-import { illNoComments } from '../../../app/img/ill/illustrations';
+import { illNoComments } from '../../illustration/illustrations';
 import AppAlertBox from '../../alert/AppAlertBox.vue';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';

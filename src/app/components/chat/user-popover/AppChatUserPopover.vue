@@ -8,9 +8,9 @@ import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service'
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { kThemeDarkest } from '../../../../_common/theme/variables';
 import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
-import { styleBorderRadiusCircle, styleWhen } from '../../../../_styles/mixins';
+import { styleWhen } from '../../../../_styles/mixins';
 import {
 	kBorderWidthLg,
 	kFontFamilyTiny,
@@ -218,8 +218,8 @@ const styleStatusIcon: CSSProperties = {
 				<div
 					class="elevate-hover-2"
 					:style="{
-						...styleBorderRadiusCircle,
 						position: `relative`,
+						borderRadius: `50%`,
 					}"
 				>
 					<AppOnHover v-slot="{ binding, hovered }">
@@ -239,12 +239,12 @@ const styleStatusIcon: CSSProperties = {
 					</AppOnHover>
 					<div
 						:style="{
-							...styleBorderRadiusCircle,
 							position: `absolute`,
 							top: `-4px`,
 							left: `-4px`,
 							width: `80px`,
 							height: `80px`,
+							borderRadius: `50%`,
 							zIndex: 1,
 							backgroundColor: kThemeDarkest,
 						}"

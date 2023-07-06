@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs } from 'vue';
+import { computed, ref, toRefs, watch } from 'vue';
 import AppAnimChargeOrb from '../../../_common/animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../../_common/animation/AppAnimElectricity.vue';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
@@ -11,8 +11,10 @@ import AppStickerChargeTooltipCaret from '../../../_common/sticker/charge/AppSti
 import AppStickerChargeTooltipHandler from '../../../_common/sticker/charge/AppStickerChargeTooltipHandler.vue';
 import { useStickerStore } from '../../../_common/sticker/sticker-store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { illChargeOrbEmpty } from '../../img/ill/illustrations';
+import { $gettext } from '../../../_common/translate/translate.service';
+import { illChargeOrbEmpty } from '../../../_common/illustration/illustrations';
 import { useQuestStore } from '../../store/quest';
+import { useGridStore } from '../grid/grid-store';
 import AppQuestTimer from './AppQuestTimer.vue';
 
 const props = defineProps({
@@ -54,6 +56,20 @@ const props = defineProps({
 const { singleRow, activeQuestId, forceLoading, showCharge, constrainChargeTooltip } =
 	toRefs(props);
 
+// Mark as loading until Grid is fully bootstrapped.
+const { grid } = useGridStore();
+const isLoadingCharge = ref(grid.value?.bootstrapReceived !== true);
+if (isLoadingCharge.value) {
+	watch(
+		() => grid.value?.bootstrapReceived,
+		bootstrapped => {
+			if (bootstrapped) {
+				isLoadingCharge.value = false;
+			}
+		}
+	);
+}
+
 const { dailyQuests, fetchDailyQuests, isLoading: isQuestStoreLoading } = useQuestStore();
 
 const { currentCharge, chargeLimit } = useStickerStore();
@@ -67,6 +83,10 @@ const isLoading = computed(() => isQuestStoreLoading.value || forceLoading.value
 const hasQuests = computed(() => displayQuests.value.length > 0);
 
 const displayCharge = computed(() => {
+	if (isLoadingCharge.value) {
+		return $gettext(`loading...`);
+	}
+
 	const current = Math.min(currentCharge.value, chargeLimit.value);
 	return `${current}/${chargeLimit.value}`;
 });

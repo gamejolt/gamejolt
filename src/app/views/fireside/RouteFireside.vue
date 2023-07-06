@@ -49,7 +49,7 @@ import {
 	illMaintenance,
 	illMobileKikkerstein,
 	illNoCommentsSmall,
-} from '../../img/ill/illustrations';
+} from '../../../_common/illustration/illustrations';
 import AppFiresideDashboard from './AppFiresideDashboard.vue';
 import AppFiresideHeader from './AppFiresideHeader.vue';
 import AppFiresideStats from './AppFiresideStats.vue';

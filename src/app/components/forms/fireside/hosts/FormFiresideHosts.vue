@@ -1,6 +1,5 @@
 <script lang="ts">
 import { computed, onMounted, onUnmounted, PropType, ref, toRefs } from 'vue';
-import { sleep } from '../../../../../utils/utils';
 import {
 	inviteFiresideHost,
 	removeFiresideHost,
@@ -8,10 +7,11 @@ import {
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
-import { ChatUser } from '../../../../components/chat/user';
+import { sleep } from '../../../../../utils/utils';
 import AppChatList from '../../../../components/chat/_list/AppChatList.vue';
+import { ChatUser } from '../../../../components/chat/user';
 import { FiresideController } from '../../../../components/fireside/controller/controller';
-import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
+import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
 import { useChatRoomMembers } from '../../../chat/room-channel';
 import AppFiresideHostsItem from './AppFiresideHostsItem.vue';
 
@@ -53,7 +53,7 @@ const canManageCohosts = computed(() => controller.value.canManageCohosts.value)
 const hosts = computed(() => controller.value.hosts.value);
 
 const users = computed(() => {
-	let list: ChatUser[] = [];
+	let list: (ChatUser | User)[] = [];
 
 	switch (section.value) {
 		case 'currentHosts': {
@@ -127,7 +127,7 @@ async function processUser(user: ChatUser | User) {
 
 <template>
 	<AppChatList :entries="users" :hide-filter="section === 'currentHosts'">
-		<template #default="{ item }: { item: ChatUser }">
+		<template #default="{ item }">
 			<AppFiresideHostsItem
 				:user="item"
 				:disable-toggle="!canManageCohosts"

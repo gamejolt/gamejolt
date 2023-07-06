@@ -573,6 +573,10 @@ export class NotificationText {
 			case Notification.TYPE_POLL_ENDED: {
 				return _process($gettext(`Poll's closed, results are in!`));
 			}
+
+			case Notification.TYPE_UNLOCKED_AVATAR_FRAME: {
+				return _process($gettext(`You unlocked a new <em>avatar frame</em>!`));
+			}
 		}
 
 		// When the notification type has no implementation, we log and don't show it (return undefined).

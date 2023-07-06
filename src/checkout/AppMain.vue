@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted } from '@vue/runtime-core';
+import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 import AppButton from '../_common/button/AppButton.vue';
 import { AppClientBase, ClientHistoryNavigator } from '../_common/client/safe-exports';
@@ -13,7 +13,7 @@ import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useCommonStore } from '../_common/store/common-store';
 import AppTranslate from '../_common/translate/AppTranslate.vue';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
-import AppUserBar from '../_common/user/user-bar/user-bar.vue';
+import AppUserBar from '../_common/user/user-bar/AppUserBar.vue';
 import { User } from '../_common/user/user.model';
 
 const { user } = useCommonStore();
@@ -38,7 +38,7 @@ function navigateBack() {
 
 		<div id="shell">
 			<div id="header" class="theme-dark">
-				<AppUserBar :user="user" site="main" hide-site-selector>
+				<AppUserBar :user="user">
 					<AppButton v-if="GJ_IS_DESKTOP_APP" icon="chevron-left" @click="navigateBack()">
 						<AppTranslate>Back to Game</AppTranslate>
 					</AppButton>

@@ -1,9 +1,6 @@
 <script lang="ts">
-import { watch } from '@vue/runtime-core';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
-import { getParam } from '../../../utils/router';
-import { sleep } from '../../../utils/utils';
 import { Api } from '../../../_common/api/api.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
@@ -14,8 +11,10 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { getParam } from '../../../utils/router';
+import { sleep } from '../../../utils/utils';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
-import { illNoComments, illNoCommentsSmall } from '../../img/ill/illustrations';
+import { illNoComments, illNoCommentsSmall } from '../../../_common/illustration/illustrations';
 import { useQuestStore } from '../../store/quest';
 
 export default {

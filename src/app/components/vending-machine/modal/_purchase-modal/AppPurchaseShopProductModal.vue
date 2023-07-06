@@ -28,6 +28,7 @@ import { UserStickerPack } from '../../../../../_common/sticker/pack/user-pack.m
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserAvatarFrame } from '../../../../../_common/user/user-avatar/frame/frame.model';
 import {
 	styleBorderRadiusLg,
@@ -35,7 +36,6 @@ import {
 	styleMaxWidthForOptions,
 } from '../../../../../_styles/mixins';
 import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.route';
-import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
 import { showNewProductModal } from '../_product/modal/modal.service';
 
 interface PurchaseData {
@@ -296,6 +296,10 @@ function getItemStyles(ratio: number) {
 						:style="getItemStyles(1)"
 						:background="shopProduct.background"
 						:backdrop-style="styleBorderRadiusLg"
+						:background-style="{
+							backgroundSize: `cover`,
+							backgroundPosition: `center`,
+						}"
 						darken
 					>
 						<AppAspectRatio :ratio="1" />

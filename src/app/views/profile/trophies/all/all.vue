@@ -5,8 +5,8 @@ import { Api } from '../../../../../_common/api/api.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import AppTrophyCard from '../../../../components/trophy/card/card.vue';
-import AppTrophyListPaged from '../../../../components/trophy/list/paged/paged.vue';
+import AppTrophyCard from '../../../../../_common/trophy/AppTrophyCard.vue';
+import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
 import { useProfileRouteController } from '../../RouteProfile.vue';
 
 @Options({

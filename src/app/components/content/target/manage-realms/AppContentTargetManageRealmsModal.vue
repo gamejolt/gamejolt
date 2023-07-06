@@ -137,7 +137,7 @@ import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import { illPointyThing } from '../../../../img/ill/illustrations';
+import { illPointyThing } from '../../../../../_common/illustration/illustrations';
 import AppContentTargetRealm from '../AppContentTargetRealm.vue';
 
 const COL_COUNT_BASE = 4;

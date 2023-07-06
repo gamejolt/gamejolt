@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { RouteLocationDefinition } from '../../../../../utils/router';
 import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
@@ -20,7 +19,7 @@ import {
 	provideStickerTargetController,
 } from '../../../../../_common/sticker/target/target-controller';
 import { kThemeGjOverlayNotice } from '../../../../../_common/theme/variables';
-import { styleBorderRadiusCircle } from '../../../../../_styles/mixins';
+import { RouteLocationDefinition } from '../../../../../utils/router';
 import AppContentTargets from '../../../content/AppContentTargets.vue';
 import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
 import AppPollVoting from '../../../poll/AppPollVoting.vue';
@@ -233,12 +232,12 @@ function onPostUnpinned(item: EventItem) {
 				<div
 					v-if="isNew"
 					:style="{
-						...styleBorderRadiusCircle,
 						position: `absolute`,
 						top: `6px`,
 						left: `6px`,
 						width: `12px`,
 						height: `12px`,
+						borderRadius: `50%`,
 						zIndex: 2,
 						backgroundColor: kThemeGjOverlayNotice,
 						filter: `drop-shadow(0 0 1px ${kThemeGjOverlayNotice})`,

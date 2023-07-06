@@ -9,7 +9,7 @@ import { Realm } from '../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarBubble from '../../user/AppUserAvatarBubble.vue';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { PostEditModal } from '../edit-modal/edit-modal-service';
 
 const props = defineProps({

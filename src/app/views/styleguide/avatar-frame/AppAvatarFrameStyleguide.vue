@@ -15,12 +15,7 @@ import { Theme } from '../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { kThemeFg } from '../../../../_common/theme/variables';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import {
-	styleBorderRadiusCircle,
-	styleBorderRadiusLg,
-	styleChangeBg,
-	styleFlexCenter,
-} from '../../../../_styles/mixins';
+import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '../../../../_styles/mixins';
 import { kBorderWidthBase } from '../../../../_styles/variables';
 
 interface FormModel {
@@ -227,9 +222,9 @@ function setFiles(files: File[]) {
 						<AppUserAvatarImg
 							:style="{
 								...styleChangeBg('bg-offset'),
-								...styleBorderRadiusCircle,
 								width: `100%`,
 								height: `100%`,
+								borderRadius: `50%`,
 								display: `flex`,
 								justifyContent: `stretch`,
 								alignItems: `stretch`,
