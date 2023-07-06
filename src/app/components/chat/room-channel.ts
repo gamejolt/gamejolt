@@ -385,17 +385,15 @@ export function createChatRoomChannel(
 			return;
 		}
 
-		for (const emoji_delta of payload.deltas) {
-			updateReactionCount({
-				emoji_id: emoji_delta.emoji_id,
-				emoji_img_url: emoji_delta.emoji_img_url,
-				emoji_prefix: emoji_delta.emoji_prefix,
-				emoji_short_name: emoji_delta.emoji_short_name,
-				delta_inc: emoji_delta.delta_inc,
-				delta_dec: emoji_delta.delta_dec,
-				current_user_id: client.currentUser ? client.currentUser.id : 0,
-				model: message,
-			});
+		for (const emojiDelta of payload.deltas) {
+			updateReactionCount(
+				{
+					current_user_id: client.currentUser ? client.currentUser.id : 0,
+					model: message,
+				},
+				emojiDelta,
+				emojiDelta
+			);
 		}
 	}
 

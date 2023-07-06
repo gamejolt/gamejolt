@@ -158,7 +158,6 @@ const dataAnchorWidth = computed(() => {
 	}
 	if (canReact.value) {
 		++itemCount;
-		// is this okay?
 	}
 	if (!itemCount) {
 		return 0;

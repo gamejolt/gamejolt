@@ -21,12 +21,12 @@ interface UserDeltas {
 
 export interface EmojiDelta extends EmojiData, UserDeltas {}
 
-export interface UpdateReactionCountPayload extends EmojiData, UserDeltas {
+interface UpdateReactionCountOptions {
 	current_user_id: number;
 	model: ReactionableModel;
 }
 
-interface ApplyReactionPayload extends EmojiData {
+interface ApplyReactionOptions {
 	existing_reaction: ReactionCount | undefined;
 	model: ReactionableModel;
 	count_mod: number;
@@ -46,16 +46,10 @@ interface EmojiIdAndCount {
 }
 const ModelsPendingReactions = new WeakMap<ReactionableModel, EmojiIdAndCount[]>();
 
-function applyReaction({
-	existing_reaction,
-	count_mod,
-	did_react,
-	model,
-	emoji_id,
-	emoji_img_url,
-	emoji_prefix,
-	emoji_short_name,
-}: ApplyReactionPayload) {
+function applyReaction(
+	{ existing_reaction, count_mod, did_react, model }: ApplyReactionOptions,
+	{ emoji_id, emoji_img_url, emoji_prefix, emoji_short_name }: EmojiData
+) {
 	if (existing_reaction) {
 		if (existing_reaction.count + count_mod <= 0) {
 			arrayRemove(model.reaction_counts, i => i.id === emoji_id);
@@ -77,16 +71,13 @@ function applyReaction({
 	}
 }
 
-export async function updateReactionCount({
-	emoji_id,
-	emoji_img_url,
-	emoji_prefix,
-	emoji_short_name,
-	delta_inc,
-	delta_dec,
-	current_user_id,
-	model,
-}: UpdateReactionCountPayload) {
+export async function updateReactionCount(
+	{ current_user_id, model }: UpdateReactionCountOptions,
+	deltas: UserDeltas,
+	emojiData: EmojiData
+) {
+	const { delta_inc, delta_dec } = deltas;
+	const { emoji_id } = emojiData;
 	let countMod = delta_inc.length - delta_dec.length;
 
 	const existingReaction = model.reaction_counts.find(i => i.id === emoji_id);
@@ -127,16 +118,15 @@ export async function updateReactionCount({
 		return;
 	}
 
-	applyReaction({
-		existing_reaction: existingReaction,
-		count_mod: countMod,
-		did_react: didReact,
-		model: model,
-		emoji_id: emoji_id,
-		emoji_img_url: emoji_img_url,
-		emoji_prefix: emoji_prefix,
-		emoji_short_name: emoji_short_name,
-	});
+	applyReaction(
+		{
+			existing_reaction: existingReaction,
+			count_mod: countMod,
+			did_react: didReact,
+			model,
+		},
+		emojiData
+	);
 }
 
 export class ReactionCount {
@@ -206,6 +196,13 @@ export async function toggleReactionOnResource({
 	shortName: string;
 	imgUrl: string;
 }) {
+	const emojiData: EmojiData = {
+		emoji_id: emojiId,
+		emoji_img_url: imgUrl,
+		emoji_prefix: prefix,
+		emoji_short_name: shortName,
+	};
+
 	const existingReaction = model.reaction_counts.find(i => i.id === emojiId);
 
 	// this means the reaction is new or the user never reacted to it before
@@ -213,16 +210,15 @@ export async function toggleReactionOnResource({
 	const countMod = isReacting ? 1 : -1;
 
 	try {
-		applyReaction({
-			existing_reaction: existingReaction,
-			count_mod: countMod,
-			did_react: isReacting,
-			model: model,
-			emoji_id: emojiId,
-			emoji_short_name: shortName,
-			emoji_prefix: prefix,
-			emoji_img_url: imgUrl,
-		});
+		applyReaction(
+			{
+				existing_reaction: existingReaction,
+				count_mod: countMod,
+				did_react: isReacting,
+				model,
+			},
+			emojiData
+		);
 
 		// user might have reacted to this emoji before and
 		// if it's still in the pending queue we need to update the count
@@ -289,15 +285,15 @@ export async function toggleReactionOnResource({
 			: model.reaction_counts.find(i => i.id === emojiId);
 
 		// revert the reaction UI change
-		applyReaction({
-			existing_reaction: revertOnExistingReaction,
-			count_mod: -countMod,
-			did_react: !isReacting,
-			model: model,
-			emoji_id: emojiId,
-			emoji_short_name: shortName,
-			emoji_prefix: prefix,
-			emoji_img_url: imgUrl,
-		});
+
+		applyReaction(
+			{
+				existing_reaction: revertOnExistingReaction,
+				count_mod: -countMod,
+				did_react: !isReacting,
+				model,
+			},
+			emojiData
+		);
 	}
 }
