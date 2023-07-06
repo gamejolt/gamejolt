@@ -1,7 +1,13 @@
 import { RouteRecordRaw } from 'vue-router';
+import { routeHome } from '../../home/home.route';
 
 export const routeQuestsView: RouteRecordRaw = {
 	name: 'quests.view',
 	path: ':id',
-	component: () => import('./RouteQuestsView.vue'),
+	redirect(to) {
+		return {
+			...routeHome,
+			hash: `#quest-${to.params.id}`,
+		};
+	},
 };

@@ -45,7 +45,7 @@ import AppPageContainer from '../../components/page-container/AppPageContainer.v
 import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
-import { useQuestStore } from '../../store/quest';
+import { fetchDailyQuests, useQuestStore } from '../../store/quest';
 import { createRealmRouteStore, RealmRouteStore } from '../realms/view/view.store';
 import AppHomeFireside from './_fireside/AppHomeFireside.vue';
 import AppHomeFeaturedBanner from './AppHomeFeaturedBanner.vue';
@@ -115,7 +115,8 @@ export default {
 
 <script lang="ts" setup>
 const { user } = useCommonStore();
-const { fetchDailyQuests, isLoading: isQuestStoreLoading, dailyQuests } = useQuestStore();
+const questStore = useQuestStore();
+const { isLoading: isQuestStoreLoading, dailyQuests } = questStore;
 const route = useRoute();
 
 // Mark as loading until Grid is fully bootstrapped.
@@ -402,7 +403,7 @@ async function refreshQuests() {
 	}
 
 	isLoadingQuests.value = true;
-	await fetchDailyQuests();
+	await fetchDailyQuests(questStore);
 	isLoadingQuests.value = false;
 }
 </script>

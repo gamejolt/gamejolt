@@ -572,11 +572,35 @@ export function trackHomeFeedSwitch({
 	});
 }
 
+export function trackCbarControlClick(
+	item: string,
+	{ method, from }: { method?: 'show' | 'hide' | 'switch'; from?: string } = {}
+) {
+	const params = { item } as any;
+	if (method) {
+		params['method'] = method;
+	}
+	if (from) {
+		params['from'] = from;
+	}
+
+	_trackEvent('cbar_control_click', params);
+}
+
 /**
  * @deprecated This is left here so that old code doesn't break.
  */
 export class Analytics {
+	private static warnDeprecated(name: string) {
+		if (import.meta.env.MODE === 'development' || import.meta.env.DEV) {
+			console.warn(
+				`[Analytics] - [${name}] is deprecated and no longer functional. Use new analytics functions instead.`
+			);
+		}
+	}
+
 	static trackEvent(_category: string, _action: string, _label?: string, _value?: string) {
+		this.warnDeprecated('trackEvent');
 		return;
 
 		// if (!this.shouldTrack) {
@@ -599,6 +623,7 @@ export class Analytics {
 	}
 
 	static trackSocial(_network: string, _action: string, _target: string) {
+		this.warnDeprecated('trackSocial');
 		return;
 
 		// if (!this.shouldTrack) {
@@ -616,6 +641,7 @@ export class Analytics {
 	}
 
 	static trackTiming(_category: string, _timingVar: string, _value: number, _label?: string) {
+		this.warnDeprecated('trackTiming');
 		return;
 
 		// if (!this.shouldTrack) {

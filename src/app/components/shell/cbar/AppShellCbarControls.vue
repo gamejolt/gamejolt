@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+import { trackCbarControlClick } from '../../../../_common/analytics/analytics.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { DefaultTheme } from '../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { useAppStore } from '../../../store/index';
+import { TogglableLeftPane, useAppStore } from '../../../store/index';
+import { useQuestStore } from '../../../store/quest';
 import { useGridStore } from '../../grid/grid-store';
 import AppShellCbarItem from './AppShellCbarItem.vue';
 
@@ -14,6 +16,7 @@ const { activeCommunity, visibleLeftPane, toggleLeftPane } = useAppStore();
 const { user, showInitialPackWatermark } = useCommonStore();
 const { theme } = useThemeStore();
 const { chat } = useGridStore();
+const { questActivityIds } = useQuestStore();
 
 const highlight = computed(() => {
 	const _theme = activeCommunity.value?.theme ?? theme.value ?? DefaultTheme;
@@ -23,6 +26,21 @@ const highlight = computed(() => {
 
 	return undefined;
 });
+
+function trackAndTogglePane(pane: TogglableLeftPane) {
+	const currentPane = visibleLeftPane.value;
+	let method: 'show' | 'hide' | 'switch';
+	if (currentPane === pane) {
+		method = 'hide';
+	} else if (!currentPane) {
+		method = 'show';
+	} else {
+		method = 'switch';
+	}
+
+	trackCbarControlClick(pane, { method, from: currentPane });
+	toggleLeftPane(pane);
+}
 </script>
 
 <template>
@@ -35,11 +53,7 @@ const highlight = computed(() => {
 			:is-active="visibleLeftPane === 'mobile'"
 			is-control
 		>
-			<a
-				v-app-track-event="`cbar:menu:toggle`"
-				class="-control-item"
-				@click="toggleLeftPane('mobile')"
-			>
+			<a class="-control-item" @click="trackAndTogglePane('mobile')">
 				<AppJolticon class="-control-icon" icon="gamejolt" />
 			</a>
 		</AppShellCbarItem>
@@ -56,9 +70,8 @@ const highlight = computed(() => {
 			>
 				<a
 					v-app-tooltip.right="$gettext(`Chat and Friends List (c)`)"
-					v-app-track-event="`cbar:chat:toggle`"
 					class="-control-item"
-					@click="toggleLeftPane('chat')"
+					@click="trackAndTogglePane('chat')"
 				>
 					<AppJolticon class="-control-icon" icon="user-messages" />
 				</a>
@@ -74,11 +87,27 @@ const highlight = computed(() => {
 			>
 				<a
 					v-app-tooltip.right="$gettext(`Backpack`)"
-					v-app-track-event="`cbar:backpack:toggle`"
 					class="-control-item"
-					@click="toggleLeftPane('backpack')"
+					@click="trackAndTogglePane('backpack')"
 				>
 					<AppJolticon class="-control-icon" icon="backpack" />
+				</a>
+			</AppShellCbarItem>
+
+			<!-- Quests -->
+			<AppShellCbarItem
+				class="-control"
+				:highlight="highlight"
+				:is-active="visibleLeftPane === 'quests'"
+				:show-blip="questActivityIds.size > 0"
+				is-control
+			>
+				<a
+					v-app-tooltip.right="$gettext(`Quests`)"
+					class="-control-item"
+					@click="trackAndTogglePane('quests')"
+				>
+					<AppJolticon class="-control-icon" icon="quest-log" />
 				</a>
 			</AppShellCbarItem>
 
@@ -91,9 +120,8 @@ const highlight = computed(() => {
 			>
 				<a
 					v-app-tooltip.right="$gettext(`Game Library (m)`)"
-					v-app-track-event="`cbar:library:toggle`"
 					class="-control-item"
-					@click="toggleLeftPane('library')"
+					@click="trackAndTogglePane('library')"
 				>
 					<AppJolticon class="-control-icon" icon="books" />
 				</a>
