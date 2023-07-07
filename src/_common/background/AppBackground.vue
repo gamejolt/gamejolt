@@ -26,7 +26,7 @@ const props = defineProps({
 	},
 	fadeOpacity: {
 		type: Number,
-		default: 0.05,
+		default: 0.1,
 	},
 	/**
 	 * Will scroll the background infinitely in the chosen direction.
@@ -178,18 +178,19 @@ if (import.meta.env.SSR) {
 	position: absolute
 	left: 0
 	right: 0
-	height: calc(min(80px, 50%))
+	height: 150px
+	max-height: 100%
 	background-repeat: no-repeat
 	background-size: cover
 
 .-fade-top
 	top: 0
-	background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25),  rgba(0, 0, 0, 0))
+	background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3),  rgba(0, 0, 0, 0))
 	background-position: top
 
 .-fade-bottom
 	bottom: 0
-	background-image: linear-gradient(to top, rgba(0, 0, 0, 0.25),  rgba(0, 0, 0, 0))
+	background-image: linear-gradient(to top, rgba(0, 0, 0, 0.3),  rgba(0, 0, 0, 0))
 	background-position: bottom
 
 .-inner
