@@ -250,7 +250,7 @@ function toggleSidebar(val: SidebarTab) {
 	preferredSidebar.value = sidebar.value === val ? undefined : val;
 }
 
-function close() {
+function closeWindow() {
 	closeChatRoom(chat.value);
 
 	// xs size needs to show the friends list when closing the room. Any other
@@ -271,7 +271,7 @@ function onMobileAppBarBack() {
 </script>
 
 <template>
-	<AppShellWindow :close-callback="close" avoid-sidebar="sm-up">
+	<AppShellWindow :close-callback="closeWindow" avoid-sidebar="sm-up">
 		<div class="_window-main">
 			<AppHeaderBar
 				class="_header"
@@ -287,7 +287,7 @@ function onMobileAppBarBack() {
 						trans
 						icon="remove"
 						:style="{ marginRight: '4px' }"
-						@click="close"
+						@click="closeWindow"
 					/>
 
 					<template v-if="room">
@@ -416,7 +416,7 @@ function onMobileAppBarBack() {
 						circle
 						trans
 						icon="remove"
-						@click="close"
+						@click="closeWindow"
 					/>
 				</template>
 			</AppHeaderBar>
