@@ -1,5 +1,5 @@
 import { Router } from 'vue-router';
-import { getCommentUrl } from '../../../../../_common/comment/comment-model';
+import { Comment, getCommentUrl } from '../../../../../_common/comment/comment-model';
 import { Community } from '../../../../../_common/community/community.model';
 import {
 	CommunityUserNotification,
