@@ -6,7 +6,6 @@ import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { CommentModal } from '../../../_common/comment/modal/modal.service';
-import { ComponentProps } from '../../../_common/component-helpers';
 import { Environment } from '../../../_common/environment/environment.service';
 import { formatNumber } from '../../../_common/filters/number';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
@@ -26,14 +25,13 @@ import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButto
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
-import AppUserAvatar from '../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { User } from '../../../_common/user/user.model';
 import { kFontFamilyBase } from '../../../_styles/variables';
 import { isUserOnline } from '../../components/chat/client';
 import { useGridStore } from '../../components/grid/grid-store';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
+import AppPageHeaderAvatar from '../../components/page-header/AppPageHeaderAvatar.vue';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
 import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
@@ -279,16 +277,6 @@ const isOnline = computed<null | boolean>(() => {
 	return isUserOnline(chat.value, routeUser.value.id);
 });
 
-const spotlightWrapper = AppUserAvatarBubble;
-const spotlightWrapperProps = computed<ComponentProps<typeof spotlightWrapper>>(() => ({
-	user: routeUser.value || null,
-	disableLink: true,
-	showFrame: true,
-	showVerified: true,
-	verifiedSize: 'big',
-	verifiedOffset: 0,
-}));
-
 const { isBootstrapped } = createAppRoute({
 	onInit() {
 		// This isn't needed by SSR or anything, so it's fine to call it here.
@@ -390,8 +378,6 @@ const headingUsernameStyles = computed<CSSProperties>(() => ({
 					:cover-max-height="400"
 					should-affix-nav
 					:autoscroll-anchor-key="autoscrollAnchorKey"
-					:spotlight-wrapper="spotlightWrapper"
-					:spotlight-wrapper-props="spotlightWrapperProps"
 				>
 					<RouterLink
 						:to="{
@@ -462,7 +448,7 @@ const headingUsernameStyles = computed<CSSProperties>(() => ({
 					</div>
 
 					<template #spotlight>
-						<AppUserAvatar :user="routeUser" />
+						<AppPageHeaderAvatar :user="routeUser" />
 					</template>
 
 					<template #nav>

@@ -32,6 +32,7 @@ import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadc
 import AppForumPostList from '../../../../components/forum/post-list/post-list.vue';
 import AppForumRules from '../../../../components/forum/rules/rules.vue';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
+import AppPageHeaderAvatar from '../../../../components/page-header/AppPageHeaderAvatar.vue';
 import AppPageHeaderControls from '../../../../components/page-header/controls/controls.vue';
 
 @Options({
@@ -53,6 +54,7 @@ import AppPageHeaderControls from '../../../../components/page-header/controls/c
 		AppContentViewer,
 		AppUserVerifiedTick,
 		AppForumRules,
+		AppPageHeaderAvatar,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -197,9 +199,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 			</div>
 
 			<template #spotlight>
-				<AppUserCardHover :user="topic.user">
-					<AppUserAvatar :user="topic.user" />
-				</AppUserCardHover>
+				<AppPageHeaderAvatar :user="topic.user" />
 			</template>
 
 			<template #nav>
