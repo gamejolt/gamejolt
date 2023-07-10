@@ -183,7 +183,7 @@ export class GridClient {
 		this.guestToken = guestToken;
 
 		if (!this.isGuest || tokenChanged) {
-			await this.disconnect();
+			await this._disconnect({ isReconnecting: true });
 			this.isGuest = true;
 			this.connect();
 		}
@@ -193,7 +193,7 @@ export class GridClient {
 		this.guestToken = null;
 
 		if (this.isGuest) {
-			await this.disconnect();
+			await this._disconnect({ isReconnecting: true });
 			this.isGuest = false;
 			this.connect();
 		}
@@ -267,7 +267,7 @@ export class GridClient {
 		}
 	}
 
-	async disconnect() {
+	async _disconnect({ isReconnecting }: { isReconnecting: boolean }) {
 		if (this.connected) {
 			this.logger.info('Disconnecting...');
 		} else {
@@ -288,13 +288,17 @@ export class GridClient {
 		this.notificationChannel = null;
 		this.commentChannel = null;
 
-		// TODO(realtime-reactions) invoke cancel token from registerOnConnected
-		// here, but only if its the "final" disconnect (as in, not part of a
-		// reconnect).
+		if (!isReconnecting) {
+			this.socketController.cancelToken.value.cancel();
+		}
 
 		clearChat(this.chat!);
 
 		this.socketController.disconnect();
+	}
+
+	async disconnect() {
+		await this._disconnect({ isReconnecting: false });
 	}
 
 	async reconnect(sleepMs = 2_000) {
@@ -303,7 +307,7 @@ export class GridClient {
 
 		// teardown and try to reconnect
 		if (this.connected) {
-			await this.disconnect();
+			await this._disconnect({ isReconnecting: true });
 		}
 		this.connect();
 	}

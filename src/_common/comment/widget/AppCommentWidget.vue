@@ -133,12 +133,6 @@ export function createCommentWidget(options: {
 		return totalCommentsCount.value > 0;
 	});
 
-	// TODO(realtime-reactions) this imports things from app section.
-	//
-	// need to check this doesnt screw things up:
-	// - make sure the build goes through
-	// - check ssr renders properly
-
 	const { grid, whenGridConnected } = useGridStore();
 
 	let _deregisterReactions: DeregisterOnConnected | null = null;
