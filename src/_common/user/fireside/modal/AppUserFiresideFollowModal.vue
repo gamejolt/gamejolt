@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { illNoCommentsSmall } from '../../../../app/img/ill/illustrations';
+import { illNoCommentsSmall } from '../../../illustration/illustrations';
 import AppButton from '../../../button/AppButton.vue';
 import AppIllustration from '../../../illustration/AppIllustration.vue';
 import AppModal from '../../../modal/AppModal.vue';

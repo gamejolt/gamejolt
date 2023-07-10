@@ -23,6 +23,7 @@ import {
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { getTrophyImg } from '../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
@@ -32,8 +33,8 @@ import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
 import { AppStore } from '../../store/index';
 import { router } from '../../views';
+import { gotoNotification } from '../activity/feed/notification/notification-routing';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
-import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import {
 	CommentTopicPayload,
 	GridCommentChannel,
@@ -427,7 +428,7 @@ export class GridClient {
 				icon,
 				onClick: () => {
 					Analytics.trackEvent('grid', 'notification-click', notification.type);
-					notification.go(router);
+					gotoNotification(notification, { router, appStore: this.appStore });
 				},
 				system: isSystem,
 			});

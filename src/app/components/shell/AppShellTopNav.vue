@@ -1,14 +1,17 @@
 <script lang="ts" setup>
 import { computed, defineAsyncComponent, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { run } from '../../../utils/utils';
 import {
 	trackAppPromotionClick,
 	trackExperimentEngagement,
 } from '../../../_common/analytics/analytics.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { AppClientHistoryNavigator } from '../../../_common/client/safe-exports';
-import { configShowStoreInMoreMenu, ensureConfig } from '../../../_common/config/config.service';
+import {
+	configInitialPackWatermark,
+	configShowStoreInMoreMenu,
+	ensureConfig,
+} from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -17,13 +20,16 @@ import { vAppObserveDimensions } from '../../../_common/observe-dimensions/obser
 import { Screen } from '../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
+import { kThemeGjOverlayNotice } from '../../../_common/theme/variables';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { styleWhen } from '../../../_styles/mixins';
+import { run } from '../../../utils/utils';
 import { imageGameJoltLogo, imageJolt } from '../../img/images';
 import { useAppStore } from '../../store/index';
+import { useQuestStore } from '../../store/quest';
 import { useGridStore } from '../grid/grid-store';
 import AppSearch from '../search/AppSearch.vue';
 import { CBAR_WIDTH } from './AppShell.vue';
-import AppShellQuestIcon from './AppShellQuestIcon.vue';
 
 const AppShellAccountPopover = defineAsyncComponent(() => import('./AppShellAccountPopover.vue'));
 const AppShellFriendRequestPopover = defineAsyncComponent(
@@ -37,6 +43,7 @@ const AppShellAltMenuPopover = defineAsyncComponent(() => import('./AppShellAltM
 const { visibleLeftPane, hasCbar, unreadActivityCount, toggleCbarMenu } = useAppStore();
 const { isUserTimedOut, user, userBootstrapped } = useCommonStore();
 const { chat } = useGridStore();
+const { questActivityIds } = useQuestStore();
 
 const left = ref<HTMLDivElement>();
 const right = ref<HTMLDivElement>();
@@ -113,6 +120,20 @@ run(async () => {
 					>
 						{{ chat.roomNotificationsCount }}
 					</div>
+					<div
+						v-else-if="configInitialPackWatermark.value || questActivityIds.size > 0"
+						:style="{
+							width: `16px`,
+							height: `16px`,
+							pointerEvents: `none`,
+							position: `absolute`,
+							zIndex: 2,
+							top: 0,
+							right: 0,
+							borderRadius: `50%`,
+							background: kThemeGjOverlayNotice,
+						}"
+					/>
 				</a>
 
 				<!-- History Navigator (for desktop app) -->
@@ -176,7 +197,15 @@ run(async () => {
 			</div>
 		</div>
 
-		<div class="navbar-center">
+		<div
+			class="navbar-center"
+			:style="{
+				...styleWhen(!shouldShowSearch, {
+					// Allow this space to collapse if there's nothing to show.
+					minWidth: 0,
+				}),
+			}"
+		>
 			<AppConfigLoaded class="-search">
 				<!-- Search Input -->
 				<AppSearch v-if="shouldShowSearch" />
@@ -216,8 +245,6 @@ run(async () => {
 
 			<div v-app-observe-dimensions="_checkColWidths" class="-col">
 				<template v-if="user">
-					<AppShellQuestIcon />
-
 					<!-- Notifications -->
 					<AppShellNotificationPopover />
 

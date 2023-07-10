@@ -7,6 +7,12 @@ const ScalingTile = 'tile';
 const DefaultScale = 2.0;
 
 export class Background extends Model {
+	declare scaling: string;
+	declare media_item: MediaItem;
+	declare scale: number;
+	declare name?: string;
+	declare rarity?: number;
+
 	constructor(data: any = {}) {
 		super(data);
 
@@ -21,27 +27,25 @@ export class Background extends Model {
 		}
 	}
 
-	declare scaling: string;
-	declare media_item: MediaItem;
-	declare scale: number;
-
 	get cssBackgroundImage() {
 		if (!this.media_item) {
 			return;
 		}
 
-		let url = this.media_item.mediaserver_url;
-		if (this.scaling === ScalingTile) {
-			const { width, height, mediaserver_url: src } = this.media_item;
+		const { is_animated, img_url, mediaserver_url, width, height } = this.media_item;
+		if (is_animated && img_url) {
+			return `url(${img_url})`;
+		}
 
-			url = getMediaserverUrlForBounds({
+		let src = mediaserver_url;
+		if (this.scaling === ScalingTile) {
+			src = getMediaserverUrlForBounds({
 				src,
 				maxWidth: width / this.scale,
 				maxHeight: height / this.scale,
 			});
 		}
-
-		return `url(${url})`;
+		return `url(${src})`;
 	}
 
 	get cssBackgroundSize() {

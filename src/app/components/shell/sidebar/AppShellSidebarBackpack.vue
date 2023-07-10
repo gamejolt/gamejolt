@@ -25,7 +25,7 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vu
 import { styleTextOverflow } from '../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../_styles/variables';
 import { run } from '../../../../utils/utils';
-import { illPointyThing } from '../../../img/ill/illustrations';
+import { illPointyThing } from '../../../../_common/illustration/illustrations';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
 type FormModel = {
@@ -35,7 +35,7 @@ type FormModel = {
 const { stickerPacks, eventStickers, creatorStickers, generalStickers, allStickers } =
 	useStickerStore();
 
-const { coinBalance, joltbuxBalance } = useCommonStore();
+const { coinBalance, joltbuxBalance, setInitialPackWatermarkStorageValue } = useCommonStore();
 
 const form: FormController<FormModel> = createForm({
 	loadUrl: `/mobile/sticker`,
@@ -49,6 +49,8 @@ const form: FormController<FormModel> = createForm({
 	},
 	sanitizeComplexData: false,
 	onInit() {
+		setInitialPackWatermarkStorageValue(false);
+
 		run(async () => {
 			const payload = await Api.sendFieldsRequest(
 				'/mobile/me',
@@ -84,10 +86,7 @@ async function onClickVendingMachine() {
 }
 
 function openPack(pack: UserStickerPack) {
-	StickerPackOpenModal.show({
-		pack,
-		openImmediate: true,
-	});
+	StickerPackOpenModal.show({ pack });
 }
 
 function sortStickers(sorting: StickerSortMethod) {
@@ -148,7 +147,6 @@ function sortStickers(sorting: StickerSortMethod) {
 					}"
 					:expiry-info="userPack.expires_on"
 					can-click-pack
-					:hover-title="$gettext(`Open`)"
 					@click-pack="openPack(userPack)"
 				/>
 			</div>

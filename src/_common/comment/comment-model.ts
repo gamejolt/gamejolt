@@ -79,10 +79,6 @@ export class Comment implements ModelStoreModel, RemovableModel, ReactionableMod
 		if (data.reaction_counts) {
 			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
 		}
-
-		if (data.supporters) {
-			this.supporters = User.populate(data.supporters);
-		}
 	}
 
 	get resourceName() {

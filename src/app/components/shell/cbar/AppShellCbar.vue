@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+import { trackCbarControlClick } from '../../../../_common/analytics/analytics.service';
 import AppCommunityAddWidget from '../../../../_common/community/add-widget/add-widget.vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { useAppStore } from '../../../store';
@@ -8,7 +9,7 @@ import AppShellCbarCommunity from './AppShellCbarCommunity.vue';
 import AppShellCbarControls from './AppShellCbarControls.vue';
 import AppShellCbarItem from './AppShellCbarItem.vue';
 
-const { hasCbar, activeCommunity, communities } = useAppStore();
+const { hasCbar, activeCommunity, communities, visibleLeftPane } = useAppStore();
 
 const sortedCommunities = computed(() => {
 	const _communities = [...communities.value];
@@ -55,7 +56,11 @@ const cbarCSSVariables = computed(() => {
 					/>
 				</TransitionGroup>
 				<AppShellCbarItem>
-					<AppCommunityAddWidget tooltip-placement="right" @contextmenu.prevent />
+					<AppCommunityAddWidget
+						tooltip-placement="right"
+						@contextmenu.prevent
+						@click="trackCbarControlClick('community-add', { from: visibleLeftPane })"
+					/>
 				</AppShellCbarItem>
 			</div>
 		</AppScrollScroller>

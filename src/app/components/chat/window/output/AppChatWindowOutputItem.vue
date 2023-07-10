@@ -17,10 +17,10 @@ import AppScrollInview, {
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleElevate } from '../../../../../_styles/mixins';
 import { kChatRoomWindowPaddingH } from '../../../../styles/variables';
 import { useGridStore } from '../../../grid/grid-store';
-import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
 import {
 	removeMessage as chatRemoveMessage,
 	retryFailedQueuedMessage,

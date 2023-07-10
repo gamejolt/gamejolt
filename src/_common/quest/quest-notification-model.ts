@@ -1,4 +1,3 @@
-import { RouteLocationDefinition } from '../../utils/router';
 import { Model } from '../model/model.service';
 
 export const QuestNotificationAction = {
@@ -17,15 +16,6 @@ export class QuestNotification extends Model {
 	declare quest_id: number;
 	declare is_new: boolean;
 	declare has_activity: boolean;
-
-	get routeLocation(): RouteLocationDefinition {
-		return {
-			name: 'quests.view',
-			params: {
-				id: this.quest_id,
-			},
-		};
-	}
 }
 
 Model.create(QuestNotification);

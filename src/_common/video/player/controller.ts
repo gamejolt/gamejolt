@@ -3,8 +3,6 @@ import { assertNever } from '../../../utils/utils';
 import { Analytics } from '../../analytics/analytics.service';
 import {
 	SettingVideoPlayerFeedAutoplay,
-	SettingVideoPlayerFeedMuted,
-	SettingVideoPlayerFeedVolume,
 	SettingVideoPlayerMuted,
 	SettingVideoPlayerVolume,
 } from '../../settings/settings.service';
@@ -75,11 +73,7 @@ export function createVideoPlayerController(
 	// Assign volume level from the proper local storage context.
 	switch (context) {
 		case 'feed':
-			rawVolume = SettingVideoPlayerFeedMuted.get()
-				? 0
-				: // Use the page player volume because the feed player has no volume control.
-				  SettingVideoPlayerVolume.get();
-
+			rawVolume = SettingVideoPlayerMuted.get() ? 0 : SettingVideoPlayerVolume.get();
 			rawQueued = SettingVideoPlayerFeedAutoplay.get() ? 'playing' : 'paused';
 			break;
 
@@ -162,18 +156,14 @@ export function setVideoVolume(player: VideoPlayerController, level: number) {
 
 /** Assigns the volume Setting to the appropriate context. */
 function assignVolumeSetting(player: VideoPlayerController, volume: number) {
-	if (player.context === 'feed') {
-		SettingVideoPlayerFeedVolume.set(volume);
-	} else if (player.context === 'page') {
+	if (player.context === 'feed' || player.context === 'page') {
 		SettingVideoPlayerVolume.set(volume);
 	}
 }
 
 /** Gets the volume Setting from the appropriate context. */
 function getVolumeSetting(player: VideoPlayerController) {
-	if (player.context === 'feed') {
-		return SettingVideoPlayerFeedVolume.get();
-	} else if (player.context === 'page') {
+	if (player.context === 'feed' || player.context === 'page') {
 		return SettingVideoPlayerVolume.get();
 	} else if (player.context === 'gif') {
 		return 0;
@@ -204,13 +194,21 @@ export function scrubVideoVolume(
 	}
 }
 
-export function setVideoMuted(player: VideoPlayerController, mute: boolean) {
+export function setVideoMuted(
+	player: VideoPlayerController,
+	mute: boolean,
+	options?: {
+		/**
+		 * Allows setting a custom volume level when unmuting the video instead
+		 * of reading from the Setting.
+		 */
+		unmuteVolume?: number;
+	}
+) {
 	player.muted = mute;
-	setVideoVolume(player, mute ? 0 : getVolumeSetting(player));
+	setVideoVolume(player, mute ? 0 : options?.unmuteVolume ?? getVolumeSetting(player));
 
-	if (player.context === 'feed') {
-		SettingVideoPlayerFeedMuted.set(mute);
-	} else if (player.context === 'page') {
+	if (player.context === 'feed' || player.context === 'page') {
 		SettingVideoPlayerMuted.set(mute);
 	}
 }

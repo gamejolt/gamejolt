@@ -28,6 +28,15 @@ export default defineConfig(async () => {
 	// Note: when building to disk package.json is changed by the caller
 	// depending on which section(s) are being built.
 	if (gjOpts.buildType === 'serve-hmr') {
+		// Gameserver HMR is not supported because almost always want to run the
+		// gameserver section side-by-side with the web section, but most of
+		// this config assumes one section is being served with HMR at a time.
+		//
+		// You can still use build-serve tho.
+		if (gjOpts.section === 'gameserver') {
+			throw new Error('Serving gameserver with HMR is not supported at this point');
+		}
+
 		// Intended values for main and node-remote keys.
 		const propertyMain =
 			gjOpts.section === 'auth'
@@ -396,10 +405,16 @@ export default defineConfig(async () => {
 						gjOpts.buildType === 'build' &&
 						['web'].includes(gjOpts.platform)
 					) {
+						// Update this when you want to force cache busting for
+						// all of our assets regardless of if their contents
+						// changed.
+						const hashVersion = '';
+						// const hashVersion = '-v2';
+
 						return <RollupOptions>{
 							output: {
-								chunkFileNames: 'assets/[hash].js',
-								assetFileNames: 'assets/[hash].[ext]',
+								chunkFileNames: `assets/[hash]${hashVersion}.js`,
+								assetFileNames: `assets/[hash]${hashVersion}.[ext]`,
 							},
 						};
 					}

@@ -7,7 +7,6 @@ import { Sticker } from '../../../../../_common/sticker/sticker.model';
 import { kThemeBiBg, kThemeBiFg } from '../../../../../_common/theme/variables';
 import {
 	styleAbsoluteFill,
-	styleBorderRadiusCircle,
 	styleBorderRadiusLg,
 	styleChangeBg,
 	styleFlexCenter,
@@ -119,9 +118,9 @@ function onClickTile() {
 							<div
 								:style="{
 									...styleChangeBg('bg-offset'),
-									...styleBorderRadiusCircle,
 									width: `100%`,
 									height: `100%`,
+									borderRadius: `50%`,
 								}"
 							/>
 						</div>
@@ -157,13 +156,13 @@ function onClickTile() {
 					v-if="sticker && sticker.is_active"
 					:style="{
 						...styleFlexCenter(),
-						...styleBorderRadiusCircle,
 						pointerEvents: `none`,
 						position: `absolute`,
 						top: `16px`,
 						right: `16px`,
 						width: `24px`,
 						height: `24px`,
+						borderRadius: `50%`,
 						zIndex: 2,
 						backgroundColor: kThemeBiBg,
 					}"

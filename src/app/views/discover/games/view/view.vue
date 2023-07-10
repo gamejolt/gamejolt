@@ -25,6 +25,7 @@ import { Environment } from '../../../../../_common/environment/environment.serv
 import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { CustomMessage, Game, handleGameAddFailure } from '../../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../../_common/game/package/package-payload.model';
+import { onRatingWidgetChange } from '../../../../../_common/game/rating/AppGameRatingWidget.vue';
 import { GameRating } from '../../../../../_common/game/rating/rating.model';
 import { GameScoreTable } from '../../../../../_common/game/score-table/score-table.model';
 import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
@@ -44,17 +45,17 @@ import { EventSubscription } from '../../../../../_common/system/event/event-top
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { User } from '../../../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 import { enforceLocation } from '../../../../../utils/router';
 import AppGameCoverButtons from '../../../../components/game/cover-buttons/cover-buttons.vue';
 import AppGameMaturityBlock from '../../../../components/game/maturity-block/maturity-block.vue';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
-import { onRatingWidgetChange } from '../../../../components/rating/widget/widget.vue';
+import AppPageHeaderAvatar from '../../../../components/page-header/AppPageHeaderAvatar.vue';
 import AppDiscoverGamesViewControls from './AppDiscoverGamesViewControls.vue';
 import AppDiscoverGamesViewNav from './AppDiscoverGamesViewNav.vue';
 import './view-content.styl';
@@ -373,6 +374,7 @@ const GameThemeKey = 'game';
 		AppGameCoverButtons,
 		AppGamePerms,
 		AppUserVerifiedTick,
+		AppPageHeaderAvatar,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -668,9 +670,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 				</template>
 
 				<template #spotlight>
-					<AppUserCardHover :user="game.developer">
-						<AppUserAvatar :user="game.developer" />
-					</AppUserCardHover>
+					<AppPageHeaderAvatar :user="game.developer" />
 				</template>
 
 				<template #nav>

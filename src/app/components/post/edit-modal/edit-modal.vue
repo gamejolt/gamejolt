@@ -10,8 +10,8 @@ import { BaseModal } from '../../../../_common/modal/base';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import AppFormPost from '../../forms/post/AppFormPost.vue';
 import { VideoStatus } from '../../forms/post/_video/video.vue';
+import AppFormPost from '../../forms/post/AppFormPost.vue';
 import AppPostAddPlaceholder from '../add-placeholder/AppPostAddPlaceholder.vue';
 
 @Options({
@@ -81,7 +81,7 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 			class="-background"
 			:background="background"
 			:darken="overlay"
-			:background-style="
+			:backdrop-style="
 				Screen.isXs
 					? undefined
 					: {

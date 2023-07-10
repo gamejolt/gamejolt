@@ -5,12 +5,12 @@ import { Api } from '../../../../_common/api/api.service';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
+import { AppAuthJoinLazy } from '../../../../_common/lazy';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { AppAuthJoinLazy } from '../../../components/lazy';
 import { imageJolt } from '../../../img/images';
 import socialImage from './social.png';
 

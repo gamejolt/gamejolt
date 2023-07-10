@@ -16,6 +16,10 @@ const props = defineProps({
 	bleed: {
 		type: Boolean,
 	},
+	backdropStyle: {
+		type: Object as PropType<StyleValue>,
+		default: undefined,
+	},
 	backgroundStyle: {
 		type: Object as PropType<StyleValue>,
 		default: undefined,
@@ -39,7 +43,8 @@ const props = defineProps({
 	},
 });
 
-const { background, darken, bleed, backgroundStyle, fadeOpacity, scrollDirection } = toRefs(props);
+const { background, darken, bleed, backdropStyle, backgroundStyle, fadeOpacity, scrollDirection } =
+	toRefs(props);
 
 const mediaItem = computed(() => background?.value?.media_item);
 const hasMedia = computed(() => !!mediaItem.value);
@@ -76,7 +81,7 @@ if (import.meta.env.SSR) {
 			:media-item="mediaItem"
 			class="-backdrop"
 			:class="{ '-bleed': bleed }"
-			:style="backgroundStyle"
+			:style="backdropStyle"
 		>
 			<div v-if="background" class="-stretch anim-fade-in">
 				<Transition name="fade">
@@ -91,12 +96,15 @@ if (import.meta.env.SSR) {
 								[`-scroll-${scrollDirection}`]: scrollDirection,
 							},
 						]"
-						:style="{
-							backgroundImage: loadedBackground.cssBackgroundImage,
-							backgroundRepeat: loadedBackground.cssBackgroundRepeat,
-							backgroundSize: loadedBackground.cssBackgroundSize,
-							backgroundPosition: loadedBackground.cssBackgroundPosition,
-						}"
+						:style="[
+							{
+								backgroundImage: loadedBackground.cssBackgroundImage,
+								backgroundRepeat: loadedBackground.cssBackgroundRepeat,
+								backgroundSize: loadedBackground.cssBackgroundSize,
+								backgroundPosition: loadedBackground.cssBackgroundPosition,
+							},
+							backgroundStyle || {},
+						]"
 					/>
 				</Transition>
 

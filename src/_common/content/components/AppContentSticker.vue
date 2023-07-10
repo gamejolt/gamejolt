@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppLoading from '../../loading/AppLoading.vue';
 import { Sticker } from '../../sticker/sticker.model';
 import AppTranslate from '../../translate/AppTranslate.vue';
@@ -35,7 +34,15 @@ owner.hydrator.useData('sticker-id', props.stickerId.toString(), data => {
 	<div class="-sticker">
 		<template v-if="sticker">
 			<AppAnimElectricity :disabled="!isCharged" shock-anim="square" ignore-asset-padding>
-				<AppImgResponsive class="content-image" :src="sticker.img_url" />
+				<img
+					class="content-image"
+					:style="{
+						width: `100%`,
+						height: `100%`,
+					}"
+					:src="sticker.img_url"
+					:alt="sticker.name || ''"
+				/>
 			</AppAnimElectricity>
 		</template>
 		<template v-else-if="hasError">

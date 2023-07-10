@@ -15,7 +15,7 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
 import AppTimeoutCountdown from '../../components/timeout/AppTimeoutCountdown.vue';
-import { illTimeOut } from '../../img/ill/illustrations';
+import { illTimeOut } from '../../../_common/illustration/illustrations';
 import { imageGameJoltLogo } from '../../img/images';
 
 export default {

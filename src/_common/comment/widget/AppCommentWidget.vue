@@ -15,7 +15,6 @@ import {
 import { useRoute } from 'vue-router';
 import type { DeregisterOnConnected } from '../../../app/components/grid/client.service';
 import { useGridStore } from '../../../app/components/grid/grid-store';
-import { illNoComments } from '../../../app/img/ill/illustrations';
 import AppAlertBox from '../../alert/AppAlertBox.vue';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
@@ -23,6 +22,7 @@ import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
 import AppIllustration from '../../illustration/AppIllustration.vue';
+import { illNoComments } from '../../illustration/illustrations';
 import { FormCommentLazy } from '../../lazy';
 import AppLoading from '../../loading/AppLoading.vue';
 import AppMessageThread from '../../message-thread/AppMessageThread.vue';

@@ -5,7 +5,7 @@ import AppFiresideLiveTag from '../../../../../_common/fireside/AppFiresideLiveT
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppUserAvatarList from '../../../../../_common/user/user-avatar/list/list.vue';
+import AppUserAvatarList from '../../../../../_common/user/user-avatar/AppUserAvatarList.vue';
 import { User } from '../../../../../_common/user/user.model';
 import { useGridStore } from '../../../grid/grid-store';
 import { createFiresideController, provideFiresideController } from '../../controller/controller';

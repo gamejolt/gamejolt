@@ -1,18 +1,7 @@
-import { Router } from 'vue-router';
-import { TrophyModal } from '../../app/components/trophy/modal/modal.service';
-import { SupporterMessageModal } from '../../app/views/dashboard/supporters/message/modal.service';
-import { routeDashSupporters } from '../../app/views/dashboard/supporters/supporters.route';
-import type { RouteLocationDefinition } from '../../utils/router';
-import { isKnownRoute } from '../../utils/router';
-import { assertNever } from '../../utils/utils';
 import { Collaborator } from '../collaborator/collaborator.model';
-import { Comment, getCommentUrl } from '../comment/comment-model';
+import { Comment } from '../comment/comment-model';
 import { Community } from '../community/community.model';
-import {
-	CommunityUserNotification,
-	NotificationType,
-} from '../community/user-notification/user-notification.model';
-import { Environment } from '../environment/environment.service';
+import { CommunityUserNotification } from '../community/user-notification/user-notification.model';
 import { EventItem } from '../event-item/event-item.model';
 import { FiresideCommunity } from '../fireside/community/community.model';
 import { Fireside } from '../fireside/fireside.model';
@@ -24,11 +13,9 @@ import { ForumTopic } from '../forum/topic/topic.model';
 import { GameLibraryGame } from '../game-library/game/game.model';
 import { Game } from '../game/game.model';
 import { GameRating } from '../game/rating/rating.model';
-import { showErrorGrowl } from '../growls/growls.service';
 import { Mention } from '../mention/mention.model';
 import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
-import { Navigate } from '../navigate/navigate.service';
 import { OrderItem } from '../order/item/item.model';
 import { Poll } from '../poll/poll.model';
 import { QuestNotification } from '../quest/quest-notification-model';
@@ -36,31 +23,12 @@ import { Sellable } from '../sellable/sellable.model';
 import { StickerPlacement } from '../sticker/placement/placement.model';
 import { Subscription } from '../subscription/subscription.model';
 import { SupporterAction } from '../supporters/action.model';
-import { $gettext, Translate } from '../translate/translate.service';
+import { $gettext } from '../translate/translate.service';
 import { UserFriendship } from '../user/friendship/friendship.model';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
-import { UserBaseTrophy } from '../user/trophy/user-base-trophy.model';
+import { UserAvatarFrame } from '../user/user-avatar/frame/frame.model';
 import { User } from '../user/user.model';
-
-function getRouteLocationForModel(
-	model: Game | User | FiresidePost | Community | Fireside | QuestNotification
-): RouteLocationDefinition | '' {
-	if (model instanceof User) {
-		return model.routeLocation;
-	} else if (model instanceof Game) {
-		return model.routeLocation;
-	} else if (model instanceof FiresidePost) {
-		return model.routeLocation;
-	} else if (model instanceof Community) {
-		return model.routeLocation;
-	} else if (model instanceof Fireside) {
-		return model.routeLocation;
-	} else if (model instanceof QuestNotification) {
-		return model.routeLocation;
-	}
-	return '';
-}
 
 export class Notification extends Model {
 	static TYPE_COMMENT_ADD = 'comment-add';
@@ -87,6 +55,7 @@ export class Notification extends Model {
 	static TYPE_CHARGED_STICKER = 'charged-sticker';
 	static TYPE_SUPPORTER_MESSAGE = 'supporter-message';
 	static TYPE_POLL_ENDED = 'poll-ended';
+	static TYPE_UNLOCKED_AVATAR_FRAME = 'unlocked-avatar-frame';
 
 	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
 
@@ -109,6 +78,7 @@ export class Notification extends Model {
 		Notification.TYPE_CHARGED_STICKER,
 		Notification.TYPE_SUPPORTER_MESSAGE,
 		Notification.TYPE_POLL_ENDED,
+		Notification.TYPE_UNLOCKED_AVATAR_FRAME,
 	];
 
 	user_id!: number;
@@ -144,7 +114,8 @@ export class Notification extends Model {
 		| QuestNotification
 		| StickerPlacement
 		| SupporterAction
-		| Poll;
+		| Poll
+		| UserAvatarFrame;
 
 	to_resource!: string | null;
 	to_resource_id!: number | null;
@@ -264,6 +235,8 @@ export class Notification extends Model {
 			this.is_user_based = true;
 		} else if (this.type === Notification.TYPE_POLL_ENDED) {
 			this.action_model = new Poll(data.action_resource_model);
+		} else if (this.type === Notification.TYPE_UNLOCKED_AVATAR_FRAME) {
+			this.action_model = new UserAvatarFrame(data.action_resource_model);
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -273,111 +246,6 @@ export class Notification extends Model {
 		delete (this as any).to_resource_model;
 	}
 
-	get routeLocation(): RouteLocationDefinition | '' {
-		switch (this.type) {
-			case Notification.TYPE_FRIENDSHIP_REQUEST:
-			case Notification.TYPE_FRIENDSHIP_ACCEPT:
-				return getRouteLocationForModel(this.from_model!);
-
-			case Notification.TYPE_USER_FOLLOW:
-				return getRouteLocationForModel(this.from_model!);
-
-			case Notification.TYPE_GAME_RATING_ADD:
-				return getRouteLocationForModel(this.from_model!);
-
-			case Notification.TYPE_GAME_FOLLOW:
-				return getRouteLocationForModel(this.from_model!);
-
-			case Notification.TYPE_POST_FEATURED_IN_COMMUNITY:
-				return getRouteLocationForModel(
-					(this.action_model as FiresidePostCommunity).community
-				);
-
-			case Notification.TYPE_COMMUNITY_USER_NOTIFICATION:
-				switch ((this.action_model as CommunityUserNotification).type) {
-					case NotificationType.POSTS_MOVE:
-					case NotificationType.POSTS_EJECT:
-						return getRouteLocationForModel(this.to_model as FiresidePost);
-					case NotificationType.FIRESIDES_EJECT:
-						return getRouteLocationForModel(this.to_model as Fireside);
-				}
-				break;
-
-			case Notification.TYPE_COLLABORATOR_INVITE:
-				switch (this.to_resource) {
-					case 'Game':
-						return getRouteLocationForModel(this.to_model as Game);
-					case 'Community':
-						return getRouteLocationForModel(this.to_model as Community);
-				}
-				break;
-
-			case Notification.TYPE_POST_ADD:
-				return getRouteLocationForModel(this.action_model as FiresidePost);
-
-			case Notification.TYPE_SELLABLE_SELL:
-				return {
-					name: 'home',
-				};
-
-			case Notification.TYPE_MENTION: {
-				const mention = this.action_model as Mention;
-				switch (mention.resource) {
-					case 'Comment':
-					case 'Forum_Post':
-						// Pull through the "go" func below since we can't statically get it.
-						return '';
-
-					case 'Game':
-						return getRouteLocationForModel(this.to_model as Game);
-
-					case 'User':
-						return getRouteLocationForModel(this.to_model as User);
-
-					case 'Fireside_Post':
-						return getRouteLocationForModel(this.to_model as FiresidePost);
-
-					default:
-						return assertNever(mention.resource);
-				}
-			}
-
-			case Notification.TYPE_FIRESIDE_START:
-				return getRouteLocationForModel(this.action_model as Fireside);
-
-			case Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION:
-				return getRouteLocationForModel(
-					(this.action_model as FiresideStreamNotification).fireside
-				);
-
-			case Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY:
-				return getRouteLocationForModel(this.to_model as Fireside);
-
-			case Notification.TYPE_QUEST_NOTIFICATION:
-				return getRouteLocationForModel(this.action_model as QuestNotification);
-
-			case Notification.TYPE_CHARGED_STICKER: {
-				return routeDashSupporters;
-			}
-
-			case Notification.TYPE_SUPPORTER_MESSAGE: {
-				// Messages might have their height cropped in the notification
-				// feed. Don't return a location here, we'll instead show a
-				// modal in the `go` function.
-				return '';
-			}
-
-			case Notification.TYPE_POLL_ENDED: {
-				if (this.from_model) {
-					return getRouteLocationForModel(this.from_model);
-				}
-			}
-		}
-
-		// Must pull asynchronously when they click on the notification.
-		return '';
-	}
-
 	get feedType() {
 		if (Notification.ACTIVITY_FEED_TYPES.indexOf(this.type) !== -1) {
 			return 'activity';
@@ -385,77 +253,6 @@ export class Notification extends Model {
 			return 'notifications';
 		}
 		return '';
-	}
-
-	async go(router: Router) {
-		const gotoLocation = this.routeLocation;
-		if (gotoLocation !== '') {
-			router.push(gotoLocation);
-		} else if (
-			this.type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
-			this.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
-		) {
-			if (this.action_model instanceof UserBaseTrophy) {
-				TrophyModal.show(this.action_model);
-			}
-		} else if (
-			this.type === Notification.TYPE_COMMENT_ADD ||
-			this.type === Notification.TYPE_COMMENT_ADD_OBJECT_OWNER ||
-			this.type === Notification.TYPE_MENTION ||
-			this.type === Notification.TYPE_FORUM_POST_ADD
-		) {
-			// Need to fetch the URL first.
-			let url: string;
-			let model = this.action_model;
-
-			if (this.action_model instanceof Mention) {
-				if (this.action_model.comment) {
-					model = this.action_model.comment;
-				} else if (this.action_model.forum_post) {
-					model = this.action_model.forum_post;
-				} else if (this.action_model.fireside_post) {
-					model = this.action_model.fireside_post;
-				} else {
-					throw new Error(`Invalid mention model.`);
-				}
-			}
-
-			try {
-				if (model instanceof Comment) {
-					url = await getCommentUrl(model.id);
-				} else if (model instanceof ForumPost) {
-					url = await ForumPost.getPostUrl(model.id);
-				} else if (model instanceof FiresidePost) {
-					url = model.url;
-				} else {
-					throw new Error('Invalid type.');
-				}
-
-				// If we're going to a URL within this domain, then we want to strip off the domain stuff
-				// and go to the URL. Otherwise we need to do a full-page change to the domain/url.
-				const search = Environment.baseUrl;
-				if (url.search(search) === 0) {
-					url = url.replace(search, '');
-
-					if (!isKnownRoute(router, url)) {
-						throw new Error(
-							`Could not resolve notification url to a vue route. Notification id: ${this.id}, Url: ${url}`
-						);
-					}
-
-					router.push(url);
-				} else {
-					Navigate.gotoExternal(url);
-				}
-			} catch (e) {
-				console.error(e);
-				showErrorGrowl(Translate.$gettext(`Couldn't go to notification.`));
-			}
-		} else if (this.type === Notification.TYPE_SUPPORTER_MESSAGE) {
-			if (this.action_model instanceof SupporterAction) {
-				SupporterMessageModal.show(this.action_model);
-			}
-		}
 	}
 
 	$read() {

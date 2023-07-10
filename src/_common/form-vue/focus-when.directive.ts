@@ -1,11 +1,11 @@
 import { Directive } from 'vue';
 import { Screen } from '../screen/screen-service';
 
-export const vAppFocusWhen: Directive<HTMLElement, boolean | void> = {
-	mounted(el, binding) {
+export const vAppFocusWhen: Directive<unknown, boolean | void> = {
+	mounted(el: HTMLElement, binding) {
 		_tryFocus(el, binding.value, binding.oldValue);
 	},
-	updated(el, binding) {
+	updated(el: HTMLElement, binding) {
 		_tryFocus(el, binding.value, binding.oldValue);
 	},
 };

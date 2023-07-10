@@ -62,7 +62,9 @@ const supportersModel = computed(() =>
 <style lang="stylus" scoped>
 .sticker-placement-list
 	display: inline-flex
-	align-items: center
+	flex-direction: column
+	align-items: flex-start
+	gap: 8px
 	margin-bottom: 16px
 
 .-supporters

@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
-import { styleBorderRadiusCircle, styleChangeBg } from '../../../../_styles/mixins';
-import { ChatUser } from '../../chat/user';
+import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
+import { UserCommonFields } from '../../../../_common/user/user.model';
+import { styleChangeBg } from '../../../../_styles/mixins';
 import AppChatListItem from '../../chat/_list/AppChatListItem.vue';
-import AppUserAvatarBubble from '../../user/AppUserAvatarBubble.vue';
 
 defineProps({
 	user: {
-		type: Object as PropType<ChatUser>,
+		type: Object as PropType<UserCommonFields>,
 		required: true,
 	},
 });
@@ -46,8 +46,8 @@ const emit = defineEmits({
 			<AppUserVerifiedTick
 				:style="{
 					...styleChangeBg('bg'),
-					...styleBorderRadiusCircle,
 					padding: `1px`,
+					borderRadius: `50%`,
 					transform: `translate(2px, 2px)`,
 				}"
 				:user="user"
