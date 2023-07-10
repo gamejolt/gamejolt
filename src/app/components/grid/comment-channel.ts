@@ -5,7 +5,7 @@ import { EmojiDelta, updateReactionCount } from '../../../_common/reaction/react
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { GridClient } from './client.service';
 
-export type GridCommentsChannel = ReturnType<typeof createGridCommentsChannel>;
+export type GridCommentChannel = ReturnType<typeof createGridCommentChannel>;
 
 interface UpdateCommentReactionPayload {
 	deltas: EmojiDelta[];
@@ -18,7 +18,7 @@ export interface CommentTopicPayload {
 	parent_comment_id: number;
 }
 
-export function createGridCommentsChannel(client: GridClient, { userId }: { userId: number }) {
+export function createGridCommentChannel(client: GridClient, { userId }: { userId: number }) {
 	const { socketController } = client;
 
 	const channelController = createSocketChannelController(`comment:${userId}`, socketController);

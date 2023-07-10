@@ -36,9 +36,9 @@ import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/cl
 import { getTrophyImg } from '../trophy/thumbnail/thumbnail.vue';
 import {
 	CommentTopicPayload,
-	GridCommentsChannel,
-	createGridCommentsChannel,
-} from './comments-channel';
+	GridCommentChannel,
+	createGridCommentChannel,
+} from './comment-channel';
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
 import { GridNotificationChannel, createGridNotificationChannel } from './notification-channel';
@@ -130,7 +130,7 @@ export class GridClient {
 	firesideDMChannels: GridFiresideDMChannel[] = [];
 	notificationChannel: GridNotificationChannel | null = null;
 
-	commentsChannel: GridCommentsChannel | null = null;
+	commentChannel: GridCommentChannel | null = null;
 
 	/**
 	 * @see `deregisterViewingCommunity` doc-block for explanation.
@@ -241,9 +241,9 @@ export class GridClient {
 			await notificationChannel.joinPromise;
 			this.notificationChannel = markRaw(notificationChannel);
 
-			const commentsChannel = createGridCommentsChannel(this, { userId: user.value.id });
-			await commentsChannel.joinPromise;
-			this.commentsChannel = markRaw(commentsChannel);
+			const commentChannel = createGridCommentChannel(this, { userId: user.value.id });
+			await commentChannel.joinPromise;
+			this.commentChannel = markRaw(commentChannel);
 			this.markConnected();
 		}
 
@@ -286,7 +286,7 @@ export class GridClient {
 		this.firesideChannels = [];
 		this.firesideDMChannels = [];
 		this.notificationChannel = null;
-		this.commentsChannel = null;
+		this.commentChannel = null;
 
 		// TODO(realtime-reactions) invoke cancel token from registerOnConnected
 		// here, but only if its the "final" disconnect (as in, not part of a
@@ -522,14 +522,14 @@ export class GridClient {
 	}
 
 	async startListeningToCommentsReactions(data: CommentTopicPayload) {
-		if (this.commentsChannel) {
-			this.commentsChannel.startListeningToCommentsReactions(data);
+		if (this.commentChannel) {
+			this.commentChannel.startListeningToCommentsReactions(data);
 		}
 	}
 
 	async stopListeningToCommentsReactions(data: CommentTopicPayload) {
-		if (this.commentsChannel) {
-			this.commentsChannel.stopListeningToCommentsReactions(data);
+		if (this.commentChannel) {
+			this.commentChannel.stopListeningToCommentsReactions(data);
 		}
 	}
 

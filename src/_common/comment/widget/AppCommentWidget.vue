@@ -180,7 +180,7 @@ export function createCommentWidget(options: {
 		if (_deregisterReactions) {
 			console.error('Expected to not have a reaction handler yet');
 		} else {
-			_deregisterReactions = whenGridConnected(_joinReactionsChannel);
+			_deregisterReactions = whenGridConnected(_joinCommentChannel);
 		}
 
 		// Keep track of how many comment widgets have a lock on this store. We
@@ -210,7 +210,7 @@ export function createCommentWidget(options: {
 		}
 
 		releaseCommentStore(commentManager, store.value);
-		_leaveReactionsChannel();
+		_leaveCommentChannel();
 
 		store.value = null;
 	}
@@ -259,11 +259,11 @@ export function createCommentWidget(options: {
 		}
 	}
 
-	function _joinReactionsChannel(): void {
+	function _joinCommentChannel(): void {
 		const resource = getCommentModelResourceName(model.value);
 		const resourceId = model.value.id;
 		const commentId = threadCommentId.value ? threadCommentId.value : 0;
-		console.log(`joining reactions channel for ${commentId} on ${resource}/${resourceId}...`);
+		console.log(`joining comment channel for ${commentId} on ${resource}/${resourceId}...`);
 
 		grid.value?.startListeningToCommentsReactions({
 			resource: resource,
@@ -272,11 +272,11 @@ export function createCommentWidget(options: {
 		});
 	}
 
-	function _leaveReactionsChannel(): void {
+	function _leaveCommentChannel(): void {
 		const resource = getCommentModelResourceName(model.value);
 		const resourceId = model.value.id;
 		const commentId = threadCommentId.value ? threadCommentId.value : 0;
-		console.log(`leaving reactions channel for ${commentId} on ${resource}/${resourceId}...`);
+		console.log(`leaving comment channel for ${commentId} on ${resource}/${resourceId}...`);
 
 		grid.value?.stopListeningToCommentsReactions({
 			resource: resource,
