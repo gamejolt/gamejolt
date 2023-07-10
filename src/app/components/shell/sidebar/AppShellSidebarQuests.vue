@@ -51,9 +51,15 @@ const {
 } = questStore;
 
 useEscapeStack(() => {
-	// Closes any open quest window.
+	const hadQuestWindow = !!activeQuest.value;
+	// Clear out the [activeQuest], closing the quest window.
 	activeQuest.value = undefined;
-	toggleLeftPane('');
+
+	// Mobile sizes should close the quest window before closing the sidebar.
+	// Desktop should close the sidebar always.
+	if (!hadQuestWindow || Screen.isDesktop) {
+		toggleLeftPane('');
+	}
 });
 
 const questChunks = computed(() => {

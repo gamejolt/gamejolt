@@ -205,7 +205,13 @@ onUnmounted(async () => {
 function closeQuests() {
 	// Causes the shell to v-if this away.
 	activeQuest.value = undefined;
-	toggleLeftPane('');
+
+	// Close the sidebar only for breakpoints that always show it. Mobile
+	// breakpoints have the quest window overlay everything, so we should keep
+	// the sidebar open.
+	if (Screen.isDesktop) {
+		toggleLeftPane('');
+	}
 }
 
 function onNewQuest(data: Quest) {
