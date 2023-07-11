@@ -86,18 +86,14 @@ export async function updateReactionCount(
 	let currUserNettCountChange = userReactingCount - userUnreactingCount;
 
 	// get reaction.count (countMod)
-	let pendingEmojiReaction = null;
 	const pendingReactions = ModelsPendingReactions.get(model);
-	if (pendingReactions && pendingReactions.length) {
-		pendingEmojiReaction = pendingReactions.find(i => i.emoji_id === emoji_id);
-
-		if (pendingEmojiReaction) {
-			// if there is a pending reaction for this emoji in curr tab,
-			// we should scrap it off the counts as it has been applied before in toggleReactionOnResource()
-			countMod -= pendingEmojiReaction.count;
-			currUserNettCountChange -= pendingEmojiReaction.count;
-			arrayRemove(pendingReactions, i => i.emoji_id === emoji_id);
-		}
+	const pendingEmojiReaction = pendingReactions?.find(i => i.emoji_id === emoji_id);
+	if (pendingReactions && pendingEmojiReaction) {
+		// if there is a pending reaction for this emoji in curr tab,
+		// we should scrap it off the counts as it has been applied before in toggleReactionOnResource()
+		countMod -= pendingEmojiReaction.count;
+		currUserNettCountChange -= pendingEmojiReaction.count;
+		arrayRemove(pendingReactions, i => i.emoji_id === emoji_id);
 	}
 
 	// get reaction.did_react (didReact)
