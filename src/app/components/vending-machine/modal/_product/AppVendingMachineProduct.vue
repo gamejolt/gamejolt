@@ -2,8 +2,11 @@
 import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
+import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
-import AppStickerPack from '../../../../../_common/sticker/pack/AppStickerPack.vue';
+import AppStickerPack, {
+	StickerPackExpiryStyles,
+} from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { kBorderRadiusLg } from '../../../../../_styles/variables';
@@ -54,11 +57,12 @@ function onClickProduct() {
 
 const popperConfirmRadius = kBorderRadiusLg;
 
+const overlayTagZIndex = 2;
 const currencyTagStyles: CSSProperties = {
 	position: `absolute`,
 	bottom: `4px`,
 	right: `4px`,
-	zIndex: 2,
+	zIndex: overlayTagZIndex,
 };
 
 const anchorStyles = computed<CSSProperties>(() => {
@@ -80,62 +84,64 @@ const anchorStyles = computed<CSSProperties>(() => {
 				zIndex: 1,
 			}"
 		>
-			<template v-if="shopProduct.stickerPack">
-				<AppStickerPack
-					:pack="shopProduct.stickerPack"
-					:expiry-info="shopProduct.ends_on"
-					:can-click-pack="!disablePurchases"
-					show-details
-					@click-pack="onClickProduct()"
+			<AppStickerPack
+				v-if="shopProduct.stickerPack"
+				:pack="shopProduct.stickerPack"
+				:expiry-info="shopProduct.ends_on"
+				:can-click-pack="!disablePurchases"
+				show-details
+				@click-pack="onClickProduct()"
+			>
+				<template #overlay-children>
+					<AppProductCurrencyTags
+						:style="currencyTagStyles"
+						:shop-product="shopProduct"
+					/>
+				</template>
+			</AppStickerPack>
+			<a v-else-if="shopProduct.product" :style="anchorStyles" @click="onClickProduct()">
+				<AppUserAvatarBubble
+					v-if="shopProduct.avatarFrame"
+					:user="myUser"
+					:frame-override="shopProduct.avatarFrame"
+					show-frame
+					smoosh
+					disable-link
+				/>
+				<AppAspectRatio v-else-if="shopProduct.background" :ratio="1">
+					<AppBackground
+						:background="shopProduct.background"
+						:backdrop-style="{
+							borderRadius: popperConfirmRadius.px,
+						}"
+						:background-style="{
+							backgroundSize: `contain`,
+							backgroundPosition: `center`,
+						}"
+						darken
+					>
+						<AppAspectRatio :ratio="1" />
+					</AppBackground>
+				</AppAspectRatio>
+
+				<div
+					v-if="shopProduct.ends_on"
+					:style="{
+						...StickerPackExpiryStyles,
+						zIndex: overlayTagZIndex,
+					}"
 				>
-					<template #overlay-children>
-						<AppProductCurrencyTags
-							:style="currencyTagStyles"
-							:shop-product="shopProduct"
-						/>
-					</template>
-				</AppStickerPack>
-			</template>
-			<template v-else-if="shopProduct.avatarFrame">
-				<a :style="anchorStyles" @click="onClickProduct()">
-					<AppUserAvatarBubble
-						:user="myUser"
-						:frame-override="shopProduct.avatarFrame"
-						show-frame
-						smoosh
-						disable-link
-					/>
+					{{
+						shorthandReadableTime(shopProduct.ends_on, {
+							allowFuture: true,
+							precision: 'rough',
+							nowText: $gettext(`Expired`),
+						})
+					}}
+				</div>
 
-					<AppProductCurrencyTags
-						:style="currencyTagStyles"
-						:shop-product="shopProduct"
-					/>
-				</a>
-			</template>
-			<template v-else-if="shopProduct.background">
-				<a :style="anchorStyles" @click="onClickProduct()">
-					<AppAspectRatio :ratio="1">
-						<AppBackground
-							:background="shopProduct.background"
-							:backdrop-style="{
-								borderRadius: popperConfirmRadius.px,
-							}"
-							:background-style="{
-								backgroundSize: `contain`,
-								backgroundPosition: `center`,
-							}"
-							darken
-						>
-							<AppAspectRatio :ratio="1" />
-						</AppBackground>
-					</AppAspectRatio>
-
-					<AppProductCurrencyTags
-						:style="currencyTagStyles"
-						:shop-product="shopProduct"
-					/>
-				</a>
-			</template>
+				<AppProductCurrencyTags :style="currencyTagStyles" :shop-product="shopProduct" />
+			</a>
 		</div>
 
 		<div
