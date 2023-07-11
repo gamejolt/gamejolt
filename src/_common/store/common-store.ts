@@ -1,6 +1,4 @@
 import { computed, inject, InjectionKey, ref, Ref } from 'vue';
-import { trackExperimentEngagement } from '../analytics/analytics.service';
-import { configInitialPackWatermark } from '../config/config.service';
 import { EmojiGroup } from '../emoji/emoji-group.model';
 import { Environment } from '../environment/environment.service';
 import '../model/model.service';
@@ -52,13 +50,10 @@ export function createCommonStore() {
 		if (!user.value) {
 			return null;
 		}
-		return `${configInitialPackWatermark.name}/${user.value.id}`;
+		return `initial_pack_watermark/${user.value.id}`;
 	}
 
 	function getInitialPackWatermarkStorageValue() {
-		if (!configInitialPackWatermark.value) {
-			return false;
-		}
 		const key = getInitialPackWatermarkStorageKey();
 		if (!key) {
 			return false;
@@ -94,7 +89,6 @@ export function createCommonStore() {
 		} else {
 			user.value = new User(newUser);
 
-			trackExperimentEngagement(configInitialPackWatermark);
 			if (getInitialPackWatermarkStorageValue()) {
 				showInitialPackWatermark.value = true;
 			}
