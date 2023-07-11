@@ -7,11 +7,7 @@ import {
 } from '../../../_common/analytics/analytics.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { AppClientHistoryNavigator } from '../../../_common/client/safe-exports';
-import {
-	configInitialPackWatermark,
-	configShowStoreInMoreMenu,
-	ensureConfig,
-} from '../../../_common/config/config.service';
+import { configShowStoreInMoreMenu, ensureConfig } from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -22,13 +18,14 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
 import { kThemeGjOverlayNotice } from '../../../_common/theme/variables';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import { styleWhen } from '../../../_styles/mixins';
 import { run } from '../../../utils/utils';
 import { imageGameJoltLogo, imageJolt } from '../../img/images';
 import { useAppStore } from '../../store/index';
+import { useQuestStore } from '../../store/quest';
 import { useGridStore } from '../grid/grid-store';
 import AppSearch from '../search/AppSearch.vue';
 import { CBAR_WIDTH } from './AppShell.vue';
-import AppShellQuestIcon from './AppShellQuestIcon.vue';
 
 const AppShellAccountPopover = defineAsyncComponent(() => import('./AppShellAccountPopover.vue'));
 const AppShellFriendRequestPopover = defineAsyncComponent(
@@ -40,8 +37,9 @@ const AppShellNotificationPopover = defineAsyncComponent(
 const AppShellAltMenuPopover = defineAsyncComponent(() => import('./AppShellAltMenuPopover.vue'));
 
 const { visibleLeftPane, hasCbar, unreadActivityCount, toggleCbarMenu } = useAppStore();
-const { isUserTimedOut, user, userBootstrapped } = useCommonStore();
+const { isUserTimedOut, user, userBootstrapped, showInitialPackWatermark } = useCommonStore();
 const { chat } = useGridStore();
+const { questActivityIds } = useQuestStore();
 
 const left = ref<HTMLDivElement>();
 const right = ref<HTMLDivElement>();
@@ -119,7 +117,7 @@ run(async () => {
 						{{ chat.roomNotificationsCount }}
 					</div>
 					<div
-						v-else-if="configInitialPackWatermark.value"
+						v-else-if="showInitialPackWatermark || questActivityIds.size > 0"
 						:style="{
 							width: `16px`,
 							height: `16px`,
@@ -195,7 +193,15 @@ run(async () => {
 			</div>
 		</div>
 
-		<div class="navbar-center">
+		<div
+			class="navbar-center"
+			:style="{
+				...styleWhen(!shouldShowSearch, {
+					// Allow this space to collapse if there's nothing to show.
+					minWidth: 0,
+				}),
+			}"
+		>
 			<AppConfigLoaded class="-search">
 				<!-- Search Input -->
 				<AppSearch v-if="shouldShowSearch" />
@@ -235,8 +241,6 @@ run(async () => {
 
 			<div v-app-observe-dimensions="_checkColWidths" class="-col">
 				<template v-if="user">
-					<AppShellQuestIcon />
-
 					<!-- Notifications -->
 					<AppShellNotificationPopover />
 

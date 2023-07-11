@@ -6,20 +6,12 @@ import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/
 import AppStickerPack from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleOverlayTextShadow } from '../../../../../_styles/mixins';
 import { kBorderRadiusLg } from '../../../../../_styles/variables';
 import AppProductCurrencyTags from './AppProductCurrencyTags.vue';
 
 const props = defineProps({
 	shopProduct: {
 		type: Object as PropType<InventoryShopProductSale>,
-		required: true,
-	},
-	/**
-	 * Whether or not the user has enough funds to purchase this product.
-	 */
-	canPurchase: {
-		type: Boolean,
 		required: true,
 	},
 	/**
@@ -30,7 +22,7 @@ const props = defineProps({
 	},
 });
 
-const { shopProduct, canPurchase, disablePurchases } = toRefs(props);
+const { shopProduct, disablePurchases } = toRefs(props);
 
 const emit = defineEmits({
 	purchase: (_shopProduct: InventoryShopProductSale) => true,
@@ -38,7 +30,6 @@ const emit = defineEmits({
 
 const { user: myUser } = useCommonStore();
 
-const canPerformAction = computed(() => !disablePurchases.value && canPurchase.value);
 const name = computed(() => {
 	const product = shopProduct.value;
 	if (product.stickerPack) {
@@ -54,7 +45,7 @@ const name = computed(() => {
 });
 
 function onClickProduct() {
-	if (!canPerformAction.value) {
+	if (disablePurchases.value) {
 		return;
 	}
 
@@ -63,32 +54,22 @@ function onClickProduct() {
 
 const popperConfirmRadius = kBorderRadiusLg;
 
-const notEnoughFundsOverlayStyles: CSSProperties = {
-	...styleOverlayTextShadow,
-	borderRadius: popperConfirmRadius.px,
-	position: `absolute`,
-	top: 0,
-	right: 0,
-	bottom: 0,
-	left: 0,
-	fontSize: `13px`,
-	padding: `12px`,
-	zIndex: 3,
-	display: `grid`,
-	justifyContent: `center`,
-	alignContent: `center`,
-	textAlign: `center`,
-	fontWeight: `bold`,
-	color: `white`,
-	backgroundColor: `rgba(0, 0, 0, 0.45)`,
-};
-
 const currencyTagStyles: CSSProperties = {
 	position: `absolute`,
 	bottom: `4px`,
 	right: `4px`,
 	zIndex: 2,
 };
+
+const anchorStyles = computed<CSSProperties>(() => {
+	if (disablePurchases.value) {
+		// Revert the cursor if we're not allowing purchases. Using a
+		// <component> tag and swapping between <a> and <div> was causing some
+		// item images to flicker.
+		return { cursor: `inherit` };
+	}
+	return {};
+});
 </script>
 
 <template>
@@ -103,7 +84,7 @@ const currencyTagStyles: CSSProperties = {
 				<AppStickerPack
 					:pack="shopProduct.stickerPack"
 					:expiry-info="shopProduct.ends_on"
-					:can-click-pack="canPerformAction"
+					:can-click-pack="!disablePurchases"
 					show-details
 					@click-pack="onClickProduct()"
 				>
@@ -112,15 +93,11 @@ const currencyTagStyles: CSSProperties = {
 							:style="currencyTagStyles"
 							:shop-product="shopProduct"
 						/>
-
-						<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
-							{{ $gettext(`You don't have enough funds to purchase this`) }}
-						</div>
 					</template>
 				</AppStickerPack>
 			</template>
 			<template v-else-if="shopProduct.avatarFrame">
-				<component :is="canPerformAction ? 'a' : 'div'" @click="onClickProduct()">
+				<a :style="anchorStyles" @click="onClickProduct()">
 					<AppUserAvatarBubble
 						:user="myUser"
 						:frame-override="shopProduct.avatarFrame"
@@ -133,14 +110,10 @@ const currencyTagStyles: CSSProperties = {
 						:style="currencyTagStyles"
 						:shop-product="shopProduct"
 					/>
-
-					<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
-						{{ $gettext(`You don't have enough funds to purchase this`) }}
-					</div>
-				</component>
+				</a>
 			</template>
 			<template v-else-if="shopProduct.background">
-				<component :is="canPerformAction ? 'a' : 'div'" @click="onClickProduct()">
+				<a :style="anchorStyles" @click="onClickProduct()">
 					<AppAspectRatio :ratio="1">
 						<AppBackground
 							:background="shopProduct.background"
@@ -161,11 +134,7 @@ const currencyTagStyles: CSSProperties = {
 						:style="currencyTagStyles"
 						:shop-product="shopProduct"
 					/>
-
-					<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
-						{{ $gettext(`You don't have enough funds to purchase this`) }}
-					</div>
-				</component>
+				</a>
 			</template>
 		</div>
 

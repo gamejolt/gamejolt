@@ -54,6 +54,7 @@ import AppGameMaturityBlock from '../../../../components/game/maturity-block/mat
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
+import AppPageHeaderAvatar from '../../../../components/page-header/AppPageHeaderAvatar.vue';
 import AppDiscoverGamesViewControls from './AppDiscoverGamesViewControls.vue';
 import AppDiscoverGamesViewNav from './AppDiscoverGamesViewNav.vue';
 import './view-content.styl';
@@ -372,6 +373,7 @@ const GameThemeKey = 'game';
 		AppGameCoverButtons,
 		AppGamePerms,
 		AppUserVerifiedTick,
+		AppPageHeaderAvatar,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
@@ -667,9 +669,7 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 				</template>
 
 				<template #spotlight>
-					<AppUserCardHover :user="game.developer">
-						<AppUserAvatar :user="game.developer" />
-					</AppUserCardHover>
+					<AppPageHeaderAvatar :user="game.developer" />
 				</template>
 
 				<template #nav>

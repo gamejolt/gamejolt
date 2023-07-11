@@ -77,12 +77,15 @@ async function updateVote(rating: number) {
 				rating: rating,
 			});
 
-			// We only show likes, not dislikes.
+			// We don't show dislikes, only the amount of likes.
+			// no old rating, new rating like => +1
+			// no old rating, new rating dislike => 0
+			// old rating dislike, new rating like => +1
+			// old rating like, new rating dislike => -1
 			const oldRating = oldUserRating ? oldUserRating.rating : null;
 			if (rating === GameRating.RATING_LIKE) {
 				operation = 1;
-				game.value.like_count += operation;
-			} else if (oldRating === GameRating.RATING_DISLIKE) {
+			} else if (oldRating === GameRating.RATING_LIKE) {
 				operation = -1;
 			}
 

@@ -104,6 +104,8 @@ function _createInviewConfig() {
 	let offset = padding.value;
 	if (anchor.value === 'top') {
 		offset += getOffsetTop();
+	} else if (offsetTop?.value !== undefined) {
+		offset += offsetTop.value;
 	}
 
 	// The 10000px is so that it only considers the element "out of view" in

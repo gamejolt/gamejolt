@@ -70,7 +70,7 @@ if (GJ_ENVIRONMENT === 'development') {
 
 	Environment.apiHost = 'https://development.gamejolt.com';
 	Environment.uploadHost = Environment.apiHost;
-	Environment.gameserverApiHost = 'https://development.gamejolt.com';
+	Environment.gameserverApiHost = 'https://development.gamejolt.net';
 	Environment.widgetHost = 'https://localhost:8086';
 	Environment.grid = 'https://grid.development.gamejolt.com/grid';
 	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';

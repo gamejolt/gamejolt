@@ -5,11 +5,7 @@ import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue'
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
 import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
-import {
-	Currency,
-	CurrencyType,
-	canAffordCurrency,
-} from '../../../../_common/currency/currency-type';
+import { Currency, CurrencyType } from '../../../../_common/currency/currency-type';
 import {
 	featureMicrotransactions,
 	fetchFeatureToggles,
@@ -17,6 +13,7 @@ import {
 import { formatNumber } from '../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import { InventoryShopProductSale } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -59,7 +56,6 @@ import {
 	kFontSizeH3,
 	kStrongEaseOut,
 } from '../../../../_styles/variables';
-import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
 import AppVendingMachineProduct from './_product/AppVendingMachineProduct.vue';
 import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
@@ -78,8 +74,6 @@ interface ProductChunk {
 
 const { isDark } = useThemeStore();
 const { coinBalance, joltbuxBalance } = useCommonStore();
-
-const balanceRefs = { coinBalance, joltbuxBalance };
 
 const modal = useModal()!;
 
@@ -178,16 +172,6 @@ onMounted(() => {
 	init();
 });
 
-function canPurchaseProduct(shopProduct: InventoryShopProductSale) {
-	return (
-		shopProduct.validPricings.filter(
-			i =>
-				!!i.knownCurrencyType &&
-				canAffordCurrency(i.knownCurrencyType, i.price, balanceRefs)
-		).length > 0
-	);
-}
-
 async function purchaseProduct(shopProduct: InventoryShopProductSale) {
 	if (productProcessing.value) {
 		return;
@@ -195,10 +179,7 @@ async function purchaseProduct(shopProduct: InventoryShopProductSale) {
 	const currencyOptions = shopProduct.validPricingsData;
 	const currencyOptionsList = Object.entries(currencyOptions);
 	if (currencyOptionsList.length === 0) {
-		showErrorGrowl($gettext(`This pack is not available for purchase right now.`));
-		return;
-	}
-	if (!canPurchaseProduct(shopProduct)) {
+		showErrorGrowl($gettext(`This item is not available for purchase right now.`));
 		return;
 	}
 
@@ -526,7 +507,6 @@ const currencyCardImgStyles: CSSProperties = {
 											>
 												<AppVendingMachineProduct
 													:shop-product="shopProduct"
-													:can-purchase="canPurchaseProduct(shopProduct)"
 													:disable-purchases="!!productProcessing"
 													@purchase="purchaseProduct($event)"
 												/>

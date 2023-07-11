@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs, useSlots } from 'vue';
-import { ComponentProps } from '../../../_common/component-helpers';
 import AppEditableOverlay from '../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';
 import { MediaItem } from '../../../_common/media-item/media-item-model';
@@ -36,9 +35,6 @@ const props = defineProps({
 	shouldAffixNav: {
 		type: Boolean,
 	},
-	spotlightDark: {
-		type: Boolean,
-	},
 	blurHeader: {
 		type: Boolean,
 	},
@@ -55,14 +51,6 @@ const props = defineProps({
 	},
 	showCoverButtons: {
 		type: Boolean,
-	},
-	spotlightWrapper: {
-		type: [Object, String] as PropType<any>,
-		default: 'div',
-	},
-	spotlightWrapperProps: {
-		type: Object as PropType<ComponentProps<any>>,
-		default: undefined,
 	},
 	/**
 	 * Used so we can override our `hasSlotName` computed properties, allowing
@@ -81,14 +69,11 @@ const {
 	coverEditable,
 	hideNav,
 	shouldAffixNav,
-	spotlightDark,
 	blurHeader,
 	colClasses,
 	autoscrollAnchorKey,
 	disableAutoscrollAnchor,
 	showCoverButtons,
-	spotlightWrapper,
-	spotlightWrapperProps,
 	overrideSlots,
 } = toRefs(props);
 
@@ -108,6 +93,7 @@ const hasSpotlight = computed(() => {
 	}
 	return !!slots['spotlight'];
 });
+
 const hasNav = computed(() => {
 	const override = overrideSlots?.value?.nav;
 	if (override !== undefined) {
@@ -115,6 +101,7 @@ const hasNav = computed(() => {
 	}
 	return !!slots['nav'];
 });
+
 const hasControls = computed(() => {
 	const override = overrideSlots?.value?.controls;
 	if (override !== undefined) {
@@ -218,30 +205,7 @@ const hasControls = computed(() => {
 				</div>
 
 				<div v-if="hasSpotlight" class="page-header-spotlight">
-					<component
-						:is="spotlightWrapper"
-						:style="{
-							width: `100%`,
-							height: `100%`,
-						}"
-						v-bind="spotlightWrapperProps"
-					>
-						<div
-							class="page-header-spotlight-bubble"
-							:style="{
-								zIndex: 2,
-							}"
-							:class="{ dark: spotlightDark }"
-						>
-							<div
-								:style="{
-									zIndex: 0,
-								}"
-							>
-								<slot name="spotlight" />
-							</div>
-						</div>
-					</component>
+					<slot name="spotlight" />
 				</div>
 			</div>
 		</section>
