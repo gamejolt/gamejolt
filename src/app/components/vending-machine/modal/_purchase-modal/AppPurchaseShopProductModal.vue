@@ -27,7 +27,7 @@ import { StickerPackOpenModal } from '../../../../../_common/sticker/pack/open-m
 import { UserStickerPack } from '../../../../../_common/sticker/pack/user-pack.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserAvatarFrame } from '../../../../../_common/user/user-avatar/frame/frame.model';
 import {
@@ -213,6 +213,17 @@ const showPackHelpDocsLink = computed(
 	() => !!joltbuxEntry.value && !!shopProduct.value.stickerPack
 );
 
+const headerLabel = computed(() => {
+	if (shopProduct.value.stickerPack) {
+		return $gettext(`Purchase sticker pack`);
+	} else if (shopProduct.value.avatarFrame) {
+		return $gettext(`Purchase avatar frame`);
+	} else if (shopProduct.value.background) {
+		return $gettext(`Purchase background`);
+	}
+	return $gettext(`Purchase item`);
+});
+
 /**
  * Purchases an inventory shop product using the specified Currency.
  */
@@ -263,7 +274,7 @@ function handleStickerPackPurchase(product: UserStickerPack) {
 	});
 }
 
-function getItemStyles(ratio: number) {
+function getItemWidthStyles(ratio: number) {
 	return {
 		...styleMaxWidthForOptions({
 			ratio,
@@ -283,29 +294,33 @@ function getItemStyles(ratio: number) {
 			</AppButton>
 		</div>
 
+		<div class="modal-header">
+			<h2 class="modal-title">
+				{{ headerLabel }}
+			</h2>
+		</div>
+
 		<div class="modal-body">
 			<div :style="styleFlexCenter({ direction: 'column' })">
 				<AppStickerPack
 					v-if="shopProduct.stickerPack"
-					:style="getItemStyles(StickerPackRatio)"
+					:style="getItemWidthStyles(StickerPackRatio)"
 					:pack="shopProduct.stickerPack"
 					:show-details="{
 						name: true,
 					}"
 				/>
-				<template v-else-if="shopProduct.avatarFrame">
+				<div v-else-if="shopProduct.product" :style="getItemWidthStyles(1)">
 					<AppUserAvatarBubble
-						:style="getItemStyles(1)"
+						v-if="shopProduct.avatarFrame"
 						:user="myUser"
 						:frame-override="shopProduct.avatarFrame"
 						show-frame
 						smoosh
 						disable-link
 					/>
-				</template>
-				<template v-else-if="shopProduct.background">
 					<AppBackground
-						:style="getItemStyles(1)"
+						v-else-if="shopProduct.background"
 						:background="shopProduct.background"
 						:backdrop-style="styleBorderRadiusLg"
 						:background-style="{
@@ -316,7 +331,17 @@ function getItemStyles(ratio: number) {
 					>
 						<AppAspectRatio :ratio="1" />
 					</AppBackground>
-				</template>
+
+					<div
+						v-if="shopProduct.product.name"
+						:style="{
+							marginTop: `8px`,
+							fontWeight: 700,
+						}"
+					>
+						{{ shopProduct.product.name }}
+					</div>
+				</div>
 
 				<AppSpacer vertical :scale="4" />
 

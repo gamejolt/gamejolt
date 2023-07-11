@@ -6,10 +6,14 @@ import { Model } from '../../model/model.service';
 import { StickerPack } from '../../sticker/pack/pack.model';
 import { InventoryShopProductSalePricing } from './inventory-shop-product-sale-pricing.model';
 
+interface ModelWithName extends Model {
+	name?: string;
+}
+
 export class InventoryShopProductSale implements ModelStoreModel {
 	declare id: number;
 	declare product_type: string;
-	declare product?: Model;
+	declare product?: ModelWithName;
 	declare pricings: InventoryShopProductSalePricing[];
 	declare starts_on?: number;
 	declare ends_on?: number;
