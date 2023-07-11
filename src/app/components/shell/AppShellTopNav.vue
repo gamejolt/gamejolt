@@ -7,11 +7,7 @@ import {
 } from '../../../_common/analytics/analytics.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { AppClientHistoryNavigator } from '../../../_common/client/safe-exports';
-import {
-	configInitialPackWatermark,
-	configShowStoreInMoreMenu,
-	ensureConfig,
-} from '../../../_common/config/config.service';
+import { configShowStoreInMoreMenu, ensureConfig } from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -41,7 +37,7 @@ const AppShellNotificationPopover = defineAsyncComponent(
 const AppShellAltMenuPopover = defineAsyncComponent(() => import('./AppShellAltMenuPopover.vue'));
 
 const { visibleLeftPane, hasCbar, unreadActivityCount, toggleCbarMenu } = useAppStore();
-const { isUserTimedOut, user, userBootstrapped } = useCommonStore();
+const { isUserTimedOut, user, userBootstrapped, showInitialPackWatermark } = useCommonStore();
 const { chat } = useGridStore();
 const { questActivityIds } = useQuestStore();
 
@@ -121,7 +117,7 @@ run(async () => {
 						{{ chat.roomNotificationsCount }}
 					</div>
 					<div
-						v-else-if="configInitialPackWatermark.value || questActivityIds.size > 0"
+						v-else-if="showInitialPackWatermark || questActivityIds.size > 0"
 						:style="{
 							width: `16px`,
 							height: `16px`,
