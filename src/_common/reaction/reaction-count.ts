@@ -76,44 +76,37 @@ export async function updateReactionCount(
 	deltas: UserDeltas,
 	emojiData: EmojiData
 ) {
-	const { delta_inc, delta_dec } = deltas;
 	const { emoji_id } = emojiData;
-	let countMod = delta_inc.length - delta_dec.length;
-
-	const existingReaction = model.reaction_counts.find(i => i.id === emoji_id);
+	const { delta_inc, delta_dec } = deltas;
 	const userReactingCount = delta_inc.filter(id => id === current_user_id).length;
 	const userUnreactingCount = delta_dec.filter(id => id === current_user_id).length;
+	let countMod = delta_inc.length - delta_dec.length;
 
-	let didReact = userReactingCount > 0;
-	let updateDidReactIndicator = false;
+	// get current user's nett count across tabs
+	let currUserNettCountChange = userReactingCount - userUnreactingCount;
 
-	if (existingReaction) {
-		// emoji.did_react will need to be updated if userReactingCount and userUnreactingCount are not equal
-		if (userReactingCount !== userUnreactingCount) {
-			didReact = !existingReaction.did_react;
-			updateDidReactIndicator = true;
-		} else {
-			didReact = existingReaction.did_react;
-		}
-	}
-
-	// we need to cancel out the self reactions made earlier in toggleReactionOnResource()
-	// as we the payload we receive from the grid will include our own reactions
+	// get reaction.count (countMod)
+	let pendingEmojiReaction = null;
 	const pendingReactions = ModelsPendingReactions.get(model);
 	if (pendingReactions && pendingReactions.length) {
-		const pendingEmojiReaction = pendingReactions.find(i => i.emoji_id === emoji_id);
-		if (pendingEmojiReaction) {
-			countMod = countMod - pendingEmojiReaction.count;
-			arrayRemove(pendingReactions, i => i.emoji_id === emoji_id);
+		pendingEmojiReaction = pendingReactions.find(i => i.emoji_id === emoji_id);
 
-			// having pendingEmojiReaction means we have reacted to this emoji in this client/tab,
-			// thus did_react indicator would have been updated locally
-			updateDidReactIndicator = false;
+		if (pendingEmojiReaction) {
+			// if there is a pending reaction for this emoji in curr tab,
+			// we should scrap it off the counts as it has been applied before in toggleReactionOnResource()
+			countMod -= pendingEmojiReaction.count;
+			currUserNettCountChange -= pendingEmojiReaction.count;
+			arrayRemove(pendingReactions, i => i.emoji_id === emoji_id);
 		}
 	}
 
-	// even if the nett count is 0, we still need to update the did_react state if the user's
-	// did_react state has been changed (user's reaction from diff tab)
+	// get reaction.did_react (didReact)
+	const updateDidReactIndicator = currUserNettCountChange !== 0;
+	const existingReaction = model.reaction_counts.find(i => i.id === emoji_id);
+	let didReact = existingReaction ? existingReaction.did_react : false;
+	if (updateDidReactIndicator) didReact = !didReact;
+
+	// we'll need UI update for either count update or did_react state change
 	if (countMod === 0 && !updateDidReactIndicator) {
 		return;
 	}
