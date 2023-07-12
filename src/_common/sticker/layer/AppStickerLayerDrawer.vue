@@ -335,6 +335,11 @@ function onContentDimensionsChanged() {
 
 	drawerHeight.value = Ruler.height(content.value);
 }
+
+function onClickPurchasePacks() {
+	closeStickerDrawer(stickerStore);
+	showVendingMachineModal();
+}
 </script>
 
 <template>
@@ -442,7 +447,7 @@ function onContentDimensionsChanged() {
 								</template>
 								<template v-else-if="hasLoaded">
 									<div class="text-center">
-										<p class="lead" style="padding: 0 16px">
+										<p class="lead" :style="{ padding: `0 16px` }">
 											{{
 												$gettext(
 													`Oh no! Looks like you don't have any stickers.`
@@ -450,9 +455,16 @@ function onContentDimensionsChanged() {
 											}}
 										</p>
 
-										<AppButton block trans @click="showVendingMachineModal()">
-											{{ $gettext(`Purchase packs`) }}
-										</AppButton>
+										<div
+											:style="{
+												padding: `0 16px`,
+												marginBottom: `8px`,
+											}"
+										>
+											<AppButton block solid @click="onClickPurchasePacks()">
+												{{ $gettext(`Purchase packs`) }}
+											</AppButton>
+										</div>
 									</div>
 								</template>
 								<template v-else>
