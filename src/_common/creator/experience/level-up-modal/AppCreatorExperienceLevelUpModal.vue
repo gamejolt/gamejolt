@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { PropType, onMounted, ref } from 'vue';
 import { styleAbsoluteFill, styleChangeBg } from '../../../../_styles/mixins';
-import AppUserAvatarBubble from '../../../../app/components/user/AppUserAvatarBubble.vue';
 import { sleep } from '../../../../utils/utils';
 import AppAspectRatio from '../../../aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../button/AppButton.vue';
@@ -10,6 +9,7 @@ import { useModal } from '../../../modal/modal.service';
 import AppCircularProgress from '../../../progress/AppCircularProgress.vue';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../store/common-store';
+import AppUserAvatarBubble from '../../../user/user-avatar/AppUserAvatarBubble.vue';
 import { CreatorExperienceLevel } from '../level.model';
 
 defineProps({
