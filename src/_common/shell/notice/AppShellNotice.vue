@@ -59,7 +59,18 @@ export const ShellNotice = reactive({
 </script>
 
 <script lang="ts" setup>
-defineProps({});
+defineProps({
+	// This meme is required to not break certain things. Don't remove it even
+	// though it's unused.
+	//
+	// Parent components complain if there's an empty [defineProps]. Vue breaks
+	// if this is empty and the tags end up going single-line. Adding an empty
+	// comment between the lines to prevent collapsing works fine, but I don't
+	// know if it'll still break outside of dev.
+	empty: {
+		type: Boolean,
+	},
+});
 </script>
 
 <template>
