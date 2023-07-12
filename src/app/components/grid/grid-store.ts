@@ -107,7 +107,9 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 
 		grid.value = newGrid;
 
-		_reapplyOnConnectedHandlers();
+		if (newGrid) {
+			_reapplyOnConnectedHandlers();
+		}
 	}
 
 	/**
@@ -128,7 +130,7 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 		// We unset the grid immediately to avoid a race condition where the
 		// grid is cleared multiple times and getting instantiated between the
 		// actual calls to destroy()
-		grid.value = undefined;
+		_setGrid(undefined);
 		await gridFrozen.disconnect();
 	}
 
@@ -160,32 +162,43 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 	 * - The exact same callback may be registered multiple times. It will be
 	 *   invoked multiple times in this case.
 	 */
-	function whenGridConnected(cb: GridOnConnectedHandler): DeregisterOnConnected {
+	function whenGridConnected(fn: GridOnConnectedHandler): DeregisterOnConnected {
 		// Make a connection handler.
 		const newHandler: OnConnectedHandler = {
-			fn: cb,
-			deregister: () => {},
+			fn,
+			deregister() {
+				arrayRemove(_onConnectedHandlers, i => i === newHandler);
+				if (newHandler.gridDeregister) {
+					newHandler.gridDeregister();
+					newHandler.gridDeregister = null;
+				}
+			},
 			gridDeregister: null,
 		};
-		newHandler.deregister = () => {
-			arrayRemove(_onConnectedHandlers, i => i === newHandler);
-			newHandler.gridDeregister?.();
-		};
 
+		// We push to this array so that if our grid instance gets swapped out
+		// before it has a chance to connect, we can reapply the handlers to the
+		// new grid instance.
 		_onConnectedHandlers.push(newHandler);
 
 		whenGridBootstrapped().then(curGrid => {
+			const generation = curGrid.socketController.cancelToken.value;
+
 			const cbSafe = () => {
 				// Protects against invoking closures from old grid clients.
-				if (curGrid !== grid.value) {
+				if (generation.isCanceled) {
 					return;
 				}
-				cb(curGrid);
+				fn(curGrid);
 			};
-			newHandler.gridDeregister = curGrid.registerOnConnected(cbSafe);
 
 			if (curGrid.connected) {
+				// If we're already connected, just invoke the callback.
 				cbSafe();
+			} else {
+				// Register our safe callback so it gets invoked when grid
+				// finished connecting.
+				newHandler.gridDeregister = curGrid.registerOnConnected(cbSafe);
 			}
 		});
 
@@ -196,10 +209,6 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 	 * Reapplies the connection handlers onto the current instance of grid.
 	 */
 	function _reapplyOnConnectedHandlers(): void {
-		if (!grid.value) {
-			throw new Error('Expected grid to be set by now');
-		}
-
 		const oldHandlers = _onConnectedHandlers;
 		_onConnectedHandlers = [];
 
