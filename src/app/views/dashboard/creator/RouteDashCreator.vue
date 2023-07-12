@@ -35,8 +35,8 @@ export default {
 		resolver: async () => {
 			try {
 				return await Api.sendFieldsRequest(
-					`/mobile/dash/creators/experience`,
-					{ experience: true },
+					`/mobile/me`,
+					{ creatorExperience: true },
 					{ noErrorRedirect: true }
 				);
 			} catch (error) {
@@ -50,7 +50,7 @@ export default {
 };
 
 interface InitPayload {
-	experience: ModelData<CreatorExperience> | null;
+	creatorExperience: ModelData<CreatorExperience> | null;
 }
 </script>
 
@@ -62,8 +62,8 @@ const experience = ref<CreatorExperience | null>(null);
 const { isBootstrapped } = createAppRoute({
 	routeTitle: computed(() => $gettext(`Creator HUD`)),
 	onResolved({ payload }: { payload: InitPayload }) {
-		if (payload.experience) {
-			experience.value = new CreatorExperience(payload.experience);
+		if (payload.creatorExperience) {
+			experience.value = new CreatorExperience(payload.creatorExperience);
 		} else {
 			experience.value = null;
 		}
