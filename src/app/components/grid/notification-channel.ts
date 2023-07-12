@@ -41,6 +41,8 @@ interface JoinPayload {
 	newQuestIds: number[];
 	questActivityIds: number[];
 	charge: ChargeData;
+	coinBalance: number;
+	buxBalance: number;
 }
 
 interface NewNotificationPayload {
@@ -169,6 +171,9 @@ export function createGridNotificationChannel(
 			const questStore = appStore.getQuestStore();
 			questStore.addNewQuestIds(payload.newQuestIds);
 			questStore.addQuestActivityIds(payload.questActivityIds);
+
+			commonStore.coinBalance.value = payload.coinBalance;
+			commonStore.joltbuxBalance.value = payload.buxBalance;
 
 			const {
 				charge,
