@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue';
+import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments, illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -9,6 +10,7 @@ import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { numberSort } from '../../../../utils/array';
 import { run } from '../../../../utils/utils';
+import { useAppStore } from '../../../store/index';
 import { fetchAllQuests, useQuestStore } from '../../../store/quest';
 import AppDailyQuests from '../../quest/AppDailyQuests.vue';
 import AppQuestLogItem from './_quests/AppQuestLogItem.vue';
@@ -36,9 +38,29 @@ interface QuestChunk {
 	quests: Quest[];
 }
 
+const { toggleLeftPane } = useAppStore();
 const questStore = useQuestStore();
-const { isLoading, hasLoaded, dailyQuests, allQuests, newQuestIdsForView, activeQuestId } =
-	questStore;
+const {
+	isLoading,
+	hasLoaded,
+	dailyQuests,
+	allQuests,
+	newQuestIdsForView,
+	activeQuest,
+	activeQuestId,
+} = questStore;
+
+useEscapeStack(() => {
+	const hadQuestWindow = !!activeQuest.value;
+	// Clear out the [activeQuest], closing the quest window.
+	activeQuest.value = undefined;
+
+	// Mobile sizes should close the quest window before closing the sidebar.
+	// Desktop should close the sidebar always.
+	if (!hadQuestWindow || Screen.isDesktop) {
+		toggleLeftPane('');
+	}
+});
 
 const questChunks = computed(() => {
 	const items = allQuests.value

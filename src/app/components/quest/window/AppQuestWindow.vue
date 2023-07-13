@@ -41,6 +41,7 @@ import {
 	kWeakEaseOut,
 } from '../../../../_styles/variables';
 import { numberSort } from '../../../../utils/array';
+import { useAppStore } from '../../../store/index';
 import { useQuestStore } from '../../../store/quest';
 import AppShellWindow from '../../shell/window/AppShellWindow.vue';
 import AppQuestTimer from '../AppQuestTimer.vue';
@@ -58,6 +59,7 @@ const props = defineProps({
 
 const { questId, resource } = toRefs(props);
 
+const { toggleLeftPane } = useAppStore();
 const { clearNewQuestIds, clearQuestActivityIds, activeQuest, activeQuestId } = useQuestStore();
 
 const isLoading = ref(false);
@@ -200,9 +202,16 @@ onUnmounted(async () => {
 	}
 });
 
-function close() {
+function closeQuests() {
 	// Causes the shell to v-if this away.
 	activeQuest.value = undefined;
+
+	// Close the sidebar only for breakpoints that always show it. Mobile
+	// breakpoints have the quest window overlay everything, so we should keep
+	// the sidebar open.
+	if (Screen.isDesktop) {
+		toggleLeftPane('');
+	}
 }
 
 function onNewQuest(data: Quest) {
@@ -235,7 +244,7 @@ const fillStyles: CSSProperties = {
 </script>
 
 <template>
-	<AppShellWindow :close-callback="close" avoid-sidebar="md-up">
+	<AppShellWindow :close-callback="closeQuests" avoid-sidebar="md-up">
 		<template #default="{ borderRadius }">
 			<!--
 				Don't include this within the [AppLoadingFade], otherwise we
@@ -252,7 +261,7 @@ const fillStyles: CSSProperties = {
 					zIndex: 2,
 				}"
 			>
-				<AppButton overlay @click="close">
+				<AppButton overlay @click="closeQuests">
 					<AppTranslate>Close</AppTranslate>
 				</AppButton>
 			</div>
@@ -514,7 +523,7 @@ const fillStyles: CSSProperties = {
 										}}
 										<AppSpacer vertical :scale="4" />
 
-										<AppButton block @click="close">
+										<AppButton block @click="closeQuests">
 											{{ $gettext(`Close`) }}
 										</AppButton>
 									</AppIllustration>
