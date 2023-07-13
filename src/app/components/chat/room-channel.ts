@@ -381,18 +381,26 @@ export function createChatRoomChannel(
 
 	function _onUpdateReaction(payload: UpdateChatMessageReactionPayload) {
 		const message = getModel(ChatMessage, payload.chat_message_id!);
-		if (message === undefined) {
+		if (!message) {
 			return;
 		}
 
 		for (const emojiDelta of payload.deltas) {
+			const {
+				delta_dec,
+				delta_inc,
+				emoji_id,
+				emoji_img_url,
+				emoji_prefix,
+				emoji_short_name,
+			} = emojiDelta;
 			updateReactionCount(
 				{
 					current_user_id: client.currentUser ? client.currentUser.id : 0,
 					model: message,
 				},
-				emojiDelta,
-				emojiDelta
+				{ delta_inc, delta_dec },
+				{ emoji_id, emoji_img_url, emoji_prefix, emoji_short_name }
 			);
 		}
 	}

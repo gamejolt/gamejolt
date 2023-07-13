@@ -100,7 +100,9 @@ export async function updateReactionCount(
 	const updateDidReactIndicator = currUserNettCountChange !== 0;
 	const existingReaction = model.reaction_counts.find(i => i.id === emoji_id);
 	let didReact = existingReaction ? existingReaction.did_react : false;
-	if (updateDidReactIndicator) didReact = !didReact;
+	if (updateDidReactIndicator) {
+		didReact = !didReact;
+	}
 
 	// we'll need UI update for either count update or did_react state change
 	if (countMod === 0 && !updateDidReactIndicator) {
@@ -217,7 +219,7 @@ export async function toggleReactionOnResource({
 			pendingEmojiReaction.count = pendingEmojiReaction.count + countMod;
 		} else {
 			pendingReactions.push({ emoji_id: emojiId, count: countMod });
-			ModelsPendingReactions.set(model, pendingReactions); // is this needed?
+			ModelsPendingReactions.set(model, pendingReactions);
 		}
 
 		const action = isReacting ? 'react' : 'unreact';
@@ -266,7 +268,13 @@ export async function toggleReactionOnResource({
 		if (pendingEmojiReaction) {
 			// revert current failed attempt of reacting to the emoji.
 			// the emoji might have pending reactions from earlier successful attempts which we want to preserve.
-			pendingEmojiReaction.count = pendingEmojiReaction.count - countMod;
+			pendingEmojiReaction.count -= countMod;
+
+			// If our revert brings the count to 0, we can remove the emoji from
+			// the pending queue.
+			if (pendingEmojiReaction.count === 0) {
+				arrayRemove(pendingReactions, i => i.emoji_id === emojiId);
+			}
 		}
 
 		const revertOnExistingReaction = existingReaction

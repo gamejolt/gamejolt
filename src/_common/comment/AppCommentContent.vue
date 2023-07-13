@@ -49,6 +49,7 @@ const showFullContent = ref(false);
 		<a
 			v-if="canToggleContent"
 			v-app-track-event="`comment-widget:toggle-full-content`"
+			class="hidden-text-expander"
 			:style="{
 				marginBottom: kFontSizeBase.px,
 			}"

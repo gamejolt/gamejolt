@@ -33,13 +33,22 @@ export function createGridCommentChannel(client: GridClient, { userId }: { userI
 		}
 
 		for (const emojiDelta of payload.deltas) {
+			const {
+				delta_dec,
+				delta_inc,
+				emoji_id,
+				emoji_img_url,
+				emoji_prefix,
+				emoji_short_name,
+			} = emojiDelta;
+
 			updateReactionCount(
 				{
 					current_user_id: userId,
 					model: comment,
 				},
-				emojiDelta,
-				emojiDelta
+				{ delta_inc, delta_dec },
+				{ emoji_id, emoji_img_url, emoji_prefix, emoji_short_name }
 			);
 		}
 	}
@@ -47,6 +56,7 @@ export function createGridCommentChannel(client: GridClient, { userId }: { userI
 	function startListeningToCommentsReactions(data: CommentTopicPayload) {
 		return channelController.push('follow_comment', data);
 	}
+
 	function stopListeningToCommentsReactions(data: CommentTopicPayload) {
 		return channelController.push('unfollow_comment', data);
 	}

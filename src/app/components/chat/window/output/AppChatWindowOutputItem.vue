@@ -68,10 +68,6 @@ const props = defineProps({
 		type: Array as PropType<PopperPlacementType[]>,
 		default: undefined,
 	},
-	canReact: {
-		type: Boolean,
-		default: true,
-	},
 });
 
 const emit = defineEmits({
@@ -79,7 +75,7 @@ const emit = defineEmits({
 	hidePopper: () => true,
 });
 
-const { message, room, maxContentWidth, canReact } = toRefs(props);
+const { message, room, maxContentWidth } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
 
 const avatarSizeStyles: CSSProperties = {
@@ -136,9 +132,7 @@ const messageState = computed<{ icon?: Jolticon; display: string; tooltip?: stri
 	return null;
 });
 
-const shouldShowMessageOptions = computed(
-	() => canRemoveMessage.value || canEditMessage.value || canReact.value
-);
+const shouldShowMessageOptions = computed(() => canRemoveMessage.value || canEditMessage.value);
 
 const dataAnchorWidth = computed(() => {
 	const itemWidth = 40;
@@ -149,14 +143,12 @@ const dataAnchorWidth = computed(() => {
 		return itemWidth;
 	}
 
-	let itemCount = 0;
+	// Chat messages can always be reacted to, so we'll always have at least one item.
+	let itemCount = 1;
 	if (canRemoveMessage.value) {
 		++itemCount;
 	}
 	if (canEditMessage.value) {
-		++itemCount;
-	}
-	if (canReact.value) {
 		++itemCount;
 	}
 	if (!itemCount) {
@@ -383,7 +375,7 @@ async function onMessageClick() {
 					<div v-if="message.reaction_counts.length">
 						<AppReactionList
 							:model="message"
-							:click-action="canReact ? 'toggle' : undefined"
+							click-action="toggle"
 							context-action="show-details"
 							sans-margin-bottom
 						/>
@@ -435,7 +427,6 @@ async function onMessageClick() {
 								</a>
 
 								<a
-									v-if="canReact"
 									v-app-tooltip="$gettext('Add Reaction')"
 									class="-message-actions-item"
 									@click="selectReactionForResource(message)"
@@ -642,8 +633,6 @@ $-min-item-width = 24px
 .-overlay-text
 	color: white
 	overlay-text-shadow()
-
-
 
 // Desktop (mouse)
 @media not screen and (pointer: coarse)

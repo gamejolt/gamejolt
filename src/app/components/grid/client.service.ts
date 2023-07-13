@@ -10,6 +10,7 @@ import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { FiresideStreamNotification } from '../../../_common/fireside/stream-notification/stream-notification.model';
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
+import { ModelStoreModel } from '../../../_common/model/model-store.service';
 import { Model } from '../../../_common/model/model.service';
 import { Notification } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
@@ -44,7 +45,7 @@ import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
 import { GridNotificationChannel, createGridNotificationChannel } from './notification-channel';
 
-export const onFiresideStart = new EventTopic<Model>();
+export const onFiresideStart = new EventTopic<Model | ModelStoreModel>();
 
 type ClearNotificationsType =
 	// For the user's activity feed.
