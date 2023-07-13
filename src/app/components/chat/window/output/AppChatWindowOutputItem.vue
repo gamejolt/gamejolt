@@ -132,7 +132,9 @@ const messageState = computed<{ icon?: Jolticon; display: string; tooltip?: stri
 	return null;
 });
 
-const shouldShowMessageOptions = computed(() => canRemoveMessage.value || canEditMessage.value);
+const shouldShowMessageOptions = computed(
+	() => canRemoveMessage.value || canReactToMessage.value || canEditMessage.value
+);
 
 const dataAnchorWidth = computed(() => {
 	const itemWidth = 40;
@@ -143,12 +145,14 @@ const dataAnchorWidth = computed(() => {
 		return itemWidth;
 	}
 
-	// Chat messages can always be reacted to, so we'll always have at least one item.
-	let itemCount = 1;
+	let itemCount = 0;
 	if (canRemoveMessage.value) {
 		++itemCount;
 	}
 	if (canEditMessage.value) {
+		++itemCount;
+	}
+	if (canReactToMessage.value) {
 		++itemCount;
 	}
 	if (!itemCount) {
@@ -174,7 +178,7 @@ const canRemoveMessage = computed(() => {
 	return userCanModerateOtherUser(room.value, chat.value.currentUser, message.value.user);
 });
 
-const canEditMessage = computed(() => {
+const canReactToMessage = computed(() => {
 	if (message.value.is_automated) {
 		return false;
 	}
@@ -188,8 +192,16 @@ const canEditMessage = computed(() => {
 		return false;
 	}
 
+	return true;
+});
+
+const canEditMessage = computed(() => {
+	if (!canReactToMessage.value) {
+		return false;
+	}
+
 	// Only the owner of the message can edit.
-	return chat.value.currentUser.id === message.value.user.id;
+	return !!chat.value.currentUser && chat.value.currentUser.id === message.value.user.id;
 });
 
 const roleData = computed(() =>
@@ -409,6 +421,15 @@ async function onMessageClick() {
 							</template>
 							<template v-else>
 								<a
+									v-if="canReactToMessage"
+									v-app-tooltip="$gettext('Add reaction')"
+									class="-message-actions-item"
+									@click="selectReactionForResource(message)"
+								>
+									<AppJolticon icon="add-reaction" />
+								</a>
+
+								<a
 									v-if="canEditMessage"
 									v-app-tooltip="$gettext('Edit message')"
 									class="-message-actions-item"
@@ -424,14 +445,6 @@ async function onMessageClick() {
 									@click="removeMessage"
 								>
 									<AppJolticon icon="trash-can" />
-								</a>
-
-								<a
-									v-app-tooltip="$gettext('Add Reaction')"
-									class="-message-actions-item"
-									@click="selectReactionForResource(message)"
-								>
-									<AppJolticon icon="add-reaction" />
 								</a>
 							</template>
 						</div>
