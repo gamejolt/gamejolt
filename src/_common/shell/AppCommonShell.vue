@@ -5,15 +5,17 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppBackdropPortal from '../backdrop/AppBackdropPortal.vue';
+import { defineAsyncComponent } from 'vue';
 import AppGrowls from '../growls/AppGrowls.vue';
-import AppLightboxPortal from '../lightbox/AppLightboxPortal.vue';
-import AppLoadingBar from '../loading/bar/bar.vue';
-import AppModalPortal from '../modal/AppModalPortal.vue';
 import AppScrollInviewParent from '../scroll/inview/AppScrollInviewParent.vue';
 import AppTheme from '../theme/AppTheme.vue';
-import AppTooltipPortal from '../tooltip/AppTooltipPortal.vue';
-import AppShellNotice from './notice/AppShellNotice.vue';
+
+const AppLoadingBar = defineAsyncComponent(() => import('../loading/bar/bar.vue'));
+const AppBackdropPortal = defineAsyncComponent(() => import('../backdrop/AppBackdropPortal.vue'));
+const AppLightboxPortal = defineAsyncComponent(() => import('../lightbox/AppLightboxPortal.vue'));
+const AppModalPortal = defineAsyncComponent(() => import('../modal/AppModalPortal.vue'));
+const AppTooltipPortal = defineAsyncComponent(() => import('../tooltip/AppTooltipPortal.vue'));
+const AppShellNotice = defineAsyncComponent(() => import('./notice/AppShellNotice.vue'));
 </script>
 
 <template>

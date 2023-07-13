@@ -3,17 +3,13 @@ import { CSSProperties, PropType, computed, onMounted, ref, toRefs } from 'vue';
 import { kFontSizeTiny } from '../../../../_styles/variables';
 import { sleep } from '../../../../utils/utils';
 import AppCircularProgress from '../../../progress/AppCircularProgress.vue';
-import { $gettext } from '../../../translate/translate.service';
-import { CreatorExperienceNotice, ShellNotice } from '../AppShellNotice.vue';
+import { $gettext, $gettextInterpolate } from '../../../translate/translate.service';
 import AppShellNoticeBase from '../_base/AppShellNoticeBase.vue';
+import { CreatorExperienceNotice, getShellNotice } from '../notice.service';
 
 const props = defineProps({
 	noticeId: {
 		type: Number,
-		required: true,
-	},
-	message: {
-		type: String,
 		required: true,
 	},
 	data: {
@@ -22,7 +18,7 @@ const props = defineProps({
 	},
 });
 
-const { noticeId, message, data } = toRefs(props);
+const { noticeId, data } = toRefs(props);
 
 interface PercentContent {
 	percent: number;
@@ -67,6 +63,23 @@ const creatorLevelUpData = computed(() => {
 // initial values.
 const { previousLevel, previousPercent } = creatorLevelUpData.value;
 percentData.value = { percent: previousPercent, text: previousLevel };
+
+const message = computed(() => {
+	const {
+		leveledUp,
+		experience: { current_level },
+		xpGained,
+	} = data.value;
+
+	if (leveledUp) {
+		return $gettextInterpolate(`Level up! You are now level %{ level }.`, {
+			level: current_level,
+		});
+	}
+	return $gettextInterpolate(`You gained %{ xpGained } experience.`, {
+		xpGained,
+	});
+});
 
 const subtext = computed(() => {
 	const messages: string[] = [];
@@ -133,7 +146,7 @@ async function afterIntroTransition() {
 }
 
 function closeNotice() {
-	ShellNotice.remove(noticeId.value);
+	getShellNotice().remove(noticeId.value);
 }
 </script>
 

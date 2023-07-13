@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import { Ref, computed, onMounted, ref, toRefs } from 'vue';
+import { Ref, computed, ref, toRefs } from 'vue';
 import { styleAbsoluteFill, styleFlexCenter, styleWhen } from '../../_styles/mixins';
 import { kBorderWidthLg } from '../../_styles/variables';
-import { debounceWithMaxTimeout } from '../../utils/utils';
+import { useResizeObserver } from '../../utils/resize-observer';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { vAppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
 import { kThemeFg10, kThemePrimary } from '../theme/variables';
 
 const props = defineProps({
@@ -29,7 +28,7 @@ const emit = defineEmits({
 });
 
 const root = ref() as Ref<HTMLDivElement>;
-const parentSize = ref<number>(0);
+const parentSize = ref(0);
 
 /**
  * NOTE: Formatting was breaking due to a non-null assertion in the template.
@@ -43,21 +42,15 @@ const radius = computed(() => parentSize.value / 2 - strokeWidth.value / 2);
 
 const indeterminate = computed(() => typeof percent?.value !== 'number');
 
-onMounted(() => {
-	parentSize.value = root.value.clientWidth;
+useResizeObserver({
+	target: root,
+	callback: entries => (parentSize.value = entries[0].contentRect.width),
 });
-
-function onDimensionsChanged(entries: ResizeObserverEntry[]) {
-	parentSize.value = entries[0].contentRect.width;
-}
-
-const debounceDimensionsChanged = debounceWithMaxTimeout(onDimensionsChanged, 100, 500);
 </script>
 
 <template>
 	<div
 		ref="root"
-		v-app-observe-dimensions="debounceDimensionsChanged.call"
 		:style="{
 			width: `100%`,
 		}"

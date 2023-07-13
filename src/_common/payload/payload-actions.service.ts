@@ -1,79 +1,53 @@
 import { CreatorExperience } from '../creator/experience/experience.model';
 import { UnknownModelData } from '../model/model.service';
-import { ShellNotice } from '../shell/notice/AppShellNotice.vue';
+import { getShellNotice } from '../shell/notice/notice.service';
 import { StickerPackOpenModal } from '../sticker/pack/open-modal/modal.service';
 import { UserStickerPack } from '../sticker/pack/user-pack.model';
 
-export const PayloadAction = {
-	UNLOCK_STICKER_PACK: 'unlock-sticker-pack',
-	GAIN_CREATOR_EXPERIENCE: 'gain-creator-experience',
-} as const;
+interface PayloadData {
+	actions?: (PackAction | CreatorExperienceAction)[];
+}
 
-export const PayloadActionDataFields = {
-	'unlock-sticker-pack': {
-		pack: 'user_sticker_pack',
-	},
-	'gain-creator-experience': {
-		experience: 'experience',
-		leveledUp: 'leveled_up',
-		xpGained: 'xp_gained',
-	},
-} as const;
+interface PackAction {
+	type: 'unlock-sticker-pack';
+	data: {
+		user_sticker_pack: UnknownModelData;
+	};
+}
 
-export const PayloadActionData = {
-	[PayloadAction.UNLOCK_STICKER_PACK]: (data: any) => {
-		const { pack } = PayloadActionDataFields['unlock-sticker-pack'];
-		return {
-			pack: data[pack],
-		} as {
-			pack: UnknownModelData;
-		};
-	},
-	[PayloadAction.GAIN_CREATOR_EXPERIENCE]: (data: any) => {
-		const { experience, leveledUp, xpGained } =
-			PayloadActionDataFields['gain-creator-experience'];
-		return {
-			experience: data[experience],
-			leveledUp: data[leveledUp] === true,
-			xpGained: data[xpGained] ?? 0,
-		} as {
-			experience: UnknownModelData;
-			leveledUp: boolean;
-			xpGained: number;
-		};
-	},
-} as const;
+interface CreatorExperienceAction {
+	type: 'gain-creator-experience';
+	data: {
+		experience: number;
+		leveled_up: boolean;
+		xp_gained: number;
+	};
+}
 
-export default function checkPayloadActions(payload: any) {
+export default function handlePayloadActions(payload: PayloadData) {
 	if (!payload || !payload.actions) {
 		return;
 	}
 
-	if (!Array.isArray(payload.actions)) {
-		return;
-	}
-
-	const actions: any[] = payload.actions;
-	for (const { type, data } of actions) {
+	for (const { type, data } of payload.actions) {
 		switch (type) {
-			case PayloadAction.UNLOCK_STICKER_PACK: {
-				const payloadData = PayloadActionData[PayloadAction.UNLOCK_STICKER_PACK](data);
-				if (payloadData.pack) {
-					StickerPackOpenModal.show({
-						pack: new UserStickerPack(payloadData.pack),
-					});
-				}
+			case 'unlock-sticker-pack': {
+				const { user_sticker_pack } = data;
+
+				StickerPackOpenModal.show({
+					pack: new UserStickerPack(user_sticker_pack),
+				});
 				break;
 			}
 
-			case PayloadAction.GAIN_CREATOR_EXPERIENCE: {
-				const { experience, leveledUp, xpGained } =
-					PayloadActionData[PayloadAction.GAIN_CREATOR_EXPERIENCE](data);
+			case 'gain-creator-experience': {
+				const { experience, leveled_up, xp_gained } = data;
 
-				ShellNotice.addCreatorExperience({
+				getShellNotice().addNotice({
+					type: 'creator-experience',
 					experience: new CreatorExperience(experience),
-					leveledUp,
-					xpGained,
+					leveledUp: leveled_up,
+					xpGained: xp_gained,
 				});
 				break;
 			}

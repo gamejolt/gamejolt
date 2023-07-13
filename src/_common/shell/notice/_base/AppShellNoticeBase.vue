@@ -14,7 +14,9 @@ import { Screen } from '../../../screen/screen-service';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import { kThemeFg10, kThemeFgMuted, kThemeGjOverlayNotice } from '../../../theme/variables';
 import { $gettext } from '../../../translate/translate.service';
-import { ShellNotice } from '../AppShellNotice.vue';
+import { getShellNotice } from '../notice.service';
+
+const { remove: removeShellNoticeItem } = getShellNotice();
 
 const props = defineProps({
 	noticeId: {
@@ -55,7 +57,7 @@ watch(
 	ms => {
 		if (ms && !autoCloseTimeout) {
 			autoCloseTimeout = setTimeout(() => {
-				ShellNotice.remove(noticeId.value);
+				removeShellNoticeItem(noticeId.value);
 			}, ms);
 		}
 	}
@@ -64,7 +66,7 @@ watch(
 onMounted(() => {
 	if (autoCloseMs?.value) {
 		autoCloseTimeout = setTimeout(() => {
-			ShellNotice.remove(noticeId.value);
+			removeShellNoticeItem(noticeId.value);
 		}, autoCloseMs.value);
 	}
 });
@@ -74,7 +76,7 @@ function onClick() {
 		clearTimeout(autoCloseTimeout);
 		autoCloseTimeout = undefined;
 	}
-	ShellNotice.remove(noticeId.value);
+	removeShellNoticeItem(noticeId.value);
 }
 </script>
 
