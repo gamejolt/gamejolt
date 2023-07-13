@@ -13,6 +13,17 @@ import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop
 import { StickerPack } from './pack.model';
 
 export const StickerPackRatio = 2 / 3;
+
+export const StickerPackExpiryStyles: CSSProperties = {
+	...styleChangeBgRgba(`0, 0, 0`, 0.54),
+	...styleBorderRadiusLg,
+	position: `absolute`,
+	padding: `2px 6px`,
+	color: `white`,
+	fontWeight: 700,
+	right: `4px`,
+	top: `4px`,
+};
 </script>
 
 <script lang="ts" setup>
@@ -61,15 +72,6 @@ function onClickPack() {
 		emit('clickPack');
 	}
 }
-
-const overlayedStyle: CSSProperties = {
-	...styleChangeBgRgba(`0, 0, 0`, 0.54),
-	...styleBorderRadiusLg,
-	position: `absolute`,
-	padding: `2px 6px`,
-	color: `white`,
-	fontWeight: 700,
-};
 </script>
 
 <template>
@@ -105,14 +107,7 @@ const overlayedStyle: CSSProperties = {
 				</AppAspectRatio>
 			</component>
 
-			<div
-				v-if="expiryInfo"
-				:style="{
-					...overlayedStyle,
-					right: `4px`,
-					top: `4px`,
-				}"
-			>
+			<div v-if="expiryInfo" :style="StickerPackExpiryStyles">
 				{{
 					shorthandReadableTime(expiryInfo, {
 						allowFuture: true,
