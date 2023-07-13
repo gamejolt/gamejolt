@@ -1,5 +1,7 @@
 import { computed, reactive, shallowReadonly } from 'vue';
+import { Router } from 'vue-router';
 import { importNoSSR } from '../../../_common/code-splitting';
+import { CurrencyType } from '../../../_common/currency/currency-type';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
@@ -13,8 +15,6 @@ import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { addNewQuestIds, addQuestActivityIds } from '../../store/quest';
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
 import { GridClient, onFiresideStart } from './client.service';
-
-import { Router } from 'vue-router';
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
 
 export type GridNotificationChannel = ReturnType<typeof createGridNotificationChannel>;
@@ -42,6 +42,8 @@ interface JoinPayload {
 	newQuestIds: number[];
 	questActivityIds: number[];
 	charge: ChargeData;
+	coinBalance: number;
+	buxBalance: number;
 }
 
 interface NewNotificationPayload {
@@ -93,6 +95,11 @@ interface PostUpdatedPayload {
 	was_scheduled: boolean;
 }
 
+interface WalletUpdatedPayload {
+	identifier: string;
+	available_balance: number;
+}
+
 // from community channel
 interface FeaturePayload {
 	community_id: string;
@@ -129,6 +136,7 @@ export function createGridNotificationChannel(
 	channelController.listenTo('new-notification', _onNewNotification);
 	channelController.listenTo('clear-notifications', _onClearNotifications);
 	channelController.listenTo('post-updated', _onPostUpdated);
+	channelController.listenTo('wallet-updated', _onWalletUpdated);
 
 	// from community channel
 	channelController.listenTo('feature', _onFeature);
@@ -164,6 +172,9 @@ export function createGridNotificationChannel(
 			const questStore = appStore.getQuestStore();
 			addNewQuestIds(questStore, payload.newQuestIds);
 			addQuestActivityIds(questStore, payload.questActivityIds);
+
+			commonStore.coinBalance.value = payload.coinBalance;
+			commonStore.joltbuxBalance.value = payload.buxBalance;
 
 			const {
 				charge,
@@ -285,6 +296,14 @@ export function createGridNotificationChannel(
 				post,
 				payload.was_scheduled ? 'scheduled-publish' : 'publish'
 			);
+		}
+	}
+
+	function _onWalletUpdated(payload: WalletUpdatedPayload) {
+		if (payload.identifier === CurrencyType.coins.id) {
+			commonStore.coinBalance.value = payload.available_balance;
+		} else if (payload.identifier === CurrencyType.joltbux.id) {
+			commonStore.joltbuxBalance.value = payload.available_balance;
 		}
 	}
 
