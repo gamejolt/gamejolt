@@ -2,6 +2,7 @@ import { Collaborator } from '../collaborator/collaborator.model';
 import { Comment } from '../comment/comment-model';
 import { Community } from '../community/community.model';
 import { CommunityUserNotification } from '../community/user-notification/user-notification.model';
+import { CreatorExperienceLevel } from '../creator/experience/level.model';
 import { EventItem } from '../event-item/event-item.model';
 import { FiresideCommunity } from '../fireside/community/community.model';
 import { Fireside } from '../fireside/fireside.model';
@@ -54,6 +55,7 @@ export class Notification extends Model {
 	static TYPE_CHARGED_STICKER = 'charged-sticker';
 	static TYPE_SUPPORTER_MESSAGE = 'supporter-message';
 	static TYPE_POLL_ENDED = 'poll-ended';
+	static TYPE_CREATOR_LEVEL_UP = 'creator-level-up';
 	static TYPE_UNLOCKED_AVATAR_FRAME = 'unlocked-avatar-frame';
 
 	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
@@ -77,6 +79,7 @@ export class Notification extends Model {
 		Notification.TYPE_CHARGED_STICKER,
 		Notification.TYPE_SUPPORTER_MESSAGE,
 		Notification.TYPE_POLL_ENDED,
+		Notification.TYPE_CREATOR_LEVEL_UP,
 		Notification.TYPE_UNLOCKED_AVATAR_FRAME,
 	];
 
@@ -114,6 +117,7 @@ export class Notification extends Model {
 		| StickerPlacement
 		| SupporterAction
 		| Poll
+		| CreatorExperienceLevel
 		| UserAvatarFrame;
 
 	to_resource!: string | null;
@@ -234,6 +238,8 @@ export class Notification extends Model {
 			this.is_user_based = true;
 		} else if (this.type === Notification.TYPE_POLL_ENDED) {
 			this.action_model = new Poll(data.action_resource_model);
+		} else if (this.type === Notification.TYPE_CREATOR_LEVEL_UP) {
+			this.action_model = new CreatorExperienceLevel(data.action_resource_model);
 		} else if (this.type === Notification.TYPE_UNLOCKED_AVATAR_FRAME) {
 			this.action_model = new UserAvatarFrame(data.action_resource_model);
 		}
@@ -278,25 +284,42 @@ Model.create(Notification);
 /**
  * Map of {@link Notification.NOTIFICATION_FEED_TYPES} and their readable
  * translated labels.
+ *
+ * Only returns labels the user should be able to see.
  */
-export const NOTIFICATION_FEED_TYPE_LABELS = {
-	[Notification.TYPE_COMMENT_ADD]: $gettext(`Comment replies`),
-	[Notification.TYPE_COMMENT_ADD_OBJECT_OWNER]: $gettext(`Comments on your content`),
-	[Notification.TYPE_FORUM_POST_ADD]: $gettext(`Forum posts`),
-	[Notification.TYPE_FRIENDSHIP_ACCEPT]: $gettext(`Accepted friend requests`),
-	[Notification.TYPE_GAME_RATING_ADD]: $gettext(`Game ratings`),
-	[Notification.TYPE_GAME_FOLLOW]: $gettext(`Game follows`),
-	[Notification.TYPE_POST_FEATURED_IN_COMMUNITY]: $gettext(`Post featured`),
-	[Notification.TYPE_SELLABLE_SELL]: $gettext(`Sales`),
-	[Notification.TYPE_USER_FOLLOW]: $gettext(`Follows`),
-	[Notification.TYPE_MENTION]: $gettext(`Mentions`),
-	[Notification.TYPE_COLLABORATOR_INVITE]: $gettext(`Collaborator invites`),
-	[Notification.TYPE_GAME_TROPHY_ACHIEVED]: $gettext(`Game trophies`),
-	[Notification.TYPE_SITE_TROPHY_ACHIEVED]: $gettext(`Site trophies`),
-	[Notification.TYPE_COMMUNITY_USER_NOTIFICATION]: $gettext(`Community actions`),
-	[Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY]: $gettext(`Community featured firesides`),
-	[Notification.TYPE_QUEST_NOTIFICATION]: $gettext(`Quests`),
-	[Notification.TYPE_CHARGED_STICKER]: $gettext(`Charged stickers`),
-	[Notification.TYPE_SUPPORTER_MESSAGE]: $gettext(`Creator thank-you messages`),
-	[Notification.TYPE_POLL_ENDED]: $gettext(`Polls`),
-} as const;
+export function getNotificationFeedTypeLabels(user: User) {
+	const labels = {
+		[Notification.TYPE_COMMENT_ADD]: $gettext(`Comment replies`),
+		[Notification.TYPE_COMMENT_ADD_OBJECT_OWNER]: $gettext(`Comments on your content`),
+		[Notification.TYPE_FORUM_POST_ADD]: $gettext(`Forum posts`),
+		[Notification.TYPE_FRIENDSHIP_ACCEPT]: $gettext(`Accepted friend requests`),
+		[Notification.TYPE_POST_FEATURED_IN_COMMUNITY]: $gettext(`Post featured`),
+		[Notification.TYPE_USER_FOLLOW]: $gettext(`Follows`),
+		[Notification.TYPE_MENTION]: $gettext(`Mentions`),
+		[Notification.TYPE_COLLABORATOR_INVITE]: $gettext(`Collaborator invites`),
+		[Notification.TYPE_GAME_TROPHY_ACHIEVED]: $gettext(`Game trophies`),
+		[Notification.TYPE_SITE_TROPHY_ACHIEVED]: $gettext(`Site trophies`),
+		[Notification.TYPE_COMMUNITY_USER_NOTIFICATION]: $gettext(`Community actions`),
+		[Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY]: $gettext(
+			`Community featured firesides`
+		),
+		[Notification.TYPE_QUEST_NOTIFICATION]: $gettext(`Quests`),
+		[Notification.TYPE_SUPPORTER_MESSAGE]: $gettext(`Creator thank-you messages`),
+		[Notification.TYPE_POLL_ENDED]: $gettext(`Polls`),
+	};
+
+	// Creator notification types.
+	if (user.is_creator) {
+		labels[Notification.TYPE_CHARGED_STICKER] = $gettext(`Charged stickers`);
+		labels[Notification.TYPE_CREATOR_LEVEL_UP] = $gettext(`Creator level ups`);
+	}
+
+	// Game developer notification types.
+	if (user.type === User.TYPE_DEVELOPER) {
+		labels[Notification.TYPE_GAME_RATING_ADD] = $gettext(`Game ratings`);
+		labels[Notification.TYPE_GAME_FOLLOW] = $gettext(`Game follows`);
+		labels[Notification.TYPE_SELLABLE_SELL] = $gettext(`Sales`);
+	}
+
+	return labels;
+}

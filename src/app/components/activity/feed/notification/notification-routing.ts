@@ -5,6 +5,8 @@ import {
 	CommunityUserNotification,
 	NotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
+import { CreatorExperienceLevelUpModal } from '../../../../../_common/creator/experience/level-up-modal/modal.service';
+import { CreatorExperienceLevel } from '../../../../../_common/creator/experience/level.model';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
@@ -18,6 +20,7 @@ import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { Notification } from '../../../../../_common/notification/notification-model';
 import { QuestNotification } from '../../../../../_common/quest/quest-notification-model';
 import { SupporterAction } from '../../../../../_common/supporters/action.model';
+import { SupporterMessageModal } from '../../../../../_common/supporters/message/modal.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { TrophyModal } from '../../../../../_common/trophy/modal/modal.service';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
@@ -26,7 +29,6 @@ import { RouteLocationDefinition, isKnownRoute } from '../../../../../utils/rout
 import { assertNever } from '../../../../../utils/utils';
 import { AppStore } from '../../../../store/index';
 import { routeDashAccountEdit } from '../../../../views/dashboard/account/edit/edit.route';
-import { SupporterMessageModal } from '../../../../views/dashboard/supporters/message/modal.service';
 import { routeDashSupporters } from '../../../../views/dashboard/supporters/supporters.route';
 
 function getRouteLocationForModel(
@@ -149,6 +151,11 @@ export function getNotificationRouteLocation(
 			break;
 		}
 
+		case Notification.TYPE_CREATOR_LEVEL_UP:
+			// Don't return a location here, we'll instead show a modal in the
+			// `go` function.
+			return '';
+
 		case Notification.TYPE_UNLOCKED_AVATAR_FRAME: {
 			return {
 				name: routeDashAccountEdit.name,
@@ -236,6 +243,10 @@ export async function gotoNotification(
 	} else if (type === Notification.TYPE_SUPPORTER_MESSAGE) {
 		if (action_model instanceof SupporterAction) {
 			SupporterMessageModal.show(action_model);
+		}
+	} else if (type === Notification.TYPE_CREATOR_LEVEL_UP) {
+		if (action_model instanceof CreatorExperienceLevel) {
+			CreatorExperienceLevelUpModal.show(action_model);
 		}
 	} else if (type === Notification.TYPE_QUEST_NOTIFICATION) {
 		if (action_model instanceof QuestNotification) {

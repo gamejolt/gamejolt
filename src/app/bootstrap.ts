@@ -3,8 +3,8 @@ import { bootstrapCommon } from '../_common/bootstrap';
 import { setChatInviteComponent } from '../_common/content/content-viewer/components/chat-invite';
 import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
 import { addModalBackdropCheck } from '../_common/modal/AppModal.vue';
-import checkPayloadActions from '../_common/payload/payload-actions.service';
-import { assignPayloadActionsChecker } from '../_common/payload/payload-service';
+import handlePayloadActions from '../_common/payload/payload-actions.service';
+import { assignPayloadActionsHandler } from '../_common/payload/payload-service';
 import { Registry } from '../_common/registry/registry.service';
 import { Scroll } from '../_common/scroll/scroll.service';
 import { createSidebarStore, SidebarStoreKey } from '../_common/sidebar/sidebar.store';
@@ -69,7 +69,7 @@ export async function createApp() {
 	setChatInviteComponent(AppContentChatInview);
 
 	// PayloadService doesn't play nice with importing certain things.
-	assignPayloadActionsChecker(checkPayloadActions);
+	assignPayloadActionsHandler(handlePayloadActions);
 
 	GamePlayModal.init({ canMinimize: true });
 

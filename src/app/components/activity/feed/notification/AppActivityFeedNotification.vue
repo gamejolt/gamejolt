@@ -23,6 +23,7 @@ import {
 	NotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
+import { CreatorExperienceLevel } from '../../../../../_common/creator/experience/level.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Notification } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
@@ -101,6 +102,7 @@ const hasDetails = computed(() => {
 		Notification.TYPE_GAME_TROPHY_ACHIEVED,
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
 		Notification.TYPE_POLL_ENDED,
+		Notification.TYPE_CREATOR_LEVEL_UP,
 		Notification.TYPE_UNLOCKED_AVATAR_FRAME,
 	].includes(type);
 });
@@ -199,6 +201,16 @@ function onMarkRead() {
 								>
 									<div class="-avatar-icon">
 										<AppJolticon icon="pedestals-numbers" />
+									</div>
+								</template>
+								<template
+									v-else-if="
+										notification.type === Notification.TYPE_CREATOR_LEVEL_UP &&
+										notification.action_model instanceof CreatorExperienceLevel
+									"
+								>
+									<div class="-avatar-icon">
+										<AppJolticon icon="sparkles" />
 									</div>
 								</template>
 								<template
@@ -330,6 +342,21 @@ function onMarkRead() {
 														(
 															notification.action_model as QuestNotification
 														).subtitle
+													}}
+												</span>
+												<span
+													v-else-if="
+														notification.type ===
+															Notification.TYPE_CREATOR_LEVEL_UP &&
+														notification.action_model instanceof
+															CreatorExperienceLevel &&
+														notification.action_model.ability !== null
+													"
+												>
+													{{
+														$gettext(
+															`Click to see the ability you've unlocked.`
+														)
 													}}
 												</span>
 												<span
