@@ -5,6 +5,7 @@ import { closeStickerDrawer, useStickerStore } from '../../../_common/sticker/st
 import { TogglableLeftPane } from '../../store';
 import { useAppStore } from '../../store/index';
 import { useQuestStore } from '../../store/quest';
+import { showVendingMachineModal } from '../vending-machine/modal/modal.service';
 
 export type HashEventResult = false | { sidebar: TogglableLeftPane | undefined };
 
@@ -53,6 +54,23 @@ export function initShellRoutes() {
 					toggleLeftPane(sidebar);
 				}
 				return { sidebar };
+			},
+		},
+		backpack: {
+			sidebar: 'backpack',
+			handler() {
+				const sidebar = 'backpack';
+				if (visibleLeftPane.value !== sidebar) {
+					toggleLeftPane(sidebar);
+				}
+				return { sidebar };
+			},
+		},
+		shop: {
+			sidebar: undefined,
+			handler() {
+				showVendingMachineModal();
+				return { sidebar: undefined };
 			},
 		},
 	};
