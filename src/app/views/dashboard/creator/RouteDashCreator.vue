@@ -222,8 +222,7 @@ const creatorNextUnlock = computed(() => {
 							class="link-help"
 							:to="{
 								name: routeLandingHelpRedirect.name,
-								// TODO(creator-score) help docs
-								params: { path: 'creator-score' },
+								params: { path: 'creator-levels' },
 							}"
 						>
 							{{ $gettext(`Learn how creator leveling works`) }}
