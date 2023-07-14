@@ -21,6 +21,7 @@ export class ChatMessage implements ModelStoreModel, ReactionableModel {
 	declare dateSplit?: boolean;
 	declare is_automated?: boolean;
 	reaction_counts: ReactionCount[] = [];
+	reaction_counts_queue: Map<number, number> = new Map();
 
 	// Used for rendering.
 	_collapsable = false;
@@ -63,6 +64,7 @@ export class ChatMessage implements ModelStoreModel, ReactionableModel {
 
 		if (data.reaction_counts) {
 			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
+			this.reaction_counts_queue = new Map();
 		}
 	}
 

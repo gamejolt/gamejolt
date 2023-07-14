@@ -52,6 +52,7 @@ export class Comment implements ModelStoreModel, RemovableModel, ReactionableMod
 	declare has_owner_reply: boolean;
 
 	reaction_counts: ReactionCount[] = [];
+	reaction_counts_queue: Map<number, number> = new Map();
 	supporters: User[] = [];
 
 	isFollowPending = false;
@@ -78,6 +79,7 @@ export class Comment implements ModelStoreModel, RemovableModel, ReactionableMod
 
 		if (data.reaction_counts) {
 			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
+			this.reaction_counts_queue = new Map();
 		}
 	}
 

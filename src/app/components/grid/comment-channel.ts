@@ -1,14 +1,17 @@
 import { shallowReadonly } from 'vue';
 import { Comment } from '../../../_common/comment/comment-model';
 import { getModel } from '../../../_common/model/model-store.service';
-import { EmojiDelta, updateReactionCount } from '../../../_common/reaction/reaction-count';
+import {
+	RealtimeReactionsPayload,
+	updateReactionCount,
+} from '../../../_common/reaction/reaction-count';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { GridClient } from './client.service';
 
 export type GridCommentChannel = ReturnType<typeof createGridCommentChannel>;
 
 interface UpdateCommentReactionPayload {
-	deltas: EmojiDelta[];
+	deltas: RealtimeReactionsPayload[];
 	comment_id: number;
 }
 
@@ -32,23 +35,22 @@ export function createGridCommentChannel(client: GridClient, { userId }: { userI
 			return;
 		}
 
-		for (const emojiDelta of payload.deltas) {
-			const {
-				delta_dec,
-				delta_inc,
-				emoji_id,
-				emoji_img_url,
-				emoji_prefix,
-				emoji_short_name,
-			} = emojiDelta;
-
+		for (const data of payload.deltas) {
 			updateReactionCount(
 				{
-					current_user_id: userId,
+					currentUserId: userId,
 					model: comment,
 				},
-				{ delta_inc, delta_dec },
-				{ emoji_id, emoji_img_url, emoji_prefix, emoji_short_name }
+				{
+					deltaInc: data.delta_inc,
+					deltaDec: data.delta_dec,
+				},
+				{
+					emojiId: data.emoji_id,
+					emojiImgUrl: data.emoji_img_url,
+					emojiPrefix: data.emoji_prefix,
+					emojiShortName: data.emoji_short_name,
+				}
 			);
 		}
 	}
