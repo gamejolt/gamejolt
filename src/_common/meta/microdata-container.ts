@@ -37,7 +37,7 @@ export class MicrodataContainer {
 	}
 }
 
-export function renderMicrodata(container: MicrodataContainer) {
+export function ssrRenderMicrodata(container: MicrodataContainer) {
 	if (!container.microdata || typeof container.microdata !== 'object') {
 		return '';
 	}

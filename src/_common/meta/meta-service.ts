@@ -1,10 +1,10 @@
-import { reactive } from '@vue/reactivity';
+import { reactive } from 'vue';
 import { Router } from 'vue-router';
 import { Environment } from '../environment/environment.service';
 import { FbMetaContainer } from './fb-meta-container';
-import { MetaContainer, renderMetaContainer } from './meta-container';
-import { MicrodataContainer, renderMicrodata } from './microdata-container';
-import { SeoMetaContainer } from './seo-meta-container';
+import { MetaContainer, ssrRenderMetaContainer } from './meta-container';
+import { MicrodataContainer, ssrRenderMicrodata } from './microdata-container';
+import { SeoMetaContainer, ssrRenderSeoMetaContainer } from './seo-meta-container';
 import { TwitterMetaContainer } from './twitter-meta-container';
 
 export function escapeString(str: string) {
@@ -104,13 +104,13 @@ export function setMetaTitle(title: string | null, withoutSuffix?: boolean) {
 	_updatePageTitle();
 }
 
-export function renderMeta() {
+export function ssrRenderMeta() {
 	return (
-		renderMetaContainer(Meta._base) +
-		renderMetaContainer(Meta._fb) +
-		renderMetaContainer(Meta._twitter) +
-		renderMicrodata(Meta._microdata) +
-		renderMetaContainer(Meta._seo)
+		ssrRenderMetaContainer(Meta._base) +
+		ssrRenderMetaContainer(Meta._fb.meta) +
+		ssrRenderMetaContainer(Meta._twitter.meta) +
+		ssrRenderSeoMetaContainer(Meta._seo) +
+		ssrRenderMicrodata(Meta._microdata)
 	);
 }
 
@@ -162,4 +162,5 @@ function _clearMeta() {
 	};
 
 	Meta._microdata.clear();
+	Meta._seo.clear();
 }

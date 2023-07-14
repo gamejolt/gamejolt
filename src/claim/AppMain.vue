@@ -4,7 +4,7 @@ import { RouterView } from 'vue-router';
 import AppContactLink from '../_common/contact-link/AppContactLink.vue';
 import AppCookieBanner from '../_common/cookie/banner/banner.vue';
 import { Environment } from '../_common/environment/environment.service';
-import AppErrorPage from '../_common/error/page/page.vue';
+import AppErrorPage from '../_common/error/page/AppErrorPage.vue';
 import { formatDate } from '../_common/filters/date';
 import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useCommonStore } from '../_common/store/common-store';

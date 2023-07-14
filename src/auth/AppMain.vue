@@ -3,7 +3,7 @@ import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 import { AppClientBase } from '../_common/client/safe-exports';
 import { Connection } from '../_common/connection/connection-service';
-import AppErrorPage from '../_common/error/page/page.vue';
+import AppErrorPage from '../_common/error/page/AppErrorPage.vue';
 import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
 
