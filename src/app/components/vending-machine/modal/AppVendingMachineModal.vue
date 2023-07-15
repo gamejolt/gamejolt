@@ -24,7 +24,6 @@ import { useModal } from '../../../../_common/modal/modal.service';
 import { storeModelList } from '../../../../_common/model/model-store.service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -96,7 +95,7 @@ const hasProducts = computed(() => {
 const currencyCardData = computed(() => {
 	const result = [{ currency: CurrencyType.coins, amount: coinBalance.value }];
 	if (featureMicrotransactions.value) {
-		result.push({ currency: CurrencyType.joltbux, amount: joltbuxBalance.value });
+		result.unshift({ currency: CurrencyType.joltbux, amount: joltbuxBalance.value });
 	}
 	return result;
 });
@@ -245,9 +244,6 @@ const loadingFadeStyles = computed<CSSProperties>(() => {
 			flexDirection: `column`,
 		}),
 		minHeight: `calc(min(45vh, 800px))`,
-		// Handled around the Vending Vance illustration.
-		borderBottomLeftRadius: 0,
-		borderBottomRightRadius: 0,
 	};
 });
 
@@ -524,61 +520,38 @@ const currencyCardImgStyles: CSSProperties = {
 					</AppLoadingFade>
 				</AppTheme>
 
-				<AppScrollAffix
+				<div
 					:style="{
-						zIndex: 2,
+						...styleFlexCenter({ direction: 'column' }),
+						position: 'relative',
+						backgroundColor: kThemeBgActual,
 					}"
-					anchor="bottom"
-					:offset-top="0"
-					:padding="0"
 				>
+					<!-- Vance -->
+					<AppSpacer vertical :scale="4" />
 					<div
 						:style="{
-							...styleFlexCenter({ direction: 'column' }),
-							position: 'relative',
-							backgroundColor: kThemeBgActual,
+							...styleMaxWidthForOptions({
+								ratio: 1000 / 250,
+								maxHeight: Math.max(Screen.height * 0.15, 80),
+							}),
+							width: `100%`,
 						}"
 					>
-						<!-- Vance -->
-						<AppSpacer vertical :scale="4" />
-						<div
-							:style="{
-								...styleMaxWidthForOptions({
-									ratio: 1000 / 250,
-									maxHeight: Math.max(Screen.height * 0.15, 80),
-								}),
-								width: `100%`,
-							}"
-						>
-							<AppAspectRatio :ratio="1000 / 250">
-								<img
-									:src="imageVance"
-									:style="{
-										width: `100%`,
-										height: `100%`,
-										userSelect: `none`,
-									}"
-									alt="Vending Vance"
-								/>
-							</AppAspectRatio>
-						</div>
-						<AppSpacer vertical :scale="4" />
-
-						<!-- Rounded corner decorators -->
-						<div class="_output-corner-tl">
-							<AppTheme>
-								<div class="_output-corner-tl-border" />
-							</AppTheme>
-							<div class="_output-corner-bg" />
-						</div>
-						<div class="_output-corner-tr">
-							<AppTheme>
-								<div class="_output-corner-tr-border" />
-							</AppTheme>
-							<div class="_output-corner-bg" />
-						</div>
+						<AppAspectRatio :ratio="1000 / 250">
+							<img
+								:src="imageVance"
+								:style="{
+									width: `100%`,
+									height: `100%`,
+									userSelect: `none`,
+								}"
+								alt="Vending Vance"
+							/>
+						</AppAspectRatio>
 					</div>
-				</AppScrollAffix>
+					<AppSpacer vertical :scale="4" />
+				</div>
 			</div>
 		</div>
 	</AppModal>
@@ -598,37 +571,4 @@ const currencyCardImgStyles: CSSProperties = {
 
 	@media $media-xs
 		--pack-min-width: 140px
-
-._output-corner-tl
-._output-corner-tr
-	width: 12px
-	height: 12px
-	position: absolute
-	top: -12px
-	z-index: 3
-
-._output-corner-tl
-	left: 0
-
-._output-corner-tr
-	right: 0
-
-._output-corner-tl-border
-._output-corner-tr-border
-	border: 6px solid var(--theme-bg-offset)
-
-._output-corner-tl-border
-	border-bottom-left-radius: 12px
-
-._output-corner-tr-border
-	border-bottom-right-radius: 12px
-
-._output-corner-bg
-	background-color: var(--theme-bg)
-	width: 100%
-	height: 100%
-	position: absolute
-	left: 0
-	top: 0
-	z-index: -1
 </style>
