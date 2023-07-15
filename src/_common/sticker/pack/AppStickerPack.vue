@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import {
 	styleBorderRadiusLg,
 	styleChangeBgRgba,
@@ -60,6 +60,8 @@ const emit = defineEmits({
 
 const { pack, showDetails, canClickPack, forceElevate, expiryInfo } = toRefs(props);
 
+const loadedImage = ref(false);
+
 const showName = computed(() => {
 	if (!showDetails.value) {
 		return false;
@@ -78,7 +80,15 @@ function onClickPack() {
 	<!-- AppStickerPack -->
 	<div>
 		<div :style="{ position: `relative` }">
-			<component :is="canClickPack ? 'a' : 'div'" @click="onClickPack()">
+			<a
+				:style="
+					styleWhen(!canClickPack, {
+						// Do this instead of a <component> tag to prevent image flickering.
+						cursor: `inherit`,
+					})
+				"
+				@click="onClickPack()"
+			>
 				<AppAspectRatio :ratio="StickerPackRatio" show-overflow>
 					<AppMediaItemBackdrop
 						:style="{
@@ -90,6 +100,7 @@ function onClickPack() {
 							height: `100%`,
 						}"
 						:media-item="pack.media_item"
+						:color-opacity="loadedImage ? 0 : 1"
 						radius="lg"
 					>
 						<AppImgResponsive
@@ -102,10 +113,11 @@ function onClickPack() {
 							alt=""
 							draggable="false"
 							ondragstart="return false"
+							@imgloadchange="loadedImage = $event"
 						/>
 					</AppMediaItemBackdrop>
 				</AppAspectRatio>
-			</component>
+			</a>
 
 			<div v-if="expiryInfo" :style="StickerPackExpiryStyles">
 				{{

@@ -215,24 +215,26 @@ export function styleFlexCenter({
 }
 
 export function styleAbsoluteFill({
-	top = 0,
-	right = 0,
-	bottom = 0,
-	left = 0,
+	inset = 0,
+	top,
+	right,
+	bottom,
+	left,
 	zIndex,
 }: {
-	top?: CSSProperties['top'];
-	right?: CSSProperties['right'];
-	bottom?: CSSProperties['bottom'];
-	left?: CSSProperties['left'];
+	inset?: string | 0;
+	top?: string | 0;
+	right?: string | 0;
+	bottom?: string | 0;
+	left?: string | 0;
 	zIndex?: CSSProperties['zIndex'];
 } = {}) {
 	const result: CSSProperties = {
 		position: `absolute`,
-		top,
-		left,
-		right,
-		bottom,
+		top: top ?? inset,
+		left: left ?? inset,
+		right: right ?? inset,
+		bottom: bottom ?? inset,
 	};
 	if (zIndex !== undefined) {
 		result.zIndex = zIndex;
