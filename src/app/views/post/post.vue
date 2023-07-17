@@ -1,12 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { enforceLocation } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
-import {
-	CommentThreadModal,
-	CommentThreadModalPermalinkDeregister,
-} from '../../../_common/comment/thread/modal.service';
 import { CommunityUserNotification } from '../../../_common/community/user-notification/user-notification.model';
 import { $viewPost, FiresidePost } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
@@ -14,6 +9,11 @@ import { Registry } from '../../../_common/registry/registry.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { Translate } from '../../../_common/translate/translate.service';
+import { enforceLocation } from '../../../utils/router';
+import {
+	CommentThreadModal,
+	CommentThreadModalPermalinkDeregister,
+} from '../../components/comment/thread/modal.service';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPostPagePlaceholder from './_page-placeholder/AppPostPagePlaceholder.vue';
 import AppPostPage from './_page/AppPostPage.vue';

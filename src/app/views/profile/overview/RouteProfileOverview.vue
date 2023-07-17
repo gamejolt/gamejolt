@@ -5,7 +5,6 @@ import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
 import { Comment } from '../../../../_common/comment/comment-model';
 import {
 	CommentStoreManagerKey,
@@ -14,11 +13,6 @@ import {
 	lockCommentStore,
 	releaseCommentStore,
 } from '../../../../_common/comment/comment-store';
-import { CommentModal } from '../../../../_common/comment/modal/modal.service';
-import {
-	CommentThreadModal,
-	CommentThreadModalPermalinkDeregister,
-} from '../../../../_common/comment/thread/modal.service';
 import { Community } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
@@ -48,6 +42,8 @@ import AppTopSupportersCard, {
 } from '../../../../_common/supporters/AppTopSupportersCard.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { TrophyModal } from '../../../../_common/trophy/modal/modal.service';
+import AppTrophyThumbnail from '../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { showUserFiresideFollowModal } from '../../../../_common/user/fireside/modal/follow-modal.service';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
@@ -57,14 +53,18 @@ import { numberSort } from '../../../../utils/array';
 import { removeQuery } from '../../../../utils/router';
 import { openChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/AppCommentOverview.vue';
+import AppCommentAddButton from '../../../components/comment/add-button/AppCommentAddButton.vue';
+import { CommentModal } from '../../../components/comment/modal/modal.service';
+import {
+	CommentThreadModal,
+	CommentThreadModalPermalinkDeregister,
+} from '../../../components/comment/thread/modal.service';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
 import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import { TrophyModal } from '../../../../_common/trophy/modal/modal.service';
-import AppTrophyThumbnail from '../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useAppStore } from '../../../store/index';
 import { useProfileRouteController } from '../RouteProfile.vue';

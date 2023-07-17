@@ -5,10 +5,6 @@ export const FormCommentLazy = defineAsyncComponent(() => import('./comment/Form
 
 export const AppAuthJoinLazy = defineAsyncComponent(() => import('./auth/join/join.vue'));
 
-export const AppCommentWidgetLazy = defineAsyncComponent(
-	() => import('./comment/widget/AppCommentWidget.vue')
-);
-
 export const AppVideoPlayerShakaLazy = defineAsyncComponent(
 	lazyImportNoSSR(() => import('./video/player/AppVideoPlayerShaka.vue'))
 );

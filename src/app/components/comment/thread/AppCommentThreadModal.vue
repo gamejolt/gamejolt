@@ -1,18 +1,26 @@
 <script lang="ts" setup>
 import { computed, inject, PropType, ref, toRefs } from 'vue';
-import AppButton from '../../button/AppButton.vue';
-import { FormCommentLazy } from '../../lazy';
-import AppMessageThreadAdd from '../../message-thread/AppMessageThreadAdd.vue';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { Model } from '../../model/model.service';
-import { useCommonStore } from '../../store/common-store';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { $gettext } from '../../translate/translate.service';
-import AppCommentDisabledCheck from '../AppCommentDisabledCheck.vue';
-import { Comment, CommentableModel, getCommentModelResourceName } from '../comment-model';
-import { commentStoreHandleAdd, CommentStoreManagerKey, getCommentStore } from '../comment-store';
 import AppCommentWidget from '../widget/AppCommentWidget.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import { FormCommentLazy } from '../../../../_common/lazy';
+import AppMessageThreadAdd from '../../../../_common/message-thread/AppMessageThreadAdd.vue';
+import AppModal from '../../../../_common/modal/AppModal.vue';
+import { useModal } from '../../../../_common/modal/modal.service';
+import { Model } from '../../../../_common/model/model.service';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
+import {
+	Comment,
+	CommentableModel,
+	getCommentModelResourceName,
+} from '../../../../_common/comment/comment-model';
+import {
+	commentStoreHandleAdd,
+	CommentStoreManagerKey,
+	getCommentStore,
+} from '../../../../_common/comment/comment-store';
 
 const props = defineProps({
 	commentId: {

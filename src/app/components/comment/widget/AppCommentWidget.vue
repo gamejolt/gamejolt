@@ -13,32 +13,16 @@ import {
 	watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
-import type { DeregisterOnConnected } from '../../../app/components/grid/client.service';
-import { useGridStore } from '../../../app/components/grid/grid-store';
-import AppAlertBox from '../../alert/AppAlertBox.vue';
-import { vAppAuthRequired } from '../../auth/auth-required-directive';
-import AppButton from '../../button/AppButton.vue';
-import { Collaborator } from '../../collaborator/collaborator.model';
-import { Environment } from '../../environment/environment.service';
-import { formatNumber } from '../../filters/number';
-import AppIllustration from '../../illustration/AppIllustration.vue';
-import { illNoComments } from '../../illustration/illustrations';
-import { FormCommentLazy } from '../../lazy';
-import AppLoading from '../../loading/AppLoading.vue';
-import AppMessageThread from '../../message-thread/AppMessageThread.vue';
-import AppMessageThreadAdd from '../../message-thread/AppMessageThreadAdd.vue';
-import { storeModel } from '../../model/model-store.service';
-import { Model } from '../../model/model.service';
-import AppNavTabList from '../../nav/tab-list/tab-list.vue';
-import { useCommonStore } from '../../store/common-store';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { User } from '../../user/user.model';
+import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import {
 	canCommentOnModel,
 	Comment,
 	CommentableModel,
 	getCommentModelResourceName,
-} from '../comment-model';
+} from '../../../../_common/comment/comment-model';
 import {
 	commentStoreFetch,
 	commentStoreFetchThread,
@@ -51,12 +35,28 @@ import {
 	commentStoreSort,
 	lockCommentStore,
 	releaseCommentStore,
-} from '../comment-store';
+} from '../../../../_common/comment/comment-store';
 import {
 	CommentStoreSliceView,
 	CommentStoreThreadView,
 	CommentStoreView,
-} from '../comment-store-view';
+} from '../../../../_common/comment/comment-store-view';
+import { Environment } from '../../../../_common/environment/environment.service';
+import { formatNumber } from '../../../../_common/filters/number';
+import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import { illNoComments } from '../../../../_common/illustration/illustrations';
+import { FormCommentLazy } from '../../../../_common/lazy';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
+import AppMessageThread from '../../../../_common/message-thread/AppMessageThread.vue';
+import AppMessageThreadAdd from '../../../../_common/message-thread/AppMessageThreadAdd.vue';
+import { storeModel } from '../../../../_common/model/model-store.service';
+import { Model } from '../../../../_common/model/model.service';
+import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { User } from '../../../../_common/user/user.model';
+import type { DeregisterOnConnected } from '../../grid/client.service';
+import { useGridStore } from '../../grid/grid-store';
 import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidgetComment from './AppCommentWidgetComment.vue';
 

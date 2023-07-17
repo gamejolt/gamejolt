@@ -7,18 +7,12 @@ import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/AppCard.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
-import AppCommentAddButton from '../../../../../../_common/comment/add-button/add-button.vue';
 import { Comment, canCommentOnModel } from '../../../../../../_common/comment/comment-model';
 import {
 	CommentStoreManager,
 	CommentStoreManagerKey,
 	getCommentStore,
 } from '../../../../../../_common/comment/comment-store';
-import { CommentModal } from '../../../../../../_common/comment/modal/modal.service';
-import {
-	CommentThreadModal,
-	CommentThreadModalPermalinkDeregister,
-} from '../../../../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../../_common/filters/number';
@@ -44,6 +38,12 @@ import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import AppCommentOverview from '../../../../../components/comment/AppCommentOverview.vue';
+import AppCommentAddButton from '../../../../../components/comment/add-button/AppCommentAddButton.vue';
+import { CommentModal } from '../../../../../components/comment/modal/modal.service';
+import {
+	CommentThreadModal,
+	CommentThreadModalPermalinkDeregister,
+} from '../../../../../components/comment/thread/modal.service';
 import AppGameCommunityBadge from '../../../../../components/game/community-badge/community-badge.vue';
 import AppGameList from '../../../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../../../components/game/list/placeholder/placeholder.vue';

@@ -1,22 +1,9 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, toRefs } from 'vue';
-import { Clipboard } from '../../clipboard/clipboard-service';
-import { Collaborator } from '../../collaborator/collaborator.model';
-import { Environment } from '../../environment/environment.service';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { FormCommentLazy } from '../../lazy';
-import AppMessageThreadItem from '../../message-thread/AppMessageThreadItem.vue';
-import { ModalConfirm } from '../../modal/confirm/confirm-service';
-import { Model } from '../../model/model.service';
-import AppPopper from '../../popper/AppPopper.vue';
-import { Popper } from '../../popper/popper.service';
-import { ReportModal } from '../../report/modal/modal.service';
-import { useCommonStore } from '../../store/common-store';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { $gettext } from '../../translate/translate.service';
-import AppCommentBlocked from '../AppCommentBlocked.vue';
-import AppCommentContent from '../AppCommentContent.vue';
+import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
+import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
+import AppCommentBlocked from '../../../../_common/comment/AppCommentBlocked.vue';
+import AppCommentContent from '../../../../_common/comment/AppCommentContent.vue';
 import {
 	canCommentOnModel,
 	Comment,
@@ -25,7 +12,20 @@ import {
 	getCommentBlockReason,
 	removeComment,
 	unfollowComment,
-} from '../comment-model';
+} from '../../../../_common/comment/comment-model';
+import { Environment } from '../../../../_common/environment/environment.service';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { FormCommentLazy } from '../../../../_common/lazy';
+import AppMessageThreadItem from '../../../../_common/message-thread/AppMessageThreadItem.vue';
+import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { Model } from '../../../../_common/model/model.service';
+import AppPopper from '../../../../_common/popper/AppPopper.vue';
+import { Popper } from '../../../../_common/popper/popper.service';
+import { ReportModal } from '../../../../_common/report/modal/modal.service';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import AppCommentControls from '../controls/AppCommentControls.vue';
 import { useCommentWidget } from './AppCommentWidget.vue';
 

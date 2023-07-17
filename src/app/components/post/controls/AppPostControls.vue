@@ -15,7 +15,6 @@ import {
 	lockCommentStore,
 	releaseCommentStore,
 } from '../../../../_common/comment/comment-store';
-import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
@@ -34,6 +33,7 @@ import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion
 import { User } from '../../../../_common/user/user.model';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
 import { ActivityFeedView } from '../../activity/feed/view';
+import { CommentModal } from '../../comment/modal/modal.service';
 import { PostEditModal } from '../edit-modal/edit-modal-service';
 import AppPostControlsStats from './AppPostControlsStats.vue';
 import AppPostControlsMore from './more/more.vue';
