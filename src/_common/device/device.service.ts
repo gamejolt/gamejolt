@@ -181,7 +181,7 @@ export function isDynamicGoogleBot() {
 
 	if (_isDynamicGoogleBot === null) {
 		const result = _getResult();
-		_isDynamicGoogleBot = /googlebot/i.test(result.ua);
+		_isDynamicGoogleBot = /googlebot|google-inspectiontool/i.test(result.ua);
 	}
 
 	return _isDynamicGoogleBot;
