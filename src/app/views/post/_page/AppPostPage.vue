@@ -6,6 +6,7 @@ import AppBackground from '../../../../_common/background/AppBackground.vue';
 import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
+import { isGoogleBot } from '../../../../_common/device/device.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
 	$viewPostVideo,
@@ -261,6 +262,7 @@ function onVideoPlay() {
 						"
 					>
 						<AppStickerPlacementList
+							v-if="!isGoogleBot()"
 							:sticker-target-controller="stickerTargetController"
 							:supporters="post.supporters"
 							:stickers="post.sticker_counts"
