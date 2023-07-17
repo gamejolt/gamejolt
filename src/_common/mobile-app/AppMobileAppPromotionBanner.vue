@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { trackAppPromotionClick } from '../analytics/analytics.service';
 import AppButton from '../button/AppButton.vue';
-import { isGoogleBot } from '../device/device.service';
+import { isDynamicGoogleBot } from '../device/device.service';
 import { illMobileKikkerstein } from '../illustration/illustrations';
 import { Screen } from '../screen/screen-service';
 import AppSpacer from '../spacer/AppSpacer.vue';
@@ -23,7 +23,7 @@ const storeUrl = computed(() => getAppUrl(appPromotion));
 const forceClosed = ref(false);
 
 const shouldShow = computed(() => {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isGoogleBot()) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return false;
 	}
 

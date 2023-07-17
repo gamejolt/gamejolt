@@ -1,5 +1,5 @@
 import { Component, PropType } from 'vue';
-import { isGoogleBot } from '../device/device.service';
+import { isDynamicGoogleBot } from '../device/device.service';
 import { AdSlot } from './ad-slot-info';
 
 export abstract class AdAdapterBase {
@@ -18,7 +18,7 @@ export abstract class AdAdapterBase {
 	 * first ad display (lazy initialization).
 	 */
 	protected runOnce(cb: () => void) {
-		if (import.meta.env.SSR || isGoogleBot() || this.ranOnce) {
+		if (import.meta.env.SSR || isDynamicGoogleBot() || this.ranOnce) {
 			return;
 		}
 

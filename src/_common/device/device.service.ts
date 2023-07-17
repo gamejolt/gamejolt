@@ -174,17 +174,17 @@ export function getDeviceType(): DeviceType {
  * just does detection against user agent. It's not static, so it won't tree
  * shake away anything in the build.
  */
-export function isGoogleBot() {
-	if (GJ_IS_DESKTOP_APP) {
+export function isDynamicGoogleBot() {
+	if (GJ_IS_DESKTOP_APP || import.meta.env.SSR) {
 		return false;
 	}
 
-	if (_isGoogleBot === null) {
+	if (_isDynamicGoogleBot === null) {
 		const result = _getResult();
-		_isGoogleBot = /googlebot/i.test(result.ua);
+		_isDynamicGoogleBot = /googlebot/i.test(result.ua);
 	}
 
-	return _isGoogleBot;
+	return _isDynamicGoogleBot;
 }
 
-let _isGoogleBot: boolean | null = null;
+let _isDynamicGoogleBot: boolean | null = null;

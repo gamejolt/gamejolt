@@ -4,7 +4,7 @@ import {
 	SOCIAL_ACTION_TWEET,
 	SOCIAL_NETWORK_TWITTER,
 } from '../../../analytics/analytics.service';
-import { isGoogleBot } from '../../../device/device.service';
+import { isDynamicGoogleBot } from '../../../device/device.service';
 
 function setupEvents() {
 	(window as any).twttr.events.bind('tweet', () => {
@@ -22,7 +22,7 @@ export class TwitterSdk {
 	private static isBootstrapped = false;
 
 	static load() {
-		if (import.meta.env.SSR || isGoogleBot()) {
+		if (import.meta.env.SSR || isDynamicGoogleBot()) {
 			return;
 		}
 

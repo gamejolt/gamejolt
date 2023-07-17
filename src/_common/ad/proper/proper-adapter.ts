@@ -1,6 +1,6 @@
 import { Component } from 'vue';
 import { loadScript } from '../../../utils/utils';
-import { isGoogleBot } from '../../device/device.service';
+import { isDynamicGoogleBot } from '../../device/device.service';
 import { AdSlot } from '../ad-slot-info';
 import { AdAdapterBase } from '../adapter-base';
 import AppAdProper from './AppAdProper.vue';
@@ -32,7 +32,7 @@ export class AdProperAdapter extends AdAdapterBase {
 	}
 
 	run(cb: () => void) {
-		if (import.meta.env.SSR || isGoogleBot()) {
+		if (import.meta.env.SSR || isDynamicGoogleBot()) {
 			return;
 		}
 

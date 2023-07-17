@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import AppButton from '../../button/AppButton.vue';
-import { isGoogleBot } from '../../device/device.service';
+import { isDynamicGoogleBot } from '../../device/device.service';
 import { Environment } from '../../environment/environment.service';
 import {
 	setTimezoneOffsetCookie,
@@ -12,7 +12,7 @@ import {
 const forceClosed = ref(false);
 
 const shouldShow = computed(() => {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isGoogleBot()) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return false;
 	}
 

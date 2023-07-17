@@ -1,6 +1,6 @@
 import { App, computed, ref } from 'vue';
 import { arrayIndexBy } from '../../utils/array';
-import { isGoogleBot } from '../device/device.service';
+import { isDynamicGoogleBot } from '../device/device.service';
 import AppTranslate from './AppTranslate.vue';
 import { TranslateDirective } from './translate-directive';
 
@@ -9,7 +9,7 @@ type LazyLanguageImport = () => Promise<{
 }>;
 
 const _translationImports: Record<string, LazyLanguageImport> =
-	import.meta.env.SSR || GJ_IS_MOBILE_APP || isGoogleBot()
+	import.meta.env.SSR || GJ_IS_MOBILE_APP || isDynamicGoogleBot()
 		? {}
 		: import.meta.glob('../../translations/*/main.json');
 

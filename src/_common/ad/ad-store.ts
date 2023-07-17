@@ -1,7 +1,7 @@
 import { inject, InjectionKey, onUnmounted, provide, reactive } from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
 import { objectEquals } from '../../utils/object';
-import { isGoogleBot } from '../device/device.service';
+import { isDynamicGoogleBot } from '../device/device.service';
 import { Environment } from '../environment/environment.service';
 import { Model } from '../model/model.service';
 import { onRouteChangeAfter } from '../route/route-component';
@@ -76,7 +76,7 @@ class AdsController {
 	}
 
 	get shouldShow() {
-		if (GJ_IS_DESKTOP_APP || import.meta.env.SSR || isGoogleBot()) {
+		if (GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot()) {
 			return false;
 		}
 
@@ -92,7 +92,7 @@ export function createAdsController() {
 	const c = reactive(new AdsController()) as AdsController;
 	provide(AdsControllerKey, c);
 
-	if (GJ_IS_DESKTOP_APP || import.meta.env.SSR || isGoogleBot() || AdsDisabledDev) {
+	if (GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev) {
 		return c;
 	}
 

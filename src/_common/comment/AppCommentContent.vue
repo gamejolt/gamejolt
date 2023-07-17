@@ -2,7 +2,7 @@
 import { PropType, ref } from 'vue';
 import AppFadeCollapse from '../AppFadeCollapse.vue';
 import AppContentViewer from '../content/content-viewer/AppContentViewer.vue';
-import { isGoogleBot } from '../device/device.service';
+import { isDynamicGoogleBot } from '../device/device.service';
 import { formatDate } from '../filters/date';
 import AppReactionList from '../reaction/list/AppReactionList.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
@@ -53,7 +53,10 @@ const showFullContent = ref(false);
 			@click="showFullContent = !showFullContent"
 		/>
 
-		<div v-if="comment.reaction_counts.length && !isGoogleBot()" class="_reactions-container">
+		<div
+			v-if="comment.reaction_counts.length && !isDynamicGoogleBot()"
+			class="_reactions-container"
+		>
 			<AppReactionList
 				:model="comment"
 				:click-action="canReact ? 'toggle' : undefined"

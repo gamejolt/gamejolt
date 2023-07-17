@@ -1,10 +1,10 @@
-import { isGoogleBot } from '../../../device/device.service';
+import { isDynamicGoogleBot } from '../../../device/device.service';
 
 export class YoutubeSdk {
 	private static isBootstrapped = false;
 
 	static load() {
-		if (import.meta.env.SSR || isGoogleBot()) {
+		if (import.meta.env.SSR || isDynamicGoogleBot()) {
 			return;
 		}
 

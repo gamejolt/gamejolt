@@ -1,5 +1,5 @@
 import { FirebaseApp, initializeApp } from 'firebase/app';
-import { isGoogleBot } from '../device/device.service';
+import { isDynamicGoogleBot } from '../device/device.service';
 import { Environment } from '../environment/environment.service';
 
 const firebaseConfig = {
@@ -26,7 +26,7 @@ export function getFirebaseApp() {
 }
 
 async function _initPerformanceMonitoring() {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isGoogleBot()) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return;
 	}
 

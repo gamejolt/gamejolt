@@ -5,6 +5,7 @@ import { trackPostOpen } from '../../../../../_common/analytics/analytics.servic
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
+import { isDynamicGoogleBot } from '../../../../../_common/device/device.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
@@ -34,7 +35,6 @@ import AppActivityFeedPostBlocked from './AppActivityFeedPostBlocked.vue';
 import AppActivityFeedPostMedia from './AppActivityFeedPostMedia.vue';
 import AppActivityFeedPostVideo from './AppActivityFeedPostVideo.vue';
 import AppActivityFeedPostText from './text/text.vue';
-import { isGoogleBot } from '../../../../../_common/device/device.service';
 
 const props = defineProps({
 	item: {
@@ -300,7 +300,7 @@ function onPostUnpinned(item: EventItem) {
 
 					<AppStickerControlsOverlay :hide="!!post.background">
 						<AppStickerPlacementList
-							v-if="!isGoogleBot()"
+							v-if="!isDynamicGoogleBot()"
 							:sticker-target-controller="stickerTargetController"
 							:supporters="post.supporters"
 							:stickers="post.sticker_counts"

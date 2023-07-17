@@ -1,4 +1,4 @@
-import { isGoogleBot } from '../device/device.service';
+import { isDynamicGoogleBot } from '../device/device.service';
 import { Environment } from '../environment/environment.service';
 
 export function getCookie(name: string): Promise<string | undefined> {
@@ -36,7 +36,7 @@ export function getCookie(name: string): Promise<string | undefined> {
 }
 
 export function userAgreedToCookies() {
-	if (import.meta.env.SSR || isGoogleBot()) {
+	if (import.meta.env.SSR || isDynamicGoogleBot()) {
 		return false;
 	}
 	if (GJ_IS_DESKTOP_APP) {

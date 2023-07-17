@@ -2,14 +2,14 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import {
-AdSettingsContainer,
-releasePageAdsSettings,
-setPageAdsSettings,
-useAdsController,
+	AdSettingsContainer,
+	releasePageAdsSettings,
+	setPageAdsSettings,
+	useAdsController,
 } from '../../../_common/ad/ad-store';
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
-import { isGoogleBot } from '../../../_common/device/device.service';
+import { isDynamicGoogleBot } from '../../../_common/device/device.service';
 import { GameBuild } from '../../../_common/game/build/build.model';
 import { Game } from '../../../_common/game/game.model';
 import { GameSong } from '../../../_common/game/song/song.model';
@@ -120,7 +120,7 @@ export default class RouteDownload extends BaseRouteComponent {
 		this._setAdSettings();
 
 		// Don't download on SSR.
-		if (import.meta.env.SSR || isGoogleBot()) {
+		if (import.meta.env.SSR || isDynamicGoogleBot()) {
 			return;
 		}
 

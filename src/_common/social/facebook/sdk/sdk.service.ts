@@ -4,7 +4,7 @@ import {
 	SOCIAL_ACTION_SEND,
 	SOCIAL_NETWORK_FB,
 } from '../../../analytics/analytics.service';
-import { isGoogleBot } from '../../../device/device.service';
+import { isDynamicGoogleBot } from '../../../device/device.service';
 
 function setupEvents() {
 	(window as any).FB.Event.subscribe('edge.create', (url: string) => {
@@ -20,7 +20,7 @@ export class FacebookSdk {
 	private static isBootstrapped = false;
 
 	static load() {
-		if (import.meta.env.SSR || isGoogleBot()) {
+		if (import.meta.env.SSR || isDynamicGoogleBot()) {
 			return;
 		}
 

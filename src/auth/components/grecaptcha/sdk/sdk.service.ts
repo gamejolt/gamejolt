@@ -1,10 +1,10 @@
-import { isGoogleBot } from '../../../../_common/device/device.service';
+import { isDynamicGoogleBot } from '../../../../_common/device/device.service';
 
 export class GrecaptchaSdk {
 	private static bootstrapPromise: Promise<void> | null = null;
 
 	static load() {
-		if (import.meta.env.SSR || isGoogleBot()) {
+		if (import.meta.env.SSR || isDynamicGoogleBot()) {
 			return;
 		}
 
