@@ -387,6 +387,12 @@ export default defineConfig(async () => {
 				target: 'es2015',
 			}),
 
+			// Don't add the preloads. We generate a ton of chunks, and to load
+			// them all is quite a bit for any client to handle. It also seems
+			// like Google's dynamic crawler might be trying to load them all in
+			// and exhausting it's request limit.
+			modulePreload: false,
+
 			// Never inline stuff.
 			assetsInlineLimit: 0,
 
