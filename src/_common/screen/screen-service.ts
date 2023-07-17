@@ -19,11 +19,6 @@ const HIDPI_BREAKPOINT = 1.5;
 
 export const onScreenResize = new EventTopic<void>();
 
-// We use their user agent to initialize our initial breakpoints so that mobile
-// SSR renderers will correctly get the right styling. That is, if they set the
-// user agent correctly.
-const _deviceType = getDeviceType();
-
 class ScreenService {
 	/**
 	 * The actual width of the browser/screen context. Either in actual pixels,
@@ -37,13 +32,13 @@ class ScreenService {
 	 */
 	height = 0;
 
-	isXs = _deviceType === 'mobile';
-	isSm = _deviceType === 'tablet';
+	isXs = false;
+	isSm = false;
 	isMd = false;
 	/**
 	 * lg is the default fallback.
 	 */
-	isLg = !this.isXs && !this.isSm;
+	isLg = true;
 
 	get breakpoint() {
 		return this.isXs ? 'xs' : this.isSm ? 'sm' : this.isMd ? 'md' : 'lg';
@@ -121,18 +116,30 @@ class ScreenService {
 
 export const Screen = reactive(new ScreenService()) as ScreenService;
 
-if (!import.meta.env.SSR) {
-	// Check the breakpoints on app load.
-	_onResize();
+export function initScreenService() {
+	// We use their user agent to initialize our initial breakpoints so that mobile
+	// SSR renderers will correctly get the right styling. That is, if they set the
+	// user agent correctly.
+	const _deviceType = getDeviceType();
 
-	/**
-	 * This is used internally to check things every time window resizes.
-	 * We debounce this and afterwards fire the resizeChanges for everyone else.
-	 */
-	window.addEventListener(
-		'resize',
-		debounce(() => _onResize(), 250)
-	);
+	Screen.isXs = _deviceType === 'mobile';
+	Screen.isSm = _deviceType === 'tablet';
+	Screen.isMd = false;
+	Screen.isLg = !Screen.isXs && !Screen.isSm && !Screen.isMd;
+
+	if (!import.meta.env.SSR) {
+		// Check the breakpoints on app load.
+		_onResize();
+
+		/**
+		 * This is used internally to check things every time window resizes.
+		 * We debounce this and afterwards fire the resizeChanges for everyone else.
+		 */
+		window.addEventListener(
+			'resize',
+			debounce(() => _onResize(), 250)
+		);
+	}
 }
 
 async function _onResize() {
