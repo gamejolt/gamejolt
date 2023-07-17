@@ -34,6 +34,7 @@ import AppActivityFeedPostBlocked from './AppActivityFeedPostBlocked.vue';
 import AppActivityFeedPostMedia from './AppActivityFeedPostMedia.vue';
 import AppActivityFeedPostVideo from './AppActivityFeedPostVideo.vue';
 import AppActivityFeedPostText from './text/text.vue';
+import { isGoogleBot } from '../../../../../_common/device/device.service';
 
 const props = defineProps({
 	item: {
@@ -299,6 +300,7 @@ function onPostUnpinned(item: EventItem) {
 
 					<AppStickerControlsOverlay :hide="!!post.background">
 						<AppStickerPlacementList
+							v-if="!isGoogleBot()"
 							:sticker-target-controller="stickerTargetController"
 							:supporters="post.supporters"
 							:stickers="post.sticker_counts"

@@ -1,6 +1,7 @@
 import Axios, { AxiosRequestConfig } from 'axios';
 import { ref } from 'vue';
 import { setTimezoneOffsetCookie } from '../cookie/cookie.service';
+import { isGoogleBot } from '../device/device.service';
 import { Environment } from '../environment/environment.service';
 import { Payload } from '../payload/payload-service';
 
@@ -213,7 +214,7 @@ export class Api {
 		// For SSR we pass in the frontend cookie of "ssr" so that the server
 		// knows that this is an SSR request and shouldn't store session data.
 		const headers: any = {};
-		if (import.meta.env.SSR) {
+		if (import.meta.env.SSR || isGoogleBot()) {
 			headers.cookie = 'frontend=ssr;';
 		}
 

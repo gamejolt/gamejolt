@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { illMobileKikkerstein } from '../illustration/illustrations';
 import { trackAppPromotionClick } from '../analytics/analytics.service';
 import AppButton from '../button/AppButton.vue';
+import { isGoogleBot } from '../device/device.service';
+import { illMobileKikkerstein } from '../illustration/illustrations';
 import { Screen } from '../screen/screen-service';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import { useCommonStore } from '../store/common-store';
@@ -22,7 +23,7 @@ const storeUrl = computed(() => getAppUrl(appPromotion));
 const forceClosed = ref(false);
 
 const shouldShow = computed(() => {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isGoogleBot()) {
 		return false;
 	}
 

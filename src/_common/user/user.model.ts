@@ -211,10 +211,6 @@ export class User
 	}
 
 	static touch() {
-		if (import.meta.env.SSR) {
-			return Promise.resolve();
-		}
-
 		// We don't want to wait for the touch in Client since we know it gets loaded in
 		// immediately.
 		if (GJ_IS_DESKTOP_APP) {

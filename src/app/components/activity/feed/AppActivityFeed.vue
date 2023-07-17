@@ -9,6 +9,7 @@ import { EventItem } from '../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import { illEndOfFeed } from '../../../../_common/illustration/illustrations';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -17,7 +18,6 @@ import AppScrollInview, {
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { illEndOfFeed } from '../../../../_common/illustration/illustrations';
 import AppActivityFeedItem from './item/AppActivityFeedItem.vue';
 import AppActivityFeedNewButton from './new-button/new-button.vue';
 import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from './view';
@@ -243,18 +243,21 @@ function shouldShowAd(index: number) {
 			:config="InviewConfigLoadMore"
 			@inview="onScrollLoadMore"
 		>
+			<!-- Include the link here for crawlers to easily find it even if we're loading... -->
+			<RouterLink :to="{ query: { feed_last_id: lastPostScrollId } }" @click.capture.prevent>
+				<AppLoading v-if="feed.isLoadingMore" class="-bottom-loading loading-centered" />
+			</RouterLink>
+
 			<div v-if="shouldShowLoadMore" class="page-cut">
 				<AppButton
 					v-app-track-event="`activity-feed:more`"
-					:to="GJ_IS_SSR ? { query: { feed_last_id: lastPostScrollId } } : undefined"
+					:to="{ query: { feed_last_id: lastPostScrollId } }"
 					trans
-					@click="loadMoreButton"
+					@click.capture.prevent="loadMoreButton"
 				>
 					<AppTranslate>Load More</AppTranslate>
 				</AppButton>
 			</div>
-
-			<AppLoading v-if="feed.isLoadingMore" class="-bottom-loading loading-centered" />
 
 			<AppIllustration v-if="feed.reachedEnd" :asset="illEndOfFeed">
 				<p>

@@ -1,4 +1,3 @@
-export const isClient = GJ_IS_DESKTOP_APP;
 export const isSecure = typeof window !== 'undefined' && window.location.protocol === 'https:';
 
 interface SsrContext {
@@ -11,7 +10,6 @@ interface SsrContext {
 }
 
 export class Environment {
-	static isClient = GJ_IS_DESKTOP_APP;
 	static isSecure = isSecure;
 
 	static ssrContext: SsrContext = {

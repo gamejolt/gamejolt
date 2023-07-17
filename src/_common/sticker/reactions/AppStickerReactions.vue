@@ -21,9 +21,7 @@ const { controller } = toRefs(props);
 const animate = ref(false);
 
 const canShowBorder = computed(() => !controller.value.isLive);
-
 const showAsActive = computed(() => canShowBorder.value && controller.value.shouldShow.value);
-
 const shouldAnimate = computed(() => animate.value);
 
 const reactions = computed(() =>

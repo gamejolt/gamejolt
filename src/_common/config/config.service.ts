@@ -1,5 +1,6 @@
 import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-config';
 import { reactive } from 'vue';
+import { isGoogleBot } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 
 const ConfigService_ = {
@@ -84,7 +85,7 @@ export abstract class ConfigOption<T extends ValueType = any> {
 
 export class ConfigOptionBoolean extends ConfigOption<boolean> {
 	get value() {
-		if (import.meta.env.SSR) {
+		if (import.meta.env.SSR || isGoogleBot()) {
 			return this.defaultValue;
 		}
 
@@ -112,7 +113,7 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 
 	get value() {
-		if (import.meta.env.SSR) {
+		if (import.meta.env.SSR || isGoogleBot()) {
 			return this.defaultValue;
 		}
 
@@ -176,7 +177,7 @@ export function ensureConfig() {
 
 let _initPromise: Promise<void> | null = null;
 async function _init() {
-	if (import.meta.env.SSR) {
+	if (import.meta.env.SSR || isGoogleBot()) {
 		ConfigService.isLoaded = true;
 		return;
 	}
@@ -215,7 +216,7 @@ async function _init() {
  * what was active when they first joined.
  */
 export function configSaveJoinOptions() {
-	if (import.meta.env.SSR) {
+	if (import.meta.env.SSR || isGoogleBot()) {
 		return;
 	}
 
@@ -227,7 +228,7 @@ export function configSaveJoinOptions() {
 
 let _joinOptions: undefined | string[];
 function _getJoinOptions() {
-	if (import.meta.env.SSR) {
+	if (import.meta.env.SSR || isGoogleBot()) {
 		return [];
 	}
 
@@ -238,7 +239,7 @@ type Overrides = Record<string, ValueType>;
 let _overrides: undefined | Overrides;
 
 export function configSaveOverrides(overrides: Overrides) {
-	if (import.meta.env.SSR) {
+	if (import.meta.env.SSR || isGoogleBot()) {
 		return;
 	}
 
@@ -249,7 +250,7 @@ export function configSaveOverrides(overrides: Overrides) {
 }
 
 function _configGetOverrides(): Overrides {
-	if (import.meta.env.SSR) {
+	if (import.meta.env.SSR || isGoogleBot()) {
 		return {};
 	}
 

@@ -1,49 +1,49 @@
 import fallbackImageUrl from '../../app/img/meta-default-image.png';
 import { MetaContainer } from './meta-container';
 
-export class FbMetaContainer extends MetaContainer {
-	_attr = 'property';
+export class FbMetaContainer {
+	readonly meta = new MetaContainer('property');
 
 	set title(value: string | null) {
-		this.set('og:title', value);
+		this.meta.set('og:title', value);
 	}
 	get title() {
-		return this.get('og:title');
+		return this.meta.get('og:title');
 	}
 
 	set description(value: string | null) {
-		this.set('og:description', value);
+		this.meta.set('og:description', value);
 	}
 	get description() {
-		return this.get('og:description');
+		return this.meta.get('og:description');
 	}
 
 	set url(value: string | null) {
-		this.set('og:url', value);
+		this.meta.set('og:url', value);
 	}
 	get url() {
-		return this.get('og:url');
+		return this.meta.get('og:url');
 	}
 
 	set type(value: string | null) {
-		this.set('og:type', value);
+		this.meta.set('og:type', value);
 	}
 	get type() {
-		return this.get('og:type');
+		return this.meta.get('og:type');
 	}
 
 	set image(value: string | null) {
 		// Default to the fallback.
-		this.set('og:image', value ?? fallbackImageUrl);
+		this.meta.set('og:image', value ?? fallbackImageUrl);
 	}
 	get image() {
-		return this.get('og:image');
+		return this.meta.get('og:image');
 	}
 
 	set profileId(value: string | null) {
-		this.set('og:profile_id', value);
+		this.meta.set('og:profile_id', value);
 	}
 	get profileId() {
-		return this.get('og:profile_id');
+		return this.meta.get('og:profile_id');
 	}
 }

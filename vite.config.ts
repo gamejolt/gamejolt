@@ -398,7 +398,7 @@ export default defineConfig(async () => {
 					// By default vite outputs filenames with their chunks, but
 					// some ad blockers are outrageously aggressive with their
 					// filter lists, for example blocking any file that contains
-					// the string 'follow-widget'. It'd ridiculous. For this
+					// the string 'follow-widget'. It's ridiculous. For this
 					// reason, do not output filenames in prod web-based builds.
 					if (
 						gjOpts.environment === 'production' &&

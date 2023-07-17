@@ -1,8 +1,10 @@
+import { isGoogleBot } from '../../../../_common/device/device.service';
+
 export class GrecaptchaSdk {
 	private static bootstrapPromise: Promise<void> | null = null;
 
 	static load() {
-		if (import.meta.env.SSR) {
+		if (import.meta.env.SSR || isGoogleBot()) {
 			return;
 		}
 

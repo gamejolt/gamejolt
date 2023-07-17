@@ -2,6 +2,7 @@ import { computed, inject, InjectionKey, ref, Ref, unref, watch } from 'vue';
 import { Router } from 'vue-router';
 import { Analytics } from '../../_common/analytics/analytics.service';
 import { Connection } from '../../_common/connection/connection-service';
+import { isGoogleBot } from '../../_common/device/device.service';
 import { Screen } from '../../_common/screen/screen-service';
 import { SettingFeedNotifications } from '../../_common/settings/settings.service';
 import { CommonStore } from '../../_common/store/common-store';
@@ -30,7 +31,7 @@ export function createBannerStore({
 				)
 			),
 			isActive: computed(() => {
-				if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || Screen.isXs) {
+				if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || Screen.isXs || isGoogleBot()) {
 					return false;
 				}
 
