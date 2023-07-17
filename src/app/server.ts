@@ -6,12 +6,13 @@ import { translationsReady } from '../_common/translate/translate.service';
 import { createApp } from './bootstrap';
 
 export default async (context: any) => {
+	Environment.ssrContext = context;
+	setDeviceUserAgent(context.ua);
+
 	const { app, router } = await createApp();
 
 	const s = Date.now();
 
-	Environment.ssrContext = context;
-	setDeviceUserAgent(context.ua);
 	router.push(context.url);
 
 	// Wait until the route has resolved all possible async components and

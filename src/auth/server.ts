@@ -4,12 +4,12 @@ import { Meta } from '../_common/meta/meta-service';
 import { createApp as bootstrapCreateApp } from './bootstrap';
 
 export default async function (context: typeof Environment.ssrContext) {
+	Environment.ssrContext = context;
+	setDeviceUserAgent(context.ua);
+
 	const { app, router } = await bootstrapCreateApp();
 
 	const s = Date.now();
-
-	Environment.ssrContext = context;
-	setDeviceUserAgent(context.ua);
 
 	// set the router to the desired URL before rendering
 	router.push(context.url);
