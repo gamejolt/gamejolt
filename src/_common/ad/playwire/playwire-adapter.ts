@@ -4,6 +4,7 @@ import { AdSlot } from '../ad-slot-info';
 import { AdAdapterBase } from '../adapter-base';
 import AppAdPlaywire from './AppAdPlaywire.vue';
 import AppAdPlaywireVideo from './AppAdPlaywireVideo.vue';
+import { isGoogleBot } from '../../device/device.service';
 
 export class AdPlaywireAdapter extends AdAdapterBase {
 	hasVideoSupport = true;
@@ -25,7 +26,7 @@ export class AdPlaywireAdapter extends AdAdapterBase {
 	}
 
 	run(cb: (ramp: any) => MaybePromise<void>) {
-		if (import.meta.env.SSR) {
+		if (import.meta.env.SSR || isGoogleBot()) {
 			return;
 		}
 

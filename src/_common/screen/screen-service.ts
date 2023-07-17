@@ -1,4 +1,4 @@
-import { reactive } from '@vue/reactivity';
+import { reactive } from 'vue';
 import { debounce, run } from '../../utils/utils';
 import { EventTopic } from '../system/event/event-topic';
 

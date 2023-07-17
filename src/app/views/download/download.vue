@@ -1,16 +1,15 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { sleep } from '../../../utils/utils';
-import { shallowSetup } from '../../../utils/vue';
 import {
-	AdSettingsContainer,
-	releasePageAdsSettings,
-	setPageAdsSettings,
-	useAdsController,
+AdSettingsContainer,
+releasePageAdsSettings,
+setPageAdsSettings,
+useAdsController,
 } from '../../../_common/ad/ad-store';
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
+import { isGoogleBot } from '../../../_common/device/device.service';
 import { GameBuild } from '../../../_common/game/build/build.model';
 import { Game } from '../../../_common/game/game.model';
 import { GameSong } from '../../../_common/game/song/song.model';
@@ -23,6 +22,8 @@ import { PayloadError } from '../../../_common/payload/payload-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
+import { sleep } from '../../../utils/utils';
+import { shallowSetup } from '../../../utils/vue';
 import AppGameBadge from '../../components/game/badge/badge.vue';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 
@@ -119,7 +120,7 @@ export default class RouteDownload extends BaseRouteComponent {
 		this._setAdSettings();
 
 		// Don't download on SSR.
-		if (import.meta.env.SSR) {
+		if (import.meta.env.SSR || isGoogleBot()) {
 			return;
 		}
 
