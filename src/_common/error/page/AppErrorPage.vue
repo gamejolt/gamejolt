@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineAsyncComponent, markRaw, onMounted, onUnmounted } from 'vue';
+import { computed, defineAsyncComponent, markRaw, onMounted, onUnmounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { Meta } from '../../meta/meta-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
@@ -27,6 +27,16 @@ const page = computed(() => {
 	}
 });
 
+// Payload sets this error value if there was a payload error. We want to
+// deindex any page that shows an error. When they click to go to a new page,
+// the Meta gets cleared out, and this deindex will go away. We don't need to
+// clean it up ourselves, basically, since it gets cleared on each new route.
+watch(error, () => {
+	if (error.value) {
+		Meta.seo.deindex();
+	}
+});
+
 onMounted(() => {
 	// We want to do it AFTER the route resolves for the next route we are going to.
 	watcher = router.afterEach(() => {
@@ -34,9 +44,6 @@ onMounted(() => {
 			clearError();
 		}
 	});
-
-	// We don't want to index error pages.
-	Meta.seo.deindex();
 });
 
 onUnmounted(() => {
