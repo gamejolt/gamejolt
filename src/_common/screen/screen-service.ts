@@ -1,5 +1,6 @@
 import { reactive } from 'vue';
 import { debounce, run } from '../../utils/utils';
+import { getDeviceType } from '../device/device.service';
 import { EventTopic } from '../system/event/event-topic';
 
 /**
@@ -18,6 +19,11 @@ const HIDPI_BREAKPOINT = 1.5;
 
 export const onScreenResize = new EventTopic<void>();
 
+// We use their user agent to initialize our initial breakpoints so that mobile
+// SSR renderers will correctly get the right styling. That is, if they set the
+// user agent correctly.
+const _deviceType = getDeviceType();
+
 class ScreenService {
 	/**
 	 * The actual width of the browser/screen context. Either in actual pixels,
@@ -31,13 +37,13 @@ class ScreenService {
 	 */
 	height = 0;
 
-	isXs = false;
-	isSm = false;
+	isXs = _deviceType === 'mobile';
+	isSm = _deviceType === 'tablet';
 	isMd = false;
 	/**
-	 * lg is the default true state.
+	 * lg is the default fallback.
 	 */
-	isLg = true;
+	isLg = !this.isXs && !this.isSm;
 
 	get breakpoint() {
 		return this.isXs ? 'xs' : this.isSm ? 'sm' : this.isMd ? 'md' : 'lg';
