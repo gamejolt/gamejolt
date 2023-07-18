@@ -391,7 +391,9 @@ export default defineConfig(async () => {
 			// them all is quite a bit for any client to handle. It also seems
 			// like Google's dynamic crawler might be trying to load them all in
 			// and exhausting it's request limit.
-			modulePreload: false,
+			modulePreload: {
+				polyfill: false,
+			},
 
 			// Never inline stuff.
 			assetsInlineLimit: 0,
