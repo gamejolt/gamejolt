@@ -42,7 +42,7 @@ const { user: sessionUser } = useCommonStore();
 		}"
 	>
 		<component :is="userHoverCard ? AppUserCardHover : 'div'" :user="user" class="-avatar">
-			<AppUserAvatarBubble :user="user" show-frame show-verified />
+			<AppUserAvatarBubble :user="user" show-frame show-verified smoosh />
 		</component>
 
 		<div class="-label">
