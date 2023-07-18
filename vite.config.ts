@@ -419,10 +419,11 @@ export default defineConfig(async () => {
 						const hashVersion = '';
 						// const hashVersion = '-v2';
 
+						// TODO(chunk-optimization: revert when ready for prod)
 						return <RollupOptions>{
 							output: {
-								chunkFileNames: `assets/[hash]${hashVersion}.js`,
-								assetFileNames: `assets/[hash]${hashVersion}.[ext]`,
+								chunkFileNames: `assets/[name].[hash]${hashVersion}.js`,
+								assetFileNames: `assets/[name].[hash]${hashVersion}.[ext]`,
 							},
 						};
 					}
