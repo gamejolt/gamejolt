@@ -1,15 +1,5 @@
 <script lang="ts" setup>
-import {
-	CSSProperties,
-	PropType,
-	Ref,
-	computed,
-	nextTick,
-	onMounted,
-	onUnmounted,
-	ref,
-	toRefs,
-} from 'vue';
+import { CSSProperties, PropType, Ref, computed, nextTick, onUnmounted, ref, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
@@ -29,9 +19,7 @@ import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue'
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { kThemeBgActual, kThemeFgMuted } from '../../../../_common/theme/variables';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
-import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
-import { User } from '../../../../_common/user/user.model';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
 import {
 	CSSPixelValue,
@@ -66,9 +54,6 @@ const isLoading = ref(false);
 const hasError = ref(false);
 const hasActionButtonError = ref(false);
 
-const participatingFriends = ref<User[]>([]);
-const participatingFriendCount = ref(0);
-
 const localQuest = ref() as Ref<Quest | undefined>;
 
 const quest = computed(() => localQuest.value || resource?.value);
@@ -97,70 +82,6 @@ const shouldShowActionButton = computed(() => {
 	return isQuestAcceptAction.value || objectives.value.some(i => i.has_unclaimed_rewards);
 });
 
-const friendsText = computed(() => {
-	const count = participatingFriendCount.value;
-	if (count <= 0) {
-		return $gettext(`None of your friends have started this quest`);
-	}
-
-	const users = participatingFriends.value;
-
-	if (users.length === 1) {
-		return $gettextInterpolate(`%{ name1 } has started this quest!`, {
-			name1: users[0].display_name,
-		});
-	}
-
-	if (users.length === 2) {
-		return $gettextInterpolate(`%{ name1 } and %{ name2 } have started this quest!`, {
-			name1: users[0].display_name,
-			name2: users[1].display_name,
-		});
-	}
-
-	if (users.length >= 3 && count === 3) {
-		return $gettextInterpolate(
-			`%{ name1 }, %{ name2 } and %{ name3 } have started this quest!`,
-			{
-				name1: users[0].display_name,
-				name2: users[1].display_name,
-				name3: users[2].display_name,
-			}
-		);
-	}
-
-	if (users.length >= 3 && count === 4) {
-		return $gettextInterpolate(
-			`%{ name1 }, %{ name2 }, %{ name3 } and 1 other friend have started this quest!`,
-			{
-				name1: users[0].display_name,
-				name2: users[1].display_name,
-				name3: users[2].display_name,
-			}
-		);
-	}
-
-	if (users.length >= 3 && count > 4) {
-		return $gettextInterpolate(
-			`%{ name1 }, %{ name2 }, %{ name3 } and %{ num } other friends have started this quest!`,
-			{
-				name1: users[0].display_name,
-				name2: users[1].display_name,
-				name3: users[2].display_name,
-				num: count - 3,
-			}
-		);
-	}
-
-	if (GJ_ENVIRONMENT === 'development' || GJ_IS_STAGING) {
-		console.error('Encountered known followers unknown user number for text.', {
-			users: users.length,
-			count: count,
-		});
-	}
-	return '';
-});
-
 async function init() {
 	if (isLoading.value) {
 		return;
@@ -170,15 +91,10 @@ async function init() {
 	try {
 		const payload = await Api.sendFieldsRequest(
 			`/mobile/quest/${questId.value}`,
-			{
-				quest: true,
-				participatingFriends: true,
-				participatingFriendCount: true,
-			},
+			{ quest: true },
 			{ detach: true }
 		);
-		participatingFriends.value = User.populate(payload.participatingFriends);
-		participatingFriendCount.value = payload.participatingFriendCount;
+
 		if (payload.quest) {
 			onNewQuest(storeModel(Quest, payload.quest));
 		}
@@ -189,9 +105,7 @@ async function init() {
 	isLoading.value = false;
 }
 
-onMounted(async () => {
-	await init();
-});
+init();
 
 onUnmounted(async () => {
 	// Wait a tick in case a different quest window was opened and changed the activeQuestId.
@@ -367,35 +281,6 @@ const fillStyles: CSSProperties = {
 											is-percent
 											:icon="quest.isAllComplete ? 'star' : undefined"
 										/>
-
-										<template v-if="participatingFriendCount > 0">
-											<AppSpacer vertical :scale="4" />
-
-											<div
-												:style="{
-													display: `flex`,
-													justifyContent: `center`,
-													alignItems: `center`,
-													fontSize: kFontSizeSmall.px,
-													color: kThemeFgMuted,
-													fontWeight: 400,
-												}"
-											>
-												<div>
-													<AppUserAvatarList
-														:style="{
-															marginRight: `16px`,
-														}"
-														:users="participatingFriends"
-														sm
-														inline
-													/>
-												</div>
-												<span>
-													{{ friendsText }}
-												</span>
-											</div>
-										</template>
 									</section>
 
 									<section class="section">
