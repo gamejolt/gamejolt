@@ -353,7 +353,7 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 .-name-row
 	text-overflow()
 
-	&*
+	& *
 		vertical-align: middle
 
 .-loading-top
