@@ -46,6 +46,7 @@ interface ShorthandTimeOptions {
 	precision?: ShorthandTimePrecision;
 	joiner?: string;
 	nowText?: string;
+	trailingText?: string;
 }
 
 export function shorthandReadableTime(
@@ -55,6 +56,7 @@ export function shorthandReadableTime(
 		precision = 'exact',
 		joiner = ', ',
 		nowText = 'now',
+		trailingText,
 	}: ShorthandTimeOptions = {}
 ): string {
 	const now = getCurrentServerTime();
@@ -115,5 +117,9 @@ export function shorthandReadableTime(
 		return nowText;
 	}
 
-	return strings.join(joiner);
+	const joinedText = strings.join(joiner);
+	if (trailingText) {
+		return `${joinedText} ${trailingText}`;
+	}
+	return joinedText;
 }

@@ -3,14 +3,18 @@ import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
 import { CurrencyType } from '../../../../_common/currency/currency-type';
+import { shorthandReadableTime } from '../../../../_common/filters/duration';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import { illPointyThing } from '../../../../_common/illustration/illustrations';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerLayerDrawerItem from '../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
-import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
+import AppStickerPack, {
+	StickerPackExpiryStyles,
+} from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
 import { UserStickerPack } from '../../../../_common/sticker/pack/user-pack.model';
 import {
@@ -25,7 +29,6 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vu
 import { styleTextOverflow } from '../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../_styles/variables';
 import { run } from '../../../../utils/utils';
-import { illPointyThing } from '../../../../_common/illustration/illustrations';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
 type FormModel = {
@@ -145,10 +148,19 @@ function sortStickers(sorting: StickerSortMethod) {
 					:show-details="{
 						name: true,
 					}"
-					:expiry-info="userPack.expires_on"
 					can-click-pack
 					@click-pack="openPack(userPack)"
-				/>
+				>
+					<div v-if="userPack.expires_on" :style="StickerPackExpiryStyles">
+						{{
+							shorthandReadableTime(userPack.expires_on, {
+								allowFuture: true,
+								precision: 'rough',
+								nowText: $gettext(`Expired`),
+							})
+						}}
+					</div>
+				</AppStickerPack>
 			</div>
 			<div v-else>
 				<AppIllustration :asset="illPointyThing" />

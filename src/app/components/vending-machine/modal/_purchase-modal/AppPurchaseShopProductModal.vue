@@ -1,5 +1,5 @@
 <script lang="ts">
-import { PropType, Ref, computed, ref, toRefs } from 'vue';
+import { PropType, Ref, computed, onUnmounted, ref, toRefs, watch } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
@@ -12,6 +12,7 @@ import {
 	CurrencyType,
 	canAffordCurrency,
 } from '../../../../../_common/currency/currency-type';
+import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
@@ -35,6 +36,7 @@ import {
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 } from '../../../../../_styles/mixins';
+import { getCurrentServerTime } from '../../../../../utils/server-time';
 import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.route';
 import { showNewProductModal } from '../_product/modal/modal.service';
 
@@ -170,6 +172,54 @@ const balanceRefs = { coinBalance, joltbuxBalance };
 
 const processingPurchaseCurrencyId = ref<string>();
 
+let timerBuilder: NodeJS.Timer | null = null;
+const timeRemaining = ref<string>();
+
+function getTimeRemaining(endsOn: number) {
+	if (endsOn - getCurrentServerTime() < 1_000) {
+		if (timerBuilder) {
+			clearInterval(timerBuilder!);
+			timerBuilder = null;
+		}
+		timeRemaining.value = $gettext(`No longer for sale.`);
+		return;
+	}
+
+	timeRemaining.value = $gettextInterpolate(`Limited time to purchase: %{ time }`, {
+		time: shorthandReadableTime(endsOn, {
+			nowText: '0s',
+			precision: 'exact',
+			allowFuture: true,
+		}),
+	});
+}
+
+watch(
+	shopProduct,
+	(product, oldProduct) => {
+		const endsOn = product.ends_on;
+		const oldEndsOn = oldProduct?.ends_on;
+
+		if (endsOn !== oldEndsOn && timerBuilder) {
+			clearInterval(timerBuilder);
+			timerBuilder = null;
+		}
+
+		if (endsOn) {
+			timerBuilder ??= setInterval(() => getTimeRemaining(endsOn), 1_000);
+			getTimeRemaining(endsOn);
+			return;
+		}
+
+		if (timerBuilder) {
+			clearInterval(timerBuilder!);
+			timerBuilder = null;
+		}
+		timeRemaining.value = undefined;
+	},
+	{ immediate: true }
+);
+
 const currencyOptionsList = computed(() => Object.entries(currencyOptions.value));
 
 const joltbuxEntry = computed(() => {
@@ -222,6 +272,13 @@ const headerLabel = computed(() => {
 		return $gettext(`Purchase background`);
 	}
 	return $gettext(`Purchase item`);
+});
+
+onUnmounted(() => {
+	if (timerBuilder) {
+		clearInterval(timerBuilder);
+		timerBuilder = null;
+	}
 });
 
 /**
@@ -344,6 +401,14 @@ function getItemWidthStyles(ratio: number) {
 				</div>
 
 				<AppSpacer vertical :scale="4" />
+
+				<template v-if="timeRemaining">
+					<div>
+						{{ timeRemaining }}
+					</div>
+
+					<AppSpacer vertical :scale="4" />
+				</template>
 
 				<div v-if="currencyOptionsList.length !== 1" class="text-center">
 					<template v-if="!currencyOptionsList.length">
