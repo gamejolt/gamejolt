@@ -53,7 +53,7 @@ interface ShorthandTimeOptions {
 	 * This is only used when remaining time is displayed, and has no effect
 	 * when {@link nowText} is displayed.
 	 */
-	timeTransformer?: (_time: string) => string;
+	timeTransformer?: (time: string) => string;
 }
 
 export function shorthandReadableTime(

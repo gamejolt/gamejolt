@@ -1,5 +1,5 @@
 <script lang="ts">
-import { PropType, Ref, computed, onUnmounted, ref, toRefs, watch } from 'vue';
+import { PropType, Ref, computed, onUnmounted, ref, toRefs, watchEffect } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
@@ -175,13 +175,24 @@ const processingPurchaseCurrencyId = ref<string>();
 let timerBuilder: NodeJS.Timer | null = null;
 const timeRemaining = ref<string>();
 
-function getTimeRemaining(endsOn: number) {
+const isExpired = ref(false);
+
+function clearTimerBuilder() {
+	if (timerBuilder) {
+		clearInterval(timerBuilder);
+		timerBuilder = null;
+	}
+}
+
+/**
+ * Updates the {@link timeRemaining} text and {@link isExpired} state, and
+ * clears the timer once we've hit an expired state.
+ */
+function checkTimeRemaining(endsOn: number) {
 	if (endsOn - getCurrentServerTime() < 1_000) {
-		if (timerBuilder) {
-			clearInterval(timerBuilder!);
-			timerBuilder = null;
-		}
+		clearTimerBuilder();
 		timeRemaining.value = $gettext(`No longer for sale.`);
+		isExpired.value = true;
 		return;
 	}
 
@@ -194,31 +205,21 @@ function getTimeRemaining(endsOn: number) {
 	});
 }
 
-watch(
-	shopProduct,
-	(product, oldProduct) => {
-		const endsOn = product.ends_on;
-		const oldEndsOn = oldProduct?.ends_on;
+watchEffect(() => {
+	const endsOn = shopProduct.value.ends_on;
+	// Not sure if endsOn is different due to a prop changing, so we should just
+	// always clear the timer builder and set up fresh again as required.
+	clearTimerBuilder();
 
-		if (endsOn !== oldEndsOn && timerBuilder) {
-			clearInterval(timerBuilder);
-			timerBuilder = null;
-		}
+	if (endsOn) {
+		timerBuilder = setInterval(() => checkTimeRemaining(endsOn), 1_000);
+		checkTimeRemaining(endsOn);
+		return;
+	}
 
-		if (endsOn) {
-			timerBuilder ??= setInterval(() => getTimeRemaining(endsOn), 1_000);
-			getTimeRemaining(endsOn);
-			return;
-		}
-
-		if (timerBuilder) {
-			clearInterval(timerBuilder!);
-			timerBuilder = null;
-		}
-		timeRemaining.value = undefined;
-	},
-	{ immediate: true }
-);
+	timeRemaining.value = undefined;
+	isExpired.value = false;
+});
 
 const currencyOptionsList = computed(() => Object.entries(currencyOptions.value));
 
@@ -313,10 +314,6 @@ async function purchaseProduct(options: PurchaseData) {
 }
 
 function handleStickerPackPurchase(product: UserStickerPack) {
-	if (!(product instanceof UserStickerPack)) {
-		return;
-	}
-
 	if (stickerPacks.value.some(i => i.id === product.id)) {
 		// Was probably handled somewhere already, ignore.
 		return;
@@ -436,6 +433,7 @@ function getItemWidthStyles(ratio: number) {
 							margin: 0,
 						}"
 						:disabled="
+							isExpired ||
 							!!processingPurchaseCurrencyId ||
 							!canAffordCurrency(currency.id, amount, balanceRefs)
 						"
