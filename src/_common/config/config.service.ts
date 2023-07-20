@@ -158,12 +158,6 @@ export const configShowStoreInMoreMenu = new ConfigOptionBoolean(
 	false
 );
 
-export const configHomeFeedSwitcher = new ConfigOptionBoolean('web_home_feed_switcher', false, {
-	conditions: {
-		join: true,
-	},
-});
-
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }

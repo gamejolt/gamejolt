@@ -1,7 +1,6 @@
 <script lang="ts">
 import { computed, ref, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
-import { arrayShuffle } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Environment } from '../../../../_common/environment/environment.service';
@@ -14,9 +13,9 @@ import { Realm } from '../../../../_common/realm/realm-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { arrayShuffle } from '../../../../utils/array';
 import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
 import socialImage from '../../../img/social/social-share-header.png';
-import { updateHomeRouteAnalyticsPath } from '../../home/RouteHome.vue';
 import AppHomeDefault from './AppHomeDefault.vue';
 import AppHomeSlider from './AppHomeSlider.vue';
 
@@ -108,8 +107,6 @@ const { isBootstrapped } = createAppRoute({
 				: [];
 			HistoryCache.store(route, creatorPosts.value, CachedCreatorsKey);
 		}
-
-		updateHomeRouteAnalyticsPath(route, user.value);
 	},
 });
 </script>
