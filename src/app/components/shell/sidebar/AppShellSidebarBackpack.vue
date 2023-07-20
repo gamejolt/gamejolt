@@ -110,33 +110,33 @@ function sortStickers(sorting: StickerSortMethod) {
 
 <template>
 	<div id="shell-sidebar-backpack" class="fill-offset">
+		<AppCurrencyPillList
+			:currencies="{
+				[CurrencyType.joltbux.id]: [CurrencyType.joltbux, joltbuxBalance],
+				[CurrencyType.coins.id]: [CurrencyType.coins, coinBalance],
+			}"
+			direction="row"
+			:gap="8"
+			wrap
+		/>
+
+		<AppSpacer vertical :scale="2" />
+
+		<div
+			:style="{
+				display: `flex`,
+				alignItems: `flex-start`,
+				gap: `12px`,
+			}"
+		>
+			<AppButton block solid @click="onClickVendingMachine()">
+				{{ $gettext(`Open Shop`) }}
+			</AppButton>
+		</div>
+
+		<AppSpacer vertical :scale="4" />
+
 		<AppForm :controller="form">
-			<AppCurrencyPillList
-				:currencies="{
-					[CurrencyType.joltbux.id]: [CurrencyType.joltbux, joltbuxBalance],
-					[CurrencyType.coins.id]: [CurrencyType.coins, coinBalance],
-				}"
-				direction="row"
-				:gap="8"
-				wrap
-			/>
-
-			<AppSpacer vertical :scale="2" />
-
-			<div
-				:style="{
-					display: `flex`,
-					alignItems: `flex-start`,
-					gap: `12px`,
-				}"
-			>
-				<AppButton block solid @click="onClickVendingMachine()">
-					{{ $gettext(`Open Shop`) }}
-				</AppButton>
-			</div>
-
-			<AppSpacer vertical :scale="4" />
-
 			<div class="_section-header">
 				{{ $gettext(`Sticker packs`) }}
 			</div>
