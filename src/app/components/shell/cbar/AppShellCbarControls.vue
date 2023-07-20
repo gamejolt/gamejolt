@@ -27,6 +27,12 @@ const highlight = computed(() => {
 	return undefined;
 });
 
+const showQuestsBlip = computed(() => {
+	// TODO(quest-blip-rework): Should check new quest ids too, but we need
+	// better ways to clear them first.
+	return questActivityIds.value.size > 0;
+});
+
 function trackAndTogglePane(pane: TogglableLeftPane) {
 	const currentPane = visibleLeftPane.value;
 	let method: 'show' | 'hide' | 'switch';
@@ -99,7 +105,7 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 				class="-control"
 				:highlight="highlight"
 				:is-active="visibleLeftPane === 'quests'"
-				:show-blip="questActivityIds.size > 0"
+				:show-blip="showQuestsBlip"
 				is-control
 			>
 				<a
