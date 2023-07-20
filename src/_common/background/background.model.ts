@@ -4,7 +4,7 @@ import { Model } from '../model/model.service';
 
 const DefaultScale = 2.0;
 
-export enum BackgroundScaling {
+export const enum BackgroundScaling {
 	stretch = 'stretch',
 	tile = 'tile',
 }
