@@ -24,7 +24,7 @@ export interface CommentTopicPayload {
 export function createGridCommentChannel(client: GridClient, { userId }: { userId: number }) {
 	const { socketController } = client;
 
-	const channelController = createSocketChannelController(`comment:${userId}`, socketController);
+	const channelController = createSocketChannelController(`comment`, socketController);
 	channelController.listenTo('update-reactions', _onUpdateReaction);
 
 	const joinPromise = channelController.join();
