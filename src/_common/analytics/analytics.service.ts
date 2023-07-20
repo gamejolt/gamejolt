@@ -550,25 +550,10 @@ export function trackFiresideStopStreaming(trigger: string) {
 	trackFiresideAction({ action: 'stop-streaming', trigger: trigger });
 }
 
-export function trackHomeFeedSwitch({
-	path,
-	isActive: is_active,
-	realmId: realm_id,
-	realmIndex: realm_index,
-	realmCount: realm_count,
-}: {
-	path: string;
-	isActive: boolean;
-	realmId: number | undefined;
-	realmIndex: number | undefined;
-	realmCount: number | undefined;
-}) {
+export function trackHomeFeedSwitch({ path, isActive }: { path: string; isActive: boolean }) {
 	_trackEvent('home_feed_switch', {
 		path,
-		is_active,
-		realm_id,
-		realm_index,
-		realm_count,
+		is_active: isActive,
 	});
 }
 

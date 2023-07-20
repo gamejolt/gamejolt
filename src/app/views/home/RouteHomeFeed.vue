@@ -122,7 +122,7 @@ const isShowAllGamesVisible = computed(() => {
 	return !isShowingAllGames.value && games.value.length > 7 && gameFilterQuery.value === '';
 });
 
-const feedTab = computed(() => HomeFeedService.getRouteFeedTab(route));
+const activeFeedTab = computed(() => HomeFeedService.getRouteFeedTab(route));
 
 const tabs = computed(() => {
 	if (HomeFeedService.getDefault() === HOME_FEED_FYP) {
@@ -334,7 +334,7 @@ async function refreshQuests() {
 					/>
 				</template>
 
-				<AppHomeFeedMenu v-if="Screen.isDesktop" :tabs="tabs" :feed-tab="feedTab" />
+				<AppHomeFeedMenu v-if="Screen.isDesktop" :tabs="tabs" :active-tab="activeFeedTab" />
 
 				<!-- Realm feed will handle its own add button. -->
 				<AppPostAddButton @add="onPostAdded" />
@@ -355,11 +355,11 @@ async function refreshQuests() {
 
 					<hr class="full-bleed" />
 
-					<AppHomeFeedMenu :tabs="tabs" :feed-tab="feedTab" />
+					<AppHomeFeedMenu :tabs="tabs" :active-tab="activeFeedTab" />
 				</template>
 
-				<RouteHomeActivity v-if="feedTab === 'activity'" />
-				<RouteHomeFyp v-else-if="feedTab === 'fyp'" />
+				<RouteHomeActivity v-if="activeFeedTab === HOME_FEED_ACTIVITY" />
+				<RouteHomeFyp v-else-if="activeFeedTab === HOME_FEED_FYP" />
 			</AppPageContainer>
 		</section>
 	</AppShellPageBackdrop>
