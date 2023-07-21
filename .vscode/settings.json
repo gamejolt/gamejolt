@@ -60,5 +60,6 @@
 	"html.autoCreateQuotes": false,
 	"editor.linkedEditing": true,
 	"editor.semanticHighlighting.enabled": true,
-	"emmet.excludeLanguages": ["markdown", "stylus", "styl"]
+	"emmet.excludeLanguages": ["markdown", "stylus", "styl"],
+	"vue.updateImportsOnFileMove.enabled": true
 }

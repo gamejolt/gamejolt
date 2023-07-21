@@ -17,6 +17,7 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useEventSubscription } from '../../../../../_common/system/event/event-topic';
 import { kThemeBiBg, kThemeBiFg } from '../../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	styleBorderRadiusBase,
 	styleElevate,
@@ -26,9 +27,8 @@ import {
 import { CSSPixelValue, kFontFamilyHeading, kFontSizeBase } from '../../../../../_styles/variables';
 import { useResizeObserver } from '../../../../../utils/resize-observer';
 import { debounce } from '../../../../../utils/utils';
-import { illNoChat } from '../../../../img/ill/illustrations';
+import { illNoChat } from '../../../../../_common/illustration/illustrations';
 import { useGridStore } from '../../../grid/grid-store';
-import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
 import { loadOlderChatMessages, onNewChatMessage } from '../../client';
 import { TIMEOUT_CONSIDER_QUEUED } from '../../message';
 import { ChatRoom } from '../../room';

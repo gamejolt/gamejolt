@@ -10,8 +10,8 @@ import {
 	RouterHistory,
 } from 'vue-router';
 import { Environment } from '../_common/environment/environment.service';
-import { routeError404 } from '../_common/error/page/page.route';
-import { logger as navigateLogger, Navigate } from '../_common/navigate/navigate.service';
+import { routeError404 } from '../_common/error/page/404.route';
+import { Navigate, logger as navigateLogger } from '../_common/navigate/navigate.service';
 import { initScrollBehavior } from '../_common/scroll/auto-scroll/autoscroll.service';
 import { escapeRegex } from './string';
 

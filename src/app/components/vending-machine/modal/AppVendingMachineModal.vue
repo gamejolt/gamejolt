@@ -5,11 +5,7 @@ import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue'
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
 import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
-import {
-	Currency,
-	CurrencyType,
-	canAffordCurrency,
-} from '../../../../_common/currency/currency-type';
+import { Currency, CurrencyType } from '../../../../_common/currency/currency-type';
 import {
 	featureMicrotransactions,
 	fetchFeatureToggles,
@@ -17,6 +13,7 @@ import {
 import { formatNumber } from '../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import { InventoryShopProductSale } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -27,7 +24,6 @@ import { useModal } from '../../../../_common/modal/modal.service';
 import { storeModelList } from '../../../../_common/model/model-store.service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -45,7 +41,6 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import {
 	styleBorderRadiusBase,
-	styleBorderRadiusCircle,
 	styleBorderRadiusLg,
 	styleChangeBg,
 	styleElevate,
@@ -60,7 +55,6 @@ import {
 	kFontSizeH3,
 	kStrongEaseOut,
 } from '../../../../_styles/variables';
-import { illNoCommentsSmall } from '../../../img/ill/illustrations';
 import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
 import AppVendingMachineProduct from './_product/AppVendingMachineProduct.vue';
 import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
@@ -79,8 +73,6 @@ interface ProductChunk {
 
 const { isDark } = useThemeStore();
 const { coinBalance, joltbuxBalance } = useCommonStore();
-
-const balanceRefs = { coinBalance, joltbuxBalance };
 
 const modal = useModal()!;
 
@@ -103,7 +95,7 @@ const hasProducts = computed(() => {
 const currencyCardData = computed(() => {
 	const result = [{ currency: CurrencyType.coins, amount: coinBalance.value }];
 	if (featureMicrotransactions.value) {
-		result.push({ currency: CurrencyType.joltbux, amount: joltbuxBalance.value });
+		result.unshift({ currency: CurrencyType.joltbux, amount: joltbuxBalance.value });
 	}
 	return result;
 });
@@ -179,16 +171,6 @@ onMounted(() => {
 	init();
 });
 
-function canPurchaseProduct(shopProduct: InventoryShopProductSale) {
-	return (
-		shopProduct.validPricings.filter(
-			i =>
-				!!i.knownCurrencyType &&
-				canAffordCurrency(i.knownCurrencyType, i.price, balanceRefs)
-		).length > 0
-	);
-}
-
 async function purchaseProduct(shopProduct: InventoryShopProductSale) {
 	if (productProcessing.value) {
 		return;
@@ -196,10 +178,7 @@ async function purchaseProduct(shopProduct: InventoryShopProductSale) {
 	const currencyOptions = shopProduct.validPricingsData;
 	const currencyOptionsList = Object.entries(currencyOptions);
 	if (currencyOptionsList.length === 0) {
-		showErrorGrowl($gettext(`This pack is not available for purchase right now.`));
-		return;
-	}
-	if (!canPurchaseProduct(shopProduct)) {
+		showErrorGrowl($gettext(`This item is not available for purchase right now.`));
 		return;
 	}
 
@@ -265,9 +244,6 @@ const loadingFadeStyles = computed<CSSProperties>(() => {
 			flexDirection: `column`,
 		}),
 		minHeight: `calc(min(45vh, 800px))`,
-		// Handled around the Vending Vance illustration.
-		borderBottomLeftRadius: 0,
-		borderBottomRightRadius: 0,
 	};
 });
 
@@ -392,9 +368,9 @@ const currencyCardImgStyles: CSSProperties = {
 												<AppAspectRatio
 													:ratio="1"
 													:style="{
-														...styleBorderRadiusCircle,
 														backgroundColor: kThemeFg10,
 														width: `100%`,
+														borderRadius: `50%`,
 													}"
 													:inner-styles="{
 														...styleFlexCenter(),
@@ -527,7 +503,6 @@ const currencyCardImgStyles: CSSProperties = {
 											>
 												<AppVendingMachineProduct
 													:shop-product="shopProduct"
-													:can-purchase="canPurchaseProduct(shopProduct)"
 													:disable-purchases="!!productProcessing"
 													@purchase="purchaseProduct($event)"
 												/>
@@ -545,61 +520,38 @@ const currencyCardImgStyles: CSSProperties = {
 					</AppLoadingFade>
 				</AppTheme>
 
-				<AppScrollAffix
+				<div
 					:style="{
-						zIndex: 2,
+						...styleFlexCenter({ direction: 'column' }),
+						position: 'relative',
+						backgroundColor: kThemeBgActual,
 					}"
-					anchor="bottom"
-					:offset-top="0"
-					:padding="0"
 				>
+					<!-- Vance -->
+					<AppSpacer vertical :scale="4" />
 					<div
 						:style="{
-							...styleFlexCenter({ direction: 'column' }),
-							position: 'relative',
-							backgroundColor: kThemeBgActual,
+							...styleMaxWidthForOptions({
+								ratio: 1000 / 250,
+								maxHeight: Math.max(Screen.height * 0.15, 80),
+							}),
+							width: `100%`,
 						}"
 					>
-						<!-- Vance -->
-						<AppSpacer vertical :scale="4" />
-						<div
-							:style="{
-								...styleMaxWidthForOptions({
-									ratio: 1000 / 250,
-									maxHeight: Math.max(Screen.height * 0.15, 80),
-								}),
-								width: `100%`,
-							}"
-						>
-							<AppAspectRatio :ratio="1000 / 250">
-								<img
-									:src="imageVance"
-									:style="{
-										width: `100%`,
-										height: `100%`,
-										userSelect: `none`,
-									}"
-									alt="Vending Vance"
-								/>
-							</AppAspectRatio>
-						</div>
-						<AppSpacer vertical :scale="4" />
-
-						<!-- Rounded corner decorators -->
-						<div class="_output-corner-tl">
-							<AppTheme>
-								<div class="_output-corner-tl-border" />
-							</AppTheme>
-							<div class="_output-corner-bg" />
-						</div>
-						<div class="_output-corner-tr">
-							<AppTheme>
-								<div class="_output-corner-tr-border" />
-							</AppTheme>
-							<div class="_output-corner-bg" />
-						</div>
+						<AppAspectRatio :ratio="1000 / 250">
+							<img
+								:src="imageVance"
+								:style="{
+									width: `100%`,
+									height: `100%`,
+									userSelect: `none`,
+								}"
+								alt="Vending Vance"
+							/>
+						</AppAspectRatio>
 					</div>
-				</AppScrollAffix>
+					<AppSpacer vertical :scale="4" />
+				</div>
 			</div>
 		</div>
 	</AppModal>
@@ -619,37 +571,4 @@ const currencyCardImgStyles: CSSProperties = {
 
 	@media $media-xs
 		--pack-min-width: 140px
-
-._output-corner-tl
-._output-corner-tr
-	width: 12px
-	height: 12px
-	position: absolute
-	top: -12px
-	z-index: 3
-
-._output-corner-tl
-	left: 0
-
-._output-corner-tr
-	right: 0
-
-._output-corner-tl-border
-._output-corner-tr-border
-	border: 6px solid var(--theme-bg-offset)
-
-._output-corner-tl-border
-	border-bottom-left-radius: 12px
-
-._output-corner-tr-border
-	border-bottom-right-radius: 12px
-
-._output-corner-bg
-	background-color: var(--theme-bg)
-	width: 100%
-	height: 100%
-	position: absolute
-	left: 0
-	top: 0
-	z-index: -1
 </style>

@@ -23,6 +23,7 @@ import {
 	NotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
+import { CreatorExperienceLevel } from '../../../../../_common/creator/experience/level.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Notification } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
@@ -31,14 +32,16 @@ import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophy } from '../../../../../_common/trophy/base-trophy.model';
+import { getTrophyImg } from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { UserAvatarFrame } from '../../../../../_common/user/user-avatar/frame/frame.model';
 import { User } from '../../../../../_common/user/user.model';
-import { getTrophyImg } from '../../../trophy/thumbnail/thumbnail.vue';
+import { useAppStore } from '../../../../store/index';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
+import { getNotificationRouteLocation, gotoNotification } from './notification-routing';
 
 const props = defineProps({
 	item: {
@@ -53,6 +56,7 @@ const emit = defineEmits({
 
 const { item } = toRefs(props);
 const feed = useActivityFeed()!;
+const appStore = useAppStore();
 const router = useRouter();
 
 const canToggleContent = ref(false);
@@ -65,6 +69,8 @@ const titleText = computed(() => NotificationText.getText(notification.value, fa
 
 // Only show when there is a title text for the notification.
 const shouldShow = computed(() => titleText.value !== undefined);
+
+const notificationLocation = computed(() => getNotificationRouteLocation(notification.value));
 
 const hasDetails = computed(() => {
 	const { type, action_model } = notification.value;
@@ -96,6 +102,7 @@ const hasDetails = computed(() => {
 		Notification.TYPE_GAME_TROPHY_ACHIEVED,
 		Notification.TYPE_SITE_TROPHY_ACHIEVED,
 		Notification.TYPE_POLL_ENDED,
+		Notification.TYPE_CREATOR_LEVEL_UP,
 		Notification.TYPE_UNLOCKED_AVATAR_FRAME,
 	].includes(type);
 });
@@ -120,7 +127,7 @@ const avatarFrameImg = computed(() => {
 
 function go() {
 	notification.value.$read();
-	notification.value.go(router);
+	gotoNotification(notification.value, { router, appStore });
 	emit('clicked');
 }
 
@@ -134,7 +141,7 @@ function onMarkRead() {
 		<template v-if="shouldShow">
 			<div class="notification-item">
 				<div class="notification-container" @click.stop="go">
-					<RouterLink :to="notification.routeLocation">
+					<RouterLink :to="notificationLocation">
 						<AppTimelineListItem :is-new="isNew">
 							<template #bubble>
 								<template
@@ -194,6 +201,16 @@ function onMarkRead() {
 								>
 									<div class="-avatar-icon">
 										<AppJolticon icon="pedestals-numbers" />
+									</div>
+								</template>
+								<template
+									v-else-if="
+										notification.type === Notification.TYPE_CREATOR_LEVEL_UP &&
+										notification.action_model instanceof CreatorExperienceLevel
+									"
+								>
+									<div class="-avatar-icon">
+										<AppJolticon icon="sparkles" />
 									</div>
 								</template>
 								<template
@@ -325,6 +342,21 @@ function onMarkRead() {
 														(
 															notification.action_model as QuestNotification
 														).subtitle
+													}}
+												</span>
+												<span
+													v-else-if="
+														notification.type ===
+															Notification.TYPE_CREATOR_LEVEL_UP &&
+														notification.action_model instanceof
+															CreatorExperienceLevel &&
+														notification.action_model.ability !== null
+													"
+												>
+													{{
+														$gettext(
+															`Click to see the ability you've unlocked.`
+														)
 													}}
 												</span>
 												<span

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
-import { ChatUser } from '../../../../components/chat/user';
+import { UserCommonFields } from '../../../../../_common/user/user.model';
 import AppChatManageUserItem from '../../chat/AppChatManageUserItem.vue';
 
 defineProps({
 	user: {
-		type: Object as PropType<ChatUser>,
+		type: Object as PropType<UserCommonFields>,
 		required: true,
 	},
 	isProcessing: {

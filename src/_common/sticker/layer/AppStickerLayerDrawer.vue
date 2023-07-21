@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import AppEventItemMediaIndicator from '../../../app/components/event-item/media-indicator/AppEventItemMediaIndicator.vue';
 import { showVendingMachineModal } from '../../../app/components/vending-machine/modal/modal.service';
 import { Analytics } from '../../analytics/analytics.service';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
@@ -8,6 +7,7 @@ import AppButton from '../../button/AppButton.vue';
 import { EscapeStack, EscapeStackCallback } from '../../escape-stack/escape-stack.service';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
+import AppPageIndicator from '../../pagination/AppPageIndicator.vue';
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize, Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
@@ -335,6 +335,11 @@ function onContentDimensionsChanged() {
 
 	drawerHeight.value = Ruler.height(content.value);
 }
+
+function onClickPurchasePacks() {
+	closeStickerDrawer(stickerStore);
+	showVendingMachineModal();
+}
 </script>
 
 <template>
@@ -442,7 +447,7 @@ function onContentDimensionsChanged() {
 								</template>
 								<template v-else-if="hasLoaded">
 									<div class="text-center">
-										<p class="lead" style="padding: 0 16px">
+										<p class="lead" :style="{ padding: `0 16px` }">
 											{{
 												$gettext(
 													`Oh no! Looks like you don't have any stickers.`
@@ -450,9 +455,16 @@ function onContentDimensionsChanged() {
 											}}
 										</p>
 
-										<AppButton block trans @click="showVendingMachineModal()">
-											{{ $gettext(`Purchase packs`) }}
-										</AppButton>
+										<div
+											:style="{
+												padding: `0 16px`,
+												marginBottom: `8px`,
+											}"
+										>
+											<AppButton block solid @click="onClickPurchasePacks()">
+												{{ $gettext(`Purchase packs`) }}
+											</AppButton>
+										</div>
 									</div>
 								</template>
 								<template v-else>
@@ -461,10 +473,7 @@ function onContentDimensionsChanged() {
 							</div>
 						</component>
 						<div v-if="!Screen.isPointerMouse">
-							<AppEventItemMediaIndicator
-								:count="stickerSheets.length"
-								:current="sheetPage"
-							/>
+							<AppPageIndicator :count="stickerSheets.length" :current="sheetPage" />
 						</div>
 					</AppLoadingFade>
 				</component>

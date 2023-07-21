@@ -1,4 +1,3 @@
-export const isClient = GJ_IS_DESKTOP_APP;
 export const isSecure = typeof window !== 'undefined' && window.location.protocol === 'https:';
 
 interface SsrContext {
@@ -11,7 +10,6 @@ interface SsrContext {
 }
 
 export class Environment {
-	static isClient = GJ_IS_DESKTOP_APP;
 	static isSecure = isSecure;
 
 	static ssrContext: SsrContext = {
@@ -31,7 +29,6 @@ export class Environment {
 	static helpDocsBaseUrl = 'https://gamejolt.com/help-docs';
 	static clientSectionUrl = '';
 
-	static firesideBaseUrl = 'http://fireside.gamejolt.com';
 	static devBaseUrl = 'http://dev.gamejolt.com';
 	static gameserverUrl = (isSecure ? 'https' : 'http') + '://gamejolt.net';
 	static mediaserverUrl = 'https://m.gjcdn.net';
@@ -64,7 +61,6 @@ if (GJ_ENVIRONMENT === 'development') {
 	Environment.helpBaseUrl = 'https://development.gamejolt.com/help';
 	Environment.helpDocsBaseUrl = 'https://development.gamejolt.com/help-docs';
 
-	Environment.firesideBaseUrl = 'https://fireside.development.gamejolt.com';
 	Environment.devBaseUrl = 'https://dev.development.gamejolt.com';
 	Environment.gameserverUrl = 'https://development.gamejolt.net';
 	Environment.mediaserverUrl = 'https://media.development.gamejolt.com';
@@ -72,7 +68,7 @@ if (GJ_ENVIRONMENT === 'development') {
 
 	Environment.apiHost = 'https://development.gamejolt.com';
 	Environment.uploadHost = Environment.apiHost;
-	Environment.gameserverApiHost = 'https://development.gamejolt.com';
+	Environment.gameserverApiHost = 'https://development.gamejolt.net';
 	Environment.widgetHost = 'https://localhost:8086';
 	Environment.grid = 'https://grid.development.gamejolt.com/grid';
 	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';

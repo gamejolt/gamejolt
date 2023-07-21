@@ -1,6 +1,6 @@
 import { getCurrentServerTime } from '../../utils/server-time';
 import { MediaItem } from '../media-item/media-item-model';
-import { Model } from '../model/model.service';
+import { ModelStoreModel } from '../model/model-store.service';
 import { QuestObjective } from './quest-objective-model';
 import { QuestReward } from './quest-reward-model';
 
@@ -40,27 +40,8 @@ export const QuestSeries = {
 	helloWorld: 'hello-world',
 } as const;
 
-export class Quest extends Model {
-	constructor(data: any = {}) {
-		super(data);
-
-		if (data.avatar) {
-			this.avatar = new MediaItem(data.avatar);
-		}
-
-		if (data.header) {
-			this.header = new MediaItem(data.header);
-		}
-
-		if (data.objectives) {
-			this.objectives = QuestObjective.populate(data.objectives);
-		}
-
-		if (data.rewards) {
-			this.rewards = QuestReward.populate(data.rewards);
-		}
-	}
-
+export class Quest implements ModelStoreModel {
+	declare id: number;
 	declare status: number;
 	declare started_on: number;
 	declare avatar: MediaItem;
@@ -80,6 +61,26 @@ export class Quest extends Model {
 	declare total_stages: number;
 	objectives: QuestObjective[] = [];
 	rewards: QuestReward[] = [];
+
+	constructor(data: any = {}) {
+		this.update(data);
+	}
+
+	update(data: any): void {
+		Object.assign(this, data);
+
+		if (data.avatar) {
+			this.avatar = new MediaItem(data.avatar);
+		}
+
+		if (data.header) {
+			this.header = new MediaItem(data.header);
+		}
+
+		if (data.objectives) {
+			this.objectives = QuestObjective.populate(data.objectives);
+		}
+	}
 
 	get isActive() {
 		return this.status === QuestStatus.active;
@@ -129,5 +130,3 @@ export class Quest extends Model {
 		return this.repeat_type === QuestRepeatType.daily;
 	}
 }
-
-Model.create(Quest);

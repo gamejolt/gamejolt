@@ -27,11 +27,12 @@ import { kThemeBacklight, kThemeBacklightFg } from '../../../../_common/theme/va
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
-import { styleBorderRadiusCircle, styleFlexCenter } from '../../../../_styles/mixins';
+import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleFlexCenter } from '../../../../_styles/mixins';
 import { useAppStore } from '../../../store';
 import { useGridStore } from '../../grid/grid-store';
-import AppUserAvatarBubble from '../../user/AppUserAvatarBubble.vue';
+import AppShellWindow from '../../shell/window/AppShellWindow.vue';
 import { closeChatRoom } from '../client';
 import FormChatRoomSettings from '../FormChatRoomSettings.vue';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
@@ -70,9 +71,9 @@ const headerAvatarBackgroundColor = kThemeBacklight;
 const headerAvatarJolticonColor = kThemeBacklightFg;
 
 const headerAvatarStyles: CSSProperties = {
-	...styleBorderRadiusCircle,
 	...headerAvatarSizeStyles,
 	...styleFlexCenter(),
+	borderRadius: `50%`,
 	backgroundColor: headerAvatarBackgroundColor,
 };
 
@@ -249,7 +250,7 @@ function toggleSidebar(val: SidebarTab) {
 	preferredSidebar.value = sidebar.value === val ? undefined : val;
 }
 
-function close() {
+function closeWindow() {
 	closeChatRoom(chat.value);
 
 	// xs size needs to show the friends list when closing the room. Any other
@@ -270,320 +271,268 @@ function onMobileAppBarBack() {
 </script>
 
 <template>
-	<div class="chat-window">
-		<!-- We sadly need the chat close thing twice. It takes up the empty
-		background space so you can click that to close chat. -->
-		<div class="_close" @click="close" />
-		<div class="_window">
-			<div class="_close" @click="close" />
+	<AppShellWindow :close-callback="closeWindow" avoid-sidebar="sm-up">
+		<div class="_window-main">
+			<AppHeaderBar
+				class="_header"
+				title-size="lg"
+				:automatically-imply-leading="false"
+				:elevation="2"
+			>
+				<template #leading>
+					<AppButton
+						v-if="Screen.isXs"
+						v-app-tooltip="$gettext('Close')"
+						circle
+						trans
+						icon="remove"
+						:style="{ marginRight: '4px' }"
+						@click="closeWindow"
+					/>
 
-			<div class="_window-main">
-				<!-- Window Header -->
-				<AppHeaderBar
-					class="_header"
-					title-size="lg"
-					:automatically-imply-leading="false"
-					:elevation="2"
-				>
-					<template #leading>
-						<AppButton
-							v-if="Screen.isXs"
-							v-app-tooltip="$gettext('Close')"
-							circle
-							trans
-							icon="remove"
-							:style="{ marginRight: '4px' }"
-							@click="close"
-						/>
-
-						<template v-if="room">
-							<span v-if="!room.isPmRoom" class="anim-fade-in-enlarge no-animate-xs">
-								<div :style="headerAvatarStyles">
-									<AppJolticon
-										:style="{
-											color: headerAvatarJolticonColor,
-										}"
-										icon="users"
-									/>
-								</div>
-							</span>
-							<RouterLink
-								v-else-if="room.user"
-								class="anim-fade-in-enlarge no-animate-xs"
-								:to="room.user.url"
-							>
-								<AppUserAvatarBubble
+					<template v-if="room">
+						<span v-if="!room.isPmRoom" class="anim-fade-in-enlarge no-animate-xs">
+							<div :style="headerAvatarStyles">
+								<AppJolticon
 									:style="{
-										...headerAvatarSizeStyles,
-										position: `relative`,
-										zIndex: 0,
+										color: headerAvatarJolticonColor,
 									}"
-									:user="room.user"
-									disable-link
-									show-frame
-									smoosh
+									icon="users"
 								/>
-								<AppChatUserOnlineStatus
-									class="_online-status"
-									:style="{
-										position: `absolute`,
-										right: 0,
-										bottom: 0,
-										zIndex: 1,
-									}"
-									:is-online="room.user.isOnline"
-									:size="12"
-									:segment-width="1.5"
-								/>
-							</RouterLink>
-						</template>
+							</div>
+						</span>
+						<RouterLink
+							v-else-if="room.user"
+							class="anim-fade-in-enlarge no-animate-xs"
+							:to="room.user.url"
+						>
+							<AppUserAvatarBubble
+								:style="{
+									...headerAvatarSizeStyles,
+									position: `relative`,
+									zIndex: 0,
+								}"
+								:user="room.user"
+								disable-link
+								show-frame
+								smoosh
+							/>
+							<AppChatUserOnlineStatus
+								:style="{
+									position: `absolute`,
+									right: 0,
+									bottom: 0,
+									zIndex: 1,
+								}"
+								:is-online="room.user.isOnline"
+								:size="12"
+								:segment-width="1.5"
+							/>
+						</RouterLink>
 					</template>
+				</template>
 
-					<template #title>
-						<template v-if="room">
-							<div
-								v-if="!room.isPmRoom"
-								class="_header-name anim-fade-in-right no-animate-xs"
-							>
+				<template #title>
+					<template v-if="room">
+						<div
+							v-if="!room.isPmRoom"
+							class="_header-name anim-fade-in-right no-animate-xs"
+						>
+							{{ roomTitle }}
+						</div>
+						<div
+							v-else-if="room.user"
+							class="_header-name anim-fade-in-right no-animate-xs"
+							:title="`${room.user.display_name} (@${room.user.username})`"
+						>
+							<RouterLink class="link-unstyled" :to="room.user.url">
 								{{ roomTitle }}
-							</div>
-							<div
-								v-else-if="room.user"
-								class="_header-name anim-fade-in-right no-animate-xs"
-								:title="`${room.user.display_name} (@${room.user.username})`"
-							>
-								<RouterLink class="link-unstyled" :to="room.user.url">
-									{{ roomTitle }}
-								</RouterLink>
-								<AppUserVerifiedTick :user="room.user" />
-								<div class="_header-name-username">@{{ room.user.username }}</div>
-							</div>
-						</template>
+							</RouterLink>
+							<AppUserVerifiedTick :user="room.user" />
+							<div class="_header-name-username">@{{ room.user.username }}</div>
+						</div>
 					</template>
+				</template>
 
-					<template #actions>
-						<template v-if="room">
-							<AppButton
-								v-if="room && !room.fireside && canDeviceCreateFiresides()"
-								v-app-tooltip="$gettext(`Start livestream/video call`)"
-								class="_header-control anim-fade-in"
-								trans
-								icon="video-camera"
-								sparse
-								circle
-								:disabled="isStartingFireside"
-								@click="startFireside()"
-							/>
-
-							<AppButton
-								v-app-tooltip="
-									room.isPmRoom
-										? $gettext('Create group chat')
-										: $gettext('Add friends')
-								"
-								class="_header-control anim-fade-in"
-								circle
-								trans
-								:icon="`friend-add-${friendAddJolticonVersion}`"
-								@mouseenter="friendAddJolticonVersion = 2"
-								@mouseleave="friendAddJolticonVersion = 1"
-								@click="room!.isPmRoom ? addGroup() : addMembers()"
-							/>
-
-							<AppButton
-								v-if="showMembersViewButton"
-								v-app-tooltip="
-									isShowingUsers
-										? $gettext('Hide members')
-										: $gettext('Show members')
-								"
-								circle
-								trans
-								icon="users"
-								class="_header-control anim-fade-in"
-								:primary="sidebar === 'members'"
-								:solid="sidebar === 'members'"
-								@click="toggleSidebar('members')"
-							/>
-
-							<AppButton
-								v-app-tooltip="$gettext(`Settings`)"
-								circle
-								sparse
-								trans
-								icon="ellipsis-h"
-								:primary="sidebar === 'settings'"
-								:solid="sidebar === 'settings'"
-								@click="toggleSidebar('settings')"
-							/>
-						</template>
+				<template #actions>
+					<template v-if="room">
+						<AppButton
+							v-if="room && !room.fireside && canDeviceCreateFiresides()"
+							v-app-tooltip="$gettext(`Start livestream/video call`)"
+							class="_header-control anim-fade-in"
+							trans
+							icon="video-camera"
+							sparse
+							circle
+							:disabled="isStartingFireside"
+							@click="startFireside()"
+						/>
 
 						<AppButton
-							v-if="!Screen.isXs"
-							v-app-tooltip="$gettext('Close')"
-							class="_header-control"
+							v-app-tooltip="
+								room.isPmRoom
+									? $gettext('Create group chat')
+									: $gettext('Add friends')
+							"
+							class="_header-control anim-fade-in"
 							circle
 							trans
-							icon="remove"
-							@click="close"
+							:icon="`friend-add-${friendAddJolticonVersion}`"
+							@mouseenter="friendAddJolticonVersion = 2"
+							@mouseleave="friendAddJolticonVersion = 1"
+							@click="room!.isPmRoom ? addGroup() : addMembers()"
+						/>
+
+						<AppButton
+							v-if="showMembersViewButton"
+							v-app-tooltip="
+								isShowingUsers ? $gettext('Hide members') : $gettext('Show members')
+							"
+							circle
+							trans
+							icon="users"
+							class="_header-control anim-fade-in"
+							:primary="sidebar === 'members'"
+							:solid="sidebar === 'members'"
+							@click="toggleSidebar('members')"
+						/>
+
+						<AppButton
+							v-app-tooltip="$gettext(`Settings`)"
+							circle
+							sparse
+							trans
+							icon="ellipsis-h"
+							:primary="sidebar === 'settings'"
+							:solid="sidebar === 'settings'"
+							@click="toggleSidebar('settings')"
 						/>
 					</template>
-				</AppHeaderBar>
 
-				<div class="_body">
-					<div class="_chatting-section">
-						<div class="_output">
-							<template v-if="!room || !room.messagesPopulated">
-								<AppChatWindowOutputPlaceholder />
-							</template>
-							<template v-else>
-								<AppChatWindowOutput
-									class="_output-inner"
-									:room="room"
-									:background="room.background"
-									:overlay="!!room.background"
-								/>
-							</template>
-						</div>
+					<AppButton
+						v-if="!Screen.isXs"
+						v-app-tooltip="$gettext('Close')"
+						class="_header-control"
+						circle
+						trans
+						icon="remove"
+						@click="closeWindow"
+					/>
+				</template>
+			</AppHeaderBar>
 
-						<div v-if="room" class="_send-container">
-							<AppChatWindowSend
+			<div class="_body">
+				<div class="_chatting-section">
+					<div class="_output">
+						<template v-if="!room || !room.messagesPopulated">
+							<AppChatWindowOutputPlaceholder />
+						</template>
+						<template v-else>
+							<AppChatWindowOutput
+								class="_output-inner"
 								:room="room"
-								:capabilities="contentCapabilities"
-								:max-content-length="maxContentLength"
-								@focus-change="emit('focus-change', $event)"
+								:background="room.background"
+								:overlay="!!room.background"
 							/>
-						</div>
+						</template>
 					</div>
 
-					<div v-if="room && sidebar" class="_sidebar">
-						<div v-if="Screen.isDesktop" class="_sidebar-shadow" />
+					<div v-if="room" class="_send-container">
+						<AppChatWindowSend
+							:room="room"
+							:capabilities="contentCapabilities"
+							:max-content-length="maxContentLength"
+							@focus-change="emit('focus-change', $event)"
+						/>
+					</div>
+				</div>
 
-						<div class="_sidebar-container">
-							<AppHeaderBar v-if="Screen.isMobile" title-size="lg" center-title>
-								<template #leading>
-									<AppButton
-										icon="chevron-left"
-										trans
-										sparse
-										circle
-										@click="onMobileAppBarBack"
-									/>
-								</template>
+				<div v-if="room && sidebar" class="_sidebar">
+					<div v-if="Screen.isDesktop" class="_sidebar-shadow" />
 
-								<template #title>
-									<template v-if="sidebar === 'settings'">
-										<template v-if="room.isGroupRoom">
-											<AppTranslate>Group Settings</AppTranslate>
-										</template>
-										<template v-else>
-											<AppTranslate>Chat Settings</AppTranslate>
-										</template>
-									</template>
-									<template v-else>
-										<AppTranslate>Group Members</AppTranslate>
-									</template>
-								</template>
-
-								<template #actions>
-									<AppButton
-										v-if="!room.isGroupRoom || sidebar === 'members'"
-										v-app-tooltip="$gettext('Add friends')"
-										class="_header-control"
-										circle
-										trans
-										:icon="`friend-add-${friendAddJolticonVersion}`"
-										@mouseenter="friendAddJolticonVersion = 2"
-										@mouseleave="friendAddJolticonVersion = 1"
-										@click="room!.isPmRoom ? addGroup() : addMembers()"
-									/>
-								</template>
-							</AppHeaderBar>
-
-							<template v-if="sidebar === 'settings'">
-								<AppScrollScroller>
-									<FormChatRoomSettings
-										:room="room"
-										:show-members-preview="
-											(!showMembersViewButton || Screen.isMobile) &&
-											room.isGroupRoom
-										"
-										:members="memberCollection.users"
-										:style="{
-											paddingTop: Screen.isXs ? '16px' : undefined,
-										}"
-										@view-members="sidebar = 'members'"
-									/>
-								</AppScrollScroller>
-							</template>
-							<template v-else-if="sidebar === 'members'">
-								<div v-if="Screen.isDesktop" class="_header-members">
-									<AppTranslate>Members</AppTranslate>
-									<span> ({{ membersCount }}) </span>
-								</div>
-
-								<AppChatMemberList
-									v-if="memberCollection"
-									:collection="memberCollection"
-									:room="room"
+					<div class="_sidebar-container">
+						<AppHeaderBar v-if="Screen.isMobile" title-size="lg" center-title>
+							<template #leading>
+								<AppButton
+									icon="chevron-left"
+									trans
+									sparse
+									circle
+									@click="onMobileAppBarBack"
 								/>
 							</template>
-						</div>
+
+							<template #title>
+								<template v-if="sidebar === 'settings'">
+									<template v-if="room.isGroupRoom">
+										<AppTranslate>Group Settings</AppTranslate>
+									</template>
+									<template v-else>
+										<AppTranslate>Chat Settings</AppTranslate>
+									</template>
+								</template>
+								<template v-else>
+									<AppTranslate>Group Members</AppTranslate>
+								</template>
+							</template>
+
+							<template #actions>
+								<AppButton
+									v-if="!room.isGroupRoom || sidebar === 'members'"
+									v-app-tooltip="$gettext('Add friends')"
+									class="_header-control"
+									circle
+									trans
+									:icon="`friend-add-${friendAddJolticonVersion}`"
+									@mouseenter="friendAddJolticonVersion = 2"
+									@mouseleave="friendAddJolticonVersion = 1"
+									@click="room!.isPmRoom ? addGroup() : addMembers()"
+								/>
+							</template>
+						</AppHeaderBar>
+
+						<template v-if="sidebar === 'settings'">
+							<AppScrollScroller>
+								<FormChatRoomSettings
+									:room="room"
+									:show-members-preview="
+										(!showMembersViewButton || Screen.isMobile) &&
+										room.isGroupRoom
+									"
+									:members="memberCollection.users"
+									:style="{
+										paddingTop: Screen.isXs ? '16px' : undefined,
+									}"
+									@view-members="sidebar = 'members'"
+								/>
+							</AppScrollScroller>
+						</template>
+						<template v-else-if="sidebar === 'members'">
+							<div v-if="Screen.isDesktop" class="_header-members">
+								<AppTranslate>Members</AppTranslate>
+								<span> ({{ membersCount }}) </span>
+							</div>
+
+							<AppChatMemberList
+								v-if="memberCollection"
+								:collection="memberCollection"
+								:room="room"
+							/>
+						</template>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</AppShellWindow>
 </template>
 
 <style lang="stylus" scoped>
-$-zindex-close = 0
 $-zindex-window-inner = 1
 $-zindex-sidebar-shadow = 2
 $-zindex-input = 3
 $-zindex-header = 4
 
 $-zindex-sidebar-mobile = 10
-
-.chat-window
-	position: fixed
-	display: flex
-	justify-content: center
-	align-items: flex-start
-	z-index: $zindex-chat-window
-	padding: 16px 20px 16px 16px
-
-._close
-	position: absolute
-	top: 0
-	right: 0
-	bottom: 0
-	left: 0
-	background: transparent
-	z-index: $-zindex-close
-
-._window
-	change-bg(bg)
-	position: relative
-	display: flex
-	flex: auto
-	justify-content: center
-	width: 100%
-	height: 100%
-	z-index: $-zindex-window-inner
-	overflow: hidden
-
-	@media $media-xs
-		position: fixed
-		top: 0
-		right: 0
-		left: 0
-		bottom: 0
-		height: auto !important
-		width: auto !important
-
-	@media $media-sm-up
-		rounded-corners-lg()
 
 ._window-main
 	position: relative

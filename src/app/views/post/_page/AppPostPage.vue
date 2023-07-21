@@ -6,6 +6,7 @@ import AppBackground from '../../../../_common/background/AppBackground.vue';
 import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
+import { isDynamicGoogleBot } from '../../../../_common/device/device.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
 	$viewPostVideo,
@@ -13,6 +14,7 @@ import {
 } from '../../../../_common/fireside/post/video/video-model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { AppCommentWidgetLazy } from '../../../../_common/lazy';
 import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
@@ -31,7 +33,6 @@ import AppVideoPlayer from '../../../../_common/video/player/AppVideoPlayer.vue'
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
-import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPollVoting from '../../../components/poll/AppPollVoting.vue';
 import AppPostControls from '../../../components/post/controls/AppPostControls.vue';
@@ -261,6 +262,7 @@ function onVideoPlay() {
 						"
 					>
 						<AppStickerPlacementList
+							v-if="!isDynamicGoogleBot()"
 							:sticker-target-controller="stickerTargetController"
 							:supporters="post.supporters"
 							:stickers="post.sticker_counts"

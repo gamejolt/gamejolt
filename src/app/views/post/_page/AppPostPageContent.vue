@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
-import { arrayRemove } from '../../../../utils/array';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
@@ -16,12 +15,13 @@ import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowButton.vue';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleOverlayTextShadow, styleWhen } from '../../../../_styles/mixins';
+import { arrayRemove } from '../../../../utils/array';
 import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
 import AppGameBadge from '../../../components/game/badge/badge.vue';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPostContent from '../../../components/post/AppPostContent.vue';
-import AppUserAvatarBubble from '../../../components/user/AppUserAvatarBubble.vue';
 
 const UserFollowLocation = 'postPage' as const;
 

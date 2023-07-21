@@ -8,13 +8,12 @@ import {
 } from 'firebase/analytics';
 import { unref, watch } from 'vue';
 import { Router } from 'vue-router';
-import { FiresideSidebar } from '../../app/components/fireside/controller/controller';
 import { arrayRemove } from '../../utils/array';
 import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';
 import { CommentVote } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
-import { DeviceArch, DeviceOs } from '../device/device.service';
+import { DeviceArch, DeviceOs, isDynamicGoogleBot } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 import { AppPromotionSource } from '../mobile-app/store';
 import { onRouteChangeAfter } from '../route/route-component';
@@ -96,7 +95,7 @@ function _shouldTrack() {
  * Initializes the analytics for use with the current app.
  */
 export function initAnalytics({ commonStore }: { commonStore: CommonStore }) {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return;
 	}
 
@@ -129,7 +128,7 @@ export function initAnalytics({ commonStore }: { commonStore: CommonStore }) {
  * Can be called to hook into the router to track pageviews automatically.
  */
 export function initAnalyticsRouter(router: Router) {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return;
 	}
 
@@ -166,7 +165,7 @@ export function trackPageViewAfterRoute(router: Router) {
 }
 
 function _trackPageview(path?: string) {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return;
 	}
 
@@ -209,7 +208,7 @@ function _trackPageview(path?: string) {
  * Sets the current user ID into analytics.
  */
 function _trackUserId(id: number) {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return;
 	}
 
@@ -221,7 +220,7 @@ function _trackUserId(id: number) {
  * analytics.
  */
 function _untrackUserId() {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return;
 	}
 
@@ -230,7 +229,7 @@ function _untrackUserId() {
 }
 
 function _trackUserProperties(properties: { theme_brightness: string; lang: string }) {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return;
 	}
 
@@ -242,7 +241,7 @@ function _trackEvent(
 	name: string,
 	eventParams: Record<string, string | number | boolean | undefined>
 ) {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return;
 	}
 
@@ -252,7 +251,7 @@ function _trackEvent(
 }
 
 export function trackSearch(params: { query: string }) {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return;
 	}
 
@@ -306,7 +305,7 @@ export function trackExperimentEngagement(option: ConfigOption) {
 }
 
 export function trackLogin(method: AuthMethod) {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return;
 	}
 
@@ -314,7 +313,7 @@ export function trackLogin(method: AuthMethod) {
 }
 
 export function trackJoin(method: AuthMethod) {
-	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
 		return;
 	}
 
@@ -529,8 +528,8 @@ export function trackFiresideSidebarButton({
 	current,
 	trigger,
 }: {
-	previous: FiresideSidebar;
-	current: FiresideSidebar;
+	previous: string;
+	current: string;
 	trigger: string;
 }) {
 	trackFiresideAction({
@@ -573,11 +572,35 @@ export function trackHomeFeedSwitch({
 	});
 }
 
+export function trackCbarControlClick(
+	item: string,
+	{ method, from }: { method?: 'show' | 'hide' | 'switch'; from?: string } = {}
+) {
+	const params = { item } as any;
+	if (method) {
+		params['method'] = method;
+	}
+	if (from) {
+		params['from'] = from;
+	}
+
+	_trackEvent('cbar_control_click', params);
+}
+
 /**
  * @deprecated This is left here so that old code doesn't break.
  */
 export class Analytics {
+	private static warnDeprecated(name: string) {
+		if (import.meta.env.MODE === 'development' || import.meta.env.DEV) {
+			console.warn(
+				`[Analytics] - [${name}] is deprecated and no longer functional. Use new analytics functions instead.`
+			);
+		}
+	}
+
 	static trackEvent(_category: string, _action: string, _label?: string, _value?: string) {
+		this.warnDeprecated('trackEvent');
 		return;
 
 		// if (!this.shouldTrack) {
@@ -600,6 +623,7 @@ export class Analytics {
 	}
 
 	static trackSocial(_network: string, _action: string, _target: string) {
+		this.warnDeprecated('trackSocial');
 		return;
 
 		// if (!this.shouldTrack) {
@@ -617,6 +641,7 @@ export class Analytics {
 	}
 
 	static trackTiming(_category: string, _timingVar: string, _value: number, _label?: string) {
+		this.warnDeprecated('trackTiming');
 		return;
 
 		// if (!this.shouldTrack) {

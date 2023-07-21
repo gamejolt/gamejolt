@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import {
 	styleBorderRadiusLg,
 	styleChangeBgRgba,
@@ -13,6 +13,17 @@ import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop
 import { StickerPack } from './pack.model';
 
 export const StickerPackRatio = 2 / 3;
+
+export const StickerPackExpiryStyles: CSSProperties = {
+	...styleChangeBgRgba(`0, 0, 0`, 0.54),
+	...styleBorderRadiusLg,
+	position: `absolute`,
+	padding: `2px 6px`,
+	color: `white`,
+	fontWeight: 700,
+	right: `4px`,
+	top: `4px`,
+};
 </script>
 
 <script lang="ts" setup>
@@ -49,6 +60,8 @@ const emit = defineEmits({
 
 const { pack, showDetails, canClickPack, forceElevate, expiryInfo } = toRefs(props);
 
+const loadedImage = ref(false);
+
 const showName = computed(() => {
 	if (!showDetails.value) {
 		return false;
@@ -61,22 +74,21 @@ function onClickPack() {
 		emit('clickPack');
 	}
 }
-
-const overlayedStyle: CSSProperties = {
-	...styleChangeBgRgba(`0, 0, 0`, 0.54),
-	...styleBorderRadiusLg,
-	position: `absolute`,
-	padding: `2px 6px`,
-	color: `white`,
-	fontWeight: 700,
-};
 </script>
 
 <template>
 	<!-- AppStickerPack -->
 	<div>
 		<div :style="{ position: `relative` }">
-			<component :is="canClickPack ? 'a' : 'div'" @click="onClickPack()">
+			<a
+				:style="
+					styleWhen(!canClickPack, {
+						// Do this instead of a <component> tag to prevent image flickering.
+						cursor: `inherit`,
+					})
+				"
+				@click="onClickPack()"
+			>
 				<AppAspectRatio :ratio="StickerPackRatio" show-overflow>
 					<AppMediaItemBackdrop
 						:style="{
@@ -88,6 +100,7 @@ const overlayedStyle: CSSProperties = {
 							height: `100%`,
 						}"
 						:media-item="pack.media_item"
+						:color-opacity="loadedImage ? 0 : 1"
 						radius="lg"
 					>
 						<AppImgResponsive
@@ -100,19 +113,13 @@ const overlayedStyle: CSSProperties = {
 							alt=""
 							draggable="false"
 							ondragstart="return false"
+							@imgloadchange="loadedImage = $event"
 						/>
 					</AppMediaItemBackdrop>
 				</AppAspectRatio>
-			</component>
+			</a>
 
-			<div
-				v-if="expiryInfo"
-				:style="{
-					...overlayedStyle,
-					right: `4px`,
-					top: `4px`,
-				}"
-			>
+			<div v-if="expiryInfo" :style="StickerPackExpiryStyles">
 				{{
 					shorthandReadableTime(expiryInfo, {
 						allowFuture: true,

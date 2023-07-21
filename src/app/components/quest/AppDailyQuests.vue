@@ -1,20 +1,21 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs, watch } from 'vue';
+import { CSSProperties, PropType, computed, ref, toRefs, watch } from 'vue';
 import AppAnimChargeOrb from '../../../_common/animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../../_common/animation/AppAnimElectricity.vue';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import { illChargeOrbEmpty } from '../../../_common/illustration/illustrations';
 import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
-import AppQuestLogItem from '../../../_common/quest/AppQuestLogItem.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppStickerChargeTooltip from '../../../_common/sticker/charge/AppStickerChargeTooltip.vue';
 import AppStickerChargeTooltipCaret from '../../../_common/sticker/charge/AppStickerChargeTooltipCaret.vue';
 import AppStickerChargeTooltipHandler from '../../../_common/sticker/charge/AppStickerChargeTooltipHandler.vue';
 import { useStickerStore } from '../../../_common/sticker/sticker-store';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { kThemeFg } from '../../../_common/theme/variables';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { illChargeOrbEmpty } from '../../img/ill/illustrations';
-import { useQuestStore } from '../../store/quest';
+import { styleWhen } from '../../../_styles/mixins';
+import { fetchDailyQuests, useQuestStore } from '../../store/quest';
 import { useGridStore } from '../grid/grid-store';
+import AppQuestLogItem from '../shell/sidebar/_quests/AppQuestLogItem.vue';
 import AppQuestTimer from './AppQuestTimer.vue';
 
 const props = defineProps({
@@ -51,6 +52,15 @@ const props = defineProps({
 	constrainChargeTooltip: {
 		type: Boolean,
 	},
+	direction: {
+		type: String as PropType<'row' | 'column'>,
+		default: `row`,
+		validator: val => typeof val === 'string' && ['row', 'column'].includes(val),
+	},
+	gridStyles: {
+		type: Object as PropType<CSSProperties>,
+		default: () => {},
+	},
 });
 
 const { singleRow, activeQuestId, forceLoading, showCharge, constrainChargeTooltip } =
@@ -70,7 +80,8 @@ if (isLoadingCharge.value) {
 	);
 }
 
-const { dailyQuests, fetchDailyQuests, isLoading: isQuestStoreLoading } = useQuestStore();
+const questStore = useQuestStore();
+const { dailyQuests, isLoading: isQuestStoreLoading } = questStore;
 
 const { currentCharge, chargeLimit } = useStickerStore();
 
@@ -130,39 +141,46 @@ const showPlaceholders = computed(() => {
 	}
 	return false;
 });
+
+function onRefresh() {
+	fetchDailyQuests(questStore);
+}
 </script>
 
 <template>
 	<AppLoadingFade v-if="showPlaceholders || hasQuests" :is-loading="isLoading">
-		<div ref="header" class="-header">
+		<div ref="header" class="_header">
 			<slot name="header">
 				<h4 class="section-header" :class="{ h6: Screen.isXs }">
-					<AppTranslate>Daily Quests</AppTranslate>
+					{{ $gettext(`Daily Quests`) }}
 				</h4>
 			</slot>
 
-			<span class="help-inline -info">
+			<span class="_info help-inline">
 				<template v-if="showCharge">
 					<AppStickerChargeTooltipHandler
-						class="-charge-orb-container"
-						:class="{
-							'-overcharge': chargeOrbStyle === 'overcharge',
-						}"
-						:style="{ marginRight: questEndsOnDate ? '12px' : undefined }"
+						:style="[
+							styleWhen(!!questEndsOnDate, {
+								marginRight: '12px',
+							}),
+							styleWhen(chargeOrbStyle === 'overcharge', {
+								color: kThemeFg,
+							}),
+						]"
 						:trigger="Screen.isPointerMouse ? 'hover' : 'focus'"
 						inline
 						@show="showChargeTooltip = true"
 						@hide="showChargeTooltip = false"
 					>
 						<AppStickerChargeTooltipCaret
-							class="-charge-caret"
+							class="_charge-caret"
 							:show="showChargeTooltip"
 							inline
 						>
-							<div ref="chargeOrb" class="-charge-orb">
+							<div ref="chargeOrb" class="_charge-orb">
 								<AppIllustration
 									v-if="chargeOrbStyle === 'empty'"
-									class="-charge-orb-img"
+									class="_charge-orb-img"
 									:asset="illChargeOrbEmpty"
 									:style="{
 										opacity: 0.3,
@@ -193,29 +211,35 @@ const showPlaceholders = computed(() => {
 
 				<AppQuestTimer v-if="questEndsOnDate" :ends-on="questEndsOnDate">
 					<template #ended>
-						<a class="link-unstyled" @click="fetchDailyQuests">
-							<AppTranslate> Refresh </AppTranslate>
+						<a class="link-unstyled" @click="onRefresh">
+							{{ $gettext(`Refresh`) }}
 						</a>
 					</template>
 				</AppQuestTimer>
 			</span>
 		</div>
 
-		<div class="-list">
-			<div class="-list-grid">
-				<template v-if="showPlaceholders">
-					<div v-for="i of 3" :key="'p-' + i" class="-placeholder-daily" />
-				</template>
-				<template v-else>
-					<AppQuestLogItem
-						v-for="(quest, i) of displayQuests"
-						:key="i"
-						:quest="quest"
-						:active="activeQuestId === quest.id"
-						compact-stack
-					/>
-				</template>
-			</div>
+		<div
+			class="_list-grid"
+			:style="[
+				styleWhen(direction === 'column', {
+					gridTemplateColumns: '1fr',
+				}),
+				gridStyles,
+			]"
+		>
+			<template v-if="showPlaceholders">
+				<div v-for="i of 3" :key="`p-${i}`" class="_placeholder-daily" />
+			</template>
+			<template v-else>
+				<AppQuestLogItem
+					v-for="quest of displayQuests"
+					:key="quest.id"
+					:quest="quest"
+					:active="activeQuestId === quest.id"
+					:compact-stack="direction === 'row'"
+				/>
+			</template>
 		</div>
 	</AppLoadingFade>
 </template>
@@ -223,7 +247,7 @@ const showPlaceholders = computed(() => {
 <style lang="stylus" scoped>
 $-placeholder-height = 150px
 
-.-header
+._header
 	display: flex
 	justify-content: space-between
 	align-items: center
@@ -232,40 +256,33 @@ $-placeholder-height = 150px
 	h4
 		margin-bottom: 0
 
-.-list-grid
+._list-grid
 	display: grid
-	grid-gap: 16px
+	grid-gap: 8px
 	grid-template-columns: repeat(3, minmax(0, 1fr))
 
-.-placeholder-daily
+._placeholder-daily
 	background-color: var(--theme-bg-subtle)
 	rounded-corners-lg()
 	display: flex
 	height: $-placeholder-height
 	flex: auto
 
-.-no-quests
-	min-height: $-placeholder-height
-
-.-info
+._info
 	position: relative
 	white-space: nowrap
 
-.-charge-caret
+._charge-caret
 	display: inline-flex
 
-.-charge-orb-container
-	&.-overcharge
-		color: var(--theme-fg)
-
-.-charge-orb
+._charge-orb
 	flex: none
 	width: $font-size-small
 	height: @width
 	position: relative
 	display: inline-block
 
-.-charge-orb-img
+._charge-orb-img
 	position: absolute
 	top: 0
 	right: 0

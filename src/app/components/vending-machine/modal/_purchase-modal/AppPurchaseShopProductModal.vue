@@ -27,7 +27,8 @@ import { StickerPackOpenModal } from '../../../../../_common/sticker/pack/open-m
 import { UserStickerPack } from '../../../../../_common/sticker/pack/user-pack.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserAvatarFrame } from '../../../../../_common/user/user-avatar/frame/frame.model';
 import {
 	styleBorderRadiusLg,
@@ -35,7 +36,6 @@ import {
 	styleMaxWidthForOptions,
 } from '../../../../../_styles/mixins';
 import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.route';
-import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
 import { showNewProductModal } from '../_product/modal/modal.service';
 
 interface PurchaseData {
@@ -67,7 +67,7 @@ export async function purchaseShopProduct({
 	const { coinBalance, joltbuxBalance } = balanceRefs;
 	const pricing = shopProduct.validPricings.find(i => i.knownCurrencyType?.id === currency.id);
 
-	if (!pricing || !canAffordCurrency(currency, pricing.price, balanceRefs)) {
+	if (!pricing || !canAffordCurrency(currency.id, pricing.price, balanceRefs)) {
 		showErrorGrowl(
 			$gettextInterpolate(`You don't have enough %{ label } to purchase this product.`, {
 				label: currency.label,
@@ -180,6 +180,18 @@ const joltbuxEntry = computed(() => {
 	}
 });
 
+const canPurchaseAny = computed(() => {
+	const options = currencyOptionsList.value;
+	if (options.length === 0) {
+		return false;
+	}
+	for (const [, [currency, amount]] of currencyOptionsList.value) {
+		if (canAffordCurrency(currency.id, amount, balanceRefs)) {
+			return true;
+		}
+	}
+});
+
 /**
  * Show when we have a Joltbux purchase option and the user doesn't have enough
  * Joltbux to purchase.
@@ -190,7 +202,7 @@ const showPurchaseJoltbuxButton = computed(() => {
 	}
 
 	const [currency, amount] = joltbuxEntry.value;
-	return !canAffordCurrency(currency, amount, balanceRefs);
+	return !canAffordCurrency(currency.id, amount, balanceRefs);
 });
 
 /**
@@ -200,6 +212,17 @@ const showPurchaseJoltbuxButton = computed(() => {
 const showPackHelpDocsLink = computed(
 	() => !!joltbuxEntry.value && !!shopProduct.value.stickerPack
 );
+
+const headerLabel = computed(() => {
+	if (shopProduct.value.stickerPack) {
+		return $gettext(`Purchase sticker pack`);
+	} else if (shopProduct.value.avatarFrame) {
+		return $gettext(`Purchase avatar frame`);
+	} else if (shopProduct.value.background) {
+		return $gettext(`Purchase background`);
+	}
+	return $gettext(`Purchase item`);
+});
 
 /**
  * Purchases an inventory shop product using the specified Currency.
@@ -251,7 +274,7 @@ function handleStickerPackPurchase(product: UserStickerPack) {
 	});
 }
 
-function getItemStyles(ratio: number) {
+function getItemWidthStyles(ratio: number) {
 	return {
 		...styleMaxWidthForOptions({
 			ratio,
@@ -271,29 +294,33 @@ function getItemStyles(ratio: number) {
 			</AppButton>
 		</div>
 
+		<div class="modal-header">
+			<h2 class="modal-title">
+				{{ headerLabel }}
+			</h2>
+		</div>
+
 		<div class="modal-body">
 			<div :style="styleFlexCenter({ direction: 'column' })">
 				<AppStickerPack
 					v-if="shopProduct.stickerPack"
-					:style="getItemStyles(StickerPackRatio)"
+					:style="getItemWidthStyles(StickerPackRatio)"
 					:pack="shopProduct.stickerPack"
 					:show-details="{
 						name: true,
 					}"
 				/>
-				<template v-else-if="shopProduct.avatarFrame">
+				<div v-else-if="shopProduct.product" :style="getItemWidthStyles(1)">
 					<AppUserAvatarBubble
-						:style="getItemStyles(1)"
+						v-if="shopProduct.avatarFrame"
 						:user="myUser"
 						:frame-override="shopProduct.avatarFrame"
 						show-frame
 						smoosh
 						disable-link
 					/>
-				</template>
-				<template v-else-if="shopProduct.background">
 					<AppBackground
-						:style="getItemStyles(1)"
+						v-else-if="shopProduct.background"
 						:background="shopProduct.background"
 						:backdrop-style="styleBorderRadiusLg"
 						:background-style="{
@@ -304,21 +331,30 @@ function getItemStyles(ratio: number) {
 					>
 						<AppAspectRatio :ratio="1" />
 					</AppBackground>
-				</template>
+
+					<div
+						v-if="shopProduct.product.name"
+						:style="{
+							marginTop: `8px`,
+							fontWeight: 700,
+						}"
+					>
+						{{ shopProduct.product.name }}
+					</div>
+				</div>
 
 				<AppSpacer vertical :scale="4" />
 
-				<template v-if="currencyOptionsList.length !== 1">
-					<div class="text-center">
-						{{
-							!currencyOptionsList.length
-								? $gettext(`This item is not available for purchase`)
-								: $gettext(`Choose a purchase option`)
-						}}
-					</div>
+				<div v-if="currencyOptionsList.length !== 1" class="text-center">
+					<template v-if="!currencyOptionsList.length">
+						{{ $gettext(`This item is not available for purchase`) }}
+					</template>
+					<template v-else>
+						{{ $gettext(`Choose a purchase option`) }}
+					</template>
 
 					<AppSpacer vertical :scale="3" />
-				</template>
+				</div>
 
 				<div
 					:style="{
@@ -336,7 +372,7 @@ function getItemStyles(ratio: number) {
 						}"
 						:disabled="
 							!!processingPurchaseCurrencyId ||
-							!canAffordCurrency(currency, amount, balanceRefs)
+							!canAffordCurrency(currency.id, amount, balanceRefs)
 						"
 						:dynamic-slots="['icon']"
 						lg
@@ -355,6 +391,14 @@ function getItemStyles(ratio: number) {
 						{{ formatNumber(amount) }}
 					</AppButton>
 				</div>
+
+				<template v-if="!canPurchaseAny">
+					<AppSpacer vertical :scale="3" />
+
+					<div class="text-center">
+						{{ $gettext(`You don't have enough funds to purchase this`) }}
+					</div>
+				</template>
 
 				<template v-if="showPurchaseJoltbuxButton">
 					<AppSpacer vertical :scale="3" />

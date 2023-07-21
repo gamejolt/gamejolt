@@ -2,24 +2,19 @@
 import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
+import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
-import AppStickerPack from '../../../../../_common/sticker/pack/AppStickerPack.vue';
+import AppStickerPack, {
+	StickerPackExpiryStyles,
+} from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { styleOverlayTextShadow } from '../../../../../_styles/mixins';
+import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { kBorderRadiusLg } from '../../../../../_styles/variables';
-import AppUserAvatarBubble from '../../../user/AppUserAvatarBubble.vue';
 import AppProductCurrencyTags from './AppProductCurrencyTags.vue';
 
 const props = defineProps({
 	shopProduct: {
 		type: Object as PropType<InventoryShopProductSale>,
-		required: true,
-	},
-	/**
-	 * Whether or not the user has enough funds to purchase this product.
-	 */
-	canPurchase: {
-		type: Boolean,
 		required: true,
 	},
 	/**
@@ -30,7 +25,7 @@ const props = defineProps({
 	},
 });
 
-const { shopProduct, canPurchase, disablePurchases } = toRefs(props);
+const { shopProduct, disablePurchases } = toRefs(props);
 
 const emit = defineEmits({
 	purchase: (_shopProduct: InventoryShopProductSale) => true,
@@ -38,7 +33,6 @@ const emit = defineEmits({
 
 const { user: myUser } = useCommonStore();
 
-const canPerformAction = computed(() => !disablePurchases.value && canPurchase.value);
 const name = computed(() => {
 	const product = shopProduct.value;
 	if (product.stickerPack) {
@@ -54,7 +48,7 @@ const name = computed(() => {
 });
 
 function onClickProduct() {
-	if (!canPerformAction.value) {
+	if (disablePurchases.value) {
 		return;
 	}
 
@@ -63,32 +57,23 @@ function onClickProduct() {
 
 const popperConfirmRadius = kBorderRadiusLg;
 
-const notEnoughFundsOverlayStyles: CSSProperties = {
-	...styleOverlayTextShadow,
-	borderRadius: popperConfirmRadius.px,
-	position: `absolute`,
-	top: 0,
-	right: 0,
-	bottom: 0,
-	left: 0,
-	fontSize: `13px`,
-	padding: `12px`,
-	zIndex: 3,
-	display: `grid`,
-	justifyContent: `center`,
-	alignContent: `center`,
-	textAlign: `center`,
-	fontWeight: `bold`,
-	color: `white`,
-	backgroundColor: `rgba(0, 0, 0, 0.45)`,
-};
-
+const overlayTagZIndex = 2;
 const currencyTagStyles: CSSProperties = {
 	position: `absolute`,
 	bottom: `4px`,
 	right: `4px`,
-	zIndex: 2,
+	zIndex: overlayTagZIndex,
 };
+
+const anchorStyles = computed<CSSProperties>(() => {
+	if (disablePurchases.value) {
+		// Revert the cursor if we're not allowing purchases. Using a
+		// <component> tag and swapping between <a> and <div> was causing some
+		// item images to flicker.
+		return { cursor: `inherit` };
+	}
+	return {};
+});
 </script>
 
 <template>
@@ -99,74 +84,64 @@ const currencyTagStyles: CSSProperties = {
 				zIndex: 1,
 			}"
 		>
-			<template v-if="shopProduct.stickerPack">
-				<AppStickerPack
-					:pack="shopProduct.stickerPack"
-					:expiry-info="shopProduct.ends_on"
-					:can-click-pack="canPerformAction"
-					show-details
-					@click-pack="onClickProduct()"
+			<AppStickerPack
+				v-if="shopProduct.stickerPack"
+				:pack="shopProduct.stickerPack"
+				:expiry-info="shopProduct.ends_on"
+				:can-click-pack="!disablePurchases"
+				show-details
+				@click-pack="onClickProduct()"
+			>
+				<template #overlay-children>
+					<AppProductCurrencyTags
+						:style="currencyTagStyles"
+						:shop-product="shopProduct"
+					/>
+				</template>
+			</AppStickerPack>
+			<a v-else-if="shopProduct.product" :style="anchorStyles" @click="onClickProduct()">
+				<AppUserAvatarBubble
+					v-if="shopProduct.avatarFrame"
+					:user="myUser"
+					:frame-override="shopProduct.avatarFrame"
+					show-frame
+					smoosh
+					disable-link
+				/>
+				<AppAspectRatio v-else-if="shopProduct.background" :ratio="1">
+					<AppBackground
+						:background="shopProduct.background"
+						:backdrop-style="{
+							borderRadius: popperConfirmRadius.px,
+						}"
+						:background-style="{
+							backgroundSize: `contain`,
+							backgroundPosition: `center`,
+						}"
+						darken
+					>
+						<AppAspectRatio :ratio="1" />
+					</AppBackground>
+				</AppAspectRatio>
+
+				<div
+					v-if="shopProduct.ends_on"
+					:style="{
+						...StickerPackExpiryStyles,
+						zIndex: overlayTagZIndex,
+					}"
 				>
-					<template #overlay-children>
-						<AppProductCurrencyTags
-							:style="currencyTagStyles"
-							:shop-product="shopProduct"
-						/>
+					{{
+						shorthandReadableTime(shopProduct.ends_on, {
+							allowFuture: true,
+							precision: 'rough',
+							nowText: $gettext(`Expired`),
+						})
+					}}
+				</div>
 
-						<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
-							{{ $gettext(`You don't have enough funds to purchase this`) }}
-						</div>
-					</template>
-				</AppStickerPack>
-			</template>
-			<template v-else-if="shopProduct.avatarFrame">
-				<component :is="canPerformAction ? 'a' : 'div'" @click="onClickProduct()">
-					<AppUserAvatarBubble
-						:user="myUser"
-						:frame-override="shopProduct.avatarFrame"
-						show-frame
-						smoosh
-						disable-link
-					/>
-
-					<AppProductCurrencyTags
-						:style="currencyTagStyles"
-						:shop-product="shopProduct"
-					/>
-
-					<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
-						{{ $gettext(`You don't have enough funds to purchase this`) }}
-					</div>
-				</component>
-			</template>
-			<template v-else-if="shopProduct.background">
-				<component :is="canPerformAction ? 'a' : 'div'" @click="onClickProduct()">
-					<AppAspectRatio :ratio="1">
-						<AppBackground
-							:background="shopProduct.background"
-							:backdrop-style="{
-								borderRadius: popperConfirmRadius.px,
-							}"
-							:background-style="{
-								backgroundSize: `contain`,
-								backgroundPosition: `center`,
-							}"
-							darken
-						>
-							<AppAspectRatio :ratio="1" />
-						</AppBackground>
-					</AppAspectRatio>
-
-					<AppProductCurrencyTags
-						:style="currencyTagStyles"
-						:shop-product="shopProduct"
-					/>
-
-					<div v-if="!canPurchase" :style="notEnoughFundsOverlayStyles">
-						{{ $gettext(`You don't have enough funds to purchase this`) }}
-					</div>
-				</component>
-			</template>
+				<AppProductCurrencyTags :style="currencyTagStyles" :shop-product="shopProduct" />
+			</a>
 		</div>
 
 		<div
