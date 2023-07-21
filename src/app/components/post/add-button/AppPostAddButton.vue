@@ -3,7 +3,7 @@ import { computed, PropType, toRefs } from 'vue';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { $createFiresidePost, FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
 import { Realm } from '../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -54,7 +54,7 @@ async function open() {
 		return;
 	}
 
-	const postProvider = FiresidePost.$create(game?.value ? game.value.id : 0);
+	const postProvider = $createFiresidePost(game?.value ? game.value.id : 0);
 
 	const post = await PostEditModal.show(postProvider, {
 		community: community?.value,

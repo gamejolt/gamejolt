@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs, useSlots } from 'vue';
 import { RouterLink } from 'vue-router';
 import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
-import { ContentRules } from '../../../content/content-editor/content-rules';
+import { ContentRules } from '../../../content/content-rules';
 import AppContentViewer from '../../../content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../environment/environment.service';
 import { formatFuzzynumber } from '../../../filters/fuzzynumber';

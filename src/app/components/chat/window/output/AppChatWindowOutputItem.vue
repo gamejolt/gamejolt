@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, CSSProperties, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
+import { ContentRules } from '../../../../../_common/content/content-rules';
 import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../../../../../_common/filters/date';

@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, PropType, ref, useSlots } from 'vue';
 import { isNavigationFailure, useRouter } from 'vue-router';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
+import { helloDarkness1 } from '../backdrop/darkness';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
@@ -46,6 +47,8 @@ const emit = defineEmits({
 defineExpose<AppModalInterface>({
 	scrollTo,
 });
+
+console.log(helloDarkness1());
 
 const slots = useSlots();
 const router = useRouter();

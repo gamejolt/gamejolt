@@ -1,7 +1,7 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { ViteMarkdownExport } from '../../../../../typings/markdown';
-import { PayloadError } from '../../../../_common/payload/payload-service';
+import { buildPayloadErrorForStatusCode } from '../../../../_common/payload/payload-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 const paths = import.meta.glob<ViteMarkdownExport>('../../../../lib/doc-game-api/v1.x/**/*.md');
@@ -26,7 +26,7 @@ const paths = import.meta.glob<ViteMarkdownExport>('../../../../lib/doc-game-api
 			return (await paths[`../../../../lib/doc-game-api/v1.x/${path}/index.md`]()).html;
 		}
 
-		return PayloadError.fromHttpError(404);
+		return buildPayloadErrorForStatusCode(404);
 	},
 })
 export default class RouteLandingGameApiDoc extends BaseRouteComponent {

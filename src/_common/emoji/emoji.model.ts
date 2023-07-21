@@ -1,5 +1,4 @@
 import { ModelStoreModel } from '../model/model-store.service';
-import { Model } from '../model/model.service';
 
 export class Emoji implements ModelStoreModel {
 	declare id: number;
@@ -19,5 +18,3 @@ export class Emoji implements ModelStoreModel {
 		return `:${this.prefix}${this.short_name}:`;
 	}
 }
-
-Model.create(Emoji);

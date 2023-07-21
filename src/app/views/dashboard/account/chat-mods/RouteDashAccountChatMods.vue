@@ -7,7 +7,7 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { User } from '../../../../../_common/user/user.model';
+import { touchUser } from '../../../../../_common/user/user.model';
 import { ChatUser } from '../../../../components/chat/user';
 import FormChatMods from '../../../../components/forms/chat/mods/FormChatMods.vue';
 import { ChatModsModal } from '../../../../components/forms/chat/mods/modal/modal.service';
@@ -16,7 +16,7 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 export default {
 	...defineAppRouteOptions({
 		deps: {},
-		resolver: () => User.touch(),
+		resolver: () => touchUser(),
 	}),
 };
 </script>

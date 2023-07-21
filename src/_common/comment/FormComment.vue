@@ -4,8 +4,8 @@ import AppAlertBox from '../alert/AppAlertBox.vue';
 import { trackCommentAdd } from '../analytics/analytics.service';
 import AppButton from '../button/AppButton.vue';
 import { ContentContext, ContextCapabilities } from '../content/content-context';
-import { ContentRules } from '../content/content-editor/content-rules';
-import { FiresidePost } from '../fireside/post/post-model';
+import { ContentRules } from '../content/content-rules';
+import { FiresidePost, FiresidePostAllowComments } from '../fireside/post/post-model';
 import AppForm, { createForm, FormController } from '../form-vue/AppForm.vue';
 import AppFormButton from '../form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../form-vue/AppFormControlErrors.vue';
@@ -152,7 +152,7 @@ const postModel = computed(() => (model.value instanceof FiresidePost ? model.va
 
 /** Whether or not only friends can comment */
 const onlyFriends = computed(
-	() => postModel.value?.allow_comments === FiresidePost.ALLOW_COMMENTS_FRIENDS
+	() => postModel.value?.allow_comments === FiresidePostAllowComments.Friends
 );
 </script>
 

@@ -1,32 +1,32 @@
-import { Model } from '../../model/model.service';
+import { Model, defineLegacyModel } from '../../model/model.service';
 
-export class SellablePricing extends Model {
-	amount!: number;
-	currency_code!: string;
-	country_code!: string;
-	promotional!: boolean;
+export class SellablePricing extends defineLegacyModel(
+	class SellablePricingDefinition extends Model {
+		declare amount: number;
+		declare currency_code: string;
+		declare country_code: string;
+		declare promotional: boolean;
 
-	// Promotional settings
-	start?: number;
-	end?: number;
-	timezone?: string;
-
-	static getOriginalPricing(pricings: SellablePricing[]) {
-		if (Array.isArray(pricings) && pricings.length > 0) {
-			if (pricings[0].promotional) {
-				return pricings[1];
-			}
-			return pricings[0];
-		}
-		return undefined;
+		// Promotional settings
+		declare start?: number;
+		declare end?: number;
+		declare timezone?: string;
 	}
+) {}
 
-	static getPromotionalPricing(pricings: SellablePricing[]) {
-		if (Array.isArray(pricings) && pricings.length > 0 && pricings[0].promotional) {
-			return pricings[0];
+export function getOriginalSellablePricing(pricings: SellablePricing[]) {
+	if (Array.isArray(pricings) && pricings.length > 0) {
+		if (pricings[0].promotional) {
+			return pricings[1];
 		}
-		return undefined;
+		return pricings[0];
 	}
+	return undefined;
 }
 
-Model.create(SellablePricing);
+export function getPromotionalSellablePricing(pricings: SellablePricing[]) {
+	if (Array.isArray(pricings) && pricings.length > 0 && pricings[0].promotional) {
+		return pricings[0];
+	}
+	return undefined;
+}

@@ -2,7 +2,7 @@
 import { addWeeks, startOfDay, startOfTomorrow } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { setup } from 'vue-class-component';
-import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Watch, mixins } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatCurrency } from '../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../_common/filters/date';
@@ -18,8 +18,12 @@ import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { SellablePricing } from '../../../../../_common/sellable/pricing/pricing.model';
-import { Sellable } from '../../../../../_common/sellable/sellable.model';
+import {
+	SellablePricing,
+	getOriginalSellablePricing,
+	getPromotionalSellablePricing,
+} from '../../../../../_common/sellable/pricing/pricing.model';
+import { Sellable, SellableType } from '../../../../../_common/sellable/sellable.model';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
@@ -195,7 +199,7 @@ export default class FormGamePackage
 			this.setField('primary', true);
 		}
 
-		this.setField('pricing_type', 'free');
+		this.setField('pricing_type', SellableType.Free);
 		this.setField('sale_start', startOfTomorrow().getTime());
 		this.setField('sale_end', startOfDay(addWeeks(Date.now(), 1)).getTime());
 
@@ -216,10 +220,8 @@ export default class FormGamePackage
 			if (this.sellable.type !== 'free') {
 				this.setField('pricing_type', this.sellable.type);
 
-				this.originalPricing = SellablePricing.getOriginalPricing(this.pricings) || null;
-
-				this.promotionalPricing =
-					SellablePricing.getPromotionalPricing(this.pricings) || null;
+				this.originalPricing = getOriginalSellablePricing(this.pricings) || null;
+				this.promotionalPricing = getPromotionalSellablePricing(this.pricings) || null;
 
 				this.setField(
 					'price',

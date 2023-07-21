@@ -34,7 +34,7 @@ import {
 	editorCreateView,
 	editorFocus,
 } from './content-editor-controller';
-import { ContentRules } from './content-rules';
+import { ContentRules } from '../content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
 import AppContentEditorBlockControls from './controls/block-controls.vue';
 import AppContentEditorControlsEmoji from './controls/emoji/AppContentEditorControlsEmoji.vue';

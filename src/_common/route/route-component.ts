@@ -8,7 +8,7 @@ import { ensureConfig } from '../config/config.service';
 import { HistoryCache } from '../history/cache/cache.service';
 import { Meta, setMetaTitle } from '../meta/meta-service';
 import { Navigate } from '../navigate/navigate.service';
-import { PayloadError } from '../payload/payload-service';
+import { PayloadError, PayloadErrorType } from '../payload/payload-service';
 import { useCommonStore } from '../store/common-store';
 import { EventTopic } from '../system/event/event-topic';
 
@@ -31,6 +31,9 @@ export type AppRouteOptionsInternal = AppRouteOptions & {
  */
 export const onRouteChangeAfter = new EventTopic<void>();
 
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
 export function defineAppRouteOptions(options: AppRouteOptions): {
 	appRouteOptions: AppRouteOptionsInternal;
 	beforeRouteEnter: NavigationGuardWithThis<undefined>;
@@ -240,11 +243,11 @@ export function createAppRoute({
 		if (payload) {
 			// If the payload errored out.
 			if (payload instanceof PayloadError) {
-				if (payload.type === PayloadError.ERROR_NEW_VERSION) {
+				if (payload.type === PayloadErrorType.NewVersion) {
 					// If it was a version change payload error, we want to
 					// refresh the page so that it gets the new code.
 					Navigate.reload();
-				} else if (payload.type === PayloadError.ERROR_HTTP_ERROR) {
+				} else if (payload.type === PayloadErrorType.HttpError) {
 					setError(payload.status || 500);
 				}
 

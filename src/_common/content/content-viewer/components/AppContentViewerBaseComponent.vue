@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, h, PropType, toRefs } from 'vue';
-import { ContentRules } from '../../content-editor/content-rules';
+import { ContentRules } from '../../content-rules';
 import { ContentObject } from '../../content-object';
 import AppContentViewerHardBreak from './AppContentViewerHardBreak.vue';
 import AppContentViewerParagraph from './AppContentViewerParagraph.vue';

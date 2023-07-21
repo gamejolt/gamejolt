@@ -1,6 +1,5 @@
 import { MediaItem } from '../media-item/media-item-model';
 import { ModelStoreModel, storeModelList } from '../model/model-store.service';
-import { Model } from '../model/model.service';
 import { Emoji } from './emoji.model';
 
 export class EmojiGroup implements ModelStoreModel {
@@ -44,5 +43,3 @@ export class EmojiGroup implements ModelStoreModel {
 		return this.type === EmojiGroup.TYPE_LOCAL_RECENT && this.id <= 0;
 	}
 }
-
-Model.create(EmojiGroup);

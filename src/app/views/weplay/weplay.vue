@@ -4,7 +4,7 @@ import AppCard from '../../../_common/card/AppCard.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { User } from '../../../_common/user/user.model';
+import { touchUser } from '../../../_common/user/user.model';
 import AppWeplayLogo from '../../components/weplay/logo/AppWeplayLogo.vue';
 
 @Options({
@@ -19,7 +19,7 @@ import AppWeplayLogo from '../../components/weplay/logo/AppWeplayLogo.vue';
 })
 @OptionsForRoute({
 	deps: {},
-	resolver: () => User.touch(),
+	resolver: () => touchUser(),
 })
 export default class RouteWeplay extends BaseRouteComponent {
 	readonly Screen = Screen;

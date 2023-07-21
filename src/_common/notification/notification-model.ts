@@ -28,7 +28,7 @@ import { UserFriendship } from '../user/friendship/friendship.model';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
 import { UserAvatarFrame } from '../user/user-avatar/frame/frame.model';
-import { User } from '../user/user.model';
+import { User, UserType } from '../user/user.model';
 
 export class Notification extends Model {
 	static TYPE_COMMENT_ADD = 'comment-add';
@@ -315,7 +315,7 @@ export function getNotificationFeedTypeLabels(user: User) {
 	}
 
 	// Game developer notification types.
-	if (user.type === User.TYPE_DEVELOPER) {
+	if (user.type === UserType.Developer) {
 		labels[Notification.TYPE_GAME_RATING_ADD] = $gettext(`Game ratings`);
 		labels[Notification.TYPE_GAME_FOLLOW] = $gettext(`Game follows`);
 		labels[Notification.TYPE_SELLABLE_SELL] = $gettext(`Sales`);

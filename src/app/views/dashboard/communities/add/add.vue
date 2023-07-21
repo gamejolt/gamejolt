@@ -2,7 +2,7 @@
 import { Options } from 'vue-property-decorator';
 import { Community } from '../../../../../_common/community/community.model';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
-import { User } from '../../../../../_common/user/user.model';
+import { touchUser } from '../../../../../_common/user/user.model';
 import FormCommunity from '../../../../components/forms/community/community.vue';
 import AppPageContainer from '../../../../components/page-container/AppPageContainer.vue';
 
@@ -15,7 +15,7 @@ import AppPageContainer from '../../../../components/page-container/AppPageConta
 })
 @OptionsForRoute({
 	deps: {},
-	resolver: () => User.touch(),
+	resolver: () => touchUser(),
 })
 export default class RouteDashCommunitiesAdd extends BaseRouteComponent {
 	get routeTitle() {

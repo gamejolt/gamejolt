@@ -1,3 +1,5 @@
+export const LINK_LENGTH = 23;
+
 export class ContentRules {
 	public maxMediaWidth: number | null = null;
 	public maxMediaHeight: number | null = null;

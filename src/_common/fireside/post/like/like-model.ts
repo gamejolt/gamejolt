@@ -1,12 +1,12 @@
-import { Model } from '../../../model/model.service';
+import { Model, defineLegacyModel } from '../../../model/model.service';
 
-export class FiresidePostLike extends Model {
-	fireside_post_id!: number;
-	user_id!: number;
-	added_on!: number;
-}
-
-Model.create(FiresidePostLike);
+export class FiresidePostLike extends defineLegacyModel(
+	class FiresidePostLikeDefinition extends Model {
+		declare fireside_post_id: number;
+		declare user_id: number;
+		declare added_on: number;
+	}
+) {}
 
 export function saveFiresidePostLike(like: FiresidePostLike) {
 	if (like.id) {

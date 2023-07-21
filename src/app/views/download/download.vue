@@ -18,7 +18,7 @@ import { HistoryTick } from '../../../_common/history-tick/history-tick-service'
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { setAppPromotionCohort, useAppPromotionStore } from '../../../_common/mobile-app/store';
 import { Navigate } from '../../../_common/navigate/navigate.service';
-import { PayloadError } from '../../../_common/payload/payload-service';
+import { buildPayloadErrorForStatusCode } from '../../../_common/payload/payload-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
@@ -50,14 +50,14 @@ const DownloadDelay = 3000;
 
 		const gameId = getQuery('game');
 		if (!gameId) {
-			return PayloadError.fromHttpError(404);
+			return buildPayloadErrorForStatusCode(404);
 		}
 
 		const query: string[] = [];
 		if (route.params.type === 'build') {
 			const buildId = getQuery('build');
 			if (!buildId) {
-				return PayloadError.fromHttpError(404);
+				return buildPayloadErrorForStatusCode(404);
 			}
 
 			HistoryTick.sendBeacon('game-build', buildId, {

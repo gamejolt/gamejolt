@@ -4,74 +4,71 @@ import { Environment } from '../environment/environment.service';
 import { showErrorGrowl } from '../growls/growls.service';
 import { Seo } from '../seo/seo.service';
 import { CommonStore } from '../store/common-store';
-import { Translate } from '../translate/translate.service';
-
-let payloadActionsHandler: ((payload: any) => void) | null = null;
-export function assignPayloadActionsHandler(fn: (payload: any) => void) {
-	payloadActionsHandler = fn;
-}
+import { $gettext } from '../translate/translate.service';
 
 export type PayloadFormErrors = { [errorId: string]: boolean };
 
-export class PayloadError {
-	static readonly ERROR_NEW_VERSION = 'payload-new-version';
-	static readonly ERROR_NOT_LOGGED = 'payload-not-logged';
-	static readonly ERROR_INVALID = 'payload-invalid';
-	static readonly ERROR_HTTP_ERROR = 'payload-error';
-	static readonly ERROR_OFFLINE = 'payload-offline';
-	static readonly ERROR_REDIRECT = 'payload-redirect';
-	static readonly ERROR_NEW_CLIENT_VERSION = 'payload-new-client-version';
-	static readonly ERROR_USER_TIMED_OUT = 'payload-user-timed-out';
-	static readonly ERROR_RATE_LIMIT = 'payload-rate-limit';
-
-	redirect?: string;
-
-	constructor(public type: string, public response?: any, public status?: number) {}
-
-	static fromAxiosError({ response }: AxiosError) {
-		// If the response indicated a failed connection.
-		if (response === undefined || response.status === -1) {
-			return new PayloadError(PayloadError.ERROR_OFFLINE);
-		}
-
-		const data = response.data;
-
-		if (response.status === 401) {
-			// If it was a 401 error, then they need to be logged in.
-			// Let's redirect them to the login page on the main site.
-			return new PayloadError(PayloadError.ERROR_NOT_LOGGED, data || undefined, 401);
-		} else if (response.status === 403 && data.user?.timeout) {
-			return new PayloadError(PayloadError.ERROR_USER_TIMED_OUT, data || undefined, 403);
-		} else if (response.status === 429) {
-			return new PayloadError(PayloadError.ERROR_RATE_LIMIT, data || undefined, 429);
-		}
-
-		// Otherwise, show an error page.
-		return new PayloadError(
-			PayloadError.ERROR_HTTP_ERROR,
-			data || undefined,
-			response.status || undefined
-		);
-	}
-
-	static fromHttpError(status: number) {
-		return new PayloadError(PayloadError.ERROR_HTTP_ERROR, undefined, status);
-	}
+export const enum PayloadErrorType {
+	NewVersion = 'payload-new-version',
+	NotLogged = 'payload-not-logged',
+	Invalid = 'payload-invalid',
+	HttpError = 'payload-error',
+	Offline = 'payload-offline',
+	Redirect = 'payload-redirect',
+	NewClientVersion = 'payload-new-client-version',
+	UserTimedOut = 'payload-user-timed-out',
+	RateLimit = 'payload-rate-limit',
 }
 
-export class Payload {
-	static readonly httpErrors = [400, 403, 404, 500];
+export class PayloadError {
+	constructor(public type: string, public response?: any, public status?: number) {}
+	redirect?: string;
+}
+
+export function buildPayloadErrorForStatusCode(statusCode: number) {
+	return new PayloadError(PayloadErrorType.HttpError, undefined, statusCode);
+}
+
+function _buildPayloadErrorFromAxios({ response }: AxiosError) {
+	// If the response indicated a failed connection.
+	if (response === undefined || response.status === -1) {
+		return new PayloadError(PayloadErrorType.Offline);
+	}
+
+	const data = response.data as any;
+
+	if (response.status === 401) {
+		// If it was a 401 error, then they need to be logged in.
+		// Let's redirect them to the login page on the main site.
+		return new PayloadError(PayloadErrorType.NotLogged, data || undefined, 401);
+	} else if (response.status === 403 && data.user?.timeout) {
+		return new PayloadError(PayloadErrorType.UserTimedOut, data || undefined, 403);
+	} else if (response.status === 429) {
+		return new PayloadError(PayloadErrorType.RateLimit, data || undefined, 429);
+	}
+
+	// Otherwise, show an error page.
+	return new PayloadError(
+		PayloadErrorType.HttpError,
+		data || undefined,
+		response.status || undefined
+	);
+}
+
+class PayloadService {
+	readonly httpErrors = [400, 403, 404, 500];
 	// These http errors are not redirects, so the noRedirect behavior should not apply to them.
-	static readonly httpNoRedirectOverrides = [429];
+	readonly httpNoRedirectOverrides = [429];
 
-	private static commonStore: CommonStore;
-	private static ver?: number = undefined;
+	private declare commonStore: CommonStore;
+	private ver?: number = undefined;
+	private payloadActionsHandler: ((payload: any) => void) | null = null;
 
-	static init({ commonStore }: { commonStore: CommonStore }) {
+	init({ commonStore }: { commonStore: CommonStore }) {
 		this.commonStore = commonStore;
 	}
 
-	static async processResponse(
+	async processResponse(
 		requestPromise: AxiosPromise<any>,
 		options: RequestOptions = {}
 	): Promise<any> {
@@ -91,7 +88,7 @@ export class Payload {
 			if (!response || !response.data) {
 				if (!options.noErrorRedirect) {
 					throw new PayloadError(
-						PayloadError.ERROR_INVALID,
+						PayloadErrorType.Invalid,
 						response ? response.data || undefined : undefined
 					);
 				} else {
@@ -107,8 +104,8 @@ export class Payload {
 			this.checkPayloadVersion(responseData, options);
 			this.checkPayloadSeo(responseData, options);
 
-			if (payloadActionsHandler) {
-				payloadActionsHandler(responseData);
+			if (this.payloadActionsHandler) {
+				this.payloadActionsHandler(responseData);
 			}
 
 			return responseData.payload;
@@ -137,7 +134,7 @@ export class Payload {
 				!options.noErrorRedirect ||
 				this.httpNoRedirectOverrides.includes(response.status)
 			) {
-				throw this.handlePayloadError(PayloadError.fromAxiosError(error));
+				throw this.handlePayloadError(_buildPayloadErrorFromAxios(error));
 			} else {
 				throw error;
 			}
@@ -147,11 +144,11 @@ export class Payload {
 	/**
 	 * Indicates an axios cancel token cancelled the request.
 	 */
-	static isCancelledUpload(payload: any) {
+	isCancelledUpload(payload: any) {
 		return payload.__CANCEL__ === true;
 	}
 
-	private static checkPayloadVersion(data: any, options: RequestOptions) {
+	private checkPayloadVersion(data: any, options: RequestOptions) {
 		// We ignore completely if we're in the client.
 		// We don't want the client refreshing when an update to site is pushed out.
 		if (options.ignorePayloadVersion || GJ_IS_DESKTOP_APP || import.meta.env.SSR) {
@@ -164,12 +161,12 @@ export class Payload {
 			if (this.ver === undefined) {
 				this.ver = data.ver;
 			} else {
-				throw new PayloadError(PayloadError.ERROR_NEW_VERSION);
+				throw new PayloadError(PayloadErrorType.NewVersion);
 			}
 		}
 	}
 
-	private static checkPayloadUser(data: any, options: RequestOptions) {
+	private checkPayloadUser(data: any, options: RequestOptions) {
 		if (options.ignorePayloadUser || !data || !this.commonStore) {
 			return;
 		}
@@ -185,7 +182,7 @@ export class Payload {
 		}
 	}
 
-	private static checkPayloadSeo(data: any, options: RequestOptions) {
+	private checkPayloadSeo(data: any, options: RequestOptions) {
 		if (!data || !data.meta || !data.meta.seo || options.ignorePayloadSeo) {
 			return;
 		}
@@ -193,7 +190,7 @@ export class Payload {
 		Seo.processPayloadDirectives(data.meta.seo);
 	}
 
-	private static checkPayloadConsents(data: any) {
+	private checkPayloadConsents(data: any) {
 		if (!data || !this.commonStore) {
 			return;
 		}
@@ -206,43 +203,43 @@ export class Payload {
 		this.commonStore.setConsents({});
 	}
 
-	private static checkClientForceUpgrade(data: any) {
+	private checkClientForceUpgrade(data: any) {
 		// We ignore completely if we're not in the client.
 		if (!GJ_IS_DESKTOP_APP) {
 			return;
 		}
 
 		if (data.clientForceUpgrade) {
-			throw new PayloadError(PayloadError.ERROR_NEW_CLIENT_VERSION);
+			throw new PayloadError(PayloadErrorType.NewClientVersion);
 		}
 	}
 
-	private static handlePayloadError(error: PayloadError) {
-		if (error.type === PayloadError.ERROR_NEW_VERSION) {
+	private handlePayloadError(error: PayloadError) {
+		if (error.type === PayloadErrorType.NewVersion) {
 			// Do nothing. Our BeforeRouteEnter util will catch this payload
 			// error and do a refresh of the page after it has the URL to
 			// reload.
-		} else if (error.type === PayloadError.ERROR_NOT_LOGGED) {
+		} else if (error.type === PayloadErrorType.NotLogged) {
 			const redirect = encodeURIComponent(
 				import.meta.env.SSR ? Environment.ssrContext.url : window.location.href
 			);
 			const location = Environment.authBaseUrl + '/login?redirect=' + redirect;
 			this.commonStore.redirect(location);
-		} else if (error.type === PayloadError.ERROR_NEW_CLIENT_VERSION) {
+		} else if (error.type === PayloadErrorType.NewClientVersion) {
 			this.commonStore.redirect(Environment.clientSectionUrl + '/upgrade');
-		} else if (error.type === PayloadError.ERROR_USER_TIMED_OUT) {
+		} else if (error.type === PayloadErrorType.UserTimedOut) {
 			this.commonStore.redirect(Environment.wttfBaseUrl + '/timeout');
-		} else if (error.type === PayloadError.ERROR_INVALID) {
+		} else if (error.type === PayloadErrorType.Invalid) {
 			this.commonStore.setError(500);
-		} else if (error.type === PayloadError.ERROR_RATE_LIMIT) {
+		} else if (error.type === PayloadErrorType.RateLimit) {
 			showErrorGrowl({
-				title: Translate.$gettext(`Whoa there, slow down!`),
-				message: Translate.$gettext(
+				title: $gettext(`Whoa there, slow down!`),
+				message: $gettext(
 					`Looks like you are doing that too much. Slow down, then try again in a few minutes.`
 				),
 			});
 		} else if (
-			error.type === PayloadError.ERROR_HTTP_ERROR &&
+			error.type === PayloadErrorType.HttpError &&
 			(!error.status || this.httpErrors.indexOf(error.status) !== -1)
 		) {
 			this.commonStore.setError(error.status || 500);
@@ -253,7 +250,7 @@ export class Payload {
 		return error;
 	}
 
-	static formErrors(payload: any): PayloadFormErrors | null {
+	formErrors(payload: any): PayloadFormErrors | null {
 		const errors = payload?.errors;
 
 		if (typeof errors !== 'object' || Object.keys(errors).length === 0) {
@@ -263,8 +260,14 @@ export class Payload {
 		return errors;
 	}
 
-	static hasFormError(payload: any, errorId: string): boolean {
+	hasFormError(payload: any, errorId: string): boolean {
 		const errors = this.formErrors(payload);
 		return !!errors?.[errorId];
 	}
+
+	assignPayloadActionsHandler(fn: (payload: any) => void) {
+		this.payloadActionsHandler = fn;
+	}
 }
+
+export const Payload = /** @__PURE__ */ new PayloadService();

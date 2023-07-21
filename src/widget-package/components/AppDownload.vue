@@ -7,15 +7,14 @@ import { formatCurrency } from '../../_common/filters/currency';
 import { formatFilesize } from '../../_common/filters/filesize';
 import { GameBuild } from '../../_common/game/build/build.model';
 import { HistoryTick } from '../../_common/history-tick/history-tick-service';
-import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
-import { Sellable } from '../../_common/sellable/sellable.model';
+import AppJolticon, { Jolticon } from '../../_common/jolticon/AppJolticon.vue';
+import { SellableType } from '../../_common/sellable/sellable.model';
 import { useCommonStore } from '../../_common/store/common-store';
 import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
 import AppFadeCollapse from '../components/AppFadeCollapse.vue';
 import AppWidgetModal from '../components/AppWidgetModal.vue';
 import { useWidgetPackageStore } from '../store/index';
 import FormPayment from './forms/FormPayment.vue';
-import { Jolticon } from '../../_common/jolticon/AppJolticon.vue';
 
 const store = useWidgetPackageStore();
 const { user } = useCommonStore();
@@ -59,7 +58,7 @@ async function buildClick(build?: GameBuild) {
 		throw new Error('Build must always be set.');
 	}
 
-	if (sellable.value.type === Sellable.TYPE_PWYW && !isShowingPayment.value) {
+	if (sellable.value.type === SellableType.Pwyw && !isShowingPayment.value) {
 		clickedBuild.value = build;
 		isShowingPayment.value = true;
 		return;

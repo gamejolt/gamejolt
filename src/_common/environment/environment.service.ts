@@ -9,78 +9,113 @@ interface SsrContext {
 	redirect?: string;
 }
 
-export class Environment {
-	static isSecure = isSecure;
+class EnvironmentService {
+	isSecure = isSecure;
 
-	static ssrContext: SsrContext = {
+	ssrContext: SsrContext = {
 		ua: '',
 		url: '',
 		accept: '',
 		meta: {},
 	};
 
-	// Production defaults.
-	static baseUrlInsecure = 'http://gamejolt.com';
-	static baseUrl = 'https://gamejolt.com';
-	static wttfBaseUrl = 'https://gamejolt.com';
-	static authBaseUrl = 'https://gamejolt.com';
-	static checkoutBaseUrl = 'https://gamejolt.com';
-	static helpBaseUrl = 'https://gamejolt.com/help';
-	static helpDocsBaseUrl = 'https://gamejolt.com/help-docs';
-	static clientSectionUrl = '';
-
-	static devBaseUrl = 'http://dev.gamejolt.com';
-	static gameserverUrl = (isSecure ? 'https' : 'http') + '://gamejolt.net';
-	static mediaserverUrl = 'https://m.gjcdn.net';
-	static staticCdnUrl = 'https://s.gjcdn.net';
-
-	static apiHost = 'https://gamejolt.com';
-	static uploadHost = 'https://upload.gamejolt.com';
-	static gameserverApiHost = 'https://gamejolt.net';
-	static widgetHost = 'https://widgets.gamejolt.com';
-	static grid = 'https://grid.gamejolt.com/grid';
-	static recaptchaSiteKey = '6Led_UAUAAAAAB_ptIOOlAF5DFK9YM7Qi_7z8iKk';
-
-	static firebaseAppId = '1:1065321331780:web:37c4d21c84f1a69ad3d011';
-	static firebaseMeasurementId = 'G-ZV3SVDN43D';
-
-	static baseUrlDesktopApp =
+	baseUrlDesktopApp =
 		GJ_BUILD_TYPE === 'build'
 			? 'chrome-extension://game-jolt-client/package'
 			: GJ_BUILD_TYPE === 'serve-build'
 			? 'chrome-extension://game-jolt-client/build/desktop'
 			: 'chrome-extension://game-jolt-client';
-}
 
-if (GJ_ENVIRONMENT === 'development') {
-	Environment.baseUrl = 'https://development.gamejolt.com';
-	Environment.baseUrlInsecure = 'https://development.gamejolt.com';
-	Environment.wttfBaseUrl = 'https://development.gamejolt.com';
-	Environment.authBaseUrl = 'https://development.gamejolt.com';
-	Environment.checkoutBaseUrl = 'https://development.gamejolt.com';
-	Environment.helpBaseUrl = 'https://development.gamejolt.com/help';
-	Environment.helpDocsBaseUrl = 'https://development.gamejolt.com/help-docs';
+	baseUrl =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://development.gamejolt.com'
+			: 'https://gamejolt.com';
 
-	Environment.devBaseUrl = 'https://dev.development.gamejolt.com';
-	Environment.gameserverUrl = 'https://development.gamejolt.net';
-	Environment.mediaserverUrl = 'https://media.development.gamejolt.com';
-	Environment.staticCdnUrl = 'https://development.gamejolt.com';
+	baseUrlInsecure =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://development.gamejolt.com'
+			: 'http://gamejolt.com';
 
-	Environment.apiHost = 'https://development.gamejolt.com';
-	Environment.uploadHost = Environment.apiHost;
-	Environment.gameserverApiHost = 'https://development.gamejolt.net';
-	Environment.widgetHost = 'https://localhost:8086';
-	Environment.grid = 'https://grid.development.gamejolt.com/grid';
-	Environment.recaptchaSiteKey = '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';
-}
+	wttfBaseUrl = GJ_ENVIRONMENT
+		? 'https://development.gamejolt.com'
+		: GJ_IS_DESKTOP_APP
+		? `${this.baseUrlDesktopApp}/index.html#`
+		: 'https://gamejolt.com';
 
-if (GJ_IS_DESKTOP_APP) {
-	Environment.wttfBaseUrl = `${Environment.baseUrlDesktopApp}/index.html#`;
-	Environment.authBaseUrl = `${Environment.baseUrlDesktopApp}/auth.html#`;
-	Environment.checkoutBaseUrl = `${Environment.baseUrlDesktopApp}/checkout.html#`;
-	Environment.clientSectionUrl = `${Environment.baseUrlDesktopApp}/client.html#`;
+	authBaseUrl = GJ_ENVIRONMENT
+		? 'https://development.gamejolt.com'
+		: GJ_IS_DESKTOP_APP
+		? `${this.baseUrlDesktopApp}/auth.html#`
+		: 'https://gamejolt.com';
+
+	checkoutBaseUrl = GJ_ENVIRONMENT
+		? 'https://development.gamejolt.com'
+		: GJ_IS_DESKTOP_APP
+		? `${this.baseUrlDesktopApp}/checkout.html#`
+		: 'https://gamejolt.com';
+
+	helpBaseUrl =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://development.gamejolt.com/help'
+			: 'https://gamejolt.com/help';
+
+	helpDocsBaseUrl =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://development.gamejolt.com/help-docs'
+			: 'https://gamejolt.com/help-docs';
+
+	clientSectionUrl = GJ_IS_DESKTOP_APP ? `${this.baseUrlDesktopApp}/client.html#` : '';
+
+	devBaseUrl =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://dev.development.gamejolt.com'
+			: 'http://dev.gamejolt.com';
+
+	gameserverUrl =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://development.gamejolt.net'
+			: (isSecure ? 'https' : 'http') + '://gamejolt.net';
+
+	mediaserverUrl =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://media.development.gamejolt.com'
+			: 'https://m.gjcdn.net';
+
+	staticCdnUrl =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://development.gamejolt.com'
+			: 'https://s.gjcdn.net';
+
+	apiHost =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://development.gamejolt.com'
+			: 'https://gamejolt.com';
+
+	uploadHost = GJ_ENVIRONMENT === 'development' ? this.apiHost : 'https://upload.gamejolt.com';
+
+	gameserverApiHost = GJ_ENVIRONMENT === 'development' ? this.apiHost : 'https://gamejolt.net';
+
+	widgetHost =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://localhost:8086'
+			: 'https://widgets.gamejolt.com';
+
+	grid =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://grid.development.gamejolt.com/grid'
+			: 'https://grid.gamejolt.com/grid';
+
+	recaptchaSiteKey =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://dev.development.gamejolt.com'
+			: '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';
 
 	// We have different firebase app for Client.
-	Environment.firebaseAppId = '1:1065321331780:web:b58ac57b00c1d538d3d011';
-	Environment.firebaseMeasurementId = 'G-PJSN27C1K6';
+	firebaseAppId = GJ_IS_DESKTOP_APP
+		? '1:1065321331780:web:b58ac57b00c1d538d3d011'
+		: '1:1065321331780:web:37c4d21c84f1a69ad3d011';
+
+	firebaseMeasurementId = GJ_IS_DESKTOP_APP ? 'G-PJSN27C1K6' : 'G-ZV3SVDN43D';
 }
+
+export const Environment = /** @__PURE__ */ new EnvironmentService();

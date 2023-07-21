@@ -4,7 +4,7 @@ import { createFocusToken } from '../../../../../utils/focus-token';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../_common/content/content-document';
-import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
+import { ContentRules } from '../../../../../_common/content/content-rules';
 import {
 	EscapeStack,
 	EscapeStackCallback,

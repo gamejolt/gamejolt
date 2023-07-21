@@ -66,3 +66,13 @@ export const kStrongEaseInOut = `cubic-bezier(1, 0, 0, 1)`;
 export const kEaseInBack = `cubic-bezier(0.6, -0.28, 0.735, 0.045)`;
 export const kEaseOutBack = `cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
 export const kEaseInOutBack = `cubic-bezier(0.68, -0.55, 0.265, 1.55)`;
+
+export const kLayerModal = 1050;
+export const kLayerPopover = 1060;
+export const kLayerTooltip = 1300;
+export const kLayerLoadingBar = 2000;
+export const kLayerGrowls = 1200;
+export const kLayerContentEditor = 200;
+export const kLayerBackdrop = 20;
+export const kLayerPlayButtonOverlay = 11;
+export const kLayerStickerLayer = kLayerModal + 1;

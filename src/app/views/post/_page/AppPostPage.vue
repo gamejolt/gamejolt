@@ -7,7 +7,7 @@ import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisab
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { isDynamicGoogleBot } from '../../../../_common/device/device.service';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { FiresidePost, FiresidePostStatus } from '../../../../_common/fireside/post/post-model';
 import {
 	$viewPostVideo,
 	FiresidePostVideo,
@@ -72,7 +72,7 @@ const videoProcessingErrorMsg = ref('');
 const communities = computed(() => post.value.communities || []);
 const realms = computed(() => post.value.realms.map(i => i.realm));
 const shouldShowCommunityPublishError = computed(
-	() => post.value.status === FiresidePost.STATUS_DRAFT && !post.value.canPublishToCommunities()
+	() => post.value.status === FiresidePostStatus.Draft && !post.value.canPublishToCommunities()
 );
 const video = computed<FiresidePostVideo | null>(() => post.value.videos[0] || null);
 const background = computed(() => post.value.background);

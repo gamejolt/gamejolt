@@ -2,6 +2,8 @@ export type Logger = ReturnType<typeof createLogger>;
 
 /**
  * Simple function to create a logger that prefixes each log message.
+ *
+ * @__NO_SIDE_EFFECTS__
  */
 export function createLogger(name: string) {
 	const _createLevel =

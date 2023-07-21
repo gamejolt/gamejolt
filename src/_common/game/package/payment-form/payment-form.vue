@@ -23,7 +23,7 @@ import { Navigate } from '../../../navigate/navigate.service';
 import { OrderPayment } from '../../../order/payment/payment.model';
 import AppPopper from '../../../popper/AppPopper.vue';
 import { Screen } from '../../../screen/screen-service';
-import { Sellable } from '../../../sellable/sellable.model';
+import { Sellable, SellableType } from '../../../sellable/sellable.model';
 import { useCommonStore } from '../../../store/common-store';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../../user/user.model';
@@ -141,7 +141,7 @@ export default class FormGamePackagePayment
 
 		// Paid games have to be more than the amount of the game base price.
 		if (
-			this.sellable.type === Sellable.TYPE_PAID &&
+			this.sellable.type === SellableType.Paid &&
 			this.walletBalance < sellableAmount + taxAmount
 		) {
 			return false;

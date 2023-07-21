@@ -10,7 +10,7 @@ import AppGrowls from '../growls/AppGrowls.vue';
 import AppScrollInviewParent from '../scroll/inview/AppScrollInviewParent.vue';
 import AppTheme from '../theme/AppTheme.vue';
 
-const AppLoadingBar = defineAsyncComponent(() => import('../loading/bar/bar.vue'));
+const AppLoadingBar = defineAsyncComponent(() => import('../loading/AppLoadingBar.vue'));
 const AppBackdropPortal = defineAsyncComponent(() => import('../backdrop/AppBackdropPortal.vue'));
 const AppLightboxPortal = defineAsyncComponent(() => import('../lightbox/AppLightboxPortal.vue'));
 const AppModalPortal = defineAsyncComponent(() => import('../modal/AppModalPortal.vue'));

@@ -4,13 +4,13 @@ import { RouterLink } from 'vue-router';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { User } from '../../../../_common/user/user.model';
+import { touchUser } from '../../../../_common/user/user.model';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import { routeDashAccountReferrals } from './referrals/referrals.route';
 
 export default {
 	...defineAppRouteOptions({
-		resolver: () => User.touch(),
+		resolver: () => touchUser(),
 	}),
 };
 </script>

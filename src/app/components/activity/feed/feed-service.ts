@@ -1,14 +1,14 @@
 import { RouteLocationNormalized, RouteLocationNormalizedLoaded, Router } from 'vue-router';
-import { arrayRemove } from '../../../../utils/array';
-import { RouteLocationDefinition } from '../../../../utils/router';
 import { EventItem } from '../../../../_common/event-item/event-item.model';
 import { FiresidePostGotoGrowl } from '../../../../_common/fireside/post/goto-growl/goto-growl.service';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { FiresidePost, FiresidePostStatus } from '../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../_common/game/game.model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import { Notification } from '../../../../_common/notification/notification-model';
 import { AppRoute } from '../../../../_common/route/route-component';
 import { User } from '../../../../_common/user/user.model';
+import { arrayRemove } from '../../../../utils/array';
+import { RouteLocationDefinition } from '../../../../utils/router';
 import { ActivityFeedInput } from './item-service';
 import { ActivityFeedState, ActivityFeedStateOptions } from './state';
 import { ActivityFeedView, ActivityFeedViewOptions } from './view';
@@ -123,9 +123,9 @@ export class ActivityFeedService {
 	 * Checks if the feed is correct for the post on the current route.
 	 */
 	private static isInCorrectManageFeed(post: FiresidePost, route: RouteLocationNormalized) {
-		if (post.status === FiresidePost.STATUS_ACTIVE) {
+		if (post.status === FiresidePostStatus.Active) {
 			return !route.query['tab'];
-		} else if (post.status === FiresidePost.STATUS_DRAFT) {
+		} else if (post.status === FiresidePostStatus.Draft) {
 			if (post.isScheduled) {
 				return route.query['tab'] === 'scheduled';
 			}
@@ -150,7 +150,7 @@ export class ActivityFeedService {
 			post.game instanceof Game &&
 			route.name === 'discover.games.view.overview' &&
 			route.params.id.toString() === post.game.id.toString() &&
-			post.status === FiresidePost.STATUS_ACTIVE
+			post.status === FiresidePostStatus.Active
 		);
 	}
 

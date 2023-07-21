@@ -2,7 +2,7 @@
 import { computed, PropType, provide, ref, toRefs, watch } from 'vue';
 import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
-import { ContentRules } from '../content-editor/content-rules';
+import { ContentRules } from '../content-rules';
 import { ContentHydrator } from '../content-hydrator';
 import {
 	ContentOwnerControllerKey,

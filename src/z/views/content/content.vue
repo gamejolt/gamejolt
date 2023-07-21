@@ -8,7 +8,7 @@ import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
-import { User } from '../../../_common/user/user.model';
+import { touchUser } from '../../../_common/user/user.model';
 
 @Options({
 	name: 'RouteContent',
@@ -21,11 +21,11 @@ import { User } from '../../../_common/user/user.model';
 @OptionsForRoute({
 	deps: { params: ['resource', 'resource-Id'] },
 	async resolver({ route }) {
-		await User.touch();
-		const payload = await Api.sendRequest(
+		await touchUser();
+
+		return await Api.sendRequest(
 			`/z/content/${route.params.resource}/${route.params.resourceId}`
 		);
-		return payload;
 	},
 })
 export default class RouteContent extends BaseRouteComponent {

@@ -1,19 +1,23 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { enforceLocation } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
 import {
 	CommentThreadModal,
 	CommentThreadModalPermalinkDeregister,
 } from '../../../_common/comment/thread/modal.service';
 import { CommunityUserNotification } from '../../../_common/community/user-notification/user-notification.model';
-import { $viewPost, FiresidePost } from '../../../_common/fireside/post/post-model';
+import {
+	$viewPost,
+	FiresidePost,
+	pullFiresideHashFromUrl,
+} from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Registry } from '../../../_common/registry/registry.service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 import { useThemeStore } from '../../../_common/theme/theme.store';
-import { Translate } from '../../../_common/translate/translate.service';
+import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { enforceLocation } from '../../../utils/router';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPostPagePlaceholder from './_page-placeholder/AppPostPagePlaceholder.vue';
 import AppPostPage from './_page/AppPostPage.vue';
@@ -34,13 +38,13 @@ const PostThemeKey = 'post';
 	async resolver({ route }) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'like-post',
-			message: Translate.$gettext(`You like this post! That's cool.`),
+			message: $gettext(`You like this post! That's cool.`),
 		});
 		if (intentRedirect) {
 			return intentRedirect;
 		}
 
-		const postHash = FiresidePost.pullHashFromUrl(route.params.slug.toString());
+		const postHash = pullFiresideHashFromUrl(route.params.slug.toString());
 		const payload = await Api.sendRequest('/web/posts/view/' + postHash);
 
 		if (payload?.post) {
@@ -82,21 +86,21 @@ export default class RoutePost extends BaseRouteComponent {
 		const game = this.post.game?.title;
 
 		if (game) {
-			return this.$gettextInterpolate(`%{ lead } - %{ game } by %{ user }`, {
+			return $gettextInterpolate(`%{ lead } - %{ game } by %{ user }`, {
 				lead,
 				game,
 				user,
 			});
 		}
 
-		return this.$gettextInterpolate('%{ user } on Game Jolt: "%{ lead }"', {
+		return $gettextInterpolate('%{ user } on Game Jolt: "%{ lead }"', {
 			user,
 			lead,
 		});
 	}
 
 	routeCreated() {
-		const hash = FiresidePost.pullHashFromUrl(this.$route.params.slug.toString());
+		const hash = pullFiresideHashFromUrl(this.$route.params.slug.toString());
 		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
 		this.setPageTheme();
 	}

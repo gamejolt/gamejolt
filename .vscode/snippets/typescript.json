@@ -41,5 +41,23 @@
 			"}",
 			"$0"
 		]
+	},
+	"Legacy model definition": {
+		"prefix": "legacy-model",
+		"body": [
+			"export class ${1:ModelName} extends defineLegacyModel(",
+			"class ${1:ModelName}Definition extends Model {",
+			"\t$0",
+			"}",
+			") {}"
+		]
+	},
+	"Pure assignment": {
+		"prefix": "pure",
+		"body": "/** @__PURE__ */"
+	},
+	"Side effect free function": {
+		"prefix": "no-side-effects",
+		"body": "@__NO_SIDE_EFFECTS__"
 	}
 }

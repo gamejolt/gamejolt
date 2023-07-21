@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import { PayloadError } from '../../../_common/payload/payload-service';
+import { buildPayloadErrorForStatusCode } from '../../../_common/payload/payload-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
 
 const ActionUnsubscribeNotification = 'unsubscribe-notification';
@@ -13,7 +13,7 @@ const ValidActions = [ActionUnsubscribeNotification, ActionUnsubscribeGJ];
 @OptionsForRoute({
 	async resolver({ route }) {
 		if (ValidActions.indexOf(route.params.action) === -1) {
-			return PayloadError.fromHttpError(404);
+			return buildPayloadErrorForStatusCode(404);
 		}
 	},
 })

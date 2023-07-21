@@ -1,14 +1,13 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePost, FiresidePostStatus } from '../../../../../_common/fireside/post/post-model';
 import { Game } from '../../../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
@@ -16,6 +15,7 @@ import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { User } from '../../../../../_common/user/user.model';
+import { arrayRemove } from '../../../../../utils/array';
 import { useAppStore } from '../../../../store';
 import { CommunityBlockUserModal } from '../../../community/block-user-modal/block-user-modal.service';
 import { CommunityEjectPostModal } from '../../../community/eject-post/modal/modal.service';
@@ -59,7 +59,7 @@ export default class AppPostControlsMore extends Vue {
 
 	get shouldShowManageCommunities() {
 		return (
-			this.post.status === FiresidePost.STATUS_ACTIVE &&
+			this.post.status === FiresidePostStatus.Active &&
 			this.post.manageableCommunities.length !== 0
 		);
 	}
@@ -84,7 +84,7 @@ export default class AppPostControlsMore extends Vue {
 			return false;
 		}
 
-		if (this.post.status !== FiresidePost.STATUS_ACTIVE) {
+		if (this.post.status !== FiresidePostStatus.Active) {
 			return false;
 		}
 

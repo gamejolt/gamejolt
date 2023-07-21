@@ -8,7 +8,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/rout
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { vAppScrollTo } from '../../../_common/scroll/to/to.directive';
 import AppThemeSvgStyleguide from '../../../_common/theme/svg/svg-styleguide.vue';
-import { User } from '../../../_common/user/user.model';
+import { touchUser } from '../../../_common/user/user.model';
 import AppAvatarFrameStyleguide from './avatar-frame/AppAvatarFrameStyleguide.vue';
 import AppStyleguideColor from './color/color.vue';
 
@@ -29,7 +29,7 @@ import AppStyleguideColor from './color/color.vue';
 })
 @OptionsForRoute({
 	deps: {},
-	resolver: () => User.touch(),
+	resolver: () => touchUser(),
 })
 export default class RouteStyleguide extends BaseRouteComponent {
 	get routeTitle() {
