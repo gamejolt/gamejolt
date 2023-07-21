@@ -158,10 +158,6 @@ function closeNotice() {
 	>
 		<template #leading>
 			<AppCircularProgress
-				:style="{
-					width: `100%`,
-					height: `100%`,
-				}"
 				:transition-ms="percentTransitionMs"
 				:percent="percentData.percent"
 			>

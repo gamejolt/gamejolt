@@ -392,7 +392,14 @@ function onClickPurchasePacks() {
 						width: '100%',
 					}"
 				>
-					<AppButton block primary :solid="isChargingSticker" @click="onClickPlace()">
+					<AppButton
+						block
+						primary
+						:solid="isChargingSticker"
+						:disabled="isConfirmingPlacement"
+						:loading="isConfirmingPlacement"
+						@click="onClickPlace()"
+					>
 						<span v-if="isChargingSticker">
 							{{ $gettext(`Place charged sticker`) }}
 						</span>
