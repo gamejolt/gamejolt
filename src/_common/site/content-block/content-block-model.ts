@@ -1,8 +1,8 @@
-import { Model } from '../../model/model.service';
+import { Model, defineLegacyModel } from '../../model/model.service';
 
-export class SiteContentBlock extends Model {
-	content_markdown!: string;
-	content_compiled!: string;
-}
-
-Model.create(SiteContentBlock);
+export class SiteContentBlock extends defineLegacyModel(
+	class SiteContentBlockDefinition extends Model {
+		declare content_markdown: string;
+		declare content_compiled: string;
+	}
+) {}

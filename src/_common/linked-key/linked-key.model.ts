@@ -1,15 +1,13 @@
-import { Model } from '../model/model.service';
+import { Model, defineLegacyModel } from '../model/model.service';
 
-export class LinkedKey extends Model {
-	static readonly PROVIDER_STEAM = 'steam';
-
-	key!: string;
-	provider!: string;
-	provider_label!: string;
-
-	constructor(data: any = {}) {
-		super(data);
-	}
+export const enum LinkedKeyProvider {
+	Steam = 'steam',
 }
 
-Model.create(LinkedKey);
+export class LinkedKey extends defineLegacyModel(
+	class LinkedKeyDefinition extends Model {
+		declare key: string;
+		declare provider: LinkedKeyProvider;
+		declare provider_label: string;
+	}
+) {}

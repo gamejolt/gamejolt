@@ -5,7 +5,11 @@ import AppButton from '../../_common/button/AppButton.vue';
 import { Environment } from '../../_common/environment/environment.service';
 import { formatCurrency } from '../../_common/filters/currency';
 import { formatFilesize } from '../../_common/filters/filesize';
-import { GameBuild } from '../../_common/game/build/build.model';
+import {
+	GameBuild,
+	GameBuildEmulatorInfo,
+	GameBuildType,
+} from '../../_common/game/build/build.model';
 import { HistoryTick } from '../../_common/history-tick/history-tick-service';
 import AppJolticon, { Jolticon } from '../../_common/jolticon/AppJolticon.vue';
 import { SellableType } from '../../_common/sellable/sellable.model';
@@ -73,7 +77,7 @@ async function buildClick(build?: GameBuild) {
 		sourceResourceId: game.value.id,
 	});
 
-	if (build.isBrowserBased || build.type === GameBuild.TYPE_ROM) {
+	if (build.isBrowserBased || build.type === GameBuildType.Rom) {
 		Analytics.trackEvent('game-play', 'play');
 
 		// We have to open the window first before getting the URL. The browser
@@ -169,8 +173,8 @@ async function buildClick(build?: GameBuild) {
 							<!-- If a ROM, we want to show a tooltip on what kind. -->
 							<AppButton
 								v-app-tooltip.touchable="
-									extraBuild.build.type === GameBuild.TYPE_ROM
-										? GameBuild.emulatorInfo[extraBuild.build.emulator_type]
+									extraBuild.build.type === GameBuildType.Rom
+										? GameBuildEmulatorInfo[extraBuild.build.emulator_type]
 										: undefined
 								"
 								block

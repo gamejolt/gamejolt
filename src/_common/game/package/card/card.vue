@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Component } from 'vue';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Analytics } from '../../../analytics/analytics.service';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
+import { Analytics } from '../../../analytics/analytics.service';
 import AppCard from '../../../card/AppCard.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
 import { AppCountdown } from '../../../countdown/countdown';
@@ -15,7 +15,7 @@ import { Sellable } from '../../../sellable/sellable.model';
 import AppTimeAgo from '../../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { User } from '../../../user/user.model';
-import { GameBuild } from '../../build/build.model';
+import { GameBuild, GameBuildType } from '../../build/build.model';
 import { GameDownloader } from '../../downloader/downloader.service';
 import { Game } from '../../game.model';
 import { GamePlayModal } from '../../play-modal/play-modal.service';
@@ -159,8 +159,8 @@ export default class AppGamePackageCard extends Vue {
 	}
 
 	private doBuildClick(build: GameBuild, fromExtraSection = false) {
-		let operation = build.type === GameBuild.TYPE_DOWNLOADABLE ? 'download' : 'play';
-		if (build.type === GameBuild.TYPE_ROM && fromExtraSection) {
+		let operation = build.type === GameBuildType.Downloadable ? 'download' : 'play';
+		if (build.type === GameBuildType.Rom && fromExtraSection) {
 			operation = 'download';
 		}
 

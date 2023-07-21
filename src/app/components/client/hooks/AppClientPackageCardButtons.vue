@@ -4,7 +4,7 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatFilesize } from '../../../../_common/filters/filesize';
-import { GameBuild } from '../../../../_common/game/build/build.model';
+import { GameBuild, GameBuildType } from '../../../../_common/game/build/build.model';
 import { Game } from '../../../../_common/game/game.model';
 import AppGamePackageCardMoreOptions from '../../../../_common/game/package/card/AppGamePackageCardMoreOptions.vue';
 import { GamePackageCardModel } from '../../../../_common/game/package/card/card.model';
@@ -184,8 +184,8 @@ if (card.value.downloadableBuild) {
 // quick played in their client.
 if (
 	card.value.browserBuild &&
-	card.value.browserBuild.type !== GameBuild.TYPE_HTML &&
-	card.value.browserBuild.type !== GameBuild.TYPE_ROM
+	card.value.browserBuild.type !== GameBuildType.Html &&
+	card.value.browserBuild.type !== GameBuildType.Rom
 ) {
 	build.value = card.value.browserBuild;
 

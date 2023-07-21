@@ -1,11 +1,11 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Analytics } from '../../../analytics/analytics.service';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
+import { Analytics } from '../../../analytics/analytics.service';
 import AppCard from '../../../card/AppCard.vue';
 import { Navigate } from '../../../navigate/navigate.service';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
-import { GameBuild } from '../../build/build.model';
+import { GameBuildPlatformSupportInfo } from '../../build/build.model';
 import { GameExternalPackage } from '../external-package.model';
 
 @Options({
@@ -24,7 +24,7 @@ export default class AppGameExternalPackageCard extends Vue {
 	showFullDescription = false;
 	canToggleDescription = false;
 
-	readonly GameBuild = GameBuild;
+	readonly GameBuildPlatformSupportInfo = GameBuildPlatformSupportInfo;
 
 	get platforms() {
 		const platforms = [];
@@ -39,7 +39,7 @@ export default class AppGameExternalPackageCard extends Vue {
 				}
 
 				const field = prop.substr(prefix.length);
-				if (field in GameBuild.platformSupportInfo) {
+				if (field in GameBuildPlatformSupportInfo) {
 					platforms.push(field);
 				}
 			}
@@ -67,8 +67,8 @@ export default class AppGameExternalPackageCard extends Vue {
 			<AppJolticon
 				v-for="platform of platforms"
 				:key="platform"
-				v-app-tooltip="GameBuild.platformSupportInfo[platform].tooltip"
-				:icon="GameBuild.platformSupportInfo[platform].icon"
+				v-app-tooltip="GameBuildPlatformSupportInfo[platform].tooltip"
+				:icon="GameBuildPlatformSupportInfo[platform].icon"
 			/>
 		</div>
 

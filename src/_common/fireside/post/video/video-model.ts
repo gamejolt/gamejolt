@@ -1,5 +1,5 @@
 import { HistoryTick } from '../../../history-tick/history-tick-service';
-import { MediaItem } from '../../../media-item/media-item-model';
+import { MediaItem, MediaItemType } from '../../../media-item/media-item-model';
 import { Model, defineLegacyModel } from '../../../model/model.service';
 import { VideoSourceArray } from '../../../video/AppVideo.vue';
 
@@ -23,12 +23,12 @@ export class FiresidePostVideo extends defineLegacyModel(
 		}
 
 		get posterMediaItem() {
-			return this.media.find(i => i.type === MediaItem.TYPE_VIDEO_POSTER);
+			return this.media.find(i => i.type === MediaItemType.VideoPoster);
 		}
 
 		get postCardVideo(): VideoSourceArray | null {
 			return this.media
-				.filter(i => i.type === MediaItem.TYPE_TRANSCODED_VIDEO_CARD)
+				.filter(i => i.type === MediaItemType.TranscodedVideoCard)
 				.map(i => ({ src: i.img_url, type: i.filetype }));
 		}
 
@@ -45,14 +45,14 @@ export class FiresidePostVideo extends defineLegacyModel(
 			};
 
 			return this.media
-				.filter(i => i.type === MediaItem.TYPE_VIDEO_MANIFEST)
+				.filter(i => i.type === MediaItemType.VideoManifest)
 				.sort((a, b) => getManifestPreference(a) - getManifestPreference(b))
 				.map(i => ({ src: i.img_url, type: i.filetype }));
 		}
 
 		get transcodedVideos(): VideoSourceArray {
 			return this.media
-				.filter(i => i.type === MediaItem.TYPE_TRANSCODED_VIDEO)
+				.filter(i => i.type === MediaItemType.TranscodedVideo)
 				.map(i => ({ type: i.filetype, src: i.img_url }));
 		}
 	}

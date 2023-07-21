@@ -1,10 +1,10 @@
-import { Model } from '../model/model.service';
+import { Model, defineLegacyModel } from '../model/model.service';
 
-export class GameBundle extends Model {
-	title!: string;
-	description!: string;
-	slug!: string;
-	added_on!: number;
-}
-
-Model.create(GameBundle);
+export class GameBundle extends defineLegacyModel(
+	class GameBundleDefinition extends Model {
+		declare title: string;
+		declare description: string;
+		declare slug: string;
+		declare added_on: number;
+	}
+) {}

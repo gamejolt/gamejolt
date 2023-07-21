@@ -1,14 +1,16 @@
-import { Model } from '../../model/model.service';
+import { Model, defineLegacyModel } from '../../model/model.service';
 
-export class SiteBuild extends Model {
-	static STATUS_ACTIVE = 'active';
-	static STATUS_INACTIVE = 'inactive';
-	static STATUS_REMOVED = 'removed';
-
-	site_id!: number;
-	folder!: string;
-	status!: string;
-	added_on!: number;
+export const enum SiteBuildStatus {
+	Active = 'active',
+	Inactive = 'inactive',
+	Removed = 'removed',
 }
 
-Model.create(SiteBuild);
+export class SiteBuild extends defineLegacyModel(
+	class SiteBuildDefinition extends Model {
+		declare site_id: number;
+		declare folder: string;
+		declare status: SiteBuildStatus;
+		declare added_on: number;
+	}
+) {}

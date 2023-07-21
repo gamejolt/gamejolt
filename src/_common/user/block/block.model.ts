@@ -1,30 +1,30 @@
-import { Model } from '../../model/model.service';
+import { Model, defineLegacyModel } from '../../model/model.service';
 import { User } from '../user.model';
 
-export class UserBlock extends Model {
-	blocked_on!: number;
-	expires_on!: number;
-	reason!: string;
-	resource!: 'Community' | 'User';
-	resource_id!: number;
+export class UserBlock extends defineLegacyModel(
+	class UserBlockDefinition extends Model {
+		declare blocked_on: number;
+		declare expires_on: number;
+		declare reason: string;
+		declare resource: 'Community' | 'User';
+		declare resource_id: number;
 
-	user!: User;
-	blocked_by_user?: User | null;
+		declare user: User;
+		declare blocked_by_user?: User | null;
 
-	get doesExpire() {
-		return this.expires_on > 0;
-	}
-
-	constructor(data: any = {}) {
-		super(data);
-
-		if (data.user) {
-			this.user = new User(data.user);
+		get doesExpire() {
+			return this.expires_on > 0;
 		}
-		if (data.blocked_by_user) {
-			this.blocked_by_user = new User(data.blocked_by_user);
+
+		constructor(data: any = {}) {
+			super(data);
+
+			if (data.user) {
+				this.user = new User(data.user);
+			}
+			if (data.blocked_by_user) {
+				this.blocked_by_user = new User(data.blocked_by_user);
+			}
 		}
 	}
-}
-
-Model.create(UserBlock);
+) {}

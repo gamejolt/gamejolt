@@ -1,12 +1,12 @@
-import { Model } from '../../../model/model.service';
+import { Model, defineLegacyModel } from '../../../model/model.service';
 
-export class GameBuildFile extends Model {
-	game_build_id!: number;
-	filename!: string;
-	filesize!: string;
-	java_include_archive!: boolean;
-	is_archive!: boolean;
-	is_archive_ready!: boolean;
-}
-
-Model.create(GameBuildFile);
+export class GameBuildFile extends defineLegacyModel(
+	class GameBuildFileDefinition extends Model {
+		declare game_build_id: number;
+		declare filename: string;
+		declare filesize: string;
+		declare java_include_archive: boolean;
+		declare is_archive: boolean;
+		declare is_archive_ready: boolean;
+	}
+) {}

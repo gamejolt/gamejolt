@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { formatFilesize } from '../../../filters/filesize';
-import { GameBuild } from '../../build/build.model';
-import { GamePackageCardModel } from './card.model';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppTranslate from '../../../translate/AppTranslate.vue';
+import { GameBuild, GameBuildEmulatorInfo } from '../../build/build.model';
+import { GamePackageCardModel } from './card.model';
 
 defineProps({
 	card: {
@@ -20,8 +20,6 @@ const emit = defineEmits({
 function click(build: GameBuild) {
 	emit('click', build);
 }
-
-const emulatorInfo = GameBuild.emulatorInfo;
 </script>
 
 <template>
@@ -42,7 +40,9 @@ const emulatorInfo = GameBuild.emulatorInfo;
 				</AppTranslate>
 				<AppTranslate
 					v-else-if="extraBuild.build.type === 'rom'"
-					:translate-params="{ platform: emulatorInfo[extraBuild.build.emulator_type] }"
+					:translate-params="{
+						platform: GameBuildEmulatorInfo[extraBuild.build.emulator_type],
+					}"
 					translate-comment="%{ platform } will be the platform we are downloading for, such as Game Boy, NES, etc."
 				>
 					Download %{ platform } ROM

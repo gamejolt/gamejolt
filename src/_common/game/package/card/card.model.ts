@@ -3,7 +3,12 @@ import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
 import { Jolticon } from '../../../jolticon/AppJolticon.vue';
 import { LinkedKey } from '../../../linked-key/linked-key.model';
 import { Sellable } from '../../../sellable/sellable.model';
-import { GameBuild } from '../../build/build.model';
+import {
+	GameBuild,
+	GameBuildPlatformSupportInfo,
+	GameBuildType,
+	pluckGameBuildOsSupport,
+} from '../../build/build.model';
 import { GameRelease } from '../../release/release.model';
 
 interface ExtraBuild {
@@ -15,7 +20,7 @@ interface ExtraBuild {
 }
 
 export class GamePackageCardModel {
-	platformSupportInfo = Object.assign({}, GameBuild.platformSupportInfo);
+	platformSupportInfo = Object.assign({}, GameBuildPlatformSupportInfo);
 	platformSupport: string[] = [];
 	downloadableBuild: GameBuild | null = null;
 	browserBuild: GameBuild | null = null;
@@ -49,14 +54,14 @@ export class GamePackageCardModel {
 				if (build.isBrowserBased) {
 					indexedBuilds[build.type] = build;
 					this.platformSupport.push(build.type);
-				} else if (build.type === GameBuild.TYPE_ROM) {
+				} else if (build.type === GameBuildType.Rom) {
 					indexedBuilds[build.type] = build;
 					this.platformSupport.push(build.type);
 					otherBuilds.push(build);
 				} else if (build.os_other) {
 					otherBuilds.push(build);
 				} else {
-					GameBuild.pluckOsSupport(build).forEach(platform => {
+					pluckGameBuildOsSupport(build).forEach(platform => {
 						indexedBuilds[platform] = build;
 						this.platformSupport.push(this.platformSupportInfo[platform].icon);
 					});
@@ -172,7 +177,7 @@ export class GamePackageCardModel {
 					return;
 				}
 
-				if (build.type !== GameBuild.TYPE_DOWNLOADABLE) {
+				if (build.type !== GameBuildType.Downloadable) {
 					if (this.browserBuild && this.browserBuild.id === build.id) {
 						return;
 					}
@@ -185,7 +190,7 @@ export class GamePackageCardModel {
 			if (otherBuilds.length) {
 				otherBuilds.forEach(build => {
 					let supportKey = 'other';
-					if (build.type === GameBuild.TYPE_ROM) {
+					if (build.type === GameBuildType.Rom) {
 						supportKey = 'rom';
 					}
 

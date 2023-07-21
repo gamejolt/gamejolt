@@ -3,27 +3,31 @@ import { Inject, Options } from 'vue-property-decorator';
 import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
-import { CommunityChannel } from '../../../../../../../_common/community/channel/channel.model';
 import {
-	Community,
-	CommunityPresetChannelType,
+$saveCommunityChannelSort,
+$saveCommunityChannelSortArchived,
+CommunityChannel,
+} from '../../../../../../../_common/community/channel/channel.model';
+import {
+Community,
+CommunityPresetChannelType,
 } from '../../../../../../../_common/community/community.model';
 import { showErrorGrowl } from '../../../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../../../_common/loading/AppLoading.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
+BaseRouteComponent,
+OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import { CommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';
 import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/add.vue';
-import {
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
-	loadArchivedChannels,
-	updateCommunity,
-} from '../../../view.store';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
+import {
+CommunityRouteStore,
+CommunityRouteStoreKey,
+loadArchivedChannels,
+updateCommunity,
+} from '../../../view.store';
 import AppCommunitiesEditChannelListItem from './_item/item.vue';
 import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.vue';
 
@@ -68,7 +72,7 @@ export default class RouteCommunitiesViewEditChannelsList extends BaseRouteCompo
 
 		const sortedIds = sortedChannels.map(i => i.id);
 		try {
-			await CommunityChannel.$saveSort(this.community.id, sortedIds);
+			await $saveCommunityChannelSort(this.community.id, sortedIds);
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl(this.$gettext(`Could not save channel arrangement.`));
@@ -85,7 +89,7 @@ export default class RouteCommunitiesViewEditChannelsList extends BaseRouteCompo
 
 		const sortedIds = sortedChannels.map(i => i.id);
 		try {
-			await CommunityChannel.$saveSortArchived(this.community.id, sortedIds);
+			await $saveCommunityChannelSortArchived(this.community.id, sortedIds);
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl(this.$gettext(`Could not save channel arrangement.`));

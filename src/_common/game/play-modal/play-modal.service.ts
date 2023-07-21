@@ -7,7 +7,7 @@ import { showModal } from '../../modal/modal.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { Popper } from '../../popper/popper.service';
 import { Translate } from '../../translate/translate.service';
-import { GameBuild } from '../build/build.model';
+import { GameBuild, GameBuildType } from '../build/build.model';
 import { Game } from '../game.model';
 
 export class GamePlayModal {
@@ -42,8 +42,8 @@ export class GamePlayModal {
 		// Will open the gameserver in their browser.
 		if (
 			GJ_IS_DESKTOP_APP &&
-			build.type !== GameBuild.TYPE_HTML &&
-			build.type !== GameBuild.TYPE_ROM
+			build.type !== GameBuildType.Html &&
+			build.type !== GameBuildType.Rom
 		) {
 			const downloadUrl = await this.getDownloadUrl(build, { key: options.key });
 			Navigate.gotoExternal(downloadUrl);

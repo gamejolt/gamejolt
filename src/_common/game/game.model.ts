@@ -16,7 +16,7 @@ import { Site } from '../site/site-model';
 import { Theme } from '../theme/theme.model';
 import { $gettext } from '../translate/translate.service';
 import { User } from '../user/user.model';
-import { GameBuild } from './build/build.model';
+import { GameBuild, GameBuildType } from './build/build.model';
 import { GamePackage } from './package/package.model';
 
 export interface CustomMessage {
@@ -380,7 +380,7 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	}
 
 	static pluckRomBuilds(packages: GamePackage[]) {
-		return pluckBuilds(packages, i => i.isRom);
+		return pluckBuilds(packages, i => i.type === GameBuildType.Rom);
 	}
 
 	static chooseBestBuild(builds: GameBuild[], os: string, arch?: string) {

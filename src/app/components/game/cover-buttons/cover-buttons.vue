@@ -10,11 +10,10 @@ export function setBuildButtonsComponent(component: Component) {
 import type { Component, PropType } from 'vue';
 import { toRefs } from 'vue';
 import { useRouter } from 'vue-router';
-import { arrayUnique } from '../../../../utils/array';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
-import { GameBuild } from '../../../../_common/game/build/build.model';
+import { GameBuild, GameBuildType } from '../../../../_common/game/build/build.model';
 import { GameDownloader } from '../../../../_common/game/downloader/downloader.service';
 import { Game } from '../../../../_common/game/game.model';
 import type { GamePackage } from '../../../../_common/game/package/package.model';
@@ -22,6 +21,7 @@ import { GamePackagePurchaseModal } from '../../../../_common/game/package/purch
 import { GamePlayModal } from '../../../../_common/game/play-modal/play-modal.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import type { User } from '../../../../_common/user/user.model';
+import { arrayUnique } from '../../../../utils/array';
 import AppGameCoverButtonsBuildButtons from './build-buttons.vue';
 
 const props = defineProps({
@@ -102,7 +102,7 @@ function play() {
 	Analytics.trackEvent('game-cover-buttons', 'download', 'play');
 
 	// Prioritize HTML build.
-	let defaultBuild = browserBuilds.value.find(item => item.type === GameBuild.TYPE_HTML);
+	let defaultBuild = browserBuilds.value.find(item => item.type === GameBuildType.Html);
 
 	// If no HTML build, use something else.
 	if (!defaultBuild && browserBuilds.value.length) {

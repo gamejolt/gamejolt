@@ -17,7 +17,7 @@ import { $gettext, $gettextInterpolate, $ngettext } from '../../translate/transl
 import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 import { addCommentVote, Comment, removeCommentVote } from '../comment-model';
 import { CommentThreadModal } from '../thread/modal.service';
-import { CommentVote } from '../vote/vote-model';
+import { CommentVoteType } from '../vote/vote-model';
 import { useCommentWidget } from '../widget/AppCommentWidget.vue';
 
 const props = defineProps({
@@ -85,11 +85,11 @@ const votingTooltip = computed(() => {
 });
 
 const hasUpvote = computed(
-	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVote.VOTE_UPVOTE
+	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVoteType.Upvote
 );
 
 const hasDownvote = computed(
-	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVote.VOTE_DOWNVOTE
+	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVoteType.Downvote
 );
 
 const showOwnerInteraction = computed(
@@ -138,11 +138,11 @@ const ownerIndicatorIcons = computed(() => {
 });
 
 function onUpvoteClick() {
-	voteComment(CommentVote.VOTE_UPVOTE);
+	voteComment(CommentVoteType.Upvote);
 }
 
 function onDownvoteClick() {
-	voteComment(CommentVote.VOTE_DOWNVOTE);
+	voteComment(CommentVoteType.Downvote);
 }
 
 async function voteComment(vote: number) {

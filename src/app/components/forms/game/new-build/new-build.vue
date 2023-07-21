@@ -3,7 +3,7 @@ import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
-import { GameBuild } from '../../../../../_common/game/build/build.model';
+import { GameBuild, GameBuildType } from '../../../../../_common/game/build/build.model';
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../_common/game/release/release.model';
@@ -54,7 +54,7 @@ export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnL
 		}
 
 		const releaseTypes = this.builds
-			.filter(build => build.type !== GameBuild.TYPE_DOWNLOADABLE)
+			.filter(build => build.type !== GameBuildType.Downloadable)
 			.map(build => build.type);
 
 		const accept = Object.entries(this.browserTypes)
@@ -84,9 +84,9 @@ export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnL
 		this.setField('game_release_id', this.release.id);
 
 		this.browserTypes = {
-			'.zip': GameBuild.TYPE_HTML,
-			'.swf': GameBuild.TYPE_FLASH,
-			'.unity3d': GameBuild.TYPE_UNITY,
+			'.zip': GameBuildType.Html,
+			'.swf': GameBuildType.Flash,
+			'.unity3d': GameBuildType.Unity,
 		};
 	}
 
@@ -99,7 +99,7 @@ export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnL
 		// ROM types can change, so we pull from server.
 		if (this.romTypes) {
 			for (const ext of this.romTypes) {
-				this.browserTypes[ext] = GameBuild.TYPE_ROM;
+				this.browserTypes[ext] = GameBuildType.Rom;
 			}
 		}
 	}

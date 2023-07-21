@@ -1,10 +1,8 @@
 <script lang="ts">
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { inject, InjectionKey, provide, shallowRef } from 'vue';
-import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../utils/array';
-import { shallowSetup } from '../../../../../utils/vue';
+import { InjectionKey, inject, provide, shallowRef } from 'vue';
+import { Emit, Options, Prop, mixins } from 'vue-property-decorator';
 import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlDate from '../../../../../_common/form-vue/controls/AppFormControlDate.vue';
@@ -18,11 +16,13 @@ import { GameBuild } from '../../../../../_common/game/build/build.model';
 import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
 import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
-import { GameRelease } from '../../../../../_common/game/release/release.model';
+import { GameRelease, GameReleaseStatus } from '../../../../../_common/game/release/release.model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
+import { arrayRemove } from '../../../../../utils/array';
+import { shallowSetup } from '../../../../../utils/vue';
 import FormGameBuild, { FormGameBuildInterface } from '../build/build.vue';
 import FormGameNewBuild from '../new-build/new-build.vue';
 
@@ -97,6 +97,7 @@ export default class FormGameRelease
 	readonly Screen = Screen;
 	readonly GameRelease = GameRelease;
 	readonly validateSemver = validateSemver;
+	readonly GameReleaseStatusPublished = GameReleaseStatus.Published;
 
 	@Emit('unpublish-release')
 	emitUnpublishRelease(_release: GameReleaseFormModel) {}
@@ -383,7 +384,7 @@ export default class FormGameRelease
 			</div>
 		</fieldset>
 
-		<fieldset v-if="model.status !== GameRelease.STATUS_PUBLISHED">
+		<fieldset v-if="model.status !== GameReleaseStatusPublished">
 			<AppFormLegend compact>
 				<AppTranslate>Schedule publishing of release</AppTranslate>
 			</AppFormLegend>
@@ -404,9 +405,9 @@ export default class FormGameRelease
 			<template v-else-if="isScheduling && timezones">
 				<AppFormGroup name="scheduled_for_timezone" :label="$gettext(`Timezone`)">
 					<p class="help-block">
-						<AppTranslate
-							>All time selection below will use this timezone.</AppTranslate
-						>
+						<AppTranslate>
+							All time selection below will use this timezone.
+						</AppTranslate>
 					</p>
 
 					<p class="help-block">
@@ -458,7 +459,7 @@ export default class FormGameRelease
 			The buttons in this template do submit the form through their click handlers.
 			We don't use app-form-button because we needed to do some async operations before submitting.
 		-->
-		<template v-if="model.status !== GameRelease.STATUS_PUBLISHED">
+		<template v-if="model.status !== GameReleaseStatusPublished">
 			<AppButton
 				v-if="isScheduling"
 				primary
@@ -496,7 +497,7 @@ export default class FormGameRelease
 			<br class="visible-xs" />
 
 			<AppButton
-				v-if="model.status === GameRelease.STATUS_PUBLISHED"
+				v-if="model.status === GameReleaseStatusPublished"
 				trans
 				@click="unpublish()"
 			>

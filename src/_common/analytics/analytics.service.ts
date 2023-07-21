@@ -11,7 +11,7 @@ import { Router } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
 import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';
-import { CommentVote } from '../comment/vote/vote-model';
+import { CommentVoteType } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
 import { DeviceArch, DeviceOs, isDynamicGoogleBot } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
@@ -368,9 +368,9 @@ export function trackCommentVote(vote: number, params: { failed: boolean; toggle
 	const { failed, toggled } = params;
 
 	let type = '';
-	if (vote === CommentVote.VOTE_UPVOTE) {
+	if (vote === CommentVoteType.Upvote) {
 		type = 'like';
-	} else if (vote === CommentVote.VOTE_DOWNVOTE) {
+	} else if (vote === CommentVoteType.Downvote) {
 		type = 'dislike';
 	} else {
 		return;

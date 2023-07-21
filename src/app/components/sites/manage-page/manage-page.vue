@@ -2,7 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Game } from '../../../../_common/game/game.model';
 import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
-import { Site } from '../../../../_common/site/site-model';
+import { Site, SiteStatus } from '../../../../_common/site/site-model';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppSitesManagePageDomain from './domain.vue';
 import AppSitesManagePageStatic from './static.vue';
@@ -28,11 +28,11 @@ export default class AppSitesManagePage extends Vue {
 	}
 
 	get staticEnabled() {
-		return this.site.status === Site.STATUS_ACTIVE && this.site.is_static;
+		return this.site.status === SiteStatus.Active && this.site.is_static;
 	}
 
 	get templateEnabled() {
-		return this.site.status === Site.STATUS_ACTIVE && !this.site.is_static;
+		return this.site.status === SiteStatus.Active && !this.site.is_static;
 	}
 
 	disable() {

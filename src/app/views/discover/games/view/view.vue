@@ -22,7 +22,7 @@ import {
 } from '../../../../../_common/comment/comment-store';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import { GameBuild } from '../../../../../_common/game/build/build.model';
+import { GameBuildType } from '../../../../../_common/game/build/build.model';
 import { CustomMessage, Game, handleGameAddFailure } from '../../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../../_common/game/package/package-payload.model';
 import { onRatingWidgetChange } from '../../../../../_common/game/rating/AppGameRatingWidget.vue';
@@ -148,7 +148,7 @@ function createController({ router }: { router: Router }) {
 
 		// On Client we only want to include HTML games.
 		if (GJ_IS_DESKTOP_APP) {
-			builds = builds.filter(item => item.type === GameBuild.TYPE_HTML);
+			builds = builds.filter(item => item.type === GameBuildType.Html);
 		}
 
 		// Pull in ROMs to the browser builds.

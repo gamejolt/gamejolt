@@ -15,7 +15,10 @@ import {
 	FormOnLoad,
 } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
-import { GamePackage } from '../../../../../_common/game/package/package.model';
+import {
+	GamePackage,
+	GamePackageVisibility,
+} from '../../../../../_common/game/package/package.model';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -88,6 +91,8 @@ export default class FormGamePackage
 	readonly GamePackage = GamePackage;
 	readonly formatDate = formatDate;
 	readonly formatCurrency = formatCurrency;
+	readonly GamePackageVisibilityPublic = GamePackageVisibility.Public;
+	readonly GamePackageVisibilityPrivate = GamePackageVisibility.Private;
 
 	@Emit('salecancel')
 	emitSaleCancel(_formModel: FormGamePackageModel) {}
@@ -204,7 +209,7 @@ export default class FormGamePackage
 		this.setField('sale_end', startOfDay(addWeeks(Date.now(), 1)).getTime());
 
 		if (this.method === 'add') {
-			this.setField('visibility', GamePackage.VISIBILITY_PUBLIC);
+			this.setField('visibility', GamePackageVisibility.Public);
 			if (payload.hasDefaultPackage) {
 				this.setField('title', '');
 			} else {
@@ -343,7 +348,7 @@ export default class FormGamePackage
 				<div class="radio" :class="{ disabled: !hasAllPerms }">
 					<label>
 						<AppFormControlRadio
-							:value="GamePackage.VISIBILITY_PUBLIC"
+							:value="GamePackageVisibilityPublic"
 							:disabled="!hasAllPerms"
 						/>
 						<AppTranslate>Public</AppTranslate>
@@ -357,7 +362,7 @@ export default class FormGamePackage
 				<div class="radio" :class="{ disabled: !hasAllPerms }">
 					<label>
 						<AppFormControlRadio
-							:value="GamePackage.VISIBILITY_PRIVATE"
+							:value="GamePackageVisibilityPrivate"
 							:disabled="!hasAllPerms"
 						/>
 						<AppTranslate>Private</AppTranslate>

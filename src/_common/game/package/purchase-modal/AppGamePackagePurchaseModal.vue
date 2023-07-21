@@ -18,7 +18,7 @@ import { useModal } from '../../../modal/modal.service';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../translate/translate.service';
 import type { User } from '../../../user/user.model';
-import { GameBuild } from '../../build/build.model';
+import { GameBuild, GameBuildType } from '../../build/build.model';
 import { GameDownloader } from '../../downloader/downloader.service';
 import type { Game } from '../../game.model';
 import { GamePlayModal } from '../../play-modal/play-modal.service';
@@ -65,8 +65,8 @@ const packageOperation = computed(() => {
 	}
 
 	let operation: 'download' | 'play' =
-		build.value.type === GameBuild.TYPE_DOWNLOADABLE ? 'download' : 'play';
-	if (build.value.type === GameBuild.TYPE_ROM && fromExtraSection) {
+		build.value.type === GameBuildType.Downloadable ? 'download' : 'play';
+	if (build.value.type === GameBuildType.Rom && fromExtraSection) {
 		operation = 'download';
 	}
 	return operation;

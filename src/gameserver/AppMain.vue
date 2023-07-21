@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { defineAsyncComponent } from 'vue';
 import { Environment } from '../_common/environment/environment.service';
-import { GameBuild } from '../_common/game/build/build.model';
+import { GameBuildType } from '../_common/game/build/build.model';
 import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useGameserverStore } from './store/index';
 
@@ -31,12 +31,12 @@ bootstrap();
 <template>
 	<AppCommonShell v-if="build">
 		<div class="-build-embed fill-darker">
-			<AppEmbedFlash v-if="build.type === GameBuild.TYPE_FLASH" />
-			<AppEmbedHtml v-if="build.type === GameBuild.TYPE_HTML" />
-			<AppEmbedUnity v-if="build.type === GameBuild.TYPE_UNITY" />
-			<AppEmbedSilverlight v-if="build.type === GameBuild.TYPE_SILVERLIGHT" />
-			<AppEmbedApplet v-if="build.type === GameBuild.TYPE_APPLET" />
-			<AppEmbedRom v-if="build.type === GameBuild.TYPE_ROM" />
+			<AppEmbedFlash v-if="build.type === GameBuildType.Flash" />
+			<AppEmbedHtml v-if="build.type === GameBuildType.Html" />
+			<AppEmbedUnity v-if="build.type === GameBuildType.Unity" />
+			<AppEmbedSilverlight v-if="build.type === GameBuildType.Silverlight" />
+			<AppEmbedApplet v-if="build.type === GameBuildType.Applet" />
+			<AppEmbedRom v-if="build.type === GameBuildType.Rom" />
 		</div>
 	</AppCommonShell>
 </template>

@@ -9,7 +9,7 @@ import { Model } from '../model/model.service';
 import { ReactionableModel, ReactionCount } from '../reaction/reaction-count';
 import { Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
-import { CommentVote } from './vote/vote-model';
+import { CommentVote, CommentVoteType } from './vote/vote-model';
 
 export interface CommentableModel {
 	canViewComments: boolean;
@@ -239,7 +239,7 @@ export async function addCommentVote(comment: Comment, vote: number) {
 	// they had previously set it to upvote and are changing to downvote to signify the removal
 	// of the upvote only.
 	let operation = 0;
-	if (vote === CommentVote.VOTE_UPVOTE) {
+	if (vote === CommentVoteType.Upvote) {
 		operation = 1;
 	} else if (hadPreviousVote) {
 		// Their previous vote had to be an upvote in this case.
@@ -269,7 +269,7 @@ export async function removeCommentVote(comment: Comment) {
 	const previousVote = comment.user_vote;
 
 	// Votes only show upvotes, so don't modify vote count if it was a downvote.
-	if (previousVote.vote === CommentVote.VOTE_UPVOTE) {
+	if (previousVote.vote === CommentVoteType.Upvote) {
 		--comment.votes;
 	}
 	comment.user_vote = undefined;

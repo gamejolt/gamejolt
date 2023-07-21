@@ -6,7 +6,7 @@ import { ContentFocus } from '../../../content-focus/content-focus.service';
 import AppContentViewer from '../../../content/content-viewer/AppContentViewer.vue';
 import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItem } from '../../../media-item/media-item-model';
+import { MediaItem, MediaItemType } from '../../../media-item/media-item-model';
 import AppResponsiveDimensions from '../../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
@@ -118,7 +118,7 @@ const video = computed(() => {
 		return undefined;
 	}
 
-	return post.value?.videos[0].media.find(i => i.type == MediaItem.TYPE_TRANSCODED_VIDEO_CARD);
+	return post.value?.videos[0].media.find(i => i.type === MediaItemType.TranscodedVideoCard);
 });
 
 const background = computed(() => post.value.background);

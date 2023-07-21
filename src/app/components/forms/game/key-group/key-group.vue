@@ -4,7 +4,10 @@ import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { BaseForm, FormOnSubmitSuccess } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
-import { GamePackage } from '../../../../../_common/game/package/package.model';
+import {
+	GamePackage,
+	GamePackageVisibility,
+} from '../../../../../_common/game/package/package.model';
 import { KeyGroup } from '../../../../../_common/key-group/key-group.model';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
@@ -27,6 +30,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 	readonly formatNumber = formatNumber;
 	readonly KeyGroup = KeyGroup;
 	readonly GamePackage = GamePackage;
+	readonly GamePackageVisibilityPrivate = GamePackageVisibility.Private;
 
 	get arePackagesChosen() {
 		return this.formModel.package_ids.length > 0;
@@ -134,9 +138,9 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			:label="$gettext(`Email Addresses`)"
 		>
 			<p class="help-block">
-				<AppTranslate
-					>Paste one email address per line, or separate them by commas.</AppTranslate
-				>
+				<AppTranslate>
+					Paste one email address per line, or separate them by commas.
+				</AppTranslate>
 			</p>
 			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
 			<AppFormControlErrors />
@@ -148,9 +152,9 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			:label="$gettext(`Usernames`)"
 		>
 			<p class="help-block">
-				<AppTranslate
-					>Paste one username per line, or separate them by commas.</AppTranslate
-				>
+				<AppTranslate>
+					Paste one username per line, or separate them by commas.
+				</AppTranslate>
 			</p>
 			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
 			<AppFormControlErrors />
@@ -171,7 +175,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 				<label>
 					<AppFormControlCheckbox :value="pkg.id" />
 					<span
-						v-if="pkg.visibility === GamePackage.VISIBILITY_PRIVATE"
+						v-if="pkg.visibility === GamePackageVisibilityPrivate"
 						v-app-tooltip="
 							$gettext(
 								`This package is private, but will be accessible in this key group if you assign it.`

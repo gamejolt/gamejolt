@@ -1,6 +1,5 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../../../../../utils/array';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../../../_common/card/list/AppCardListAdd.vue';
@@ -21,6 +20,7 @@ import {
 import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
+import { arrayRemove } from '../../../../../../../../../utils/array';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
 import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/award.vue';
 import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/category.vue';
@@ -159,7 +159,10 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 
 		const sortedIds = sortedCategories.map(i => i.id);
 		try {
-			await CommunityCompetitionVotingCategory.$saveSort(this.competition.id, sortedIds);
+			await Api.sendRequest(
+				`/web/dash/communities/competitions/voting-categories/save-sort/${this.competition.id}`,
+				sortedIds
+			);
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl(this.$gettext(`Could not save category arrangement.`));

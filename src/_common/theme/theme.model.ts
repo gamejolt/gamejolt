@@ -11,7 +11,7 @@ import {
 } from 'polished';
 import { RgbColor } from 'polished/lib/types/color';
 import { lab2rgb, rgb2lab } from '../../utils/color';
-import { Model } from '../model/model.service';
+import { Model, defineLegacyModel } from '../model/model.service';
 import { ThemePreset } from './preset/preset.model';
 
 // Sync with variables in stylus.
@@ -193,146 +193,147 @@ function getReadableCustom(custom: string | undefined, background: 'light' | 'da
 	return custom;
 }
 
-export class Theme extends Model {
-	highlight!: string;
-	backlight!: string;
-	notice!: string;
-	tint?: string;
-	theme_preset_id?: number;
-	custom?: string;
+export class Theme extends defineLegacyModel(
+	class ThemeDefinition extends Model {
+		declare highlight: string;
+		declare backlight: string;
+		declare notice: string;
+		declare tint?: string;
+		declare theme_preset_id?: number;
+		declare custom?: string;
 
-	constructor(data: any = {}) {
-		super(data);
+		constructor(data: any = {}) {
+			super(data);
 
-		this.highlight = this.highlight || 'ccff00';
-		this.backlight = this.backlight || '2f7f6f';
-		this.notice = this.notice || 'ff3fac';
+			this.highlight = this.highlight || 'ccff00';
+			this.backlight = this.backlight || '2f7f6f';
+			this.notice = this.notice || 'ff3fac';
+		}
+
+		get highlight_() {
+			return this._readableCustomLight || this.highlight;
+		}
+
+		get darkHighlight_() {
+			return this._readableCustomDark || this.highlight;
+		}
+
+		get backlight_() {
+			return this._readableCustomLight || this.backlight;
+		}
+
+		get darkBacklight_() {
+			return this._readableCustomDark || this.backlight;
+		}
+
+		get notice_() {
+			return this._readableCustomLight || this.notice;
+		}
+
+		get darkNotice_() {
+			return this._readableCustomDark || this.notice;
+		}
+
+		get tint_() {
+			return (
+				(this.custom && desaturate(0.5, complement('#' + this.custom)).substr(1)) ||
+				this.tint
+			);
+		}
+
+		get highlightFg_() {
+			return readableColor('#' + this.highlight_).substr(1);
+		}
+
+		get backlightFg_() {
+			return readableColor('#' + this.backlight_).substr(1);
+		}
+
+		get primaryFg_() {
+			return readableColor('#' + this.highlight_).substr(1);
+		}
+
+		get darkPrimaryFg_() {
+			return readableColor('#' + this.darkHighlight_).substr(1);
+		}
+
+		get noticeFg_() {
+			return readableColor('#' + this.notice_).substr(1);
+		}
+
+		get biBg_() {
+			return this._readableCustomLight || this.backlight;
+		}
+
+		get biFg_() {
+			return this._readableCustomLight
+				? readableColor('#' + this.biBg_).substr(1)
+				: this.highlight;
+		}
+
+		get darkBiBg_() {
+			return this._readableCustomDark || this.highlight;
+		}
+
+		get darkBiFg_() {
+			return this.highlightFg_;
+		}
+
+		get bgBackdrop_() {
+			return this.tintColor(BgBackdropLight, 0.02);
+		}
+
+		get darkBgBackdrop_() {
+			return this.tintColor(BgBackdropDark, 0.04);
+		}
+
+		get darkest_() {
+			return this.tintColor(GrayDarkest, 0.02);
+		}
+
+		get darker_() {
+			return this.tintColor(GrayDarker, 0.04);
+		}
+
+		get dark_() {
+			return this.tintColor(GrayDark, 0.04);
+		}
+
+		get gray_() {
+			return this.tintColor(Gray, 0.04);
+		}
+
+		get graySubtle_() {
+			return this.tintColor(GraySubtle, 0.04);
+		}
+
+		get light_() {
+			return this.tintColor(GrayLight, 0.04);
+		}
+
+		get lighter_() {
+			return this.tintColor(GrayLighter, 0.04);
+		}
+
+		get lightest_() {
+			return this.tintColor(GrayLightest, 0.04);
+		}
+
+		get _readableCustomDark() {
+			return getReadableCustom(this.custom, 'dark');
+		}
+
+		get _readableCustomLight() {
+			return getReadableCustom(this.custom, 'light');
+		}
+
+		tintColor(color: string, amount: number) {
+			return (this.tint_ ? mix(amount, '#' + this.tint_, color) : color).substr(1);
+		}
 	}
-
-	get highlight_() {
-		return this._readableCustomLight || this.highlight;
-	}
-
-	get darkHighlight_() {
-		return this._readableCustomDark || this.highlight;
-	}
-
-	get backlight_() {
-		return this._readableCustomLight || this.backlight;
-	}
-
-	get darkBacklight_() {
-		return this._readableCustomDark || this.backlight;
-	}
-
-	get notice_() {
-		return this._readableCustomLight || this.notice;
-	}
-
-	get darkNotice_() {
-		return this._readableCustomDark || this.notice;
-	}
-
-	get tint_() {
-		return (
-			(this.custom && desaturate(0.5, complement('#' + this.custom)).substr(1)) || this.tint
-		);
-	}
-
-	get highlightFg_() {
-		return readableColor('#' + this.highlight_).substr(1);
-	}
-
-	get backlightFg_() {
-		return readableColor('#' + this.backlight_).substr(1);
-	}
-
-	get primaryFg_() {
-		return readableColor('#' + this.highlight_).substr(1);
-	}
-
-	get darkPrimaryFg_() {
-		return readableColor('#' + this.darkHighlight_).substr(1);
-	}
-
-	get noticeFg_() {
-		return readableColor('#' + this.notice_).substr(1);
-	}
-
-	get biBg_() {
-		return this._readableCustomLight || this.backlight;
-	}
-
-	get biFg_() {
-		return this._readableCustomLight
-			? readableColor('#' + this.biBg_).substr(1)
-			: this.highlight;
-	}
-
-	get darkBiBg_() {
-		return this._readableCustomDark || this.highlight;
-	}
-
-	get darkBiFg_() {
-		return this.highlightFg_;
-	}
-
-	get bgBackdrop_() {
-		return this.tintColor(BgBackdropLight, 0.02);
-	}
-
-	get darkBgBackdrop_() {
-		return this.tintColor(BgBackdropDark, 0.04);
-	}
-
-	get darkest_() {
-		return this.tintColor(GrayDarkest, 0.02);
-	}
-
-	get darker_() {
-		return this.tintColor(GrayDarker, 0.04);
-	}
-
-	get dark_() {
-		return this.tintColor(GrayDark, 0.04);
-	}
-
-	get gray_() {
-		return this.tintColor(Gray, 0.04);
-	}
-
-	get graySubtle_() {
-		return this.tintColor(GraySubtle, 0.04);
-	}
-
-	get light_() {
-		return this.tintColor(GrayLight, 0.04);
-	}
-
-	get lighter_() {
-		return this.tintColor(GrayLighter, 0.04);
-	}
-
-	get lightest_() {
-		return this.tintColor(GrayLightest, 0.04);
-	}
-
-	get _readableCustomDark() {
-		return getReadableCustom(this.custom, 'dark');
-	}
-
-	get _readableCustomLight() {
-		return getReadableCustom(this.custom, 'light');
-	}
-
-	tintColor(color: string, amount: number) {
-		return (this.tint_ ? mix(amount, '#' + this.tint_, color) : color).substr(1);
-	}
-}
-
-Model.create(Theme);
+) {}
 
 /**
  * Default theme to be used by the whole app. Uses our main theme tint.
  */
-export const DefaultTheme = new Theme({ tint: '4800ff' });
+export const DefaultTheme = /** @__PURE__ */ new Theme({ tint: '4800ff' });
