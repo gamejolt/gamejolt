@@ -1,5 +1,4 @@
-import { InjectionKey } from '@vue/runtime-core';
-import { inject, provide, ref } from 'vue';
+import { InjectionKey, inject, provide, ref } from 'vue';
 import { User } from '../user/user.model';
 
 export type AppPromotionSource =

@@ -1,4 +1,4 @@
-import { reactive } from '@vue/reactivity';
+import { reactive } from 'vue';
 import { arrayRemove } from '../../utils/array';
 
 export interface MinbarItem {
@@ -13,7 +13,7 @@ class MinbarService {
 	items: MinbarItem[] = [];
 }
 
-export const Minbar = reactive(new MinbarService()) as MinbarService;
+export const Minbar = reactive(/** @__PURE__ */ new MinbarService()) as MinbarService;
 
 export function addMinbarItem(item: MinbarItem) {
 	Minbar.items.push(item);

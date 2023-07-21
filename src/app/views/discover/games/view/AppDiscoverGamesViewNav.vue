@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { computed, inject } from '@vue/runtime-core';
+import { computed, inject } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
-import { getAbsoluteLink } from '../../../../../utils/router';
 import {
 	CommentStoreManagerKey,
 	getCommentStore,
@@ -15,6 +14,7 @@ import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { getAbsoluteLink } from '../../../../../utils/router';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { useGameRouteController } from './view.vue';
 

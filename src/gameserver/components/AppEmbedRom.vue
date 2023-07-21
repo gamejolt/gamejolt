@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { onMounted } from '@vue/runtime-core';
-import { loadScript } from '../../utils/utils';
+import { onMounted } from 'vue';
 import { GameBuild } from '../../_common/game/build/build.model';
+import { loadScript } from '../../utils/utils';
 import { useGameserverStore } from '../store/index';
 
 declare const RetroJolt: any;

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { onUnmounted } from '@vue/runtime-core';
-import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, ref, toRefs } from 'vue';
 import { vAppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../_common/filters/number';

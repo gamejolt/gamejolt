@@ -1,4 +1,4 @@
-import { defineAsyncComponent } from '@vue/runtime-core';
+import { defineAsyncComponent } from 'vue';
 import { showModal } from '../modal/modal.service';
 
 export class AuthModal {

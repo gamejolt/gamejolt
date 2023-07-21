@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineAsyncComponent } from '@vue/runtime-core';
+import { defineAsyncComponent } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 

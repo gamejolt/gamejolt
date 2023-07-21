@@ -1,4 +1,4 @@
-import { reactive } from '@vue/reactivity';
+import { reactive } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import { Community } from '../../../_common/community/community.model';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';

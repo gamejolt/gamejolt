@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from '@vue/reactivity';
+import { computed } from 'vue';
 import AppLinkExternal from '../../_common/link/AppLinkExternal.vue';
 import AppTranslate from '../../_common/translate/AppTranslate.vue';
 import { useGameserverStore } from '../store/index';
