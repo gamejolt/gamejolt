@@ -80,6 +80,10 @@ export class Quest implements ModelStoreModel {
 		if (data.objectives) {
 			this.objectives = QuestObjective.populate(data.objectives);
 		}
+
+		if (data.rewards) {
+			this.rewards = QuestReward.populate(data.rewards);
+		}
 	}
 
 	get isActive() {
