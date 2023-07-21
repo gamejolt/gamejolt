@@ -11,6 +11,7 @@ import {
 	unref,
 } from 'vue';
 import { arrayRemove } from '../../../../utils/array';
+import { getMediaserverUrlForBounds } from '../../../../utils/image';
 import { sleep } from '../../../../utils/utils';
 import { MaybeRef } from '../../../../utils/vue';
 import { Api } from '../../../api/api.service';
@@ -24,7 +25,7 @@ import { useModal } from '../../../modal/modal.service';
 import { Screen } from '../../../screen/screen-service';
 import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../translate/translate.service';
-import AppStickerStackItem from '../../stack/AppStickerStackItem.vue';
+import AppStickerImg from '../../AppStickerImg.vue';
 import { CreatorStickersMap, sortStickerStacks, useStickerStore } from '../../sticker-store';
 import { Sticker, StickerStack } from '../../sticker.model';
 import AppStickerPack from '../AppStickerPack.vue';
@@ -154,11 +155,16 @@ const stickerAnimationDuration = computed(() =>
 	expandStickers.value ? DurationStickerShow : DurationStickerStash
 );
 
-const stickerSizing = computed<CSSProperties>(() => {
-	let size = 128;
+const stickerSizing = computed(() => {
+	const size = 128;
 	if (Screen.isXs) {
-		size = Math.min(size, Math.max(Screen.width * 0.2, size / 2));
+		return Math.min(size, Math.max(Screen.width * 0.2, size / 2));
 	}
+	return size;
+});
+
+const stickerSizeStyles = computed<CSSProperties>(() => {
+	const size = stickerSizing.value;
 	return { width: `${size}px`, height: `${size}px` };
 });
 
@@ -237,17 +243,29 @@ async function playSliceAnimations() {
 	for (const item of elements) {
 		if (item) {
 			item.style.animationPlayState = 'running';
-			// playAnimation(item);
 		}
 	}
 	await sleep(DelayPackTrash + DurationPackTrash * 0.5);
 }
 
 function preloadImages() {
+	const stickerSize = stickerSizing.value;
 	const urls = [
 		illBackpackClosed.path,
 		illBackpackOpen.path,
-		...openedStickers.value.map(i => i.img_url),
+		...openedStickers.value.map(i =>
+			// Preload using our assumed bounds
+			getMediaserverUrlForBounds(
+				{
+					src: i.img_url,
+					maxWidth: stickerSize,
+					maxHeight: stickerSize,
+				},
+				{
+					dpiCheck: 'loose',
+				}
+			)
+		),
 	];
 	urls.forEach(url => ImgHelper.loaded(url));
 }
@@ -348,7 +366,6 @@ async function setStage(newStage: PackOpenStage) {
 			const element = stickerElements[i];
 
 			element.style.animationPlayState = 'running';
-			// playAnimation(element);
 
 			if (i === stickerElements.length - 1) {
 				const cb = () => {
@@ -667,6 +684,7 @@ function addMs(value: number) {
 					:key="index"
 					class="_weak-ease-in"
 					:style="{
+						...stickerSizeStyles,
 						position: 'absolute',
 						left: '50%',
 						bottom: stage === 'results-stash' ? `64px` : `60%`,
@@ -676,7 +694,6 @@ function addMs(value: number) {
 						transform: 'translateX(-50%)',
 						zIndex: 3 + index,
 						pointerEvents: 'none',
-						...stickerSizing,
 					}"
 				>
 					<!-- Stickers rotation -->
@@ -714,7 +731,7 @@ function addMs(value: number) {
 								}"
 							>
 								<!-- Stickers scale -->
-								<AppStickerStackItem
+								<AppStickerImg
 									:style="{
 										transform:
 											stage === 'results-show' ? `scale(1)` : `scale(0.5)`,
@@ -728,7 +745,7 @@ function addMs(value: number) {
 											index * DurationStickerAnimationOffset
 										}ms`,
 									}"
-									:img-url="sticker.img_url"
+									:src="sticker.img_url"
 								/>
 							</div>
 						</div>

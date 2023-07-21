@@ -195,6 +195,9 @@ async function onStickerPlaced(placement: StickerPlacement) {
 		fadeInStop: 0,
 		fadeOutStart: 0.8,
 		fadeOut: true,
+		hiDpiMediaserverOptions: {
+			dpiCheck: 'loose',
+		},
 	});
 }
 

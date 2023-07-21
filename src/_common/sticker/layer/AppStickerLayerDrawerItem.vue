@@ -14,6 +14,7 @@ import AppQuestFrame from '../../quest/AppQuestFrame.vue';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import { kThemeBgActual, kThemeFg10, kThemePrimary } from '../../theme/variables';
 import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
+import AppStickerImg from '../AppStickerImg.vue';
 import { useStickerStore } from '../sticker-store';
 import { Sticker } from '../sticker.model';
 
@@ -122,13 +123,7 @@ const tagStyles: CSSProperties = {
 			<component :is="sticker.is_event ? AppQuestFrame : 'div'" :style="itemStyling">
 				<template #[slotName]>
 					<div :class="{ '-peeled': isPeeled }">
-						<img
-							draggable="false"
-							class="-img"
-							:style="itemStyling"
-							:src="sticker.img_url"
-							@dragstart.prevent
-						/>
+						<AppStickerImg class="-img" :style="itemStyling" :src="sticker.img_url" />
 					</div>
 				</template>
 			</component>

@@ -1,4 +1,5 @@
 import { Component, inject, InjectionKey, markRaw, provide, ref, watch } from 'vue';
+import { getMediaserverUrlForBounds, HiDpiOptions } from '../../utils/image';
 import { ComponentProps } from '../component-helpers';
 
 const PopcornKettleControllerKey: InjectionKey<PopcornKettleController> = Symbol('popcorn-kettle');
@@ -49,6 +50,8 @@ export type KernelRecipe<C extends Component = any> = KernelRecipeBase & {
 	rotationVelocityVariance: number;
 	/** Called when the kernel is finished animating and gets removed. */
 	onDispose?: () => void;
+	/** Attempt to process the {@link KernelRecipe.kernelImage} as a mediaserver url.  */
+	hiDpiMediaserverOptions?: HiDpiOptions;
 };
 
 export function createPopcornKettleController() {
@@ -86,6 +89,7 @@ export function createPopcornKettleController() {
 		rotationVelocityVariance = 10.0,
 		popAngleVariance = 45.0,
 		onDispose,
+		hiDpiMediaserverOptions,
 	}: Partial<KernelRecipe<C>> = {}) {
 		if (import.meta.env.SSR) {
 			return;
@@ -99,7 +103,17 @@ export function createPopcornKettleController() {
 
 		const _kernelData: PopcornKernelData = markRaw({
 			key: Date.now(),
-			kernelImage,
+			kernelImage:
+				kernelImage && hiDpiMediaserverOptions
+					? getMediaserverUrlForBounds(
+							{
+								src: kernelImage,
+								maxWidth: baseSize,
+								maxHeight: baseSize,
+							},
+							hiDpiMediaserverOptions
+					  )
+					: kernelImage,
 			kernelComponent,
 			kernelComponentProps,
 			duration,

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { onUnmounted } from '@vue/runtime-core';
-import { computed, CSSProperties, ref } from 'vue';
+import { computed, CSSProperties, onUnmounted, ref } from 'vue';
 import { Analytics } from '../../analytics/analytics.service';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
+import AppStickerImg from '../AppStickerImg.vue';
 import {
 	assignStickerStoreGhostCallback,
 	setStickerStoreActiveItem,
@@ -88,14 +88,7 @@ function updateGhostPosition(pos: { left: number; top: number }) {
 			@mousedown="onStartDrag"
 			@touchstart="onStartDrag"
 		>
-			<img
-				class="-img-inner"
-				draggable="false"
-				style="user-drag: none"
-				:style="itemStyling"
-				:src="sticker.img_url"
-				@dragstart.prevent
-			/>
+			<AppStickerImg class="-img-inner" :style="itemStyling" :src="sticker.img_url" />
 		</AppAnimElectricity>
 	</div>
 </template>

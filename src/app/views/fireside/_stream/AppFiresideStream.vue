@@ -13,6 +13,7 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import AppStickerImg from '../../../../_common/sticker/AppStickerImg.vue';
 import { useStickerStore } from '../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -23,9 +24,9 @@ import { useFiresideController } from '../../../components/fireside/controller/c
 import AppFiresideDesktopAudio from '../../../components/fireside/stream/AppFiresideDesktopAudio.vue';
 import AppFiresideStreamVideo from '../../../components/fireside/stream/AppFiresideStreamVideo.vue';
 import AppFiresideStreamStats from '../../../components/fireside/stream/stream-stats/AppFiresideStreamStats.vue';
-import AppFiresideHeader from '../AppFiresideHeader.vue';
 import AppFiresideBottomBar from '../_bottom-bar/AppFiresideBottomBar.vue';
 import AppFiresideBottomBarHostAvatar from '../_bottom-bar/AppFiresideBottomBarHostAvatar.vue';
+import AppFiresideHeader from '../AppFiresideHeader.vue';
 
 const props = defineProps({
 	rtcUser: {
@@ -558,12 +559,9 @@ async function togglePinStream() {
 				x{{ streakCount }}
 			</div>
 
-			<img
+			<AppStickerImg
 				class="-combo-sticker"
 				:class="{ '-keep-animating': shouldAnimateStreak }"
-				draggable="false"
-				onmousedown="return false"
-				style="user-drag: none"
 				:src="stickerStreak.sticker.img_url"
 			/>
 		</div>

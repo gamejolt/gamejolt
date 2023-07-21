@@ -1,3 +1,4 @@
+import { Environment } from '../_common/environment/environment.service';
 import { Screen } from '../_common/screen/screen-service';
 
 export const imageMimeTypes = [
@@ -50,14 +51,36 @@ export function makeFileFromDataUrl(dataUrl: string, fileName: string) {
 export const emptyGif =
 	'data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
-function getMaxMediaserverDimension(maxDimension: number) {
-	// Keep mediaserver dimensions within 100px increment bounds.
-	const step = 100;
+export interface HiDpiOptions {
+	dpiCheck?: 'strict' | 'loose';
+	step?: number;
+}
+
+function getMaxMediaserverDimension(maxDimension: number, options: HiDpiOptions) {
+	const {
+		dpiCheck = 'strict',
+		// Keep mediaserver dimensions within 100px increment bounds by default.
+		step = 100,
+	} = options;
 
 	let dimension = maxDimension;
+
 	if (Screen.isHiDpi) {
-		// For high dpi, double the dimension/density.
-		dimension = dimension * 2;
+		const hiDpiScale = 2;
+
+		let hiDpiThreshold = step / hiDpiScale;
+
+		if (dpiCheck === 'loose') {
+			// Add some value to our threshold. This should allow 60px
+			// dimensions to size at 100px instead of 200px.
+			hiDpiThreshold += step * 0.25;
+		}
+
+		// Double the dimension/density for high dpi displays only if it's above
+		// our threshold.
+		if (dimension >= hiDpiThreshold) {
+			dimension = dimension * hiDpiScale;
+		}
 	}
 
 	// Round up to the next step.
@@ -77,20 +100,27 @@ function getMaxMediaserverDimension(maxDimension: number) {
  * height definition. {@link maxWidth} is always used.
  *
  */
-export function getMediaserverUrlForBounds({
-	src,
-	maxWidth,
-	maxHeight,
-}: {
-	src: string;
-	maxWidth: number;
-	maxHeight: number;
-}) {
+export function getMediaserverUrlForBounds(
+	{
+		src,
+		maxWidth,
+		maxHeight,
+	}: {
+		src: string;
+		maxWidth: number;
+		maxHeight: number;
+	},
+	hiDpiOptions: HiDpiOptions = {}
+) {
+	if (!src || !src.startsWith(Environment.mediaserverUrl)) {
+		return src;
+	}
+
 	let newSrc = src;
-	const width = getMaxMediaserverDimension(maxWidth);
+	const width = getMaxMediaserverDimension(maxWidth, hiDpiOptions);
 
 	if (newSrc.search(WidthHeightRegex) !== -1) {
-		const height = getMaxMediaserverDimension(maxHeight);
+		const height = getMaxMediaserverDimension(maxHeight, hiDpiOptions);
 		newSrc = newSrc.replace(WidthHeightRegex, `/${width}x${height}/`);
 	} else {
 		newSrc = newSrc.replace(WidthRegex, `/${width}/`);

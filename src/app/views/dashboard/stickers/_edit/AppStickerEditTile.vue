@@ -2,6 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppStickerImg from '../../../../../_common/sticker/AppStickerImg.vue';
 import { StickerPack } from '../../../../../_common/sticker/pack/pack.model';
 import { Sticker } from '../../../../../_common/sticker/sticker.model';
 import { kThemeBiBg, kThemeBiFg } from '../../../../../_common/theme/variables';
@@ -92,17 +93,12 @@ function onClickTile() {
 						zIndex: 0,
 					}"
 				>
-					<img
-						:style="[
-							'user-drag: none',
-							{
-								width: `100%`,
-								height: `auto`,
-							},
-						]"
+					<AppStickerImg
+						:style="{
+							width: `100%`,
+							height: `auto`,
+						}"
 						:src="sticker.img_url"
-						draggable="false"
-						onmousedown="return false"
 					/>
 				</div>
 				<template v-else>

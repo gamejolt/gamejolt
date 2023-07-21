@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppLoading from '../../loading/AppLoading.vue';
+import AppStickerImg from '../../sticker/AppStickerImg.vue';
 import { Sticker } from '../../sticker/sticker.model';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { useContentOwnerController } from '../content-owner';
@@ -34,7 +35,7 @@ owner.hydrator.useData('sticker-id', props.stickerId.toString(), data => {
 	<div class="-sticker">
 		<template v-if="sticker">
 			<AppAnimElectricity :disabled="!isCharged" shock-anim="square" ignore-asset-padding>
-				<img
+				<AppStickerImg
 					class="content-image"
 					:style="{
 						width: `100%`,
