@@ -1,8 +1,5 @@
 import { Presence } from 'phoenix';
 import { computed, markRaw, onMounted, onUnmounted, Ref, ref, shallowReadonly, watch } from 'vue';
-import { arrayRemove } from '../../../utils/array';
-import { CancelToken } from '../../../utils/cancel-token';
-import { run } from '../../../utils/utils';
 import { Background } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
@@ -12,6 +9,9 @@ import { getModel, storeModel, storeModelList } from '../../../_common/model/mod
 import { UnknownModelData } from '../../../_common/model/model.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
+import { arrayRemove } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
+import { run } from '../../../utils/utils';
 import {
 	ChatClient,
 	isInChatRoom,
@@ -532,16 +532,10 @@ export function createChatRoomChannel(
 	 * Places a sticker on a particular target user in the room.
 	 */
 	function pushPlaceSticker(targetUserId: number, stickerData: any) {
-		return channelController.push<PlaceStickerPayload>(
-			'place_sticker',
-			{
-				...stickerData,
-				host_user_id: targetUserId,
-			},
-			// Just in case they get disconnected (or bad data causes it to
-			// error out)
-			5_000
-		);
+		return channelController.push<PlaceStickerPayload>('place_sticker', {
+			...stickerData,
+			host_user_id: targetUserId,
+		});
 	}
 
 	function pushStartFireside() {
