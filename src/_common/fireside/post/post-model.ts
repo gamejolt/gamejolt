@@ -8,7 +8,7 @@ import { CommunityChannel } from '../../community/channel/channel.model';
 import { Community } from '../../community/community.model';
 import { ContentContainerModel } from '../../content/content-container-model';
 import { ContentContext } from '../../content/content-context';
-import { ContentSetCacheService } from '../../content/content-set-cache';
+import { ContentSetCache } from '../../content/content-set-cache';
 import { EventItem } from '../../event-item/event-item.model';
 import { Game } from '../../game/game.model';
 import { HistoryTick } from '../../history-tick/history-tick-service';
@@ -236,17 +236,17 @@ export class FiresidePost extends defineLegacyModel(
 		 * it updates in realtime.
 		 */
 		get hasArticleContent() {
-			const cache = ContentSetCacheService.getCache(this, 'fireside-post-article');
+			const cache = ContentSetCache.getCache(this, 'fireside-post-article');
 			return cache.hasContent;
 		}
 
 		get hasLead() {
-			const cache = ContentSetCacheService.getCache(this, 'fireside-post-lead');
+			const cache = ContentSetCache.getCache(this, 'fireside-post-lead');
 			return cache.hasContent;
 		}
 
 		get leadLength() {
-			const cache = ContentSetCacheService.getCache(this, 'fireside-post-lead');
+			const cache = ContentSetCache.getCache(this, 'fireside-post-lead');
 			return cache.length;
 		}
 

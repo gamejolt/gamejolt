@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, PropType, toRefs } from 'vue';
 import { styleWhen } from '../../_styles/mixins';
-import { CSSPixelValue } from '../../_styles/variables';
+import { buildCSSPixelValue } from '../../_styles/variables';
 import { Emoji } from './emoji.model';
 
 export const GJ_EMOJIS = [
@@ -27,7 +27,7 @@ export const GJ_EMOJIS = [
 	'yush',
 ] as const;
 
-export const emojiBaseSize = new CSSPixelValue(24);
+export const emojiBaseSize = buildCSSPixelValue(24);
 
 const assetPaths = import.meta.glob('./*.png', { eager: true, as: 'url' });
 </script>

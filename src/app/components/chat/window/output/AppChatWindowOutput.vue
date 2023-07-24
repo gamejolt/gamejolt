@@ -6,12 +6,13 @@ import AppButton from '../../../../../_common/button/AppButton.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import { canDeviceViewFiresides } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { illNoChat } from '../../../../../_common/illustration/illustrations';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppOnHover from '../../../../../_common/on/AppOnHover.vue';
 import { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
 import AppScrollScroller, {
-	createScroller,
+createScroller,
 } from '../../../../../_common/scroll/AppScrollScroller.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useEventSubscription } from '../../../../../_common/system/event/event-topic';
@@ -19,15 +20,14 @@ import { kThemeBiBg, kThemeBiFg } from '../../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
-	styleBorderRadiusBase,
-	styleElevate,
-	styleLineClamp,
-	styleWhen,
+styleBorderRadiusBase,
+styleElevate,
+styleLineClamp,
+styleWhen,
 } from '../../../../../_styles/mixins';
-import { CSSPixelValue, kFontFamilyHeading, kFontSizeBase } from '../../../../../_styles/variables';
+import { buildCSSPixelValue, kFontFamilyHeading, kFontSizeBase } from '../../../../../_styles/variables';
 import { useResizeObserver } from '../../../../../utils/resize-observer';
 import { debounce } from '../../../../../utils/utils';
-import { illNoChat } from '../../../../../_common/illustration/illustrations';
 import { useGridStore } from '../../../grid/grid-store';
 import { loadOlderChatMessages, onNewChatMessage } from '../../client';
 import { TIMEOUT_CONSIDER_QUEUED } from '../../message';
@@ -340,15 +340,15 @@ function _updateMaxContentWidth(width: number) {
 	);
 }
 
-const firesideBannerMargin = new CSSPixelValue(8);
-const minFiresideBannerHeight = new CSSPixelValue(40);
+const firesideBannerMargin = buildCSSPixelValue(8);
+const minFiresideBannerHeight = buildCSSPixelValue(40);
 
 /**
  * Margin added to the scroller content top so the banner doesn't obscure the
  * oldest messages.
  */
 const bannerScrollerMargin = computed(
-	() => new CSSPixelValue(firesideBannerMargin.value * 2 + minFiresideBannerHeight.value)
+	() => buildCSSPixelValue(firesideBannerMargin.value * 2 + minFiresideBannerHeight.value)
 );
 </script>
 

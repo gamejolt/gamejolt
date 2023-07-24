@@ -22,7 +22,7 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
 import {
-	CSSPixelValue,
+	buildCSSPixelValue,
 	kFontFamilyDisplay,
 	kFontSizeSmall,
 	kFontSizeTiny,
@@ -139,7 +139,7 @@ function onNewQuest(data: Quest) {
 	}
 }
 
-const headerHeight = new CSSPixelValue(300);
+const headerHeight = buildCSSPixelValue(300);
 
 // Uses the base padding from `.container` class while allowing the width to
 // stretch.

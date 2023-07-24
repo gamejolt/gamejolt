@@ -5,7 +5,7 @@ import { AvatarFrame } from '../avatar/frame.model';
 import { CommentableModel } from '../comment/comment-model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
-import { ContentSetCacheService } from '../content/content-set-cache';
+import { ContentSetCache } from '../content/content-set-cache';
 import { DogtagData } from '../dogtag/dogtag-data';
 import { showErrorGrowl } from '../growls/growls.service';
 import { MediaItem } from '../media-item/media-item-model';
@@ -148,7 +148,7 @@ export class User extends defineLegacyModel(
 		}
 
 		get hasBio() {
-			const cache = ContentSetCacheService.getCache(this, 'user-bio');
+			const cache = ContentSetCache.getCache(this, 'user-bio');
 			return cache.hasContent;
 		}
 

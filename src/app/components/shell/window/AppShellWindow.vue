@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed } from 'vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { CSSPixelValue, kBorderRadiusLg } from '../../../../_styles/variables';
+import { buildCSSPixelValue, kBorderRadiusLg } from '../../../../_styles/variables';
 
 defineProps({
 	/**
@@ -22,7 +22,7 @@ defineProps({
 	},
 });
 
-const zeroPx = new CSSPixelValue(0);
+const zeroPx = buildCSSPixelValue(0);
 const windowBorderRadius = computed(() => {
 	if (Screen.isXs) {
 		return zeroPx;

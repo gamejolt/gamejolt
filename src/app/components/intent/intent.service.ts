@@ -1,7 +1,7 @@
 import { RouteLocationNormalized } from 'vue-router';
-import { RouteLocationRedirect } from '../../../utils/router';
 import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { locationRedirectFromRoute } from '../../../utils/router';
 
 export interface Intent {
 	intent: string;
@@ -26,7 +26,7 @@ export class IntentService {
 					break;
 				}
 			}
-			return RouteLocationRedirect.fromRoute(route, {}, { intent: undefined });
+			return locationRedirectFromRoute(route, {}, { intent: undefined });
 		}
 		return null;
 	}
@@ -49,7 +49,7 @@ export class IntentService {
 				});
 			}
 
-			return RouteLocationRedirect.fromRoute(
+			return locationRedirectFromRoute(
 				route,
 				{},
 				{ intent: undefined, approve_login_error: undefined }
@@ -73,7 +73,7 @@ export class IntentService {
 				});
 			}
 
-			return RouteLocationRedirect.fromRoute(
+			return locationRedirectFromRoute(
 				route,
 				{},
 				{ intent: undefined, reject_login_error: undefined }

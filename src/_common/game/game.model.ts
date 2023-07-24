@@ -6,7 +6,7 @@ import { CommentableModel } from '../comment/comment-model';
 import { Community } from '../community/community.model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
-import { ContentSetCacheService } from '../content/content-set-cache';
+import { ContentSetCache } from '../content/content-set-cache';
 import { showErrorGrowl } from '../growls/growls.service';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model, defineLegacyModel } from '../model/model.service';
@@ -221,7 +221,7 @@ export class Game extends defineLegacyModel(
 		}
 
 		get hasDescription() {
-			const cache = ContentSetCacheService.getCache(this, 'game-description');
+			const cache = ContentSetCache.getCache(this, 'game-description');
 			return cache.hasContent;
 		}
 

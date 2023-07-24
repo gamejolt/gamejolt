@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
-import { CSSPixelValue } from '../../../_styles/variables';
+import { buildCSSPixelValue } from '../../../_styles/variables';
 import { ComponentProps } from '../../component-helpers';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../scroll/AppScrollScroller.vue';
@@ -167,7 +167,7 @@ async function onMouseOverSide(side: typeof mouseOverSide) {
 	}
 }
 
-const scrollerMarginBottom = new CSSPixelValue(12);
+const scrollerMarginBottom = buildCSSPixelValue(12);
 </script>
 
 <template>

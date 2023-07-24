@@ -214,28 +214,38 @@ export type RouteLocationDefinition = Exclude<RouteLocationRaw, string>;
 
 export class RouteLocationRedirect {
 	constructor(public location: RouteLocationDefinition) {}
-
-	static fromRoute(from: RouteLocationNormalized, params: any, query: any = {}) {
-		return new RouteLocationRedirect({
-			name: from.name ?? undefined,
-			params: Object.assign({}, from.params, params),
-			query: Object.assign({}, from.query, query),
-			hash: from.hash,
-			replace: true,
-		});
-	}
 }
 
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
+export function locationRedirectFromRoute(
+	from: RouteLocationNormalized,
+	params: any,
+	query: any = {}
+) {
+	return new RouteLocationRedirect({
+		name: from.name ?? undefined,
+		params: Object.assign({}, from.params, params),
+		query: Object.assign({}, from.query, query),
+		hash: from.hash,
+		replace: true,
+	});
+}
+
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
 export function enforceLocation(route: RouteLocationNormalized, params: any, query: any = {}) {
 	for (const key in params) {
 		if (route.params[key] !== params[key]) {
-			return RouteLocationRedirect.fromRoute(route, params, query);
+			return locationRedirectFromRoute(route, params, query);
 		}
 	}
 
 	for (const key in query) {
 		if (route.query[key] !== query[key]) {
-			return RouteLocationRedirect.fromRoute(route, params, query);
+			return locationRedirectFromRoute(route, params, query);
 		}
 	}
 }
@@ -259,6 +269,8 @@ export function removeQuery(router: Router, key: string) {
 
 /**
  * Will generate a link from a route location.
+ *
+ * @__NO_SIDE_EFFECTS__
  */
 export function getAbsoluteLink(router: Router, location: RouteLocationRaw) {
 	let url = typeof location === 'string' ? location : router.resolve(location).href;
@@ -274,6 +286,8 @@ export function getAbsoluteLink(router: Router, location: RouteLocationRaw) {
  * This function assumes that the given router has a catch-all route as a
  * fallback that's called 'error.404'. As of time of writing, this is true for
  * all sections - this is done during src/utils/router.ts:initRouter
+ *
+ * @__NO_SIDE_EFFECTS__
  */
 export function isKnownRoute(router: Router, location: string) {
 	const resolved = router.resolve(location);
@@ -289,6 +303,8 @@ export function isKnownRoute(router: Router, location: string) {
 /**
  * Returns a query parameter from a route as either a string or null. If the
  * query was in an array format, it will try pulling the first item.
+ *
+ * @__NO_SIDE_EFFECTS__
  */
 export function getQuery(route: RouteLocationNormalized, key: string) {
 	return _getRouteParamString(route.query[key]);
@@ -297,11 +313,16 @@ export function getQuery(route: RouteLocationNormalized, key: string) {
 /**
  * Returns a route parameter as either a string or null. If the param was in an
  * array format, it will try pulling the first item.
+ *
+ * @__NO_SIDE_EFFECTS__
  */
 export function getParam(route: RouteLocationNormalized, key: string) {
 	return _getRouteParamString(route.params[key]);
 }
 
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
 function _getRouteParamString(val: string | null | (string | null)[]) {
 	if (!val) {
 		return null;
