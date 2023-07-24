@@ -39,15 +39,6 @@ export class AppGamePerms extends Vue {
 	get hasPerms() {
 		const perms: Perm[] = (this.required as any).split(',');
 
-		// if (this.debug && this.targetGame) {
-		// 	console.log(
-		// 		'Checking that ' +
-		// 			JSON.stringify(this.targetGame.perms) +
-		// 			' has perms ' +
-		// 			JSON.stringify(perms.filter(perm => !!perm))
-		// 	);
-		// }
-
 		if (!this.targetGame) {
 			throw new Error(`Target game doesn't exist for app-game-perms component.`);
 		}

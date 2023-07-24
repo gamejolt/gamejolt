@@ -24,6 +24,7 @@ export type Perm =
 	| 'community-activity'
 	| 'community-competitions'
 	| 'community-firesides'
+	| 'community-comments'
 	| 'fireside-collaborators'
 	| 'fireside-edit'
 	| 'fireside-extend'
