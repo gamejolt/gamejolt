@@ -7,7 +7,7 @@ import { Model } from '../../model/model.service';
 import { Screen } from '../../screen/screen-service';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import AppCommentDisabledCheck from '../AppCommentDisabledCheck.vue';
-import { CommentableModel } from '../comment-model';
+import { CommentableModel, CommentSort } from '../comment-model';
 import AppCommentWidget from '../widget/AppCommentWidget.vue';
 import { DisplayMode } from './modal.service';
 
@@ -21,7 +21,7 @@ defineProps({
 		required: true,
 	},
 	initialTab: {
-		type: String,
+		type: String as PropType<CommentSort>,
 		default: undefined,
 	},
 });

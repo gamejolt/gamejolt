@@ -23,7 +23,15 @@ import {
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { GameBuildType } from '../../../../../_common/game/build/build.model';
-import { CustomMessage, Game, handleGameAddFailure } from '../../../../../_common/game/game.model';
+import {
+	CustomGameMessage,
+	Game,
+	handleGameAddFailure,
+	pluckBrowserGameBuilds,
+	pluckDownloadableGameBuilds,
+	pluckInstallableGameBuilds,
+	pluckRomGameBuilds,
+} from '../../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../../_common/game/package/package-payload.model';
 import { onRatingWidgetChange } from '../../../../../_common/game/rating/AppGameRatingWidget.vue';
 import { GameRating } from '../../../../../_common/game/rating/rating.model';
@@ -109,7 +117,7 @@ function createController({ router }: { router: Router }) {
 
 	const overviewComments = ref<Comment[]>([]);
 
-	const customGameMessages = ref<CustomMessage[]>([]);
+	const customGameMessages = ref<CustomGameMessage[]>([]);
 
 	const packages = computed(() => {
 		if (!packagePayload.value) {
@@ -130,7 +138,7 @@ function createController({ router }: { router: Router }) {
 	const installableBuilds = computed(() => {
 		const os = getDeviceOS();
 		const arch = getDeviceArch();
-		return Game.pluckInstallableBuilds(packages.value, os, arch);
+		return pluckInstallableGameBuilds(packages.value, os, arch);
 	});
 
 	const externalPackages = computed(() => {
@@ -141,10 +149,10 @@ function createController({ router }: { router: Router }) {
 		return packagePayload.value.externalPackages;
 	});
 
-	const downloadableBuilds = computed(() => Game.pluckDownloadableBuilds(packages.value));
+	const downloadableBuilds = computed(() => pluckDownloadableGameBuilds(packages.value));
 
 	const browserBuilds = computed(() => {
-		let builds = Game.pluckBrowserBuilds(packages.value);
+		let builds = pluckBrowserGameBuilds(packages.value);
 
 		// On Client we only want to include HTML games.
 		if (GJ_IS_DESKTOP_APP) {
@@ -152,7 +160,7 @@ function createController({ router }: { router: Router }) {
 		}
 
 		// Pull in ROMs to the browser builds.
-		return builds.concat(Game.pluckRomBuilds(packages.value));
+		return builds.concat(pluckRomGameBuilds(packages.value));
 	});
 
 	const hasReleasesSection = computed(() => {

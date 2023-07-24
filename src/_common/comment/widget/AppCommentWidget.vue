@@ -13,7 +13,6 @@ import {
 	watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
-import { illNoComments } from '../../illustration/illustrations';
 import AppAlertBox from '../../alert/AppAlertBox.vue';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
@@ -21,6 +20,7 @@ import { Collaborator } from '../../collaborator/collaborator.model';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
 import AppIllustration from '../../illustration/AppIllustration.vue';
+import { illNoComments } from '../../illustration/illustrations';
 import { FormCommentLazy } from '../../lazy';
 import AppLoading from '../../loading/AppLoading.vue';
 import AppMessageThread from '../../message-thread/AppMessageThread.vue';
@@ -34,6 +34,7 @@ import {
 	canCommentOnModel,
 	Comment,
 	CommentableModel,
+	CommentSort,
 	getCommentModelResourceName,
 } from '../comment-model';
 import {
@@ -67,7 +68,7 @@ export function createCommentWidget(options: {
 	model: Ref<Model & CommentableModel>;
 	threadCommentId: Ref<number | null>;
 	showTabs: Ref<boolean>;
-	initialTab: Ref<string | null>;
+	initialTab: Ref<CommentSort | null>;
 	onError: (e: any) => void;
 	onAdd: (comment: Comment) => void;
 	onEdit: (comment: Comment) => void;
@@ -112,11 +113,11 @@ export function createCommentWidget(options: {
 	const totalCommentsCount = computed(() => store.value?.totalCount ?? 0);
 	const totalParentCount = computed(() => store.value?.parentCount ?? 0);
 	const currentParentCount = computed(() => comments.value.length);
-	const currentSort = computed(() => store.value?.sort ?? Comment.SORT_HOT);
-	const isSortHot = computed(() => currentSort.value === Comment.SORT_HOT);
-	const isSortTop = computed(() => currentSort.value === Comment.SORT_TOP);
-	const isSortNew = computed(() => currentSort.value === Comment.SORT_NEW);
-	const isSortYou = computed(() => currentSort.value === Comment.SORT_YOU);
+	const currentSort = computed(() => store.value?.sort ?? CommentSort.Hot);
+	const isSortHot = computed(() => currentSort.value === CommentSort.Hot);
+	const isSortTop = computed(() => currentSort.value === CommentSort.Top);
+	const isSortNew = computed(() => currentSort.value === CommentSort.New);
+	const isSortYou = computed(() => currentSort.value === CommentSort.You);
 	const showTopSorting = computed(() => getCommentModelResourceName(model.value) === 'Game');
 	const isThreadView = computed(() => !!threadCommentId.value);
 	const shouldShowEmptyMessage = computed(() => !comments.value.length);
@@ -187,7 +188,7 @@ export function createCommentWidget(options: {
 		// comment widget. This way if you open up a new comment widget in the
 		// future, we'll correctly start at the "hot" sort.
 		if (metadata.widgetLocks === 0) {
-			setCommentSort(store.value, Comment.SORT_HOT);
+			setCommentSort(store.value, CommentSort.Hot);
 		}
 
 		releaseCommentStore(commentManager, store.value);
@@ -237,7 +238,7 @@ export function createCommentWidget(options: {
 		}
 	}
 
-	function setSort(sort: string) {
+	function setSort(sort: CommentSort) {
 		if (!store.value) {
 			return;
 		}
@@ -257,8 +258,8 @@ export function createCommentWidget(options: {
 		options.onAdd(comment);
 
 		if (store.value) {
-			if (store.value.sort !== Comment.SORT_YOU) {
-				setSort(Comment.SORT_YOU);
+			if (store.value.sort !== CommentSort.You) {
+				setSort(CommentSort.You);
 			} else {
 				if (storeView.value instanceof CommentStoreSliceView) {
 					storeView.value.registerIds([comment.id]);
@@ -362,7 +363,7 @@ const props = defineProps({
 		default: true,
 	},
 	initialTab: {
-		type: String,
+		type: String as PropType<CommentSort>,
 		default: null,
 	},
 	displayMode: {
@@ -412,19 +413,19 @@ const {
 } = c;
 
 function sortHot() {
-	setSort(Comment.SORT_HOT);
+	setSort(CommentSort.Hot);
 }
 
 function sortTop() {
-	setSort(Comment.SORT_TOP);
+	setSort(CommentSort.Top);
 }
 
 function sortNew() {
-	setSort(Comment.SORT_NEW);
+	setSort(CommentSort.New);
 }
 
 function sortYou() {
-	setSort(Comment.SORT_YOU);
+	setSort(CommentSort.You);
 }
 </script>
 

@@ -8,7 +8,7 @@ import {
 	GamePackage,
 	GamePackageVisibility,
 } from '../../../../../_common/game/package/package.model';
-import { KeyGroup } from '../../../../../_common/key-group/key-group.model';
+import { KeyGroup, KeyGroupType } from '../../../../../_common/key-group/key-group.model';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 class Wrapper extends BaseForm<KeyGroup> {}
@@ -28,9 +28,12 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 	@Prop(Array) packages!: GamePackage[];
 
 	readonly formatNumber = formatNumber;
-	readonly KeyGroup = KeyGroup;
 	readonly GamePackage = GamePackage;
 	readonly GamePackageVisibilityPrivate = GamePackageVisibility.Private;
+	readonly KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
+	readonly KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
+	readonly KeyGroupTypeEmail = KeyGroupType.Email;
+	readonly KeyGroupTypeUser = KeyGroupType.User;
 
 	get arePackagesChosen() {
 		return this.formModel.package_ids.length > 0;
@@ -55,7 +58,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 		<AppFormGroup v-if="method === 'add'" name="type" :label="$gettext(`Key Type`)">
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="KeyGroup.TYPE_USER" />
+					<AppFormControlRadio :value="KeyGroupTypeUser" />
 					<AppTranslate>User</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">
@@ -66,7 +69,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="KeyGroup.TYPE_ANONYMOUS_CLAIM" />
+					<AppFormControlRadio :value="KeyGroupTypeAnonymousClaim" />
 					<AppTranslate>Claim-Only</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">
@@ -78,7 +81,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="KeyGroup.TYPE_ANONYMOUS" />
+					<AppFormControlRadio :value="KeyGroupTypeAnonymous" />
 					<AppTranslate>Unrestricted (Anonymous)</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">
@@ -90,7 +93,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="KeyGroup.TYPE_EMAIL" />
+					<AppFormControlRadio :value="KeyGroupTypeEmail" />
 					<AppTranslate>Unrestricted (Email)</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">
@@ -116,8 +119,8 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			v-if="
 				!!formModel.type &&
 				method === 'add' &&
-				(formModel.type === KeyGroup.TYPE_ANONYMOUS ||
-					formModel.type === KeyGroup.TYPE_ANONYMOUS_CLAIM)
+				(formModel.type === KeyGroupTypeAnonymous ||
+					formModel.type === KeyGroupTypeAnonymousClaim)
 			"
 			name="amount"
 			:label="$gettext(`# of Keys to Generate`)"
@@ -133,7 +136,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="!!formModel.type && method === 'add' && formModel.type === KeyGroup.TYPE_EMAIL"
+			v-if="!!formModel.type && method === 'add' && formModel.type === KeyGroupTypeEmail"
 			name="emails"
 			:label="$gettext(`Email Addresses`)"
 		>
@@ -147,7 +150,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="!!formModel.type && method === 'add' && formModel.type === KeyGroup.TYPE_USER"
+			v-if="!!formModel.type && method === 'add' && formModel.type === KeyGroupTypeUser"
 			name="users"
 			:label="$gettext(`Usernames`)"
 		>

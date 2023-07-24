@@ -19,7 +19,7 @@ import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppLoading from '../../loading/AppLoading.vue';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import { Navigate } from '../../navigate/navigate.service';
-import { OrderPayment } from '../../order/payment/payment.model';
+import { OrderPaymentMethod } from '../../order/payment/payment.model';
 import AppPopper from '../../popper/AppPopper.vue';
 import { Screen } from '../../screen/screen-service';
 import { Sellable } from '../../sellable/sellable.model';
@@ -149,7 +149,7 @@ const form: FormController<FormModel> = createForm({
 	onSubmitSuccess(response: any) {
 		if (GJ_IS_DESKTOP_APP) {
 			// Our checkout can be done in client.
-			if (checkoutType.value === OrderPayment.METHOD_CC_STRIPE) {
+			if (checkoutType.value === OrderPaymentMethod.CCStripe) {
 				Navigate.goto(Environment.checkoutBaseUrl + '/checkout/' + response.cart.hash);
 			} else {
 				// Otherwise we have to open in browser.

@@ -8,10 +8,12 @@ import { Geo } from '../../../../../../_common/geo/geo.service';
 import AppMicrotransactionItem from '../../../../../../_common/microtransaction/AppMicrotransactionItem.vue';
 import { MicrotransactionProduct } from '../../../../../../_common/microtransaction/product.model';
 import { Order } from '../../../../../../_common/order/order.model';
-import { OrderPayment } from '../../../../../../_common/order/payment/payment.model';
 import {
-	createAppRoute,
-	defineAppRouteOptions,
+OrderPaymentMethod
+} from '../../../../../../_common/order/payment/payment.model';
+import {
+createAppRoute,
+defineAppRouteOptions,
 } from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
@@ -52,7 +54,7 @@ const hasVisiblePayment = computed(() => {
 	}
 
 	return order.value.payments.some(
-		i => i.method !== OrderPayment.METHOD_CC_STRIPE || !!i.stripe_payment_source
+		i => i.method !== OrderPaymentMethod.CCStripe || !!i.stripe_payment_source
 	);
 });
 
@@ -150,7 +152,7 @@ function isMicrotransactionProduct(resource: any): resource is MicrotransactionP
 				<div v-for="payment of order.payments" :key="payment.id">
 					<template
 						v-if="
-							payment.method === OrderPayment.METHOD_CC_STRIPE &&
+							payment.method === OrderPaymentMethod.CCStripe &&
 							payment.stripe_payment_source
 						"
 					>
@@ -160,11 +162,11 @@ function isMicrotransactionProduct(resource: any): resource is MicrotransactionP
 						****
 						{{ payment.stripe_payment_source.last4 }}
 					</template>
-					<template v-else-if="payment.method === OrderPayment.METHOD_PAYPAL">
+					<template v-else-if="payment.method === OrderPaymentMethod.Paypal">
 						<span class="tag"> PayPal </span>
 						{{ payment.paypal_email_address }}
 					</template>
-					<template v-else-if="payment.method === OrderPayment.METHOD_WALLET">
+					<template v-else-if="payment.method === OrderPaymentMethod.Wallet">
 						<span class="tag"> Wallet </span>
 						{{ formatCurrency(payment.amount) }}
 					</template>

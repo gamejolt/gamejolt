@@ -6,11 +6,11 @@ import AppButton from '../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
-import { CustomMessage as CustomGameMessage, Game } from '../../../_common/game/game.model';
+import { CustomGameMessage, Game } from '../../../_common/game/game.model';
 import AppGamePackageCard from '../../../_common/game/package/card/card.vue';
 import { GamePackagePayloadModel } from '../../../_common/game/package/package-payload.model';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { KeyGroup } from '../../../_common/key-group/key-group.model';
+import { KeyGroup, KeyGroupType } from '../../../_common/key-group/key-group.model';
 import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
@@ -56,8 +56,8 @@ const packagePayload = ref<GamePackagePayloadModel | null>(null);
 
 if (
 	keyGroup.value &&
-	(keyGroup.value.type === KeyGroup.TYPE_USER ||
-		keyGroup.value.type === KeyGroup.TYPE_ANONYMOUS_CLAIM)
+	(keyGroup.value.type === KeyGroupType.User ||
+		keyGroup.value.type === KeyGroupType.AnonymousClaim)
 ) {
 	isClaimOnly.value = true;
 } else {

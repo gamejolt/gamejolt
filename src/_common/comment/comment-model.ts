@@ -5,9 +5,9 @@ import { Environment } from '../environment/environment.service';
 import { FiresidePost } from '../fireside/post/post-model';
 import { Game } from '../game/game.model';
 import { showErrorGrowl } from '../growls/growls.service';
-import { Model } from '../model/model.service';
+import { defineLegacyModel, Model } from '../model/model.service';
 import { ReactionableModel, ReactionCount } from '../reaction/reaction-count';
-import { Subscription } from '../subscription/subscription.model';
+import { $createSubscription, Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
 import { CommentVote, CommentVoteType } from './vote/vote-model';
 
@@ -17,116 +17,119 @@ export interface CommentableModel {
 	canInteractWithComments: boolean;
 }
 
-export class Comment extends Model implements ReactionableModel {
-	static readonly STATUS_REMOVED = 0;
-	static readonly STATUS_VISIBLE = 1;
-	static readonly STATUS_SPAM = 2;
-
-	static readonly SORT_HOT = 'hot';
-	static readonly SORT_TOP = 'top';
-	static readonly SORT_NEW = 'new';
-	static readonly SORT_YOU = 'you';
-
-	parent_id!: number;
-	resource!: 'Game' | 'Fireside_Post' | 'User';
-	resource_id!: number;
-	user!: User;
-	votes!: number;
-	user_vote?: CommentVote;
-	status!: number;
-	posted_on!: number;
-	modified_on?: number;
-	lang!: string;
-	subscription?: Subscription;
-	is_pinned!: boolean;
-	comment_content!: string;
-	reaction_counts: ReactionCount[] = [];
-	has_owner_like!: boolean;
-	has_owner_reply!: boolean;
-
-	isFollowPending = false;
-
-	get typename__() {
-		return 'Comment';
-	}
-
-	get permalink() {
-		return Environment.baseUrl + '/x/permalink/comment/' + this.id;
-	}
-
-	constructor(data: any = {}) {
-		super(data);
-
-		if (data.user) {
-			this.user = new User(data.user);
-		}
-
-		if (data.user_vote) {
-			this.user_vote = new CommentVote(data.user_vote);
-		}
-
-		if (data.subscription) {
-			this.subscription = new Subscription(data.subscription);
-		}
-
-		if (data.reaction_counts) {
-			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
-		}
-	}
-
-	$save() {
-		if (!this.id) {
-			return this.$_save(`/comments/save`, 'comment', {
-				detach: true,
-			});
-		} else {
-			return this.$_save(`/comments/save/${this.id}`, 'comment', {
-				detach: true,
-			});
-		}
-	}
-
-	$remove() {
-		if (!this.id) {
-			throw new Error('Tried removing a comment that does not exist');
-		} else {
-			return this.$_remove(`/comments/remove/${this.id}`, {
-				detach: true,
-			});
-		}
-	}
-
-	async $follow() {
-		if (this.subscription || this.isFollowPending) {
-			return;
-		}
-		this.isFollowPending = true;
-
-		const subscription = await Subscription.$subscribe(this.id);
-		this.subscription = subscription;
-		this.isFollowPending = false;
-	}
-
-	async $removeFollow() {
-		if (!this.subscription || this.isFollowPending) {
-			return;
-		}
-		this.isFollowPending = true;
-
-		await this.subscription.$remove();
-		this.subscription = undefined;
-		this.isFollowPending = false;
-	}
-
-	// applies pin operation to current comment and returns the comment that
-	// got unpinned (or null if that didn't happen)
-	async $pin(): Promise<Comment | null> {
-		const result = await this.$_save(`/comments/pin/${this.id}`, 'comment');
-		return result['otherComment'] ? new Comment(result['otherComment']) : null;
-	}
+export const enum CommentStatus {
+	Removed = 0,
+	Visible = 1,
+	Spam = 2,
 }
 
-Model.create(Comment);
+export const enum CommentSort {
+	Hot = 'hot',
+	Top = 'top',
+	New = 'new',
+	You = 'you',
+}
+
+export class Comment extends defineLegacyModel(
+	class CommentDefinition extends Model implements ReactionableModel {
+		declare parent_id: number;
+		declare resource: 'Game' | 'Fireside_Post' | 'User';
+		declare resource_id: number;
+		declare user: User;
+		declare votes: number;
+		declare user_vote?: CommentVote;
+		declare status: number;
+		declare posted_on: number;
+		declare modified_on?: number;
+		declare lang: string;
+		declare subscription?: Subscription;
+		declare is_pinned: boolean;
+		declare comment_content: string;
+		reaction_counts: ReactionCount[] = [];
+		declare has_owner_like: boolean;
+		declare has_owner_reply: boolean;
+		isFollowPending = false;
+
+		get typename__() {
+			return 'Comment';
+		}
+
+		get permalink() {
+			return Environment.baseUrl + '/x/permalink/comment/' + this.id;
+		}
+
+		constructor(data: any = {}) {
+			super(data);
+
+			if (data.user) {
+				this.user = new User(data.user);
+			}
+
+			if (data.user_vote) {
+				this.user_vote = new CommentVote(data.user_vote);
+			}
+
+			if (data.subscription) {
+				this.subscription = new Subscription(data.subscription);
+			}
+
+			if (data.reaction_counts) {
+				this.reaction_counts = ReactionCount.populate(data.reaction_counts);
+			}
+		}
+
+		$save() {
+			if (!this.id) {
+				return this.$_save(`/comments/save`, 'comment', {
+					detach: true,
+				});
+			} else {
+				return this.$_save(`/comments/save/${this.id}`, 'comment', {
+					detach: true,
+				});
+			}
+		}
+
+		$remove() {
+			if (!this.id) {
+				throw new Error('Tried removing a comment that does not exist');
+			} else {
+				return this.$_remove(`/comments/remove/${this.id}`, {
+					detach: true,
+				});
+			}
+		}
+
+		async $follow() {
+			if (this.subscription || this.isFollowPending) {
+				return;
+			}
+			this.isFollowPending = true;
+
+			const subscription = await $createSubscription(this.id);
+			this.subscription = subscription;
+			this.isFollowPending = false;
+		}
+
+		async $removeFollow() {
+			if (!this.subscription || this.isFollowPending) {
+				return;
+			}
+			this.isFollowPending = true;
+
+			await this.subscription.$remove();
+			this.subscription = undefined;
+			this.isFollowPending = false;
+		}
+
+		// applies pin operation to current comment and returns the comment that
+		// got unpinned (or null if that didn't happen)
+		async $pin(): Promise<Comment | null> {
+			const result = await this.$_save(`/comments/pin/${this.id}`, 'comment');
+			return result['otherComment'] ? new Comment(result['otherComment']) : null;
+		}
+	}
+) {}
 
 export async function fetchComment(id: number) {
 	try {
@@ -192,7 +195,7 @@ export function canCommentOnModel(model: CommentableModel, parentComment?: Comme
 export async function fetchComments(
 	resource: string,
 	resourceId: number,
-	sort: string,
+	sort: CommentSort,
 	options: { scrollId?: number | null; page?: number | null }
 ) {
 	const { scrollId, page } = options;

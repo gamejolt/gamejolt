@@ -25,8 +25,6 @@ export default class AppCommunityCompetitionEntrySubmitModal extends mixins(Base
 	selectedGame: Game | null = null;
 	isSubmitting = false;
 
-	readonly Game = Game;
-
 	get hasSelectedGame() {
 		return this.selectedGame !== null;
 	}

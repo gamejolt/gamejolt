@@ -8,7 +8,7 @@ import { validateUrlPath } from '../../../../_common/form-vue/validators';
 import { Game } from '../../../../_common/game/game.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppGameDevStageSelector from './dev-stage-selector/dev-stage-selector.vue';
+import AppGameDevStageSelector from './dev-stage-selector/AppGameDevStageSelector.vue';
 import AppDashGameWizardControls from './wizard-controls/wizard-controls.vue';
 
 class Wrapper extends BaseForm<Game> {}

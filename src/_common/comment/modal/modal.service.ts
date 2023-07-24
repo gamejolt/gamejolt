@@ -1,14 +1,14 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../modal/modal.service';
 import { Model } from '../../model/model.service';
-import { CommentableModel } from '../comment-model';
+import { CommentSort, CommentableModel } from '../comment-model';
 
 export type DisplayMode = 'comments' | 'shouts';
 
 interface CommentModalOptions {
 	displayMode?: DisplayMode;
 	model: CommentableModel & Model;
-	initialTab?: string;
+	initialTab?: CommentSort;
 }
 
 export class CommentModal {

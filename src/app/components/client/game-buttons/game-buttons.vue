@@ -1,16 +1,20 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { arrayGroupBy } from '../../../../utils/array';
-import { shallowSetup } from '../../../../utils/vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
-import { Game } from '../../../../_common/game/game.model';
+import {
+	Game,
+	chooseBestGameBuild,
+	pluckInstallableGameBuilds,
+} from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { GamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { arrayGroupBy } from '../../../../utils/array';
+import { shallowSetup } from '../../../../utils/vue';
 import { useClientLibraryStore } from '../../../store/client-library';
 import AppClientInstallProgress from '../AppClientInstallProgress.vue';
 import { ClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
@@ -116,7 +120,7 @@ export default class AppClientGameButtons extends Vue {
 			return;
 		}
 
-		const build = Game.chooseBestBuild(packageData.installableBuilds!, this.os!, this.arch);
+		const build = chooseBestGameBuild(packageData.installableBuilds!, this.os!, this.arch);
 
 		// If the build belongs to a pwyw package, open up the package
 		// payment form.
@@ -143,7 +147,7 @@ export default class AppClientGameButtons extends Vue {
 		const payload = await Api.sendRequest('/web/discover/games/packages/' + this.game.id);
 
 		const packageData = new GamePackagePayloadModel(payload);
-		packageData.installableBuilds = Game.pluckInstallableBuilds(
+		packageData.installableBuilds = pluckInstallableGameBuilds(
 			packageData.packages,
 			this.os!,
 			this.arch

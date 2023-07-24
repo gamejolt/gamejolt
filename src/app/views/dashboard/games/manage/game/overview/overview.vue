@@ -15,7 +15,7 @@ import {
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
-import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
+import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/AppGameDevStageSelector.vue';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../manage.store';
 
@@ -62,7 +62,6 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 
 	hasBuildsProcessing = false;
 
-	readonly Game = Game;
 	readonly formatNumber = formatNumber;
 
 	get routeTitle() {

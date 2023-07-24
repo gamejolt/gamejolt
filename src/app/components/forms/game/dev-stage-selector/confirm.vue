@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { Game } from '../../../../../_common/game/game.model';
+import { Game, GameDevelopmentStatus } from '../../../../../_common/game/game.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 
 @Options({})
@@ -25,9 +25,9 @@ export default class AppGameDevStageConfirmModal extends mixins(BaseModal) {
 	}
 
 	private _getStatusTranslated(stage: number) {
-		if (stage === Game.DEVELOPMENT_STATUS_DEVLOG) {
+		if (stage === GameDevelopmentStatus.Devlog) {
 			return this.$gettext('devlog-only');
-		} else if (stage === Game.DEVELOPMENT_STATUS_WIP) {
+		} else if (stage === GameDevelopmentStatus.Wip) {
 			return this.$gettext('early access');
 		}
 
@@ -35,9 +35,9 @@ export default class AppGameDevStageConfirmModal extends mixins(BaseModal) {
 	}
 
 	private _getStatusString(stage: number) {
-		if (stage === Game.DEVELOPMENT_STATUS_DEVLOG) {
+		if (stage === GameDevelopmentStatus.Devlog) {
 			return 'devlog';
-		} else if (stage === Game.DEVELOPMENT_STATUS_WIP) {
+		} else if (stage === GameDevelopmentStatus.Wip) {
 			return 'wip';
 		}
 
@@ -70,8 +70,8 @@ export default class AppGameDevStageConfirmModal extends mixins(BaseModal) {
 						to: toTranslated,
 					}"
 				>
-					When switching your game page from a %{ from } page to a %{ to } page, the follow changes
-					will occur:
+					When switching your game page from a %{ from } page to a %{ to } page, the
+					follow changes will occur:
 				</AppTranslate>
 			</p>
 
@@ -84,29 +84,36 @@ export default class AppGameDevStageConfirmModal extends mixins(BaseModal) {
 				</li>
 				<li v-else-if="to === 'devlog'">
 					<AppTranslate>
-						Any public packages/builds for your game will be hidden while your game page is
-						devlog-only.
+						Any public packages/builds for your game will be hidden while your game page
+						is devlog-only.
 					</AppTranslate>
 				</li>
 
 				<!-- Devlog Tab -->
 				<li v-if="from === 'devlog'">
 					<AppTranslate>
-						Your game's devlog feed will be moved into its own tab. You can continue posting devlog
-						posts for your game.
+						Your game's devlog feed will be moved into its own tab. You can continue
+						posting devlog posts for your game.
 					</AppTranslate>
 				</li>
 				<li v-else-if="to === 'devlog'">
-					<AppTranslate>Your game's devlog feed will move back to your game's main page.</AppTranslate>
+					<AppTranslate
+						>Your game's devlog feed will move back to your game's main
+						page.</AppTranslate
+					>
 				</li>
 
 				<!-- Published Date -->
 				<li
 					v-if="
-						action === 'devlog:wip' || action === 'devlog:complete' || action === 'wip:complete'
+						action === 'devlog:wip' ||
+						action === 'devlog:complete' ||
+						action === 'wip:complete'
 					"
 				>
-					<AppTranslate>Your game will be added to the top of the "new game" list.</AppTranslate>
+					<AppTranslate
+						>Your game will be added to the top of the "new game" list.</AppTranslate
+					>
 				</li>
 			</ul>
 		</div>

@@ -1,15 +1,15 @@
 import { computed, inject, InjectionKey, provide, ref, unref } from 'vue';
 import { Router } from 'vue-router';
-import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
-import { Game } from '../../../../../_common/game/game.model';
+import { Game, GameStatus } from '../../../../../_common/game/game.model';
 import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
 import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
 import { GameVideo } from '../../../../../_common/game/video/video.model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { arrayRemove } from '../../../../../utils/array';
 
 const Key: InjectionKey<GameDashRouteController> = Symbol('game-dash-route');
 const WizardKey = 'manage-game-wizard';
@@ -173,7 +173,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			return;
 		}
 
-		await game.value!.$setStatus(Game.STATUS_VISIBLE);
+		await game.value!.$setStatus(GameStatus.Visible);
 
 		showSuccessGrowl(
 			$gettext(
@@ -208,7 +208,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			return;
 		}
 
-		await game.value!.$setStatus(Game.STATUS_HIDDEN);
+		await game.value!.$setStatus(GameStatus.Hidden);
 
 		showInfoGrowl($gettext('Your game page is now unlisted.'), $gettext('Game Unlisted'));
 	}

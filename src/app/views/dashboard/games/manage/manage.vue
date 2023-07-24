@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { useRouter } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { Game } from '../../../../../_common/game/game.model';
+import { Game, GameLockedStatus } from '../../../../../_common/game/game.model';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
@@ -14,7 +14,7 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
-import { createGameDashRouteController, ManageGameThemeKey } from './manage.store';
+import { ManageGameThemeKey, createGameDashRouteController } from './manage.store';
 
 @Options({
 	name: 'RouteDashGamesManage',
@@ -47,9 +47,8 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
 
-	readonly Game = Game;
-	readonly GAME_LOCKED_STATUS_DMCA = Game.LOCKED_STATUS_DMCA;
-	readonly GAME_LOCKED_STATUS_ADULT = Game.LOCKED_STATUS_ADULT;
+	readonly GAME_LOCKED_STATUS_DMCA = GameLockedStatus.Dmca;
+	readonly GAME_LOCKED_STATUS_ADULT = GameLockedStatus.Adult;
 
 	get user() {
 		return this.commonStore.user!;
@@ -93,11 +92,11 @@ export default class RouteDashGamesManage extends BaseRouteComponent {
 					<template v-if="game.locked_status === GAME_LOCKED_STATUS_DMCA">
 						<div key="locked-reason-dmca">
 							<p>
-								<b
-									><AppTranslate
-										>This game was removed from the site.</AppTranslate
-									></b
-								>
+								<b>
+									<AppTranslate>
+										This game was removed from the site.
+									</AppTranslate>
+								</b>
 							</p>
 							<p>
 								<AppTranslate>

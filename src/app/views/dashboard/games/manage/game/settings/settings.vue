@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
-import { Game } from '../../../../../../../_common/game/game.model';
+import { GameStatus } from '../../../../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import {
 	BaseRouteComponent,
@@ -54,7 +54,7 @@ export default class RouteDashGamesManageGameSettings extends BaseRouteComponent
 	}
 
 	get isUnlisted() {
-		return this.game.status === Game.STATUS_HIDDEN;
+		return this.game.status === GameStatus.Hidden;
 	}
 
 	get isCanceled() {

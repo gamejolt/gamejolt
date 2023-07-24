@@ -41,7 +41,6 @@ export default class RouteDashGamesManageGame extends BaseRouteComponent {
 		return this.routeStore.canPublish;
 	}
 
-	readonly Game = Game;
 	readonly Screen = Screen;
 
 	showEditHeader() {

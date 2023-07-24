@@ -9,10 +9,10 @@ import AppExpand from '../../../expand/AppExpand.vue';
 import { formatCurrency } from '../../../filters/currency';
 import { vAppFocusWhen } from '../../../form-vue/focus-when.directive';
 import {
-	BaseForm,
-	FormOnSubmit,
-	FormOnSubmitError,
-	FormOnSubmitSuccess,
+BaseForm,
+FormOnSubmit,
+FormOnSubmitError,
+FormOnSubmitSuccess,
 } from '../../../form-vue/form.service';
 import { Geo, Region } from '../../../geo/geo.service';
 import { showErrorGrowl } from '../../../growls/growls.service';
@@ -20,7 +20,7 @@ import { HistoryTick } from '../../../history-tick/history-tick-service';
 import AppLoading from '../../../loading/AppLoading.vue';
 import AppLoadingFade from '../../../loading/AppLoadingFade.vue';
 import { Navigate } from '../../../navigate/navigate.service';
-import { OrderPayment } from '../../../order/payment/payment.model';
+import { OrderPaymentMethod } from '../../../order/payment/payment.model';
 import AppPopper from '../../../popper/AppPopper.vue';
 import { Screen } from '../../../screen/screen-service';
 import { Sellable, SellableType } from '../../../sellable/sellable.model';
@@ -397,7 +397,7 @@ export default class FormGamePackagePayment
 	onSubmitSuccess(response: any) {
 		if (GJ_IS_DESKTOP_APP) {
 			// Our checkout can be done in client.
-			if (this.checkoutType === OrderPayment.METHOD_CC_STRIPE) {
+			if (this.checkoutType === OrderPaymentMethod.CCStripe) {
 				Navigate.goto(Environment.checkoutBaseUrl + '/checkout/' + response.cart.hash);
 			} else {
 				// Otherwise we have to open in browser.

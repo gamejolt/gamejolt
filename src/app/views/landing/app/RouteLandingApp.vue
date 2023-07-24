@@ -1,7 +1,5 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { arrayShuffle } from '../../../../utils/array';
-import { useFullscreenHeight } from '../../../../utils/fullscreen';
 import {
 	trackAppDownload,
 	trackAppPromotionClick,
@@ -13,7 +11,10 @@ import AppBean from '../../../../_common/bean/AppBean.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
 import { DeviceArch, DeviceOs, getDeviceOS } from '../../../../_common/device/device.service';
-import { Game } from '../../../../_common/game/game.model';
+import {
+	chooseBestGameBuild,
+	pluckInstallableGameBuilds,
+} from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -24,6 +25,8 @@ import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import { arrayShuffle } from '../../../../utils/array';
+import { useFullscreenHeight } from '../../../../utils/fullscreen';
 import laptopImage from './laptop.webp';
 import mobileImage from './mobile.webp';
 import footerImage from './peek-jelly.png';
@@ -110,12 +113,12 @@ async function _getDownloadUrl(platform: string, arch: string) {
 		return null;
 	}
 
-	const installableBuilds = Game.pluckInstallableBuilds(
+	const installableBuilds = pluckInstallableGameBuilds(
 		packageData.value.packages,
 		platform,
 		arch
 	);
-	const bestBuild = Game.chooseBestBuild(installableBuilds, platform, arch);
+	const bestBuild = chooseBestGameBuild(installableBuilds, platform, arch);
 	if (!bestBuild) {
 		return null;
 	}

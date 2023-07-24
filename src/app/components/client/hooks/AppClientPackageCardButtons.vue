@@ -5,7 +5,7 @@ import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.se
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatFilesize } from '../../../../_common/filters/filesize';
 import { GameBuild, GameBuildType } from '../../../../_common/game/build/build.model';
-import { Game } from '../../../../_common/game/game.model';
+import { checkGameDeviceSupport, Game } from '../../../../_common/game/game.model';
 import AppGamePackageCardMoreOptions from '../../../../_common/game/package/card/AppGamePackageCardMoreOptions.vue';
 import { GamePackageCardModel } from '../../../../_common/game/package/card/card.model';
 import { GamePackage } from '../../../../_common/game/package/package.model';
@@ -62,7 +62,7 @@ const canInstall = computed(() => {
 	const os = getDeviceOS();
 
 	return card.value.downloadableBuild
-		? Game.checkDeviceSupport(card.value.downloadableBuild, os!, arch)
+		? checkGameDeviceSupport(card.value.downloadableBuild, os!, arch)
 		: false;
 });
 

@@ -15,7 +15,7 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
 import { GameBuild, GameBuildType } from '../../../../_common/game/build/build.model';
 import { GameDownloader } from '../../../../_common/game/downloader/downloader.service';
-import { Game } from '../../../../_common/game/game.model';
+import { Game, chooseBestGameBuild } from '../../../../_common/game/game.model';
 import type { GamePackage } from '../../../../_common/game/package/package.model';
 import { GamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
 import { GamePlayModal } from '../../../../_common/game/play-modal/play-modal.service';
@@ -129,7 +129,7 @@ function download() {
 	const arch = getDeviceArch();
 
 	// This will return builds that may not work for this OS, but it's still the "best" to get.
-	const defaultBuild = Game.chooseBestBuild(downloadableBuilds.value, os, arch);
+	const defaultBuild = chooseBestGameBuild(downloadableBuilds.value, os, arch);
 
 	// We then try to see within the actual installable builds for this OS, if there are
 	// multiple packages we may have to choose from.
