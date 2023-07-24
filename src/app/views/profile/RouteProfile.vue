@@ -5,7 +5,6 @@ import { vAppTrackEvent } from '../../../_common/analytics/track-event.directive
 import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { CommentModal } from '../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { formatNumber } from '../../../_common/filters/number';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
@@ -28,6 +27,7 @@ import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.mo
 import { User } from '../../../_common/user/user.model';
 import { kFontFamilyBase } from '../../../_styles/variables';
 import { isUserOnline } from '../../components/chat/client';
+import { CommentModal } from '../../components/comment/modal/modal.service';
 import { useGridStore } from '../../components/grid/grid-store';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeader from '../../components/page-header/AppPageHeader.vue';

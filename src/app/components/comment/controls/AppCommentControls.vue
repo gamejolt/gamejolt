@@ -1,23 +1,31 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
-import { vAppAuthRequired } from '../../auth/auth-required-directive';
-import AppButton from '../../button/AppButton.vue';
-import { formatFuzzynumber } from '../../filters/fuzzynumber';
-import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
-import { LikersModal } from '../../likers/modal.service';
-import { Model } from '../../model/model.service';
-import { selectReactionForResource } from '../../reaction/reaction-count';
-import { Screen } from '../../screen/screen-service';
-import { useCommonStore } from '../../store/common-store';
-import { kThemeBg, kThemeBgOffset } from '../../theme/variables';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { $gettext, $gettextInterpolate, $ngettext } from '../../translate/translate.service';
-import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
-import { addCommentVote, Comment, removeCommentVote } from '../comment-model';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import {
+	addCommentVote,
+	Comment,
+	removeCommentVote,
+} from '../../../../_common/comment/comment-model';
+import { CommentVote } from '../../../../_common/comment/vote/vote-model';
+import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
+import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
+import { LikersModal } from '../../../../_common/likers/modal.service';
+import { Model } from '../../../../_common/model/model.service';
+import { selectReactionForResource } from '../../../../_common/reaction/reaction-count';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import { kThemeBg, kThemeBgOffset } from '../../../../_common/theme/variables';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import {
+	$gettext,
+	$gettextInterpolate,
+	$ngettext,
+} from '../../../../_common/translate/translate.service';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { CommentThreadModal } from '../thread/modal.service';
-import { CommentVote } from '../vote/vote-model';
 import { useCommentWidget } from '../widget/AppCommentWidget.vue';
 
 const props = defineProps({

@@ -9,6 +9,8 @@ import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJoltic
 import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppPopper, { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
+import AppReactionList from '../../../../../_common/reaction/list/AppReactionList.vue';
+import { selectReactionForResource } from '../../../../../_common/reaction/reaction-count';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
@@ -130,7 +132,9 @@ const messageState = computed<{ icon?: Jolticon; display: string; tooltip?: stri
 	return null;
 });
 
-const shouldShowMessageOptions = computed(() => canRemoveMessage.value || canEditMessage.value);
+const shouldShowMessageOptions = computed(
+	() => canRemoveMessage.value || canReactToMessage.value || canEditMessage.value
+);
 
 const dataAnchorWidth = computed(() => {
 	const itemWidth = 40;
@@ -146,6 +150,9 @@ const dataAnchorWidth = computed(() => {
 		++itemCount;
 	}
 	if (canEditMessage.value) {
+		++itemCount;
+	}
+	if (canReactToMessage.value) {
 		++itemCount;
 	}
 	if (!itemCount) {
@@ -171,7 +178,7 @@ const canRemoveMessage = computed(() => {
 	return userCanModerateOtherUser(room.value, chat.value.currentUser, message.value.user);
 });
 
-const canEditMessage = computed(() => {
+const canReactToMessage = computed(() => {
 	if (message.value.is_automated) {
 		return false;
 	}
@@ -185,8 +192,16 @@ const canEditMessage = computed(() => {
 		return false;
 	}
 
+	return true;
+});
+
+const canEditMessage = computed(() => {
+	if (!canReactToMessage.value) {
+		return false;
+	}
+
 	// Only the owner of the message can edit.
-	return chat.value.currentUser.id === message.value.user.id;
+	return !!chat.value.currentUser && chat.value.currentUser.id === message.value.user.id;
 });
 
 const roleData = computed(() =>
@@ -368,6 +383,15 @@ async function onMessageClick() {
 						<AppJolticon v-if="messageState.icon" :icon="messageState.icon" />
 						<AppTranslate>{{ messageState.display }}</AppTranslate>
 					</span>
+
+					<div v-if="message.reaction_counts.length">
+						<AppReactionList
+							:model="message"
+							click-action="toggle"
+							context-action="show-details"
+							sans-margin-bottom
+						/>
+					</div>
 				</div>
 
 				<div v-if="!message.showMeta" class="-floating-data-left">
@@ -396,6 +420,15 @@ async function onMessageClick() {
 								</a>
 							</template>
 							<template v-else>
+								<a
+									v-if="canReactToMessage"
+									v-app-tooltip="$gettext('Add reaction')"
+									class="-message-actions-item"
+									@click="selectReactionForResource(message)"
+								>
+									<AppJolticon icon="add-reaction" />
+								</a>
+
 								<a
 									v-if="canEditMessage"
 									v-app-tooltip="$gettext('Edit message')"

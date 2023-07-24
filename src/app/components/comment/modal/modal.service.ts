@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from 'vue';
-import { showModal } from '../../modal/modal.service';
-import { Model } from '../../model/model.service';
-import { CommentableModel } from '../comment-model';
+import { CommentableModel } from '../../../../_common/comment/comment-model';
+import { showModal } from '../../../../_common/modal/modal.service';
+import { Model } from '../../../../_common/model/model.service';
 
 export type DisplayMode = 'comments' | 'shouts';
 
