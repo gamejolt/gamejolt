@@ -178,7 +178,6 @@ export const defineLegacyModel = <T extends new (...args: any[]) => Model>(base:
 	class extends base {
 		// These need to be created dynamically for each model type.
 		static populate(rows: any[]): any[] {
-			console.log('POPULATE', base, rows);
 			const models: any[] = [];
 			if (rows && Array.isArray(rows) && rows.length) {
 				for (const row of rows) {

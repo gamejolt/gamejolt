@@ -4,7 +4,7 @@ import { MarkObject, MarkObjectType } from './mark-object';
 export abstract class ContentNode {
 	protected _content: ContentObject[];
 
-	get content(): ReadonlyArray<ContentObject> {
+	get content(): readonly ContentObject[] {
 		return this._content;
 	}
 
@@ -12,14 +12,14 @@ export abstract class ContentNode {
 		return this.content.length > 0;
 	}
 
-	get lastChild() {
+	get lastChild(): ContentObject | null {
 		if (!this.hasChildren) {
 			return null;
 		}
 		return this.content[this.content.length - 1];
 	}
 
-	get firstChild() {
+	get firstChild(): ContentObject | null {
 		if (!this.hasChildren) {
 			return null;
 		}

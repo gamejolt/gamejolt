@@ -1,6 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 import { bootstrapCommon } from '../_common/bootstrap';
-import { setChatInviteComponent } from '../_common/content/content-viewer/components/chat-invite';
+import { setChatInviteComponent } from '../_common/content/content-viewer/components/AppContentViewerChatInvite.vue';
 import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
 import { addModalBackdropCheck } from '../_common/modal/AppModal.vue';
 import handlePayloadActions from '../_common/payload/payload-actions.service';

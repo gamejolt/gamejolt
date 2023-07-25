@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
+import { PropType, computed } from 'vue';
 import { ContentObject } from '../../content-object';
-import { useContentOwnerController } from '../../content-owner';
 import { renderContentChildren } from './AppContentViewerBaseComponent.vue';
 
 const props = defineProps({
@@ -11,15 +10,16 @@ const props = defineProps({
 	},
 });
 
-const { contentRules } = useContentOwnerController()!;
-
 const children = computed(() => renderContentChildren(props.contentData.content));
+
+// We do this because we want users to only be able to add H3s and H4s (SEO).
+const tag = computed(() => `h${props.contentData.attrs.level + 2}`);
 </script>
 
 <template>
-	<p :style="{ display: contentRules.inlineParagraphs ? 'inline' : undefined }">
+	<component :is="tag">
 		<template v-for="child of children" :key="child">
 			<component :is="child" />
 		</template>
-	</p>
+	</component>
 </template>

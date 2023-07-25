@@ -1,23 +1,23 @@
 <script lang="ts">
 import { computed, h, PropType, toRefs } from 'vue';
-import { ContentRules } from '../../content-rules';
 import { ContentObject } from '../../content-object';
+import { ContentRules } from '../../content-rules';
+import AppContentViewerBlockquote from './AppContentViewerBlockquote.vue';
+import AppContentViewerChatInvite from './AppContentViewerChatInvite.vue';
+import AppContentViewerEmbed from './AppContentViewerEmbed.vue';
+import AppContentViewerGif from './AppContentViewerGif.vue';
+import AppContentViewerGJEmoji from './AppContentViewerGJEmoji.vue';
 import AppContentViewerHardBreak from './AppContentViewerHardBreak.vue';
+import AppContentViewerHeading from './AppContentViewerHeading.vue';
+import AppContentViewerHorizontalRule from './AppContentViewerHorizontalRule.vue';
+import AppContentViewerList from './AppContentViewerList.vue';
+import AppContentViewerListItem from './AppContentViewerListItem.vue';
+import AppContentViewerMediaItem from './AppContentViewerMediaItem.vue';
 import AppContentViewerParagraph from './AppContentViewerParagraph.vue';
-import { AppContentViewerBlockquote } from './blockquote';
-import { AppContentViewerChatInvite } from './chat-invite';
-import { AppContentViewerCodeBlock } from './code/code';
-import { AppContentViewerEmbed } from './embed';
-import { AppContentViewerGif } from './gif';
-import { AppContentViewerGJEmoji } from './gjEmoji';
-import { AppContentViewerHeading } from './heading';
-import { AppContentViewerHorizontalRule } from './hr';
-import { AppContentViewerList } from './list';
-import { AppContentViewerListItem } from './list-item';
-import { AppContentViewerMediaItem } from './media-item';
-import { AppContentViewerSpoiler } from './spoiler';
-import { AppContentViewerSticker } from './sticker';
-import { AppContentViewerText } from './text';
+import AppContentViewerSpoiler from './AppContentViewerSpoiler.vue';
+import AppContentViewerSticker from './AppContentViewerSticker.vue';
+import AppContentViewerText from './AppContentViewerText.vue';
+import AppContentViewerCodeBlock from './AppContentViewerCodeBlock.vue';
 
 function getComponentType(data: ContentObject): any {
 	switch (data.type) {
@@ -57,7 +57,7 @@ function getComponentType(data: ContentObject): any {
 	}
 }
 
-export function renderChildren(
+export function renderContentChildren(
 	childObjects: ReadonlyArray<ContentObject>,
 	contentRules?: ContentRules
 ) {
@@ -98,7 +98,7 @@ const props = defineProps({
 
 const { content, contentRules } = toRefs(props);
 
-const children = computed(() => renderChildren(content.value, contentRules.value));
+const children = computed(() => renderContentChildren(content.value, contentRules.value));
 </script>
 
 <template>
