@@ -8,6 +8,7 @@ import AppStickerPack, {
 	StickerPackExpiryStyles,
 } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
+import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { kBorderRadiusLg } from '../../../../../_styles/variables';
 import AppProductCurrencyTags from './AppProductCurrencyTags.vue';
@@ -74,6 +75,27 @@ const anchorStyles = computed<CSSProperties>(() => {
 	}
 	return {};
 });
+
+const readableEndsOnStyles: CSSProperties = {
+	...StickerPackExpiryStyles,
+	zIndex: overlayTagZIndex,
+};
+
+const readableEndsOn = computed(() => {
+	const endsOn = shopProduct.value.ends_on;
+	if (!endsOn) {
+		return;
+	}
+
+	return shorthandReadableTime(endsOn, {
+		allowFuture: true,
+		precision: 'rough',
+		nowText: $gettext(`No longer for sale`),
+		timeTransformer(time) {
+			return $gettextInterpolate(`%{ time } left to purchase`, { time });
+		},
+	});
+});
 </script>
 
 <template>
@@ -87,12 +109,15 @@ const anchorStyles = computed<CSSProperties>(() => {
 			<AppStickerPack
 				v-if="shopProduct.stickerPack"
 				:pack="shopProduct.stickerPack"
-				:expiry-info="shopProduct.ends_on"
 				:can-click-pack="!disablePurchases"
 				show-details
 				@click-pack="onClickProduct()"
 			>
 				<template #overlay-children>
+					<div v-if="readableEndsOn" :style="readableEndsOnStyles">
+						{{ readableEndsOn }}
+					</div>
+
 					<AppProductCurrencyTags
 						:style="currencyTagStyles"
 						:shop-product="shopProduct"
@@ -124,20 +149,8 @@ const anchorStyles = computed<CSSProperties>(() => {
 					</AppBackground>
 				</AppAspectRatio>
 
-				<div
-					v-if="shopProduct.ends_on"
-					:style="{
-						...StickerPackExpiryStyles,
-						zIndex: overlayTagZIndex,
-					}"
-				>
-					{{
-						shorthandReadableTime(shopProduct.ends_on, {
-							allowFuture: true,
-							precision: 'rough',
-							nowText: $gettext(`Expired`),
-						})
-					}}
+				<div v-if="readableEndsOn" :style="readableEndsOnStyles">
+					{{ readableEndsOn }}
 				</div>
 
 				<AppProductCurrencyTags :style="currencyTagStyles" :shop-product="shopProduct" />
