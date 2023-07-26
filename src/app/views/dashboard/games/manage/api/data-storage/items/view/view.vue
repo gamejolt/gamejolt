@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
 import { GameDataStoreItem } from '../../../../../../../../../_common/game/data-store/item/item.model';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
@@ -49,8 +49,7 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 	}
 
 	async remove() {
-		const result = await ModalConfirm.show(
-			// TODO(vue3) translate-comment="This refers to game API data storage items specifically"
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this item?')
 		);
 

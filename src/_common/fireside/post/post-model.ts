@@ -14,13 +14,13 @@ import { Game } from '../../game/game.model';
 import { HistoryTick } from '../../history-tick/history-tick-service';
 import { KeyGroup } from '../../key-group/key-group.model';
 import { MediaItem } from '../../media-item/media-item-model';
-import { ModalConfirm } from '../../modal/confirm/confirm-service';
+import { showModalConfirm } from '../../modal/confirm/confirm-service';
 import { Model, ModelSaveRequestOptions, defineLegacyModel } from '../../model/model.service';
 import { Poll } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
 import { StickerPlacement } from '../../sticker/placement/placement.model';
 import { StickerCount, constructStickerCounts } from '../../sticker/sticker-count';
-import { Translate } from '../../translate/translate.service';
+import { $gettext } from '../../translate/translate.service';
 import { User } from '../../user/user.model';
 import { FiresidePostCommunity } from './community/community.model';
 import { FiresidePostEmbed } from './embed/embed.model';
@@ -543,8 +543,8 @@ export class FiresidePost extends defineLegacyModel(
 		}
 
 		async remove() {
-			const result = await ModalConfirm.show(
-				Translate.$gettext(`Are you sure you want to remove this post?`)
+			const result = await showModalConfirm(
+				$gettext(`Are you sure you want to remove this post?`)
 			);
 
 			if (result) {

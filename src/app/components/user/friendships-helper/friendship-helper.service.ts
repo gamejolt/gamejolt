@@ -1,5 +1,5 @@
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../_common/payload/payload-service';
 import { commonStore } from '../../../../_common/store/common-store';
 import { Translate } from '../../../../_common/translate/translate.service';
@@ -59,7 +59,7 @@ export class UserFriendshipHelper {
 	}
 
 	static async cancelRequest(request: UserFriendship) {
-		const confirmResult = await ModalConfirm.show(
+		const confirmResult = await showModalConfirm(
 			Translate.$gettextInterpolate(`Cancel the friend request you sent to @%{ username }?`, {
 				username: request.target_user.username,
 			})
@@ -90,7 +90,7 @@ export class UserFriendshipHelper {
 	}
 
 	static async rejectRequest(request: UserFriendship) {
-		const confirmResult = await ModalConfirm.show(
+		const confirmResult = await showModalConfirm(
 			Translate.$gettextInterpolate(`Dismiss the friend request from @%{ username }?`, {
 				username: request.user.username,
 			})
@@ -121,7 +121,7 @@ export class UserFriendshipHelper {
 	static async removeFriend(friendship: UserFriendship) {
 		const them = friendship.getThem(commonStore.user.value!);
 
-		const confirmResult = await ModalConfirm.show(
+		const confirmResult = await showModalConfirm(
 			Translate.$gettextInterpolate(`Remove @%{ username } as a friend?`, {
 				username: them.username,
 			})

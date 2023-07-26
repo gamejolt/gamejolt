@@ -1,4 +1,4 @@
-import { EventItem } from '../../../../_common/event-item/event-item.model';
+import { EventItem, EventItemType } from '../../../../_common/event-item/event-item.model';
 import { $viewPost, FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { Notification } from '../../../../_common/notification/notification-model';
 
@@ -28,7 +28,7 @@ export class ActivityFeedItem {
 	}
 
 	$viewed(sourceFeed: string) {
-		if (this.feedItem instanceof EventItem && this.feedItem.type === EventItem.TYPE_POST_ADD) {
+		if (this.feedItem instanceof EventItem && this.feedItem.type === EventItemType.PostAdd) {
 			$viewPost(this.feedItem.action as FiresidePost, sourceFeed);
 		}
 	}

@@ -15,7 +15,7 @@ import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
-import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
@@ -199,7 +199,7 @@ async function reloadBackgroundForm(retryOnDesync: boolean) {
 }
 
 async function leaveRoom() {
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to leave the group chat?`)
 	);
 
@@ -215,7 +215,7 @@ async function extinguishRoomFireside() {
 		return;
 	}
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to extinguish the fireside?`)
 	);
 

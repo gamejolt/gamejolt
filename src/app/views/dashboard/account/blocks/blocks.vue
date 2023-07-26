@@ -6,7 +6,7 @@ import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../_common/card/list/AppCardListAdd.vue';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
@@ -81,7 +81,7 @@ export default class RouteDashAccountBlocks extends BaseRouteComponent {
 	}
 
 	async onClickUnblock(block: UserBlock) {
-		const confirm = await ModalConfirm.show(
+		const confirm = await showModalConfirm(
 			this.$gettextInterpolate(`Are you sure you want to unblock %{ name }?`, {
 				name: block.user.display_name,
 			}),

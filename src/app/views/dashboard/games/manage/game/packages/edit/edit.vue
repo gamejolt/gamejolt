@@ -4,7 +4,7 @@ import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../../../_common/card/AppCard.vue';
 import AppExpand from '../../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../../_common/filters/number';
-import AppGamePackageCard from '../../../../../../../../_common/game/package/card/card.vue';
+import AppGamePackageCard from '../../../../../../../../_common/game/package/card/AppGamePackageCard.vue';
 import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';
 import {
 	GamePackage,
@@ -19,7 +19,7 @@ import {
 	showSuccessGrowl,
 } from '../../../../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../../../../_common/loading/AppLoading.vue';
-import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
 import AppProgressPoller from '../../../../../../../../_common/progress/poller/AppProgressPoller.vue';
 import {
@@ -180,7 +180,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 	}
 
 	async removeRelease(release: GameRelease) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to remove this release? All of its builds will be removed as well.'
 			)

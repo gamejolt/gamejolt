@@ -5,7 +5,7 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
 import { GameBuild } from '../../../../_common/game/build/build.model';
 import { Game, pluckInstallableGameBuilds } from '../../../../_common/game/game.model';
-import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
+import AppGamePackageCard from '../../../../_common/game/package/card/AppGamePackageCard.vue';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';

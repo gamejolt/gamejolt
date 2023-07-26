@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
@@ -42,7 +42,7 @@ export default class RouteDashGamesManageApiSettings extends BaseRouteComponent 
 	}
 
 	async generateNewKey() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to generate a new key? If you do, any builds of your game using the current key will stop working.'
 			)

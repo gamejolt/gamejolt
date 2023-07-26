@@ -1,12 +1,12 @@
 <script lang="ts">
 import { computed, onMounted, onUnmounted, PropType, ref, toRefs } from 'vue';
-import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { storeModelList } from '../../../../../_common/model/model-store.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
@@ -15,13 +15,13 @@ import AppScrollInview, {
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import { User } from '../../../../../_common/user/user.model';
-import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
+import { arrayRemove } from '../../../../../utils/array';
+import AppChatList from '../../../chat/_list/AppChatList.vue';
 import { tryGetRoomRole } from '../../../chat/client';
 import { ChatRole } from '../../../chat/role';
 import { ChatRoom } from '../../../chat/room';
 import { useChatRoomMembers } from '../../../chat/room-channel';
 import { ChatUser } from '../../../chat/user';
-import AppChatList from '../../../chat/_list/AppChatList.vue';
 import { useGridStore } from '../../../grid/grid-store';
 import AppFiresideChatModsItem from './AppFiresideChatModsItem.vue';
 
@@ -197,14 +197,14 @@ async function toggleModerator(user: ChatUser) {
 	let canProceed: boolean | undefined;
 
 	if (isPromoting) {
-		canProceed = await ModalConfirm.show(
+		canProceed = await showModalConfirm(
 			$gettextInterpolate(
 				`Do you want to promote @%{ username } to a chat moderator? They will be able to remove messages and kick users from the chat. You can demote them at any time.`,
 				{ username: user.username }
 			)
 		);
 	} else {
-		canProceed = await ModalConfirm.show(
+		canProceed = await showModalConfirm(
 			$gettextInterpolate(`Do you want to demote @%{ username } to a normal chat user?`, {
 				username: user.username,
 			})

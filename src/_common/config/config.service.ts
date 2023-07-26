@@ -131,12 +131,16 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-export const configFYPExperiment = new ConfigOptionString<string>('fyp_experiment', 'default', {
-	// Allow any value since we pass directly to backend, which does all the logic.
-	validValues: false,
-});
+export const configFYPExperiment = /** @__PURE__ */ new ConfigOptionString<string>(
+	'fyp_experiment',
+	'default',
+	{
+		// Allow any value since we pass directly to backend, which does all the logic.
+		validValues: false,
+	}
+);
 
-export const configCommunityFrontpageFeedType = new ConfigOptionString(
+export const configCommunityFrontpageFeedType = /** @__PURE__ */ new ConfigOptionString(
 	'web_community_frontpage_feed_type',
 	'default',
 	{
@@ -148,21 +152,25 @@ export const configCommunityFrontpageFeedType = new ConfigOptionString(
 /**
  * Whether or not to allow streaming of desktop video directly.
  */
-export const configCanStreamDesktopVideo = new ConfigOptionBoolean(
+export const configCanStreamDesktopVideo = /** @__PURE__ */ new ConfigOptionBoolean(
 	'client_can_stream_desktop_video',
 	false
 );
 
-export const configShowStoreInMoreMenu = new ConfigOptionBoolean(
+export const configShowStoreInMoreMenu = /** @__PURE__ */ new ConfigOptionBoolean(
 	'web_show_store_in_more_menu',
 	false
 );
 
-export const configHomeFeedSwitcher = new ConfigOptionBoolean('web_home_feed_switcher', false, {
-	conditions: {
-		join: true,
-	},
-});
+export const configHomeFeedSwitcher = /** @__PURE__ */ new ConfigOptionBoolean(
+	'web_home_feed_switcher',
+	false,
+	{
+		conditions: {
+			join: true,
+		},
+	}
+);
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());

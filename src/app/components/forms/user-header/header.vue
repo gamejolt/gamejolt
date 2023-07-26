@@ -8,7 +8,7 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../_common/form-vue/form.service';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { User } from '../../../../_common/user/user.model';
 
@@ -75,7 +75,7 @@ export default class FormUserHeader
 	}
 
 	async clearHeader() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to remove your profile header?`)
 		);
 

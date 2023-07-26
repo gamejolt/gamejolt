@@ -9,7 +9,7 @@ import { ContentSetCache } from '../content/content-set-cache';
 import { DogtagData } from '../dogtag/dogtag-data';
 import { showErrorGrowl } from '../growls/growls.service';
 import { MediaItem } from '../media-item/media-item-model';
-import { ModalConfirm } from '../modal/confirm/confirm-service';
+import { showModalConfirm } from '../modal/confirm/confirm-service';
 import { defineLegacyModel, Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { Theme } from '../theme/theme.model';
@@ -333,7 +333,7 @@ export async function toggleUserFollow(
 		}
 	} else {
 		try {
-			result = await ModalConfirm.show(
+			result = await showModalConfirm(
 				$gettext(`Are you sure you want to unfollow this user?`),
 				$gettext(`Unfollow user?`)
 			);

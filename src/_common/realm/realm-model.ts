@@ -3,7 +3,7 @@ import { RealmFollowSource, trackRealmFollow } from '../analytics/analytics.serv
 import { Api } from '../api/api.service';
 import { showErrorGrowl } from '../growls/growls.service';
 import { MediaItem } from '../media-item/media-item-model';
-import { ModalConfirm } from '../modal/confirm/confirm-service';
+import { showModalConfirm } from '../modal/confirm/confirm-service';
 import { Model, defineLegacyModel } from '../model/model.service';
 import { $gettext } from '../translate/translate.service';
 
@@ -92,7 +92,7 @@ export async function toggleRealmFollow(realm: Realm, source: RealmFollowSource)
 		}
 	} else {
 		try {
-			const result = await ModalConfirm.show(
+			const result = await showModalConfirm(
 				$gettext(`Are you sure you want to unfollow this realm?`),
 				$gettext(`Unfollow realm?`)
 			);

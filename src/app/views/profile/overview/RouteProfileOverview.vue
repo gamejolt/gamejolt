@@ -33,7 +33,7 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { LinkedAccount, Provider } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
@@ -47,6 +47,8 @@ import AppTopSupportersCard, {
 } from '../../../../_common/supporters/AppTopSupportersCard.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { TrophyModal } from '../../../../_common/trophy/modal/modal.service';
+import AppTrophyThumbnail from '../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { showUserFiresideFollowModal } from '../../../../_common/user/fireside/modal/follow-modal.service';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
@@ -62,8 +64,6 @@ import AppGameListPlaceholder from '../../../components/game/list/placeholder/pl
 import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import { TrophyModal } from '../../../../_common/trophy/modal/modal.service';
-import AppTrophyThumbnail from '../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useAppStore } from '../../../store/index';
 import { useProfileRouteController } from '../RouteProfile.vue';
@@ -485,7 +485,7 @@ function onClickTrophy(userTrophy: UserBaseTrophy) {
 
 async function onClickUnfollow() {
 	if (routeUser.value) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			$gettext(`Are you sure you want to unfollow this user?`),
 			$gettext(`Unfollow user?`)
 		);

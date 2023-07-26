@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { kThemeBacklight, kThemeBacklightFg } from '../../../../_common/theme/variables';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -70,7 +70,7 @@ async function leaveRoom() {
 		return;
 	}
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to leave the group chat?`)
 	);
 

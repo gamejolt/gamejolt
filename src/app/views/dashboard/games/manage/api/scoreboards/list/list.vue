@@ -7,7 +7,7 @@ import AppCardListAdd from '../../../../../../../../_common/card/list/AppCardLis
 import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { GameScoreTable } from '../../../../../../../../_common/game/score-table/score-table.model';
-import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
@@ -79,7 +79,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 	}
 
 	async removeTable(table: GameScoreTable) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this scoreboard?')
 		);
 

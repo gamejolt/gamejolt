@@ -6,7 +6,7 @@ import { setMenuBuilderHook } from '../_common/client/tray/AppClientTray.vue';
 import {
 	setButtonsComponent as setPackageCardButtonsComponent,
 	setMetaComponent,
-} from '../_common/game/package/card/card.vue';
+} from '../_common/game/package/card/AppGamePackageCard.vue';
 import { setDownloadPackageHook } from '../_common/game/package/purchase-modal/AppGamePackagePurchaseModal.vue';
 import type { CommonStore } from '../_common/store/common-store';
 import AppClientGameCoverButtons from './components/client/hooks/AppClientGameCoverButtons.vue';

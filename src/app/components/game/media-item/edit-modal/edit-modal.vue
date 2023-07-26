@@ -4,7 +4,7 @@ import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { BaseModal } from '../../../../../_common/modal/base';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Media } from '../../../../views/dashboard/games/manage/manage.store';
 import FormGameImage from '../../../forms/game/image/image.vue';
@@ -79,7 +79,7 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 			}
 		);
 
-		const result = await ModalConfirm.show(message);
+		const result = await showModalConfirm(message);
 		if (!result) {
 			return;
 		}

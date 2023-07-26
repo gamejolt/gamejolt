@@ -8,7 +8,7 @@ import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAd
 import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
 import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
-import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
@@ -16,8 +16,8 @@ import {
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { TrophyDifficulty } from '../../../../../../../_common/trophy/base-trophy.model';
-import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
 import AppTrophyThumbnail from '../../../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
+import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
@@ -144,7 +144,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 	}
 
 	async removeTrophy(trophy: GameTrophy) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this trophy?')
 		);
 

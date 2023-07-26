@@ -7,7 +7,7 @@ import { GameBuildLaunchOption } from '../../../../../../../../../_common/game/b
 import { GamePackage } from '../../../../../../../../../_common/game/package/package.model';
 import { GameRelease } from '../../../../../../../../../_common/game/release/release.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
@@ -89,7 +89,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 	}
 
 	async unpublishRelease(release: GameRelease) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to hide this release? It will no longer be accessible from your game page.'
 			)
@@ -108,7 +108,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 	}
 
 	async removeRelease(release: GameRelease) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to remove this release? All of its builds will be removed as well.'
 			)

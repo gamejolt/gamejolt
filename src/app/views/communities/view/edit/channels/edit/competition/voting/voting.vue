@@ -12,7 +12,7 @@ import {
 } from '../../../../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionVotingCategory } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { showErrorGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
@@ -170,7 +170,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 	}
 
 	async onClickRemoveCategory(category: CommunityCompetitionVotingCategory) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure want to remove this voting category?`)
 		);
 
@@ -200,7 +200,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 	}
 
 	async onClickRemoveAward(award: CommunityCompetitionAward) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure want to remove this award?`)
 		);
 

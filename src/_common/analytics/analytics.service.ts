@@ -590,8 +590,8 @@ export function trackCbarControlClick(
 /**
  * @deprecated This is left here so that old code doesn't break.
  */
-export class Analytics {
-	private static warnDeprecated(name: string) {
+class AnalyticsService {
+	private warnDeprecated(name: string) {
 		if (import.meta.env.MODE === 'development' || import.meta.env.DEV) {
 			console.warn(
 				`[Analytics] - [${name}] is deprecated and no longer functional. Use new analytics functions instead.`
@@ -599,7 +599,7 @@ export class Analytics {
 		}
 	}
 
-	static trackEvent(_category: string, _action: string, _label?: string, _value?: string) {
+	trackEvent(_category: string, _action: string, _label?: string, _value?: string) {
 		this.warnDeprecated('trackEvent');
 		return;
 
@@ -622,7 +622,7 @@ export class Analytics {
 		// }
 	}
 
-	static trackSocial(_network: string, _action: string, _target: string) {
+	trackSocial(_network: string, _action: string, _target: string) {
 		this.warnDeprecated('trackSocial');
 		return;
 
@@ -640,7 +640,7 @@ export class Analytics {
 		// }
 	}
 
-	static trackTiming(_category: string, _timingVar: string, _value: number, _label?: string) {
+	trackTiming(_category: string, _timingVar: string, _value: number, _label?: string) {
 		this.warnDeprecated('trackTiming');
 		return;
 
@@ -658,3 +658,8 @@ export class Analytics {
 		// }
 	}
 }
+
+/**
+ * @deprecated This is left here so that old code doesn't break.
+ */
+export const Analytics = /** @__PURE__ */ new AnalyticsService();

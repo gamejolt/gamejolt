@@ -27,7 +27,7 @@ import {
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
@@ -248,7 +248,7 @@ async function onClickIsActive() {
 		return;
 	}
 
-	const response = await ModalConfirm.show(
+	const response = await showModalConfirm(
 		$gettext(
 			`Do you really want to deactivate this sticker? If you do, your sticker pack will be deactivated too. You'll need to activate the pack to make it available again.`
 		),

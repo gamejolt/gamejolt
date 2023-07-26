@@ -4,7 +4,7 @@ import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { showErrorGrowl } from '../../growls/growls.service';
-import { LikersModal } from '../../likers/modal.service';
+import { showLikersModal } from '../../likers/modal.service';
 import { EventTopic } from '../../system/event/event-topic';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
@@ -41,7 +41,7 @@ const hasLiked = computed(() => userRating?.value?.rating === GameRatingValue.Li
 const hasDisliked = computed(() => userRating?.value?.rating === GameRatingValue.Dislike);
 
 function showLikers() {
-	LikersModal.show({ count: game.value.like_count, resource: game.value });
+	showLikersModal({ count: game.value.like_count, resource: game.value });
 }
 
 function like() {

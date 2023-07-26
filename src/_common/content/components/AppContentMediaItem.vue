@@ -9,7 +9,7 @@ import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop
 import { MediaItem } from '../../media-item/media-item-model';
 import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
-import { ContentEditorLinkModal } from '../content-editor/modals/link/link-modal.service';
+import { showContentEditorLinkModal } from '../content-editor/modals/link/link-modal.service';
 import { defineEditableNodeViewProps } from '../content-editor/node-views/base';
 import { useContentOwnerController } from '../content-owner';
 import AppBaseContentComponent from './AppBaseContentComponent.vue';
@@ -175,7 +175,7 @@ async function onEdit() {
 	if (hasLink.value) {
 		removeLink();
 	} else {
-		const result = await ContentEditorLinkModal.show(href.value);
+		const result = await showContentEditorLinkModal(href.value);
 		if (result !== undefined) {
 			onUpdateAttrs?.value?.({ href: result.href });
 		}

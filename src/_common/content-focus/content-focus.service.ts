@@ -22,8 +22,11 @@ class ContentFocusService {
 	}
 }
 
-export const ContentFocus = reactive(new ContentFocusService()) as ContentFocusService;
+export const ContentFocus = reactive(
+	/** @__PURE__ */ new ContentFocusService()
+) as ContentFocusService;
 
+// TODO(chunk-optimization): Put this in an initializer so that it's not a side effect.
 if (typeof window !== 'undefined') {
 	window.addEventListener('focus', () => (ContentFocus.isWindowFocused = true));
 	window.addEventListener('blur', () => (ContentFocus.isWindowFocused = false));

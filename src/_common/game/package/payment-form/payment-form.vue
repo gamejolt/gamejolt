@@ -9,12 +9,12 @@ import AppExpand from '../../../expand/AppExpand.vue';
 import { formatCurrency } from '../../../filters/currency';
 import { vAppFocusWhen } from '../../../form-vue/focus-when.directive';
 import {
-BaseForm,
-FormOnSubmit,
-FormOnSubmitError,
-FormOnSubmitSuccess,
+	BaseForm,
+	FormOnSubmit,
+	FormOnSubmitError,
+	FormOnSubmitSuccess,
 } from '../../../form-vue/form.service';
-import { Geo, Region } from '../../../geo/geo.service';
+import { Geo, GeoRegion } from '../../../geo/geo.service';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import { HistoryTick } from '../../../history-tick/history-tick-service';
 import AppLoading from '../../../loading/AppLoading.vue';
@@ -77,7 +77,7 @@ export default class FormGamePackagePayment
 	calculatedAddressTax = false;
 	addressTaxAmount = 0;
 	countries = Geo.getCountries();
-	regions: Region[] | null = null;
+	regions: GeoRegion[] | null = null;
 	walletBalance = 0;
 	walletTax = 0;
 	minOrderAmount = 50;

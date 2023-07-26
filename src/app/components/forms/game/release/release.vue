@@ -18,7 +18,7 @@ import { Game } from '../../../../../_common/game/game.model';
 import { GamePackage } from '../../../../../_common/game/package/package.model';
 import { GameRelease, GameReleaseStatus } from '../../../../../_common/game/release/release.model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
 import { arrayRemove } from '../../../../../utils/array';
@@ -180,7 +180,7 @@ export default class FormGameRelease
 	}
 
 	async removeBuild(build: GameBuild) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this build?')
 		);
 
@@ -205,7 +205,7 @@ export default class FormGameRelease
 	}
 
 	async savePublished() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to publish this release? All of its builds will become active on your game page.'
 			)

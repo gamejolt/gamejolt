@@ -3,7 +3,7 @@ import { computed, PropType } from 'vue';
 import AppCard from '../../../../_common/card/AppCard.vue';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { PaymentSource } from '../../../../_common/payment-source/payment-source.model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -28,7 +28,7 @@ const expires = computed(() => {
 });
 
 async function remove() {
-	const result = await ModalConfirm.show($gettext(`Are you sure you want to remove this card?`));
+	const result = await showModalConfirm($gettext(`Are you sure you want to remove this card?`));
 	if (!result) {
 		return;
 	}

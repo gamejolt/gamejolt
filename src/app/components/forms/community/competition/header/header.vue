@@ -8,7 +8,7 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../../../_common/form-vue/form.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
 type FormModel = CommunityCompetition & {
 	header_crop: any;
@@ -66,7 +66,7 @@ export default class FormCommunityCompetitionHeader
 	}
 
 	async clearHeader() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to remove your competition's header?`)
 		);
 

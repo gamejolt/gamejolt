@@ -11,18 +11,16 @@ interface LikersModalOptions {
 	resource?: LikersResource;
 }
 
-export class LikersModal {
-	static async show(options: LikersModalOptions) {
-		const { count, resource } = options;
+export async function showLikersModal(options: LikersModalOptions) {
+	const { count, resource } = options;
 
-		return await showModal<void>({
-			modalId: 'Likers',
-			component: defineAsyncComponent(() => import('./modal.vue')),
-			props: {
-				count,
-				resource,
-			},
-			size: 'sm',
-		});
-	}
+	return await showModal<void>({
+		modalId: 'Likers',
+		component: defineAsyncComponent(() => import('./AppLikesModal.vue')),
+		props: {
+			count,
+			resource,
+		},
+		size: 'sm',
+	});
 }

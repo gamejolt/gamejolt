@@ -47,7 +47,7 @@ import {
 	setListableHostIds,
 } from '../../../../_common/fireside/rtc/rtc';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { getModel } from '../../../../_common/model/model-store.service';
 import handlePayloadActions from '../../../../_common/payload/payload-actions.service';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -1221,7 +1221,7 @@ export async function publishFireside(
 		return;
 	}
 
-	const ret = await ModalConfirm.show(
+	const ret = await showModalConfirm(
 		$gettext(`Do you want to publish this fireside for the world to see?`)
 	);
 	if (!ret) {
@@ -1261,7 +1261,7 @@ export async function extinguishFireside(c: FiresideController, trigger: string)
 		return;
 	}
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(
 			`Are you sure you want to extinguish your Fireside? This will immediately close it and send all members home.`
 		)

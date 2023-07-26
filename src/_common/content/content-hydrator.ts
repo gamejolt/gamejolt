@@ -62,7 +62,7 @@ export class ContentHydrator {
 			source,
 		};
 
-		const requestKey = ContentHydrationRequest.makeKey(type, source);
+		const requestKey = _makeKey(type, source);
 
 		// We only allow one hydration request to get created.
 		if (!this.hydrationRequests.has(requestKey)) {
@@ -103,7 +103,7 @@ export class ContentHydrator {
 
 		// If there was a hydration request active, let's resolve it with the
 		// data we have.
-		const requestKey = ContentHydrationRequest.makeKey(type, source);
+		const requestKey = _makeKey(type, source);
 
 		const hydrationRequest = this.hydrationRequests.get(requestKey);
 		if (hydrationRequest) {
@@ -127,8 +127,6 @@ class ContentHydrationRequest {
 	readonly promise: Promise<any>;
 	private resolver?: (entry: ContentHydrationDataEntry) => void;
 
-	static makeKey = (type: ContentHydrationType, source: string) => `${type}:${source}`;
-
 	constructor() {
 		this.promise = new Promise(resolve => {
 			this.resolver = resolve;
@@ -138,4 +136,8 @@ class ContentHydrationRequest {
 	resolveWithData(entry: ContentHydrationDataEntry) {
 		this.resolver?.(entry.data);
 	}
+}
+
+function _makeKey(type: ContentHydrationType, source: string) {
+	return `${type}:${source}`;
 }

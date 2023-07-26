@@ -4,7 +4,7 @@ import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import AppPagination from '../../../../../../_common/pagination/pagination.vue';
 import {
 	BaseRouteComponent,
@@ -16,8 +16,8 @@ import { UserBlock } from '../../../../../../_common/user/block/block.model';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import FormCommunityBlock from '../../../../../components/forms/community/ban/block.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditBlocks',
@@ -114,7 +114,7 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 	}
 
 	async onClickLift(block: UserBlock) {
-		const response = await ModalConfirm.show(
+		const response = await showModalConfirm(
 			this.$gettextInterpolate(
 				'Do you really want to lift the block for the user @%{ username } early? The reason they were blocked: %{ reason }',
 				{ username: block.user.username, reason: block.reason }

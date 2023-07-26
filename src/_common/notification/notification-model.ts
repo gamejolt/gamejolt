@@ -3,7 +3,7 @@ import { Comment } from '../comment/comment-model';
 import { Community } from '../community/community.model';
 import { CommunityUserNotification } from '../community/user-notification/user-notification.model';
 import { CreatorExperienceLevel } from '../creator/experience/level.model';
-import { EventItem } from '../event-item/event-item.model';
+import { EventItemType } from '../event-item/event-item.model';
 import { FiresideCommunity } from '../fireside/community/community.model';
 import { Fireside } from '../fireside/fireside.model';
 import { FiresidePostCommunity } from '../fireside/post/community/community.model';
@@ -58,7 +58,7 @@ export class Notification extends Model {
 	static TYPE_CREATOR_LEVEL_UP = 'creator-level-up';
 	static TYPE_UNLOCKED_AVATAR_FRAME = 'unlocked-avatar-frame';
 
-	static ACTIVITY_FEED_TYPES = [EventItem.TYPE_POST_ADD];
+	static ACTIVITY_FEED_TYPES = [EventItemType.PostAdd];
 
 	static NOTIFICATION_FEED_TYPES = [
 		Notification.TYPE_COMMENT_ADD,

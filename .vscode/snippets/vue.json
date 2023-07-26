@@ -70,5 +70,13 @@
 	"Vue prop": {
 		"prefix": "vue-prop",
 		"body": ["${1:name}: {", "\ttype: ${2:String},", "\trequired: true,", "},"]
+	},
+	"Pure assignment": {
+		"prefix": "pure",
+		"body": "/** @__PURE__ */"
+	},
+	"Side effect free function": {
+		"prefix": "no-side-effects",
+		"body": "@__NO_SIDE_EFFECTS__"
 	}
 }

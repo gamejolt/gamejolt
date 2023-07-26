@@ -14,7 +14,7 @@ import {
 	registerContentFocusWatcher as registerFocusWatcher,
 } from '../../_common/content-focus/content-focus.service';
 import { showSuccessGrowl } from '../../_common/growls/growls.service';
-import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
 import { SidebarStore } from '../../_common/sidebar/sidebar.store';
 import { StickerStore } from '../../_common/sticker/sticker-store';
@@ -182,7 +182,7 @@ export function createAppStore({
 	}
 
 	async function logout() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			$gettext('Are you seriously going to leave us?'),
 			$gettext('Logout?')
 		);
@@ -401,7 +401,7 @@ export function createAppStore({
 
 		if (community.is_member && !community._removed) {
 			if (shouldConfirm) {
-				const result = await ModalConfirm.show(
+				const result = await showModalConfirm(
 					$gettext(`Are you sure you want to leave this community?`),
 					$gettext(`Leave community?`)
 				);

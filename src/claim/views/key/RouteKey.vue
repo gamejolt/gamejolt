@@ -6,7 +6,7 @@ import { Environment } from '../../../_common/environment/environment.service';
 import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
 import { Game } from '../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { useCommonStore } from '../../../_common/store/common-store';
@@ -84,7 +84,7 @@ const { isBootstrapped } = createAppRoute({
 async function claim(resource: Game | GameBundle) {
 	const resourceName = resource instanceof GameBundle ? 'bundle' : 'game';
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettextInterpolate(
 			`Claiming this %{ type } into your Library will allow you to access it through your Game Jolt account and invalidate this key page.`,
 			{ type: resourceName }

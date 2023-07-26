@@ -6,7 +6,7 @@ import { CommunityCompetitionVotingCategory } from '../../../../../../_common/co
 import { Game } from '../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityCompetitionEntryModal } from '../modal/modal.service';
@@ -93,7 +93,7 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 	}
 
 	async onClickRemove() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to remove this entry from the jam?`)
 		);
 

@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
@@ -72,7 +72,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 	}
 
 	async removeAll() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to remove all of the user's scores from this scoreboard?`
 			)

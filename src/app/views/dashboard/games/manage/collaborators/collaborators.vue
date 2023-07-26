@@ -1,19 +1,19 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
 import { Collaborator } from '../../../../../../_common/collaborator/collaborator.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../_common/route/route-component';
 import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
+import { arrayRemove } from '../../../../../../utils/array';
 import FormGameCollaborator from '../../../../../components/forms/game/collaborator/collaborator.vue';
 import { useGameDashRouteController } from '../manage.store';
 
@@ -71,7 +71,7 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 	}
 
 	async remove(collaborator: Collaborator) {
-		const ret = await ModalConfirm.show(
+		const ret = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to remove this collaborator? They will no longer be able to make changes to the game.`
 			),

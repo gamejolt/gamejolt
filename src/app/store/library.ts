@@ -1,13 +1,13 @@
 import { computed, inject, InjectionKey, Ref, ref } from 'vue';
 import { Router } from 'vue-router';
-import { arrayRemove } from '../../utils/array';
 import { trackGameFollow } from '../../_common/analytics/analytics.service';
 import { GamePlaylist } from '../../_common/game-playlist/game-playlist.model';
 import { Game, unfollowGame } from '../../_common/game/game.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../_common/growls/growls.service';
-import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Scroll } from '../../_common/scroll/scroll.service';
 import { $gettext, $gettextInterpolate } from '../../_common/translate/translate.service';
+import { arrayRemove } from '../../utils/array';
 import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
 import { GameCollection } from '../components/game/collection/collection.model';
 import { router } from '../views';
@@ -165,7 +165,7 @@ export async function libraryRemovePlaylist(store: LibraryStore, collection: Gam
 		throw new Error(`Collection isn't a playlist.`);
 	}
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		collection.isOwner
 			? $gettext(`Are you sure you want to remove this playlist?`)
 			: $gettext(`Are you sure you want to unfollow this playlist?`)
@@ -242,7 +242,7 @@ export async function libraryRemoveGameFromPlaylist(
 	}
 
 	if (options.shouldConfirm) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			$gettext('Are you sure you want to remove this game from the playlist?')
 		);
 
@@ -271,7 +271,7 @@ export async function libraryRemoveGameFromPlaylist(
 }
 
 export async function libraryUnfollowGame(_store: LibraryStore, game: Game) {
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettextInterpolate(`Are you sure you want to stop following %{ game }?`, {
 			game: game.title,
 		})

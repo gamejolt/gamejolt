@@ -20,7 +20,7 @@ import {
 	GamePackageVisibility,
 } from '../../../../../_common/game/package/package.model';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import {
 	SellablePricing,
 	getOriginalSellablePricing,
@@ -262,7 +262,7 @@ export default class FormGamePackage
 	}
 
 	async cancelSale() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to cancel this sale?')
 		);
 

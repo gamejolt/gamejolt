@@ -13,7 +13,7 @@ import {
 } from '../../../../../../../_common/growls/growls.service';
 import { KeyGroup, KeyGroupType } from '../../../../../../../_common/key-group/key-group.model';
 import { Key } from '../../../../../../../_common/key/key-model';
-import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import {
 	BaseRouteComponent,
@@ -105,7 +105,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 	}
 
 	async removeGroup(keyGroup: KeyGroup) {
-		const resolved = await ModalConfirm.show(
+		const resolved = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to remove this key group? All keys within this key group will be invalidated. Any access that users may have gained from these keys will be revoked. This can not be reversed.'
 			),
@@ -134,7 +134,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 	}
 
 	async removeKey(key: Key) {
-		const resolved = await ModalConfirm.show(
+		const resolved = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to remove this key? This will revoke this key's access, or anyone that has claimed this key. This can not be reversed.`
 			),

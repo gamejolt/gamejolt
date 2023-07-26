@@ -6,15 +6,15 @@ import AppCardListDraggable from '../../../../../../../../_common/card/list/AppC
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { formatCurrency } from '../../../../../../../../_common/filters/currency';
 import {
-$saveGamePackageSort,
-GamePackage,
-GamePackageVisibility,
+	$saveGamePackageSort,
+	GamePackage,
+	GamePackageVisibility,
 } from '../../../../../../../../_common/game/package/package.model';
 import { showSuccessGrowl } from '../../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-BaseRouteComponent,
-OptionsForRoute,
+	BaseRouteComponent,
+	OptionsForRoute,
 } from '../../../../../../../../_common/route/route-component';
 import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
@@ -113,7 +113,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 	}
 
 	async removePackage(pkg: GamePackage) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to remove this package? All of the releases and builds it contains will be removed as well.'
 			)

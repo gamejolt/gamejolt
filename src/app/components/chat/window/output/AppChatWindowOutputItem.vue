@@ -1,12 +1,12 @@
 <script lang="ts">
 import { computed, CSSProperties, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import { ContentRules } from '../../../../../_common/content/content-rules';
 import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
+import { ContentRules } from '../../../../../_common/content/content-rules';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppPopper, { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppScrollInview, {
@@ -222,7 +222,7 @@ function stopEdit() {
 async function removeMessage() {
 	Popper.hideAll();
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to remove this message?`)
 	);
 

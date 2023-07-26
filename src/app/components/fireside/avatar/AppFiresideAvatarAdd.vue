@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
-import { AuthModal } from '../../../../_common/auth/auth-modal.service';
+import { showAuthModal } from '../../../../_common/auth/auth-modal.service';
 import { Community } from '../../../../_common/community/community.model';
 import { Fireside } from '../../../../_common/fireside/fireside.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -42,7 +42,7 @@ const isDisabled = computed(() => {
 
 async function onClick() {
 	if (!user.value) {
-		AuthModal.show();
+		showAuthModal();
 		return;
 	}
 

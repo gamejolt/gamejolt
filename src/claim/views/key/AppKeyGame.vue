@@ -7,7 +7,7 @@ import AppContentViewer from '../../../_common/content/content-viewer/AppContent
 import { Environment } from '../../../_common/environment/environment.service';
 import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
 import { CustomGameMessage, Game } from '../../../_common/game/game.model';
-import AppGamePackageCard from '../../../_common/game/package/card/card.vue';
+import AppGamePackageCard from '../../../_common/game/package/card/AppGamePackageCard.vue';
 import { GamePackagePayloadModel } from '../../../_common/game/package/package-payload.model';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { KeyGroup, KeyGroupType } from '../../../_common/key-group/key-group.model';

@@ -1,29 +1,26 @@
 import { defineAsyncComponent } from 'vue';
-import { Analytics } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { HistoryTick } from '../../history-tick/history-tick-service';
 import { showModal } from '../../modal/modal.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { Popper } from '../../popper/popper.service';
-import { Translate } from '../../translate/translate.service';
+import { $gettext } from '../../translate/translate.service';
 import { GameBuild, GameBuildType } from '../build/build.model';
 import { Game } from '../game.model';
 
-export class GamePlayModal {
-	static hasModal = false;
-	static canMinimize = false;
+class GamePlayModalService {
+	hasModal = false;
+	canMinimize = false;
 
-	static init(options: { canMinimize?: boolean }) {
+	init(options: { canMinimize?: boolean }) {
 		this.canMinimize = options.canMinimize || false;
 	}
 
-	static async show(game: Game, build: GameBuild, options: { key?: string } = {}) {
-		Analytics.trackEvent('game-play', 'play');
-
+	async show(game: Game, build: GameBuild, options: { key?: string } = {}) {
 		if (this.hasModal) {
 			showErrorGrowl(
-				Translate.$gettext(
+				$gettext(
 					`You already have a browser game open. You can only have one running at a time.`
 				)
 			);
@@ -75,7 +72,7 @@ export class GamePlayModal {
 
 		await showModal({
 			modalId: 'GamePlay',
-			component: defineAsyncComponent(() => import('./play-modal.vue')),
+			component: defineAsyncComponent(() => import('./AppGamePlayModal.vue')),
 			props: { game, build, url, canMinimize },
 			noBackdrop: true,
 			noBackdropClose: true,
@@ -86,7 +83,7 @@ export class GamePlayModal {
 		this.hasModal = false;
 	}
 
-	private static async getDownloadUrl(build: GameBuild, options: { key?: string }) {
+	private async getDownloadUrl(build: GameBuild, options: { key?: string }) {
 		const payload = await build.getDownloadUrl({ key: options.key });
 		let url = payload.url;
 
@@ -98,3 +95,5 @@ export class GamePlayModal {
 		return url;
 	}
 }
+
+export const GamePlayModal = /** @__PURE__ */ new GamePlayModalService();

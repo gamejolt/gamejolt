@@ -1,7 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../../../utils/array';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
@@ -9,11 +8,12 @@ import AppCardListDraggable from '../../../../../../../_common/card/list/AppCard
 import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
 import { GameSong } from '../../../../../../../_common/game/song/song.model';
 import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
-import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
 } from '../../../../../../../_common/route/route-component';
+import { arrayRemove } from '../../../../../../../utils/array';
 import FormGameSong from '../../../../../../components/forms/game/song/song.vue';
 import AppDashGameWizardControls from '../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { useGameDashRouteController } from '../../manage.store';
@@ -79,7 +79,7 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 	}
 
 	async removeSong(song: GameSong) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this song?')
 		);
 

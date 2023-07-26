@@ -18,7 +18,7 @@ import {
 } from '../../../../../_common/form-vue/form.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
@@ -309,7 +309,7 @@ export default class AppFormPostVideo
 
 	async onDeleteUpload() {
 		if (this.videoStatus !== VideoStatus.IDLE) {
-			const result = await ModalConfirm.show(
+			const result = await showModalConfirm(
 				this.$gettext(
 					`Are you sure you want to remove this video? You'll be able to add another one later.`
 				),

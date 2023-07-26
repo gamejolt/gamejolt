@@ -12,7 +12,7 @@ import {
 	editorUnlink,
 	useContentEditorController,
 } from '../content-editor-controller';
-import { ContentEditorLinkModal } from '../modals/link/link-modal.service';
+import { showContentEditorLinkModal } from '../modals/link/link-modal.service';
 
 @Options({
 	directives: {
@@ -144,7 +144,7 @@ export default class AppContentEditorTextControls extends Vue {
 			editorUnlink(this.controller);
 		} else {
 			const selectedText = editorGetSelectedText(this.controller);
-			const result = await ContentEditorLinkModal.show(selectedText);
+			const result = await showContentEditorLinkModal(selectedText);
 
 			if (result) {
 				editorLink(this.controller, result.href);

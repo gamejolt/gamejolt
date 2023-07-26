@@ -5,7 +5,7 @@ import { CommunityCompetitionVotingCategory } from '../../../../../../../../../_
 import { Environment } from '../../../../../../../../../_common/environment/environment.service';
 import { formatDuration } from '../../../../../../../../../_common/filters/duration';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	BaseRouteComponent,
 	OptionsForRoute,
@@ -83,7 +83,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 	}
 
 	async onClickPublish() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to publish your jam? You will not be able to set it back to draft.`
 			),

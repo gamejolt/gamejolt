@@ -177,7 +177,7 @@ async function onClickSendAll() {
 		return;
 	}
 
-	const shouldSend = await ModalConfirm.show(
+	const shouldSend = await showModalConfirm(
 		$gettext(
 			`Are you sure you want to thank your recent supporters using your existing message template? Each person will only get one message.`
 		)

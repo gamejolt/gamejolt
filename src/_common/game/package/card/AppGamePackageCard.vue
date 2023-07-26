@@ -1,20 +1,21 @@
 <script lang="ts">
-import { Component } from 'vue';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Component, PropType, computed, ref, toRefs } from 'vue';
+import { useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
-import { Analytics } from '../../../analytics/analytics.service';
+import AppButton from '../../../button/AppButton.vue';
 import AppCard from '../../../card/AppCard.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
-import { AppCountdown } from '../../../countdown/countdown';
+import AppCountdown from '../../../countdown/AppCountdown.vue';
 import AppExpand from '../../../expand/AppExpand.vue';
 import { formatCurrency } from '../../../filters/currency';
 import { formatFilesize } from '../../../filters/filesize';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import { LinkedKey } from '../../../linked-key/linked-key.model';
 import { SellablePricing } from '../../../sellable/pricing/pricing.model';
 import { Sellable } from '../../../sellable/sellable.model';
 import AppTimeAgo from '../../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
-import { User } from '../../../user/user.model';
+import AppTranslate from '../../../translate/AppTranslate.vue';
 import { GameBuild, GameBuildType } from '../../build/build.model';
 import { GameDownloader } from '../../downloader/downloader.service';
 import { Game } from '../../game.model';
@@ -25,184 +26,146 @@ import { GamePackagePurchaseModal } from '../purchase-modal/purchase-modal.servi
 import AppGamePackageCardButtons from './AppGamePackageCardButtons.vue';
 import { GamePackageCardModel } from './card.model';
 
-let buttonsComponent: Component | undefined;
-let metaComponent: Component | undefined;
+let _buttonsComponent: Component | undefined;
+let _metaComponent: Component | undefined;
 
 export function setButtonsComponent(component: Component) {
-	buttonsComponent = component;
+	_buttonsComponent = component;
 }
 
 export function setMetaComponent(component: Component) {
-	metaComponent = component;
+	_metaComponent = component;
+}
+</script>
+
+<script lang="ts" setup>
+const props = defineProps({
+	game: {
+		type: Object as PropType<Game>,
+		required: true,
+	},
+	package: {
+		type: Object as PropType<GamePackage>,
+		required: true,
+	},
+	sellable: {
+		type: Object as PropType<Sellable>,
+		required: true,
+	},
+	releases: {
+		type: Array as PropType<GameRelease[]>,
+		default: () => [],
+	},
+	builds: {
+		type: Array as PropType<GameBuild[]>,
+		default: () => [],
+	},
+	accessKey: {
+		type: String,
+		default: undefined,
+	},
+});
+
+const { game, package: gamePackage, sellable, releases, builds, accessKey } = toRefs(props);
+const router = useRouter();
+
+const showFullDescription = ref(false);
+const canToggleDescription = ref(false);
+
+const isWhatOpen = ref(false);
+const pricing = ref<SellablePricing | null>(null);
+const sale = ref(false);
+const salePercentageOff = ref('');
+const saleOldPricing = ref<SellablePricing | null>(null);
+
+const providerIcons = {
+	steam: 'steam',
+} as const;
+
+const metaComponent = _metaComponent;
+const buttonsComponent = _buttonsComponent ?? AppGamePackageCardButtons;
+
+const card = computed(
+	() => new GamePackageCardModel(sellable.value, releases.value, builds.value, linkedKeys.value)
+);
+
+const isOwned = computed(() => {
+	// If there is a key on the package, then we should show it as being
+	// "owned".
+	if (accessKey?.value) {
+		return true;
+	}
+
+	return sellable.value.is_owned ? true : false;
+});
+
+const linkedKeys = computed(() => sellable.value.linked_keys || []);
+
+const canBuy = computed(
+	() => !isOwned.value && (sellable.value.type === 'pwyw' || sellable.value.type === 'paid')
+);
+
+if (sellable.value.pricings.length > 0) {
+	pricing.value = sellable.value.pricings[0];
+	if (pricing.value.promotional) {
+		saleOldPricing.value = sellable.value.pricings[1];
+		sale.value = true;
+		salePercentageOff.value = (
+			((saleOldPricing.value.amount - pricing.value.amount) / saleOldPricing.value.amount) *
+			100
+		).toFixed(0);
+	}
 }
 
-@Options({
-	components: {
-		AppCard,
-		AppTimeAgo,
-		AppFadeCollapse,
-		AppExpand,
-		AppCountdown,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppGamePackageCard extends Vue {
-	@Prop(Object)
-	game!: Game;
+function buildClick(build: GameBuild, fromExtraSection = false) {
+	// For client, if they clicked in the "options" section, then skip
+	// showing payment form. Just take them directly to site.
+	if (GJ_IS_DESKTOP_APP && fromExtraSection) {
+		doBuildClick(build, fromExtraSection);
+	} else if (sellable.value.type === 'pwyw' && canBuy.value) {
+		showPayment(build, fromExtraSection);
+	} else {
+		doBuildClick(build, fromExtraSection);
+	}
+}
 
-	@Prop(Object)
-	package!: GamePackage;
-
-	@Prop(Object)
-	sellable!: Sellable;
-
-	@Prop({ type: Array, default: () => [] })
-	releases!: GameRelease[];
-
-	@Prop({ type: Array, default: () => [] })
-	builds!: GameBuild[];
-
-	@Prop(String)
-	accessKey?: string;
-
-	@Prop(Boolean)
-	isPartner?: boolean;
-
-	@Prop(String)
-	partnerKey?: string;
-
-	@Prop(Object)
-	partner?: User;
-
-	showFullDescription = false;
-	canToggleDescription = false;
-
-	isWhatOpen = false;
-	pricing: SellablePricing | null = null;
-	sale = false;
-	salePercentageOff = '';
-	saleOldPricing: SellablePricing | null = null;
-
-	providerIcons: { [provider: string]: string } = {
-		steam: 'steam',
-	};
-
-	readonly AppGamePackageCard = AppGamePackageCard;
-	readonly formatCurrency = formatCurrency;
-	readonly formatFilesize = formatFilesize;
-
-	get metaComponent() {
-		return metaComponent;
+function doBuildClick(build: GameBuild, fromExtraSection = false) {
+	let operation = build.type === GameBuildType.Downloadable ? 'download' : 'play';
+	if (build.type === GameBuildType.Rom && fromExtraSection) {
+		operation = 'download';
 	}
 
-	get buttonsComponent() {
-		return buttonsComponent ?? AppGamePackageCardButtons;
+	if (operation === 'download') {
+		download(build);
+	} else if (operation === 'play') {
+		showBrowserModal(build);
 	}
+}
 
-	get card() {
-		return new GamePackageCardModel(this.sellable, this.releases, this.builds, this.linkedKeys);
-	}
+function showPayment(build: GameBuild | null, fromExtraSection: boolean) {
+	GamePackagePurchaseModal.show({
+		game: game.value,
+		package: gamePackage.value,
+		build: build,
+		fromExtraSection,
+	});
+}
 
-	get isOwned() {
-		// If there is a key on the package, then we should show it as being
-		// "owned".
-		if (this.accessKey) {
-			return true;
-		}
+function download(build: GameBuild) {
+	GameDownloader.download(router, game.value, build, {
+		isOwned: isOwned.value,
+		key: accessKey?.value,
+	});
+}
 
-		return this.sellable && this.sellable.is_owned ? true : false;
-	}
+function showBrowserModal(build: GameBuild) {
+	GamePlayModal.show(game.value, build, {
+		key: accessKey?.value,
+	});
+}
 
-	get linkedKeys() {
-		if (!this.sellable) {
-			return [];
-		}
-
-		return this.sellable.linked_keys || [];
-	}
-
-	get canBuy() {
-		return (
-			this.sellable &&
-			!this.isOwned &&
-			(this.sellable.type === 'pwyw' || this.sellable.type === 'paid')
-		);
-	}
-
-	created() {
-		if (this.sellable && this.sellable.pricings.length > 0) {
-			this.pricing = this.sellable.pricings[0];
-			if (this.pricing.promotional) {
-				this.saleOldPricing = this.sellable.pricings[1];
-				this.sale = true;
-				this.salePercentageOff = (
-					((this.saleOldPricing.amount - this.pricing.amount) /
-						this.saleOldPricing.amount) *
-					100
-				).toFixed(0);
-			}
-		}
-	}
-
-	buildClick(build: GameBuild, fromExtraSection = false) {
-		// For client, if they clicked in the "options" section, then skip
-		// showing payment form. Just take them directly to site.
-		if (GJ_IS_DESKTOP_APP && fromExtraSection) {
-			this.doBuildClick(build, fromExtraSection);
-		} else if (this.sellable.type === 'pwyw' && this.canBuy) {
-			this.showPayment(build, fromExtraSection);
-		} else {
-			this.doBuildClick(build, fromExtraSection);
-		}
-	}
-
-	private doBuildClick(build: GameBuild, fromExtraSection = false) {
-		let operation = build.type === GameBuildType.Downloadable ? 'download' : 'play';
-		if (build.type === GameBuildType.Rom && fromExtraSection) {
-			operation = 'download';
-		}
-
-		if (operation === 'download') {
-			this.download(build);
-		} else if (operation === 'play') {
-			this.showBrowserModal(build);
-		}
-	}
-
-	showPayment(build: GameBuild | null, fromExtraSection: boolean) {
-		GamePackagePurchaseModal.show({
-			game: this.game,
-			package: this.package,
-			build: build,
-			fromExtraSection,
-			partner: this.partner,
-			partnerKey: this.partnerKey,
-		});
-	}
-
-	private download(build: GameBuild) {
-		Analytics.trackEvent('game-package-card', 'download', 'download');
-
-		GameDownloader.download(this.$router, this.game, build, {
-			isOwned: this.isOwned || this.isPartner,
-			key: this.accessKey,
-		});
-	}
-
-	private showBrowserModal(build: GameBuild) {
-		Analytics.trackEvent('game-package-card', 'download', 'play');
-
-		GamePlayModal.show(this.game, build, {
-			// isOwned: this.isOwned || this.isPartner,
-			key: this.accessKey,
-		});
-	}
-
-	copyProviderKey(key: LinkedKey) {
-		Clipboard.copy(key.key);
-	}
+function copyProviderKey(key: LinkedKey) {
+	Clipboard.copy(key.key);
 }
 </script>
 
@@ -210,7 +173,7 @@ export default class AppGamePackageCard extends Vue {
 	<AppCard :id="`game-package-card-${package.id}`" class="game-package-card">
 		<div class="game-package-card-pricing fill-gray">
 			<!-- Fixed Pricing -->
-			<div v-if="sellable.type === 'paid'">
+			<div v-if="sellable.type === 'paid' && pricing">
 				<span v-if="sale" class="game-package-card-pricing-sale-percentage">
 					-{{ salePercentageOff }}%
 				</span>
@@ -218,7 +181,7 @@ export default class AppGamePackageCard extends Vue {
 					{{ formatCurrency(pricing.amount) }}
 				</strong>
 				<span
-					v-if="sale"
+					v-if="sale && saleOldPricing"
 					class="game-package-card-pricing-amount game-package-card-pricing-amount-old"
 				>
 					{{ formatCurrency(saleOldPricing.amount) }}
@@ -280,7 +243,7 @@ export default class AppGamePackageCard extends Vue {
 			</template>
 		</div>
 
-		<div v-if="sale" class="card-content card-sale-info">
+		<div v-if="sale && pricing?.end" class="card-content card-sale-info">
 			<strong><AppTranslate>On sale!</AppTranslate></strong>
 			{{ ' ' }}
 			<AppTranslate>Offer ends in</AppTranslate>
@@ -320,7 +283,7 @@ export default class AppGamePackageCard extends Vue {
 			</div>
 		</template>
 		<div v-else class="card-controls">
-			<template v-if="sellable.type !== 'paid' || isOwned || isPartner">
+			<template v-if="sellable.type !== 'paid' || isOwned">
 				<component
 					:is="buttonsComponent"
 					:game="game"
@@ -329,16 +292,6 @@ export default class AppGamePackageCard extends Vue {
 					@click="buildClick($event.build, $event.fromExtraSection)"
 					@show-build-payment="showPayment($event, false)"
 				/>
-
-				<template v-if="isPartner && sellable.type === 'paid' && !isOwned">
-					<br />
-					<div class="alert">
-						<AppTranslate>
-							You get access to this package because you're a partner.
-						</AppTranslate>
-					</div>
-					<hr />
-				</template>
 			</template>
 
 			<template v-if="sellable.type === 'paid' && !isOwned">
@@ -400,11 +353,11 @@ export default class AppGamePackageCard extends Vue {
 						:key="os"
 						class="package-card-well-os"
 					>
-						<template v-if="build['os_' + os] || build['os_' + os + '_64']">
+						<template v-if="build.isPlatform(os) || build.isPlatform(os, '64')">
 							{{ card.platformSupportInfo[os].tooltip }}
 						</template>
 
-						<template v-if="!build['os_' + os] && build['os_' + os + '_64']">
+						<template v-if="!build.isPlatform(os) && build.isPlatform(os, '64')">
 							64-bit
 						</template>
 					</span>
@@ -418,4 +371,82 @@ export default class AppGamePackageCard extends Vue {
 	</AppCard>
 </template>
 
-<style lang="stylus" src="./card.styl" scoped></style>
+<style lang="stylus" scoped>
+.game-package-card
+	&-pricing
+		rounded-corners()
+		float: right
+		margin-top: -(15px + 4px)
+		margin-left: 15px
+		padding: 10px
+		text-align: center
+
+		&-amount
+			color: $white
+
+		&-amount-old
+			theme-prop('color', 'lighter')
+			margin-left: 5px
+			text-decoration: line-through
+			font-size: $font-size-tiny
+
+		&-tag
+			color: $white
+			font-size: $font-size-tiny
+			font-weight: bold
+			text-transform: uppercase
+
+			&.muted
+				theme-prop('color', 'lighter')
+
+		&-sale-percentage
+			change-bg('highlight')
+			theme-prop('color', 'highlight-fg')
+			border-top-left-radius: $border-radius-base
+			border-top-right-radius: $border-radius-base
+			display: block
+			margin-left: -10px
+			margin-right: -10px
+			margin-top: -10px
+			margin-bottom: 5px
+			padding-top: 3px
+			padding-bottom: 3px
+			font-weight: bold
+
+	.card
+		padding-bottom: 0
+
+	.card-sale-info
+		theme-prop('color', 'highlight')
+
+	.card-controls
+		margin-bottom: 15px
+
+	.package-card-well-expander
+		clear: both
+		margin-left: -15px
+		margin-right: -15px
+
+	.package-card-well
+		change-bg('bg-offset')
+		theme-prop('border-top-color', 'light')
+		theme-prop('border-bottom-color', 'light')
+		padding: 15px
+		border-top-width: 2px
+		border-top-style: dashed
+		border-bottom-width: 2px
+		border-bottom-style: dashed
+
+		p:last-child
+			margin-bottom: 0
+
+		&-os
+			margin: 0 5px
+			font-size: $font-size-small
+
+	&-payment-what-link
+		float: right
+		display: inline-block
+		line-height: $button-md-line-height
+		font-size: $font-size-small
+</style>

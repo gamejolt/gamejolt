@@ -26,7 +26,7 @@ import { FiresidePost } from '../../../../../../_common/fireside/post/post-model
 import AppGameExternalPackageCard from '../../../../../../_common/game/external-package/card/card.vue';
 import { Game } from '../../../../../../_common/game/game.model';
 import AppGameMediaBar from '../../../../../../_common/game/media-bar/media-bar.vue';
-import AppGamePackageCard from '../../../../../../_common/game/package/card/card.vue';
+import AppGamePackageCard from '../../../../../../_common/game/package/card/AppGamePackageCard.vue';
 import AppGameSoundtrackCard from '../../../../../../_common/game/soundtrack/card/card.vue';
 import { HistoryTick } from '../../../../../../_common/history-tick/history-tick-service';
 import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/placeholder';

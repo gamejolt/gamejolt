@@ -6,7 +6,7 @@ import { Environment } from '../../environment/environment.service';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { FormCommentLazy } from '../../lazy';
 import AppMessageThreadItem from '../../message-thread/AppMessageThreadItem.vue';
-import { ModalConfirm } from '../../modal/confirm/confirm-service';
+import { showModalConfirm } from '../../modal/confirm/confirm-service';
 import { Model } from '../../model/model.service';
 import AppPopper from '../../popper/AppPopper.vue';
 import { Popper } from '../../popper/popper.service';
@@ -200,7 +200,7 @@ async function removeComment() {
 	isEditing.value = false;
 	Popper.hideAll();
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to remove this comment?`)
 	);
 

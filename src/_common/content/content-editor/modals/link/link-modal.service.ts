@@ -16,3 +16,12 @@ export class ContentEditorLinkModal {
 		});
 	}
 }
+
+export async function showContentEditorLinkModal(selectedText: string) {
+	return await showModal<LinkData>({
+		modalId: 'ContentEditorLink',
+		component: AppContentEditorLinkModal,
+		size: 'sm',
+		props: { selectedText },
+	});
+}

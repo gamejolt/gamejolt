@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { kThemeDarkest } from '../../../../_common/theme/variables';
 import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
@@ -125,7 +125,7 @@ async function onClickKick() {
 				`Are you sure you want to kick @%{ username } from this room? You're not friends with this user, so you won't be able to invite them back into this room.`,
 				{ username: user.value.username }
 		  );
-	const confirm = await ModalConfirm.show(
+	const confirm = await showModalConfirm(
 		message,
 		$gettextInterpolate(`Kick @%{ username }`, { username: user.value.username })
 	);
@@ -136,7 +136,7 @@ async function onClickKick() {
 }
 
 async function onClickPromoteModerator() {
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettextInterpolate(
 			`Do you want to promote @%{ username } to moderator? They will be able to remove messages and kick users from the chat. You can demote them at any time.`,
 			{ username: user.value.username }
@@ -160,7 +160,7 @@ async function onClickPromoteModerator() {
 }
 
 async function onClickDemoteModerator() {
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettextInterpolate(`Do you want to demote @%{ username } to a normal user?`, {
 			username: user.value.username,
 		})

@@ -5,7 +5,7 @@ import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
-import { EventItem } from '../../../../_common/event-item/event-item.model';
+import { EventItem, EventItemType } from '../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
@@ -133,20 +133,20 @@ function onPostPinned(eventItem: EventItem) {
 	for (const item of feed.value.items) {
 		if (
 			item.feedItem instanceof EventItem &&
-			item.feedItem.type === EventItem.TYPE_POST_ADD &&
+			item.feedItem.type === EventItemType.PostAdd &&
 			item.feedItem.action instanceof FiresidePost
 		) {
 			item.feedItem.action.is_pinned = false;
 		}
 	}
 
-	if (eventItem.type === EventItem.TYPE_POST_ADD && eventItem.action instanceof FiresidePost) {
+	if (eventItem.type === EventItemType.PostAdd && eventItem.action instanceof FiresidePost) {
 		eventItem.action.is_pinned = true;
 	}
 }
 
 function onPostUnpinned(eventItem: EventItem) {
-	if (eventItem.type === EventItem.TYPE_POST_ADD && eventItem.action instanceof FiresidePost) {
+	if (eventItem.type === EventItemType.PostAdd && eventItem.action instanceof FiresidePost) {
 		eventItem.action.is_pinned = false;
 	}
 	onPostEdited(eventItem);

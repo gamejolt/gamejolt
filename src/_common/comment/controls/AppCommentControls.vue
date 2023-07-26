@@ -5,7 +5,7 @@ import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
-import { LikersModal } from '../../likers/modal.service';
+import { showLikersModal } from '../../likers/modal.service';
 import { Model } from '../../model/model.service';
 import { selectReactionForResource } from '../../reaction/reaction-count';
 import { Screen } from '../../screen/screen-service';
@@ -170,7 +170,7 @@ function onReplyClick(autofocus: boolean) {
 }
 
 function showLikers() {
-	LikersModal.show({ count: comment.value.votes, resource: comment.value });
+	showLikersModal({ count: comment.value.votes, resource: comment.value });
 }
 </script>
 
