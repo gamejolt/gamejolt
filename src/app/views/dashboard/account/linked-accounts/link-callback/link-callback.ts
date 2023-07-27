@@ -9,9 +9,9 @@ import {
 	getLinkedAccountProviderDisplayName,
 } from '../../../../../../_common/linked-account/linked-account.model';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 
 function constructUrl(baseUrl: string, route: RouteLocationNormalized) {
@@ -34,14 +34,14 @@ function constructUrl(baseUrl: string, route: RouteLocationNormalized) {
 @Options({
 	name: 'RouteDashAccountLinkedAccountsLinkCallback',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	resolver({ route }) {
 		const url = constructUrl('/web/dash/linked-accounts/link-callback/', route);
 		// Force POST.
 		return Api.sendRequest(url, {});
 	},
 })
-export default class RouteDashAccountLinkedAccountsLinkCallback extends BaseRouteComponent {
+export default class RouteDashAccountLinkedAccountsLinkCallback extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 
 	get user() {

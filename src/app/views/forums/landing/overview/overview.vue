@@ -4,7 +4,10 @@ import { Api } from '../../../../../_common/api/api.service';
 import { ForumCategory } from '../../../../../_common/forum/category/category.model';
 import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumPost } from '../../../../../_common/forum/post/post.model';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import AppForumChannelList from '../../../../components/forum/channel-list/channel-list.vue';
 import AppForumRules from '../../../../components/forum/rules/rules.vue';
 
@@ -15,12 +18,12 @@ import AppForumRules from '../../../../components/forum/rules/rules.vue';
 		AppForumChannelList,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	deps: {},
 	resolver: () => Api.sendRequest('/web/forums'),
 })
-export default class RouteForumsLandingOverview extends BaseRouteComponent {
+export default class RouteForumsLandingOverview extends LegacyRouteComponent {
 	categories: ForumCategory[] = [];
 	groupedChannels: { [k: number]: ForumChannel[] } = {};
 	latestPosts: ForumPost[] = [];

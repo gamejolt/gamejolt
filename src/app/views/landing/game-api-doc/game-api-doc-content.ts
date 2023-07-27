@@ -2,14 +2,17 @@ import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { ViteMarkdownExport } from '../../../../../typings/markdown';
 import { buildPayloadErrorForStatusCode } from '../../../../_common/payload/payload-service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 
 const paths = import.meta.glob<ViteMarkdownExport>('../../../../lib/doc-game-api/v1.x/**/*.md');
 
 @Options({
 	name: 'RouteLandingGameApiDocContent',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	async resolver({ route }) {
 		console.log(route.params.path);
 		// First check the path as is, then check with "index".
@@ -29,7 +32,7 @@ const paths = import.meta.glob<ViteMarkdownExport>('../../../../lib/doc-game-api
 		return buildPayloadErrorForStatusCode(404);
 	},
 })
-export default class RouteLandingGameApiDoc extends BaseRouteComponent {
+export default class RouteLandingGameApiDoc extends LegacyRouteComponent {
 	content = '';
 
 	get routeTitle() {

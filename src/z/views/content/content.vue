@@ -6,7 +6,10 @@ import { ContentDocument } from '../../../_common/content/content-document';
 import AppContentEditor from '../../../_common/content/content-editor/AppContentEditor.vue';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import { touchUser } from '../../../_common/user/user.model';
 
@@ -18,7 +21,7 @@ import { touchUser } from '../../../_common/user/user.model';
 		AppTimeAgo,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['resource', 'resource-Id'] },
 	async resolver({ route }) {
 		await touchUser();
@@ -28,7 +31,7 @@ import { touchUser } from '../../../_common/user/user.model';
 		);
 	},
 })
-export default class RouteContent extends BaseRouteComponent {
+export default class RouteContent extends LegacyRouteComponent {
 	isHydrated = false;
 	isLoading = false;
 	requireLog = true;

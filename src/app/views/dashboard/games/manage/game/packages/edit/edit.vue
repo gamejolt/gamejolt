@@ -23,9 +23,9 @@ import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
 import AppProgressPoller from '../../../../../../../../_common/progress/poller/AppProgressPoller.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../_common/route/legacy-route-component';
 import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
 import AppTimeAgo from '../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
@@ -54,14 +54,14 @@ import { useGameDashRouteController } from '../../../manage.store';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['packageId'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			'/web/dash/developer/games/packages/' + route.params.id + '/' + route.params.packageId
 		),
 })
-export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteComponent {
+export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteComponent {
 	routeStore = shallowSetup(() => useGameDashRouteController()!);
 
 	get game() {

@@ -4,29 +4,29 @@ import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue'
 import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import {
-$saveCommunityChannelSort,
-$saveCommunityChannelSortArchived,
-CommunityChannel,
+	$saveCommunityChannelSort,
+	$saveCommunityChannelSortArchived,
+	CommunityChannel,
 } from '../../../../../../../_common/community/channel/channel.model';
 import {
-Community,
-CommunityPresetChannelType,
+	Community,
+	CommunityPresetChannelType,
 } from '../../../../../../../_common/community/community.model';
 import { showErrorGrowl } from '../../../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../../../_common/loading/AppLoading.vue';
 import {
-BaseRouteComponent,
-OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import { CommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';
 import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/add.vue';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
 import {
-CommunityRouteStore,
-CommunityRouteStoreKey,
-loadArchivedChannels,
-updateCommunity,
+	CommunityRouteStore,
+	CommunityRouteStoreKey,
+	loadArchivedChannels,
+	updateCommunity,
 } from '../../../view.store';
 import AppCommunitiesEditChannelListItem from './_item/item.vue';
 import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.vue';
@@ -45,8 +45,8 @@ import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.
 		AppLoading,
 	},
 })
-@OptionsForRoute()
-export default class RouteCommunitiesViewEditChannelsList extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteCommunitiesViewEditChannelsList extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

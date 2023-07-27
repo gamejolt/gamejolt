@@ -9,7 +9,7 @@ import AppTranslate from '../../translate/AppTranslate.vue';
 import AppUserVerifiedTick from '../../user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
-import AppGameCompatIcons from '../compat-icons/compat-icons.vue';
+import AppGameCompatIcons from '../compat-icons/AppGameCompatIcons.vue';
 import { Game } from '../game.model';
 import AppGameThumbnailImg from './AppGameThumbnailImg.vue';
 

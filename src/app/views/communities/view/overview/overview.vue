@@ -1,15 +1,18 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../utils/array';
 import { canCommunityCreateFiresides } from '../../../../../_common/community/community.model';
-import { canDeviceCreateFiresides, Fireside } from '../../../../../_common/fireside/fireside.model';
+import { Fireside, canDeviceCreateFiresides } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { arrayRemove } from '../../../../../utils/array';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
@@ -19,17 +22,17 @@ import AppFiresideAvatar, {
 import AppFiresideAvatarAdd from '../../../../components/fireside/avatar/AppFiresideAvatarAdd.vue';
 import { useGridStore } from '../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../store/index';
-import { CommunitiesViewChannelDeps } from '../channel/channel.vue';
-import {
-	acceptCollaboration,
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
-	declineCollaboration,
-	setCommunityMeta,
-} from '../view.store';
 import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
 import AppCommunitiesViewFeed from '../_feed/feed.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
+import { CommunitiesViewChannelDeps } from '../channel/channel.vue';
+import {
+	CommunityRouteStore,
+	CommunityRouteStoreKey,
+	acceptCollaboration,
+	declineCollaboration,
+	setCommunityMeta,
+} from '../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewOverview',
@@ -45,13 +48,13 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	lazy: true,
 	deps: CommunitiesViewChannelDeps,
 	resolver: ({ route }) => doFeedChannelPayload(route),
 })
-export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
+export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	gridStore = setup(() => useGridStore());

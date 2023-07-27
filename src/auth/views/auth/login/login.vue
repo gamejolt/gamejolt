@@ -2,7 +2,10 @@
 import { Options } from 'vue-property-decorator';
 import AppAuthLogin from '../../../../_common/auth/login/login.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { locationRedirectFromRoute } from '../../../../utils/router';
 import { loggedUserBlock } from '../RouteAuth.vue';
@@ -13,7 +16,7 @@ import { loggedUserBlock } from '../RouteAuth.vue';
 		AppAuthLogin,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { query: ['intent'] },
 	async resolver({ route }) {
 		if (route.query.intent === 'approve-login-expired') {
@@ -27,7 +30,7 @@ import { loggedUserBlock } from '../RouteAuth.vue';
 		return loggedUserBlock();
 	},
 })
-export default class RouteAuthLogin extends BaseRouteComponent {
+export default class RouteAuthLogin extends LegacyRouteComponent {
 	redirect = '';
 
 	get routeTitle() {

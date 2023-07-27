@@ -16,9 +16,9 @@ import { Key } from '../../../../../../../_common/key/key-model';
 import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { arrayRemove } from '../../../../../../../utils/array';
@@ -39,14 +39,14 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['keyGroupId'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			`/web/dash/developer/games/key-groups/${route.params.id}/${route.params.keyGroupId}`
 		),
 })
-export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponent {
+export default class RouteDashGamesManageKeyGroupsEdit extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

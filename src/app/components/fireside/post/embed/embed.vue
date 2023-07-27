@@ -11,9 +11,9 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue';
+import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/AppSketchfabEmbed.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
+import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px` });
 

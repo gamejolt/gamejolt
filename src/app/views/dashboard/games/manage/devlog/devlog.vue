@@ -7,9 +7,9 @@ import { EventItem } from '../../../../../../_common/event-item/event-item.model
 import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
@@ -35,14 +35,14 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppShellPageBackdrop,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: false,
 	lazy: false,
 	deps: { query: ['tab', 'feed_last_id'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route))),
 })
-export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
+export default class RouteDashGamesManageDevlog extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

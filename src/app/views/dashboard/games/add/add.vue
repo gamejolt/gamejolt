@@ -3,7 +3,10 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game, handleGameAddFailure } from '../../../../../_common/game/game.model';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import FormGame from '../../../../components/forms/game/game.vue';
 import { startWizard } from '../manage/manage.store';
@@ -14,12 +17,12 @@ import { startWizard } from '../manage/manage.store';
 		FormGame,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	// Make sure they can add a game.
 	resolver: () => Api.sendRequest('/web/dash/developer/games/add'),
 })
-export default class RouteDashGamesAdd extends BaseRouteComponent {
+export default class RouteDashGamesAdd extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 
 	get user() {

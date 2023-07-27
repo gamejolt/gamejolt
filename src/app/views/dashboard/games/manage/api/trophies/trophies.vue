@@ -10,9 +10,9 @@ import AppCardListItem from '../../../../../../../_common/card/list/AppCardListI
 import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
 import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { TrophyDifficulty } from '../../../../../../../_common/trophy/base-trophy.model';
@@ -34,12 +34,12 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/api/trophies/' + route.params.id),
 })
-export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent {
+export default class RouteDashGamesManageApiTrophies extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

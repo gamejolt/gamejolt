@@ -24,7 +24,7 @@ import {
 } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { Background } from '../../../../_common/background/background.model';
-import { ContentFocus } from '../../../../_common/content-focus/content-focus.service';
+import { useContentFocusService } from '../../../../_common/content-focus/content-focus.service';
 import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device.service';
 import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
 import { formatDuration } from '../../../../_common/filters/duration';
@@ -441,7 +441,7 @@ export function createFiresideController(
 			return false;
 		}
 
-		return !ContentFocus.isWindowFocused;
+		return !useContentFocusService().isWindowFocused.value;
 	});
 
 	/**
@@ -456,7 +456,7 @@ export function createFiresideController(
 		// Always show if the window is focused, we paused the video streams
 		// manually, or we're not streaming.
 		if (
-			ContentFocus.isWindowFocused ||
+			useContentFocusService().isWindowFocused.value ||
 			rtc.value?.videoPaused === true ||
 			!isPersonallyStreaming.value
 		) {

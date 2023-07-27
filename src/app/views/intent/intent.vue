@@ -1,7 +1,10 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { buildPayloadErrorForStatusCode } from '../../../_common/payload/payload-service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../_common/route/legacy-route-component';
 
 const ActionUnsubscribeNotification = 'unsubscribe-notification';
 const ActionUnsubscribeGJ = 'unsubscribe-gj';
@@ -10,14 +13,14 @@ const ValidActions = [ActionUnsubscribeNotification, ActionUnsubscribeGJ];
 @Options({
 	name: 'RouteIntent',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	async resolver({ route }) {
 		if (ValidActions.indexOf(route.params.action) === -1) {
 			return buildPayloadErrorForStatusCode(404);
 		}
 	},
 })
-export default class RouteIntent extends BaseRouteComponent {
+export default class RouteIntent extends LegacyRouteComponent {
 	get action() {
 		return this.$route.params.action;
 	}

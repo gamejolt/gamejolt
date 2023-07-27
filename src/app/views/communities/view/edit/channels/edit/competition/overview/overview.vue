@@ -7,9 +7,9 @@ import { formatDuration } from '../../../../../../../../../_common/filters/durat
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
@@ -25,14 +25,14 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id', 'channel'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			`/web/dash/communities/competitions/${route.params.id}/${route.params.channel}`
 		),
 })
-export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

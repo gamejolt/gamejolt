@@ -1,6 +1,6 @@
 import { computed, inject, InjectionKey, ref, watch } from 'vue';
+import { useContentFocusService } from '../../../_common/content-focus/content-focus.service';
 import { bangRef } from '../../../utils/vue';
-import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
 import { AppStore } from '../../store';
 import { setChatFocused } from '../chat/client';
 import { GridClientLazy } from '../lazy';
@@ -33,7 +33,7 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 
 	// Sync up focus state for chat.
 	watch(
-		() => ContentFocus.isWindowFocused,
+		() => useContentFocusService().isWindowFocused,
 		isFocused => {
 			if (!chat.value) {
 				return;

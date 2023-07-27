@@ -7,7 +7,10 @@ import AppCardListAdd from '../../../../../_common/card/list/AppCardListAdd.vue'
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
@@ -30,12 +33,12 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 	},
 	directives: {},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	lazy: false,
 	resolver: () => Api.sendRequest('/web/dash/blocks'),
 })
-export default class RouteDashAccountBlocks extends BaseRouteComponent {
+export default class RouteDashAccountBlocks extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
 	isBlocking = false;

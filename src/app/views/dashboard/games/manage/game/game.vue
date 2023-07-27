@@ -3,13 +3,12 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
-import { Game } from '../../../../../../_common/game/game.model';
 import AppMediaItemCover from '../../../../../../_common/media-item/cover/AppMediaItemCover.vue';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { GameHeaderModal } from '../../../../../components/game/header-modal/header-modal.service';
 import { useGameDashRouteController } from '../manage.store';
@@ -27,8 +26,8 @@ import AppManageGameNav from './_nav/nav.vue';
 		AppMediaItemCover,
 	},
 })
-@OptionsForRoute()
-export default class RouteDashGamesManageGame extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteDashGamesManageGame extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

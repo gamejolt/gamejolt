@@ -10,9 +10,9 @@ import { GamePackage } from '../../../../../../../_common/game/package/package.m
 import { KeyGroup, KeyGroupType } from '../../../../../../../_common/key-group/key-group.model';
 import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import {
-BaseRouteComponent,
-OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
@@ -26,12 +26,12 @@ import { useGameDashRouteController } from '../../manage.store';
 		FormGameKeyGroup,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id),
 })
-export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponent {
+export default class RouteDashGamesManageKeyGroupsList extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

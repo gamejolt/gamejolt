@@ -8,9 +8,9 @@ import { Collaborator } from '../../../../../../_common/collaborator/collaborato
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import { arrayRemove } from '../../../../../../utils/array';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
@@ -26,13 +26,13 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 		FormCommunityCollaborator,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id'] },
 	resolver({ route }) {
 		return Api.sendRequest('/web/dash/communities/collaborators/' + route.params.id);
 	},
 })
-export default class RouteCommunitiesViewEditModerators extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditModerators extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

@@ -1,13 +1,13 @@
 import { Presence } from 'phoenix';
 import { computed, markRaw, shallowReadonly } from 'vue';
-import { arrayRemove } from '../../../utils/array';
-import type { TabLeaderInterface } from '../../../utils/tab-leader';
 import { Background } from '../../../_common/background/background.model';
 import { importNoSSR } from '../../../_common/code-splitting';
-import { ContentFocus } from '../../../_common/content-focus/content-focus.service';
+import { useContentFocusService } from '../../../_common/content-focus/content-focus.service';
 import { storeModel } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
+import { arrayRemove } from '../../../utils/array';
+import type { TabLeaderInterface } from '../../../utils/tab-leader';
 import {
 	ChatClient,
 	closeChatRoom,
@@ -202,7 +202,7 @@ export function createChatUserChannel(
 
 		// For client, only play when window is focused.
 		if (GJ_IS_DESKTOP_APP) {
-			shouldPlay = ContentFocus.isWindowFocused;
+			shouldPlay = useContentFocusService().isWindowFocused.value;
 		}
 		if (shouldPlay) {
 			message.playNotificationSound();

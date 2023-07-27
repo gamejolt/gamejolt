@@ -5,7 +5,10 @@ import { overrideAdsAdapter, useAdsController } from '../../../../_common/ad/ad-
 import { AdPlaywireAdapter } from '../../../../_common/ad/playwire/playwire-adapter';
 import { AdProperAdapter } from '../../../../_common/ad/proper/proper-adapter';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 
 @Options({
@@ -15,8 +18,8 @@ import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 		AppScrollAffix,
 	},
 })
-@OptionsForRoute()
-export default class RouteAdtest extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteAdtest extends LegacyRouteComponent {
 	ads = setup(() => useAdsController());
 
 	get q() {

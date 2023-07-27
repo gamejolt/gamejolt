@@ -21,7 +21,7 @@ import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
-import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
+import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
 import AppVideoPlayer from '../../../../../_common/video/player/AppVideoPlayer.vue';
 import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 

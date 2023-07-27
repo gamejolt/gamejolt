@@ -7,9 +7,9 @@ import {
 } from '../../../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../../../_common/scroll/scroll.service';
 import { arrayRemove } from '../../../../../../../../utils/array';
@@ -26,8 +26,8 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.st
 		FormCommunityChannelDescription,
 	},
 })
-@OptionsForRoute()
-export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteCommunitiesViewEditChannelsOverview extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

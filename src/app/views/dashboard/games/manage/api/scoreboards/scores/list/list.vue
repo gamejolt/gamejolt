@@ -4,9 +4,9 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { useGameDashRouteController } from '../../../../manage.store';
@@ -18,7 +18,7 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 		AppManageGameListScores,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['table'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
@@ -28,7 +28,7 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 				route.params.table
 		),
 })
-export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRouteComponent {
+export default class RouteDashGamesManageApiScoreboardsScoresList extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

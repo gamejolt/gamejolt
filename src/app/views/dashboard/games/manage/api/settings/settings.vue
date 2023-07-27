@@ -5,20 +5,20 @@ import { Api } from '../../../../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiSettings',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/api/settings/' + route.params.id),
 })
-export default class RouteDashGamesManageApiSettings extends BaseRouteComponent {
+export default class RouteDashGamesManageApiSettings extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

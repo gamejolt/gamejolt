@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import AppResponsiveDimensions from '../../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
-import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
+import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
 import { ActivityFeedKey, ActivityFeedView } from '../view';
 
 @Options({

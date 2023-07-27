@@ -6,11 +6,11 @@ import AppCommunityActivityItem from '../../../../../../_common/community/activi
 import { formatDate } from '../../../../../../_common/filters/date';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 
 type ActivityItem = {
 	item: CommunityActivityItem;
@@ -27,13 +27,13 @@ type ActivityItem = {
 		AppLoading,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id'] },
 	resolver({ route }) {
 		return Api.sendRequest('/web/dash/communities/activity/' + route.params.id);
 	},
 })
-export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditActivity extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

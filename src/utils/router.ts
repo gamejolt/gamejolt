@@ -19,6 +19,9 @@ const ClientBaseRegex = new RegExp(
 	escapeRegex(Environment.baseUrlDesktopApp) + '\\/([^.]+)\\.html#'
 );
 
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
 export function initRouter(appRoutes: RouteRecordRaw[]) {
 	const routes = [...appRoutes, routeError404];
 

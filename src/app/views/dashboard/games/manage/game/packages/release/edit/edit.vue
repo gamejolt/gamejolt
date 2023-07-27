@@ -9,9 +9,9 @@ import { GameRelease } from '../../../../../../../../../_common/game/release/rel
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import FormGameRelease from '../../../../../../../../components/forms/game/release/release.vue';
 import { useGameDashRouteController } from '../../../../manage.store';
 
@@ -21,7 +21,7 @@ import { useGameDashRouteController } from '../../../../manage.store';
 		FormGameRelease,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['packageId', 'releaseId'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
@@ -33,7 +33,7 @@ import { useGameDashRouteController } from '../../../../manage.store';
 				route.params.releaseId
 		),
 })
-export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRouteComponent {
+export default class RouteDashGamesManageGamePackageReleaseEdit extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

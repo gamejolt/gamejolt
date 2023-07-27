@@ -5,10 +5,10 @@ import { router } from '../../..';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
 import {
-	asyncRouteLoader,
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
+import { asyncRouteLoader } from '../../../../../_common/route/route-component';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
@@ -34,14 +34,14 @@ export const CommunitiesViewChannelDeps = {
 		),
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['path', 'channel'] },
 	resolver: ({ route }) => {
 		const channel = getChannelPathFromRoute(route);
 		return Api.sendRequest(`/web/communities/view-channel/${route.params.path}/${channel}`);
 	},
 })
-export default class RouteCommunitiesViewChannel extends BaseRouteComponent {
+export default class RouteCommunitiesViewChannel extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

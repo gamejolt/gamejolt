@@ -7,9 +7,9 @@ import { GameDataStoreItem } from '../../../../../../../../../_common/game/data-
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../../../../../_common/popper/AppPopper.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { useGameDashRouteController } from '../../../../manage.store';
 
 @Options({
@@ -18,12 +18,12 @@ import { useGameDashRouteController } from '../../../../manage.store';
 		AppPopper,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/api/data-storage/' + route.params.id),
 })
-export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRouteComponent {
+export default class RouteDashGamesManageApiDataStorageItemsList extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

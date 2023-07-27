@@ -6,9 +6,9 @@ import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
 import { GameStatus } from '../../../../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import FormGameSettings from '../../../../../../components/forms/game/settings/settings.vue';
@@ -21,12 +21,12 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppExpand,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(`/web/dash/developer/games/settings/view/${route.params.id}`),
 })
-export default class RouteDashGamesManageGameSettings extends BaseRouteComponent {
+export default class RouteDashGamesManageGameSettings extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 	commonStore = setup(() => useCommonStore());
 

@@ -33,9 +33,9 @@ import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/p
 import { Meta } from '../../../../../../_common/meta/meta-service';
 import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../../../_common/share/card/AppShareCard.vue';
 import { getAbsoluteLink } from '../../../../../../utils/router';
@@ -89,7 +89,7 @@ import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
 		AppGameList,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	lazy: true,
 	cache: true,
 	deps: { query: ['feed_last_id'] },
@@ -112,7 +112,7 @@ import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
 		return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, apiOverviewUrl));
 	},
 })
-export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
+export default class RouteDiscoverGamesViewOverview extends LegacyRouteComponent {
 	routeStore = setup(() => useGameRouteController()!);
 	ads = setup(() => useAdsController());
 

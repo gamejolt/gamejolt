@@ -6,7 +6,7 @@ import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.m
 import AppSketchfabEmbed, {
 	getSketchfabIdFromInput,
 	SKETCHFAB_FIELD_VALIDATION_REGEX,
-} from '../../../../../_common/sketchfab/embed/embed.vue';
+} from '../../../../../_common/sketchfab/embed/AppSketchfabEmbed.vue';
 
 class Wrapper extends BaseForm<GameSketchfab> {}
 

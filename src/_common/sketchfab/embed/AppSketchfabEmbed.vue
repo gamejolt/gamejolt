@@ -1,6 +1,5 @@
 <script lang="ts">
-import { nextTick } from 'vue';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize } from '../../screen/screen-service';
 import { useEventSubscription } from '../../system/event/event-topic';
@@ -38,66 +37,83 @@ export function getSketchfabIdFromInput(input: string) {
 	// Does not match either of the two regexes above. Due to the above assumption, this must be a standalone sketchfab model id.
 	return input;
 }
+</script>
 
-@Options({})
-export default class AppSketchfabEmbed extends Vue {
-	@Prop(String) sketchfabId!: string;
-	@Prop(Number) maxWidth!: number;
-	@Prop(Number) maxHeight!: number;
-	@Prop({ type: Boolean, default: false })
-	autoplay!: boolean;
+<script lang="ts" setup>
+const props = defineProps({
+	sketchfabId: {
+		type: String,
+		required: true,
+	},
+	maxWidth: {
+		type: Number,
+		required: true,
+	},
+	maxHeight: {
+		type: Number,
+		required: true,
+	},
+	autoplay: {
+		type: Boolean,
+	},
+});
 
-	embedUrl = '';
-	width = 0;
-	height = 0;
+const { sketchfabId, maxWidth, maxHeight, autoplay } = toRefs(props);
 
-	created() {
-		useEventSubscription(onScreenResize, () => this.recalculateDimensions());
-	}
+const embedUrl = ref('');
+const width = ref(0);
+const height = ref(0);
+const innerElem = ref<HTMLElement>();
 
-	mounted() {
-		this.recalculateDimensions();
-	}
+useEventSubscription(onScreenResize, () => recalculateDimensions());
 
-	@Watch('sketchfabId', { immediate: true })
-	idChange() {
-		if (!this.sketchfabId) {
+onMounted(() => {
+	recalculateDimensions();
+});
+
+watch(
+	sketchfabId,
+	() => {
+		if (!sketchfabId.value) {
 			return;
 		}
 
-		let url = `https://sketchfab.com/models/${this.sketchfabId}/embed`;
+		let url = `https://sketchfab.com/models/${sketchfabId.value}/embed`;
 
-		if (this.autoplay) {
+		if (autoplay.value) {
 			url += '?autostart=1';
 		}
 
-		this.embedUrl = url;
+		embedUrl.value = url;
+	},
+	{ immediate: true }
+);
+
+async function recalculateDimensions() {
+	await nextTick();
+
+	if (!innerElem.value) {
+		return;
 	}
 
-	async recalculateDimensions() {
-		await nextTick();
+	width.value = Ruler.width(innerElem.value);
 
-		this.width = Ruler.width(
-			this.$el.getElementsByClassName('sketchfab-embed-inner')[0] as HTMLElement
-		);
+	if (maxWidth.value) {
+		width.value = Math.min(maxWidth.value, width.value);
+	}
 
-		if (this.maxWidth) {
-			this.width = Math.min(this.maxWidth, this.width);
-		}
+	height.value = width.value * RATIO;
 
-		this.height = this.width * RATIO;
-
-		if (this.maxHeight && this.height > this.maxHeight) {
-			this.height = this.maxHeight;
-			this.width = this.height / RATIO;
-		}
+	if (maxHeight.value && height.value > maxHeight.value) {
+		height.value = maxHeight.value;
+		width.value = height.value / RATIO;
 	}
 }
 </script>
 
 <template>
-	<div class="sketchfab-embed">
-		<div class="sketchfab-embed-inner">
+	<div>
+		<div ref="innerElem">
 			<iframe
 				nwdisable
 				nwfaketop

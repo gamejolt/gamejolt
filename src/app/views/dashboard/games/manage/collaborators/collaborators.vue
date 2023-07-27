@@ -9,9 +9,9 @@ import { Collaborator } from '../../../../../../_common/collaborator/collaborato
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
 import { arrayRemove } from '../../../../../../utils/array';
 import FormGameCollaborator from '../../../../../components/forms/game/collaborator/collaborator.vue';
@@ -27,12 +27,12 @@ import { useGameDashRouteController } from '../manage.store';
 		FormGameCollaborator,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/collaborators/' + route.params.id),
 })
-export default class RouteDashGamesManageCollaborators extends BaseRouteComponent {
+export default class RouteDashGamesManageCollaborators extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

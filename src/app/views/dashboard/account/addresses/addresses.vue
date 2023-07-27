@@ -1,11 +1,14 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserAddress } from '../../../../../_common/user/address/address.model';
+import { arrayRemove } from '../../../../../utils/array';
 import AppUserAddressCard from '../../../../components/user/address/AppUserAddressCard.vue';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 
@@ -15,11 +18,11 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 		AppUserAddressCard,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/addresses'),
 })
-export default class RouteDashAccountAddresses extends BaseRouteComponent {
+export default class RouteDashAccountAddresses extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
 	billingAddresses: UserAddress[] = [];

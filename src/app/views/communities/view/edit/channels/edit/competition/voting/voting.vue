@@ -14,9 +14,9 @@ import { CommunityCompetitionVotingCategory } from '../../../../../../../../../_
 import { showErrorGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
@@ -47,14 +47,14 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id', 'channel'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			`/web/dash/communities/competitions/voting/${route.params.id}/${route.params.channel}`
 		),
 })
-export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

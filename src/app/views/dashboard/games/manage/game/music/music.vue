@@ -10,9 +10,9 @@ import { GameSong } from '../../../../../../../_common/game/song/song.model';
 import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
 import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { arrayRemove } from '../../../../../../../utils/array';
 import FormGameSong from '../../../../../../components/forms/game/song/song.vue';
 import AppDashGameWizardControls from '../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
@@ -30,11 +30,11 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppLoadingFade,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/music/' + route.params.id),
 })
-export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
+export default class RouteDashGamesManageGameMusic extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

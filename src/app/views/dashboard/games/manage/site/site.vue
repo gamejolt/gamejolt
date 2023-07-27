@@ -3,9 +3,9 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import { Site } from '../../../../../../_common/site/site-model';
 import AppSitesLinkCard from '../../../../../components/sites/link-card/link-card.vue';
 import AppSitesManagePage from '../../../../../components/sites/manage-page/manage-page.vue';
@@ -18,11 +18,11 @@ import { useGameDashRouteController } from '../manage.store';
 		AppSitesManagePage,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/dash/sites/' + route.params.id),
 })
-export default class RouteDashGamesManageSite extends BaseRouteComponent {
+export default class RouteDashGamesManageSite extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

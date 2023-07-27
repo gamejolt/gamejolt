@@ -1,8 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { enforceLocation } from '../../../../utils/router';
-import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { formatNumber } from '../../../../_common/filters/number';
@@ -12,12 +10,17 @@ import { Game } from '../../../../_common/game/game.model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { User } from '../../../../_common/user/user.model';
+import { enforceLocation } from '../../../../utils/router';
+import { shallowSetup } from '../../../../utils/vue';
 import { GameCollection } from '../../../components/game/collection/collection.model';
 import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
 import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/thumbnail.vue';
@@ -58,7 +61,7 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		AppAuthRequired: vAppAuthRequired,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	// Not really able to make this lazy since it needs payload to build out the
 	// header.
 	cache: true,
@@ -90,7 +93,7 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		return payload;
 	},
 })
-export default class RouteLibraryCollection extends BaseRouteComponent {
+export default class RouteLibraryCollection extends LegacyRouteComponent {
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());

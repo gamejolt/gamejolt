@@ -2,7 +2,10 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { Site } from '../../../../../_common/site/site-model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppSitesLinkCard from '../../../../components/sites/link-card/link-card.vue';
@@ -16,11 +19,11 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 		AppSitesLinkCard,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/sites'),
 })
-export default class RouteDashAccountSite extends BaseRouteComponent {
+export default class RouteDashAccountSite extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
 	site?: Site = null as any;

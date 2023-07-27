@@ -2,7 +2,10 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/widget.vue';
 
 @Options({
@@ -11,8 +14,8 @@ import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/widget.vu
 		AppGrecaptchaWidget,
 	},
 })
-@OptionsForRoute()
-export default class RouteJoinCaptcha extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteJoinCaptcha extends LegacyRouteComponent {
 	authToken: string = null as any;
 
 	serverErrors: {

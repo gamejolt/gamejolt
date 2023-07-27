@@ -9,10 +9,7 @@ import {
 	leaveCommunity as leaveCommunityModel,
 } from '../../_common/community/community.model';
 import { Connection } from '../../_common/connection/connection-service';
-import {
-	ContentFocus,
-	registerContentFocusWatcher as registerFocusWatcher,
-} from '../../_common/content-focus/content-focus.service';
+import { registerContentFocusWatcher as registerFocusWatcher } from '../../_common/content-focus/content-focus.service';
 import { showSuccessGrowl } from '../../_common/growls/growls.service';
 import { showModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
@@ -131,7 +128,6 @@ export function createAppStore({
 
 	// Sync with the ContentFocus service.
 	registerFocusWatcher(
-		ContentFocus,
 		// We only care if the panes are overlaying, not if they're visible in
 		// the page without overlaying. Example is that context panes show
 		// in-page on large displays.

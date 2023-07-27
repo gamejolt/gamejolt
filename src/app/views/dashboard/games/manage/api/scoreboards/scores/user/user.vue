@@ -6,9 +6,9 @@ import { GameScoreTable } from '../../../../../../../../../_common/game/score-ta
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { User } from '../../../../../../../../../_common/user/user.model';
@@ -24,7 +24,7 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['table', 'user'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
@@ -36,7 +36,7 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 				route.params.user
 		),
 })
-export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRouteComponent {
+export default class RouteDashGamesManageApiScoreboardsScoresUser extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

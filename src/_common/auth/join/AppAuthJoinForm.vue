@@ -1,67 +1,66 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { toRefs } from 'vue';
+import { useRouter } from 'vue-router';
 import { Api } from '../../api/api.service';
+import AppButton from '../../button/AppButton.vue';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
-import { BaseForm, FormOnSubmit, FormOnSubmitSuccess } from '../../form-vue/form.service';
-import { validateUsername } from '../../form-vue/validators';
+import AppFormVue, { createForm, FormController } from '../../form-vue/AppForm.vue';
+import AppFormButton from '../../form-vue/AppFormButton.vue';
+import AppFormControl from '../../form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../form-vue/AppFormGroup.vue';
+import {
+	validateAvailability,
+	validateMaxLength,
+	validateMinLength,
+	validateUsername,
+} from '../../form-vue/validators';
 import { Provider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
-import AppLoading from '../../loading/AppLoading.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import googleImage from '../google-icon.svg';
 
-export type FormModel = {
+export type JoinFormModel = {
 	email: string;
 	username: string;
 	password: string;
 	token: string;
 };
 
-class Wrapper extends BaseForm<FormModel> {}
-
-@Options({
-	components: {
-		AppLoading,
+// TODO(chunk-optimization): Test this form out.
+const props = defineProps({
+	overlay: {
+		type: Boolean,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	blocked: {
+		type: Boolean,
 	},
-})
-export default class AppAuthJoinForm
-	extends mixins(Wrapper)
-	implements FormOnSubmit, FormOnSubmitSuccess
-{
-	@Prop(Boolean)
-	overlay?: boolean;
+});
 
-	@Prop(Boolean)
-	blocked?: boolean;
+const emit = defineEmits({
+	submit: (_model: JoinFormModel) => true,
+});
 
-	readonly Connection = Connection;
-	readonly Environment = Environment;
-	readonly validateUsername = validateUsername;
-	readonly googleImage = googleImage;
+const { overlay, blocked } = toRefs(props);
+const router = useRouter();
 
-	created() {
-		this.form.warnOnDiscard = false;
-	}
-
+const form: FormController<JoinFormModel> = createForm({
+	warnOnDiscard: false,
 	onSubmit() {
-		return Api.sendRequest('/web/auth/join', this.formModel);
-	}
-
+		return Api.sendRequest('/web/auth/join', form.formModel);
+	},
 	onSubmitSuccess(response: any) {
-		this.setField('token', response.token);
-	}
+		form.formModel.token = response.token;
+		emit('submit', form.formModel);
+	},
+});
 
-	/**
-	 * Sign up is just login without an account. It'll direct to the correct page when it figures
-	 * out if they have an account in the callback URL.
-	 */
-	linkedChoose(provider: Provider) {
-		LinkedAccounts.login(this.$router, provider);
-	}
+/**
+ * Sign up is just login without an account. It'll direct to the correct page
+ * when it figures out if they have an account in the callback URL.
+ */
+function linkedChoose(provider: Provider) {
+	LinkedAccounts.login(router, provider);
 }
 </script>
 
@@ -81,15 +80,15 @@ export default class AppAuthJoinForm
 					@click="linkedChoose('google')"
 				>
 					<img :src="googleImage" alt="" />
-					<span><AppTranslate>Sign up with Google</AppTranslate></span>
+					<span>{{ $gettext(`Sign up with Google`) }}</span>
 				</AppButton>
 			</div>
 
 			<div class="auth-line-thru">
-				<AppTranslate>or</AppTranslate>
+				{{ $gettext(`or`) }}
 			</div>
 
-			<AppForm class="auth-form" :controller="form">
+			<AppFormVue class="auth-form" :controller="form">
 				<fieldset :disabled="Connection.isClientOffline ? 'true' : undefined">
 					<AppFormGroup name="email" :label="$gettext('Email')" hide-label>
 						<AppFormControl
@@ -140,19 +139,29 @@ export default class AppAuthJoinForm
 
 					<div class="form-group">
 						<AppFormButton block :disabled="blocked">
-							<AppTranslate>Sign Up</AppTranslate>
+							{{ $gettext(`Sign up`) }}
 						</AppFormButton>
 					</div>
 				</fieldset>
 
-				<div v-if="blocked" class="alert alert-notice -blocked-message">
-					<AppTranslate>
-						You must wait 15 minutes before creating another account.
-					</AppTranslate>
+				<div
+					v-if="blocked"
+					class="alert alert-notice"
+					:style="{
+						marginTop: `4px`,
+					}"
+				>
+					{{ $gettext(`You must wait 15 minutes before creating another account.`) }}
 				</div>
-			</AppForm>
+			</AppFormVue>
 
-			<div class="-terms">
+			<div
+				:style="{
+					fontSize: `12px`,
+					marginTop: `16px`,
+					textShadow: overlay ? `1px 1px 1px rgba(0, 0, 0, 0.3)` : undefined,
+				}"
+			>
 				By signing up, you agree to the
 				<a :href="Environment.baseUrl + '/terms'">Terms of Use</a>
 				and
@@ -167,18 +176,4 @@ export default class AppAuthJoinForm
 
 <style lang="stylus" scoped>
 @import '../auth-form'
-
-// 4px is the spacing below form groups/the submit button
-.-terms
-	font-size: 12px
-	margin-top: 16px - 4px
-
-	@media $media-sm-up
-		margin-top: 24px - 4px
-
-	.auth-form-overlay &
-		text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3)
-
-.-blocked-message
-	margin-top: 5px
 </style>

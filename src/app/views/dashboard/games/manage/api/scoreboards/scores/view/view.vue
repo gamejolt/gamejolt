@@ -7,23 +7,23 @@ import { formatNumber } from '../../../../../../../../../_common/filters/number'
 import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { useGameDashRouteController } from '../../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiScoreboardsScoresView',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['score'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			'/web/dash/developer/games/api/scores/' + route.params.id + '/' + route.params.score
 		),
 })
-export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRouteComponent {
+export default class RouteDashGamesManageApiScoreboardsScoresView extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

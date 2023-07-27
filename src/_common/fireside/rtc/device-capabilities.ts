@@ -4,7 +4,7 @@ import { getDeviceArch, getDeviceOS } from '../../device/device.service';
 /**
  * Whether or not we can capture desktop audio.
  */
-export const hasDesktopAudioCaptureSupport = run(() => {
+export const hasDesktopAudioCaptureSupport = /** @__PURE__ */ run(() => {
 	if (!GJ_IS_DESKTOP_APP) {
 		return false;
 	}

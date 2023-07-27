@@ -2,11 +2,11 @@
 import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, watch } from 'vue';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppBackground from '../../../background/AppBackground.vue';
-import { ContentFocus } from '../../../content-focus/content-focus.service';
+import { useContentFocusService } from '../../../content-focus/content-focus.service';
 import AppContentViewer from '../../../content/content-viewer/AppContentViewer.vue';
 import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItem, MediaItemType } from '../../../media-item/media-item-model';
+import { MediaItemType } from '../../../media-item/media-item-model';
 import AppResponsiveDimensions from '../../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
@@ -71,6 +71,7 @@ const props = defineProps({
 });
 
 const { post, videoContext, aspectRatio } = toRefs(props);
+const { hasContentFocus } = useContentFocusService();
 useSlots();
 
 const root = ref<HTMLElement>();
@@ -96,7 +97,7 @@ const isHydrated = ref(import.meta.env.SSR);
 const postCardRatio = computed(() => aspectRatio?.value ?? AppPostCardAspectRatio);
 
 const shouldPlayVideo = computed(
-	() => Screen.isDesktop && !import.meta.env.SSR && isHydrated.value && ContentFocus.hasFocus
+	() => Screen.isDesktop && !import.meta.env.SSR && isHydrated.value && hasContentFocus.value
 );
 
 onMounted(() => calcData());

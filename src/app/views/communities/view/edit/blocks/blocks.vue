@@ -7,9 +7,9 @@ import { showErrorGrowl } from '../../../../../../_common/growls/growls.service'
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import AppPagination from '../../../../../../_common/pagination/pagination.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { UserBlock } from '../../../../../../_common/user/block/block.model';
@@ -35,13 +35,13 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id'] },
 	resolver({ route }) {
 		return Api.sendRequest('/web/dash/communities/blocks/' + route.params.id);
 	},
 })
-export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditBlocks extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

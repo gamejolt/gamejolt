@@ -6,15 +6,15 @@ import { formatDate } from '../../../../../../../../../_common/filters/date';
 import { GameDataStoreItem } from '../../../../../../../../../_common/game/data-store/item/item.model';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { useGameDashRouteController } from '../../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiDataStorageItemsView',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['item'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
@@ -24,7 +24,7 @@ import { useGameDashRouteController } from '../../../../manage.store';
 				route.params.item
 		),
 })
-export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRouteComponent {
+export default class RouteDashGamesManageApiDataStorageItemsView extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {

@@ -19,7 +19,10 @@ import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { setAppPromotionCohort, useAppPromotionStore } from '../../../_common/mobile-app/store';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { buildPayloadErrorForStatusCode } from '../../../_common/payload/payload-service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../_common/route/legacy-route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { sleep } from '../../../utils/utils';
@@ -40,7 +43,7 @@ const DownloadDelay = 3000;
 		AppScrollAffix,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['type'], query: ['game_id', 'build_id'] },
 	async resolver({ route }) {
 		const getQuery = (name: string) =>
@@ -71,7 +74,7 @@ const DownloadDelay = 3000;
 		return Api.sendRequest(`/web/download/info/${gameId}?${query.join('&')}`);
 	},
 })
-export default class RouteDownload extends BaseRouteComponent {
+export default class RouteDownload extends LegacyRouteComponent {
 	ads = setup(() => useAdsController());
 	appPromotionStore = shallowSetup(() => useAppPromotionStore());
 

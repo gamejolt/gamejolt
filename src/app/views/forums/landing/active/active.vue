@@ -2,7 +2,10 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
 
 @Options({
@@ -11,12 +14,12 @@ import AppForumTopicList from '../../../../components/forum/topic-list/topic-lis
 		AppForumTopicList,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	deps: {},
 	resolver: () => Api.sendRequest('/web/forums/active-topics'),
 })
-export default class RouteForumsLandingActive extends BaseRouteComponent {
+export default class RouteForumsLandingActive extends LegacyRouteComponent {
 	topics: ForumTopic[] = [];
 	postCountPerPage = 0;
 

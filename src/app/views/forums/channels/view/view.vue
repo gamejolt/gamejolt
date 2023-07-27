@@ -7,7 +7,10 @@ import { ForumChannel } from '../../../../../_common/forum/channel/channel.model
 import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import AppPagination from '../../../../../_common/pagination/pagination.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -27,7 +30,7 @@ import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue'
 		AppForumRules,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	deps: { params: ['name', 'sort'], query: ['page'] },
 	resolver({ route }) {
@@ -37,7 +40,7 @@ import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue'
 		);
 	},
 })
-export default class RouteForumsChannelsView extends BaseRouteComponent {
+export default class RouteForumsChannelsView extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 
 	get app() {

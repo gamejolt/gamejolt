@@ -1,7 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommunityCardCreatePlaceholder from '../../../../_common/community/card-create-placeholder/card-create-placeholder.vue';
 import AppCommunityCard from '../../../../_common/community/card/card.vue';
@@ -9,12 +8,16 @@ import { Community } from '../../../../_common/community/community.model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import { shallowSetup } from '../../../../utils/vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 
 const endpoint = '/web/discover/communities';
@@ -36,13 +39,13 @@ interface CacheData {
 		AppShellPageBackdrop,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	lazy: true,
 	deps: {},
 	resolver: () => Api.sendRequest(endpoint),
 })
-export default class RouteDiscoverCommunities extends BaseRouteComponent {
+export default class RouteDiscoverCommunities extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 	appPromotionStore = shallowSetup(() => useAppPromotionStore());
 

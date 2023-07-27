@@ -4,7 +4,7 @@ import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../../../utils/re
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
 import { GameVideo } from '../../../../../_common/game/video/video.model';
-import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
+import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
 
 type FormModel = GameVideo & {
 	_url: string;
@@ -83,9 +83,7 @@ export default class FormGameVideo extends mixins(Wrapper) {
 		<AppFormGroup name="_url" :label="$gettext(`Video URL`)">
 			<AppFormControl type="text" :validators="[validatePattern(REGEX_VIDEO)]" />
 
-			<AppFormControlErrors
-				:label="$gettext(`video URL`)"
-			/>
+			<AppFormControlErrors :label="$gettext(`video URL`)" />
 
 			<p v-translate class="help-block">
 				We currently only support videos from Vimeo or YouTube.
@@ -109,11 +107,7 @@ export default class FormGameVideo extends mixins(Wrapper) {
 			<AppFormControlErrors />
 		</AppFormGroup>
 
-		<AppFormGroup
-			name="description"
-			:label="$gettext(`Description`)"
-			:optional="true"
-		>
+		<AppFormGroup name="description" :label="$gettext(`Description`)" :optional="true">
 			<AppFormControlTextarea rows="5" :validators="[validateMaxLength(2500)]" />
 			<AppFormControlErrors />
 		</AppFormGroup>

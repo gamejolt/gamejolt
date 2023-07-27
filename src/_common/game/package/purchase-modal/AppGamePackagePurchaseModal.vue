@@ -23,7 +23,7 @@ import { GameDownloader } from '../../downloader/downloader.service';
 import type { Game } from '../../game.model';
 import { GamePlayModal } from '../../play-modal/play-modal.service';
 import type { GamePackage } from '../package.model';
-import FormGamePackagePayment from '../payment-form/payment-form.vue';
+import FormGamePackagePayment from '../payment-form/FormGamePackagePayment.vue';
 
 const props = defineProps({
 	game: {

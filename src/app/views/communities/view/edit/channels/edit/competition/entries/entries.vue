@@ -14,9 +14,9 @@ import AppLoading from '../../../../../../../../../_common/loading/AppLoading.vu
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPagination from '../../../../../../../../../_common/pagination/pagination.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
@@ -88,7 +88,7 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 		AppNoAutoscroll: vAppNoAutoscroll,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id', 'channel'], query: ['sort', 'sort-direction', 'page'] },
 	resolver: ({ route }) => {
 		const query = [];
@@ -118,7 +118,7 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 		return Api.sendRequest(url);
 	},
 })
-export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

@@ -9,7 +9,10 @@ import AppIllustration from '../../../../../_common/illustration/AppIllustration
 import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import AppPagination from '../../../../../_common/pagination/pagination.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { vAppNoAutoscroll } from '../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/grid.vue';
@@ -142,14 +145,14 @@ function makeRequest(route: RouteLocationNormalized) {
 		AppNoAutoscroll: vAppNoAutoscroll,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {
 		params: ['path', 'channel'],
 		query: ['sort', 'page', 'category', 'ignore-awards'],
 	},
 	resolver: ({ route }) => makeRequest(route),
 })
-export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComponent {
+export default class RouteCommunitiesViewChannelJamEntries extends LegacyRouteComponent {
 	@Prop({ type: Array, required: true }) categories!: CommunityCompetitionVotingCategory[];
 
 	@Inject({ from: CommunityRouteStoreKey })

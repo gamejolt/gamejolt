@@ -4,13 +4,16 @@ import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import { illNoComments } from '../../../../../_common/illustration/illustrations';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
 import AppFiresideAvatarBase from '../../../../components/fireside/avatar/AppFiresideAvatarBase.vue';
-import { illNoComments } from '../../../../../_common/illustration/illustrations';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 
 function getFetchUrl(route: RouteLocationNormalized) {
 	return `/web/communities/firesides/${route.params.path}`;
@@ -25,7 +28,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppFiresideAvatarBase,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	lazy: true,
 	deps: {
@@ -33,7 +36,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 	},
 	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
 })
-export default class RouteCommunitiesViewFiresides extends BaseRouteComponent {
+export default class RouteCommunitiesViewFiresides extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

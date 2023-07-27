@@ -1,17 +1,20 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { RouteLocationRedirect } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
 import { Game } from '../../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/AppGameThumbnail.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppTrophyCard from '../../../../../_common/trophy/AppTrophyCard.vue';
 import AppTrophyCompletion from '../../../../../_common/trophy/AppTrophyCompletion.vue';
 import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
+import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
+import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
+import { RouteLocationRedirect } from '../../../../../utils/router';
 import { useProfileRouteController } from '../../RouteProfile.vue';
 
 type CompletionData = {
@@ -29,7 +32,7 @@ type CompletionData = {
 		AppGameThumbnail,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id'] },
 	async resolver({ route }) {
 		const payload = await Api.sendRequest(
@@ -48,7 +51,7 @@ type CompletionData = {
 		return payload;
 	},
 })
-export default class RouteProfileTrophiesGame extends BaseRouteComponent {
+export default class RouteProfileTrophiesGame extends LegacyRouteComponent {
 	routeStore = setup(() => useProfileRouteController()!);
 	commonStore = setup(() => useCommonStore());
 

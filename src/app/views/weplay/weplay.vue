@@ -1,7 +1,10 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import AppCard from '../../../_common/card/AppCard.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../_common/route/legacy-route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { touchUser } from '../../../_common/user/user.model';
@@ -17,11 +20,11 @@ import AppWeplayLogo from '../../components/weplay/logo/AppWeplayLogo.vue';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: () => touchUser(),
 })
-export default class RouteWeplay extends BaseRouteComponent {
+export default class RouteWeplay extends LegacyRouteComponent {
 	readonly Screen = Screen;
 
 	get routeTitle() {

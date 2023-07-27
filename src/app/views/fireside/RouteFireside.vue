@@ -9,7 +9,7 @@ import {
 import AppAnimSlideshow from '../../../_common/animation/AppAnimSlideshow.vue';
 import { sheetFireplace } from '../../../_common/animation/slideshow/sheets';
 import { Api } from '../../../_common/api/api.service';
-import AppAuthJoin from '../../../_common/auth/join/join.vue';
+import AppAuthJoin from '../../../_common/auth/join/AppAuthJoin.vue';
 import AppBackground from '../../../_common/background/AppBackground.vue';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { canDeviceViewFiresides, Fireside } from '../../../_common/fireside/fireside.model';

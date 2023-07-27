@@ -6,13 +6,13 @@ import { formatNumber } from '../../../../../../../_common/filters/number';
 import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
 import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
-import { UserGameTrophy } from '../../../../../../../_common/user/trophy/game-trophy.model';
 import AppTrophyCompletion from '../../../../../../../_common/trophy/AppTrophyCompletion.vue';
 import AppTrophyList from '../../../../../../../_common/trophy/list/AppTrophyList.vue';
+import { UserGameTrophy } from '../../../../../../../_common/user/trophy/game-trophy.model';
 import { useGameRouteController } from '../../view.vue';
 
 @Options({
@@ -23,12 +23,12 @@ import { useGameRouteController } from '../../view.vue';
 		AppNavTabList,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/discover/games/trophies/' + route.params.id),
 })
-export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteComponent {
+export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteComponent {
 	routeStore = setup(() => useGameRouteController()!);
 	commonStore = setup(() => useCommonStore());
 

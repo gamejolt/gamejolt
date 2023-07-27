@@ -14,7 +14,10 @@ import {
 } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Registry } from '../../../_common/registry/registry.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../_common/route/legacy-route-component';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 import { enforceLocation } from '../../../utils/router';
@@ -31,7 +34,7 @@ const PostThemeKey = 'post';
 		AppPostPagePlaceholder,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	lazy: true,
 	cache: true,
 	deps: { params: ['slug'], query: ['intent'] },
@@ -57,7 +60,7 @@ const PostThemeKey = 'post';
 		return payload;
 	},
 })
-export default class RoutePost extends BaseRouteComponent {
+export default class RoutePost extends LegacyRouteComponent {
 	themeStore = setup(() => useThemeStore());
 
 	post: FiresidePost | null = null;

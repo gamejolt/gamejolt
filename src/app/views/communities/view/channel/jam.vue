@@ -3,9 +3,8 @@ import { defineAsyncComponent } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { router } from '../../..';
-import { arrayRemove } from '../../../../../utils/array';
-import { Api } from '../../../../../_common/api/api.service';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
+import { Api } from '../../../../../_common/api/api.service';
 import { CompetitionPeriodVoting } from '../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionEntrySubmitModal } from '../../../../../_common/community/competition/entry/submit-modal/submit-modal.service';
@@ -15,22 +14,23 @@ import { formatDate } from '../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import {
-	asyncRouteLoader,
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
+import { asyncRouteLoader } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
+import { arrayRemove } from '../../../../../utils/array';
 import AppCommunityCompetitionCountdown from '../../../../components/community/competition/countdown/countdown.vue';
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/grid.vue';
 import { AppCommunityPerms } from '../../../../components/community/perms/perms';
+import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
 	getChannelPathFromRoute,
 	setCommunityMeta,
 } from '../view.store';
-import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 
 @Options({
 	name: 'RouteCommunitiesViewChannelJam',
@@ -46,7 +46,7 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		),
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['path', 'channel'] },
 	resolver: ({ route }) => {
 		const channel = getChannelPathFromRoute(route);
@@ -55,7 +55,7 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		);
 	},
 })
-export default class RouteCommunitiesViewChannelJam extends BaseRouteComponent {
+export default class RouteCommunitiesViewChannelJam extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 
 	@Inject({ from: CommunityRouteStoreKey })

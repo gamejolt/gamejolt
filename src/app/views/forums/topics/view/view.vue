@@ -14,7 +14,10 @@ import AppMessageThreadPagination from '../../../../../_common/message-thread/pa
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/AppScrollAffix.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
@@ -61,7 +64,7 @@ import AppPageHeaderControls from '../../../../components/page-header/controls/c
 		AppScrollTo: vAppScrollTo,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	deps: { params: ['slug', 'id'], query: ['page'] },
 	async resolver({ route }) {
@@ -81,7 +84,7 @@ import AppPageHeaderControls from '../../../../components/page-header/controls/c
 		return payload;
 	},
 })
-export default class RouteForumsTopicsView extends BaseRouteComponent {
+export default class RouteForumsTopicsView extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 
 	get app() {

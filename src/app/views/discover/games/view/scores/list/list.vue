@@ -7,9 +7,9 @@ import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.
 import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
 import { Popper } from '../../../../../../../_common/popper/popper.service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.vue';
 import { vAppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
@@ -33,7 +33,7 @@ import { useGameRouteController } from '../../view.vue';
 		AppNoAutoscroll: vAppNoAutoscroll,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	deps: { params: ['tableId', 'type'], query: ['page'] },
 	resolver({ route }) {
@@ -53,7 +53,7 @@ import { useGameRouteController } from '../../view.vue';
 		return Api.sendRequest(url + query);
 	},
 })
-export default class RouteDiscoverGamesViewScoresList extends BaseRouteComponent {
+export default class RouteDiscoverGamesViewScoresList extends LegacyRouteComponent {
 	routeStore = setup(() => useGameRouteController()!);
 	commonStore = setup(() => useCommonStore());
 

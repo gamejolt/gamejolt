@@ -7,13 +7,13 @@ import { CommunityCompetitionAward } from '../../../../../../../../../../_common
 import { CommunityCompetitionEntryAward } from '../../../../../../../../../../_common/community/competition/entry/award/award.model';
 import { CommunityCompetitionEntry } from '../../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showErrorGrowl } from '../../../../../../../../../../_common/growls/growls.service';
-import AppLoadingFade from '../../../../../../../../../../_common/loading/AppLoadingFade.vue';
 import AppLoading from '../../../../../../../../../../_common/loading/AppLoading.vue';
+import AppLoadingFade from '../../../../../../../../../../_common/loading/AppLoadingFade.vue';
 import AppPagination from '../../../../../../../../../../_common/pagination/pagination.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
 
@@ -54,11 +54,11 @@ function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '')
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['awardId'] },
 	resolver: ({ route }) => makeRequest(route),
 })
-export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAward extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAward extends LegacyRouteComponent {
 	award!: CommunityCompetitionAward;
 	awardedEntries: CommunityCompetitionEntry[] = [];
 	entries: CommunityCompetitionEntry[] = [];

@@ -3,7 +3,10 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { AppAuthJoinLazy } from '../../../../_common/lazy';
 import { Meta } from '../../../../_common/meta/meta-service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import { vAppScrollTo } from '../../../../_common/scroll/to/to.directive';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
@@ -21,8 +24,8 @@ import socialImage from './social.png';
 		AppScrollTo: vAppScrollTo,
 	},
 })
-@OptionsForRoute()
-export default class RouteLandingIndieaf extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteLandingIndieaf extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 
 	get user() {

@@ -6,9 +6,9 @@ import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEd
 import { showInfoGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { useThemeStore } from '../../../../../../_common/theme/theme.store';
 import { enforceLocation } from '../../../../../../utils/router';
@@ -32,8 +32,8 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 		AppAlertDismissable,
 	},
 })
-@OptionsForRoute()
-export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteCommunitiesViewEditDetails extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

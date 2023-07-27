@@ -6,8 +6,12 @@ import { Api } from '../../../../../_common/api/api.service';
 import { EventItem } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
@@ -16,7 +20,6 @@ import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
 import AppUserSpawnDay from '../../../../components/user/spawn-day/spawn-day.vue';
-import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import { useProfileRouteController } from '../../RouteProfile.vue';
 
 function isLikeFeed(route: RouteLocationNormalized) {
@@ -43,7 +46,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: false,
 	lazy: true,
 	deps: { params: ['feedSection'], query: ['tab', 'feed_last_id'] },
@@ -54,7 +57,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 			noErrorRedirect: true,
 		}),
 })
-export default class RouteProfileOverviewFeed extends BaseRouteComponent {
+export default class RouteProfileOverviewFeed extends LegacyRouteComponent {
 	routeStore = setup(() => useProfileRouteController()!);
 	commonStore = setup(() => useCommonStore());
 

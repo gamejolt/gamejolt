@@ -4,8 +4,11 @@ import { Options } from 'vue-property-decorator';
 import { useRouter } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { Game, GameLockedStatus } from '../../../../../_common/game/game.model';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import { GameLockedStatus } from '../../../../../_common/game/game.model';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
@@ -28,7 +31,7 @@ import { ManageGameThemeKey, createGameDashRouteController } from './manage.stor
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id'], query: ['intent'] },
 	async resolver({ route }) {
 		const intentRedirect = IntentService.checkRoute(route, {
@@ -42,7 +45,7 @@ import { ManageGameThemeKey, createGameDashRouteController } from './manage.stor
 		return Api.sendRequest('/web/dash/developer/games/' + route.params.id);
 	},
 })
-export default class RouteDashGamesManage extends BaseRouteComponent {
+export default class RouteDashGamesManage extends LegacyRouteComponent {
 	routeStore = setup(() => createGameDashRouteController({ router: useRouter() }));
 	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
