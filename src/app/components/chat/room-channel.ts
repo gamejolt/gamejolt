@@ -522,7 +522,7 @@ export function createChatRoomChannel(
 	 * Adds new members to this room.
 	 */
 	function pushMemberAdd(members: number[]) {
-		return channelController.push<void>('invite_new_member', { member_ids: members });
+		return channelController.push<void>('member_add', { member_ids: members });
 	}
 
 	/**
