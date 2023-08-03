@@ -361,8 +361,9 @@ export function createChatRoomChannel(
 	}
 
 	function _onRoomUpdate(json: Partial<ChatRoom>) {
-		const { title, background } = json;
+		const { title, fallback_title, background } = json;
 		room.value.title = title || '';
+		room.value.fallback_title = fallback_title || '';
 		room.value.background = background ? new Background(background) : undefined;
 	}
 
