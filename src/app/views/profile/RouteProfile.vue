@@ -22,7 +22,10 @@ import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppUserDogtag from '../../../_common/user/AppUserDogtag.vue';
 import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
-import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
+import {
+	UserFriendship,
+	UserFriendshipState,
+} from '../../../_common/user/friendship/friendship.model';
 import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
 import { User } from '../../../_common/user/user.model';
@@ -410,7 +413,7 @@ const headingUsernameStyles = computed<CSSProperties>(() => ({
 							<span
 								v-if="
 									userFriendship &&
-									userFriendship.state === UserFriendship.STATE_FRIENDS
+									userFriendship.state === UserFriendshipState.Friends
 								"
 								v-app-tooltip="$gettext('You are friends! Awwww!')"
 								class="tag tag-highlight"
@@ -542,7 +545,7 @@ const headingUsernameStyles = computed<CSSProperties>(() => ({
 													v-if="
 														userFriendship &&
 														userFriendship.state ===
-															UserFriendship.STATE_FRIENDS
+															UserFriendshipState.Friends
 													"
 													class="list-group-item has-icon"
 													@click="routeStore.removeFriend()"

@@ -1,30 +1,28 @@
-import { Model } from '../../model/model.service';
+import { Model, defineLegacyModel } from '../../model/model.service';
 import { Sticker } from '../sticker.model';
 
-export class StickerPlacement extends Model {
-	position_x!: number;
-	position_y!: number;
-	rotation!: number;
+export class StickerPlacement extends defineLegacyModel(
+	class StickerPlacementDefinition extends Model {
+		declare position_x: number;
+		declare position_y: number;
+		declare rotation: number;
+		declare sticker: Sticker;
+		declare target_data: StickerPlacementTargetData;
+		declare is_charged: boolean;
 
-	sticker!: Sticker;
+		constructor(data: any = {}) {
+			super(data);
 
-	target_data!: StickerPlacementTargetData;
-	is_charged!: boolean;
+			if (data.sticker) {
+				this.sticker = new Sticker(data.sticker);
+			}
 
-	constructor(data: any = {}) {
-		super(data);
-
-		if (data.sticker) {
-			this.sticker = new Sticker(data.sticker);
-		}
-
-		if (data.target_data === '' || !data.target_data) {
-			this.target_data = {};
+			if (data.target_data === '' || !data.target_data) {
+				this.target_data = {};
+			}
 		}
 	}
-}
-
-Model.create(StickerPlacement);
+) {}
 
 export interface StickerPlacementTargetData {
 	host_user_id?: number;

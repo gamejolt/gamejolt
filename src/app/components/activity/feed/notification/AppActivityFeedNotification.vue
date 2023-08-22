@@ -20,12 +20,15 @@ import '../../../../../_common/comment/comment.styl';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
 	CommunityUserNotification,
-	NotificationType,
+	CommunityUserNotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { CreatorExperienceLevel } from '../../../../../_common/creator/experience/level.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { Notification } from '../../../../../_common/notification/notification-model';
+import {
+	Notification,
+	NotificationType,
+} from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
 import { SupporterAction } from '../../../../../_common/supporters/action.model';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
@@ -64,7 +67,7 @@ const canToggleContent = ref(false);
 const notification = computed(() => item.value.feedItem as Notification);
 const isNew = computed(() => feed.isItemUnread(item.value));
 const isFromUser = computed(() => notification.value.from_model instanceof User);
-const showTime = computed(() => notification.value.type !== Notification.TYPE_QUEST_NOTIFICATION);
+const showTime = computed(() => notification.value.type !== NotificationType.QuestNotification);
 const titleText = computed(() => NotificationText.getText(notification.value, false));
 
 // Only show when there is a title text for the notification.
@@ -75,35 +78,36 @@ const notificationLocation = computed(() => getNotificationRouteLocation(notific
 const hasDetails = computed(() => {
 	const { type, action_model } = notification.value;
 
-	if (type === Notification.TYPE_MENTION && (action_model as Mention).resource === 'Comment') {
+	if (type === NotificationType.Mention && (action_model as Mention).resource === 'Comment') {
 		return true;
 	}
 
 	// Community user notifications with a post want to show the post lead.
 	if (
-		type === Notification.TYPE_COMMUNITY_USER_NOTIFICATION &&
-		[NotificationType.POSTS_EJECT, NotificationType.POSTS_MOVE].includes(
-			(action_model as CommunityUserNotification).type
-		)
+		type === NotificationType.CommunityUserNotification &&
+		[
+			CommunityUserNotificationType.POSTS_EJECT,
+			CommunityUserNotificationType.POSTS_MOVE,
+		].includes((action_model as CommunityUserNotification).type)
 	) {
 		return true;
 	}
 
-	if (type === Notification.TYPE_SUPPORTER_MESSAGE) {
+	if (type === NotificationType.SupporterMessage) {
 		return !!(action_model as SupporterAction).message?.content;
 	}
 
 	return [
-		Notification.TYPE_COMMENT_ADD,
-		Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
-		Notification.TYPE_POST_FEATURED_IN_COMMUNITY,
-		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
-		Notification.TYPE_QUEST_NOTIFICATION,
-		Notification.TYPE_GAME_TROPHY_ACHIEVED,
-		Notification.TYPE_SITE_TROPHY_ACHIEVED,
-		Notification.TYPE_POLL_ENDED,
-		Notification.TYPE_CREATOR_LEVEL_UP,
-		Notification.TYPE_UNLOCKED_AVATAR_FRAME,
+		NotificationType.CommentAdd,
+		NotificationType.CommentAddObjectOwner,
+		NotificationType.PostFeaturedInCommunity,
+		NotificationType.FiresideFeaturedInCommunity,
+		NotificationType.QuestNotification,
+		NotificationType.GameTrophyAchieved,
+		NotificationType.SiteTrophyAchieved,
+		NotificationType.PollEnded,
+		NotificationType.CreatorLevelUp,
+		NotificationType.UnlockedAvatarFrame,
 	].includes(type);
 });
 
@@ -147,7 +151,7 @@ function onMarkRead() {
 								<template
 									v-if="
 										notification.type ===
-										Notification.TYPE_COMMUNITY_USER_NOTIFICATION
+										NotificationType.CommunityUserNotification
 									"
 								>
 									<div class="-community-thumb">
@@ -167,9 +171,9 @@ function onMarkRead() {
 								<template
 									v-else-if="
 										notification.type ===
-											Notification.TYPE_POST_FEATURED_IN_COMMUNITY ||
+											NotificationType.PostFeaturedInCommunity ||
 										notification.type ===
-											Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY
+											NotificationType.FiresideFeaturedInCommunity
 									"
 								>
 									<div class="-community-thumb">
@@ -180,16 +184,15 @@ function onMarkRead() {
 								</template>
 								<template
 									v-else-if="
-										notification.type ===
-											Notification.TYPE_GAME_TROPHY_ACHIEVED ||
-										notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
+										notification.type === NotificationType.GameTrophyAchieved ||
+										notification.type === NotificationType.SiteTrophyAchieved
 									"
 								>
 									<img class="img-circle -trophy-img" :src="trophyImg" />
 								</template>
 								<template
 									v-else-if="
-										notification.type === Notification.TYPE_QUEST_NOTIFICATION
+										notification.type === NotificationType.QuestNotification
 									"
 								>
 									<div class="-avatar-icon">
@@ -197,7 +200,7 @@ function onMarkRead() {
 									</div>
 								</template>
 								<template
-									v-else-if="notification.type === Notification.TYPE_POLL_ENDED"
+									v-else-if="notification.type === NotificationType.PollEnded"
 								>
 									<div class="-avatar-icon">
 										<AppJolticon icon="pedestals-numbers" />
@@ -205,7 +208,7 @@ function onMarkRead() {
 								</template>
 								<template
 									v-else-if="
-										notification.type === Notification.TYPE_CREATOR_LEVEL_UP &&
+										notification.type === NotificationType.CreatorLevelUp &&
 										notification.action_model instanceof CreatorExperienceLevel
 									"
 								>
@@ -215,8 +218,7 @@ function onMarkRead() {
 								</template>
 								<template
 									v-else-if="
-										notification.type ===
-										Notification.TYPE_UNLOCKED_AVATAR_FRAME
+										notification.type === NotificationType.UnlockedAvatarFrame
 									"
 								>
 									<img class="img-circle -trophy-img" :src="avatarFrameImg" />
@@ -244,9 +246,9 @@ function onMarkRead() {
 												<AppContentViewer
 													v-if="
 														notification.type ===
-															Notification.TYPE_COMMENT_ADD ||
+															NotificationType.CommentAdd ||
 														notification.type ===
-															Notification.TYPE_COMMENT_ADD_OBJECT_OWNER
+															NotificationType.CommentAddObjectOwner
 													"
 													:source="
 														(notification.action_model as Comment).comment_content
@@ -255,7 +257,7 @@ function onMarkRead() {
 												<AppContentViewer
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_MENTION
+														NotificationType.Mention
 													"
 													:source="
 														(notification.action_model as Mention).comment
@@ -265,7 +267,7 @@ function onMarkRead() {
 												<AppContentViewer
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_SUPPORTER_MESSAGE
+														NotificationType.SupporterMessage
 													"
 													:source="
 														(notification.action_model as SupporterAction).message?.content
@@ -274,7 +276,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_POLL_ENDED
+														NotificationType.PollEnded
 													"
 												>
 													{{
@@ -286,7 +288,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_POST_FEATURED_IN_COMMUNITY
+														NotificationType.PostFeaturedInCommunity
 													"
 												>
 													{{
@@ -298,7 +300,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY
+														NotificationType.FiresideFeaturedInCommunity
 													"
 												>
 													{{ (notification.to_model as Fireside).title }}
@@ -306,7 +308,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_COMMUNITY_USER_NOTIFICATION
+														NotificationType.CommunityUserNotification
 													"
 												>
 													{{
@@ -318,9 +320,9 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-															Notification.TYPE_GAME_TROPHY_ACHIEVED ||
+															NotificationType.GameTrophyAchieved ||
 														notification.type ===
-															Notification.TYPE_SITE_TROPHY_ACHIEVED
+															NotificationType.SiteTrophyAchieved
 													"
 												>
 													{{
@@ -334,7 +336,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_QUEST_NOTIFICATION
+														NotificationType.QuestNotification
 													"
 													class="tiny text-muted"
 												>
@@ -347,7 +349,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-															Notification.TYPE_CREATOR_LEVEL_UP &&
+															NotificationType.CreatorLevelUp &&
 														notification.action_model instanceof
 															CreatorExperienceLevel &&
 														notification.action_model.ability !== null
@@ -362,7 +364,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_UNLOCKED_AVATAR_FRAME
+														NotificationType.UnlockedAvatarFrame
 													"
 												>
 													{{ $gettext(`Click to equip!`) }}

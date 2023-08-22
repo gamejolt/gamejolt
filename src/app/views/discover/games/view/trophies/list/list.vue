@@ -12,7 +12,10 @@ import {
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import AppTrophyCompletion from '../../../../../../../_common/trophy/AppTrophyCompletion.vue';
 import AppTrophyList from '../../../../../../../_common/trophy/list/AppTrophyList.vue';
-import { UserGameTrophy } from '../../../../../../../_common/user/trophy/game-trophy.model';
+import {
+	UserGameTrophy,
+	indexAchievedGameTrophies,
+} from '../../../../../../../_common/user/trophy/game-trophy.model';
 import { useGameRouteController } from '../../view.vue';
 
 @Options({
@@ -72,7 +75,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 		this.experience = $payload.trophiesExperienceAchieved || 0;
 		this.showInvisibleTrophyMessage = $payload.trophiesShowInvisibleTrophyMessage || false;
 
-		this.achievedIndexed = UserGameTrophy.indexAchieved(this.achieved);
+		this.achievedIndexed = indexAchievedGameTrophies(this.achieved);
 		this.filteredTrophies = GameTrophy.splitAchieved(this.trophies, this.achievedIndexed);
 
 		this.currentFilter = 'all';
@@ -162,10 +165,9 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 
 		<section v-if="!trophies.length" class="section fill-offset">
 			<div class="container text-center">
-				<AppTranslate
-					>There are no trophies for this game yet. Bug the developer about adding
-					some!</AppTranslate
-				>
+				<AppTranslate>
+					There are no trophies for this game yet. Bug the developer about adding some!
+				</AppTranslate>
 			</div>
 		</section>
 	</div>

@@ -1,5 +1,3 @@
-// import AppNoop from './AppNoop.vue';
-
 export function lazyImportNoSSR<T>(fn: () => Promise<T>): () => Promise<T> {
 	return () => importNoSSR(fn);
 }

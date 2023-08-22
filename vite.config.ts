@@ -1,11 +1,12 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
+// import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig, UserConfig as ViteUserConfig } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import {
-	activateJsonProperty,
-	patchPackageJson,
-	updateJsonProperty,
+activateJsonProperty,
+patchPackageJson,
+updateJsonProperty,
 } from './scripts/build/packageJson';
 import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { readFromViteEnv } from './scripts/build/vite-runner';
@@ -259,6 +260,8 @@ export default defineConfig(async () => {
 			md({
 				mode: [MarkdownMode.HTML],
 			}),
+			// splitVendorChunkPlugin(),
+			// visualizer(),
 		],
 
 		root: 'src',
@@ -387,14 +390,6 @@ export default defineConfig(async () => {
 				target: 'es2015',
 			}),
 
-			// Don't add the preloads. We generate a ton of chunks, and to load
-			// them all is quite a bit for any client to handle. It also seems
-			// like Google's dynamic crawler might be trying to load them all in
-			// and exhausting it's request limit.
-			modulePreload: {
-				polyfill: false,
-			},
-
 			// Never inline stuff.
 			assetsInlineLimit: 0,
 
@@ -402,6 +397,17 @@ export default defineConfig(async () => {
 			minify: gjOpts.environment === 'production' && gjOpts.buildType === 'build',
 
 			rollupOptions: {
+				// Can use this to see which modules are causing side effects.
+				// experimentalLogSideEffects: true,
+
+				treeshake: {
+					// We always want these to be considered pure and side effect free for exports.
+					manualPureFunctions: ['ref', 'reactive', 'computed'],
+
+					// We don't do any side effects with property access, so turn it off.
+					propertyReadSideEffects: false,
+				},
+
 				...(() => {
 					// By default vite outputs filenames with their chunks, but
 					// some ad blockers are outrageously aggressive with their
@@ -409,9 +415,10 @@ export default defineConfig(async () => {
 					// the string 'follow-widget'. It's ridiculous. For this
 					// reason, do not output filenames in prod web-based builds.
 					if (
-						gjOpts.environment === 'production' &&
-						gjOpts.buildType === 'build' &&
-						['web'].includes(gjOpts.platform)
+						true ||
+						(gjOpts.environment === 'production' &&
+							gjOpts.buildType === 'build' &&
+							['web'].includes(gjOpts.platform))
 					) {
 						// Update this when you want to force cache busting for
 						// all of our assets regardless of if their contents
@@ -419,11 +426,33 @@ export default defineConfig(async () => {
 						const hashVersion = '';
 						// const hashVersion = '-v2';
 
-						// TODO(chunk-optimization: revert when ready for prod)
+						// TODO(chunk-optimization)
 						return <RollupOptions>{
 							output: {
+								manualChunks(id) {
+									// We never want translations to be chunked
+									// together, they should always be in their
+									// own modules since they're big and not
+									// needed unless you're actually using the
+									// language.
+									if (id.includes('/translations/')) {
+										return id
+											.substring(
+												id.lastIndexOf('/translations/') + 1,
+												id.lastIndexOf('.json')
+											)
+											.replace(/\//g, '_');
+									}
+
+									if (id.includes('chunkName')) {
+										return id.match(/[?&]chunkName=(.+?)(&|$)/)![1];
+									}
+								},
 								chunkFileNames: `assets/[name].[hash]${hashVersion}.js`,
 								assetFileNames: `assets/[name].[hash]${hashVersion}.[ext]`,
+
+								// This should result in about a 50KB file after gzip.
+								experimentalMinChunkSize: 200_000,
 							},
 						};
 					}

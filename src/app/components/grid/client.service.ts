@@ -11,7 +11,7 @@ import { FiresideStreamNotification } from '../../../_common/fireside/stream-not
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { Model } from '../../../_common/model/model.service';
-import { Notification } from '../../../_common/notification/notification-model';
+import { Notification, NotificationType } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
 import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
@@ -320,7 +320,7 @@ export class GridClient {
 
 		if (message !== undefined) {
 			let title = $gettext('New Notification');
-			if (notification.type === Notification.TYPE_POST_ADD) {
+			if (notification.type === NotificationType.PostAdd) {
 				if (notification.from_model instanceof User) {
 					// We send a notification to the author of the post.
 					// Do not show a notification in that case, the purpose is to increment the activity feed counter.
@@ -345,7 +345,7 @@ export class GridClient {
 				} else {
 					title = $gettext('New Post');
 				}
-			} else if (notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED) {
+			} else if (notification.type === NotificationType.GameTrophyAchieved) {
 				if (
 					notification.action_model instanceof UserGameTrophy &&
 					notification.action_model.trophy instanceof GameTrophy
@@ -354,7 +354,7 @@ export class GridClient {
 					message = notification.action_model.trophy.title;
 					icon = getTrophyImg(notification.action_model.trophy);
 				}
-			} else if (notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED) {
+			} else if (notification.type === NotificationType.SiteTrophyAchieved) {
 				if (
 					notification.action_model instanceof UserSiteTrophy &&
 					notification.action_model.trophy instanceof SiteTrophy
@@ -363,20 +363,20 @@ export class GridClient {
 					message = notification.action_model.trophy.title;
 					icon = getTrophyImg(notification.action_model.trophy);
 				}
-			} else if (notification.type === Notification.TYPE_POST_FEATURED_IN_COMMUNITY) {
+			} else if (notification.type === NotificationType.PostFeaturedInCommunity) {
 				if (notification.action_model instanceof FiresidePostCommunity) {
 					icon = notification.action_model.community.img_thumbnail;
 				}
-			} else if (notification.type === Notification.TYPE_FIRESIDE_START) {
+			} else if (notification.type === NotificationType.FiresideStart) {
 				if (notification.action_model instanceof Fireside) {
 					title = notification.action_model.title;
 				}
-			} else if (notification.type === Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION) {
+			} else if (notification.type === NotificationType.FiresideStreamNotification) {
 				if (notification.action_model instanceof FiresideStreamNotification) {
 					title = $gettext('Fireside Stream');
 					icon = notification.action_model.users[0].img_avatar;
 				}
-			} else if (notification.type === Notification.TYPE_CHARGED_STICKER) {
+			} else if (notification.type === NotificationType.ChargedSticker) {
 				title = $gettext('Charged Sticker');
 			}
 

@@ -3,7 +3,7 @@ import { Comment, getCommentUrl } from '../../../../../_common/comment/comment-m
 import { Community } from '../../../../../_common/community/community.model';
 import {
 	CommunityUserNotification,
-	NotificationType,
+	CommunityUserNotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import { CreatorExperienceLevelUpModal } from '../../../../../_common/creator/experience/level-up-modal/modal.service';
 import { CreatorExperienceLevel } from '../../../../../_common/creator/experience/level.model';
@@ -12,12 +12,15 @@ import { Fireside } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
 import { FiresideStreamNotification } from '../../../../../_common/fireside/stream-notification/stream-notification.model';
-import { ForumPost } from '../../../../../_common/forum/post/post.model';
+import { ForumPost, getForumPostUrl } from '../../../../../_common/forum/post/post.model';
 import { Game } from '../../../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import { Mention } from '../../../../../_common/mention/mention.model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
-import { Notification } from '../../../../../_common/notification/notification-model';
+import {
+	Notification,
+	NotificationType,
+} from '../../../../../_common/notification/notification-model';
 import { QuestNotification } from '../../../../../_common/quest/quest-notification-model';
 import { SupporterAction } from '../../../../../_common/supporters/action.model';
 import { SupporterMessageModal } from '../../../../../_common/supporters/message/modal.service';
@@ -55,33 +58,33 @@ export function getNotificationRouteLocation(
 		notification;
 
 	switch (type) {
-		case Notification.TYPE_FRIENDSHIP_REQUEST:
-		case Notification.TYPE_FRIENDSHIP_ACCEPT:
+		case NotificationType.FriendshipRequest:
+		case NotificationType.FriendshipAccept:
 			return getRouteLocationForModel(from_model);
 
-		case Notification.TYPE_USER_FOLLOW:
+		case NotificationType.UserFollow:
 			return getRouteLocationForModel(from_model);
 
-		case Notification.TYPE_GAME_RATING_ADD:
+		case NotificationType.GameRatingAdd:
 			return getRouteLocationForModel(from_model);
 
-		case Notification.TYPE_GAME_FOLLOW:
+		case NotificationType.GameFollow:
 			return getRouteLocationForModel(from_model);
 
-		case Notification.TYPE_POST_FEATURED_IN_COMMUNITY:
+		case NotificationType.PostFeaturedInCommunity:
 			return getRouteLocationForModel((action_model as FiresidePostCommunity).community);
 
-		case Notification.TYPE_COMMUNITY_USER_NOTIFICATION:
+		case NotificationType.CommunityUserNotification:
 			switch ((action_model as CommunityUserNotification).type) {
-				case NotificationType.POSTS_MOVE:
-				case NotificationType.POSTS_EJECT:
+				case CommunityUserNotificationType.POSTS_MOVE:
+				case CommunityUserNotificationType.POSTS_EJECT:
 					return getRouteLocationForModel(to_model as FiresidePost);
-				case NotificationType.FIRESIDES_EJECT:
+				case CommunityUserNotificationType.FIRESIDES_EJECT:
 					return getRouteLocationForModel(to_model as Fireside);
 			}
 			break;
 
-		case Notification.TYPE_COLLABORATOR_INVITE:
+		case NotificationType.CollaboratorInvite:
 			switch (to_resource) {
 				case 'Game':
 					return getRouteLocationForModel(to_model as Game);
@@ -90,15 +93,15 @@ export function getNotificationRouteLocation(
 			}
 			break;
 
-		case Notification.TYPE_POST_ADD:
+		case NotificationType.PostAdd:
 			return getRouteLocationForModel(action_model as FiresidePost);
 
-		case Notification.TYPE_SELLABLE_SELL:
+		case NotificationType.SellableSell:
 			return {
 				name: 'home',
 			};
 
-		case Notification.TYPE_MENTION: {
+		case NotificationType.Mention: {
 			const mention = action_model as Mention;
 			switch (mention.resource) {
 				case 'Comment':
@@ -120,43 +123,43 @@ export function getNotificationRouteLocation(
 			}
 		}
 
-		case Notification.TYPE_FIRESIDE_START:
+		case NotificationType.FiresideStart:
 			return getRouteLocationForModel(action_model as Fireside);
 
-		case Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION:
+		case NotificationType.FiresideStreamNotification:
 			return getRouteLocationForModel((action_model as FiresideStreamNotification).fireside);
 
-		case Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY:
+		case NotificationType.FiresideFeaturedInCommunity:
 			return getRouteLocationForModel(to_model as Fireside);
 
-		case Notification.TYPE_QUEST_NOTIFICATION:
+		case NotificationType.QuestNotification:
 			// Handled in the [go] function.
 			return '';
 
-		case Notification.TYPE_CHARGED_STICKER: {
+		case NotificationType.ChargedSticker: {
 			return routeDashSupporters;
 		}
 
-		case Notification.TYPE_SUPPORTER_MESSAGE: {
+		case NotificationType.SupporterMessage: {
 			// Messages might have their height cropped in the notification
 			// feed. Don't return a location here, we'll instead show a
 			// modal in the `go` function.
 			return '';
 		}
 
-		case Notification.TYPE_POLL_ENDED: {
+		case NotificationType.PollEnded: {
 			if (from_model) {
 				return getRouteLocationForModel(from_model);
 			}
 			break;
 		}
 
-		case Notification.TYPE_CREATOR_LEVEL_UP:
+		case NotificationType.CreatorLevelUp:
 			// Don't return a location here, we'll instead show a modal in the
 			// `go` function.
 			return '';
 
-		case Notification.TYPE_UNLOCKED_AVATAR_FRAME: {
+		case NotificationType.UnlockedAvatarFrame: {
 			return {
 				name: routeDashAccountEdit.name,
 				query: { avatar: action_resource_id },
@@ -181,17 +184,17 @@ export async function gotoNotification(
 	}
 
 	if (
-		type === Notification.TYPE_GAME_TROPHY_ACHIEVED ||
-		type === Notification.TYPE_SITE_TROPHY_ACHIEVED
+		type === NotificationType.GameTrophyAchieved ||
+		type === NotificationType.SiteTrophyAchieved
 	) {
 		if (action_model instanceof UserBaseTrophy) {
 			TrophyModal.show(action_model);
 		}
 	} else if (
-		type === Notification.TYPE_COMMENT_ADD ||
-		type === Notification.TYPE_COMMENT_ADD_OBJECT_OWNER ||
-		type === Notification.TYPE_MENTION ||
-		type === Notification.TYPE_FORUM_POST_ADD
+		type === NotificationType.CommentAdd ||
+		type === NotificationType.CommentAddObjectOwner ||
+		type === NotificationType.Mention ||
+		type === NotificationType.ForumPostAdd
 	) {
 		// Need to fetch the URL first.
 		let url: string;
@@ -213,7 +216,7 @@ export async function gotoNotification(
 			if (model instanceof Comment) {
 				url = await getCommentUrl(model.id);
 			} else if (model instanceof ForumPost) {
-				url = await ForumPost.getPostUrl(model.id);
+				url = await getForumPostUrl(model.id);
 			} else if (model instanceof FiresidePost) {
 				url = model.url;
 			} else {
@@ -240,15 +243,15 @@ export async function gotoNotification(
 			console.error(e);
 			showErrorGrowl($gettext(`Couldn't go to notification.`));
 		}
-	} else if (type === Notification.TYPE_SUPPORTER_MESSAGE) {
+	} else if (type === NotificationType.SupporterMessage) {
 		if (action_model instanceof SupporterAction) {
 			SupporterMessageModal.show(action_model);
 		}
-	} else if (type === Notification.TYPE_CREATOR_LEVEL_UP) {
+	} else if (type === NotificationType.CreatorLevelUp) {
 		if (action_model instanceof CreatorExperienceLevel) {
 			CreatorExperienceLevelUpModal.show(action_model);
 		}
-	} else if (type === Notification.TYPE_QUEST_NOTIFICATION) {
+	} else if (type === NotificationType.QuestNotification) {
 		if (action_model instanceof QuestNotification) {
 			const { quest_id } = action_model;
 

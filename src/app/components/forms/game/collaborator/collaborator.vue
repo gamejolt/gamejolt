@@ -1,6 +1,9 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
+import {
+	Collaborator,
+	CollaboratorRole,
+} from '../../../../../_common/collaborator/collaborator.model';
 import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { Game } from '../../../../../_common/game/game.model';
@@ -20,6 +23,8 @@ export default class FormGameCollaborator extends mixins(Wrapper) {
 	game!: Game;
 
 	readonly Collaborator = Collaborator;
+	readonly CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
+	readonly CollaboratorRoleCommunityManager = CollaboratorRole.CommunityManager;
 
 	created() {
 		this.form.resetOnSubmit = true;
@@ -64,7 +69,7 @@ export default class FormGameCollaborator extends mixins(Wrapper) {
 		<AppFormGroup name="role" :label="$gettext('Role')">
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="Collaborator.ROLE_EQUAL_COLLABORATOR" />
+					<AppFormControlRadio :value="CollaboratorRoleEqualCollaborator" />
 					<AppTranslate>Full Collaborator</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">
@@ -75,7 +80,7 @@ export default class FormGameCollaborator extends mixins(Wrapper) {
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="Collaborator.ROLE_COMMUNITY_MANAGER" />
+					<AppFormControlRadio :value="CollaboratorRoleCommunityManager" />
 					<AppTranslate>Community Manager</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">

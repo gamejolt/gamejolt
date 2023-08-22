@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Component, PropType } from 'vue';
+import type { Component, PropType } from 'vue';
 import { ContentObject } from '../../content-object';
 
 // App bootstrap will assign the component we should render.

@@ -50,7 +50,7 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import { TrophyModal } from '../../../../_common/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { showUserFiresideFollowModal } from '../../../../_common/user/fireside/modal/follow-modal.service';
-import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
+import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
 import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { User, unfollowUser } from '../../../../_common/user/user.model';
@@ -208,7 +208,7 @@ const shouldShowShouts = computed(() => {
 });
 
 const isFriend = computed(() => {
-	return userFriendship.value && userFriendship.value.state === UserFriendship.STATE_FRIENDS;
+	return userFriendship.value && userFriendship.value.state === UserFriendshipState.Friends;
 });
 
 const canMessage = computed(() => {
@@ -859,7 +859,7 @@ async function onFriendRequestReject() {
 						<!-- Friend Requests -->
 						<template v-if="userFriendship">
 							<AppExpand
-								:when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT"
+								:when="userFriendship.state === UserFriendshipState.RequestSent"
 								:animate-initial="true"
 							>
 								<div class="alert">
@@ -881,9 +881,7 @@ async function onFriendRequestReject() {
 							</AppExpand>
 
 							<AppExpand
-								:when="
-									userFriendship.state === UserFriendship.STATE_REQUEST_RECEIVED
-								"
+								:when="userFriendship.state === UserFriendshipState.RequestReceived"
 								:animate-initial="true"
 							>
 								<div class="alert">

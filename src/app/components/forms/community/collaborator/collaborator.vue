@@ -1,6 +1,9 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
+import {
+	Collaborator,
+	CollaboratorRole,
+} from '../../../../../_common/collaborator/collaborator.model';
 import { Community } from '../../../../../_common/community/community.model';
 import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
 import { vAppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
@@ -23,6 +26,9 @@ export default class FormCommunityCollaborator extends mixins(Wrapper) {
 	@Prop({ type: Object, required: true }) community!: Community;
 
 	readonly Collaborator = Collaborator;
+	readonly CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
+	readonly CollaboratorRoleModerator = CollaboratorRole.Moderator;
+	readonly CollaboratorRoleJamOrganizer = CollaboratorRole.JamOrganizer;
 
 	created() {
 		this.form.resetOnSubmit = true;
@@ -65,7 +71,7 @@ export default class FormCommunityCollaborator extends mixins(Wrapper) {
 		<AppFormGroup name="role" :label="$gettext('Role')">
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="Collaborator.ROLE_EQUAL_COLLABORATOR" />
+					<AppFormControlRadio :value="CollaboratorRoleEqualCollaborator" />
 					<AppTranslate>Full Collaborator</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">
@@ -76,7 +82,7 @@ export default class FormCommunityCollaborator extends mixins(Wrapper) {
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="Collaborator.ROLE_JAM_ORGANIZER" />
+					<AppFormControlRadio :value="CollaboratorRoleJamOrganizer" />
 					<AppTranslate>Jam Organizer</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">
@@ -87,7 +93,7 @@ export default class FormCommunityCollaborator extends mixins(Wrapper) {
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="Collaborator.ROLE_MODERATOR" />
+					<AppFormControlRadio :value="CollaboratorRoleModerator" />
 					<AppTranslate>Moderator</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">

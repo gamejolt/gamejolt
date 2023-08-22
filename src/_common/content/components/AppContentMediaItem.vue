@@ -250,7 +250,7 @@ function onItemFullscreen() {
 							/>
 							<img
 								v-else
-								class="img-responsive content-image egsdega"
+								class="img-responsive content-image"
 								:src="mediaItem.img_url"
 								:alt="title"
 								:title="title"

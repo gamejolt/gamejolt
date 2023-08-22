@@ -6,7 +6,7 @@ import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
-import { Notification } from '../../../_common/notification/notification-model';
+import { Notification, NotificationType } from '../../../_common/notification/notification-model';
 import { QuestNotification } from '../../../_common/quest/quest-notification-model';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
@@ -242,19 +242,19 @@ export function createGridNotificationChannel(
 		const notification = reactive(new Notification(data)) as Notification;
 
 		switch (notification.type) {
-			case Notification.TYPE_FRIENDSHIP_REQUEST:
+			case NotificationType.FriendshipRequest:
 				// For an incoming friend request, set that they have a new friend request.
 				appStore.setHasNewFriendRequests(true);
 				client.spawnNotification(notification);
 				break;
 
-			case Notification.TYPE_FIRESIDE_START:
+			case NotificationType.FiresideStart:
 				// Emit event that different components can pick up to update their views.
 				onFiresideStart.next(notification.action_model);
 				client.spawnNotification(notification);
 				break;
 
-			case Notification.TYPE_QUEST_NOTIFICATION: {
+			case NotificationType.QuestNotification: {
 				if (!(notification.action_model instanceof QuestNotification)) {
 					break;
 				}

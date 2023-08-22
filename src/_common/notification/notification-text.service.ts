@@ -1,7 +1,7 @@
 import { Community } from '../community/community.model';
 import {
 	CommunityUserNotification,
-	NotificationType,
+	CommunityUserNotificationType,
 } from '../community/user-notification/user-notification.model';
 import { CreatorExperienceLevel } from '../creator/experience/level.model';
 import { formatCurrency } from '../filters/currency';
@@ -14,7 +14,7 @@ import { ForumTopic } from '../forum/topic/topic.model';
 import { Game } from '../game/game.model';
 import { GameTrophy } from '../game/trophy/trophy.model';
 import { Mention } from '../mention/mention.model';
-import { OrderItem } from '../order/item/item.model';
+import type { OrderItem } from '../order/item/item.model';
 import { QuestNotification } from '../quest/quest-notification-model';
 import { Sellable } from '../sellable/sellable.model';
 import { SiteTrophy } from '../site/trophy/trophy.model';
@@ -23,7 +23,7 @@ import { $gettext, $gettextInterpolate } from '../translate/translate.service';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
 import { User } from '../user/user.model';
-import { Notification } from './notification-model';
+import { Notification, NotificationType } from './notification-model';
 
 export class NotificationText {
 	private static getSubjectTranslationValue(notification: Notification) {
@@ -96,7 +96,7 @@ export class NotificationText {
 		}
 
 		switch (notification.type) {
-			case Notification.TYPE_POST_ADD: {
+			case NotificationType.PostAdd: {
 				let gameTitle = '';
 				let postTitle = '';
 				if (notification.to_model instanceof Game) {
@@ -108,7 +108,7 @@ export class NotificationText {
 				return gameTitle + postTitle;
 			}
 
-			case Notification.TYPE_POST_FEATURED_IN_COMMUNITY: {
+			case NotificationType.PostFeaturedInCommunity: {
 				const postCommunity = notification.action_model as FiresidePostCommunity;
 
 				return _process(
@@ -122,7 +122,7 @@ export class NotificationText {
 				);
 			}
 
-			case Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY: {
+			case NotificationType.FiresideFeaturedInCommunity: {
 				return _process(
 					$gettextInterpolate(
 						`Your Fireside in the <em>%{ community }</em> community has been featured!`,
@@ -135,12 +135,12 @@ export class NotificationText {
 				);
 			}
 
-			case Notification.TYPE_COMMUNITY_USER_NOTIFICATION:
+			case NotificationType.CommunityUserNotification:
 				{
 					const userNotification = notification.action_model as CommunityUserNotification;
 
 					switch (userNotification.type) {
-						case NotificationType.POSTS_MOVE:
+						case CommunityUserNotificationType.POSTS_MOVE:
 							return _process(
 								$gettextInterpolate(
 									`Your post in the <em>%{ community }</em> community has been <b>moved</b> to a different channel.`,
@@ -150,7 +150,7 @@ export class NotificationText {
 									!plaintext
 								)
 							);
-						case NotificationType.POSTS_EJECT:
+						case CommunityUserNotificationType.POSTS_EJECT:
 							return _process(
 								$gettextInterpolate(
 									`Your post has been <b>ejected</b> from the <em>%{ community }</em> community.`,
@@ -160,7 +160,7 @@ export class NotificationText {
 									!plaintext
 								)
 							);
-						case NotificationType.FIRESIDES_EJECT:
+						case CommunityUserNotificationType.FIRESIDES_EJECT:
 							return _process(
 								$gettextInterpolate(
 									`Your Fireside has been <b>ejected</b> from the <em>%{ community }</em> community.`,
@@ -174,7 +174,7 @@ export class NotificationText {
 				}
 				break;
 
-			case Notification.TYPE_GAME_TROPHY_ACHIEVED: {
+			case NotificationType.GameTrophyAchieved: {
 				if (
 					notification.action_model instanceof UserGameTrophy &&
 					notification.action_model.trophy instanceof GameTrophy &&
@@ -194,7 +194,7 @@ export class NotificationText {
 				break;
 			}
 
-			case Notification.TYPE_SITE_TROPHY_ACHIEVED: {
+			case NotificationType.SiteTrophyAchieved: {
 				if (
 					notification.action_model instanceof UserSiteTrophy &&
 					notification.action_model.trophy instanceof SiteTrophy
@@ -212,7 +212,7 @@ export class NotificationText {
 				break;
 			}
 
-			case Notification.TYPE_COMMENT_ADD_OBJECT_OWNER: {
+			case NotificationType.CommentAddObjectOwner: {
 				if (notification.to_model instanceof User) {
 					return _process(
 						$gettextInterpolate(
@@ -232,7 +232,7 @@ export class NotificationText {
 				}
 			}
 
-			case Notification.TYPE_COMMENT_ADD: {
+			case NotificationType.CommentAdd: {
 				if (notification.to_model instanceof User) {
 					return _process(
 						$gettextInterpolate(
@@ -252,7 +252,7 @@ export class NotificationText {
 				}
 			}
 
-			case Notification.TYPE_FORUM_POST_ADD: {
+			case NotificationType.ForumPostAdd: {
 				return _process(
 					$gettextInterpolate(
 						`<em>%{ subject }</em> posted a new forum post to <b>%{ object }</b>.`,
@@ -262,7 +262,7 @@ export class NotificationText {
 				);
 			}
 
-			case Notification.TYPE_FRIENDSHIP_REQUEST: {
+			case NotificationType.FriendshipRequest: {
 				return _process(
 					$gettextInterpolate(
 						`<em>%{ subject }</em> sent you a friend request.`,
@@ -272,7 +272,7 @@ export class NotificationText {
 				);
 			}
 
-			case Notification.TYPE_FRIENDSHIP_ACCEPT: {
+			case NotificationType.FriendshipAccept: {
 				return _process(
 					$gettextInterpolate(
 						`<em>%{ subject }</em> accepted your friend request.`,
@@ -282,7 +282,7 @@ export class NotificationText {
 				);
 			}
 
-			case Notification.TYPE_GAME_RATING_ADD: {
+			case NotificationType.GameRatingAdd: {
 				return _process(
 					$gettextInterpolate(
 						`<em>%{ subject }</em> liked <b>%{ object }</b>.`,
@@ -292,7 +292,7 @@ export class NotificationText {
 				);
 			}
 
-			case Notification.TYPE_GAME_FOLLOW: {
+			case NotificationType.GameFollow: {
 				return _process(
 					$gettextInterpolate(
 						`<em>%{ subject }</em> followed <b>%{ object }</b>.`,
@@ -302,7 +302,7 @@ export class NotificationText {
 				);
 			}
 
-			case Notification.TYPE_SELLABLE_SELL: {
+			case NotificationType.SellableSell: {
 				const sellable = notification.to_model as Sellable;
 				const orderItem = notification.action_model as OrderItem;
 				const translationValues = {
@@ -320,7 +320,7 @@ export class NotificationText {
 				);
 			}
 
-			case Notification.TYPE_USER_FOLLOW: {
+			case NotificationType.UserFollow: {
 				return _process(
 					$gettextInterpolate(
 						`<em>%{ subject }</em> followed you.`,
@@ -330,7 +330,7 @@ export class NotificationText {
 				);
 			}
 
-			case Notification.TYPE_COLLABORATOR_INVITE: {
+			case NotificationType.CollaboratorInvite: {
 				switch (notification.to_resource) {
 					case 'Game':
 						return _process(
@@ -352,7 +352,7 @@ export class NotificationText {
 				break;
 			}
 
-			case Notification.TYPE_MENTION: {
+			case NotificationType.Mention: {
 				const mention = notification.action_model as Mention;
 
 				switch (mention.resource) {
@@ -455,7 +455,7 @@ export class NotificationText {
 				break;
 			}
 
-			case Notification.TYPE_QUEST_NOTIFICATION: {
+			case NotificationType.QuestNotification: {
 				if (notification.action_model instanceof QuestNotification) {
 					// TODO(quests) translation support for notifications
 					return _process($gettext(notification.action_model.title));
@@ -464,7 +464,7 @@ export class NotificationText {
 				break;
 			}
 
-			case Notification.TYPE_FIRESIDE_START: {
+			case NotificationType.FiresideStart: {
 				if (notification.action_model instanceof Fireside) {
 					return _process(
 						$gettextInterpolate(
@@ -478,7 +478,7 @@ export class NotificationText {
 				break;
 			}
 
-			case Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION: {
+			case NotificationType.FiresideStreamNotification: {
 				const users = (notification.action_model as FiresideStreamNotification).users;
 
 				if (users.length === 0) {
@@ -525,7 +525,7 @@ export class NotificationText {
 				}
 			}
 
-			case Notification.TYPE_CHARGED_STICKER: {
+			case NotificationType.ChargedSticker: {
 				if (notification.to_resource === 'Fireside_Post') {
 					return _process(
 						$gettextInterpolate(
@@ -546,7 +546,7 @@ export class NotificationText {
 				break;
 			}
 
-			case Notification.TYPE_SUPPORTER_MESSAGE: {
+			case NotificationType.SupporterMessage: {
 				const action =
 					notification.action_model instanceof SupporterAction
 						? notification.action_model
@@ -571,11 +571,11 @@ export class NotificationText {
 				);
 			}
 
-			case Notification.TYPE_POLL_ENDED: {
+			case NotificationType.PollEnded: {
 				return _process($gettext(`Poll's closed, results are in!`));
 			}
 
-			case Notification.TYPE_CREATOR_LEVEL_UP: {
+			case NotificationType.CreatorLevelUp: {
 				if (notification.action_model instanceof CreatorExperienceLevel) {
 					return _process(
 						$gettextInterpolate(
@@ -588,7 +588,7 @@ export class NotificationText {
 				break;
 			}
 
-			case Notification.TYPE_UNLOCKED_AVATAR_FRAME: {
+			case NotificationType.UnlockedAvatarFrame: {
 				return _process($gettext(`You unlocked a new <em>avatar frame</em>!`));
 			}
 		}

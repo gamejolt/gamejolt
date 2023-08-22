@@ -3,11 +3,10 @@ import { BaseTrophy } from '../../trophy/base-trophy.model';
 import { User } from '../user.model';
 
 export abstract class UserBaseTrophy extends Model {
-	user_id!: number;
-	logged_on!: number;
-	viewed_on?: number;
-
-	user?: User;
+	declare user_id: number;
+	declare logged_on: number;
+	declare viewed_on?: number;
+	declare user?: User;
 
 	constructor(data: any = {}) {
 		super(data);

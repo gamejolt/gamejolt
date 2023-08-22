@@ -1,33 +1,32 @@
-import { Model } from '../../model/model.service';
+import { Model, defineLegacyModel } from '../../model/model.service';
 import { Community } from '../community.model';
 
-export const enum NotificationType {
+export const enum CommunityUserNotificationType {
 	POSTS_MOVE = 'posts/move',
 	POSTS_EJECT = 'posts/eject',
 	FIRESIDES_EJECT = 'firesides/eject',
 }
 
-export class CommunityUserNotification extends Model {
-	community!: Community;
+export class CommunityUserNotification extends defineLegacyModel(
+	class CommunityUserNotificationDefinition extends Model {
+		declare community: Community;
+		declare type: CommunityUserNotificationType;
+		declare added_on: number;
+		declare reason: string | null;
+		declare extra_data: any;
 
-	type!: NotificationType;
-	added_on!: number;
-	reason!: string | null;
-	extra_data!: any;
+		constructor(data: any = {}) {
+			super(data);
 
-	constructor(data: any = {}) {
-		super(data);
+			if (data.community) {
+				this.community = new Community(data.community);
+			}
+		}
 
-		if (data.community) {
-			this.community = new Community(data.community);
+		$remove() {
+			return this.$_remove(`/web/dash/communities/user-notifications/dismiss/${this.id}`, {
+				ignoreLoadingBar: true,
+			});
 		}
 	}
-
-	$remove() {
-		return this.$_remove(`/web/dash/communities/user-notifications/dismiss/${this.id}`, {
-			ignoreLoadingBar: true,
-		});
-	}
-}
-
-Model.create(CommunityUserNotification);
+) {}

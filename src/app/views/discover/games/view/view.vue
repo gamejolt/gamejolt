@@ -10,7 +10,10 @@ import {
 	useAdsController,
 } from '../../../../../_common/ad/ad-store';
 import { Api } from '../../../../../_common/api/api.service';
-import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
+import {
+	Collaborator,
+	CollaboratorRole,
+} from '../../../../../_common/collaborator/collaborator.model';
 import { Comment } from '../../../../../_common/comment/comment-model';
 import {
 	CommentStoreManager,
@@ -446,9 +449,9 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 	private ratingChange$?: EventSubscription;
 
 	private roleNames: { [k: string]: string } = {
-		[Collaborator.ROLE_EQUAL_COLLABORATOR]: $gettext('an equal collaborator'),
-		[Collaborator.ROLE_COMMUNITY_MANAGER]: $gettext('a community manager'),
-		[Collaborator.ROLE_DEVELOPER]: $gettext('a developer'),
+		[CollaboratorRole.EqualCollaborator]: $gettext('an equal collaborator'),
+		[CollaboratorRole.CommunityManager]: $gettext('a community manager'),
+		[CollaboratorRole.Developer]: $gettext('a developer'),
 	};
 
 	get user() {

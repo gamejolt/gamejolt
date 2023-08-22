@@ -5,7 +5,11 @@ import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
-import { Collaborator } from '../../../../../../_common/collaborator/collaborator.model';
+import {
+	Collaborator,
+	CollaboratorRole,
+	CollaboratorStatus,
+} from '../../../../../../_common/collaborator/collaborator.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -44,6 +48,10 @@ export default class RouteDashGamesManageCollaborators extends LegacyRouteCompon
 	isAdding = false;
 
 	readonly Collaborator = Collaborator;
+	readonly CollaboratorStatusActive = CollaboratorStatus.Active;
+	readonly CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
+	readonly CollaboratorRoleCommunityManager = CollaboratorRole.CommunityManager;
+	readonly CollaboratorRoleDeveloper = CollaboratorRole.Developer;
 
 	get routeTitle() {
 		if (this.game) {
@@ -141,31 +149,27 @@ export default class RouteDashGamesManageCollaborators extends LegacyRouteCompon
 								<span class="tag">
 									<template
 										v-if="
-											collaborator.role ===
-											Collaborator.ROLE_EQUAL_COLLABORATOR
+											collaborator.role === CollaboratorRoleEqualCollaborator
 										"
 									>
 										<AppTranslate>Collaborator</AppTranslate>
 									</template>
 									<template
 										v-else-if="
-											collaborator.role ===
-											Collaborator.ROLE_COMMUNITY_MANAGER
+											collaborator.role === CollaboratorRoleCommunityManager
 										"
 									>
 										<AppTranslate>Community Manager</AppTranslate>
 									</template>
 									<template
-										v-else-if="
-											collaborator.role === Collaborator.ROLE_DEVELOPER
-										"
+										v-else-if="collaborator.role === CollaboratorRoleDeveloper"
 									>
 										<AppTranslate>Developer</AppTranslate>
 									</template>
 									<template v-else> - </template>
 								</span>
 
-								<template v-if="collaborator.status !== Collaborator.STATUS_ACTIVE">
+								<template v-if="collaborator.status !== CollaboratorStatusActive">
 									<span class="tag"><AppTranslate>Invited</AppTranslate></span>
 									<br />
 									<AppTranslate>

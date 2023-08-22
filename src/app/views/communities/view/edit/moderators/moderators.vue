@@ -4,12 +4,16 @@ import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
-import { Collaborator } from '../../../../../../_common/collaborator/collaborator.model';
+import {
+Collaborator,
+CollaboratorRole,
+CollaboratorStatus,
+} from '../../../../../../_common/collaborator/collaborator.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
+LegacyRouteComponent,
+OptionsForLegacyRoute,
 } from '../../../../../../_common/route/legacy-route-component';
 import { arrayRemove } from '../../../../../../utils/array';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
@@ -41,6 +45,10 @@ export default class RouteCommunitiesViewEditModerators extends LegacyRouteCompo
 	isShowingCollaboratorAdd = false;
 
 	readonly Collaborator = Collaborator;
+	readonly CollaboratorStatusActive = CollaboratorStatus.Active;
+	readonly CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
+	readonly CollaboratorRoleModerator = CollaboratorRole.Moderator;
+	readonly CollaboratorRoleJamOrganizer = CollaboratorRole.JamOrganizer;
 
 	get community() {
 		return this.routeStore.community;
@@ -132,19 +140,19 @@ export default class RouteCommunitiesViewEditModerators extends LegacyRouteCompo
 
 				<div class="card-meta">
 					<span class="tag">
-						<template v-if="collaborator.role === Collaborator.ROLE_EQUAL_COLLABORATOR">
+						<template v-if="collaborator.role === CollaboratorRoleEqualCollaborator">
 							<AppTranslate>Full Collaborator</AppTranslate>
 						</template>
-						<template v-else-if="collaborator.role === Collaborator.ROLE_JAM_ORGANIZER">
+						<template v-else-if="collaborator.role === CollaboratorRoleJamOrganizer">
 							<AppTranslate>Jam Organizer</AppTranslate>
 						</template>
-						<template v-else-if="collaborator.role === Collaborator.ROLE_MODERATOR">
+						<template v-else-if="collaborator.role === CollaboratorRoleModerator">
 							<AppTranslate>Moderator</AppTranslate>
 						</template>
 						<template v-else> - </template>
 					</span>
 
-					<template v-if="collaborator.status !== Collaborator.STATUS_ACTIVE">
+					<template v-if="collaborator.status !== CollaboratorStatusActive">
 						<span class="tag"><AppTranslate>Invited</AppTranslate></span>
 						<br />
 						<AppTranslate>This user hasn't accepted their invitation yet.</AppTranslate>
