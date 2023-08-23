@@ -1,8 +1,6 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, onMounted, PropType, ref, toRefs } from 'vue';
-import { debounce } from '../../utils/utils';
-import { vAppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
-import { Ruler } from '../ruler/ruler-service';
+import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { useResizeObserver } from '../../utils/resize-observer';
 import AppAnimSlideshow from './AppAnimSlideshow.vue';
 import {
 	ImgSlideshow,
@@ -61,17 +59,19 @@ const chosenAsset = computed(() => {
 	}
 });
 
-onMounted(() => {
-	onDimensionsChanged();
-});
-
-function onDimensionsChanged() {
-	if (!root.value) {
+function onDimensionsChanged(entries: ResizeObserverEntry[]) {
+	const entry = entries[0];
+	if (!entry) {
 		return;
 	}
-	const { width, height } = Ruler.offset(root.value);
+	const { width, height } = entry.contentRect;
 	size.value = { width, height };
 }
+
+useResizeObserver({
+	target: root,
+	callback: onDimensionsChanged,
+});
 
 function getStyleForAsset(sheet: ImgSlideshow): CSSProperties {
 	const { width, height } = size.value;
@@ -122,12 +122,10 @@ function getStyleForAsset(sheet: ImgSlideshow): CSSProperties {
 		...offset,
 	};
 }
-
-const debounceDimensionsChanged = debounce(onDimensionsChanged, 500);
 </script>
 
 <template>
-	<div ref="root" v-app-observe-dimensions="debounceDimensionsChanged" class="anim-electricity">
+	<div ref="root" class="anim-electricity">
 		<slot />
 
 		<template v-if="chosenAsset">

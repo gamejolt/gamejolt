@@ -1,8 +1,19 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, PropType, ref, toRefs, watch } from 'vue';
+import {
+	CSSProperties,
+	PropType,
+	Ref,
+	computed,
+	nextTick,
+	onMounted,
+	ref,
+	toRefs,
+	watch,
+} from 'vue';
 import AppAnimElectricity from '../animation/AppAnimElectricity.vue';
+import AppStickerImg from './AppStickerImg.vue';
 import { StickerPlacement } from './placement/placement.model';
-import { removeStickerFromTarget, StickerTargetController } from './target/target-controller';
+import { StickerTargetController, removeStickerFromTarget } from './target/target-controller';
 
 const props = defineProps({
 	sticker: {
@@ -31,9 +42,10 @@ const emit = defineEmits({
 	click: () => true,
 });
 
-const refOuter = ref<HTMLDivElement>();
-const refLive = ref<HTMLDivElement>();
-const refInner = ref<HTMLImageElement>();
+const refOuter = ref() as Ref<HTMLDivElement>;
+const refLive = ref() as Ref<HTMLDivElement>;
+
+const imgStyles = ref<CSSProperties>({});
 
 const electricityProps = computed(() =>
 	showCharged.value
@@ -70,11 +82,13 @@ watch(
 async function onUpdateStickerPlacement() {
 	await nextTick();
 
-	refOuter.value!.style.left = `calc(${sticker.value.position_x * 100}% - 32px)`;
-	refOuter.value!.style.top = `calc(${sticker.value.position_y * 100}% - 32px)`;
+	refOuter.value.style.left = `calc(${sticker.value.position_x * 100}% - 32px)`;
+	refOuter.value.style.top = `calc(${sticker.value.position_y * 100}% - 32px)`;
 	// Transform the inner element so the parent component can assign
-	// translateY() while transitioning in
-	refInner.value!.style.transform = `rotate(${sticker.value.rotation * 90 - 45}deg)`;
+	// translateY() while transitioning in.
+	imgStyles.value = {
+		transform: `rotate(${sticker.value.rotation * 90 - 45}deg)`,
+	};
 }
 
 function onClickRemove() {
@@ -85,23 +99,20 @@ function onClickRemove() {
 </script>
 
 <template>
-	<div ref="refOuter" class="-sticker" @click.stop="onClickRemove">
+	<div ref="refOuter" class="_sticker" @click.stop="onClickRemove">
 		<div
 			ref="refLive"
 			:class="{
-				'-live': isLive,
+				_live: isLive,
 			}"
 		>
 			<component :is="showCharged ? AppAnimElectricity : 'div'" v-bind="electricityProps">
-				<img
-					ref="refInner"
-					draggable="false"
-					onmousedown="return false"
-					style="user-drag: none"
-					:src="sticker.sticker.img_url"
+				<AppStickerImg
 					:class="{
-						'-clickable': isClickable,
+						_clickable: isClickable,
 					}"
+					:style="imgStyles"
+					:src="sticker.sticker.img_url"
 				/>
 			</component>
 		</div>
@@ -111,7 +122,7 @@ function onClickRemove() {
 <style lang="stylus" scoped>
 $-base-scale = scale(0.8)
 
-.-sticker
+._sticker
 	position: absolute
 	z-index: 2
 	width: 64px
@@ -124,7 +135,7 @@ $-base-scale = scale(0.8)
 		width: 100%
 		height: 100%
 
-.-live
+._live
 	// Keep this at 0 or the image may flicker before removing itself.
 	opacity: 0
 	transform: $-base-scale
@@ -132,7 +143,7 @@ $-base-scale = scale(0.8)
 	animation-duration: 8.5s
 	animation-timing-function: $strong-ease-out
 
-.-clickable
+._clickable
 	cursor: pointer
 
 @keyframes live-fade

@@ -1,6 +1,5 @@
 <script lang="ts">
 import { computed, PropType, ref, toRefs, watch } from 'vue';
-import { getMediaserverUrlForBounds } from '../../utils/image';
 import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';
 import { Jolticon } from '../jolticon/AppJolticon.vue';
@@ -95,15 +94,6 @@ async function onActionPressed() {
 			}
 		};
 
-		const processMediaserverUrl = (src: string | undefined) => {
-			if (src) {
-				return getMediaserverUrlForBounds({
-					src,
-					maxWidth: 100,
-					maxHeight: 100,
-				});
-			}
-		};
 		const fallbackIcon: Jolticon = 'gift';
 
 		for (const reward of objectiveRewards) {
@@ -126,7 +116,7 @@ async function onActionPressed() {
 					// Combine all exp rewards into 1 listing
 					key: 'exp',
 					amount: reward.fallback_amount,
-					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
+					img_url: reward.fallback_media?.mediaserver_url,
 					name: reward.name,
 					icon: 'exp',
 					xAfterCount: false,
@@ -148,7 +138,7 @@ async function onActionPressed() {
 				addOrUpdateReward({
 					key: `background-${id}`,
 					amount: 1,
-					img_url: processMediaserverUrl(reward.background.media_item.mediaserver_url),
+					img_url: reward.background.media_item.mediaserver_url,
 					name: reward.name,
 					icon: 'paintbrush',
 					xAfterCount: true,
@@ -167,7 +157,7 @@ async function onActionPressed() {
 				addOrUpdateReward({
 					key: `charge`,
 					amount: reward.fallback_amount,
-					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
+					img_url: reward.fallback_media?.mediaserver_url,
 					name: reward.name,
 					icon: fallbackIcon,
 					xAfterCount: true,
@@ -179,7 +169,7 @@ async function onActionPressed() {
 				addOrUpdateReward({
 					key: `coin`,
 					amount: reward.fallback_amount,
-					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
+					img_url: reward.fallback_media?.mediaserver_url,
 					name: reward.name,
 					icon: fallbackIcon,
 					xAfterCount: true,
@@ -189,7 +179,7 @@ async function onActionPressed() {
 				addOrUpdateReward({
 					key: `unknown-${reward.name}-${reward.id}`,
 					amount: reward.fallback_amount,
-					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
+					img_url: reward.fallback_media?.mediaserver_url,
 					name: reward.name,
 					icon: fallbackIcon,
 					xAfterCount: true,

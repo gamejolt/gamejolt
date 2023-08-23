@@ -569,16 +569,10 @@ export function createChatRoomChannel(
 	 * Places a sticker on a particular target user in the room.
 	 */
 	function pushPlaceSticker(targetUserId: number, stickerData: any) {
-		return channelController.push<PlaceStickerPayload>(
-			'place_sticker',
-			{
-				...stickerData,
-				host_user_id: targetUserId,
-			},
-			// Just in case they get disconnected (or bad data causes it to
-			// error out)
-			5_000
-		);
+		return channelController.push<PlaceStickerPayload>('place_sticker', {
+			...stickerData,
+			host_user_id: targetUserId,
+		});
 	}
 
 	function pushStartFireside() {

@@ -43,8 +43,15 @@ const props = defineProps({
 
 const { emoji } = toRefs(props);
 
+function isEmojiResource(emoji: typeof props.emoji): emoji is Emoji {
+	if (typeof emoji === 'string') {
+		return false;
+	}
+	return true;
+}
+
 const src = computed(() => {
-	if (typeof emoji.value === 'string') {
+	if (!isEmojiResource(emoji.value)) {
 		return assetPaths[`./${emoji.value}.png`];
 	}
 	return emoji.value.img_url;
@@ -65,7 +72,7 @@ const src = computed(() => {
 				lineHeight: 1,
 				cursor: `default`,
 			},
-			styleWhen(typeof emoji === 'string', {
+			styleWhen(!isEmojiResource(emoji), {
 				imageRendering: `pixelated`,
 			}),
 		]"

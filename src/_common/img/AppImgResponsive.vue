@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
-import { getMediaserverUrlForBounds } from '../../utils/image';
+import { PropType, nextTick, onMounted, ref, toRefs, watch } from 'vue';
+import { HiDpiOptions, getMediaserverUrlForBounds } from '../../utils/image';
 import { sleep } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';
 import { onScreenResize } from '../screen/screen-service';
@@ -12,13 +12,21 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
+	hiDpiOptions: {
+		type: Object as PropType<HiDpiOptions>,
+		default: undefined,
+	},
+	alt: {
+		type: String,
+		default: undefined,
+	},
 });
 
 const emit = defineEmits({
 	imgloadchange: (_isLoaded: boolean) => true,
 });
 
-const { src } = toRefs(props);
+const { src, hiDpiOptions } = toRefs(props);
 
 const root = ref<HTMLElement>();
 const initialized = ref(false);
@@ -53,11 +61,14 @@ async function _updateSrc() {
 		return;
 	}
 
-	const newSrc = getMediaserverUrlForBounds({
-		src: src.value,
-		maxWidth: containerWidth,
-		maxHeight: containerHeight,
-	});
+	const newSrc = getMediaserverUrlForBounds(
+		{
+			src: src.value,
+			maxWidth: containerWidth,
+			maxHeight: containerHeight,
+		},
+		hiDpiOptions?.value
+	);
 
 	// Only if the src changed from previous runs. They may be the same if the
 	// user resized the window but image container didn't change dimensions.
@@ -74,5 +85,5 @@ async function _updateSrc() {
 </script>
 
 <template>
-	<img ref="root" class="img-responsive" :src="processedSrc" />
+	<img ref="root" class="img-responsive" :src="processedSrc" :alt="alt" />
 </template>

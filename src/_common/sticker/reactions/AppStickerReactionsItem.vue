@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, toRefs, watch } from 'vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
+import AppStickerImg from '../AppStickerImg.vue';
 
 const props = defineProps({
 	count: {
@@ -74,7 +75,7 @@ function onCountChanged() {
 <template>
 	<div class="-item">
 		<span class="-sticker" :class="{ '-animated': animate, '-keep-animating': shouldAnimate }">
-			<img :src="imgUrl" @dragstart.prevent />
+			<AppStickerImg :src="imgUrl" />
 		</span>
 		<span class="-count">
 			{{ displayCount }}

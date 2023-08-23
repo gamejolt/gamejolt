@@ -135,6 +135,9 @@ const baseKernelOptions = computed<Partial<KernelRecipe>>(() => ({
 	downwardGravityStrength: 1.5,
 	popAngleVariance: 30,
 	baseSize: baseSize.value,
+	hiDpiMediaserverOptions: {
+		dpiCheck: 'loose',
+	},
 }));
 
 const isLive = computed(() => controller.value.isLive);
@@ -266,7 +269,7 @@ function _onFiresideStickerPlaced(placement: StickerPlacement) {
 	let kettle: PopcornKettleController | null = null;
 	let tempKettle: TempKettle | null = null;
 
-	const onKettleDispose = () => {
+	const onKernelDispose = () => {
 		if (tempKettle) {
 			arrayRemove(tempLeadingKettles, i => i.key === tempKettle?.key);
 			tempAnimatingKernels.value = Math.max(0, tempAnimatingKernels.value - 1);
@@ -292,8 +295,8 @@ function _onFiresideStickerPlaced(placement: StickerPlacement) {
 			const sticker = allStickers.value[stickers.value.length + extraCount];
 
 			trailingKettle.addKernel({
-				kernelImage: sticker!.img_url,
 				...baseKernelOptions,
+				kernelImage: sticker.img_url,
 				popAngle: -popAngle,
 			});
 		}
@@ -322,13 +325,13 @@ function _onFiresideStickerPlaced(placement: StickerPlacement) {
 	}
 
 	kettle.addKernel({
-		kernelImage: img_url,
 		...baseKernelOptions,
+		kernelImage: img_url,
 		popAngle,
 		reverse: true,
 		fadeOut: false,
 		zIndexInvert: true,
-		onDispose: onKettleDispose,
+		onDispose: onKernelDispose,
 	});
 }
 

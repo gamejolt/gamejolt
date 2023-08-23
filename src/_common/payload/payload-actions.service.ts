@@ -1,5 +1,5 @@
 import { CreatorExperience } from '../creator/experience/experience.model';
-import { UnknownModelData } from '../model/model.service';
+import { ModelData, UnknownModelData } from '../model/model.service';
 import { getShellNotice } from '../shell/notice/notice.service';
 import { StickerPackOpenModal } from '../sticker/pack/open-modal/modal.service';
 import { UserStickerPack } from '../sticker/pack/user-pack.model';
@@ -18,7 +18,7 @@ interface PackAction {
 interface CreatorExperienceAction {
 	type: 'gain-creator-experience';
 	data: {
-		experience: number;
+		experience: ModelData<CreatorExperience>;
 		leveled_up: boolean;
 		xp_gained: number;
 	};

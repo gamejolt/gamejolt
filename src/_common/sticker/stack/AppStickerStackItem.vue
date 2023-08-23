@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import AppStickerImg from '../AppStickerImg.vue';
+
 defineProps({
 	imgUrl: {
 		type: String,
@@ -8,19 +10,21 @@ defineProps({
 </script>
 
 <template>
-	<div class="sticker-stack-item">
+	<div
+		class="AppStickerStackItem"
+		:style="{
+			userSelect: `none`,
+		}"
+	>
 		<span>
-			<img class="-sticker-img" :src="imgUrl" alt="" draggable="false" />
+			<AppStickerImg
+				:style="{
+					display: `block`,
+					width: `100%`,
+					height: `100%`,
+				}"
+				:src="imgUrl"
+			/>
 		</span>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.sticker-stack-item
-	user-select: none
-
-.-sticker-img
-	display: block
-	width: 100%
-	height: 100%
-</style>

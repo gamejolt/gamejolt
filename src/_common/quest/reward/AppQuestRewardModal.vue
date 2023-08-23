@@ -1,6 +1,8 @@
 <script lang="ts">
 import { nextTick, onMounted, onUnmounted, PropType, ref, Ref, toRefs } from 'vue';
+import { HiDpiOptions } from '../../../utils/image';
 import { sleep } from '../../../utils/utils';
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import { illBackpackClosed, illBackpackOpen } from '../../img/ill/illustrations';
 import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
 import AppModal from '../../modal/AppModal.vue';
@@ -89,6 +91,10 @@ const isClosing = ref(false);
 let itemAnimationOffset = 500;
 let _isMounted = false;
 
+const hiDpiOptions: HiDpiOptions = {
+	dpiCheck: 'loose',
+};
+
 onMounted(() => afterMount());
 onUnmounted(() => (_isMounted = false));
 
@@ -141,6 +147,7 @@ async function startBackpackFlow() {
 				popAngle: 0,
 				duration: DurationBackpackItem,
 				fadeOutStart: 0.9,
+				hiDpiMediaserverOptions: hiDpiOptions,
 			});
 
 			// Wait to show the next item.
@@ -229,7 +236,13 @@ function playAnimation(
 					>
 						{{ amount + (xAfterCount ? 'x ' : ' ') }}
 
-						<img v-if="img_url" class="-reward-img" :src="img_url" alt="" />
+						<AppImgResponsive
+							v-if="img_url"
+							class="-reward-img"
+							:src="img_url"
+							:hi-dpi-options="hiDpiOptions"
+							alt=""
+						/>
 						<AppJolticon v-else :icon="icon" />
 
 						<span>{{ ' ' + name }}</span>
@@ -327,12 +340,12 @@ $-z-backpack = 1
 	::v-deep(.jolticon)
 		font-size: calc(min(32px, 3vh))
 
-	img
-		height: calc(min(32px, 3vh))
-		width: @height
-
 .-reward-img
 	rounded-corners()
+	display: inline-block
+	height: calc(min(32px, 3vh))
+	width: auto
+	maxWidth: calc(min(32px, 3vh))
 
 .-kettle
 	position: absolute

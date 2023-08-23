@@ -30,6 +30,7 @@ import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppStickerImg from '../../../../_common/sticker/AppStickerImg.vue';
 import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
 import { Sticker } from '../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -376,7 +377,7 @@ async function onClickIsActive() {
 							height: `50%`,
 						}"
 					>
-						<img
+						<AppStickerImg
 							v-if="imgUrl"
 							:style="{
 								width: `100%`,
@@ -384,9 +385,6 @@ async function onClickIsActive() {
 								maxHeight: `100%`,
 							}"
 							:src="imgUrl"
-							draggable="false"
-							style="user-select: none"
-							ondragstart="return false"
 						/>
 						<div
 							v-else
