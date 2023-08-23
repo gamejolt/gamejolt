@@ -4,9 +4,9 @@ import { defineConfig, UserConfig as ViteUserConfig } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import {
-activateJsonProperty,
-patchPackageJson,
-updateJsonProperty,
+	activateJsonProperty,
+	patchPackageJson,
+	updateJsonProperty,
 } from './scripts/build/packageJson';
 import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { readFromViteEnv } from './scripts/build/vite-runner';
@@ -401,9 +401,6 @@ export default defineConfig(async () => {
 				// experimentalLogSideEffects: true,
 
 				treeshake: {
-					// We always want these to be considered pure and side effect free for exports.
-					manualPureFunctions: ['ref', 'reactive', 'computed'],
-
 					// We don't do any side effects with property access, so turn it off.
 					propertyReadSideEffects: false,
 				},
