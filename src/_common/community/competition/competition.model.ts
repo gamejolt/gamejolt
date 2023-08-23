@@ -1,5 +1,5 @@
 import { MediaItem } from '../../media-item/media-item-model';
-import { Model, defineLegacyModel } from '../../model/model.service';
+import { Model } from '../../model/model.service';
 
 export type CompetitionPeriod = 'pre-comp' | 'running' | 'voting' | 'post-comp';
 
@@ -13,102 +13,100 @@ export const CompetitionPeriodPostComp = 3;
 
 const PeriodNumerics: CompetitionPeriod[] = ['pre-comp', 'running', 'voting', 'post-comp'];
 
-export class CommunityCompetition extends defineLegacyModel(
-	class CommunityCompetitionDefinition extends Model {
-		declare added_on: number;
-		declare timezone: string;
-		declare starts_on: number;
-		declare ends_on: number;
-		declare is_voting_enabled: boolean;
-		declare voting_ends_on: number;
-		declare has_community_voting: boolean;
-		declare voting_type: VotingType;
-		declare voting_user_restriction: VotingUserRestriction;
-		declare has_awards: boolean;
-		declare are_results_calculated: boolean;
-		declare entry_count: number;
-		declare header?: MediaItem;
+export class CommunityCompetition extends Model {
+	declare added_on: number;
+	declare timezone: string;
+	declare starts_on: number;
+	declare ends_on: number;
+	declare is_voting_enabled: boolean;
+	declare voting_ends_on: number;
+	declare has_community_voting: boolean;
+	declare voting_type: VotingType;
+	declare voting_user_restriction: VotingUserRestriction;
+	declare has_awards: boolean;
+	declare are_results_calculated: boolean;
+	declare entry_count: number;
+	declare header?: MediaItem;
 
-		get period(): CompetitionPeriod {
-			const now = Date.now();
-			if (now < this.starts_on) {
-				return 'pre-comp';
-			}
-
-			if (now < this.ends_on) {
-				return 'running';
-			}
-
-			if (this.is_voting_enabled && now < this.voting_ends_on) {
-				return 'voting';
-			}
-
-			return 'post-comp';
+	get period(): CompetitionPeriod {
+		const now = Date.now();
+		if (now < this.starts_on) {
+			return 'pre-comp';
 		}
 
-		get periodNum(): number {
-			return PeriodNumerics.indexOf(this.period);
+		if (now < this.ends_on) {
+			return 'running';
 		}
 
-		get hasStarted() {
-			return this.periodNum > CompetitionPeriodPreComp;
+		if (this.is_voting_enabled && now < this.voting_ends_on) {
+			return 'voting';
 		}
 
-		get hasEnded() {
-			return this.periodNum > CompetitionPeriodRunning;
-		}
+		return 'post-comp';
+	}
 
-		get isVotingSetUp() {
-			return !!this.voting_ends_on;
-		}
+	get periodNum(): number {
+		return PeriodNumerics.indexOf(this.period);
+	}
 
-		constructor(data: any = {}) {
-			super(data);
+	get hasStarted() {
+		return this.periodNum > CompetitionPeriodPreComp;
+	}
 
-			if (data.header) {
-				this.header = new MediaItem(data.header);
-			}
-		}
+	get hasEnded() {
+		return this.periodNum > CompetitionPeriodRunning;
+	}
 
-		$save() {
-			return this.$_save(`/web/dash/communities/competitions/save/${this.id}`, 'competition');
-		}
+	get isVotingSetUp() {
+		return !!this.voting_ends_on;
+	}
 
-		$saveVoting() {
-			return this.$_save(
-				`/web/dash/communities/competitions/voting/save/${this.id}`,
-				'competition'
-			);
-		}
+	constructor(data: any = {}) {
+		super(data);
 
-		$saveVotingEnabled() {
-			return this.$_save(
-				`/web/dash/communities/competitions/voting/set-enabled/${this.id}`,
-				'competition',
-				{
-					data: {
-						is_voting_enabled: this.is_voting_enabled,
-					},
-				}
-			);
-		}
-
-		$saveHeader() {
-			return this.$_save(
-				`/web/dash/communities/competitions/header/save/${this.id}`,
-				'competition',
-				{
-					file: this.file,
-					allowComplexData: ['crop'],
-				}
-			);
-		}
-
-		$clearHeader() {
-			return this.$_save(
-				`/web/dash/communities/competitions/header/clear/${this.id}`,
-				'competition'
-			);
+		if (data.header) {
+			this.header = new MediaItem(data.header);
 		}
 	}
-) {}
+
+	$save() {
+		return this.$_save(`/web/dash/communities/competitions/save/${this.id}`, 'competition');
+	}
+
+	$saveVoting() {
+		return this.$_save(
+			`/web/dash/communities/competitions/voting/save/${this.id}`,
+			'competition'
+		);
+	}
+
+	$saveVotingEnabled() {
+		return this.$_save(
+			`/web/dash/communities/competitions/voting/set-enabled/${this.id}`,
+			'competition',
+			{
+				data: {
+					is_voting_enabled: this.is_voting_enabled,
+				},
+			}
+		);
+	}
+
+	$saveHeader() {
+		return this.$_save(
+			`/web/dash/communities/competitions/header/save/${this.id}`,
+			'competition',
+			{
+				file: this.file,
+				allowComplexData: ['crop'],
+			}
+		);
+	}
+
+	$clearHeader() {
+		return this.$_save(
+			`/web/dash/communities/competitions/header/clear/${this.id}`,
+			'competition'
+		);
+	}
+}

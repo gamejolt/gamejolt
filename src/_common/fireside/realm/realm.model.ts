@@ -14,5 +14,3 @@ export class FiresideRealm extends Model {
 		}
 	}
 }
-
-Model.create(FiresideRealm);

@@ -14,5 +14,3 @@ export class ForumChannel extends Model {
 	replies_count!: number;
 	notifications_count!: number;
 }
-
-Model.create(ForumChannel);

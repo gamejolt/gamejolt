@@ -69,5 +69,3 @@ export class CommunityCompetitionEntry extends Model {
 		);
 	}
 }
-
-Model.create(CommunityCompetitionEntry);

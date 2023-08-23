@@ -10,5 +10,3 @@ export class UserWallet extends Model {
 	declare minimum_payout_balance: number;
 	declare can_withdraw: boolean;
 }
-
-Model.create(UserWallet);

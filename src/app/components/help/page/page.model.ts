@@ -27,5 +27,3 @@ export default class HelpPage extends Model {
 		);
 	}
 }
-
-Model.create(HelpPage);

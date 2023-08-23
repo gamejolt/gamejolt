@@ -4,39 +4,37 @@ import { Api } from '../api/api.service';
 import { showErrorGrowl } from '../growls/growls.service';
 import { MediaItem } from '../media-item/media-item-model';
 import { showModalConfirm } from '../modal/confirm/confirm-service';
-import { Model, defineLegacyModel } from '../model/model.service';
+import { Model } from '../model/model.service';
 import { $gettext } from '../translate/translate.service';
 
-export class Realm extends defineLegacyModel(
-	class RealmDefinition extends Model {
-		declare name: string;
-		declare path: string;
-		declare added_on: number;
+export class Realm extends Model {
+	declare name: string;
+	declare path: string;
+	declare added_on: number;
 
-		declare cover: MediaItem;
+	declare cover: MediaItem;
 
-		declare is_following: boolean;
-		declare follower_count: number;
-		declare can_moderate: boolean;
+	declare is_following: boolean;
+	declare follower_count: number;
+	declare can_moderate: boolean;
 
-		constructor(data: any = {}) {
-			super(data);
+	constructor(data: any = {}) {
+		super(data);
 
-			if (data.cover) {
-				this.cover = new MediaItem(data.cover);
-			}
-		}
-
-		get routeLocation(): RouteLocationDefinition {
-			return {
-				name: 'realms.view.overview',
-				params: {
-					path: this.path,
-				},
-			};
+		if (data.cover) {
+			this.cover = new MediaItem(data.cover);
 		}
 	}
-) {}
+
+	get routeLocation(): RouteLocationDefinition {
+		return {
+			name: 'realms.view.overview',
+			params: {
+				path: this.path,
+			},
+		};
+	}
+}
 
 export async function followRealm(realm: Realm) {
 	realm.is_following = true;

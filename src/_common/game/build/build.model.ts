@@ -1,6 +1,6 @@
 import { Api } from '../../api/api.service';
 import { Jolticon } from '../../jolticon/AppJolticon.vue';
-import { Model, defineLegacyModel } from '../../model/model.service';
+import { Model } from '../../model/model.service';
 import { Game } from '../game.model';
 import { GamePackage } from '../package/package.model';
 import { GameRelease } from '../release/release.model';
@@ -156,141 +156,139 @@ export const GameBuildEmulatorInfo = {
 	[GameBuildEmulator.Msx]: 'MSX',
 };
 
-export class GameBuild extends defineLegacyModel(
-	class GameBuildDefinition extends Model {
-		declare primary_file: GameBuildFile;
-		params: GameBuildParam[] = [];
-		declare errors?: GameBuildError[];
-		declare game_id: number;
-		declare game_package_id: number;
-		declare game_release_id: number;
-		declare archive_type: string;
-		declare folder: string;
-		declare type: GameBuildType;
-		declare os_windows: boolean;
-		declare os_windows_64: boolean;
-		declare os_mac: boolean;
-		declare os_mac_64: boolean;
-		declare os_linux: boolean;
-		declare os_linux_64: boolean;
-		declare os_other: boolean;
-		declare emulator_type: GameBuildEmulator;
-		declare embed_width: number;
-		declare embed_height: number;
-		declare embed_fit_to_screen: boolean;
-		declare java_class_name: string;
-		declare browser_disable_right_click: boolean;
-		declare https_enabled: boolean;
-		declare added_on: number;
-		declare updated_on: number;
-		declare modified_on: number;
-		declare status: GameBuildStatus;
+export class GameBuild extends Model {
+	declare primary_file: GameBuildFile;
+	params: GameBuildParam[] = [];
+	declare errors?: GameBuildError[];
+	declare game_id: number;
+	declare game_package_id: number;
+	declare game_release_id: number;
+	declare archive_type: string;
+	declare folder: string;
+	declare type: GameBuildType;
+	declare os_windows: boolean;
+	declare os_windows_64: boolean;
+	declare os_mac: boolean;
+	declare os_mac_64: boolean;
+	declare os_linux: boolean;
+	declare os_linux_64: boolean;
+	declare os_other: boolean;
+	declare emulator_type: GameBuildEmulator;
+	declare embed_width: number;
+	declare embed_height: number;
+	declare embed_fit_to_screen: boolean;
+	declare java_class_name: string;
+	declare browser_disable_right_click: boolean;
+	declare https_enabled: boolean;
+	declare added_on: number;
+	declare updated_on: number;
+	declare modified_on: number;
+	declare status: GameBuildStatus;
 
-		// These fields get added only during GamePackagePayloadModel.
-		declare _package?: GamePackage;
-		declare _release?: GameRelease;
-		declare _launch_options?: GameBuildLaunchOption[];
+	// These fields get added only during GamePackagePayloadModel.
+	declare _package?: GamePackage;
+	declare _release?: GameRelease;
+	declare _launch_options?: GameBuildLaunchOption[];
 
-		constructor(data: any = {}) {
-			super(data);
+	constructor(data: any = {}) {
+		super(data);
 
-			if (data.primary_file) {
-				this.primary_file = new GameBuildFile(data.primary_file);
-			}
-
-			this.params = [];
-			if (data.params && Array.isArray(data.params) && data.params.length) {
-				this.params = GameBuildParam.populate(data.params);
-			}
-
-			if (data.errors && typeof data.errors === 'string') {
-				this.errors = data.errors.split(',');
-			}
+		if (data.primary_file) {
+			this.primary_file = new GameBuildFile(data.primary_file);
 		}
 
-		isPlatform(os: string, arch?: string) {
-			if (os === 'windows') {
-				return arch === '64' ? !!this.os_windows_64 : !!this.os_windows;
-			} else if (os === 'mac') {
-				return arch === '64' ? !!this.os_mac_64 : !!this.os_mac;
-			} else if (os === 'linux') {
-				return arch === '64' ? !!this.os_linux_64 : !!this.os_linux;
-			}
-			return false;
+		this.params = [];
+		if (data.params && Array.isArray(data.params) && data.params.length) {
+			this.params = GameBuildParam.populate(data.params);
 		}
 
-		get isBrowserBased() {
-			return GameBuildBrowserTypes.indexOf(this.type) !== -1;
-		}
-
-		get isDownloadable() {
-			return !this.isBrowserBased;
-		}
-
-		hasError(error: GameBuildError) {
-			return !!this.errors && this.errors.indexOf(error) !== -1;
-		}
-
-		getUrl(game: Game, page: string) {
-			if (page === 'download') {
-				return `/get/build?game=${game.id}&build=${this.id}`;
-			}
-
-			return undefined;
-		}
-
-		static getDownloadUrl(id: number, options: { key?: string; forceDownload?: boolean } = {}) {
-			// This is a game key so you can access games that you have a key for.
-			const data: any = {};
-			if (options.key) {
-				data.key = options.key;
-			}
-
-			if (options.forceDownload) {
-				data.forceDownload = true;
-			}
-
-			return Api.sendRequest('/web/discover/games/builds/get-download-url/' + id, data);
-		}
-
-		getDownloadUrl(options: { key?: string; forceDownload?: boolean } = {}) {
-			return GameBuild.getDownloadUrl(this.id, options);
-		}
-
-		$save() {
-			const params = [this.game_id, this.game_package_id, this.game_release_id];
-			if (!this.id) {
-				return this.$_save(
-					'/web/dash/developer/games/builds/save/' + params.join('/'),
-					'gameBuild',
-					{
-						file: this.file,
-					}
-				);
-			} else {
-				// May or may not have an upload file on an edit.
-				params.push(this.id);
-				return this.$_save(
-					'/web/dash/developer/games/builds/save/' + params.join('/'),
-					'gameBuild'
-				);
-			}
-		}
-
-		async $remove(game: Game) {
-			const params = [this.game_id, this.game_package_id, this.game_release_id, this.id];
-			const response = await this.$_remove(
-				'/web/dash/developer/games/builds/remove/' + params.join('/')
-			);
-
-			if (game && response.game) {
-				game.assign(response.game);
-			}
-
-			return response;
+		if (data.errors && typeof data.errors === 'string') {
+			this.errors = data.errors.split(',');
 		}
 	}
-) {}
+
+	isPlatform(os: string, arch?: string) {
+		if (os === 'windows') {
+			return arch === '64' ? !!this.os_windows_64 : !!this.os_windows;
+		} else if (os === 'mac') {
+			return arch === '64' ? !!this.os_mac_64 : !!this.os_mac;
+		} else if (os === 'linux') {
+			return arch === '64' ? !!this.os_linux_64 : !!this.os_linux;
+		}
+		return false;
+	}
+
+	get isBrowserBased() {
+		return GameBuildBrowserTypes.indexOf(this.type) !== -1;
+	}
+
+	get isDownloadable() {
+		return !this.isBrowserBased;
+	}
+
+	hasError(error: GameBuildError) {
+		return !!this.errors && this.errors.indexOf(error) !== -1;
+	}
+
+	getUrl(game: Game, page: string) {
+		if (page === 'download') {
+			return `/get/build?game=${game.id}&build=${this.id}`;
+		}
+
+		return undefined;
+	}
+
+	static getDownloadUrl(id: number, options: { key?: string; forceDownload?: boolean } = {}) {
+		// This is a game key so you can access games that you have a key for.
+		const data: any = {};
+		if (options.key) {
+			data.key = options.key;
+		}
+
+		if (options.forceDownload) {
+			data.forceDownload = true;
+		}
+
+		return Api.sendRequest('/web/discover/games/builds/get-download-url/' + id, data);
+	}
+
+	getDownloadUrl(options: { key?: string; forceDownload?: boolean } = {}) {
+		return GameBuild.getDownloadUrl(this.id, options);
+	}
+
+	$save() {
+		const params = [this.game_id, this.game_package_id, this.game_release_id];
+		if (!this.id) {
+			return this.$_save(
+				'/web/dash/developer/games/builds/save/' + params.join('/'),
+				'gameBuild',
+				{
+					file: this.file,
+				}
+			);
+		} else {
+			// May or may not have an upload file on an edit.
+			params.push(this.id);
+			return this.$_save(
+				'/web/dash/developer/games/builds/save/' + params.join('/'),
+				'gameBuild'
+			);
+		}
+	}
+
+	async $remove(game: Game) {
+		const params = [this.game_id, this.game_package_id, this.game_release_id, this.id];
+		const response = await this.$_remove(
+			'/web/dash/developer/games/builds/remove/' + params.join('/')
+		);
+
+		if (game && response.game) {
+			game.assign(response.game);
+		}
+
+		return response;
+	}
+}
 
 export function pluckGameBuildOsSupport(build: GameBuild) {
 	const support = [];

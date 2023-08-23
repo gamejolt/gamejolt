@@ -67,5 +67,3 @@ export class QuestObjective extends Model {
 		return this.progress_visualization_type === QuestObjectiveMilestoneType.segmented;
 	}
 }
-
-Model.create(QuestObjective);

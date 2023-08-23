@@ -79,5 +79,3 @@ export class GameScreenshot extends Model implements LightboxMediaModel {
 		);
 	}
 }
-
-Model.create(GameScreenshot);

@@ -87,5 +87,3 @@ export class GameCollection extends Model {
 		});
 	}
 }
-
-Model.create(GameCollection);

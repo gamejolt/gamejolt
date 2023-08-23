@@ -202,5 +202,3 @@ export class CommunityActivityItem extends Model {
 		}
 	}
 }
-
-Model.create(CommunityActivityItem);

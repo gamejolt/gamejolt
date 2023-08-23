@@ -16,5 +16,3 @@ export class UserStickerPack extends Model {
 		}
 	}
 }
-
-Model.create(UserStickerPack);

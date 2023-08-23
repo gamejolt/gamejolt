@@ -30,5 +30,3 @@ export class UserStripeManagedAccount extends Model {
 		super(data);
 	}
 }
-
-Model.create(UserStripeManagedAccount);

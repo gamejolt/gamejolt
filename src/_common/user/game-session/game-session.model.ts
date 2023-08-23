@@ -1,5 +1,5 @@
-import { Model } from '../../model/model.service';
 import { Game } from '../../game/game.model';
+import { Model } from '../../model/model.service';
 
 export class UserGameSession extends Model {
 	user_id!: number;
@@ -16,5 +16,3 @@ export class UserGameSession extends Model {
 		}
 	}
 }
-
-Model.create(UserGameSession);

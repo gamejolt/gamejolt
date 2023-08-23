@@ -7,5 +7,3 @@ export class UserTipaltiManagedAccount extends Model {
 		super(data);
 	}
 }
-
-Model.create(UserTipaltiManagedAccount);

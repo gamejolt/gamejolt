@@ -39,5 +39,3 @@ export class CommunityCompetitionEntryAward extends Model {
 		);
 	}
 }
-
-Model.create(CommunityCompetitionEntryAward);

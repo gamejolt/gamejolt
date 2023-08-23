@@ -26,5 +26,3 @@ export class UserGameScore extends Model {
 		);
 	}
 }
-
-Model.create(UserGameScore);

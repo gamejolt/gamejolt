@@ -8,5 +8,3 @@ export class ForumCategory extends Model {
 	status!: string;
 	created_on!: number;
 }
-
-Model.create(ForumCategory);

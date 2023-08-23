@@ -1,4 +1,4 @@
-import { Model, defineLegacyModel } from '../../../model/model.service';
+import { Model } from '../../../model/model.service';
 
 export const enum GameBuildLaunchOptionOs {
 	Windows = 'windows',
@@ -18,10 +18,8 @@ export const GameBuildLaunchablePlatforms = [
 	GameBuildLaunchOptionOs.Linux64,
 ];
 
-export class GameBuildLaunchOption extends defineLegacyModel(
-	class GameBuildLaunchOptionDefinition extends Model {
-		declare game_build_id: number;
-		declare os: GameBuildLaunchOptionOs;
-		declare executable_path: string;
-	}
-) {}
+export class GameBuildLaunchOption extends Model {
+	declare game_build_id: number;
+	declare os: GameBuildLaunchOptionOs;
+	declare executable_path: string;
+}

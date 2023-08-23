@@ -65,5 +65,3 @@ export class GameSketchfab extends Model implements LightboxMediaModel {
 		);
 	}
 }
-
-Model.create(GameSketchfab);

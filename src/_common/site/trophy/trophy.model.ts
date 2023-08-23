@@ -1,4 +1,3 @@
-import { Model } from '../../model/model.service';
 import { BaseTrophy } from '../../trophy/base-trophy.model';
 import { User } from '../../user/user.model';
 
@@ -13,5 +12,3 @@ export class SiteTrophy extends BaseTrophy {
 		}
 	}
 }
-
-Model.create(SiteTrophy);

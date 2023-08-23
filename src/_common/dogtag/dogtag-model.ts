@@ -14,5 +14,3 @@ export class Dogtag extends Model {
 	declare type: string;
 	declare text: string;
 }
-
-Model.create(Dogtag);

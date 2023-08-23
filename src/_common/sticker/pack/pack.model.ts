@@ -19,5 +19,3 @@ export class StickerPack extends Model {
 		}
 	}
 }
-
-Model.create(StickerPack);

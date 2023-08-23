@@ -6,5 +6,3 @@ export class Translation extends Model {
 	lang!: string;
 	content!: string;
 }
-
-Model.create(Translation);

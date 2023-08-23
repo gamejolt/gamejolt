@@ -8,5 +8,3 @@ export class ReferralEntry extends Model {
 		super(data);
 	}
 }
-
-Model.create(ReferralEntry);

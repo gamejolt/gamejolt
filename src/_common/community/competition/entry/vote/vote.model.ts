@@ -5,5 +5,3 @@ export class CommunityCompetitionEntryVote extends Model {
 	community_competition_voting_category_id!: number | null;
 	rating!: number;
 }
-
-Model.create(CommunityCompetitionEntryVote);

@@ -18,8 +18,6 @@ export class FiresideChatSettings extends Model {
 	declare content_capabilities: string[];
 }
 
-Model.create(FiresideChatSettings);
-
 /**
  * Generates the correct context capabilities for the fireside depending on
  * their role and what the chat settings are defined as.

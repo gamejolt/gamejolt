@@ -16,5 +16,3 @@ export class StoreBanner extends Model {
 	event_label!: string;
 	banner_media?: MediaItem;
 }
-
-Model.create(StoreBanner);

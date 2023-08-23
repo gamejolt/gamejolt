@@ -7,5 +7,3 @@ export class ThemePreset extends Model {
 	notice!: string;
 	tint!: string | null;
 }
-
-Model.create(ThemePreset);

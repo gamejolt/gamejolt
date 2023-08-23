@@ -21,5 +21,3 @@ export class PaymentSource extends Model {
 		return this.$_remove('/web/dash/payment-methods/remove/' + this.id);
 	}
 }
-
-Model.create(PaymentSource);

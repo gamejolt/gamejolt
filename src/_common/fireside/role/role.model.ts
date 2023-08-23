@@ -11,5 +11,3 @@ export class FiresideRole extends Model {
 		return this.can_stream_audio || this.can_stream_video;
 	}
 }
-
-Model.create(FiresideRole);

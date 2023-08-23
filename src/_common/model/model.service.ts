@@ -52,48 +52,20 @@ export class Model {
 	_removed = false;
 	_progress: ApiProgressEvent | null = null;
 
-	// We need to create some methods dynamically on the model.
-	// These get defined in defineLegacyModel().
-	static populate: <T = any>(rows: (T | ModelData<T>)[]) => T[];
-	assign(_other: any): void {}
+	constructor(data?: any) {
+		if (data) {
+			Object.assign(this, data);
+		}
+	}
 
-	/**
-	 * @deprecated Use {@link defineLegacyModel} instead.
-	 */
-	static create(self: any) {
-		// These need to be created dynamically for each model type.
-		self.populate = function (rows: any[]): any[] {
-			const models: any[] = [];
-			if (rows && Array.isArray(rows) && rows.length) {
-				for (const row of rows) {
-					models.push(new self(row));
-				}
+	static populate<T>(this: new (data?: any) => T, rows: (T | ModelData<T>)[]): T[] {
+		const models: any[] = [];
+		if (rows && Array.isArray(rows) && rows.length) {
+			for (const row of rows) {
+				models.push(new this(row));
 			}
-			return models;
-		};
-
-		self.prototype.assign = function (this: any, other: any) {
-			// Some times the model constructors add new fields when populating.
-			// This way we retain those fields.
-			const newObj = new self(other);
-
-			const keys = Object.keys(newObj);
-			for (const k of keys) {
-				// For some reason this was throwing some weird errors when
-				// saving some forms (like key group form). Couldn't figure it
-				// out, so I'm wrapping it. It still seems to work okay.
-				try {
-					this[k] = newObj[k];
-				} catch (e) {
-					console.warn(`Got an error when setting a model value (key ${k}) in assign().`);
-					console.warn(e);
-				}
-			}
-		};
-
-		Object.assign(self.prototype, Model.prototype);
-
-		return self;
+		}
+		return models;
 	}
 
 	/**
@@ -112,9 +84,24 @@ export class Model {
 		return Promise.reject(response);
 	}
 
-	constructor(data?: any) {
-		if (data) {
-			Object.assign(this, data);
+	assign(other: any): void {
+		const modelConstructor = this.constructor as typeof Model;
+
+		// Some times the model constructors add new fields when populating.
+		// This way we retain those fields.
+		const newObj = new modelConstructor(other);
+
+		const keys = Object.keys(newObj);
+		for (const k of keys) {
+			// For some reason this was throwing some weird errors when
+			// saving some forms (like key group form). Couldn't figure it
+			// out, so I'm wrapping it. It still seems to work okay.
+			try {
+				(this as any)[k] = (newObj as any)[k];
+			} catch (e) {
+				console.warn(`Got an error when setting a model value (key ${k}) in assign().`);
+				console.warn(e);
+			}
 		}
 	}
 
@@ -168,42 +155,3 @@ export class Model {
 		return removeModel(this, url, options);
 	}
 }
-
-/**
- * This is the new way to define a legacy model. It doesn't use side effects.
- * Use instead of Model.create from now on.
- *
- * @__NO_SIDE_EFFECTS__
- */
-export const defineLegacyModel = <T extends new (...args: any[]) => Model>(base: T) =>
-	class extends base {
-		// These need to be created dynamically for each model type.
-		static populate(rows: any[]): any[] {
-			const models: any[] = [];
-			if (rows && Array.isArray(rows) && rows.length) {
-				for (const row of rows) {
-					models.push(new base(row));
-				}
-			}
-			return models;
-		}
-
-		assign(this: any, other: any) {
-			// Some times the model constructors add new fields when populating.
-			// This way we retain those fields.
-			const newObj = new base(other);
-
-			const keys = Object.keys(newObj);
-			for (const k of keys) {
-				// For some reason this was throwing some weird errors when
-				// saving some forms (like key group form). Couldn't figure it
-				// out, so I'm wrapping it. It still seems to work okay.
-				try {
-					this[k] = (newObj as any)[k];
-				} catch (e) {
-					console.warn(`Got an error when setting a model value (key ${k}) in assign().`);
-					console.warn(e);
-				}
-			}
-		}
-	};

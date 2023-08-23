@@ -54,5 +54,3 @@ export class GameVideo extends Model implements LightboxMediaModel {
 		);
 	}
 }
-
-Model.create(GameVideo);

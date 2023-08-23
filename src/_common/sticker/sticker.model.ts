@@ -1,6 +1,6 @@
 import { Emoji } from '../emoji/emoji.model';
 import { MediaItem } from '../media-item/media-item-model';
-import { Model, defineLegacyModel } from '../model/model.service';
+import { Model } from '../model/model.service';
 import { User } from '../user/user.model';
 
 /**
@@ -19,78 +19,76 @@ export const enum StickerRarity {
 	Epic = 3,
 }
 
-export class Sticker extends defineLegacyModel(
-	class StickerDefinition extends Model {
-		declare name?: string;
-		declare rarity: number;
-		declare img_url: string;
-		declare is_event: boolean;
-		declare is_secret?: boolean;
-		declare is_active?: boolean;
-		declare added_on?: number;
-		declare media_item?: MediaItem;
-		declare artist?: User;
-		declare owner_user?: User;
-		declare mastery?: number;
-		declare emoji?: Emoji;
+export class Sticker extends Model {
+	declare name?: string;
+	declare rarity: number;
+	declare img_url: string;
+	declare is_event: boolean;
+	declare is_secret?: boolean;
+	declare is_active?: boolean;
+	declare added_on?: number;
+	declare media_item?: MediaItem;
+	declare artist?: User;
+	declare owner_user?: User;
+	declare mastery?: number;
+	declare emoji?: Emoji;
 
-		constructor(data: any = {}) {
-			super(data);
+	constructor(data: any = {}) {
+		super(data);
 
-			if (data.media_item) {
-				this.media_item = new MediaItem(data.media_item);
-			}
-
-			if (data.artist) {
-				this.artist = new User(data.artist);
-			}
-
-			if (data.owner_user) {
-				this.owner_user = new User(data.owner_user);
-			}
-
-			if (data.emoji) {
-				this.emoji = new Emoji(data.emoji);
-			}
+		if (data.media_item) {
+			this.media_item = new MediaItem(data.media_item);
 		}
 
-		get isCreatorSticker() {
-			return !!this.owner_user && this.owner_user.is_creator === true;
+		if (data.artist) {
+			this.artist = new User(data.artist);
 		}
 
-		get rarityColor() {
-			switch (this.rarity) {
-				case StickerRarity.Uncommon:
-					return '#1bb804';
-
-				case StickerRarity.Rare:
-					return '#18a5f2';
-
-				case StickerRarity.Epic:
-					return '#ffbc56';
-
-				default:
-					return null;
-			}
+		if (data.owner_user) {
+			this.owner_user = new User(data.owner_user);
 		}
 
-		get rarityName() {
-			switch (this.rarity) {
-				case StickerRarity.Common:
-					return 'Common';
-
-				case StickerRarity.Uncommon:
-					return 'Uncommon';
-
-				case StickerRarity.Rare:
-					return 'Rare';
-
-				case StickerRarity.Epic:
-					return 'Epic';
-
-				default:
-					return '???';
-			}
+		if (data.emoji) {
+			this.emoji = new Emoji(data.emoji);
 		}
 	}
-) {}
+
+	get isCreatorSticker() {
+		return !!this.owner_user && this.owner_user.is_creator === true;
+	}
+
+	get rarityColor() {
+		switch (this.rarity) {
+			case StickerRarity.Uncommon:
+				return '#1bb804';
+
+			case StickerRarity.Rare:
+				return '#18a5f2';
+
+			case StickerRarity.Epic:
+				return '#ffbc56';
+
+			default:
+				return null;
+		}
+	}
+
+	get rarityName() {
+		switch (this.rarity) {
+			case StickerRarity.Common:
+				return 'Common';
+
+			case StickerRarity.Uncommon:
+				return 'Uncommon';
+
+			case StickerRarity.Rare:
+				return 'Rare';
+
+			case StickerRarity.Epic:
+				return 'Epic';
+
+			default:
+				return '???';
+		}
+	}
+}

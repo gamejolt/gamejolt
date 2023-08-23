@@ -6,5 +6,3 @@ export default class HelpCategory extends Model {
 	declare sort: number;
 	declare icon: string | null;
 }
-
-Model.create(HelpCategory);

@@ -5,5 +5,3 @@ export class CommunityCompetitionEntryVoteResult extends Model {
 	rating!: number;
 	rank!: number;
 }
-
-Model.create(CommunityCompetitionEntryVoteResult);

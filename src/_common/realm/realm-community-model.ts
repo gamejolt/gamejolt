@@ -14,5 +14,3 @@ export class RealmCommunity extends Model {
 	declare community: Community;
 	declare added_on: number;
 }
-
-Model.create(RealmCommunity);

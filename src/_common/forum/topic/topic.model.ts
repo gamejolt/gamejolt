@@ -51,5 +51,3 @@ export class ForumTopic extends Model {
 		return this.$_save(url + '/' + this.id, 'forumTopic');
 	}
 }
-
-Model.create(ForumTopic);

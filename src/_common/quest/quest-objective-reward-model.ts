@@ -132,5 +132,3 @@ export class QuestObjectiveReward extends Model {
 		return result[0].toUpperCase() + result.slice(1);
 	}
 }
-
-Model.create(QuestObjectiveReward);

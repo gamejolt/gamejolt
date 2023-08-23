@@ -29,5 +29,3 @@ export class SupporterMessage extends Model {
 		});
 	}
 }
-
-Model.create(SupporterMessage);

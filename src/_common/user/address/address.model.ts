@@ -22,5 +22,3 @@ export class UserAddress extends Model {
 		return this.$_save('/web/dash/addresses/save/' + this.id, 'userAddress');
 	}
 }
-
-Model.create(UserAddress);

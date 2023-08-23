@@ -25,5 +25,3 @@ export class ChatInvite extends Model {
 		}
 	}
 }
-
-Model.create(ChatInvite);

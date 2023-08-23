@@ -10,5 +10,3 @@ export class StickerReward extends Model {
 	declare sticker: Sticker;
 	declare amount: number;
 }
-
-Model.create(StickerReward);

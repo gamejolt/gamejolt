@@ -29,5 +29,3 @@ export class GamePlaylistGame extends Model {
 		);
 	}
 }
-
-Model.create(GamePlaylistGame);

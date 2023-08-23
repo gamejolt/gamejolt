@@ -2,15 +2,18 @@
 	"Model definition": {
 		"prefix": "model",
 		"body": [
+			"export class ${1:ModelName} implements ModelStoreModel {",
+			"\tdeclare id: number;",
+			"\t$0",
 			"",
-			"export class ${1:Comment} extends Model {",
 			"\tconstructor(data: any = {}) {",
-			"\t\tsuper( data );",
+			"\t\tthis.update(data);",
 			"\t}",
-			"}",
 			"",
-			"Model.create(${1:Comment});",
-			""
+			"\tupdate(data: any) {",
+			"\t\tObject.assign(this, data);",
+			"\t}",
+			"}"
 		]
 	},
 	"Vue Route": {
@@ -44,13 +47,7 @@
 	},
 	"Legacy model definition": {
 		"prefix": "legacy-model",
-		"body": [
-			"export class ${1:ModelName} extends defineLegacyModel(",
-			"class ${1:ModelName}Definition extends Model {",
-			"\t$0",
-			"}",
-			") {}"
-		]
+		"body": ["export class ${1:ModelName} extends Model {", "\t$0", "}"]
 	},
 	"Pure assignment": {
 		"prefix": "pure",

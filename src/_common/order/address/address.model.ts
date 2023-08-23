@@ -18,5 +18,3 @@ export class OrderAddress extends Model {
 		super(data);
 	}
 }
-
-Model.create(OrderAddress);

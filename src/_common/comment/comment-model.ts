@@ -13,7 +13,7 @@ import {
 	storeModel,
 } from '../model/model-store.service';
 import { Model } from '../model/model.service';
-import { ReactionableModel, ReactionCount } from '../reaction/reaction-count';
+import { ReactionCount, ReactionableModel } from '../reaction/reaction-count';
 import { $createSubscription, Subscription } from '../subscription/subscription.model';
 import { User } from '../user/user.model';
 import { CommentVote, CommentVoteType } from './vote/vote-model';

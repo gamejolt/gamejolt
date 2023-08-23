@@ -37,5 +37,3 @@ export class FeaturedItem extends Model {
 		}
 	}
 }
-
-Model.create(FeaturedItem);

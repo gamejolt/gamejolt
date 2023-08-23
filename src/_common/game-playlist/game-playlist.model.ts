@@ -1,6 +1,6 @@
+import { Api } from '../api/api.service';
 import { Model } from '../model/model.service';
 import { User } from '../user/user.model';
-import { Api } from '../api/api.service';
 import { GamePlaylistGame } from './game/game.model';
 
 export class GamePlaylist extends Model {
@@ -65,5 +65,3 @@ export class GamePlaylist extends Model {
 		return this.$_remove('/web/library/playlists/remove/' + this.id);
 	}
 }
-
-Model.create(GamePlaylist);

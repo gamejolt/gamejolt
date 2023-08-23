@@ -1,5 +1,5 @@
-import { Model } from '../../model/model.service';
 import { Api } from '../../api/api.service';
+import { Model } from '../../model/model.service';
 
 export class GameSong extends Model {
 	game_id!: number;
@@ -39,8 +39,8 @@ export class GameSong extends Model {
 	}
 
 	$remove() {
-		return this.$_remove('/web/dash/developer/games/music/remove/' + this.game_id + '/' + this.id);
+		return this.$_remove(
+			'/web/dash/developer/games/music/remove/' + this.game_id + '/' + this.id
+		);
 	}
 }
-
-Model.create(GameSong);

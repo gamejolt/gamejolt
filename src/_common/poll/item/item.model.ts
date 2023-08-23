@@ -1,14 +1,12 @@
-import { Model, defineLegacyModel } from '../../model/model.service';
+import { Model } from '../../model/model.service';
 import { Poll } from '../poll.model';
 
-export class PollItem extends defineLegacyModel(
-	class PollItemDefinition extends Model {
-		declare poll_id: number;
-		declare text: string;
-		declare vote_count: number;
-		declare is_voted?: boolean;
-	}
-) {}
+export class PollItem extends Model {
+	declare poll_id: number;
+	declare text: string;
+	declare vote_count: number;
+	declare is_voted?: boolean;
+}
 
 export function buildPollItemForPoll(poll: Poll, text: string) {
 	const item = new PollItem({

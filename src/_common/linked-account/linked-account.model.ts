@@ -72,5 +72,3 @@ export class LinkedAccount extends Model {
 		}
 	}
 }
-
-Model.create(LinkedAccount);

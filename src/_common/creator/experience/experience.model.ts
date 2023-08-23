@@ -9,5 +9,3 @@ export class CreatorExperience extends Model {
 	declare ability_on_level_up_display: string | null;
 	declare is_max_level: boolean;
 }
-
-Model.create(CreatorExperience);
