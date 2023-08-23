@@ -5,7 +5,6 @@ import {
 	CommentStoreManagerKey,
 	getCommentStore,
 } from '../../../../../_common/comment/comment-store';
-import { CommentModal } from '../../../../../_common/comment/modal/modal.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppGameModLinks from '../../../../../_common/game/mod-links/mod-links.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
@@ -15,6 +14,7 @@ import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { getAbsoluteLink } from '../../../../../utils/router';
+import { CommentModal } from '../../../../components/comment/modal/modal.service';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { useGameRouteController } from './view.vue';
 

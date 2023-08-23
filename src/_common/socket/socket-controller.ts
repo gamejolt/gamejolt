@@ -183,6 +183,9 @@ export function createSocketController(options: {
 		});
 	}
 
+	/**
+	 * Disconnects the socket and invalidates the current {@link cancelToken}.
+	 */
 	function disconnect() {
 		logger.info('Disconnecting socket.');
 

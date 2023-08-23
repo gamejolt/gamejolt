@@ -438,6 +438,8 @@ async function refreshQuests() {
 
 						<AppStickerChargeCard
 							header-charge
+							elevate
+							header-spacer-height="6px"
 							allow-fully-charged-text
 							:is-loading="isLoadingCharge"
 						/>

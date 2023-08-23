@@ -1,6 +1,7 @@
 import { Comment } from '../comment/comment-model';
 import { FiresidePost } from '../fireside/post/post-model';
 import { ForumPost } from '../forum/post/post.model';
+import { storeModel } from '../model/model-store.service';
 import { Model, defineLegacyModel } from '../model/model.service';
 import { User } from '../user/user.model';
 
@@ -27,7 +28,7 @@ export class Mention extends defineLegacyModel(
 			}
 
 			if (data.comment) {
-				this.comment = new Comment(data.comment);
+				this.comment = storeModel(Comment, data.comment);
 			}
 
 			if (data.forum_post) {

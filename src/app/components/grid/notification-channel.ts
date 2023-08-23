@@ -250,6 +250,7 @@ export function createGridNotificationChannel(
 
 			case NotificationType.FiresideStart:
 				// Emit event that different components can pick up to update their views.
+
 				onFiresideStart.next(notification.action_model);
 				client.spawnNotification(notification);
 				break;

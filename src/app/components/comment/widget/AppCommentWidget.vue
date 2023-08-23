@@ -13,48 +13,51 @@ import {
 	watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
-import AppAlertBox from '../../alert/AppAlertBox.vue';
-import { vAppAuthRequired } from '../../auth/auth-required-directive';
-import AppButton from '../../button/AppButton.vue';
-import { Collaborator } from '../../collaborator/collaborator.model';
-import { Environment } from '../../environment/environment.service';
-import { formatNumber } from '../../filters/number';
-import AppIllustration from '../../illustration/AppIllustration.vue';
-import { illNoComments } from '../../illustration/illustrations';
-import { FormCommentLazy } from '../../lazy';
-import AppLoading from '../../loading/AppLoading.vue';
-import AppMessageThread from '../../message-thread/AppMessageThread.vue';
-import AppMessageThreadAdd from '../../message-thread/AppMessageThreadAdd.vue';
-import { Model } from '../../model/model.service';
-import AppNavTabList from '../../nav/tab-list/tab-list.vue';
-import { useCommonStore } from '../../store/common-store';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { User } from '../../user/user.model';
+import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
 import {
 	canCommentOnModel,
 	Comment,
 	CommentableModel,
 	CommentSort,
 	getCommentModelResourceName,
-} from '../comment-model';
+} from '../../../../_common/comment/comment-model';
 import {
+	commentStoreFetch,
+	commentStoreFetchThread,
+	commentStoreHandleAdd,
+	commentStoreHandleEdit,
+	commentStoreHandleRemove,
 	CommentStoreManagerKey,
 	CommentStoreModel,
-	fetchCommentThread,
-	fetchStoreComments,
+	commentStorePin,
+	commentStoreSort,
 	lockCommentStore,
-	onCommentAdd as onCommentStoreAdd,
-	onCommentEdit as onCommentStoreEdit,
-	onCommentRemove as onCommentStoreRemove,
-	pinComment as pinStoreComment,
 	releaseCommentStore,
-	setCommentSort,
-} from '../comment-store';
+} from '../../../../_common/comment/comment-store';
 import {
 	CommentStoreSliceView,
 	CommentStoreThreadView,
 	CommentStoreView,
-} from '../comment-store-view';
+} from '../../../../_common/comment/comment-store-view';
+import { Environment } from '../../../../_common/environment/environment.service';
+import { formatNumber } from '../../../../_common/filters/number';
+import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import { illNoComments } from '../../../../_common/illustration/illustrations';
+import { FormCommentLazy } from '../../../../_common/lazy';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
+import AppMessageThread from '../../../../_common/message-thread/AppMessageThread.vue';
+import AppMessageThreadAdd from '../../../../_common/message-thread/AppMessageThreadAdd.vue';
+import { storeModel } from '../../../../_common/model/model-store.service';
+import { Model } from '../../../../_common/model/model.service';
+import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
+import { useCommonStore } from '../../../../_common/store/common-store';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { User } from '../../../../_common/user/user.model';
+import type { DeregisterOnConnected } from '../../grid/client.service';
+import { useGridStore } from '../../grid/grid-store';
 import { DisplayMode } from '../modal/modal.service';
 import AppCommentWidgetComment from './AppCommentWidgetComment.vue';
 
@@ -131,6 +134,10 @@ export function createCommentWidget(options: {
 		return totalCommentsCount.value > 0;
 	});
 
+	const { grid, whenGridConnected } = useGridStore();
+
+	let _deregisterReactions: DeregisterOnConnected | null = null;
+
 	async function _init() {
 		if (!model.value) {
 			return;
@@ -154,7 +161,7 @@ export function createCommentWidget(options: {
 		// Filter comments based on the 'initialTab' prop. This allows us to set the comment
 		// sorting to the "You" tab when you leave a comment from an event item.
 		if (store.value && initialTab.value) {
-			setCommentSort(store.value, initialTab.value);
+			commentStoreSort(store.value, initialTab.value);
 		}
 
 		await _fetchComments();
@@ -164,6 +171,12 @@ export function createCommentWidget(options: {
 		const resource = getCommentModelResourceName(model.value);
 		const resourceId = model.value.id;
 		store.value = lockCommentStore(commentManager, resource, resourceId);
+
+		if (_deregisterReactions) {
+			console.error('Expected to not have a reaction handler yet');
+		} else {
+			_deregisterReactions = whenGridConnected(_joinCommentChannel);
+		}
 
 		// Keep track of how many comment widgets have a lock on this store. We
 		// need this data when closing the last widget to do some tear down
@@ -188,10 +201,12 @@ export function createCommentWidget(options: {
 		// comment widget. This way if you open up a new comment widget in the
 		// future, we'll correctly start at the "hot" sort.
 		if (metadata.widgetLocks === 0) {
-			setCommentSort(store.value, CommentSort.Hot);
+			commentStoreSort(store.value, CommentSort.Hot);
 		}
 
 		releaseCommentStore(commentManager, store.value);
+		_leaveCommentChannel();
+
 		store.value = null;
 	}
 
@@ -205,15 +220,16 @@ export function createCommentWidget(options: {
 
 			let payload: any;
 			if (isThreadView.value && threadCommentId.value) {
-				payload = await fetchCommentThread(store.value, threadCommentId.value);
+				payload = await commentStoreFetchThread(store.value, threadCommentId.value);
+
 				// It's possible that the thread comment is actually a child. In
 				// that case, update the view's parent ID to the returned parent
 				// ID.
 				if (storeView.value instanceof CommentStoreThreadView) {
-					storeView.value.parentCommentId = new Comment(payload.parent).id;
+					storeView.value.parentCommentId = storeModel(Comment, payload.parent).id;
 				}
 			} else {
-				payload = await fetchStoreComments(store.value, currentPage.value);
+				payload = await commentStoreFetch(store.value, currentPage.value);
 			}
 
 			isLoading.value = false;
@@ -238,13 +254,44 @@ export function createCommentWidget(options: {
 		}
 	}
 
+	function _joinCommentChannel(): void {
+		const resource = getCommentModelResourceName(model.value);
+		const resourceId = model.value.id;
+		const commentId = threadCommentId.value ? threadCommentId.value : 0;
+		console.log(`joining comment channel for ${commentId} on ${resource}/${resourceId}...`);
+
+		grid.value?.startListeningToCommentsReactions({
+			resource: resource,
+			resource_id: resourceId,
+			parent_comment_id: commentId,
+		});
+	}
+
+	function _leaveCommentChannel(): void {
+		const resource = getCommentModelResourceName(model.value);
+		const resourceId = model.value.id;
+		const commentId = threadCommentId.value ? threadCommentId.value : 0;
+		console.log(`leaving comment channel for ${commentId} on ${resource}/${resourceId}...`);
+
+		grid.value?.stopListeningToCommentsReactions({
+			resource: resource,
+			resource_id: resourceId,
+			parent_comment_id: commentId,
+		});
+
+		if (_deregisterReactions) {
+			_deregisterReactions();
+			_deregisterReactions = null;
+		}
+	}
+
 	function setSort(sort: CommentSort) {
 		if (!store.value) {
 			return;
 		}
 
 		currentPage.value = 1;
-		setCommentSort(store.value, sort);
+		commentStoreSort(store.value, sort);
 		_fetchComments();
 	}
 
@@ -254,7 +301,7 @@ export function createCommentWidget(options: {
 	}
 
 	function onCommentAdd(comment: Comment) {
-		onCommentStoreAdd(commentManager, comment);
+		commentStoreHandleAdd(commentManager, comment);
 		options.onAdd(comment);
 
 		if (store.value) {
@@ -269,17 +316,17 @@ export function createCommentWidget(options: {
 	}
 
 	function onCommentEdit(comment: Comment) {
-		onCommentStoreEdit(commentManager, comment);
+		commentStoreHandleEdit(commentManager, comment);
 		options.onEdit(comment);
 	}
 
 	function onCommentRemove(comment: Comment) {
-		onCommentStoreRemove(commentManager, comment);
+		commentStoreHandleRemove(commentManager, comment);
 		options.onRemove(comment);
 	}
 
 	function pinComment(comment: Comment) {
-		return pinStoreComment(commentManager, comment);
+		return commentStorePin(commentManager, comment);
 	}
 
 	// Reinitialize anytime model changes.

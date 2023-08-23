@@ -1,14 +1,13 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
-import AppButton from '../../button/AppButton.vue';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { Model } from '../../model/model.service';
-import { Screen } from '../../screen/screen-service';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import AppCommentDisabledCheck from '../AppCommentDisabledCheck.vue';
-import { CommentableModel, CommentSort } from '../comment-model';
-import AppCommentWidget from '../widget/AppCommentWidget.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
+import { CommentableModel, CommentSort } from '../../../../_common/comment/comment-model';
+import AppModal from '../../../../_common/modal/AppModal.vue';
+import { useModal } from '../../../../_common/modal/modal.service';
+import { Model } from '../../../../_common/model/model.service';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { AppCommentWidgetLazy } from '../../lazy';
 import { DisplayMode } from './modal.service';
 
 defineProps({
@@ -35,13 +34,13 @@ const autofocusAdd = computed(() => !Screen.isXs);
 	<AppModal>
 		<div class="modal-controls">
 			<AppButton @click="modal.dismiss()">
-				<AppTranslate>Close</AppTranslate>
+				{{ $gettext(`Close`) }}
 			</AppButton>
 		</div>
 
 		<div class="modal-body">
 			<AppCommentDisabledCheck :model="model">
-				<AppCommentWidget
+				<AppCommentWidgetLazy
 					:model="model"
 					:autofocus="autofocusAdd"
 					:initial-tab="initialTab"

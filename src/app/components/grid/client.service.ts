@@ -10,6 +10,7 @@ import { FiresidePost } from '../../../_common/fireside/post/post-model';
 import { FiresideStreamNotification } from '../../../_common/fireside/stream-notification/stream-notification.model';
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
+import { ModelStoreModel } from '../../../_common/model/model-store.service';
 import { Model } from '../../../_common/model/model.service';
 import { Notification, NotificationType } from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
@@ -27,6 +28,7 @@ import { getTrophyImg } from '../../../_common/trophy/thumbnail/AppTrophyThumbna
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
 import { User } from '../../../_common/user/user.model';
+import { arrayRemove } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
 import { sleep } from '../../../utils/utils';
 import { uuidv4 } from '../../../utils/uuid';
@@ -34,11 +36,16 @@ import { AppStore } from '../../store/index';
 import { router } from '../../views';
 import { gotoNotification } from '../activity/feed/notification/notification-routing';
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
+import {
+	CommentTopicPayload,
+	GridCommentChannel,
+	createGridCommentChannel,
+} from './comment-channel';
 import { GridFiresideChannel } from './fireside-channel';
 import { GridFiresideDMChannel } from './fireside-dm-channel';
 import { GridNotificationChannel, createGridNotificationChannel } from './notification-channel';
 
-export const onFiresideStart = new EventTopic<Model>();
+export const onFiresideStart = new EventTopic<Model | ModelStoreModel>();
 
 type ClearNotificationsType =
 	// For the user's activity feed.
@@ -72,6 +79,9 @@ interface ClearNotificationsData {
 export interface ClearNotificationsEventData extends ClearNotificationsPayload {
 	currentCount: number;
 }
+
+export type OnConnectedHandler = (grid: GridClient) => void;
+export type DeregisterOnConnected = () => void;
 
 /**
  * List of resolvers waiting for grid to connect.
@@ -121,6 +131,9 @@ export class GridClient {
 	firesideChannels: GridFiresideChannel[] = [];
 	firesideDMChannels: GridFiresideDMChannel[] = [];
 	notificationChannel: GridNotificationChannel | null = null;
+
+	commentChannel: GridCommentChannel | null = null;
+
 	/**
 	 * @see `deregisterViewingCommunity` doc-block for explanation.
 	 */
@@ -137,6 +150,16 @@ export class GridClient {
 	 * because users that feature posts should not get notified about those exact posts.
 	 */
 	featuredPostIds: Set<number> = new Set<number>();
+
+	/**
+	 * Callbacks to run when this grid client gets connected.
+	 */
+	onConnectedHandlers: OnConnectedHandler[] = [];
+
+	registerOnConnected(cb: OnConnectedHandler): DeregisterOnConnected {
+		this.onConnectedHandlers.push(cb);
+		return () => arrayRemove(this.onConnectedHandlers, i => i === cb);
+	}
 
 	init() {
 		this.socketController = markRaw(
@@ -220,6 +243,9 @@ export class GridClient {
 			await notificationChannel.joinPromise;
 			this.notificationChannel = markRaw(notificationChannel);
 
+			const commentChannel = createGridCommentChannel(this, { userId: user.value.id });
+			await commentChannel.joinPromise;
+			this.commentChannel = markRaw(commentChannel);
 			this.markConnected();
 		}
 
@@ -233,6 +259,14 @@ export class GridClient {
 			resolver();
 		}
 		connectionResolvers = [];
+
+		for (const handler of this.onConnectedHandlers) {
+			try {
+				handler(this);
+			} catch (e) {
+				this.logger.error('Error during connection handler for grid', e);
+			}
+		}
 	}
 
 	async disconnect() {
@@ -254,6 +288,7 @@ export class GridClient {
 		this.firesideChannels = [];
 		this.firesideDMChannels = [];
 		this.notificationChannel = null;
+		this.commentChannel = null;
 
 		clearChat(this.chat!);
 
@@ -482,6 +517,18 @@ export class GridClient {
 		this.notificationChannel?.leaveCommunity({
 			community_id: community.id,
 		});
+	}
+
+	async startListeningToCommentsReactions(data: CommentTopicPayload) {
+		if (this.commentChannel) {
+			this.commentChannel.startListeningToCommentsReactions(data);
+		}
+	}
+
+	async stopListeningToCommentsReactions(data: CommentTopicPayload) {
+		if (this.commentChannel) {
+			this.commentChannel.stopListeningToCommentsReactions(data);
+		}
 	}
 
 	recordFeaturedPost(post: FiresidePost) {

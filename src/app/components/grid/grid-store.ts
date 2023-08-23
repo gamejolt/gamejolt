@@ -1,16 +1,37 @@
 import { computed, inject, InjectionKey, ref, watch } from 'vue';
 import { useContentFocusService } from '../../../_common/content-focus/content-focus.service';
+import { arrayRemove } from '../../../utils/array';
 import { bangRef } from '../../../utils/vue';
 import { AppStore } from '../../store';
 import { setChatFocused } from '../chat/client';
 import { GridClientLazy } from '../lazy';
-import { type GridClient } from './client.service';
+import type {
+	DeregisterOnConnected,
+	GridClient,
+	OnConnectedHandler as GridOnConnectedHandler,
+} from './client.service';
 
 export type GridStore = ReturnType<typeof createGridStore>;
 export const GridStoreKey: InjectionKey<GridStore> = Symbol('grid-store');
 
 export function useGridStore() {
 	return inject(GridStoreKey)!;
+}
+
+interface OnConnectedHandler {
+	/**
+	 * The function to invoke on connection.
+	 */
+	fn: GridOnConnectedHandler;
+	/**
+	 * A callback that makes the connection handler remove itself from the grid
+	 * store. It also calls gridDeregister if it is defined.
+	 */
+	deregister: DeregisterOnConnected;
+	/**
+	 * Deregisters the handler from grid.
+	 */
+	gridDeregister: DeregisterOnConnected | null;
 }
 
 export function createGridStore({ appStore }: { appStore: AppStore }) {
@@ -30,6 +51,11 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 	 * this if you are absolutely sure there is a chat around.
 	 */
 	const chatUnsafe = bangRef(chat);
+
+	/**
+	 * Callbacks to run when the current grid client instance gets connected.
+	 */
+	let _onConnectedHandlers: OnConnectedHandler[] = [];
 
 	// Sync up focus state for chat.
 	watch(
@@ -80,6 +106,10 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 		}
 
 		grid.value = newGrid;
+
+		if (newGrid) {
+			_reapplyOnConnectedHandlers();
+		}
 	}
 
 	/**
@@ -100,7 +130,7 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 		// We unset the grid immediately to avoid a race condition where the
 		// grid is cleared multiple times and getting instantiated between the
 		// actual calls to destroy()
-		grid.value = undefined;
+		_setGrid(undefined);
 		await gridFrozen.disconnect();
 	}
 
@@ -117,5 +147,77 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 		});
 	}
 
-	return { grid, chat, chatUnsafe, loadGrid, clearGrid, whenGridBootstrapped };
+	/**
+	 * Function that calls a callback whenever the current instance of grid gets
+	 * connected. If grid was already connected when this was called, the
+	 * callback will be invoked immediately.
+	 *
+	 * This function is different from `whenGridBootstrapped` because
+	 * bootstrapped is called as soon as we have a grid instance regardless of
+	 * whether it is connected or not.
+	 *
+	 * Notes:
+	 * - Callbacks that are registered here will transfer to new instances of
+	 *   GridClient automatically.
+	 * - The exact same callback may be registered multiple times. It will be
+	 *   invoked multiple times in this case.
+	 */
+	function whenGridConnected(fn: GridOnConnectedHandler): DeregisterOnConnected {
+		// Make a connection handler.
+		const newHandler: OnConnectedHandler = {
+			fn,
+			deregister() {
+				arrayRemove(_onConnectedHandlers, i => i === newHandler);
+				if (newHandler.gridDeregister) {
+					newHandler.gridDeregister();
+					newHandler.gridDeregister = null;
+				}
+			},
+			gridDeregister: null,
+		};
+
+		// We push to this array so that if our grid instance gets swapped out
+		// before it has a chance to connect, we can reapply the handlers to the
+		// new grid instance.
+		_onConnectedHandlers.push(newHandler);
+
+		whenGridBootstrapped().then(curGrid => {
+			const generation = curGrid.socketController.cancelToken.value;
+
+			const cbSafe = () => {
+				// Protects against invoking closures from old grid clients.
+				if (generation.isCanceled) {
+					return;
+				}
+				fn(curGrid);
+			};
+
+			if (curGrid.connected) {
+				// If we're already connected, just invoke the callback.
+				cbSafe();
+			} else {
+				// Register our safe callback so it gets invoked when grid
+				// finished connecting.
+				newHandler.gridDeregister = curGrid.registerOnConnected(cbSafe);
+			}
+		});
+
+		return newHandler.deregister;
+	}
+
+	/**
+	 * Reapplies the connection handlers onto the current instance of grid.
+	 */
+	function _reapplyOnConnectedHandlers(): void {
+		const oldHandlers = _onConnectedHandlers;
+		_onConnectedHandlers = [];
+
+		for (const handler of oldHandlers) {
+			handler.deregister?.();
+			// This should be fully sync since grid is already set.
+			whenGridConnected(handler.fn);
+		}
+	}
+
+	return { grid, chat, chatUnsafe, loadGrid, clearGrid, whenGridBootstrapped, whenGridConnected };
 }

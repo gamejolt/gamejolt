@@ -14,6 +14,7 @@ import { GameLibraryGame } from '../game-library/game/game.model';
 import { Game } from '../game/game.model';
 import { GameRating } from '../game/rating/rating.model';
 import { Mention } from '../mention/mention.model';
+import { storeModel } from '../model/model-store.service';
 import { Model, defineLegacyModel } from '../model/model.service';
 import { OrderItem } from '../order/item/item.model';
 import { Poll } from '../poll/poll.model';
@@ -177,10 +178,10 @@ export class Notification extends defineLegacyModel(
 			}
 
 			if (this.type === NotificationType.CommentAdd) {
-				this.action_model = new Comment(data.action_resource_model);
+				this.action_model = storeModel(Comment, data.action_resource_model);
 				this.is_user_based = true;
 			} else if (this.type === NotificationType.CommentAddObjectOwner) {
-				this.action_model = new Comment(data.action_resource_model);
+				this.action_model = storeModel(Comment, data.action_resource_model);
 				this.is_user_based = true;
 			} else if (this.type === NotificationType.ForumPostAdd) {
 				this.action_model = new ForumPost(data.action_resource_model);

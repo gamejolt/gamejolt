@@ -168,7 +168,7 @@ async function loadMore(feed: ReactionDetailsFeed | null) {
 
 function getQueryParamsForFeed(feed: ReactionDetailsFeed, newPage: number) {
 	return [
-		`resource=${model.value.typename__}`,
+		`resource=${model.value.resourceName}`,
 		`resourceId=${model.value.id}`,
 		`emojiId=${feed.reaction.id}`,
 		`page=${newPage}`,

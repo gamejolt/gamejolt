@@ -2,13 +2,16 @@ import { getMediaserverUrlForBounds } from '../../utils/image';
 import { MediaItem } from '../media-item/media-item-model';
 import { Model, defineLegacyModel } from '../model/model.service';
 
-const ScalingStretch = 'stretch';
-const ScalingTile = 'tile';
 const DefaultScale = 2.0;
+
+export const enum BackgroundScaling {
+	stretch = 'stretch',
+	tile = 'tile',
+}
 
 export class Background extends defineLegacyModel(
 	class BackgroundDefinition extends Model {
-		declare scaling: string;
+		declare scaling: BackgroundScaling;
 		declare media_item: MediaItem;
 		declare scale: number;
 		declare name?: string;
@@ -39,7 +42,7 @@ export class Background extends defineLegacyModel(
 			}
 
 			let src = mediaserver_url;
-			if (this.scaling === ScalingTile) {
+			if (this.scaling === BackgroundScaling.tile) {
 				src = getMediaserverUrlForBounds({
 					src,
 					maxWidth: width / this.scale,
@@ -50,18 +53,18 @@ export class Background extends defineLegacyModel(
 		}
 
 		get cssBackgroundSize() {
-			if (this.scaling === ScalingTile) {
+			if (this.scaling === BackgroundScaling.tile) {
 				const width = this.media_item.width / this.scale;
 				const height = this.media_item.height / this.scale;
 				return `${width}px ${height}px`;
-			} else if (this.scaling === ScalingStretch) {
+			} else if (this.scaling === BackgroundScaling.stretch) {
 				return '100% 100%';
 			}
 			return 'cover';
 		}
 
 		get cssBackgroundRepeat() {
-			if (this.scaling === ScalingTile) {
+			if (this.scaling === BackgroundScaling.tile) {
 				return 'repeat';
 			}
 			return 'no-repeat';

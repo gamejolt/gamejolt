@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
 import { buildCSSPixelValue } from '../../../_styles/variables';
 import { ComponentProps } from '../../component-helpers';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../scroll/AppScrollScroller.vue';
 import { ReactionDetailsModal } from '../details-modal/modal.service';
-import { ReactionableModel, ReactionCount, toggleReactionOnResource } from '../reaction-count';
+import { ReactionCount, ReactionableModel, toggleReactionOnResource } from '../reaction-count';
 import AppReactionListItem from './AppReactionListItem.vue';
 
 type ClickAction = 'toggle' | 'emit-click';
@@ -43,6 +43,10 @@ const props = defineProps({
 	hoverScrollWidth: {
 		type: Number,
 		default: 24,
+	},
+	sansMarginBottom: {
+		type: Boolean,
+		default: false,
 	},
 });
 
@@ -183,6 +187,9 @@ const scrollerMarginBottom = buildCSSPixelValue(12);
 			:style="{
 				display: `inline-block`,
 				margin: `4px 0 8px 0`,
+				...styleWhen(sansMarginBottom, {
+					marginBottom: 0,
+				}),
 				...styleWhen(useScroller, {
 					display: `block`,
 				}),

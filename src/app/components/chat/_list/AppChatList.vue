@@ -16,7 +16,11 @@ function searchEntries<T extends ChatListEntry>(entries: T[], query: string): T[
 				fuzzysearch(query, i.username.toLowerCase())
 			);
 		} else if (i instanceof ChatRoom) {
-			return searchEntries(i.memberCollection.users, query).length > 0;
+			if (i.title) {
+				return fuzzysearch(query, i.title.toLowerCase());
+			} else {
+				return i.fallback_title && fuzzysearch(query, i.fallback_title.toLowerCase());
+			}
 		}
 	});
 }

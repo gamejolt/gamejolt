@@ -2,10 +2,6 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
-import {
-	CommentThreadModal,
-	CommentThreadModalPermalinkDeregister,
-} from '../../../_common/comment/thread/modal.service';
 import { CommunityUserNotification } from '../../../_common/community/user-notification/user-notification.model';
 import {
 	$viewPost,
@@ -21,6 +17,10 @@ import {
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 import { enforceLocation } from '../../../utils/router';
+import {
+	CommentThreadModal,
+	CommentThreadModalPermalinkDeregister,
+} from '../../components/comment/thread/modal.service';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPostPagePlaceholder from './_page-placeholder/AppPostPagePlaceholder.vue';
 import AppPostPage from './_page/AppPostPage.vue';
