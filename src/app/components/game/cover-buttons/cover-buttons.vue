@@ -1,12 +1,4 @@
 <script lang="ts">
-let buildButtonsComponent: Component = AppGameCoverButtonsBuildButtons;
-
-export function setBuildButtonsComponent(component: Component) {
-	buildButtonsComponent = component;
-}
-</script>
-
-<script lang="ts" setup>
 import type { Component, PropType } from 'vue';
 import { toRefs } from 'vue';
 import { useRouter } from 'vue-router';
@@ -24,6 +16,14 @@ import type { User } from '../../../../_common/user/user.model';
 import { arrayUnique } from '../../../../utils/array';
 import AppGameCoverButtonsBuildButtons from './build-buttons.vue';
 
+let buildButtonsComponent: Component = AppGameCoverButtonsBuildButtons;
+
+export function setBuildButtonsComponent(component: Component) {
+	buildButtonsComponent = component;
+}
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	game: {
 		type: Object as PropType<Game>,

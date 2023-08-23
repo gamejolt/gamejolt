@@ -1,4 +1,4 @@
-import { Component, markRaw, reactive } from 'vue';
+import { markRaw, reactive, type Component } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { Client } from '../client/safe-exports';
 import { Translate } from '../translate/translate.service';

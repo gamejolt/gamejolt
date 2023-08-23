@@ -27,7 +27,6 @@ export type JoinFormModel = {
 	token: string;
 };
 
-// TODO(chunk-optimization): Test this form out.
 const props = defineProps({
 	overlay: {
 		type: Boolean,

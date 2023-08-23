@@ -19,14 +19,12 @@ const emit = defineEmits({
 	submit: (_model: LinkData) => true,
 });
 
-// TODO(chunk-optimization): Test out the basic link validator.
 const form: FormController<LinkData> = createForm({
 	model: toRef(props, 'model'),
 	onInit() {
 		form.formModel.href ??= form.formModel.href || '';
 		form.formModel.title ??= form.formModel.title || '';
 	},
-	// TODO(chunk-optimization): Does this ever get called?
 	onSubmitSuccess() {
 		emit('submit', form.formModel);
 	},
