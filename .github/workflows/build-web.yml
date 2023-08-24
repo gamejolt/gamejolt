@@ -27,7 +27,7 @@ jobs:
 
       - run: yarn install
       - run: yarn run web:build
-      - run: cd build && tar czvf web-build.tar.gz web ssr
+      - run: tar czvf web-build.tar.gz build
 
       - name: Upload build to R2
         run: |
