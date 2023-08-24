@@ -14,7 +14,7 @@ import { makeDownloadPackageHook } from './components/client/hooks/game-package-
 import AppClientPackageCardButtons from './components/client/hooks/AppClientPackageCardButtons.vue';
 import AppClientPackageCardMeta from './components/client/hooks/AppClientPackageCardMeta.vue';
 import { createClientTrayMenuBuilder } from './components/client/hooks/tray/tray';
-import { setBuildButtonsComponent } from './components/game/cover-buttons/cover-buttons.vue';
+import { setBuildButtonsComponent } from './components/game/cover-buttons/AppGameCoverButtons.vue';
 import { setClientLibraryStore } from './components/search/search-service';
 import { ClientLibraryStoreKey, createClientLibraryStore } from './store/client-library';
 import { router } from './views/index';

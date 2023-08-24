@@ -55,15 +55,7 @@ const props = defineProps({
 	},
 });
 
-const {
-	game,
-	packages,
-	downloadableBuilds,
-	browserBuilds,
-	installableBuilds,
-	partnerKey,
-	partner,
-} = toRefs(props);
+const { game, packages, downloadableBuilds, browserBuilds, installableBuilds } = toRefs(props);
 
 const emit = defineEmits({
 	'show-multiple-packages': () => true,
@@ -168,8 +160,6 @@ function buy(pkg?: GamePackageModel, build?: GameBuildModel) {
 		game: game.value,
 		package: pkg,
 		build: build || null,
-		partner: partner?.value,
-		partnerKey: partnerKey?.value,
 		fromExtraSection: false,
 	});
 }

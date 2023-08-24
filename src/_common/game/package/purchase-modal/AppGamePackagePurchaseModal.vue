@@ -1,13 +1,4 @@
 <script lang="ts">
-type DownloadPackageHook = (game: GameModel, build: GameBuildModel) => void;
-let downloadPackageHook: DownloadPackageHook | undefined;
-
-export function setDownloadPackageHook(newHook: DownloadPackageHook) {
-	downloadPackageHook = newHook;
-}
-</script>
-
-<script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { Analytics } from '../../../analytics/analytics.service';
@@ -17,7 +8,6 @@ import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../translate/translate.service';
-import type { UserModel } from '../../../user/user.model';
 import { GameBuildModel, GameBuildType } from '../../build/build.model';
 import { GameDownloader } from '../../downloader/downloader.service';
 import type { GameModel } from '../../game.model';
@@ -25,6 +15,15 @@ import { GamePlayModal } from '../../play-modal/play-modal.service';
 import type { GamePackageModel } from '../package.model';
 import FormGamePackagePayment from '../payment-form/FormGamePackagePayment.vue';
 
+type DownloadPackageHook = (game: GameModel, build: GameBuildModel) => void;
+let downloadPackageHook: DownloadPackageHook | undefined;
+
+export function setDownloadPackageHook(newHook: DownloadPackageHook) {
+	downloadPackageHook = newHook;
+}
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	game: {
 		type: Object as PropType<GameModel>,
@@ -41,14 +40,6 @@ const props = defineProps({
 	fromExtraSection: {
 		type: Boolean,
 		required: true,
-	},
-	partnerKey: {
-		type: String,
-		default: undefined,
-	},
-	partner: {
-		type: Object as PropType<UserModel>,
-		default: undefined,
 	},
 });
 
@@ -139,11 +130,9 @@ function _showBrowserModal(gameBuild: GameBuildModel) {
 		<div class="modal-body">
 			<FormGamePackagePayment
 				:game="game"
-				:package="gamePackage"
+				:game-package="gamePackage"
 				:build="build"
 				:sellable="sellable"
-				:partner-key="partnerKey"
-				:partner="partner"
 				:operation="packageOperation"
 				@bought="bought"
 				@skip="skipPayment"

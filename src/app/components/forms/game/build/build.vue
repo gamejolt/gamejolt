@@ -639,7 +639,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							Platform Selector
 						-->
 						<div
-							v-if="model.type === GameBuildType.Downloadable && !forceOther"
+							v-if="model.type === GameBuildTypes.downloadable && !forceOther"
 							class="downloadable-platforms"
 						>
 							<!--
@@ -716,7 +716,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 						<fieldset
 							v-if="
 								!hasPlatformsError &&
-								model.type === GameBuildType.Downloadable &&
+								model.type === GameBuildTypes.downloadable &&
 								!model.os_other
 							"
 							class="form-horizontal"

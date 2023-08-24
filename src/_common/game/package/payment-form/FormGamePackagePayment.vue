@@ -45,7 +45,7 @@ const props = defineProps({
 		required: true,
 	},
 	build: {
-		type: Object as PropType<GameBuildModel>,
+		type: Object as PropType<GameBuildModel | null>,
 		required: false,
 		default: null,
 	},
@@ -104,7 +104,7 @@ const minOrderMessage = computed(() =>
 );
 
 const hasSufficientWalletFunds = computed(() => {
-	if (!form.formModel.value.amount || form.formModel.value.amount <= 0) {
+	if (!form.formModel.amount || form.formModel.amount <= 0) {
 		return true;
 	}
 
@@ -112,7 +112,7 @@ const hasSufficientWalletFunds = computed(() => {
 	// Otherwise, when we're on the main page, check the wallet tax amount for their saved address.
 	const taxAmount = checkoutStep.value === 'address' ? addressTaxAmount.value : walletTax.value;
 	const sellableAmount = pricing.value.amount;
-	const currentAmount = form.formModel.value.amount * 100; // The formModel amount is a decimal.
+	const currentAmount = form.formModel.amount * 100; // The formModel amount is a decimal.
 
 	// Paid games have to be more than the amount of the game base price.
 	if (
