@@ -1,5 +1,6 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 // import { visualizer } from 'rollup-plugin-visualizer';
+import { copyFileSync, readFileSync } from 'fs-extra';
 import { defineConfig, UserConfig as ViteUserConfig } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
@@ -12,7 +13,6 @@ import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { readFromViteEnv } from './scripts/build/vite-runner';
 
 const path = require('path') as typeof import('path');
-const fs = require('fs-extra') as typeof import('fs-extra');
 
 type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 
@@ -110,7 +110,7 @@ export default defineConfig(async () => {
 	let inputHtmlFile = indexHtml;
 	if (gjOpts.buildType !== 'serve-hmr' && gjOpts.section !== 'app') {
 		inputHtmlFile = path.resolve(indexHtml, '..', `${gjOpts.section}.html`);
-		fs.copyFileSync(indexHtml, inputHtmlFile);
+		copyFileSync(indexHtml, inputHtmlFile);
 	}
 
 	return {
@@ -173,7 +173,7 @@ export default defineConfig(async () => {
 							'<!-- gj:firebase-shenanigans -->',
 							`
 		<script>
-			${fs.readFileSync(
+			${readFileSync(
 				path.resolve(
 					__dirname,
 					'node_modules/first-input-delay/dist/first-input-delay.min.js'
@@ -406,6 +406,12 @@ export default defineConfig(async () => {
 				},
 
 				...(() => {
+					// Update this when you want to force cache busting for
+					// all of our assets regardless of if their contents
+					// changed.
+					const hashVersion = '';
+					// const hashVersion = '-v2';
+
 					// By default vite outputs filenames with their chunks, but
 					// some ad blockers are outrageously aggressive with their
 					// filter lists, for example blocking any file that contains
@@ -416,12 +422,6 @@ export default defineConfig(async () => {
 						gjOpts.buildType === 'build' &&
 						['web'].includes(gjOpts.platform)
 					) {
-						// Update this when you want to force cache busting for
-						// all of our assets regardless of if their contents
-						// changed.
-						const hashVersion = '';
-						// const hashVersion = '-v2';
-
 						return <RollupOptions>{
 							output: {
 								manualChunks(id) {
@@ -460,6 +460,9 @@ export default defineConfig(async () => {
 					if (['mobile', 'ssr'].includes(gjOpts.platform)) {
 						return <RollupOptions>{
 							output: {
+								chunkFileNames: `assets/[hash]${hashVersion}.js`,
+								assetFileNames: `assets/[hash]${hashVersion}.[ext]`,
+
 								// Vite itself sets manualChunks so that it can
 								// pull out the vendor library code into a
 								// chunk. We need to disable that first.
