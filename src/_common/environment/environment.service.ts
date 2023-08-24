@@ -36,23 +36,26 @@ class EnvironmentService {
 			? 'https://development.gamejolt.com'
 			: 'http://gamejolt.com';
 
-	wttfBaseUrl = GJ_ENVIRONMENT
-		? 'https://development.gamejolt.com'
-		: GJ_IS_DESKTOP_APP
-		? `${this.baseUrlDesktopApp}/index.html#`
-		: 'https://gamejolt.com';
+	wttfBaseUrl =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://development.gamejolt.com'
+			: GJ_IS_DESKTOP_APP
+			? `${this.baseUrlDesktopApp}/index.html#`
+			: 'https://gamejolt.com';
 
-	authBaseUrl = GJ_ENVIRONMENT
-		? 'https://development.gamejolt.com'
-		: GJ_IS_DESKTOP_APP
-		? `${this.baseUrlDesktopApp}/auth.html#`
-		: 'https://gamejolt.com';
+	authBaseUrl =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://development.gamejolt.com'
+			: GJ_IS_DESKTOP_APP
+			? `${this.baseUrlDesktopApp}/auth.html#`
+			: 'https://gamejolt.com';
 
-	checkoutBaseUrl = GJ_ENVIRONMENT
-		? 'https://development.gamejolt.com'
-		: GJ_IS_DESKTOP_APP
-		? `${this.baseUrlDesktopApp}/checkout.html#`
-		: 'https://gamejolt.com';
+	checkoutBaseUrl =
+		GJ_ENVIRONMENT === 'development'
+			? 'https://development.gamejolt.com'
+			: GJ_IS_DESKTOP_APP
+			? `${this.baseUrlDesktopApp}/checkout.html#`
+			: 'https://gamejolt.com';
 
 	helpBaseUrl =
 		GJ_ENVIRONMENT === 'development'
