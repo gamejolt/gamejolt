@@ -395,6 +395,12 @@ export default defineConfig(async () => {
 
 			rollupOptions: {
 				...(() => {
+					// Update this when you want to force cache busting for
+					// all of our assets regardless of if their contents
+					// changed.
+					const hashVersion = '';
+					// const hashVersion = '-v2';
+
 					// By default vite outputs filenames with their chunks, but
 					// some ad blockers are outrageously aggressive with their
 					// filter lists, for example blocking any file that contains
@@ -405,12 +411,6 @@ export default defineConfig(async () => {
 						gjOpts.buildType === 'build' &&
 						['web'].includes(gjOpts.platform)
 					) {
-						// Update this when you want to force cache busting for
-						// all of our assets regardless of if their contents
-						// changed.
-						const hashVersion = '';
-						// const hashVersion = '-v2';
-
 						return <RollupOptions>{
 							output: {
 								chunkFileNames: `assets/[hash]${hashVersion}.js`,
@@ -425,6 +425,9 @@ export default defineConfig(async () => {
 					if (['mobile', 'ssr'].includes(gjOpts.platform)) {
 						return <RollupOptions>{
 							output: {
+								chunkFileNames: `assets/[hash]${hashVersion}.js`,
+								assetFileNames: `assets/[hash]${hashVersion}.[ext]`,
+
 								// Vite itself sets manualChunks so that it can
 								// pull out the vendor library code into a
 								// chunk. We need to disable that first.
