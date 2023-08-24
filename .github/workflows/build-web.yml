@@ -32,6 +32,6 @@ jobs:
       - name: Upload build to R2
         run: |
           aws --endpoint-url ${AWS_ENDPOINT_URL} s3 cp \
-            ${GITHUB_WORKSPACE}/web-build.tar.gz \
+            ${GITHUB_WORKSPACE}/build/web-build.tar.gz \
             s3://gjolt-build-artifacts/web-builds/${GITHUB_SHA}/web-build.tar.gz \
             --acl private
