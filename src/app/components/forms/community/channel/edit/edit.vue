@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
-import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	BaseForm,
@@ -13,7 +13,7 @@ import { CommunityChannelBackgroundModal } from '../../../../community/channel/b
 import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/edit.vue';
 import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
-class FormModel extends CommunityChannel {
+class FormModel extends CommunityChannelModel {
 	permission_posting = 'all';
 }
 
@@ -31,7 +31,7 @@ export default class FormCommunityChannelEdit
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmitSuccess
 {
-	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
 
 	maxFilesize = 0;
 	maxWidth = 0;
@@ -39,7 +39,7 @@ export default class FormCommunityChannelEdit
 
 	modelClass = FormModel;
 
-	@Emit('background-change') emitBackgroundChange(_model: CommunityChannel) {}
+	@Emit('background-change') emitBackgroundChange(_model: CommunityChannelModel) {}
 
 	get competitionId() {
 		return this.model!.competition?.id;

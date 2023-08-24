@@ -1,9 +1,9 @@
-import { arrayUnique } from '../../../utils/array';
 import { Api } from '../../../_common/api/api.service';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import { Geo } from '../../../_common/geo/geo.service';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { User } from '../../../_common/user/user.model';
+import { UserModel } from '../../../_common/user/user.model';
+import { arrayUnique } from '../../../utils/array';
 import {
 	Analyzer,
 	Collection,
@@ -322,7 +322,9 @@ export class SiteAnalyticsReport {
 					value: displayValue,
 					isAnalyticsEntry: true,
 					gathers: {
-						user: gatheredData.user_model ? new User(gatheredData.user_model) : null,
+						user: gatheredData.user_model
+							? new UserModel(gatheredData.user_model)
+							: null,
 					},
 				};
 
@@ -334,7 +336,9 @@ export class SiteAnalyticsReport {
 					value: displayValue,
 					isAnalyticsEntry: false,
 					gathers: {
-						user: gatheredData.user_model ? new User(gatheredData.user_model) : null,
+						user: gatheredData.user_model
+							? new UserModel(gatheredData.user_model)
+							: null,
 					},
 				};
 
@@ -346,7 +350,7 @@ export class SiteAnalyticsReport {
 					isAnalyticsEntry: false,
 					gathers: {
 						post: gatheredData.post_model
-							? new FiresidePost(gatheredData.post_model)
+							? new FiresidePostModel(gatheredData.post_model)
 							: null,
 					},
 				};

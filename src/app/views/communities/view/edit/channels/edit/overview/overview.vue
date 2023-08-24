@@ -1,22 +1,22 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../../../../utils/array';
-import { CommunityChannel } from '../../../../../../../../_common/community/channel/channel.model';
+import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
 import {
 	showErrorGrowl,
 	showSuccessGrowl,
 } from '../../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../../../_common/scroll/scroll.service';
+import { arrayRemove } from '../../../../../../../../utils/array';
 import FormCommunityChannelDescription from '../../../../../../../components/forms/community/channel/description/FormCommunityChannelDescription.vue';
 import FormCommunityChannelEdit from '../../../../../../../components/forms/community/channel/edit/edit.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
 import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditChannelsOverview',
@@ -26,8 +26,8 @@ import AppCommunitiesViewPageContainer from '../../../../_page-container/page-co
 		FormCommunityChannelDescription,
 	},
 })
-@OptionsForRoute()
-export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteCommunitiesViewEditChannelsOverview extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
@@ -59,7 +59,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 		);
 	}
 
-	onSubmit(model: CommunityChannel) {
+	onSubmit(model: CommunityChannelModel) {
 		// After submitting the form, redirect to the edit page with the new title if it changed.
 		// The title of the channel is part of the URL.
 		if (model.title !== this.$route.params.channel) {
@@ -67,7 +67,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 		}
 	}
 
-	onBackgroundChange(model: CommunityChannel) {
+	onBackgroundChange(model: CommunityChannelModel) {
 		Object.assign(this.channel, model);
 	}
 
@@ -76,7 +76,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 			return;
 		}
 
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettextInterpolate(`Are you sure you want to archive the channel %{ channel }?`, {
 				channel: this.channel.displayTitle,
 			})
@@ -96,7 +96,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 	}
 
 	async onClickUnarchive() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettextInterpolate(
 				`Are you sure you want to restore the channel %{ channel } from the archive?`,
 				{

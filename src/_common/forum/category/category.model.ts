@@ -1,6 +1,6 @@
 import { Model } from '../../model/model.service';
 
-export class ForumCategory extends Model {
+export class ForumCategoryModel extends Model {
 	title!: string;
 	url!: string;
 	description!: string;
@@ -8,5 +8,3 @@ export class ForumCategory extends Model {
 	status!: string;
 	created_on!: number;
 }
-
-Model.create(ForumCategory);

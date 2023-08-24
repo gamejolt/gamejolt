@@ -1,4 +1,4 @@
-import { nextTick } from '@vue/runtime-core';
+import { nextTick } from 'vue';
 import { RouterScrollBehavior } from 'vue-router';
 import { Scroll } from '../scroll.service';
 

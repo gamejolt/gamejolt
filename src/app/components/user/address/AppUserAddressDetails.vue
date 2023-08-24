@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
 import { Geo } from '../../../../_common/geo/geo.service';
-import { UserAddress } from '../../../../_common/user/address/address.model';
+import { UserAddressModel } from '../../../../_common/user/address/address.model';
 
 const props = defineProps({
 	address: {
-		type: Object as PropType<UserAddress>,
+		type: Object as PropType<UserAddressModel>,
 		required: true,
 	},
 });

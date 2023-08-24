@@ -3,13 +3,13 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
-import { EventItem } from '../../../../../../_common/event-item/event-item.model';
-import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import { EventItemModel } from '../../../../../../_common/event-item/event-item.model';
+import { FiresidePostModel } from '../../../../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
@@ -35,14 +35,14 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppShellPageBackdrop,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: false,
 	lazy: false,
 	deps: { query: ['tab', 'feed_last_id'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route))),
 })
-export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
+export default class RouteDashGamesManageDevlog extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
@@ -77,7 +77,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		);
 	}
 
-	onPostAdded(post: FiresidePost) {
+	onPostAdded(post: FiresidePostModel) {
 		ActivityFeedService.onPostAdded({
 			feed: this.feed!,
 			post,
@@ -87,7 +87,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		});
 	}
 
-	onPostEdited(eventItem: EventItem) {
+	onPostEdited(eventItem: EventItemModel) {
 		ActivityFeedService.onPostEdited({
 			eventItem,
 			appRoute: this.appRoute_,
@@ -96,7 +96,7 @@ export default class RouteDashGamesManageDevlog extends BaseRouteComponent {
 		});
 	}
 
-	onPostPublished(eventItem: EventItem) {
+	onPostPublished(eventItem: EventItemModel) {
 		ActivityFeedService.onPostPublished({
 			eventItem,
 			appRoute: this.appRoute_,

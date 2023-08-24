@@ -3,11 +3,11 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import { showSuccessGrowl } from '../../growls/growls.service';
-import { Game } from '../game.model';
+import { GameModel } from '../game.model';
 
 @Options({})
 export default class AppGameModLinks extends Vue {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 
 	Environment = Environment;
 

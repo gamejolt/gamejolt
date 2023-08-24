@@ -5,11 +5,11 @@ import { vAppAuthRequired } from '../auth/auth-required-directive';
 import AppButton from '../button/AppButton.vue';
 import { useCommonStore } from '../store/common-store';
 import AppTranslate from '../translate/AppTranslate.vue';
-import { Realm, toggleRealmFollow } from './realm-model';
+import { RealmModel, toggleRealmFollow } from './realm-model';
 
 const props = defineProps({
 	realm: {
-		type: Object as PropType<Realm>,
+		type: Object as PropType<RealmModel>,
 		required: true,
 	},
 	source: {

@@ -5,8 +5,8 @@ import AppAlertBox from '../alert/AppAlertBox.vue';
 import { trackCommentAdd } from '../analytics/analytics.service';
 import AppButton from '../button/AppButton.vue';
 import { ContentContext, ContextCapabilities } from '../content/content-context';
-import { ContentRules } from '../content/content-editor/content-rules';
-import { FiresidePost } from '../fireside/post/post-model';
+import { ContentRules } from '../content/content-rules';
+import { FiresidePostAllowComments, FiresidePostModel } from '../fireside/post/post-model';
 import AppForm, { createForm, FormController } from '../form-vue/AppForm.vue';
 import AppFormButton from '../form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../form-vue/AppFormControlErrors.vue';
@@ -26,8 +26,8 @@ import AppTranslate from '../translate/AppTranslate.vue';
 import { $gettext } from '../translate/translate.service';
 import {
 	canCommentOnModel,
-	Comment,
 	CommentableModel,
+	CommentModel,
 	getCommentModelResourceName,
 	saveComment,
 } from './comment-model';
@@ -35,7 +35,7 @@ import './comment.styl';
 
 const props = defineProps({
 	comment: {
-		type: Object as PropType<Comment>,
+		type: Object as PropType<CommentModel>,
 		default: undefined,
 	},
 	/** The model that the comment is attached to */
@@ -59,7 +59,7 @@ const props = defineProps({
 const { comment, model, parentId, autofocus, placeholder } = toRefs(props);
 
 const emit = defineEmits({
-	submit: (_model: Comment) => true,
+	submit: (_model: CommentModel) => true,
 	'editor-focus': () => true,
 	'editor-blur': () => true,
 	cancel: () => true,
@@ -77,11 +77,11 @@ const loadUrl = computed(() => {
 });
 
 type FormModel = {
-	id?: Comment['id'];
-	comment_content: Comment['comment_content'];
-	resource: Comment['resource'];
-	resource_id: Comment['resource_id'];
-	parent_id: Comment['parent_id'];
+	id?: CommentModel['id'];
+	comment_content: CommentModel['comment_content'];
+	resource: CommentModel['resource'];
+	resource_id: CommentModel['resource_id'];
+	parent_id: CommentModel['parent_id'];
 };
 
 const form: FormController<FormModel> = createForm({
@@ -155,11 +155,13 @@ const contentModelId = computed(() => comment?.value?.id);
 const canComment = computed(() => canCommentOnModel(model.value));
 
 /** If the model we're commenting on is a post, this will return it. */
-const postModel = computed(() => (model.value instanceof FiresidePost ? model.value : undefined));
+const postModel = computed(() =>
+	model.value instanceof FiresidePostModel ? model.value : undefined
+);
 
 /** Whether or not only friends can comment */
 const onlyFriends = computed(
-	() => postModel.value?.allow_comments === FiresidePost.ALLOW_COMMENTS_FRIENDS
+	() => postModel.value?.allow_comments === FiresidePostAllowComments.Friends
 );
 </script>
 

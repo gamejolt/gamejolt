@@ -4,18 +4,17 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../_common/filters/number';
-import { Game } from '../../../../../../../_common/game/game.model';
 import AppGraphWidget from '../../../../../../../_common/graph/AppGraphWidget.vue';
 import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import AppProgressPoller from '../../../../../../../_common/progress/poller/AppProgressPoller.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
-import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
+import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/AppGameDevStageSelector.vue';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../manage.store';
 
@@ -34,12 +33,12 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/overview/' + route.params.id),
 })
-export default class RouteDashGamesManageGameOverview extends BaseRouteComponent {
+export default class RouteDashGamesManageGameOverview extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 	commonStore = setup(() => useCommonStore());
 
@@ -62,7 +61,6 @@ export default class RouteDashGamesManageGameOverview extends BaseRouteComponent
 
 	hasBuildsProcessing = false;
 
-	readonly Game = Game;
 	readonly formatNumber = formatNumber;
 
 	get routeTitle() {

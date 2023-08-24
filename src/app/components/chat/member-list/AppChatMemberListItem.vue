@@ -11,7 +11,7 @@ import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAva
 import { useGridStore } from '../../grid/grid-store';
 import AppChatListItem from '../_list/AppChatListItem.vue';
 import { isUserOnline } from '../client';
-import { ChatRoom } from '../room';
+import { ChatRoomModel } from '../room';
 import { ChatUser, getChatUserRoleData } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 import AppChatUserPopover from '../user-popover/AppChatUserPopover.vue';
@@ -22,7 +22,7 @@ const props = defineProps({
 		required: true,
 	},
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 	host: {

@@ -1,7 +1,7 @@
 <script lang="ts">
-import { defineAsyncComponent } from '@vue/runtime-core';
+import { defineAsyncComponent } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import { FiresideModel } from '../../../../../_common/fireside/fireside.model';
 
 @Options({
 	components: {
@@ -12,13 +12,13 @@ import { Fireside } from '../../../../../_common/fireside/fireside.model';
 })
 export default class AppFiresideStreamPreview extends Vue {
 	@Prop({ type: Object, required: true })
-	fireside!: Fireside;
+	fireside!: FiresideModel;
 
 	@Prop({ type: Boolean, default: true })
-	showLive!: Fireside;
+	showLive!: FiresideModel;
 
 	@Prop({ type: Boolean })
-	showLiveUsers!: Fireside;
+	showLiveUsers!: FiresideModel;
 
 	@Emit('changed') emitChanged(_hasVideo: boolean, _isStreaming: boolean) {}
 

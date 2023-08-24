@@ -16,11 +16,12 @@ import { useRoute } from 'vue-router';
 import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
+import { CollaboratorModel } from '../../../../_common/collaborator/collaborator.model';
 import {
 	canCommentOnModel,
-	Comment,
 	CommentableModel,
+	CommentModel,
+	CommentSort,
 	getCommentModelResourceName,
 } from '../../../../_common/comment/comment-model';
 import {
@@ -54,7 +55,7 @@ import { Model } from '../../../../_common/model/model.service';
 import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 import type { DeregisterOnConnected } from '../../grid/client.service';
 import { useGridStore } from '../../grid/grid-store';
 import { DisplayMode } from '../modal/modal.service';
@@ -70,11 +71,11 @@ export function createCommentWidget(options: {
 	model: Ref<Model & CommentableModel>;
 	threadCommentId: Ref<number | null>;
 	showTabs: Ref<boolean>;
-	initialTab: Ref<string | null>;
+	initialTab: Ref<CommentSort | null>;
 	onError: (e: any) => void;
-	onAdd: (comment: Comment) => void;
-	onEdit: (comment: Comment) => void;
-	onRemove: (comment: Comment) => void;
+	onAdd: (comment: CommentModel) => void;
+	onEdit: (comment: CommentModel) => void;
+	onRemove: (comment: CommentModel) => void;
 }) {
 	const { model, threadCommentId, showTabs, initialTab } = options;
 
@@ -84,10 +85,10 @@ export function createCommentWidget(options: {
 	const hasBootstrapped = ref(false);
 	const hasError = ref(false);
 	const isLoading = ref(false);
-	const resourceOwner = ref<User | null>(null);
+	const resourceOwner = ref<UserModel | null>(null);
 	const perPage = ref(10);
 	const currentPage = ref(1);
-	const collaborators = ref<Collaborator[]>([]);
+	const collaborators = ref<CollaboratorModel[]>([]);
 
 	const route = useRoute();
 	const commentManager = inject(CommentStoreManagerKey)!;
@@ -115,11 +116,11 @@ export function createCommentWidget(options: {
 	const totalCommentsCount = computed(() => store.value?.totalCount ?? 0);
 	const totalParentCount = computed(() => store.value?.parentCount ?? 0);
 	const currentParentCount = computed(() => comments.value.length);
-	const currentSort = computed(() => store.value?.sort ?? Comment.SORT_HOT);
-	const isSortHot = computed(() => currentSort.value === Comment.SORT_HOT);
-	const isSortTop = computed(() => currentSort.value === Comment.SORT_TOP);
-	const isSortNew = computed(() => currentSort.value === Comment.SORT_NEW);
-	const isSortYou = computed(() => currentSort.value === Comment.SORT_YOU);
+	const currentSort = computed(() => store.value?.sort ?? CommentSort.Hot);
+	const isSortHot = computed(() => currentSort.value === CommentSort.Hot);
+	const isSortTop = computed(() => currentSort.value === CommentSort.Top);
+	const isSortNew = computed(() => currentSort.value === CommentSort.New);
+	const isSortYou = computed(() => currentSort.value === CommentSort.You);
 	const showTopSorting = computed(() => getCommentModelResourceName(model.value) === 'Game');
 	const isThreadView = computed(() => !!threadCommentId.value);
 	const shouldShowEmptyMessage = computed(() => !comments.value.length);
@@ -200,7 +201,7 @@ export function createCommentWidget(options: {
 		// comment widget. This way if you open up a new comment widget in the
 		// future, we'll correctly start at the "hot" sort.
 		if (metadata.widgetLocks === 0) {
-			commentStoreSort(store.value, Comment.SORT_HOT);
+			commentStoreSort(store.value, CommentSort.Hot);
 		}
 
 		releaseCommentStore(commentManager, store.value);
@@ -225,7 +226,7 @@ export function createCommentWidget(options: {
 				// that case, update the view's parent ID to the returned parent
 				// ID.
 				if (storeView.value instanceof CommentStoreThreadView) {
-					storeView.value.parentCommentId = storeModel(Comment, payload.parent).id;
+					storeView.value.parentCommentId = storeModel(CommentModel, payload.parent).id;
 				}
 			} else {
 				payload = await commentStoreFetch(store.value, currentPage.value);
@@ -234,7 +235,7 @@ export function createCommentWidget(options: {
 			isLoading.value = false;
 			hasBootstrapped.value = true;
 			hasError.value = false;
-			resourceOwner.value = new User(payload.resourceOwner);
+			resourceOwner.value = new UserModel(payload.resourceOwner);
 			perPage.value = payload.perPage || 10;
 
 			// Display all loaded comments.
@@ -244,7 +245,7 @@ export function createCommentWidget(options: {
 			}
 
 			collaborators.value = payload.collaborators
-				? Collaborator.populate(payload.collaborators)
+				? CollaboratorModel.populate(payload.collaborators)
 				: [];
 		} catch (e) {
 			console.error(e);
@@ -284,7 +285,7 @@ export function createCommentWidget(options: {
 		}
 	}
 
-	function setSort(sort: string) {
+	function setSort(sort: CommentSort) {
 		if (!store.value) {
 			return;
 		}
@@ -299,13 +300,13 @@ export function createCommentWidget(options: {
 		_fetchComments();
 	}
 
-	function onCommentAdd(comment: Comment) {
+	function onCommentAdd(comment: CommentModel) {
 		commentStoreHandleAdd(commentManager, comment);
 		options.onAdd(comment);
 
 		if (store.value) {
-			if (store.value.sort !== Comment.SORT_YOU) {
-				setSort(Comment.SORT_YOU);
+			if (store.value.sort !== CommentSort.You) {
+				setSort(CommentSort.You);
 			} else {
 				if (storeView.value instanceof CommentStoreSliceView) {
 					storeView.value.registerIds([comment.id]);
@@ -314,17 +315,17 @@ export function createCommentWidget(options: {
 		}
 	}
 
-	function onCommentEdit(comment: Comment) {
+	function onCommentEdit(comment: CommentModel) {
 		commentStoreHandleEdit(commentManager, comment);
 		options.onEdit(comment);
 	}
 
-	function onCommentRemove(comment: Comment) {
+	function onCommentRemove(comment: CommentModel) {
 		commentStoreHandleRemove(commentManager, comment);
 		options.onRemove(comment);
 	}
 
-	function pinComment(comment: Comment) {
+	function pinComment(comment: CommentModel) {
 		return commentStorePin(commentManager, comment);
 	}
 
@@ -409,7 +410,7 @@ const props = defineProps({
 		default: true,
 	},
 	initialTab: {
-		type: String,
+		type: String as PropType<CommentSort>,
 		default: null,
 	},
 	displayMode: {
@@ -420,9 +421,9 @@ const props = defineProps({
 
 const emit = defineEmits({
 	error: (_e: any) => true,
-	add: (_comment: Comment) => true,
-	edit: (_comment: Comment) => true,
-	remove: (_comment: Comment) => true,
+	add: (_comment: CommentModel) => true,
+	edit: (_comment: CommentModel) => true,
+	remove: (_comment: CommentModel) => true,
 });
 
 const c = createCommentWidget({
@@ -459,19 +460,19 @@ const {
 } = c;
 
 function sortHot() {
-	setSort(Comment.SORT_HOT);
+	setSort(CommentSort.Hot);
 }
 
 function sortTop() {
-	setSort(Comment.SORT_TOP);
+	setSort(CommentSort.Top);
 }
 
 function sortNew() {
-	setSort(Comment.SORT_NEW);
+	setSort(CommentSort.New);
 }
 
 function sortYou() {
-	setSort(Comment.SORT_YOU);
+	setSort(CommentSort.You);
 }
 </script>
 

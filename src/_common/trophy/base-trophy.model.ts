@@ -2,24 +2,24 @@ import { Model } from '../model/model.service';
 
 export type TrophyDifficulty = 1 | 2 | 3 | 4;
 
-export abstract class BaseTrophy extends Model {
+export abstract class BaseTrophyModel extends Model {
 	static readonly DIFFICULTY_BRONZE = 1;
 	static readonly DIFFICULTY_SILVER = 2;
 	static readonly DIFFICULTY_GOLD = 3;
 	static readonly DIFFICULTY_PLATINUM = 4;
 
 	static readonly difficulties = <TrophyDifficulty[]>[
-		BaseTrophy.DIFFICULTY_BRONZE,
-		BaseTrophy.DIFFICULTY_SILVER,
-		BaseTrophy.DIFFICULTY_GOLD,
-		BaseTrophy.DIFFICULTY_PLATINUM,
+		BaseTrophyModel.DIFFICULTY_BRONZE,
+		BaseTrophyModel.DIFFICULTY_SILVER,
+		BaseTrophyModel.DIFFICULTY_GOLD,
+		BaseTrophyModel.DIFFICULTY_PLATINUM,
 	];
 
 	static readonly difficultyLabels: { [k: string]: string } = {
-		[BaseTrophy.DIFFICULTY_BRONZE]: 'Bronze',
-		[BaseTrophy.DIFFICULTY_SILVER]: 'Silver',
-		[BaseTrophy.DIFFICULTY_GOLD]: 'Gold',
-		[BaseTrophy.DIFFICULTY_PLATINUM]: 'Platinum',
+		[BaseTrophyModel.DIFFICULTY_BRONZE]: 'Bronze',
+		[BaseTrophyModel.DIFFICULTY_SILVER]: 'Silver',
+		[BaseTrophyModel.DIFFICULTY_GOLD]: 'Gold',
+		[BaseTrophyModel.DIFFICULTY_PLATINUM]: 'Platinum',
 	};
 
 	difficulty!: number;
@@ -39,6 +39,6 @@ export abstract class BaseTrophy extends Model {
 	}
 
 	get difficultyLabel() {
-		return BaseTrophy.difficultyLabels[this.difficulty];
+		return BaseTrophyModel.difficultyLabels[this.difficulty];
 	}
 }

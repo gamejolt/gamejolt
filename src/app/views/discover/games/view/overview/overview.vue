@@ -7,7 +7,7 @@ import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/AppCard.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
-import { Comment, canCommentOnModel } from '../../../../../../_common/comment/comment-model';
+import { CommentModel, canCommentOnModel } from '../../../../../../_common/comment/comment-model';
 import {
 	CommentStoreManager,
 	CommentStoreManagerKey,
@@ -16,11 +16,11 @@ import {
 import AppContentViewer from '../../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../../_common/filters/number';
-import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../../_common/fireside/post/post-model';
 import AppGameExternalPackageCard from '../../../../../../_common/game/external-package/card/card.vue';
-import { Game } from '../../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../../_common/game/game.model';
 import AppGameMediaBar from '../../../../../../_common/game/media-bar/media-bar.vue';
-import AppGamePackageCard from '../../../../../../_common/game/package/card/card.vue';
+import AppGamePackageCard from '../../../../../../_common/game/package/card/AppGamePackageCard.vue';
 import AppGameSoundtrackCard from '../../../../../../_common/game/soundtrack/card/card.vue';
 import { HistoryTick } from '../../../../../../_common/history-tick/history-tick-service';
 import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/placeholder';
@@ -28,9 +28,9 @@ import { Meta } from '../../../../../../_common/meta/meta-service';
 import { storeModelList } from '../../../../../../_common/model/model-store.service';
 import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../../../_common/share/card/AppShareCard.vue';
 import { getAbsoluteLink } from '../../../../../../utils/router';
@@ -90,7 +90,7 @@ import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
 		AppGameList,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	lazy: true,
 	cache: true,
 	deps: { query: ['feed_last_id'] },
@@ -113,7 +113,7 @@ import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
 		return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, apiOverviewUrl));
 	},
 })
-export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
+export default class RouteDiscoverGamesViewOverview extends LegacyRouteComponent {
 	routeStore = setup(() => useGameRouteController()!);
 	ads = setup(() => useAdsController());
 
@@ -327,7 +327,7 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 		CommentModal.show({ model: this.game!, displayMode: 'comments' });
 	}
 
-	onPostAdded(post: FiresidePost) {
+	onPostAdded(post: FiresidePostModel) {
 		ActivityFeedService.onPostAdded({
 			feed: this.feed!,
 			post,
@@ -338,12 +338,12 @@ export default class RouteDiscoverGamesViewOverview extends BaseRouteComponent {
 	}
 
 	async reloadPreviewComments() {
-		if (this.game instanceof Game) {
+		if (this.game instanceof GameModel) {
 			const $payload = await Api.sendRequest(
 				'/web/discover/games/comment-overview/' + this.game.id
 			);
 
-			this.routeStore.setOverviewComments(storeModelList(Comment, $payload.comments));
+			this.routeStore.setOverviewComments(storeModelList(CommentModel, $payload.comments));
 		}
 	}
 }

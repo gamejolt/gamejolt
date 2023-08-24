@@ -2,7 +2,7 @@
 import { computed, onMounted, PropType, toRefs } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
-import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
+import { ContentRules } from '../../../../../_common/content/content-rules';
 import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -20,7 +20,7 @@ import {
 	validatePattern,
 } from '../../../../../_common/form-vue/validators';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { ChatCommand } from './command.model';
+import { ChatCommandModel } from './command.model';
 import { ChatCommandsFormModel } from './FormChatCommands.vue';
 
 const COMMAND_PATTERN = /^[a-z0-9]+[a-z0-9-]*[a-z0-9]+$/i;
@@ -33,7 +33,7 @@ const previewContentRules = new ContentRules({
 
 const props = defineProps({
 	item: {
-		type: Object as PropType<ChatCommand>,
+		type: Object as PropType<ChatCommandModel>,
 		required: true,
 	},
 	commandMinLength: {

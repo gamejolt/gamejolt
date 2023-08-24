@@ -1,14 +1,14 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
-import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketchfab.model';
 import AppSketchfabEmbed, {
 	getSketchfabIdFromInput,
 	SKETCHFAB_FIELD_VALIDATION_REGEX,
-} from '../../../../../_common/sketchfab/embed/embed.vue';
+} from '../../../../../_common/sketchfab/embed/AppSketchfabEmbed.vue';
 
-class Wrapper extends BaseForm<GameSketchfab> {}
+class Wrapper extends BaseForm<GameSketchfabModel> {}
 
 @Options({
 	components: {
@@ -16,11 +16,11 @@ class Wrapper extends BaseForm<GameSketchfab> {}
 	},
 })
 export default class FormGameSketchfab extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 
 	readonly SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;
 
-	modelClass = GameSketchfab;
+	modelClass = GameSketchfabModel;
 
 	get sketchfabId() {
 		return getSketchfabIdFromInput(this.formModel.sketchfab_id);

@@ -1,9 +1,9 @@
 import { inject, InjectionKey } from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api, RequestOptions } from '../../../../_common/api/api.service';
-import { Community } from '../../../../_common/community/community.model';
-import { EventItem } from '../../../../_common/event-item/event-item.model';
-import { Notification } from '../../../../_common/notification/notification-model';
+import { CommunityModel } from '../../../../_common/community/community.model';
+import { EventItemModel } from '../../../../_common/event-item/event-item.model';
+import { NotificationModel } from '../../../../_common/notification/notification-model';
 import { ScrollInviewConfig } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { ActivityFeedInterface } from './AppActivityFeed.vue';
 import { ActivityFeedInput, ActivityFeedItem } from './item-service';
@@ -26,7 +26,7 @@ class ActivityFeedViewItemState {
 export interface ActivityFeedViewOptions {
 	slice?: number;
 	shouldScroll?: boolean;
-	mainCommunity?: Community | null;
+	mainCommunity?: CommunityModel | null;
 	hideGameInfo?: boolean;
 	shouldShowUserCards?: boolean;
 	shouldShowFollow?: boolean;
@@ -62,7 +62,7 @@ export class ActivityFeedView {
 	totalTimesLoaded = 0;
 	shouldScroll = true;
 	hideGameInfo = false;
-	mainCommunity: Community | null = null;
+	mainCommunity: CommunityModel | null = null;
 	shouldShowUserCards = true;
 	shouldShowFollow = false;
 	newCount = 0;
@@ -192,7 +192,7 @@ export class ActivityFeedView {
 
 	isItemUnread(item: ActivityFeedItem) {
 		// Notifications are considered unread if their viewed on isn't set yet.
-		if (item.feedItem instanceof Notification && item.feedItem.viewed_on === null) {
+		if (item.feedItem instanceof NotificationModel && item.feedItem.viewed_on === null) {
 			// If a notification watermark is passed in, we allow it to
 			// override. This makes "mark all as read" easier to implement.
 			if (
@@ -339,9 +339,9 @@ export class ActivityFeedView {
 		this.clear();
 
 		if (this.state.feedType === 'Notification') {
-			this.prepend(Notification.populate(response.items));
+			this.prepend(NotificationModel.populate(response.items));
 		} else if (this.state.feedType === 'EventItem') {
-			this.prepend(EventItem.populate(response.items));
+			this.prepend(EventItemModel.populate(response.items));
 		}
 
 		if (response.unreadWatermark) {
@@ -377,9 +377,9 @@ export class ActivityFeedView {
 		}
 
 		if (this.state.feedType === 'Notification') {
-			this.append(Notification.populate(response.items));
+			this.append(NotificationModel.populate(response.items));
 		} else if (this.state.feedType === 'EventItem') {
-			this.append(EventItem.populate(response.items));
+			this.append(EventItemModel.populate(response.items));
 		}
 
 		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.totalTimesLoaded);
@@ -419,9 +419,9 @@ export class ActivityFeedView {
 		}
 
 		if (this.state.feedType === 'Notification') {
-			this.prepend(Notification.populate(response.items));
+			this.prepend(NotificationModel.populate(response.items));
 		} else if (this.state.feedType === 'EventItem') {
-			this.prepend(EventItem.populate(response.items));
+			this.prepend(EventItemModel.populate(response.items));
 		}
 
 		if (response.unreadWatermark) {

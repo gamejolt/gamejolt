@@ -1,5 +1,5 @@
-import { LINK_LENGTH } from './content-editor/schemas/specs/marks/link-markspec';
 import { ContentNode } from './content-node';
+import { LINK_LENGTH } from './content-rules';
 import { MarkObject } from './mark-object';
 
 export type ContentObjectType =

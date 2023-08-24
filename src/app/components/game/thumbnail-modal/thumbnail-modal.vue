@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import { BaseModal } from '../../../../_common/modal/base';
 import FormGameThumbnail from '../../forms/game/thumbnail/FormGameThumbnail.vue';
 
@@ -10,7 +10,7 @@ import FormGameThumbnail from '../../forms/game/thumbnail/FormGameThumbnail.vue'
 	},
 })
 export default class AppGameThumbnailModal extends mixins(BaseModal) {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 
 	// We don't want to close the modal after they've uploaded a thumbnail since they can set a crop
 	// after. We want to auto-close it after they've saved the crop, though.
@@ -22,7 +22,7 @@ export default class AppGameThumbnailModal extends mixins(BaseModal) {
 		}
 	}
 
-	onSubmit(game: Game) {
+	onSubmit(game: GameModel) {
 		const newThumbnailId = (game.thumbnail_media_item && game.thumbnail_media_item.id) || null;
 		if (this.previousThumbnailId === newThumbnailId) {
 			this.modal.resolve(this.game);

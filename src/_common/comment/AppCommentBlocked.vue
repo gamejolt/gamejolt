@@ -2,11 +2,11 @@
 import { PropType } from 'vue';
 import AppButton from '../button/AppButton.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
-import { Comment, CommentBlockReason } from './comment-model';
+import { CommentBlockReason, CommentModel } from './comment-model';
 
 defineProps({
 	comment: {
-		type: Object as PropType<Comment>,
+		type: Object as PropType<CommentModel>,
 		required: true,
 	},
 	reason: {

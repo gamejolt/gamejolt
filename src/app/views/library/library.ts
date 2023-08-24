@@ -1,18 +1,21 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { RouterView } from 'vue-router';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
-import { User } from '../../../_common/user/user.model';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../_common/route/legacy-route-component';
+import { touchUser } from '../../../_common/user/user.model';
 
 @Options({
 	name: 'RouteLibrary',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	// Make sure the children know if we're logged in or not.
-	resolver: () => User.touch(),
+	resolver: () => touchUser(),
 })
-export default class RouteLibrary extends BaseRouteComponent {
+export default class RouteLibrary extends LegacyRouteComponent {
 	render() {
 		return h(RouterView);
 	}

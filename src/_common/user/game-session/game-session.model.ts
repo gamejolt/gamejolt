@@ -1,10 +1,10 @@
+import { GameModel } from '../../game/game.model';
 import { Model } from '../../model/model.service';
-import { Game } from '../../game/game.model';
 
-export class UserGameSession extends Model {
+export class UserGameSessionModel extends Model {
 	user_id!: number;
 	game_id!: number;
-	game!: Game;
+	game!: GameModel;
 	opened_on!: number;
 	total_time!: number;
 
@@ -12,9 +12,7 @@ export class UserGameSession extends Model {
 		super(data);
 
 		if (data.game) {
-			this.game = new Game(data.game);
+			this.game = new GameModel(data.game);
 		}
 	}
 }
-
-Model.create(UserGameSession);

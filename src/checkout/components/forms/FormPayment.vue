@@ -18,10 +18,10 @@ import {
 	validateMaxLength,
 	validatePattern,
 } from '../../../_common/form-vue/validators';
-import { Geo, Region } from '../../../_common/geo/geo.service';
+import { Geo, GeoRegion } from '../../../_common/geo/geo.service';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
-import { Order } from '../../../_common/order/order.model';
+import { OrderModel } from '../../../_common/order/order.model';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 
@@ -31,7 +31,7 @@ const props = defineProps({
 		required: true,
 	},
 	order: {
-		type: Object as PropType<Order>,
+		type: Object as PropType<OrderModel>,
 		required: true,
 	},
 });
@@ -41,7 +41,7 @@ const { user } = useCommonStore();
 
 const stripeError = ref<string | null>(null);
 const countries = Geo.getCountries();
-const regions = ref<Region[] | null>(null);
+const regions = ref<GeoRegion[] | null>(null);
 const calculatedTax = ref(false);
 const taxAmount = ref(0);
 

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType, Ref, computed, ref, toRefs } from 'vue';
 import { styleChangeBg, styleWhen } from '../../../_styles/mixins';
-import { CSSPixelValue } from '../../../_styles/variables';
+import { buildCSSPixelValue } from '../../../_styles/variables';
 import { Ruler } from '../../ruler/ruler-service';
 import { kThemeHighlight } from '../../theme/variables';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
@@ -77,8 +77,8 @@ function calcScrubPos(event: AppTouchInput) {
 const baseTransitions = `width 200ms, height 200ms, margin-top 200ms, margin-right 200ms`;
 const rightTransition = `right 250ms linear`;
 
-const thumbSize = new CSSPixelValue(13);
-const thumbScrubbingSize = new CSSPixelValue(17);
+const thumbSize = buildCSSPixelValue(13);
+const thumbScrubbingSize = buildCSSPixelValue(17);
 </script>
 
 <template>

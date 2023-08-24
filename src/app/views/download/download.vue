@@ -10,16 +10,19 @@ import {
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
 import { isDynamicGoogleBot } from '../../../_common/device/device.service';
-import { GameBuild } from '../../../_common/game/build/build.model';
-import { Game } from '../../../_common/game/game.model';
-import { GameSong } from '../../../_common/game/song/song.model';
+import { GameBuildModel } from '../../../_common/game/build/build.model';
+import { GameModel } from '../../../_common/game/game.model';
+import { GameSongModel } from '../../../_common/game/song/song.model';
 import AppGameThumbnail from '../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { HistoryTick } from '../../../_common/history-tick/history-tick-service';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { setAppPromotionCohort, useAppPromotionStore } from '../../../_common/mobile-app/store';
 import { Navigate } from '../../../_common/navigate/navigate.service';
-import { PayloadError } from '../../../_common/payload/payload-service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import { buildPayloadErrorForStatusCode } from '../../../_common/payload/payload-service';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../_common/route/legacy-route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { sleep } from '../../../utils/utils';
@@ -40,7 +43,7 @@ const DownloadDelay = 3000;
 		AppScrollAffix,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['type'], query: ['game_id', 'build_id'] },
 	async resolver({ route }) {
 		const getQuery = (name: string) =>
@@ -50,14 +53,14 @@ const DownloadDelay = 3000;
 
 		const gameId = getQuery('game');
 		if (!gameId) {
-			return PayloadError.fromHttpError(404);
+			return buildPayloadErrorForStatusCode(404);
 		}
 
 		const query: string[] = [];
 		if (route.params.type === 'build') {
 			const buildId = getQuery('build');
 			if (!buildId) {
-				return PayloadError.fromHttpError(404);
+				return buildPayloadErrorForStatusCode(404);
 			}
 
 			HistoryTick.sendBeacon('game-build', buildId, {
@@ -71,15 +74,15 @@ const DownloadDelay = 3000;
 		return Api.sendRequest(`/web/download/info/${gameId}?${query.join('&')}`);
 	},
 })
-export default class RouteDownload extends BaseRouteComponent {
+export default class RouteDownload extends LegacyRouteComponent {
 	ads = setup(() => useAdsController());
 	appPromotionStore = shallowSetup(() => useAppPromotionStore());
 
 	started = false;
-	game: Game = null as any;
-	build: null | GameBuild = null;
-	ownerGames: Game[] = [];
-	recommendedGames: Game[] = [];
+	game: GameModel = null as any;
+	build: null | GameBuildModel = null;
+	ownerGames: GameModel[] = [];
+	recommendedGames: GameModel[] = [];
 
 	readonly Screen = Screen;
 
@@ -111,12 +114,12 @@ export default class RouteDownload extends BaseRouteComponent {
 	}
 
 	async routeResolved($payload: any) {
-		this.game = new Game($payload.game);
-		this.build = $payload.build ? new GameBuild($payload.build) : null;
+		this.game = new GameModel($payload.game);
+		this.build = $payload.build ? new GameBuildModel($payload.build) : null;
 		this.started = false;
 
-		this.ownerGames = Game.populate($payload.ownerGames);
-		this.recommendedGames = Game.populate($payload.recommendedGames);
+		this.ownerGames = GameModel.populate($payload.ownerGames);
+		this.recommendedGames = GameModel.populate($payload.recommendedGames);
 		this._setAdSettings();
 
 		// Don't download on SSR.
@@ -131,7 +134,7 @@ export default class RouteDownload extends BaseRouteComponent {
 				? this.build!.getDownloadUrl({
 						forceDownload: true,
 				  })
-				: GameSong.getSoundtrackDownloadUrl(this.game.id),
+				: GameSongModel.getSoundtrackDownloadUrl(this.game.id),
 
 			// Wait at least this long before spawning the download.
 			sleep(DownloadDelay),

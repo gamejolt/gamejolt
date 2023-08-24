@@ -6,16 +6,17 @@ import {
 	CompetitionPeriodPreComp,
 	CompetitionPeriodVoting,
 } from '../../../../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntry } from '../../../../../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryModel } from '../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../../../../../_common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '../../../../../../../../../_common/illustration/illustrations';
 import AppLoading from '../../../../../../../../../_common/loading/AppLoading.vue';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPagination from '../../../../../../../../../_common/pagination/pagination.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
@@ -24,7 +25,6 @@ import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUs
 import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
 import { CommunityCompetitionEntryModal } from '../../../../../../../../components/community/competition/entry/modal/modal.service';
-import { illNoCommentsSmall } from '../../../../../../../../../_common/illustration/illustrations';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
 
 type Payload = {
@@ -88,7 +88,7 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 		AppNoAutoscroll: vAppNoAutoscroll,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id', 'channel'], query: ['sort', 'sort-direction', 'page'] },
 	resolver: ({ route }) => {
 		const query = [];
@@ -118,12 +118,12 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 		return Api.sendRequest(url);
 	},
 })
-export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
 	entryCount = 0;
-	entries: CommunityCompetitionEntry[] = [];
+	entries: CommunityCompetitionEntryModel[] = [];
 	isLoading = true;
 	perPage = 50;
 
@@ -165,7 +165,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 
 	routeResolved($payload: Payload) {
 		this.entryCount = $payload.entryCount;
-		this.entries = CommunityCompetitionEntry.populate($payload.entries);
+		this.entries = CommunityCompetitionEntryModel.populate($payload.entries);
 		this.perPage = $payload.perPage;
 
 		this.isLoading = false;
@@ -210,13 +210,13 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 		return this.patchLocation(query);
 	}
 
-	onClickShowEntry(entry: CommunityCompetitionEntry) {
+	onClickShowEntry(entry: CommunityCompetitionEntryModel) {
 		CommunityCompetitionEntryModal.showEntry(entry);
 	}
 
-	async onClickRemoveEntry(entry: CommunityCompetitionEntry) {
+	async onClickRemoveEntry(entry: CommunityCompetitionEntryModel) {
 		if (entry.is_removed) {
-			const result = await ModalConfirm.show(
+			const result = await showModalConfirm(
 				this.$gettext(`Are you sure you want to readmit this entry to the jam?`)
 			);
 			if (result) {
@@ -226,7 +226,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 				this.competition.entry_count++;
 			}
 		} else {
-			const result = await ModalConfirm.show(
+			const result = await showModalConfirm(
 				this.$gettext(
 					`Are you sure you want to hide this entry from the jam? The user will not be able to submit the same entry again, but they can submit other entries.`
 				)

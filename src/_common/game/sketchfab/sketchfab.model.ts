@@ -1,16 +1,16 @@
 import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-helpers';
-import { MediaItem } from '../../media-item/media-item-model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
-import { Game } from '../game.model';
+import { GameModel } from '../game.model';
 
-export class GameSketchfab extends Model implements LightboxMediaModel {
+export class GameSketchfabModel extends Model implements LightboxMediaModel {
 	media_type!: 'sketchfab';
 
 	game_id!: number;
 	sketchfab_id!: string;
 	added_on!: number;
 	status!: string;
-	media_item!: MediaItem;
+	media_item!: MediaItemModel;
 
 	// Needed for lightbox and other components that are used together with GameVideo.
 	get img_thumbnail() {
@@ -25,7 +25,7 @@ export class GameSketchfab extends Model implements LightboxMediaModel {
 		super(data);
 
 		if (data.media_item) {
-			this.media_item = new MediaItem(data.media_item);
+			this.media_item = new MediaItemModel(data.media_item);
 		}
 	}
 
@@ -41,7 +41,7 @@ export class GameSketchfab extends Model implements LightboxMediaModel {
 		return this.media_item;
 	}
 
-	getUrl(game: Game) {
+	getUrl(game: GameModel) {
 		return game.getUrl() + '#sketchfab-' + this.id;
 	}
 
@@ -65,5 +65,3 @@ export class GameSketchfab extends Model implements LightboxMediaModel {
 		);
 	}
 }
-
-Model.create(GameSketchfab);

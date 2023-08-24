@@ -1,6 +1,6 @@
 import { Model } from '../model/model.service';
 
-export class AvatarFrame extends Model {
+export class AvatarFrameModel extends Model {
 	declare image_url: string;
 	declare name?: string;
 	declare rarity?: number;
@@ -10,5 +10,3 @@ export class AvatarFrame extends Model {
 		super(data);
 	}
 }
-
-Model.create(AvatarFrame);

@@ -1,9 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { arrayShuffle } from '../../../../../utils/array';
-import { getParam, RouteLocationRedirect } from '../../../../../utils/router';
-import { titleCase } from '../../../../../utils/string';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../_common/filters/date';
 import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
@@ -17,15 +14,18 @@ import {
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { arrayShuffle } from '../../../../../utils/array';
+import { RouteLocationRedirect, getParam } from '../../../../../utils/router';
+import { titleCase } from '../../../../../utils/string';
 import {
-	checkGameFilteringRoute,
 	GameFilteringContainer,
+	checkGameFilteringRoute,
 } from '../../../../components/game/filtering/container';
 import AppGameGrid from '../../../../components/game/grid/grid.vue';
 import AppGameListing from '../../../../components/game/listing/AppGameListing.vue';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
 import AppStoreBanner from '../../../../components/store-banner/AppStoreBanner.vue';
-import { StoreBanner } from '../../../../components/store-banner/store-banner-model';
+import { StoreBannerModel } from '../../../../components/store-banner/store-banner-model';
 import AppTagList from '../../../../components/tag/list/list.vue';
 import { TagsInfo } from '../../../../components/tag/tags-info.service';
 
@@ -53,7 +53,7 @@ const route = useRoute();
 
 const filtering = ref<GameFilteringContainer>();
 const listing = ref<GameListingContainer>();
-const storeBanner = ref<StoreBanner>();
+const storeBanner = ref<StoreBannerModel>();
 
 const section = computed(() => getParam(route, 'section')?.toLowerCase());
 const tag = computed(() => getParam(route, 'tag')?.toLowerCase());
@@ -262,7 +262,7 @@ const { isLoading } = createAppRoute({
 			}
 
 			if (payload.storeBanner) {
-				storeBanner.value = new StoreBanner(payload.storeBanner);
+				storeBanner.value = new StoreBannerModel(payload.storeBanner);
 			}
 		}
 	},

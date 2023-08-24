@@ -1,10 +1,8 @@
-import { Model } from '../../model/model.service';
 import { SiteTrophy } from '../../site/trophy/trophy.model';
-import { UserBaseTrophy } from './user-base-trophy.model';
+import { UserBaseTrophyModel } from './user-base-trophy.model';
 
-export class UserSiteTrophy extends UserBaseTrophy {
-	site_trophy_id!: number;
-
+export class UserSiteTrophy extends UserBaseTrophyModel {
+	declare site_trophy_id: number;
 	site_trophy?: SiteTrophy;
 
 	constructor(data: any = {}) {
@@ -27,5 +25,3 @@ export class UserSiteTrophy extends UserBaseTrophy {
 		this.$_save(`/web/profile/trophies/view-site/${this.id}`, 'userSiteTrophy');
 	}
 }
-
-Model.create(UserSiteTrophy);

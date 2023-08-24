@@ -1,10 +1,10 @@
 import { Api } from '../../../../_common/api/api.service';
-import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
+import { GamePlaylistModel } from '../../../../_common/game-playlist/game-playlist.model';
 import { Model } from '../../../../_common/model/model.service';
 import { commonStore } from '../../../../_common/store/common-store';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 
-export class GameCollection extends Model {
+export class GameCollectionModel extends Model {
 	static readonly TYPE_FOLLOWED = 'followed';
 	static readonly TYPE_DEVELOPER = 'developer';
 	static readonly TYPE_OWNED = 'owned';
@@ -13,10 +13,10 @@ export class GameCollection extends Model {
 	static readonly TYPE_BUNDLE = 'bundle';
 
 	static readonly USER_TYPES = [
-		GameCollection.TYPE_FOLLOWED,
-		GameCollection.TYPE_DEVELOPER,
-		GameCollection.TYPE_OWNED,
-		GameCollection.TYPE_RECOMMENDED,
+		GameCollectionModel.TYPE_FOLLOWED,
+		GameCollectionModel.TYPE_DEVELOPER,
+		GameCollectionModel.TYPE_OWNED,
+		GameCollectionModel.TYPE_RECOMMENDED,
 	];
 
 	_id?: string;
@@ -25,8 +25,8 @@ export class GameCollection extends Model {
 	slug!: string;
 	img_thumbnail!: string;
 	from_subscription!: boolean;
-	owner?: User;
-	playlist?: GamePlaylist;
+	owner?: UserModel;
+	playlist?: GamePlaylistModel;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -37,11 +37,11 @@ export class GameCollection extends Model {
 		}
 
 		if (data.owner) {
-			this.owner = new User(data.owner);
+			this.owner = new UserModel(data.owner);
 		}
 
 		if (data.playlist) {
-			this.playlist = new GamePlaylist(data.playlist);
+			this.playlist = new GamePlaylistModel(data.playlist);
 		}
 	}
 
@@ -87,5 +87,3 @@ export class GameCollection extends Model {
 		});
 	}
 }
-
-Model.create(GameCollection);

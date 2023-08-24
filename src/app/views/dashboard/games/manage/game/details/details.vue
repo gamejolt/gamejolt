@@ -3,12 +3,12 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
-import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/dev-stage-selector.vue';
+import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/AppGameDevStageSelector.vue';
 import FormGame from '../../../../../../components/forms/game/game.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
@@ -19,8 +19,8 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppGameDevStageSelector,
 	},
 })
-@OptionsForRoute()
-export default class RouteDashGamesManageGameDetails extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteDashGamesManageGameDetails extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 	commonStore = setup(() => useCommonStore());
 

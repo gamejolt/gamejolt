@@ -1,25 +1,24 @@
 import { Model } from '../../model/model.service';
-import { Community } from '../community.model';
+import { CommunityModel } from '../community.model';
 
-export const enum NotificationType {
+export const enum CommunityUserNotificationType {
 	POSTS_MOVE = 'posts/move',
 	POSTS_EJECT = 'posts/eject',
 	FIRESIDES_EJECT = 'firesides/eject',
 }
 
-export class CommunityUserNotification extends Model {
-	community!: Community;
-
-	type!: NotificationType;
-	added_on!: number;
-	reason!: string | null;
-	extra_data!: any;
+export class CommunityUserNotificationModel extends Model {
+	declare community: CommunityModel;
+	declare type: CommunityUserNotificationType;
+	declare added_on: number;
+	declare reason: string | null;
+	declare extra_data: any;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.community) {
-			this.community = new Community(data.community);
+			this.community = new CommunityModel(data.community);
 		}
 	}
 
@@ -29,5 +28,3 @@ export class CommunityUserNotification extends Model {
 		});
 	}
 }
-
-Model.create(CommunityUserNotification);

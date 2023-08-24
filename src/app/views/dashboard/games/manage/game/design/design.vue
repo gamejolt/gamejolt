@@ -3,9 +3,9 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { useThemeStore } from '../../../../../../../_common/theme/theme.store';
 import FormGameDesign from '../../../../../../components/forms/game/design/design.vue';
 import { ManageGameThemeKey, useGameDashRouteController } from '../../manage.store';
@@ -16,11 +16,11 @@ import { ManageGameThemeKey, useGameDashRouteController } from '../../manage.sto
 		FormGameDesign,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/media/' + route.params.id),
 })
-export default class RouteDashGamesManageGameDesign extends BaseRouteComponent {
+export default class RouteDashGamesManageGameDesign extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 	themeStore = setup(() => useThemeStore());
 

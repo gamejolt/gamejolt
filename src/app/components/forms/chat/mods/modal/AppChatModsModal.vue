@@ -7,7 +7,7 @@ import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import AppTabBar from '../../../../../../_common/tab-bar/AppTabBar.vue';
 import AppTabBarItem from '../../../../../../_common/tab-bar/AppTabBarItem.vue';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { ChatRoom } from '../../../../chat/room';
+import { ChatRoomModel } from '../../../../chat/room';
 import { ChatUser } from '../../../../chat/user';
 import FormChatMods from '../FormChatMods.vue';
 
@@ -23,7 +23,7 @@ export type ListTitle = keyof typeof ListTitles;
 <script lang="ts" setup>
 const props = defineProps({
 	chatRoom: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		default: undefined,
 	},
 	hasCurrentMods: {

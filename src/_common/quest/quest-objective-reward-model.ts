@@ -1,8 +1,8 @@
-import { Background } from '../background/background.model';
-import { MediaItem } from '../media-item/media-item-model';
+import { BackgroundModel } from '../background/background.model';
+import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { SiteTrophy } from '../site/trophy/trophy.model';
-import { StickerReward } from '../sticker/sticker-reward-model';
+import { StickerRewardModel } from '../sticker/sticker-reward-model';
 
 const QuestRewardTypes = {
 	exp: 0,
@@ -26,12 +26,12 @@ const QuestRewardTypes = {
 	avatarFrame: 9,
 } as const;
 
-export class QuestObjectiveReward extends Model {
+export class QuestObjectiveRewardModel extends Model {
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.stickers) {
-			this.stickers = StickerReward.populate(data.stickers);
+			this.stickers = StickerRewardModel.populate(data.stickers);
 		}
 
 		if (data.trophy) {
@@ -39,7 +39,7 @@ export class QuestObjectiveReward extends Model {
 		}
 
 		if (data.background) {
-			this.background = new Background(data.background);
+			this.background = new BackgroundModel(data.background);
 		}
 	}
 
@@ -48,13 +48,13 @@ export class QuestObjectiveReward extends Model {
 	declare claimed_on: number;
 
 	declare type: number;
-	declare stickers: StickerReward[];
+	declare stickers: StickerRewardModel[];
 	declare trophy?: SiteTrophy;
-	declare background?: Background;
+	declare background?: BackgroundModel;
 
 	declare fallback_name: string;
 	declare fallback_amount: number;
-	declare fallback_media?: MediaItem;
+	declare fallback_media?: MediaItemModel;
 
 	declare is_condensed?: boolean;
 
@@ -132,5 +132,3 @@ export class QuestObjectiveReward extends Model {
 		return result[0].toUpperCase() + result.slice(1);
 	}
 }
-
-Model.create(QuestObjectiveReward);

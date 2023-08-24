@@ -1,5 +1,5 @@
 import { computed, ComputedRef, onUnmounted, reactive, readonly, ref, Ref } from 'vue';
-import { MediaItem } from '../media-item/media-item-model';
+import { MediaItemModel } from '../media-item/media-item-model';
 
 export const LightboxConfig = {
 	// This should match the $-controls-height variable in lightbox.styl
@@ -17,7 +17,7 @@ export interface LightboxMediaModel {
 	getMediaType(): LightboxMediaType;
 
 	// Screenshot/Media Item
-	getMediaItem(): MediaItem | undefined;
+	getMediaItem(): MediaItemModel | undefined;
 }
 
 /**

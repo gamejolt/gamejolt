@@ -15,7 +15,7 @@ import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { User } from '../../../../../_common/user/user.model';
+import { UserModel } from '../../../../../_common/user/user.model';
 import { styleTextOverflow } from '../../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../../_styles/variables';
 import AppShellPageBackdrop from '../../../../components/shell/AppShellPageBackdrop.vue';
@@ -43,7 +43,7 @@ interface ReferralData {
 	share_part: number;
 	share_time_finished: boolean;
 	start_time: number;
-	user: User;
+	user: UserModel;
 	earned_revenue: EarnedRevenue[];
 }
 
@@ -66,7 +66,7 @@ const { isBootstrapped } = createAppRoute({
 					id: referral.id,
 					share_part: referral.share_part,
 					start_time: referral.start_time,
-					user: new User(referral.user),
+					user: new UserModel(referral.user),
 					share_time_finished: referral.share_time_finished,
 					earned_revenue: referral.earned_revenue,
 				});

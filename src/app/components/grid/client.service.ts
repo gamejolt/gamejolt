@@ -1,18 +1,21 @@
 import { Channel } from 'phoenix';
 import { markRaw, reactive } from 'vue';
 import { Analytics } from '../../../_common/analytics/analytics.service';
-import { Community } from '../../../_common/community/community.model';
+import { CommunityModel } from '../../../_common/community/community.model';
 import { ensureConfig } from '../../../_common/config/config.service';
 import { Environment } from '../../../_common/environment/environment.service';
-import { Fireside } from '../../../_common/fireside/fireside.model';
-import { FiresidePostCommunity } from '../../../_common/fireside/post/community/community.model';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
-import { FiresideStreamNotification } from '../../../_common/fireside/stream-notification/stream-notification.model';
+import { FiresideModel } from '../../../_common/fireside/fireside.model';
+import { FiresidePostCommunityModel } from '../../../_common/fireside/post/community/community.model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
+import { FiresideStreamNotificationModel } from '../../../_common/fireside/stream-notification/stream-notification.model';
 import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { ModelStoreModel } from '../../../_common/model/model-store.service';
 import { Model } from '../../../_common/model/model.service';
-import { Notification } from '../../../_common/notification/notification-model';
+import {
+	NotificationModel,
+	NotificationType,
+} from '../../../_common/notification/notification-model';
 import { NotificationText } from '../../../_common/notification/notification-text.service';
 import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
@@ -27,7 +30,7 @@ import { $gettext, $gettextInterpolate } from '../../../_common/translate/transl
 import { getTrophyImg } from '../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
-import { User } from '../../../_common/user/user.model';
+import { UserModel } from '../../../_common/user/user.model';
 import { arrayRemove } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
 import { sleep } from '../../../utils/utils';
@@ -306,7 +309,7 @@ export class GridClient {
 		this.connect();
 	}
 
-	spawnNotification(notification: Notification) {
+	spawnNotification(notification: NotificationModel) {
 		const feedType = notification.feedType;
 
 		// Activity feed types should always increment. Notification feed types
@@ -333,15 +336,15 @@ export class GridClient {
 
 		let message = NotificationText.getText(notification, true);
 		let icon = '';
-		if (notification.from_model instanceof User) {
+		if (notification.from_model instanceof UserModel) {
 			icon = notification.from_model.img_avatar;
-		} else if (notification.from_model instanceof Community) {
+		} else if (notification.from_model instanceof CommunityModel) {
 			icon = notification.from_model.img_thumbnail;
 		}
 
 		// When it's a game post as game owner, use the game owner's avatar instead.
 		if (
-			notification.action_model instanceof FiresidePost &&
+			notification.action_model instanceof FiresidePostModel &&
 			notification.action_model.as_game_owner &&
 			!!notification.action_model.game
 		) {
@@ -355,8 +358,8 @@ export class GridClient {
 
 		if (message !== undefined) {
 			let title = $gettext('New Notification');
-			if (notification.type === Notification.TYPE_POST_ADD) {
-				if (notification.from_model instanceof User) {
+			if (notification.type === NotificationType.PostAdd) {
+				if (notification.from_model instanceof UserModel) {
 					// We send a notification to the author of the post.
 					// Do not show a notification in that case, the purpose is to increment the activity feed counter.
 					if (notification.from_model.id === commonStore.user.value?.id) {
@@ -367,7 +370,7 @@ export class GridClient {
 
 					// When it's a game post as game owner, use the game owner's username instead.
 					if (
-						notification.action_model instanceof FiresidePost &&
+						notification.action_model instanceof FiresidePostModel &&
 						notification.action_model.as_game_owner &&
 						!!notification.action_model.game
 					) {
@@ -380,7 +383,7 @@ export class GridClient {
 				} else {
 					title = $gettext('New Post');
 				}
-			} else if (notification.type === Notification.TYPE_GAME_TROPHY_ACHIEVED) {
+			} else if (notification.type === NotificationType.GameTrophyAchieved) {
 				if (
 					notification.action_model instanceof UserGameTrophy &&
 					notification.action_model.trophy instanceof GameTrophy
@@ -389,7 +392,7 @@ export class GridClient {
 					message = notification.action_model.trophy.title;
 					icon = getTrophyImg(notification.action_model.trophy);
 				}
-			} else if (notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED) {
+			} else if (notification.type === NotificationType.SiteTrophyAchieved) {
 				if (
 					notification.action_model instanceof UserSiteTrophy &&
 					notification.action_model.trophy instanceof SiteTrophy
@@ -398,20 +401,20 @@ export class GridClient {
 					message = notification.action_model.trophy.title;
 					icon = getTrophyImg(notification.action_model.trophy);
 				}
-			} else if (notification.type === Notification.TYPE_POST_FEATURED_IN_COMMUNITY) {
-				if (notification.action_model instanceof FiresidePostCommunity) {
+			} else if (notification.type === NotificationType.PostFeaturedInCommunity) {
+				if (notification.action_model instanceof FiresidePostCommunityModel) {
 					icon = notification.action_model.community.img_thumbnail;
 				}
-			} else if (notification.type === Notification.TYPE_FIRESIDE_START) {
-				if (notification.action_model instanceof Fireside) {
+			} else if (notification.type === NotificationType.FiresideStart) {
+				if (notification.action_model instanceof FiresideModel) {
 					title = notification.action_model.title;
 				}
-			} else if (notification.type === Notification.TYPE_FIRESIDE_STREAM_NOTIFICATION) {
-				if (notification.action_model instanceof FiresideStreamNotification) {
+			} else if (notification.type === NotificationType.FiresideStreamNotification) {
+				if (notification.action_model instanceof FiresideStreamNotificationModel) {
 					title = $gettext('Fireside Stream');
 					icon = notification.action_model.users[0].img_avatar;
 				}
-			} else if (notification.type === Notification.TYPE_CHARGED_STICKER) {
+			} else if (notification.type === NotificationType.ChargedSticker) {
 				title = $gettext('Charged Sticker');
 			}
 
@@ -496,7 +499,7 @@ export class GridClient {
 		}
 	}
 
-	async joinCommunity(community: Community) {
+	async joinCommunity(community: CommunityModel) {
 		const cancelToken = this.socketController.cancelToken.value;
 
 		if (cancelToken.isCanceled) {
@@ -513,7 +516,7 @@ export class GridClient {
 		return;
 	}
 
-	async leaveCommunity(community: Community) {
+	async leaveCommunity(community: CommunityModel) {
 		this.notificationChannel?.leaveCommunity({
 			community_id: community.id,
 		});
@@ -531,7 +534,7 @@ export class GridClient {
 		}
 	}
 
-	recordFeaturedPost(post: FiresidePost) {
+	recordFeaturedPost(post: FiresidePostModel) {
 		if (!this.featuredPostIds.has(post.id)) {
 			this.featuredPostIds.add(post.id);
 		}

@@ -1,9 +1,9 @@
 import { Model } from '../../model/model.service';
-import { ForumCategory } from '../category/category.model';
+import { ForumCategoryModel } from '../category/category.model';
 
-export class ForumChannel extends Model {
+export class ForumChannelModel extends Model {
 	category_id!: number;
-	category!: ForumCategory;
+	category!: ForumCategoryModel;
 	name!: string;
 	description!: string;
 	type!: string;
@@ -14,5 +14,3 @@ export class ForumChannel extends Model {
 	replies_count!: number;
 	notifications_count!: number;
 }
-
-Model.create(ForumChannel);

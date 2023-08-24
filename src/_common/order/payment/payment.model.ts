@@ -1,27 +1,27 @@
 import { Model } from '../../model/model.service';
-import { OrderPaymentRefund } from './refund/refund.model';
+import { OrderPaymentRefundModel } from './refund/refund.model';
 
-export class OrderPayment extends Model {
-	static readonly METHOD_CC_STRIPE = 'cc-stripe';
-	static readonly METHOD_PAYPAL = 'paypal';
-	static readonly METHOD_AMAZON = 'amazon';
-	static readonly METHOD_WALLET = 'wallet';
+export const enum OrderPaymentMethod {
+	CCStripe = 'cc-stripe',
+	Paypal = 'paypal',
+	Amazon = 'amazon',
+	Wallet = 'wallet',
+}
 
-	order_id!: number;
-	method!: string;
-	currency_code!: string;
-	amount!: number;
-	stripe_payment_source!: any | null;
-	paypal_email_address!: string | null;
-	refunds: OrderPaymentRefund[] = [];
+export class OrderPaymentModel extends Model {
+	declare order_id: number;
+	declare method: string;
+	declare currency_code: string;
+	declare amount: number;
+	declare stripe_payment_source: any | null;
+	declare paypal_email_address: string | null;
+	refunds: OrderPaymentRefundModel[] = [];
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.refunds) {
-			this.refunds = OrderPaymentRefund.populate(data.refunds);
+			this.refunds = OrderPaymentRefundModel.populate(data.refunds);
 		}
 	}
 }
-
-Model.create(OrderPayment);

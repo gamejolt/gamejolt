@@ -1,4 +1,4 @@
-import { Component, inject, markRaw, reactive, ref } from 'vue';
+import { inject, markRaw, reactive, ref, type Component } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { MaybeRef } from '../../utils/vue';
 import { Popper } from '../popper/popper.service';

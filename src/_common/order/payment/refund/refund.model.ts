@@ -1,13 +1,7 @@
 import { Model } from '../../../model/model.service';
 
-export class OrderPaymentRefund extends Model {
-	order_id!: number;
-	order_payment_id!: number;
-	created_on!: number;
-
-	constructor(data: any = {}) {
-		super(data);
-	}
+export class OrderPaymentRefundModel extends Model {
+	declare order_id: number;
+	declare order_payment_id: number;
+	declare created_on: number;
 }
-
-Model.create(OrderPaymentRefund);

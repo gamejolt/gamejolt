@@ -1,32 +1,32 @@
 import { RouteLocationNormalized } from 'vue-router';
 import { RouteLocationDefinition } from '../../../utils/router';
 import { Api } from '../../api/api.service';
-import { Background } from '../../background/background.model';
+import { BackgroundModel } from '../../background/background.model';
 import { Perm } from '../../collaborator/collaboratable';
 import { CommentableModel } from '../../comment/comment-model';
-import { CommunityChannel } from '../../community/channel/channel.model';
-import { Community } from '../../community/community.model';
+import { CommunityChannelModel } from '../../community/channel/channel.model';
+import { CommunityModel } from '../../community/community.model';
 import { ContentContainerModel } from '../../content/content-container-model';
 import { ContentContext } from '../../content/content-context';
-import { ContentSetCacheService } from '../../content/content-set-cache';
-import { EventItem } from '../../event-item/event-item.model';
-import { Game } from '../../game/game.model';
+import { ContentSetCache } from '../../content/content-set-cache';
+import { EventItemModel } from '../../event-item/event-item.model';
+import { GameModel } from '../../game/game.model';
 import { HistoryTick } from '../../history-tick/history-tick-service';
-import { KeyGroup } from '../../key-group/key-group.model';
-import { MediaItem } from '../../media-item/media-item-model';
-import { ModalConfirm } from '../../modal/confirm/confirm-service';
+import { KeyGroupModel } from '../../key-group/key-group.model';
+import { MediaItemModel } from '../../media-item/media-item-model';
+import { showModalConfirm } from '../../modal/confirm/confirm-service';
 import { Model, ModelSaveRequestOptions } from '../../model/model.service';
-import { Poll } from '../../poll/poll.model';
+import { PollModel } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
-import { StickerPlacement } from '../../sticker/placement/placement.model';
-import { constructStickerCounts, StickerCount } from '../../sticker/sticker-count';
-import { Translate } from '../../translate/translate.service';
-import { User } from '../../user/user.model';
-import { FiresidePostCommunity } from './community/community.model';
-import { FiresidePostEmbed } from './embed/embed.model';
-import { FiresidePostLike } from './like/like-model';
-import { FiresidePostRealm } from './realm/realm.model';
-import { FiresidePostVideo } from './video/video-model';
+import { StickerPlacementModel } from '../../sticker/placement/placement.model';
+import { StickerCount, constructStickerCounts } from '../../sticker/sticker-count';
+import { $gettext } from '../../translate/translate.service';
+import { UserModel } from '../../user/user.model';
+import { FiresidePostCommunityModel } from './community/community.model';
+import { FiresidePostEmbedModel } from './embed/embed.model';
+import { FiresidePostLikeModel } from './like/like-model';
+import { FiresidePostRealmModel } from './realm/realm.model';
+import { FiresidePostVideoModel } from './video/video-model';
 
 export type CommunityNotifyOptions = {
 	notifyUser: boolean;
@@ -34,77 +34,80 @@ export type CommunityNotifyOptions = {
 	reasonType: string | null;
 };
 
-export class FiresidePost extends Model implements ContentContainerModel, CommentableModel {
-	static readonly TYPE_TEXT = 'text';
-	static readonly TYPE_MEDIA = 'media';
-	static readonly TYPE_VIDEO = 'video';
+export const enum FiresidePostType {
+	Text = 'text',
+	Media = 'media',
+	Video = 'video',
+}
 
-	static readonly STATUS_DRAFT = 'draft';
-	static readonly STATUS_ACTIVE = 'active';
-	static readonly STATUS_REMOVED = 'removed';
-	static readonly STATUS_TEMP = 'temp';
+export const enum FiresidePostStatus {
+	Draft = 'draft',
+	Active = 'active',
+	Removed = 'removed',
+	Temp = 'temp',
+}
 
-	static readonly ALLOW_COMMENTS_DISABLED = 0;
-	static readonly ALLOW_COMMENTS_ENABLED = 1;
-	static readonly ALLOW_COMMENTS_FRIENDS = 2;
+export const enum FiresidePostAllowComments {
+	Disabled = 0,
+	Enabled = 1,
+	Friends = 2,
+}
 
-	hash!: string;
-	status!: string;
-	added_on!: number;
-	updated_on!: number;
-	published_on!: number;
-	scheduled_for_timezone!: string | null;
-	scheduled_for!: number | null;
-	like_count!: number;
-	comment_count!: number;
-	user!: User;
-	game?: Game;
-	as_game_owner!: boolean;
-	post_to_user_profile!: boolean;
-	slug!: string;
-	subline!: string;
-	url!: string;
-	view_count?: number;
-	is_pinned!: boolean;
-	is_processing!: boolean;
+export class FiresidePostModel extends Model implements ContentContainerModel, CommentableModel {
+	declare hash: string;
+	declare status: FiresidePostStatus;
+	declare added_on: number;
+	declare updated_on: number;
+	declare published_on: number;
+	declare scheduled_for_timezone: string | null;
+	declare scheduled_for: number | null;
+	declare like_count: number;
+	declare comment_count: number;
+	declare user: UserModel;
+	declare game?: GameModel;
+	declare as_game_owner: boolean;
+	declare post_to_user_profile: boolean;
+	declare slug: string;
+	declare subline: string;
+	declare url: string;
+	declare view_count?: number;
+	declare is_pinned: boolean;
+	declare is_processing: boolean;
 
 	/**
 	 * If the post has an article saved, whether or not it's loaded in yet.
 	 */
-	has_article!: boolean;
+	declare has_article: boolean;
 
-	lead_content!: string;
-	leadStr!: string;
-	article_content!: string;
+	declare lead_content: string;
+	declare leadStr: string;
+	declare article_content: string;
 
-	communities: FiresidePostCommunity[] = [];
-	realms: FiresidePostRealm[] = [];
-	media: MediaItem[] = [];
-	videos: FiresidePostVideo[] = [];
-	user_like?: FiresidePostLike | null;
-	key_groups: KeyGroup[] = [];
-	poll!: Poll | null;
-	stickers: StickerPlacement[] = [];
+	communities: FiresidePostCommunityModel[] = [];
+	realms: FiresidePostRealmModel[] = [];
+	media: MediaItemModel[] = [];
+	videos: FiresidePostVideoModel[] = [];
+	user_like?: FiresidePostLikeModel | null;
+	key_groups: KeyGroupModel[] = [];
+	declare poll: PollModel | null;
+	stickers: StickerPlacementModel[] = [];
 	sticker_counts: StickerCount[] = [];
-	supporters: User[] = [];
-	embeds: FiresidePostEmbed[] = [];
+	supporters: UserModel[] = [];
+	embeds: FiresidePostEmbedModel[] = [];
 
 	// Used for forms and saving.
 	key_group_ids: number[] = [];
 
 	// Returned when saving a post for the first time.
 	// The feed no longer works with posts directly - we need the event item.
-	event_item?: EventItem;
+	declare event_item?: EventItemModel;
 
-	background?: Background;
+	declare background?: BackgroundModel;
 
 	/**
 	 * The raw state of who can comment from backend.
 	 */
-	declare allow_comments:
-		| (typeof FiresidePost)['ALLOW_COMMENTS_DISABLED']
-		| (typeof FiresidePost)['ALLOW_COMMENTS_ENABLED']
-		| (typeof FiresidePost)['ALLOW_COMMENTS_FRIENDS'];
+	declare allow_comments: FiresidePostAllowComments;
 
 	/**
 	 * If the current post comment restrictions allow us to comment. For the
@@ -121,44 +124,44 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 
 		if (data.game) {
-			this.game = new Game(data.game);
+			this.game = new GameModel(data.game);
 		}
 
 		if (data.communities) {
-			this.communities = FiresidePostCommunity.populate(data.communities);
+			this.communities = FiresidePostCommunityModel.populate(data.communities);
 		}
 
 		if (data.realms) {
-			this.realms = FiresidePostRealm.populate(data.realms);
+			this.realms = FiresidePostRealmModel.populate(data.realms);
 		}
 
 		if (data.media) {
-			this.media = MediaItem.populate(data.media);
+			this.media = MediaItemModel.populate(data.media);
 		}
 
 		if (data.videos) {
-			this.videos = FiresidePostVideo.populate(data.videos);
+			this.videos = FiresidePostVideoModel.populate(data.videos);
 		}
 
 		if (data.user_like) {
-			this.user_like = new FiresidePostLike(data.user_like);
+			this.user_like = new FiresidePostLikeModel(data.user_like);
 		}
 
 		if (data.key_groups) {
-			this.key_groups = KeyGroup.populate(data.key_groups);
+			this.key_groups = KeyGroupModel.populate(data.key_groups);
 			this.key_group_ids = this.key_groups.map(i => i.id);
 		}
 
 		if (data.poll) {
-			this.poll = new Poll(data.poll);
+			this.poll = new PollModel(data.poll);
 		}
 
 		if (data.event_item) {
-			this.event_item = new EventItem(data.event_item);
+			this.event_item = new EventItemModel(data.event_item);
 		}
 
 		if (data.sticker_counts) {
@@ -166,30 +169,30 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		}
 
 		if (data.supporters) {
-			this.supporters = User.populate(data.supporters);
+			this.supporters = UserModel.populate(data.supporters);
 		}
 
 		if (data.embeds) {
-			this.embeds = FiresidePostEmbed.populate(data.embeds);
+			this.embeds = FiresidePostEmbedModel.populate(data.embeds);
 		}
 
 		if (data.background) {
-			this.background = new Background(data.background);
+			this.background = new BackgroundModel(data.background);
 		}
 
 		Registry.store('FiresidePost', this);
 	}
 
 	get isActive() {
-		return this.status === FiresidePost.STATUS_ACTIVE;
+		return this.status === FiresidePostStatus.Active;
 	}
 
 	get isDraft() {
-		return this.status === FiresidePost.STATUS_DRAFT;
+		return this.status === FiresidePostStatus.Draft;
 	}
 
 	get isRemoved() {
-		return this.status === FiresidePost.STATUS_REMOVED;
+		return this.status === FiresidePostStatus.Removed;
 	}
 
 	get isScheduled() {
@@ -232,26 +235,22 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	 * it updates in realtime.
 	 */
 	get hasArticleContent() {
-		const cache = ContentSetCacheService.getCache(this, 'fireside-post-article');
+		const cache = ContentSetCache.getCache(this, 'fireside-post-article');
 		return cache.hasContent;
 	}
 
 	get hasLead() {
-		const cache = ContentSetCacheService.getCache(this, 'fireside-post-lead');
+		const cache = ContentSetCache.getCache(this, 'fireside-post-lead');
 		return cache.hasContent;
 	}
 
 	get leadLength() {
-		const cache = ContentSetCacheService.getCache(this, 'fireside-post-lead');
+		const cache = ContentSetCache.getCache(this, 'fireside-post-lead');
 		return cache.length;
 	}
 
 	get hasPoll() {
 		return !!this.poll;
-	}
-
-	static pullHashFromUrl(url: string) {
-		return url.substring(url.lastIndexOf('-') + 1);
 	}
 
 	get routeLocation(): RouteLocationDefinition {
@@ -289,8 +288,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 
 	get canInteractWithComments() {
 		return (
-			this._canInteractWithPost &&
-			this.allow_comments !== FiresidePost.ALLOW_COMMENTS_DISABLED
+			this._canInteractWithPost && this.allow_comments !== FiresidePostAllowComments.Disabled
 		);
 	}
 
@@ -319,12 +317,12 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	 * Manageable is any permissions that would show the event-item-manage
 	 * controls.
 	 */
-	isManageableByUser(user?: User | null) {
+	isManageableByUser(user?: UserModel | null) {
 		return this.isEditableByUser(user) || this.manageableCommunities.length !== 0;
 	}
 
-	isEditableByUser(user?: User | null) {
-		if (!(user instanceof User)) {
+	isEditableByUser(user?: UserModel | null) {
+		if (!(user instanceof UserModel)) {
 			return false;
 		}
 
@@ -428,17 +426,6 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return route.params.username === this.displayUser.username;
 	}
 
-	static async $create(gameId?: number) {
-		let url = `/web/posts/manage/new-post`;
-		if (gameId) {
-			url += '/' + gameId;
-		}
-
-		const response = await Api.sendRequest(url, {});
-		await FiresidePost.processCreate(response, 'post');
-		return new FiresidePost(response.post);
-	}
-
 	async $save() {
 		if (!this.id) {
 			throw new Error(
@@ -479,7 +466,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return payload;
 	}
 
-	$feature(community: Community) {
+	$feature(community: CommunityModel) {
 		const c = this.getTaggedCommunity(community);
 		if (!c) {
 			throw new Error('Cannot feature a post to a community it is not tagged in');
@@ -488,7 +475,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.$_save(`/web/communities/manage/feature/${c.id}`, 'post');
 	}
 
-	$unfeature(community: Community) {
+	$unfeature(community: CommunityModel) {
 		const c = this.getTaggedCommunity(community);
 		if (!c) {
 			throw new Error('Cannot unfeature a post to a community it is not tagged in');
@@ -497,7 +484,10 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		return this.$_save(`/web/communities/manage/unfeature/${c.id}`, 'post');
 	}
 
-	$reject(community: Community, notifyOptions: CommunityNotifyOptions | undefined = undefined) {
+	$reject(
+		community: CommunityModel,
+		notifyOptions: CommunityNotifyOptions | undefined = undefined
+	) {
 		const c = this.getTaggedCommunity(community);
 		if (!c) {
 			throw new Error('Cannot reject a post to a community it is not tagged in');
@@ -509,8 +499,8 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	}
 
 	$moveChannel(
-		community: Community,
-		channel: CommunityChannel,
+		community: CommunityModel,
+		channel: CommunityChannelModel,
 		notifyOptions: CommunityNotifyOptions | undefined = undefined
 	) {
 		const c = this.getTaggedCommunity(community);
@@ -529,7 +519,7 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 		});
 	}
 
-	getTaggedCommunity(community: Community) {
+	getTaggedCommunity(community: CommunityModel) {
 		return this.communities.find(c => c.community.id === community.id);
 	}
 
@@ -549,8 +539,8 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	}
 
 	async remove() {
-		const result = await ModalConfirm.show(
-			Translate.$gettext(`Are you sure you want to remove this post?`)
+		const result = await showModalConfirm(
+			$gettext(`Are you sure you want to remove this post?`)
 		);
 
 		if (result) {
@@ -566,17 +556,33 @@ export class FiresidePost extends Model implements ContentContainerModel, Commen
 	}
 }
 
-Model.create(FiresidePost);
+/**
+ * Given a URL will try to find the post hash.
+ */
+export function pullFiresideHashFromUrl(url: string) {
+	return url.substring(url.lastIndexOf('-') + 1);
+}
+
+export async function $createFiresidePost(gameId?: number) {
+	let url = `/web/posts/manage/new-post`;
+	if (gameId) {
+		url += '/' + gameId;
+	}
+
+	const response = await Api.sendRequest(url, {});
+	await FiresidePostModel.processCreate(response, 'post');
+	return new FiresidePostModel(response.post);
+}
 
 /**
  * Will load the article from the API and store it into the post model.
  */
-export async function loadArticleIntoPost(post: FiresidePost) {
+export async function loadArticleIntoPost(post: FiresidePostModel) {
 	const payload = await Api.sendRequest(`/web/posts/article/${post.id}`);
 	post.article_content = payload.article;
 	return post;
 }
 
-export function $viewPost(post: FiresidePost, sourceFeed?: string) {
+export function $viewPost(post: FiresidePostModel, sourceFeed?: string) {
 	HistoryTick.sendBeacon('fireside-post', post.id, { sourceFeed });
 }

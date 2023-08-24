@@ -6,7 +6,7 @@ import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
 import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
-import { Community, isEditingCommunity } from '../community.model';
+import { CommunityModel, isEditingCommunity } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 
@@ -18,7 +18,7 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppCommunityCardBase extends Vue {
-	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
 	@Prop({ type: Boolean, default: false }) overflow!: boolean;
 	@Prop({ type: Boolean, default: false }) elevate!: boolean;
 	@Prop({ type: Boolean, default: true }) allowEdit!: boolean;

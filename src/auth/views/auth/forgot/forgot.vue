@@ -1,6 +1,9 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import FormRetrieveLogin from '../../../components/forms/retrieve-login/retrieve-login.vue';
 
 @Options({
@@ -9,8 +12,8 @@ import FormRetrieveLogin from '../../../components/forms/retrieve-login/retrieve
 		FormRetrieveLogin,
 	},
 })
-@OptionsForRoute()
-export default class RouteAuthForgot extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteAuthForgot extends LegacyRouteComponent {
 	get routeTitle() {
 		return this.$gettext('Retrieve Login Credentials');
 	}

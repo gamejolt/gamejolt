@@ -1,18 +1,18 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
-import { CommunityChannel } from '../../../../../../../_common/community/channel/channel.model';
+import { CommunityChannelModel } from '../../../../../../../_common/community/channel/channel.model';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityCompetitionHeaderModal } from '../../../../../../components/community/competition/header-modal/header-modal.service';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import AppPageHeader from '../../../../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../../../../components/page-header/controls/controls.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../view.store';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditChannelsEdit',
@@ -26,14 +26,14 @@ import AppCommunitiesViewPageContainer from '../../../_page-container/page-conta
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id', 'channel'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			'/web/dash/communities/channels/' + route.params.id + '/' + route.params.channel
 		),
 })
-export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditChannelsEdit extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
@@ -63,7 +63,7 @@ export default class RouteCommunitiesViewEditChannelsEdit extends BaseRouteCompo
 
 	routeResolved($payload: any) {
 		if ($payload.channel) {
-			const channel = new CommunityChannel($payload.channel);
+			const channel = new CommunityChannelModel($payload.channel);
 			if (this.channel) {
 				this.channel.assign(channel);
 			} else if (channel.is_archived) {

@@ -1,18 +1,10 @@
-import { Api } from '../../../api/api.service';
 import { Model } from '../../../model/model.service';
 
-export class CommunityCompetitionVotingCategory extends Model {
-	community_competition_id!: number;
-	name!: string;
-	description!: string | null;
-	sort!: number;
-
-	static $saveSort(competitionId: number, categoryIds: number[]) {
-		return Api.sendRequest(
-			`/web/dash/communities/competitions/voting-categories/save-sort/${competitionId}`,
-			categoryIds
-		);
-	}
+export class CommunityCompetitionVotingCategoryModel extends Model {
+	declare community_competition_id: number;
+	declare name: string;
+	declare description: string | null;
+	declare sort: number;
 
 	$save() {
 		if (this.id) {
@@ -33,5 +25,3 @@ export class CommunityCompetitionVotingCategory extends Model {
 		);
 	}
 }
-
-Model.create(CommunityCompetitionVotingCategory);

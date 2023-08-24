@@ -6,7 +6,7 @@ function createRealmSearchFeed(query: string) {
 	const perPage = 12;
 	const isOverview = !query.length;
 
-	const realms = ref<Realm[]>([]);
+	const realms = ref<RealmModel[]>([]);
 
 	const isBootstrapped = ref(false);
 	const isLoading = ref(false);
@@ -56,7 +56,7 @@ function createRealmSearchFeed(query: string) {
 			page.value = pos;
 
 			const rawRealms: any[] = response.realms || [];
-			realms.value = Realm.populate(rawRealms);
+			realms.value = RealmModel.populate(rawRealms);
 
 			reachedEnd.value = isOverview || rawRealms.length < perPage;
 			isBootstrapped.value = true;
@@ -81,7 +81,7 @@ function createRealmSearchFeed(query: string) {
 			page.value = pos;
 
 			const rawRealms: any[] = response.realms || [];
-			realms.value.push(...Realm.populate(rawRealms));
+			realms.value.push(...RealmModel.populate(rawRealms));
 
 			reachedEnd.value = rawRealms.length < perPage;
 		} catch (e) {
@@ -112,14 +112,13 @@ function createRealmSearchFeed(query: string) {
 
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, PropType, ref, shallowRef, toRefs } from 'vue';
-import { arrayRemove } from '../../../../../utils/array';
-import { debounce } from '../../../../../utils/utils';
 import { Api, RequestOptions } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { illPointyThing } from '../../../../../_common/illustration/illustrations';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
@@ -128,7 +127,7 @@ import { useModal } from '../../../../../_common/modal/modal.service';
 import AppRealmFullCard, {
 	REALM_CARD_RATIO,
 } from '../../../../../_common/realm/AppRealmFullCard.vue';
-import { Realm } from '../../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../../_common/realm/realm-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller, {
 	createScroller,
@@ -137,7 +136,8 @@ import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import { illPointyThing } from '../../../../../_common/illustration/illustrations';
+import { arrayRemove } from '../../../../../utils/array';
+import { debounce } from '../../../../../utils/utils';
 import AppContentTargetRealm from '../AppContentTargetRealm.vue';
 
 const COL_COUNT_BASE = 4;
@@ -147,7 +147,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
 const props = defineProps({
 	selectedRealms: {
-		type: Array as PropType<Realm[]>,
+		type: Array as PropType<RealmModel[]>,
 		required: true,
 	},
 	maxRealms: {
@@ -189,11 +189,11 @@ onMounted(() => {
 	realmFeeds.value.get(currentQuery.value)?.init();
 });
 
-function isRealmSelected(realm: Realm) {
+function isRealmSelected(realm: RealmModel) {
 	return selectedRealms.value.findIndex(i => i.id === realm.id) !== -1;
 }
 
-function toggleRealmSelection(realm: Realm) {
+function toggleRealmSelection(realm: RealmModel) {
 	if (isRealmSelected(realm)) {
 		removeRealm(realm);
 	} else {
@@ -201,7 +201,7 @@ function toggleRealmSelection(realm: Realm) {
 	}
 }
 
-async function selectRealm(realm: Realm) {
+async function selectRealm(realm: RealmModel) {
 	if (selectedRealms.value.length >= maxRealms.value || isRealmSelected(realm)) {
 		return;
 	}
@@ -217,7 +217,7 @@ async function selectRealm(realm: Realm) {
 	}
 }
 
-function removeRealm(realm: Realm) {
+function removeRealm(realm: RealmModel) {
 	arrayRemove(selectedRealms.value, i => i.id === realm.id);
 }
 

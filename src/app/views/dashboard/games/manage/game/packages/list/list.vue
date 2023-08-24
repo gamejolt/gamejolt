@@ -1,21 +1,25 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import { arrayIndexBy } from '../../../../../../../../utils/array';
-import { shallowSetup } from '../../../../../../../../utils/vue';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { formatCurrency } from '../../../../../../../../_common/filters/currency';
-import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
-import { showSuccessGrowl } from '../../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../_common/route/route-component';
-import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
+	$saveGamePackageSort,
+	GamePackageModel,
+	GamePackageVisibility,
+} from '../../../../../../../../_common/game/package/package.model';
+import { showSuccessGrowl } from '../../../../../../../../_common/growls/growls.service';
+import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../_common/route/legacy-route-component';
+import { SellableModel } from '../../../../../../../../_common/sellable/sellable.model';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
+import { arrayIndexBy } from '../../../../../../../../utils/array';
+import { shallowSetup } from '../../../../../../../../utils/vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
@@ -34,23 +38,24 @@ import { useGameDashRouteController } from '../../../manage.store';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id),
 })
-export default class RouteDashGamesManageGamePackagesList extends BaseRouteComponent {
+export default class RouteDashGamesManageGamePackagesList extends LegacyRouteComponent {
 	routeStore = shallowSetup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game.value!;
 	}
 
-	packages: GamePackage[] = [];
-	sellables: { [x: number]: Sellable } = {};
+	packages: GamePackageModel[] = [];
+	sellables: { [x: number]: SellableModel } = {};
 
-	readonly GamePackage = GamePackage;
+	readonly GamePackage = GamePackageModel;
 	readonly formatCurrency = formatCurrency;
+	readonly GamePackageVisibilityPrivate = GamePackageVisibility.Private;
 
 	get hasAllPerms() {
 		return this.game.hasPerms('all');
@@ -88,27 +93,27 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 			return;
 		}
 
-		this.packages = GamePackage.populate($payload.packages);
-		this.sellables = arrayIndexBy<Sellable>(
-			Sellable.populate($payload.sellables),
+		this.packages = GamePackageModel.populate($payload.packages);
+		this.sellables = arrayIndexBy<SellableModel>(
+			SellableModel.populate($payload.sellables),
 			'game_package_id'
 		);
 	}
 
-	saveSort(packages: GamePackage[]) {
+	saveSort(packages: GamePackageModel[]) {
 		this.packages = packages;
-		GamePackage.$saveSort(this.game.id, this.packagesSort);
+		$saveGamePackageSort(this.game.id, this.packagesSort);
 	}
 
 	async addPackage() {
 		const newPackage = await GamePackageEditModal.show(this.routeStore);
-		if (newPackage instanceof GamePackage) {
+		if (newPackage instanceof GamePackageModel) {
 			this.packages.push(newPackage);
 		}
 	}
 
-	async removePackage(pkg: GamePackage) {
-		const result = await ModalConfirm.show(
+	async removePackage(pkg: GamePackageModel) {
+		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to remove this package? All of the releases and builds it contains will be removed as well.'
 			)
@@ -161,11 +166,11 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 			<div v-if="game._is_devlog" class="alert">
 				<AppJolticon icon="notice" notice />
 				{{ ' ' }}
-				<b
-					><AppTranslate
-						>Public packages do not show on devlog-only game pages.</AppTranslate
-					></b
-				>
+				<b>
+					<AppTranslate>
+						Public packages do not show on devlog-only game pages.
+					</AppTranslate>
+				</b>
 				{{ ' ' }}
 				<AppTranslate>
 					You are only able to create private packages for testers while your game page is
@@ -239,7 +244,7 @@ export default class RouteDashGamesManageGamePackagesList extends BaseRouteCompo
 								</span>
 
 								<span
-									v-if="pkg.visibility === GamePackage.VISIBILITY_PRIVATE"
+									v-if="pkg.visibility === GamePackageVisibilityPrivate"
 									v-app-tooltip="
 										$gettext(
 											`This package will only be available to you and any keys that have access.`

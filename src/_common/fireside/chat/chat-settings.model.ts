@@ -2,7 +2,7 @@ import { ContextCapabilities, ContextCapabilityType } from '../../content/conten
 import { Model } from '../../model/model.service';
 import { FIRESIDE_ROLES } from '../role/role.model';
 
-export class FiresideChatSettings extends Model {
+export class FiresideChatSettingsModel extends Model {
 	constructor(data: any = {}) {
 		super(data);
 	}
@@ -18,14 +18,12 @@ export class FiresideChatSettings extends Model {
 	declare content_capabilities: string[];
 }
 
-Model.create(FiresideChatSettings);
-
 /**
  * Generates the correct context capabilities for the fireside depending on
  * their role and what the chat settings are defined as.
  */
 export function createFiresideChatContextCapabilities(
-	settings: FiresideChatSettings,
+	settings: FiresideChatSettingsModel,
 	role: FIRESIDE_ROLES
 ) {
 	const capabilities = ContextCapabilities.fromPayloadList(settings.content_capabilities);

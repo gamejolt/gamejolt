@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from 'vue';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import { showModal } from '../../../../_common/modal/modal.service';
 
 export class ClientInstallPackageModal {
-	static async show(game: Game) {
+	static async show(game: GameModel) {
 		return await showModal({
 			modalId: 'ClientInstallPackage-' + game.id,
 			component: defineAsyncComponent(() => import('./AppClientInstallPackageModal.vue')),

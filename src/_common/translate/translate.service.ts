@@ -52,7 +52,7 @@ const _currentTranslations = computed(
 	() => _translations.value[_language.value] ?? _translations.value[_language.value.split('_')[0]]
 );
 
-let _translationsReady: Promise<void> = new Promise(() => {});
+let _translationsReady: Promise<void> = /** @__PURE__ */ new Promise(() => {});
 
 export function initTranslations(app: App) {
 	// Initialize our starting values. [loadCurrentLanguage] should be called

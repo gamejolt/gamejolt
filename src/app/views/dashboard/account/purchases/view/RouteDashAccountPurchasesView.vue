@@ -3,12 +3,12 @@ import { Ref, computed, ref } from 'vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import { formatCurrency } from '../../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../../_common/filters/date';
-import { GamePackage } from '../../../../../../_common/game/package/package.model';
+import { GamePackageModel } from '../../../../../../_common/game/package/package.model';
 import { Geo } from '../../../../../../_common/geo/geo.service';
 import AppMicrotransactionItem from '../../../../../../_common/microtransaction/AppMicrotransactionItem.vue';
-import { MicrotransactionProduct } from '../../../../../../_common/microtransaction/product.model';
-import { Order } from '../../../../../../_common/order/order.model';
-import { OrderPayment } from '../../../../../../_common/order/payment/payment.model';
+import { MicrotransactionProductModel } from '../../../../../../_common/microtransaction/product.model';
+import { OrderModel } from '../../../../../../_common/order/order.model';
+import { OrderPaymentMethod } from '../../../../../../_common/order/payment/payment.model';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
@@ -29,7 +29,7 @@ export default {
 <script lang="ts" setup>
 const { heading } = useAccountRouteController()!;
 
-const order = ref(null) as Ref<Order | null>;
+const order = ref(null) as Ref<OrderModel | null>;
 
 const firstRefund = computed(() => {
 	if (
@@ -52,7 +52,7 @@ const hasVisiblePayment = computed(() => {
 	}
 
 	return order.value.payments.some(
-		i => i.method !== OrderPayment.METHOD_CC_STRIPE || !!i.stripe_payment_source
+		i => i.method !== OrderPaymentMethod.CCStripe || !!i.stripe_payment_source
 	);
 });
 
@@ -62,18 +62,18 @@ const { isBootstrapped } = createAppRoute({
 		heading.value = $gettext(`Order details`);
 	},
 	onResolved({ payload }) {
-		order.value = new Order(payload.order);
+		order.value = new OrderModel(payload.order);
 	},
 });
 
 function isGamePackage(
-	resource: GamePackage | MicrotransactionProduct | null
-): resource is GamePackage {
-	return resource instanceof GamePackage;
+	resource: GamePackageModel | MicrotransactionProductModel | null
+): resource is GamePackageModel {
+	return resource instanceof GamePackageModel;
 }
 
-function isMicrotransactionProduct(resource: any): resource is MicrotransactionProduct {
-	return resource instanceof MicrotransactionProduct;
+function isMicrotransactionProduct(resource: any): resource is MicrotransactionProductModel {
+	return resource instanceof MicrotransactionProductModel;
 }
 </script>
 
@@ -150,7 +150,7 @@ function isMicrotransactionProduct(resource: any): resource is MicrotransactionP
 				<div v-for="payment of order.payments" :key="payment.id">
 					<template
 						v-if="
-							payment.method === OrderPayment.METHOD_CC_STRIPE &&
+							payment.method === OrderPaymentMethod.CCStripe &&
 							payment.stripe_payment_source
 						"
 					>
@@ -160,11 +160,11 @@ function isMicrotransactionProduct(resource: any): resource is MicrotransactionP
 						****
 						{{ payment.stripe_payment_source.last4 }}
 					</template>
-					<template v-else-if="payment.method === OrderPayment.METHOD_PAYPAL">
+					<template v-else-if="payment.method === OrderPaymentMethod.Paypal">
 						<span class="tag"> PayPal </span>
 						{{ payment.paypal_email_address }}
 					</template>
-					<template v-else-if="payment.method === OrderPayment.METHOD_WALLET">
+					<template v-else-if="payment.method === OrderPaymentMethod.Wallet">
 						<span class="tag"> Wallet </span>
 						{{ formatCurrency(payment.amount) }}
 					</template>

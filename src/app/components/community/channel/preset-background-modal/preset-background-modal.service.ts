@@ -1,13 +1,13 @@
 import { defineAsyncComponent } from 'vue';
 import {
-	Community,
+	CommunityModel,
 	CommunityPresetChannelType,
 } from '../../../../../_common/community/community.model';
 import { showModal } from '../../../../../_common/modal/modal.service';
 
 export class CommunityChannelPresetBackgroundModal {
-	static async show(community: Community, presetType: CommunityPresetChannelType) {
-		return await showModal<Community>({
+	static async show(community: CommunityModel, presetType: CommunityPresetChannelType) {
+		return await showModal<CommunityModel>({
 			modalId: 'CommunityChannelPresetBackground',
 			component: defineAsyncComponent(() => import('./preset-background-modal.vue')),
 			props: {

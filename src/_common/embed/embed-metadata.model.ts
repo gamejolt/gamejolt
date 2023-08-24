@@ -1,24 +1,21 @@
-import { MediaItem } from '../media-item/media-item-model';
+import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 
-export class EmbedMetadata extends Model {
-	url!: string;
-	site_url!: string;
-	site_name!: string;
-	title!: string;
-	type!: string | null;
-	description!: string | null;
-
-	image_media_item!: MediaItem | null;
-	image_alt!: string | null;
+export class EmbedMetadataModel extends Model {
+	declare url: string;
+	declare site_url: string;
+	declare site_name: string;
+	declare title: string;
+	declare type: string | null;
+	declare description: string | null;
+	declare image_media_item: MediaItemModel | null;
+	declare image_alt: string | null;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.image_media_item) {
-			this.image_media_item = new MediaItem(data.image_media_item);
+			this.image_media_item = new MediaItemModel(data.image_media_item);
 		}
 	}
 }
-
-Model.create(EmbedMetadata);

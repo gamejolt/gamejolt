@@ -1,7 +1,7 @@
 <script lang="ts">
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import {
-	Community,
+	CommunityModel,
 	CommunityPresetChannelType,
 	getCommunityChannelBackground,
 } from '../../../../../../_common/community/community.model';
@@ -13,9 +13,9 @@ import {
 	FormOnLoad,
 	FormOnSubmit,
 } from '../../../../../../_common/form-vue/form.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
-type FormModel = Community & {
+type FormModel = CommunityModel & {
 	background_crop: any;
 };
 
@@ -33,7 +33,7 @@ export default class FormCommunityChannelPresetBackground
 {
 	@Prop({ type: String, required: true }) presetType!: CommunityPresetChannelType;
 
-	modelClass = Community as any;
+	modelClass = CommunityModel as any;
 
 	maxFilesize = 0;
 	aspectRatio = 0;
@@ -89,7 +89,7 @@ export default class FormCommunityChannelPresetBackground
 	}
 
 	async clearBackground() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to remove this channel's background?`)
 		);
 

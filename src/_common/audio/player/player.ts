@@ -1,6 +1,6 @@
 import { h, nextTick } from 'vue';
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { GameSong } from '../../game/song/song.model';
+import { GameSongModel } from '../../game/song/song.model';
 
 interface DurationPayload {
 	currentTime: number;
@@ -10,7 +10,7 @@ interface DurationPayload {
 @Options({})
 export class AppAudioPlayer extends Vue {
 	@Prop(Object)
-	song!: GameSong;
+	song!: GameSongModel;
 
 	declare $el: HTMLAudioElement;
 

@@ -6,7 +6,7 @@ import AppLoading from '../../loading/AppLoading.vue';
 import { Screen } from '../../screen/screen-service';
 import { $gettext } from '../../translate/translate.service';
 import { populateTrophies } from '../../user/trophy/trophy-utils';
-import { UserBaseTrophy } from '../../user/trophy/user-base-trophy.model';
+import { UserBaseTrophyModel } from '../../user/trophy/user-base-trophy.model';
 import AppTrophyCard from '../AppTrophyCard.vue';
 
 const PAGE_SIZE = 12;
@@ -17,7 +17,7 @@ const props = defineProps({
 		required: true,
 	},
 	initialTrophies: {
-		type: Array as PropType<UserBaseTrophy[]>,
+		type: Array as PropType<UserBaseTrophyModel[]>,
 		required: false,
 		default: () => [],
 	},
@@ -25,7 +25,7 @@ const props = defineProps({
 
 const { url, initialTrophies } = toRefs(props);
 
-const trophies = ref<UserBaseTrophy[]>([]);
+const trophies = ref<UserBaseTrophyModel[]>([]);
 const isLoading = ref(false);
 const reachedEnd = ref(false);
 

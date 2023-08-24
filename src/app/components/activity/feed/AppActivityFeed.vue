@@ -3,11 +3,11 @@ import { computed, inject, PropType, provide, reactive, ref, toRefs } from 'vue'
 import { useAdsController } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../_common/community/community.model';
-import { EventItem } from '../../../../_common/event-item/event-item.model';
+import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
+import { EventItemModel, EventItemType } from '../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illEndOfFeed } from '../../../../_common/illustration/illustrations';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -32,15 +32,15 @@ export type ActivityFeedInterface = ReturnType<typeof createActivityFeedInterfac
  * us know about state changes.
  */
 function createActivityFeedInterface(hooks: {
-	onPostEdited: (eventItem: EventItem) => void;
-	onPostPublished: (eventItem: EventItem) => void;
-	onPostRemoved: (eventItem: EventItem) => void;
-	onPostFeatured: (eventItem: EventItem, community: Community) => void;
-	onPostUnfeatured: (eventItem: EventItem, community: Community) => void;
-	onPostMovedChannel: (eventItem: EventItem, movedTo: CommunityChannel) => void;
-	onPostRejected: (eventItem: EventItem, community: Community) => void;
-	onPostPinned: (eventItem: EventItem) => void;
-	onPostUnpinned: (eventItem: EventItem) => void;
+	onPostEdited: (eventItem: EventItemModel) => void;
+	onPostPublished: (eventItem: EventItemModel) => void;
+	onPostRemoved: (eventItem: EventItemModel) => void;
+	onPostFeatured: (eventItem: EventItemModel, community: CommunityModel) => void;
+	onPostUnfeatured: (eventItem: EventItemModel, community: CommunityModel) => void;
+	onPostMovedChannel: (eventItem: EventItemModel, movedTo: CommunityChannelModel) => void;
+	onPostRejected: (eventItem: EventItemModel, community: CommunityModel) => void;
+	onPostPinned: (eventItem: EventItemModel) => void;
+	onPostUnpinned: (eventItem: EventItemModel) => void;
 }) {
 	return reactive({ ...hooks });
 }
@@ -62,13 +62,13 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	'edit-post': (_eventItem: EventItem) => true,
-	'publish-post': (_eventItem: EventItem) => true,
-	'remove-post': (_eventItem: EventItem) => true,
-	'feature-post': (_eventItem: EventItem, _community: Community) => true,
-	'unfeature-post': (_eventItem: EventItem, _community: Community) => true,
-	'move-channel-post': (_eventItem: EventItem, _: any) => true,
-	'reject-post': (_eventItem: EventItem, _community: Community) => true,
+	'edit-post': (_eventItem: EventItemModel) => true,
+	'publish-post': (_eventItem: EventItemModel) => true,
+	'remove-post': (_eventItem: EventItemModel) => true,
+	'feature-post': (_eventItem: EventItemModel, _community: CommunityModel) => true,
+	'unfeature-post': (_eventItem: EventItemModel, _community: CommunityModel) => true,
+	'move-channel-post': (_eventItem: EventItemModel, _: any) => true,
+	'reject-post': (_eventItem: EventItemModel, _community: CommunityModel) => true,
 	'load-new': () => true,
 	'load-more': () => true,
 });
@@ -113,40 +113,40 @@ function onNewButtonInview() {
 	isNewButtonInview.value = true;
 }
 
-function onPostEdited(eventItem: EventItem) {
+function onPostEdited(eventItem: EventItemModel) {
 	feed.value.update(eventItem);
 	emit('edit-post', eventItem);
 }
 
-function onPostPublished(eventItem: EventItem) {
+function onPostPublished(eventItem: EventItemModel) {
 	feed.value.update(eventItem);
 	emit('publish-post', eventItem);
 }
 
-function onPostRemoved(eventItem: EventItem) {
+function onPostRemoved(eventItem: EventItemModel) {
 	feed.value.remove([eventItem]);
 	emit('remove-post', eventItem);
 }
 
-function onPostPinned(eventItem: EventItem) {
+function onPostPinned(eventItem: EventItemModel) {
 	// Pin the passed in item, and unpin all others.
 	for (const item of feed.value.items) {
 		if (
-			item.feedItem instanceof EventItem &&
-			item.feedItem.type === EventItem.TYPE_POST_ADD &&
-			item.feedItem.action instanceof FiresidePost
+			item.feedItem instanceof EventItemModel &&
+			item.feedItem.type === EventItemType.PostAdd &&
+			item.feedItem.action instanceof FiresidePostModel
 		) {
 			item.feedItem.action.is_pinned = false;
 		}
 	}
 
-	if (eventItem.type === EventItem.TYPE_POST_ADD && eventItem.action instanceof FiresidePost) {
+	if (eventItem.type === EventItemType.PostAdd && eventItem.action instanceof FiresidePostModel) {
 		eventItem.action.is_pinned = true;
 	}
 }
 
-function onPostUnpinned(eventItem: EventItem) {
-	if (eventItem.type === EventItem.TYPE_POST_ADD && eventItem.action instanceof FiresidePost) {
+function onPostUnpinned(eventItem: EventItemModel) {
+	if (eventItem.type === EventItemType.PostAdd && eventItem.action instanceof FiresidePostModel) {
 		eventItem.action.is_pinned = false;
 	}
 	onPostEdited(eventItem);

@@ -1,16 +1,19 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
-import { enforceLocation } from '../../../../../utils/router';
 import { Api } from '../../../../../_common/api/api.service';
-import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import { CollaboratorModel } from '../../../../../_common/collaborator/collaborator.model';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import { enforceLocation } from '../../../../../utils/router';
 import { CommunityRouteStore, CommunityRouteStoreKey, updateCommunity } from '../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEdit',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id'] },
 	async resolver({ route }) {
 		const payload = await Api.sendRequest('/web/dash/communities/' + route.params.id);
@@ -25,7 +28,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey, updateCommunity } from '..
 		return payload;
 	},
 })
-export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
+export default class RouteCommunitiesViewEdit extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
@@ -44,7 +47,7 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 	routeResolved($payload: any) {
 		updateCommunity(this.routeStore, $payload.community);
 		this.routeStore.collaborator = $payload.collaboration
-			? new Collaborator($payload.collaboration)
+			? new CollaboratorModel($payload.collaboration)
 			: null;
 	}
 }

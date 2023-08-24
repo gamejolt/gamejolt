@@ -5,18 +5,18 @@ import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
-import { Game } from '../../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditGames',
@@ -33,13 +33,13 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id'] },
 	resolver({ route }) {
 		return Api.sendRequest('/web/dash/communities/games/' + route.params.id);
 	},
 })
-export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditGames extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
@@ -63,7 +63,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 		this.maxLinkedGames = $payload.maxLinkedGames;
 	}
 
-	async saveSort(sortedGames: Game[]) {
+	async saveSort(sortedGames: GameModel[]) {
 		// Reorder the games to see the result of the ordering right away.
 		this.community.games!.splice(0, this.community.games!.length, ...sortedGames);
 
@@ -92,7 +92,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 			);
 
 			if (payload.success) {
-				this.community.games = Game.populate(payload.community.games);
+				this.community.games = GameModel.populate(payload.community.games);
 			}
 		} catch (e) {
 			console.error(e);
@@ -100,7 +100,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 		}
 	}
 
-	async onClickUnlinkGame(game: Game) {
+	async onClickUnlinkGame(game: GameModel) {
 		try {
 			const payload = await Api.sendRequest(
 				'/web/dash/communities/games/unlink',
@@ -112,7 +112,7 @@ export default class RouteCommunitiesViewEditGames extends BaseRouteComponent {
 			);
 
 			if (payload.success) {
-				this.community.games = Game.populate(payload.community.games);
+				this.community.games = GameModel.populate(payload.community.games);
 				// After unlinking a game, there is a free slot and at least one
 				// more game to link.
 				this.hasMoreGamesToLink = true;

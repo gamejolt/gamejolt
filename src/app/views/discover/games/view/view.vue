@@ -10,8 +10,11 @@ import {
 	useAdsController,
 } from '../../../../../_common/ad/ad-store';
 import { Api } from '../../../../../_common/api/api.service';
-import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
-import { Comment } from '../../../../../_common/comment/comment-model';
+import {
+	CollaboratorModel,
+	CollaboratorRole,
+} from '../../../../../_common/collaborator/collaborator.model';
+import { CommentModel } from '../../../../../_common/comment/comment-model';
 import {
 	commentStoreCount,
 	CommentStoreManager,
@@ -22,22 +25,33 @@ import {
 } from '../../../../../_common/comment/comment-store';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import { GameBuild } from '../../../../../_common/game/build/build.model';
-import { CustomMessage, Game, handleGameAddFailure } from '../../../../../_common/game/game.model';
+import { GameBuildType } from '../../../../../_common/game/build/build.model';
+import {
+	CustomGameMessage,
+	GameModel,
+	handleGameAddFailure,
+	pluckBrowserGameBuilds,
+	pluckDownloadableGameBuilds,
+	pluckInstallableGameBuilds,
+	pluckRomGameBuilds,
+} from '../../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../../_common/game/package/package-payload.model';
 import { onRatingWidgetChange } from '../../../../../_common/game/rating/AppGameRatingWidget.vue';
-import { GameRating } from '../../../../../_common/game/rating/rating.model';
-import { GameScoreTable } from '../../../../../_common/game/score-table/score-table.model';
-import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
-import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
-import { GameSong } from '../../../../../_common/game/song/song.model';
-import { GameVideo } from '../../../../../_common/game/video/video.model';
+import { GameRatingModel } from '../../../../../_common/game/rating/rating.model';
+import { GameScoreTableModel } from '../../../../../_common/game/score-table/score-table.model';
+import { GameScreenshotModel } from '../../../../../_common/game/screenshot/screenshot.model';
+import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketchfab.model';
+import { GameSongModel } from '../../../../../_common/game/song/song.model';
+import { GameVideoModel } from '../../../../../_common/game/video/video.model';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
-import { LinkedAccount } from '../../../../../_common/linked-account/linked-account.model';
+import { LinkedAccountModel } from '../../../../../_common/linked-account/linked-account.model';
 import { storeModelList } from '../../../../../_common/model/model-store.service';
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
 import { Registry } from '../../../../../_common/registry/registry.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -48,7 +62,7 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { User } from '../../../../../_common/user/user.model';
+import { UserModel } from '../../../../../_common/user/user.model';
 import { enforceLocation } from '../../../../../utils/router';
 import AppGameCoverButtons from '../../../../components/game/cover-buttons/cover-buttons.vue';
 import AppGameMaturityBlock from '../../../../components/game/maturity-block/maturity-block.vue';
@@ -72,12 +86,12 @@ function createController({ router }: { router: Router }) {
 	const isOverviewLoaded = ref(false);
 
 	// We will bootstrap this right away, so it should always be set for use.
-	const game = ref<Game>();
+	const game = ref<GameModel>();
 
 	const postsCount = ref(0);
 	const trophiesCount = ref(0);
 	const hasScores = ref(false);
-	const primaryScoreTable = ref<GameScoreTable>();
+	const primaryScoreTable = ref<GameScoreTableModel>();
 	const twitterShareMessage = ref('Check out this game!');
 
 	const packagePayload = ref<GamePackagePayloadModel>();
@@ -86,31 +100,31 @@ function createController({ router }: { router: Router }) {
 	const userPartnerKey = ref<string>();
 
 	const partnerKey = ref('');
-	const partner = ref<User>();
+	const partner = ref<UserModel>();
 
-	const collaboratorInvite = ref<Collaborator>();
+	const collaboratorInvite = ref<CollaboratorModel>();
 
-	const userRating = ref<GameRating>();
+	const userRating = ref<GameRatingModel>();
 
-	const mediaItems = ref<(GameScreenshot | GameVideo | GameSketchfab)[]>([]);
-	const songs = ref<GameSong[]>([]);
+	const mediaItems = ref<(GameScreenshotModel | GameVideoModel | GameSketchfabModel)[]>([]);
+	const songs = ref<GameSongModel[]>([]);
 
 	const profileCount = ref(0);
 	const downloadCount = ref(0);
 	const developerGamesCount = ref(0);
-	const supporters = ref<User[]>([]);
+	const supporters = ref<UserModel[]>([]);
 	const supporterCount = ref(0);
-	const recommendedGames = ref<Game[]>([]);
-	const linkedAccounts = ref<LinkedAccount[]>([]);
-	const knownFollowers = ref<User[]>([]);
+	const recommendedGames = ref<GameModel[]>([]);
+	const linkedAccounts = ref<LinkedAccountModel[]>([]);
+	const knownFollowers = ref<UserModel[]>([]);
 	const knownFollowerCount = ref(0);
 
 	const canToggleDescription = ref(false);
 	const showDetails = ref(import.meta.env.SSR);
 
-	const overviewComments = ref<Comment[]>([]);
+	const overviewComments = ref<CommentModel[]>([]);
 
-	const customGameMessages = ref<CustomMessage[]>([]);
+	const customGameMessages = ref<CustomGameMessage[]>([]);
 
 	const packages = computed(() => {
 		if (!packagePayload.value) {
@@ -131,7 +145,7 @@ function createController({ router }: { router: Router }) {
 	const installableBuilds = computed(() => {
 		const os = getDeviceOS();
 		const arch = getDeviceArch();
-		return Game.pluckInstallableBuilds(packages.value, os, arch);
+		return pluckInstallableGameBuilds(packages.value, os, arch);
 	});
 
 	const externalPackages = computed(() => {
@@ -142,18 +156,18 @@ function createController({ router }: { router: Router }) {
 		return packagePayload.value.externalPackages;
 	});
 
-	const downloadableBuilds = computed(() => Game.pluckDownloadableBuilds(packages.value));
+	const downloadableBuilds = computed(() => pluckDownloadableGameBuilds(packages.value));
 
 	const browserBuilds = computed(() => {
-		let builds = Game.pluckBrowserBuilds(packages.value);
+		let builds = pluckBrowserGameBuilds(packages.value);
 
 		// On Client we only want to include HTML games.
 		if (GJ_IS_DESKTOP_APP) {
-			builds = builds.filter(item => item.type === GameBuild.TYPE_HTML);
+			builds = builds.filter(item => item.type === GameBuildType.Html);
 		}
 
 		// Pull in ROMs to the browser builds.
-		return builds.concat(Game.pluckRomBuilds(packages.value));
+		return builds.concat(pluckRomGameBuilds(packages.value));
 	});
 
 	const hasReleasesSection = computed(() => {
@@ -186,7 +200,7 @@ function createController({ router }: { router: Router }) {
 		return undefined;
 	});
 
-	function _updateGame(newGame?: Game) {
+	function _updateGame(newGame?: GameModel) {
 		// If we already have a game, just assign new data into it to keep it
 		// fresh.
 		if (game.value && newGame && game.value.id === newGame.id) {
@@ -198,7 +212,7 @@ function createController({ router }: { router: Router }) {
 
 	function bootstrapGame(gameId: number) {
 		const prevId = game.value?.id;
-		const newGame = Registry.find<Game>('Game', i => i.id === gameId) ?? undefined;
+		const newGame = Registry.find<GameModel>('Game', i => i.id === gameId) ?? undefined;
 
 		_updateGame(newGame);
 
@@ -215,20 +229,22 @@ function createController({ router }: { router: Router }) {
 	}
 
 	function processPayload(payload: any) {
-		const newGame = new Game(payload.game);
+		const newGame = new GameModel(payload.game);
 		_updateGame(newGame);
 
-		userRating.value = payload.userRating ? new GameRating(payload.userRating) : undefined;
+		userRating.value = payload.userRating ? new GameRatingModel(payload.userRating) : undefined;
 		postsCount.value = payload.postCount || 0;
 		trophiesCount.value = payload.trophiesCount || 0;
 		hasScores.value = payload.hasScores || false;
 		primaryScoreTable.value = payload.primaryScoreTable
-			? new GameScoreTable(payload.primaryScoreTable)
+			? new GameScoreTableModel(payload.primaryScoreTable)
 			: undefined;
 		twitterShareMessage.value = payload.twitterShareMessage || 'Check out this game!';
 
 		userPartnerKey.value = payload.userPartnerKey;
-		collaboratorInvite.value = payload.invite ? new Collaborator(payload.invite) : undefined;
+		collaboratorInvite.value = payload.invite
+			? new CollaboratorModel(payload.invite)
+			: undefined;
 	}
 
 	function processOverviewPayload(payload: any) {
@@ -238,11 +254,11 @@ function createController({ router }: { router: Router }) {
 		if (payload.mediaItems && payload.mediaItems.length) {
 			payload.mediaItems.forEach((item: any) => {
 				if (item.media_type === 'image') {
-					mediaItems.value.push(new GameScreenshot(item));
+					mediaItems.value.push(new GameScreenshotModel(item));
 				} else if (item.media_type === 'video') {
-					mediaItems.value.push(new GameVideo(item));
+					mediaItems.value.push(new GameVideoModel(item));
 				} else if (item.media_type === 'sketchfab') {
-					mediaItems.value.push(new GameSketchfab(item));
+					mediaItems.value.push(new GameSketchfabModel(item));
 				}
 			});
 		}
@@ -250,12 +266,12 @@ function createController({ router }: { router: Router }) {
 		// If we pull from cache, don't refresh with new payload data. If it's not cache, we
 		// ovewrite with our cached data. This way the data doesn't refresh when you click back.
 		if (!recommendedGames.value.length) {
-			recommendedGames.value = Game.populate(payload.recommendedGames);
+			recommendedGames.value = GameModel.populate(payload.recommendedGames);
 		} else {
 			payload.recommendedGames = recommendedGames.value;
 		}
 
-		songs.value = GameSong.populate(payload.songs);
+		songs.value = GameSongModel.populate(payload.songs);
 		packagePayload.value = new GamePackagePayloadModel(payload);
 		shouldShowMultiplePackagesMessage.value = false;
 
@@ -263,27 +279,29 @@ function createController({ router }: { router: Router }) {
 		downloadCount.value = payload.downloadCount || 0;
 		developerGamesCount.value = payload.developerGamesCount || 0;
 
-		supporters.value = User.populate(payload.supporters);
+		supporters.value = UserModel.populate(payload.supporters);
 		supporterCount.value = payload.supporterCount;
 
-		linkedAccounts.value = LinkedAccount.populate(payload.linkedAccounts);
+		linkedAccounts.value = LinkedAccountModel.populate(payload.linkedAccounts);
 
-		overviewComments.value = storeModelList(Comment, payload.comments);
+		overviewComments.value = storeModelList(CommentModel, payload.comments);
 
 		partnerKey.value = payload.partnerReferredKey || '';
-		partner.value = payload.partnerReferredBy ? new User(payload.partnerReferredBy) : undefined;
+		partner.value = payload.partnerReferredBy
+			? new UserModel(payload.partnerReferredBy)
+			: undefined;
 
-		knownFollowers.value = User.populate(payload.knownFollowers);
+		knownFollowers.value = UserModel.populate(payload.knownFollowers);
 		knownFollowerCount.value = payload.knownFollowerCount || 0;
 
 		customGameMessages.value = payload.customMessages || [];
 	}
 
-	function setUserRating(rating?: GameRating) {
+	function setUserRating(rating?: GameRatingModel) {
 		userRating.value = rating;
 	}
 
-	function acceptCollaboratorInvite(invite: Collaborator) {
+	function acceptCollaboratorInvite(invite: CollaboratorModel) {
 		game.value!.perms = invite.perms;
 		collaboratorInvite.value = undefined;
 	}
@@ -304,7 +322,7 @@ function createController({ router }: { router: Router }) {
 		showDetails.value = !showDetails.value;
 	}
 
-	function setOverviewComments(comments: Comment[]) {
+	function setOverviewComments(comments: CommentModel[]) {
 		overviewComments.value = comments;
 	}
 
@@ -380,7 +398,7 @@ const GameThemeKey = 'game';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	lazy: true,
 	cache: true,
 	deps: { params: ['slug', 'id'], query: ['intent'] },
@@ -415,7 +433,7 @@ const GameThemeKey = 'game';
 		return payload;
 	},
 })
-export default class RouteDiscoverGamesView extends BaseRouteComponent {
+export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 	routeStore = setup(() => {
 		const c = createController({ router: useRouter() });
 		provide(Key, c);
@@ -436,9 +454,9 @@ export default class RouteDiscoverGamesView extends BaseRouteComponent {
 	private ratingChange$?: EventSubscription;
 
 	private roleNames: { [k: string]: string } = {
-		[Collaborator.ROLE_EQUAL_COLLABORATOR]: $gettext('an equal collaborator'),
-		[Collaborator.ROLE_COMMUNITY_MANAGER]: $gettext('a community manager'),
-		[Collaborator.ROLE_DEVELOPER]: $gettext('a developer'),
+		[CollaboratorRole.EqualCollaborator]: $gettext('an equal collaborator'),
+		[CollaboratorRole.CommunityManager]: $gettext('a community manager'),
+		[CollaboratorRole.Developer]: $gettext('a developer'),
 	};
 
 	get user() {

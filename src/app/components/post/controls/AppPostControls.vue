@@ -15,11 +15,11 @@ import {
 	lockCommentStore,
 	releaseCommentStore,
 } from '../../../../_common/comment/comment-store';
-import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/widget.vue';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
@@ -30,7 +30,7 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { CommentModal } from '../../comment/modal/modal.service';
@@ -42,7 +42,7 @@ import AppPostControlsUserFollow from './user-follow/user-follow.vue';
 
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	feed: {
@@ -79,10 +79,10 @@ const emit = defineEmits({
 	postEdit: () => true,
 	postPublish: () => true,
 	postRemove: () => true,
-	postFeature: (_community: Community) => true,
-	postUnfeature: (_community: Community) => true,
-	postMoveChannel: (_movedTo: CommunityChannel) => true,
-	postReject: (_community: Community) => true,
+	postFeature: (_community: CommunityModel) => true,
+	postUnfeature: (_community: CommunityModel) => true,
+	postMoveChannel: (_movedTo: CommunityChannelModel) => true,
+	postReject: (_community: CommunityModel) => true,
 	postPin: () => true,
 	postUnpin: () => true,
 	sticker: () => true,
@@ -141,7 +141,7 @@ const hasPerms = computed(() => {
 });
 
 const shouldShowEdit = computed(() => hasPerms.value);
-const shouldShowExtra = computed(() => user.value instanceof User);
+const shouldShowExtra = computed(() => user.value instanceof UserModel);
 const shouldShowCommentsButton = computed(() => showComments.value);
 const shouldShowStickersButton = computed(() => post.value.canPlaceSticker && !!stickerLayer);
 const shouldShowLike = computed(() => post.value.canLike);

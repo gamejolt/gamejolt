@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -9,11 +9,11 @@ import AppContentTarget from './AppContentTarget.vue';
 
 const props = defineProps({
 	community: {
-		type: Object as PropType<Community>,
+		type: Object as PropType<CommunityModel>,
 		required: true,
 	},
 	channel: {
-		type: Object as PropType<CommunityChannel | null>,
+		type: Object as PropType<CommunityChannelModel | null>,
 		default: undefined,
 	},
 	isFeatured: {
@@ -33,7 +33,7 @@ const props = defineProps({
 const { community, channel, canRemove, hasLinks, noRight } = toRefs(props);
 
 const emit = defineEmits({
-	remove: (_community: Community) => true,
+	remove: (_community: CommunityModel) => true,
 });
 
 const leftTo = computed(() => (hasLinks.value ? community.value.routeLocation : undefined));

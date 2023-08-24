@@ -3,18 +3,18 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
-import { GameDataStoreItem } from '../../../../../../../../../_common/game/data-store/item/item.model';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import { GameDataStoreItemModel } from '../../../../../../../../../_common/game/data-store/item/item.model';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { useGameDashRouteController } from '../../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiDataStorageItemsView',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['item'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
@@ -24,14 +24,14 @@ import { useGameDashRouteController } from '../../../../manage.store';
 				route.params.item
 		),
 })
-export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRouteComponent {
+export default class RouteDashGamesManageApiDataStorageItemsView extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game!;
 	}
 
-	item: GameDataStoreItem = null as any;
+	item: GameDataStoreItemModel = null as any;
 
 	readonly formatDate = formatDate;
 
@@ -45,12 +45,11 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends BaseRou
 	}
 
 	routeResolved($payload: any) {
-		this.item = new GameDataStoreItem($payload.item);
+		this.item = new GameDataStoreItemModel($payload.item);
 	}
 
 	async remove() {
-		const result = await ModalConfirm.show(
-			// TODO(vue3) translate-comment="This refers to game API data storage items specifically"
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this item?')
 		);
 

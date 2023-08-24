@@ -2,21 +2,21 @@ import { computed, inject, InjectionKey, Ref, ref, shallowReactive, shallowRef, 
 import { arrayRemove, numberSort } from '../../utils/array';
 import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
-import { Comment } from '../comment/comment-model';
-import { Fireside } from '../fireside/fireside.model';
-import { FiresidePost } from '../fireside/post/post-model';
+import { CommentModel } from '../comment/comment-model';
+import { FiresideModel } from '../fireside/fireside.model';
+import { FiresidePostModel } from '../fireside/post/post-model';
 import { showErrorGrowl } from '../growls/growls.service';
 import { setModalBodyWrapper } from '../modal/modal.service';
 import { ModelData } from '../model/model.service';
 import { EventTopic } from '../system/event/event-topic';
 import { $gettext } from '../translate/translate.service';
-import { User } from '../user/user.model';
+import { UserModel } from '../user/user.model';
 import AppStickerLayer from './layer/AppStickerLayer.vue';
 import { getCollidingStickerTarget, StickerLayerController } from './layer/layer-controller';
-import { UserStickerPack } from './pack/user-pack.model';
-import { StickerPlacement } from './placement/placement.model';
+import { UserStickerPackModel } from './pack/user-pack.model';
+import { StickerPlacementModel } from './placement/placement.model';
 import { StickerCount } from './sticker-count';
-import { Sticker, StickerStack } from './sticker.model';
+import { StickerModel, StickerStack } from './sticker.model';
 import { ValidStickerResource } from './target/AppStickerTarget.vue';
 import {
 	addStickerToTarget,
@@ -27,7 +27,7 @@ import {
 export const StickerStoreKey: InjectionKey<StickerStore> = Symbol('sticker-store');
 
 interface StickerStreak {
-	sticker: Sticker;
+	sticker: StickerModel;
 	count: number;
 }
 
@@ -36,7 +36,7 @@ export type CreatorStickersList = StickerStack[];
 
 export type StickerStore = ReturnType<typeof createStickerStore>;
 
-export function createStickerStore(options: { user: Ref<User | null> }) {
+export function createStickerStore(options: { user: Ref<UserModel | null> }) {
 	const user = computed(() => options.user.value);
 	const layers = shallowReactive<StickerLayerController[]>([]);
 	const targetController = shallowRef<StickerTargetController | null>(null);
@@ -45,10 +45,10 @@ export function createStickerStore(options: { user: Ref<User | null> }) {
 	const creatorStickers = ref<CreatorStickersMap>(new Map());
 	const generalStickers = ref([]) as Ref<CreatorStickersList>;
 
-	const stickerPacks = ref([]) as Ref<UserStickerPack[]>;
+	const stickerPacks = ref([]) as Ref<UserStickerPackModel[]>;
 
-	const placedItem = shallowRef<StickerPlacement | null>(null);
-	const sticker = shallowRef<Sticker | null>(null);
+	const placedItem = shallowRef<StickerPlacementModel | null>(null);
+	const sticker = shallowRef<StickerModel | null>(null);
 	const streak = shallowRef<StickerStreak | null>(null);
 
 	const allStickers = computed(() =>
@@ -184,11 +184,11 @@ export function isStickerTargetMine(store: StickerStore, target: StickerTargetCo
 
 	do {
 		const model = toRaw(tempController?.model);
-		if (model instanceof FiresidePost) {
+		if (model instanceof FiresidePostModel) {
 			isMine = model.displayUser.id === myUserId;
-		} else if (model instanceof Fireside) {
+		} else if (model instanceof FiresideModel) {
 			isMine = placedItem.value?.target_data.host_user_id === myUserId;
-		} else if (model instanceof Comment) {
+		} else if (model instanceof CommentModel) {
 			isMine = model.user.id === myUserId;
 		}
 
@@ -206,7 +206,7 @@ export function useStickerStore() {
 	return inject(StickerStoreKey)!;
 }
 
-export function setStickerStreak(store: StickerStore, sticker: Sticker, count: number) {
+export function setStickerStreak(store: StickerStore, sticker: StickerModel, count: number) {
 	store.streak.value = {
 		sticker,
 		count,
@@ -299,15 +299,15 @@ export function getStickerStacksFromPayloadData({
 	sorting,
 }: {
 	stickerCounts: ModelData<StickerCount>[];
-	stickers: ModelData<Sticker>[];
-	unownedStickerMasteries: ModelData<Sticker>[] | null | undefined;
+	stickers: ModelData<StickerModel>[];
+	unownedStickerMasteries: ModelData<StickerModel>[] | null | undefined;
 	sorting?: StickerSortMethod;
 }): SortedStickerStacks {
 	const eventStickers: CreatorStickersList = [];
 	const creatorStickers: CreatorStickersMap = new Map();
 	const generalStickers: CreatorStickersList = [];
 
-	const unownedMasteries = Sticker.populate(unownedStickerMasteries || []);
+	const unownedMasteries = StickerModel.populate(unownedStickerMasteries || []);
 
 	const addItemToList = (item: StickerStack) => {
 		const stickerCreator = item.sticker.owner_user;
@@ -327,7 +327,7 @@ export function getStickerStacksFromPayloadData({
 
 	stickerCounts.forEach((stickerCountPayload: any) => {
 		const stickerData = stickers.find(
-			(i: ModelData<Sticker>) => i.id === stickerCountPayload.sticker_id
+			(i: ModelData<StickerModel>) => i.id === stickerCountPayload.sticker_id
 		);
 		if (!stickerData) {
 			return;
@@ -336,7 +336,7 @@ export function getStickerStacksFromPayloadData({
 		const item: StickerStack = {
 			count: stickerCountPayload.count,
 			sticker_id: stickerCountPayload.sticker_id,
-			sticker: new Sticker(stickerData),
+			sticker: new StickerModel(stickerData),
 		};
 
 		addItemToList(item);
@@ -489,7 +489,7 @@ export function assignStickerStoreGhostCallback(
  */
 export function setStickerStoreActiveItem(
 	store: StickerStore,
-	sticker: Sticker,
+	sticker: StickerModel,
 	event?: MouseEvent | TouchEvent,
 	fromTarget?: boolean
 ) {
@@ -519,7 +519,7 @@ export function setStickerStoreActiveItem(
  */
 export function assignStickerStoreItem(
 	store: StickerStore,
-	item: StickerPlacement | null,
+	item: StickerPlacementModel | null,
 	controller: StickerTargetController | null
 ) {
 	store.placedItem.value = item;
@@ -537,7 +537,7 @@ interface StickerPlacementPayloadData {
 
 export type CustomStickerPlacementRequest = (data: StickerPlacementPayloadData) => Promise<any>;
 
-export const onFiresideStickerPlaced = new EventTopic<StickerPlacement>();
+export const onFiresideStickerPlaced = new EventTopic<StickerPlacementModel>();
 
 export async function commitStickerStoreItemPlacement(store: StickerStore) {
 	const {
@@ -581,7 +581,7 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 			throw payload;
 		}
 
-		addStickerToTarget(targetController.value, new StickerPlacement(stickerPlacement));
+		addStickerToTarget(targetController.value, new StickerPlacementModel(stickerPlacement));
 
 		model.assign(resource);
 		const { parent } = targetController.value;
@@ -610,7 +610,7 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
  */
 export function alterStickerStoreItemCount(
 	store: StickerStore,
-	sticker: Sticker,
+	sticker: StickerModel,
 	returnToDrawer = false
 ) {
 	const drawerItem = store.allStickers.value.find(i => {

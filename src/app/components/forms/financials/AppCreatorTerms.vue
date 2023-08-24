@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
-import { html as termsTemplate } from '../../../../lib/terms/creator/global.md';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatDate } from '../../../../_common/filters/date';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import { UserStripeManagedAccount } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { UserStripeManagedAccountModel } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { html as termsTemplate } from '../../../../lib/terms/creator/global.md';
 import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
 import AppFinancialsTosScroller from './AppFinancialsTosScroller.vue';
 
 const props = defineProps({
 	account: {
-		type: Object as PropType<UserStripeManagedAccount>,
+		type: Object as PropType<UserStripeManagedAccountModel>,
 		default: undefined,
 	},
 });

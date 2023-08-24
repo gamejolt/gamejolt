@@ -2,15 +2,15 @@
 import { computed, Ref, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppPostCard from '../../../../_common/fireside/post/card/AppPostCard.vue';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppHelpGroup from '../../../components/help/AppHelpGroup.vue';
-import HelpCategory from '../../../components/help/category/category.model';
-import HelpPage from '../../../components/help/page/page.model';
+import { HelpCategoryModel } from '../../../components/help/category/category.model';
+import { HelpPageModel } from '../../../components/help/page/page.model';
 import { routeDiscoverGamesListSection } from '../../discover/games/list/list.route';
 import { routeLegalAds } from '../../legal/ads/ads.route';
 import { routeLegalCookies } from '../../legal/cookies/cookies.route';
@@ -35,12 +35,12 @@ export default {
 
 <script lang="ts" setup>
 interface PayloadFeatured {
-	category: HelpCategory;
-	pages: HelpPage[];
+	category: HelpCategoryModel;
+	pages: HelpPageModel[];
 }
 
 const featuredPages = ref([]) as Ref<PayloadFeatured[]>;
-const broadcastPosts = ref([]) as Ref<FiresidePost[]>;
+const broadcastPosts = ref([]) as Ref<FiresidePostModel[]>;
 const searchSuggestions = ref<string[]>([]);
 
 const routeTitle = computed(() => $gettext(`Help Docs`));
@@ -51,12 +51,12 @@ createAppRoute({
 		featuredPages.value = [];
 		for (const categoryData of payload.featured) {
 			featuredPages.value.push({
-				category: new HelpCategory(categoryData.category),
-				pages: HelpPage.populate(categoryData.pages),
+				category: new HelpCategoryModel(categoryData.category),
+				pages: HelpPageModel.populate(categoryData.pages),
 			});
 		}
 
-		broadcastPosts.value = FiresidePost.populate(payload.broadcasts);
+		broadcastPosts.value = FiresidePostModel.populate(payload.broadcasts);
 		searchSuggestions.value = payload.searchSuggestions;
 
 		if (payload.meta) {

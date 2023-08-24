@@ -1,11 +1,14 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../_common/community/community.model';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import { Game } from '../../../../_common/game/game.model';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
+import {
+	$createFiresidePost,
+	FiresidePostModel,
+} from '../../../../_common/fireside/post/post-model';
+import { GameModel } from '../../../../_common/game/game.model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
@@ -14,19 +17,19 @@ import { PostEditModal } from '../edit-modal/edit-modal-service';
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		default: undefined,
 	},
 	community: {
-		type: Object as PropType<Community>,
+		type: Object as PropType<CommunityModel>,
 		default: undefined,
 	},
 	channel: {
-		type: Object as PropType<CommunityChannel>,
+		type: Object as PropType<CommunityChannelModel>,
 		default: undefined,
 	},
 	realm: {
-		type: Object as PropType<Realm>,
+		type: Object as PropType<RealmModel>,
 		default: undefined,
 	},
 	placeholder: {
@@ -39,7 +42,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	add: (_post: FiresidePost) => true,
+	add: (_post: FiresidePostModel) => true,
 });
 
 const { placeholder, previewOnly, game, community, channel, realm } = toRefs(props);
@@ -54,7 +57,7 @@ async function open() {
 		return;
 	}
 
-	const postProvider = FiresidePost.$create(game?.value ? game.value.id : 0);
+	const postProvider = $createFiresidePost(game?.value ? game.value.id : 0);
 
 	const post = await PostEditModal.show(postProvider, {
 		community: community?.value,

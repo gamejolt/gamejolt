@@ -10,7 +10,7 @@ import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormC
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import {
-	Notification,
+	NotificationFeedTypes,
 	getNotificationFeedTypeLabels,
 } from '../../../../_common/notification/notification-model';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -43,7 +43,7 @@ const notificationLabels = computed(() => getNotificationFeedTypeLabels(user.val
 
 const form: FormController<FormModel> = createForm({
 	onInit() {
-		Notification.NOTIFICATION_FEED_TYPES.sort((a, b) => stringSort(a, b)).forEach(i => {
+		NotificationFeedTypes.sort((a, b) => stringSort(a, b)).forEach(i => {
 			form.formModel[i] = filters.value.includes(i);
 		});
 	},
@@ -60,10 +60,7 @@ const form: FormController<FormModel> = createForm({
 		let query: any = {};
 
 		// Submit this only if we have filters and if they're not all enabled.
-		if (
-			enabledTypes.length &&
-			enabledTypes.length !== Notification.NOTIFICATION_FEED_TYPES.length
-		) {
+		if (enabledTypes.length && enabledTypes.length !== NotificationFeedTypes.length) {
 			query[NOTIFICATION_FILTER_QUERY] = enabledTypes.join(',');
 		}
 

@@ -1,6 +1,7 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
+// import { visualizer } from 'rollup-plugin-visualizer';
 import { copyFileSync, readFileSync } from 'fs-extra';
-import { UserConfig as ViteUserConfig, defineConfig } from 'vite';
+import { defineConfig, UserConfig as ViteUserConfig } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import {
@@ -259,6 +260,8 @@ export default defineConfig(async () => {
 			md({
 				mode: [MarkdownMode.HTML],
 			}),
+			// Can include to try to visualize the chunks and dependencies.
+			// visualizer(),
 		],
 
 		root: 'src',
@@ -394,6 +397,14 @@ export default defineConfig(async () => {
 			minify: gjOpts.environment === 'production' && gjOpts.buildType === 'build',
 
 			rollupOptions: {
+				// Can use this to see which modules are causing side effects.
+				// experimentalLogSideEffects: true,
+
+				treeshake: {
+					// We don't do any side effects with property access, so turn it off.
+					propertyReadSideEffects: false,
+				},
+
 				...(() => {
 					// Update this when you want to force cache busting for
 					// all of our assets regardless of if their contents
@@ -413,8 +424,32 @@ export default defineConfig(async () => {
 					) {
 						return <RollupOptions>{
 							output: {
+								manualChunks(id) {
+									// We never want translations to be chunked
+									// together, they should always be in their
+									// own modules since they're big and not
+									// needed unless you're actually using the
+									// language.
+									if (id.includes('/translations/')) {
+										return id
+											.substring(
+												id.lastIndexOf('/translations/') + 1,
+												id.lastIndexOf('.json')
+											)
+											.replace(/\//g, '_');
+									}
+
+									if (id.includes('chunkName')) {
+										return id.match(/[?&]chunkName=(.+?)(&|$)/)![1];
+									}
+								},
 								chunkFileNames: `assets/[hash]${hashVersion}.js`,
 								assetFileNames: `assets/[hash]${hashVersion}.[ext]`,
+
+								// Attempts to collapse small chunks together.
+								// This should result in about a 50KB file after
+								// gzip.
+								experimentalMinChunkSize: 200_000,
 							},
 						};
 					}

@@ -3,8 +3,8 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
-	CommunityUserNotification,
-	NotificationType,
+	CommunityUserNotificationModel,
+	CommunityUserNotificationType,
 } from '../../../../_common/community/user-notification/user-notification.model';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import {
@@ -20,18 +20,19 @@ import {
 	},
 })
 export default class AppCommunityUserNotification extends Vue {
-	@Prop({ type: Object, required: true }) notification!: CommunityUserNotification;
+	@Prop({ type: Object, required: true }) notification!: CommunityUserNotificationModel;
 
 	@Emit('dismiss')
 	emitDismiss() {}
 
-	readonly NotificationType = NotificationType;
+	readonly TypePostsEject = CommunityUserNotificationType.POSTS_EJECT;
+	readonly TypePostsMove = CommunityUserNotificationType.POSTS_MOVE;
 
 	get notificationReasons() {
 		switch (this.notification.type) {
-			case NotificationType.POSTS_MOVE:
+			case CommunityUserNotificationType.POSTS_MOVE:
 				return getCommunityMovePostReasons();
-			case NotificationType.POSTS_EJECT:
+			case CommunityUserNotificationType.POSTS_EJECT:
 				return getCommunityEjectPostReasons();
 		}
 
@@ -81,7 +82,7 @@ export default class AppCommunityUserNotification extends Vue {
 
 		<div class="-message">
 			<div>
-				<template v-if="notification.type === NotificationType.POSTS_MOVE">
+				<template v-if="notification.type === TypePostsMove">
 					<span
 						v-translate="{
 							fromChannel: notification.extra_data['from-channel'],
@@ -92,7 +93,7 @@ export default class AppCommunityUserNotification extends Vue {
 						the <i>%{ toChannel }</i> channel.
 					</span>
 				</template>
-				<template v-else-if="notification.type === NotificationType.POSTS_EJECT">
+				<template v-else-if="notification.type === TypePostsEject">
 					<span v-translate>Your post has been <b>ejected</b> from the community.</span>
 				</template>
 			</div>

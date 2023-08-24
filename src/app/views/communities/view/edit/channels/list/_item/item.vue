@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
-import { CommunityChannel } from '../../../../../../../../_common/community/channel/channel.model';
+import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
@@ -15,7 +15,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.st
 	},
 })
 export default class AppCommunitiesEditChannelListItem extends Vue {
-	@Prop({ type: Object, required: true }) channel!: CommunityChannel;
+	@Prop({ type: Object, required: true }) channel!: CommunityChannelModel;
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
@@ -55,7 +55,7 @@ export default class AppCommunitiesEditChannelListItem extends Vue {
 		return this.community.hasPerms('community-channels');
 	}
 
-	async onClickRemoveChannel(channel: CommunityChannel) {
+	async onClickRemoveChannel(channel: CommunityChannelModel) {
 		await CommunityRemoveChannelModal.show(this.community, channel);
 
 		if (channel._removed) {

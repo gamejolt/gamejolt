@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { Community } from '../community.model';
+import { CommunityModel } from '../community.model';
 
 @Options({
 	directives: {
@@ -10,7 +10,7 @@ import { Community } from '../community.model';
 })
 export default class AppCommunityVerifiedTick extends Vue {
 	@Prop(Object)
-	community!: Community;
+	community!: CommunityModel;
 
 	@Prop(Boolean)
 	big!: boolean;

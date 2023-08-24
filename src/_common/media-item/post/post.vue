@@ -2,7 +2,7 @@
 import { computed, unref } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { shallowSetup } from '../../../utils/vue';
-import { ContentFocus } from '../../content-focus/content-focus.service';
+import { useContentFocusService } from '../../content-focus/content-focus.service';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
@@ -10,15 +10,15 @@ import AppResponsiveDimensions, {
 import { Screen } from '../../screen/screen-service';
 import AppStickerTarget from '../../sticker/target/AppStickerTarget.vue';
 import {
-	createStickerTargetController,
 	StickerTargetController,
+	createStickerTargetController,
 	useStickerTargetController,
 } from '../../sticker/target/target-controller';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/AppVideo.vue';
+import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
-import { MediaItem } from '../media-item-model';
+import { MediaItemModel } from '../media-item-model';
 
 @Options({
 	components: {
@@ -33,7 +33,7 @@ import { MediaItem } from '../media-item-model';
 	},
 })
 export default class AppMediaItemPost extends Vue {
-	@Prop({ type: Object, required: true }) mediaItem!: MediaItem;
+	@Prop({ type: Object, required: true }) mediaItem!: MediaItemModel;
 	@Prop({ type: Boolean, default: true }) isPostHydrated!: boolean;
 	@Prop({ type: Boolean, default: false }) isActive!: boolean;
 	@Prop({ type: Boolean, default: false }) restrictDeviceMaxHeight!: boolean;
@@ -49,7 +49,7 @@ export default class AppMediaItemPost extends Vue {
 	readonly Screen = Screen;
 
 	@Emit('bootstrap') emitBootstrap() {}
-	@Emit('fullscreen') emitFullscreen(_mediaItem: MediaItem) {}
+	@Emit('fullscreen') emitFullscreen(_mediaItem: MediaItemModel) {}
 
 	get shouldShowFullscreenOption() {
 		return (
@@ -60,7 +60,7 @@ export default class AppMediaItemPost extends Vue {
 	}
 
 	get shouldVideoPlay() {
-		return this.isActive && ContentFocus.hasFocus;
+		return this.isActive && useContentFocusService().hasContentFocus.value;
 	}
 
 	get videoController() {

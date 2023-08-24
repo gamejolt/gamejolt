@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, PropType } from 'vue';
 import { ContentObject } from '../../content-object';
 import { useContentOwnerController } from '../../content-owner';
-import { renderChildren } from './AppContentViewerBaseComponent.vue';
+import { renderContentChildren } from './AppContentViewerBaseComponent.vue';
 
 const props = defineProps({
 	contentData: {
@@ -11,22 +11,15 @@ const props = defineProps({
 	},
 });
 
-const { contentData } = toRefs(props);
+const { contentRules } = useContentOwnerController()!;
 
-const owner = useContentOwnerController()!;
-
-const children = computed(() => renderChildren(contentData.value.content));
+const children = computed(() => renderContentChildren(props.contentData.content));
 </script>
 
 <template>
-	<p :class="{ '-inline': owner.contentRules.inlineParagraphs }">
-		<template v-for="child in children" :key="child">
+	<p :style="{ display: contentRules.inlineParagraphs ? 'inline' : undefined }">
+		<template v-for="child of children" :key="child">
 			<component :is="child" />
 		</template>
 	</p>
 </template>
-
-<style lang="stylus" scoped>
-.-inline
-	display: inline
-</style>

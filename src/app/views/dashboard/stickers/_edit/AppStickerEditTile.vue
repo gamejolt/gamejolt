@@ -2,8 +2,8 @@
 import { computed, PropType, toRefs } from 'vue';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { StickerPack } from '../../../../../_common/sticker/pack/pack.model';
-import { Sticker } from '../../../../../_common/sticker/sticker.model';
+import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
+import { StickerModel } from '../../../../../_common/sticker/sticker.model';
 import { kThemeBiBg, kThemeBiFg } from '../../../../../_common/theme/variables';
 import {
 	styleAbsoluteFill,
@@ -18,11 +18,11 @@ import { showStickerEditModal } from '../../../../components/forms/sticker/modal
 
 const props = defineProps({
 	sticker: {
-		type: Object as PropType<Sticker>,
+		type: Object as PropType<StickerModel>,
 		default: undefined,
 	},
 	stickers: {
-		type: Array as PropType<Sticker[]>,
+		type: Array as PropType<StickerModel[]>,
 		default: undefined,
 	},
 	showName: {
@@ -47,7 +47,7 @@ const { sticker, stickers, showName, currentEmojiPrefix, disabled, canActivate, 
 	toRefs(props);
 
 const emit = defineEmits({
-	pack: (_payloadPack: StickerPack | undefined) => true,
+	pack: (_payloadPack: StickerPackModel | undefined) => true,
 });
 
 const hasClickAction = computed(() => !!sticker?.value || !!stickers?.value);

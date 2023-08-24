@@ -1,38 +1,35 @@
 import { Router } from 'vue-router';
-import { Analytics } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { HistoryTick } from '../../history-tick/history-tick-service';
 import { Navigate } from '../../navigate/navigate.service';
 import { Popper } from '../../popper/popper.service';
-import { Translate } from '../../translate/translate.service';
-import { GameBuild } from '../build/build.model';
-import { Game } from '../game.model';
+import { $gettext } from '../../translate/translate.service';
+import { GameBuildModel } from '../build/build.model';
+import { GameModel } from '../game.model';
 
 export interface GameDownloaderOptions {
 	key?: string;
 	isOwned?: boolean;
 }
 
-export class GameDownloader {
-	static isDownloadQueued = false;
-	static shouldTransition = false;
+class GameDownloaderService {
+	isDownloadQueued = false;
+	shouldTransition = false;
 
-	static async download(
+	async download(
 		router: Router,
-		game: Game,
-		build: GameBuild,
+		game: GameModel,
+		build: GameBuildModel,
 		options: GameDownloaderOptions = {}
 	) {
-		Analytics.trackEvent('game-play', 'download');
-
 		// In case any popover was used to click the download.
 		Popper.hideAll();
 
 		// Any time we transition away from the page, make sure we reset our
 		// download transition. This will ensure the download won't start.
-		let deregister: Function | undefined = router.beforeEach((_to, _from, next) => {
-			GameDownloader.shouldTransition = false;
+		let deregister: (() => void) | undefined = router.beforeEach((_to, _from, next) => {
+			this.shouldTransition = false;
 			if (deregister) {
 				deregister();
 				deregister = undefined;
@@ -96,7 +93,7 @@ export class GameDownloader {
 					Navigate.goto(downloadUrl);
 				}
 			} catch (e) {
-				showErrorGrowl(Translate.$gettext(`Couldn't get download URL.`));
+				showErrorGrowl($gettext(`Couldn't get download URL.`));
 			}
 
 			this.isDownloadQueued = false;
@@ -114,3 +111,5 @@ export class GameDownloader {
 		}
 	}
 }
+
+export const GameDownloader = /** @__PURE__ */ new GameDownloaderService();

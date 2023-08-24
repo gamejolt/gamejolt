@@ -2,13 +2,13 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
-import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
+import { GameScoreTableModel } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
-import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
+import { UserGameScoreModel } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { useGameDashRouteController } from '../../../../manage.store';
 import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 
@@ -18,7 +18,7 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 		AppManageGameListScores,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['table'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
@@ -28,17 +28,17 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 				route.params.table
 		),
 })
-export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRouteComponent {
+export default class RouteDashGamesManageApiScoreboardsScoresList extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game!;
 	}
 
-	scoreTables: GameScoreTable[] = [];
-	scoreTable: GameScoreTable = null as any;
+	scoreTables: GameScoreTableModel[] = [];
+	scoreTable: GameScoreTableModel = null as any;
 	selectedTable = 0;
-	scores: UserGameScore[] = [];
+	scores: UserGameScoreModel[] = [];
 
 	get routeTitle() {
 		if (this.game && this.scoreTable) {
@@ -51,9 +51,9 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRo
 	}
 
 	routeResolved($payload: any) {
-		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
-		this.scoreTable = new GameScoreTable($payload.scoreTable);
-		this.scores = UserGameScore.populate($payload.scores);
+		this.scoreTables = GameScoreTableModel.populate($payload.scoreTables);
+		this.scoreTable = new GameScoreTableModel($payload.scoreTable);
+		this.scores = UserGameScoreModel.populate($payload.scores);
 
 		this.selectedTable = this.scoreTables.find(i => i.id === this.scoreTable.id)!.id;
 	}
@@ -69,7 +69,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresList extends BaseRo
 		// $state.go($state.current, { table: tableId });
 	}
 
-	onScoreRemoved(score: UserGameScore) {
+	onScoreRemoved(score: UserGameScoreModel) {
 		const index = this.scores.findIndex(i => i.id === score.id);
 		if (index !== -1) {
 			this.scores.splice(index, 1);

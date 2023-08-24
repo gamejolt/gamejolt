@@ -15,7 +15,7 @@ import AppPopcornKettle from '../../../../_common/popcorn/AppPopcornKettle.vue';
 import { createPopcornKettleController } from '../../../../_common/popcorn/popcorn-kettle-controller';
 import AppSlider, { ScrubberCallback } from '../../../../_common/slider/AppSlider.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { StickerPlacement } from '../../../../_common/sticker/placement/placement.model';
+import { StickerPlacementModel } from '../../../../_common/sticker/placement/placement.model';
 import { onFiresideStickerPlaced } from '../../../../_common/sticker/sticker-store';
 import { useEventSubscription } from '../../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -166,7 +166,7 @@ function onDesktopAudioScrub(data: ScrubberCallback) {
 	});
 }
 
-async function onStickerPlaced(placement: StickerPlacement) {
+async function onStickerPlaced(placement: StickerPlacementModel) {
 	const myId = host.value.userModel?.id;
 	const {
 		target_data: { host_user_id },

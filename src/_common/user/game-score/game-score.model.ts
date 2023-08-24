@@ -1,9 +1,9 @@
 import { Model } from '../../model/model.service';
-import { User } from '../user.model';
+import { UserModel } from '../user.model';
 
-export class UserGameScore extends Model {
+export class UserGameScoreModel extends Model {
 	user_id!: number;
-	user!: User;
+	user!: UserModel;
 	game_id!: number;
 	table_id!: number;
 	guest!: string;
@@ -16,7 +16,7 @@ export class UserGameScore extends Model {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 	}
 
@@ -26,5 +26,3 @@ export class UserGameScore extends Model {
 		);
 	}
 }
-
-Model.create(UserGameScore);

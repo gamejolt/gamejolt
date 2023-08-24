@@ -4,17 +4,17 @@ import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { showErrorGrowl } from '../../growls/growls.service';
-import { LikersModal } from '../../likers/modal.service';
+import { showLikersModal } from '../../likers/modal.service';
 import { EventTopic } from '../../system/event/event-topic';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
-import { Game } from '../game.model';
-import { GameRating } from './rating.model';
+import { GameModel } from '../game.model';
+import { GameRatingModel, GameRatingValue } from './rating.model';
 
 export const RatingWidgetOnChange = 'GameRating.changed';
 export interface RatingWidgetOnChangePayload {
 	gameId: number;
-	userRating?: GameRating;
+	userRating?: GameRatingModel;
 }
 
 export const onRatingWidgetChange = new EventTopic<RatingWidgetOnChangePayload>();
@@ -23,11 +23,11 @@ export const onRatingWidgetChange = new EventTopic<RatingWidgetOnChangePayload>(
 <script lang="ts" setup>
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	userRating: {
-		type: Object as PropType<GameRating>,
+		type: Object as PropType<GameRatingModel>,
 		default: undefined,
 	},
 	hideCount: {
@@ -37,19 +37,19 @@ const props = defineProps({
 
 const { game, userRating, hideCount } = toRefs(props);
 
-const hasLiked = computed(() => userRating?.value?.rating === GameRating.RATING_LIKE);
-const hasDisliked = computed(() => userRating?.value?.rating === GameRating.RATING_DISLIKE);
+const hasLiked = computed(() => userRating?.value?.rating === GameRatingValue.Like);
+const hasDisliked = computed(() => userRating?.value?.rating === GameRatingValue.Dislike);
 
 function showLikers() {
-	LikersModal.show({ count: game.value.like_count, resource: game.value });
+	showLikersModal({ count: game.value.like_count, resource: game.value });
 }
 
 function like() {
-	updateVote(GameRating.RATING_LIKE);
+	updateVote(GameRatingValue.Like);
 }
 
 function dislike() {
-	updateVote(GameRating.RATING_DISLIKE);
+	updateVote(GameRatingValue.Dislike);
 }
 
 async function updateVote(rating: number) {
@@ -59,7 +59,7 @@ async function updateVote(rating: number) {
 
 	try {
 		if (oldUserRating?.rating === rating) {
-			if (rating === GameRating.RATING_LIKE) {
+			if (rating === GameRatingValue.Like) {
 				operation = -1;
 			}
 
@@ -72,7 +72,7 @@ async function updateVote(rating: number) {
 
 			await oldUserRating.$remove();
 		} else {
-			const newUserRating = new GameRating({
+			const newUserRating = new GameRatingModel({
 				game_id: game.value.id,
 				rating: rating,
 			});
@@ -83,9 +83,9 @@ async function updateVote(rating: number) {
 			// old rating dislike, new rating like => +1
 			// old rating like, new rating dislike => -1
 			const oldRating = oldUserRating ? oldUserRating.rating : null;
-			if (rating === GameRating.RATING_LIKE) {
+			if (rating === GameRatingValue.Like) {
 				operation = 1;
-			} else if (oldRating === GameRating.RATING_LIKE) {
+			} else if (oldRating === GameRatingValue.Like) {
 				operation = -1;
 			}
 

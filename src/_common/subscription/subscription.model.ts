@@ -1,23 +1,15 @@
 import { Model } from '../model/model.service';
 
-export class Subscription extends Model {
-	id!: number;
-	user_id!: number;
-	resource_id!: number;
-	resource!: string;
-	type!: string | null;
-	created_on!: number;
+export class SubscriptionModel extends Model {
+	declare id: number;
+	declare user_id: number;
+	declare resource_id: number;
+	declare resource: string;
+	declare type: string | null;
+	declare created_on: number;
 
 	// Specifically for comment subscriptions?
-	comment_id?: number;
-
-	static async $subscribe(commentId: number) {
-		const subscription = new Subscription();
-		subscription.comment_id = commentId;
-
-		await subscription.$save();
-		return subscription;
-	}
+	declare comment_id?: number;
 
 	$save() {
 		if (!this.id) {
@@ -36,4 +28,10 @@ export class Subscription extends Model {
 	}
 }
 
-Model.create(Subscription);
+export async function $createSubscription(commentId: number) {
+	const subscription = new SubscriptionModel();
+	subscription.comment_id = commentId;
+
+	await subscription.$save();
+	return subscription;
+}

@@ -4,21 +4,21 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
-import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
-import { Sticker } from '../../../../_common/sticker/sticker.model';
+import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
+import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import FormSticker from './FormSticker.vue';
 
 const props = defineProps({
 	sticker: {
-		type: Object as PropType<Sticker>,
+		type: Object as PropType<StickerModel>,
 		default: undefined,
 	},
 	stickers: {
-		type: Array as PropType<Sticker[]>,
+		type: Array as PropType<StickerModel[]>,
 		default: undefined,
 	},
 	updatePack: {
-		type: Function as PropType<(pack: StickerPack | undefined) => void>,
+		type: Function as PropType<(pack: StickerPackModel | undefined) => void>,
 		default: undefined,
 	},
 	emojiPrefix: {
@@ -37,19 +37,19 @@ const { sticker, stickers, updatePack, emojiPrefix, canActivate, warnDeactivate 
 
 const modal = useModal()!;
 
-const newSticker = ref() as Ref<Sticker | undefined>;
+const newSticker = ref() as Ref<StickerModel | undefined>;
 const model = computed(() => sticker?.value || newSticker.value);
 
-function onFormChanged(data: UnknownModelData | ModelData<Sticker>) {
+function onFormChanged(data: UnknownModelData | ModelData<StickerModel>) {
 	if (model.value) {
 		model.value.assign(data);
 	} else {
-		newSticker.value = new Sticker(data);
+		newSticker.value = new StickerModel(data);
 		stickers?.value?.unshift(newSticker.value);
 	}
 }
 
-function onPackChanged(data: StickerPack | undefined) {
+function onPackChanged(data: StickerPackModel | undefined) {
 	updatePack?.value?.(data);
 }
 </script>

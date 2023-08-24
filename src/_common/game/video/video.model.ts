@@ -1,8 +1,8 @@
 import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-helpers';
 import { Model } from '../../model/model.service';
-import { Game } from '../game.model';
+import { GameModel } from '../game.model';
 
-export class GameVideo extends Model implements LightboxMediaModel {
+export class GameVideoModel extends Model implements LightboxMediaModel {
 	static readonly TYPE_YOUTUBE = 'youtube';
 	static readonly TYPE_VIMEO = 'vimeo';
 
@@ -30,7 +30,7 @@ export class GameVideo extends Model implements LightboxMediaModel {
 		return undefined;
 	}
 
-	getUrl(game: Game) {
+	getUrl(game: GameModel) {
 		return game.getUrl() + `#video-${this.id}`;
 	}
 
@@ -54,5 +54,3 @@ export class GameVideo extends Model implements LightboxMediaModel {
 		);
 	}
 }
-
-Model.create(GameVideo);

@@ -1,7 +1,17 @@
 <script lang="ts" setup>
 import { computed, inject, PropType, ref, toRefs } from 'vue';
-import AppCommentWidget from '../widget/AppCommentWidget.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
+import {
+	CommentableModel,
+	CommentModel,
+	getCommentModelResourceName,
+} from '../../../../_common/comment/comment-model';
+import {
+	commentStoreHandleAdd,
+	CommentStoreManagerKey,
+	getCommentStore,
+} from '../../../../_common/comment/comment-store';
 import { FormCommentLazy } from '../../../../_common/lazy';
 import AppMessageThreadAdd from '../../../../_common/message-thread/AppMessageThreadAdd.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
@@ -10,17 +20,7 @@ import { Model } from '../../../../_common/model/model.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
-import {
-	Comment,
-	CommentableModel,
-	getCommentModelResourceName,
-} from '../../../../_common/comment/comment-model';
-import {
-	commentStoreHandleAdd,
-	CommentStoreManagerKey,
-	getCommentStore,
-} from '../../../../_common/comment/comment-store';
+import AppCommentWidget from '../widget/AppCommentWidget.vue';
 
 const props = defineProps({
 	commentId: {
@@ -41,7 +41,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	add: (_comment: Comment) => true,
+	add: (_comment: CommentModel) => true,
 });
 
 const { commentId, model, autofocus } = toRefs(props);
@@ -69,12 +69,12 @@ const parent = computed(() => {
 	}
 });
 
-function _onCommentAdd(comment: Comment) {
+function _onCommentAdd(comment: CommentModel) {
 	commentStoreHandleAdd(commentManager, comment);
 	emit('add', comment);
 }
 
-function onRemove(_comment: Comment) {
+function onRemove(_comment: CommentModel) {
 	// If the parent comment of the thread got removed, close this modal
 	if (!parent.value) {
 		modal.dismiss();

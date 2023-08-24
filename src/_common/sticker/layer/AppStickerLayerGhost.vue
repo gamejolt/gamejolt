@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { onUnmounted } from '@vue/runtime-core';
-import { computed, CSSProperties, ref } from 'vue';
+import { computed, CSSProperties, onUnmounted, ref } from 'vue';
 import { Analytics } from '../../analytics/analytics.service';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import {

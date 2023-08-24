@@ -2,9 +2,12 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { $gettext, Translate } from '../../../../../_common/translate/translate.service';
-import { User } from '../../../../../_common/user/user.model';
+import { UserModel } from '../../../../../_common/user/user.model';
 import FormEmailPreferences from '../../../../components/forms/email-preferences/FormEmailPreferences.vue';
 import { IntentService } from '../../../../components/intent/intent.service';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
@@ -15,7 +18,7 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 		FormEmailPreferences,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { query: ['intent'] },
 	async resolver({ route }) {
 		const intentRedirect = IntentService.checkRoute(route, {
@@ -29,10 +32,10 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 		return Api.sendRequest('/web/dash/email-preferences');
 	},
 })
-export default class RouteDashAccountEmailPreferences extends BaseRouteComponent {
+export default class RouteDashAccountEmailPreferences extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
-	user: User = null as any;
+	user: UserModel = null as any;
 
 	get routeTitle() {
 		return this.routeStore.heading;
@@ -43,7 +46,7 @@ export default class RouteDashAccountEmailPreferences extends BaseRouteComponent
 	}
 
 	routeResolved($payload: any) {
-		this.user = new User($payload.user);
+		this.user = new UserModel($payload.user);
 	}
 }
 </script>

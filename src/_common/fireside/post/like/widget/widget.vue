@@ -5,12 +5,12 @@ import { PostControlsLocation, trackPostLike } from '../../../../analytics/analy
 import { vAppAuthRequired } from '../../../../auth/auth-required-directive';
 import { formatFuzzynumber } from '../../../../filters/fuzzynumber';
 import { showErrorGrowl } from '../../../../growls/growls.service';
-import { LikersModal } from '../../../../likers/modal.service';
+import { showLikersModal } from '../../../../likers/modal.service';
 import { Screen } from '../../../../screen/screen-service';
 import { useCommonStore } from '../../../../store/common-store';
 import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
-import { FiresidePost } from '../../post-model';
-import { FiresidePostLike, removeFiresidePostLike, saveFiresidePostLike } from '../like-model';
+import { FiresidePostModel } from '../../post-model';
+import { FiresidePostLikeModel, removeFiresidePostLike, saveFiresidePostLike } from '../like-model';
 
 @Options({
 	directives: {
@@ -20,7 +20,7 @@ import { FiresidePostLike, removeFiresidePostLike, saveFiresidePostLike } from '
 })
 export default class AppFiresidePostLikeWidget extends Vue {
 	@Prop({ type: Object, required: true })
-	post!: FiresidePost;
+	post!: FiresidePostModel;
 
 	@Prop({ type: String, required: true })
 	location!: PostControlsLocation;
@@ -69,7 +69,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 		if (!currentLike) {
 			this.emitChange(true);
 
-			const newLike = new FiresidePostLike({
+			const newLike = new FiresidePostLikeModel({
 				fireside_post_id: this.post.id,
 			});
 
@@ -112,7 +112,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 	}
 
 	showLikers() {
-		LikersModal.show({ count: this.post.like_count, resource: this.post });
+		showLikersModal({ count: this.post.like_count, resource: this.post });
 	}
 }
 </script>

@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../../../../_common/modal/modal.service';
-import { Realm } from '../../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../../_common/realm/realm-model';
 
 interface ContentTargetManageRealmsModalOptions {
-	selectedRealms: Realm[];
+	selectedRealms: RealmModel[];
 	maxRealms: number;
 }
 

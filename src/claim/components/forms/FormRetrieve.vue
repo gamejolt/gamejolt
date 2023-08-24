@@ -7,8 +7,8 @@ import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlError from '../../../_common/form-vue/AppFormControlError.vue';
 import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
-import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
-import { Game } from '../../../_common/game/game.model';
+import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
+import { GameModel } from '../../../_common/game/game.model';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 
 const props = defineProps({
@@ -17,11 +17,11 @@ const props = defineProps({
 		required: true,
 	},
 	bundle: {
-		type: Object as PropType<GameBundle>,
+		type: Object as PropType<GameBundleModel>,
 		default: undefined,
 	},
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		default: undefined,
 	},
 });

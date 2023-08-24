@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { illNoCommentsSmall } from '../../../illustration/illustrations';
 import AppButton from '../../../button/AppButton.vue';
 import AppIllustration from '../../../illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '../../../illustration/illustrations';
 import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../store/common-store';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import AppUserFollowButton from '../../follow/AppUserFollowButton.vue';
-import { User } from '../../user.model';
+import { UserModel } from '../../user.model';
 
 const props = defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 });

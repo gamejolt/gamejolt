@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 
 defineProps({
 	community: {
-		type: Object as PropType<Community>,
+		type: Object as PropType<CommunityModel>,
 		required: true,
 	},
 });

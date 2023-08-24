@@ -114,7 +114,7 @@ class ScreenService {
 		  });
 }
 
-export const Screen = reactive(new ScreenService()) as ScreenService;
+export const Screen = reactive(/** @__PURE__ */ new ScreenService()) as ScreenService;
 
 export function initScreenService() {
 	// We use their user agent to initialize our initial breakpoints so that mobile

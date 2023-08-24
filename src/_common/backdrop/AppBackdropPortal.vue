@@ -1,9 +1,6 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { Backdrop, BackdropController } from './backdrop.service';
 import AppBackdrop from './AppBackdrop.vue';
-
-const backdrops = computed(() => Backdrop.backdrops);
+import { Backdrop, BackdropController } from './backdrop.service';
 
 function getTargetForBackdrop(backdrop: BackdropController) {
 	if (backdrop.context) {
@@ -16,7 +13,7 @@ function getTargetForBackdrop(backdrop: BackdropController) {
 <template>
 	<div>
 		<teleport
-			v-for="(backdrop, index) of backdrops"
+			v-for="(backdrop, index) of Backdrop.backdrops"
 			:key="index"
 			:to="getTargetForBackdrop(backdrop)"
 		>

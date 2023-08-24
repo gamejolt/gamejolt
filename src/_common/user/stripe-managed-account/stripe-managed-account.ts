@@ -1,6 +1,6 @@
 import { Model } from '../../model/model.service';
 
-export class UserStripeManagedAccount extends Model {
+export class UserStripeManagedAccountModel extends Model {
 	static readonly TYPE_COMPANY = 'company';
 	static readonly TYPE_INDIVIDUAL = 'individual';
 
@@ -30,5 +30,3 @@ export class UserStripeManagedAccount extends Model {
 		super(data);
 	}
 }
-
-Model.create(UserStripeManagedAccount);

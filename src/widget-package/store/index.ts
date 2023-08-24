@@ -1,13 +1,13 @@
 import { parse } from 'qs';
 import { computed, inject, InjectionKey, ref } from 'vue';
 import { Api } from '../../_common/api/api.service';
-import { Game } from '../../_common/game/game.model';
+import { GameModel } from '../../_common/game/game.model';
 import { GamePackageCardModel } from '../../_common/game/package/card/card.model';
 import { GamePackagePayloadModel } from '../../_common/game/package/package-payload.model';
-import { GamePackage } from '../../_common/game/package/package.model';
-import { SellablePricing } from '../../_common/sellable/pricing/pricing.model';
-import { Sellable } from '../../_common/sellable/sellable.model';
-import { User } from '../../_common/user/user.model';
+import { GamePackageModel } from '../../_common/game/package/package.model';
+import { SellablePricingModel } from '../../_common/sellable/pricing/pricing.model';
+import { SellableModel } from '../../_common/sellable/sellable.model';
+import { UserModel } from '../../_common/user/user.model';
 
 export class PaymentData {
 	method: 'cc-stripe' | 'paypal' = 'cc-stripe';
@@ -42,16 +42,16 @@ export function createWidgetPackageStore() {
 	const hasInvalidKey = ref(false);
 	const hasFailure = ref<string>();
 
-	const game = ref<Game>();
-	const developer = ref<User>();
-	const sellable = ref<Sellable>();
-	const gamePackage = ref<GamePackage>();
+	const game = ref<GameModel>();
+	const developer = ref<UserModel>();
+	const sellable = ref<SellableModel>();
+	const gamePackage = ref<GamePackageModel>();
 	const packagePayload = ref<GamePackagePayloadModel>();
 	const packageCard = ref<GamePackageCardModel>();
 	const addresses = ref<any[]>([]);
 	const minOrderAmount = ref(50);
-	const pricing = ref<SellablePricing>();
-	const originalPricing = ref<SellablePricing>();
+	const pricing = ref<SellablePricingModel>();
+	const originalPricing = ref<SellablePricingModel>();
 
 	const payment = ref(new PaymentData());
 	const address = ref(new AddressData());
@@ -63,9 +63,9 @@ export function createWidgetPackageStore() {
 		try {
 			const payload = await Api.sendRequest(`/widgets/package/${sellableKey.value}`);
 
-			game.value = new Game(payload.game);
-			developer.value = new User(game.value.developer);
-			sellable.value = new Sellable(payload.sellable);
+			game.value = new GameModel(payload.game);
+			developer.value = new UserModel(game.value.developer);
+			sellable.value = new SellableModel(payload.sellable);
 			packagePayload.value = new GamePackagePayloadModel(payload);
 			packageCard.value = new GamePackageCardModel(
 				sellable.value,

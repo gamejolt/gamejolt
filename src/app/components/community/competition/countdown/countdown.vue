@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { CommunityCompetition } from '../../../../../_common/community/competition/competition.model';
+import { CommunityCompetitionModel } from '../../../../../_common/community/competition/competition.model';
 
 type BlockData = {
 	digits: string[];
@@ -10,7 +10,7 @@ type BlockData = {
 
 @Options({})
 export default class AppCommunityCompetitionCountdown extends Vue {
-	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
 
 	updateTimer!: NodeJS.Timer | null;
 	blocksData: BlockData[] = [];

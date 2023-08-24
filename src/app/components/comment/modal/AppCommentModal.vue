@@ -2,7 +2,7 @@
 import { computed, PropType } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
-import { CommentableModel } from '../../../../_common/comment/comment-model';
+import { CommentableModel, CommentSort } from '../../../../_common/comment/comment-model';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import { Model } from '../../../../_common/model/model.service';
@@ -20,7 +20,7 @@ defineProps({
 		required: true,
 	},
 	initialTab: {
-		type: String,
+		type: String as PropType<CommentSort>,
 		default: undefined,
 	},
 });

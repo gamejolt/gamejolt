@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppGameFollowWidget from '../../../../_common/game/follow-widget/follow-widget.vue';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 
@@ -13,7 +13,7 @@ import AppTheme from '../../../../_common/theme/AppTheme.vue';
 	},
 })
 export default class AppGameBadge extends Vue {
-	@Prop({ type: Object, required: true }) game!: Game;
+	@Prop({ type: Object, required: true }) game!: GameModel;
 	@Prop({ type: Boolean, default: false }) fullBleed!: boolean;
 }
 </script>

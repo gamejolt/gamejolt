@@ -1,6 +1,5 @@
-import { InjectionKey } from '@vue/runtime-core';
-import { inject, provide, ref } from 'vue';
-import { User } from '../user/user.model';
+import { InjectionKey, inject, provide, ref } from 'vue';
+import { UserModel } from '../user/user.model';
 
 export type AppPromotionSource =
 	| 'footer'
@@ -29,7 +28,7 @@ export function createAppPromotionStore() {
 			: null
 	);
 
-	const context = ref<User>();
+	const context = ref<UserModel>();
 
 	const c = {
 		cohort,

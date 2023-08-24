@@ -3,11 +3,11 @@ import { computed, PropType, ref, StyleValue, toRefs, watch } from 'vue';
 import { kStrongEaseOut } from '../../_styles/variables';
 import { ImgHelper } from '../img/helper/helper-service';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { Background } from './background.model';
+import { BackgroundModel } from './background.model';
 
 const props = defineProps({
 	background: {
-		type: Object as PropType<Background>,
+		type: Object as PropType<BackgroundModel>,
 		default: undefined,
 	},
 	darken: {
@@ -51,7 +51,7 @@ const hasMedia = computed(() => !!mediaItem.value);
 
 const isLoaded = ref(false);
 
-const loadedBackground = ref<Background>();
+const loadedBackground = ref<BackgroundModel>();
 
 if (import.meta.env.SSR) {
 	loadedBackground.value = background?.value;

@@ -9,7 +9,7 @@ import { formatNumber } from '../../filters/number';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { Community } from '../community.model';
+import { CommunityModel } from '../community.model';
 
 @Options({
 	directives: {
@@ -19,7 +19,7 @@ import { Community } from '../community.model';
 })
 export default class AppCommunityJoinWidget extends Vue {
 	@Prop({ type: Object, required: true })
-	community!: Community;
+	community!: CommunityModel;
 
 	@Prop({ type: String, required: true })
 	location!: CommunityJoinLocation;

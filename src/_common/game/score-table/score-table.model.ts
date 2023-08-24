@@ -1,7 +1,7 @@
-import { Model } from '../../model/model.service';
 import { Api } from '../../api/api.service';
+import { Model } from '../../model/model.service';
 
-export class GameScoreTable extends Model {
+export class GameScoreTableModel extends Model {
 	game_id!: number;
 	name!: string;
 	description!: string;
@@ -14,7 +14,10 @@ export class GameScoreTable extends Model {
 	static readonly SORTING_DIRECTION_ASC = 1;
 
 	static $saveSort(gameId: number, sort: number[]) {
-		return Api.sendRequest('/web/dash/developer/games/api/scores/save-table-sort/' + gameId, sort);
+		return Api.sendRequest(
+			'/web/dash/developer/games/api/scores/save-table-sort/' + gameId,
+			sort
+		);
 	}
 
 	$save() {
@@ -51,5 +54,3 @@ export class GameScoreTable extends Model {
 		return response;
 	}
 }
-
-Model.create(GameScoreTable);

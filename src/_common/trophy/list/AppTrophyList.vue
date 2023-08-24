@@ -5,7 +5,7 @@ import { GameTrophy } from '../../game/trophy/trophy.model';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { UserGameTrophy } from '../../user/trophy/game-trophy.model';
+import { UserGameTrophy, indexAchievedGameTrophies } from '../../user/trophy/game-trophy.model';
 import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
 
 const props = defineProps({
@@ -21,7 +21,7 @@ const props = defineProps({
 
 const { achieved } = toRefs(props);
 
-const achievedIndexed = computed(() => UserGameTrophy.indexAchieved(achieved.value));
+const achievedIndexed = computed(() => indexAchievedGameTrophies(achieved.value));
 </script>
 
 <template>

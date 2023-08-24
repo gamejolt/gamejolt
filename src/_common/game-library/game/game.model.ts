@@ -1,19 +1,17 @@
-import { Game } from '../../game/game.model';
+import { GameModel } from '../../game/game.model';
 import { Model } from '../../model/model.service';
 
-export class GameLibraryGame extends Model {
-	user_id!: number;
-	game_id!: number;
-	game!: Game;
-	added_on!: number;
+export class GameLibraryGameModel extends Model {
+	declare user_id: number;
+	declare game_id: number;
+	declare game: GameModel;
+	declare added_on: number;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.game) {
-			this.game = new Game(data.game);
+			this.game = new GameModel(data.game);
 		}
 	}
 }
-
-Model.create(GameLibraryGame);

@@ -1,6 +1,6 @@
 import { Model } from '../../model/model.service';
 
-export class UserWallet extends Model {
+export class UserWalletModel extends Model {
 	constructor(data: any = {}) {
 		super(data);
 	}
@@ -10,5 +10,3 @@ export class UserWallet extends Model {
 	declare minimum_payout_balance: number;
 	declare can_withdraw: boolean;
 }
-
-Model.create(UserWallet);

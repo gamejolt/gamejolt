@@ -1,11 +1,11 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
+import { GamePackageModel } from '../../../../../../../../_common/game/package/package.model';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../_common/route/legacy-route-component';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
 import { useGameDashRouteController } from '../../../manage.store';
 
@@ -15,8 +15,8 @@ import { useGameDashRouteController } from '../../../manage.store';
 		FormGamePackage,
 	},
 })
-@OptionsForRoute()
-export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteDashGamesManageGamePackagesAdd extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
@@ -32,7 +32,7 @@ export default class RouteDashGamesManageGamePackagesAdd extends BaseRouteCompon
 		return null;
 	}
 
-	onPackageAdded(newPackage: GamePackage) {
+	onPackageAdded(newPackage: GamePackageModel) {
 		this.$router.push({
 			name: 'dash.games.manage.game.packages.edit',
 			params: { packageId: newPackage.id + '' },

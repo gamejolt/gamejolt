@@ -2,16 +2,16 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
-import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
+import { GameScoreTableModel } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
-import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
-import { User } from '../../../../../../../../../_common/user/user.model';
+import { UserGameScoreModel } from '../../../../../../../../../_common/user/game-score/game-score.model';
+import { UserModel } from '../../../../../../../../../_common/user/user.model';
 import { useGameDashRouteController } from '../../../../manage.store';
 import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 
@@ -24,7 +24,7 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['table', 'user'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
@@ -36,16 +36,16 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 				route.params.user
 		),
 })
-export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRouteComponent {
+export default class RouteDashGamesManageApiScoreboardsScoresUser extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game!;
 	}
 
-	user: User = null as any;
-	scoreTable: GameScoreTable = null as any;
-	scores: UserGameScore[] = [];
+	user: UserModel = null as any;
+	scoreTable: GameScoreTableModel = null as any;
+	scores: UserGameScoreModel[] = [];
 
 	get routeTitle() {
 		if (this.game && this.user && this.scoreTable) {
@@ -59,12 +59,12 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 	}
 
 	routeResolved($payload: any) {
-		this.user = new User($payload.user);
-		this.scoreTable = new GameScoreTable($payload.scoreTable);
-		this.scores = UserGameScore.populate($payload.scores);
+		this.user = new UserModel($payload.user);
+		this.scoreTable = new GameScoreTableModel($payload.scoreTable);
+		this.scores = UserGameScoreModel.populate($payload.scores);
 	}
 
-	onScoreRemoved(score: UserGameScore) {
+	onScoreRemoved(score: UserGameScoreModel) {
 		const index = this.scores.findIndex(i => i.id === score.id);
 		if (index !== -1) {
 			this.scores.splice(index, 1);
@@ -72,7 +72,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends BaseRo
 	}
 
 	async removeAll() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to remove all of the user's scores from this scoreboard?`
 			)

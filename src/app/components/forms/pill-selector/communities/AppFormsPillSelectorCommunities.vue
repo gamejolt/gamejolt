@@ -1,23 +1,23 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/verified-tick.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import AppFormsPillSelectorItem from '../_item/AppFormsPillSelectorItem.vue';
 import AppFormsPillSelector from '../AppFormsPillSelector.vue';
 import AppScrollHelper from '../AppScrollHelper.vue';
-import AppFormsPillSelectorItem from '../_item/AppFormsPillSelectorItem.vue';
 
 const props = defineProps({
 	communities: {
-		type: Array as PropType<Community[]>,
+		type: Array as PropType<CommunityModel[]>,
 		required: true,
 	},
 	initialCommunity: {
-		type: Object as PropType<Community | null>,
+		type: Object as PropType<CommunityModel | null>,
 		default: null,
 	},
 	noChannel: {
@@ -29,12 +29,12 @@ const props = defineProps({
 const { communities, initialCommunity, noChannel } = toRefs(props);
 
 const emit = defineEmits({
-	selectCommunity: (_community: Community) => true,
-	selectChannel: (_channel: CommunityChannel) => true,
-	select: (_community: Community, _channel: CommunityChannel) => true,
+	selectCommunity: (_community: CommunityModel) => true,
+	selectChannel: (_channel: CommunityChannelModel) => true,
+	select: (_community: CommunityModel, _channel: CommunityChannelModel) => true,
 });
 
-const selectedCommunity = ref<Community | null>(null);
+const selectedCommunity = ref<CommunityModel | null>(null);
 
 const channels = computed(() => selectedCommunity.value?.postableChannels);
 
@@ -52,7 +52,7 @@ function unselectCommunity() {
 	selectedCommunity.value = null;
 }
 
-function selectCommunity(community: Community) {
+function selectCommunity(community: CommunityModel) {
 	selectedCommunity.value = community;
 	emit('selectCommunity', community);
 
@@ -61,7 +61,7 @@ function selectCommunity(community: Community) {
 	}
 }
 
-function selectChannel(channel: CommunityChannel) {
+function selectChannel(channel: CommunityChannelModel) {
 	emit('selectChannel', channel);
 	emit('select', selectedCommunity.value!, channel);
 	_closeAndReset();

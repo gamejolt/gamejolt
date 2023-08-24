@@ -2,16 +2,16 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
-import { GameBuild } from '../../../../../../../../../_common/game/build/build.model';
-import { GameBuildLaunchOption } from '../../../../../../../../../_common/game/build/launch-option/launch-option.model';
-import { GamePackage } from '../../../../../../../../../_common/game/package/package.model';
-import { GameRelease } from '../../../../../../../../../_common/game/release/release.model';
+import { GameBuildModel } from '../../../../../../../../../_common/game/build/build.model';
+import { GameBuildLaunchOptionModel } from '../../../../../../../../../_common/game/build/launch-option/launch-option.model';
+import { GamePackageModel } from '../../../../../../../../../_common/game/package/package.model';
+import { GameReleaseModel } from '../../../../../../../../../_common/game/release/release.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import FormGameRelease from '../../../../../../../../components/forms/game/release/release.vue';
 import { useGameDashRouteController } from '../../../../manage.store';
 
@@ -21,7 +21,7 @@ import { useGameDashRouteController } from '../../../../manage.store';
 		FormGameRelease,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['packageId', 'releaseId'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
@@ -33,18 +33,18 @@ import { useGameDashRouteController } from '../../../../manage.store';
 				route.params.releaseId
 		),
 })
-export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRouteComponent {
+export default class RouteDashGamesManageGamePackageReleaseEdit extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game!;
 	}
 
-	package: GamePackage = null as any;
-	release: GameRelease = null as any;
-	releases: GameRelease[] = [];
-	builds: GameBuild[] = [];
-	launchOptions: GameBuildLaunchOption[] = [];
+	package: GamePackageModel = null as any;
+	release: GameReleaseModel = null as any;
+	releases: GameReleaseModel[] = [];
+	builds: GameBuildModel[] = [];
+	launchOptions: GameBuildLaunchOptionModel[] = [];
 	buildDownloadCounts: { [buildId: number]: number } = {};
 	areWebBuildsLockedBySellable = false;
 
@@ -63,11 +63,11 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 	}
 
 	routeResolved($payload: any) {
-		this.package = new GamePackage($payload.package);
-		this.release = new GameRelease($payload.release);
-		this.releases = GameRelease.populate($payload.releases);
-		this.builds = GameBuild.populate($payload.builds);
-		this.launchOptions = GameBuildLaunchOption.populate($payload.launchOptions);
+		this.package = new GamePackageModel($payload.package);
+		this.release = new GameReleaseModel($payload.release);
+		this.releases = GameReleaseModel.populate($payload.releases);
+		this.builds = GameBuildModel.populate($payload.builds);
+		this.launchOptions = GameBuildLaunchOptionModel.populate($payload.launchOptions);
 
 		this.buildDownloadCounts = $payload.buildDownloadCounts || {};
 		// If the server has no build counts it returns an empty array instead of an empty object.
@@ -88,8 +88,8 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 		});
 	}
 
-	async unpublishRelease(release: GameRelease) {
-		const result = await ModalConfirm.show(
+	async unpublishRelease(release: GameReleaseModel) {
+		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to hide this release? It will no longer be accessible from your game page.'
 			)
@@ -107,8 +107,8 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends BaseRout
 		);
 	}
 
-	async removeRelease(release: GameRelease) {
-		const result = await ModalConfirm.show(
+	async removeRelease(release: GameReleaseModel) {
+		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to remove this release? All of its builds will be removed as well.'
 			)

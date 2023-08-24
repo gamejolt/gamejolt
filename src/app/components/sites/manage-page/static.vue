@@ -2,8 +2,8 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { SiteBuild } from '../../../../_common/site/build/build-model';
-import { Site } from '../../../../_common/site/site-model';
+import { SiteBuildModel } from '../../../../_common/site/build/build-model';
+import { SiteModel } from '../../../../_common/site/site-model';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import FormDashSiteBuild from '../../forms/site/build/build.vue';
 
@@ -16,7 +16,7 @@ import FormDashSiteBuild from '../../forms/site/build/build.vue';
 	},
 })
 export default class AppSitesManagePageStatic extends Vue {
-	@Prop(Object) site?: Site;
+	@Prop(Object) site?: SiteModel;
 	@Prop(Boolean) enabled?: boolean;
 	@Prop(Boolean) templateEnabled?: boolean;
 
@@ -26,7 +26,7 @@ export default class AppSitesManagePageStatic extends Vue {
 			: undefined;
 	}
 
-	onBuildAdded(_model: SiteBuild, response: any) {
+	onBuildAdded(_model: SiteBuildModel, response: any) {
 		if (!this.site) {
 			showErrorGrowl(this.$gettext(`Site is not active`));
 			return;

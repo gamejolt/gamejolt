@@ -1,8 +1,8 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { FiresideCommunity } from '../../../../../_common/fireside/community/community.model';
-import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import { FiresideCommunityModel } from '../../../../../_common/fireside/community/community.model';
+import { FiresideModel } from '../../../../../_common/fireside/fireside.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -18,10 +18,10 @@ import { CommunityEjectFiresideModalResult } from './modal.service';
 })
 export default class AppCommunityEjectFiresideModal extends mixins(BaseModal) {
 	@Prop({ type: Object, required: true })
-	firesideCommunity!: FiresideCommunity;
+	firesideCommunity!: FiresideCommunityModel;
 
 	@Prop({ type: Object, required: true })
-	fireside!: Fireside;
+	fireside!: FiresideModel;
 
 	commonStore = setup(() => useCommonStore());
 
@@ -88,7 +88,9 @@ export default class AppCommunityEjectFiresideModal extends mixins(BaseModal) {
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<AppTranslate :translate-params="{ communityName: firesideCommunity.community.name }">
+				<AppTranslate
+					:translate-params="{ communityName: firesideCommunity.community.name }"
+				>
 					Eject fireside from %{ communityName }?
 				</AppTranslate>
 			</h2>

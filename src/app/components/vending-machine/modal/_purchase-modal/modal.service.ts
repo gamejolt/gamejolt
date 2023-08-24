@@ -1,10 +1,10 @@
 import { defineAsyncComponent } from 'vue';
 import { CurrencyCostData } from '../../../../../_common/currency/currency-type';
-import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import { showModal } from '../../../../../_common/modal/modal.service';
 
 interface ShopProductPurchaseOptions {
-	shopProduct: InventoryShopProductSale;
+	shopProduct: InventoryShopProductSaleModel;
 	currencyOptions: CurrencyCostData;
 	onItemPurchased: () => void;
 }

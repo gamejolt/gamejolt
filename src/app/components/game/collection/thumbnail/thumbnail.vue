@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
-import { GameCollection } from '../collection.model';
+import { GameCollectionModel } from '../collection.model';
 
 @Options({
 	components: {
@@ -9,7 +9,7 @@ import { GameCollection } from '../collection.model';
 	},
 })
 export default class AppGameCollectionThumbnail extends Vue {
-	@Prop(Object) collection!: GameCollection;
+	@Prop(Object) collection!: GameCollectionModel;
 	@Prop(Boolean) hideTag?: boolean;
 }
 </script>

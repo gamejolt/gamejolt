@@ -3,8 +3,11 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
-import { User } from '../../../../_common/user/user.model';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
+import { UserModel } from '../../../../_common/user/user.model';
 import AppFollowerList from '../../../components/follower/list/list.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import { useProfileRouteController } from '../RouteProfile.vue';
@@ -20,14 +23,14 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppShellPageBackdrop,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
 })
-export default class RouteProfileFollowing extends BaseRouteComponent {
+export default class RouteProfileFollowing extends LegacyRouteComponent {
 	routeStore = setup(() => useProfileRouteController()!);
 
-	users: User[] = [];
+	users: UserModel[] = [];
 
 	get routeTitle() {
 		return this.user
@@ -44,7 +47,7 @@ export default class RouteProfileFollowing extends BaseRouteComponent {
 	}
 
 	routeResolved(payload: any) {
-		this.users = User.populate(payload.users);
+		this.users = UserModel.populate(payload.users);
 	}
 }
 </script>

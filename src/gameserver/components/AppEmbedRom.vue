@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { onMounted } from '@vue/runtime-core';
+import { onMounted } from 'vue';
+import { GameBuildEmulator } from '../../_common/game/build/build.model';
 import { loadScript } from '../../utils/utils';
-import { GameBuild } from '../../_common/game/build/build.model';
 import { useGameserverStore } from '../store/index';
 
 declare const RetroJolt: any;
@@ -15,40 +15,40 @@ onMounted(async () => {
 	await loadScript(`${RetroJoltBaseUrl}/retrojolt.js`);
 
 	switch (build.value!.emulator_type) {
-		case GameBuild.EMULATOR_GB:
+		case GameBuildEmulator.Gb:
 			_gb();
 			break;
-		case GameBuild.EMULATOR_GBC:
+		case GameBuildEmulator.Gbc:
 			_gbc();
 			break;
-		case GameBuild.EMULATOR_GBA:
+		case GameBuildEmulator.Gba:
 			_gba();
 			break;
-		case GameBuild.EMULATOR_NES:
+		case GameBuildEmulator.Nes:
 			_nes();
 			break;
-		case GameBuild.EMULATOR_VBOY:
+		case GameBuildEmulator.Vboy:
 			_vboy();
 			break;
-		case GameBuild.EMULATOR_GENESIS:
+		case GameBuildEmulator.Genesis:
 			_genesis();
 			break;
-		case GameBuild.EMULATOR_SNES:
+		case GameBuildEmulator.Snes:
 			_snes();
 			break;
-		case GameBuild.EMULATOR_C64:
+		case GameBuildEmulator.C64:
 			_c64();
 			break;
-		case GameBuild.EMULATOR_ZX:
+		case GameBuildEmulator.Zx:
 			_zx();
 			break;
-		case GameBuild.EMULATOR_ATARI2600:
+		case GameBuildEmulator.Atari2600:
 			_atari2600();
 			break;
-		case GameBuild.EMULATOR_CPC:
+		case GameBuildEmulator.Cpc:
 			_cpc();
 			break;
-		case GameBuild.EMULATOR_MSX:
+		case GameBuildEmulator.Msx:
 			_msx();
 			break;
 	}

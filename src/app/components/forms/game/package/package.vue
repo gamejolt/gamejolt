@@ -2,7 +2,7 @@
 import { addWeeks, startOfDay, startOfTomorrow } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { setup } from 'vue-class-component';
-import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
+import { Emit, Options, Prop, Watch, mixins } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatCurrency } from '../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../_common/filters/date';
@@ -14,20 +14,27 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
-import { GamePackage } from '../../../../../_common/game/package/package.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import {
+	GamePackageModel,
+	GamePackageVisibility,
+} from '../../../../../_common/game/package/package.model';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { SellablePricing } from '../../../../../_common/sellable/pricing/pricing.model';
-import { Sellable } from '../../../../../_common/sellable/sellable.model';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import {
+	SellablePricingModel,
+	getOriginalSellablePricing,
+	getPromotionalSellablePricing,
+} from '../../../../../_common/sellable/pricing/pricing.model';
+import { SellableModel, SellableType } from '../../../../../_common/sellable/sellable.model';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
 import { AppGamePerms } from '../../../game/perms/perms';
 
-type FormGamePackageModel = GamePackage & {
+type FormGamePackageModel = GamePackageModel & {
 	primary: boolean;
-	pricing_type: Sellable['type'];
+	pricing_type: SellableModel['type'];
 	price: number | null;
 	sale_timezone: string;
 	sale_start: number | null;
@@ -54,12 +61,12 @@ export default class FormGamePackage
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	@Prop(Object)
-	sellable!: Sellable;
+	sellable!: SellableModel;
 
-	modelClass = GamePackage as any;
+	modelClass = GamePackageModel as any;
 
 	commonStore = setup(() => useCommonStore());
 
@@ -76,14 +83,16 @@ export default class FormGamePackage
 	minPrice = 0;
 	isUserVerified = false;
 	isFangame = false;
-	pricings: SellablePricing[] = [];
-	originalPricing: SellablePricing | null = null;
-	promotionalPricing: SellablePricing | null = null;
+	pricings: SellablePricingModel[] = [];
+	originalPricing: SellablePricingModel | null = null;
+	promotionalPricing: SellablePricingModel | null = null;
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = {};
 
-	readonly GamePackage = GamePackage;
+	readonly GamePackage = GamePackageModel;
 	readonly formatDate = formatDate;
 	readonly formatCurrency = formatCurrency;
+	readonly GamePackageVisibilityPublic = GamePackageVisibility.Public;
+	readonly GamePackageVisibilityPrivate = GamePackageVisibility.Private;
 
 	@Emit('salecancel')
 	emitSaleCancel(_formModel: FormGamePackageModel) {}
@@ -184,7 +193,7 @@ export default class FormGamePackage
 		this.minPrice = payload.minPrice || 50;
 		this.isUserVerified = payload.isUserVerified;
 		this.isFangame = payload.isFangame;
-		this.pricings = SellablePricing.populate(payload.pricings);
+		this.pricings = SellablePricingModel.populate(payload.pricings);
 		this.originalPricing = null;
 		this.promotionalPricing = null;
 
@@ -195,12 +204,12 @@ export default class FormGamePackage
 			this.setField('primary', true);
 		}
 
-		this.setField('pricing_type', 'free');
+		this.setField('pricing_type', SellableType.Free);
 		this.setField('sale_start', startOfTomorrow().getTime());
 		this.setField('sale_end', startOfDay(addWeeks(Date.now(), 1)).getTime());
 
 		if (this.method === 'add') {
-			this.setField('visibility', GamePackage.VISIBILITY_PUBLIC);
+			this.setField('visibility', GamePackageVisibility.Public);
 			if (payload.hasDefaultPackage) {
 				this.setField('title', '');
 			} else {
@@ -216,10 +225,8 @@ export default class FormGamePackage
 			if (this.sellable.type !== 'free') {
 				this.setField('pricing_type', this.sellable.type);
 
-				this.originalPricing = SellablePricing.getOriginalPricing(this.pricings) || null;
-
-				this.promotionalPricing =
-					SellablePricing.getPromotionalPricing(this.pricings) || null;
+				this.originalPricing = getOriginalSellablePricing(this.pricings) || null;
+				this.promotionalPricing = getPromotionalSellablePricing(this.pricings) || null;
 
 				this.setField(
 					'price',
@@ -255,7 +262,7 @@ export default class FormGamePackage
 	}
 
 	async cancelSale() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to cancel this sale?')
 		);
 
@@ -341,7 +348,7 @@ export default class FormGamePackage
 				<div class="radio" :class="{ disabled: !hasAllPerms }">
 					<label>
 						<AppFormControlRadio
-							:value="GamePackage.VISIBILITY_PUBLIC"
+							:value="GamePackageVisibilityPublic"
 							:disabled="!hasAllPerms"
 						/>
 						<AppTranslate>Public</AppTranslate>
@@ -355,7 +362,7 @@ export default class FormGamePackage
 				<div class="radio" :class="{ disabled: !hasAllPerms }">
 					<label>
 						<AppFormControlRadio
-							:value="GamePackage.VISIBILITY_PRIVATE"
+							:value="GamePackageVisibilityPrivate"
 							:disabled="!hasAllPerms"
 						/>
 						<AppTranslate>Private</AppTranslate>

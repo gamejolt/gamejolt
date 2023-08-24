@@ -1,7 +1,7 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { BaseModal } from '../../../../../_common/modal/base';
-import { UserAddress } from '../../../../../_common/user/address/address.model';
+import { UserAddressModel } from '../../../../../_common/user/address/address.model';
 import FormAddress from '../../../forms/address/address.vue';
 
 @Options({
@@ -10,9 +10,9 @@ import FormAddress from '../../../forms/address/address.vue';
 	},
 })
 export default class AppUserAddressEditModal extends mixins(BaseModal) {
-	@Prop(Object) address!: UserAddress;
+	@Prop(Object) address!: UserAddressModel;
 
-	onSaved(address: UserAddress) {
+	onSaved(address: UserAddressModel) {
 		this.modal.resolve(address);
 	}
 }

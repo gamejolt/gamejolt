@@ -1,11 +1,11 @@
 <script lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { RouteLocationRedirect } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppContactLink from '../../../_common/contact-link/AppContactLink.vue';
 import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import { illTimeOut } from '../../../_common/illustration/illustrations';
 import AppLinkHelp from '../../../_common/link/AppLinkHelp.vue';
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
@@ -13,9 +13,9 @@ import { commonStore, useCommonStore } from '../../../_common/store/common-store
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { UserTimeout } from '../../../_common/user/timeout/timeout.model';
+import { UserTimeoutModel } from '../../../_common/user/timeout/timeout.model';
+import { RouteLocationRedirect } from '../../../utils/router';
 import AppTimeoutCountdown from '../../components/timeout/AppTimeoutCountdown.vue';
-import { illTimeOut } from '../../../_common/illustration/illustrations';
 import { imageGameJoltLogo } from '../../img/images';
 
 export default {
@@ -89,7 +89,7 @@ async function onClickClearResource() {
 
 	const payload = await Api.sendRequest('/web/dash/timeout/clear-resource', {});
 	if (payload && payload.success) {
-		const newTimeout = new UserTimeout(payload.timeout);
+		const newTimeout = new UserTimeoutModel(payload.timeout);
 		setTimeout(newTimeout);
 
 		_updateExpired();

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { Game } from '../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
@@ -15,7 +15,7 @@ import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.
 })
 export default class AppGameListItem extends Vue {
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	@Prop(String)
 	eventLabel?: string;

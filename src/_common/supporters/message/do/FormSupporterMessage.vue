@@ -20,15 +20,15 @@ import { useModal } from '../../../modal/modal.service';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import { $gettext } from '../../../translate/translate.service';
 import AppUserAvatarImg from '../../../user/user-avatar/AppUserAvatarImg.vue';
-import { SupporterAction } from '../../action.model';
-import { SupporterMessage } from '../../message.model';
+import { SupporterActionModel } from '../../action.model';
+import { SupporterMessageModel } from '../../message.model';
 
 const props = defineProps({
 	action: {
-		type: Object as PropType<SupporterAction>,
+		type: Object as PropType<SupporterActionModel>,
 		default: undefined,
 	},
-	...defineFormProps<SupporterMessage>(),
+	...defineFormProps<SupporterMessageModel>(),
 });
 
 const { action, model } = toRefs(props);
@@ -43,9 +43,9 @@ const isTemplate = computed(() => !action?.value);
 const loadUrl = computed(() => `/web/dash/creators/supporters/save-template`);
 const sendUrl = computed(() => `/web/dash/creators/supporters/send-message/${action?.value?.id}`);
 
-const form: FormController<SupporterMessage> = createForm({
+const form: FormController<SupporterMessageModel> = createForm({
 	model,
-	modelClass: SupporterMessage,
+	modelClass: SupporterMessageModel,
 	loadUrl,
 	onLoad(response) {
 		lengthLimit.value = response.lengthLimit;
@@ -99,7 +99,7 @@ const form: FormController<SupporterMessage> = createForm({
 				return;
 			}
 
-			modal.resolve(new SupporterMessage(response.message));
+			modal.resolve(new SupporterMessageModel(response.message));
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl($gettext(`Something went wrong`));

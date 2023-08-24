@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
-import { Background } from '../../../../../_common/background/background.model';
+import { BackgroundModel } from '../../../../../_common/background/background.model';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import { canDeviceViewFiresides } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { illNoChat } from '../../../../../_common/illustration/illustrations';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppOnHover from '../../../../../_common/on/AppOnHover.vue';
@@ -24,14 +25,17 @@ import {
 	styleLineClamp,
 	styleWhen,
 } from '../../../../../_styles/mixins';
-import { CSSPixelValue, kFontFamilyHeading, kFontSizeBase } from '../../../../../_styles/variables';
+import {
+	buildCSSPixelValue,
+	kFontFamilyHeading,
+	kFontSizeBase,
+} from '../../../../../_styles/variables';
 import { useResizeObserver } from '../../../../../utils/resize-observer';
 import { debounce } from '../../../../../utils/utils';
-import { illNoChat } from '../../../../../_common/illustration/illustrations';
 import { useGridStore } from '../../../grid/grid-store';
 import { loadOlderChatMessages, onNewChatMessage } from '../../client';
 import { TIMEOUT_CONSIDER_QUEUED } from '../../message';
-import { ChatRoom } from '../../room';
+import { ChatRoomModel } from '../../room';
 import { ChatWindowAvatarSize } from '../variables';
 import AppChatWindowOutputItem from './AppChatWindowOutputItem.vue';
 
@@ -40,11 +44,11 @@ const MESSAGE_PADDING = 12;
 
 const props = defineProps({
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 	background: {
-		type: Object as PropType<Background>,
+		type: Object as PropType<BackgroundModel>,
 		default: undefined,
 	},
 	overlay: {
@@ -340,15 +344,15 @@ function _updateMaxContentWidth(width: number) {
 	);
 }
 
-const firesideBannerMargin = new CSSPixelValue(8);
-const minFiresideBannerHeight = new CSSPixelValue(40);
+const firesideBannerMargin = buildCSSPixelValue(8);
+const minFiresideBannerHeight = buildCSSPixelValue(40);
 
 /**
  * Margin added to the scroller content top so the banner doesn't obscure the
  * oldest messages.
  */
-const bannerScrollerMargin = computed(
-	() => new CSSPixelValue(firesideBannerMargin.value * 2 + minFiresideBannerHeight.value)
+const bannerScrollerMargin = computed(() =>
+	buildCSSPixelValue(firesideBannerMargin.value * 2 + minFiresideBannerHeight.value)
 );
 </script>
 

@@ -1,6 +1,4 @@
-import { ComponentOptions, computed, getCurrentInstance, onUnmounted, ref, watch } from 'vue';
-import { createDecorator } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
+import { ComponentOptions, getCurrentInstance, onUnmounted, ref, watch } from 'vue';
 import { NavigationGuardWithThis, RouteLocationNormalized, Router, useRouter } from 'vue-router';
 import { RouteLocationRedirect } from '../../utils/router';
 import { MaybeRef } from '../../utils/vue';
@@ -8,7 +6,7 @@ import { ensureConfig } from '../config/config.service';
 import { HistoryCache } from '../history/cache/cache.service';
 import { Meta, setMetaTitle } from '../meta/meta-service';
 import { Navigate } from '../navigate/navigate.service';
-import { PayloadError } from '../payload/payload-service';
+import { PayloadError, PayloadErrorType } from '../payload/payload-service';
 import { useCommonStore } from '../store/common-store';
 import { EventTopic } from '../system/event/event-topic';
 
@@ -31,6 +29,9 @@ export type AppRouteOptionsInternal = AppRouteOptions & {
  */
 export const onRouteChangeAfter = new EventTopic<void>();
 
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
 export function defineAppRouteOptions(options: AppRouteOptions): {
 	appRouteOptions: AppRouteOptionsInternal;
 	beforeRouteEnter: NavigationGuardWithThis<undefined>;
@@ -240,11 +241,11 @@ export function createAppRoute({
 		if (payload) {
 			// If the payload errored out.
 			if (payload instanceof PayloadError) {
-				if (payload.type === PayloadError.ERROR_NEW_VERSION) {
+				if (payload.type === PayloadErrorType.NewVersion) {
 					// If it was a version change payload error, we want to
 					// refresh the page so that it gets the new code.
 					Navigate.reload();
-				} else if (payload.type === PayloadError.ERROR_HTTP_ERROR) {
+				} else if (payload.type === PayloadErrorType.HttpError) {
 					setError(payload.status || 500);
 				}
 
@@ -570,78 +571,4 @@ function setLeafRoute(key?: symbol) {
 // triggering many routeChangeAfter events.
 function isLeafRoute(key?: symbol) {
 	return _leafRoute === key;
-}
-
-/**
- * Old decorator to specify this is a route component with options. Use the
- * composition API now instead.
- * @deprecated
- */
-export function OptionsForRoute(options: AppRouteOptions = {}) {
-	return createDecorator(componentOptions => {
-		Object.assign(componentOptions, defineAppRouteOptions(options));
-	});
-}
-
-/**
- * Old base route component. Use the composition API now instead.
- * @deprecated
- */
-@Options({})
-export class BaseRouteComponent extends Vue {
-	isRouteDestroyed = false;
-	isRouteLoading = false;
-	isRouteBootstrapped = false;
-
-	disableRouteTitleSuffix = false;
-
-	/**
-	 * This is the AppRoute that backs this component. Only reach into this
-	 * direclty if absolutely required.
-	 */
-	protected appRoute_!: AppRoute;
-
-	get routeTitle(): null | string {
-		return null;
-	}
-
-	/**
-	 * Called to initialize the route either at the first route to this
-	 * component or after the $route object changes.
-	 */
-	routeCreated(): void {}
-
-	/**
-	 * Called after the resolver resolves with data.
-	 */
-	routeResolved(_payload: any, _fromCache: boolean) {}
-
-	/**
-	 * Called when the route component is completely destroyed.
-	 */
-	routeDestroyed() {}
-
-	async created() {
-		this.appRoute_ = createAppRoute({
-			routeTitle: computed(() => this.routeTitle),
-			disableTitleSuffix: computed(() => this.disableRouteTitleSuffix),
-			onInit: this.routeCreated.bind(this),
-			onDestroyed: this.routeDestroyed.bind(this),
-			onResolved: ({ payload, fromCache }) => this.routeResolved(payload, fromCache),
-		});
-
-		watch(
-			[this.appRoute_.isDestroyed, this.appRoute_.isLoading, this.appRoute_.isBootstrapped],
-			([isDestroyed, isLoading, isBootstrapped]) => {
-				this.isRouteDestroyed = isDestroyed;
-				this.isRouteLoading = isLoading;
-				this.isRouteBootstrapped = isBootstrapped;
-			},
-			{ immediate: true }
-		);
-	}
-
-	reloadRoute() {
-		return this.appRoute_.reload();
-	}
 }

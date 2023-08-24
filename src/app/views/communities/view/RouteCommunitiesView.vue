@@ -8,8 +8,8 @@ import {
 	useAdsController,
 } from '../../../../_common/ad/ad-store';
 import { Api } from '../../../../_common/api/api.service';
-import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
-import { Community, isEditingCommunity } from '../../../../_common/community/community.model';
+import { CollaboratorModel } from '../../../../_common/collaborator/collaborator.model';
+import { CommunityModel, isEditingCommunity } from '../../../../_common/community/community.model';
 import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppMediaItemCover from '../../../../_common/media-item/cover/AppMediaItemCover.vue';
 import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
@@ -121,11 +121,13 @@ createAppRoute({
 		setAppPromotionCohort(appPromotionStore, 'community');
 	},
 	onResolved({ payload }) {
-		const community = new Community(payload.community);
+		const community = new CommunityModel(payload.community);
 
 		setCommunity(routeStore.value, community);
 		routeStore.value.sidebarData = new CommunitySidebarData(payload);
-		routeStore.value.collaborator = payload.invite ? new Collaborator(payload.invite) : null;
+		routeStore.value.collaborator = payload.invite
+			? new CollaboratorModel(payload.invite)
+			: null;
 
 		setActiveCommunity(community);
 		viewCommunity(community);

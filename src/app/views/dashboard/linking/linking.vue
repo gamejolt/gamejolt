@@ -4,7 +4,10 @@ import { Client } from '../../../../_common/client/safe-exports';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 
 @Options({
 	name: 'RouteDashLinking',
@@ -13,8 +16,8 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/r
 		AppLoading,
 	},
 })
-@OptionsForRoute()
-export default class RouteDashLinking extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteDashLinking extends LegacyRouteComponent {
 	token!: string;
 
 	get routeTitle() {

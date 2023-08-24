@@ -5,17 +5,20 @@ import AppButton from '../../_common/button/AppButton.vue';
 import { Environment } from '../../_common/environment/environment.service';
 import { formatCurrency } from '../../_common/filters/currency';
 import { formatFilesize } from '../../_common/filters/filesize';
-import { GameBuild } from '../../_common/game/build/build.model';
+import {
+	GameBuildEmulatorInfo,
+	GameBuildModel,
+	GameBuildType,
+} from '../../_common/game/build/build.model';
 import { HistoryTick } from '../../_common/history-tick/history-tick-service';
-import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
-import { Sellable } from '../../_common/sellable/sellable.model';
+import AppJolticon, { Jolticon } from '../../_common/jolticon/AppJolticon.vue';
+import { SellableType } from '../../_common/sellable/sellable.model';
 import { useCommonStore } from '../../_common/store/common-store';
 import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
 import AppFadeCollapse from '../components/AppFadeCollapse.vue';
 import AppWidgetModal from '../components/AppWidgetModal.vue';
 import { useWidgetPackageStore } from '../store/index';
 import FormPayment from './forms/FormPayment.vue';
-import { Jolticon } from '../../_common/jolticon/AppJolticon.vue';
 
 const store = useWidgetPackageStore();
 const { user } = useCommonStore();
@@ -32,7 +35,7 @@ const isShowingMoreOptions = ref(false);
 const isDescriptionCollapsed = ref(false);
 const isShowingDescription = ref(false);
 const isShowingPayment = ref(false);
-const clickedBuild = ref<GameBuild>();
+const clickedBuild = ref<GameBuildModel>();
 
 // "Convenience" I guess
 const hasBrowserBuild = computed(() => !!packageCard.value.browserBuild);
@@ -52,14 +55,14 @@ const shouldShowDevDescription = computed(() => {
 	);
 });
 
-async function buildClick(build?: GameBuild) {
+async function buildClick(build?: GameBuildModel) {
 	// We only allow undefined builds for TS typing reasons within the view.
 	// It shouldn't ever actually happen.
 	if (!build) {
 		throw new Error('Build must always be set.');
 	}
 
-	if (sellable.value.type === Sellable.TYPE_PWYW && !isShowingPayment.value) {
+	if (sellable.value.type === SellableType.Pwyw && !isShowingPayment.value) {
 		clickedBuild.value = build;
 		isShowingPayment.value = true;
 		return;
@@ -74,7 +77,7 @@ async function buildClick(build?: GameBuild) {
 		sourceResourceId: game.value.id,
 	});
 
-	if (build.isBrowserBased || build.type === GameBuild.TYPE_ROM) {
+	if (build.isBrowserBased || build.type === GameBuildType.Rom) {
 		Analytics.trackEvent('game-play', 'play');
 
 		// We have to open the window first before getting the URL. The browser
@@ -170,8 +173,8 @@ async function buildClick(build?: GameBuild) {
 							<!-- If a ROM, we want to show a tooltip on what kind. -->
 							<AppButton
 								v-app-tooltip.touchable="
-									extraBuild.build.type === GameBuild.TYPE_ROM
-										? GameBuild.emulatorInfo[extraBuild.build.emulator_type]
+									extraBuild.build.type === GameBuildType.Rom
+										? GameBuildEmulatorInfo[extraBuild.build.emulator_type]
 										: undefined
 								"
 								block

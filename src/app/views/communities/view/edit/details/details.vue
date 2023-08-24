@@ -1,25 +1,25 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
-import { enforceLocation } from '../../../../../../utils/router';
 import AppAlertDismissable from '../../../../../../_common/alert/dismissable/dismissable.vue';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { useThemeStore } from '../../../../../../_common/theme/theme.store';
+import { enforceLocation } from '../../../../../../utils/router';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import FormCommunity from '../../../../../components/forms/community/community.vue';
 import FormCommunityDescription from '../../../../../components/forms/community/description/FormCommunityDescription.vue';
 import { useGridStore } from '../../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../../store';
 import { CommunityThemeKey } from '../../RouteCommunitiesView.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditDetails',
@@ -32,8 +32,8 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		AppAlertDismissable,
 	},
 })
-@OptionsForRoute()
-export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteCommunitiesViewEditDetails extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
@@ -78,7 +78,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 	}
 
 	async removeCommunity() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to permanently remove your community? Once it's gone, it's gone forever.`
 			)
@@ -103,7 +103,7 @@ export default class RouteCommunitiesViewEditDetails extends BaseRouteComponent 
 			return;
 		}
 
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to leave this community?`),
 			this.$gettext(`Leave community?`)
 		);

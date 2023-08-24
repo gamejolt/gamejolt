@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { Community } from '../../../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../../_common/modal/base';
 import FormCommunityHeader from '../header.vue';
 
@@ -10,7 +10,7 @@ import FormCommunityHeader from '../header.vue';
 	},
 })
 export default class AppCommunityHeaderModal extends mixins(BaseModal) {
-	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
 
 	// We don't want to close the modal after they've uploaded a header since they can set a crop
 	// after. We want to auto-close it after they've saved the crop, though.
@@ -22,7 +22,7 @@ export default class AppCommunityHeaderModal extends mixins(BaseModal) {
 		}
 	}
 
-	onSubmit(community: Community) {
+	onSubmit(community: CommunityModel) {
 		const newHeaderId = community.header ? community.header.id : null;
 		if (!newHeaderId || this.previousHeaderId === newHeaderId) {
 			this.modal.resolve(this.community);

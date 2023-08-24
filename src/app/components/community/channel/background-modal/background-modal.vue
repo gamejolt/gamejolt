@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
+import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import FormCommunityChannelBackground from '../../../forms/community/channel/background/background.vue';
 
@@ -10,7 +10,7 @@ import FormCommunityChannelBackground from '../../../forms/community/channel/bac
 	},
 })
 export default class AppCommunityChannelBackgroundModal extends mixins(BaseModal) {
-	@Prop({ type: Object, required: true }) channel!: CommunityChannel;
+	@Prop({ type: Object, required: true }) channel!: CommunityChannelModel;
 
 	previousBackgroundId: number | null = null;
 
@@ -20,7 +20,7 @@ export default class AppCommunityChannelBackgroundModal extends mixins(BaseModal
 		}
 	}
 
-	onSubmit(channel: CommunityChannel) {
+	onSubmit(channel: CommunityChannelModel) {
 		const newBackgroundId = (channel.background && channel.background.id) || null;
 		if (this.previousBackgroundId === newBackgroundId) {
 			this.modal.resolve(this.channel);

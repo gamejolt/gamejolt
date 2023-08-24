@@ -1,5 +1,5 @@
 <script lang="ts">
-type DownloadPackageHook = (game: Game, build: GameBuild) => void;
+type DownloadPackageHook = (game: GameModel, build: GameBuildModel) => void;
 let downloadPackageHook: DownloadPackageHook | undefined;
 
 export function setDownloadPackageHook(newHook: DownloadPackageHook) {
@@ -17,25 +17,25 @@ import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { $gettext, $gettextInterpolate } from '../../../translate/translate.service';
-import type { User } from '../../../user/user.model';
-import { GameBuild } from '../../build/build.model';
+import type { UserModel } from '../../../user/user.model';
+import { GameBuildModel, GameBuildType } from '../../build/build.model';
 import { GameDownloader } from '../../downloader/downloader.service';
-import type { Game } from '../../game.model';
+import type { GameModel } from '../../game.model';
 import { GamePlayModal } from '../../play-modal/play-modal.service';
-import type { GamePackage } from '../package.model';
-import FormGamePackagePayment from '../payment-form/payment-form.vue';
+import type { GamePackageModel } from '../package.model';
+import FormGamePackagePayment from '../payment-form/FormGamePackagePayment.vue';
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	package: {
-		type: Object as PropType<GamePackage>,
+		type: Object as PropType<GamePackageModel>,
 		required: true,
 	},
 	build: {
-		type: Object as PropType<GameBuild | null>,
+		type: Object as PropType<GameBuildModel | null>,
 		required: true,
 	},
 	fromExtraSection: {
@@ -47,7 +47,7 @@ const props = defineProps({
 		default: undefined,
 	},
 	partner: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		default: undefined,
 	},
 });
@@ -65,8 +65,8 @@ const packageOperation = computed(() => {
 	}
 
 	let operation: 'download' | 'play' =
-		build.value.type === GameBuild.TYPE_DOWNLOADABLE ? 'download' : 'play';
-	if (build.value.type === GameBuild.TYPE_ROM && fromExtraSection) {
+		build.value.type === GameBuildType.Downloadable ? 'download' : 'play';
+	if (build.value.type === GameBuildType.Rom && fromExtraSection) {
 		operation = 'download';
 	}
 	return operation;
@@ -111,12 +111,12 @@ function skipPayment() {
 	modal.dismiss();
 }
 
-function _download(gameBuild: GameBuild) {
+function _download(gameBuild: GameBuildModel) {
 	Analytics.trackEvent('game-purchase-modal', 'download', 'download');
 	GameDownloader.download(router, game.value, gameBuild);
 }
 
-function _showBrowserModal(gameBuild: GameBuild) {
+function _showBrowserModal(gameBuild: GameBuildModel) {
 	Analytics.trackEvent('game-purchase-modal', 'download', 'play');
 	GamePlayModal.show(game.value, gameBuild);
 }

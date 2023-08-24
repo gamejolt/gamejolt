@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import { Community } from '../community.model';
 import { PropType } from 'vue';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
+import AppImgResponsive from '../../img/AppImgResponsive.vue';
+import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
+import { CommunityModel } from '../community.model';
 
 defineProps({
 	community: {
-		type: Object as PropType<Community>,
+		type: Object as PropType<CommunityModel>,
 		required: true,
 	},
 });

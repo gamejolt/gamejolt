@@ -9,10 +9,10 @@ import {
 	validateContentNoActiveUploads,
 	validateContentRequired,
 } from '../../../../../_common/form-vue/validators';
-import { ForumPost } from '../../../../../_common/forum/post/post.model';
-import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { ForumPostModel } from '../../../../../_common/forum/post/post.model';
+import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 
-class Wrapper extends BaseForm<ForumPost> {}
+class Wrapper extends BaseForm<ForumPostModel> {}
 
 @Options({
 	components: {
@@ -20,10 +20,10 @@ class Wrapper extends BaseForm<ForumPost> {}
 	},
 })
 export default class FormForumPost extends mixins(Wrapper) {
-	@Prop(Object) topic!: ForumTopic;
-	@Prop(Object) replyTo?: ForumPost;
+	@Prop(Object) topic!: ForumTopicModel;
+	@Prop(Object) replyTo?: ForumPostModel;
 
-	modelClass = ForumPost;
+	modelClass = ForumPostModel;
 
 	readonly validateContentRequired = validateContentRequired;
 	readonly validateContentMaxLength = validateContentMaxLength;

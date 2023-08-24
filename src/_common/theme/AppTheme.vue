@@ -1,8 +1,8 @@
 <script lang="ts">
 import { parseToRgb, transparentize } from 'polished';
-import { computed, PropType, useSlots } from 'vue';
+import { PropType, computed, useSlots } from 'vue';
 import AppStyle from '../AppStyle.vue';
-import { DefaultTheme, Theme } from './theme.model';
+import { DefaultTheme, ThemeModel } from './theme.model';
 import { useThemeStore } from './theme.store';
 
 // This needs to be global so that we can generate an ID for each component.
@@ -43,7 +43,7 @@ function darkVar(varname: string) {
 <script lang="ts" setup>
 const props = defineProps({
 	theme: {
-		type: Object as PropType<Theme>,
+		type: Object as PropType<ThemeModel>,
 		default: null,
 	},
 	forceDark: {

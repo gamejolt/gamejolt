@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppCommunityChannelSelect from '../../../../_common/community/channel/AppCommunityChannelSelect.vue';
-import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppPill from '../../../../_common/pill/AppPill.vue';
@@ -16,16 +16,16 @@ import AppPill from '../../../../_common/pill/AppPill.vue';
 })
 export default class AppCommunityRemoveChannel extends Vue {
 	@Prop(Object)
-	community!: Community;
+	community!: CommunityModel;
 
 	@Prop(Object)
-	channel!: CommunityChannel;
+	channel!: CommunityChannelModel;
 
-	selectedChannel: CommunityChannel | null = null;
+	selectedChannel: CommunityChannelModel | null = null;
 	moving = false;
 
 	@Emit('removed')
-	emitRemoved(_postsMovedTo?: CommunityChannel) {}
+	emitRemoved(_postsMovedTo?: CommunityChannelModel) {}
 
 	get channels() {
 		if (!this.community.channels) {
@@ -36,7 +36,7 @@ export default class AppCommunityRemoveChannel extends Vue {
 	}
 
 	get hasSelectedChannel() {
-		return this.selectedChannel instanceof CommunityChannel;
+		return this.selectedChannel instanceof CommunityChannelModel;
 	}
 
 	onMove() {
@@ -51,7 +51,7 @@ export default class AppCommunityRemoveChannel extends Vue {
 		return this.removeChannel();
 	}
 
-	private async removeChannel(moveToChannel?: CommunityChannel) {
+	private async removeChannel(moveToChannel?: CommunityChannelModel) {
 		let success = false;
 		try {
 			await this.channel.$remove(moveToChannel);

@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import AppAnimElectricity from '../../../../_common/animation/AppAnimElectricity.vue';
 import { setProducerDeviceMuted, stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
@@ -141,7 +141,7 @@ async function onClickMic() {
 	}
 
 	if (!_user.hasVideo || producerVideoMuted.value) {
-		const shouldStopStreaming = await ModalConfirm.show(
+		const shouldStopStreaming = await showModalConfirm(
 			$gettext(
 				`Disabling this will stop your current stream. Are you sure you want to stop streaming?`
 			),
@@ -202,7 +202,7 @@ async function _confirmStopStreaming(throughInput: boolean) {
 		title = $gettext(`Stop streaming?`);
 	}
 
-	return ModalConfirm.show($gettext(message), title, 'yes');
+	return showModalConfirm($gettext(message), title, 'yes');
 }
 
 function onClickStickerButton() {

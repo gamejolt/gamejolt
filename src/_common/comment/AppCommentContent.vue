@@ -7,12 +7,12 @@ import { isDynamicGoogleBot } from '../device/device.service';
 import { formatDate } from '../filters/date';
 import AppReactionList from '../reaction/list/AppReactionList.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
-import { Comment } from './comment-model';
+import { CommentModel } from './comment-model';
 import './comment.styl';
 
 defineProps({
 	comment: {
-		type: Object as PropType<Comment>,
+		type: Object as PropType<CommentModel>,
 		required: true,
 	},
 	content: {
