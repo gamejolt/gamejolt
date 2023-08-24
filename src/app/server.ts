@@ -1,17 +1,18 @@
 import { renderToString } from 'vue/server-renderer';
 import { setDeviceUserAgent } from '../_common/device/device.service';
 import { Environment } from '../_common/environment/environment.service';
-import { renderMeta } from '../_common/meta/meta-service';
+import { ssrRenderMeta } from '../_common/meta/meta-service';
 import { translationsReady } from '../_common/translate/translate.service';
 import { createApp } from './bootstrap';
 
 export default async (context: any) => {
+	Environment.ssrContext = context;
+	setDeviceUserAgent(context.ua);
+
 	const { app, router } = await createApp();
 
 	const s = Date.now();
 
-	Environment.ssrContext = context;
-	setDeviceUserAgent(context.ua);
 	router.push(context.url);
 
 	// Wait until the route has resolved all possible async components and
@@ -36,7 +37,7 @@ export default async (context: any) => {
 		context.meta = {
 			title: 'Game Jolt - Share your creations',
 			renderTags() {
-				return renderMeta();
+				return ssrRenderMeta();
 			},
 		};
 

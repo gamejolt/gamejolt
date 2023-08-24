@@ -1,7 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { numberSort } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import { CommunityCompetition } from '../../../../../../_common/community/competition/competition.model';
@@ -15,9 +14,10 @@ import { Screen } from '../../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '../../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppUserVerifiedTick from '../../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import { numberSort } from '../../../../../../utils/array';
 import AppGameBadge from '../../../../game/badge/badge.vue';
 import AppCommunityCompetitionVotingWidget from '../../voting/widget.vue';
 

@@ -2,7 +2,6 @@
 import { computed, CSSProperties, PropType, StyleValue, toRefs } from 'vue';
 import {
 	styleBorderRadiusBase,
-	styleBorderRadiusCircle,
 	styleBorderRadiusLg,
 	styleChangeBg,
 	styleElevate,
@@ -170,13 +169,13 @@ const tagStyles: CSSProperties = {
 		<div
 			v-if="showCreator && sticker.isCreatorSticker && sticker.owner_user"
 			:style="{
-				...styleBorderRadiusCircle,
 				...styleChangeBg('bg-offset'),
 				position: `absolute`,
 				right: 0,
 				bottom: 0,
 				zIndex: 2,
 				padding: kBorderWidthLg.px,
+				borderRadius: `50%`,
 				pointerEvents: `none`,
 			}"
 		>

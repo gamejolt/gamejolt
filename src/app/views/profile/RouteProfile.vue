@@ -5,8 +5,6 @@ import { vAppTrackEvent } from '../../../_common/analytics/track-event.directive
 import { Api } from '../../../_common/api/api.service';
 import { BlockModal } from '../../../_common/block/modal/modal.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { CommentModal } from '../../../_common/comment/modal/modal.service';
-import { ComponentProps } from '../../../_common/component-helpers';
 import { Environment } from '../../../_common/environment/environment.service';
 import { formatNumber } from '../../../_common/filters/number';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
@@ -21,20 +19,20 @@ import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
+import AppUserDogtag from '../../../_common/user/AppUserDogtag.vue';
 import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
 import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
 import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
-import AppUserAvatar from '../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { User } from '../../../_common/user/user.model';
 import { kFontFamilyBase } from '../../../_styles/variables';
 import { isUserOnline } from '../../components/chat/client';
+import { CommentModal } from '../../components/comment/modal/modal.service';
 import { useGridStore } from '../../components/grid/grid-store';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
+import AppPageHeaderAvatar from '../../components/page-header/AppPageHeaderAvatar.vue';
 import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
-import AppUserAvatarBubble from '../../components/user/AppUserAvatarBubble.vue';
-import AppUserDogtag from '../../components/user/AppUserDogtag.vue';
 import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 
@@ -192,9 +190,11 @@ function createController() {
 }
 
 const ProfileThemeKey = 'profile';
+</script>
 
-export default {
-	...defineAppRouteOptions({
+<script lang="ts" setup>
+defineOptions(
+	defineAppRouteOptions({
 		cache: true,
 		lazy: true,
 		deps: { params: ['username'], query: ['intent'] },
@@ -219,11 +219,9 @@ export default {
 			}
 			return Api.sendRequest('/web/profile/@' + route.params.username);
 		},
-	}),
-};
-</script>
+	})
+);
 
-<script lang="ts" setup>
 const routeStore = createController();
 provide(Key, routeStore);
 
@@ -278,16 +276,6 @@ const isOnline = computed<null | boolean>(() => {
 
 	return isUserOnline(chat.value, routeUser.value.id);
 });
-
-const spotlightWrapper = AppUserAvatarBubble;
-const spotlightWrapperProps = computed<ComponentProps<typeof spotlightWrapper>>(() => ({
-	user: routeUser.value || null,
-	disableLink: true,
-	showFrame: true,
-	showVerified: true,
-	verifiedSize: 'big',
-	verifiedOffset: 0,
-}));
 
 const { isBootstrapped } = createAppRoute({
 	onInit() {
@@ -390,8 +378,6 @@ const headingUsernameStyles = computed<CSSProperties>(() => ({
 					:cover-max-height="400"
 					should-affix-nav
 					:autoscroll-anchor-key="autoscrollAnchorKey"
-					:spotlight-wrapper="spotlightWrapper"
-					:spotlight-wrapper-props="spotlightWrapperProps"
 				>
 					<RouterLink
 						:to="{
@@ -462,7 +448,7 @@ const headingUsernameStyles = computed<CSSProperties>(() => ({
 					</div>
 
 					<template #spotlight>
-						<AppUserAvatar :user="routeUser" />
+						<AppPageHeaderAvatar :user="routeUser" />
 					</template>
 
 					<template #nav>

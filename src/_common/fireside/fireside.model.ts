@@ -20,7 +20,6 @@ export class Fireside extends Collaboratable(Model) {
 	role: FiresideRole | null = null;
 	user_block?: UserBlock | null;
 	sticker_counts: StickerCount[] = [];
-	supporters: User[] = [];
 
 	hash!: string;
 	title!: string;
@@ -104,10 +103,6 @@ export class Fireside extends Collaboratable(Model) {
 
 		if (data.sticker_counts) {
 			this.sticker_counts = constructStickerCounts(data.sticker_counts);
-		}
-
-		if (data.supporters) {
-			this.supporters = User.populate(data.supporters);
 		}
 	}
 

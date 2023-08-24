@@ -1,5 +1,6 @@
 import { HidePrivateKeys, Primitives } from '../../utils/utils';
 import { Api, ApiProgressEvent, RequestOptions } from '../api/api.service';
+import { removeModel } from './model-store.service';
 
 /**
  * Helper type that looks like our model classes.
@@ -29,6 +30,12 @@ export type ModelData<T> = HidePrivateKeys<{
 			: never
 		: never;
 }>;
+
+/**
+ * When you only expect some model data to be passed, for example when creating
+ * or updating a model.
+ */
+export type PartialModelData<T> = Partial<ModelData<T>>;
 
 /**
  * When you don't know what data is returned from backend, but you know it's for
@@ -127,10 +134,10 @@ export class Model {
 	}
 
 	/**
-	 * You can call this after an API call that removed the model.
-	 * Will handle error codes.
+	 * You can call this after an API call that removed the model. Will handle
+	 * error codes and set the _removed flag on the model.
 	 */
-	processRemove(response: any): Promise<any> {
+	processRemove(response: any) {
 		if (response.notProcessed) {
 			return Promise.resolve(response);
 		}
@@ -143,7 +150,7 @@ export class Model {
 		return Promise.reject(response);
 	}
 
-	async $_save(url: string, field: string, options: ModelSaveRequestOptions = {}): Promise<any> {
+	async $_save(url: string, field: string, options: ModelSaveRequestOptions = {}) {
 		// Keep track of progress within the model.
 		if (!options.progress) {
 			options.progress = event => (this._progress = event);
@@ -153,13 +160,7 @@ export class Model {
 		return this.processUpdate(response, field);
 	}
 
-	async $_remove(url: string, options?: ModelSaveRequestOptions): Promise<any> {
-		// Always force a POST (passing in an object).
-		const response = await Api.sendRequest(
-			url,
-			options && options.data ? options.data : {},
-			options
-		);
-		return this.processRemove(response);
+	$_remove(url: string, options?: ModelSaveRequestOptions) {
+		return removeModel(this, url, options);
 	}
 }

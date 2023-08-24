@@ -236,7 +236,13 @@ function syncVolume() {
 	}
 
 	if (player.value.volume > 0) {
-		setVideoMuted(player.value, false);
+		setVideoMuted(
+			player.value,
+			false,
+			// Need to specify an unmuteVolume here, otherwise volume won't
+			// adjust when we're in the middle of a volume scrub.
+			{ unmuteVolume: player.value.volume }
+		);
 	}
 
 	if (player.value.volume !== videoElem.volume) {

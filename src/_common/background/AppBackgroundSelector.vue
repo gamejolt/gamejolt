@@ -81,7 +81,16 @@ function onSelect(item: Background | undefined) {
 				}"
 				@click="() => onSelect(item)"
 			>
-				<AppImgResponsive :src="item.media_item.mediaserver_url" />
+				<img
+					v-if="item.media_item.is_animated"
+					:src="item.media_item.img_url"
+					:style="{
+						width: `100%`,
+						height: `100%`,
+					}"
+					alt=""
+				/>
+				<AppImgResponsive v-else :src="item.media_item.mediaserver_url" />
 			</a>
 		</div>
 	</AppScrollScroller>

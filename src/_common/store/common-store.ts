@@ -41,6 +41,42 @@ export function createCommonStore() {
 	const coinBalance = ref(0);
 	const joltbuxBalance = ref(0);
 
+	/**
+	 * Shows a notification blip on the Backpack cbar item.
+	 */
+	const showInitialPackWatermark = ref(false);
+
+	function getInitialPackWatermarkStorageKey() {
+		if (!user.value) {
+			return null;
+		}
+		return `initial_pack_watermark/${user.value.id}`;
+	}
+
+	function getInitialPackWatermarkStorageValue() {
+		const key = getInitialPackWatermarkStorageKey();
+		if (!key) {
+			return false;
+		}
+		return localStorage.getItem(key) === '1';
+	}
+
+	function setInitialPackWatermarkStorageValue(value: boolean) {
+		showInitialPackWatermark.value = value;
+
+		const key = getInitialPackWatermarkStorageKey();
+		if (!key) {
+			console.error('Invalid key for initial pack watermark storage.');
+			return;
+		}
+
+		if (value) {
+			localStorage.setItem(key, '1');
+		} else {
+			localStorage.removeItem(key);
+		}
+	}
+
 	const isUserTimedOut = computed(() => {
 		return (
 			userBootstrapped.value && !!user.value && !!timeout.value && timeout.value.getIsActive()
@@ -52,6 +88,10 @@ export function createCommonStore() {
 			user.value.assign(newUser);
 		} else {
 			user.value = new User(newUser);
+
+			if (getInitialPackWatermarkStorageValue()) {
+				showInitialPackWatermark.value = true;
+			}
 		}
 
 		if (newUser.timeout) {
@@ -79,6 +119,7 @@ export function createCommonStore() {
 		reactionsData.value = new Map();
 		coinBalance.value = 0;
 		joltbuxBalance.value = 0;
+		showInitialPackWatermark.value = false;
 	}
 
 	function setConsents(newConsents: UserConsents) {
@@ -120,6 +161,8 @@ export function createCommonStore() {
 		redirect,
 		coinBalance,
 		joltbuxBalance,
+		showInitialPackWatermark,
+		setInitialPackWatermarkStorageValue,
 	};
 }
 

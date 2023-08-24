@@ -6,6 +6,7 @@ import { CommunityCompetitionEntry } from '../../../../../_common/community/comp
 import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import AppPagination from '../../../../../_common/pagination/pagination.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
@@ -16,7 +17,6 @@ import {
 	CommunityCompetitionEntryModal,
 	CommunityCompetitionEntryModalHashDeregister,
 } from '../../../../components/community/competition/entry/modal/modal.service';
-import { illNoComments } from '../../../../img/ill/illustrations';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,

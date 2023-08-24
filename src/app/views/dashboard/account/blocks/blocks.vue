@@ -1,7 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../_common/card/list/AppCardListAdd.vue';
@@ -11,9 +10,10 @@ import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-servi
 import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
 import { UserBlock } from '../../../../../_common/user/block/block.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
+import { arrayRemove } from '../../../../../utils/array';
 import FormUserBlock from '../../../../components/forms/user/block/block.vue';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 

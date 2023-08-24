@@ -29,7 +29,14 @@ import { QuestStore } from './quest';
 
 // the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
 type UnreadItemType = 'activity' | 'notifications';
-type TogglableLeftPane = '' | 'chat' | 'context' | 'library' | 'mobile' | 'backpack';
+export type TogglableLeftPane =
+	| ''
+	| 'chat'
+	| 'context'
+	| 'library'
+	| 'mobile'
+	| 'backpack'
+	| 'quests';
 
 export const AppStoreKey: InjectionKey<AppStore> = Symbol('app-store');
 

@@ -6,7 +6,7 @@ import { RouteLocationRedirect } from '../../utils/router';
 import { MaybeRef } from '../../utils/vue';
 import { ensureConfig } from '../config/config.service';
 import { HistoryCache } from '../history/cache/cache.service';
-import { setMetaTitle } from '../meta/meta-service';
+import { Meta, setMetaTitle } from '../meta/meta-service';
 import { Navigate } from '../navigate/navigate.service';
 import { PayloadError } from '../payload/payload-service';
 import { useCommonStore } from '../store/common-store';
@@ -250,11 +250,19 @@ export function createAppRoute({
 
 				return;
 			} else if (payload instanceof RouteLocationRedirect) {
+				const redirectionPath = router.resolve(payload.location).href;
+
 				// We want to clear out all current resolvers before doing the
 				// redirect. They will re-resolve after the route changes.
 				if (import.meta.env.SSR) {
-					redirect(router.resolve(payload.location).href);
+					redirect(redirectionPath);
 				} else {
+					// We set the canonical link here so that crawlers that are
+					// able to execute JS (Google) will hopefully see it before
+					// we redirect and will know about the true page. Just in
+					// case they don't follow the HIstory API as a redirect.
+					Meta.seo.canonicalLink = redirectionPath;
+
 					_clearActiveResolvers();
 					router.replace(payload.location);
 				}

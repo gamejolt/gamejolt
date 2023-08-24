@@ -10,9 +10,9 @@ import {
 	Ref,
 	toRefs,
 } from 'vue';
+import { styleChangeBg } from '../../../_styles/mixins';
 import { arrayRemove } from '../../../utils/array';
 import { debounceWithMaxTimeout } from '../../../utils/utils';
-import { styleBorderRadiusCircle, styleChangeBg } from '../../../_styles/mixins';
 import { Api } from '../../api/api.service';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../button/AppButton.vue';
@@ -392,10 +392,10 @@ const gridStyles: CSSProperties = {
 							<AppAspectRatio :ratio="1">
 								<div
 									:style="{
-										...styleBorderRadiusCircle,
 										...styleChangeBg('bg-subtle'),
 										width: `100%`,
 										height: `100%`,
+										borderRadius: `50%`,
 									}"
 								/>
 							</AppAspectRatio>

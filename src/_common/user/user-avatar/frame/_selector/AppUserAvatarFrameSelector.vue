@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { onUnmounted, PropType, ref, toRefs } from 'vue';
-import { styleBorderRadiusCircle } from '../../../../../_styles/mixins';
 import { useForm } from '../../../../form-vue/AppForm.vue';
 import {
 	createFormControl,
@@ -102,7 +101,7 @@ function isSelected(data: UserAvatarFrame | null) {
 						<AppUserAvatarImg
 							v-if="isSelected(data)"
 							:style="{
-								...styleBorderRadiusCircle,
+								borderRadius: `50%`,
 								backgroundColor: kThemeDark,
 							}"
 							:user="user"

@@ -15,10 +15,10 @@ import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserWallet } from '../../../_common/user/wallet/wallet.model';
 import { useAppStore } from '../../store';
 import { routeDashCreator } from '../../views/dashboard/creator/creator.route';
-import AppUserAvatarBubble from '../user/AppUserAvatarBubble.vue';
 import { UserTokenModal } from '../user/token-modal/token-modal.service';
 
 const { logout } = useAppStore();

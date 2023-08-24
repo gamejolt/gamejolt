@@ -3,6 +3,7 @@ import {
 	CommunityUserNotification,
 	NotificationType,
 } from '../community/user-notification/user-notification.model';
+import { CreatorExperienceLevel } from '../creator/experience/level.model';
 import { formatCurrency } from '../filters/currency';
 import { FiresideCommunity } from '../fireside/community/community.model';
 import { Fireside } from '../fireside/fireside.model';
@@ -572,6 +573,23 @@ export class NotificationText {
 
 			case Notification.TYPE_POLL_ENDED: {
 				return _process($gettext(`Poll's closed, results are in!`));
+			}
+
+			case Notification.TYPE_CREATOR_LEVEL_UP: {
+				if (notification.action_model instanceof CreatorExperienceLevel) {
+					return _process(
+						$gettextInterpolate(
+							`You've reached <b>Creator Level %{ level }</b>!`,
+							{ level: notification.action_model.level },
+							!plaintext
+						)
+					);
+				}
+				break;
+			}
+
+			case Notification.TYPE_UNLOCKED_AVATAR_FRAME: {
+				return _process($gettext(`You unlocked a new <em>avatar frame</em>!`));
 			}
 		}
 

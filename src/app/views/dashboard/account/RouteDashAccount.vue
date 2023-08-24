@@ -1,11 +1,9 @@
 <script lang="ts">
-import { computed, inject, InjectionKey, provide, ref } from 'vue';
+import { inject, InjectionKey, provide, ref } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
-import { bangRef } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAvatarFrame from '../../../../_common/avatar/AppAvatarFrame.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { ComponentProps } from '../../../../_common/component-helpers';
 import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppMediaItemCover from '../../../../_common/media-item/cover/AppMediaItemCover.vue';
@@ -14,7 +12,9 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import { bangRef } from '../../../../utils/vue';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
+import AppPageHeaderAvatar from '../../../components/page-header/AppPageHeaderAvatar.vue';
 import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
 import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
 import { routeDashAccountAddresses } from './addresses/addresses.route';
@@ -74,11 +74,6 @@ const { isBootstrapped } = createAppRoute({
 	},
 });
 
-const spotlightWrapper = AppAvatarFrame;
-const spotlightWrapperProps = computed<ComponentProps<typeof spotlightWrapper>>(() => ({
-	frame: user.value.avatar_frame || null,
-}));
-
 function showEditHeader() {
 	UserHeaderModal.show();
 }
@@ -100,8 +95,6 @@ function showEditAvatar() {
 			:override-slots="{
 				spotlight: !Screen.isXs,
 			}"
-			:spotlight-wrapper="spotlightWrapper"
-			:spotlight-wrapper-props="spotlightWrapperProps"
 		>
 			<h1>{{ heading }}</h1>
 
@@ -110,15 +103,17 @@ function showEditAvatar() {
 			</p>
 
 			<template v-if="!Screen.isXs" #spotlight>
-				<AppEditableOverlay
-					:disabled="route.name !== routeDashAccountEdit.name"
-					@click="showEditAvatar()"
-				>
-					<template #overlay>
-						{{ $gettext(`Change`) }}
-					</template>
-					<AppUserAvatar :user="user" />
-				</AppEditableOverlay>
+				<AppPageHeaderAvatar :user="user" disable-link>
+					<AppEditableOverlay
+						:disabled="route.name !== routeDashAccountEdit.name"
+						@click="showEditAvatar()"
+					>
+						<template #overlay>
+							{{ $gettext(`Change`) }}
+						</template>
+						<AppUserAvatar :user="user" />
+					</AppEditableOverlay>
+				</AppPageHeaderAvatar>
 			</template>
 		</AppPageHeader>
 

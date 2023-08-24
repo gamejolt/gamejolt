@@ -1,5 +1,6 @@
-import { reactive } from '@vue/reactivity';
+import { reactive } from 'vue';
 import { debounce, run } from '../../utils/utils';
+import { getDeviceType } from '../device/device.service';
 import { EventTopic } from '../system/event/event-topic';
 
 /**
@@ -35,7 +36,7 @@ class ScreenService {
 	isSm = false;
 	isMd = false;
 	/**
-	 * lg is the default true state.
+	 * lg is the default fallback.
 	 */
 	isLg = true;
 
@@ -115,18 +116,30 @@ class ScreenService {
 
 export const Screen = reactive(new ScreenService()) as ScreenService;
 
-if (!import.meta.env.SSR) {
-	// Check the breakpoints on app load.
-	_onResize();
+export function initScreenService() {
+	// We use their user agent to initialize our initial breakpoints so that mobile
+	// SSR renderers will correctly get the right styling. That is, if they set the
+	// user agent correctly.
+	const _deviceType = getDeviceType();
 
-	/**
-	 * This is used internally to check things every time window resizes.
-	 * We debounce this and afterwards fire the resizeChanges for everyone else.
-	 */
-	window.addEventListener(
-		'resize',
-		debounce(() => _onResize(), 250)
-	);
+	Screen.isXs = _deviceType === 'mobile';
+	Screen.isSm = _deviceType === 'tablet';
+	Screen.isMd = false;
+	Screen.isLg = !Screen.isXs && !Screen.isSm && !Screen.isMd;
+
+	if (!import.meta.env.SSR) {
+		// Check the breakpoints on app load.
+		_onResize();
+
+		/**
+		 * This is used internally to check things every time window resizes.
+		 * We debounce this and afterwards fire the resizeChanges for everyone else.
+		 */
+		window.addEventListener(
+			'resize',
+			debounce(() => _onResize(), 250)
+		);
+	}
 }
 
 async function _onResize() {

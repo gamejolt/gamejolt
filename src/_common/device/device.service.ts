@@ -43,17 +43,18 @@ const OS_ANDROID = ['android'];
 const ARCH_32 = ['68k', 'arm', 'avr', 'ia32', 'irix', 'mips', 'pa-risc', 'ppc', 'sparc'];
 const ARCH_64 = ['amd64', 'arm64', 'ia64', 'irix64', 'mips64', 'sparc64'];
 
-const _userAgent = ref<string>();
+let _userAgentOverride: string | undefined = undefined;
+
 const _os = ref<DeviceOs>();
 const _arch = ref<DeviceArch>();
 const _browser = ref<string>();
 const _deviceType = ref<DeviceType>();
 
-let _parserResult: null | IUAParser.IResult = null;
+let _parserResult: null | UAParser.IResult = null;
 
 function _getResult() {
 	if (!_parserResult) {
-		const parser = new UAParser(_userAgent.value);
+		const parser = new UAParser(_userAgentOverride);
 		_parserResult = parser.getResult();
 	}
 
@@ -65,7 +66,7 @@ export function setDeviceUserAgent(newUserAgent: string) {
 		throw new Error(`Already parsed the UA result.`);
 	}
 
-	_userAgent.value = newUserAgent;
+	_userAgentOverride = newUserAgent;
 }
 
 export function getDeviceOS(): DeviceOs {
@@ -85,7 +86,6 @@ export function getDeviceOS(): DeviceOs {
 
 	if (!_os.value) {
 		const result = _getResult();
-		console.log(result.os);
 		const osName = result.os.name ? result.os.name.toLowerCase() : 'windows';
 
 		if (OS_WINDOWS.indexOf(osName) !== -1) {
@@ -168,3 +168,23 @@ export function getDeviceType(): DeviceType {
 
 	return _deviceType.value;
 }
+
+/**
+ * Use this to specifically target GoogleBot's dynamic rendering. Note, this
+ * just does detection against user agent. It's not static, so it won't tree
+ * shake away anything in the build.
+ */
+export function isDynamicGoogleBot() {
+	if (GJ_IS_DESKTOP_APP || import.meta.env.SSR) {
+		return false;
+	}
+
+	if (_isDynamicGoogleBot === null) {
+		const result = _getResult();
+		_isDynamicGoogleBot = /googlebot|google-inspectiontool/i.test(result.ua);
+	}
+
+	return _isDynamicGoogleBot;
+}
+
+let _isDynamicGoogleBot: boolean | null = null;

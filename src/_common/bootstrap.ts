@@ -14,6 +14,7 @@ import AppLinkHelp from './link/AppLinkHelp.vue';
 import { initMetaService } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';
+import { initScreenService } from './screen/screen-service';
 import { CommonStoreKey, commonStore } from './store/common-store';
 import { ThemeStoreKey, createThemeStore } from './theme/theme.store';
 import { initTranslations } from './translate/translate.service';
@@ -63,6 +64,7 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 	// Try to start loading this as soon as possible.
 	ensureConfig();
 
+	initScreenService();
 	initTranslations(app);
 	initAnalytics({ commonStore });
 	Payload.init({ commonStore });

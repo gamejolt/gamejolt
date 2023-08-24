@@ -84,7 +84,14 @@ function initializeHttpServer(
 	const server = useHttps
 		? https.createServer(
 				{
-					pfx: readFileSync(path.join(projectRoot, 'development.gamejolt.com.pfx')),
+					pfx: readFileSync(
+						path.join(
+							projectRoot,
+							gjOpts.section === 'gameserver'
+								? 'development.gamejolt.net.pfx'
+								: 'development.gamejolt.com.pfx'
+						)
+					),
 					passphrase: 'yame yolt',
 				},
 				app

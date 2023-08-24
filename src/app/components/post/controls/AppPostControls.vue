@@ -9,13 +9,12 @@ import AppAnimElectricity from '../../../../_common/animation/AppAnimElectricity
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
+	commentStoreCount,
 	CommentStoreManagerKey,
 	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
-	setCommentCount,
 } from '../../../../_common/comment/comment-store';
-import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import { Community } from '../../../../_common/community/community.model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
@@ -34,6 +33,7 @@ import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion
 import { User } from '../../../../_common/user/user.model';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
 import { ActivityFeedView } from '../../activity/feed/view';
+import { CommentModal } from '../../comment/modal/modal.service';
 import { PostEditModal } from '../edit-modal/edit-modal-service';
 import AppPostControlsStats from './AppPostControlsStats.vue';
 import AppPostControlsMore from './more/more.vue';
@@ -107,7 +107,7 @@ const shouldShowFollowState = ref(
 const commentStore = ref<CommentStoreModel | null>(
 	lockCommentStore(commentManager, 'Fireside_Post', post.value.id)
 );
-setCommentCount(commentStore.value!, post.value.comment_count);
+commentStoreCount(commentStore.value!, post.value.comment_count);
 
 const isShowingFollow = computed(() => {
 	if (!shouldShowFollow.value || !shouldShowFollowState.value || !post.value) {

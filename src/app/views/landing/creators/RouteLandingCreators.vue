@@ -26,7 +26,7 @@ import {
 	illMobileKikkerstein,
 	illPointyThing,
 	illStreamingJelly,
-} from '../../../img/ill/illustrations';
+} from '../../../../_common/illustration/illustrations';
 import AppCreatorMooMoo from './AppCreatorMooMoo.vue';
 import socialImage from './social.png';
 import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';

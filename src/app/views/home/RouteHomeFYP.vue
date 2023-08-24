@@ -11,7 +11,7 @@ import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { AppActivityFeedLazy } from '../../components/lazy';
-import { illNoComments } from '../../img/ill/illustrations';
+import { illNoComments } from '../../../_common/illustration/illustrations';
 import { routeDiscoverHome } from '../discover/home/home.route';
 import { RouteActivityFeedController } from './RouteHomeFeed.vue';
 

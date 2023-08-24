@@ -16,13 +16,17 @@ const props = defineProps({
 	bleed: {
 		type: Boolean,
 	},
+	backdropStyle: {
+		type: Object as PropType<StyleValue>,
+		default: undefined,
+	},
 	backgroundStyle: {
 		type: Object as PropType<StyleValue>,
 		default: undefined,
 	},
 	fadeOpacity: {
 		type: Number,
-		default: 0.05,
+		default: 0.1,
 	},
 	/**
 	 * Will scroll the background infinitely in the chosen direction.
@@ -39,7 +43,8 @@ const props = defineProps({
 	},
 });
 
-const { background, darken, bleed, backgroundStyle, fadeOpacity, scrollDirection } = toRefs(props);
+const { background, darken, bleed, backdropStyle, backgroundStyle, fadeOpacity, scrollDirection } =
+	toRefs(props);
 
 const mediaItem = computed(() => background?.value?.media_item);
 const hasMedia = computed(() => !!mediaItem.value);
@@ -76,7 +81,7 @@ if (import.meta.env.SSR) {
 			:media-item="mediaItem"
 			class="-backdrop"
 			:class="{ '-bleed': bleed }"
-			:style="backgroundStyle"
+			:style="backdropStyle"
 		>
 			<div v-if="background" class="-stretch anim-fade-in">
 				<Transition name="fade">
@@ -91,12 +96,15 @@ if (import.meta.env.SSR) {
 								[`-scroll-${scrollDirection}`]: scrollDirection,
 							},
 						]"
-						:style="{
-							backgroundImage: loadedBackground.cssBackgroundImage,
-							backgroundRepeat: loadedBackground.cssBackgroundRepeat,
-							backgroundSize: loadedBackground.cssBackgroundSize,
-							backgroundPosition: loadedBackground.cssBackgroundPosition,
-						}"
+						:style="[
+							{
+								backgroundImage: loadedBackground.cssBackgroundImage,
+								backgroundRepeat: loadedBackground.cssBackgroundRepeat,
+								backgroundSize: loadedBackground.cssBackgroundSize,
+								backgroundPosition: loadedBackground.cssBackgroundPosition,
+							},
+							backgroundStyle || {},
+						]"
 					/>
 				</Transition>
 
@@ -170,18 +178,19 @@ if (import.meta.env.SSR) {
 	position: absolute
 	left: 0
 	right: 0
-	height: calc(min(80px, 50%))
+	height: 150px
+	max-height: 100%
 	background-repeat: no-repeat
 	background-size: cover
 
 .-fade-top
 	top: 0
-	background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25),  rgba(0, 0, 0, 0))
+	background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3),  rgba(0, 0, 0, 0))
 	background-position: top
 
 .-fade-bottom
 	bottom: 0
-	background-image: linear-gradient(to top, rgba(0, 0, 0, 0.25),  rgba(0, 0, 0, 0))
+	background-image: linear-gradient(to top, rgba(0, 0, 0, 0.3),  rgba(0, 0, 0, 0))
 	background-position: bottom
 
 .-inner

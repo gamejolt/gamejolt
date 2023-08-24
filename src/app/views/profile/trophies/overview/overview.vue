@@ -13,8 +13,8 @@ import { UserGameTrophy } from '../../../../../_common/user/trophy/game-trophy.m
 import { UserSiteTrophy } from '../../../../../_common/user/trophy/site-trophy.model';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import { TrophyModal } from '../../../../components/trophy/modal/modal.service';
-import AppTrophyThumbnail from '../../../../components/trophy/thumbnail/thumbnail.vue';
+import { TrophyModal } from '../../../../../_common/trophy/modal/modal.service';
+import AppTrophyThumbnail from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { useProfileRouteController } from '../../RouteProfile.vue';
 
 type TrophyEntry = {

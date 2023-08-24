@@ -21,7 +21,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { user } = useCommonStore();
+const { user, setInitialPackWatermarkStorageValue } = useCommonStore();
 const router = useRouter();
 
 const steps = [markRaw(FormOnboardingProfile), markRaw(FormOnboardingRealms)];
@@ -48,6 +48,7 @@ createAppRoute({
 
 		isSocialRegistration.value = payload.isSocialRegistration || false;
 		inviteUser.value = payload.inviteUser && new User(payload.inviteUser);
+		setInitialPackWatermarkStorageValue(true);
 	},
 });
 

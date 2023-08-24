@@ -16,14 +16,6 @@ import {
 	watch,
 } from 'vue';
 import { Router } from 'vue-router';
-import { arrayAssignAll, arrayUnique } from '../../../../utils/array';
-import { createLogger } from '../../../../utils/logging';
-import { objectPick } from '../../../../utils/object';
-import { getAbsoluteLink } from '../../../../utils/router';
-import { getCurrentServerTime, updateServerTimeOffset } from '../../../../utils/server-time';
-import { run, sleep } from '../../../../utils/utils';
-import { uuidv4 } from '../../../../utils/uuid';
-import { MaybeRef } from '../../../../utils/vue';
 import {
 	trackFiresideExtinguish,
 	trackFiresidePublish,
@@ -57,10 +49,7 @@ import {
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { getModel } from '../../../../_common/model/model-store.service';
-import checkPayloadActions, {
-	PayloadAction,
-	PayloadActionDataKey,
-} from '../../../../_common/payload/payload-actions.service';
+import handlePayloadActions from '../../../../_common/payload/payload-actions.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../../_common/share/share.service';
 import { onFiresideStickerPlaced, StickerStore } from '../../../../_common/sticker/sticker-store';
@@ -68,6 +57,14 @@ import { createStickerTargetController } from '../../../../_common/sticker/targe
 import { CommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { User } from '../../../../_common/user/user.model';
+import { arrayAssignAll, arrayUnique } from '../../../../utils/array';
+import { createLogger } from '../../../../utils/logging';
+import { objectPick } from '../../../../utils/object';
+import { getAbsoluteLink } from '../../../../utils/router';
+import { getCurrentServerTime, updateServerTimeOffset } from '../../../../utils/server-time';
+import { run, sleep } from '../../../../utils/utils';
+import { uuidv4 } from '../../../../utils/uuid';
+import { MaybeRef } from '../../../../utils/vue';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
 import { ChatRoom } from '../../chat/room';
 import {
@@ -259,13 +256,12 @@ export function createFiresideController(
 				}
 
 				if (unlockedPack) {
-					const type = PayloadAction.UNLOCK_STICKER_PACK;
-					checkPayloadActions({
+					handlePayloadActions({
 						actions: [
 							{
-								type,
+								type: 'unlock-sticker-pack',
 								data: {
-									[PayloadActionDataKey[type]]: unlockedPack,
+									user_sticker_pack: unlockedPack,
 								},
 							},
 						],
@@ -1182,7 +1178,7 @@ export function useFiresideController() {
 	return inject(FiresideControllerKey) || null;
 }
 
-export function provideFiresideController(c?: FiresideController | null) {
+export function provideFiresideController(c: FiresideController) {
 	provide(FiresideControllerKey, c);
 }
 
