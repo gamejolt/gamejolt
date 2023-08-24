@@ -1,5 +1,6 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
-import { defineConfig, UserConfig as ViteUserConfig } from 'vite';
+import { copyFileSync, readFileSync } from 'fs-extra';
+import { UserConfig as ViteUserConfig, defineConfig } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import {
@@ -11,7 +12,6 @@ import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { readFromViteEnv } from './scripts/build/vite-runner';
 
 const path = require('path') as typeof import('path');
-const fs = require('fs-extra') as typeof import('fs-extra');
 
 type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 
@@ -109,7 +109,7 @@ export default defineConfig(async () => {
 	let inputHtmlFile = indexHtml;
 	if (gjOpts.buildType !== 'serve-hmr' && gjOpts.section !== 'app') {
 		inputHtmlFile = path.resolve(indexHtml, '..', `${gjOpts.section}.html`);
-		fs.copyFileSync(indexHtml, inputHtmlFile);
+		copyFileSync(indexHtml, inputHtmlFile);
 	}
 
 	return {
@@ -172,7 +172,7 @@ export default defineConfig(async () => {
 							'<!-- gj:firebase-shenanigans -->',
 							`
 		<script>
-			${fs.readFileSync(
+			${readFileSync(
 				path.resolve(
 					__dirname,
 					'node_modules/first-input-delay/dist/first-input-delay.min.js'

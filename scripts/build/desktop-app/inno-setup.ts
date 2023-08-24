@@ -1,9 +1,9 @@
 import * as cp from 'child_process';
-import * as fs from 'fs-extra';
+import { readFile, writeFile } from 'fs-extra';
 import * as path from 'path';
 import { shellEscape } from '../utils';
 
-function execFile(cmd, args) {
+function execFile(cmd: string, args: string[]) {
 	return new Promise<void>(function (resolve, reject) {
 		cp.execFile(cmd, args, function (err, _stdout, stderr) {
 			if (err || stderr) {
@@ -23,7 +23,7 @@ export async function buildInnoSetup(options: {
 	certPw: string;
 }) {
 	const vendorDir = path.resolve(__dirname, 'vendor');
-	let script = await fs.readFile(path.join(vendorDir, 'gamejolt.iss'), {
+	let script = await readFile(path.join(vendorDir, 'gamejolt.iss'), {
 		encoding: 'utf8',
 	});
 
@@ -43,7 +43,7 @@ export async function buildInnoSetup(options: {
 		.replace(/\{\{INSTALLER_VERSION\}\}/g, installerVersion);
 
 	const scriptFilepath = path.join(vendorDir, 'tmp-gamejolt.iss');
-	await fs.writeFile(scriptFilepath, script, { encoding: 'utf8' });
+	await writeFile(scriptFilepath, script, { encoding: 'utf8' });
 
 	await execFile('iscc.exe', [
 		'/Ssigntool=' +

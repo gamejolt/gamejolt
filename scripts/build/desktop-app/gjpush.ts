@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra';
+import { chmod, copy, mkdirp, pathExists, readFile, rename } from 'fs-extra';
 import * as https from 'https';
 import type { RequestInit } from 'node-fetch';
 import fetch from 'node-fetch';
@@ -62,7 +62,7 @@ export class Gjpush {
 	}
 
 	async ensureGjpush() {
-		const exists = await fs.pathExists(this.gjpushExecutable);
+		const exists = await pathExists(this.gjpushExecutable);
 		if (exists && !(this.config.noCache ?? false)) {
 			console.log('Using cached gjpush executable');
 			return;
@@ -89,7 +89,7 @@ export class Gjpush {
 		}
 
 		console.log('Ensuring gjpush repo dir: ' + gjpushRepoDir);
-		await fs.mkdirp(gjpushRepoDir);
+		await mkdirp(gjpushRepoDir);
 
 		const gitStatus = 'git -C ' + shellEscape(gjpushRepoDir) + ' status';
 		const gitClone =
@@ -151,8 +151,8 @@ export class Gjpush {
 			await runShell(command, { args, cwd: gjpushRepoDir });
 		}
 
-		await fs.copy(gjpushExecutableFilepath!, this.gjpushExecutable);
-		await fs.chmod(this.gjpushExecutable, '0755');
+		await copy(gjpushExecutableFilepath!, this.gjpushExecutable);
+		await chmod(this.gjpushExecutable, '0755');
 	}
 
 	/**
@@ -162,7 +162,7 @@ export class Gjpush {
 		console.log('Downloading prebuilt gjpush executable');
 
 		// Ensure our cache dir.
-		await fs.mkdirp(path.resolve(this.config.cacheDir));
+		await mkdirp(path.resolve(this.config.cacheDir));
 
 		// In prod we fetch the binary from the github releases page. It is
 		// zipped on Github because we didn't want to have OS specific filenames
@@ -195,10 +195,10 @@ export class Gjpush {
 		);
 
 		await unzip(gjpushZip, this.config.cacheDir);
-		await fs.rename(path.join(this.config.cacheDir, localExecutable), this.gjpushExecutable);
+		await rename(path.join(this.config.cacheDir, localExecutable), this.gjpushExecutable);
 
 		// Ensure the gjpush binary is executable.
-		await fs.chmod(this.gjpushExecutable, '0755');
+		await chmod(this.gjpushExecutable, '0755');
 	}
 
 	/**
@@ -255,7 +255,7 @@ export class Gjpush {
 
 		// The build matching the filename we just uploaded is the build ID
 		// we're after.
-		const build = buildPayload.builds.data.find(i => {
+		const build = buildPayload.builds.data.find((i: any) => {
 			const filename = (i?.file?.filename ?? '') as string;
 			return filename.toLowerCase() === expectedBasename.toLowerCase();
 		});
@@ -290,9 +290,7 @@ export class Gjpush {
 
 		// Use self signed certificat when uploading to dev.
 		if (this.config.environment === 'development') {
-			const ca = await fs.readFile(
-				path.resolve(__dirname, '..', '..', '..', 'gamejoltCA.crt')
-			);
+			const ca = await readFile(path.resolve(__dirname, '..', '..', '..', 'gamejoltCA.crt'));
 			requestOpts.agent = new https.Agent({ ca });
 		}
 

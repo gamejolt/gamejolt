@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra';
+import { copy, mkdirp, move, pathExists, writeFile } from 'fs-extra';
 import * as path from 'path';
 import * as readdirp from 'readdirp';
 import plist from 'simple-plist';
@@ -70,7 +70,7 @@ export class NwBuilder {
 
 	async build() {
 		// Ensure our cache dir.
-		await fs.mkdirp(path.resolve(this.config.cacheDir));
+		await mkdirp(path.resolve(this.config.cacheDir));
 
 		await this._setupNwjs();
 
@@ -167,7 +167,7 @@ export class NwBuilder {
 		const cachePathArchive = path.resolve(this.config.cacheDir, filename);
 
 		// If we don't have it in cache yet, get it.
-		const exists = await fs.pathExists(cachePath);
+		const exists = await pathExists(cachePath);
 		if (!exists || (this.config.noCache ?? false)) {
 			const url = `https://dl.nwjs.io/${nwVersion}/${filename}`;
 			console.log(`Downloading NW.js binary: ${url}`);
@@ -185,7 +185,7 @@ export class NwBuilder {
 
 		console.log(`Copying NW.js to the build dir: ${this.buildDir}`);
 
-		await fs.copy(cachePath, this.buildDir);
+		await copy(cachePath, this.buildDir);
 	}
 
 	async _buildWindows() {
@@ -218,14 +218,14 @@ export class NwBuilder {
 
 		for (const icon of icons) {
 			console.log(`Copying macOS icon (${icon}) to ${iconPath}`);
-			await fs.copy(path.resolve(__dirname, 'icons/mac.icns'), path.resolve(iconPath, icon));
+			await copy(path.resolve(__dirname, 'icons/mac.icns'), path.resolve(iconPath, icon));
 		}
 
 		// Rename main app executable.
 		const oldExec = path.resolve(this._macAppDir, 'Contents', 'MacOS', 'nwjs');
 		const newExec = path.resolve(this._macAppDir, 'Contents', 'MacOS', this._appName);
 		console.log(`Renaming inner app executable: ${oldExec} -> ${newExec}`);
-		await fs.move(oldExec, newExec);
+		await move(oldExec, newExec);
 
 		// Gotta update all the plists for the inner apps that nwjs uses.
 		const infoPlistPaths = [
@@ -270,7 +270,7 @@ export class NwBuilder {
 
 			for (const { from, to } of renames) {
 				console.log(`Move nwjs helper: ${from} -> ${to}`);
-				await fs.move(from, to);
+				await move(from, to);
 			}
 
 			let helperBundleId = `${bundleId}.helper`;
@@ -313,10 +313,10 @@ export class NwBuilder {
 		from = this.config.frontendBuildDir;
 		to = packageDir;
 		console.log(`Copying app files: ${from} -> ${to}`);
-		await fs.copy(from, to);
+		await copy(from, to);
 
 		console.log(`Writing our package.json`);
-		await fs.writeFile(
+		await writeFile(
 			path.resolve(appDir, 'package.json'),
 			JSON.stringify(this.config.packageJson),
 			{
@@ -375,6 +375,6 @@ export class NwBuilder {
 		}
 
 		console.log(`Renaming executable to our app name: ${from} -> ${to}`);
-		await fs.move(from, to);
+		await move(from, to);
 	}
 }
