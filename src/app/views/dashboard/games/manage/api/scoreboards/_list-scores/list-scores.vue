@@ -2,10 +2,10 @@
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { formatDate } from '../../../../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../../../../_common/filters/number';
-import { GameScoreTable } from '../../../../../../../../_common/game/score-table/score-table.model';
+import { GameScoreTableModel } from '../../../../../../../../_common/game/score-table/score-table.model';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../../../../_common/popper/AppPopper.vue';
-import { UserGameScore } from '../../../../../../../../_common/user/game-score/game-score.model';
+import { UserGameScoreModel } from '../../../../../../../../_common/user/game-score/game-score.model';
 
 @Options({
 	components: {
@@ -13,17 +13,17 @@ import { UserGameScore } from '../../../../../../../../_common/user/game-score/g
 	},
 })
 export default class AppManageGameListScores extends Vue {
-	@Prop(Object) scoreTable!: GameScoreTable;
-	@Prop(Array) scores!: UserGameScore[];
+	@Prop(Object) scoreTable!: GameScoreTableModel;
+	@Prop(Array) scores!: UserGameScoreModel[];
 	@Prop(Boolean) isForUser?: boolean;
 
 	@Emit('remove')
-	emitRemove(_score: UserGameScore) {}
+	emitRemove(_score: UserGameScoreModel) {}
 
 	readonly formatDate = formatDate;
 	readonly formatNumber = formatNumber;
 
-	async removeScore(score: UserGameScore) {
+	async removeScore(score: UserGameScoreModel) {
 		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this score?')
 		);

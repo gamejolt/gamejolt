@@ -6,10 +6,10 @@ import AppCardListDraggable from '../../../../../../../_common/card/list/AppCard
 import {
 	$saveCommunityChannelSort,
 	$saveCommunityChannelSortArchived,
-	CommunityChannel,
+	CommunityChannelModel,
 } from '../../../../../../../_common/community/channel/channel.model';
 import {
-	Community,
+	CommunityModel,
 	CommunityPresetChannelType,
 } from '../../../../../../../_common/community/community.model';
 import { showErrorGrowl } from '../../../../../../../_common/growls/growls.service';
@@ -50,7 +50,7 @@ export default class RouteCommunitiesViewEditChannelsList extends LegacyRouteCom
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	activeItem: CommunityChannel | Community | CommunityPresetChannelType | null = null;
+	activeItem: CommunityChannelModel | CommunityModel | CommunityPresetChannelType | null = null;
 	isShowingChannelAdd = false;
 	isLoadingArchivedChannels = false;
 
@@ -66,7 +66,7 @@ export default class RouteCommunitiesViewEditChannelsList extends LegacyRouteCom
 		return this.community.hasPerms('community-channels');
 	}
 
-	async saveChannelSort(sortedChannels: CommunityChannel[]) {
+	async saveChannelSort(sortedChannels: CommunityChannelModel[]) {
 		// Reorder the channels to see the result of the ordering right away.
 		this.community.channels!.splice(0, this.community.channels!.length, ...sortedChannels);
 
@@ -79,7 +79,7 @@ export default class RouteCommunitiesViewEditChannelsList extends LegacyRouteCom
 		}
 	}
 
-	async saveChannelSortArchived(sortedChannels: CommunityChannel[]) {
+	async saveChannelSortArchived(sortedChannels: CommunityChannelModel[]) {
 		// Reorder the channels to see the result of the ordering right away.
 		this.routeStore.archivedChannels.splice(
 			0,
@@ -96,13 +96,13 @@ export default class RouteCommunitiesViewEditChannelsList extends LegacyRouteCom
 		}
 	}
 
-	onChannelAdded(channel: CommunityChannel) {
+	onChannelAdded(channel: CommunityChannelModel) {
 		this.community.channels!.push(channel);
 		// Close form after adding a channel.
 		this.isShowingChannelAdd = false;
 	}
 
-	onPresetListItemSaved(community: Community) {
+	onPresetListItemSaved(community: CommunityModel) {
 		// Since the preset channels are stored on the community, we have to let
 		// the routeStore know to update the community with the new information.
 		updateCommunity(this.routeStore, community);
@@ -112,7 +112,7 @@ export default class RouteCommunitiesViewEditChannelsList extends LegacyRouteCom
 		this.activeItem = item;
 	}
 
-	async onClickRemoveChannel(channel: CommunityChannel) {
+	async onClickRemoveChannel(channel: CommunityChannelModel) {
 		await CommunityRemoveChannelModal.show(this.community, channel);
 
 		if (channel._removed) {

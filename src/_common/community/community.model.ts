@@ -4,15 +4,15 @@ import { assertNever } from '../../utils/utils';
 import { CommunityJoinLocation, trackCommunityJoin } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import { Collaboratable, Perm } from '../collaborator/collaboratable';
-import { Game } from '../game/game.model';
-import { MediaItem } from '../media-item/media-item-model';
+import { GameModel } from '../game/game.model';
+import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
-import { Theme } from '../theme/theme.model';
-import { UserBlock } from '../user/block/block.model';
-import { CommunityChannel } from './channel/channel.model';
+import { ThemeModel } from '../theme/theme.model';
+import { UserBlockModel } from '../user/block/block.model';
+import { CommunityChannelModel } from './channel/channel.model';
 import noThumbImage from './no-thumb.png';
 
-export class Community extends Collaboratable(Model) {
+export class CommunityModel extends Collaboratable(Model) {
 	declare name: string;
 	declare path: string;
 	declare added_on: number;
@@ -20,14 +20,14 @@ export class Community extends Collaboratable(Model) {
 	declare description_content: string;
 	declare is_verified: boolean;
 	declare has_archived_channels: boolean | null;
-	declare thumbnail?: MediaItem;
-	declare header?: MediaItem;
-	declare theme?: Theme;
-	declare games?: Game[];
-	declare channels?: CommunityChannel[];
-	declare featured_background?: MediaItem;
-	declare all_background?: MediaItem;
-	declare user_block?: UserBlock;
+	declare thumbnail?: MediaItemModel;
+	declare header?: MediaItemModel;
+	declare theme?: ThemeModel;
+	declare games?: GameModel[];
+	declare channels?: CommunityChannelModel[];
+	declare featured_background?: MediaItemModel;
+	declare all_background?: MediaItemModel;
+	declare user_block?: UserBlockModel;
 	declare member_count: number;
 	declare is_member?: boolean;
 	declare perms?: Perm[];
@@ -36,40 +36,40 @@ export class Community extends Collaboratable(Model) {
 		super(data);
 
 		if (data.header) {
-			this.header = new MediaItem(data.header);
+			this.header = new MediaItemModel(data.header);
 		}
 
 		if (data.thumbnail) {
-			this.thumbnail = new MediaItem(data.thumbnail);
+			this.thumbnail = new MediaItemModel(data.thumbnail);
 		}
 
 		if (data.theme) {
-			this.theme = new Theme(data.theme);
+			this.theme = new ThemeModel(data.theme);
 		}
 
 		if (data.games) {
-			this.games = Game.populate(data.games);
+			this.games = GameModel.populate(data.games);
 		}
 
 		if (data.channels) {
-			this.channels = CommunityChannel.populate(data.channels);
+			this.channels = CommunityChannelModel.populate(data.channels);
 		}
 
 		if (data.featured_background) {
-			this.featured_background = new MediaItem(data.featured_background);
+			this.featured_background = new MediaItemModel(data.featured_background);
 		}
 
 		if (data.all_background) {
-			this.all_background = new MediaItem(data.all_background);
+			this.all_background = new MediaItemModel(data.all_background);
 		}
 
 		if (data.user_block) {
-			this.user_block = new UserBlock(data.user_block);
+			this.user_block = new UserBlockModel(data.user_block);
 		}
 	}
 
 	get img_thumbnail() {
-		if (this.thumbnail instanceof MediaItem) {
+		if (this.thumbnail instanceof MediaItemModel) {
 			return this.thumbnail.mediaserver_url;
 		}
 		return noThumbImage;
@@ -95,7 +95,7 @@ export class Community extends Collaboratable(Model) {
 	}
 
 	get isBlocked() {
-		return this.user_block instanceof UserBlock;
+		return this.user_block instanceof UserBlockModel;
 	}
 
 	get postableChannels() {
@@ -116,7 +116,7 @@ export class Community extends Collaboratable(Model) {
 		return this.channels.filter(i => i.visibility === 'published').length > 1;
 	}
 
-	channelRouteLocation(channel: CommunityChannel): RouteLocationDefinition {
+	channelRouteLocation(channel: CommunityChannelModel): RouteLocationDefinition {
 		return {
 			name: 'communities.view.channel',
 			params: {
@@ -197,7 +197,7 @@ export class Community extends Collaboratable(Model) {
 	}
 }
 
-export async function joinCommunity(community: Community, location?: CommunityJoinLocation) {
+export async function joinCommunity(community: CommunityModel, location?: CommunityJoinLocation) {
 	community.is_member = true;
 	++community.member_count;
 
@@ -232,7 +232,7 @@ export async function joinCommunity(community: Community, location?: CommunityJo
 	}
 }
 
-export async function leaveCommunity(community: Community, location?: CommunityJoinLocation) {
+export async function leaveCommunity(community: CommunityModel, location?: CommunityJoinLocation) {
 	community.is_member = false;
 	--community.member_count;
 
@@ -268,7 +268,7 @@ export function isEditingCommunity(route: RouteLocationNormalized) {
 }
 
 export function getCommunityChannelBackground(
-	community: Community,
+	community: CommunityModel,
 	presetType: CommunityPresetChannelType
 ) {
 	switch (presetType) {
@@ -284,14 +284,14 @@ export function getCommunityChannelBackground(
 /**
  * @deprecated we always auto-feature now
  */
-export function canCommunityFeatureFireside(_community: Community) {
+export function canCommunityFeatureFireside(_community: CommunityModel) {
 	return false;
 }
 
-export function canCommunityEjectFireside(community: Community) {
+export function canCommunityEjectFireside(community: CommunityModel) {
 	return !!community.hasPerms('community-firesides');
 }
 
-export function canCommunityCreateFiresides(community: Community) {
+export function canCommunityCreateFiresides(community: CommunityModel) {
 	return community.hasPerms('community-firesides');
 }

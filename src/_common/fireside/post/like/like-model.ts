@@ -1,12 +1,12 @@
 import { Model } from '../../../model/model.service';
 
-export class FiresidePostLike extends Model {
+export class FiresidePostLikeModel extends Model {
 	declare fireside_post_id: number;
 	declare user_id: number;
 	declare added_on: number;
 }
 
-export function saveFiresidePostLike(like: FiresidePostLike) {
+export function saveFiresidePostLike(like: FiresidePostLikeModel) {
 	if (like.id) {
 		throw new Error(`Can't update like data`);
 	}
@@ -20,7 +20,7 @@ export function saveFiresidePostLike(like: FiresidePostLike) {
 	});
 }
 
-export function removeFiresidePostLike(like: FiresidePostLike) {
+export function removeFiresidePostLike(like: FiresidePostLikeModel) {
 	return like.$_remove('/web/posts/unlike/' + like.fireside_post_id, {
 		detach: true,
 		ignorePayloadUser: true,

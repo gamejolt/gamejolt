@@ -8,11 +8,11 @@ import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop
 import { Screen } from '../../screen/screen-service';
 import AppVideo from '../../video/AppVideo.vue';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
-import { Game } from '../game.model';
+import { GameModel } from '../game.model';
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	hideMedia: {

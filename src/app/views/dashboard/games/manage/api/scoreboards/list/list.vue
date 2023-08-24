@@ -6,7 +6,7 @@ import AppCardList from '../../../../../../../../_common/card/list/AppCardList.v
 import AppCardListAdd from '../../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
-import { GameScoreTable } from '../../../../../../../../_common/game/score-table/score-table.model';
+import { GameScoreTableModel } from '../../../../../../../../_common/game/score-table/score-table.model';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	LegacyRouteComponent,
@@ -41,11 +41,11 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 		return this.routeStore.game!;
 	}
 
-	GameScoreTable = GameScoreTable;
+	GameScoreTable = GameScoreTableModel;
 
-	scoreTables: GameScoreTable[] = [];
+	scoreTables: GameScoreTableModel[] = [];
 	isAdding = false;
-	activeItem: GameScoreTable | null = null;
+	activeItem: GameScoreTableModel | null = null;
 
 	get currentSort() {
 		return this.scoreTables.map(item => item.id);
@@ -61,10 +61,10 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 	}
 
 	routeResolved($payload: any) {
-		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
+		this.scoreTables = GameScoreTableModel.populate($payload.scoreTables);
 	}
 
-	onTableAdded(table: GameScoreTable) {
+	onTableAdded(table: GameScoreTableModel) {
 		this.scoreTables.push(table);
 		this.isAdding = false;
 	}
@@ -73,12 +73,12 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 		this.activeItem = null;
 	}
 
-	saveSort(tables: GameScoreTable[]) {
+	saveSort(tables: GameScoreTableModel[]) {
 		this.scoreTables = tables;
-		GameScoreTable.$saveSort(this.game.id, this.currentSort);
+		GameScoreTableModel.$saveSort(this.game.id, this.currentSort);
 	}
 
-	async removeTable(table: GameScoreTable) {
+	async removeTable(table: GameScoreTableModel) {
 		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this scoreboard?')
 		);

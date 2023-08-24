@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import { formatCurrency } from '../../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../../_common/filters/date';
-import { Order } from '../../../../../../_common/order/order.model';
+import { OrderModel } from '../../../../../../_common/order/order.model';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
@@ -23,7 +23,7 @@ import { useAccountRouteController } from '../../RouteDashAccount.vue';
 export default class RouteDashAccountPurchasesList extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
-	orders: Order[] = [];
+	orders: OrderModel[] = [];
 
 	readonly formatDate = formatDate;
 	readonly formatCurrency = formatCurrency;
@@ -37,7 +37,7 @@ export default class RouteDashAccountPurchasesList extends LegacyRouteComponent 
 	}
 
 	routeResolved($payload: any) {
-		this.orders = Order.populate($payload.orders);
+		this.orders = OrderModel.populate($payload.orders);
 	}
 }
 </script>

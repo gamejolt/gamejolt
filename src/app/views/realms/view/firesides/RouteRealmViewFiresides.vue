@@ -2,8 +2,9 @@
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
-import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import { FiresideModel } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import { ModelData } from '../../../../../_common/model/model.service';
 import {
 	createAppRoute,
@@ -13,7 +14,6 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
 import AppFiresideAvatarBase from '../../../../components/fireside/avatar/AppFiresideAvatarBase.vue';
-import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import { RealmRoutePayload, useRealmRouteStore } from '../view.store';
 
 export default {
@@ -32,7 +32,7 @@ export default {
 
 <script lang="ts" setup>
 const { realm, processPayload } = useRealmRouteStore();
-const firesides = ref<Fireside[]>([]);
+const firesides = ref<FiresideModel[]>([]);
 
 const gridColumns = computed(() => {
 	if (Screen.isXs) {
@@ -48,7 +48,7 @@ const gridColumns = computed(() => {
 const placeholderCount = computed(() => gridColumns.value * 2);
 
 type RealmFiresidesPayload = {
-	firesides: ModelData<Fireside>[];
+	firesides: ModelData<FiresideModel>[];
 };
 
 const { isBootstrapped } = createAppRoute({
@@ -61,7 +61,7 @@ const { isBootstrapped } = createAppRoute({
 		const [realmPayload, firesidePayload] = resolved.payload;
 		processPayload(realmPayload);
 
-		firesides.value = Fireside.populate(firesidePayload.firesides);
+		firesides.value = FiresideModel.populate(firesidePayload.firesides);
 	},
 });
 </script>

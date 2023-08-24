@@ -14,27 +14,27 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../_common/game/game.model';
 import {
-	GamePackage,
+	GamePackageModel,
 	GamePackageVisibility,
 } from '../../../../../_common/game/package/package.model';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import {
-	SellablePricing,
+	SellablePricingModel,
 	getOriginalSellablePricing,
 	getPromotionalSellablePricing,
 } from '../../../../../_common/sellable/pricing/pricing.model';
-import { Sellable, SellableType } from '../../../../../_common/sellable/sellable.model';
+import { SellableModel, SellableType } from '../../../../../_common/sellable/sellable.model';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
 import { AppGamePerms } from '../../../game/perms/perms';
 
-type FormGamePackageModel = GamePackage & {
+type FormGamePackageModel = GamePackageModel & {
 	primary: boolean;
-	pricing_type: Sellable['type'];
+	pricing_type: SellableModel['type'];
 	price: number | null;
 	sale_timezone: string;
 	sale_start: number | null;
@@ -61,12 +61,12 @@ export default class FormGamePackage
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	@Prop(Object)
-	sellable!: Sellable;
+	sellable!: SellableModel;
 
-	modelClass = GamePackage as any;
+	modelClass = GamePackageModel as any;
 
 	commonStore = setup(() => useCommonStore());
 
@@ -83,12 +83,12 @@ export default class FormGamePackage
 	minPrice = 0;
 	isUserVerified = false;
 	isFangame = false;
-	pricings: SellablePricing[] = [];
-	originalPricing: SellablePricing | null = null;
-	promotionalPricing: SellablePricing | null = null;
+	pricings: SellablePricingModel[] = [];
+	originalPricing: SellablePricingModel | null = null;
+	promotionalPricing: SellablePricingModel | null = null;
 	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = {};
 
-	readonly GamePackage = GamePackage;
+	readonly GamePackage = GamePackageModel;
 	readonly formatDate = formatDate;
 	readonly formatCurrency = formatCurrency;
 	readonly GamePackageVisibilityPublic = GamePackageVisibility.Public;
@@ -193,7 +193,7 @@ export default class FormGamePackage
 		this.minPrice = payload.minPrice || 50;
 		this.isUserVerified = payload.isUserVerified;
 		this.isFangame = payload.isFangame;
-		this.pricings = SellablePricing.populate(payload.pricings);
+		this.pricings = SellablePricingModel.populate(payload.pricings);
 		this.originalPricing = null;
 		this.promotionalPricing = null;
 

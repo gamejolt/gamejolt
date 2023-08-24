@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../environment/environment.service';
-import { Game } from '../../game/game.model';
+import { GameModel } from '../../game/game.model';
 import AppGameThumbnailImg from '../../game/thumbnail/AppGameThumbnailImg.vue';
 import { WidgetCompiler } from '../widget-compiler.service';
 
@@ -12,13 +12,13 @@ import { WidgetCompiler } from '../widget-compiler.service';
 })
 export default class AppWidgetCompilerWidgetGameList extends Vue {
 	@Prop({ type: Array, default: () => [] })
-	games!: Game[];
+	games!: GameModel[];
 
 	get contentClass() {
 		return WidgetCompiler.getContentClass();
 	}
 
-	url(game: Game) {
+	url(game: GameModel) {
 		return game.site ? game.site.url : Environment.baseUrl + game.getUrl();
 	}
 }

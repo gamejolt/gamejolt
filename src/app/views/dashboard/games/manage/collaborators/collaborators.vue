@@ -6,7 +6,7 @@ import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
 import {
-	Collaborator,
+	CollaboratorModel,
 	CollaboratorRole,
 	CollaboratorStatus,
 } from '../../../../../../_common/collaborator/collaborator.model';
@@ -43,11 +43,11 @@ export default class RouteDashGamesManageCollaborators extends LegacyRouteCompon
 		return this.routeStore.game!;
 	}
 
-	collaborators: Collaborator[] = [];
-	activeCollaborator: Collaborator | null = null;
+	collaborators: CollaboratorModel[] = [];
+	activeCollaborator: CollaboratorModel | null = null;
 	isAdding = false;
 
-	readonly Collaborator = Collaborator;
+	readonly Collaborator = CollaboratorModel;
 	readonly CollaboratorStatusActive = CollaboratorStatus.Active;
 	readonly CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
 	readonly CollaboratorRoleCommunityManager = CollaboratorRole.CommunityManager;
@@ -63,13 +63,13 @@ export default class RouteDashGamesManageCollaborators extends LegacyRouteCompon
 	}
 
 	routeResolved($payload: any) {
-		this.collaborators = Collaborator.populate($payload.collaborators);
+		this.collaborators = CollaboratorModel.populate($payload.collaborators);
 		if (!this.collaborators.length) {
 			this.isAdding = true;
 		}
 	}
 
-	onAdded(collaborator: Collaborator) {
+	onAdded(collaborator: CollaboratorModel) {
 		this.isAdding = false;
 		this.collaborators.push(collaborator);
 	}
@@ -78,7 +78,7 @@ export default class RouteDashGamesManageCollaborators extends LegacyRouteCompon
 		this.activeCollaborator = null;
 	}
 
-	async remove(collaborator: Collaborator) {
+	async remove(collaborator: CollaboratorModel) {
 		const ret = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to remove this collaborator? They will no longer be able to make changes to the game.`

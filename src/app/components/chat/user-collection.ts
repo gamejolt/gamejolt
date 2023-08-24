@@ -1,9 +1,9 @@
 import { inject, InjectionKey, provide, toRaw } from 'vue';
-import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
 import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import { storeModel } from '../../../_common/model/model-store.service';
+import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
 import { ChatClient, isUserOnline } from './client';
-import { ChatRoom } from './room';
+import { ChatRoomModel } from './room';
 import { ChatUser } from './user';
 
 type RoomType = 'friend' | 'room' | 'fireside';
@@ -100,7 +100,7 @@ export class ChatUserCollection {
 		return this._byId.has(userId);
 	}
 
-	getByRoom(input: number | ChatRoom): ChatUser | undefined {
+	getByRoom(input: number | ChatRoomModel): ChatUser | undefined {
 		const roomId = typeof input === 'number' ? input : input.id;
 		return this._byRoomId.get(roomId);
 	}
@@ -358,6 +358,6 @@ function _getSortVal(chat: ChatClient, user: ChatUser) {
  * Sorts an array of users or rooms by the last time someone has made a message
  * in the room.
  */
-export function sortByLastMessageOn<T extends (ChatUser | ChatRoom)[]>(items: T): T {
+export function sortByLastMessageOn<T extends (ChatUser | ChatRoomModel)[]>(items: T): T {
 	return items.sort((a, b) => b.last_message_on - a.last_message_on);
 }

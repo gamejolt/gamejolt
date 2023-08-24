@@ -1,13 +1,13 @@
 <script lang="ts">
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
-import { Background } from '../../../../_common/background/background.model';
-import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../_common/community/community.model';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { BackgroundModel } from '../../../../_common/background/background.model';
+import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { BaseModal } from '../../../../_common/modal/base';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { VideoStatus } from '../../forms/post/_video/video.vue';
@@ -25,20 +25,20 @@ import AppPostAddPlaceholder from '../add-placeholder/AppPostAddPlaceholder.vue'
 })
 export default class AppPostEditModal extends mixins(BaseModal) {
 	@Prop({ type: [Object, async () => Object] })
-	postProvider!: FiresidePost | Promise<FiresidePost>;
+	postProvider!: FiresidePostModel | Promise<FiresidePostModel>;
 
 	@Prop(Object)
-	community?: Community;
+	community?: CommunityModel;
 
 	@Prop(Object)
-	channel?: CommunityChannel;
+	channel?: CommunityChannelModel;
 
 	@Prop(Object)
-	realm?: Realm;
+	realm?: RealmModel;
 
-	post: FiresidePost | null = null;
+	post: FiresidePostModel | null = null;
 	videoUploadStatus: VideoStatus = VideoStatus.IDLE;
-	background: Background | null = null;
+	background: BackgroundModel | null = null;
 
 	readonly Screen = Screen;
 
@@ -52,7 +52,7 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 
 	@Watch('postProvider', { immediate: true })
 	async postProviderSet() {
-		if (this.postProvider instanceof FiresidePost) {
+		if (this.postProvider instanceof FiresidePostModel) {
 			this.post = this.postProvider;
 		} else {
 			this.post = await this.postProvider;
@@ -61,7 +61,7 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 		this.background = this.post.background || null;
 	}
 
-	onSubmitted(post: FiresidePost) {
+	onSubmitted(post: FiresidePostModel) {
 		this.modal.resolve(post);
 	}
 
@@ -69,7 +69,7 @@ export default class AppPostEditModal extends mixins(BaseModal) {
 		this.videoUploadStatus = videoStatus;
 	}
 
-	onBackgroundChange(background?: Background) {
+	onBackgroundChange(background?: BackgroundModel) {
 		this.background = background || null;
 	}
 }

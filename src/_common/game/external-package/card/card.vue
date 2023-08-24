@@ -6,7 +6,7 @@ import AppCard from '../../../card/AppCard.vue';
 import { Navigate } from '../../../navigate/navigate.service';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { GameBuildPlatformSupportInfo } from '../../build/build.model';
-import { GameExternalPackage } from '../external-package.model';
+import { GameExternalPackageModel } from '../external-package.model';
 
 @Options({
 	components: {
@@ -19,7 +19,7 @@ import { GameExternalPackage } from '../external-package.model';
 })
 export default class AppGameExternalPackageCard extends Vue {
 	@Prop(Object)
-	package!: GameExternalPackage;
+	package!: GameExternalPackageModel;
 
 	showFullDescription = false;
 	canToggleDescription = false;

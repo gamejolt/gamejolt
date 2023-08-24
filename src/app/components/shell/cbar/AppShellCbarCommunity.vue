@@ -2,7 +2,7 @@
 import { computed, PropType, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { trackGotoCommunity } from '../../../../_common/analytics/analytics.service';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -21,7 +21,7 @@ import AppShellCbarItem from './AppShellCbarItem.vue';
 
 const props = defineProps({
 	community: {
-		type: Object as PropType<Community>,
+		type: Object as PropType<CommunityModel>,
 		required: true,
 	},
 });

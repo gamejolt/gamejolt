@@ -2,10 +2,10 @@
 import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { showAuthModal } from '../../../../_common/auth/auth-modal.service';
-import { Community } from '../../../../_common/community/community.model';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
+import { FiresideModel } from '../../../../_common/fireside/fireside.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
@@ -17,14 +17,14 @@ const props = defineProps({
 	 * Initial community to populate the content targets with.
 	 */
 	community: {
-		type: Object as PropType<Community>,
+		type: Object as PropType<CommunityModel>,
 		default: undefined,
 	},
 	/**
 	 * Initial realms to populate the content targets with.
 	 */
 	realms: {
-		type: Array as PropType<Realm[]>,
+		type: Array as PropType<RealmModel[]>,
 		default: () => [],
 	},
 });
@@ -54,7 +54,7 @@ async function onClick() {
 		community: community?.value,
 		realms: realms.value,
 	});
-	if (fireside instanceof Fireside) {
+	if (fireside instanceof FiresideModel) {
 		router.push(fireside.routeLocation);
 	}
 }

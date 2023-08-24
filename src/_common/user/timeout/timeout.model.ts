@@ -1,6 +1,6 @@
 import { Model } from '../../model/model.service';
 
-export class UserTimeout extends Model {
+export class UserTimeoutModel extends Model {
 	declare expires_on: number;
 	declare reason: string;
 	declare reason_template: string | null;

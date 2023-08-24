@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
-import { GameScoreTable } from '../../../../../../../_common/game/score-table/score-table.model';
+import { GameScoreTableModel } from '../../../../../../../_common/game/score-table/score-table.model';
 import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
 import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
 import { Popper } from '../../../../../../../_common/popper/popper.service';
@@ -15,7 +15,7 @@ import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.v
 import { vAppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
-import { UserGameScore } from '../../../../../../../_common/user/game-score/game-score.model';
+import { UserGameScoreModel } from '../../../../../../../_common/user/game-score/game-score.model';
 import AppScoreList from '../../../../../../components/score/list/list.vue';
 import AppScoreboardSelector from '../../../../../../components/score/scoreboard-selector/scoreboard-selector.vue';
 import { useGameRouteController } from '../../view.vue';
@@ -57,10 +57,10 @@ export default class RouteDiscoverGamesViewScoresList extends LegacyRouteCompone
 	routeStore = setup(() => useGameRouteController()!);
 	commonStore = setup(() => useCommonStore());
 
-	scoreTables: GameScoreTable[] = [];
-	scoreTable: GameScoreTable | null = null;
-	scores: UserGameScore[] = [];
-	userBestScore: UserGameScore | null = null;
+	scoreTables: GameScoreTableModel[] = [];
+	scoreTable: GameScoreTableModel | null = null;
+	scores: UserGameScoreModel[] = [];
+	userBestScore: UserGameScoreModel | null = null;
 	userScorePlacement = 0;
 	userScoreExperience = 0;
 
@@ -98,17 +98,17 @@ export default class RouteDiscoverGamesViewScoresList extends LegacyRouteCompone
 	}
 
 	routeResolved(payload: any) {
-		this.scoreTables = GameScoreTable.populate(payload.scoreTables);
-		this.scoreTable = payload.scoreTable ? new GameScoreTable(payload.scoreTable) : null;
-		this.scores = UserGameScore.populate(payload.scores);
+		this.scoreTables = GameScoreTableModel.populate(payload.scoreTables);
+		this.scoreTable = payload.scoreTable ? new GameScoreTableModel(payload.scoreTable) : null;
+		this.scores = UserGameScoreModel.populate(payload.scores);
 		this.userBestScore = payload.scoresUserBestScore
-			? new UserGameScore(payload.scoresUserBestScore)
+			? new UserGameScoreModel(payload.scoresUserBestScore)
 			: null;
 		this.userScorePlacement = payload.scoresUserScorePlacement || 0;
 		this.userScoreExperience = payload.scoresUserScoreExperience || 0;
 	}
 
-	changeTable(table: GameScoreTable) {
+	changeTable(table: GameScoreTableModel) {
 		Scroll.shouldAutoScroll = false;
 
 		this.$router.push({

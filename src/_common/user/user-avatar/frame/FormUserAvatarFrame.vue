@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { illNoCommentsSmall } from '../../../illustration/illustrations';
 import AppAlertBox from '../../../alert/AppAlertBox.vue';
 import { Api } from '../../../api/api.service';
 import AppForm, { createForm, FormController } from '../../../form-vue/AppForm.vue';
@@ -9,11 +8,12 @@ import AppFormGroup from '../../../form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../form-vue/AppFormStickySubmit.vue';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import AppIllustration from '../../../illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '../../../illustration/illustrations';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../store/common-store';
 import { $gettext } from '../../../translate/translate.service';
-import { UserAvatarFrame } from './frame.model';
 import AppUserAvatarFrameSelector from './_selector/AppUserAvatarFrameSelector.vue';
+import { UserAvatarFrameModel } from './frame.model';
 
 interface FormModel {
 	avatar_frame: number | undefined;
@@ -21,12 +21,12 @@ interface FormModel {
 
 const { user } = useCommonStore();
 
-const availableFrames = ref<UserAvatarFrame[]>([]);
+const availableFrames = ref<UserAvatarFrameModel[]>([]);
 
 const form: FormController<FormModel> = createForm({
 	loadUrl: '/web/dash/profile/save',
 	onLoad(payload) {
-		availableFrames.value = UserAvatarFrame.populate(payload.userAvatarFrames);
+		availableFrames.value = UserAvatarFrameModel.populate(payload.userAvatarFrames);
 
 		form.formModel.avatar_frame =
 			availableFrames.value.find(i => i.is_active)?.avatar_frame.id || 0;

@@ -12,9 +12,9 @@ import {
 } from '../../../../_common/form-vue/form.service';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 
-type FormModel = User & {
+type FormModel = UserModel & {
 	avatar_crop?: any;
 };
 
@@ -28,7 +28,7 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, FormOnBeforeSubmit {
-	modelClass = User;
+	modelClass = UserModel;
 	saveMethod = '$saveAvatar' as const;
 
 	maxFilesize = 0;

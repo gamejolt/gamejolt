@@ -9,8 +9,8 @@ import { Environment } from '../../../../../_common/environment/environment.serv
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { ForumPost } from '../../../../../_common/forum/post/post.model';
-import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { ForumPostModel } from '../../../../../_common/forum/post/post.model';
+import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppMessageThread from '../../../../../_common/message-thread/AppMessageThread.vue';
 import AppMessageThreadAdd from '../../../../../_common/message-thread/AppMessageThreadAdd.vue';
@@ -47,8 +47,8 @@ const InviewConfig = new ScrollInviewConfig();
 	},
 })
 export default class AppForumPostListItem extends Vue {
-	@Prop(Object) topic!: ForumTopic;
-	@Prop(Object) post!: ForumPost;
+	@Prop(Object) topic!: ForumTopicModel;
+	@Prop(Object) post!: ForumPostModel;
 	@Prop(Boolean) isReply!: boolean;
 	@Prop(Boolean) showReplies!: boolean;
 	@Prop(Boolean) isLastInThread?: boolean;
@@ -63,8 +63,8 @@ export default class AppForumPostListItem extends Vue {
 	isShowingReplies = false;
 
 	showingParent = false;
-	parent: ForumPost | null = null;
-	replies: ForumPost[] = [];
+	parent: ForumPostModel | null = null;
+	replies: ForumPostModel[] = [];
 	totalReplyCount = 0;
 
 	readonly InviewConfig = InviewConfig;
@@ -107,7 +107,7 @@ export default class AppForumPostListItem extends Vue {
 				{ noErrorRedirect: true }
 			);
 
-			this.replies = ForumPost.populate(payload.replies);
+			this.replies = ForumPostModel.populate(payload.replies);
 			this.totalReplyCount = payload.repliesCount || 0;
 
 			if (!this.isShowingReplies) {
@@ -140,7 +140,7 @@ export default class AppForumPostListItem extends Vue {
 					noErrorRedirect: true,
 				}
 			);
-			this.parent = new ForumPost(payload.parent);
+			this.parent = new ForumPostModel(payload.parent);
 			this.showingParent = true;
 		} catch (e) {
 			// The post was probably removed.

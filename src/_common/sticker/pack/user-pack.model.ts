@@ -1,18 +1,18 @@
 import { Model } from '../../model/model.service';
-import { StickerPack } from './pack.model';
+import { StickerPackModel } from './pack.model';
 
-export class UserStickerPack extends Model {
+export class UserStickerPackModel extends Model {
 	declare user_id: number;
 	declare added_on: number;
 	declare expires_on?: number;
 
-	declare sticker_pack: StickerPack;
+	declare sticker_pack: StickerPackModel;
 
-	constructor(data: Partial<UserStickerPack> = {}) {
+	constructor(data: Partial<UserStickerPackModel> = {}) {
 		super(data);
 
 		if (data.sticker_pack) {
-			this.sticker_pack = new StickerPack(data.sticker_pack);
+			this.sticker_pack = new StickerPackModel(data.sticker_pack);
 		}
 	}
 }

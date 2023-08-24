@@ -5,13 +5,13 @@ import {
 	removeFiresideHost,
 } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { User } from '../../../../../_common/user/user.model';
+import { UserModel } from '../../../../../_common/user/user.model';
 import { sleep } from '../../../../../utils/utils';
 import AppChatList from '../../../../components/chat/_list/AppChatList.vue';
 import { ChatUser } from '../../../../components/chat/user';
 import { FiresideController } from '../../../../components/fireside/controller/controller';
-import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
 import { useChatRoomMembers } from '../../../chat/room-channel';
 import AppFiresideHostsItem from './AppFiresideHostsItem.vue';
 
@@ -53,7 +53,7 @@ const canManageCohosts = computed(() => controller.value.canManageCohosts.value)
 const hosts = computed(() => controller.value.hosts.value);
 
 const users = computed(() => {
-	let list: (ChatUser | User)[] = [];
+	let list: (ChatUser | UserModel)[] = [];
 
 	switch (section.value) {
 		case 'currentHosts': {
@@ -62,7 +62,7 @@ const users = computed(() => {
 					result.push(user);
 				}
 				return result;
-			}, [] as User[]);
+			}, [] as UserModel[]);
 		}
 
 		case 'chat':
@@ -85,19 +85,19 @@ onUnmounted(() => {
 	isMounted.value = false;
 });
 
-function _isMe(user: User | ChatUser) {
+function _isMe(user: UserModel | ChatUser) {
 	return user.id === myUser.value?.id;
 }
 
-function isUserProcessing(user: ChatUser | User) {
+function isUserProcessing(user: ChatUser | UserModel) {
 	return processingIds.value.has(user.id);
 }
 
-function isHost(user: ChatUser | User) {
+function isHost(user: ChatUser | UserModel) {
 	return hosts.value.some(i => i.user.id === user.id);
 }
 
-async function processUser(user: ChatUser | User) {
+async function processUser(user: ChatUser | UserModel) {
 	if (isUserProcessing(user)) {
 		return;
 	}

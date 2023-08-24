@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../../../_common/modal/modal.service';
-import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
-import { Sticker } from '../../../../_common/sticker/sticker.model';
+import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
+import { StickerModel } from '../../../../_common/sticker/sticker.model';
 
 export async function showStickerEditModal({
 	sticker,
@@ -14,17 +14,17 @@ export async function showStickerEditModal({
 	/**
 	 * Existing sticker model to be edited.
 	 */
-	sticker: Sticker | null;
+	sticker: StickerModel | null;
 
 	/**
 	 * List of stickers we already have. New sticker will be added to this list.
 	 */
-	stickers?: Sticker[];
+	stickers?: StickerModel[];
 
 	/**
 	 * Function to run when we get a new sticker pack from the backend.
 	 */
-	updatePack?: (_payloadPack: StickerPack | undefined) => void;
+	updatePack?: (_payloadPack: StickerPackModel | undefined) => void;
 
 	/**
 	 * Our current emoji prefix.

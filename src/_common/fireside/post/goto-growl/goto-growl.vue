@@ -1,9 +1,9 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { RouteLocationRaw } from 'vue-router';
-import { Game } from '../../../game/game.model';
+import { GameModel } from '../../../game/game.model';
 import AppTimeAgo from '../../../time/AppTimeAgo.vue';
-import { FiresidePost, FiresidePostStatus } from '../post-model';
+import { FiresidePostModel, FiresidePostStatus } from '../post-model';
 
 export type Action = 'add' | 'publish' | 'scheduled-publish';
 
@@ -14,7 +14,7 @@ export type Action = 'add' | 'publish' | 'scheduled-publish';
 })
 export default class AppFiresidePostGotoGrowl extends Vue {
 	@Prop(Object)
-	post!: FiresidePost;
+	post!: FiresidePostModel;
 
 	@Prop(String)
 	action!: string;
@@ -72,7 +72,7 @@ export default class AppFiresidePostGotoGrowl extends Vue {
 	}
 
 	getFeedLocation(tab: string): RouteLocationRaw {
-		if (this.post.game instanceof Game) {
+		if (this.post.game instanceof GameModel) {
 			return {
 				name: 'dash.games.manage.devlog',
 				params: {

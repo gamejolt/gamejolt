@@ -2,12 +2,13 @@
 import { setup } from 'vue-class-component';
 import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../_common/community/community.model';
-import { EventItem } from '../../../../../_common/event-item/event-item.model';
+import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
+import { EventItemModel } from '../../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
@@ -15,10 +16,9 @@ import AppActivityFeedNewButton from '../../../../components/activity/feed/new-b
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
-import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
 import { useAppStore } from '../../../../store';
-import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
 import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
 
 @Options({
 	components: {
@@ -50,7 +50,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 		return this.store.communityStates;
 	}
 
-	@Emit('add-post') emitAddPost(_post: FiresidePost) {}
+	@Emit('add-post') emitAddPost(_post: FiresidePostModel) {}
 	@Emit('load-new') emitLoadNew() {}
 
 	readonly illNoCommentsSmall = illNoCommentsSmall;
@@ -139,7 +139,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 		this.emitLoadNew();
 	}
 
-	onPostUnfeatured(eventItem: EventItem, community: Community) {
+	onPostUnfeatured(eventItem: EventItemModel, community: CommunityModel) {
 		if (
 			this.feed &&
 			this.channel === this.routeStore.frontpageChannel &&
@@ -149,13 +149,13 @@ export default class AppCommunitiesViewFeed extends Vue {
 		}
 	}
 
-	onPostRejected(eventItem: EventItem, community: Community) {
+	onPostRejected(eventItem: EventItemModel, community: CommunityModel) {
 		if (this.feed && this.community.id === community.id) {
 			this.feed.remove([eventItem]);
 		}
 	}
 
-	onPostMovedChannel(eventItem: EventItem, movedTo: CommunityChannel) {
+	onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannelModel) {
 		if (
 			this.feed &&
 			this.community.id === movedTo.community_id &&

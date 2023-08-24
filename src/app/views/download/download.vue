@@ -10,9 +10,9 @@ import {
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
 import { isDynamicGoogleBot } from '../../../_common/device/device.service';
-import { GameBuild } from '../../../_common/game/build/build.model';
-import { Game } from '../../../_common/game/game.model';
-import { GameSong } from '../../../_common/game/song/song.model';
+import { GameBuildModel } from '../../../_common/game/build/build.model';
+import { GameModel } from '../../../_common/game/game.model';
+import { GameSongModel } from '../../../_common/game/song/song.model';
 import AppGameThumbnail from '../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { HistoryTick } from '../../../_common/history-tick/history-tick-service';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
@@ -79,10 +79,10 @@ export default class RouteDownload extends LegacyRouteComponent {
 	appPromotionStore = shallowSetup(() => useAppPromotionStore());
 
 	started = false;
-	game: Game = null as any;
-	build: null | GameBuild = null;
-	ownerGames: Game[] = [];
-	recommendedGames: Game[] = [];
+	game: GameModel = null as any;
+	build: null | GameBuildModel = null;
+	ownerGames: GameModel[] = [];
+	recommendedGames: GameModel[] = [];
 
 	readonly Screen = Screen;
 
@@ -114,12 +114,12 @@ export default class RouteDownload extends LegacyRouteComponent {
 	}
 
 	async routeResolved($payload: any) {
-		this.game = new Game($payload.game);
-		this.build = $payload.build ? new GameBuild($payload.build) : null;
+		this.game = new GameModel($payload.game);
+		this.build = $payload.build ? new GameBuildModel($payload.build) : null;
 		this.started = false;
 
-		this.ownerGames = Game.populate($payload.ownerGames);
-		this.recommendedGames = Game.populate($payload.recommendedGames);
+		this.ownerGames = GameModel.populate($payload.ownerGames);
+		this.recommendedGames = GameModel.populate($payload.recommendedGames);
 		this._setAdSettings();
 
 		// Don't download on SSR.
@@ -134,7 +134,7 @@ export default class RouteDownload extends LegacyRouteComponent {
 				? this.build!.getDownloadUrl({
 						forceDownload: true,
 				  })
-				: GameSong.getSoundtrackDownloadUrl(this.game.id),
+				: GameSongModel.getSoundtrackDownloadUrl(this.game.id),
 
 			// Wait at least this long before spawning the download.
 			sleep(DownloadDelay),

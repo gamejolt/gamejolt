@@ -25,32 +25,32 @@ import { Navigate } from '../../../navigate/navigate.service';
 import { OrderPaymentMethod } from '../../../order/payment/payment.model';
 import AppPopper from '../../../popper/AppPopper.vue';
 import { Screen } from '../../../screen/screen-service';
-import { Sellable, SellableType } from '../../../sellable/sellable.model';
+import { SellableModel, SellableType } from '../../../sellable/sellable.model';
 import { useCommonStore } from '../../../store/common-store';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { $gettext, $gettextInterpolate } from '../../../translate/translate.service';
-import { GameBuild } from '../../build/build.model';
-import { Game } from '../../game.model';
-import { GamePackage } from '../package.model';
+import { GameBuildModel } from '../../build/build.model';
+import { GameModel } from '../../game.model';
+import { GamePackageModel } from '../package.model';
 
 type FormModel = any;
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	gamePackage: {
-		type: Object as PropType<GamePackage>,
+		type: Object as PropType<GamePackageModel>,
 		required: true,
 	},
 	build: {
-		type: Object as PropType<GameBuild>,
+		type: Object as PropType<GameBuildModel>,
 		required: false,
 		default: null,
 	},
 	sellable: {
-		type: Object as PropType<Sellable>,
+		type: Object as PropType<SellableModel>,
 		required: true,
 	},
 	operation: {

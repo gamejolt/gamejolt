@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { GameScoreTable } from '../../../../_common/game/score-table/score-table.model';
+import { GameScoreTableModel } from '../../../../_common/game/score-table/score-table.model';
 import AppListGroupSelector from '../../../../_common/list-group/selector/selector.vue';
 
 @Options({
@@ -9,11 +9,11 @@ import AppListGroupSelector from '../../../../_common/list-group/selector/select
 	},
 })
 export default class AppScoreboardSelector extends Vue {
-	@Prop(Object) currentTable!: GameScoreTable;
-	@Prop(Array) tables!: GameScoreTable[];
+	@Prop(Object) currentTable!: GameScoreTableModel;
+	@Prop(Array) tables!: GameScoreTableModel[];
 
 	@Emit('select')
-	emitSelect(_table: GameScoreTable) {}
+	emitSelect(_table: GameScoreTableModel) {}
 }
 </script>
 

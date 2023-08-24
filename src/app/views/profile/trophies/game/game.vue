@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { Game } from '../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import {
 	LegacyRouteComponent,
@@ -13,7 +13,7 @@ import AppTrophyCard from '../../../../../_common/trophy/AppTrophyCard.vue';
 import AppTrophyCompletion from '../../../../../_common/trophy/AppTrophyCompletion.vue';
 import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
+import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { RouteLocationRedirect } from '../../../../../utils/router';
 import { useProfileRouteController } from '../../RouteProfile.vue';
 
@@ -55,8 +55,8 @@ export default class RouteProfileTrophiesGame extends LegacyRouteComponent {
 	routeStore = setup(() => useProfileRouteController()!);
 	commonStore = setup(() => useCommonStore());
 
-	game: Game | null = null;
-	trophies: UserBaseTrophy[] = [];
+	game: GameModel | null = null;
+	trophies: UserBaseTrophyModel[] = [];
 	completion: CompletionData | null = null;
 
 	get user() {
@@ -92,7 +92,7 @@ export default class RouteProfileTrophiesGame extends LegacyRouteComponent {
 	}
 
 	routeResolved(payload: any) {
-		this.game = new Game(payload.game);
+		this.game = new GameModel(payload.game);
 		if (payload.trophies) {
 			this.trophies = populateTrophies(payload.trophies);
 		}

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs, useSlots } from 'vue';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItem } from '../../../../_common/media-item/media-item-model';
+import { MediaItemModel } from '../../../../_common/media-item/media-item-model';
 import AppRealmThumbnail from '../../../../_common/realm/AppRealmThumbnail.vue';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
 const props = defineProps({
@@ -16,15 +16,15 @@ const props = defineProps({
 		type: Boolean,
 	},
 	avatarMediaItem: {
-		type: Object as PropType<MediaItem>,
+		type: Object as PropType<MediaItemModel>,
 		default: undefined,
 	},
 	community: {
-		type: Object as PropType<Community>,
+		type: Object as PropType<CommunityModel>,
 		default: undefined,
 	},
 	realm: {
-		type: Object as PropType<Realm>,
+		type: Object as PropType<RealmModel>,
 		default: undefined,
 	},
 	borderHighlight: {

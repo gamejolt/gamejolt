@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
-import { Site, SiteStatus } from '../../../../_common/site/site-model';
+import { SiteModel, SiteStatus } from '../../../../_common/site/site-model';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppSitesManagePageDomain from './domain.vue';
 import AppSitesManagePageStatic from './static.vue';
@@ -20,8 +20,8 @@ import AppSitesManagePageTemplate from './template.vue';
 	},
 })
 export default class AppSitesManagePage extends Vue {
-	@Prop(Object) site!: Site;
-	@Prop(Object) game?: Game;
+	@Prop(Object) site!: SiteModel;
+	@Prop(Object) game?: GameModel;
 
 	get tab() {
 		return this.$route.params.siteTab || 'template';

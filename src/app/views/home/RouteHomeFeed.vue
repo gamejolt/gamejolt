@@ -18,8 +18,8 @@ import {
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { configHomeFeedSwitcher } from '../../../_common/config/config.service';
-import { Fireside } from '../../../_common/fireside/fireside.model';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { FiresideModel } from '../../../_common/fireside/fireside.model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import AppInviteCard from '../../../_common/invite/AppInviteCard.vue';
 import {
 	asyncRouteLoader,
@@ -38,7 +38,7 @@ import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
-import { FeaturedItem } from '../../components/featured-item/featured-item.model';
+import { FeaturedItemModel } from '../../components/featured-item/featured-item.model';
 import { onFiresideStart } from '../../components/grid/client.service';
 import { useGridStore } from '../../components/grid/grid-store';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
@@ -80,10 +80,10 @@ interface FiresideFeedData {
 	loadUrl: string;
 	isLoading: boolean;
 	isBootstrapped: boolean;
-	featuredFireside: Fireside | undefined;
-	userFireside: Fireside | undefined;
-	eventFireside: Fireside | undefined;
-	firesides: Fireside[];
+	featuredFireside: FiresideModel | undefined;
+	userFireside: FiresideModel | undefined;
+	eventFireside: FiresideModel | undefined;
+	firesides: FiresideModel[];
 	refresh: () => Promise<void>;
 }
 
@@ -139,7 +139,7 @@ const games = ref<DashGame[]>([]);
 const gameFilterQuery = ref('');
 const isShowingAllGames = ref(false);
 
-const featuredItem = ref<FeaturedItem>();
+const featuredItem = ref<FeaturedItemModel>();
 const isLoadingQuests = ref(true);
 
 const homeFiresideData = ref(
@@ -294,7 +294,7 @@ const appRoute = createAppRoute({
 		trackExperimentEngagement(configHomeFeedSwitcher);
 
 		featuredItem.value = payload.featuredItem
-			? new FeaturedItem(payload.featuredItem)
+			? new FeaturedItemModel(payload.featuredItem)
 			: undefined;
 
 		games.value = (payload.ownerGames as DashGame[])
@@ -309,7 +309,7 @@ const appRoute = createAppRoute({
 		);
 
 		if (payload.eventFireside) {
-			homeFiresideData.value.eventFireside = new Fireside(payload.eventFireside);
+			homeFiresideData.value.eventFireside = new FiresideModel(payload.eventFireside);
 		}
 
 		afterRouteChange();
@@ -354,7 +354,7 @@ function _checkGameFilter(game: DashGame) {
 	return false;
 }
 
-function onPostAdded(post: FiresidePost) {
+function onPostAdded(post: FiresidePostModel) {
 	let feed: ActivityFeedView | null = null;
 	if (realmFeedData.value?.feed) {
 		feed = realmFeedData.value.feed;
@@ -384,10 +384,12 @@ async function refreshHomeFiresides(data: FiresideFeedData) {
 		const payload = await Api.sendRequest(data.loadUrl, undefined, {
 			detach: true,
 		});
-		data.userFireside = payload.userFireside ? new Fireside(payload.userFireside) : undefined;
-		data.firesides = payload.firesides ? Fireside.populate(payload.firesides) : [];
+		data.userFireside = payload.userFireside
+			? new FiresideModel(payload.userFireside)
+			: undefined;
+		data.firesides = payload.firesides ? FiresideModel.populate(payload.firesides) : [];
 		data.featuredFireside = payload.featuredFireside
-			? new Fireside(payload.featuredFireside)
+			? new FiresideModel(payload.featuredFireside)
 			: undefined;
 	} catch (error) {
 		console.error('Failed to refresh fireside data.', error);

@@ -5,7 +5,7 @@ import { formatNumber } from '../../../../_common/filters/number';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import { UserGameScore } from '../../../../_common/user/game-score/game-score.model';
+import { UserGameScoreModel } from '../../../../_common/user/game-score/game-score.model';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 
 @Options({
@@ -17,7 +17,7 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vu
 	},
 })
 export default class AppScoreList extends Vue {
-	@Prop(Array) scores!: UserGameScore[];
+	@Prop(Array) scores!: UserGameScoreModel[];
 	@Prop(Number) startRank?: number;
 	@Prop(Number) step?: number;
 

@@ -1,23 +1,23 @@
 import { HistoryTick } from '../../../history-tick/history-tick-service';
-import { MediaItem, MediaItemType } from '../../../media-item/media-item-model';
+import { MediaItemModel, MediaItemType } from '../../../media-item/media-item-model';
 import { Model } from '../../../model/model.service';
 import { VideoSourceArray } from '../../../video/AppVideo.vue';
 
 //** Our preference for which manifest type will try loading first. */
 const manifestPreferences = ['m3u8', 'mpd'];
 
-export class FiresidePostVideo extends Model {
+export class FiresidePostVideoModel extends Model {
 	declare fireside_post_id: number;
 	declare thumbnail_url: string;
 	declare view_count: number;
 	declare is_processing: boolean;
-	media: MediaItem[] = [];
+	media: MediaItemModel[] = [];
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.media) {
-			this.media = MediaItem.populate(data.media);
+			this.media = MediaItemModel.populate(data.media);
 		}
 	}
 
@@ -36,7 +36,7 @@ export class FiresidePostVideo extends Model {
 	}
 
 	get manifestSources(): VideoSourceArray {
-		const getManifestPreference = (item: MediaItem) => {
+		const getManifestPreference = (item: MediaItemModel) => {
 			const ext = item.filename.substring(item.filename.lastIndexOf('.') + 1);
 			const index = manifestPreferences.findIndex(i => i === ext);
 			// If we don't know the manifest filetype, just push it last.
@@ -56,6 +56,6 @@ export class FiresidePostVideo extends Model {
 	}
 }
 
-export function $viewPostVideo(video: FiresidePostVideo) {
+export function $viewPostVideo(video: FiresidePostVideoModel) {
 	return HistoryTick.sendBeacon('fireside-post-video', video.id);
 }

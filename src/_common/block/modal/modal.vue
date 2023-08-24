@@ -2,7 +2,7 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { showInfoGrowl } from '../../growls/growls.service';
 import { BaseModal } from '../../modal/base';
-import { User } from '../../user/user.model';
+import { UserModel } from '../../user/user.model';
 import AppBlockForm from '../form/form.vue';
 
 @Options({
@@ -12,7 +12,7 @@ import AppBlockForm from '../form/form.vue';
 })
 export default class AppReportModal extends mixins(BaseModal) {
 	@Prop(Object)
-	user!: User;
+	user!: UserModel;
 
 	onSubmittedBlock() {
 		showInfoGrowl(

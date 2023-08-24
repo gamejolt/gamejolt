@@ -1,6 +1,6 @@
 import { Model } from '../model/model.service';
 
-export class ReferralEntry extends Model {
+export class ReferralEntryModel extends Model {
 	user_id!: number;
 	referral_key!: string;
 

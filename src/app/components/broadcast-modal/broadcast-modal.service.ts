@@ -1,6 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 import { Api } from '../../../_common/api/api.service';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import { showModal } from '../../../_common/modal/modal.service';
 import { Screen } from '../../../_common/screen/screen-service';
 import { SettingBroadcastModal } from '../../../_common/settings/settings.service';
@@ -31,14 +31,14 @@ export class BroadcastModal {
 		);
 
 		if (payload.broadcasts.length) {
-			const posts = FiresidePost.populate(payload.broadcasts);
+			const posts = FiresidePostModel.populate(payload.broadcasts);
 			this.show(posts);
 		}
 
 		localStorage[this._key()] = Date.now();
 	}
 
-	private static async show(posts: FiresidePost[]) {
+	private static async show(posts: FiresidePostModel[]) {
 		await showModal({
 			modalId: 'Broadcast',
 			component: defineAsyncComponent(() => import('./AppBroadcastModal.vue')),

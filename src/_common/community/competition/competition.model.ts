@@ -1,4 +1,4 @@
-import { MediaItem } from '../../media-item/media-item-model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
 
 export type CompetitionPeriod = 'pre-comp' | 'running' | 'voting' | 'post-comp';
@@ -13,7 +13,7 @@ export const CompetitionPeriodPostComp = 3;
 
 const PeriodNumerics: CompetitionPeriod[] = ['pre-comp', 'running', 'voting', 'post-comp'];
 
-export class CommunityCompetition extends Model {
+export class CommunityCompetitionModel extends Model {
 	declare added_on: number;
 	declare timezone: string;
 	declare starts_on: number;
@@ -26,7 +26,7 @@ export class CommunityCompetition extends Model {
 	declare has_awards: boolean;
 	declare are_results_calculated: boolean;
 	declare entry_count: number;
-	declare header?: MediaItem;
+	declare header?: MediaItemModel;
 
 	get period(): CompetitionPeriod {
 		const now = Date.now();
@@ -65,7 +65,7 @@ export class CommunityCompetition extends Model {
 		super(data);
 
 		if (data.header) {
-			this.header = new MediaItem(data.header);
+			this.header = new MediaItemModel(data.header);
 		}
 	}
 

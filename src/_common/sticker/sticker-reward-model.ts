@@ -1,12 +1,12 @@
 import { Model } from '../model/model.service';
-import { Sticker } from './sticker.model';
+import { StickerModel } from './sticker.model';
 
-export class StickerReward extends Model {
+export class StickerRewardModel extends Model {
 	constructor(data: any = {}) {
 		super(data);
 	}
 
 	declare id: number;
-	declare sticker: Sticker;
+	declare sticker: StickerModel;
 	declare amount: number;
 }

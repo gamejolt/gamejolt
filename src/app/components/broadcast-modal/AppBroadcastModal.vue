@@ -2,11 +2,11 @@
 import { computed, PropType, toRefs } from 'vue';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model';
 import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { MediaItem } from '../../../_common/media-item/media-item-model';
+import { MediaItemModel } from '../../../_common/media-item/media-item-model';
 import AppModal from '../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../_common/modal/modal.service';
 import AppResponsiveDimensions from '../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
@@ -22,7 +22,7 @@ import AppPostControls from '../post/controls/AppPostControls.vue';
 
 const props = defineProps({
 	posts: {
-		type: Array as PropType<FiresidePost[]>,
+		type: Array as PropType<FiresidePostModel[]>,
 		required: true,
 	},
 });
@@ -37,7 +37,7 @@ const stickerTargetController = createStickerTargetController(post.value, {
 
 const video = computed(() => post.value.videos[0]);
 
-function getVideoController(item: MediaItem) {
+function getVideoController(item: MediaItemModel) {
 	const sources = {
 		mp4: item.mediaserver_url_mp4,
 		webm: item.mediaserver_url_webm,

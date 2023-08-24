@@ -1,5 +1,5 @@
 import { Model } from '../../model/model.service';
-import { Community } from '../community.model';
+import { CommunityModel } from '../community.model';
 
 export const enum CommunityUserNotificationType {
 	POSTS_MOVE = 'posts/move',
@@ -7,8 +7,8 @@ export const enum CommunityUserNotificationType {
 	FIRESIDES_EJECT = 'firesides/eject',
 }
 
-export class CommunityUserNotification extends Model {
-	declare community: Community;
+export class CommunityUserNotificationModel extends Model {
+	declare community: CommunityModel;
 	declare type: CommunityUserNotificationType;
 	declare added_on: number;
 	declare reason: string | null;
@@ -18,7 +18,7 @@ export class CommunityUserNotification extends Model {
 		super(data);
 
 		if (data.community) {
-			this.community = new Community(data.community);
+			this.community = new CommunityModel(data.community);
 		}
 	}
 

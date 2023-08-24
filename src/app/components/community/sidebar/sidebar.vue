@@ -1,9 +1,8 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import { formatNumber } from '../../../../_common/filters/number';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
@@ -12,7 +11,8 @@ import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
+import { getAbsoluteLink } from '../../../../utils/router';
 import AppGameList from '../../game/list/list.vue';
 import AppCommunityDescription from '../description/description.vue';
 import { CommunitySidebarData } from './sidebar-data';
@@ -35,7 +35,7 @@ export default class AppCommunitySidebar extends Vue {
 	isEditing!: boolean;
 
 	@Prop(Object)
-	community!: Community;
+	community!: CommunityModel;
 
 	@Prop(Object)
 	sidebarData!: CommunitySidebarData;
@@ -46,7 +46,7 @@ export default class AppCommunitySidebar extends Vue {
 		return this.commonStore;
 	}
 
-	currentCollaborators: User[] = [];
+	currentCollaborators: UserModel[] = [];
 	currentCollaboratorCount = 0;
 
 	collaboratorListCollapsed = true;
@@ -56,7 +56,7 @@ export default class AppCommunitySidebar extends Vue {
 	gameListCollapsed = true;
 
 	@Watch('sidebarData.collaborators', { immediate: true, deep: true })
-	onCollaboratorsUpdated(collaborators: User[]) {
+	onCollaboratorsUpdated(collaborators: UserModel[]) {
 		this.currentCollaborators = collaborators;
 	}
 
@@ -91,7 +91,7 @@ export default class AppCommunitySidebar extends Vue {
 		return this.currentCollaboratorCount > this.sidebarData.initialCollaboratorCount;
 	}
 
-	get moderators(): User[] {
+	get moderators(): UserModel[] {
 		const mods = [];
 		if (this.sidebarData.owner) {
 			mods.push(this.sidebarData.owner);
@@ -161,7 +161,7 @@ export default class AppCommunitySidebar extends Vue {
 			`/web/communities/collaborators/${this.community.id}`
 		);
 
-		const collaborators = User.populate(payload.collaborators);
+		const collaborators = UserModel.populate(payload.collaborators);
 		this.currentCollaborators = collaborators;
 		this.currentCollaboratorCount = collaborators.length;
 

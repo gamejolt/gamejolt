@@ -3,7 +3,7 @@ import { PropType } from 'vue';
 import { formatFilesize } from '../../../filters/filesize';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppTranslate from '../../../translate/AppTranslate.vue';
-import { GameBuild, GameBuildEmulatorInfo } from '../../build/build.model';
+import { GameBuildEmulatorInfo, GameBuildModel } from '../../build/build.model';
 import { GamePackageCardModel } from './card.model';
 
 defineProps({
@@ -14,10 +14,10 @@ defineProps({
 });
 
 const emit = defineEmits({
-	click: (_build: GameBuild) => true,
+	click: (_build: GameBuildModel) => true,
 });
 
-function click(build: GameBuild) {
+function click(build: GameBuildModel) {
 	emit('click', build);
 }
 </script>

@@ -1,9 +1,9 @@
 import { Api } from '../../api/api.service';
 import { Model } from '../../model/model.service';
-import { Sellable } from '../../sellable/sellable.model';
-import { GameBuild } from '../build/build.model';
-import { Game } from '../game.model';
-import { GameRelease } from '../release/release.model';
+import { SellableModel } from '../../sellable/sellable.model';
+import { GameBuildModel } from '../build/build.model';
+import { GameModel } from '../game.model';
+import { GameReleaseModel } from '../release/release.model';
 
 export const enum GamePackageStatus {
 	Hidden = 'hidden',
@@ -16,7 +16,7 @@ export const enum GamePackageVisibility {
 	Public = 'public',
 }
 
-export class GamePackage extends Model {
+export class GamePackageModel extends Model {
 	declare game_id: number;
 	declare sellable_id?: number;
 	declare title: string;
@@ -34,18 +34,18 @@ export class GamePackage extends Model {
 	declare is_in_paid_sellable?: boolean;
 
 	/** The game for this package, matching the game id. Will only be rarely populated.  */
-	declare game: Game | null;
+	declare game: GameModel | null;
 
 	// These fields get added only during GamePackagePayloadModel.
-	declare _releases?: GameRelease[];
-	declare _builds?: GameBuild[];
-	declare _sellable?: Sellable;
+	declare _releases?: GameReleaseModel[];
+	declare _builds?: GameBuildModel[];
+	declare _sellable?: SellableModel;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.game) {
-			this.game = new Game(data.game);
+			this.game = new GameModel(data.game);
 		} else {
 			this.game = null;
 		}
@@ -69,7 +69,7 @@ export class GamePackage extends Model {
 		}
 	}
 
-	async $remove(game: Game) {
+	async $remove(game: GameModel) {
 		const response = await this.$_remove(
 			'/web/dash/developer/games/packages/remove/' + this.game_id + '/' + this.id
 		);

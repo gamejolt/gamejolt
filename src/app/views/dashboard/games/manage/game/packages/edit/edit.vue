@@ -7,11 +7,11 @@ import { formatNumber } from '../../../../../../../../_common/filters/number';
 import AppGamePackageCard from '../../../../../../../../_common/game/package/card/AppGamePackageCard.vue';
 import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';
 import {
-	GamePackage,
+	GamePackageModel,
 	GamePackageVisibility,
 } from '../../../../../../../../_common/game/package/package.model';
 import {
-	GameRelease,
+	GameReleaseModel,
 	GameReleaseStatus,
 } from '../../../../../../../../_common/game/release/release.model';
 import {
@@ -26,7 +26,7 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../../../../../_common/route/legacy-route-component';
-import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
+import { SellableModel } from '../../../../../../../../_common/sellable/sellable.model';
 import AppTimeAgo from '../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { shallowSetup } from '../../../../../../../../utils/vue';
@@ -68,18 +68,18 @@ export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteCom
 		return this.routeStore.game.value!;
 	}
 
-	package: GamePackage = null as any;
-	sellable: Sellable = null as any;
-	releases: GameRelease[] = [];
+	package: GamePackageModel = null as any;
+	sellable: SellableModel = null as any;
+	releases: GameReleaseModel[] = [];
 
-	previewPackage: GamePackage | null = null;
-	previewSellable: Sellable | null = null;
+	previewPackage: GamePackageModel | null = null;
+	previewSellable: SellableModel | null = null;
 	previewData: GamePackagePayloadModel | null = null;
 	buildsProcessingCount = 0;
 	isLoadingPreview = false;
 	isAddingRelease = false;
 
-	readonly GameRelease = GameRelease;
+	readonly GameRelease = GameReleaseModel;
 	readonly formatNumber = formatNumber;
 	readonly GamePackageVisibilityPublic = GamePackageVisibility.Public;
 	readonly GameReleaseStatusHidden = GameReleaseStatus.Hidden;
@@ -104,9 +104,9 @@ export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteCom
 	}
 
 	routeResolved($payload: any) {
-		this.package = new GamePackage($payload.package);
-		this.sellable = new Sellable($payload.sellable);
-		this.releases = GameRelease.populate($payload.releases);
+		this.package = new GamePackageModel($payload.package);
+		this.sellable = new SellableModel($payload.sellable);
+		this.releases = GameReleaseModel.populate($payload.releases);
 
 		this.previewData = null;
 		this.previewPackage = null;
@@ -128,7 +128,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteCom
 
 		// We pull all new stuff for the preview so that we don't step on the form.
 		this.previewData = new GamePackagePayloadModel(response);
-		this.previewSellable = response.sellable ? new Sellable(response.sellable) : null;
+		this.previewSellable = response.sellable ? new SellableModel(response.sellable) : null;
 		this.previewPackage = this.previewData.packages.find(i => i.id === this.package.id) || null;
 		this.buildsProcessingCount = response.buildsProcessingCount || 0;
 		this.isLoadingPreview = false;
@@ -179,7 +179,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteCom
 		}
 	}
 
-	async removeRelease(release: GameRelease) {
+	async removeRelease(release: GameReleaseModel) {
 		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to remove this release? All of its builds will be removed as well.'

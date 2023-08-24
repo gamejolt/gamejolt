@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
 import AppEditableOverlay from '../../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import { Game } from '../../../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../../../_common/game/game.model';
 import AppGameMediaBarItem, {
 	MediaBarItemMaxHeight,
 } from '../../../../../../../_common/game/media-bar/item/item.vue';
@@ -22,7 +22,7 @@ import { Media, useGameDashRouteController } from '../../manage.store';
 })
 export default class AppManageGameMediaBar extends Vue {
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	@Prop(Array)
 	mediaItems!: Media[];

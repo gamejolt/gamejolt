@@ -4,7 +4,7 @@ import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
 import {
-	Game,
+	GameModel,
 	chooseBestGameBuild,
 	pluckInstallableGameBuilds,
 } from '../../../../_common/game/game.model';
@@ -33,7 +33,7 @@ export default class AppClientGameButtons extends Vue {
 	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
 
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	@Prop(Boolean)
 	overlay?: boolean;

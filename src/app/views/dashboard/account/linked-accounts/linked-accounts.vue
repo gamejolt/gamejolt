@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import {
-	LinkedAccount,
+	LinkedAccountModel,
 	Provider,
 	getLinkedAccountProviderDisplayName,
 } from '../../../../../_common/linked-account/linked-account.model';
@@ -37,19 +37,19 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 		return this.commonStore.user;
 	}
 
-	accounts: LinkedAccount[] = [];
+	accounts: LinkedAccountModel[] = [];
 	loading = false;
 
 	get facebookAccount() {
-		return this.getAccount(LinkedAccount.PROVIDER_FACEBOOK);
+		return this.getAccount(LinkedAccountModel.PROVIDER_FACEBOOK);
 	}
 
 	get googleAccount() {
-		return this.getAccount(LinkedAccount.PROVIDER_GOOGLE);
+		return this.getAccount(LinkedAccountModel.PROVIDER_GOOGLE);
 	}
 
 	get twitchAccount() {
-		return this.getAccount(LinkedAccount.PROVIDER_TWITCH);
+		return this.getAccount(LinkedAccountModel.PROVIDER_TWITCH);
 	}
 
 	getAccount(provider: string) {
@@ -72,7 +72,7 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 	}
 
 	routeResolved($payload: any) {
-		this.accounts = LinkedAccount.populate($payload.accounts);
+		this.accounts = LinkedAccountModel.populate($payload.accounts);
 	}
 
 	async onLink(provider: Provider) {
@@ -96,7 +96,7 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 			{}
 		);
 		if (response.success) {
-			this.accounts = LinkedAccount.populate(response.accounts);
+			this.accounts = LinkedAccountModel.populate(response.accounts);
 			const providerName = getLinkedAccountProviderDisplayName(provider);
 			showSuccessGrowl(
 				Translate.$gettextInterpolate(

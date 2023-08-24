@@ -1,21 +1,21 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { Community } from '../../../../_common/community/community.model';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
+import { FiresideModel } from '../../../../_common/fireside/fireside.model';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppFormFiresideAdd from '../../forms/fireside/AppFormFiresideAdd.vue';
 
 const props = defineProps({
 	community: {
-		type: Object as PropType<Community>,
+		type: Object as PropType<CommunityModel>,
 		default: undefined,
 	},
 	realms: {
-		type: Array as PropType<Realm[]>,
+		type: Array as PropType<RealmModel[]>,
 		default: () => [],
 	},
 });
@@ -24,7 +24,7 @@ const { community, realms } = toRefs(props);
 
 const modal = useModal()!;
 
-function onSubmit(fireside: Fireside) {
+function onSubmit(fireside: FiresideModel) {
 	modal.resolve(fireside);
 }
 </script>

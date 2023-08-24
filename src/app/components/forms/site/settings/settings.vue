@@ -2,13 +2,13 @@
 import { mixins, Options } from 'vue-property-decorator';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { validateGaTrackingId } from '../../../../../_common/form-vue/validators';
-import { Site } from '../../../../../_common/site/site-model';
+import { SiteModel } from '../../../../../_common/site/site-model';
 
-class Wrapper extends BaseForm<Site> {}
+class Wrapper extends BaseForm<SiteModel> {}
 
 @Options({})
 export default class FormSiteSettings extends mixins(Wrapper) {
-	modelClass = Site;
+	modelClass = SiteModel;
 
 	readonly validateGaTrackingId = validateGaTrackingId;
 }
@@ -56,9 +56,7 @@ import { validateGaTrackingId } from '../../../../../_common/form-vue/validators
 				:placeholder="$gettext(`Example: UA-1234567-1`)"
 			/>
 
-			<AppFormControlErrors
-				:label="$gettext(`tracking ID`)"
-			/>
+			<AppFormControlErrors :label="$gettext(`tracking ID`)" />
 
 			<div class="help-block">
 				<p>

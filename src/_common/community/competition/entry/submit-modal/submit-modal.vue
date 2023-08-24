@@ -1,14 +1,14 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../api/api.service';
-import { Game } from '../../../../game/game.model';
+import { GameModel } from '../../../../game/game.model';
 import AppGameThumbnail from '../../../../game/thumbnail/AppGameThumbnail.vue';
 import AppGameThumbnailImg from '../../../../game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../growls/growls.service';
 import AppLoading from '../../../../loading/AppLoading.vue';
 import { BaseModal } from '../../../../modal/base';
-import { CommunityCompetition } from '../../competition.model';
-import { CommunityCompetitionEntry } from '../entry.model';
+import { CommunityCompetitionModel } from '../../competition.model';
+import { CommunityCompetitionEntryModel } from '../entry.model';
 
 @Options({
 	components: {
@@ -18,11 +18,11 @@ import { CommunityCompetitionEntry } from '../entry.model';
 	},
 })
 export default class AppCommunityCompetitionEntrySubmitModal extends mixins(BaseModal) {
-	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
 
-	games: Game[] = [];
+	games: GameModel[] = [];
 	isLoading = true;
-	selectedGame: Game | null = null;
+	selectedGame: GameModel | null = null;
 	isSubmitting = false;
 
 	get hasSelectedGame() {
@@ -41,13 +41,13 @@ export default class AppCommunityCompetitionEntrySubmitModal extends mixins(Base
 		);
 
 		if (payload.games) {
-			this.games = Game.populate(payload.games);
+			this.games = GameModel.populate(payload.games);
 		}
 
 		this.isLoading = false;
 	}
 
-	onClickSelectGame(game: Game) {
+	onClickSelectGame(game: GameModel) {
 		this.selectedGame = game;
 	}
 
@@ -68,7 +68,7 @@ export default class AppCommunityCompetitionEntrySubmitModal extends mixins(Base
 			);
 
 			if (payload.success) {
-				const entry = new CommunityCompetitionEntry(payload.entry);
+				const entry = new CommunityCompetitionEntryModel(payload.entry);
 				this.modal.resolve(entry);
 			} else {
 				console.error(payload);

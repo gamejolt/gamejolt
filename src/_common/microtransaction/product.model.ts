@@ -1,34 +1,34 @@
-import { MediaItem } from '../media-item/media-item-model';
+import { MediaItemModel } from '../media-item/media-item-model';
 import { ModelStoreModel } from '../model/model-store.service';
 import { ModelData, UnknownModelData } from '../model/model.service';
-import { Sellable } from '../sellable/sellable.model';
+import { SellableModel } from '../sellable/sellable.model';
 
 export type MicrotransactionProductType = 'joltbux';
 
-export class MicrotransactionProduct implements ModelStoreModel {
+export class MicrotransactionProductModel implements ModelStoreModel {
 	declare id: number;
 	declare store_product_id: string;
 	declare product_type: MicrotransactionProductType;
 	declare product_amount: number;
 	declare display_name: string;
-	declare media_item: MediaItem;
+	declare media_item: MediaItemModel;
 	declare sort: number;
 	declare is_active: boolean;
-	declare sellable?: Sellable;
+	declare sellable?: SellableModel;
 
-	constructor(data: UnknownModelData | ModelData<MicrotransactionProduct> = {}) {
+	constructor(data: UnknownModelData | ModelData<MicrotransactionProductModel> = {}) {
 		this.update(data);
 	}
 
-	update(data: UnknownModelData | ModelData<MicrotransactionProduct>) {
+	update(data: UnknownModelData | ModelData<MicrotransactionProductModel>) {
 		Object.assign(this, data);
 
 		if (data.media_item) {
-			this.media_item = new MediaItem(data.media_item);
+			this.media_item = new MediaItemModel(data.media_item);
 		}
 
 		if (data.sellable) {
-			this.sellable = new Sellable(data.sellable);
+			this.sellable = new SellableModel(data.sellable);
 		}
 	}
 }

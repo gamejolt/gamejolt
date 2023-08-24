@@ -1,6 +1,6 @@
 import { Model } from '../../model/model.service';
 
-export class GamePlaylistGame extends Model {
+export class GamePlaylistGameModel extends Model {
 	game_playlist_id!: number;
 	game_id!: number;
 	added_on!: number;

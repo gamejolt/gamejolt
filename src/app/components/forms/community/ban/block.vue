@@ -1,7 +1,7 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
@@ -12,7 +12,7 @@ import {
 	REASON_OTHER,
 	REASON_SPAM,
 } from '../../../../../_common/user/action-reasons';
-import { User } from '../../../../../_common/user/user.model';
+import { UserModel } from '../../../../../_common/user/user.model';
 
 interface FormModel {
 	username: string;
@@ -30,8 +30,8 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormCommunityBlock extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop({ type: Object, required: true }) community!: Community;
-	@Prop({ type: Object, default: null }) user!: User | null;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
+	@Prop({ type: Object, default: null }) user!: UserModel | null;
 
 	usernameLocked = false;
 	otherOptions: string[] = [];

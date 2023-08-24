@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import {
@@ -19,7 +19,7 @@ class Wrapper extends BaseForm<FormModel> {}
 
 @Options({})
 export default class FormCommunityEjectFireside extends mixins(Wrapper) {
-	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
 
 	@Emit('change') emitChange(_form: FormModel) {}
 
@@ -81,11 +81,7 @@ export default class FormCommunityEjectFireside extends mixins(Wrapper) {
 			<AppFormControlErrors />
 		</AppFormGroup>
 
-		<AppFormGroup
-			v-if="shouldShowReasons"
-			name="reasonType"
-			:label="$gettext('Eject reason')"
-		>
+		<AppFormGroup v-if="shouldShowReasons" name="reasonType" :label="$gettext('Eject reason')">
 			<div v-for="(reasonDisplay, reason) in defaultReasons" :key="reason" class="radio">
 				<label>
 					<AppFormControlRadio :value="reason" />

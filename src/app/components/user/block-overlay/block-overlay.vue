@@ -1,12 +1,12 @@
 <script lang="ts">
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 
 @Options({})
 export default class AppUserBlockOverlay extends Vue {
 	@Prop(Object)
-	user!: User;
+	user!: UserModel;
 
 	private hasBypassed = false;
 
@@ -15,7 +15,7 @@ export default class AppUserBlockOverlay extends Vue {
 	}
 
 	@Watch('user', { immediate: true })
-	onWatch(newUser: User, oldUser?: User) {
+	onWatch(newUser: UserModel, oldUser?: UserModel) {
 		if (!oldUser || newUser.id !== oldUser.id) {
 			this.hasBypassed = false;
 		}
@@ -39,7 +39,9 @@ export default class AppUserBlockOverlay extends Vue {
 
 							<h4><AppTranslate>You blocked this user.</AppTranslate></h4>
 							<p>
-								<AppTranslate>Are you sure you want to view their profile?</AppTranslate>
+								<AppTranslate
+									>Are you sure you want to view their profile?</AppTranslate
+								>
 							</p>
 							<br />
 

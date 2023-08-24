@@ -23,15 +23,15 @@ import {
 	trackFiresideSidebarCollapse,
 } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
-import { Background } from '../../../../_common/background/background.model';
+import { BackgroundModel } from '../../../../_common/background/background.model';
 import { useContentFocusService } from '../../../../_common/content-focus/content-focus.service';
 import { getDeviceBrowser, getDeviceOS } from '../../../../_common/device/device.service';
 import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import { FiresideChatSettings } from '../../../../_common/fireside/chat/chat-settings.model';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
-import { FiresideRole } from '../../../../_common/fireside/role/role.model';
+import { FiresideChatSettingsModel } from '../../../../_common/fireside/chat/chat-settings.model';
+import { FiresideModel } from '../../../../_common/fireside/fireside.model';
+import { FiresideRoleModel } from '../../../../_common/fireside/role/role.model';
 import {
 	cleanupFiresideRTCProducer,
 	createFiresideRTCProducer,
@@ -56,7 +56,7 @@ import { onFiresideStickerPlaced, StickerStore } from '../../../../_common/stick
 import { createStickerTargetController } from '../../../../_common/sticker/target/target-controller';
 import { CommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 import { arrayAssignAll, arrayUnique } from '../../../../utils/array';
 import { createLogger } from '../../../../utils/logging';
 import { objectPick } from '../../../../utils/object';
@@ -66,7 +66,7 @@ import { run, sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
 import { MaybeRef } from '../../../../utils/vue';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
-import { ChatRoom } from '../../chat/room';
+import { ChatRoomModel } from '../../chat/room';
 import {
 	ChatRoomChannel,
 	createChatRoomChannel,
@@ -127,7 +127,7 @@ const FiresideControllerKey: InjectionKey<FiresideController> = Symbol('fireside
 export type FiresideController = ReturnType<typeof createFiresideController>;
 
 export function createFiresideController(
-	fireside: Fireside,
+	fireside: FiresideModel,
 	options: {
 		isPreviewMode?: boolean;
 		commonStore: CommonStore;
@@ -142,7 +142,7 @@ export function createFiresideController(
 
 	const logger = createLogger('Fireside');
 
-	fireside = reactive(fireside) as Fireside;
+	fireside = reactive(fireside) as FiresideModel;
 
 	const agoraStreamingInfo = ref<AgoraStreamingInfo>();
 
@@ -210,7 +210,7 @@ export function createFiresideController(
 	 * Mapping of user id to the background they have selected. Gets updated
 	 * through events over {@link GridFiresideChannel}.
 	 */
-	const hostBackgrounds = ref(new Map<number, Background>());
+	const hostBackgrounds = ref(new Map<number, BackgroundModel>());
 
 	const targetData = computed(() => {
 		return { host_user_id: rtc.value?.focusedUser?.userModel?.id };
@@ -275,7 +275,7 @@ export function createFiresideController(
 		},
 	});
 
-	const chatSettings = ref(new FiresideChatSettings()) as Ref<FiresideChatSettings>;
+	const chatSettings = ref(new FiresideChatSettingsModel()) as Ref<FiresideChatSettingsModel>;
 	const rtc = ref<FiresideRTC>();
 	const status = ref<RouteStatus>('initial');
 
@@ -297,7 +297,7 @@ export function createFiresideController(
 	const focusedUser = computed(() => rtc.value?.focusedUser);
 
 	const chat = computed(() => grid.value?.chat ?? undefined);
-	const chatRoom = shallowRef(getModel(ChatRoom, fireside.chat_room_id));
+	const chatRoom = shallowRef(getModel(ChatRoomModel, fireside.chat_room_id));
 
 	const chatUsers = computed(() => {
 		if (!chatRoom.value) {
@@ -558,7 +558,7 @@ export function createFiresideController(
 		return rtc.value;
 	};
 
-	function assignHostBackgroundData(userId: number, background: Background | undefined) {
+	function assignHostBackgroundData(userId: number, background: BackgroundModel | undefined) {
 		if (!background) {
 			hostBackgrounds.value.delete(userId);
 		} else {
@@ -995,7 +995,7 @@ export function createFiresideController(
 				status.value = 'setup-failed';
 				return;
 			}
-			fireside.role = new FiresideRole(rolePayload.role);
+			fireside.role = new FiresideRoleModel(rolePayload.role);
 		}
 
 		// --- Join channels.
@@ -1303,7 +1303,7 @@ export async function updateFiresideData(
 	// careful to just update when it's passed through.
 
 	if (payload.fireside) {
-		const updatedFireside = new Fireside(payload.fireside);
+		const updatedFireside = new FiresideModel(payload.fireside);
 		const oldCommunityLinks = fireside.community_links;
 
 		for (const updatedLink of updatedFireside.community_links) {
@@ -1594,7 +1594,7 @@ function _getHostsFromStreamingInfo(streamingInfo: StreamingInfoPayload) {
 		const isUnlisted = field === 'unlistedHosts';
 		const streamingUids = streamingInfo.streamingUids ?? {};
 		const streamingHostIds = streamingInfo.streamingHostIds ?? [];
-		const hostUsers = User.populate(streamingInfo[field] ?? []) as User[];
+		const hostUsers = UserModel.populate(streamingInfo[field] ?? []) as UserModel[];
 		const hosts = hostUsers.map(user => {
 			const isLive = streamingHostIds.includes(user.id);
 			const uids = streamingUids[user.id] ?? [];

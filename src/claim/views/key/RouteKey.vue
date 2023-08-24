@@ -3,8 +3,8 @@ import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import { Environment } from '../../../_common/environment/environment.service';
-import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
-import { Game } from '../../../_common/game/game.model';
+import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
+import { GameModel } from '../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
@@ -81,8 +81,8 @@ const { isBootstrapped } = createAppRoute({
 	},
 });
 
-async function claim(resource: Game | GameBundle) {
-	const resourceName = resource instanceof GameBundle ? 'bundle' : 'game';
+async function claim(resource: GameModel | GameBundleModel) {
+	const resourceName = resource instanceof GameBundleModel ? 'bundle' : 'game';
 
 	const result = await showModalConfirm(
 		$gettextInterpolate(
@@ -111,10 +111,10 @@ async function claim(resource: Game | GameBundle) {
 		}
 
 		let location = '';
-		if (resource instanceof GameBundle) {
+		if (resource instanceof GameBundleModel) {
 			location =
 				Environment.wttfBaseUrl + `/library/bundle/${resource.slug}/${resource.id}/games`;
-		} else if (resource instanceof Game) {
+		} else if (resource instanceof GameModel) {
 			location =
 				Environment.wttfBaseUrl + `/profile/${user.value.slug}/${user.value.id}/owned`;
 		}

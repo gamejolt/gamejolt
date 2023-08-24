@@ -1,6 +1,6 @@
 import { Model } from '../../../model/model.service';
 
-export class GameBuildFile extends Model {
+export class GameBuildFileModel extends Model {
 	declare game_build_id: number;
 	declare filename: string;
 	declare filesize: string;

@@ -5,7 +5,7 @@ import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
-import { Game } from '../../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import {
@@ -63,7 +63,7 @@ export default class RouteCommunitiesViewEditGames extends LegacyRouteComponent 
 		this.maxLinkedGames = $payload.maxLinkedGames;
 	}
 
-	async saveSort(sortedGames: Game[]) {
+	async saveSort(sortedGames: GameModel[]) {
 		// Reorder the games to see the result of the ordering right away.
 		this.community.games!.splice(0, this.community.games!.length, ...sortedGames);
 
@@ -92,7 +92,7 @@ export default class RouteCommunitiesViewEditGames extends LegacyRouteComponent 
 			);
 
 			if (payload.success) {
-				this.community.games = Game.populate(payload.community.games);
+				this.community.games = GameModel.populate(payload.community.games);
 			}
 		} catch (e) {
 			console.error(e);
@@ -100,7 +100,7 @@ export default class RouteCommunitiesViewEditGames extends LegacyRouteComponent 
 		}
 	}
 
-	async onClickUnlinkGame(game: Game) {
+	async onClickUnlinkGame(game: GameModel) {
 		try {
 			const payload = await Api.sendRequest(
 				'/web/dash/communities/games/unlink',
@@ -112,7 +112,7 @@ export default class RouteCommunitiesViewEditGames extends LegacyRouteComponent 
 			);
 
 			if (payload.success) {
-				this.community.games = Game.populate(payload.community.games);
+				this.community.games = GameModel.populate(payload.community.games);
 				// After unlinking a game, there is a free slot and at least one
 				// more game to link.
 				this.hasMoreGamesToLink = true;

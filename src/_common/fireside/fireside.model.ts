@@ -1,24 +1,24 @@
 import { getCurrentServerTime } from '../../utils/server-time';
 import { Api } from '../api/api.service';
 import { Collaboratable } from '../collaborator/collaboratable';
-import { MediaItem } from '../media-item/media-item-model';
+import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Screen } from '../screen/screen-service';
 import { constructStickerCounts, StickerCount } from '../sticker/sticker-count';
-import { Sticker } from '../sticker/sticker.model';
-import { UserBlock } from '../user/block/block.model';
-import { User } from '../user/user.model';
-import { FiresideCommunity } from './community/community.model';
-import { FiresideRealm } from './realm/realm.model';
-import { FiresideRole } from './role/role.model';
+import { StickerModel } from '../sticker/sticker.model';
+import { UserBlockModel } from '../user/block/block.model';
+import { UserModel } from '../user/user.model';
+import { FiresideCommunityModel } from './community/community.model';
+import { FiresideRealmModel } from './realm/realm.model';
+import { FiresideRoleModel } from './role/role.model';
 
-export class Fireside extends Collaboratable(Model) {
-	declare user: User;
-	community_links: FiresideCommunity[] = [];
-	realms: FiresideRealm[] = [];
-	header_media_item: MediaItem | null = null;
-	role: FiresideRole | null = null;
-	declare user_block?: UserBlock | null;
+export class FiresideModel extends Collaboratable(Model) {
+	declare user: UserModel;
+	community_links: FiresideCommunityModel[] = [];
+	realms: FiresideRealmModel[] = [];
+	header_media_item: MediaItemModel | null = null;
+	role: FiresideRoleModel | null = null;
+	declare user_block?: UserBlockModel | null;
 	sticker_counts: StickerCount[] = [];
 	declare hash: string;
 	declare title: string;
@@ -38,27 +38,27 @@ export class Fireside extends Collaboratable(Model) {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 
 		if (data.header_media_item) {
-			this.header_media_item = new MediaItem(data.header_media_item);
+			this.header_media_item = new MediaItemModel(data.header_media_item);
 		}
 
 		if (data.user_block) {
-			this.user_block = new UserBlock(data.user_block);
+			this.user_block = new UserBlockModel(data.user_block);
 		}
 
 		if (data.role) {
-			this.role = new FiresideRole(data.role);
+			this.role = new FiresideRoleModel(data.role);
 		}
 
 		if (data.community_links) {
-			this.community_links = FiresideCommunity.populate(data.community_links);
+			this.community_links = FiresideCommunityModel.populate(data.community_links);
 		}
 
 		if (data.realms) {
-			this.realms = FiresideRealm.populate(data.realms);
+			this.realms = FiresideRealmModel.populate(data.realms);
 		}
 
 		if (data.sticker_counts) {
@@ -117,7 +117,7 @@ export class Fireside extends Collaboratable(Model) {
 		return this.expires_on - getCurrentServerTime();
 	}
 
-	addStickerToCount(sticker: Sticker, isCharged: boolean) {
+	addStickerToCount(sticker: StickerModel, isCharged: boolean) {
 		const existingEntry = this.sticker_counts.find(i => i.stickerId === sticker.id);
 		const chargeCount = isCharged ? 1 : 0;
 
@@ -181,11 +181,11 @@ export class Fireside extends Collaboratable(Model) {
 	}
 }
 
-export function inviteFiresideHost(fireside: Fireside, hostId: number) {
+export function inviteFiresideHost(fireside: FiresideModel, hostId: number) {
 	return Api.sendRequest(`/web/dash/fireside/add-host/${fireside.id}`, { host_id: hostId });
 }
 
-export function removeFiresideHost(fireside: Fireside, hostId: number) {
+export function removeFiresideHost(fireside: FiresideModel, hostId: number) {
 	return Api.sendRequest(`/web/dash/fireside/remove-host/${fireside.id}`, { host_id: hostId });
 }
 

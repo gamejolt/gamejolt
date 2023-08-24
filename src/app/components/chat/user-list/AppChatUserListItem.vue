@@ -11,13 +11,13 @@ import { useGridStore } from '../../grid/grid-store';
 import AppChatListItem from '../_list/AppChatListItem.vue';
 import { isUserOnline, leaveGroupRoom, openChatRoom } from '../client';
 import AppChatNotificationSettings from '../notification-settings/notification-settings.vue';
-import { ChatRoom, getChatRoomTitle } from '../room';
+import { ChatRoomModel, getChatRoomTitle } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 
 const props = defineProps({
 	item: {
-		type: Object as PropType<ChatUser | ChatRoom>,
+		type: Object as PropType<ChatUser | ChatRoomModel>,
 		required: true,
 	},
 });
@@ -66,7 +66,7 @@ function onClick(e: Event) {
  * Only for group chats.
  */
 async function leaveRoom() {
-	if (!(item.value instanceof ChatRoom)) {
+	if (!(item.value instanceof ChatRoomModel)) {
 		return;
 	}
 

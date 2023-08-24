@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
-import { CommunityChannel } from '../../../../../../../../_common/community/channel/channel.model';
+import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
 import {
 	showErrorGrowl,
 	showSuccessGrowl,
@@ -59,7 +59,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends LegacyRout
 		);
 	}
 
-	onSubmit(model: CommunityChannel) {
+	onSubmit(model: CommunityChannelModel) {
 		// After submitting the form, redirect to the edit page with the new title if it changed.
 		// The title of the channel is part of the URL.
 		if (model.title !== this.$route.params.channel) {
@@ -67,7 +67,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends LegacyRout
 		}
 	}
 
-	onBackgroundChange(model: CommunityChannel) {
+	onBackgroundChange(model: CommunityChannelModel) {
 		Object.assign(this.channel, model);
 	}
 

@@ -11,10 +11,10 @@ import {
 } from '../../../../../_common/ad/ad-store';
 import { Api } from '../../../../../_common/api/api.service';
 import {
-	Collaborator,
+	CollaboratorModel,
 	CollaboratorRole,
 } from '../../../../../_common/collaborator/collaborator.model';
-import { Comment } from '../../../../../_common/comment/comment-model';
+import { CommentModel } from '../../../../../_common/comment/comment-model';
 import {
 	commentStoreCount,
 	CommentStoreManager,
@@ -28,7 +28,7 @@ import { Environment } from '../../../../../_common/environment/environment.serv
 import { GameBuildType } from '../../../../../_common/game/build/build.model';
 import {
 	CustomGameMessage,
-	Game,
+	GameModel,
 	handleGameAddFailure,
 	pluckBrowserGameBuilds,
 	pluckDownloadableGameBuilds,
@@ -37,14 +37,14 @@ import {
 } from '../../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../../_common/game/package/package-payload.model';
 import { onRatingWidgetChange } from '../../../../../_common/game/rating/AppGameRatingWidget.vue';
-import { GameRating } from '../../../../../_common/game/rating/rating.model';
-import { GameScoreTable } from '../../../../../_common/game/score-table/score-table.model';
-import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
-import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
-import { GameSong } from '../../../../../_common/game/song/song.model';
-import { GameVideo } from '../../../../../_common/game/video/video.model';
+import { GameRatingModel } from '../../../../../_common/game/rating/rating.model';
+import { GameScoreTableModel } from '../../../../../_common/game/score-table/score-table.model';
+import { GameScreenshotModel } from '../../../../../_common/game/screenshot/screenshot.model';
+import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketchfab.model';
+import { GameSongModel } from '../../../../../_common/game/song/song.model';
+import { GameVideoModel } from '../../../../../_common/game/video/video.model';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
-import { LinkedAccount } from '../../../../../_common/linked-account/linked-account.model';
+import { LinkedAccountModel } from '../../../../../_common/linked-account/linked-account.model';
 import { storeModelList } from '../../../../../_common/model/model-store.service';
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
 import { Registry } from '../../../../../_common/registry/registry.service';
@@ -62,7 +62,7 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { User } from '../../../../../_common/user/user.model';
+import { UserModel } from '../../../../../_common/user/user.model';
 import { enforceLocation } from '../../../../../utils/router';
 import AppGameCoverButtons from '../../../../components/game/cover-buttons/cover-buttons.vue';
 import AppGameMaturityBlock from '../../../../components/game/maturity-block/maturity-block.vue';
@@ -86,12 +86,12 @@ function createController({ router }: { router: Router }) {
 	const isOverviewLoaded = ref(false);
 
 	// We will bootstrap this right away, so it should always be set for use.
-	const game = ref<Game>();
+	const game = ref<GameModel>();
 
 	const postsCount = ref(0);
 	const trophiesCount = ref(0);
 	const hasScores = ref(false);
-	const primaryScoreTable = ref<GameScoreTable>();
+	const primaryScoreTable = ref<GameScoreTableModel>();
 	const twitterShareMessage = ref('Check out this game!');
 
 	const packagePayload = ref<GamePackagePayloadModel>();
@@ -100,29 +100,29 @@ function createController({ router }: { router: Router }) {
 	const userPartnerKey = ref<string>();
 
 	const partnerKey = ref('');
-	const partner = ref<User>();
+	const partner = ref<UserModel>();
 
-	const collaboratorInvite = ref<Collaborator>();
+	const collaboratorInvite = ref<CollaboratorModel>();
 
-	const userRating = ref<GameRating>();
+	const userRating = ref<GameRatingModel>();
 
-	const mediaItems = ref<(GameScreenshot | GameVideo | GameSketchfab)[]>([]);
-	const songs = ref<GameSong[]>([]);
+	const mediaItems = ref<(GameScreenshotModel | GameVideoModel | GameSketchfabModel)[]>([]);
+	const songs = ref<GameSongModel[]>([]);
 
 	const profileCount = ref(0);
 	const downloadCount = ref(0);
 	const developerGamesCount = ref(0);
-	const supporters = ref<User[]>([]);
+	const supporters = ref<UserModel[]>([]);
 	const supporterCount = ref(0);
-	const recommendedGames = ref<Game[]>([]);
-	const linkedAccounts = ref<LinkedAccount[]>([]);
-	const knownFollowers = ref<User[]>([]);
+	const recommendedGames = ref<GameModel[]>([]);
+	const linkedAccounts = ref<LinkedAccountModel[]>([]);
+	const knownFollowers = ref<UserModel[]>([]);
 	const knownFollowerCount = ref(0);
 
 	const canToggleDescription = ref(false);
 	const showDetails = ref(import.meta.env.SSR);
 
-	const overviewComments = ref<Comment[]>([]);
+	const overviewComments = ref<CommentModel[]>([]);
 
 	const customGameMessages = ref<CustomGameMessage[]>([]);
 
@@ -200,7 +200,7 @@ function createController({ router }: { router: Router }) {
 		return undefined;
 	});
 
-	function _updateGame(newGame?: Game) {
+	function _updateGame(newGame?: GameModel) {
 		// If we already have a game, just assign new data into it to keep it
 		// fresh.
 		if (game.value && newGame && game.value.id === newGame.id) {
@@ -212,7 +212,7 @@ function createController({ router }: { router: Router }) {
 
 	function bootstrapGame(gameId: number) {
 		const prevId = game.value?.id;
-		const newGame = Registry.find<Game>('Game', i => i.id === gameId) ?? undefined;
+		const newGame = Registry.find<GameModel>('Game', i => i.id === gameId) ?? undefined;
 
 		_updateGame(newGame);
 
@@ -229,20 +229,22 @@ function createController({ router }: { router: Router }) {
 	}
 
 	function processPayload(payload: any) {
-		const newGame = new Game(payload.game);
+		const newGame = new GameModel(payload.game);
 		_updateGame(newGame);
 
-		userRating.value = payload.userRating ? new GameRating(payload.userRating) : undefined;
+		userRating.value = payload.userRating ? new GameRatingModel(payload.userRating) : undefined;
 		postsCount.value = payload.postCount || 0;
 		trophiesCount.value = payload.trophiesCount || 0;
 		hasScores.value = payload.hasScores || false;
 		primaryScoreTable.value = payload.primaryScoreTable
-			? new GameScoreTable(payload.primaryScoreTable)
+			? new GameScoreTableModel(payload.primaryScoreTable)
 			: undefined;
 		twitterShareMessage.value = payload.twitterShareMessage || 'Check out this game!';
 
 		userPartnerKey.value = payload.userPartnerKey;
-		collaboratorInvite.value = payload.invite ? new Collaborator(payload.invite) : undefined;
+		collaboratorInvite.value = payload.invite
+			? new CollaboratorModel(payload.invite)
+			: undefined;
 	}
 
 	function processOverviewPayload(payload: any) {
@@ -252,11 +254,11 @@ function createController({ router }: { router: Router }) {
 		if (payload.mediaItems && payload.mediaItems.length) {
 			payload.mediaItems.forEach((item: any) => {
 				if (item.media_type === 'image') {
-					mediaItems.value.push(new GameScreenshot(item));
+					mediaItems.value.push(new GameScreenshotModel(item));
 				} else if (item.media_type === 'video') {
-					mediaItems.value.push(new GameVideo(item));
+					mediaItems.value.push(new GameVideoModel(item));
 				} else if (item.media_type === 'sketchfab') {
-					mediaItems.value.push(new GameSketchfab(item));
+					mediaItems.value.push(new GameSketchfabModel(item));
 				}
 			});
 		}
@@ -264,12 +266,12 @@ function createController({ router }: { router: Router }) {
 		// If we pull from cache, don't refresh with new payload data. If it's not cache, we
 		// ovewrite with our cached data. This way the data doesn't refresh when you click back.
 		if (!recommendedGames.value.length) {
-			recommendedGames.value = Game.populate(payload.recommendedGames);
+			recommendedGames.value = GameModel.populate(payload.recommendedGames);
 		} else {
 			payload.recommendedGames = recommendedGames.value;
 		}
 
-		songs.value = GameSong.populate(payload.songs);
+		songs.value = GameSongModel.populate(payload.songs);
 		packagePayload.value = new GamePackagePayloadModel(payload);
 		shouldShowMultiplePackagesMessage.value = false;
 
@@ -277,27 +279,29 @@ function createController({ router }: { router: Router }) {
 		downloadCount.value = payload.downloadCount || 0;
 		developerGamesCount.value = payload.developerGamesCount || 0;
 
-		supporters.value = User.populate(payload.supporters);
+		supporters.value = UserModel.populate(payload.supporters);
 		supporterCount.value = payload.supporterCount;
 
-		linkedAccounts.value = LinkedAccount.populate(payload.linkedAccounts);
+		linkedAccounts.value = LinkedAccountModel.populate(payload.linkedAccounts);
 
-		overviewComments.value = storeModelList(Comment, payload.comments);
+		overviewComments.value = storeModelList(CommentModel, payload.comments);
 
 		partnerKey.value = payload.partnerReferredKey || '';
-		partner.value = payload.partnerReferredBy ? new User(payload.partnerReferredBy) : undefined;
+		partner.value = payload.partnerReferredBy
+			? new UserModel(payload.partnerReferredBy)
+			: undefined;
 
-		knownFollowers.value = User.populate(payload.knownFollowers);
+		knownFollowers.value = UserModel.populate(payload.knownFollowers);
 		knownFollowerCount.value = payload.knownFollowerCount || 0;
 
 		customGameMessages.value = payload.customMessages || [];
 	}
 
-	function setUserRating(rating?: GameRating) {
+	function setUserRating(rating?: GameRatingModel) {
 		userRating.value = rating;
 	}
 
-	function acceptCollaboratorInvite(invite: Collaborator) {
+	function acceptCollaboratorInvite(invite: CollaboratorModel) {
 		game.value!.perms = invite.perms;
 		collaboratorInvite.value = undefined;
 	}
@@ -318,7 +322,7 @@ function createController({ router }: { router: Router }) {
 		showDetails.value = !showDetails.value;
 	}
 
-	function setOverviewComments(comments: Comment[]) {
+	function setOverviewComments(comments: CommentModel[]) {
 		overviewComments.value = comments;
 	}
 

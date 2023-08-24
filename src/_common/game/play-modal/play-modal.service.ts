@@ -6,8 +6,8 @@ import { showModal } from '../../modal/modal.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { Popper } from '../../popper/popper.service';
 import { $gettext } from '../../translate/translate.service';
-import { GameBuild, GameBuildType } from '../build/build.model';
-import { Game } from '../game.model';
+import { GameBuildModel, GameBuildType } from '../build/build.model';
+import { GameModel } from '../game.model';
 
 class GamePlayModalService {
 	hasModal = false;
@@ -17,7 +17,7 @@ class GamePlayModalService {
 		this.canMinimize = options.canMinimize || false;
 	}
 
-	async show(game: Game, build: GameBuild, options: { key?: string } = {}) {
+	async show(game: GameModel, build: GameBuildModel, options: { key?: string } = {}) {
 		if (this.hasModal) {
 			showErrorGrowl(
 				$gettext(
@@ -83,7 +83,7 @@ class GamePlayModalService {
 		this.hasModal = false;
 	}
 
-	private async getDownloadUrl(build: GameBuild, options: { key?: string }) {
+	private async getDownloadUrl(build: GameBuildModel, options: { key?: string }) {
 		const payload = await build.getDownloadUrl({ key: options.key });
 		let url = payload.url;
 

@@ -1,12 +1,12 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../environment/environment.service';
-import { Sellable } from '../../sellable/sellable.model';
+import { SellableModel } from '../../sellable/sellable.model';
 
 @Options({})
 export default class AppWidgetCompilerWidgetGamePackages extends Vue {
 	@Prop({ type: Array, default: () => [] })
-	sellables!: Sellable[];
+	sellables!: SellableModel[];
 	@Prop({ type: String, default: 'dark' })
 	theme!: string;
 

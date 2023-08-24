@@ -2,14 +2,14 @@
 import { PropType, ref } from 'vue';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppGamePlaylistAddToPopover from '../add-to-popover/add-to-popover.vue';
 
 defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	eventLabel: {

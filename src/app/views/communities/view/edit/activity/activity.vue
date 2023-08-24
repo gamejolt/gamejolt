@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
-import { CommunityActivityItem } from '../../../../../../_common/community/activity-item/activity-item.model';
+import { CommunityActivityItemModel } from '../../../../../../_common/community/activity-item/activity-item.model';
 import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/activity-item.vue';
 import { formatDate } from '../../../../../../_common/filters/date';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
@@ -13,7 +13,7 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 
 type ActivityItem = {
-	item: CommunityActivityItem;
+	item: CommunityActivityItemModel;
 	timesplit: boolean;
 	usersplit: boolean;
 	showIcon: boolean;
@@ -65,7 +65,9 @@ export default class RouteCommunitiesViewEditActivity extends LegacyRouteCompone
 	}
 
 	private handlePayload(payload: any) {
-		const items = CommunityActivityItem.populate(payload.items) as CommunityActivityItem[];
+		const items = CommunityActivityItemModel.populate(
+			payload.items
+		) as CommunityActivityItemModel[];
 		const perPage = payload.perPage;
 
 		if (items.length > 0) {
@@ -77,7 +79,7 @@ export default class RouteCommunitiesViewEditActivity extends LegacyRouteCompone
 		}
 	}
 
-	private addItems(items: CommunityActivityItem[]) {
+	private addItems(items: CommunityActivityItemModel[]) {
 		for (const item of items) {
 			const newItem = {
 				item,
@@ -88,7 +90,7 @@ export default class RouteCommunitiesViewEditActivity extends LegacyRouteCompone
 
 			if (
 				this.items.length === 0 ||
-				item.type === CommunityActivityItem.TYPE_COMMUNITY_CREATED
+				item.type === CommunityActivityItemModel.TYPE_COMMUNITY_CREATED
 			) {
 				// The first item will always be a user/time split.
 				newItem.timesplit = true;

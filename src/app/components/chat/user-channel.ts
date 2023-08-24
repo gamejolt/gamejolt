@@ -1,6 +1,6 @@
 import { Presence } from 'phoenix';
 import { computed, markRaw, shallowReadonly } from 'vue';
-import { Background } from '../../../_common/background/background.model';
+import { BackgroundModel } from '../../../_common/background/background.model';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { useContentFocusService } from '../../../_common/content-focus/content-focus.service';
 import { storeModel } from '../../../_common/model/model-store.service';
@@ -16,9 +16,9 @@ import {
 	recollectChatRoomMembers,
 	updateChatRoomLastMessageOn,
 } from './client';
-import { ChatMessage } from './message';
+import { ChatMessageModel } from './message';
 import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
-import { ChatRoom } from './room';
+import { ChatRoomModel } from './room';
 import { ChatUser } from './user';
 
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
@@ -99,7 +99,7 @@ export function createChatUserChannel(
 			client.currentUser = storeModel(ChatUser, response.user);
 			client.friendsList.replace(response.friends || []);
 			client.groupRooms = (response.groups as UnknownModelData[]).map(room =>
-				storeModel(ChatRoom, { chat: client, ...room })
+				storeModel(ChatRoomModel, { chat: client, ...room })
 			);
 
 			client.notifications.clear();
@@ -189,8 +189,8 @@ export function createChatUserChannel(
 		}
 	}
 
-	function _onNotification(data: Partial<ChatMessage>) {
-		const message = storeModel(ChatMessage, data);
+	function _onNotification(data: Partial<ChatMessageModel>) {
+		const message = storeModel(ChatMessageModel, data);
 
 		// We got a notification for some room.
 		// If the notification key is null, set it to 1.
@@ -221,7 +221,7 @@ export function createChatUserChannel(
 	}
 
 	function _onGroupAdd(data: GroupAddPayload) {
-		const newGroup = storeModel(ChatRoom, { chat: client, ...data.room });
+		const newGroup = storeModel(ChatRoomModel, { chat: client, ...data.room });
 
 		// Only push to room list if it's not already there.
 		if (client.groupRooms.every(x => x.id !== newGroup.id)) {
@@ -241,7 +241,7 @@ export function createChatUserChannel(
 		const room = client.groupRooms.find(i => i.id === data.room_id);
 
 		if (room) {
-			room.background = data.background ? new Background(data.background) : undefined;
+			room.background = data.background ? new BackgroundModel(data.background) : undefined;
 		}
 	}
 

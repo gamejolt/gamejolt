@@ -5,14 +5,14 @@ import { useRouter } from 'vue-router';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
-import { GameBuild, GameBuildType } from '../../../../_common/game/build/build.model';
+import { GameBuildModel, GameBuildType } from '../../../../_common/game/build/build.model';
 import { GameDownloader } from '../../../../_common/game/downloader/downloader.service';
-import { Game, chooseBestGameBuild } from '../../../../_common/game/game.model';
-import type { GamePackage } from '../../../../_common/game/package/package.model';
+import { GameModel, chooseBestGameBuild } from '../../../../_common/game/game.model';
+import type { GamePackageModel } from '../../../../_common/game/package/package.model';
 import { GamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
 import { GamePlayModal } from '../../../../_common/game/play-modal/play-modal.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import type { User } from '../../../../_common/user/user.model';
+import type { UserModel } from '../../../../_common/user/user.model';
 import { arrayUnique } from '../../../../utils/array';
 import AppGameCoverButtonsBuildButtons from './build-buttons.vue';
 
@@ -26,23 +26,23 @@ export function setBuildButtonsComponent(component: Component) {
 <script lang="ts" setup>
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	packages: {
-		type: Array as PropType<GamePackage[]>,
+		type: Array as PropType<GamePackageModel[]>,
 		required: true,
 	},
 	downloadableBuilds: {
-		type: Array as PropType<GameBuild[]>,
+		type: Array as PropType<GameBuildModel[]>,
 		required: true,
 	},
 	browserBuilds: {
-		type: Array as PropType<GameBuild[]>,
+		type: Array as PropType<GameBuildModel[]>,
 		required: true,
 	},
 	installableBuilds: {
-		type: Array as PropType<GameBuild[]>,
+		type: Array as PropType<GameBuildModel[]>,
 		required: true,
 	},
 	partnerKey: {
@@ -50,7 +50,7 @@ const props = defineProps({
 		default: undefined,
 	},
 	partner: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		default: undefined,
 	},
 });
@@ -71,8 +71,8 @@ const emit = defineEmits({
 
 const router = useRouter();
 
-function _chooseBuild(builds: GameBuild[], defaultBuild?: GameBuild) {
-	let chosen: GameBuild | undefined;
+function _chooseBuild(builds: GameBuildModel[], defaultBuild?: GameBuildModel) {
+	let chosen: GameBuildModel | undefined;
 
 	// Do we have to choose between multiple?
 	if (builds.length > 1) {
@@ -145,7 +145,7 @@ function download() {
 	}
 }
 
-function buy(pkg?: GamePackage, build?: GameBuild) {
+function buy(pkg?: GamePackageModel, build?: GameBuildModel) {
 	if (!pkg) {
 		if (!game.value.sellable) {
 			return;

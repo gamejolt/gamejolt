@@ -1,7 +1,7 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import AppCommunityRemoveChannel from '../remove-channel.vue';
 
@@ -12,12 +12,12 @@ import AppCommunityRemoveChannel from '../remove-channel.vue';
 })
 export default class AppCommunityRemoveChannelModal extends mixins(BaseModal) {
 	@Prop(Object)
-	community!: Community;
+	community!: CommunityModel;
 
 	@Prop(Object)
-	channel!: CommunityChannel;
+	channel!: CommunityChannelModel;
 
-	onRemoved(postsMovedTo?: CommunityChannel) {
+	onRemoved(postsMovedTo?: CommunityChannelModel) {
 		this.modal.resolve(postsMovedTo || null);
 	}
 }
@@ -42,7 +42,9 @@ export default class AppCommunityRemoveChannelModal extends mixins(BaseModal) {
 		<div class="modal-body">
 			<template v-if="channel.type === 'competition'">
 				<div class="alert">
-					<h4 class="sans-margin-top"><AppTranslate>Removing a Jam Channel</AppTranslate></h4>
+					<h4 class="sans-margin-top">
+						<AppTranslate>Removing a Jam Channel</AppTranslate>
+					</h4>
 					<p>
 						<span v-translate>
 							This channel contains a <b>Jam</b>, which gets removed when this channel

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
@@ -10,7 +10,7 @@ import {
 } from '../../../../../_common/form-vue/form.service';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 
-type FormModel = Community & {
+type FormModel = CommunityModel & {
 	header_crop: any;
 };
 
@@ -26,7 +26,7 @@ export default class FormCommunityHeader
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	modelClass = Community as any;
+	modelClass = CommunityModel as any;
 	saveMethod = '$saveHeader' as '$saveHeader' | '$clearHeader';
 
 	maxFilesize = 0;

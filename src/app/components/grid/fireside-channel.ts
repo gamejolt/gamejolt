@@ -1,20 +1,20 @@
 import { markRaw, shallowReadonly, triggerRef } from 'vue';
-import { arrayRemove } from '../../../utils/array';
-import { createLogger } from '../../../utils/logging';
-import { Background } from '../../../_common/background/background.model';
-import { FiresideChatSettings } from '../../../_common/fireside/chat/chat-settings.model';
+import { BackgroundModel } from '../../../_common/background/background.model';
+import { FiresideChatSettingsModel } from '../../../_common/fireside/chat/chat-settings.model';
 import {
-	createSocketChannelController,
 	SocketChannelController,
+	createSocketChannelController,
 } from '../../../_common/socket/socket-controller';
-import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
+import { StickerPlacementModel } from '../../../_common/sticker/placement/placement.model';
 import {
+	StickerStore,
 	onFiresideStickerPlaced,
 	setStickerStreak,
-	StickerStore,
 } from '../../../_common/sticker/sticker-store';
 import { addStickerToTarget } from '../../../_common/sticker/target/target-controller';
-import { User } from '../../../_common/user/user.model';
+import { UserModel } from '../../../_common/user/user.model';
+import { arrayRemove } from '../../../utils/array';
+import { createLogger } from '../../../utils/logging';
 import {
 	FiresideController,
 	StreamingInfoPayload,
@@ -28,7 +28,7 @@ export type GridFiresideChannel = Readonly<{
 	firesideHash: string;
 	joinPromise: Promise<void>;
 	pushUpdateChatSettings: (
-		chatSettings: FiresideChatSettings
+		chatSettings: FiresideChatSettingsModel
 	) => Promise<UpdateChatSettingsPayload>;
 	pushUpdateHost: (data: UpdateHostData) => Promise<any>;
 	leave: () => void;
@@ -48,7 +48,7 @@ interface JoinPayload {
 interface StickerPlacementPayload {
 	user_id: number;
 	streak: number;
-	sticker_placement: Partial<StickerPlacement>;
+	sticker_placement: Partial<StickerPlacementModel>;
 }
 
 interface UpdatePayload {
@@ -106,7 +106,7 @@ export function createGridFiresideChannel(
 				for (const hostData of response.host_data) {
 					assignHostBackgroundData(
 						hostData.user_id,
-						hostData.background ? new Background(hostData.background) : undefined
+						hostData.background ? new BackgroundModel(hostData.background) : undefined
 					);
 				}
 			}
@@ -148,7 +148,7 @@ export function createGridFiresideChannel(
 			return;
 		}
 
-		const user = new User(payload.user);
+		const user = new UserModel(payload.user);
 		const existingHost = hosts.value.find(host => host.user.id === user.id);
 		if (existingHost) {
 			logger.info('Adding streaming uid to existing host');
@@ -189,7 +189,7 @@ export function createGridFiresideChannel(
 			return;
 		}
 
-		const placement = new StickerPlacement(payload.sticker_placement);
+		const placement = new StickerPlacementModel(payload.sticker_placement);
 		const {
 			sticker,
 			target_data: { host_user_id },
@@ -219,14 +219,14 @@ export function createGridFiresideChannel(
 	function _onUpdateHost(payload: HostUpdatePayload) {
 		logger.info('Grid host update received.', payload);
 
-		const background = payload.background ? new Background(payload.background) : undefined;
+		const background = payload.background ? new BackgroundModel(payload.background) : undefined;
 		firesideController.assignHostBackgroundData(payload.user_id, background);
 	}
 
 	/**
 	 * Used to change the chat settings for the fireside.
 	 */
-	function pushUpdateChatSettings(chatSettings: FiresideChatSettings) {
+	function pushUpdateChatSettings(chatSettings: FiresideChatSettingsModel) {
 		return channelController.push<UpdateChatSettingsPayload>('update_chat_settings', {
 			fireside_hash: firesideHash,
 			allow_images: chatSettings.allow_images,

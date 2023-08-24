@@ -7,10 +7,10 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../_common/game/game.model';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 
-type FormModel = Game & {
+type FormModel = GameModel & {
 	header_crop: any;
 };
 
@@ -26,7 +26,7 @@ export default class FormGameHeader
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	modelClass = Game as any;
+	modelClass = GameModel as any;
 	saveMethod = '$saveHeader' as const;
 
 	maxFilesize = 0;

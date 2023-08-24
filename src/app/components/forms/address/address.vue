@@ -2,13 +2,13 @@
 import { mixins, Options, Watch } from 'vue-property-decorator';
 import { BaseForm } from '../../../../_common/form-vue/form.service';
 import { Geo, GeoRegion } from '../../../../_common/geo/geo.service';
-import { UserAddress } from '../../../../_common/user/address/address.model';
+import { UserAddressModel } from '../../../../_common/user/address/address.model';
 
-class Wrapper extends BaseForm<UserAddress> {}
+class Wrapper extends BaseForm<UserAddressModel> {}
 
 @Options({})
 export default class FormAddress extends mixins(Wrapper) {
-	modelClass = UserAddress;
+	modelClass = UserAddressModel;
 
 	countries = Geo.getCountries();
 	regions: GeoRegion[] | null = null;

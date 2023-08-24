@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
-import { CommunityCompetitionAward } from '../../../../../../../../../_common/community/competition/award/award.model';
+import { CommunityCompetitionAwardModel } from '../../../../../../../../../_common/community/competition/award/award.model';
 import AppLoading from '../../../../../../../../../_common/loading/AppLoading.vue';
 import {
 	LegacyRouteComponent,
@@ -26,7 +26,7 @@ type Payload = {
 		),
 })
 export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwards extends LegacyRouteComponent {
-	awards: CommunityCompetitionAward[] = [];
+	awards: CommunityCompetitionAwardModel[] = [];
 	isLoading = true;
 
 	get selectedAwardId() {
@@ -43,12 +43,12 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwards ext
 	}
 
 	routeResolved($payload: Payload) {
-		this.awards = CommunityCompetitionAward.populate($payload.awards);
+		this.awards = CommunityCompetitionAwardModel.populate($payload.awards);
 
 		this.isLoading = false;
 	}
 
-	isAwardSelected(award: CommunityCompetitionAward) {
+	isAwardSelected(award: CommunityCompetitionAwardModel) {
 		return this.selectedAwardId === award.id;
 	}
 

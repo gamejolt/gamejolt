@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
-	ChatInvite,
+	ChatInviteModel,
 	ChatInviteStatusAccepted,
 	ChatInviteStatusCanceled,
 	ChatInviteStatusDeclined,
@@ -33,7 +33,7 @@ const props = defineProps({
 
 const owner = useContentOwnerController();
 
-const invite = ref<ChatInvite>();
+const invite = ref<ChatInviteModel>();
 const hasError = ref(false);
 const isProcessing = ref(false);
 
@@ -42,7 +42,7 @@ const { chatUnsafe: chat } = useGridStore();
 
 owner?.hydrator.useData('chat-invite', props.inviteId.toString(), data => {
 	if (data) {
-		invite.value = new ChatInvite(data);
+		invite.value = new ChatInviteModel(data);
 	} else {
 		hasError.value = true;
 	}

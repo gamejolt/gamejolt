@@ -14,9 +14,9 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 
-type FormModel = User & {
+type FormModel = UserModel & {
 	notifications: string[];
 };
 </script>
@@ -24,7 +24,7 @@ type FormModel = User & {
 <script lang="ts" setup>
 const props = defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 });
@@ -34,7 +34,7 @@ const { user } = toRefs(props);
 const isTogglingEmails = ref(false);
 
 const form: FormController<FormModel> = createForm({
-	modelClass: User,
+	modelClass: UserModel,
 	model: user,
 	saveMethod: '$saveEmailPreferences' as const,
 	onInit() {

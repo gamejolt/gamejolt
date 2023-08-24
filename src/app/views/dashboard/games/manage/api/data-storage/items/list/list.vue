@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
-import { GameDataStoreItem } from '../../../../../../../../../_common/game/data-store/item/item.model';
+import { GameDataStoreItemModel } from '../../../../../../../../../_common/game/data-store/item/item.model';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../../../../../_common/popper/AppPopper.vue';
 import {
@@ -30,7 +30,7 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends LegacyR
 		return this.routeStore.game!;
 	}
 
-	items: GameDataStoreItem[] = [];
+	items: GameDataStoreItemModel[] = [];
 
 	readonly formatDate = formatDate;
 
@@ -44,10 +44,10 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends LegacyR
 	}
 
 	routeResolved($payload: any) {
-		this.items = GameDataStoreItem.populate($payload.items);
+		this.items = GameDataStoreItemModel.populate($payload.items);
 	}
 
-	async removeItem(item: GameDataStoreItem) {
+	async removeItem(item: GameDataStoreItemModel) {
 		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this item?')
 		);

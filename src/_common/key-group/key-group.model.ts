@@ -1,4 +1,4 @@
-import { GamePackage } from '../game/package/package.model';
+import { GamePackageModel } from '../game/package/package.model';
 import { Model } from '../model/model.service';
 
 export const enum KeyGroupType {
@@ -9,13 +9,13 @@ export const enum KeyGroupType {
 	User = 'user',
 }
 
-export class KeyGroup extends Model {
+export class KeyGroupModel extends Model {
 	declare game_id: number;
 	declare type: string;
 	declare name: string;
 
 	// Packages settings
-	packages: GamePackage[] = [];
+	packages: GamePackageModel[] = [];
 
 	// Counts settings
 	declare key_count?: number;
@@ -29,7 +29,7 @@ export class KeyGroup extends Model {
 		super(data);
 
 		if (data.packages) {
-			this.packages = GamePackage.populate(data.packages);
+			this.packages = GamePackageModel.populate(data.packages);
 			this.package_ids = this.packages.map(i => i.id);
 		}
 	}

@@ -1,6 +1,6 @@
 import { Model } from '../../../model/model.service';
 
-export class CommunityCompetitionVotingCategory extends Model {
+export class CommunityCompetitionVotingCategoryModel extends Model {
 	declare community_competition_id: number;
 	declare name: string;
 	declare description: string | null;

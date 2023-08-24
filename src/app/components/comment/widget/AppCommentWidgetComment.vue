@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, toRefs } from 'vue';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
-import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
+import { CollaboratorModel } from '../../../../_common/collaborator/collaborator.model';
 import AppCommentBlocked from '../../../../_common/comment/AppCommentBlocked.vue';
 import AppCommentContent from '../../../../_common/comment/AppCommentContent.vue';
 import {
 	canCommentOnModel,
-	Comment,
 	CommentableModel,
+	CommentModel,
 	followComment,
 	getCommentBlockReason,
 	removeComment,
@@ -35,15 +35,15 @@ const props = defineProps({
 		required: true,
 	},
 	comment: {
-		type: Object as PropType<Comment>,
+		type: Object as PropType<CommentModel>,
 		required: true,
 	},
 	children: {
-		type: Array as PropType<Comment[]>,
+		type: Array as PropType<CommentModel[]>,
 		default: () => [],
 	},
 	parent: {
-		type: Object as PropType<Comment>,
+		type: Object as PropType<CommentModel>,
 		default: undefined,
 	},
 	isLastInThread: {
@@ -110,7 +110,7 @@ const hasModPermissions = computed(() => {
 	if (collaborators.value.length) {
 		const collaborator = collaborators.value.find(i => i.user_id === user.value!.id);
 
-		if (collaborator instanceof Collaborator) {
+		if (collaborator instanceof CollaboratorModel) {
 			if (collaborator.perms.includes('all') || collaborator.perms.includes('comments')) {
 				return true;
 			}
@@ -194,7 +194,7 @@ function startEdit() {
 	Popper.hideAll();
 }
 
-function commentEdited(comment: Comment) {
+function commentEdited(comment: CommentModel) {
 	isEditing.value = false;
 	onCommentEdit(comment);
 }

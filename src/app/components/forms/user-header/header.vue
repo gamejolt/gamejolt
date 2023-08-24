@@ -10,9 +10,9 @@ import {
 } from '../../../../_common/form-vue/form.service';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 
-type FormModel = User & {
+type FormModel = UserModel & {
 	header_crop: any;
 };
 
@@ -33,7 +33,7 @@ export default class FormUserHeader
 	get app() {
 		return this.commonStore;
 	}
-	modelClass = User as any;
+	modelClass = UserModel as any;
 	saveMethod = '$saveHeader' as const;
 
 	maxFilesize = 0;

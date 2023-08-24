@@ -1,18 +1,18 @@
 import { Model } from '../../model/model.service';
-import { User } from '../../user/user.model';
-import { ForumPost } from '../post/post.model';
+import { UserModel } from '../../user/user.model';
+import { ForumPostModel } from '../post/post.model';
 
-export class ForumTopic extends Model {
+export class ForumTopicModel extends Model {
 	static readonly STATUS_ACTIVE = 'active';
 	static readonly STATUS_SPAM = 'spam';
 	static readonly STATUS_REMOVED = 'removed';
 
 	user_id!: number;
-	user!: User;
+	user!: UserModel;
 	channel_id!: number;
 	title!: string;
 	slug!: string;
-	main_post!: ForumPost;
+	main_post!: ForumPostModel;
 	status!: string;
 	posted_on!: number;
 	is_sticky!: boolean;
@@ -25,7 +25,7 @@ export class ForumTopic extends Model {
 	upvotes_count?: number;
 
 	notifications: Notification[] = [];
-	latest_post?: ForumPost;
+	latest_post?: ForumPostModel;
 
 	// When saving.
 	text_content?: string;
@@ -34,15 +34,15 @@ export class ForumTopic extends Model {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 
 		if (data.main_post) {
-			this.main_post = new ForumPost(data.main_post);
+			this.main_post = new ForumPostModel(data.main_post);
 		}
 
 		if (data.latest_post) {
-			this.latest_post = new ForumPost(data.latest_post);
+			this.latest_post = new ForumPostModel(data.latest_post);
 		}
 	}
 

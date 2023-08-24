@@ -7,7 +7,7 @@ import AppCardListItem from '../../../../../../../../_common/card/list/AppCardLi
 import { formatCurrency } from '../../../../../../../../_common/filters/currency';
 import {
 	$saveGamePackageSort,
-	GamePackage,
+	GamePackageModel,
 	GamePackageVisibility,
 } from '../../../../../../../../_common/game/package/package.model';
 import { showSuccessGrowl } from '../../../../../../../../_common/growls/growls.service';
@@ -16,7 +16,7 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../../../../../_common/route/legacy-route-component';
-import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
+import { SellableModel } from '../../../../../../../../_common/sellable/sellable.model';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { arrayIndexBy } from '../../../../../../../../utils/array';
 import { shallowSetup } from '../../../../../../../../utils/vue';
@@ -50,10 +50,10 @@ export default class RouteDashGamesManageGamePackagesList extends LegacyRouteCom
 		return this.routeStore.game.value!;
 	}
 
-	packages: GamePackage[] = [];
-	sellables: { [x: number]: Sellable } = {};
+	packages: GamePackageModel[] = [];
+	sellables: { [x: number]: SellableModel } = {};
 
-	readonly GamePackage = GamePackage;
+	readonly GamePackage = GamePackageModel;
 	readonly formatCurrency = formatCurrency;
 	readonly GamePackageVisibilityPrivate = GamePackageVisibility.Private;
 
@@ -93,26 +93,26 @@ export default class RouteDashGamesManageGamePackagesList extends LegacyRouteCom
 			return;
 		}
 
-		this.packages = GamePackage.populate($payload.packages);
-		this.sellables = arrayIndexBy<Sellable>(
-			Sellable.populate($payload.sellables),
+		this.packages = GamePackageModel.populate($payload.packages);
+		this.sellables = arrayIndexBy<SellableModel>(
+			SellableModel.populate($payload.sellables),
 			'game_package_id'
 		);
 	}
 
-	saveSort(packages: GamePackage[]) {
+	saveSort(packages: GamePackageModel[]) {
 		this.packages = packages;
 		$saveGamePackageSort(this.game.id, this.packagesSort);
 	}
 
 	async addPackage() {
 		const newPackage = await GamePackageEditModal.show(this.routeStore);
-		if (newPackage instanceof GamePackage) {
+		if (newPackage instanceof GamePackageModel) {
 			this.packages.push(newPackage);
 		}
 	}
 
-	async removePackage(pkg: GamePackage) {
+	async removePackage(pkg: GamePackageModel) {
 		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to remove this package? All of the releases and builds it contains will be removed as well.'

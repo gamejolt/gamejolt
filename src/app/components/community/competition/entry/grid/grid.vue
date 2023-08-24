@@ -1,11 +1,11 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import {
-	CommunityCompetition,
+	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
 } from '../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
+import { CommunityCompetitionEntryModel } from '../../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { formatNumber } from '../../../../../../_common/filters/number';
 import AppCommunityCompetitionEntryThumbnail from '../thumbnail/thumbnail.vue';
 
@@ -15,13 +15,13 @@ import AppCommunityCompetitionEntryThumbnail from '../thumbnail/thumbnail.vue';
 	},
 })
 export default class AppCommunityCompetitionEntryGrid extends Vue {
-	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
-	@Prop({ type: Array, required: true }) entries!: CommunityCompetitionEntry[];
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
+	@Prop({ type: Array, required: true }) entries!: CommunityCompetitionEntryModel[];
 	@Prop({ type: Number, default: 0 }) currentPage!: number;
 	@Prop({ type: Number, default: 0 }) pageCount!: number;
 	@Prop({ type: Number, default: 6 }) numPlaceholders!: number;
 	@Prop(Object)
-	category?: CommunityCompetitionVotingCategory;
+	category?: CommunityCompetitionVotingCategoryModel;
 	@Prop({ type: Boolean, default: false }) showRemove!: boolean;
 
 	readonly formatNumber = formatNumber;
@@ -51,7 +51,7 @@ export default class AppCommunityCompetitionEntryGrid extends Vue {
 	}
 
 	@Emit('remove')
-	emitRemove(_entry: CommunityCompetitionEntry) {}
+	emitRemove(_entry: CommunityCompetitionEntryModel) {}
 }
 </script>
 

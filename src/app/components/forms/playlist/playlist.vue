@@ -1,13 +1,13 @@
 <script lang="ts">
 import { mixins, Options } from 'vue-property-decorator';
 import { BaseForm } from '../../../../_common/form-vue/form.service';
-import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
+import { GamePlaylistModel } from '../../../../_common/game-playlist/game-playlist.model';
 
-class Wrapper extends BaseForm<GamePlaylist> {}
+class Wrapper extends BaseForm<GamePlaylistModel> {}
 
 @Options({})
 export default class FormPlaylist extends mixins(Wrapper) {
-	modelClass = GamePlaylist;
+	modelClass = GamePlaylistModel;
 }
 </script>
 

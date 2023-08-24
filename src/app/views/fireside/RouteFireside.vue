@@ -1,7 +1,6 @@
 <script lang="ts">
 import { computed, customRef, onBeforeUnmount, ref, shallowRef, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
-import { debounce } from '../../../utils/utils';
 import {
 	trackFiresideAction,
 	trackFiresideSidebarCollapse,
@@ -12,8 +11,14 @@ import { Api } from '../../../_common/api/api.service';
 import AppAuthJoin from '../../../_common/auth/join/AppAuthJoin.vue';
 import AppBackground from '../../../_common/background/AppBackground.vue';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { canDeviceViewFiresides, Fireside } from '../../../_common/fireside/fireside.model';
+import { FiresideModel, canDeviceViewFiresides } from '../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import {
+	illEndOfFeed,
+	illMaintenance,
+	illMobileKikkerstein,
+	illNoCommentsSmall,
+} from '../../../_common/illustration/illustrations';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { Meta } from '../../../_common/meta/meta-service';
@@ -34,22 +39,17 @@ import AppTheme from '../../../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { debounce } from '../../../utils/utils';
 import AppFiresideProvider from '../../components/fireside/AppFiresideProvider.vue';
 import {
-	createFiresideController,
-	extinguishFireside,
 	FiresideController,
 	FiresideSidebar,
+	createFiresideController,
+	extinguishFireside,
 	publishFireside,
 	toggleStreamVideoStats,
 } from '../../components/fireside/controller/controller';
 import { useGridStore } from '../../components/grid/grid-store';
-import {
-	illEndOfFeed,
-	illMaintenance,
-	illMobileKikkerstein,
-	illNoCommentsSmall,
-} from '../../../_common/illustration/illustrations';
 import AppFiresideDashboard from './AppFiresideDashboard.vue';
 import AppFiresideHeader from './AppFiresideHeader.vue';
 import AppFiresideStats from './AppFiresideStats.vue';
@@ -91,7 +91,7 @@ const videoWidth = ref(0);
 const videoHeight = ref(0);
 
 const fireside = computed(() => c.value?.fireside || payloadFireside.value);
-const payloadFireside = ref<Fireside>();
+const payloadFireside = ref<FiresideModel>();
 
 const rtc = computed(() => c.value?.rtc.value);
 const canPublish = computed(() => c.value?.canPublish.value === true);
@@ -199,7 +199,7 @@ const { isBootstrapped } = createAppRoute({
 	routeTitle,
 	disableTitleSuffix: true,
 	onResolved({ payload }) {
-		payloadFireside.value = new Fireside(payload.fireside);
+		payloadFireside.value = new FiresideModel(payload.fireside);
 
 		Meta.description = payload.metaDescription;
 		Meta.fb = payload.fb || {};

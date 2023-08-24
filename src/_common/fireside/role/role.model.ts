@@ -2,7 +2,7 @@ import { Model } from '../../model/model.service';
 
 export type FIRESIDE_ROLES = 'host' | 'cohost' | 'guest' | 'audience';
 
-export class FiresideRole extends Model {
+export class FiresideRoleModel extends Model {
 	role!: FIRESIDE_ROLES;
 	can_stream_audio?: boolean;
 	can_stream_video?: boolean;

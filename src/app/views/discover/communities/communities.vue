@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommunityCardCreatePlaceholder from '../../../../_common/community/card-create-placeholder/card-create-placeholder.vue';
 import AppCommunityCard from '../../../../_common/community/card/card.vue';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
@@ -25,7 +25,7 @@ const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}p
 
 const cacheKey = 'DiscoverCommunities';
 interface CacheData {
-	communities: Community[];
+	communities: CommunityModel[];
 	page: number;
 }
 
@@ -53,7 +53,7 @@ export default class RouteDiscoverCommunities extends LegacyRouteComponent {
 		return this.commonStore;
 	}
 
-	communities: Community[] = [];
+	communities: CommunityModel[] = [];
 	page = 1;
 	isLoading = false;
 	hasMore = true;
@@ -119,7 +119,7 @@ export default class RouteDiscoverCommunities extends LegacyRouteComponent {
 			return;
 		}
 
-		this.communities.push(...Community.populate(payload.communities));
+		this.communities.push(...CommunityModel.populate(payload.communities));
 
 		HistoryCache.store<CacheData>(
 			this.$route,

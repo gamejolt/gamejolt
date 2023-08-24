@@ -6,7 +6,7 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../../_common/route/legacy-route-component';
-import { Site } from '../../../../../_common/site/site-model';
+import { SiteModel } from '../../../../../_common/site/site-model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppSitesLinkCard from '../../../../components/sites/link-card/link-card.vue';
 import AppSitesManagePage from '../../../../components/sites/manage-page/manage-page.vue';
@@ -26,7 +26,7 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 export default class RouteDashAccountSite extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
-	site?: Site = null as any;
+	site?: SiteModel = null as any;
 
 	get routeTitle() {
 		return this.routeStore.heading;
@@ -37,7 +37,7 @@ export default class RouteDashAccountSite extends LegacyRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.site = new Site($payload.site);
+		this.site = new SiteModel($payload.site);
 	}
 }
 </script>

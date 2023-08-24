@@ -2,7 +2,7 @@
 import { PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import { Fireside } from '../../../_common/fireside/fireside.model';
+import { FiresideModel } from '../../../_common/fireside/fireside.model';
 import AppRealmThumbnail from '../../../_common/realm/AppRealmThumbnail.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppStickerStack from '../../../_common/sticker/stack/AppStickerStack.vue';
@@ -12,7 +12,7 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 
 const props = defineProps({
 	fireside: {
-		type: Object as PropType<Fireside>,
+		type: Object as PropType<FiresideModel>,
 		required: true,
 	},
 	stickerTargetController: {

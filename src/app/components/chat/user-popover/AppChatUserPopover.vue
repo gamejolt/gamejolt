@@ -26,7 +26,7 @@ import {
 	tryGetRoomRole,
 	userCanModerateOtherUser,
 } from '../client';
-import { ChatRoom } from '../room';
+import { ChatRoomModel } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 
@@ -36,7 +36,7 @@ const props = defineProps({
 		required: true,
 	},
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 });

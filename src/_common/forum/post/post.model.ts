@@ -1,9 +1,9 @@
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import { Model } from '../../model/model.service';
-import { Notification } from '../../notification/notification-model';
-import { User } from '../../user/user.model';
-import { ForumTopic } from '../topic/topic.model';
+import { NotificationModel } from '../../notification/notification-model';
+import { UserModel } from '../../user/user.model';
+import { ForumTopicModel } from '../topic/topic.model';
 
 export const enum ForumPostStatus {
 	Active = 'active',
@@ -11,21 +11,21 @@ export const enum ForumPostStatus {
 	Removed = 'removed',
 }
 
-export class ForumPost extends Model {
+export class ForumPostModel extends Model {
 	declare user_id: number;
-	declare user: User;
+	declare user: UserModel;
 	declare topic_id: number;
 	declare parent_post_id: number;
 	declare status: ForumPostStatus;
 	declare posted_on: number;
-	declare replied_to?: User;
+	declare replied_to?: UserModel;
 	declare replies_count?: number;
 	declare modified_by?: number;
-	declare modified_by_user?: User;
+	declare modified_by_user?: UserModel;
 	declare modified_on?: number;
 	declare text_content: string;
-	declare notification?: Notification;
-	declare topic: ForumTopic;
+	declare notification?: NotificationModel;
+	declare topic: ForumTopicModel;
 
 	// Filled in when saving a reply.
 	declare reply_to?: number;
@@ -34,23 +34,23 @@ export class ForumPost extends Model {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 
 		if (data.replied_to) {
-			this.replied_to = new User(data.replied_to);
+			this.replied_to = new UserModel(data.replied_to);
 		}
 
 		if (data.modified_by_user) {
-			this.modified_by_user = new User(data.modified_by_user);
+			this.modified_by_user = new UserModel(data.modified_by_user);
 		}
 
 		if (data.notification) {
-			this.notification = new Notification(data.notification);
+			this.notification = new NotificationModel(data.notification);
 		}
 
 		if (data.topic) {
-			this.topic = new ForumTopic(data.topic);
+			this.topic = new ForumTopicModel(data.topic);
 		}
 	}
 

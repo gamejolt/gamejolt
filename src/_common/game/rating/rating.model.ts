@@ -5,7 +5,7 @@ export const enum GameRatingValue {
 	Dislike = 0,
 }
 
-export class GameRating extends Model {
+export class GameRatingModel extends Model {
 	declare game_id: number;
 	declare rating: GameRatingValue;
 	declare posted_on: number;

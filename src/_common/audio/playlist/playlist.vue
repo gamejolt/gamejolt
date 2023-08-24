@@ -2,7 +2,7 @@
 import { nextTick } from 'vue';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { formatTime } from '../../filters/time';
-import { GameSong } from '../../game/song/song.model';
+import { GameSongModel } from '../../game/song/song.model';
 import { AppAudioPlayer } from '../player/player';
 import AppAudioScrubber from '../scrubber/scrubber.vue';
 
@@ -14,12 +14,12 @@ import AppAudioScrubber from '../scrubber/scrubber.vue';
 })
 export default class AppAudioPlaylist extends Vue {
 	@Prop(Array)
-	songs!: GameSong[];
+	songs!: GameSongModel[];
 
-	currentSong: GameSong | null = null;
+	currentSong: GameSongModel | null = null;
 	duration = 0;
 	currentTime = 0;
-	pausedSong: GameSong | null = null;
+	pausedSong: GameSongModel | null = null;
 	pausedSongTime = 0;
 
 	readonly formatTime = formatTime;
@@ -40,7 +40,7 @@ export default class AppAudioPlaylist extends Vue {
 	}
 
 	@Emit('play')
-	private async playSong(song: GameSong) {
+	private async playSong(song: GameSongModel) {
 		this.currentSong = song;
 
 		// If this song was previously paused, and now they're starting it
@@ -101,7 +101,7 @@ export default class AppAudioPlaylist extends Vue {
 		}
 	}
 
-	toggleSong(song: GameSong) {
+	toggleSong(song: GameSongModel) {
 		if (this.currentSong && this.currentSong.id === song.id) {
 			this.pauseSong();
 		} else {

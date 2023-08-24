@@ -22,7 +22,7 @@ import { Navigate } from '../../navigate/navigate.service';
 import { OrderPaymentMethod } from '../../order/payment/payment.model';
 import AppPopper from '../../popper/AppPopper.vue';
 import { Screen } from '../../screen/screen-service';
-import { Sellable } from '../../sellable/sellable.model';
+import { SellableModel } from '../../sellable/sellable.model';
 import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
@@ -39,7 +39,7 @@ interface FormModel {
 
 const props = defineProps({
 	sellable: {
-		type: Object as PropType<Sellable>,
+		type: Object as PropType<SellableModel>,
 		required: true,
 	},
 });

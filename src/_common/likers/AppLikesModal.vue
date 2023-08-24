@@ -2,16 +2,16 @@
 import { PropType, computed, ref, toRefs } from 'vue';
 import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';
-import { Comment } from '../comment/comment-model';
+import { CommentModel } from '../comment/comment-model';
 import { formatNumber } from '../filters/number';
-import { FiresidePost } from '../fireside/post/post-model';
-import { Game } from '../game/game.model';
+import { FiresidePostModel } from '../fireside/post/post-model';
+import { GameModel } from '../game/game.model';
 import AppLoading from '../loading/AppLoading.vue';
 import AppModal from '../modal/AppModal.vue';
 import { useModal } from '../modal/modal.service';
 import AppTranslate from '../translate/AppTranslate.vue';
 import AppUserList from '../user/list/AppUserList.vue';
-import { User } from '../user/user.model';
+import { UserModel } from '../user/user.model';
 import { LikersResource } from './modal.service';
 
 const UsersPerPage = 20;
@@ -33,7 +33,7 @@ const modal = useModal()!;
 const reachedEnd = ref(false);
 const isLoading = ref(false);
 const currentPage = ref(0);
-const users = ref<User[]>([]);
+const users = ref<UserModel[]>([]);
 
 // Just for display purposes, if we have more users than the count passed in, display that instead.
 // This can happen when the count was fetched before new users were added to the list.
@@ -46,11 +46,11 @@ const requestUrl = computed(() => {
 		return;
 	}
 
-	if (resource.value instanceof Comment) {
+	if (resource.value instanceof CommentModel) {
 		return '/comments/likers/' + resource.value.id;
-	} else if (resource.value instanceof FiresidePost) {
+	} else if (resource.value instanceof FiresidePostModel) {
 		return '/web/posts/likers/' + resource.value.id;
-	} else if (resource.value instanceof Game) {
+	} else if (resource.value instanceof GameModel) {
 		return '/web/discover/games/likers/' + resource.value.id;
 	}
 });
@@ -70,7 +70,7 @@ async function loadMore() {
 	++currentPage.value;
 	const payload = await Api.sendRequest(requestUrl.value + '?page=' + currentPage.value);
 
-	const newUsers = User.populate(payload.users);
+	const newUsers = UserModel.populate(payload.users);
 	users.value = users.value.concat(newUsers);
 
 	if (newUsers.length < UsersPerPage || users.value.length === count.value) {

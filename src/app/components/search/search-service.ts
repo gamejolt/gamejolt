@@ -1,10 +1,10 @@
 import { reactive } from 'vue';
 import { Api } from '../../../_common/api/api.service';
-import { Community } from '../../../_common/community/community.model';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
-import { Game } from '../../../_common/game/game.model';
-import { Realm } from '../../../_common/realm/realm-model';
-import { User } from '../../../_common/user/user.model';
+import { CommunityModel } from '../../../_common/community/community.model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
+import { GameModel } from '../../../_common/game/game.model';
+import { RealmModel } from '../../../_common/realm/realm-model';
+import { UserModel } from '../../../_common/user/user.model';
 import type { ClientLibraryStore } from '../../store/client-library';
 import type { LocalDbGame } from '../client/local-db/game/game.model';
 
@@ -84,16 +84,16 @@ export class SearchPayload {
 	perPage: number;
 	count: number;
 
-	users: User[];
+	users: UserModel[];
 	usersCount: number;
-	games: Game[];
+	games: GameModel[];
 	gamesCount: number;
-	posts: FiresidePost[];
+	posts: FiresidePostModel[];
 	postsCount: number;
 	postsPerPage: number;
-	communities: Community[];
+	communities: CommunityModel[];
 	communitiesCount: number;
-	realms: Realm[];
+	realms: RealmModel[];
 	realmsCount: number;
 	libraryGames: LocalDbGame[];
 
@@ -108,16 +108,16 @@ export class SearchPayload {
 		this.perPage = data.perPage || 24;
 		this.count = data.count || 0;
 
-		this.users = User.populate(data.users);
+		this.users = UserModel.populate(data.users);
 		this.usersCount = data.usersCount || 0;
-		this.games = Game.populate(data.games);
+		this.games = GameModel.populate(data.games);
 		this.gamesCount = data.gamesCount || 0;
-		this.posts = FiresidePost.populate(data.posts);
+		this.posts = FiresidePostModel.populate(data.posts);
 		this.postsCount = data.postsCount || 0;
 		this.postsPerPage = data.postsPerPage || 0;
-		this.communities = Community.populate(data.communities);
+		this.communities = CommunityModel.populate(data.communities);
 		this.communitiesCount = data.communitiesCount || 0;
-		this.realms = Realm.populate(data.realms);
+		this.realms = RealmModel.populate(data.realms);
 		this.realmsCount = data.realmsCount || 0;
 		this.libraryGames = [];
 

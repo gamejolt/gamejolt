@@ -1,8 +1,8 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Inject, Options, Vue } from 'vue-property-decorator';
-import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import AppCommunityChannelCard from '../../../../../components/community/channel/card/card.vue';
@@ -62,7 +62,7 @@ export default class AppNavChannels extends Vue {
 		return this.communityStates.getCommunityState(this.community);
 	}
 
-	isChannelLocked(channel: CommunityChannel) {
+	isChannelLocked(channel: CommunityChannelModel) {
 		// Don't show the locked status to guests.
 		if (!this.user) {
 			return false;
@@ -77,7 +77,7 @@ export default class AppNavChannels extends Vue {
 		return !channel.canPost && channel.visibility !== 'draft';
 	}
 
-	isChannelUnread(channel: CommunityChannel) {
+	isChannelUnread(channel: CommunityChannelModel) {
 		if (channel === this.allChannel) {
 			// Never show "unread" status on the All Posts channel.
 			return false;
@@ -89,14 +89,14 @@ export default class AppNavChannels extends Vue {
 
 		// We need to access the reactive community from the Store here.
 		const stateCommunity = this.communities.find(c => c.id === this.community.id);
-		if (channel && stateCommunity instanceof Community) {
+		if (channel && stateCommunity instanceof CommunityModel) {
 			return this.communityState.unreadChannels.includes(channel.id);
 		}
 
 		return false;
 	}
 
-	isChannelUnpublished(channel: CommunityChannel) {
+	isChannelUnpublished(channel: CommunityChannelModel) {
 		return channel.isUnpublished;
 	}
 

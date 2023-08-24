@@ -6,7 +6,7 @@ import {
 	CompetitionPeriodPreComp,
 	CompetitionPeriodVoting,
 } from '../../../../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntry } from '../../../../../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryModel } from '../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../../../../../../_common/illustration/illustrations';
@@ -123,7 +123,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 	routeStore!: CommunityRouteStore;
 
 	entryCount = 0;
-	entries: CommunityCompetitionEntry[] = [];
+	entries: CommunityCompetitionEntryModel[] = [];
 	isLoading = true;
 	perPage = 50;
 
@@ -165,7 +165,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 
 	routeResolved($payload: Payload) {
 		this.entryCount = $payload.entryCount;
-		this.entries = CommunityCompetitionEntry.populate($payload.entries);
+		this.entries = CommunityCompetitionEntryModel.populate($payload.entries);
 		this.perPage = $payload.perPage;
 
 		this.isLoading = false;
@@ -210,11 +210,11 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 		return this.patchLocation(query);
 	}
 
-	onClickShowEntry(entry: CommunityCompetitionEntry) {
+	onClickShowEntry(entry: CommunityCompetitionEntryModel) {
 		CommunityCompetitionEntryModal.showEntry(entry);
 	}
 
-	async onClickRemoveEntry(entry: CommunityCompetitionEntry) {
+	async onClickRemoveEntry(entry: CommunityCompetitionEntryModel) {
 		if (entry.is_removed) {
 			const result = await showModalConfirm(
 				this.$gettext(`Are you sure you want to readmit this entry to the jam?`)

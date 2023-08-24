@@ -1,33 +1,33 @@
 import { Router } from 'vue-router';
-import { Comment, getCommentUrl } from '../../../../../_common/comment/comment-model';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommentModel, getCommentUrl } from '../../../../../_common/comment/comment-model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import {
-	CommunityUserNotification,
+	CommunityUserNotificationModel,
 	CommunityUserNotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import { CreatorExperienceLevelUpModal } from '../../../../../_common/creator/experience/level-up-modal/modal.service';
-import { CreatorExperienceLevel } from '../../../../../_common/creator/experience/level.model';
+import { CreatorExperienceLevelModel } from '../../../../../_common/creator/experience/level.model';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import { Fireside } from '../../../../../_common/fireside/fireside.model';
-import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { FiresideStreamNotification } from '../../../../../_common/fireside/stream-notification/stream-notification.model';
-import { ForumPost, getForumPostUrl } from '../../../../../_common/forum/post/post.model';
-import { Game } from '../../../../../_common/game/game.model';
+import { FiresideModel } from '../../../../../_common/fireside/fireside.model';
+import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
+import { FiresideStreamNotificationModel } from '../../../../../_common/fireside/stream-notification/stream-notification.model';
+import { ForumPostModel, getForumPostUrl } from '../../../../../_common/forum/post/post.model';
+import { GameModel } from '../../../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
-import { Mention } from '../../../../../_common/mention/mention.model';
+import { MentionModel } from '../../../../../_common/mention/mention.model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import {
-	Notification,
+	NotificationModel,
 	NotificationType,
 } from '../../../../../_common/notification/notification-model';
-import { QuestNotification } from '../../../../../_common/quest/quest-notification-model';
-import { SupporterAction } from '../../../../../_common/supporters/action.model';
+import { QuestNotificationModel } from '../../../../../_common/quest/quest-notification-model';
+import { SupporterActionModel } from '../../../../../_common/supporters/action.model';
 import { SupporterMessageModal } from '../../../../../_common/supporters/message/modal.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { TrophyModal } from '../../../../../_common/trophy/modal/modal.service';
-import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import { User } from '../../../../../_common/user/user.model';
+import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
+import { UserModel } from '../../../../../_common/user/user.model';
 import { RouteLocationDefinition, isKnownRoute } from '../../../../../utils/router';
 import { assertNever } from '../../../../../utils/utils';
 import { AppStore } from '../../../../store/index';
@@ -35,24 +35,31 @@ import { routeDashAccountEdit } from '../../../../views/dashboard/account/edit/e
 import { routeDashSupporters } from '../../../../views/dashboard/supporters/supporters.route';
 
 function getRouteLocationForModel(
-	model: Game | User | FiresidePost | Community | Fireside | QuestNotification | undefined
+	model:
+		| GameModel
+		| UserModel
+		| FiresidePostModel
+		| CommunityModel
+		| FiresideModel
+		| QuestNotificationModel
+		| undefined
 ): RouteLocationDefinition | '' {
-	if (model instanceof User) {
+	if (model instanceof UserModel) {
 		return model.routeLocation;
-	} else if (model instanceof Game) {
+	} else if (model instanceof GameModel) {
 		return model.routeLocation;
-	} else if (model instanceof FiresidePost) {
+	} else if (model instanceof FiresidePostModel) {
 		return model.routeLocation;
-	} else if (model instanceof Community) {
+	} else if (model instanceof CommunityModel) {
 		return model.routeLocation;
-	} else if (model instanceof Fireside) {
+	} else if (model instanceof FiresideModel) {
 		return model.routeLocation;
 	}
 	return '';
 }
 
 export function getNotificationRouteLocation(
-	notification: Notification
+	notification: NotificationModel
 ): RouteLocationDefinition | '' {
 	const { type, action_model, from_model, to_model, to_resource, action_resource_id } =
 		notification;
@@ -72,29 +79,29 @@ export function getNotificationRouteLocation(
 			return getRouteLocationForModel(from_model);
 
 		case NotificationType.PostFeaturedInCommunity:
-			return getRouteLocationForModel((action_model as FiresidePostCommunity).community);
+			return getRouteLocationForModel((action_model as FiresidePostCommunityModel).community);
 
 		case NotificationType.CommunityUserNotification:
-			switch ((action_model as CommunityUserNotification).type) {
+			switch ((action_model as CommunityUserNotificationModel).type) {
 				case CommunityUserNotificationType.POSTS_MOVE:
 				case CommunityUserNotificationType.POSTS_EJECT:
-					return getRouteLocationForModel(to_model as FiresidePost);
+					return getRouteLocationForModel(to_model as FiresidePostModel);
 				case CommunityUserNotificationType.FIRESIDES_EJECT:
-					return getRouteLocationForModel(to_model as Fireside);
+					return getRouteLocationForModel(to_model as FiresideModel);
 			}
 			break;
 
 		case NotificationType.CollaboratorInvite:
 			switch (to_resource) {
 				case 'Game':
-					return getRouteLocationForModel(to_model as Game);
+					return getRouteLocationForModel(to_model as GameModel);
 				case 'Community':
-					return getRouteLocationForModel(to_model as Community);
+					return getRouteLocationForModel(to_model as CommunityModel);
 			}
 			break;
 
 		case NotificationType.PostAdd:
-			return getRouteLocationForModel(action_model as FiresidePost);
+			return getRouteLocationForModel(action_model as FiresidePostModel);
 
 		case NotificationType.SellableSell:
 			return {
@@ -102,7 +109,7 @@ export function getNotificationRouteLocation(
 			};
 
 		case NotificationType.Mention: {
-			const mention = action_model as Mention;
+			const mention = action_model as MentionModel;
 			switch (mention.resource) {
 				case 'Comment':
 				case 'Forum_Post':
@@ -110,13 +117,13 @@ export function getNotificationRouteLocation(
 					return '';
 
 				case 'Game':
-					return getRouteLocationForModel(to_model as Game);
+					return getRouteLocationForModel(to_model as GameModel);
 
 				case 'User':
-					return getRouteLocationForModel(to_model as User);
+					return getRouteLocationForModel(to_model as UserModel);
 
 				case 'Fireside_Post':
-					return getRouteLocationForModel(to_model as FiresidePost);
+					return getRouteLocationForModel(to_model as FiresidePostModel);
 
 				default:
 					return assertNever(mention.resource);
@@ -124,13 +131,15 @@ export function getNotificationRouteLocation(
 		}
 
 		case NotificationType.FiresideStart:
-			return getRouteLocationForModel(action_model as Fireside);
+			return getRouteLocationForModel(action_model as FiresideModel);
 
 		case NotificationType.FiresideStreamNotification:
-			return getRouteLocationForModel((action_model as FiresideStreamNotification).fireside);
+			return getRouteLocationForModel(
+				(action_model as FiresideStreamNotificationModel).fireside
+			);
 
 		case NotificationType.FiresideFeaturedInCommunity:
-			return getRouteLocationForModel(to_model as Fireside);
+			return getRouteLocationForModel(to_model as FiresideModel);
 
 		case NotificationType.QuestNotification:
 			// Handled in the [go] function.
@@ -172,7 +181,7 @@ export function getNotificationRouteLocation(
 }
 
 export async function gotoNotification(
-	notification: Notification,
+	notification: NotificationModel,
 	{ router, appStore }: { router: Router; appStore: AppStore }
 ) {
 	const { id, type, action_model } = notification;
@@ -187,7 +196,7 @@ export async function gotoNotification(
 		type === NotificationType.GameTrophyAchieved ||
 		type === NotificationType.SiteTrophyAchieved
 	) {
-		if (action_model instanceof UserBaseTrophy) {
+		if (action_model instanceof UserBaseTrophyModel) {
 			TrophyModal.show(action_model);
 		}
 	} else if (
@@ -200,7 +209,7 @@ export async function gotoNotification(
 		let url: string;
 		let model = action_model;
 
-		if (action_model instanceof Mention) {
+		if (action_model instanceof MentionModel) {
 			if (action_model.comment) {
 				model = action_model.comment;
 			} else if (action_model.forum_post) {
@@ -213,11 +222,11 @@ export async function gotoNotification(
 		}
 
 		try {
-			if (model instanceof Comment) {
+			if (model instanceof CommentModel) {
 				url = await getCommentUrl(model.id);
-			} else if (model instanceof ForumPost) {
+			} else if (model instanceof ForumPostModel) {
 				url = await getForumPostUrl(model.id);
-			} else if (model instanceof FiresidePost) {
+			} else if (model instanceof FiresidePostModel) {
 				url = model.url;
 			} else {
 				throw new Error('Invalid type.');
@@ -244,15 +253,15 @@ export async function gotoNotification(
 			showErrorGrowl($gettext(`Couldn't go to notification.`));
 		}
 	} else if (type === NotificationType.SupporterMessage) {
-		if (action_model instanceof SupporterAction) {
+		if (action_model instanceof SupporterActionModel) {
 			SupporterMessageModal.show(action_model);
 		}
 	} else if (type === NotificationType.CreatorLevelUp) {
-		if (action_model instanceof CreatorExperienceLevel) {
+		if (action_model instanceof CreatorExperienceLevelModel) {
 			CreatorExperienceLevelUpModal.show(action_model);
 		}
 	} else if (type === NotificationType.QuestNotification) {
-		if (action_model instanceof QuestNotification) {
+		if (action_model instanceof QuestNotificationModel) {
 			const { quest_id } = action_model;
 
 			const { toggleLeftPane, visibleLeftPane, getQuestStore } = appStore;

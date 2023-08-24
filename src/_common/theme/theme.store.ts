@@ -2,7 +2,7 @@ import { computed, inject, InjectionKey, ref } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { SettingThemeAlwaysOurs, SettingThemeDark } from '../settings/settings.service';
 import { CommonStore } from '../store/common-store';
-import { Theme } from './theme.model';
+import { ThemeModel } from './theme.model';
 
 export const ThemeStoreKey: InjectionKey<ThemeStore> = Symbol('theme-store');
 
@@ -14,13 +14,13 @@ export function useThemeStore() {
 
 interface PageTheme {
 	key: string;
-	theme: Theme | null;
+	theme: ThemeModel | null;
 }
 
 export function createThemeStore({ commonStore: { user } }: { commonStore: CommonStore }) {
 	const isDark = ref(SettingThemeDark.get());
 	const _alwaysOurs = ref(SettingThemeAlwaysOurs.get());
-	const _formTheme = ref<Theme | null>(null);
+	const _formTheme = ref<ThemeModel | null>(null);
 
 	/**
 	 * Page themes are a stack so that we can route between different pages and
@@ -65,7 +65,7 @@ export function createThemeStore({ commonStore: { user } }: { commonStore: Commo
 		arrayRemove(_pageThemeStack.value, i => i.key === key);
 	}
 
-	function setFormTheme(theme: Theme | null) {
+	function setFormTheme(theme: ThemeModel | null) {
 		_formTheme.value = theme;
 	}
 

@@ -1,7 +1,7 @@
 import { Api } from '../../api/api.service';
-import { MediaItem } from '../../media-item/media-item-model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
-import { CommunityCompetition } from '../competition/competition.model';
+import { CommunityCompetitionModel } from '../competition/competition.model';
 import {
 	COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING,
 	CommunityChannelPermissions,
@@ -10,7 +10,7 @@ import {
 export type CommunityChannelType = 'post-feed' | 'competition';
 export type CommunityChannelVisibility = 'draft' | 'published';
 
-export class CommunityChannel extends Model {
+export class CommunityChannelModel extends Model {
 	declare community_id: number;
 	declare title: string;
 	declare added_on: number;
@@ -21,8 +21,8 @@ export class CommunityChannel extends Model {
 	declare description_content: string | null;
 	declare is_archived: boolean;
 	declare permissions: CommunityChannelPermissions;
-	declare background?: MediaItem;
-	declare competition: CommunityCompetition | null;
+	declare background?: MediaItemModel;
+	declare competition: CommunityCompetitionModel | null;
 
 	get hasDisplayTitle() {
 		return !!this.display_title && this.display_title !== this.title;
@@ -49,10 +49,10 @@ export class CommunityChannel extends Model {
 		super(data);
 
 		if (data.background) {
-			this.background = new MediaItem(data.background);
+			this.background = new MediaItemModel(data.background);
 		}
 		if (data.competition) {
-			this.competition = new CommunityCompetition(data.competition);
+			this.competition = new CommunityCompetitionModel(data.competition);
 		}
 
 		this.permissions = new CommunityChannelPermissions(data.perms);
@@ -95,7 +95,7 @@ export class CommunityChannel extends Model {
 		);
 	}
 
-	$remove(moveToChannel?: CommunityChannel) {
+	$remove(moveToChannel?: CommunityChannelModel) {
 		if (!this.id) {
 			return;
 		}

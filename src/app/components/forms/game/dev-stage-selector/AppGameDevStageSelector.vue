@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
 import AppCard from '../../../../../_common/card/AppCard.vue';
-import { Game, GameDevelopmentStatus } from '../../../../../_common/game/game.model';
+import { GameDevelopmentStatus, GameModel } from '../../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
@@ -9,7 +9,7 @@ import { GameDevStageSelectorConfirmModal } from './confirm-service';
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		default: undefined,
 	},
 });

@@ -1,6 +1,6 @@
 import { Model } from '../../model/model.service';
 
-export class SellablePricing extends Model {
+export class SellablePricingModel extends Model {
 	declare amount: number;
 	declare currency_code: string;
 	declare country_code: string;
@@ -12,7 +12,7 @@ export class SellablePricing extends Model {
 	declare timezone?: string;
 }
 
-export function getOriginalSellablePricing(pricings: SellablePricing[]) {
+export function getOriginalSellablePricing(pricings: SellablePricingModel[]) {
 	if (Array.isArray(pricings) && pricings.length > 0) {
 		if (pricings[0].promotional) {
 			return pricings[1];
@@ -22,7 +22,7 @@ export function getOriginalSellablePricing(pricings: SellablePricing[]) {
 	return undefined;
 }
 
-export function getPromotionalSellablePricing(pricings: SellablePricing[]) {
+export function getPromotionalSellablePricing(pricings: SellablePricingModel[]) {
 	if (Array.isArray(pricings) && pricings.length > 0 && pricings[0].promotional) {
 		return pricings[0];
 	}

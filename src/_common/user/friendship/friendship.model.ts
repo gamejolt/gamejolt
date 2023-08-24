@@ -1,5 +1,5 @@
 import { Model } from '../../model/model.service';
-import { User } from '../user.model';
+import { UserModel } from '../user.model';
 
 export const enum UserFriendshipState {
 	None = 0,
@@ -8,11 +8,11 @@ export const enum UserFriendshipState {
 	Friends = 3,
 }
 
-export class UserFriendship extends Model {
+export class UserFriendshipModel extends Model {
 	declare user_id: number;
 	declare target_user_id: number;
-	declare user: User;
-	declare target_user: User;
+	declare user: UserModel;
+	declare target_user: UserModel;
 	declare created_on: number;
 	declare accepted_on: number | null;
 	declare declined_on: number | null;
@@ -22,15 +22,15 @@ export class UserFriendship extends Model {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 
 		if (data.target_user) {
-			this.target_user = new User(data.target_user);
+			this.target_user = new UserModel(data.target_user);
 		}
 	}
 
-	getThem(us: User) {
+	getThem(us: UserModel) {
 		return this.user_id !== us.id ? this.user : this.target_user;
 	}
 

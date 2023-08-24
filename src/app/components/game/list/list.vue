@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import AppGameListItem from './item/item.vue';
 
 @Options({
@@ -10,7 +10,7 @@ import AppGameListItem from './item/item.vue';
 })
 export default class AppGameList extends Vue {
 	@Prop(Array)
-	games!: Game[];
+	games!: GameModel[];
 
 	@Prop(String)
 	eventLabel?: string;

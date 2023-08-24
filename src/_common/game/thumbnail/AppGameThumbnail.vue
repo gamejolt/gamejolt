@@ -10,14 +10,14 @@ import AppUserVerifiedTick from '../../user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 import AppGameCompatIcons from '../compat-icons/AppGameCompatIcons.vue';
-import { Game } from '../game.model';
+import { GameModel } from '../game.model';
 import AppGameThumbnailImg from './AppGameThumbnailImg.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	linkTo: {

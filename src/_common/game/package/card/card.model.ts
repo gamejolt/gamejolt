@@ -1,20 +1,20 @@
 import { arrayUnique } from '../../../../utils/array';
 import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
 import { Jolticon } from '../../../jolticon/AppJolticon.vue';
-import { LinkedKey } from '../../../linked-key/linked-key.model';
-import { Sellable } from '../../../sellable/sellable.model';
+import { LinkedKeyModel } from '../../../linked-key/linked-key.model';
+import { SellableModel } from '../../../sellable/sellable.model';
 import {
-	GameBuild,
+	GameBuildModel,
 	GameBuildPlatformSupportInfo,
 	GameBuildType,
 	pluckGameBuildOsSupport,
 } from '../../build/build.model';
-import { GameRelease } from '../../release/release.model';
+import { GameReleaseModel } from '../../release/release.model';
 
 interface ExtraBuild {
 	type: string;
 	icon: Jolticon;
-	build: GameBuild;
+	build: GameBuildModel;
 	platform: string;
 	arch: string | null;
 }
@@ -22,25 +22,25 @@ interface ExtraBuild {
 export class GamePackageCardModel {
 	platformSupportInfo = Object.assign({}, GameBuildPlatformSupportInfo);
 	platformSupport: string[] = [];
-	downloadableBuild: GameBuild | null = null;
-	browserBuild: GameBuild | null = null;
+	downloadableBuild: GameBuildModel | null = null;
+	browserBuild: GameBuildModel | null = null;
 	extraBuilds: ExtraBuild[] = [];
-	showcasedRelease: GameRelease | null = null;
+	showcasedRelease: GameReleaseModel | null = null;
 	showcasedOs = '';
 	showcasedOsIcon = '';
 	showcasedBrowserIcon = '';
 	otherOnly = false;
-	linkedKeys: LinkedKey[] = [];
+	linkedKeys: LinkedKeyModel[] = [];
 
 	get hasSteamKey() {
 		return this.platformSupport.indexOf('steam') !== -1;
 	}
 
 	constructor(
-		sellable: Sellable,
-		releases: GameRelease[],
-		builds: GameBuild[],
-		linkedKeys?: LinkedKey[]
+		sellable: SellableModel,
+		releases: GameReleaseModel[],
+		builds: GameBuildModel[],
+		linkedKeys?: LinkedKeyModel[]
 	) {
 		if (builds) {
 			const os = getDeviceOS();
@@ -48,8 +48,8 @@ export class GamePackageCardModel {
 
 			// Indexes by the os/type of the build: [ { type: build } ]
 			// While looping we also gather all OS/browser support for this complete package.
-			const indexedBuilds: { [k: string]: GameBuild } = {};
-			const otherBuilds: GameBuild[] = [];
+			const indexedBuilds: { [k: string]: GameBuildModel } = {};
+			const otherBuilds: GameBuildModel[] = [];
 			builds.forEach(build => {
 				if (build.isBrowserBased) {
 					indexedBuilds[build.type] = build;
@@ -147,7 +147,7 @@ export class GamePackageCardModel {
 				this.showcasedRelease = this.browserBuild._release || null;
 			}
 
-			const addExtraBuild = (build: GameBuild, type: string) => {
+			const addExtraBuild = (build: GameBuildModel, type: string) => {
 				// Whether or not we stored this build in extra builds yet.
 				let alreadyAdded = false;
 				this.extraBuilds.forEach(extraBuild => {

@@ -1,12 +1,12 @@
 import { Model } from '../model/model.service';
-import { PollItem, buildPollItemForPoll } from './item/item.model';
+import { PollItemModel, buildPollItemForPoll } from './item/item.model';
 
 export const enum PollStatus {
 	Active = 'active',
 	Removed = 'removed',
 }
 
-export class Poll extends Model {
+export class PollModel extends Model {
 	declare fireside_post_id: number;
 	declare created_on: number;
 	declare end_time: number;
@@ -15,13 +15,13 @@ export class Poll extends Model {
 	declare status: PollStatus;
 	declare vote_count: number;
 
-	items: PollItem[] = [];
+	items: PollItemModel[] = [];
 
 	constructor(data?: any) {
 		super(data);
 
 		if (data && data.items) {
-			this.items = PollItem.populate(data.items);
+			this.items = PollItemModel.populate(data.items);
 		}
 	}
 

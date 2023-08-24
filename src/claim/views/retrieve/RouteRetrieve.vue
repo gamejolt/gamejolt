@@ -2,8 +2,8 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
-import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
-import { Game } from '../../../_common/game/game.model';
+import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
+import { GameModel } from '../../../_common/game/game.model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 import AppInvalidKey from '../../components/AppInvalidKey.vue';
@@ -62,8 +62,8 @@ defineOptions(
 
 const invalidKey = ref(false);
 const key = ref('');
-const bundle = ref<GameBundle>();
-const game = ref<Game>();
+const bundle = ref<GameBundleModel>();
+const game = ref<GameModel>();
 const resourceTitle = ref('');
 
 const router = useRouter();
@@ -92,8 +92,8 @@ createAppRoute({
 			} = payload;
 
 			key.value = payload.key;
-			bundle.value = bundleData ? new GameBundle(bundleData) : undefined;
-			game.value = gameData ? new Game(gameData) : undefined;
+			bundle.value = bundleData ? new GameBundleModel(bundleData) : undefined;
+			game.value = gameData ? new GameModel(gameData) : undefined;
 		}
 
 		resourceTitle.value = '';

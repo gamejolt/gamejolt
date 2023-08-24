@@ -4,7 +4,7 @@ import { computed, onMounted, PropType, toRefs } from 'vue';
 import { Api, ApiProgressEvent } from '../../api/api.service';
 import { showErrorGrowl } from '../../growls/growls.service';
 import AppLoading from '../../loading/AppLoading.vue';
-import { MediaItem } from '../../media-item/media-item-model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import AppProgressBar from '../../progress/AppProgressBar.vue';
 import { $gettext } from '../../translate/translate.service';
 import { getMediaItemTypeForContext } from '../content-context';
@@ -67,7 +67,7 @@ async function _uploadFile() {
 	// Start uploading media item
 	try {
 		const mediaItem = await _doUpload(file);
-		if (mediaItem instanceof MediaItem) {
+		if (mediaItem instanceof MediaItemModel) {
 			editorMediaUploadFinalize(task, mediaItem);
 		}
 	} catch (error) {
@@ -103,7 +103,7 @@ async function _doUpload(file: File) {
 		throw new Error('Failed to upload file.');
 	}
 
-	return new MediaItem(payload.mediaItem);
+	return new MediaItemModel(payload.mediaItem);
 
 	// TODO: We should be getting this info before instead of showing after the failure.
 

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
@@ -13,7 +13,7 @@ import AppTheme from '../../../../_common/theme/AppTheme.vue';
 })
 export default class AppGameCommunityBadge extends Vue {
 	@Prop(Object)
-	community!: Community;
+	community!: CommunityModel;
 
 	readonly formatNumber = formatNumber;
 }

@@ -6,8 +6,11 @@ import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue'
 import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
 import { formatNumber } from '../../../../../../../_common/filters/number';
-import { GamePackage } from '../../../../../../../_common/game/package/package.model';
-import { KeyGroup, KeyGroupType } from '../../../../../../../_common/key-group/key-group.model';
+import { GamePackageModel } from '../../../../../../../_common/game/package/package.model';
+import {
+	KeyGroupModel,
+	KeyGroupType,
+} from '../../../../../../../_common/key-group/key-group.model';
 import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import {
 	LegacyRouteComponent,
@@ -38,8 +41,8 @@ export default class RouteDashGamesManageKeyGroupsList extends LegacyRouteCompon
 		return this.routeStore.game!;
 	}
 
-	keyGroups: KeyGroup[] = [];
-	packages: GamePackage[] = [];
+	keyGroups: KeyGroupModel[] = [];
+	packages: GamePackageModel[] = [];
 	isAdding = false;
 
 	readonly formatNumber = formatNumber;
@@ -58,11 +61,11 @@ export default class RouteDashGamesManageKeyGroupsList extends LegacyRouteCompon
 	}
 
 	routeResolved($payload: any) {
-		this.keyGroups = KeyGroup.populate($payload.keyGroups);
-		this.packages = GamePackage.populate($payload.packages);
+		this.keyGroups = KeyGroupModel.populate($payload.keyGroups);
+		this.packages = GamePackageModel.populate($payload.packages);
 	}
 
-	onKeyGroupAdded(keyGroup: KeyGroup) {
+	onKeyGroupAdded(keyGroup: KeyGroupModel) {
 		this.$router.push({
 			name: 'dash.games.manage.key-groups.edit',
 			params: {

@@ -10,19 +10,19 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import {
-	GameBuild,
 	GameBuildEmulatorInfo,
 	GameBuildError,
+	GameBuildModel,
 	GameBuildStatus,
 	GameBuildType,
 } from '../../../../../_common/game/build/build.model';
 import {
 	GameBuildLaunchablePlatforms,
-	GameBuildLaunchOption,
+	GameBuildLaunchOptionModel,
 } from '../../../../../_common/game/build/launch-option/launch-option.model';
-import { Game } from '../../../../../_common/game/game.model';
-import { GamePackage } from '../../../../../_common/game/package/package.model';
-import { GameRelease } from '../../../../../_common/game/release/release.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import { GamePackageModel } from '../../../../../_common/game/package/package.model';
+import { GameReleaseModel } from '../../../../../_common/game/release/release.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
@@ -40,7 +40,7 @@ export interface FormGameBuildInterface {
 	save: () => Promise<boolean>;
 }
 
-type GameBuildFormModel = GameBuild & {
+type GameBuildFormModel = GameBuildModel & {
 	launch_windows: string;
 	launch_windows_64: string;
 	launch_mac: string;
@@ -66,19 +66,19 @@ class Wrapper extends BaseForm<GameBuildFormModel> {}
 	},
 })
 export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad {
-	modelClass = GameBuild as any;
+	modelClass = GameBuildModel as any;
 
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	@Prop(Object)
-	package!: GamePackage;
+	package!: GamePackageModel;
 
 	@Prop(Object)
-	release!: GameRelease;
+	release!: GameReleaseModel;
 
 	@Prop(Array)
-	releaseLaunchOptions!: GameBuildLaunchOption[];
+	releaseLaunchOptions!: GameBuildLaunchOptionModel[];
 
 	@Prop(Object)
 	buildDownloadCounts!: {
@@ -86,7 +86,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 	};
 
 	@Prop(Array)
-	builds!: GameBuild[];
+	builds!: GameBuildModel[];
 
 	releaseForm = shallowSetup(() => useFormGameRelease()!);
 
@@ -96,13 +96,13 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 	romTypes: string[] = [];
 	isSettingPlatform = false;
 	prevCount = -1;
-	buildLaunchOptions: GameBuildLaunchOption[] = [];
+	buildLaunchOptions: GameBuildLaunchOptionModel[] = [];
 	wasChanged = false;
 
 	readonly formatNumber = formatNumber;
 	readonly formatFuzzynumber = formatFuzzynumber;
 	readonly formatFilesize = formatFilesize;
-	readonly GameBuild = GameBuild;
+	readonly GameBuild = GameBuildModel;
 	readonly GameBuildTypes = {
 		downloadable: GameBuildType.Downloadable,
 		html: GameBuildType.Html,

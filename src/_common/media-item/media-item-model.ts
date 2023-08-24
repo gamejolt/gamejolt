@@ -32,7 +32,7 @@ export const enum MediaItemStatus {
 	Inactive = 'inactive',
 }
 
-export class MediaItem extends Model implements LightboxMediaModel {
+export class MediaItemModel extends Model implements LightboxMediaModel {
 	declare type: MediaItemType;
 	declare parent_id: number;
 	declare hash: string;

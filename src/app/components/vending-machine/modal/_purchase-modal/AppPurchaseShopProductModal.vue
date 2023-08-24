@@ -3,7 +3,7 @@ import { PropType, Ref, computed, onUnmounted, ref, toRefs, watchEffect } from '
 import { Api } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
-import { Background } from '../../../../../_common/background/background.model';
+import { BackgroundModel } from '../../../../../_common/background/background.model';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import {
@@ -15,7 +15,7 @@ import {
 import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
-import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import { showPurchaseMicrotransactionModal } from '../../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
@@ -25,12 +25,12 @@ import AppStickerPack, {
 	StickerPackRatio,
 } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackOpenModal } from '../../../../../_common/sticker/pack/open-modal/modal.service';
-import { UserStickerPack } from '../../../../../_common/sticker/pack/user-pack.model';
+import { UserStickerPackModel } from '../../../../../_common/sticker/pack/user-pack.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserAvatarFrame } from '../../../../../_common/user/user-avatar/frame/frame.model';
+import { UserAvatarFrameModel } from '../../../../../_common/user/user-avatar/frame/frame.model';
 import {
 	styleBorderRadiusLg,
 	styleFlexCenter,
@@ -41,7 +41,7 @@ import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.ro
 import { showNewProductModal } from '../_product/modal/modal.service';
 
 interface PurchaseData {
-	shopProduct: InventoryShopProductSale;
+	shopProduct: InventoryShopProductSaleModel;
 	currency: Currency;
 	balanceRefs: {
 		coinBalance: Ref<number>;
@@ -52,10 +52,12 @@ interface PurchaseData {
 interface PurchaseDataCallbacks {
 	beforeRequest?: () => void;
 	onItemPurchased?: {
-		pack?: (product: UserStickerPack) => void;
-		avatarFrame?: (product: UserAvatarFrame) => void;
-		background?: (product: Background) => void;
-		all?: (product: UserStickerPack | UserAvatarFrame | Background | null) => void;
+		pack?: (product: UserStickerPackModel) => void;
+		avatarFrame?: (product: UserAvatarFrameModel) => void;
+		background?: (product: BackgroundModel) => void;
+		all?: (
+			product: UserStickerPackModel | UserAvatarFrameModel | BackgroundModel | null
+		) => void;
 	};
 }
 
@@ -116,16 +118,16 @@ export async function purchaseShopProduct({
 			}
 		}
 
-		let item: UserStickerPack | UserAvatarFrame | Background | null = null;
+		let item: UserStickerPackModel | UserAvatarFrameModel | BackgroundModel | null = null;
 
 		if (shopProduct.stickerPack) {
-			item = new UserStickerPack(rawProduct);
+			item = new UserStickerPackModel(rawProduct);
 			onItemPurchased?.pack?.(item);
 		} else if (shopProduct.avatarFrame) {
-			item = new UserAvatarFrame(rawProduct);
+			item = new UserAvatarFrameModel(rawProduct);
 			onItemPurchased?.avatarFrame?.(item);
 		} else if (shopProduct.background) {
-			item = new Background(rawProduct);
+			item = new BackgroundModel(rawProduct);
 			onItemPurchased?.background?.(item);
 		} else {
 			console.error('No product model found after purchasing product', {
@@ -149,7 +151,7 @@ export async function purchaseShopProduct({
 <script lang="ts" setup>
 const props = defineProps({
 	shopProduct: {
-		type: Object as PropType<InventoryShopProductSale>,
+		type: Object as PropType<InventoryShopProductSaleModel>,
 		required: true,
 	},
 	currencyOptions: {
@@ -313,7 +315,7 @@ async function purchaseProduct(options: PurchaseData) {
 	processingPurchaseCurrencyId.value = undefined;
 }
 
-function handleStickerPackPurchase(product: UserStickerPack) {
+function handleStickerPackPurchase(product: UserStickerPackModel) {
 	if (stickerPacks.value.some(i => i.id === product.id)) {
 		// Was probably handled somewhere already, ignore.
 		return;

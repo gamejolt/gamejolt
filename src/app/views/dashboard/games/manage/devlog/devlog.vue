@@ -3,8 +3,8 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
-import { EventItem } from '../../../../../../_common/event-item/event-item.model';
-import { FiresidePost } from '../../../../../../_common/fireside/post/post-model';
+import { EventItemModel } from '../../../../../../_common/event-item/event-item.model';
+import { FiresidePostModel } from '../../../../../../_common/fireside/post/post-model';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
 	LegacyRouteComponent,
@@ -77,7 +77,7 @@ export default class RouteDashGamesManageDevlog extends LegacyRouteComponent {
 		);
 	}
 
-	onPostAdded(post: FiresidePost) {
+	onPostAdded(post: FiresidePostModel) {
 		ActivityFeedService.onPostAdded({
 			feed: this.feed!,
 			post,
@@ -87,7 +87,7 @@ export default class RouteDashGamesManageDevlog extends LegacyRouteComponent {
 		});
 	}
 
-	onPostEdited(eventItem: EventItem) {
+	onPostEdited(eventItem: EventItemModel) {
 		ActivityFeedService.onPostEdited({
 			eventItem,
 			appRoute: this.appRoute_,
@@ -96,7 +96,7 @@ export default class RouteDashGamesManageDevlog extends LegacyRouteComponent {
 		});
 	}
 
-	onPostPublished(eventItem: EventItem) {
+	onPostPublished(eventItem: EventItemModel) {
 		ActivityFeedService.onPostPublished({
 			eventItem,
 			appRoute: this.appRoute_,

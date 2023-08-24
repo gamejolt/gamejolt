@@ -1,11 +1,11 @@
 import { Api } from '../api/api.service';
 import { Model } from '../model/model.service';
-import { User } from '../user/user.model';
-import { GamePlaylistGame } from './game/game.model';
+import { UserModel } from '../user/user.model';
+import { GamePlaylistGameModel } from './game/game.model';
 
-export class GamePlaylist extends Model {
+export class GamePlaylistModel extends Model {
 	user_id!: number;
-	user!: User;
+	user!: UserModel;
 	name!: string;
 	slug!: string;
 	is_secret!: boolean;
@@ -16,7 +16,7 @@ export class GamePlaylist extends Model {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 	}
 
@@ -31,13 +31,13 @@ export class GamePlaylist extends Model {
 		});
 
 		return {
-			playlists: GamePlaylist.populate(response.playlists) as GamePlaylist[],
+			playlists: GamePlaylistModel.populate(response.playlists) as GamePlaylistModel[],
 			playlistsWithGame: (response.playlistsWithGame || []) as number[],
 		};
 	}
 
 	async $addGame(gameId: number) {
-		const playlistGame = new GamePlaylistGame();
+		const playlistGame = new GamePlaylistGameModel();
 		playlistGame.game_playlist_id = this.id;
 		playlistGame.game_id = gameId;
 
@@ -46,7 +46,7 @@ export class GamePlaylist extends Model {
 	}
 
 	$removeGame(gameId: number) {
-		const playlistGame = new GamePlaylistGame();
+		const playlistGame = new GamePlaylistGameModel();
 		playlistGame.game_playlist_id = this.id;
 		playlistGame.game_id = gameId;
 

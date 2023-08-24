@@ -8,8 +8,8 @@ import AppLoading from '../loading/AppLoading.vue';
 import { storeModel } from '../model/model-store.service';
 import { useStickerStore } from '../sticker/sticker-store';
 import { useCommonStore } from '../store/common-store';
-import { Quest } from './quest-model';
-import { QuestObjectiveReward } from './quest-objective-reward-model';
+import { QuestModel } from './quest-model';
+import { QuestObjectiveRewardModel } from './quest-objective-reward-model';
 import { QuestRewardData } from './reward/AppQuestRewardModal.vue';
 import { QuestRewardModal } from './reward/modal.service';
 </script>
@@ -17,7 +17,7 @@ import { QuestRewardModal } from './reward/modal.service';
 <script lang="ts" setup>
 const props = defineProps({
 	quest: {
-		type: Object as PropType<Quest>,
+		type: Object as PropType<QuestModel>,
 		required: true,
 	},
 	show: {
@@ -31,7 +31,7 @@ const props = defineProps({
 const { quest, show, isAccept } = toRefs(props);
 
 const emit = defineEmits({
-	newQuest: (_quest: Quest) => true,
+	newQuest: (_quest: QuestModel) => true,
 	payloadError: () => true,
 });
 
@@ -73,15 +73,15 @@ async function onActionPressed() {
 		);
 
 		if (payload.quest) {
-			emit('newQuest', storeModel(Quest, payload.quest));
+			emit('newQuest', storeModel(QuestModel, payload.quest));
 		}
 
 		if (!root.value) {
 			return;
 		}
 
-		const objectiveRewards: QuestObjectiveReward[] = payload.rewards
-			? QuestObjectiveReward.populate(payload.rewards)
+		const objectiveRewards: QuestObjectiveRewardModel[] = payload.rewards
+			? QuestObjectiveRewardModel.populate(payload.rewards)
 			: [];
 
 		const compactRewards = new Map<string, QuestRewardData>();

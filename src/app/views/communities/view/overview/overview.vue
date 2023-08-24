@@ -2,8 +2,11 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
 import { canCommunityCreateFiresides } from '../../../../../_common/community/community.model';
-import { Fireside, canDeviceCreateFiresides } from '../../../../../_common/fireside/fireside.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import {
+	FiresideModel,
+	canDeviceCreateFiresides,
+} from '../../../../../_common/fireside/fireside.model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import {
@@ -77,8 +80,8 @@ export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 	finishedLoading = false;
-	previewFiresides: Fireside[] = [];
-	userFireside: Fireside | null = null;
+	previewFiresides: FiresideModel[] = [];
+	userFireside: FiresideModel | null = null;
 	userHasFireside = false;
 
 	get community() {
@@ -180,13 +183,13 @@ export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 		}
 
 		if ($payload.userFireside) {
-			this.userFireside = new Fireside($payload.userFireside);
+			this.userFireside = new FiresideModel($payload.userFireside);
 		}
 
 		this.userHasFireside = $payload.userHasFireside;
 
 		if ($payload.previewFiresides) {
-			this.previewFiresides = Fireside.populate($payload.previewFiresides);
+			this.previewFiresides = FiresideModel.populate($payload.previewFiresides);
 		}
 	}
 
@@ -198,7 +201,7 @@ export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 		}
 	}
 
-	onPostAdded(post: FiresidePost) {
+	onPostAdded(post: FiresidePostModel) {
 		ActivityFeedService.onPostAdded({
 			feed: this.feed!,
 			post,

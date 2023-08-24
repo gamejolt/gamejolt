@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import AppRealmFullCard from '../../../../../_common/realm/AppRealmFullCard.vue';
-import { Realm } from '../../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../../_common/realm/realm-model';
 
 defineProps({
 	realms: {
-		type: Array as PropType<Realm[]>,
+		type: Array as PropType<RealmModel[]>,
 		required: true,
 	},
 	isLoading: {

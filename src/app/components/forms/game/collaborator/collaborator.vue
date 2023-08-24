@@ -1,14 +1,14 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import {
-	Collaborator,
+	CollaboratorModel,
 	CollaboratorRole,
 } from '../../../../../_common/collaborator/collaborator.model';
 import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../_common/game/game.model';
 
-class Wrapper extends BaseForm<Collaborator> {}
+class Wrapper extends BaseForm<CollaboratorModel> {}
 
 @Options({
 	components: {
@@ -16,13 +16,13 @@ class Wrapper extends BaseForm<Collaborator> {}
 	},
 })
 export default class FormGameCollaborator extends mixins(Wrapper) {
-	modelClass = Collaborator;
+	modelClass = CollaboratorModel;
 	saveMethod = '$invite' as const;
 
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
-	readonly Collaborator = Collaborator;
+	readonly Collaborator = CollaboratorModel;
 	readonly CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
 	readonly CollaboratorRoleCommunityManager = CollaboratorRole.CommunityManager;
 

@@ -3,13 +3,13 @@ import { determine } from 'jstimezonedetect';
 import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../../_common/community/community.model';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
-class FormModel extends CommunityChannel {
+class FormModel extends CommunityChannelModel {
 	permission_posting = 'all';
 	timezone: string | null = null;
 }
@@ -22,9 +22,9 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormCommunityChannelAdd extends mixins(Wrapper) {
-	@Prop({ type: Object, required: true }) community!: Community;
-	@Prop({ type: Array, required: true }) channels!: CommunityChannel[];
-	@Prop({ type: Array, required: true }) archivedChannels!: CommunityChannel[];
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
+	@Prop({ type: Array, required: true }) channels!: CommunityChannelModel[];
+	@Prop({ type: Array, required: true }) archivedChannels!: CommunityChannelModel[];
 
 	commonStore = setup(() => useCommonStore());
 

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { ref, toRefs } from 'vue';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import AppForm, {
+	FormController,
 	createForm,
 	defineFormProps,
-	FormController,
 } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -19,7 +19,7 @@ import {
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
 const props = defineProps({
-	...defineFormProps<Community>(true),
+	...defineFormProps<CommunityModel>(true),
 });
 
 const { model } = toRefs(props);
@@ -27,10 +27,10 @@ const { model } = toRefs(props);
 const lengthLimit = ref(5_000);
 const descriptionContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
-const form: FormController<Community> = createForm({
+const form: FormController<CommunityModel> = createForm({
 	loadUrl: `/web/dash/communities/description/save/${model.value.id}`,
 	model,
-	modelClass: Community,
+	modelClass: CommunityModel,
 	saveMethod: '$saveDescription' as const,
 	onLoad(payload) {
 		lengthLimit.value = payload.lengthLimit;

@@ -2,9 +2,9 @@ import { parse } from 'qs';
 import { computed, inject, InjectionKey, ref } from 'vue';
 import { Api } from '../../_common/api/api.service';
 import { Environment } from '../../_common/environment/environment.service';
-import { GameBuild } from '../../_common/game/build/build.model';
-import { Game } from '../../_common/game/game.model';
-import { GamePackage } from '../../_common/game/package/package.model';
+import { GameBuildModel } from '../../_common/game/build/build.model';
+import { GameModel } from '../../_common/game/game.model';
+import { GamePackageModel } from '../../_common/game/package/package.model';
 import { Meta } from '../../_common/meta/meta-service';
 
 export const GameserverStoreKey: InjectionKey<GameserverStore> = Symbol('gameserver-store');
@@ -16,9 +16,9 @@ export function useGameserverStore() {
 }
 
 export function createGameserverStore() {
-	const game = ref<Game>();
-	const gamePackage = ref<GamePackage>();
-	const build = ref<GameBuild>();
+	const game = ref<GameModel>();
+	const gamePackage = ref<GamePackageModel>();
+	const build = ref<GameBuildModel>();
 	const url = ref('');
 
 	const javaArchive = ref('');
@@ -77,9 +77,9 @@ export function createGameserverStore() {
 
 		const response = await Api.sendRequest(requestUrl);
 
-		game.value = new Game(response.game);
-		gamePackage.value = new GamePackage(response.package);
-		build.value = new GameBuild(response.build);
+		game.value = new GameModel(response.game);
+		gamePackage.value = new GamePackageModel(response.package);
+		build.value = new GameBuildModel(response.build);
 		url.value = response.url;
 
 		javaArchive.value = response.javaArchive;

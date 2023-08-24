@@ -6,13 +6,16 @@ import { Clipboard } from '../../../../../../../_common/clipboard/clipboard-serv
 import { Environment } from '../../../../../../../_common/environment/environment.service';
 import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../_common/filters/number';
-import { GamePackage } from '../../../../../../../_common/game/package/package.model';
+import { GamePackageModel } from '../../../../../../../_common/game/package/package.model';
 import {
 	showErrorGrowl,
 	showSuccessGrowl,
 } from '../../../../../../../_common/growls/growls.service';
-import { KeyGroup, KeyGroupType } from '../../../../../../../_common/key-group/key-group.model';
-import { Key } from '../../../../../../../_common/key/key-model';
+import {
+	KeyGroupModel,
+	KeyGroupType,
+} from '../../../../../../../_common/key-group/key-group.model';
+import { KeyModel } from '../../../../../../../_common/key/key-model';
 import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import {
@@ -53,9 +56,9 @@ export default class RouteDashGamesManageKeyGroupsEdit extends LegacyRouteCompon
 		return this.routeStore.game!;
 	}
 
-	keyGroup: KeyGroup = null as any;
-	packages: GamePackage[] = [];
-	keys: Key[] = [];
+	keyGroup: KeyGroupModel = null as any;
+	packages: GamePackageModel[] = [];
+	keys: KeyModel[] = [];
 
 	isShowingAddKeys = false;
 
@@ -79,9 +82,9 @@ export default class RouteDashGamesManageKeyGroupsEdit extends LegacyRouteCompon
 	}
 
 	routeResolved($payload: any) {
-		this.keyGroup = new KeyGroup($payload.keyGroup);
-		this.packages = GamePackage.populate($payload.packages);
-		this.keys = Key.populate($payload.keys);
+		this.keyGroup = new KeyGroupModel($payload.keyGroup);
+		this.packages = GamePackageModel.populate($payload.packages);
+		this.keys = KeyModel.populate($payload.keys);
 	}
 
 	async searchKeys() {
@@ -91,10 +94,10 @@ export default class RouteDashGamesManageKeyGroupsEdit extends LegacyRouteCompon
 			this.search
 		);
 
-		this.keys = Key.populate(response.keys);
+		this.keys = KeyModel.populate(response.keys);
 	}
 
-	copyKeyLink(key: Key) {
+	copyKeyLink(key: KeyModel) {
 		Clipboard.copy(`${Environment.baseUrl}/claim/${key.key}`);
 	}
 
@@ -104,7 +107,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends LegacyRouteCompon
 		this.isShowingAddKeys = false;
 	}
 
-	async removeGroup(keyGroup: KeyGroup) {
+	async removeGroup(keyGroup: KeyGroupModel) {
 		const resolved = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to remove this key group? All keys within this key group will be invalidated. Any access that users may have gained from these keys will be revoked. This can not be reversed.'
@@ -133,7 +136,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends LegacyRouteCompon
 		});
 	}
 
-	async removeKey(key: Key) {
+	async removeKey(key: KeyModel) {
 		const resolved = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to remove this key? This will revoke this key's access, or anyone that has claimed this key. This can not be reversed.`

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
@@ -24,14 +24,14 @@ import FormGameFeaturedBadge from '../../../components/forms/game/featured-badge
 	},
 })
 export default class RouteBadgeFeatured extends LegacyRouteComponent {
-	game: Game | null = null;
+	game: GameModel | null = null;
 
 	get routeTitle() {
 		return 'Featured Badge';
 	}
 
 	routeResolved($payload: any) {
-		this.game = new Game($payload.game);
+		this.game = new GameModel($payload.game);
 	}
 }
 </script>

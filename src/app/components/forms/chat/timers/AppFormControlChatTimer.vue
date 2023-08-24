@@ -18,7 +18,7 @@ import {
 	validateMinValue,
 } from '../../../../../_common/form-vue/validators';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { ChatCommand } from '../commands/command.model';
+import { ChatCommandModel } from '../commands/command.model';
 import { ChatTimersFormModel } from './FormChatTimers.vue';
 
 const MAX_EDITOR_HEIGHT = 480;
@@ -30,7 +30,7 @@ const previewContentRules = new ContentRules({
 
 const props = defineProps({
 	item: {
-		type: Object as PropType<ChatCommand>,
+		type: Object as PropType<ChatCommandModel>,
 		required: true,
 	},
 	maxInvokeSchedule: {

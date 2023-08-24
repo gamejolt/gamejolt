@@ -2,13 +2,13 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { PostOpenSource, trackGotoCommunity } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
-import { EventItem } from '../../event-item/event-item.model';
+import { EventItemModel } from '../../event-item/event-item.model';
 import { formatNumber } from '../../filters/number';
 import AppPostCard from '../../fireside/post/card/AppPostCard.vue';
 import AppPostCardPlaceholder from '../../fireside/post/card/AppPostCardPlaceholder.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
-import { Community } from '../community.model';
+import { CommunityModel } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
 import AppCommunityThumbnailImg from '../thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
@@ -24,9 +24,9 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 	},
 })
 export default class AppCommunityChunk extends Vue {
-	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
 
-	items: EventItem[] = [];
+	items: EventItemModel[] = [];
 	isLoadingPosts = true;
 
 	readonly formatNumber = formatNumber;
@@ -45,7 +45,7 @@ export default class AppCommunityChunk extends Vue {
 			{},
 			{ detach: true }
 		);
-		this.items = EventItem.populate(payload.items);
+		this.items = EventItemModel.populate(payload.items);
 		this.isLoadingPosts = false;
 	}
 

@@ -2,8 +2,8 @@
 import { Inject, Options, Prop, Watch } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
-import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
+import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments } from '../../../../../_common/illustration/illustrations';
@@ -153,7 +153,7 @@ function makeRequest(route: RouteLocationNormalized) {
 	resolver: ({ route }) => makeRequest(route),
 })
 export default class RouteCommunitiesViewChannelJamEntries extends LegacyRouteComponent {
-	@Prop({ type: Array, required: true }) categories!: CommunityCompetitionVotingCategory[];
+	@Prop({ type: Array, required: true }) categories!: CommunityCompetitionVotingCategoryModel[];
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
@@ -161,7 +161,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends LegacyRouteCo
 	readonly formatNumber = formatNumber;
 	readonly illNoComments = illNoComments;
 
-	entries: CommunityCompetitionEntry[] = [];
+	entries: CommunityCompetitionEntryModel[] = [];
 	perPage = 50;
 	page = 1;
 	sort = 'random';
@@ -331,7 +331,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends LegacyRouteCo
 	}
 
 	handlePayload($payload: any) {
-		this.entries = CommunityCompetitionEntry.populate($payload.entries);
+		this.entries = CommunityCompetitionEntryModel.populate($payload.entries);
 		if (this.entries.length > this.competition.entry_count) {
 			this.competition.entry_count = this.entries.length;
 		}

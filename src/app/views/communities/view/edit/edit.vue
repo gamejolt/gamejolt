@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
+import { CollaboratorModel } from '../../../../../_common/collaborator/collaborator.model';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
@@ -47,7 +47,7 @@ export default class RouteCommunitiesViewEdit extends LegacyRouteComponent {
 	routeResolved($payload: any) {
 		updateCommunity(this.routeStore, $payload.community);
 		this.routeStore.collaborator = $payload.collaboration
-			? new Collaborator($payload.collaboration)
+			? new CollaboratorModel($payload.collaboration)
 			: null;
 	}
 }

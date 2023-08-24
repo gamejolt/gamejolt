@@ -4,8 +4,8 @@ import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import AppLoading from '../../loading/AppLoading.vue';
-import { SiteContentBlock } from '../../site/content-block/content-block-model';
-import { Site } from '../../site/site-model';
+import { SiteContentBlockModel } from '../../site/content-block/content-block-model';
+import { SiteModel } from '../../site/site-model';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import FormContentBlockEditor from './editor-form.vue';
 
@@ -21,9 +21,9 @@ const PreviewDebounce = 3000;
 	},
 })
 export default class AppContentBlockEditor extends Vue {
-	@Prop(Object) site!: Site;
+	@Prop(Object) site!: SiteModel;
 	@Prop(String) windowId!: string;
-	@Prop(Object) contentBlock!: SiteContentBlock;
+	@Prop(Object) contentBlock!: SiteContentBlockModel;
 
 	isPreviewLoading = false;
 	private previewIndex = 0;

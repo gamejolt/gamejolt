@@ -2,12 +2,12 @@
 import { PropType } from 'vue';
 import AppUserAvatar from '../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { User } from '../../../_common/user/user.model';
+import { UserModel } from '../../../_common/user/user.model';
 import { styleWhen } from '../../../_styles/mixins';
 
 defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 	disableLink: {

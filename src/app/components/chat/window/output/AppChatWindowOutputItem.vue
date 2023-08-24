@@ -26,15 +26,15 @@ import {
 	retryFailedQueuedMessage,
 	userCanModerateOtherUser,
 } from '../../client';
-import { ChatMessage } from '../../message';
-import { ChatRoom } from '../../room';
+import { ChatMessageModel } from '../../message';
+import { ChatRoomModel } from '../../room';
 import { getChatUserRoleData } from '../../user';
 import AppChatUserPopover from '../../user-popover/AppChatUserPopover.vue';
 import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '../variables';
 import AppChatWindowOutputItemTime from './AppChatWindowOutputItemTime.vue';
 
 export interface ChatMessageEditEvent {
-	message: ChatMessage;
+	message: ChatMessageModel;
 }
 
 const InviewConfig = new ScrollInviewConfig();
@@ -45,11 +45,11 @@ const DisplayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 
 <script lang="ts" setup>
 const props = defineProps({
 	message: {
-		type: Object as PropType<ChatMessage>,
+		type: Object as PropType<ChatMessageModel>,
 		required: true,
 	},
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 	messagePadding: {

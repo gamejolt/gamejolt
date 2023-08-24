@@ -1,7 +1,7 @@
 <script lang="ts">
 import { mixins, Options } from 'vue-property-decorator';
 import {
-	CommunityCompetition,
+	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
 } from '../../../../../../_common/community/competition/competition.model';
 import { formatDate } from '../../../../../../_common/filters/date';
@@ -12,7 +12,7 @@ import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import AppCommunityCompetitionDate from '../../../../community/competition/date/date.vue';
 
-class Wrapper extends BaseForm<CommunityCompetition> {}
+class Wrapper extends BaseForm<CommunityCompetitionModel> {}
 
 @Options({
 	components: {
@@ -23,8 +23,8 @@ class Wrapper extends BaseForm<CommunityCompetition> {}
 	},
 })
 export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
-	modelClass = CommunityCompetition;
-	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
+	modelClass = CommunityCompetitionModel;
+	timezoneService: FormTimezoneService<CommunityCompetitionModel> | null = null;
 
 	readonly formatDate = formatDate;
 

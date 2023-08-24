@@ -1,6 +1,6 @@
 import { Model } from '../../model/model.service';
 
-export class UserWallet extends Model {
+export class UserWalletModel extends Model {
 	constructor(data: any = {}) {
 		super(data);
 	}

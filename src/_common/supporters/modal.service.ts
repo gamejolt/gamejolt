@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from 'vue';
-import { FiresidePost } from '../fireside/post/post-model';
-import { Game } from '../game/game.model';
+import { FiresidePostModel } from '../fireside/post/post-model';
+import { GameModel } from '../game/game.model';
 import { showModal } from '../modal/modal.service';
 
-export type SupportersModel = FiresidePost | Game;
+export type SupportersModel = FiresidePostModel | GameModel;
 
 interface SupportersModalOptions {
 	model: SupportersModel;

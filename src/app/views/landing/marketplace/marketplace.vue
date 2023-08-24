@@ -3,8 +3,8 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import { Game } from '../../../../_common/game/game.model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
+import { GameModel } from '../../../../_common/game/game.model';
 import { AppAuthJoinLazy } from '../../../../_common/lazy';
 import { Meta } from '../../../../_common/meta/meta-service';
 import {
@@ -36,8 +36,8 @@ export default class RouteLandingMarketplace extends LegacyRouteComponent {
 		return this.commonStore;
 	}
 
-	firesidePosts: FiresidePost[] = [];
-	games: Game[] = [];
+	firesidePosts: FiresidePostModel[] = [];
+	games: GameModel[] = [];
 
 	readonly Screen = Screen;
 	readonly imageJolt = imageJolt;
@@ -53,8 +53,8 @@ export default class RouteLandingMarketplace extends LegacyRouteComponent {
 		Meta.twitter = $payload.twitter;
 		Meta.fb.image = Meta.twitter.image = socialImage;
 
-		this.firesidePosts = FiresidePost.populate($payload.firesidePosts);
-		this.games = Game.populate($payload.games);
+		this.firesidePosts = FiresidePostModel.populate($payload.firesidePosts);
+		this.games = GameModel.populate($payload.games);
 	}
 }
 </script>

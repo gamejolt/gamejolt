@@ -1,9 +1,9 @@
 import { Model } from '../../../model/model.service';
-import { User } from '../../../user/user.model';
+import { UserModel } from '../../../user/user.model';
 
-export class GameDataStoreItem extends Model {
+export class GameDataStoreItemModel extends Model {
 	declare user_id: number;
-	declare user: User;
+	declare user: UserModel;
 	declare game_id: number;
 	declare key: string;
 	declare data: string;
@@ -14,7 +14,7 @@ export class GameDataStoreItem extends Model {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 	}
 

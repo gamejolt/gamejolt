@@ -5,8 +5,8 @@ import { HistoryTick } from '../../history-tick/history-tick-service';
 import { Navigate } from '../../navigate/navigate.service';
 import { Popper } from '../../popper/popper.service';
 import { $gettext } from '../../translate/translate.service';
-import { GameBuild } from '../build/build.model';
-import { Game } from '../game.model';
+import { GameBuildModel } from '../build/build.model';
+import { GameModel } from '../game.model';
 
 export interface GameDownloaderOptions {
 	key?: string;
@@ -19,8 +19,8 @@ class GameDownloaderService {
 
 	async download(
 		router: Router,
-		game: Game,
-		build: GameBuild,
+		game: GameModel,
+		build: GameBuildModel,
 		options: GameDownloaderOptions = {}
 	) {
 		// In case any popover was used to click the download.

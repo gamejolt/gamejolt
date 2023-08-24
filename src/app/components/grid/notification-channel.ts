@@ -2,12 +2,15 @@ import { computed, reactive, shallowReadonly } from 'vue';
 import { Router } from 'vue-router';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { CurrencyType } from '../../../_common/currency/currency-type';
-import { Fireside } from '../../../_common/fireside/fireside.model';
+import { FiresideModel } from '../../../_common/fireside/fireside.model';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
-import { Notification, NotificationType } from '../../../_common/notification/notification-model';
-import { QuestNotification } from '../../../_common/quest/quest-notification-model';
+import {
+	NotificationModel,
+	NotificationType,
+} from '../../../_common/notification/notification-model';
+import { QuestNotificationModel } from '../../../_common/quest/quest-notification-model';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
@@ -239,7 +242,7 @@ export function createGridNotificationChannel(
 
 	function _onNewNotification(payload: NewNotificationPayload) {
 		const data = payload.notification_data.event_item;
-		const notification = reactive(new Notification(data)) as Notification;
+		const notification = reactive(new NotificationModel(data)) as NotificationModel;
 
 		switch (notification.type) {
 			case NotificationType.FriendshipRequest:
@@ -256,7 +259,7 @@ export function createGridNotificationChannel(
 				break;
 
 			case NotificationType.QuestNotification: {
-				if (!(notification.action_model instanceof QuestNotification)) {
+				if (!(notification.action_model instanceof QuestNotificationModel)) {
 					break;
 				}
 
@@ -289,7 +292,7 @@ export function createGridNotificationChannel(
 	}
 
 	function _onPostUpdated(payload: PostUpdatedPayload) {
-		const post = reactive(new FiresidePost(payload.post_data)) as FiresidePost;
+		const post = reactive(new FiresidePostModel(payload.post_data)) as FiresidePostModel;
 
 		if (payload.was_published) {
 			// Send out a growl to let the user know that their post was updated.
@@ -340,7 +343,7 @@ export function createGridNotificationChannel(
 	}
 
 	function _onFeatureFireside(payload: FeatureFiresidePayload) {
-		const fireside = new Fireside(payload.fireside_data);
+		const fireside = new FiresideModel(payload.fireside_data);
 		if (!fireside.community) {
 			console.error('Featured fireside must have a community, but it does not.');
 			return;

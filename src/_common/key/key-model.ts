@@ -1,6 +1,6 @@
 import { Model } from '../model/model.service';
 
-export class Key extends Model {
+export class KeyModel extends Model {
 	declare key_group_id: number;
 	declare resource: string;
 	declare resource_id: number;

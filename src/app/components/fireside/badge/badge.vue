@@ -3,7 +3,7 @@ import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppFiresideLiveTag from '../../../../_common/fireside/AppFiresideLiveTag.vue';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { FiresideModel } from '../../../../_common/fireside/fireside.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { vAppObserveDimensions } from '../../../../_common/observe-dimensions/observe-dimensions.directive';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
@@ -27,7 +27,7 @@ import AppFiresideStreamPreview from '../stream/preview/preview.vue';
 })
 export default class AppFiresideBadge extends Vue {
 	@Prop({ type: Object, required: true })
-	fireside!: Fireside | null;
+	fireside!: FiresideModel | null;
 
 	@Prop({ type: Boolean, required: false, default: null })
 	showPreview!: boolean | null;

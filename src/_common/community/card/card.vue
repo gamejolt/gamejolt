@@ -2,7 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import AppCommunityCardBase from '../card-base/card-base.vue';
-import { Community } from '../community.model';
+import { CommunityModel } from '../community.model';
 import AppCommunityThumbnailImg from '../thumbnail/AppCommunityThumbnailImg.vue';
 
 @Options({
@@ -12,7 +12,7 @@ import AppCommunityThumbnailImg from '../thumbnail/AppCommunityThumbnailImg.vue'
 	},
 })
 export default class AppCommunityCard extends Vue {
-	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
 	@Prop({ type: Boolean, default: false }) elevate!: boolean;
 	@Prop({ type: Boolean, default: true }) allowEdit!: boolean;
 	@Prop({ type: Boolean, default: false }) trackGoto!: boolean;

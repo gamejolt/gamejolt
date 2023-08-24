@@ -1,16 +1,16 @@
 import { Model } from '../../model/model.service';
-import { Realm } from '../../realm/realm-model';
+import { RealmModel } from '../../realm/realm-model';
 
-export class FiresideRealm extends Model {
+export class FiresideRealmModel extends Model {
 	declare fireside_id: number;
-	declare realm: Realm;
+	declare realm: RealmModel;
 	declare added_on: number;
 
-	constructor(data: Partial<FiresideRealm> = {}) {
+	constructor(data: Partial<FiresideRealmModel> = {}) {
 		super(data);
 
 		if (data.realm) {
-			this.realm = new Realm(data.realm);
+			this.realm = new RealmModel(data.realm);
 		}
 	}
 }

@@ -8,13 +8,13 @@ import { showLikersModal } from '../../likers/modal.service';
 import { EventTopic } from '../../system/event/event-topic';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
-import { Game } from '../game.model';
-import { GameRating, GameRatingValue } from './rating.model';
+import { GameModel } from '../game.model';
+import { GameRatingModel, GameRatingValue } from './rating.model';
 
 export const RatingWidgetOnChange = 'GameRating.changed';
 export interface RatingWidgetOnChangePayload {
 	gameId: number;
-	userRating?: GameRating;
+	userRating?: GameRatingModel;
 }
 
 export const onRatingWidgetChange = new EventTopic<RatingWidgetOnChangePayload>();
@@ -23,11 +23,11 @@ export const onRatingWidgetChange = new EventTopic<RatingWidgetOnChangePayload>(
 <script lang="ts" setup>
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	userRating: {
-		type: Object as PropType<GameRating>,
+		type: Object as PropType<GameRatingModel>,
 		default: undefined,
 	},
 	hideCount: {
@@ -72,7 +72,7 @@ async function updateVote(rating: number) {
 
 			await oldUserRating.$remove();
 		} else {
-			const newUserRating = new GameRating({
+			const newUserRating = new GameRatingModel({
 				game_id: game.value.id,
 				rating: rating,
 			});

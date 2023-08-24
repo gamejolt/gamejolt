@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
-import { Background } from '../../../../../_common/background/background.model';
+import { BackgroundModel } from '../../../../../_common/background/background.model';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import { canDeviceViewFiresides } from '../../../../../_common/fireside/fireside.model';
@@ -12,7 +12,7 @@ import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions
 import AppOnHover from '../../../../../_common/on/AppOnHover.vue';
 import { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
 import AppScrollScroller, {
-createScroller,
+	createScroller,
 } from '../../../../../_common/scroll/AppScrollScroller.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useEventSubscription } from '../../../../../_common/system/event/event-topic';
@@ -20,18 +20,22 @@ import { kThemeBiBg, kThemeBiFg } from '../../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
-styleBorderRadiusBase,
-styleElevate,
-styleLineClamp,
-styleWhen,
+	styleBorderRadiusBase,
+	styleElevate,
+	styleLineClamp,
+	styleWhen,
 } from '../../../../../_styles/mixins';
-import { buildCSSPixelValue, kFontFamilyHeading, kFontSizeBase } from '../../../../../_styles/variables';
+import {
+	buildCSSPixelValue,
+	kFontFamilyHeading,
+	kFontSizeBase,
+} from '../../../../../_styles/variables';
 import { useResizeObserver } from '../../../../../utils/resize-observer';
 import { debounce } from '../../../../../utils/utils';
 import { useGridStore } from '../../../grid/grid-store';
 import { loadOlderChatMessages, onNewChatMessage } from '../../client';
 import { TIMEOUT_CONSIDER_QUEUED } from '../../message';
-import { ChatRoom } from '../../room';
+import { ChatRoomModel } from '../../room';
 import { ChatWindowAvatarSize } from '../variables';
 import AppChatWindowOutputItem from './AppChatWindowOutputItem.vue';
 
@@ -40,11 +44,11 @@ const MESSAGE_PADDING = 12;
 
 const props = defineProps({
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 	background: {
-		type: Object as PropType<Background>,
+		type: Object as PropType<BackgroundModel>,
 		default: undefined,
 	},
 	overlay: {
@@ -347,8 +351,8 @@ const minFiresideBannerHeight = buildCSSPixelValue(40);
  * Margin added to the scroller content top so the banner doesn't obscure the
  * oldest messages.
  */
-const bannerScrollerMargin = computed(
-	() => buildCSSPixelValue(firesideBannerMargin.value * 2 + minFiresideBannerHeight.value)
+const bannerScrollerMargin = computed(() =>
+	buildCSSPixelValue(firesideBannerMargin.value * 2 + minFiresideBannerHeight.value)
 );
 </script>
 

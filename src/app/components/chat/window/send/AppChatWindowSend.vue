@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, nextTick, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
-import { createFocusToken } from '../../../../../utils/focus-token';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../_common/content/content-document';
@@ -20,10 +19,11 @@ import AppShortkey from '../../../../../_common/shortkey/AppShortkey.vue';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { createFocusToken } from '../../../../../utils/focus-token';
 import { useGridStore } from '../../../grid/grid-store';
 import { editMessage as chatEditMessage, queueChatMessage, tryGetRoomRole } from '../../client';
-import { ChatMessage } from '../../message';
-import { ChatRoom } from '../../room';
+import { ChatMessageModel } from '../../message';
+import { ChatRoomModel } from '../../room';
 import { ChatWindowLeftGutterSize } from '../variables';
 
 const TYPING_TIMEOUT_INTERVAL = 3000;
@@ -34,7 +34,7 @@ const displayRules = new ContentRules({ maxMediaWidth: 125, maxMediaHeight: 100 
 
 const props = defineProps({
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 	capabilities: {
@@ -201,7 +201,7 @@ onUnmounted(() => {
 
 watch(
 	() => room.value.messageEditing,
-	async (message: ChatMessage | null) => {
+	async (message: ChatMessageModel | null) => {
 		if (message) {
 			form.formModel.content = message.content;
 			form.formModel.id = message.id;

@@ -1,16 +1,16 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppBlockForm from '../../block/form/form.vue';
-import { Comment } from '../../comment/comment-model';
-import { Community } from '../../community/community.model';
-import { Fireside } from '../../fireside/fireside.model';
-import { FiresidePost } from '../../fireside/post/post-model';
-import { ForumPost } from '../../forum/post/post.model';
-import { ForumTopic } from '../../forum/topic/topic.model';
-import { Game } from '../../game/game.model';
+import { CommentModel } from '../../comment/comment-model';
+import { CommunityModel } from '../../community/community.model';
+import { FiresideModel } from '../../fireside/fireside.model';
+import { FiresidePostModel } from '../../fireside/post/post-model';
+import { ForumPostModel } from '../../forum/post/post.model';
+import { ForumTopicModel } from '../../forum/topic/topic.model';
+import { GameModel } from '../../game/game.model';
 import { showInfoGrowl } from '../../growls/growls.service';
 import { BaseModal } from '../../modal/base';
-import { User } from '../../user/user.model';
+import { UserModel } from '../../user/user.model';
 import AppReportForm from '../form/form.vue';
 
 @Options({
@@ -21,26 +21,34 @@ import AppReportForm from '../form/form.vue';
 })
 export default class AppReportModal extends mixins(BaseModal) {
 	@Prop(Object)
-	resource!: Comment | User | Game | FiresidePost | ForumTopic | ForumPost | Community | Fireside;
+	resource!:
+		| CommentModel
+		| UserModel
+		| GameModel
+		| FiresidePostModel
+		| ForumTopicModel
+		| ForumPostModel
+		| CommunityModel
+		| FiresideModel;
 
 	page: 'report' | 'block' = 'report';
 
 	get type() {
-		if (this.resource instanceof Comment) {
+		if (this.resource instanceof CommentModel) {
 			return 'Comment';
-		} else if (this.resource instanceof User) {
+		} else if (this.resource instanceof UserModel) {
 			return 'User';
-		} else if (this.resource instanceof Game) {
+		} else if (this.resource instanceof GameModel) {
 			return 'Game';
-		} else if (this.resource instanceof FiresidePost) {
+		} else if (this.resource instanceof FiresidePostModel) {
 			return 'Fireside_Post';
-		} else if (this.resource instanceof ForumTopic) {
+		} else if (this.resource instanceof ForumTopicModel) {
 			return 'Forum_Topic';
-		} else if (this.resource instanceof ForumPost) {
+		} else if (this.resource instanceof ForumPostModel) {
 			return 'Forum_Post';
-		} else if (this.resource instanceof Community) {
+		} else if (this.resource instanceof CommunityModel) {
 			return 'Community';
-		} else if (this.resource instanceof Fireside) {
+		} else if (this.resource instanceof FiresideModel) {
 			return 'Fireside';
 		}
 		return '';
@@ -89,7 +97,7 @@ export default class AppReportModal extends mixins(BaseModal) {
 	}
 
 	onSubmittedBlock() {
-		if (this.resource instanceof User) {
+		if (this.resource instanceof UserModel) {
 			showInfoGrowl(
 				this.$gettextInterpolate(`You blocked %{ user }!`, {
 					user: this.resource.username,

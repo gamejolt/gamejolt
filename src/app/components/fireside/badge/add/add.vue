@@ -1,9 +1,9 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Community } from '../../../../../_common/community/community.model';
-import { Fireside } from '../../../../../_common/fireside/fireside.model';
-import { Realm } from '../../../../../_common/realm/realm-model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
+import { FiresideModel } from '../../../../../_common/fireside/fireside.model';
+import { RealmModel } from '../../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTheme from '../../../../../_common/theme/AppTheme.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -19,10 +19,10 @@ import { FiresideAddModal } from '../../add-modal/add-modal.service';
 })
 export default class AppFiresideBadgeAdd extends Vue {
 	@Prop({ type: Object, default: undefined })
-	community!: Community | undefined;
+	community!: CommunityModel | undefined;
 
 	@Prop({ type: Array, default: undefined })
-	realms!: Realm[] | undefined;
+	realms!: RealmModel[] | undefined;
 
 	commonStore = setup(() => useCommonStore());
 
@@ -52,7 +52,7 @@ export default class AppFiresideBadgeAdd extends Vue {
 			realms: this.realms,
 		});
 
-		if (fireside instanceof Fireside) {
+		if (fireside instanceof FiresideModel) {
 			this.$router.push(fireside.routeLocation);
 		}
 	}

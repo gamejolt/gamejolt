@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, toRefs } from 'vue';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { AvatarFrame } from './frame.model';
+import { AvatarFrameModel } from './frame.model';
 
 const BASE_FRAME_INSET = -10;
 const BASE_FRAME_SIZE = 100 - BASE_FRAME_INSET * 2;
 
 const props = defineProps({
 	frame: {
-		type: [Object, null] as PropType<AvatarFrame | null>,
+		type: [Object, null] as PropType<AvatarFrameModel | null>,
 		required: true,
 	},
 	inset: {

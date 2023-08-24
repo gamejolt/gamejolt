@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../modal/modal.service';
-import { User } from '../../user/user.model';
+import { UserModel } from '../../user/user.model';
 
 interface ModalOptions {
-	user: User;
+	user: UserModel;
 }
 
 export class InviteModal {

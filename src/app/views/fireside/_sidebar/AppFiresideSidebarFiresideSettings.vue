@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import { computed, ref, watch, watchEffect } from 'vue';
-import { arrayRemove } from '../../../../utils/array';
-import { Background } from '../../../../_common/background/background.model';
+import { BackgroundModel } from '../../../../_common/background/background.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { Community } from '../../../../_common/community/community.model';
-import { FiresideChatSettings } from '../../../../_common/fireside/chat/chat-settings.model';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
+import { FiresideChatSettingsModel } from '../../../../_common/fireside/chat/chat-settings.model';
+import { FiresideModel } from '../../../../_common/fireside/fireside.model';
 import { FIRESIDE_ROLES } from '../../../../_common/fireside/role/role.model';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -19,13 +18,14 @@ import AppFormControlToggleButton from '../../../../_common/form-vue/controls/to
 import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { arrayRemove } from '../../../../utils/array';
 import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import {
 	extinguishFireside,
@@ -57,14 +57,14 @@ const {
 	canReport,
 } = c;
 
-const selectedCommunities = ref<{ community: Community }[]>([]);
+const selectedCommunities = ref<{ community: CommunityModel }[]>([]);
 const targetableCommunities = computed(() => selectedCommunities.value.map(i => i.community));
-const selectedRealms = ref<Realm[]>([]);
+const selectedRealms = ref<RealmModel[]>([]);
 const maxRealms = ref(0);
 
-const form: FormController<Fireside> = createForm({
+const form: FormController<FiresideModel> = createForm({
 	warnOnDiscard: false,
-	modelClass: Fireside,
+	modelClass: FiresideModel,
 	// Just wrapping in a ref to make the form happy. It never actually changes.
 	model: ref(fireside),
 	loadUrl: `/web/dash/fireside/save/${fireside.hash}`,
@@ -83,7 +83,7 @@ const form: FormController<Fireside> = createForm({
 	},
 });
 
-function attachRealm(realm: Realm, append = true) {
+function attachRealm(realm: RealmModel, append = true) {
 	// Do nothing if that realm is already attached.
 	if (selectedRealms.value.find(i => i.id === realm.id)) {
 		return;
@@ -97,7 +97,7 @@ function attachRealm(realm: Realm, append = true) {
 	form.changed = true;
 }
 
-function removeRealm(realm: Realm) {
+function removeRealm(realm: RealmModel) {
 	const removed = arrayRemove(selectedRealms.value, i => i.id === realm.id, {
 		onMissing: () => console.warn('Attempted to remove a realm that is not attached'),
 	});
@@ -107,9 +107,9 @@ function removeRealm(realm: Realm) {
 	}
 }
 
-const settingsForm: FormController<FiresideChatSettings> = createForm({
+const settingsForm: FormController<FiresideChatSettingsModel> = createForm({
 	warnOnDiscard: false,
-	modelClass: FiresideChatSettings,
+	modelClass: FiresideChatSettingsModel,
 	model: chatSettings,
 	loadUrl: computed(() => {
 		// Only load this form if we have permissions to edit the fireside.
@@ -134,7 +134,7 @@ const settingsForm: FormController<FiresideChatSettings> = createForm({
 // well. This should only really occur if they do it in another tab or client.
 watch(chatSettings, () => settingsForm.formModel.assign(chatSettings.value), { deep: true });
 
-const backgrounds = ref<Background[]>([]);
+const backgrounds = ref<BackgroundModel[]>([]);
 const backgroundForm: FormController<{ background_id?: number }> = createForm({
 	warnOnDiscard: false,
 	loadUrl: computed(() => {
@@ -145,7 +145,7 @@ const backgroundForm: FormController<{ background_id?: number }> = createForm({
 		return `/web/fireside/backgrounds/${fireside.hash}`;
 	}),
 	onLoad(payload) {
-		backgrounds.value = Background.populate(payload.backgrounds);
+		backgrounds.value = BackgroundModel.populate(payload.backgrounds);
 		backgroundForm.formModel.background_id = payload.currentBackgroundId || undefined;
 	},
 	async onSubmit() {

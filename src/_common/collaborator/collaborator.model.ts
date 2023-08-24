@@ -1,8 +1,8 @@
 import { Api } from '../api/api.service';
-import { Community } from '../community/community.model';
-import { Game } from '../game/game.model';
+import { CommunityModel } from '../community/community.model';
+import { GameModel } from '../game/game.model';
 import { Model } from '../model/model.service';
-import { User } from '../user/user.model';
+import { UserModel } from '../user/user.model';
 import { Perm } from './collaboratable';
 
 export type Roles =
@@ -29,7 +29,7 @@ export const enum CollaboratorRole {
 	JamOrganizer = 'jam-organizer',
 }
 
-export class Collaborator extends Model {
+export class CollaboratorModel extends Model {
 	declare resource: 'Game' | 'Community';
 	declare resource_id: number;
 	declare user_id: number;
@@ -39,9 +39,9 @@ export class Collaborator extends Model {
 	perms: Perm[] = [];
 	declare added_on: number;
 	declare accepted_on: number;
-	declare game?: Game;
-	declare community?: Community;
-	declare user?: User;
+	declare game?: GameModel;
+	declare community?: CommunityModel;
+	declare user?: UserModel;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -51,14 +51,14 @@ export class Collaborator extends Model {
 
 		if (data.resource_model) {
 			if (this.resource === 'Game') {
-				this.game = new Game(data.resource_model);
+				this.game = new GameModel(data.resource_model);
 			} else if (this.resource === 'Community') {
-				this.community = new Community(data.resource_model);
+				this.community = new CommunityModel(data.resource_model);
 			}
 		}
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 	}
 

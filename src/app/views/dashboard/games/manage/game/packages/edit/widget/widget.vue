@@ -7,7 +7,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../../../../_common/screen/screen-service';
-import { Sellable } from '../../../../../../../../../_common/sellable/sellable.model';
+import { SellableModel } from '../../../../../../../../../_common/sellable/sellable.model';
 
 @Options({
 	name: 'RouteDashGamesManageGamePackagesEditWidget',
@@ -23,7 +23,7 @@ import { Sellable } from '../../../../../../../../../_common/sellable/sellable.m
 		),
 })
 export default class RouteDashGamesManageGamePackagesEditWidget extends LegacyRouteComponent {
-	sellable: Sellable | null = null;
+	sellable: SellableModel | null = null;
 	theme: string = null as any;
 	widgetUrl = '';
 	widgetCode = '';
@@ -31,7 +31,7 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends LegacyRo
 	readonly Screen = Screen;
 
 	routeResolved($payload: any) {
-		this.sellable = $payload.sellable ? new Sellable($payload.sellable) : null;
+		this.sellable = $payload.sellable ? new SellableModel($payload.sellable) : null;
 		this.theme = ''; // Default to dark.
 	}
 

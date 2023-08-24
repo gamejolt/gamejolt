@@ -1,10 +1,10 @@
 import { Presence } from 'phoenix';
 import { computed, markRaw, onMounted, onUnmounted, Ref, ref, shallowReadonly, watch } from 'vue';
-import { Background } from '../../../_common/background/background.model';
+import { BackgroundModel } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
 import { MarkObject } from '../../../_common/content/mark-object';
-import { Fireside } from '../../../_common/fireside/fireside.model';
+import { FiresideModel } from '../../../_common/fireside/fireside.model';
 import { getModel, storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
 import {
@@ -12,7 +12,7 @@ import {
 	updateReactionCount,
 } from '../../../_common/reaction/reaction-count';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
-import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
+import { StickerPlacementModel } from '../../../_common/sticker/placement/placement.model';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { run } from '../../../utils/utils';
@@ -23,8 +23,8 @@ import {
 	setTimeSplit,
 	updateChatRoomLastMessageOn,
 } from './client';
-import { ChatMessage } from './message';
-import { ChatRoom } from './room';
+import { ChatMessageModel } from './message';
+import { ChatRoomModel } from './room';
 import { ChatUser } from './user';
 
 export type ChatRoomChannel = ReturnType<typeof createChatRoomChannel>;
@@ -65,7 +65,7 @@ interface OwnerSyncPayload {
 }
 
 export interface PlaceStickerPayload {
-	stickerPlacement: StickerPlacement;
+	stickerPlacement: StickerPlacementModel;
 	success?: boolean;
 	unlockedPack?: UnknownModelData;
 }
@@ -117,7 +117,7 @@ export function createChatRoomChannel(
 	// This is because the join set its up async, but all the functionality that
 	// attaches to this channel will be called after the room is set up. So we
 	// can just safely access it.
-	const _room = ref<ChatRoom>();
+	const _room = ref<ChatRoomModel>();
 	const room = computed(() => _room.value!);
 
 	let _freezeMessageLimitRemovals = false;
@@ -152,19 +152,19 @@ export function createChatRoomChannel(
 	const joinPromise = channelController.join({
 		async onJoin(response: JoinPayload) {
 			client.roomChannels.set(roomId, markRaw(c));
-			_room.value = storeModel(ChatRoom, { chat: client, ...response.room });
+			_room.value = storeModel(ChatRoomModel, { chat: client, ...response.room });
 
 			// Clear out any old messages so we don't use old data from the
 			// model store.
 			room.value.messages = [];
 
-			const messages = storeModelList(ChatMessage, response.messages);
+			const messages = storeModelList(ChatMessageModel, response.messages);
 			messages.reverse();
 			processNewChatOutput(room.value, messages, true);
 			room.value.messagesPopulated = true;
 
 			room.value.updateFireside(
-				response.fireside ? new Fireside(response.fireside) : null,
+				response.fireside ? new FiresideModel(response.fireside) : null,
 				response.streaming_users.map(x => new ChatUser(x))
 			);
 
@@ -214,10 +214,10 @@ export function createChatRoomChannel(
 		channelController.leave();
 	}
 
-	function _onMsg(data: Partial<ChatMessage>) {
-		let message = getModel(ChatMessage, data.id!);
+	function _onMsg(data: Partial<ChatMessageModel>) {
+		let message = getModel(ChatMessageModel, data.id!);
 		const storedMessage = message !== undefined;
-		message = storeModel(ChatMessage, data);
+		message = storeModel(ChatMessageModel, data);
 
 		// If we already stored the message before, just update its data and return.
 		if (storedMessage) {
@@ -309,13 +309,13 @@ export function createChatRoomChannel(
 		}
 	}
 
-	function _onUpdateMsg(data: Partial<ChatMessage>) {
+	function _onUpdateMsg(data: Partial<ChatMessageModel>) {
 		if (!room.value) {
 			return;
 		}
 
 		// This will edit it within the room's message list.
-		storeModel(ChatMessage, data);
+		storeModel(ChatMessageModel, data);
 	}
 
 	function _onMemberInc(data: MemberIncPayload) {
@@ -360,11 +360,11 @@ export function createChatRoomChannel(
 		afterMemberKick?.(data);
 	}
 
-	function _onRoomUpdate(json: Partial<ChatRoom>) {
+	function _onRoomUpdate(json: Partial<ChatRoomModel>) {
 		const { title, fallback_title, background } = json;
 		room.value.title = title || '';
 		room.value.fallback_title = fallback_title || '';
-		room.value.background = background ? new Background(background) : undefined;
+		room.value.background = background ? new BackgroundModel(background) : undefined;
 	}
 
 	function _onOwnerSync(data: OwnerSyncPayload) {
@@ -372,19 +372,19 @@ export function createChatRoomChannel(
 	}
 
 	function _onFiresideStart(data: StartFiresidePayload) {
-		room.value.updateFireside(new Fireside(data.fireside), []);
+		room.value.updateFireside(new FiresideModel(data.fireside), []);
 	}
 
 	function _onFiresideUpdate(data: UpdateFiresidePayload) {
 		room.value.updateFireside(
 			// This returns `null` when the Fireside is expired.
-			data.fireside ? new Fireside(data.fireside) : null,
+			data.fireside ? new FiresideModel(data.fireside) : null,
 			data.streaming_users.map(x => new ChatUser(x))
 		);
 	}
 
 	function _onUpdateReaction(payload: UpdateChatMessageReactionPayload) {
-		const message = getModel(ChatMessage, payload.chat_message_id!);
+		const message = getModel(ChatMessageModel, payload.chat_message_id!);
 		if (!message) {
 			return;
 		}
@@ -447,7 +447,7 @@ export function createChatRoomChannel(
 	}
 
 	// TODO: why is this here and not in the chat client?
-	function processNewRoomMessage(message: ChatMessage) {
+	function processNewRoomMessage(message: ChatMessageModel) {
 		const alreadyReceivedMessage = room.value.messages.some(i => i.id === message.id);
 		if (alreadyReceivedMessage) {
 			return;
@@ -665,7 +665,7 @@ class ChatRoomChannelLock {
  * Convenience for getting a member collection and releasing the lock on
  * component unmount.
  */
-export function useChatRoomMembers(room: Ref<ChatRoom | undefined>) {
+export function useChatRoomMembers(room: Ref<ChatRoomModel | undefined>) {
 	let lock: ChatRoomChannelLock | undefined;
 	const mounted = ref(false);
 

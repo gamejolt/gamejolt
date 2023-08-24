@@ -2,9 +2,9 @@
 import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppCommunityChannelSelect from '../../../../../_common/community/channel/AppCommunityChannelSelect.vue';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
+import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -19,9 +19,9 @@ import { CommunityMovePostModalResult } from './modal.service';
 	},
 })
 export default class AppCommunityMovePostModal extends mixins(BaseModal) {
-	@Prop({ type: Object, required: true }) firesidePostCommunity!: FiresidePostCommunity;
-	@Prop({ type: Object, required: true }) post!: FiresidePost;
-	@Prop({ type: Array, required: true }) channels!: CommunityChannel[];
+	@Prop({ type: Object, required: true }) firesidePostCommunity!: FiresidePostCommunityModel;
+	@Prop({ type: Object, required: true }) post!: FiresidePostModel;
+	@Prop({ type: Array, required: true }) channels!: CommunityChannelModel[];
 
 	commonStore = setup(() => useCommonStore());
 
@@ -29,7 +29,7 @@ export default class AppCommunityMovePostModal extends mixins(BaseModal) {
 		return this.commonStore.user;
 	}
 
-	selectedChannel: CommunityChannel | null = null;
+	selectedChannel: CommunityChannelModel | null = null;
 	reasonFormModel: FormModel | null = null;
 
 	get selectableChannels() {
@@ -41,7 +41,7 @@ export default class AppCommunityMovePostModal extends mixins(BaseModal) {
 	}
 
 	get hasSelectedChannel() {
-		return this.selectedChannel instanceof CommunityChannel;
+		return this.selectedChannel instanceof CommunityChannelModel;
 	}
 
 	get canMove() {

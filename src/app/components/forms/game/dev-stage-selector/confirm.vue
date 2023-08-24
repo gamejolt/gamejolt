@@ -1,11 +1,11 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { Game, GameDevelopmentStatus } from '../../../../../_common/game/game.model';
+import { GameDevelopmentStatus, GameModel } from '../../../../../_common/game/game.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 
 @Options({})
 export default class AppGameDevStageConfirmModal extends mixins(BaseModal) {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 	@Prop(Number) stage!: number;
 
 	from = '';

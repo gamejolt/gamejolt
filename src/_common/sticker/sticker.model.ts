@@ -1,7 +1,7 @@
-import { Emoji } from '../emoji/emoji.model';
-import { MediaItem } from '../media-item/media-item-model';
+import { EmojiModel } from '../emoji/emoji.model';
+import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
-import { User } from '../user/user.model';
+import { UserModel } from '../user/user.model';
 
 /**
  * Returned from backend when representing a collection of the same sticker.
@@ -9,7 +9,7 @@ import { User } from '../user/user.model';
 export type StickerStack = {
 	sticker_id: number;
 	count: number | null;
-	sticker: Sticker;
+	sticker: StickerModel;
 };
 
 export const enum StickerRarity {
@@ -19,7 +19,7 @@ export const enum StickerRarity {
 	Epic = 3,
 }
 
-export class Sticker extends Model {
+export class StickerModel extends Model {
 	declare name?: string;
 	declare rarity: number;
 	declare img_url: string;
@@ -27,29 +27,29 @@ export class Sticker extends Model {
 	declare is_secret?: boolean;
 	declare is_active?: boolean;
 	declare added_on?: number;
-	declare media_item?: MediaItem;
-	declare artist?: User;
-	declare owner_user?: User;
+	declare media_item?: MediaItemModel;
+	declare artist?: UserModel;
+	declare owner_user?: UserModel;
 	declare mastery?: number;
-	declare emoji?: Emoji;
+	declare emoji?: EmojiModel;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.media_item) {
-			this.media_item = new MediaItem(data.media_item);
+			this.media_item = new MediaItemModel(data.media_item);
 		}
 
 		if (data.artist) {
-			this.artist = new User(data.artist);
+			this.artist = new UserModel(data.artist);
 		}
 
 		if (data.owner_user) {
-			this.owner_user = new User(data.owner_user);
+			this.owner_user = new UserModel(data.owner_user);
 		}
 
 		if (data.emoji) {
-			this.emoji = new Emoji(data.emoji);
+			this.emoji = new EmojiModel(data.emoji);
 		}
 	}
 

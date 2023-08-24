@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { bangRef } from '../../../../utils/vue';
 import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../_common/api/api.service';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserStripeManagedAccount } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { UserTipaltiManagedAccount } from '../../../../_common/user/tipalti-managed-account/tipalti-managed-account';
+import { UserStripeManagedAccountModel } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { UserTipaltiManagedAccountModel } from '../../../../_common/user/tipalti-managed-account/tipalti-managed-account';
 import { userCanAccessCreatorForm } from '../../../../_common/user/user.model';
+import { bangRef } from '../../../../utils/vue';
 import AppCreatorTerms from './AppCreatorTerms.vue';
 import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
 
@@ -20,8 +20,8 @@ interface FormModel {
 const { user: maybeUser } = useCommonStore();
 const user = bangRef(maybeUser);
 
-const account = ref<UserStripeManagedAccount>();
-const creatorAccount = ref<UserTipaltiManagedAccount>();
+const account = ref<UserStripeManagedAccountModel>();
+const creatorAccount = ref<UserTipaltiManagedAccountModel>();
 const creatorOnboardingForm = ref<string>();
 const creatorOnboardingFormHeight = ref(500);
 
@@ -59,9 +59,11 @@ const form: FormController<FormModel> = createForm({
 			user.value.assign(payload.user);
 		}
 
-		account.value = payload.account ? new UserStripeManagedAccount(payload.account) : undefined;
+		account.value = payload.account
+			? new UserStripeManagedAccountModel(payload.account)
+			: undefined;
 		creatorAccount.value = payload.creatorAccount
-			? new UserTipaltiManagedAccount(payload.creatorAccount)
+			? new UserTipaltiManagedAccountModel(payload.creatorAccount)
 			: undefined;
 		creatorOnboardingForm.value = payload.creatorOnboardingForm ?? undefined;
 	},

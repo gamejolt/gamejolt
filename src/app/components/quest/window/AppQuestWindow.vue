@@ -12,7 +12,7 @@ import { storeModel } from '../../../../_common/model/model-store.service';
 import AppQuestActionButton from '../../../../_common/quest/AppQuestActionButton.vue';
 import AppQuestObjective from '../../../../_common/quest/AppQuestObjective.vue';
 import AppProgressBarQuest from '../../../../_common/quest/AppQuestProgress.vue';
-import { Quest } from '../../../../_common/quest/quest-model';
+import { QuestModel } from '../../../../_common/quest/quest-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -40,7 +40,7 @@ const props = defineProps({
 		required: true,
 	},
 	resource: {
-		type: Object as PropType<Quest>,
+		type: Object as PropType<QuestModel>,
 		default: undefined,
 	},
 });
@@ -54,7 +54,7 @@ const isLoading = ref(false);
 const hasError = ref(false);
 const hasActionButtonError = ref(false);
 
-const localQuest = ref() as Ref<Quest | undefined>;
+const localQuest = ref() as Ref<QuestModel | undefined>;
 
 const quest = computed(() => localQuest.value || resource?.value);
 
@@ -96,7 +96,7 @@ async function init() {
 		);
 
 		if (payload.quest) {
-			onNewQuest(storeModel(Quest, payload.quest));
+			onNewQuest(storeModel(QuestModel, payload.quest));
 		}
 	} catch (e) {
 		console.error('Failed to load quest data', e);
@@ -128,7 +128,7 @@ function closeQuests() {
 	}
 }
 
-function onNewQuest(data: Quest) {
+function onNewQuest(data: QuestModel) {
 	localQuest.value = data;
 
 	if (!data.is_new) {

@@ -4,7 +4,7 @@ import { Api } from '../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../_common/filters/number';
 import { BaseForm, FormOnSubmit } from '../../../../../../_common/form-vue/form.service';
-import { KeyGroup, KeyGroupType } from '../../../../../../_common/key-group/key-group.model';
+import { KeyGroupModel, KeyGroupType } from '../../../../../../_common/key-group/key-group.model';
 
 class Wrapper extends BaseForm<any> {}
 
@@ -14,7 +14,7 @@ class Wrapper extends BaseForm<any> {}
 	},
 })
 export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop(Object) keyGroup!: KeyGroup;
+	@Prop(Object) keyGroup!: KeyGroupModel;
 
 	readonly formatNumber = formatNumber;
 	readonly KeyGroupTypeAnonymous = KeyGroupType.Anonymous;

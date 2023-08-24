@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { Game } from '../../../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import {
 	LegacyRouteComponent,
@@ -30,7 +30,7 @@ export default class RouteDashGamesManageGameMaturity extends LegacyRouteCompone
 		return this.routeStore.game!;
 	}
 
-	current: Game = null as any;
+	current: GameModel = null as any;
 
 	readonly Screen = Screen;
 

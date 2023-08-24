@@ -1,10 +1,10 @@
 import type { IParsedWrapper } from 'client-voodoo';
 import { Api } from '../../../../../_common/api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
-import { GameBuild } from '../../../../../_common/game/build/build.model';
-import type { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
-import type { GamePackage } from '../../../../../_common/game/package/package.model';
-import type { GameRelease } from '../../../../../_common/game/release/release.model';
+import { GameBuildModel } from '../../../../../_common/game/build/build.model';
+import type { GameBuildLaunchOptionModel } from '../../../../../_common/game/build/launch-option/launch-option.model';
+import type { GamePackageModel } from '../../../../../_common/game/package/package.model';
+import type { GameReleaseModel } from '../../../../../_common/game/release/release.model';
 import { LocalDbModel } from '../model.service';
 
 export type LocalDbPackagePid = string | IParsedWrapper;
@@ -191,10 +191,10 @@ export class LocalDbPackage extends LocalDbModel<LocalDbPackage> {
 	}
 
 	static fromSitePackageInfo(
-		pkg: GamePackage,
-		release: GameRelease,
-		build: GameBuild,
-		launchOptions: GameBuildLaunchOption[]
+		pkg: GamePackageModel,
+		release: GameReleaseModel,
+		build: GameBuildModel,
+		launchOptions: GameBuildLaunchOptionModel[]
 	): Partial<LocalDbPackage> {
 		// All launch options are passed in. Let's just pull the ones for our build.
 		launchOptions = launchOptions.filter(i => i.game_build_id === build.id);
@@ -303,7 +303,7 @@ export class LocalDbPackage extends LocalDbModel<LocalDbPackage> {
 
 	getDownloadUrl() {
 		if (this.install_state) {
-			return GameBuild.getDownloadUrl(this.build.id, {
+			return GameBuildModel.getDownloadUrl(this.build.id, {
 				forceDownload: true,
 			});
 		} else if (this.update_state) {
@@ -311,7 +311,7 @@ export class LocalDbPackage extends LocalDbModel<LocalDbPackage> {
 				throw new Error('Update build is not set');
 			}
 
-			return GameBuild.getDownloadUrl(this.update.build.id, {
+			return GameBuildModel.getDownloadUrl(this.update.build.id, {
 				forceDownload: true,
 			});
 		}

@@ -4,7 +4,7 @@ export const enum LinkedKeyProvider {
 	Steam = 'steam',
 }
 
-export class LinkedKey extends Model {
+export class LinkedKeyModel extends Model {
 	declare key: string;
 	declare provider: LinkedKeyProvider;
 	declare provider_label: string;

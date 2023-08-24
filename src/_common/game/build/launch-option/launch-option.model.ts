@@ -18,7 +18,7 @@ export const GameBuildLaunchablePlatforms = [
 	GameBuildLaunchOptionOs.Linux64,
 ];
 
-export class GameBuildLaunchOption extends Model {
+export class GameBuildLaunchOptionModel extends Model {
 	declare game_build_id: number;
 	declare os: GameBuildLaunchOptionOs;
 	declare executable_path: string;

@@ -18,14 +18,14 @@ import {
 	validateContentNoActiveUploads,
 	validateContentRequired,
 } from '../../../../../_common/form-vue/validators';
-import { Game } from '../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../_common/game/game.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { AppGamePerms } from '../../../game/perms/perms';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 import AppFormGameDescriptionTags from './tags/tags.vue';
 
-type DescriptionFormModel = Game & {
+type DescriptionFormModel = GameModel & {
 	autotag?: string;
 	autotag_skip?: boolean;
 };
@@ -35,7 +35,7 @@ const props = defineProps({
 		type: Array as PropType<string[]>,
 		required: true,
 	},
-	...defineFormProps<Game>(true),
+	...defineFormProps<GameModel>(true),
 });
 
 const { tags, model } = toRefs(props);
@@ -48,7 +48,7 @@ const descriptionContentCapabilities = ref(ContextCapabilities.getPlaceholder())
 const form: FormController<DescriptionFormModel> = createForm({
 	loadUrl: `/web/dash/developer/games/description/save/${model.value.id}`,
 	model,
-	modelClass: Game,
+	modelClass: GameModel,
 	saveMethod: '$saveDescription' as const,
 	onLoad(payload) {
 		lengthLimit.value = payload.lengthLimit;

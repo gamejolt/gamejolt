@@ -12,11 +12,14 @@ import {
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
 import { validateSemver } from '../../../../../_common/form-vue/validators';
-import { GameBuild } from '../../../../../_common/game/build/build.model';
-import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
-import { Game } from '../../../../../_common/game/game.model';
-import { GamePackage } from '../../../../../_common/game/package/package.model';
-import { GameRelease, GameReleaseStatus } from '../../../../../_common/game/release/release.model';
+import { GameBuildModel } from '../../../../../_common/game/build/build.model';
+import { GameBuildLaunchOptionModel } from '../../../../../_common/game/build/launch-option/launch-option.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import { GamePackageModel } from '../../../../../_common/game/package/package.model';
+import {
+	GameReleaseModel,
+	GameReleaseStatus,
+} from '../../../../../_common/game/release/release.model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -26,7 +29,7 @@ import { shallowSetup } from '../../../../../utils/vue';
 import FormGameBuild, { FormGameBuildInterface } from '../build/build.vue';
 import FormGameNewBuild from '../new-build/new-build.vue';
 
-type GameReleaseFormModel = GameRelease & {
+type GameReleaseFormModel = GameReleaseModel & {
 	should_publish: boolean;
 };
 
@@ -65,19 +68,19 @@ export default class FormGameRelease
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmitSuccess
 {
-	modelClass = GameRelease as any;
+	modelClass = GameReleaseModel as any;
 
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	@Prop(Object)
-	package!: GamePackage;
+	package!: GamePackageModel;
 
 	@Prop(Array)
-	builds!: GameBuild[];
+	builds!: GameBuildModel[];
 
 	@Prop(Array)
-	launchOptions!: GameBuildLaunchOption[];
+	launchOptions!: GameBuildLaunchOptionModel[];
 
 	@Prop(Object)
 	buildDownloadCounts!: { [buildId: number]: number };
@@ -95,7 +98,7 @@ export default class FormGameRelease
 	now = 0;
 
 	readonly Screen = Screen;
-	readonly GameRelease = GameRelease;
+	readonly GameRelease = GameReleaseModel;
 	readonly validateSemver = validateSemver;
 	readonly GameReleaseStatusPublished = GameReleaseStatus.Published;
 
@@ -140,12 +143,12 @@ export default class FormGameRelease
 		}
 	}
 
-	onBuildProcessingComplete(build: GameBuild, response: any) {
+	onBuildProcessingComplete(build: GameBuildModel, response: any) {
 		// Just copy over the new build data into our current one.
 		build.assign(response.build);
 	}
 
-	onBuildAdded(build: GameBuild) {
+	onBuildAdded(build: GameBuildModel) {
 		this.builds.push(build);
 	}
 
@@ -154,7 +157,7 @@ export default class FormGameRelease
 	 * When launch options are modified for a build, we need to merge the
 	 * changes back into the global array of them.
 	 **/
-	updateBuildLaunchOptions(build: GameBuild, launchOptions: GameBuildLaunchOption[]) {
+	updateBuildLaunchOptions(build: GameBuildModel, launchOptions: GameBuildLaunchOptionModel[]) {
 		// Remove old ones for build.
 		if (this.launchOptions && this.launchOptions.length) {
 			arrayRemove(
@@ -169,17 +172,17 @@ export default class FormGameRelease
 		}
 
 		// Add the new ones into the global list.
-		const newLaunchOptions = GameBuildLaunchOption.populate(launchOptions);
+		const newLaunchOptions = GameBuildLaunchOptionModel.populate(launchOptions);
 		for (const launchOption of newLaunchOptions) {
 			this.launchOptions.push(launchOption);
 		}
 	}
 
-	onBuildEdited(build: GameBuild, response: any) {
+	onBuildEdited(build: GameBuildModel, response: any) {
 		this.updateBuildLaunchOptions(build, response.launchOptions);
 	}
 
-	async removeBuild(build: GameBuild) {
+	async removeBuild(build: GameBuildModel) {
 		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this build?')
 		);

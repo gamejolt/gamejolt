@@ -1,19 +1,19 @@
 import { defineAsyncComponent } from 'vue';
-import { Community } from '../../../../_common/community/community.model';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
+import { FiresideModel } from '../../../../_common/fireside/fireside.model';
 import { showModal } from '../../../../_common/modal/modal.service';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 
 interface FiresideAddModalOptions {
-	community?: Community;
-	realms?: Realm[];
+	community?: CommunityModel;
+	realms?: RealmModel[];
 }
 
 export class FiresideAddModal {
 	static async show(options: FiresideAddModalOptions) {
 		const { community, realms } = options;
 
-		return await showModal<Fireside>({
+		return await showModal<FiresideModel>({
 			modalId: 'FiresideAdd',
 			component: defineAsyncComponent(() => import('./AppFiresideAddModal.vue')),
 			props: {

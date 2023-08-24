@@ -14,12 +14,12 @@ import AppScrollInview, {
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
-import { User } from '../../../../../_common/user/user.model';
+import { UserModel } from '../../../../../_common/user/user.model';
 import { arrayRemove } from '../../../../../utils/array';
 import AppChatList from '../../../chat/_list/AppChatList.vue';
 import { tryGetRoomRole } from '../../../chat/client';
 import { ChatRole } from '../../../chat/role';
-import { ChatRoom } from '../../../chat/room';
+import { ChatRoomModel } from '../../../chat/room';
 import { useChatRoomMembers } from '../../../chat/room-channel';
 import { ChatUser } from '../../../chat/user';
 import { useGridStore } from '../../../grid/grid-store';
@@ -39,7 +39,7 @@ const props = defineProps({
 		required: true,
 	},
 	chatRoom: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		default: undefined,
 	},
 	getCurrentMods: {
@@ -112,7 +112,7 @@ onUnmounted(() => {
 	isMounted.value = false;
 });
 
-function _isMe(user: User | ChatUser) {
+function _isMe(user: UserModel | ChatUser) {
 	return user.id === myUser.value?.id;
 }
 
@@ -159,12 +159,12 @@ function isUserProcessing(user: ChatUser) {
 	return processingIds.value.has(user.id);
 }
 
-function isModerator(user: User | ChatUser) {
+function isModerator(user: UserModel | ChatUser) {
 	if (!chat.value) {
 		return false;
 	}
 
-	if (user instanceof User) {
+	if (user instanceof UserModel) {
 		return user.isMod;
 	}
 

@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { Game } from '../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../_common/game/game.model';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
@@ -16,14 +16,14 @@ import AppTrophyThumbnail from '../../../../../_common/trophy/thumbnail/AppTroph
 import { UserGameTrophy } from '../../../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../../../_common/user/trophy/site-trophy.model';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
+import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { numberSort } from '../../../../../utils/array';
 import { useProfileRouteController } from '../../RouteProfile.vue';
 
 type TrophyEntry = {
 	gameId?: number;
-	game?: Game;
-	trophies: UserBaseTrophy[];
+	game?: GameModel;
+	trophies: UserBaseTrophyModel[];
 };
 
 @Options({
@@ -82,7 +82,7 @@ export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
 	routeResolved(payload: any) {
 		this.pageSize = payload.pageSize;
 
-		let trophies: UserBaseTrophy[] = [];
+		let trophies: UserBaseTrophyModel[] = [];
 		if (payload.trophies) {
 			trophies = populateTrophies(payload.trophies);
 		}
@@ -103,9 +103,9 @@ export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
 	 * Each entry is a group of trophies of the same origin (same game or site).
 	 * It also creates a new entry if the difference between achieved trophies is larger than 24 hours.
 	 */
-	private insertTrophy(userTrophy: UserBaseTrophy) {
+	private insertTrophy(userTrophy: UserBaseTrophyModel) {
 		// Set the game/id for this user trophy (undefined for site trophies)
-		let game: Game | undefined = undefined;
+		let game: GameModel | undefined = undefined;
 		let gameId: number | undefined = undefined;
 		if (userTrophy instanceof UserGameTrophy) {
 			game = userTrophy.game;
@@ -133,7 +133,7 @@ export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
 		}
 	}
 
-	private updateCanLoadMore(loadedTrophies: UserBaseTrophy[]) {
+	private updateCanLoadMore(loadedTrophies: UserBaseTrophyModel[]) {
 		// We have to receive a page size from the api to be able to load more.
 		if (!this.pageSize) {
 			this.canLoadMore = false;
@@ -177,7 +177,7 @@ export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
 		);
 	}
 
-	onClickTrophy(userTrophy: UserBaseTrophy) {
+	onClickTrophy(userTrophy: UserBaseTrophyModel) {
 		TrophyModal.show(userTrophy);
 	}
 
@@ -218,7 +218,7 @@ export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
 
 		const payload = await Api.sendRequest(url);
 
-		let trophies: UserBaseTrophy[] = [];
+		let trophies: UserBaseTrophyModel[] = [];
 		if (payload.trophies) {
 			trophies = populateTrophies(payload.trophies);
 		}

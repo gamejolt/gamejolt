@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { ref, toRefs } from 'vue';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
-import { Game } from '../../../_common/game/game.model';
+import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
+import { GameModel } from '../../../_common/game/game.model';
 import AppGameThumbnail from '../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { $gettext } from '../../../_common/translate/translate.service';
@@ -23,14 +23,14 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	claim: (_bundle: GameBundle) => true,
+	claim: (_bundle: GameBundleModel) => true,
 });
 
 const { payload } = toRefs(props);
 const { user } = useCommonStore();
 
-let bundle = ref(new GameBundle(payload.value.bundle));
-let games = ref(Game.populate(payload.value.games));
+let bundle = ref(new GameBundleModel(payload.value.bundle));
+let games = ref(GameModel.populate(payload.value.games));
 
 function claim() {
 	emit('claim', bundle.value);

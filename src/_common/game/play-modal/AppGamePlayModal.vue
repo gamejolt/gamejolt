@@ -4,12 +4,12 @@ import AppButton from '../../button/AppButton.vue';
 import { addMinbarItem, removeMinbarItem } from '../../minbar/minbar.service';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
-import { Game } from '../game.model';
+import { GameModel } from '../game.model';
 import { showGameRatingGrowl } from '../rating-growl/rating-growl.service';
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	url: {

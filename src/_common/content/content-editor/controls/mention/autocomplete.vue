@@ -7,7 +7,7 @@ import AppLoading from '../../../../loading/AppLoading.vue';
 import { Screen } from '../../../../screen/screen-service';
 import AppUserVerifiedTick from '../../../../user/AppUserVerifiedTick.vue';
 import AppUserAvatarImg from '../../../../user/user-avatar/AppUserAvatarImg.vue';
-import { User } from '../../../../user/user.model';
+import { UserModel } from '../../../../user/user.model';
 import { editorInsertMention, useContentEditorController } from '../../content-editor-controller';
 import ContentEditorMentionCache from './cache.service';
 
@@ -29,7 +29,7 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 	isListening = false; // If we are listening to the document keydown event, to be able to unbind it later.
 	remoteSuggestionDebounceTimeout: NodeJS.Timer | null = null; // Timeout between requests to search backend
 	isLoading = false; // Loading more users from backend
-	users: User[] = [];
+	users: UserModel[] = [];
 
 	readonly Screen = Screen;
 
@@ -146,7 +146,7 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 				);
 
 				if (payload.users) {
-					const searchUsers = User.populate(payload.users);
+					const searchUsers = UserModel.populate(payload.users);
 
 					// Add to cache
 					ContentEditorMentionCache.setResults(query, searchUsers);
@@ -204,7 +204,7 @@ export default class AppContentEditorControlsMentionAutocomplete extends Vue {
 		}
 	}
 
-	insertUser(user: User) {
+	insertUser(user: UserModel) {
 		editorInsertMention(this.controller, user.username);
 		this.emitInsert();
 	}

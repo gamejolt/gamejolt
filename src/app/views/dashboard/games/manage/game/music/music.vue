@@ -6,7 +6,7 @@ import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue'
 import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
-import { GameSong } from '../../../../../../../_common/game/song/song.model';
+import { GameSongModel } from '../../../../../../../_common/game/song/song.model';
 import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
 import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -41,10 +41,10 @@ export default class RouteDashGamesManageGameMusic extends LegacyRouteComponent 
 		return this.routeStore.game!;
 	}
 
-	songs: GameSong[] = [];
+	songs: GameSongModel[] = [];
 	isAdding = false;
 	isProcessing = false;
-	activeItem: GameSong | null = null;
+	activeItem: GameSongModel | null = null;
 
 	get currentSort() {
 		return this.songs.map(item => item.id);
@@ -60,7 +60,7 @@ export default class RouteDashGamesManageGameMusic extends LegacyRouteComponent 
 	}
 
 	routeResolved($payload: any) {
-		this.songs = GameSong.populate($payload.songs);
+		this.songs = GameSongModel.populate($payload.songs);
 		this.isAdding = !this.songs.length;
 	}
 
@@ -68,17 +68,17 @@ export default class RouteDashGamesManageGameMusic extends LegacyRouteComponent 
 		this.activeItem = null;
 	}
 
-	onSongAdded(formModel: GameSong) {
-		this.songs.push(new GameSong(formModel));
+	onSongAdded(formModel: GameSongModel) {
+		this.songs.push(new GameSongModel(formModel));
 		this.isAdding = false;
 	}
 
-	saveSongSort(songs: GameSong[]) {
+	saveSongSort(songs: GameSongModel[]) {
 		this.songs = songs;
-		GameSong.$saveSort(this.game.id, this.currentSort);
+		GameSongModel.$saveSort(this.game.id, this.currentSort);
 	}
 
-	async removeSong(song: GameSong) {
+	async removeSong(song: GameSongModel) {
 		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this song?')
 		);

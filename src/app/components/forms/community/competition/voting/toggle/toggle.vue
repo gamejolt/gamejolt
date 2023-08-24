@@ -1,11 +1,11 @@
 <script lang="ts">
 import { nextTick } from 'vue';
 import { Emit, mixins, Options } from 'vue-property-decorator';
-import { CommunityCompetition } from '../../../../../../../_common/community/competition/competition.model';
+import { CommunityCompetitionModel } from '../../../../../../../_common/community/competition/competition.model';
 import AppFormControlToggle from '../../../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../../../../../../_common/form-vue/form.service';
 
-class Wrapper extends BaseForm<CommunityCompetition> {}
+class Wrapper extends BaseForm<CommunityCompetitionModel> {}
 
 @Options({
 	components: {
@@ -13,7 +13,7 @@ class Wrapper extends BaseForm<CommunityCompetition> {}
 	},
 })
 export default class FormCommunityCompetitionVotingToggle extends mixins(Wrapper) {
-	modelClass = CommunityCompetition;
+	modelClass = CommunityCompetitionModel;
 	saveMethod = '$saveVotingEnabled' as const;
 
 	@Emit('toggle-not-set-up')

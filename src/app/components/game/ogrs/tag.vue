@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 
 @Options({
@@ -9,7 +9,7 @@ import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 	},
 })
 export default class AppGameOgrsTag extends Vue {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 	@Prop(Boolean) full?: boolean;
 
 	readonly assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });

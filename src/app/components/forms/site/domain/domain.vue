@@ -3,9 +3,9 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { validateDomain } from '../../../../../_common/form-vue/validators';
-import { Game } from '../../../../../_common/game/game.model';
-import { Site } from '../../../../../_common/site/site-model';
-import { User } from '../../../../../_common/user/user.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import { SiteModel } from '../../../../../_common/site/site-model';
+import { UserModel } from '../../../../../_common/user/user.model';
 
 interface FormModel {
 	type: string;
@@ -19,10 +19,10 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormSiteDomain extends mixins(Wrapper) {
-	@Prop(Object) user!: User;
-	@Prop(Object) game?: Game;
+	@Prop(Object) user!: UserModel;
+	@Prop(Object) game?: GameModel;
 
-	modelClass = Site as any;
+	modelClass = SiteModel as any;
 	saveMethod = '$saveDomain' as const;
 
 	readonly validateDomain = validateDomain;

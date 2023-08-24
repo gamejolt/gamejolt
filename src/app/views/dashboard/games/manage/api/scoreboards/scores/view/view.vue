@@ -4,13 +4,13 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../../../../../_common/filters/number';
-import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
+import { GameScoreTableModel } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../../../../../../_common/route/legacy-route-component';
-import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
+import { UserGameScoreModel } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { useGameDashRouteController } from '../../../../manage.store';
 
 @Options({
@@ -30,8 +30,8 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends Legacy
 		return this.routeStore.game!;
 	}
 
-	score: UserGameScore = null as any;
-	scoreTable: GameScoreTable = null as any;
+	score: UserGameScoreModel = null as any;
+	scoreTable: GameScoreTableModel = null as any;
 
 	readonly formatNumber = formatNumber;
 	readonly formatDate = formatDate;
@@ -46,8 +46,8 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends Legacy
 	}
 
 	routeResolved($payload: any) {
-		this.score = new UserGameScore($payload.score);
-		this.scoreTable = new GameScoreTable($payload.scoreTable);
+		this.score = new UserGameScoreModel($payload.score);
+		this.scoreTable = new GameScoreTableModel($payload.scoreTable);
 	}
 
 	async removeScore() {

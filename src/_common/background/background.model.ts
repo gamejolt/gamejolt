@@ -1,5 +1,5 @@
 import { getMediaserverUrlForBounds } from '../../utils/image';
-import { MediaItem } from '../media-item/media-item-model';
+import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 
 const DefaultScale = 2.0;
@@ -9,9 +9,9 @@ export const enum BackgroundScaling {
 	tile = 'tile',
 }
 
-export class Background extends Model {
+export class BackgroundModel extends Model {
 	declare scaling: BackgroundScaling;
-	declare media_item: MediaItem;
+	declare media_item: MediaItemModel;
 	declare scale: number;
 	declare name?: string;
 	declare rarity?: number;
@@ -20,7 +20,7 @@ export class Background extends Model {
 		super(data);
 
 		if (data.media_item) {
-			this.media_item = new MediaItem(data.media_item);
+			this.media_item = new MediaItemModel(data.media_item);
 		}
 
 		if (typeof data.scale === 'number' && data.scale > 0) {

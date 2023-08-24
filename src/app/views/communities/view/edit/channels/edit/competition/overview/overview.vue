@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
-import { CommunityCompetitionVotingCategory } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
+import { CommunityCompetitionVotingCategoryModel } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Environment } from '../../../../../../../../../_common/environment/environment.service';
 import { formatDuration } from '../../../../../../../../../_common/filters/duration';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
@@ -36,7 +36,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	votingCategories: CommunityCompetitionVotingCategory[] = [];
+	votingCategories: CommunityCompetitionVotingCategoryModel[] = [];
 	isLoading = true;
 
 	readonly Environment = Environment;
@@ -75,7 +75,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 
 	routeResolved($payload: any) {
 		if ($payload && $payload.votingCategories) {
-			this.votingCategories = CommunityCompetitionVotingCategory.populate(
+			this.votingCategories = CommunityCompetitionVotingCategoryModel.populate(
 				$payload.votingCategories
 			);
 		}

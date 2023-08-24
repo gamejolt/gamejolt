@@ -1,7 +1,7 @@
 import { Api } from '../../api/api.service';
 import { Model } from '../../model/model.service';
 
-export class GameSong extends Model {
+export class GameSongModel extends Model {
 	game_id!: number;
 	filename!: string;
 	title!: string;

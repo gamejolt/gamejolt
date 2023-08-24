@@ -1,19 +1,19 @@
-import { Fireside } from '../../fireside/fireside.model';
-import { FiresidePost } from '../../fireside/post/post-model';
-import { Game } from '../../game/game.model';
+import { FiresideModel } from '../../fireside/fireside.model';
+import { FiresidePostModel } from '../../fireside/post/post-model';
+import { GameModel } from '../../game/game.model';
 import { Model } from '../../model/model.service';
-import { UserBlock } from '../../user/block/block.model';
-import { User } from '../../user/user.model';
-import { CommunityChannel } from '../channel/channel.model';
-import { CommunityCompetition } from '../competition/competition.model';
-import { CommunityCompetitionEntry } from '../competition/entry/entry.model';
+import { UserBlockModel } from '../../user/block/block.model';
+import { UserModel } from '../../user/user.model';
+import { CommunityChannelModel } from '../channel/channel.model';
+import { CommunityCompetitionModel } from '../competition/competition.model';
+import { CommunityCompetitionEntryModel } from '../competition/entry/entry.model';
 
 export type TypeIcon = {
 	icon: string;
 	color: string;
 };
 
-export class CommunityActivityItem extends Model {
+export class CommunityActivityItemModel extends Model {
 	public static TYPE_COMMUNITY_CREATED = 'community/created';
 
 	public static TYPE_POST_FEATURE = 'post/feature';
@@ -60,75 +60,75 @@ export class CommunityActivityItem extends Model {
 	added_on!: number;
 	extra_data!: string;
 
-	user?: User;
+	user?: UserModel;
 
 	action_resource?:
-		| FiresidePost
-		| User
-		| CommunityChannel
-		| UserBlock
-		| Game
-		| CommunityCompetition
-		| CommunityCompetitionEntry
-		| Fireside;
+		| FiresidePostModel
+		| UserModel
+		| CommunityChannelModel
+		| UserBlockModel
+		| GameModel
+		| CommunityCompetitionModel
+		| CommunityCompetitionEntryModel
+		| FiresideModel;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 
 		if (data.action_resource) {
 			switch (this.type) {
-				case CommunityActivityItem.TYPE_POST_FEATURE:
-				case CommunityActivityItem.TYPE_POST_UNFEATURE:
-				case CommunityActivityItem.TYPE_POST_MOVE:
-				case CommunityActivityItem.TYPE_POST_EJECT:
-					this.action_resource = new FiresidePost(data.action_resource);
+				case CommunityActivityItemModel.TYPE_POST_FEATURE:
+				case CommunityActivityItemModel.TYPE_POST_UNFEATURE:
+				case CommunityActivityItemModel.TYPE_POST_MOVE:
+				case CommunityActivityItemModel.TYPE_POST_EJECT:
+					this.action_resource = new FiresidePostModel(data.action_resource);
 					break;
 
-				case CommunityActivityItem.TYPE_MOD_INVITE:
-				case CommunityActivityItem.TYPE_MOD_ACCEPT:
-				case CommunityActivityItem.TYPE_MOD_REMOVE:
-					this.action_resource = new User(data.action_resource);
+				case CommunityActivityItemModel.TYPE_MOD_INVITE:
+				case CommunityActivityItemModel.TYPE_MOD_ACCEPT:
+				case CommunityActivityItemModel.TYPE_MOD_REMOVE:
+					this.action_resource = new UserModel(data.action_resource);
 					break;
 
-				case CommunityActivityItem.TYPE_BLOCK_USER:
-					this.action_resource = new UserBlock(data.action_resource);
+				case CommunityActivityItemModel.TYPE_BLOCK_USER:
+					this.action_resource = new UserBlockModel(data.action_resource);
 					break;
 
-				case CommunityActivityItem.TYPE_CHANNEL_ADD:
-				case CommunityActivityItem.TYPE_CHANNEL_EDIT:
-				case CommunityActivityItem.TYPE_CHANNEL_RENAME:
-					this.action_resource = new CommunityChannel(data.action_resource);
+				case CommunityActivityItemModel.TYPE_CHANNEL_ADD:
+				case CommunityActivityItemModel.TYPE_CHANNEL_EDIT:
+				case CommunityActivityItemModel.TYPE_CHANNEL_RENAME:
+					this.action_resource = new CommunityChannelModel(data.action_resource);
 					break;
 
-				case CommunityActivityItem.TYPE_GAME_LINK:
-				case CommunityActivityItem.TYPE_GAME_UNLINK:
-					this.action_resource = new Game(data.action_resource);
+				case CommunityActivityItemModel.TYPE_GAME_LINK:
+				case CommunityActivityItemModel.TYPE_GAME_UNLINK:
+					this.action_resource = new GameModel(data.action_resource);
 					break;
 
-				case CommunityActivityItem.TYPE_COMPETITION_EDIT_SETTINGS:
-				case CommunityActivityItem.TYPE_COMPETITION_EDIT_VOTING:
-				case CommunityActivityItem.TYPE_COMPETITION_VOTING_SET_ACTIVE:
-					this.action_resource = new CommunityCompetition(data.action_resource);
+				case CommunityActivityItemModel.TYPE_COMPETITION_EDIT_SETTINGS:
+				case CommunityActivityItemModel.TYPE_COMPETITION_EDIT_VOTING:
+				case CommunityActivityItemModel.TYPE_COMPETITION_VOTING_SET_ACTIVE:
+					this.action_resource = new CommunityCompetitionModel(data.action_resource);
 					break;
 
-				case CommunityActivityItem.TYPE_COMPETITION_ENTRY_REMOVE:
-				case CommunityActivityItem.TYPE_COMPETITION_ENTRY_UNREMOVE:
-				case CommunityActivityItem.TYPE_COMPETITION_ENTRY_GIVE_AWARD:
-					this.action_resource = new CommunityCompetitionEntry(data.action_resource);
+				case CommunityActivityItemModel.TYPE_COMPETITION_ENTRY_REMOVE:
+				case CommunityActivityItemModel.TYPE_COMPETITION_ENTRY_UNREMOVE:
+				case CommunityActivityItemModel.TYPE_COMPETITION_ENTRY_GIVE_AWARD:
+					this.action_resource = new CommunityCompetitionEntryModel(data.action_resource);
 					break;
 
-				case CommunityActivityItem.TYPE_FIRESIDE_START:
-				case CommunityActivityItem.TYPE_FIRESIDE_START_DRAFT:
-				case CommunityActivityItem.TYPE_FIRESIDE_PUBLISH:
-				case CommunityActivityItem.TYPE_FIRESIDE_EXTINGUISH:
-				case CommunityActivityItem.TYPE_FIRESIDE_FEATURE:
-				case CommunityActivityItem.TYPE_FIRESIDE_UNFEATURE:
-				case CommunityActivityItem.TYPE_FIRESIDE_EJECT:
-					this.action_resource = new Fireside(data.action_resource);
+				case CommunityActivityItemModel.TYPE_FIRESIDE_START:
+				case CommunityActivityItemModel.TYPE_FIRESIDE_START_DRAFT:
+				case CommunityActivityItemModel.TYPE_FIRESIDE_PUBLISH:
+				case CommunityActivityItemModel.TYPE_FIRESIDE_EXTINGUISH:
+				case CommunityActivityItemModel.TYPE_FIRESIDE_FEATURE:
+				case CommunityActivityItemModel.TYPE_FIRESIDE_UNFEATURE:
+				case CommunityActivityItemModel.TYPE_FIRESIDE_EJECT:
+					this.action_resource = new FiresideModel(data.action_resource);
 					break;
 			}
 		}
@@ -136,68 +136,68 @@ export class CommunityActivityItem extends Model {
 
 	public getTypeIcon(): TypeIcon | undefined {
 		switch (this.type) {
-			case CommunityActivityItem.TYPE_COMMUNITY_CREATED:
+			case CommunityActivityItemModel.TYPE_COMMUNITY_CREATED:
 				return { icon: 'heart-filled', color: 'notice' };
 
-			case CommunityActivityItem.TYPE_POST_FEATURE:
-			case CommunityActivityItem.TYPE_FIRESIDE_FEATURE:
+			case CommunityActivityItemModel.TYPE_POST_FEATURE:
+			case CommunityActivityItemModel.TYPE_FIRESIDE_FEATURE:
 				return { icon: 'star', color: '' };
-			case CommunityActivityItem.TYPE_POST_UNFEATURE:
-			case CommunityActivityItem.TYPE_FIRESIDE_UNFEATURE:
+			case CommunityActivityItemModel.TYPE_POST_UNFEATURE:
+			case CommunityActivityItemModel.TYPE_FIRESIDE_UNFEATURE:
 				return { icon: 'star', color: '' };
-			case CommunityActivityItem.TYPE_POST_MOVE:
+			case CommunityActivityItemModel.TYPE_POST_MOVE:
 				return { icon: 'arrow-forward', color: '' };
-			case CommunityActivityItem.TYPE_POST_EJECT:
-			case CommunityActivityItem.TYPE_FIRESIDE_EJECT:
+			case CommunityActivityItemModel.TYPE_POST_EJECT:
+			case CommunityActivityItemModel.TYPE_FIRESIDE_EJECT:
 				return { icon: 'eject', color: 'notice' };
 
-			case CommunityActivityItem.TYPE_MOD_INVITE:
+			case CommunityActivityItemModel.TYPE_MOD_INVITE:
 				return { icon: 'friend-add-1', color: '' };
-			case CommunityActivityItem.TYPE_MOD_ACCEPT:
+			case CommunityActivityItemModel.TYPE_MOD_ACCEPT:
 				return { icon: 'friends', color: 'theme' };
-			case CommunityActivityItem.TYPE_MOD_REMOVE:
+			case CommunityActivityItemModel.TYPE_MOD_REMOVE:
 				return { icon: 'friend-remove-1', color: 'notice' };
 
-			case CommunityActivityItem.TYPE_BLOCK_USER:
+			case CommunityActivityItemModel.TYPE_BLOCK_USER:
 				return { icon: 'friend-remove-2', color: 'notice' };
 
-			case CommunityActivityItem.TYPE_EDIT_DESCRIPTION:
-			case CommunityActivityItem.TYPE_EDIT_THUMBNAIL:
-			case CommunityActivityItem.TYPE_EDIT_HEADER:
-			case CommunityActivityItem.TYPE_EDIT_DETAILS:
-			case CommunityActivityItem.TYPE_EDIT_HEADER_REMOVE:
-			case CommunityActivityItem.TYPE_COMPETITION_EDIT_SETTINGS:
-			case CommunityActivityItem.TYPE_COMPETITION_EDIT_VOTING:
+			case CommunityActivityItemModel.TYPE_EDIT_DESCRIPTION:
+			case CommunityActivityItemModel.TYPE_EDIT_THUMBNAIL:
+			case CommunityActivityItemModel.TYPE_EDIT_HEADER:
+			case CommunityActivityItemModel.TYPE_EDIT_DETAILS:
+			case CommunityActivityItemModel.TYPE_EDIT_HEADER_REMOVE:
+			case CommunityActivityItemModel.TYPE_COMPETITION_EDIT_SETTINGS:
+			case CommunityActivityItemModel.TYPE_COMPETITION_EDIT_VOTING:
 				return { icon: 'edit', color: '' };
 
-			case CommunityActivityItem.TYPE_CHANNEL_ADD:
+			case CommunityActivityItemModel.TYPE_CHANNEL_ADD:
 				return { icon: 'add', color: '' };
-			case CommunityActivityItem.TYPE_CHANNEL_REMOVE:
+			case CommunityActivityItemModel.TYPE_CHANNEL_REMOVE:
 				return { icon: 'remove', color: 'notice' };
-			case CommunityActivityItem.TYPE_CHANNEL_EDIT:
-			case CommunityActivityItem.TYPE_CHANNEL_RENAME:
+			case CommunityActivityItemModel.TYPE_CHANNEL_EDIT:
+			case CommunityActivityItemModel.TYPE_CHANNEL_RENAME:
 				return { icon: 'edit', color: '' };
 
-			case CommunityActivityItem.TYPE_GAME_LINK:
-			case CommunityActivityItem.TYPE_GAME_UNLINK:
+			case CommunityActivityItemModel.TYPE_GAME_LINK:
+			case CommunityActivityItemModel.TYPE_GAME_UNLINK:
 				return { icon: 'gamepad', color: '' };
 
-			case CommunityActivityItem.TYPE_COMPETITION_VOTING_SET_ACTIVE:
+			case CommunityActivityItemModel.TYPE_COMPETITION_VOTING_SET_ACTIVE:
 				return { icon: 'pedestals-numbers', color: '' };
 
-			case CommunityActivityItem.TYPE_COMPETITION_ENTRY_REMOVE:
+			case CommunityActivityItemModel.TYPE_COMPETITION_ENTRY_REMOVE:
 				return { icon: 'bullet-list', color: 'notice' };
-			case CommunityActivityItem.TYPE_COMPETITION_ENTRY_UNREMOVE:
+			case CommunityActivityItemModel.TYPE_COMPETITION_ENTRY_UNREMOVE:
 				return { icon: 'bullet-list', color: '' };
 
-			case CommunityActivityItem.TYPE_COMPETITION_ENTRY_GIVE_AWARD:
+			case CommunityActivityItemModel.TYPE_COMPETITION_ENTRY_GIVE_AWARD:
 				return { icon: 'medal', color: '' };
 
-			case CommunityActivityItem.TYPE_FIRESIDE_START:
-			case CommunityActivityItem.TYPE_FIRESIDE_START_DRAFT:
-			case CommunityActivityItem.TYPE_FIRESIDE_PUBLISH:
+			case CommunityActivityItemModel.TYPE_FIRESIDE_START:
+			case CommunityActivityItemModel.TYPE_FIRESIDE_START_DRAFT:
+			case CommunityActivityItemModel.TYPE_FIRESIDE_PUBLISH:
 				return { icon: 'fireside', color: '' };
-			case CommunityActivityItem.TYPE_FIRESIDE_EXTINGUISH:
+			case CommunityActivityItemModel.TYPE_FIRESIDE_EXTINGUISH:
 				return { icon: 'remove', color: '' };
 		}
 	}

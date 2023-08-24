@@ -5,7 +5,7 @@ import { styleChangeBg } from '../../../../_styles/mixins';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppUserCardHover from '../../../user/card/AppUserCardHover.vue';
 import AppUserCreatorBadge from '../../../user/creator/AppUserCreatorBadge.vue';
-import { User } from '../../../user/user.model';
+import { UserModel } from '../../../user/user.model';
 import { useContentOwnerController } from '../../content-owner';
 
 const props = defineProps({
@@ -18,7 +18,7 @@ const props = defineProps({
 const { username } = toRefs(props);
 const { hydrator } = useContentOwnerController()!;
 
-const user = ref<User | null>(null);
+const user = ref<UserModel | null>(null);
 
 watch(username, () => _hydrateUser(), { immediate: true });
 
@@ -26,7 +26,7 @@ function _hydrateUser() {
 	// Make sure we never execute a promise if we don't have to, it would break SSR.
 	hydrator.useData<any>('username', username.value, data => {
 		if (data !== null) {
-			user.value = new User(data);
+			user.value = new UserModel(data);
 		}
 	});
 }

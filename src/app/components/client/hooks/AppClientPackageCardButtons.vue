@@ -4,11 +4,11 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatFilesize } from '../../../../_common/filters/filesize';
-import { GameBuild, GameBuildType } from '../../../../_common/game/build/build.model';
-import { checkGameDeviceSupport, Game } from '../../../../_common/game/game.model';
+import { GameBuildModel, GameBuildType } from '../../../../_common/game/build/build.model';
+import { checkGameDeviceSupport, GameModel } from '../../../../_common/game/game.model';
 import AppGamePackageCardMoreOptions from '../../../../_common/game/package/card/AppGamePackageCardMoreOptions.vue';
 import { GamePackageCardModel } from '../../../../_common/game/package/card/card.model';
-import { GamePackage } from '../../../../_common/game/package/package.model';
+import { GamePackageModel } from '../../../../_common/game/package/package.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
@@ -23,11 +23,11 @@ import {
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	package: {
-		type: Object as PropType<GamePackage>,
+		type: Object as PropType<GamePackageModel>,
 		required: true,
 	},
 	card: {
@@ -39,8 +39,8 @@ const props = defineProps({
 const { game, package: pkg, card } = toRefs(props);
 
 const emit = defineEmits({
-	click: (_data: { build: GameBuild; fromExtraSection?: boolean }) => true,
-	'show-build-payment': (_build: GameBuild) => true,
+	click: (_data: { build: GameBuildModel; fromExtraSection?: boolean }) => true,
+	'show-build-payment': (_build: GameBuildModel) => true,
 });
 
 const {
@@ -53,7 +53,7 @@ const {
 	launcherLaunch,
 } = useClientLibraryStore();
 
-const build = ref<GameBuild>();
+const build = ref<GameBuildModel>();
 const downloadableUnsupported = ref(false);
 const downloadableUnsupportedHasQuickPlay = ref(false);
 
@@ -68,11 +68,11 @@ const canInstall = computed(() => {
 
 const localPackage = computed(() => packagesById.value[pkg.value.id]);
 
-function buildClick(build: GameBuild, fromExtraSection?: boolean) {
+function buildClick(build: GameBuildModel, fromExtraSection?: boolean) {
 	emit('click', { build, fromExtraSection });
 }
 
-function installClick(build: GameBuild) {
+function installClick(build: GameBuildModel) {
 	if (build._package!.shouldShowNamePrice()) {
 		emit('show-build-payment', build);
 		return;
@@ -81,7 +81,7 @@ function installClick(build: GameBuild) {
 	startInstall(build);
 }
 
-function startInstall(build: GameBuild) {
+function startInstall(build: GameBuildModel) {
 	packageInstall(game.value, build._package!, build._release!, build, build._launch_options!);
 }
 

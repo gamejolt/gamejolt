@@ -6,7 +6,7 @@ import {
 } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
-import { Background } from '../../../../_common/background/background.model';
+import { BackgroundModel } from '../../../../_common/background/background.model';
 import AppBean from '../../../../_common/bean/AppBean.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
@@ -49,9 +49,9 @@ const fullscreenHeight = useFullscreenHeight();
 
 const packageData = ref<GamePackagePayloadModel>();
 const fallbackUrl = ref('https://gamejolt.com');
-const headerBackground = ref<Background>();
-const mobileBackground = ref<Background>();
-const laptopBackground = ref<Background>();
+const headerBackground = ref<BackgroundModel>();
+const mobileBackground = ref<BackgroundModel>();
+const laptopBackground = ref<BackgroundModel>();
 
 const detectedDevice = getDeviceOS();
 
@@ -83,9 +83,11 @@ createAppRoute({
 		packageData.value = new GamePackagePayloadModel(payload.packageData);
 		fallbackUrl.value = payload.clientGameUrl;
 
-		headerBackground.value = new Background(payload.headerBackground);
+		headerBackground.value = new BackgroundModel(payload.headerBackground);
 
-		const backgrounds = arrayShuffle(Background.populate<Background>(payload.backgrounds));
+		const backgrounds = arrayShuffle(
+			BackgroundModel.populate<BackgroundModel>(payload.backgrounds)
+		);
 		laptopBackground.value = backgrounds.pop()!;
 		mobileBackground.value = backgrounds.pop()!;
 	},

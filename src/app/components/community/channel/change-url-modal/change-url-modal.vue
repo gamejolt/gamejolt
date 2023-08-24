@@ -1,7 +1,7 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import FormCommunityChannelChangeUrl from '../../../forms/community/channel/change-url/change-url.vue';
 
@@ -11,11 +11,11 @@ import FormCommunityChannelChangeUrl from '../../../forms/community/channel/chan
 	},
 })
 export default class AppCommunityChannelChangeUrlModal extends mixins(BaseModal) {
-	@Prop({ type: Object, required: true }) channel!: CommunityChannel;
-	@Prop({ type: Object, required: true }) community!: Community;
-	@Prop({ type: Array, required: true }) channels!: CommunityChannel[];
+	@Prop({ type: Object, required: true }) channel!: CommunityChannelModel;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
+	@Prop({ type: Array, required: true }) channels!: CommunityChannelModel[];
 
-	onSubmit(channel: CommunityChannel) {
+	onSubmit(channel: CommunityChannelModel) {
 		return this.modal.resolve(channel);
 	}
 }

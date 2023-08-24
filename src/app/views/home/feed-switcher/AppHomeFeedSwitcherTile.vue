@@ -4,7 +4,7 @@ import { RouteLocationRaw } from 'vue-router';
 import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItem } from '../../../../_common/media-item/media-item-model';
+import { MediaItemModel } from '../../../../_common/media-item/media-item-model';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import {
@@ -41,7 +41,7 @@ const props = defineProps({
 		required: true,
 	},
 	mediaItem: {
-		type: Object as PropType<MediaItem>,
+		type: Object as PropType<MediaItemModel>,
 		default: undefined,
 	},
 	icon: {

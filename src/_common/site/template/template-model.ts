@@ -1,12 +1,12 @@
 import { Model } from '../../model/model.service';
-import { User } from '../../user/user.model';
+import { UserModel } from '../../user/user.model';
 
-export class SiteTemplate extends Model {
+export class SiteTemplateModel extends Model {
 	declare key: string;
 	declare name: string;
 	declare description: string;
 	declare data: any | null;
-	declare user: User;
+	declare user: UserModel;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -20,7 +20,7 @@ export class SiteTemplate extends Model {
 		}
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 	}
 }

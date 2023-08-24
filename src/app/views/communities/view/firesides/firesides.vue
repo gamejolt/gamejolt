@@ -2,7 +2,7 @@
 import { Inject, Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
-import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import { FiresideModel } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import {
@@ -40,7 +40,7 @@ export default class RouteCommunitiesViewFiresides extends LegacyRouteComponent 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	firesides: Fireside[] = [];
+	firesides: FiresideModel[] = [];
 
 	readonly Screen = Screen;
 	readonly illNoComments = illNoComments;
@@ -77,7 +77,7 @@ export default class RouteCommunitiesViewFiresides extends LegacyRouteComponent 
 	}
 
 	routeResolved($payload: any) {
-		this.firesides = Fireside.populate($payload.firesides);
+		this.firesides = FiresideModel.populate($payload.firesides);
 	}
 }
 </script>

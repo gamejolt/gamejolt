@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
@@ -20,7 +20,7 @@ import AppForumTopicList from '../../../../components/forum/topic-list/topic-lis
 	resolver: () => Api.sendRequest('/web/forums/active-topics'),
 })
 export default class RouteForumsLandingActive extends LegacyRouteComponent {
-	topics: ForumTopic[] = [];
+	topics: ForumTopicModel[] = [];
 	postCountPerPage = 0;
 
 	get routeTitle() {
@@ -28,7 +28,7 @@ export default class RouteForumsLandingActive extends LegacyRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.topics = ForumTopic.populate($payload.topics);
+		this.topics = ForumTopicModel.populate($payload.topics);
 		this.postCountPerPage = $payload.postCountPerPage;
 	}
 }

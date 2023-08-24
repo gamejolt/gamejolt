@@ -3,10 +3,10 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
-import { SiteBuild } from '../../../../../_common/site/build/build-model';
-import { Site } from '../../../../../_common/site/site-model';
+import { SiteBuildModel } from '../../../../../_common/site/build/build-model';
+import { SiteModel } from '../../../../../_common/site/site-model';
 
-class Wrapper extends BaseForm<SiteBuild> {}
+class Wrapper extends BaseForm<SiteBuildModel> {}
 
 @Options({
 	components: {
@@ -14,9 +14,9 @@ class Wrapper extends BaseForm<SiteBuild> {}
 	},
 })
 export default class FormDashSiteBuild extends mixins(Wrapper) implements FormOnLoad, FormOnSubmit {
-	modelClass = SiteBuild;
+	modelClass = SiteBuildModel;
 
-	@Prop(Object) site!: Site;
+	@Prop(Object) site!: SiteModel;
 
 	maxFilesize = 0;
 	progress = 0;

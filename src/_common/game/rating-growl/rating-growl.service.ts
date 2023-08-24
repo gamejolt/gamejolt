@@ -1,10 +1,10 @@
 import { Api } from '../../api/api.service';
 import { showInfoGrowl } from '../../growls/growls.service';
 import { commonStore } from '../../store/common-store';
-import { Game } from '../game.model';
+import { GameModel } from '../game.model';
 import AppGameRatingGrowl from './AppGameRatingGrowl.vue';
 
-export async function showGameRatingGrowl(game: Game) {
+export async function showGameRatingGrowl(game: GameModel) {
 	// Don't show when not logged in.
 	if (!commonStore.user.value) {
 		return;

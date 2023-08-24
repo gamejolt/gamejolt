@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { FiresidePost } from '../fireside/post/post-model';
+import { FiresidePostModel } from '../fireside/post/post-model';
 import { SupportersModal } from '../supporters/modal.service';
 import { vAppTooltip } from '../tooltip/tooltip-directive';
 import { $gettext } from '../translate/translate.service';
 import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
-import { User } from '../user/user.model';
+import { UserModel } from '../user/user.model';
 
 const props = defineProps({
 	model: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	supporters: {
-		type: Array as PropType<User[]>,
+		type: Array as PropType<UserModel[]>,
 		required: true,
 	},
 	limit: {

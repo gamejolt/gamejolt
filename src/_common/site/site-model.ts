@@ -1,7 +1,7 @@
 import { Model } from '../model/model.service';
-import { SiteBuild } from './build/build-model';
-import { SiteContentBlock } from './content-block/content-block-model';
-import { SiteTheme } from './theme/theme-model';
+import { SiteBuildModel } from './build/build-model';
+import { SiteContentBlockModel } from './content-block/content-block-model';
+import { SiteThemeModel } from './theme/theme-model';
 
 export const enum SiteStatus {
 	Inactive = 'inactive',
@@ -9,16 +9,16 @@ export const enum SiteStatus {
 	Removed = 'removed',
 }
 
-export class Site extends Model {
+export class SiteModel extends Model {
 	declare user_id: number;
 	declare game_id: number;
 	declare domain_type: string;
 	declare domain?: string;
 	declare url: string;
-	declare theme: SiteTheme;
-	declare content_blocks?: SiteContentBlock[];
+	declare theme: SiteThemeModel;
+	declare content_blocks?: SiteContentBlockModel[];
 	declare is_static: boolean;
-	declare build?: SiteBuild;
+	declare build?: SiteBuildModel;
 	declare title?: string;
 	declare description?: string;
 	declare ga_tracking_id?: string;
@@ -28,15 +28,15 @@ export class Site extends Model {
 		super(data);
 
 		if (data.theme) {
-			this.theme = new SiteTheme(data.theme);
+			this.theme = new SiteThemeModel(data.theme);
 		}
 
 		if (data.content_blocks) {
-			this.content_blocks = SiteContentBlock.populate(data.content_blocks);
+			this.content_blocks = SiteContentBlockModel.populate(data.content_blocks);
 		}
 
 		if (data.build) {
-			this.build = new SiteBuild(data.build);
+			this.build = new SiteBuildModel(data.build);
 		}
 	}
 

@@ -7,7 +7,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../_common/route/legacy-route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { UserAddress } from '../../../../../_common/user/address/address.model';
+import { UserAddressModel } from '../../../../../_common/user/address/address.model';
 import { arrayRemove } from '../../../../../utils/array';
 import AppUserAddressCard from '../../../../components/user/address/AppUserAddressCard.vue';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
@@ -25,7 +25,7 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 export default class RouteDashAccountAddresses extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
-	billingAddresses: UserAddress[] = [];
+	billingAddresses: UserAddressModel[] = [];
 
 	get routeTitle() {
 		return this.routeStore.heading;
@@ -36,10 +36,10 @@ export default class RouteDashAccountAddresses extends LegacyRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.billingAddresses = UserAddress.populate($payload.billingAddresses);
+		this.billingAddresses = UserAddressModel.populate($payload.billingAddresses);
 	}
 
-	onRemove(address: UserAddress) {
+	onRemove(address: UserAddressModel) {
 		arrayRemove(this.billingAddresses, i => i.id === address.id);
 	}
 }

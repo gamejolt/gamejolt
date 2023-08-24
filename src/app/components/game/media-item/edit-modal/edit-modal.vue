@@ -2,7 +2,7 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import { Game } from '../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../_common/game/game.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -23,7 +23,7 @@ import { GameMediaItemEditModalRemoveCallback } from './edit-modal.service';
 	},
 })
 export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 	@Prop(Object) item!: Media;
 	@Prop(Function) onRemove!: GameMediaItemEditModalRemoveCallback;
 

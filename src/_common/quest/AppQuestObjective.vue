@@ -6,16 +6,20 @@ import AppSpacer from '../spacer/AppSpacer.vue';
 import { useCommonStore } from '../store/common-store';
 import { $gettext } from '../translate/translate.service';
 import AppQuestProgress from './AppQuestProgress.vue';
-import { Quest, QuestStatus } from './quest-model';
-import { QuestObjective, QuestObjectiveStatus, QuestObjectiveType } from './quest-objective-model';
+import { QuestModel, QuestStatus } from './quest-model';
+import {
+	QuestObjectiveModel,
+	QuestObjectiveStatus,
+	QuestObjectiveType,
+} from './quest-objective-model';
 
 const props = defineProps({
 	quest: {
-		type: Object as PropType<Quest>,
+		type: Object as PropType<QuestModel>,
 		required: true,
 	},
 	objective: {
-		type: Object as PropType<QuestObjective>,
+		type: Object as PropType<QuestObjectiveModel>,
 		required: true,
 	},
 });

@@ -1,8 +1,8 @@
 import { InjectionKey, Ref, computed, inject, ref, shallowReadonly, watch } from 'vue';
 import { Api } from '../../_common/api/api.service';
 import { storeModelList } from '../../_common/model/model-store.service';
-import { Quest, QuestRepeatType } from '../../_common/quest/quest-model';
-import { User } from '../../_common/user/user.model';
+import { QuestModel, QuestRepeatType } from '../../_common/quest/quest-model';
+import { UserModel } from '../../_common/user/user.model';
 import { GridClient } from '../components/grid/client.service';
 
 export type QuestStore = ReturnType<typeof createQuestStore>;
@@ -14,13 +14,13 @@ export function createQuestStore({
 	user,
 	grid,
 }: {
-	user: Ref<User | null>;
+	user: Ref<UserModel | null>;
 	grid: Ref<GridClient | undefined>;
 }) {
 	const isLoading = ref(false);
 	const hasLoaded = ref(false);
 
-	const allQuests = ref<Quest[]>([]);
+	const allQuests = ref<QuestModel[]>([]);
 	const dailyQuests = computed(() =>
 		allQuests.value.filter(i => i.repeat_type === QuestRepeatType.daily)
 	);
@@ -29,7 +29,7 @@ export function createQuestStore({
 	const newQuestIds = ref<QuestIdSet>(new Set());
 	const questActivityIds = ref<QuestIdSet>(new Set());
 
-	const activeQuest = ref() as Ref<number | Quest | undefined>;
+	const activeQuest = ref() as Ref<number | QuestModel | undefined>;
 	const activeQuestId = computed(() => {
 		if (typeof activeQuest.value === 'number') {
 			return activeQuest.value;
@@ -76,7 +76,7 @@ export function createQuestStore({
 		}
 	}
 
-	function _assignQuests(newQuests: Quest[]) {
+	function _assignQuests(newQuests: QuestModel[]) {
 		allQuests.value = newQuests;
 		hasLoaded.value = true;
 	}
@@ -104,7 +104,7 @@ export function createQuestStore({
 		 */
 		activeQuestId,
 		/**
-		 * Helper to grab the {@link Quest} resource from {@link activeQuest}.
+		 * Helper to grab the {@link QuestModel} resource from {@link activeQuest}.
 		 */
 		activeQuestResource,
 		clearNewQuestIds,
@@ -177,10 +177,10 @@ export async function fetchAllQuests(store: QuestStore) {
 			{ detach: true }
 		);
 
-		const newQuests: Quest[] = [];
+		const newQuests: QuestModel[] = [];
 		if (payload.quests) {
 			newQuests.push(
-				...storeModelList(Quest, payload.quests).filter((i: Quest) => {
+				...storeModelList(QuestModel, payload.quests).filter((i: QuestModel) => {
 					// We may get both daily quests and other quests when
 					// requesting `quests`, but that may not include daily
 					// quests that are in a completed state.
@@ -193,7 +193,7 @@ export async function fetchAllQuests(store: QuestStore) {
 		}
 		if (payload.dailyQuests) {
 			// Insert the daily quests to the front of our new quests.
-			newQuests.unshift(...storeModelList(Quest, payload.dailyQuests));
+			newQuests.unshift(...storeModelList(QuestModel, payload.dailyQuests));
 		}
 
 		newQuestIdsForView.value = new Set(
@@ -227,11 +227,11 @@ export async function fetchDailyQuests(store: QuestStore) {
 			}
 		);
 
-		const newDailyQuests: Quest[] = payload.dailyQuests
-			? storeModelList(Quest, payload.dailyQuests)
+		const newDailyQuests: QuestModel[] = payload.dailyQuests
+			? storeModelList(QuestModel, payload.dailyQuests)
 			: [];
 
-		const oldNonDaily = allQuests.value.reduce<Quest[]>((result, i) => {
+		const oldNonDaily = allQuests.value.reduce<QuestModel[]>((result, i) => {
 			if (!i.isDaily) {
 				result.push(i);
 			}

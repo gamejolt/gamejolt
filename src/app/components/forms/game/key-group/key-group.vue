@@ -3,15 +3,15 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { BaseForm, FormOnSubmitSuccess } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../_common/game/game.model';
 import {
-	GamePackage,
+	GamePackageModel,
 	GamePackageVisibility,
 } from '../../../../../_common/game/package/package.model';
-import { KeyGroup, KeyGroupType } from '../../../../../_common/key-group/key-group.model';
+import { KeyGroupModel, KeyGroupType } from '../../../../../_common/key-group/key-group.model';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
-class Wrapper extends BaseForm<KeyGroup> {}
+class Wrapper extends BaseForm<KeyGroupModel> {}
 
 @Options({
 	components: {
@@ -22,13 +22,13 @@ class Wrapper extends BaseForm<KeyGroup> {}
 	},
 })
 export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnSubmitSuccess {
-	modelClass = KeyGroup;
+	modelClass = KeyGroupModel;
 
-	@Prop(Object) game!: Game;
-	@Prop(Array) packages!: GamePackage[];
+	@Prop(Object) game!: GameModel;
+	@Prop(Array) packages!: GamePackageModel[];
 
 	readonly formatNumber = formatNumber;
-	readonly GamePackage = GamePackage;
+	readonly GamePackage = GamePackageModel;
 	readonly GamePackageVisibilityPrivate = GamePackageVisibility.Private;
 	readonly KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
 	readonly KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;

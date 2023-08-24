@@ -7,8 +7,8 @@ import { Connection } from '../../../../_common/connection/connection-service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import {
-	Notification,
 	NotificationFeedTypes,
+	NotificationModel,
 } from '../../../../_common/notification/notification-model';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -95,7 +95,7 @@ async function onShow() {
 				}
 			);
 
-			const items = Notification.populate(payload.items);
+			const items = NotificationModel.populate(payload.items);
 			feed.value.append(items);
 
 			if (payload.perPage) {

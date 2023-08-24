@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import { FiresideController } from '../../fireside/controller/controller';
 import AppChatList from '../_list/AppChatList.vue';
-import { ChatRoom } from '../room';
+import { ChatRoomModel } from '../room';
 import { ChatUserCollection } from '../user-collection';
 import AppChatMemberListItem from './AppChatMemberListItem.vue';
 
@@ -12,7 +12,7 @@ const props = defineProps({
 		required: true,
 	},
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 	firesideController: {

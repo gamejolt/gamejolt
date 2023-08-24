@@ -2,10 +2,10 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
-import { CommunityUserNotification } from '../../../_common/community/user-notification/user-notification.model';
+import { CommunityUserNotificationModel } from '../../../_common/community/user-notification/user-notification.model';
 import {
 	$viewPost,
-	FiresidePost,
+	FiresidePostModel,
 	pullFiresideHashFromUrl,
 } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
@@ -63,8 +63,8 @@ const PostThemeKey = 'post';
 export default class RoutePost extends LegacyRouteComponent {
 	themeStore = setup(() => useThemeStore());
 
-	post: FiresidePost | null = null;
-	communityNotifications: CommunityUserNotification[] = [];
+	post: FiresidePostModel | null = null;
+	communityNotifications: CommunityUserNotificationModel[] = [];
 
 	/** @override */
 	disableRouteTitleSuffix = true;
@@ -104,12 +104,12 @@ export default class RoutePost extends LegacyRouteComponent {
 
 	routeCreated() {
 		const hash = pullFiresideHashFromUrl(this.$route.params.slug.toString());
-		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
+		this.post = Registry.find<FiresidePostModel>('FiresidePost', i => i.hash === hash);
 		this.setPageTheme();
 	}
 
 	routeResolved($payload: any) {
-		const post = new FiresidePost($payload.post);
+		const post = new FiresidePostModel($payload.post);
 		if (this.post) {
 			this.post.assign(post);
 		} else {
@@ -117,7 +117,7 @@ export default class RoutePost extends LegacyRouteComponent {
 		}
 
 		if ($payload.communityNotifications) {
-			this.communityNotifications = CommunityUserNotification.populate(
+			this.communityNotifications = CommunityUserNotificationModel.populate(
 				$payload.communityNotifications
 			);
 		}

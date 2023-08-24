@@ -14,7 +14,7 @@ import {
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
-import { UserBlock } from '../../../../../_common/user/block/block.model';
+import { UserBlockModel } from '../../../../../_common/user/block/block.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { arrayRemove } from '../../../../../utils/array';
 import FormUserBlock from '../../../../components/forms/user/block/block.vue';
@@ -42,7 +42,7 @@ export default class RouteDashAccountBlocks extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
 	isBlocking = false;
-	blocks: UserBlock[] = [];
+	blocks: UserBlockModel[] = [];
 	totalCount = 0;
 	isLoadingMore = false;
 
@@ -59,7 +59,7 @@ export default class RouteDashAccountBlocks extends LegacyRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.blocks = UserBlock.populate($payload.blocks);
+		this.blocks = UserBlockModel.populate($payload.blocks);
 		this.totalCount = $payload.total || 0;
 	}
 
@@ -69,7 +69,7 @@ export default class RouteDashAccountBlocks extends LegacyRouteComponent {
 		const from = this.blocks.length > 0 ? this.blocks[this.blocks.length - 1].blocked_on : '';
 		const payload = await Api.sendRequest('/web/dash/blocks/more?from=' + from);
 		if (payload.blocks) {
-			const blocks = UserBlock.populate(payload.blocks);
+			const blocks = UserBlockModel.populate(payload.blocks);
 			this.blocks.push(...blocks);
 		}
 
@@ -83,7 +83,7 @@ export default class RouteDashAccountBlocks extends LegacyRouteComponent {
 		this.loadMore();
 	}
 
-	async onClickUnblock(block: UserBlock) {
+	async onClickUnblock(block: UserBlockModel) {
 		const confirm = await showModalConfirm(
 			this.$gettextInterpolate(`Are you sure you want to unblock %{ name }?`, {
 				name: block.user.display_name,

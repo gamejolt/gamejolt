@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
@@ -25,7 +25,7 @@ export default class RouteDashCommunitiesAdd extends LegacyRouteComponent {
 		return this.$gettext('Create a community');
 	}
 
-	onSubmit(community: Community) {
+	onSubmit(community: CommunityModel) {
 		this.$router.push(community.routeEditLocation);
 	}
 }

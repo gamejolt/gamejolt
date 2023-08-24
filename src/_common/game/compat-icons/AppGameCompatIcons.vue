@@ -2,11 +2,11 @@
 import { PropType, computed, toRefs } from 'vue';
 import { styleChangeBg } from '../../../_styles/mixins';
 import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
-import { Game } from '../game.model';
+import { GameModel } from '../game.model';
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 });

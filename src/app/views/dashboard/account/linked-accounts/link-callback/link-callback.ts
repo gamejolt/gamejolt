@@ -5,7 +5,7 @@ import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import {
-	LinkedAccount,
+	LinkedAccountModel,
 	getLinkedAccountProviderDisplayName,
 } from '../../../../../../_common/linked-account/linked-account.model';
 import {
@@ -104,11 +104,11 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends LegacyRo
 			}
 		} else {
 			switch (provider) {
-				case LinkedAccount.PROVIDER_FACEBOOK:
-				case LinkedAccount.PROVIDER_GOOGLE:
-				case LinkedAccount.PROVIDER_TWITCH:
+				case LinkedAccountModel.PROVIDER_FACEBOOK:
+				case LinkedAccountModel.PROVIDER_GOOGLE:
+				case LinkedAccountModel.PROVIDER_TWITCH:
 					{
-						const account = new LinkedAccount($payload.account);
+						const account = new LinkedAccountModel($payload.account);
 						showSuccessGrowl(
 							this.$gettextInterpolate(
 								'Your %{ provider } account (%{ name }) has been linked.',

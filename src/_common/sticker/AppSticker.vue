@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, PropType, ref, toRefs, watch } from 'vue';
 import AppAnimElectricity from '../animation/AppAnimElectricity.vue';
-import { StickerPlacement } from './placement/placement.model';
+import { StickerPlacementModel } from './placement/placement.model';
 import { removeStickerFromTarget, StickerTargetController } from './target/target-controller';
 
 const props = defineProps({
 	sticker: {
-		type: Object as PropType<StickerPlacement>,
+		type: Object as PropType<StickerPlacementModel>,
 		required: true,
 	},
 	controller: {

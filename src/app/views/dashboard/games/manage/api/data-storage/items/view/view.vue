@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
-import { GameDataStoreItem } from '../../../../../../../../../_common/game/data-store/item/item.model';
+import { GameDataStoreItemModel } from '../../../../../../../../../_common/game/data-store/item/item.model';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	LegacyRouteComponent,
@@ -31,7 +31,7 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends LegacyR
 		return this.routeStore.game!;
 	}
 
-	item: GameDataStoreItem = null as any;
+	item: GameDataStoreItemModel = null as any;
 
 	readonly formatDate = formatDate;
 
@@ -45,7 +45,7 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends LegacyR
 	}
 
 	routeResolved($payload: any) {
-		this.item = new GameDataStoreItem($payload.item);
+		this.item = new GameDataStoreItemModel($payload.item);
 	}
 
 	async remove() {

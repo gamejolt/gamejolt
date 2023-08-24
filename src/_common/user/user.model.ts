@@ -1,18 +1,18 @@
 import type { RouteLocationDefinition } from '../../utils/router';
 import { trackUserFollow, UserFollowLocation } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
-import { AvatarFrame } from '../avatar/frame.model';
+import { AvatarFrameModel } from '../avatar/frame.model';
 import { CommentableModel } from '../comment/comment-model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCache } from '../content/content-set-cache';
 import { DogtagData } from '../dogtag/dogtag-data';
 import { showErrorGrowl } from '../growls/growls.service';
-import { MediaItem } from '../media-item/media-item-model';
+import { MediaItemModel } from '../media-item/media-item-model';
 import { showModalConfirm } from '../modal/confirm/confirm-service';
 import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
-import { Theme } from '../theme/theme.model';
+import { ThemeModel } from '../theme/theme.model';
 import { $gettext } from '../translate/translate.service';
 /**
  * When you have code that needs to work on either User | ChatUser, you can use
@@ -27,7 +27,7 @@ export interface UserCommonFields {
 	permission_level: number;
 	is_verified: boolean;
 	is_creator?: boolean;
-	avatar_frame?: AvatarFrame;
+	avatar_frame?: AvatarFrameModel;
 }
 
 export const enum UserType {
@@ -41,7 +41,7 @@ export const enum CreatorStatus {
 	Suspended = 3,
 }
 
-export class User
+export class UserModel
 	extends Model
 	implements UserCommonFields, ContentContainerModel, CommentableModel
 {
@@ -68,7 +68,7 @@ export class User
 
 	declare created_on: number;
 
-	declare theme: Theme | null;
+	declare theme: ThemeModel | null;
 	declare follower_count: number;
 	declare following_count: number;
 	declare comment_count: number;
@@ -84,10 +84,10 @@ export class User
 	declare level_next_percentage?: number;
 
 	// Profile settings.
-	declare avatar_media_item?: MediaItem;
-	declare header_media_item?: MediaItem;
+	declare avatar_media_item?: MediaItemModel;
+	declare header_media_item?: MediaItemModel;
 	declare disable_gravatar?: boolean;
-	declare avatar_frame?: AvatarFrame;
+	declare avatar_frame?: AvatarFrameModel;
 
 	declare bio_content: string;
 
@@ -191,15 +191,15 @@ export class User
 		}
 
 		if (data.avatar_media_item) {
-			this.avatar_media_item = new MediaItem(data.avatar_media_item);
+			this.avatar_media_item = new MediaItemModel(data.avatar_media_item);
 		}
 
 		if (data.header_media_item) {
-			this.header_media_item = new MediaItem(data.header_media_item);
+			this.header_media_item = new MediaItemModel(data.header_media_item);
 		}
 
 		if (data.theme) {
-			this.theme = new Theme(data.theme);
+			this.theme = new ThemeModel(data.theme);
 		}
 
 		if (data.dogtags) {
@@ -207,7 +207,7 @@ export class User
 		}
 
 		if (data.avatar_frame) {
-			this.avatar_frame = new AvatarFrame(data.avatar_frame);
+			this.avatar_frame = new AvatarFrameModel(data.avatar_frame);
 		}
 
 		Registry.store('User', this);
@@ -271,7 +271,7 @@ export async function touchUser() {
 	return Api.sendRequest('/web/touch');
 }
 
-export async function followUser(user: User) {
+export async function followUser(user: UserModel) {
 	user.is_following = true;
 	++user.follower_count;
 
@@ -292,7 +292,7 @@ export async function followUser(user: User) {
 	}
 }
 
-export async function unfollowUser(user: User) {
+export async function unfollowUser(user: UserModel) {
 	user.is_following = false;
 	--user.follower_count;
 
@@ -314,7 +314,7 @@ export async function unfollowUser(user: User) {
 }
 
 export async function toggleUserFollow(
-	user: User,
+	user: UserModel,
 	location: UserFollowLocation
 ): Promise<boolean | null> {
 	let failed = false,
@@ -356,7 +356,7 @@ export async function toggleUserFollow(
 	return !failed;
 }
 
-export function userCanAccessCreatorForm(user: User) {
+export function userCanAccessCreatorForm(user: UserModel) {
 	return (
 		user.creator_status === CreatorStatus.Applied ||
 		user.creator_status === CreatorStatus.Creator ||

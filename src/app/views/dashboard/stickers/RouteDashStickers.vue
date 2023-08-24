@@ -22,8 +22,8 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerPack, {
 	StickerPackRatio,
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
-import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
-import { Sticker } from '../../../../_common/sticker/sticker.model';
+import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
+import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import {
 	$gettext,
 	$gettextInterpolate,
@@ -43,18 +43,18 @@ export default {
 
 type InitPayload = {
 	emojiPrefix: string | null | undefined;
-	stickers: ModelData<Sticker>[];
-	pack: ModelData<StickerPack> | null;
+	stickers: ModelData<StickerModel>[];
+	pack: ModelData<StickerPackModel> | null;
 	maxStickerAmount: number;
 	stickerSlots: number;
 };
 
-type PackFormModel = Partial<StickerPack>;
+type PackFormModel = Partial<StickerPackModel>;
 </script>
 
 <script lang="ts" setup>
-const stickers = ref([]) as Ref<Sticker[]>;
-const pack = ref(null) as Ref<StickerPack | null>;
+const stickers = ref([]) as Ref<StickerModel[]>;
+const pack = ref(null) as Ref<StickerPackModel | null>;
 const maxStickerAmount = ref(5);
 const stickerSlots = ref(100);
 
@@ -133,7 +133,7 @@ const packForm: FormController<PackFormModel> = createForm({
 		showErrorGrowl(message || $gettext(`Could not update your sticker pack. Try again later.`));
 	},
 	onSubmitSuccess(payload) {
-		pack.value = new StickerPack(payload.pack);
+		pack.value = new StickerPackModel(payload.pack);
 	},
 });
 
@@ -144,8 +144,8 @@ const { isBootstrapped } = createAppRoute({
 
 		emojiPrefix.value = payload.emojiPrefix || '';
 
-		stickers.value = Sticker.populate(payload.stickers);
-		pack.value = payload.pack ? new StickerPack(payload.pack) : null;
+		stickers.value = StickerModel.populate(payload.stickers);
+		pack.value = payload.pack ? new StickerPackModel(payload.pack) : null;
 		maxStickerAmount.value = payload.maxStickerAmount;
 		stickerSlots.value = payload.stickerSlots;
 
@@ -198,7 +198,7 @@ const showStickerPackDisabledWarning = computed(() => {
 	return currentActiveStickers >= minActiveStickers;
 });
 
-function updatePack(newPack: StickerPack | undefined) {
+function updatePack(newPack: StickerPackModel | undefined) {
 	if (newPack) {
 		pack.value = newPack;
 		packForm.formModel.is_active = newPack.is_active === true;

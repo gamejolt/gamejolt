@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
+import { GamePackageModel } from '../../../../../../../../_common/game/package/package.model';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
@@ -32,7 +32,7 @@ export default class RouteDashGamesManageGamePackagesAdd extends LegacyRouteComp
 		return null;
 	}
 
-	onPackageAdded(newPackage: GamePackage) {
+	onPackageAdded(newPackage: GamePackageModel) {
 		this.$router.push({
 			name: 'dash.games.manage.game.packages.edit',
 			params: { packageId: newPackage.id + '' },

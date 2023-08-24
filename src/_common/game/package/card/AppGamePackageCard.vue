@@ -11,18 +11,18 @@ import AppExpand from '../../../expand/AppExpand.vue';
 import { formatCurrency } from '../../../filters/currency';
 import { formatFilesize } from '../../../filters/filesize';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import { LinkedKey } from '../../../linked-key/linked-key.model';
-import { SellablePricing } from '../../../sellable/pricing/pricing.model';
-import { Sellable } from '../../../sellable/sellable.model';
+import { LinkedKeyModel } from '../../../linked-key/linked-key.model';
+import { SellablePricingModel } from '../../../sellable/pricing/pricing.model';
+import { SellableModel } from '../../../sellable/sellable.model';
 import AppTimeAgo from '../../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import AppTranslate from '../../../translate/AppTranslate.vue';
-import { GameBuild, GameBuildType } from '../../build/build.model';
+import { GameBuildModel, GameBuildType } from '../../build/build.model';
 import { GameDownloader } from '../../downloader/downloader.service';
-import { Game } from '../../game.model';
+import { GameModel } from '../../game.model';
 import { GamePlayModal } from '../../play-modal/play-modal.service';
-import { GameRelease } from '../../release/release.model';
-import { GamePackage } from '../package.model';
+import { GameReleaseModel } from '../../release/release.model';
+import { GamePackageModel } from '../package.model';
 import { GamePackagePurchaseModal } from '../purchase-modal/purchase-modal.service';
 import AppGamePackageCardButtons from './AppGamePackageCardButtons.vue';
 import { GamePackageCardModel } from './card.model';
@@ -42,23 +42,23 @@ export function setMetaComponent(component: Component) {
 <script lang="ts" setup>
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	package: {
-		type: Object as PropType<GamePackage>,
+		type: Object as PropType<GamePackageModel>,
 		required: true,
 	},
 	sellable: {
-		type: Object as PropType<Sellable>,
+		type: Object as PropType<SellableModel>,
 		required: true,
 	},
 	releases: {
-		type: Array as PropType<GameRelease[]>,
+		type: Array as PropType<GameReleaseModel[]>,
 		default: () => [],
 	},
 	builds: {
-		type: Array as PropType<GameBuild[]>,
+		type: Array as PropType<GameBuildModel[]>,
 		default: () => [],
 	},
 	accessKey: {
@@ -74,10 +74,10 @@ const showFullDescription = ref(false);
 const canToggleDescription = ref(false);
 
 const isWhatOpen = ref(false);
-const pricing = ref<SellablePricing | null>(null);
+const pricing = ref<SellablePricingModel | null>(null);
 const sale = ref(false);
 const salePercentageOff = ref('');
-const saleOldPricing = ref<SellablePricing | null>(null);
+const saleOldPricing = ref<SellablePricingModel | null>(null);
 
 const providerIcons = {
 	steam: 'steam',
@@ -118,7 +118,7 @@ if (sellable.value.pricings.length > 0) {
 	}
 }
 
-function buildClick(build: GameBuild, fromExtraSection = false) {
+function buildClick(build: GameBuildModel, fromExtraSection = false) {
 	// For client, if they clicked in the "options" section, then skip
 	// showing payment form. Just take them directly to site.
 	if (GJ_IS_DESKTOP_APP && fromExtraSection) {
@@ -130,7 +130,7 @@ function buildClick(build: GameBuild, fromExtraSection = false) {
 	}
 }
 
-function doBuildClick(build: GameBuild, fromExtraSection = false) {
+function doBuildClick(build: GameBuildModel, fromExtraSection = false) {
 	let operation = build.type === GameBuildType.Downloadable ? 'download' : 'play';
 	if (build.type === GameBuildType.Rom && fromExtraSection) {
 		operation = 'download';
@@ -143,7 +143,7 @@ function doBuildClick(build: GameBuild, fromExtraSection = false) {
 	}
 }
 
-function showPayment(build: GameBuild | null, fromExtraSection: boolean) {
+function showPayment(build: GameBuildModel | null, fromExtraSection: boolean) {
 	GamePackagePurchaseModal.show({
 		game: game.value,
 		package: gamePackage.value,
@@ -152,20 +152,20 @@ function showPayment(build: GameBuild | null, fromExtraSection: boolean) {
 	});
 }
 
-function download(build: GameBuild) {
+function download(build: GameBuildModel) {
 	GameDownloader.download(router, game.value, build, {
 		isOwned: isOwned.value,
 		key: accessKey?.value,
 	});
 }
 
-function showBrowserModal(build: GameBuild) {
+function showBrowserModal(build: GameBuildModel) {
 	GamePlayModal.show(game.value, build, {
 		key: accessKey?.value,
 	});
 }
 
-function copyProviderKey(key: LinkedKey) {
+function copyProviderKey(key: LinkedKeyModel) {
 	Clipboard.copy(key.key);
 }
 </script>

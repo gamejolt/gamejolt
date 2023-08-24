@@ -6,7 +6,7 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../../../_common/route/legacy-route-component';
-import { Site } from '../../../../../../_common/site/site-model';
+import { SiteModel } from '../../../../../../_common/site/site-model';
 import AppSitesLinkCard from '../../../../../components/sites/link-card/link-card.vue';
 import AppSitesManagePage from '../../../../../components/sites/manage-page/manage-page.vue';
 import { useGameDashRouteController } from '../manage.store';
@@ -29,14 +29,14 @@ export default class RouteDashGamesManageSite extends LegacyRouteComponent {
 		return this.routeStore.game!;
 	}
 
-	site: Site = null as any;
+	site: SiteModel = null as any;
 
 	get routeTitle() {
 		return this.$gettext('Manage Site');
 	}
 
 	routeResolved($payload: any) {
-		this.site = new Site($payload.site);
+		this.site = new SiteModel($payload.site);
 	}
 }
 </script>

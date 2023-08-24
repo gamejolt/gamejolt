@@ -6,9 +6,9 @@ import { router } from '../../..';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { CompetitionPeriodVoting } from '../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionEntrySubmitModal } from '../../../../../_common/community/competition/entry/submit-modal/submit-modal.service';
-import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
+import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../_common/filters/number';
@@ -72,8 +72,8 @@ export default class RouteCommunitiesViewChannelJam extends LegacyRouteComponent
 	canToggleDescription = false;
 	isDescriptionOpen = false;
 	isLoading = true;
-	userEntries: CommunityCompetitionEntry[] = [];
-	categories: CommunityCompetitionVotingCategory[] = [];
+	userEntries: CommunityCompetitionEntryModel[] = [];
+	categories: CommunityCompetitionVotingCategoryModel[] = [];
 
 	/** @override */
 	disableRouteTitleSuffix = true;
@@ -137,10 +137,10 @@ export default class RouteCommunitiesViewChannelJam extends LegacyRouteComponent
 
 	routeResolved($payload: any) {
 		if ($payload.entries) {
-			this.userEntries = CommunityCompetitionEntry.populate($payload.entries);
+			this.userEntries = CommunityCompetitionEntryModel.populate($payload.entries);
 		}
 		if ($payload.categories) {
-			this.categories = CommunityCompetitionVotingCategory.populate($payload.categories);
+			this.categories = CommunityCompetitionVotingCategoryModel.populate($payload.categories);
 		}
 		this.isLoading = false;
 
@@ -175,7 +175,7 @@ export default class RouteCommunitiesViewChannelJam extends LegacyRouteComponent
 		}
 	}
 
-	onEntryRemoved(entry: CommunityCompetitionEntry) {
+	onEntryRemoved(entry: CommunityCompetitionEntryModel) {
 		arrayRemove(this.userEntries, i => i.id === entry.id);
 
 		if (this.competition) {

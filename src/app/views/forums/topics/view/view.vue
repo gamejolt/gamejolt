@@ -6,9 +6,9 @@ import { Api } from '../../../../../_common/api/api.service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
-import { ForumPost } from '../../../../../_common/forum/post/post.model';
-import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';
+import { ForumPostModel } from '../../../../../_common/forum/post/post.model';
+import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
 import AppMessageThreadPagination from '../../../../../_common/message-thread/pagination/pagination.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
@@ -91,9 +91,9 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 		return this.commonStore;
 	}
 
-	topic: ForumTopic = null as any;
-	channel: ForumChannel = null as any;
-	posts: ForumPost[] = [];
+	topic: ForumTopicModel = null as any;
+	channel: ForumChannelModel = null as any;
+	posts: ForumPostModel[] = [];
 
 	isEditingTopic = false;
 	canToggleDescription = false;
@@ -127,9 +127,9 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.topic = new ForumTopic($payload.topic);
-		this.channel = new ForumChannel($payload.channel);
-		this.posts = ForumPost.populate($payload.posts);
+		this.topic = new ForumTopicModel($payload.topic);
+		this.channel = new ForumChannelModel($payload.channel);
+		this.posts = ForumPostModel.populate($payload.posts);
 
 		this.perPage = $payload.perPage;
 		this.currentPage = $payload.page || 1;

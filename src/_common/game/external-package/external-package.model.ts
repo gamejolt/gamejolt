@@ -5,7 +5,7 @@ export const enum GameExternalPackageStatus {
 	Removed = 'removed',
 }
 
-export class GameExternalPackage extends Model {
+export class GameExternalPackageModel extends Model {
 	declare game_id: number;
 	declare title: string;
 	declare description: string;

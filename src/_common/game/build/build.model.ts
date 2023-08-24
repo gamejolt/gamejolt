@@ -1,12 +1,12 @@
 import { Api } from '../../api/api.service';
 import { Jolticon } from '../../jolticon/AppJolticon.vue';
 import { Model } from '../../model/model.service';
-import { Game } from '../game.model';
-import { GamePackage } from '../package/package.model';
-import { GameRelease } from '../release/release.model';
-import { GameBuildFile } from './file/file.model';
-import { GameBuildLaunchOption } from './launch-option/launch-option.model';
-import { GameBuildParam } from './param/param.model';
+import { GameModel } from '../game.model';
+import { GamePackageModel } from '../package/package.model';
+import { GameReleaseModel } from '../release/release.model';
+import { GameBuildFileModel } from './file/file.model';
+import { GameBuildLaunchOptionModel } from './launch-option/launch-option.model';
+import { GameBuildParamModel } from './param/param.model';
 
 export const enum GameBuildType {
 	Downloadable = 'downloadable',
@@ -156,9 +156,9 @@ export const GameBuildEmulatorInfo = {
 	[GameBuildEmulator.Msx]: 'MSX',
 };
 
-export class GameBuild extends Model {
-	declare primary_file: GameBuildFile;
-	params: GameBuildParam[] = [];
+export class GameBuildModel extends Model {
+	declare primary_file: GameBuildFileModel;
+	params: GameBuildParamModel[] = [];
 	declare errors?: GameBuildError[];
 	declare game_id: number;
 	declare game_package_id: number;
@@ -186,20 +186,20 @@ export class GameBuild extends Model {
 	declare status: GameBuildStatus;
 
 	// These fields get added only during GamePackagePayloadModel.
-	declare _package?: GamePackage;
-	declare _release?: GameRelease;
-	declare _launch_options?: GameBuildLaunchOption[];
+	declare _package?: GamePackageModel;
+	declare _release?: GameReleaseModel;
+	declare _launch_options?: GameBuildLaunchOptionModel[];
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.primary_file) {
-			this.primary_file = new GameBuildFile(data.primary_file);
+			this.primary_file = new GameBuildFileModel(data.primary_file);
 		}
 
 		this.params = [];
 		if (data.params && Array.isArray(data.params) && data.params.length) {
-			this.params = GameBuildParam.populate(data.params);
+			this.params = GameBuildParamModel.populate(data.params);
 		}
 
 		if (data.errors && typeof data.errors === 'string') {
@@ -230,7 +230,7 @@ export class GameBuild extends Model {
 		return !!this.errors && this.errors.indexOf(error) !== -1;
 	}
 
-	getUrl(game: Game, page: string) {
+	getUrl(game: GameModel, page: string) {
 		if (page === 'download') {
 			return `/get/build?game=${game.id}&build=${this.id}`;
 		}
@@ -253,7 +253,7 @@ export class GameBuild extends Model {
 	}
 
 	getDownloadUrl(options: { key?: string; forceDownload?: boolean } = {}) {
-		return GameBuild.getDownloadUrl(this.id, options);
+		return GameBuildModel.getDownloadUrl(this.id, options);
 	}
 
 	$save() {
@@ -276,7 +276,7 @@ export class GameBuild extends Model {
 		}
 	}
 
-	async $remove(game: Game) {
+	async $remove(game: GameModel) {
 		const params = [this.game_id, this.game_package_id, this.game_release_id, this.id];
 		const response = await this.$_remove(
 			'/web/dash/developer/games/builds/remove/' + params.join('/')
@@ -290,7 +290,7 @@ export class GameBuild extends Model {
 	}
 }
 
-export function pluckGameBuildOsSupport(build: GameBuild) {
+export function pluckGameBuildOsSupport(build: GameBuildModel) {
 	const support = [];
 
 	// We only include the 64-bit versions if the build doesn't have 32bit and 64bit

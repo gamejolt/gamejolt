@@ -6,9 +6,12 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../_common/content/content-writer';
-import { $createFiresidePost, FiresidePost } from '../../../../_common/fireside/post/post-model';
+import {
+	$createFiresidePost,
+	FiresidePostModel,
+} from '../../../../_common/fireside/post/post-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 import { sleep } from '../../../../utils/utils';
 import { CommentModal } from '../../comment/modal/modal.service';
 import { PostEditModal } from '../../post/edit-modal/edit-modal-service';
@@ -20,7 +23,7 @@ import { PostEditModal } from '../../post/edit-modal/edit-modal-service';
 })
 export default class AppUserSpawnDay extends Vue {
 	@Prop(Object)
-	user!: User;
+	user!: UserModel;
 
 	commonStore = setup(() => useCommonStore());
 
@@ -33,7 +36,7 @@ export default class AppUserSpawnDay extends Vue {
 	};
 
 	@Emit('post-add')
-	emitPostAdd(_post: FiresidePost) {}
+	emitPostAdd(_post: FiresidePostModel) {}
 
 	get shouldShowSpawnDay() {
 		return !!this.user.is_spawnday;

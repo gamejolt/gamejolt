@@ -1,11 +1,11 @@
 import { Model } from '../../model/model.service';
-import { Sticker } from '../sticker.model';
+import { StickerModel } from '../sticker.model';
 
-export class StickerPlacement extends Model {
+export class StickerPlacementModel extends Model {
 	declare position_x: number;
 	declare position_y: number;
 	declare rotation: number;
-	declare sticker: Sticker;
+	declare sticker: StickerModel;
 	declare target_data: StickerPlacementTargetData;
 	declare is_charged: boolean;
 
@@ -13,7 +13,7 @@ export class StickerPlacement extends Model {
 		super(data);
 
 		if (data.sticker) {
-			this.sticker = new Sticker(data.sticker);
+			this.sticker = new StickerModel(data.sticker);
 		}
 
 		if (data.target_data === '' || !data.target_data) {

@@ -1,10 +1,10 @@
 <script lang="ts">
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
+import { Analytics } from '../../../../../../_common/analytics/analytics.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import {
-	FiresidePost,
+	FiresidePostModel,
 	loadArticleIntoPost,
 } from '../../../../../../_common/fireside/post/post-model';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
@@ -25,7 +25,7 @@ export default class AppActivityFeedPostText extends Vue {
 	item!: ActivityFeedItem;
 
 	@Prop({ type: Object, required: true })
-	post!: FiresidePost;
+	post!: FiresidePostModel;
 
 	@Inject({ from: ActivityFeedKey })
 	feed!: ActivityFeedView;

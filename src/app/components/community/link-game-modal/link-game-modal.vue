@@ -1,8 +1,8 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
-import { Community } from '../../../../_common/community/community.model';
-import { Game } from '../../../../_common/game/game.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
@@ -19,12 +19,12 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 	},
 })
 export default class AppCommunityLinkGameModal extends mixins(BaseModal) {
-	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
 
 	page = 1;
 	isLoading = true;
 	lastPage = false;
-	games: Game[] = [];
+	games: GameModel[] = [];
 
 	mounted() {
 		this.loadPage();
@@ -40,7 +40,7 @@ export default class AppCommunityLinkGameModal extends mixins(BaseModal) {
 				{ noErrorRedirect: true }
 			);
 
-			const games = Game.populate(payload.games);
+			const games = GameModel.populate(payload.games);
 			if (games.length < payload.perPage) {
 				this.lastPage = true;
 			}
@@ -59,7 +59,7 @@ export default class AppCommunityLinkGameModal extends mixins(BaseModal) {
 		this.loadPage();
 	}
 
-	onClickLink(game: Game) {
+	onClickLink(game: GameModel) {
 		this.modal.resolve(game);
 	}
 }

@@ -8,7 +8,7 @@ import {
 } from '../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { shallowSetup } from '../../../../utils/vue';
-import { GameCollection } from '../../../components/game/collection/collection.model';
+import { GameCollectionModel } from '../../../components/game/collection/collection.model';
 import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
 import AppGameCollectionList from '../../../components/game/collection/list/list.vue';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
@@ -79,7 +79,7 @@ export default class RouteLibraryOverview extends LegacyRouteComponent {
 	}
 
 	get mainCollections() {
-		const main: GameCollection[] = [];
+		const main: GameCollectionModel[] = [];
 
 		if (this.followedCollection) {
 			main.push(this.followedCollection);

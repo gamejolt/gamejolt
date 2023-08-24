@@ -2,7 +2,7 @@
 import { PropType, toRefs } from 'vue';
 import { ScrollInviewConfig } from '../../../../scroll/inview/AppScrollInview.vue';
 import { EmojiGroupData } from '../../../../store/common-store';
-import { Emoji } from '../../../emoji.model';
+import { EmojiModel } from '../../../emoji.model';
 import AppEmojiSelectorGroupItem from './AppEmojiSelectorGroupItem.vue';
 
 const props = defineProps({
@@ -19,7 +19,7 @@ const props = defineProps({
 		default: undefined,
 	},
 	emoji: {
-		type: Object as PropType<Emoji>,
+		type: Object as PropType<EmojiModel>,
 		default: undefined,
 	},
 });
@@ -27,7 +27,7 @@ const props = defineProps({
 const { groupData, isInview, emoji } = toRefs(props);
 
 const emit = defineEmits({
-	select: (_emoji: Emoji) => true,
+	select: (_emoji: EmojiModel) => true,
 });
 </script>
 

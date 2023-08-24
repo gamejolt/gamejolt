@@ -11,7 +11,7 @@ import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppUserFollowButton from '../../user/follow/AppUserFollowButton.vue';
 import { UserFollowSuggestion } from '../../user/follow/suggestion.service';
-import { Game, followGame, unfollowGame } from '../game.model';
+import { GameModel, followGame, unfollowGame } from '../game.model';
 
 @Options({
 	components: {
@@ -25,7 +25,7 @@ import { Game, followGame, unfollowGame } from '../game.model';
 })
 export default class AppGameFollowWidget extends Vue {
 	@Prop({ type: Object, required: true })
-	game!: Game;
+	game!: GameModel;
 
 	@Prop({ type: String, required: true })
 	location!: GameFollowLocation;

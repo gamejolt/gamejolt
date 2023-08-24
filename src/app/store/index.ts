@@ -4,7 +4,7 @@ import { CommunityJoinLocation } from '../../_common/analytics/analytics.service
 import { Api } from '../../_common/api/api.service';
 import { Backdrop, BackdropController } from '../../_common/backdrop/backdrop.service';
 import {
-	Community,
+	CommunityModel,
 	joinCommunity as joinCommunityModel,
 	leaveCommunity as leaveCommunityModel,
 } from '../../_common/community/community.model';
@@ -82,8 +82,8 @@ export function createAppStore({
 	const hasContentSidebar = ref(false);
 
 	/** Will be set to the community they're currently viewing (if any). */
-	const activeCommunity = ref<Community>();
-	const communities = ref<Community[]>([]);
+	const activeCommunity = ref<CommunityModel>();
+	const communities = ref<CommunityModel[]>([]);
 	const communityStates = ref(new CommunityStates());
 
 	const _backdrop = shallowRef(null) as ShallowRef<BackdropController | null>;
@@ -359,11 +359,11 @@ export function createAppStore({
 
 	function _shellPayload(payload: any) {
 		isShellBootstrapped.value = true;
-		communities.value = Community.populate(payload.communities);
+		communities.value = CommunityModel.populate(payload.communities);
 	}
 
 	async function joinCommunity(
-		community: Community,
+		community: CommunityModel,
 		options: { grid: GridClient | undefined; location?: CommunityJoinLocation }
 	) {
 		const { grid, location } = options;
@@ -386,7 +386,7 @@ export function createAppStore({
 	}
 
 	async function leaveCommunity(
-		community: Community,
+		community: CommunityModel,
 		options: {
 			grid: GridClient | undefined;
 			location?: CommunityJoinLocation;
@@ -423,7 +423,7 @@ export function createAppStore({
 		communities.value.splice(idx, 1);
 	}
 
-	function setActiveCommunity(community: Community) {
+	function setActiveCommunity(community: CommunityModel) {
 		activeCommunity.value = community;
 	}
 
@@ -431,7 +431,7 @@ export function createAppStore({
 		activeCommunity.value = undefined;
 	}
 
-	function viewCommunity(community: Community) {
+	function viewCommunity(community: CommunityModel) {
 		const communityState = communityStates.value.getCommunityState(community);
 		communityState.hasUnreadFeaturedPosts = false;
 

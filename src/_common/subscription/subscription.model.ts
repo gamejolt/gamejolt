@@ -1,6 +1,6 @@
 import { Model } from '../model/model.service';
 
-export class Subscription extends Model {
+export class SubscriptionModel extends Model {
 	declare id: number;
 	declare user_id: number;
 	declare resource_id: number;
@@ -29,7 +29,7 @@ export class Subscription extends Model {
 }
 
 export async function $createSubscription(commentId: number) {
-	const subscription = new Subscription();
+	const subscription = new SubscriptionModel();
 	subscription.comment_id = commentId;
 
 	await subscription.$save();

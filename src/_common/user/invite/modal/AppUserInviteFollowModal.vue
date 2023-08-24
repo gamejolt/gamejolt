@@ -7,11 +7,11 @@ import AppSpacer from '../../../spacer/AppSpacer.vue';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import AppUserFollowButton from '../../follow/AppUserFollowButton.vue';
 import AppUserAvatarImg from '../../user-avatar/AppUserAvatarImg.vue';
-import { User } from '../../user.model';
+import { UserModel } from '../../user.model';
 
 defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 });

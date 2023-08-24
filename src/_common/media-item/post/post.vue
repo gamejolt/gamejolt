@@ -18,7 +18,7 @@ import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppVideo from '../../video/AppVideo.vue';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
-import { MediaItem } from '../media-item-model';
+import { MediaItemModel } from '../media-item-model';
 
 @Options({
 	components: {
@@ -33,7 +33,7 @@ import { MediaItem } from '../media-item-model';
 	},
 })
 export default class AppMediaItemPost extends Vue {
-	@Prop({ type: Object, required: true }) mediaItem!: MediaItem;
+	@Prop({ type: Object, required: true }) mediaItem!: MediaItemModel;
 	@Prop({ type: Boolean, default: true }) isPostHydrated!: boolean;
 	@Prop({ type: Boolean, default: false }) isActive!: boolean;
 	@Prop({ type: Boolean, default: false }) restrictDeviceMaxHeight!: boolean;
@@ -49,7 +49,7 @@ export default class AppMediaItemPost extends Vue {
 	readonly Screen = Screen;
 
 	@Emit('bootstrap') emitBootstrap() {}
-	@Emit('fullscreen') emitFullscreen(_mediaItem: MediaItem) {}
+	@Emit('fullscreen') emitFullscreen(_mediaItem: MediaItemModel) {}
 
 	get shouldShowFullscreenOption() {
 		return (

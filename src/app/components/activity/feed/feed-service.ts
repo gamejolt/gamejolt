@@ -1,12 +1,15 @@
 import { RouteLocationNormalized, RouteLocationNormalizedLoaded, Router } from 'vue-router';
-import { EventItem } from '../../../../_common/event-item/event-item.model';
+import { EventItemModel } from '../../../../_common/event-item/event-item.model';
 import { FiresidePostGotoGrowl } from '../../../../_common/fireside/post/goto-growl/goto-growl.service';
-import { FiresidePost, FiresidePostStatus } from '../../../../_common/fireside/post/post-model';
-import { Game } from '../../../../_common/game/game.model';
+import {
+	FiresidePostModel,
+	FiresidePostStatus,
+} from '../../../../_common/fireside/post/post-model';
+import { GameModel } from '../../../../_common/game/game.model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
-import { Notification } from '../../../../_common/notification/notification-model';
+import { NotificationModel } from '../../../../_common/notification/notification-model';
 import { AppRoute } from '../../../../_common/route/route-component';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 import { arrayRemove } from '../../../../utils/array';
 import { RouteLocationDefinition } from '../../../../utils/router';
 import { ActivityFeedInput } from './item-service';
@@ -24,7 +27,7 @@ interface ActivityFeedCachedState {
 	cacheTag?: string;
 }
 
-function getTabForPost(post: FiresidePost) {
+function getTabForPost(post: FiresidePostModel) {
 	if (post.isScheduled) {
 		return 'scheduled';
 	} else if (post.isDraft) {
@@ -34,8 +37,8 @@ function getTabForPost(post: FiresidePost) {
 	return 'active';
 }
 
-function postFromEventItem(eventItem: EventItem) {
-	return eventItem.action as FiresidePost;
+function postFromEventItem(eventItem: EventItemModel) {
+	return eventItem.action as FiresidePostModel;
 }
 
 type CacheTagOptions = { cacheTag?: string };
@@ -96,33 +99,33 @@ export class ActivityFeedService {
 	 * Note: game posts may now be managed through the author's user profile
 	 * as well as the game's dashboard.
 	 */
-	private static isInCorrectManageRoute(post: FiresidePost, route: RouteLocationNormalized) {
+	private static isInCorrectManageRoute(post: FiresidePostModel, route: RouteLocationNormalized) {
 		if (post.post_to_user_profile && this.isInCorrectUserManageRoute(post.user, route)) {
 			return true;
 		}
 
-		if (post.game instanceof Game) {
+		if (post.game instanceof GameModel) {
 			return this.isInCorrectGameManageRoute(post.game, route);
 		}
 
 		return this.isInCorrectUserManageRoute(post.user, route);
 	}
 
-	private static isInCorrectGameManageRoute(game: Game, route: RouteLocationNormalized) {
+	private static isInCorrectGameManageRoute(game: GameModel, route: RouteLocationNormalized) {
 		return (
 			route.name === 'dash.games.manage.devlog' &&
 			route.params.id.toString() === game.id.toString()
 		);
 	}
 
-	private static isInCorrectUserManageRoute(user: User, route: RouteLocationNormalized) {
+	private static isInCorrectUserManageRoute(user: UserModel, route: RouteLocationNormalized) {
 		return route.name === 'profile.overview' && route.params.username === user.username;
 	}
 
 	/**
 	 * Checks if the feed is correct for the post on the current route.
 	 */
-	private static isInCorrectManageFeed(post: FiresidePost, route: RouteLocationNormalized) {
+	private static isInCorrectManageFeed(post: FiresidePostModel, route: RouteLocationNormalized) {
 		if (post.status === FiresidePostStatus.Active) {
 			return !route.query['tab'];
 		} else if (post.status === FiresidePostStatus.Draft) {
@@ -145,9 +148,12 @@ export class ActivityFeedService {
 	/**
 	 * Checks if we are in the correct game overview route for a post.
 	 */
-	private static isInCorrectGameOverview(post: FiresidePost, route: RouteLocationNormalized) {
+	private static isInCorrectGameOverview(
+		post: FiresidePostModel,
+		route: RouteLocationNormalized
+	) {
 		return (
-			post.game instanceof Game &&
+			post.game instanceof GameModel &&
 			route.name === 'discover.games.view.overview' &&
 			route.params.id.toString() === post.game.id.toString() &&
 			post.status === FiresidePostStatus.Active
@@ -159,7 +165,7 @@ export class ActivityFeedService {
 	 * Assumes the route name/params are already correct.
 	 */
 	private static getCorrectManageFeedLocation(
-		post: FiresidePost,
+		post: FiresidePostModel,
 		route: RouteLocationNormalized
 	): RouteLocationDefinition {
 		const location: RouteLocationDefinition = {
@@ -173,7 +179,7 @@ export class ActivityFeedService {
 	}
 
 	private static applyCorrectManageFeedLocation(
-		post: FiresidePost,
+		post: FiresidePostModel,
 		location: RouteLocationDefinition
 	) {
 		const tab = getTabForPost(post);
@@ -184,7 +190,7 @@ export class ActivityFeedService {
 
 	static onPostAdded(options: {
 		feed: ActivityFeedView;
-		post: FiresidePost;
+		post: FiresidePostModel;
 		route: RouteLocationNormalizedLoaded;
 		router: Router;
 		appRoute: AppRoute;
@@ -220,7 +226,7 @@ export class ActivityFeedService {
 	}
 
 	static onPostEdited(options: {
-		eventItem: EventItem;
+		eventItem: EventItemModel;
 		route: RouteLocationNormalizedLoaded;
 		router: Router;
 		appRoute: AppRoute;
@@ -265,7 +271,7 @@ export class ActivityFeedService {
 	}
 
 	static onPostPublished(options: {
-		eventItem: EventItem;
+		eventItem: EventItemModel;
 		route: RouteLocationNormalizedLoaded;
 		router: Router;
 		appRoute: AppRoute;
@@ -339,14 +345,16 @@ export class ActivityFeedService {
 
 	private static bootstrapFeed(items: any[], options: BootstrapOptions) {
 		const populatedItems =
-			options.type === 'EventItem' ? EventItem.populate(items) : Notification.populate(items);
+			options.type === 'EventItem'
+				? EventItemModel.populate(items)
+				: NotificationModel.populate(items);
 
 		const state = this.makeCachedState(populatedItems, options);
 		return state.view;
 	}
 }
 
-export function feedShouldBlockPost(post: FiresidePost, route: RouteLocationNormalized) {
+export function feedShouldBlockPost(post: FiresidePostModel, route: RouteLocationNormalized) {
 	if (post.game === null && post.user.is_blocked) {
 		// We need to show if they force viewed the profile.
 		if (route.name !== 'profile.overview' || route.params.username !== post.user.username) {

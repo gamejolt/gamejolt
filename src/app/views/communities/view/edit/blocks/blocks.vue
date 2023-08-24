@@ -12,7 +12,7 @@ import {
 } from '../../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { UserBlock } from '../../../../../../_common/user/block/block.model';
+import { UserBlockModel } from '../../../../../../_common/user/block/block.model';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import FormCommunityBlock from '../../../../../components/forms/community/ban/block.vue';
@@ -46,7 +46,7 @@ export default class RouteCommunitiesViewEditBlocks extends LegacyRouteComponent
 	routeStore!: CommunityRouteStore;
 
 	isAdding = false;
-	blocks: UserBlock[] = [];
+	blocks: UserBlockModel[] = [];
 	totalCount = 0;
 	perPage = 0;
 
@@ -80,7 +80,7 @@ export default class RouteCommunitiesViewEditBlocks extends LegacyRouteComponent
 	}
 
 	routeResolved($payload: any) {
-		this.blocks = UserBlock.populate($payload.blocks);
+		this.blocks = UserBlockModel.populate($payload.blocks);
 		this.totalCount = $payload.totalCount;
 		this.perPage = $payload.perPage;
 
@@ -98,7 +98,7 @@ export default class RouteCommunitiesViewEditBlocks extends LegacyRouteComponent
 	async refetch() {
 		const url = `/web/dash/communities/blocks/${this.community.id}?page=${this.page}&sort=${this.sort}&sort-direction=${this.sortDirection}`;
 		const payload = await Api.sendRequest(url);
-		this.blocks = UserBlock.populate(payload.blocks);
+		this.blocks = UserBlockModel.populate(payload.blocks);
 	}
 
 	changeSort(sort: string) {
@@ -113,7 +113,7 @@ export default class RouteCommunitiesViewEditBlocks extends LegacyRouteComponent
 		this.refetch();
 	}
 
-	async onClickLift(block: UserBlock) {
+	async onClickLift(block: UserBlockModel) {
 		const response = await showModalConfirm(
 			this.$gettextInterpolate(
 				'Do you really want to lift the block for the user @%{ username } early? The reason they were blocked: %{ reason }',

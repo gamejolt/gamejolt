@@ -1,11 +1,11 @@
 <script lang="ts">
 import { computed } from 'vue';
-import { RouteLocationRedirect } from '../../../utils/router';
 import { Api } from '../../../_common/api/api.service';
-import { Fireside } from '../../../_common/fireside/fireside.model';
+import { FiresideModel } from '../../../_common/fireside/fireside.model';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { RouteLocationRedirect } from '../../../utils/router';
 
 export default {
 	...defineAppRouteOptions({
@@ -33,7 +33,7 @@ export default {
 				});
 			}
 
-			const fireside = new Fireside(payload.fireside);
+			const fireside = new FiresideModel(payload.fireside);
 
 			return new RouteLocationRedirect({
 				name: 'fireside',

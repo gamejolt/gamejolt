@@ -1,7 +1,5 @@
 <script lang="ts">
 import { ref } from 'vue';
-import { arrayRemove } from '../../../../../utils/array';
-import { sleep } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
@@ -10,15 +8,17 @@ import AppForm, { createForm, FormController } from '../../../../../_common/form
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormStickySubmit from '../../../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
+import { arrayRemove } from '../../../../../utils/array';
+import { sleep } from '../../../../../utils/utils';
 import AppFormControlChatCommand from './AppFormControlChatCommand.vue';
-import { ChatCommand, CHAT_COMMAND_TYPE_COMMAND } from './command.model';
+import { CHAT_COMMAND_TYPE_COMMAND, ChatCommandModel } from './command.model';
 
 export interface ChatCommandsFormModel {
-	commands: ChatCommand[];
+	commands: ChatCommandModel[];
 
 	/**
 	 * ChatCommands fields keyed as `command_${id}`, `message_content_${id}`,
-	 * where `id` is the unique {@link ChatCommand.id}.
+	 * where `id` is the unique {@link ChatCommandModel.id}.
 	 */
 	[k: string]: any;
 }
@@ -37,10 +37,10 @@ const messageCapabilities = ref(ContextCapabilities.getPlaceholder());
 const form: FormController<ChatCommandsFormModel> = createForm({
 	loadUrl: `/web/chat/commands`,
 	model: ref({
-		commands: [] as ChatCommand[],
+		commands: [] as ChatCommandModel[],
 	}),
 	onLoad(response) {
-		form.formModel.commands = ChatCommand.populate(response.commands);
+		form.formModel.commands = ChatCommandModel.populate(response.commands);
 
 		maxCommands.value = response.maxCommands;
 		commandMinLength.value = response.commandMinLength;
@@ -67,7 +67,11 @@ const form: FormController<ChatCommandsFormModel> = createForm({
 			const makeKey = (prefix: string) => `${prefix}_${item.id}`;
 			const getValue = (prefix: string) => form.formModel[makeKey(prefix)];
 
-			const wantedFields: (keyof ChatCommand)[] = ['command', 'message_content', 'is_active'];
+			const wantedFields: (keyof ChatCommandModel)[] = [
+				'command',
+				'message_content',
+				'is_active',
+			];
 			const formFields: { [k: string]: any } = {};
 
 			let formFieldsLength = 0;
@@ -128,7 +132,7 @@ async function addNewItem() {
 			throw Error('Got no chat command returned when creating a new one');
 		}
 
-		const newCommand = new ChatCommand(response.command);
+		const newCommand = new ChatCommandModel(response.command);
 		// Set it as enabled right way to make it easier for them.
 		newCommand.is_active = true;
 		form.formModel.commands.push(newCommand);
@@ -139,7 +143,7 @@ async function addNewItem() {
 	}
 }
 
-function removeItem(item: ChatCommand, fieldsToClear: string[]) {
+function removeItem(item: ChatCommandModel, fieldsToClear: string[]) {
 	arrayRemove(form.formModel.commands, i => i.id === item.id);
 
 	for (const field of fieldsToClear) {

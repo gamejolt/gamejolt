@@ -5,15 +5,15 @@ import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
 import {
-Collaborator,
-CollaboratorRole,
-CollaboratorStatus,
+	CollaboratorModel,
+	CollaboratorRole,
+	CollaboratorStatus,
 } from '../../../../../../_common/collaborator/collaborator.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import {
-LegacyRouteComponent,
-OptionsForLegacyRoute,
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
 } from '../../../../../../_common/route/legacy-route-component';
 import { arrayRemove } from '../../../../../../utils/array';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
@@ -40,11 +40,11 @@ export default class RouteCommunitiesViewEditModerators extends LegacyRouteCompo
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	collaborators: Collaborator[] = [];
-	activeCollaborator: Collaborator | null = null;
+	collaborators: CollaboratorModel[] = [];
+	activeCollaborator: CollaboratorModel | null = null;
 	isShowingCollaboratorAdd = false;
 
-	readonly Collaborator = Collaborator;
+	readonly Collaborator = CollaboratorModel;
 	readonly CollaboratorStatusActive = CollaboratorStatus.Active;
 	readonly CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
 	readonly CollaboratorRoleModerator = CollaboratorRole.Moderator;
@@ -56,14 +56,14 @@ export default class RouteCommunitiesViewEditModerators extends LegacyRouteCompo
 
 	routeResolved($payload: any) {
 		if ($payload.collaborators) {
-			this.collaborators = Collaborator.populate($payload.collaborators);
+			this.collaborators = CollaboratorModel.populate($payload.collaborators);
 			if (!this.collaborators.length) {
 				this.isShowingCollaboratorAdd = true;
 			}
 		}
 	}
 
-	onAddedCollaborator(collaborator: Collaborator) {
+	onAddedCollaborator(collaborator: CollaboratorModel) {
 		this.isShowingCollaboratorAdd = false;
 		this.collaborators.push(collaborator);
 	}
@@ -72,7 +72,7 @@ export default class RouteCommunitiesViewEditModerators extends LegacyRouteCompo
 		this.activeCollaborator = null;
 	}
 
-	async removeCollaborator(collaborator: Collaborator) {
+	async removeCollaborator(collaborator: CollaboratorModel) {
 		const ret = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to remove this collaborator? They will no longer be able to make changes to the community.`

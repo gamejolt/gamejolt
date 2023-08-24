@@ -3,7 +3,7 @@ import { CSSProperties, onMounted, PropType, ref, Ref, toRefs } from 'vue';
 import { RouteLocationRaw, useRouter } from 'vue-router';
 import { trackHomeFeedSwitch } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppScrollScroller, {
@@ -18,7 +18,7 @@ import {
 } from '../../../../_styles/mixins';
 import { kGridGutterWidth, kGridGutterWidthXs } from '../../../../_styles/variables';
 import { kShellTopNavHeight } from '../../../styles/variables';
-import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from '../home-feed.service';
+import { HOME_FEED_ACTIVITY, HOME_FEED_FYP, HomeFeedService } from '../home-feed.service';
 import { routeHome } from '../home.route';
 import AppHomeFeedSwitcherTile from './AppHomeFeedSwitcherTile.vue';
 
@@ -45,7 +45,7 @@ const props = defineProps({
 
 const { feedTab, listStyles } = toRefs(props);
 
-const realms = ref([]) as Ref<Realm[]>;
+const realms = ref([]) as Ref<RealmModel[]>;
 
 const router = useRouter();
 const scrollController = createScroller();
@@ -59,7 +59,7 @@ onMounted(async () => {
 		{ detach: true }
 	);
 
-	realms.value = Realm.populate(response.realms);
+	realms.value = RealmModel.populate(response.realms);
 });
 
 function getLocation(data: RealmSwitcherTab): RouteLocationRaw {
@@ -112,7 +112,7 @@ function onClickTile(data: RealmSwitcherTab) {
 			? undefined
 			: realms.value.findIndex(i => i.path === data.realmPath);
 
-	let realm: Realm | null = null;
+	let realm: RealmModel | null = null;
 	if (index !== undefined && index !== -1) {
 		realm = realms.value.splice(index, 1)[0];
 		realms.value.unshift(realm);

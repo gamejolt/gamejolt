@@ -5,12 +5,12 @@ import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
-import { GameBundle } from '../../../_common/game-bundle/game-bundle.model';
-import { CustomGameMessage, Game } from '../../../_common/game/game.model';
+import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
+import { CustomGameMessage, GameModel } from '../../../_common/game/game.model';
 import AppGamePackageCard from '../../../_common/game/package/card/AppGamePackageCard.vue';
 import { GamePackagePayloadModel } from '../../../_common/game/package/package-payload.model';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { KeyGroup, KeyGroupType } from '../../../_common/key-group/key-group.model';
+import { KeyGroupModel, KeyGroupType } from '../../../_common/key-group/key-group.model';
 import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
@@ -33,7 +33,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	claim: (_game: Game) => true,
+	claim: (_game: GameModel) => true,
 });
 
 const { payload, loginUrl, accessKey } = toRefs(props);
@@ -47,9 +47,9 @@ const isClaimOnly = ref(false);
 const canToggleDescription = ref(false);
 const showingFullDescription = ref(false);
 
-const game = ref(new Game(payload.value.game));
-const bundle = ref(payload.value.bundle ? new GameBundle(payload.value.bundle) : null);
-const keyGroup = ref(payload.value.keyGroup ? new KeyGroup(payload.value.keyGroup) : null);
+const game = ref(new GameModel(payload.value.game));
+const bundle = ref(payload.value.bundle ? new GameBundleModel(payload.value.bundle) : null);
+const keyGroup = ref(payload.value.keyGroup ? new KeyGroupModel(payload.value.keyGroup) : null);
 const gameIsLocked = ref(payload.value.gameIsLocked ?? false);
 const customGameMessages = ref<CustomGameMessage[]>([]);
 const packagePayload = ref<GamePackagePayloadModel | null>(null);

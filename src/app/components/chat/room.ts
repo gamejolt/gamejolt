@@ -1,10 +1,10 @@
-import { Background } from '../../../_common/background/background.model';
+import { BackgroundModel } from '../../../_common/background/background.model';
 import { ContentContext } from '../../../_common/content/content-context';
-import { Fireside } from '../../../_common/fireside/fireside.model';
+import { FiresideModel } from '../../../_common/fireside/fireside.model';
 import { ModelStoreModel } from '../../../_common/model/model-store.service';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { ChatClient } from './client';
-import { ChatMessage } from './message';
+import { ChatMessageModel } from './message';
 import { ChatRole } from './role';
 import { ChatUser } from './user';
 import { ChatUserCollection } from './user-collection';
@@ -15,7 +15,7 @@ interface TypingUserData {
 	username: string;
 }
 
-export class ChatRoom implements ModelStoreModel {
+export class ChatRoomModel implements ModelStoreModel {
 	static readonly ROOM_PM = 'pm';
 	static readonly ROOM_OPEN_GROUP = 'open_group';
 	static readonly ROOM_CLOSED_GROUP = 'closed_group';
@@ -31,16 +31,16 @@ export class ChatRoom implements ModelStoreModel {
 	declare member_count: number;
 	declare owner_id: number;
 	declare last_message_on: number;
-	declare background?: Background;
+	declare background?: BackgroundModel;
 
 	declare chat: ChatClient;
 	declare memberCollection: ChatUserCollection;
 	messagesPopulated = false;
-	messages: ChatMessage[] = [];
-	queuedMessages: ChatMessage[] = [];
-	messageEditing: null | ChatMessage = null;
+	messages: ChatMessageModel[] = [];
+	queuedMessages: ChatMessageModel[] = [];
+	messageEditing: null | ChatMessageModel = null;
 	/** One of the firesides that were started for this room. This is not an inverse of the Fireside -> Chat room relation. */
-	fireside: Fireside | null = null;
+	fireside: FiresideModel | null = null;
 	firesideStreamingUsers: ChatUser[] = [];
 
 	/** Indexed by user ID */
@@ -64,7 +64,7 @@ export class ChatRoom implements ModelStoreModel {
 		}
 
 		if (data.background) {
-			this.background = new Background(data.background);
+			this.background = new BackgroundModel(data.background);
 		}
 
 		const initialMembers = data.members || [];
@@ -82,31 +82,31 @@ export class ChatRoom implements ModelStoreModel {
 			);
 		}
 
-		if (this.type === ChatRoom.ROOM_PM) {
+		if (this.type === ChatRoomModel.ROOM_PM) {
 			// We need to rename the room to the username
 			this.user = this.chat.friendsList.getByRoom(this.id);
 		}
 	}
 
 	get isPmRoom() {
-		return this.type === ChatRoom.ROOM_PM;
+		return this.type === ChatRoomModel.ROOM_PM;
 	}
 
 	get isPrivateRoom() {
-		return this.type === ChatRoom.ROOM_PM || this.type === ChatRoom.ROOM_CLOSED_GROUP;
+		return this.type === ChatRoomModel.ROOM_PM || this.type === ChatRoomModel.ROOM_CLOSED_GROUP;
 	}
 
 	get isGroupRoom() {
 		return (
-			this.type === ChatRoom.ROOM_OPEN_GROUP ||
-			this.type === ChatRoom.ROOM_CLOSED_GROUP ||
-			this.type === ChatRoom.ROOM_VIRAL_GROUP ||
-			this.type === ChatRoom.ROOM_FIRESIDE_GROUP
+			this.type === ChatRoomModel.ROOM_OPEN_GROUP ||
+			this.type === ChatRoomModel.ROOM_CLOSED_GROUP ||
+			this.type === ChatRoomModel.ROOM_VIRAL_GROUP ||
+			this.type === ChatRoomModel.ROOM_FIRESIDE_GROUP
 		);
 	}
 
 	get isFiresideRoom() {
-		return this.type === ChatRoom.ROOM_FIRESIDE_GROUP;
+		return this.type === ChatRoomModel.ROOM_FIRESIDE_GROUP;
 	}
 
 	get shouldShowTimestamp() {
@@ -156,7 +156,7 @@ export class ChatRoom implements ModelStoreModel {
 		}
 	}
 
-	updateFireside(fireside: Fireside | null, streamingUsers: ChatUser[]) {
+	updateFireside(fireside: FiresideModel | null, streamingUsers: ChatUser[]) {
 		this.fireside = fireside;
 		if (this.fireside) {
 			this.firesideStreamingUsers = streamingUsers;
@@ -166,8 +166,8 @@ export class ChatRoom implements ModelStoreModel {
 	}
 }
 
-export function getChatRoomTitle(room: ChatRoom) {
-	if (room.type === ChatRoom.ROOM_PM) {
+export function getChatRoomTitle(room: ChatRoomModel) {
+	if (room.type === ChatRoomModel.ROOM_PM) {
 		return room.user?.display_name ?? $gettext(`PM Chat`);
 	}
 

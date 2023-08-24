@@ -1,9 +1,9 @@
-import { Community } from '../../community/community.model';
+import { CommunityModel } from '../../community/community.model';
 import { Model } from '../../model/model.service';
 
-export class FiresideCommunity extends Model {
+export class FiresideCommunityModel extends Model {
 	declare fireside_id: number;
-	declare community: Community;
+	declare community: CommunityModel;
 	declare added_on: number;
 	declare featured_on: number | null;
 
@@ -12,7 +12,7 @@ export class FiresideCommunity extends Model {
 
 		this.featured_on = data.featured_on ?? null;
 		if (data.community) {
-			this.community = new Community(data.community);
+			this.community = new CommunityModel(data.community);
 		}
 	}
 

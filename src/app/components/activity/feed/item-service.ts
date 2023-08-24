@@ -1,8 +1,8 @@
-import { EventItem, EventItemType } from '../../../../_common/event-item/event-item.model';
-import { $viewPost, FiresidePost } from '../../../../_common/fireside/post/post-model';
-import { Notification } from '../../../../_common/notification/notification-model';
+import { EventItemModel, EventItemType } from '../../../../_common/event-item/event-item.model';
+import { $viewPost, FiresidePostModel } from '../../../../_common/fireside/post/post-model';
+import { NotificationModel } from '../../../../_common/notification/notification-model';
 
-export type ActivityFeedInput = Notification | EventItem;
+export type ActivityFeedInput = NotificationModel | EventItemModel;
 
 export class ActivityFeedItem {
 	constructor(public feedItem: ActivityFeedInput) {}
@@ -12,7 +12,7 @@ export class ActivityFeedItem {
 	}
 
 	get type() {
-		if (this.feedItem instanceof Notification) {
+		if (this.feedItem instanceof NotificationModel) {
 			return 'notification';
 		}
 
@@ -28,8 +28,11 @@ export class ActivityFeedItem {
 	}
 
 	$viewed(sourceFeed: string) {
-		if (this.feedItem instanceof EventItem && this.feedItem.type === EventItemType.PostAdd) {
-			$viewPost(this.feedItem.action as FiresidePost, sourceFeed);
+		if (
+			this.feedItem instanceof EventItemModel &&
+			this.feedItem.type === EventItemType.PostAdd
+		) {
+			$viewPost(this.feedItem.action as FiresidePostModel, sourceFeed);
 		}
 	}
 }

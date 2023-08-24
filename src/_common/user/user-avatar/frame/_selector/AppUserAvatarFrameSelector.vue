@@ -9,12 +9,12 @@ import {
 import { useCommonStore } from '../../../../store/common-store';
 import { kThemeDark } from '../../../../theme/variables';
 import AppUserAvatarImg from '../../AppUserAvatarImg.vue';
-import { UserAvatarFrame } from '../frame.model';
+import { UserAvatarFrameModel } from '../frame.model';
 import AppUserAvatarFrameTile from './AppUserAvatarFrameTile.vue';
 
 const props = defineProps({
 	frames: {
-		type: Array as PropType<UserAvatarFrame[]>,
+		type: Array as PropType<UserAvatarFrameModel[]>,
 		required: true,
 	},
 	...defineFormControlProps(),
@@ -52,7 +52,7 @@ function pickFrame(frameId: number) {
 	applyValue(frameId);
 }
 
-function isSelected(data: UserAvatarFrame | null) {
+function isSelected(data: UserAvatarFrameModel | null) {
 	const frameId = data?.avatar_frame.id || 0;
 	return frameId === form.formModel.avatar_frame;
 }

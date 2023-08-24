@@ -1,21 +1,21 @@
 import { defineAsyncComponent } from 'vue';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
+import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
+import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
 import {
 	CommunityNotifyOptions,
-	FiresidePost,
+	FiresidePostModel,
 } from '../../../../../_common/fireside/post/post-model';
 import { showModal } from '../../../../../_common/modal/modal.service';
 
 export type CommunityMovePostModalResult = CommunityNotifyOptions & {
-	channel: CommunityChannel;
+	channel: CommunityChannelModel;
 };
 
 export class CommunityMovePostModal {
 	static async show(
-		firesidePostCommunity: FiresidePostCommunity,
-		post: FiresidePost,
-		channels: CommunityChannel[]
+		firesidePostCommunity: FiresidePostCommunityModel,
+		post: FiresidePostModel,
+		channels: CommunityChannelModel[]
 	) {
 		return await showModal<CommunityMovePostModalResult>({
 			modalId: 'CommunityMovePost',

@@ -3,8 +3,8 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
-import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';
+import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
 import AppPagination from '../../../../../_common/pagination/pagination.vue';
 import {
@@ -47,10 +47,10 @@ export default class RouteForumsChannelsView extends LegacyRouteComponent {
 		return this.commonStore;
 	}
 
-	channel: ForumChannel = null as any;
-	topics: ForumTopic[] = [];
+	channel: ForumChannelModel = null as any;
+	topics: ForumTopicModel[] = [];
 	postCountPerPage = 0;
-	stickyTopics: ForumTopic[] = [];
+	stickyTopics: ForumTopicModel[] = [];
 	perPage = 0;
 	currentPage = 1;
 	listableTopicsCount = 0;
@@ -77,13 +77,13 @@ export default class RouteForumsChannelsView extends LegacyRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.channel = new ForumChannel($payload.channel);
-		this.topics = ForumTopic.populate($payload.topics);
+		this.channel = new ForumChannelModel($payload.channel);
+		this.topics = ForumTopicModel.populate($payload.topics);
 		this.postCountPerPage = $payload.postCountPerPage;
 		this.listableTopicsCount = $payload.listableTopicsCount;
 
 		if ($payload.stickyTopics && $payload.stickyTopics.length) {
-			this.stickyTopics = ForumTopic.populate($payload.stickyTopics);
+			this.stickyTopics = ForumTopicModel.populate($payload.stickyTopics);
 		} else {
 			this.stickyTopics = [];
 		}

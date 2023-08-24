@@ -6,7 +6,7 @@ export const enum SiteBuildStatus {
 	Removed = 'removed',
 }
 
-export class SiteBuild extends Model {
+export class SiteBuildModel extends Model {
 	declare site_id: number;
 	declare folder: string;
 	declare status: SiteBuildStatus;

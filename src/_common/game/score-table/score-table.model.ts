@@ -1,7 +1,7 @@
 import { Api } from '../../api/api.service';
 import { Model } from '../../model/model.service';
 
-export class GameScoreTable extends Model {
+export class GameScoreTableModel extends Model {
 	game_id!: number;
 	name!: string;
 	description!: string;

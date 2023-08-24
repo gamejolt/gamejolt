@@ -3,21 +3,21 @@ import type { RouteLocationDefinition } from '../../utils/router';
 import { Api } from '../api/api.service';
 import { Collaboratable } from '../collaborator/collaboratable';
 import { CommentableModel } from '../comment/comment-model';
-import { Community } from '../community/community.model';
+import { CommunityModel } from '../community/community.model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCache } from '../content/content-set-cache';
 import { showErrorGrowl } from '../growls/growls.service';
-import { MediaItem } from '../media-item/media-item-model';
+import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
-import { Sellable } from '../sellable/sellable.model';
-import { Site } from '../site/site-model';
-import { Theme } from '../theme/theme.model';
+import { SellableModel } from '../sellable/sellable.model';
+import { SiteModel } from '../site/site-model';
+import { ThemeModel } from '../theme/theme.model';
 import { $gettext } from '../translate/translate.service';
-import { User } from '../user/user.model';
-import { GameBuild, GameBuildType } from './build/build.model';
-import { GamePackage } from './package/package.model';
+import { UserModel } from '../user/user.model';
+import { GameBuildModel, GameBuildType } from './build/build.model';
+import { GamePackageModel } from './package/package.model';
 
 export interface CustomGameMessage {
 	type: 'info' | 'alert';
@@ -46,11 +46,14 @@ export const enum GameLockedStatus {
 	Adult = 3,
 }
 
-export class Game extends Collaboratable(Model) implements ContentContainerModel, CommentableModel {
-	declare developer: User;
-	declare thumbnail_media_item?: MediaItem;
-	declare header_media_item?: MediaItem;
-	declare community?: Community;
+export class GameModel
+	extends Collaboratable(Model)
+	implements ContentContainerModel, CommentableModel
+{
+	declare developer: UserModel;
+	declare thumbnail_media_item?: MediaItemModel;
+	declare header_media_item?: MediaItemModel;
+	declare community?: CommunityModel;
 	declare title: string;
 	declare slug: string;
 	declare path: string;
@@ -70,7 +73,7 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	declare development_status: GameDevelopmentStatus;
 	declare canceled: boolean;
 	declare tigrs_age: number;
-	declare sellable?: Sellable;
+	declare sellable?: SellableModel;
 	declare can_user_rate?: boolean;
 	declare is_following?: boolean;
 	declare has_adult_content: boolean;
@@ -115,42 +118,42 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	declare is_locked?: boolean;
 	declare locked_status?: GameLockedStatus;
 
-	declare site?: Site;
-	declare theme?: Theme;
+	declare site?: SiteModel;
+	declare theme?: ThemeModel;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.developer) {
-			this.developer = new User(data.developer);
+			this.developer = new UserModel(data.developer);
 		}
 
 		if (data.thumbnail_media_item) {
-			this.thumbnail_media_item = new MediaItem(data.thumbnail_media_item);
+			this.thumbnail_media_item = new MediaItemModel(data.thumbnail_media_item);
 		}
 
 		if (data.header_media_item) {
-			this.header_media_item = new MediaItem(data.header_media_item);
+			this.header_media_item = new MediaItemModel(data.header_media_item);
 		}
 
 		if (data.site) {
-			this.site = new Site(data.site);
+			this.site = new SiteModel(data.site);
 		}
 
 		// Should show as owned for the dev and collaborators of the game.
 		if (data.sellable) {
-			this.sellable = new Sellable(data.sellable);
+			this.sellable = new SellableModel(data.sellable);
 			if (this.sellable.type !== 'free' && this.hasPerms()) {
 				this.sellable.is_owned = true;
 			}
 		}
 
 		if (data.theme) {
-			this.theme = new Theme(data.theme);
+			this.theme = new ThemeModel(data.theme);
 		}
 
 		if (data.community) {
-			this.community = new Community(data.community);
+			this.community = new CommunityModel(data.community);
 		}
 
 		Registry.store('Game', this);
@@ -403,11 +406,11 @@ export function checkGameDeviceSupport(obj: any, os: string, arch: string | unde
 }
 
 export function pluckInstallableGameBuilds(
-	packages: GamePackage[],
+	packages: GamePackageModel[],
 	os: string,
 	arch?: string
-): GameBuild[] {
-	const pluckedBuilds: GameBuild[] = [];
+): GameBuildModel[] {
+	const pluckedBuilds: GameBuildModel[] = [];
 
 	packages.forEach(_package => {
 		// Don't include builds for packages that aren't bought yet.
@@ -432,22 +435,22 @@ export function pluckInstallableGameBuilds(
 	return pluckedBuilds;
 }
 
-export function pluckDownloadableGameBuilds(packages: GamePackage[]) {
+export function pluckDownloadableGameBuilds(packages: GamePackageModel[]) {
 	return _pluckBuilds(packages, i => i.isDownloadable);
 }
 
-export function pluckBrowserGameBuilds(packages: GamePackage[]) {
+export function pluckBrowserGameBuilds(packages: GamePackageModel[]) {
 	return _pluckBuilds(packages, i => i.isBrowserBased);
 }
 
-export function pluckRomGameBuilds(packages: GamePackage[]) {
+export function pluckRomGameBuilds(packages: GamePackageModel[]) {
 	return _pluckBuilds(packages, i => i.type === GameBuildType.Rom);
 }
 
-function _pluckBuilds(packages: GamePackage[], func: (build: GameBuild) => boolean) {
-	const pluckedBuilds: GameBuild[] = [];
+function _pluckBuilds(packages: GamePackageModel[], func: (build: GameBuildModel) => boolean) {
+	const pluckedBuilds: GameBuildModel[] = [];
 
-	packages.forEach((_package: GamePackage) => {
+	packages.forEach((_package: GamePackageModel) => {
 		if (!_package._builds) {
 			return;
 		}
@@ -462,7 +465,7 @@ function _pluckBuilds(packages: GamePackage[], func: (build: GameBuild) => boole
 	return pluckedBuilds;
 }
 
-export function chooseBestGameBuild(builds: GameBuild[], os: string, arch?: string) {
+export function chooseBestGameBuild(builds: GameBuildModel[], os: string, arch?: string) {
 	const sortedBuilds = builds.sort((a, b) => a._release!.sort - b._release!.sort);
 
 	const build32 = sortedBuilds.find(build => build.isPlatform(os));
@@ -485,7 +488,7 @@ export function chooseBestGameBuild(builds: GameBuild[], os: string, arch?: stri
 	return builds[0];
 }
 
-export async function followGame(game: Game) {
+export async function followGame(game: GameModel) {
 	game.is_following = true;
 	++game.follower_count;
 
@@ -507,7 +510,7 @@ export async function followGame(game: Game) {
 	}
 }
 
-export async function unfollowGame(game: Game) {
+export async function unfollowGame(game: GameModel) {
 	game.is_following = false;
 	--game.follower_count;
 
@@ -524,7 +527,7 @@ export async function unfollowGame(game: Game) {
 	}
 }
 
-export function handleGameAddFailure(user: User, reason: string, router: Router) {
+export function handleGameAddFailure(user: UserModel, reason: string, router: Router) {
 	switch (reason) {
 		case 'game-limit-reached':
 			showErrorGrowl(

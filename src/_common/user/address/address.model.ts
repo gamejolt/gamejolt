@@ -1,6 +1,6 @@
 import { Model } from '../../model/model.service';
 
-export class UserAddress extends Model {
+export class UserAddressModel extends Model {
 	static readonly TYPE_BILLING = 'billing';
 	static readonly TYPE_SHIPPING = 'shipping';
 

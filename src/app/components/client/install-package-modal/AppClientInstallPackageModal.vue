@@ -3,8 +3,8 @@ import { computed, PropType, ref, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
-import { GameBuild } from '../../../../_common/game/build/build.model';
-import { Game, pluckInstallableGameBuilds } from '../../../../_common/game/game.model';
+import { GameBuildModel } from '../../../../_common/game/build/build.model';
+import { GameModel, pluckInstallableGameBuilds } from '../../../../_common/game/game.model';
 import AppGamePackageCard from '../../../../_common/game/package/card/AppGamePackageCard.vue';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -16,7 +16,7 @@ import { arrayIndexBy } from '../../../../utils/array';
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 });
@@ -27,7 +27,7 @@ const modal = useModal()!;
 const isLoading = ref(true);
 const packageData = ref<GamePackagePayloadModel>();
 
-const buildsByPackage = computed((): { [packageId: number]: GameBuild } => {
+const buildsByPackage = computed((): { [packageId: number]: GameBuildModel } => {
 	const builds = packageData.value?.installableBuilds;
 	if (!builds) {
 		return {};

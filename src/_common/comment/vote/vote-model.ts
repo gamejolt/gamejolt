@@ -5,7 +5,7 @@ export const enum CommentVoteType {
 	Downvote = 0,
 }
 
-export class CommentVote extends Model {
+export class CommentVoteModel extends Model {
 	declare comment_id: number;
 	declare user_id: number;
 	declare posted_on: number;

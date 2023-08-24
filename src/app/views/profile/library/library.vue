@@ -6,7 +6,7 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../_common/route/legacy-route-component';
-import { GameCollection } from '../../../components/game/collection/collection.model';
+import { GameCollectionModel } from '../../../components/game/collection/collection.model';
 import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
 import { useProfileRouteController } from '../RouteProfile.vue';
 
@@ -23,7 +23,7 @@ import { useProfileRouteController } from '../RouteProfile.vue';
 export default class RouteProfileLibrary extends LegacyRouteComponent {
 	routeStore = setup(() => useProfileRouteController()!);
 
-	collections: GameCollection[] = [];
+	collections: GameCollectionModel[] = [];
 
 	get routeTitle() {
 		if (this.user) {
@@ -39,12 +39,12 @@ export default class RouteProfileLibrary extends LegacyRouteComponent {
 	}
 
 	routeResolved(payload: any) {
-		this.collections = GameCollection.populate(payload.collections);
+		this.collections = GameCollectionModel.populate(payload.collections);
 
-		const followedCollection = new GameCollection(payload.followedCollection);
+		const followedCollection = new GameCollectionModel(payload.followedCollection);
 
 		const developerCollection = payload.developerCollection
-			? new GameCollection(payload.developerCollection)
+			? new GameCollectionModel(payload.developerCollection)
 			: null;
 
 		this.collections.unshift(followedCollection);

@@ -1,6 +1,6 @@
 import { Model } from '../../model/model.service';
 
-export class CreatorExperienceLevel extends Model {
+export class CreatorExperienceLevelModel extends Model {
 	declare level: number;
 	declare ability: string | null;
 	declare ability_display: string | null;

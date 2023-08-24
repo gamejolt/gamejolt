@@ -1,9 +1,9 @@
 import { getCurrentServerTime } from '../../../../utils/server-time';
-import { AvatarFrame } from '../../../avatar/frame.model';
+import { AvatarFrameModel } from '../../../avatar/frame.model';
 import { Model } from '../../../model/model.service';
 
-export class UserAvatarFrame extends Model {
-	declare avatar_frame: AvatarFrame;
+export class UserAvatarFrameModel extends Model {
+	declare avatar_frame: AvatarFrameModel;
 	declare is_active: boolean;
 	declare expires_on: number | null;
 
@@ -15,7 +15,7 @@ export class UserAvatarFrame extends Model {
 		}
 
 		if (data.avatar_frame) {
-			this.avatar_frame = new AvatarFrame(data.avatar_frame);
+			this.avatar_frame = new AvatarFrameModel(data.avatar_frame);
 		}
 	}
 

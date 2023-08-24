@@ -17,7 +17,7 @@ import {
 	VideoPlayerController,
 	VideoPlayerControllerContext,
 } from '../../../video/player/controller';
-import { FiresidePost } from '../post-model';
+import { FiresidePostModel } from '../post-model';
 
 export const AppPostCardAspectRatio = 10 / 16;
 
@@ -27,7 +27,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 <script lang="ts" setup>
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	/**

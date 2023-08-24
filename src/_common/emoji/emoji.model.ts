@@ -1,6 +1,6 @@
 import { ModelStoreModel } from '../model/model-store.service';
 
-export class Emoji implements ModelStoreModel {
+export class EmojiModel implements ModelStoreModel {
 	declare id: number;
 	declare img_url: string;
 	declare prefix: string;

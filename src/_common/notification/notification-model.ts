@@ -1,34 +1,34 @@
-import { Collaborator } from '../collaborator/collaborator.model';
-import { Comment } from '../comment/comment-model';
-import { Community } from '../community/community.model';
-import { CommunityUserNotification } from '../community/user-notification/user-notification.model';
-import { CreatorExperienceLevel } from '../creator/experience/level.model';
-import { FiresideCommunity } from '../fireside/community/community.model';
-import { Fireside } from '../fireside/fireside.model';
-import { FiresidePostCommunity } from '../fireside/post/community/community.model';
-import { FiresidePost } from '../fireside/post/post-model';
-import { FiresideStreamNotification } from '../fireside/stream-notification/stream-notification.model';
-import { ForumPost } from '../forum/post/post.model';
-import { ForumTopic } from '../forum/topic/topic.model';
-import { GameLibraryGame } from '../game-library/game/game.model';
-import { Game } from '../game/game.model';
-import { GameRating } from '../game/rating/rating.model';
-import { Mention } from '../mention/mention.model';
+import { CollaboratorModel } from '../collaborator/collaborator.model';
+import { CommentModel } from '../comment/comment-model';
+import { CommunityModel } from '../community/community.model';
+import { CommunityUserNotificationModel } from '../community/user-notification/user-notification.model';
+import { CreatorExperienceLevelModel } from '../creator/experience/level.model';
+import { FiresideCommunityModel } from '../fireside/community/community.model';
+import { FiresideModel } from '../fireside/fireside.model';
+import { FiresidePostCommunityModel } from '../fireside/post/community/community.model';
+import { FiresidePostModel } from '../fireside/post/post-model';
+import { FiresideStreamNotificationModel } from '../fireside/stream-notification/stream-notification.model';
+import { ForumPostModel } from '../forum/post/post.model';
+import { ForumTopicModel } from '../forum/topic/topic.model';
+import { GameLibraryGameModel } from '../game-library/game/game.model';
+import { GameModel } from '../game/game.model';
+import { GameRatingModel } from '../game/rating/rating.model';
+import { MentionModel } from '../mention/mention.model';
 import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
-import { OrderItem } from '../order/item/item.model';
-import { Poll } from '../poll/poll.model';
-import { QuestNotification } from '../quest/quest-notification-model';
-import { Sellable } from '../sellable/sellable.model';
-import { StickerPlacement } from '../sticker/placement/placement.model';
-import { Subscription } from '../subscription/subscription.model';
-import { SupporterAction } from '../supporters/action.model';
+import { OrderItemModel } from '../order/item/item.model';
+import { PollModel } from '../poll/poll.model';
+import { QuestNotificationModel } from '../quest/quest-notification-model';
+import { SellableModel } from '../sellable/sellable.model';
+import { StickerPlacementModel } from '../sticker/placement/placement.model';
+import { SubscriptionModel } from '../subscription/subscription.model';
+import { SupporterActionModel } from '../supporters/action.model';
 import { $gettext } from '../translate/translate.service';
-import { UserFriendship } from '../user/friendship/friendship.model';
+import { UserFriendshipModel } from '../user/friendship/friendship.model';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
-import { UserAvatarFrame } from '../user/user-avatar/frame/frame.model';
-import { User, UserType } from '../user/user.model';
+import { UserAvatarFrameModel } from '../user/user-avatar/frame/frame.model';
+import { UserModel, UserType } from '../user/user.model';
 
 export const enum NotificationType {
 	CommentAdd = 'comment-add',
@@ -84,7 +84,7 @@ export const NotificationFeedTypes = [
 	NotificationType.UnlockedAvatarFrame,
 ];
 
-export class Notification extends Model {
+export class NotificationModel extends Model {
 	declare user_id: number;
 	declare type: NotificationType;
 	declare is_notification_feed_item: boolean;
@@ -93,38 +93,45 @@ export class Notification extends Model {
 
 	declare from_resource: string;
 	declare from_resource_id: number;
-	declare from_model?: User | Community | FiresidePost;
+	declare from_model?: UserModel | CommunityModel | FiresidePostModel;
 
 	declare action_resource: string;
 	declare action_resource_id: number;
 	declare action_model:
-		| Comment
-		| ForumPost
-		| UserFriendship
-		| GameRating
-		| GameLibraryGame
-		| FiresidePost
-		| FiresidePostCommunity
-		| OrderItem
-		| Subscription
-		| Collaborator
-		| Mention
+		| CommentModel
+		| ForumPostModel
+		| UserFriendshipModel
+		| GameRatingModel
+		| GameLibraryGameModel
+		| FiresidePostModel
+		| FiresidePostCommunityModel
+		| OrderItemModel
+		| SubscriptionModel
+		| CollaboratorModel
+		| MentionModel
 		| UserGameTrophy
 		| UserSiteTrophy
-		| CommunityUserNotification
-		| Fireside
-		| FiresideStreamNotification
-		| FiresideCommunity
-		| QuestNotification
-		| StickerPlacement
-		| SupporterAction
-		| Poll
-		| CreatorExperienceLevel
-		| UserAvatarFrame;
+		| CommunityUserNotificationModel
+		| FiresideModel
+		| FiresideStreamNotificationModel
+		| FiresideCommunityModel
+		| QuestNotificationModel
+		| StickerPlacementModel
+		| SupporterActionModel
+		| PollModel
+		| CreatorExperienceLevelModel
+		| UserAvatarFrameModel;
 
 	declare to_resource: string | null;
 	declare to_resource_id: number | null;
-	declare to_model: Game | User | FiresidePost | ForumTopic | Sellable | Community | Fireside;
+	declare to_model:
+		| GameModel
+		| UserModel
+		| FiresidePostModel
+		| ForumTopicModel
+		| SellableModel
+		| CommunityModel
+		| FiresideModel;
 
 	// For feeds.
 	declare scroll_id?: string;
@@ -140,13 +147,13 @@ export class Notification extends Model {
 		if (data.from_resource_id) {
 			switch (data.from_resource) {
 				case 'User':
-					this.from_model = new User(data.from_resource_model);
+					this.from_model = new UserModel(data.from_resource_model);
 					break;
 				case 'Community':
-					this.from_model = new Community(data.from_resource_model);
+					this.from_model = new CommunityModel(data.from_resource_model);
 					break;
 				case 'Fireside_Post':
-					this.from_model = new FiresidePost(data.from_resource_model);
+					this.from_model = new FiresidePostModel(data.from_resource_model);
 					break;
 			}
 		}
@@ -161,58 +168,58 @@ export class Notification extends Model {
 		}
 
 		if (data.to_resource === 'Game') {
-			this.to_model = new Game(data.to_resource_model);
+			this.to_model = new GameModel(data.to_resource_model);
 		} else if (data.to_resource === 'User') {
-			this.to_model = new User(data.to_resource_model);
+			this.to_model = new UserModel(data.to_resource_model);
 		} else if (data.to_resource === 'Fireside_Post') {
-			this.to_model = new FiresidePost(data.to_resource_model);
+			this.to_model = new FiresidePostModel(data.to_resource_model);
 		} else if (data.to_resource === 'Forum_Topic') {
-			this.to_model = new ForumTopic(data.to_resource_model);
+			this.to_model = new ForumTopicModel(data.to_resource_model);
 		} else if (data.to_resource === 'Sellable') {
-			this.to_model = new Sellable(data.to_resource_model);
+			this.to_model = new SellableModel(data.to_resource_model);
 		} else if (data.to_resource === 'Community') {
-			this.to_model = new Community(data.to_resource_model);
+			this.to_model = new CommunityModel(data.to_resource_model);
 		} else if (data.to_resource === 'Fireside') {
-			this.to_model = new Fireside(data.to_resource_model);
+			this.to_model = new FiresideModel(data.to_resource_model);
 		}
 
 		if (this.type === NotificationType.CommentAdd) {
-			this.action_model = storeModel(Comment, data.action_resource_model);
+			this.action_model = storeModel(CommentModel, data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.CommentAddObjectOwner) {
-			this.action_model = storeModel(Comment, data.action_resource_model);
+			this.action_model = storeModel(CommentModel, data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.ForumPostAdd) {
-			this.action_model = new ForumPost(data.action_resource_model);
+			this.action_model = new ForumPostModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.FriendshipRequest) {
-			this.action_model = new UserFriendship(data.action_resource_model);
+			this.action_model = new UserFriendshipModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.FriendshipAccept) {
-			this.action_model = new UserFriendship(data.action_resource_model);
+			this.action_model = new UserFriendshipModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.GameRatingAdd) {
-			this.action_model = new GameRating(data.action_resource_model);
+			this.action_model = new GameRatingModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.GameFollow) {
-			this.action_model = new GameLibraryGame(data.action_resource_model);
+			this.action_model = new GameLibraryGameModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.PostAdd) {
-			this.action_model = new FiresidePost(data.action_resource_model);
-			this.is_game_based = this.to_model instanceof Game;
+			this.action_model = new FiresidePostModel(data.action_resource_model);
+			this.is_game_based = this.to_model instanceof GameModel;
 		} else if (this.type === NotificationType.PostFeaturedInCommunity) {
-			this.action_model = new FiresidePostCommunity(data.action_resource_model);
+			this.action_model = new FiresidePostCommunityModel(data.action_resource_model);
 		} else if (this.type === NotificationType.SellableSell) {
-			this.action_model = new OrderItem(data.action_resource_model);
+			this.action_model = new OrderItemModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.UserFollow) {
-			this.action_model = new Subscription(data.action_resource_model);
+			this.action_model = new SubscriptionModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.CollaboratorInvite) {
-			this.action_model = new Collaborator(data.action_resource_model);
+			this.action_model = new CollaboratorModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.Mention) {
-			this.action_model = new Mention(data.action_resource_model);
+			this.action_model = new MentionModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.GameTrophyAchieved) {
 			this.action_model = new UserGameTrophy(data.action_resource_model);
@@ -221,29 +228,29 @@ export class Notification extends Model {
 			this.action_model = new UserSiteTrophy(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.CommunityUserNotification) {
-			this.action_model = new CommunityUserNotification(data.action_resource_model);
+			this.action_model = new CommunityUserNotificationModel(data.action_resource_model);
 			this.is_community_based = true;
 		} else if (this.type === NotificationType.FiresideStart) {
-			this.action_model = new Fireside(data.action_resource_model);
+			this.action_model = new FiresideModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.FiresideStreamNotification) {
-			this.action_model = new FiresideStreamNotification(data.action_resource_model);
+			this.action_model = new FiresideStreamNotificationModel(data.action_resource_model);
 		} else if (this.type === NotificationType.FiresideFeaturedInCommunity) {
-			this.action_model = new FiresideCommunity(data.action_resource_model);
+			this.action_model = new FiresideCommunityModel(data.action_resource_model);
 		} else if (this.type === NotificationType.QuestNotification) {
-			this.action_model = new QuestNotification(data.action_resource_model);
+			this.action_model = new QuestNotificationModel(data.action_resource_model);
 		} else if (this.type === NotificationType.ChargedSticker) {
-			this.action_model = new StickerPlacement(data.action_resource_model);
+			this.action_model = new StickerPlacementModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.SupporterMessage) {
-			this.action_model = new SupporterAction(data.action_resource_model);
+			this.action_model = new SupporterActionModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.PollEnded) {
-			this.action_model = new Poll(data.action_resource_model);
+			this.action_model = new PollModel(data.action_resource_model);
 		} else if (this.type === NotificationType.CreatorLevelUp) {
-			this.action_model = new CreatorExperienceLevel(data.action_resource_model);
+			this.action_model = new CreatorExperienceLevelModel(data.action_resource_model);
 		} else if (this.type === NotificationType.UnlockedAvatarFrame) {
-			this.action_model = new UserAvatarFrame(data.action_resource_model);
+			this.action_model = new UserAvatarFrameModel(data.action_resource_model);
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -287,7 +294,7 @@ export class Notification extends Model {
  *
  * Only returns labels the user should be able to see.
  */
-export function getNotificationFeedTypeLabels(user: User) {
+export function getNotificationFeedTypeLabels(user: UserModel) {
 	const labels = {
 		[NotificationType.CommentAdd]: $gettext(`Comment replies`),
 		[NotificationType.CommentAddObjectOwner]: $gettext(`Comments on your content`),

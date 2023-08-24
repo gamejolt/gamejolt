@@ -5,7 +5,7 @@ export const QuestNotificationAction = {
 	updated: 'quest-updated',
 } as const;
 
-export class QuestNotification extends Model {
+export class QuestNotificationModel extends Model {
 	declare action: string;
 	declare title: string;
 	declare subtitle: string;

@@ -1,7 +1,7 @@
 import { Model } from '../../model/model.service';
-import { GameBuild } from '../build/build.model';
-import { Game } from '../game.model';
-import { GamePackage } from '../package/package.model';
+import { GameBuildModel } from '../build/build.model';
+import { GameModel } from '../game.model';
+import { GamePackageModel } from '../package/package.model';
 
 export const enum GameReleaseStatus {
 	Hidden = 'hidden',
@@ -9,7 +9,7 @@ export const enum GameReleaseStatus {
 	Removed = 'removed',
 }
 
-export class GameRelease extends Model {
+export class GameReleaseModel extends Model {
 	declare game_id: number;
 	declare game_package_id: number;
 	declare version_number: string;
@@ -27,8 +27,8 @@ export class GameRelease extends Model {
 	declare build_count: number;
 
 	// These fields get added only during GamePackagePayloadModel.
-	declare _package?: GamePackage;
-	declare _builds?: GameBuild[];
+	declare _package?: GamePackageModel;
+	declare _builds?: GameBuildModel[];
 
 	get isScheduled() {
 		return !!this.scheduled_for;
@@ -56,7 +56,7 @@ export class GameRelease extends Model {
 		}
 	}
 
-	async $publish(game: Game) {
+	async $publish(game: GameModel) {
 		const response = await this.$_save(
 			'/web/dash/developer/games/releases/publish/' +
 				this.game_id +
@@ -74,7 +74,7 @@ export class GameRelease extends Model {
 		return response;
 	}
 
-	async $unpublish(game: Game) {
+	async $unpublish(game: GameModel) {
 		const response = await this.$_save(
 			'/web/dash/developer/games/releases/unpublish/' +
 				this.game_id +
@@ -92,7 +92,7 @@ export class GameRelease extends Model {
 		return response;
 	}
 
-	async $remove(game: Game) {
+	async $remove(game: GameModel) {
 		const response = await this.$_remove(
 			'/web/dash/developer/games/releases/remove/' +
 				this.game_id +

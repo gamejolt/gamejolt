@@ -4,14 +4,14 @@ import AppCard from '../../../../_common/card/AppCard.vue';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { PaymentSource } from '../../../../_common/payment-source/payment-source.model';
+import { PaymentSourceModel } from '../../../../_common/payment-source/payment-source.model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAddressDetails from '../address/AppUserAddressDetails.vue';
 
 const props = defineProps({
 	paymentSource: {
-		type: Object as PropType<PaymentSource>,
+		type: Object as PropType<PaymentSourceModel>,
 		required: true,
 	},
 	showRemove: {

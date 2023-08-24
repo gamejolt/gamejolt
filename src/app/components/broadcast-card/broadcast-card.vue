@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../../../_common/card/AppCard.vue';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 
 @Options({
 	components: {
@@ -10,7 +10,7 @@ import { FiresidePost } from '../../../_common/fireside/post/post-model';
 })
 export default class AppBroadcastCard extends Vue {
 	@Prop(Object)
-	post!: FiresidePost;
+	post!: FiresidePostModel;
 }
 </script>
 

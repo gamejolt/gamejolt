@@ -5,7 +5,7 @@ import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directi
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
 	addCommentVote,
-	Comment,
+	CommentModel,
 	removeCommentVote,
 } from '../../../../_common/comment/comment-model';
 import { CommentVoteType } from '../../../../_common/comment/vote/vote-model';
@@ -34,11 +34,11 @@ const props = defineProps({
 		required: true,
 	},
 	comment: {
-		type: Object as PropType<Comment>,
+		type: Object as PropType<CommentModel>,
 		required: true,
 	},
 	children: {
-		type: Array as PropType<Comment[]>,
+		type: Array as PropType<CommentModel[]>,
 		default: () => [],
 	},
 	showReply: {
@@ -162,7 +162,7 @@ async function voteComment(vote: number) {
 	}
 
 	if (result && result.comment) {
-		const resultComment = new Comment(result.comment);
+		const resultComment = new CommentModel(result.comment);
 		comment.value.has_owner_like = resultComment.has_owner_like;
 	}
 }

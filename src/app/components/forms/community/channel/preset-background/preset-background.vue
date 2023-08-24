@@ -1,7 +1,7 @@
 <script lang="ts">
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import {
-	Community,
+	CommunityModel,
 	CommunityPresetChannelType,
 	getCommunityChannelBackground,
 } from '../../../../../../_common/community/community.model';
@@ -15,7 +15,7 @@ import {
 } from '../../../../../../_common/form-vue/form.service';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
-type FormModel = Community & {
+type FormModel = CommunityModel & {
 	background_crop: any;
 };
 
@@ -33,7 +33,7 @@ export default class FormCommunityChannelPresetBackground
 {
 	@Prop({ type: String, required: true }) presetType!: CommunityPresetChannelType;
 
-	modelClass = Community as any;
+	modelClass = CommunityModel as any;
 
 	maxFilesize = 0;
 	aspectRatio = 0;

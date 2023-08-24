@@ -4,21 +4,21 @@ import { determine } from 'jstimezonedetect';
 import { PropType, computed, nextTick, ref, toRefs, watch } from 'vue';
 import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
-import { Background } from '../../../../_common/background/background.model';
+import { BackgroundModel } from '../../../../_common/background/background.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import { ContextCapabilities } from '../../../../_common/content/content-context';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { FiresidePostCommunity } from '../../../../_common/fireside/post/community/community.model';
+import { FiresidePostCommunityModel } from '../../../../_common/fireside/post/community/community.model';
 import {
-	FiresidePost,
 	FiresidePostAllowComments,
+	FiresidePostModel,
 	FiresidePostStatus,
 	FiresidePostType,
 } from '../../../../_common/fireside/post/post-model';
-import { FiresidePostRealm } from '../../../../_common/fireside/post/realm/realm.model';
-import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
+import { FiresidePostRealmModel } from '../../../../_common/fireside/post/realm/realm.model';
+import { FiresidePostVideoModel } from '../../../../_common/fireside/post/video/video-model';
 import AppForm, {
 	FormController,
 	createForm,
@@ -45,10 +45,10 @@ import {
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { KeyGroup } from '../../../../_common/key-group/key-group.model';
-import { MediaItem } from '../../../../_common/media-item/media-item-model';
+import { KeyGroupModel } from '../../../../_common/key-group/key-group.model';
+import { MediaItemModel } from '../../../../_common/media-item/media-item-model';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { SettingPostBackgroundId } from '../../../../_common/settings/settings.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -64,7 +64,7 @@ import { CONTENT_TARGET_HEIGHT } from '../../content/target/AppContentTarget.vue
 import AppFormPostMedia from './_media/media.vue';
 import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
-type FormPostModel = FiresidePost & {
+type FormPostModel = FiresidePostModel & {
 	mediaItemIds: number[];
 	key_group_ids: number[];
 	video_id: number;
@@ -99,28 +99,28 @@ const MAX_POLL_DURATION = 20160;
 
 const props = defineProps({
 	defaultCommunity: {
-		type: Object as PropType<Community | null>,
+		type: Object as PropType<CommunityModel | null>,
 		default: null,
 	},
 	defaultChannel: {
-		type: Object as PropType<CommunityChannel | null>,
+		type: Object as PropType<CommunityChannelModel | null>,
 		default: null,
 	},
 	defaultRealm: {
-		type: Object as PropType<Realm | null>,
+		type: Object as PropType<RealmModel | null>,
 		default: null,
 	},
 	overlay: {
 		type: Boolean,
 		default: false,
 	},
-	...defineFormProps<FiresidePost>(true),
+	...defineFormProps<FiresidePostModel>(true),
 });
 
 const emit = defineEmits({
-	submit: (_data: FiresidePost) => true,
+	submit: (_data: FiresidePostModel) => true,
 	videoUploadStatusChange: (_status: VideoStatus) => true,
-	backgroundChange: (_background?: Background) => true,
+	backgroundChange: (_background?: BackgroundModel) => true,
 });
 
 const { defaultCommunity, defaultChannel, defaultRealm, overlay, model } = toRefs(props);
@@ -139,17 +139,19 @@ const now = ref(0);
 const leadContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 const articleContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
-const keyGroups = ref<KeyGroup[]>([]);
+const keyGroups = ref<KeyGroupModel[]>([]);
 const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] } | null>(null);
 
 const maxCommunities = ref(0);
-const attachedCommunities = ref<{ community: Community; channel: CommunityChannel }[]>([]);
-const targetableCommunities = ref<Community[]>([]);
+const attachedCommunities = ref<{ community: CommunityModel; channel: CommunityChannelModel }[]>(
+	[]
+);
+const targetableCommunities = ref<CommunityModel[]>([]);
 
 const maxRealms = ref(0);
-const attachedRealms = ref<Realm[]>([]);
+const attachedRealms = ref<RealmModel[]>([]);
 
-const backgrounds = ref<Background[]>([]);
+const backgrounds = ref<BackgroundModel[]>([]);
 
 const isShowingMorePollOptions = ref(false);
 const accessPermissionsEnabled = ref(false);
@@ -164,7 +166,7 @@ const isShowingMoreOptions = ref(false);
 
 const form: FormController<FormPostModel> = createForm({
 	model,
-	modelClass: FiresidePost,
+	modelClass: FiresidePostModel,
 	loadUrl: computed(() => `/web/posts/manage/save/${model.value.id}`),
 	onInit: async () => {
 		const _model = model.value;
@@ -246,7 +248,7 @@ const form: FormController<FormPostModel> = createForm({
 			payload.articleContentCapabilities
 		);
 
-		keyGroups.value = KeyGroup.populate(payload.keyGroups);
+		keyGroups.value = KeyGroupModel.populate(payload.keyGroups);
 		wasPublished.value = payload.wasPublished;
 		maxFilesize.value = payload.maxFilesize;
 		maxWidth.value = payload.maxWidth;
@@ -256,7 +258,7 @@ const form: FormController<FormPostModel> = createForm({
 		maxCommunities.value = payload.maxCommunities;
 		maxRealms.value = payload.maxRealms;
 
-		backgrounds.value = Background.populate(payload.backgrounds);
+		backgrounds.value = BackgroundModel.populate(payload.backgrounds);
 
 		// Use our saved background id if we're not editing.
 		if (!isEditing.value) {
@@ -264,9 +266,9 @@ const form: FormController<FormPostModel> = createForm({
 		}
 
 		if (payload.attachedCommunities) {
-			attachedCommunities.value = FiresidePostCommunity.populate(
+			attachedCommunities.value = FiresidePostCommunityModel.populate(
 				payload.attachedCommunities
-			).map((fpc: FiresidePostCommunity) => {
+			).map((fpc: FiresidePostCommunityModel) => {
 				return {
 					community: fpc.community,
 					channel: fpc.channel!,
@@ -275,7 +277,7 @@ const form: FormController<FormPostModel> = createForm({
 		}
 
 		if (payload.attachedRealms) {
-			attachedRealms.value = FiresidePostRealm.populate(payload.attachedRealms).map(
+			attachedRealms.value = FiresidePostRealmModel.populate(payload.attachedRealms).map(
 				i => i.realm
 			);
 		}
@@ -295,7 +297,7 @@ const form: FormController<FormPostModel> = createForm({
 		}
 
 		if (payload.targetableCommunities) {
-			targetableCommunities.value = Community.populate(payload.targetableCommunities);
+			targetableCommunities.value = CommunityModel.populate(payload.targetableCommunities);
 
 			// Filter out communities the user is blocked from,
 			// and communities who don't have channels the current user can post to.
@@ -459,7 +461,7 @@ const incompleteDefaultCommunity = computed(() => {
 
 	const community = defaultCommunity.value;
 
-	if (!(community instanceof Community)) {
+	if (!(community instanceof CommunityModel)) {
 		return null;
 	}
 
@@ -543,7 +545,7 @@ watch(
 	}
 );
 
-function attachIncompleteCommunity(community: Community, channel?: CommunityChannel) {
+function attachIncompleteCommunity(community: CommunityModel, channel?: CommunityChannelModel) {
 	if (!channel) {
 		console.warn('Attempt to attach a community without a channel');
 		return;
@@ -552,7 +554,11 @@ function attachIncompleteCommunity(community: Community, channel?: CommunityChan
 	attachCommunity(community, channel, false);
 }
 
-function attachCommunity(community: Community, channel?: CommunityChannel, append = true) {
+function attachCommunity(
+	community: CommunityModel,
+	channel?: CommunityChannelModel,
+	append = true
+) {
 	if (!channel) {
 		console.warn('Attempt to attach a community without a channel');
 		return;
@@ -571,7 +577,7 @@ function attachCommunity(community: Community, channel?: CommunityChannel, appen
 	}
 }
 
-function attachRealm(realm: Realm, append = true) {
+function attachRealm(realm: RealmModel, append = true) {
 	// Do nothing if that realm is already attached.
 	if (attachedRealms.value.find(i => i.id === realm.id)) {
 		return;
@@ -593,13 +599,13 @@ async function scrollToAdd() {
 	scrollingKey.value *= -1;
 }
 
-function removeCommunity(community: Community) {
+function removeCommunity(community: CommunityModel) {
 	arrayRemove(attachedCommunities.value, i => i.community.id === community.id, {
 		onMissing: () => console.warn('Attempted to remove a community that is not attached'),
 	});
 }
 
-function removeRealm(realm: Realm) {
+function removeRealm(realm: RealmModel) {
 	arrayRemove(attachedRealms.value, i => i.id === realm.id, {
 		onMissing: () => console.warn('Attempted to remove a realm that is not attached'),
 	});
@@ -619,7 +625,7 @@ function enableImages() {
 	attachmentType.value = FiresidePostType.Media;
 }
 
-function onMediaUploaded(mediaItems: MediaItem[]) {
+function onMediaUploaded(mediaItems: MediaItemModel[]) {
 	const newMedia = mediaItems.concat(form.formModel.media);
 	form.formModel.media = newMedia;
 }
@@ -650,11 +656,11 @@ function onMediaUploadFailed(reason: string) {
 	showErrorGrowl(message, $gettext('Failed to upload your media.'));
 }
 
-function onMediaSort(mediaItems: MediaItem[]) {
+function onMediaSort(mediaItems: MediaItemModel[]) {
 	form.formModel.media = mediaItems;
 }
 
-function removeMediaItem(mediaItem: MediaItem) {
+function removeMediaItem(mediaItem: MediaItemModel) {
 	const newMedia = form.formModel.media.filter(item => item.id !== mediaItem.id);
 	form.formModel.media = newMedia;
 }
@@ -828,14 +834,14 @@ async function onPaste(e: ClipboardEvent) {
 
 	if ($payload.success) {
 		// Apply returned media items.
-		const mediaItems = MediaItem.populate($payload.mediaItems);
+		const mediaItems = MediaItemModel.populate($payload.mediaItems);
 		onMediaUploaded(mediaItems);
 	} else {
 		onMediaUploadFailed($payload.reason);
 	}
 }
 
-function onVideoChanged(video: FiresidePostVideo | null) {
+function onVideoChanged(video: FiresidePostVideoModel | null) {
 	if (video === null) {
 		form.formModel.videos = [];
 	} else {

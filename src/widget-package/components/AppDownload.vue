@@ -6,8 +6,8 @@ import { Environment } from '../../_common/environment/environment.service';
 import { formatCurrency } from '../../_common/filters/currency';
 import { formatFilesize } from '../../_common/filters/filesize';
 import {
-	GameBuild,
 	GameBuildEmulatorInfo,
+	GameBuildModel,
 	GameBuildType,
 } from '../../_common/game/build/build.model';
 import { HistoryTick } from '../../_common/history-tick/history-tick-service';
@@ -35,7 +35,7 @@ const isShowingMoreOptions = ref(false);
 const isDescriptionCollapsed = ref(false);
 const isShowingDescription = ref(false);
 const isShowingPayment = ref(false);
-const clickedBuild = ref<GameBuild>();
+const clickedBuild = ref<GameBuildModel>();
 
 // "Convenience" I guess
 const hasBrowserBuild = computed(() => !!packageCard.value.browserBuild);
@@ -55,7 +55,7 @@ const shouldShowDevDescription = computed(() => {
 	);
 });
 
-async function buildClick(build?: GameBuild) {
+async function buildClick(build?: GameBuildModel) {
 	// We only allow undefined builds for TS typing reasons within the view.
 	// It shouldn't ever actually happen.
 	if (!build) {

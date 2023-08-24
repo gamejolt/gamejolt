@@ -1,6 +1,6 @@
 import { Model } from '../model/model.service';
 
-export class Translation extends Model {
+export class TranslationModel extends Model {
 	resource!: string;
 	resource_id!: number;
 	lang!: string;
