@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, type Router } from 'vue-router';
 import { styleChangeBg } from '../../_styles/mixins';
 import { kLayerLoadingBar, kStrongEaseOut } from '../../_styles/variables';
 import { Api } from '../api/api.service';
@@ -24,8 +24,9 @@ const shouldShow = ref(false);
 let showTimeout: NodeJS.Timer | undefined;
 let hideTimeout: NodeJS.Timer | undefined;
 
-// TODO: This will apparently break gameserver. Figure out a better way.
-const router = useRouter();
+// This might not be available on all sections (such as gameserver, which
+// doesn't have a router), so we mark it as potentially undefined.
+const router: Router | undefined = useRouter();
 
 const width = computed(() => {
 	if (!requestCount.value) {
@@ -37,8 +38,6 @@ const width = computed(() => {
 const apiRequestCount = computed(() => Api.loadingBarRequests.value);
 
 onMounted(() => {
-	// NOTICE: Router may not be available on all sections (like gameserver).
-
 	// We hook into router so that we can show loading bar while the async
 	// component chunks are being loaded by webpack.
 	router?.beforeEach((_to, _from, next) => {

@@ -260,7 +260,7 @@ export default defineConfig(async () => {
 			md({
 				mode: [MarkdownMode.HTML],
 			}),
-			// splitVendorChunkPlugin(),
+			// Can include to try to visualize the chunks and dependencies.
 			// visualizer(),
 		],
 
@@ -412,10 +412,9 @@ export default defineConfig(async () => {
 					// the string 'follow-widget'. It's ridiculous. For this
 					// reason, do not output filenames in prod web-based builds.
 					if (
-						true ||
-						(gjOpts.environment === 'production' &&
-							gjOpts.buildType === 'build' &&
-							['web'].includes(gjOpts.platform))
+						gjOpts.environment === 'production' &&
+						gjOpts.buildType === 'build' &&
+						['web'].includes(gjOpts.platform)
 					) {
 						// Update this when you want to force cache busting for
 						// all of our assets regardless of if their contents
@@ -423,7 +422,6 @@ export default defineConfig(async () => {
 						const hashVersion = '';
 						// const hashVersion = '-v2';
 
-						// TODO(chunk-optimization)
 						return <RollupOptions>{
 							output: {
 								manualChunks(id) {
@@ -445,10 +443,12 @@ export default defineConfig(async () => {
 										return id.match(/[?&]chunkName=(.+?)(&|$)/)![1];
 									}
 								},
-								chunkFileNames: `assets/[name].[hash]${hashVersion}.js`,
-								assetFileNames: `assets/[name].[hash]${hashVersion}.[ext]`,
+								chunkFileNames: `assets/[hash]${hashVersion}.js`,
+								assetFileNames: `assets/[hash]${hashVersion}.[ext]`,
 
-								// This should result in about a 50KB file after gzip.
+								// Attempts to collapse small chunks together.
+								// This should result in about a 50KB file after
+								// gzip.
 								experimentalMinChunkSize: 200_000,
 							},
 						};

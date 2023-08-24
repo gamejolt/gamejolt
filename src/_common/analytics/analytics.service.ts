@@ -224,7 +224,6 @@ function _untrackUserId() {
 		return;
 	}
 
-	// TODO: Check to make sure this actually works.
 	setUserId(_getFirebaseAnalytics(), '');
 }
 

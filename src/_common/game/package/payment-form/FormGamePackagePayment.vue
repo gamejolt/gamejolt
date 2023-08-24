@@ -130,8 +130,6 @@ const hasSufficientWalletFunds = computed(() => {
 	return true;
 });
 
-// TODO(chunk-optimization): test this out!
-
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
 	onInit() {
