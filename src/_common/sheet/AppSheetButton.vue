@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 import { styleBorderRadiusLg, styleWhen } from '../../_styles/mixins';
 import { kFontSizeLarge } from '../../_styles/variables';
-import { Jolticon } from '../jolticon/AppJolticon.vue';
+import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppOnHover from '../on/AppOnHover.vue';
 import { kThemeBg, kThemeBiBg, kThemeBiFg, kThemeFg } from '../theme/variables';
 
@@ -37,6 +37,7 @@ const ourTag = computed(() => (to?.value ? RouterLink : 'div'));
 				padding: `16px`,
 				backgroundColor: kThemeBg,
 				color: kThemeFg,
+				transition: 'background-color 0.1s ease, color 0.1s ease',
 				...styleWhen(hovered, {
 					backgroundColor: kThemeBiBg,
 					color: kThemeBiFg,

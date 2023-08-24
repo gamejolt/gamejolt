@@ -7,7 +7,7 @@ class CurrencyData {
 	public smallAsset: IllustrationAsset | string;
 
 	constructor(
-		public readonly id: string,
+		public readonly id: '$COIN' | '$GEM' | '$BUX',
 		public readonly label: string,
 		public readonly asset: IllustrationAsset | string,
 		smallAsset?: CurrencyData['smallAsset']
@@ -17,7 +17,9 @@ class CurrencyData {
 }
 
 export type Currency = CurrencyData;
-export type CurrencyCostData = Record<string, [currency: Currency, amount: number]>;
+export type CurrencyCostData = Partial<
+	Record<CurrencyData['id'], [currency: Currency, amount: number]>
+>;
 
 export const CurrencyType = {
 	coins: new CurrencyData('$COIN', 'Coins', imageCoins, imageCoinsSmall),
@@ -30,15 +32,19 @@ export function getCurrencyTypeFromIdentifier(id: string): Currency | undefined 
 }
 
 export function canAffordCurrency(
-	type: Currency,
+	currencyId: CurrencyData['id'],
 	amount: number,
 	{ coinBalance, joltbuxBalance }: { coinBalance: Ref<number>; joltbuxBalance: Ref<number> }
 ) {
-	switch (type.id) {
+	switch (currencyId) {
 		case CurrencyType.coins.id:
 			return coinBalance.value >= amount;
 		case CurrencyType.joltbux.id:
 			return joltbuxBalance.value >= amount;
+		case CurrencyType.gems.id:
+			return false;
+		default:
+			console.warn('Unexpected [currencyId] value', currencyId);
 	}
 
 	return false;

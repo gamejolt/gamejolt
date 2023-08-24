@@ -24,6 +24,7 @@ export class ChatRoom implements ModelStoreModel {
 
 	declare id: number;
 	declare title: string;
+	declare fallback_title: string;
 	declare type: ChatRoomType;
 	declare user?: ChatUser;
 	declare roles: ChatRole[];
@@ -174,17 +175,9 @@ export function getChatRoomTitle(room: ChatRoom) {
 		return room.title;
 	}
 
-	// When no title is set and no/one member is in the chat, set the title
-	// to "Group Chat" instead of just the single name.
-	if (room.memberCollection.count <= 1) {
-		return $gettext(`Group Chat`);
+	if (room.fallback_title) {
+		return room.fallback_title;
 	}
 
-	// No room title, return a comma separated list of members.
-	const chat = room.chat;
-	return room.memberCollection.users
-		.filter(i => i.id !== chat.currentUser?.id)
-		.slice(0, 5)
-		.map(i => i.display_name)
-		.join(', ');
+	return $gettext(`Group Chat`);
 }

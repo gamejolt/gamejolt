@@ -6,6 +6,7 @@ import AppBackground from '../../../../_common/background/AppBackground.vue';
 import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
 import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
+import { isDynamicGoogleBot } from '../../../../_common/device/device.service';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import {
 	$viewPostVideo,
@@ -27,7 +28,7 @@ import {
 	StickerTargetController,
 } from '../../../../_common/sticker/target/target-controller';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppVideoPlayer from '../../../../_common/video/player/player.vue';
+import AppVideoPlayer from '../../../../_common/video/player/AppVideoPlayer.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
@@ -261,6 +262,7 @@ function onVideoPlay() {
 						"
 					>
 						<AppStickerPlacementList
+							v-if="!isDynamicGoogleBot()"
 							:sticker-target-controller="stickerTargetController"
 							:supporters="post.supporters"
 							:stickers="post.sticker_counts"

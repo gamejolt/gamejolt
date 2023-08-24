@@ -5,9 +5,8 @@ import { vAppTrackEvent } from '../../analytics/track-event.directive';
 import { useCommonStore } from '../../store/common-store';
 import AppUserCardHover from '../card/AppUserCardHover.vue';
 import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
-import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
+import AppUserAvatarBubble from '../user-avatar/AppUserAvatarBubble.vue';
 import { User } from '../user.model';
-import AppUserVerifiedTick from '../verified-tick/AppUserVerifiedTick.vue';
 
 defineProps({
 	user: {
@@ -43,14 +42,11 @@ const { user: sessionUser } = useCommonStore();
 		}"
 	>
 		<component :is="userHoverCard ? AppUserCardHover : 'div'" :user="user" class="-avatar">
-			<AppUserAvatarImg :user="user" />
+			<AppUserAvatarBubble :user="user" show-frame show-verified smoosh />
 		</component>
 
 		<div class="-label">
-			<div class="-name">
-				{{ user.display_name }}
-				<AppUserVerifiedTick :user="user" />
-			</div>
+			<div class="-name">{{ user.display_name }}</div>
 			<div class="-username">@{{ user.username }}</div>
 		</div>
 

@@ -14,8 +14,8 @@ import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.v
 import { createStickerTargetController } from '../../../_common/sticker/target/target-controller';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import AppVideo from '../../../_common/video/AppVideo.vue';
+import AppVideoPlayer from '../../../_common/video/player/AppVideoPlayer.vue';
 import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
-import AppVideoPlayer from '../../../_common/video/player/player.vue';
 import { AppCommentWidgetLazy } from '../lazy';
 import AppPollVoting from '../poll/AppPollVoting.vue';
 import AppPostControls from '../post/controls/AppPostControls.vue';

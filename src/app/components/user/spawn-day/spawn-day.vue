@@ -3,14 +3,14 @@ import { formatDistanceStrict } from 'date-fns';
 import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { sleep } from '../../../../utils/utils';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
-import { CommentModal } from '../../../../_common/comment/modal/modal.service';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../_common/content/content-writer';
 import { FiresidePost } from '../../../../_common/fireside/post/post-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { User } from '../../../../_common/user/user.model';
+import { sleep } from '../../../../utils/utils';
+import { CommentModal } from '../../comment/modal/modal.service';
 import { PostEditModal } from '../../post/edit-modal/edit-modal-service';
 
 @Options({

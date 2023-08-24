@@ -156,10 +156,8 @@ const { isBootstrapped } = createAppRoute({
 });
 
 const canCreateSticker = computed(() => stickers.value.length < stickerSlots.value);
-
-const canActivateSticker = computed(
-	() => stickers.value.filter(i => i.is_active).length < maxStickerAmount.value
-);
+const activeStickersCount = computed(() => stickers.value.filter(i => i.is_active).length);
+const canActivateSticker = computed(() => activeStickersCount.value < maxStickerAmount.value);
 
 const warnDeactivateSticker = computed(() => {
 	// Don't warn if pack is already inactive.
@@ -168,7 +166,7 @@ const warnDeactivateSticker = computed(() => {
 	}
 
 	const minActiveStickers = pack.value?.payout_sticker_num ?? 3;
-	const currentActiveStickers = stickers.value.filter(i => i.is_active).length;
+	const currentActiveStickers = activeStickersCount.value;
 	return currentActiveStickers <= minActiveStickers;
 });
 
@@ -195,7 +193,7 @@ const showStickerPackDisabledWarning = computed(() => {
 
 	// Show if the pack is inactive, and there are enough active stickers to enable it.
 	const minActiveStickers = pack.value.payout_sticker_num;
-	const currentActiveStickers = stickers.value.filter(i => i.is_active).length;
+	const currentActiveStickers = activeStickersCount.value;
 
 	return currentActiveStickers >= minActiveStickers;
 });
@@ -277,9 +275,19 @@ function onPackEnabledChanged() {
 						<p>
 							{{
 								$gettextInterpolate(`%{ usedSlots } / %{ maxSlots } slots used`, {
-									usedSlots: stickers.length,
-									maxSlots: stickerSlots,
+									usedSlots: stickers.length.toString(),
+									maxSlots: stickerSlots.toString(),
 								})
+							}}
+							<br />
+							{{
+								$gettextInterpolate(
+									`%{ currentAmount } / %{ maxAmount } active stickers`,
+									{
+										currentAmount: activeStickersCount.toString(),
+										maxAmount: maxStickerAmount.toString(),
+									}
+								)
 							}}
 						</p>
 					</div>

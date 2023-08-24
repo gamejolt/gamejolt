@@ -1,41 +1,39 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { inject, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import { illNoComments } from '../../../_common/illustration/illustrations';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { useGridStore } from '../../components/grid/grid-store';
 import { AppActivityFeedLazy } from '../../components/lazy';
-import { illNoComments } from '../../img/ill/illustrations';
 import { useAppStore } from '../../store/index';
 import { routeDiscoverHome } from '../discover/home/home.route';
 import { RouteActivityFeedController } from './RouteHomeFeed.vue';
 import { shouldUseFYPDefault } from './home-feed.service';
 
-function getFetchUrl() {
-	let url = '/web/dash/activity/activity';
-	// If our home feed is not the activity feed, we only want to include the actual followed content in the feed.
-	if (shouldUseFYPDefault()) {
-		url += '?only-followed=1';
-	}
-	return url;
-}
-
-export default {
-	...defineAppRouteOptions({
+defineOptions(
+	defineAppRouteOptions({
 		cache: true,
 		lazy: true,
-		resolver: ({ route }) =>
-			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl())),
-	}),
-};
-</script>
+		resolver: ({ route }) => {
+			let url = '/web/dash/activity/activity';
 
-<script lang="ts" setup>
+			// If our home feed is not the activity feed, we only want to
+			// include the actual followed content in the feed.
+			if (shouldUseFYPDefault()) {
+				url += '?only-followed=1';
+			}
+
+			return Api.sendRequest(ActivityFeedService.makeFeedUrl(route, url));
+		},
+	})
+);
+
 const { unreadActivityCount } = useAppStore();
 const { grid } = useGridStore();
 const { feed } = inject<RouteActivityFeedController>('route-activity-feed')!;

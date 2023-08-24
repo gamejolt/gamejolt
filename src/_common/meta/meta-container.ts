@@ -6,8 +6,9 @@ export class MetaField {
 }
 
 export class MetaContainer {
-	_attr = 'name';
-	_fields: Record<string, MetaField> = {};
+	constructor(readonly attr = 'name') {}
+
+	fields: Record<string, MetaField> = {};
 
 	set(name: string, content: string | null) {
 		this._storeField(name, content);
@@ -16,58 +17,53 @@ export class MetaContainer {
 			return;
 		}
 
-		let elem = document.head.querySelector<HTMLMetaElement>(`meta[${this._attr}="${name}"]`);
+		let elem = document.head.querySelector<HTMLMetaElement>(`meta[${this.attr}="${name}"]`);
+		if (elem) {
+			document.head.removeChild(elem);
+		}
 
-		// Remove if we're nulling it out.
 		if (!content) {
-			if (elem) {
-				document.head.removeChild(elem);
-			}
 			return;
 		}
 
-		// Create if not exists.
-		if (!elem) {
-			elem = document.createElement('meta');
-			elem.setAttribute(this._attr, name);
-			document.head.appendChild(elem);
-		}
-
+		elem = document.createElement('meta');
+		elem.setAttribute(this.attr, name);
 		elem.content = content;
+		document.head.appendChild(elem);
 	}
 
 	get(name: string) {
-		return this._fields[name] ? this._fields[name].current : null;
+		return this.fields[name] ? this.fields[name].current : null;
 	}
 
 	protected _storeField(name: string, content: string | null) {
-		if (!this._fields[name]) {
+		if (!this.fields[name]) {
 			const field = new MetaField();
 
 			if (!import.meta.env.SSR) {
 				const elem = document.head.querySelector<HTMLMetaElement>(
-					`meta[${this._attr}="${name}"]`
+					`meta[${this.attr}="${name}"]`
 				);
 				if (elem) {
 					field.original = elem.content;
 				}
 			}
 
-			this._fields[name] = field;
+			this.fields[name] = field;
 		}
 
-		this._fields[name].current = content;
+		this.fields[name].current = content;
 	}
 }
 
-export function renderMetaContainer(container: MetaContainer) {
+export function ssrRenderMetaContainer(container: MetaContainer) {
 	let output = '';
 
-	for (const key in container._fields) {
-		const field = container._fields[key];
+	for (const key in container.fields) {
+		const field = container.fields[key];
 		if (field.current) {
 			output +=
-				`<meta ${container._attr}="${key}" content="${escapeString(field.current)}" />` +
+				`<meta ${container.attr}="${key}" content="${escapeString(field.current)}" />` +
 				'\n';
 		}
 	}

@@ -6,6 +6,7 @@ import { showModal } from '../../../../../_common/modal/modal.service';
 interface ShopProductPurchaseOptions {
 	shopProduct: InventoryShopProductSale;
 	currencyOptions: CurrencyCostData;
+	onItemPurchased: () => void;
 }
 
 export async function showPurchaseShopProductModal(options: ShopProductPurchaseOptions) {

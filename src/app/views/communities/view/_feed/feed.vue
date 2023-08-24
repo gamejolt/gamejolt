@@ -15,7 +15,7 @@ import AppActivityFeedNewButton from '../../../../components/activity/feed/new-b
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
-import { illNoCommentsSmall } from '../../../../img/ill/illustrations';
+import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
 import { useAppStore } from '../../../../store';
 import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
 import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';

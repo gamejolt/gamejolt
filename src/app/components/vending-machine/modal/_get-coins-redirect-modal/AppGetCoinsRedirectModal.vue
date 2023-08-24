@@ -1,26 +1,23 @@
 <script lang="ts" setup>
-import { useRouter } from 'vue-router';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { illMobileKikkerstein } from '../../../../img/ill/illustrations';
+import { illMobileKikkerstein } from '../../../../../_common/illustration/illustrations';
 import { useAppStore } from '../../../../store/index';
-import { routeQuests } from '../../../../views/quests/quests.route';
 
 const modal = useModal()!;
-const router = useRouter();
-const { clearPanes } = useAppStore();
+const { clearPanes, visibleLeftPane, toggleLeftPane } = useAppStore();
 
 function gotoQuests() {
 	// Close the modal, indicating that we're doing some form of redirect.
 	modal.resolve(true);
 
 	// Go to quests page if we're not already there.
-	if (router.currentRoute.value.name !== routeQuests.name) {
-		router.push({ name: routeQuests.name });
+	if (visibleLeftPane.value !== 'quests') {
+		toggleLeftPane('quests');
 		return;
 	}
 

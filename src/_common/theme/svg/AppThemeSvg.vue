@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { darken, lighten, parseToHsl } from 'polished';
-import { computed, PropType, ref, toRefs, unref, watch } from 'vue';
+import { PropType, computed, ref, toRefs, unref, watch } from 'vue';
 import { arrayUnique } from '../../../utils/array';
 import { Api } from '../../api/api.service';
+import { isDynamicGoogleBot } from '../../device/device.service';
 import { DefaultTheme, Theme } from '../theme.model';
 import { useThemeStore } from '../theme.store';
 
@@ -31,7 +32,7 @@ let _request: Promise<any> | undefined;
 const actualTheme = computed(() => theme.value || storeTheme.value);
 
 const processedSvg = computed(() => {
-	if (import.meta.env.SSR) {
+	if (import.meta.env.SSR || isDynamicGoogleBot()) {
 		return src.value;
 	}
 
@@ -91,7 +92,7 @@ const processedSvg = computed(() => {
 	return 'data:image/svg+xml;utf8,' + encodeURIComponent(svgData);
 });
 
-if (!import.meta.env.SSR) {
+if (!import.meta.env.SSR && !isDynamicGoogleBot()) {
 	watch(
 		() => unref(src),
 		src => {

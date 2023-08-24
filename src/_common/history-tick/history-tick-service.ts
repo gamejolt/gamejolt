@@ -1,4 +1,4 @@
-import { getDeviceArch, getDeviceOS } from '../device/device.service';
+import { getDeviceArch, getDeviceOS, isDynamicGoogleBot } from '../device/device.service';
 import { Environment } from '../environment/environment.service';
 import { PartnerReferral } from '../partner-referral/partner-referral-service';
 import { Referrer } from '../referrer/referrer.service';
@@ -36,7 +36,7 @@ export class HistoryTick {
 	}
 
 	static sendBeacon(type: string, resourceId?: number, options: BeaconOptions = {}) {
-		if (import.meta.env.SSR) {
+		if (import.meta.env.SSR || isDynamicGoogleBot()) {
 			return;
 		}
 

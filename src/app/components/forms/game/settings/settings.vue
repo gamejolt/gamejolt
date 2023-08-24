@@ -34,38 +34,6 @@ export default class FormGameSettings extends mixins(Wrapper) implements FormOnL
 
 <template>
 	<AppForm :controller="form">
-		<AppFormGroup v-if="!hasPackagesForSale" name="ads_enabled" :label="$gettext(`Show ads?`)">
-			<template #inline-control>
-				<AppFormControlToggle />
-			</template>
-
-			<div class="help-block">
-				<p>
-					<strong>
-						<AppTranslate>
-							Turning this off will remove all ads for this game.
-						</AppTranslate>
-					</strong>
-				</p>
-				<p>
-					<AppTranslate>
-						Only do this if you don't want your game monetized, or if your game is
-						subject to a license that doesn't allow monetization.
-					</AppTranslate>
-				</p>
-			</div>
-		</AppFormGroup>
-		<div v-else class="form-group">
-			<label class="control-label">
-				<AppTranslate>Show ads?</AppTranslate>
-			</label>
-			<div class="alert">
-				<AppTranslate v-if="hasPackagesForSale">
-					We don't show ads on Marketplace game pages (even for pay what you want games).
-				</AppTranslate>
-			</div>
-		</div>
-
 		<AppFormGroup name="comments_enabled" :label="$gettext(`Allow comments?`)">
 			<template #inline-control>
 				<AppFormControlToggle />

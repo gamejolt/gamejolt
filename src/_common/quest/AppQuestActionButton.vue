@@ -5,6 +5,7 @@ import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';
 import { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppLoading from '../loading/AppLoading.vue';
+import { storeModel } from '../model/model-store.service';
 import { useStickerStore } from '../sticker/sticker-store';
 import { useCommonStore } from '../store/common-store';
 import { Quest } from './quest-model';
@@ -72,7 +73,7 @@ async function onActionPressed() {
 		);
 
 		if (payload.quest) {
-			emit('newQuest', new Quest(payload.quest));
+			emit('newQuest', storeModel(Quest, payload.quest));
 		}
 
 		if (!root.value) {

@@ -53,6 +53,7 @@ const emit = defineEmits({
 
 .-label
 	display: block
+	margin-top: 12px
 
 .-icon
 	color: var(--theme-link)

@@ -1,13 +1,13 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { fuzzysearch } from '../../../../utils/string';
 import { Api } from '../../../../_common/api/api.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
+import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
+import { fuzzysearch } from '../../../../utils/string';
 import { useGridStore } from '../../grid/grid-store';
 import { addGroupMembers, addGroupRoom } from '../client';
 import { ChatRoom } from '../room';

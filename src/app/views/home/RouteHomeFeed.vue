@@ -11,8 +11,6 @@ import {
 } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
-import { numberSort } from '../../../utils/array';
-import { fuzzysearch } from '../../../utils/string';
 import {
 	trackExperimentEngagement,
 	trackPageViewAfterRoute,
@@ -36,29 +34,32 @@ import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { styleWhen } from '../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../_styles/variables';
+import { numberSort } from '../../../utils/array';
+import { fuzzysearch } from '../../../utils/string';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { FeaturedItem } from '../../components/featured-item/featured-item.model';
 import { onFiresideStart } from '../../components/grid/client.service';
+import { useGridStore } from '../../components/grid/grid-store';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
-import { useQuestStore } from '../../store/quest';
+import { fetchDailyQuests, useQuestStore } from '../../store/quest';
 import { createRealmRouteStore, RealmRouteStore } from '../realms/view/view.store';
+import AppHomeFireside from './_fireside/AppHomeFireside.vue';
 import AppHomeFeaturedBanner from './AppHomeFeaturedBanner.vue';
 import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
 import AppHomeFeedSwitcher, {
 	RealmPathHistoryStateKey,
 	RealmTabData,
 } from './feed-switcher/AppHomeFeedSwitcher.vue';
-import { HomeFeedService, HOME_FEED_ACTIVITY, HOME_FEED_FYP } from './home-feed.service';
+import { HOME_FEED_ACTIVITY, HOME_FEED_FYP, HomeFeedService } from './home-feed.service';
 import {
 	getCurrentHomeRouteAnalyticsPath,
 	getNewHomeRouteAnalyticsPath,
 	updateHomeRouteAnalyticsPath,
 } from './RouteHome.vue';
-import AppHomeFireside from './_fireside/AppHomeFireside.vue';
 
 class DashGame {
 	constructor(
@@ -114,8 +115,23 @@ export default {
 
 <script lang="ts" setup>
 const { user } = useCommonStore();
-const { fetchDailyQuests, isLoading: isQuestStoreLoading, dailyQuests } = useQuestStore();
+const questStore = useQuestStore();
+const { isLoading: isQuestStoreLoading, dailyQuests } = questStore;
 const route = useRoute();
+
+// Mark as loading until Grid is fully bootstrapped.
+const { grid } = useGridStore();
+const isLoadingCharge = ref(grid.value?.bootstrapReceived !== true);
+if (isLoadingCharge.value) {
+	watch(
+		() => grid.value?.bootstrapReceived,
+		bootstrapped => {
+			if (bootstrapped) {
+				isLoadingCharge.value = false;
+			}
+		}
+	);
+}
 
 let afterEachDeregister: (() => void) | null = null;
 
@@ -387,7 +403,7 @@ async function refreshQuests() {
 	}
 
 	isLoadingQuests.value = true;
-	await fetchDailyQuests();
+	await fetchDailyQuests(questStore);
 	isLoadingQuests.value = false;
 }
 </script>
@@ -420,7 +436,13 @@ async function refreshQuests() {
 					<template v-if="Screen.isDesktop">
 						<div v-if="!configHomeFeedSwitcher.value" class="-top-spacer" />
 
-						<AppStickerChargeCard header-charge allow-fully-charged-text />
+						<AppStickerChargeCard
+							header-charge
+							elevate
+							header-spacer-height="6px"
+							allow-fully-charged-text
+							:is-loading="isLoadingCharge"
+						/>
 						<AppSpacer vertical :scale="8" />
 
 						<template v-if="user">

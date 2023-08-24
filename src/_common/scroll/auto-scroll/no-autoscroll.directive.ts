@@ -25,8 +25,8 @@ if (!import.meta.env.SSR) {
 	);
 }
 
-export const vAppNoAutoscroll: Directive<HTMLElement> = {
-	beforeMount(el) {
+export const vAppNoAutoscroll: Directive<unknown> = {
+	beforeMount(el: HTMLElement) {
 		el.dataset.gjAutoscroll = 'disabled';
 	},
 };

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+import { styleAbsoluteFill } from '../../../_styles/mixins';
 import { MediaItem } from '../media-item-model';
 
 const props = defineProps({
@@ -19,6 +20,10 @@ const props = defineProps({
 		type: String,
 		default: '',
 	},
+	colorOpacity: {
+		type: Number,
+		default: 1,
+	},
 });
 
 const { mediaItem, radius, fallbackColor } = toRefs(props);
@@ -31,7 +36,7 @@ const radiusClass = computed(() => {
 	return '-' + radius?.value;
 });
 
-const wrapperStyling = computed(() => {
+const colorStyles = computed(() => {
 	if (!mediaItem?.value?.avg_img_color || mediaItem?.value.img_has_transparency) {
 		if (fallbackColor.value) {
 			return { backgroundColor: fallbackColor.value };
@@ -46,7 +51,18 @@ const wrapperStyling = computed(() => {
 
 <template>
 	<div class="media-item-backdrop" :class="radiusClass">
-		<div class="-color" :class="radiusClass" :style="wrapperStyling" />
+		<div
+			:style="{
+				...colorStyles,
+				...styleAbsoluteFill({
+					inset: `1px`,
+					zIndex: -1,
+				}),
+				width: `auto`,
+				borderRadius: `inherit`,
+				opacity: colorOpacity,
+			}"
+		/>
 		<slot />
 	</div>
 </template>
@@ -59,29 +75,17 @@ const wrapperStyling = computed(() => {
 	overflow: hidden
 	width: 100%
 	height: 100%
-
-	.-color
-		position: absolute
-		z-index: -1
-		top: 1px
-		right: 1px
-		bottom: 1px
-		left: 1px
-		width: auto
+	border-radius: 0
 
 	&.-sm
-	.-color.-sm
 		rounded-corners-sm()
 
 	&.-md
-	.-color.-md
 		rounded-corners()
 
 	&.-lg
-	.-color.-lg
 		rounded-corners-lg()
 
 	&.-full
-	.-color.-full
 		img-circle()
 </style>

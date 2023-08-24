@@ -4,6 +4,8 @@ import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useSidebarStore } from '../../../../_common/sidebar/sidebar.store';
+import { kThemeGjOverlayNotice } from '../../../../_common/theme/variables';
+import { styleWhen } from '../../../../_styles/mixins';
 import { useAppStore } from '../../../store';
 
 const props = defineProps({
@@ -24,13 +26,23 @@ const props = defineProps({
 		type: Number,
 		default: 0,
 	},
+	/**
+	 * Shows an overlay-notice blip instead of count.
+	 */
+	showBlip: {
+		type: Boolean,
+	},
 });
 
-const { isControl, isActive, notificationCount } = toRefs(props);
+const { isControl, isActive, isUnread, highlight, notificationCount, showBlip } = toRefs(props);
 const { visibleLeftPane } = useAppStore();
 const { activeContextPane } = useSidebarStore();
 
 const notificationCountText = computed(() => {
+	if (showBlip.value) {
+		return '';
+	}
+
 	if (notificationCount.value > 99) {
 		return '99+';
 	}
@@ -79,7 +91,18 @@ const isShowingPane = computed(() => showAsActive.value && !!visibleLeftPane.val
 		>
 			<AppJolticon icon="menu" />
 		</div>
-		<div v-if="notificationCount > 0" class="-notification-count">
+		<div
+			v-if="notificationCount > 0 || showBlip"
+			class="-notification-count"
+			:style="
+				styleWhen(showBlip, {
+					width: `16px`,
+					height: `16px`,
+					padding: 0,
+					background: kThemeGjOverlayNotice,
+				})
+			"
+		>
 			{{ notificationCountText }}
 		</div>
 	</div>

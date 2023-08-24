@@ -65,6 +65,7 @@ export const Jolticons = [
 	'dashboard',
 	'details',
 	'devlogs',
+	'double-check',
 	'download-box',
 	'download',
 	'edit',

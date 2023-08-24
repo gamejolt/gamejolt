@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
+import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { User } from '../../../../../_common/user/user.model';
-import AppUserVerifiedTick from '../../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 
 defineProps({
 	user: {

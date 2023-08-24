@@ -50,6 +50,33 @@ export function makeFileFromDataUrl(dataUrl: string, fileName: string) {
 export const emptyGif =
 	'data:image/gif;base64,R0lGODlhAQABAIABAAAAAP///yH+EUNyZWF0ZWQgd2l0aCBHSU1QACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
+function getMaxMediaserverDimension(maxDimension: number) {
+	// Keep mediaserver dimensions within 100px increment bounds.
+	const step = 100;
+
+	let dimension = maxDimension;
+	if (Screen.isHiDpi) {
+		// For high dpi, double the dimension/density.
+		dimension = dimension * 2;
+	}
+
+	// Round up to the next step.
+	dimension = Math.ceil(dimension / step) * step;
+
+	// Make sure our dimension is at least one step.
+	if (dimension < step) {
+		return step;
+	}
+	return dimension;
+}
+
+/**
+ * Updates width/height in a mediaserver url to match the given bounds.
+ *
+ * NOTE: {@link maxHeight} is ignored unless {@link src} already contains some
+ * height definition. {@link maxWidth} is always used.
+ *
+ */
 export function getMediaserverUrlForBounds({
 	src,
 	maxWidth,
@@ -59,22 +86,14 @@ export function getMediaserverUrlForBounds({
 	maxWidth: number;
 	maxHeight: number;
 }) {
-	// Update width in the URL. We keep width within 100px increment bounds.
 	let newSrc = src;
-	let largerDimension = Math.max(maxWidth, maxHeight);
-
-	if (Screen.isHiDpi) {
-		// For high dpi, double the width.
-		largerDimension = largerDimension * 2;
-		largerDimension = Math.ceil(largerDimension / 100) * 100;
-	} else {
-		largerDimension = Math.ceil(largerDimension / 100) * 100;
-	}
+	const width = getMaxMediaserverDimension(maxWidth);
 
 	if (newSrc.search(WidthHeightRegex) !== -1) {
-		newSrc = newSrc.replace(WidthHeightRegex, '/' + largerDimension + 'x2000/');
+		const height = getMaxMediaserverDimension(maxHeight);
+		newSrc = newSrc.replace(WidthHeightRegex, `/${width}x${height}/`);
 	} else {
-		newSrc = newSrc.replace(WidthRegex, '/' + largerDimension + '/');
+		newSrc = newSrc.replace(WidthRegex, `/${width}/`);
 	}
 	return newSrc;
 }

@@ -11,7 +11,7 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
-import AppUserAvatarList from '../../../../_common/user/user-avatar/list/list.vue';
+import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
 import { User } from '../../../../_common/user/user.model';
 import AppGameList from '../../game/list/list.vue';
 import AppCommunityDescription from '../description/description.vue';

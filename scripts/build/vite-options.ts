@@ -23,7 +23,7 @@ export async function parseAndInferOptionsFromCommandline(args: MinimistParsedAr
 function isExpectedValue<T extends string | null>(
 	value: any,
 	expectedValues: readonly T[]
-): value is typeof expectedValues[number] {
+): value is (typeof expectedValues)[number] {
 	return expectedValues.includes(value);
 }
 
@@ -31,8 +31,8 @@ function parseOption<T extends string | null>(
 	arg: MinimistArgument,
 	argNameHuman: string,
 	validValues: readonly T[],
-	defaultValue: typeof validValues[number]
-): typeof validValues[number] {
+	defaultValue: (typeof validValues)[number]
+): (typeof validValues)[number] {
 	if (arg === undefined) {
 		return defaultValue;
 	}

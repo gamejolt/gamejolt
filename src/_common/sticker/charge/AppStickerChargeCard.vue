@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import { illChargeOrbEmpty } from '../../../app/img/ill/illustrations';
 import { routeLandingCreators } from '../../../app/views/landing/creators/creators.route';
 import AppAnimChargeOrb from '../../animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
+import { illChargeOrbEmpty } from '../../illustration/illustrations';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
+import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
@@ -40,6 +41,17 @@ const props = defineProps({
 	paddingV: {
 		type: Number,
 		default: 16,
+	},
+	isLoading: {
+		type: Boolean,
+	},
+	/**
+	 * Passed into the AppSpacer component between the header and the charge
+	 * card.
+	 */
+	headerSpacerHeight: {
+		type: String,
+		default: undefined,
 	},
 });
 
@@ -78,7 +90,14 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 		<div
 			ref="root"
 			class="sticker-charge-card"
-			:class="{ '-elevate': elevate, '-decorator': !headerCharge }"
+			:class="
+				headerCharge
+					? {}
+					: {
+							'-elevate': elevate,
+							'-decorator': true,
+					  }
+			"
 		>
 			<div class="-content" :class="{ '-col': headerCharge }">
 				<div :style="{ width: headerCharge ? '100%' : undefined }">
@@ -102,7 +121,7 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 
 					<RouterLink
 						v-if="headerCharge"
-						:to="routeLandingCreators"
+						:to="{ name: routeLandingCreators.name }"
 						class="link-muted"
 						:style="{ float: 'right' }"
 					>
@@ -110,31 +129,45 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 					</RouterLink>
 				</div>
 
-				<AppSpacer v-if="headerCharge" vertical :scale="4" />
-
-				<div
-					class="-center-grid"
-					:class="{
-						'-decorator': headerCharge,
+				<template v-if="headerCharge">
+					<div v-if="headerSpacerHeight" :style="{ height: headerSpacerHeight }" />
+					<AppSpacer v-else vertical :scale="4" />
+				</template>
+				<AppLoadingFade
+					:style="{
+						width: '100%',
 					}"
+					:is-loading="isLoading"
 				>
-					<AppAnimElectricity
-						class="-orbs"
-						:style="gridStyling"
-						:disabled="!canChargeSticker"
+					<div
+						class="-center-grid"
+						:class="
+							!headerCharge
+								? {}
+								: {
+										'-elevate': elevate,
+										'-decorator': true,
+								  }
+						"
 					>
-						<AppAspectRatio v-for="i of chargeLimit" :key="i" :ratio="1">
-							<img
-								v-if="currentCharge < i"
-								class="-orb-empty"
-								:src="illChargeOrbEmpty.path"
-								draggable="false"
-								alt=""
-							/>
-							<AppAnimChargeOrb v-else class="-abs-fill" use-random-offset />
-						</AppAspectRatio>
-					</AppAnimElectricity>
-				</div>
+						<AppAnimElectricity
+							class="-orbs"
+							:style="gridStyling"
+							:disabled="!canChargeSticker"
+						>
+							<AppAspectRatio v-for="i of chargeLimit" :key="i" :ratio="1">
+								<img
+									v-if="currentCharge < i"
+									class="-orb-empty"
+									:src="illChargeOrbEmpty.path"
+									draggable="false"
+									alt=""
+								/>
+								<AppAnimChargeOrb v-else class="-abs-fill" use-random-offset />
+							</AppAspectRatio>
+						</AppAnimElectricity>
+					</div>
+				</AppLoadingFade>
 			</div>
 
 			<div v-if="showFullyChargedText" :class="{ '-small': headerCharge }">
@@ -166,7 +199,7 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 	padding: var(--padding-v) var(--padding-h)
 
 	&.-elevate
-		elevate-2()
+		elevate-1()
 
 .-content
 	display: inline-flex

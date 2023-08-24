@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { styleBorderRadiusCircle, styleChangeBg } from '../../../../_styles/mixins';
+import { styleChangeBg } from '../../../../_styles/mixins';
 </script>
 
 <template>
@@ -10,8 +10,8 @@ import { styleBorderRadiusCircle, styleChangeBg } from '../../../../_styles/mixi
 					<div
 						class="-avatar"
 						:style="{
-							...styleBorderRadiusCircle,
 							...styleChangeBg('bg-subtle'),
+							borderRadius: `50%`,
 						}"
 					/>
 					<div class="-name">

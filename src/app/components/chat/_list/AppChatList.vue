@@ -1,12 +1,14 @@
 <script lang="ts">
 import { computed, PropType, ref, toRefs } from 'vue';
-import { fuzzysearch } from '../../../../utils/string';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { User } from '../../../../_common/user/user.model';
+import { fuzzysearch } from '../../../../utils/string';
 import { ChatRoom } from '../room';
 import { ChatUser } from '../user';
 
-function searchEntries(entries: ChatListEntries, query: string): ChatListEntries {
+type ChatListEntry = ChatUser | User | ChatRoom;
+
+function searchEntries<T extends ChatListEntry>(entries: T[], query: string): T[] {
 	return entries.filter(i => {
 		if (i instanceof ChatUser || i instanceof User) {
 			return (
@@ -14,17 +16,14 @@ function searchEntries(entries: ChatListEntries, query: string): ChatListEntries
 				fuzzysearch(query, i.username.toLowerCase())
 			);
 		} else if (i instanceof ChatRoom) {
-			return searchEntries(i.memberCollection.users, query).length > 0;
+			if (i.title) {
+				return fuzzysearch(query, i.title.toLowerCase());
+			} else {
+				return i.fallback_title && fuzzysearch(query, i.fallback_title.toLowerCase());
+			}
 		}
 	});
 }
-
-type ChatListEntry = ChatUser | User | ChatRoom;
-type ChatListEntries = ChatListEntry[];
-
-export type ChatListSlotProps = {
-	item: ChatListEntry;
-};
 
 function getKeyForEntry(entry: ChatListEntry) {
 	let key = '';
@@ -40,10 +39,10 @@ function getKeyForEntry(entry: ChatListEntry) {
 }
 </script>
 
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends ChatListEntry">
 const props = defineProps({
 	entries: {
-		type: Array as PropType<ChatListEntries>,
+		type: Array as PropType<T[]>,
 		required: true,
 	},
 	hideFilter: {

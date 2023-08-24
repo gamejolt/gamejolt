@@ -6,9 +6,9 @@ import { Seo } from '../seo/seo.service';
 import { CommonStore } from '../store/common-store';
 import { Translate } from '../translate/translate.service';
 
-let payloadActionsChecker: ((payload: any) => void) | null = null;
-export function assignPayloadActionsChecker(fn: (payload: any) => void) {
-	payloadActionsChecker = fn;
+let payloadActionsHandler: ((payload: any) => void) | null = null;
+export function assignPayloadActionsHandler(fn: (payload: any) => void) {
+	payloadActionsHandler = fn;
 }
 
 export type PayloadFormErrors = { [errorId: string]: boolean };
@@ -107,8 +107,8 @@ export class Payload {
 			this.checkPayloadVersion(responseData, options);
 			this.checkPayloadSeo(responseData, options);
 
-			if (payloadActionsChecker) {
-				payloadActionsChecker(responseData);
+			if (payloadActionsHandler) {
+				payloadActionsHandler(responseData);
 			}
 
 			return responseData.payload;

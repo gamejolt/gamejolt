@@ -3,14 +3,18 @@ import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
 import { CurrencyType } from '../../../../_common/currency/currency-type';
+import { shorthandReadableTime } from '../../../../_common/filters/duration';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
+import { illPointyThing } from '../../../../_common/illustration/illustrations';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppStickerLayerDrawerItem from '../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
-import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
+import AppStickerPack, {
+	StickerPackExpiryStyles,
+} from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
 import { UserStickerPack } from '../../../../_common/sticker/pack/user-pack.model';
 import {
@@ -25,7 +29,6 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vu
 import { styleTextOverflow } from '../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../_styles/variables';
 import { run } from '../../../../utils/utils';
-import { illPointyThing } from '../../../img/ill/illustrations';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
 type FormModel = {
@@ -35,7 +38,7 @@ type FormModel = {
 const { stickerPacks, eventStickers, creatorStickers, generalStickers, allStickers } =
 	useStickerStore();
 
-const { coinBalance, joltbuxBalance } = useCommonStore();
+const { coinBalance, joltbuxBalance, setInitialPackWatermarkStorageValue } = useCommonStore();
 
 const form: FormController<FormModel> = createForm({
 	loadUrl: `/mobile/sticker`,
@@ -49,6 +52,8 @@ const form: FormController<FormModel> = createForm({
 	},
 	sanitizeComplexData: false,
 	onInit() {
+		setInitialPackWatermarkStorageValue(false);
+
 		run(async () => {
 			const payload = await Api.sendFieldsRequest(
 				'/mobile/me',
@@ -84,10 +89,7 @@ async function onClickVendingMachine() {
 }
 
 function openPack(pack: UserStickerPack) {
-	StickerPackOpenModal.show({
-		pack,
-		openImmediate: true,
-	});
+	StickerPackOpenModal.show({ pack });
 }
 
 function sortStickers(sorting: StickerSortMethod) {
@@ -108,33 +110,33 @@ function sortStickers(sorting: StickerSortMethod) {
 
 <template>
 	<div id="shell-sidebar-backpack" class="fill-offset">
+		<AppCurrencyPillList
+			:currencies="{
+				[CurrencyType.joltbux.id]: [CurrencyType.joltbux, joltbuxBalance],
+				[CurrencyType.coins.id]: [CurrencyType.coins, coinBalance],
+			}"
+			direction="row"
+			:gap="8"
+			wrap
+		/>
+
+		<AppSpacer vertical :scale="2" />
+
+		<div
+			:style="{
+				display: `flex`,
+				alignItems: `flex-start`,
+				gap: `12px`,
+			}"
+		>
+			<AppButton block solid @click="onClickVendingMachine()">
+				{{ $gettext(`Open Shop`) }}
+			</AppButton>
+		</div>
+
+		<AppSpacer vertical :scale="4" />
+
 		<AppForm :controller="form">
-			<AppCurrencyPillList
-				:currencies="{
-					[CurrencyType.joltbux.id]: [CurrencyType.joltbux, joltbuxBalance],
-					[CurrencyType.coins.id]: [CurrencyType.coins, coinBalance],
-				}"
-				direction="row"
-				:gap="8"
-				wrap
-			/>
-
-			<AppSpacer vertical :scale="2" />
-
-			<div
-				:style="{
-					display: `flex`,
-					alignItems: `flex-start`,
-					gap: `12px`,
-				}"
-			>
-				<AppButton block solid @click="onClickVendingMachine()">
-					{{ $gettext(`Open Shop`) }}
-				</AppButton>
-			</div>
-
-			<AppSpacer vertical :scale="4" />
-
 			<div class="_section-header">
 				{{ $gettext(`Sticker packs`) }}
 			</div>
@@ -146,11 +148,19 @@ function sortStickers(sorting: StickerSortMethod) {
 					:show-details="{
 						name: true,
 					}"
-					:expiry-info="userPack.expires_on"
 					can-click-pack
-					:hover-title="$gettext(`Open`)"
 					@click-pack="openPack(userPack)"
-				/>
+				>
+					<div v-if="userPack.expires_on" :style="StickerPackExpiryStyles">
+						{{
+							shorthandReadableTime(userPack.expires_on, {
+								allowFuture: true,
+								precision: 'rough',
+								nowText: $gettext(`Expired`),
+							})
+						}}
+					</div>
+				</AppStickerPack>
 			</div>
 			<div v-else>
 				<AppIllustration :asset="illPointyThing" />

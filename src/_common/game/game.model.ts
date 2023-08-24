@@ -122,7 +122,6 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	description_content!: string;
 
 	// Manage settings
-	ads_enabled?: boolean;
 	has_sales?: boolean;
 	has_active_builds?: boolean;
 	is_listable?: boolean;

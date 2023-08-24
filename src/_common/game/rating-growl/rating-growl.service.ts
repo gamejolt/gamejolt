@@ -2,7 +2,7 @@ import { Api } from '../../api/api.service';
 import { showInfoGrowl } from '../../growls/growls.service';
 import { commonStore } from '../../store/common-store';
 import { Game } from '../game.model';
-import AppGameRatingGrowl from './rating-growl.vue';
+import AppGameRatingGrowl from './AppGameRatingGrowl.vue';
 
 export class GameRatingGrowl {
 	static async show(game: Game) {

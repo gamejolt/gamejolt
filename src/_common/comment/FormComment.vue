@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, nextTick, PropType, ref, toRefs } from 'vue';
+import { kFontSizeSmall } from '../../_styles/variables';
 import AppAlertBox from '../alert/AppAlertBox.vue';
 import { trackCommentAdd } from '../analytics/analytics.service';
 import AppButton from '../button/AppButton.vue';
@@ -28,10 +29,9 @@ import {
 	Comment,
 	CommentableModel,
 	getCommentModelResourceName,
+	saveComment,
 } from './comment-model';
 import './comment.styl';
-
-type FormModel = Comment;
 
 const props = defineProps({
 	comment: {
@@ -76,25 +76,31 @@ const loadUrl = computed(() => {
 	}
 });
 
+type FormModel = {
+	id?: Comment['id'];
+	comment_content: Comment['comment_content'];
+	resource: Comment['resource'];
+	resource_id: Comment['resource_id'];
+	parent_id: Comment['parent_id'];
+};
+
 const form: FormController<FormModel> = createForm({
 	resetOnSubmit: true,
-	modelClass: Comment,
-	model: comment,
 	loadUrl,
 	async onInit() {
-		if (!comment?.value) {
-			form.formModel.comment_content = '';
-			form.formModel.resource = getCommentModelResourceName(model.value);
-			form.formModel.resource_id = model.value.id;
+		const _comment = comment?.value;
 
-			if (parentId?.value) {
-				form.formModel.parent_id = parentId.value;
-			}
+		form.method = _comment ? 'edit' : 'add';
+		form.formModel.id = _comment?.id;
 
-			// Wait for errors, then clear them.
-			await nextTick();
-			form.clearErrors();
-		}
+		form.formModel.comment_content = _comment?.comment_content ?? '';
+		form.formModel.resource = _comment?.resource ?? getCommentModelResourceName(model.value);
+		form.formModel.resource_id = _comment?.resource_id ?? model.value.id;
+		form.formModel.parent_id = _comment?.parent_id ?? parentId?.value;
+
+		// Wait for errors, then clear them.
+		await nextTick();
+		form.clearErrors();
 	},
 	onLoad(payload: any) {
 		lengthLimit.value = payload.lengthLimit;
@@ -102,11 +108,12 @@ const form: FormController<FormModel> = createForm({
 			payload.contentCapabilities
 		);
 	},
-	onSubmitSuccess() {
+	onSubmit: () => saveComment(form.formModel),
+	onSubmitSuccess(savedComment) {
 		if (form.method === 'add') {
 			trackCommentAdd();
 		}
-		emit('submit', form.formModel);
+		emit('submit', savedComment);
 	},
 	onSubmitError() {
 		showErrorGrowl($gettext(`Couldn't add your comment for some reason.`));
@@ -206,11 +213,22 @@ const onlyFriends = computed(
 			<AppFormControlErrors label="comment" />
 		</AppFormGroup>
 
-		<p v-if="shouldShowGuidelines" class="-guidelines">
+		<p
+			v-if="shouldShowGuidelines"
+			:style="{
+				fontSize: kFontSizeSmall.px,
+				marginBottom: `8px`,
+			}"
+		>
 			Remember to be respectful and follow our
 			<AppLinkHelp page="guidelines">Site Guidelines</AppLinkHelp>.
 		</p>
-		<div v-else class="-buttons">
+		<div
+			v-else
+			:style="{
+				textAlign: `right`,
+			}"
+		>
 			<AppButton v-if="form.method === 'edit'" trans @click="emit('cancel')">
 				<AppTranslate>Cancel</AppTranslate>
 			</AppButton>
@@ -224,13 +242,6 @@ const onlyFriends = computed(
 </template>
 
 <style lang="stylus" scoped>
-.-guidelines
-	font-size: $font-size-small
-	margin-bottom: 8px
-
-.-buttons
-	text-align: right
-
 ::v-deep(.form-group)
 	margin-bottom: 8px
 </style>

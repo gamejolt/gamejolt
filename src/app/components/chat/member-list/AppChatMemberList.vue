@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { FiresideController } from '../../fireside/controller/controller';
-import { ChatRoom } from '../room';
-import { ChatUser } from '../user';
-import { ChatUserCollection } from '../user-collection';
 import AppChatList from '../_list/AppChatList.vue';
+import { ChatRoom } from '../room';
+import { ChatUserCollection } from '../user-collection';
 import AppChatMemberListItem from './AppChatMemberListItem.vue';
 
 const props = defineProps({
@@ -55,7 +54,7 @@ const users = computed(() => {
 		<template #default="{ item }">
 			<AppChatMemberListItem
 				:room="room"
-				:user="(item as ChatUser)"
+				:user="item"
 				:host="collection.getFiresideHost(item.id)"
 				:horizontal-padding="horizontalPadding"
 			/>

@@ -12,14 +12,14 @@ import {
 	CommentStoreModel,
 	getCommentStore,
 } from '../../../_common/comment/comment-store';
-import { DisplayMode } from '../../../_common/comment/modal/modal.service';
-import { CommentThreadModal } from '../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '../../../_common/illustration/illustrations';
 import { Model } from '../../../_common/model/model.service';
 import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
-import { illNoCommentsSmall } from '../../img/ill/illustrations';
-import AppUserAvatarBubble from '../user/AppUserAvatarBubble.vue';
+import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
+import { DisplayMode } from './modal/modal.service';
+import { CommentThreadModal } from './thread/modal.service';
 
 const props = defineProps({
 	comments: {

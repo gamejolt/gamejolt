@@ -1,8 +1,5 @@
 import { Presence } from 'phoenix';
 import { computed, markRaw, onMounted, onUnmounted, Ref, ref, shallowReadonly, watch } from 'vue';
-import { arrayRemove } from '../../../utils/array';
-import { CancelToken } from '../../../utils/cancel-token';
-import { run } from '../../../utils/utils';
 import { Background } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
@@ -10,8 +7,15 @@ import { MarkObject } from '../../../_common/content/mark-object';
 import { Fireside } from '../../../_common/fireside/fireside.model';
 import { getModel, storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
+import {
+	RealtimeReactionsPayload,
+	updateReactionCount,
+} from '../../../_common/reaction/reaction-count';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
+import { arrayRemove } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
+import { run } from '../../../utils/utils';
 import {
 	ChatClient,
 	isInChatRoom,
@@ -79,6 +83,11 @@ interface FiresideSocketParams {
 	fireside_viewing_mode: string;
 }
 
+interface UpdateChatMessageReactionPayload {
+	deltas: RealtimeReactionsPayload[];
+	chat_message_id: number;
+}
+
 export function createChatRoomChannel(
 	client: ChatClient,
 	options: {
@@ -132,6 +141,7 @@ export function createChatRoomChannel(
 	channelController.listenTo('kick_member', _onMemberKicked);
 	channelController.listenTo('fireside_start', _onFiresideStart);
 	channelController.listenTo('fireside_update', _onFiresideUpdate);
+	channelController.listenTo('update-reactions', _onUpdateReaction);
 
 	const { channel, isClosed } = channelController;
 
@@ -351,8 +361,9 @@ export function createChatRoomChannel(
 	}
 
 	function _onRoomUpdate(json: Partial<ChatRoom>) {
-		const { title, background } = json;
+		const { title, fallback_title, background } = json;
 		room.value.title = title || '';
+		room.value.fallback_title = fallback_title || '';
 		room.value.background = background ? new Background(background) : undefined;
 	}
 
@@ -370,6 +381,32 @@ export function createChatRoomChannel(
 			data.fireside ? new Fireside(data.fireside) : null,
 			data.streaming_users.map(x => new ChatUser(x))
 		);
+	}
+
+	function _onUpdateReaction(payload: UpdateChatMessageReactionPayload) {
+		const message = getModel(ChatMessage, payload.chat_message_id!);
+		if (!message) {
+			return;
+		}
+
+		for (const data of payload.deltas) {
+			updateReactionCount(
+				{
+					currentUserId: client.currentUser ? client.currentUser.id : 0,
+					model: message,
+				},
+				{
+					deltaInc: data.delta_inc,
+					deltaDec: data.delta_dec,
+				},
+				{
+					emojiId: data.emoji_id,
+					emojiImgUrl: data.emoji_img_url,
+					emojiPrefix: data.emoji_prefix,
+					emojiShortName: data.emoji_short_name,
+				}
+			);
+		}
 	}
 
 	function _syncPresentUsers(presence: Presence) {

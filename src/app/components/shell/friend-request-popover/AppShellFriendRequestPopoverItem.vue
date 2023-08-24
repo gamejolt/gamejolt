@@ -9,9 +9,9 @@ import AppScrollInview, {
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppUserVerifiedTick from '../../../../_common/user/verified-tick/AppUserVerifiedTick.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 </script>
