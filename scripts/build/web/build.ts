@@ -16,17 +16,19 @@ export async function buildWebAndSSR() {
 	console.log('Cleaning up old web build dir');
 	await remove(frontendBuildDir);
 
+	const buildPromises: Promise<void>[] = [];
 	for (const sectionName of sectionsToBuild) {
 		const section = gjSectionConfigs[sectionName];
 
 		if (section.webApp) {
-			await buildSection(sectionName, { platform: 'web' });
+			buildPromises.push(buildSection(sectionName, { platform: 'web' }));
 		}
 
 		if (section.ssr) {
-			await buildSection(sectionName, { platform: 'ssr' });
+			buildPromises.push(buildSection(sectionName, { platform: 'ssr' }));
 		}
 	}
+	await Promise.all(buildPromises);
 }
 
 type BuildSectionOptions = {
