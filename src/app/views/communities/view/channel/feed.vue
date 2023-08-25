@@ -94,7 +94,7 @@ export default class RouteCommunitiesViewChannelFeed extends LegacyRouteComponen
 			return null;
 		}
 
-		const title = this.$gettextInterpolate(`%{ name } Community on Game Jolt`, {
+		const title = this.$gettext(`%{ name } Community on Game Jolt`, {
 			name: this.community.name,
 		});
 
@@ -116,13 +116,13 @@ export default class RouteCommunitiesViewChannelFeed extends LegacyRouteComponen
 		switch (this.sort) {
 			case 'hot':
 				return prefixWith(
-					this.$gettextInterpolate('Hot posts in %{ channel }', {
+					this.$gettext('Hot posts in %{ channel }', {
 						channel: this.channel ? this.channel.displayTitle : this.channelPath,
 					})
 				);
 			case 'new':
 				return prefixWith(
-					this.$gettextInterpolate('New posts in %{ channel }', {
+					this.$gettext('New posts in %{ channel }', {
 						channel: this.channel ? this.channel.displayTitle : this.channelPath,
 					})
 				);

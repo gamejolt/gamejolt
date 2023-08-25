@@ -47,7 +47,7 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Game API for %{ game }', {
+			return this.$gettext('Game API for %{ game }', {
 				game: this.game.title,
 			});
 		}

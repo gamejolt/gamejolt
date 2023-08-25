@@ -89,7 +89,7 @@ export default class RouteDashGamesManageApiTrophies extends LegacyRouteComponen
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Manage Trophies for %{ game }', {
+			return this.$gettext('Manage Trophies for %{ game }', {
 				game: this.game.title,
 			});
 		}

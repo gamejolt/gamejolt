@@ -53,7 +53,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Manage Scoreboards for %{ game }', {
+			return this.$gettext('Manage Scoreboards for %{ game }', {
 				game: this.game.title,
 			});
 		}

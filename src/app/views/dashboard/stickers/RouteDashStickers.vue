@@ -8,10 +8,10 @@ import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
-	validateFilesize,
-	validateImageAspectRatio,
-	validateImageMaxDimensions,
-	validateImageMinDimensions,
+validateFilesize,
+validateImageAspectRatio,
+validateImageMaxDimensions,
+validateImageMinDimensions,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -20,15 +20,11 @@ import { ModelData } from '../../../../_common/model/model.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerPack, {
-	StickerPackRatio,
+StickerPackRatio,
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
-import {
-	$gettext,
-	$gettextInterpolate,
-	$ngettext,
-} from '../../../../_common/translate/translate.service';
+import { $gettext, $ngettext } from '../../../../_common/translate/translate.service';
 import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../../_styles/variables';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
@@ -118,15 +114,11 @@ const packForm: FormController<PackFormModel> = createForm({
 
 		const reason = response.reason;
 		if (reason === 'not-enough-active-stickers') {
-			message = $gettextInterpolate(
-				$ngettext(
-					`You need at least %{ num } active sticker to enable your sticker pack.`,
-					`You need at least %{ num } active stickers to enable your sticker pack.`,
-					requiredActiveStickers.value
-				),
-				{
-					num: requiredActiveStickers.value,
-				}
+			message = $ngettext(
+				`You need at least %{ num } active sticker to enable your sticker pack.`,
+				`You need at least %{ num } active stickers to enable your sticker pack.`,
+				requiredActiveStickers.value,
+				{ num: requiredActiveStickers.value }
 			);
 		}
 
@@ -274,20 +266,17 @@ function onPackEnabledChanged() {
 						</p>
 						<p>
 							{{
-								$gettextInterpolate(`%{ usedSlots } / %{ maxSlots } slots used`, {
+								$gettext(`%{ usedSlots } / %{ maxSlots } slots used`, {
 									usedSlots: stickers.length.toString(),
 									maxSlots: stickerSlots.toString(),
 								})
 							}}
 							<br />
 							{{
-								$gettextInterpolate(
-									`%{ currentAmount } / %{ maxAmount } active stickers`,
-									{
-										currentAmount: activeStickersCount.toString(),
-										maxAmount: maxStickerAmount.toString(),
-									}
-								)
+								$gettext(`%{ currentAmount } / %{ maxAmount } active stickers`, {
+									currentAmount: activeStickersCount.toString(),
+									maxAmount: maxStickerAmount.toString(),
+								})
 							}}
 						</p>
 					</div>
@@ -375,15 +364,11 @@ function onPackEnabledChanged() {
 								<AppExpand :when="isPackDisabled">
 									<div class="help-block">
 										{{
-											$gettextInterpolate(
-												$ngettext(
-													`You need at least %{ min } active sticker to enable this pack.`,
-													`You need at least %{ min } active stickers to enable this pack.`,
-													requiredActiveStickers
-												),
-												{
-													min: requiredActiveStickers,
-												}
+											$ngettext(
+												`You need at least %{ min } active sticker to enable this pack.`,
+												`You need at least %{ min } active stickers to enable this pack.`,
+												requiredActiveStickers,
+												{ min: requiredActiveStickers }
 											)
 										}}
 									</div>

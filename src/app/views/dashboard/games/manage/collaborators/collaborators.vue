@@ -55,7 +55,7 @@ export default class RouteDashGamesManageCollaborators extends LegacyRouteCompon
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Collaborators for %{ game }', {
+			return this.$gettext('Collaborators for %{ game }', {
 				game: this.game.title,
 			});
 		}

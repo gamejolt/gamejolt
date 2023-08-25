@@ -13,7 +13,7 @@ import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../../_common/user/user.model';
 import { arrayRemove } from '../../../../../utils/array';
 import AppChatList from '../../../chat/_list/AppChatList.vue';
@@ -198,14 +198,14 @@ async function toggleModerator(user: ChatUser) {
 
 	if (isPromoting) {
 		canProceed = await showModalConfirm(
-			$gettextInterpolate(
+			$gettext(
 				`Do you want to promote @%{ username } to a chat moderator? They will be able to remove messages and kick users from the chat. You can demote them at any time.`,
 				{ username: user.username }
 			)
 		);
 	} else {
 		canProceed = await showModalConfirm(
-			$gettextInterpolate(`Do you want to demote @%{ username } to a normal chat user?`, {
+			$gettext(`Do you want to demote @%{ username } to a normal chat user?`, {
 				username: user.username,
 			})
 		);
@@ -238,7 +238,7 @@ async function toggleModerator(user: ChatUser) {
 
 			if (payload.role) {
 				showSuccessGrowl(
-					$gettextInterpolate(`@%{ username } has been promoted to a chat moderator.`, {
+					$gettext(`@%{ username } has been promoted to a chat moderator.`, {
 						username: user.username,
 					})
 				);
@@ -256,7 +256,7 @@ async function toggleModerator(user: ChatUser) {
 
 			if (payload.role) {
 				showSuccessGrowl(
-					$gettextInterpolate(`@%{ username } has been demoted to a normal chat user.`, {
+					$gettext(`@%{ username } has been demoted to a normal chat user.`, {
 						username: user.username,
 					})
 				);

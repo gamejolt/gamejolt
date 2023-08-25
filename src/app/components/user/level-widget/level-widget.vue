@@ -19,7 +19,7 @@ export default class AppUserLevelWidget extends Vue {
 	readonly formatNumber = formatNumber;
 
 	get tooltip() {
-		return this.$gettextInterpolate('%{ percentage }% progress to next level', {
+		return this.$gettext('%{ percentage }% progress to next level', {
 			percentage: this.user.level_next_percentage,
 		});
 	}

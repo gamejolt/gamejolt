@@ -3,7 +3,7 @@ import { CSSProperties, PropType, computed, onMounted, ref, toRefs } from 'vue';
 import { kFontSizeTiny } from '../../../../_styles/variables';
 import { sleep } from '../../../../utils/utils';
 import AppCircularProgress from '../../../progress/AppCircularProgress.vue';
-import { $gettext, $gettextInterpolate } from '../../../translate/translate.service';
+import { $gettext } from '../../../translate/translate.service';
 import AppShellNoticeBase from '../_base/AppShellNoticeBase.vue';
 import { CreatorExperienceNotice, getShellNotice } from '../notice.service';
 
@@ -72,11 +72,11 @@ const message = computed(() => {
 	} = data.value;
 
 	if (leveledUp) {
-		return $gettextInterpolate(`Level up! You are now level %{ level }.`, {
+		return $gettext(`Level up! You are now level %{ level }.`, {
 			level: current_level,
 		});
 	}
-	return $gettextInterpolate(`You gained %{ xpGained } experience.`, {
+	return $gettext(`You gained %{ xpGained } experience.`, {
 		xpGained,
 	});
 });

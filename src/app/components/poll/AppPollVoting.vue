@@ -203,10 +203,9 @@ function setDateRefresh() {
 
 			<span class="text-muted">
 				{{
-					$gettextInterpolate(
-						$ngettext('%{ votes } vote', '%{ votes } votes', poll.vote_count || 0),
-						{ votes: formatNumber(poll.vote_count || 0) }
-					)
+					$ngettext('%{ votes } vote', '%{ votes } votes', poll.vote_count || 0, {
+						votes: formatNumber(poll.vote_count || 0),
+					})
 				}}
 
 				<span class="dot-separator" />

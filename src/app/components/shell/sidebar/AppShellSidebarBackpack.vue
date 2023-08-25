@@ -261,7 +261,7 @@ function sortStickers(sorting: StickerSortMethod) {
 								}"
 							>
 								{{
-									$gettextInterpolate(`@%{ username } stickers`, {
+									$gettext(`@%{ username } stickers`, {
 										username: stickers[0].sticker.owner_user.username,
 									})
 								}}

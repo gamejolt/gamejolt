@@ -137,7 +137,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Followed Games');
 				} else {
-					return this.$gettextInterpolate('Games Followed by %{ user }', params);
+					return this.$gettext('Games Followed by %{ user }', params);
 				}
 			} else if (
 				this.type === GameCollectionModel.TYPE_PLAYLIST &&
@@ -152,7 +152,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 				if (this.collection.isOwner) {
 					return this.playlist.name;
 				} else {
-					return this.$gettextInterpolate('%{ playlist } by %{ user }', params);
+					return this.$gettext('%{ playlist } by %{ user }', params);
 				}
 			} else if (
 				this.type === GameCollectionModel.TYPE_DEVELOPER &&
@@ -163,7 +163,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Games');
 				} else {
-					return this.$gettextInterpolate('Games by %{ user }', params);
+					return this.$gettext('Games by %{ user }', params);
 				}
 			} else if (
 				this.type === GameCollectionModel.TYPE_OWNED &&
@@ -174,7 +174,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Owned Games');
 				} else {
-					return this.$gettextInterpolate('Games Owned by %{ user }', params);
+					return this.$gettext('Games Owned by %{ user }', params);
 				}
 			} else if (
 				this.type === GameCollectionModel.TYPE_RECOMMENDED &&
@@ -185,7 +185,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Daily Mix');
 				} else {
-					return this.$gettextInterpolate('Daily Mix for %{ user }', params);
+					return this.$gettext('Daily Mix for %{ user }', params);
 				}
 			} else if (this.type === GameCollectionModel.TYPE_BUNDLE && this.bundle) {
 				return this.bundle.title;

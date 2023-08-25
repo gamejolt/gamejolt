@@ -36,7 +36,7 @@ export default class RouteDashGamesManageGameMaturity extends LegacyRouteCompone
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate(`Edit Maturity Rating for %{ game }`, {
+			return this.$gettext(`Edit Maturity Rating for %{ game }`, {
 				game: this.game.title,
 			});
 		}

@@ -8,7 +8,7 @@ import {
 } from '../../../../_common/community/community.model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { Translate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../_common/user/user.model';
 import { numberSort } from '../../../../utils/array';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
@@ -162,7 +162,7 @@ export function getChannelPathFromRoute(route: RouteLocationNormalized) {
  * Initializes the route metadata for a community page.
  */
 export function setCommunityMeta(community: CommunityModel, title: string) {
-	const description = Translate.$gettextInterpolate(
+	const description = $gettext(
 		`Welcome to the %{ name } community on Game Jolt! Discover %{ name } fan art, lets plays and catch up on the latest news and theories!`,
 		{ name: community.name }
 	);

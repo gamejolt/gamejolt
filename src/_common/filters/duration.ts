@@ -48,7 +48,7 @@ interface ShorthandTimeOptions {
 	nowText?: string;
 	/**
 	 * An optional function allowing easy wrapping of the shorthand time in
-	 * [gettextInterpolate].
+	 * [gettext].
 	 *
 	 * This is only used when remaining time is displayed, and has no effect
 	 * when {@link nowText} is displayed.

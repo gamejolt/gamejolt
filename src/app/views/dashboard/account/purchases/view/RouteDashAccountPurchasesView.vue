@@ -80,12 +80,12 @@ function isMicrotransactionProduct(resource: any): resource is MicrotransactionP
 <template>
 	<div v-if="isBootstrapped && order">
 		<p class="text-muted">
-			{{ $gettextInterpolate(`Order #%{ orderId }`, { orderId: order.id }) }}
+			{{ $gettext(`Order #%{ orderId }`, { orderId: order.id }) }}
 
 			<span class="dot-separator" />
 
 			{{
-				$gettextInterpolate(`Ordered on %{ date }`, {
+				$gettext(`Ordered on %{ date }`, {
 					date: formatDate(order.completed_on, 'medium'),
 				})
 			}}
@@ -97,7 +97,7 @@ function isMicrotransactionProduct(resource: any): resource is MicrotransactionP
 		 -->
 		<div v-if="order && order._is_refunded && firstRefund" class="alert alert-notice">
 			{{
-				$gettextInterpolate(`This order was refunded on %{ date }.`, {
+				$gettext(`This order was refunded on %{ date }.`, {
 					date: formatDate(firstRefund.created_on, 'medium'),
 				})
 			}}

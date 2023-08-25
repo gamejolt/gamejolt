@@ -6,7 +6,7 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../../_common/route/legacy-route-component';
-import { $gettext, Translate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../../_common/user/user.model';
 import FormEmailPreferences from '../../../../components/forms/email-preferences/FormEmailPreferences.vue';
 import { IntentService } from '../../../../components/intent/intent.service';
@@ -23,7 +23,7 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 	async resolver({ route }) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'unsubscribe',
-			message: Translate.$gettext(`We have updated your email preferences.`),
+			message: $gettext(`We have updated your email preferences.`),
 		});
 		if (intentRedirect) {
 			return intentRedirect;

@@ -17,7 +17,7 @@ import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import { useCommonStore } from '../../store/common-store';
 import { kThemeFg10 } from '../../theme/variables';
-import { $gettext, $gettextInterpolate } from '../../translate/translate.service';
+import { $gettext } from '../../translate/translate.service';
 import AppMicrotransactionItem from '../AppMicrotransactionItem.vue';
 import AppMicrotransactionPaymentForm from '../payment-form/AppMicrotransactionPaymentForm.vue';
 import { MicrotransactionProductModel } from '../product.model';
@@ -70,7 +70,7 @@ function onBought(product: MicrotransactionProductModel) {
 	if (type === 'joltbux') {
 		if (amount > 0) {
 			joltbuxBalance.value += amount;
-			message = $gettextInterpolate(`%{ amount } Joltbux have been added to your account`, {
+			message = $gettext(`%{ amount } Joltbux have been added to your account`, {
 				amount: formatNumber(amount),
 			});
 		}

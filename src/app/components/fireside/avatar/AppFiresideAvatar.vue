@@ -301,12 +301,10 @@ async function ejectFiresideFromCommunity(community: FiresideCommunityModel) {
 						<div class="-tooltip-row -tooltip-members">
 							<AppChatUserOnlineStatus is-online :size="12" :segment-width="1.5" />
 							{{
-								$gettextInterpolate(
-									$ngettext(
-										`%{ count } member`,
-										`%{ count } members`,
-										fireside.member_count
-									),
+								$ngettext(
+									`%{ count } member`,
+									`%{ count } members`,
+									fireside.member_count,
 									{ count: formatNumber(fireside.member_count || 0) }
 								)
 							}}

@@ -5,6 +5,7 @@ import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../_common/filters/number';
 import { BaseForm, FormOnSubmit } from '../../../../../../_common/form-vue/form.service';
 import { KeyGroupModel, KeyGroupType } from '../../../../../../_common/key-group/key-group.model';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 
 class Wrapper extends BaseForm<any> {}
 
@@ -83,10 +84,9 @@ export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements 
 		<AppExpand :when="serverErrors['num-keys']">
 			<div class="alert alert-notice">
 				{{
-					$gettextInterpolate(
-						`You can only have a max of %{ max } keys in a single key group.`,
-						{ max: formatNumber(20000) }
-					)
+					$gettext(`You can only have a max of %{ max } keys in a single key group.`, {
+						max: formatNumber(20000),
+					})
 				}}
 			</div>
 		</AppExpand>

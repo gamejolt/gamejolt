@@ -52,7 +52,7 @@ export default class RouteDashGamesManageGameMusic extends LegacyRouteComponent 
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate(`Manage Music for %{ game }`, {
+			return this.$gettext(`Manage Music for %{ game }`, {
 				game: this.game.title,
 			});
 		}

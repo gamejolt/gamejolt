@@ -2,7 +2,7 @@
 import { PropType, toRefs } from 'vue';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import { RealmModel } from '../../../_common/realm/realm-model';
-import { $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../components/lazy';
@@ -37,7 +37,7 @@ function onPostAdded(post: FiresidePostModel) {
 			v-if="realm && feed"
 			:realm="realm"
 			:placeholder="
-				$gettextInterpolate(`Post about %{ realm }!`, {
+				$gettext(`Post about %{ realm }!`, {
 					realm: realm.name,
 				})
 			"

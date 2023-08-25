@@ -7,7 +7,7 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { kThemeDarkest } from '../../../../_common/theme/variables';
-import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { styleWhen } from '../../../../_styles/mixins';
@@ -118,16 +118,16 @@ function onClickSendMessage() {
 
 async function onClickKick() {
 	const message = canMessage.value
-		? $gettextInterpolate(`Are you sure you want to kick %{ user } from the room?`, {
+		? $gettext(`Are you sure you want to kick %{ user } from the room?`, {
 				user: user.value.display_name,
 		  })
-		: $gettextInterpolate(
+		: $gettext(
 				`Are you sure you want to kick @%{ username } from this room? You're not friends with this user, so you won't be able to invite them back into this room.`,
 				{ username: user.value.username }
 		  );
 	const confirm = await showModalConfirm(
 		message,
-		$gettextInterpolate(`Kick @%{ username }`, { username: user.value.username })
+		$gettext(`Kick @%{ username }`, { username: user.value.username })
 	);
 
 	if (confirm) {
@@ -137,7 +137,7 @@ async function onClickKick() {
 
 async function onClickPromoteModerator() {
 	const result = await showModalConfirm(
-		$gettextInterpolate(
+		$gettext(
 			`Do you want to promote @%{ username } to moderator? They will be able to remove messages and kick users from the chat. You can demote them at any time.`,
 			{ username: user.value.username }
 		)
@@ -151,7 +151,7 @@ async function onClickPromoteModerator() {
 
 		if (payload.success && payload.role) {
 			showSuccessGrowl(
-				$gettextInterpolate(`@%{ username } has been promoted to moderator.`, {
+				$gettext(`@%{ username } has been promoted to moderator.`, {
 					username: user.value.username,
 				})
 			);
@@ -161,7 +161,7 @@ async function onClickPromoteModerator() {
 
 async function onClickDemoteModerator() {
 	const result = await showModalConfirm(
-		$gettextInterpolate(`Do you want to demote @%{ username } to a normal user?`, {
+		$gettext(`Do you want to demote @%{ username } to a normal user?`, {
 			username: user.value.username,
 		})
 	);
@@ -173,7 +173,7 @@ async function onClickDemoteModerator() {
 		);
 		if (payload.success && payload.role) {
 			showSuccessGrowl(
-				$gettextInterpolate(`@%{ username } is no longer a moderator.`, {
+				$gettext(`@%{ username } is no longer a moderator.`, {
 					username: user.value.username,
 				})
 			);

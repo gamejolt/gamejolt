@@ -19,11 +19,7 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import { kThemeBg, kThemeBgOffset } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import {
-	$gettext,
-	$gettextInterpolate,
-	$ngettext,
-} from '../../../../_common/translate/translate.service';
+import { $gettext, $ngettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { CommentThreadModal } from '../thread/modal.service';
 import { useCommentWidget } from '../widget/AppCommentWidget.vue';
@@ -71,22 +67,18 @@ const votingTooltip = computed(() => {
 		if (count === 1) {
 			return $gettext('You like this comment');
 		} else {
-			return $gettextInterpolate(
-				$ngettext(
-					'You and another person like this comment',
-					'You and %{ count } people like this comment',
-					count - 1
-				),
+			return $ngettext(
+				'You and another person like this comment',
+				'You and %{ count } people like this comment',
+				count - 1,
 				{ count: count - 1 }
 			);
 		}
 	} else {
-		return $gettextInterpolate(
-			$ngettext(
-				'One person likes this comment',
-				'%{ count } people like this comment',
-				count
-			),
+		return $ngettext(
+			'One person likes this comment',
+			'%{ count } people like this comment',
+			count,
 			{ count }
 		);
 	}
@@ -113,19 +105,19 @@ const ownerIndicatorTooltipText = computed(() => {
 	if (comment.value.has_owner_like && comment.value.has_owner_reply) {
 		return isOwner
 			? $gettext(`You liked this and replied`)
-			: $gettextInterpolate(`%{ username } liked this and replied`, {
+			: $gettext(`%{ username } liked this and replied`, {
 					username: resourceOwnerUsername,
 			  });
 	} else if (comment.value.has_owner_like) {
 		return isOwner
 			? $gettext(`You liked this`)
-			: $gettextInterpolate(`%{ username } liked this`, {
+			: $gettext(`%{ username } liked this`, {
 					username: resourceOwnerUsername,
 			  });
 	} else if (comment.value.has_owner_reply) {
 		return isOwner
 			? $gettext(`You replied to this`)
-			: $gettextInterpolate(`%{ username } replied`, {
+			: $gettext(`%{ username } replied`, {
 					username: resourceOwnerUsername,
 			  });
 	}

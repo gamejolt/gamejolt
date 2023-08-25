@@ -1,9 +1,9 @@
 <script lang="ts">
 import { computed } from 'vue';
-import { getQuery } from '../../../../utils/router';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCard from '../../../../_common/user/card/AppUserCard.vue';
+import { getQuery } from '../../../../utils/router';
 import { sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../RouteSearch.vue';
 
@@ -24,7 +24,7 @@ const { processPayload, hasSearch, searchPayload, query } = useSearchRouteContro
 
 createAppRoute({
 	routeTitle: computed(() =>
-		$gettextInterpolate(`Users matching "%{ query }"`, {
+		$gettext(`Users matching "%{ query }"`, {
 			query: query.value,
 		})
 	),

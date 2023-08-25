@@ -6,7 +6,7 @@ import { GameModel, unfollowGame } from '../../_common/game/game.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../_common/growls/growls.service';
 import { showModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Scroll } from '../../_common/scroll/scroll.service';
-import { $gettext, $gettextInterpolate } from '../../_common/translate/translate.service';
+import { $gettext } from '../../_common/translate/translate.service';
 import { arrayRemove } from '../../utils/array';
 import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
 import { GameCollectionModel } from '../components/game/collection/collection.model';
@@ -191,7 +191,7 @@ export async function libraryRemovePlaylist(store: LibraryStore, collection: Gam
 			router.replace({ name: 'library.overview' });
 
 			showSuccessGrowl(
-				$gettextInterpolate(
+				$gettext(
 					collection.isOwner
 						? $gettext(`%{ playlist } has been removed.`)
 						: $gettext(`You have unfollowed %{ playlist }.`),
@@ -222,7 +222,7 @@ export async function libraryAddGameToPlaylist(
 		await playlist.$addGame(game.id);
 
 		showSuccessGrowl(
-			$gettextInterpolate(`You've added %{ game } to %{ playlist }. Nice!`, {
+			$gettext(`You've added %{ game } to %{ playlist }. Nice!`, {
 				game: game.title,
 				playlist: playlist.name,
 			}),
@@ -261,7 +261,7 @@ export async function libraryRemoveGameFromPlaylist(
 		await playlist.$removeGame(game.id);
 
 		showSuccessGrowl(
-			$gettextInterpolate(`You have successfully removed %{ game } from %{ playlist }.`, {
+			$gettext(`You have successfully removed %{ game } from %{ playlist }.`, {
 				game: game.title,
 				playlist: playlist.name,
 			}),
@@ -278,7 +278,7 @@ export async function libraryRemoveGameFromPlaylist(
 
 export async function libraryUnfollowGame(_store: LibraryStore, game: GameModel) {
 	const result = await showModalConfirm(
-		$gettextInterpolate(`Are you sure you want to stop following %{ game }?`, {
+		$gettext(`Are you sure you want to stop following %{ game }?`, {
 			game: game.title,
 		})
 	);
@@ -292,7 +292,7 @@ export async function libraryUnfollowGame(_store: LibraryStore, game: GameModel)
 		await unfollowGame(game);
 
 		showSuccessGrowl(
-			$gettextInterpolate(
+			$gettext(
 				`You have stopped following %{ game } and will no longer receive notifications about it.`,
 				{ game: game.title }
 			),

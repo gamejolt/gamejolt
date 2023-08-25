@@ -5,7 +5,7 @@ import { Api } from '../../../_common/api/api.service';
 import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import { GameModel } from '../../../_common/game/game.model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import AppInvalidKey from '../../components/AppInvalidKey.vue';
 import FormRetrieve from '../../components/forms/FormRetrieve.vue';
 
@@ -71,7 +71,7 @@ const router = useRouter();
 createAppRoute({
 	routeTitle: computed(() => {
 		if (resourceTitle.value) {
-			return $gettextInterpolate(`Retrieve Your Keys for %{ resource }`, {
+			return $gettext(`Retrieve Your Keys for %{ resource }`, {
 				resource: resourceTitle.value,
 			});
 		}
@@ -121,7 +121,7 @@ function onSubmit() {
 				</template>
 				<template v-else>
 					{{
-						$gettextInterpolate(`Retrieve Your Keys for %{ resource }`, {
+						$gettext(`Retrieve Your Keys for %{ resource }`, {
 							resource: resourceTitle,
 						})
 					}}

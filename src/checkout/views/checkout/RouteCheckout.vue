@@ -17,7 +17,7 @@ import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/ro
 import { Screen } from '../../../_common/screen/screen-service';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { kThemeFgMuted } from '../../../_common/theme/variables';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { styleFlexCenter, styleMaxWidthForOptions } from '../../../_styles/mixins';
 import { kFontFamilyDisplay, kLineHeightComputed } from '../../../_styles/variables';
 import FormPayment from '../../components/forms/FormPayment.vue';
@@ -51,12 +51,12 @@ const routeTitle = computed(() => {
 	const orderItem = order.value.items[0];
 	if (orderItem.sellable) {
 		if (order.value.items.length > 1) {
-			return $gettextInterpolate('Buy %{ title } and %{ num } other(s)', {
+			return $gettext('Buy %{ title } and %{ num } other(s)', {
 				title: orderItem.sellable.title,
 				num: order.value.items.length - 1,
 			});
 		} else {
-			return $gettextInterpolate('Buy %{ title }', {
+			return $gettext('Buy %{ title }', {
 				title: orderItem.sellable.title,
 			});
 		}

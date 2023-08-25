@@ -2,7 +2,7 @@
 import { formatDistanceStrict, formatDistanceToNow } from 'date-fns';
 import { onUnmounted, ref, toRefs, watch } from 'vue';
 import { formatDate } from '../filters/date';
-import { $gettextInterpolate } from '../translate/translate.service';
+import { $gettext } from '../translate/translate.service';
 
 const props = defineProps({
 	date: {
@@ -48,9 +48,9 @@ function _refresh() {
 	if (withoutSuffix.value) {
 		timeAgo.value = time;
 	} else if (isFuture.value) {
-		timeAgo.value = $gettextInterpolate('%{ time } left', { time });
+		timeAgo.value = $gettext('%{ time } left', { time });
 	} else {
-		timeAgo.value = $gettextInterpolate('%{ time } ago', { time });
+		timeAgo.value = $gettext('%{ time } ago', { time });
 	}
 
 	// In minutes.

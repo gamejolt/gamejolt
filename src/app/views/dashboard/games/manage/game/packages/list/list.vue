@@ -71,7 +71,7 @@ export default class RouteDashGamesManageGamePackagesList extends LegacyRouteCom
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Manage Packages for %{ game }', {
+			return this.$gettext('Manage Packages for %{ game }', {
 				game: this.game.title,
 			});
 		}

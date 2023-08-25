@@ -8,7 +8,7 @@ import AppStickerPack, {
 	StickerPackExpiryStyles,
 } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { kBorderRadiusLg } from '../../../../../_styles/variables';
 import AppProductCurrencyTags from './AppProductCurrencyTags.vue';
@@ -92,7 +92,7 @@ const readableEndsOn = computed(() => {
 		precision: 'rough',
 		nowText: $gettext(`No longer for sale`),
 		timeTransformer(time) {
-			return $gettextInterpolate(`%{ time } left to purchase`, { time });
+			return $gettext(`%{ time } left to purchase`, { time });
 		},
 	});
 });

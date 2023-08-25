@@ -65,7 +65,7 @@ export default class RouteDashGamesManageGameOverview extends LegacyRouteCompone
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Manage %{ game }', {
+			return this.$gettext('Manage %{ game }', {
 				game: this.game.title,
 			});
 		}

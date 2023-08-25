@@ -410,7 +410,7 @@ const currencyCardImgStyles: CSSProperties = {
 												}"
 											>
 												{{
-													$gettextInterpolate(`Get %{ label }`, {
+													$gettext(`Get %{ label }`, {
 														label: currency.label,
 													})
 												}}

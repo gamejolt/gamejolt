@@ -7,7 +7,7 @@ import { showSuccessGrowl } from '../../../growls/growls.service';
 import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
 import AppTranslate from '../../../translate/AppTranslate.vue';
-import { $gettext, $gettextInterpolate } from '../../../translate/translate.service';
+import { $gettext } from '../../../translate/translate.service';
 import { GameBuildModel, GameBuildType } from '../../build/build.model';
 import { GameDownloader } from '../../downloader/downloader.service';
 import type { GameModel } from '../../game.model';
@@ -72,10 +72,9 @@ function bought() {
 
 	showSuccessGrowl({
 		title: $gettext('Order Complete'),
-		message: $gettextInterpolate(
-			'Warm thanks from both %{ developer } and the Game Jolt team.',
-			{ developer: game.value.developer.display_name }
-		),
+		message: $gettext('Warm thanks from both %{ developer } and the Game Jolt team.', {
+			developer: game.value.developer.display_name,
+		}),
 		sticky: true,
 	});
 

@@ -471,7 +471,7 @@ async function _getTax() {
 			:disabled="!form.valid"
 		>
 			{{
-				$gettextInterpolate(`Pay %{ amount }`, {
+				$gettext(`Pay %{ amount }`, {
 					amount: formatCurrency(order.amount + taxAmount),
 				})
 			}}

@@ -28,7 +28,7 @@ import { StickerPackOpenModal } from '../../../../../_common/sticker/pack/open-m
 import { UserStickerPackModel } from '../../../../../_common/sticker/pack/user-pack.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserAvatarFrameModel } from '../../../../../_common/user/user-avatar/frame/frame.model';
 import {
@@ -73,7 +73,7 @@ export async function purchaseShopProduct({
 
 	if (!pricing || !canAffordCurrency(currency.id, pricing.price, balanceRefs)) {
 		showErrorGrowl(
-			$gettextInterpolate(`You don't have enough %{ label } to purchase this product.`, {
+			$gettext(`You don't have enough %{ label } to purchase this product.`, {
 				label: currency.label,
 			})
 		);
@@ -198,7 +198,7 @@ function checkTimeRemaining(endsOn: number) {
 		return;
 	}
 
-	timeRemaining.value = $gettextInterpolate(`Limited time to purchase: %{ time }`, {
+	timeRemaining.value = $gettext(`Limited time to purchase: %{ time }`, {
 		time: shorthandReadableTime(endsOn, {
 			nowText: '0s',
 			precision: 'exact',

@@ -32,7 +32,7 @@ export default class RouteDashGamesManageGameDescription extends LegacyRouteComp
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Edit Description for %{ game }', {
+			return this.$gettext('Edit Description for %{ game }', {
 				game: this.game.title,
 			});
 		}
