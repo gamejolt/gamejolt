@@ -111,6 +111,22 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 				</a>
 			</AppShellCbarItem>
 
+			<!-- Atlas -->
+			<AppShellCbarItem
+				class="-control"
+				:highlight="highlight"
+				:is-active="visibleLeftPane === 'atlas'"
+				is-control
+			>
+				<a
+					v-app-tooltip.right="$gettext(`Atlas`)"
+					class="-control-item"
+					@click="trackAndTogglePane('atlas')"
+				>
+					<AppJolticon class="-control-icon" icon="sparkles" />
+				</a>
+			</AppShellCbarItem>
+
 			<!-- Library -->
 			<AppShellCbarItem
 				class="-control"

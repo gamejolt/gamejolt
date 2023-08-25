@@ -12,6 +12,7 @@ const AppShellSidebarLibrary = defineAsyncComponent(() => import('./AppShellSide
 const AppShellSidebarMobile = defineAsyncComponent(() => import('./AppShellSidebarMobile.vue'));
 const AppShellSidebarQuests = defineAsyncComponent(() => import('./AppShellSidebarQuests.vue'));
 const AppShellSidebarChat = defineAsyncComponent(() => import('./AppShellSidebarChat.vue'));
+const AppShellSidebarAtlas = defineAsyncComponent(() => import('./AppShellSidebarAtlas.vue'));
 
 const { visibleLeftPane, checkBackdrop, toggleLeftPane } = useAppStore();
 const { user } = useCommonStore();
@@ -48,6 +49,7 @@ watch(
 		<AppShellSidebarMobile v-else-if="visibleLeftPane === 'mobile'" />
 		<AppShellSidebarBackpack v-else-if="visibleLeftPane === 'backpack'" />
 		<AppShellSidebarQuests v-else-if="visibleLeftPane === 'quests'" />
+		<AppShellSidebarAtlas v-else-if="visibleLeftPane === 'atlas'" />
 	</component>
 </template>
 
