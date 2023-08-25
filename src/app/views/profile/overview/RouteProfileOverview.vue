@@ -869,7 +869,7 @@ async function onFriendRequestReject() {
 								<div class="alert">
 									<p>
 										{{
-											$gettextInterpolate(
+											$gettext(
 												`Friend request to %{ username } pending acceptance.`,
 												{
 													username:
@@ -891,7 +891,7 @@ async function onFriendRequestReject() {
 								<div class="alert">
 									<p>
 										{{
-											$gettextInterpolate(
+											$gettext(
 												`%{ username } would like to be your friend.`,
 												{
 													username: '@' + userFriendship.user.username,

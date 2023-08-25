@@ -2,7 +2,7 @@ import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/gro
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../_common/payload/payload-service';
 import { commonStore } from '../../../../_common/store/common-store';
-import { Translate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserFriendshipModel } from '../../../../_common/user/friendship/friendship.model';
 import { UserModel } from '../../../../_common/user/user.model';
 
@@ -14,16 +14,16 @@ export class UserFriendshipHelper {
 			await request.$save();
 
 			showSuccessGrowl(
-				Translate.$gettextInterpolate(
+				$gettext(
 					`A friend request has been sent to @%{ username }. You'll be notified when they accept.`,
 					{ username: request.target_user.username }
 				),
-				Translate.$gettext(`Request Sent`)
+				$gettext(`Request Sent`)
 			);
 
 			return request;
 		} catch (e) {
-			showErrorGrowl(Translate.$gettext(`Friend request could not be sent.`));
+			showErrorGrowl($gettext(`Friend request could not be sent.`));
 			throw e;
 		}
 	}
@@ -40,15 +40,15 @@ export class UserFriendshipHelper {
 			await request.$accept();
 
 			showSuccessGrowl(
-				Translate.$gettextInterpolate(`You are now friends with @%{ username }!`, {
+				$gettext(`You are now friends with @%{ username }!`, {
 					username: request.user.username,
 				}),
-				Translate.$gettext(`Request Accepted`)
+				$gettext(`Request Accepted`)
 			);
 
 			return true;
 		} catch (e) {
-			showErrorGrowl(Translate.$gettext(`Unable to accept friend request.`));
+			showErrorGrowl($gettext(`Unable to accept friend request.`));
 
 			if (Payload.hasFormError(e, 'friendship-not-found')) {
 				return false;
@@ -60,7 +60,7 @@ export class UserFriendshipHelper {
 
 	static async cancelRequest(request: UserFriendshipModel) {
 		const confirmResult = await showModalConfirm(
-			Translate.$gettextInterpolate(`Cancel the friend request you sent to @%{ username }?`, {
+			$gettext(`Cancel the friend request you sent to @%{ username }?`, {
 				username: request.target_user.username,
 			})
 		);
@@ -73,25 +73,22 @@ export class UserFriendshipHelper {
 			const response = await request.$remove();
 
 			showSuccessGrowl(
-				Translate.$gettextInterpolate(
-					`Your friend request to @%{ username } was canceled.`,
-					{
-						username: request.target_user.username,
-					}
-				),
-				Translate.$gettext(`Request Canceled`)
+				$gettext(`Your friend request to @%{ username } was canceled.`, {
+					username: request.target_user.username,
+				}),
+				$gettext(`Request Canceled`)
 			);
 
 			return response;
 		} catch (e) {
-			showErrorGrowl(Translate.$gettext(`Unable to cancel friend request.`));
+			showErrorGrowl($gettext(`Unable to cancel friend request.`));
 			throw e;
 		}
 	}
 
 	static async rejectRequest(request: UserFriendshipModel) {
 		const confirmResult = await showModalConfirm(
-			Translate.$gettextInterpolate(`Dismiss the friend request from @%{ username }?`, {
+			$gettext(`Dismiss the friend request from @%{ username }?`, {
 				username: request.user.username,
 			})
 		);
@@ -104,16 +101,15 @@ export class UserFriendshipHelper {
 			const response = await request.$remove();
 
 			showSuccessGrowl(
-				Translate.$gettextInterpolate(
-					`You have dismissed the friend request from @%{ username }.`,
-					{ username: request.user.username }
-				),
-				Translate.$gettext(`Request Dismissed`)
+				$gettext(`You have dismissed the friend request from @%{ username }.`, {
+					username: request.user.username,
+				}),
+				$gettext(`Request Dismissed`)
 			);
 
 			return response;
 		} catch (e) {
-			showErrorGrowl(Translate.$gettext(`Unable to dismiss friend request.`));
+			showErrorGrowl($gettext(`Unable to dismiss friend request.`));
 			throw e;
 		}
 	}
@@ -122,7 +118,7 @@ export class UserFriendshipHelper {
 		const them = friendship.getThem(commonStore.user.value!);
 
 		const confirmResult = await showModalConfirm(
-			Translate.$gettextInterpolate(`Remove @%{ username } as a friend?`, {
+			$gettext(`Remove @%{ username } as a friend?`, {
 				username: them.username,
 			})
 		);
@@ -135,15 +131,15 @@ export class UserFriendshipHelper {
 			const response = await friendship.$remove();
 
 			showSuccessGrowl(
-				Translate.$gettextInterpolate(`@%{ username } is no longer your friend.`, {
+				$gettext(`@%{ username } is no longer your friend.`, {
 					username: them.username,
 				}),
-				Translate.$gettext('Friend Removed')
+				$gettext('Friend Removed')
 			);
 
 			return response;
 		} catch (e) {
-			showErrorGrowl(Translate.$gettext('Unable to remove friend.'));
+			showErrorGrowl($gettext('Unable to remove friend.'));
 			throw e;
 		}
 	}

@@ -81,7 +81,7 @@ onMounted(async () => {
 					animationDelay: `300ms`,
 				}"
 			>
-				{{ $gettextInterpolate(`Level %{ level }`, { level: level.level }) }}
+				{{ $gettext(`Level %{ level }`, { level: level.level }) }}
 			</div>
 
 			<AppSpacer vertical :scale="4" />

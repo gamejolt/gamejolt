@@ -44,7 +44,7 @@ import {
 	CommentThreadModal,
 	CommentThreadModalPermalinkDeregister,
 } from '../../../../../components/comment/thread/modal.service';
-import AppGameCommunityBadge from '../../../../../components/game/community-badge/community-badge.vue';
+import AppGameCommunityBadge from '../../../../../components/game/community-badge/AppGameCommunityBadge.vue';
 import AppGameList from '../../../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../../../components/game/list/placeholder/placeholder.vue';
 import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
@@ -130,7 +130,7 @@ export default class RouteDiscoverGamesViewOverview extends LegacyRouteComponent
 
 	get routeTitle() {
 		if (this.game) {
-			let title = this.$gettextInterpolate('%{ gameTitle } by %{ user }', {
+			let title = this.$gettext('%{ gameTitle } by %{ user }', {
 				gameTitle: this.game.title,
 				user: this.game.developer.display_name,
 			});

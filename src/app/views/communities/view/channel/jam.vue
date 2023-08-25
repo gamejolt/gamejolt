@@ -129,7 +129,7 @@ export default class RouteCommunitiesViewChannelJam extends LegacyRouteComponent
 	}
 
 	get routeTitle() {
-		return this.$gettextInterpolate(`%{ channel } - %{ name } Community on Game Jolt`, {
+		return this.$gettext(`%{ channel } - %{ name } Community on Game Jolt`, {
 			name: this.community.name,
 			channel: this.channel?.displayTitle || '',
 		});

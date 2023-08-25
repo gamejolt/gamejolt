@@ -107,12 +107,9 @@ export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 			return null;
 		}
 
-		return this.$gettextInterpolate(
-			`%{ name } Community - Fan art, videos, guides, polls and more`,
-			{
-				name: this.community.name,
-			}
-		);
+		return this.$gettext(`%{ name } Community - Fan art, videos, guides, polls and more`, {
+			name: this.community.name,
+		});
 	}
 
 	get canAcceptCollaboration() {

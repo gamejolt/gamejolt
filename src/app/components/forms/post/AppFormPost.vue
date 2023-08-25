@@ -56,7 +56,7 @@ import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { arrayRemove } from '../../../../utils/array';
 import AppContentTargets from '../../content/AppContentTargets.vue';
@@ -1055,7 +1055,7 @@ function _getMatchingBackgroundIdFromPref() {
 						<AppFormControl
 							type="text"
 							:validators="[validateMaxLength(64)]"
-							:placeholder="$gettextInterpolate('Choice %{ num }', { num: i })"
+							:placeholder="$gettext('Choice %{ num }', { num: i })"
 							:disabled="!isPollEditable"
 						/>
 

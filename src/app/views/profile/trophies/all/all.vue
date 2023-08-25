@@ -33,7 +33,7 @@ export default class RouteProfileTrophiesAll extends LegacyRouteComponent {
 
 	get routeTitle() {
 		if (this.user) {
-			return this.$gettextInterpolate(`@%{ user }'s achieved Trophies`, {
+			return this.$gettext(`@%{ user }'s achieved Trophies`, {
 				user: this.user.username,
 			});
 		}

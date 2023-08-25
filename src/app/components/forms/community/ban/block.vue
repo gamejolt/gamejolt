@@ -7,6 +7,7 @@ import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFo
 import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import {
 	getCommunityBlockReasons,
 	REASON_OTHER,
@@ -42,12 +43,12 @@ export default class FormCommunityBlock extends mixins(Wrapper) implements FormO
 
 	get expiryOptions() {
 		return {
-			hour: this.$gettext('1 Hour'),
-			day: this.$gettext('1 Day'),
-			week: this.$gettext('1 Week'),
-			month: this.$gettext('1 Month'),
-			year: this.$gettext('1 Year'),
-			never: this.$gettext('Never'),
+			hour: $gettext('1 Hour'),
+			day: $gettext('1 Day'),
+			week: $gettext('1 Week'),
+			month: $gettext('1 Month'),
+			year: $gettext('1 Year'),
+			never: $gettext('Never'),
 		};
 	}
 
@@ -82,8 +83,8 @@ export default class FormCommunityBlock extends mixins(Wrapper) implements FormO
 		if (!response.success) {
 			if (response.errors.collaborator) {
 				showErrorGrowl({
-					title: this.$gettext('Collaborators cannot be blocked'),
-					message: this.$gettextInterpolate(
+					title: $gettext('Collaborators cannot be blocked'),
+					message: $gettext(
 						'%{ user } is a Collaborator on this Community. Remove them from the collaborators list first to block them.',
 						{ user: this.formModel.username }
 					),
@@ -100,9 +101,9 @@ export default class FormCommunityBlock extends mixins(Wrapper) implements FormO
 			}
 
 			if (this.formModel.ejectPosts) {
-				const whatsRemoved = this.$gettext('posts');
+				const whatsRemoved = $gettext('posts');
 
-				const message = this.$gettextInterpolate(
+				const message = $gettext(
 					'%{ user } was blocked from this Community. It might take a few moments for their %{ stuff } to disappear.',
 					{
 						user: this.formModel.username,
@@ -111,18 +112,15 @@ export default class FormCommunityBlock extends mixins(Wrapper) implements FormO
 				);
 
 				showSuccessGrowl({
-					message: this.$gettextInterpolate(message, {
+					message: $gettext(message, {
 						user: this.formModel.username,
 					}),
 				});
 			} else {
 				showSuccessGrowl({
-					message: this.$gettextInterpolate(
-						'%{ user } was blocked from this Community.',
-						{
-							user: this.formModel.username,
-						}
-					),
+					message: $gettext('%{ user } was blocked from this Community.', {
+						user: this.formModel.username,
+					}),
 				});
 			}
 		}

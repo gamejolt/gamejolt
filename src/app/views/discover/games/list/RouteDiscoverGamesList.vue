@@ -13,7 +13,7 @@ import {
 } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { arrayShuffle } from '../../../../../utils/array';
 import { RouteLocationRedirect, getParam } from '../../../../../utils/router';
 import { titleCase } from '../../../../../utils/string';
@@ -75,14 +75,14 @@ const listTitle = computed(() => {
 	}
 
 	if (date.value) {
-		return $gettextInterpolate(`Games published on %{ date }`, {
+		return $gettext(`Games published on %{ date }`, {
 			date: date.value,
 		});
 	}
 
 	const onlyFree = filtering.value && filtering.value.getFilter('price') === 'free';
 
-	const title = $gettextInterpolate(`%{ listOf } %{ free } %{ gamesType }`, {
+	const title = $gettext(`%{ listOf } %{ free } %{ gamesType }`, {
 		listOf: displayListOf.value,
 		free: onlyFree ? $gettext(`free`) : '',
 		gamesType: displayGamesType.value,
@@ -130,7 +130,7 @@ const displayGamesType = computed(() => {
 		case 'roguelike':
 			return $gettext(`roguelike games`);
 		default:
-			return $gettextInterpolate(`%{ category } games`, {
+			return $gettext(`%{ category } games`, {
 				category: tag.value,
 			});
 	}
@@ -142,29 +142,23 @@ const displayGamesType = computed(() => {
  */
 const listDescription = computed(() => {
 	if (!section.value) {
-		return $gettextInterpolate(
-			`Browse our featured list of %{ gamesType }, curated by Game Jolt.`,
-			{
-				gamesType: displayGamesType.value,
-			}
-		);
+		return $gettext(`Browse our featured list of %{ gamesType }, curated by Game Jolt.`, {
+			gamesType: displayGamesType.value,
+		});
 	} else if (section.value === 'new') {
-		return $gettextInterpolate(`Find the newest %{ gamesType } on Game Jolt.`, {
+		return $gettext(`Find the newest %{ gamesType } on Game Jolt.`, {
 			gamesType: displayGamesType.value,
 		});
 	} else if (section.value === 'hot') {
-		return $gettextInterpolate(`Find the hottest trending %{ gamesType } on Game Jolt.`, {
+		return $gettext(`Find the hottest trending %{ gamesType } on Game Jolt.`, {
 			gamesType: displayGamesType.value,
 		});
 	} else if (section.value === 'best') {
-		return $gettextInterpolate(
-			`Find the best %{ gamesType }, top rated by our community on Game Jolt.`,
-			{
-				gamesType: displayGamesType.value,
-			}
-		);
+		return $gettext(`Find the best %{ gamesType }, top rated by our community on Game Jolt.`, {
+			gamesType: displayGamesType.value,
+		});
 	} else if (section.value === 'worst') {
-		return $gettextInterpolate(`The worst %{ gamesType } decided by the Game Jolt community.`, {
+		return $gettext(`The worst %{ gamesType } decided by the Game Jolt community.`, {
 			gamesType: displayGamesType.value,
 		});
 	}
@@ -187,13 +181,10 @@ const routeMeta = computed(() => {
 		.map(game => game.title)
 		.join(', ');
 
-	const descriptionStats = $gettextInterpolate(
-		`Discover over %{ count } games like %{ gameTitles }`,
-		{
-			count,
-			gameTitles,
-		}
-	);
+	const descriptionStats = $gettext(`Discover over %{ count } games like %{ gameTitles }`, {
+		count,
+		gameTitles,
+	});
 
 	return `${listDescription.value} ${descriptionStats}`;
 });

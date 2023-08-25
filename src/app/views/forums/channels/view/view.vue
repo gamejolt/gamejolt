@@ -69,7 +69,7 @@ export default class RouteForumsChannelsView extends LegacyRouteComponent {
 
 	get routeTitle() {
 		if (this.channel) {
-			return this.$gettextInterpolate(`%{ channel } Forum`, {
+			return this.$gettext(`%{ channel } Forum`, {
 				channel: '#' + this.channel.name,
 			});
 		}

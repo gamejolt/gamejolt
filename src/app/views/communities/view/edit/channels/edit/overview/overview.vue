@@ -77,7 +77,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends LegacyRout
 		}
 
 		const result = await showModalConfirm(
-			this.$gettextInterpolate(`Are you sure you want to archive the channel %{ channel }?`, {
+			this.$gettext(`Are you sure you want to archive the channel %{ channel }?`, {
 				channel: this.channel.displayTitle,
 			})
 		);
@@ -97,7 +97,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends LegacyRout
 
 	async onClickUnarchive() {
 		const result = await showModalConfirm(
-			this.$gettextInterpolate(
+			this.$gettext(
 				`Are you sure you want to restore the channel %{ channel } from the archive?`,
 				{
 					channel: this.channel.displayTitle,

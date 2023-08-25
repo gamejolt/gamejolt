@@ -60,7 +60,7 @@ export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
 
 	get routeTitle() {
 		if (this.user) {
-			return this.$gettextInterpolate(`@%{ user }'s Trophy Case`, {
+			return this.$gettext(`@%{ user }'s Trophy Case`, {
 				user: this.user.username,
 			});
 		}

@@ -115,7 +115,7 @@ export default class RouteCommunitiesViewEditBlocks extends LegacyRouteComponent
 
 	async onClickLift(block: UserBlockModel) {
 		const response = await showModalConfirm(
-			this.$gettextInterpolate(
+			this.$gettext(
 				'Do you really want to lift the block for the user @%{ username } early? The reason they were blocked: %{ reason }',
 				{ username: block.user.username, reason: block.reason }
 			),

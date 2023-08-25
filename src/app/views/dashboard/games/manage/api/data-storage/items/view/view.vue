@@ -37,7 +37,7 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends LegacyR
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Item Details - %{ game }', {
+			return this.$gettext('Item Details - %{ game }', {
 				game: this.game.title,
 			});
 		}

@@ -15,7 +15,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext, Translate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 
@@ -99,11 +99,10 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 			this.accounts = LinkedAccountModel.populate(response.accounts);
 			const providerName = getLinkedAccountProviderDisplayName(provider);
 			showSuccessGrowl(
-				Translate.$gettextInterpolate(
-					`Your %{ provider } account has been unlinked from the site.`,
-					{ provider: providerName }
-				),
-				Translate.$gettext('Account Unlinked')
+				$gettext(`Your %{ provider } account has been unlinked from the site.`, {
+					provider: providerName,
+				}),
+				$gettext('Account Unlinked')
 			);
 		} else {
 			// If they don't have a password, we have to show them a modal to set it.
@@ -115,14 +114,14 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 				}
 
 				showSuccessGrowl(
-					this.$gettext('Your new password has been set. You can now log in with it.'),
-					this.$gettext('Password Set')
+					$gettext('Your new password has been set. You can now log in with it.'),
+					$gettext('Password Set')
 				);
 
 				// Try to unlink again once they've set one!
 				await this.onUnlink(provider);
 			} else {
-				showErrorGrowl(this.$gettext('Failed to unlink account from the site.'));
+				showErrorGrowl($gettext('Failed to unlink account from the site.'));
 			}
 		}
 		this.loading = false;

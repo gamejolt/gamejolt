@@ -85,7 +85,7 @@ export default class RouteDashAccountBlocks extends LegacyRouteComponent {
 
 	async onClickUnblock(block: UserBlockModel) {
 		const confirm = await showModalConfirm(
-			this.$gettextInterpolate(`Are you sure you want to unblock %{ name }?`, {
+			this.$gettext(`Are you sure you want to unblock %{ name }?`, {
 				name: block.user.display_name,
 			}),
 			this.$gettext(`Unblock user`)
@@ -101,7 +101,7 @@ export default class RouteDashAccountBlocks extends LegacyRouteComponent {
 		}
 
 		showSuccessGrowl(
-			this.$gettextInterpolate('Unblocked %{ name }!', {
+			this.$gettext('Unblocked %{ name }!', {
 				name: block.user.display_name,
 			})
 		);

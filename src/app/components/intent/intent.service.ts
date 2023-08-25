@@ -1,6 +1,6 @@
 import { RouteLocationNormalized } from 'vue-router';
 import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { locationRedirectFromRoute } from '../../../utils/router';
 
 export interface Intent {
@@ -42,7 +42,7 @@ export class IntentService {
 			} else if (approveLoginError === 'already-rejected') {
 				showErrorGrowl({
 					sticky: true,
-					message: $gettextInterpolate(
+					message: $gettext(
 						`The device you're logging in from has been blocked. If you did not do this, or blocked the login by mistake, contact us at %{ email } right away. Your account may be compromised.`,
 						{ email: 'contact@gamejolt.com' }
 					),
@@ -66,7 +66,7 @@ export class IntentService {
 			} else if (rejectLoginError === 'already-approved') {
 				showErrorGrowl({
 					sticky: true,
-					message: $gettextInterpolate(
+					message: $gettext(
 						`The device you're logging in from has already been approved. If you did not do this, or blocked the login by mistake, contact us at %{ email } right away. Your account may be compromised.`,
 						{ email: 'contact@gamejolt.com' }
 					),

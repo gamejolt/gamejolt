@@ -28,7 +28,7 @@ import { Screen } from '../../../screen/screen-service';
 import { SellableModel, SellableType } from '../../../sellable/sellable.model';
 import { useCommonStore } from '../../../store/common-store';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
-import { $gettext, $gettextInterpolate } from '../../../translate/translate.service';
+import { $gettext } from '../../../translate/translate.service';
 import { GameBuildModel } from '../../build/build.model';
 import { GameModel } from '../../game.model';
 import { GamePackageModel } from '../package.model';
@@ -97,7 +97,7 @@ const _minOrderAmount = computed(() =>
 const formattedAmount = computed(() => formatCurrency(pricing.value.amount));
 
 const minOrderMessage = computed(() =>
-	$gettextInterpolate(
+	$gettext(
 		`Because of payment processing fees, we are not able to sell this game for less than %{ amount }. You can click the link below to grab the download for free, though!`,
 		{ amount: formatCurrency(minOrderAmount.value) }
 	)
@@ -391,14 +391,14 @@ async function doCheckout(setupData: any, chargeData: any) {
 			<p v-if="isNameYourPrice">
 				<template v-if="!pricing.amount">
 					{{
-						$gettextInterpolate(`Show %{ developer } some love by supporting them!`, {
+						$gettext(`Show %{ developer } some love by supporting them!`, {
 							developer: game.developer.display_name,
 						})
 					}}
 				</template>
 				<template v-else>
 					{{
-						$gettextInterpolate(
+						$gettext(
 							`This developer suggests paying %{ amount }, but you're able to pay what you want!`,
 							{ amount: formattedAmount }
 						)
@@ -407,7 +407,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 			</p>
 			<p v-else>
 				{{
-					$gettextInterpolate(
+					$gettext(
 						`The developer has set the price of this game to %{ amount }, but you're able to support them by giving more!`,
 						{ amount: formattedAmount }
 					)
@@ -444,7 +444,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 
 							<span v-if="!isNameYourPrice" class="text-muted">
 								{{
-									$gettextInterpolate(`(%{ amount } or more)`, {
+									$gettext(`(%{ amount } or more)`, {
 										amount: formattedAmount,
 									})
 								}}

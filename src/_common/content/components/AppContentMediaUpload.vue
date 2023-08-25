@@ -117,8 +117,8 @@ async function _doUpload(file: File) {
 	// 	const maxFilesize = sizePayload.maxFilesize;
 
 	// 	Growls.error({
-	// 		title: this.$gettext('Oh no!'),
-	// 		message: this.$gettextInterpolate(
+	// 		title: $gettext('Oh no!'),
+	// 		message: $gettext(
 	// 			"It looks like your image's filesize or dimensions are too large. Its filesize must be less than %{ filesize } and its dimensions less than %{ width }×%{ height }",
 	// 			{ width: maxWidth, height: maxHeight, size: maxFilesize }
 	// 		),

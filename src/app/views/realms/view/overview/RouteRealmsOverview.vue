@@ -10,7 +10,7 @@ import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
-import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { kLineHeightComputed } from '../../../../../_styles/variables';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
@@ -64,7 +64,7 @@ const displayablePreviewFiresides = computed(() => {
 const appRoute = createAppRoute({
 	routeTitle: computed(() =>
 		realm.value
-			? $gettextInterpolate(`%{ realm } Realm - Art, videos, guides, polls and more`, {
+			? $gettext(`%{ realm } Realm - Art, videos, guides, polls and more`, {
 					realm: realm.value.name,
 			  })
 			: null
@@ -151,7 +151,7 @@ function onPostAdded(post: FiresidePostModel) {
 			v-if="realm"
 			:realm="realm"
 			:placeholder="
-				$gettextInterpolate(`Post about %{ realm }!`, {
+				$gettext(`Post about %{ realm }!`, {
 					realm: realm.name,
 				})
 			"

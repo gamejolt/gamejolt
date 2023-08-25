@@ -2,6 +2,7 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { showInfoGrowl } from '../../growls/growls.service';
 import { BaseModal } from '../../modal/base';
+import { $gettext } from '../../translate/translate.service';
 import { UserModel } from '../../user/user.model';
 import AppBlockForm from '../form/form.vue';
 
@@ -16,10 +17,10 @@ export default class AppReportModal extends mixins(BaseModal) {
 
 	onSubmittedBlock() {
 		showInfoGrowl(
-			this.$gettextInterpolate(`You blocked %{ user }!`, {
+			$gettext(`You blocked %{ user }!`, {
 				user: this.user.username,
 			}),
-			this.$gettext('Blocked')
+			$gettext('Blocked')
 		);
 
 		this.modal.resolve(true);

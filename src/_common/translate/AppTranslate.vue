@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, useSlots } from 'vue';
 import { uuidv4 } from '../../utils/uuid';
-import { $gettextInterpolate, getTranslation } from './translate.service';
+import { getTranslation, interpolateTranslation, TranslationContext } from './translate.service';
 
 const props = defineProps({
 	tag: {
@@ -17,7 +17,7 @@ const props = defineProps({
 		default: undefined,
 	},
 	translateParams: {
-		type: Object as PropType<Record<string, any>>,
+		type: Object as PropType<TranslationContext>,
 		default: undefined,
 	},
 	translateComment: {
@@ -53,7 +53,7 @@ const translation = computed(() => {
 		return str;
 	}
 
-	return $gettextInterpolate(str, props.translateParams);
+	return interpolateTranslation(str, props.translateParams, {});
 });
 
 // TODO(vue3): we should see if we can get rid of this now with vue3

@@ -13,7 +13,7 @@ import {
 import { QuestNotificationModel } from '../../../_common/quest/quest-notification-model';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { addNewQuestIds, addQuestActivityIds } from '../../store/quest';
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
@@ -356,7 +356,7 @@ export function createGridNotificationChannel(
 
 		showInfoGrowl({
 			title: $gettext(`New Featured Fireside!`),
-			message: $gettextInterpolate(
+			message: $gettext(
 				`@%{ username }'s fireside %{ firesideTitle } was featured in %{ communityName }!`,
 				{
 					username: fireside.user.username,

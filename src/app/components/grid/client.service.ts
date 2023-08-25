@@ -26,7 +26,7 @@ import {
 } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { getTrophyImg } from '../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
@@ -377,7 +377,7 @@ export class GridClient {
 						username = notification.action_model.game.developer.username;
 					}
 
-					title = $gettextInterpolate(`New Post by @%{ username }`, {
+					title = $gettext(`New Post by @%{ username }`, {
 						username,
 					});
 				} else {

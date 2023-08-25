@@ -72,12 +72,9 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 		}
 
 		// {{ type }} contains the translated media item type (image/video/sketchfab)
-		const message = this.$gettextInterpolate(
-			'Are you sure you want to remove this %{ type }?',
-			{
-				type: typeLabel,
-			}
-		);
+		const message = this.$gettext('Are you sure you want to remove this %{ type }?', {
+			type: typeLabel,
+		});
 
 		const result = await showModalConfirm(message);
 		if (!result) {

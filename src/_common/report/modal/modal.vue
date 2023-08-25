@@ -10,6 +10,7 @@ import { ForumTopicModel } from '../../forum/topic/topic.model';
 import { GameModel } from '../../game/game.model';
 import { showInfoGrowl } from '../../growls/growls.service';
 import { BaseModal } from '../../modal/base';
+import { $gettext } from '../../translate/translate.service';
 import { UserModel } from '../../user/user.model';
 import AppReportForm from '../form/form.vue';
 
@@ -56,26 +57,26 @@ export default class AppReportModal extends mixins(BaseModal) {
 
 	get title() {
 		if (this.page === 'block') {
-			return this.$gettext('Block User');
+			return $gettext('Block User');
 		}
 
 		switch (this.type) {
 			case 'Comment':
-				return this.$gettext('Report Comment');
+				return $gettext('Report Comment');
 			case 'Game':
-				return this.$gettext('Report Game');
+				return $gettext('Report Game');
 			case 'Fireside_Post':
-				return this.$gettext('Report Post');
+				return $gettext('Report Post');
 			case 'User':
-				return this.$gettext('Report User');
+				return $gettext('Report User');
 			case 'Forum_Topic':
-				return this.$gettext('Report Topic');
+				return $gettext('Report Topic');
 			case 'Forum_Post':
-				return this.$gettext('Report Post');
+				return $gettext('Report Post');
 			case 'Community':
-				return this.$gettext(`Report Community`);
+				return $gettext(`Report Community`);
 			case 'Fireside':
-				return this.$gettext(`Report Fireside`);
+				return $gettext(`Report Fireside`);
 		}
 
 		return '';
@@ -83,10 +84,10 @@ export default class AppReportModal extends mixins(BaseModal) {
 
 	onSubmittedReport() {
 		showInfoGrowl(
-			this.$gettext(
+			$gettext(
 				`Thanks for helping us make Game Jolt a place for everyone. We will take a look as soon as possible!`
 			),
-			this.$gettext('Reported')
+			$gettext('Reported')
 		);
 
 		if (this.type === 'User') {
@@ -99,10 +100,10 @@ export default class AppReportModal extends mixins(BaseModal) {
 	onSubmittedBlock() {
 		if (this.resource instanceof UserModel) {
 			showInfoGrowl(
-				this.$gettextInterpolate(`You blocked %{ user }!`, {
+				$gettext(`You blocked %{ user }!`, {
 					user: this.resource.username,
 				}),
-				this.$gettext('Blocked')
+				$gettext('Blocked')
 			);
 		}
 

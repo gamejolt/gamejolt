@@ -52,7 +52,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate(`Trophies for %{ game }`, {
+			return this.$gettext(`Trophies for %{ game }`, {
 				game: this.game.title,
 			});
 		}

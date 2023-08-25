@@ -38,7 +38,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends Legacy
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Score Details - %{ game }', {
+			return this.$gettext('Score Details - %{ game }', {
 				game: this.game.title,
 			});
 		}

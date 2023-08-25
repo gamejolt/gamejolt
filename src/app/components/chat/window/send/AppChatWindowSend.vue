@@ -18,7 +18,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import AppShortkey from '../../../../../_common/shortkey/AppShortkey.vue';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { createFocusToken } from '../../../../../utils/focus-token';
 import { useGridStore } from '../../../grid/grid-store';
 import { editMessage as chatEditMessage, queueChatMessage, tryGetRoomRole } from '../../client';
@@ -146,17 +146,14 @@ const typingText = computed(() => {
 	if (typingNames.length > 3) {
 		return $gettext(`Several people are typing...`);
 	} else if (typingNames.length === 3) {
-		return $gettextInterpolate(
+		return $gettext(
 			`%{ user1 }, %{ user2 } and %{ user3 } are typing...`,
 			namePlaceholderValues
 		);
 	} else if (typingNames.length === 2) {
-		return $gettextInterpolate(
-			`%{ user1 } and %{ user2 } are typing...`,
-			namePlaceholderValues
-		);
+		return $gettext(`%{ user1 } and %{ user2 } are typing...`, namePlaceholderValues);
 	} else if (typingNames.length === 1) {
-		return $gettextInterpolate(`%{ user1 } is typing...`, namePlaceholderValues);
+		return $gettext(`%{ user1 } is typing...`, namePlaceholderValues);
 	}
 
 	return '';

@@ -34,7 +34,7 @@ export default class RouteDashGamesManageGameDesign extends LegacyRouteComponent
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate(`Edit Design for %{ game }`, {
+			return this.$gettext(`Edit Design for %{ game }`, {
 				game: this.game.title,
 			});
 		}

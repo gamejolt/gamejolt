@@ -59,7 +59,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends LegacyRo
 			switch ($payload.reason) {
 				case 'account-taken':
 					showErrorGrowl(
-						this.$gettextInterpolate(
+						this.$gettext(
 							'This %{ provider } account is already linked to another Game Jolt account.',
 							{
 								provider: providerName,
@@ -96,7 +96,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends LegacyRo
 
 				default:
 					showErrorGrowl(
-						this.$gettextInterpolate('Unable to link your %{ provider } account.', {
+						this.$gettext('Unable to link your %{ provider } account.', {
 							provder: providerName,
 						})
 					);
@@ -110,7 +110,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends LegacyRo
 					{
 						const account = new LinkedAccountModel($payload.account);
 						showSuccessGrowl(
-							this.$gettextInterpolate(
+							this.$gettext(
 								'Your %{ provider } account (%{ name }) has been linked.',
 								{
 									name: account.name,

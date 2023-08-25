@@ -13,7 +13,7 @@ import { startDesktopAudioCapture } from '../../client/safe-exports';
 import { importNoSSR } from '../../code-splitting';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { Navigate } from '../../navigate/navigate.service';
-import { $gettext, Translate } from '../../translate/translate.service';
+import { $gettext } from '../../translate/translate.service';
 import {
 	FiresideRTCChannel,
 	previewChannelVideo,
@@ -22,7 +22,7 @@ import {
 	startChannelStreaming,
 	stopChannelStreaming,
 } from './channel';
-import { applyRTCTokens, chooseFocusedRTCUser, FiresideRTC } from './rtc';
+import { FiresideRTC, applyRTCTokens, chooseFocusedRTCUser } from './rtc';
 import {
 	createLocalFiresideRTCUser,
 	setUserHasDesktopAudio,
@@ -988,7 +988,7 @@ export async function startStreaming(producer: FiresideRTCProducer) {
 			rtc.log(`Started streaming.`);
 		} catch (err) {
 			rtc.logError(err);
-			showErrorGrowl(Translate.$gettext('Could not start streaming. Try again later.'));
+			showErrorGrowl($gettext('Could not start streaming. Try again later.'));
 			await _stopStreaming(producer, false);
 		}
 	});

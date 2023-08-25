@@ -8,6 +8,7 @@ import { ReportModal } from '../../../../_common/report/modal/modal.service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
@@ -82,7 +83,7 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	get shareContent() {
-		return this.$gettextInterpolate('Check out %{ name } community - Game Jolt', {
+		return $gettext('Check out %{ name } community - Game Jolt', {
 			name: this.community.name,
 		});
 	}

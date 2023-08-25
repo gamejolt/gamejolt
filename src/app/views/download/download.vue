@@ -99,10 +99,10 @@ export default class RouteDownload extends LegacyRouteComponent {
 	get routeTitle() {
 		if (this.game) {
 			return this.type === 'build'
-				? this.$gettextInterpolate(`Downloading %{ game }`, {
+				? this.$gettext(`Downloading %{ game }`, {
 						game: this.game.title,
 				  })
-				: this.$gettextInterpolate(`Downloading soundtrack for %{ game }`, {
+				: this.$gettext(`Downloading soundtrack for %{ game }`, {
 						game: this.game.title,
 				  });
 		}

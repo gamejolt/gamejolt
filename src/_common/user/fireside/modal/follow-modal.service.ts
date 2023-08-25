@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from 'vue';
 import { showSuccessGrowl } from '../../../growls/growls.service';
 import { showModal } from '../../../modal/modal.service';
-import { $gettextInterpolate } from '../../../translate/translate.service';
+import { $gettext } from '../../../translate/translate.service';
 import { UserModel } from '../../user.model';
 
 export async function showUserFiresideFollowModal(user: UserModel) {
@@ -21,7 +21,7 @@ export async function showUserFiresideFollowModal(user: UserModel) {
 
 export function showUserFiresideFollowGrowl(user: UserModel) {
 	showSuccessGrowl(
-		$gettextInterpolate(`Added %{ user } to your follows.`, {
+		$gettext(`Added %{ user } to your follows.`, {
 			user: '@' + user.username,
 		})
 	);

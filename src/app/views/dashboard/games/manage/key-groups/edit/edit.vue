@@ -74,7 +74,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends LegacyRouteCompon
 
 	get routeTitle() {
 		if (this.keyGroup) {
-			return this.$gettextInterpolate('Edit Key Group: %{ name }', {
+			return this.$gettext('Edit Key Group: %{ name }', {
 				name: this.keyGroup.name,
 			});
 		}

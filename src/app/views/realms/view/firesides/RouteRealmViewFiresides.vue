@@ -11,7 +11,7 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppFiresideAvatar from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
 import AppFiresideAvatarBase from '../../../../components/fireside/avatar/AppFiresideAvatarBase.vue';
 import { RealmRoutePayload, useRealmRouteStore } from '../view.store';
@@ -54,7 +54,7 @@ type RealmFiresidesPayload = {
 const { isBootstrapped } = createAppRoute({
 	routeTitle: computed(() =>
 		realm.value
-			? $gettextInterpolate(`Firesides in the %{ realm } Realm`, { realm: realm.value.name })
+			? $gettext(`Firesides in the %{ realm } Realm`, { realm: realm.value.name })
 			: null
 	),
 	onResolved: (resolved: { payload: [RealmRoutePayload, RealmFiresidesPayload] }) => {

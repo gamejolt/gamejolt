@@ -35,7 +35,7 @@ export default class RouteProfileTrophiesSite extends LegacyRouteComponent {
 
 	get routeTitle() {
 		if (this.user) {
-			return this.$gettextInterpolate(`@%{ user }'s achieved Game Jolt Trophies`, {
+			return this.$gettext(`@%{ user }'s achieved Game Jolt Trophies`, {
 				user: this.user.username,
 			});
 		}

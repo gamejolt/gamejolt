@@ -30,7 +30,7 @@ export default class RouteDashGamesManageApiSettings extends LegacyRouteComponen
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Game API Settings for %{ game }', {
+			return this.$gettext('Game API Settings for %{ game }', {
 				game: this.game.title,
 			});
 		}

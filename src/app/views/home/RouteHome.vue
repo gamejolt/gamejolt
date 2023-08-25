@@ -10,7 +10,7 @@ import {
 	defineAppRouteOptions,
 } from '../../../_common/route/route-component';
 import { useCommonStore } from '../../../_common/store/common-store';
-import { $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { UserModel } from '../../../_common/user/user.model';
 import { objectOmit } from '../../../utils/object';
 import { IntentService } from '../../components/intent/intent.service';
@@ -115,7 +115,7 @@ createAppRoute({
 			message = `%{ type } were added to your account.`;
 		}
 
-		showSuccessGrowl($gettextInterpolate(message, { type }));
+		showSuccessGrowl($gettext(message, { type }));
 	},
 	onResolved() {
 		updateHomeRouteAnalyticsPath(route, user.value);

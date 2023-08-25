@@ -15,7 +15,7 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { $gettext, $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { styleBorderRadiusBase, styleChangeBg } from '../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../_styles/variables';
 import { openChatRoom } from '../../chat/client';
@@ -63,13 +63,13 @@ const statusText = computed(() => {
 			: $gettext(`This invite was canceled.`);
 	} else if (invite.value.status === ChatInviteStatusAccepted) {
 		return sentInvite.value
-			? $gettextInterpolate(`@%{ user } accepted this invite.`, {
+			? $gettext(`@%{ user } accepted this invite.`, {
 					user: invite.value?.invited_user.username,
 			  })
 			: $gettext(`You accepted this invite.`);
 	} else if (invite.value.status === ChatInviteStatusDeclined) {
 		return sentInvite.value
-			? $gettextInterpolate(`@%{ user } declined this invite.`, {
+			? $gettext(`@%{ user } declined this invite.`, {
 					user: invite.value?.invited_user.username,
 			  })
 			: $gettext(`You declined this invite.`);
@@ -172,14 +172,14 @@ async function onClickDecline() {
 				<div>
 					<template v-if="sentInvite">
 						{{
-							$gettextInterpolate(`You invited @%{ user } to a group chat`, {
+							$gettext(`You invited @%{ user } to a group chat`, {
 								user: invite.invited_user.username,
 							})
 						}}
 					</template>
 					<template v-else>
 						{{
-							$gettextInterpolate(`@%{ user } invited you to a group chat`, {
+							$gettext(`@%{ user } invited you to a group chat`, {
 								user: invite.inviter_user.username,
 							})
 						}}

@@ -49,7 +49,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends Legacy
 
 	get routeTitle() {
 		if (this.game && this.user && this.scoreTable) {
-			return this.$gettextInterpolate('View Scores for %{ user } on %{ table } - %{ game }', {
+			return this.$gettext('View Scores for %{ user } on %{ table } - %{ game }', {
 				game: this.game.title,
 				user: this.user.display_name,
 				table: this.scoreTable.name,

@@ -10,7 +10,7 @@ import { showModalConfirm } from '../../../_common/modal/confirm/confirm-service
 import { Navigate } from '../../../_common/navigate/navigate.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { useCommonStore } from '../../../_common/store/common-store';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import AppInvalidKey from '../../components/AppInvalidKey.vue';
 import AppKeyBundle from './AppKeyBundle.vue';
 import AppKeyGame from './AppKeyGame.vue';
@@ -49,15 +49,15 @@ const { isBootstrapped } = createAppRoute({
 	routeTitle: computed(() => {
 		if (routePayload.value) {
 			if (type.value === 'bundle') {
-				return $gettextInterpolate(`Key Page for %{ bundle }`, {
+				return $gettext(`Key Page for %{ bundle }`, {
 					bundle: routePayload.value.bundle.title,
 				});
 			} else if (type.value === 'game') {
-				return $gettextInterpolate(`Key Page for %{ game }`, {
+				return $gettext(`Key Page for %{ game }`, {
 					game: routePayload.value.game.title,
 				});
 			} else if (type.value === 'bundle-game' && routePayload.value.bundle) {
-				return $gettextInterpolate(`Key Page for %{ game } in %{ bundle }`, {
+				return $gettext(`Key Page for %{ game } in %{ bundle }`, {
 					game: routePayload.value.game.title,
 					bundle: routePayload.value.bundle.title,
 				});
@@ -85,7 +85,7 @@ async function claim(resource: GameModel | GameBundleModel) {
 	const resourceName = resource instanceof GameBundleModel ? 'bundle' : 'game';
 
 	const result = await showModalConfirm(
-		$gettextInterpolate(
+		$gettext(
 			`Claiming this %{ type } into your Library will allow you to access it through your Game Jolt account and invalidate this key page.`,
 			{ type: resourceName }
 		),

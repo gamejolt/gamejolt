@@ -1,9 +1,9 @@
 <script lang="ts">
 import { computed } from 'vue';
-import { getQuery } from '../../../../utils/router';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import { getQuery } from '../../../../utils/router';
 import { sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../RouteSearch.vue';
 
@@ -24,7 +24,7 @@ const { processPayload, hasSearch, searchPayload, query } = useSearchRouteContro
 
 createAppRoute({
 	routeTitle: computed(() =>
-		$gettextInterpolate(`"%{ query }" realms`, {
+		$gettext(`"%{ query }" realms`, {
 			query: query.value,
 		})
 	),

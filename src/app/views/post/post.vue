@@ -15,7 +15,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../_common/route/legacy-route-component';
 import { useThemeStore } from '../../../_common/theme/theme.store';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { enforceLocation } from '../../../utils/router';
 import {
 	CommentThreadModal,
@@ -89,14 +89,14 @@ export default class RoutePost extends LegacyRouteComponent {
 		const game = this.post.game?.title;
 
 		if (game) {
-			return $gettextInterpolate(`%{ lead } - %{ game } by %{ user }`, {
+			return $gettext(`%{ lead } - %{ game } by %{ user }`, {
 				lead,
 				game,
 				user,
 			});
 		}
 
-		return $gettextInterpolate('%{ user } on Game Jolt: "%{ lead }"', {
+		return $gettext('%{ user } on Game Jolt: "%{ lead }"', {
 			user,
 			lead,
 		});

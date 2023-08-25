@@ -11,7 +11,7 @@ import { SiteTrophy } from '../../site/trophy/trophy.model';
 import { useCommonStore } from '../../store/common-store';
 import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext, $gettextInterpolate } from '../../translate/translate.service';
+import { $gettext } from '../../translate/translate.service';
 import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
 import { UserGameTrophy } from '../../user/trophy/game-trophy.model';
 import { UserBaseTrophyModel } from '../../user/trophy/user-base-trophy.model';
@@ -196,10 +196,9 @@ async function populateFriends() {
 								</span>
 								<span v-else>
 									{{
-										$gettextInterpolate(
-											`~%{ num }% of players achieved this trophy`,
-											{ num: completionPercentageForDisplay }
-										)
+										$gettext(`~%{ num }% of players achieved this trophy`, {
+											num: completionPercentageForDisplay,
+										})
 									}}
 								</span>
 							</span>

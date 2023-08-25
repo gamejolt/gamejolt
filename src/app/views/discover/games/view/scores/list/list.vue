@@ -90,7 +90,7 @@ export default class RouteDiscoverGamesViewScoresList extends LegacyRouteCompone
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate(`Scores for %{ game }`, {
+			return this.$gettext(`Scores for %{ game }`, {
 				game: this.game.title,
 			});
 		}

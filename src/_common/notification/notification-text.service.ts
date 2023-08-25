@@ -19,7 +19,7 @@ import { QuestNotificationModel } from '../quest/quest-notification-model';
 import { SellableModel } from '../sellable/sellable.model';
 import { SiteTrophy } from '../site/trophy/trophy.model';
 import { SupporterActionModel } from '../supporters/action.model';
-import { $gettext, $gettextInterpolate } from '../translate/translate.service';
+import { $gettext } from '../translate/translate.service';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
 import { UserModel } from '../user/user.model';
@@ -115,25 +115,25 @@ export class NotificationText {
 				const postCommunity = notification.action_model as FiresidePostCommunityModel;
 
 				return _process(
-					$gettextInterpolate(
+					$gettext(
 						`Your post in the <em>%{ community }</em> community has been featured!`,
 						{
 							community: postCommunity.community.name,
 						},
-						!plaintext
+						{ enableHTMLEscaping: !plaintext }
 					)
 				);
 			}
 
 			case NotificationType.FiresideFeaturedInCommunity: {
 				return _process(
-					$gettextInterpolate(
+					$gettext(
 						`Your Fireside in the <em>%{ community }</em> community has been featured!`,
 						{
 							community: (notification.action_model as FiresideCommunityModel)
 								.community.name,
 						},
-						!plaintext
+						{ enableHTMLEscaping: !plaintext }
 					)
 				);
 			}
@@ -146,32 +146,32 @@ export class NotificationText {
 					switch (userNotification.type) {
 						case CommunityUserNotificationType.POSTS_MOVE:
 							return _process(
-								$gettextInterpolate(
+								$gettext(
 									`Your post in the <em>%{ community }</em> community has been <b>moved</b> to a different channel.`,
 									{
 										community: userNotification.community.name,
 									},
-									!plaintext
+									{ enableHTMLEscaping: !plaintext }
 								)
 							);
 						case CommunityUserNotificationType.POSTS_EJECT:
 							return _process(
-								$gettextInterpolate(
+								$gettext(
 									`Your post has been <b>ejected</b> from the <em>%{ community }</em> community.`,
 									{
 										community: userNotification.community.name,
 									},
-									!plaintext
+									{ enableHTMLEscaping: !plaintext }
 								)
 							);
 						case CommunityUserNotificationType.FIRESIDES_EJECT:
 							return _process(
-								$gettextInterpolate(
+								$gettext(
 									`Your Fireside has been <b>ejected</b> from the <em>%{ community }</em> community.`,
 									{
 										community: userNotification.community.name,
 									},
-									!plaintext
+									{ enableHTMLEscaping: !plaintext }
 								)
 							);
 					}
@@ -185,13 +185,13 @@ export class NotificationText {
 					notification.action_model.game instanceof GameModel
 				) {
 					return _process(
-						$gettextInterpolate(
+						$gettext(
 							`You achieved <em>%{ trophyTitle }</em> on <b>%{ gameTitle }</b>!`,
 							{
 								trophyTitle: notification.action_model.trophy.title,
 								gameTitle: notification.action_model.game.title,
 							},
-							!plaintext
+							{ enableHTMLEscaping: !plaintext }
 						)
 					);
 				}
@@ -204,12 +204,12 @@ export class NotificationText {
 					notification.action_model.trophy instanceof SiteTrophy
 				) {
 					return _process(
-						$gettextInterpolate(
+						$gettext(
 							`You achieved the Game Jolt Trophy <em>%{ trophyTitle }</em>!`,
 							{
 								trophyTitle: notification.action_model.trophy.title,
 							},
-							!plaintext
+							{ enableHTMLEscaping: !plaintext }
 						)
 					);
 				}
@@ -219,18 +219,18 @@ export class NotificationText {
 			case NotificationType.CommentAddObjectOwner: {
 				if (notification.to_model instanceof UserModel) {
 					return _process(
-						$gettextInterpolate(
+						$gettext(
 							`<em>%{ subject }</em> shouted at you!`,
 							this.getTranslationValues(notification),
-							!plaintext
+							{ enableHTMLEscaping: !plaintext }
 						)
 					);
 				} else {
 					return _process(
-						$gettextInterpolate(
+						$gettext(
 							`<em>%{ subject }</em> commented on <b>%{ object }</b>.`,
 							this.getTranslationValues(notification),
-							!plaintext
+							{ enableHTMLEscaping: !plaintext }
 						)
 					);
 				}
@@ -239,18 +239,18 @@ export class NotificationText {
 			case NotificationType.CommentAdd: {
 				if (notification.to_model instanceof UserModel) {
 					return _process(
-						$gettextInterpolate(
+						$gettext(
 							`<em>%{ subject }</em> replied to your shout to <b>%{ object }</b>.`,
 							this.getTranslationValues(notification),
-							!plaintext
+							{ enableHTMLEscaping: !plaintext }
 						)
 					);
 				} else {
 					return _process(
-						$gettextInterpolate(
+						$gettext(
 							`<em>%{ subject }</em> replied to your comment on <b>%{ object }</b>.`,
 							this.getTranslationValues(notification),
-							!plaintext
+							{ enableHTMLEscaping: !plaintext }
 						)
 					);
 				}
@@ -258,50 +258,50 @@ export class NotificationText {
 
 			case NotificationType.ForumPostAdd: {
 				return _process(
-					$gettextInterpolate(
+					$gettext(
 						`<em>%{ subject }</em> posted a new forum post to <b>%{ object }</b>.`,
 						this.getTranslationValues(notification),
-						!plaintext
+						{ enableHTMLEscaping: !plaintext }
 					)
 				);
 			}
 
 			case NotificationType.FriendshipRequest: {
 				return _process(
-					$gettextInterpolate(
+					$gettext(
 						`<em>%{ subject }</em> sent you a friend request.`,
 						this.getTranslationValues(notification),
-						!plaintext
+						{ enableHTMLEscaping: !plaintext }
 					)
 				);
 			}
 
 			case NotificationType.FriendshipAccept: {
 				return _process(
-					$gettextInterpolate(
+					$gettext(
 						`<em>%{ subject }</em> accepted your friend request.`,
 						this.getTranslationValues(notification),
-						!plaintext
+						{ enableHTMLEscaping: !plaintext }
 					)
 				);
 			}
 
 			case NotificationType.GameRatingAdd: {
 				return _process(
-					$gettextInterpolate(
+					$gettext(
 						`<em>%{ subject }</em> liked <b>%{ object }</b>.`,
 						this.getTranslationValues(notification),
-						!plaintext
+						{ enableHTMLEscaping: !plaintext }
 					)
 				);
 			}
 
 			case NotificationType.GameFollow: {
 				return _process(
-					$gettextInterpolate(
+					$gettext(
 						`<em>%{ subject }</em> followed <b>%{ object }</b>.`,
 						this.getTranslationValues(notification),
-						!plaintext
+						{ enableHTMLEscaping: !plaintext }
 					)
 				);
 			}
@@ -316,20 +316,20 @@ export class NotificationText {
 				};
 
 				return _process(
-					$gettextInterpolate(
+					$gettext(
 						`<em>%{ subject }</em> bought a package in <b>%{ object }</b> for %{ amount }.`,
 						translationValues,
-						!plaintext
+						{ enableHTMLEscaping: !plaintext }
 					)
 				);
 			}
 
 			case NotificationType.UserFollow: {
 				return _process(
-					$gettextInterpolate(
+					$gettext(
 						`<em>%{ subject }</em> followed you.`,
 						this.getTranslationValues(notification),
-						!plaintext
+						{ enableHTMLEscaping: !plaintext }
 					)
 				);
 			}
@@ -338,18 +338,18 @@ export class NotificationText {
 				switch (notification.to_resource) {
 					case 'Game':
 						return _process(
-							$gettextInterpolate(
+							$gettext(
 								`<em>%{ subject }</em> invited you to collaborate on the game <b>%{ object }</b>.`,
 								this.getTranslationValues(notification),
-								!plaintext
+								{ enableHTMLEscaping: !plaintext }
 							)
 						);
 					case 'Community':
 						return _process(
-							$gettextInterpolate(
+							$gettext(
 								`<em>%{ subject }</em> invited you to collaborate on the <b>%{ object }</b> community.`,
 								this.getTranslationValues(notification),
-								!plaintext
+								{ enableHTMLEscaping: !plaintext }
 							)
 						);
 				}
@@ -363,35 +363,35 @@ export class NotificationText {
 					case 'Comment': {
 						if (notification.to_model instanceof GameModel) {
 							return _process(
-								$gettextInterpolate(
+								$gettext(
 									`<em>%{ subject }</em> mentioned you in a comment on the game <b>%{ object }</b>.`,
 									{
 										object: notification.to_model.title,
 										subject: this.getSubjectTranslationValue(notification),
 									},
-									!plaintext
+									{ enableHTMLEscaping: !plaintext }
 								)
 							);
 						} else if (notification.to_model instanceof FiresidePostModel) {
 							return _process(
-								$gettextInterpolate(
+								$gettext(
 									`<em>%{ subject }</em> mentioned you in a comment on the post <b>%{ object }</b>.`,
 									{
 										object: notification.to_model.getShortLead(),
 										subject: this.getSubjectTranslationValue(notification),
 									},
-									!plaintext
+									{ enableHTMLEscaping: !plaintext }
 								)
 							);
 						} else if (notification.to_model instanceof UserModel) {
 							return _process(
-								$gettextInterpolate(
+								$gettext(
 									`<em>%{ subject }</em> mentioned you in a shout to @<b>%{ object }</b>.`,
 									{
 										object: notification.to_model.username,
 										subject: this.getSubjectTranslationValue(notification),
 									},
-									!plaintext
+									{ enableHTMLEscaping: !plaintext }
 								)
 							);
 						}
@@ -400,30 +400,30 @@ export class NotificationText {
 
 					case 'Game': {
 						return _process(
-							$gettextInterpolate(
+							$gettext(
 								`<em>%{ subject }</em> mentioned you in the game <b>%{ object }</b>.`,
 								{
 									object: (notification.to_model as GameModel).title,
 									subject: this.getSubjectTranslationValue(notification),
 								},
-								!plaintext
+								{ enableHTMLEscaping: !plaintext }
 							)
 						);
 					}
 
 					case 'User': {
 						return _process(
-							$gettextInterpolate(
+							$gettext(
 								`<em>%{ subject }</em> mentioned you in their user bio.`,
 								this.getTranslationValues(notification),
-								!plaintext
+								{ enableHTMLEscaping: !plaintext }
 							)
 						);
 					}
 
 					case 'Fireside_Post': {
 						return _process(
-							$gettextInterpolate(
+							$gettext(
 								`<em>%{ subject }</em> mentioned you in the post <b>%{ object }</b>.`,
 								{
 									object: (
@@ -431,20 +431,20 @@ export class NotificationText {
 									).getShortLead(),
 									subject: this.getSubjectTranslationValue(notification),
 								},
-								!plaintext
+								{ enableHTMLEscaping: !plaintext }
 							)
 						);
 					}
 
 					case 'Forum_Post': {
 						return _process(
-							$gettextInterpolate(
+							$gettext(
 								`<em>%{ subject }</em> mentioned you in a forum post to <b>%{ object }</b>.`,
 								{
 									object: (notification.to_model as ForumTopicModel).title,
 									subject: this.getSubjectTranslationValue(notification),
 								},
-								!plaintext
+								{ enableHTMLEscaping: !plaintext }
 							)
 						);
 					}
@@ -473,10 +473,10 @@ export class NotificationText {
 			case NotificationType.FiresideStart: {
 				if (notification.action_model instanceof FiresideModel) {
 					return _process(
-						$gettextInterpolate(
+						$gettext(
 							`<em>%{ subject }</em> is live!`,
 							this.getTranslationValues(notification),
-							!plaintext
+							{ enableHTMLEscaping: !plaintext }
 						)
 					);
 				}
@@ -501,31 +501,29 @@ export class NotificationText {
 				switch (users.length) {
 					case 1:
 						return _process(
-							$gettextInterpolate(
-								`<em>%{ user1 }</em> is live!`,
-								userInterpolates,
-								!plaintext
-							)
+							$gettext(`<em>%{ user1 }</em> is live!`, userInterpolates, {
+								enableHTMLEscaping: !plaintext,
+							})
 						);
 
 					case 2:
 						return _process(
-							$gettextInterpolate(
+							$gettext(
 								`<em>%{ user1 }</em> and <em>%{ user2 }</em> are live!`,
 								userInterpolates,
-								!plaintext
+								{ enableHTMLEscaping: !plaintext }
 							)
 						);
 
 					default:
 						return _process(
-							$gettextInterpolate(
+							$gettext(
 								`<em>%{ user1 }</em>, <em>%{ user2 }</em> and <em>%{ more }</em> more are live!`,
 								{
 									...userInterpolates,
 									more: users.length - 2,
 								},
-								!plaintext
+								{ enableHTMLEscaping: !plaintext }
 							)
 						);
 				}
@@ -534,18 +532,18 @@ export class NotificationText {
 			case NotificationType.ChargedSticker: {
 				if (notification.to_resource === 'Fireside_Post') {
 					return _process(
-						$gettextInterpolate(
+						$gettext(
 							`<em>%{ subject }</em> placed a charged sticker on your post <b>%{ object }</b>.`,
 							this.getTranslationValues(notification),
-							!plaintext
+							{ enableHTMLEscaping: !plaintext }
 						)
 					);
 				} else if (notification.to_resource === 'Fireside') {
 					return _process(
-						$gettextInterpolate(
+						$gettext(
 							`<em>%{ subject }</em> placed a charged sticker on your fireside stream.`,
 							this.getTranslationValues(notification),
-							!plaintext
+							{ enableHTMLEscaping: !plaintext }
 						)
 					);
 				}
@@ -560,19 +558,19 @@ export class NotificationText {
 
 				if (action?.isChargedSticker) {
 					return _process(
-						$gettextInterpolate(
+						$gettext(
 							`<em>%{ subject }</em> thanked you for giving them a charged sticker.`,
 							this.getTranslationValues(notification),
-							!plaintext
+							{ enableHTMLEscaping: !plaintext }
 						)
 					);
 				}
 
 				return _process(
-					$gettextInterpolate(
+					$gettext(
 						`<em>%{ subject }</em> thanked you for supporting them.`,
 						this.getTranslationValues(notification),
-						!plaintext
+						{ enableHTMLEscaping: !plaintext }
 					)
 				);
 			}
@@ -584,10 +582,10 @@ export class NotificationText {
 			case NotificationType.CreatorLevelUp: {
 				if (notification.action_model instanceof CreatorExperienceLevelModel) {
 					return _process(
-						$gettextInterpolate(
+						$gettext(
 							`You've reached <b>Creator Level %{ level }</b>!`,
 							{ level: notification.action_model.level },
-							!plaintext
+							{ enableHTMLEscaping: !plaintext }
 						)
 					);
 				}

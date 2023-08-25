@@ -6,6 +6,7 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../_common/route/legacy-route-component';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { GameCollectionModel } from '../../../components/game/collection/collection.model';
 import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
 import { useProfileRouteController } from '../RouteProfile.vue';
@@ -27,7 +28,7 @@ export default class RouteProfileLibrary extends LegacyRouteComponent {
 
 	get routeTitle() {
 		if (this.user) {
-			return this.$gettextInterpolate(`Library of @%{ user }`, {
+			return $gettext(`Library of @%{ user }`, {
 				user: this.user.username,
 			});
 		}
