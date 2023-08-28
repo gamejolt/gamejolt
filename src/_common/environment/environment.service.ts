@@ -110,8 +110,8 @@ class EnvironmentService {
 
 	recaptchaSiteKey =
 		GJ_ENVIRONMENT === 'development'
-			? 'https://dev.development.gamejolt.com'
-			: '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT';
+			? '6LcwTkEUAAAAAHTT67TB8gkM0ft5hUzz_r_tFFaT'
+			: '6Led_UAUAAAAAB_ptIOOlAF5DFK9YM7Qi_7z8iKk';
 
 	// We have different firebase app for Client.
 	firebaseAppId = GJ_IS_DESKTOP_APP
