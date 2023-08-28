@@ -1,9 +1,9 @@
 import { Model } from '../model/model.service';
-import { User } from '../user/user.model';
+import { UserModel } from '../user/user.model';
 
-export class SupporterMessage extends Model {
-	declare from_user: User;
-	declare to_user: User;
+export class SupporterMessageModel extends Model {
+	declare from_user: UserModel;
+	declare to_user: UserModel;
 	declare sent_on: number;
 	declare skipped_on?: number;
 	declare content: string;
@@ -12,11 +12,11 @@ export class SupporterMessage extends Model {
 		super(data);
 
 		if (data.from_user) {
-			this.from_user = new User(data.from_user);
+			this.from_user = new UserModel(data.from_user);
 		}
 
 		if (data.to_user) {
-			this.to_user = new User(data.to_user);
+			this.to_user = new UserModel(data.to_user);
 		}
 	}
 
@@ -29,5 +29,3 @@ export class SupporterMessage extends Model {
 		});
 	}
 }
-
-Model.create(SupporterMessage);

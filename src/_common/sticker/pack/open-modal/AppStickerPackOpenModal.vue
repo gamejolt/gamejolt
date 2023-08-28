@@ -26,9 +26,9 @@ import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../translate/translate.service';
 import AppStickerStackItem from '../../stack/AppStickerStackItem.vue';
 import { CreatorStickersMap, sortStickerStacks, useStickerStore } from '../../sticker-store';
-import { Sticker, StickerStack } from '../../sticker.model';
+import { StickerModel, StickerStack } from '../../sticker.model';
 import AppStickerPack from '../AppStickerPack.vue';
-import { UserStickerPack } from '../user-pack.model';
+import { UserStickerPackModel } from '../user-pack.model';
 
 const DurationStickerShow = 500;
 const DurationStickerStash = 750;
@@ -73,7 +73,7 @@ export function checkPackOpenPayloadErrors({
 	 * Provide to remove packs matching {@link packId} under certain error
 	 * conditions.
 	 */
-	myPacks: UserStickerPack[];
+	myPacks: UserStickerPackModel[];
 }) {
 	if (payload.success) {
 		return null;
@@ -115,7 +115,7 @@ const modal = useModal()!;
 
 const props = defineProps({
 	pack: {
-		type: Object as PropType<UserStickerPack>,
+		type: Object as PropType<UserStickerPackModel>,
 		required: true,
 	},
 	/**
@@ -142,7 +142,7 @@ const packSlice = ref<HTMLDivElement>();
 const packTrash = ref<HTMLDivElement>();
 
 const stage = ref<PackOpenStage>('confirm');
-const openedStickers = ref<Sticker[]>([]);
+const openedStickers = ref<StickerModel[]>([]);
 const expandStickers = ref(false);
 
 const shownContainer = ref<'pack' | 'backpack'>('pack');
@@ -208,7 +208,7 @@ async function _openPack() {
 			throw Error('Got no stickers returned when opening pack.');
 		}
 
-		const newStickers: Sticker[] = Sticker.populate(rawStickers);
+		const newStickers: StickerModel[] = StickerModel.populate(rawStickers);
 		openedStickers.value = newStickers;
 		// Sort our owned stickers, adding our new stickers to the list.
 		sortMyStickers(newStickers);
@@ -252,7 +252,7 @@ function preloadImages() {
 	urls.forEach(url => ImgHelper.loaded(url));
 }
 
-function sortMyStickers(newStickers: Sticker[]) {
+function sortMyStickers(newStickers: StickerModel[]) {
 	const myStickers = [...allStickers.value];
 
 	// Increment or add new stickers to our existing list as required.

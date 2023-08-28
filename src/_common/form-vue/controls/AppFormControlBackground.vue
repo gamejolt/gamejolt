@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRef, toRefs } from 'vue';
 import AppBackgroundSelector from '../../background/AppBackgroundSelector.vue';
-import { Background } from '../../background/background.model';
+import { BackgroundModel } from '../../background/background.model';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { useForm } from '../AppForm.vue';
 import {
@@ -13,7 +13,7 @@ import { useFormGroup } from '../AppFormGroup.vue';
 
 const props = defineProps({
 	backgrounds: {
-		type: Array as PropType<Array<Background>>,
+		type: Array as PropType<Array<BackgroundModel>>,
 		required: true,
 	},
 	tileSize: {
@@ -64,11 +64,11 @@ const currentBackground = computed(() => {
 });
 
 const emit = defineEmits({
-	backgroundChange: (_item?: Background) => true,
+	backgroundChange: (_item?: BackgroundModel) => true,
 	...defineFormControlEmits(),
 });
 
-function onSelect(item?: Background) {
+function onSelect(item?: BackgroundModel) {
 	applyValue(item?.id);
 }
 </script>

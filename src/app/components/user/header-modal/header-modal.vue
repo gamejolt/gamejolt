@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
 import { BaseModal } from '../../../../_common/modal/base';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 import FormUserHeader from '../../forms/user-header/header.vue';
 
 @Options({
@@ -28,7 +28,7 @@ export default class AppUserHeaderModal extends mixins(BaseModal) {
 		}
 	}
 
-	onSubmit(user: User) {
+	onSubmit(user: UserModel) {
 		const newHeaderId = (user.header_media_item && user.header_media_item.id) || null;
 		if (this.previousHeaderId === newHeaderId) {
 			this.modal.resolve(user);

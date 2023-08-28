@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
-import { GamePackage } from '../../../../../_common/game/package/package.model';
+import { GamePackageModel } from '../../../../../_common/game/package/package.model';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
-import { Sellable } from '../../../../../_common/sellable/sellable.model';
+import { SellableModel } from '../../../../../_common/sellable/sellable.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import {
 	GameDashRouteController,
@@ -18,20 +18,20 @@ const props = defineProps({
 		required: true,
 	},
 	gamePackage: {
-		type: Object as PropType<GamePackage>,
+		type: Object as PropType<GamePackageModel>,
 		default: undefined,
 	},
 	sellable: {
-		type: Object as PropType<Sellable>,
+		type: Object as PropType<SellableModel>,
 		default: undefined,
 	},
 });
 
 provideGameDashRouteController(props.routeController);
 
-const modal = useModal<GamePackage>()!;
+const modal = useModal<GamePackageModel>()!;
 
-function onSubmitted(gamePackage: GamePackage) {
+function onSubmitted(gamePackage: GamePackageModel) {
 	modal.resolve(gamePackage);
 }
 </script>

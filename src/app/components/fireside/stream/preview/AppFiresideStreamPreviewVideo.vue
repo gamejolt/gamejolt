@@ -2,18 +2,18 @@
 import { computed, onBeforeUnmount, PropType, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import AppFiresideLiveTag from '../../../../../_common/fireside/AppFiresideLiveTag.vue';
-import { Fireside } from '../../../../../_common/fireside/fireside.model';
+import { FiresideModel } from '../../../../../_common/fireside/fireside.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppUserAvatarList from '../../../../../_common/user/user-avatar/AppUserAvatarList.vue';
-import { User } from '../../../../../_common/user/user.model';
+import { UserModel } from '../../../../../_common/user/user.model';
 import { useGridStore } from '../../../grid/grid-store';
 import { createFiresideController, provideFiresideController } from '../../controller/controller';
 import AppFiresideStreamVideo from '../AppFiresideStreamVideo.vue';
 
 const props = defineProps({
 	fireside: {
-		type: Object as PropType<Fireside>,
+		type: Object as PropType<FiresideModel>,
 		required: true,
 	},
 	showLive: {
@@ -42,7 +42,7 @@ provideFiresideController(c);
 const { rtc, isShowingStreamSetup, isStreaming, cleanup: cleanupController } = c;
 
 const cohosts = computed(() => {
-	const result: User[] = [];
+	const result: UserModel[] = [];
 
 	for (const rtcUser of rtc.value?.listableStreamingUsers ?? []) {
 		// Since we're iterating over listable users they will always have their userModel.

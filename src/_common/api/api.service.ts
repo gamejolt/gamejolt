@@ -9,9 +9,9 @@ export interface ApiProgressEvent {
 	total: number;
 }
 
-// Memoized essentially, and lazily fetched when first needed.
-let _hasWebpSupport: null | Promise<boolean> = null;
-const hasWebpSupport = () => {
+/** @__NO_SIDE_EFFECTS__ */
+function hasWebpSupport() {
+	// Memoized essentially, and lazily fetched when first needed.
 	if (!_hasWebpSupport) {
 		_hasWebpSupport = import.meta.env.SSR
 			? // SSR passes through the webp support from the client.
@@ -28,7 +28,9 @@ const hasWebpSupport = () => {
 	}
 
 	return _hasWebpSupport;
-};
+}
+
+let _hasWebpSupport: null | Promise<boolean> = null;
 
 export interface RequestOptions {
 	/**
@@ -109,14 +111,14 @@ export interface RequestOptions {
 	fileCancelToken?: AbortSignal;
 }
 
-export class Api {
-	static loadingBarRequests = ref(0);
+class ApiService {
+	loadingBarRequests = ref(0);
 
-	static apiHost: string = Environment.apiHost;
-	static uploadHost: string = Environment.uploadHost;
-	static apiPath = '/site-api';
+	apiHost: string = Environment.apiHost;
+	uploadHost: string = Environment.uploadHost;
+	apiPath = '/site-api';
 
-	static async sendRequest<T = any>(
+	async sendRequest<T = any>(
 		uri: string,
 		postData?: any,
 		options: RequestOptions = {}
@@ -187,7 +189,7 @@ export class Api {
 	/**
 	 * Used to send a request for specific fields against the mobile API.
 	 */
-	static async sendFieldsRequest<T = any>(
+	async sendFieldsRequest<T = any>(
 		uri: string,
 		fields: Record<string, any>,
 		options: RequestOptions = {}
@@ -204,7 +206,7 @@ export class Api {
 		);
 	}
 
-	private static async createRequest(
+	private async createRequest(
 		method: 'GET' | 'POST',
 		url: string,
 		data: any,
@@ -283,11 +285,11 @@ export class Api {
 		return promise;
 	}
 
-	public static createCancelToken() {
+	public createCancelToken() {
 		return new AbortController();
 	}
 
-	public static async sendRawRequest(url: string, config: AxiosRequestConfig = {}) {
+	public async sendRawRequest(url: string, config: AxiosRequestConfig = {}) {
 		const requestInfo = config;
 		requestInfo.url = url;
 
@@ -305,3 +307,5 @@ export class Api {
 		return Axios(requestInfo);
 	}
 }
+
+export const Api = /** @__PURE__ */ new ApiService();

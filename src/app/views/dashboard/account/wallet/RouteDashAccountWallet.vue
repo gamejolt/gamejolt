@@ -18,7 +18,7 @@ import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { UserWallet } from '../../../../../_common/user/wallet/wallet.model';
+import { UserWalletModel } from '../../../../../_common/user/wallet/wallet.model';
 import { showWalletWithdrawModal } from '../../../../components/wallet/withdraw/withdraw-modal.service';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 import marketplaceImage from './marketplace.png';
@@ -51,7 +51,7 @@ const marketplaceRevenueSpent = ref(0);
 const marketplaceRevenueCurrent = ref(0);
 const marketplaceRevenuePendingWithdraw = ref(0);
 const marketplaceRevenuePendingActivation = ref(0);
-const gemWallet = ref<UserWallet>();
+const gemWallet = ref<UserWalletModel>();
 
 const isShowingRevenueBreakdown = ref(false);
 
@@ -82,7 +82,7 @@ const { isBootstrapped, reload } = createAppRoute({
 			payload.marketplaceRevenuePendingActivation || 0;
 		marketplaceWalletBalance.value = payload.marketplaceWalletBalance || 0;
 
-		gemWallet.value = payload.gemWallet ? new UserWallet(payload.gemWallet) : undefined;
+		gemWallet.value = payload.gemWallet ? new UserWalletModel(payload.gemWallet) : undefined;
 	},
 });
 

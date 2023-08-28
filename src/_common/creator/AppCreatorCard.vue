@@ -1,21 +1,20 @@
 <script lang="ts">
-export const AppCreatorCardAspectRatio = 11 / 17;
-</script>
-
-<script lang="ts" setup>
-import { computed } from '@vue/runtime-core';
-import { PropType, ref, toRefs } from 'vue';
+import { PropType, computed, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppPostCardBase from '../fireside/post/card/AppPostCardBase.vue';
-import { FiresidePost } from '../fireside/post/post-model';
+import { FiresidePostModel } from '../fireside/post/post-model';
 import { useCommonStore } from '../store/common-store';
 import AppUserFollowButton from '../user/follow/AppUserFollowButton.vue';
 import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
 import { toggleUserFollow } from '../user/user.model';
 
+export const AppCreatorCardAspectRatio = 11 / 17;
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	fancyHover: {

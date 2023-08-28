@@ -15,11 +15,11 @@ import AppSpacer from '../../spacer/AppSpacer.vue';
 import { kThemeBgActual, kThemeFg10, kThemePrimary } from '../../theme/variables';
 import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
 import { useStickerStore } from '../sticker-store';
-import { Sticker } from '../sticker.model';
+import { StickerModel } from '../sticker.model';
 
 const props = defineProps({
 	sticker: {
-		type: Object as PropType<Sticker>,
+		type: Object as PropType<StickerModel>,
 		required: true,
 	},
 	count: {

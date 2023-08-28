@@ -1,0 +1,37 @@
+name: Build Web + SSR
+
+on:
+  push:
+    branches:
+      - main
+      - frontend-build-on-gh
+
+env:
+  AWS_ACCESS_KEY_ID: '${{ secrets.AWS_ACCESS_KEY_ID }}'
+  AWS_SECRET_ACCESS_KEY: '${{ secrets.AWS_SECRET_ACCESS_KEY }}'
+  AWS_ENDPOINT_URL: https://8561b266229aeee5a9a5b2566b04c8ae.r2.cloudflarestorage.com
+
+jobs:
+  build-frontend:
+    runs-on: buildjet-4vcpu-ubuntu-2204
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.20.0'
+          cache: yarn
+
+      - run: yarn install
+      - run: yarn run web:build
+      - run: tar czvf web-build.tar.gz build
+
+      - name: Upload build to R2
+        run: |
+          aws --endpoint-url ${AWS_ENDPOINT_URL} s3 cp \
+            ${GITHUB_WORKSPACE}/web-build.tar.gz \
+            s3://gjolt-build-artifacts/web-builds/${GITHUB_SHA}/web-build.tar.gz \
+            --acl private

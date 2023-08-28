@@ -6,6 +6,7 @@
  */
 
 import { defineAsyncComponent } from 'vue';
+import AppNoop from '../AppNoop.vue';
 import { getDeviceOS } from '../device/device.service';
 import type { startDesktopAudioCapture as startDesktopAudioCaptureType } from './asg/asg';
 import type { ClientAutoStart as ClientAutoStartType } from './autostart/autostart.service';
@@ -15,9 +16,8 @@ import type { ClientHistoryNavigator as ClientHistoryNavigatorType } from './his
 import type AppClientHistoryNavigatorType from './history-navigator/history-navigator.vue';
 
 // Vue components
-const AppNoopLoader = defineAsyncComponent(async () => (await import('../AppNoop.vue')).default);
-export let AppClientHistoryNavigator: typeof AppClientHistoryNavigatorType = AppNoopLoader as any;
-export let AppClientBase: typeof AppClientBaseType = AppNoopLoader as any;
+export let AppClientHistoryNavigator: typeof AppClientHistoryNavigatorType = AppNoop as any;
+export let AppClientBase: typeof AppClientBaseType = AppNoop as any;
 
 // ASG
 export let startDesktopAudioCapture: typeof startDesktopAudioCaptureType = null as any;

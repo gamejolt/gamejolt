@@ -3,11 +3,11 @@ import { computed, ref, toRef } from 'vue';
 import { Api, ApiProgressEvent } from '../../../api/api.service';
 import AppButton from '../../../button/AppButton.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
-import { MediaItem } from '../../../media-item/media-item-model';
+import { MediaItemModel } from '../../../media-item/media-item-model';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { $gettext } from '../../../translate/translate.service';
-import AppForm, { createForm, defineFormProps, FormController } from '../../AppForm.vue';
+import AppForm, { FormController, createForm, defineFormProps } from '../../AppForm.vue';
 import AppFormControlErrors from '../../AppFormControlErrors.vue';
 import AppFormGroup from '../../AppFormGroup.vue';
 import { validateFilesize, validateImageMaxDimensions } from '../../validators';
@@ -35,7 +35,7 @@ const props = defineProps({
 	},
 });
 
-const mediaItems = ref([] as MediaItem[]);
+const mediaItems = ref([] as MediaItemModel[]);
 const maxFilesize = ref(0);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
@@ -51,7 +51,7 @@ const form: FormController<FormModel> = createForm({
 		form.formModel['image'] = null;
 	},
 	onLoad(response) {
-		mediaItems.value = MediaItem.populate(response.mediaItems);
+		mediaItems.value = MediaItemModel.populate(response.mediaItems);
 		maxFilesize.value = response.maxFilesize;
 		maxWidth.value = response.maxWidth;
 		maxHeight.value = response.maxHeight;
@@ -67,7 +67,7 @@ const form: FormController<FormModel> = createForm({
 	onSubmitSuccess(response) {
 		if (Array.isArray(response.mediaItems)) {
 			for (const mediaItem of response.mediaItems) {
-				mediaItems.value.unshift(new MediaItem(mediaItem));
+				mediaItems.value.unshift(new MediaItemModel(mediaItem));
 			}
 		}
 	},
@@ -77,7 +77,7 @@ function imageSelected() {
 	form.submit();
 }
 
-function copyLink(mediaItem: MediaItem) {
+function copyLink(mediaItem: MediaItemModel) {
 	Clipboard.copy(
 		'![](' + mediaItem.img_url.replace(/ /g, '+') + ')',
 		$gettext(`You can now paste this image in your content.`)

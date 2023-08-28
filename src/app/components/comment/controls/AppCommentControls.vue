@@ -5,13 +5,13 @@ import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directi
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
 	addCommentVote,
-	Comment,
+	CommentModel,
 	removeCommentVote,
 } from '../../../../_common/comment/comment-model';
-import { CommentVote } from '../../../../_common/comment/vote/vote-model';
+import { CommentVoteType } from '../../../../_common/comment/vote/vote-model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
-import { LikersModal } from '../../../../_common/likers/modal.service';
+import { showLikersModal } from '../../../../_common/likers/modal.service';
 import { Model } from '../../../../_common/model/model.service';
 import { selectReactionForResource } from '../../../../_common/reaction/reaction-count';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -19,11 +19,7 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import { kThemeBg, kThemeBgOffset } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import {
-	$gettext,
-	$gettextInterpolate,
-	$ngettext,
-} from '../../../../_common/translate/translate.service';
+import { $gettext, $ngettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { CommentThreadModal } from '../thread/modal.service';
 import { useCommentWidget } from '../widget/AppCommentWidget.vue';
@@ -34,11 +30,11 @@ const props = defineProps({
 		required: true,
 	},
 	comment: {
-		type: Object as PropType<Comment>,
+		type: Object as PropType<CommentModel>,
 		required: true,
 	},
 	children: {
-		type: Array as PropType<Comment[]>,
+		type: Array as PropType<CommentModel[]>,
 		default: () => [],
 	},
 	showReply: {
@@ -71,33 +67,29 @@ const votingTooltip = computed(() => {
 		if (count === 1) {
 			return $gettext('You like this comment');
 		} else {
-			return $gettextInterpolate(
-				$ngettext(
-					'You and another person like this comment',
-					'You and %{ count } people like this comment',
-					count - 1
-				),
+			return $ngettext(
+				'You and another person like this comment',
+				'You and %{ count } people like this comment',
+				count - 1,
 				{ count: count - 1 }
 			);
 		}
 	} else {
-		return $gettextInterpolate(
-			$ngettext(
-				'One person likes this comment',
-				'%{ count } people like this comment',
-				count
-			),
+		return $ngettext(
+			'One person likes this comment',
+			'%{ count } people like this comment',
+			count,
 			{ count }
 		);
 	}
 });
 
 const hasUpvote = computed(
-	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVote.VOTE_UPVOTE
+	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVoteType.Upvote
 );
 
 const hasDownvote = computed(
-	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVote.VOTE_DOWNVOTE
+	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVoteType.Downvote
 );
 
 const showOwnerInteraction = computed(
@@ -113,19 +105,19 @@ const ownerIndicatorTooltipText = computed(() => {
 	if (comment.value.has_owner_like && comment.value.has_owner_reply) {
 		return isOwner
 			? $gettext(`You liked this and replied`)
-			: $gettextInterpolate(`%{ username } liked this and replied`, {
+			: $gettext(`%{ username } liked this and replied`, {
 					username: resourceOwnerUsername,
 			  });
 	} else if (comment.value.has_owner_like) {
 		return isOwner
 			? $gettext(`You liked this`)
-			: $gettextInterpolate(`%{ username } liked this`, {
+			: $gettext(`%{ username } liked this`, {
 					username: resourceOwnerUsername,
 			  });
 	} else if (comment.value.has_owner_reply) {
 		return isOwner
 			? $gettext(`You replied to this`)
-			: $gettextInterpolate(`%{ username } replied`, {
+			: $gettext(`%{ username } replied`, {
 					username: resourceOwnerUsername,
 			  });
 	}
@@ -146,11 +138,11 @@ const ownerIndicatorIcons = computed(() => {
 });
 
 function onUpvoteClick() {
-	voteComment(CommentVote.VOTE_UPVOTE);
+	voteComment(CommentVoteType.Upvote);
 }
 
 function onDownvoteClick() {
-	voteComment(CommentVote.VOTE_DOWNVOTE);
+	voteComment(CommentVoteType.Downvote);
 }
 
 async function voteComment(vote: number) {
@@ -162,7 +154,7 @@ async function voteComment(vote: number) {
 	}
 
 	if (result && result.comment) {
-		const resultComment = new Comment(result.comment);
+		const resultComment = new CommentModel(result.comment);
 		comment.value.has_owner_like = resultComment.has_owner_like;
 	}
 }
@@ -178,7 +170,7 @@ function onReplyClick(autofocus: boolean) {
 }
 
 function showLikers() {
-	LikersModal.show({ count: comment.value.votes, resource: comment.value });
+	showLikersModal({ count: comment.value.votes, resource: comment.value });
 }
 </script>
 

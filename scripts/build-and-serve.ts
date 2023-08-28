@@ -16,7 +16,7 @@
  *              By default this is 127.0.0.1 which only allows local connections.
  */
 
-import * as fs from 'fs-extra';
+import { readFileSync, remove } from 'fs-extra';
 import { acquirePrebuiltFFmpeg } from './build/desktop-app/ffmpeg-prebuilt';
 import { deactivateJsonProperty, patchPackageJson, updateJsonProperty } from './build/packageJson';
 import { gjSectionConfigs, type GjSectionName } from './build/section-config';
@@ -84,7 +84,7 @@ function initializeHttpServer(
 	const server = useHttps
 		? https.createServer(
 				{
-					pfx: fs.readFileSync(
+					pfx: readFileSync(
 						path.join(
 							projectRoot,
 							gjOpts.section === 'gameserver'
@@ -185,7 +185,7 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 
 				// Clean the build folder to start fresh.
 				console.log('Cleaning up old build dir');
-				await fs.remove(frontendBuildDir);
+				await remove(frontendBuildDir);
 
 				const desktopAppSectionNames = Object.entries(gjSectionConfigs)
 					.filter(([_k, v]) => v.desktopApp)

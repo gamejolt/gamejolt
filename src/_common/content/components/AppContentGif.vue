@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, ref, toRefs, unref } from 'vue';
-import { ContentFocus } from '../../content-focus/content-focus.service';
+import { useContentFocusService } from '../../content-focus/content-focus.service';
 import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
-import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/AppVideo.vue';
+import { getVideoPlayerFromSources } from '../../video/player/controller';
 import { defineEditableNodeViewProps } from '../content-editor/node-views/base';
 import { useContentOwnerController } from '../content-owner';
 import AppBaseContentComponent from './AppBaseContentComponent.vue';
@@ -47,11 +47,10 @@ const props = defineProps({
 const { width, height, media, isEditing, isDisabled } = toRefs(props);
 
 const owner = useContentOwnerController()!;
+const { isWindowFocused } = useContentFocusService();
 const isInview = ref(false);
 
-const shouldPlay = computed(() => {
-	return ContentFocus.isWindowFocused;
-});
+const shouldPlay = computed(() => isWindowFocused.value);
 
 const videoController = computed(() => {
 	if (!media.value || !media.value.mp4.url || !media.value.webm.url) {

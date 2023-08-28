@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { PropType, computed, toRefs } from 'vue';
 import AppFadeCollapse from '../AppFadeCollapse.vue';
-import { Game } from '../game/game.model';
+import { GameModel } from '../game/game.model';
 import AppJolticon from '../jolticon/AppJolticon.vue';
 import { useCommonStore } from '../store/common-store';
 import { $gettext } from '../translate/translate.service';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
-import { UserBaseTrophy } from '../user/trophy/user-base-trophy.model';
+import { UserBaseTrophyModel } from '../user/trophy/user-base-trophy.model';
 import { TrophyModal } from './modal/modal.service';
 import AppTrophyThumbnail from './thumbnail/AppTrophyThumbnail.vue';
 
 const props = defineProps({
 	userTrophy: {
-		type: Object as PropType<UserBaseTrophy>,
+		type: Object as PropType<UserBaseTrophyModel>,
 		required: true,
 	},
 });
@@ -36,7 +36,7 @@ const isGame = computed(
 );
 
 const gameTitle = computed(() => {
-	if (userTrophy.value instanceof UserGameTrophy && userTrophy.value.game instanceof Game) {
+	if (userTrophy.value instanceof UserGameTrophy && userTrophy.value.game instanceof GameModel) {
 		return userTrophy.value.game.title;
 	}
 	return $gettext(`Game Trophy`);

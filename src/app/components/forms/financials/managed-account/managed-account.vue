@@ -2,16 +2,16 @@
 import * as StripeData from 'stripe';
 import { inject, InjectionKey, provide, Ref, ref } from 'vue';
 import { mixins, Options } from 'vue-property-decorator';
-import { loadScript } from '../../../../../utils/utils';
-import { shallowSetup } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatCurrency } from '../../../../../_common/filters/currency';
 import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Geo } from '../../../../../_common/geo/geo.service';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { User } from '../../../../../_common/user/user.model';
+import { UserStripeManagedAccountModel } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { UserModel } from '../../../../../_common/user/user.model';
+import { loadScript } from '../../../../../utils/utils';
+import { shallowSetup } from '../../../../../utils/vue';
 import AppFinancialsManagedAccountCompanyDetails from './AppFinancialsManagedAccountCompanyDetails.vue';
 import AppFinancialsManagedAccountPerson, {
 	AppFinancialsManagedAccountPersonInterface,
@@ -55,8 +55,8 @@ export function useFormManagedAccount() {
 }
 
 function createFormManagedAccount() {
-	const user = ref() as Ref<User>;
-	const account = ref() as Ref<UserStripeManagedAccount>;
+	const user = ref() as Ref<UserModel>;
+	const account = ref() as Ref<UserStripeManagedAccountModel>;
 	const stripeMeta = ref() as Ref<StripeMeta>;
 	const stripe = ref() as Ref<PayloadStripeData>;
 
@@ -266,8 +266,8 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 		this.stripePublishableKey = stripePayload.publishableKey;
 		this.stripeInst = Stripe(stripePayload.publishableKey);
 
-		user.value = new User(payload.user);
-		account.value = new UserStripeManagedAccount(payload.account);
+		user.value = new UserModel(payload.user);
+		account.value = new UserStripeManagedAccountModel(payload.account);
 		stripe.value = stripePayload;
 		stripeMeta.value = stripePayload.required;
 

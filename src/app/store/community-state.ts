@@ -1,5 +1,5 @@
+import { CommunityModel } from '../../_common/community/community.model';
 import { arrayRemove } from '../../utils/array';
-import { Community } from '../../_common/community/community.model';
 
 export class CommunityState {
 	public communityId: number;
@@ -52,9 +52,9 @@ export class CommunityState {
 export class CommunityStates {
 	states: CommunityState[] = [];
 
-	public getCommunityState(communityInput: number | Community) {
+	public getCommunityState(communityInput: number | CommunityModel) {
 		let communityId: number;
-		if (communityInput instanceof Community) {
+		if (communityInput instanceof CommunityModel) {
 			communityId = communityInput.id;
 		} else {
 			communityId = communityInput;

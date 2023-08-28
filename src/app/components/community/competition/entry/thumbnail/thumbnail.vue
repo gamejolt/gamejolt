@@ -1,12 +1,12 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { Game } from '../../../../../../_common/game/game.model';
+import { CommunityCompetitionEntryModel } from '../../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
+import { GameModel } from '../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { CommunityCompetitionEntryModal } from '../modal/modal.service';
@@ -20,12 +20,12 @@ import { CommunityCompetitionEntryModal } from '../modal/modal.service';
 	},
 })
 export default class AppCommunityCompetitionEntryThumbnail extends Vue {
-	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntry;
+	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntryModel;
 	@Prop({ type: Boolean, default: false }) showRemove!: boolean;
 	@Prop({ type: Boolean, default: false }) showRank!: boolean;
 	/** Voting category the rank should be shown from. No voting category means Overall. */
 	@Prop(Object)
-	votingCategory?: CommunityCompetitionVotingCategory;
+	votingCategory?: CommunityCompetitionVotingCategoryModel;
 	@Prop({ type: Boolean, default: false }) showAwards!: boolean;
 
 	commonStore = setup(() => useCommonStore());
@@ -42,7 +42,7 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 	}
 
 	get game() {
-		return this.entry.resource as Game;
+		return this.entry.resource as GameModel;
 	}
 
 	get shouldShowRank() {
@@ -93,7 +93,7 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 	}
 
 	async onClickRemove() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to remove this entry from the jam?`)
 		);
 

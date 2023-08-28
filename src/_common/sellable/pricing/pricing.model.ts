@@ -1,32 +1,30 @@
 import { Model } from '../../model/model.service';
 
-export class SellablePricing extends Model {
-	amount!: number;
-	currency_code!: string;
-	country_code!: string;
-	promotional!: boolean;
+export class SellablePricingModel extends Model {
+	declare amount: number;
+	declare currency_code: string;
+	declare country_code: string;
+	declare promotional: boolean;
 
 	// Promotional settings
-	start?: number;
-	end?: number;
-	timezone?: string;
-
-	static getOriginalPricing(pricings: SellablePricing[]) {
-		if (Array.isArray(pricings) && pricings.length > 0) {
-			if (pricings[0].promotional) {
-				return pricings[1];
-			}
-			return pricings[0];
-		}
-		return undefined;
-	}
-
-	static getPromotionalPricing(pricings: SellablePricing[]) {
-		if (Array.isArray(pricings) && pricings.length > 0 && pricings[0].promotional) {
-			return pricings[0];
-		}
-		return undefined;
-	}
+	declare start?: number;
+	declare end?: number;
+	declare timezone?: string;
 }
 
-Model.create(SellablePricing);
+export function getOriginalSellablePricing(pricings: SellablePricingModel[]) {
+	if (Array.isArray(pricings) && pricings.length > 0) {
+		if (pricings[0].promotional) {
+			return pricings[1];
+		}
+		return pricings[0];
+	}
+	return undefined;
+}
+
+export function getPromotionalSellablePricing(pricings: SellablePricingModel[]) {
+	if (Array.isArray(pricings) && pricings.length > 0 && pricings[0].promotional) {
+		return pricings[0];
+	}
+	return undefined;
+}

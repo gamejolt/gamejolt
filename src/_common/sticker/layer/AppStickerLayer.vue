@@ -1,9 +1,6 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, onMounted, toRaw, toRefs, watch } from 'vue';
-import {
-	ContentFocus,
-	registerContentFocusWatcher,
-} from '../../content-focus/content-focus.service';
+import { registerContentFocusWatcher } from '../../content-focus/content-focus.service';
 import { useScroller } from '../../scroll/AppScrollScroller.vue';
 import { registerStickerLayer, unregisterStickerLayer, useStickerStore } from '../sticker-store';
 import AppStickerLayerPlacementMask from './AppStickerLayerPlacementMask.vue';
@@ -49,10 +46,7 @@ onMounted(() => {
 
 	// We tell the ContentFocus service that content is unfocused when the
 	// mask is active.
-	focusWatcherDeregister = registerContentFocusWatcher(
-		ContentFocus,
-		() => !isShowingDrawer.value
-	);
+	focusWatcherDeregister = registerContentFocusWatcher(() => !isShowingDrawer.value);
 });
 
 onBeforeUnmount(() => {

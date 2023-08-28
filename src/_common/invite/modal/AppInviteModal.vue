@@ -6,12 +6,12 @@ import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import { ShareModal } from '../../share/card/_modal/modal.service';
 import AppTranslate from '../../translate/AppTranslate.vue';
-import { User } from '../../user/user.model';
+import { UserModel } from '../../user/user.model';
 
 const props = defineProps({
 	/** Should only be your own user. */
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 });

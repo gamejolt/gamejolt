@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { ref } from '@vue/reactivity';
-import { onMounted } from '@vue/runtime-core';
-import { loadScript } from '../../utils/utils';
+import { onMounted, ref } from 'vue';
 import AppLinkExternal from '../../_common/link/AppLinkExternal.vue';
 import AppTranslate from '../../_common/translate/AppTranslate.vue';
+import { loadScript } from '../../utils/utils';
 import { useGameserverStore } from '../store';
 
 declare const UnityObject2: any;

@@ -1,27 +1,27 @@
 <script lang="ts">
 import { computed, onMounted, onUnmounted, PropType, ref, toRefs } from 'vue';
-import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { storeModelList } from '../../../../../_common/model/model-store.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
-import { User } from '../../../../../_common/user/user.model';
-import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
+import { $gettext } from '../../../../../_common/translate/translate.service';
+import { UserModel } from '../../../../../_common/user/user.model';
+import { arrayRemove } from '../../../../../utils/array';
+import AppChatList from '../../../chat/_list/AppChatList.vue';
 import { tryGetRoomRole } from '../../../chat/client';
 import { ChatRole } from '../../../chat/role';
-import { ChatRoom } from '../../../chat/room';
+import { ChatRoomModel } from '../../../chat/room';
 import { useChatRoomMembers } from '../../../chat/room-channel';
 import { ChatUser } from '../../../chat/user';
-import AppChatList from '../../../chat/_list/AppChatList.vue';
 import { useGridStore } from '../../../grid/grid-store';
 import AppFiresideChatModsItem from './AppFiresideChatModsItem.vue';
 
@@ -39,7 +39,7 @@ const props = defineProps({
 		required: true,
 	},
 	chatRoom: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		default: undefined,
 	},
 	getCurrentMods: {
@@ -112,7 +112,7 @@ onUnmounted(() => {
 	isMounted.value = false;
 });
 
-function _isMe(user: User | ChatUser) {
+function _isMe(user: UserModel | ChatUser) {
 	return user.id === myUser.value?.id;
 }
 
@@ -159,12 +159,12 @@ function isUserProcessing(user: ChatUser) {
 	return processingIds.value.has(user.id);
 }
 
-function isModerator(user: User | ChatUser) {
+function isModerator(user: UserModel | ChatUser) {
 	if (!chat.value) {
 		return false;
 	}
 
-	if (user instanceof User) {
+	if (user instanceof UserModel) {
 		return user.isMod;
 	}
 
@@ -197,15 +197,15 @@ async function toggleModerator(user: ChatUser) {
 	let canProceed: boolean | undefined;
 
 	if (isPromoting) {
-		canProceed = await ModalConfirm.show(
-			$gettextInterpolate(
+		canProceed = await showModalConfirm(
+			$gettext(
 				`Do you want to promote @%{ username } to a chat moderator? They will be able to remove messages and kick users from the chat. You can demote them at any time.`,
 				{ username: user.username }
 			)
 		);
 	} else {
-		canProceed = await ModalConfirm.show(
-			$gettextInterpolate(`Do you want to demote @%{ username } to a normal chat user?`, {
+		canProceed = await showModalConfirm(
+			$gettext(`Do you want to demote @%{ username } to a normal chat user?`, {
 				username: user.username,
 			})
 		);
@@ -238,7 +238,7 @@ async function toggleModerator(user: ChatUser) {
 
 			if (payload.role) {
 				showSuccessGrowl(
-					$gettextInterpolate(`@%{ username } has been promoted to a chat moderator.`, {
+					$gettext(`@%{ username } has been promoted to a chat moderator.`, {
 						username: user.username,
 					})
 				);
@@ -256,7 +256,7 @@ async function toggleModerator(user: ChatUser) {
 
 			if (payload.role) {
 				showSuccessGrowl(
-					$gettextInterpolate(`@%{ username } has been demoted to a normal chat user.`, {
+					$gettext(`@%{ username } has been demoted to a normal chat user.`, {
 						username: user.username,
 					})
 				);

@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-import { onUnmounted } from '@vue/runtime-core';
-import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, ref, toRefs } from 'vue';
 import { vAppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../_common/filters/number';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
-import { PollItem } from '../../../_common/poll/item/item.model';
-import { Poll } from '../../../_common/poll/poll.model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
+import { PollItemModel } from '../../../_common/poll/item/item.model';
+import { PollModel } from '../../../_common/poll/poll.model';
 import AppProgressBar from '../../../_common/progress/AppProgressBar.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
@@ -14,11 +13,11 @@ import { $ngettext } from '../../../_common/translate/translate.service';
 
 const props = defineProps({
 	poll: {
-		type: Object as PropType<Poll>,
+		type: Object as PropType<PollModel>,
 		required: true,
 	},
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 });
@@ -70,7 +69,7 @@ onUnmounted(() => {
 	clearDateRefresh();
 });
 
-function getItemPercentage(item: PollItem) {
+function getItemPercentage(item: PollItemModel) {
 	return (item.vote_count || 0) / Math.max(poll.value.vote_count, 1);
 }
 
@@ -204,10 +203,9 @@ function setDateRefresh() {
 
 			<span class="text-muted">
 				{{
-					$gettextInterpolate(
-						$ngettext('%{ votes } vote', '%{ votes } votes', poll.vote_count || 0),
-						{ votes: formatNumber(poll.vote_count || 0) }
-					)
+					$ngettext('%{ votes } vote', '%{ votes } votes', poll.vote_count || 0, {
+						votes: formatNumber(poll.vote_count || 0),
+					})
 				}}
 
 				<span class="dot-separator" />

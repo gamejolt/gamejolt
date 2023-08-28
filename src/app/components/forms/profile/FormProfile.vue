@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { formatDistanceToNow } from 'date-fns';
 import { computed, onUnmounted, PropType, ref, shallowReactive, toRefs } from 'vue';
-import { arrayUnique } from '../../../../utils/array';
 import { ContextCapabilities } from '../../../../_common/content/content-context';
-import { Dogtag, DogtagType } from '../../../../_common/dogtag/dogtag-model';
+import { DogtagModel, DogtagType } from '../../../../_common/dogtag/dogtag-model';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
@@ -28,15 +27,16 @@ import { DefaultTheme } from '../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
+import { arrayUnique } from '../../../../utils/array';
 
-type FormModel = User & {
+type FormModel = UserModel & {
 	pronoun_dogtags: number[];
 };
 
 const props = defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 });
@@ -44,7 +44,7 @@ const props = defineProps({
 const { user } = toRefs(props);
 
 const emit = defineEmits({
-	submit: (_model: User) => true,
+	submit: (_model: UserModel) => true,
 });
 
 const { setFormTheme } = useThemeStore();
@@ -57,7 +57,7 @@ const bioLengthLimit = ref(5_000);
 
 const bioContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
-const pronounDogtags = shallowReactive<Dogtag[]>([]);
+const pronounDogtags = shallowReactive<DogtagModel[]>([]);
 
 const mentionsSettingOptions = computed(() => {
 	return [
@@ -77,7 +77,7 @@ const mentionsSettingOptions = computed(() => {
 });
 
 const form: FormController<FormModel> = createForm({
-	modelClass: User,
+	modelClass: UserModel,
 	model: user,
 	loadUrl: '/web/dash/profile/save',
 	reloadOnSubmit: true,
@@ -95,8 +95,8 @@ const form: FormController<FormModel> = createForm({
 		pronounDogtags.splice(
 			0,
 			pronounDogtags.length,
-			...Dogtag.populate(payload['dogtags']).filter(
-				(i: Dogtag) => i.type === DogtagType.pronoun
+			...DogtagModel.populate(payload['dogtags']).filter(
+				(i: DogtagModel) => i.type === DogtagType.pronoun
 			)
 		);
 

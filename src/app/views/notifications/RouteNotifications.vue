@@ -4,7 +4,7 @@ import { RouteLocationNormalized, useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { Notification } from '../../../_common/notification/notification-model';
+import { NotificationFeedTypes } from '../../../_common/notification/notification-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
@@ -17,7 +17,7 @@ import { useAppStore } from '../../store';
 import { NotificationsFilterModal } from './filter/modal.service';
 import { routeNotifications } from './notifications.route';
 
-export const SUPPORTED_NOTIFICATION_FEED_TYPES = Notification.NOTIFICATION_FEED_TYPES;
+export const SUPPORTED_NOTIFICATION_FEED_TYPES = NotificationFeedTypes;
 export const NOTIFICATION_FILTER_QUERY = 'f';
 export const NOTIFICATION_FILTER_FIELD = 'notificationTypes';
 

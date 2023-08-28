@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { SettingRestrictedBrowsing } from '../../../../_common/settings/settings.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -14,7 +14,7 @@ import AppGameOgrs from '../ogrs/ogrs.vue';
 	},
 })
 export default class AppGameMaturityBlock extends Vue {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 
 	commonStore = setup(() => useCommonStore());
 
@@ -37,7 +37,7 @@ export default class AppGameMaturityBlock extends Vue {
 	}
 
 	@Watch('game', { immediate: true })
-	onWatch(newGame: Game, oldGame?: Game) {
+	onWatch(newGame: GameModel, oldGame?: GameModel) {
 		if (!oldGame || newGame.id !== oldGame.id) {
 			this.hasBypassed = false;
 		}
@@ -64,7 +64,9 @@ export default class AppGameMaturityBlock extends Vue {
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 						<div class="game-maturity-block">
 							<h4>
-								<AppTranslate>This game is tagged for mature audiences.</AppTranslate>
+								<AppTranslate
+									>This game is tagged for mature audiences.</AppTranslate
+								>
 							</h4>
 							<p>
 								<AppTranslate>

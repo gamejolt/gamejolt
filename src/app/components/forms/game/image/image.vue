@@ -2,10 +2,10 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
-import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import { GameScreenshotModel } from '../../../../../_common/game/screenshot/screenshot.model';
 
-class Wrapper extends BaseForm<GameScreenshot> {}
+class Wrapper extends BaseForm<GameScreenshotModel> {}
 
 @Options({
 	components: {
@@ -13,9 +13,9 @@ class Wrapper extends BaseForm<GameScreenshot> {}
 	},
 })
 export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad {
-	modelClass = GameScreenshot;
+	modelClass = GameScreenshotModel;
 
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 
 	maxFilesize = 0;
 	maxWidth = 0;
@@ -86,7 +86,10 @@ export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad
 			<AppFormControl type="text" :validators="[validateMaxLength(200)]" />
 			<AppFormControlErrors />
 			<p class="help-block">
-				<AppTranslate>This caption will appear when your image is viewed in full screen.</AppTranslate>
+				<AppTranslate
+					>This caption will appear when your image is viewed in full
+					screen.</AppTranslate
+				>
 			</p>
 		</AppFormGroup>
 

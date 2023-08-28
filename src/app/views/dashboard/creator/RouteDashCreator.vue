@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { RouteParamsRaw, RouteRecordName } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import { CreatorExperience } from '../../../../_common/creator/experience/experience.model';
+import { CreatorExperienceModel } from '../../../../_common/creator/experience/experience.model';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
 import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
@@ -50,20 +50,20 @@ export default {
 };
 
 interface InitPayload {
-	creatorExperience: ModelData<CreatorExperience> | null;
+	creatorExperience: ModelData<CreatorExperienceModel> | null;
 }
 </script>
 
 <script lang="ts" setup>
 const { user } = useCommonStore();
 
-const experience = ref<CreatorExperience | null>(null);
+const experience = ref<CreatorExperienceModel | null>(null);
 
 const { isBootstrapped } = createAppRoute({
 	routeTitle: computed(() => $gettext(`Creator HUD`)),
 	onResolved({ payload }: { payload: InitPayload }) {
 		if (payload.creatorExperience) {
-			experience.value = new CreatorExperience(payload.creatorExperience);
+			experience.value = new CreatorExperienceModel(payload.creatorExperience);
 		} else {
 			experience.value = null;
 		}

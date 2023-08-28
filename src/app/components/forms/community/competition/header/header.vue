@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import { CommunityCompetition } from '../../../../../../_common/community/competition/competition.model';
+import { CommunityCompetitionModel } from '../../../../../../_common/community/competition/competition.model';
 import AppFormControlCrop from '../../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
@@ -8,9 +8,9 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../../../_common/form-vue/form.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
-type FormModel = CommunityCompetition & {
+type FormModel = CommunityCompetitionModel & {
 	header_crop: any;
 };
 
@@ -26,7 +26,7 @@ export default class FormCommunityCompetitionHeader
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	modelClass = CommunityCompetition as any;
+	modelClass = CommunityCompetitionModel as any;
 	saveMethod = '$saveHeader' as const;
 
 	maxFilesize = 0;
@@ -66,7 +66,7 @@ export default class FormCommunityCompetitionHeader
 	}
 
 	async clearHeader() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to remove your competition's header?`)
 		);
 

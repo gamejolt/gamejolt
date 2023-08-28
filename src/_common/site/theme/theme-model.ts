@@ -1,15 +1,15 @@
 import { Model } from '../../model/model.service';
-import { SiteTemplate } from '../template/template-model';
+import { SiteTemplateModel } from '../template/template-model';
 
-export class SiteTheme extends Model {
-	template!: SiteTemplate;
-	data: any;
+export class SiteThemeModel extends Model {
+	declare template: SiteTemplateModel;
+	declare data: any;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.template) {
-			this.template = new SiteTemplate(data.template);
+			this.template = new SiteTemplateModel(data.template);
 		}
 
 		if (data.data) {
@@ -21,5 +21,3 @@ export class SiteTheme extends Model {
 		}
 	}
 }
-
-Model.create(SiteTheme);

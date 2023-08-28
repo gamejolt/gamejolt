@@ -11,7 +11,7 @@ import { Router } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
 import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';
-import { CommentVote } from '../comment/vote/vote-model';
+import { CommentVoteType } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
 import { DeviceArch, DeviceOs, isDynamicGoogleBot } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
@@ -224,7 +224,6 @@ function _untrackUserId() {
 		return;
 	}
 
-	// TODO: Check to make sure this actually works.
 	setUserId(_getFirebaseAnalytics(), '');
 }
 
@@ -368,9 +367,9 @@ export function trackCommentVote(vote: number, params: { failed: boolean; toggle
 	const { failed, toggled } = params;
 
 	let type = '';
-	if (vote === CommentVote.VOTE_UPVOTE) {
+	if (vote === CommentVoteType.Upvote) {
 		type = 'like';
-	} else if (vote === CommentVote.VOTE_DOWNVOTE) {
+	} else if (vote === CommentVoteType.Downvote) {
 		type = 'dislike';
 	} else {
 		return;
@@ -590,8 +589,8 @@ export function trackCbarControlClick(
 /**
  * @deprecated This is left here so that old code doesn't break.
  */
-export class Analytics {
-	private static warnDeprecated(name: string) {
+class AnalyticsService {
+	private warnDeprecated(name: string) {
 		if (import.meta.env.MODE === 'development' || import.meta.env.DEV) {
 			console.warn(
 				`[Analytics] - [${name}] is deprecated and no longer functional. Use new analytics functions instead.`
@@ -599,7 +598,7 @@ export class Analytics {
 		}
 	}
 
-	static trackEvent(_category: string, _action: string, _label?: string, _value?: string) {
+	trackEvent(_category: string, _action: string, _label?: string, _value?: string) {
 		this.warnDeprecated('trackEvent');
 		return;
 
@@ -622,7 +621,7 @@ export class Analytics {
 		// }
 	}
 
-	static trackSocial(_network: string, _action: string, _target: string) {
+	trackSocial(_network: string, _action: string, _target: string) {
 		this.warnDeprecated('trackSocial');
 		return;
 
@@ -640,7 +639,7 @@ export class Analytics {
 		// }
 	}
 
-	static trackTiming(_category: string, _timingVar: string, _value: number, _label?: string) {
+	trackTiming(_category: string, _timingVar: string, _value: number, _label?: string) {
 		this.warnDeprecated('trackTiming');
 		return;
 
@@ -658,3 +657,8 @@ export class Analytics {
 		// }
 	}
 }
+
+/**
+ * @deprecated This is left here so that old code doesn't break.
+ */
+export const Analytics = /** @__PURE__ */ new AnalyticsService();

@@ -2,12 +2,12 @@
 import { computed, ref } from 'vue';
 import { Environment } from '../../_common/environment/environment.service';
 import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
-import { Sellable } from '../../_common/sellable/sellable.model';
+import { SellableType } from '../../_common/sellable/sellable.model';
 import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
 import { useWidgetPackageStore } from '../store/index';
 import AppIncludedItems from './AppIncludedItems.vue';
-import AppWidgetModal from './AppWidgetModal.vue';
 import AppPricingCard from './AppPricingCard.vue';
+import AppWidgetModal from './AppWidgetModal.vue';
 
 const store = useWidgetPackageStore();
 
@@ -22,7 +22,7 @@ const gameUrl = computed(() => Environment.baseUrl + game.value.getUrl());
 const developerUrl = computed(
 	() => developer.value.web_site || Environment.baseUrl + developer.value.url
 );
-const shouldShowIncluded = computed(() => sellable.value.type !== Sellable.TYPE_FREE);
+const shouldShowIncluded = computed(() => sellable.value.type !== SellableType.Free);
 </script>
 
 <template>

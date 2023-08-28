@@ -4,6 +4,7 @@ import { Options, Vue } from 'vue-property-decorator';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import { Screen } from '../../../screen/screen-service';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
+import { $gettext } from '../../../translate/translate.service';
 import {
 	editorInsertBlockquote,
 	editorInsertBulletList,
@@ -99,11 +100,10 @@ export default class AppContentEditorBlockControls extends Vue {
 						const result = editorUploadImageFile(this.controller, file);
 						if (!result) {
 							showErrorGrowl({
-								title: this.$gettext('Invalid file selected'),
-								message: this.$gettextInterpolate(
-									'"%{ filename }" is not a valid image file.',
-									{ filename: file.name }
-								),
+								title: $gettext(`Invalid file selected`),
+								message: $gettext(`"%{ filename }" is not a valid image file.`, {
+									filename: file.name,
+								}),
 							});
 						}
 					}

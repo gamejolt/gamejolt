@@ -8,12 +8,12 @@ import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive
 import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { User } from '../../../../../../_common/user/user.model';
+import { UserModel } from '../../../../../../_common/user/user.model';
 import { useGameRouteController } from '../view.vue';
 
 const props = defineProps({
 	supporters: {
-		type: Array as PropType<User[]>,
+		type: Array as PropType<UserModel[]>,
 		required: true,
 	},
 	supporterCount: {

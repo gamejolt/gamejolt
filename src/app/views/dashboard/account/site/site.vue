@@ -2,8 +2,11 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
-import { Site } from '../../../../../_common/site/site-model';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
+import { SiteModel } from '../../../../../_common/site/site-model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppSitesLinkCard from '../../../../components/sites/link-card/link-card.vue';
 import AppSitesManagePage from '../../../../components/sites/manage-page/manage-page.vue';
@@ -16,14 +19,14 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 		AppSitesLinkCard,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/sites'),
 })
-export default class RouteDashAccountSite extends BaseRouteComponent {
+export default class RouteDashAccountSite extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
-	site?: Site = null as any;
+	site?: SiteModel = null as any;
 
 	get routeTitle() {
 		return this.routeStore.heading;
@@ -34,7 +37,7 @@ export default class RouteDashAccountSite extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.site = new Site($payload.site);
+		this.site = new SiteModel($payload.site);
 	}
 }
 </script>

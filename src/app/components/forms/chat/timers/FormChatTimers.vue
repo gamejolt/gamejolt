@@ -1,7 +1,5 @@
 <script lang="ts">
 import { ref } from 'vue';
-import { arrayRemove } from '../../../../../utils/array';
-import { sleep } from '../../../../../utils/utils';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
@@ -10,15 +8,17 @@ import AppForm, { createForm, FormController } from '../../../../../_common/form
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormStickySubmit from '../../../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import { ChatCommand, CHAT_COMMAND_TYPE_TIMER } from '../commands/command.model';
+import { arrayRemove } from '../../../../../utils/array';
+import { sleep } from '../../../../../utils/utils';
+import { CHAT_COMMAND_TYPE_TIMER, ChatCommandModel } from '../commands/command.model';
 import AppFormControlChatTimer from './AppFormControlChatTimer.vue';
 
 export interface ChatTimersFormModel {
-	timers: ChatCommand[];
+	timers: ChatCommandModel[];
 
 	/**
 	 * Chat timer fields keyed as `description_${id}`, `message_content_${id}`,
-	 * where `id` is the unique {@link ChatCommand.id}.
+	 * where `id` is the unique {@link ChatCommandModel.id}.
 	 */
 	[k: string]: any;
 }
@@ -37,10 +37,10 @@ const messageCapabilities = ref(ContextCapabilities.getPlaceholder());
 const form: FormController<ChatTimersFormModel> = createForm({
 	loadUrl: `/web/chat/commands/timers`,
 	model: ref({
-		timers: [] as ChatCommand[],
+		timers: [] as ChatCommandModel[],
 	}),
 	onLoad(response) {
-		form.formModel.timers = ChatCommand.populate(response.timers);
+		form.formModel.timers = ChatCommandModel.populate(response.timers);
 
 		maxTimers.value = response.maxTimers;
 		maxInvokeSchedule.value = response.maxInvokeSchedule;
@@ -67,7 +67,7 @@ const form: FormController<ChatTimersFormModel> = createForm({
 			const makeKey = (prefix: string) => `${prefix}_${item.id}`;
 			const getValue = (prefix: string) => form.formModel[makeKey(prefix)];
 
-			const wantedFields: (keyof ChatCommand)[] = [
+			const wantedFields: (keyof ChatCommandModel)[] = [
 				'invoke_schedule',
 				'num_required_messages',
 				'message_content',
@@ -133,7 +133,7 @@ async function addNewItem() {
 			throw Error('Got no chat timer returned when creating a new one');
 		}
 
-		const newFilter = new ChatCommand(response.command);
+		const newFilter = new ChatCommandModel(response.command);
 		// Set it as enabled right way to make it easier for them.
 		newFilter.is_active = true;
 		newFilter.invoke_schedule = 30;
@@ -146,7 +146,7 @@ async function addNewItem() {
 	}
 }
 
-function removeItem(item: ChatCommand, fieldsToClear: string[]) {
+function removeItem(item: ChatCommandModel, fieldsToClear: string[]) {
 	arrayRemove(form.formModel.timers, i => i.id === item.id);
 
 	for (const field of fieldsToClear) {

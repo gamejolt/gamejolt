@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, toRefs } from 'vue';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
-import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
+import { CollaboratorModel } from '../../../../_common/collaborator/collaborator.model';
 import AppCommentBlocked from '../../../../_common/comment/AppCommentBlocked.vue';
 import AppCommentContent from '../../../../_common/comment/AppCommentContent.vue';
 import {
 	canCommentOnModel,
-	Comment,
 	CommentableModel,
+	CommentModel,
 	followComment,
 	getCommentBlockReason,
 	removeComment,
@@ -17,7 +17,7 @@ import { Environment } from '../../../../_common/environment/environment.service
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { FormCommentLazy } from '../../../../_common/lazy';
 import AppMessageThreadItem from '../../../../_common/message-thread/AppMessageThreadItem.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Model } from '../../../../_common/model/model.service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
@@ -35,15 +35,15 @@ const props = defineProps({
 		required: true,
 	},
 	comment: {
-		type: Object as PropType<Comment>,
+		type: Object as PropType<CommentModel>,
 		required: true,
 	},
 	children: {
-		type: Array as PropType<Comment[]>,
+		type: Array as PropType<CommentModel[]>,
 		default: () => [],
 	},
 	parent: {
-		type: Object as PropType<Comment>,
+		type: Object as PropType<CommentModel>,
 		default: undefined,
 	},
 	isLastInThread: {
@@ -110,7 +110,7 @@ const hasModPermissions = computed(() => {
 	if (collaborators.value.length) {
 		const collaborator = collaborators.value.find(i => i.user_id === user.value!.id);
 
-		if (collaborator instanceof Collaborator) {
+		if (collaborator instanceof CollaboratorModel) {
 			if (collaborator.perms.includes('all') || collaborator.perms.includes('comments')) {
 				return true;
 			}
@@ -194,7 +194,7 @@ function startEdit() {
 	Popper.hideAll();
 }
 
-function commentEdited(comment: Comment) {
+function commentEdited(comment: CommentModel) {
 	isEditing.value = false;
 	onCommentEdit(comment);
 }
@@ -203,7 +203,7 @@ async function doRemoveComment() {
 	isEditing.value = false;
 	Popper.hideAll();
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to remove this comment?`)
 	);
 

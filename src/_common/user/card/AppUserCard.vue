@@ -13,11 +13,11 @@ import AppUserDogtag from '../AppUserDogtag.vue';
 import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
 import AppUserAvatarBubble from '../user-avatar/AppUserAvatarBubble.vue';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
-import { User } from '../user.model';
+import { UserModel } from '../user.model';
 
 const props = defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 	isLoading: {

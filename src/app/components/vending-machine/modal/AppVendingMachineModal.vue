@@ -14,7 +14,7 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
-import { InventoryShopProductSale } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import { InventoryShopProductSaleModel } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../_common/microtransaction/purchase-modal/modal.service';
@@ -67,7 +67,7 @@ interface ProductChunks {
 }
 
 interface ProductChunk {
-	items: InventoryShopProductSale[];
+	items: InventoryShopProductSaleModel[];
 	type: keyof ProductChunks;
 }
 
@@ -120,11 +120,11 @@ async function init() {
 
 	const payload = p[0];
 	const newProducts = payload.sales
-		? storeModelList(InventoryShopProductSale, payload.sales)
+		? storeModelList(InventoryShopProductSaleModel, payload.sales)
 		: [];
 
 	const productChunks: ProductChunks = {};
-	const missingItems: InventoryShopProductSale[] = [];
+	const missingItems: InventoryShopProductSaleModel[] = [];
 
 	for (const shopProduct of newProducts) {
 		let key: keyof ProductChunks | null = null;
@@ -171,7 +171,7 @@ onMounted(() => {
 	init();
 });
 
-async function purchaseProduct(shopProduct: InventoryShopProductSale) {
+async function purchaseProduct(shopProduct: InventoryShopProductSaleModel) {
 	if (productProcessing.value) {
 		return;
 	}
@@ -410,7 +410,7 @@ const currencyCardImgStyles: CSSProperties = {
 												}"
 											>
 												{{
-													$gettextInterpolate(`Get %{ label }`, {
+													$gettext(`Get %{ label }`, {
 														label: currency.label,
 													})
 												}}

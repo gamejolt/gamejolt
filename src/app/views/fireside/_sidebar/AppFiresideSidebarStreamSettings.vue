@@ -4,7 +4,11 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { startStreaming, stopStreaming } from '../../../../_common/fireside/rtc/producer';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import {
+	illNoCommentsSmall,
+	illStreamingJelly,
+} from '../../../../_common/illustration/illustrations';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -13,10 +17,6 @@ import {
 	useFiresideController,
 } from '../../../components/fireside/controller/controller';
 import AppFiresideStreamSetup from '../../../components/fireside/stream/setup/AppFiresideStreamSetup.vue';
-import {
-	illNoCommentsSmall,
-	illStreamingJelly,
-} from '../../../../_common/illustration/illustrations';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
 
@@ -66,7 +66,7 @@ async function onClickStopStreaming() {
 	}
 
 	try {
-		const shouldStop = await ModalConfirm.show(
+		const shouldStop = await showModalConfirm(
 			$gettext(`Are you sure you want to stop streaming?`)
 		);
 

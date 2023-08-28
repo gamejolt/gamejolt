@@ -1,11 +1,14 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
-import { PaymentSource } from '../../../../../_common/payment-source/payment-source.model';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import { PaymentSourceModel } from '../../../../../_common/payment-source/payment-source.model';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { arrayRemove } from '../../../../../utils/array';
 import AppUserPaymentSourceCard from '../../../../components/user/payment-source/AppUserPaymentSourceCard.vue';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 
@@ -15,14 +18,14 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 		AppUserPaymentSourceCard,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/payment-methods'),
 })
-export default class RouteDashAccountPaymentMethods extends BaseRouteComponent {
+export default class RouteDashAccountPaymentMethods extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
-	paymentSources: PaymentSource[] = [];
+	paymentSources: PaymentSourceModel[] = [];
 
 	get routeTitle() {
 		return this.routeStore.heading;
@@ -37,10 +40,10 @@ export default class RouteDashAccountPaymentMethods extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.paymentSources = PaymentSource.populate($payload.paymentSources);
+		this.paymentSources = PaymentSourceModel.populate($payload.paymentSources);
 	}
 
-	onRemove(source: PaymentSource) {
+	onRemove(source: PaymentSourceModel) {
 		arrayRemove(this.paymentSources, i => i.id === source.id);
 	}
 }

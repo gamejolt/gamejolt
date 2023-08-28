@@ -16,7 +16,7 @@ import AppStickerPack, {
 	StickerPackExpiryStyles,
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
-import { UserStickerPack } from '../../../../_common/sticker/pack/user-pack.model';
+import { UserStickerPackModel } from '../../../../_common/sticker/pack/user-pack.model';
 import {
 	getStickerStacksFromPayloadData,
 	sortStickerStacks,
@@ -70,7 +70,7 @@ const form: FormController<FormModel> = createForm({
 		});
 	},
 	async onLoad(payload) {
-		stickerPacks.value = UserStickerPack.populate(payload.ownedPacks);
+		stickerPacks.value = UserStickerPackModel.populate(payload.ownedPacks);
 
 		const data = getStickerStacksFromPayloadData({
 			stickerCounts: payload.ownedStickers.stickerCounts,
@@ -88,7 +88,7 @@ async function onClickVendingMachine() {
 	await showVendingMachineModal();
 }
 
-function openPack(pack: UserStickerPack) {
+function openPack(pack: UserStickerPackModel) {
 	StickerPackOpenModal.show({ pack });
 }
 
@@ -261,7 +261,7 @@ function sortStickers(sorting: StickerSortMethod) {
 								}"
 							>
 								{{
-									$gettextInterpolate(`@%{ username } stickers`, {
+									$gettext(`@%{ username } stickers`, {
 										username: stickers[0].sticker.owner_user.username,
 									})
 								}}

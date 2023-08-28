@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { formatNumber } from '../../../../_common/filters/number';
-import { ForumTopic } from '../../../../_common/forum/topic/topic.model';
+import { ForumTopicModel } from '../../../../_common/forum/topic/topic.model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -21,7 +21,7 @@ import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vu
 	},
 })
 export default class AppForumTopicList extends Vue {
-	@Prop(Array) topics!: ForumTopic[];
+	@Prop(Array) topics!: ForumTopicModel[];
 	@Prop(String) sort!: string;
 	@Prop(Boolean) useUpvotes!: boolean;
 	@Prop(Number) postCountPerPage!: number;
@@ -29,7 +29,7 @@ export default class AppForumTopicList extends Vue {
 	readonly formatNumber = formatNumber;
 	readonly Screen = Screen;
 
-	getPostPage(topic: ForumTopic) {
+	getPostPage(topic: ForumTopicModel) {
 		if (!this.postCountPerPage) {
 			return undefined;
 		}

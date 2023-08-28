@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
-import { Realm } from '../../../_common/realm/realm-model';
-import { $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
+import { RealmModel } from '../../../_common/realm/realm-model';
+import { $gettext } from '../../../_common/translate/translate.service';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../components/lazy';
@@ -10,7 +10,7 @@ import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.
 
 const props = defineProps({
 	realm: {
-		type: Object as PropType<Realm>,
+		type: Object as PropType<RealmModel>,
 		default: undefined,
 	},
 	feed: {
@@ -22,10 +22,10 @@ const props = defineProps({
 const { realm, feed } = toRefs(props);
 
 const emit = defineEmits({
-	'post-added': (_post: FiresidePost) => true,
+	'post-added': (_post: FiresidePostModel) => true,
 });
 
-function onPostAdded(post: FiresidePost) {
+function onPostAdded(post: FiresidePostModel) {
 	emit('post-added', post);
 }
 </script>
@@ -37,7 +37,7 @@ function onPostAdded(post: FiresidePost) {
 			v-if="realm && feed"
 			:realm="realm"
 			:placeholder="
-				$gettextInterpolate(`Post about %{ realm }!`, {
+				$gettext(`Post about %{ realm }!`, {
 					realm: realm.name,
 				})
 			"

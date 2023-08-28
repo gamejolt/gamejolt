@@ -1,6 +1,6 @@
 import { Directive } from 'vue';
 import { commonStore } from '../store/common-store';
-import { AuthModal } from './auth-modal.service';
+import { showAuthModal } from './auth-modal.service';
 
 export const vAppAuthRequired: Directive<unknown, void> = {
 	beforeMount(el: HTMLElement) {
@@ -16,7 +16,7 @@ export const vAppAuthRequired: Directive<unknown, void> = {
 				e.stopImmediatePropagation();
 				e.preventDefault();
 
-				AuthModal.show();
+				showAuthModal();
 			},
 			true
 		);

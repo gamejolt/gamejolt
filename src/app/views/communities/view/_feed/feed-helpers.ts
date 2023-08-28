@@ -1,7 +1,7 @@
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import {
-	Community,
+	CommunityModel,
 	CommunityPresetChannelType,
 } from '../../../../../_common/community/community.model';
 import { configCommunityFrontpageFeedType } from '../../../../../_common/config/config.service';
@@ -31,7 +31,7 @@ export function doFeedChannelPayload(route: RouteLocationNormalized) {
  */
 export function resolveFeedChannelPayload(
 	feed: null | ActivityFeedView,
-	mainCommunity: Community,
+	mainCommunity: CommunityModel,
 	route: RouteLocationNormalized,
 	payload: any,
 	fromCache: boolean

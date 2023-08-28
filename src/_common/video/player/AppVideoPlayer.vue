@@ -7,7 +7,7 @@ import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { AppVideoPlayerShakaLazy } from '../../lazy';
 import AppLoading from '../../loading/AppLoading.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItem } from '../../media-item/media-item-model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
 } from '../../responsive-dimensions/AppResponsiveDimensions.vue';
@@ -89,7 +89,7 @@ const props = defineProps({
 		required: true,
 	},
 	mediaItem: {
-		type: Object as PropType<MediaItem>,
+		type: Object as PropType<MediaItemModel>,
 		required: true,
 	},
 	manifests: {

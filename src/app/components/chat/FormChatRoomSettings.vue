@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs, watch } from 'vue';
 import { Api } from '../../../_common/api/api.service';
-import { Background } from '../../../_common/background/background.model';
+import { BackgroundModel } from '../../../_common/background/background.model';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
@@ -15,7 +15,7 @@ import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
-import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
@@ -23,12 +23,12 @@ import { $gettext } from '../../../_common/translate/translate.service';
 import { useGridStore } from '../grid/grid-store';
 import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './client';
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
-import { ChatRoom } from './room';
+import { ChatRoomModel } from './room';
 import { ChatUser } from './user';
 
 const props = defineProps({
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 	showMembersPreview: {
@@ -41,7 +41,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	submit: (_model: ChatRoom) => true,
+	submit: (_model: ChatRoomModel) => true,
 	viewMembers: () => true,
 });
 
@@ -55,7 +55,7 @@ const isLoadingBackgrounds = ref(false);
 const isSettingBackground = ref(false);
 
 const notificationLevel = ref('');
-const backgrounds = ref<Background[]>([]);
+const backgrounds = ref<BackgroundModel[]>([]);
 const roomBackgroundId = ref(room.value.background?.id || null);
 
 // When a user selects a background in this form, it sends a grid message to
@@ -83,7 +83,7 @@ watch(
 	}
 );
 
-const form: FormController<ChatRoom> = createForm({
+const form: FormController<ChatRoomModel> = createForm({
 	model: room,
 	loadUrl: `/web/chat/rooms/room-edit`,
 	onLoad(payload) {
@@ -100,7 +100,7 @@ type FormBackground = {
 const backgroundForm: FormController<FormBackground> = createForm({
 	loadUrl: `/web/chat/rooms/backgrounds/${room.value.id}`,
 	onLoad(payload) {
-		backgrounds.value = Background.populate(payload.backgrounds);
+		backgrounds.value = BackgroundModel.populate(payload.backgrounds);
 		roomBackgroundId.value = payload.roomBackgroundId || null;
 		backgroundForm.formModel.background_id = roomBackgroundId.value;
 	},
@@ -199,7 +199,7 @@ async function reloadBackgroundForm(retryOnDesync: boolean) {
 }
 
 async function leaveRoom() {
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to leave the group chat?`)
 	);
 
@@ -215,7 +215,7 @@ async function extinguishRoomFireside() {
 		return;
 	}
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to extinguish the fireside?`)
 	);
 

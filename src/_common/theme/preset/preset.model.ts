@@ -1,11 +1,9 @@
 import { Model } from '../../model/model.service';
 
-export class ThemePreset extends Model {
+export class ThemePresetModel extends Model {
 	name!: string;
 	highlight!: string;
 	backlight!: string;
 	notice!: string;
 	tint!: string | null;
 }
-
-Model.create(ThemePreset);

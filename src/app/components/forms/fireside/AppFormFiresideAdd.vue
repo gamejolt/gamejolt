@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
-import { arrayRemove } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
-import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../_common/community/community.model';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
+import { FiresideModel } from '../../../../_common/fireside/fireside.model';
 import AppForm, { createForm, defineFormProps } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
@@ -12,9 +11,10 @@ import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErr
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { arrayRemove } from '../../../../utils/array';
 import AppContentTargets from '../../content/AppContentTargets.vue';
 
 type FormModel = {
@@ -25,28 +25,28 @@ type FormModel = {
 
 const props = defineProps({
 	community: {
-		type: Object as PropType<Community>,
+		type: Object as PropType<CommunityModel>,
 		default: null,
 	},
 	realms: {
-		type: Array as PropType<Realm[]>,
+		type: Array as PropType<RealmModel[]>,
 		default: () => [],
 	},
 	...defineFormProps<FormModel>(false),
 });
 
 const emit = defineEmits({
-	submit: (_fireside: Fireside) => true,
+	submit: (_fireside: FiresideModel) => true,
 });
 
 const { community, realms, model } = toRefs(props);
 
-const realmsActual = ref<Realm[]>([...realms.value]);
+const realmsActual = ref<RealmModel[]>([...realms.value]);
 
 const defaultTitle = computed(() => nameSuggestion.value ?? undefined);
 const nameSuggestion = ref<string | null>(null);
-const targetableCommunities = ref<Community[]>([]);
-const communities = ref<{ community: Community }[]>([]);
+const targetableCommunities = ref<CommunityModel[]>([]);
+const communities = ref<{ community: CommunityModel }[]>([]);
 const maxRealms = ref(0);
 
 const selectableCommunities = computed(() => targetableCommunities.value.filter(c => !c.isBlocked));
@@ -62,7 +62,7 @@ const form = createForm({
 	onLoad(payload) {
 		// If there is already an active fireside for the requested target, return it immediately.
 		if (payload.fireside) {
-			const fireside = new Fireside(payload.fireside);
+			const fireside = new FiresideModel(payload.fireside);
 			emit('submit', fireside);
 			return;
 		}
@@ -72,7 +72,7 @@ const form = createForm({
 		}
 
 		if (payload.targetableCommunities) {
-			targetableCommunities.value = Community.populate(payload.targetableCommunities);
+			targetableCommunities.value = CommunityModel.populate(payload.targetableCommunities);
 		} else {
 			targetableCommunities.value = [];
 		}
@@ -129,7 +129,7 @@ const form = createForm({
 			return;
 		}
 
-		const fireside = new Fireside(payload.fireside);
+		const fireside = new FiresideModel(payload.fireside);
 		emit('submit', fireside);
 	},
 });
@@ -143,8 +143,8 @@ function onBlurTitle() {
 }
 
 function attachCommunity(
-	community: Community,
-	_channel: CommunityChannel | undefined,
+	community: CommunityModel,
+	_channel: CommunityChannelModel | undefined,
 	append = true
 ) {
 	// Do nothing if that community is already attached.
@@ -159,7 +159,7 @@ function attachCommunity(
 	}
 }
 
-function attachRealm(realm: Realm, append = true) {
+function attachRealm(realm: RealmModel, append = true) {
 	// Do nothing if that realm is already attached.
 	if (realmsActual.value.find(i => i.id === realm.id)) {
 		return;
@@ -172,13 +172,13 @@ function attachRealm(realm: Realm, append = true) {
 	}
 }
 
-function removeCommunity(community: Community) {
+function removeCommunity(community: CommunityModel) {
 	arrayRemove(communities.value, i => i.community.id === community.id, {
 		onMissing: () => console.warn('Attempted to remove a community that is not attached'),
 	});
 }
 
-function removeRealm(realm: Realm) {
+function removeRealm(realm: RealmModel) {
 	arrayRemove(realmsActual.value, i => i.id === realm.id, {
 		onMissing: () => console.warn('Attempted to remove a realm that is not attached'),
 	});

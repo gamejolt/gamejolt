@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { CommunitySidebarData } from '../sidebar-data';
 import AppCommunitySidebar from '../sidebar.vue';
@@ -18,7 +18,7 @@ export default class AppCommunitySidebarModal extends mixins(BaseModal) {
 	sidebarData!: CommunitySidebarData;
 
 	@Prop({ type: Object, required: true })
-	community!: Community;
+	community!: CommunityModel;
 }
 </script>
 

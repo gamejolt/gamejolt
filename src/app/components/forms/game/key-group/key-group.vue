@@ -3,12 +3,15 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { BaseForm, FormOnSubmitSuccess } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
-import { GamePackage } from '../../../../../_common/game/package/package.model';
-import { KeyGroup } from '../../../../../_common/key-group/key-group.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import {
+	GamePackageModel,
+	GamePackageVisibility,
+} from '../../../../../_common/game/package/package.model';
+import { KeyGroupModel, KeyGroupType } from '../../../../../_common/key-group/key-group.model';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
-class Wrapper extends BaseForm<KeyGroup> {}
+class Wrapper extends BaseForm<KeyGroupModel> {}
 
 @Options({
 	components: {
@@ -19,14 +22,18 @@ class Wrapper extends BaseForm<KeyGroup> {}
 	},
 })
 export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnSubmitSuccess {
-	modelClass = KeyGroup;
+	modelClass = KeyGroupModel;
 
-	@Prop(Object) game!: Game;
-	@Prop(Array) packages!: GamePackage[];
+	@Prop(Object) game!: GameModel;
+	@Prop(Array) packages!: GamePackageModel[];
 
 	readonly formatNumber = formatNumber;
-	readonly KeyGroup = KeyGroup;
-	readonly GamePackage = GamePackage;
+	readonly GamePackage = GamePackageModel;
+	readonly GamePackageVisibilityPrivate = GamePackageVisibility.Private;
+	readonly KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
+	readonly KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
+	readonly KeyGroupTypeEmail = KeyGroupType.Email;
+	readonly KeyGroupTypeUser = KeyGroupType.User;
 
 	get arePackagesChosen() {
 		return this.formModel.package_ids.length > 0;
@@ -51,7 +58,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 		<AppFormGroup v-if="method === 'add'" name="type" :label="$gettext(`Key Type`)">
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="KeyGroup.TYPE_USER" />
+					<AppFormControlRadio :value="KeyGroupTypeUser" />
 					<AppTranslate>User</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">
@@ -62,7 +69,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="KeyGroup.TYPE_ANONYMOUS_CLAIM" />
+					<AppFormControlRadio :value="KeyGroupTypeAnonymousClaim" />
 					<AppTranslate>Claim-Only</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">
@@ -74,7 +81,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="KeyGroup.TYPE_ANONYMOUS" />
+					<AppFormControlRadio :value="KeyGroupTypeAnonymous" />
 					<AppTranslate>Unrestricted (Anonymous)</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">
@@ -86,7 +93,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="KeyGroup.TYPE_EMAIL" />
+					<AppFormControlRadio :value="KeyGroupTypeEmail" />
 					<AppTranslate>Unrestricted (Email)</AppTranslate>
 					&mdash;
 					<AppTranslate class="help-inline">
@@ -112,8 +119,8 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 			v-if="
 				!!formModel.type &&
 				method === 'add' &&
-				(formModel.type === KeyGroup.TYPE_ANONYMOUS ||
-					formModel.type === KeyGroup.TYPE_ANONYMOUS_CLAIM)
+				(formModel.type === KeyGroupTypeAnonymous ||
+					formModel.type === KeyGroupTypeAnonymousClaim)
 			"
 			name="amount"
 			:label="$gettext(`# of Keys to Generate`)"
@@ -129,28 +136,28 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="!!formModel.type && method === 'add' && formModel.type === KeyGroup.TYPE_EMAIL"
+			v-if="!!formModel.type && method === 'add' && formModel.type === KeyGroupTypeEmail"
 			name="emails"
 			:label="$gettext(`Email Addresses`)"
 		>
 			<p class="help-block">
-				<AppTranslate
-					>Paste one email address per line, or separate them by commas.</AppTranslate
-				>
+				<AppTranslate>
+					Paste one email address per line, or separate them by commas.
+				</AppTranslate>
 			</p>
 			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
 			<AppFormControlErrors />
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="!!formModel.type && method === 'add' && formModel.type === KeyGroup.TYPE_USER"
+			v-if="!!formModel.type && method === 'add' && formModel.type === KeyGroupTypeUser"
 			name="users"
 			:label="$gettext(`Usernames`)"
 		>
 			<p class="help-block">
-				<AppTranslate
-					>Paste one username per line, or separate them by commas.</AppTranslate
-				>
+				<AppTranslate>
+					Paste one username per line, or separate them by commas.
+				</AppTranslate>
 			</p>
 			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
 			<AppFormControlErrors />
@@ -171,7 +178,7 @@ export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnS
 				<label>
 					<AppFormControlCheckbox :value="pkg.id" />
 					<span
-						v-if="pkg.visibility === GamePackage.VISIBILITY_PRIVATE"
+						v-if="pkg.visibility === GamePackageVisibilityPrivate"
 						v-app-tooltip="
 							$gettext(
 								`This package is private, but will be accessible in this key group if you assign it.`

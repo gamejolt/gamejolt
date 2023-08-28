@@ -4,7 +4,8 @@ import { Api } from '../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../_common/filters/number';
 import { BaseForm, FormOnSubmit } from '../../../../../../_common/form-vue/form.service';
-import { KeyGroup } from '../../../../../../_common/key-group/key-group.model';
+import { KeyGroupModel, KeyGroupType } from '../../../../../../_common/key-group/key-group.model';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 
 class Wrapper extends BaseForm<any> {}
 
@@ -14,10 +15,13 @@ class Wrapper extends BaseForm<any> {}
 	},
 })
 export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop(Object) keyGroup!: KeyGroup;
+	@Prop(Object) keyGroup!: KeyGroupModel;
 
 	readonly formatNumber = formatNumber;
-	readonly KeyGroup = KeyGroup;
+	readonly KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
+	readonly KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
+	readonly KeyGroupTypeEmail = KeyGroupType.Email;
+	readonly KeyGroupTypeUser = KeyGroupType.User;
 
 	created() {
 		this.form.warnOnDiscard = false;
@@ -37,8 +41,8 @@ export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements 
 	<AppForm :controller="form">
 		<AppFormGroup
 			v-if="
-				keyGroup.type === KeyGroup.TYPE_ANONYMOUS ||
-				keyGroup.type === KeyGroup.TYPE_ANONYMOUS_CLAIM
+				keyGroup.type === KeyGroupTypeAnonymous ||
+				keyGroup.type === KeyGroupTypeAnonymousClaim
 			"
 			name="amount"
 			:label="$gettext(`# of Keys to Generate`)"
@@ -54,7 +58,7 @@ export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements 
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="keyGroup.type === KeyGroup.TYPE_EMAIL"
+			v-if="keyGroup.type === KeyGroupTypeEmail"
 			name="emails"
 			:label="$gettext(`Email Addresses`)"
 		>
@@ -66,7 +70,7 @@ export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements 
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="keyGroup.type === KeyGroup.TYPE_USER"
+			v-if="keyGroup.type === KeyGroupTypeUser"
 			name="users"
 			:label="$gettext(`Usernames`)"
 		>
@@ -80,10 +84,9 @@ export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements 
 		<AppExpand :when="serverErrors['num-keys']">
 			<div class="alert alert-notice">
 				{{
-					$gettextInterpolate(
-						`You can only have a max of %{ max } keys in a single key group.`,
-						{ max: formatNumber(20000) }
-					)
+					$gettext(`You can only have a max of %{ max } keys in a single key group.`, {
+						max: formatNumber(20000),
+					})
 				}}
 			</div>
 		</AppExpand>

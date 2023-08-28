@@ -1,8 +1,8 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -16,8 +16,8 @@ import { CommunityEjectPostModalResult } from './modal.service';
 	},
 })
 export default class AppCommunityEjectPostModal extends mixins(BaseModal) {
-	@Prop({ type: Object, required: true }) firesidePostCommunity!: FiresidePostCommunity;
-	@Prop({ type: Object, required: true }) post!: FiresidePost;
+	@Prop({ type: Object, required: true }) firesidePostCommunity!: FiresidePostCommunityModel;
+	@Prop({ type: Object, required: true }) post!: FiresidePostModel;
 
 	commonStore = setup(() => useCommonStore());
 

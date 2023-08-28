@@ -5,14 +5,14 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { User } from '../../../../../_common/user/user.model';
+import { touchUser } from '../../../../../_common/user/user.model';
 import FormChatCommands from '../../../../components/forms/chat/commands/FormChatCommands.vue';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 export default {
 	...defineAppRouteOptions({
 		deps: {},
-		resolver: () => User.touch(),
+		resolver: () => touchUser(),
 	}),
 };
 </script>

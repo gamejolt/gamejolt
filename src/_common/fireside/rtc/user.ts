@@ -5,13 +5,13 @@ import {
 	IRemoteAudioTrack,
 	IRemoteVideoTrack,
 } from 'agora-rtc-sdk-ng';
-import { markRaw, reactive, toRaw, watch, WatchStopHandle } from 'vue';
+import { WatchStopHandle, markRaw, reactive, toRaw, watch } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { sleep } from '../../../utils/utils';
-import { User } from '../../user/user.model';
-import { Fireside } from '../fireside.model';
+import { UserModel } from '../../user/user.model';
+import { FiresideModel } from '../fireside.model';
 import { updateTrackPlaybackDevice } from './producer';
-import { chooseFocusedRTCUser, FiresideRTC } from './rtc';
+import { FiresideRTC, chooseFocusedRTCUser } from './rtc';
 
 export type FiresideVideoFit = 'cover' | 'contain' | 'fill' | undefined;
 export class FiresideVideoPlayStatePlaying {
@@ -273,7 +273,7 @@ export function initRemoteFiresideRTCUserPrefs(user: FiresideRTCUser) {
 	}
 }
 
-function _getFiresideRTCUserPrefKey(fireside: Fireside, userModel: User) {
+function _getFiresideRTCUserPrefKey(fireside: FiresideModel, userModel: UserModel) {
 	return `${fireside.id}-${userModel.id}`;
 }
 

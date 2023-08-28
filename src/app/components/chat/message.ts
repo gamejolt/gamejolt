@@ -6,7 +6,7 @@ export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued messag
 
 export type ChatMessageType = 'content' | 'sticker' | 'invite';
 
-export class ChatMessage implements ModelStoreModel, ReactionableModel {
+export class ChatMessageModel implements ModelStoreModel, ReactionableModel {
 	declare id: number;
 	declare user_id: number;
 	declare user: ChatUser;

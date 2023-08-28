@@ -3,13 +3,13 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
-import { GameDataStoreItem } from '../../../../../../../../../_common/game/data-store/item/item.model';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import { GameDataStoreItemModel } from '../../../../../../../../../_common/game/data-store/item/item.model';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../../../../../_common/popper/AppPopper.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { useGameDashRouteController } from '../../../../manage.store';
 
 @Options({
@@ -18,25 +18,25 @@ import { useGameDashRouteController } from '../../../../manage.store';
 		AppPopper,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/api/data-storage/' + route.params.id),
 })
-export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRouteComponent {
+export default class RouteDashGamesManageApiDataStorageItemsList extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game!;
 	}
 
-	items: GameDataStoreItem[] = [];
+	items: GameDataStoreItemModel[] = [];
 
 	readonly formatDate = formatDate;
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Manage Data Storage for %{ game }', {
+			return this.$gettext('Manage Data Storage for %{ game }', {
 				game: this.game.title,
 			});
 		}
@@ -44,12 +44,11 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends BaseRou
 	}
 
 	routeResolved($payload: any) {
-		this.items = GameDataStoreItem.populate($payload.items);
+		this.items = GameDataStoreItemModel.populate($payload.items);
 	}
 
-	async removeItem(item: GameDataStoreItem) {
-		const result = await ModalConfirm.show(
-			// TODO(vue3) translate-comment="This refers to game API data storage items specifically"
+	async removeItem(item: GameDataStoreItemModel) {
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this item?')
 		);
 

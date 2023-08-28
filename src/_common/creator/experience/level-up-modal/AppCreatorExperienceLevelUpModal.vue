@@ -10,11 +10,11 @@ import AppCircularProgress from '../../../progress/AppCircularProgress.vue';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../store/common-store';
 import AppUserAvatarBubble from '../../../user/user-avatar/AppUserAvatarBubble.vue';
-import { CreatorExperienceLevel } from '../level.model';
+import { CreatorExperienceLevelModel } from '../level.model';
 
 defineProps({
 	level: {
-		type: Object as PropType<CreatorExperienceLevel>,
+		type: Object as PropType<CreatorExperienceLevelModel>,
 		required: true,
 	},
 });
@@ -81,7 +81,7 @@ onMounted(async () => {
 					animationDelay: `300ms`,
 				}"
 			>
-				{{ $gettextInterpolate(`Level %{ level }`, { level: level.level }) }}
+				{{ $gettext(`Level %{ level }`, { level: level.level }) }}
 			</div>
 
 			<AppSpacer vertical :scale="4" />

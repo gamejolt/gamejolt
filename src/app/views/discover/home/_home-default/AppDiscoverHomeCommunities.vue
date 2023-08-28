@@ -3,13 +3,13 @@ import { computed, PropType } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCommunityCardPlaceholder from '../../../../../_common/community/card-placeholder/card-placeholder.vue';
 import AppCommunityCard from '../../../../../_common/community/card/card.vue';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
 const props = defineProps({
 	communities: {
-		type: Array as PropType<Community[]>,
+		type: Array as PropType<CommunityModel[]>,
 		required: true,
 	},
 	isLoading: {

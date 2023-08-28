@@ -10,7 +10,7 @@ import { kFontSizeSmall } from '../../../_styles/variables';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { StickerPack } from './pack.model';
+import { StickerPackModel } from './pack.model';
 
 export const StickerPackRatio = 2 / 3;
 
@@ -36,7 +36,7 @@ type PackDetailsOptions = boolean | StickerPackDetails;
 
 const props = defineProps({
 	pack: {
-		type: Object as PropType<StickerPack>,
+		type: Object as PropType<StickerPackModel>,
 		required: true,
 	},
 	showDetails: {

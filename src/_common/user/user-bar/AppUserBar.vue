@@ -2,11 +2,11 @@
 import { PropType } from 'vue';
 import { Environment } from '../../environment/environment.service';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
-import { User } from '../user.model';
+import { UserModel } from '../user.model';
 
 defineProps({
 	user: {
-		type: Object as PropType<User | null | undefined>,
+		type: Object as PropType<UserModel | null | undefined>,
 		required: true,
 	},
 });

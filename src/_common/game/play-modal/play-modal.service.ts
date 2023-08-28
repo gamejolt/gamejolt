@@ -1,29 +1,26 @@
 import { defineAsyncComponent } from 'vue';
-import { Analytics } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { HistoryTick } from '../../history-tick/history-tick-service';
 import { showModal } from '../../modal/modal.service';
 import { Navigate } from '../../navigate/navigate.service';
 import { Popper } from '../../popper/popper.service';
-import { Translate } from '../../translate/translate.service';
-import { GameBuild } from '../build/build.model';
-import { Game } from '../game.model';
+import { $gettext } from '../../translate/translate.service';
+import { GameBuildModel, GameBuildType } from '../build/build.model';
+import { GameModel } from '../game.model';
 
-export class GamePlayModal {
-	static hasModal = false;
-	static canMinimize = false;
+class GamePlayModalService {
+	hasModal = false;
+	canMinimize = false;
 
-	static init(options: { canMinimize?: boolean }) {
+	init(options: { canMinimize?: boolean }) {
 		this.canMinimize = options.canMinimize || false;
 	}
 
-	static async show(game: Game, build: GameBuild, options: { key?: string } = {}) {
-		Analytics.trackEvent('game-play', 'play');
-
+	async show(game: GameModel, build: GameBuildModel, options: { key?: string } = {}) {
 		if (this.hasModal) {
 			showErrorGrowl(
-				Translate.$gettext(
+				$gettext(
 					`You already have a browser game open. You can only have one running at a time.`
 				)
 			);
@@ -42,8 +39,8 @@ export class GamePlayModal {
 		// Will open the gameserver in their browser.
 		if (
 			GJ_IS_DESKTOP_APP &&
-			build.type !== GameBuild.TYPE_HTML &&
-			build.type !== GameBuild.TYPE_ROM
+			build.type !== GameBuildType.Html &&
+			build.type !== GameBuildType.Rom
 		) {
 			const downloadUrl = await this.getDownloadUrl(build, { key: options.key });
 			Navigate.gotoExternal(downloadUrl);
@@ -75,7 +72,7 @@ export class GamePlayModal {
 
 		await showModal({
 			modalId: 'GamePlay',
-			component: defineAsyncComponent(() => import('./play-modal.vue')),
+			component: defineAsyncComponent(() => import('./AppGamePlayModal.vue')),
 			props: { game, build, url, canMinimize },
 			noBackdrop: true,
 			noBackdropClose: true,
@@ -86,7 +83,7 @@ export class GamePlayModal {
 		this.hasModal = false;
 	}
 
-	private static async getDownloadUrl(build: GameBuild, options: { key?: string }) {
+	private async getDownloadUrl(build: GameBuildModel, options: { key?: string }) {
 		const payload = await build.getDownloadUrl({ key: options.key });
 		let url = payload.url;
 
@@ -98,3 +95,5 @@ export class GamePlayModal {
 		return url;
 	}
 }
+
+export const GamePlayModal = /** @__PURE__ */ new GamePlayModalService();

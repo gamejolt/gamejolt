@@ -2,7 +2,7 @@
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import AppPopper from '../../popper/AppPopper.vue';
 import { Popper } from '../../popper/popper.service';
-import { SiteTemplate } from '../../site/template/template-model';
+import { SiteTemplateModel } from '../../site/template/template-model';
 
 @Options({
 	components: {
@@ -11,12 +11,12 @@ import { SiteTemplate } from '../../site/template/template-model';
 })
 export default class AppThemeSelector extends Vue {
 	@Prop(Array)
-	templates!: SiteTemplate[];
+	templates!: SiteTemplateModel[];
 
 	@Prop(Number)
 	currentTemplate!: number;
 
-	current: SiteTemplate | null = null;
+	current: SiteTemplateModel | null = null;
 
 	@Emit('change')
 	emitChange(_id: number) {}

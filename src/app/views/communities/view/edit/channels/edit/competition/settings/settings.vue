@@ -1,9 +1,9 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import FormCommunityCompetitionEdit from '../../../../../../../../components/forms/community/competition/edit/edit.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
 
@@ -13,8 +13,8 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		FormCommunityCompetitionEdit,
 	},
 })
-@OptionsForRoute()
-export default class RouteCommunitiesViewEditChannelsCompetitionSettings extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteCommunitiesViewEditChannelsCompetitionSettings extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 

@@ -3,169 +3,157 @@ import type { RouteLocationDefinition } from '../../utils/router';
 import { Api } from '../api/api.service';
 import { Collaboratable } from '../collaborator/collaboratable';
 import { CommentableModel } from '../comment/comment-model';
-import { Community } from '../community/community.model';
+import { CommunityModel } from '../community/community.model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
-import { ContentSetCacheService } from '../content/content-set-cache';
+import { ContentSetCache } from '../content/content-set-cache';
 import { showErrorGrowl } from '../growls/growls.service';
-import { MediaItem } from '../media-item/media-item-model';
+import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
-import { Sellable } from '../sellable/sellable.model';
-import { Site } from '../site/site-model';
-import { Theme } from '../theme/theme.model';
+import { SellableModel } from '../sellable/sellable.model';
+import { SiteModel } from '../site/site-model';
+import { ThemeModel } from '../theme/theme.model';
 import { $gettext } from '../translate/translate.service';
-import { User } from '../user/user.model';
-import { GameBuild } from './build/build.model';
-import { GamePackage } from './package/package.model';
+import { UserModel } from '../user/user.model';
+import { GameBuildModel, GameBuildType } from './build/build.model';
+import { GamePackageModel } from './package/package.model';
 
-export interface CustomMessage {
+export interface CustomGameMessage {
 	type: 'info' | 'alert';
 	message: string;
 	class: string;
 }
 
-function pluckBuilds(packages: GamePackage[], func: (build: GameBuild) => boolean) {
-	const pluckedBuilds: GameBuild[] = [];
+export const GameCreationToolOther = 'Other';
 
-	packages.forEach((_package: GamePackage) => {
-		if (!_package._builds) {
-			return;
-		}
-
-		_package._builds.forEach(build => {
-			if (func(build)) {
-				pluckedBuilds.push(build);
-			}
-		});
-	});
-
-	return pluckedBuilds;
+export const enum GameStatus {
+	Hidden = 0,
+	Visible = 1,
+	Removed = 2,
 }
 
-export class Game extends Collaboratable(Model) implements ContentContainerModel, CommentableModel {
-	static readonly CREATION_TOOL_OTHER = 'Other';
+export const enum GameDevelopmentStatus {
+	Finished = 1,
+	Wip = 2,
+	Canceled = 3,
+	Devlog = 4,
+}
 
-	static readonly STATUS_HIDDEN = 0;
-	static readonly STATUS_VISIBLE = 1;
-	static readonly STATUS_REMOVED = 2;
+export const enum GameLockedStatus {
+	Unlocked = 0,
+	Dmca = 1,
+	Adult = 3,
+}
 
-	static readonly DEVELOPMENT_STATUS_FINISHED = 1;
-	static readonly DEVELOPMENT_STATUS_WIP = 2;
-	static readonly DEVELOPMENT_STATUS_CANCELED = 3;
-	static readonly DEVELOPMENT_STATUS_DEVLOG = 4;
-
-	static readonly LOCKED_STATUS_UNLOCKED = 0;
-	static readonly LOCKED_STATUS_DMCA = 1;
-	static readonly LOCKED_STATUS_ADULT = 3;
-
-	developer!: User;
-	thumbnail_media_item?: MediaItem;
-	header_media_item?: MediaItem;
-	community?: Community;
-
-	title!: string;
-	slug!: string;
-	path!: string;
-	img_thumbnail!: string;
-	has_animated_thumbnail!: boolean;
-	img_thumbnail_webm!: string;
-	img_thumbnail_mp4!: string;
-	media_count!: number;
-	follower_count!: number;
-	ratings_enabled!: boolean;
-	referrals_enabled!: boolean;
-	compatibility!: any;
-	modified_on!: number;
-	posted_on!: number;
-	published_on!: number;
-	status!: number;
-	development_status!: number;
-	canceled!: boolean;
-	tigrs_age!: number;
-	sellable?: Sellable;
-	can_user_rate?: boolean;
-	is_following?: boolean;
-	has_adult_content!: boolean;
-	should_show_ads!: boolean;
-	like_count!: number;
-	sites_enabled!: boolean;
+export class GameModel
+	extends Collaboratable(Model)
+	implements ContentContainerModel, CommentableModel
+{
+	declare developer: UserModel;
+	declare thumbnail_media_item?: MediaItemModel;
+	declare header_media_item?: MediaItemModel;
+	declare community?: CommunityModel;
+	declare title: string;
+	declare slug: string;
+	declare path: string;
+	declare img_thumbnail: string;
+	declare has_animated_thumbnail: boolean;
+	declare img_thumbnail_webm: string;
+	declare img_thumbnail_mp4: string;
+	declare media_count: number;
+	declare follower_count: number;
+	declare ratings_enabled: boolean;
+	declare referrals_enabled: boolean;
+	declare compatibility: any;
+	declare modified_on: number;
+	declare posted_on: number;
+	declare published_on: number;
+	declare status: GameStatus;
+	declare development_status: GameDevelopmentStatus;
+	declare canceled: boolean;
+	declare tigrs_age: number;
+	declare sellable?: SellableModel;
+	declare can_user_rate?: boolean;
+	declare is_following?: boolean;
+	declare has_adult_content: boolean;
+	declare should_show_ads: boolean;
+	declare like_count: number;
+	declare sites_enabled: boolean;
 
 	// Meta settings
-	creation_tool?: string;
-	creation_tool_other?: string;
-	creation_tool_human?: string;
-	web_site?: string;
-	bundle_only?: boolean;
-	ga_tracking_id?: string;
-	comments_enabled?: boolean;
+	declare creation_tool?: string;
+	declare creation_tool_other?: string;
+	declare creation_tool_human?: string;
+	declare web_site?: string;
+	declare bundle_only?: boolean;
+	declare ga_tracking_id?: string;
+	declare comments_enabled?: boolean;
 
-	avg_rating?: number;
-	rating_count?: number;
+	declare avg_rating?: number;
+	declare rating_count?: number;
 
 	// Maturity settings
-	tigrs_cartoon_violence?: number;
-	tigrs_fantasy_violence?: number;
-	tigrs_realistic_violence?: number;
-	tigrs_bloodshed?: number;
-	tigrs_sexual_violence?: number;
-	tigrs_alcohol?: number;
-	tigrs_drugs?: number;
-	tigrs_tobacco?: number;
-	tigrs_nudity?: number;
-	tigrs_sexual_themes?: number;
-	tigrs_language?: number;
-	tigrs_humor?: number;
-	tigrs_gambling?: number;
+	declare tigrs_cartoon_violence?: number;
+	declare tigrs_fantasy_violence?: number;
+	declare tigrs_realistic_violence?: number;
+	declare tigrs_bloodshed?: number;
+	declare tigrs_sexual_violence?: number;
+	declare tigrs_alcohol?: number;
+	declare tigrs_drugs?: number;
+	declare tigrs_tobacco?: number;
+	declare tigrs_nudity?: number;
+	declare tigrs_sexual_themes?: number;
+	declare tigrs_language?: number;
+	declare tigrs_humor?: number;
+	declare tigrs_gambling?: number;
 
 	// Description settings
-	description_content!: string;
+	declare description_content: string;
 
 	// Manage settings
-	has_sales?: boolean;
-	has_active_builds?: boolean;
-	is_listable?: boolean;
-	is_locked?: boolean;
-	locked_status?: number;
+	declare has_sales?: boolean;
+	declare has_active_builds?: boolean;
+	declare is_listable?: boolean;
+	declare is_locked?: boolean;
+	declare locked_status?: GameLockedStatus;
 
-	// Sites settings
-	site?: Site;
-
-	theme?: Theme;
+	declare site?: SiteModel;
+	declare theme?: ThemeModel;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.developer) {
-			this.developer = new User(data.developer);
+			this.developer = new UserModel(data.developer);
 		}
 
 		if (data.thumbnail_media_item) {
-			this.thumbnail_media_item = new MediaItem(data.thumbnail_media_item);
+			this.thumbnail_media_item = new MediaItemModel(data.thumbnail_media_item);
 		}
 
 		if (data.header_media_item) {
-			this.header_media_item = new MediaItem(data.header_media_item);
+			this.header_media_item = new MediaItemModel(data.header_media_item);
 		}
 
 		if (data.site) {
-			this.site = new Site(data.site);
+			this.site = new SiteModel(data.site);
 		}
 
 		// Should show as owned for the dev and collaborators of the game.
 		if (data.sellable) {
-			this.sellable = new Sellable(data.sellable);
+			this.sellable = new SellableModel(data.sellable);
 			if (this.sellable.type !== 'free' && this.hasPerms()) {
 				this.sellable.is_owned = true;
 			}
 		}
 
 		if (data.theme) {
-			this.theme = new Theme(data.theme);
+			this.theme = new ThemeModel(data.theme);
 		}
 
 		if (data.community) {
-			this.community = new Community(data.community);
+			this.community = new CommunityModel(data.community);
 		}
 
 		Registry.store('Game', this);
@@ -189,23 +177,23 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	}
 
 	get _is_finished() {
-		return this.development_status === Game.DEVELOPMENT_STATUS_FINISHED;
+		return this.development_status === GameDevelopmentStatus.Finished;
 	}
 
 	get _is_wip() {
-		return this.development_status === Game.DEVELOPMENT_STATUS_WIP;
+		return this.development_status === GameDevelopmentStatus.Wip;
 	}
 
 	get _is_devlog() {
-		return this.development_status === Game.DEVELOPMENT_STATUS_DEVLOG;
+		return this.development_status === GameDevelopmentStatus.Devlog;
 	}
 
 	get isVisible() {
-		return this.status === Game.STATUS_VISIBLE;
+		return this.status === GameStatus.Visible;
 	}
 
 	get isUnlisted() {
-		return this.status === Game.STATUS_HIDDEN;
+		return this.status === GameStatus.Hidden;
 	}
 
 	get _has_cover() {
@@ -232,7 +220,7 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	}
 
 	get hasDescription() {
-		const cache = ContentSetCacheService.getCache(this, 'game-description');
+		const cache = ContentSetCache.getCache(this, 'game-description');
 		return cache.hasContent;
 	}
 
@@ -318,92 +306,13 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 		);
 	}
 
-	/**
-	 * Helper function to check if the resource passed in has support for the
-	 * os/arch passed in.
-	 */
-	static checkDeviceSupport(obj: any, os: string, arch: string | undefined): boolean {
-		if (obj['os_' + os]) {
-			return true;
-		}
-
-		// If they are on 64bit, then we can check for 64bit only support as well.
-		// If there is no arch (web site context) then we allow 64bit builds as well.
-		if ((!arch || arch === '64') && obj['os_' + os + '_64']) {
-			return true;
-		}
-
-		return false;
-	}
-
 	canInstall(os: string, arch: string | undefined): boolean {
 		// Obviously can't install if no desktop build.
 		if (!this.hasDesktopSupport()) {
 			return false;
 		}
 
-		return Game.checkDeviceSupport(this.compatibility, os, arch);
-	}
-
-	static pluckInstallableBuilds(packages: GamePackage[], os: string, arch?: string): GameBuild[] {
-		const pluckedBuilds: GameBuild[] = [];
-
-		packages.forEach(_package => {
-			// Don't include builds for packages that aren't bought yet.
-			// Can't install them if they can't be bought.
-			if (
-				_package._sellable &&
-				_package._sellable.type === 'paid' &&
-				!_package._sellable.is_owned
-			) {
-				return;
-			}
-
-			if (_package._builds) {
-				_package._builds.forEach(build => {
-					if (Game.checkDeviceSupport(build, os, arch)) {
-						pluckedBuilds.push(build);
-					}
-				});
-			}
-		});
-
-		return pluckedBuilds;
-	}
-
-	static pluckDownloadableBuilds(packages: GamePackage[]) {
-		return pluckBuilds(packages, i => i.isDownloadable);
-	}
-
-	static pluckBrowserBuilds(packages: GamePackage[]) {
-		return pluckBuilds(packages, i => i.isBrowserBased);
-	}
-
-	static pluckRomBuilds(packages: GamePackage[]) {
-		return pluckBuilds(packages, i => i.isRom);
-	}
-
-	static chooseBestBuild(builds: GameBuild[], os: string, arch?: string) {
-		const sortedBuilds = builds.sort((a, b) => a._release!.sort - b._release!.sort);
-
-		const build32 = sortedBuilds.find(build => build.isPlatform(os));
-		const build64 = sortedBuilds.find(build => build.isPlatform(os, '64'));
-
-		// If they are on 64bit, and we have a 64 bit build, we should try to
-		// use it.
-		if (arch === '64' && build64) {
-			// If the 64bit build is an older version than the 32bit build, then
-			// we have to use 32bit anyway.
-			if (!build32 || build64._release!.sort <= build32._release!.sort) {
-				return build64;
-			}
-		}
-
-		if (build32) {
-			return build32;
-		}
-
-		return builds[0];
+		return checkGameDeviceSupport(this.compatibility, os, arch);
 	}
 
 	$save() {
@@ -478,9 +387,108 @@ export class Game extends Collaboratable(Model) implements ContentContainerModel
 	}
 }
 
-Model.create(Game);
+/**
+ * Helper function to check if the resource passed in has support for the
+ * os/arch passed in.
+ */
+export function checkGameDeviceSupport(obj: any, os: string, arch: string | undefined): boolean {
+	if (obj['os_' + os]) {
+		return true;
+	}
 
-export async function followGame(game: Game) {
+	// If they are on 64bit, then we can check for 64bit only support as well.
+	// If there is no arch (web site context) then we allow 64bit builds as well.
+	if ((!arch || arch === '64') && obj['os_' + os + '_64']) {
+		return true;
+	}
+
+	return false;
+}
+
+export function pluckInstallableGameBuilds(
+	packages: GamePackageModel[],
+	os: string,
+	arch?: string
+): GameBuildModel[] {
+	const pluckedBuilds: GameBuildModel[] = [];
+
+	packages.forEach(_package => {
+		// Don't include builds for packages that aren't bought yet.
+		// Can't install them if they can't be bought.
+		if (
+			_package._sellable &&
+			_package._sellable.type === 'paid' &&
+			!_package._sellable.is_owned
+		) {
+			return;
+		}
+
+		if (_package._builds) {
+			_package._builds.forEach(build => {
+				if (checkGameDeviceSupport(build, os, arch)) {
+					pluckedBuilds.push(build);
+				}
+			});
+		}
+	});
+
+	return pluckedBuilds;
+}
+
+export function pluckDownloadableGameBuilds(packages: GamePackageModel[]) {
+	return _pluckBuilds(packages, i => i.isDownloadable);
+}
+
+export function pluckBrowserGameBuilds(packages: GamePackageModel[]) {
+	return _pluckBuilds(packages, i => i.isBrowserBased);
+}
+
+export function pluckRomGameBuilds(packages: GamePackageModel[]) {
+	return _pluckBuilds(packages, i => i.type === GameBuildType.Rom);
+}
+
+function _pluckBuilds(packages: GamePackageModel[], func: (build: GameBuildModel) => boolean) {
+	const pluckedBuilds: GameBuildModel[] = [];
+
+	packages.forEach((_package: GamePackageModel) => {
+		if (!_package._builds) {
+			return;
+		}
+
+		_package._builds.forEach(build => {
+			if (func(build)) {
+				pluckedBuilds.push(build);
+			}
+		});
+	});
+
+	return pluckedBuilds;
+}
+
+export function chooseBestGameBuild(builds: GameBuildModel[], os: string, arch?: string) {
+	const sortedBuilds = builds.sort((a, b) => a._release!.sort - b._release!.sort);
+
+	const build32 = sortedBuilds.find(build => build.isPlatform(os));
+	const build64 = sortedBuilds.find(build => build.isPlatform(os, '64'));
+
+	// If they are on 64bit, and we have a 64 bit build, we should try to
+	// use it.
+	if (arch === '64' && build64) {
+		// If the 64bit build is an older version than the 32bit build, then
+		// we have to use 32bit anyway.
+		if (!build32 || build64._release!.sort <= build32._release!.sort) {
+			return build64;
+		}
+	}
+
+	if (build32) {
+		return build32;
+	}
+
+	return builds[0];
+}
+
+export async function followGame(game: GameModel) {
 	game.is_following = true;
 	++game.follower_count;
 
@@ -502,7 +510,7 @@ export async function followGame(game: Game) {
 	}
 }
 
-export async function unfollowGame(game: Game) {
+export async function unfollowGame(game: GameModel) {
 	game.is_following = false;
 	--game.follower_count;
 
@@ -519,7 +527,7 @@ export async function unfollowGame(game: Game) {
 	}
 }
 
-export function handleGameAddFailure(user: User, reason: string, router: Router) {
+export function handleGameAddFailure(user: UserModel, reason: string, router: Router) {
 	switch (reason) {
 		case 'game-limit-reached':
 			showErrorGrowl(

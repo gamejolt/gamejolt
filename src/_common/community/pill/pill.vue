@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { FiresidePostCommunity } from '../../fireside/post/community/community.model';
+import { FiresidePostCommunityModel } from '../../fireside/post/community/community.model';
 import AppPill from '../../pill/AppPill.vue';
 import AppPillBi from '../../pill/AppPillBi.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
@@ -20,7 +20,7 @@ import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 })
 export default class AppCommunityPill extends Vue {
 	@Prop({ type: Object, required: true })
-	communityLink!: FiresidePostCommunity;
+	communityLink!: FiresidePostCommunityModel;
 
 	@Prop({ type: Boolean, required: false, default: false })
 	noLinks!: boolean;

@@ -1,10 +1,10 @@
 import { defineAsyncComponent } from 'vue';
-import { Community } from '../../../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../../../_common/community/community.model';
 import { showModal } from '../../../../../../_common/modal/modal.service';
 
 export class CommunityHeaderModal {
-	static async show(community: Community) {
-		return await showModal<Community>({
+	static async show(community: CommunityModel) {
+		return await showModal<CommunityModel>({
 			modalId: 'CommunityHeader',
 			component: defineAsyncComponent(() => import('./modal.vue')),
 			props: {

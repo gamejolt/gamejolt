@@ -3,7 +3,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 
 @Options({
 	components: {
@@ -14,12 +14,12 @@ import { User } from '../../../../_common/user/user.model';
 	},
 })
 export default class AppUserLevelWidget extends Vue {
-	@Prop(Object) user!: User;
+	@Prop(Object) user!: UserModel;
 
 	readonly formatNumber = formatNumber;
 
 	get tooltip() {
-		return this.$gettextInterpolate('%{ percentage }% progress to next level', {
+		return this.$gettext('%{ percentage }% progress to next level', {
 			percentage: this.user.level_next_percentage,
 		});
 	}

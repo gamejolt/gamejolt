@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { canDeviceCreateFiresides, Fireside } from '../../../../_common/fireside/fireside.model';
+import {
+	canDeviceCreateFiresides,
+	FiresideModel,
+} from '../../../../_common/fireside/fireside.model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
@@ -13,7 +16,7 @@ import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 
 const props = defineProps({
 	firesides: {
-		type: Array as PropType<Fireside[]>,
+		type: Array as PropType<FiresideModel[]>,
 		required: true,
 	},
 	isLoading: {
@@ -21,18 +24,18 @@ const props = defineProps({
 		required: true,
 	},
 	featuredFireside: {
-		type: Object as PropType<Fireside>,
+		type: Object as PropType<FiresideModel>,
 		default: null,
 	},
 	userFireside: {
-		type: Object as PropType<Fireside>,
+		type: Object as PropType<FiresideModel>,
 		default: null,
 	},
 	showPlaceholders: {
 		type: Boolean,
 	},
 	initialRealm: {
-		type: Object as PropType<Realm>,
+		type: Object as PropType<RealmModel>,
 		default: undefined,
 	},
 });

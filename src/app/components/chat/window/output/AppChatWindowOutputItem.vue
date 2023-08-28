@@ -1,12 +1,12 @@
 <script lang="ts">
 import { computed, CSSProperties, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
 import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
+import { ContentRules } from '../../../../../_common/content/content-rules';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppPopper, { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import AppReactionList from '../../../../../_common/reaction/list/AppReactionList.vue';
@@ -26,15 +26,15 @@ import {
 	retryFailedQueuedMessage,
 	userCanModerateOtherUser,
 } from '../../client';
-import { ChatMessage } from '../../message';
-import { ChatRoom } from '../../room';
+import { ChatMessageModel } from '../../message';
+import { ChatRoomModel } from '../../room';
 import { getChatUserRoleData } from '../../user';
 import AppChatUserPopover from '../../user-popover/AppChatUserPopover.vue';
 import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '../variables';
 import AppChatWindowOutputItemTime from './AppChatWindowOutputItemTime.vue';
 
 export interface ChatMessageEditEvent {
-	message: ChatMessage;
+	message: ChatMessageModel;
 }
 
 const InviewConfig = new ScrollInviewConfig();
@@ -45,11 +45,11 @@ const DisplayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 
 <script lang="ts" setup>
 const props = defineProps({
 	message: {
-		type: Object as PropType<ChatMessage>,
+		type: Object as PropType<ChatMessageModel>,
 		required: true,
 	},
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 	messagePadding: {
@@ -237,7 +237,7 @@ function stopEdit() {
 async function removeMessage() {
 	Popper.hideAll();
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to remove this message?`)
 	);
 

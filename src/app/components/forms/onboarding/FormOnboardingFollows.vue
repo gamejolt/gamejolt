@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed, PropType, ref } from 'vue';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 import AppOnboardingFollowsCommunityItem from './AppOnboardingFollowsCommunityItem.vue';
 
 type FormModel = {
@@ -13,7 +13,7 @@ type FormModel = {
 
 defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 	isSocialRegistration: {
@@ -26,7 +26,7 @@ const emit = defineEmits({
 	next: () => true,
 });
 
-const communities = ref<Community[]>([]);
+const communities = ref<CommunityModel[]>([]);
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
@@ -35,7 +35,7 @@ const form: FormController<FormModel> = createForm({
 	},
 	loadUrl: '/web/onboarding/follows',
 	onLoad(payload) {
-		communities.value = Community.populate(payload.communities);
+		communities.value = CommunityModel.populate(payload.communities);
 	},
 	onBeforeSubmit() {
 		Onboarding.trackEvent(

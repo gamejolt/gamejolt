@@ -1,21 +1,21 @@
 <script lang="ts">
 import { computed, PropType, ref, toRefs } from 'vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 import { fuzzysearch } from '../../../../utils/string';
-import { ChatRoom } from '../room';
+import { ChatRoomModel } from '../room';
 import { ChatUser } from '../user';
 
-type ChatListEntry = ChatUser | User | ChatRoom;
+type ChatListEntry = ChatUser | UserModel | ChatRoomModel;
 
 function searchEntries<T extends ChatListEntry>(entries: T[], query: string): T[] {
 	return entries.filter(i => {
-		if (i instanceof ChatUser || i instanceof User) {
+		if (i instanceof ChatUser || i instanceof UserModel) {
 			return (
 				fuzzysearch(query, i.display_name.toLowerCase()) ||
 				fuzzysearch(query, i.username.toLowerCase())
 			);
-		} else if (i instanceof ChatRoom) {
+		} else if (i instanceof ChatRoomModel) {
 			if (i.title) {
 				return fuzzysearch(query, i.title.toLowerCase());
 			} else {
@@ -29,9 +29,9 @@ function getKeyForEntry(entry: ChatListEntry) {
 	let key = '';
 	if (entry instanceof ChatUser) {
 		key = 'chat-user-';
-	} else if (entry instanceof User) {
+	} else if (entry instanceof UserModel) {
 		key = 'user-';
-	} else if (entry instanceof ChatRoom) {
+	} else if (entry instanceof ChatRoomModel) {
 		key = 'chat-room-';
 	}
 

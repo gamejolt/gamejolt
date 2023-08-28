@@ -17,7 +17,7 @@ import {
 } from '../../../../_common/form-vue/validators';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 import { UserAvatarModal } from '../../user/avatar-modal/avatar-modal.service';
 
 type FormModel = {
@@ -27,7 +27,7 @@ type FormModel = {
 
 const props = defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 	isSocialRegistration: {

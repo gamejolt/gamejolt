@@ -4,11 +4,11 @@ import { styleFlexCenter } from '../../../../_styles/mixins';
 import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppJolticon, { Jolticon } from '../../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { EmojiGroup } from '../../emoji-group.model';
+import { EmojiGroupModel } from '../../emoji-group.model';
 
 const props = defineProps({
 	group: {
-		type: Object as PropType<EmojiGroup>,
+		type: Object as PropType<EmojiGroupModel>,
 		required: true,
 	},
 	/**
@@ -29,11 +29,11 @@ const icon = computed(() => {
 	let result: Jolticon = 'other-os';
 
 	switch (group.value.type) {
-		case EmojiGroup.TYPE_LEGACY:
+		case EmojiGroupModel.TYPE_LEGACY:
 			result = 'bolt-filled';
 			break;
 
-		case EmojiGroup.TYPE_UNICODE: {
+		case EmojiGroupModel.TYPE_UNICODE: {
 			const name = group.value.name.toLowerCase();
 
 			if (name === 'smileys & people' || name === 'smileys & emotion') {
@@ -56,7 +56,7 @@ const icon = computed(() => {
 			break;
 		}
 
-		case EmojiGroup.TYPE_COLLECTION:
+		case EmojiGroupModel.TYPE_COLLECTION:
 			result = 'smiley';
 			break;
 

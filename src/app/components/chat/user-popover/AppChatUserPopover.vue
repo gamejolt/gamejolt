@@ -4,10 +4,10 @@ import { RouterLink } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { kThemeDarkest } from '../../../../_common/theme/variables';
-import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { styleWhen } from '../../../../_styles/mixins';
@@ -26,7 +26,7 @@ import {
 	tryGetRoomRole,
 	userCanModerateOtherUser,
 } from '../client';
-import { ChatRoom } from '../room';
+import { ChatRoomModel } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 
@@ -36,7 +36,7 @@ const props = defineProps({
 		required: true,
 	},
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 });
@@ -118,16 +118,16 @@ function onClickSendMessage() {
 
 async function onClickKick() {
 	const message = canMessage.value
-		? $gettextInterpolate(`Are you sure you want to kick %{ user } from the room?`, {
+		? $gettext(`Are you sure you want to kick %{ user } from the room?`, {
 				user: user.value.display_name,
 		  })
-		: $gettextInterpolate(
+		: $gettext(
 				`Are you sure you want to kick @%{ username } from this room? You're not friends with this user, so you won't be able to invite them back into this room.`,
 				{ username: user.value.username }
 		  );
-	const confirm = await ModalConfirm.show(
+	const confirm = await showModalConfirm(
 		message,
-		$gettextInterpolate(`Kick @%{ username }`, { username: user.value.username })
+		$gettext(`Kick @%{ username }`, { username: user.value.username })
 	);
 
 	if (confirm) {
@@ -136,8 +136,8 @@ async function onClickKick() {
 }
 
 async function onClickPromoteModerator() {
-	const result = await ModalConfirm.show(
-		$gettextInterpolate(
+	const result = await showModalConfirm(
+		$gettext(
 			`Do you want to promote @%{ username } to moderator? They will be able to remove messages and kick users from the chat. You can demote them at any time.`,
 			{ username: user.value.username }
 		)
@@ -151,7 +151,7 @@ async function onClickPromoteModerator() {
 
 		if (payload.success && payload.role) {
 			showSuccessGrowl(
-				$gettextInterpolate(`@%{ username } has been promoted to moderator.`, {
+				$gettext(`@%{ username } has been promoted to moderator.`, {
 					username: user.value.username,
 				})
 			);
@@ -160,8 +160,8 @@ async function onClickPromoteModerator() {
 }
 
 async function onClickDemoteModerator() {
-	const result = await ModalConfirm.show(
-		$gettextInterpolate(`Do you want to demote @%{ username } to a normal user?`, {
+	const result = await showModalConfirm(
+		$gettext(`Do you want to demote @%{ username } to a normal user?`, {
 			username: user.value.username,
 		})
 	);
@@ -173,7 +173,7 @@ async function onClickDemoteModerator() {
 		);
 		if (payload.success && payload.role) {
 			showSuccessGrowl(
-				$gettextInterpolate(`@%{ username } is no longer a moderator.`, {
+				$gettext(`@%{ username } is no longer a moderator.`, {
 					username: user.value.username,
 				})
 			);

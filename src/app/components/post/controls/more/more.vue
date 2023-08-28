@@ -1,21 +1,24 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { Game } from '../../../../../_common/game/game.model';
+import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
+import {
+	FiresidePostModel,
+	FiresidePostStatus,
+} from '../../../../../_common/fireside/post/post-model';
+import { GameModel } from '../../../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { ReportModal } from '../../../../../_common/report/modal/modal.service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { User } from '../../../../../_common/user/user.model';
+import { UserModel } from '../../../../../_common/user/user.model';
+import { arrayRemove } from '../../../../../utils/array';
 import { useAppStore } from '../../../../store';
 import { CommunityBlockUserModal } from '../../../community/block-user-modal/block-user-modal.service';
 import { CommunityEjectPostModal } from '../../../community/eject-post/modal/modal.service';
@@ -32,7 +35,7 @@ import { useGridStore } from '../../../grid/grid-store';
 })
 export default class AppPostControlsMore extends Vue {
 	@Prop({ type: Object, required: true })
-	post!: FiresidePost;
+	post!: FiresidePostModel;
 
 	@Prop({ type: Boolean, default: false })
 	overlay!: boolean;
@@ -46,10 +49,10 @@ export default class AppPostControlsMore extends Vue {
 	}
 
 	@Emit('remove') emitRemove() {}
-	@Emit('feature') emitFeature(_community: Community) {}
-	@Emit('unfeature') emitUnfeature(_community: Community) {}
-	@Emit('move-channel') emitMoveChannel(_movedTo: CommunityChannel) {}
-	@Emit('reject') emitReject(_community: Community) {}
+	@Emit('feature') emitFeature(_community: CommunityModel) {}
+	@Emit('unfeature') emitUnfeature(_community: CommunityModel) {}
+	@Emit('move-channel') emitMoveChannel(_movedTo: CommunityChannelModel) {}
+	@Emit('reject') emitReject(_community: CommunityModel) {}
 	@Emit('pin') emitPin() {}
 	@Emit('unpin') emitUnpin() {}
 
@@ -59,7 +62,7 @@ export default class AppPostControlsMore extends Vue {
 
 	get shouldShowManageCommunities() {
 		return (
-			this.post.status === FiresidePost.STATUS_ACTIVE &&
+			this.post.status === FiresidePostStatus.Active &&
 			this.post.manageableCommunities.length !== 0
 		);
 	}
@@ -84,16 +87,16 @@ export default class AppPostControlsMore extends Vue {
 			return false;
 		}
 
-		if (this.post.status !== FiresidePost.STATUS_ACTIVE) {
+		if (this.post.status !== FiresidePostStatus.Active) {
 			return false;
 		}
 
 		const pinContext = this.post.getPinContextFor(this.$route);
-		if (pinContext instanceof Game) {
+		if (pinContext instanceof GameModel) {
 			return this.canEdit;
-		} else if (pinContext instanceof FiresidePostCommunity) {
+		} else if (pinContext instanceof FiresidePostCommunityModel) {
 			return pinContext.community.hasPerms('community-posts');
-		} else if (pinContext instanceof User) {
+		} else if (pinContext instanceof UserModel) {
 			return pinContext.id === this.user.id;
 		}
 
@@ -105,7 +108,7 @@ export default class AppPostControlsMore extends Vue {
 		return this.post.user.id !== this.user?.id;
 	}
 
-	async toggleFeatured(postCommunity: FiresidePostCommunity) {
+	async toggleFeatured(postCommunity: FiresidePostCommunityModel) {
 		if (postCommunity.isFeatured) {
 			await this.post.$unfeature(postCommunity.community);
 			this.emitUnfeature(postCommunity.community);
@@ -116,7 +119,7 @@ export default class AppPostControlsMore extends Vue {
 		}
 	}
 
-	async movePostFromCommunityChannel(postCommunity: FiresidePostCommunity) {
+	async movePostFromCommunityChannel(postCommunity: FiresidePostCommunityModel) {
 		let possibleChannels = postCommunity.community.channels;
 		if (!possibleChannels) {
 			possibleChannels = await this.fetchCommunityChannels(postCommunity.community);
@@ -141,7 +144,7 @@ export default class AppPostControlsMore extends Vue {
 		}
 	}
 
-	private async fetchCommunityChannels(community: Community) {
+	private async fetchCommunityChannels(community: CommunityModel) {
 		const payload = await Api.sendRequest(
 			`/web/communities/manage/list-channels/${community.id}`,
 			null,
@@ -154,10 +157,10 @@ export default class AppPostControlsMore extends Vue {
 			throw new Error('Could not fetch community channels');
 		}
 
-		return CommunityChannel.populate(payload.channels) as CommunityChannel[];
+		return CommunityChannelModel.populate(payload.channels) as CommunityChannelModel[];
 	}
 
-	async rejectFromCommunity(postCommunity: FiresidePostCommunity) {
+	async rejectFromCommunity(postCommunity: FiresidePostCommunityModel) {
 		const result = await CommunityEjectPostModal.show(postCommunity, this.post);
 		if (!result) {
 			return;
@@ -176,7 +179,7 @@ export default class AppPostControlsMore extends Vue {
 		}
 	}
 
-	blockFromCommunity(postCommunity: FiresidePostCommunity) {
+	blockFromCommunity(postCommunity: FiresidePostCommunityModel) {
 		CommunityBlockUserModal.show(this.post.user, postCommunity.community);
 	}
 
@@ -200,13 +203,13 @@ export default class AppPostControlsMore extends Vue {
 		let resourceName: string;
 		let resourceId: number;
 
-		if (pinContext instanceof Game) {
+		if (pinContext instanceof GameModel) {
 			resourceName = 'Game';
 			resourceId = pinContext.id;
-		} else if (pinContext instanceof FiresidePostCommunity) {
+		} else if (pinContext instanceof FiresidePostCommunityModel) {
 			resourceName = 'Community_Channel';
 			resourceId = pinContext.channel!.id;
-		} else if (pinContext instanceof User) {
+		} else if (pinContext instanceof UserModel) {
 			resourceName = 'User';
 			resourceId = pinContext.id;
 		} else {

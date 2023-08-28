@@ -2,11 +2,14 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
-import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import AppTrophyCard from '../../../../../_common/trophy/AppTrophyCard.vue';
 import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
+import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
+import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { useProfileRouteController } from '../../RouteProfile.vue';
 
 @Options({
@@ -16,13 +19,13 @@ import { useProfileRouteController } from '../../RouteProfile.vue';
 		AppTrophyListPaged,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	resolver: ({ route }) => Api.sendRequest('/web/profile/trophies/all/@' + route.params.username),
 })
-export default class RouteProfileTrophiesAll extends BaseRouteComponent {
+export default class RouteProfileTrophiesAll extends LegacyRouteComponent {
 	routeStore = setup(() => useProfileRouteController()!);
 
-	trophies: UserBaseTrophy[] = [];
+	trophies: UserBaseTrophyModel[] = [];
 
 	get user() {
 		return this.routeStore.user;
@@ -30,7 +33,7 @@ export default class RouteProfileTrophiesAll extends BaseRouteComponent {
 
 	get routeTitle() {
 		if (this.user) {
-			return this.$gettextInterpolate(`@%{ user }'s achieved Trophies`, {
+			return this.$gettext(`@%{ user }'s achieved Trophies`, {
 				user: this.user.username,
 			});
 		}

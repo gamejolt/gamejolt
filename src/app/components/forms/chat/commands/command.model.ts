@@ -3,11 +3,7 @@ import { Model } from '../../../../../_common/model/model.service';
 export const CHAT_COMMAND_TYPE_COMMAND = 'command';
 export const CHAT_COMMAND_TYPE_TIMER = 'timer';
 
-export class ChatCommand extends Model {
-	constructor(data: any = {}) {
-		super(data);
-	}
-
+export class ChatCommandModel extends Model {
 	declare type: 'command' | 'timer';
 	declare prefix: string;
 	declare command: string;
@@ -19,5 +15,3 @@ export class ChatCommand extends Model {
 	declare last_invoked: number;
 	declare sort: number;
 }
-
-Model.create(ChatCommand);

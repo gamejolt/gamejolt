@@ -1,23 +1,21 @@
-//
+// 
 // Mixins
 // --------------------------------------------------
-
-// Stylus Extras
-// --------------------------------------------------
-
-// Non supported LESS functions
 percentage(n1, n2)
 	if (n1 == 0)
 		0
 	else
-		unit((n1 / n2) * 100, '%')
+		unit(
+			(n1 / n2) * 100,
+			'%'
+		)
 
 // Utilities
 // -------------------------
 
 // Clearfix
 // Source: http://nicolasgallagher.com/micro-clearfix-hack/
-//
+// 
 // For modern browsers
 // 1. The space content is one way to avoid an Opera bug when the
 // contenteditable attribute is included anywhere else in the document.
@@ -26,15 +24,13 @@ percentage(n1, n2)
 // 2. The use of `table` rather than `block` is only necessary if using
 // `:before` to contain the top-margins of child elements.
 clearfix()
-	&:before, &:after
+	&:before
+	&:after
 		content: ' ' // 1
 		display: table // 2
 
 	&:after
 		clear: both
-
-.clearfix
-	clearfix()
 
 // Webkit-style focus
 tab-focus()
@@ -50,7 +46,6 @@ center-block()
 	margin-left: auto
 	margin-right: auto
 
-// Sizing shortcutss
 size(w, h)
 	width: w
 	height: h
@@ -69,12 +64,12 @@ text-overflow()
 		text-overflow: ellipsis
 
 // CSS image replacement
-//
+// 
 // Heads up! v3 launched with with only `.hide-text()`, but per our pattern for
 // mixins being reused as classes with the same name, this doesn't hold up. As
 // of v3.0.1 we have added `.text-hide()` and deprecated `.hide-text()`. Note
 // that we cannot chain the mixins together in Less, so they are repeated.
-//
+// 
 // Source: https://github.com/h5bp/html5-boilerplate/commit/aa0396eae757
 
 // Deprecated as of v3.0.1 (will be removed in v4)
@@ -89,13 +84,6 @@ hide-text()
 text-hide()
 	hide-text()
 
-.text-hide
-	text-hide()
-
-// CSS3 PROPERTIES
-// --------------------------------------------------
-
-// Single side border-radius
 border-top-radius(radius)
 	border-top-right-radius: radius
 	border-top-left-radius: radius
@@ -248,15 +236,10 @@ border-left-radius(radius)
 // -moz-user-select: select;
 // -ms-user-select: select; // IE10+
 // -o-user-select: select;
-// user-select: select;
-// }
-
-// Resize anything
 resizable(direction)
 	resize: direction // Options: horizontal, vertical, both
 	overflow: auto // Safari fix
 
-// CSS3 Content Columns
 content-columns(column-count, column-gap = $grid-gutter-width)
 	-webkit-column-count: column-count
 	-moz-column-count: column-count
@@ -287,9 +270,6 @@ content-columns(column-count, column-gap = $grid-gutter-width)
 // --------------------------------------------------
 
 // Horizontal gradient, from left to right
-//
-// Creates two color stops, start and end, by specifying a color and position for each color stop.
-// Color stops are not available in IE9 and below.
 gradient-horizontal(start-color = #555, end-color = #333, start-percent = 0, end-percent = 100%)
 	background-image: -webkit-gradient(linear, start-percent top, end-percent top, from(start-color), to(end-color)) // Safari 4+, Chrome 2+
 	background-image: -webkit-linear-gradient(left, color-stop(start-color start-percent), color-stop(end-color end-percent)) // Safari 5.1+, Chrome 10+
@@ -299,9 +279,6 @@ gradient-horizontal(start-color = #555, end-color = #333, start-percent = 0, end
 	filter: s("progid:DXImageTransform.Microsoft.gradient(startColorstr='%s', endColorstr='%s', GradientType=1)", start-color, end-color) // IE9 and down
 
 // Vertical gradient, from top to bottom
-//
-// Creates two color stops, start and end, by specifying a color and position for each color stop.
-// Color stops are not available in IE9 and below.
 gradient-vertical(start-color = #555, end-color = #333, start-percent = 0, end-percent = 100%)
 	background-image: -webkit-gradient(linear, left start-percent, left end-percent, from(start-color), to(end-color)) // Safari 4+, Chrome 2+
 	background-image: -webkit-linear-gradient(top, start-color, start-percent, end-color, end-percent) // Safari 5.1+, Chrome 10+
@@ -347,15 +324,12 @@ gradient-striped(color = #555, angle = 45deg)
 	background-image: linear-gradient(angle, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent)
 
 // Reset filters for IE
-//
+// 
 // When you need to remove a gradient background, do not forget to use this to reset
 // the IE filter for IE9 and below.
 reset-filter()
 	filter: s('progid:DXImageTransform.Microsoft.gradient(enabled = false)')
 
-// Retina images
-//
-// Short retina mixin for setting background-image and -size
 img-retina(file-1x, file-2x, width-1x, height-1x)
 	background-image: url(file-1x)
 
@@ -363,9 +337,6 @@ img-retina(file-1x, file-2x, width-1x, height-1x)
 		background-image: url(file-2x)
 		background-size: width-1x height-1x
 
-// Responsive image
-//
-// Keep images from scaling beyond the width of their parents.
 img-responsive(display = block)
 	display: display
 	max-width: 100% // Part 1: Set a maximum relative to the parent
@@ -373,18 +344,12 @@ img-responsive(display = block)
 
 // COMPONENT MIXINS
 // --------------------------------------------------
-
-// Horizontal dividers
-// -------------------------
-// Dividers (basically an hr) within dropdowns and nav lists
 nav-divider(color = #e5e5e5)
 	height: $border-width-small
 	margin: ($line-height-computed / 2) - 1 0
 	overflow: hidden
 	background-color: color
 
-// Panels
-// -------------------------
 panel-variant(border, heading-text-color, heading-bg-color, heading-border)
 	border-color: border
 
@@ -400,8 +365,6 @@ panel-variant(border, heading-text-color, heading-bg-color, heading-border)
 		+ .panel-collapse .panel-body
 			border-bottom-color: border
 
-// Alerts
-// -------------------------
 alert-variant(background, border, text-color)
 	background-color: background
 	border-color: border
@@ -413,8 +376,6 @@ alert-variant(background, border, text-color)
 	.alert-link
 		color: darken(text-color, 10%)
 
-// List Groups
-// -------------------------
 list-group-item-variant($state, $background, $color)
 	.list-group-item-{$state}
 		color: $color
@@ -426,34 +387,46 @@ list-group-item-variant($state, $background, $color)
 			.list-group-item-heading
 				color: inherit
 
-			&:hover, &:focus
+			&:hover
+			&:focus
 				color: $color
 				background-color: darken($background, 5%)
 
-			&.active, &.active:hover, &.active:focus
+			&.active
+			&.active:hover
+			&.active:focus
 				color: #fff
 				background-color: $color
 				border-color: $color
 
 // Button variants
-// -------------------------
-// Easily pump out default styles, as well as :hover, :focus, :active,
-// and disabled options for all buttons
 button-variant(color, background, border)
 	color: color
 	background-color: background
 	border-color: border
 
-	&:hover, &:focus, &:active, &.active, .open .dropdown-toggle&
+	&:hover
+	&:focus
+	&:active
+	&.active
+	.open .dropdown-toggle&
 		color: color
 		background-color: darken(background, 8%)
 		border-color: darken(border, 12%)
 
-	&:active, &.active, .open .dropdown-toggle&
+	&:active
+	&.active
+	.open .dropdown-toggle&
 		background-image: none
 
-	&.disabled, &[disabled], fieldset[disabled] &
-		&, &:hover, &:focus, &:active, &.active
+	&.disabled
+	&[disabled]
+	fieldset[disabled] &
+		&
+		&:hover
+		&:focus
+		&:active
+		&.active
 			background-color: background
 			border-color: border
 
@@ -461,49 +434,43 @@ button-variant(color, background, border)
 		color: background
 		background-color: color
 
-// Button sizes
-// -------------------------
 button-size(padding-vertical, padding-horizontal, font-size, line-height, border-radius)
 	padding: padding-vertical padding-horizontal
 	font-size: font-size
 	line-height: line-height
 	border-radius: border-radius
 
-// Pagination
-// -------------------------
 pagination-size(padding-vertical, padding-horizontal, font-size, border-radius)
 	> li
-		> a, > span
+		> a
+		> span
 			padding: padding-vertical padding-horizontal
 			font-size: font-size
 
 		&:first-child
-			> a, > span
+			> a
+			> span
 				border-left-radius(border-radius)
 
 		&:last-child
-			> a, > span
+			> a
+			> span
 				border-right-radius(border-radius)
 
-// Labels
-// -------------------------
 label-variant(color)
 	background-color: color
 
 	&[href]
-		&:hover, &:focus
+		&:hover
+		&:focus
 			background-color: darken(color, 10%)
 
-// Contextual backgrounds
-// -------------------------
 bg-variant($color)
 	background-color: $color
 
 	a&:hover
 		background-color: darken($color, 10%)
 
-// Typography
-// -------------------------
 text-emphasis-variant($color)
 	color: $color
 
@@ -511,15 +478,10 @@ text-emphasis-variant($color)
 		color: darken($color, 10%)
 
 // Navbar vertical align
-// -------------------------
-// Vertically center elements in the navbar.
-// Example: an element has a height of 30px, so write out `.navbar-vertical-align(30px);` to calculate the appropriate top margin.
 navbar-vertical-align(element-height)
 	margin-top: (($navbar-height - element-height) / 2)
 	margin-bottom: (($navbar-height - element-height) / 2)
 
-// Progress bars
-// -------------------------
 progress-bar-variant(color)
 	background-color: color
 
@@ -538,7 +500,8 @@ responsive-visibility()
 	tr&
 		display: table-row !important
 
-	th&, td&
+	th&
+	td&
 		display: table-cell !important
 
 responsive-invisibility()
@@ -553,15 +516,13 @@ container-fixed()
 	margin-left: auto
 	padding-left: ($grid-gutter-width / 2)
 	padding-right: ($grid-gutter-width / 2)
-	@extend .clearfix
+	clearfix()
 
-// Creates a wrapper for a series of columns
 make-row(gutter = $grid-gutter-width)
 	margin-left: (gutter / -2)
 	margin-right: (gutter / -2)
-	@extend .clearfix
+	clearfix()
 
-// Generate the extra small columns
 make-xs-column(columns, gutter = $grid-gutter-width)
 	position: relative
 	float: left
@@ -584,7 +545,6 @@ make-xs-column-pull(columns)
 	@media $media-min-phone
 		right: percentage(columns, $grid-columns)
 
-// Generate the small columns
 make-sm-column(columns, gutter = $grid-gutter-width)
 	position: relative
 	min-height: 1px
@@ -607,7 +567,6 @@ make-sm-column-pull(columns)
 	media $media-min-tablet
 		right: percentage(columns, $grid-columns)
 
-// Generate the medium columns
 make-md-column(columns, gutter = $grid-gutter-width)
 	position: relative
 	min-height: 1px
@@ -630,7 +589,6 @@ make-md-column-pull(columns)
 	@media $media-min-desktop
 		right: percentage(columns, $grid-columns)
 
-// Generate the large columns
 make-lg-column(columns, gutter = $grid-gutter-width)
 	position: relative
 	min-height: 1px
@@ -654,7 +612,7 @@ make-lg-column-pull(columns)
 		right: percentage(columns, $grid-columns)
 
 // Framework grid generation
-//
+// 
 // Used only by Bootstrap to generate the correct number of grid classes given
 // any value of `@grid-columns`.
 $column-properties
@@ -665,7 +623,10 @@ $column-properties
 
 make-grid-columns()
 	for i in 1 .. $grid-columns
-		.col-xs-{i}, .col-sm-{i}, .col-md-{i}, .col-lg-{i}
+		.col-xs-{i}
+		.col-sm-{i}
+		.col-md-{i}
+		.col-lg-{i}
 			@extend $column-properties
 
 make-grid-col-float(class)
@@ -694,7 +655,6 @@ calc-grid(index, class, type)
 		.col-{class}-offset-{index}
 			margin-left: percentage(index, $grid-columns)
 
-// Basic looping in Stylus (not sure if the ordering needs to be reversed, but I still did it this way)
 make-grid(columns, class, type)
 	for i in columns .. 0
 		calc-grid(i, class, type)

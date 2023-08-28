@@ -4,7 +4,7 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import AppColorpicker from '../../colorpicker/colorpicker.vue';
 import AppLoading from '../../loading/AppLoading.vue';
-import { SiteTemplate } from '../../site/template/template-model';
+import { SiteTemplateModel } from '../../site/template/template-model';
 import AppThemeEditorFontSelector from './font-selector.vue';
 import AppThemeEditorImage from './image.vue';
 
@@ -33,7 +33,7 @@ export default class AppThemeEditor extends Vue {
 	isLoaded = false;
 
 	selectedGroup: StyleGroup = null as any;
-	templateObj: SiteTemplate = {} as any;
+	templateObj: SiteTemplateModel = {} as any;
 	definition: any = {};
 
 	@Emit('change')
@@ -50,7 +50,7 @@ export default class AppThemeEditor extends Vue {
 
 		this.isLoaded = true;
 
-		this.templateObj = new SiteTemplate(response.template);
+		this.templateObj = new SiteTemplateModel(response.template);
 		this.definition = this.templateObj.data;
 		this.selectedGroup = this.definition.styleGroups[0];
 

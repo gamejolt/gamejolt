@@ -7,7 +7,7 @@ import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 import AppScrollScroller, { createScroller } from '../scroll/AppScrollScroller.vue';
 import AppTheme from '../theme/AppTheme.vue';
-import { Theme } from '../theme/theme.model';
+import { ThemeModel } from '../theme/theme.model';
 import { ModalDismissReason, Modals, useModal } from './modal.service';
 
 export interface AppModalInterface {
@@ -30,7 +30,7 @@ const _modalBackdropChecks: (() => boolean)[] = [];
 <script lang="ts" setup>
 defineProps({
 	theme: {
-		type: Object as PropType<Theme>,
+		type: Object as PropType<ThemeModel>,
 		default: undefined,
 	},
 	forceTheme: {

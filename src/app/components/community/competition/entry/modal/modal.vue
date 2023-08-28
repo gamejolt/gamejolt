@@ -3,10 +3,10 @@ import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
-import { CommunityCompetition } from '../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionEntryVote } from '../../../../../../_common/community/competition/entry/vote/vote.model';
-import { CommunityCompetitionVotingCategory } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
+import { CommunityCompetitionModel } from '../../../../../../_common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '../../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryVoteModel } from '../../../../../../_common/community/competition/entry/vote/vote.model';
+import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { formatDate } from '../../../../../../_common/filters/date';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import { BaseModal } from '../../../../../../_common/modal/base';
@@ -36,7 +36,7 @@ import AppCommunityCompetitionVotingWidget from '../../voting/widget.vue';
 	},
 })
 export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal) {
-	@Prop(Object) entry?: CommunityCompetitionEntry;
+	@Prop(Object) entry?: CommunityCompetitionEntryModel;
 	@Prop(Number) entryId?: number;
 
 	commonStore = setup(() => useCommonStore());
@@ -45,10 +45,10 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 		return this.commonStore.user;
 	}
 
-	m_entry: CommunityCompetitionEntry | null = null;
-	competition: CommunityCompetition | null = null;
-	votingCategories: CommunityCompetitionVotingCategory[] = [];
-	userVotes: CommunityCompetitionEntryVote[] = [];
+	m_entry: CommunityCompetitionEntryModel | null = null;
+	competition: CommunityCompetitionModel | null = null;
+	votingCategories: CommunityCompetitionVotingCategoryModel[] = [];
+	userVotes: CommunityCompetitionEntryVoteModel[] = [];
 	isParticipant = false;
 	isArchived = false;
 	isBlocked = false;
@@ -113,18 +113,18 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 		if (this.m_entry) {
 			this.m_entry.assign(payload.entry);
 		} else {
-			this.m_entry = new CommunityCompetitionEntry(payload.entry);
+			this.m_entry = new CommunityCompetitionEntryModel(payload.entry);
 		}
 
-		this.competition = new CommunityCompetition(payload.competition);
+		this.competition = new CommunityCompetitionModel(payload.competition);
 
 		if (payload.votingCategories) {
-			this.votingCategories = CommunityCompetitionVotingCategory.populate(
+			this.votingCategories = CommunityCompetitionVotingCategoryModel.populate(
 				payload.votingCategories
 			);
 		}
 		if (payload.userVotes) {
-			this.userVotes = CommunityCompetitionEntryVote.populate(payload.userVotes);
+			this.userVotes = CommunityCompetitionEntryVoteModel.populate(payload.userVotes);
 		}
 
 		this.isLoading = false;

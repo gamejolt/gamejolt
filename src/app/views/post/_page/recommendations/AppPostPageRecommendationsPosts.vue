@@ -3,14 +3,14 @@ import { computed, PropType, ref, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppPostCard from '../../../../../_common/fireside/post/card/AppPostCard.vue';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { HistoryCache } from '../../../../../_common/history/cache/cache.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 });
@@ -28,7 +28,7 @@ const payload =
 
 HistoryCache.store(route, payload, cacheKey);
 
-const posts = ref(FiresidePost.populate<FiresidePost>(payload.posts));
+const posts = ref(FiresidePostModel.populate<FiresidePostModel>(payload.posts));
 
 const usablePosts = computed(() => {
 	if (Screen.isSm) {

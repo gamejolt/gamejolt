@@ -1,10 +1,15 @@
 import { Directive, DirectiveBinding, VNode } from 'vue';
-import { $gettextInterpolate, getTranslation, getTranslationLang } from './translate.service';
+import {
+	TranslationContext,
+	getTranslation,
+	getTranslationLang,
+	interpolateTranslation,
+} from './translate.service';
 
 // TODO(vue3): I think we should get rid of this since there's no way the
 // translations will work with the way vue does the scope stuff.
 
-export const TranslateDirective: Directive<unknown, Record<string, string | number>> = {
+export const TranslateDirective: Directive<unknown, TranslationContext> = {
 	beforeMount(el: HTMLElement, binding, vnode) {
 		// Make sure that vue knows not to reuse this node when v-ifing or
 		// anything, since we store the inner HTML into the msgid property and
@@ -63,7 +68,7 @@ function _updateTranslation(
 	const context = binding.value && typeof binding.value === 'object' ? binding.value : {};
 
 	let translation = getTranslation(msgid, translateN, isPlural ? translatePlural : null);
-	translation = $gettextInterpolate(translation, context, enableHTMLEscaping);
+	translation = interpolateTranslation(translation, context, { enableHTMLEscaping });
 
 	el.innerHTML = translation;
 }

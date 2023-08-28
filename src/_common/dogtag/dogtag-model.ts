@@ -6,7 +6,7 @@ export const DogtagType = {
 	special: 'special',
 } as const;
 
-export class Dogtag extends Model {
+export class DogtagModel extends Model {
 	constructor(data: any = {}) {
 		super(data);
 	}
@@ -14,5 +14,3 @@ export class Dogtag extends Model {
 	declare type: string;
 	declare text: string;
 }
-
-Model.create(Dogtag);

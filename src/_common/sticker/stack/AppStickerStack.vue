@@ -21,7 +21,7 @@ import {
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import AppTranslate from '../../translate/AppTranslate.vue';
-import { StickerPlacement } from '../placement/placement.model';
+import { StickerPlacementModel } from '../placement/placement.model';
 import { StickerCount } from '../sticker-count';
 import { onFiresideStickerPlaced } from '../sticker-store';
 import { StickerTargetController, toggleStickersShouldShow } from '../target/target-controller';
@@ -209,7 +209,7 @@ function onModelStickersChanged() {
 	initStickers();
 }
 
-function _onFiresideStickerPlaced(placement: StickerPlacement) {
+function _onFiresideStickerPlaced(placement: StickerPlacementModel) {
 	if (!useFiresideSub.value) {
 		return;
 	}

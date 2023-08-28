@@ -11,18 +11,18 @@ import { SiteTrophy } from '../../site/trophy/trophy.model';
 import { useCommonStore } from '../../store/common-store';
 import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext, $gettextInterpolate } from '../../translate/translate.service';
+import { $gettext } from '../../translate/translate.service';
 import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
 import { UserGameTrophy } from '../../user/trophy/game-trophy.model';
-import { UserBaseTrophy } from '../../user/trophy/user-base-trophy.model';
+import { UserBaseTrophyModel } from '../../user/trophy/user-base-trophy.model';
 import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 import AppUserAvatarList from '../../user/user-avatar/AppUserAvatarList.vue';
-import { User } from '../../user/user.model';
+import { UserModel } from '../../user/user.model';
 import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
 
 const props = defineProps({
 	userTrophy: {
-		type: Object as PropType<UserBaseTrophy>,
+		type: Object as PropType<UserBaseTrophyModel>,
 		required: true,
 	},
 });
@@ -32,7 +32,7 @@ const { user } = useCommonStore();
 const modal = useModal()!;
 
 const completionPercentage = ref<number | null>(null);
-const friends = ref<User[]>([]);
+const friends = ref<UserModel[]>([]);
 
 const trophy = computed(() => userTrophy.value.trophy!);
 
@@ -71,7 +71,7 @@ const loggedInUserUnlocked = computed(() =>
 );
 
 const artist = computed(() =>
-	trophy.value instanceof SiteTrophy && trophy.value.artist instanceof User
+	trophy.value instanceof SiteTrophy && trophy.value.artist instanceof UserModel
 		? trophy.value.artist
 		: undefined
 );
@@ -106,7 +106,7 @@ async function populateFriends() {
 		`/web/profile/trophies/friends/${type}/${trophy.value.id}`
 	);
 	if (payload.users) {
-		friends.value = User.populate(payload.users);
+		friends.value = UserModel.populate(payload.users);
 	}
 }
 </script>
@@ -196,10 +196,9 @@ async function populateFriends() {
 								</span>
 								<span v-else>
 									{{
-										$gettextInterpolate(
-											`~%{ num }% of players achieved this trophy`,
-											{ num: completionPercentageForDisplay }
-										)
+										$gettext(`~%{ num }% of players achieved this trophy`, {
+											num: completionPercentageForDisplay,
+										})
 									}}
 								</span>
 							</span>

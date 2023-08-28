@@ -1,15 +1,15 @@
 import { computed, inject, InjectionKey, Ref, ref } from 'vue';
 import { Router } from 'vue-router';
-import { arrayRemove } from '../../utils/array';
 import { trackGameFollow } from '../../_common/analytics/analytics.service';
-import { GamePlaylist } from '../../_common/game-playlist/game-playlist.model';
-import { Game, unfollowGame } from '../../_common/game/game.model';
+import { GamePlaylistModel } from '../../_common/game-playlist/game-playlist.model';
+import { GameModel, unfollowGame } from '../../_common/game/game.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../_common/growls/growls.service';
-import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Scroll } from '../../_common/scroll/scroll.service';
-import { $gettext, $gettextInterpolate } from '../../_common/translate/translate.service';
+import { $gettext } from '../../_common/translate/translate.service';
+import { arrayRemove } from '../../utils/array';
 import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
-import { GameCollection } from '../components/game/collection/collection.model';
+import { GameCollectionModel } from '../components/game/collection/collection.model';
 import { router } from '../views';
 
 export const LibraryStoreKey: InjectionKey<LibraryStore> = Symbol('library-store');
@@ -21,10 +21,10 @@ export function useLibraryStore() {
 }
 
 class GamePlaylistFolder {
-	constructor(public title: string, public collections: Ref<GameCollection[]>) {}
+	constructor(public title: string, public collections: Ref<GameCollectionModel[]>) {}
 }
 
-function _isViewingCollection(router: Router, collection: GameCollection) {
+function _isViewingCollection(router: Router, collection: GameCollectionModel) {
 	return (
 		router.currentRoute.value.name === collection.routeLocation.name &&
 		router.currentRoute.value.params.id === (collection as any).id
@@ -34,23 +34,23 @@ function _isViewingCollection(router: Router, collection: GameCollection) {
 export function createLibraryStore({ router }: { router: Router }) {
 	const _router = router;
 
-	const collections = ref<GameCollection[]>([]);
-	const followedCollection = ref<GameCollection>();
-	const developerCollection = ref<GameCollection>();
-	const ownedCollection = ref<GameCollection>();
+	const collections = ref<GameCollectionModel[]>([]);
+	const followedCollection = ref<GameCollectionModel>();
+	const developerCollection = ref<GameCollectionModel>();
+	const ownedCollection = ref<GameCollectionModel>();
 
 	/**
 	 * These are their followed developer playlists.
 	 */
 	const developerPlaylists = computed(() =>
-		collections.value.filter(item => item.type === GameCollection.TYPE_DEVELOPER)
+		collections.value.filter(item => item.type === GameCollectionModel.TYPE_DEVELOPER)
 	);
 
 	/**
 	 * These are playlists that don't belong to a folder.
 	 */
 	const mainPlaylists = computed(() =>
-		collections.value.filter(item => item.type !== GameCollection.TYPE_DEVELOPER)
+		collections.value.filter(item => item.type !== GameCollectionModel.TYPE_DEVELOPER)
 	);
 
 	/**
@@ -72,15 +72,15 @@ export function createLibraryStore({ router }: { router: Router }) {
 	});
 
 	function bootstrap(payload: any) {
-		collections.value = GameCollection.populate(payload.collections);
+		collections.value = GameCollectionModel.populate(payload.collections);
 		followedCollection.value = payload.followedCollection
-			? new GameCollection(payload.followedCollection)
+			? new GameCollectionModel(payload.followedCollection)
 			: undefined;
 		developerCollection.value = payload.developerCollection
-			? new GameCollection(payload.developerCollection)
+			? new GameCollectionModel(payload.developerCollection)
 			: undefined;
 		ownedCollection.value = payload.ownedCollection
-			? new GameCollection(payload.ownedCollection)
+			? new GameCollectionModel(payload.ownedCollection)
 			: undefined;
 	}
 
@@ -91,11 +91,11 @@ export function createLibraryStore({ router }: { router: Router }) {
 		ownedCollection.value = undefined;
 	}
 
-	function addCollection(collection: GameCollection) {
+	function addCollection(collection: GameCollectionModel) {
 		collections.value.push(collection);
 	}
 
-	function removeCollection(collection: GameCollection) {
+	function removeCollection(collection: GameCollectionModel) {
 		arrayRemove(collections.value, i => i._id === collection._id);
 	}
 
@@ -116,7 +116,10 @@ export function createLibraryStore({ router }: { router: Router }) {
 	};
 }
 
-export async function libraryFollowCollection(store: LibraryStore, collection: GameCollection) {
+export async function libraryFollowCollection(
+	store: LibraryStore,
+	collection: GameCollectionModel
+) {
 	store.addCollection(collection);
 
 	try {
@@ -127,7 +130,10 @@ export async function libraryFollowCollection(store: LibraryStore, collection: G
 	}
 }
 
-export async function libraryUnfollowCollection(store: LibraryStore, collection: GameCollection) {
+export async function libraryUnfollowCollection(
+	store: LibraryStore,
+	collection: GameCollectionModel
+) {
 	store.removeCollection(collection);
 
 	try {
@@ -147,7 +153,7 @@ export async function libraryNewPlaylist(store: LibraryStore) {
 	return collection;
 }
 
-export async function libraryEditPlaylist(store: LibraryStore, collection: GameCollection) {
+export async function libraryEditPlaylist(store: LibraryStore, collection: GameCollectionModel) {
 	// If we're viewing the playlist we're editing, we want to sync the new
 	// URL after.
 	const syncUrlAfter = _isViewingCollection(store._router, collection);
@@ -160,12 +166,12 @@ export async function libraryEditPlaylist(store: LibraryStore, collection: GameC
 	}
 }
 
-export async function libraryRemovePlaylist(store: LibraryStore, collection: GameCollection) {
+export async function libraryRemovePlaylist(store: LibraryStore, collection: GameCollectionModel) {
 	if (!collection.playlist) {
 		throw new Error(`Collection isn't a playlist.`);
 	}
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		collection.isOwner
 			? $gettext(`Are you sure you want to remove this playlist?`)
 			: $gettext(`Are you sure you want to unfollow this playlist?`)
@@ -185,7 +191,7 @@ export async function libraryRemovePlaylist(store: LibraryStore, collection: Gam
 			router.replace({ name: 'library.overview' });
 
 			showSuccessGrowl(
-				$gettextInterpolate(
+				$gettext(
 					collection.isOwner
 						? $gettext(`%{ playlist } has been removed.`)
 						: $gettext(`You have unfollowed %{ playlist }.`),
@@ -209,14 +215,14 @@ export async function libraryRemovePlaylist(store: LibraryStore, collection: Gam
 
 export async function libraryAddGameToPlaylist(
 	_store: LibraryStore,
-	playlist: GamePlaylist,
-	game: Game
+	playlist: GamePlaylistModel,
+	game: GameModel
 ) {
 	try {
 		await playlist.$addGame(game.id);
 
 		showSuccessGrowl(
-			$gettextInterpolate(`You've added %{ game } to %{ playlist }. Nice!`, {
+			$gettext(`You've added %{ game } to %{ playlist }. Nice!`, {
 				game: game.title,
 				playlist: playlist.name,
 			}),
@@ -233,8 +239,8 @@ export async function libraryAddGameToPlaylist(
 
 export async function libraryRemoveGameFromPlaylist(
 	_store: LibraryStore,
-	playlist: GamePlaylist,
-	game: Game,
+	playlist: GamePlaylistModel,
+	game: GameModel,
 	options: { shouldConfirm?: boolean } = {}
 ) {
 	if (!playlist) {
@@ -242,7 +248,7 @@ export async function libraryRemoveGameFromPlaylist(
 	}
 
 	if (options.shouldConfirm) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			$gettext('Are you sure you want to remove this game from the playlist?')
 		);
 
@@ -255,7 +261,7 @@ export async function libraryRemoveGameFromPlaylist(
 		await playlist.$removeGame(game.id);
 
 		showSuccessGrowl(
-			$gettextInterpolate(`You have successfully removed %{ game } from %{ playlist }.`, {
+			$gettext(`You have successfully removed %{ game } from %{ playlist }.`, {
 				game: game.title,
 				playlist: playlist.name,
 			}),
@@ -270,9 +276,9 @@ export async function libraryRemoveGameFromPlaylist(
 	return false;
 }
 
-export async function libraryUnfollowGame(_store: LibraryStore, game: Game) {
-	const result = await ModalConfirm.show(
-		$gettextInterpolate(`Are you sure you want to stop following %{ game }?`, {
+export async function libraryUnfollowGame(_store: LibraryStore, game: GameModel) {
+	const result = await showModalConfirm(
+		$gettext(`Are you sure you want to stop following %{ game }?`, {
 			game: game.title,
 		})
 	);
@@ -286,7 +292,7 @@ export async function libraryUnfollowGame(_store: LibraryStore, game: Game) {
 		await unfollowGame(game);
 
 		showSuccessGrowl(
-			$gettextInterpolate(
+			$gettext(
 				`You have stopped following %{ game } and will no longer receive notifications about it.`,
 				{ game: game.title }
 			),

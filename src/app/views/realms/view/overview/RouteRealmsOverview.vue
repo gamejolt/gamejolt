@@ -4,13 +4,13 @@ import { useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { canDeviceCreateFiresides } from '../../../../../_common/fireside/fireside.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
-import { $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { kLineHeightComputed } from '../../../../../_styles/variables';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
@@ -64,7 +64,7 @@ const displayablePreviewFiresides = computed(() => {
 const appRoute = createAppRoute({
 	routeTitle: computed(() =>
 		realm.value
-			? $gettextInterpolate(`%{ realm } Realm - Art, videos, guides, polls and more`, {
+			? $gettext(`%{ realm } Realm - Art, videos, guides, polls and more`, {
 					realm: realm.value.name,
 			  })
 			: null
@@ -93,7 +93,7 @@ const appRoute = createAppRoute({
 	},
 });
 
-function onPostAdded(post: FiresidePost) {
+function onPostAdded(post: FiresidePostModel) {
 	ActivityFeedService.onPostAdded({
 		feed: feed.value!,
 		post,
@@ -151,7 +151,7 @@ function onPostAdded(post: FiresidePost) {
 			v-if="realm"
 			:realm="realm"
 			:placeholder="
-				$gettextInterpolate(`Post about %{ realm }!`, {
+				$gettext(`Post about %{ realm }!`, {
 					realm: realm.name,
 				})
 			"

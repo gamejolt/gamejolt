@@ -8,10 +8,10 @@ import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
-	validateFilesize,
-	validateImageAspectRatio,
-	validateImageMaxDimensions,
-	validateImageMinDimensions,
+validateFilesize,
+validateImageAspectRatio,
+validateImageMaxDimensions,
+validateImageMinDimensions,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -20,15 +20,11 @@ import { ModelData } from '../../../../_common/model/model.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerPack, {
-	StickerPackRatio,
+StickerPackRatio,
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
-import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
-import { Sticker } from '../../../../_common/sticker/sticker.model';
-import {
-	$gettext,
-	$gettextInterpolate,
-	$ngettext,
-} from '../../../../_common/translate/translate.service';
+import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
+import { StickerModel } from '../../../../_common/sticker/sticker.model';
+import { $gettext, $ngettext } from '../../../../_common/translate/translate.service';
 import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../../_styles/variables';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
@@ -43,18 +39,18 @@ export default {
 
 type InitPayload = {
 	emojiPrefix: string | null | undefined;
-	stickers: ModelData<Sticker>[];
-	pack: ModelData<StickerPack> | null;
+	stickers: ModelData<StickerModel>[];
+	pack: ModelData<StickerPackModel> | null;
 	maxStickerAmount: number;
 	stickerSlots: number;
 };
 
-type PackFormModel = Partial<StickerPack>;
+type PackFormModel = Partial<StickerPackModel>;
 </script>
 
 <script lang="ts" setup>
-const stickers = ref([]) as Ref<Sticker[]>;
-const pack = ref(null) as Ref<StickerPack | null>;
+const stickers = ref([]) as Ref<StickerModel[]>;
+const pack = ref(null) as Ref<StickerPackModel | null>;
 const maxStickerAmount = ref(5);
 const stickerSlots = ref(100);
 
@@ -118,22 +114,18 @@ const packForm: FormController<PackFormModel> = createForm({
 
 		const reason = response.reason;
 		if (reason === 'not-enough-active-stickers') {
-			message = $gettextInterpolate(
-				$ngettext(
-					`You need at least %{ num } active sticker to enable your sticker pack.`,
-					`You need at least %{ num } active stickers to enable your sticker pack.`,
-					requiredActiveStickers.value
-				),
-				{
-					num: requiredActiveStickers.value,
-				}
+			message = $ngettext(
+				`You need at least %{ num } active sticker to enable your sticker pack.`,
+				`You need at least %{ num } active stickers to enable your sticker pack.`,
+				requiredActiveStickers.value,
+				{ num: requiredActiveStickers.value }
 			);
 		}
 
 		showErrorGrowl(message || $gettext(`Could not update your sticker pack. Try again later.`));
 	},
 	onSubmitSuccess(payload) {
-		pack.value = new StickerPack(payload.pack);
+		pack.value = new StickerPackModel(payload.pack);
 	},
 });
 
@@ -144,8 +136,8 @@ const { isBootstrapped } = createAppRoute({
 
 		emojiPrefix.value = payload.emojiPrefix || '';
 
-		stickers.value = Sticker.populate(payload.stickers);
-		pack.value = payload.pack ? new StickerPack(payload.pack) : null;
+		stickers.value = StickerModel.populate(payload.stickers);
+		pack.value = payload.pack ? new StickerPackModel(payload.pack) : null;
 		maxStickerAmount.value = payload.maxStickerAmount;
 		stickerSlots.value = payload.stickerSlots;
 
@@ -198,7 +190,7 @@ const showStickerPackDisabledWarning = computed(() => {
 	return currentActiveStickers >= minActiveStickers;
 });
 
-function updatePack(newPack: StickerPack | undefined) {
+function updatePack(newPack: StickerPackModel | undefined) {
 	if (newPack) {
 		pack.value = newPack;
 		packForm.formModel.is_active = newPack.is_active === true;
@@ -274,20 +266,17 @@ function onPackEnabledChanged() {
 						</p>
 						<p>
 							{{
-								$gettextInterpolate(`%{ usedSlots } / %{ maxSlots } slots used`, {
+								$gettext(`%{ usedSlots } / %{ maxSlots } slots used`, {
 									usedSlots: stickers.length.toString(),
 									maxSlots: stickerSlots.toString(),
 								})
 							}}
 							<br />
 							{{
-								$gettextInterpolate(
-									`%{ currentAmount } / %{ maxAmount } active stickers`,
-									{
-										currentAmount: activeStickersCount.toString(),
-										maxAmount: maxStickerAmount.toString(),
-									}
-								)
+								$gettext(`%{ currentAmount } / %{ maxAmount } active stickers`, {
+									currentAmount: activeStickersCount.toString(),
+									maxAmount: maxStickerAmount.toString(),
+								})
 							}}
 						</p>
 					</div>
@@ -375,15 +364,11 @@ function onPackEnabledChanged() {
 								<AppExpand :when="isPackDisabled">
 									<div class="help-block">
 										{{
-											$gettextInterpolate(
-												$ngettext(
-													`You need at least %{ min } active sticker to enable this pack.`,
-													`You need at least %{ min } active stickers to enable this pack.`,
-													requiredActiveStickers
-												),
-												{
-													min: requiredActiveStickers,
-												}
+											$ngettext(
+												`You need at least %{ min } active sticker to enable this pack.`,
+												`You need at least %{ min } active stickers to enable this pack.`,
+												requiredActiveStickers,
+												{ min: requiredActiveStickers }
 											)
 										}}
 									</div>

@@ -4,26 +4,26 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import { formatCurrency } from '../../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../../_common/filters/date';
-import { Order } from '../../../../../../_common/order/order.model';
+import { OrderModel } from '../../../../../../_common/order/order.model';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { useAccountRouteController } from '../../RouteDashAccount.vue';
 
 @Options({
 	name: 'RouteDashAccountPurchasesList',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/purchases'),
 })
-export default class RouteDashAccountPurchasesList extends BaseRouteComponent {
+export default class RouteDashAccountPurchasesList extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
-	orders: Order[] = [];
+	orders: OrderModel[] = [];
 
 	readonly formatDate = formatDate;
 	readonly formatCurrency = formatCurrency;
@@ -37,7 +37,7 @@ export default class RouteDashAccountPurchasesList extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.orders = Order.populate($payload.orders);
+		this.orders = OrderModel.populate($payload.orders);
 	}
 }
 </script>

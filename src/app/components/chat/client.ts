@@ -1,13 +1,13 @@
 import { markRaw, reactive } from 'vue';
-import { arrayRemove, numberSort } from '../../../utils/array';
-import { createLogger } from '../../../utils/logging';
 import { storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
+import { arrayRemove, numberSort } from '../../../utils/array';
+import { createLogger } from '../../../utils/logging';
 import { AppStore } from '../../store';
 import { type GridClient } from '../grid/client.service';
-import { ChatMessage, ChatMessageType } from './message';
-import { ChatRoom } from './room';
+import { ChatMessageModel, ChatMessageType } from './message';
+import { ChatRoomModel } from './room';
 import { ChatRoomChannel } from './room-channel';
 import { ChatUser } from './user';
 import { ChatUserChannel, createChatUserChannel } from './user-channel';
@@ -15,12 +15,12 @@ import { ChatUserCollection } from './user-collection';
 
 export const ChatKey = Symbol('chat');
 
-export const onNewChatMessage = new EventTopic<ChatMessage>();
+export const onNewChatMessage = new EventTopic<ChatMessageModel>();
 
 export const RoboJoltUserId = 192757;
 
 export interface ChatNewMessageEvent {
-	message: ChatMessage;
+	message: ChatMessageModel;
 }
 
 export function createChatClient({ grid, appStore }: { grid: GridClient; appStore: AppStore }) {
@@ -49,7 +49,7 @@ export class ChatClient {
 	populated = false;
 	currentUser: ChatUser | null = null;
 	friendsList = new ChatUserCollection(this, ChatUserCollection.TYPE_FRIEND);
-	groupRooms: ChatRoom[] = [];
+	groupRooms: ChatRoomModel[] = [];
 
 	activeRoomId: number | null = null;
 
@@ -176,7 +176,7 @@ export function newChatNotification(chat: ChatClient, roomId: number) {
 	chat.notifications.set(roomId, current ? current + 1 : 1);
 }
 
-export function queueChatMessage(room: ChatRoom, type: ChatMessageType, content: string) {
+export function queueChatMessage(room: ChatRoomModel, type: ChatMessageType, content: string) {
 	const { chat } = room;
 
 	if (chat.currentUser === null) {
@@ -184,7 +184,7 @@ export function queueChatMessage(room: ChatRoom, type: ChatMessageType, content:
 	}
 
 	const tempId = Math.floor(Math.random() * Date.now());
-	const message = storeModel(ChatMessage, {
+	const message = storeModel(ChatMessageModel, {
 		id: tempId,
 		user_id: chat.currentUser.id,
 		user: chat.currentUser,
@@ -200,7 +200,7 @@ export function queueChatMessage(room: ChatRoom, type: ChatMessageType, content:
 	sendChatMessage(room, message);
 }
 
-export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
+export function setTimeSplit(room: ChatRoomModel, message: ChatMessageModel) {
 	message.showAvatar = false;
 	message.showMeta = true;
 	message.dateSplit = false;
@@ -217,7 +217,7 @@ export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
 	// If we can't locate the message in the list, we assume it's not in the list yet and about to be added to the end.
 	// Therefore, we use the last message in the list as previous and pretend this message is at the end of the list.
 	const messageIndex = messages.findIndex(i => i.id === message.id);
-	let prevMessage: ChatMessage | null = null;
+	let prevMessage: ChatMessageModel | null = null;
 
 	if (messageIndex > 0) {
 		prevMessage = messages[messageIndex - 1];
@@ -262,7 +262,7 @@ export function setTimeSplit(room: ChatRoom, message: ChatMessage) {
 	}
 }
 
-function outputMessage(room: ChatRoom, message: ChatMessage, isHistorical: boolean) {
+function outputMessage(room: ChatRoomModel, message: ChatMessageModel, isHistorical: boolean) {
 	const isInstanced = isRoomInstanced(room.chat, room.id);
 	if (!isInstanced && (!room || !isInChatRoom(room.chat, room.id))) {
 		return;
@@ -280,8 +280,8 @@ function outputMessage(room: ChatRoom, message: ChatMessage, isHistorical: boole
 }
 
 export function processNewChatOutput(
-	room: ChatRoom,
-	messages: ChatMessage[],
+	room: ChatRoomModel,
+	messages: ChatMessageModel[],
 	isHistorical: boolean
 ) {
 	if (!messages.length) {
@@ -302,7 +302,7 @@ export function processNewChatOutput(
 	room.queuedMessages.forEach(i => setTimeSplit(room, i));
 }
 
-async function sendChatMessage(room: ChatRoom, message: ChatMessage) {
+async function sendChatMessage(room: ChatRoomModel, message: ChatMessageModel) {
 	const channel = room.chat.roomChannels.get(room.id);
 	if (!channel) {
 		return;
@@ -324,7 +324,7 @@ async function sendChatMessage(room: ChatRoom, message: ChatMessage) {
 		// the new message and removing the queued one.
 		arrayRemove(room.queuedMessages, i => i.id === message.id);
 
-		const newMessage = storeModel(ChatMessage, data);
+		const newMessage = storeModel(ChatMessageModel, data);
 		channel.processNewRoomMessage(newMessage);
 	} catch (e) {
 		room.chat.logger.error('Received error sending message', e);
@@ -342,7 +342,7 @@ function isRoomInstanced(chat: ChatClient, roomId: number) {
 	return channel.instanced;
 }
 
-export function retryFailedQueuedMessage(room: ChatRoom, message: ChatMessage) {
+export function retryFailedQueuedMessage(room: ChatRoomModel, message: ChatMessageModel) {
 	if (!message._isQueued || !message._error) {
 		return;
 	}
@@ -356,7 +356,7 @@ export function retryFailedQueuedMessage(room: ChatRoom, message: ChatMessage) {
 	sendChatMessage(room, message);
 }
 
-export async function loadOlderChatMessages(room: ChatRoom) {
+export async function loadOlderChatMessages(room: ChatRoomModel) {
 	const { chat } = room;
 
 	const channel = chat.roomChannels.get(room.id);
@@ -368,7 +368,7 @@ export async function loadOlderChatMessages(room: ChatRoom) {
 		const firstMessage = room.messages[0];
 		const data = await channel.pushLoadMessages(firstMessage.logged_on);
 
-		const oldMessages = storeModelList(ChatMessage, data.messages);
+		const oldMessages = storeModelList(ChatMessageModel, data.messages);
 
 		// If no older messages, we reached the end of the history.
 		if (oldMessages.length > 0) {
@@ -401,7 +401,7 @@ export async function addGroupRoom(chat: ChatClient, members: number[]) {
 	}
 
 	const response = await chat.userChannel.pushGroupAdd(members);
-	const newGroupRoom = storeModel(ChatRoom, { chat, ...response.room });
+	const newGroupRoom = storeModel(ChatRoomModel, { chat, ...response.room });
 	chat.groupRooms.push(newGroupRoom);
 	openChatRoom(chat, newGroupRoom.id);
 }
@@ -419,7 +419,7 @@ export function addGroupMembers(chat: ChatClient, roomId: number, members: numbe
 	return _getRoomChannelOrFail(chat, roomId).pushMemberAdd(members);
 }
 
-export async function leaveGroupRoom(chat: ChatClient, room: ChatRoom) {
+export async function leaveGroupRoom(chat: ChatClient, room: ChatRoomModel) {
 	if (!chat.userChannel) {
 		return;
 	}
@@ -431,31 +431,31 @@ export async function leaveGroupRoom(chat: ChatClient, room: ChatRoom) {
 	await chat.userChannel.pushGroupLeave(room.id);
 }
 
-export function removeMessage(chat: ChatClient, room: ChatRoom, messageId: number) {
+export function removeMessage(chat: ChatClient, room: ChatRoomModel, messageId: number) {
 	return _getRoomChannelOrFail(chat, room.id).pushMessageRemove(messageId);
 }
 
 export function editMessage(
 	chat: ChatClient,
-	room: ChatRoom,
+	room: ChatRoomModel,
 	{ content, id }: { content: string; id: number }
 ) {
 	return _getRoomChannelOrFail(chat, room.id).pushMessageUpdate(id, content);
 }
 
-export function editChatRoomTitle(chat: ChatClient, room: ChatRoom, title: string) {
+export function editChatRoomTitle(chat: ChatClient, room: ChatRoomModel, title: string) {
 	return _getRoomChannelOrFail(chat, room.id).pushUpdateTitle(title);
 }
 
 export function editChatRoomBackground(
 	chat: ChatClient,
-	room: ChatRoom,
+	room: ChatRoomModel,
 	backgroundId: number | null
 ) {
 	return _getRoomChannelOrFail(chat, room.id).pushUpdateBackground(backgroundId);
 }
 
-export function kickGroupMember(chat: ChatClient, room: ChatRoom, memberId: number) {
+export function kickGroupMember(chat: ChatClient, room: ChatRoomModel, memberId: number) {
 	return _getRoomChannelOrFail(chat, room.id).pushKickMember(memberId);
 }
 
@@ -473,7 +473,7 @@ export function isInChatRoom(chat: ChatClient, roomId?: number) {
 	return chat.activeRoomId ? chat.activeRoomId === roomId : false;
 }
 
-export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessage) {
+export function updateChatRoomLastMessageOn(chat: ChatClient, message: ChatMessageModel) {
 	const time = message.logged_on.getTime();
 
 	// If it's a friend chat.
@@ -519,7 +519,7 @@ export function recollectChatRoomMembers(chat: ChatClient) {
  * This is only possible if the role is bootstrapped onto the input user,
  * or if the user is currently in the room.
  */
-export function tryGetRoomRole(room: ChatRoom, user: ChatUser) {
+export function tryGetRoomRole(room: ChatRoomModel, user: ChatUser) {
 	if (room.owner_id === user.id) {
 		return 'owner';
 	}
@@ -543,7 +543,7 @@ export function tryGetRoomRole(room: ChatRoom, user: ChatUser) {
 /**
  * Returns whether `user` can moderate `otherUser` within the given `room`.
  */
-export function userCanModerateOtherUser(room: ChatRoom, user: ChatUser, otherUser: ChatUser) {
+export function userCanModerateOtherUser(room: ChatRoomModel, user: ChatUser, otherUser: ChatUser) {
 	// Cannot moderate yourself.
 	if (user.id === otherUser.id) {
 		return false;

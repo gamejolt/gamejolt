@@ -1,11 +1,11 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import {
-	Community,
+	CommunityModel,
 	CommunityPresetChannelType,
 } from '../../../../../_common/community/community.model';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItem } from '../../../../../_common/media-item/media-item-model';
+import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
@@ -23,10 +23,10 @@ const CARD_HEIGHT = 70;
 	},
 })
 export default class AppCommunityChannelCard extends Vue {
-	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
 	@Prop({ type: String, required: true }) path!: string;
 	@Prop({ type: String, required: true }) label!: string;
-	@Prop(Object) backgroundItem?: MediaItem;
+	@Prop(Object) backgroundItem?: MediaItemModel;
 	@Prop({ type: Boolean, default: false }) isActive!: boolean;
 	@Prop({ type: Boolean, default: false }) isUnread!: boolean;
 	@Prop({ type: String, default: undefined }) sort?: string;

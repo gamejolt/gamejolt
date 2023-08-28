@@ -1,19 +1,19 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../../../utils/array';
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
-import { GameSong } from '../../../../../../../_common/game/song/song.model';
+import { GameSongModel } from '../../../../../../../_common/game/song/song.model';
 import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
-import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
+import { arrayRemove } from '../../../../../../../utils/array';
 import FormGameSong from '../../../../../../components/forms/game/song/song.vue';
 import AppDashGameWizardControls from '../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
 import { useGameDashRouteController } from '../../manage.store';
@@ -30,21 +30,21 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppLoadingFade,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/music/' + route.params.id),
 })
-export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
+export default class RouteDashGamesManageGameMusic extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game!;
 	}
 
-	songs: GameSong[] = [];
+	songs: GameSongModel[] = [];
 	isAdding = false;
 	isProcessing = false;
-	activeItem: GameSong | null = null;
+	activeItem: GameSongModel | null = null;
 
 	get currentSort() {
 		return this.songs.map(item => item.id);
@@ -52,7 +52,7 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate(`Manage Music for %{ game }`, {
+			return this.$gettext(`Manage Music for %{ game }`, {
 				game: this.game.title,
 			});
 		}
@@ -60,7 +60,7 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.songs = GameSong.populate($payload.songs);
+		this.songs = GameSongModel.populate($payload.songs);
 		this.isAdding = !this.songs.length;
 	}
 
@@ -68,18 +68,18 @@ export default class RouteDashGamesManageGameMusic extends BaseRouteComponent {
 		this.activeItem = null;
 	}
 
-	onSongAdded(formModel: GameSong) {
-		this.songs.push(new GameSong(formModel));
+	onSongAdded(formModel: GameSongModel) {
+		this.songs.push(new GameSongModel(formModel));
 		this.isAdding = false;
 	}
 
-	saveSongSort(songs: GameSong[]) {
+	saveSongSort(songs: GameSongModel[]) {
 		this.songs = songs;
-		GameSong.$saveSort(this.game.id, this.currentSort);
+		GameSongModel.$saveSort(this.game.id, this.currentSort);
 	}
 
-	async removeSong(song: GameSong) {
-		const result = await ModalConfirm.show(
+	async removeSong(song: GameSongModel) {
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this song?')
 		);
 

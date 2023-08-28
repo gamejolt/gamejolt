@@ -1,20 +1,22 @@
-import { FiresidePost } from '../fireside/post/post-model';
-import { Game } from '../game/game.model';
+import { FiresidePostModel } from '../fireside/post/post-model';
+import { GameModel } from '../game/game.model';
 import { Model } from '../model/model.service';
-import { User } from '../user/user.model';
+import { UserModel } from '../user/user.model';
 
-export class EventItem extends Model {
-	static readonly TYPE_POST_ADD = 'post-add';
+export const enum EventItemType {
+	PostAdd = 'post-add',
+}
 
-	type!: 'post-add';
-	added_on: number;
+export class EventItemModel extends Model {
+	declare type: EventItemType;
+	declare added_on: number;
 
-	from?: User;
-	action!: any;
-	to?: any;
+	declare from?: UserModel;
+	declare action: any;
+	declare to?: any;
 
 	// For feeds.
-	scroll_id?: string;
+	declare scroll_id?: string;
 
 	constructor(data: any = {}) {
 		// Don't auto assign data. We pull what we want.
@@ -25,13 +27,13 @@ export class EventItem extends Model {
 		this.added_on = data.added_on;
 		this.scroll_id = data.scroll_id;
 
-		if (this.type === EventItem.TYPE_POST_ADD) {
-			this.action = new FiresidePost(data.action_resource_model);
-			this.from = new User(data.from_resource_model);
+		if (this.type === EventItemType.PostAdd) {
+			this.action = new FiresidePostModel(data.action_resource_model);
+			this.from = new UserModel(data.from_resource_model);
 			this.to =
 				data.to_resource === 'Game'
-					? new Game(data.to_resource_model)
-					: new User(data.to_resource_model);
+					? new GameModel(data.to_resource_model)
+					: new UserModel(data.to_resource_model);
 		}
 	}
 
@@ -40,13 +42,13 @@ export class EventItem extends Model {
 	 * not necessarily the real owner of the resource. e.g.
 	 * for collaborators posting as the owner, the owner will be used.
 	 */
-	set user(user: User) {
+	set user(user: UserModel) {
 		if (!user) {
 			return;
 		}
 
-		if (this.type === EventItem.TYPE_POST_ADD) {
-			const post = this.action as FiresidePost;
+		if (this.type === EventItemType.PostAdd) {
+			const post = this.action as FiresidePostModel;
 			if (post.game && post.as_game_owner) {
 				post.game.developer = user;
 				return;
@@ -61,30 +63,28 @@ export class EventItem extends Model {
 	 * not necessarily the real owner of the resource. e.g.
 	 * for collaborators posting as the owner, the owner will be used.
 	 */
-	get user(): User {
+	get user(): UserModel {
 		switch (this.type) {
-			case EventItem.TYPE_POST_ADD: {
-				const post = this.action as FiresidePost;
+			case EventItemType.PostAdd: {
+				const post = this.action as FiresidePostModel;
 				return post.displayUser;
 			}
 		}
 	}
 
-	set game(game: Game | undefined) {
+	set game(game: GameModel | undefined) {
 		if (!game) {
 			return;
 		}
 
-		if (this.type === EventItem.TYPE_POST_ADD && this.to instanceof Game) {
+		if (this.type === EventItemType.PostAdd && this.to instanceof GameModel) {
 			this.to = game;
 		}
 	}
 
 	get game() {
-		if (this.type === EventItem.TYPE_POST_ADD && this.to instanceof Game) {
+		if (this.type === EventItemType.PostAdd && this.to instanceof GameModel) {
 			return this.to;
 		}
 	}
 }
-
-Model.create(EventItem);

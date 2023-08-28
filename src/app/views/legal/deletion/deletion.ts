@@ -1,13 +1,16 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import { html } from '../../../../lib/terms/deletion/global.md';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
 
 @Options({
 	name: 'RouteLegalDeletion',
 })
-@OptionsForRoute()
-export default class RouteLegalDeletion extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteLegalDeletion extends LegacyRouteComponent {
 	get routeTitle() {
 		return this.$gettext('Account Deletion');
 	}

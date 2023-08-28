@@ -1,7 +1,7 @@
 import { Api } from '../../../api/api.service';
 import { Model } from '../../../model/model.service';
 
-export class CommunityCompetitionAward extends Model {
+export class CommunityCompetitionAwardModel extends Model {
 	community_competition_id!: number;
 	name!: string;
 	description!: string | null;
@@ -33,5 +33,3 @@ export class CommunityCompetitionAward extends Model {
 		return this.$_remove(`/web/dash/communities/competitions/awards/remove/${this.id}`);
 	}
 }
-
-Model.create(CommunityCompetitionAward);

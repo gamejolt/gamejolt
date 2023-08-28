@@ -1,12 +1,12 @@
 import { markRaw, shallowReadonly } from 'vue';
-import { arrayRemove } from '../../../utils/array';
-import { createLogger } from '../../../utils/logging';
 import { chooseFocusedRTCUser } from '../../../_common/fireside/rtc/rtc';
 import {
-	createSocketChannelController,
 	SocketChannelController,
+	createSocketChannelController,
 } from '../../../_common/socket/socket-controller';
-import { User } from '../../../_common/user/user.model';
+import { UserModel } from '../../../_common/user/user.model';
+import { arrayRemove } from '../../../utils/array';
+import { createLogger } from '../../../utils/logging';
 import { FiresideController } from '../fireside/controller/controller';
 import { GridClient } from './client.service';
 
@@ -24,7 +24,7 @@ interface ListableHostsPayload {
 export function createGridFiresideDMChannel(
 	client: GridClient,
 	firesideController: FiresideController,
-	options: { firesideHash: string; user: User }
+	options: { firesideHash: string; user: UserModel }
 ): GridFiresideDMChannel {
 	const { socketController } = client;
 	const { firesideHash, user } = options;

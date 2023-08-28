@@ -2,15 +2,15 @@
 import { computed, PropType, ref, toRefs } from 'vue';
 import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
 import { ComponentProps } from '../../../_common/component-helpers';
-import { ContentRules } from '../../../_common/content/content-editor/content-rules';
+import { ContentRules } from '../../../_common/content/content-rules';
 import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
 
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	stickerTargetController: {

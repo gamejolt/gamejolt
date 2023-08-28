@@ -1,7 +1,7 @@
-import { MediaItem } from '../../media-item/media-item-model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import { Model, ModelData, UnknownModelData } from '../../model/model.service';
 
-export class StickerPack extends Model {
+export class StickerPackModel extends Model {
 	declare name: string;
 	declare payout_sticker_num: number;
 	declare cost_coins: number;
@@ -9,15 +9,13 @@ export class StickerPack extends Model {
 	declare ends_on?: number;
 	declare is_active?: boolean;
 
-	declare media_item: MediaItem;
+	declare media_item: MediaItemModel;
 
-	constructor(data: UnknownModelData | ModelData<StickerPack> = {}) {
+	constructor(data: UnknownModelData | ModelData<StickerPackModel> = {}) {
 		super(data);
 
 		if (data.media_item) {
-			this.media_item = new MediaItem(data.media_item);
+			this.media_item = new MediaItemModel(data.media_item);
 		}
 	}
 }
-
-Model.create(StickerPack);

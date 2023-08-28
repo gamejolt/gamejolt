@@ -3,19 +3,19 @@ import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { shorthandReadableTime } from '../../../../../_common/filters/duration';
-import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppStickerPack, {
 	StickerPackExpiryStyles,
 } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { kBorderRadiusLg } from '../../../../../_styles/variables';
 import AppProductCurrencyTags from './AppProductCurrencyTags.vue';
 
 const props = defineProps({
 	shopProduct: {
-		type: Object as PropType<InventoryShopProductSale>,
+		type: Object as PropType<InventoryShopProductSaleModel>,
 		required: true,
 	},
 	/**
@@ -29,7 +29,7 @@ const props = defineProps({
 const { shopProduct, disablePurchases } = toRefs(props);
 
 const emit = defineEmits({
-	purchase: (_shopProduct: InventoryShopProductSale) => true,
+	purchase: (_shopProduct: InventoryShopProductSaleModel) => true,
 });
 
 const { user: myUser } = useCommonStore();
@@ -92,7 +92,7 @@ const readableEndsOn = computed(() => {
 		precision: 'rough',
 		nowText: $gettext(`No longer for sale`),
 		timeTransformer(time) {
-			return $gettextInterpolate(`%{ time } left to purchase`, { time });
+			return $gettext(`%{ time } left to purchase`, { time });
 		},
 	});
 });

@@ -5,6 +5,8 @@ import { kBorderRadiusBase, kBorderRadiusLg, kBorderRadiusSm } from './variables
 /**
  * Helper to make it easier to mix certain styles into a style binding depending
  * on a condition.
+ *
+ * @__NO_SIDE_EFFECTS__
  */
 export function styleWhen(condition: boolean | null | undefined, style: CSSProperties) {
 	return condition ? style : {};

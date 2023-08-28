@@ -1,15 +1,15 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../../modal/modal.service';
-import { SupporterAction } from '../../action.model';
-import { SupporterMessage } from '../../message.model';
+import { SupporterActionModel } from '../../action.model';
+import { SupporterMessageModel } from '../../message.model';
 
 interface DoSupporterMessageModalOptions {
-	model?: SupporterMessage;
+	model?: SupporterMessageModel;
 	/**
 	 * Provide if sending a custom message to a specific user. If undefined, we
 	 * assume that we're editing an existing message template.
 	 */
-	action?: SupporterAction;
+	action?: SupporterActionModel;
 }
 
 /**
@@ -20,7 +20,7 @@ export class DoSupporterMessageModal {
 	static async show(options: DoSupporterMessageModalOptions) {
 		const { action, model } = options;
 
-		return await showModal<SupporterMessage>({
+		return await showModal<SupporterMessageModel>({
 			modalId: 'DoSupporterMessage',
 			component: defineAsyncComponent(() => import('./FormSupporterMessage.vue')),
 			props: {

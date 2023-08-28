@@ -27,21 +27,21 @@ import {
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { StickerPack } from '../../../../_common/sticker/pack/pack.model';
-import { Sticker } from '../../../../_common/sticker/sticker.model';
+import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
+import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '../../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../../_styles/variables';
 
-type FormModel = Partial<Sticker> & {
+type FormModel = Partial<StickerModel> & {
 	emoji_name: string;
 };
 
 const props = defineProps({
-	...defineFormProps<Sticker>(),
+	...defineFormProps<StickerModel>(),
 	emojiPrefix: {
 		type: String,
 		default: '',
@@ -55,8 +55,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	changed: (_payloadSticker: UnknownModelData | ModelData<Sticker>) => true,
-	pack: (_payloadPack: StickerPack | undefined) => true,
+	changed: (_payloadSticker: UnknownModelData | ModelData<StickerModel>) => true,
+	pack: (_payloadPack: StickerPackModel | undefined) => true,
 });
 
 const { model, canActivate, warnDeactivate } = toRefs(props);
@@ -135,7 +135,7 @@ const form: FormController<FormModel> = createForm({
 	},
 	onSubmitSuccess(response) {
 		emit('changed', response.sticker);
-		emit('pack', response.pack ? new StickerPack(response.pack) : undefined);
+		emit('pack', response.pack ? new StickerPackModel(response.pack) : undefined);
 	},
 });
 
@@ -248,7 +248,7 @@ async function onClickIsActive() {
 		return;
 	}
 
-	const response = await ModalConfirm.show(
+	const response = await showModalConfirm(
 		$gettext(
 			`Do you really want to deactivate this sticker? If you do, your sticker pack will be deactivated too. You'll need to activate the pack to make it available again.`
 		),

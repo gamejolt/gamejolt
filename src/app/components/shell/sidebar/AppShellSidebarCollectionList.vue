@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import { stringSort } from '../../../../utils/array';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { GameCollection } from '../../game/collection/collection.model';
+import { stringSort } from '../../../../utils/array';
+import { GameCollectionModel } from '../../game/collection/collection.model';
 
 const props = defineProps({
 	collections: {
-		type: Array as PropType<GameCollection[]>,
+		type: Array as PropType<GameCollectionModel[]>,
 		required: true,
 	},
 	filter: {
@@ -38,7 +38,7 @@ const filtered = computed(() => {
  * We compare the collection's name or owner's name if it's a subscription.
  * This way they can search for "cros" and get cros's games if they're following.
  */
-function filterComparator(item: GameCollection) {
+function filterComparator(item: GameCollectionModel) {
 	let actual: string;
 	const expected = filter.value.toLowerCase();
 

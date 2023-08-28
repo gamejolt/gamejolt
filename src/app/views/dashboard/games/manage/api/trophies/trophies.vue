@@ -8,16 +8,16 @@ import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAd
 import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
 import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
-import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { TrophyDifficulty } from '../../../../../../../_common/trophy/base-trophy.model';
-import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
 import AppTrophyThumbnail from '../../../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
+import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
@@ -34,12 +34,12 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/api/trophies/' + route.params.id),
 })
-export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent {
+export default class RouteDashGamesManageApiTrophies extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
@@ -89,7 +89,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Manage Trophies for %{ game }', {
+			return this.$gettext('Manage Trophies for %{ game }', {
 				game: this.game.title,
 			});
 		}
@@ -144,7 +144,7 @@ export default class RouteDashGamesManageApiTrophies extends BaseRouteComponent 
 	}
 
 	async removeTrophy(trophy: GameTrophy) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this trophy?')
 		);
 

@@ -10,11 +10,11 @@ import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vu
 import AppResponsiveDimensions from '../responsive-dimensions/AppResponsiveDimensions.vue';
 import AppRealmFollowButton from './AppRealmFollowButton.vue';
 import AppRealmLabel from './AppRealmLabel.vue';
-import { Realm, toggleRealmFollow } from './realm-model';
+import { RealmModel, toggleRealmFollow } from './realm-model';
 
 const props = defineProps({
 	realm: {
-		type: Object as PropType<Realm>,
+		type: Object as PropType<RealmModel>,
 		required: true,
 	},
 	overlayContent: {

@@ -5,13 +5,13 @@ import { Api } from '../../../../_common/api/api.service';
 import {
 	canCommunityEjectFireside,
 	canCommunityFeatureFireside,
-	Community,
+	CommunityModel,
 } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../_common/filters/number';
-import { FiresideCommunity } from '../../../../_common/fireside/community/community.model';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
+import { FiresideCommunityModel } from '../../../../_common/fireside/community/community.model';
+import { FiresideModel } from '../../../../_common/fireside/fireside.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
@@ -24,15 +24,15 @@ import { CommunityEjectFiresideModal } from '../../community/eject-fireside/moda
 import AppFiresideAvatarBase from './AppFiresideAvatarBase.vue';
 
 export interface FiresideAvatarEvent {
-	fireside: Fireside;
-	community: FiresideCommunity;
+	fireside: FiresideModel;
+	community: FiresideCommunityModel;
 }
 </script>
 
 <script lang="ts" setup>
 const props = defineProps({
 	fireside: {
-		type: Object as PropType<Fireside>,
+		type: Object as PropType<FiresideModel>,
 		required: true,
 	},
 	hideCommunity: {
@@ -125,11 +125,11 @@ function _destroyExpiryCheck() {
 	}
 }
 
-function canFeatureCommunity(community: Community) {
+function canFeatureCommunity(community: CommunityModel) {
 	return canCommunityFeatureFireside(community);
 }
 
-async function toggleFeatured(community: FiresideCommunity) {
+async function toggleFeatured(community: FiresideCommunityModel) {
 	Popper.hideAll();
 	if (!canFeatureCommunity(community.community)) {
 		return;
@@ -161,7 +161,7 @@ async function toggleFeatured(community: FiresideCommunity) {
 	isLoading.value = false;
 }
 
-async function ejectFiresideFromCommunity(community: FiresideCommunity) {
+async function ejectFiresideFromCommunity(community: FiresideCommunityModel) {
 	Popper.hideAll();
 	if (!canCommunityEjectFireside(community.community)) {
 		return;
@@ -301,12 +301,10 @@ async function ejectFiresideFromCommunity(community: FiresideCommunity) {
 						<div class="-tooltip-row -tooltip-members">
 							<AppChatUserOnlineStatus is-online :size="12" :segment-width="1.5" />
 							{{
-								$gettextInterpolate(
-									$ngettext(
-										`%{ count } member`,
-										`%{ count } members`,
-										fireside.member_count
-									),
+								$ngettext(
+									`%{ count } member`,
+									`%{ count } members`,
+									fireside.member_count,
 									{ count: formatNumber(fireside.member_count || 0) }
 								)
 							}}

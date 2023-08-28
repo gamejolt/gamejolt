@@ -2,7 +2,7 @@
 import { computed, onMounted, PropType, toRefs } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
-import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
+import { ContentRules } from '../../../../../_common/content/content-rules';
 import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -18,7 +18,7 @@ import {
 	validateMinValue,
 } from '../../../../../_common/form-vue/validators';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { ChatCommand } from '../commands/command.model';
+import { ChatCommandModel } from '../commands/command.model';
 import { ChatTimersFormModel } from './FormChatTimers.vue';
 
 const MAX_EDITOR_HEIGHT = 480;
@@ -30,7 +30,7 @@ const previewContentRules = new ContentRules({
 
 const props = defineProps({
 	item: {
-		type: Object as PropType<ChatCommand>,
+		type: Object as PropType<ChatCommandModel>,
 		required: true,
 	},
 	maxInvokeSchedule: {

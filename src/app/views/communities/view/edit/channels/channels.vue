@@ -1,16 +1,16 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 
 @Options({
 	name: 'RouteCommunitiesViewEditChannels',
 	components: {},
 })
-@OptionsForRoute()
-export default class RouteCommunitiesViewEditChannels extends BaseRouteComponent {}
+@OptionsForLegacyRoute()
+export default class RouteCommunitiesViewEditChannels extends LegacyRouteComponent {}
 </script>
 
 <template>

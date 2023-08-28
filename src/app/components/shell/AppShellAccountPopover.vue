@@ -16,7 +16,7 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserWallet } from '../../../_common/user/wallet/wallet.model';
+import { UserWalletModel } from '../../../_common/user/wallet/wallet.model';
 import { useAppStore } from '../../store';
 import { routeDashCreator } from '../../views/dashboard/creator/creator.route';
 import { UserTokenModal } from '../user/token-modal/token-modal.service';
@@ -29,7 +29,7 @@ const isShowing = ref(false);
 
 const isFetchingWallet = ref(true);
 const marketplaceAmount = ref(0);
-const gemWallet = ref<UserWallet>();
+const gemWallet = ref<UserWalletModel>();
 
 function onShow() {
 	isShowing.value = true;
@@ -62,7 +62,7 @@ async function _getWallet() {
 	);
 
 	marketplaceAmount.value = response.marketplaceWalletBalance || 0;
-	gemWallet.value = response.gemWallet ? new UserWallet(response.gemWallet) : undefined;
+	gemWallet.value = response.gemWallet ? new UserWalletModel(response.gemWallet) : undefined;
 	isFetchingWallet.value = false;
 }
 

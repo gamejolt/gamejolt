@@ -2,7 +2,7 @@
 import { PropType, computed, toRefs } from 'vue';
 import { styleChangeBg } from '../../../_styles/mixins';
 import AppAvatarFrame from '../../avatar/AppAvatarFrame.vue';
-import { AvatarFrame } from '../../avatar/frame.model';
+import { AvatarFrameModel } from '../../avatar/frame.model';
 import { ComponentProps } from '../../component-helpers';
 import { Environment } from '../../environment/environment.service';
 import { ThemeColor } from '../../theme/variables';
@@ -51,7 +51,7 @@ const props = defineProps({
 	 * the User has equipped.
 	 */
 	frameOverride: {
-		type: Object as PropType<AvatarFrame>,
+		type: Object as PropType<AvatarFrameModel>,
 		default: undefined,
 	},
 	/**

@@ -1,12 +1,12 @@
 import { defineAsyncComponent } from 'vue';
 import { Router } from 'vue-router';
-import { CommunityCompetitionEntry } from '../../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryModel } from '../../../../../../_common/community/competition/entry/entry.model';
 import { showModal } from '../../../../../../_common/modal/modal.service';
 
 export type CommunityCompetitionEntryModalHashDeregister = () => void;
 
 export class CommunityCompetitionEntryModal {
-	static async showEntry(entry: CommunityCompetitionEntry) {
+	static async showEntry(entry: CommunityCompetitionEntryModel) {
 		return this.show({ entry });
 	}
 

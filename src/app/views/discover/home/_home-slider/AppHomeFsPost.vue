@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, toRefs } from 'vue';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
+import AppVideo from '../../../../../_common/video/AppVideo.vue';
 import {
 	createVideoPlayerController,
 	getVideoPlayerFromSources,
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
-import AppVideo from '../../../../../_common/video/AppVideo.vue';
 
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 });

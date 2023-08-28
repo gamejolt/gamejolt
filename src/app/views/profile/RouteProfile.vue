@@ -21,10 +21,13 @@ import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppUserDogtag from '../../../_common/user/AppUserDogtag.vue';
 import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
-import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
+import {
+	UserFriendshipModel,
+	UserFriendshipState,
+} from '../../../_common/user/friendship/friendship.model';
 import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
-import { User } from '../../../_common/user/user.model';
+import { UserBaseTrophyModel } from '../../../_common/user/trophy/user-base-trophy.model';
+import { UserModel } from '../../../_common/user/user.model';
 import { kFontFamilyBase } from '../../../_styles/variables';
 import { isUserOnline } from '../../components/chat/client';
 import { CommentModal } from '../../components/comment/modal/modal.service';
@@ -48,16 +51,16 @@ function createController() {
 	const isOverviewLoaded = ref(false);
 
 	// We will bootstrap this right away, so it should always be set for use.
-	const user = ref<User>();
+	const user = ref<UserModel>();
 
 	const gamesCount = ref(0);
 	const communitiesCount = ref(0);
 	const placeholderCommunitiesCount = ref(0);
 	const trophyCount = ref(0);
-	const userFriendship = ref<UserFriendship>();
-	const previewTrophies = ref<UserBaseTrophy[]>([]);
+	const userFriendship = ref<UserFriendshipModel>();
+	const previewTrophies = ref<UserBaseTrophyModel[]>([]);
 
-	function _updateUser(newUser?: User) {
+	function _updateUser(newUser?: UserModel) {
 		// If we already have a user, just assign new data into it to keep it
 		// fresh.
 		if (user.value && newUser && user.value.id === newUser.id) {
@@ -126,8 +129,10 @@ function createController() {
 	function bootstrapUser(username: string) {
 		const prevId = user.value?.id;
 		const newUser =
-			Registry.find<User>('User', i => i.username.toLowerCase() === username.toLowerCase()) ??
-			undefined;
+			Registry.find<UserModel>(
+				'User',
+				i => i.username.toLowerCase() === username.toLowerCase()
+			) ?? undefined;
 
 		_updateUser(newUser);
 
@@ -143,7 +148,7 @@ function createController() {
 	}
 
 	function profilePayload(payload: any) {
-		const newUser = new User(payload.user);
+		const newUser = new UserModel(payload.user);
 		_updateUser(newUser);
 
 		gamesCount.value = payload.gamesCount || 0;
@@ -152,7 +157,7 @@ function createController() {
 		trophyCount.value = payload.trophyCount || 0;
 
 		userFriendship.value = payload.userFriendship
-			? new UserFriendship(payload.userFriendship)
+			? new UserFriendshipModel(payload.userFriendship)
 			: undefined;
 
 		previewTrophies.value = payload.previewTrophies
@@ -165,7 +170,7 @@ function createController() {
 		isOverviewLoaded.value = true;
 	}
 
-	function _setUserFriendship(friendship?: UserFriendship) {
+	function _setUserFriendship(friendship?: UserFriendshipModel) {
 		userFriendship.value = friendship;
 	}
 
@@ -410,7 +415,7 @@ const headingUsernameStyles = computed<CSSProperties>(() => ({
 							<span
 								v-if="
 									userFriendship &&
-									userFriendship.state === UserFriendship.STATE_FRIENDS
+									userFriendship.state === UserFriendshipState.Friends
 								"
 								v-app-tooltip="$gettext('You are friends! Awwww!')"
 								class="tag tag-highlight"
@@ -542,7 +547,7 @@ const headingUsernameStyles = computed<CSSProperties>(() => ({
 													v-if="
 														userFriendship &&
 														userFriendship.state ===
-															UserFriendship.STATE_FRIENDS
+															UserFriendshipState.Friends
 													"
 													class="list-group-item has-icon"
 													@click="routeStore.removeFriend()"

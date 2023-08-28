@@ -9,7 +9,7 @@ import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { showUserInviteFollowGrowl } from '../../../_common/user/invite/modal/modal.service';
-import { User } from '../../../_common/user/user.model';
+import { UserModel } from '../../../_common/user/user.model';
 import FormOnboardingProfile from '../../components/forms/onboarding/FormOnboardingProfile.vue';
 import FormOnboardingRealms from '../../components/forms/onboarding/FormOnboardingRealms.vue';
 
@@ -28,7 +28,7 @@ const steps = [markRaw(FormOnboardingProfile), markRaw(FormOnboardingRealms)];
 
 const currentStep = ref(0);
 const isSocialRegistration = ref(false);
-const inviteUser = ref<User>();
+const inviteUser = ref<UserModel>();
 
 const stepComponent = computed(() => {
 	const step = Math.max(0, Math.min(steps.length - 1, currentStep.value));
@@ -47,7 +47,7 @@ createAppRoute({
 		}
 
 		isSocialRegistration.value = payload.isSocialRegistration || false;
-		inviteUser.value = payload.inviteUser && new User(payload.inviteUser);
+		inviteUser.value = payload.inviteUser && new UserModel(payload.inviteUser);
 		setInitialPackWatermarkStorageValue(true);
 	},
 });

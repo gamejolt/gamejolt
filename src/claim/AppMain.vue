@@ -10,7 +10,7 @@ import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useCommonStore } from '../_common/store/common-store';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
 import AppUserBar from '../_common/user/user-bar/AppUserBar.vue';
-import { User } from '../_common/user/user.model';
+import { touchUser } from '../_common/user/user.model';
 
 const { user } = useCommonStore();
 const curDate = new Date();
@@ -18,7 +18,7 @@ const curDate = new Date();
 onMounted(() => {
 	// Will load the user in asynchronously so that the user-bar in the
 	// shell will get loaded with a user.
-	User.touch();
+	touchUser();
 
 	loadCurrentLanguage();
 });

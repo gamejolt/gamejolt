@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import AppGameMediaBar from '../../game/media-bar/media-bar.vue';
-import { MediaItem } from '../../media-item/media-item-model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 
 @Options({
 	components: {
@@ -9,11 +9,11 @@ import { MediaItem } from '../../media-item/media-item-model';
 	},
 })
 export default class AppWidgetCompilerWidgetGameMedia extends Vue {
-	@Prop(Array) items!: MediaItem[];
+	@Prop(Array) items!: MediaItemModel[];
 	@Prop(Number) num!: number;
 
 	// We trim based on their `num` param.
-	_items: MediaItem[] = [];
+	_items: MediaItemModel[] = [];
 
 	created() {
 		this.trim();

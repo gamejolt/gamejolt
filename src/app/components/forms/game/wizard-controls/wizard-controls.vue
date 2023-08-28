@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ref } from '@vue/reactivity';
+import { ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { useForm } from '../../../../../_common/form-vue/AppForm.vue';

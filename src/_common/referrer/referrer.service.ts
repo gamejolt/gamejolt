@@ -8,24 +8,24 @@ import { onRouteChangeAfter } from '../route/route-component';
  * be correct when we first hit the page. If it's "null" then there was no
  * referrer when hitting the initial page.
  */
-export class Referrer {
-	private static isInitialized = false;
+class ReferrerService {
+	private isInitialized = false;
 
 	/**
 	 * We will set this to false after the first page change. We don't
 	 * artifically track new referrers until after the first page has passed.
 	 */
-	private static firstPass = true;
+	private firstPass = true;
 
 	/**
 	 * After every location change we store the current URL. We can use this
 	 * value as the referrer when switching to the next page.
 	 */
-	private static url?: string;
+	private url?: string;
 
-	private static _referrer?: string;
+	private _referrer?: string;
 
-	static init(router: Router) {
+	init(router: Router) {
 		this.isInitialized = true;
 
 		if (!import.meta.env.SSR && window.document.referrer) {
@@ -50,7 +50,7 @@ export class Referrer {
 		}
 	}
 
-	static get referrer() {
+	get referrer() {
 		if (!this.isInitialized) {
 			throw new Error(`Using Referrer before it's initialized.`);
 		}
@@ -58,3 +58,5 @@ export class Referrer {
 		return this._referrer;
 	}
 }
+
+export const Referrer = /** @__PURE__ */ new ReferrerService();

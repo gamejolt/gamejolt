@@ -1,6 +1,6 @@
 import { Model } from '../../model/model.service';
 
-export class OrderAddress extends Model {
+export class OrderAddressModel extends Model {
 	static readonly TYPE_BILLING = 'billing';
 	static readonly TYPE_SHIPPING = 'shipping';
 
@@ -18,5 +18,3 @@ export class OrderAddress extends Model {
 		super(data);
 	}
 }
-
-Model.create(OrderAddress);

@@ -10,7 +10,7 @@ import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvata
 import { fuzzysearch } from '../../../../utils/string';
 import { useGridStore } from '../../grid/grid-store';
 import { addGroupMembers, addGroupRoom } from '../client';
-import { ChatRoom } from '../room';
+import { ChatRoomModel } from '../room';
 import { ChatUser } from '../user';
 
 @Options({
@@ -22,7 +22,7 @@ import { ChatUser } from '../user';
 	},
 })
 export default class AppChatInviteModal extends mixins(BaseModal) {
-	@Prop({ type: Object, required: true }) room!: ChatRoom;
+	@Prop({ type: Object, required: true }) room!: ChatRoomModel;
 	@Prop({ type: Array, required: true }) friends!: ChatUser[];
 	@Prop({ type: Object, default: null }) initialUser!: ChatUser | null;
 

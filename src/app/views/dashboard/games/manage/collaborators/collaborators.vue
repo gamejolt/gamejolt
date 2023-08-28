@@ -1,19 +1,23 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
-import { Collaborator } from '../../../../../../_common/collaborator/collaborator.model';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	CollaboratorModel,
+	CollaboratorRole,
+	CollaboratorStatus,
+} from '../../../../../../_common/collaborator/collaborator.model';
+import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
+import { arrayRemove } from '../../../../../../utils/array';
 import FormGameCollaborator from '../../../../../components/forms/game/collaborator/collaborator.vue';
 import { useGameDashRouteController } from '../manage.store';
 
@@ -27,27 +31,31 @@ import { useGameDashRouteController } from '../manage.store';
 		FormGameCollaborator,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/collaborators/' + route.params.id),
 })
-export default class RouteDashGamesManageCollaborators extends BaseRouteComponent {
+export default class RouteDashGamesManageCollaborators extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game!;
 	}
 
-	collaborators: Collaborator[] = [];
-	activeCollaborator: Collaborator | null = null;
+	collaborators: CollaboratorModel[] = [];
+	activeCollaborator: CollaboratorModel | null = null;
 	isAdding = false;
 
-	readonly Collaborator = Collaborator;
+	readonly Collaborator = CollaboratorModel;
+	readonly CollaboratorStatusActive = CollaboratorStatus.Active;
+	readonly CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
+	readonly CollaboratorRoleCommunityManager = CollaboratorRole.CommunityManager;
+	readonly CollaboratorRoleDeveloper = CollaboratorRole.Developer;
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Collaborators for %{ game }', {
+			return this.$gettext('Collaborators for %{ game }', {
 				game: this.game.title,
 			});
 		}
@@ -55,13 +63,13 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 	}
 
 	routeResolved($payload: any) {
-		this.collaborators = Collaborator.populate($payload.collaborators);
+		this.collaborators = CollaboratorModel.populate($payload.collaborators);
 		if (!this.collaborators.length) {
 			this.isAdding = true;
 		}
 	}
 
-	onAdded(collaborator: Collaborator) {
+	onAdded(collaborator: CollaboratorModel) {
 		this.isAdding = false;
 		this.collaborators.push(collaborator);
 	}
@@ -70,8 +78,8 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 		this.activeCollaborator = null;
 	}
 
-	async remove(collaborator: Collaborator) {
-		const ret = await ModalConfirm.show(
+	async remove(collaborator: CollaboratorModel) {
+		const ret = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to remove this collaborator? They will no longer be able to make changes to the game.`
 			),
@@ -141,31 +149,27 @@ export default class RouteDashGamesManageCollaborators extends BaseRouteComponen
 								<span class="tag">
 									<template
 										v-if="
-											collaborator.role ===
-											Collaborator.ROLE_EQUAL_COLLABORATOR
+											collaborator.role === CollaboratorRoleEqualCollaborator
 										"
 									>
 										<AppTranslate>Collaborator</AppTranslate>
 									</template>
 									<template
 										v-else-if="
-											collaborator.role ===
-											Collaborator.ROLE_COMMUNITY_MANAGER
+											collaborator.role === CollaboratorRoleCommunityManager
 										"
 									>
 										<AppTranslate>Community Manager</AppTranslate>
 									</template>
 									<template
-										v-else-if="
-											collaborator.role === Collaborator.ROLE_DEVELOPER
-										"
+										v-else-if="collaborator.role === CollaboratorRoleDeveloper"
 									>
 										<AppTranslate>Developer</AppTranslate>
 									</template>
 									<template v-else> - </template>
 								</span>
 
-								<template v-if="collaborator.status !== Collaborator.STATUS_ACTIVE">
+								<template v-if="collaborator.status !== CollaboratorStatusActive">
 									<span class="tag"><AppTranslate>Invited</AppTranslate></span>
 									<br />
 									<AppTranslate>

@@ -15,7 +15,10 @@ import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { formatNumber } from '../../../../_common/filters/number';
-import { canDeviceCreateFiresides, Fireside } from '../../../../_common/fireside/fireside.model';
+import {
+	canDeviceCreateFiresides,
+	FiresideModel,
+} from '../../../../_common/fireside/fireside.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -37,7 +40,7 @@ import { closeChatRoom } from '../client';
 import FormChatRoomSettings from '../FormChatRoomSettings.vue';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
 import AppChatMemberList from '../member-list/AppChatMemberList.vue';
-import { ChatRoom, getChatRoomTitle } from '../room';
+import { ChatRoomModel, getChatRoomTitle } from '../room';
 import { ChatRoomChannel, createChatRoomChannel } from '../room-channel';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 import AppChatWindowOutput from './output/AppChatWindowOutput.vue';
@@ -79,7 +82,7 @@ const headerAvatarStyles: CSSProperties = {
 
 // Set up the room with connection logic.
 let destroyed = false;
-const room = shallowRef(getModel(ChatRoom, roomId.value));
+const room = shallowRef(getModel(ChatRoomModel, roomId.value));
 const roomChannel = shallowRef<ChatRoomChannel>();
 
 const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
@@ -192,7 +195,7 @@ async function startFireside() {
 	try {
 		const payload = await roomChannel.value?.pushStartFireside();
 		if (payload && payload.fireside) {
-			const fireside = new Fireside(payload.fireside);
+			const fireside = new FiresideModel(payload.fireside);
 			router.push(fireside.routeLocation);
 		}
 	} catch (e) {

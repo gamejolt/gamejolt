@@ -6,7 +6,7 @@ import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppLoading from '../../../loading/AppLoading.vue';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { $gettext } from '../../../translate/translate.service';
-import AppVideoEmbed from '../../../video/embed/embed.vue';
+import AppVideoEmbed from '../../../video/embed/AppVideoEmbed.vue';
 import { ContentEmbedService } from '../../content-editor/content-embed.service';
 import { defineEditableNodeViewProps } from '../../content-editor/node-views/base';
 import { useContentOwnerController } from '../../content-owner';

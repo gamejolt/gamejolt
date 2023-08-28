@@ -12,7 +12,7 @@ import {
 import { RgbColor } from 'polished/lib/types/color';
 import { lab2rgb, rgb2lab } from '../../utils/color';
 import { Model } from '../model/model.service';
-import { ThemePreset } from './preset/preset.model';
+import { ThemePresetModel } from './preset/preset.model';
 
 // Sync with variables in stylus.
 
@@ -33,8 +33,8 @@ const MaxLitBase = 0.8; // Base lightness ceiling in Light mode.
 const MinLitBase = 0.45; // Base lightness floor in Dark mode.  (Originally 0.45. Tried 0.43 & it works.)
 const BlueBoost = 0.2; // Extra blue brightness in Dark mode. (Originally 0.2.  Tried 0.18 & it works.)
 
-export function makeThemeFromPreset(preset: ThemePreset) {
-	return new Theme({
+export function makeThemeFromPreset(preset: ThemePresetModel) {
+	return new ThemeModel({
 		theme_preset_id: preset.id,
 		highlight: preset.highlight,
 		backlight: preset.backlight,
@@ -44,7 +44,7 @@ export function makeThemeFromPreset(preset: ThemePreset) {
 }
 
 export function makeThemeFromColor(color: string) {
-	return new Theme({
+	return new ThemeModel({
 		custom: color,
 	});
 }
@@ -193,13 +193,13 @@ function getReadableCustom(custom: string | undefined, background: 'light' | 'da
 	return custom;
 }
 
-export class Theme extends Model {
-	highlight!: string;
-	backlight!: string;
-	notice!: string;
-	tint?: string;
-	theme_preset_id?: number;
-	custom?: string;
+export class ThemeModel extends Model {
+	declare highlight: string;
+	declare backlight: string;
+	declare notice: string;
+	declare tint?: string;
+	declare theme_preset_id?: number;
+	declare custom?: string;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -330,9 +330,7 @@ export class Theme extends Model {
 	}
 }
 
-Model.create(Theme);
-
 /**
  * Default theme to be used by the whole app. Uses our main theme tint.
  */
-export const DefaultTheme = new Theme({ tint: '4800ff' });
+export const DefaultTheme = /** @__PURE__ */ new ThemeModel({ tint: '4800ff' });

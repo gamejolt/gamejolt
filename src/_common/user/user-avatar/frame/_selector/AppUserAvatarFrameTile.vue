@@ -11,11 +11,11 @@ import {
 	kThemeFg10,
 	kThemeGjOverlayNotice,
 } from '../../../../theme/variables';
-import { UserAvatarFrame } from '../frame.model';
+import { UserAvatarFrameModel } from '../frame.model';
 
 const props = defineProps({
 	frame: {
-		type: Object as PropType<UserAvatarFrame>,
+		type: Object as PropType<UserAvatarFrameModel>,
 		default: undefined,
 	},
 	isPlaceholder: {

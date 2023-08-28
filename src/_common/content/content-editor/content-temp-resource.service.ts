@@ -1,8 +1,8 @@
 import { Api } from '../../api/api.service';
 import { ContentContext } from '../content-context';
 
-export class ContentTempResource {
-	public static async getTempModelId(context: ContentContext, postData: any) {
+class ContentTempResourceService {
+	public async getTempModelId(context: ContentContext, postData: any) {
 		const payload = await Api.sendRequest(
 			`/web/content/temp-resource-id/${context}`,
 			// Make sure it's a POST request.
@@ -17,3 +17,5 @@ export class ContentTempResource {
 		throw new Error('Failed to fetch temp model id');
 	}
 }
+
+export const ContentTempResource = /** @__PURE__ */ new ContentTempResourceService();

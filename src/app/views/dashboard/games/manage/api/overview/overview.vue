@@ -5,9 +5,9 @@ import { Api } from '../../../../../../../_common/api/api.service';
 import { formatDuration } from '../../../../../../../_common/filters/duration';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { useGameDashRouteController } from '../../manage.store';
 
@@ -17,11 +17,11 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/api/' + route.params.id),
 })
-export default class RouteDashGamesManageApiOverview extends BaseRouteComponent {
+export default class RouteDashGamesManageApiOverview extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
@@ -47,7 +47,7 @@ export default class RouteDashGamesManageApiOverview extends BaseRouteComponent 
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Game API for %{ game }', {
+			return this.$gettext('Game API for %{ game }', {
 				game: this.game.title,
 			});
 		}

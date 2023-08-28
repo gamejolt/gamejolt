@@ -5,7 +5,7 @@ import { Api } from '../../../api/api.service';
 import { Screen } from '../../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
 import { EmojiGroupData } from '../../../store/common-store';
-import { Emoji } from '../../emoji.model';
+import { EmojiModel } from '../../emoji.model';
 import AppEmojiSelectorGroupThumbnail from './AppEmojiSelectorGroupThumbnail.vue';
 import AppEmojiSelectorGroupItemLazy from './item/AppEmojiSelectorGroupItemLazy.vue';
 
@@ -30,7 +30,7 @@ const inview = ref(false);
 const emit = defineEmits({
 	inview: () => true,
 	outview: () => true,
-	'select-emoji': (_emoji: Emoji) => true,
+	'select-emoji': (_emoji: EmojiModel) => true,
 });
 
 const itemCount = computed(() => {
@@ -53,7 +53,7 @@ function onOutview() {
 	emit('outview');
 }
 
-function selectEmoji(emoji: Emoji) {
+function selectEmoji(emoji: EmojiModel) {
 	Api.sendRequest(`/web/emojis/pick-emoji/${emoji.id}`, {}, { detach: true }).catch(e => {
 		console.error('Failed to update recently used emoji.', e);
 	});

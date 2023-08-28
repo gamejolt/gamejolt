@@ -3,11 +3,11 @@ import { PropType } from 'vue';
 import AppShareControl from '../share/AppShareControl.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
-import { User } from '../user/user.model';
+import { UserModel } from '../user/user.model';
 
 defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 	elevate: {

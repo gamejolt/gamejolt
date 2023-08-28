@@ -3,7 +3,7 @@ import { computed, inject, PropType, toRefs, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
 import {
-	Comment,
+	CommentModel,
 	getCommentBlockReason,
 	getCommentModelResourceName,
 } from '../../../_common/comment/comment-model';
@@ -23,7 +23,7 @@ import { CommentThreadModal } from './thread/modal.service';
 
 const props = defineProps({
 	comments: {
-		type: Array as PropType<Comment[]>,
+		type: Array as PropType<CommentModel[]>,
 		required: true,
 	},
 	model: {
@@ -89,7 +89,7 @@ watch(commentStoreDirtyState, dirtyState => {
 	}
 });
 
-function open(comment: Comment) {
+function open(comment: CommentModel) {
 	CommentThreadModal.show({
 		router,
 		model: model.value,

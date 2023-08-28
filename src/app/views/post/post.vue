@@ -2,13 +2,20 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
-import { CommunityUserNotification } from '../../../_common/community/user-notification/user-notification.model';
-import { $viewPost, FiresidePost } from '../../../_common/fireside/post/post-model';
+import { CommunityUserNotificationModel } from '../../../_common/community/user-notification/user-notification.model';
+import {
+	$viewPost,
+	FiresidePostModel,
+	pullFiresideHashFromUrl,
+} from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Registry } from '../../../_common/registry/registry.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../_common/route/legacy-route-component';
 import { useThemeStore } from '../../../_common/theme/theme.store';
-import { Translate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { enforceLocation } from '../../../utils/router';
 import {
 	CommentThreadModal,
@@ -27,20 +34,20 @@ const PostThemeKey = 'post';
 		AppPostPagePlaceholder,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	lazy: true,
 	cache: true,
 	deps: { params: ['slug'], query: ['intent'] },
 	async resolver({ route }) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'like-post',
-			message: Translate.$gettext(`You like this post! That's cool.`),
+			message: $gettext(`You like this post! That's cool.`),
 		});
 		if (intentRedirect) {
 			return intentRedirect;
 		}
 
-		const postHash = FiresidePost.pullHashFromUrl(route.params.slug.toString());
+		const postHash = pullFiresideHashFromUrl(route.params.slug.toString());
 		const payload = await Api.sendRequest('/web/posts/view/' + postHash);
 
 		if (payload?.post) {
@@ -53,11 +60,11 @@ const PostThemeKey = 'post';
 		return payload;
 	},
 })
-export default class RoutePost extends BaseRouteComponent {
+export default class RoutePost extends LegacyRouteComponent {
 	themeStore = setup(() => useThemeStore());
 
-	post: FiresidePost | null = null;
-	communityNotifications: CommunityUserNotification[] = [];
+	post: FiresidePostModel | null = null;
+	communityNotifications: CommunityUserNotificationModel[] = [];
 
 	/** @override */
 	disableRouteTitleSuffix = true;
@@ -82,27 +89,27 @@ export default class RoutePost extends BaseRouteComponent {
 		const game = this.post.game?.title;
 
 		if (game) {
-			return this.$gettextInterpolate(`%{ lead } - %{ game } by %{ user }`, {
+			return $gettext(`%{ lead } - %{ game } by %{ user }`, {
 				lead,
 				game,
 				user,
 			});
 		}
 
-		return this.$gettextInterpolate('%{ user } on Game Jolt: "%{ lead }"', {
+		return $gettext('%{ user } on Game Jolt: "%{ lead }"', {
 			user,
 			lead,
 		});
 	}
 
 	routeCreated() {
-		const hash = FiresidePost.pullHashFromUrl(this.$route.params.slug.toString());
-		this.post = Registry.find<FiresidePost>('FiresidePost', i => i.hash === hash);
+		const hash = pullFiresideHashFromUrl(this.$route.params.slug.toString());
+		this.post = Registry.find<FiresidePostModel>('FiresidePost', i => i.hash === hash);
 		this.setPageTheme();
 	}
 
 	routeResolved($payload: any) {
-		const post = new FiresidePost($payload.post);
+		const post = new FiresidePostModel($payload.post);
 		if (this.post) {
 			this.post.assign(post);
 		} else {
@@ -110,7 +117,7 @@ export default class RoutePost extends BaseRouteComponent {
 		}
 
 		if ($payload.communityNotifications) {
-			this.communityNotifications = CommunityUserNotification.populate(
+			this.communityNotifications = CommunityUserNotificationModel.populate(
 				$payload.communityNotifications
 			);
 		}

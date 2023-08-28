@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, defineAsyncComponent, markRaw, onMounted, onUnmounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { Meta } from '../../meta/meta-service';
@@ -13,9 +13,7 @@ const errorPages = markRaw({
 	500: defineAsyncComponent(() => import('./AppErrorPage500.vue')),
 	offline: defineAsyncComponent(() => import('./AppErrorPageOffline.vue')),
 });
-</script>
 
-<script lang="ts" setup>
 const { error, clearError } = useCommonStore();
 const router = useRouter();
 

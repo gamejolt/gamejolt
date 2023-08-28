@@ -2,20 +2,20 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { RouteLocationRaw } from 'vue-router';
 import { formatDate } from '../../filters/date';
-import { Fireside } from '../../fireside/fireside.model';
-import { FiresidePost } from '../../fireside/post/post-model';
-import { Game } from '../../game/game.model';
+import { FiresideModel } from '../../fireside/fireside.model';
+import { FiresidePostModel } from '../../fireside/post/post-model';
+import { GameModel } from '../../game/game.model';
 import { Screen } from '../../screen/screen-service';
 import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { getSingleReasonText } from '../../user/action-reasons';
-import { UserBlock } from '../../user/block/block.model';
+import { UserBlockModel } from '../../user/block/block.model';
 import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
-import { User } from '../../user/user.model';
-import { CommunityChannel } from '../channel/channel.model';
-import { CommunityCompetition } from '../competition/competition.model';
-import { CommunityCompetitionEntry } from '../competition/entry/entry.model';
-import { CommunityActivityItem } from './activity-item.model';
+import { UserModel } from '../../user/user.model';
+import { CommunityChannelModel } from '../channel/channel.model';
+import { CommunityCompetitionModel } from '../competition/competition.model';
+import { CommunityCompetitionEntryModel } from '../competition/entry/entry.model';
+import { CommunityActivityItemModel } from './activity-item.model';
 
 @Options({
 	components: {
@@ -27,13 +27,13 @@ import { CommunityActivityItem } from './activity-item.model';
 	},
 })
 export default class AppCommunityActivityItem extends Vue {
-	@Prop({ type: Object, required: true }) item!: CommunityActivityItem;
+	@Prop({ type: Object, required: true }) item!: CommunityActivityItemModel;
 	@Prop({ type: Boolean, required: true }) usersplit!: boolean;
 	@Prop({ type: Boolean, required: true }) showIcon!: boolean;
 
 	readonly Screen = Screen;
 	readonly formatDate = formatDate;
-	readonly CommunityActivityItem = CommunityActivityItem;
+	readonly CommunityActivityItem = CommunityActivityItemModel;
 
 	get loggedOn() {
 		return formatDate(this.item.added_on, 'medium');
@@ -52,11 +52,11 @@ export default class AppCommunityActivityItem extends Vue {
 	}
 
 	get actionIsFiresidePost() {
-		return this.item.action_resource instanceof FiresidePost;
+		return this.item.action_resource instanceof FiresidePostModel;
 	}
 
 	get actionIsUser() {
-		return this.item.action_resource instanceof User;
+		return this.item.action_resource instanceof UserModel;
 	}
 
 	get isToday() {
@@ -74,22 +74,22 @@ export default class AppCommunityActivityItem extends Vue {
 	}
 
 	get actionTo(): RouteLocationRaw | undefined {
-		if (this.item.action_resource instanceof FiresidePost) {
+		if (this.item.action_resource instanceof FiresidePostModel) {
 			return this.item.action_resource.routeLocation;
-		} else if (this.item.action_resource instanceof User) {
+		} else if (this.item.action_resource instanceof UserModel) {
 			return this.item.action_resource.url;
-		} else if (this.item.action_resource instanceof UserBlock) {
+		} else if (this.item.action_resource instanceof UserBlockModel) {
 			return this.item.action_resource.user.url;
-		} else if (this.item.action_resource instanceof CommunityChannel) {
+		} else if (this.item.action_resource instanceof CommunityChannelModel) {
 			return {
 				name: 'communities.view.channel',
 				params: {
 					channel: this.item.action_resource.title,
 				},
 			};
-		} else if (this.item.action_resource instanceof Game) {
+		} else if (this.item.action_resource instanceof GameModel) {
 			return this.item.action_resource.routeLocation;
-		} else if (this.item.action_resource instanceof CommunityCompetition) {
+		} else if (this.item.action_resource instanceof CommunityCompetitionModel) {
 			// For community competitions, the channel title is encoded in the extra data.
 			const channelTitle = this.getExtraData('channel-title');
 			return {
@@ -98,7 +98,7 @@ export default class AppCommunityActivityItem extends Vue {
 					channel: channelTitle,
 				},
 			};
-		} else if (this.item.action_resource instanceof CommunityCompetitionEntry) {
+		} else if (this.item.action_resource instanceof CommunityCompetitionEntryModel) {
 			// For community competition entries, the channel title is encoded in the extra data.
 			const channelTitle = this.getExtraData('channel-title');
 			return {
@@ -108,29 +108,29 @@ export default class AppCommunityActivityItem extends Vue {
 				},
 				hash: '#entry-' + this.item.action_resource.id,
 			};
-		} else if (this.item.action_resource instanceof Fireside) {
+		} else if (this.item.action_resource instanceof FiresideModel) {
 			return this.item.action_resource.routeLocation;
 		}
 	}
 
 	get actionText() {
-		if (this.item.action_resource instanceof FiresidePost) {
+		if (this.item.action_resource instanceof FiresidePostModel) {
 			return this.item.action_resource.getShortLead();
-		} else if (this.item.action_resource instanceof User) {
+		} else if (this.item.action_resource instanceof UserModel) {
 			return '@' + this.item.action_resource.username;
-		} else if (this.item.action_resource instanceof UserBlock) {
+		} else if (this.item.action_resource instanceof UserBlockModel) {
 			return '@' + this.item.action_resource.user.username;
-		} else if (this.item.action_resource instanceof CommunityChannel) {
+		} else if (this.item.action_resource instanceof CommunityChannelModel) {
 			return this.item.action_resource.title;
-		} else if (this.item.action_resource instanceof Game) {
+		} else if (this.item.action_resource instanceof GameModel) {
 			return this.item.action_resource.title;
-		} else if (this.item.action_resource instanceof CommunityCompetition) {
+		} else if (this.item.action_resource instanceof CommunityCompetitionModel) {
 			// For community competitions, the channel title is encoded in the extra data.
 			const channelTitle = this.getExtraData('channel-title');
 			return channelTitle;
-		} else if (this.item.action_resource instanceof CommunityCompetitionEntry) {
+		} else if (this.item.action_resource instanceof CommunityCompetitionEntryModel) {
 			return this.item.action_resource.resource.title;
-		} else if (this.item.action_resource instanceof Fireside) {
+		} else if (this.item.action_resource instanceof FiresideModel) {
 			return this.item.action_resource.title;
 		}
 	}
@@ -145,7 +145,7 @@ export default class AppCommunityActivityItem extends Vue {
 
 	get reasonText() {
 		// The user block resource comes with a reason.
-		if (this.item.action_resource instanceof UserBlock) {
+		if (this.item.action_resource instanceof UserBlockModel) {
 			return getSingleReasonText(this.item.action_resource.reason);
 		}
 

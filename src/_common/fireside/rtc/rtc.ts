@@ -1,26 +1,26 @@
 import type { IAgoraRTC, IAgoraRTCRemoteUser } from 'agora-rtc-sdk-ng';
-import { markRaw, reactive, Ref } from 'vue';
+import { Ref, markRaw, reactive } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CancelToken } from '../../../utils/cancel-token';
 import { debounce, sleep } from '../../../utils/utils';
-import { Background } from '../../background/background.model';
+import { BackgroundModel } from '../../background/background.model';
 import { importNoSSR } from '../../code-splitting';
 import { Navigate } from '../../navigate/navigate.service';
-import { User } from '../../user/user.model';
-import { Fireside } from '../fireside.model';
+import { UserModel } from '../../user/user.model';
+import { FiresideModel } from '../fireside.model';
 import {
+	FiresideRTCChannel,
 	createFiresideRTCChannel,
 	destroyChannel,
-	FiresideRTCChannel,
 	joinChannel,
 	setChannelToken,
 } from './channel';
-import { cleanupFiresideRTCProducer, FiresideRTCProducer, updateSetIsStreaming } from './producer';
+import { FiresideRTCProducer, cleanupFiresideRTCProducer, updateSetIsStreaming } from './producer';
 import {
-	cleanupFiresideRTCUser,
-	createRemoteFiresideRTCUser,
 	FiresideRTCUser,
 	FiresideVideoPlayStateStopped,
+	cleanupFiresideRTCUser,
+	createRemoteFiresideRTCUser,
 	initRemoteFiresideRTCUserPrefs,
 	setUserHasDesktopAudio,
 	setUserHasMicAudio,
@@ -41,7 +41,7 @@ const AgoraRTCLoader = importNoSSR(async () => (await import('agora-rtc-sdk-ng')
 export const FiresideRTCKey = Symbol();
 
 export interface FiresideRTCHost {
-	user: User;
+	user: UserModel;
 	needsPermissionToView: boolean;
 	isLive: boolean;
 	uids: number[];
@@ -65,7 +65,7 @@ type Options = { isPreviewMode?: boolean };
 
 export class FiresideRTC {
 	constructor(
-		public readonly fireside: Fireside,
+		public readonly fireside: FiresideModel,
 		public readonly userId: number | null,
 		public readonly appId: string,
 		public readonly streamingUid: number,
@@ -78,7 +78,7 @@ export class FiresideRTC {
 		// `reactive` unwraps it.
 		public readonly hosts: FiresideRTCHost[],
 		public readonly listableHostIds: Set<number>,
-		public readonly hostBackgrounds: Map<number, Background>,
+		public readonly hostBackgrounds: Map<number, BackgroundModel>,
 		{ isPreviewMode }: Options
 	) {
 		this.isPreviewMode = isPreviewMode ?? false;
@@ -172,12 +172,12 @@ export class FiresideRTC {
 }
 
 export function createFiresideRTC(
-	fireside: Fireside,
+	fireside: FiresideModel,
 	userId: number | null,
 	agoraStreamingInfo: AgoraStreamingInfo,
 	hosts: Ref<FiresideRTCHost[]>,
 	listableHostIds: Ref<Set<number>>,
-	hostBackgrounds: Ref<Map<number, Background>>,
+	hostBackgrounds: Ref<Map<number, BackgroundModel>>,
 	options: Options = {}
 ) {
 	const rtc = reactive(
@@ -197,7 +197,7 @@ export function createFiresideRTC(
 			// the fields.
 			hosts as unknown as FiresideRTCHost[],
 			listableHostIds as unknown as Set<number>,
-			hostBackgrounds as unknown as Map<number, Background>,
+			hostBackgrounds as unknown as Map<number, BackgroundModel>,
 			options
 		)
 	) as FiresideRTC;

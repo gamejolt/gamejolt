@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../modal/modal.service';
-import { User } from '../../user/user.model';
+import { UserModel } from '../../user/user.model';
 
 export class BlockModal {
-	static async show(user: User) {
+	static async show(user: UserModel) {
 		return await showModal<boolean>({
 			modalId: 'Block',
 			size: 'sm',

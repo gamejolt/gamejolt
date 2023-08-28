@@ -2,9 +2,9 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import { Game } from '../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../_common/game/game.model';
 import { BaseModal } from '../../../../../_common/modal/base';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Media } from '../../../../views/dashboard/games/manage/manage.store';
 import FormGameImage from '../../../forms/game/image/image.vue';
@@ -23,7 +23,7 @@ import { GameMediaItemEditModalRemoveCallback } from './edit-modal.service';
 	},
 })
 export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 	@Prop(Object) item!: Media;
 	@Prop(Function) onRemove!: GameMediaItemEditModalRemoveCallback;
 
@@ -72,14 +72,11 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 		}
 
 		// {{ type }} contains the translated media item type (image/video/sketchfab)
-		const message = this.$gettextInterpolate(
-			'Are you sure you want to remove this %{ type }?',
-			{
-				type: typeLabel,
-			}
-		);
+		const message = this.$gettext('Are you sure you want to remove this %{ type }?', {
+			type: typeLabel,
+		});
 
-		const result = await ModalConfirm.show(message);
+		const result = await showModalConfirm(message);
 		if (!result) {
 			return;
 		}

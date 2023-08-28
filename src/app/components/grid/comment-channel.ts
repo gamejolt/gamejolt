@@ -1,5 +1,5 @@
 import { shallowReadonly } from 'vue';
-import { Comment } from '../../../_common/comment/comment-model';
+import { CommentModel } from '../../../_common/comment/comment-model';
 import { getModel } from '../../../_common/model/model-store.service';
 import {
 	RealtimeReactionsPayload,
@@ -30,7 +30,7 @@ export function createGridCommentChannel(client: GridClient, { userId }: { userI
 	const joinPromise = channelController.join();
 
 	function _onUpdateReaction(payload: UpdateCommentReactionPayload) {
-		const comment = getModel(Comment, payload.comment_id);
+		const comment = getModel(CommentModel, payload.comment_id);
 		if (!comment) {
 			return;
 		}

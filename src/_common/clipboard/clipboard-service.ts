@@ -1,5 +1,5 @@
 import { showErrorGrowl, showSuccessGrowl } from '../growls/growls.service';
-import { Translate } from '../translate/translate.service';
+import { $gettext } from '../translate/translate.service';
 
 export class Clipboard {
 	static copy(url: string, message?: string) {
@@ -15,14 +15,11 @@ export class Clipboard {
 		const result = window.document.execCommand('copy');
 
 		if (result) {
-			showSuccessGrowl(
-				message || Translate.$gettext('Copied to your clipboard.'),
-				Translate.$gettext('Copied!')
-			);
+			showSuccessGrowl(message || $gettext('Copied to your clipboard.'), $gettext('Copied!'));
 		} else {
 			showErrorGrowl(
-				Translate.$gettext('Could not copy to your clipboard. Dunno why. Sorry.'),
-				Translate.$gettext('Copy Failed')
+				$gettext('Could not copy to your clipboard. Dunno why. Sorry.'),
+				$gettext('Copy Failed')
 			);
 		}
 

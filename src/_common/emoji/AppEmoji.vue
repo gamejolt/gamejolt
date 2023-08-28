@@ -1,8 +1,8 @@
 <script lang="ts">
 import { computed, PropType, toRefs } from 'vue';
 import { styleWhen } from '../../_styles/mixins';
-import { CSSPixelValue } from '../../_styles/variables';
-import { Emoji } from './emoji.model';
+import { buildCSSPixelValue } from '../../_styles/variables';
+import { EmojiModel } from './emoji.model';
 
 export const GJ_EMOJIS = [
 	'bucktooth',
@@ -27,7 +27,7 @@ export const GJ_EMOJIS = [
 	'yush',
 ] as const;
 
-export const emojiBaseSize = new CSSPixelValue(24);
+export const emojiBaseSize = buildCSSPixelValue(24);
 
 const assetPaths = import.meta.glob('./*.png', { eager: true, as: 'url' });
 </script>
@@ -35,9 +35,9 @@ const assetPaths = import.meta.glob('./*.png', { eager: true, as: 'url' });
 <script lang="ts" setup>
 const props = defineProps({
 	emoji: {
-		type: [String, Object] as PropType<(typeof GJ_EMOJIS)[number] | Emoji>,
+		type: [String, Object] as PropType<(typeof GJ_EMOJIS)[number] | EmojiModel>,
 		required: true,
-		validator: (val: any) => val instanceof Emoji || GJ_EMOJIS.includes(val),
+		validator: (val: any) => val instanceof EmojiModel || GJ_EMOJIS.includes(val),
 	},
 });
 

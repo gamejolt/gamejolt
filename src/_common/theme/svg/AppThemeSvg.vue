@@ -4,7 +4,7 @@ import { PropType, computed, ref, toRefs, unref, watch } from 'vue';
 import { arrayUnique } from '../../../utils/array';
 import { Api } from '../../api/api.service';
 import { isDynamicGoogleBot } from '../../device/device.service';
-import { DefaultTheme, Theme } from '../theme.model';
+import { DefaultTheme, ThemeModel } from '../theme.model';
 import { useThemeStore } from '../theme.store';
 
 const SvgGraysRegex = /#([a-f\d]{1,2})\1{2}\b/gi;
@@ -15,7 +15,7 @@ const props = defineProps({
 		default: '',
 	},
 	theme: {
-		type: Object as PropType<Theme>,
+		type: Object as PropType<ThemeModel>,
 		default: null,
 	},
 	strictColors: {

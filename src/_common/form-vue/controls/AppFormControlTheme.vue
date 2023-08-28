@@ -6,12 +6,12 @@ import AppButton from '../../button/AppButton.vue';
 import AppLoading from '../../loading/AppLoading.vue';
 import AppPopper from '../../popper/AppPopper.vue';
 import AppThemeBubble from '../../theme/bubble/bubble.vue';
-import { ThemePreset } from '../../theme/preset/preset.model';
+import { ThemePresetModel } from '../../theme/preset/preset.model';
 import {
 	DefaultTheme,
+	ThemeModel,
 	makeThemeFromColor,
 	makeThemeFromPreset,
-	Theme,
 } from '../../theme/theme.model';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
@@ -34,14 +34,14 @@ interface VueColor {
 }
 
 const { controlVal, applyValue } = createFormControl({
-	initialValue: null as Theme | null,
+	initialValue: null as ThemeModel | null,
 	validators: toRef(props, 'validators'),
 	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 	alwaysOptional: true,
 });
 
-const presets = ref([] as ThemePreset[]);
+const presets = ref([] as ThemePresetModel[]);
 const activeTab = ref('preset' as 'preset' | 'custom');
 const customSelection = ref({ hex: null } as VueColor);
 
@@ -70,14 +70,14 @@ async function onPopover() {
 	}
 
 	const response = await Api.sendRequest('/web/theme-presets');
-	presets.value = ThemePreset.populate(response.presets);
+	presets.value = ThemePresetModel.populate(response.presets);
 }
 
-function selectPreset(preset: ThemePreset) {
+function selectPreset(preset: ThemePresetModel) {
 	applyValue(makeThemeFromPreset(preset));
 }
 
-function isPresetActive(preset: ThemePreset) {
+function isPresetActive(preset: ThemePresetModel) {
 	if (currentTheme.value.custom) {
 		return false;
 	}
