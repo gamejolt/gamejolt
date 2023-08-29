@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import {
 	trackAppDownload,
 	trackAppPromotionClick,
@@ -50,7 +50,7 @@ export default {
 <script lang="ts" setup>
 const appPromotion = useAppPromotionStore();
 const fullscreenHeight = useFullscreenHeight();
-const router = useRouter();
+const route = useRoute();
 
 const packageData = ref<GamePackagePayloadModel>();
 const fallbackUrl = ref('https://gamejolt.com');
@@ -64,7 +64,7 @@ const routeTitle = computed(() => `Get the Game Jolt app`);
 const playStoreUrl = computed(() => getAppUrl(appPromotion, { targetStore: 'play' }));
 const appStoreUrl = computed(() => getAppUrl(appPromotion, { targetStore: 'app' }));
 
-const hasKeyClaimIntent = computed(() => router.currentRoute.value.query.intent === 'claim-key');
+const hasKeyClaimIntent = computed(() => route.query.intent === 'claim-key');
 
 createAppRoute({
 	routeTitle: routeTitle.value,
