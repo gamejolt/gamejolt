@@ -406,15 +406,16 @@ async function playAnimation(
 
 	rawElement.style.animationName = 'unset';
 
-	// NOTE: Don't remove these sleep calls - they're required for production,
-	// otherwise the animations may not switch properly.
+	// NOTE: Don't remove this sleep call - it's required for production,
+	// otherwise the animations may not switch properly. We need the animation
+	// to be fully removed before swapping the direction, otherwise we'll still
+	// be at the end of the animation.
 	await sleep(0);
 	if (reverse) {
 		rawElement.style.animationDirection = 'reverse';
 	} else if (rawElement.style.animationDirection === 'reverse') {
 		rawElement.style.animationDirection = 'normal';
 	}
-	await sleep(0);
 	// Force a reflow so it animates again.
 	rawElement.offsetWidth;
 	rawElement.style.animationName = '';
