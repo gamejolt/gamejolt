@@ -237,7 +237,6 @@ async function playSliceAnimations() {
 	for (const item of elements) {
 		if (item) {
 			item.style.animationPlayState = 'running';
-			// playAnimation(item);
 		}
 	}
 	await sleep(DelayPackTrash + DurationPackTrash * 0.5);
@@ -348,7 +347,6 @@ async function setStage(newStage: PackOpenStage) {
 			const element = stickerElements[i];
 
 			element.style.animationPlayState = 'running';
-			// playAnimation(element);
 
 			if (i === stickerElements.length - 1) {
 				const cb = () => {
@@ -397,7 +395,7 @@ async function setStage(newStage: PackOpenStage) {
 /**
  * "Resets" the animation of an element, changing direction as directed.
  */
-function playAnimation(
+async function playAnimation(
 	element: MaybeRef<HTMLElement | null | undefined>,
 	{ reverse }: { reverse?: boolean } = {}
 ) {
@@ -407,11 +405,16 @@ function playAnimation(
 	}
 
 	rawElement.style.animationName = 'unset';
+
+	// NOTE: Don't remove these sleep calls - they're required for production,
+	// otherwise the animations may not switch properly.
+	await sleep(0);
 	if (reverse) {
 		rawElement.style.animationDirection = 'reverse';
 	} else if (rawElement.style.animationDirection === 'reverse') {
 		rawElement.style.animationDirection = 'normal';
 	}
+	await sleep(0);
 	// Force a reflow so it animates again.
 	rawElement.offsetWidth;
 	rawElement.style.animationName = '';
