@@ -8,11 +8,9 @@ import {
 	PropType,
 	ref,
 	toRefs,
-	unref,
 } from 'vue';
 import { arrayRemove } from '../../../../utils/array';
 import { sleep } from '../../../../utils/utils';
-import { MaybeRef } from '../../../../utils/vue';
 import { Api } from '../../../api/api.service';
 import AppButton from '../../../button/AppButton.vue';
 import { showErrorGrowl } from '../../../growls/growls.service';
@@ -370,19 +368,6 @@ async function setStage(newStage: PackOpenStage) {
 	if (newStage === 'results-stash') {
 		// Tell the stickers to animate back towards the pack/backpack.
 		expandStickers.value = false;
-
-		for (let i = 0; i < openedStickers.value.length; i++) {
-			const element = root.value?.querySelector<HTMLDivElement>(`._sticker-${i}`);
-			if (!element) {
-				continue;
-			}
-
-			// Reverse animations, causing stickers to animate towards the
-			// backpack.
-			playAnimation(element, {
-				reverse: true,
-			});
-		}
 		return;
 	}
 
@@ -390,35 +375,6 @@ async function setStage(newStage: PackOpenStage) {
 		closeModal();
 		return;
 	}
-}
-
-/**
- * "Resets" the animation of an element, changing direction as directed.
- */
-async function playAnimation(
-	element: MaybeRef<HTMLElement | null | undefined>,
-	{ reverse }: { reverse?: boolean } = {}
-) {
-	const rawElement = unref(element);
-	if (!rawElement) {
-		return;
-	}
-
-	rawElement.style.animationName = 'unset';
-
-	// NOTE: Don't remove this sleep call - it's required for production,
-	// otherwise the animations may not switch properly. We need the animation
-	// to be fully removed before swapping the direction, otherwise we'll still
-	// be at the end of the animation.
-	await sleep(0);
-	if (reverse) {
-		rawElement.style.animationDirection = 'reverse';
-	} else if (rawElement.style.animationDirection === 'reverse') {
-		rawElement.style.animationDirection = 'normal';
-	}
-	// Force a reflow so it animates again.
-	rawElement.offsetWidth;
-	rawElement.style.animationName = '';
 }
 
 function getBottomForRotation(angle: number) {
@@ -696,6 +652,8 @@ function addMs(value: number) {
 							:class="[
 								`_sticker-${index}`,
 								{
+									'_anim-sticker-reverse':
+										shownContainer === 'backpack' && !expandStickers,
 									'_strong-ease-out': expandStickers,
 								},
 							]"
@@ -827,6 +785,9 @@ function addMs(value: number) {
 	animation-fill-mode: both
 	animation-play-state: paused
 
+._anim-sticker-reverse
+	animation-name: anim-sticker-reverse !important
+
 ._anim-slice
 	animation-name: anim-slice
 	animation-fill-mode: both
@@ -871,6 +832,19 @@ function addMs(value: number) {
 
 	50%
 		opacity: 1
+
+	100%
+		opacity: 1
+
+@keyframes anim-sticker-reverse
+	0%
+		opacity: 1
+
+	50%
+		opacity: 1
+
+	100%
+		opacity: 0
 
 @keyframes anim-slice
 	0%
