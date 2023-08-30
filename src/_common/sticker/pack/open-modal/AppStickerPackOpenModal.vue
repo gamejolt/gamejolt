@@ -649,14 +649,11 @@ function addMs(value: number) {
 						<!-- Stickers offset -->
 						<div
 							class="_anim-sticker"
-							:class="[
-								`_sticker-${index}`,
-								{
-									'_anim-sticker-reverse':
-										shownContainer === 'backpack' && !expandStickers,
-									'_strong-ease-out': expandStickers,
-								},
-							]"
+							:class="{
+								'_anim-sticker-reverse':
+									shownContainer === 'backpack' && !expandStickers,
+								'_strong-ease-out': expandStickers,
+							}"
 							:style="{
 								transition: `bottom`,
 								transitionDelay: `${index * DurationStickerAnimationOffset}ms`,
