@@ -69,7 +69,7 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 				is-control
 			>
 				<a
-					v-app-tooltip.right="$gettext(`Chat and Friends List (c)`)"
+					v-app-tooltip.right="$gettext(`Chat and friends`)"
 					class="-control-item"
 					@click="trackAndTogglePane('chat')"
 				>
@@ -115,15 +115,15 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 			<AppShellCbarItem
 				class="-control"
 				:highlight="highlight"
-				:is-active="visibleLeftPane === 'atlas'"
+				:is-active="visibleLeftPane === 'joltydex'"
 				is-control
 			>
 				<a
-					v-app-tooltip.right="$gettext(`Atlas`)"
+					v-app-tooltip.right="$gettext(`Joltydex`)"
 					class="-control-item"
-					@click="trackAndTogglePane('atlas')"
+					@click="trackAndTogglePane('joltydex')"
 				>
-					<AppJolticon class="-control-icon" icon="sparkles" />
+					<AppJolticon class="-control-icon" icon="joltydex" />
 				</a>
 			</AppShellCbarItem>
 
@@ -135,7 +135,7 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 				is-control
 			>
 				<a
-					v-app-tooltip.right="$gettext(`Game Library (m)`)"
+					v-app-tooltip.right="$gettext(`Game library`)"
 					class="-control-item"
 					@click="trackAndTogglePane('library')"
 				>

@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 
+import { HTMLAttributes } from 'vue';
 import './typings/environment-vue.d.ts';
 import './typings/environment.d.ts';
 import './typings/html.d.ts';
@@ -18,4 +19,9 @@ declare global {
 			components: any;
 		};
 	}
+}
+
+declare module '@vue/runtime-core' {
+	// eslint-disable-next-line @typescript-eslint/no-empty-interface
+	interface ComponentCustomProps extends HTMLAttributes {}
 }

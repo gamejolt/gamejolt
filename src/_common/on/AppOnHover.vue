@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs, watch } from 'vue';
+import { ref, toRefs, watch } from 'vue';
 
 const props = defineProps({
 	/**
@@ -16,37 +16,33 @@ const props = defineProps({
 });
 
 const { stateKey, disable } = toRefs(props);
-watch(
-	() => stateKey?.value,
-	() => {
-		hovered.value = false;
-	}
-);
-
 const hovered = ref(false);
 
-const showHovered = computed(() => {
-	return !disable.value && hovered.value;
-});
+// Skip if they didn't define a stateKey at all.
+// eslint-disable-next-line vue/no-ref-as-operand
+if (stateKey) {
+	watch(
+		() => stateKey?.value,
+		() => {
+			hovered.value = false;
+		}
+	);
+}
 
 /**
  * This should be bound to the slot components that want to affect the hover
  * state.
  */
 const binding = {
-	onMouseenter,
-	onMouseleave,
+	onMouseenter() {
+		hovered.value = true;
+	},
+	onMouseleave() {
+		hovered.value = false;
+	},
 };
-
-function onMouseenter() {
-	hovered.value = true;
-}
-
-function onMouseleave() {
-	hovered.value = false;
-}
 </script>
 
 <template>
-	<slot :hovered="showHovered" :binding="binding" />
+	<slot :hovered="!disable && hovered" :binding="binding" />
 </template>

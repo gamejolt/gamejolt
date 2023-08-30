@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed } from 'vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { buildCSSPixelValue, kBorderRadiusLg } from '../../../../_styles/variables';
+import { Screen } from '../../../_common/screen/screen-service';
+import { buildCSSPixelValue, kBorderRadiusLg } from '../../../_styles/variables';
 
 defineProps({
 	/**

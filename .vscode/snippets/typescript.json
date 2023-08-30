@@ -2,7 +2,7 @@
 	"Model definition": {
 		"prefix": "model",
 		"body": [
-			"export class ${1:ModelName} implements ModelStoreModel {",
+			"export class ${1:ModelName}Model implements ModelStoreModel {",
 			"\tdeclare id: number;",
 			"\t$0",
 			"",
@@ -47,7 +47,7 @@
 	},
 	"Legacy model definition": {
 		"prefix": "legacy-model",
-		"body": ["export class ${1:ModelName} extends Model {", "\t$0", "}"]
+		"body": ["export class ${1:ModelName}Model extends Model {", "\t$0", "}"]
 	},
 	"Pure assignment": {
 		"prefix": "pure",

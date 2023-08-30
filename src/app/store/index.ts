@@ -34,7 +34,7 @@ export type TogglableLeftPane =
 	| 'mobile'
 	| 'backpack'
 	| 'quests'
-	| 'atlas';
+	| 'joltydex';
 
 export const AppStoreKey: InjectionKey<AppStore> = Symbol('app-store');
 

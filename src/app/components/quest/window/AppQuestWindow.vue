@@ -31,7 +31,7 @@ import {
 import { numberSort } from '../../../../utils/array';
 import { useAppStore } from '../../../store/index';
 import { useQuestStore } from '../../../store/quest';
-import AppShellWindow from '../../shell/window/AppShellWindow.vue';
+import AppShellWindow from '../../shell/AppShellWindow.vue';
 import AppQuestTimer from '../AppQuestTimer.vue';
 
 const props = defineProps({

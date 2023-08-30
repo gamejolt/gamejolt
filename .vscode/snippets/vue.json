@@ -14,10 +14,7 @@
 			"const props = defineProps({});",
 			"</script>",
 			"",
-			"<template></template>",
-			"",
-			"<style lang=\"stylus\" scoped>",
-			"</style>"
+			"<template></template>"
 		]
 	},
 	"Vue route component": {

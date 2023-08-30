@@ -124,6 +124,7 @@ export const Jolticons = [
 	'jams',
 	'java',
 	'jigsaw',
+	'joltydex',
 	'key-diagonal',
 	'leaf',
 	'light-bulb',

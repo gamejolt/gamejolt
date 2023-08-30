@@ -35,7 +35,7 @@ import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAva
 import { styleFlexCenter } from '../../../../_styles/mixins';
 import { useAppStore } from '../../../store';
 import { useGridStore } from '../../grid/grid-store';
-import AppShellWindow from '../../shell/window/AppShellWindow.vue';
+import AppShellWindow from '../../shell/AppShellWindow.vue';
 import { closeChatRoom } from '../client';
 import FormChatRoomSettings from '../FormChatRoomSettings.vue';
 import { ChatInviteModal } from '../invite-modal/invite-modal.service';
