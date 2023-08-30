@@ -73,6 +73,16 @@ export function initShellRoutes() {
 				return { sidebar: undefined };
 			},
 		},
+		joltydex: {
+			sidebar: 'joltydex',
+			handler() {
+				const sidebar = 'joltydex';
+				if (visibleLeftPane.value !== sidebar) {
+					toggleLeftPane(sidebar);
+				}
+				return { sidebar };
+			},
+		},
 	};
 
 	/**
