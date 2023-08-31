@@ -89,7 +89,7 @@ const effectiveEdgePadding = computed(() => {
 		return edgePadding.value;
 	}
 
-	return Screen.isXs ? 0 : 16;
+	return Screen.isXs ? 12 : 16;
 });
 </script>
 

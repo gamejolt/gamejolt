@@ -55,53 +55,49 @@ function close() {
 				display: `flex`,
 				flexDirection: `column`,
 				zIndex: 1,
+				// Needed for AppHeaderBar to collapse.
+				minWidth: 0,
 			}"
 		>
-			<AppHeaderBar title-size="lg" :automatically-imply-leading="false" :elevation="2">
+			<AppHeaderBar
+				title-size="lg"
+				:automatically-imply-leading="false"
+				:elevation="2"
+				:title-spacing="16"
+			>
 				<template #leading>
+					<AppUserAvatarBubble
+						:style="{
+							width: `36px`,
+							height: `36px`,
+						}"
+						:user="selectedUser"
+						show-frame
+						show-verified
+					/>
+				</template>
+
+				<template #title>
+					<div
+						:style="[
+							styleTextOverflow,
+							{
+								fontSize: kFontSizeLarge.px,
+								fontWeight: `bold`,
+							},
+						]"
+					>
+						{{ selectedUser.name }}'s
+					</div>
+
 					<div
 						:style="{
-							display: `flex`,
-							flexDirection: `row`,
-							alignItems: `center`,
-							gap: `16px`,
+							fontSize: kFontSizeSmall.px,
+							lineHeight: 1,
+							color: kThemeFgMuted,
 						}"
 					>
-						<AppUserAvatarBubble
-							:style="{
-								flex: `none`,
-								width: `36px`,
-								height: `36px`,
-							}"
-							:user="selectedUser"
-							show-frame
-							show-verified
-						/>
-
-						<div>
-							<div
-								:style="[
-									// TODO(fear-the-atlas): need help getting this overflow to work
-									styleTextOverflow,
-									{
-										fontSize: kFontSizeLarge.px,
-										fontWeight: `bold`,
-									},
-								]"
-							>
-								{{ selectedUser.name }}'s
-							</div>
-
-							<div
-								:style="{
-									fontSize: kFontSizeSmall.px,
-									lineHeight: 1,
-									color: kThemeFgMuted,
-								}"
-							>
-								@{{ selectedUser.username }}
-							</div>
-						</div>
+						@{{ selectedUser.username }}
 					</div>
 				</template>
 

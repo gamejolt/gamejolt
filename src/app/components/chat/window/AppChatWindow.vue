@@ -307,6 +307,7 @@ function onMobileAppBarBack() {
 						<RouterLink
 							v-else-if="room.user"
 							class="anim-fade-in-enlarge no-animate-xs"
+							:style="{ position: `relative` }"
 							:to="room.user.url"
 						>
 							<AppUserAvatarBubble
