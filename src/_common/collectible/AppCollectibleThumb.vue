@@ -1,19 +1,43 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
 import { styleElevate, styleFlexCenter, styleLineClamp, styleWhen } from '../../_styles/mixins';
 import { kBorderRadiusBase, kBorderRadiusLg } from '../../_styles/variables';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
 import AppJolticon from '../jolticon/AppJolticon.vue';
-import AppSpacer from '../spacer/AppSpacer.vue';
 import AppStickerMastery from '../sticker/AppStickerMastery.vue';
 import { kThemeBgOffset, kThemeGjOverlayNotice } from '../theme/variables';
+import { vAppTooltip } from '../tooltip/tooltip-directive';
+import { $gettext } from '../translate/translate.service';
 import { CollectibleModel, CollectibleType } from './collectible.model';
 
-defineProps({
+const props = defineProps({
 	collectible: {
 		type: Object as PropType<CollectibleModel>,
 		required: true,
 	},
+});
+
+const { collectible } = toRefs(props);
+
+const stickerMasteryTooltip = computed(() => {
+	if (typeof collectible.value.sticker_mastery !== 'number') {
+		return undefined;
+	}
+
+	if (collectible.value.sticker_mastery === 0) {
+		return $gettext(`You haven't used this sticker yet. Use it to gain mastery!`);
+	}
+
+	if (collectible.value.sticker_mastery !== 100) {
+		return $gettext(
+			`You're %{ progress }% of the way to mastering this sticker. Use it more to gain mastery. Once you master it, you'll be able to use it for emojis and reactions!`,
+			{
+				progress: collectible.value.sticker_mastery,
+			}
+		);
+	}
+
+	return $gettext(`You've mastered this sticker and can now use it for emojis and reactions!`);
 });
 </script>
 
@@ -26,45 +50,63 @@ defineProps({
 			borderRadius: kBorderRadiusLg.px,
 			textAlign: `center`,
 			overflow: `hidden`,
+			display: `flex`,
+			flexDirection: `column`,
 		}"
 	>
-		<!-- Image -->
-		<AppAspectRatio :ratio="1">
-			<img
-				:style="[
-					{
-						width: `100%`,
-						height: `auto`,
-					},
-					styleWhen(collectible.type === CollectibleType.Background, {
-						borderRadius: kBorderRadiusBase.px,
-					}),
-				]"
-				:src="collectible.image_url"
-				alt=""
-			/>
-		</AppAspectRatio>
-
-		<!-- Label -->
 		<div
-			:style="[
-				styleLineClamp(2),
-				{
-					fontWeight: `bold`,
-					marginTop: `16px`,
-				},
-			]"
+			:style="{
+				flex: `auto`,
+				display: `flex`,
+				flexDirection: `column`,
+				gap: `16px`,
+			}"
 		>
-			{{ collectible.name }}
+			<!-- Image -->
+			<AppAspectRatio :ratio="1">
+				<img
+					:style="[
+						{
+							width: `100%`,
+							height: `auto`,
+						},
+						styleWhen(collectible.type === CollectibleType.Background, {
+							borderRadius: kBorderRadiusBase.px,
+						}),
+					]"
+					:src="collectible.image_url"
+					alt=""
+				/>
+			</AppAspectRatio>
+
+			<!-- Label -->
+			<div
+				:style="[
+					styleLineClamp(2),
+					{
+						fontWeight: `bold`,
+					},
+				]"
+			>
+				{{ collectible.name }}
+			</div>
 		</div>
 
-		<template v-if="100">
-			<AppSpacer vertical :scale="3" />
-			<AppStickerMastery :progress="100" />
-		</template>
+		<div
+			v-if="typeof collectible.sticker_mastery === 'number'"
+			v-app-tooltip="stickerMasteryTooltip"
+			:style="{
+				flex: `none`,
+				paddingTop: `12px`,
+				cursor: `help`,
+			}"
+		>
+			<AppStickerMastery :progress="collectible.sticker_mastery" />
+		</div>
 
 		<!-- Unlocked ribbon -->
 		<div
+			v-if="collectible.is_unlocked"
 			:style="[
 				styleFlexCenter(),
 				{

@@ -7,7 +7,7 @@ import AppScrollInview, {
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../../../../../_common/user/user.model';
-import { styleWhen } from '../../../../../_styles/mixins';
+import { styleTextOverflow, styleWhen } from '../../../../../_styles/mixins';
 import { kBorderRadiusBase } from '../../../../../_styles/variables';
 import { useJoltydexStore } from '../../../../store/joltydex';
 
@@ -58,12 +58,20 @@ const isInview = ref(false);
 					]"
 					@click="selectedJoltydexUser = user"
 				>
-					<AppUserAvatarBubble :user="user" :style="{ width: '32px', height: '32px' }" />
+					<AppUserAvatarBubble
+						:style="{ flex: `none`, width: '32px', height: '32px' }"
+						:user="user"
+						disable-link
+						show-frame
+					/>
 
 					<div
-						:style="{
-							fontWeight: `bold`,
-						}"
+						:style="[
+							styleTextOverflow,
+							{
+								fontWeight: `bold`,
+							},
+						]"
 					>
 						@{{ user.username }}
 					</div>

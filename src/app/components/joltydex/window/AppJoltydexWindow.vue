@@ -1,11 +1,15 @@
 <script lang="ts" setup>
 import { nextTick, onUnmounted, toRefs } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppJoltydexBrowser from '../../../../_common/joltydex/AppJoltydexBrowser.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
+import { kThemeFgMuted } from '../../../../_common/theme/variables';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../../../../_common/user/user.model';
+import { styleTextOverflow } from '../../../../_styles/mixins';
+import { kFontSizeLarge, kFontSizeSmall } from '../../../../_styles/variables';
 import { useAppStore } from '../../../store/index';
 import { useJoltydexStore } from '../../../store/joltydex';
 import AppShellWindow from '../../shell/AppShellWindow.vue';
@@ -46,37 +50,76 @@ function close() {
 <template>
 	<AppShellWindow :close-callback="close" avoid-sidebar="md-up">
 		<div
-			class="modal-controls"
 			:style="{
-				position: `absolute`,
-				left: 0,
-				top: 0,
-				right: 0,
-				height: 0,
-				zIndex: 2,
-			}"
-		>
-			<AppButton overlay @click="close">
-				{{ $gettext(`Close`) }}
-			</AppButton>
-		</div>
-
-		<div
-			:style="{
-				position: `relative`,
+				flex: `auto`,
+				display: `flex`,
+				flexDirection: `column`,
 				zIndex: 1,
-				width: `100%`,
-				height: `100%`,
 			}"
 		>
-			<AppScrollScroller
+			<AppHeaderBar title-size="lg" :automatically-imply-leading="false" :elevation="2">
+				<template #leading>
+					<div
+						:style="{
+							display: `flex`,
+							flexDirection: `row`,
+							alignItems: `center`,
+							gap: `16px`,
+						}"
+					>
+						<AppUserAvatarBubble
+							:style="{
+								flex: `none`,
+								width: `36px`,
+								height: `36px`,
+							}"
+							:user="selectedUser"
+							show-frame
+							show-verified
+						/>
+
+						<div>
+							<div
+								:style="[
+									// TODO(fear-the-atlas): need help getting this overflow to work
+									styleTextOverflow,
+									{
+										fontSize: kFontSizeLarge.px,
+										fontWeight: `bold`,
+									},
+								]"
+							>
+								{{ selectedUser.name }}'s
+							</div>
+
+							<div :style="{ fontSize: kFontSizeSmall.px, color: kThemeFgMuted }">
+								@{{ selectedUser.username }}
+							</div>
+						</div>
+					</div>
+				</template>
+
+				<template #actions>
+					<AppButton circle trans sparse icon="remove" @click="close()" />
+				</template>
+			</AppHeaderBar>
+
+			<div
 				:style="{
+					position: `relative`,
+					width: `100%`,
 					height: `100%`,
-					padding: `16px`,
 				}"
 			>
-				<AppJoltydexBrowser :user="selectedUser" />
-			</AppScrollScroller>
+				<AppScrollScroller
+					:style="{
+						height: `100%`,
+						padding: `16px`,
+					}"
+				>
+					<AppJoltydexBrowser :user="selectedUser" />
+				</AppScrollScroller>
+			</div>
 		</div>
 	</AppShellWindow>
 </template>

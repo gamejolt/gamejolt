@@ -66,9 +66,6 @@ const hasLeading = computed(() =>
 const hasActions = computed(() =>
 	definedSlots?.value ? definedSlots.value.includes('actions') : !!slots['actions']
 );
-const hasBottom = computed(() =>
-	definedSlots?.value ? definedSlots.value.includes('bottom') : !!slots['bottom']
-);
 
 const noLeading = computed(() => definedSlots?.value && !definedSlots.value.includes('leading'));
 const noTitle = computed(() => definedSlots?.value && !definedSlots.value.includes('title'));
@@ -97,11 +94,11 @@ const effectiveEdgePadding = computed(() => {
 </script>
 
 <template>
-	<div class="header-bar" :class="`-elevate-${elevation}`">
+	<div class="header-bar" :class="`_elevate-${elevation}`">
 		<div
-			class="-inner-row"
+			class="_inner-row"
 			:class="{
-				'-center': centerTitle,
+				_center: centerTitle,
 			}"
 			:style="{
 				padding: `0 ${effectiveEdgePadding}px`,
@@ -110,9 +107,9 @@ const effectiveEdgePadding = computed(() => {
 		>
 			<div
 				v-if="!noLeading"
-				class="-leading"
+				class="_leading"
 				:class="{
-					'-shrink': shouldShrinkLeading,
+					_shrink: shouldShrinkLeading,
 					'-reverse': reverseLeading,
 				}"
 			>
@@ -121,12 +118,12 @@ const effectiveEdgePadding = computed(() => {
 
 			<div
 				v-if="!noTitle"
-				class="-title"
+				class="_title"
 				:class="[
 					{
-						'-center': centerTitle,
+						_center: centerTitle,
 					},
-					`-size-${titleSize}`,
+					`_size-${titleSize}`,
 				]"
 			>
 				<slot name="title" />
@@ -134,18 +131,14 @@ const effectiveEdgePadding = computed(() => {
 
 			<div
 				v-if="!noActions"
-				class="-actions"
+				class="_actions"
 				:class="{
-					'-shrink': shouldShrinkActions,
-					'-reverse': reverseActions,
+					_shrink: shouldShrinkActions,
+					_reverse: reverseActions,
 				}"
 			>
 				<slot name="actions" />
 			</div>
-		</div>
-
-		<div v-if="hasBottom" class="-bottom">
-			<slot name="bottom" />
 		</div>
 	</div>
 </template>
@@ -158,7 +151,7 @@ const effectiveEdgePadding = computed(() => {
 	flex-wrap: nowrap
 	background-color: var(--theme-bg)
 
-.-inner-row
+._inner-row
 	display: flex
 	flex-direction: row
 	flex-wrap: nowrap
@@ -168,52 +161,52 @@ const effectiveEdgePadding = computed(() => {
 	align-items: center
 	justify-content: flex-start
 
-	&.-center
+	&._center
 		justify-content: space-between
 
-		.-leading
-		.-actions
+		._leading
+		._actions
 			flex: 1
 
-		.-leading
+		._leading
 			margin-right: 0
 
-		.-title
+		._title
 			flex: none
 
-		.-actions
+		._actions
 			margin-left: 0
 
-.-leading
-.-actions
+._leading
+._actions
 	flex: none
 	flex-basis: auto
 	display: inline-flex
 
-	&.-reverse
+	&._reverse
 		flex-direction: row-reverse
 
-.-leading
+._leading
 	justify-content: flex-start
 
-.-title
+._title
 	font-weight: 800
 	font-size: 19px
 	font-family: $font-family-heading
 	min-width: 0
 
-.-size-lg
+._size-lg
 	font-size: 24px
 	line-height: 28px
 
-.-actions
+._actions
 	margin-left: auto
 	justify-content: flex-end
 
-.-shrink
+._shrink
 	flex-basis: 0
 
 for i in 0..3
-	.-elevate-{i}
+	._elevate-{i}
 		elevate-{i}()
 </style>

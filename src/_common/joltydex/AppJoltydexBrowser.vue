@@ -74,6 +74,7 @@ async function loadMore(type: CollectibleType) {
 			types: feedTypes,
 			ownerUser: user.value,
 			user: loggedInUser.value!,
+			pos: feed.collectibles.value.length,
 		});
 
 		applyPayloadToJoltydexFeed(payload, feed);
