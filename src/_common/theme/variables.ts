@@ -84,3 +84,6 @@ export const kDarkThemeLink = `var(--dark-theme-link)`;
 export const kDarkThemeLinkHover = `var(--dark-theme-link-hover)`;
 export const kDarkThemePrimary = `var(--dark-theme-primary)`;
 export const kDarkThemePrimaryFg = `var(--dark-theme-primary-fg)`;
+
+// Context colors
+export const kThemePlaceholderBg = kThemeBgSubtle;

@@ -4,14 +4,16 @@ import { Api } from '../../../../_common/api/api.service';
 import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illJoltydexBrowse } from '../../../../_common/illustration/illustrations';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../_common/user/user.model';
 import { kFontSizeLarge } from '../../../../_styles/variables';
 import { useAppStore } from '../../../store';
 import { useJoltydexStore } from '../../../store/joltydex';
+import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 import AppJoltydexUser from './_joltydex/AppJoltydexUser.vue';
 
 const { user: loggedInUser } = useCommonStore();
@@ -58,15 +60,18 @@ async function loadUsers() {
 
 <template>
 	<div id="shell-sidebar-joltydex" class="fill-offset">
-		<AppLoadingFade :is-loading="isLoading">
-			<AppScrollScroller thin>
-				<div
-					:style="{
-						padding: `var(--shell-content-sidebar-padding)`,
-					}"
-				>
-					<AppIllustration :asset="illJoltydexBrowse" />
+		<AppScrollScroller thin>
+			<div
+				:style="{
+					padding: `var(--shell-content-sidebar-padding)`,
+				}"
+			>
+				<AppIllustration :asset="illJoltydexBrowse" />
 
+				<template v-if="isLoading">
+					<AppLoading centered />
+				</template>
+				<template v-if="users.length">
 					<div
 						:style="{
 							fontSize: kFontSizeLarge.px,
@@ -78,8 +83,25 @@ async function loadUsers() {
 					</div>
 
 					<AppJoltydexUser v-for="user of users" :key="user.id" :user="user" />
-				</div>
-			</AppScrollScroller>
-		</AppLoadingFade>
+				</template>
+				<template v-else-if="!isLoading && !users.length">
+					<div class="alert alert-info">
+						<div>
+							{{
+								$gettext(
+									`Your Joltydex allows you to browse all your collectibles in one place. That is, once you have some.`
+								)
+							}}
+						</div>
+						<br />
+						<div>
+							<a @click="showVendingMachineModal()">
+								{{ $gettext(`Get some cool stuff from the Shop!`) }}
+							</a>
+						</div>
+					</div>
+				</template>
+			</div>
+		</AppScrollScroller>
 	</div>
 </template>

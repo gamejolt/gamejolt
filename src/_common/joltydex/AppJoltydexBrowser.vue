@@ -1,11 +1,15 @@
 <script lang="ts" setup>
 import { PropType, computed, ref, toRefs } from 'vue';
-import { kFontFamilyDisplay } from '../../_styles/variables';
+import { styleFlexCenter } from '../../_styles/mixins';
+import { kBorderRadiusLg, kFontFamilyDisplay } from '../../_styles/variables';
+import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../button/AppButton.vue';
 import AppCollectibleThumb from '../collectible/AppCollectibleThumb.vue';
 import { CollectibleType } from '../collectible/collectible.model';
+import AppCircularProgress from '../progress/AppCircularProgress.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import { useCommonStore } from '../store/common-store';
+import { kThemePlaceholderBg } from '../theme/variables';
 import { $gettext } from '../translate/translate.service';
 import { UserModel } from '../user/user.model';
 import { applyPayloadToJoltydexFeed, loadJoltydexFeed, makeJoltydexFeed } from './joltydex-feed';
@@ -20,7 +24,7 @@ const props = defineProps({
 const { user } = toRefs(props);
 const { user: loggedInUser } = useCommonStore();
 
-const isBrowserLoading = ref(false);
+const isInitializing = ref(true);
 
 const feedTypes = [
 	CollectibleType.AvatarFrame,
@@ -44,11 +48,6 @@ const filteredFeeds = computed(() =>
 init();
 
 async function init() {
-	if (isBrowserLoading.value) {
-		return;
-	}
-	isBrowserLoading.value = true;
-
 	try {
 		const payload = await loadJoltydexFeed({
 			types: feedTypes,
@@ -62,7 +61,7 @@ async function init() {
 	} catch (e) {
 		console.error('Failed to load collection data', e);
 	}
-	isBrowserLoading.value = false;
+	isInitializing.value = false;
 }
 
 async function loadMore(type: CollectibleType) {
@@ -84,42 +83,71 @@ async function loadMore(type: CollectibleType) {
 
 	feed.isLoading.value = false;
 }
+
+const gridStyles = {
+	display: `grid`,
+	gridTemplateColumns: `repeat(auto-fill, minmax(160px, 1fr))`,
+	gridGap: `8px`,
+};
 </script>
 
 <template>
-	<template
-		v-for="[feedType, { collectibles, isLoading, reachedEnd }] of filteredFeeds"
-		:key="feedType"
-	>
-		<h2
-			:style="{
-				marginTop: `0`,
-				fontFamily: kFontFamilyDisplay,
-			}"
-		>
-			{{ feedLabels[feedType] }}
-		</h2>
-
-		<div
-			:style="{
-				display: `grid`,
-				gridTemplateColumns: `repeat(auto-fill, minmax(160px, 1fr))`,
-				gridGap: `8px`,
-			}"
-		>
-			<AppCollectibleThumb
-				v-for="collectible of collectibles.value"
-				:key="collectible.id"
-				:collectible="collectible"
-			/>
+	<template v-if="isInitializing">
+		<div :style="gridStyles">
+			<AppAspectRatio
+				v-for="i of 3"
+				:key="i"
+				:ratio="1"
+				:style="{ backgroundColor: kThemePlaceholderBg, borderRadius: kBorderRadiusLg.px }"
+			>
+				<div
+					v-if="i === 1"
+					:style="[
+						styleFlexCenter(),
+						{
+							width: `100%`,
+							height: `100%`,
+						},
+					]"
+				>
+					<AppCircularProgress :style="{ width: `32px`, height: `32px` }" />
+				</div>
+			</AppAspectRatio>
 		</div>
+	</template>
+	<template v-else>
+		<template
+			v-for="[feedType, { collectibles, isLoading, reachedEnd }] of filteredFeeds"
+			:key="feedType"
+		>
+			<h2
+				:style="{
+					marginTop: `0`,
+					fontFamily: kFontFamilyDisplay,
+				}"
+			>
+				{{ feedLabels[feedType] }}
+			</h2>
 
-		<AppSpacer vertical :scale="6" />
+			<div :style="gridStyles">
+				<AppCollectibleThumb
+					v-for="collectible of collectibles.value"
+					:key="collectible.id"
+					:collectible="collectible"
+				/>
+			</div>
 
-		<AppButton v-if="!isLoading.value && !reachedEnd.value" @click="loadMore(feedType)">
-			{{ $gettext(`Load more`) }}
-		</AppButton>
+			<AppSpacer vertical :scale="6" />
 
-		<AppSpacer vertical :scale="10" />
+			<AppButton
+				v-if="!reachedEnd.value"
+				:disabled="isLoading.value"
+				@click="loadMore(feedType)"
+			>
+				{{ isLoading.value ? $gettext(`Loading...`) : $gettext(`Load more`) }}
+			</AppButton>
+
+			<AppSpacer vertical :scale="10" />
+		</template>
 	</template>
 </template>
