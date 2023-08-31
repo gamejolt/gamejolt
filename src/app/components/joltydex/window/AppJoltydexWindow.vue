@@ -92,7 +92,13 @@ function close() {
 								{{ selectedUser.name }}'s
 							</div>
 
-							<div :style="{ fontSize: kFontSizeSmall.px, color: kThemeFgMuted }">
+							<div
+								:style="{
+									fontSize: kFontSizeSmall.px,
+									lineHeight: 1,
+									color: kThemeFgMuted,
+								}"
+							>
 								@{{ selectedUser.username }}
 							</div>
 						</div>
