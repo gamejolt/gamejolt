@@ -118,7 +118,10 @@ const stickerMasteryTooltip = computed(() => {
 				},
 			]"
 		>
-			<AppJolticon :style="{ position: `relative`, zIndex: 1 }" icon="check" />
+			<AppJolticon
+				:style="{ position: `relative`, color: `white`, zIndex: 1 }"
+				icon="check"
+			/>
 			<div
 				:style="[
 					styleElevate(4),

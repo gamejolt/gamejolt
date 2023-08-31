@@ -5,6 +5,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
+import { kThemeFg10 } from '../../../../../_common/theme/variables';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../../../../../_common/user/user.model';
 import { styleTextOverflow, styleWhen } from '../../../../../_styles/mixins';
@@ -53,7 +54,7 @@ const isInview = ref(false);
 							gap: `8px`,
 						},
 						styleWhen(hovered || selectedJoltydexUser === user, {
-							background: `rgba(255, 255, 255, 0.1)`,
+							background: kThemeFg10,
 						}),
 					]"
 					@click="selectedJoltydexUser = user"
