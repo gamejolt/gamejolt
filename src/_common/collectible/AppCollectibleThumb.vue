@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { styleElevate, styleFlexCenter, styleWhen } from '../../_styles/mixins';
+import { styleElevate, styleFlexCenter, styleLineClamp, styleWhen } from '../../_styles/mixins';
 import { kBorderRadiusBase, kBorderRadiusLg } from '../../_styles/variables';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
 import AppJolticon from '../jolticon/AppJolticon.vue';
+import AppSpacer from '../spacer/AppSpacer.vue';
+import AppStickerMastery from '../sticker/AppStickerMastery.vue';
 import { kThemeBgOffset, kThemeGjOverlayNotice } from '../theme/variables';
 import { CollectibleModel, CollectibleType } from './collectible.model';
 
@@ -26,6 +28,7 @@ defineProps({
 			overflow: `hidden`,
 		}"
 	>
+		<!-- Image -->
 		<AppAspectRatio :ratio="1">
 			<img
 				:style="[
@@ -42,15 +45,25 @@ defineProps({
 			/>
 		</AppAspectRatio>
 
+		<!-- Label -->
 		<div
-			:style="{
-				fontWeight: `bold`,
-				marginTop: `16px`,
-			}"
+			:style="[
+				styleLineClamp(2),
+				{
+					fontWeight: `bold`,
+					marginTop: `16px`,
+				},
+			]"
 		>
 			{{ collectible.name }}
 		</div>
 
+		<template v-if="100">
+			<AppSpacer vertical :scale="3" />
+			<AppStickerMastery :progress="100" />
+		</template>
+
+		<!-- Unlocked ribbon -->
 		<div
 			:style="[
 				styleFlexCenter(),
@@ -63,15 +76,10 @@ defineProps({
 				},
 			]"
 		>
-			<AppJolticon
-				:style="{
-					position: `relative`,
-					zIndex: 1,
-				}"
-				icon="check"
-			/>
+			<AppJolticon :style="{ position: `relative`, zIndex: 1 }" icon="check" />
 			<div
 				:style="[
+					styleElevate(4),
 					{
 						position: `absolute`,
 						width: `200%`,
@@ -80,7 +88,6 @@ defineProps({
 						rotate: `-45deg`,
 						zIndex: 0,
 					},
-					styleElevate(4),
 				]"
 			/>
 		</div>
