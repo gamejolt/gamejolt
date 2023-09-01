@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
+import { trackJoltydex } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
@@ -24,6 +25,7 @@ const isLoading = ref(false);
 const users = ref<UserModel[]>([]);
 
 onMounted(() => {
+	trackJoltydex({ action: 'show' });
 	loadUsers();
 });
 

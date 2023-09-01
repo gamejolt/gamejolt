@@ -586,6 +586,19 @@ export function trackCbarControlClick(
 	_trackEvent('cbar_control_click', params);
 }
 
+export function trackJoltydex(
+	params:
+		| {
+				action: 'show';
+		  }
+		| {
+				action: 'show-collection';
+				collectionId: number;
+		  }
+) {
+	_trackEvent('joltydex', params);
+}
+
 /**
  * @deprecated This is left here so that old code doesn't break.
  */

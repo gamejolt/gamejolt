@@ -6,6 +6,8 @@ import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../button/AppButton.vue';
 import AppCollectibleThumb from '../collectible/AppCollectibleThumb.vue';
 import { CollectibleType } from '../collectible/collectible.model';
+import AppIllustration from '../illustration/AppIllustration.vue';
+import { illExtremeSadness } from '../illustration/illustrations';
 import AppCircularProgress from '../progress/AppCircularProgress.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import { useCommonStore } from '../store/common-store';
@@ -114,6 +116,11 @@ const gridStyles = {
 				</div>
 			</AppAspectRatio>
 		</div>
+	</template>
+	<template v-else-if="!filteredFeeds.length">
+		<AppIllustration :asset="illExtremeSadness">
+			{{ $gettext(`There's nothing available from this creator yet. Let them know!`) }}
+		</AppIllustration>
 	</template>
 	<template v-else>
 		<template

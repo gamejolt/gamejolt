@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { nextTick, onUnmounted, toRefs } from 'vue';
+import { nextTick, onMounted, onUnmounted, toRefs } from 'vue';
+import { trackJoltydex } from '../../../../_common/analytics/analytics.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppJoltydexBrowser from '../../../../_common/joltydex/AppJoltydexBrowser.vue';
@@ -24,6 +25,10 @@ const props = defineProps({
 const { selectedUser } = toRefs(props);
 const { selectedJoltydexUser } = useJoltydexStore();
 const { toggleLeftPane } = useAppStore();
+
+onMounted(() => {
+	trackJoltydex({ action: 'show-collection', collectionId: selectedUser.value.id });
+});
 
 onUnmounted(async () => {
 	// Wait a tick in case a different quest window was opened and changed the activeQuestId.
@@ -87,7 +92,11 @@ function close() {
 							},
 						]"
 					>
-						{{ selectedUser.name }}'s
+						{{
+							$gettext(`%{ user }'s Collection`, {
+								user: selectedUser.display_name,
+							})
+						}}
 					</div>
 
 					<div
