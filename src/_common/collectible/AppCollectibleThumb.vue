@@ -130,7 +130,7 @@ const stickerMasteryTooltip = computed(() => {
 						width: `200%`,
 						height: `20px`,
 						backgroundColor: kThemeGjOverlayNotice,
-						rotate: `-45deg`,
+						transform: `rotate(-45deg)`,
 						zIndex: 0,
 					},
 				]"

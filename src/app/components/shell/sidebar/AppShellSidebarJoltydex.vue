@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { trackJoltydex } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
@@ -21,13 +21,24 @@ const { user: loggedInUser } = useCommonStore();
 const { toggleLeftPane } = useAppStore();
 const { selectedJoltydexUser } = useJoltydexStore();
 
-const isLoading = ref(false);
+const isLoading = ref(true);
 const users = ref<UserModel[]>([]);
 
 onMounted(() => {
 	trackJoltydex({ action: 'show' });
-	loadUsers();
 });
+
+// This sidebar might show before the user is loaded in, so just wait till they
+// are before trying to initialize.
+watch(
+	loggedInUser,
+	() => {
+		if (loggedInUser.value) {
+			loadUsers();
+		}
+	},
+	{ immediate: true }
+);
 
 useEscapeStack(() => {
 	const hadWindow = !!selectedJoltydexUser.value;
@@ -42,8 +53,6 @@ useEscapeStack(() => {
 });
 
 async function loadUsers() {
-	isLoading.value = true;
-
 	const response = await Api.sendFieldsRequest(
 		'/mobile/inventory-collection',
 		{
