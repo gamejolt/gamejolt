@@ -14,6 +14,7 @@ import { createGridStore, GridStoreKey } from './components/grid/grid-store';
 import './main.styl';
 import { BannerStoreKey, createBannerStore } from './store/banner';
 import { AppStoreKey, createAppStore } from './store/index';
+import { createJoltydexStore, JoltydexStoreKey } from './store/joltydex';
 import { createLibraryStore, LibraryStoreKey } from './store/library';
 import { createQuestStore, QuestStoreKey } from './store/quest';
 import { router } from './views/index';
@@ -45,6 +46,7 @@ export async function createApp() {
 
 	const gridStore = createGridStore({ appStore });
 	const questStore = createQuestStore({ user: commonStore.user, grid: gridStore.grid });
+	const joltydexStore = createJoltydexStore();
 
 	// Section stores.
 	app.provide(SidebarStoreKey, sidebarStore);
@@ -54,6 +56,7 @@ export async function createApp() {
 	app.provide(AppStoreKey, appStore);
 	app.provide(GridStoreKey, gridStore);
 	app.provide(QuestStoreKey, questStore);
+	app.provide(JoltydexStoreKey, joltydexStore);
 
 	if (GJ_IS_DESKTOP_APP) {
 		const { bootstrapClient } = await import('./bootstrap-client');

@@ -4,6 +4,7 @@ import illCreatorInfographicPath from './img/creator-infographic.png';
 import illEndOfFeedPath from './img/end-of-feed.png';
 import illExtremeSadnessSmallPath from './img/extreme-sadness-small.png';
 import illExtremeSadnessPath from './img/extreme-sadness.png';
+import illJoltydexBrowsePath from './img/joltydex-browse.png';
 import illMaintenancePath from './img/maintenance.png';
 import illMobileKikkersteinPath from './img/mobile-kikkerstein.png';
 import illNoChatPath from './img/no-chat.png';
@@ -89,4 +90,10 @@ export const illExtremeSadnessSmall: IllustrationAsset = {
 	path: illExtremeSadnessSmallPath,
 	width: 166,
 	height: 179,
+};
+
+export const illJoltydexBrowse: IllustrationAsset = {
+	path: illJoltydexBrowsePath,
+	width: 391,
+	height: 311,
 };

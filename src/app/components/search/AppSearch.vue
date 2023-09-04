@@ -14,7 +14,6 @@ import {
 import { useRouter } from 'vue-router';
 import { trackSearch } from '../../../_common/analytics/analytics.service';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
-import AppShortkey from '../../../_common/shortkey/AppShortkey.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { arrayRemove } from '../../../utils/array';
 import { createFocusToken } from '../../../utils/focus-token';
@@ -168,8 +167,6 @@ function onBlur() {
 
 <template>
 	<div class="app-search">
-		<AppShortkey shortkey="s" @press="focusToken.focus()" />
-
 		<!--
 			Put the action/method stuff so that crawlers can see how to submit the form.
 		-->
