@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import {
 	trackAppDownload,
 	trackAppPromotionClick,
@@ -25,6 +26,9 @@ import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import { kThemeGjOverlayNotice } from '../../../../_common/theme/variables';
+import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
+import { kFontSizeLarge } from '../../../../_styles/variables';
 import { arrayShuffle } from '../../../../utils/array';
 import { useFullscreenHeight } from '../../../../utils/fullscreen';
 import laptopImage from './laptop.webp';
@@ -46,6 +50,7 @@ export default {
 <script lang="ts" setup>
 const appPromotion = useAppPromotionStore();
 const fullscreenHeight = useFullscreenHeight();
+const route = useRoute();
 
 const packageData = ref<GamePackagePayloadModel>();
 const fallbackUrl = ref('https://gamejolt.com');
@@ -58,6 +63,8 @@ const detectedDevice = getDeviceOS();
 const routeTitle = computed(() => `Get the Game Jolt app`);
 const playStoreUrl = computed(() => getAppUrl(appPromotion, { targetStore: 'play' }));
 const appStoreUrl = computed(() => getAppUrl(appPromotion, { targetStore: 'app' }));
+
+const hasKeyClaimIntent = computed(() => route.query.intent === 'claim-key');
 
 createAppRoute({
 	routeTitle: routeTitle.value,
@@ -141,6 +148,34 @@ async function _getDownloadUrl(platform: string, arch: string) {
 <template>
 	<div class="route-landing-app">
 		<AppBackground :background="headerBackground" scroll-direction="right">
+			<div
+				v-if="hasKeyClaimIntent"
+				:style="{
+					backgroundColor: kThemeGjOverlayNotice,
+					padding: `24px`,
+					textAlign: `center`,
+					fontWeight: `bold`,
+					color: `white`,
+					fontSize: kFontSizeLarge.px,
+				}"
+			>
+				<div :style="[styleFlexCenter(), { marginBottom: `12px` }]">
+					<AppJolticon icon="notice" big :style="{ color: `white` }" />
+				</div>
+
+				<span>
+					{{ $gettext(`Keys can only be claimed using the Game Jolt mobile app.`) }}
+					{{ ' ' }}
+				</span>
+
+				<a
+					href="https://app.gamejolt.com/qr"
+					class="link-unstyled"
+					:style="{ textDecoration: 'underline' }"
+				>
+					{{ $gettext(`Get the mobile app now!`) }}
+				</a>
+			</div>
 			<section class="-header theme-dark">
 				<div class="-header-darken" />
 
@@ -197,7 +232,9 @@ async function _getDownloadUrl(platform: string, arch: string) {
 						<div class="-content-col-spacer" />
 
 						<div class="-content-col-buttons">
-							<div class="-content-heading">at home</div>
+							<div class="-content-heading">
+								{{ $gettext(`Desktop app`) }}
+							</div>
 
 							<AppSpacer vertical :scale="6" />
 
@@ -230,12 +267,16 @@ async function _getDownloadUrl(platform: string, arch: string) {
 
 					<div
 						class="-mobile-row -content-row"
-						:style="{
-							order:
-								detectedDevice === 'ios' || detectedDevice === 'android'
-									? -1
-									: undefined,
-						}"
+						:style="
+							styleWhen(
+								detectedDevice === 'ios' ||
+									detectedDevice === 'android' ||
+									hasKeyClaimIntent,
+								{
+									order: -1,
+								}
+							)
+						"
 					>
 						<AppBean class="-bean" no-clamp>
 							<template #background>
@@ -251,7 +292,9 @@ async function _getDownloadUrl(platform: string, arch: string) {
 						<div class="-content-col-spacer" />
 
 						<div class="-content-col-buttons">
-							<div class="-content-heading">on the go</div>
+							<div class="-content-heading">
+								{{ $gettext(`Mobile app`) }}
+							</div>
 
 							<AppSpacer vertical :scale="6" />
 
