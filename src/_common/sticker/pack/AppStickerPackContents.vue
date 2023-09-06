@@ -34,9 +34,13 @@ watch(
 
 		isLoading.value = true;
 
-		const payload = await Api.sendRequest(
-			`/web/stickers/pack-stickers/${pack.value.id}`,
-			null,
+		const payload = await Api.sendFieldsRequest(
+			`/mobile/sticker`,
+			{
+				packContents: {
+					packId: pack.value.id,
+				},
+			},
 			{ detach: true }
 		);
 
@@ -44,7 +48,7 @@ watch(
 			return;
 		}
 
-		stickers.value = StickerModel.populate(payload.stickers);
+		stickers.value = StickerModel.populate(payload.packContents || []);
 		isLoading.value = false;
 	},
 	{ immediate: true }
