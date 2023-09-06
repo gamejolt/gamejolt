@@ -7,19 +7,17 @@ interface StickerPackOpenModalOptions {
 	openImmediate?: boolean;
 }
 
-export class StickerPackOpenModal {
-	static async show(options: StickerPackOpenModalOptions) {
-		const { pack, openImmediate } = options;
+export async function showStickerPackOpenModal(options: StickerPackOpenModalOptions) {
+	const { pack, openImmediate } = options;
 
-		return await showModal<void>({
-			modalId: 'StickerPackOpen',
-			component: defineAsyncComponent(() => import('./AppStickerPackOpenModal.vue')),
-			props: {
-				pack,
-				openImmediate,
-			},
-			noBackdrop: true,
-			size: 'full',
-		});
-	}
+	return await showModal<void>({
+		modalId: 'StickerPackOpen',
+		component: defineAsyncComponent(() => import('./AppStickerPackOpenModal.vue')),
+		props: {
+			pack,
+			openImmediate,
+		},
+		noBackdrop: true,
+		size: 'full',
+	});
 }

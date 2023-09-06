@@ -5,7 +5,7 @@ import { GameDevelopmentStatus, GameModel } from '../../../../../_common/game/ga
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { GameDevStageSelectorConfirmModal } from './confirm-service';
+import { showGameDevStageSelectorConfirmModal } from './confirm-service';
 
 const props = defineProps({
 	game: {
@@ -39,7 +39,7 @@ async function select(stage: number) {
 		return;
 	}
 
-	const result = await GameDevStageSelectorConfirmModal.show(game.value, stage);
+	const result = await showGameDevStageSelectorConfirmModal(game.value, stage);
 	if (result) {
 		await game.value.$setDevStage(stage);
 		showSuccessGrowl(

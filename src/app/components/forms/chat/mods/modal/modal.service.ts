@@ -16,25 +16,20 @@ interface ChatModsModalOptions {
 	initialSection?: ListTitle;
 }
 
-export class ChatModsModal {
-	/**
-	 * Returns `true` if the list of mods changed at some point.
-	 */
-	static async show(options: ChatModsModalOptions) {
-		const { chatRoom, hasCurrentMods, initialMods, initialSection } = options;
+export async function showChatModsModal(options: ChatModsModalOptions) {
+	const { chatRoom, hasCurrentMods, initialMods, initialSection } = options;
 
-		return await showModal<boolean>({
-			modalId: 'ChatMods',
-			component: defineAsyncComponent(() => import('./AppChatModsModal.vue')),
-			props: {
-				chatRoom,
-				hasCurrentMods,
-				initialMods,
-				initialSection,
-			},
-			size: 'sm',
-			noEscClose: true,
-			noBackdropClose: true,
-		});
-	}
+	return await showModal<boolean>({
+		modalId: 'ChatMods',
+		component: defineAsyncComponent(() => import('./AppChatModsModal.vue')),
+		props: {
+			chatRoom,
+			hasCurrentMods,
+			initialMods,
+			initialSection,
+		},
+		size: 'sm',
+		noEscClose: true,
+		noBackdropClose: true,
+	});
 }

@@ -3,13 +3,14 @@ import { CommunityChannelModel } from '../../../../../_common/community/channel/
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import { showModal } from '../../../../../_common/modal/modal.service';
 
-export class CommunityRemoveChannelModal {
-	static async show(community: CommunityModel, channel: CommunityChannelModel) {
-		return await showModal<CommunityChannelModel | null>({
-			modalId: 'CommunityRemoveChannel',
-			component: defineAsyncComponent(() => import('./modal.vue')),
-			props: { community, channel },
-			size: 'sm',
-		});
-	}
+export async function showCommunityRemoveChannelModal(
+	community: CommunityModel,
+	channel: CommunityChannelModel
+) {
+	return await showModal<CommunityChannelModel | null>({
+		modalId: 'CommunityRemoveChannel',
+		component: defineAsyncComponent(() => import('./modal.vue')),
+		props: { community, channel },
+		size: 'sm',
+	});
 }

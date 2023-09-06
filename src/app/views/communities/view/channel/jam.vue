@@ -7,7 +7,7 @@ import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { CompetitionPeriodVoting } from '../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionEntrySubmitModal } from '../../../../../_common/community/competition/entry/submit-modal/submit-modal.service';
+import { showCommunityCompetitionEntrySubmitModal } from '../../../../../_common/community/competition/entry/submit-modal/submit-modal.service';
 import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../../../../../_common/filters/date';
@@ -162,7 +162,7 @@ export default class RouteCommunitiesViewChannelJam extends LegacyRouteComponent
 			return;
 		}
 
-		const result = await CommunityCompetitionEntrySubmitModal.show(this.competition);
+		const result = await showCommunityCompetitionEntrySubmitModal(this.competition);
 		if (result) {
 			this.userEntries.unshift(result);
 

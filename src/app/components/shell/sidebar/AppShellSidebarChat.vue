@@ -4,14 +4,14 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { InviteModal } from '../../../../_common/invite/modal/modal.service';
+import { illMaintenance, illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
+import { showInviteModal } from '../../../../_common/invite/modal/modal.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTabBar from '../../../../_common/tab-bar/AppTabBar.vue';
 import AppTabBarItem from '../../../../_common/tab-bar/AppTabBarItem.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { illMaintenance, illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import { useAppStore } from '../../../store';
 import { closeChatRoom, openChatRoom } from '../../chat/client';
 import { sortByLastMessageOn } from '../../chat/user-collection';
@@ -45,8 +45,8 @@ onMounted(() => {
 useEscapeStack(() => closeChatPane());
 onUnmounted(() => closeChatRoom(chat.value));
 
-function showInviteModal() {
-	InviteModal.show({ user: user.value! });
+function openInviteModal() {
+	showInviteModal({ user: user.value! });
 }
 </script>
 
@@ -60,7 +60,7 @@ function showInviteModal() {
 							<AppTranslate>No friends yet.</AppTranslate>
 						</p>
 
-						<AppButton primary solid @click="showInviteModal()">
+						<AppButton primary solid @click="openInviteModal()">
 							<AppTranslate>Invite a friend</AppTranslate>
 						</AppButton>
 					</AppIllustration>
@@ -88,7 +88,7 @@ function showInviteModal() {
 					<AppChatUserList :entries="tab === 'chats' ? chats : friends" />
 
 					<div class="-footer">
-						<AppButton block primary solid @click="showInviteModal()">
+						<AppButton block primary solid @click="openInviteModal()">
 							<AppTranslate>Invite a friend</AppTranslate>
 						</AppButton>
 					</div>

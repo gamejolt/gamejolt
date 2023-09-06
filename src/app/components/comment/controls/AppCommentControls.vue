@@ -21,7 +21,7 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext, $ngettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { CommentThreadModal } from '../thread/modal.service';
+import { showCommentThreadModal } from '../thread/modal.service';
 import { useCommentWidget } from '../widget/AppCommentWidget.vue';
 
 const props = defineProps({
@@ -160,7 +160,7 @@ async function voteComment(vote: number) {
 }
 
 function onReplyClick(autofocus: boolean) {
-	CommentThreadModal.show({
+	showCommentThreadModal({
 		router: router,
 		model: model.value,
 		commentId: comment.value.id,

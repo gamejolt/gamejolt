@@ -15,7 +15,7 @@ import {
 	FiresideSidebar,
 	useFiresideController,
 } from '../../../components/fireside/controller/controller';
-import { FiresideHostsModal } from '../../../components/forms/fireside/hosts/modal/modal.service';
+import { showFiresideHostsModal } from '../../../components/forms/fireside/hosts/modal/modal.service';
 import AppFiresideBottomBarButton from './AppFiresideBottomBarButton.vue';
 import AppFiresideBottomBarHosts from './AppFiresideBottomBarHosts.vue';
 
@@ -217,7 +217,7 @@ function toggleStreamSettings() {
 }
 
 function showHostsModal() {
-	FiresideHostsModal.show({ controller: c });
+	showFiresideHostsModal({ controller: c });
 }
 
 function toggleFiresideSettings() {

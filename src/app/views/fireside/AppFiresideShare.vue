@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { ShareModal } from '../../../_common/share/card/_modal/modal.service';
+import { showShareModal } from '../../../_common/share/card/_modal/modal.service';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import {
 	copyFiresideLink,
@@ -29,7 +29,7 @@ function showEllipsisMenu() {
 	if (!url) {
 		return;
 	}
-	ShareModal.show({
+	showShareModal({
 		resource: 'fireside',
 		url,
 	});

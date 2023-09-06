@@ -24,7 +24,7 @@ import AppUserVerifiedTick from '../../../../../../../../../_common/user/AppUser
 import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
-import { CommunityCompetitionEntryModal } from '../../../../../../../../components/community/competition/entry/modal/modal.service';
+import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../components/community/competition/entry/modal/modal.service';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
 
 type Payload = {
@@ -211,7 +211,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 	}
 
 	onClickShowEntry(entry: CommunityCompetitionEntryModel) {
-		CommunityCompetitionEntryModal.showEntry(entry);
+		showEntryFromCommunityCompetitionEntryModal(entry);
 	}
 
 	async onClickRemoveEntry(entry: CommunityCompetitionEntryModel) {

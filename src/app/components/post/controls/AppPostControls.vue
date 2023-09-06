@@ -33,8 +33,8 @@ import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion
 import { UserModel } from '../../../../_common/user/user.model';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
 import { ActivityFeedView } from '../../activity/feed/view';
-import { CommentModal } from '../../comment/modal/modal.service';
-import { PostEditModal } from '../edit-modal/edit-modal-service';
+import { showCommentModal } from '../../comment/modal/modal.service';
+import { showPostEditModal } from '../edit-modal/edit-modal-service';
 import AppPostControlsStats from './AppPostControlsStats.vue';
 import AppPostControlsMore from './more/more.vue';
 import AppPostControlsSaveProgress from './save-progress/save-progress.vue';
@@ -159,7 +159,8 @@ onUnmounted(() => {
 
 function openComments() {
 	Analytics.trackEvent('post-controls', 'comments', eventLabel.value);
-	CommentModal.show({
+
+	showCommentModal({
 		model: post.value,
 		displayMode: 'comments',
 	});
@@ -167,7 +168,7 @@ function openComments() {
 
 async function openEdit() {
 	Analytics.trackEvent('post-controls', 'edit', eventLabel.value);
-	if (await PostEditModal.show(post.value)) {
+	if (await showPostEditModal(post.value)) {
 		emit('postEdit');
 	}
 }

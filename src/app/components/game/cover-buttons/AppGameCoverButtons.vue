@@ -9,7 +9,7 @@ import { GameBuildModel, GameBuildType } from '../../../../_common/game/build/bu
 import { GameDownloader } from '../../../../_common/game/downloader/downloader.service';
 import { GameModel, chooseBestGameBuild } from '../../../../_common/game/game.model';
 import type { GamePackageModel } from '../../../../_common/game/package/package.model';
-import { GamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
+import { showGamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
 import { GamePlayModal } from '../../../../_common/game/play-modal/play-modal.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import type { UserModel } from '../../../../_common/user/user.model';
@@ -156,7 +156,7 @@ function buy(pkg?: GamePackageModel, build?: GameBuildModel) {
 		}
 	}
 
-	GamePackagePurchaseModal.show({
+	showGamePackagePurchaseModal({
 		game: game.value,
 		package: pkg,
 		build: build || null,

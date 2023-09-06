@@ -19,7 +19,7 @@ import { Model } from '../../../_common/model/model.service';
 import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { DisplayMode } from './modal/modal.service';
-import { CommentThreadModal } from './thread/modal.service';
+import { showCommentThreadModal } from './thread/modal.service';
 
 const props = defineProps({
 	comments: {
@@ -90,7 +90,7 @@ watch(commentStoreDirtyState, dirtyState => {
 });
 
 function open(comment: CommentModel) {
-	CommentThreadModal.show({
+	showCommentThreadModal({
 		router,
 		model: model.value,
 		commentId: comment.id,

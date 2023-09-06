@@ -13,7 +13,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { CommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
+import { showCommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
@@ -76,7 +76,7 @@ export default class RouteCommunitiesViewEditGames extends LegacyRouteComponent 
 	}
 
 	async onClickLinkGame() {
-		const game = await CommunityLinkGameModal.show(this.community);
+		const game = await showCommunityLinkGameModal(this.community);
 		if (!game) {
 			return;
 		}

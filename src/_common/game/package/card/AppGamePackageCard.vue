@@ -23,7 +23,7 @@ import { GameModel } from '../../game.model';
 import { GamePlayModal } from '../../play-modal/play-modal.service';
 import { GameReleaseModel } from '../../release/release.model';
 import { GamePackageModel } from '../package.model';
-import { GamePackagePurchaseModal } from '../purchase-modal/purchase-modal.service';
+import { showGamePackagePurchaseModal } from '../purchase-modal/purchase-modal.service';
 import AppGamePackageCardButtons from './AppGamePackageCardButtons.vue';
 import { GamePackageCardModel } from './card.model';
 
@@ -144,7 +144,7 @@ function doBuildClick(build: GameBuildModel, fromExtraSection = false) {
 }
 
 function showPayment(build: GameBuildModel | null, fromExtraSection: boolean) {
-	GamePackagePurchaseModal.show({
+	showGamePackagePurchaseModal({
 		game: game.value,
 		package: gamePackage.value,
 		build: build,

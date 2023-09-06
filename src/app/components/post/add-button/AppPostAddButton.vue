@@ -13,7 +13,7 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { PostEditModal } from '../edit-modal/edit-modal-service';
+import { showPostEditModal } from '../edit-modal/edit-modal-service';
 
 const props = defineProps({
 	game: {
@@ -59,7 +59,7 @@ async function open() {
 
 	const postProvider = $createFiresidePost(game?.value ? game.value.id : 0);
 
-	const post = await PostEditModal.show(postProvider, {
+	const post = await showPostEditModal(postProvider, {
 		community: community?.value,
 		channel: channel?.value,
 		realm: realm?.value,

@@ -6,13 +6,11 @@ interface ModalOptions {
 	user: UserModel;
 }
 
-export class InviteModal {
-	static async show(options: ModalOptions) {
-		return await showModal<void>({
-			modalId: 'Invite',
-			component: defineAsyncComponent(() => import('./AppInviteModal.vue')),
-			props: options,
-			size: 'sm',
-		});
-	}
+export async function showInviteModal(options: ModalOptions) {
+	return await showModal<void>({
+		modalId: 'Invite',
+		component: defineAsyncComponent(() => import('./AppInviteModal.vue')),
+		props: options,
+		size: 'sm',
+	});
 }
