@@ -20,12 +20,14 @@ import AppLoading from '../../../loading/AppLoading.vue';
 import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
 import { Screen } from '../../../screen/screen-service';
+import AppSpacer from '../../../spacer/AppSpacer.vue';
 import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../translate/translate.service';
 import AppStickerStackItem from '../../stack/AppStickerStackItem.vue';
 import { CreatorStickersMap, sortStickerStacks, useStickerStore } from '../../sticker-store';
 import { StickerModel, StickerStack } from '../../sticker.model';
 import AppStickerPack from '../AppStickerPack.vue';
+import { showStickerPackContentsModal } from '../contents-modal/modal.service';
 import { UserStickerPackModel } from '../user-pack.model';
 
 const DurationStickerShow = 500;
@@ -599,24 +601,41 @@ function addMs(value: number) {
 							@click.capture.stop="setStage('closing')"
 						/>
 
-						<!-- Open button -->
-						<AppButton
+						<div
 							class="_strong-ease-out"
 							:style="{
 								position: 'absolute',
 								top: 'calc(100% + 16px)',
+								width: `100%`,
 								opacity: stage === 'confirm' ? 1 : 0,
 								transition: 'opacity 200ms',
 								...ignoreWhen(stage !== 'confirm'),
 							}"
-							solid
-							primary
-							block
-							overlay
-							@click.capture.stop="setStage('pack-open')"
 						>
-							{{ $gettext(`Open pack`) }}
-						</AppButton>
+							<!-- Open button -->
+							<AppButton
+								solid
+								primary
+								block
+								overlay
+								@click.capture.stop="setStage('pack-open')"
+							>
+								{{ $gettext(`Open pack`) }}
+							</AppButton>
+
+							<AppSpacer vertical :scale="2" />
+
+							<!-- Pack contents button -->
+							<AppButton
+								block
+								overlay
+								@click.capture.stop="
+									showStickerPackContentsModal(pack.sticker_pack)
+								"
+							>
+								{{ $gettext(`View contents`) }}
+							</AppButton>
+						</div>
 					</div>
 				</div>
 

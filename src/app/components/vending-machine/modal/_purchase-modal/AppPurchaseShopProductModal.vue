@@ -24,6 +24,7 @@ import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppStickerPack, {
 	StickerPackRatio,
 } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
+import AppStickerPackContents from '../../../../../_common/sticker/pack/AppStickerPackContents.vue';
 import { StickerPackOpenModal } from '../../../../../_common/sticker/pack/open-modal/modal.service';
 import { UserStickerPackModel } from '../../../../../_common/sticker/pack/user-pack.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
@@ -489,6 +490,11 @@ function getItemWidthStyles(ratio: number) {
 						</RouterLink>
 					</div>
 				</template>
+
+				<div v-if="shopProduct.stickerPack" :style="{ width: `100%` }">
+					<AppSpacer vertical :scale="8" />
+					<AppStickerPackContents :pack="shopProduct.stickerPack" />
+				</div>
 			</div>
 		</div>
 	</AppModal>
