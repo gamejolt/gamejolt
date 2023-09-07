@@ -19,7 +19,7 @@ defineProps({
 </script>
 
 <template>
-	<AppPopper trigger="hover" placement="right-start" no-hover-popover>
+	<AppPopper trigger="hover" placement="left-start" no-hover-popover>
 		<template #default="{ isShowingPopper }">
 			<div
 				:style="[
@@ -35,7 +35,7 @@ defineProps({
 						transition: `transform 250ms ${kStrongEaseOut}`,
 					},
 					styleWhen(isShowingPopper, {
-						transform: `rotate(-5deg) scale(0.9)`,
+						transform: `rotate(5deg) scale(0.9)`,
 						...styleElevate(4),
 						transition: `transform 250ms ${kStrongEaseOut}`,
 						zIndex: 2,
