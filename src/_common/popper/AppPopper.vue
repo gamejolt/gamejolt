@@ -592,7 +592,7 @@ function onManualShow() {
 		@pointerenter="onMouseEnter"
 		@pointerleave="onMouseLeave"
 	>
-		<slot v-bind="{ isShowingPopper: isVisible }" />
+		<slot v-bind="{ isShowingPopper: isVisible && !isHiding }" />
 
 		<teleport v-if="isVisible" :to="to">
 			<div
