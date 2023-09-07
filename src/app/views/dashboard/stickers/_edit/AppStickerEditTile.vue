@@ -102,7 +102,7 @@ function onClickTile() {
 						]"
 						:src="sticker.img_url"
 						draggable="false"
-						onmousedown="return false"
+						@mousedown.prevent
 					/>
 				</div>
 				<template v-else>

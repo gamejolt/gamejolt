@@ -36,7 +36,7 @@ const props = defineProps({
 		type: Boolean,
 	},
 	/**
-	 * Removes grab[bing] cursor styling.
+	 * Removes grabbing cursor styling.
 	 */
 	noDrag: {
 		type: Boolean,
@@ -131,7 +131,6 @@ const tagStyles: CSSProperties = {
 					<div :style="isPeeled ? { filter: `contrast(0)` } : undefined">
 						<img
 							draggable="false"
-							class="-img"
 							:style="itemStyling"
 							:src="sticker.img_url"
 							@dragstart.prevent

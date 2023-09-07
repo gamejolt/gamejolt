@@ -1,8 +1,6 @@
 import { computed, inject, InjectionKey, Ref, ref, shallowReactive, shallowRef, toRaw } from 'vue';
 import { arrayRemove, numberSort } from '../../utils/array';
-import { Analytics } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
-import { CommentModel } from '../comment/comment-model';
 import { FiresideModel } from '../fireside/fireside.model';
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { showErrorGrowl } from '../growls/growls.service';
@@ -188,8 +186,6 @@ export function isStickerTargetMine(store: StickerStore, target: StickerTargetCo
 			isMine = model.displayUser.id === myUserId;
 		} else if (model instanceof FiresideModel) {
 			isMine = placedItem.value?.target_data.host_user_id === myUserId;
-		} else if (model instanceof CommentModel) {
-			isMine = model.user.id === myUserId;
 		}
 
 		if (isMine) {
@@ -553,8 +549,6 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 		return;
 	}
 
-	Analytics.trackEvent('stickers', 'place-sticker');
-
 	const { model, placeStickerCallback } = targetController.value;
 	const resourceType = getStickerModelResourceName(model);
 
@@ -714,7 +708,6 @@ const _onPointerUp = (store: StickerStore) => (event: MouseEvent | TouchEvent) =
 	const { isHoveringDrawer, sticker, activeLayer } = store;
 
 	if (isHoveringDrawer.value && sticker.value) {
-		Analytics.trackEvent('sticker-drawer', 'drop-drawer');
 		alterStickerStoreItemCount(store, sticker.value, true);
 		_removeEventListeners(store);
 		return;
@@ -730,10 +723,8 @@ const _onPointerUp = (store: StickerStore) => (event: MouseEvent | TouchEvent) =
 		: null;
 
 	if (target) {
-		Analytics.trackEvent('sticker-drawer', 'drop-target');
 		target.onPlaceDrawerSticker(pointer);
 	} else if (sticker.value) {
-		Analytics.trackEvent('sticker-drawer', 'drop-mask');
 		alterStickerStoreItemCount(store, sticker.value, true);
 	}
 
