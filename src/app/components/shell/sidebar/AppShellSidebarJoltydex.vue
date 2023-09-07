@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { trackJoltydex } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
@@ -8,10 +8,12 @@ import { illJoltydexBrowse } from '../../../../_common/illustration/illustration
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../_common/user/user.model';
 import { kFontSizeLarge } from '../../../../_styles/variables';
+import { fuzzysearch } from '../../../../utils/string';
 import { useAppStore } from '../../../store';
 import { useJoltydexStore } from '../../../store/joltydex';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
@@ -23,6 +25,12 @@ const { selectedJoltydexUser } = useJoltydexStore();
 
 const isLoading = ref(true);
 const users = ref<UserModel[]>([]);
+const filter = ref('');
+
+const filteredUsers = computed(() => {
+	const f = filter.value;
+	return users.value.filter(i => fuzzysearch(f, i.username.toLowerCase()));
+});
 
 onMounted(() => {
 	trackJoltydex({ action: 'show' });
@@ -93,7 +101,28 @@ async function loadUsers() {
 						{{ $gettext(`Which collection would you like to browse?`) }}
 					</div>
 
-					<AppJoltydexUser v-for="user of users" :key="user.id" :user="user" />
+					<template v-if="users.length > 5">
+						<input
+							v-model="filter"
+							class="form-control"
+							:placeholder="$gettext(`Filter...`)"
+						/>
+
+						<AppSpacer vertical :scale="2" />
+					</template>
+
+					<template v-if="filteredUsers.length">
+						<AppJoltydexUser
+							v-for="user of filteredUsers"
+							:key="user.id"
+							:user="user"
+						/>
+					</template>
+					<template v-else>
+						<div class="alert alert-info">
+							{{ $gettext(`No results for that filter.`) }}
+						</div>
+					</template>
 				</template>
 				<template v-else-if="!isLoading && !users.length">
 					<div class="alert alert-info">

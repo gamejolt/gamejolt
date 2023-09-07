@@ -33,7 +33,9 @@ const isInview = ref(false);
 	<AppScrollInview
 		:config="InviewConfig"
 		:style="{
-			height: `60px`,
+			marginTop: `2px`,
+			marginBottom: `2px`,
+			height: `56px`,
 		}"
 		@inview="isInview = true"
 		@outview="isInview = false"
@@ -52,9 +54,16 @@ const isInview = ref(false);
 							borderRadius: kBorderRadiusBase.px,
 							color: `inherit`,
 							gap: `8px`,
+							transition: `margin 150ms, padding 150ms`,
 						},
 						styleWhen(hovered || selectedJoltydexUser === user, {
 							background: kThemeFg10,
+						}),
+						styleWhen(selectedJoltydexUser === user, {
+							marginLeft: `calc(0px - var(--shell-content-sidebar-padding))`,
+							paddingLeft: `var(--shell-content-sidebar-padding)`,
+							borderTopLeftRadius: 0,
+							borderBottomLeftRadius: 0,
 						}),
 					]"
 					@click="selectedJoltydexUser = user"
@@ -66,14 +75,7 @@ const isInview = ref(false);
 						show-frame
 					/>
 
-					<div
-						:style="[
-							styleTextOverflow,
-							{
-								fontWeight: `bold`,
-							},
-						]"
-					>
+					<div :style="[styleTextOverflow, { fontWeight: `bold` }]">
 						@{{ user.username }}
 					</div>
 				</a>

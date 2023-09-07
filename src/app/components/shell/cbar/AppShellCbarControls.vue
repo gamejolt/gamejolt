@@ -59,12 +59,12 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 		</AppShellCbarItem>
 
 		<template v-if="user">
+			<!-- TODO(joltydex-harder): make the chat "disconnected" state better -->
 			<!-- Chat -->
 			<AppShellCbarItem
-				v-if="chat"
 				class="-control"
 				:highlight="highlight"
-				:notification-count="chat.roomNotificationsCount"
+				:notification-count="chat?.roomNotificationsCount || 0"
 				:is-active="visibleLeftPane === 'chat'"
 				is-control
 			>

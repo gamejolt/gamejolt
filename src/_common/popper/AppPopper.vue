@@ -20,6 +20,7 @@ import {
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
+import { styleWhen } from '../../_styles/mixins';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
 import { vAppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../screen/screen-service';
@@ -591,7 +592,7 @@ function onManualShow() {
 		@pointerenter="onMouseEnter"
 		@pointerleave="onMouseLeave"
 	>
-		<slot />
+		<slot v-bind="{ isShowingPopper: isVisible }" />
 
 		<teleport v-if="isVisible" :to="to">
 			<div
@@ -599,6 +600,11 @@ function onManualShow() {
 				v-app-observe-dimensions="onDimensionsChanged"
 				class="popper-wrapper"
 				:class="{ '-hide': isHiding, '-ssr': GJ_IS_SSR }"
+				:style="
+					styleWhen(noHoverPopover, {
+						pointerEvents: `none`,
+					})
+				"
 				@mouseenter="onPopoverEnter"
 				@mouseleave="onPopoverLeave"
 			>

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { trackAppPromotionClick } from '../../../_common/analytics/analytics.service';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
@@ -8,7 +7,10 @@ import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppUserCreatorBadge from '../../../_common/user/creator/AppUserCreatorBadge.vue';
-import { routeLandingHelpIndex, routeLandingHelpRedirect } from '../../views/landing/help/help.route';
+import {
+	routeLandingHelpIndex,
+	routeLandingHelpRedirect,
+} from '../../views/landing/help/help.route';
 import { ClientSystemReportModal } from '../client/safe-exports';
 import AppShellAltMenuDevelopers from './AppShellAltMenuDevelopers.vue';
 import AppShellAltMenuExtra from './AppShellAltMenuExtra.vue';
@@ -18,8 +20,6 @@ defineProps({
 		type: Boolean,
 	},
 });
-
-const moreMenuShowing = ref(false);
 
 function showSystemReport() {
 	ClientSystemReportModal?.show();
@@ -34,12 +34,12 @@ function showSystemReport() {
 		hide-on-state-change
 		fixed
 		width="516px"
-		@show="moreMenuShowing = true"
-		@hide="moreMenuShowing = false"
 	>
-		<a class="navbar-item" :class="{ active: moreMenuShowing }">
-			<AppJolticon icon="ellipsis-v" />
-		</a>
+		<template #default="{ isShowingPopper }">
+			<a class="navbar-item" :class="{ active: isShowingPopper }">
+				<AppJolticon icon="ellipsis-v" />
+			</a>
+		</template>
 
 		<template #popover>
 			<div class="-container list-group-dark">
