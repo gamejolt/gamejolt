@@ -14,10 +14,6 @@ async function _show(props: any) {
 	});
 }
 
-async function _showId(entryId: number) {
-	return _show({ entryId });
-}
-
 export async function showEntryFromCommunityCompetitionEntryModal(
 	entry: CommunityCompetitionEntryModel
 ) {
@@ -35,7 +31,7 @@ export async function showCommunityCompetitionEntryModalIdFromHash(router: Route
 		return;
 	}
 
-	return _showId(id);
+	return _show({ entryId: id });
 }
 
 export function watchCommunityCompetitionEntryModalForHash(router: Router) {

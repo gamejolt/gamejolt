@@ -20,7 +20,7 @@ import AppTranslate from '../../../translate/AppTranslate.vue';
 import { GameBuildModel, GameBuildType } from '../../build/build.model';
 import { GameDownloader } from '../../downloader/downloader.service';
 import { GameModel } from '../../game.model';
-import { GamePlayModal } from '../../play-modal/play-modal.service';
+import { showGamePlayModal } from '../../play-modal/play-modal.service';
 import { GameReleaseModel } from '../../release/release.model';
 import { GamePackageModel } from '../package.model';
 import { showGamePackagePurchaseModal } from '../purchase-modal/purchase-modal.service';
@@ -160,7 +160,7 @@ function download(build: GameBuildModel) {
 }
 
 function showBrowserModal(build: GameBuildModel) {
-	GamePlayModal.show(game.value, build, {
+	showGamePlayModal(game.value, build, {
 		key: accessKey?.value,
 	});
 }

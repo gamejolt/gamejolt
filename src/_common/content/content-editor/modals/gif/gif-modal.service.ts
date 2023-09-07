@@ -26,11 +26,6 @@ export type SearchResult = {
 	favorite: boolean;
 };
 
-// TODO: check if having static variable is okay?
-export class ContentEditorGifModal {
-	static categories?: Category[];
-}
-
 export async function showContentEditorGifModal() {
 	return await showModal<SearchResult>({
 		modalId: 'ContentEditorGif',
