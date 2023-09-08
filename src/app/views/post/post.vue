@@ -35,7 +35,7 @@ const PostThemeKey = 'post';
 	},
 })
 @OptionsForLegacyRoute({
-	lazy: true,
+	lazy: false,
 	cache: true,
 	deps: { params: ['slug'], query: ['intent'] },
 	async resolver({ route }) {

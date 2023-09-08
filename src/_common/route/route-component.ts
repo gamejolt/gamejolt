@@ -59,7 +59,7 @@ export function defineAppRouteOptions(options: AppRouteOptions): {
 					useCache: false,
 				});
 
-				// In this case we want to resolve lazily. The created() hook of the
+				// In this case we want to resolve lazily. The setup() hook of the
 				// component will pick up the Resolver and finish out resolving it.
 				resolver.resolvePayload();
 			} else {
@@ -69,10 +69,10 @@ export function defineAppRouteOptions(options: AppRouteOptions): {
 
 				// In this case we want to make sure we resolve the payload
 				// before resolving the route so that the data is set
-				// immediately. The created() hook of the component will see
+				// immediately. The setup() hook of the component will see
 				// that this Resolver is already resolved and immediately
 				// resolve the route with this data.
-				await resolver.resolvePayload();
+				await resolver.resolvePayload().catch(e => console.log(e));
 			}
 		},
 	};
@@ -350,8 +350,8 @@ export async function asyncRouteLoader(router: Router, loader: Promise<any>) {
 
 class Resolver {
 	constructor(
-		public resolverOptions: AppRouteOptionsInternal,
-		public route: RouteLocationNormalized,
+		public readonly resolverOptions: AppRouteOptionsInternal,
+		public readonly route: RouteLocationNormalized,
 		options: {
 			useCache: boolean;
 			onPayloadResolved?: () => void;
@@ -367,16 +367,15 @@ class Resolver {
 		_activeRouteResolvers.set(this.routeKey, this);
 	}
 
-	routeKey: symbol;
-	useCache: boolean;
-	onPayloadResolved?: () => void;
+	readonly routeKey: symbol;
+	readonly useCache: boolean;
+	readonly onPayloadResolved?: () => void;
 
 	isResolved = false;
+	canceled = false;
 	payload: any | PayloadError | RouteLocationRedirect;
 	fromCache?: boolean;
 	private _payloadPromise?: ReturnType<Resolver['_doResolvePayload']>;
-
-	canceled = false;
 
 	resolvePayload() {
 		return (this._payloadPromise ??= this._doResolvePayload());
