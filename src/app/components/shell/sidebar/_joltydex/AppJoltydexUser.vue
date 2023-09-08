@@ -41,31 +41,33 @@ const isInview = ref(false);
 		@outview="isInview = false"
 	>
 		<template v-if="isInview">
-			<AppOnHover v-slot="{ binding, hovered }">
+			<AppOnHover v-slot="{ hoverBinding, hovered }">
 				<a
-					v-bind="binding"
-					:style="[
-						{
-							display: `flex`,
-							alignItems: `center`,
-							padding: `0 4px`,
-							margin: `0 -4px`,
-							height: `100%`,
-							borderRadius: kBorderRadiusBase.px,
-							color: `inherit`,
-							gap: `8px`,
-							transition: `margin 150ms, padding 150ms`,
-						},
-						styleWhen(hovered || selectedJoltydexUser === user, {
-							background: kThemeFg10,
-						}),
-						styleWhen(selectedJoltydexUser === user, {
-							marginLeft: `calc(0px - var(--shell-content-sidebar-padding))`,
-							paddingLeft: `var(--shell-content-sidebar-padding)`,
-							borderTopLeftRadius: 0,
-							borderBottomLeftRadius: 0,
-						}),
-					]"
+					v-bind="{
+						...hoverBinding,
+						style: [
+							{
+								display: `flex`,
+								alignItems: `center`,
+								padding: `0 4px`,
+								margin: `0 -4px`,
+								height: `100%`,
+								borderRadius: kBorderRadiusBase.px,
+								color: `inherit`,
+								gap: `8px`,
+								transition: `margin 150ms, padding 150ms`,
+							},
+							styleWhen(hovered || selectedJoltydexUser === user, {
+								background: kThemeFg10,
+							}),
+							styleWhen(selectedJoltydexUser === user, {
+								marginLeft: `calc(0px - var(--shell-content-sidebar-padding))`,
+								paddingLeft: `var(--shell-content-sidebar-padding)`,
+								borderTopLeftRadius: 0,
+								borderBottomLeftRadius: 0,
+							}),
+						],
+					}"
 					@click="selectedJoltydexUser = user"
 				>
 					<AppUserAvatarBubble

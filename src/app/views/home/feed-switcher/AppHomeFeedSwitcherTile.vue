@@ -134,123 +134,125 @@ function getImageFilters({ hovered }: { hovered: boolean }) {
 				textDecoration: `none !important`,
 			}"
 		>
-			<AppOnHover :state-key="collapse ? 1 : -1" :disable="!Screen.isPointerMouse">
-				<template #default="{ binding, hovered }">
-					<div
-						v-bind="binding"
-						:style="{
-							position: `relative`,
-							display: `flex`,
-							width: `${tileSize}px`,
-							flexFlow: `column nowrap`,
-							alignItems: `center`,
-							...styleWhen(collapse, {
+			<AppOnHover
+				v-slot="{ hoverBinding, hovered }"
+				:state-key="collapse ? 1 : -1"
+				:disable="!Screen.isPointerMouse"
+			>
+				<div
+					v-bind="{
+						...hoverBinding,
+						style: [
+							{
+								position: `relative`,
+								display: `flex`,
+								width: `${tileSize}px`,
+								flexFlow: `column nowrap`,
+								alignItems: `center`,
+							},
+							styleWhen(collapse, {
 								justifyContent: `center`,
+							}),
+						],
+					}"
+				>
+					<div
+						:style="{
+							...styleFlexCenter({ direction: 'row' }),
+							position: `relative`,
+							width: `${tileSize}px`,
+							height: `${tileSize}px`,
+							...styleWhen(collapse, {
+								height: `${collapsedHeight}px`,
 							}),
 						}"
 					>
-						<div
-							:style="{
-								...styleFlexCenter({ direction: 'row' }),
-								position: `relative`,
-								width: `${tileSize}px`,
-								height: `${tileSize}px`,
-								...styleWhen(collapse, {
-									height: `${collapsedHeight}px`,
-								}),
-							}"
+						<AppMediaItemBackdrop
+							:media-item="mediaItem"
+							:radius="borderRadius.backdrop"
+							:fallback-color="
+								hovered || isActive
+									? kThemeBiBg
+									: collapse
+									? kThemeDark
+									: kThemeBgSubtle
+							"
 						>
-							<AppMediaItemBackdrop
-								:media-item="mediaItem"
-								:radius="borderRadius.backdrop"
-								:fallback-color="
-									hovered || isActive
-										? kThemeBiBg
-										: collapse
-										? kThemeDark
-										: kThemeBgSubtle
-								"
-							>
-								<AppImgResponsive
-									v-if="mediaItem"
-									:src="mediaItem.mediaserver_url"
-									:style="{
-										position: `absolute`,
-										width: `100%`,
-										height: `100%`,
-										objectFit: `cover`,
-										transition: `filter 300ms ${kStrongEaseOut}`,
-										filter: getImageFilters({ hovered }),
-									}"
-									alt=""
-									draggable="false"
-									ondragstart="return false"
-								/>
-							</AppMediaItemBackdrop>
-
-							<AppJolticon
-								v-if="icon && !collapse"
-								:icon="icon"
+							<AppImgResponsive
+								v-if="mediaItem"
+								:src="mediaItem.mediaserver_url"
 								:style="{
 									position: `absolute`,
-									fontSize: `${tileSize * 0.3}px`,
-									margin: 0,
-									color: hovered || isActive ? kThemeBiFg : kThemeFg,
-									transition: `color 300ms ${kStrongEaseOut}`,
+									width: `100%`,
+									height: `100%`,
+									objectFit: `cover`,
+									transition: `filter 300ms ${kStrongEaseOut}`,
+									filter: getImageFilters({ hovered }),
 								}"
+								alt=""
+								draggable="false"
+								ondragstart="return false"
 							/>
+						</AppMediaItemBackdrop>
 
-							<div
-								v-if="isActive"
-								:style="{
-									position: `absolute`,
-									top: `-${activeIndicatorMargin}px`,
-									right: `-${activeIndicatorMargin}px`,
-									bottom: `-${activeIndicatorMargin}px`,
-									left: `-${activeIndicatorMargin}px`,
-									border: `${activeIndicatorSize}px solid ${kThemePrimary}`,
-									borderRadius: `${
-										borderRadius.media.value + activeIndicatorSize
-									}px`,
-									zIndex: 1,
-								}"
-							/>
-						</div>
+						<AppJolticon
+							v-if="icon && !collapse"
+							:icon="icon"
+							:style="{
+								position: `absolute`,
+								fontSize: `${tileSize * 0.3}px`,
+								margin: 0,
+								color: hovered || isActive ? kThemeBiFg : kThemeFg,
+								transition: `color 300ms ${kStrongEaseOut}`,
+							}"
+						/>
 
 						<div
+							v-if="isActive"
 							:style="{
-								fontWeight: `bold`,
-								fontSize: kFontSizeTiny.px,
-								textAlign: `center`,
-								maxWidth: `${
-									tileSize - (imagePadding.left + imagePadding.right)
-								}px`,
-								width: `max-content`,
-								textDecoration: `none !important`,
-								lineHeight: lineHeight,
-								paddingTop: `1px`,
-								paddingBottom: `1px`,
-								...(collapse
-									? {
-											...styleOverlayTextShadow,
-											position: `absolute`,
-											color: `white`,
-											...styleWhen(!mediaItem && (hovered || isActive), {
-												color: kThemeBiFg,
-											}),
-									  }
-									: {
-											marginTop: `6px`,
-											marginBottom: `2px`,
-											color: kThemeFg,
-									  }),
-								...styleLineClamp(2),
+								position: `absolute`,
+								top: `-${activeIndicatorMargin}px`,
+								right: `-${activeIndicatorMargin}px`,
+								bottom: `-${activeIndicatorMargin}px`,
+								left: `-${activeIndicatorMargin}px`,
+								border: `${activeIndicatorSize}px solid ${kThemePrimary}`,
+								borderRadius: `${borderRadius.media.value + activeIndicatorSize}px`,
+								zIndex: 1,
 							}"
-						>
-							{{ title }}
-						</div>
+						/>
 					</div>
-				</template>
+
+					<div
+						:style="{
+							fontWeight: `bold`,
+							fontSize: kFontSizeTiny.px,
+							textAlign: `center`,
+							maxWidth: `${tileSize - (imagePadding.left + imagePadding.right)}px`,
+							width: `max-content`,
+							textDecoration: `none !important`,
+							lineHeight: lineHeight,
+							paddingTop: `1px`,
+							paddingBottom: `1px`,
+							...(collapse
+								? {
+										...styleOverlayTextShadow,
+										position: `absolute`,
+										color: `white`,
+										...styleWhen(!mediaItem && (hovered || isActive), {
+											color: kThemeBiFg,
+										}),
+								  }
+								: {
+										marginTop: `6px`,
+										marginBottom: `2px`,
+										color: kThemeFg,
+								  }),
+							...styleLineClamp(2),
+						}"
+					>
+						{{ title }}
+					</div>
+				</div>
 			</AppOnHover>
 		</RouterLink>
 	</div>

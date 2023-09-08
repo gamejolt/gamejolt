@@ -7,9 +7,8 @@ import AppIllustration from '../../../../_common/illustration/AppIllustration.vu
 import { illJoltydexBrowse } from '../../../../_common/illustration/illustrations';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import { kThemeBgActual } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../_common/user/user.model';
 import { kFontSizeLarge } from '../../../../_styles/variables';
@@ -79,69 +78,74 @@ async function loadUsers() {
 
 <template>
 	<div id="shell-sidebar-joltydex" class="fill-offset">
-		<AppScrollScroller thin>
-			<div
-				:style="{
-					padding: `var(--shell-content-sidebar-padding)`,
-				}"
-			>
-				<AppIllustration :asset="illJoltydexBrowse" />
+		<div
+			:style="{
+				padding: `var(--shell-content-sidebar-padding)`,
+			}"
+		>
+			<AppIllustration :asset="illJoltydexBrowse" />
 
-				<template v-if="isLoading">
-					<AppLoading centered />
+			<template v-if="isLoading">
+				<AppLoading centered />
+			</template>
+			<template v-if="users.length">
+				<div
+					:style="{
+						fontSize: kFontSizeLarge.px,
+						fontWeight: `bold`,
+						marginBottom: `8px`,
+					}"
+				>
+					{{ $gettext(`Which collection would you like to browse?`) }}
+				</div>
+
+				<div
+					v-if="users.length > 5"
+					:style="{
+						position: `sticky`,
+						// Put it on its own layer so that when it stickies it
+						// doesn't repaint every time.
+						willChange: `transform`,
+						top: `0`,
+						padding: `8px var(--shell-content-sidebar-padding)`,
+						margin: `0 calc(0px - var(--shell-content-sidebar-padding))`,
+						zIndex: 2,
+						backgroundColor: kThemeBgActual,
+					}"
+				>
+					<input
+						v-model="filter"
+						class="form-control"
+						:placeholder="$gettext(`Filter...`)"
+					/>
+				</div>
+
+				<template v-if="filteredUsers.length">
+					<AppJoltydexUser v-for="user of filteredUsers" :key="user.id" :user="user" />
 				</template>
-				<template v-if="users.length">
-					<div
-						:style="{
-							fontSize: kFontSizeLarge.px,
-							fontWeight: `bold`,
-							marginBottom: `8px`,
-						}"
-					>
-						{{ $gettext(`Which collection would you like to browse?`) }}
-					</div>
-
-					<template v-if="users.length > 5">
-						<input
-							v-model="filter"
-							class="form-control"
-							:placeholder="$gettext(`Filter...`)"
-						/>
-
-						<AppSpacer vertical :scale="2" />
-					</template>
-
-					<template v-if="filteredUsers.length">
-						<AppJoltydexUser
-							v-for="user of filteredUsers"
-							:key="user.id"
-							:user="user"
-						/>
-					</template>
-					<template v-else>
-						<div class="alert alert-info">
-							{{ $gettext(`No results for that filter.`) }}
-						</div>
-					</template>
-				</template>
-				<template v-else-if="!isLoading && !users.length">
+				<template v-else>
 					<div class="alert alert-info">
-						<div>
-							{{
-								$gettext(
-									`Your Joltydex allows you to browse all your collectibles in one place. That is, once you have some.`
-								)
-							}}
-						</div>
-						<br />
-						<div>
-							<a @click="showVendingMachineModal()">
-								{{ $gettext(`Get some cool stuff from the Shop!`) }}
-							</a>
-						</div>
+						{{ $gettext(`No results for that filter.`) }}
 					</div>
 				</template>
-			</div>
-		</AppScrollScroller>
+			</template>
+			<template v-else-if="!isLoading && !users.length">
+				<div class="alert alert-info">
+					<div>
+						{{
+							$gettext(
+								`Your Joltydex allows you to browse all your collectibles in one place. That is, once you have some.`
+							)
+						}}
+					</div>
+					<br />
+					<div>
+						<a @click="showVendingMachineModal()">
+							{{ $gettext(`Get some cool stuff from the Shop!`) }}
+						</a>
+					</div>
+				</div>
+			</template>
+		</div>
 	</div>
 </template>

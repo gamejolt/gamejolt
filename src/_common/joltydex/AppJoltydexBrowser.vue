@@ -140,15 +140,16 @@ const gridStyles = {
 			</h2>
 
 			<div :style="gridStyles">
-				<AppCollectibleThumb
+				<div
 					v-for="(collectible, i) of collectibles.value"
 					:key="collectible.id"
-					:collectible="collectible"
 					class="anim-fade-in-enlarge"
 					:style="{
 						animationDelay: `${15 * (i % ItemsPerPage)}ms`,
 					}"
-				/>
+				>
+					<AppCollectibleThumb :collectible="collectible" />
+				</div>
 			</div>
 
 			<AppSpacer vertical :scale="6" />

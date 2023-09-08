@@ -44,5 +44,5 @@ const binding = {
 </script>
 
 <template>
-	<slot :hovered="!disable && hovered" :binding="binding" />
+	<slot :hovered="!disable && hovered" :hover-binding="binding" />
 </template>

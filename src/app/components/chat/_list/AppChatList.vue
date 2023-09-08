@@ -75,7 +75,6 @@ const mappedEntries = computed(() =>
 		<div v-if="!hideFilter" class="-input-container" :class="{ '-bleed-filter': bleedFilter }">
 			<input
 				v-model="filterQuery"
-				text="search"
 				class="form-control"
 				:placeholder="$gettext(`Filter...`)"
 			/>
