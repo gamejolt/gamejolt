@@ -71,7 +71,7 @@ watch(
 				gridTemplateColumns: `repeat(auto-fill, minmax(56px, 1fr))`,
 			}"
 		>
-			<template v-for="sticker of stickers" :key="sticker.id">
+			<div v-for="sticker of stickers" :key="sticker.id">
 				<AppAspectRatio v-app-tooltip="sticker.name" :ratio="1">
 					<img
 						draggable="false"
@@ -88,7 +88,7 @@ watch(
 					<AppSpacer vertical :scale="1" />
 					<AppStickerMastery :progress="sticker.mastery" />
 				</template>
-			</template>
+			</div>
 		</div>
 	</template>
 </template>
