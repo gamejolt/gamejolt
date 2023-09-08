@@ -22,6 +22,7 @@ import {
 import { useRouter } from 'vue-router';
 import { styleWhen } from '../../_styles/mixins';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
+import { useEscapeStack as useEscapeStackService } from '../escape-stack/escape-stack.service';
 import { vAppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../screen/screen-service';
 import AppScrollScroller from '../scroll/AppScrollScroller.vue';
@@ -210,6 +211,13 @@ const props = defineProps({
 		type: String,
 		default: 'body',
 	},
+	/**
+	 * Whether or not this popper will register itself with the EscapeStack.
+	 */
+	useEscapeStack: {
+		type: Boolean,
+		default: true,
+	},
 });
 
 const emit = defineEmits({
@@ -239,6 +247,7 @@ const {
 	sansArrow,
 	showDelay,
 	popoverClass,
+	useEscapeStack: wantsEscapeStack,
 } = toRefs(props);
 
 const slots = useSlots();
@@ -333,8 +342,12 @@ onUnmounted(() => {
 });
 
 watch([manualShow, debugActual], onManualShow);
-
 watch(hideTrigger, _hide);
+
+useEscapeStackService({
+	disable: () => !wantsEscapeStack.value || !isVisible.value,
+	handler: () => _hide(),
+});
 
 function _stateChangeHide() {
 	if (isVisible.value && hideOnStateChange.value) {

@@ -57,8 +57,6 @@ const mutedStyles: CSSProperties = {
 			display: `flex`,
 			flexDirection: `column`,
 			gap: `16px`,
-			width: `250px`,
-			padding: `16px`,
 		}"
 	>
 		<!-- Label -->

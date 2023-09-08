@@ -50,16 +50,18 @@ const {
 	activeQuestId,
 } = questStore;
 
-useEscapeStack(() => {
-	const hadQuestWindow = !!activeQuest.value;
-	// Clear out the [activeQuest], closing the quest window.
-	activeQuest.value = undefined;
+useEscapeStack({
+	handler() {
+		const hadQuestWindow = !!activeQuest.value;
+		// Clear out the [activeQuest], closing the quest window.
+		activeQuest.value = undefined;
 
-	// Mobile sizes should close the quest window before closing the sidebar.
-	// Desktop should close the sidebar always.
-	if (!hadQuestWindow || Screen.isDesktop) {
-		toggleLeftPane('');
-	}
+		// Mobile sizes should close the quest window before closing the sidebar.
+		// Desktop should close the sidebar always.
+		if (!hadQuestWindow || Screen.isDesktop) {
+			toggleLeftPane('');
+		}
+	},
 });
 
 const questChunks = computed(() => {

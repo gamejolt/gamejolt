@@ -1,6 +1,5 @@
 import ResizeObserver from 'resize-observer-polyfill';
-import { onBeforeUnmount, unref, watch } from 'vue';
-import { MaybeRef } from './vue';
+import { MaybeRef, onBeforeUnmount, unref, watch } from 'vue';
 
 export function useResizeObserver({
 	target,

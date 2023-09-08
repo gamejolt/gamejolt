@@ -3,6 +3,7 @@ import {
 	computed,
 	inject,
 	InjectionKey,
+	MaybeRef,
 	nextTick,
 	onMounted,
 	onUnmounted,
@@ -18,7 +19,6 @@ import { useRouter } from 'vue-router';
 import { arrayRemove, arrayUnique } from '../../utils/array';
 import { CancelToken } from '../../utils/cancel-token';
 import { uuidv4 } from '../../utils/uuid';
-import { MaybeRef } from '../../utils/vue';
 import { Api } from '../api/api.service';
 import AppLoading from '../loading/AppLoading.vue';
 import AppLoadingFade from '../loading/AppLoadingFade.vue';

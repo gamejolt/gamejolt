@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted } from 'vue';
+import { MaybeRefOrGetter, onMounted, onUnmounted, toRef, watch } from 'vue';
 import { arrayRemove } from '../../utils/array';
 
 export type EscapeStackCallback = () => void;
@@ -39,12 +39,37 @@ class EscapeStackService {
 
 export const EscapeStack = /** @__PURE__ */ new EscapeStackService();
 
-export function useEscapeStack(cb: () => void) {
+export function useEscapeStack(options: {
+	handler: () => void;
+	disable?: MaybeRefOrGetter<boolean>;
+}) {
+	const { handler } = options;
+	const disable = toRef(options.disable);
+	let isRegistered = false;
+
 	onMounted(() => {
-		EscapeStack.register(cb);
+		if (disable.value) {
+			return;
+		}
+
+		EscapeStack.register(handler);
+		isRegistered = true;
+	});
+
+	watch(disable, value => {
+		if (value && isRegistered) {
+			EscapeStack.deregister(handler);
+			isRegistered = false;
+		} else if (!value && !isRegistered) {
+			EscapeStack.register(handler);
+			isRegistered = true;
+		}
 	});
 
 	onUnmounted(() => {
-		EscapeStack.deregister(cb);
+		if (!isRegistered) {
+			return;
+		}
+		EscapeStack.deregister(handler);
 	});
 }
