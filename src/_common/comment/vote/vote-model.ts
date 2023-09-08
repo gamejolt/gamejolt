@@ -12,7 +12,7 @@ export class CommentVoteModel extends Model {
 	declare vote: CommentVoteType;
 }
 
-export function $saveCommentVoteModel(model: CommentVoteModel) {
+export function $saveCommentVote(model: CommentVoteModel) {
 	return model.$_save(
 		'/comments/votes/add/' + model.comment_id + '/' + model.vote,
 		'commentVote',
@@ -26,7 +26,7 @@ export function $saveCommentVoteModel(model: CommentVoteModel) {
 	);
 }
 
-export function $removeCommentVoteModel(model: CommentVoteModel) {
+export function $removeCommentVote(model: CommentVoteModel) {
 	return model.$_remove('/comments/votes/remove/' + model.comment_id, {
 		detach: true,
 		ignorePayloadUser: true,

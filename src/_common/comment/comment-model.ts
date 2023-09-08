@@ -17,8 +17,8 @@ import { ReactionCount, ReactionableModel } from '../reaction/reaction-count';
 import { $createSubscription, SubscriptionModel } from '../subscription/subscription.model';
 import { UserModel } from '../user/user.model';
 import {
-	$removeCommentVoteModel,
-	$saveCommentVoteModel,
+	$removeCommentVote,
+	$saveCommentVote,
 	CommentVoteModel,
 	CommentVoteType,
 } from './vote/vote-model';
@@ -281,7 +281,7 @@ export async function addCommentVote(comment: CommentModel, vote: number) {
 
 	let failed = false;
 	try {
-		return await $saveCommentVoteModel(newVote);
+		return await $saveCommentVote(newVote);
 	} catch (e) {
 		failed = true;
 		comment.votes -= operation;
@@ -308,7 +308,7 @@ export async function removeCommentVote(comment: CommentModel) {
 
 	let failed = false;
 	try {
-		return await $removeCommentVoteModel(previousVote);
+		return await $removeCommentVote(previousVote);
 	} catch (e) {
 		failed = true;
 		comment.user_vote = previousVote;
