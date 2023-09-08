@@ -16,7 +16,12 @@ import { Model } from '../model/model.service';
 import { ReactionCount, ReactionableModel } from '../reaction/reaction-count';
 import { $createSubscription, SubscriptionModel } from '../subscription/subscription.model';
 import { UserModel } from '../user/user.model';
-import { CommentVoteModel, CommentVoteType } from './vote/vote-model';
+import {
+	$removeCommentVoteModel,
+	$saveCommentVoteModel,
+	CommentVoteModel,
+	CommentVoteType,
+} from './vote/vote-model';
 
 export interface CommentableModel {
 	canViewComments: boolean;
@@ -276,7 +281,7 @@ export async function addCommentVote(comment: CommentModel, vote: number) {
 
 	let failed = false;
 	try {
-		return await newVote.$save();
+		return await $saveCommentVoteModel(newVote);
 	} catch (e) {
 		failed = true;
 		comment.votes -= operation;
@@ -303,7 +308,7 @@ export async function removeCommentVote(comment: CommentModel) {
 
 	let failed = false;
 	try {
-		return await previousVote.$remove();
+		return await $removeCommentVoteModel(previousVote);
 	} catch (e) {
 		failed = true;
 		comment.user_vote = previousVote;
