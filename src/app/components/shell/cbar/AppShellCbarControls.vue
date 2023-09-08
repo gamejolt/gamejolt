@@ -59,7 +59,6 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 		</AppShellCbarItem>
 
 		<template v-if="user">
-			<!-- TODO(joltydex-harder): make the chat "disconnected" state better -->
 			<!-- Chat -->
 			<AppShellCbarItem
 				class="-control"
