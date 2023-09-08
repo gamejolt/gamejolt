@@ -13,7 +13,7 @@ import AppShellSidebarChatConnected from './_chat/AppShellSidebarChatConnected.v
 const { closeChatPane } = useAppStore();
 const { chat } = useGridStore();
 
-useEscapeStack({ handler: () => closeChatPane() });
+useEscapeStack(() => closeChatPane());
 </script>
 
 <template>

@@ -47,18 +47,16 @@ watch(
 	{ immediate: true }
 );
 
-useEscapeStack({
-	handler() {
-		const hadWindow = !!selectedJoltydexUser.value;
-		// Clear out the [activeQuest], closing the quest window.
-		selectedJoltydexUser.value = undefined;
+useEscapeStack(() => {
+	const hadWindow = !!selectedJoltydexUser.value;
+	// Clear out the [activeQuest], closing the quest window.
+	selectedJoltydexUser.value = undefined;
 
-		// Mobile sizes should close the quest window before closing the sidebar.
-		// Desktop should close the sidebar always.
-		if (!hadWindow || Screen.isDesktop) {
-			toggleLeftPane('');
-		}
-	},
+	// Mobile sizes should close the quest window before closing the sidebar.
+	// Desktop should close the sidebar always.
+	if (!hadWindow || Screen.isDesktop) {
+		toggleLeftPane('');
+	}
 });
 
 async function loadUsers() {

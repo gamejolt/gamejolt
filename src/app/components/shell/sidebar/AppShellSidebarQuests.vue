@@ -50,8 +50,8 @@ const {
 	activeQuestId,
 } = questStore;
 
-useEscapeStack({
-	handler() {
+useEscapeStack(
+	() => {
 		const hadQuestWindow = !!activeQuest.value;
 		// Clear out the [activeQuest], closing the quest window.
 		activeQuest.value = undefined;
@@ -62,7 +62,7 @@ useEscapeStack({
 			toggleLeftPane('');
 		}
 	},
-});
+);
 
 const questChunks = computed(() => {
 	const items = allQuests.value

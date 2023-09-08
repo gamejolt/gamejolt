@@ -21,13 +21,12 @@ import {
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { styleWhen } from '../../_styles/mixins';
-import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
-import { useEscapeStack as useEscapeStackService } from '../escape-stack/escape-stack.service';
 import { vAppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../screen/screen-service';
 import AppScrollScroller from '../scroll/AppScrollScroller.vue';
+import AppPopperBackdrop from './AppPopperBackdrop.vue';
+import AppPopperEscapeStack from './AppPopperEscapeStack.vue';
 import { Popper } from './popper.service';
-import './popper.styl';
 
 type ActualTrigger = 'click' | 'hover' | 'manual';
 
@@ -269,7 +268,6 @@ const popperId = `popper-${popperIndex}`;
 let popperInstance: Instance | undefined;
 let _hideTimeout: NodeJS.Timer | undefined;
 let _showDelayTimer: NodeJS.Timer | undefined;
-let _mobileBackdrop: BackdropController | undefined;
 
 const computedMaxHeight = computed(() => {
 	if (maxHeight?.value) {
@@ -332,22 +330,15 @@ onBeforeUnmount(() => {
 
 	// Just in case the popover wasn't cleaned up properly.
 	document.removeEventListener('click', _onClickAway, true);
-	_removeBackdrop();
 });
 
 onUnmounted(() => {
 	_deregisterRouter?.();
-	_removeBackdrop();
 	Popper.deregisterPopper(popperIndex);
 });
 
 watch([manualShow, debugActual], onManualShow);
 watch(hideTrigger, _hide);
-
-useEscapeStackService({
-	disable: () => !wantsEscapeStack.value || !isVisible.value,
-	handler: () => _hide(),
-});
 
 function _stateChangeHide() {
 	if (isVisible.value && hideOnStateChange.value) {
@@ -511,7 +502,6 @@ async function _show() {
 	await _createPopper();
 
 	_calcWidth();
-	_addBackdrop();
 }
 
 function _calcWidth() {
@@ -551,25 +541,11 @@ function _hide() {
 	isHiding.value = true;
 	_clearHideTimeout();
 	_hideTimeout = setTimeout(() => _hideDone(), TransitionTime);
-	_removeBackdrop();
 }
 
 function _hideDone() {
 	emit('hide');
 	_destroyPopper();
-}
-
-function _addBackdrop() {
-	if (Screen.isXs && isVisible.value && !_mobileBackdrop) {
-		_mobileBackdrop = Backdrop.push({ className: 'popper-backdrop' });
-	}
-}
-
-function _removeBackdrop() {
-	if (_mobileBackdrop) {
-		_mobileBackdrop.remove();
-		_mobileBackdrop = undefined;
-	}
 }
 
 function _clearHideTimeout() {
@@ -608,6 +584,11 @@ function onManualShow() {
 		<slot v-bind="{ isShowingPopper: isVisible && !isHiding }" />
 
 		<teleport v-if="isVisible" :to="to">
+			<template v-if="!isHiding">
+				<AppPopperBackdrop v-if="Screen.isXs" />
+				<AppPopperEscapeStack v-if="wantsEscapeStack" @trigger="_hide" />
+			</template>
+
 			<div
 				ref="popperElem"
 				v-app-observe-dimensions="onDimensionsChanged"
@@ -626,6 +607,8 @@ function onManualShow() {
 					class="popper-content"
 					:class="contentClass"
 					:style="{
+						display: `flex`,
+						flexDirection: `column`,
 						maxHeight: computedMaxHeight,
 						width: calculatedWidth,
 						maxWidth,
@@ -646,8 +629,4 @@ function onManualShow() {
 	</div>
 </template>
 
-<style lang="stylus" scoped>
-.popper-content
-	display: flex
-	flex-direction: column
-</style>
+<style lang="stylus" src="./popper.styl" />
