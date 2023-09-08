@@ -52,7 +52,7 @@ defineProps({
 						// We make it look like the card pulls up.
 						styleWhen(hovered, {
 							...styleElevate(5),
-							transform: `scale(1.07)`,
+							transform: `scale(1.1)`,
 							zIndex: 2,
 						}),
 						// When viewing details we push the card back since the details
