@@ -5,7 +5,7 @@ import { buildCSSPixelValue } from '../../../_styles/variables';
 import { ComponentProps } from '../../component-helpers';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../scroll/AppScrollScroller.vue';
-import { ReactionDetailsModal } from '../details-modal/modal.service';
+import { showReactionDetailsModal } from '../details-modal/modal.service';
 import { ReactionCount, ReactionableModel, toggleReactionOnResource } from '../reaction-count';
 import AppReactionListItem from './AppReactionListItem.vue';
 
@@ -107,7 +107,7 @@ function onItemContext(reaction: ReactionCount) {
 	if (contextAction.value === 'emit-context') {
 		emit('item-context', reaction);
 	} else if (contextAction.value === 'show-details') {
-		ReactionDetailsModal.show({
+		showReactionDetailsModal({
 			model: model.value,
 			initialReaction: reaction,
 		});

@@ -18,7 +18,7 @@ import { StickerStore } from '../../_common/sticker/sticker-store';
 import { CommonStore } from '../../_common/store/common-store';
 import { $gettext } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
-import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
+import { checkBroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import type { GridClient } from '../components/grid/client.service';
 import { CommunityStates } from './community-state';
 import { LibraryStore } from './library';
@@ -174,7 +174,7 @@ export function createAppStore({
 		_setBootstrapped();
 
 		if (!GJ_IS_DESKTOP_APP && !import.meta.env.SSR) {
-			BroadcastModal.check();
+			checkBroadcastModal();
 		}
 	}
 

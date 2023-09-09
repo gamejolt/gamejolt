@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { InviteModal } from '../invite/modal/modal.service';
+import { showInviteModal } from '../invite/modal/modal.service';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import { useCommonStore } from '../store/common-store';
@@ -55,7 +55,7 @@ function onClickSubtitle() {
 	}
 
 	if (isFriendInvite.value) {
-		InviteModal.show({
+		showInviteModal({
 			user: user.value,
 		});
 	}

@@ -8,7 +8,7 @@ import {
 } from '../../../../../../../../_common/community/community.model';
 import { assertNever } from '../../../../../../../../utils/utils';
 import AppCommunityChannelCardEdit from '../../../../../../../components/community/channel/card/edit/edit.vue';
-import { CommunityChannelPresetBackgroundModal } from '../../../../../../../components/community/channel/preset-background-modal/preset-background-modal.service';
+import { showCommunityChannelPresetBackgroundModal } from '../../../../../../../components/community/channel/preset-background-modal/preset-background-modal.service';
 
 @Options({
 	components: {
@@ -43,7 +43,7 @@ export default class AppCommunitiesEditChannelListPresetItem extends Vue {
 	}
 
 	async onClickEditBackground() {
-		await CommunityChannelPresetBackgroundModal.show(this.community, this.presetType);
+		await showCommunityChannelPresetBackgroundModal(this.community, this.presetType);
 		this.emitEdit();
 	}
 }

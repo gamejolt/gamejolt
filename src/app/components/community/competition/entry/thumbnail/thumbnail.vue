@@ -9,7 +9,7 @@ import { showSuccessGrowl } from '../../../../../../_common/growls/growls.servic
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { CommunityCompetitionEntryModal } from '../modal/modal.service';
+import { showEntryFromCommunityCompetitionEntryModal } from '../modal/modal.service';
 
 @Options({
 	components: {
@@ -110,7 +110,7 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 
 	/** Instead of navigating to the link target, open the entry modal instead. */
 	onClickThumbnail() {
-		CommunityCompetitionEntryModal.showEntry(this.entry);
+		showEntryFromCommunityCompetitionEntryModal(this.entry);
 	}
 }
 </script>

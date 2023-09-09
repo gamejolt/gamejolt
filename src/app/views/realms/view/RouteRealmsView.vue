@@ -1,7 +1,6 @@
 <script lang="ts">
 import { computed, provide } from 'vue';
 import { RouterView, useRouter } from 'vue-router';
-import { getAbsoluteLink } from '../../../../utils/router';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppRealmFollowButton from '../../../../_common/realm/AppRealmFollowButton.vue';
@@ -10,13 +9,14 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
-import { ShareModal } from '../../../../_common/share/card/_modal/modal.service';
+import { showShareModal } from '../../../../_common/share/card/_modal/modal.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { getAbsoluteLink } from '../../../../utils/router';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
-import { createRealmRouteStore, RealmRouteStoreKey } from './view.store';
+import { RealmRouteStoreKey, createRealmRouteStore } from './view.store';
 
 export default {
 	...defineAppRouteOptions({
@@ -44,7 +44,7 @@ function onShareClick() {
 	if (!shareLink.value) {
 		return;
 	}
-	ShareModal.show({ resource: 'realm', url: shareLink.value });
+	showShareModal({ resource: 'realm', url: shareLink.value });
 }
 </script>
 

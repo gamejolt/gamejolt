@@ -1,4 +1,5 @@
 const fs = require('fs');
+const process = require('process');
 const path = require('path');
 const bundleRunner = require('./bundle-runner');
 const express = require('express');
@@ -10,6 +11,16 @@ const projectRoot = path.resolve(__dirname, '..');
 const buildDir = path.join(projectRoot, 'build');
 const serverBuildPath = path.join(buildDir, 'ssr');
 const webBuildPath = path.join(buildDir, 'web');
+
+// If a promise is rejected and no error handler is attached, node will by
+// default just die. We don't want that, otherwise all the other in-flight
+// requests will die along with the one that triggered this. Generally, this
+// isn't a problem for us since it's just async code that was triggered in some
+// way in vue. As long as vue runs properly, we'll have the response that we can
+// send.
+process.on('unhandledRejection', (_reason, promise) => {
+	console.error('Unhandled promise rejection at:', promise);
+});
 
 // This is the output of build:client.
 // The server will render the vue app for incoming requests and interpolate it

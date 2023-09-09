@@ -13,8 +13,8 @@ import {
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { UserModel } from '../../../../_common/user/user.model';
 import { sleep } from '../../../../utils/utils';
-import { CommentModal } from '../../comment/modal/modal.service';
-import { PostEditModal } from '../../post/edit-modal/edit-modal-service';
+import { showCommentModal } from '../../comment/modal/modal.service';
+import { showPostEditModal } from '../../post/edit-modal/edit-modal-service';
 
 @Options({
 	components: {
@@ -59,7 +59,7 @@ export default class AppUserSpawnDay extends Vue {
 
 	showComments() {
 		if (this.user) {
-			CommentModal.show({
+			showCommentModal({
 				model: this.user,
 				displayMode: 'shouts',
 			});
@@ -77,7 +77,7 @@ export default class AppUserSpawnDay extends Vue {
 			return newPost;
 		});
 
-		const post = await PostEditModal.show(postProvider);
+		const post = await showPostEditModal(postProvider);
 
 		if (!post) {
 			return;

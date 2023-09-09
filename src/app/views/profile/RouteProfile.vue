@@ -3,14 +3,14 @@ import { computed, CSSProperties, inject, InjectionKey, provide, ref } from 'vue
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 import { vAppTrackEvent } from '../../../_common/analytics/track-event.directive';
 import { Api } from '../../../_common/api/api.service';
-import { BlockModal } from '../../../_common/block/modal/modal.service';
+import { showBlockModal } from '../../../_common/block/modal/modal.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { Environment } from '../../../_common/environment/environment.service';
 import { formatNumber } from '../../../_common/filters/number';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Registry } from '../../../_common/registry/registry.service';
-import { ReportModal } from '../../../_common/report/modal/modal.service';
+import { showReportModal } from '../../../_common/report/modal/modal.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../_common/share/share.service';
@@ -30,7 +30,7 @@ import { UserBaseTrophyModel } from '../../../_common/user/trophy/user-base-trop
 import { UserModel } from '../../../_common/user/user.model';
 import { kFontFamilyBase } from '../../../_styles/variables';
 import { isUserOnline } from '../../components/chat/client';
-import { CommentModal } from '../../components/comment/modal/modal.service';
+import { showCommentModal } from '../../components/comment/modal/modal.service';
 import { useGridStore } from '../../components/grid/grid-store';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
@@ -307,7 +307,7 @@ function setPageTheme() {
 
 function showComments() {
 	if (routeUser.value) {
-		CommentModal.show({
+		showCommentModal({
 			model: routeUser.value,
 			displayMode: 'shouts',
 		});
@@ -324,13 +324,13 @@ function copyShareUrl() {
 
 function report() {
 	if (routeUser.value) {
-		ReportModal.show(routeUser.value);
+		showReportModal(routeUser.value);
 	}
 }
 
 async function blockUser() {
 	if (routeUser.value) {
-		const result = await BlockModal.show(routeUser.value);
+		const result = await showBlockModal(routeUser.value);
 
 		// Navigate away from the page after blocking.
 		if (result) {

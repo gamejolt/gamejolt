@@ -9,7 +9,7 @@ import {
 	FormOnSubmitSuccess,
 } from '../../../../../../_common/form-vue/form.service';
 import AppImgResponsive from '../../../../../../_common/img/AppImgResponsive.vue';
-import { CommunityChannelBackgroundModal } from '../../../../community/channel/background-modal/background-modal.service';
+import { showCommunityChannelBackgroundModal } from '../../../../community/channel/background-modal/background-modal.service';
 import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/edit.vue';
 import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
@@ -72,7 +72,7 @@ export default class FormCommunityChannelEdit
 	}
 
 	async onClickEditBackground() {
-		await CommunityChannelBackgroundModal.show(this.formModel);
+		await showCommunityChannelBackgroundModal(this.formModel);
 		this.emitBackgroundChange(this.formModel);
 	}
 }

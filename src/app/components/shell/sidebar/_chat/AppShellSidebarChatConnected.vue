@@ -4,7 +4,7 @@ import AppButton from '../../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
-import { InviteModal } from '../../../../../_common/invite/modal/modal.service';
+import { showInviteModal } from '../../../../../_common/invite/modal/modal.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTabBar from '../../../../../_common/tab-bar/AppTabBar.vue';
@@ -40,8 +40,8 @@ onMounted(() => {
 
 onUnmounted(() => closeChatRoom(chat.value));
 
-function showInviteModal() {
-	InviteModal.show({ user: user.value! });
+function openInviteModal() {
+	showInviteModal({ user: user.value! });
 }
 </script>
 
@@ -52,7 +52,7 @@ function showInviteModal() {
 				{{ $gettext(`No friends yet.`) }}
 			</p>
 
-			<AppButton primary solid @click="showInviteModal()">
+			<AppButton primary solid @click="openInviteModal()">
 				{{ $gettext(`Invite a friend`) }}
 			</AppButton>
 		</AppIllustration>
@@ -76,7 +76,7 @@ function showInviteModal() {
 		<AppChatUserList :entries="tab === 'chats' ? chats : friends" />
 
 		<div :style="{ padding: `4px 16px` }">
-			<AppButton block primary solid @click="showInviteModal()">
+			<AppButton block primary solid @click="openInviteModal()">
 				{{ $gettext(`Invite a friend`) }}
 			</AppButton>
 		</div>

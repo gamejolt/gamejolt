@@ -8,8 +8,8 @@ import AppGameMediaBarItem, {
 	MediaBarItemMaxHeight,
 } from '../../../../../../../_common/game/media-bar/item/item.vue';
 import AppScrollScroller from '../../../../../../../_common/scroll/AppScrollScroller.vue';
-import { GameMediaItemAddModal } from '../../../../../../components/game/media-item/add-modal/add-modal.service';
-import { GameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
+import { showGameMediaItemAddModal } from '../../../../../../components/game/media-item/add-modal/add-modal.service';
+import { showGameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
 import { Media, useGameDashRouteController } from '../../manage.store';
 
 @Options({
@@ -41,14 +41,14 @@ export default class AppManageGameMediaBar extends Vue {
 	}
 
 	async add() {
-		const newItems = await GameMediaItemAddModal.show(this.game);
+		const newItems = await showGameMediaItemAddModal(this.game);
 		if (newItems) {
 			this.routeStore.addMedia(newItems);
 		}
 	}
 
 	async open(item: Media) {
-		const newItem = await GameMediaItemEditModal.show(this.game, item, () => {
+		const newItem = await showGameMediaItemEditModal(this.game, item, () => {
 			this.routeStore.removeMedia(item);
 		});
 

@@ -3,7 +3,7 @@ import { PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { SupportersModal } from '../../../../../../_common/supporters/modal.service';
+import { showSupportersModal } from '../../../../../../_common/supporters/modal.service';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
@@ -26,7 +26,7 @@ const { supporterCount } = toRefs(props);
 const { game } = useGameRouteController()!;
 
 function viewAll() {
-	SupportersModal.show({
+	showSupportersModal({
 		model: game.value!,
 		count: supporterCount.value,
 	});

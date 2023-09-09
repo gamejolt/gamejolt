@@ -4,7 +4,7 @@ import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { formatNumber } from '../../../../_common/filters/number';
-import { ReportModal } from '../../../../_common/report/modal/modal.service';
+import { showReportModal } from '../../../../_common/report/modal/modal.service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
@@ -175,7 +175,7 @@ export default class AppCommunitySidebar extends Vue {
 	}
 
 	onClickReport() {
-		ReportModal.show(this.community);
+		showReportModal(this.community);
 	}
 }
 </script>

@@ -18,7 +18,7 @@ import {
 	NOTIFICATION_FILTER_FIELD,
 	SUPPORTED_NOTIFICATION_FEED_TYPES,
 } from '../../../views/notifications/RouteNotifications.vue';
-import { NotificationsFilterModal } from '../../../views/notifications/filter/modal.service';
+import { showNotificationsFilterModal } from '../../../views/notifications/filter/modal.service';
 import { routeNotifications } from '../../../views/notifications/notifications.route';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { useGridStore } from '../../grid/grid-store';
@@ -121,7 +121,7 @@ function onHide() {
 }
 
 function onClickFilter() {
-	NotificationsFilterModal.show({
+	showNotificationsFilterModal({
 		filters: NotificationFeedTypes,
 		replaceRoute: route.name === routeNotifications.name,
 	});

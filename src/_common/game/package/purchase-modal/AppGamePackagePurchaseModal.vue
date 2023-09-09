@@ -11,7 +11,7 @@ import { $gettext } from '../../../translate/translate.service';
 import { GameBuildModel, GameBuildType } from '../../build/build.model';
 import { GameDownloader } from '../../downloader/downloader.service';
 import type { GameModel } from '../../game.model';
-import { GamePlayModal } from '../../play-modal/play-modal.service';
+import { showGamePlayModal } from '../../play-modal/play-modal.service';
 import type { GamePackageModel } from '../package.model';
 import FormGamePackagePayment from '../payment-form/FormGamePackagePayment.vue';
 
@@ -108,7 +108,7 @@ function _download(gameBuild: GameBuildModel) {
 
 function _showBrowserModal(gameBuild: GameBuildModel) {
 	Analytics.trackEvent('game-purchase-modal', 'download', 'play');
-	GamePlayModal.show(game.value, gameBuild);
+	showGamePlayModal(game.value, gameBuild);
 }
 </script>
 

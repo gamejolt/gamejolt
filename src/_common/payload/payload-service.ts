@@ -69,7 +69,7 @@ class PayloadService {
 	}
 
 	async processResponse(
-		requestPromise: AxiosPromise<any>,
+		requestBuilder: () => AxiosPromise<any>,
 		options: RequestOptions = {}
 	): Promise<any> {
 		options = {
@@ -83,7 +83,7 @@ class PayloadService {
 		};
 
 		try {
-			const response = await requestPromise;
+			const response = await requestBuilder();
 
 			if (!response || !response.data) {
 				if (!options.noErrorRedirect) {
