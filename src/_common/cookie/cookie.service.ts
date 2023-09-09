@@ -1,3 +1,4 @@
+import { isDynamicGoogleBot } from '../device/device.service';
 import { Environment } from '../environment/environment.service';
 
 export function getCookie(name: string): Promise<string | undefined> {
@@ -35,6 +36,10 @@ export function getCookie(name: string): Promise<string | undefined> {
 }
 
 export function setTimezoneOffsetCookie() {
+	if (import.meta.env.SSR || isDynamicGoogleBot()) {
+		return;
+	}
+
 	const cookieName = 'gjtz';
 
 	// Negate the offset, because this function returns the offset from UTC to local time.
