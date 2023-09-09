@@ -8,13 +8,14 @@ import { showModal } from '../../../../../_common/modal/modal.service';
 
 export type CommunityEjectPostModalResult = CommunityNotifyOptions;
 
-export class CommunityEjectPostModal {
-	static async show(firesidePostCommunity: FiresidePostCommunityModel, post: FiresidePostModel) {
-		return await showModal<CommunityEjectPostModalResult>({
-			modalId: 'CommunityEjectPost',
-			component: defineAsyncComponent(() => import('./modal.vue')),
-			props: { firesidePostCommunity, post },
-			size: 'sm',
-		});
-	}
+export async function showCommunityEjectPostModal(
+	firesidePostCommunity: FiresidePostCommunityModel,
+	post: FiresidePostModel
+) {
+	return await showModal<CommunityEjectPostModalResult>({
+		modalId: 'CommunityEjectPost',
+		component: defineAsyncComponent(() => import('./modal.vue')),
+		props: { firesidePostCommunity, post },
+		size: 'sm',
+	});
 }

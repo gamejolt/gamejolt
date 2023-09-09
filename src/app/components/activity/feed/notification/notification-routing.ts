@@ -5,7 +5,7 @@ import {
 	CommunityUserNotificationModel,
 	CommunityUserNotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
-import { CreatorExperienceLevelUpModal } from '../../../../../_common/creator/experience/level-up-modal/modal.service';
+import { showCreatorExperienceLevelUpModal } from '../../../../../_common/creator/experience/level-up-modal/modal.service';
 import { CreatorExperienceLevelModel } from '../../../../../_common/creator/experience/level.model';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { FiresideModel } from '../../../../../_common/fireside/fireside.model';
@@ -23,9 +23,9 @@ import {
 } from '../../../../../_common/notification/notification-model';
 import { QuestNotificationModel } from '../../../../../_common/quest/quest-notification-model';
 import { SupporterActionModel } from '../../../../../_common/supporters/action.model';
-import { SupporterMessageModal } from '../../../../../_common/supporters/message/modal.service';
+import { showSupporterMessageModal } from '../../../../../_common/supporters/message/modal.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TrophyModal } from '../../../../../_common/trophy/modal/modal.service';
+import { showTrophyModal } from '../../../../../_common/trophy/modal/modal.service';
 import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { UserModel } from '../../../../../_common/user/user.model';
 import { RouteLocationDefinition, isKnownRoute } from '../../../../../utils/router';
@@ -197,7 +197,7 @@ export async function gotoNotification(
 		type === NotificationType.SiteTrophyAchieved
 	) {
 		if (action_model instanceof UserBaseTrophyModel) {
-			TrophyModal.show(action_model);
+			showTrophyModal(action_model);
 		}
 	} else if (
 		type === NotificationType.CommentAdd ||
@@ -254,11 +254,11 @@ export async function gotoNotification(
 		}
 	} else if (type === NotificationType.SupporterMessage) {
 		if (action_model instanceof SupporterActionModel) {
-			SupporterMessageModal.show(action_model);
+			showSupporterMessageModal(action_model);
 		}
 	} else if (type === NotificationType.CreatorLevelUp) {
 		if (action_model instanceof CreatorExperienceLevelModel) {
-			CreatorExperienceLevelUpModal.show(action_model);
+			showCreatorExperienceLevelUpModal(action_model);
 		}
 	} else if (type === NotificationType.QuestNotification) {
 		if (action_model instanceof QuestNotificationModel) {

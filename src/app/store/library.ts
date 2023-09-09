@@ -8,7 +8,7 @@ import { showModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Scroll } from '../../_common/scroll/scroll.service';
 import { $gettext } from '../../_common/translate/translate.service';
 import { arrayRemove } from '../../utils/array';
-import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
+import { showGamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
 import { GameCollectionModel } from '../components/game/collection/collection.model';
 import { router } from '../views';
 
@@ -145,7 +145,7 @@ export async function libraryUnfollowCollection(
 }
 
 export async function libraryNewPlaylist(store: LibraryStore) {
-	const collection = await GamePlaylistSaveModal.show();
+	const collection = await showGamePlaylistSaveModal();
 	if (collection) {
 		store.addCollection(collection);
 	}
@@ -158,7 +158,7 @@ export async function libraryEditPlaylist(store: LibraryStore, collection: GameC
 	// URL after.
 	const syncUrlAfter = _isViewingCollection(store._router, collection);
 
-	if (await GamePlaylistSaveModal.show(collection)) {
+	if (await showGamePlaylistSaveModal(collection)) {
 		if (syncUrlAfter) {
 			Scroll.shouldAutoScroll = false;
 			router.replace(collection.routeLocation);

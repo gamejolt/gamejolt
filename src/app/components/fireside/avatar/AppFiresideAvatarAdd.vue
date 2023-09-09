@@ -9,7 +9,7 @@ import { RealmModel } from '../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { FiresideAddModal } from '../add-modal/add-modal.service';
+import { showFiresideAddModal } from '../add-modal/add-modal.service';
 import AppFiresideAvatarBase from './AppFiresideAvatarBase.vue';
 
 const props = defineProps({
@@ -50,7 +50,7 @@ async function onClick() {
 		return;
 	}
 
-	const fireside = await FiresideAddModal.show({
+	const fireside = await showFiresideAddModal({
 		community: community?.value,
 		realms: realms.value,
 	});

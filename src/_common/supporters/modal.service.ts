@@ -10,18 +10,16 @@ interface SupportersModalOptions {
 	count?: number;
 }
 
-export class SupportersModal {
-	static async show(options: SupportersModalOptions) {
-		const { count, model } = options;
+export async function showSupportersModal(options: SupportersModalOptions) {
+	const { count, model } = options;
 
-		return await showModal<void>({
-			modalId: 'Supporters',
-			component: defineAsyncComponent(() => import('./AppSupportersModal.vue')),
-			props: {
-				count,
-				model,
-			},
-			size: 'sm',
-		});
-	}
+	return await showModal<void>({
+		modalId: 'Supporters',
+		component: defineAsyncComponent(() => import('./AppSupportersModal.vue')),
+		props: {
+			count,
+			model,
+		},
+		size: 'sm',
+	});
 }

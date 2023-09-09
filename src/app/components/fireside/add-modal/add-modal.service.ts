@@ -9,18 +9,16 @@ interface FiresideAddModalOptions {
 	realms?: RealmModel[];
 }
 
-export class FiresideAddModal {
-	static async show(options: FiresideAddModalOptions) {
-		const { community, realms } = options;
+export async function showFiresideAddModal(options: FiresideAddModalOptions) {
+	const { community, realms } = options;
 
-		return await showModal<FiresideModel>({
-			modalId: 'FiresideAdd',
-			component: defineAsyncComponent(() => import('./AppFiresideAddModal.vue')),
-			props: {
-				community,
-				realms,
-			},
-			size: 'sm',
-		});
-	}
+	return await showModal<FiresideModel>({
+		modalId: 'FiresideAdd',
+		component: defineAsyncComponent(() => import('./AppFiresideAddModal.vue')),
+		props: {
+			community,
+			realms,
+		},
+		size: 'sm',
+	});
 }

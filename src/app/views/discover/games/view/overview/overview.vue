@@ -39,10 +39,11 @@ import { ActivityFeedService } from '../../../../../components/activity/feed/fee
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import AppCommentOverview from '../../../../../components/comment/AppCommentOverview.vue';
 import AppCommentAddButton from '../../../../../components/comment/add-button/AppCommentAddButton.vue';
-import { CommentModal } from '../../../../../components/comment/modal/modal.service';
+import { showCommentModal } from '../../../../../components/comment/modal/modal.service';
 import {
-	CommentThreadModal,
 	CommentThreadModalPermalinkDeregister,
+	showCommentThreadModalFromPermalink,
+	watchForCommentThreadModalPermalink,
 } from '../../../../../components/comment/thread/modal.service';
 import AppGameCommunityBadge from '../../../../../components/game/community-badge/AppGameCommunityBadge.vue';
 import AppGameList from '../../../../../components/game/list/list.vue';
@@ -288,8 +289,8 @@ export default class RouteDiscoverGamesViewOverview extends LegacyRouteComponent
 		}
 
 		if (this.game) {
-			CommentThreadModal.showFromPermalink(this.$router, this.game, 'comments');
-			this.permalinkWatchDeregister = CommentThreadModal.watchForPermalink(
+			showCommentThreadModalFromPermalink(this.$router, this.game, 'comments');
+			this.permalinkWatchDeregister = watchForCommentThreadModalPermalink(
 				this.$router,
 				this.game,
 				'comments'
@@ -324,7 +325,7 @@ export default class RouteDiscoverGamesViewOverview extends LegacyRouteComponent
 	}
 
 	showComments() {
-		CommentModal.show({ model: this.game!, displayMode: 'comments' });
+		showCommentModal({ model: this.game!, displayMode: 'comments' });
 	}
 
 	onPostAdded(post: FiresidePostModel) {

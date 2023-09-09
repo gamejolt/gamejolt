@@ -15,8 +15,8 @@ import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatar
 import { bangRef } from '../../../../utils/vue';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderAvatar from '../../../components/page-header/AppPageHeaderAvatar.vue';
-import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
-import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
+import { showUserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
+import { showUserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
 import { routeDashAccountAddresses } from './addresses/addresses.route';
 import { routeDashAccountBlocks } from './blocks/blocks.route';
 import { routeDashAccountChangePassword } from './change-password/change-password.route';
@@ -75,11 +75,11 @@ const { isBootstrapped } = createAppRoute({
 });
 
 function showEditHeader() {
-	UserHeaderModal.show();
+	showUserHeaderModal();
 }
 
 function showEditAvatar() {
-	UserAvatarModal.show();
+	showUserAvatarModal();
 }
 </script>
 

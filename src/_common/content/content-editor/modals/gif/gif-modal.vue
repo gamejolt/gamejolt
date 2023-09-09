@@ -12,8 +12,11 @@ import { Ruler } from '../../../../ruler/ruler-service';
 import { Screen } from '../../../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../../../scroll/AppScrollScroller.vue';
 import { $gettext } from '../../../../translate/translate.service';
-import { Category, ContentEditorGifModal, SearchResult } from './gif-modal.service';
+import { Category, SearchResult } from './gif-modal.service';
 import mascotImage from './mascot-complete.png';
+
+// This is a module variable so that it only fetches once.
+let categoriesCache: Category[] | undefined;
 
 @Options({
 	components: {
@@ -79,15 +82,15 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 	}
 
 	private async populateCategories() {
-		if (ContentEditorGifModal.categories === undefined) {
+		if (categoriesCache === undefined) {
 			try {
 				const payload = await Api.sendRequest('/web/content/tenor/categories', undefined, {
 					detach: true,
 				});
 				if (payload.categories) {
-					ContentEditorGifModal.categories = payload.categories;
-					for (let i = 0; i < ContentEditorGifModal.categories!.length; i++) {
-						ContentEditorGifModal.categories![i].index = i;
+					categoriesCache = payload.categories;
+					for (let i = 0; i < categoriesCache!.length; i++) {
+						categoriesCache![i].index = i;
 					}
 				}
 			} catch (error) {
@@ -95,7 +98,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 				this.hasError = true;
 			}
 		}
-		this.categories = ContentEditorGifModal.categories!;
+		this.categories = categoriesCache!;
 		this.loadingCategories = false;
 	}
 
@@ -252,7 +255,7 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 		this.currentSearchTerm = '';
 		this.isLastPage = false;
 		this.categories = [];
-		ContentEditorGifModal.categories = undefined;
+		categoriesCache = undefined;
 		this.searchValue = '';
 		this.isLoading = false;
 		this.searchResults = [];

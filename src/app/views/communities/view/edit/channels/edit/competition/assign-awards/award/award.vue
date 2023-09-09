@@ -15,7 +15,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
-import { CommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
+import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
 
 type Payload = {
 	award: any;
@@ -125,7 +125,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 	}
 
 	onClickShowEntry(entry: CommunityCompetitionEntryModel) {
-		CommunityCompetitionEntryModal.showEntry(entry);
+		showEntryFromCommunityCompetitionEntryModal(entry);
 	}
 
 	onFilterInput(event: InputEvent) {

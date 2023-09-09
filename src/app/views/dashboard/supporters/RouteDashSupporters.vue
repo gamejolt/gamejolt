@@ -19,7 +19,7 @@ import AppScrollInview, {
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { SupporterActionModel } from '../../../../_common/supporters/action.model';
 import { SupporterMessageModel } from '../../../../_common/supporters/message.model';
-import { DoSupporterMessageModal } from '../../../../_common/supporters/message/do/modal.service';
+import { showDoSupporterMessageModal } from '../../../../_common/supporters/message/do/modal.service';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { getCurrentServerTime } from '../../../../utils/server-time';
@@ -224,7 +224,7 @@ async function onClickSendAll() {
 }
 
 async function onClickEdit() {
-	const newTemplate = await DoSupporterMessageModal.show({
+	const newTemplate = await showDoSupporterMessageModal({
 		model: templateMessage.value,
 	});
 
@@ -236,7 +236,7 @@ async function onClickEdit() {
 }
 
 async function onClickCreateCustom(action: SupporterActionModel) {
-	const sentMessage = await DoSupporterMessageModal.show({
+	const sentMessage = await showDoSupporterMessageModal({
 		model: action.message,
 		action,
 	});

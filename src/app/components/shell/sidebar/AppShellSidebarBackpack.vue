@@ -15,7 +15,7 @@ import AppStickerLayerDrawerItem from '../../../../_common/sticker/layer/AppStic
 import AppStickerPack, {
 	StickerPackExpiryStyles,
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
-import { StickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
+import { showStickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
 import { UserStickerPackModel } from '../../../../_common/sticker/pack/user-pack.model';
 import {
 	getStickerStacksFromPayloadData,
@@ -89,7 +89,7 @@ async function onClickVendingMachine() {
 }
 
 function openPack(pack: UserStickerPackModel) {
-	StickerPackOpenModal.show({ pack });
+	showStickerPackOpenModal({ pack });
 }
 
 function sortStickers(sorting: StickerSortMethod) {

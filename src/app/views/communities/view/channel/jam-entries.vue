@@ -17,8 +17,9 @@ import { vAppNoAutoscroll } from '../../../../../_common/scroll/auto-scroll/no-a
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/grid.vue';
 import {
-	CommunityCompetitionEntryModal,
 	CommunityCompetitionEntryModalHashDeregister,
+	showCommunityCompetitionEntryModalIdFromHash,
+	watchCommunityCompetitionEntryModalForHash,
 } from '../../../../components/community/competition/entry/modal/modal.service';
 import {
 	CommunityRouteStore,
@@ -286,10 +287,9 @@ export default class RouteCommunitiesViewChannelJamEntries extends LegacyRouteCo
 
 	routeResolved($payload: any) {
 		this.handlePayload($payload);
-
-		CommunityCompetitionEntryModal.showFromHash(this.$router);
+		showCommunityCompetitionEntryModalIdFromHash(this.$router);
 		if (!this.hashWatchDeregister) {
-			this.hashWatchDeregister = CommunityCompetitionEntryModal.watchForHash(this.$router);
+			this.hashWatchDeregister = watchCommunityCompetitionEntryModalForHash(this.$router);
 		}
 	}
 

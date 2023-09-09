@@ -7,7 +7,7 @@ import { RealmModel } from '../../../../../_common/realm/realm-model';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTheme from '../../../../../_common/theme/AppTheme.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { FiresideAddModal } from '../../add-modal/add-modal.service';
+import { showFiresideAddModal } from '../../add-modal/add-modal.service';
 
 @Options({
 	components: {
@@ -47,7 +47,7 @@ export default class AppFiresideBadgeAdd extends Vue {
 	};
 
 	async onClickBadge() {
-		const fireside = await FiresideAddModal.show({
+		const fireside = await showFiresideAddModal({
 			community: this.community,
 			realms: this.realms,
 		});

@@ -4,7 +4,7 @@ import AppButton from '../../button/AppButton.vue';
 import { Clipboard } from '../../clipboard/clipboard-service';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
-import { ShareModal } from '../../share/card/_modal/modal.service';
+import { showShareModal } from '../../share/card/_modal/modal.service';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { UserModel } from '../../user/user.model';
 
@@ -26,7 +26,7 @@ function onCopy() {
 }
 
 function onShare() {
-	ShareModal.show({
+	showShareModal({
 		resource: 'user',
 		url: url.value,
 	});

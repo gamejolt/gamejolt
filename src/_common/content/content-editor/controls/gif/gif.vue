@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
 import { editorInsertGif, useContentEditorController } from '../../content-editor-controller';
-import { ContentEditorGifModal } from '../../modals/gif/gif-modal.service';
+import { showContentEditorGifModal } from '../../modals/gif/gif-modal.service';
 
 @Options({
 	directives: {
@@ -22,7 +22,7 @@ export default class AppContentEditorControlsGif extends Vue {
 	}
 
 	async openGifModal() {
-		const gif = await ContentEditorGifModal.show();
+		const gif = await showContentEditorGifModal();
 		if (gif === undefined) {
 			return;
 		}

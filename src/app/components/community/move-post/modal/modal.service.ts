@@ -11,17 +11,15 @@ export type CommunityMovePostModalResult = CommunityNotifyOptions & {
 	channel: CommunityChannelModel;
 };
 
-export class CommunityMovePostModal {
-	static async show(
-		firesidePostCommunity: FiresidePostCommunityModel,
-		post: FiresidePostModel,
-		channels: CommunityChannelModel[]
-	) {
-		return await showModal<CommunityMovePostModalResult>({
-			modalId: 'CommunityMovePost',
-			component: defineAsyncComponent(() => import('./modal.vue')),
-			props: { firesidePostCommunity, channels, post },
-			size: 'sm',
-		});
-	}
+export async function showCommunityMovePostModal(
+	firesidePostCommunity: FiresidePostCommunityModel,
+	post: FiresidePostModel,
+	channels: CommunityChannelModel[]
+) {
+	return await showModal<CommunityMovePostModalResult>({
+		modalId: 'CommunityMovePost',
+		component: defineAsyncComponent(() => import('./modal.vue')),
+		props: { firesidePostCommunity, channels, post },
+		size: 'sm',
+	});
 }
