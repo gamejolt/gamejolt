@@ -3,7 +3,6 @@ import { onMounted, provide, reactive, watch } from 'vue';
 import { RouterView } from 'vue-router';
 import { createAdsController } from '../_common/ad/ad-store';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
-import AppCookieBanner from '../_common/cookie/banner/AppCookieBanner.vue';
 import AppErrorPage from '../_common/error/page/AppErrorPage.vue';
 import { createAppPromotionStore } from '../_common/mobile-app/store';
 import Onboarding from '../_common/onboarding/onboarding.service';
@@ -78,8 +77,6 @@ watch(
 
 <template>
 	<AppCommonShell>
-		<AppCookieBanner />
-
 		<AppShell>
 			<div id="content">
 				<AppErrorPage>
