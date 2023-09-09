@@ -1,7 +1,6 @@
-import { ComponentOptions, getCurrentInstance, onUnmounted, ref, watch } from 'vue';
+import { ComponentOptions, MaybeRef, getCurrentInstance, onUnmounted, ref, watch } from 'vue';
 import { NavigationGuardWithThis, RouteLocationNormalized, Router, useRouter } from 'vue-router';
 import { RouteLocationRedirect } from '../../utils/router';
-import { MaybeRef } from '../../utils/vue';
 import { ensureConfig } from '../config/config.service';
 import { HistoryCache } from '../history/cache/cache.service';
 import { Meta, setMetaTitle } from '../meta/meta-service';

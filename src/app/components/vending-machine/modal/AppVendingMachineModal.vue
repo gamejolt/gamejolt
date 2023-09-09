@@ -320,103 +320,107 @@ const currencyCardImgStyles: CSSProperties = {
 								v-for="{ currency, amount } of currencyCardData"
 								:key="currency.id"
 							>
-								<AppOnHover>
-									<template #default="{ binding, hovered }">
-										<div
-											v-bind="binding"
-											:style="{
-												...styleBorderRadiusBase,
-												...styleElevate(1),
-												backgroundColor: kThemeBgOffset,
-												padding: `12px`,
-												flex: `auto`,
-												display: `flex`,
-												flexDirection: `column`,
-												alignItems: `center`,
-												gap: `8px`,
-												cursor: `pointer`,
-												color: kThemeFg,
-												...styleWhen(hovered, {
+								<AppOnHover v-slot="{ hoverBinding, hovered }">
+									<div
+										v-bind="{
+											...hoverBinding,
+											style: [
+												styleBorderRadiusBase,
+												styleElevate(1),
+												{
+													backgroundColor: kThemeBgOffset,
+													padding: `12px`,
+													flex: `auto`,
+													display: `flex`,
+													flexDirection: `column`,
+													alignItems: `center`,
+													gap: `8px`,
+													cursor: `pointer`,
+													color: kThemeFg,
+												},
+												styleWhen(hovered, {
 													...styleElevate(2),
 													backgroundColor: kThemeBgBackdrop,
 												}),
-												// Need this to override the style from the `styleElevate` functions.
-												transition: `background-color 200ms ${kStrongEaseOut}, box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important`,
+												{
+													// Need this to override the style from the `styleElevate` functions.
+													transition: `background-color 200ms ${kStrongEaseOut}, box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1)`,
+												},
+											],
+										}"
+										@click="onClickCurrencyCard(currency)"
+									>
+										<div
+											class="text-center"
+											:style="{
+												fontFamily: kFontFamilyDisplay,
+												fontSize: kFontSizeH3.px,
 											}"
-											@click="onClickCurrencyCard(currency)"
 										>
-											<div
-												class="text-center"
-												:style="{
-													fontFamily: kFontFamilyDisplay,
-													fontSize: kFontSizeH3.px,
-												}"
-											>
-												{{ currency.label }}
-											</div>
-
-											<div
-												:style="{
-													...styleMaxWidthForOptions({
-														ratio: 1,
-														maxWidth: Screen.isXs ? 64 : 128,
-														maxHeight: Screen.height * 0.2,
-													}),
-													width: `100%`,
-												}"
-											>
-												<AppAspectRatio
-													:ratio="1"
-													:style="{
-														backgroundColor: kThemeFg10,
-														width: `100%`,
-														borderRadius: `50%`,
-													}"
-													:inner-styles="{
-														...styleFlexCenter(),
-														padding: `16px`,
-													}"
-													show-overflow
-												>
-													<AppCurrencyImg
-														asset-size="large"
-														:currency="currency"
-														:max-width="0"
-														:style="currencyCardImgStyles"
-														:ill-styles="currencyCardImgStyles"
-													/>
-												</AppAspectRatio>
-											</div>
-
-											<div
-												class="text-center"
-												:style="{
-													...styleOverlayTextShadow,
-													fontWeight: `bold`,
-													fontSize: `17px`,
-													fontFamily: kFontFamilyHeading,
-													marginBottom: `8px`,
-												}"
-											>
-												{{ formatNumber(amount) }}
-											</div>
-
-											<AppButton
-												block
-												solid
-												:force-hover="hovered"
-												:style="{
-													pointerEvents: `none`,
-												}"
-											>
-												{{
-													$gettext(`Get %{ label }`, {
-														label: currency.label,
-													})
-												}}
-											</AppButton>
+											{{ currency.label }}
 										</div>
-									</template>
+
+										<div
+											:style="{
+												...styleMaxWidthForOptions({
+													ratio: 1,
+													maxWidth: Screen.isXs ? 64 : 128,
+													maxHeight: Screen.height * 0.2,
+												}),
+												width: `100%`,
+											}"
+										>
+											<AppAspectRatio
+												:ratio="1"
+												:style="{
+													backgroundColor: kThemeFg10,
+													width: `100%`,
+													borderRadius: `50%`,
+												}"
+												:inner-styles="{
+													...styleFlexCenter(),
+													padding: `16px`,
+												}"
+												show-overflow
+											>
+												<AppCurrencyImg
+													asset-size="large"
+													:currency="currency"
+													:max-width="0"
+													:style="currencyCardImgStyles"
+													:ill-styles="currencyCardImgStyles"
+												/>
+											</AppAspectRatio>
+										</div>
+
+										<div
+											class="text-center"
+											:style="{
+												...styleOverlayTextShadow,
+												fontWeight: `bold`,
+												fontSize: `17px`,
+												fontFamily: kFontFamilyHeading,
+												marginBottom: `8px`,
+											}"
+										>
+											{{ formatNumber(amount) }}
+										</div>
+
+										<AppButton
+											block
+											solid
+											:force-hover="hovered"
+											:style="{
+												pointerEvents: `none`,
+											}"
+										>
+											{{
+												$gettext(`Get %{ label }`, {
+													label: currency.label,
+												})
+											}}
+										</AppButton>
+									</div>
 								</AppOnHover>
 							</template>
 						</div>

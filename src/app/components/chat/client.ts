@@ -68,7 +68,7 @@ export class ChatClient {
 	}
 
 	/**
-	 * Chat is connected when grid is connected. This if for convenience.
+	 * Chat is connected when grid is connected. This is for convenience.
 	 */
 	get connected() {
 		return this.grid.connected;
