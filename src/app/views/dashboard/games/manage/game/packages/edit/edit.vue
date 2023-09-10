@@ -11,6 +11,7 @@ import {
 	GamePackageVisibility,
 } from '../../../../../../../../_common/game/package/package.model';
 import {
+	$removeGameRelease,
 	GameReleaseModel,
 	GameReleaseStatus,
 } from '../../../../../../../../_common/game/release/release.model';
@@ -190,7 +191,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteCom
 			return;
 		}
 
-		await release.$remove(this.game);
+		await $removeGameRelease(release, this.game);
 
 		showSuccessGrowl(
 			this.$gettext('The release and its builds have been removed from the package.'),

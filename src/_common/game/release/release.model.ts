@@ -33,79 +33,81 @@ export class GameReleaseModel extends Model {
 	get isScheduled() {
 		return !!this.scheduled_for;
 	}
+}
 
-	$save() {
-		if (!this.id) {
-			return this.$_save(
-				'/web/dash/developer/games/releases/save/' +
-					this.game_id +
-					'/' +
-					this.game_package_id,
-				'gameRelease'
-			);
-		} else {
-			return this.$_save(
-				'/web/dash/developer/games/releases/save/' +
-					this.game_id +
-					'/' +
-					this.game_package_id +
-					'/' +
-					this.id,
-				'gameRelease'
-			);
-		}
-	}
-
-	async $publish(game: GameModel) {
-		const response = await this.$_save(
-			'/web/dash/developer/games/releases/publish/' +
-				this.game_id +
+// unused/ no refs
+export function $saveGameRelease(model: GameReleaseModel) {
+	if (!model.id) {
+		return model.$_save(
+			'/web/dash/developer/games/releases/save/' +
+				model.game_id +
 				'/' +
-				this.game_package_id +
-				'/' +
-				this.id,
+				model.game_package_id,
 			'gameRelease'
 		);
-
-		if (game && response.game) {
-			game.assign(response.game);
-		}
-
-		return response;
-	}
-
-	async $unpublish(game: GameModel) {
-		const response = await this.$_save(
-			'/web/dash/developer/games/releases/unpublish/' +
-				this.game_id +
+	} else {
+		return model.$_save(
+			'/web/dash/developer/games/releases/save/' +
+				model.game_id +
 				'/' +
-				this.game_package_id +
+				model.game_package_id +
 				'/' +
-				this.id,
+				model.id,
 			'gameRelease'
 		);
+	}
+}
 
-		if (game && response.game) {
-			game.assign(response.game);
-		}
+export async function $removeGameRelease(model: GameReleaseModel, game: GameModel) {
+	const response = await model.$_remove(
+		'/web/dash/developer/games/releases/remove/' +
+			model.game_id +
+			'/' +
+			model.game_package_id +
+			'/' +
+			model.id
+	);
 
-		return response;
+	if (game && response.game) {
+		game.assign(response.game);
 	}
 
-	async $remove(game: GameModel) {
-		const response = await this.$_remove(
-			'/web/dash/developer/games/releases/remove/' +
-				this.game_id +
-				'/' +
-				this.game_package_id +
-				'/' +
-				this.id
-		);
+	return response;
+}
 
-		if (game && response.game) {
-			game.assign(response.game);
-		}
+// unused/ no refs
+export async function $publish(model: GameReleaseModel, game: GameModel) {
+	const response = await model.$_save(
+		'/web/dash/developer/games/releases/publish/' +
+			model.game_id +
+			'/' +
+			model.game_package_id +
+			'/' +
+			model.id,
+		'gameRelease'
+	);
 
-		return response;
+	if (game && response.game) {
+		game.assign(response.game);
 	}
+
+	return response;
+}
+
+export async function $unpublishGameRelease(model: GameReleaseModel, game: GameModel) {
+	const response = await model.$_save(
+		'/web/dash/developer/games/releases/unpublish/' +
+			model.game_id +
+			'/' +
+			model.game_package_id +
+			'/' +
+			model.id,
+		'gameRelease'
+	);
+
+	if (game && response.game) {
+		game.assign(response.game);
+	}
+
+	return response;
 }
