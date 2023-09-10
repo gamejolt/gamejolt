@@ -8,28 +8,26 @@ export class CommunityCompetitionAwardModel extends Model {
 	sort!: number;
 
 	entry_count!: number | null;
+}
 
-	static $saveSort(competitionId: number, awardIds: number[]) {
-		return Api.sendRequest(
-			`/web/dash/communities/competitions/awards/save-sort/${competitionId}`,
-			awardIds
-		);
+export function $saveCommunityCompetitionAwardSort(competitionId: number, awardIds: number[]) {
+	return Api.sendRequest(
+		`/web/dash/communities/competitions/awards/save-sort/${competitionId}`,
+		awardIds
+	);
+}
+
+// no ref?
+export function $saveCommunityCompetitionAward(model: CommunityCompetitionAwardModel) {
+	if (model.id) {
+		// Save existing award.
+		return model.$_save(`/web/dash/communities/competitions/awards/save/${model.id}`, 'award');
 	}
 
-	$save() {
-		if (this.id) {
-			// Save existing award.
-			return this.$_save(
-				`/web/dash/communities/competitions/awards/save/${this.id}`,
-				'award'
-			);
-		}
+	// Create new award.
+	return model.$_save(`/web/dash/communities/competitions/awards/save`, 'award');
+}
 
-		// Create new award.
-		return this.$_save(`/web/dash/communities/competitions/awards/save`, 'award');
-	}
-
-	$remove() {
-		return this.$_remove(`/web/dash/communities/competitions/awards/remove/${this.id}`);
-	}
+export function $removeCommunityCompetitionAward(model: CommunityCompetitionAwardModel) {
+	return model.$_remove(`/web/dash/communities/competitions/awards/remove/${model.id}`);
 }

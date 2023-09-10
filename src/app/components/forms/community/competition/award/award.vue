@@ -18,6 +18,7 @@ export default class FormCommunityCompetitionAward
 {
 	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
 
+	// being used? no refs.
 	modelClass = CommunityCompetitionAwardModel;
 
 	get isAdding() {
