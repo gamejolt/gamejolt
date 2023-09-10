@@ -9,7 +9,12 @@ import { EventTopic } from '../../system/event/event-topic';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
 import { GameModel } from '../game.model';
-import { GameRatingModel, GameRatingValue } from './rating.model';
+import {
+	$removeGameRating,
+	$saveGameRating,
+	GameRatingModel,
+	GameRatingValue,
+} from './rating.model';
 
 export const RatingWidgetOnChange = 'GameRating.changed';
 export interface RatingWidgetOnChangePayload {
@@ -70,7 +75,7 @@ async function updateVote(rating: number) {
 				userRating: undefined,
 			});
 
-			await oldUserRating.$remove();
+			await $removeGameRating(oldUserRating);
 		} else {
 			const newUserRating = new GameRatingModel({
 				game_id: game.value.id,
@@ -96,7 +101,7 @@ async function updateVote(rating: number) {
 				userRating: newUserRating,
 			});
 
-			await newUserRating.$save();
+			await $saveGameRating(newUserRating);
 		}
 	} catch (e) {
 		console.error(e);
