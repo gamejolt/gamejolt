@@ -14,7 +14,10 @@ import {
 	CompetitionPeriodPostComp,
 	CompetitionPeriodVoting,
 } from '../../../../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
+import {
+	$removeCommunityCompetitionVotingCategory,
+	CommunityCompetitionVotingCategoryModel,
+} from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { showErrorGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -180,7 +183,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends L
 
 		if (result) {
 			arrayRemove(this.votingCategories, i => i.id === category.id);
-			await category.$remove();
+			await $removeCommunityCompetitionVotingCategory(category);
 		}
 	}
 
