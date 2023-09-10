@@ -80,48 +80,51 @@ export class CommunityChannelModel extends Model {
 	$saveDescription() {
 		return this.$_save('/web/dash/communities/description/save-channel/' + this.id, 'channel');
 	}
+}
 
-	$publish() {
-		return this.$_save(
-			`/web/dash/communities/channels/publish/` + this.community_id + '/' + this.id,
-			'channel'
-		);
+export function $publishCommunityChannel(model: CommunityChannelModel) {
+	return model.$_save(
+		`/web/dash/communities/channels/publish/` + model.community_id + '/' + model.id,
+		'channel'
+	);
+}
+
+export function $clearCommunityChannelBackground(model: CommunityChannelModel) {
+	return model.$_save(
+		`/web/dash/communities/channels/clear-background/${model.community_id}/${model.id}`,
+		'channel'
+	);
+}
+
+export function $removeCommunityChannel(
+	model: CommunityChannelModel,
+	moveToChannel?: CommunityChannelModel
+) {
+	if (!model.id) {
+		return;
 	}
 
-	$clearBackground() {
-		return this.$_save(
-			`/web/dash/communities/channels/clear-background/${this.community_id}/${this.id}`,
-			'channel'
-		);
-	}
-
-	$remove(moveToChannel?: CommunityChannelModel) {
-		if (!this.id) {
-			return;
+	return model.$_remove(
+		'/web/dash/communities/channels/remove/' + model.community_id + '/' + model.id,
+		{
+			detach: true,
+			data: moveToChannel ? { move_to_channel: moveToChannel.id } : {},
 		}
+	);
+}
 
-		return this.$_remove(
-			'/web/dash/communities/channels/remove/' + this.community_id + '/' + this.id,
-			{
-				detach: true,
-				data: moveToChannel ? { move_to_channel: moveToChannel.id } : {},
-			}
-		);
-	}
+export function $archiveCommunityChannel(model: CommunityChannelModel) {
+	return model.$_save(
+		`/web/dash/communities/channels/archive/` + model.community_id + '/' + model.id,
+		'channel'
+	);
+}
 
-	$archive() {
-		return this.$_save(
-			`/web/dash/communities/channels/archive/` + this.community_id + '/' + this.id,
-			'channel'
-		);
-	}
-
-	$unarchive() {
-		return this.$_save(
-			`/web/dash/communities/channels/unarchive/` + this.community_id + '/' + this.id,
-			'channel'
-		);
-	}
+export function $unarchiveCommunityChannel(model: CommunityChannelModel) {
+	return model.$_save(
+		`/web/dash/communities/channels/unarchive/` + model.community_id + '/' + model.id,
+		'channel'
+	);
 }
 
 export function $saveCommunityChannelSort(communityId: number, channelIds: number[]) {

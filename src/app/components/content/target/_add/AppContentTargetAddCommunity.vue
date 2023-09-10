@@ -41,6 +41,7 @@ function onSelectCommunity(community: CommunityModel) {
 	}
 }
 
+// why failing below?
 function onSelectChannel(channel: CommunityChannelModel) {
 	emit('selectChannel', channel);
 }

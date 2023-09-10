@@ -1,6 +1,10 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
-import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
+import {
+	$archiveCommunityChannel,
+	$unarchiveCommunityChannel,
+	CommunityChannelModel,
+} from '../../../../../../../../_common/community/channel/channel.model';
 import {
 	showErrorGrowl,
 	showSuccessGrowl,
@@ -83,7 +87,8 @@ export default class RouteCommunitiesViewEditChannelsOverview extends LegacyRout
 		);
 
 		if (result) {
-			const payload = await this.channel.$archive();
+			const payload = await $archiveCommunityChannel(this.channel);
+
 			if (payload.success) {
 				this.routeStore.archivedChannels.push(this.channel);
 				arrayRemove(this.community.channels!, i => i.id === this.channel.id);
@@ -107,7 +112,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends LegacyRout
 
 		if (result) {
 			try {
-				await this.channel.$unarchive();
+				await $unarchiveCommunityChannel(this.channel);
 				this.community.channels!.push(this.channel);
 				arrayRemove(this.routeStore.archivedChannels, i => i.id === this.channel.id);
 
