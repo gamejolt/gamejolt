@@ -81,3 +81,14 @@ export async function getForumPostUrl(postId: number) {
 
 	return response.url;
 }
+
+export function $saveForumPost(model: ForumPostModel) {
+	const url = '/web/forums/posts/save/' + model.topic_id;
+	let query = '';
+
+	if (model.reply_to) {
+		query = '?reply_to=' + model.reply_to;
+	}
+
+	return model.$_save(url + '/' + model.id + query, 'forumPost');
+}
