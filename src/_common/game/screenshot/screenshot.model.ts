@@ -79,3 +79,37 @@ export class GameScreenshotModel extends Model implements LightboxMediaModel {
 		);
 	}
 }
+
+export async function $saveGameScreenshot(model: GameScreenshotModel) {
+	if (!model.id) {
+		// When adding, we add multiple, so we can't treat it like a normal model save.
+		const response = await Api.sendRequest(
+			'/web/dash/developer/games/media/save/image/' + model.game_id,
+			model,
+			{
+				file: model.file,
+				progress: event => {
+					model._progress = event;
+				},
+			}
+		);
+
+		if (response.success) {
+			return response;
+		}
+
+		throw response;
+	} else {
+		return model.$_save(
+			'/web/dash/developer/games/media/save/image/' + model.game_id + '/' + model.id,
+			'gameScreenshot'
+		);
+	}
+}
+
+// argument mismatch in edit-modal.vue
+export function $removeGameScreenshot(model: GameScreenshotModel) {
+	return model.$_remove(
+		'/web/dash/developer/games/media/remove/image/' + model.game_id + '/' + model.id
+	);
+}

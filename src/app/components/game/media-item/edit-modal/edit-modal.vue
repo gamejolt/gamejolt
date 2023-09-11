@@ -81,6 +81,7 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 			return;
 		}
 
+		// right ref for GameScreenshotModel::remove?
 		await this.item.$remove();
 
 		this.onRemove();
