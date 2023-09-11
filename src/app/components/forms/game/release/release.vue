@@ -12,7 +12,7 @@ import {
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
 import { validateSemver } from '../../../../../_common/form-vue/validators';
-import { GameBuildModel } from '../../../../../_common/game/build/build.model';
+import { $removeGameBuild, GameBuildModel } from '../../../../../_common/game/build/build.model';
 import { GameBuildLaunchOptionModel } from '../../../../../_common/game/build/launch-option/launch-option.model';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { GamePackageModel } from '../../../../../_common/game/package/package.model';
@@ -191,7 +191,7 @@ export default class FormGameRelease
 			return;
 		}
 
-		await build.$remove(this.game);
+		await $removeGameBuild(build, this.game);
 		arrayRemove(this.builds, _build => _build.id === build.id);
 
 		showSuccessGrowl(
