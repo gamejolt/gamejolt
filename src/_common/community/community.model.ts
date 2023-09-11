@@ -126,18 +126,7 @@ export class CommunityModel extends Collaboratable(Model) {
 		};
 	}
 
-	$save() {
-		if (this.id) {
-			return this.$_save('/web/dash/communities/save/' + this.id, 'community', {
-				allowComplexData: ['theme'],
-			});
-		} else {
-			return this.$_save('/web/dash/communities/save', 'community', {
-				allowComplexData: ['theme'],
-			});
-		}
-	}
-
+	// referred in components/forms/community/header/header.vue
 	$saveHeader() {
 		return this.$_save('/web/dash/communities/design/save-header/' + this.id, 'community', {
 			file: this.file,
@@ -145,10 +134,12 @@ export class CommunityModel extends Collaboratable(Model) {
 		});
 	}
 
+	// referred in components/forms/community/header/header.vue
 	async $clearHeader() {
 		return this.$_save('/web/dash/communities/design/clear-header/' + this.id, 'community');
 	}
 
+	// referred in components/forms/community/thumbnail/thumbnail.vue
 	$saveThumbnail() {
 		return this.$_save('/web/dash/communities/design/save-thumbnail/' + this.id, 'community', {
 			file: this.file,
@@ -156,45 +147,98 @@ export class CommunityModel extends Collaboratable(Model) {
 		});
 	}
 
+	// referred in components/forms/community/description/FormCommunityDescription.vue
 	$saveDescription() {
 		return this.$_save('/web/dash/communities/description/save/' + this.id, 'community');
 	}
+}
 
-	$remove() {
-		return this.$_remove('/web/dash/communities/remove/' + this.id);
+// no refs
+export function $saveCommunity(model: CommunityModel) {
+	if (model.id) {
+		return model.$_save('/web/dash/communities/save/' + model.id, 'community', {
+			allowComplexData: ['theme'],
+		});
+	} else {
+		return model.$_save('/web/dash/communities/save', 'community', {
+			allowComplexData: ['theme'],
+		});
 	}
+}
 
-	$savePresetChannelBackground(presetType: CommunityPresetChannelType) {
-		return this.$_save(
-			`/web/dash/communities/channels/save-preset-background/${this.id}/${presetType}`,
-			'community',
-			{
-				file: this.file,
-				allowComplexData: ['crop'],
-			}
-		);
-	}
-
-	$clearPresetChannelBackground(presetType: CommunityPresetChannelType) {
-		return this.$_save(
-			`/web/dash/communities/channels/clear-preset-background/${this.id}/${presetType}`,
-			'community'
-		);
-	}
-
-	async saveGameSort() {
-		const response = await Api.sendRequest(
-			`/web/dash/communities/games/save-sort/${this.id}`,
-			this.games!.map(i => i.id),
-			{
-				noErrorRedirect: true,
-			}
-		);
-		if (response.success) {
-			this.assign(response.community);
+export function $saveCommunityHeader(community: CommunityModel) {
+	return community.$_save(
+		'/web/dash/communities/design/save-header/' + community.id,
+		'community',
+		{
+			file: community.file,
+			allowComplexData: ['crop'],
 		}
-		return response;
+	);
+}
+
+export async function $clearCommunityHeader(community: CommunityModel) {
+	return community.$_save(
+		'/web/dash/communities/design/clear-header/' + community.id,
+		'community'
+	);
+}
+
+export function $saveCommunityThumbnail(community: CommunityModel) {
+	return community.$_save(
+		'/web/dash/communities/design/save-thumbnail/' + community.id,
+		'community',
+		{
+			file: community.file,
+			allowComplexData: ['crop'],
+		}
+	);
+}
+
+export function $saveCommunityDescription(community: CommunityModel) {
+	return community.$_save('/web/dash/communities/description/save/' + community.id, 'community');
+}
+
+export function $removeCommunity(community: CommunityModel) {
+	return community.$_remove('/web/dash/communities/remove/' + community.id);
+}
+
+export function $saveCommunityPresetChannelBackground(
+	community: CommunityModel,
+	presetType: CommunityPresetChannelType
+) {
+	return community.$_save(
+		`/web/dash/communities/channels/save-preset-background/${community.id}/${presetType}`,
+		'community',
+		{
+			file: community.file,
+			allowComplexData: ['crop'],
+		}
+	);
+}
+
+export function $clearCommunityPresetChannelBackground(
+	community: CommunityModel,
+	presetType: CommunityPresetChannelType
+) {
+	return community.$_save(
+		`/web/dash/communities/channels/clear-preset-background/${community.id}/${presetType}`,
+		'community'
+	);
+}
+
+export async function $saveCommunityGameSort(community: CommunityModel) {
+	const response = await Api.sendRequest(
+		`/web/dash/communities/games/save-sort/${community.id}`,
+		community.games!.map(i => i.id),
+		{
+			noErrorRedirect: true,
+		}
+	);
+	if (response.success) {
+		community.assign(response.community);
 	}
+	return response;
 }
 
 export async function joinCommunity(community: CommunityModel, location?: CommunityJoinLocation) {
