@@ -73,13 +73,14 @@ export class CommunityCompetitionModel extends Model {
 		return this.$_save(`/web/dash/communities/competitions/save/${this.id}`, 'competition');
 	}
 
+	// Referred in FormCommunityCompetitionVotingEdit
 	$saveVoting() {
 		return this.$_save(
 			`/web/dash/communities/competitions/voting/save/${this.id}`,
 			'competition'
 		);
 	}
-
+	// Referred in FormCommunityCompetitionVotingToggle
 	$saveVotingEnabled() {
 		return this.$_save(
 			`/web/dash/communities/competitions/voting/set-enabled/${this.id}`,
@@ -92,6 +93,7 @@ export class CommunityCompetitionModel extends Model {
 		);
 	}
 
+	// Referred in FormCommunityCompetitionHeader
 	$saveHeader() {
 		return this.$_save(
 			`/web/dash/communities/competitions/header/save/${this.id}`,
@@ -102,11 +104,15 @@ export class CommunityCompetitionModel extends Model {
 			}
 		);
 	}
+}
 
-	$clearHeader() {
-		return this.$_save(
-			`/web/dash/communities/competitions/header/clear/${this.id}`,
-			'competition'
-		);
-	}
+export function $saveCommunityCompetition(model: CommunityCompetitionModel) {
+	return model.$_save(`/web/dash/communities/competitions/save/${model.id}`, 'competition');
+}
+
+export function $clearCommunityCompetitionHeader(model: CommunityCompetitionModel) {
+	return model.$_save(
+		`/web/dash/communities/competitions/header/clear/${model.id}`,
+		'competition'
+	);
 }
