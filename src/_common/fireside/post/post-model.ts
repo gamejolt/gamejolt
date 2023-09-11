@@ -567,17 +567,17 @@ export function $removeFiresidePostVideo(model: FiresidePostModel) {
 	return Api.sendRequest(`/web/posts/manage/remove-video/${model.id}`, {});
 }
 
-export async function removeFiresidePost(model: FiresidePostModel) {
+export async function $removeFiresidePost(model: FiresidePostModel) {
 	const result = await showModalConfirm($gettext(`Are you sure you want to remove this post?`));
 
 	if (result) {
-		await $removeFiresidePost(model);
+		await $remove(model);
 		return true;
 	}
 
 	return false;
 }
 
-function $removeFiresidePost(model: FiresidePostModel) {
+function $remove(model: FiresidePostModel) {
 	return model.$_remove(`/web/posts/manage/remove/${model.id}`);
 }
