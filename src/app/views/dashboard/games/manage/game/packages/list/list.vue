@@ -6,6 +6,7 @@ import AppCardListDraggable from '../../../../../../../../_common/card/list/AppC
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { formatCurrency } from '../../../../../../../../_common/filters/currency';
 import {
+	$removeGamePackage,
 	$saveGamePackageSort,
 	GamePackageModel,
 	GamePackageVisibility,
@@ -123,7 +124,7 @@ export default class RouteDashGamesManageGamePackagesList extends LegacyRouteCom
 			return;
 		}
 
-		await pkg.$remove(this.game);
+		await $removeGamePackage(pkg, this.game);
 
 		showSuccessGrowl(
 			this.$gettext('The game package has been removed.'),
