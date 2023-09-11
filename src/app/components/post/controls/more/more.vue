@@ -8,6 +8,12 @@ import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
 import {
+	$featureFiresidePost,
+	$moveFiresidePostToChannel,
+	$rejectFiresidePost,
+	$removeFiresidePost,
+	$togglePinOnFiresidePost,
+	$unfeatureFiresidePost,
 	FiresidePostModel,
 	FiresidePostStatus,
 } from '../../../../../_common/fireside/post/post-model';
@@ -110,10 +116,10 @@ export default class AppPostControlsMore extends Vue {
 
 	async toggleFeatured(postCommunity: FiresidePostCommunityModel) {
 		if (postCommunity.isFeatured) {
-			await this.post.$unfeature(postCommunity.community);
+			await $unfeatureFiresidePost(this.post, postCommunity.community);
 			this.emitUnfeature(postCommunity.community);
 		} else {
-			await this.post.$feature(postCommunity.community);
+			await $featureFiresidePost(this.post, postCommunity.community);
 			this.gridStore.grid?.recordFeaturedPost(this.post);
 			this.emitFeature(postCommunity.community);
 		}
@@ -135,7 +141,12 @@ export default class AppPostControlsMore extends Vue {
 		}
 
 		try {
-			await this.post.$moveChannel(postCommunity.community, result.channel, result);
+			await $moveFiresidePostToChannel(
+				this.post,
+				postCommunity.community,
+				result.channel,
+				result
+			);
 			this.emitMoveChannel(result.channel);
 		} catch (e) {
 			console.error('Failed to move community post to a channel');
@@ -167,7 +178,7 @@ export default class AppPostControlsMore extends Vue {
 		}
 
 		try {
-			await this.post.$reject(postCommunity.community, result);
+			await $rejectFiresidePost(this.post, postCommunity.community, result);
 			// Make sure the post community gets removed from the post.
 			// The backend might not return the post resource if the post was already
 			// ejected, so the community list doesn't get updated.
@@ -192,7 +203,7 @@ export default class AppPostControlsMore extends Vue {
 	}
 
 	async remove() {
-		if (await this.post.remove()) {
+		if (await $removeFiresidePost(this.post)) {
 			this.emitRemove();
 		}
 	}
@@ -223,7 +234,7 @@ export default class AppPostControlsMore extends Vue {
 		const wasPinned = this.post.is_pinned;
 
 		const { resourceName, resourceId } = this._getPinTarget();
-		await this.post.$togglePin(resourceName, resourceId);
+		await $togglePinOnFiresidePost(this.post, resourceName, resourceId);
 		this.post.is_pinned = !wasPinned;
 
 		if (wasPinned) {

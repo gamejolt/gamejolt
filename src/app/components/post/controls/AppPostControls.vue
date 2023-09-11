@@ -19,7 +19,10 @@ import { CommunityChannelModel } from '../../../../_common/community/channel/cha
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/widget.vue';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
+import {
+	$publishFiresidePost,
+	FiresidePostModel,
+} from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
@@ -174,7 +177,7 @@ async function openEdit() {
 
 async function publish() {
 	trackPostPublish();
-	await post.value.$publish();
+	await $publishFiresidePost(post.value);
 	emit('postPublish');
 }
 
