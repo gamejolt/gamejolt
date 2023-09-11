@@ -17,25 +17,25 @@ export class CommunityCompetitionEntryAwardModel extends Model {
 			);
 		}
 	}
+}
 
-	static $saveSort(awardId: number, sortedIds: number[]) {
-		return Api.sendRequest(
-			`/web/dash/communities/competitions/awards/save-entry-sort/${awardId}`,
-			sortedIds
-		);
-	}
+export function $saveSortCommunityCompetitionEntryAward(awardId: number, sortedIds: number[]) {
+	return Api.sendRequest(
+		`/web/dash/communities/competitions/awards/save-entry-sort/${awardId}`,
+		sortedIds
+	);
+}
 
-	static $assign(entryId: number, awardId: number) {
-		return Api.sendRequest(
-			`/web/dash/communities/competitions/awards/entry-assign/${awardId}/${entryId}`,
-			{}
-		);
-	}
+export function $assignCommunityCompetitionEntryAward(entryId: number, awardId: number) {
+	return Api.sendRequest(
+		`/web/dash/communities/competitions/awards/entry-assign/${awardId}/${entryId}`,
+		{}
+	);
+}
 
-	static $unassign(entryId: number, awardId: number) {
-		return Api.sendRequest(
-			`/web/dash/communities/competitions/awards/entry-unassign/${awardId}/${entryId}`,
-			{}
-		);
-	}
+export function $unassignCommunityCompetitionEntryAward(entryId: number, awardId: number) {
+	return Api.sendRequest(
+		`/web/dash/communities/competitions/awards/entry-unassign/${awardId}/${entryId}`,
+		{}
+	);
 }
