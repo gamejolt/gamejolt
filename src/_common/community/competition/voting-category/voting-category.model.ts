@@ -5,6 +5,18 @@ export class CommunityCompetitionVotingCategoryModel extends Model {
 	declare name: string;
 	declare description: string | null;
 	declare sort: number;
+
+	$save() {
+		if (this.id) {
+			// Save existing category.
+			return this.$_save(
+				`/web/dash/communities/competitions/voting-categories/save/${this.id}`,
+				'category'
+			);
+		}
+		// Create new category.
+		return this.$_save(`/web/dash/communities/competitions/voting-categories/save`, 'category');
+	}
 }
 
 // unused/ no refs
