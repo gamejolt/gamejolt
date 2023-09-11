@@ -33,6 +33,28 @@ export class GameReleaseModel extends Model {
 	get isScheduled() {
 		return !!this.scheduled_for;
 	}
+
+	$save() {
+		if (!this.id) {
+			return this.$_save(
+				'/web/dash/developer/games/releases/save/' +
+					this.game_id +
+					'/' +
+					this.game_package_id,
+				'gameRelease'
+			);
+		} else {
+			return this.$_save(
+				'/web/dash/developer/games/releases/save/' +
+					this.game_id +
+					'/' +
+					this.game_package_id +
+					'/' +
+					this.id,
+				'gameRelease'
+			);
+		}
+	}
 }
 
 // unused/ no refs
