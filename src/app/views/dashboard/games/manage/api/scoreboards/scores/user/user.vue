@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import {
-	$removeAllUserScoresfromGameScoreTable,
+	$removeAllUserScoresFromGameScoreTable,
 	GameScoreTableModel,
 } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
@@ -85,7 +85,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresUser extends Legacy
 			return;
 		}
 
-		await $removeAllUserScoresfromGameScoreTable(this.scoreTable, this.user.id);
+		await $removeAllUserScoresFromGameScoreTable(this.scoreTable, this.user.id);
 
 		showSuccessGrowl(
 			this.$gettext(`All of the user's scores have been removed from the scoreboard.`),

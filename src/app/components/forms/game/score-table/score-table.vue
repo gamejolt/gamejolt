@@ -3,7 +3,10 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { GameModel } from '../../../../../_common/game/game.model';
-import { GameScoreTableModel } from '../../../../../_common/game/score-table/score-table.model';
+import {
+	$saveGameScoreTable,
+	GameScoreTableModel,
+} from '../../../../../_common/game/score-table/score-table.model';
 
 class Wrapper extends BaseForm<GameScoreTableModel> {}
 
@@ -16,7 +19,9 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 	@Prop(Object) game!: GameModel;
 
 	modelClass = GameScoreTableModel;
-	GameScoreTable = GameScoreTableModel;
+	modelSaveHandler = $saveGameScoreTable;
+
+	readonly GameScoreTable = GameScoreTableModel;
 
 	onInit() {
 		this.setField('game_id', this.game.id);

@@ -8,7 +8,7 @@ import AppCardListDraggable from '../../../../../../../../_common/card/list/AppC
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import {
 	$removeGameScoreTable,
-	$saveSortGameScoreTable,
+	$saveGameScoreTableSort,
 	GameScoreTableModel,
 } from '../../../../../../../../_common/game/score-table/score-table.model';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
@@ -79,7 +79,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 
 	saveSort(tables: GameScoreTableModel[]) {
 		this.scoreTables = tables;
-		$saveSortGameScoreTable(this.game.id, this.currentSort);
+		$saveGameScoreTableSort(this.game.id, this.currentSort);
 	}
 
 	async removeTable(table: GameScoreTableModel) {
