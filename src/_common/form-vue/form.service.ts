@@ -57,6 +57,7 @@ export class BaseForm<T> extends Vue {
 
 	modelClass?: ModelClassType<T> = undefined;
 	saveMethod?: keyof T;
+	modelSaveHandler?: (model: T) => Promise<any>;
 
 	// Common validators that were used in old form templates.
 	readonly validateMaxLength = validateMaxLength;
