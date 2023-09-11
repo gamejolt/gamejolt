@@ -13,13 +13,6 @@ export class GameScoreTableModel extends Model {
 	static readonly SORTING_DIRECTION_DESC = 0;
 	static readonly SORTING_DIRECTION_ASC = 1;
 
-	static $saveSort(gameId: number, sort: number[]) {
-		return Api.sendRequest(
-			'/web/dash/developer/games/api/scores/save-table-sort/' + gameId,
-			sort
-		);
-	}
-
 	$save() {
 		if (!this.id) {
 			return this.$_save(
@@ -33,24 +26,45 @@ export class GameScoreTableModel extends Model {
 			);
 		}
 	}
+}
 
-	$remove() {
-		return this.$_remove(
-			'/web/dash/developer/games/api/scores/remove-table/' + this.game_id + '/' + this.id
+export function $saveSortGameScoreTable(gameId: number, sort: number[]) {
+	return Api.sendRequest('/web/dash/developer/games/api/scores/save-table-sort/' + gameId, sort);
+}
+
+export function $saveGameScoreTable(model: GameScoreTableModel) {
+	if (!model.id) {
+		return model.$_save(
+			'/web/dash/developer/games/api/scores/save-table/' + model.game_id,
+			'gameScoreTable'
+		);
+	} else {
+		return model.$_save(
+			'/web/dash/developer/games/api/scores/save-table/' + model.game_id + '/' + model.id,
+			'gameScoreTable'
 		);
 	}
+}
 
-	async $removeAllUserScores(userId: number) {
-		const params = [this.game_id, this.id, userId].join('/');
-		const response = await Api.sendRequest(
-			'/web/dash/developer/games/api/scores/remove-table-user-scores/' + params,
-			{}
-		);
+export function $removeGameScoreTable(model: GameScoreTableModel) {
+	return model.$_remove(
+		'/web/dash/developer/games/api/scores/remove-table/' + model.game_id + '/' + model.id
+	);
+}
 
-		if (!response.success) {
-			throw response;
-		}
+export async function $removeAllUserScoresfromGameScoreTable(
+	model: GameScoreTableModel,
+	userId: number
+) {
+	const params = [model.game_id, model.id, userId].join('/');
+	const response = await Api.sendRequest(
+		'/web/dash/developer/games/api/scores/remove-table-user-scores/' + params,
+		{}
+	);
 
-		return response;
+	if (!response.success) {
+		throw response;
 	}
+
+	return response;
 }

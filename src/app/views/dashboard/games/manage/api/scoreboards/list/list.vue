@@ -6,7 +6,11 @@ import AppCardList from '../../../../../../../../_common/card/list/AppCardList.v
 import AppCardListAdd from '../../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
-import { GameScoreTableModel } from '../../../../../../../../_common/game/score-table/score-table.model';
+import {
+	$removeGameScoreTable,
+	$saveSortGameScoreTable,
+	GameScoreTableModel,
+} from '../../../../../../../../_common/game/score-table/score-table.model';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	LegacyRouteComponent,
@@ -75,7 +79,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 
 	saveSort(tables: GameScoreTableModel[]) {
 		this.scoreTables = tables;
-		GameScoreTableModel.$saveSort(this.game.id, this.currentSort);
+		$saveSortGameScoreTable(this.game.id, this.currentSort);
 	}
 
 	async removeTable(table: GameScoreTableModel) {
@@ -87,7 +91,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 			return;
 		}
 
-		await table.$remove();
+		await $removeGameScoreTable(table);
 
 		const index = this.scoreTables.findIndex(i => i.id === table.id);
 		if (index !== -1) {
