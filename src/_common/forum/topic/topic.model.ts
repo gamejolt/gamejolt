@@ -51,3 +51,8 @@ export class ForumTopicModel extends Model {
 		return this.$_save(url + '/' + this.id, 'forumTopic');
 	}
 }
+
+export function $saveForumTopic(model: ForumTopicModel) {
+	const url = '/web/forums/topics/save/' + model.channel_id;
+	return model.$_save(url + '/' + model.id, 'forumTopic');
+}
