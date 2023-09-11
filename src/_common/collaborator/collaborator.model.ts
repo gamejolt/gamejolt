@@ -66,6 +66,7 @@ export class CollaboratorModel extends Model {
 		return !!this.accepted_on;
 	}
 
+	// referred in components/forms/community & game/collaborator/collaborator.vue
 	$invite() {
 		let url = '';
 		if (this.resource === 'Game') {
@@ -78,35 +79,35 @@ export class CollaboratorModel extends Model {
 
 		return this.$_save(url, 'collaborator');
 	}
+}
 
-	$accept() {
-		let url = '';
-		if (this.resource === 'Game') {
-			url = '/web/dash/developer/games/collaborators/accept/' + this.resource_id;
-		} else if (this.resource === 'Community') {
-			url = '/web/dash/communities/collaborators/accept/' + this.resource_id;
-		} else {
-			throw new Error('Not supported');
-		}
-
-		return this.$_save(url, 'collaborator');
+export function $acceptCollaboratorInvite(model: CollaboratorModel) {
+	let url = '';
+	if (model.resource === 'Game') {
+		url = '/web/dash/developer/games/collaborators/accept/' + model.resource_id;
+	} else if (model.resource === 'Community') {
+		url = '/web/dash/communities/collaborators/accept/' + model.resource_id;
+	} else {
+		throw new Error('Not supported');
 	}
 
-	async $remove() {
-		let url = '';
-		if (this.resource === 'Game') {
-			url = '/web/dash/developer/games/collaborators/remove/' + this.resource_id;
-		} else if (this.resource === 'Community') {
-			url = '/web/dash/communities/collaborators/remove/' + this.resource_id;
-		} else {
-			throw new Error('Not supported');
-		}
+	return model.$_save(url, 'collaborator');
+}
 
-		const response = await Api.sendRequest(url, {
-			user_id: this.user_id,
-			role: this.role,
-		});
-
-		return this.processRemove(response);
+export async function $removeCollaboratorInvite(model: CollaboratorModel) {
+	let url = '';
+	if (model.resource === 'Game') {
+		url = '/web/dash/developer/games/collaborators/remove/' + model.resource_id;
+	} else if (model.resource === 'Community') {
+		url = '/web/dash/communities/collaborators/remove/' + model.resource_id;
+	} else {
+		throw new Error('Not supported');
 	}
+
+	const response = await Api.sendRequest(url, {
+		user_id: model.user_id,
+		role: model.role,
+	});
+
+	return model.processRemove(response);
 }

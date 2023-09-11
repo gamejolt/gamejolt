@@ -2,6 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import AppAlertDismissable from '../../../../../../_common/alert/dismissable/dismissable.vue';
+import { $removeCollaboratorInvite } from '../../../../../../_common/collaborator/collaborator.model';
 import { $removeCommunity } from '../../../../../../_common/community/community.model';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
@@ -112,7 +113,7 @@ export default class RouteCommunitiesViewEditDetails extends LegacyRouteComponen
 			return;
 		}
 
-		await this.collaborator.$remove();
+		await $removeCollaboratorInvite(this.collaborator);
 		await this.store.leaveCommunity(this.community, { grid: this.grid, shouldConfirm: false });
 
 		showSuccessGrowl(

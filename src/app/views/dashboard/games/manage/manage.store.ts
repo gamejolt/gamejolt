@@ -1,7 +1,10 @@
 import { computed, inject, InjectionKey, provide, ref, unref } from 'vue';
 import { Router } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
-import { CollaboratorModel } from '../../../../../_common/collaborator/collaborator.model';
+import {
+	$removeCollaboratorInvite,
+	CollaboratorModel,
+} from '../../../../../_common/collaborator/collaborator.model';
 import { GameModel, GameStatus } from '../../../../../_common/game/game.model';
 import { GameScreenshotModel } from '../../../../../_common/game/screenshot/screenshot.model';
 import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketchfab.model';
@@ -274,7 +277,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			return;
 		}
 
-		await collaboration.value.$remove();
+		await $removeCollaboratorInvite(collaboration.value);
 
 		showSuccessGrowl(
 			$gettext('You left the project. You will be missed! ;A;'),

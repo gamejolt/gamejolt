@@ -6,6 +6,7 @@ import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
 import {
+	$removeCollaboratorInvite,
 	CollaboratorModel,
 	CollaboratorRole,
 	CollaboratorStatus,
@@ -91,7 +92,7 @@ export default class RouteDashGamesManageCollaborators extends LegacyRouteCompon
 		}
 
 		try {
-			await collaborator.$remove();
+			await $removeCollaboratorInvite(collaborator);
 
 			showSuccessGrowl(
 				this.$gettext('The collaborator has been removed.'),
