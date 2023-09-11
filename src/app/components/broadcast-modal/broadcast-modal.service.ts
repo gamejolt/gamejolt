@@ -18,6 +18,7 @@ async function _show(posts: FiresidePostModel[]) {
 		component: defineAsyncComponent(() => import('./AppBroadcastModal.vue')),
 		props: { posts },
 		noBackdropClose: true,
+		size: 'sm',
 	});
 }
 
