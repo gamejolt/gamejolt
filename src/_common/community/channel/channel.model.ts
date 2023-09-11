@@ -69,6 +69,7 @@ export class CommunityChannelModel extends Model {
 		return this.$_save('/web/dash/communities/channels/save/' + this.community_id, 'channel');
 	}
 
+	// Referred in community/channel/background/background.vue
 	$saveBackground() {
 		return this.$_save(
 			'/web/dash/communities/channels/save-background/' + this.community_id + '/' + this.id,
@@ -77,6 +78,7 @@ export class CommunityChannelModel extends Model {
 		);
 	}
 
+	// Referred in community/channel/description/FormCommunityChannelDescription.vue
 	$saveDescription() {
 		return this.$_save('/web/dash/communities/description/save-channel/' + this.id, 'channel');
 	}
