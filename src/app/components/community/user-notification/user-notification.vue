@@ -3,6 +3,7 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
+	$removeCommunityUserNotification,
 	CommunityUserNotificationModel,
 	CommunityUserNotificationType,
 } from '../../../../_common/community/user-notification/user-notification.model';
@@ -58,7 +59,7 @@ export default class AppCommunityUserNotification extends Vue {
 
 	onDismiss() {
 		// Hope it succeeds, but don't wait on it.
-		this.notification.$remove();
+		$removeCommunityUserNotification(this.notification);
 		this.emitDismiss();
 	}
 }
