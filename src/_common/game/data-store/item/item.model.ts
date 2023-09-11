@@ -17,10 +17,10 @@ export class GameDataStoreItemModel extends Model {
 			this.user = new UserModel(data.user);
 		}
 	}
+}
 
-	$remove() {
-		return this.$_remove(
-			'/web/dash/developer/games/api/data-storage/remove-item/' + this.game_id + '/' + this.id
-		);
-	}
+export function $removeGameDataStoreItem(model: GameDataStoreItemModel) {
+	return model.$_remove(
+		'/web/dash/developer/games/api/data-storage/remove-item/' + model.game_id + '/' + model.id
+	);
 }
