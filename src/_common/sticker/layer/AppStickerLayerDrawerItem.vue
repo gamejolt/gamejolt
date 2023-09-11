@@ -112,7 +112,6 @@ const tagStyles: CSSProperties = {
 		:style="{
 			position: `relative`,
 			userSelect: `none`,
-			touchAction: `none`,
 		}"
 		draggable="false"
 		@contextmenu="onContextMenu"
