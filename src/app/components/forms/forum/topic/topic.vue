@@ -9,7 +9,7 @@ import {
 	validateContentRequired,
 } from '../../../../../_common/form-vue/validators';
 import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';
-import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
+import { $saveForumTopic, ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 
 class Wrapper extends BaseForm<ForumTopicModel> {}
 
@@ -22,6 +22,7 @@ export default class FormForumTopic extends mixins(Wrapper) {
 	@Prop(Object) channel!: ForumChannelModel;
 
 	modelClass = ForumTopicModel;
+	modelSaveHandler = $saveForumTopic;
 
 	readonly validateContentRequired = validateContentRequired;
 	readonly validateContentMaxLength = validateContentMaxLength;

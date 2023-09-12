@@ -45,11 +45,6 @@ export class ForumTopicModel extends Model {
 			this.latest_post = new ForumPostModel(data.latest_post);
 		}
 	}
-
-	$save() {
-		const url = '/web/forums/topics/save/' + this.channel_id;
-		return this.$_save(url + '/' + this.id, 'forumTopic');
-	}
 }
 
 export function $saveForumTopic(model: ForumTopicModel) {
