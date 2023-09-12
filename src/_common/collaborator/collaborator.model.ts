@@ -65,20 +65,19 @@ export class CollaboratorModel extends Model {
 	get isAccepted() {
 		return !!this.accepted_on;
 	}
+}
 
-	// referred in components/forms/community & game/collaborator/collaborator.vue
-	$invite() {
-		let url = '';
-		if (this.resource === 'Game') {
-			url = '/web/dash/developer/games/collaborators/invite/' + this.resource_id;
-		} else if (this.resource === 'Community') {
-			url = '/web/dash/communities/collaborators/invite/' + this.resource_id;
-		} else {
-			throw new Error('Not supported');
-		}
-
-		return this.$_save(url, 'collaborator');
+export function $inviteCollaborator(model: CollaboratorModel) {
+	let url = '';
+	if (model.resource === 'Game') {
+		url = '/web/dash/developer/games/collaborators/invite/' + model.resource_id;
+	} else if (model.resource === 'Community') {
+		url = '/web/dash/communities/collaborators/invite/' + model.resource_id;
+	} else {
+		throw new Error('Not supported');
 	}
+
+	return model.$_save(url, 'collaborator');
 }
 
 export function $acceptCollaboratorInvite(model: CollaboratorModel) {
