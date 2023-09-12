@@ -359,7 +359,3 @@ export function $toggleUserEmails(user: UserModel, state: boolean) {
 		data: { state },
 	});
 }
-
-export function $unlinkUserAccount(user: UserModel, provider: string) {
-	return user.$_save('/web/dash/linked-accounts/unlink/' + provider, 'user');
-}
