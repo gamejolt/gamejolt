@@ -35,33 +35,33 @@ export class GamePlaylistModel extends Model {
 			playlistsWithGame: (response.playlistsWithGame || []) as number[],
 		};
 	}
+}
 
-	async $addGame(gameId: number) {
-		const playlistGame = new GamePlaylistGameModel();
-		playlistGame.game_playlist_id = this.id;
-		playlistGame.game_id = gameId;
+export async function $addGameToGamePlaylist(model: GamePlaylistModel, gameId: number) {
+	const playlistGame = new GamePlaylistGameModel();
+	playlistGame.game_playlist_id = model.id;
+	playlistGame.game_id = gameId;
 
-		await playlistGame.$save();
-		return playlistGame;
+	await playlistGame.$save();
+	return playlistGame;
+}
+
+export function $removeGameFromGamePlaylist(model: GamePlaylistModel, gameId: number) {
+	const playlistGame = new GamePlaylistGameModel();
+	playlistGame.game_playlist_id = model.id;
+	playlistGame.game_id = gameId;
+
+	return playlistGame.$remove();
+}
+
+export function $saveGamePlaylist(model: GamePlaylistModel) {
+	if (!model.id) {
+		return model.$_save('/web/library/playlists/save', 'gamePlaylist');
+	} else {
+		return model.$_save('/web/library/playlists/save/' + model.id, 'gamePlaylist');
 	}
+}
 
-	$removeGame(gameId: number) {
-		const playlistGame = new GamePlaylistGameModel();
-		playlistGame.game_playlist_id = this.id;
-		playlistGame.game_id = gameId;
-
-		return playlistGame.$remove();
-	}
-
-	$save() {
-		if (!this.id) {
-			return this.$_save('/web/library/playlists/save', 'gamePlaylist');
-		} else {
-			return this.$_save('/web/library/playlists/save/' + this.id, 'gamePlaylist');
-		}
-	}
-
-	$remove() {
-		return this.$_remove('/web/library/playlists/remove/' + this.id);
-	}
+export function $removeGamePlaylist(model: GamePlaylistModel) {
+	return model.$_remove('/web/library/playlists/remove/' + model.id);
 }

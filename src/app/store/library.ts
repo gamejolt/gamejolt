@@ -1,7 +1,12 @@
 import { computed, inject, InjectionKey, Ref, ref } from 'vue';
 import { Router } from 'vue-router';
 import { trackGameFollow } from '../../_common/analytics/analytics.service';
-import { GamePlaylistModel } from '../../_common/game-playlist/game-playlist.model';
+import {
+	$addGameToGamePlaylist,
+	$removeGameFromGamePlaylist,
+	$removeGamePlaylist,
+	GamePlaylistModel,
+} from '../../_common/game-playlist/game-playlist.model';
 import { GameModel, unfollowGame } from '../../_common/game/game.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../_common/growls/growls.service';
 import { showModalConfirm } from '../../_common/modal/confirm/confirm-service';
@@ -182,7 +187,7 @@ export async function libraryRemovePlaylist(store: LibraryStore, collection: Gam
 	}
 
 	try {
-		await collection.playlist.$remove();
+		await $removeGamePlaylist(collection.playlist);
 		store.removeCollection(collection);
 
 		// If they're currently on the playlist page, let's push them to
@@ -219,7 +224,7 @@ export async function libraryAddGameToPlaylist(
 	game: GameModel
 ) {
 	try {
-		await playlist.$addGame(game.id);
+		await $addGameToGamePlaylist(playlist, game.id);
 
 		showSuccessGrowl(
 			$gettext(`You've added %{ game } to %{ playlist }. Nice!`, {
@@ -258,7 +263,7 @@ export async function libraryRemoveGameFromPlaylist(
 	}
 
 	try {
-		await playlist.$removeGame(game.id);
+		await $removeGameFromGamePlaylist(playlist, game.id);
 
 		showSuccessGrowl(
 			$gettext(`You have successfully removed %{ game } from %{ playlist }.`, {
