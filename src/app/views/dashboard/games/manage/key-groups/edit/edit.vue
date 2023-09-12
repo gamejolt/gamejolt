@@ -15,7 +15,7 @@ import {
 	KeyGroupModel,
 	KeyGroupType,
 } from '../../../../../../../_common/key-group/key-group.model';
-import { KeyModel } from '../../../../../../../_common/key/key-model';
+import { $removeKey, KeyModel } from '../../../../../../../_common/key/key-model';
 import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import {
@@ -149,7 +149,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends LegacyRouteCompon
 		}
 
 		try {
-			await key.$remove();
+			await $removeKey(key);
 		} catch (e) {
 			showErrorGrowl(this.$gettext('Could not remove key for some reason.'));
 			return;
