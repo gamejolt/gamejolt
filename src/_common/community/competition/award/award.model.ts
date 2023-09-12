@@ -8,18 +8,6 @@ export class CommunityCompetitionAwardModel extends Model {
 	sort!: number;
 
 	entry_count!: number | null;
-
-	$save() {
-		if (this.id) {
-			// Save existing award.
-			return this.$_save(
-				`/web/dash/communities/competitions/awards/save/${this.id}`,
-				'award'
-			);
-		}
-		// Create new award.
-		return this.$_save(`/web/dash/communities/competitions/awards/save`, 'award');
-	}
 }
 
 export function $saveCommunityCompetitionAwardSort(competitionId: number, awardIds: number[]) {
@@ -29,7 +17,6 @@ export function $saveCommunityCompetitionAwardSort(competitionId: number, awardI
 	);
 }
 
-// no ref?
 export function $saveCommunityCompetitionAward(model: CommunityCompetitionAwardModel) {
 	if (model.id) {
 		// Save existing award.
