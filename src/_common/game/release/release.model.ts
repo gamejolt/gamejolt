@@ -74,25 +74,6 @@ export async function $removeGameRelease(model: GameReleaseModel, game: GameMode
 	return response;
 }
 
-// unused/ no refs, check if can remove
-export async function $publish(model: GameReleaseModel, game: GameModel) {
-	const response = await model.$_save(
-		'/web/dash/developer/games/releases/publish/' +
-			model.game_id +
-			'/' +
-			model.game_package_id +
-			'/' +
-			model.id,
-		'gameRelease'
-	);
-
-	if (game && response.game) {
-		game.assign(response.game);
-	}
-
-	return response;
-}
-
 export async function $unpublishGameRelease(model: GameReleaseModel, game: GameModel) {
 	const response = await model.$_save(
 		'/web/dash/developer/games/releases/unpublish/' +
