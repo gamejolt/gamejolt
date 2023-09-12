@@ -212,52 +212,6 @@ export class UserModel
 
 		Registry.store('User', this);
 	}
-
-	$save() {
-		// You can only save yourself, so we don't pass in an ID to the endpoint.
-		return this.$_save('/web/dash/profile/save', 'user', {
-			allowComplexData: ['theme', 'dogtags', 'pronoun_dogtags'],
-		});
-	}
-
-	$saveAvatar() {
-		// You can only save yourself, so we don't pass in an ID to the endpoint.
-		return this.$_save('/web/dash/avatar/save', 'user', {
-			file: this.file,
-			allowComplexData: ['crop'],
-		});
-	}
-
-	$clearAvatar() {
-		return this.$_save('/web/dash/avatar/clear', 'user');
-	}
-
-	$saveHeader() {
-		// You can only save yourself, so we don't pass in an ID to the endpoint.
-		return this.$_save('/web/dash/header/save', 'user', {
-			file: this.file,
-			allowComplexData: ['crop'],
-		});
-	}
-
-	$clearHeader() {
-		return this.$_save('/web/dash/header/clear', 'user');
-	}
-
-	$saveEmailPreferences() {
-		// You can only save yourself, so we don't pass in an ID to the endpoint.
-		return this.$_save('/web/dash/email-preferences/save', 'user');
-	}
-
-	$toggleEmails(state: boolean) {
-		return this.$_save('/web/dash/email-preferences/toggle-emails', 'user', {
-			data: { state },
-		});
-	}
-
-	$unlinkAccount(provider: string) {
-		return this.$_save('/web/dash/linked-accounts/unlink/' + provider, 'user');
-	}
 }
 
 export async function touchUser() {
@@ -362,4 +316,50 @@ export function userCanAccessCreatorForm(user: UserModel) {
 		user.creator_status === CreatorStatus.Creator ||
 		user.creator_status === CreatorStatus.Suspended
 	);
+}
+
+export function $saveUser(user: UserModel) {
+	// You can only save yourself, so we don't pass in an ID to the endpoint.
+	return user.$_save('/web/dash/profile/save', 'user', {
+		allowComplexData: ['theme', 'dogtags', 'pronoun_dogtags'],
+	});
+}
+
+export function $saveUserAvatar(user: UserModel) {
+	// You can only save yourself, so we don't pass in an ID to the endpoint.
+	return user.$_save('/web/dash/avatar/save', 'user', {
+		file: user.file,
+		allowComplexData: ['crop'],
+	});
+}
+
+export function $clearUserAvatar(user: UserModel) {
+	return user.$_save('/web/dash/avatar/clear', 'user');
+}
+
+export function $saveUserHeader(user: UserModel) {
+	// You can only save yourself, so we don't pass in an ID to the endpoint.
+	return user.$_save('/web/dash/header/save', 'user', {
+		file: user.file,
+		allowComplexData: ['crop'],
+	});
+}
+
+export function $clearUserHeader(user: UserModel) {
+	return user.$_save('/web/dash/header/clear', 'user');
+}
+
+export function $saveUserEmailPreferences(user: UserModel) {
+	// You can only save yourself, so we don't pass in an ID to the endpoint.
+	return user.$_save('/web/dash/email-preferences/save', 'user');
+}
+
+export function $toggleUserEmails(user: UserModel, state: boolean) {
+	return user.$_save('/web/dash/email-preferences/toggle-emails', 'user', {
+		data: { state },
+	});
+}
+
+export function $unlinkUserAccount(user: UserModel, provider: string) {
+	return user.$_save('/web/dash/linked-accounts/unlink/' + provider, 'user');
 }
