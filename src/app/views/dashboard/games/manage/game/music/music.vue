@@ -6,7 +6,11 @@ import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue'
 import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
-import { GameSongModel } from '../../../../../../../_common/game/song/song.model';
+import {
+	$removeGameSong,
+	$saveGameSongSort,
+	GameSongModel,
+} from '../../../../../../../_common/game/song/song.model';
 import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
 import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -75,7 +79,7 @@ export default class RouteDashGamesManageGameMusic extends LegacyRouteComponent 
 
 	saveSongSort(songs: GameSongModel[]) {
 		this.songs = songs;
-		GameSongModel.$saveSort(this.game.id, this.currentSort);
+		$saveGameSongSort(this.game.id, this.currentSort);
 	}
 
 	async removeSong(song: GameSongModel) {
@@ -88,7 +92,7 @@ export default class RouteDashGamesManageGameMusic extends LegacyRouteComponent 
 		}
 
 		this.isProcessing = true;
-		await song.$remove();
+		await $removeGameSong(song);
 		arrayRemove(this.songs, i => i.id === song.id);
 		this.isProcessing = false;
 	}
