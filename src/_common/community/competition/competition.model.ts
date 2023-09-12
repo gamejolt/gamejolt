@@ -72,42 +72,40 @@ export class CommunityCompetitionModel extends Model {
 	$save() {
 		return this.$_save(`/web/dash/communities/competitions/save/${this.id}`, 'competition');
 	}
-
-	// Referred in FormCommunityCompetitionVotingEdit
-	$saveVoting() {
-		return this.$_save(
-			`/web/dash/communities/competitions/voting/save/${this.id}`,
-			'competition'
-		);
-	}
-	// Referred in FormCommunityCompetitionVotingToggle
-	$saveVotingEnabled() {
-		return this.$_save(
-			`/web/dash/communities/competitions/voting/set-enabled/${this.id}`,
-			'competition',
-			{
-				data: {
-					is_voting_enabled: this.is_voting_enabled,
-				},
-			}
-		);
-	}
-
-	// Referred in FormCommunityCompetitionHeader
-	$saveHeader() {
-		return this.$_save(
-			`/web/dash/communities/competitions/header/save/${this.id}`,
-			'competition',
-			{
-				file: this.file,
-				allowComplexData: ['crop'],
-			}
-		);
-	}
 }
 
 export function $saveCommunityCompetition(model: CommunityCompetitionModel) {
 	return model.$_save(`/web/dash/communities/competitions/save/${model.id}`, 'competition');
+}
+
+export function $saveCommunityCompetitionVoting(model: CommunityCompetitionModel) {
+	return model.$_save(
+		`/web/dash/communities/competitions/voting/save/${model.id}`,
+		'competition'
+	);
+}
+
+export function $setVotingEnabledOnCommunityCompetition(model: CommunityCompetitionModel) {
+	return model.$_save(
+		`/web/dash/communities/competitions/voting/set-enabled/${model.id}`,
+		'competition',
+		{
+			data: {
+				is_voting_enabled: model.is_voting_enabled,
+			},
+		}
+	);
+}
+
+export function $saveCommunityCompetitionHeader(model: CommunityCompetitionModel) {
+	return model.$_save(
+		`/web/dash/communities/competitions/header/save/${model.id}`,
+		'competition',
+		{
+			file: model.file,
+			allowComplexData: ['crop'],
+		}
+	);
 }
 
 export function $clearCommunityCompetitionHeader(model: CommunityCompetitionModel) {

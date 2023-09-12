@@ -2,6 +2,7 @@
 import { mixins, Options, Watch } from 'vue-property-decorator';
 import {
 	$clearCommunityCompetitionHeader,
+	$saveCommunityCompetitionHeader,
 	CommunityCompetitionModel,
 } from '../../../../../../_common/community/competition/competition.model';
 import AppFormControlCrop from '../../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
@@ -30,7 +31,7 @@ export default class FormCommunityCompetitionHeader
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = CommunityCompetitionModel as any;
-	saveMethod = '$saveHeader' as const;
+	modelSaveHandler = $saveCommunityCompetitionHeader;
 
 	maxFilesize = 0;
 	minAspectRatio = 0;
