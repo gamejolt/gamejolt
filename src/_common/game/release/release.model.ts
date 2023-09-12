@@ -33,31 +33,8 @@ export class GameReleaseModel extends Model {
 	get isScheduled() {
 		return !!this.scheduled_for;
 	}
-
-	$save() {
-		if (!this.id) {
-			return this.$_save(
-				'/web/dash/developer/games/releases/save/' +
-					this.game_id +
-					'/' +
-					this.game_package_id,
-				'gameRelease'
-			);
-		} else {
-			return this.$_save(
-				'/web/dash/developer/games/releases/save/' +
-					this.game_id +
-					'/' +
-					this.game_package_id +
-					'/' +
-					this.id,
-				'gameRelease'
-			);
-		}
-	}
 }
 
-// unused/ no refs
 export function $saveGameRelease(model: GameReleaseModel) {
 	if (!model.id) {
 		return model.$_save(
@@ -97,7 +74,7 @@ export async function $removeGameRelease(model: GameReleaseModel, game: GameMode
 	return response;
 }
 
-// unused/ no refs
+// unused/ no refs, check if can remove
 export async function $publish(model: GameReleaseModel, game: GameModel) {
 	const response = await model.$_save(
 		'/web/dash/developer/games/releases/publish/' +

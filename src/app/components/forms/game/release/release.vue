@@ -17,6 +17,7 @@ import { GameBuildLaunchOptionModel } from '../../../../../_common/game/build/la
 import { GameModel } from '../../../../../_common/game/game.model';
 import { GamePackageModel } from '../../../../../_common/game/package/package.model';
 import {
+	$saveGameRelease,
 	GameReleaseModel,
 	GameReleaseStatus,
 } from '../../../../../_common/game/release/release.model';
@@ -69,6 +70,7 @@ export default class FormGameRelease
 	implements FormOnLoad, FormOnSubmitSuccess
 {
 	modelClass = GameReleaseModel as any;
+	modelSaveHandler = $saveGameRelease;
 
 	@Prop(Object)
 	game!: GameModel;
