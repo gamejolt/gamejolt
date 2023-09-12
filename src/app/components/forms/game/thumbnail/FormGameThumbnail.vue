@@ -11,7 +11,7 @@ import {
 	validateImageMaxDimensions,
 	validateImageMinDimensions,
 } from '../../../../../_common/form-vue/validators';
-import { GameModel } from '../../../../../_common/game/game.model';
+import { $saveGameThumbnail, GameModel } from '../../../../../_common/game/game.model';
 import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
@@ -39,8 +39,8 @@ const cropAspectRatio = ref(0);
 
 const form: FormController<FormModel> = createForm({
 	modelClass: GameModel,
+	modelSaveHandler: $saveGameThumbnail,
 	model: toRef(props, 'game'),
-	saveMethod: '$saveThumbnail',
 	warnOnDiscard: false,
 	resetOnSubmit: true,
 	loadUrl: computed(() => `/web/dash/developer/games/thumbnail/save/${props.game.id}`),

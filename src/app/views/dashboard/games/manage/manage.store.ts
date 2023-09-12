@@ -5,7 +5,13 @@ import {
 	$removeCollaboratorInvite,
 	CollaboratorModel,
 } from '../../../../../_common/collaborator/collaborator.model';
-import { GameModel, GameStatus } from '../../../../../_common/game/game.model';
+import {
+	$removeGame,
+	$setGameCanceled,
+	$setGameStatus,
+	GameModel,
+	GameStatus,
+} from '../../../../../_common/game/game.model';
 import { GameScreenshotModel } from '../../../../../_common/game/screenshot/screenshot.model';
 import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketchfab.model';
 import { GameVideoModel } from '../../../../../_common/game/video/video.model';
@@ -176,7 +182,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			return;
 		}
 
-		await game.value!.$setStatus(GameStatus.Visible);
+		await $setGameStatus(game.value!, GameStatus.Visible);
 
 		showSuccessGrowl(
 			$gettext(
@@ -211,7 +217,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			return;
 		}
 
-		await game.value!.$setStatus(GameStatus.Hidden);
+		await $setGameStatus(game.value!, GameStatus.Hidden);
 
 		showInfoGrowl($gettext('Your game page is now unlisted.'), $gettext('Game Unlisted'));
 	}
@@ -224,7 +230,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			return;
 		}
 
-		await game.value!.$setCanceled(true);
+		await $setGameCanceled(game.value!, true);
 
 		showInfoGrowl($gettext('Your game is now canceled.'), $gettext('Game Canceled'));
 	}
@@ -236,8 +242,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 		if (!result) {
 			return;
 		}
-
-		await game.value!.$setCanceled(false);
+		await $setGameCanceled(game.value!, false);
 
 		showInfoGrowl($gettext('Your game is no longer canceled.'), $gettext('Game Uncanceled'));
 	}
@@ -251,7 +256,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			return;
 		}
 
-		await game.value!.$remove();
+		await $removeGame(game.value!);
 
 		showInfoGrowl(
 			$gettext(

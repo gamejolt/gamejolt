@@ -3,7 +3,7 @@ import { mixins, Options } from 'vue-property-decorator';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { validateGaTrackingId } from '../../../../../_common/form-vue/validators';
-import { GameModel } from '../../../../../_common/game/game.model';
+import { $saveGameSettings, GameModel } from '../../../../../_common/game/game.model';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
 class Wrapper extends BaseForm<GameModel> {}
@@ -16,7 +16,7 @@ class Wrapper extends BaseForm<GameModel> {}
 })
 export default class FormGameSettings extends mixins(Wrapper) implements FormOnLoad {
 	modelClass = GameModel;
-	saveMethod = '$saveSettings' as const;
+	modelSaveHandler = $saveGameSettings;
 
 	hasPackagesForSale = false;
 
