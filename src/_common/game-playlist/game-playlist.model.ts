@@ -1,7 +1,11 @@
 import { Api } from '../api/api.service';
 import { Model } from '../model/model.service';
 import { UserModel } from '../user/user.model';
-import { GamePlaylistGameModel } from './game/game.model';
+import {
+	$removeGamePlaylistGame,
+	$saveGamePlaylistGame,
+	GamePlaylistGameModel,
+} from './game/game.model';
 
 export class GamePlaylistModel extends Model {
 	user_id!: number;
@@ -42,7 +46,7 @@ export async function $addGameToGamePlaylist(model: GamePlaylistModel, gameId: n
 	playlistGame.game_playlist_id = model.id;
 	playlistGame.game_id = gameId;
 
-	await playlistGame.$save();
+	await $saveGamePlaylistGame(playlistGame);
 	return playlistGame;
 }
 
@@ -51,7 +55,7 @@ export function $removeGameFromGamePlaylist(model: GamePlaylistModel, gameId: nu
 	playlistGame.game_playlist_id = model.id;
 	playlistGame.game_id = gameId;
 
-	return playlistGame.$remove();
+	return $removeGamePlaylistGame(playlistGame);
 }
 
 export function $saveGamePlaylist(model: GamePlaylistModel) {
