@@ -1,18 +1,18 @@
 <script lang="ts">
 import {
-computed,
-inject,
-InjectionKey,
-nextTick,
-onMounted,
-onUnmounted,
-PropType,
-provide,
-reactive,
-ref,
-Ref,
-shallowRef,
-toRefs,
+	computed,
+	inject,
+	InjectionKey,
+	nextTick,
+	onMounted,
+	onUnmounted,
+	PropType,
+	provide,
+	reactive,
+	ref,
+	Ref,
+	shallowRef,
+	toRefs,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { arrayRemove, arrayUnique } from '../../utils/array';
@@ -83,7 +83,7 @@ interface CreateFormOptions<T, SubmitResponse = any> {
 	model?: Ref<T | undefined>;
 	modelClass?: ModelClassType<T>;
 	saveMethod?: MaybeRef<keyof T | undefined>;
-	modelSaveHandler: MaybeRef<(model: T) => Promise<SubmitResponse>>;
+	modelSaveHandler?: MaybeRef<(model: T) => Promise<SubmitResponse> | undefined>;
 	loadUrl?: MaybeRef<string | undefined>;
 	loadData?: MaybeRef<any>;
 	sanitizeComplexData?: boolean;
