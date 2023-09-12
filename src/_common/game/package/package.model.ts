@@ -54,20 +54,6 @@ export class GamePackageModel extends Model {
 	shouldShowNamePrice() {
 		return this._sellable && this._sellable.type === 'pwyw' && !this._sellable.is_owned;
 	}
-
-	$save() {
-		if (!this.id) {
-			return this.$_save(
-				'/web/dash/developer/games/packages/save/' + this.game_id,
-				'gamePackage'
-			);
-		} else {
-			return this.$_save(
-				'/web/dash/developer/games/packages/save/' + this.game_id + '/' + this.id,
-				'gamePackage'
-			);
-		}
-	}
 }
 
 export function $saveGamePackageSort(gameId: number, packagesSort: any) {
