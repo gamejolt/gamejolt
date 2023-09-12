@@ -2,6 +2,7 @@
 import { mixins, Options, Watch } from 'vue-property-decorator';
 import {
 	$clearCommunityChannelBackground,
+	$saveCommunityChannelBackground,
 	CommunityChannelModel,
 } from '../../../../../../_common/community/channel/channel.model';
 import AppFormControlCrop from '../../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
@@ -30,8 +31,7 @@ export default class FormCommunityChannelBackground
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = CommunityChannelModel as any;
-	// is this where the func used / referred?
-	saveMethod = '$saveBackground' as const;
+	modelSaveHandler = $saveCommunityChannelBackground;
 
 	maxFilesize = 0;
 	aspectRatio = 0;

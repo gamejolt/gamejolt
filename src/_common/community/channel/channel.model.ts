@@ -57,31 +57,6 @@ export class CommunityChannelModel extends Model {
 
 		this.permissions = new CommunityChannelPermissions(data.perms);
 	}
-
-	$save() {
-		if (this.id) {
-			return this.$_save(
-				'/web/dash/communities/channels/save/' + this.community_id + '/' + this.id,
-				'channel'
-			);
-		}
-
-		return this.$_save('/web/dash/communities/channels/save/' + this.community_id, 'channel');
-	}
-
-	// Referred in community/channel/background/background.vue
-	$saveBackground() {
-		return this.$_save(
-			'/web/dash/communities/channels/save-background/' + this.community_id + '/' + this.id,
-			'channel',
-			{ file: this.file, allowComplexData: ['crop'] }
-		);
-	}
-
-	// Referred in community/channel/description/FormCommunityChannelDescription.vue
-	$saveDescription() {
-		return this.$_save('/web/dash/communities/description/save-channel/' + this.id, 'channel');
-	}
 }
 
 export function $publishCommunityChannel(model: CommunityChannelModel) {
@@ -138,4 +113,27 @@ export function $saveCommunityChannelSortArchived(communityId: number, channelId
 		'/web/dash/communities/channels/save-sort-archived/' + communityId,
 		channelIds
 	);
+}
+
+export function $saveCommunityChannel(model: CommunityChannelModel) {
+	if (model.id) {
+		return model.$_save(
+			'/web/dash/communities/channels/save/' + model.community_id + '/' + model.id,
+			'channel'
+		);
+	}
+
+	return model.$_save('/web/dash/communities/channels/save/' + model.community_id, 'channel');
+}
+
+export function $saveCommunityChannelBackground(model: CommunityChannelModel) {
+	return model.$_save(
+		'/web/dash/communities/channels/save-background/' + model.community_id + '/' + model.id,
+		'channel',
+		{ file: model.file, allowComplexData: ['crop'] }
+	);
+}
+
+export function $saveCommunityChannelDescription(model: CommunityChannelModel) {
+	return model.$_save('/web/dash/communities/description/save-channel/' + model.id, 'channel');
 }
