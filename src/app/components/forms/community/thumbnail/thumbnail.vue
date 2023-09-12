@@ -1,6 +1,9 @@
 <script lang="ts">
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import { CommunityModel } from '../../../../../_common/community/community.model';
+import {
+	$saveCommunityThumbnail,
+	CommunityModel,
+} from '../../../../../_common/community/community.model';
 import { formatFilesize } from '../../../../../_common/filters/filesize';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
@@ -27,7 +30,7 @@ export default class FormCommunityThumbnail
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = CommunityModel;
-	saveMethod = '$saveThumbnail' as const;
+	modelSaveHandler = $saveCommunityThumbnail;
 
 	maxFilesize = 0;
 	minSize = 0;

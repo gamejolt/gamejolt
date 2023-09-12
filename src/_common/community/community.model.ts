@@ -125,35 +125,8 @@ export class CommunityModel extends Collaboratable(Model) {
 			},
 		};
 	}
-
-	// referred in components/forms/community/header/header.vue
-	$saveHeader() {
-		return this.$_save('/web/dash/communities/design/save-header/' + this.id, 'community', {
-			file: this.file,
-			allowComplexData: ['crop'],
-		});
-	}
-
-	// referred in components/forms/community/header/header.vue
-	async $clearHeader() {
-		return this.$_save('/web/dash/communities/design/clear-header/' + this.id, 'community');
-	}
-
-	// referred in components/forms/community/thumbnail/thumbnail.vue
-	$saveThumbnail() {
-		return this.$_save('/web/dash/communities/design/save-thumbnail/' + this.id, 'community', {
-			file: this.file,
-			allowComplexData: ['crop'],
-		});
-	}
-
-	// referred in components/forms/community/description/FormCommunityDescription.vue
-	$saveDescription() {
-		return this.$_save('/web/dash/communities/description/save/' + this.id, 'community');
-	}
 }
 
-// no refs
 export function $saveCommunity(model: CommunityModel) {
 	if (model.id) {
 		return model.$_save('/web/dash/communities/save/' + model.id, 'community', {

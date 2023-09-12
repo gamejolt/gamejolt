@@ -1,6 +1,10 @@
 <script lang="ts">
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import { CommunityModel } from '../../../../../_common/community/community.model';
+import {
+	$clearCommunityHeader,
+	$saveCommunityHeader,
+	CommunityModel,
+} from '../../../../../_common/community/community.model';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
@@ -27,7 +31,7 @@ export default class FormCommunityHeader
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = CommunityModel as any;
-	saveMethod = '$saveHeader' as '$saveHeader' | '$clearHeader';
+	modelSaveHandler = $saveCommunityHeader;
 
 	maxFilesize = 0;
 	minAspectRatio = 0;
@@ -61,7 +65,7 @@ export default class FormCommunityHeader
 	}
 
 	onBeforeSubmit() {
-		if (this.saveMethod === '$saveHeader') {
+		if (this.modelSaveHandler === $saveCommunityHeader) {
 			// Backend expects this field.
 			this.setField('crop' as any, this.formModel.header_crop);
 		}
@@ -73,14 +77,14 @@ export default class FormCommunityHeader
 		);
 
 		if (result) {
-			this.saveMethod = '$clearHeader';
+			this.modelSaveHandler = $clearCommunityHeader;
 			this.form.submit();
 		}
 	}
 
 	headerSelected() {
 		if (this.formModel.file) {
-			this.saveMethod = '$saveHeader';
+			this.modelSaveHandler = $saveCommunityHeader;
 			this.form.submit();
 		}
 	}
