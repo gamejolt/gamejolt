@@ -3,7 +3,10 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { GameModel } from '../../../../../_common/game/game.model';
-import { GameScreenshotModel } from '../../../../../_common/game/screenshot/screenshot.model';
+import {
+	$saveGameScreenshot,
+	GameScreenshotModel,
+} from '../../../../../_common/game/screenshot/screenshot.model';
 
 class Wrapper extends BaseForm<GameScreenshotModel> {}
 
@@ -16,6 +19,7 @@ export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad
 	modelClass = GameScreenshotModel;
 
 	@Prop(Object) game!: GameModel;
+	modelSaveHandler = $saveGameScreenshot;
 
 	maxFilesize = 0;
 	maxWidth = 0;

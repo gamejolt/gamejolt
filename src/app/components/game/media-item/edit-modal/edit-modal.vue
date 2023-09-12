@@ -3,6 +3,9 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { GameModel } from '../../../../../_common/game/game.model';
+import { $removeGameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
+import { $removeGameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
+import { $removeGameVideo } from '../../../../../_common/game/video/video.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -81,8 +84,13 @@ export default class AppGameMediaItemEditModal extends mixins(BaseModal) {
 			return;
 		}
 
-		// right ref for GameScreenshotModel::remove?
-		await this.item.$remove();
+		if (this.item.media_type === 'image') {
+			await $removeGameScreenshot(this.item);
+		} else if (this.item.media_type === 'video') {
+			await $removeGameVideo(this.item);
+		} else if (this.item.media_type === 'sketchfab') {
+			await $removeGameSketchfab(this.item);
+		}
 
 		this.onRemove();
 		this.modal.dismiss();

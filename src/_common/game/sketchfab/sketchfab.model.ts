@@ -44,24 +44,24 @@ export class GameSketchfabModel extends Model implements LightboxMediaModel {
 	getUrl(game: GameModel) {
 		return game.getUrl() + '#sketchfab-' + this.id;
 	}
+}
 
-	$save() {
-		if (!this.id) {
-			return this.$_save(
-				'/web/dash/developer/games/media/save/sketchfab/' + this.game_id,
-				'gameSketchfab'
-			);
-		} else {
-			return this.$_save(
-				'/web/dash/developer/games/media/save/sketchfab/' + this.game_id + '/' + this.id,
-				'gameSketchfab'
-			);
-		}
-	}
-
-	$remove() {
-		return this.$_remove(
-			'/web/dash/developer/games/media/remove/sketchfab/' + this.game_id + '/' + this.id
+export function $saveGameSketchfab(model: GameSketchfabModel) {
+	if (!model.id) {
+		return model.$_save(
+			'/web/dash/developer/games/media/save/sketchfab/' + model.game_id,
+			'gameSketchfab'
+		);
+	} else {
+		return model.$_save(
+			'/web/dash/developer/games/media/save/sketchfab/' + model.game_id + '/' + model.id,
+			'gameSketchfab'
 		);
 	}
+}
+
+export function $removeGameSketchfab(model: GameSketchfabModel) {
+	return model.$_remove(
+		'/web/dash/developer/games/media/remove/sketchfab/' + model.game_id + '/' + model.id
+	);
 }
