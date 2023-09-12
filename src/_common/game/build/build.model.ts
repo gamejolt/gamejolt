@@ -255,26 +255,6 @@ export class GameBuildModel extends Model {
 	getDownloadUrl(options: { key?: string; forceDownload?: boolean } = {}) {
 		return GameBuildModel.getDownloadUrl(this.id, options);
 	}
-
-	$save() {
-		const params = [this.game_id, this.game_package_id, this.game_release_id];
-		if (!this.id) {
-			return this.$_save(
-				'/web/dash/developer/games/builds/save/' + params.join('/'),
-				'gameBuild',
-				{
-					file: this.file,
-				}
-			);
-		} else {
-			// May or may not have an upload file on an edit.
-			params.push(this.id);
-			return this.$_save(
-				'/web/dash/developer/games/builds/save/' + params.join('/'),
-				'gameBuild'
-			);
-		}
-	}
 }
 
 export function pluckGameBuildOsSupport(build: GameBuildModel) {
