@@ -12,6 +12,7 @@ import {
 	showSuccessGrowl,
 } from '../../../../../../../_common/growls/growls.service';
 import {
+	$removeKeyGroup,
 	KeyGroupModel,
 	KeyGroupType,
 } from '../../../../../../../_common/key-group/key-group.model';
@@ -120,7 +121,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends LegacyRouteCompon
 		}
 
 		try {
-			await keyGroup.$remove();
+			await $removeKeyGroup(keyGroup);
 		} catch (e) {
 			showErrorGrowl(this.$gettext('Could not remove key group for some reason.'));
 			return;
