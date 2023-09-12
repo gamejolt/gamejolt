@@ -57,17 +57,6 @@ export class ForumPostModel extends Model {
 	getPermalink() {
 		return Environment.baseUrl + '/x/permalink/forum-post/' + this.id;
 	}
-
-	$save() {
-		const url = '/web/forums/posts/save/' + this.topic_id;
-		let query = '';
-
-		if (this.reply_to) {
-			query = '?reply_to=' + this.reply_to;
-		}
-
-		return this.$_save(url + '/' + this.id + query, 'forumPost');
-	}
 }
 
 export async function getForumPostUrl(postId: number) {
