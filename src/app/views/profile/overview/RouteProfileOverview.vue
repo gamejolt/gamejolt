@@ -51,7 +51,7 @@ import { showUserFiresideFollowModal } from '../../../../_common/user/fireside/m
 import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
 import { UserBaseTrophyModel } from '../../../../_common/user/trophy/user-base-trophy.model';
-import { UserModel, unfollowUser } from '../../../../_common/user/user.model';
+import { $unfollowUser, UserModel } from '../../../../_common/user/user.model';
 import { numberSort } from '../../../../utils/array';
 import { removeQuery } from '../../../../utils/router';
 import { openChatRoom } from '../../../components/chat/client';
@@ -498,7 +498,7 @@ async function onClickUnfollow() {
 			return;
 		}
 
-		unfollowUser(routeUser.value);
+		$unfollowUser(routeUser.value);
 	}
 }
 

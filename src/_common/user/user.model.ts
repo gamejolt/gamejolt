@@ -225,7 +225,7 @@ export async function touchUser() {
 	return Api.sendRequest('/web/touch');
 }
 
-export async function followUser(user: UserModel) {
+async function _followUser(user: UserModel) {
 	user.is_following = true;
 	++user.follower_count;
 
@@ -246,7 +246,7 @@ export async function followUser(user: UserModel) {
 	}
 }
 
-export async function unfollowUser(user: UserModel) {
+export async function $unfollowUser(user: UserModel) {
 	user.is_following = false;
 	--user.follower_count;
 
@@ -267,7 +267,7 @@ export async function unfollowUser(user: UserModel) {
 	}
 }
 
-export async function toggleUserFollow(
+export async function $toggleUserFollow(
 	user: UserModel,
 	location: UserFollowLocation
 ): Promise<boolean | null> {
@@ -276,7 +276,7 @@ export async function toggleUserFollow(
 
 	if (!user.is_following) {
 		try {
-			await followUser(user);
+			await _followUser(user);
 		} catch (e) {
 			failed = true;
 			showErrorGrowl($gettext(`Something has prevented you from following this user.`));
@@ -294,7 +294,7 @@ export async function toggleUserFollow(
 				return null;
 			}
 
-			await unfollowUser(user);
+			await $unfollowUser(user);
 		} catch (e) {
 			failed = true;
 			showErrorGrowl($gettext(`For some reason we couldn't unfollow this user.`));
