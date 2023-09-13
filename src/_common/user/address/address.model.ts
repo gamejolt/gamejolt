@@ -13,12 +13,12 @@ export class UserAddressModel extends Model {
 	region!: string;
 	postcode!: string;
 	country!: string;
+}
 
-	$remove() {
-		return this.$_remove('/web/dash/addresses/remove/' + this.id);
-	}
+export function $removeUserAddress(model: UserAddressModel) {
+	return model.$_remove('/web/dash/addresses/remove/' + model.id);
+}
 
-	$save() {
-		return this.$_save('/web/dash/addresses/save/' + this.id, 'userAddress');
-	}
+export function $saveUserAddress(model: UserAddressModel) {
+	return model.$_save('/web/dash/addresses/save/' + model.id, 'userAddress');
 }
