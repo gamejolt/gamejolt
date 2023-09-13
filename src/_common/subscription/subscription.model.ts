@@ -12,7 +12,7 @@ export class SubscriptionModel extends Model {
 	declare comment_id?: number;
 }
 
-function $saveSubscription(model: SubscriptionModel) {
+function _saveSubscription(model: SubscriptionModel) {
 	if (!model.id) {
 		return model.$_save('/comments/subscriptions/add/' + model.comment_id, 'subscription', {
 			ignorePayloadUser: true,
@@ -26,7 +26,7 @@ export async function $createSubscription(commentId: number) {
 	const subscription = new SubscriptionModel();
 	subscription.comment_id = commentId;
 
-	await $saveSubscription(subscription);
+	await _saveSubscription(subscription);
 	return subscription;
 }
 
