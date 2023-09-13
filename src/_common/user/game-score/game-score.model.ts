@@ -19,10 +19,10 @@ export class UserGameScoreModel extends Model {
 			this.user = new UserModel(data.user);
 		}
 	}
+}
 
-	$remove() {
-		return this.$_remove(
-			'/web/dash/developer/games/api/scores/remove-score' + '/' + this.game_id + '/' + this.id
-		);
-	}
+export function $removeUserGameScore(model: UserGameScoreModel) {
+	return model.$_remove(
+		'/web/dash/developer/games/api/scores/remove-score' + '/' + model.game_id + '/' + model.id
+	);
 }
