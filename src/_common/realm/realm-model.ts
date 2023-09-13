@@ -36,8 +36,7 @@ export class RealmModel extends Model {
 	}
 }
 
-// Todo: check if export removal for these functions are okay
-async function $followRealm(realm: RealmModel) {
+async function _followRealm(realm: RealmModel) {
 	realm.is_following = true;
 	++realm.follower_count;
 
@@ -58,7 +57,7 @@ async function $followRealm(realm: RealmModel) {
 	}
 }
 
-async function $unfollowRealm(realm: RealmModel) {
+async function _unfollowRealm(realm: RealmModel) {
 	realm.is_following = false;
 	--realm.follower_count;
 
@@ -82,7 +81,7 @@ async function $unfollowRealm(realm: RealmModel) {
 export async function $toggleRealmFollow(realm: RealmModel, source: RealmFollowSource) {
 	if (!realm.is_following) {
 		try {
-			await $followRealm(realm);
+			await _followRealm(realm);
 			trackRealmFollow(true, { source });
 		} catch (e) {
 			console.error(e);
@@ -97,7 +96,7 @@ export async function $toggleRealmFollow(realm: RealmModel, source: RealmFollowS
 			);
 
 			if (result) {
-				await $unfollowRealm(realm);
+				await _unfollowRealm(realm);
 				trackRealmFollow(false, { source });
 			}
 		} catch (e) {
