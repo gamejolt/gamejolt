@@ -1,8 +1,8 @@
 <script lang="ts">
 import { computed, onMounted, onUnmounted, PropType, ref, toRefs } from 'vue';
 import {
-	inviteFiresideHost,
-	removeFiresideHost,
+	$inviteFiresideHost,
+	$removeFiresideHost,
 } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
@@ -107,9 +107,9 @@ async function processUser(user: ChatUser | UserModel) {
 	try {
 		const wasHost = isHost(user);
 		if (wasHost) {
-			await removeFiresideHost(fireside.value, user.id);
+			await $removeFiresideHost(fireside.value, user.id);
 		} else {
-			await inviteFiresideHost(fireside.value, user.id);
+			await $inviteFiresideHost(fireside.value, user.id);
 		}
 
 		// We will get a grid message that will update the RTC host list.
