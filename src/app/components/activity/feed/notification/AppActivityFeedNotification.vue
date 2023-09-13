@@ -10,7 +10,7 @@ import type { FiresidePostModel } from '../../../../../_common/fireside/post/pos
 import type { MentionModel } from '../../../../../_common/mention/mention.model';
 import type { QuestNotificationModel } from '../../../../../_common/quest/quest-notification-model';
 import type { UserGameTrophy } from '../../../../../_common/user/trophy/game-trophy.model';
-import type { UserSiteTrophy } from '../../../../../_common/user/trophy/site-trophy.model';
+import type { UserSiteTrophyModel } from '../../../../../_common/user/trophy/site-trophy.model';
 
 import { computed, PropType, ref, toRefs } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
@@ -339,7 +339,7 @@ function onMarkRead() {
 														(
 															notification.action_model as
 																| UserGameTrophy
-																| UserSiteTrophy
+																| UserSiteTrophyModel
 														).trophy?.description
 													}}
 												</span>

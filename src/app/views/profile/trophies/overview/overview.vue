@@ -14,7 +14,7 @@ import AppTimelineList from '../../../../../_common/timeline-list/timeline-list.
 import { TrophyModal } from '../../../../../_common/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { UserGameTrophy } from '../../../../../_common/user/trophy/game-trophy.model';
-import { UserSiteTrophy } from '../../../../../_common/user/trophy/site-trophy.model';
+import { UserSiteTrophyModel } from '../../../../../_common/user/trophy/site-trophy.model';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { numberSort } from '../../../../../utils/array';
@@ -143,7 +143,7 @@ export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
 		// When we have less than the page size in new trophies for both game AND site trophies,
 		// we know there are no new trophies to load at all.
 		const loadedGameTrophies = loadedTrophies.filter(i => i instanceof UserGameTrophy);
-		const loadedSiteTrophies = loadedTrophies.filter(i => i instanceof UserSiteTrophy);
+		const loadedSiteTrophies = loadedTrophies.filter(i => i instanceof UserSiteTrophyModel);
 		if (
 			loadedGameTrophies.length < this.pageSize &&
 			loadedSiteTrophies.length < this.pageSize
@@ -154,7 +154,7 @@ export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
 
 		const allTrophies = this.trophyEntries.flatMap(i => i.trophies);
 		const gameTrophies = allTrophies.filter(i => i instanceof UserGameTrophy);
-		const siteTrophies = allTrophies.filter(i => i instanceof UserSiteTrophy);
+		const siteTrophies = allTrophies.filter(i => i instanceof UserSiteTrophyModel);
 
 		// For either trophy type:
 		// When we have more than 0 new trophies and more than 0 total,
@@ -192,7 +192,7 @@ export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
 
 		// Find the oldest game and site trophy to use as scroll
 		let oldestGameTrophy: UserGameTrophy | null = null,
-			oldestSiteTrophy: UserSiteTrophy | null = null;
+			oldestSiteTrophy: UserSiteTrophyModel | null = null;
 
 		const allTrophies = this.trophyEntries.flatMap(i => i.trophies);
 
@@ -201,7 +201,7 @@ export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
 				if (!oldestGameTrophy || oldestGameTrophy.logged_on > userTrophy.logged_on) {
 					oldestGameTrophy = userTrophy;
 				}
-			} else if (userTrophy instanceof UserSiteTrophy) {
+			} else if (userTrophy instanceof UserSiteTrophyModel) {
 				if (!oldestSiteTrophy || oldestSiteTrophy.logged_on > userTrophy.logged_on) {
 					oldestSiteTrophy = userTrophy;
 				}

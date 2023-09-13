@@ -29,7 +29,7 @@ import { EventTopic } from '../../../_common/system/event/event-topic';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { getTrophyImg } from '../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
-import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
+import { UserSiteTrophyModel } from '../../../_common/user/trophy/site-trophy.model';
 import { UserModel } from '../../../_common/user/user.model';
 import { arrayRemove } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
@@ -394,7 +394,7 @@ export class GridClient {
 				}
 			} else if (notification.type === NotificationType.SiteTrophyAchieved) {
 				if (
-					notification.action_model instanceof UserSiteTrophy &&
+					notification.action_model instanceof UserSiteTrophyModel &&
 					notification.action_model.trophy instanceof SiteTrophy
 				) {
 					title = $gettext(`Trophy Unlocked!`);

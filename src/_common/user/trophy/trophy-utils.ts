@@ -1,5 +1,5 @@
 import { UserGameTrophy } from './game-trophy.model';
-import { UserSiteTrophy } from './site-trophy.model';
+import { UserSiteTrophyModel } from './site-trophy.model';
 import { UserBaseTrophyModel } from './user-base-trophy.model';
 
 export function populateTrophies(trophyDatas: any[]): UserBaseTrophyModel[] {
@@ -9,7 +9,7 @@ export function populateTrophies(trophyDatas: any[]): UserBaseTrophyModel[] {
 			const trophy = new UserGameTrophy(trophyData);
 			trophies.push(trophy);
 		} else {
-			const trophy = new UserSiteTrophy(trophyData);
+			const trophy = new UserSiteTrophyModel(trophyData);
 			trophies.push(trophy);
 		}
 	}
