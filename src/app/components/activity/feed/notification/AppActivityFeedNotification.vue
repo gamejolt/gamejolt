@@ -26,6 +26,7 @@ import AppContentViewer from '../../../../../_common/content/content-viewer/AppC
 import { CreatorExperienceLevelModel } from '../../../../../_common/creator/experience/level.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import {
+	$readNotification,
 	NotificationModel,
 	NotificationType,
 } from '../../../../../_common/notification/notification-model';
@@ -133,13 +134,13 @@ const avatarFrameImg = computed(() => {
 });
 
 function go() {
-	notification.value.$read();
+	$readNotification(notification.value);
 	gotoNotification(notification.value, { router, appStore });
 	emit('clicked');
 }
 
 function onMarkRead() {
-	notification.value.$read();
+	$readNotification(notification.value);
 }
 </script>
 

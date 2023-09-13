@@ -268,24 +268,6 @@ export class NotificationModel extends Model {
 		}
 		return '';
 	}
-
-	$read() {
-		// We want this to look like it happens immediately.
-		this.viewed_on = Date.now();
-
-		return this.$_save('/web/dash/activity/mark-read/' + this.id, 'notification', {
-			detach: true,
-		});
-	}
-
-	$unread() {
-		// We want this to look like it happens immediately.
-		this.viewed_on = null;
-
-		return this.$_save('/web/dash/activity/mark-unread/' + this.id, 'notification', {
-			detach: true,
-		});
-	}
 }
 
 /**
@@ -327,4 +309,23 @@ export function getNotificationFeedTypeLabels(user: UserModel) {
 	}
 
 	return labels;
+}
+
+export function $readNotification(model: NotificationModel) {
+	// We want this to look like it happens immediately.
+	model.viewed_on = Date.now();
+
+	return model.$_save('/web/dash/activity/mark-read/' + model.id, 'notification', {
+		detach: true,
+	});
+}
+
+// TODO: probably can be removed.
+export function $unreadNotification(model: NotificationModel) {
+	// We want this to look like it happens immediately.
+	model.viewed_on = null;
+
+	return model.$_save('/web/dash/activity/mark-unread/' + model.id, 'notification', {
+		detach: true,
+	});
 }
