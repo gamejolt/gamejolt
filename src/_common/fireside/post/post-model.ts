@@ -463,10 +463,6 @@ export function $viewPost(post: FiresidePostModel, sourceFeed?: string) {
 }
 
 export async function $saveFiresidePost(model: FiresidePostModel) {
-	if (!model.id) {
-		throw new Error(`Can't add fireside posts through $save() anymore. Use $create() instead`);
-	}
-
 	const options: ModelSaveRequestOptions = {
 		data: Object.assign({}, model),
 		allowComplexData: ['attached_communities', 'attached_realms', 'keyGroups', 'mediaItemIds'],
