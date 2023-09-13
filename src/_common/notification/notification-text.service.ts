@@ -17,7 +17,7 @@ import { MentionModel } from '../mention/mention.model';
 import type { OrderItemModel } from '../order/item/item.model';
 import { QuestNotificationModel } from '../quest/quest-notification-model';
 import { SellableModel } from '../sellable/sellable.model';
-import { SiteTrophy } from '../site/trophy/trophy.model';
+import { SiteTrophyModel } from '../site/trophy/trophy.model';
 import { SupporterActionModel } from '../supporters/action.model';
 import { $gettext } from '../translate/translate.service';
 import { UserGameTrophy } from '../user/trophy/game-trophy.model';
@@ -201,7 +201,7 @@ export class NotificationText {
 			case NotificationType.SiteTrophyAchieved: {
 				if (
 					notification.action_model instanceof UserSiteTrophyModel &&
-					notification.action_model.trophy instanceof SiteTrophy
+					notification.action_model.trophy instanceof SiteTrophyModel
 				) {
 					return _process(
 						$gettext(

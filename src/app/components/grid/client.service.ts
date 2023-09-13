@@ -19,7 +19,7 @@ import {
 import { NotificationText } from '../../../_common/notification/notification-text.service';
 import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
-import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
+import { SiteTrophyModel } from '../../../_common/site/trophy/trophy.model';
 import {
 	SocketController,
 	createSocketController,
@@ -395,7 +395,7 @@ export class GridClient {
 			} else if (notification.type === NotificationType.SiteTrophyAchieved) {
 				if (
 					notification.action_model instanceof UserSiteTrophyModel &&
-					notification.action_model.trophy instanceof SiteTrophy
+					notification.action_model.trophy instanceof SiteTrophyModel
 				) {
 					title = $gettext(`Trophy Unlocked!`);
 					message = notification.action_model.trophy.title;

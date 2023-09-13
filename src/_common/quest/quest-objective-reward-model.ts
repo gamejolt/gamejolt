@@ -1,7 +1,7 @@
 import { BackgroundModel } from '../background/background.model';
 import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
-import { SiteTrophy } from '../site/trophy/trophy.model';
+import { SiteTrophyModel } from '../site/trophy/trophy.model';
 import { StickerRewardModel } from '../sticker/sticker-reward-model';
 
 const QuestRewardTypes = {
@@ -35,7 +35,7 @@ export class QuestObjectiveRewardModel extends Model {
 		}
 
 		if (data.trophy) {
-			this.trophy = new SiteTrophy(data.trophy);
+			this.trophy = new SiteTrophyModel(data.trophy);
 		}
 
 		if (data.background) {
@@ -49,7 +49,7 @@ export class QuestObjectiveRewardModel extends Model {
 
 	declare type: number;
 	declare stickers: StickerRewardModel[];
-	declare trophy?: SiteTrophy;
+	declare trophy?: SiteTrophyModel;
 	declare background?: BackgroundModel;
 
 	declare fallback_name: string;
