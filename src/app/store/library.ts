@@ -14,7 +14,11 @@ import { Scroll } from '../../_common/scroll/scroll.service';
 import { $gettext } from '../../_common/translate/translate.service';
 import { arrayRemove } from '../../utils/array';
 import { GamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
-import { GameCollectionModel } from '../components/game/collection/collection.model';
+import {
+	$followGameCollection,
+	$unfollowGameCollection,
+	GameCollectionModel,
+} from '../components/game/collection/collection.model';
 import { router } from '../views';
 
 export const LibraryStoreKey: InjectionKey<LibraryStore> = Symbol('library-store');
@@ -128,7 +132,7 @@ export async function libraryFollowCollection(
 	store.addCollection(collection);
 
 	try {
-		await collection.$follow();
+		await $followGameCollection(collection);
 	} catch (e) {
 		store.removeCollection(collection);
 		throw e;
@@ -142,7 +146,7 @@ export async function libraryUnfollowCollection(
 	store.removeCollection(collection);
 
 	try {
-		await collection.$unfollow();
+		await $unfollowGameCollection(collection);
 	} catch (e) {
 		store.addCollection(collection);
 		throw e;

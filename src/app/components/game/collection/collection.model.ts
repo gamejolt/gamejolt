@@ -72,18 +72,18 @@ export class GameCollectionModel extends Model {
 		}
 		return title;
 	}
+}
 
-	$follow() {
-		return Api.sendRequest('/web/library/follow/' + this.type, {
-			id: this.id,
-			timestamp: Date.now(),
-		});
-	}
+export function $followGameCollection(model: GameCollectionModel) {
+	return Api.sendRequest('/web/library/follow/' + model.type, {
+		id: model.id,
+		timestamp: Date.now(),
+	});
+}
 
-	$unfollow() {
-		return Api.sendRequest('/web/library/unfollow/' + this.type, {
-			id: this.id,
-			timestamp: Date.now(),
-		});
-	}
+export function $unfollowGameCollection(model: GameCollectionModel) {
+	return Api.sendRequest('/web/library/unfollow/' + model.type, {
+		id: model.id,
+		timestamp: Date.now(),
+	});
 }
