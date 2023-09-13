@@ -259,7 +259,7 @@ export async function $pinComment(comment: CommentModel) {
 	return response['otherComment'] ? storeModel(CommentModel, response['otherComment']) : null;
 }
 
-export async function $addCommentVote(comment: CommentModel, vote: number) {
+export async function $voteOnComment(comment: CommentModel, vote: number) {
 	// Don't do anything if they are setting the same vote.
 	if (comment.user_vote && comment.user_vote.vote === vote) {
 		return;
@@ -297,7 +297,7 @@ export async function $addCommentVote(comment: CommentModel, vote: number) {
 	}
 }
 
-export async function $removeCommentVote(comment: CommentModel) {
+export async function $unvoteOnComment(comment: CommentModel) {
 	if (!comment.user_vote) {
 		return;
 	}
