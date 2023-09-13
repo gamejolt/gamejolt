@@ -68,10 +68,6 @@ export class CommunityCompetitionModel extends Model {
 			this.header = new MediaItemModel(data.header);
 		}
 	}
-
-	$save() {
-		return this.$_save(`/web/dash/communities/competitions/save/${this.id}`, 'competition');
-	}
 }
 
 export function $saveCommunityCompetition(model: CommunityCompetitionModel) {
