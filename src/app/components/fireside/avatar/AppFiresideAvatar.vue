@@ -11,7 +11,11 @@ import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/Ap
 import { Environment } from '../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresideCommunityModel } from '../../../../_common/fireside/community/community.model';
-import { FiresideModel } from '../../../../_common/fireside/fireside.model';
+import {
+	$featureFireside,
+	$unfeatureFireside,
+	FiresideModel,
+} from '../../../../_common/fireside/fireside.model';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
@@ -139,13 +143,13 @@ async function toggleFeatured(community: FiresideCommunityModel) {
 	try {
 		isLoading.value = true;
 		if (isFeaturing) {
-			const promise = fireside.value.$feature();
+			const promise = $featureFireside(fireside.value);
 			if (promise instanceof Promise) {
 				await promise;
 				emit('featured', { fireside: fireside.value, community });
 			}
 		} else {
-			const promise = fireside.value.$unfeature();
+			const promise = $unfeatureFireside(fireside.value);
 			if (promise instanceof Promise) {
 				await promise;
 				emit('unfeatured', { fireside: fireside.value, community });
