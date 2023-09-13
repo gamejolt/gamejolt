@@ -4,7 +4,10 @@ import AppCard from '../../../../_common/card/AppCard.vue';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { PaymentSourceModel } from '../../../../_common/payment-source/payment-source.model';
+import {
+	$removePaymentSource,
+	PaymentSourceModel,
+} from '../../../../_common/payment-source/payment-source.model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAddressDetails from '../address/AppUserAddressDetails.vue';
@@ -33,7 +36,7 @@ async function remove() {
 		return;
 	}
 
-	await props.paymentSource.$remove();
+	await $removePaymentSource(props.paymentSource);
 
 	showSuccessGrowl(
 		$gettext(`Your card has successfully been removed.`),
