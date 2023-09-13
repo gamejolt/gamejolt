@@ -5,13 +5,13 @@ import { CollaboratorModel } from '../../../../_common/collaborator/collaborator
 import AppCommentBlocked from '../../../../_common/comment/AppCommentBlocked.vue';
 import AppCommentContent from '../../../../_common/comment/AppCommentContent.vue';
 import {
+	$followComment,
+	$unfollowComment,
 	canCommentOnModel,
 	CommentableModel,
 	CommentModel,
-	followComment,
 	getCommentBlockReason,
 	removeComment,
-	unfollowComment,
 } from '../../../../_common/comment/comment-model';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -223,9 +223,9 @@ async function doRemoveComment() {
 
 function onFollowClick() {
 	if (!comment.value.subscription) {
-		followComment(comment.value);
+		$followComment(comment.value);
 	} else {
-		unfollowComment(comment.value);
+		$unfollowComment(comment.value);
 	}
 }
 

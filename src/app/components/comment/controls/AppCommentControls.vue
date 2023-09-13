@@ -4,9 +4,9 @@ import { useRouter } from 'vue-router';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
-	addCommentVote,
+	$addCommentVote,
+	$removeCommentVote,
 	CommentModel,
-	removeCommentVote,
 } from '../../../../_common/comment/comment-model';
 import { CommentVoteType } from '../../../../_common/comment/vote/vote-model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
@@ -138,19 +138,19 @@ const ownerIndicatorIcons = computed(() => {
 });
 
 function onUpvoteClick() {
-	voteComment(CommentVoteType.Upvote);
+	$voteComment(CommentVoteType.Upvote);
 }
 
 function onDownvoteClick() {
-	voteComment(CommentVoteType.Downvote);
+	$voteComment(CommentVoteType.Downvote);
 }
 
-async function voteComment(vote: number) {
+async function $voteComment(vote: number) {
 	let result: any | null = null;
 	if (!comment.value.user_vote || comment.value.user_vote.vote !== vote) {
-		result = await addCommentVote(comment.value, vote);
+		result = await $addCommentVote(comment.value, vote);
 	} else {
-		result = await removeCommentVote(comment.value);
+		result = await $removeCommentVote(comment.value);
 	}
 
 	if (result && result.comment) {
