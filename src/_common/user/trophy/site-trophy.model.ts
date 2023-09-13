@@ -21,7 +21,7 @@ export class UserSiteTrophyModel extends UserBaseTrophyModel {
 		return 'site-trophy-' + this.id;
 	}
 
-	async $view() {
-		this.$_save(`/web/profile/trophies/view-site/${this.id}`, 'userSiteTrophy');
+	get trophyType() {
+		return 'userSiteTrophy';
 	}
 }

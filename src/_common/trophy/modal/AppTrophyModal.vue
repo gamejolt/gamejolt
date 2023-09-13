@@ -14,7 +14,10 @@ import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
 import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
 import { UserGameTrophy } from '../../user/trophy/game-trophy.model';
-import { UserBaseTrophyModel } from '../../user/trophy/user-base-trophy.model';
+import {
+	$viewUserBaseTrophyModel,
+	UserBaseTrophyModel,
+} from '../../user/trophy/user-base-trophy.model';
 import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 import AppUserAvatarList from '../../user/user-avatar/AppUserAvatarList.vue';
 import { UserModel } from '../../user/user.model';
@@ -84,7 +87,7 @@ onMounted(() => {
 		populateFriends();
 
 		if (userTrophy.value.user_id === user.value.id && !userTrophy.value.viewed_on) {
-			userTrophy.value.$view();
+			$viewUserBaseTrophyModel(userTrophy.value);
 		}
 	}
 });

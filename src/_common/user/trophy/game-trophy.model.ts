@@ -29,8 +29,8 @@ export class UserGameTrophy extends UserBaseTrophyModel {
 		return 'game-trophy-' + this.id;
 	}
 
-	async $view() {
-		this.$_save(`/web/profile/trophies/view-game/${this.id}`, 'userGameTrophy');
+	get trophyType() {
+		return 'userGameTrophy';
 	}
 }
 
