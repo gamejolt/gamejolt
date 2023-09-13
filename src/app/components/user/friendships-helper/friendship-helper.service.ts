@@ -3,7 +3,12 @@ import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-serv
 import { Payload } from '../../../../_common/payload/payload-service';
 import { commonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserFriendshipModel } from '../../../../_common/user/friendship/friendship.model';
+import {
+	$acceptUserFriendship,
+	$removeUserFriendship,
+	$saveUserFriendship,
+	UserFriendshipModel,
+} from '../../../../_common/user/friendship/friendship.model';
 import { UserModel } from '../../../../_common/user/user.model';
 
 export class UserFriendshipHelper {
@@ -11,7 +16,7 @@ export class UserFriendshipHelper {
 		const request = new UserFriendshipModel({ target_user_id: targetUser.id });
 
 		try {
-			await request.$save();
+			await $saveUserFriendship(request);
 
 			showSuccessGrowl(
 				$gettext(
@@ -37,7 +42,7 @@ export class UserFriendshipHelper {
 	 */
 	static async acceptRequest(request: UserFriendshipModel) {
 		try {
-			await request.$accept();
+			await $acceptUserFriendship(request);
 
 			showSuccessGrowl(
 				$gettext(`You are now friends with @%{ username }!`, {
@@ -70,7 +75,7 @@ export class UserFriendshipHelper {
 		}
 
 		try {
-			const response = await request.$remove();
+			const response = await $removeUserFriendship(request);
 
 			showSuccessGrowl(
 				$gettext(`Your friend request to @%{ username } was canceled.`, {
@@ -98,7 +103,7 @@ export class UserFriendshipHelper {
 		}
 
 		try {
-			const response = await request.$remove();
+			const response = await $removeUserFriendship(request);
 
 			showSuccessGrowl(
 				$gettext(`You have dismissed the friend request from @%{ username }.`, {
@@ -128,7 +133,7 @@ export class UserFriendshipHelper {
 		}
 
 		try {
-			const response = await friendship.$remove();
+			const response = await $removeUserFriendship(friendship);
 
 			showSuccessGrowl(
 				$gettext(`@%{ username } is no longer your friend.`, {
