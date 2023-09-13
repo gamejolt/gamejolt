@@ -20,7 +20,7 @@ import { SellableModel } from '../sellable/sellable.model';
 import { SiteTrophyModel } from '../site/trophy/trophy.model';
 import { SupporterActionModel } from '../supporters/action.model';
 import { $gettext } from '../translate/translate.service';
-import { UserGameTrophy } from '../user/trophy/game-trophy.model';
+import { UserGameTrophyModel } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophyModel } from '../user/trophy/site-trophy.model';
 import { UserModel } from '../user/user.model';
 import { NotificationModel, NotificationType } from './notification-model';
@@ -180,7 +180,7 @@ export class NotificationText {
 
 			case NotificationType.GameTrophyAchieved: {
 				if (
-					notification.action_model instanceof UserGameTrophy &&
+					notification.action_model instanceof UserGameTrophyModel &&
 					notification.action_model.trophy instanceof GameTrophyModel &&
 					notification.action_model.game instanceof GameModel
 				) {

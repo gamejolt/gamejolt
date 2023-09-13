@@ -3,7 +3,7 @@ import { GameModel } from '../../game/game.model';
 import { GameTrophyModel } from '../../game/trophy/trophy.model';
 import { UserBaseTrophyModel } from './user-base-trophy.model';
 
-export class UserGameTrophy extends UserBaseTrophyModel {
+export class UserGameTrophyModel extends UserBaseTrophyModel {
 	game_id!: number;
 	game_trophy_id!: number;
 
@@ -37,6 +37,6 @@ export class UserGameTrophy extends UserBaseTrophyModel {
 /**
  * Indexes the achieved trophies by their trophy ID.
  */
-export function indexAchievedGameTrophies(trophies: UserGameTrophy[]) {
+export function indexAchievedGameTrophies(trophies: UserGameTrophyModel[]) {
 	return arrayIndexBy(trophies, 'game_trophy_id');
 }

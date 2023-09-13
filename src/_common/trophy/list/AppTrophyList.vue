@@ -5,7 +5,10 @@ import { GameTrophyModel } from '../../game/trophy/trophy.model';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { UserGameTrophy, indexAchievedGameTrophies } from '../../user/trophy/game-trophy.model';
+import {
+	UserGameTrophyModel,
+	indexAchievedGameTrophies,
+} from '../../user/trophy/game-trophy.model';
 import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
 
 const props = defineProps({
@@ -14,7 +17,7 @@ const props = defineProps({
 		required: true,
 	},
 	achieved: {
-		type: Array as PropType<UserGameTrophy[]>,
+		type: Array as PropType<UserGameTrophyModel[]>,
 		required: true,
 	},
 });

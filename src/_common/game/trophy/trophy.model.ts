@@ -1,6 +1,6 @@
 import { Api } from '../../api/api.service';
 import { BaseTrophyModel } from '../../trophy/base-trophy.model';
-import { UserGameTrophy } from '../../user/trophy/game-trophy.model';
+import { UserGameTrophyModel } from '../../user/trophy/game-trophy.model';
 
 export class GameTrophyModel extends BaseTrophyModel {
 	game_id!: number;
@@ -15,7 +15,7 @@ export class GameTrophyModel extends BaseTrophyModel {
 	 */
 	static splitAchieved(
 		trophies: GameTrophyModel[],
-		achievedIndexed: { [k: number]: UserGameTrophy }
+		achievedIndexed: { [k: number]: UserGameTrophyModel }
 	) {
 		return {
 			achieved: trophies.filter(trophy => achievedIndexed[trophy.id]),

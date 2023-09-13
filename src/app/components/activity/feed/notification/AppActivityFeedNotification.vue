@@ -9,7 +9,7 @@ import type { FiresidePostCommunityModel } from '../../../../../_common/fireside
 import type { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import type { MentionModel } from '../../../../../_common/mention/mention.model';
 import type { QuestNotificationModel } from '../../../../../_common/quest/quest-notification-model';
-import type { UserGameTrophy } from '../../../../../_common/user/trophy/game-trophy.model';
+import type { UserGameTrophyModel } from '../../../../../_common/user/trophy/game-trophy.model';
 import type { UserSiteTrophyModel } from '../../../../../_common/user/trophy/site-trophy.model';
 
 import { computed, PropType, ref, toRefs } from 'vue';
@@ -338,7 +338,7 @@ function onMarkRead() {
 													{{
 														(
 															notification.action_model as
-																| UserGameTrophy
+																| UserGameTrophyModel
 																| UserSiteTrophyModel
 														).trophy?.description
 													}}

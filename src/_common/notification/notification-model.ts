@@ -25,7 +25,7 @@ import { SubscriptionModel } from '../subscription/subscription.model';
 import { SupporterActionModel } from '../supporters/action.model';
 import { $gettext } from '../translate/translate.service';
 import { UserFriendshipModel } from '../user/friendship/friendship.model';
-import { UserGameTrophy } from '../user/trophy/game-trophy.model';
+import { UserGameTrophyModel } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophyModel } from '../user/trophy/site-trophy.model';
 import { UserAvatarFrameModel } from '../user/user-avatar/frame/frame.model';
 import { UserModel, UserType } from '../user/user.model';
@@ -109,7 +109,7 @@ export class NotificationModel extends Model {
 		| SubscriptionModel
 		| CollaboratorModel
 		| MentionModel
-		| UserGameTrophy
+		| UserGameTrophyModel
 		| UserSiteTrophyModel
 		| CommunityUserNotificationModel
 		| FiresideModel
@@ -222,7 +222,7 @@ export class NotificationModel extends Model {
 			this.action_model = new MentionModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.GameTrophyAchieved) {
-			this.action_model = new UserGameTrophy(data.action_resource_model);
+			this.action_model = new UserGameTrophyModel(data.action_resource_model);
 			this.is_user_based = true;
 		} else if (this.type === NotificationType.SiteTrophyAchieved) {
 			this.action_model = new UserSiteTrophyModel(data.action_resource_model);

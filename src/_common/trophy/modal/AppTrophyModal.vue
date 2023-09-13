@@ -13,7 +13,7 @@ import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
 import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
-import { UserGameTrophy } from '../../user/trophy/game-trophy.model';
+import { UserGameTrophyModel } from '../../user/trophy/game-trophy.model';
 import {
 	$viewUserBaseTrophyModel,
 	UserBaseTrophyModel,
@@ -42,7 +42,7 @@ const trophy = computed(() => userTrophy.value.trophy!);
 const bgClass = computed(() => '-trophy-difficulty-' + trophy.value.difficulty);
 
 const isGame = computed(
-	() => userTrophy.value instanceof UserGameTrophy && !!userTrophy.value.game
+	() => userTrophy.value instanceof UserGameTrophyModel && !!userTrophy.value.game
 );
 
 const canReceiveExp = computed(() =>
@@ -64,7 +64,7 @@ const completionPercentageForDisplay = computed(() => {
 const shouldShowFriends = computed(() => Boolean(friends.value && friends.value.length > 0));
 
 const game = computed(() =>
-	userTrophy.value instanceof UserGameTrophy && userTrophy.value.game
+	userTrophy.value instanceof UserGameTrophyModel && userTrophy.value.game
 		? userTrophy.value.game
 		: undefined
 );
