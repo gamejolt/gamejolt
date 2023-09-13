@@ -12,7 +12,7 @@ import { FiresidePostModel } from '../fireside/post/post-model';
 import { FiresideStreamNotificationModel } from '../fireside/stream-notification/stream-notification.model';
 import { ForumTopicModel } from '../forum/topic/topic.model';
 import { GameModel } from '../game/game.model';
-import { GameTrophy } from '../game/trophy/trophy.model';
+import { GameTrophyModel } from '../game/trophy/trophy.model';
 import { MentionModel } from '../mention/mention.model';
 import type { OrderItemModel } from '../order/item/item.model';
 import { QuestNotificationModel } from '../quest/quest-notification-model';
@@ -181,7 +181,7 @@ export class NotificationText {
 			case NotificationType.GameTrophyAchieved: {
 				if (
 					notification.action_model instanceof UserGameTrophy &&
-					notification.action_model.trophy instanceof GameTrophy &&
+					notification.action_model.trophy instanceof GameTrophyModel &&
 					notification.action_model.game instanceof GameModel
 				) {
 					return _process(

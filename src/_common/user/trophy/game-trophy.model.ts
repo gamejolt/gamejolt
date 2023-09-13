@@ -1,20 +1,20 @@
 import { arrayIndexBy } from '../../../utils/array';
 import { GameModel } from '../../game/game.model';
-import { GameTrophy } from '../../game/trophy/trophy.model';
+import { GameTrophyModel } from '../../game/trophy/trophy.model';
 import { UserBaseTrophyModel } from './user-base-trophy.model';
 
 export class UserGameTrophy extends UserBaseTrophyModel {
 	game_id!: number;
 	game_trophy_id!: number;
 
-	game_trophy?: GameTrophy;
+	game_trophy?: GameTrophyModel;
 	game?: GameModel;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.game_trophy) {
-			this.game_trophy = new GameTrophy(data.game_trophy);
+			this.game_trophy = new GameTrophyModel(data.game_trophy);
 		}
 		if (data.game) {
 			this.game = new GameModel(data.game);

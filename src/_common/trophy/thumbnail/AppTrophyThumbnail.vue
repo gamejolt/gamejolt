@@ -1,6 +1,6 @@
 <script lang="ts">
 import { PropType, computed, onMounted, ref, toRefs } from 'vue';
-import { GameTrophy } from '../../game/trophy/trophy.model';
+import { GameTrophyModel } from '../../game/trophy/trophy.model';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { BaseTrophyModel } from '../base-trophy.model';
@@ -32,13 +32,13 @@ export function getTrophyImg(trophy: BaseTrophyModel) {
 	}
 
 	let img = '';
-	if (trophy.difficulty === GameTrophy.DIFFICULTY_BRONZE) {
+	if (trophy.difficulty === GameTrophyModel.DIFFICULTY_BRONZE) {
 		img = 'bronze';
-	} else if (trophy.difficulty === GameTrophy.DIFFICULTY_SILVER) {
+	} else if (trophy.difficulty === GameTrophyModel.DIFFICULTY_SILVER) {
 		img = 'silver';
-	} else if (trophy.difficulty === GameTrophy.DIFFICULTY_GOLD) {
+	} else if (trophy.difficulty === GameTrophyModel.DIFFICULTY_GOLD) {
 		img = 'gold';
-	} else if (trophy.difficulty === GameTrophy.DIFFICULTY_PLATINUM) {
+	} else if (trophy.difficulty === GameTrophyModel.DIFFICULTY_PLATINUM) {
 		img = 'platinum';
 	}
 

@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../../../_common/filters/number';
-import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
+import { GameTrophyModel } from '../../../../../../../_common/game/trophy/trophy.model';
 import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
 	LegacyRouteComponent,
@@ -35,7 +35,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 	routeStore = setup(() => useGameRouteController()!);
 	commonStore = setup(() => useCommonStore());
 
-	trophies: GameTrophy[] = [];
+	trophies: GameTrophyModel[] = [];
 	achieved: UserGameTrophy[] = [];
 	experience = 0;
 	showInvisibleTrophyMessage = false;
@@ -68,7 +68,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 	}
 
 	routeResolved($payload: any) {
-		this.trophies = GameTrophy.populate($payload.trophies);
+		this.trophies = GameTrophyModel.populate($payload.trophies);
 		this.achieved = $payload.trophiesAchieved
 			? UserGameTrophy.populate($payload.trophiesAchieved)
 			: [];
@@ -76,7 +76,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 		this.showInvisibleTrophyMessage = $payload.trophiesShowInvisibleTrophyMessage || false;
 
 		this.achievedIndexed = indexAchievedGameTrophies(this.achieved);
-		this.filteredTrophies = GameTrophy.splitAchieved(this.trophies, this.achievedIndexed);
+		this.filteredTrophies = GameTrophyModel.splitAchieved(this.trophies, this.achievedIndexed);
 
 		this.currentFilter = 'all';
 	}

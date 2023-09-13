@@ -8,7 +8,7 @@ import { FiresideModel } from '../../../_common/fireside/fireside.model';
 import { FiresidePostCommunityModel } from '../../../_common/fireside/post/community/community.model';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import { FiresideStreamNotificationModel } from '../../../_common/fireside/stream-notification/stream-notification.model';
-import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
+import { GameTrophyModel } from '../../../_common/game/trophy/trophy.model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { ModelStoreModel } from '../../../_common/model/model-store.service';
 import { Model } from '../../../_common/model/model.service';
@@ -386,7 +386,7 @@ export class GridClient {
 			} else if (notification.type === NotificationType.GameTrophyAchieved) {
 				if (
 					notification.action_model instanceof UserGameTrophy &&
-					notification.action_model.trophy instanceof GameTrophy
+					notification.action_model.trophy instanceof GameTrophyModel
 				) {
 					title = $gettext(`Trophy Unlocked!`);
 					message = notification.action_model.trophy.title;
