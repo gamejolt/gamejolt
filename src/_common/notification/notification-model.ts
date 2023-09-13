@@ -319,13 +319,3 @@ export function $readNotification(model: NotificationModel) {
 		detach: true,
 	});
 }
-
-// TODO: probably can be removed.
-export function $unreadNotification(model: NotificationModel) {
-	// We want this to look like it happens immediately.
-	model.viewed_on = null;
-
-	return model.$_save('/web/dash/activity/mark-unread/' + model.id, 'notification', {
-		detach: true,
-	});
-}
