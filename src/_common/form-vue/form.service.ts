@@ -113,6 +113,7 @@ export class BaseForm<T> extends Vue {
 	created() {
 		this.form._override({
 			modelClass: this.modelClass,
+			modelSaveHandler: this.modelSaveHandler,
 			saveMethod: computed(() => this.saveMethod),
 			loadUrl: computed(() => (this as Partial<FormOnLoad>).loadUrl),
 			loadData: computed(() => (this as Partial<FormOnLoad>).loadData),
