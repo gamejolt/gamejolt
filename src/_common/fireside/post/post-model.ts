@@ -567,13 +567,13 @@ export async function $removeFiresidePost(model: FiresidePostModel) {
 	const result = await showModalConfirm($gettext(`Are you sure you want to remove this post?`));
 
 	if (result) {
-		await $remove(model);
+		await _removeFiresidePost(model);
 		return true;
 	}
 
 	return false;
 }
 
-function $remove(model: FiresidePostModel) {
+function _removeFiresidePost(model: FiresidePostModel) {
 	return model.$_remove(`/web/posts/manage/remove/${model.id}`);
 }
