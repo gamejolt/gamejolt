@@ -39,22 +39,22 @@ export class SiteModel extends Model {
 			this.build = new SiteBuildModel(data.build);
 		}
 	}
+}
 
-	$save() {
-		return this.$_save(`/web/dash/sites/save/${this.id}`, 'site');
-	}
+export function $saveSite(model: SiteModel) {
+	return model.$_save(`/web/dash/sites/save/${model.id}`, 'site');
+}
 
-	$saveDomain() {
-		return this.$_save(`/web/dash/sites/save-domain/${this.id}`, 'site');
-	}
+export function $saveDomainSite(model: SiteModel) {
+	return model.$_save(`/web/dash/sites/save-domain/${model.id}`, 'site');
+}
 
-	$activate() {
-		return this.$_save(`/web/dash/sites/activate/${this.id}`, 'site', {
-			noErrorRedirect: true,
-		});
-	}
+export function $activateSite(model: SiteModel) {
+	return model.$_save(`/web/dash/sites/activate/${model.id}`, 'site', {
+		noErrorRedirect: true,
+	});
+}
 
-	$deactivate() {
-		return this.$_save(`/web/dash/sites/deactivate/${this.id}`, 'site');
-	}
+export function $deactivateSite(model: SiteModel) {
+	return model.$_save(`/web/dash/sites/deactivate/${model.id}`, 'site');
 }
