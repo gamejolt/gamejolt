@@ -33,24 +33,24 @@ export class GameVideoModel extends Model implements LightboxMediaModel {
 	getUrl(game: GameModel) {
 		return game.getUrl() + `#video-${this.id}`;
 	}
+}
 
-	$save() {
-		if (!this.id) {
-			return this.$_save(
-				'/web/dash/developer/games/media/save/video/' + this.game_id,
-				'gameVideo'
-			);
-		} else {
-			return this.$_save(
-				'/web/dash/developer/games/media/save/video/' + this.game_id + '/' + this.id,
-				'gameVideo'
-			);
-		}
-	}
-
-	$remove() {
-		return this.$_remove(
-			'/web/dash/developer/games/media/remove/video/' + this.game_id + '/' + this.id
+export function $saveGameVideo(model: GameVideoModel) {
+	if (!model.id) {
+		return model.$_save(
+			'/web/dash/developer/games/media/save/video/' + model.game_id,
+			'gameVideo'
+		);
+	} else {
+		return model.$_save(
+			'/web/dash/developer/games/media/save/video/' + model.game_id + '/' + model.id,
+			'gameVideo'
 		);
 	}
+}
+
+export function $removeGameVideo(model: GameVideoModel) {
+	return model.$_remove(
+		'/web/dash/developer/games/media/remove/video/' + model.game_id + '/' + model.id
+	);
 }

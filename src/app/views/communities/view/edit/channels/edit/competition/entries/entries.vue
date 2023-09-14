@@ -6,7 +6,11 @@ import {
 	CompetitionPeriodPreComp,
 	CompetitionPeriodVoting,
 } from '../../../../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntryModel } from '../../../../../../../../../_common/community/competition/entry/entry.model';
+import {
+	$hideCommunityCompetitionEntry,
+	$unhideCommunityCompetitionEntry,
+	CommunityCompetitionEntryModel,
+} from '../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../../../../../../_common/illustration/illustrations';
@@ -220,7 +224,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 				this.$gettext(`Are you sure you want to readmit this entry to the jam?`)
 			);
 			if (result) {
-				await entry.$unhideEntry();
+				await $unhideCommunityCompetitionEntry(entry);
 
 				showSuccessGrowl(this.$gettext(`Entry was readmitted to the jam.`));
 				this.competition.entry_count++;
@@ -232,7 +236,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 				)
 			);
 			if (result) {
-				await entry.$hideEntry();
+				await $hideCommunityCompetitionEntry(entry);
 
 				showSuccessGrowl(this.$gettext(`Entry was hidden from the jam.`));
 				this.competition.entry_count--;

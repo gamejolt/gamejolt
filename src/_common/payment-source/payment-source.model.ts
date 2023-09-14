@@ -16,8 +16,8 @@ export class PaymentSourceModel extends Model {
 			this.user_address = new UserAddressModel(data.user_address);
 		}
 	}
+}
 
-	$remove() {
-		return this.$_remove('/web/dash/payment-methods/remove/' + this.id);
-	}
+export function $removePaymentSource(model: PaymentSourceModel) {
+	return model.$_remove('/web/dash/payment-methods/remove/' + model.id);
 }

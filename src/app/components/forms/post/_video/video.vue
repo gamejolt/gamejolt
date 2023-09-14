@@ -2,7 +2,10 @@
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
+import {
+	$removeFiresidePostVideo,
+	FiresidePostModel,
+} from '../../../../../_common/fireside/post/post-model';
 import { FiresidePostVideoModel } from '../../../../../_common/fireside/post/video/video-model';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlUpload, {
@@ -330,7 +333,7 @@ export default class AppFormPostVideo
 		// in this case specifically I think it makes sense since the video is
 		// unpublishable anyways.
 		if (this.videoStatus === VideoStatus.ERROR) {
-			await this.post.$removeVideo();
+			await $removeFiresidePostVideo(this.post);
 		}
 
 		this.hasVideoProcessingError = false;

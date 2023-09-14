@@ -10,7 +10,10 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../../../../../../_common/route/legacy-route-component';
-import { UserGameScoreModel } from '../../../../../../../../../_common/user/game-score/game-score.model';
+import {
+	$removeUserGameScore,
+	UserGameScoreModel,
+} from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { useGameDashRouteController } from '../../../../manage.store';
 
 @Options({
@@ -59,7 +62,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends Legacy
 			return;
 		}
 
-		await this.score.$remove();
+		await $removeUserGameScore(this.score);
 
 		this.$router.push({
 			name: 'dash.games.manage.api.scoreboards.scores.list',

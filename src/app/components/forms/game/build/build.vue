@@ -10,6 +10,7 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import {
+	$saveGameBuild,
 	GameBuildEmulatorInfo,
 	GameBuildError,
 	GameBuildModel,
@@ -67,6 +68,7 @@ class Wrapper extends BaseForm<GameBuildFormModel> {}
 })
 export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad {
 	modelClass = GameBuildModel as any;
+	modelSaveHandler = $saveGameBuild;
 
 	@Prop(Object)
 	game!: GameModel;

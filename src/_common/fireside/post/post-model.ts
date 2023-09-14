@@ -426,133 +426,8 @@ export class FiresidePostModel extends Model implements ContentContainerModel, C
 		return route.params.username === this.displayUser.username;
 	}
 
-	async $save() {
-		if (!this.id) {
-			throw new Error(
-				`Can't add fireside posts through $save() anymore. Use $create() instead`
-			);
-		}
-
-		const options: ModelSaveRequestOptions = {
-			data: Object.assign({}, this),
-			allowComplexData: [
-				'attached_communities',
-				'attached_realms',
-				'keyGroups',
-				'mediaItemIds',
-			],
-		};
-
-		if (this.game) {
-			options.data.keyGroups = {};
-			for (const id of this.key_group_ids) {
-				options.data.keyGroups[id] = true;
-			}
-		}
-
-		// Preserve the is pinned status.
-		// The backend will not know the context in which we edit the post,
-		// so we save the pinned status, which won't change between edits, and then reapply it manully.
-		const isPinned = this.is_pinned;
-
-		const payload = await this.$_save(
-			`/web/posts/manage/save/${this.id}`,
-			'firesidePost',
-			options
-		);
-
-		this.is_pinned = isPinned;
-
-		return payload;
-	}
-
-	$feature(community: CommunityModel) {
-		const c = this.getTaggedCommunity(community);
-		if (!c) {
-			throw new Error('Cannot feature a post to a community it is not tagged in');
-		}
-
-		return this.$_save(`/web/communities/manage/feature/${c.id}`, 'post');
-	}
-
-	$unfeature(community: CommunityModel) {
-		const c = this.getTaggedCommunity(community);
-		if (!c) {
-			throw new Error('Cannot unfeature a post to a community it is not tagged in');
-		}
-
-		return this.$_save(`/web/communities/manage/unfeature/${c.id}`, 'post');
-	}
-
-	$reject(
-		community: CommunityModel,
-		notifyOptions: CommunityNotifyOptions | undefined = undefined
-	) {
-		const c = this.getTaggedCommunity(community);
-		if (!c) {
-			throw new Error('Cannot reject a post to a community it is not tagged in');
-		}
-
-		return this.$_save(`/web/communities/manage/reject/${c.id}`, 'post', {
-			data: notifyOptions,
-		});
-	}
-
-	$moveChannel(
-		community: CommunityModel,
-		channel: CommunityChannelModel,
-		notifyOptions: CommunityNotifyOptions | undefined = undefined
-	) {
-		const c = this.getTaggedCommunity(community);
-		if (!c) {
-			throw new Error('Cannot move a post to a channel in a community it is not tagged in');
-		}
-
-		if (community.id !== channel.community_id) {
-			throw new Error(
-				'Attempted to move a community post to a channel of a different community'
-			);
-		}
-
-		return this.$_save(`/web/communities/manage/move-post/${c.id}/${channel.id}`, 'post', {
-			data: notifyOptions,
-		});
-	}
-
 	getTaggedCommunity(community: CommunityModel) {
 		return this.communities.find(c => c.community.id === community.id);
-	}
-
-	$publish() {
-		return this.$_save(`/web/posts/manage/publish/${this.id}`, 'firesidePost');
-	}
-
-	$togglePin(targetModel: string, targetId: number) {
-		return this.$_save(
-			`/web/posts/manage/toggle-pin/${this.id}/${targetModel}/${targetId}`,
-			'post'
-		);
-	}
-
-	$removeVideo() {
-		return Api.sendRequest(`/web/posts/manage/remove-video/${this.id}`, {});
-	}
-
-	async remove() {
-		const result = await showModalConfirm(
-			$gettext(`Are you sure you want to remove this post?`)
-		);
-
-		if (result) {
-			await this.$remove();
-			return true;
-		}
-
-		return false;
-	}
-
-	$remove() {
-		return this.$_remove(`/web/posts/manage/remove/${this.id}`);
 	}
 }
 
@@ -585,4 +460,120 @@ export async function loadArticleIntoPost(post: FiresidePostModel) {
 
 export function $viewPost(post: FiresidePostModel, sourceFeed?: string) {
 	HistoryTick.sendBeacon('fireside-post', post.id, { sourceFeed });
+}
+
+export async function $saveFiresidePost(model: FiresidePostModel) {
+	const options: ModelSaveRequestOptions = {
+		data: Object.assign({}, model),
+		allowComplexData: ['attached_communities', 'attached_realms', 'keyGroups', 'mediaItemIds'],
+	};
+
+	if (model.game) {
+		options.data.keyGroups = {};
+		for (const id of model.key_group_ids) {
+			options.data.keyGroups[id] = true;
+		}
+	}
+
+	// Preserve the is pinned status.
+	// The backend will not know the context in which we edit the post,
+	// so we save the pinned status, which won't change between edits, and then reapply it manully.
+	const isPinned = model.is_pinned;
+
+	const payload = await model.$_save(
+		`/web/posts/manage/save/${model.id}`,
+		'firesidePost',
+		options
+	);
+
+	model.is_pinned = isPinned;
+
+	return payload;
+}
+
+export function $featureFiresidePost(model: FiresidePostModel, community: CommunityModel) {
+	const c = model.getTaggedCommunity(community);
+	if (!c) {
+		throw new Error('Cannot feature a post to a community it is not tagged in');
+	}
+
+	return model.$_save(`/web/communities/manage/feature/${c.id}`, 'post');
+}
+
+export function $unfeatureFiresidePost(model: FiresidePostModel, community: CommunityModel) {
+	const c = model.getTaggedCommunity(community);
+	if (!c) {
+		throw new Error('Cannot unfeature a post to a community it is not tagged in');
+	}
+
+	return model.$_save(`/web/communities/manage/unfeature/${c.id}`, 'post');
+}
+
+export function $rejectFiresidePost(
+	model: FiresidePostModel,
+	community: CommunityModel,
+	notifyOptions: CommunityNotifyOptions | undefined = undefined
+) {
+	const c = model.getTaggedCommunity(community);
+	if (!c) {
+		throw new Error('Cannot reject a post to a community it is not tagged in');
+	}
+
+	return model.$_save(`/web/communities/manage/reject/${c.id}`, 'post', {
+		data: notifyOptions,
+	});
+}
+
+export function $moveFiresidePostToChannel(
+	model: FiresidePostModel,
+	community: CommunityModel,
+	channel: CommunityChannelModel,
+	notifyOptions: CommunityNotifyOptions | undefined = undefined
+) {
+	const c = model.getTaggedCommunity(community);
+	if (!c) {
+		throw new Error('Cannot move a post to a channel in a community it is not tagged in');
+	}
+
+	if (community.id !== channel.community_id) {
+		throw new Error('Attempted to move a community post to a channel of a different community');
+	}
+
+	return model.$_save(`/web/communities/manage/move-post/${c.id}/${channel.id}`, 'post', {
+		data: notifyOptions,
+	});
+}
+
+export function $publishFiresidePost(model: FiresidePostModel) {
+	return model.$_save(`/web/posts/manage/publish/${model.id}`, 'firesidePost');
+}
+
+export function $togglePinOnFiresidePost(
+	model: FiresidePostModel,
+	targetModel: string,
+	targetId: number
+) {
+	return model.$_save(
+		`/web/posts/manage/toggle-pin/${model.id}/${targetModel}/${targetId}`,
+		'post'
+	);
+}
+
+export function $removeFiresidePostVideo(model: FiresidePostModel) {
+	return Api.sendRequest(`/web/posts/manage/remove-video/${model.id}`, {});
+}
+
+export async function $removeFiresidePost(model: FiresidePostModel) {
+	const result = await showModalConfirm($gettext(`Are you sure you want to remove this post?`));
+
+	if (result) {
+		await _removeFiresidePost(model);
+		return true;
+	}
+
+	return false;
+}
+
+function _removeFiresidePost(model: FiresidePostModel) {
+	return model.$_remove(`/web/posts/manage/remove/${model.id}`);
 }

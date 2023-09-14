@@ -4,36 +4,38 @@ import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
 import { Router, useRouter } from 'vue-router';
 import {
-AdSettingsContainer,
-releasePageAdsSettings,
-setPageAdsSettings,
-useAdsController,
+	AdSettingsContainer,
+	releasePageAdsSettings,
+	setPageAdsSettings,
+	useAdsController,
 } from '../../../../../_common/ad/ad-store';
 import { Api } from '../../../../../_common/api/api.service';
 import {
-CollaboratorModel,
-CollaboratorRole,
+	$acceptCollaboratorInvite,
+	$removeCollaboratorInvite,
+	CollaboratorModel,
+	CollaboratorRole,
 } from '../../../../../_common/collaborator/collaborator.model';
 import { CommentModel } from '../../../../../_common/comment/comment-model';
 import {
-commentStoreCount,
-CommentStoreManager,
-CommentStoreManagerKey,
-CommentStoreModel,
-lockCommentStore,
-releaseCommentStore,
+	commentStoreCount,
+	CommentStoreManager,
+	CommentStoreManagerKey,
+	CommentStoreModel,
+	lockCommentStore,
+	releaseCommentStore,
 } from '../../../../../_common/comment/comment-store';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { GameBuildType } from '../../../../../_common/game/build/build.model';
 import {
-CustomGameMessage,
-GameModel,
-handleGameAddFailure,
-pluckBrowserGameBuilds,
-pluckDownloadableGameBuilds,
-pluckInstallableGameBuilds,
-pluckRomGameBuilds,
+	CustomGameMessage,
+	GameModel,
+	handleGameAddFailure,
+	pluckBrowserGameBuilds,
+	pluckDownloadableGameBuilds,
+	pluckInstallableGameBuilds,
+	pluckRomGameBuilds,
 } from '../../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../../_common/game/package/package-payload.model';
 import { onRatingWidgetChange } from '../../../../../_common/game/rating/AppGameRatingWidget.vue';
@@ -49,8 +51,8 @@ import { storeModelList } from '../../../../../_common/model/model-store.service
 import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
 import { Registry } from '../../../../../_common/registry/registry.service';
 import {
-LegacyRouteComponent,
-OptionsForLegacyRoute,
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
 } from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
@@ -572,7 +574,7 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 
 	async acceptCollaboration() {
 		try {
-			await this.collaboratorInvite!.$accept();
+			await $acceptCollaboratorInvite(this.collaboratorInvite!);
 			this.routeStore.acceptCollaboratorInvite(this.collaboratorInvite!);
 		} catch (error: any) {
 			console.log('Error status for accepting game collaboration.', error);
@@ -581,7 +583,7 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 	}
 
 	async declineCollaboration() {
-		await this.collaboratorInvite!.$remove();
+		await $removeCollaboratorInvite(this.collaboratorInvite!);
 		this.routeStore.declineCollaboratorInvite();
 	}
 

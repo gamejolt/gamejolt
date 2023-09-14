@@ -12,16 +12,16 @@ import { FiresidePostModel } from '../fireside/post/post-model';
 import { FiresideStreamNotificationModel } from '../fireside/stream-notification/stream-notification.model';
 import { ForumTopicModel } from '../forum/topic/topic.model';
 import { GameModel } from '../game/game.model';
-import { GameTrophy } from '../game/trophy/trophy.model';
+import { GameTrophyModel } from '../game/trophy/trophy.model';
 import { MentionModel } from '../mention/mention.model';
 import type { OrderItemModel } from '../order/item/item.model';
 import { QuestNotificationModel } from '../quest/quest-notification-model';
 import { SellableModel } from '../sellable/sellable.model';
-import { SiteTrophy } from '../site/trophy/trophy.model';
+import { SiteTrophyModel } from '../site/trophy/trophy.model';
 import { SupporterActionModel } from '../supporters/action.model';
 import { $gettext } from '../translate/translate.service';
-import { UserGameTrophy } from '../user/trophy/game-trophy.model';
-import { UserSiteTrophy } from '../user/trophy/site-trophy.model';
+import { UserGameTrophyModel } from '../user/trophy/game-trophy.model';
+import { UserSiteTrophyModel } from '../user/trophy/site-trophy.model';
 import { UserModel } from '../user/user.model';
 import { NotificationModel, NotificationType } from './notification-model';
 
@@ -180,8 +180,8 @@ export class NotificationText {
 
 			case NotificationType.GameTrophyAchieved: {
 				if (
-					notification.action_model instanceof UserGameTrophy &&
-					notification.action_model.trophy instanceof GameTrophy &&
+					notification.action_model instanceof UserGameTrophyModel &&
+					notification.action_model.trophy instanceof GameTrophyModel &&
 					notification.action_model.game instanceof GameModel
 				) {
 					return _process(
@@ -200,8 +200,8 @@ export class NotificationText {
 
 			case NotificationType.SiteTrophyAchieved: {
 				if (
-					notification.action_model instanceof UserSiteTrophy &&
-					notification.action_model.trophy instanceof SiteTrophy
+					notification.action_model instanceof UserSiteTrophyModel &&
+					notification.action_model.trophy instanceof SiteTrophyModel
 				) {
 					return _process(
 						$gettext(

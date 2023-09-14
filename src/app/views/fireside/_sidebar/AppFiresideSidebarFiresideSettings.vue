@@ -4,7 +4,10 @@ import { BackgroundModel } from '../../../../_common/background/background.model
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { FiresideChatSettingsModel } from '../../../../_common/fireside/chat/chat-settings.model';
-import { FiresideModel } from '../../../../_common/fireside/fireside.model';
+import {
+	$saveFiresideWithRealms,
+	FiresideModel,
+} from '../../../../_common/fireside/fireside.model';
 import { FIRESIDE_ROLES } from '../../../../_common/fireside/role/role.model';
 import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
@@ -77,7 +80,11 @@ const form: FormController<FiresideModel> = createForm({
 		});
 		selectedRealms.value = fireside.realms.map(i => i.realm);
 	},
-	onSubmit: () => form.formModel.$saveWithRealms(selectedRealms.value.map(i => i.id)),
+	onSubmit: () =>
+		$saveFiresideWithRealms(
+			form.formModel,
+			selectedRealms.value.map(i => i.id)
+		),
 	onSubmitSuccess: () => {
 		fireside.assign(form.formModel);
 	},

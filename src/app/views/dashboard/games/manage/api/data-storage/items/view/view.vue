@@ -3,7 +3,10 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
-import { GameDataStoreItemModel } from '../../../../../../../../../_common/game/data-store/item/item.model';
+import {
+	$removeGameDataStoreItem,
+	GameDataStoreItemModel,
+} from '../../../../../../../../../_common/game/data-store/item/item.model';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	LegacyRouteComponent,
@@ -57,7 +60,7 @@ export default class RouteDashGamesManageApiDataStorageItemsView extends LegacyR
 			return;
 		}
 
-		await this.item.$remove();
+		await $removeGameDataStoreItem(this.item);
 		this.$router.push({ name: 'dash.games.manage.api.data-storage.items.list' });
 	}
 }

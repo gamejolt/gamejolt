@@ -2,7 +2,7 @@
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { GameModel } from '../../../../../_common/game/game.model';
-import { GameVideoModel } from '../../../../../_common/game/video/video.model';
+import { $saveGameVideo, GameVideoModel } from '../../../../../_common/game/video/video.model';
 import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
 import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../../../utils/regex';
 
@@ -21,6 +21,7 @@ export default class FormGameVideo extends mixins(Wrapper) {
 	@Prop(Object) game!: GameModel;
 
 	modelClass = GameVideoModel as any;
+	modelSaveHandler = $saveGameVideo;
 
 	readonly REGEX_VIDEO = REGEX_VIDEO;
 

@@ -57,17 +57,6 @@ export class ForumPostModel extends Model {
 	getPermalink() {
 		return Environment.baseUrl + '/x/permalink/forum-post/' + this.id;
 	}
-
-	$save() {
-		const url = '/web/forums/posts/save/' + this.topic_id;
-		let query = '';
-
-		if (this.reply_to) {
-			query = '?reply_to=' + this.reply_to;
-		}
-
-		return this.$_save(url + '/' + this.id + query, 'forumPost');
-	}
 }
 
 export async function getForumPostUrl(postId: number) {
@@ -80,4 +69,15 @@ export async function getForumPostUrl(postId: number) {
 	}
 
 	return response.url;
+}
+
+export function $saveForumPost(model: ForumPostModel) {
+	const url = '/web/forums/posts/save/' + model.topic_id;
+	let query = '';
+
+	if (model.reply_to) {
+		query = '?reply_to=' + model.reply_to;
+	}
+
+	return model.$_save(url + '/' + model.id + query, 'forumPost');
 }

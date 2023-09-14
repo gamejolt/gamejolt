@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { ref, toRefs } from 'vue';
-import { CommunityModel } from '../../../../../_common/community/community.model';
+import {
+	$saveCommunityDescription,
+	CommunityModel,
+} from '../../../../../_common/community/community.model';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import AppForm, {
 	FormController,
@@ -31,7 +34,7 @@ const form: FormController<CommunityModel> = createForm({
 	loadUrl: `/web/dash/communities/description/save/${model.value.id}`,
 	model,
 	modelClass: CommunityModel,
-	saveMethod: '$saveDescription' as const,
+	modelSaveHandler: $saveCommunityDescription,
 	onLoad(payload) {
 		lengthLimit.value = payload.lengthLimit;
 		form.formModel.description_content = model.value.description_content ?? '';

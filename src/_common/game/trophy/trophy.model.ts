@@ -1,8 +1,8 @@
 import { Api } from '../../api/api.service';
 import { BaseTrophyModel } from '../../trophy/base-trophy.model';
-import { UserGameTrophy } from '../../user/trophy/game-trophy.model';
+import { UserGameTrophyModel } from '../../user/trophy/game-trophy.model';
 
-export class GameTrophy extends BaseTrophyModel {
+export class GameTrophyModel extends BaseTrophyModel {
 	game_id!: number;
 	sort!: number;
 
@@ -13,47 +13,50 @@ export class GameTrophy extends BaseTrophyModel {
 	/**
 	 * Splits out the trophies by achieved/unachieved.
 	 */
-	static splitAchieved(trophies: GameTrophy[], achievedIndexed: { [k: number]: UserGameTrophy }) {
+	static splitAchieved(
+		trophies: GameTrophyModel[],
+		achievedIndexed: { [k: number]: UserGameTrophyModel }
+	) {
 		return {
 			achieved: trophies.filter(trophy => achievedIndexed[trophy.id]),
 			unachieved: trophies.filter(trophy => !achievedIndexed[trophy.id]),
 		};
 	}
+}
 
-	static $saveSort(gameId: number, difficulty: number, sort: any) {
-		return Api.sendRequest(
-			`/web/dash/developer/games/api/trophies/save-sort/${gameId}/${difficulty}`,
-			sort
+export function $saveGameTrophy(model: GameTrophyModel) {
+	if (!model.id) {
+		return model.$_save(
+			`/web/dash/developer/games/api/trophies/save/${model.game_id}`,
+			'gameTrophy',
+			{ file: model.file }
+		);
+	} else {
+		// May or may not have an upload file on an edit.
+		return model.$_save(
+			`/web/dash/developer/games/api/trophies/save/${model.game_id}/${model.id}`,
+			'gameTrophy',
+			{ file: model.file }
 		);
 	}
+}
 
-	$save() {
-		if (!this.id) {
-			return this.$_save(
-				`/web/dash/developer/games/api/trophies/save/${this.game_id}`,
-				'gameTrophy',
-				{ file: this.file }
-			);
-		} else {
-			// May or may not have an upload file on an edit.
-			return this.$_save(
-				`/web/dash/developer/games/api/trophies/save/${this.game_id}/${this.id}`,
-				'gameTrophy',
-				{ file: this.file }
-			);
-		}
-	}
+export function $clearGameTrophyImage(model: GameTrophyModel) {
+	return model.$_save(
+		`/web/dash/developer/games/api/trophies/clear-image/${model.game_id}/${model.id}`,
+		'gameTrophy'
+	);
+}
 
-	$clearImage() {
-		return this.$_save(
-			`/web/dash/developer/games/api/trophies/clear-image/${this.game_id}/${this.id}`,
-			'gameTrophy'
-		);
-	}
+export function $removeGameTrophy(model: GameTrophyModel) {
+	return model.$_remove(
+		`/web/dash/developer/games/api/trophies/remove/${model.game_id}/${model.id}`
+	);
+}
 
-	$remove() {
-		return this.$_remove(
-			`/web/dash/developer/games/api/trophies/remove/${this.game_id}/${this.id}`
-		);
-	}
+export function $saveSortGameTrophy(gameId: number, difficulty: number, sort: any) {
+	return Api.sendRequest(
+		`/web/dash/developer/games/api/trophies/save-sort/${gameId}/${difficulty}`,
+		sort
+	);
 }

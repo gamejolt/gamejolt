@@ -21,7 +21,7 @@ import AppSpacer from '../../../spacer/AppSpacer.vue';
 import { $gettext } from '../../../translate/translate.service';
 import AppUserAvatarImg from '../../../user/user-avatar/AppUserAvatarImg.vue';
 import { SupporterActionModel } from '../../action.model';
-import { SupporterMessageModel } from '../../message.model';
+import { $saveSupporterMessageTemplate, SupporterMessageModel } from '../../message.model';
 
 const props = defineProps({
 	action: {
@@ -58,7 +58,7 @@ const form: FormController<SupporterMessageModel> = createForm({
 			let response: any = {};
 
 			if (isTemplate.value) {
-				response = await form.formModel.$saveTemplate();
+				response = await $saveSupporterMessageTemplate(form.formModel);
 			} else {
 				response = await Api.sendRequest(
 					sendUrl.value,

@@ -10,28 +10,28 @@ export class SubscriptionModel extends Model {
 
 	// Specifically for comment subscriptions?
 	declare comment_id?: number;
+}
 
-	$save() {
-		if (!this.id) {
-			return this.$_save('/comments/subscriptions/add/' + this.comment_id, 'subscription', {
-				ignorePayloadUser: true,
-			});
-		}
-
-		throw new Error('No edit method for subscriptions.');
-	}
-
-	$remove() {
-		return this.$_remove('/comments/subscriptions/remove/' + this.id, {
+function _saveSubscription(model: SubscriptionModel) {
+	if (!model.id) {
+		return model.$_save('/comments/subscriptions/add/' + model.comment_id, 'subscription', {
 			ignorePayloadUser: true,
 		});
 	}
+
+	throw new Error('No edit method for subscriptions.');
 }
 
 export async function $createSubscription(commentId: number) {
 	const subscription = new SubscriptionModel();
 	subscription.comment_id = commentId;
 
-	await subscription.$save();
+	await _saveSubscription(subscription);
 	return subscription;
+}
+
+export function $removeSubscription(model: SubscriptionModel) {
+	return model.$_remove('/comments/subscriptions/remove/' + model.id, {
+		ignorePayloadUser: true,
+	});
 }

@@ -1,6 +1,7 @@
 <script lang="ts">
 import { mixins, Options } from 'vue-property-decorator';
 import {
+	$saveCommunityCompetition,
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
 } from '../../../../../../_common/community/competition/competition.model';
@@ -24,6 +25,8 @@ class Wrapper extends BaseForm<CommunityCompetitionModel> {}
 })
 export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 	modelClass = CommunityCompetitionModel;
+	modelSaveHandler = $saveCommunityCompetition;
+
 	timezoneService: FormTimezoneService<CommunityCompetitionModel> | null = null;
 
 	readonly formatDate = formatDate;

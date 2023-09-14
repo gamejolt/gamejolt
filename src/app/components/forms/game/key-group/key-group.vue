@@ -8,7 +8,11 @@ import {
 	GamePackageModel,
 	GamePackageVisibility,
 } from '../../../../../_common/game/package/package.model';
-import { KeyGroupModel, KeyGroupType } from '../../../../../_common/key-group/key-group.model';
+import {
+	$saveKeyGroup,
+	KeyGroupModel,
+	KeyGroupType,
+} from '../../../../../_common/key-group/key-group.model';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 class Wrapper extends BaseForm<KeyGroupModel> {}
@@ -23,6 +27,7 @@ class Wrapper extends BaseForm<KeyGroupModel> {}
 })
 export default class FormGameKeyGroup extends mixins(Wrapper) implements FormOnSubmitSuccess {
 	modelClass = KeyGroupModel;
+	modelSaveHandler = $saveKeyGroup;
 
 	@Prop(Object) game!: GameModel;
 	@Prop(Array) packages!: GamePackageModel[];

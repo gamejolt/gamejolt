@@ -212,52 +212,6 @@ export class UserModel
 
 		Registry.store('User', this);
 	}
-
-	$save() {
-		// You can only save yourself, so we don't pass in an ID to the endpoint.
-		return this.$_save('/web/dash/profile/save', 'user', {
-			allowComplexData: ['theme', 'dogtags', 'pronoun_dogtags'],
-		});
-	}
-
-	$saveAvatar() {
-		// You can only save yourself, so we don't pass in an ID to the endpoint.
-		return this.$_save('/web/dash/avatar/save', 'user', {
-			file: this.file,
-			allowComplexData: ['crop'],
-		});
-	}
-
-	$clearAvatar() {
-		return this.$_save('/web/dash/avatar/clear', 'user');
-	}
-
-	$saveHeader() {
-		// You can only save yourself, so we don't pass in an ID to the endpoint.
-		return this.$_save('/web/dash/header/save', 'user', {
-			file: this.file,
-			allowComplexData: ['crop'],
-		});
-	}
-
-	$clearHeader() {
-		return this.$_save('/web/dash/header/clear', 'user');
-	}
-
-	$saveEmailPreferences() {
-		// You can only save yourself, so we don't pass in an ID to the endpoint.
-		return this.$_save('/web/dash/email-preferences/save', 'user');
-	}
-
-	$toggleEmails(state: boolean) {
-		return this.$_save('/web/dash/email-preferences/toggle-emails', 'user', {
-			data: { state },
-		});
-	}
-
-	$unlinkAccount(provider: string) {
-		return this.$_save('/web/dash/linked-accounts/unlink/' + provider, 'user');
-	}
 }
 
 export async function touchUser() {
@@ -271,7 +225,7 @@ export async function touchUser() {
 	return Api.sendRequest('/web/touch');
 }
 
-export async function followUser(user: UserModel) {
+async function _followUser(user: UserModel) {
 	user.is_following = true;
 	++user.follower_count;
 
@@ -292,7 +246,7 @@ export async function followUser(user: UserModel) {
 	}
 }
 
-export async function unfollowUser(user: UserModel) {
+export async function $unfollowUser(user: UserModel) {
 	user.is_following = false;
 	--user.follower_count;
 
@@ -313,7 +267,7 @@ export async function unfollowUser(user: UserModel) {
 	}
 }
 
-export async function toggleUserFollow(
+export async function $toggleUserFollow(
 	user: UserModel,
 	location: UserFollowLocation
 ): Promise<boolean | null> {
@@ -322,7 +276,7 @@ export async function toggleUserFollow(
 
 	if (!user.is_following) {
 		try {
-			await followUser(user);
+			await _followUser(user);
 		} catch (e) {
 			failed = true;
 			showErrorGrowl($gettext(`Something has prevented you from following this user.`));
@@ -340,7 +294,7 @@ export async function toggleUserFollow(
 				return null;
 			}
 
-			await unfollowUser(user);
+			await $unfollowUser(user);
 		} catch (e) {
 			failed = true;
 			showErrorGrowl($gettext(`For some reason we couldn't unfollow this user.`));
@@ -362,4 +316,46 @@ export function userCanAccessCreatorForm(user: UserModel) {
 		user.creator_status === CreatorStatus.Creator ||
 		user.creator_status === CreatorStatus.Suspended
 	);
+}
+
+export function $saveUser(user: UserModel) {
+	// You can only save yourself, so we don't pass in an ID to the endpoint.
+	return user.$_save('/web/dash/profile/save', 'user', {
+		allowComplexData: ['theme', 'dogtags', 'pronoun_dogtags'],
+	});
+}
+
+export function $saveUserAvatar(user: UserModel) {
+	// You can only save yourself, so we don't pass in an ID to the endpoint.
+	return user.$_save('/web/dash/avatar/save', 'user', {
+		file: user.file,
+		allowComplexData: ['crop'],
+	});
+}
+
+export function $clearUserAvatar(user: UserModel) {
+	return user.$_save('/web/dash/avatar/clear', 'user');
+}
+
+export function $saveUserHeader(user: UserModel) {
+	// You can only save yourself, so we don't pass in an ID to the endpoint.
+	return user.$_save('/web/dash/header/save', 'user', {
+		file: user.file,
+		allowComplexData: ['crop'],
+	});
+}
+
+export function $clearUserHeader(user: UserModel) {
+	return user.$_save('/web/dash/header/clear', 'user');
+}
+
+export function $saveUserEmailPreferences(user: UserModel) {
+	// You can only save yourself, so we don't pass in an ID to the endpoint.
+	return user.$_save('/web/dash/email-preferences/save', 'user');
+}
+
+export function $toggleUserEmails(user: UserModel, state: boolean) {
+	return user.$_save('/web/dash/email-preferences/toggle-emails', 'user', {
+		data: { state },
+	});
 }

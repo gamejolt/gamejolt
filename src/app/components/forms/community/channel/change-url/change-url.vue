@@ -1,6 +1,9 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
+import {
+	$saveCommunityChannel,
+	CommunityChannelModel,
+} from '../../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import AppFormCommunityChannelTitle from '../_title/title.vue';
@@ -21,6 +24,7 @@ export default class FormCommunityChannelChangeUrl extends mixins(Wrapper) {
 	@Prop({ type: Array, required: true }) channels!: CommunityChannelModel[];
 
 	modelClass = CommunityChannelModel;
+	modelSaveHandler = $saveCommunityChannel;
 
 	get isValid() {
 		if (!this.valid) {

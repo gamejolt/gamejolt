@@ -1,6 +1,10 @@
 <script lang="ts">
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import { CommunityCompetitionModel } from '../../../../../../_common/community/competition/competition.model';
+import {
+	$clearCommunityCompetitionHeader,
+	$saveCommunityCompetitionHeader,
+	CommunityCompetitionModel,
+} from '../../../../../../_common/community/competition/competition.model';
 import AppFormControlCrop from '../../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
@@ -27,7 +31,7 @@ export default class FormCommunityCompetitionHeader
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = CommunityCompetitionModel as any;
-	saveMethod = '$saveHeader' as const;
+	modelSaveHandler = $saveCommunityCompetitionHeader;
 
 	maxFilesize = 0;
 	minAspectRatio = 0;
@@ -71,7 +75,8 @@ export default class FormCommunityCompetitionHeader
 		);
 
 		if (result) {
-			const payload = await this.formModel.$clearHeader();
+			const payload = await $clearCommunityCompetitionHeader(this.formModel);
+
 			// Overwrite the base model's header media item here.
 			// This needs to be done because this form does not resolve (and may never resolve)
 			// after cleaning a header. Need to ensure that the base model's header gets cleared.

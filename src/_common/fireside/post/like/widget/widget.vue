@@ -10,7 +10,11 @@ import { Screen } from '../../../../screen/screen-service';
 import { useCommonStore } from '../../../../store/common-store';
 import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
 import { FiresidePostModel } from '../../post-model';
-import { FiresidePostLikeModel, removeFiresidePostLike, saveFiresidePostLike } from '../like-model';
+import {
+	$removeFiresidePostLike,
+	$saveFiresidePostLike,
+	FiresidePostLikeModel,
+} from '../like-model';
 
 @Options({
 	directives: {
@@ -80,7 +84,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 
 			let failed = false;
 			try {
-				await saveFiresidePostLike(newLike);
+				await $saveFiresidePostLike(newLike);
 			} catch (e) {
 				failed = true;
 				this.post.user_like = null;
@@ -99,7 +103,7 @@ export default class AppFiresidePostLikeWidget extends Vue {
 
 			let failed = false;
 			try {
-				await removeFiresidePostLike(currentLike);
+				await $removeFiresidePostLike(currentLike);
 			} catch (e) {
 				failed = true;
 				this.post.user_like = currentLike;

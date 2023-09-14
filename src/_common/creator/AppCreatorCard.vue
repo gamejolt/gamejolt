@@ -6,7 +6,7 @@ import { FiresidePostModel } from '../fireside/post/post-model';
 import { useCommonStore } from '../store/common-store';
 import AppUserFollowButton from '../user/follow/AppUserFollowButton.vue';
 import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
-import { toggleUserFollow } from '../user/user.model';
+import { $toggleUserFollow } from '../user/user.model';
 
 export const AppCreatorCardAspectRatio = 11 / 17;
 </script>
@@ -59,7 +59,7 @@ async function onClick(event: Event) {
 	}
 
 	isProcessing.value = true;
-	await toggleUserFollow(user.value, 'creatorCard');
+	await $toggleUserFollow(user.value, 'creatorCard');
 	isProcessing.value = false;
 }
 </script>

@@ -1,7 +1,12 @@
 import { computed, inject, InjectionKey, Ref, ref } from 'vue';
 import { Router } from 'vue-router';
 import { trackGameFollow } from '../../_common/analytics/analytics.service';
-import { GamePlaylistModel } from '../../_common/game-playlist/game-playlist.model';
+import {
+	$addGameToGamePlaylist,
+	$removeGameFromGamePlaylist,
+	$removeGamePlaylist,
+	GamePlaylistModel,
+} from '../../_common/game-playlist/game-playlist.model';
 import { GameModel, unfollowGame } from '../../_common/game/game.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../_common/growls/growls.service';
 import { showModalConfirm } from '../../_common/modal/confirm/confirm-service';
@@ -9,7 +14,11 @@ import { Scroll } from '../../_common/scroll/scroll.service';
 import { $gettext } from '../../_common/translate/translate.service';
 import { arrayRemove } from '../../utils/array';
 import { showGamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
-import { GameCollectionModel } from '../components/game/collection/collection.model';
+import {
+	$followGameCollection,
+	$unfollowGameCollection,
+	GameCollectionModel,
+} from '../components/game/collection/collection.model';
 import { router } from '../views';
 
 export const LibraryStoreKey: InjectionKey<LibraryStore> = Symbol('library-store');
@@ -123,7 +132,7 @@ export async function libraryFollowCollection(
 	store.addCollection(collection);
 
 	try {
-		await collection.$follow();
+		await $followGameCollection(collection);
 	} catch (e) {
 		store.removeCollection(collection);
 		throw e;
@@ -137,7 +146,7 @@ export async function libraryUnfollowCollection(
 	store.removeCollection(collection);
 
 	try {
-		await collection.$unfollow();
+		await $unfollowGameCollection(collection);
 	} catch (e) {
 		store.addCollection(collection);
 		throw e;
@@ -182,7 +191,7 @@ export async function libraryRemovePlaylist(store: LibraryStore, collection: Gam
 	}
 
 	try {
-		await collection.playlist.$remove();
+		await $removeGamePlaylist(collection.playlist);
 		store.removeCollection(collection);
 
 		// If they're currently on the playlist page, let's push them to
@@ -219,7 +228,7 @@ export async function libraryAddGameToPlaylist(
 	game: GameModel
 ) {
 	try {
-		await playlist.$addGame(game.id);
+		await $addGameToGamePlaylist(playlist, game.id);
 
 		showSuccessGrowl(
 			$gettext(`You've added %{ game } to %{ playlist }. Nice!`, {
@@ -258,7 +267,7 @@ export async function libraryRemoveGameFromPlaylist(
 	}
 
 	try {
-		await playlist.$removeGame(game.id);
+		await $removeGameFromGamePlaylist(playlist, game.id);
 
 		showSuccessGrowl(
 			$gettext(`You have successfully removed %{ game } from %{ playlist }.`, {

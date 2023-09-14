@@ -1,6 +1,7 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import {
+	$inviteCollaborator,
 	CollaboratorModel,
 	CollaboratorRole,
 } from '../../../../../_common/collaborator/collaborator.model';
@@ -21,7 +22,7 @@ class Wrapper extends BaseForm<CollaboratorModel> {}
 })
 export default class FormCommunityCollaborator extends mixins(Wrapper) {
 	modelClass = CollaboratorModel;
-	saveMethod = '$invite' as const;
+	modelSaveHandler = $inviteCollaborator;
 
 	@Prop({ type: Object, required: true }) community!: CommunityModel;
 

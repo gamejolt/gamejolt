@@ -83,6 +83,7 @@ interface CreateFormOptions<T, SubmitResponse = any> {
 	model?: Ref<T | undefined>;
 	modelClass?: ModelClassType<T>;
 	saveMethod?: MaybeRef<keyof T | undefined>;
+	modelSaveHandler?: MaybeRef<(model: T) => Promise<SubmitResponse> | undefined>;
 	loadUrl?: MaybeRef<string | undefined>;
 	loadData?: MaybeRef<any>;
 	sanitizeComplexData?: boolean;
@@ -124,6 +125,7 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 	// These are only specified as "let" because we need to allow them to be
 	// lazy initialized.
 	let saveMethod = ref(options.saveMethod);
+	let modelSaveHandler = ref(options.modelSaveHandler);
 	let loadUrl = ref(options.loadUrl);
 	let loadData = ref(options.loadData);
 
@@ -171,6 +173,9 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		}
 		if (overrides.saveMethod) {
 			saveMethod = ref(overrides.saveMethod);
+		}
+		if (overrides.modelSaveHandler) {
+			modelSaveHandler = ref(overrides.modelSaveHandler);
 		}
 		if (overrides.loadUrl) {
 			loadUrl = ref(overrides.loadUrl);
@@ -351,7 +356,11 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 
 				response = _response;
 			} else if (modelClass) {
-				response = await (formModel.value as any)[saveMethod.value || '$save']();
+				if (modelSaveHandler.value) {
+					response = await modelSaveHandler.value(formModel.value);
+				} else {
+					response = await (formModel.value as any)[saveMethod.value || '$save']();
+				}
 
 				// Copy it back to the base model.
 				if (model?.value) {
@@ -400,6 +409,7 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		formModel,
 		method,
 		saveMethod,
+		modelSaveHandler,
 		resetOnSubmit,
 		warnOnDiscard,
 		reloadOnSubmit,
@@ -434,6 +444,7 @@ export interface FormController<T = any> {
 	formModel: T;
 	method: 'add' | 'edit';
 	saveMethod: keyof T;
+	modelSaveHandler: (model: T) => Promise<any>;
 	warnOnDiscard: boolean;
 	resetOnSubmit: boolean;
 	reloadOnSubmit: boolean;

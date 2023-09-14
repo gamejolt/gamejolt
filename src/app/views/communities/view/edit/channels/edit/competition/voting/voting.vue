@@ -5,12 +5,19 @@ import AppCardList from '../../../../../../../../../_common/card/list/AppCardLis
 import AppCardListAdd from '../../../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../../../_common/card/list/AppCardListItem.vue';
-import { CommunityCompetitionAwardModel } from '../../../../../../../../../_common/community/competition/award/award.model';
+import {
+	$removeCommunityCompetitionAward,
+	$saveCommunityCompetitionAwardSort,
+	CommunityCompetitionAwardModel,
+} from '../../../../../../../../../_common/community/competition/award/award.model';
 import {
 	CompetitionPeriodPostComp,
 	CompetitionPeriodVoting,
 } from '../../../../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
+import {
+	$removeCommunityCompetitionVotingCategory,
+	CommunityCompetitionVotingCategoryModel,
+} from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { showErrorGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -176,7 +183,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends L
 
 		if (result) {
 			arrayRemove(this.votingCategories, i => i.id === category.id);
-			await category.$remove();
+			await $removeCommunityCompetitionVotingCategory(category);
 		}
 	}
 
@@ -192,7 +199,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends L
 
 		const sortedIds = sortedAwards.map(i => i.id);
 		try {
-			await CommunityCompetitionAwardModel.$saveSort(this.competition.id, sortedIds);
+			await $saveCommunityCompetitionAwardSort(this.competition.id, sortedIds);
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl(this.$gettext(`Could not save award arrangement.`));
@@ -206,7 +213,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends L
 
 		if (result) {
 			arrayRemove(this.awards, i => i.id === award.id);
-			await award.$remove();
+			await $removeCommunityCompetitionAward(award);
 		}
 	}
 }

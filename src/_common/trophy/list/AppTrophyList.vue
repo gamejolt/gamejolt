@@ -1,20 +1,23 @@
 <script lang="ts" setup>
 import { PropType, computed, toRefs } from 'vue';
 import { formatNumber } from '../../filters/number';
-import { GameTrophy } from '../../game/trophy/trophy.model';
+import { GameTrophyModel } from '../../game/trophy/trophy.model';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { UserGameTrophy, indexAchievedGameTrophies } from '../../user/trophy/game-trophy.model';
+import {
+	UserGameTrophyModel,
+	indexAchievedGameTrophies,
+} from '../../user/trophy/game-trophy.model';
 import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
 
 const props = defineProps({
 	trophies: {
-		type: Array as PropType<GameTrophy[]>,
+		type: Array as PropType<GameTrophyModel[]>,
 		required: true,
 	},
 	achieved: {
-		type: Array as PropType<UserGameTrophy[]>,
+		type: Array as PropType<UserGameTrophyModel[]>,
 		required: true,
 	},
 });

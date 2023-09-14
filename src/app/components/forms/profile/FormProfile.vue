@@ -27,7 +27,7 @@ import { DefaultTheme } from '../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
+import { $saveUser, UserModel } from '../../../../_common/user/user.model';
 import { arrayUnique } from '../../../../utils/array';
 
 type FormModel = UserModel & {
@@ -78,6 +78,7 @@ const mentionsSettingOptions = computed(() => {
 
 const form: FormController<FormModel> = createForm({
 	modelClass: UserModel,
+	modelSaveHandler: $saveUser,
 	model: user,
 	loadUrl: '/web/dash/profile/save',
 	reloadOnSubmit: true,

@@ -14,7 +14,11 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
+import {
+	$saveUserEmailPreferences,
+	$toggleUserEmails,
+	UserModel,
+} from '../../../../_common/user/user.model';
 
 type FormModel = UserModel & {
 	notifications: string[];
@@ -35,8 +39,8 @@ const isTogglingEmails = ref(false);
 
 const form: FormController<FormModel> = createForm({
 	modelClass: UserModel,
+	modelSaveHandler: $saveUserEmailPreferences,
 	model: user,
-	saveMethod: '$saveEmailPreferences' as const,
 	onInit() {
 		const notifications = [];
 		for (const i of notificationTypes.value) {
@@ -112,7 +116,7 @@ const emailsDisabled = computed(() => {
 
 async function toggleEmails(state: boolean) {
 	isTogglingEmails.value = true;
-	await user.value.$toggleEmails(state);
+	await $toggleUserEmails(user.value, state);
 	isTogglingEmails.value = false;
 }
 </script>

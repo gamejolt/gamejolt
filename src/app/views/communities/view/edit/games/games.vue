@@ -5,6 +5,7 @@ import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
+import { $saveCommunityGameSort } from '../../../../../../_common/community/community.model';
 import { GameModel } from '../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
@@ -68,7 +69,7 @@ export default class RouteCommunitiesViewEditGames extends LegacyRouteComponent 
 		this.community.games!.splice(0, this.community.games!.length, ...sortedGames);
 
 		try {
-			await this.community.saveGameSort();
+			await $saveCommunityGameSort(this.community);
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl(this.$gettext(`Could not save game arrangement.`));

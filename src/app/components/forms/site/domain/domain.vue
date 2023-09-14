@@ -4,10 +4,10 @@ import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { validateDomain } from '../../../../../_common/form-vue/validators';
 import { GameModel } from '../../../../../_common/game/game.model';
-import { SiteModel } from '../../../../../_common/site/site-model';
+import { $saveDomainSite, SiteModel } from '../../../../../_common/site/site-model';
 import { UserModel } from '../../../../../_common/user/user.model';
 
-interface FormModel {
+interface FormModel extends SiteModel {
 	type: string;
 }
 
@@ -23,7 +23,7 @@ export default class FormSiteDomain extends mixins(Wrapper) {
 	@Prop(Object) game?: GameModel;
 
 	modelClass = SiteModel as any;
-	saveMethod = '$saveDomain' as const;
+	modelSaveHandler = $saveDomainSite;
 
 	readonly validateDomain = validateDomain;
 

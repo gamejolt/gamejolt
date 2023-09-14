@@ -54,34 +54,34 @@ export class GamePackageModel extends Model {
 	shouldShowNamePrice() {
 		return this._sellable && this._sellable.type === 'pwyw' && !this._sellable.is_owned;
 	}
-
-	$save() {
-		if (!this.id) {
-			return this.$_save(
-				'/web/dash/developer/games/packages/save/' + this.game_id,
-				'gamePackage'
-			);
-		} else {
-			return this.$_save(
-				'/web/dash/developer/games/packages/save/' + this.game_id + '/' + this.id,
-				'gamePackage'
-			);
-		}
-	}
-
-	async $remove(game: GameModel) {
-		const response = await this.$_remove(
-			'/web/dash/developer/games/packages/remove/' + this.game_id + '/' + this.id
-		);
-
-		if (game && response.game) {
-			game.assign(response.game);
-		}
-
-		return response;
-	}
 }
 
 export function $saveGamePackageSort(gameId: number, packagesSort: any) {
 	return Api.sendRequest('/web/dash/developer/games/packages/save-sort/' + gameId, packagesSort);
+}
+
+export function $saveGamePackage(model: GamePackageModel) {
+	if (!model.id) {
+		return model.$_save(
+			'/web/dash/developer/games/packages/save/' + model.game_id,
+			'gamePackage'
+		);
+	} else {
+		return model.$_save(
+			'/web/dash/developer/games/packages/save/' + model.game_id + '/' + model.id,
+			'gamePackage'
+		);
+	}
+}
+
+export async function $removeGamePackage(model: GamePackageModel, game: GameModel) {
+	const response = await model.$_remove(
+		'/web/dash/developer/games/packages/remove/' + model.game_id + '/' + model.id
+	);
+
+	if (game && response.game) {
+		game.assign(response.game);
+	}
+
+	return response;
 }

@@ -5,7 +5,7 @@ import AppButton from '../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../_common/filters/number';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import { PollItemModel } from '../../../_common/poll/item/item.model';
-import { PollModel } from '../../../_common/poll/poll.model';
+import { $refreshPoll, $voteOnPoll, PollModel } from '../../../_common/poll/poll.model';
 import AppProgressBar from '../../../_common/progress/AppProgressBar.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
@@ -79,7 +79,7 @@ async function vote(id: number) {
 	}
 
 	isProcessing.value = true;
-	const payload = await poll.value.$vote(id);
+	const payload = await $voteOnPoll(poll.value, id);
 	handleVotePayload(payload);
 	isProcessing.value = false;
 }
@@ -124,7 +124,7 @@ function setDateRefresh() {
 		now.value = Date.now();
 		if (!isVotable.value) {
 			clearDateRefresh();
-			await poll.value.$refresh();
+			await $refreshPoll(poll.value);
 			areResultsReady.value = true;
 		}
 	}, 1000);

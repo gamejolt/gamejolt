@@ -3,7 +3,10 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
-import { GameDataStoreItemModel } from '../../../../../../../../../_common/game/data-store/item/item.model';
+import {
+	$removeGameDataStoreItem,
+	GameDataStoreItemModel,
+} from '../../../../../../../../../_common/game/data-store/item/item.model';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../../../../../_common/popper/AppPopper.vue';
 import {
@@ -56,7 +59,7 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends LegacyR
 			return;
 		}
 
-		await item.$remove();
+		await $removeGameDataStoreItem(item);
 
 		const index = this.items.findIndex(i => i.id === item.id);
 		if (index !== -1) {

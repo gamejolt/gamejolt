@@ -30,16 +30,16 @@ export class PollModel extends Model {
 			buildPollItemForPoll(this, '');
 		}
 	}
+}
 
-	$vote(itemId: number) {
-		return this.$_save(`/web/polls/vote/${this.id}`, 'poll', { data: { item_id: itemId } });
+export function $voteOnPoll(model: PollModel, itemId: number) {
+	return model.$_save(`/web/polls/vote/${model.id}`, 'poll', { data: { item_id: itemId } });
+}
+
+export function $refreshPoll(model: PollModel) {
+	if (!model.id) {
+		throw new Error(`Cannot refresh a poll that doesn't exist yet`);
 	}
 
-	$refresh() {
-		if (!this.id) {
-			throw new Error(`Cannot refresh a poll that doesn't exist yet`);
-		}
-
-		return this.$_save(`/web/polls/refresh/${this.id}`, 'poll', { detach: true });
-	}
+	return model.$_save(`/web/polls/refresh/${model.id}`, 'poll', { detach: true });
 }

@@ -4,7 +4,7 @@ import { mixins, Options, Watch } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppFormControlTheme from '../../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
-import { GameModel } from '../../../../../_common/game/game.model';
+import { $saveGameDesign, GameModel } from '../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
@@ -23,7 +23,7 @@ class Wrapper extends BaseForm<GameModel> {}
 })
 export default class FormGameDesign extends mixins(Wrapper) {
 	modelClass = GameModel as any;
-	saveMethod = '$saveDesign' as const;
+	modelSaveHandler = $saveGameDesign;
 
 	themeStore = setup(() => useThemeStore());
 

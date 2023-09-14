@@ -19,13 +19,13 @@ export class SupporterMessageModel extends Model {
 			this.to_user = new UserModel(data.to_user);
 		}
 	}
+}
 
-	async $saveTemplate() {
-		return this.$_save(`/web/dash/creators/supporters/save_template`, 'message', {
-			data: {
-				message_content: this.content,
-			},
-			detach: true,
-		});
-	}
+export async function $saveSupporterMessageTemplate(model: SupporterMessageModel) {
+	return model.$_save(`/web/dash/creators/supporters/save_template`, 'message', {
+		data: {
+			message_content: model.content,
+		},
+		detach: true,
+	});
 }

@@ -5,7 +5,7 @@ import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnLoad } from '../../../../_common/form-vue/form.service';
 import { validateUrlPath } from '../../../../_common/form-vue/validators';
-import { GameModel } from '../../../../_common/game/game.model';
+import { $saveGame, GameModel } from '../../../../_common/game/game.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppGameDevStageSelector from './dev-stage-selector/AppGameDevStageSelector.vue';
@@ -33,6 +33,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 
 	// We need to reset all the "is published", "has builds" stuff.
 	modelClass = GameModel;
+	modelSaveHandler = $saveGame;
 
 	account: any = null;
 	categories: any = null;

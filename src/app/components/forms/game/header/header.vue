@@ -7,7 +7,11 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../../_common/form-vue/form.service';
-import { GameModel } from '../../../../../_common/game/game.model';
+import {
+	$clearGameHeader,
+	$saveGameHeader,
+	GameModel,
+} from '../../../../../_common/game/game.model';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 
 type FormModel = GameModel & {
@@ -27,7 +31,7 @@ export default class FormGameHeader
 	implements FormOnLoad, FormOnBeforeSubmit
 {
 	modelClass = GameModel as any;
-	saveMethod = '$saveHeader' as const;
+	modelSaveHandler = $saveGameHeader;
 
 	maxFilesize = 0;
 	minAspectRatio = 0;
@@ -73,7 +77,7 @@ export default class FormGameHeader
 		);
 
 		if (result) {
-			const payload = await this.formModel.$clearHeader();
+			const payload = await $clearGameHeader(this.model!);
 			// Overwrite the base model's header media item here.
 			// This needs to be done because this form does not resolve (and may never resolve)
 			// after cleaning a header. Need to ensure that the base model's header gets cleared.

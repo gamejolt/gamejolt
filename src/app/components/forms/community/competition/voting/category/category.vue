@@ -1,7 +1,10 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { CommunityCompetitionModel } from '../../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
+import {
+	$saveCommunityCompetitionVotingCategory,
+	CommunityCompetitionVotingCategoryModel,
+} from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import AppFormControlTextarea from '../../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
 import { BaseForm, FormOnBeforeSubmit } from '../../../../../../../_common/form-vue/form.service';
 
@@ -19,6 +22,7 @@ export default class FormCommunityCompetitionVotingCategory
 	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
 
 	modelClass = CommunityCompetitionVotingCategoryModel;
+	modelSaveHandler = $saveCommunityCompetitionVotingCategory;
 
 	get isAdding() {
 		return !this.model;

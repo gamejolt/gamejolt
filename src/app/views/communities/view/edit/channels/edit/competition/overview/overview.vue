@@ -1,6 +1,7 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
+import { $publishCommunityChannel } from '../../../../../../../../../_common/community/channel/channel.model';
 import { CommunityCompetitionVotingCategoryModel } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Environment } from '../../../../../../../../../_common/environment/environment.service';
 import { formatDuration } from '../../../../../../../../../_common/filters/duration';
@@ -91,7 +92,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 		);
 
 		if (result) {
-			await this.channel.$publish();
+			await $publishCommunityChannel(this.channel);
 
 			showSuccessGrowl(this.$gettext(`Your jam has been published!`));
 		}

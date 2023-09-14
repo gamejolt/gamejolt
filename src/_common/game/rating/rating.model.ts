@@ -10,28 +10,28 @@ export class GameRatingModel extends Model {
 	declare rating: GameRatingValue;
 	declare posted_on: number;
 	declare type: string;
+}
 
-	$save() {
-		// This is an upsert.
-		return this.$_save('/web/discover/games/ratings/save/' + this.game_id, 'gameRating', {
-			detach: true,
-			ignoreLoadingBar: true,
-			data: {
-				rating: this.rating,
-				timestamp: Date.now(),
-			},
-		});
-	}
+export function $saveGameRating(model: GameRatingModel) {
+	// This is an upsert.
+	return model.$_save('/web/discover/games/ratings/save/' + model.game_id, 'gameRating', {
+		detach: true,
+		ignoreLoadingBar: true,
+		data: {
+			rating: model.rating,
+			timestamp: Date.now(),
+		},
+	});
+}
 
-	$remove() {
-		// This is a clear.
-		// Doesn't depend on the rating ID, only the game ID.
-		return this.$_remove('/web/discover/games/ratings/clear/' + this.game_id, {
-			detach: true,
-			ignoreLoadingBar: true,
-			data: {
-				timestamp: Date.now(),
-			},
-		});
-	}
+export function $removeGameRating(model: GameRatingModel) {
+	// This is a clear.
+	// Doesn't depend on the rating ID, only the game ID.
+	return model.$_remove('/web/discover/games/ratings/clear/' + model.game_id, {
+		detach: true,
+		ignoreLoadingBar: true,
+		data: {
+			timestamp: Date.now(),
+		},
+	});
 }
