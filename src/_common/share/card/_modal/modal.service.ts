@@ -7,18 +7,16 @@ interface ShareModalOptions {
 	url: string;
 }
 
-export class ShareModal {
-	static async show(options: ShareModalOptions) {
-		const { resource, url } = options;
+export async function showShareModal(options: ShareModalOptions) {
+	const { resource, url } = options;
 
-		return await showModal<void>({
-			modalId: 'Share',
-			component: defineAsyncComponent(() => import('./AppShareCardModal.vue')),
-			props: {
-				resource,
-				url,
-			},
-			size: 'sm',
-		});
-	}
+	return await showModal<void>({
+		modalId: 'Share',
+		component: defineAsyncComponent(() => import('./AppShareCardModal.vue')),
+		props: {
+			resource,
+			url,
+		},
+		size: 'sm',
+	});
 }

@@ -11,7 +11,7 @@ import { useCommonStore } from '../store/common-store';
 import { QuestModel } from './quest-model';
 import { QuestObjectiveRewardModel } from './quest-objective-reward-model';
 import { QuestRewardData } from './reward/AppQuestRewardModal.vue';
-import { QuestRewardModal } from './reward/modal.service';
+import { showQuestRewardModal } from './reward/modal.service';
 </script>
 
 <script lang="ts" setup>
@@ -204,7 +204,7 @@ async function onActionPressed() {
 		}
 		const title = isAccept.value ? quest.value.title : undefined;
 
-		QuestRewardModal.show({
+		showQuestRewardModal({
 			quest: quest.value,
 			rewards,
 			title,

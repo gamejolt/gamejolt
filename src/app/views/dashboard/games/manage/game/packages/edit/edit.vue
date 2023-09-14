@@ -33,7 +33,7 @@ import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-dir
 import { shallowSetup } from '../../../../../../../../utils/vue';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
-import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
+import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../../manage.store';
 
@@ -150,7 +150,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteCom
 
 	async editPackage() {
 		// Keep our preview in sync.
-		await GamePackageEditModal.show(this.routeStore, this.package, this.sellable);
+		await showGamePackageEditModal(this.routeStore, this.package, this.sellable);
 		this.loadPreview();
 	}
 

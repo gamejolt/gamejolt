@@ -15,6 +15,15 @@ interface GamePackagePurchaseModalOptions {
 	partner?: UserModel;
 }
 
+export async function showGamePackagePurchaseModal(options: GamePackagePurchaseModalOptions) {
+	return await showModal<void>({
+		modalId: 'GamePackagePurchase',
+		component: defineAsyncComponent(() => import('./AppGamePackagePurchaseModal.vue')),
+		size: 'sm',
+		props: options,
+	});
+}
+
 export class GamePackagePurchaseModal {
 	static async show(options: GamePackagePurchaseModalOptions) {
 		return await showModal<void>({

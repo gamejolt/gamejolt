@@ -3,15 +3,15 @@ import { showModal } from '../../../../modal/modal.service';
 import { CommunityCompetitionModel } from '../../competition.model';
 import { CommunityCompetitionEntryModel } from '../entry.model';
 
-export class CommunityCompetitionEntrySubmitModal {
-	static async show(competition: CommunityCompetitionModel) {
-		return await showModal<CommunityCompetitionEntryModel>({
-			modalId: 'CommunityCompetitionEntrySubmit',
-			component: defineAsyncComponent(() => import('./submit-modal.vue')),
-			props: {
-				competition,
-			},
-			size: 'sm',
-		});
-	}
+export async function showCommunityCompetitionEntrySubmitModal(
+	competition: CommunityCompetitionModel
+) {
+	return await showModal<CommunityCompetitionEntryModel>({
+		modalId: 'CommunityCompetitionEntrySubmit',
+		component: defineAsyncComponent(() => import('./submit-modal.vue')),
+		props: {
+			competition,
+		},
+		size: 'sm',
+	});
 }

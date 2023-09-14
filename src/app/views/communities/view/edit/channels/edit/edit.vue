@@ -7,7 +7,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import { CommunityCompetitionHeaderModal } from '../../../../../../components/community/competition/header-modal/header-modal.service';
+import { showCommunityCompetitionHeaderModal } from '../../../../../../components/community/competition/header-modal/header-modal.service';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
 import AppPageHeader from '../../../../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../../../../components/page-header/controls/controls.vue';
@@ -73,7 +73,7 @@ export default class RouteCommunitiesViewEditChannelsEdit extends LegacyRouteCom
 	}
 
 	async onClickEditHeader() {
-		await CommunityCompetitionHeaderModal.show(this.competition!);
+		await showCommunityCompetitionHeaderModal(this.competition!);
 	}
 }
 </script>

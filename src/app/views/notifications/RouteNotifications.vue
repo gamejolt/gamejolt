@@ -14,7 +14,7 @@ import { ActivityFeedView } from '../../components/activity/feed/view';
 import { useGridStore } from '../../components/grid/grid-store';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import { useAppStore } from '../../store';
-import { NotificationsFilterModal } from './filter/modal.service';
+import { showNotificationsFilterModal } from './filter/modal.service';
 import { routeNotifications } from './notifications.route';
 
 export const SUPPORTED_NOTIFICATION_FEED_TYPES = NotificationFeedTypes;
@@ -141,7 +141,7 @@ function onLoadedNew() {
 }
 
 function onClickFilter() {
-	NotificationsFilterModal.show({
+	showNotificationsFilterModal({
 		filters: existingFilters.value ?? SUPPORTED_NOTIFICATION_FEED_TYPES,
 		replaceRoute: true,
 	});

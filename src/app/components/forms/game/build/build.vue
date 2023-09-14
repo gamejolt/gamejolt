@@ -33,7 +33,7 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../utils/array';
 import { shallowSetup } from '../../../../../utils/vue';
 import { useFormGameRelease } from '../release/release.vue';
-import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
+import { showArchiveFileSelectorModal } from './archive-file-selector-modal.service';
 
 export interface FormGameBuildInterface {
 	buildId: number;
@@ -427,7 +427,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 	}
 
 	async openFileSelector(platform: string) {
-		const selected = await ArchiveFileSelectorModal.show(
+		const selected = await showArchiveFileSelectorModal(
 			this.game.id,
 			this.package.id,
 			this.release.id,

@@ -222,17 +222,21 @@ const styleStatusIcon: CSSProperties = {
 						borderRadius: `50%`,
 					}"
 				>
-					<AppOnHover v-slot="{ binding, hovered }">
+					<AppOnHover v-slot="{ hoverBinding, hovered }">
 						<AppUserAvatar
-							v-bind="binding"
-							:style="{
-								width: `72px`,
-								height: `72px`,
-								zIndex: 2,
-								transition: `filter 0.1s ease`,
-								...styleWhen(hovered, {
-									filter: `brightness(0.6) contrast(1.1)`,
-								}),
+							v-bind="{
+								...hoverBinding,
+								style: [
+									{
+										width: `72px`,
+										height: `72px`,
+										zIndex: 2,
+										transition: `filter 0.1s ease`,
+									},
+									styleWhen(hovered, {
+										filter: `brightness(0.6) contrast(1.1)`,
+									}),
+								],
 							}"
 							:user="user"
 						/>

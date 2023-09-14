@@ -6,17 +6,15 @@ interface FiresideHostsModalOptions {
 	controller: FiresideController;
 }
 
-export class FiresideHostsModal {
-	static async show(options: FiresideHostsModalOptions) {
-		const { controller } = options;
+export async function showFiresideHostsModal(options: FiresideHostsModalOptions) {
+	const { controller } = options;
 
-		return await showModal<void>({
-			modalId: 'FiresideHosts',
-			component: defineAsyncComponent(() => import('./AppFiresideHostsModal.vue')),
-			props: {
-				controller,
-			},
-			size: 'sm',
-		});
-	}
+	return await showModal<void>({
+		modalId: 'FiresideHosts',
+		component: defineAsyncComponent(() => import('./AppFiresideHostsModal.vue')),
+		props: {
+			controller,
+		},
+		size: 'sm',
+	});
 }

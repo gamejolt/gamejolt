@@ -9,19 +9,17 @@ interface QuestRewardModalOptions {
 	title?: string;
 }
 
-export class QuestRewardModal {
-	static async show(options: QuestRewardModalOptions) {
-		const { quest, title, rewards } = options;
+export async function showQuestRewardModal(options: QuestRewardModalOptions) {
+	const { quest, title, rewards } = options;
 
-		return await showModal({
-			modalId: 'QuestRewards',
-			component: defineAsyncComponent(() => import('./AppQuestRewardModal.vue')),
-			props: {
-				quest,
-				rewards,
-				title,
-			},
-			size: 'full',
-		});
-	}
+	return await showModal({
+		modalId: 'QuestRewards',
+		component: defineAsyncComponent(() => import('./AppQuestRewardModal.vue')),
+		props: {
+			quest,
+			rewards,
+			title,
+		},
+		size: 'full',
+	});
 }

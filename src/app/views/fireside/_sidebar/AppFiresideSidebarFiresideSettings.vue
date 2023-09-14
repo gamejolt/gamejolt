@@ -22,7 +22,7 @@ import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/contro
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { RealmModel } from '../../../../_common/realm/realm-model';
-import { ReportModal } from '../../../../_common/report/modal/modal.service';
+import { showReportModal } from '../../../../_common/report/modal/modal.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -35,10 +35,10 @@ import {
 	publishFireside,
 	useFiresideController,
 } from '../../../components/fireside/controller/controller';
-import { ChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
-import { ChatModsModal } from '../../../components/forms/chat/mods/modal/modal.service';
-import { ChatTimersModal } from '../../../components/forms/chat/timers/modal/modal.service';
-import { FiresideHostsModal } from '../../../components/forms/fireside/hosts/modal/modal.service';
+import { showChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
+import { showChatModsModal } from '../../../components/forms/chat/mods/modal/modal.service';
+import { showChatTimersModal } from '../../../components/forms/chat/timers/modal/modal.service';
+import { showFiresideHostsModal } from '../../../components/forms/fireside/hosts/modal/modal.service';
 import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
@@ -194,7 +194,7 @@ const settingsRoleOptions = computed<{ label: string; value: FIRESIDE_ROLES | nu
 ]);
 
 function onClickReport() {
-	ReportModal.show(fireside);
+	showReportModal(fireside);
 }
 
 function onClickPublish() {
@@ -206,20 +206,20 @@ function onClickExtinguish() {
 }
 
 function onClickChatCommands() {
-	ChatCommandsModal.show();
+	showChatCommandsModal();
 }
 
 function onClickChatTimers() {
-	ChatTimersModal.show();
+	showChatTimersModal();
 }
 
 function onClickHosts() {
-	FiresideHostsModal.show({ controller: c });
+	showFiresideHostsModal({ controller: c });
 }
 
 function onClickChatMods() {
 	if (chatRoom.value) {
-		ChatModsModal.show({
+		showChatModsModal({
 			chatRoom: chatRoom.value,
 			hasCurrentMods: true,
 			initialSection: 'currentMods',

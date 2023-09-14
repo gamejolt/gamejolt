@@ -3,6 +3,7 @@ import {
 	ComputedRef,
 	inject,
 	InjectionKey,
+	MaybeRef,
 	provide,
 	reactive,
 	ref,
@@ -13,7 +14,7 @@ import {
 	unref,
 	WritableComputedRef,
 } from 'vue';
-import { MaybeComputedRef, MaybeRef } from '../../../utils/vue';
+import { MaybeComputedRef } from '../../../utils/vue';
 import { CommentModel } from '../../comment/comment-model';
 import { FiresideModel } from '../../fireside/fireside.model';
 import { FiresidePostModel } from '../../fireside/post/post-model';
@@ -134,6 +135,9 @@ export function createStickerTargetController(
 export function provideStickerTargetController(
 	controller?: MaybeRef<StickerTargetController | null>
 ) {
+	if (!controller) {
+		return;
+	}
 	provide(StickerTargetParentControllerKey, controller);
 }
 

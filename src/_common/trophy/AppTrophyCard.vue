@@ -7,7 +7,7 @@ import { useCommonStore } from '../store/common-store';
 import { $gettext } from '../translate/translate.service';
 import { UserGameTrophyModel } from '../user/trophy/game-trophy.model';
 import { UserBaseTrophyModel } from '../user/trophy/user-base-trophy.model';
-import { TrophyModal } from './modal/modal.service';
+import { showTrophyModal } from './modal/modal.service';
 import AppTrophyThumbnail from './thumbnail/AppTrophyThumbnail.vue';
 
 const props = defineProps({
@@ -50,7 +50,7 @@ const loggedInUserUnlocked = computed(() =>
 );
 
 function onClick() {
-	TrophyModal.show(userTrophy.value);
+	showTrophyModal(userTrophy.value);
 }
 </script>
 

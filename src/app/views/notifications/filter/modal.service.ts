@@ -6,18 +6,16 @@ interface NotificationsFilterModalOptions {
 	replaceRoute?: boolean;
 }
 
-export class NotificationsFilterModal {
-	static async show(options: NotificationsFilterModalOptions) {
-		const { filters, replaceRoute } = options;
+export async function showNotificationsFilterModal(options: NotificationsFilterModalOptions) {
+	const { filters, replaceRoute } = options;
 
-		return await showModal<void>({
-			modalId: 'NotificationsFilter',
-			component: defineAsyncComponent(() => import('./NotificationsFilter.vue')),
-			props: {
-				filters,
-				replaceRoute,
-			},
-			size: 'sm',
-		});
-	}
+	return await showModal<void>({
+		modalId: 'NotificationsFilter',
+		component: defineAsyncComponent(() => import('./NotificationsFilter.vue')),
+		props: {
+			filters,
+			replaceRoute,
+		},
+		size: 'sm',
+	});
 }

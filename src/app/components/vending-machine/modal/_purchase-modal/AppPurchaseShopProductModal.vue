@@ -25,7 +25,6 @@ import AppStickerPack, {
 	StickerPackRatio,
 } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import AppStickerPackContents from '../../../../../_common/sticker/pack/AppStickerPackContents.vue';
-import { StickerPackOpenModal } from '../../../../../_common/sticker/pack/open-modal/modal.service';
 import { UserStickerPackModel } from '../../../../../_common/sticker/pack/user-pack.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -325,7 +324,7 @@ function handleStickerPackPurchase(product: UserStickerPackModel) {
 
 	// Show the PackOpen modal. This should ask them if they want to open right
 	// away or save their pack for later.
-	StickerPackOpenModal.show({
+	showStickerPackOpenModal({
 		pack: product,
 		openImmediate: false,
 	});

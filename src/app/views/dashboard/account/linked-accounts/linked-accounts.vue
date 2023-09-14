@@ -16,7 +16,7 @@ import {
 } from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
+import { showUserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 @Options({
@@ -107,7 +107,7 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 		} else {
 			// If they don't have a password, we have to show them a modal to set it.
 			if (response.reason === 'no-password') {
-				const result = await UserSetPasswordModal.show();
+				const result = await showUserSetPasswordModal();
 				if (!result) {
 					this.loading = false;
 					return;

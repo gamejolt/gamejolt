@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { FiresidePostModel } from '../fireside/post/post-model';
-import { SupportersModal } from '../supporters/modal.service';
+import { showSupportersModal } from '../supporters/modal.service';
 import { vAppTooltip } from '../tooltip/tooltip-directive';
 import { $gettext } from '../translate/translate.service';
 import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
@@ -27,7 +27,7 @@ const { model, supporters, limit } = toRefs(props);
 const displaySupporters = computed(() => supporters.value.slice(0, limit?.value));
 
 function onClick() {
-	SupportersModal.show({ model: model.value });
+	showSupportersModal({ model: model.value });
 }
 </script>
 

@@ -9,12 +9,12 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import AppGameModLinks from '../../../../../_common/game/mod-links/mod-links.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
-import { ReportModal } from '../../../../../_common/report/modal/modal.service';
+import { showReportModal } from '../../../../../_common/report/modal/modal.service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { getAbsoluteLink } from '../../../../../utils/router';
-import { CommentModal } from '../../../../components/comment/modal/modal.service';
+import { showCommentModal } from '../../../../components/comment/modal/modal.service';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { useGameRouteController } from './view.vue';
 
@@ -35,7 +35,7 @@ const commentsCount = computed(() => {
 });
 
 function showComments() {
-	CommentModal.show({ model: game.value!, displayMode: 'comments' });
+	showCommentModal({ model: game.value!, displayMode: 'comments' });
 }
 
 function copyShareUrl() {
@@ -48,7 +48,7 @@ function copyShareUrl() {
 }
 
 function report() {
-	ReportModal.show(game.value!);
+	showReportModal(game.value!);
 }
 </script>
 

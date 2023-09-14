@@ -22,7 +22,7 @@ import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-dir
 import { arrayIndexBy } from '../../../../../../../../utils/array';
 import { shallowSetup } from '../../../../../../../../utils/vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
-import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
+import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../../manage.store';
 
@@ -107,7 +107,7 @@ export default class RouteDashGamesManageGamePackagesList extends LegacyRouteCom
 	}
 
 	async addPackage() {
-		const newPackage = await GamePackageEditModal.show(this.routeStore);
+		const newPackage = await showGamePackageEditModal(this.routeStore);
 		if (newPackage instanceof GamePackageModel) {
 			this.packages.push(newPackage);
 		}

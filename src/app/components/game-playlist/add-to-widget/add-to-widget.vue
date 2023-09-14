@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
+import { PropType } from 'vue';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { GameModel } from '../../../../_common/game/game.model';
@@ -23,29 +23,23 @@ defineProps({
 		type: Boolean,
 	},
 });
-
-const isShown = ref(false);
 </script>
 
 <template>
-	<AppPopper
-		v-if="game.isVisible"
-		popover-class="fill-darkest"
-		placement="bottom"
-		@show="isShown = true"
-		@hide="isShown = false"
-	>
-		<AppButton
-			v-app-auth-required
-			v-app-tooltip.bottom="$gettext('Add to Playlist')"
-			v-app-track-event="`add-to-playlist:widget:${eventLabel}`"
-			icon="add"
-			sparse
-			:overlay="overlay"
-			:circle="circle"
-		/>
+	<AppPopper v-if="game.isVisible" popover-class="fill-darkest" placement="bottom">
+		<template #default>
+			<AppButton
+				v-app-auth-required
+				v-app-tooltip.bottom="$gettext('Add to Playlist')"
+				v-app-track-event="`add-to-playlist:widget:${eventLabel}`"
+				icon="add"
+				sparse
+				:overlay="overlay"
+				:circle="circle"
+			/>
+		</template>
 
-		<template v-if="isShown" #popover>
+		<template #popover>
 			<AppGamePlaylistAddToPopover :game="game" />
 		</template>
 	</AppPopper>

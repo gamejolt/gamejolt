@@ -18,7 +18,7 @@ import {
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { $saveUser, UserModel } from '../../../../_common/user/user.model';
-import { UserAvatarModal } from '../../user/avatar-modal/avatar-modal.service';
+import { showUserAvatarModal } from '../../user/avatar-modal/avatar-modal.service';
 
 type FormModel = {
 	username: string;
@@ -139,7 +139,7 @@ async function chooseAvatar() {
 	}
 	hasSelectedAvatar.value = true;
 
-	await UserAvatarModal.show();
+	await showUserAvatarModal();
 }
 </script>
 

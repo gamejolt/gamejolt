@@ -21,7 +21,7 @@ import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-serv
 import { Model } from '../../../../_common/model/model.service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
-import { ReportModal } from '../../../../_common/report/modal/modal.service';
+import { showReportModal } from '../../../../_common/report/modal/modal.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
@@ -234,7 +234,7 @@ function copyPermalink() {
 }
 
 function report() {
-	ReportModal.show(comment.value);
+	showReportModal(comment.value);
 }
 
 function onUnhideBlock() {

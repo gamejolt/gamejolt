@@ -61,10 +61,9 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 		<template v-if="user">
 			<!-- Chat -->
 			<AppShellCbarItem
-				v-if="chat"
 				class="-control"
 				:highlight="highlight"
-				:notification-count="chat.roomNotificationsCount"
+				:notification-count="chat?.roomNotificationsCount || 0"
 				:is-active="visibleLeftPane === 'chat'"
 				is-control
 			>

@@ -27,6 +27,7 @@ export async function loadJoltydexFeed({
 	ownerUser,
 	user,
 	pos,
+	perPage,
 }: {
 	types: CollectibleType[];
 	/** The user that is providing these collectibles. */
@@ -34,6 +35,7 @@ export async function loadJoltydexFeed({
 	/** The user that has unlocked the items. */
 	user: UserModel;
 	pos?: number;
+	perPage?: number;
 }) {
 	const commonFields = {
 		ownerUser: ownerUser.id,
@@ -46,6 +48,7 @@ export async function loadJoltydexFeed({
 		{
 			collectibles: {
 				...commonFields,
+				perPage,
 				pos,
 			},
 			collectibleCount: {

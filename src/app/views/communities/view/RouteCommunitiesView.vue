@@ -20,7 +20,7 @@ import { useThemeStore } from '../../../../_common/theme/theme.store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { enforceLocation } from '../../../../utils/router';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
-import { CommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
+import { showCommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
 import { useGridStore } from '../../../components/grid/grid-store';
 import AppShellContentWithSidebar from '../../../components/shell/AppShellContentWithSidebar.vue';
 import { useAppStore } from '../../../store/index';
@@ -172,7 +172,7 @@ async function _getCommunityBootstrap() {
 }
 
 function showEditHeader() {
-	CommunityHeaderModal.show(community.value);
+	showCommunityHeaderModal(community.value);
 }
 </script>
 

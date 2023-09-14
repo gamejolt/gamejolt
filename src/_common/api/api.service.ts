@@ -176,14 +176,14 @@ class ApiService {
 		const apiHost = options.apiHost ?? (options.file ? this.uploadHost : this.apiHost);
 		const url = apiHost + (options.apiPath ?? this.apiPath) + uri;
 
-		const requestPromise = this.createRequest(method, url, sanitizedPostData, options);
+		const requestBuilder = () => this.createRequest(method, url, sanitizedPostData, options);
 
 		// If we aren't processing the payload, then just return the promise.
 		if (!options.processPayload) {
-			return await requestPromise;
+			return (await requestBuilder()) as unknown as any;
+		} else {
+			return Payload.processResponse(requestBuilder, options);
 		}
-
-		return Payload.processResponse(requestPromise, options);
 	}
 
 	/**
@@ -228,61 +228,58 @@ class ApiService {
 			++this.loadingBarRequests.value;
 		}
 
-		let promise: Promise<any>;
-
-		if (options.file) {
-			// An upload request.
-			// We have to send it over as form data instead of JSON data.
-			data = { ...data, file: options.file };
-			const formData = new FormData();
-			for (const key in data) {
-				if (Array.isArray(data[key])) {
-					for (const i of data[key]) {
-						formData.append(key + '[]', i);
+		try {
+			if (options.file) {
+				// An upload request.
+				// We have to send it over as form data instead of JSON data.
+				data = { ...data, file: options.file };
+				const formData = new FormData();
+				for (const key in data) {
+					if (Array.isArray(data[key])) {
+						for (const i of data[key]) {
+							formData.append(key + '[]', i);
+						}
+					} else {
+						formData.append(key, data[key]);
 					}
-				} else {
-					formData.append(key, data[key]);
 				}
-			}
 
-			promise = this.sendRawRequest(url, {
-				method,
-				data: formData,
-				headers,
-				withCredentials: options.withCredentials,
-				signal: options.fileCancelToken,
-				onUploadProgress: e => {
-					if (options.progress && e.total) {
-						options.progress({
-							loaded: e.loaded,
-							total: e.total,
-						});
-					}
-				},
-			}).then((response: any) => {
+				const response = await this.sendRawRequest(url, {
+					method,
+					data: formData,
+					headers,
+					withCredentials: options.withCredentials,
+					signal: options.fileCancelToken,
+					onUploadProgress: e => {
+						if (options.progress && e.total) {
+							options.progress({
+								loaded: e.loaded,
+								total: e.total,
+							});
+						}
+					},
+				});
+
 				// When the request is done, send one last progress event of
 				// nothing to indicate that the transfer is complete.
 				if (options.progress) {
 					options.progress(null);
 				}
-				return response;
-			});
-		} else {
-			promise = this.sendRawRequest(url, {
-				method,
-				data,
-				headers,
-				withCredentials: options.withCredentials,
-			});
-		}
 
-		promise.finally(() => {
+				return response;
+			} else {
+				return await this.sendRawRequest(url, {
+					method,
+					data,
+					headers,
+					withCredentials: options.withCredentials,
+				});
+			}
+		} finally {
 			if (showLoading) {
 				--this.loadingBarRequests.value;
 			}
-		});
-
-		return promise;
+		}
 	}
 
 	public createCancelToken() {

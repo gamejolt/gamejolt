@@ -7,21 +7,19 @@ interface ContentTargetManageRealmsModalOptions {
 	maxRealms: number;
 }
 
-export class ContentTargetManageRealmsModal {
-	static async show(options: ContentTargetManageRealmsModalOptions) {
-		const { selectedRealms, maxRealms } = options;
+export async function showContentTargetManageRealmsModal(
+	options: ContentTargetManageRealmsModalOptions
+) {
+	const { selectedRealms, maxRealms } = options;
 
-		return await showModal<void>({
-			modalId: 'ContentTargetManageRealms',
-			component: defineAsyncComponent(
-				() => import('./AppContentTargetManageRealmsModal.vue')
-			),
-			props: {
-				selectedRealms,
-				maxRealms,
-			},
-			size: 'sm',
-			noBackdropClose: true,
-		});
-	}
+	return await showModal<void>({
+		modalId: 'ContentTargetManageRealms',
+		component: defineAsyncComponent(() => import('./AppContentTargetManageRealmsModal.vue')),
+		props: {
+			selectedRealms,
+			maxRealms,
+		},
+		size: 'sm',
+		noBackdropClose: true,
+	});
 }

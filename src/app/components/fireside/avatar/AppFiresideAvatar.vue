@@ -24,7 +24,7 @@ import AppRealmThumbnail from '../../../../_common/realm/AppRealmThumbnail.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppChatUserOnlineStatus from '../../chat/user-online-status/AppChatUserOnlineStatus.vue';
-import { CommunityEjectFiresideModal } from '../../community/eject-fireside/modal/modal.service';
+import { showCommunityEjectFiresideModal } from '../../community/eject-fireside/modal/modal.service';
 import AppFiresideAvatarBase from './AppFiresideAvatarBase.vue';
 
 export interface FiresideAvatarEvent {
@@ -171,7 +171,7 @@ async function ejectFiresideFromCommunity(community: FiresideCommunityModel) {
 		return;
 	}
 
-	const result = await CommunityEjectFiresideModal.show(community, fireside.value);
+	const result = await showCommunityEjectFiresideModal(community, fireside.value);
 	if (!result) {
 		return;
 	}

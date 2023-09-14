@@ -11,24 +11,22 @@ export type PostEditModalOptions = {
 	realm?: RealmModel;
 };
 
-export class PostEditModal {
-	static async show(
-		postProvider: FiresidePostModel | Promise<FiresidePostModel>,
-		options: PostEditModalOptions = {}
-	) {
-		options = options || {};
-		return await showModal<FiresidePostModel>({
-			modalId: 'PostEdit',
-			component: defineAsyncComponent(() => import('./edit-modal.vue')),
-			noBackdropClose: true,
-			noEscClose: true,
-			size: 'sm',
-			props: {
-				postProvider: postProvider,
-				community: options.community,
-				channel: options.channel,
-				realm: options.realm,
-			},
-		});
-	}
+export async function showPostEditModal(
+	postProvider: FiresidePostModel | Promise<FiresidePostModel>,
+	options: PostEditModalOptions = {}
+) {
+	options = options || {};
+	return await showModal<FiresidePostModel>({
+		modalId: 'PostEdit',
+		component: defineAsyncComponent(() => import('./edit-modal.vue')),
+		noBackdropClose: true,
+		noEscClose: true,
+		size: 'sm',
+		props: {
+			postProvider: postProvider,
+			community: options.community,
+			channel: options.channel,
+			realm: options.realm,
+		},
+	});
 }

@@ -5,44 +5,40 @@ import { showModal } from '../../../../../../_common/modal/modal.service';
 
 export type CommunityCompetitionEntryModalHashDeregister = () => void;
 
-export class CommunityCompetitionEntryModal {
-	static async showEntry(entry: CommunityCompetitionEntryModel) {
-		return this.show({ entry });
+async function _show(props: any) {
+	return await showModal<void>({
+		modalId: 'CommunityCompetitionEntry',
+		component: defineAsyncComponent(() => import('./modal.vue')),
+		props,
+		size: 'sm',
+	});
+}
+
+export async function showEntryFromCommunityCompetitionEntryModal(
+	entry: CommunityCompetitionEntryModel
+) {
+	return _show({ entry });
+}
+
+export async function showCommunityCompetitionEntryModalIdFromHash(router: Router) {
+	const hash = router.currentRoute.value.hash;
+	if (!hash || !hash.includes('#entry-')) {
+		return;
 	}
 
-	private static async showId(entryId: number) {
-		return this.show({ entryId });
+	const id = parseInt(hash.substring('#entry-'.length), 10);
+	if (!id) {
+		return;
 	}
 
-	static async showFromHash(router: Router) {
-		const hash = router.currentRoute.value.hash;
-		if (!hash || !hash.includes('#entry-')) {
-			return;
+	return _show({ entryId: id });
+}
+
+export function watchCommunityCompetitionEntryModalForHash(router: Router) {
+	const checkPath = router.currentRoute.value.path;
+	return router.afterEach((to, _from) => {
+		if (checkPath === to.path && !!to.hash) {
+			showCommunityCompetitionEntryModalIdFromHash(router);
 		}
-
-		const id = parseInt(hash.substring('#entry-'.length), 10);
-		if (!id) {
-			return;
-		}
-
-		return this.showId(id);
-	}
-
-	private static async show(props: any) {
-		return await showModal<void>({
-			modalId: 'CommunityCompetitionEntry',
-			component: defineAsyncComponent(() => import('./modal.vue')),
-			props,
-			size: 'sm',
-		});
-	}
-
-	static watchForHash(router: Router) {
-		const checkPath = router.currentRoute.value.path;
-		return router.afterEach((to, _from) => {
-			if (checkPath === to.path && !!to.hash) {
-				this.showFromHash(router);
-			}
-		}) as CommunityCompetitionEntryModalHashDeregister;
-	}
+	}) as CommunityCompetitionEntryModalHashDeregister;
 }

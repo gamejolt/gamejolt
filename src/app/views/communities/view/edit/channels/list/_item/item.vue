@@ -3,7 +3,7 @@ import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
-import { CommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
+import { showCommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
 
 @Options({
@@ -56,7 +56,7 @@ export default class AppCommunitiesEditChannelListItem extends Vue {
 	}
 
 	async onClickRemoveChannel(channel: CommunityChannelModel) {
-		await CommunityRemoveChannelModal.show(this.community, channel);
+		await showCommunityRemoveChannelModal(this.community, channel);
 
 		if (channel._removed) {
 			if (channel.is_archived) {

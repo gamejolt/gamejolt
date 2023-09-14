@@ -20,10 +20,10 @@ import AppTranslate from '../../../translate/AppTranslate.vue';
 import { GameBuildModel, GameBuildType } from '../../build/build.model';
 import { GameDownloader } from '../../downloader/downloader.service';
 import { GameModel } from '../../game.model';
-import { GamePlayModal } from '../../play-modal/play-modal.service';
+import { showGamePlayModal } from '../../play-modal/play-modal.service';
 import { GameReleaseModel } from '../../release/release.model';
 import { GamePackageModel } from '../package.model';
-import { GamePackagePurchaseModal } from '../purchase-modal/purchase-modal.service';
+import { showGamePackagePurchaseModal } from '../purchase-modal/purchase-modal.service';
 import AppGamePackageCardButtons from './AppGamePackageCardButtons.vue';
 import { GamePackageCardModel } from './card.model';
 
@@ -144,7 +144,7 @@ function doBuildClick(build: GameBuildModel, fromExtraSection = false) {
 }
 
 function showPayment(build: GameBuildModel | null, fromExtraSection: boolean) {
-	GamePackagePurchaseModal.show({
+	showGamePackagePurchaseModal({
 		game: game.value,
 		package: gamePackage.value,
 		build: build,
@@ -160,7 +160,7 @@ function download(build: GameBuildModel) {
 }
 
 function showBrowserModal(build: GameBuildModel) {
-	GamePlayModal.show(game.value, build, {
+	showGamePlayModal(game.value, build, {
 		key: accessKey?.value,
 	});
 }

@@ -1,10 +1,10 @@
 import type { Router } from 'vue-router';
-import type { RouteLocationDefinition } from '../../../../../utils/router';
 import { Client } from '../../../../../_common/client/client.service';
 import { commonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import type { RouteLocationDefinition } from '../../../../../utils/router';
 import { AppStore } from '../../../../store';
-import { UserTokenModal } from '../../../user/token-modal/token-modal.service';
+import { showUserTokenModal } from '../../../user/token-modal/token-modal.service';
 
 export function createClientTrayMenuBuilder(router: Router, appStore: AppStore) {
 	function go(location: RouteLocationDefinition) {
@@ -79,7 +79,7 @@ export function createClientTrayMenuBuilder(router: Router, appStore: AppStore) 
 			new nw.MenuItem({
 				label: $gettext(`Your Game Token`),
 				click: () => {
-					UserTokenModal.show();
+					showUserTokenModal();
 					Client.show();
 				},
 			})

@@ -35,23 +35,8 @@ export function getCookie(name: string): Promise<string | undefined> {
 	});
 }
 
-export function userAgreedToCookies() {
-	if (import.meta.env.SSR || isDynamicGoogleBot()) {
-		return false;
-	}
-	if (GJ_IS_DESKTOP_APP) {
-		return true;
-	}
-	return !!window.localStorage.getItem('banner:cookie');
-}
-
-export function setUserAgreedToCookies() {
-	window.localStorage.setItem('banner:cookie', Date.now() + '');
-}
-
 export function setTimezoneOffsetCookie() {
-	// Only track if user agreed to cookies.
-	if (!userAgreedToCookies()) {
+	if (import.meta.env.SSR || isDynamicGoogleBot()) {
 		return;
 	}
 

@@ -45,7 +45,7 @@ import AppTopSupportersCard, {
 } from '../../../../_common/supporters/AppTopSupportersCard.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { TrophyModal } from '../../../../_common/trophy/modal/modal.service';
+import { showTrophyModal } from '../../../../_common/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { showUserFiresideFollowModal } from '../../../../_common/user/fireside/modal/follow-modal.service';
 import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
@@ -57,10 +57,11 @@ import { removeQuery } from '../../../../utils/router';
 import { openChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/AppCommentOverview.vue';
 import AppCommentAddButton from '../../../components/comment/add-button/AppCommentAddButton.vue';
-import { CommentModal } from '../../../components/comment/modal/modal.service';
+import { showCommentModal } from '../../../components/comment/modal/modal.service';
 import {
-	CommentThreadModal,
 	CommentThreadModalPermalinkDeregister,
+	showCommentThreadModalFromPermalink,
+	watchForCommentThreadModalPermalink,
 } from '../../../components/comment/thread/modal.service';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
@@ -352,8 +353,8 @@ createAppRoute({
 		};
 
 		if (routeUser.value) {
-			CommentThreadModal.showFromPermalink(router, routeUser.value, 'shouts');
-			permalinkWatchDeregister = CommentThreadModal.watchForPermalink(
+			showCommentThreadModalFromPermalink(router, routeUser.value, 'shouts');
+			permalinkWatchDeregister = watchForCommentThreadModalPermalink(
 				router,
 				routeUser.value,
 				'shouts'
@@ -410,7 +411,7 @@ function clearCommentStore() {
 
 function showComments() {
 	if (routeUser.value) {
-		CommentModal.show({
+		showCommentModal({
 			model: routeUser.value,
 			displayMode: 'shouts',
 		});
@@ -484,7 +485,7 @@ async function reloadPreviewComments() {
 }
 
 function onClickTrophy(userTrophy: UserBaseTrophyModel) {
-	TrophyModal.show(userTrophy);
+	showTrophyModal(userTrophy);
 }
 
 async function onClickUnfollow() {

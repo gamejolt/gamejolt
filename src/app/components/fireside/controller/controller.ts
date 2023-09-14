@@ -4,6 +4,7 @@ import {
 	inject,
 	InjectionKey,
 	markRaw,
+	MaybeRef,
 	provide,
 	reactive,
 	readonly,
@@ -68,7 +69,6 @@ import { getAbsoluteLink } from '../../../../utils/router';
 import { getCurrentServerTime, updateServerTimeOffset } from '../../../../utils/server-time';
 import { run, sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
-import { MaybeRef } from '../../../../utils/vue';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
 import { ChatRoomModel } from '../../chat/room';
 import {

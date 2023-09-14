@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { trackGotoCommunity } from '../../../../_common/analytics/analytics.service';
 import { CommunityModel } from '../../../../_common/community/community.model';
@@ -34,8 +34,6 @@ const { grid } = useGridStore();
 const { userTheme } = useThemeStore();
 const { showContextOnRouteChange } = useSidebarStore();
 
-const popperVisible = ref(false);
-
 const communityState = computed(() => communityStates.value.getCommunityState(community.value));
 
 const isUnread = computed(() => communityState.value.isUnread);
@@ -50,9 +48,6 @@ const highlight = computed(() => {
 	}
 	return undefined;
 });
-
-// Don't show the tooltip if the right click popper is visible.
-const tooltip = computed(() => (popperVisible.value ? '' : community.value.name));
 
 const shouldShowModerate = computed(() => user.value && user.value.isMod);
 const shouldShowLeave = computed(() => !community.value.hasPerms() && !!community.value.is_member);
@@ -102,10 +97,8 @@ function gotoModerate() {
 			fixed
 			block
 			hide-on-state-change
-			@show="popperVisible = true"
-			@hide="popperVisible = false"
 		>
-			<template #default>
+			<template #default="{ isShowingPopper }">
 				<div @click.capture="onCommunityClick">
 					<AppShellCbarItem
 						class="-community"
@@ -114,7 +107,7 @@ function gotoModerate() {
 						:highlight="highlight"
 					>
 						<RouterLink
-							v-app-tooltip.right="tooltip"
+							v-app-tooltip.right="!isShowingPopper ? community.name : undefined"
 							class="-link link-unstyled"
 							:to="{
 								name: 'communities.view.overview',

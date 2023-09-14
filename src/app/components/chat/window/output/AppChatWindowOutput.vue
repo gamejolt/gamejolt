@@ -441,95 +441,97 @@ const bannerScrollerMargin = computed(() =>
 			</div>
 		</AppScrollScroller>
 
-		<AppOnHover v-if="fireside && showFiresideBanner">
-			<template #default="{ hovered, binding }">
-				<div
-					:style="{
-						position: `absolute`,
-						left: `12px`,
-						right: `12px`,
-						top: firesideBannerMargin.px,
-						zIndex: 2,
-					}"
-				>
-					<RouterLink :to="fireside.routeLocation">
+		<AppOnHover v-if="fireside && showFiresideBanner" v-slot="{ hovered, hoverBinding }">
+			<div
+				:style="{
+					position: `absolute`,
+					left: `12px`,
+					right: `12px`,
+					top: firesideBannerMargin.px,
+					zIndex: 2,
+				}"
+			>
+				<RouterLink :to="fireside.routeLocation">
+					<div
+						v-bind="{
+							...hoverBinding,
+							style: [
+								styleElevate(2),
+								styleBorderRadiusBase,
+								{
+									backgroundColor: kThemeBiBg,
+									width: `100%`,
+									minHeight: minFiresideBannerHeight.px,
+									padding: `4px`,
+									display: `flex`,
+									alignItems: `center`,
+								},
+							],
+						}"
+					>
 						<div
-							v-bind="binding"
 							:style="{
-								...styleElevate(2),
-								...styleBorderRadiusBase,
-								backgroundColor: kThemeBiBg,
-								width: `100%`,
-								minHeight: minFiresideBannerHeight.px,
-								padding: `4px`,
-								display: `flex`,
-								alignItems: `center`,
+								...styleLineClamp(1),
+								fontSize: kFontSizeBase.px,
+								fontWeight: `bold`,
+								fontFamily: kFontFamilyHeading,
+								color: kThemeBiFg,
+								marginLeft: `4px`,
 							}"
 						>
+							{{ fireside.title }}
+						</div>
+
+						<template v-if="streamingUsers.length">
 							<div
 								:style="{
-									...styleLineClamp(1),
-									fontSize: kFontSizeBase.px,
-									fontWeight: `bold`,
-									fontFamily: kFontFamilyHeading,
-									color: kThemeBiFg,
-									marginLeft: `4px`,
+									display: `inline-flex`,
+									marginLeft: `8px`,
 								}"
 							>
-								{{ fireside.title }}
-							</div>
-
-							<template v-if="streamingUsers.length">
 								<div
+									v-for="(streamer, index) in streamingUsers"
+									:key="streamer.id"
 									:style="{
-										display: `inline-flex`,
-										marginLeft: `8px`,
+										position: `relative`,
+										width: `10px`,
+										zIndex: streamingUsers.length - index,
 									}"
 								>
-									<div
-										v-for="(streamer, index) in streamingUsers"
-										:key="streamer.id"
+									<AppUserAvatarBubble
+										v-app-tooltip="`@${streamer.username}`"
 										:style="{
-											position: `relative`,
-											width: `10px`,
-											zIndex: streamingUsers.length - index,
+											width: `16px`,
+											height: `16px`,
 										}"
-									>
-										<AppUserAvatarBubble
-											v-app-tooltip="`@${streamer.username}`"
-											:style="{
-												width: `16px`,
-												height: `16px`,
-											}"
-											:user="streamer"
-											disable-link
-											smoosh
-										/>
-									</div>
+										:user="streamer"
+										disable-link
+										smoosh
+									/>
 								</div>
-							</template>
+							</div>
+						</template>
 
-							<div
-								:style="{
-									flex: `auto`,
-									minWidth: `8px`,
-								}"
-							/>
+						<div
+							:style="{
+								flex: `auto`,
+								minWidth: `8px`,
+							}"
+						/>
 
-							<AppButton
-								:style="{
-									flex: `none`,
-								}"
-								overlay
-								trans
-								:force-hover="hovered"
-							>
-								{{ $gettext(`View`) }}
-							</AppButton>
-						</div>
-					</RouterLink>
-				</div>
-			</template>
+						<AppButton
+							:style="{
+								flex: `none`,
+							}"
+							overlay
+							trans
+							:force-hover="hovered"
+						>
+							{{ $gettext(`View`) }}
+						</AppButton>
+					</div>
+				</RouterLink>
+			</div>
 		</AppOnHover>
 
 		<div v-if="shouldShowNewMessagesButton" class="_new-messages">

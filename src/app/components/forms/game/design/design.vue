@@ -8,7 +8,7 @@ import { $saveGameDesign, GameModel } from '../../../../../_common/game/game.mod
 import AppGameThumbnailImg from '../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
-import { GameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
+import { showGameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
 class Wrapper extends BaseForm<GameModel> {}
@@ -36,7 +36,7 @@ export default class FormGameDesign extends mixins(Wrapper) {
 	}
 
 	showEditThumbnail() {
-		GameThumbnailModal.show(this.model!);
+		showGameThumbnailModal(this.model!);
 	}
 
 	@Watch('model.thumbnail_media_item', { immediate: true })
