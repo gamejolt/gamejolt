@@ -313,7 +313,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 <template>
 	<AppForm :controller="form" @changed="emitChanged($event)">
 		<AppFormGroup name="tigrs_age" :label="$gettext(`Age Rating`)">
-			<p v-if="model._is_wip" class="help-block">
+			<p v-if="model && model._is_wip" class="help-block">
 				<AppTranslate>
 					If you don't know what the final content of your game will be, give an educated
 					guess. You can make changes later.

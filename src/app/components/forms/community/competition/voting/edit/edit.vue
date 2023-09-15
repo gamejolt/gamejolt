@@ -34,8 +34,9 @@ class Wrapper extends BaseForm<CommunityCompetitionModel> {}
 })
 export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) {
 	modelClass = CommunityCompetitionModel;
-	timezoneService: FormTimezoneService<CommunityCompetitionModel> | null = null;
 	modelSaveHandler = $saveCommunityCompetitionVoting;
+
+	timezoneService: FormTimezoneService<CommunityCompetitionModel> | null = null;
 
 	readonly formatDate = formatDate;
 

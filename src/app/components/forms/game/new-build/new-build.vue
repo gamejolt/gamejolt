@@ -3,7 +3,11 @@ import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
-import { GameBuildModel, GameBuildType } from '../../../../../_common/game/build/build.model';
+import {
+	$saveGameBuild,
+	GameBuildModel,
+	GameBuildType,
+} from '../../../../../_common/game/build/build.model';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { GamePackageModel } from '../../../../../_common/game/package/package.model';
 import { GameReleaseModel } from '../../../../../_common/game/release/release.model';
@@ -22,6 +26,7 @@ class Wrapper extends BaseForm<NewGameBuildFormModel> {}
 })
 export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnLoad {
 	modelClass = GameBuildModel as any;
+	modelSaveHandler = $saveGameBuild;
 
 	@Prop(String) type!: 'downloadable' | 'browser';
 	@Prop(Object) game!: GameModel;
@@ -78,6 +83,7 @@ export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnL
 
 	onInit() {
 		// Set the game ID on the form model from the game passed in.
+		// TODO(fix-form-saving) 'browser' doesn't exist, what is this typing meant to be?
 		this.setField('type', this.type);
 		this.setField('game_id', this.game.id);
 		this.setField('game_package_id', this.package.id);
@@ -153,7 +159,7 @@ export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnL
 				</div>
 			</AppExpand>
 
-			<p class="help-block" v-if="type === 'browser'">
+			<p v-if="type === 'browser'" class="help-block">
 				<AppTranslate>
 					For HTML builds, upload a .zip archive containing all of your build's files and
 					assets. There must be an index.html file in the root folder.

@@ -15,7 +15,7 @@ import {
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
 type FormModel = CommunityCompetitionModel & {
-	header_crop: any;
+	header_crop?: any;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -30,7 +30,7 @@ export default class FormCommunityCompetitionHeader
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	modelClass = CommunityCompetitionModel as any;
+	modelClass = CommunityCompetitionModel;
 	modelSaveHandler = $saveCommunityCompetitionHeader;
 
 	maxFilesize = 0;

@@ -17,9 +17,9 @@ class Wrapper extends BaseForm<GameScreenshotModel> {}
 })
 export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad {
 	modelClass = GameScreenshotModel;
+	modelSaveHandler = $saveGameScreenshot;
 
 	@Prop(Object) game!: GameModel;
-	modelSaveHandler = $saveGameScreenshot;
 
 	maxFilesize = 0;
 	maxWidth = 0;
@@ -58,7 +58,7 @@ export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad
 			:label="$gettext(`Image File`)"
 			:hide-label="true"
 		>
-			<p class="help-block" v-translate>
+			<p v-translate class="help-block">
 				<AppTranslate>Your image must be a PNG or JPG.</AppTranslate>
 				<br />
 				<strong>
@@ -90,16 +90,14 @@ export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad
 			<AppFormControl type="text" :validators="[validateMaxLength(200)]" />
 			<AppFormControlErrors />
 			<p class="help-block">
-				<AppTranslate
-					>This caption will appear when your image is viewed in full
-					screen.</AppTranslate
-				>
+				<AppTranslate>
+					This caption will appear when your image is viewed in full screen.
+				</AppTranslate>
 			</p>
 		</AppFormGroup>
 
-		<AppFormButton v-if="method !== 'add'" show-when-valid>
-			<AppTranslate v-if="method === 'add'">Add</AppTranslate>
-			<AppTranslate v-else-if="method === 'edit'">Save</AppTranslate>
+		<AppFormButton v-if="method === 'edit'" show-when-valid>
+			<AppTranslate>Save</AppTranslate>
 		</AppFormButton>
 	</AppForm>
 </template>

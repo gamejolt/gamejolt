@@ -22,7 +22,7 @@ class Wrapper extends BaseForm<GameModel> {}
 	},
 })
 export default class FormGameDesign extends mixins(Wrapper) {
-	modelClass = GameModel as any;
+	modelClass = GameModel;
 	modelSaveHandler = $saveGameDesign;
 
 	themeStore = setup(() => useThemeStore());
@@ -93,7 +93,7 @@ export default class FormGameDesign extends mixins(Wrapper) {
 				<AppEditableOverlay class="-thumb-overlay" @click="showEditThumbnail()">
 					<template #overlay>
 						<span>
-							<AppTranslate v-if="!model.thumbnail_media_item">
+							<AppTranslate v-if="!model || !model.thumbnail_media_item">
 								Upload Thumbnail
 							</AppTranslate>
 							<AppTranslate v-else>Change Thumbnail</AppTranslate>

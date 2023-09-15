@@ -11,6 +11,7 @@ import {
 } from '../../../../../_common/game/trophy/trophy.model';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+
 class Wrapper extends BaseForm<GameTrophyModel> {}
 
 @Options({
