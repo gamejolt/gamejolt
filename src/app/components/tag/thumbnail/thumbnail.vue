@@ -64,13 +64,20 @@ export default class AppTagThumbnail extends Vue {
 	&.active .-info
 		theme-prop('color', 'highlight')
 
+	&:hover
+		.-image
+			animation-name: anim-image-hover
+			animation-duration: 0.2s
+			animation-timing-function: ease-out
+			animation-fill-mode: forwards
+			animation-iteration-count: 1
+
 .-ratio
 	rounded-corners-lg()
 	change-bg('darkest')
 	position: relative
 	height: 0
 	padding-top: 100% // Makes it same height as width.
-	overflow: hidden
 
 .-content
 	position: absolute
@@ -86,6 +93,14 @@ export default class AppTagThumbnail extends Vue {
 .-image
 	width: 116px * 0.5
 	height: 116px * 0.5
+
+@keyframes anim-image-hover
+	0%
+		transform: none
+	50%
+		transform: scaleX(0.75) scaleY(1.2) translateY(-8px)
+	100%
+		transform: none
 
 .-info
 	padding: 8px 0
