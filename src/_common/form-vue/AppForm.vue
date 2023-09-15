@@ -82,7 +82,6 @@ export function useForm<T = any>() {
 interface CreateFormOptions<T, SubmitResponse = any> {
 	model?: Ref<T | undefined>;
 	modelClass?: ModelClassType<T>;
-	saveMethod?: MaybeRef<keyof T | undefined>;
 	modelSaveHandler?: MaybeRef<(model: T) => Promise<SubmitResponse> | undefined>;
 	loadUrl?: MaybeRef<string | undefined>;
 	loadData?: MaybeRef<any>;
@@ -124,7 +123,6 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 
 	// These are only specified as "let" because we need to allow them to be
 	// lazy initialized.
-	let saveMethod = ref(options.saveMethod);
 	let modelSaveHandler = ref(options.modelSaveHandler);
 	let loadUrl = ref(options.loadUrl);
 	let loadData = ref(options.loadData);
@@ -170,9 +168,6 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		if (overrides.modelClass) {
 			modelClass = overrides.modelClass;
 			formModel.value = _makeFormModel();
-		}
-		if (overrides.saveMethod) {
-			saveMethod = ref(overrides.saveMethod);
 		}
 		if (overrides.modelSaveHandler) {
 			modelSaveHandler = ref(overrides.modelSaveHandler);
@@ -355,12 +350,8 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 				}
 
 				response = _response;
-			} else if (modelClass) {
-				if (modelSaveHandler.value) {
-					response = await modelSaveHandler.value(formModel.value);
-				} else {
-					response = await (formModel.value as any)[saveMethod.value || '$save']();
-				}
+			} else if (modelSaveHandler.value) {
+				response = await modelSaveHandler.value(formModel.value);
 
 				// Copy it back to the base model.
 				if (model?.value) {
@@ -408,7 +399,6 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		name,
 		formModel,
 		method,
-		saveMethod,
 		modelSaveHandler,
 		resetOnSubmit,
 		warnOnDiscard,
@@ -443,7 +433,6 @@ export interface FormController<T = any> {
 	name: string;
 	formModel: T;
 	method: 'add' | 'edit';
-	saveMethod: keyof T;
 	modelSaveHandler: (model: T) => Promise<any>;
 	warnOnDiscard: boolean;
 	resetOnSubmit: boolean;

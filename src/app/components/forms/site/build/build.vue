@@ -15,6 +15,8 @@ class Wrapper extends BaseForm<SiteBuildModel> {}
 })
 export default class FormDashSiteBuild extends mixins(Wrapper) implements FormOnLoad, FormOnSubmit {
 	modelClass = SiteBuildModel;
+	// Handled through onSubmit.
+	// modelSaveHandler = undefined;
 
 	@Prop(Object) site!: SiteModel;
 

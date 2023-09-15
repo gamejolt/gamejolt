@@ -1,6 +1,9 @@
 <script lang="ts">
 import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
-import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
+import {
+	$saveCommunityChannel,
+	CommunityChannelModel,
+} from '../../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
@@ -38,6 +41,7 @@ export default class FormCommunityChannelEdit
 	maxHeight = 0;
 
 	modelClass = FormModel;
+	modelSaveHandler = $saveCommunityChannel;
 
 	@Emit('background-change') emitBackgroundChange(_model: CommunityChannelModel) {}
 

@@ -18,7 +18,7 @@ import {
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
 type FormModel = CommunityModel & {
-	background_crop: any;
+	background_crop?: any;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -35,7 +35,9 @@ export default class FormCommunityChannelPresetBackground
 {
 	@Prop({ type: String, required: true }) presetType!: CommunityPresetChannelType;
 
-	modelClass = CommunityModel as any;
+	modelClass = CommunityModel;
+	// Handled through onSubmit.
+	// modelSaveHandler = undefined;
 
 	maxFilesize = 0;
 	aspectRatio = 0;

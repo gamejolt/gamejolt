@@ -7,8 +7,7 @@ import { BaseModal } from '../../../../../_common/modal/base';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { REASON_OTHER } from '../../../../../_common/user/action-reasons';
-import { FormModel } from '../form/form';
-import FormCommunityEjectFireside from '../form/form.vue';
+import FormCommunityEjectFireside, { FormModel } from '../form/form.vue';
 import { CommunityEjectFiresideModalResult } from './modal.service';
 
 @Options({

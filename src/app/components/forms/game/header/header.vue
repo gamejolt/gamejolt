@@ -15,7 +15,7 @@ import {
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 
 type FormModel = GameModel & {
-	header_crop: any;
+	header_crop?: any;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -30,7 +30,7 @@ export default class FormGameHeader
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	modelClass = GameModel as any;
+	modelClass = GameModel;
 	modelSaveHandler = $saveGameHeader;
 
 	maxFilesize = 0;
