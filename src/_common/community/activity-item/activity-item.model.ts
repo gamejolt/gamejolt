@@ -13,56 +13,58 @@ export type TypeIcon = {
 	color: string;
 };
 
+export const enum CommunityActivityItemType {
+	CommunityCreated = 'community/created',
+
+	PostFeature = 'post/feature',
+	PostUnfeature = 'post/unfeature',
+	PostMove = 'post/move',
+	PostEject = 'post/eject',
+
+	ModInvite = 'mod/invite',
+	ModAccept = 'mod/accept',
+	ModRemove = 'mod/remove',
+
+	BlockUser = 'block/user',
+
+	EditDescription = 'edit/description',
+	EditThumbnail = 'edit/thumbnail',
+	EditHeader = 'edit/header',
+	EditDetails = 'edit/details',
+	EditHeaderRemove = 'edit/header/remove',
+
+	ChannelAdd = 'channel/add',
+	ChannelRemove = 'channel/remove',
+	ChannelEdit = 'channel/edit',
+	ChannelRename = 'channel/rename',
+
+	GameLink = 'game/link',
+	GameUnlink = 'game/unlink',
+
+	CompetitionEditSettings = 'competition/edit/settings',
+	CompetitionEditVoting = 'competition/edit/voting',
+	CompetitionVotingSetActive = 'competition/voting/set-active',
+	CompetitionEntryRemove = 'competition/entry/remove',
+	CompetitionEntryUnremove = 'competition/entry/unremove',
+	CompetitionEntryGiveAward = 'competition/entry/give-award',
+
+	FiresideStart = 'fireside/start',
+	FiresideStartDraft = 'fireside/start-draft',
+	FiresidePublish = 'fireside/publish',
+	FiresideExtinguish = 'fireside/extinguish',
+	FiresideFeature = 'fireside/feature',
+	FiresideUnfeature = 'fireside/unfeature',
+	FiresideEject = 'fireside/eject',
+}
+
 export class CommunityActivityItemModel extends Model {
-	public static TYPE_COMMUNITY_CREATED = 'community/created';
+	declare type: CommunityActivityItemType;
+	declare added_on: number;
+	declare extra_data: string;
 
-	public static TYPE_POST_FEATURE = 'post/feature';
-	public static TYPE_POST_UNFEATURE = 'post/unfeature';
-	public static TYPE_POST_MOVE = 'post/move';
-	public static TYPE_POST_EJECT = 'post/eject';
+	declare user: UserModel;
 
-	public static TYPE_MOD_INVITE = 'mod/invite';
-	public static TYPE_MOD_ACCEPT = 'mod/accept';
-	public static TYPE_MOD_REMOVE = 'mod/remove';
-
-	public static TYPE_BLOCK_USER = 'block/user';
-
-	public static TYPE_EDIT_DESCRIPTION = 'edit/description';
-	public static TYPE_EDIT_THUMBNAIL = 'edit/thumbnail';
-	public static TYPE_EDIT_HEADER = 'edit/header';
-	public static TYPE_EDIT_DETAILS = 'edit/details';
-	public static TYPE_EDIT_HEADER_REMOVE = 'edit/header/remove';
-
-	public static TYPE_CHANNEL_ADD = 'channel/add';
-	public static TYPE_CHANNEL_REMOVE = 'channel/remove';
-	public static TYPE_CHANNEL_EDIT = 'channel/edit';
-	public static TYPE_CHANNEL_RENAME = 'channel/rename';
-
-	public static TYPE_GAME_LINK = 'game/link';
-	public static TYPE_GAME_UNLINK = 'game/unlink';
-
-	public static TYPE_COMPETITION_EDIT_SETTINGS = 'competition/edit/settings';
-	public static TYPE_COMPETITION_EDIT_VOTING = 'competition/edit/voting';
-	public static TYPE_COMPETITION_VOTING_SET_ACTIVE = 'competition/voting/set-active';
-	public static TYPE_COMPETITION_ENTRY_REMOVE = 'competition/entry/remove';
-	public static TYPE_COMPETITION_ENTRY_UNREMOVE = 'competition/entry/unremove';
-	public static TYPE_COMPETITION_ENTRY_GIVE_AWARD = 'competition/entry/give-award';
-
-	public static TYPE_FIRESIDE_START = 'fireside/start';
-	public static TYPE_FIRESIDE_START_DRAFT = 'fireside/start-draft';
-	public static TYPE_FIRESIDE_PUBLISH = 'fireside/publish';
-	public static TYPE_FIRESIDE_EXTINGUISH = 'fireside/extinguish';
-	public static TYPE_FIRESIDE_FEATURE = 'fireside/feature';
-	public static TYPE_FIRESIDE_UNFEATURE = 'fireside/unfeature';
-	public static TYPE_FIRESIDE_EJECT = 'fireside/eject';
-
-	type!: string;
-	added_on!: number;
-	extra_data!: string;
-
-	user?: UserModel;
-
-	action_resource?:
+	declare action_resource:
 		| FiresidePostModel
 		| UserModel
 		| CommunityChannelModel
@@ -81,53 +83,53 @@ export class CommunityActivityItemModel extends Model {
 
 		if (data.action_resource) {
 			switch (this.type) {
-				case CommunityActivityItemModel.TYPE_POST_FEATURE:
-				case CommunityActivityItemModel.TYPE_POST_UNFEATURE:
-				case CommunityActivityItemModel.TYPE_POST_MOVE:
-				case CommunityActivityItemModel.TYPE_POST_EJECT:
+				case CommunityActivityItemType.PostFeature:
+				case CommunityActivityItemType.PostUnfeature:
+				case CommunityActivityItemType.PostMove:
+				case CommunityActivityItemType.PostEject:
 					this.action_resource = new FiresidePostModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemModel.TYPE_MOD_INVITE:
-				case CommunityActivityItemModel.TYPE_MOD_ACCEPT:
-				case CommunityActivityItemModel.TYPE_MOD_REMOVE:
+				case CommunityActivityItemType.ModInvite:
+				case CommunityActivityItemType.ModAccept:
+				case CommunityActivityItemType.ModRemove:
 					this.action_resource = new UserModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemModel.TYPE_BLOCK_USER:
+				case CommunityActivityItemType.BlockUser:
 					this.action_resource = new UserBlockModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemModel.TYPE_CHANNEL_ADD:
-				case CommunityActivityItemModel.TYPE_CHANNEL_EDIT:
-				case CommunityActivityItemModel.TYPE_CHANNEL_RENAME:
+				case CommunityActivityItemType.ChannelAdd:
+				case CommunityActivityItemType.ChannelEdit:
+				case CommunityActivityItemType.ChannelRename:
 					this.action_resource = new CommunityChannelModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemModel.TYPE_GAME_LINK:
-				case CommunityActivityItemModel.TYPE_GAME_UNLINK:
+				case CommunityActivityItemType.GameLink:
+				case CommunityActivityItemType.GameUnlink:
 					this.action_resource = new GameModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemModel.TYPE_COMPETITION_EDIT_SETTINGS:
-				case CommunityActivityItemModel.TYPE_COMPETITION_EDIT_VOTING:
-				case CommunityActivityItemModel.TYPE_COMPETITION_VOTING_SET_ACTIVE:
+				case CommunityActivityItemType.CompetitionEditSettings:
+				case CommunityActivityItemType.CompetitionEditVoting:
+				case CommunityActivityItemType.CompetitionVotingSetActive:
 					this.action_resource = new CommunityCompetitionModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemModel.TYPE_COMPETITION_ENTRY_REMOVE:
-				case CommunityActivityItemModel.TYPE_COMPETITION_ENTRY_UNREMOVE:
-				case CommunityActivityItemModel.TYPE_COMPETITION_ENTRY_GIVE_AWARD:
+				case CommunityActivityItemType.CompetitionEntryRemove:
+				case CommunityActivityItemType.CompetitionEntryUnremove:
+				case CommunityActivityItemType.CompetitionEntryGiveAward:
 					this.action_resource = new CommunityCompetitionEntryModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemModel.TYPE_FIRESIDE_START:
-				case CommunityActivityItemModel.TYPE_FIRESIDE_START_DRAFT:
-				case CommunityActivityItemModel.TYPE_FIRESIDE_PUBLISH:
-				case CommunityActivityItemModel.TYPE_FIRESIDE_EXTINGUISH:
-				case CommunityActivityItemModel.TYPE_FIRESIDE_FEATURE:
-				case CommunityActivityItemModel.TYPE_FIRESIDE_UNFEATURE:
-				case CommunityActivityItemModel.TYPE_FIRESIDE_EJECT:
+				case CommunityActivityItemType.FiresideStart:
+				case CommunityActivityItemType.FiresideStartDraft:
+				case CommunityActivityItemType.FiresidePublish:
+				case CommunityActivityItemType.FiresideExtinguish:
+				case CommunityActivityItemType.FiresideFeature:
+				case CommunityActivityItemType.FiresideUnfeature:
+				case CommunityActivityItemType.FiresideEject:
 					this.action_resource = new FiresideModel(data.action_resource);
 					break;
 			}
@@ -136,68 +138,68 @@ export class CommunityActivityItemModel extends Model {
 
 	public getTypeIcon(): TypeIcon | undefined {
 		switch (this.type) {
-			case CommunityActivityItemModel.TYPE_COMMUNITY_CREATED:
+			case CommunityActivityItemType.CommunityCreated:
 				return { icon: 'heart-filled', color: 'notice' };
 
-			case CommunityActivityItemModel.TYPE_POST_FEATURE:
-			case CommunityActivityItemModel.TYPE_FIRESIDE_FEATURE:
+			case CommunityActivityItemType.PostFeature:
+			case CommunityActivityItemType.FiresideFeature:
 				return { icon: 'star', color: '' };
-			case CommunityActivityItemModel.TYPE_POST_UNFEATURE:
-			case CommunityActivityItemModel.TYPE_FIRESIDE_UNFEATURE:
+			case CommunityActivityItemType.PostUnfeature:
+			case CommunityActivityItemType.FiresideUnfeature:
 				return { icon: 'star', color: '' };
-			case CommunityActivityItemModel.TYPE_POST_MOVE:
+			case CommunityActivityItemType.PostMove:
 				return { icon: 'arrow-forward', color: '' };
-			case CommunityActivityItemModel.TYPE_POST_EJECT:
-			case CommunityActivityItemModel.TYPE_FIRESIDE_EJECT:
+			case CommunityActivityItemType.PostEject:
+			case CommunityActivityItemType.FiresideEject:
 				return { icon: 'eject', color: 'notice' };
 
-			case CommunityActivityItemModel.TYPE_MOD_INVITE:
+			case CommunityActivityItemType.ModInvite:
 				return { icon: 'friend-add-1', color: '' };
-			case CommunityActivityItemModel.TYPE_MOD_ACCEPT:
+			case CommunityActivityItemType.ModAccept:
 				return { icon: 'friends', color: 'theme' };
-			case CommunityActivityItemModel.TYPE_MOD_REMOVE:
+			case CommunityActivityItemType.ModRemove:
 				return { icon: 'friend-remove-1', color: 'notice' };
 
-			case CommunityActivityItemModel.TYPE_BLOCK_USER:
+			case CommunityActivityItemType.BlockUser:
 				return { icon: 'friend-remove-2', color: 'notice' };
 
-			case CommunityActivityItemModel.TYPE_EDIT_DESCRIPTION:
-			case CommunityActivityItemModel.TYPE_EDIT_THUMBNAIL:
-			case CommunityActivityItemModel.TYPE_EDIT_HEADER:
-			case CommunityActivityItemModel.TYPE_EDIT_DETAILS:
-			case CommunityActivityItemModel.TYPE_EDIT_HEADER_REMOVE:
-			case CommunityActivityItemModel.TYPE_COMPETITION_EDIT_SETTINGS:
-			case CommunityActivityItemModel.TYPE_COMPETITION_EDIT_VOTING:
+			case CommunityActivityItemType.EditDescription:
+			case CommunityActivityItemType.EditThumbnail:
+			case CommunityActivityItemType.EditHeader:
+			case CommunityActivityItemType.EditDetails:
+			case CommunityActivityItemType.EditHeaderRemove:
+			case CommunityActivityItemType.CompetitionEditSettings:
+			case CommunityActivityItemType.CompetitionEditVoting:
 				return { icon: 'edit', color: '' };
 
-			case CommunityActivityItemModel.TYPE_CHANNEL_ADD:
+			case CommunityActivityItemType.ChannelAdd:
 				return { icon: 'add', color: '' };
-			case CommunityActivityItemModel.TYPE_CHANNEL_REMOVE:
+			case CommunityActivityItemType.ChannelRemove:
 				return { icon: 'remove', color: 'notice' };
-			case CommunityActivityItemModel.TYPE_CHANNEL_EDIT:
-			case CommunityActivityItemModel.TYPE_CHANNEL_RENAME:
+			case CommunityActivityItemType.ChannelEdit:
+			case CommunityActivityItemType.ChannelRename:
 				return { icon: 'edit', color: '' };
 
-			case CommunityActivityItemModel.TYPE_GAME_LINK:
-			case CommunityActivityItemModel.TYPE_GAME_UNLINK:
+			case CommunityActivityItemType.GameLink:
+			case CommunityActivityItemType.GameUnlink:
 				return { icon: 'gamepad', color: '' };
 
-			case CommunityActivityItemModel.TYPE_COMPETITION_VOTING_SET_ACTIVE:
+			case CommunityActivityItemType.CompetitionVotingSetActive:
 				return { icon: 'pedestals-numbers', color: '' };
 
-			case CommunityActivityItemModel.TYPE_COMPETITION_ENTRY_REMOVE:
+			case CommunityActivityItemType.CompetitionEntryRemove:
 				return { icon: 'bullet-list', color: 'notice' };
-			case CommunityActivityItemModel.TYPE_COMPETITION_ENTRY_UNREMOVE:
+			case CommunityActivityItemType.CompetitionEntryUnremove:
 				return { icon: 'bullet-list', color: '' };
 
-			case CommunityActivityItemModel.TYPE_COMPETITION_ENTRY_GIVE_AWARD:
+			case CommunityActivityItemType.CompetitionEntryGiveAward:
 				return { icon: 'medal', color: '' };
 
-			case CommunityActivityItemModel.TYPE_FIRESIDE_START:
-			case CommunityActivityItemModel.TYPE_FIRESIDE_START_DRAFT:
-			case CommunityActivityItemModel.TYPE_FIRESIDE_PUBLISH:
+			case CommunityActivityItemType.FiresideStart:
+			case CommunityActivityItemType.FiresideStartDraft:
+			case CommunityActivityItemType.FiresidePublish:
 				return { icon: 'fireside', color: '' };
-			case CommunityActivityItemModel.TYPE_FIRESIDE_EXTINGUISH:
+			case CommunityActivityItemType.FiresideExtinguish:
 				return { icon: 'remove', color: '' };
 		}
 	}
