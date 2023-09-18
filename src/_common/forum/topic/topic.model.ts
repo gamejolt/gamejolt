@@ -2,23 +2,25 @@ import { Model } from '../../model/model.service';
 import { UserModel } from '../../user/user.model';
 import { ForumPostModel } from '../post/post.model';
 
-export class ForumTopicModel extends Model {
-	static readonly STATUS_ACTIVE = 'active';
-	static readonly STATUS_SPAM = 'spam';
-	static readonly STATUS_REMOVED = 'removed';
+export const enum ForumTopicStatus {
+	Active = 'active',
+	Spam = 'spam',
+	Removed = 'removed',
+}
 
-	user_id!: number;
-	user!: UserModel;
-	channel_id!: number;
-	title!: string;
-	slug!: string;
-	main_post!: ForumPostModel;
-	status!: string;
-	posted_on!: number;
-	is_sticky!: boolean;
-	is_locked!: boolean;
-	is_upvoted?: boolean;
-	can_upvote!: boolean;
+export class ForumTopicModel extends Model {
+	declare user_id: number;
+	declare user: UserModel;
+	declare channel_id: number;
+	declare title: string;
+	declare slug: string;
+	declare main_post: ForumPostModel;
+	declare status: ForumTopicStatus;
+	declare posted_on: number;
+	declare is_sticky: boolean;
+	declare is_locked: boolean;
+	declare is_upvoted: boolean;
+	declare can_upvote: boolean;
 
 	replies_count?: number;
 	followers_count?: number;
