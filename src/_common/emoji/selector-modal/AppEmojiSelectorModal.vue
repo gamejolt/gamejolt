@@ -24,7 +24,7 @@ import { storeModelList } from '../../model/model-store.service';
 import { ModelData } from '../../model/model.service';
 import { EmojiGroupData, useCommonStore } from '../../store/common-store';
 import { $gettext } from '../../translate/translate.service';
-import { EmojiGroupModel } from '../emoji-group.model';
+import { EmojiGroupModel, EmojiGroupType } from '../emoji-group.model';
 import { EmojiModel } from '../emoji.model';
 import AppEmojiSelectorGroup from './_group/AppEmojiSelectorGroup.vue';
 
@@ -129,7 +129,7 @@ async function init() {
 					emojis: rawRecentEmojis,
 					num_emojis: rawRecentEmojis.length,
 					added_on: Date.now(),
-					type: EmojiGroupModel.TYPE_LOCAL_RECENT,
+					type: EmojiGroupType.LocalRecent,
 					media_item: undefined,
 				} as ModelData<EmojiGroupModel>)
 			);
