@@ -1,4 +1,4 @@
-import { CSSProperties } from 'vue';
+import { CSSProperties, StyleValue } from 'vue';
 import { ThemeColor } from '../_common/theme/variables';
 import { kBorderRadiusBase, kBorderRadiusLg, kBorderRadiusSm } from './variables';
 
@@ -8,8 +8,23 @@ import { kBorderRadiusBase, kBorderRadiusLg, kBorderRadiusSm } from './variables
  *
  * @__NO_SIDE_EFFECTS__
  */
-export function styleWhen(condition: boolean | null | undefined, style: CSSProperties) {
+export function styleWhen<T extends StyleValue = CSSProperties>(
+	condition: boolean | null | undefined,
+	style: T
+) {
 	return condition ? style : {};
+}
+
+/**
+ * Helper to enforce the typing of a style binding for an element.
+ *
+ * Using `v-bind` on an element breaks the typing for normal style bindings. Use
+ * this to fix that.
+ *
+ * @__NO_SIDE_EFFECTS__
+ */
+export function styleTyped(value: StyleValue) {
+	return value;
 }
 
 export const styleBorderRadiusBase: CSSProperties = {
@@ -90,9 +105,11 @@ export function styleElevate(elevation: number): CSSProperties {
 	};
 }
 
+export const kElevateTransition = `box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1)`;
+
 const _elevateTransition: CSSProperties = {
 	// If elevations change, we want to transition the shadow.
-	transition: `box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1)`,
+	transition: kElevateTransition,
 };
 
 const _mdcElevationUmbraMap: Record<number, string> = {
