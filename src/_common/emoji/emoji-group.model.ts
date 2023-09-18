@@ -10,12 +10,6 @@ export const enum EmojiGroupType {
 }
 
 export class EmojiGroupModel implements ModelStoreModel {
-	static readonly TYPE_LOCAL_RECENT = 'local-recent';
-
-	static readonly TYPE_UNICODE = 'unicode';
-	static readonly TYPE_LEGACY = 'legacy';
-	static readonly TYPE_COLLECTION = 'sticker-collection';
-
 	declare id: number;
 	declare type: EmojiGroupType;
 	declare name: string;
