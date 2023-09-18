@@ -29,6 +29,7 @@ const ACTIONS_PER_PAGE = 25;
 
 export default {
 	...defineAppRouteOptions({
+		deps: {},
 		resolver: () =>
 			Api.sendFieldsRequest('/mobile/dash/creators/supporters', {
 				actions: {
