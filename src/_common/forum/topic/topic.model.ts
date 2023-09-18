@@ -22,15 +22,15 @@ export class ForumTopicModel extends Model {
 	declare is_upvoted: boolean;
 	declare can_upvote: boolean;
 
-	replies_count?: number;
-	followers_count?: number;
-	upvotes_count?: number;
+	declare replies_count: number;
+	declare followers_count: number;
+	declare upvotes_count: number;
 
 	notifications: Notification[] = [];
-	latest_post?: ForumPostModel;
+	declare latest_post: ForumPostModel;
 
 	// When saving.
-	text_content?: string;
+	declare text_content: string;
 
 	constructor(data: any = {}) {
 		super(data);
