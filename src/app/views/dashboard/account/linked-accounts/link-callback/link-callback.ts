@@ -6,6 +6,7 @@ import { Api } from '../../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import {
 	LinkedAccountModel,
+	LinkedAccountProvider,
 	getLinkedAccountProviderDisplayName,
 } from '../../../../../../_common/linked-account/linked-account.model';
 import {
@@ -53,7 +54,8 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends LegacyRo
 			return;
 		}
 
-		const provider = this.$route.params.provider as string;
+		//TODO(static-const-enums): Test this
+		const provider = this.$route.params.provider as LinkedAccountProvider;
 		const providerName = getLinkedAccountProviderDisplayName(provider);
 		if (!$payload.success) {
 			switch ($payload.reason) {
@@ -104,9 +106,9 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends LegacyRo
 			}
 		} else {
 			switch (provider) {
-				case LinkedAccountModel.PROVIDER_FACEBOOK:
-				case LinkedAccountModel.PROVIDER_GOOGLE:
-				case LinkedAccountModel.PROVIDER_TWITCH:
+				case LinkedAccountProvider.Facebook:
+				case LinkedAccountProvider.Google:
+				case LinkedAccountProvider.Twitch:
 					{
 						const account = new LinkedAccountModel($payload.account);
 						showSuccessGrowl(

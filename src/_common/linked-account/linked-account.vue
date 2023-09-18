@@ -3,6 +3,7 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppCard from '../card/AppCard.vue';
 import {
 	LinkedAccountModel,
+	LinkedAccountProvider,
 	getLinkedAccountPlatformIcon,
 	getLinkedAccountProviderDisplayName,
 } from './linked-account.model';
@@ -27,12 +28,12 @@ export default class AppLinkedAccount extends Vue {
 	disabled?: boolean;
 
 	get providerIcon() {
-		const provider = this.getProvider();
+		const provider = this.getProvider() as LinkedAccountProvider;
 		return getLinkedAccountPlatformIcon(provider);
 	}
 
 	get providerName() {
-		const provider = this.getProvider();
+		const provider = this.getProvider() as LinkedAccountProvider;
 		return getLinkedAccountProviderDisplayName(provider);
 	}
 
