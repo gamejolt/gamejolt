@@ -2,20 +2,22 @@ import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-h
 import { Model } from '../../model/model.service';
 import { GameModel } from '../game.model';
 
-export class GameVideoModel extends Model implements LightboxMediaModel {
-	static readonly TYPE_YOUTUBE = 'youtube';
-	static readonly TYPE_VIMEO = 'vimeo';
+export const enum GameVideoType {
+	Youtube = 'youtube',
+	Vimeo = 'vimeo',
+}
 
+export class GameVideoModel extends Model implements LightboxMediaModel {
 	media_type!: 'video';
 
-	game_id!: number;
-	type!: string;
-	url!: string;
-	title!: string;
-	description!: string;
-	posted_on!: number;
-	status!: number;
-	img_thumbnail!: string;
+	declare game_id: number;
+	declare type: GameVideoType;
+	declare url: string;
+	declare title: string;
+	declare description: string;
+	declare posted_on: number;
+	declare status: number;
+	declare img_thumbnail: string;
 
 	getModelId() {
 		return this.id;
