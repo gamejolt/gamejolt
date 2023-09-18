@@ -1,5 +1,5 @@
 import { Api } from '../../api/api.service';
-import { BaseTrophyModel } from '../../trophy/base-trophy.model';
+import { BaseTrophyDifficulty, BaseTrophyModel } from '../../trophy/base-trophy.model';
 import { UserGameTrophyModel } from '../../user/trophy/game-trophy.model';
 
 export class GameTrophyModel extends BaseTrophyModel {
@@ -54,7 +54,7 @@ export function $removeGameTrophy(model: GameTrophyModel) {
 	);
 }
 
-export function $saveSortGameTrophy(gameId: number, difficulty: number, sort: any) {
+export function $saveSortGameTrophy(gameId: number, difficulty: BaseTrophyDifficulty, sort: any) {
 	return Api.sendRequest(
 		`/web/dash/developer/games/api/trophies/save-sort/${gameId}/${difficulty}`,
 		sort

@@ -11,6 +11,7 @@ import {
 } from '../../../../../_common/game/trophy/trophy.model';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { BaseTrophyDifficulty } from '../../../../../_common/trophy/base-trophy.model';
 class Wrapper extends BaseForm<GameTrophyModel> {}
 
 @Options({
@@ -39,19 +40,19 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 		return [
 			{
 				label: this.$gettext('Bronze'),
-				value: GameTrophyModel.DIFFICULTY_BRONZE,
+				value: BaseTrophyDifficulty.Bronze,
 			},
 			{
 				label: this.$gettext('Silver'),
-				value: GameTrophyModel.DIFFICULTY_SILVER,
+				value: BaseTrophyDifficulty.Silver,
 			},
 			{
 				label: this.$gettext('Gold'),
-				value: GameTrophyModel.DIFFICULTY_GOLD,
+				value: BaseTrophyDifficulty.Gold,
 			},
 			{
 				label: this.$gettext('Platinum'),
-				value: GameTrophyModel.DIFFICULTY_PLATINUM,
+				value: BaseTrophyDifficulty.Platinum,
 			},
 		];
 	}
