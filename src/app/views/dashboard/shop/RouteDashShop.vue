@@ -16,90 +16,13 @@ import RouteLandingCreators from '../../landing/creators/RouteLandingCreators.vu
 type ItemModel = AvatarFrameModel | BackgroundModel | StickerPackModel | StickerModel;
 export type ShopManagerGroupItem = ItemModel & ShopItemModelCommonFields;
 
-export const shopManagerGroupTypes = {
-	frame: {
-		typename: 'Avatar_Frame',
-		modelMaker: AvatarFrameModel,
-	},
-};
-
-/**
- * Helper to check the type of a shop item.
- *
- * @param model Used to check if the item is an instance of this model.
- * @param typename Used to check if the item is of this typename.
- */
-export function checkShopItemType<T extends ShopManagerGroupItem>(
-	item: ShopManagerGroupItem,
-	model: new (data: any) => T
-): item is T;
-// eslint-disable-next-line no-redeclare
-// export function checkShopItemType<T extends ShopManagerGroupItem>(
-// 	item: ShopManagerGroupItem,
-// 	model: ShopManagerGroupItemType
-// ): item is T;
-// eslint-disable-next-line no-redeclare
-export function checkShopItemType<T extends ShopManagerGroupItem>(
-	item: ShopManagerGroupItem,
-	model: 'Avatar_Frame'
-): item is AvatarFrameModel;
-// eslint-disable-next-line no-redeclare
-export function checkShopItemType<T extends ShopManagerGroupItem>(
-	item: ShopManagerGroupItem,
-	model: 'Background'
-): item is BackgroundModel;
-// eslint-disable-next-line no-redeclare
-export function checkShopItemType<T extends ShopManagerGroupItem>(
-	item: ShopManagerGroupItem,
-	model: 'Sticker_Pack'
-): item is StickerPackModel;
-// eslint-disable-next-line no-redeclare
-export function checkShopItemType<T extends ShopManagerGroupItem>(
-	item: ShopManagerGroupItem,
-	model: 'Sticker'
-): item is StickerModel;
-// eslint-disable-next-line no-redeclare
-export function checkShopItemType<T extends ShopManagerGroupItem>(
-	item: ShopManagerGroupItem,
-	model: ShopManagerGroupItemType | (new (data: any) => T)
-): item is T {
-	if (model instanceof Function) {
-		return item instanceof model;
-	}
-
-	if (model === 'Avatar_Frame') {
-		return _isAvatarFrame(item);
-	} else if (model === 'Background') {
-		return _isBackground(item);
-	} else if (model === 'Sticker_Pack') {
-		return _isStickerPack(item);
-	} else if (model === 'Sticker') {
-		return _isSticker(item);
-	}
-
-	return false;
-}
-
-function _isAvatarFrame(item: ShopManagerGroupItem): item is AvatarFrameModel {
-	return item instanceof AvatarFrameModel;
-}
-function _isBackground(item: ShopManagerGroupItem): item is BackgroundModel {
-	return item instanceof BackgroundModel;
-}
-function _isStickerPack(item: ShopManagerGroupItem): item is StickerPackModel {
-	return item instanceof StickerPackModel;
-}
-function _isSticker(item: ShopManagerGroupItem): item is StickerModel {
-	return item instanceof StickerModel;
-}
-
 export interface ShopManagerGroup<T extends ShopManagerGroupItem = ShopManagerGroupItem> {
 	items: T[];
 	itemCount?: number;
 	// activeCount?: number;
 	// activeIds: number[];
 	slotAmount?: number;
-	maxActive?: number;
+	maxPublished?: number;
 	canAdd?: boolean;
 }
 
@@ -117,7 +40,7 @@ function createShopManagerStore() {
 			items: [] as T[],
 			itemCount: 0,
 			slotAmount: 100,
-			maxActive: 3,
+			maxPublished: 3,
 			canAdd: false,
 		});
 	}

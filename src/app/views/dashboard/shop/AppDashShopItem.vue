@@ -1,10 +1,14 @@
 <script lang="ts" setup>
 import { PropType, computed, toRefs } from 'vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
+import { BackgroundModel } from '../../../../_common/background/background.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppStickerLayerDrawerItem from '../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
 import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue';
+import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
+import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import {
 	kThemeBgSubtle,
 	kThemeFg,
@@ -18,11 +22,7 @@ import { styleElevate, styleFlexCenter } from '../../../../_styles/mixins';
 import { kFontSizeSmall } from '../../../../_styles/variables';
 import AppDashShopHover from './AppDashShopHover.vue';
 import AppDashShopItemBase, { ShopItemStates } from './AppDashShopItemBase.vue';
-import {
-	ShopManagerGroupItem,
-	ShopManagerGroupItemType,
-	checkShopItemType,
-} from './RouteDashShop.vue';
+import { ShopManagerGroupItem, ShopManagerGroupItemType } from './RouteDashShop.vue';
 import { routeDashShopProduct } from './product/product.route';
 
 const props = defineProps({
@@ -46,15 +46,28 @@ const props = defineProps({
 
 const { item, borderRadius, itemStates } = toRefs(props);
 
+function _isAvatarFrame(i: ShopManagerGroupItem): i is AvatarFrameModel {
+	return i instanceof AvatarFrameModel;
+}
+function _isBackground(i: ShopManagerGroupItem): i is BackgroundModel {
+	return i instanceof BackgroundModel;
+}
+function _isStickerPack(i: ShopManagerGroupItem): i is StickerPackModel {
+	return i instanceof StickerPackModel;
+}
+function _isSticker(i: ShopManagerGroupItem): i is StickerModel {
+	return i instanceof StickerModel;
+}
+
 const typename = computed<ShopManagerGroupItemType>(() => {
 	const i = item.value;
-	if (checkShopItemType(i, 'Avatar_Frame')) {
+	if (_isAvatarFrame(i)) {
 		return 'Avatar_Frame';
-	} else if (checkShopItemType(i, 'Background')) {
+	} else if (_isBackground(i)) {
 		return 'Background';
-	} else if (checkShopItemType(i, 'Sticker_Pack')) {
+	} else if (_isStickerPack(i)) {
 		return 'Sticker_Pack';
-	} else if (checkShopItemType(i, 'Sticker')) {
+	} else if (_isSticker(i)) {
 		return 'Sticker';
 	}
 	throw Error(`Unknown item type`);
@@ -98,20 +111,23 @@ const showDebugData = false;
 				typename,
 				id: item.id,
 			},
+			query: {
+				premium: `${item.is_premium === true}`,
+			},
 		}"
 	>
 		<template #default="{ borderRadius: parentRadius }">
 			<AppDashShopItemBase :name="item.name">
 				<template #img>
 					<AppUserAvatarBubble
-						v-if="checkShopItemType(item, 'Avatar_Frame')"
+						v-if="_isAvatarFrame(item)"
 						:user="null"
 						:frame-override="item"
 						smoosh
 						show-frame
 					/>
 					<AppBackground
-						v-if="checkShopItemType(item, 'Background')"
+						v-if="_isBackground(item)"
 						:background="item"
 						:style="{
 							borderRadius: `${parentRadius}px`,
@@ -125,12 +141,12 @@ const showDebugData = false;
 						<AppAspectRatio :ratio="1" />
 					</AppBackground>
 					<AppStickerPack
-						v-if="checkShopItemType(item, 'Sticker_Pack')"
+						v-if="_isStickerPack(item)"
 						:pack="item"
 						:border-radius="parentRadius"
 					/>
 					<AppStickerLayerDrawerItem
-						v-if="checkShopItemType(item, 'Sticker')"
+						v-if="_isSticker(item)"
 						:sticker="item"
 						no-drag
 						hide-count

@@ -48,14 +48,15 @@ async function _makeSectionPromise<T extends ShopManagerGroupItem>(
 }
 
 async function getOverviewData() {
+	// TODO(creator-shops) remove
+	const unsafe = false;
 	const promises = Promise.all([
 		_makeSectionPromise<AvatarFrameModel>('Avatar_Frame'),
 		_makeSectionPromise<BackgroundModel>('Background'),
-		_makeSectionPromise<StickerPackModel>('Sticker_Pack'),
+		unsafe ? _makeSectionPromise<StickerPackModel>('Sticker_Pack') : null,
 		_makeSectionPromise<StickerModel>('Sticker'),
-		// TODO(creator-shops) display in some other section.
-		_makeSectionPromise<StickerPackModel>('Sticker_Pack', { premium: false }),
-		_makeSectionPromise<StickerModel>('Sticker', { premium: false }),
+		unsafe ? _makeSectionPromise<StickerPackModel>('Sticker_Pack', { premium: false }) : null,
+		unsafe ? _makeSectionPromise<StickerModel>('Sticker', { premium: false }) : null,
 	]);
 
 	const [
@@ -94,7 +95,7 @@ interface ChangeData {
 const routeTitle = computed(() => $gettext(`Manage Shop Content`));
 
 const controller = useShopManagerStore()!;
-const { avatarFrames, backgrounds, stickerPacks, stickers, changes, findItemGroup } = controller;
+const { avatarFrames, backgrounds, stickerPacks, stickers, changes } = controller;
 
 // AppRoute sets isBootstrapped to `true` without awaiting [onResolved] calls,
 // so we can just set it ourselves when we're done with the busy work.
@@ -138,7 +139,7 @@ function _setGroupFields<T extends ShopManagerGroupItem>(
 	group.value.canAdd = allowedToAdd;
 	group.value.itemCount = resources?.length;
 	group.value.items = makeModels(resources);
-	// group.value.maxActive = publishedAmount;
+	// group.value.maxPublished = publishedAmount;
 	group.value.slotAmount = slotAmount;
 }
 
@@ -191,8 +192,9 @@ const actionWells = computed(() => {
 
 const sectionData = computed<
 	{
-		label: string;
 		typename: ShopManagerGroupItemType;
+		premium: boolean;
+		label: string;
 		data: ShopManagerGroup;
 		canAdd?: boolean;
 		ratio: number;
@@ -200,43 +202,49 @@ const sectionData = computed<
 >(() => {
 	return [
 		{
-			label: $gettext(`Avatar frames`),
 			typename: `Avatar_Frame`,
+			premium: true,
+			label: $gettext(`Avatar frames`),
 			data: avatarFrames.value,
 			canAdd: avatarFrames.value.canAdd,
 			ratio: 1,
 		},
 		{
-			label: $gettext(`Backgrounds`),
 			typename: `Background`,
+			premium: true,
+			label: $gettext(`Backgrounds`),
 			data: backgrounds.value,
 			canAdd: backgrounds.value.canAdd,
 			ratio: 1,
 		},
 		{
-			label: $gettext(`Sticker packs`),
 			typename: `Sticker_Pack`,
+			premium: true,
+			label: $gettext(`Sticker packs`),
 			data: stickerPacks.value,
 			canAdd: stickerPacks.value.canAdd,
 			ratio: StickerPackRatio,
 		},
 		{
-			label: $gettext(`Stickers`),
 			typename: `Sticker`,
+			premium: true,
+			label: $gettext(`Stickers`),
 			data: stickers.value,
 			canAdd: stickers.value.canAdd,
 			ratio: 1,
 		},
 		{
-			label: $gettext(`Sticker packs (non-premium)`),
 			typename: `Sticker_Pack`,
+			premium: false,
+			label: $gettext(`Sticker packs (non-premium)`),
 			data: stickerPacks.value,
 			canAdd: stickerPacks.value.canAdd,
 			ratio: StickerPackRatio,
 		},
 		{
-			label: $gettext(`Stickers (non-premium)`),
 			typename: `Sticker`,
+			premium: false,
+			label: $gettext(`Stickers (non-premium)`),
 			data: stickers.value,
 			canAdd: stickers.value.canAdd,
 			ratio: 1,
@@ -337,13 +345,16 @@ const itemBorderRadius = kBorderRadiusLg.value;
 
 			<AppSpacer vertical :scale="4" />
 
-			<div v-for="{ label, typename, data, ratio, canAdd } of sectionData" :key="label">
+			<div
+				v-for="{ label, typename, premium, data, ratio, canAdd } of sectionData"
+				:key="label"
+			>
 				<h4 :style="subheaderStyles">
 					{{ label }}
 				</h4>
 
 				<div
-					v-if="data.slotAmount || data.maxActive"
+					v-if="data.slotAmount || data.maxPublished"
 					class="help-block"
 					:style="helpBlockStyles"
 				>
@@ -357,14 +368,14 @@ const itemBorderRadius = kBorderRadiusLg.value;
 							{{ $gettext(`slots used`) }}
 						</template>
 
-						<br v-if="data.slotAmount && data.maxActive" />
+						<br v-if="data.slotAmount && data.maxPublished" />
 
-						<template v-if="data.maxActive">
+						<template v-if="data.maxPublished">
 							{{ '??' /* data.activeIds.length */ }}
 							{{ ' / ' }}
-							{{ data.maxActive }}
+							{{ data.maxPublished }}
 							{{ ' ' }}
-							{{ $gettext(`active`) }}
+							{{ $gettext(`published`) }}
 						</template>
 					</p>
 				</div>
@@ -374,6 +385,7 @@ const itemBorderRadius = kBorderRadiusLg.value;
 						v-if="canAdd"
 						key="add-item"
 						:typename="typename"
+						:premium="premium"
 						:ratio="ratio"
 						:border-radius="itemBorderRadius"
 						:border-width="itemBorderWidth"

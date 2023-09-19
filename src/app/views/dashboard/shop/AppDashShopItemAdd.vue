@@ -13,6 +13,10 @@ defineProps({
 		type: String as PropType<ShopManagerGroupItemType>,
 		required: true,
 	},
+	premium: {
+		type: Boolean,
+		required: true,
+	},
 	borderRadius: {
 		type: Number,
 		default: undefined,
@@ -37,6 +41,9 @@ defineProps({
 			name: routeDashShopProduct.name,
 			params: {
 				typename,
+			},
+			query: {
+				premium: `${premium}`,
 			},
 		}"
 	>
