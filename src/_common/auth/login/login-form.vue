@@ -59,7 +59,7 @@ export default class AppAuthLoginForm
 	readonly Environment = Environment;
 	readonly validateUsername = validateUsername;
 	readonly googleImage = googleImage;
-	readonly accountProviderGoogle = LinkedAccountProvider.Google;
+	readonly Google = LinkedAccountProvider.Google;
 
 	created() {
 		this.form.warnOnDiscard = false;
@@ -291,7 +291,7 @@ export default class AppAuthLoginForm
 					solid
 					block
 					:disabled="Connection.isClientOffline"
-					@click="linkedChoose(accountProviderGoogle)"
+					@click="linkedChoose(Google)"
 				>
 					<img :src="googleImage" alt="" />
 					<span><AppTranslate>Sign in with Google</AppTranslate></span>
