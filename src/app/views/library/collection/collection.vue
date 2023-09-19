@@ -24,7 +24,7 @@ import { shallowSetup } from '../../../../utils/vue';
 import {
 	GameCollectionModel,
 	GameCollectionType,
-	GameCollectionUserType,
+	GameCollectionUserTypes,
 } from '../../../components/game/collection/collection.model';
 import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
 import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/thumbnail.vue';
@@ -74,7 +74,7 @@ const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
 		const query = filtering.getQueryString(route);
 
 		let id: string = route.params.id as string;
-		if (GameCollectionUserType.indexOf(type) !== -1) {
+		if (GameCollectionUserTypes.indexOf(type) !== -1) {
 			id = '@' + id;
 		}
 
@@ -283,7 +283,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 	get processedId() {
 		// Get the collection id.
 		let id = this.id;
-		if (this.type && GameCollectionUserType.indexOf(this.type) !== -1) {
+		if (this.type && GameCollectionUserTypes.indexOf(this.type) !== -1) {
 			id = '@' + id;
 		}
 

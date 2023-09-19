@@ -24,8 +24,8 @@ export abstract class BaseTrophyModel extends Model {
 	declare secret: boolean;
 	declare is_owner: boolean;
 	declare visible: boolean;
-	declare is_achieved: boolean;
-	declare has_perms: boolean;
+	declare is_achieved?: boolean;
+	declare has_perms?: boolean;
 
 	get isInfoRevealed() {
 		return !this.secret || this.is_achieved || this.has_perms;

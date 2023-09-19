@@ -28,7 +28,6 @@ export const enum LinkedAccountProvider {
 	Facebook = 'facebook',
 	Google = 'google',
 	Twitch = 'twitch',
-	// 'youtube'?
 }
 
 export class LinkedAccountModel extends Model {

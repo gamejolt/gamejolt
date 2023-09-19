@@ -62,9 +62,9 @@ export class CommunityActivityItemModel extends Model {
 	declare added_on: number;
 	declare extra_data: string;
 
-	declare user: UserModel;
+	declare user?: UserModel;
 
-	declare action_resource:
+	declare action_resource?:
 		| FiresidePostModel
 		| UserModel
 		| CommunityChannelModel

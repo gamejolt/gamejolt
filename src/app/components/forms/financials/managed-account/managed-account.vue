@@ -248,8 +248,6 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 
 	readonly IndividualAccountType = UserStripeManagedAccountType.Individual;
 	readonly CompanyAccountType = UserStripeManagedAccountType.Company;
-
-	readonly PendingStatus = UserStripeManagedAccountStatus.Pending;
 	readonly UnverifiedStatus = UserStripeManagedAccountStatus.Unverified;
 
 	declare $refs: {
@@ -326,7 +324,7 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 
 	get isVerificationPending() {
 		// If they're in pending state and we don't require more info from them.
-		if (!this.account || this.account.status !== this.PendingStatus) {
+		if (!this.account || this.account.status !== UserStripeManagedAccountStatus.Pending) {
 			return false;
 		}
 
@@ -339,7 +337,7 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 		}
 
 		const allPersons = Object.values(this.stripe.persons || []);
-		if (this.account.type === this.IndividualAccountType) {
+		if (this.account.type === UserStripeManagedAccountType.Individual) {
 			allPersons.push(this.stripe.current.individual as any);
 		}
 

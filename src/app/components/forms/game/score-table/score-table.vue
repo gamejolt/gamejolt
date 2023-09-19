@@ -22,7 +22,6 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 	modelClass = GameScoreTableModel;
 	modelSaveHandler = $saveGameScoreTable;
 
-	readonly GameScoreTable = GameScoreTableModel;
 	readonly DirectionAscend = GameScoreTableSorting.DirectionAsc;
 	readonly DirectionDescend = GameScoreTableSorting.DirectionDesc;
 
@@ -31,7 +30,7 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 
 		if (this.method === 'add') {
 			this.setField('unique_scores', true);
-			this.setField('scores_sorting_direction', this.DirectionDescend);
+			this.setField('scores_sorting_direction', GameScoreTableSorting.DirectionDesc);
 		}
 	}
 }

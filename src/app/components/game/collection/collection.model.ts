@@ -13,7 +13,7 @@ export const enum GameCollectionType {
 	Bundle = 'bundle',
 }
 
-export const GameCollectionUserType = [
+export const GameCollectionUserTypes = [
 	GameCollectionType.Followed,
 	GameCollectionType.Developer,
 	GameCollectionType.Owned,
@@ -21,14 +21,14 @@ export const GameCollectionUserType = [
 ];
 
 export class GameCollectionModel extends Model {
-	declare _id: string;
+	declare _id?: string;
 	declare type: GameCollectionType;
 	declare name: string;
 	declare slug: string;
 	declare img_thumbnail: string;
 	declare from_subscription: boolean;
-	declare owner: UserModel;
-	declare playlist: GamePlaylistModel;
+	declare owner?: UserModel;
+	declare playlist?: GamePlaylistModel;
 
 	constructor(data: any = {}) {
 		super(data);

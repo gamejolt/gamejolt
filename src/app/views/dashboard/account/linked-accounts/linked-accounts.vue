@@ -32,9 +32,10 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 	commonStore = setup(() => useCommonStore());
-	accountProviderFacebook = LinkedAccountProvider.Facebook;
-	accountProviderGoogle = LinkedAccountProvider.Google;
-	accountProviderTwitch = LinkedAccountProvider.Twitch;
+
+	readonly accountProviderFacebook = LinkedAccountProvider.Facebook;
+	readonly accountProviderGoogle = LinkedAccountProvider.Google;
+	readonly accountProviderTwitch = LinkedAccountProvider.Twitch;
 
 	get user() {
 		return this.commonStore.user;
@@ -139,7 +140,7 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 				<AppLinkedAccount
 					:account="facebookAccount"
 					:disabled="loading"
-					provider="accountProviderFacebook"
+					:provider="accountProviderFacebook"
 					@link="onLink"
 					@sync="onLink"
 					@unlink="onUnlink"
@@ -149,7 +150,7 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 				<AppLinkedAccount
 					:account="googleAccount"
 					:disabled="loading"
-					provider="accountProviderGoogle"
+					:provider="accountProviderGoogle"
 					@link="onLink"
 					@sync="onLink"
 					@unlink="onUnlink"
@@ -159,7 +160,7 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 				<AppLinkedAccount
 					:account="twitchAccount"
 					:disabled="loading"
-					provider="accountProviderTwitch"
+					:provider="accountProviderTwitch"
 					@link="onLink"
 					@sync="onLink"
 					@unlink="onUnlink"

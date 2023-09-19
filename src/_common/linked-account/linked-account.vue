@@ -16,7 +16,7 @@ export default class AppLinkedAccount extends Vue {
 	account!: LinkedAccountModel | null;
 
 	@Prop(String)
-	provider!: string;
+	provider!: LinkedAccountProvider;
 
 	@Prop(Boolean)
 	preview?: boolean;
@@ -28,12 +28,12 @@ export default class AppLinkedAccount extends Vue {
 	disabled?: boolean;
 
 	get providerIcon() {
-		const provider = this.getProvider() as LinkedAccountProvider;
+		const provider = this.getProvider();
 		return getLinkedAccountPlatformIcon(provider);
 	}
 
 	get providerName() {
-		const provider = this.getProvider() as LinkedAccountProvider;
+		const provider = this.getProvider();
 		return getLinkedAccountProviderDisplayName(provider);
 	}
 

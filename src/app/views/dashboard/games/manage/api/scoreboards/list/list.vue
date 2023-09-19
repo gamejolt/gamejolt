@@ -51,6 +51,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 	scoreTables: GameScoreTableModel[] = [];
 	isAdding = false;
 	activeItem: GameScoreTableModel | null = null;
+
 	readonly DirectionAscend = GameScoreTableSorting.DirectionAsc;
 	readonly DirectionDescend = GameScoreTableSorting.DirectionDesc;
 

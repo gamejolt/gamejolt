@@ -54,7 +54,6 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends LegacyRo
 			return;
 		}
 
-		//TODO(static-const-enums): Test this
 		const provider = this.$route.params.provider as LinkedAccountProvider;
 		const providerName = getLinkedAccountProviderDisplayName(provider);
 		if (!$payload.success) {

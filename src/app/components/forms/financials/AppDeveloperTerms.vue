@@ -6,8 +6,8 @@ import { formatDate } from '../../../../_common/filters/date';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import {
+	ManagedAccountTermsDistributionVersion,
 	UserStripeManagedAccountModel,
-	UserStripeManagedAccountTerms,
 } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import { html as termsTemplate } from '../../../../lib/terms/distribution-agreement/global.md';
 import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
@@ -34,7 +34,7 @@ const hasSignedOldAgreement = computed(
 	() =>
 		account?.value &&
 		account.value.tos_signed_developer > 0 &&
-		account.value.tos_signed_developer !== UserStripeManagedAccountTerms.DistributionVersion
+		account.value.tos_signed_developer !== ManagedAccountTermsDistributionVersion
 );
 
 const agreementLink = computed(() =>

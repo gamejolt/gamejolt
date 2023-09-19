@@ -11,15 +11,13 @@ export const enum UserStripeManagedAccountStatus {
 	Verified = 'verified',
 }
 
-export const enum UserStripeManagedAccountTerms {
-	DistributionVersion = 2,
-	PartnerVersion = 1,
-	CreatorVersion = 1,
-}
+export const ManagedAccountTermsDistributionVersion = 2;
+export const ManagedAccountTermsPartnerVersion = 1;
+export const ManagedAccountTermsCreatorVersion = 1;
 
 export class UserStripeManagedAccountModel extends Model {
 	declare type: UserStripeManagedAccountType;
-	declare country_code: 'string';
+	declare country_code: string;
 	declare status: UserStripeManagedAccountStatus;
 	declare tos_signed_developer: number;
 	declare tos_signed_developer_timestamp: number;

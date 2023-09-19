@@ -8,7 +8,7 @@ export const enum GameVideoType {
 }
 
 export class GameVideoModel extends Model implements LightboxMediaModel {
-	media_type!: 'video';
+	declare media_type: 'video';
 
 	declare game_id: number;
 	declare type: GameVideoType;

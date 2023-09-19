@@ -54,11 +54,10 @@ export default class RouteDashGamesManageApiTrophies extends LegacyRouteComponen
 	}
 
 	trophies: GameTrophyModel[] = [];
-	trophyDifficulties = BaseTrophyDifficulties;
 	isAdding: { [x: number]: boolean } = {};
 	activeItem: { [x: number]: GameTrophyModel | null } = {};
 
-	GameTrophy = GameTrophyModel;
+	readonly trophyDifficulties = BaseTrophyDifficulties;
 
 	get groupedTrophies() {
 		const trophies: { [x: number]: GameTrophyModel[] } = {
