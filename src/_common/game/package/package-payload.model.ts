@@ -6,13 +6,13 @@ import { GameReleaseModel } from '../release/release.model';
 import { GamePackageModel } from './package.model';
 
 export class GamePackagePayloadModel {
-	declare packages: GamePackageModel[];
-	declare releases: GameReleaseModel[];
-	declare builds: GameBuildModel[];
-	declare launchOptions: GameBuildLaunchOptionModel[];
-	declare sellables: SellableModel[];
-	declare installableBuilds?: GameBuildModel[];
-	declare externalPackages: GameExternalPackageModel[];
+	packages: GamePackageModel[];
+	releases: GameReleaseModel[];
+	builds: GameBuildModel[];
+	launchOptions: GameBuildLaunchOptionModel[];
+	sellables: SellableModel[];
+	installableBuilds?: GameBuildModel[];
+	externalPackages: GameExternalPackageModel[];
 
 	constructor(payload: any) {
 		this.packages = payload.packages ? GamePackageModel.populate(payload.packages) : [];
