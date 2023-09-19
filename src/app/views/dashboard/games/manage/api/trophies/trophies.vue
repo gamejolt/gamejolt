@@ -19,7 +19,10 @@ import {
 } from '../../../../../../../_common/route/legacy-route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import { BaseTrophyDifficulty } from '../../../../../../../_common/trophy/base-trophy.model';
+import {
+	BaseTrophyDifficulties,
+	BaseTrophyDifficulty,
+} from '../../../../../../../_common/trophy/base-trophy.model';
 import AppTrophyThumbnail from '../../../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
 import { useGameDashRouteController } from '../../manage.store';
@@ -51,6 +54,7 @@ export default class RouteDashGamesManageApiTrophies extends LegacyRouteComponen
 	}
 
 	trophies: GameTrophyModel[] = [];
+	trophyDifficulties = BaseTrophyDifficulties;
 	isAdding: { [x: number]: boolean } = {};
 	activeItem: { [x: number]: GameTrophyModel | null } = {};
 
@@ -213,7 +217,7 @@ export default class RouteDashGamesManageApiTrophies extends LegacyRouteComponen
 				</p>
 			</div>
 
-			<div v-for="difficulty of GameTrophy.difficulties" :key="difficulty">
+			<div v-for="difficulty of trophyDifficulties" :key="difficulty">
 				<h4>
 					<AppTranslate :translate-params="{ difficulty: trophyLabels[difficulty] }">
 						%{ difficulty } Trophies

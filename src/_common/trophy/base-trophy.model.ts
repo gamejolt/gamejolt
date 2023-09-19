@@ -7,14 +7,14 @@ export const enum BaseTrophyDifficulty {
 	Platinum = 4,
 }
 
-export abstract class BaseTrophyModel extends Model {
-	static readonly difficulties = <BaseTrophyDifficulty[]>[
-		BaseTrophyDifficulty.Bronze,
-		BaseTrophyDifficulty.Silver,
-		BaseTrophyDifficulty.Gold,
-		BaseTrophyDifficulty.Platinum,
-	];
+export const BaseTrophyDifficulties = <BaseTrophyDifficulty[]>[
+	BaseTrophyDifficulty.Bronze,
+	BaseTrophyDifficulty.Silver,
+	BaseTrophyDifficulty.Gold,
+	BaseTrophyDifficulty.Platinum,
+];
 
+export abstract class BaseTrophyModel extends Model {
 	declare difficulty: BaseTrophyDifficulty;
 	declare title: string;
 	declare description: string;
