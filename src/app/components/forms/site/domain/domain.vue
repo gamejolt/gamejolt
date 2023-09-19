@@ -8,7 +8,7 @@ import { $saveDomainSite, SiteModel } from '../../../../../_common/site/site-mod
 import { UserModel } from '../../../../../_common/user/user.model';
 
 interface FormModel extends SiteModel {
-	type: string;
+	type?: string;
 }
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -22,7 +22,7 @@ export default class FormSiteDomain extends mixins(Wrapper) {
 	@Prop(Object) user!: UserModel;
 	@Prop(Object) game?: GameModel;
 
-	modelClass = SiteModel as any;
+	modelClass = SiteModel;
 	modelSaveHandler = $saveDomainSite;
 
 	readonly validateDomain = validateDomain;
@@ -92,7 +92,7 @@ export default class FormSiteDomain extends mixins(Wrapper) {
 						validateDomain(),
 						validateAvailability({
 							url: '/web/dash/sites/check-field-availability/domain',
-							initVal: model.domain,
+							initVal: model && model.domain,
 						}),
 					]"
 				/>

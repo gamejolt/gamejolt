@@ -15,7 +15,7 @@ import {
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
 type FormModel = CommunityChannelModel & {
-	background_crop: any;
+	background_crop?: any;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -30,7 +30,7 @@ export default class FormCommunityChannelBackground
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	modelClass = CommunityChannelModel as any;
+	modelClass = CommunityChannelModel;
 	modelSaveHandler = $saveCommunityChannelBackground;
 
 	maxFilesize = 0;

@@ -3,7 +3,10 @@ import { determine } from 'jstimezonedetect';
 import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
+import {
+	$saveCommunityChannel,
+	CommunityChannelModel,
+} from '../../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
@@ -33,6 +36,7 @@ export default class FormCommunityChannelAdd extends mixins(Wrapper) {
 	}
 
 	modelClass = FormModel;
+	modelSaveHandler = $saveCommunityChannel;
 	isTitleInitial = true;
 
 	get types() {

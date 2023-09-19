@@ -15,17 +15,16 @@ export default class FormSiteSettings extends mixins(Wrapper) {
 }
 </script>
 
-import { validateGaTrackingId } from '../../../../../_common/form-vue/validators';
 <template>
 	<AppForm :controller="form">
 		<AppFormGroup name="title" :label="$gettext(`Page Title`)" :optional="true">
-			<div class="help-block" v-if="!formModel.game_id">
+			<div v-if="!formModel.game_id" class="help-block">
 				<AppTranslate>
 					You can override the default title for your site. This will show in search
 					engines, and in the tab bar of browsers. By default it's your display name.
 				</AppTranslate>
 			</div>
-			<div class="help-block" v-else>
+			<div v-else class="help-block">
 				<AppTranslate>
 					You can override the default title for your site. This will show in search
 					engines, and in the tab bar of browsers. By default it's the title of your game.

@@ -11,7 +11,7 @@ import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue'
 import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../../../utils/regex';
 
 type FormModel = GameVideoModel & {
-	_url: string;
+	_url?: string;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -24,7 +24,7 @@ class Wrapper extends BaseForm<FormModel> {}
 export default class FormGameVideo extends mixins(Wrapper) {
 	@Prop(Object) game!: GameModel;
 
-	modelClass = GameVideoModel as any;
+	modelClass = GameVideoModel;
 	modelSaveHandler = $saveGameVideo;
 
 	readonly REGEX_VIDEO = REGEX_VIDEO;

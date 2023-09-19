@@ -56,7 +56,6 @@ export class BaseForm<T> extends Vue {
 	emitSubmit(_formModel: Readonly<T>, _response: any) {}
 
 	modelClass?: ModelClassType<T> = undefined;
-	saveMethod?: keyof T;
 	modelSaveHandler?: (model: T) => Promise<any>;
 
 	// Common validators that were used in old form templates.
@@ -75,6 +74,8 @@ export class BaseForm<T> extends Vue {
 	form = setup(() =>
 		createForm<T>({
 			model: toRef(this.$props as this, 'model'),
+			modelClass: this.modelClass,
+			modelSaveHandler: this.modelSaveHandler,
 		})
 	);
 
@@ -114,7 +115,6 @@ export class BaseForm<T> extends Vue {
 		this.form._override({
 			modelClass: this.modelClass,
 			modelSaveHandler: this.modelSaveHandler,
-			saveMethod: computed(() => this.saveMethod),
 			loadUrl: computed(() => (this as Partial<FormOnLoad>).loadUrl),
 			loadData: computed(() => (this as Partial<FormOnLoad>).loadData),
 			onInit: () => this.onInit(),
