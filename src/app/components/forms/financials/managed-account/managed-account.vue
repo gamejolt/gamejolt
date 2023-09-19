@@ -38,8 +38,8 @@ type StripeMeta =
 
 type PayloadStripeData = {
 	publishableKey: string;
-	countries: { [code: string]: string };
-	currencies: { [code: string]: string[] };
+	countries: Record<string, string>;
+	currencies: Record<string, string>;
 
 	required: StripeMeta;
 	current: StripeData.accounts.IAccount;
