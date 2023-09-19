@@ -3,10 +3,10 @@ import { Model } from '../../../../model/model.service';
 import { CommunityCompetitionAwardModel } from '../../award/award.model';
 
 export class CommunityCompetitionEntryAwardModel extends Model {
-	community_competition_entry_id!: number;
-	sort!: number;
+	declare community_competition_entry_id: number;
+	declare sort: number;
 
-	community_competition_award!: CommunityCompetitionAwardModel;
+	declare community_competition_award: CommunityCompetitionAwardModel;
 
 	constructor(data: any = {}) {
 		super(data);

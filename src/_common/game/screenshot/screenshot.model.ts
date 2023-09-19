@@ -5,13 +5,13 @@ import { Model } from '../../model/model.service';
 import { GameModel } from '../game.model';
 
 export class GameScreenshotModel extends Model implements LightboxMediaModel {
-	media_type!: 'image';
+	declare media_type: 'image';
 
-	game_id!: number;
-	caption!: string;
-	posted_on!: number;
-	status!: number;
-	media_item!: MediaItemModel;
+	declare game_id: number;
+	declare caption: string;
+	declare posted_on: number;
+	declare status: number;
+	declare media_item: MediaItemModel;
 
 	// Needed for lightbox and other components that are used together with GameVideo.
 	get img_thumbnail() {

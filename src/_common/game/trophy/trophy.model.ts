@@ -3,8 +3,8 @@ import { BaseTrophyDifficulty, BaseTrophyModel } from '../../trophy/base-trophy.
 import { UserGameTrophyModel } from '../../user/trophy/game-trophy.model';
 
 export class GameTrophyModel extends BaseTrophyModel {
-	game_id!: number;
-	sort!: number;
+	declare game_id: number;
+	declare sort: number;
 
 	constructor(data: any = {}) {
 		super(data);

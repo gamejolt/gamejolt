@@ -2,12 +2,12 @@ import { Api } from '../../../api/api.service';
 import { Model } from '../../../model/model.service';
 
 export class CommunityCompetitionAwardModel extends Model {
-	community_competition_id!: number;
-	name!: string;
-	description!: string | null;
-	sort!: number;
+	declare community_competition_id: number;
+	declare name: string;
+	declare description: string | null;
+	declare sort: number;
 
-	entry_count!: number | null;
+	declare entry_count: number | null;
 }
 
 export function $saveCommunityCompetitionAwardSort(competitionId: number, awardIds: number[]) {

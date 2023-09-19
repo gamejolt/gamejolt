@@ -2,11 +2,11 @@ import { GameModel } from '../../game/game.model';
 import { Model } from '../../model/model.service';
 
 export class UserGameSessionModel extends Model {
-	user_id!: number;
-	game_id!: number;
-	game!: GameModel;
-	opened_on!: number;
-	total_time!: number;
+	declare user_id: number;
+	declare game_id: number;
+	declare game: GameModel;
+	declare opened_on: number;
+	declare total_time: number;
 
 	constructor(data: any = {}) {
 		super(data);
