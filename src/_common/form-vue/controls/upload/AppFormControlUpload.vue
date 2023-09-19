@@ -44,7 +44,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	...defineFormControlEmits(),
+	...defineFormControlEmits<File | File[] | null>(),
 });
 
 const validators = computed(() => {

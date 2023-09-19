@@ -51,7 +51,7 @@ const props = defineProps({
 	 * the User has equipped.
 	 */
 	frameOverride: {
-		type: Object as PropType<AvatarFrameModel>,
+		type: Object as PropType<Pick<AvatarFrameModel, 'image_url'>>,
 		default: undefined,
 	},
 	/**

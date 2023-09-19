@@ -42,9 +42,9 @@ export function defineFormControlValidateProps() {
 /**
  * Used to mix in common emits used in most form controls.
  */
-export function defineFormControlEmits() {
+export function defineFormControlEmits<T = any>() {
 	return {
-		changed: (_value: any) => true,
+		changed: (_value: T) => true,
 	};
 }
 

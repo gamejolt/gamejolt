@@ -27,6 +27,7 @@ import { routeDashAccountChatTimers } from '../account/chat-timers/chat-timers.r
 import { routeDashAccountReferrals } from '../account/referrals/referrals.route';
 import { routeDashAccountWallet } from '../account/wallet/wallet.route';
 import { routeDashAnalytics } from '../analytics/analytics.route';
+import { routeDashShopOverview } from '../shop/overview/overview.route';
 import { routeDashStickers } from '../stickers/stickers.route';
 import { routeDashSupporters } from '../supporters/supporters.route';
 
@@ -101,6 +102,11 @@ const buttons = computed<Button[]>(() => [
 		to: routeDashStickers.name!,
 		label: $gettext(`Custom stickers`),
 		icon: 'sticker-filled',
+	},
+	{
+		to: routeDashShopOverview.name!,
+		label: $gettext(`Custom shop products`),
+		icon: 'marketplace-filled',
 	},
 	{
 		to: routeDashAccountReferrals.name!,
