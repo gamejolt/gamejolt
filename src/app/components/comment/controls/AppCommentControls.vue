@@ -12,6 +12,7 @@ import { CommentVoteType } from '../../../../_common/comment/vote/vote-model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
 import { showLikersModal } from '../../../../_common/likers/modal.service';
+import { storeModel } from '../../../../_common/model/model-store.service';
 import { Model } from '../../../../_common/model/model.service';
 import { selectReactionForResource } from '../../../../_common/reaction/reaction-count';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -154,8 +155,10 @@ async function $voteComment(vote: number) {
 	}
 
 	if (result && result.comment) {
-		const resultComment = new CommentModel(result.comment);
-		comment.value.has_owner_like = resultComment.has_owner_like;
+		// TODO(creator-shops): check this
+		storeModel(CommentModel, result.comment);
+		// const resultComment = new CommentModel(result.comment);
+		// comment.value.has_owner_like = resultComment.has_owner_like;
 	}
 }
 

@@ -1,5 +1,6 @@
 import { BackgroundModel } from '../background/background.model';
 import { MediaItemModel } from '../media-item/media-item-model';
+import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
 import { SiteTrophyModel } from '../site/trophy/trophy.model';
 import { StickerRewardModel } from '../sticker/sticker-reward-model';
@@ -39,7 +40,7 @@ export class QuestObjectiveRewardModel extends Model {
 		}
 
 		if (data.background) {
-			this.background = new BackgroundModel(data.background);
+			this.background = storeModel(BackgroundModel, data.background);
 		}
 	}
 

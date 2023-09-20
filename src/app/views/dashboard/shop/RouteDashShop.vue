@@ -185,7 +185,9 @@ createAppRoute({
 	<AppShellPageBackdrop>
 		<section class="section">
 			<div class="container">
-				{{ 'RouteDashShop' }}
+				RouteDashShop
+
+				<hr />
 
 				<RouterView />
 			</div>

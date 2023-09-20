@@ -35,10 +35,6 @@ export class ChatMessageModel implements ModelStoreModel, ReactionableModel {
 		return 'Chat_Message';
 	}
 
-	constructor(data: any) {
-		this.update(data);
-	}
-
 	update(data: any) {
 		Object.assign(this, data);
 

@@ -5,10 +5,11 @@ import { AvatarFrameModel } from '../../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../../_common/background/background.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
+import { storeModelList } from '../../../../../_common/model/model-store.service';
 import { ModelData } from '../../../../../_common/model/model.service';
 import {
-	createAppRoute,
-	defineAppRouteOptions,
+createAppRoute,
+defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
@@ -22,10 +23,10 @@ import AppDashShopItem from '.././AppDashShopItem.vue';
 import AppDashShopItemAdd from '../AppDashShopItemAdd.vue';
 import { ShopItemStates } from '../AppDashShopItemBase.vue';
 import {
-	ShopManagerGroup,
-	ShopManagerGroupItem,
-	ShopManagerGroupItemType,
-	useShopManagerStore,
+ShopManagerGroup,
+ShopManagerGroupItem,
+ShopManagerGroupItemType,
+useShopManagerStore,
 } from '../RouteDashShop.vue';
 import { ShopChangesType, showManageShopChangesModal } from '../_changes-modal/modal.service';
 
@@ -113,10 +114,16 @@ createAppRoute({
 		try {
 			const payload = await getOverviewData();
 
-			_setGroupFields(avatarFrames, payload.avatarFrames, i => AvatarFrameModel.populate(i));
-			_setGroupFields(backgrounds, payload.backgrounds, i => BackgroundModel.populate(i));
-			_setGroupFields(stickerPacks, payload.stickerPacks, i => StickerPackModel.populate(i));
-			_setGroupFields(stickers, payload.stickers, i => StickerModel.populate(i));
+			_setGroupFields(avatarFrames, payload.avatarFrames, i =>
+				storeModelList(AvatarFrameModel, i)
+			);
+			_setGroupFields(backgrounds, payload.backgrounds, i =>
+				storeModelList(BackgroundModel, i)
+			);
+			_setGroupFields(stickerPacks, payload.stickerPacks, i =>
+				storeModelList(StickerPackModel, i)
+			);
+			_setGroupFields(stickers, payload.stickers, i => storeModelList(StickerModel, i));
 		} catch (e) {
 			console.error('Error fetching overview data', e);
 		}

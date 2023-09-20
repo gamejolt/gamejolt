@@ -17,10 +17,6 @@ export class EmojiGroupModel implements ModelStoreModel {
 	declare added_on: number;
 	declare emojis: EmojiModel[];
 
-	constructor(data: any = {}) {
-		this.update(data);
-	}
-
 	update(data: any = {}) {
 		Object.assign(this, data);
 

@@ -1,6 +1,7 @@
 import { markRaw, shallowReadonly, triggerRef } from 'vue';
 import { BackgroundModel } from '../../../_common/background/background.model';
 import { FiresideChatSettingsModel } from '../../../_common/fireside/chat/chat-settings.model';
+import { storeModel } from '../../../_common/model/model-store.service';
 import {
 	SocketChannelController,
 	createSocketChannelController,
@@ -106,7 +107,9 @@ export function createGridFiresideChannel(
 				for (const hostData of response.host_data) {
 					assignHostBackgroundData(
 						hostData.user_id,
-						hostData.background ? new BackgroundModel(hostData.background) : undefined
+						hostData.background
+							? storeModel(BackgroundModel, hostData.background)
+							: undefined
 					);
 				}
 			}
@@ -219,7 +222,9 @@ export function createGridFiresideChannel(
 	function _onUpdateHost(payload: HostUpdatePayload) {
 		logger.info('Grid host update received.', payload);
 
-		const background = payload.background ? new BackgroundModel(payload.background) : undefined;
+		const background = payload.background
+			? storeModel(BackgroundModel, payload.background)
+			: undefined;
 		firesideController.assignHostBackgroundData(payload.user_id, background);
 	}
 

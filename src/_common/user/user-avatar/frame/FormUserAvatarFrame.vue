@@ -9,6 +9,7 @@ import AppFormStickySubmit from '../../../form-vue/AppFormStickySubmit.vue';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import AppIllustration from '../../../illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../illustration/illustrations';
+import { storeModelList } from '../../../model/model-store.service';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../store/common-store';
 import { $gettext } from '../../../translate/translate.service';
@@ -26,7 +27,7 @@ const availableFrames = ref<UserAvatarFrameModel[]>([]);
 const form: FormController<FormModel> = createForm({
 	loadUrl: '/web/dash/profile/save',
 	onLoad(payload) {
-		availableFrames.value = UserAvatarFrameModel.populate(payload.userAvatarFrames);
+		availableFrames.value = storeModelList(UserAvatarFrameModel, payload.userAvatarFrames);
 
 		form.formModel.avatar_frame =
 			availableFrames.value.find(i => i.is_active)?.avatar_frame.id || 0;

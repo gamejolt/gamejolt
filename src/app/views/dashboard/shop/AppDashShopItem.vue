@@ -22,7 +22,7 @@ import { styleElevate, styleFlexCenter } from '../../../../_styles/mixins';
 import { kFontSizeSmall } from '../../../../_styles/variables';
 import AppDashShopHover from './AppDashShopHover.vue';
 import AppDashShopItemBase, { ShopItemStates } from './AppDashShopItemBase.vue';
-import { ShopManagerGroupItem, ShopManagerGroupItemType } from './RouteDashShop.vue';
+import { ShopManagerGroupItem } from './RouteDashShop.vue';
 import { routeDashShopProduct } from './product/product.route';
 
 const props = defineProps({
@@ -59,16 +59,16 @@ function _isSticker(i: ShopManagerGroupItem): i is StickerModel {
 	return i instanceof StickerModel;
 }
 
-const typename = computed<ShopManagerGroupItemType>(() => {
+const type = computed(() => {
 	const i = item.value;
 	if (_isAvatarFrame(i)) {
-		return 'Avatar_Frame';
+		return 'avatar-frame';
 	} else if (_isBackground(i)) {
-		return 'Background';
+		return 'background';
 	} else if (_isStickerPack(i)) {
-		return 'Sticker_Pack';
+		return 'sticker-pack';
 	} else if (_isSticker(i)) {
-		return 'Sticker';
+		return 'sticker';
 	}
 	throw Error(`Unknown item type`);
 });
@@ -99,7 +99,7 @@ const showDebugData = false;
 
 <template>
 	<AppDashShopHover
-		v-if="!!typename"
+		v-if="!!type"
 		:border-radius="borderRadius"
 		:border-width="borderWidth"
 		:style="{
@@ -108,11 +108,8 @@ const showDebugData = false;
 		:to="{
 			name: routeDashShopProduct.name,
 			params: {
-				typename,
+				type,
 				id: item.id,
-			},
-			query: {
-				premium: `${item.is_premium === true}`,
 			},
 		}"
 	>

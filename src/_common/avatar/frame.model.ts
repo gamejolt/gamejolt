@@ -1,18 +1,19 @@
-import { Model } from '../model/model.service';
+import { ModelStoreModel } from '../model/model-store.service';
 import { ShopItemModelCommonFields } from '../model/shop-item-model.service';
 
-export class AvatarFrameModel extends Model implements ShopItemModelCommonFields {
+export class AvatarFrameModel implements ModelStoreModel, ShopItemModelCommonFields {
+	declare id: number;
 	declare image_url: string;
-	declare name?: string;
+	declare name: string;
+	declare description: string | undefined;
 	declare rarity?: number;
-	declare description?: string;
 
 	// Shop fields
-	declare is_premium?: boolean;
-	declare has_active_sale?: boolean;
-	declare was_approved?: boolean;
+	declare is_premium: boolean;
+	declare has_active_sale: boolean;
+	declare was_approved: boolean;
 
-	constructor(data: any = {}) {
-		super(data);
+	update(data: any) {
+		Object.assign(this, data);
 	}
 }

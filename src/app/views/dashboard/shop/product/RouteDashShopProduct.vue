@@ -1,52 +1,98 @@
-<script lang="ts">
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { defineAppRouteOptions } from '../../../../../_common/route/route-component';
-import { touchUser } from '../../../../../_common/user/user.model';
-import { useShopManagerStore } from '../RouteDashShop.vue';
-import FormShopProductAvatarFrame from './_form/FormShopProductAvatarFrame.vue';
-
-export default {
-	...defineAppRouteOptions({
-		deps: {
-			params: ['id', 'typename'],
-			query: ['premium'],
-		},
-		resolver: () => touchUser(),
-	}),
-};
-</script>
-
 <script lang="ts" setup>
-const route = useRoute();
-const { castTypename } = useShopManagerStore()!;
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { AvatarFrameModel } from '../../../../../_common/avatar/frame.model';
+import { BackgroundModel } from '../../../../../_common/background/background.model';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
+import {
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../_common/route/route-component';
+import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
+import { StickerModel } from '../../../../../_common/sticker/sticker.model';
+import { $gettext } from '../../../../../_common/translate/translate.service';
+import { assertNever } from '../../../../../utils/utils';
+import { useShopManagerStore } from '../RouteDashShop.vue';
+import FormShopProductAvatarFrame from './_forms/FormShopProductAvatarFrame.vue';
+import FormShopProductSticker from './_forms/FormShopProductSticker.vue';
 
-const id = computed(() => {
-	let id = route.params.id;
-	if (Array.isArray(id)) {
-		id = id[0];
-	}
-	return parseInt(id, 10);
+defineOptions(
+	defineAppRouteOptions({
+		deps: {
+			params: ['type', 'id'],
+		},
+		// Empty resolver so that the shop store is resolved first.
+		resolver: () => Promise.resolve(),
+	})
+);
+
+const route = useRoute();
+const { avatarFrames, backgrounds, stickers, stickerPacks } = useShopManagerStore()!;
+
+const avatarFrame = ref<AvatarFrameModel>();
+const background = ref<BackgroundModel>();
+const sticker = ref<StickerModel>();
+const stickerPack = ref<StickerPackModel>();
+
+type ProductType = 'avatar-frame' | 'background' | 'sticker' | 'sticker-pack';
+
+const productType = computed(() => route.params.type as ProductType);
+
+const { isBootstrapped } = createAppRoute({
+	routeTitle: computed(() => {
+		const titles: Record<ProductType, string> = {
+			'avatar-frame': $gettext(`Avatar frame product`),
+			background: $gettext(`Background product`),
+			sticker: $gettext(`Sticker product`),
+			'sticker-pack': $gettext(`Sticker pack product`),
+		};
+
+		return titles[productType.value];
+	}),
+	onResolved() {
+		if (!route.params.id) {
+			return;
+		}
+
+		const modelId = parseInt(route.params.id as string, 10);
+
+		switch (productType.value) {
+			case 'avatar-frame': {
+				avatarFrame.value = avatarFrames.value.items.find(i => i.id === modelId);
+				break;
+			}
+
+			case 'background': {
+				background.value = backgrounds.value.items.find(i => i.id === modelId);
+				break;
+			}
+
+			case 'sticker': {
+				sticker.value = stickers.value.items.find(i => i.id === modelId);
+				break;
+			}
+
+			case 'sticker-pack': {
+				stickerPack.value = stickerPacks.value.items.find(i => i.id === modelId);
+				break;
+			}
+
+			default:
+				assertNever(productType.value);
+		}
+	},
 });
-const typename = computed(() => castTypename(`${route.params.typename}`));
-const premium = computed(() => !!route.query.premium);
 </script>
 
 <template>
-	<FormShopProductAvatarFrame
-		v-if="typename === 'Avatar_Frame'"
-		:model-id="id"
-		:premium="premium"
-	/>
-	<!-- <FormShopProductBackground
-		v-else-if="typename === 'Background'"
-		:model-id="id"
-		:premium="premium"
-	/>
-	<FormShopProductStickerPack
-		v-else-if="typename === 'Sticker_Pack'"
-		:model-id="id"
-		:premium="premium"
-	/>
-	<FormShopProductSticker v-else-if="typename === 'Sticker'" :model-id="id" :premium="premium" /> -->
+	<template v-if="isBootstrapped">
+		<FormShopProductAvatarFrame v-if="productType === 'avatar-frame'" :model="avatarFrame" />
+		<FormShopProductSticker v-else-if="productType === 'sticker'" :model="sticker" />
+		<template v-else>
+			{{ $gettext(`Uh oh`) }}
+		</template>
+	</template>
+	<template v-else>
+		<AppLoading centered />
+	</template>
 </template>

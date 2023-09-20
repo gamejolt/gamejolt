@@ -10,6 +10,7 @@ import { DogtagData } from '../dogtag/dogtag-data';
 import { showErrorGrowl } from '../growls/growls.service';
 import { MediaItemModel } from '../media-item/media-item-model';
 import { showModalConfirm } from '../modal/confirm/confirm-service';
+import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { ThemeModel } from '../theme/theme.model';
@@ -207,7 +208,7 @@ export class UserModel
 		}
 
 		if (data.avatar_frame) {
-			this.avatar_frame = new AvatarFrameModel(data.avatar_frame);
+			this.avatar_frame = storeModel(data.avatar_frame);
 		}
 
 		Registry.store('User', this);

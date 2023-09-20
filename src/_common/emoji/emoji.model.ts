@@ -6,10 +6,6 @@ export class EmojiModel implements ModelStoreModel {
 	declare prefix: string;
 	declare short_name: string;
 
-	constructor(data: any = {}) {
-		this.update(data);
-	}
-
 	update(data: any = {}) {
 		Object.assign(this, data);
 	}

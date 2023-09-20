@@ -5,8 +5,8 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { FiresideChatSettingsModel } from '../../../../_common/fireside/chat/chat-settings.model';
 import {
-	$saveFiresideWithRealms,
-	FiresideModel,
+$saveFiresideWithRealms,
+FiresideModel,
 } from '../../../../_common/fireside/fireside.model';
 import { FIRESIDE_ROLES } from '../../../../_common/fireside/role/role.model';
 import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
@@ -21,6 +21,7 @@ import AppFormControlToggleButton from '../../../../_common/form-vue/controls/to
 import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { storeModelList } from '../../../../_common/model/model-store.service';
 import { RealmModel } from '../../../../_common/realm/realm-model';
 import { showReportModal } from '../../../../_common/report/modal/modal.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -31,9 +32,9 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../utils/array';
 import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import {
-	extinguishFireside,
-	publishFireside,
-	useFiresideController,
+extinguishFireside,
+publishFireside,
+useFiresideController,
 } from '../../../components/fireside/controller/controller';
 import { showChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
 import { showChatModsModal } from '../../../components/forms/chat/mods/modal/modal.service';
@@ -152,7 +153,7 @@ const backgroundForm: FormController<{ background_id?: number }> = createForm({
 		return `/web/fireside/backgrounds/${fireside.hash}`;
 	}),
 	onLoad(payload) {
-		backgrounds.value = BackgroundModel.populate(payload.backgrounds);
+		backgrounds.value = storeModelList(BackgroundModel, payload.backgrounds);
 		backgroundForm.formModel.background_id = payload.currentBackgroundId || undefined;
 	},
 	async onSubmit() {

@@ -1,24 +1,26 @@
 import { MediaItemModel } from '../../media-item/media-item-model';
-import { Model, ModelData, UnknownModelData } from '../../model/model.service';
+import { ModelStoreModel } from '../../model/model-store.service';
+import { ModelData, UnknownModelData } from '../../model/model.service';
 import { ShopItemModelCommonFields } from '../../model/shop-item-model.service';
 
-export class StickerPackModel extends Model implements ShopItemModelCommonFields {
+export class StickerPackModel implements ModelStoreModel, ShopItemModelCommonFields {
+	declare id: number;
 	declare name: string;
+	declare description: string | undefined;
 	declare payout_sticker_num: number;
 	declare cost_coins: number;
 	declare starts_on?: number;
 	declare ends_on?: number;
 	declare is_active?: boolean;
-
 	declare media_item: MediaItemModel;
 
 	// Shop fields
-	declare is_premium?: boolean;
-	declare has_active_sale?: boolean;
-	declare was_approved?: boolean;
+	declare is_premium: boolean;
+	declare has_active_sale: boolean;
+	declare was_approved: boolean;
 
-	constructor(data: UnknownModelData | ModelData<StickerPackModel> = {}) {
-		super(data);
+	update(data: UnknownModelData | ModelData<StickerPackModel>) {
+		Object.assign(this, data);
 
 		if (data.media_item) {
 			this.media_item = new MediaItemModel(data.media_item);

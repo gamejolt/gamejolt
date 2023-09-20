@@ -1,4 +1,5 @@
 import { CreatorExperienceModel } from '../creator/experience/experience.model';
+import { storeModel } from '../model/model-store.service';
 import { UnknownModelData } from '../model/model.service';
 import { getShellNotice } from '../shell/notice/notice.service';
 import { showStickerPackOpenModal } from '../sticker/pack/open-modal/modal.service';
@@ -35,7 +36,7 @@ export default function handlePayloadActions(payload: PayloadData) {
 				const { user_sticker_pack } = data;
 
 				showStickerPackOpenModal({
-					pack: new UserStickerPackModel(user_sticker_pack),
+					pack: storeModel(UserStickerPackModel, user_sticker_pack),
 				});
 				break;
 			}

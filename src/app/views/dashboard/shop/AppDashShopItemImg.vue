@@ -13,7 +13,7 @@ const props = defineProps({
 		required: true,
 	},
 	imgUrl: {
-		type: String as PropType<string | undefined>,
+		type: [String, null] as PropType<string | null>,
 		required: true,
 	},
 });
