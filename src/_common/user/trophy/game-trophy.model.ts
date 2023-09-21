@@ -4,11 +4,11 @@ import { GameTrophyModel } from '../../game/trophy/trophy.model';
 import { UserBaseTrophyModel } from './user-base-trophy.model';
 
 export class UserGameTrophyModel extends UserBaseTrophyModel {
-	game_id!: number;
-	game_trophy_id!: number;
+	declare game_id: number;
+	declare game_trophy_id: number;
 
-	game_trophy?: GameTrophyModel;
-	game?: GameModel;
+	declare game_trophy?: GameTrophyModel;
+	declare game?: GameModel;
 
 	constructor(data: any = {}) {
 		super(data);

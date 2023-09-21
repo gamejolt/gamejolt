@@ -2,15 +2,15 @@ import { Model } from '../../model/model.service';
 import { ForumCategoryModel } from '../category/category.model';
 
 export class ForumChannelModel extends Model {
-	category_id!: number;
-	category!: ForumCategoryModel;
-	name!: string;
-	description!: string;
-	type!: string;
-	status!: string;
-	created_on!: number;
+	declare category_id: number;
+	declare category: ForumCategoryModel;
+	declare name: string;
+	declare description: string;
+	declare type: string;
+	declare status: string;
+	declare created_on: number;
 
-	topics_count!: number;
-	replies_count!: number;
-	notifications_count!: number;
+	declare topics_count: number;
+	declare replies_count: number;
+	declare notifications_count: number;
 }

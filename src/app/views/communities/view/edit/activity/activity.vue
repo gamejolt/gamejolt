@@ -1,7 +1,10 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
-import { CommunityActivityItemModel } from '../../../../../../_common/community/activity-item/activity-item.model';
+import {
+	CommunityActivityItemModel,
+	CommunityActivityItemType,
+} from '../../../../../../_common/community/activity-item/activity-item.model';
 import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/activity-item.vue';
 import { formatDate } from '../../../../../../_common/filters/date';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
@@ -90,7 +93,7 @@ export default class RouteCommunitiesViewEditActivity extends LegacyRouteCompone
 
 			if (
 				this.items.length === 0 ||
-				item.type === CommunityActivityItemModel.TYPE_COMMUNITY_CREATED
+				item.type === CommunityActivityItemType.CommunityCreated
 			) {
 				// The first item will always be a user/time split.
 				newItem.timesplit = true;

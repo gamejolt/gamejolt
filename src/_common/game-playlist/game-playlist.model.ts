@@ -8,13 +8,13 @@ import {
 } from './game/game.model';
 
 export class GamePlaylistModel extends Model {
-	user_id!: number;
-	user!: UserModel;
-	name!: string;
-	slug!: string;
-	is_secret!: boolean;
-	added_on!: number;
-	updated_on!: number;
+	declare user_id: number;
+	declare user: UserModel;
+	declare name: string;
+	declare slug: string;
+	declare is_secret: boolean;
+	declare added_on: number;
+	declare updated_on: number;
 
 	constructor(data: any = {}) {
 		super(data);

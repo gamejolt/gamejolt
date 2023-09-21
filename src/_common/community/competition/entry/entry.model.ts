@@ -8,17 +8,17 @@ import { CommunityCompetitionEntryVoteResultModel } from './vote/vote-result.mod
 type EntryType = 'Game';
 
 export class CommunityCompetitionEntryModel extends Model {
-	community_competition_id!: number;
-	added_on!: number;
-	type!: EntryType;
-	vote_count!: number;
+	declare community_competition_id: number;
+	declare added_on: number;
+	declare type: EntryType;
+	declare vote_count: number;
 
-	is_removed!: boolean | null;
+	declare is_removed: boolean | null;
 
-	user!: UserModel;
-	resource!: GameModel;
-	vote_results!: CommunityCompetitionEntryVoteResultModel[];
-	awards!: CommunityCompetitionEntryAwardModel[];
+	declare user: UserModel;
+	declare resource: GameModel;
+	declare vote_results: CommunityCompetitionEntryVoteResultModel[];
+	declare awards: CommunityCompetitionEntryAwardModel[];
 
 	get author() {
 		return this.resource.developer;

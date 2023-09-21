@@ -11,7 +11,7 @@ import {
 	libraryUnfollowCollection,
 	useLibraryStore,
 } from '../../../../store/library';
-import { GameCollectionModel } from '../collection.model';
+import { GameCollectionModel, GameCollectionType } from '../collection.model';
 
 @Options({
 	directives: {
@@ -53,7 +53,7 @@ export default class AppGameCollectionFollowWidget extends Vue {
 	emitUnfollow() {}
 
 	get isFollowing() {
-		if (this.collection.type === GameCollectionModel.TYPE_DEVELOPER) {
+		if (this.collection.type === GameCollectionType.Developer) {
 			return this.collection.owner!.is_following;
 		}
 
@@ -72,7 +72,7 @@ export default class AppGameCollectionFollowWidget extends Vue {
 	}
 
 	get tooltip() {
-		if (this.collection.type === GameCollectionModel.TYPE_DEVELOPER) {
+		if (this.collection.type === GameCollectionType.Developer) {
 			return undefined;
 		}
 

@@ -19,7 +19,10 @@ import {
 } from '../../../../../../../_common/route/legacy-route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import { TrophyDifficulty } from '../../../../../../../_common/trophy/base-trophy.model';
+import {
+	BaseTrophyDifficulties,
+	BaseTrophyDifficulty,
+} from '../../../../../../../_common/trophy/base-trophy.model';
 import AppTrophyThumbnail from '../../../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
 import { useGameDashRouteController } from '../../manage.store';
@@ -54,14 +57,14 @@ export default class RouteDashGamesManageApiTrophies extends LegacyRouteComponen
 	isAdding: { [x: number]: boolean } = {};
 	activeItem: { [x: number]: GameTrophyModel | null } = {};
 
-	GameTrophy = GameTrophyModel;
+	readonly trophyDifficulties = BaseTrophyDifficulties;
 
 	get groupedTrophies() {
 		const trophies: { [x: number]: GameTrophyModel[] } = {
-			[GameTrophyModel.DIFFICULTY_BRONZE]: [],
-			[GameTrophyModel.DIFFICULTY_SILVER]: [],
-			[GameTrophyModel.DIFFICULTY_GOLD]: [],
-			[GameTrophyModel.DIFFICULTY_PLATINUM]: [],
+			[BaseTrophyDifficulty.Bronze]: [],
+			[BaseTrophyDifficulty.Silver]: [],
+			[BaseTrophyDifficulty.Gold]: [],
+			[BaseTrophyDifficulty.Platinum]: [],
 		};
 
 		this.trophies.forEach(item => trophies[item.difficulty].push(item));
@@ -71,25 +74,19 @@ export default class RouteDashGamesManageApiTrophies extends LegacyRouteComponen
 
 	get trophyLabels() {
 		return {
-			[GameTrophyModel.DIFFICULTY_BRONZE]: this.$gettext('Bronze'),
-			[GameTrophyModel.DIFFICULTY_SILVER]: this.$gettext('Silver'),
-			[GameTrophyModel.DIFFICULTY_GOLD]: this.$gettext('Gold'),
-			[GameTrophyModel.DIFFICULTY_PLATINUM]: this.$gettext('Platinum'),
+			[BaseTrophyDifficulty.Bronze]: this.$gettext('Bronze'),
+			[BaseTrophyDifficulty.Silver]: this.$gettext('Silver'),
+			[BaseTrophyDifficulty.Gold]: this.$gettext('Gold'),
+			[BaseTrophyDifficulty.Platinum]: this.$gettext('Platinum'),
 		};
 	}
 
 	get trophySorts() {
 		return {
-			[GameTrophyModel.DIFFICULTY_BRONZE]: this.getTrophyGroup(
-				GameTrophyModel.DIFFICULTY_BRONZE
-			),
-			[GameTrophyModel.DIFFICULTY_SILVER]: this.getTrophyGroup(
-				GameTrophyModel.DIFFICULTY_SILVER
-			),
-			[GameTrophyModel.DIFFICULTY_GOLD]: this.getTrophyGroup(GameTrophyModel.DIFFICULTY_GOLD),
-			[GameTrophyModel.DIFFICULTY_PLATINUM]: this.getTrophyGroup(
-				GameTrophyModel.DIFFICULTY_PLATINUM
-			),
+			[BaseTrophyDifficulty.Bronze]: this.getTrophyGroup(BaseTrophyDifficulty.Bronze),
+			[BaseTrophyDifficulty.Silver]: this.getTrophyGroup(BaseTrophyDifficulty.Silver),
+			[BaseTrophyDifficulty.Gold]: this.getTrophyGroup(BaseTrophyDifficulty.Gold),
+			[BaseTrophyDifficulty.Platinum]: this.getTrophyGroup(BaseTrophyDifficulty.Platinum),
 		};
 	}
 
@@ -142,7 +139,7 @@ export default class RouteDashGamesManageApiTrophies extends LegacyRouteComponen
 		Scroll.to('trophy-container-' + trophy.id);
 	}
 
-	saveTrophySort(difficulty: TrophyDifficulty, trophies: GameTrophyModel[]) {
+	saveTrophySort(difficulty: BaseTrophyDifficulty, trophies: GameTrophyModel[]) {
 		// Pull out the trophies and then add them back in in the correct order.
 		const trophyIds = trophies.map(i => i.id);
 		const filtered = this.trophies.filter(i => trophyIds.indexOf(i.id) === -1).concat(trophies);
@@ -172,19 +169,19 @@ export default class RouteDashGamesManageApiTrophies extends LegacyRouteComponen
 
 	private resetAdding() {
 		this.isAdding = {
-			[GameTrophyModel.DIFFICULTY_BRONZE]: false,
-			[GameTrophyModel.DIFFICULTY_SILVER]: false,
-			[GameTrophyModel.DIFFICULTY_GOLD]: false,
-			[GameTrophyModel.DIFFICULTY_PLATINUM]: false,
+			[BaseTrophyDifficulty.Bronze]: false,
+			[BaseTrophyDifficulty.Silver]: false,
+			[BaseTrophyDifficulty.Gold]: false,
+			[BaseTrophyDifficulty.Platinum]: false,
 		};
 	}
 
 	private resetActive() {
 		this.activeItem = {
-			[GameTrophyModel.DIFFICULTY_BRONZE]: null,
-			[GameTrophyModel.DIFFICULTY_SILVER]: null,
-			[GameTrophyModel.DIFFICULTY_GOLD]: null,
-			[GameTrophyModel.DIFFICULTY_PLATINUM]: null,
+			[BaseTrophyDifficulty.Bronze]: null,
+			[BaseTrophyDifficulty.Silver]: null,
+			[BaseTrophyDifficulty.Gold]: null,
+			[BaseTrophyDifficulty.Platinum]: null,
 		};
 	}
 }
@@ -219,7 +216,7 @@ export default class RouteDashGamesManageApiTrophies extends LegacyRouteComponen
 				</p>
 			</div>
 
-			<div v-for="difficulty of GameTrophy.difficulties" :key="difficulty">
+			<div v-for="difficulty of trophyDifficulties" :key="difficulty">
 				<h4>
 					<AppTranslate :translate-params="{ difficulty: trophyLabels[difficulty] }">
 						%{ difficulty } Trophies

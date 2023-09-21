@@ -1,18 +1,20 @@
 import { Model } from '../../model/model.service';
 
-export class OrderAddressModel extends Model {
-	static readonly TYPE_BILLING = 'billing';
-	static readonly TYPE_SHIPPING = 'shipping';
+export const enum OrderAddressType {
+	Billing = 'billing',
+	Shipping = 'shipping',
+}
 
-	order_id!: number;
-	type!: string;
-	fullname!: string | null;
-	street1!: string | null;
-	street2!: string | null;
-	city!: string | null;
-	region!: string | null;
-	postcode!: string | null;
-	country!: string | null;
+export class OrderAddressModel extends Model {
+	declare order_id: number;
+	declare type: OrderAddressType;
+	declare fullname: string | null;
+	declare street1: string | null;
+	declare street2: string | null;
+	declare city: string | null;
+	declare region: string | null;
+	declare postcode: string | null;
+	declare country: string | null;
 
 	constructor(data: any = {}) {
 		super(data);

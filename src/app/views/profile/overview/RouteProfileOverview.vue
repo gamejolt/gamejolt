@@ -27,7 +27,7 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import {
 	LinkedAccountModel,
-	Provider,
+	LinkedAccountProvider,
 } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
@@ -186,7 +186,7 @@ const hasCommunitiesSection = computed(() => {
 });
 
 const twitchAccount = computed(() => {
-	return getLinkedAccount(LinkedAccountModel.PROVIDER_TWITCH);
+	return getLinkedAccount(LinkedAccountProvider.Twitch);
 });
 
 const addCommentPlaceholder = computed(() => {
@@ -283,7 +283,7 @@ const canShowFiresidePreview = computed(() => {
 	return maintainFiresideOutviewSpace.value;
 });
 
-function getLinkedAccount(provider: Provider) {
+function getLinkedAccount(provider: LinkedAccountProvider) {
 	if (
 		routeUser.value &&
 		linkedAccounts.value &&

@@ -1,18 +1,20 @@
 import { Model } from '../../model/model.service';
 
-export class UserAddressModel extends Model {
-	static readonly TYPE_BILLING = 'billing';
-	static readonly TYPE_SHIPPING = 'shipping';
+export const enum UserAddressType {
+	Billing = 'billing',
+	Shipping = 'shipping',
+}
 
-	user_id!: number;
-	type!: 'billing' | 'shipping';
-	fullname!: string;
-	street1!: string;
-	street2!: string;
-	city!: string;
-	region!: string;
-	postcode!: string;
-	country!: string;
+export class UserAddressModel extends Model {
+	declare user_id: number;
+	declare type: UserAddressType;
+	declare fullname: string;
+	declare street1: string;
+	declare street2: string;
+	declare city: string;
+	declare region: string;
+	declare postcode: string;
+	declare country: string;
 }
 
 export function $removeUserAddress(model: UserAddressModel) {

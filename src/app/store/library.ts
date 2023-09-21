@@ -18,6 +18,7 @@ import {
 	$followGameCollection,
 	$unfollowGameCollection,
 	GameCollectionModel,
+	GameCollectionType,
 } from '../components/game/collection/collection.model';
 import { router } from '../views';
 
@@ -52,14 +53,14 @@ export function createLibraryStore({ router }: { router: Router }) {
 	 * These are their followed developer playlists.
 	 */
 	const developerPlaylists = computed(() =>
-		collections.value.filter(item => item.type === GameCollectionModel.TYPE_DEVELOPER)
+		collections.value.filter(item => item.type === GameCollectionType.Developer)
 	);
 
 	/**
 	 * These are playlists that don't belong to a folder.
 	 */
 	const mainPlaylists = computed(() =>
-		collections.value.filter(item => item.type !== GameCollectionModel.TYPE_DEVELOPER)
+		collections.value.filter(item => item.type !== GameCollectionType.Developer)
 	);
 
 	/**
