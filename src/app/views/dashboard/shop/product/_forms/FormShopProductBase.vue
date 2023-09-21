@@ -290,7 +290,10 @@ export function createShopProductBaseForm<
 		onSubmit() {
 			return Api.sendRequest(
 				loadUrl.value!,
-				objectOmit(form.formModel, ['description', 'file']),
+				{
+					...objectOmit(form.formModel, ['description', 'file']),
+					is_premium: paymentType.value === ShopProductPaymentType.Premium,
+				},
 				{
 					detach: true,
 					file: form.formModel.file,
@@ -498,7 +501,7 @@ function makeStateBubbleIconStyles({
 						:img-url="existingImgUrl"
 						:model="initialFormModel"
 					>
-						<template v-if="baseModel">
+						<template v-if="baseModel && baseModel.was_approved">
 							<AppShopProductDiffImg
 								:typename="typename"
 								:img-url="existingImgUrl"
@@ -644,6 +647,10 @@ function makeStateBubbleIconStyles({
 			</AppFormGroup>
 
 			<AppFormGroup
+				v-if="
+					data.paymentType.value === ShopProductPaymentType.Premium ||
+					typename !== 'Sticker_Pack'
+				"
 				name="name"
 				tiny-label-margin
 				:style="{
