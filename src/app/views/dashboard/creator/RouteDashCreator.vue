@@ -98,6 +98,7 @@ const buttons = computed<Button[]>(() => [
 		label: $gettext(`Wallet`),
 		icon: 'gem',
 	},
+	// TODO(creator-shops) remove
 	{
 		to: routeDashStickers.name!,
 		label: $gettext(`Custom stickers`),
