@@ -5,16 +5,12 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { styleFlexCenter } from '../../../../_styles/mixins';
 import AppDashShopHover from './AppDashShopHover.vue';
-import { ShopManagerGroupItemType } from './RouteDashShop.vue';
 import { routeDashShopProduct } from './product/product.route';
+import { ShopManagerGroupItemType, productTypeFromTypename } from './shop.store';
 
 defineProps({
 	typename: {
 		type: String as PropType<ShopManagerGroupItemType>,
-		required: true,
-	},
-	premium: {
-		type: Boolean,
 		required: true,
 	},
 	borderRadius: {
@@ -40,10 +36,7 @@ defineProps({
 		:to="{
 			name: routeDashShopProduct.name,
 			params: {
-				typename,
-			},
-			query: {
-				premium: `${premium}`,
+				type: productTypeFromTypename(typename),
 			},
 		}"
 	>

@@ -1,150 +1,61 @@
 <script lang="ts">
-import { InjectionKey, Ref, computed, inject, provide, ref, shallowReadonly } from 'vue';
+import { Ref, computed } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../_common/background/background.model';
-import { ShopItemModelCommonFields } from '../../../../_common/model/shop-item-model.service';
+import { storeModelList } from '../../../../_common/model/model-store.service';
+import { ModelData } from '../../../../_common/model/model.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { arrayAssignAll } from '../../../../utils/array';
 import { RouteLocationRedirect } from '../../../../utils/router';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import RouteLandingCreators from '../../landing/creators/RouteLandingCreators.vue';
+import {
+	ShopManagerGroup,
+	ShopManagerGroupItem,
+	ShopManagerGroupItemType,
+	createShopManagerStore,
+} from './shop.store';
 
-type ItemModel = AvatarFrameModel | BackgroundModel | StickerPackModel | StickerModel;
-export type ShopManagerGroupItem = ItemModel & ShopItemModelCommonFields;
-
-export interface ShopManagerGroup<T extends ShopManagerGroupItem = ShopManagerGroupItem> {
-	items: T[];
-	itemCount?: number;
-	// activeCount?: number;
-	// activeIds: number[];
+interface ProductPayload<T extends ShopManagerGroupItem> {
+	resources: ModelData<T>[];
+	// TODO(creator-shops) need amount of publish items we can have
+	canEditFree?: boolean;
+	canEditPremium?: boolean;
 	slotAmount?: number;
-	maxPublished?: number;
-	canAdd?: boolean;
 }
 
-const itemTypes = ['Avatar_Frame', 'Background', 'Sticker_Pack', 'Sticker'] as const;
-export type ShopManagerGroupItemType = (typeof itemTypes)[number];
-
-const shopManagerStoreKey: InjectionKey<ShopManagerStore> = Symbol('shop-manager-store');
-
-export type ShopManagerStore = ReturnType<typeof createShopManagerStore>;
-
-function createShopManagerStore() {
-	function _makeEmptyGroup<T extends ShopManagerGroupItem>() {
-		return ref<ShopManagerGroup<T>>({
-			// activeIds: [] as number[],
-			items: [] as T[],
-			itemCount: 0,
-			slotAmount: 100,
-			maxPublished: 3,
-			canAdd: false,
-		});
+async function _makeSectionPromise<T extends ShopManagerGroupItem>(
+	typename: Omit<ShopManagerGroupItemType, 'Sticker_Packs'> | 'packs'
+) {
+	let url = `/web/dash/creators/shop`;
+	if (typename !== 'packs') {
+		url += `/collectibles`;
 	}
+	url += `/${typename}`;
+	return await Api.sendRequest<ProductPayload<T>>(url);
+}
 
-	const avatarFrames = _makeEmptyGroup<AvatarFrameModel>();
-	const backgrounds = _makeEmptyGroup<BackgroundModel>();
-	const stickerPacks = _makeEmptyGroup<StickerPackModel>();
-	const stickers = _makeEmptyGroup<StickerModel>();
+async function fetchOverviewData() {
+	const promises = Promise.all([
+		_makeSectionPromise<AvatarFrameModel>('Avatar_Frame'),
+		_makeSectionPromise<BackgroundModel>('Background'),
+		_makeSectionPromise<StickerPackModel>('packs'),
+		_makeSectionPromise<StickerModel>('Sticker'),
+	]);
 
-	function castTypename(typename: string) {
-		if (itemTypes.includes(typename as any)) {
-			return typename as ShopManagerGroupItemType;
-		}
-		return null;
-	}
+	const items = await promises;
 
-	function findItemGroup<T extends ShopManagerGroupItem>(
-		item: T | string
-	): Ref<ShopManagerGroup<T>> | undefined {
-		const typename = typeof item === 'string' ? castTypename(item) : null;
+	const [avatarFrames, backgrounds, stickerPacks, stickers] = items;
 
-		if (item instanceof AvatarFrameModel || typename === 'Avatar_Frame') {
-			return avatarFrames as Ref<ShopManagerGroup<T>>;
-		} else if (item instanceof BackgroundModel || typename === 'Background') {
-			return backgrounds as Ref<ShopManagerGroup<T>>;
-		} else if (item instanceof StickerPackModel || typename === 'Sticker_Pack') {
-			return stickerPacks as Ref<ShopManagerGroup<T>>;
-		} else if (item instanceof StickerModel || typename === 'Sticker') {
-			return stickers as Ref<ShopManagerGroup<T>>;
-		}
-	}
-
-	function addItem<T extends ShopManagerGroupItem>(item: T, { insert } = { insert: false }) {
-		const group = findItemGroup<T>(item);
-		if (!group) {
-			return;
-		}
-
-		removeItem(item);
-		if (insert) {
-			group.value.items.unshift(item);
-		} else {
-			group.value.items.push(item);
-		}
-	}
-
-	function removeItem<T extends ShopManagerGroupItem>(toRemove: T) {
-		const group = findItemGroup(toRemove);
-		if (!group) {
-			return;
-		}
-		const newItems = group.value.items.reduce<T[]>((result, item) => {
-			if (item.id !== toRemove.id) {
-				result.push(item);
-			}
-			return result;
-		}, []);
-		arrayAssignAll(group.value.items, newItems);
-	}
-
-	function _makeEmptyChanges() {
-		return {
-			items: [] as ShopManagerGroupItem[],
-			count: 0,
-		};
-	}
-
-	const changes = {
-		approved: ref(_makeEmptyChanges()),
-		inReview: ref(_makeEmptyChanges()),
-		rejected: ref(_makeEmptyChanges()),
-		draft: ref({ ids: new Set<number>() }),
-	};
-
-	const c = shallowReadonly({
-		//
+	return {
 		avatarFrames,
 		backgrounds,
 		stickerPacks,
 		stickers,
-
-		//
-		canLoadFrames: ref(true),
-		canLoadBackgrounds: ref(true),
-		canLoadStickerPacks: ref(true),
-		canLoadStickers: ref(true),
-
-		//
-		addItem,
-		removeItem,
-		findItemGroup,
-
-		castTypename,
-
-		//
-		changes,
-	});
-
-	provide(shopManagerStoreKey, c);
-	return c;
-}
-
-export function useShopManagerStore() {
-	return inject(shopManagerStoreKey, null);
+	};
 }
 
 export default {
@@ -152,11 +63,7 @@ export default {
 		deps: {},
 		resolver: async () => {
 			try {
-				return Api.sendFieldsRequest(
-					`/mobile/me`,
-					{ creatorExperience: true },
-					{ noErrorRedirect: true }
-				);
+				return await fetchOverviewData();
 			} catch (error) {
 				// Redirect away if the request fails.
 				return new RouteLocationRedirect({
@@ -169,14 +76,43 @@ export default {
 </script>
 
 <script lang="ts" setup>
-createShopManagerStore();
+const { avatarFrames, backgrounds, stickerPacks, stickers } = createShopManagerStore();
 
 const routeTitle = computed(() => $gettext(`Manage Shop Content`));
+
+function _setGroupFields<T extends ShopManagerGroupItem>(
+	group: Ref<ShopManagerGroup<T>>,
+	data: ProductPayload<T> | null,
+	makeModels: (items: ModelData<T>[]) => T[]
+) {
+	const { canEditFree, canEditPremium, resources, slotAmount } = data ?? {
+		// allowedToAdd: true,
+		resources: [],
+		// slotAmount: 30,
+	};
+
+	// Since we show both premium and free products in the same lists, we need
+	// to allow the "Add" button to show for either of them.
+	group.value.canAdd = canEditFree || canEditPremium;
+	group.value.itemCount = resources?.length;
+	group.value.items = makeModels(resources);
+	// group.value.maxPublished = publishedAmount;
+	group.value.slotAmount = slotAmount;
+}
 
 createAppRoute({
 	routeTitle,
 	async onResolved(data) {
-		console.warn('RouteDashShop onResolved', data);
+		const payload = data.payload as Awaited<ReturnType<typeof fetchOverviewData>>;
+
+		_setGroupFields(avatarFrames, payload.avatarFrames, i =>
+			storeModelList(AvatarFrameModel, i)
+		);
+		_setGroupFields(backgrounds, payload.backgrounds, i => storeModelList(BackgroundModel, i));
+		_setGroupFields(stickerPacks, payload.stickerPacks, i =>
+			storeModelList(StickerPackModel, i)
+		);
+		_setGroupFields(stickers, payload.stickers, i => storeModelList(StickerModel, i));
 	},
 });
 </script>
@@ -185,10 +121,6 @@ createAppRoute({
 	<AppShellPageBackdrop>
 		<section class="section">
 			<div class="container">
-				RouteDashShop
-
-				<hr />
-
 				<RouterView />
 			</div>
 		</section>

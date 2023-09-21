@@ -9,12 +9,11 @@ export interface ShopItemStates {
 	active?: boolean;
 	inReview?: boolean;
 	rejected?: boolean;
-	draft?: boolean;
 }
 
 const props = defineProps({
 	name: {
-		type: String as PropType<string | undefined>,
+		type: [String, null] as PropType<string | null>,
 		required: true,
 	},
 });

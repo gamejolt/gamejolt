@@ -10,20 +10,23 @@ import AppStickerPack from '../../../../_common/sticker/pack/AppStickerPack.vue'
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import {
-	kThemeBgSubtle,
-	kThemeFg,
 	kThemeGjOverlayNotice,
 	kThemePrimary,
 	kThemePrimaryFg,
 } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleElevate, styleFlexCenter } from '../../../../_styles/mixins';
+import {
+	styleAbsoluteFill,
+	styleBorderRadiusLg,
+	styleElevate,
+	styleFlexCenter,
+} from '../../../../_styles/mixins';
 import { kFontSizeSmall } from '../../../../_styles/variables';
 import AppDashShopHover from './AppDashShopHover.vue';
 import AppDashShopItemBase, { ShopItemStates } from './AppDashShopItemBase.vue';
-import { ShopManagerGroupItem } from './RouteDashShop.vue';
 import { routeDashShopProduct } from './product/product.route';
+import { ShopManagerGroupItem } from './shop.store';
 
 const props = defineProps({
 	item: {
@@ -73,8 +76,6 @@ const type = computed(() => {
 	throw Error(`Unknown item type`);
 });
 
-const shouldShowStateTag = computed(() => Object.values(itemStates.value).some(Boolean));
-
 function makeStateBubbleStyles(backgroundColor: string = kThemePrimary) {
 	return {
 		...styleFlexCenter(),
@@ -92,9 +93,6 @@ function makeStateBubbleIconStyles(color: string = kThemePrimaryFg) {
 		color,
 	};
 }
-
-// TODO(creator-shops) remove
-const showDebugData = false;
 </script>
 
 <template>
@@ -116,86 +114,131 @@ const showDebugData = false;
 		<template #default="{ borderRadius: parentRadius }">
 			<AppDashShopItemBase :name="item.name">
 				<template #img>
-					<AppUserAvatarBubble
-						v-if="_isAvatarFrame(item)"
-						:user="null"
-						:frame-override="item"
-						smoosh
-						show-frame
-					/>
-					<AppBackground
-						v-if="_isBackground(item)"
-						:background="item"
+					<div
 						:style="{
-							borderRadius: `${parentRadius}px`,
-							overflow: `hidden`,
-						}"
-						:background-style="{
-							backgroundSize: `cover`,
-							backgroundPosition: `center`,
+							position: `relative`,
 						}"
 					>
-						<AppAspectRatio :ratio="1" />
-					</AppBackground>
-					<AppStickerPack
-						v-if="_isStickerPack(item)"
-						:pack="item"
-						:border-radius="parentRadius"
-					/>
-					<AppStickerLayerDrawerItem
-						v-if="_isSticker(item)"
-						:sticker="item"
-						no-drag
-						hide-count
-						fit-parent
-					/>
-				</template>
-
-				<div
-					v-if="shouldShowStateTag"
-					:style="{
-						position: `absolute`,
-						top: `-6px`,
-						left: `-6px`,
-						right: `-6px`,
-						zIndex: 1,
-						display: `inline-flex`,
-						flexWrap: `wrap`,
-						gap: `2px 4px`,
-					}"
-				>
-					<div
-						v-if="itemStates.active || showDebugData"
-						v-app-tooltip="$gettext(`Available in the shop`)"
-						:style="makeStateBubbleStyles()"
-					>
-						<AppJolticon icon="check" :style="makeStateBubbleIconStyles()" />
-					</div>
-					<div
-						v-if="itemStates.draft || showDebugData"
-						v-app-tooltip="$gettext(`Un-submitted changes`)"
-						:style="makeStateBubbleStyles(kThemeBgSubtle)"
-					>
-						<AppJolticon icon="edit" :style="makeStateBubbleIconStyles(kThemeFg)" />
-					</div>
-					<div
-						v-if="itemStates.inReview || showDebugData"
-						v-app-tooltip="$gettext(`In review`)"
-						:style="makeStateBubbleStyles()"
-					>
-						<AppJolticon icon="clock" :style="makeStateBubbleIconStyles()" />
-					</div>
-					<div
-						v-if="itemStates.rejected || showDebugData"
-						v-app-tooltip="$gettext(`Rejected`)"
-						:style="makeStateBubbleStyles(kThemeGjOverlayNotice)"
-					>
-						<AppJolticon
-							icon="exclamation"
-							:style="makeStateBubbleIconStyles(`white`)"
+						<AppUserAvatarBubble
+							v-if="_isAvatarFrame(item)"
+							:user="null"
+							:frame-override="item"
+							smoosh
+							show-frame
 						/>
+						<AppBackground
+							v-else-if="_isBackground(item)"
+							:background="item"
+							:style="{
+								borderRadius: `${parentRadius}px`,
+								overflow: `hidden`,
+							}"
+							:background-style="{
+								backgroundSize: `cover`,
+								backgroundPosition: `center`,
+							}"
+						>
+							<AppAspectRatio :ratio="1" />
+						</AppBackground>
+						<AppStickerPack
+							v-else-if="_isStickerPack(item)"
+							:pack="item"
+							:border-radius="parentRadius"
+						/>
+						<AppStickerLayerDrawerItem
+							v-else-if="_isSticker(item)"
+							:sticker="item"
+							no-drag
+							hide-count
+							fit-parent
+						/>
+
+						<div
+							:style="[
+								styleAbsoluteFill({
+									zIndex: 1,
+									inset: `-12px`,
+									// Don't overlap the name below the image.
+									bottom: 0,
+								}),
+								{
+									display: `flex`,
+									justifyContent: `space-between`,
+									gap: `8px`,
+								},
+							]"
+						>
+							<div
+								:style="{
+									display: `flex`,
+									flexDirection: `column`,
+									flexWrap: `wrap`,
+									gap: `4px`,
+									opacity: 0.8,
+								}"
+							>
+								<div
+									v-if="itemStates.active"
+									v-app-tooltip="$gettext(`Available in the shop`)"
+									:style="makeStateBubbleStyles()"
+								>
+									<AppJolticon
+										icon="marketplace"
+										:style="makeStateBubbleIconStyles()"
+									/>
+								</div>
+								<div
+									v-if="itemStates.inReview"
+									v-app-tooltip="$gettext(`In review`)"
+									:style="makeStateBubbleStyles()"
+								>
+									<AppJolticon
+										icon="clock"
+										:style="makeStateBubbleIconStyles()"
+									/>
+								</div>
+								<div
+									v-if="itemStates.rejected"
+									v-app-tooltip="$gettext(`Rejected`)"
+									:style="makeStateBubbleStyles(kThemeGjOverlayNotice)"
+								>
+									<AppJolticon
+										icon="exclamation"
+										:style="makeStateBubbleIconStyles(`white`)"
+									/>
+								</div>
+							</div>
+
+							<div
+								:style="{
+									justifySelf: `flex-end`,
+									pointerEvents: `none`,
+								}"
+							>
+								<!-- TODO(creator-shops) Now that premium and free
+								items are listed together, we'll need a better
+								indication to differentiate between them at a
+								glance. This is currently too similar for me to be
+								comfortable with.
+								-->
+								<div
+									:style="[
+										styleBorderRadiusLg,
+										{
+											backgroundColor: `rgba(0,0,0,0.54)`,
+											color: `white`,
+											fontWeight: `bold`,
+											fontSize: kFontSizeSmall.px,
+											padding: `2px 6px`,
+										},
+									]"
+								>
+									{{ item.is_premium ? $gettext(`Premium`) : $gettext(`Free`) }}
+								</div>
+							</div>
+						</div>
 					</div>
-				</div>
+				</template>
 			</AppDashShopItemBase>
 		</template>
 	</AppDashShopHover>

@@ -121,6 +121,7 @@ const href = computed(() => {
 						:style="{
 							...styleChangeBg(bgColor),
 							borderRadius: `50%`,
+							overflow: `hidden`,
 							// Some containers end up adjusting the size of this avatar
 							// and break things, even if width and height on the parent
 							// are assigned to 1:1 ratios.

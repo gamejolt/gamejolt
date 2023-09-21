@@ -12,9 +12,11 @@ import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model
 import { StickerModel } from '../../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { assertNever } from '../../../../../utils/utils';
-import { useShopManagerStore } from '../RouteDashShop.vue';
+import { ProductType, useShopManagerStore } from '../shop.store';
 import FormShopProductAvatarFrame from './_forms/FormShopProductAvatarFrame.vue';
+import FormShopProductBackground from './_forms/FormShopProductBackground.vue';
 import FormShopProductSticker from './_forms/FormShopProductSticker.vue';
+import FormShopProductStickerPack from './_forms/FormShopProductStickerPack.vue';
 
 defineOptions(
 	defineAppRouteOptions({
@@ -27,14 +29,12 @@ defineOptions(
 );
 
 const route = useRoute();
-const { avatarFrames, backgrounds, stickers, stickerPacks } = useShopManagerStore()!;
+const { avatarFrames, backgrounds, stickerPacks, stickers } = useShopManagerStore()!;
 
 const avatarFrame = ref<AvatarFrameModel>();
 const background = ref<BackgroundModel>();
 const sticker = ref<StickerModel>();
 const stickerPack = ref<StickerPackModel>();
-
-type ProductType = 'avatar-frame' | 'background' | 'sticker' | 'sticker-pack';
 
 const productType = computed(() => route.params.type as ProductType);
 
@@ -57,26 +57,18 @@ const { isBootstrapped } = createAppRoute({
 		const modelId = parseInt(route.params.id as string, 10);
 
 		switch (productType.value) {
-			case 'avatar-frame': {
+			case 'avatar-frame':
 				avatarFrame.value = avatarFrames.value.items.find(i => i.id === modelId);
 				break;
-			}
-
-			case 'background': {
+			case 'background':
 				background.value = backgrounds.value.items.find(i => i.id === modelId);
 				break;
-			}
-
-			case 'sticker': {
-				sticker.value = stickers.value.items.find(i => i.id === modelId);
-				break;
-			}
-
-			case 'sticker-pack': {
+			case 'sticker-pack':
 				stickerPack.value = stickerPacks.value.items.find(i => i.id === modelId);
 				break;
-			}
-
+			case 'sticker':
+				sticker.value = stickers.value.items.find(i => i.id === modelId);
+				break;
 			default:
 				assertNever(productType.value);
 		}
@@ -87,9 +79,14 @@ const { isBootstrapped } = createAppRoute({
 <template>
 	<template v-if="isBootstrapped">
 		<FormShopProductAvatarFrame v-if="productType === 'avatar-frame'" :model="avatarFrame" />
+		<FormShopProductBackground v-else-if="productType === 'background'" :model="background" />
+		<FormShopProductStickerPack
+			v-else-if="productType === 'sticker-pack'"
+			:model="stickerPack"
+		/>
 		<FormShopProductSticker v-else-if="productType === 'sticker'" :model="sticker" />
 		<template v-else>
-			{{ $gettext(`Uh oh`) }}
+			{{ $gettext(`Uh oh, something went wrong...`) }}
 		</template>
 	</template>
 	<template v-else>
