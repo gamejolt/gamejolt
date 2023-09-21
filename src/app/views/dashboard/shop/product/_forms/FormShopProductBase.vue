@@ -37,18 +37,30 @@ import {
 	validateMinLength,
 } from '../../../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkHelpDocs from '../../../../../../_common/link/AppLinkHelpDocs.vue';
 import { storeModel } from '../../../../../../_common/model/model-store.service';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import {
 	kThemeFg10,
+	kThemeGjOverlayNotice,
 	kThemePrimary,
 	kThemePrimaryFg,
 } from '../../../../../../_common/theme/variables';
+import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { styleBorderRadiusLg, styleChangeBg } from '../../../../../../_styles/mixins';
-import { kBorderWidthBase, kLineHeightComputed } from '../../../../../../_styles/variables';
+import {
+	styleBorderRadiusLg,
+	styleChangeBg,
+	styleElevate,
+	styleFlexCenter,
+} from '../../../../../../_styles/mixins';
+import {
+	kBorderWidthBase,
+	kFontSizeLarge,
+	kLineHeightComputed,
+} from '../../../../../../_styles/variables';
 import { objectOmit } from '../../../../../../utils/object';
 import { routeDashShopOverview } from '../../overview/overview.route';
 import {
@@ -113,17 +125,38 @@ export function createShopProductBaseForm<
 	const changeRequest = ref(null) as Ref<CreatorChangeRequestModel | null>;
 	const rejectedChangeRequest = ref(null) as Ref<CreatorChangeRequestModel | null>;
 
-	const processedFileData = ref() as Ref<{ file: File; url: string } | undefined>;
+	const latestChangeRequest = computed(() => {
+		const change = changeRequest.value;
+		const rejectedChange = rejectedChangeRequest.value;
+
+		if (change && rejectedChange) {
+			return change.added_on > rejectedChange.added_on ? change : rejectedChange;
+		} else if (change) {
+			return change;
+		} else if (rejectedChange) {
+			return rejectedChange;
+		}
+		return null;
+	});
 
 	function _getFile(file: File | File[] | null | undefined) {
 		if (!file) {
 			return undefined;
 		}
-
 		return Array.isArray(file) ? file[0] : file;
 	}
 
 	const isEditing = Boolean(baseModel);
+
+	const processedFileData = ref() as Ref<{ file: File; url: string } | undefined>;
+
+	onUnmounted(() => {
+		// Cleanup any temp image data we were using in the form.
+		if (processedFileData.value) {
+			(window.URL || window.webkitURL).revokeObjectURL(processedFileData.value.url);
+			processedFileData.value = undefined;
+		}
+	});
 
 	const existingImgUrl = computed(() => {
 		if (baseModel) {
@@ -143,11 +176,30 @@ export function createShopProductBaseForm<
 		return null;
 	});
 
-	onUnmounted(() => {
-		if (processedFileData.value) {
-			(window.URL || window.webkitURL).revokeObjectURL(processedFileData.value.url);
-			processedFileData.value = undefined;
+	const tempImgUrl = computed(() => {
+		const file = _getFile(form.formModel.file);
+		if (
+			!file ||
+			form.controlErrors.file ||
+			toRaw(file) === toRaw(processedFileData.value?.file)
+		) {
+			// If there's an issue with the temp file or it doesn't exist,
+			// fallback to the current image.
+			const media = latestChangeRequest.value?.change_media_item;
+			if (media) {
+				return media.is_animated ? media.img_url : media.mediaserver_url;
+			}
+			return existingImgUrl.value;
 		}
+
+		// Create a temporary URL for the file so we can display before upload.
+		const windowUrl = window.URL || window.webkitURL;
+		const oldImage = processedFileData.value?.url;
+		processedFileData.value = { file, url: windowUrl.createObjectURL(file) };
+		if (oldImage) {
+			windowUrl.revokeObjectURL(oldImage);
+		}
+		return processedFileData.value.url;
 	});
 
 	function choosePaymentType(type: ShopProductPaymentType) {
@@ -208,8 +260,36 @@ export function createShopProductBaseForm<
 			assignNonNull(canEditPremium, payload.canEditPremium);
 
 			// When editing
-			assignNonNull(changeRequest, payload.changeRequest);
-			assignNonNull(rejectedChangeRequest, payload.rejectedChangeRequest);
+			if (payload.changeRequest) {
+				changeRequest.value = storeModel(CreatorChangeRequestModel, payload.changeRequest);
+			}
+			if (payload.rejectedChangeRequest) {
+				rejectedChangeRequest.value = storeModel(
+					CreatorChangeRequestModel,
+					payload.rejectedChangeRequest
+				);
+			}
+
+			const latestChange = latestChangeRequest.value;
+			if (latestChange) {
+				form.formModel.name = latestChange.change_name || form.formModel.name;
+
+				const changeData = JSON.parse(latestChange.change_data);
+				switch (typename) {
+					case 'Avatar_Frame':
+					case 'Background':
+					case 'Sticker':
+						break;
+					case 'Sticker_Pack':
+						// TODO(creator-shops) Now that form controllers are
+						// created here instead of the forms that build them, we
+						// should probably have some `onDiff` function that can
+						// be called at the end of onLoad. Then each resource
+						// type can handle the general change data as needed.
+						(form.formModel as any).stickers = changeData.change_stickers;
+						break;
+				}
+			}
 
 			// This will update the model that this form is bound to.
 			if (payload.resource) {
@@ -256,27 +336,6 @@ export function createShopProductBaseForm<
 		},
 	});
 
-	const imgUrl = computed(() => {
-		// If we weren't provided a model to edit, try grabbing one from our
-		// file.
-		const file = _getFile(form.formModel.file);
-		if (
-			!file ||
-			form.controlErrors.file ||
-			toRaw(file) === toRaw(processedFileData.value?.file)
-		) {
-			return processedFileData.value?.url || null;
-		}
-
-		const windowUrl = window.URL || window.webkitURL;
-		processedFileData.value = { file, url: windowUrl.createObjectURL(file) };
-		const oldImage = processedFileData.value?.url;
-		if (oldImage) {
-			windowUrl.revokeObjectURL(oldImage);
-		}
-		return processedFileData.value.url;
-	});
-
 	return shallowReadonly({
 		form,
 		typename,
@@ -294,8 +353,10 @@ export function createShopProductBaseForm<
 		canEditPremium,
 
 		// Form helpers
+		/** Image url that is on our existing shop product. */
 		existingImgUrl,
-		imgUrl,
+		/** Temporary image url that we can use before upload. */
+		tempImgUrl,
 		setFile(file: File | File[] | null | undefined) {
 			form.formModel.file = _getFile(file);
 		},
@@ -303,6 +364,7 @@ export function createShopProductBaseForm<
 		isEditing,
 		paymentType,
 		choosePaymentType,
+		latestChangeRequest,
 	});
 }
 </script>
@@ -331,7 +393,8 @@ const {
 	choosePaymentType,
 	setFile,
 	existingImgUrl,
-	imgUrl,
+	tempImgUrl,
+	latestChangeRequest,
 } = data.value;
 
 const validateNameAvailabilityPath = computed(() => {
@@ -349,6 +412,36 @@ const premiumSelectorStyle: CSSProperties = {
 	flex: 1,
 	cursor: `pointer`,
 };
+
+// TODO(creator-shops) copied and modified from the product item. Make some
+// component for this if we don't choose to remove it.
+function makeStateBubbleStyles({
+	backgroundColor = kThemePrimary,
+}: { backgroundColor?: string } = {}) {
+	return {
+		...styleFlexCenter(),
+		...styleElevate(1),
+		borderRadius: `50%`,
+		backgroundColor,
+		padding: `4px`,
+	};
+}
+
+function makeStateBubbleIconStyles({
+	fontSize = kFontSizeLarge.px,
+	color = kThemePrimaryFg,
+}: {
+	color?: string;
+	fontSize?: string;
+} = {}) {
+	return {
+		margin: 0,
+		fontSize,
+		color,
+	};
+}
+
+console.warn('asdf', form.formModel.name);
 </script>
 
 <template>
@@ -413,12 +506,64 @@ const premiumSelectorStyle: CSSProperties = {
 				</template>
 
 				<template #after>
-					<slot name="diff" state="after" :img-url="imgUrl" :model="form.formModel">
+					<slot name="diff" state="after" :img-url="tempImgUrl" :model="form.formModel">
 						<AppShopProductDiffImg
 							:typename="typename"
-							:img-url="imgUrl"
+							:img-url="tempImgUrl"
 							:style="{ marginBottom: `16px` }"
 						/>
+
+						<div
+							v-if="latestChangeRequest"
+							:style="{
+								position: `absolute`,
+								top: `8px`,
+								right: `8px`,
+							}"
+						>
+							<div
+								v-if="latestChangeRequest.rejected_on"
+								v-app-tooltip.touchable="
+									$gettext(
+										`This item was previously rejected. We'll submit a new change request when you submit again.`
+									)
+								"
+								:style="
+									makeStateBubbleStyles({
+										backgroundColor: kThemeGjOverlayNotice,
+									})
+								"
+							>
+								<AppJolticon
+									icon="exclamation"
+									:style="makeStateBubbleIconStyles({ color: `white` })"
+								/>
+							</div>
+							<div
+								v-else-if="
+									latestChangeRequest.added_on && !latestChangeRequest.approved_on
+								"
+								v-app-tooltip.touchable="
+									$gettext(
+										`You already have changes in review. We'll submit a new change request when you submit again.`
+									)
+								"
+								:style="makeStateBubbleStyles()"
+							>
+								<AppJolticon icon="clock" :style="makeStateBubbleIconStyles()" />
+							</div>
+							<div
+								v-else-if="latestChangeRequest.approved_on"
+								v-app-tooltip.touchable="$gettext(`Available in the shop`)"
+								:style="makeStateBubbleStyles()"
+							>
+								<AppJolticon
+									icon="marketplace"
+									:style="makeStateBubbleIconStyles()"
+								/>
+							</div>
+						</div>
+
 						<AppShopProductDiffMeta
 							:current="{
 								name: form.formModel.name || '',
@@ -501,7 +646,11 @@ const premiumSelectorStyle: CSSProperties = {
 					:validators="[
 						validateMinLength(data.minNameLength.value),
 						validateMaxLength(data.maxNameLength.value),
-						validateAvailability({ url: validateNameAvailabilityPath }),
+						// TODO(creator-shops) Fix this, it's not being reset properly when we update [name] during [onLoad].
+						validateAvailability({
+							initVal: form.formModel.name,
+							url: validateNameAvailabilityPath,
+						}),
 					]"
 				/>
 

@@ -41,7 +41,10 @@ function checkDiff(key: string): boolean {
 		<div
 			v-for="[key, value] in Object.entries(current as T)"
 			:key="key"
-			:style="[styleLineClamp(3), { fontSize: kFontSizeSmall.px, marginBottom: `8px` }]"
+			:style="{
+				fontSize: kFontSizeSmall.px,
+				marginBottom: `8px`,
+			}"
 		>
 			<div :style="{ fontWeight: `bold` }">
 				<span v-app-tooltip.touchable="value">
@@ -50,20 +53,28 @@ function checkDiff(key: string): boolean {
 			</div>
 			{{ ' ' }}
 			<div v-if="value">
-				<span :style="{ position: `relative`, zIndex: 1 }">
-					{{ value }}
+				<div
+					:style="{
+						position: `relative`,
+						zIndex: 1,
+						width: `fit-content`,
+					}"
+				>
+					<div :style="styleLineClamp(3)">
+						{{ value }}
+					</div>
 					<div
 						:style="[
-							styleAbsoluteFill({ zIndex: -1 }),
+							styleAbsoluteFill({ zIndex: -1, left: `-4px`, right: `-4px` }),
 							styleWhen(checkDiff(key), {
 								backgroundColor: diffBackground,
 								color: diffColor,
-								borderRadius: `2px`,
+								borderRadius: `4px`,
 								opacity: 0.2,
 							}),
 						]"
 					/>
-				</span>
+				</div>
 			</div>
 			<div v-else :style="{ color: kThemeFgMuted, fontStyle: `italic` }">
 				{{ $gettext(`none`) }}

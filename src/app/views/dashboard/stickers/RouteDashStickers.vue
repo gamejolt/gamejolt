@@ -1,4 +1,5 @@
 <script lang="ts">
+// TODO(creator-shops) Remove - replaced by RouteDashShop.
 import { computed, CSSProperties, Ref, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
@@ -8,19 +9,20 @@ import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
-validateFilesize,
-validateImageAspectRatio,
-validateImageMaxDimensions,
-validateImageMinDimensions,
+	validateFilesize,
+	validateImageAspectRatio,
+	validateImageMaxDimensions,
+	validateImageMinDimensions,
 } from '../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
+import { storeModel, storeModelList } from '../../../../_common/model/model-store.service';
 import { ModelData } from '../../../../_common/model/model.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerPack, {
-StickerPackRatio,
+	StickerPackRatio,
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
@@ -45,7 +47,9 @@ type InitPayload = {
 	stickerSlots: number;
 };
 
-type PackFormModel = Partial<StickerPackModel>;
+type PackFormModel = Partial<StickerPackModel> & {
+	file: File | undefined;
+};
 </script>
 
 <script lang="ts" setup>
@@ -92,7 +96,7 @@ const routeTitle = computed(() => $gettext(`Your Stickers`));
 
 const packForm: FormController<PackFormModel> = createForm({
 	loadUrl: '/web/dash/creators/stickers/save-pack',
-	model: ref({ ...pack.value }),
+	model: ref({ file: undefined, ...pack.value }),
 	onLoad(payload) {
 		packMaxFilesize.value = payload.maxFilesize ?? packMaxFilesize.value;
 		packMinWidth.value = payload.minWidth ?? packMinWidth.value;
@@ -125,7 +129,7 @@ const packForm: FormController<PackFormModel> = createForm({
 		showErrorGrowl(message || $gettext(`Could not update your sticker pack. Try again later.`));
 	},
 	onSubmitSuccess(payload) {
-		pack.value = new StickerPackModel(payload.pack);
+		pack.value = storeModel(StickerPackModel, payload.pack);
 	},
 });
 
@@ -136,8 +140,8 @@ const { isBootstrapped } = createAppRoute({
 
 		emojiPrefix.value = payload.emojiPrefix || '';
 
-		stickers.value = StickerModel.populate(payload.stickers);
-		pack.value = payload.pack ? new StickerPackModel(payload.pack) : null;
+		stickers.value = storeModelList(StickerModel, payload.stickers);
+		pack.value = payload.pack ? storeModel(StickerPackModel, payload.pack) : null;
 		maxStickerAmount.value = payload.maxStickerAmount;
 		stickerSlots.value = payload.stickerSlots;
 
@@ -210,7 +214,7 @@ function onPackEnabledChanged() {
 	// If an invalid file was attached, clear it before changing our enabled
 	// state.
 	if (packForm.controlErrors.file) {
-		packForm.formModel.file = null;
+		packForm.formModel.file = undefined;
 	}
 	packForm.submit();
 }

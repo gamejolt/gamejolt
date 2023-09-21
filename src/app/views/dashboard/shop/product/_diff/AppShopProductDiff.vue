@@ -1,20 +1,33 @@
 <script lang="ts" setup>
-import { CSSProperties } from 'vue';
+import { CSSProperties, computed } from 'vue';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
+import { Screen } from '../../../../../../_common/screen/screen-service';
 import { kThemeBgOffset } from '../../../../../../_common/theme/variables';
-import { styleBorderRadiusLg, styleElevate } from '../../../../../../_styles/mixins';
+import {
+	styleBorderRadiusLg,
+	styleElevate,
+	styleTextOverflow,
+} from '../../../../../../_styles/mixins';
+
+const shouldShowArrow = computed(() => Screen.isDesktop);
+
+const baseStyles = computed<CSSProperties>(() => {
+	const middleCol = shouldShowArrow.value ? ' 36px ' : ' ';
+	const columns = ['minmax(0, 1fr)', 'minmax(0, 1fr)'];
+	return {
+		display: `grid`,
+		gridTemplateColumns: columns.join(middleCol),
+		gap: `16px`,
+		alignItems: `center`,
+		marginBottom: `16px`,
+	};
+});
 
 const headerStyles: CSSProperties = {
+	...styleTextOverflow,
 	marginTop: 0,
 	marginBottom: `4px`,
-};
-
-const baseStyles: CSSProperties = {
-	display: `grid`,
-	gridTemplateColumns: `1fr 36px 1fr`,
-	gap: `16px`,
-	alignItems: `center`,
-	marginBottom: `16px`,
+	minWidth: 0,
 };
 
 const sectionStyles: CSSProperties = {
@@ -52,7 +65,7 @@ const jolticonStyles: CSSProperties = {
 			</div>
 		</div>
 
-		<AppJolticon icon="arrow-right" :style="jolticonStyles" />
+		<AppJolticon v-if="shouldShowArrow" icon="arrow-right" :style="jolticonStyles" />
 
 		<div :style="sectionStyles">
 			<h6 :style="headerStyles">

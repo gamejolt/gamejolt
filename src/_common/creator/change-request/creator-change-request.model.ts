@@ -23,10 +23,6 @@ export class CreatorChangeRequestModel implements ModelStoreModel {
 	declare approved_on: number;
 	declare rejected_on: number;
 
-	constructor(data: any = {}) {
-		this.update(data);
-	}
-
 	update(data: any) {
 		Object.assign(this, data);
 
