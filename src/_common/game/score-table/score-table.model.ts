@@ -1,17 +1,19 @@
 import { Api } from '../../api/api.service';
 import { Model } from '../../model/model.service';
 
-export class GameScoreTableModel extends Model {
-	game_id!: number;
-	name!: string;
-	description!: string;
-	sort!: number;
-	allow_guest_scores!: boolean;
-	scores_sorting_direction!: number;
-	unique_scores!: boolean;
+export const enum GameScoreTableSorting {
+	DirectionDesc = 0,
+	DirectionAsc = 1,
+}
 
-	static readonly SORTING_DIRECTION_DESC = 0;
-	static readonly SORTING_DIRECTION_ASC = 1;
+export class GameScoreTableModel extends Model {
+	declare game_id: number;
+	declare name: string;
+	declare description: string;
+	declare sort: GameScoreTableSorting;
+	declare allow_guest_scores: boolean;
+	declare scores_sorting_direction: number;
+	declare unique_scores: boolean;
 }
 
 export function $saveGameScoreTableSort(gameId: number, sort: number[]) {

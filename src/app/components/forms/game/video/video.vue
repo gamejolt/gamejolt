@@ -2,7 +2,11 @@
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { GameModel } from '../../../../../_common/game/game.model';
-import { $saveGameVideo, GameVideoModel } from '../../../../../_common/game/video/video.model';
+import {
+	$saveGameVideo,
+	GameVideoModel,
+	GameVideoType,
+} from '../../../../../_common/game/video/video.model';
 import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
 import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../../../utils/regex';
 
@@ -37,12 +41,12 @@ export default class FormGameVideo extends mixins(Wrapper) {
 
 		const youtubeMatch = url.match(REGEX_YOUTUBE);
 		if (youtubeMatch) {
-			return { id: youtubeMatch[youtubeMatch.length - 1], type: GameVideoModel.TYPE_YOUTUBE };
+			return { id: youtubeMatch[youtubeMatch.length - 1], type: GameVideoType.Youtube };
 		}
 
 		const vimeoMatch = url.match(REGEX_VIMEO);
 		if (vimeoMatch) {
-			return { id: vimeoMatch[vimeoMatch.length - 1], type: GameVideoModel.TYPE_VIMEO };
+			return { id: vimeoMatch[vimeoMatch.length - 1], type: GameVideoType.Vimeo };
 		}
 	}
 
@@ -56,9 +60,9 @@ export default class FormGameVideo extends mixins(Wrapper) {
 
 		// We use _url as the form model's URL and copy back and forth.
 		if (this.formModel.url) {
-			if (this.formModel.type === GameVideoModel.TYPE_VIMEO) {
+			if (this.formModel.type === GameVideoType.Vimeo) {
 				this.setField('_url', 'https://www.vimeo.com/' + this.formModel.url);
-			} else if (this.formModel.type === GameVideoModel.TYPE_YOUTUBE) {
+			} else if (this.formModel.type === GameVideoType.Youtube) {
 				this.setField('_url', 'https://www.youtube.com/watch?v=' + this.formModel.url);
 			}
 		}

@@ -10,6 +10,7 @@ import {
 	$removeGameScoreTable,
 	$saveGameScoreTableSort,
 	GameScoreTableModel,
+	GameScoreTableSorting,
 } from '../../../../../../../../_common/game/score-table/score-table.model';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -50,6 +51,9 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 	scoreTables: GameScoreTableModel[] = [];
 	isAdding = false;
 	activeItem: GameScoreTableModel | null = null;
+
+	readonly DirectionAscend = GameScoreTableSorting.DirectionAsc;
+	readonly DirectionDescend = GameScoreTableSorting.DirectionDesc;
 
 	get currentSort() {
 		return this.scoreTables.map(item => item.id);
@@ -196,8 +200,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 									</span>
 									<span
 										v-if="
-											scoreTable.scores_sorting_direction ===
-											GameScoreTable.SORTING_DIRECTION_ASC
+											scoreTable.scores_sorting_direction === DirectionAscend
 										"
 										v-app-tooltip="
 											$gettext(
@@ -214,8 +217,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 									</span>
 									<span
 										v-if="
-											scoreTable.scores_sorting_direction ===
-											GameScoreTable.SORTING_DIRECTION_DESC
+											scoreTable.scores_sorting_direction === DirectionDescend
 										"
 										v-app-tooltip="
 											$gettext(

@@ -1,8 +1,8 @@
 import { Model } from '../model/model.service';
 
 export class TranslationModel extends Model {
-	resource!: string;
-	resource_id!: number;
-	lang!: string;
-	content!: string;
+	declare resource: string;
+	declare resource_id: number;
+	declare lang: string;
+	declare content: string;
 }

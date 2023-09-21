@@ -4,13 +4,13 @@ import { Model } from '../../model/model.service';
 import { GameModel } from '../game.model';
 
 export class GameSketchfabModel extends Model implements LightboxMediaModel {
-	media_type!: 'sketchfab';
+	declare media_type: 'sketchfab';
 
-	game_id!: number;
-	sketchfab_id!: string;
-	added_on!: number;
-	status!: string;
-	media_item!: MediaItemModel;
+	declare game_id: number;
+	declare sketchfab_id: string;
+	declare added_on: number;
+	declare status: string;
+	declare media_item: MediaItemModel;
 
 	// Needed for lightbox and other components that are used together with GameVideo.
 	get img_thumbnail() {

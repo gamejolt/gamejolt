@@ -3,7 +3,7 @@ import { UserBaseTrophyModel } from './user-base-trophy.model';
 
 export class UserSiteTrophyModel extends UserBaseTrophyModel {
 	declare site_trophy_id: number;
-	site_trophy?: SiteTrophyModel;
+	declare site_trophy?: SiteTrophyModel;
 
 	constructor(data: any = {}) {
 		super(data);

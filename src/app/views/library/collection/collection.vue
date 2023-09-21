@@ -21,7 +21,11 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserModel } from '../../../../_common/user/user.model';
 import { enforceLocation } from '../../../../utils/router';
 import { shallowSetup } from '../../../../utils/vue';
-import { GameCollectionModel } from '../../../components/game/collection/collection.model';
+import {
+	GameCollectionModel,
+	GameCollectionType,
+	GameCollectionUserTypes,
+} from '../../../components/game/collection/collection.model';
 import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
 import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/thumbnail.vue';
 import { GameFilteringContainer } from '../../../components/game/filtering/container';
@@ -42,7 +46,6 @@ import {
 const CollectionThemeKey = 'collection';
 
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
-const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 
 @Options({
 	name: 'RouteLibraryCollection',
@@ -66,12 +69,12 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 	// header.
 	cache: true,
 	async resolver({ route }) {
-		const type = route.meta.collectionType as string;
+		const type = route.meta.collectionType as GameCollectionType;
 		const filtering = new GameFilteringContainer(route);
 		const query = filtering.getQueryString(route);
 
 		let id: string = route.params.id as string;
-		if (GameCollectionModel.USER_TYPES.indexOf(type) !== -1) {
+		if (GameCollectionUserTypes.indexOf(type) !== -1) {
 			id = '@' + id;
 		}
 
@@ -107,7 +110,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 		return this.libraryStore.collections.value;
 	}
 
-	type = '';
+	type: GameCollectionType | null = null;
 	followerCount = 0;
 
 	collection: GameCollectionModel = null as any;
@@ -132,7 +135,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 		if (this.metaTitle) {
 			return this.metaTitle;
 		} else if (this.type) {
-			if (this.type === GameCollectionModel.TYPE_FOLLOWED && this.user && this.collection) {
+			if (this.type === GameCollectionType.Followed && this.user && this.collection) {
 				const params = { user: '@' + this.user.username };
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Followed Games');
@@ -140,7 +143,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 					return this.$gettext('Games Followed by %{ user }', params);
 				}
 			} else if (
-				this.type === GameCollectionModel.TYPE_PLAYLIST &&
+				this.type === GameCollectionType.Playlist &&
 				this.playlist &&
 				this.user &&
 				this.collection
@@ -154,22 +157,14 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 				} else {
 					return this.$gettext('%{ playlist } by %{ user }', params);
 				}
-			} else if (
-				this.type === GameCollectionModel.TYPE_DEVELOPER &&
-				this.user &&
-				this.collection
-			) {
+			} else if (this.type === GameCollectionType.Developer && this.user && this.collection) {
 				const params = { user: '@' + this.user.username };
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Games');
 				} else {
 					return this.$gettext('Games by %{ user }', params);
 				}
-			} else if (
-				this.type === GameCollectionModel.TYPE_OWNED &&
-				this.user &&
-				this.collection
-			) {
+			} else if (this.type === GameCollectionType.Owned && this.user && this.collection) {
 				const params = { user: '@' + this.user.username };
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Owned Games');
@@ -177,7 +172,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 					return this.$gettext('Games Owned by %{ user }', params);
 				}
 			} else if (
-				this.type === GameCollectionModel.TYPE_RECOMMENDED &&
+				this.type === GameCollectionType.Recommended &&
 				this.collection &&
 				this.user
 			) {
@@ -187,7 +182,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 				} else {
 					return this.$gettext('Daily Mix for %{ user }', params);
 				}
-			} else if (this.type === GameCollectionModel.TYPE_BUNDLE && this.bundle) {
+			} else if (this.type === GameCollectionType.Bundle && this.bundle) {
 				return this.bundle.title;
 			}
 		}
@@ -203,12 +198,12 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 			await this.store.tillStoreBootstrapped;
 		}
 
-		this.type = this.$route.meta.collectionType as string;
+		this.type = this.$route.meta.collectionType as GameCollectionType;
 
 		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer(this.$route);
 			this.listing = new GameListingContainer({
-				loadInfinitely: this.type === GameCollectionModel.TYPE_DEVELOPER,
+				loadInfinitely: this.type === GameCollectionType.Developer,
 			});
 		}
 
@@ -235,9 +230,13 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 		this.bundle = $payload.bundle ? new GameBundleModel($payload.bundle) : null;
 
 		this.user = null;
-		if (this.type === 'followed' || this.type === 'owned' || this.type === 'recommended') {
+		if (
+			this.type === GameCollectionType.Followed ||
+			this.type === GameCollectionType.Owned ||
+			this.type === GameCollectionType.Recommended
+		) {
 			this.user = new UserModel($payload.user);
-		} else if (this.type === 'developer') {
+		} else if (this.type === GameCollectionType.Developer) {
 			this.user = new UserModel($payload.developer);
 		} else if (this.playlist) {
 			this.user = this.playlist.user;
@@ -284,7 +283,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 	get processedId() {
 		// Get the collection id.
 		let id = this.id;
-		if (GameCollectionModel.USER_TYPES.indexOf(this.type) !== -1) {
+		if (this.type && GameCollectionUserTypes.indexOf(this.type) !== -1) {
 			id = '@' + id;
 		}
 
@@ -292,10 +291,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 	}
 
 	get shouldShowFollowers() {
-		return (
-			this.type !== GameCollectionModel.TYPE_BUNDLE &&
-			this.type !== GameCollectionModel.TYPE_OWNED
-		);
+		return this.type !== GameCollectionType.Bundle && this.type !== GameCollectionType.Owned;
 	}
 
 	get shouldShowFollow() {
@@ -304,7 +300,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 		}
 
 		// Don't show follow for owned collections
-		if (this.collection.isOwner || this.collection.type === GameCollectionModel.TYPE_OWNED) {
+		if (this.collection.isOwner || this.collection.type === GameCollectionType.Owned) {
 			return false;
 		}
 
@@ -325,14 +321,14 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 	get shouldShowEditPlaylist() {
 		return (
 			!this.shouldShowFollow &&
-			this.collection.type === GameCollectionModel.TYPE_PLAYLIST &&
+			this.collection.type === GameCollectionType.Playlist &&
 			this.collection.isOwner
 		);
 	}
 
 	get canReorder() {
 		return (
-			this.collection.type === GameCollectionModel.TYPE_DEVELOPER &&
+			this.collection.type === GameCollectionType.Developer &&
 			this.collection.isOwner &&
 			(this.filtering === null || this.filtering.areTagFiltersEmpty)
 		);
@@ -375,7 +371,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 	}
 
 	async mixPlaylist(shouldRefresh = false) {
-		if (MixableTypes.indexOf(this.type) === -1) {
+		if (!this.type || MixableTypes.indexOf(this.type) === -1) {
 			this.recommendedGames = [];
 			return;
 		}
@@ -392,7 +388,7 @@ export default class RouteLibraryCollection extends LegacyRouteComponent {
 	}
 
 	async loadMore() {
-		if (!this.filtering || !this.listing || this.listing.isLoadingMore) {
+		if (!this.filtering || !this.listing || this.listing.isLoadingMore || !this.type) {
 			return;
 		}
 
