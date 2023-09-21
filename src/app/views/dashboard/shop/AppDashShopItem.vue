@@ -21,6 +21,7 @@ import {
 	styleBorderRadiusLg,
 	styleElevate,
 	styleFlexCenter,
+	styleWhen,
 } from '../../../../_styles/mixins';
 import { kFontSizeSmall } from '../../../../_styles/variables';
 import AppDashShopHover from './AppDashShopHover.vue';
@@ -111,7 +112,7 @@ function makeStateBubbleIconStyles(color: string = kThemePrimaryFg) {
 			},
 		}"
 	>
-		<template #default="{ borderRadius: parentRadius }">
+		<template #default="{ borderRadius: parentRadius, hovered }">
 			<AppDashShopItemBase :name="item.name">
 				<template #img>
 					<div
@@ -215,25 +216,24 @@ function makeStateBubbleIconStyles(color: string = kThemePrimaryFg) {
 									pointerEvents: `none`,
 								}"
 							>
-								<!-- TODO(creator-shops) Now that premium and free
-								items are listed together, we'll need a better
-								indication to differentiate between them at a
-								glance. This is currently too similar for me to be
-								comfortable with.
-								-->
 								<div
+									v-if="item.is_premium"
 									:style="[
 										styleBorderRadiusLg,
 										{
-											backgroundColor: `rgba(0,0,0,0.54)`,
-											color: `white`,
+											backgroundColor: `#FFBE00`,
+											color: `black`,
 											fontWeight: `bold`,
 											fontSize: kFontSizeSmall.px,
 											padding: `2px 6px`,
+											transition: `opacity 250ms`,
 										},
+										styleWhen(hovered, {
+											opacity: 0,
+										}),
 									]"
 								>
-									{{ item.is_premium ? $gettext(`Premium`) : $gettext(`Free`) }}
+									{{ $gettext(`Premium`) }}
 								</div>
 							</div>
 						</div>

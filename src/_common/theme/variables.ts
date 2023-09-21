@@ -66,6 +66,7 @@ export const kThemeFgMuted = `var(--theme-fg-muted)`;
 export const kThemeLink = `var(--theme-link)`;
 export const kThemeLinkHover = `var(--theme-link-hover)`;
 export const kThemePrimary = `var(--theme-primary)`;
+export const kThemePrimaryTrans = `var(--theme-primary-trans)`;
 export const kThemePrimaryFg = `var(--theme-primary-fg)`;
 
 export const kDarkThemeHighlight = `var(--dark-theme-highlight)`;

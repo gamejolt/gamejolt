@@ -25,6 +25,7 @@ const nameStyles: CSSProperties = {
 	marginTop: `4px`,
 	fontWeight: 600,
 	fontSize: kFontSizeSmall.px,
+	textAlign: `center`,
 };
 </script>
 

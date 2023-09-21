@@ -3,6 +3,7 @@ import { PropType } from 'vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import { kThemeBgSubtle } from '../../../../_common/theme/variables';
 import { styleFlexCenter } from '../../../../_styles/mixins';
 import AppDashShopHover from './AppDashShopHover.vue';
 import { routeDashShopProduct } from './product/product.route';
@@ -33,6 +34,7 @@ defineProps({
 	<AppDashShopHover
 		:border-radius="borderRadius"
 		:border-width="borderWidth"
+		:border-color="kThemeBgSubtle"
 		:to="{
 			name: routeDashShopProduct.name,
 			params: {

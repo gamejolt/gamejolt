@@ -7,6 +7,7 @@ import {
 	kThemeFg,
 	kThemeFgMuted,
 	kThemePrimary,
+	kThemePrimaryTrans,
 } from '../../../../_common/theme/variables';
 import {
 	kElevateTransition,
@@ -34,6 +35,10 @@ const props = defineProps({
 		type: Number,
 		default: () => kBorderWidthBase.value,
 	},
+	borderColor: {
+		type: String,
+		default: kThemePrimaryTrans,
+	},
 	padding: {
 		type: Number,
 		default: 8,
@@ -60,7 +65,15 @@ const props = defineProps({
 	},
 });
 
-const { onClick: onClickProp, to, borderWidth, padding, paddingH, paddingV } = toRefs(props);
+const {
+	onClick: onClickProp,
+	to,
+	borderWidth,
+	borderColor,
+	padding,
+	paddingH,
+	paddingV,
+} = toRefs(props);
 
 const isClickable = computed(() => !!onClickProp?.value || !!to?.value);
 
@@ -93,7 +106,7 @@ const verticalPadding = computed(() => _scalePadding(paddingV?.value));
 					borderRadius: `${borderRadius}px`,
 					borderWidth: `${borderWidth}px`,
 					borderStyle: `solid`,
-					borderColor: `rgba(var(--theme-primary-rgb), 0)`,
+					borderColor,
 					padding: `${verticalPadding}px ${horizontalPadding}px`,
 					color: kThemeFg,
 				},
