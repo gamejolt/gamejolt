@@ -77,7 +77,7 @@ const isDropActive = ref(false);
  * Will be an array even if not a `multiple` upload type.
  */
 const files = computed(() => {
-	if (controlVal.value === null) {
+	if (!controlVal.value) {
 		return [];
 	}
 
@@ -138,7 +138,7 @@ function showFileSelect() {
 }
 
 // Normal file select.
-function onChange(files: File[]) {
+function onChange(files: File[] | File | null | undefined) {
 	setFiles(files);
 }
 
@@ -161,13 +161,15 @@ function clearFile(file: File) {
 	}
 }
 
-function setFiles(files: File[] | null) {
+function setFiles(files: File[] | File | null | undefined) {
 	if (!files) {
 		applyValue(null);
 	} else if (props.multiple) {
 		applyValue(files);
-	} else {
+	} else if (Array.isArray(files)) {
 		applyValue(files[0]);
+	} else {
+		applyValue(files);
 	}
 }
 

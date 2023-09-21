@@ -480,7 +480,6 @@ const premiumSelectorStyle: CSSProperties = {
 							height: data.maxSize.value,
 						}),
 						validateImageAspectRatio({ ratio: data.aspectRatio.value }),
-						// TODO(creator-shops) Need to figure out what filetypes we're accepting.
 					]"
 					accept=".png"
 					fix-overflow
