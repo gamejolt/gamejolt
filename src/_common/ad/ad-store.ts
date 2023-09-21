@@ -6,7 +6,7 @@ import { Environment } from '../environment/environment.service';
 import { Model } from '../model/model.service';
 import { onRouteChangeAfter } from '../route/route-component';
 import { AdSlot } from './ad-slot-info';
-import { AdAdapterBase } from './adapter-base';
+import { AdAdapter } from './adapter-base';
 import { AdPlaywireAdapter } from './playwire/playwire-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';
 
@@ -48,7 +48,7 @@ function _getRandom(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function _chooseAdapter() {
+function _chooseAdapter(): new () => AdAdapter {
 	const adapters = [AdProperAdapter];
 	return adapters[_getRandom(0, adapters.length)];
 }
@@ -65,7 +65,7 @@ function _didRouteChange(from: RouteLocationNormalized, to: RouteLocationNormali
 
 class AdsController {
 	videoAdapter = new AdPlaywireAdapter();
-	adapter = new (_chooseAdapter())() as AdAdapterBase;
+	adapter = new (_chooseAdapter())();
 
 	routeResolved = false;
 	ads = new Set<AdInterface>();
@@ -151,7 +151,7 @@ export function chooseAdAdapterForSlot(c: AdsController, slot: AdSlot) {
 /**
  * Should only be used for testing!
  */
-export function overrideAdsAdapter(c: AdsController, adapter: AdAdapterBase) {
+export function overrideAdsAdapter(c: AdsController, adapter: AdAdapter) {
 	c.adapter = adapter;
 }
 

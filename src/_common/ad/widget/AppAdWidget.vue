@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { styleWhen } from '../../../_styles/mixins';
 import { AdSlot, AdSlotMeta, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
 import { useAdsController } from '../ad-store';
 import AppAdWidgetInner from './AppAdWidgetInner.vue';
@@ -40,39 +41,31 @@ function _makeAdSlot() {
 </script>
 
 <template>
-	<div
-		v-if="shouldShow"
-		class="-ad-widget"
-		:class="{
-			'-size-leaderboard': adSlot.size === 'leaderboard',
-			'-size-rectangle': adSlot.size === 'rectangle',
-		}"
-	>
-		<div class="-content">
-			<AppAdWidgetInner class="-inner" :ad-slot="adSlot" />
+	<div v-if="shouldShow" :style="{ textAlign: `center` }">
+		<div
+			class="-content"
+			:style="[
+				{
+					display: `flex`,
+					alignItems: `center`,
+					justifyContent: `center`,
+					margin: `0 auto`,
+				},
+				styleWhen(adSlot.size === 'leaderboard', {
+					minHeight: `115px`,
+				}),
+				styleWhen(adSlot.size === 'rectangle', {
+					minHeight: `275px`,
+				}),
+			]"
+		>
+			<AppAdWidgetInner
+				:ad-slot="adSlot"
+				:style="{
+					// Make sure the ad is able to take up the full width.
+					flex: `auto`,
+				}"
+			/>
 		</div>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-ad-widget
-	text-align: center
-
-.-content
-	display: flex
-	align-items: center
-	justify-content: center
-	margin: 0 auto
-
-	// Make sure the ad is able to take up the full width.
-	> .-inner
-		flex: auto
-
-.-size-leaderboard
-	.-content
-		min-height: 115px
-
-.-size-rectangle
-	.-content
-		min-height: 275px
-</style>
