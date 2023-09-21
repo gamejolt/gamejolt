@@ -10,6 +10,7 @@ import {
 	shallowReadonly,
 	toRaw,
 	toRefs,
+	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -62,6 +63,7 @@ import {
 	kLineHeightComputed,
 } from '../../../../../../_styles/variables';
 import { objectOmit } from '../../../../../../utils/object';
+import { run } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
 import {
 	ShopManagerGroupItem,
@@ -176,31 +178,7 @@ export function createShopProductBaseForm<
 		return null;
 	});
 
-	const tempImgUrl = computed(() => {
-		const file = _getFile(form.formModel.file);
-		if (
-			!file ||
-			form.controlErrors.file ||
-			toRaw(file) === toRaw(processedFileData.value?.file)
-		) {
-			// If there's an issue with the temp file or it doesn't exist,
-			// fallback to the current image.
-			const media = latestChangeRequest.value?.change_media_item;
-			if (media) {
-				return media.is_animated ? media.img_url : media.mediaserver_url;
-			}
-			return existingImgUrl.value;
-		}
-
-		// Create a temporary URL for the file so we can display before upload.
-		const windowUrl = window.URL || window.webkitURL;
-		const oldImage = processedFileData.value?.url;
-		processedFileData.value = { file, url: windowUrl.createObjectURL(file) };
-		if (oldImage) {
-			windowUrl.revokeObjectURL(oldImage);
-		}
-		return processedFileData.value.url;
-	});
+	const tempImgUrl = ref<string | null>(null);
 
 	function choosePaymentType(type: ShopProductPaymentType) {
 		paymentType.value = type;
@@ -235,9 +213,7 @@ export function createShopProductBaseForm<
 		if (baseModel?.id) {
 			result += `/${baseModel.id}`;
 		}
-		return (
-			result + `?is_premium=${paymentType.value === ShopProductPaymentType.Premium ? 1 : 0}`
-		);
+		return result + `?is_premium=${paymentType.value === ShopProductPaymentType.Premium}`;
 	});
 
 	const form: FormController<typeof initialFormModel.value> = createForm({
@@ -335,6 +311,41 @@ export function createShopProductBaseForm<
 			});
 		},
 	});
+
+	// We'll assign to some Refs in here, so don't turn this into a computed.
+	watch(
+		[
+			() => form.formModel.file,
+			() => form.controlErrors.file,
+			latestChangeRequest,
+			existingImgUrl,
+		],
+		([file, fileError, latestChange, existingImgUrl]) => {
+			const url = run(() => {
+				if (!file || fileError || toRaw(file) === toRaw(processedFileData.value?.file)) {
+					// If there's an issue with the temp file or it doesn't
+					// exist, fallback to the current image.
+					const media = latestChange?.change_media_item;
+					if (media) {
+						return media.is_animated ? media.img_url : media.mediaserver_url;
+					}
+					return existingImgUrl;
+				}
+
+				// Create a temporary URL for the file so we can display before upload.
+				const windowUrl = window.URL || window.webkitURL;
+				const oldImage = processedFileData.value?.url;
+				processedFileData.value = { file, url: windowUrl.createObjectURL(file) };
+				if (oldImage) {
+					windowUrl.revokeObjectURL(oldImage);
+				}
+				return processedFileData.value.url;
+			});
+
+			tempImgUrl.value = url || null;
+		},
+		{ immediate: true }
+	);
 
 	return shallowReadonly({
 		form,
@@ -440,8 +451,6 @@ function makeStateBubbleIconStyles({
 		color,
 	};
 }
-
-console.warn('asdf', form.formModel.name);
 </script>
 
 <template>
