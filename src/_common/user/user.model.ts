@@ -208,7 +208,7 @@ export class UserModel
 		}
 
 		if (data.avatar_frame) {
-			this.avatar_frame = storeModel(data.avatar_frame);
+			this.avatar_frame = storeModel(AvatarFrameModel, data.avatar_frame);
 		}
 
 		Registry.store('User', this);
