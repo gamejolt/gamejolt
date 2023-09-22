@@ -9,7 +9,6 @@ import {
 	ref,
 	shallowReadonly,
 	toRaw,
-	toRefs,
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
@@ -41,6 +40,7 @@ import { showErrorGrowl } from '../../../../../../_common/growls/growls.service'
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkHelpDocs from '../../../../../../_common/link/AppLinkHelpDocs.vue';
 import { storeModel } from '../../../../../../_common/model/model-store.service';
+import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import {
@@ -213,7 +213,9 @@ export function createShopProductBaseForm<
 		if (baseModel?.id) {
 			result += `/${baseModel.id}`;
 		}
-		return result + `?is_premium=${paymentType.value === ShopProductPaymentType.Premium}`;
+		return (
+			result + `?is_premium=${paymentType.value === ShopProductPaymentType.Premium ? 1 : 0}`
+		);
 	});
 
 	const form: FormController<typeof initialFormModel.value> = createForm({
@@ -292,7 +294,7 @@ export function createShopProductBaseForm<
 				loadUrl.value!,
 				{
 					...objectOmit(form.formModel, ['description', 'file']),
-					is_premium: paymentType.value === ShopProductPaymentType.Premium,
+					is_premium: paymentType.value === ShopProductPaymentType.Premium ? 1 : 0,
 				},
 				{
 					detach: true,
@@ -395,8 +397,7 @@ const props = defineProps({
 	},
 });
 
-const { data } = toRefs(props);
-
+// eslint-disable-next-line vue/no-setup-props-destructure
 const {
 	form,
 	baseModel,
@@ -409,7 +410,13 @@ const {
 	existingImgUrl,
 	tempImgUrl,
 	latestChangeRequest,
-} = data.value;
+	minSize,
+	maxSize,
+	aspectRatio,
+	maxFilesize,
+	minNameLength,
+	maxNameLength,
+} = props.data;
 
 const validateNameAvailabilityPath = computed(() => {
 	if (baseModel) {
@@ -492,7 +499,7 @@ function makeStateBubbleIconStyles({
 			</div>
 		</AppExpand>
 
-		<AppExpand :when="!!paymentType">
+		<template v-if="!!paymentType">
 			<AppShopProductDiff>
 				<template #before>
 					<slot
@@ -588,6 +595,8 @@ function makeStateBubbleIconStyles({
 				</template>
 			</AppShopProductDiff>
 
+			<AppSpacer vertical :scale="4" />
+
 			<AppFormGroup
 				name="file"
 				:label="$gettext(`Upload your image`)"
@@ -599,8 +608,8 @@ function makeStateBubbleIconStyles({
 				</p>
 				<p
 					v-translate="{
-						min: `${data.minSize.value}×${data.minSize.value}`,
-						max: `${data.maxSize.value}×${data.maxSize.value}`,
+						min: `${minSize}×${minSize}`,
+						max: `${maxSize}×${maxSize}`,
 					}"
 					class="help-block strong"
 				>
@@ -609,7 +618,7 @@ function makeStateBubbleIconStyles({
 					and
 					<code>%{max}</code>
 					<!-- TODO(creator-shops) flexible aspect ratio restriction display. -->
-					(ratio of {{ data.aspectRatio.value }} ÷ 1).
+					(ratio of {{ aspectRatio }} ÷ 1).
 				</p>
 
 				<p class="help-block">
@@ -627,16 +636,16 @@ function makeStateBubbleIconStyles({
 
 				<AppFormControlUpload
 					:validators="[
-						validateFilesize(data.maxFilesize.value),
+						validateFilesize(maxFilesize),
 						validateImageMinDimensions({
-							width: data.minSize.value,
-							height: data.minSize.value,
+							width: minSize,
+							height: minSize,
 						}),
 						validateImageMaxDimensions({
-							width: data.maxSize.value,
-							height: data.maxSize.value,
+							width: maxSize,
+							height: maxSize,
 						}),
-						validateImageAspectRatio({ ratio: data.aspectRatio.value }),
+						validateImageAspectRatio({ ratio: aspectRatio }),
 					]"
 					accept=".png"
 					fix-overflow
@@ -647,10 +656,7 @@ function makeStateBubbleIconStyles({
 			</AppFormGroup>
 
 			<AppFormGroup
-				v-if="
-					data.paymentType.value === ShopProductPaymentType.Premium ||
-					typename !== 'Sticker_Pack'
-				"
+				v-if="paymentType === ShopProductPaymentType.Premium || typename !== 'Sticker_Pack'"
 				name="name"
 				tiny-label-margin
 				:style="{
@@ -660,11 +666,11 @@ function makeStateBubbleIconStyles({
 				<AppFormControl
 					:placeholder="$gettext(`Product name...`)"
 					:validators="[
-						validateMinLength(data.minNameLength.value),
-						validateMaxLength(data.maxNameLength.value),
+						validateMinLength(minNameLength),
+						validateMaxLength(maxNameLength),
 						// TODO(creator-shops) Fix this, it's not being reset properly when we update [name] during [onLoad].
 						validateAvailability({
-							initVal: form.formModel.name,
+							initVal: baseModel?.name,
 							url: validateNameAvailabilityPath,
 						}),
 					]"
@@ -684,6 +690,8 @@ function makeStateBubbleIconStyles({
 					{{ $gettext(`Save & Submit`) }}
 				</AppFormButton>
 			</AppFormStickySubmit>
-		</AppExpand>
+
+			<AppSpacer vertical :scale="10" />
+		</template>
 	</AppForm>
 </template>

@@ -117,7 +117,7 @@ export function createFormControl<T>({
 		changed.value = true;
 
 		onChange?.(value);
-		form._onControlChanged();
+		form.triggerChanged();
 
 		if (!options.validateOnBlur) {
 			_validate(options);

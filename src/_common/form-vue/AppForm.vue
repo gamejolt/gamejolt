@@ -314,7 +314,7 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		await Promise.all(promises);
 	}
 
-	function _onControlChanged() {
+	function triggerChanged() {
 		changed.value = true;
 		onChange?.(formModel.value as T);
 	}
@@ -421,9 +421,9 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		setCustomError,
 		clearCustomError,
 		hasCustomError,
+		triggerChanged,
 
 		_groups,
-		_onControlChanged,
 		_validationToken,
 		_override,
 	}) as FormController<T>;
@@ -455,10 +455,10 @@ export interface FormController<T = any> {
 	setCustomError: (error: string) => void;
 	clearCustomError: (error: string) => void;
 	hasCustomError: (error: string) => boolean;
+	triggerChanged: () => void;
 
 	// Internal.
 	_groups: FormGroupController[];
-	_onControlChanged: () => void;
 	_validationToken: CancelToken;
 	_override: (overrides: Partial<CreateFormOptions<T>>) => void;
 }

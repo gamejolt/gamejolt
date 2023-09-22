@@ -1,15 +1,19 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed, toRefs } from 'vue';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import AppStickerStackItem from '../../../../../../_common/sticker/stack/AppStickerStackItem.vue';
-import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
+import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
+import AppStickerStackItem from '../../../../../../../_common/sticker/stack/AppStickerStackItem.vue';
+import { StickerModel } from '../../../../../../../_common/sticker/sticker.model';
 import {
 	kThemeBgOffset,
 	kThemePrimary,
 	kThemePrimaryFg,
-} from '../../../../../../_common/theme/variables';
-import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '../../../../../../_styles/mixins';
-import { kBorderWidthBase, kStrongEaseOut } from '../../../../../../_styles/variables';
+} from '../../../../../../../_common/theme/variables';
+import {
+	styleBorderRadiusLg,
+	styleFlexCenter,
+	styleWhen,
+} from '../../../../../../../_styles/mixins';
+import { kBorderWidthBase, kStrongEaseOut } from '../../../../../../../_styles/variables';
 
 const props = defineProps({
 	sticker: {
