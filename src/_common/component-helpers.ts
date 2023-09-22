@@ -10,7 +10,7 @@ export type ComponentProps<C extends Component> = C extends new (...args: any) =
 	? Omit<InstanceType<C>['$props'], keyof VNodeProps | keyof AllowedComponentProps>
 	: never;
 
-type DynamicSlots<T extends string> = T[] | boolean;
+type DynamicSlots<T extends string> = T[] | Record<T, boolean> | boolean;
 
 /**
  * Adds a `dynamicSlots` prop that a parent component can use to determine what
@@ -20,17 +20,19 @@ type DynamicSlots<T extends string> = T[] | boolean;
  */
 export function defineDynamicSlotProps<T extends string>(
 	validValues: T[],
-	defaultValue: (() => T[]) | boolean
+	defaultValue: (() => T[] | Record<T, boolean>) | boolean
 ) {
 	return {
 		dynamicSlots: {
-			type: [Array, Boolean] as PropType<DynamicSlots<T>>,
+			type: [Array, Boolean, Object] as PropType<DynamicSlots<T>>,
 			default: defaultValue,
 			validator: (value: unknown) => {
 				if (typeof value === 'boolean') {
 					return true;
 				} else if (Array.isArray(value)) {
 					return value.length === 0 || value.every(i => validValues.includes(i));
+				} else if (value && typeof value === 'object') {
+					return Object.keys(value).every((i: T) => validValues.includes(i));
 				}
 				return false;
 			},
@@ -52,15 +54,21 @@ export function useDynamicSlots<T extends string>(dynamicSlots: Ref<DynamicSlots
 			// Booleans should be returned directly.
 			if (typeof dynamicSlots.value === 'boolean') {
 				return dynamicSlots.value;
+			} else if (Array.isArray(dynamicSlots.value)) {
+				return dynamicSlots.value.includes(slot);
+			} else if (typeof dynamicSlots.value === 'object') {
+				return dynamicSlots.value[slot];
 			}
-			return dynamicSlots.value.includes(slot);
 		},
 		hasAnySlot: computed(() => {
 			// Booleans should be returned directly.
 			if (typeof dynamicSlots.value === 'boolean') {
 				return dynamicSlots.value;
+			} else if (Array.isArray(dynamicSlots.value)) {
+				return dynamicSlots.value.length > 0;
+			} else if (typeof dynamicSlots.value === 'object') {
+				return Object.values(dynamicSlots.value).some(i => i);
 			}
-			return dynamicSlots.value.length > 0;
 		}),
 	};
 }

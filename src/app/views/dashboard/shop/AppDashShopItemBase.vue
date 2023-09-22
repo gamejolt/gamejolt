@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, toRefs } from 'vue';
+import { PropType, toRefs } from 'vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { kThemeFg10 } from '../../../../_common/theme/variables';
 import { styleLineClamp } from '../../../../_styles/mixins';
-import { kFontSizeSmall } from '../../../../_styles/variables';
+import { kFontSizeTiny } from '../../../../_styles/variables';
 
 export interface ShopItemStates {
 	active?: boolean;
@@ -19,14 +19,6 @@ const props = defineProps({
 });
 
 const { name } = toRefs(props);
-
-const nameStyles: CSSProperties = {
-	...styleLineClamp(2),
-	marginTop: `4px`,
-	fontWeight: 600,
-	fontSize: kFontSizeSmall.px,
-	textAlign: `center`,
-};
 </script>
 
 <template>
@@ -40,7 +32,18 @@ const nameStyles: CSSProperties = {
 
 		<slot />
 
-		<div v-if="name" :style="nameStyles">
+		<div
+			v-if="name"
+			:style="[
+				styleLineClamp(2),
+				{
+					marginTop: `4px`,
+					fontWeight: `bold`,
+					fontSize: kFontSizeTiny.px,
+					textAlign: `center`,
+				},
+			]"
+		>
 			{{ name }}
 		</div>
 	</div>

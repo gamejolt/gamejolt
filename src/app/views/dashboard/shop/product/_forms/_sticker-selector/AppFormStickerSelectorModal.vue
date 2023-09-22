@@ -5,12 +5,14 @@ import { Api } from '../../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../../_common/button/AppButton.vue';
 import AppIllustration from '../../../../../../../_common/illustration/AppIllustration.vue';
 import { illExtremeSadness } from '../../../../../../../_common/illustration/illustrations';
+import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../../../../_common/loading/AppLoading.vue';
 import AppModal from '../../../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../../../_common/modal/modal.service';
 import { storeModelList } from '../../../../../../../_common/model/model-store.service';
 import { StickerModel } from '../../../../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
+import { kFontSizeSmall } from '../../../../../../../_styles/variables';
 import { run } from '../../../../../../../utils/utils';
 import AppFormStickerSelectorItem from './AppFormStickerSelectorItem.vue';
 
@@ -33,7 +35,7 @@ const props = defineProps({
 	},
 });
 
-const { stickerPackId, premium, currentStickers } = toRefs(props);
+const { stickerPackId, premium, currentStickers, availableSlots } = toRefs(props);
 
 const router = useRouter();
 const modal = useModal()!;
@@ -59,6 +61,14 @@ run(async () => {
 	).filter(i => !currentStickers.value.includes(i));
 
 	isLoading.value = false;
+});
+
+const modalError = computed(() => {
+	if (combinedStickers.value.length >= availableSlots.value) {
+		return $gettext(`You've reached the limit of how many stickers you can add to this pack.`);
+	}
+
+	return null;
 });
 
 function getIndex(sticker: StickerModel) {
@@ -97,71 +107,101 @@ const gridStyles: CSSProperties = {
 </script>
 
 <template>
-	<AppModal>
-		<div class="modal-controls">
-			<AppButton @click="modal.dismiss()">
-				{{ $gettext(`Close`) }}
-			</AppButton>
+	<AppModal :dynamic-slots="{ footer: !!modalError }">
+		<template #default>
+			<div class="modal-controls">
+				<AppButton @click="modal.dismiss()">
+					{{ $gettext(`Close`) }}
+				</AppButton>
 
-			<AppButton v-if="selectedStickers.length" solid primary @click="confirm()">
-				{{
-					$ngettext(`Add 1 sticker`, `Add %{ count } stickers`, selectedStickers.length, {
-						count: selectedStickers.length,
-					})
-				}}
-			</AppButton>
-		</div>
+				<AppButton v-if="selectedStickers.length" solid primary @click="confirm()">
+					{{
+						$ngettext(
+							`Add 1 sticker`,
+							`Add %{ count } stickers`,
+							selectedStickers.length,
+							{
+								count: selectedStickers.length,
+							}
+						)
+					}}
+				</AppButton>
+			</div>
 
-		<div v-if="isLoading || selectableStickers.length" class="modal-header">
-			<h2 class="modal-title text-center">
-				{{ $gettext(`Select stickers to add`) }}
-			</h2>
-		</div>
+			<div v-if="isLoading || selectableStickers.length" class="modal-header">
+				<h2 class="modal-title text-center">
+					{{ $gettext(`Select stickers to add`) }}
+				</h2>
+			</div>
 
-		<div class="modal-body">
-			<template v-if="isLoading">
-				<AppLoading centered />
-			</template>
-			<template v-else-if="!selectableStickers.length">
-				<AppIllustration :asset="illExtremeSadness">
-					<template v-if="!currentStickers.length">
-						<p>{{ $gettext(`You have no stickers to put into this pack.`) }}</p>
+			<div class="modal-body">
+				<template v-if="isLoading">
+					<AppLoading centered />
+				</template>
+				<template v-else-if="!selectableStickers.length">
+					<AppIllustration :asset="illExtremeSadness">
+						<template v-if="!currentStickers.length">
+							<p>{{ $gettext(`You have no stickers to put into this pack.`) }}</p>
+							<p>
+								{{
+									$gettext(
+										`Before creating a pack, you'll need to add your stickers indivdually from your shop dashboard.`
+									)
+								}}
+							</p>
+						</template>
+						<template v-else>
+							<p>
+								{{ $gettext(`You have no more stickers to put into this pack.`) }}
+							</p>
+							<p>
+								{{ $gettext(`You can add new stickers from your shop dashboard.`) }}
+							</p>
+						</template>
+
+						<br />
+
 						<p>
-							{{
-								$gettext(
-									`Before creating a pack, you'll need to add your stickers indivdually from your shop dashboard.`
-								)
-							}}
+							<AppButton @click="gotoDashboard()">
+								{{ $gettext(`Go to shop dashboard`) }}
+							</AppButton>
 						</p>
-					</template>
-					<template v-else>
-						<p>{{ $gettext(`You have no more stickers to put into this pack.`) }}</p>
-						<p>{{ $gettext(`You can add new stickers from your shop dashboard.`) }}</p>
-					</template>
+					</AppIllustration>
+				</template>
+				<template v-else>
+					<div :style="gridStyles">
+						<AppFormStickerSelectorItem
+							v-for="sticker of selectableStickers"
+							:key="sticker.id"
+							:sticker="sticker"
+							:selected="isSelected(sticker)"
+							:disabled="
+								combinedStickers.length >= availableSlots && !isSelected(sticker)
+							"
+							@click="toggle(sticker)"
+						/>
+					</div>
+				</template>
+			</div>
+		</template>
 
-					<br />
-
-					<p>
-						<AppButton @click="gotoDashboard()">
-							{{ $gettext(`Go to shop dashboard`) }}
-						</AppButton>
-					</p>
-				</AppIllustration>
-			</template>
-			<template v-else>
-				<div :style="gridStyles">
-					<AppFormStickerSelectorItem
-						v-for="sticker of selectableStickers"
-						:key="sticker.id"
-						:sticker="sticker"
-						:selected="isSelected(sticker)"
-						:disabled="
-							combinedStickers.length >= availableSlots && !isSelected(sticker)
-						"
-						@click="toggle(sticker)"
-					/>
+		<template #footer>
+			<div
+				:style="{
+					display: `flex`,
+					textAlign: `left`,
+					gap: `16px`,
+					alignItems: `center`,
+					padding: `0 0 16px 0`,
+					fontWeight: `bold`,
+					fontSize: kFontSizeSmall.px,
+				}"
+			>
+				<AppJolticon icon="notice" notice middle />
+				<div>
+					{{ modalError }}
 				</div>
-			</template>
-		</div>
+			</div>
+		</template>
 	</AppModal>
 </template>

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, Ref, ref, toRefs } from 'vue';
+import { CSSProperties, Ref, computed, ref, toRefs, watch } from 'vue';
+import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
@@ -45,6 +46,29 @@ const data = createShopProductBaseForm({
 });
 
 const { form, paymentType } = data;
+
+const stickersError = computed(() => {
+	if (stickers.value.length < minStickers.value) {
+		return $gettext(`You must have at least %{ count } sticker(s) in a pack.`, {
+			count: minStickers.value,
+		});
+	} else if (stickers.value.length > maxStickers.value) {
+		// This shouldn't really happen, but better to be safe.
+		return $gettext(`You can only have %{ count } sticker in a pack. Please remove some.`, {
+			count: maxStickers.value,
+		});
+	}
+
+	return null;
+});
+
+watch(stickersError, stickersError => {
+	if (stickersError) {
+		form.setCustomError('stickers');
+	} else {
+		form.clearCustomError('stickers');
+	}
+});
 
 function _setStickers(isInitial: boolean, newStickers: StickerModel[] | undefined) {
 	if (!newStickers || !newStickers.length) {
@@ -104,11 +128,23 @@ const stickerItemStyles: CSSProperties = {
 		<template #default>
 			<h2>{{ $gettext(`Stickers`) }}</h2>
 
-			<AppButton solid @click="addStickers()">
-				{{ $gettext(`Add stickers`) }}
-			</AppButton>
-
+			<div>
+				<AppButton solid :disabled="stickers.length >= maxStickers" @click="addStickers()">
+					{{ $gettext(`Add stickers`) }}
+				</AppButton>
+			</div>
 			<AppSpacer vertical :scale="4" />
+
+			<template v-if="stickers.length >= maxStickers">
+				<AppAlertBox fill-color="offset" icon="info-circle">
+					{{
+						$gettext(
+							`You've reached the limit of how many stickers you can add into this pack.`
+						)
+					}}
+				</AppAlertBox>
+				<AppSpacer vertical :scale="4" />
+			</template>
 
 			<div :style="stickerGridStyles">
 				<AppOnHover
@@ -157,6 +193,14 @@ const stickerItemStyles: CSSProperties = {
 					</div>
 				</AppOnHover>
 			</div>
+
+			<template v-if="stickersError">
+				<div class="control-erros">
+					<p class="help-block error anim-fade-in">
+						{{ stickersError }}
+					</p>
+				</div>
+			</template>
 
 			<AppSpacer vertical :scale="6" />
 		</template>

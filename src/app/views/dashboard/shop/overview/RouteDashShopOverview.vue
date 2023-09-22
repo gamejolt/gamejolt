@@ -27,7 +27,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeTitle = computed(() => $gettext(`Manage Shop Content`));
+const routeTitle = computed(() => $gettext(`Shop dashboard`));
 
 const controller = useShopManagerStore()!;
 const { avatarFrames, backgrounds, stickerPacks, stickers } = controller;
@@ -102,10 +102,6 @@ const sectionData = computed<
 	];
 });
 
-const headerStyles: CSSProperties = {
-	marginTop: 0,
-};
-
 const subheaderStyles: CSSProperties = {
 	marginTop: 0,
 	marginBottom: 0,
@@ -128,8 +124,8 @@ const itemBorderRadius = kBorderRadiusLg.value;
 
 <template>
 	<div>
-		<h1 :style="headerStyles">
-			{{ $gettext(`Shop products`) }}
+		<h1 :style="{ marginTop: 0 }">
+			{{ routeTitle }}
 		</h1>
 
 		<div class="help-block" :style="helpBlockStyles">

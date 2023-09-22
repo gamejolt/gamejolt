@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { AvatarFrameModel } from '../../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../../_common/background/background.model';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import {
 	createAppRoute,
@@ -38,17 +39,17 @@ const stickerPack = ref<StickerPackModel>();
 
 const productType = computed(() => route.params.type as ProductType);
 
-const { isBootstrapped } = createAppRoute({
-	routeTitle: computed(() => {
-		const titles: Record<ProductType, string> = {
-			'avatar-frame': $gettext(`Avatar frame product`),
-			background: $gettext(`Background product`),
-			sticker: $gettext(`Sticker product`),
-			'sticker-pack': $gettext(`Sticker pack product`),
-		};
+const routeTitles: Record<ProductType, string> = {
+	'avatar-frame': $gettext(`Avatar frame product`),
+	background: $gettext(`Background product`),
+	sticker: $gettext(`Sticker product`),
+	'sticker-pack': $gettext(`Sticker pack product`),
+};
 
-		return titles[productType.value];
-	}),
+const routeTitle = computed(() => routeTitles[productType.value]);
+
+const { isBootstrapped } = createAppRoute({
+	routeTitle,
 	onResolved() {
 		if (!route.params.id) {
 			return;
@@ -77,6 +78,17 @@ const { isBootstrapped } = createAppRoute({
 </script>
 
 <template>
+	<RouterLink
+		class="link-muted"
+		:to="{ name: 'dash.shop.overview' }"
+		:style="{ display: `block`, padding: `0 16px 16px 0`, marginBottom: `16px` }"
+	>
+		<AppJolticon icon="arrow-left" middle />
+		{{ $gettext(`Back to shop dashboard`) }}
+	</RouterLink>
+
+	<h1 class="section-header">{{ routeTitle }}</h1>
+
 	<template v-if="isBootstrapped">
 		<FormShopProductAvatarFrame v-if="productType === 'avatar-frame'" :model="avatarFrame" />
 		<FormShopProductBackground v-else-if="productType === 'background'" :model="background" />

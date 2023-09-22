@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+import { styleBorderRadiusBase, styleWhen } from '../../_styles/mixins';
+import { kFontSizeSmall } from '../../_styles/variables';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
+import { kThemeFgMuted, kThemePrimary } from '../theme/variables';
 
 defineProps({
 	icon: {
@@ -19,34 +22,34 @@ defineProps({
 </script>
 
 <template>
-	<div class="-alert-box" :class="[`fill-${fillColor}`]">
-		<div v-if="icon" class="-icon" :class="`-icon-color-${color}`">
-			<AppJolticon :icon="icon" />
+	<div
+		:class="`fill-${fillColor}`"
+		:style="[
+			styleBorderRadiusBase,
+			{
+				display: `flex`,
+				flexDirection: `row`,
+				alignItems: `center`,
+				padding: `24px`,
+				gridGap: `16px`,
+			},
+		]"
+	>
+		<div
+			v-if="icon"
+			:style="[
+				styleWhen(color === 'default', {
+					color: kThemeFgMuted,
+				}),
+				styleWhen(color === 'primary', {
+					color: kThemePrimary,
+				}),
+			]"
+		>
+			<AppJolticon :icon="icon" :style="{ fontSize: `24px` }" />
 		</div>
-		<div class="-content">
+		<div :style="{ fontSize: kFontSizeSmall.px }">
 			<slot />
 		</div>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-alert-box
-	rounded-corners()
-	display: flex
-	flex-direction: row
-	align-items: center
-	padding: 24px
-	grid-gap: 16px
-
-.-content
-	font-size: $font-size-small
-
-.-icon .jolticon
-	font-size: 24px
-
-.-icon-color-default
-	color: var(--theme-fg-muted)
-
-.-icon-color-primary
-	color: var(--theme-primary)
-</style>

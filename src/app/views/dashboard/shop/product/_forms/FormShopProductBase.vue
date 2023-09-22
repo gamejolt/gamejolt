@@ -682,6 +682,7 @@ function makeStateBubbleIconStyles({
 			<slot />
 
 			<AppFormStickySubmit
+				v-if="form.valid"
 				:style="{
 					marginTop: kLineHeightComputed.px,
 				}"
