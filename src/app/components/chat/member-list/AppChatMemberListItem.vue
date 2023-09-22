@@ -61,7 +61,11 @@ const isLiveFiresideHost = computed(() => {
 	<AppChatListItem
 		:horizontal-padding="horizontalPadding"
 		:popper-placement="Screen.isMobile ? 'bottom' : 'left'"
-		:defined-slots="roleData ? ['leading', 'title', 'trailing'] : ['leading', 'title']"
+		:dynamic-slots="{
+			leading: true,
+			title: true,
+			trailing: !!roleData,
+		}"
 		popper-trigger="click"
 	>
 		<template #leading>

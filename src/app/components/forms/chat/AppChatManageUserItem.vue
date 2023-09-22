@@ -24,7 +24,7 @@ const emit = defineEmits({
 	<AppChatListItem
 		:horizontal-padding="16"
 		popper-trigger="manual"
-		:defined-slots="['leading', 'title', 'trailing']"
+		:dynamic-slots="['leading', 'title', 'trailing']"
 		@mouseenter="emit('hover')"
 		@mouseleave="emit('unhover')"
 		@click="emit('click')"

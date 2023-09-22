@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, onUnmounted, toRefs } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
 import { trackJoltydex } from '../../../../_common/analytics/analytics.service';
+import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppJoltydexBrowser from '../../../../_common/joltydex/AppJoltydexBrowser.vue';
@@ -14,6 +15,7 @@ import { kFontSizeLarge, kFontSizeSmall } from '../../../../_styles/variables';
 import { useAppStore } from '../../../store/index';
 import { useJoltydexStore } from '../../../store/joltydex';
 import AppShellWindow from '../../shell/AppShellWindow.vue';
+import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
 const props = defineProps({
 	selectedUser: {
@@ -38,6 +40,40 @@ onUnmounted(async () => {
 		selectedJoltydexUser.value = undefined;
 	}
 });
+
+let isLoadingSales = false;
+const userWithSales = ref<number>();
+const hasSale = computed(
+	() => !!userWithSales.value && userWithSales.value === selectedUser.value.id
+);
+
+watch(
+	selectedUser,
+	async (newUser, oldUser) => {
+		if (newUser.id !== oldUser?.id) {
+			userWithSales.value = undefined;
+		}
+		if (!newUser || newUser.id === oldUser?.id || isLoadingSales) {
+			return;
+		}
+		isLoadingSales = true;
+		try {
+			const payload = await Api.sendFieldsRequest(
+				`/mobile/user/${newUser.id}`,
+				{
+					hasSales: true,
+				},
+				{ detach: true }
+			);
+			if (payload.hasSales && selectedUser.value.id === newUser.id) {
+				userWithSales.value = newUser.id;
+			}
+		} finally {
+			isLoadingSales = false;
+		}
+	},
+	{ immediate: true }
+);
 
 function close() {
 	// Causes the shell to v-if this away.
@@ -69,6 +105,12 @@ function close() {
 				:automatically-imply-leading="false"
 				:elevation="2"
 				:title-spacing="16"
+				:dynamic-slots="{
+					leading: true,
+					title: true,
+					actions: true,
+					bottom: hasSale,
+				}"
 			>
 				<template #leading>
 					<AppUserAvatarBubble
@@ -112,6 +154,23 @@ function close() {
 
 				<template #actions>
 					<AppButton circle trans sparse icon="remove" @click="close()" />
+				</template>
+
+				<template #bottom>
+					<div v-if="hasSale" :style="{ padding: `8px 12px` }">
+						<AppButton
+							solid
+							primary
+							block
+							@click="
+								showVendingMachineModal({
+									userId: selectedUser.id,
+								})
+							"
+						>
+							{{ $gettext(`Open creator shop`) }}
+						</AppButton>
+					</div>
 				</template>
 			</AppHeaderBar>
 

@@ -11,6 +11,7 @@ export type ComponentProps<C extends Component> = C extends new (...args: any) =
 	: never;
 
 type DynamicSlots<T extends string> = T[] | Record<T, boolean> | boolean;
+type DynamicSlotArray<T extends string> = T[] | Readonly<T[]>;
 
 /**
  * Adds a `dynamicSlots` prop that a parent component can use to determine what
@@ -19,12 +20,12 @@ type DynamicSlots<T extends string> = T[] | Record<T, boolean> | boolean;
  * For use with {@link useDynamicSlots}.
  */
 export function defineDynamicSlotProps<T extends string>(
-	validValues: T[],
-	defaultValue: (() => T[] | Record<T, boolean>) | boolean
+	validValues: DynamicSlotArray<T>,
+	defaultValue: (() => DynamicSlotArray<T> | Record<T, boolean>) | boolean
 ) {
 	return {
 		dynamicSlots: {
-			type: [Array, Boolean, Object] as PropType<DynamicSlots<T>>,
+			type: [Array, Object, Boolean] as PropType<DynamicSlots<T>>,
 			default: defaultValue,
 			validator: (value: unknown) => {
 				if (typeof value === 'boolean') {
