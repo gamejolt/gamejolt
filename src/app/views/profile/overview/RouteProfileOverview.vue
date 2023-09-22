@@ -70,6 +70,7 @@ import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
+import { showVendingMachineModal } from '../../../components/vending-machine/modal/modal.service';
 import { useAppStore } from '../../../store/index';
 import { useProfileRouteController } from '../RouteProfile.vue';
 
@@ -127,6 +128,7 @@ const allCommunities = ref<CommunityModel[] | null>(null);
 const supportersData = ref() as Ref<
 	{ supporters: TopSupporter[]; ownSupport: OwnSupport } | undefined
 >;
+const hasSales = ref(false);
 const overviewComments = ref<CommentModel[]>([]);
 const linkedAccounts = ref<LinkedAccountModel[]>([]);
 const knownFollowers = ref<UserModel[]>([]);
@@ -309,6 +311,7 @@ createAppRoute({
 		linkedAccounts.value = [];
 		overviewComments.value = [];
 		supportersData.value = undefined;
+		hasSales.value = false;
 	},
 	onResolved({ payload }) {
 		Meta.description = payload.metaDescription;
@@ -327,6 +330,7 @@ createAppRoute({
 		communities.value = CommunityModel.populate(payload.communities);
 		linkedAccounts.value = LinkedAccountModel.populate(payload.linkedAccounts);
 		overviewComments.value = storeModelList(CommentModel, payload.comments);
+		hasSales.value = payload.hasSales === true;
 
 		let supporters: TopSupporter[] = [];
 		if (payload.topSupporters && Array.isArray(payload.topSupporters)) {
@@ -617,6 +621,22 @@ async function onFriendRequestReject() {
 								:supporters="supportersData.supporters"
 								:own-support="supportersData.ownSupport"
 							/>
+							<br />
+						</template>
+
+						<template v-if="hasSales">
+							<AppButton
+								solid
+								primary
+								block
+								@click="
+									showVendingMachineModal({
+										userId: routeUser.id,
+									})
+								"
+							>
+								{{ $gettext(`Open creator shop`) }}
+							</AppButton>
 							<br />
 						</template>
 					</template>

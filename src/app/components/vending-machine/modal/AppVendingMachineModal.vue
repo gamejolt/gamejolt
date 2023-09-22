@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, Ref, computed, onMounted, ref } from 'vue';
+import { CSSProperties, Ref, computed, onMounted, ref, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -39,7 +39,10 @@ import {
 } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
+import { UserModel } from '../../../../_common/user/user.model';
 import {
+	kElevateTransition,
 	styleBorderRadiusBase,
 	styleBorderRadiusLg,
 	styleChangeBg,
@@ -47,6 +50,7 @@ import {
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 	styleOverlayTextShadow,
+	styleTextOverflow,
 	styleWhen,
 } from '../../../../_styles/mixins';
 import {
@@ -71,13 +75,26 @@ interface ProductChunk {
 	type: keyof ProductChunks;
 }
 
+const props = defineProps({
+	shopId: {
+		type: Number,
+		default: undefined,
+	},
+	userId: {
+		type: Number,
+		default: undefined,
+	},
+});
+
+const { shopId, userId } = toRefs(props);
+
 const { isDark } = useThemeStore();
 const { coinBalance, joltbuxBalance } = useCommonStore();
 
 const modal = useModal()!;
 
+const shopOwner = ref<UserModel>();
 const availableProducts = ref({}) as Ref<ProductChunks>;
-
 const isLoading = ref(false);
 const productProcessing = ref<number>();
 
@@ -106,63 +123,76 @@ async function init() {
 	}
 	isLoading.value = true;
 
-	const p = await Promise.all([
-		Api.sendRequest('/web/inventory/shop/sales', undefined, { detach: true }),
-		Api.sendFieldsRequest(
-			'/mobile/me',
-			{
-				coinBalance: true,
-				buxBalance: true,
-			},
-			{ detach: true }
-		),
-	]);
-
-	const payload = p[0];
-	const newProducts = payload.sales
-		? storeModelList(InventoryShopProductSaleModel, payload.sales)
-		: [];
-
-	const productChunks: ProductChunks = {};
-	const missingItems: InventoryShopProductSaleModel[] = [];
-
-	for (const shopProduct of newProducts) {
-		let key: keyof ProductChunks | null = null;
-
-		if (shopProduct.stickerPack) {
-			key = 'packs';
-		} else if (shopProduct.avatarFrame) {
-			key = 'avatarFrames';
-		} else if (shopProduct.background) {
-			key = 'backgrounds';
-		}
-
-		if (!key) {
-			missingItems.push(shopProduct);
-			continue;
-		}
-
-		const items = (productChunks[key]?.items || []).concat(shopProduct);
-		productChunks[key] = { type: key, items };
+	let productUrl = `/web/inventory/shop/sales`;
+	if (shopId?.value) {
+		productUrl += `?shop=${shopId.value}`;
+	} else if (userId?.value) {
+		productUrl += `?userId=${userId.value}`;
 	}
 
-	if (missingItems.length > 0) {
-		console.warn(`Got some products that we don't support yet.`, {
-			missingCount: missingItems.length,
-			types: missingItems.reduce((result, i) => {
-				result.set(i.product_type, (result.get(i.product_type) || 0) + 1);
-				return result;
-			}, new Map<string, number>()),
-		});
+	try {
+		const p = await Promise.all([
+			Api.sendRequest(productUrl, undefined, { detach: true }),
+			Api.sendFieldsRequest(
+				'/mobile/me',
+				{
+					coinBalance: true,
+					buxBalance: true,
+				},
+				{ detach: true }
+			),
+			fetchFeatureToggles([featureMicrotransactions]),
+		]);
+
+		const payload = p[0];
+		const newProducts = payload.sales
+			? storeModelList(InventoryShopProductSaleModel, payload.sales)
+			: [];
+
+		const productChunks: ProductChunks = {};
+		const missingItems: InventoryShopProductSaleModel[] = [];
+
+		for (const shopProduct of newProducts) {
+			let key: keyof ProductChunks | null = null;
+
+			if (shopProduct.stickerPack) {
+				key = 'packs';
+			} else if (shopProduct.avatarFrame) {
+				key = 'avatarFrames';
+			} else if (shopProduct.background) {
+				key = 'backgrounds';
+			}
+
+			if (!key) {
+				missingItems.push(shopProduct);
+				continue;
+			}
+
+			const items = (productChunks[key]?.items || []).concat(shopProduct);
+			productChunks[key] = { type: key, items };
+		}
+
+		if (missingItems.length > 0) {
+			console.warn(`Got some products that we don't support yet.`, {
+				missingCount: missingItems.length,
+				types: missingItems.reduce((result, i) => {
+					result.set(i.product_type, (result.get(i.product_type) || 0) + 1);
+					return result;
+				}, new Map<string, number>()),
+			});
+		}
+
+		availableProducts.value = productChunks;
+		if (payload.shopOwner) {
+			shopOwner.value = payload.shopOwner;
+		}
+
+		const mePayload = p[1];
+		coinBalance.value = mePayload.coinBalance;
+		joltbuxBalance.value = mePayload.buxBalance;
+	} catch (e) {
+		console.error('Failed to load vending machine data', e);
 	}
-
-	availableProducts.value = productChunks;
-
-	const mePayload = p[1];
-	coinBalance.value = mePayload.coinBalance;
-	joltbuxBalance.value = mePayload.buxBalance;
-
-	await fetchFeatureToggles([featureMicrotransactions]);
 
 	isLoading.value = false;
 }
@@ -252,12 +282,41 @@ const currencyCardImgStyles: CSSProperties = {
 	width: `100%`,
 	height: `100%`,
 };
+
+const shopOwnerNameStyles: CSSProperties = {
+	...styleTextOverflow,
+	flex: `auto`,
+	minWidth: 0,
+};
+
+const currencyCardBaseStyles: CSSProperties = {
+	...styleBorderRadiusBase,
+	...styleElevate(1),
+	backgroundColor: kThemeBgOffset,
+	padding: `12px`,
+	flex: `auto`,
+	display: `flex`,
+	flexDirection: `column`,
+	alignItems: `center`,
+	gap: `8px`,
+	cursor: `pointer`,
+	color: kThemeFg,
+};
+
+const currencyCardTransitionStyles: CSSProperties = {
+	transition: `background-color 200ms ${kStrongEaseOut}, ${kElevateTransition}`,
+};
 </script>
 
 <template>
 	<AppModal force-theme="dark">
 		<div :style="containerStyles">
-			<AppModalFloatingHeader>
+			<AppModalFloatingHeader
+				:dynamic-slots="{
+					title: true,
+					bottom: false,
+				}"
+			>
 				<template #modal-controls>
 					<div
 						:style="{
@@ -286,6 +345,35 @@ const currencyCardImgStyles: CSSProperties = {
 						>
 							{{ $gettext(`Close`) }}
 						</AppButton>
+					</div>
+				</template>
+
+				<template #title>
+					<div
+						v-if="shopOwner"
+						:style="{
+							display: `flex`,
+							gap: `12px`,
+							alignItems: `center`,
+						}"
+					>
+						<AppUserAvatarBubble
+							:style="{
+								width: `40px`,
+								height: `40px`,
+								flex: `none`,
+							}"
+							:user="shopOwner"
+							show-frame
+						/>
+
+						<div :style="shopOwnerNameStyles">
+							{{
+								$gettext(`@%{ username }'s Shop`, {
+									username: shopOwner.username,
+								})
+							}}
+						</div>
 					</div>
 				</template>
 			</AppModalFloatingHeader>
@@ -325,27 +413,12 @@ const currencyCardImgStyles: CSSProperties = {
 										v-bind="{
 											...hoverBinding,
 											style: [
-												styleBorderRadiusBase,
-												styleElevate(1),
-												{
-													backgroundColor: kThemeBgOffset,
-													padding: `12px`,
-													flex: `auto`,
-													display: `flex`,
-													flexDirection: `column`,
-													alignItems: `center`,
-													gap: `8px`,
-													cursor: `pointer`,
-													color: kThemeFg,
-												},
+												currencyCardBaseStyles,
 												styleWhen(hovered, {
 													...styleElevate(2),
 													backgroundColor: kThemeBgBackdrop,
 												}),
-												{
-													// Need this to override the style from the `styleElevate` functions.
-													transition: `background-color 200ms ${kStrongEaseOut}, box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1)`,
-												},
+												currencyCardTransitionStyles,
 											],
 										}"
 										@click="onClickCurrencyCard(currency)"
@@ -542,7 +615,7 @@ const currencyCardImgStyles: CSSProperties = {
 							width: `100%`,
 						}"
 					>
-						<AppAspectRatio :ratio="1000 / 250">
+						<AppAspectRatio :ratio="4">
 							<img
 								:src="imageVance"
 								:style="{
