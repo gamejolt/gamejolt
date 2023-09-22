@@ -4,6 +4,7 @@ import { BackgroundModel } from '../../../../_common/background/background.model
 import { ShopItemModelCommonFields } from '../../../../_common/model/shop-item-model.service';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
+import { assertNever } from '../../../../utils/utils';
 
 type ItemModel = AvatarFrameModel | BackgroundModel | StickerPackModel | StickerModel;
 export type ShopManagerGroupItem = ItemModel & ShopItemModelCommonFields;
@@ -16,8 +17,8 @@ export interface ShopManagerGroup<T extends ShopManagerGroupItem = ShopManagerGr
 	canAdd?: boolean;
 }
 
-const itemTypes = ['Avatar_Frame', 'Background', 'Sticker_Pack', 'Sticker'] as const;
-export type ShopManagerGroupItemType = (typeof itemTypes)[number];
+const typenames = ['Avatar_Frame', 'Background', 'Sticker_Pack', 'Sticker'] as const;
+export type ShopManagerGroupItemType = (typeof typenames)[number];
 export type ProductType = 'avatar-frame' | 'background' | 'sticker' | 'sticker-pack';
 export const productTypes: { [key in ProductType]: ShopManagerGroupItemType } = {
 	'avatar-frame': 'Avatar_Frame',
@@ -28,6 +29,20 @@ export const productTypes: { [key in ProductType]: ShopManagerGroupItemType } = 
 
 export function productTypeFromTypename(typename: ShopManagerGroupItemType) {
 	return Object.entries(productTypes).find(([, val]) => val === typename)?.[0];
+}
+
+export function getShopProductType(product: ItemModel): ProductType {
+	if (product instanceof AvatarFrameModel) {
+		return 'avatar-frame';
+	} else if (product instanceof BackgroundModel) {
+		return 'background';
+	} else if (product instanceof StickerPackModel) {
+		return 'sticker-pack';
+	} else if (product instanceof StickerModel) {
+		return 'sticker';
+	} else {
+		return assertNever(product);
+	}
 }
 
 export type ShopManagerStore = ReturnType<typeof createShopManagerStore>;

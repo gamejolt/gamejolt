@@ -9,8 +9,8 @@ import { StickerPackRatio } from '../../../../../_common/sticker/pack/AppSticker
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { touchUser } from '../../../../../_common/user/user.model';
 import { kBorderRadiusLg, kBorderWidthBase } from '../../../../../_styles/variables';
-import AppDashShopItem from '.././AppDashShopItem.vue';
-import AppDashShopItemAdd from '../AppDashShopItemAdd.vue';
+import AppDashShopItem from '../product/_item/AppDashShopItem.vue';
+import AppDashShopItemAdd from '../product/_item/AppDashShopItemAdd.vue';
 import {
 	ShopManagerGroup,
 	ShopManagerGroupItem,
