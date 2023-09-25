@@ -4,7 +4,7 @@ import { debounce } from '../../utils/utils';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
 import { vAppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
 import { Ruler } from '../ruler/ruler-service';
-import { ImgSlideshow } from './slideshow/sheets';
+import { getImgSlideshowData, ImgSlideshow } from './slideshow/sheets';
 
 const props = defineProps({
 	sheet: {
@@ -55,7 +55,7 @@ function initAnimator(fromStart: boolean) {
 	}
 
 	timer = setInterval(() => {
-		const { frames, blankFrames } = sheet.value;
+		const { frames, blankFrames = 0 } = sheet.value;
 
 		if (frame.value + 1 >= frames + blankFrames) {
 			frame.value = 0;
@@ -91,6 +91,8 @@ onUnmounted(() => {
 
 const debounceDimensionsChanged = debounce(onDimensionsChanged, 500);
 
+const sheetData = computed(() => getImgSlideshowData(sheet.value));
+
 function onDimensionsChanged() {
 	if (!root.value) {
 		return;
@@ -105,11 +107,11 @@ function onDimensionsChanged() {
 		<div
 			class="-slideshow-container"
 			:style="{
-				maxWidth: Math.min(size.width, size.height * sheet.frameAspectRatio) + 'px',
+				maxWidth: Math.min(size.width, size.height * sheetData.frameAspectRatio) + 'px',
 			}"
 		>
 			<AppAspectRatio
-				:ratio="sheet.frameAspectRatio"
+				:ratio="sheetData.frameAspectRatio"
 				class="-slideshow"
 				:class="{
 					'-shadow': overlay,
