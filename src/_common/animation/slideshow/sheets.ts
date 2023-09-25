@@ -27,9 +27,12 @@ export function getImgSlideshowData(slideshow: ImgSlideshow) {
 	};
 }
 
-const month = new Date().getMonth();
+const month = /** @__PURE__ */ new Date().getMonth();
 const isOctober = month === 9;
 
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
 function createSeasonalAsset<T>({ base, october }: { base: T; october?: T }) {
 	if (isOctober) {
 		return october || base;
