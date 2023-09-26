@@ -500,7 +500,17 @@ function makeStateBubbleIconStyles({
 		</AppExpand>
 
 		<template v-if="!!paymentType">
-			<AppShopProductDiff>
+			<AppShopProductDiff
+				:dynamic-slots="{
+					before: !!baseModel && baseModel.was_approved,
+					after: Object.entries(initialFormModel).some(([key, val]) => {
+						if (key === 'file' && form.controlErrors.file) {
+							return false;
+						}
+						return form.formModel[key] !== val;
+					}),
+				}"
+			>
 				<template #before>
 					<slot
 						name="diff"
