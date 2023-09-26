@@ -13,7 +13,8 @@ export interface ShopManagerGroup<T extends ShopManagerGroupItem = ShopManagerGr
 	items: T[];
 	slotAmount?: number;
 	publishAmount?: number;
-	canAdd?: boolean;
+	canAddFree?: boolean;
+	canAddPremium?: boolean;
 }
 
 const typenames = ['Avatar_Frame', 'Background', 'Sticker_Pack', 'Sticker'] as const;
@@ -51,9 +52,6 @@ export function createShopManagerStore() {
 	function _makeEmptyGroup<T extends ShopManagerGroupItem>() {
 		return ref<ShopManagerGroup<T>>({
 			items: [] as T[],
-			slotAmount: undefined,
-			publishAmount: undefined,
-			canAdd: false,
 		});
 	}
 

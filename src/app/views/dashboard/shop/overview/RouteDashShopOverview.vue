@@ -45,7 +45,6 @@ const sectionData = computed<
 		typename: ShopManagerGroupItemType;
 		label: string;
 		data: ShopManagerGroup;
-		canAdd?: boolean;
 		ratio: number;
 	}[]
 >(() => {
@@ -59,46 +58,26 @@ const sectionData = computed<
 			typename: `Avatar_Frame`,
 			label: $gettext(`Avatar frames`),
 			data: frameData,
-			canAdd: frameData.canAdd,
 			ratio: 1,
 		},
 		{
 			typename: `Background`,
 			label: $gettext(`Backgrounds`),
 			data: backgroundData,
-			canAdd: backgroundData.canAdd,
 			ratio: 1,
 		},
 		{
 			typename: `Sticker_Pack`,
 			label: $gettext(`Sticker packs`),
 			data: stickerPackData,
-			canAdd: stickerPackData.canAdd,
 			ratio: StickerPackRatio,
 		},
 		{
 			typename: `Sticker`,
 			label: $gettext(`Stickers`),
 			data: stickerData,
-			canAdd: stickerData.canAdd,
 			ratio: 1,
 		},
-		// {
-		// 	typename: `Sticker_Pack`,
-		// 	premium: false,
-		// 	label: $gettext(`Sticker packs (non-premium)`),
-		// 	data: freeStickerPacks.value,
-		// 	canAdd: freeStickerPacks.value.canAdd,
-		// 	ratio: StickerPackRatio,
-		// },
-		// {
-		// 	typename: `Sticker`,
-		// 	premium: false,
-		// 	label: $gettext(`Stickers (non-premium)`),
-		// 	data: freeStickers.value,
-		// 	canAdd: freeStickers.value.canAdd,
-		// 	ratio: 1,
-		// },
 	];
 });
 
@@ -140,7 +119,7 @@ const itemBorderRadius = kBorderRadiusLg.value;
 
 		<AppSpacer vertical :scale="4" />
 
-		<div v-for="{ label, typename, data, ratio, canAdd } of sectionData" :key="label">
+		<div v-for="{ label, typename, data, ratio } of sectionData" :key="label">
 			<h4 :style="subheaderStyles">
 				{{ label }}
 			</h4>
@@ -173,7 +152,7 @@ const itemBorderRadius = kBorderRadiusLg.value;
 
 			<div :style="gridStyles">
 				<AppDashShopItemAdd
-					v-if="canAdd"
+					v-if="data.canAddFree || data.canAddPremium"
 					key="add-item"
 					:typename="typename"
 					:ratio="ratio"

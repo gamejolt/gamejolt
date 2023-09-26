@@ -92,9 +92,8 @@ function _setGroupFields<T extends ShopManagerGroupItem>(
 
 	const items = makeModels(resources);
 
-	// Since we show both premium and free products in the same lists, we need
-	// to allow the "Add" button to show for either of them.
-	group.value.canAdd = canEditFree || canEditPremium;
+	group.value.canAddFree = canEditFree;
+	group.value.canAddPremium = canEditPremium;
 	group.value.items = items;
 	group.value.slotAmount = slotAmount;
 	group.value.publishAmount = publishAmount;
