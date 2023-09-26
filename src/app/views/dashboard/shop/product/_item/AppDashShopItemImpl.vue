@@ -14,6 +14,7 @@ import {
 	kThemePrimary,
 	kThemePrimaryFg,
 } from '../../../../../../_common/theme/variables';
+import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	styleAbsoluteFill,
