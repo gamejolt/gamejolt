@@ -9,10 +9,26 @@ import { showVendingMachineModal } from '../vending-machine/modal/modal.service'
 
 export type HashEventResult = false | { sidebar: TogglableLeftPane | undefined };
 
+interface HandlerData {
+	/**
+	 * Parts of the hash route split by hyphens. Excludes the key value before
+	 * the first hyphen.
+	 *
+	 * Used for branching logic based on a root hash event, like showing data
+	 * for a specific user or other resource.
+	 */
+	parts: string[];
+	/**
+	 * The last part of parts, usually an ID of some kind. Only used if the last
+	 * part is a number.
+	 */
+	trailingId: number | undefined;
+}
+
 interface HashEvents {
 	[key: string]: {
 		sidebar: TogglableLeftPane | undefined;
-		handler: (trailingValue: string | undefined) => HashEventResult;
+		handler: (data: HandlerData) => HashEventResult;
 	};
 }
 
@@ -41,9 +57,8 @@ export function initShellRoutes() {
 	const hashEvents: HashEvents = {
 		quest: {
 			sidebar: 'quests',
-			handler(trailingValue) {
-				const questId = trailingValue ? parseInt(trailingValue, 10) : -1;
-				if (questId > 0) {
+			handler({ trailingId: questId }) {
+				if (questId && questId > 0) {
 					activeQuest.value = questId;
 				} else {
 					activeQuest.value = undefined;
@@ -68,8 +83,19 @@ export function initShellRoutes() {
 		},
 		shop: {
 			sidebar: undefined,
-			handler() {
-				showVendingMachineModal();
+			handler({ parts, trailingId }) {
+				let userId: number | undefined = undefined;
+				let shopId: number | undefined = undefined;
+
+				if (parts.length && parts[0] === 'user') {
+					userId = trailingId;
+				} else if (trailingId) {
+					shopId = trailingId;
+				}
+				showVendingMachineModal({
+					userId,
+					shopId,
+				});
 				return { sidebar: undefined };
 			},
 		},
@@ -90,22 +116,35 @@ export function initShellRoutes() {
 	 *
 	 * {@link eventKey} is anything between the `#` and the first hyphen.
 	 *
-	 * {@link trailingValue} is anything after the last hyphen. If there's no
+	 * {@link trailingId} is anything after the last hyphen. If there's no
 	 * hyphen splitting {@link eventKey}, this will be `undefined`.
 	 */
 	function _getHashEventParts(hash: string) {
-		const hashParts = hash.split('-');
-		const eventKey = hashParts[0].substring(1);
-		const trailingValue = hashParts.length > 1 ? hashParts[hashParts.length - 1] : undefined;
-		return { eventKey, trailingValue };
+		let parts = hash.split('-');
+		const eventKey = parts[0].substring(1);
+
+		// Remove the event key from our parts.
+		parts = parts.slice(1);
+
+		let trailingId: number | undefined = undefined;
+		const unsafeId = parts.length ? parseInt(parts[parts.length - 1], 10) : undefined;
+
+		// Grab a trailing ID if it's a number.
+		if (unsafeId && !isNaN(unsafeId)) {
+			trailingId = unsafeId;
+			// Remove the trailing ID from our parts.
+			parts = parts.slice(0, parts.length - 1);
+		}
+		return { eventKey, hashParts: parts, trailingId };
 	}
 
 	function _getHashEventData(hash: string) {
-		const { eventKey, trailingValue } = _getHashEventParts(hash);
+		const { eventKey, hashParts, trailingId } = _getHashEventParts(hash);
 		if (hashEvents && eventKey in hashEvents) {
 			return {
 				eventKey,
-				trailingValue,
+				hashParts,
+				trailingId,
 				event: hashEvents[eventKey],
 			};
 		}
@@ -128,7 +167,10 @@ export function initShellRoutes() {
 			return false;
 		}
 
-		const hashEventResult = data.event.handler(data.trailingValue);
+		const hashEventResult = data.event.handler({
+			parts: data.hashParts,
+			trailingId: data.trailingId,
+		});
 		if (!hashEventResult) {
 			return false;
 		}
