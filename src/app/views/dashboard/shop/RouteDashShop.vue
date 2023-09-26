@@ -21,10 +21,11 @@ import {
 
 interface ProductPayload<T extends ShopManagerGroupItem> {
 	resources: ModelData<T>[];
-	// TODO(creator-shops) need amount of publish items we can have
 	canEditFree?: boolean;
 	canEditPremium?: boolean;
 	slotAmount?: number;
+	// TODO(creator-shops) need amount of published items we can have
+	publishAmount?: number;
 }
 
 async function _makeSectionPromise<T extends ShopManagerGroupItem>(
@@ -85,19 +86,18 @@ function _setGroupFields<T extends ShopManagerGroupItem>(
 	data: ProductPayload<T> | null,
 	makeModels: (items: ModelData<T>[]) => T[]
 ) {
-	const { canEditFree, canEditPremium, resources, slotAmount } = data ?? {
-		// allowedToAdd: true,
+	const { canEditFree, canEditPremium, resources, slotAmount, publishAmount } = data || {
 		resources: [],
-		// slotAmount: 30,
 	};
+
+	const items = makeModels(resources);
 
 	// Since we show both premium and free products in the same lists, we need
 	// to allow the "Add" button to show for either of them.
 	group.value.canAdd = canEditFree || canEditPremium;
-	group.value.itemCount = resources?.length;
-	group.value.items = makeModels(resources);
-	// group.value.maxPublished = publishedAmount;
+	group.value.items = items;
 	group.value.slotAmount = slotAmount;
+	group.value.publishAmount = publishAmount;
 }
 
 createAppRoute({

@@ -11,9 +11,8 @@ export type ShopManagerGroupItem = ItemModel & ShopItemModelCommonFields;
 
 export interface ShopManagerGroup<T extends ShopManagerGroupItem = ShopManagerGroupItem> {
 	items: T[];
-	itemCount?: number;
 	slotAmount?: number;
-	maxPublished?: number;
+	publishAmount?: number;
 	canAdd?: boolean;
 }
 
@@ -52,9 +51,8 @@ export function createShopManagerStore() {
 	function _makeEmptyGroup<T extends ShopManagerGroupItem>() {
 		return ref<ShopManagerGroup<T>>({
 			items: [] as T[],
-			itemCount: 0,
-			slotAmount: 100,
-			maxPublished: 3,
+			slotAmount: undefined,
+			publishAmount: undefined,
 			canAdd: false,
 		});
 	}
@@ -64,11 +62,27 @@ export function createShopManagerStore() {
 	const stickerPacks = _makeEmptyGroup<StickerPackModel>();
 	const stickers = _makeEmptyGroup<StickerModel>();
 
+	function getItemCountForSlots<T extends ShopManagerGroupItem>(group: ShopManagerGroup<T>) {
+		// Need to count differently for certain model types.
+		if (group.items.length && group.items[0] instanceof StickerPackModel) {
+			return group.items.reduce((acc, item) => (item.is_premium ? acc + 1 : acc), 0);
+		}
+		return group.items.length;
+	}
+
 	const c = shallowReadonly({
 		avatarFrames,
 		backgrounds,
 		stickerPacks,
 		stickers,
+		/**
+		 * Helper to get the total number of items that take up a slot.
+		 *
+		 * We show all premium and non-premium items in the same list, and some
+		 * of those non-premium versions aren't optional and can't be removed,
+		 * so we need to count them differently than just adding them all up.
+		 */
+		getItemCountForSlots,
 	});
 
 	provide(shopManagerStoreKey, c);

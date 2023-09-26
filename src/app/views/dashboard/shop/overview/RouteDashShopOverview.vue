@@ -30,7 +30,7 @@ export default {
 const routeTitle = computed(() => $gettext(`Shop dashboard`));
 
 const controller = useShopManagerStore()!;
-const { avatarFrames, backgrounds, stickerPacks, stickers } = controller;
+const { avatarFrames, backgrounds, stickerPacks, stickers, getItemCountForSlots } = controller;
 
 createAppRoute({
 	routeTitle,
@@ -146,25 +146,25 @@ const itemBorderRadius = kBorderRadiusLg.value;
 			</h4>
 
 			<div
-				v-if="data.slotAmount || data.maxPublished"
+				v-if="data.slotAmount || data.publishAmount"
 				class="help-block"
 				:style="helpBlockStyles"
 			>
 				<p>
 					<template v-if="data.slotAmount">
-						{{ data.itemCount ?? data.items.length }}
+						{{ getItemCountForSlots(data) }}
 						{{ ' / ' }}
 						{{ data.slotAmount }}
 						{{ ' ' }}
 						{{ $gettext(`slots used`) }}
 					</template>
 
-					<br v-if="data.slotAmount && data.maxPublished" />
+					<br v-if="data.slotAmount && data.publishAmount" />
 
-					<template v-if="data.maxPublished">
+					<template v-if="data.publishAmount">
 						{{ getPublishedCount(data.items) }}
 						{{ ' / ' }}
-						{{ data.maxPublished }}
+						{{ data.publishAmount }}
 						{{ ' ' }}
 						{{ $gettext(`published`) }}
 					</template>
