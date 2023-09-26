@@ -253,6 +253,7 @@ export function createShopProductBaseForm<
 				form.formModel.name = latestChange.change_name || form.formModel.name;
 
 				const changeData = JSON.parse(latestChange.change_data);
+				console.warn('asdf changeData', changeData);
 				switch (typename) {
 					case 'Avatar_Frame':
 					case 'Background':
@@ -461,6 +462,21 @@ function makeStateBubbleIconStyles({
 		color,
 	};
 }
+
+const dynamicDiffSlots = computed(() => {
+	const before = !!baseModel && baseModel.was_approved;
+	return {
+		before,
+		after:
+			!before ||
+			Object.entries(initialFormModel).some(([key, val]) => {
+				if (key === 'file' && form.controlErrors.file) {
+					return false;
+				}
+				return form.formModel[key] !== val;
+			}),
+	};
+});
 </script>
 
 <template>
@@ -500,17 +516,7 @@ function makeStateBubbleIconStyles({
 		</AppExpand>
 
 		<template v-if="!!paymentType">
-			<AppShopProductDiff
-				:dynamic-slots="{
-					before: !!baseModel && baseModel.was_approved,
-					after: Object.entries(initialFormModel).some(([key, val]) => {
-						if (key === 'file' && form.controlErrors.file) {
-							return false;
-						}
-						return form.formModel[key] !== val;
-					}),
-				}"
-			>
+			<AppShopProductDiff :dynamic-slots="dynamicDiffSlots">
 				<template #before>
 					<slot
 						name="diff"
