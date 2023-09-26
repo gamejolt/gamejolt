@@ -5,8 +5,8 @@ import { Screen } from '../../../../../../_common/screen/screen-service';
 import { StickerPackRatio } from '../../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { kThemeFg10 } from '../../../../../../_common/theme/variables';
 import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleMaxWidthForOptions } from '../../../../../../_styles/mixins';
-import { kBorderRadiusLg } from '../../../../../../_styles/variables';
+import { styleFlexCenter, styleMaxWidthForOptions } from '../../../../../../_styles/mixins';
+import { kBorderRadiusBase, kBorderRadiusLg } from '../../../../../../_styles/variables';
 import { ShopManagerGroupItemType } from '../../shop.store';
 
 const props = defineProps({
@@ -37,8 +37,8 @@ const imgData = computed(() => {
 			placeholderRatio = StickerPackRatio;
 			break;
 		case 'Sticker':
-			borderRadius = kBorderRadiusLg.px;
-			placeholderRatio = 1.7;
+			borderRadius = kBorderRadiusBase.px;
+			placeholderRatio = 1.54;
 			break;
 	}
 
@@ -56,14 +56,30 @@ const imgData = computed(() => {
 const stickerGridStyles: CSSProperties = {
 	display: `grid`,
 	gridTemplateAreas: `
-		"a a a b b"
-		"a a a b b"
-		"a a a c ."
+		"a a a a a a b b b"
+		"a a a a a a b b b"
+		"a a a a a a b b b"
+		"a a a a a a c c d"
+		"a a a a a a c c ."
+		"a a a a a a . . ."
 	`,
 	gridAutoColumns: `1fr`,
 	gridAutoRows: `1fr`,
-	gap: `12px`,
+	gap: `8px`,
 };
+
+function getSizeForStickerGridArea(gridArea: 'a' | 'b' | 'c' | 'd') {
+	switch (gridArea) {
+		case 'a':
+			return 200;
+		case 'b':
+			return 100;
+		case 'c':
+			return 50;
+		case 'd':
+			return 24;
+	}
+}
 </script>
 
 <template>
@@ -107,23 +123,28 @@ const stickerGridStyles: CSSProperties = {
 			<img v-if="imgUrl" :style="imgData.styles" :src="imgUrl" />
 			<div v-else :style="imgData.styles" />
 		</AppAspectRatio>
-		<AppAspectRatio v-else-if="typename === 'Sticker'" :ratio="imgData.placeholderRatio">
-			<div :style="stickerGridStyles">
-				<div v-for="i in ['a', 'b', 'c']" :key="i" :style="{ gridArea: i }">
-					<AppAspectRatio :ratio="1">
-						<div :style="[imgData.styles, { padding: `12px` }]">
+		<div v-else-if="typename === 'Sticker'" :style="stickerGridStyles">
+			<template v-for="gridArea in (['a', 'b', 'c', 'd'] as const)" :key="gridArea">
+				<div v-if="gridArea !== 'd' || Screen.width > 500" :style="{ gridArea }">
+					<div :style="imgData.styles">
+						<AppAspectRatio
+							:ratio="1"
+							:inner-styles="[styleFlexCenter(), { padding: `2px` }]"
+						>
 							<img
 								v-if="imgUrl"
 								:style="{
-									width: `100%`,
-									height: `100%`,
+									maxWidth: `100%`,
+									maxHeight: `100%`,
 								}"
+								:width="getSizeForStickerGridArea(gridArea)"
+								:height="getSizeForStickerGridArea(gridArea)"
 								:src="imgUrl"
 							/>
-						</div>
-					</AppAspectRatio>
+						</AppAspectRatio>
+					</div>
 				</div>
-			</div>
-		</AppAspectRatio>
+			</template>
+		</div>
 	</div>
 </template>

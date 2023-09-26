@@ -7,6 +7,7 @@ import {
 	styleBorderRadiusLg,
 	styleElevate,
 	styleTextOverflow,
+	styleWhen,
 } from '../../../../../../_styles/mixins';
 
 const shouldShowArrow = computed(() => Screen.isDesktop);
@@ -36,15 +37,20 @@ const sectionStyles: CSSProperties = {
 	flexDirection: `column`,
 };
 
-const imgCardStyles: CSSProperties = {
-	...styleBorderRadiusLg,
-	...styleElevate(1),
-	flex: `auto`,
-	backgroundColor: kThemeBgOffset,
-	padding: `24px`,
-	display: `flex`,
-	flexDirection: `column`,
-};
+const imgCardStyles = computed<CSSProperties>(() => {
+	return {
+		...styleBorderRadiusLg,
+		...styleElevate(1),
+		flex: `auto`,
+		backgroundColor: kThemeBgOffset,
+		padding: `24px`,
+		display: `flex`,
+		flexDirection: `column`,
+		...styleWhen(Screen.isXs, {
+			padding: `12px`,
+		}),
+	};
+});
 
 const jolticonStyles: CSSProperties = {
 	margin: 0,
