@@ -194,6 +194,10 @@ const stickerItemStyles: CSSProperties = {
 				</AppOnHover>
 			</div>
 
+			<!-- TODO(creator-shops) This should hook into the actual form so
+			that the submit button doesn't show until we're actually allowed to
+			submit. This current iteration gets obscured by the sticky submit.
+			-->
 			<template v-if="stickersError">
 				<div class="control-erros">
 					<p class="help-block error anim-fade-in">
