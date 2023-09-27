@@ -63,44 +63,60 @@ const nameStyles: CSSProperties = {
 	textAlign: `center`,
 };
 
-const premiumTagStyles = computed<CSSProperties>(() => ({
+const baseOverlayTagStyles: CSSProperties = {
 	...styleBorderRadiusLg,
 	position: `absolute`,
 	top: `-12px`,
 	right: `-12px`,
 	zIndex: 1,
 	pointerEvents: `none`,
-	backgroundColor: `#FFBE00`,
-	color: `black`,
 	fontWeight: `bold`,
 	fontSize: kFontSizeSmall.px,
 	padding: `2px 6px`,
 	transition: `opacity 250ms`,
+};
+
+const premiumTagStyles = computed<CSSProperties>(() => ({
+	...baseOverlayTagStyles,
+	backgroundColor: `#FFBE00`,
+	color: `black`,
 	...styleWhen(hovered.value, {
 		opacity: 0,
 	}),
 }));
 
+const chargeTagStyles = computed<CSSProperties>(() => {
+	return {
+		...baseOverlayTagStyles,
+		...styleFlexCenter({
+			display: `inline-flex`,
+			gap: `6px`,
+		}),
+		backgroundColor: kThemeGjDarkGreen,
+		color: kThemeGjGreen,
+		...styleWhen(hovered.value, {
+			opacity: 0,
+		}),
+	};
+});
+
 const baseInfoTagStyles: CSSProperties = {
 	...styleBorderRadiusLg,
 	...styleFlexCenter({
 		display: `inline-flex`,
+		gap: `6px`,
 	}),
-	gap: `6px`,
 	padding: `2px 8px`,
 	fontSize: kFontSizeTiny.px,
 	fontWeight: `bold`,
 	marginTop: `4px`,
 };
 
-function getInfoTagStyles(type: 'charge' | 'inReview' | 'rejected') {
+function getInfoTagStyles(type: 'inReview' | 'rejected') {
 	let color = '';
 	let backgroundColor = '';
 
-	if (type === 'charge') {
-		backgroundColor = kThemeGjDarkGreen;
-		color = kThemeGjGreen;
-	} else if (type === 'inReview') {
+	if (type === 'inReview') {
 		backgroundColor = kThemeFg10;
 		color = kThemeFg;
 	} else if (type === 'rejected') {
@@ -150,9 +166,21 @@ function getInfoTagStyles(type: 'charge' | 'inReview' | 'rejected') {
 			fit-parent
 		/>
 
-		<!-- Premium tag -->
+		<!-- Premium/charge tag -->
 		<div v-if="item.is_premium" :style="premiumTagStyles">
 			{{ $gettext(`Premium`) }}
+		</div>
+		<div
+			v-else-if="isInstance(item, StickerPackModel) || isInstance(item, StickerModel)"
+			:style="chargeTagStyles"
+		>
+			<AppAnimChargeOrb
+				:style="{
+					width: baseInfoTagStyles.fontSize,
+					height: baseInfoTagStyles.fontSize,
+				}"
+			/>
+			{{ $gettext(`Charge`) }}
 		</div>
 
 		<!-- Name -->
@@ -168,21 +196,6 @@ function getInfoTagStyles(type: 'charge' | 'inReview' | 'rejected') {
 				})
 			"
 		>
-			<div
-				v-if="
-					(isInstance(item, StickerPackModel) || isInstance(item, StickerModel)) &&
-					!item.is_premium
-				"
-				:style="getInfoTagStyles('charge')"
-			>
-				<AppAnimChargeOrb
-					:style="{
-						width: baseInfoTagStyles.fontSize,
-						height: baseInfoTagStyles.fontSize,
-					}"
-				/>
-				{{ $gettext(`Charge`) }}
-			</div>
 			<div v-if="itemStates.inReview" :style="getInfoTagStyles('inReview')">
 				<AppJolticon :style="{ margin: 0, fontSize: `inherit` }" icon="clock" />
 				{{ $gettext(`In review`) }}

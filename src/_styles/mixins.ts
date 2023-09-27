@@ -219,14 +219,17 @@ export function styleLineClamp(lines = 2): CSSProperties {
 export function styleFlexCenter({
 	display = 'flex',
 	direction,
+	gap,
 }: {
 	display?: 'flex' | 'inline-flex';
 	direction?: CSSProperties['flex-direction'];
+	gap?: CSSProperties['gap'];
 } = {}): CSSProperties {
 	return {
 		display,
 		alignItems: `center`,
 		justifyContent: `center`,
+		gap,
 		...styleWhen(!!direction, {
 			flexDirection: direction,
 		}),
