@@ -109,7 +109,7 @@ function close() {
 					leading: true,
 					title: true,
 					actions: true,
-					bottom: hasSale,
+					bottom: false,
 				}"
 			>
 				<template #leading>
@@ -153,24 +153,24 @@ function close() {
 				</template>
 
 				<template #actions>
-					<AppButton circle trans sparse icon="remove" @click="close()" />
-				</template>
+					<AppButton
+						v-if="hasSale"
+						solid
+						primary
+						:icon="Screen.isXs ? 'marketplace-filled' : undefined"
+						:circle="Screen.isXs"
+						@click="
+							showVendingMachineModal({
+								userId: selectedUser.id,
+							})
+						"
+					>
+						<template v-if="!Screen.isXs">
+							{{ $gettext(`Open shop`) }}
+						</template>
+					</AppButton>
 
-				<template #bottom>
-					<div v-if="hasSale" :style="{ padding: `8px 12px` }">
-						<AppButton
-							solid
-							primary
-							block
-							@click="
-								showVendingMachineModal({
-									userId: selectedUser.id,
-								})
-							"
-						>
-							{{ $gettext(`Open creator shop`) }}
-						</AppButton>
-					</div>
+					<AppButton circle trans sparse icon="remove" @click="close()" />
 				</template>
 			</AppHeaderBar>
 
