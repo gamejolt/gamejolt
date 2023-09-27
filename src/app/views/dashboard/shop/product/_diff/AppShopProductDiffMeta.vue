@@ -1,9 +1,13 @@
 <script lang="ts" setup generic="T extends Record<string, any>">
-import { PropType, toRefs } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
+import { getModel } from '../../../../../../_common/model/model-store.service';
+import AppStickerStackItem from '../../../../../../_common/sticker/stack/AppStickerStackItem.vue';
+import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { kThemeFgMuted } from '../../../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { styleAbsoluteFill, styleLineClamp, styleWhen } from '../../../../../../_styles/mixins';
 import { kFontSizeSmall } from '../../../../../../_styles/variables';
+import { isInstance } from '../../../../../../utils/utils';
 
 const props = defineProps({
 	current: {
@@ -37,12 +41,40 @@ function prettyKey(key: string) {
 	const newKey = key.replace(/[_-]/g, ' ');
 	return newKey[0].toUpperCase() + newKey.slice(1);
 }
+
+function isArrayOfInstance<T>(value: any, type: new (data: any) => T): value is T[] {
+	return Array.isArray(value) && value.length > 0 && isInstance(value[0], type);
+}
+
+function isSimpleValue(value: any) {
+	return typeof value === 'number' || typeof value === 'string';
+}
+
+const entries = computed(() =>
+	Object.entries(current.value).map(([key, val]) => {
+		const newEntry: [string, any] = [key, val];
+
+		// Get sticker models from the ModelStore if we have a list of sticker
+		// IDs.
+		if (
+			key === 'stickers' &&
+			Array.isArray(val) &&
+			val.length > 0 &&
+			typeof val[0] === 'number'
+		) {
+			const stickers = val.map(id => getModel(StickerModel, id));
+			newEntry[1] = stickers;
+		}
+
+		return newEntry;
+	})
+);
 </script>
 
 <template>
 	<div>
 		<div
-			v-for="[key, value] in Object.entries(current as T)"
+			v-for="[key, value] in entries"
 			:key="key"
 			:style="{
 				fontSize: kFontSizeSmall.px,
@@ -55,17 +87,33 @@ function prettyKey(key: string) {
 				</span>
 			</div>
 			{{ ' ' }}
-			<div v-if="value">
+			<template v-if="value && (!Array.isArray(value) || value.length)">
 				<div
 					:style="{
 						position: `relative`,
 						zIndex: 1,
-						width: `fit-content`,
+						...styleWhen(isSimpleValue(value), {
+							width: `fit-content`,
+						}),
 					}"
 				>
-					<div :style="styleLineClamp(3)">
+					<!-- Value display -->
+					<div v-if="isSimpleValue(value)" :style="styleLineClamp(3)">
 						{{ value }}
 					</div>
+					<div
+						v-else-if="isArrayOfInstance(value, StickerModel)"
+						:style="{
+							display: `grid`,
+							gridTemplateColumns: `repeat(auto-fill, minmax(64px, 1fr))`,
+						}"
+					>
+						<div v-for="sticker in value" :key="sticker.id" :style="{ padding: `4px` }">
+							<AppStickerStackItem :img-url="sticker.img_url" />
+						</div>
+					</div>
+
+					<!-- Diff color indicator -->
 					<div
 						:style="[
 							styleAbsoluteFill({ zIndex: -1, left: `-4px`, right: `-4px` }),
@@ -78,7 +126,7 @@ function prettyKey(key: string) {
 						]"
 					/>
 				</div>
-			</div>
+			</template>
 			<div v-else :style="{ color: kThemeFgMuted, fontStyle: `italic` }">
 				{{ $gettext(`none`) }}
 			</div>

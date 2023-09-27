@@ -41,6 +41,7 @@ import { showErrorGrowl } from '../../../../../../_common/growls/growls.service'
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkHelpDocs from '../../../../../../_common/link/AppLinkHelpDocs.vue';
 import { storeModel } from '../../../../../../_common/model/model-store.service';
+import { Model } from '../../../../../../_common/model/model.service';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
@@ -63,6 +64,7 @@ import {
 	kFontSizeLarge,
 	kLineHeightComputed,
 } from '../../../../../../_styles/variables';
+import { stringSort } from '../../../../../../utils/array';
 import { objectOmit } from '../../../../../../utils/object';
 import { run } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
@@ -104,7 +106,10 @@ export function createShopProductBaseForm<
 	baseModel: BaseModel | undefined;
 	fields?: Fields;
 	complexFields?: (keyof Fields)[];
-	onLoad?: (payload: any) => void;
+	onLoad?: (data: {
+		payload: any;
+		setInitialFormModelStickers: (stickers: number[] | StickerModel[]) => void;
+	}) => void;
 }) {
 	const router = useRouter();
 
@@ -119,8 +124,10 @@ export function createShopProductBaseForm<
 	const minNameLength = ref(3);
 	const maxNameLength = ref(50);
 	const maxFilesize = ref(5 * 1024 * 1024);
-	const minSize = ref(100);
-	const maxSize = ref(400);
+	const minWidth = ref(100);
+	const maxWidth = ref(400);
+	const minHeight = ref(100);
+	const maxHeight = ref(400);
 	const aspectRatio = ref(1);
 	const canEditFree = ref(false);
 	const canEditPremium = ref(false);
@@ -219,6 +226,16 @@ export function createShopProductBaseForm<
 		);
 	});
 
+	function setInitialFormModelStickers(stickers: number[] | StickerModel[]) {
+		if (!Object.hasOwn(initialFormModel.value, 'stickers')) {
+			return;
+		}
+
+		((initialFormModel.value as any).stickers as number[]) = stickers.map(i =>
+			typeof i === 'number' ? i : i.id
+		);
+	}
+
 	const form: FormController<typeof initialFormModel.value> = createForm({
 		// Clone the initial model. Forms are overwriting non-model data passed into here.
 		model: initialFormModel,
@@ -232,8 +249,12 @@ export function createShopProductBaseForm<
 			assignNonNull(minNameLength, payload.minNameLength);
 			assignNonNull(maxNameLength, payload.maxNameLength);
 			assignNonNull(maxFilesize, payload.maxFilesize);
-			assignNonNull(minSize, payload.minSize);
-			assignNonNull(maxSize, payload.maxSize);
+
+			assignNonNull(minWidth, payload.minWidth ?? payload.minSize);
+			assignNonNull(maxWidth, payload.maxWidth ?? payload.maxSize);
+			assignNonNull(minHeight, payload.minHeight ?? payload.minSize);
+			assignNonNull(maxHeight, payload.maxHeight ?? payload.maxSize);
+
 			assignNonNull(aspectRatio, payload.aspectRatio);
 			assignNonNull(canEditFree, payload.canEditFree);
 			assignNonNull(canEditPremium, payload.canEditPremium);
@@ -260,11 +281,8 @@ export function createShopProductBaseForm<
 					case 'Sticker':
 						break;
 					case 'Sticker_Pack':
-						// TODO(creator-shops) Now that form controllers are
-						// created here instead of the forms that build them, we
-						// should probably have some `onDiff` function that can
-						// be called at the end of onLoad. Then each resource
-						// type can handle the general change data as needed.
+						// TODO(creator-shops) Need to assign sticker ids to the
+						// form model when we get a change request.
 						(form.formModel as any).stickers = changeData.change_stickers;
 						break;
 				}
@@ -288,7 +306,7 @@ export function createShopProductBaseForm<
 				}
 			}
 
-			onLoad?.(payload);
+			onLoad?.({ payload, setInitialFormModelStickers });
 		},
 		onSubmit() {
 			return Api.sendRequest(
@@ -311,7 +329,7 @@ export function createShopProductBaseForm<
 			showErrorGrowl(message || $gettext(`There was an error saving your product.`));
 		},
 		onSubmitSuccess() {
-			// TODO(creator-shops) best way to go back to the overview?
+			// TODO(creator-shops) Doesn't force the overview to reload.
 			router.push({
 				name: routeDashShopOverview.name,
 			});
@@ -363,8 +381,10 @@ export function createShopProductBaseForm<
 		minNameLength,
 		maxNameLength,
 		maxFilesize,
-		minSize,
-		maxSize,
+		minWidth,
+		maxWidth,
+		minHeight,
+		maxHeight,
 		aspectRatio,
 		canEditFree,
 		canEditPremium,
@@ -411,8 +431,10 @@ const {
 	existingImgUrl,
 	tempImgUrl,
 	latestChangeRequest,
-	minSize,
-	maxSize,
+	minWidth,
+	maxWidth,
+	minHeight,
+	maxHeight,
 	aspectRatio,
 	maxFilesize,
 	minNameLength,
@@ -437,8 +459,6 @@ const premiumSelectorStyle: CSSProperties = {
 	cursor: `pointer`,
 };
 
-// TODO(creator-shops) copied and modified from the product item. Make some
-// component for this if we don't choose to remove it.
 function makeStateBubbleStyles({
 	backgroundColor = kThemePrimary,
 }: { backgroundColor?: string } = {}) {
@@ -465,6 +485,19 @@ function makeStateBubbleIconStyles({
 	};
 }
 
+function grabSortValue(val: any): string {
+	if (typeof val === 'number') {
+		return `${val}`;
+	} else if (val instanceof Model || Object.hasOwn(val, 'id')) {
+		return val.id;
+	}
+	return `${val}`;
+}
+
+function sortUnknownList(list: any[]): string[] {
+	return [...list].map(i => grabSortValue(i)).sort(stringSort);
+}
+
 const dynamicDiffSlots = computed(() => {
 	const before = !!baseModel && baseModel.was_approved;
 	return {
@@ -475,15 +508,23 @@ const dynamicDiffSlots = computed(() => {
 				if (key === 'file' && form.controlErrors.file) {
 					return false;
 				}
-				// TODO(creator-shops) Initial sticker pack for models don't get
-				// the stickers that they already have. This needs to be
-				// assigned to the initialFormModel after load if we want to use
-				// this. Diff system also just doesn't work with sticker diffs
-				// at the time of writing this.
-				if (key === 'stickers') {
-					return false;
+
+				const formVal = form.formModel[key];
+				if (Array.isArray(val) && Array.isArray(formVal)) {
+					if (!val.length && !formVal.length) {
+						return false;
+					}
+					if (val.length !== formVal.length) {
+						return true;
+					}
+
+					// We need to sort the arrays so that we can compare them.
+					const sortedVal = sortUnknownList(val);
+					const sortedFormVal = sortUnknownList(formVal);
+					return sortedVal.some((i, index) => i !== sortedFormVal[index]);
 				}
-				return form.formModel[key] !== val;
+
+				return val !== formVal;
 			}),
 	};
 });
@@ -645,8 +686,8 @@ function getExtraDiffData(target: typeof form.formModel) {
 				</p>
 				<p
 					v-translate="{
-						min: `${minSize}×${minSize}`,
-						max: `${maxSize}×${maxSize}`,
+						min: `${minWidth}×${minHeight}`,
+						max: `${maxWidth}×${maxHeight}`,
 					}"
 					class="help-block strong"
 				>
@@ -654,8 +695,12 @@ function getExtraDiffData(target: typeof form.formModel) {
 					<code>%{min}</code>
 					and
 					<code>%{max}</code>
-					<!-- TODO(creator-shops) flexible aspect ratio restriction display. -->
-					(ratio of {{ aspectRatio }} ÷ 1).
+					(ratio of {{ (1 / aspectRatio) * aspectRatio }} ÷
+					{{
+						aspectRatio === 1
+							? 1
+							: Math.trunc((1 / (maxWidth / maxHeight)) * 100) / 100
+					}}).
 				</p>
 
 				<p class="help-block">
@@ -675,12 +720,12 @@ function getExtraDiffData(target: typeof form.formModel) {
 					:validators="[
 						validateFilesize(maxFilesize),
 						validateImageMinDimensions({
-							width: minSize,
-							height: minSize,
+							width: minWidth,
+							height: minHeight,
 						}),
 						validateImageMaxDimensions({
-							width: maxSize,
-							height: maxSize,
+							width: maxWidth,
+							height: maxHeight,
 						}),
 						validateImageAspectRatio({ ratio: aspectRatio }),
 					]"

@@ -48,6 +48,7 @@ const containerStyles: CSSProperties = {
 				type: productTypeFromTypename(typename),
 			},
 		}"
+		center
 	>
 		<AppAspectRatio :ratio="ratio" :style="{ width: `100%` }">
 			<div :style="containerStyles">

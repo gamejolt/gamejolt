@@ -24,7 +24,7 @@ const data = createShopProductBaseForm({
 	fields: {
 		emoji_name: model?.value?.emoji?.short_name ?? '',
 	},
-	onLoad(payload) {
+	onLoad({ payload }) {
 		emojiNameMinLength.value = payload.emojiNameMinLength || emojiNameMinLength.value;
 		emojiNameMaxLength.value = payload.emojiNameMaxLength || emojiNameMaxLength.value;
 		emojiPrefix.value = payload.emojiPrefix || emojiPrefix.value;

@@ -38,10 +38,11 @@ const data = createShopProductBaseForm({
 		stickers: [] as number[],
 	},
 	complexFields: ['stickers'],
-	onLoad(payload) {
+	onLoad({ payload, setInitialFormModelStickers }) {
 		minStickers.value = payload.minStickers || minStickers.value;
 		maxStickers.value = payload.maxStickers || maxStickers.value;
 		_setStickers(true, storeModelList(StickerModel, payload.currentStickers));
+		setInitialFormModelStickers(stickers.value);
 	},
 });
 
@@ -124,7 +125,7 @@ const stickerItemStyles: CSSProperties = {
 </script>
 
 <template>
-	<FormShopProductBase :data="data">
+	<FormShopProductBase :data="data" :diff-keys="['stickers']">
 		<template #default>
 			<h2>{{ $gettext(`Stickers`) }}</h2>
 

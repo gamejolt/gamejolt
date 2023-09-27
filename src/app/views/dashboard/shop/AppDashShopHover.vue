@@ -62,6 +62,9 @@ const props = defineProps({
 	noScale: {
 		type: Boolean,
 	},
+	center: {
+		type: Boolean,
+	},
 });
 
 const {
@@ -99,7 +102,7 @@ const verticalPadding = computed(() => _scalePadding(paddingV?.value));
 				{
 					display: `flex`,
 					flexDirection: `column`,
-					justifyContent: `flex-start`,
+					justifyContent: center ? `center` : `flex-start`,
 					position: `relative`,
 					width: `100%`,
 					height: `100%`,
