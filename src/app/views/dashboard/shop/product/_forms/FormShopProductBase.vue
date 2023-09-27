@@ -472,7 +472,7 @@ const dynamicDiffSlots = computed(() => {
 		before,
 		after:
 			!before ||
-			Object.entries(initialFormModel).some(([key, val]) => {
+			Object.entries(initialFormModel.value).some(([key, val]) => {
 				if (key === 'file' && form.controlErrors.file) {
 					return false;
 				}
@@ -487,7 +487,7 @@ function getExtraDiffData(target: typeof form.formModel) {
 			acc[key] = target[key];
 		}
 		return acc;
-	}, {} as Record<string, any>);
+	}, {} as any);
 }
 </script>
 
