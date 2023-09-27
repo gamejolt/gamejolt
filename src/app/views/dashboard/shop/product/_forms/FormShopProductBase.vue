@@ -16,6 +16,7 @@ import { useRouter } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../../../_common/background/background.model';
+import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { CreatorChangeRequestModel } from '../../../../../../_common/creator/change-request/creator-change-request.model';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import AppForm, {
@@ -443,11 +444,20 @@ const diffKeys = toRef(props.diffKeys);
 const { isSameValues } = useShopManagerStore()!;
 
 const validateNameAvailabilityPath = computed(() => {
+	// TODO(creator-shops) Name availability paths
 	if (baseModel) {
 		return `/web/dash/creators/stickers/check-field-availability/${baseModel.id}/name`;
 	}
 	return `/web/dash/creators/stickers/check-field-availability/0/name`;
 });
+
+async function publishToShop() {
+	// TODO(creator-shops) Publish products
+}
+
+async function removeFromShop() {
+	// TODO(creator-shops) Unlist products
+}
 
 const premiumSelectorStyle: CSSProperties = {
 	...styleBorderRadiusLg,
@@ -736,6 +746,15 @@ function getExtraDiffData(target: typeof form.formModel) {
 			</AppFormGroup>
 
 			<slot />
+
+			<template v-if="baseModel?.was_approved">
+				<AppButton v-if="baseModel.has_active_sale" solid primary @click="publishToShop()">
+					{{ $gettext(`Publish to shop`) }}
+				</AppButton>
+				<AppButton v-else solid @click="removeFromShop()">
+					{{ $gettext(`Remove from shop`) }}
+				</AppButton>
+			</template>
 
 			<AppFormStickySubmit
 				v-if="form.valid"
