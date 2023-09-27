@@ -254,7 +254,6 @@ export function createShopProductBaseForm<
 				form.formModel.name = latestChange.change_name || form.formModel.name;
 
 				const changeData = JSON.parse(latestChange.change_data);
-				console.warn('asdf changeData', changeData);
 				switch (typename) {
 					case 'Avatar_Frame':
 					case 'Background':
@@ -474,6 +473,14 @@ const dynamicDiffSlots = computed(() => {
 			!before ||
 			Object.entries(initialFormModel.value).some(([key, val]) => {
 				if (key === 'file' && form.controlErrors.file) {
+					return false;
+				}
+				// TODO(creator-shops) Initial sticker pack for models don't get
+				// the stickers that they already have. This needs to be
+				// assigned to the initialFormModel after load if we want to use
+				// this. Diff system also just doesn't work with sticker diffs
+				// at the time of writing this.
+				if (key === 'stickers') {
 					return false;
 				}
 				return form.formModel[key] !== val;
