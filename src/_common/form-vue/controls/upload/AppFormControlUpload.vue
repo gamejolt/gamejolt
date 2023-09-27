@@ -72,6 +72,7 @@ const { id, controlVal, applyValue } = createFormControl({
 
 const input = ref<AppFormControlUploadFileInterface>();
 const isDropActive = ref(false);
+const clearKey = ref(0);
 
 /**
  * Will be an array even if not a `multiple` upload type.
@@ -150,6 +151,7 @@ function clearFile(file: File) {
 
 			if (!files.value.length) {
 				applyValue(null);
+				++clearKey.value;
 			} else {
 				applyValue(controlVal.value);
 			}
@@ -157,6 +159,7 @@ function clearFile(file: File) {
 	} else {
 		if (controlVal.value === file) {
 			applyValue(null);
+			++clearKey.value;
 		}
 	}
 }
@@ -289,6 +292,7 @@ defineExpose<AppFormControlUploadInterface>({
 			<AppFormControlUploadFile
 				v-show="!uploadLinkLabel"
 				:id="id!"
+				:key="clearKey"
 				ref="input"
 				:name="name"
 				:multiple="multiple"
