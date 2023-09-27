@@ -32,12 +32,15 @@ function checkDiff(key: string): boolean {
 	}
 	return current.value[key] !== other.value?.[key];
 }
+
+function prettyKey(key: string) {
+	const newKey = key.replace(/[_-]/g, ' ');
+	return newKey[0].toUpperCase() + newKey.slice(1);
+}
 </script>
 
 <template>
 	<div>
-		<!-- TODO(creator-shops) I don't think I like this, takes up a ton of
-		space and it's awkward. -->
 		<div
 			v-for="[key, value] in Object.entries(current as T)"
 			:key="key"
@@ -48,7 +51,7 @@ function checkDiff(key: string): boolean {
 		>
 			<div :style="{ fontWeight: `bold` }">
 				<span v-app-tooltip.touchable="value">
-					{{ key }}
+					{{ prettyKey(key) }}
 				</span>
 			</div>
 			{{ ' ' }}

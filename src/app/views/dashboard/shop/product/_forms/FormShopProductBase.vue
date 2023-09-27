@@ -9,6 +9,7 @@ import {
 	ref,
 	shallowReadonly,
 	toRaw,
+	toRef,
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
@@ -419,6 +420,8 @@ const {
 	maxNameLength,
 } = props.data;
 
+const diffKeys = toRef(props.diffKeys);
+
 const validateNameAvailabilityPath = computed(() => {
 	if (baseModel) {
 		return `/web/dash/creators/stickers/check-field-availability/${baseModel.id}/name`;
@@ -477,6 +480,15 @@ const dynamicDiffSlots = computed(() => {
 			}),
 	};
 });
+
+function getExtraDiffData(target: typeof form.formModel) {
+	return diffKeys.value.reduce((acc, key) => {
+		if (Object.hasOwn(form.formModel, key)) {
+			acc[key] = target[key];
+		}
+		return acc;
+	}, {} as Record<string, any>);
+}
 </script>
 
 <template>
@@ -533,6 +545,7 @@ const dynamicDiffSlots = computed(() => {
 							<AppShopProductDiffMeta
 								:current="{
 									name: initialFormModel.name,
+									...getExtraDiffData(initialFormModel),
 								}"
 							/>
 						</template>
@@ -602,6 +615,7 @@ const dynamicDiffSlots = computed(() => {
 						<AppShopProductDiffMeta
 							:current="{
 								name: form.formModel.name || '',
+								...getExtraDiffData(form.formModel),
 							}"
 							:other="initialFormModel"
 							:diff-color="kThemePrimaryFg"

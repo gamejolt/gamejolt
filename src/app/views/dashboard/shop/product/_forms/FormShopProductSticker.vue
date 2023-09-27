@@ -35,7 +35,7 @@ const data = createShopProductBaseForm({
 <template>
 	<!-- TODO(creator-shops) This should be checking both `canAddPremium` and
 	`canAddFree` for the sticker group. -->
-	<FormShopProductBase :data="data">
+	<FormShopProductBase :data="data" :diff-keys="['emoji_name']">
 		<AppFormGroup name="emoji_name" :label="$gettext(`Emoji name`)">
 			<AppFormControl />
 			<AppFormControlErrors />
