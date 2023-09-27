@@ -12,7 +12,6 @@ import {
 import {
 	kElevateTransition,
 	styleElevate,
-	styleFlexCenter,
 	styleTyped,
 	styleWhen,
 } from '../../../../_styles/mixins';
@@ -97,8 +96,10 @@ const verticalPadding = computed(() => _scalePadding(paddingV?.value));
 		:style="
 			styleTyped([
 				styleElevate(0),
-				styleFlexCenter({ direction: `column` }),
 				{
+					display: `flex`,
+					flexDirection: `column`,
+					justifyContent: `flex-start`,
 					position: `relative`,
 					width: `100%`,
 					height: `100%`,

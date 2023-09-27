@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed, toRefs } from 'vue';
+import AppAnimChargeOrb from '../../../../../../_common/animation/AppAnimChargeOrb.vue';
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import AppBackground from '../../../../../../_common/background/AppBackground.vue';
@@ -12,6 +13,8 @@ import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import {
 	kThemeFg,
 	kThemeFg10,
+	kThemeGjDarkGreen,
+	kThemeGjGreen,
 	kThemeGjOverlayNotice,
 } from '../../../../../../_common/theme/variables';
 import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
@@ -90,11 +93,14 @@ const baseInfoTagStyles: CSSProperties = {
 	marginTop: `4px`,
 };
 
-function getInfoTagStyles(type: 'inReview' | 'rejected') {
+function getInfoTagStyles(type: 'charge' | 'inReview' | 'rejected') {
 	let color = '';
 	let backgroundColor = '';
 
-	if (type === 'inReview') {
+	if (type === 'charge') {
+		backgroundColor = kThemeGjDarkGreen;
+		color = kThemeGjGreen;
+	} else if (type === 'inReview') {
 		backgroundColor = kThemeFg10;
 		color = kThemeFg;
 	} else if (type === 'rejected') {
@@ -162,6 +168,21 @@ function getInfoTagStyles(type: 'inReview' | 'rejected') {
 				})
 			"
 		>
+			<div
+				v-if="
+					(isInstance(item, StickerPackModel) || isInstance(item, StickerModel)) &&
+					!item.is_premium
+				"
+				:style="getInfoTagStyles('charge')"
+			>
+				<AppAnimChargeOrb
+					:style="{
+						width: baseInfoTagStyles.fontSize,
+						height: baseInfoTagStyles.fontSize,
+					}"
+				/>
+				{{ $gettext(`Charge`) }}
+			</div>
 			<div v-if="itemStates.inReview" :style="getInfoTagStyles('inReview')">
 				<AppJolticon :style="{ margin: 0, fontSize: `inherit` }" icon="clock" />
 				{{ $gettext(`In review`) }}
