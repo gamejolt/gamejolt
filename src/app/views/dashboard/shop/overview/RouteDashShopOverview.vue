@@ -167,7 +167,7 @@ const itemBorderRadius = kBorderRadiusLg.value;
 					:border-radius="itemBorderRadius"
 					:border-width="itemBorderWidth"
 					:item-states="{
-						active: item.has_active_sale,
+						published: item.has_active_sale,
 						inReview: !item.was_approved,
 						// rejected: !!item.rejected_change_request,
 					}"

@@ -10,16 +10,13 @@ import AppStickerPack from '../../../../../../_common/sticker/pack/AppStickerPac
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import {
+	kThemeFg,
+	kThemeFg10,
 	kThemeGjOverlayNotice,
-	kThemePrimary,
-	kThemePrimaryFg,
 } from '../../../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
-	styleAbsoluteFill,
 	styleBorderRadiusLg,
-	styleElevate,
 	styleFlexCenter,
 	styleLineClamp,
 	styleWhen,
@@ -63,46 +60,13 @@ const nameStyles: CSSProperties = {
 	textAlign: `center`,
 };
 
-const tagsContainerStyles: CSSProperties = {
-	...styleAbsoluteFill({
-		zIndex: 1,
-		inset: `-12px`,
-		// Don't overlap the name below the image.
-		bottom: 0,
-	}),
-	display: `flex`,
-	justifyContent: `space-between`,
-	gap: `8px`,
-};
-
-const statesContainerStyles: CSSProperties = {
-	display: `flex`,
-	flexDirection: `column`,
-	flexWrap: `wrap`,
-	gap: `4px`,
-	opacity: 0.8,
-};
-
-function makeStateBubbleStyles(backgroundColor: string = kThemePrimary) {
-	return {
-		...styleFlexCenter(),
-		...styleElevate(1),
-		borderRadius: `50%`,
-		backgroundColor,
-		padding: `4px`,
-	};
-}
-
-function makeStateBubbleIconStyles(color: string = kThemePrimaryFg) {
-	return {
-		margin: 0,
-		fontSize: kFontSizeSmall.px,
-		color,
-	};
-}
-
 const premiumTagStyles = computed<CSSProperties>(() => ({
 	...styleBorderRadiusLg,
+	position: `absolute`,
+	top: `-12px`,
+	right: `-12px`,
+	zIndex: 1,
+	pointerEvents: `none`,
 	backgroundColor: `#FFBE00`,
 	color: `black`,
 	fontWeight: `bold`,
@@ -113,6 +77,37 @@ const premiumTagStyles = computed<CSSProperties>(() => ({
 		opacity: 0,
 	}),
 }));
+
+const baseInfoTagStyles: CSSProperties = {
+	...styleBorderRadiusLg,
+	...styleFlexCenter({
+		display: `inline-flex`,
+	}),
+	gap: `6px`,
+	padding: `2px 8px`,
+	fontSize: kFontSizeTiny.px,
+	fontWeight: `bold`,
+	marginTop: `4px`,
+};
+
+function getInfoTagStyles(type: 'inReview' | 'rejected') {
+	let color = '';
+	let backgroundColor = '';
+
+	if (type === 'inReview') {
+		backgroundColor = kThemeFg10;
+		color = kThemeFg;
+	} else if (type === 'rejected') {
+		backgroundColor = kThemeGjOverlayNotice;
+		color = `white`;
+	}
+
+	return {
+		...baseInfoTagStyles,
+		color,
+		backgroundColor,
+	};
+}
 </script>
 
 <template>
@@ -149,44 +144,35 @@ const premiumTagStyles = computed<CSSProperties>(() => ({
 			fit-parent
 		/>
 
-		<!-- Tags -->
-		<div :style="tagsContainerStyles">
-			<!-- Item states -->
-			<div :style="statesContainerStyles">
-				<div
-					v-if="itemStates.active"
-					v-app-tooltip="$gettext(`Available in the shop`)"
-					:style="makeStateBubbleStyles()"
-				>
-					<AppJolticon icon="marketplace" :style="makeStateBubbleIconStyles()" />
-				</div>
-				<div
-					v-if="itemStates.inReview"
-					v-app-tooltip="$gettext(`In review`)"
-					:style="makeStateBubbleStyles()"
-				>
-					<AppJolticon icon="clock" :style="makeStateBubbleIconStyles()" />
-				</div>
-				<div
-					v-if="itemStates.rejected"
-					v-app-tooltip="$gettext(`Rejected`)"
-					:style="makeStateBubbleStyles(kThemeGjOverlayNotice)"
-				>
-					<AppJolticon icon="exclamation" :style="makeStateBubbleIconStyles(`white`)" />
-				</div>
-			</div>
-
-			<!-- Premium -->
-			<div :style="{ justifySelf: `flex-end`, pointerEvents: `none` }">
-				<div v-if="item.is_premium" :style="premiumTagStyles">
-					{{ $gettext(`Premium`) }}
-				</div>
-			</div>
+		<!-- Premium tag -->
+		<div v-if="item.is_premium" :style="premiumTagStyles">
+			{{ $gettext(`Premium`) }}
 		</div>
 
 		<!-- Name -->
 		<div v-if="item.name" :style="nameStyles">
 			{{ item.name }}
+		</div>
+
+		<!-- Product state tags -->
+		<div
+			:style="
+				styleFlexCenter({
+					direction: `column`,
+				})
+			"
+		>
+			<div v-if="itemStates.inReview" :style="getInfoTagStyles('inReview')">
+				<AppJolticon :style="{ margin: 0, fontSize: `inherit` }" icon="clock" />
+				{{ $gettext(`In review`) }}
+			</div>
+			<div v-if="itemStates.rejected" :style="getInfoTagStyles('rejected')">
+				<AppJolticon
+					:style="{ margin: 0, fontSize: `inherit` }"
+					icon="exclamation-circle"
+				/>
+				{{ $gettext(`Rejected`) }}
+			</div>
 		</div>
 	</div>
 </template>

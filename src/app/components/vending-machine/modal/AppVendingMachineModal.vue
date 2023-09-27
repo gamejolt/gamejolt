@@ -35,7 +35,6 @@ import {
 	kThemeBgOffset,
 	kThemeFg,
 	kThemeFg10,
-	kThemeFgMuted,
 } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -56,7 +55,7 @@ import {
 import {
 	kFontFamilyDisplay,
 	kFontFamilyHeading,
-	kFontSizeH3,
+	kFontSizeH2,
 	kStrongEaseOut,
 } from '../../../../_styles/variables';
 import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
@@ -427,7 +426,7 @@ const currencyCardTransitionStyles: CSSProperties = {
 											class="text-center"
 											:style="{
 												fontFamily: kFontFamilyDisplay,
-												fontSize: kFontSizeH3.px,
+												fontSize: kFontSizeH2.px,
 											}"
 										>
 											{{ currency.label }}
@@ -530,18 +529,15 @@ const currencyCardTransitionStyles: CSSProperties = {
 							<template v-else-if="hasProducts">
 								<template v-for="chunk in availableProducts" :key="chunk.type">
 									<template v-if="chunk && chunk.items.length">
-										<h3
+										<h2
 											:style="{
-												marginTop: 0,
-												marginBottom: `8px`,
-												padding: `12px 16px`,
-												background: `linear-gradient(to right, ${
-													isDark ? 'rgba(0,0,0,0.26)' : 'rgba(0,0,0,0.12)'
-												} 0%, rgba(0,0,0,0) 100%)`,
-												fontWeight: `bold`,
 												display: `flex`,
-												gap: `12px`,
 												alignItems: `center`,
+												gap: `12px`,
+												marginTop: 0,
+												padding: `12px 16px 0`,
+												fontFamily: kFontFamilyDisplay,
+												fontWeight: `bold`,
 												color: kThemeFg,
 											}"
 										>
@@ -559,12 +555,11 @@ const currencyCardTransitionStyles: CSSProperties = {
 												v-app-tooltip.touchable="getTooltipText(chunk.type)"
 												icon="help-circle"
 												:style="{
-													color: kThemeFgMuted,
 													fontSize: `inherit`,
-													margin: `0 0 0 auto`,
+													margin: 0,
 												}"
 											/>
-										</h3>
+										</h2>
 
 										<AppSpacer vertical :scale="2" />
 

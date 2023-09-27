@@ -6,7 +6,7 @@ import { routeDashShopProduct } from '../product.route';
 import AppDashShopItemImpl from './AppDashShopItemImpl.vue';
 
 export interface ShopItemStates {
-	active?: boolean;
+	published?: boolean;
 	inReview?: boolean;
 	rejected?: boolean;
 }
