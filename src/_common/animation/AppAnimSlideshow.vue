@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
-import { debounce } from '../../utils/utils';
+import { PropType, ref, toRefs } from 'vue';
+import { styleWhen } from '../../_styles/mixins';
+import { useResizeObserver } from '../../utils/resize-observer';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { vAppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
 import { Ruler } from '../ruler/ruler-service';
+import AppAnimSlideshowImg from './AppAnimSlideshowImg.vue';
 import { ImgSlideshow } from './slideshow/sheets';
 
 const props = defineProps({
@@ -26,70 +27,13 @@ const props = defineProps({
 
 const { sheet, overlay, pause, startOffset } = toRefs(props);
 
-let timer: NodeJS.Timer | null = null;
-
 const root = ref<HTMLDivElement>();
-
-const frame = ref(0);
-
-const offset = computed(() => {
-	const { frames } = sheet.value;
-
-	return (frame.value / frames) * 100;
-});
-
 const size = ref({ width: 200, height: 200 });
 
-function initAnimator(fromStart: boolean) {
-	if (pause.value) {
-		return;
-	}
-
-	if (timer) {
-		clearInterval(timer);
-	}
-	if (fromStart) {
-		const offset = Math.min(1, Math.max(0, startOffset.value));
-		const chosenFrame = Math.round(sheet.value.frames * offset);
-		frame.value = chosenFrame;
-	}
-
-	timer = setInterval(() => {
-		const { frames, blankFrames } = sheet.value;
-
-		if (frame.value + 1 >= frames + blankFrames) {
-			frame.value = 0;
-		} else {
-			++frame.value;
-		}
-	}, 1_000 / sheet.value.fps);
-}
-
-watch(sheet, () => initAnimator(true));
-
-watch(pause, shouldPause => {
-	if (shouldPause) {
-		if (timer) {
-			clearInterval(timer);
-			timer = null;
-		}
-	} else if (!timer) {
-		initAnimator(false);
-	}
+useResizeObserver({
+	target: root,
+	callback: onDimensionsChanged,
 });
-
-onMounted(() => {
-	onDimensionsChanged();
-	initAnimator(true);
-});
-
-onUnmounted(() => {
-	if (timer) {
-		clearInterval(timer);
-	}
-});
-
-const debounceDimensionsChanged = debounce(onDimensionsChanged, 500);
 
 function onDimensionsChanged() {
 	if (!root.value) {
@@ -101,61 +45,51 @@ function onDimensionsChanged() {
 </script>
 
 <template>
-	<div ref="root" v-app-observe-dimensions="debounceDimensionsChanged" class="img-slideshow">
+	<div
+		ref="root"
+		:style="{
+			width: `100%`,
+			height: `100%`,
+			display: `flex`,
+			alignItems: `center`,
+			justifyContent: `center`,
+			minHeight: 0,
+			minWidth: 0,
+		}"
+	>
 		<div
-			class="-slideshow-container"
 			:style="{
+				width: `100%`,
 				maxWidth: Math.min(size.width, size.height * sheet.frameAspectRatio) + 'px',
 			}"
 		>
 			<AppAspectRatio
 				:ratio="sheet.frameAspectRatio"
-				class="-slideshow"
-				:class="{
-					'-shadow': overlay,
-				}"
+				:style="[
+					{
+						position: `relative`,
+						zIndex: 1,
+						overflow: `hidden`,
+						width: `100%`,
+					},
+					styleWhen(overlay, {
+						filter: `drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.15)) drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.15)) drop-shadow(0px 1px 16px rgba(0, 0, 0, 0.09))`,
+					}),
+				]"
 			>
-				<img
-					class="-img"
-					:src="sheet.asset"
+				<AppAnimSlideshowImg
 					:style="{
-						transform: `translateX(-${offset}%)`,
+						position: `absolute`,
+						height: `100%`,
+						left: 0,
+						top: 0,
+						pointerEvents: `none`,
 					}"
-					draggable="false"
-					alt=""
+					:sheet="sheet"
+					:pause="pause"
+					:start-offset="startOffset"
 				/>
 			</AppAspectRatio>
 		</div>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.img-slideshow
-	width: 100%
-	height: 100%
-	display: flex
-	align-items: center
-	justify-content: center
-	min-height: 0
-	min-width: 0
-
-.-slideshow-container
-	width: 100%
-
-.-slideshow
-	position: relative
-	z-index: 1
-	overflow: hidden
-	width: 100%
-
-.-img
-	position: absolute
-	height: 100%
-	transform: translateX(0)
-	left: 0
-	top: 0
-	pointer-events: none
-
-.-shadow
-	filter: drop-shadow(0px 4px 8px rgba(black, 0.15)) drop-shadow(0px 4px 8px rgba(black, 0.15)) drop-shadow(0px 1px 16px rgba(black, 0.09))
-</style>
