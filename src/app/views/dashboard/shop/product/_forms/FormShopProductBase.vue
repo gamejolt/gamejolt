@@ -41,7 +41,6 @@ import { showErrorGrowl } from '../../../../../../_common/growls/growls.service'
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkHelpDocs from '../../../../../../_common/link/AppLinkHelpDocs.vue';
 import { storeModel } from '../../../../../../_common/model/model-store.service';
-import { Model } from '../../../../../../_common/model/model.service';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
@@ -64,7 +63,6 @@ import {
 	kFontSizeLarge,
 	kLineHeightComputed,
 } from '../../../../../../_styles/variables';
-import { stringSort } from '../../../../../../utils/array';
 import { objectOmit } from '../../../../../../utils/object';
 import { run } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
@@ -72,6 +70,7 @@ import {
 	ShopManagerGroupItem,
 	ShopManagerGroupItemType,
 	productTypeFromTypename,
+	useShopManagerStore,
 } from '../../shop.store';
 import AppShopProductDiff from '../_diff/AppShopProductDiff.vue';
 import AppShopProductDiffImg from '../_diff/AppShopProductDiffImg.vue';
@@ -281,9 +280,7 @@ export function createShopProductBaseForm<
 					case 'Sticker':
 						break;
 					case 'Sticker_Pack':
-						// TODO(creator-shops) Need to assign sticker ids to the
-						// form model when we get a change request.
-						(form.formModel as any).stickers = changeData.change_stickers;
+						(form.formModel as any).stickers = changeData.sticker_ids;
 						break;
 				}
 			}
@@ -443,6 +440,8 @@ const {
 
 const diffKeys = toRef(props.diffKeys);
 
+const { isSameValues } = useShopManagerStore()!;
+
 const validateNameAvailabilityPath = computed(() => {
 	if (baseModel) {
 		return `/web/dash/creators/stickers/check-field-availability/${baseModel.id}/name`;
@@ -485,19 +484,6 @@ function makeStateBubbleIconStyles({
 	};
 }
 
-function grabSortValue(val: any): string {
-	if (typeof val === 'number') {
-		return `${val}`;
-	} else if (val instanceof Model || Object.hasOwn(val, 'id')) {
-		return val.id;
-	}
-	return `${val}`;
-}
-
-function sortUnknownList(list: any[]): string[] {
-	return [...list].map(i => grabSortValue(i)).sort(stringSort);
-}
-
 const dynamicDiffSlots = computed(() => {
 	const before = !!baseModel && baseModel.was_approved;
 	return {
@@ -509,22 +495,7 @@ const dynamicDiffSlots = computed(() => {
 					return false;
 				}
 
-				const formVal = form.formModel[key];
-				if (Array.isArray(val) && Array.isArray(formVal)) {
-					if (!val.length && !formVal.length) {
-						return false;
-					}
-					if (val.length !== formVal.length) {
-						return true;
-					}
-
-					// We need to sort the arrays so that we can compare them.
-					const sortedVal = sortUnknownList(val);
-					const sortedFormVal = sortUnknownList(formVal);
-					return sortedVal.some((i, index) => i !== sortedFormVal[index]);
-				}
-
-				return val !== formVal;
+				return !isSameValues(val, form.formModel[key]);
 			}),
 	};
 });
@@ -716,6 +687,9 @@ function getExtraDiffData(target: typeof form.formModel) {
 					</AppLinkHelpDocs>
 				</p>
 
+				<!-- TODO(creator-shops) This never seems to complain for
+				sticker packs when the image is missing? This is set to be
+				required, why does it let you submit without complaint? -->
 				<AppFormControlUpload
 					:validators="[
 						validateFilesize(maxFilesize),
@@ -734,7 +708,7 @@ function getExtraDiffData(target: typeof form.formModel) {
 					@changed="setFile"
 				/>
 
-				<AppFormControlErrors :label="$gettext(`sticker image`)" />
+				<AppFormControlErrors :label="$gettext(`image`)" />
 			</AppFormGroup>
 
 			<AppFormGroup

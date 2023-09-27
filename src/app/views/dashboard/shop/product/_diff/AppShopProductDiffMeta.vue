@@ -8,6 +8,7 @@ import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive
 import { styleAbsoluteFill, styleLineClamp, styleWhen } from '../../../../../../_styles/mixins';
 import { kFontSizeSmall } from '../../../../../../_styles/variables';
 import { isInstance } from '../../../../../../utils/utils';
+import { useShopManagerStore } from '../../shop.store';
 
 const props = defineProps({
 	current: {
@@ -30,11 +31,39 @@ const props = defineProps({
 
 const { current, other } = toRefs(props);
 
-function checkDiff(key: string): boolean {
+const { isSameValues } = useShopManagerStore()!;
+
+function parseEntry(key: string, val: any) {
+	const newEntry: [string, any] = [key, val];
+
+	// Get sticker models from the ModelStore if we have a list of sticker
+	// IDs.
+	if (key === 'stickers' && Array.isArray(val) && val.length > 0 && typeof val[0] === 'number') {
+		// TODO (creator-shops) This won't show all the stickers selected if
+		// our primary route doesn't load them in.
+		const stickers = val.reduce((acc, id) => {
+			const model = getModel(StickerModel, id);
+			if (model) {
+				acc.push(model);
+			}
+			return acc;
+		}, [] as StickerModel[]);
+		newEntry[1] = stickers;
+	}
+
+	return newEntry;
+}
+
+const entries = computed(() =>
+	Object.entries(current.value).map(([key, val]) => parseEntry(key, val))
+);
+
+function isFieldEqual(key: string): boolean {
 	if (!other?.value) {
 		return false;
 	}
-	return current.value[key] !== other.value?.[key];
+
+	return isSameValues(parseEntry(key, current.value[key]), parseEntry(key, other.value[key]));
 }
 
 function prettyKey(key: string) {
@@ -49,26 +78,6 @@ function isArrayOfInstance<T>(value: any, type: new (data: any) => T): value is 
 function isSimpleValue(value: any) {
 	return typeof value === 'number' || typeof value === 'string';
 }
-
-const entries = computed(() =>
-	Object.entries(current.value).map(([key, val]) => {
-		const newEntry: [string, any] = [key, val];
-
-		// Get sticker models from the ModelStore if we have a list of sticker
-		// IDs.
-		if (
-			key === 'stickers' &&
-			Array.isArray(val) &&
-			val.length > 0 &&
-			typeof val[0] === 'number'
-		) {
-			const stickers = val.map(id => getModel(StickerModel, id));
-			newEntry[1] = stickers;
-		}
-
-		return newEntry;
-	})
-);
 </script>
 
 <template>
@@ -117,7 +126,7 @@ const entries = computed(() =>
 					<div
 						:style="[
 							styleAbsoluteFill({ zIndex: -1, left: `-4px`, right: `-4px` }),
-							styleWhen(checkDiff(key), {
+							styleWhen(!isFieldEqual(key), {
 								backgroundColor: diffBackground,
 								color: diffColor,
 								borderRadius: `4px`,

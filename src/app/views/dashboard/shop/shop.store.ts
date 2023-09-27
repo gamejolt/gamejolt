@@ -4,6 +4,7 @@ import { BackgroundModel } from '../../../../_common/background/background.model
 import { ShopItemModelCommonFields } from '../../../../_common/model/shop-item-model.service';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
+import { stringSort } from '../../../../utils/array';
 import { assertNever } from '../../../../utils/utils';
 
 type ItemModel = AvatarFrameModel | BackgroundModel | StickerPackModel | StickerModel;
@@ -68,6 +69,17 @@ export function createShopManagerStore() {
 		return group.items.length;
 	}
 
+	function grabSortValue(val: any): string {
+		if (Object.hasOwn(val, 'id')) {
+			return `${val.id}`;
+		}
+		return `${val}`;
+	}
+
+	function sortUnknownList(list: any[]): string[] {
+		return list.map(grabSortValue).sort(stringSort);
+	}
+
 	const c = shallowReadonly({
 		avatarFrames,
 		backgrounds,
@@ -81,6 +93,27 @@ export function createShopManagerStore() {
 		 * so we need to count them differently than just adding them all up.
 		 */
 		getItemCountForSlots,
+
+		/**
+		 * Returns a boolean indicating equality between two values.
+		 */
+		isSameValues(val: any, otherVal: any) {
+			if (Array.isArray(val) && Array.isArray(otherVal)) {
+				if (!val.length && !otherVal.length) {
+					return true;
+				}
+				if (val.length !== otherVal.length) {
+					return false;
+				}
+
+				// We need to sort the arrays so that we can compare them.
+				const sortedVal = sortUnknownList(val);
+				const sortedFormVal = sortUnknownList(otherVal);
+				return sortedVal.every((i, index) => i === sortedFormVal[index]);
+			}
+
+			return val === otherVal;
+		},
 	});
 
 	provide(shopManagerStoreKey, c);

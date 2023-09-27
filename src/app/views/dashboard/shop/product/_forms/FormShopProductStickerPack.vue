@@ -5,7 +5,7 @@ import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { storeModelList } from '../../../../../../_common/model/model-store.service';
+import { getModel, storeModelList } from '../../../../../../_common/model/model-store.service';
 import AppOnHover from '../../../../../../_common/on/AppOnHover.vue';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
@@ -41,7 +41,22 @@ const data = createShopProductBaseForm({
 	onLoad({ payload, setInitialFormModelStickers }) {
 		minStickers.value = payload.minStickers || minStickers.value;
 		maxStickers.value = payload.maxStickers || maxStickers.value;
-		_setStickers(true, storeModelList(StickerModel, payload.currentStickers));
+
+		// TODO(creator-shops) Backend only returns the stickers currently in
+		// the /APPROVED/ pack, not the ones in the /PENDING/ pack. We may want
+		// to change that so we're not relying on this sketchy stuff.
+		if (data.isEditing) {
+			const stickers = data.form.formModel.stickers.reduce((acc, id) => {
+				const model = getModel(StickerModel, id);
+				if (model) {
+					acc.push(model);
+				}
+				return acc;
+			}, [] as StickerModel[]);
+			_setStickers(true, stickers);
+		} else {
+			_setStickers(true, storeModelList(StickerModel, payload.currentStickers));
+		}
 		setInitialFormModelStickers(stickers.value);
 	},
 });
