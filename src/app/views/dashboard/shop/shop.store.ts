@@ -1,4 +1,4 @@
-import { InjectionKey, inject, provide, ref, shallowReadonly } from 'vue';
+import { InjectionKey, Ref, computed, inject, provide, ref, shallowReadonly } from 'vue';
 import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../_common/background/background.model';
 import { ShopItemModelCommonFields } from '../../../../_common/model/shop-item-model.service';
@@ -12,6 +12,7 @@ export type ShopManagerGroupItem = ItemModel & ShopItemModelCommonFields;
 
 export interface ShopManagerGroup<T extends ShopManagerGroupItem = ShopManagerGroupItem> {
 	items: T[];
+	sortedItems: T[];
 	slotAmount?: number;
 	publishAmount?: number;
 	canAddFree?: boolean;
@@ -51,9 +52,40 @@ const shopManagerStoreKey: InjectionKey<ShopManagerStore> = Symbol('shop-manager
 
 export function createShopManagerStore() {
 	function _makeEmptyGroup<T extends ShopManagerGroupItem>() {
-		return ref<ShopManagerGroup<T>>({
-			items: [] as T[],
+		const items = ref<T[]>([]);
+		const sortedItems = computed(() => {
+			return items.value
+				.map(item => {
+					let sort = 0;
+					if (item.has_active_sale) {
+						--sort;
+					}
+					if (!item.was_approved) {
+						++sort;
+					}
+					if (item.is_premium) {
+						--sort;
+					}
+
+					return {
+						sort,
+						item,
+						name: item.name.toLowerCase(),
+					};
+				})
+				.sort((a, b) => {
+					if (a.sort === b.sort) {
+						return stringSort(a.name, b.name);
+					}
+					return a.sort - b.sort;
+				})
+				.map(i => i.item);
 		});
+
+		return ref({
+			items,
+			sortedItems,
+		}) as Ref<ShopManagerGroup<T>>;
 	}
 
 	const avatarFrames = _makeEmptyGroup<AvatarFrameModel>();
@@ -63,10 +95,10 @@ export function createShopManagerStore() {
 
 	function getItemCountForSlots<T extends ShopManagerGroupItem>(group: ShopManagerGroup<T>) {
 		// Need to count differently for certain model types.
-		if (group.items.length && group.items[0] instanceof StickerPackModel) {
-			return group.items.reduce((acc, item) => (item.is_premium ? acc + 1 : acc), 0);
+		if (group.sortedItems.length && group.sortedItems[0] instanceof StickerPackModel) {
+			return group.sortedItems.reduce((acc, item) => (item.is_premium ? acc + 1 : acc), 0);
 		}
-		return group.items.length;
+		return group.sortedItems.length;
 	}
 
 	function grabSortValue(val: any): string {

@@ -37,6 +37,7 @@ createAppRoute({
 });
 
 function getPublishedCount(items: ShopManagerGroupItem[]) {
+	// TODO(creator-shops) DODO: Exclude items how you want to.
 	return items.reduce((result, i) => (i.has_active_sale ? result + 1 : result), 0);
 }
 
@@ -161,7 +162,7 @@ const itemBorderRadius = kBorderRadiusLg.value;
 				/>
 
 				<AppDashShopItem
-					v-for="item in data.items"
+					v-for="item in data.sortedItems"
 					:key="item.id"
 					:item="item"
 					:border-radius="itemBorderRadius"
