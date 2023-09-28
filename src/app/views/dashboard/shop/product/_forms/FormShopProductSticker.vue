@@ -37,7 +37,8 @@ const data = createShopProductBaseForm({
 	`canAddFree` for the sticker group. -->
 	<FormShopProductBase :data="data" :diff-keys="['emoji_name']">
 		<AppFormGroup name="emoji_name" :label="$gettext(`Emoji name`)">
-			<AppFormControl />
+			<!-- TODO(creator-shops) validators for emoji name, use the same styling as [FormShopProductBase]. -->
+			<AppFormControl :placeholder="$gettext(`Emoji name...`)" />
 			<AppFormControlErrors />
 		</AppFormGroup>
 	</FormShopProductBase>
