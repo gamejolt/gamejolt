@@ -29,7 +29,7 @@ interface ProductPayload<T extends ShopManagerGroupItem> {
 }
 
 async function _makeSectionPromise<T extends ShopManagerGroupItem>(
-	typename: Omit<ShopManagerGroupItemType, 'Sticker_Packs'> | 'packs'
+	typename: Exclude<ShopManagerGroupItemType, 'Sticker_Pack'> | 'packs'
 ) {
 	let url = `/web/dash/creators/shop`;
 	if (typename !== 'packs') {
@@ -40,16 +40,12 @@ async function _makeSectionPromise<T extends ShopManagerGroupItem>(
 }
 
 async function fetchOverviewData() {
-	const promises = Promise.all([
+	const [avatarFrames, backgrounds, stickerPacks, stickers] = await Promise.all([
 		_makeSectionPromise<AvatarFrameModel>('Avatar_Frame'),
 		_makeSectionPromise<BackgroundModel>('Background'),
 		_makeSectionPromise<StickerPackModel>('packs'),
 		_makeSectionPromise<StickerModel>('Sticker'),
 	]);
-
-	const items = await promises;
-
-	const [avatarFrames, backgrounds, stickerPacks, stickers] = items;
 
 	return {
 		avatarFrames,

@@ -5,7 +5,6 @@ import {
 	Ref,
 	computed,
 	onUnmounted,
-	readonly,
 	ref,
 	shallowReadonly,
 	toRaw,
@@ -41,7 +40,7 @@ import {
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkHelpDocs from '../../../../../../_common/link/AppLinkHelpDocs.vue';
-import { storeModel } from '../../../../../../_common/model/model-store.service';
+import { ModelStoreModel, storeModel } from '../../../../../../_common/model/model-store.service';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
@@ -106,10 +105,7 @@ export function createShopProductBaseForm<
 	baseModel: BaseModel | undefined;
 	fields?: Fields;
 	complexFields?: (keyof Fields)[];
-	onLoad?: (data: {
-		payload: any;
-		setInitialFormModelStickers: (stickers: number[] | StickerModel[]) => void;
-	}) => void;
+	onLoad?: (data: { payload: any }) => void;
 }) {
 	const router = useRouter();
 
@@ -226,16 +222,6 @@ export function createShopProductBaseForm<
 		);
 	});
 
-	function setInitialFormModelStickers(stickers: number[] | StickerModel[]) {
-		if (!Object.hasOwn(initialFormModel.value, 'stickers')) {
-			return;
-		}
-
-		((initialFormModel.value as any).stickers as number[]) = stickers.map(i =>
-			typeof i === 'number' ? i : i.id
-		);
-	}
-
 	const form: FormController<typeof initialFormModel.value> = createForm({
 		// Clone the initial model. Forms are overwriting non-model data passed into here.
 		model: initialFormModel,
@@ -270,41 +256,29 @@ export function createShopProductBaseForm<
 				);
 			}
 
-			const latestChange = latestChangeRequest.value;
-			if (latestChange) {
-				form.formModel.name = latestChange.change_name || form.formModel.name;
-
-				const changeData = JSON.parse(latestChange.change_data);
-				switch (typename) {
-					case 'Avatar_Frame':
-					case 'Background':
-					case 'Sticker':
-						break;
-					case 'Sticker_Pack':
-						(form.formModel as any).stickers = changeData.sticker_ids;
-						break;
+			/** Helper for nullable resource from the payload. */
+			function maybeStoreModel(model: new () => ModelStoreModel) {
+				if (payload.resource) {
+					storeModel(model, payload.resource);
 				}
 			}
 
-			// This will update the model that this form is bound to.
-			if (payload.resource) {
-				switch (typename) {
-					case 'Avatar_Frame':
-						storeModel(AvatarFrameModel, payload.resource);
-						break;
-					case 'Background':
-						storeModel(BackgroundModel, payload.resource);
-						break;
-					case 'Sticker_Pack':
-						storeModel(StickerPackModel, payload.resource);
-						break;
-					case 'Sticker':
-						storeModel(StickerModel, payload.resource);
-						break;
-				}
+			switch (typename) {
+				case 'Avatar_Frame':
+					maybeStoreModel(AvatarFrameModel);
+					break;
+				case 'Background':
+					maybeStoreModel(BackgroundModel);
+					break;
+				case 'Sticker_Pack':
+					maybeStoreModel(StickerPackModel);
+					break;
+				case 'Sticker':
+					maybeStoreModel(StickerModel);
+					break;
 			}
 
-			onLoad?.({ payload, setInitialFormModelStickers });
+			onLoad?.({ payload });
 		},
 		onSubmit() {
 			return Api.sendRequest(
@@ -372,7 +346,7 @@ export function createShopProductBaseForm<
 	return shallowReadonly({
 		form,
 		typename,
-		initialFormModel: readonly(initialFormModel),
+		initialFormModel,
 		baseModel,
 
 		// Restrictions

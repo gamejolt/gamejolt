@@ -38,26 +38,32 @@ const data = createShopProductBaseForm({
 		stickers: [] as number[],
 	},
 	complexFields: ['stickers'],
-	onLoad({ payload, setInitialFormModelStickers }) {
+	onLoad({ payload }) {
 		minStickers.value = payload.minStickers || minStickers.value;
 		maxStickers.value = payload.maxStickers || maxStickers.value;
 
-		// TODO(creator-shops) Backend only returns the stickers currently in
-		// the /APPROVED/ pack, not the ones in the /PENDING/ pack. We may want
-		// to change that so we're not relying on this sketchy stuff.
-		if (data.isEditing) {
-			const stickers = data.form.formModel.stickers.reduce((acc, id) => {
-				const model = getModel(StickerModel, id);
+		const currentStickers = storeModelList(StickerModel, payload.currentStickers);
+		data.initialFormModel.value.stickers = currentStickers.map(i => i.id);
+
+		let changeRequestStickers: StickerModel[];
+		const changeData = JSON.parse(data.latestChangeRequest.value?.change_data || '{}');
+		if (Array.isArray(changeData.sticker_ids)) {
+			// TODO(creator-shops) Backend only returns the stickers currently
+			// in the /APPROVED/ pack, not the ones in the /PENDING/ pack. We
+			// may want the actual resources returned so we're not solely
+			// relying on the model store having them.
+			changeRequestStickers = (changeData.sticker_ids as number[]).reduce((acc, i) => {
+				const model = getModel(StickerModel, i);
 				if (model) {
 					acc.push(model);
 				}
 				return acc;
 			}, [] as StickerModel[]);
-			_setStickers(true, stickers);
 		} else {
-			_setStickers(true, storeModelList(StickerModel, payload.currentStickers));
+			changeRequestStickers = currentStickers;
 		}
-		setInitialFormModelStickers(stickers.value);
+
+		_setStickers(true, changeRequestStickers);
 	},
 });
 
