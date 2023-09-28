@@ -71,7 +71,7 @@ const data = createShopProductBaseForm({
 	},
 });
 
-const { form, paymentType } = data;
+const { form, paymentType, isEditing } = data;
 
 const stickersError = computed(() => {
 	if (stickers.value.length < minStickers.value) {
@@ -88,13 +88,17 @@ const stickersError = computed(() => {
 	return null;
 });
 
-watch(stickersError, stickersError => {
-	if (stickersError) {
-		form.setCustomError('stickers');
-	} else {
-		form.clearCustomError('stickers');
-	}
-});
+watch(
+	stickersError,
+	stickersError => {
+		if (stickersError) {
+			form.setCustomError('stickers');
+		} else {
+			form.clearCustomError('stickers');
+		}
+	},
+	{ immediate: true }
+);
 
 function _setStickers(isInitial: boolean, newStickers: StickerModel[] | undefined) {
 	if (!newStickers || !newStickers.length) {
@@ -154,11 +158,21 @@ const stickerItemStyles: CSSProperties = {
 		<template #default>
 			<h2>{{ $gettext(`Stickers`) }}</h2>
 
+			<!-- TODO(creator-shops): this should be changed to show the message when it's not approved yet. -->
+			<div v-if="!isEditing" :style="{ marginBottom: `12px`, fontWeight: `bold` }">
+				{{
+					$gettext(
+						`Careful! You won't be able to change the stickers in this pack once it's been approved.`
+					)
+				}}
+			</div>
+
 			<div>
 				<AppButton solid :disabled="stickers.length >= maxStickers" @click="addStickers()">
 					{{ $gettext(`Add stickers`) }}
 				</AppButton>
 			</div>
+
 			<AppSpacer vertical :scale="4" />
 
 			<template v-if="stickers.length >= maxStickers">
@@ -220,10 +234,6 @@ const stickerItemStyles: CSSProperties = {
 				</AppOnHover>
 			</div>
 
-			<!-- TODO(creator-shops) This should hook into the actual form so
-			that the submit button doesn't show until we're actually allowed to
-			submit. This current iteration gets obscured by the sticky submit.
-			-->
 			<template v-if="stickersError">
 				<div class="control-erros">
 					<p class="help-block error anim-fade-in">

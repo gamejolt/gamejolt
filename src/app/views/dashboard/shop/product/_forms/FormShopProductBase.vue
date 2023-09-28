@@ -552,10 +552,14 @@ function getExtraDiffData(target: typeof form.formModel) {
 					@click="choosePaymentType(ShopProductPaymentType.Free)"
 				>
 					<div :style="{ fontWeight: `bold` }">
-						{{ $gettext(`Free`) }}
+						{{ $gettext(`Charge`) }}
 					</div>
-					<div :style="{ fontStyle: `italic` }">
-						{{ $gettext(`Explain the free products`) }}
+					<div>
+						{{
+							$gettext(
+								`These are rewarded to users from charge sticker packs for placing charged stickers on your content. They can not be included in premium sticker packs. Static images only; they can't be animated.`
+							)
+						}}
 					</div>
 				</div>
 
@@ -566,8 +570,12 @@ function getExtraDiffData(target: typeof form.formModel) {
 					<div :style="{ fontWeight: `bold` }">
 						{{ $gettext(`Premium`) }}
 					</div>
-					<div :style="{ fontStyle: `italic` }">
-						{{ $gettext(`Explain the premium products`) }}
+					<div>
+						{{
+							$gettext(
+								`Premium stickers can be sold in premium sticker packs from your shop. They can not be included in charge sticker packs. Only animated images are accepted.`
+							)
+						}}
 					</div>
 				</div>
 			</div>
@@ -618,9 +626,7 @@ function getExtraDiffData(target: typeof form.formModel) {
 							<div
 								v-if="latestChangeRequest.rejected_on"
 								v-app-tooltip.touchable="
-									$gettext(
-										`This item was previously rejected. We'll submit a new change request when you submit again.`
-									)
+									$gettext(`This item was rejected. Please submit a new version.`)
 								"
 								:style="
 									makeStateBubbleStyles({
@@ -639,7 +645,7 @@ function getExtraDiffData(target: typeof form.formModel) {
 								"
 								v-app-tooltip.touchable="
 									$gettext(
-										`You already have changes in review. We'll submit a new change request when you submit again.`
+										`This item is currently in review. You can still submit a new version for review, which will replace this.`
 									)
 								"
 								:style="makeStateBubbleStyles()"
@@ -675,31 +681,38 @@ function getExtraDiffData(target: typeof form.formModel) {
 
 			<AppFormGroup
 				name="file"
-				:label="$gettext(`Upload your image`)"
+				:label="
+					paymentType === ShopProductPaymentType.Premium
+						? $gettext(`Upload animated image`)
+						: $gettext(`Upload image`)
+				"
 				tiny-label-margin
 				:optional="isEditing"
 			>
-				<p class="help-block">
-					{{ $gettext(`Your image must be a PNG.`) }}
-				</p>
-				<p
-					v-translate="{
-						min: `${minWidth}×${minHeight}`,
-						max: `${maxWidth}×${maxHeight}`,
-					}"
-					class="help-block strong"
-				>
-					Images must be between
-					<code>%{min}</code>
-					and
-					<code>%{max}</code>
-					(ratio of {{ (1 / aspectRatio) * aspectRatio }} ÷
-					{{
-						aspectRatio === 1
-							? 1
-							: Math.trunc((1 / (maxWidth / maxHeight)) * 100) / 100
-					}}).
-				</p>
+				<div class="help-block">
+					<div v-if="paymentType === ShopProductPaymentType.Premium">
+						{{ $gettext(`Your image must be an animated PNG (APNG).`) }}
+					</div>
+					<div v-else>{{ $gettext(`Your image must be a PNG.`) }}</div>
+
+					<div
+						v-translate="{
+							min: `${minWidth}×${minHeight}`,
+							max: `${maxWidth}×${maxHeight}`,
+						}"
+					>
+						Images must be between
+						<code>%{min}</code>
+						and
+						<code>%{max}</code>
+						(ratio of {{ (1 / aspectRatio) * aspectRatio }} ÷
+						{{
+							aspectRatio === 1
+								? 1
+								: Math.trunc((1 / (maxWidth / maxHeight)) * 100) / 100
+						}}).
+					</div>
+				</div>
 
 				<p class="help-block">
 					<!-- TODO(creator-shops) help docs. -->
@@ -714,9 +727,6 @@ function getExtraDiffData(target: typeof form.formModel) {
 					</AppLinkHelpDocs>
 				</p>
 
-				<!-- TODO(creator-shops) This never seems to complain for
-				sticker packs when the image is missing? This is set to be
-				required, why does it let you submit without complaint? -->
 				<AppFormControlUpload
 					:validators="[
 						validateFilesize(maxFilesize),

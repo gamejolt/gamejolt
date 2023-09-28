@@ -128,10 +128,17 @@ const gridStyles: CSSProperties = {
 				</AppButton>
 			</div>
 
-			<div v-if="isLoading || selectableStickers.length" class="modal-header">
-				<h2 class="modal-title text-center">
+			<div v-if="isLoading || selectableStickers.length" class="modal-header text-center">
+				<h2 class="modal-title">
 					{{ $gettext(`Select stickers to add`) }}
 				</h2>
+
+				<div v-if="premium">
+					{{ $gettext(`Only premium stickers can be added into premium sticker packs.`) }}
+				</div>
+				<div v-else>
+					{{ $gettext(`Only charge stickers can be added into charge sticker packs.`) }}
+				</div>
 			</div>
 
 			<div class="modal-body">

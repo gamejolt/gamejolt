@@ -27,7 +27,7 @@ import {
 } from '../../../../../../_styles/mixins';
 import { kFontSizeSmall, kFontSizeTiny } from '../../../../../../_styles/variables';
 import { isInstance } from '../../../../../../utils/utils';
-import { ShopManagerGroupItem } from '../../shop.store';
+import { ShopManagerGroupItem, ShopProductPremiumColor } from '../../shop.store';
 import { ShopItemStates } from './AppDashShopItem.vue';
 
 const props = defineProps({
@@ -97,7 +97,7 @@ const baseOverlayTagStyles: CSSProperties = {
 
 const premiumTagStyles = computed<CSSProperties>(() => ({
 	...baseOverlayTagStyles,
-	backgroundColor: `#FFBE00`,
+	backgroundColor: ShopProductPremiumColor,
 	color: `black`,
 	...styleWhen(hovered.value, {
 		opacity: 0,

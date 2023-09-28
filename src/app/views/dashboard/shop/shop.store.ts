@@ -7,6 +7,8 @@ import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import { stringSort } from '../../../../utils/array';
 import { assertNever } from '../../../../utils/utils';
 
+export const ShopProductPremiumColor = '#ffbe00';
+
 type ItemModel = AvatarFrameModel | BackgroundModel | StickerPackModel | StickerModel;
 export type ShopManagerGroupItem = ItemModel & ShopItemModelCommonFields;
 
