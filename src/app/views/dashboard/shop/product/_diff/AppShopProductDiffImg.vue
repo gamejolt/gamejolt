@@ -75,7 +75,7 @@ function getSizeForStickerGridArea(gridArea: 'a' | 'b' | 'c' | 'd') {
 		case 'b':
 			return 100;
 		case 'c':
-			return 50;
+			return 64;
 		case 'd':
 			return 24;
 	}

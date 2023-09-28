@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed, toRefs } from 'vue';
-import AppAnimChargeOrb from '../../../../../../_common/animation/AppAnimChargeOrb.vue';
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import AppBackground from '../../../../../../_common/background/AppBackground.vue';
@@ -11,6 +10,8 @@ import AppStickerPack from '../../../../../../_common/sticker/pack/AppStickerPac
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import {
+	kThemeBiBg,
+	kThemeBiFg,
 	kThemeFg,
 	kThemeFg10,
 	kThemeGjDarkGreen,
@@ -62,6 +63,24 @@ const nameStyles: CSSProperties = {
 	fontSize: kFontSizeTiny.px,
 	textAlign: `center`,
 };
+
+const publishedTagStyles = computed<CSSProperties>(() => ({
+	...styleFlexCenter(),
+	position: `absolute`,
+	top: `-12px`,
+	left: `-12px`,
+	zIndex: 1,
+	pointerEvents: `none`,
+	width: `24px`,
+	height: `24px`,
+	borderRadius: `50%`,
+	transition: `opacity 250ms`,
+	backgroundColor: kThemeBiBg,
+	color: kThemeBiFg,
+	...styleWhen(hovered.value, {
+		opacity: 0,
+	}),
+}));
 
 const baseOverlayTagStyles: CSSProperties = {
 	...styleBorderRadiusLg,
@@ -166,6 +185,11 @@ function getInfoTagStyles(type: 'inReview' | 'rejected') {
 			fit-parent
 		/>
 
+		<!-- Published tag -->
+		<div v-if="itemStates.published" :style="publishedTagStyles">
+			<AppJolticon icon="marketplace-filled" />
+		</div>
+
 		<!-- Premium/charge tag -->
 		<div v-if="item.is_premium" :style="premiumTagStyles">
 			{{ $gettext(`Premium`) }}
@@ -174,12 +198,6 @@ function getInfoTagStyles(type: 'inReview' | 'rejected') {
 			v-else-if="isInstance(item, StickerPackModel) || isInstance(item, StickerModel)"
 			:style="chargeTagStyles"
 		>
-			<AppAnimChargeOrb
-				:style="{
-					width: baseInfoTagStyles.fontSize,
-					height: baseInfoTagStyles.fontSize,
-				}"
-			/>
 			{{ $gettext(`Charge`) }}
 		</div>
 
