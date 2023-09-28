@@ -29,7 +29,6 @@ export class StickerModel implements ModelStoreModel, ShopItemModelCommonFields 
 	declare is_event: boolean;
 	declare is_secret?: boolean;
 	declare is_active?: boolean;
-	declare added_on?: number;
 	declare media_item?: MediaItemModel;
 	declare artist?: UserModel;
 	declare owner_user?: UserModel;
@@ -40,6 +39,7 @@ export class StickerModel implements ModelStoreModel, ShopItemModelCommonFields 
 	declare is_premium: boolean;
 	declare has_active_sale: boolean;
 	declare was_approved: boolean;
+	declare added_on: number | undefined;
 
 	update(data: any) {
 		Object.assign(this, data);

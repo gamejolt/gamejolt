@@ -163,7 +163,7 @@ const itemBorderRadius = kBorderRadiusLg.value;
 
 				<AppDashShopItem
 					v-for="item in data.sortedItems"
-					:key="item.id"
+					:key="`${item.id}:${item.added_on}`"
 					:item="item"
 					:border-radius="itemBorderRadius"
 					:border-width="itemBorderWidth"

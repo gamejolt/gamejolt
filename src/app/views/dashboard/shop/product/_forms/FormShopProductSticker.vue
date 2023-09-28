@@ -6,6 +6,7 @@ import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormCont
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { useShopManagerStore } from '../../shop.store';
 import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
 
 const props = defineProps({
@@ -18,7 +19,10 @@ const emojiNameMinLength = ref(3);
 const emojiNameMaxLength = ref(30);
 const emojiPrefix = ref(props.model?.emoji?.prefix || 'username');
 
+const shopStore = useShopManagerStore()!;
+
 const data = createShopProductBaseForm({
+	shopStore,
 	typename: 'Sticker',
 	baseModel: model?.value,
 	fields: {

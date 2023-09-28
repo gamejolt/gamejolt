@@ -57,14 +57,14 @@ export function createShopManagerStore() {
 			return items.value
 				.map(item => {
 					let sort = 0;
-					if (item.has_active_sale) {
-						--sort;
-					}
-					if (!item.was_approved) {
-						++sort;
-					}
 					if (item.is_premium) {
-						--sort;
+						sort -= 100;
+					}
+					if (item.has_active_sale) {
+						sort -= 10;
+					}
+					if (item.was_approved) {
+						sort -= 1;
 					}
 
 					return {

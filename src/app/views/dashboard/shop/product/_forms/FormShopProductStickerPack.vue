@@ -15,6 +15,7 @@ import { kThemeBg, kThemeBgOffset, kThemeFg } from '../../../../../../_common/th
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '../../../../../../_styles/mixins';
 import { kStrongEaseOut } from '../../../../../../_styles/variables';
+import { useShopManagerStore } from '../../shop.store';
 import FormShopProductBase, {
 	ShopProductPaymentType,
 	createShopProductBaseForm,
@@ -31,7 +32,10 @@ const minStickers = ref(3);
 const maxStickers = ref(5);
 const stickers = ref([]) as Ref<StickerModel[]>;
 
+const shopStore = useShopManagerStore()!;
+
 const data = createShopProductBaseForm({
+	shopStore,
 	typename: 'Sticker_Pack',
 	baseModel: model?.value,
 	fields: {

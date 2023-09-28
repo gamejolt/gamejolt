@@ -1,15 +1,15 @@
 <script lang="ts">
 import {
-	CSSProperties,
-	PropType,
-	Ref,
-	computed,
-	onUnmounted,
-	ref,
-	shallowReadonly,
-	toRaw,
-	toRef,
-	watch,
+CSSProperties,
+PropType,
+Ref,
+computed,
+onUnmounted,
+ref,
+shallowReadonly,
+toRaw,
+toRef,
+watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -19,8 +19,8 @@ import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { CreatorChangeRequestModel } from '../../../../../../_common/creator/change-request/creator-change-request.model';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import AppForm, {
-	FormController,
-	createForm,
+FormController,
+createForm,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
@@ -29,13 +29,13 @@ import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
-	validateAvailability,
-	validateFilesize,
-	validateImageAspectRatio,
-	validateImageMaxDimensions,
-	validateImageMinDimensions,
-	validateMaxLength,
-	validateMinLength,
+validateAvailability,
+validateFilesize,
+validateImageAspectRatio,
+validateImageMaxDimensions,
+validateImageMinDimensions,
+validateMaxLength,
+validateMinLength,
 } from '../../../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
@@ -45,32 +45,34 @@ import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import {
-	kThemeFg10,
-	kThemeGjOverlayNotice,
-	kThemePrimary,
-	kThemePrimaryFg,
+kThemeFg10,
+kThemeGjOverlayNotice,
+kThemePrimary,
+kThemePrimaryFg,
 } from '../../../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import {
-	styleBorderRadiusLg,
-	styleChangeBg,
-	styleElevate,
-	styleFlexCenter,
+styleBorderRadiusLg,
+styleChangeBg,
+styleElevate,
+styleFlexCenter,
 } from '../../../../../../_styles/mixins';
 import {
-	kBorderWidthBase,
-	kFontSizeLarge,
-	kLineHeightComputed,
+kBorderWidthBase,
+kFontSizeLarge,
+kLineHeightComputed,
 } from '../../../../../../_styles/variables';
 import { objectOmit } from '../../../../../../utils/object';
 import { run } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
 import {
-	ShopManagerGroupItem,
-	ShopManagerGroupItemType,
-	productTypeFromTypename,
-	useShopManagerStore,
+ShopManagerGroup,
+ShopManagerGroupItem,
+ShopManagerGroupItemType,
+ShopManagerStore,
+productTypeFromTypename,
+useShopManagerStore,
 } from '../../shop.store';
 import AppShopProductDiff from '../_diff/AppShopProductDiff.vue';
 import AppShopProductDiffImg from '../_diff/AppShopProductDiffImg.vue';
@@ -95,12 +97,14 @@ export function createShopProductBaseForm<
 	Fields extends Partial<BaseFields> & Record<string, any>,
 	BaseModel extends ShopManagerGroupItem
 >({
+	shopStore,
 	typename,
 	baseModel,
 	fields = {} as Fields,
 	complexFields,
 	onLoad,
 }: {
+	shopStore: ShopManagerStore;
 	typename: ShopManagerGroupItemType;
 	baseModel: BaseModel | undefined;
 	fields?: Fields;
@@ -300,8 +304,47 @@ export function createShopProductBaseForm<
 
 			showErrorGrowl(message || $gettext(`There was an error saving your product.`));
 		},
-		onSubmitSuccess() {
-			// TODO(creator-shops) Doesn't force the overview to reload.
+		onSubmitSuccess(response) {
+			function updateGroup<T extends ShopManagerGroupItem>(
+				group: Ref<ShopManagerGroup<T>>,
+				item: T
+			) {
+				if (!group.value.items.includes(item)) {
+					group.value.items.push(item);
+				}
+			}
+
+			if (response.resource) {
+				switch (typename) {
+					// TODO(creator-shops) Saving an insta-approved item doesn't
+					// return the new fields.
+					case 'Avatar_Frame':
+						updateGroup(
+							shopStore.avatarFrames,
+							storeModel(AvatarFrameModel, response.resource)
+						);
+						break;
+					case 'Background':
+						updateGroup(
+							shopStore.backgrounds,
+							storeModel(BackgroundModel, response.resource)
+						);
+						break;
+					case 'Sticker_Pack':
+						updateGroup(
+							shopStore.stickerPacks,
+							storeModel(StickerPackModel, response.resource)
+						);
+						break;
+					case 'Sticker':
+						updateGroup(
+							shopStore.stickers,
+							storeModel(StickerModel, response.resource)
+						);
+						break;
+				}
+			}
+
 			router.push({
 				name: routeDashShopOverview.name,
 			});

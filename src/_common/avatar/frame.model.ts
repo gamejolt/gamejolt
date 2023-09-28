@@ -12,6 +12,7 @@ export class AvatarFrameModel implements ModelStoreModel, ShopItemModelCommonFie
 	declare is_premium: boolean;
 	declare has_active_sale: boolean;
 	declare was_approved: boolean;
+	declare added_on: number | undefined;
 
 	update(data: any) {
 		Object.assign(this, data);
