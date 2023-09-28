@@ -64,7 +64,7 @@ const form = useForm()!;
 const { name } = useFormGroup()!;
 
 const { id, controlVal, applyValue } = createFormControl({
-	initialValue: [] as File | File[] | null,
+	initialValue: null as File | File[] | null,
 	validators,
 	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),

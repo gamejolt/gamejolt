@@ -75,6 +75,7 @@ defineExpose<AppFormControlUploadFileInterface>({
 		:id="id"
 		ref="root"
 		:style="
+			// TODO(creator-shops): can this just always be styled this way?
 			styleWhen(fixOverflow, {
 				...styleTextOverflow,
 				width: `100%`,

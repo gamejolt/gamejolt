@@ -62,7 +62,7 @@ const _basicLinkRegex = /.+\..+/;
  * Essentially enforces it to have a truthy value.
  */
 export const validateRequired = (): FormValidator => async value => {
-	if (!value) {
+	if (!value || (Array.isArray(value) && value.length === 0)) {
 		return {
 			type: 'required',
 			message: `You must enter a {}.`,
@@ -402,17 +402,13 @@ export const validateImageMinDimensions =
 		if (!result) {
 			let message = '';
 			if (width && height) {
-				message = `BIG OOF! The dimensions of your {} must be at least ${formatNumber(
+				message = `The dimensions of your {} must be at least ${formatNumber(
 					width
 				)}x${formatNumber(height)}px.`;
 			} else if (width) {
-				message = `BIG OOF! The width of your {} must be at least ${formatNumber(
-					width
-				)}px.`;
+				message = `The width of your {} must be at least ${formatNumber(width)}px.`;
 			} else if (height) {
-				message = `BIG OOF! The height of your {} must be at least ${formatNumber(
-					height
-				)}px.`;
+				message = `The height of your {} must be at least ${formatNumber(height)}px.`;
 			}
 
 			return {
@@ -443,15 +439,13 @@ export const validateImageMaxDimensions =
 		if (!result) {
 			let message = '';
 			if (width && height) {
-				message = `BIG OOF! The dimensions of your {} must be no greater than ${formatNumber(
+				message = `The dimensions of your {} must be no greater than ${formatNumber(
 					width
 				)}x${formatNumber(height)}px.`;
 			} else if (width) {
-				message = `BIG OOF! The width of your {} must be no greater than ${formatNumber(
-					width
-				)}px.`;
+				message = `The width of your {} must be no greater than ${formatNumber(width)}px.`;
 			} else if (height) {
-				message = `BIG OOF! The height of your {} must be no greater than ${formatNumber(
+				message = `The height of your {} must be no greater than ${formatNumber(
 					height
 				)}px.`;
 			}
@@ -487,7 +481,7 @@ export const validateImageAspectRatio =
 		if (!result) {
 			return {
 				type: 'img_ratio',
-				message: `Uh oh, L + Ratio! The aspect ratio of your {} must be ${ratio}.`,
+				message: `The aspect ratio of your {} must be ${ratio}.`,
 			};
 		}
 
