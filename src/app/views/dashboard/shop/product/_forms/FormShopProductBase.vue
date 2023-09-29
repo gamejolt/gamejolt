@@ -882,7 +882,6 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 					:validators="[
 						validateMinLength(minNameLength),
 						validateMaxLength(maxNameLength),
-						// TODO(creator-shops) Fix this, it's not being reset properly when we update [name] during [onLoad].
 						validateAvailability({
 							initVal: baseModel?.name,
 							url: validateNameAvailabilityPath,

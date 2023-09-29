@@ -3,6 +3,7 @@ import { computed, ref, toRefs } from 'vue';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '../../../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
 import {
 	validateAvailability,
@@ -23,7 +24,7 @@ const { model } = toRefs(props);
 
 const emojiNameMinLength = ref(3);
 const emojiNameMaxLength = ref(30);
-const emojiPrefix = ref(props.model?.emoji?.prefix || 'username');
+const emojiPrefix = ref(props.model?.emoji?.prefix);
 
 const shopStore = useShopManagerStore()!;
 
@@ -37,7 +38,7 @@ const data = createShopProductBaseForm({
 	onLoad({ payload }) {
 		emojiNameMinLength.value = payload.emojiNameMinLength || emojiNameMinLength.value;
 		emojiNameMaxLength.value = payload.emojiNameMaxLength || emojiNameMaxLength.value;
-		emojiPrefix.value = payload.emojiPrefix || emojiPrefix.value;
+		emojiPrefix.value = baseModel?.emoji?.prefix || emojiPrefix.value;
 
 		const changeData = JSON.parse(data.latestChangeRequest.value?.change_data || '{}');
 		if (changeData.emoji_name) {
@@ -68,21 +69,25 @@ const emojiNameAvailabilityUrl = computed(() => {
 			<AppFormGroup
 				v-bind="formGroupBindings"
 				name="emoji_name"
-				:label="$gettext(`Emoji name`)"
+				tiny-label-margin
+				label="Emoji name"
 			>
-				<AppFormControl
-					:placeholder="$gettext(`Emoji name...`)"
-					:validators="[
-						validateMinLength(emojiNameMinLength),
-						validateMaxLength(emojiNameMaxLength),
-						validateEmojiName(),
-						validateAvailability({
-							url: emojiNameAvailabilityUrl,
-							initVal: baseModel?.emoji?.short_name,
-						}),
-					]"
-				/>
-				<AppFormControlErrors />
+				<AppFormControlPrefix :prefix="emojiPrefix || ''">
+					<AppFormControl
+						:placeholder="emojiPrefix ? undefined : $gettext(`Emoji name...`)"
+						:validators="[
+							validateMinLength(emojiNameMinLength),
+							validateMaxLength(emojiNameMaxLength),
+							validateEmojiName(),
+							validateAvailability({
+								url: emojiNameAvailabilityUrl,
+								initVal: baseModel?.emoji?.short_name,
+							}),
+						]"
+					/>
+				</AppFormControlPrefix>
+
+				<AppFormControlErrors :label="$gettext(`emoji name`)" />
 			</AppFormGroup>
 		</template>
 	</FormShopProductBase>

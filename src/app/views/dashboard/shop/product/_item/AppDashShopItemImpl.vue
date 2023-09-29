@@ -210,6 +210,14 @@ function getInfoTagStyles(type: 'inReview' | 'rejected') {
 			{{ item.name }}
 		</div>
 
+		<!-- TODO(creator-shops) Do you want to show the emoji name here? -->
+		<div
+			v-if="isInstance(item, StickerModel) && item.emoji"
+			:style="[nameStyles, { fontWeight: `normal`, color: `rgba(var(--theme-fg-rgb), 0.5)` }]"
+		>
+			{{ item.emoji.commandString }}
+		</div>
+
 		<!-- Product state tags -->
 		<div
 			:style="
