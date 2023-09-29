@@ -84,6 +84,8 @@ export function initShellRoutes() {
 		shop: {
 			sidebar: undefined,
 			handler({ parts, trailingId }) {
+				// TODO(creator-shops) DODO: Figure out desired changes for the
+				// existing implementation.
 				let userId: number | undefined = undefined;
 				let shopId: number | undefined = undefined;
 
