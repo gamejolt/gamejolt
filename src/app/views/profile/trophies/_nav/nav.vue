@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppListGroupSelector from '../../../../../_common/list-group/selector/selector.vue';
-import { useProfileRouteController } from '../../RouteProfile.vue';
+import { useProfileRouteStore } from '../../RouteProfile.vue';
 
 export type TrophyNavGame = {
 	id: number;
@@ -26,7 +26,7 @@ export default class AppProfileTrophiesNav extends Vue {
 	@Prop(Array)
 	unviewedGames!: number[];
 
-	routeStore = setup(() => useProfileRouteController()!);
+	routeStore = setup(() => useProfileRouteStore()!);
 
 	readonly formatNumber = formatNumber;
 

@@ -4,7 +4,6 @@ import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
 const props = defineProps({
 	when: {
 		type: Boolean,
-		required: true,
 	},
 	animateInitial: {
 		type: Boolean,

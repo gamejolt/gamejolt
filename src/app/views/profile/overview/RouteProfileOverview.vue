@@ -70,9 +70,8 @@ import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
-import { showVendingMachineModal } from '../../../components/vending-machine/modal/modal.service';
 import { useAppStore } from '../../../store/index';
-import { useProfileRouteController } from '../RouteProfile.vue';
+import { useProfileRouteStore } from '../RouteProfile.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -105,7 +104,7 @@ const {
 	removeFriend,
 	sendFriendRequest,
 	cancelFriendRequest,
-} = useProfileRouteController()!;
+} = useProfileRouteStore()!;
 
 const { toggleLeftPane } = useAppStore();
 const { user: myUser } = useCommonStore();
@@ -625,16 +624,7 @@ async function onFriendRequestReject() {
 						</template>
 
 						<template v-if="hasSales">
-							<AppButton
-								solid
-								primary
-								block
-								@click="
-									showVendingMachineModal({
-										userId: routeUser.id,
-									})
-								"
-							>
+							<AppButton solid primary block :to="{ name: 'profile.shop' }">
 								{{ $gettext(`Open creator shop`) }}
 							</AppButton>
 							<br />
