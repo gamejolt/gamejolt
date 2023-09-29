@@ -204,7 +204,7 @@ export function createShopProductBaseForm<
 
 	const initialFormModel = ref<BaseFields & Fields>({
 		name: baseModel?.name || '',
-		description: baseModel?.description || '',
+		description: baseModel?.description,
 		file: undefined,
 		...fields,
 	});
@@ -265,7 +265,13 @@ export function createShopProductBaseForm<
 
 			const latestChange = latestChangeRequest.value;
 			if (latestChange) {
-				form.formModel.name = latestChange.change_name || form.formModel.name;
+				const name = latestChange.change_name || form.formModel.name;
+				form.formModel.name = name;
+				// Update our initial form model with our common fields so that
+				// diffs work properly for items that haven't been approved yet.
+				if (!isEditing || !baseModel?.was_approved) {
+					initialFormModel.value.name = name;
+				}
 			}
 
 			/** Helper for nullable resource from the payload. */
@@ -711,20 +717,17 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 						:img-url="existingImgUrl"
 						:model="initialFormModel"
 					>
-						<template v-if="baseModel && baseModel.was_approved">
-							<AppShopProductDiffImg
-								:typename="typename"
-								:img-url="existingImgUrl"
-								:style="{ marginBottom: `16px` }"
-							/>
-							<AppShopProductDiffMeta
-								:current="{
-									name: initialFormModel.name,
-									...getExtraDiffData(initialFormModel),
-								}"
-							/>
-						</template>
-						<div v-else class="help-text">This item hasn't been approved yet.</div>
+						<AppShopProductDiffImg
+							:typename="typename"
+							:img-url="existingImgUrl"
+							:style="{ marginBottom: `16px` }"
+						/>
+						<AppShopProductDiffMeta
+							:current="{
+								name: initialFormModel.name,
+								...getExtraDiffData(initialFormModel),
+							}"
+						/>
 					</slot>
 				</template>
 
@@ -826,7 +829,7 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 						<code>%{min}</code>
 						and
 						<code>%{max}</code>
-						(ratio of {{ (1 / aspectRatio) * aspectRatio }} ÷
+						(ratio of 1 ÷
 						{{
 							aspectRatio === 1
 								? 1

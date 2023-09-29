@@ -71,7 +71,7 @@ const data = createShopProductBaseForm({
 	},
 });
 
-const { form, paymentType, isEditing } = data;
+const { form, initialFormModel, paymentType, isEditing, baseModel } = data;
 
 const stickersError = computed(() => {
 	if (stickers.value.length < minStickers.value) {
@@ -105,11 +105,14 @@ function _setStickers(isInitial: boolean, newStickers: StickerModel[] | undefine
 		return;
 	}
 
+	const stickerIds = newStickers.map(i => i.id);
 	stickers.value = newStickers;
-	form.formModel.stickers = stickers.value.map(i => i.id);
+	form.formModel.stickers = stickerIds;
 
 	if (!isInitial) {
 		form.triggerChanged();
+	} else if (!isEditing || !model?.value?.was_approved) {
+		initialFormModel.value.stickers = stickerIds;
 	}
 }
 
@@ -151,6 +154,13 @@ const stickerItemStyles: CSSProperties = {
 	padding: `12px`,
 	position: `relative`,
 };
+
+const canModifyStickers = computed(() => {
+	if (!baseModel) {
+		return true;
+	}
+	return !baseModel.is_premium || !baseModel.was_approved;
+});
 </script>
 
 <template>
@@ -159,87 +169,96 @@ const stickerItemStyles: CSSProperties = {
 			<h2>{{ $gettext(`Stickers`) }}</h2>
 
 			<!-- TODO(creator-shops): this should be changed to show the message when it's not approved yet. -->
-			<div v-if="!isEditing" :style="{ marginBottom: `12px`, fontWeight: `bold` }">
-				{{
-					$gettext(
-						`Careful! You won't be able to change the stickers in this pack once it's been approved.`
-					)
-				}}
+			<div v-if="baseModel?.is_premium" :style="{ marginBottom: `12px`, fontWeight: `bold` }">
+				<template v-if="!canModifyStickers">
+					{{
+						$gettext(
+							`This sticker pack has been approved and the contents can't be changed.`
+						)
+					}}
+				</template>
+				<template v-else>
+					{{
+						$gettext(
+							`Careful! You won't be able to change the stickers in this pack once it's been approved.`
+						)
+					}}
+				</template>
 			</div>
 
-			<div>
+			<template v-if="canModifyStickers">
 				<AppButton solid :disabled="stickers.length >= maxStickers" @click="addStickers()">
 					{{ $gettext(`Add stickers`) }}
 				</AppButton>
-			</div>
 
-			<AppSpacer vertical :scale="4" />
-
-			<template v-if="stickers.length >= maxStickers">
-				<AppAlertBox fill-color="offset" icon="info-circle">
-					{{
-						$gettext(
-							`You've reached the limit of how many stickers you can add into this pack.`
-						)
-					}}
-				</AppAlertBox>
 				<AppSpacer vertical :scale="4" />
-			</template>
 
-			<div :style="stickerGridStyles">
-				<AppOnHover
-					v-for="sticker of stickers"
-					:key="sticker.id"
-					v-slot="{ hoverBinding, hovered }"
-				>
-					<div v-bind="hoverBinding" :style="stickerItemStyles">
-						<div
-							:style="[
-								{
-									position: `absolute`,
-									padding: `20px`,
-									top: `-${20 + 8}px`,
-									right: `-${20 + 8}px`,
-									opacity: 0,
-									transform: `scale(0)`,
-									transition: `all 300ms ${kStrongEaseOut}`,
-									pointerEvents: `none`,
-									cursor: `pointer`,
-								},
-								styleWhen(hovered, {
-									opacity: 1,
-									transform: `scale(1)`,
-									pointerEvents: `initial`,
-								}),
-							]"
-							@click="removeSticker(sticker)"
-						>
+				<template v-if="stickers.length >= maxStickers">
+					<AppAlertBox fill-color="offset" icon="info-circle">
+						{{
+							$gettext(
+								`You've reached the limit of how many stickers you can add into this pack.`
+							)
+						}}
+					</AppAlertBox>
+					<AppSpacer vertical :scale="4" />
+				</template>
+
+				<div :style="stickerGridStyles">
+					<AppOnHover
+						v-for="sticker of stickers"
+						:key="sticker.id"
+						v-slot="{ hoverBinding, hovered }"
+					>
+						<div v-bind="hoverBinding" :style="stickerItemStyles">
 							<div
 								:style="[
-									styleFlexCenter(),
 									{
-										width: `30px`,
-										height: `30px`,
-										borderRadius: `50%`,
-										backgroundColor: kThemeFg,
-										color: kThemeBg,
+										position: `absolute`,
+										padding: `20px`,
+										top: `-${20 + 8}px`,
+										right: `-${20 + 8}px`,
+										opacity: 0,
+										transform: `scale(0)`,
+										transition: `all 300ms ${kStrongEaseOut}`,
+										pointerEvents: `none`,
+										cursor: `pointer`,
 									},
+									styleWhen(hovered, {
+										opacity: 1,
+										transform: `scale(1)`,
+										pointerEvents: `initial`,
+									}),
 								]"
+								@click="removeSticker(sticker)"
 							>
-								<AppJolticon icon="remove" />
+								<div
+									:style="[
+										styleFlexCenter(),
+										{
+											width: `30px`,
+											height: `30px`,
+											borderRadius: `50%`,
+											backgroundColor: kThemeFg,
+											color: kThemeBg,
+										},
+									]"
+								>
+									<AppJolticon icon="remove" />
+								</div>
 							</div>
+							<AppStickerStackItem :img-url="sticker.img_url" />
 						</div>
-						<AppStickerStackItem :img-url="sticker.img_url" />
-					</div>
-				</AppOnHover>
-			</div>
-
-			<template v-if="stickersError">
-				<div class="control-erros">
-					<p class="help-block error anim-fade-in">
-						{{ stickersError }}
-					</p>
+					</AppOnHover>
 				</div>
+
+				<template v-if="stickersError">
+					<div class="control-erros">
+						<p class="help-block error anim-fade-in">
+							{{ stickersError }}
+						</p>
+					</div>
+				</template>
 			</template>
 
 			<AppSpacer vertical :scale="6" />

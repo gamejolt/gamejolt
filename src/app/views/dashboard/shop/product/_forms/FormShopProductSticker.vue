@@ -5,6 +5,8 @@ import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vu
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
 import {
+	validateAvailability,
+	validateEmojiName,
 	validateMaxLength,
 	validateMinLength,
 } from '../../../../../../_common/form-vue/validators';
@@ -40,18 +42,21 @@ const data = createShopProductBaseForm({
 		const changeData = JSON.parse(data.latestChangeRequest.value?.change_data || '{}');
 		if (changeData.emoji_name) {
 			data.form.formModel.emoji_name = changeData.emoji_name;
+			if (!data.isEditing || !model?.value?.was_approved) {
+				data.initialFormModel.value.emoji_name = changeData.emoji_name;
+			}
 		}
 	},
 });
 
-const { form, isEditing } = data;
+const { baseModel } = data;
 
-// TODO(creator-shops) Emoji name availability validator.
+// TODO(creator-shops) double check that this is correct.
 const emojiNameAvailabilityUrl = computed(() => {
-	if (isEditing) {
-		return ``;
+	if (model?.value) {
+		return `/web/dash/creators/stickers/check-field-availability/${model.value.id}/emojiName`;
 	}
-	return ``;
+	return `/web/dash/creators/stickers/check-field-availability/0/emojiName`;
 });
 </script>
 
@@ -70,10 +75,11 @@ const emojiNameAvailabilityUrl = computed(() => {
 					:validators="[
 						validateMinLength(emojiNameMinLength),
 						validateMaxLength(emojiNameMaxLength),
-						// validateAvailability({
-						// 	url: emojiNameAvailabilityUrl,
-						// 	initVal: form.formModel.emoji_name,
-						// }),
+						validateEmojiName(),
+						validateAvailability({
+							url: emojiNameAvailabilityUrl,
+							initVal: baseModel?.emoji?.short_name,
+						}),
 					]"
 				/>
 				<AppFormControlErrors />

@@ -60,7 +60,7 @@ const entries = computed(() =>
 
 function isFieldEqual(key: string): boolean {
 	if (!other?.value) {
-		return false;
+		return true;
 	}
 
 	return isSameValues(parseEntry(key, current.value[key]), parseEntry(key, other.value[key]));
