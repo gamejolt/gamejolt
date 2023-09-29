@@ -7,6 +7,8 @@ import AppDashShopItemImpl from './AppDashShopItemImpl.vue';
 
 export interface ShopItemStates {
 	published?: boolean;
+	/** "Published" state for charge items. */
+	chargeEnabled?: boolean;
 	inReview?: boolean;
 	rejected?: boolean;
 }

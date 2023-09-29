@@ -38,6 +38,7 @@ import {
 	validateMinLength,
 } from '../../../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
+import { InventoryShopProductSaleModel } from '../../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkHelpDocs from '../../../../../../_common/link/AppLinkHelpDocs.vue';
 import { ModelStoreModel, storeModel } from '../../../../../../_common/model/model-store.service';
@@ -64,7 +65,7 @@ import {
 	kLineHeightComputed,
 } from '../../../../../../_styles/variables';
 import { objectOmit } from '../../../../../../utils/object';
-import { run } from '../../../../../../utils/utils';
+import { isInstance, run } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
 import {
 	ShopManagerGroup,
@@ -468,12 +469,59 @@ const validateNameAvailabilityPath = computed(() => {
 	return `/web/dash/creators/stickers/check-field-availability/0/name`;
 });
 
-async function publishToShop() {
-	// TODO(creator-shops) Publish products
-}
+async function setProductPublishState(publish: boolean) {
+	if (!baseModel) {
+		return;
+	}
 
-async function removeFromShop() {
-	// TODO(creator-shops) Unlist products
+	let url: string;
+	let postData: any = {};
+	const isStickerPack = isInstance(baseModel, StickerPackModel);
+	if (isStickerPack) {
+		url = `/web/dash/creators/shop/packs/set-enabled`;
+		postData = {
+			pack_id: baseModel.id,
+			is_enabled: publish,
+		};
+	} else if (publish) {
+		url = `/web/dash/creators/shop/sales/create/${typename}/${baseModel.id}`;
+	} else {
+		url = `/web/dash/creators/shop/sales/remove/${typename}/${baseModel.id}`;
+	}
+
+	try {
+		const response = await Api.sendRequest(url, postData, { detach: true });
+
+		// TODO(creator-shops) The data returned doesn't include the actual shop
+		// product fields that we use for this form:
+		//
+		// is_premium
+		// has_active_sale
+		// was_approved
+		// is_active (free sticker packs only)
+		//
+		// We'll either need to manually update the models ourselves, reload the
+		// form, or push a new overview route and force load it somehow so we
+		// get the fresh data.
+		//
+		// If we'd doing any option other than the first one, we should lock the
+		// publish/unpublish controls if there are modifications to the form
+		// model.
+		//
+		// If we're locking the publish controls when there are modifications,
+		// we need something better than just `form.changed` as it doesn't
+		// un-dirty itself when fields are modified back to their original
+		// values.
+		if (isStickerPack && response.pack) {
+			storeModel(StickerPackModel, response.pack);
+		} else if (response.sale) {
+			// TODO(creator-shops) Only returned when publishing.
+			storeModel(InventoryShopProductSaleModel, response.sale);
+		}
+	} catch (e) {
+		console.error(`Error processing publish state change.`, { publish }, e);
+		showErrorGrowl($gettext(`Something went wrong. Please try again in a few minutes.`));
+	}
 }
 
 const premiumSelectorStyle: CSSProperties = {
@@ -774,12 +822,38 @@ function getExtraDiffData(target: typeof form.formModel) {
 
 			<slot />
 
-			<template v-if="baseModel?.was_approved">
-				<AppButton v-if="baseModel.has_active_sale" solid primary @click="publishToShop()">
-					{{ $gettext(`Publish to shop`) }}
+			<!-- Publish/unpublish button -->
+			<template
+				v-if="baseModel && baseModel.was_approved && !isInstance(baseModel, StickerModel)"
+			>
+				<AppButton
+					v-if="
+						baseModel.has_active_sale ||
+						(isInstance(baseModel, StickerPackModel) &&
+							!baseModel.is_premium &&
+							baseModel.is_active)
+					"
+					solid
+					@click="setProductPublishState(false)"
+				>
+					<template
+						v-if="isInstance(baseModel, StickerPackModel) && !baseModel.is_premium"
+					>
+						{{ $gettext(`Disable charge pack`) }}
+					</template>
+					<template v-else>
+						{{ $gettext(`Remove from shop`) }}
+					</template>
 				</AppButton>
-				<AppButton v-else solid @click="removeFromShop()">
-					{{ $gettext(`Remove from shop`) }}
+				<AppButton v-else solid primary @click="setProductPublishState(true)">
+					<template
+						v-if="isInstance(baseModel, StickerPackModel) && !baseModel.is_premium"
+					>
+						{{ $gettext(`Enable charge pack`) }}
+					</template>
+					<template v-else>
+						{{ $gettext(`Publish to shop`) }}
+					</template>
 				</AppButton>
 			</template>
 

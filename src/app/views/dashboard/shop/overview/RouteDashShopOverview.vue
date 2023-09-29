@@ -6,9 +6,11 @@ import {
 } from '../../../../../_common/route/route-component';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
+import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { touchUser } from '../../../../../_common/user/user.model';
 import { kBorderRadiusLg, kBorderWidthBase } from '../../../../../_styles/variables';
+import { isInstance } from '../../../../../utils/utils';
 import AppDashShopItem from '../product/_item/AppDashShopItem.vue';
 import AppDashShopItemAdd from '../product/_item/AppDashShopItemAdd.vue';
 import {
@@ -169,6 +171,10 @@ const itemBorderRadius = kBorderRadiusLg.value;
 					:border-width="itemBorderWidth"
 					:item-states="{
 						published: item.has_active_sale,
+						chargeEnabled:
+							isInstance(item, StickerPackModel) &&
+							!item.is_premium &&
+							item.is_active,
 						inReview: !item.was_approved,
 						// rejected: !!item.rejected_change_request,
 					}"
