@@ -1,6 +1,5 @@
 <script lang="ts" setup generic="T extends Record<string, any>">
 import { PropType, computed, toRefs } from 'vue';
-import { getModel } from '../../../../../../_common/model/model-store.service';
 import AppStickerStackItem from '../../../../../../_common/sticker/stack/AppStickerStackItem.vue';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { kThemeFgMuted } from '../../../../../../_common/theme/variables';
@@ -31,7 +30,7 @@ const props = defineProps({
 
 const { current, other } = toRefs(props);
 
-const { isSameValues } = useShopManagerStore()!;
+const { isSameValues, stickers } = useShopManagerStore()!;
 
 function parseEntry(key: string, val: any) {
 	const newEntry: [string, any] = [key, val];
@@ -39,16 +38,13 @@ function parseEntry(key: string, val: any) {
 	// Get sticker models from the ModelStore if we have a list of sticker
 	// IDs.
 	if (key === 'stickers' && Array.isArray(val) && val.length > 0 && typeof val[0] === 'number') {
-		// TODO (creator-shops) This won't show all the stickers selected if
-		// our primary route doesn't load them in.
-		const stickers = val.reduce((acc, id) => {
-			const model = getModel(StickerModel, id);
-			if (model) {
-				acc.push(model);
+		newEntry[1] = val.reduce((acc, id) => {
+			const sticker = stickers.value.items.find(sticker => sticker.id === id);
+			if (sticker) {
+				acc.push(sticker);
 			}
 			return acc;
 		}, [] as StickerModel[]);
-		newEntry[1] = stickers;
 	}
 
 	return newEntry;

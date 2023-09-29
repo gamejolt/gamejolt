@@ -5,7 +5,7 @@ import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { getModel, storeModelList } from '../../../../../../_common/model/model-store.service';
+import { storeModelList } from '../../../../../../_common/model/model-store.service';
 import AppOnHover from '../../../../../../_common/on/AppOnHover.vue';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
@@ -52,14 +52,10 @@ const data = createShopProductBaseForm({
 		let changeRequestStickers: StickerModel[];
 		const changeData = JSON.parse(data.latestChangeRequest.value?.change_data || '{}');
 		if (Array.isArray(changeData.sticker_ids)) {
-			// TODO(creator-shops) Backend only returns the stickers currently
-			// in the /APPROVED/ pack, not the ones in the /PENDING/ pack. We
-			// may want the actual resources returned so we're not solely
-			// relying on the model store having them.
-			changeRequestStickers = (changeData.sticker_ids as number[]).reduce((acc, i) => {
-				const model = getModel(StickerModel, i);
-				if (model) {
-					acc.push(model);
+			changeRequestStickers = (changeData.sticker_ids as number[]).reduce((acc, id) => {
+				const sticker = shopStore.stickers.value.items.find(sticker => sticker.id === id);
+				if (sticker) {
+					acc.push(sticker);
 				}
 				return acc;
 			}, [] as StickerModel[]);
