@@ -1,10 +1,8 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../../../_common/modal/modal.service';
 
-export async function showVendingMachineModal(options: { userId?: number; shopId?: number } = {}) {
-	const userId = options.userId;
-	// User id takes precedence over shop id.
-	const shopId = userId ? undefined : options.shopId;
+export async function showVendingMachineModal(options: { userId?: number } = {}) {
+	const { userId } = options;
 
 	return await showModal<void>({
 		modalId: 'VendingMachine',
@@ -12,7 +10,6 @@ export async function showVendingMachineModal(options: { userId?: number; shopId
 		size: 'lg',
 		props: {
 			userId,
-			shopId,
 		},
 	});
 }

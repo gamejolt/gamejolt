@@ -83,21 +83,8 @@ export function initShellRoutes() {
 		},
 		shop: {
 			sidebar: undefined,
-			handler({ parts, trailingId }) {
-				// TODO(creator-shops) DODO: Figure out desired changes for the
-				// existing implementation.
-				let userId: number | undefined = undefined;
-				let shopId: number | undefined = undefined;
-
-				if (parts.length && parts[0] === 'user') {
-					userId = trailingId;
-				} else if (trailingId) {
-					shopId = trailingId;
-				}
-				showVendingMachineModal({
-					userId,
-					shopId,
-				});
+			handler() {
+				showVendingMachineModal();
 				return { sidebar: undefined };
 			},
 		},

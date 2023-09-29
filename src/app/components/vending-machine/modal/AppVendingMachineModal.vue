@@ -75,17 +75,13 @@ interface ProductChunk {
 }
 
 const props = defineProps({
-	shopId: {
-		type: Number,
-		default: undefined,
-	},
 	userId: {
 		type: Number,
 		default: undefined,
 	},
 });
 
-const { shopId, userId } = toRefs(props);
+const { userId } = toRefs(props);
 
 const { isDark } = useThemeStore();
 const { coinBalance, joltbuxBalance } = useCommonStore();
@@ -123,9 +119,7 @@ async function init() {
 	isLoading.value = true;
 
 	let productUrl = `/web/inventory/shop/sales`;
-	if (shopId?.value) {
-		productUrl += `?shop=${shopId.value}`;
-	} else if (userId?.value) {
+	if (userId?.value) {
 		productUrl += `?userId=${userId.value}`;
 	}
 
