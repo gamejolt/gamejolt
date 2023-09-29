@@ -262,6 +262,11 @@ export function createShopProductBaseForm<
 				);
 			}
 
+			const latestChange = latestChangeRequest.value;
+			if (latestChange) {
+				form.formModel.name = latestChange.change_name || form.formModel.name;
+			}
+
 			/** Helper for nullable resource from the payload. */
 			function maybeStoreModel(model: new () => ModelStoreModel) {
 				if (payload.resource) {

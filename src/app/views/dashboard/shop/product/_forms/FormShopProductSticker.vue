@@ -32,6 +32,11 @@ const data = createShopProductBaseForm({
 		emojiNameMinLength.value = payload.emojiNameMinLength || emojiNameMinLength.value;
 		emojiNameMaxLength.value = payload.emojiNameMaxLength || emojiNameMaxLength.value;
 		emojiPrefix.value = payload.emojiPrefix || emojiPrefix.value;
+
+		const changeData = JSON.parse(data.latestChangeRequest.value?.change_data || '{}');
+		if (changeData.emoji_name) {
+			data.form.formModel.emoji_name = changeData.emoji_name;
+		}
 	},
 });
 </script>
