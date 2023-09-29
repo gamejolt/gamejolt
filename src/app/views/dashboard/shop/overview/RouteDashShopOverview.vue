@@ -39,8 +39,16 @@ createAppRoute({
 });
 
 function getPublishedCount(items: ShopManagerGroupItem[]) {
-	// TODO(creator-shops) DODO: Exclude items how you want to.
-	return items.reduce((result, i) => (i.has_active_sale ? result + 1 : result), 0);
+	return items.reduce((result, i) => {
+		// Free sticker packs aren't counted towards the published count.
+		if (isInstance(i, StickerPackModel) && !i.is_premium) {
+			return result;
+		}
+		if (i.has_active_sale) {
+			return result + 1;
+		}
+		return result;
+	}, 0);
 }
 
 const sectionData = computed<
