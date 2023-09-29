@@ -186,12 +186,8 @@ function getInfoTagStyles(type: 'inReview' | 'rejected') {
 		/>
 
 		<!-- Published tag -->
-		<div v-if="itemStates.published" :style="publishedTagStyles">
+		<div v-if="itemStates.published || itemStates.chargeEnabled" :style="publishedTagStyles">
 			<AppJolticon icon="marketplace-filled" />
-		</div>
-		<div v-else-if="itemStates.chargeEnabled" :style="publishedTagStyles">
-			<!-- TODO(creator-shops) What do you want to show here? -->
-			<AppJolticon icon="check" />
 		</div>
 
 		<!-- Premium/charge tag -->
@@ -208,14 +204,6 @@ function getInfoTagStyles(type: 'inReview' | 'rejected') {
 		<!-- Name -->
 		<div v-if="item.name" :style="nameStyles">
 			{{ item.name }}
-		</div>
-
-		<!-- TODO(creator-shops) Do you want to show the emoji name here? -->
-		<div
-			v-if="isInstance(item, StickerModel) && item.emoji"
-			:style="[nameStyles, { fontWeight: `normal`, color: `rgba(var(--theme-fg-rgb), 0.5)` }]"
-		>
-			{{ item.emoji.commandString }}
 		</div>
 
 		<!-- Product state tags -->

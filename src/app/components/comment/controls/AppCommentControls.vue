@@ -4,9 +4,9 @@ import { useRouter } from 'vue-router';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
-	$unvoteOnComment,
-	$voteOnComment,
-	CommentModel,
+$unvoteOnComment,
+$voteOnComment,
+CommentModel,
 } from '../../../../_common/comment/comment-model';
 import { CommentVoteType } from '../../../../_common/comment/vote/vote-model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
@@ -155,10 +155,9 @@ async function $voteComment(vote: number) {
 	}
 
 	if (result && result.comment) {
-		// TODO(creator-shops): check this
+		// Update the parent model so that it gets the latest data, like whether
+		// or not it has an owner like.
 		storeModel(CommentModel, result.comment);
-		// const resultComment = new CommentModel(result.comment);
-		// comment.value.has_owner_like = resultComment.has_owner_like;
 	}
 }
 

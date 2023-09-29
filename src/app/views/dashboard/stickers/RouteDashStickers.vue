@@ -461,7 +461,6 @@ function onPackEnabledChanged() {
 											validateImageAspectRatio({ ratio: packAspectRatio }),
 										]"
 										accept=".png,.jpg,.jpeg,.webp"
-										fix-overflow
 										@changed="onFileUploadChanged()"
 									/>
 

@@ -306,7 +306,6 @@ async function onClickIsActive() {
 					validateImageAspectRatio({ ratio: aspectRatio }),
 				]"
 				accept=".png"
-				fix-overflow
 				@changed="onFileUploadChanged()"
 			/>
 

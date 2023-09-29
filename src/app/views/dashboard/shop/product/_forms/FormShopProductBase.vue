@@ -865,7 +865,6 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 						validateImageAspectRatio({ ratio: aspectRatio }),
 					]"
 					accept=".png"
-					fix-overflow
 					@changed="setFile"
 				/>
 
