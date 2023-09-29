@@ -1,9 +1,13 @@
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
+import { computed, ref, toRefs } from 'vue';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
+import {
+	validateMaxLength,
+	validateMinLength,
+} from '../../../../../../_common/form-vue/validators';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { useShopManagerStore } from '../../shop.store';
@@ -39,16 +43,41 @@ const data = createShopProductBaseForm({
 		}
 	},
 });
+
+const { form, isEditing } = data;
+
+// TODO(creator-shops) Emoji name availability validator.
+const emojiNameAvailabilityUrl = computed(() => {
+	if (isEditing) {
+		return ``;
+	}
+	return ``;
+});
 </script>
 
 <template>
 	<!-- TODO(creator-shops) This should be checking both `canAddPremium` and
 	`canAddFree` for the sticker group. -->
 	<FormShopProductBase :data="data" :diff-keys="['emoji_name']">
-		<AppFormGroup name="emoji_name" :label="$gettext(`Emoji name`)">
-			<!-- TODO(creator-shops) validators for emoji name, use the same styling as [FormShopProductBase]. -->
-			<AppFormControl :placeholder="$gettext(`Emoji name...`)" />
-			<AppFormControlErrors />
-		</AppFormGroup>
+		<template #default="{ formGroupBindings }">
+			<AppFormGroup
+				v-bind="formGroupBindings"
+				name="emoji_name"
+				:label="$gettext(`Emoji name`)"
+			>
+				<AppFormControl
+					:placeholder="$gettext(`Emoji name...`)"
+					:validators="[
+						validateMinLength(emojiNameMinLength),
+						validateMaxLength(emojiNameMaxLength),
+						// validateAvailability({
+						// 	url: emojiNameAvailabilityUrl,
+						// 	initVal: form.formModel.emoji_name,
+						// }),
+					]"
+				/>
+				<AppFormControlErrors />
+			</AppFormGroup>
+		</template>
 	</FormShopProductBase>
 </template>

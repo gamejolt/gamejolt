@@ -16,6 +16,7 @@ import { Api } from '../../../../../../_common/api/api.service';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../../../_common/background/background.model';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
+import { ComponentProps } from '../../../../../../_common/component-helpers';
 import { CreatorChangeRequestModel } from '../../../../../../_common/creator/change-request/creator-change-request.model';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import AppForm, {
@@ -648,6 +649,13 @@ function getExtraDiffData(target: typeof form.formModel) {
 		return acc;
 	}, {} as any);
 }
+
+const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style: CSSProperties } = {
+	tinyLabelMargin: true,
+	style: {
+		marginBottom: kLineHeightComputed.px,
+	},
+};
 </script>
 
 <template>
@@ -793,13 +801,13 @@ function getExtraDiffData(target: typeof form.formModel) {
 			<AppSpacer vertical :scale="4" />
 
 			<AppFormGroup
+				v-bind="formGroupBindings"
 				name="file"
 				:label="
 					paymentType === ShopProductPaymentType.Premium
 						? $gettext(`Upload animated image`)
 						: $gettext(`Upload image`)
 				"
-				tiny-label-margin
 				:optional="isEditing"
 			>
 				<div class="help-block">
@@ -863,11 +871,8 @@ function getExtraDiffData(target: typeof form.formModel) {
 
 			<AppFormGroup
 				v-if="paymentType === ShopProductPaymentType.Premium || typename !== 'Sticker_Pack'"
+				v-bind="formGroupBindings"
 				name="name"
-				tiny-label-margin
-				:style="{
-					marginBottom: kLineHeightComputed.px,
-				}"
 			>
 				<AppFormControl
 					:placeholder="$gettext(`Product name...`)"
@@ -885,7 +890,7 @@ function getExtraDiffData(target: typeof form.formModel) {
 				<AppFormControlErrors />
 			</AppFormGroup>
 
-			<slot />
+			<slot v-bind="{ formGroupBindings }" />
 
 			<!-- Publish/unpublish button -->
 			<template
