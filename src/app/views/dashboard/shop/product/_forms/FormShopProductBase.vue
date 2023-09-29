@@ -41,6 +41,7 @@ import { showErrorGrowl } from '../../../../../../_common/growls/growls.service'
 import { InventoryShopProductSaleModel } from '../../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkHelpDocs from '../../../../../../_common/link/AppLinkHelpDocs.vue';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { ModelStoreModel, storeModel } from '../../../../../../_common/model/model-store.service';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
@@ -417,6 +418,8 @@ export function createShopProductBaseForm<
 		isEditing,
 		paymentType,
 		choosePaymentType,
+		changeRequest,
+		rejectedChangeRequest,
 		latestChangeRequest,
 	});
 }
@@ -446,6 +449,8 @@ const {
 	setFile,
 	existingImgUrl,
 	tempImgUrl,
+	changeRequest,
+	rejectedChangeRequest,
 	latestChangeRequest,
 	minWidth,
 	maxWidth,
@@ -474,9 +479,29 @@ async function setProductPublishState(publish: boolean) {
 		return;
 	}
 
+	const isStickerPack = isInstance(baseModel, StickerPackModel);
+	let confirmText: string;
+	if (publish) {
+		if (isStickerPack && !baseModel.is_premium) {
+			confirmText = $gettext(`Are you sure you want to enable this charge sticker pack?`);
+		} else {
+			confirmText = $gettext(`Are you sure you want to publish this product to the shop?`);
+		}
+	} else {
+		if (isStickerPack && !baseModel.is_premium) {
+			confirmText = $gettext(`Are you sure you want to disable this charge sticker pack?`);
+		} else {
+			confirmText = $gettext(`Are you sure you want to remove this product from the shop?`);
+		}
+	}
+
+	const canContinue = await showModalConfirm(confirmText);
+	if (!canContinue) {
+		return;
+	}
+
 	let url: string;
 	let postData: any = {};
-	const isStickerPack = isInstance(baseModel, StickerPackModel);
 	if (isStickerPack) {
 		url = `/web/dash/creators/shop/packs/set-enabled`;
 		postData = {
@@ -520,6 +545,41 @@ async function setProductPublishState(publish: boolean) {
 		}
 	} catch (e) {
 		console.error(`Error processing publish state change.`, { publish }, e);
+		showErrorGrowl($gettext(`Something went wrong. Please try again in a few minutes.`));
+	}
+}
+
+async function cancelChangeRequest() {
+	const changes = latestChangeRequest.value;
+	if (!changes || changes.rejected_on) {
+		return;
+	}
+
+	const canContinue = await showModalConfirm(
+		$gettext(`Are you sure you want to cancel your pending change request?`)
+	);
+	if (!canContinue) {
+		return;
+	}
+
+	try {
+		// TODO(creator-shops) Doesn't appear to do anything when canceling a
+		// change request for a product that isn't approved yet. Status changes,
+		// but the change request is still there and the product is still
+		// returned in the overview.
+		const response = await Api.sendRequest(
+			`/web/dash/creators/shop/change-requests/retract-submitted/${changes.id}`,
+			{},
+			{ detach: true }
+		);
+
+		if (response.request) {
+			storeModel(CreatorChangeRequestModel, response.request);
+			changeRequest.value = null;
+			rejectedChangeRequest.value = null;
+		}
+	} catch (e) {
+		console.error(`Error canceling pending change request.`, e);
 		showErrorGrowl($gettext(`Something went wrong. Please try again in a few minutes.`));
 	}
 }
@@ -854,6 +914,13 @@ function getExtraDiffData(target: typeof form.formModel) {
 					<template v-else>
 						{{ $gettext(`Publish to shop`) }}
 					</template>
+				</AppButton>
+			</template>
+
+			<!-- Cancel pending changes -->
+			<template v-if="latestChangeRequest && !latestChangeRequest.rejected_on">
+				<AppButton solid @click="cancelChangeRequest()">
+					{{ $gettext(`Cancel pending changes`) }}
 				</AppButton>
 			</template>
 

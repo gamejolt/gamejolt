@@ -189,6 +189,10 @@ function getInfoTagStyles(type: 'inReview' | 'rejected') {
 		<div v-if="itemStates.published" :style="publishedTagStyles">
 			<AppJolticon icon="marketplace-filled" />
 		</div>
+		<div v-else-if="itemStates.chargeEnabled" :style="publishedTagStyles">
+			<!-- TODO(creator-shops) What do you want to show here? -->
+			<AppJolticon icon="check" />
+		</div>
 
 		<!-- Premium/charge tag -->
 		<div v-if="item.is_premium" :style="premiumTagStyles">
