@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { trackCbarControlClick } from '../../../../_common/analytics/analytics.service';
-import AppCommunityAddWidget from '../../../../_common/community/add-widget/add-widget.vue';
+import AppCommunityAddWidget from '../../../../_common/community/add-widget/AppCommunityAddWidget.vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { useAppStore } from '../../../store';
 import { CBAR_WIDTH } from '../AppShell.vue';

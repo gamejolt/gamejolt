@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-property-decorator';
-import AppCommunityAddWidget from '../add-widget/add-widget.vue';
+import AppCommunityAddWidget from '../add-widget/AppCommunityAddWidget.vue';
 
 @Options({
 	components: {
