@@ -164,10 +164,6 @@ const canModifyStickers = computed(() => {
 		<template #default>
 			<h2>{{ $gettext(`Stickers`) }}</h2>
 
-			<!-- TODO(creator-shops) DODO(creator-shops) Tagging so you'll see
-			this, I did some messaging but it's not super in-depth. I hide the
-			whole sticker selector form when you're not able to modify, since
-			the diff shows the current state anyway. -->
 			<div v-if="baseModel?.is_premium" :style="{ marginBottom: `12px`, fontWeight: `bold` }">
 				<template v-if="!canModifyStickers">
 					{{
@@ -185,79 +181,82 @@ const canModifyStickers = computed(() => {
 				</template>
 			</div>
 
-			<template v-if="canModifyStickers">
-				<AppButton solid :disabled="stickers.length >= maxStickers" @click="addStickers()">
-					{{ $gettext(`Add stickers`) }}
-				</AppButton>
+			<AppButton
+				solid
+				:disabled="stickers.length >= maxStickers || !canModifyStickers"
+				@click="addStickers()"
+			>
+				{{ $gettext(`Add stickers`) }}
+			</AppButton>
 
+			<AppSpacer vertical :scale="4" />
+
+			<template v-if="stickers.length >= maxStickers">
+				<AppAlertBox fill-color="offset" icon="info-circle">
+					{{
+						$gettext(
+							`You've reached the limit of how many stickers you can add into this pack.`
+						)
+					}}
+				</AppAlertBox>
 				<AppSpacer vertical :scale="4" />
+			</template>
 
-				<template v-if="stickers.length >= maxStickers">
-					<AppAlertBox fill-color="offset" icon="info-circle">
-						{{
-							$gettext(
-								`You've reached the limit of how many stickers you can add into this pack.`
-							)
-						}}
-					</AppAlertBox>
-					<AppSpacer vertical :scale="4" />
-				</template>
-
-				<div :style="stickerGridStyles">
-					<AppOnHover
-						v-for="sticker of stickers"
-						:key="sticker.id"
-						v-slot="{ hoverBinding, hovered }"
-					>
-						<div v-bind="hoverBinding" :style="stickerItemStyles">
+			<div :style="stickerGridStyles">
+				<AppOnHover
+					v-for="sticker of stickers"
+					:key="sticker.id"
+					v-slot="{ hoverBinding, hovered }"
+				>
+					<div v-bind="hoverBinding" :style="stickerItemStyles">
+						<div
+							v-if="canModifyStickers"
+							:style="[
+								{
+									position: `absolute`,
+									padding: `20px`,
+									top: `-${20 + 8}px`,
+									right: `-${20 + 8}px`,
+									opacity: 0,
+									transform: `scale(0)`,
+									transition: `all 300ms ${kStrongEaseOut}`,
+									pointerEvents: `none`,
+									cursor: `pointer`,
+								},
+								styleWhen(hovered, {
+									opacity: 1,
+									transform: `scale(1)`,
+									pointerEvents: `initial`,
+								}),
+							]"
+							@click="removeSticker(sticker)"
+						>
 							<div
 								:style="[
+									styleFlexCenter(),
 									{
-										position: `absolute`,
-										padding: `20px`,
-										top: `-${20 + 8}px`,
-										right: `-${20 + 8}px`,
-										opacity: 0,
-										transform: `scale(0)`,
-										transition: `all 300ms ${kStrongEaseOut}`,
-										pointerEvents: `none`,
-										cursor: `pointer`,
+										width: `30px`,
+										height: `30px`,
+										borderRadius: `50%`,
+										backgroundColor: kThemeFg,
+										color: kThemeBg,
 									},
-									styleWhen(hovered, {
-										opacity: 1,
-										transform: `scale(1)`,
-										pointerEvents: `initial`,
-									}),
 								]"
-								@click="removeSticker(sticker)"
 							>
-								<div
-									:style="[
-										styleFlexCenter(),
-										{
-											width: `30px`,
-											height: `30px`,
-											borderRadius: `50%`,
-											backgroundColor: kThemeFg,
-											color: kThemeBg,
-										},
-									]"
-								>
-									<AppJolticon icon="remove" />
-								</div>
+								<AppJolticon icon="remove" />
 							</div>
-							<AppStickerStackItem :img-url="sticker.img_url" />
 						</div>
-					</AppOnHover>
-				</div>
-
-				<template v-if="stickersError">
-					<div class="control-erros">
-						<p class="help-block error anim-fade-in">
-							{{ stickersError }}
-						</p>
+						<AppStickerStackItem :img-url="sticker.img_url" />
 					</div>
-				</template>
+				</AppOnHover>
+			</div>
+
+			<template v-if="stickersError">
+				<div class="control-erros">
+					<p class="help-block error anim-fade-in">
+						{{ stickersError }}
+					</p>
+				</div>
 			</template>
 
 			<AppSpacer vertical :scale="6" />
