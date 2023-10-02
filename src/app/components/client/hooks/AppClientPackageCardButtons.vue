@@ -1,11 +1,14 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatFilesize } from '../../../../_common/filters/filesize';
-import { GameBuildModel, GameBuildType } from '../../../../_common/game/build/build.model';
-import { checkGameDeviceSupport, GameModel } from '../../../../_common/game/game.model';
+import {
+	canInstallGameBuild,
+	GameBuildType,
+	type GameBuildModel,
+} from '../../../../_common/game/build/build.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import AppGamePackageCardMoreOptions from '../../../../_common/game/package/card/AppGamePackageCardMoreOptions.vue';
 import { GamePackageCardModel } from '../../../../_common/game/package/card/card.model';
 import { GamePackageModel } from '../../../../_common/game/package/package.model';
@@ -53,19 +56,6 @@ const {
 	launcherLaunch,
 } = useClientLibraryStore();
 
-const build = ref<GameBuildModel>();
-const downloadableUnsupported = ref(false);
-const downloadableUnsupportedHasQuickPlay = ref(false);
-
-const canInstall = computed(() => {
-	const arch = getDeviceArch();
-	const os = getDeviceOS();
-
-	return card.value.downloadableBuild
-		? checkGameDeviceSupport(card.value.downloadableBuild, os!, arch)
-		: false;
-});
-
 const localPackage = computed(() => packagesById.value[pkg.value.id]);
 
 function buildClick(build: GameBuildModel, fromExtraSection?: boolean) {
@@ -82,6 +72,11 @@ function installClick(build: GameBuildModel) {
 }
 
 function startInstall(build: GameBuildModel) {
+	// Sanity check.
+	if (!canInstallGameBuild({ build })) {
+		throw new Error(`Attempted to install a non installable build ${build.id}`);
+	}
+
 	packageInstall(game.value, build._package!, build._release!, build, build._launch_options!);
 }
 
@@ -165,18 +160,19 @@ function retryUninstall() {
 	packageUninstall(localPackage.value);
 }
 
-// We want to put the installable build in extra builds as well.
+// We want to put the local build in extra builds as well.
 // This way they can also download it if they don't want to install.
-if (card.value.downloadableBuild) {
-	build.value = card.value.downloadableBuild;
+if (card.value.installableBuild) {
+	const _build = card.value.installableBuild;
 
 	// Gotta use the showcased OS for this since it's the OS that this build fulfilled.
 	card.value.extraBuilds.unshift({
-		type: build.value.type,
+		type: _build.type,
+		build: _build,
+		platform: _build.type,
+		// TODO(game-build-installers) this may be wrong if showcasedOs is not based on the installable build. Test this.
 		icon: card.value.platformSupportInfo[card.value.showcasedOs].icon,
-		build: build.value,
 		arch: card.value.platformSupportInfo[card.value.showcasedOs].arch || null,
-		platform: build.value.type,
 	});
 }
 
@@ -187,13 +183,13 @@ if (
 	card.value.browserBuild.type !== GameBuildType.Html &&
 	card.value.browserBuild.type !== GameBuildType.Rom
 ) {
-	build.value = card.value.browserBuild;
+	const _build = card.value.browserBuild;
 
 	card.value.extraBuilds.unshift({
-		type: build.value.type,
-		icon: card.value.platformSupportInfo[build.value.type].icon,
-		build: build.value,
-		platform: build.value.type,
+		type: _build.type,
+		icon: card.value.platformSupportInfo[_build.type].icon,
+		build: _build,
+		platform: _build.type,
 		arch: null,
 	});
 
@@ -201,28 +197,47 @@ if (
 	card.value.browserBuild = null;
 }
 
-// If we can't install the downloadable build, then we need to show a message.
-if (card.value.downloadableBuild && !canInstall.value) {
-	// If there is a quick play web build, then we show a different msg.
-	if (card.value.browserBuild) {
-		downloadableUnsupportedHasQuickPlay.value = true;
-	} else {
-		downloadableUnsupported.value = true;
-	}
+// This sets up proper messaging for what you can or cannot do with the build.
+enum BuildCapability {
+	Installable,
+	QuickPlayable,
+	Runnable,
+	Unsupported,
+}
+const buildCapability = ref(BuildCapability.Unsupported);
+
+if (card.value.installableBuild) {
+	buildCapability.value = BuildCapability.Installable;
+} else if (card.value.browserBuild) {
+	buildCapability.value = BuildCapability.QuickPlayable;
+} else if (card.value.runnableBuild) {
+	buildCapability.value = BuildCapability.Runnable;
+} else {
+	buildCapability.value = BuildCapability.Unsupported;
 }
 </script>
 
 <template>
 	<div class="package-card-buttons">
 		<!-- Messaging for weird cases... -->
-		<div v-if="downloadableUnsupported" class="alert">
+		<div v-if="buildCapability === BuildCapability.Unsupported" class="alert">
 			<p>
 				<AppJolticon icon="notice" notice />
-				<AppTranslate>This package can not be installed on your system.</AppTranslate>
+				<AppTranslate>This package is not supported on your system.</AppTranslate>
 			</p>
 		</div>
 
-		<div v-if="downloadableUnsupportedHasQuickPlay" class="alert">
+		<div v-else-if="buildCapability === BuildCapability.Runnable" class="alert">
+			<p>
+				<AppJolticon icon="notice" notice />
+				<AppTranslate>
+					This package can not be installed using the Desktop App, but may work if you
+					download it
+				</AppTranslate>
+			</p>
+		</div>
+
+		<div v-else-if="buildCapability === BuildCapability.QuickPlayable" class="alert">
 			<p>
 				<AppJolticon icon="notice" notice />
 				<AppTranslate>
@@ -284,13 +299,13 @@ if (card.value.downloadableBuild && !canInstall.value) {
 
 		<!-- Able to install game -->
 		<AppButton
-			v-if="canInstall && !localPackage"
+			v-if="card.installableBuild && !localPackage"
 			primary
 			icon="download-box"
-			@click="installClick(card.downloadableBuild!)"
+			@click="installClick(card.installableBuild)"
 		>
 			<AppTranslate>Install</AppTranslate>
-			<small>({{ formatFilesize(card.downloadableBuild!.primary_file.filesize) }})</small>
+			<small>({{ formatFilesize(card.installableBuild.primary_file.filesize) }})</small>
 		</AppButton>
 
 		<!-- Game is installing or installed -->

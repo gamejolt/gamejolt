@@ -46,6 +46,7 @@ const showcasedBrowserIcon = computed(() => packageCard.value.showcasedBrowserIc
 const platformSupportInfo = computed(() => packageCard.value.platformSupportInfo);
 const showcasedOs = computed(() => packageCard.value.showcasedOs);
 const showcasedOsIcon = computed(() => packageCard.value.showcasedOsIcon);
+// TODO(game-build-installers) this is probably broken if viewing package widgets from the client and the downloadableBuild and installableBuild are different.
 const extraBuilds = computed(() => packageCard.value.extraBuilds);
 const otherOnly = computed(() => packageCard.value.otherOnly);
 

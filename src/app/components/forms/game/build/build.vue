@@ -710,86 +710,105 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							</AppTranslate>
 						</p>
 
-						<!--
-							Launch Options
-						-->
-						<fieldset
+						<template
 							v-if="
 								!hasPlatformsError &&
 								model.type === GameBuildTypes.downloadable &&
 								!model.os_other
 							"
-							class="form-horizontal"
 						>
-							<legend><AppTranslate>Launch Options</AppTranslate></legend>
+							<hr />
 
-							<div v-if="model.primary_file.is_archive">
-								<AppFormGroup
-									v-for="platform of availablePlatformOptions"
-									:key="platform.key"
-									:name="`launch_${platform.key}`"
-									:label="platform.label"
-									label-class="col-sm-3"
-								>
-									<div class="col-sm-9">
-										<div class="input-group input-group-sm">
-											<AppFormControl
-												:validators="[validateMaxLength(500)]"
-												@changed="onBuildFieldChanged"
-											/>
-											<!--  TODO: this doesn't register when the file is selected to clear the error -->
+							<AppFormGroup name="is_installer" :label="$gettext(`Is Installer?`)">
+								<template #inline-control>
+									<AppFormControlToggle @changed="onBuildFieldChanged" />
+								</template>
 
-											<span class="input-group-addon">
-												<a
-													v-app-tooltip="$gettext(`Browse file list.`)"
-													class="link-unstyled"
-													@click="openFileSelector(platform.key)"
-												>
-													<AppJolticon icon="ellipsis-h" />
-												</a>
-											</span>
-										</div>
-
-										<AppFormControlErrors
-											:ignore-dirty="true"
-											:label="$gettext(`path to the executable file`)"
-										/>
-									</div>
-								</AppFormGroup>
-							</div>
-
-							<AppExpand :when="serverErrors.launchOptions">
-								<div class="alert alert-notice">
-									<strong>
-										<AppTranslate>
-											The launch options you entered are invalid.
-										</AppTranslate>
-									</strong>
+								<p class="help-block">
 									<AppTranslate>
-										Make sure each selected file is in your build and that it
-										works on the appropriate operating system.
+										The Desktop App does not support automatically installing
+										games using installers. It will download them through the
+										browser instead.
 									</AppTranslate>
-								</div>
-							</AppExpand>
+								</p>
+							</AppFormGroup>
 
-							<AppExpand :when="!model.primary_file.is_archive">
-								<div>
-									<p>
+							<!--
+								Launch Options
+							-->
+							<fieldset class="form-horizontal">
+								<legend><AppTranslate>Launch Options</AppTranslate></legend>
+
+								<div v-if="model.primary_file.is_archive">
+									<AppFormGroup
+										v-for="platform of availablePlatformOptions"
+										:key="platform.key"
+										:name="`launch_${platform.key}`"
+										:label="platform.label"
+										label-class="col-sm-3"
+									>
+										<div class="col-sm-9">
+											<div class="input-group input-group-sm">
+												<AppFormControl
+													:validators="[validateMaxLength(500)]"
+													@changed="onBuildFieldChanged"
+												/>
+												<!--  TODO: this doesn't register when the file is selected to clear the error -->
+
+												<span class="input-group-addon">
+													<a
+														v-app-tooltip="
+															$gettext(`Browse file list.`)
+														"
+														class="link-unstyled"
+														@click="openFileSelector(platform.key)"
+													>
+														<AppJolticon icon="ellipsis-h" />
+													</a>
+												</span>
+											</div>
+
+											<AppFormControlErrors
+												:ignore-dirty="true"
+												:label="$gettext(`path to the executable file`)"
+											/>
+										</div>
+									</AppFormGroup>
+								</div>
+
+								<AppExpand :when="serverErrors.launchOptions">
+									<div class="alert alert-notice">
 										<strong>
 											<AppTranslate>
-												We've detected that this build is a standalone
-												executable file.
+												The launch options you entered are invalid.
 											</AppTranslate>
 										</strong>
-									</p>
-									<p>
 										<AppTranslate>
-											It can be launched automatically.
+											Make sure each selected file is in your build and that
+											it works on the appropriate operating system.
 										</AppTranslate>
-									</p>
-								</div>
-							</AppExpand>
-						</fieldset>
+									</div>
+								</AppExpand>
+
+								<AppExpand :when="!model.primary_file.is_archive">
+									<div>
+										<p>
+											<strong>
+												<AppTranslate>
+													We've detected that this build is a standalone
+													executable file.
+												</AppTranslate>
+											</strong>
+										</p>
+										<p>
+											<AppTranslate>
+												It can be launched automatically.
+											</AppTranslate>
+										</p>
+									</div>
+								</AppExpand>
+							</fieldset>
+						</template>
 
 						<!--
 							Browser Embed Dimensions

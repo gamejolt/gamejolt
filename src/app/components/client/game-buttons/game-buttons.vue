@@ -48,9 +48,6 @@ export default class AppClientGameButtons extends Vue {
 	label?: string;
 
 	@Prop(Boolean)
-	hasInstallableBuilds?: boolean;
-
-	@Prop(Boolean)
 	canInstall?: boolean;
 
 	@Prop(Boolean)
@@ -147,11 +144,11 @@ export default class AppClientGameButtons extends Vue {
 		const payload = await Api.sendRequest('/web/discover/games/packages/' + this.game.id);
 
 		const packageData = new GamePackagePayloadModel(payload);
-		packageData.installableBuilds = pluckInstallableGameBuilds(
-			packageData.packages,
-			this.os!,
-			this.arch
-		);
+		packageData.installableBuilds = pluckInstallableGameBuilds({
+			packages: packageData.packages,
+			os: this.os!,
+			arch: this.arch,
+		});
 
 		return packageData;
 	}

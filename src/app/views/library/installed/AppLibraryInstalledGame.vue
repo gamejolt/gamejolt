@@ -66,7 +66,6 @@ const shouldShowControls = computed(() => {
 				<AppClientGameButtons
 					:game="game._game"
 					overlay
-					has-installable-builds
 					can-install
 					@show-options="isShowingOptions = true"
 					@hide-options="isShowingOptions = false"
