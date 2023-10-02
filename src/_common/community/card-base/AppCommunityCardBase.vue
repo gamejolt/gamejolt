@@ -1,6 +1,6 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, PropType, toRefs } from 'vue';
+import { useRoute } from 'vue-router';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
@@ -10,55 +10,36 @@ import { CommunityModel, isEditingCommunity } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 
-@Options({
-	components: {
-		AppTheme,
-		AppCommunityVerifiedTick,
-		AppCommunityJoinWidget,
-	},
-})
-export default class AppCommunityCardBase extends Vue {
-	@Prop({ type: Object, required: true }) community!: CommunityModel;
-	@Prop({ type: Boolean, default: false }) overflow!: boolean;
-	@Prop({ type: Boolean, default: false }) elevate!: boolean;
-	@Prop({ type: Boolean, default: true }) allowEdit!: boolean;
-	@Prop({ type: Boolean, default: false }) trackGoto!: boolean;
+const props = defineProps({
+	community: { type: Object as PropType<CommunityModel>, required: true },
+	overflow: { type: Boolean },
+	elevate: { type: Boolean },
+	allowEdit: { type: Boolean, default: true },
+	trackGoto: { type: Boolean },
+});
 
-	commonStore = setup(() => useCommonStore());
+const { community, overflow, elevate, allowEdit, trackGoto } = toRefs(props);
 
-	get user() {
-		return this.commonStore.user;
-	}
+const { user } = useCommonStore();
+const route = useRoute();
 
-	readonly formatNumber = formatNumber;
-	readonly Environment = Environment;
+const memberCount = computed(() => community.value.member_count || 0);
 
-	get memberCount() {
-		return this.community.member_count || 0;
-	}
+const headerBackgroundImage = computed(() =>
+	community.value.header ? `url('${community.value.header.mediaserver_url}')` : undefined
+);
 
-	get headerBackgroundImage() {
-		return this.community.header
-			? `url('${this.community.header.mediaserver_url}')`
-			: undefined;
-	}
+const isEditing = computed(() => isEditingCommunity(route));
 
-	get isEditing() {
-		return isEditingCommunity(this.$route);
-	}
+const shouldShowModTools = computed(() => user.value && user.value.isMod);
 
-	get shouldShowModTools() {
-		return this.user && this.user.isMod;
-	}
-
-	trackGotoCommunity() {
-		if (this.trackGoto) {
-			trackGotoCommunity({
-				source: 'card',
-				id: this.community.id,
-				path: this.community.path,
-			});
-		}
+function doTrackGotoCommunity() {
+	if (trackGoto.value) {
+		trackGotoCommunity({
+			source: 'card',
+			id: community.value.id,
+			path: community.value.path,
+		});
 	}
 }
 </script>
@@ -86,7 +67,7 @@ export default class AppCommunityCardBase extends Vue {
 					<router-link
 						:to="community.routeLocation"
 						class="link-unstyled"
-						@click="trackGotoCommunity()"
+						@click="doTrackGotoCommunity"
 					>
 						{{ community.name }}
 						<AppCommunityVerifiedTick :community="community" />
@@ -125,7 +106,7 @@ export default class AppCommunityCardBase extends Vue {
 							primary
 							block
 							:to="community.routeLocation"
-							@click="trackGotoCommunity()"
+							@click="doTrackGotoCommunity"
 						>
 							<AppTranslate>View Community</AppTranslate>
 						</AppButton>

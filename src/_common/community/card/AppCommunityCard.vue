@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
-import AppCommunityCardBase from '../card-base/card-base.vue';
+import AppCommunityCardBase from '../card-base/AppCommunityCardBase.vue';
 import { CommunityModel } from '../community.model';
 import AppCommunityThumbnailImg from '../thumbnail/AppCommunityThumbnailImg.vue';
 
