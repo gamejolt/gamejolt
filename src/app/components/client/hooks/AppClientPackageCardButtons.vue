@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatFilesize } from '../../../../_common/filters/filesize';
@@ -160,24 +160,10 @@ function retryUninstall() {
 	packageUninstall(localPackage.value);
 }
 
-// We want to put the local build in extra builds as well.
-// This way they can also download it if they don't want to install.
-if (card.value.installableBuild) {
-	const _build = card.value.installableBuild;
-
-	// Gotta use the showcased OS for this since it's the OS that this build fulfilled.
-	card.value.extraBuilds.unshift({
-		type: _build.type,
-		build: _build,
-		platform: _build.type,
-		// TODO(game-build-installers) this may be wrong if showcasedOs is not based on the installable build. Test this.
-		icon: card.value.platformSupportInfo[card.value.showcasedOs].icon,
-		arch: card.value.platformSupportInfo[card.value.showcasedOs].arch || null,
-	});
-}
-
-// If the browser build isn't an HTML/ROM build, then it can't be
-// quick played in their client.
+// If the browser build isn't an HTML/ROM build, then it can't be quick played
+// in the desktop app. It might be playable in the browser tho.
+//
+// TODO(game-build-installers) this is extremely silly. put this logic in card model.
 if (
 	card.value.browserBuild &&
 	card.value.browserBuild.type !== GameBuildType.Html &&
@@ -203,23 +189,34 @@ enum BuildCapability {
 	QuickPlayable,
 	Runnable,
 	Unsupported,
+	NonExistant,
 }
-const buildCapability = ref(BuildCapability.Unsupported);
 
-if (card.value.installableBuild) {
-	buildCapability.value = BuildCapability.Installable;
-} else if (card.value.browserBuild) {
-	buildCapability.value = BuildCapability.QuickPlayable;
-} else if (card.value.runnableBuild) {
-	buildCapability.value = BuildCapability.Runnable;
-} else {
-	buildCapability.value = BuildCapability.Unsupported;
-}
+const buildCapability = computed(() => {
+	if (card.value.primaryAction === 'install') {
+		return BuildCapability.Installable;
+	} else if (card.value.browserBuild) {
+		return BuildCapability.QuickPlayable;
+	} else if (card.value.primaryIsCompatible) {
+		return BuildCapability.Runnable;
+	} else if (card.value.primaryBuild) {
+		return BuildCapability.Unsupported;
+	} else {
+		return BuildCapability.NonExistant;
+	}
+});
 </script>
 
 <template>
 	<div class="package-card-buttons">
 		<!-- Messaging for weird cases... -->
+		<div v-if="buildCapability === BuildCapability.NonExistant" class="alert">
+			<p>
+				<AppJolticon icon="notice" notice />
+				<AppTranslate>This package does not have any builds.</AppTranslate>
+			</p>
+		</div>
+
 		<div v-if="buildCapability === BuildCapability.Unsupported" class="alert">
 			<p>
 				<AppJolticon icon="notice" notice />
@@ -242,7 +239,7 @@ if (card.value.installableBuild) {
 				<AppJolticon icon="notice" notice />
 				<AppTranslate>
 					This package can not be installed on your system, but can be quick played in the
-					client.
+					Desktop App.
 				</AppTranslate>
 			</p>
 		</div>
@@ -299,13 +296,13 @@ if (card.value.installableBuild) {
 
 		<!-- Able to install game -->
 		<AppButton
-			v-if="card.installableBuild && !localPackage"
+			v-if="card.primaryAction === 'install' && card.primaryBuild && !localPackage"
 			primary
 			icon="download-box"
-			@click="installClick(card.installableBuild)"
+			@click="installClick(card.primaryBuild)"
 		>
 			<AppTranslate>Install</AppTranslate>
-			<small>({{ formatFilesize(card.installableBuild.primary_file.filesize) }})</small>
+			<small>({{ formatFilesize(card.primaryBuild.primary_file.filesize) }})</small>
 		</AppButton>
 
 		<!-- Game is installing or installed -->

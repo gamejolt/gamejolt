@@ -40,13 +40,12 @@ const clickedBuild = ref<GameBuildModel>();
 // "Convenience" I guess
 const hasBrowserBuild = computed(() => !!packageCard.value.browserBuild);
 const browserBuild = computed(() => packageCard.value.browserBuild!);
-const hasDownloadableBuild = computed(() => !!packageCard.value.downloadableBuild);
-const downloadableBuild = computed(() => packageCard.value.downloadableBuild!);
+const hasDownloadableBuild = computed(() => !!packageCard.value.primaryBuild);
+const downloadableBuild = computed(() => packageCard.value.primaryBuild!);
 const showcasedBrowserIcon = computed(() => packageCard.value.showcasedBrowserIcon);
 const platformSupportInfo = computed(() => packageCard.value.platformSupportInfo);
 const showcasedOs = computed(() => packageCard.value.showcasedOs);
 const showcasedOsIcon = computed(() => packageCard.value.showcasedOsIcon);
-// TODO(game-build-installers) this is probably broken if viewing package widgets from the client and the downloadableBuild and installableBuild are different.
 const extraBuilds = computed(() => packageCard.value.extraBuilds);
 const otherOnly = computed(() => packageCard.value.otherOnly);
 

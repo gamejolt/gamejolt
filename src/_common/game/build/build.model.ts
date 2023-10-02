@@ -220,6 +220,9 @@ export class GameBuildModel extends Model {
 		return false;
 	}
 
+	/**
+	 * Note: ROM games, despite being quick playable are not considered browser based.
+	 */
 	get isBrowserBased() {
 		return GameBuildBrowserTypes.indexOf(this.type) !== -1;
 	}
@@ -345,41 +348,4 @@ export function canRunGameBuild(options: {
 	}
 
 	return false;
-}
-
-export function pluckGameBuildOsSupport(build: GameBuildModel) {
-	const support = [];
-
-	// We only include the 64-bit versions if the build doesn't have 32bit and 64bit
-	// on the same build. That basically just means it's a universal build.
-
-	if (build.os_windows) {
-		support.push('windows');
-	}
-
-	if (build.os_windows_64 && !build.os_windows) {
-		support.push('windows_64');
-	}
-
-	if (build.os_mac) {
-		support.push('mac');
-	}
-
-	if (build.os_mac_64 && !build.os_mac) {
-		support.push('mac_64');
-	}
-
-	if (build.os_linux) {
-		support.push('linux');
-	}
-
-	if (build.os_linux_64 && !build.os_linux) {
-		support.push('linux_64');
-	}
-
-	if (build.os_other) {
-		support.push('other');
-	}
-
-	return support;
 }

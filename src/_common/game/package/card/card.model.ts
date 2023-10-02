@@ -18,36 +18,60 @@ interface ExtraBuild {
 	build: GameBuildModel;
 	platform: string;
 	arch: string | null;
+	sort?: number;
 }
 
 /**
- * A model that contains information that is used to render and interact with game package cards.
+ * A model that contains information that is used to render and interact with
+ * game package cards.
+ *
+ * You can do 3 things with a game package card's builds:
+ * - Download or install a non browser based build that is compatible with the
+ *   current device.
+ * - Quick play a build directly in the browser.
+ * - Download other builds in the package that are not compatible.
  */
 export class GamePackageCardModel {
 	platformSupportInfo = Object.assign({}, GameBuildPlatformSupportInfo);
 	platformSupport: string[] = [];
 	/**
-	 * The "most suitable" build that is playable on the current device after
-	 * downloading it (e.g. not a browser build).
+	 * This build is the target of the main action button on the game package
+	 * card.
+	 *
+	 * This is the "most compatible" non browser based build available in the
+	 * package. If there is no compatible build it defaults to Windows, then
+	 * Mac, then Linux. If there are no downloadable builds at all, this will be
+	 * null.
 	 */
-	downloadableBuild: GameBuildModel | null = null;
+	primaryBuild: GameBuildModel | null = null;
 	/**
-	 * The "most suitable" build that is runnable on the current device.
+	 * The platform of the primary build. This is used to show the icon on the
+	 * main action button.
 	 */
-	runnableBuild: GameBuildModel | null = null;
+	primaryPlatform: string | null = null;
 	/**
-	 * The "most suitable" build that is installable on the current device using
-	 * the GJ desktop app. A build is installable if it is a runnable build
-	 * and is not marked as an installer.
+	 * Says what you can do with the primary build.
 	 */
-	installableBuild: GameBuildModel | null = null;
+	primaryAction: 'install' | 'download' = 'download';
+	/**
+	 * Whether the primary build is compatible with the current device.
+	 */
+	primaryIsCompatible = false;
+	/**
+	 * The "most suitable" build that is able to quick play.
+	 */
 	browserBuild: GameBuildModel | null = null;
 	/**
-	 * All of the package's builds, sorted by how much they are "suitable" for
-	 * the current device, excluding the "most suitable" one.
+	 * All of the package's builds excluding primaryBuild and browserBuild. The
+	 * order of the builds here is the order they will be displayed in the popup
+	 * menu when choosing other builds.
 	 *
-	 * TODO(game-build-installers) since most suitable is contextual, we might
-	 * need different extraBuilds depending on the conetxt as well..
+	 * Their order is the same as the input builds, except builds that are
+	 * compatible with the current device are sorted to the top.
+	 *
+	 * Also, if primaryBuild is installable, it is also prepended to the head of
+	 * the list, which allows the user to download the game instead of
+	 * installing it.
 	 */
 	extraBuilds: ExtraBuild[] = [];
 	showcasedRelease: GameReleaseModel | null = null;
@@ -73,18 +97,19 @@ export class GamePackageCardModel {
 
 			// Indexes by the os/type of the build: [ { type: build } ]
 			// While looping we also gather all OS/browser support for this complete package.
-			const indexedBuilds: { [k: string]: GameBuildModel } = {};
+			const winMacLinuxBuilds: { [k: string]: GameBuildModel } = {};
+			const browserBasedBuilds: { [k: string]: GameBuildModel } = {};
 			const otherBuilds: GameBuildModel[] = [];
 			builds.forEach(build => {
 				// Browser based builds can be played on the browser.
 				if (build.isBrowserBased) {
-					indexedBuilds[build.type] = build;
+					browserBasedBuilds[build.type] = build;
 					this.platformSupport.push(build.type);
 				}
 				// ROMs are special cases as they can be treated as
 				// downloadables or emulated on the browser.
 				else if (build.type === GameBuildType.Rom) {
-					indexedBuilds[build.type] = build;
+					browserBasedBuilds[build.type] = build;
 					this.platformSupport.push(build.type);
 					// Adding them to other builds lets them show as downloadables.
 					otherBuilds.push(build);
@@ -106,7 +131,7 @@ export class GamePackageCardModel {
 				// a build that IS exclusively 64bit.
 				else {
 					pluckGameBuildOsSupport(build).forEach(platform => {
-						indexedBuilds[platform] = build;
+						winMacLinuxBuilds[platform] = build;
 						this.platformSupport.push(this.platformSupportInfo[platform].icon);
 					});
 				}
@@ -134,7 +159,7 @@ export class GamePackageCardModel {
 			// Now that we have all the builds indexed by the platform they support
 			// we need to try to pick one to showcase as the default. We put
 			// their detected OS first so that it tries to pick that one first.
-			const checkDownloadables = [
+			let checkDownloadables = [
 				'windows',
 				'windows_64',
 				'mac',
@@ -153,69 +178,76 @@ export class GamePackageCardModel {
 				checkDownloadables.unshift(os);
 			}
 
-			// TODO(game-build-installers) This picks the preferable
-			// downloadable build but it doesnt take into consideration if that
-			// build is installable. Some parts of the code need
-			// downloadableBuild for actually downloading it and some for
-			// installing it. For the latter, we want to fall back to the other
-			// build if its installable and the "preferred" one is not. This
-			// means we probably want a different field for when we want a build
-			// for installing... Need to go through everything that uses
-			// downloadableBuild and see if it needs to change.
+			checkDownloadables = arrayUnique(checkDownloadables);
+
+			let installableBuild: { platform: string; build: GameBuildModel } | null = null;
+			const runnableBuilds: { platform: string; build: GameBuildModel }[] = [];
+			let fallbackBuild: { platform: string; build: GameBuildModel } | null = null;
+
 			for (const platform of checkDownloadables) {
-				if (!indexedBuilds[platform]) {
+				if (!winMacLinuxBuilds[platform]) {
 					continue;
 				}
 
-				const build = indexedBuilds[platform];
+				const build = winMacLinuxBuilds[platform];
 
-				// The first build is always downloadable, even if it isnt
-				// guaranteed to run on the current device.
-				if (!this.downloadableBuild) {
-					this.downloadableBuild = build;
-					// TODO(game-build-installers) we might want to save showcasedOs/Icon for runnableBuild and installableBuild too to display the correct thing depending on context.
-					this.showcasedOs = platform;
-					this.showcasedOsIcon = this.platformSupportInfo[platform].icon;
+				// Only resolve the installableBuild on desktop app.
+				if (
+					GJ_IS_DESKTOP_APP &&
+					!installableBuild &&
+					canInstallGameBuild({ build, os, arch })
+				) {
+					installableBuild = { platform, build };
+					continue;
 				}
 
-				if (!this.runnableBuild && canRunGameBuild({ build, os, arch })) {
-					this.runnableBuild = build;
+				if (canRunGameBuild({ build, os, arch })) {
+					runnableBuilds.push({ platform, build });
+					continue;
 				}
 
-				if (!this.installableBuild && canInstallGameBuild({ build, os, arch })) {
-					this.installableBuild = build;
-				}
+				fallbackBuild ??= { platform, build };
+			}
 
-				// If we found both, can stop looping.
-				if (this.downloadableBuild && this.installableBuild) {
-					break;
-				}
+			// Choose the primary build.
+			if (installableBuild) {
+				this.primaryBuild = installableBuild.build;
+				this.primaryPlatform = installableBuild.platform;
+				this.primaryAction = 'install';
+				this.primaryIsCompatible = true;
+			} else if (runnableBuilds.length) {
+				this.primaryBuild = runnableBuilds[0].build;
+				this.primaryPlatform = runnableBuilds[0].platform;
+				this.primaryAction = 'download';
+				this.primaryIsCompatible = true;
+			} else {
+				this.primaryBuild = fallbackBuild?.build ?? null;
+				this.primaryPlatform = fallbackBuild?.platform ?? null;
+				this.primaryAction = 'download';
+				this.primaryIsCompatible = false;
+			}
+
+			// Choose the chowcased OS based on the primary build.
+			if (this.primaryBuild) {
+				this.showcasedOs = this.primaryPlatform!;
+				this.showcasedOsIcon = this.platformSupportInfo[this.showcasedOs].icon;
 			}
 
 			// Do the same with browser type. Pick the default browser one to
 			// show. We include ROMs in browser play.
 			['html', 'flash', 'unity', 'applet', 'silverlight', 'rom'].every(type => {
-				if (!indexedBuilds[type]) {
+				if (!browserBasedBuilds[type]) {
 					return true;
 				}
 
-				this.browserBuild = indexedBuilds[type];
+				this.browserBuild = browserBasedBuilds[type];
 				this.showcasedBrowserIcon = this.platformSupportInfo[type].icon;
 				return false;
 			});
 
-			// TODO(game-build-installers) do we want the showcased release to
-			// be based off of the installable build, runnable build or
-			// downloadable build?
-			const localBuild = GJ_IS_DESKTOP_APP
-				? this.installableBuild ?? this.runnableBuild ?? this.downloadableBuild
-				: this.downloadableBuild;
-
-			// Pull the showcased release version.
-			// It should be the greater one for either the local or browser build chosen.
-			if (localBuild) {
-				this.showcasedRelease = localBuild._release || null;
-			}
+			// Pick which release to show between the priamry build and browser build.
+			// We prefer showing the latest of the two.
+			this.showcasedRelease = this.primaryBuild?._release || null;
 
 			// Lower sort value is a "newer" version.
 			if (
@@ -226,17 +258,12 @@ export class GamePackageCardModel {
 				this.showcasedRelease = this.browserBuild._release || null;
 			}
 
-			const addExtraBuild = (build: GameBuildModel, type: string) => {
-				// Whether or not we stored this build in extra builds yet.
-				let alreadyAdded = false;
-				this.extraBuilds.forEach(extraBuild => {
-					if (extraBuild.build.id === build.id) {
-						alreadyAdded = true;
-					}
-				});
-
-				if (alreadyAdded) {
-					return;
+			const addExtraBuild = (build: GameBuildModel, type: string, sort?: number) => {
+				sort ??= this.platformSupportInfo[type]?.sort;
+				if (sort === undefined) {
+					throw new Error(
+						`Could not infer sort value when adding build ${build.id} of type ${type}`
+					);
 				}
 
 				this.extraBuilds.push({
@@ -245,49 +272,90 @@ export class GamePackageCardModel {
 					build: build,
 					arch: this.platformSupportInfo[type].arch || null,
 					platform: type,
+					sort: sort,
 				});
 			};
 
-			// Now pull the extra builds (ones that aren't default).
-			Object.keys(indexedBuilds).forEach(type => {
-				const build = indexedBuilds[type];
+			// Populate the extraBuilds.
+			//
+			// Start with the primary build. If it is installable, we also want
+			// to offer it as a downloadable. Sort value of -100 ensures it is
+			// at the top.
+			if (this.primaryAction === 'install') {
+				addExtraBuild(this.primaryBuild!, this.primaryPlatform!, -100);
+			}
 
-				if (build === localBuild && type === this.showcasedOs) {
-					return;
+			// All compatible downloadable builds.
+			for (const idx in runnableBuilds) {
+				const runnable = runnableBuilds[idx];
+
+				// Skip the primary build.
+				if (
+					runnable.build === this.primaryBuild &&
+					runnable.platform === this.primaryPlatform
+				) {
+					continue;
 				}
 
-				if (build.type !== GameBuildType.Downloadable) {
-					if (this.browserBuild && this.browserBuild.id === build.id) {
-						return;
-					}
+				addExtraBuild(
+					runnable.build,
+					runnable.platform,
+					// We want to sort these after the primary build but before
+					// everything else.
+					parseInt(idx) - 50
+				);
+			}
+
+			// All browser builds.
+			for (const platform in browserBasedBuilds) {
+				const build = browserBasedBuilds[platform];
+
+				// Skip the main browser build.
+				if (build === this.browserBuild) {
+					continue;
 				}
 
-				addExtraBuild(build, type);
+				addExtraBuild(build, platform);
+			}
+
+			// All other downloadable builds.
+			for (const platform in winMacLinuxBuilds) {
+				const build = winMacLinuxBuilds[platform];
+
+				// Skip the primary build.
+				if (build === this.primaryBuild && platform === this.primaryPlatform) {
+					continue;
+				}
+
+				addExtraBuild(build, platform);
+			}
+
+			// All other builds.
+			for (const build of otherBuilds) {
+				let supportKey = 'other';
+
+				// ROMs were added to other builds to make sure they are
+				// downloadable. Show the ROM icon for them tho.
+				if (build.type === GameBuildType.Rom) {
+					supportKey = 'rom';
+				}
+
+				addExtraBuild(
+					build,
+					supportKey,
+					// Make sure they are sorted last.
+					this.platformSupportInfo[supportKey].sort + 100
+				);
+			}
+
+			// Sort.
+			this.extraBuilds.sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+			// Deduplicate by platform (keep first entry).
+			this.extraBuilds = this.extraBuilds.filter((value, index, self) => {
+				return self.findIndex(v => v.platform === value.platform) === index;
 			});
 
-			// Add all the "Other" builds onto the end of extra.
-			if (otherBuilds.length) {
-				otherBuilds.forEach(build => {
-					let supportKey = 'other';
-					if (build.type === GameBuildType.Rom) {
-						supportKey = 'rom';
-					}
-
-					addExtraBuild(build, supportKey);
-				});
-			}
-
-			// Sort extra builds if there are any.
-			if (this.extraBuilds.length) {
-				this.extraBuilds.sort((a, b) => {
-					return (
-						this.platformSupportInfo[a.platform].sort -
-						this.platformSupportInfo[b.platform].sort
-					);
-				});
-			}
-
-			if (!localBuild && !this.browserBuild && otherBuilds.length) {
+			if (!this.primaryBuild && !this.browserBuild && otherBuilds.length) {
 				this.otherOnly = true;
 				this.showcasedRelease = releases[0];
 			}
@@ -309,30 +377,26 @@ function pluckGameBuildOsSupport(build: GameBuildModel) {
 
 	if (build.os_windows) {
 		support.push('windows');
-	}
-
-	if (build.os_windows_64 && !build.os_windows) {
+	} else if (build.os_windows_64) {
 		support.push('windows_64');
 	}
 
 	if (build.os_mac) {
 		support.push('mac');
-	}
-
-	if (build.os_mac_64 && !build.os_mac) {
+	} else if (build.os_mac_64) {
 		support.push('mac_64');
 	}
 
 	if (build.os_linux) {
 		support.push('linux');
-	}
-
-	if (build.os_linux_64 && !build.os_linux) {
+	} else if (build.os_linux_64) {
 		support.push('linux_64');
 	}
 
-	if (build.os_other) {
-		support.push('other');
+	if (!support.length) {
+		throw new Error(
+			`Expected build to be compatible with at least one known OS. Got build ${build.id} with type ${build.type}.`
+		);
 	}
 
 	return support;

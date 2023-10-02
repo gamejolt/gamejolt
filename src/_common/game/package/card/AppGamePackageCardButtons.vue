@@ -40,9 +40,9 @@ function click(build: GameBuildModel, fromExtraSection = false) {
 		{{ ' ' }}
 
 		<AppButton
-			v-if="card.downloadableBuild"
+			v-if="card.primaryBuild"
 			:primary="!card.browserBuild"
-			@click="click(card.downloadableBuild!)"
+			@click="click(card.primaryBuild!)"
 		>
 			<AppTranslate>Download</AppTranslate>
 			{{ ' ' }}
@@ -50,7 +50,7 @@ function click(build: GameBuildModel, fromExtraSection = false) {
 				<AppTranslate>64-bit</AppTranslate>
 			</small>
 			<small class="hidden-xs">
-				({{ formatFilesize(card.downloadableBuild.primary_file.filesize) }})
+				({{ formatFilesize(card.primaryBuild.primary_file.filesize) }})
 			</small>
 			<AppJolticon class="jolticon-addon" :icon="card.showcasedOsIcon" />
 		</AppButton>
