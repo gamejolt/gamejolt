@@ -164,7 +164,10 @@ const canModifyStickers = computed(() => {
 		<template #default>
 			<h2>{{ $gettext(`Stickers`) }}</h2>
 
-			<!-- TODO(creator-shops): this should be changed to show the message when it's not approved yet. -->
+			<!-- TODO(creator-shops) DODO(creator-shops) Tagging so you'll see
+			this, I did some messaging but it's not super in-depth. I hide the
+			whole sticker selector form when you're not able to modify, since
+			the diff shows the current state anyway. -->
 			<div v-if="baseModel?.is_premium" :style="{ marginBottom: `12px`, fontWeight: `bold` }">
 				<template v-if="!canModifyStickers">
 					{{
