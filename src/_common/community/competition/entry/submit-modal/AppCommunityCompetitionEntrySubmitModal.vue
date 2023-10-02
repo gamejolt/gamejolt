@@ -1,90 +1,82 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, onMounted, ref, toRefs } from 'vue';
 import { Api } from '../../../../api/api.service';
 import { GameModel } from '../../../../game/game.model';
 import AppGameThumbnail from '../../../../game/thumbnail/AppGameThumbnail.vue';
 import AppGameThumbnailImg from '../../../../game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../growls/growls.service';
 import AppLoading from '../../../../loading/AppLoading.vue';
-import { BaseModal } from '../../../../modal/base';
+import { useModal } from '../../../../modal/modal.service';
+import { $gettext } from '../../../../translate/translate.service';
 import { CommunityCompetitionModel } from '../../competition.model';
 import { CommunityCompetitionEntryModel } from '../entry.model';
 
-@Options({
-	components: {
-		AppLoading,
-		AppGameThumbnailImg,
-		AppGameThumbnail,
-	},
-})
-export default class AppCommunityCompetitionEntrySubmitModal extends mixins(BaseModal) {
-	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
+const props = defineProps({
+	competition: { type: Object as PropType<CommunityCompetitionModel>, required: true },
+});
 
-	games: GameModel[] = [];
-	isLoading = true;
-	selectedGame: GameModel | null = null;
-	isSubmitting = false;
+const { competition } = toRefs(props);
+const games = ref<GameModel[]>([]);
+const isLoading = ref(true);
+const selectedGame = ref<GameModel | null>(null);
+const isSubmitting = ref(false);
+const modal = useModal()!;
 
-	get hasSelectedGame() {
-		return this.selectedGame !== null;
+onMounted(() => {
+	loadGames();
+});
+
+async function loadGames() {
+	isLoading.value = true;
+
+	const payload = await Api.sendRequest(
+		`/web/communities/competitions/entries/list-games/${competition.value.id}`
+	);
+
+	if (payload.games) {
+		games.value = GameModel.populate(payload.games);
 	}
 
-	mounted() {
-		this.loadGames();
+	isLoading.value = false;
+}
+
+function onClickSelectGame(game: GameModel) {
+	selectedGame.value = game;
+}
+
+async function onClickSubmit() {
+	if (!selectedGame.value || isSubmitting.value) {
+		return;
 	}
 
-	private async loadGames() {
-		this.isLoading = true;
+	isSubmitting.value = true;
 
+	try {
 		const payload = await Api.sendRequest(
-			`/web/communities/competitions/entries/list-games/${this.competition.id}`
+			`/web/communities/competitions/entries/submit-game/${competition.value.id}/${selectedGame.value.id}`,
+			{},
+			{
+				noErrorRedirect: true,
+			}
 		);
 
-		if (payload.games) {
-			this.games = GameModel.populate(payload.games);
+		if (payload.success) {
+			const entry = new CommunityCompetitionEntryModel(payload.entry);
+			modal.resolve(entry);
+		} else {
+			console.error(payload);
+			throw new Error('Payload error');
 		}
+	} catch (error) {
+		showErrorGrowl($gettext(`Could not submit your game to the jam :(`));
 
-		this.isLoading = false;
+		// Reset modal, try again?
+		selectedGame.value = null;
+		games.value = [];
+		loadGames();
 	}
 
-	onClickSelectGame(game: GameModel) {
-		this.selectedGame = game;
-	}
-
-	async onClickSubmit() {
-		if (!this.selectedGame || this.isSubmitting) {
-			return;
-		}
-
-		this.isSubmitting = true;
-
-		try {
-			const payload = await Api.sendRequest(
-				`/web/communities/competitions/entries/submit-game/${this.competition.id}/${this.selectedGame.id}`,
-				{},
-				{
-					noErrorRedirect: true,
-				}
-			);
-
-			if (payload.success) {
-				const entry = new CommunityCompetitionEntryModel(payload.entry);
-				this.modal.resolve(entry);
-			} else {
-				console.error(payload);
-				throw new Error('Payload error');
-			}
-		} catch (error) {
-			showErrorGrowl(this.$gettext(`Could not submit your game to the jam :(`));
-
-			// Reset modal, try again?
-			this.selectedGame = null;
-			this.games = [];
-			this.loadGames();
-		}
-
-		this.isSubmitting = false;
-	}
+	isSubmitting.value = false;
 }
 </script>
 
