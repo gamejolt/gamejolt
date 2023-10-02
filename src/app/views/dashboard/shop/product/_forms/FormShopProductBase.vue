@@ -313,7 +313,7 @@ export function createShopProductBaseForm<
 			);
 		},
 		onSubmitError(_response) {
-			// TODO(creator-shops) errors
+			// TODO(creator-shops) DODO(creator-shops) errors
 			let message: string | null = null;
 
 			showErrorGrowl(message || $gettext(`There was an error saving your product.`));
@@ -330,7 +330,8 @@ export function createShopProductBaseForm<
 
 			if (response.resource) {
 				switch (typename) {
-					// TODO(creator-shops) We need these items to return a new image url as required.
+					// TODO(creator-shops) (backend) We need these items to
+					// return a new image url when the image is changed.
 					case 'Avatar_Frame':
 						updateGroup(
 							shopStore.avatarFrames,
@@ -536,8 +537,8 @@ async function setProductPublishState(publish: boolean) {
 	try {
 		const response = await Api.sendRequest(url, postData, { detach: true });
 
-		// TODO(creator-shops) The data returned doesn't include the actual shop
-		// product fields that we use for this form:
+		// TODO(creator-shops) (call) The data returned doesn't include the
+		// actual shop product fields that we use for this form:
 		//
 		// is_premium
 		// has_active_sale
@@ -582,10 +583,10 @@ async function cancelChangeRequest() {
 	}
 
 	try {
-		// TODO(creator-shops) Doesn't appear to do anything when canceling a
-		// change request for a product that isn't approved yet. Status changes,
-		// but the change request is still there and the product is still
-		// returned in the overview.
+		// TODO(creator-shops) (backend) Doesn't appear to do anything when
+		// canceling a change request for a product that isn't approved yet.
+		// Status changes, but the change request is still there and the product
+		// is still returned in the overview.
 		const response = await Api.sendRequest(
 			`/web/dash/creators/shop/change-requests/retract-submitted/${changes.id}`,
 			{},
@@ -846,7 +847,7 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 				</div>
 
 				<p class="help-block">
-					<!-- TODO(creator-shops) help docs. -->
+					<!-- TODO(creator-shops) DODO(creator-shops) help docs. -->
 					<AppLinkHelpDocs
 						category="creators"
 						:page="productTypeFromTypename(typename)"

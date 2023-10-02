@@ -54,8 +54,8 @@ const { baseModel, getFieldAvailabilityUrl } = data;
 </script>
 
 <template>
-	<!-- TODO(creator-shops) This should be checking both `canAddPremium` and
-	`canAddFree` for the sticker group. -->
+	<!-- TODO(creator-shops) (call) This should be checking both `canAddPremium`
+	and `canAddFree` for the sticker group. -->
 	<FormShopProductBase :data="data" :diff-keys="['emoji_name']">
 		<template #default="{ formGroupBindings }">
 			<AppFormGroup
