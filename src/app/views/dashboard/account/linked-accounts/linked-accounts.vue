@@ -5,7 +5,7 @@ import { Api } from '../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import {
 	LinkedAccountModel,
-	Provider,
+	LinkedAccountProvider,
 	getLinkedAccountProviderDisplayName,
 } from '../../../../../_common/linked-account/linked-account.model';
 import AppLinkedAccount from '../../../../../_common/linked-account/linked-account.vue';
@@ -16,7 +16,7 @@ import {
 } from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { UserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
+import { showUserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 @Options({
@@ -33,6 +33,10 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 	routeStore = setup(() => useAccountRouteController()!);
 	commonStore = setup(() => useCommonStore());
 
+	readonly accountProviderFacebook = LinkedAccountProvider.Facebook;
+	readonly accountProviderGoogle = LinkedAccountProvider.Google;
+	readonly accountProviderTwitch = LinkedAccountProvider.Twitch;
+
 	get user() {
 		return this.commonStore.user;
 	}
@@ -41,18 +45,18 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 	loading = false;
 
 	get facebookAccount() {
-		return this.getAccount(LinkedAccountModel.PROVIDER_FACEBOOK);
+		return this.getAccount(LinkedAccountProvider.Facebook);
 	}
 
 	get googleAccount() {
-		return this.getAccount(LinkedAccountModel.PROVIDER_GOOGLE);
+		return this.getAccount(LinkedAccountProvider.Google);
 	}
 
 	get twitchAccount() {
-		return this.getAccount(LinkedAccountModel.PROVIDER_TWITCH);
+		return this.getAccount(LinkedAccountProvider.Twitch);
 	}
 
-	getAccount(provider: string) {
+	getAccount(provider: LinkedAccountProvider) {
 		if (this.accounts) {
 			for (const account of this.accounts) {
 				if (account.provider === provider) {
@@ -75,7 +79,7 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 		this.accounts = LinkedAccountModel.populate($payload.accounts);
 	}
 
-	async onLink(provider: Provider) {
+	async onLink(provider: LinkedAccountProvider) {
 		this.loading = true;
 		await LinkedAccounts.link(
 			this.$router,
@@ -85,7 +89,7 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 		);
 	}
 
-	async onUnlink(provider: Provider) {
+	async onUnlink(provider: LinkedAccountProvider) {
 		if (!this.user) {
 			return;
 		}
@@ -107,7 +111,7 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 		} else {
 			// If they don't have a password, we have to show them a modal to set it.
 			if (response.reason === 'no-password') {
-				const result = await UserSetPasswordModal.show();
+				const result = await showUserSetPasswordModal();
 				if (!result) {
 					this.loading = false;
 					return;
@@ -136,7 +140,7 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 				<AppLinkedAccount
 					:account="facebookAccount"
 					:disabled="loading"
-					provider="facebook"
+					:provider="accountProviderFacebook"
 					@link="onLink"
 					@sync="onLink"
 					@unlink="onUnlink"
@@ -146,7 +150,7 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 				<AppLinkedAccount
 					:account="googleAccount"
 					:disabled="loading"
-					provider="google"
+					:provider="accountProviderGoogle"
 					@link="onLink"
 					@sync="onLink"
 					@unlink="onUnlink"
@@ -156,7 +160,7 @@ export default class RouteDashAccountLinkedAccounts extends LegacyRouteComponent
 				<AppLinkedAccount
 					:account="twitchAccount"
 					:disabled="loading"
-					provider="twitch"
+					:provider="accountProviderTwitch"
 					@link="onLink"
 					@sync="onLink"
 					@unlink="onUnlink"

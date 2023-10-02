@@ -12,6 +12,7 @@ import { ContextCapabilities } from '../../../../_common/content/content-context
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { FiresidePostCommunityModel } from '../../../../_common/fireside/post/community/community.model';
 import {
+	$saveFiresidePost,
 	FiresidePostAllowComments,
 	FiresidePostModel,
 	FiresidePostStatus,
@@ -357,7 +358,7 @@ const form: FormController<FormPostModel> = createForm({
 
 		form.formModel.poll_duration = pollDuration.value * 60; // site-api expects duration in seconds.
 
-		return form.formModel.$save();
+		return $saveFiresidePost(form.formModel);
 	},
 	onSubmitSuccess() {
 		Object.assign(model.value, form.formModel);

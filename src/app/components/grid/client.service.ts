@@ -8,7 +8,7 @@ import { FiresideModel } from '../../../_common/fireside/fireside.model';
 import { FiresidePostCommunityModel } from '../../../_common/fireside/post/community/community.model';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import { FiresideStreamNotificationModel } from '../../../_common/fireside/stream-notification/stream-notification.model';
-import { GameTrophy } from '../../../_common/game/trophy/trophy.model';
+import { GameTrophyModel } from '../../../_common/game/trophy/trophy.model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import { ModelStoreModel } from '../../../_common/model/model-store.service';
 import { Model } from '../../../_common/model/model.service';
@@ -19,7 +19,7 @@ import {
 import { NotificationText } from '../../../_common/notification/notification-text.service';
 import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
-import { SiteTrophy } from '../../../_common/site/trophy/trophy.model';
+import { SiteTrophyModel } from '../../../_common/site/trophy/trophy.model';
 import {
 	SocketController,
 	createSocketController,
@@ -28,8 +28,8 @@ import { commonStore } from '../../../_common/store/common-store';
 import { EventTopic } from '../../../_common/system/event/event-topic';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { getTrophyImg } from '../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
-import { UserGameTrophy } from '../../../_common/user/trophy/game-trophy.model';
-import { UserSiteTrophy } from '../../../_common/user/trophy/site-trophy.model';
+import { UserGameTrophyModel } from '../../../_common/user/trophy/game-trophy.model';
+import { UserSiteTrophyModel } from '../../../_common/user/trophy/site-trophy.model';
 import { UserModel } from '../../../_common/user/user.model';
 import { arrayRemove } from '../../../utils/array';
 import { createLogger } from '../../../utils/logging';
@@ -385,8 +385,8 @@ export class GridClient {
 				}
 			} else if (notification.type === NotificationType.GameTrophyAchieved) {
 				if (
-					notification.action_model instanceof UserGameTrophy &&
-					notification.action_model.trophy instanceof GameTrophy
+					notification.action_model instanceof UserGameTrophyModel &&
+					notification.action_model.trophy instanceof GameTrophyModel
 				) {
 					title = $gettext(`Trophy Unlocked!`);
 					message = notification.action_model.trophy.title;
@@ -394,8 +394,8 @@ export class GridClient {
 				}
 			} else if (notification.type === NotificationType.SiteTrophyAchieved) {
 				if (
-					notification.action_model instanceof UserSiteTrophy &&
-					notification.action_model.trophy instanceof SiteTrophy
+					notification.action_model instanceof UserSiteTrophyModel &&
+					notification.action_model.trophy instanceof SiteTrophyModel
 				) {
 					title = $gettext(`Trophy Unlocked!`);
 					message = notification.action_model.trophy.title;

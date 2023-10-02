@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import { arrayRemove } from '../../utils/array';
 import { getCurrentServerTime } from '../../utils/server-time';
 import { Api } from '../api/api.service';
-import { EmojiSelectorModal } from '../emoji/selector-modal/modal.service';
+import { showEmojiSelectorModal } from '../emoji/selector-modal/modal.service';
 import { showErrorGrowl } from '../growls/growls.service';
 import { PayloadError } from '../payload/payload-service';
 import { $gettext } from '../translate/translate.service';
@@ -54,7 +54,7 @@ export class ReactionCount {
 }
 
 export async function selectReactionForResource(model: ReactionableModel) {
-	const emoji = await EmojiSelectorModal.show({
+	const emoji = await showEmojiSelectorModal({
 		type: 'reactions',
 		modelData: {
 			type: 'resource',

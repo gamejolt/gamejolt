@@ -5,7 +5,10 @@ import { formatNumber } from '../../../../../../../../_common/filters/number';
 import { GameScoreTableModel } from '../../../../../../../../_common/game/score-table/score-table.model';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../../../../_common/popper/AppPopper.vue';
-import { UserGameScoreModel } from '../../../../../../../../_common/user/game-score/game-score.model';
+import {
+	$removeUserGameScore,
+	UserGameScoreModel,
+} from '../../../../../../../../_common/user/game-score/game-score.model';
 
 @Options({
 	components: {
@@ -32,7 +35,7 @@ export default class AppManageGameListScores extends Vue {
 			return;
 		}
 
-		await score.$remove();
+		await $removeUserGameScore(score);
 
 		this.emitRemove(score);
 	}

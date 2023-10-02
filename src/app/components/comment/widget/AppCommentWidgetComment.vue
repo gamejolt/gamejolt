@@ -5,13 +5,13 @@ import { CollaboratorModel } from '../../../../_common/collaborator/collaborator
 import AppCommentBlocked from '../../../../_common/comment/AppCommentBlocked.vue';
 import AppCommentContent from '../../../../_common/comment/AppCommentContent.vue';
 import {
+	$followComment,
+	$unfollowComment,
 	canCommentOnModel,
 	CommentableModel,
 	CommentModel,
-	followComment,
 	getCommentBlockReason,
 	removeComment,
-	unfollowComment,
 } from '../../../../_common/comment/comment-model';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -21,7 +21,7 @@ import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-serv
 import { Model } from '../../../../_common/model/model.service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
-import { ReportModal } from '../../../../_common/report/modal/modal.service';
+import { showReportModal } from '../../../../_common/report/modal/modal.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
@@ -223,9 +223,9 @@ async function doRemoveComment() {
 
 function onFollowClick() {
 	if (!comment.value.subscription) {
-		followComment(comment.value);
+		$followComment(comment.value);
 	} else {
-		unfollowComment(comment.value);
+		$unfollowComment(comment.value);
 	}
 }
 
@@ -234,7 +234,7 @@ function copyPermalink() {
 }
 
 function report() {
-	ReportModal.show(comment.value);
+	showReportModal(comment.value);
 }
 
 function onUnhideBlock() {

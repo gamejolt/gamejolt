@@ -21,10 +21,10 @@ export class CommunityUserNotificationModel extends Model {
 			this.community = new CommunityModel(data.community);
 		}
 	}
+}
 
-	$remove() {
-		return this.$_remove(`/web/dash/communities/user-notifications/dismiss/${this.id}`, {
-			ignoreLoadingBar: true,
-		});
-	}
+export function $removeCommunityUserNotification(model: CommunityUserNotificationModel) {
+	return model.$_remove(`/web/dash/communities/user-notifications/dismiss/${model.id}`, {
+		ignoreLoadingBar: true,
+	});
 }

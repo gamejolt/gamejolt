@@ -15,9 +15,10 @@ import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppMessageThread from '../../../../../_common/message-thread/AppMessageThread.vue';
 import AppMessageThreadAdd from '../../../../../_common/message-thread/AppMessageThreadAdd.vue';
 import AppMessageThreadItem from '../../../../../_common/message-thread/AppMessageThreadItem.vue';
+import { $readNotification } from '../../../../../_common/notification/notification-model';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
-import { ReportModal } from '../../../../../_common/report/modal/modal.service';
+import { showReportModal } from '../../../../../_common/report/modal/modal.service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
@@ -159,13 +160,13 @@ export default class AppForumPostListItem extends Vue {
 	}
 
 	report() {
-		ReportModal.show(this.post);
+		showReportModal(this.post);
 	}
 
 	onInviewChange(isInView: boolean) {
 		if (isInView && this.post.notification) {
 			// Don't wait for success before updating the view.
-			this.post.notification.$read();
+			$readNotification(this.post.notification);
 			this.post.notification = undefined;
 		}
 	}

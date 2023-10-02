@@ -2,6 +2,7 @@
 import { nextTick } from 'vue';
 import { Emit, mixins, Options } from 'vue-property-decorator';
 import {
+	$saveCommunityCompetitionVoting,
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
 	VotingType,
@@ -33,8 +34,9 @@ class Wrapper extends BaseForm<CommunityCompetitionModel> {}
 })
 export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) {
 	modelClass = CommunityCompetitionModel;
+	modelSaveHandler = $saveCommunityCompetitionVoting;
+
 	timezoneService: FormTimezoneService<CommunityCompetitionModel> | null = null;
-	saveMethod = '$saveVoting' as const;
 
 	readonly formatDate = formatDate;
 

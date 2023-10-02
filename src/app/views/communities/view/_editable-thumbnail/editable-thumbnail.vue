@@ -3,7 +3,7 @@ import { Inject, Options, Vue } from 'vue-property-decorator';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import { CommunityThumbnailModal } from '../../../../components/forms/community/thumbnail/modal/modal.service';
+import { showCommunityThumbnailModal } from '../../../../components/forms/community/thumbnail/modal/modal.service';
 import { routeCommunitiesViewEditDetails } from '../edit/details/details.route';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 
@@ -34,7 +34,7 @@ export default class AppEditableThumbnail extends Vue {
 	}
 
 	showEditAvatar() {
-		CommunityThumbnailModal.show(this.routeStore.community);
+		showCommunityThumbnailModal(this.routeStore.community);
 	}
 }
 </script>

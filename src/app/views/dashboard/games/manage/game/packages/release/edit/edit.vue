@@ -5,7 +5,11 @@ import { Api } from '../../../../../../../../../_common/api/api.service';
 import { GameBuildModel } from '../../../../../../../../../_common/game/build/build.model';
 import { GameBuildLaunchOptionModel } from '../../../../../../../../../_common/game/build/launch-option/launch-option.model';
 import { GamePackageModel } from '../../../../../../../../../_common/game/package/package.model';
-import { GameReleaseModel } from '../../../../../../../../../_common/game/release/release.model';
+import {
+	$removeGameRelease,
+	$unpublishGameRelease,
+	GameReleaseModel,
+} from '../../../../../../../../../_common/game/release/release.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
@@ -96,7 +100,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends LegacyRo
 			return;
 		}
 
-		await release.$unpublish(this.game);
+		await $unpublishGameRelease(release, this.game);
 
 		showSuccessGrowl(
 			this.$gettext('The release has been unpublished and is now hidden.'),
@@ -115,7 +119,7 @@ export default class RouteDashGamesManageGamePackageReleaseEdit extends LegacyRo
 			return;
 		}
 
-		await release.$remove(this.game);
+		await $removeGameRelease(release, this.game);
 
 		showSuccessGrowl(
 			this.$gettext('The release and its builds have been removed from the package.'),

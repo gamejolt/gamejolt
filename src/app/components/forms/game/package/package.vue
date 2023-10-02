@@ -16,6 +16,7 @@ import {
 } from '../../../../../_common/form-vue/form.service';
 import { GameModel } from '../../../../../_common/game/game.model';
 import {
+	$saveGamePackage,
 	GamePackageModel,
 	GamePackageVisibility,
 } from '../../../../../_common/game/package/package.model';
@@ -67,6 +68,7 @@ export default class FormGamePackage
 	sellable!: SellableModel;
 
 	modelClass = GamePackageModel as any;
+	modelSaveHandler = $saveGamePackage;
 
 	commonStore = setup(() => useCommonStore());
 

@@ -1,7 +1,10 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { CommunityCompetitionEntryModel } from '../../../../../../_common/community/competition/entry/entry.model';
+import {
+	$removeCommunityCompetitionEntry,
+	CommunityCompetitionEntryModel,
+} from '../../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { GameModel } from '../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
@@ -9,7 +12,7 @@ import { showSuccessGrowl } from '../../../../../../_common/growls/growls.servic
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { CommunityCompetitionEntryModal } from '../modal/modal.service';
+import { showEntryFromCommunityCompetitionEntryModal } from '../modal/modal.service';
 
 @Options({
 	components: {
@@ -98,7 +101,7 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 		);
 
 		if (result) {
-			await this.entry.$remove();
+			await $removeCommunityCompetitionEntry(this.entry);
 			if (this.entry._removed) {
 				showSuccessGrowl(
 					this.$gettext(`Your entry was successfully removed from the jam.`)
@@ -110,7 +113,7 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 
 	/** Instead of navigating to the link target, open the entry modal instead. */
 	onClickThumbnail() {
-		CommunityCompetitionEntryModal.showEntry(this.entry);
+		showEntryFromCommunityCompetitionEntryModal(this.entry);
 	}
 }
 </script>

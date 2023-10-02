@@ -1,6 +1,10 @@
 <script lang="ts">
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
+import {
+	$clearCommunityChannelBackground,
+	$saveCommunityChannelBackground,
+	CommunityChannelModel,
+} from '../../../../../../_common/community/channel/channel.model';
 import AppFormControlCrop from '../../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
@@ -11,7 +15,7 @@ import {
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
 type FormModel = CommunityChannelModel & {
-	background_crop: any;
+	background_crop?: any;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -26,8 +30,8 @@ export default class FormCommunityChannelBackground
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	modelClass = CommunityChannelModel as any;
-	saveMethod = '$saveBackground' as const;
+	modelClass = CommunityChannelModel;
+	modelSaveHandler = $saveCommunityChannelBackground;
 
 	maxFilesize = 0;
 	aspectRatio = 0;
@@ -78,7 +82,7 @@ export default class FormCommunityChannelBackground
 			return;
 		}
 
-		const payload = await this.formModel.$clearBackground();
+		const payload = await $clearCommunityChannelBackground(this.formModel);
 
 		this.model?.assign(payload.channel);
 	}

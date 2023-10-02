@@ -258,7 +258,7 @@ function panStart(event: AppTouchInput) {
 	}
 }
 
-function pan(event: AppTouchInput) {
+function panMove(event: AppTouchInput) {
 	if (isDragging.value) {
 		isSwipingSheets.value = false;
 		return;
@@ -421,7 +421,7 @@ function onClickPurchasePacks() {
 							class="-scroller"
 							v-bind="drawerNavigationProps"
 							@panstart="panStart"
-							@pan="pan"
+							@panmove="panMove"
 							@panend="panEnd"
 						>
 							<div ref="slider" class="-drawer-inner">

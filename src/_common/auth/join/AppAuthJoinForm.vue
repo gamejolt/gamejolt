@@ -16,7 +16,7 @@ import {
 	validateMinLength,
 	validateUsername,
 } from '../../form-vue/validators';
-import { Provider } from '../../linked-account/linked-account.model';
+import { LinkedAccountProvider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
 import googleImage from '../google-icon.svg';
 
@@ -58,7 +58,7 @@ const form: FormController<JoinFormModel> = createForm({
  * Sign up is just login without an account. It'll direct to the correct page
  * when it figures out if they have an account in the callback URL.
  */
-function linkedChoose(provider: Provider) {
+function linkedChoose(provider: LinkedAccountProvider) {
 	LinkedAccounts.login(router, provider);
 }
 </script>
@@ -76,7 +76,7 @@ function linkedChoose(provider: Provider) {
 					block
 					solid
 					:disabled="Connection.isClientOffline || blocked"
-					@click="linkedChoose('google')"
+					@click="linkedChoose(LinkedAccountProvider.Google)"
 				>
 					<img :src="googleImage" alt="" />
 					<span>{{ $gettext(`Sign up with Google`) }}</span>

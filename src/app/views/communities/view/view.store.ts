@@ -1,6 +1,10 @@
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
-import { CollaboratorModel } from '../../../../_common/collaborator/collaborator.model';
+import {
+	$acceptCollaboratorInvite,
+	$removeCollaboratorInvite,
+	CollaboratorModel,
+} from '../../../../_common/collaborator/collaborator.model';
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
 import {
 	CommunityModel,
@@ -119,7 +123,7 @@ export async function acceptCollaboration(store: CommunityRouteStore, currentUse
 		return;
 	}
 
-	await invite.$accept();
+	await $acceptCollaboratorInvite(invite);
 	const { community, sidebarData } = store;
 
 	// Accepting the collaboration also automatically follow you to the
@@ -147,7 +151,7 @@ export async function declineCollaboration(store: CommunityRouteStore) {
 		return;
 	}
 
-	await store.collaborator.$remove();
+	await $removeCollaboratorInvite(store.collaborator);
 	store.collaborator = null;
 }
 

@@ -12,7 +12,7 @@ import AppContentTargetAddCommunity from './target/_add/AppContentTargetAddCommu
 import AppContentTarget from './target/AppContentTarget.vue';
 import AppContentTargetCommunity from './target/AppContentTargetCommunity.vue';
 import AppContentTargetRealm from './target/AppContentTargetRealm.vue';
-import { ContentTargetManageRealmsModal } from './target/manage-realms/modal.service';
+import { showContentTargetManageRealmsModal } from './target/manage-realms/modal.service';
 
 const props = defineProps({
 	/**
@@ -206,7 +206,7 @@ async function onClickAddRealm() {
 	const curRealms = realms.value;
 	const newRealms = [...curRealms];
 
-	await ContentTargetManageRealmsModal.show({
+	await showContentTargetManageRealmsModal({
 		selectedRealms: newRealms,
 		maxRealms: maxRealms?.value || 0,
 	});

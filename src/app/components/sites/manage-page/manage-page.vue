@@ -2,7 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
-import { SiteModel, SiteStatus } from '../../../../_common/site/site-model';
+import { $deactivateSite, SiteModel, SiteStatus } from '../../../../_common/site/site-model';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppSitesManagePageDomain from './domain.vue';
 import AppSitesManagePageStatic from './static.vue';
@@ -36,7 +36,7 @@ export default class AppSitesManagePage extends Vue {
 	}
 
 	disable() {
-		return this.site.$deactivate();
+		return $deactivateSite(this.site);
 	}
 }
 </script>

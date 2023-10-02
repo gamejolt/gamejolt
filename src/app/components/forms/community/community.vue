@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
-import { CommunityModel } from '../../../../_common/community/community.model';
+import { $saveCommunity, CommunityModel } from '../../../../_common/community/community.model';
 import AppFormControlPrefix from '../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form.service';
@@ -23,6 +23,7 @@ class Wrapper extends BaseForm<CommunityModel> {}
 })
 export default class FormCommunity extends mixins(Wrapper) implements FormOnSubmitSuccess {
 	modelClass = CommunityModel;
+	modelSaveHandler = $saveCommunity;
 
 	store = setup(() => useAppStore());
 	gridStore = setup(() => useGridStore());

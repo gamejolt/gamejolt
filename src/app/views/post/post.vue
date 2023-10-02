@@ -18,8 +18,9 @@ import { useThemeStore } from '../../../_common/theme/theme.store';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { enforceLocation } from '../../../utils/router';
 import {
-	CommentThreadModal,
 	CommentThreadModalPermalinkDeregister,
+	showCommentThreadModalFromPermalink,
+	watchForCommentThreadModalPermalink,
 } from '../../components/comment/thread/modal.service';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPostPagePlaceholder from './_page-placeholder/AppPostPagePlaceholder.vue';
@@ -124,8 +125,8 @@ export default class RoutePost extends LegacyRouteComponent {
 
 		this.setPageTheme();
 
-		CommentThreadModal.showFromPermalink(this.$router, this.post, 'comments');
-		this.permalinkWatchDeregister = CommentThreadModal.watchForPermalink(
+		showCommentThreadModalFromPermalink(this.$router, this.post, 'comments');
+		this.permalinkWatchDeregister = watchForCommentThreadModalPermalink(
 			this.$router,
 			this.post,
 			'comments'

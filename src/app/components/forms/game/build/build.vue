@@ -10,6 +10,7 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import {
+	$saveGameBuild,
 	GameBuildEmulatorInfo,
 	GameBuildError,
 	GameBuildModel,
@@ -32,7 +33,7 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../utils/array';
 import { shallowSetup } from '../../../../../utils/vue';
 import { useFormGameRelease } from '../release/release.vue';
-import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
+import { showArchiveFileSelectorModal } from './archive-file-selector-modal.service';
 
 export interface FormGameBuildInterface {
 	buildId: number;
@@ -67,6 +68,7 @@ class Wrapper extends BaseForm<GameBuildFormModel> {}
 })
 export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad {
 	modelClass = GameBuildModel as any;
+	modelSaveHandler = $saveGameBuild;
 
 	@Prop(Object)
 	game!: GameModel;
@@ -425,7 +427,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 	}
 
 	async openFileSelector(platform: string) {
-		const selected = await ArchiveFileSelectorModal.show(
+		const selected = await showArchiveFileSelectorModal(
 			this.game.id,
 			this.package.id,
 			this.release.id,

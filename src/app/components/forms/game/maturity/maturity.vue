@@ -2,7 +2,7 @@
 import { Emit, mixins, Options } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
-import { GameModel } from '../../../../../_common/game/game.model';
+import { $saveGameMaturity, GameModel } from '../../../../../_common/game/game.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
@@ -21,7 +21,7 @@ class Wrapper extends BaseForm<GameModel> {}
 })
 export default class FormGameMaturity extends mixins(Wrapper) {
 	modelClass = GameModel;
-	saveMethod = '$saveMaturity' as const;
+	modelSaveHandler = $saveGameMaturity;
 
 	age: MaturityField[] = [
 		{
@@ -313,7 +313,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 <template>
 	<AppForm :controller="form" @changed="emitChanged($event)">
 		<AppFormGroup name="tigrs_age" :label="$gettext(`Age Rating`)">
-			<p v-if="model._is_wip" class="help-block">
+			<p v-if="model && model._is_wip" class="help-block">
 				<AppTranslate>
 					If you don't know what the final content of your game will be, give an educated
 					guess. You can make changes later.

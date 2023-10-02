@@ -9,19 +9,17 @@ interface Options {
 	community: CommunityModel;
 }
 
-export class CommunitySidebarModal {
-	static async show(options: Options) {
-		const { isEditing, community, sidebarData } = options;
+export async function showCommunitySidebarModal(options: Options) {
+	const { isEditing, community, sidebarData } = options;
 
-		return await showModal<void>({
-			modalId: 'CommunitySidebarModal-' + community.id,
-			component: defineAsyncComponent(() => import('./modal.vue')),
-			props: {
-				isEditing,
-				sidebarData,
-				community,
-			},
-			size: 'sm',
-		});
-	}
+	return await showModal<void>({
+		modalId: 'CommunitySidebarModal-' + community.id,
+		component: defineAsyncComponent(() => import('./modal.vue')),
+		props: {
+			isEditing,
+			sidebarData,
+			community,
+		},
+		size: 'sm',
+	});
 }

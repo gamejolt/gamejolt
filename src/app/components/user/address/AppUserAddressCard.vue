@@ -7,9 +7,12 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserAddressModel } from '../../../../_common/user/address/address.model';
+import {
+	$removeUserAddress,
+	UserAddressModel,
+} from '../../../../_common/user/address/address.model';
 import AppUserAddressDetails from './AppUserAddressDetails.vue';
-import { UserAddressEditModal } from './edit-modal/edit-modal.service';
+import { showUserAddressEditModal } from './edit-modal/edit-modal.service';
 
 const props = defineProps({
 	address: {
@@ -26,7 +29,7 @@ const emit = defineEmits({
 });
 
 function edit() {
-	UserAddressEditModal.show(props.address);
+	showUserAddressEditModal(props.address);
 }
 
 async function remove() {
@@ -35,7 +38,7 @@ async function remove() {
 		return;
 	}
 
-	await props.address.$remove();
+	await $removeUserAddress(props.address);
 
 	showSuccessGrowl(
 		$gettext(`Your address has successfully been removed.`),

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { PropType, computed, toRefs } from 'vue';
-import { CommentModal, DisplayMode } from '../modal/modal.service';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
+import { CommentableModel } from '../../../../_common/comment/comment-model';
 import { Model } from '../../../../_common/model/model.service';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { CommentableModel } from '../../../../_common/comment/comment-model';
+import { DisplayMode, showCommentModal } from '../modal/modal.service';
 
 const props = defineProps({
 	model: {
@@ -28,7 +28,7 @@ const placeholderText = computed(() => {
 });
 
 function open() {
-	CommentModal.show({
+	showCommentModal({
 		model: model.value,
 		displayMode: displayMode.value,
 	});

@@ -2,15 +2,15 @@ import { Model } from '../../model/model.service';
 import { UserModel } from '../user.model';
 
 export class UserGameScoreModel extends Model {
-	user_id!: number;
-	user!: UserModel;
-	game_id!: number;
-	table_id!: number;
-	guest!: string;
-	score!: string;
-	sort!: number;
-	extra_data!: string;
-	logged_on!: number;
+	declare user_id: number;
+	declare user: UserModel;
+	declare game_id: number;
+	declare table_id: number;
+	declare guest: string;
+	declare score: string;
+	declare sort: number;
+	declare extra_data: string;
+	declare logged_on: number;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -19,10 +19,10 @@ export class UserGameScoreModel extends Model {
 			this.user = new UserModel(data.user);
 		}
 	}
+}
 
-	$remove() {
-		return this.$_remove(
-			'/web/dash/developer/games/api/scores/remove-score' + '/' + this.game_id + '/' + this.id
-		);
-	}
+export function $removeUserGameScore(model: UserGameScoreModel) {
+	return model.$_remove(
+		'/web/dash/developer/games/api/scores/remove-score' + '/' + model.game_id + '/' + model.id
+	);
 }

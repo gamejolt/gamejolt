@@ -19,7 +19,10 @@ import { CommunityChannelModel } from '../../../../_common/community/channel/cha
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/widget.vue';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
+import {
+	$publishFiresidePost,
+	FiresidePostModel,
+} from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
@@ -33,8 +36,8 @@ import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion
 import { UserModel } from '../../../../_common/user/user.model';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
 import { ActivityFeedView } from '../../activity/feed/view';
-import { CommentModal } from '../../comment/modal/modal.service';
-import { PostEditModal } from '../edit-modal/edit-modal-service';
+import { showCommentModal } from '../../comment/modal/modal.service';
+import { showPostEditModal } from '../edit-modal/edit-modal-service';
 import AppPostControlsStats from './AppPostControlsStats.vue';
 import AppPostControlsMore from './more/more.vue';
 import AppPostControlsSaveProgress from './save-progress/save-progress.vue';
@@ -159,7 +162,8 @@ onUnmounted(() => {
 
 function openComments() {
 	Analytics.trackEvent('post-controls', 'comments', eventLabel.value);
-	CommentModal.show({
+
+	showCommentModal({
 		model: post.value,
 		displayMode: 'comments',
 	});
@@ -167,14 +171,14 @@ function openComments() {
 
 async function openEdit() {
 	Analytics.trackEvent('post-controls', 'edit', eventLabel.value);
-	if (await PostEditModal.show(post.value)) {
+	if (await showPostEditModal(post.value)) {
 		emit('postEdit');
 	}
 }
 
 async function publish() {
 	trackPostPublish();
-	await post.value.$publish();
+	await $publishFiresidePost(post.value);
 	emit('postPublish');
 }
 

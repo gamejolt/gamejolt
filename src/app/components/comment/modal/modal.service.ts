@@ -11,19 +11,17 @@ interface CommentModalOptions {
 	initialTab?: CommentSort;
 }
 
-export class CommentModal {
-	static async show(options: CommentModalOptions) {
-		const { displayMode, model, initialTab } = options;
+export async function showCommentModal(options: CommentModalOptions) {
+	const { displayMode, model, initialTab } = options;
 
-		return await showModal<void>({
-			modalId: 'Comment-' + [model.constructor.name, model.id].join('-'),
-			component: defineAsyncComponent(() => import('./AppCommentModal.vue')),
-			props: {
-				displayMode,
-				model,
-				initialTab,
-			},
-			size: 'sm',
-		});
-	}
+	return await showModal<void>({
+		modalId: 'Comment-' + [model.constructor.name, model.id].join('-'),
+		component: defineAsyncComponent(() => import('./AppCommentModal.vue')),
+		props: {
+			displayMode,
+			model,
+			initialTab,
+		},
+		size: 'sm',
+	});
 }

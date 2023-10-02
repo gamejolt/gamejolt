@@ -6,7 +6,12 @@ import AppCardList from '../../../../../../../../_common/card/list/AppCardList.v
 import AppCardListAdd from '../../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
-import { GameScoreTableModel } from '../../../../../../../../_common/game/score-table/score-table.model';
+import {
+	$removeGameScoreTable,
+	$saveGameScoreTableSort,
+	GameScoreTableModel,
+	GameScoreTableSorting,
+} from '../../../../../../../../_common/game/score-table/score-table.model';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	LegacyRouteComponent,
@@ -47,6 +52,9 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 	isAdding = false;
 	activeItem: GameScoreTableModel | null = null;
 
+	readonly DirectionAscend = GameScoreTableSorting.DirectionAsc;
+	readonly DirectionDescend = GameScoreTableSorting.DirectionDesc;
+
 	get currentSort() {
 		return this.scoreTables.map(item => item.id);
 	}
@@ -75,7 +83,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 
 	saveSort(tables: GameScoreTableModel[]) {
 		this.scoreTables = tables;
-		GameScoreTableModel.$saveSort(this.game.id, this.currentSort);
+		$saveGameScoreTableSort(this.game.id, this.currentSort);
 	}
 
 	async removeTable(table: GameScoreTableModel) {
@@ -87,7 +95,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 			return;
 		}
 
-		await table.$remove();
+		await $removeGameScoreTable(table);
 
 		const index = this.scoreTables.findIndex(i => i.id === table.id);
 		if (index !== -1) {
@@ -192,8 +200,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 									</span>
 									<span
 										v-if="
-											scoreTable.scores_sorting_direction ===
-											GameScoreTable.SORTING_DIRECTION_ASC
+											scoreTable.scores_sorting_direction === DirectionAscend
 										"
 										v-app-tooltip="
 											$gettext(
@@ -210,8 +217,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 									</span>
 									<span
 										v-if="
-											scoreTable.scores_sorting_direction ===
-											GameScoreTable.SORTING_DIRECTION_DESC
+											scoreTable.scores_sorting_direction === DirectionDescend
 										"
 										v-app-tooltip="
 											$gettext(

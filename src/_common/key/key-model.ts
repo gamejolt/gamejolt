@@ -15,8 +15,8 @@ export class KeyModel extends Model {
 	constructor(data: any = {}) {
 		super(data);
 	}
+}
 
-	$remove() {
-		return this.$_remove('/web/dash/developer/games/keys/remove/' + this.id);
-	}
+export function $removeKey(model: KeyModel) {
+	return model.$_remove('/web/dash/developer/games/keys/remove/' + model.id);
 }

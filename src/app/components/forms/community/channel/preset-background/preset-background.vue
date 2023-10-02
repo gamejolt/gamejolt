@@ -1,6 +1,8 @@
 <script lang="ts">
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import {
+	$clearCommunityPresetChannelBackground,
+	$saveCommunityPresetChannelBackground,
 	CommunityModel,
 	CommunityPresetChannelType,
 	getCommunityChannelBackground,
@@ -16,7 +18,7 @@ import {
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
 type FormModel = CommunityModel & {
-	background_crop: any;
+	background_crop?: any;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -33,7 +35,9 @@ export default class FormCommunityChannelPresetBackground
 {
 	@Prop({ type: String, required: true }) presetType!: CommunityPresetChannelType;
 
-	modelClass = CommunityModel as any;
+	modelClass = CommunityModel;
+	// Handled through onSubmit.
+	// modelSaveHandler = undefined;
 
 	maxFilesize = 0;
 	aspectRatio = 0;
@@ -74,7 +78,11 @@ export default class FormCommunityChannelPresetBackground
 	}
 
 	async onSubmit() {
-		const response = await this.formModel.$savePresetChannelBackground(this.presetType);
+		const response = await $saveCommunityPresetChannelBackground(
+			this.formModel,
+			this.presetType
+		);
+
 		if (this.model) {
 			Object.assign(this.model, this.formModel);
 		}
@@ -97,7 +105,10 @@ export default class FormCommunityChannelPresetBackground
 			return;
 		}
 
-		const payload = await this.formModel.$clearPresetChannelBackground(this.presetType);
+		const payload = await $clearCommunityPresetChannelBackground(
+			this.formModel,
+			this.presetType
+		);
 
 		this.model?.assign(payload.community);
 	}

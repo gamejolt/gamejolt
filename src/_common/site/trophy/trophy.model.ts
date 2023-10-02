@@ -1,8 +1,8 @@
 import { BaseTrophyModel } from '../../trophy/base-trophy.model';
 import { UserModel } from '../../user/user.model';
 
-export class SiteTrophy extends BaseTrophyModel {
-	artist?: UserModel;
+export class SiteTrophyModel extends BaseTrophyModel {
+	declare artist?: UserModel;
 
 	constructor(data: any = {}) {
 		super(data);

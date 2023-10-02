@@ -10,7 +10,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
-import { GameHeaderModal } from '../../../../../components/game/header-modal/header-modal.service';
+import { showGameHeaderModal } from '../../../../../components/game/header-modal/header-modal.service';
 import { useGameDashRouteController } from '../manage.store';
 import AppManageGameMediaBar from './_media-bar/media-bar.vue';
 import AppManageGameNav from './_nav/nav.vue';
@@ -43,7 +43,7 @@ export default class RouteDashGamesManageGame extends LegacyRouteComponent {
 	readonly Screen = Screen;
 
 	showEditHeader() {
-		GameHeaderModal.show(this.game);
+		showGameHeaderModal(this.game);
 	}
 }
 </script>

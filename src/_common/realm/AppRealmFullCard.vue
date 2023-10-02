@@ -10,7 +10,7 @@ import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vu
 import AppResponsiveDimensions from '../responsive-dimensions/AppResponsiveDimensions.vue';
 import AppRealmFollowButton from './AppRealmFollowButton.vue';
 import AppRealmLabel from './AppRealmLabel.vue';
-import { RealmModel, toggleRealmFollow } from './realm-model';
+import { $toggleRealmFollow, RealmModel } from './realm-model';
 
 const props = defineProps({
 	realm: {
@@ -90,7 +90,7 @@ async function onClick(event: Event) {
 	}
 
 	isProcessing.value = true;
-	await toggleRealmFollow(realm.value, 'fullCard');
+	await $toggleRealmFollow(realm.value, 'fullCard');
 	isProcessing.value = false;
 }
 </script>

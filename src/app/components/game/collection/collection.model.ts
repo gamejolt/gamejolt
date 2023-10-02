@@ -4,29 +4,31 @@ import { Model } from '../../../../_common/model/model.service';
 import { commonStore } from '../../../../_common/store/common-store';
 import { UserModel } from '../../../../_common/user/user.model';
 
+export const enum GameCollectionType {
+	Followed = 'followed',
+	Developer = 'developer',
+	Owned = 'owned',
+	Recommended = 'recommended',
+	Playlist = 'playlist',
+	Bundle = 'bundle',
+}
+
+export const GameCollectionUserTypes = [
+	GameCollectionType.Followed,
+	GameCollectionType.Developer,
+	GameCollectionType.Owned,
+	GameCollectionType.Recommended,
+];
+
 export class GameCollectionModel extends Model {
-	static readonly TYPE_FOLLOWED = 'followed';
-	static readonly TYPE_DEVELOPER = 'developer';
-	static readonly TYPE_OWNED = 'owned';
-	static readonly TYPE_RECOMMENDED = 'recommended';
-	static readonly TYPE_PLAYLIST = 'playlist';
-	static readonly TYPE_BUNDLE = 'bundle';
-
-	static readonly USER_TYPES = [
-		GameCollectionModel.TYPE_FOLLOWED,
-		GameCollectionModel.TYPE_DEVELOPER,
-		GameCollectionModel.TYPE_OWNED,
-		GameCollectionModel.TYPE_RECOMMENDED,
-	];
-
-	_id?: string;
-	type!: string;
-	name!: string;
-	slug!: string;
-	img_thumbnail!: string;
-	from_subscription!: boolean;
-	owner?: UserModel;
-	playlist?: GamePlaylistModel;
+	declare _id?: string;
+	declare type: GameCollectionType;
+	declare name: string;
+	declare slug: string;
+	declare img_thumbnail: string;
+	declare from_subscription: boolean;
+	declare owner?: UserModel;
+	declare playlist?: GamePlaylistModel;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -72,18 +74,18 @@ export class GameCollectionModel extends Model {
 		}
 		return title;
 	}
+}
 
-	$follow() {
-		return Api.sendRequest('/web/library/follow/' + this.type, {
-			id: this.id,
-			timestamp: Date.now(),
-		});
-	}
+export function $followGameCollection(model: GameCollectionModel) {
+	return Api.sendRequest('/web/library/follow/' + model.type, {
+		id: model.id,
+		timestamp: Date.now(),
+	});
+}
 
-	$unfollow() {
-		return Api.sendRequest('/web/library/unfollow/' + this.type, {
-			id: this.id,
-			timestamp: Date.now(),
-		});
-	}
+export function $unfollowGameCollection(model: GameCollectionModel) {
+	return Api.sendRequest('/web/library/unfollow/' + model.type, {
+		id: model.id,
+		timestamp: Date.now(),
+	});
 }

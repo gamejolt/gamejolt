@@ -260,39 +260,6 @@ export class GameBuildModel extends Model {
 	getDownloadUrl(options: { key?: string; forceDownload?: boolean } = {}) {
 		return GameBuildModel.getDownloadUrl(this.id, options);
 	}
-
-	$save() {
-		const params = [this.game_id, this.game_package_id, this.game_release_id];
-		if (!this.id) {
-			return this.$_save(
-				'/web/dash/developer/games/builds/save/' + params.join('/'),
-				'gameBuild',
-				{
-					file: this.file,
-				}
-			);
-		} else {
-			// May or may not have an upload file on an edit.
-			params.push(this.id);
-			return this.$_save(
-				'/web/dash/developer/games/builds/save/' + params.join('/'),
-				'gameBuild'
-			);
-		}
-	}
-
-	async $remove(game: GameModel) {
-		const params = [this.game_id, this.game_package_id, this.game_release_id, this.id];
-		const response = await this.$_remove(
-			'/web/dash/developer/games/builds/remove/' + params.join('/')
-		);
-
-		if (game && response.game) {
-			game.assign(response.game);
-		}
-
-		return response;
-	}
 }
 
 /**
@@ -348,4 +315,37 @@ export function canRunGameBuild(options: {
 	}
 
 	return false;
+}
+
+export function $saveGameBuild(model: GameBuildModel) {
+	const params = [model.game_id, model.game_package_id, model.game_release_id];
+	if (!model.id) {
+		return model.$_save(
+			'/web/dash/developer/games/builds/save/' + params.join('/'),
+			'gameBuild',
+			{
+				file: model.file,
+			}
+		);
+	} else {
+		// May or may not have an upload file on an edit.
+		params.push(model.id);
+		return model.$_save(
+			'/web/dash/developer/games/builds/save/' + params.join('/'),
+			'gameBuild'
+		);
+	}
+}
+
+export async function $removeGameBuild(model: GameBuildModel, game: GameModel) {
+	const params = [model.game_id, model.game_package_id, model.game_release_id, model.id];
+	const response = await model.$_remove(
+		'/web/dash/developer/games/builds/remove/' + params.join('/')
+	);
+
+	if (game && response.game) {
+		game.assign(response.game);
+	}
+
+	return response;
 }

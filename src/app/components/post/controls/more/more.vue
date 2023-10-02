@@ -8,21 +8,27 @@ import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
 import {
+	$featureFiresidePost,
+	$moveFiresidePostToChannel,
+	$rejectFiresidePost,
+	$removeFiresidePost,
+	$togglePinOnFiresidePost,
+	$unfeatureFiresidePost,
 	FiresidePostModel,
 	FiresidePostStatus,
 } from '../../../../../_common/fireside/post/post-model';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
-import { ReportModal } from '../../../../../_common/report/modal/modal.service';
+import { showReportModal } from '../../../../../_common/report/modal/modal.service';
 import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { UserModel } from '../../../../../_common/user/user.model';
 import { arrayRemove } from '../../../../../utils/array';
 import { useAppStore } from '../../../../store';
-import { CommunityBlockUserModal } from '../../../community/block-user-modal/block-user-modal.service';
-import { CommunityEjectPostModal } from '../../../community/eject-post/modal/modal.service';
-import { CommunityMovePostModal } from '../../../community/move-post/modal/modal.service';
+import { showCommunityBlockUserModal } from '../../../community/block-user-modal/block-user-modal.service';
+import { showCommunityEjectPostModal } from '../../../community/eject-post/modal/modal.service';
+import { showCommunityMovePostModal } from '../../../community/move-post/modal/modal.service';
 import { AppCommunityPerms } from '../../../community/perms/perms';
 import { useGridStore } from '../../../grid/grid-store';
 
@@ -110,10 +116,10 @@ export default class AppPostControlsMore extends Vue {
 
 	async toggleFeatured(postCommunity: FiresidePostCommunityModel) {
 		if (postCommunity.isFeatured) {
-			await this.post.$unfeature(postCommunity.community);
+			await $unfeatureFiresidePost(this.post, postCommunity.community);
 			this.emitUnfeature(postCommunity.community);
 		} else {
-			await this.post.$feature(postCommunity.community);
+			await $featureFiresidePost(this.post, postCommunity.community);
 			this.gridStore.grid?.recordFeaturedPost(this.post);
 			this.emitFeature(postCommunity.community);
 		}
@@ -125,17 +131,18 @@ export default class AppPostControlsMore extends Vue {
 			possibleChannels = await this.fetchCommunityChannels(postCommunity.community);
 		}
 
-		const result = await CommunityMovePostModal.show(
-			postCommunity,
-			this.post,
-			possibleChannels
-		);
+		const result = await showCommunityMovePostModal(postCommunity, this.post, possibleChannels);
 		if (!result) {
 			return;
 		}
 
 		try {
-			await this.post.$moveChannel(postCommunity.community, result.channel, result);
+			await $moveFiresidePostToChannel(
+				this.post,
+				postCommunity.community,
+				result.channel,
+				result
+			);
 			this.emitMoveChannel(result.channel);
 		} catch (e) {
 			console.error('Failed to move community post to a channel');
@@ -161,13 +168,13 @@ export default class AppPostControlsMore extends Vue {
 	}
 
 	async rejectFromCommunity(postCommunity: FiresidePostCommunityModel) {
-		const result = await CommunityEjectPostModal.show(postCommunity, this.post);
+		const result = await showCommunityEjectPostModal(postCommunity, this.post);
 		if (!result) {
 			return;
 		}
 
 		try {
-			await this.post.$reject(postCommunity.community, result);
+			await $rejectFiresidePost(this.post, postCommunity.community, result);
 			// Make sure the post community gets removed from the post.
 			// The backend might not return the post resource if the post was already
 			// ejected, so the community list doesn't get updated.
@@ -180,7 +187,7 @@ export default class AppPostControlsMore extends Vue {
 	}
 
 	blockFromCommunity(postCommunity: FiresidePostCommunityModel) {
-		CommunityBlockUserModal.show(this.post.user, postCommunity.community);
+		showCommunityBlockUserModal(this.post.user, postCommunity.community);
 	}
 
 	copyShareUrl() {
@@ -188,11 +195,11 @@ export default class AppPostControlsMore extends Vue {
 	}
 
 	report() {
-		ReportModal.show(this.post);
+		showReportModal(this.post);
 	}
 
 	async remove() {
-		if (await this.post.remove()) {
+		if (await $removeFiresidePost(this.post)) {
 			this.emitRemove();
 		}
 	}
@@ -223,7 +230,7 @@ export default class AppPostControlsMore extends Vue {
 		const wasPinned = this.post.is_pinned;
 
 		const { resourceName, resourceId } = this._getPinTarget();
-		await this.post.$togglePin(resourceName, resourceId);
+		await $togglePinOnFiresidePost(this.post, resourceName, resourceId);
 		this.post.is_pinned = !wasPinned;
 
 		if (wasPinned) {

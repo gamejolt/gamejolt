@@ -7,7 +7,7 @@ import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
 import { BaseForm, FormOnLoad, FormOnSubmit, FormOnSubmitError } from '../../form-vue/form.service';
 import { validateUsername } from '../../form-vue/validators';
-import { Provider } from '../../linked-account/linked-account.model';
+import { LinkedAccountProvider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
 import AppLoading from '../../loading/AppLoading.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
@@ -59,6 +59,7 @@ export default class AppAuthLoginForm
 	readonly Environment = Environment;
 	readonly validateUsername = validateUsername;
 	readonly googleImage = googleImage;
+	readonly Google = LinkedAccountProvider.Google;
 
 	created() {
 		this.form.warnOnDiscard = false;
@@ -153,7 +154,7 @@ export default class AppAuthLoginForm
 		this.captchaToken = null;
 	}
 
-	linkedChoose(provider: Provider) {
+	linkedChoose(provider: LinkedAccountProvider) {
 		LinkedAccounts.login(this.$router, provider);
 	}
 }
@@ -290,7 +291,7 @@ export default class AppAuthLoginForm
 					solid
 					block
 					:disabled="Connection.isClientOffline"
-					@click="linkedChoose('google')"
+					@click="linkedChoose(Google)"
 				>
 					<img :src="googleImage" alt="" />
 					<span><AppTranslate>Sign in with Google</AppTranslate></span>

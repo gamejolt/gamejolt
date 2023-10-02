@@ -33,19 +33,16 @@ export class UserFriendshipModel extends Model {
 	getThem(us: UserModel) {
 		return this.user_id !== us.id ? this.user : this.target_user;
 	}
+}
 
-	$save() {
-		return this.$_save(
-			'/web/dash/friends/requests/add/' + this.target_user_id,
-			'userFriendship'
-		);
-	}
+export function $saveUserFriendship(model: UserFriendshipModel) {
+	return model.$_save('/web/dash/friends/requests/add/' + model.target_user_id, 'userFriendship');
+}
 
-	$accept() {
-		return this.$_save('/web/dash/friends/requests/accept/' + this.id, 'userFriendship');
-	}
+export function $acceptUserFriendship(model: UserFriendshipModel) {
+	return model.$_save('/web/dash/friends/requests/accept/' + model.id, 'userFriendship');
+}
 
-	$remove() {
-		return this.$_remove('/web/dash/friends/requests/remove/' + this.id);
-	}
+export function $removeUserFriendship(model: UserFriendshipModel) {
+	return model.$_remove('/web/dash/friends/requests/remove/' + model.id);
 }

@@ -38,7 +38,7 @@ const placeholder = ref<HTMLElement>();
 const shouldAffix = ref(false);
 const width = ref<number>();
 const height = ref(0);
-const InviewConfig = _createInviewConfig();
+const inviewConfig = _createInviewConfig();
 
 // If we resized, then the element dimensions most likely changed.
 useEventSubscription(onScreenResize, async () => {
@@ -120,7 +120,7 @@ function _createInviewConfig() {
 </script>
 
 <template>
-	<AppScrollInview :config="InviewConfig" @inview="inview" @outview="outview">
+	<AppScrollInview :config="inviewConfig" @inview="inview" @outview="outview">
 		<div
 			v-if="isAffixed"
 			ref="placeholder"

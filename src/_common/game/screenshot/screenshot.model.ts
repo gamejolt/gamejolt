@@ -5,13 +5,13 @@ import { Model } from '../../model/model.service';
 import { GameModel } from '../game.model';
 
 export class GameScreenshotModel extends Model implements LightboxMediaModel {
-	media_type!: 'image';
+	declare media_type: 'image';
 
-	game_id!: number;
-	caption!: string;
-	posted_on!: number;
-	status!: number;
-	media_item!: MediaItemModel;
+	declare game_id: number;
+	declare caption: string;
+	declare posted_on: number;
+	declare status: number;
+	declare media_item: MediaItemModel;
 
 	// Needed for lightbox and other components that are used together with GameVideo.
 	get img_thumbnail() {
@@ -45,37 +45,37 @@ export class GameScreenshotModel extends Model implements LightboxMediaModel {
 	getUrl(game: GameModel) {
 		return game.getUrl() + `#screenshot-${this.id}`;
 	}
+}
 
-	async $save() {
-		if (!this.id) {
-			// When adding, we add multiple, so we can't treat it like a normal model save.
-			const response = await Api.sendRequest(
-				'/web/dash/developer/games/media/save/image/' + this.game_id,
-				this,
-				{
-					file: this.file,
-					progress: event => {
-						this._progress = event;
-					},
-				}
-			);
-
-			if (response.success) {
-				return response;
+export async function $saveGameScreenshot(model: GameScreenshotModel) {
+	if (!model.id) {
+		// When adding, we add multiple, so we can't treat it like a normal model save.
+		const response = await Api.sendRequest(
+			'/web/dash/developer/games/media/save/image/' + model.game_id,
+			model,
+			{
+				file: model.file,
+				progress: event => {
+					model._progress = event;
+				},
 			}
+		);
 
-			throw response;
-		} else {
-			return this.$_save(
-				'/web/dash/developer/games/media/save/image/' + this.game_id + '/' + this.id,
-				'gameScreenshot'
-			);
+		if (response.success) {
+			return response;
 		}
-	}
 
-	$remove() {
-		return this.$_remove(
-			'/web/dash/developer/games/media/remove/image/' + this.game_id + '/' + this.id
+		throw response;
+	} else {
+		return model.$_save(
+			'/web/dash/developer/games/media/save/image/' + model.game_id + '/' + model.id,
+			'gameScreenshot'
 		);
 	}
+}
+
+export function $removeGameScreenshot(model: GameScreenshotModel) {
+	return model.$_remove(
+		'/web/dash/developer/games/media/remove/image/' + model.game_id + '/' + model.id
+	);
 }

@@ -4,11 +4,11 @@ import { mixins, Options, Watch } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppFormControlTheme from '../../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
-import { GameModel } from '../../../../../_common/game/game.model';
+import { $saveGameDesign, GameModel } from '../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
-import { GameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
+import { showGameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
 import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
 
 class Wrapper extends BaseForm<GameModel> {}
@@ -22,8 +22,8 @@ class Wrapper extends BaseForm<GameModel> {}
 	},
 })
 export default class FormGameDesign extends mixins(Wrapper) {
-	modelClass = GameModel as any;
-	saveMethod = '$saveDesign' as const;
+	modelClass = GameModel;
+	modelSaveHandler = $saveGameDesign;
 
 	themeStore = setup(() => useThemeStore());
 
@@ -36,7 +36,7 @@ export default class FormGameDesign extends mixins(Wrapper) {
 	}
 
 	showEditThumbnail() {
-		GameThumbnailModal.show(this.model!);
+		showGameThumbnailModal(this.model!);
 	}
 
 	@Watch('model.thumbnail_media_item', { immediate: true })
@@ -93,7 +93,7 @@ export default class FormGameDesign extends mixins(Wrapper) {
 				<AppEditableOverlay class="-thumb-overlay" @click="showEditThumbnail()">
 					<template #overlay>
 						<span>
-							<AppTranslate v-if="!model.thumbnail_media_item">
+							<AppTranslate v-if="!model || !model.thumbnail_media_item">
 								Upload Thumbnail
 							</AppTranslate>
 							<AppTranslate v-else>Change Thumbnail</AppTranslate>

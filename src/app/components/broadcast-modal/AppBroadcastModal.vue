@@ -5,7 +5,6 @@ import AppContentViewer from '../../../_common/content/content-viewer/AppContent
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model';
 import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { MediaItemModel } from '../../../_common/media-item/media-item-model';
 import AppModal from '../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../_common/modal/modal.service';
@@ -16,7 +15,6 @@ import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import AppVideo from '../../../_common/video/AppVideo.vue';
 import AppVideoPlayer from '../../../_common/video/player/AppVideoPlayer.vue';
 import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
-import { AppCommentWidgetLazy } from '../lazy';
 import AppPollVoting from '../poll/AppPollVoting.vue';
 import AppPostControls from '../post/controls/AppPostControls.vue';
 
@@ -73,94 +71,60 @@ function onVideoPlay() {
 		<hr />
 
 		<div class="modal-body">
-			<div class="row">
-				<div class="col-sm-4 col-sm-push-8">
-					<div class="list-group">
-						<a
-							v-for="_post of posts"
-							:key="_post.id"
-							class="list-group-item has-icon"
-							@click="post = _post"
-						>
-							<h5 class="list-group-item-heading">
-								<AppJolticon v-if="post.id === _post.id" icon="chevron-right" />
-
-								{{ _post.getShortLead() }}
-
-								<div class="tiny text-muted">
-									<AppTimeAgo :date="_post.published_on" />
-								</div>
-							</h5>
-						</a>
-					</div>
-				</div>
-				<div class="col-sm-8 col-sm-pull-4">
-					<div v-if="post.hasMedia">
-						<div v-for="item of post.media" :key="item.id">
-							<AppResponsiveDimensions
-								class="-media-item"
-								:ratio="item.width / item.height"
-							>
-								<AppImgResponsive
-									v-if="!item.is_animated"
-									class="-img"
-									:src="item.mediaserver_url"
-									alt=""
-								/>
-
-								<AppVideo
-									v-else
-									class="-video"
-									:player="getVideoController(item)"
-									:show-loading="true"
-								/>
-							</AppResponsiveDimensions>
-
-							<br />
-						</div>
-					</div>
-
-					<div v-if="post.hasVideo">
-						<AppVideoPlayer
-							context="page"
-							:media-item="video.posterMediaItem!"
-							:manifests="video.manifestSources"
-							autoplay
-							@play="onVideoPlay"
+			<div v-if="post.hasMedia">
+				<div v-for="item of post.media" :key="item.id">
+					<AppResponsiveDimensions class="-media-item" :ratio="item.width / item.height">
+						<AppImgResponsive
+							v-if="!item.is_animated"
+							class="-img"
+							:src="item.mediaserver_url"
+							alt=""
 						/>
-						<br />
-					</div>
 
-					<div class="tiny text-muted">
-						<AppTimeAgo v-if="post.isActive" :date="post.published_on" />
-					</div>
+						<AppVideo
+							v-else
+							class="-video"
+							:player="getVideoController(item)"
+							:show-loading="true"
+						/>
+					</AppResponsiveDimensions>
 
-					<AppStickerTarget :controller="stickerTargetController">
-						<AppContentViewer :source="post.lead_content" />
-					</AppStickerTarget>
-
-					<div v-if="post.has_article">
-						<div class="page-cut" />
-
-						<AppContentViewer :source="post.article_content" />
-					</div>
-
-					<template v-if="post.hasPoll">
-						<AppPollVoting :post="post" :poll="post.poll!" />
-
-						<br />
-					</template>
-
-					<AppPostControls :post="post" location="broadcast" event-label="broadcast" />
-
-					<!-- We don't even want to show comment info if the comments are disabled -->
-					<template v-if="post.canViewComments">
-						<br />
-						<br />
-						<AppCommentWidgetLazy :model="post" display-mode="comments" />
-					</template>
+					<br />
 				</div>
 			</div>
+
+			<div v-if="post.hasVideo">
+				<AppVideoPlayer
+					context="page"
+					:media-item="video.posterMediaItem!"
+					:manifests="video.manifestSources"
+					autoplay
+					@play="onVideoPlay"
+				/>
+				<br />
+			</div>
+
+			<div class="tiny text-muted">
+				<AppTimeAgo v-if="post.isActive" :date="post.published_on" />
+			</div>
+
+			<AppStickerTarget :controller="stickerTargetController">
+				<AppContentViewer :source="post.lead_content" />
+			</AppStickerTarget>
+
+			<div v-if="post.has_article">
+				<div class="page-cut" />
+
+				<AppContentViewer :source="post.article_content" />
+			</div>
+
+			<template v-if="post.hasPoll">
+				<AppPollVoting :post="post" :poll="post.poll!" />
+
+				<br />
+			</template>
+
+			<AppPostControls :post="post" location="broadcast" event-label="broadcast" />
 		</div>
 	</AppModal>
 </template>

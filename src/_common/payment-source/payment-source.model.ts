@@ -2,12 +2,12 @@ import { Model } from '../model/model.service';
 import { UserAddressModel } from '../user/address/address.model';
 
 export class PaymentSourceModel extends Model {
-	last4!: string;
-	brand!: string;
-	exp_month!: number;
-	exp_year!: number;
-	created_on!: number;
-	user_address?: UserAddressModel;
+	declare last4: string;
+	declare brand: string;
+	declare exp_month: number;
+	declare exp_year: number;
+	declare created_on: number;
+	declare user_address?: UserAddressModel;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -16,8 +16,8 @@ export class PaymentSourceModel extends Model {
 			this.user_address = new UserAddressModel(data.user_address);
 		}
 	}
+}
 
-	$remove() {
-		return this.$_remove('/web/dash/payment-methods/remove/' + this.id);
-	}
+export function $removePaymentSource(model: PaymentSourceModel) {
+	return model.$_remove('/web/dash/payment-methods/remove/' + model.id);
 }

@@ -12,11 +12,12 @@ import {
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
 import { validateSemver } from '../../../../../_common/form-vue/validators';
-import { GameBuildModel } from '../../../../../_common/game/build/build.model';
+import { $removeGameBuild, GameBuildModel } from '../../../../../_common/game/build/build.model';
 import { GameBuildLaunchOptionModel } from '../../../../../_common/game/build/launch-option/launch-option.model';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { GamePackageModel } from '../../../../../_common/game/package/package.model';
 import {
+	$saveGameRelease,
 	GameReleaseModel,
 	GameReleaseStatus,
 } from '../../../../../_common/game/release/release.model';
@@ -30,7 +31,7 @@ import FormGameBuild, { FormGameBuildInterface } from '../build/build.vue';
 import FormGameNewBuild from '../new-build/new-build.vue';
 
 type GameReleaseFormModel = GameReleaseModel & {
-	should_publish: boolean;
+	should_publish?: boolean;
 };
 
 type Controller = ReturnType<typeof createFormGameRelease>;
@@ -68,7 +69,8 @@ export default class FormGameRelease
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmitSuccess
 {
-	modelClass = GameReleaseModel as any;
+	modelClass = GameReleaseModel;
+	modelSaveHandler = $saveGameRelease;
 
 	@Prop(Object)
 	game!: GameModel;
@@ -191,7 +193,7 @@ export default class FormGameRelease
 			return;
 		}
 
-		await build.$remove(this.game);
+		await $removeGameBuild(build, this.game);
 		arrayRemove(this.builds, _build => _build.id === build.id);
 
 		showSuccessGrowl(
@@ -312,7 +314,7 @@ export default class FormGameRelease
 					validateMaxLength(50),
 					validateAvailability({
 						url: `/web/dash/developer/games/releases/check-field-availability/${game.id}/${package.id}/version_number`,
-						initVal: model.version_number,
+						initVal: model && model.version_number,
 					}),
 				]"
 				:validate-delay="500"
@@ -387,7 +389,7 @@ export default class FormGameRelease
 			</div>
 		</fieldset>
 
-		<fieldset v-if="model.status !== GameReleaseStatusPublished">
+		<fieldset v-if="model && model.status !== GameReleaseStatusPublished">
 			<AppFormLegend compact>
 				<AppTranslate>Schedule publishing of release</AppTranslate>
 			</AppFormLegend>
@@ -423,12 +425,12 @@ export default class FormGameRelease
 
 					<AppFormControlSelect>
 						<optgroup
-							v-for="(timezones, region) of timezones"
+							v-for="(timezoneData, region) of timezones"
 							:key="region"
 							:label="region"
 						>
 							<option
-								v-for="timezone of timezones"
+								v-for="timezone of timezoneData"
 								:key="timezone.label"
 								:value="timezone.i"
 							>
@@ -462,7 +464,7 @@ export default class FormGameRelease
 			The buttons in this template do submit the form through their click handlers.
 			We don't use app-form-button because we needed to do some async operations before submitting.
 		-->
-		<template v-if="model.status !== GameReleaseStatusPublished">
+		<template v-if="model && model.status !== GameReleaseStatusPublished">
 			<AppButton
 				v-if="isScheduling"
 				primary
@@ -500,7 +502,7 @@ export default class FormGameRelease
 			<br class="visible-xs" />
 
 			<AppButton
-				v-if="model.status === GameReleaseStatusPublished"
+				v-if="model && model.status === GameReleaseStatusPublished"
 				trans
 				@click="unpublish()"
 			>

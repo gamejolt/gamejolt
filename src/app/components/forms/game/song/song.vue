@@ -4,7 +4,7 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { GameModel } from '../../../../../_common/game/game.model';
-import { GameSongModel } from '../../../../../_common/game/song/song.model';
+import { $saveGameSong, GameSongModel } from '../../../../../_common/game/song/song.model';
 
 class Wrapper extends BaseForm<GameSongModel> {}
 
@@ -17,6 +17,7 @@ export default class FormGameSong extends mixins(Wrapper) implements FormOnLoad 
 	@Prop(Object) game!: GameModel;
 
 	modelClass = GameSongModel;
+	modelSaveHandler = $saveGameSong;
 
 	maxFilesize = 0;
 

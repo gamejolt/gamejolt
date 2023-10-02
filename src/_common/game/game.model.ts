@@ -283,77 +283,6 @@ export class GameModel
 		}
 		return '/games/' + this.slug + '/' + this.id;
 	}
-
-	$save() {
-		if (this.id) {
-			return this.$_save('/web/dash/developer/games/save/' + this.id, 'game');
-		} else {
-			return this.$_save('/web/dash/developer/games/save', 'game');
-		}
-	}
-
-	$saveDescription() {
-		return this.$_save('/web/dash/developer/games/description/save/' + this.id, 'game');
-	}
-
-	$saveMaturity() {
-		return this.$_save('/web/dash/developer/games/maturity/save/' + this.id, 'game');
-	}
-
-	$saveThumbnail() {
-		return this.$_save('/web/dash/developer/games/thumbnail/save/' + this.id, 'game', {
-			file: this.file,
-			allowComplexData: ['crop'],
-		});
-	}
-
-	$saveHeader() {
-		return this.$_save('/web/dash/developer/games/header/save/' + this.id, 'game', {
-			file: this.file,
-			allowComplexData: ['crop'],
-		});
-	}
-
-	$clearHeader() {
-		return this.$_save('/web/dash/developer/games/header/clear/' + this.id, 'game');
-	}
-
-	$saveSettings() {
-		return this.$_save('/web/dash/developer/games/settings/save/' + this.id, 'game');
-	}
-
-	$saveDesign() {
-		return this.$_save('/web/dash/developer/games/design/save/' + this.id, 'game', {
-			allowComplexData: ['theme'],
-		});
-	}
-
-	$setStatus(status: number) {
-		return this.$_save('/web/dash/developer/games/set-status/' + this.id, 'game', {
-			data: { status },
-		});
-	}
-
-	$setDevStage(stage: number) {
-		return this.$_save(
-			'/web/dash/developer/games/set-dev-stage/' + this.id + '/' + stage,
-			'game',
-			{
-				data: { stage },
-			}
-		);
-	}
-
-	$setCanceled(isCanceled: boolean) {
-		return this.$_save(
-			'/web/dash/developer/games/set-canceled/' + this.id + '/' + (isCanceled ? '1' : '0'),
-			'game'
-		);
-	}
-
-	$remove() {
-		return this.$_remove('/web/dash/developer/games/remove/' + this.id);
-	}
 }
 
 export function pluckInstallableGameBuilds(options: {
@@ -499,4 +428,75 @@ export function handleGameAddFailure(user: UserModel, reason: string, router: Ro
 		name: 'library.collection.developer',
 		params: { id: user.username },
 	});
+}
+
+export function $saveGame(model: GameModel) {
+	if (model.id) {
+		return model.$_save('/web/dash/developer/games/save/' + model.id, 'game');
+	} else {
+		return model.$_save('/web/dash/developer/games/save', 'game');
+	}
+}
+
+export function $saveGameThumbnail(model: GameModel) {
+	return model.$_save('/web/dash/developer/games/thumbnail/save/' + model.id, 'game', {
+		file: model.file,
+		allowComplexData: ['crop'],
+	});
+}
+
+export function $saveGameHeader(model: GameModel) {
+	return model.$_save('/web/dash/developer/games/header/save/' + model.id, 'game', {
+		file: model.file,
+		allowComplexData: ['crop'],
+	});
+}
+
+export function $clearGameHeader(model: GameModel) {
+	return model.$_save('/web/dash/developer/games/header/clear/' + model.id, 'game');
+}
+
+export function $saveGameDescription(model: GameModel) {
+	return model.$_save('/web/dash/developer/games/description/save/' + model.id, 'game');
+}
+
+export function $saveGameMaturity(model: GameModel) {
+	return model.$_save('/web/dash/developer/games/maturity/save/' + model.id, 'game');
+}
+
+export function $saveGameSettings(model: GameModel) {
+	return model.$_save('/web/dash/developer/games/settings/save/' + model.id, 'game');
+}
+
+export function $saveGameDesign(model: GameModel) {
+	return model.$_save('/web/dash/developer/games/design/save/' + model.id, 'game', {
+		allowComplexData: ['theme'],
+	});
+}
+
+export function $setGameStatus(model: GameModel, status: number) {
+	return model.$_save('/web/dash/developer/games/set-status/' + model.id, 'game', {
+		data: { status },
+	});
+}
+
+export function $setGameDevStage(model: GameModel, stage: number) {
+	return model.$_save(
+		'/web/dash/developer/games/set-dev-stage/' + model.id + '/' + stage,
+		'game',
+		{
+			data: { stage },
+		}
+	);
+}
+
+export function $setGameCanceled(model: GameModel, isCanceled: boolean) {
+	return model.$_save(
+		'/web/dash/developer/games/set-canceled/' + model.id + '/' + (isCanceled ? '1' : '0'),
+		'game'
+	);
+}
+
+export function $removeGame(model: GameModel) {
+	return model.$_remove('/web/dash/developer/games/remove/' + model.id);
 }

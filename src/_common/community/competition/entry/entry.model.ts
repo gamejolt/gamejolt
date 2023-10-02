@@ -8,17 +8,17 @@ import { CommunityCompetitionEntryVoteResultModel } from './vote/vote-result.mod
 type EntryType = 'Game';
 
 export class CommunityCompetitionEntryModel extends Model {
-	community_competition_id!: number;
-	added_on!: number;
-	type!: EntryType;
-	vote_count!: number;
+	declare community_competition_id: number;
+	declare added_on: number;
+	declare type: EntryType;
+	declare vote_count: number;
 
-	is_removed!: boolean | null;
+	declare is_removed: boolean | null;
 
-	user!: UserModel;
-	resource!: GameModel;
-	vote_results!: CommunityCompetitionEntryVoteResultModel[];
-	awards!: CommunityCompetitionEntryAwardModel[];
+	declare user: UserModel;
+	declare resource: GameModel;
+	declare vote_results: CommunityCompetitionEntryVoteResultModel[];
+	declare awards: CommunityCompetitionEntryAwardModel[];
 
 	get author() {
 		return this.resource.developer;
@@ -52,22 +52,22 @@ export class CommunityCompetitionEntryModel extends Model {
 			);
 		}
 	}
+}
 
-	$remove() {
-		return this.$_remove(`/web/communities/competitions/entries/remove-entry/${this.id}`);
-	}
+export function $removeCommunityCompetitionEntry(model: CommunityCompetitionEntryModel) {
+	return model.$_remove(`/web/communities/competitions/entries/remove-entry/${model.id}`);
+}
 
-	$hideEntry() {
-		return this.$_save(
-			`/web/dash/communities/competitions/entries/remove-entry/${this.id}`,
-			'entry'
-		);
-	}
+export function $hideCommunityCompetitionEntry(model: CommunityCompetitionEntryModel) {
+	return model.$_save(
+		`/web/dash/communities/competitions/entries/remove-entry/${model.id}`,
+		'entry'
+	);
+}
 
-	$unhideEntry() {
-		return this.$_save(
-			`/web/dash/communities/competitions/entries/unremove-entry/${this.id}`,
-			'entry'
-		);
-	}
+export function $unhideCommunityCompetitionEntry(model: CommunityCompetitionEntryModel) {
+	return model.$_save(
+		`/web/dash/communities/competitions/entries/unremove-entry/${model.id}`,
+		'entry'
+	);
 }

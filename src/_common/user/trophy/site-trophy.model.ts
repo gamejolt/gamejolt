@@ -1,15 +1,15 @@
-import { SiteTrophy } from '../../site/trophy/trophy.model';
+import { SiteTrophyModel } from '../../site/trophy/trophy.model';
 import { UserBaseTrophyModel } from './user-base-trophy.model';
 
-export class UserSiteTrophy extends UserBaseTrophyModel {
+export class UserSiteTrophyModel extends UserBaseTrophyModel {
 	declare site_trophy_id: number;
-	site_trophy?: SiteTrophy;
+	declare site_trophy?: SiteTrophyModel;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.site_trophy) {
-			this.site_trophy = new SiteTrophy(data.site_trophy);
+			this.site_trophy = new SiteTrophyModel(data.site_trophy);
 		}
 	}
 
@@ -21,7 +21,7 @@ export class UserSiteTrophy extends UserBaseTrophyModel {
 		return 'site-trophy-' + this.id;
 	}
 
-	async $view() {
-		this.$_save(`/web/profile/trophies/view-site/${this.id}`, 'userSiteTrophy');
+	get trophyType() {
+		return 'userSiteTrophy';
 	}
 }

@@ -32,15 +32,14 @@
 	"Vue modal service": {
 		"prefix": "vue-modal-service",
 		"body": [
+			"import { defineAsyncComponent } from 'vue';",
 			"",
-			"export class ${1:Login}Modal {",
-			"\tstatic async show($2) {",
-			"\t\treturn await showModal<${3:boolean}>({",
-			"\t\tmodalId: '${1:Login}',",
-			"\t\t\tcomponent: defineAsyncComponent(() => import('./$4')),",
-			"\t\t\tprops: { $5 },",
-			"\t\t});",
-			"\t}",
+			"export async function show${1:Login}Modal($2) {",
+			"\treturn await showModal<${3:boolean}>({",
+			"\tmodalId: '${1:Login}',",
+			"\t\tcomponent: defineAsyncComponent(() => import('./App${1:Login}Modal.vue')),",
+			"\t\tprops: { $4 },",
+			"\t});",
 			"}",
 			"$0"
 		]

@@ -5,21 +5,19 @@ import { Media } from '../../../../views/dashboard/games/manage/manage.store';
 
 export type GameMediaItemEditModalRemoveCallback = () => void;
 
-export class GameMediaItemEditModal {
-	static async show(
-		game: GameModel,
-		item: Media,
-		onRemove: GameMediaItemEditModalRemoveCallback
-	) {
-		return await showModal<Media>({
-			modalId: 'GameMediaItemEdit',
-			component: defineAsyncComponent(() => import('./edit-modal.vue')),
-			props: {
-				game,
-				item,
-				onRemove,
-			},
-			size: 'sm',
-		});
-	}
+export async function showGameMediaItemEditModal(
+	game: GameModel,
+	item: Media,
+	onRemove: GameMediaItemEditModalRemoveCallback
+) {
+	return await showModal<Media>({
+		modalId: 'GameMediaItemEdit',
+		component: defineAsyncComponent(() => import('./edit-modal.vue')),
+		props: {
+			game,
+			item,
+			onRemove,
+		},
+		size: 'sm',
+	});
 }

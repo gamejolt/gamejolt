@@ -4,11 +4,11 @@ import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { validateDomain } from '../../../../../_common/form-vue/validators';
 import { GameModel } from '../../../../../_common/game/game.model';
-import { SiteModel } from '../../../../../_common/site/site-model';
+import { $saveDomainSite, SiteModel } from '../../../../../_common/site/site-model';
 import { UserModel } from '../../../../../_common/user/user.model';
 
-interface FormModel {
-	type: string;
+interface FormModel extends SiteModel {
+	type?: string;
 }
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -22,8 +22,8 @@ export default class FormSiteDomain extends mixins(Wrapper) {
 	@Prop(Object) user!: UserModel;
 	@Prop(Object) game?: GameModel;
 
-	modelClass = SiteModel as any;
-	saveMethod = '$saveDomain' as const;
+	modelClass = SiteModel;
+	modelSaveHandler = $saveDomainSite;
 
 	readonly validateDomain = validateDomain;
 
@@ -92,7 +92,7 @@ export default class FormSiteDomain extends mixins(Wrapper) {
 						validateDomain(),
 						validateAvailability({
 							url: '/web/dash/sites/check-field-availability/domain',
-							initVal: model.domain,
+							initVal: model && model.domain,
 						}),
 					]"
 				/>

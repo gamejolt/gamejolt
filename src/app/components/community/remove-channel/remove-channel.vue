@@ -1,7 +1,10 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppCommunityChannelSelect from '../../../../_common/community/channel/AppCommunityChannelSelect.vue';
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
+import {
+	$removeCommunityChannel,
+	CommunityChannelModel,
+} from '../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
@@ -54,7 +57,7 @@ export default class AppCommunityRemoveChannel extends Vue {
 	private async removeChannel(moveToChannel?: CommunityChannelModel) {
 		let success = false;
 		try {
-			await this.channel.$remove(moveToChannel);
+			await $removeCommunityChannel(this.channel, moveToChannel);
 			success = true;
 		} catch (e) {
 			showErrorGrowl(

@@ -10,9 +10,9 @@ export class StoreBannerModel extends Model {
 		}
 	}
 
-	text!: string;
-	button!: string;
-	url!: string;
-	event_label!: string;
-	banner_media?: MediaItemModel;
+	declare text: string;
+	declare button: string;
+	declare url: string;
+	declare event_label: string;
+	declare banner_media?: MediaItemModel;
 }

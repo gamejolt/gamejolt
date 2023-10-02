@@ -5,6 +5,7 @@ import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
+import { $saveCommunityGameSort } from '../../../../../../_common/community/community.model';
 import { GameModel } from '../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
@@ -13,7 +14,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { CommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
+import { showCommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
@@ -68,7 +69,7 @@ export default class RouteCommunitiesViewEditGames extends LegacyRouteComponent 
 		this.community.games!.splice(0, this.community.games!.length, ...sortedGames);
 
 		try {
-			await this.community.saveGameSort();
+			await $saveCommunityGameSort(this.community);
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl(this.$gettext(`Could not save game arrangement.`));
@@ -76,7 +77,7 @@ export default class RouteCommunitiesViewEditGames extends LegacyRouteComponent 
 	}
 
 	async onClickLinkGame() {
-		const game = await CommunityLinkGameModal.show(this.community);
+		const game = await showCommunityLinkGameModal(this.community);
 		if (!game) {
 			return;
 		}

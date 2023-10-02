@@ -24,24 +24,28 @@ const ourTag = computed(() => (to?.value ? RouterLink : 'div'));
 </script>
 
 <template>
-	<AppOnHover v-slot="{ binding, hovered }">
-		<Component
+	<AppOnHover v-slot="{ hoverBinding, hovered }">
+		<component
 			:is="ourTag"
-			v-bind="binding"
 			class="elevate-1"
-			:style="{
-				...styleBorderRadiusLg,
-				display: `flex`,
-				flexDirection: `column`,
-				height: `150px`,
-				padding: `16px`,
-				backgroundColor: kThemeBg,
-				color: kThemeFg,
-				transition: 'background-color 0.1s ease, color 0.1s ease',
-				...styleWhen(hovered, {
-					backgroundColor: kThemeBiBg,
-					color: kThemeBiFg,
-				}),
+			v-bind="{
+				...hoverBinding,
+				style: [
+					styleBorderRadiusLg,
+					{
+						display: `flex`,
+						flexDirection: `column`,
+						height: `150px`,
+						padding: `16px`,
+						backgroundColor: kThemeBg,
+						color: kThemeFg,
+						transition: 'background-color 0.1s ease, color 0.1s ease',
+					},
+					styleWhen(hovered, {
+						backgroundColor: kThemeBiBg,
+						color: kThemeBiFg,
+					}),
+				],
 			}"
 			:to="to"
 		>
@@ -55,6 +59,6 @@ const ourTag = computed(() => (to?.value ? RouterLink : 'div'));
 			</div>
 			<div :style="{ flex: `auto` }" />
 			<AppJolticon :style="{ fontSize: `40px` }" :icon="icon" />
-		</Component>
+		</component>
 	</AppOnHover>
 </template>

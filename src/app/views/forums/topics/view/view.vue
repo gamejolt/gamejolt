@@ -13,7 +13,7 @@ import { HistoryTick } from '../../../../../_common/history-tick/history-tick-se
 import AppMessageThreadPagination from '../../../../../_common/message-thread/pagination/pagination.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
-import { ReportModal } from '../../../../../_common/report/modal/modal.service';
+import { showReportModal } from '../../../../../_common/report/modal/modal.service';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
@@ -158,7 +158,7 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 	}
 
 	report() {
-		ReportModal.show(this.topic);
+		showReportModal(this.topic);
 	}
 }
 </script>

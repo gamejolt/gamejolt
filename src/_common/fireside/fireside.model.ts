@@ -133,59 +133,13 @@ export class FiresideModel extends Collaboratable(Model) {
 			});
 		}
 	}
-
-	$save() {
-		return this.$_save(`/web/dash/fireside/save/` + this.hash, 'fireside');
-	}
-
-	$saveWithRealms(realmIds: number[]) {
-		return this.$_save(`/web/dash/fireside/save/${this.hash}`, 'fireside', {
-			data: {
-				title: this.title,
-				realm_ids: realmIds,
-			},
-			allowComplexData: ['realm_ids'],
-		});
-	}
-
-	$publish({ autoFeature }: { autoFeature?: boolean } = {}) {
-		return this.$_save(`/web/dash/fireside/publish/` + this.hash, 'fireside', {
-			data: {
-				auto_feature: autoFeature ?? false,
-			},
-		});
-	}
-
-	$extinguish() {
-		return this.$_save(`/web/dash/fireside/extinguish/` + this.hash, 'fireside');
-	}
-
-	$feature() {
-		if (!this.primaryCommunityLink) {
-			return;
-		}
-		return this.$_save(
-			`/web/communities/manage/feature-fireside/${this.primaryCommunityLink.id}`,
-			'fireside'
-		);
-	}
-
-	$unfeature() {
-		if (!this.primaryCommunityLink) {
-			return;
-		}
-		return this.$_save(
-			`/web/communities/manage/unfeature-fireside/${this.primaryCommunityLink.id}`,
-			'fireside'
-		);
-	}
 }
 
-export function inviteFiresideHost(fireside: FiresideModel, hostId: number) {
+export function $inviteFiresideHost(fireside: FiresideModel, hostId: number) {
 	return Api.sendRequest(`/web/dash/fireside/add-host/${fireside.id}`, { host_id: hostId });
 }
 
-export function removeFiresideHost(fireside: FiresideModel, hostId: number) {
+export function $removeFiresideHost(fireside: FiresideModel, hostId: number) {
 	return Api.sendRequest(`/web/dash/fireside/remove-host/${fireside.id}`, { host_id: hostId });
 }
 
@@ -195,4 +149,49 @@ export function canDeviceViewFiresides() {
 
 export function canDeviceCreateFiresides() {
 	return canDeviceViewFiresides();
+}
+
+export function $saveFiresideWithRealms(model: FiresideModel, realmIds: number[]) {
+	return model.$_save(`/web/dash/fireside/save/${model.hash}`, 'fireside', {
+		data: {
+			title: model.title,
+			realm_ids: realmIds,
+		},
+		allowComplexData: ['realm_ids'],
+	});
+}
+
+export function $publishFireside(
+	model: FiresideModel,
+	{ autoFeature }: { autoFeature?: boolean } = {}
+) {
+	return model.$_save(`/web/dash/fireside/publish/` + model.hash, 'fireside', {
+		data: {
+			auto_feature: autoFeature ?? false,
+		},
+	});
+}
+
+export function $extinguishFireside(model: FiresideModel) {
+	return model.$_save(`/web/dash/fireside/extinguish/` + model.hash, 'fireside');
+}
+
+export function $featureFireside(model: FiresideModel) {
+	if (!model.primaryCommunityLink) {
+		return;
+	}
+	return model.$_save(
+		`/web/communities/manage/feature-fireside/${model.primaryCommunityLink.id}`,
+		'fireside'
+	);
+}
+
+export function $unfeatureFireside(model: FiresideModel) {
+	if (!model.primaryCommunityLink) {
+		return;
+	}
+	return model.$_save(
+		`/web/communities/manage/unfeature-fireside/${model.primaryCommunityLink.id}`,
+		'fireside'
+	);
 }

@@ -2,20 +2,22 @@ import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-h
 import { Model } from '../../model/model.service';
 import { GameModel } from '../game.model';
 
+export const enum GameVideoType {
+	Youtube = 'youtube',
+	Vimeo = 'vimeo',
+}
+
 export class GameVideoModel extends Model implements LightboxMediaModel {
-	static readonly TYPE_YOUTUBE = 'youtube';
-	static readonly TYPE_VIMEO = 'vimeo';
+	declare media_type: 'video';
 
-	media_type!: 'video';
-
-	game_id!: number;
-	type!: string;
-	url!: string;
-	title!: string;
-	description!: string;
-	posted_on!: number;
-	status!: number;
-	img_thumbnail!: string;
+	declare game_id: number;
+	declare type: GameVideoType;
+	declare url: string;
+	declare title: string;
+	declare description: string;
+	declare posted_on: number;
+	declare status: number;
+	declare img_thumbnail: string;
 
 	getModelId() {
 		return this.id;
@@ -33,24 +35,24 @@ export class GameVideoModel extends Model implements LightboxMediaModel {
 	getUrl(game: GameModel) {
 		return game.getUrl() + `#video-${this.id}`;
 	}
+}
 
-	$save() {
-		if (!this.id) {
-			return this.$_save(
-				'/web/dash/developer/games/media/save/video/' + this.game_id,
-				'gameVideo'
-			);
-		} else {
-			return this.$_save(
-				'/web/dash/developer/games/media/save/video/' + this.game_id + '/' + this.id,
-				'gameVideo'
-			);
-		}
-	}
-
-	$remove() {
-		return this.$_remove(
-			'/web/dash/developer/games/media/remove/video/' + this.game_id + '/' + this.id
+export function $saveGameVideo(model: GameVideoModel) {
+	if (!model.id) {
+		return model.$_save(
+			'/web/dash/developer/games/media/save/video/' + model.game_id,
+			'gameVideo'
+		);
+	} else {
+		return model.$_save(
+			'/web/dash/developer/games/media/save/video/' + model.game_id + '/' + model.id,
+			'gameVideo'
 		);
 	}
+}
+
+export function $removeGameVideo(model: GameVideoModel) {
+	return model.$_remove(
+		'/web/dash/developer/games/media/remove/video/' + model.game_id + '/' + model.id
+	);
 }

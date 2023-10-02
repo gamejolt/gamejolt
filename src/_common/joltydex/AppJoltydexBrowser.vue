@@ -26,6 +26,7 @@ const props = defineProps({
 const { user } = toRefs(props);
 const { user: loggedInUser } = useCommonStore();
 
+const ItemsPerPage = 24;
 const isInitializing = ref(true);
 
 const feedTypes = [
@@ -55,6 +56,7 @@ async function init() {
 			types: feedTypes,
 			ownerUser: user.value,
 			user: loggedInUser.value!,
+			perPage: ItemsPerPage,
 		});
 
 		for (const [_type, feed] of feeds) {
@@ -76,6 +78,7 @@ async function loadMore(type: CollectibleType) {
 			ownerUser: user.value,
 			user: loggedInUser.value!,
 			pos: feed.collectibles.value.length,
+			perPage: ItemsPerPage,
 		});
 
 		applyPayloadToJoltydexFeed(payload, feed);
@@ -138,21 +141,23 @@ const gridStyles = {
 
 			<div :style="gridStyles">
 				<AppCollectibleThumb
-					v-for="collectible of collectibles.value"
+					v-for="(collectible, i) of collectibles.value"
 					:key="collectible.id"
 					:collectible="collectible"
+					class="anim-fade-in-enlarge"
+					:style="{
+						animationDelay: `${15 * (i % ItemsPerPage)}ms`,
+					}"
 				/>
 			</div>
 
 			<AppSpacer vertical :scale="6" />
 
-			<AppButton
-				v-if="!reachedEnd.value"
-				:disabled="isLoading.value"
-				@click="loadMore(feedType)"
-			>
-				{{ isLoading.value ? $gettext(`Loading...`) : $gettext(`Load more`) }}
-			</AppButton>
+			<div v-if="!reachedEnd.value" class="page-cut">
+				<AppButton :disabled="isLoading.value" @click="loadMore(feedType)">
+					{{ isLoading.value ? $gettext(`Loading...`) : $gettext(`Load more`) }}
+				</AppButton>
+			</div>
 
 			<AppSpacer vertical :scale="10" />
 		</template>

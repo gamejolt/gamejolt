@@ -1,8 +1,11 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
+import { BaseForm, FormOnBeforeSubmit } from '../../../../../_common/form-vue/form.service';
 import { GameModel } from '../../../../../_common/game/game.model';
-import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketchfab.model';
+import {
+	$saveGameSketchfab,
+	GameSketchfabModel,
+} from '../../../../../_common/game/sketchfab/sketchfab.model';
 import AppSketchfabEmbed, {
 	getSketchfabIdFromInput,
 	SKETCHFAB_FIELD_VALIDATION_REGEX,
@@ -15,12 +18,13 @@ class Wrapper extends BaseForm<GameSketchfabModel> {}
 		AppSketchfabEmbed,
 	},
 })
-export default class FormGameSketchfab extends mixins(Wrapper) implements FormOnSubmit {
+export default class FormGameSketchfab extends mixins(Wrapper) implements FormOnBeforeSubmit {
 	@Prop(Object) game!: GameModel;
 
 	readonly SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;
 
 	modelClass = GameSketchfabModel;
+	modelSaveHandler = $saveGameSketchfab;
 
 	get sketchfabId() {
 		return getSketchfabIdFromInput(this.formModel.sketchfab_id);
@@ -48,9 +52,8 @@ export default class FormGameSketchfab extends mixins(Wrapper) implements FormOn
 		}
 	}
 
-	onSubmit() {
+	onBeforeSubmit() {
 		this.setField('sketchfab_id', this.sketchfabId);
-		return this.formModel.$save();
 	}
 }
 </script>

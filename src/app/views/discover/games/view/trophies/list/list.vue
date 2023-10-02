@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../../../_common/filters/number';
-import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
+import { GameTrophyModel } from '../../../../../../../_common/game/trophy/trophy.model';
 import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
 import {
 	LegacyRouteComponent,
@@ -13,7 +13,7 @@ import { useCommonStore } from '../../../../../../../_common/store/common-store'
 import AppTrophyCompletion from '../../../../../../../_common/trophy/AppTrophyCompletion.vue';
 import AppTrophyList from '../../../../../../../_common/trophy/list/AppTrophyList.vue';
 import {
-	UserGameTrophy,
+	UserGameTrophyModel,
 	indexAchievedGameTrophies,
 } from '../../../../../../../_common/user/trophy/game-trophy.model';
 import { useGameRouteController } from '../../view.vue';
@@ -35,8 +35,8 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 	routeStore = setup(() => useGameRouteController()!);
 	commonStore = setup(() => useCommonStore());
 
-	trophies: GameTrophy[] = [];
-	achieved: UserGameTrophy[] = [];
+	trophies: GameTrophyModel[] = [];
+	achieved: UserGameTrophyModel[] = [];
 	experience = 0;
 	showInvisibleTrophyMessage = false;
 
@@ -68,15 +68,15 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 	}
 
 	routeResolved($payload: any) {
-		this.trophies = GameTrophy.populate($payload.trophies);
+		this.trophies = GameTrophyModel.populate($payload.trophies);
 		this.achieved = $payload.trophiesAchieved
-			? UserGameTrophy.populate($payload.trophiesAchieved)
+			? UserGameTrophyModel.populate($payload.trophiesAchieved)
 			: [];
 		this.experience = $payload.trophiesExperienceAchieved || 0;
 		this.showInvisibleTrophyMessage = $payload.trophiesShowInvisibleTrophyMessage || false;
 
 		this.achievedIndexed = indexAchievedGameTrophies(this.achieved);
-		this.filteredTrophies = GameTrophy.splitAchieved(this.trophies, this.achievedIndexed);
+		this.filteredTrophies = GameTrophyModel.splitAchieved(this.trophies, this.achievedIndexed);
 
 		this.currentFilter = 'all';
 	}

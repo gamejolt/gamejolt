@@ -3,7 +3,11 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { GameModel } from '../../../../../_common/game/game.model';
-import { GameScoreTableModel } from '../../../../../_common/game/score-table/score-table.model';
+import {
+	$saveGameScoreTable,
+	GameScoreTableModel,
+	GameScoreTableSorting,
+} from '../../../../../_common/game/score-table/score-table.model';
 
 class Wrapper extends BaseForm<GameScoreTableModel> {}
 
@@ -16,14 +20,17 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 	@Prop(Object) game!: GameModel;
 
 	modelClass = GameScoreTableModel;
-	GameScoreTable = GameScoreTableModel;
+	modelSaveHandler = $saveGameScoreTable;
+
+	readonly DirectionAscend = GameScoreTableSorting.DirectionAsc;
+	readonly DirectionDescend = GameScoreTableSorting.DirectionDesc;
 
 	onInit() {
 		this.setField('game_id', this.game.id);
 
 		if (this.method === 'add') {
 			this.setField('unique_scores', true);
-			this.setField('scores_sorting_direction', GameScoreTableModel.SORTING_DIRECTION_DESC);
+			this.setField('scores_sorting_direction', GameScoreTableSorting.DirectionDesc);
 		}
 	}
 }
@@ -56,7 +63,7 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 		<AppFormGroup name="scores_sorting_direction" :label="$gettext(`Sort Direction`)">
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="GameScoreTable.SORTING_DIRECTION_DESC" />
+					<AppFormControlRadio :value="DirectionDescend" />
 					<AppTranslate translate-comment="As in going from highest to lowest">
 						Descending
 					</AppTranslate>
@@ -68,7 +75,7 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="GameScoreTable.SORTING_DIRECTION_ASC" />
+					<AppFormControlRadio :value="DirectionAscend" />
 					<AppTranslate translate-comment="As in going from lowest to highest">
 						Ascending
 					</AppTranslate>

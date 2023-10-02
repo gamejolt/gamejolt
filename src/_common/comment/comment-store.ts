@@ -5,11 +5,11 @@ import { showSuccessGrowl } from '../growls/growls.service';
 import { storeModel, storeModelList } from '../model/model-store.service';
 import { $gettext } from '../translate/translate.service';
 import {
+	$pinComment,
 	CommentModel,
 	CommentSort,
 	CommentStatus,
 	fetchComments,
-	pinComment,
 } from './comment-model';
 
 export const CommentStoreManagerKey: InjectionKey<CommentStoreManager> = Symbol('comment-store');
@@ -167,7 +167,7 @@ export async function commentStoreFetch(store: CommentStoreModel, page?: number)
 }
 
 export async function commentStorePin(manager: CommentStoreManager, comment: CommentModel) {
-	await pinComment(comment);
+	await $pinComment(comment);
 
 	const store = getCommentStore(manager, comment.resource, comment.resource_id);
 	if (store instanceof CommentStoreModel) {

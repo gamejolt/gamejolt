@@ -1,5 +1,5 @@
 import { Model } from '../model/model.service';
-import { OrderAddressModel } from './address/address.model';
+import { OrderAddressModel, OrderAddressType } from './address/address.model';
 import { OrderItemModel } from './item/item.model';
 import { OrderPaymentModel } from './payment/payment.model';
 
@@ -35,11 +35,11 @@ export class OrderModel extends Model {
 	}
 
 	get billing_address() {
-		return this.addresses?.find(item => item.type === OrderAddressModel.TYPE_BILLING);
+		return this.addresses?.find(item => item.type === OrderAddressType.Billing);
 	}
 
 	get shipping_address() {
-		return this.addresses?.find(item => item.type === OrderAddressModel.TYPE_SHIPPING);
+		return this.addresses?.find(item => item.type === OrderAddressType.Shipping);
 	}
 
 	get _is_refunded() {

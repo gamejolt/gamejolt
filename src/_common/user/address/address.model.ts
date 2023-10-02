@@ -1,24 +1,26 @@
 import { Model } from '../../model/model.service';
 
+export const enum UserAddressType {
+	Billing = 'billing',
+	Shipping = 'shipping',
+}
+
 export class UserAddressModel extends Model {
-	static readonly TYPE_BILLING = 'billing';
-	static readonly TYPE_SHIPPING = 'shipping';
+	declare user_id: number;
+	declare type: UserAddressType;
+	declare fullname: string;
+	declare street1: string;
+	declare street2: string;
+	declare city: string;
+	declare region: string;
+	declare postcode: string;
+	declare country: string;
+}
 
-	user_id!: number;
-	type!: 'billing' | 'shipping';
-	fullname!: string;
-	street1!: string;
-	street2!: string;
-	city!: string;
-	region!: string;
-	postcode!: string;
-	country!: string;
+export function $removeUserAddress(model: UserAddressModel) {
+	return model.$_remove('/web/dash/addresses/remove/' + model.id);
+}
 
-	$remove() {
-		return this.$_remove('/web/dash/addresses/remove/' + this.id);
-	}
-
-	$save() {
-		return this.$_save('/web/dash/addresses/save/' + this.id, 'userAddress');
-	}
+export function $saveUserAddress(model: UserAddressModel) {
+	return model.$_save('/web/dash/addresses/save/' + model.id, 'userAddress');
 }

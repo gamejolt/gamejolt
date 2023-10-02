@@ -19,7 +19,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../../../_common/route/legacy-route-component';
 import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
-import { CommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';
+import { showCommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';
 import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/add.vue';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
 import {
@@ -113,7 +113,7 @@ export default class RouteCommunitiesViewEditChannelsList extends LegacyRouteCom
 	}
 
 	async onClickRemoveChannel(channel: CommunityChannelModel) {
-		await CommunityRemoveChannelModal.show(this.community, channel);
+		await showCommunityRemoveChannelModal(this.community, channel);
 
 		if (channel._removed) {
 			this.community.channels = this.community.channels!.filter(i => i.id !== channel.id);

@@ -7,14 +7,17 @@ import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import { Screen } from '../../screen/screen-service';
-import { SiteTrophy } from '../../site/trophy/trophy.model';
+import { SiteTrophyModel } from '../../site/trophy/trophy.model';
 import { useCommonStore } from '../../store/common-store';
 import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
 import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
-import { UserGameTrophy } from '../../user/trophy/game-trophy.model';
-import { UserBaseTrophyModel } from '../../user/trophy/user-base-trophy.model';
+import { UserGameTrophyModel } from '../../user/trophy/game-trophy.model';
+import {
+	$viewUserBaseTrophyModel,
+	UserBaseTrophyModel,
+} from '../../user/trophy/user-base-trophy.model';
 import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 import AppUserAvatarList from '../../user/user-avatar/AppUserAvatarList.vue';
 import { UserModel } from '../../user/user.model';
@@ -39,7 +42,7 @@ const trophy = computed(() => userTrophy.value.trophy!);
 const bgClass = computed(() => '-trophy-difficulty-' + trophy.value.difficulty);
 
 const isGame = computed(
-	() => userTrophy.value instanceof UserGameTrophy && !!userTrophy.value.game
+	() => userTrophy.value instanceof UserGameTrophyModel && !!userTrophy.value.game
 );
 
 const canReceiveExp = computed(() =>
@@ -61,7 +64,7 @@ const completionPercentageForDisplay = computed(() => {
 const shouldShowFriends = computed(() => Boolean(friends.value && friends.value.length > 0));
 
 const game = computed(() =>
-	userTrophy.value instanceof UserGameTrophy && userTrophy.value.game
+	userTrophy.value instanceof UserGameTrophyModel && userTrophy.value.game
 		? userTrophy.value.game
 		: undefined
 );
@@ -71,7 +74,7 @@ const loggedInUserUnlocked = computed(() =>
 );
 
 const artist = computed(() =>
-	trophy.value instanceof SiteTrophy && trophy.value.artist instanceof UserModel
+	trophy.value instanceof SiteTrophyModel && trophy.value.artist instanceof UserModel
 		? trophy.value.artist
 		: undefined
 );
@@ -84,7 +87,7 @@ onMounted(() => {
 		populateFriends();
 
 		if (userTrophy.value.user_id === user.value.id && !userTrophy.value.viewed_on) {
-			userTrophy.value.$view();
+			$viewUserBaseTrophyModel(userTrophy.value);
 		}
 	}
 });

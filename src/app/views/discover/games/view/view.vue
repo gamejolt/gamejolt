@@ -11,6 +11,8 @@ import {
 } from '../../../../../_common/ad/ad-store';
 import { Api } from '../../../../../_common/api/api.service';
 import {
+	$acceptCollaboratorInvite,
+	$removeCollaboratorInvite,
 	CollaboratorModel,
 	CollaboratorRole,
 } from '../../../../../_common/collaborator/collaborator.model';
@@ -576,7 +578,7 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 
 	async acceptCollaboration() {
 		try {
-			await this.collaboratorInvite!.$accept();
+			await $acceptCollaboratorInvite(this.collaboratorInvite!);
 			this.routeStore.acceptCollaboratorInvite(this.collaboratorInvite!);
 		} catch (error: any) {
 			console.log('Error status for accepting game collaboration.', error);
@@ -585,7 +587,7 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 	}
 
 	async declineCollaboration() {
-		await this.collaboratorInvite!.$remove();
+		await $removeCollaboratorInvite(this.collaboratorInvite!);
 		this.routeStore.declineCollaboratorInvite();
 	}
 

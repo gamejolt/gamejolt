@@ -2,7 +2,6 @@ import type { ComputedRef, Ref } from 'vue';
 import { shallowRef } from 'vue';
 import { setup } from 'vue-class-component';
 
-export type MaybeRef<T> = Ref<T> | T;
 export type MaybeComputedRef<T> = ComputedRef<T> | T;
 
 /**

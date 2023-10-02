@@ -27,7 +27,7 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import {
 	LinkedAccountModel,
-	Provider,
+	LinkedAccountProvider,
 } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
@@ -45,22 +45,23 @@ import AppTopSupportersCard, {
 } from '../../../../_common/supporters/AppTopSupportersCard.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { TrophyModal } from '../../../../_common/trophy/modal/modal.service';
+import { showTrophyModal } from '../../../../_common/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { showUserFiresideFollowModal } from '../../../../_common/user/fireside/modal/follow-modal.service';
 import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
 import { UserBaseTrophyModel } from '../../../../_common/user/trophy/user-base-trophy.model';
-import { UserModel, unfollowUser } from '../../../../_common/user/user.model';
+import { $unfollowUser, UserModel } from '../../../../_common/user/user.model';
 import { numberSort } from '../../../../utils/array';
 import { removeQuery } from '../../../../utils/router';
 import { openChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/AppCommentOverview.vue';
 import AppCommentAddButton from '../../../components/comment/add-button/AppCommentAddButton.vue';
-import { CommentModal } from '../../../components/comment/modal/modal.service';
+import { showCommentModal } from '../../../components/comment/modal/modal.service';
 import {
-	CommentThreadModal,
 	CommentThreadModalPermalinkDeregister,
+	showCommentThreadModalFromPermalink,
+	watchForCommentThreadModalPermalink,
 } from '../../../components/comment/thread/modal.service';
 import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppGameList from '../../../components/game/list/list.vue';
@@ -185,7 +186,7 @@ const hasCommunitiesSection = computed(() => {
 });
 
 const twitchAccount = computed(() => {
-	return getLinkedAccount(LinkedAccountModel.PROVIDER_TWITCH);
+	return getLinkedAccount(LinkedAccountProvider.Twitch);
 });
 
 const addCommentPlaceholder = computed(() => {
@@ -282,7 +283,7 @@ const canShowFiresidePreview = computed(() => {
 	return maintainFiresideOutviewSpace.value;
 });
 
-function getLinkedAccount(provider: Provider) {
+function getLinkedAccount(provider: LinkedAccountProvider) {
 	if (
 		routeUser.value &&
 		linkedAccounts.value &&
@@ -352,8 +353,8 @@ createAppRoute({
 		};
 
 		if (routeUser.value) {
-			CommentThreadModal.showFromPermalink(router, routeUser.value, 'shouts');
-			permalinkWatchDeregister = CommentThreadModal.watchForPermalink(
+			showCommentThreadModalFromPermalink(router, routeUser.value, 'shouts');
+			permalinkWatchDeregister = watchForCommentThreadModalPermalink(
 				router,
 				routeUser.value,
 				'shouts'
@@ -410,7 +411,7 @@ function clearCommentStore() {
 
 function showComments() {
 	if (routeUser.value) {
-		CommentModal.show({
+		showCommentModal({
 			model: routeUser.value,
 			displayMode: 'shouts',
 		});
@@ -484,7 +485,7 @@ async function reloadPreviewComments() {
 }
 
 function onClickTrophy(userTrophy: UserBaseTrophyModel) {
-	TrophyModal.show(userTrophy);
+	showTrophyModal(userTrophy);
 }
 
 async function onClickUnfollow() {
@@ -498,7 +499,7 @@ async function onClickUnfollow() {
 			return;
 		}
 
-		unfollowUser(routeUser.value);
+		$unfollowUser(routeUser.value);
 	}
 }
 

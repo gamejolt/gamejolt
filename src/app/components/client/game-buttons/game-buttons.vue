@@ -9,7 +9,7 @@ import {
 	pluckInstallableGameBuilds,
 } from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
-import { GamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
+import { showGamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -17,7 +17,7 @@ import { arrayGroupBy } from '../../../../utils/array';
 import { shallowSetup } from '../../../../utils/vue';
 import { useClientLibraryStore } from '../../../store/client-library';
 import AppClientInstallProgress from '../AppClientInstallProgress.vue';
-import { ClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
+import { showClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
 import { LocalDbPackage } from '../local-db/package/package.model';
 
 @Options({
@@ -113,7 +113,7 @@ export default class AppClientGameButtons extends Vue {
 		const byPackageId = arrayGroupBy(packageData.installableBuilds!, 'game_package_id');
 		// If more than one package for their OS, then we have to show an install package modal.
 		if (Object.keys(byPackageId).length > 1) {
-			ClientInstallPackageModal.show(this.game);
+			showClientInstallPackageModal(this.game);
 			return;
 		}
 
@@ -122,7 +122,7 @@ export default class AppClientGameButtons extends Vue {
 		// If the build belongs to a pwyw package, open up the package
 		// payment form.
 		if (build._package!.shouldShowNamePrice()) {
-			GamePackagePurchaseModal.show({
+			showGamePackagePurchaseModal({
 				game: this.game,
 				package: build._package!,
 				build: build,

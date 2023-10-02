@@ -1,6 +1,9 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { CommunityCompetitionAwardModel } from '../../../../../../_common/community/competition/award/award.model';
+import {
+	$saveCommunityCompetitionAward,
+	CommunityCompetitionAwardModel,
+} from '../../../../../../_common/community/competition/award/award.model';
 import { CommunityCompetitionModel } from '../../../../../../_common/community/competition/competition.model';
 import AppFormControlTextarea from '../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
 import { BaseForm, FormOnBeforeSubmit } from '../../../../../../_common/form-vue/form.service';
@@ -19,6 +22,7 @@ export default class FormCommunityCompetitionAward
 	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
 
 	modelClass = CommunityCompetitionAwardModel;
+	modelSaveHandler = $saveCommunityCompetitionAward;
 
 	get isAdding() {
 		return !this.model;

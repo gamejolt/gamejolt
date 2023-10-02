@@ -8,7 +8,7 @@ import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext } from '../../translate/translate.service';
-import { toggleUserFollow, UserModel } from '../user.model';
+import { $toggleUserFollow, UserModel } from '../user.model';
 
 const props = defineProps({
 	user: {
@@ -79,7 +79,7 @@ async function onClick() {
 	}
 
 	const isFollowing = user.value.is_following !== true;
-	const success = await toggleUserFollow(user.value, location.value);
+	const success = await $toggleUserFollow(user.value, location.value);
 	// Either failed or didn't confirm the action.
 	if (!success) {
 		return;

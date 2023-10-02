@@ -14,9 +14,18 @@ import {
 } from '../model/model-store.service';
 import { Model } from '../model/model.service';
 import { ReactionCount, ReactionableModel } from '../reaction/reaction-count';
-import { $createSubscription, SubscriptionModel } from '../subscription/subscription.model';
+import {
+	$createSubscription,
+	$removeSubscription,
+	SubscriptionModel,
+} from '../subscription/subscription.model';
 import { UserModel } from '../user/user.model';
-import { CommentVoteModel, CommentVoteType } from './vote/vote-model';
+import {
+	$removeCommentVote,
+	$saveCommentVote,
+	CommentVoteModel,
+	CommentVoteType,
+} from './vote/vote-model';
 
 export interface CommentableModel {
 	canViewComments: boolean;
@@ -215,7 +224,7 @@ export async function removeComment(comment: CommentModel) {
 	});
 }
 
-export async function followComment(comment: CommentModel) {
+export async function $followComment(comment: CommentModel) {
 	if (comment.subscription || comment.isFollowPending) {
 		return;
 	}
@@ -226,13 +235,13 @@ export async function followComment(comment: CommentModel) {
 	comment.isFollowPending = false;
 }
 
-export async function unfollowComment(comment: CommentModel) {
+export async function $unfollowComment(comment: CommentModel) {
 	if (!comment.subscription || comment.isFollowPending) {
 		return;
 	}
 	comment.isFollowPending = true;
 
-	await comment.subscription.$remove();
+	await $removeSubscription(comment.subscription);
 	comment.subscription = undefined;
 	comment.isFollowPending = false;
 }
@@ -241,7 +250,7 @@ export async function unfollowComment(comment: CommentModel) {
  * Applies pin operation to current comment and returns the comment that got
  * unpinned (or null if that didn't happen).
  */
-export async function pinComment(comment: CommentModel) {
+export async function $pinComment(comment: CommentModel) {
 	const { response } = await saveModel(CommentModel, {
 		url: `/comments/pin/${comment.id}`,
 		field: 'comment',
@@ -250,7 +259,7 @@ export async function pinComment(comment: CommentModel) {
 	return response['otherComment'] ? storeModel(CommentModel, response['otherComment']) : null;
 }
 
-export async function addCommentVote(comment: CommentModel, vote: number) {
+export async function $voteOnComment(comment: CommentModel, vote: number) {
 	// Don't do anything if they are setting the same vote.
 	if (comment.user_vote && comment.user_vote.vote === vote) {
 		return;
@@ -276,7 +285,7 @@ export async function addCommentVote(comment: CommentModel, vote: number) {
 
 	let failed = false;
 	try {
-		return await newVote.$save();
+		return await $saveCommentVote(newVote);
 	} catch (e) {
 		failed = true;
 		comment.votes -= operation;
@@ -288,7 +297,7 @@ export async function addCommentVote(comment: CommentModel, vote: number) {
 	}
 }
 
-export async function removeCommentVote(comment: CommentModel) {
+export async function $unvoteOnComment(comment: CommentModel) {
 	if (!comment.user_vote) {
 		return;
 	}
@@ -303,7 +312,7 @@ export async function removeCommentVote(comment: CommentModel) {
 
 	let failed = false;
 	try {
-		return await previousVote.$remove();
+		return await $removeCommentVote(previousVote);
 	} catch (e) {
 		failed = true;
 		comment.user_vote = previousVote;

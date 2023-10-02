@@ -4,7 +4,10 @@ import { BackgroundModel } from '../../../../_common/background/background.model
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { FiresideChatSettingsModel } from '../../../../_common/fireside/chat/chat-settings.model';
-import { FiresideModel } from '../../../../_common/fireside/fireside.model';
+import {
+	$saveFiresideWithRealms,
+	FiresideModel,
+} from '../../../../_common/fireside/fireside.model';
 import { FIRESIDE_ROLES } from '../../../../_common/fireside/role/role.model';
 import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
@@ -19,7 +22,7 @@ import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/contro
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { RealmModel } from '../../../../_common/realm/realm-model';
-import { ReportModal } from '../../../../_common/report/modal/modal.service';
+import { showReportModal } from '../../../../_common/report/modal/modal.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -32,10 +35,10 @@ import {
 	publishFireside,
 	useFiresideController,
 } from '../../../components/fireside/controller/controller';
-import { ChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
-import { ChatModsModal } from '../../../components/forms/chat/mods/modal/modal.service';
-import { ChatTimersModal } from '../../../components/forms/chat/timers/modal/modal.service';
-import { FiresideHostsModal } from '../../../components/forms/fireside/hosts/modal/modal.service';
+import { showChatCommandsModal } from '../../../components/forms/chat/commands/modal/modal.service';
+import { showChatModsModal } from '../../../components/forms/chat/mods/modal/modal.service';
+import { showChatTimersModal } from '../../../components/forms/chat/timers/modal/modal.service';
+import { showFiresideHostsModal } from '../../../components/forms/fireside/hosts/modal/modal.service';
 import AppFiresideShare from '../AppFiresideShare.vue';
 import AppFiresideSidebar from './AppFiresideSidebar.vue';
 import AppFiresideSidebarHeading from './AppFiresideSidebarHeading.vue';
@@ -77,7 +80,11 @@ const form: FormController<FiresideModel> = createForm({
 		});
 		selectedRealms.value = fireside.realms.map(i => i.realm);
 	},
-	onSubmit: () => form.formModel.$saveWithRealms(selectedRealms.value.map(i => i.id)),
+	onSubmit: () =>
+		$saveFiresideWithRealms(
+			form.formModel,
+			selectedRealms.value.map(i => i.id)
+		),
 	onSubmitSuccess: () => {
 		fireside.assign(form.formModel);
 	},
@@ -187,7 +194,7 @@ const settingsRoleOptions = computed<{ label: string; value: FIRESIDE_ROLES | nu
 ]);
 
 function onClickReport() {
-	ReportModal.show(fireside);
+	showReportModal(fireside);
 }
 
 function onClickPublish() {
@@ -199,20 +206,20 @@ function onClickExtinguish() {
 }
 
 function onClickChatCommands() {
-	ChatCommandsModal.show();
+	showChatCommandsModal();
 }
 
 function onClickChatTimers() {
-	ChatTimersModal.show();
+	showChatTimersModal();
 }
 
 function onClickHosts() {
-	FiresideHostsModal.show({ controller: c });
+	showFiresideHostsModal({ controller: c });
 }
 
 function onClickChatMods() {
 	if (chatRoom.value) {
-		ChatModsModal.show({
+		showChatModsModal({
 			chatRoom: chatRoom.value,
 			hasCurrentMods: true,
 			initialSection: 'currentMods',

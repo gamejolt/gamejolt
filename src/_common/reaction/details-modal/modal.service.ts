@@ -7,18 +7,16 @@ interface ReactionDetailsModalOptions {
 	initialReaction?: ReactionCount;
 }
 
-export class ReactionDetailsModal {
-	static async show(options: ReactionDetailsModalOptions) {
-		const { model, initialReaction } = options;
+export async function showReactionDetailsModal(options: ReactionDetailsModalOptions) {
+	const { model, initialReaction } = options;
 
-		return await showModal<void>({
-			modalId: 'ReactionDetails',
-			component: defineAsyncComponent(() => import('./AppReactionDetailsModal.vue')),
-			props: {
-				model,
-				initialReaction,
-			},
-			size: 'sm',
-		});
-	}
+	return await showModal<void>({
+		modalId: 'ReactionDetails',
+		component: defineAsyncComponent(() => import('./AppReactionDetailsModal.vue')),
+		props: {
+			model,
+			initialReaction,
+		},
+		size: 'sm',
+	});
 }

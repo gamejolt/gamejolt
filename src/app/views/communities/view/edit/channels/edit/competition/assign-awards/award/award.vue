@@ -4,7 +4,11 @@ import { RouteLocationNormalized } from 'vue-router';
 import draggable from 'vuedraggable';
 import { Api } from '../../../../../../../../../../_common/api/api.service';
 import { CommunityCompetitionAwardModel } from '../../../../../../../../../../_common/community/competition/award/award.model';
-import { CommunityCompetitionEntryAwardModel } from '../../../../../../../../../../_common/community/competition/entry/award/award.model';
+import {
+	$assignCommunityCompetitionEntryAward,
+	$saveSortCommunityCompetitionEntryAward,
+	$unassignCommunityCompetitionEntryAward,
+} from '../../../../../../../../../../_common/community/competition/entry/award/award.model';
 import { CommunityCompetitionEntryModel } from '../../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showErrorGrowl } from '../../../../../../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../../../../../../_common/loading/AppLoading.vue';
@@ -15,7 +19,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
-import { CommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
+import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
 
 type Payload = {
 	award: any;
@@ -125,7 +129,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 	}
 
 	onClickShowEntry(entry: CommunityCompetitionEntryModel) {
-		CommunityCompetitionEntryModal.showEntry(entry);
+		showEntryFromCommunityCompetitionEntryModal(entry);
 	}
 
 	onFilterInput(event: InputEvent) {
@@ -150,7 +154,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 	}
 
 	async onClickAssign(entry: CommunityCompetitionEntryModel) {
-		await CommunityCompetitionEntryAwardModel.$assign(entry.id, this.award.id);
+		await $assignCommunityCompetitionEntryAward(entry.id, this.award.id);
 
 		this.emitAssign(this.award.id);
 
@@ -160,7 +164,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 	}
 
 	async onClickUnassign(entry: CommunityCompetitionEntryModel) {
-		await CommunityCompetitionEntryAwardModel.$unassign(entry.id, this.award.id);
+		await $unassignCommunityCompetitionEntryAward(entry.id, this.award.id);
 
 		this.emitUnassign(this.award.id);
 
@@ -175,7 +179,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 
 		const sortedIds = sortedEntries.map(i => i.id);
 		try {
-			await CommunityCompetitionEntryAwardModel.$saveSort(this.award.id, sortedIds);
+			await $saveSortCommunityCompetitionEntryAward(this.award.id, sortedIds);
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl(this.$gettext(`Could not save entry arrangement.`));

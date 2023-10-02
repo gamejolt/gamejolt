@@ -12,6 +12,8 @@ export function buildCSSPixelValue(value: number) {
 	});
 }
 
+export type CSSPixelValue = ReturnType<typeof buildCSSPixelValue>;
+
 export const kGridColumns = buildCSSPixelValue(12);
 export const kGridGutterWidth = buildCSSPixelValue(40);
 export const kGridGutterWidthXs = buildCSSPixelValue(16 * 2);

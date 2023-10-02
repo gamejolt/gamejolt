@@ -18,7 +18,7 @@ import {
 	validateContentNoActiveUploads,
 	validateContentRequired,
 } from '../../../../../_common/form-vue/validators';
-import { GameModel } from '../../../../../_common/game/game.model';
+import { $saveGameDescription, GameModel } from '../../../../../_common/game/game.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { AppGamePerms } from '../../../game/perms/perms';
@@ -49,7 +49,7 @@ const form: FormController<DescriptionFormModel> = createForm({
 	loadUrl: `/web/dash/developer/games/description/save/${model.value.id}`,
 	model,
 	modelClass: GameModel,
-	saveMethod: '$saveDescription' as const,
+	modelSaveHandler: $saveGameDescription,
 	onLoad(payload) {
 		lengthLimit.value = payload.lengthLimit;
 

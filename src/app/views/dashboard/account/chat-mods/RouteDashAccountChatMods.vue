@@ -10,7 +10,7 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import { touchUser } from '../../../../../_common/user/user.model';
 import { ChatUser } from '../../../../components/chat/user';
 import FormChatMods from '../../../../components/forms/chat/mods/FormChatMods.vue';
-import { ChatModsModal } from '../../../../components/forms/chat/mods/modal/modal.service';
+import { showChatModsModal } from '../../../../components/forms/chat/mods/modal/modal.service';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 export default {
@@ -38,7 +38,7 @@ createAppRoute({
 });
 
 async function onClickAdd() {
-	const needsRefresh = await ChatModsModal.show({
+	const needsRefresh = await showChatModsModal({
 		initialSection: 'friends',
 		initialMods: chatMods.value,
 	});

@@ -16,20 +16,19 @@ interface DoSupporterMessageModalOptions {
  * Used to create/edit a thank-you message template, or send an individual
  * thank-you message to a user.
  */
-export class DoSupporterMessageModal {
-	static async show(options: DoSupporterMessageModalOptions) {
-		const { action, model } = options;
 
-		return await showModal<SupporterMessageModel>({
-			modalId: 'DoSupporterMessage',
-			component: defineAsyncComponent(() => import('./FormSupporterMessage.vue')),
-			props: {
-				action,
-				model,
-			},
-			size: 'sm',
-			noBackdropClose: true,
-			noEscClose: true,
-		});
-	}
+export async function showDoSupporterMessageModal(options: DoSupporterMessageModalOptions) {
+	const { action, model } = options;
+
+	return await showModal<SupporterMessageModel>({
+		modalId: 'DoSupporterMessage',
+		component: defineAsyncComponent(() => import('./FormSupporterMessage.vue')),
+		props: {
+			action,
+			model,
+		},
+		size: 'sm',
+		noBackdropClose: true,
+		noEscClose: true,
+	});
 }

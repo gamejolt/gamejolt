@@ -38,7 +38,7 @@ import { useGridStore } from '../../grid/grid-store';
 import AppShellWindow from '../../shell/AppShellWindow.vue';
 import { closeChatRoom } from '../client';
 import FormChatRoomSettings from '../FormChatRoomSettings.vue';
-import { ChatInviteModal } from '../invite-modal/invite-modal.service';
+import { showChatInviteModal } from '../invite-modal/invite-modal.service';
 import AppChatMemberList from '../member-list/AppChatMemberList.vue';
 import { ChatRoomModel, getChatRoomTitle } from '../room';
 import { ChatRoomChannel, createChatRoomChannel } from '../room-channel';
@@ -230,7 +230,7 @@ function addGroup() {
 	}
 
 	// Give the InviteModal the initialUser so it can set them as invited by default
-	ChatInviteModal.show(room.value, invitableUsers, initialUser);
+	showChatInviteModal(room.value, invitableUsers, initialUser);
 }
 
 async function addMembers() {
@@ -241,7 +241,7 @@ async function addMembers() {
 	// Filter out the room members as we don't want to add them again.
 	const members = memberCollection.value.users.map(i => i.id);
 	const invitableUsers = chat.value.friendsList.users.filter(({ id }) => !members.includes(id));
-	const result = await ChatInviteModal.show(room.value, invitableUsers);
+	const result = await showChatInviteModal(room.value, invitableUsers);
 	if (result) {
 		showSuccessGrowl(
 			$gettext(`Sent invites to users. They will be added to the chat once they accept.`)

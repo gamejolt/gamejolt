@@ -4,6 +4,7 @@ import {
 	inject,
 	InjectionKey,
 	markRaw,
+	MaybeRef,
 	provide,
 	reactive,
 	readonly,
@@ -30,7 +31,11 @@ import { DogtagData } from '../../../../_common/dogtag/dogtag-data';
 import { formatDuration } from '../../../../_common/filters/duration';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { FiresideChatSettingsModel } from '../../../../_common/fireside/chat/chat-settings.model';
-import { FiresideModel } from '../../../../_common/fireside/fireside.model';
+import {
+	$extinguishFireside,
+	$publishFireside,
+	FiresideModel,
+} from '../../../../_common/fireside/fireside.model';
 import { FiresideRoleModel } from '../../../../_common/fireside/role/role.model';
 import {
 	cleanupFiresideRTCProducer,
@@ -64,7 +69,6 @@ import { getAbsoluteLink } from '../../../../utils/router';
 import { getCurrentServerTime, updateServerTimeOffset } from '../../../../utils/server-time';
 import { run, sleep } from '../../../../utils/utils';
 import { uuidv4 } from '../../../../utils/uuid';
-import { MaybeRef } from '../../../../utils/vue';
 import { BottomBarControl } from '../../../views/fireside/_bottom-bar/AppFiresideBottomBar.vue';
 import { ChatRoomModel } from '../../chat/room';
 import {
@@ -1228,7 +1232,7 @@ export async function publishFireside(
 		return;
 	}
 
-	await fireside.$publish({ autoFeature: true });
+	await $publishFireside(fireside, { autoFeature: true });
 	showSuccessGrowl($gettext(`Your fireside is live!`));
 
 	trackFiresidePublish(trigger);
@@ -1271,7 +1275,7 @@ export async function extinguishFireside(c: FiresideController, trigger: string)
 	}
 
 	trackFiresideExtinguish(trigger);
-	await c.fireside.$extinguish();
+	await $extinguishFireside(c.fireside);
 }
 
 export async function updateFiresideData(

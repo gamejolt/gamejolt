@@ -1,11 +1,15 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
 import AppCard from '../../../../../_common/card/AppCard.vue';
-import { GameDevelopmentStatus, GameModel } from '../../../../../_common/game/game.model';
+import {
+	$setGameDevStage,
+	GameDevelopmentStatus,
+	GameModel,
+} from '../../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { GameDevStageSelectorConfirmModal } from './confirm-service';
+import { showGameDevStageSelectorConfirmModal } from './confirm-service';
 
 const props = defineProps({
 	game: {
@@ -39,9 +43,9 @@ async function select(stage: number) {
 		return;
 	}
 
-	const result = await GameDevStageSelectorConfirmModal.show(game.value, stage);
+	const result = await showGameDevStageSelectorConfirmModal(game.value, stage);
 	if (result) {
-		await game.value.$setDevStage(stage);
+		await $setGameDevStage(game.value, stage);
 		showSuccessGrowl(
 			$gettext(`Your game's development stage has been changed!`),
 			$gettext(`Stage Changed`)
