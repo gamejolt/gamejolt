@@ -210,13 +210,6 @@ const buildCapability = computed(() => {
 <template>
 	<div class="package-card-buttons">
 		<!-- Messaging for weird cases... -->
-		<div v-if="buildCapability === BuildCapability.NonExistant" class="alert">
-			<p>
-				<AppJolticon icon="notice" notice />
-				<AppTranslate>This package does not have any builds.</AppTranslate>
-			</p>
-		</div>
-
 		<div v-if="buildCapability === BuildCapability.Unsupported" class="alert">
 			<p>
 				<AppJolticon icon="notice" notice />
@@ -228,7 +221,7 @@ const buildCapability = computed(() => {
 			<p>
 				<AppJolticon icon="notice" notice />
 				<AppTranslate>
-					This package can not be installed using the Desktop App, but may work if you
+					This package can not be installed from the Desktop App, but may work if you
 					download it
 				</AppTranslate>
 			</p>
@@ -238,8 +231,7 @@ const buildCapability = computed(() => {
 			<p>
 				<AppJolticon icon="notice" notice />
 				<AppTranslate>
-					This package can not be installed on your system, but can be quick played in the
-					Desktop App.
+					This package can not be installed on your system, but you can quick play it
 				</AppTranslate>
 			</p>
 		</div>

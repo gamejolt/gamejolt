@@ -278,10 +278,22 @@ export class GamePackageCardModel {
 
 			// Populate the extraBuilds.
 			//
-			// Start with the primary build. If it is installable, we also want
-			// to offer it as a downloadable. Sort value of -100 ensures it is
-			// at the top.
-			if (this.primaryAction === 'install') {
+			// Start with the primary build. In some cases we want to show it in
+			// the extra builds as well.
+			//
+			// prettier-ignore
+			const showPrimaryInOther =
+				this.primaryBuild && (
+					// If its installable we also want to make it downloadable.
+					this.primaryAction === 'install' ||
+					// If its incompatible with the current device the primary
+					// button for it wont actually show, so we need to add it to the
+					// extras list.
+					!this.primaryIsCompatible
+				);
+
+			// Sort value of -100 ensures it is at the top.
+			if (showPrimaryInOther) {
 				addExtraBuild(this.primaryBuild!, this.primaryPlatform!, -100);
 			}
 
@@ -289,8 +301,11 @@ export class GamePackageCardModel {
 			for (const idx in runnableBuilds) {
 				const runnable = runnableBuilds[idx];
 
+				// If the primary build is already showing in its own button it doesnt need to show again here.
+
 				// Skip the primary build.
 				if (
+					!showPrimaryInOther &&
 					runnable.build === this.primaryBuild &&
 					runnable.platform === this.primaryPlatform
 				) {
@@ -323,7 +338,11 @@ export class GamePackageCardModel {
 				const build = winMacLinuxBuilds[platform];
 
 				// Skip the primary build.
-				if (build === this.primaryBuild && platform === this.primaryPlatform) {
+				if (
+					!showPrimaryInOther &&
+					build === this.primaryBuild &&
+					platform === this.primaryPlatform
+				) {
 					continue;
 				}
 
