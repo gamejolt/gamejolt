@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppCommunityCardPlaceholder from '../../../../../_common/community/card-placeholder/card-placeholder.vue';
+import AppCommunityCardPlaceholder from '../../../../../_common/community/card-placeholder/AppCommunityCardPlaceholder.vue';
 import AppCommunityCard from '../../../../../_common/community/card/AppCommunityCard.vue';
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import { Screen } from '../../../../../_common/screen/screen-service';
