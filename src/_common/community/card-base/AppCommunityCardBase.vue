@@ -8,7 +8,7 @@ import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
 import { CommunityModel, isEditingCommunity } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/AppCommunityJoinWidget.vue';
-import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
+import AppCommunityVerifiedTick from '../verified-tick/AppCommunityVerifiedTick.vue';
 
 const props = defineProps({
 	community: { type: Object as PropType<CommunityModel>, required: true },
