@@ -3,6 +3,8 @@ import { computed, toRefs } from 'vue';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { useCommonStore } from '../../store/common-store';
 import { $gettext } from '../../translate/translate.service';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import { vAppAuthRequired } from '../../auth/auth-required-directive';
 
 const props = defineProps({
 	tooltipPlacement: {
