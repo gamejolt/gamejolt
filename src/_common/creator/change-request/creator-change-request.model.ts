@@ -2,7 +2,7 @@ import { MediaItemModel } from '../../media-item/media-item-model';
 import { ModelStoreModel } from '../../model/model-store.service';
 import { UserModel } from '../../user/user.model';
 
-const enum CreatorChangeRequestStatus {
+export const enum CreatorChangeRequestStatus {
 	Initial = 'initial',
 	Submitted = 'submitted',
 	InReview = 'in-review',

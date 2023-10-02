@@ -1,5 +1,6 @@
 <script lang="ts">
 import { CSSProperties, computed } from 'vue';
+import { CreatorChangeRequestStatus } from '../../../../../_common/creator/change-request/creator-change-request.model';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
@@ -7,11 +8,12 @@ import {
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
+import { StickerModel } from '../../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { touchUser } from '../../../../../_common/user/user.model';
 import { kBorderRadiusLg, kBorderWidthBase } from '../../../../../_styles/variables';
 import { isInstance } from '../../../../../utils/utils';
-import AppDashShopItem from '../product/_item/AppDashShopItem.vue';
+import AppDashShopItem, { ShopItemStates } from '../product/_item/AppDashShopItem.vue';
 import AppDashShopItemAdd from '../product/_item/AppDashShopItemAdd.vue';
 import {
 	ShopManagerGroup,
@@ -31,8 +33,16 @@ export default {
 <script lang="ts" setup>
 const routeTitle = computed(() => $gettext(`Shop dashboard`));
 
-const controller = useShopManagerStore()!;
-const { avatarFrames, backgrounds, stickerPacks, stickers, getItemCountForSlots } = controller;
+const {
+	avatarFrames,
+	backgrounds,
+	stickerPacks,
+	stickers,
+	getItemCountForSlots,
+	changeRequests,
+	getChangeRequestKey,
+	publishedStickers,
+} = useShopManagerStore()!;
 
 createAppRoute({
 	routeTitle,
@@ -49,6 +59,27 @@ function getPublishedCount(items: ShopManagerGroupItem[]) {
 		}
 		return result;
 	}, 0);
+}
+
+function getItemStates(item: ShopManagerGroupItem): ShopItemStates {
+	let published = false;
+	if (isInstance(item, StickerPackModel) && !item.is_premium) {
+		published = item.is_active === true;
+	} else if (isInstance(item, StickerModel)) {
+		published = publishedStickers.value.has(item.id);
+	} else {
+		published = item.has_active_sale;
+	}
+
+	const status = changeRequests.value.get(getChangeRequestKey(item));
+
+	return {
+		published,
+		inReview:
+			status === CreatorChangeRequestStatus.Submitted ||
+			status === CreatorChangeRequestStatus.InReview,
+		rejected: status === CreatorChangeRequestStatus.Rejected,
+	};
 }
 
 const sectionData = computed<
@@ -177,15 +208,7 @@ const itemBorderRadius = kBorderRadiusLg.value;
 					:item="item"
 					:border-radius="itemBorderRadius"
 					:border-width="itemBorderWidth"
-					:item-states="{
-						published: item.has_active_sale,
-						chargeEnabled:
-							isInstance(item, StickerPackModel) &&
-							!item.is_premium &&
-							item.is_active,
-						inReview: !item.was_approved,
-						// rejected: !!item.rejected_change_request,
-					}"
+					:item-states="getItemStates(item)"
 				/>
 			</div>
 		</div>

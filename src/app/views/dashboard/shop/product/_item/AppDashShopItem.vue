@@ -6,9 +6,11 @@ import { routeDashShopProduct } from '../product.route';
 import AppDashShopItemImpl from './AppDashShopItemImpl.vue';
 
 export interface ShopItemStates {
+	/**
+	 * Either `published` for publishable items, or `is_active` for free sticker
+	 * packs. No visual distinction is made between the two.
+	 */
 	published?: boolean;
-	/** "Published" state for charge items. */
-	chargeEnabled?: boolean;
 	inReview?: boolean;
 	rejected?: boolean;
 }

@@ -186,7 +186,7 @@ function getInfoTagStyles(type: 'inReview' | 'rejected') {
 		/>
 
 		<!-- Published tag -->
-		<div v-if="itemStates.published || itemStates.chargeEnabled" :style="publishedTagStyles">
+		<div v-if="itemStates.published" :style="publishedTagStyles">
 			<AppJolticon icon="marketplace-filled" />
 		</div>
 

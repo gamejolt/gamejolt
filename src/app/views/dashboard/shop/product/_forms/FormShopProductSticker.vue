@@ -38,6 +38,8 @@ const data = createShopProductBaseForm({
 	onLoad({ payload }) {
 		emojiNameMinLength.value = payload.emojiNameMinLength || emojiNameMinLength.value;
 		emojiNameMaxLength.value = payload.emojiNameMaxLength || emojiNameMaxLength.value;
+		// TODO(creator-shops) (backend) Either need this returned or we can
+		// just hard-code our current format of prefix.
 		emojiPrefix.value = baseModel?.emoji?.prefix || emojiPrefix.value;
 
 		const changeData = JSON.parse(data.latestChangeRequest.value?.change_data || '{}');

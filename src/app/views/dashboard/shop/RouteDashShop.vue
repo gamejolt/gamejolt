@@ -3,6 +3,7 @@ import { Ref, computed } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../_common/background/background.model';
+import { CreatorChangeRequestStatus } from '../../../../_common/creator/change-request/creator-change-request.model';
 import { storeModelList } from '../../../../_common/model/model-store.service';
 import { ModelData } from '../../../../_common/model/model.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
@@ -19,13 +20,26 @@ import {
 	createShopManagerStore,
 } from './shop.store';
 
-interface ProductPayload<T extends ShopManagerGroupItem> {
+interface BaseProductPayload<T extends ShopManagerGroupItem> {
 	resources: ModelData<T>[];
 	canEditFree?: boolean;
 	canEditPremium?: boolean;
 	slotAmount?: number;
 	maxSalesAmount?: number;
+	currentRequestStatus?: {
+		// TODO(creator-shops) (backend) string => CreatorChangeRequestModel
+		[key: number]: CreatorChangeRequestStatus;
+	};
 }
+
+interface StickerPackFields {
+	stickerIds: {
+		[key: number]: number[];
+	};
+}
+
+type ProductPayload<T extends ShopManagerGroupItem> = BaseProductPayload<T> &
+	(T extends StickerPackModel ? StickerPackFields : never);
 
 async function _makeSectionPromise<T extends ShopManagerGroupItem>(
 	typename: Exclude<ShopManagerGroupItemType, 'Sticker_Pack'> | 'packs'
@@ -75,7 +89,15 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { avatarFrames, backgrounds, stickerPacks, stickers } = createShopManagerStore();
+const {
+	avatarFrames,
+	backgrounds,
+	stickerPacks,
+	stickers,
+	changeRequests,
+	getChangeRequestKey,
+	publishedStickers,
+} = createShopManagerStore();
 
 const routeTitle = computed(() => $gettext(`Manage Shop Content`));
 
@@ -84,7 +106,15 @@ function _setGroupFields<T extends ShopManagerGroupItem>(
 	data: ProductPayload<T> | null,
 	makeModels: (items: ModelData<T>[]) => T[]
 ) {
-	const { canEditFree, canEditPremium, resources, slotAmount, maxSalesAmount } = data || {
+	const {
+		canEditFree,
+		canEditPremium,
+		resources,
+		slotAmount,
+		maxSalesAmount,
+		currentRequestStatus,
+		stickerIds,
+	} = data || {
 		resources: [],
 	};
 
@@ -95,12 +125,31 @@ function _setGroupFields<T extends ShopManagerGroupItem>(
 	group.value.items = items;
 	group.value.slotAmount = slotAmount;
 	group.value.maxSalesAmount = maxSalesAmount;
+
+	if (currentRequestStatus) {
+		const { productType } = group.value;
+		for (const [id, status] of Object.entries(currentRequestStatus)) {
+			changeRequests.value.set(getChangeRequestKey(productType, id), status);
+		}
+	}
+
+	if (stickerIds) {
+		for (const ids of Object.values(stickerIds)) {
+			for (const id of ids) {
+				publishedStickers.value.add(id);
+			}
+		}
+	}
 }
 
 createAppRoute({
 	routeTitle,
 	async onResolved(data) {
 		const payload = data.payload as Awaited<ReturnType<typeof fetchOverviewData>>;
+
+		// Clear these out so we don't need to deal with merging data.
+		changeRequests.value.clear();
+		publishedStickers.value.clear();
 
 		_setGroupFields(avatarFrames, payload.avatarFrames, i =>
 			storeModelList(AvatarFrameModel, i)

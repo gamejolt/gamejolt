@@ -1,6 +1,7 @@
 import { InjectionKey, Ref, computed, inject, provide, ref, shallowReadonly } from 'vue';
 import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../_common/background/background.model';
+import { CreatorChangeRequestStatus } from '../../../../_common/creator/change-request/creator-change-request.model';
 import { ShopItemModelCommonFields } from '../../../../_common/model/shop-item-model.service';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
@@ -13,6 +14,7 @@ type ItemModel = AvatarFrameModel | BackgroundModel | StickerPackModel | Sticker
 export type ShopManagerGroupItem = ItemModel & ShopItemModelCommonFields;
 
 export interface ShopManagerGroup<T extends ShopManagerGroupItem = ShopManagerGroupItem> {
+	productType: ProductType;
 	items: T[];
 	sortedItems: T[];
 	slotAmount?: number;
@@ -53,7 +55,7 @@ export type ShopManagerStore = ReturnType<typeof createShopManagerStore>;
 const shopManagerStoreKey: InjectionKey<ShopManagerStore> = Symbol('shop-manager-store');
 
 export function createShopManagerStore() {
-	function _makeEmptyGroup<T extends ShopManagerGroupItem>() {
+	function _makeEmptyGroup<T extends ShopManagerGroupItem>(productType: ProductType) {
 		const items = ref<T[]>([]);
 		const sortedItems = computed(() => {
 			return items.value
@@ -85,15 +87,19 @@ export function createShopManagerStore() {
 		});
 
 		return ref({
+			productType,
 			items,
 			sortedItems,
 		}) as Ref<ShopManagerGroup<T>>;
 	}
 
-	const avatarFrames = _makeEmptyGroup<AvatarFrameModel>();
-	const backgrounds = _makeEmptyGroup<BackgroundModel>();
-	const stickerPacks = _makeEmptyGroup<StickerPackModel>();
-	const stickers = _makeEmptyGroup<StickerModel>();
+	const avatarFrames = _makeEmptyGroup<AvatarFrameModel>('avatar-frame');
+	const backgrounds = _makeEmptyGroup<BackgroundModel>('background');
+	const stickerPacks = _makeEmptyGroup<StickerPackModel>('sticker-pack');
+	const stickers = _makeEmptyGroup<StickerModel>('sticker');
+
+	const changeRequests = ref(new Map<string, CreatorChangeRequestStatus>());
+	const publishedStickers = ref(new Set<number>());
 
 	function getItemCountForSlots<T extends ShopManagerGroupItem>(group: ShopManagerGroup<T>) {
 		// Need to count differently for certain model types.
@@ -101,6 +107,24 @@ export function createShopManagerStore() {
 			return group.sortedItems.reduce((acc, item) => (item.is_premium ? acc + 1 : acc), 0);
 		}
 		return group.sortedItems.length;
+	}
+
+	function getChangeRequestKey(item: ShopManagerGroupItem): string;
+	function getChangeRequestKey(type: ProductType, id: number | string): string;
+	function getChangeRequestKey(
+		itemOrType: ShopManagerGroupItem | ProductType,
+		maybeId?: number | string | never
+	): string {
+		let type: ProductType;
+		let id: number | string;
+		if (typeof itemOrType === 'string') {
+			type = itemOrType;
+			id = maybeId!;
+		} else {
+			type = getShopProductType(itemOrType);
+			id = itemOrType.id;
+		}
+		return `${type}:${id}`;
 	}
 
 	function grabSortValue(val: any): string {
@@ -119,6 +143,11 @@ export function createShopManagerStore() {
 		backgrounds,
 		stickerPacks,
 		stickers,
+
+		changeRequests,
+		getChangeRequestKey,
+		publishedStickers,
+
 		/**
 		 * Helper to get the total number of items that take up a slot.
 		 *
