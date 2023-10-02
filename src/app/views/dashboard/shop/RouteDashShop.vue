@@ -24,8 +24,7 @@ interface ProductPayload<T extends ShopManagerGroupItem> {
 	canEditFree?: boolean;
 	canEditPremium?: boolean;
 	slotAmount?: number;
-	// TODO(creator-shops) need amount of published items we can have
-	publishAmount?: number;
+	maxSalesAmount?: number;
 }
 
 async function _makeSectionPromise<T extends ShopManagerGroupItem>(
@@ -82,7 +81,7 @@ function _setGroupFields<T extends ShopManagerGroupItem>(
 	data: ProductPayload<T> | null,
 	makeModels: (items: ModelData<T>[]) => T[]
 ) {
-	const { canEditFree, canEditPremium, resources, slotAmount, publishAmount } = data || {
+	const { canEditFree, canEditPremium, resources, slotAmount, maxSalesAmount } = data || {
 		resources: [],
 	};
 
@@ -92,7 +91,7 @@ function _setGroupFields<T extends ShopManagerGroupItem>(
 	group.value.canAddPremium = canEditPremium;
 	group.value.items = items;
 	group.value.slotAmount = slotAmount;
-	group.value.publishAmount = publishAmount;
+	group.value.maxSalesAmount = maxSalesAmount;
 }
 
 createAppRoute({

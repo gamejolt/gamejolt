@@ -16,7 +16,7 @@ export interface ShopManagerGroup<T extends ShopManagerGroupItem = ShopManagerGr
 	items: T[];
 	sortedItems: T[];
 	slotAmount?: number;
-	publishAmount?: number;
+	maxSalesAmount?: number;
 	canAddFree?: boolean;
 	canAddPremium?: boolean;
 }

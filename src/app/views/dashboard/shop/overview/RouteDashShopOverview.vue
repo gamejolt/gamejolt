@@ -136,7 +136,7 @@ const itemBorderRadius = kBorderRadiusLg.value;
 			</h4>
 
 			<div
-				v-if="data.slotAmount || data.publishAmount"
+				v-if="data.slotAmount || data.maxSalesAmount"
 				class="help-block"
 				:style="helpBlockStyles"
 			>
@@ -149,12 +149,12 @@ const itemBorderRadius = kBorderRadiusLg.value;
 						{{ $gettext(`slots used`) }}
 					</template>
 
-					<br v-if="data.slotAmount && data.publishAmount" />
+					<br v-if="data.slotAmount && data.maxSalesAmount" />
 
-					<template v-if="data.publishAmount">
+					<template v-if="data.maxSalesAmount">
 						{{ getPublishedCount(data.items) }}
 						{{ ' / ' }}
-						{{ data.publishAmount }}
+						{{ data.maxSalesAmount }}
 						{{ ' ' }}
 						{{ $gettext(`published`) }}
 					</template>
