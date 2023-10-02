@@ -15,7 +15,9 @@ export class CreatorChangeRequestModel implements ModelStoreModel {
 	// TODO(creator-shops) (backend) Need the resource and resource_id fields
 	// returned here.
 	declare id: number;
-	declare status: string;
+	declare resource: string;
+	declare resource_id: number;
+	declare status: CreatorChangeRequestStatus;
 	declare change_media_item?: MediaItemModel;
 	declare change_name?: string;
 	declare change_artist_user?: UserModel;
@@ -36,12 +38,4 @@ export class CreatorChangeRequestModel implements ModelStoreModel {
 			this.change_artist_user = new UserModel(data.change_artist_user);
 		}
 	}
-}
-
-export function isCreatorChangeRequestInProgress(model: CreatorChangeRequestModel) {
-	return (
-		model.status === CreatorChangeRequestStatus.Initial ||
-		model.status === CreatorChangeRequestStatus.Submitted ||
-		model.status === CreatorChangeRequestStatus.InReview
-	);
 }

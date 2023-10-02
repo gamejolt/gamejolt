@@ -1,12 +1,16 @@
 import { InjectionKey, Ref, computed, inject, provide, ref, shallowReadonly } from 'vue';
 import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../_common/background/background.model';
-import { CreatorChangeRequestStatus } from '../../../../_common/creator/change-request/creator-change-request.model';
+import {
+	CreatorChangeRequestModel,
+	CreatorChangeRequestStatus,
+} from '../../../../_common/creator/change-request/creator-change-request.model';
 import { ShopItemModelCommonFields } from '../../../../_common/model/shop-item-model.service';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import { stringSort } from '../../../../utils/array';
-import { assertNever } from '../../../../utils/utils';
+import { assertNever, isInstance } from '../../../../utils/utils';
+import { ShopItemStates } from './product/_item/AppDashShopItem.vue';
 
 export const ShopProductPremiumColor = '#ffbe00';
 
@@ -33,7 +37,9 @@ export const productTypes: { [key in ProductType]: ShopManagerGroupItemType } = 
 	'sticker-pack': 'Sticker_Pack',
 };
 
-export function productTypeFromTypename(typename: ShopManagerGroupItemType) {
+export function productTypeFromTypename(typename: ShopManagerGroupItemType): ProductType;
+export function productTypeFromTypename(typename: string): ProductType;
+export function productTypeFromTypename(typename: ShopManagerGroupItemType | string) {
 	return Object.entries(productTypes).find(([, val]) => val === typename)?.[0];
 }
 
@@ -109,10 +115,10 @@ export function createShopManagerStore() {
 		return group.sortedItems.length;
 	}
 
-	function getChangeRequestKey(item: ShopManagerGroupItem): string;
+	function getChangeRequestKey(item: ShopManagerGroupItem | CreatorChangeRequestModel): string;
 	function getChangeRequestKey(type: ProductType, id: number | string): string;
 	function getChangeRequestKey(
-		itemOrType: ShopManagerGroupItem | ProductType,
+		itemOrType: ShopManagerGroupItem | CreatorChangeRequestModel | ProductType,
 		maybeId?: number | string | never
 	): string {
 		let type: ProductType;
@@ -120,6 +126,9 @@ export function createShopManagerStore() {
 		if (typeof itemOrType === 'string') {
 			type = itemOrType;
 			id = maybeId!;
+		} else if (isInstance(itemOrType, CreatorChangeRequestModel)) {
+			type = productTypeFromTypename(itemOrType.resource);
+			id = itemOrType.resource_id;
 		} else {
 			type = getShopProductType(itemOrType);
 			id = itemOrType.id;
@@ -156,6 +165,28 @@ export function createShopManagerStore() {
 		 * so we need to count them differently than just adding them all up.
 		 */
 		getItemCountForSlots,
+		getShopItemStates(item: ShopManagerGroupItem | CreatorChangeRequestModel): ShopItemStates {
+			const isChangeRequest = isInstance(item, CreatorChangeRequestModel);
+			let published: boolean | undefined = undefined;
+
+			if (isInstance(item, StickerPackModel) && !item.is_premium) {
+				published = item.is_active;
+			} else if (isInstance(item, StickerModel)) {
+				published = publishedStickers.value.has(item.id);
+			} else if (!isChangeRequest) {
+				published = item.has_active_sale;
+			}
+
+			const status = changeRequests.value.get(getChangeRequestKey(item));
+
+			return {
+				published,
+				inReview:
+					status === CreatorChangeRequestStatus.Submitted ||
+					status === CreatorChangeRequestStatus.InReview,
+				rejected: status === CreatorChangeRequestStatus.Rejected,
+			};
+		},
 
 		/**
 		 * Returns a boolean indicating equality between two values.

@@ -80,6 +80,7 @@ import {
 import AppShopProductDiff from '../_diff/AppShopProductDiff.vue';
 import AppShopProductDiffImg from '../_diff/AppShopProductDiffImg.vue';
 import AppShopProductDiffMeta from '../_diff/AppShopProductDiffMeta.vue';
+import { ShopItemStates } from '../_item/AppDashShopItem.vue';
 
 interface BaseFields {
 	name: string;
@@ -326,32 +327,35 @@ export function createShopProductBaseForm<
 				if (!group.value.items.includes(item)) {
 					group.value.items.push(item);
 				}
+				return item;
 			}
+
+			let updatedModel: ShopManagerGroupItem | undefined = baseModel;
 
 			if (response.resource) {
 				switch (typename) {
 					// TODO(creator-shops) (backend) We need these items to
 					// return a new image url when the image is changed.
 					case 'Avatar_Frame':
-						updateGroup(
+						updatedModel = updateGroup(
 							shopStore.avatarFrames,
 							storeModel(AvatarFrameModel, response.resource)
 						);
 						break;
 					case 'Background':
-						updateGroup(
+						updatedModel = updateGroup(
 							shopStore.backgrounds,
 							storeModel(BackgroundModel, response.resource)
 						);
 						break;
 					case 'Sticker_Pack':
-						updateGroup(
+						updatedModel = updateGroup(
 							shopStore.stickerPacks,
 							storeModel(StickerPackModel, response.resource)
 						);
 						break;
 					case 'Sticker':
-						updateGroup(
+						updatedModel = updateGroup(
 							shopStore.stickers,
 							storeModel(StickerModel, response.resource)
 						);
@@ -359,10 +363,18 @@ export function createShopProductBaseForm<
 				}
 			}
 
-			// TODO(creator-shop) Check new change request data here so we can
-			// manually insert it into our state maps. We're not refreshing the
-			// overview in this [router.push], so we need to ensure this is
-			// synced properly.
+			if (updatedModel) {
+				const changeRequest = response.changeRequest
+					? storeModel(CreatorChangeRequestModel, response.changeRequest)
+					: null;
+				const changeRequestKey = shopStore.getChangeRequestKey(updatedModel);
+
+				if (changeRequest) {
+					shopStore.changeRequests.value.set(changeRequestKey, changeRequest.status);
+				} else {
+					shopStore.changeRequests.value.delete(changeRequestKey);
+				}
+			}
 
 			router.push({
 				name: routeDashShopOverview.name,
@@ -492,7 +504,15 @@ const {
 
 const diffKeys = toRef(props.diffKeys);
 
-const { isSameValues } = useShopManagerStore()!;
+const { isSameValues, changeRequests, getChangeRequestKey, getShopItemStates } =
+	useShopManagerStore()!;
+
+const itemStates = computed<ShopItemStates>(() => {
+	if (!latestChangeRequest.value) {
+		return {};
+	}
+	return getShopItemStates(latestChangeRequest.value);
+});
 
 async function setProductPublishState(publish: boolean) {
 	if (!baseModel) {
@@ -593,10 +613,21 @@ async function cancelChangeRequest() {
 			{ detach: true }
 		);
 
-		if (response.request) {
-			storeModel(CreatorChangeRequestModel, response.request);
-			changeRequest.value = null;
-			rejectedChangeRequest.value = null;
+		const request = response.request
+			? storeModel(CreatorChangeRequestModel, response.request)
+			: null;
+		changeRequest.value = request?.rejected_on ? null : request;
+		rejectedChangeRequest.value = request?.rejected_on ? request : null;
+
+		const key = baseModel ? getChangeRequestKey(baseModel) : null;
+		if (!key) {
+			return;
+		}
+
+		if (request) {
+			changeRequests.value.set(key, request.status);
+		} else {
+			changeRequests.value.delete(key);
 		}
 	} catch (e) {
 		console.error(`Error canceling pending change request.`, e);
@@ -748,7 +779,7 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 						/>
 
 						<div
-							v-if="latestChangeRequest"
+							v-if="itemStates"
 							:style="{
 								position: `absolute`,
 								top: `8px`,
@@ -756,7 +787,7 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 							}"
 						>
 							<div
-								v-if="latestChangeRequest.rejected_on"
+								v-if="itemStates.rejected"
 								v-app-tooltip.touchable="
 									$gettext(`This item was rejected. Please submit a new version.`)
 								"
@@ -772,9 +803,7 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 								/>
 							</div>
 							<div
-								v-else-if="
-									latestChangeRequest.added_on && !latestChangeRequest.approved_on
-								"
+								v-else-if="itemStates.inReview"
 								v-app-tooltip.touchable="
 									$gettext(
 										`This item is currently in review. You can still submit a new version for review, which will replace this.`
@@ -785,7 +814,7 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 								<AppJolticon icon="clock" :style="makeStateBubbleIconStyles()" />
 							</div>
 							<div
-								v-else-if="latestChangeRequest.approved_on"
+								v-else-if="itemStates.published"
 								v-app-tooltip.touchable="$gettext(`Available in the shop`)"
 								:style="makeStateBubbleStyles()"
 							>
