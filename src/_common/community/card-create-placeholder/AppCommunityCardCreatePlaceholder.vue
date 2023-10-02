@@ -1,13 +1,5 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
 import AppCommunityAddWidget from '../add-widget/AppCommunityAddWidget.vue';
-
-@Options({
-	components: {
-		AppCommunityAddWidget,
-	},
-})
-export default class AppCommunityCardCreatePlaceholder extends Vue {}
 </script>
 
 <template>
