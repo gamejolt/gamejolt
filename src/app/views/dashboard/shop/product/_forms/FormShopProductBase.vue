@@ -330,8 +330,7 @@ export function createShopProductBaseForm<
 
 			if (response.resource) {
 				switch (typename) {
-					// TODO(creator-shops) Saving an insta-approved item doesn't
-					// return the new fields.
+					// TODO(creator-shops) We need these items to return a new image url as required.
 					case 'Avatar_Frame':
 						updateGroup(
 							shopStore.avatarFrames,
@@ -358,6 +357,11 @@ export function createShopProductBaseForm<
 						break;
 				}
 			}
+
+			// TODO(creator-shop) Check new change request data here so we can
+			// manually insert it into our state maps. We're not refreshing the
+			// overview in this [router.push], so we need to ensure this is
+			// synced properly.
 
 			router.push({
 				name: routeDashShopOverview.name,
@@ -400,6 +404,15 @@ export function createShopProductBaseForm<
 		{ immediate: true }
 	);
 
+	function getFieldAvailabilityUrl(field: keyof typeof initialFormModel.value) {
+		const id = baseModel?.id || 0;
+		const safeField = String(field);
+		if (typename === 'Sticker_Pack') {
+			return `/web/dash/creators/shop/packs/check-field-availability/${id}/${safeField}`;
+		}
+		return `/web/dash/creators/shop/collectibles/check-field-availability/${typename}/${id}/${safeField}`;
+	}
+
 	return shallowReadonly({
 		form,
 		typename,
@@ -433,6 +446,7 @@ export function createShopProductBaseForm<
 		changeRequest,
 		rejectedChangeRequest,
 		latestChangeRequest,
+		getFieldAvailabilityUrl,
 	});
 }
 </script>
@@ -472,19 +486,12 @@ const {
 	maxFilesize,
 	minNameLength,
 	maxNameLength,
+	getFieldAvailabilityUrl,
 } = props.data;
 
 const diffKeys = toRef(props.diffKeys);
 
 const { isSameValues } = useShopManagerStore()!;
-
-const validateNameAvailabilityPath = computed(() => {
-	// TODO(creator-shops) Name availability paths
-	if (baseModel) {
-		return `/web/dash/creators/stickers/check-field-availability/${baseModel.id}/name`;
-	}
-	return `/web/dash/creators/stickers/check-field-availability/0/name`;
-});
 
 async function setProductPublishState(publish: boolean) {
 	if (!baseModel) {
@@ -883,7 +890,7 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 						validateMaxLength(maxNameLength),
 						validateAvailability({
 							initVal: baseModel?.name,
-							url: validateNameAvailabilityPath,
+							url: getFieldAvailabilityUrl('name'),
 						}),
 					]"
 				/>

@@ -46,6 +46,9 @@ async function fetchOverviewData() {
 		_makeSectionPromise<StickerModel>('Sticker'),
 	]);
 
+	// TODO(creator-shops) (backend) Change request data should be changed from
+	// {id=>status} to an array of change requests.
+
 	return {
 		avatarFrames,
 		backgrounds,

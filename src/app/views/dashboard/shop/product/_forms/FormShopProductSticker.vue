@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs } from 'vue';
+import { ref, toRefs } from 'vue';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -50,15 +50,7 @@ const data = createShopProductBaseForm({
 	},
 });
 
-const { baseModel } = data;
-
-// TODO(creator-shops) double check that this is correct.
-const emojiNameAvailabilityUrl = computed(() => {
-	if (model?.value) {
-		return `/web/dash/creators/stickers/check-field-availability/${model.value.id}/emojiName`;
-	}
-	return `/web/dash/creators/stickers/check-field-availability/0/emojiName`;
-});
+const { baseModel, getFieldAvailabilityUrl } = data;
 </script>
 
 <template>
@@ -80,7 +72,7 @@ const emojiNameAvailabilityUrl = computed(() => {
 							validateMaxLength(emojiNameMaxLength),
 							validateEmojiName(),
 							validateAvailability({
-								url: emojiNameAvailabilityUrl,
+								url: getFieldAvailabilityUrl('emoji_name'),
 								initVal: baseModel?.emoji?.short_name,
 							}),
 						]"
