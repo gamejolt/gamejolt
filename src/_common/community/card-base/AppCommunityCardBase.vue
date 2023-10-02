@@ -7,7 +7,7 @@ import { formatNumber } from '../../filters/number';
 import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
 import { CommunityModel, isEditingCommunity } from '../community.model';
-import AppCommunityJoinWidget from '../join-widget/join-widget.vue';
+import AppCommunityJoinWidget from '../join-widget/AppCommunityJoinWidget.vue';
 import AppCommunityVerifiedTick from '../verified-tick/verified-tick.vue';
 
 const props = defineProps({

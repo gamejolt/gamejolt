@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
+import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/AppCommunityJoinWidget.vue';
 import AppGameFollowWidget from '../../../../../_common/game/follow-widget/follow-widget.vue';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -170,7 +170,6 @@ const bannerMediaItem = computed(() => {
 										v-if="shouldShowJoinCommunity"
 										:community="item.community"
 										solid
-										primary
 										location="homeBanner"
 									/>
 								</template>
