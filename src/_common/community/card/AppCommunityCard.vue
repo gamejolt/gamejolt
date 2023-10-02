@@ -1,0 +1,44 @@
+<script lang="ts" setup>
+import { PropType, toRefs } from 'vue';
+import { trackGotoCommunity } from '../../analytics/analytics.service';
+import AppCommunityCardBase from '../card-base/card-base.vue';
+import { CommunityModel } from '../community.model';
+import AppCommunityThumbnailImg from '../thumbnail/AppCommunityThumbnailImg.vue';
+
+const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
+	elevate: { type: Boolean },
+	allowEdit: { type: Boolean, default: true },
+	trackGoto: { type: Boolean },
+});
+
+const { community, elevate, allowEdit, trackGoto } = toRefs(props);
+
+function doTrackGotoCommunity() {
+	if (trackGoto.value) {
+		trackGotoCommunity({
+			source: 'card',
+			id: community.value.id,
+			path: community.value.path,
+		});
+	}
+}
+</script>
+
+<template>
+	<AppCommunityCardBase
+		:community="community"
+		:elevate="elevate"
+		:allow-edit="allowEdit"
+		:track-goto="trackGoto"
+	>
+		<template #thumbnail>
+			<router-link :to="community.routeLocation" @click="doTrackGotoCommunity()">
+				<AppCommunityThumbnailImg :community="community" />
+			</router-link>
+		</template>
+	</AppCommunityCardBase>
+</template>
