@@ -67,12 +67,20 @@ const headerMessage = computed(() => {
 			return $gettext(`Charge stickers can be placed into charge sticker packs.`);
 	}
 });
+
+const heading = computed(() => {
+	if (paymentType.value === undefined) {
+		return $gettext(`What type of sticker are you adding?`);
+	}
+
+	return isEditing ? $gettext(`Sticker product`) : $gettext(`Add sticker`);
+});
 </script>
 
 <template>
 	<AppDashShopProductHeader
 		:payment-type="paymentType"
-		:heading="isEditing ? $gettext(`Sticker product`) : $gettext(`Add sticker`)"
+		:heading="heading"
 		:message="headerMessage"
 	/>
 
