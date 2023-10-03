@@ -23,8 +23,8 @@ export interface ShopManagerGroup<T extends ShopManagerGroupItem = ShopManagerGr
 	sortedItems: T[];
 	slotAmount?: number;
 	maxSalesAmount?: number;
-	canAddFree?: boolean;
-	canAddPremium?: boolean;
+	canEditFree?: boolean;
+	canEditPremium?: boolean;
 }
 
 const typenames = ['Avatar_Frame', 'Background', 'Sticker_Pack', 'Sticker'] as const;

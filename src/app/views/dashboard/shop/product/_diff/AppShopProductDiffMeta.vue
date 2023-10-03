@@ -1,21 +1,37 @@
-<script lang="ts" setup generic="T extends Record<string, any>">
+<script lang="ts">
 import { PropType, computed, toRefs } from 'vue';
-import AppStickerStackItem from '../../../../../../_common/sticker/stack/AppStickerStackItem.vue';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
-import { kThemeFgMuted } from '../../../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { styleAbsoluteFill, styleLineClamp, styleWhen } from '../../../../../../_styles/mixins';
-import { kFontSizeSmall } from '../../../../../../_styles/variables';
-import { isInstance } from '../../../../../../utils/utils';
 import { useShopManagerStore } from '../../shop.store';
+import AppShopProductDiffMetaEntry from './AppShopProductDiffMetaEntry.vue';
 
+export function parseProductDiffEntry(key: string, val: any, extras: { stickers: StickerModel[] }) {
+	const newEntry: [string, any] = [key, val];
+
+	// Get sticker models from the ModelStore if we have a list of sticker
+	// IDs.
+	if (key === 'stickers' && Array.isArray(val) && val.length > 0 && typeof val[0] === 'number') {
+		const { stickers } = extras;
+		newEntry[1] = val.reduce((acc, id) => {
+			const sticker = stickers.find(sticker => sticker.id === id);
+			if (sticker) {
+				acc.push(sticker);
+			}
+			return acc;
+		}, [] as StickerModel[]);
+	}
+
+	return newEntry;
+}
+</script>
+
+<script lang="ts" setup generic="T extends Record<string, any>">
 const props = defineProps({
 	current: {
-		type: Object as PropType<{ name: string } & T>,
+		type: Object as PropType<T & { name: string }>,
 		required: true,
 	},
 	other: {
-		type: Object as PropType<{ name: string } & T>,
+		type: Object as PropType<T & { name: string }>,
 		default: undefined,
 	},
 	diffBackground: {
@@ -30,111 +46,25 @@ const props = defineProps({
 
 const { current, other } = toRefs(props);
 
-const { isSameValues, stickers } = useShopManagerStore()!;
-
-function parseEntry(key: string, val: any) {
-	const newEntry: [string, any] = [key, val];
-
-	// Get sticker models from the ModelStore if we have a list of sticker
-	// IDs.
-	if (key === 'stickers' && Array.isArray(val) && val.length > 0 && typeof val[0] === 'number') {
-		newEntry[1] = val.reduce((acc, id) => {
-			const sticker = stickers.value.items.find(sticker => sticker.id === id);
-			if (sticker) {
-				acc.push(sticker);
-			}
-			return acc;
-		}, [] as StickerModel[]);
-	}
-
-	return newEntry;
-}
+const { stickers } = useShopManagerStore()!;
 
 const entries = computed(() =>
-	Object.entries(current.value).map(([key, val]) => parseEntry(key, val))
+	Object.entries(current.value).map(([key, val]) =>
+		parseProductDiffEntry(key, val, { stickers: stickers.value.items })
+	)
 );
-
-function isFieldEqual(key: string): boolean {
-	if (!other?.value) {
-		return true;
-	}
-
-	return isSameValues(parseEntry(key, current.value[key]), parseEntry(key, other.value[key]));
-}
-
-function prettyKey(key: string) {
-	const newKey = key.replace(/[_-]/g, ' ');
-	return newKey[0].toUpperCase() + newKey.slice(1);
-}
-
-function isArrayOfInstance<T>(value: any, type: new (data: any) => T): value is T[] {
-	return Array.isArray(value) && value.length > 0 && isInstance(value[0], type);
-}
-
-function isSimpleValue(value: any) {
-	return typeof value === 'number' || typeof value === 'string';
-}
 </script>
 
 <template>
 	<div>
-		<div
+		<AppShopProductDiffMetaEntry
 			v-for="[key, value] in entries"
 			:key="key"
-			:style="{
-				fontSize: kFontSizeSmall.px,
-				marginBottom: `8px`,
-			}"
-		>
-			<div :style="{ fontWeight: `bold` }">
-				<span v-app-tooltip.touchable="value">
-					{{ prettyKey(key) }}
-				</span>
-			</div>
-			{{ ' ' }}
-			<template v-if="value && (!Array.isArray(value) || value.length)">
-				<div
-					:style="{
-						position: `relative`,
-						zIndex: 1,
-						...styleWhen(isSimpleValue(value), {
-							width: `fit-content`,
-						}),
-					}"
-				>
-					<!-- Value display -->
-					<div v-if="isSimpleValue(value)" :style="styleLineClamp(3)">
-						{{ value }}
-					</div>
-					<div
-						v-else-if="isArrayOfInstance(value, StickerModel)"
-						:style="{
-							display: `grid`,
-							gridTemplateColumns: `repeat(auto-fill, minmax(64px, 1fr))`,
-						}"
-					>
-						<div v-for="sticker in value" :key="sticker.id" :style="{ padding: `4px` }">
-							<AppStickerStackItem :img-url="sticker.img_url" />
-						</div>
-					</div>
-
-					<!-- Diff color indicator -->
-					<div
-						:style="[
-							styleAbsoluteFill({ zIndex: -1, left: `-4px`, right: `-4px` }),
-							styleWhen(!isFieldEqual(key), {
-								backgroundColor: diffBackground,
-								color: diffColor,
-								borderRadius: `4px`,
-								opacity: 0.2,
-							}),
-						]"
-					/>
-				</div>
-			</template>
-			<div v-else :style="{ color: kThemeFgMuted, fontStyle: `italic` }">
-				{{ $gettext(`none`) }}
-			</div>
-		</div>
+			:entry="{ key, value }"
+			:current="(current as any)"
+			:other="(other as any)"
+			:diff-background="diffBackground"
+			:diff-color="diffColor"
+		/>
 	</div>
 </template>

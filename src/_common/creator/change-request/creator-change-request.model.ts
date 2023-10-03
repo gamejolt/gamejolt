@@ -12,8 +12,6 @@ export const enum CreatorChangeRequestStatus {
 }
 
 export class CreatorChangeRequestModel implements ModelStoreModel {
-	// TODO(creator-shops) (backend) Need the resource and resource_id fields
-	// returned here.
 	declare id: number;
 	declare resource: string;
 	declare resource_id: number;

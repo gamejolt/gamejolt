@@ -20,6 +20,10 @@ const props = defineProps({
 		type: Object as PropType<ShopManagerGroupItem>,
 		required: true,
 	},
+	canEdit: {
+		type: Boolean,
+		required: true,
+	},
 	borderRadius: {
 		type: Number,
 		default: undefined,
@@ -39,19 +43,25 @@ const { item, borderRadius } = toRefs(props);
 const type = computed(() => getShopProductType(item.value));
 </script>
 
+<!-- TODO(creator-shops) DODO(creator-shops) See if this is how you want items
+to behave when they can't be edited. -->
 <template>
 	<AppDashShopHover
 		v-if="type"
 		:border-radius="borderRadius"
 		:border-width="borderWidth"
 		:style="{ width: `100%` }"
-		:to="{
-			name: routeDashShopProduct.name,
-			params: {
-				type,
-				id: item.id,
-			},
-		}"
+		:to="
+			canEdit
+				? {
+						name: routeDashShopProduct.name,
+						params: {
+							type,
+							id: item.id,
+						},
+				  }
+				: undefined
+		"
 	>
 		<template #default="{ borderRadius: parentRadius, hovered }">
 			<AppDashShopItemImpl

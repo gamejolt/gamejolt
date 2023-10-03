@@ -334,8 +334,6 @@ export function createShopProductBaseForm<
 
 			if (response.resource) {
 				switch (typename) {
-					// TODO(creator-shops) (backend) We need these items to
-					// return a new image url when the image is changed.
 					case 'Avatar_Frame':
 						updatedModel = updateGroup(
 							shopStore.avatarFrames,
@@ -557,30 +555,10 @@ async function setProductPublishState(publish: boolean) {
 	try {
 		const response = await Api.sendRequest(url, postData, { detach: true });
 
-		// TODO(creator-shops) (call) The data returned doesn't include the
-		// actual shop product fields that we use for this form:
-		//
-		// is_premium
-		// has_active_sale
-		// was_approved
-		// is_active (free sticker packs only)
-		//
-		// We'll either need to manually update the models ourselves, reload the
-		// form, or push a new overview route and force load it somehow so we
-		// get the fresh data.
-		//
-		// If we'd doing any option other than the first one, we should lock the
-		// publish/unpublish controls if there are modifications to the form
-		// model.
-		//
-		// If we're locking the publish controls when there are modifications,
-		// we need something better than just `form.changed` as it doesn't
-		// un-dirty itself when fields are modified back to their original
-		// values.
-		if (isStickerPack && response.pack) {
+		// TODO(creator-shops) check backend, make changes
+		if (response.pack) {
 			storeModel(StickerPackModel, response.pack);
 		} else if (response.sale) {
-			// TODO(creator-shops) Only returned when publishing.
 			storeModel(InventoryShopProductSaleModel, response.sale);
 		}
 	} catch (e) {
@@ -603,12 +581,8 @@ async function cancelChangeRequest() {
 	}
 
 	try {
-		// TODO(creator-shops) (backend) Doesn't appear to do anything when
-		// canceling a change request for a product that isn't approved yet.
-		// Status changes, but the change request is still there and the product
-		// is still returned in the overview.
 		const response = await Api.sendRequest(
-			`/web/dash/creators/shop/change-requests/retract-submitted/${changes.id}`,
+			`/web/dash/creators/shop/change-requests/cancel/${changes.id}`,
 			{},
 			{ detach: true }
 		);
@@ -619,6 +593,8 @@ async function cancelChangeRequest() {
 		changeRequest.value = request?.rejected_on ? null : request;
 		rejectedChangeRequest.value = request?.rejected_on ? request : null;
 
+		// TODO(creator-shops) Go back to the overview if this was never
+		// approved. Check backend data to make sure I'm not goofing it up.
 		const key = baseModel ? getChangeRequestKey(baseModel) : null;
 		if (!key) {
 			return;

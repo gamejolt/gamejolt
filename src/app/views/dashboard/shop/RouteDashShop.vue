@@ -27,7 +27,6 @@ interface BaseProductPayload<T extends ShopManagerGroupItem> {
 	slotAmount?: number;
 	maxSalesAmount?: number;
 	currentRequestStatus?: {
-		// TODO(creator-shops) (backend) string => CreatorChangeRequestModel
 		[key: number]: CreatorChangeRequestStatus;
 	};
 }
@@ -120,8 +119,8 @@ function _setGroupFields<T extends ShopManagerGroupItem>(
 
 	const items = makeModels(resources);
 
-	group.value.canAddFree = canEditFree;
-	group.value.canAddPremium = canEditPremium;
+	group.value.canEditFree = canEditFree;
+	group.value.canEditPremium = canEditPremium;
 	group.value.items = items;
 	group.value.slotAmount = slotAmount;
 	group.value.maxSalesAmount = maxSalesAmount;

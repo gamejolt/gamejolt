@@ -38,8 +38,7 @@ const data = createShopProductBaseForm({
 	onLoad({ payload }) {
 		emojiNameMinLength.value = payload.emojiNameMinLength || emojiNameMinLength.value;
 		emojiNameMaxLength.value = payload.emojiNameMaxLength || emojiNameMaxLength.value;
-		// TODO(creator-shops) (backend) Either need this returned or we can
-		// just hard-code our current format of prefix.
+		// TODO(creator-shops) Get emoji prefix from the payload.
 		emojiPrefix.value = baseModel?.emoji?.prefix || emojiPrefix.value;
 
 		const changeData = JSON.parse(data.latestChangeRequest.value?.change_data || '{}');
@@ -56,15 +55,15 @@ const { baseModel, getFieldAvailabilityUrl } = data;
 </script>
 
 <template>
-	<!-- TODO(creator-shops) (call) This should be checking both `canAddPremium`
-	and `canAddFree` for the sticker group. -->
+	<!-- TODO(creator-shops) (call) This should be checking both `canEditPremium`
+	and `canEditFree` for the sticker group. -->
 	<FormShopProductBase :data="data" :diff-keys="['emoji_name']">
 		<template #default="{ formGroupBindings }">
 			<AppFormGroup
 				v-bind="formGroupBindings"
 				name="emoji_name"
 				tiny-label-margin
-				label="Emoji name"
+				:label="$gettext(`Emoji name`)"
 			>
 				<AppFormControlPrefix :prefix="emojiPrefix || ''">
 					<AppFormControl
