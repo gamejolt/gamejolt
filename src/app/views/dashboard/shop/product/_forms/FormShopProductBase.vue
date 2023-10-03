@@ -25,6 +25,7 @@ import AppForm, {
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlError from '../../../../../../_common/form-vue/AppFormControlError.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../../../../_common/form-vue/AppFormStickySubmit.vue';
@@ -314,10 +315,7 @@ export function createShopProductBaseForm<
 			);
 		},
 		onSubmitError(_response) {
-			// TODO(creator-shops) DODO(creator-shops) errors
-			let message: string | null = null;
-
-			showErrorGrowl(message || $gettext(`There was an error saving your product.`));
+			showErrorGrowl($gettext(`There was an error saving your product.`));
 		},
 		onSubmitSuccess(response) {
 			function updateGroup<T extends ShopManagerGroupItem>(
@@ -881,7 +879,16 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 					@changed="setFile"
 				/>
 
-				<AppFormControlErrors :label="$gettext(`image`)" />
+				<AppFormControlErrors :label="$gettext(`image`)">
+					<AppFormControlError
+						when="file:missing-required-animated-image"
+						:message="
+							$gettext(
+								`Premium products must be animated. Please upload an animated PNG file.`
+							)
+						"
+					/>
+				</AppFormControlErrors>
 			</AppFormGroup>
 
 			<AppFormGroup
