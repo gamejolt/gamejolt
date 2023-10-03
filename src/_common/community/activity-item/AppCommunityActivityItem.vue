@@ -99,7 +99,7 @@ const isYesterday = computed(() => {
 	);
 });
 
-const actionTo = computed((): RouteLocationRaw | undefined => {
+const actionTo = computed<RouteLocationRaw | undefined>(() => {
 	if (item.value.action_resource instanceof FiresidePostModel) {
 		return item.value.action_resource.routeLocation;
 	} else if (item.value.action_resource instanceof UserModel) {
@@ -165,7 +165,7 @@ const shouldShowActionSecondLine = computed(() => {
 	return !!actionTo.value || !!actionText.value;
 });
 
-const extraData = computed((): Record<string, any> => {
+const extraData = computed<Record<string, any>>(() => {
 	return JSON.parse(item.value.extra_data);
 });
 
