@@ -3,9 +3,12 @@ import { PropType, computed, ref, toRefs } from 'vue';
 import { useGridStore } from '../../../app/components/grid/grid-store';
 import { useAppStore } from '../../../app/store/index';
 import { CommunityJoinLocation } from '../../analytics/analytics.service';
+import { vAppAuthRequired } from '../../auth/auth-required-directive';
+import AppButton from '../../button/AppButton.vue';
 import { formatNumber } from '../../filters/number';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { useCommonStore } from '../../store/common-store';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
 import { CommunityModel } from '../community.model';
 
@@ -17,19 +20,18 @@ const props = defineProps({
 	solid: { type: Boolean },
 });
 
-const { community, location, block, hideCount, solid } = toRefs(props);
-
-const isProcessing = ref(false);
-
 const { joinCommunity, leaveCommunity } = useAppStore();
 const { user } = useCommonStore();
 const { grid } = useGridStore();
 
-const badge = computed(() => {
-	return !hideCount.value && community.value.member_count
+const { community, location, hideCount } = toRefs(props);
+const isProcessing = ref(false);
+
+const badge = computed(() =>
+	!hideCount.value && community.value.member_count
 		? formatNumber(community.value.member_count)
-		: '';
-});
+		: ''
+);
 
 // Guests should always be allowed to attempt to join stuff.
 // When they log in, we can check if they are actually allowed.
@@ -81,7 +83,6 @@ async function onClick() {
 			showErrorGrowl($gettext(`For some reason we couldn't leave this community.`));
 		}
 	}
-
 	isProcessing.value = false;
 }
 </script>
@@ -98,11 +99,7 @@ async function onClick() {
 		:disabled="isDisabled"
 		@click="onClick"
 	>
-		<template v-if="!community.is_member">
-			<AppTranslate>Join Community</AppTranslate>
-		</template>
-		<template v-else>
-			<AppTranslate>Joined</AppTranslate>
-		</template>
+		<template v-if="!community.is_member"> ${{ $gettext(`Join Community`) }} </template>
+		<template v-else> ${{ $gettext(`Joined`) }} </template>
 	</AppButton>
 </template>

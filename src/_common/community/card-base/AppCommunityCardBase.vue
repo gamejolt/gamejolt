@@ -2,6 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
+import AppButton from '../../button/AppButton.vue';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
 import { useCommonStore } from '../../store/common-store';
@@ -18,10 +19,10 @@ const props = defineProps({
 	trackGoto: { type: Boolean },
 });
 
-const { community, overflow, elevate, allowEdit, trackGoto } = toRefs(props);
-
 const { user } = useCommonStore();
 const route = useRoute();
+
+const { community, trackGoto } = toRefs(props);
 
 const memberCount = computed(() => community.value.member_count || 0);
 
@@ -64,18 +65,18 @@ function doTrackGotoCommunity() {
 
 			<div class="-well fill-bg">
 				<div class="-name" :class="{ '-overflow': overflow }">
-					<router-link
+					<RouterLink
 						:to="community.routeLocation"
 						class="link-unstyled"
 						@click="doTrackGotoCommunity"
 					>
 						{{ community.name }}
 						<AppCommunityVerifiedTick :community="community" />
-					</router-link>
+					</RouterLink>
 				</div>
 
 				<div class="-member-counts small">
-					<router-link
+					<RouterLink
 						v-app-track-event="`community-card:community-members`"
 						v-translate="{ count: formatNumber(memberCount) }"
 						:translate-n="memberCount"
@@ -87,7 +88,7 @@ function doTrackGotoCommunity() {
 					>
 						<b>1</b>
 						member
-					</router-link>
+					</RouterLink>
 				</div>
 
 				<div class="-controls">
@@ -99,7 +100,7 @@ function doTrackGotoCommunity() {
 							block
 							:to="community.routeEditLocation"
 						>
-							<AppTranslate>Edit Community</AppTranslate>
+							${{ $gettext(`Edit Community`) }}
 						</AppButton>
 						<AppButton
 							v-else
@@ -108,7 +109,7 @@ function doTrackGotoCommunity() {
 							:to="community.routeLocation"
 							@click="doTrackGotoCommunity"
 						>
-							<AppTranslate>View Community</AppTranslate>
+							${{ $gettext(`View Community`) }}
 						</AppButton>
 					</template>
 					<AppCommunityJoinWidget

@@ -10,12 +10,19 @@ const props = defineProps({
 		type: Object as PropType<CommunityModel>,
 		required: true,
 	},
-	elevate: { type: Boolean },
-	allowEdit: { type: Boolean, default: true },
-	trackGoto: { type: Boolean },
+	elevate: {
+		type: Boolean,
+	},
+	allowEdit: {
+		type: Boolean,
+		default: true,
+	},
+	trackGoto: {
+		type: Boolean,
+	},
 });
 
-const { community, elevate, allowEdit, trackGoto } = toRefs(props);
+const { community, trackGoto } = toRefs(props);
 
 function doTrackGotoCommunity() {
 	if (trackGoto.value) {

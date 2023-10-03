@@ -4,9 +4,7 @@ import AppCommunityAddWidget from '../add-widget/AppCommunityAddWidget.vue';
 
 <template>
 	<div class="community-card-create-placeholder sheet">
-		<div class="-text">
-			<AppTranslate>Create a Community</AppTranslate>
-		</div>
+		<div class="-text">${{ $gettext(`Create a Community`) }}</div>
 		<div class="-widget">
 			<div class="-widget-button">
 				<AppCommunityAddWidget />

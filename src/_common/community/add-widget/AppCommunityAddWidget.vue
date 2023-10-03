@@ -1,16 +1,17 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
-import { showErrorGrowl } from '../../growls/growls.service';
-import { useCommonStore } from '../../store/common-store';
-import { $gettext } from '../../translate/translate.service';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import { computed, PropType, toRefs } from 'vue';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
+import { showErrorGrowl } from '../../growls/growls.service';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
+import { useCommonStore } from '../../store/common-store';
+import { TooltipPlacement } from '../../tooltip/tooltip-controller';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import { $gettext } from '../../translate/translate.service';
 
 const props = defineProps({
 	tooltipPlacement: {
-		type: String,
+		type: String as PropType<TooltipPlacement>,
 		default: 'bottom',
-		required: true,
 	},
 });
 
@@ -34,7 +35,6 @@ const tooltip = computed(() => {
 	};
 });
 
-// is this okay?
 function showGrowl() {
 	if (!user.value) {
 		return;
@@ -50,14 +50,14 @@ function showGrowl() {
 </script>
 
 <template>
-	<router-link
+	<RouterLink
 		v-if="canCreate"
 		v-app-tooltip="tooltip"
 		class="-add"
 		:to="{ name: 'dash.communities.add' }"
 	>
 		<AppJolticon icon="add" big />
-	</router-link>
+	</RouterLink>
 	<a
 		v-else
 		v-app-auth-required

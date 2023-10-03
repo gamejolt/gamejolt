@@ -1,26 +1,33 @@
 <script lang="ts" setup>
 import { PropType, onMounted, ref, toRefs } from 'vue';
 import { Api } from '../../../../api/api.service';
+import AppButton from '../../../../button/AppButton.vue';
 import { GameModel } from '../../../../game/game.model';
 import AppGameThumbnail from '../../../../game/thumbnail/AppGameThumbnail.vue';
 import AppGameThumbnailImg from '../../../../game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../growls/growls.service';
 import AppLoading from '../../../../loading/AppLoading.vue';
+import AppModal from '../../../../modal/AppModal.vue';
 import { useModal } from '../../../../modal/modal.service';
 import { $gettext } from '../../../../translate/translate.service';
 import { CommunityCompetitionModel } from '../../competition.model';
 import { CommunityCompetitionEntryModel } from '../entry.model';
 
 const props = defineProps({
-	competition: { type: Object as PropType<CommunityCompetitionModel>, required: true },
+	competition: {
+		type: Object as PropType<CommunityCompetitionModel>,
+		required: true,
+	},
 });
 
 const { competition } = toRefs(props);
+
+const modal = useModal()!;
+
 const games = ref<GameModel[]>([]);
 const isLoading = ref(true);
 const selectedGame = ref<GameModel | null>(null);
 const isSubmitting = ref(false);
-const modal = useModal()!;
 
 onMounted(() => {
 	loadGames();
@@ -84,26 +91,24 @@ async function onClickSubmit() {
 	<AppModal>
 		<div class="modal-controls">
 			<AppButton @click="modal.dismiss()">
-				<AppTranslate>Close</AppTranslate>
+				{{ $gettext(`Close`) }}
 			</AppButton>
 		</div>
 		<div class="modal-header">
-			<h2 class="modal-title">
-				<AppTranslate>Choose a game to submit</AppTranslate>
-			</h2>
+			<h2 class="modal-title">${{ $gettext(`Choose a game to submit`) }}</h2>
 		</div>
 		<div class="modal-body">
 			<AppLoading v-if="isLoading" centered />
 			<template v-else-if="selectedGame">
 				<AppGameThumbnail :game="selectedGame" class="-game-thumb-selected" hide-pricing />
 				<p class="help-block">
-					<AppTranslate>
-						Before submitting, make sure that you have read and understood the rules of
-						the jam.
-					</AppTranslate>
+					${{
+						$gettext(`Before submitting, make sure that you have read and understood the rules of
+						the jam.`)
+					}}
 				</p>
 				<AppButton solid primary @click="onClickSubmit">
-					<AppTranslate>Submit</AppTranslate>
+					${{ $gettext(`Submit`) }}
 				</AppButton>
 			</template>
 			<template v-else-if="games.length">
@@ -118,21 +123,19 @@ async function onClickSubmit() {
 
 					<div class="-game-button">
 						<AppButton primary @click="onClickSelectGame(game)">
-							<AppTranslate>Select</AppTranslate>
+							${{ $gettext(`Select`) }}
 						</AppButton>
 					</div>
 				</div>
 			</template>
 			<div v-else class="alert">
-				<p>
-					<AppTranslate>You have no games available to be submitted.</AppTranslate>
-				</p>
+				<p>${{ $gettext(`You have no games available to be submitted.`) }}</p>
 				<p v-translate>
 					To enter a game into the jam, upload it to Game Jolt first,
 					<b>make sure it is published</b>, then return to this page.
 				</p>
 				<AppButton :to="{ name: 'dash.games.add' }">
-					<AppTranslate>Add Game</AppTranslate>
+					${{ $gettext(`Add Game`) }}
 				</AppButton>
 			</div>
 		</div>
