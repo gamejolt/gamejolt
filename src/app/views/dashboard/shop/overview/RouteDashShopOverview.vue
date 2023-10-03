@@ -57,6 +57,23 @@ function getPublishedCount(items: ShopManagerGroupItem[]) {
 	}, 0);
 }
 
+function getCanAddForProductType(type: ShopManagerGroupItemType) {
+	switch (type) {
+		// Can only add premium.
+		case 'Avatar_Frame':
+			return avatarFrames.value.canEditPremium === true;
+		// Can only add premium.
+		case 'Background':
+			return avatarFrames.value.canEditPremium === true;
+		// Can only add premium.
+		case 'Sticker_Pack':
+			return stickerPacks.value.canEditPremium === true;
+		// Need to check both canAdd fields.
+		case 'Sticker':
+			return (stickers.value.canEditFree || stickers.value.canEditPremium) === true;
+	}
+}
+
 const sectionData = computed<
 	{
 		typename: ShopManagerGroupItemType;
@@ -169,7 +186,7 @@ const itemBorderRadius = kBorderRadiusLg.value;
 
 			<div :style="gridStyles">
 				<AppDashShopItemAdd
-					v-if="data.canAddFree || data.canAddPremium"
+					v-if="getCanAddForProductType(typename)"
 					key="add-item"
 					:typename="typename"
 					:ratio="ratio"
@@ -179,11 +196,12 @@ const itemBorderRadius = kBorderRadiusLg.value;
 
 				<AppDashShopItem
 					v-for="item in data.sortedItems"
-					:key="`${item.id}:${item.added_on}`"
+					:key="item.id"
 					:item="item"
 					:border-radius="itemBorderRadius"
 					:border-width="itemBorderWidth"
 					:item-states="getShopItemStates(item)"
+					:can-edit="(item.is_premium ? data.canEditPremium : data.canEditFree) === true"
 				/>
 			</div>
 		</div>
