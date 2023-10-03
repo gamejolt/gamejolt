@@ -74,6 +74,10 @@ function getCanAddForProductType(type: ShopManagerGroupItemType) {
 	}
 }
 
+function getLimitText(current: number, max: number, type: string) {
+	return `${current} / ${max} ${type}`;
+}
+
 const sectionData = computed<
 	{
 		typename: ShopManagerGroupItemType;
@@ -165,21 +169,25 @@ const itemBorderRadius = kBorderRadiusLg.value;
 			>
 				<p>
 					<template v-if="data.slotAmount">
-						{{ getItemCountForSlots(data) }}
-						{{ ' / ' }}
-						{{ data.slotAmount }}
-						{{ ' ' }}
-						{{ $gettext(`slots used`) }}
+						{{
+							getLimitText(
+								getItemCountForSlots(data),
+								data.slotAmount,
+								$gettext(`slots used`)
+							)
+						}}
 					</template>
 
 					<br v-if="data.slotAmount && data.maxSalesAmount" />
 
 					<template v-if="data.maxSalesAmount">
-						{{ getPublishedCount(data.items) }}
-						{{ ' / ' }}
-						{{ data.maxSalesAmount }}
-						{{ ' ' }}
-						{{ $gettext(`published`) }}
+						{{
+							getLimitText(
+								getPublishedCount(data.items),
+								data.maxSalesAmount,
+								$gettext(`published`)
+							)
+						}}
 					</template>
 				</p>
 			</div>
