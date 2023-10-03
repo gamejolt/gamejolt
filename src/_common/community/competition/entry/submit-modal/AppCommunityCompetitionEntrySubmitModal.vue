@@ -95,20 +95,20 @@ async function onClickSubmit() {
 			</AppButton>
 		</div>
 		<div class="modal-header">
-			<h2 class="modal-title">${{ $gettext(`Choose a game to submit`) }}</h2>
+			<h2 class="modal-title">{{ $gettext(`Choose a game to submit`) }}</h2>
 		</div>
 		<div class="modal-body">
 			<AppLoading v-if="isLoading" centered />
 			<template v-else-if="selectedGame">
 				<AppGameThumbnail :game="selectedGame" class="-game-thumb-selected" hide-pricing />
 				<p class="help-block">
-					${{
+					{{
 						$gettext(`Before submitting, make sure that you have read and understood the rules of
 						the jam.`)
 					}}
 				</p>
 				<AppButton solid primary @click="onClickSubmit">
-					${{ $gettext(`Submit`) }}
+					{{ $gettext(`Submit`) }}
 				</AppButton>
 			</template>
 			<template v-else-if="games.length">
@@ -123,19 +123,19 @@ async function onClickSubmit() {
 
 					<div class="-game-button">
 						<AppButton primary @click="onClickSelectGame(game)">
-							${{ $gettext(`Select`) }}
+							{{ $gettext(`Select`) }}
 						</AppButton>
 					</div>
 				</div>
 			</template>
 			<div v-else class="alert">
-				<p>${{ $gettext(`You have no games available to be submitted.`) }}</p>
+				<p>{{ $gettext(`You have no games available to be submitted.`) }}</p>
 				<p v-translate>
 					To enter a game into the jam, upload it to Game Jolt first,
 					<b>make sure it is published</b>, then return to this page.
 				</p>
 				<AppButton :to="{ name: 'dash.games.add' }">
-					${{ $gettext(`Add Game`) }}
+					{{ $gettext(`Add Game`) }}
 				</AppButton>
 			</div>
 		</div>

@@ -12,11 +12,23 @@ import AppCommunityJoinWidget from '../join-widget/AppCommunityJoinWidget.vue';
 import AppCommunityVerifiedTick from '../verified-tick/AppCommunityVerifiedTick.vue';
 
 const props = defineProps({
-	community: { type: Object as PropType<CommunityModel>, required: true },
-	overflow: { type: Boolean },
-	elevate: { type: Boolean },
-	allowEdit: { type: Boolean, default: true },
-	trackGoto: { type: Boolean },
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
+	overflow: {
+		type: Boolean,
+	},
+	elevate: {
+		type: Boolean,
+	},
+	allowEdit: {
+		type: Boolean,
+		default: true,
+	},
+	trackGoto: {
+		type: Boolean,
+	},
 });
 
 const { user } = useCommonStore();
@@ -100,7 +112,7 @@ function doTrackGotoCommunity() {
 							block
 							:to="community.routeEditLocation"
 						>
-							${{ $gettext(`Edit Community`) }}
+							{{ $gettext(`Edit Community`) }}
 						</AppButton>
 						<AppButton
 							v-else
@@ -109,7 +121,7 @@ function doTrackGotoCommunity() {
 							:to="community.routeLocation"
 							@click="doTrackGotoCommunity"
 						>
-							${{ $gettext(`View Community`) }}
+							{{ $gettext(`View Community`) }}
 						</AppButton>
 					</template>
 					<AppCommunityJoinWidget

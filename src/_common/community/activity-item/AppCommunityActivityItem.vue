@@ -218,7 +218,7 @@ function getExtraData(key: string) {
 				<!-- This is for when the user that took the action is not available anymore. -->
 				<template v-else>
 					<span class="text-muted">
-						${{ $gettext(`Someone`) }}
+						{{ $gettext(`Someone`) }}
 						<AppJolticon
 							v-app-tooltip="$gettext(`This user is no longer active.`)"
 							icon="help-circle"
@@ -237,8 +237,8 @@ function getExtraData(key: string) {
 						"
 						class="-user-sub-date"
 					>
-						<span v-if="isToday"> ${{ $gettext(`Today`) }} </span>
-						<span v-else-if="isYesterday"> ${{ $gettext(`Yesterday`) }} </span>
+						<span v-if="isToday">{{ $gettext(`Today`) }} </span>
+						<span v-else-if="isYesterday">{{ $gettext(`Yesterday`) }} </span>
 						<span
 							v-if="isToday || isYesterday"
 							v-translate="{ time: formatDate(item.added_on, 'shortTime') }"
@@ -418,7 +418,7 @@ function getExtraData(key: string) {
 					<template v-if="hasReason">
 						<br />
 						<span class="-reason-row">
-							${{ $gettext(`Reason:`) }}
+							{{ $gettext(`Reason:`) }}
 							<i>{{ ' ' + reasonText }}</i>
 						</span>
 					</template>

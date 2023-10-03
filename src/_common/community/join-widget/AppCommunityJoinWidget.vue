@@ -13,11 +13,23 @@ import { $gettext } from '../../translate/translate.service';
 import { CommunityModel } from '../community.model';
 
 const props = defineProps({
-	community: { type: Object as PropType<CommunityModel>, required: true },
-	location: { type: String as PropType<CommunityJoinLocation>, required: true },
-	block: { type: Boolean },
-	hideCount: { type: Boolean },
-	solid: { type: Boolean },
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
+	location: {
+		type: String as PropType<CommunityJoinLocation>,
+		required: true,
+	},
+	block: {
+		type: Boolean,
+	},
+	hideCount: {
+		type: Boolean,
+	},
+	solid: {
+		type: Boolean,
+	},
 });
 
 const { joinCommunity, leaveCommunity } = useAppStore();
@@ -99,7 +111,7 @@ async function onClick() {
 		:disabled="isDisabled"
 		@click="onClick"
 	>
-		<template v-if="!community.is_member"> ${{ $gettext(`Join Community`) }} </template>
-		<template v-else> ${{ $gettext(`Joined`) }} </template>
+		<template v-if="!community.is_member">{{ $gettext(`Join Community`) }} </template>
+		<template v-else>{{ $gettext(`Joined`) }} </template>
 	</AppButton>
 </template>
