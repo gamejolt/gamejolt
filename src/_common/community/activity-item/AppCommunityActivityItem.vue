@@ -1,12 +1,12 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, PropType, toRefs } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 import { formatDate } from '../../filters/date';
 import { FiresideModel } from '../../fireside/fireside.model';
 import { FiresidePostModel } from '../../fireside/post/post-model';
 import { GameModel } from '../../game/game.model';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { Screen } from '../../screen/screen-service';
-import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { getSingleReasonText } from '../../user/action-reasons';
 import { UserBlockModel } from '../../user/block/block.model';
@@ -17,194 +17,179 @@ import { CommunityCompetitionModel } from '../competition/competition.model';
 import { CommunityCompetitionEntryModel } from '../competition/entry/entry.model';
 import { CommunityActivityItemModel, CommunityActivityItemType } from './activity-item.model';
 
-@Options({
-	components: {
-		AppTimeAgo,
-		AppUserAvatar,
+const props = defineProps({
+	item: {
+		type: Object as PropType<CommunityActivityItemModel>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	usersplit: {
+		type: Boolean,
+		required: true,
 	},
-})
-export default class AppCommunityActivityItem extends Vue {
-	@Prop({ type: Object, required: true }) item!: CommunityActivityItemModel;
-	@Prop({ type: Boolean, required: true }) usersplit!: boolean;
-	@Prop({ type: Boolean, required: true }) showIcon!: boolean;
+	showIcon: {
+		type: Boolean,
+		required: true,
+	},
+});
 
-	readonly Screen = Screen;
-	readonly formatDate = formatDate;
+const CommunityCreated = CommunityActivityItemType.CommunityCreated;
+const PostFeature = CommunityActivityItemType.PostFeature;
+const PostUnfeature = CommunityActivityItemType.PostUnfeature;
+const PostMove = CommunityActivityItemType.PostMove;
+const PostEject = CommunityActivityItemType.PostEject;
 
-	readonly CommunityCreated = CommunityActivityItemType.CommunityCreated;
-	readonly PostFeature = CommunityActivityItemType.PostFeature;
-	readonly PostUnfeature = CommunityActivityItemType.PostUnfeature;
-	readonly PostMove = CommunityActivityItemType.PostMove;
-	readonly PostEject = CommunityActivityItemType.PostEject;
+const ModInvite = CommunityActivityItemType.ModInvite;
+const ModAccept = CommunityActivityItemType.ModAccept;
+const ModRemove = CommunityActivityItemType.ModRemove;
 
-	readonly ModInvite = CommunityActivityItemType.ModInvite;
-	readonly ModAccept = CommunityActivityItemType.ModAccept;
-	readonly ModRemove = CommunityActivityItemType.ModRemove;
+const BlockUser = CommunityActivityItemType.BlockUser;
 
-	readonly BlockUser = CommunityActivityItemType.BlockUser;
+const EditDescription = CommunityActivityItemType.EditDescription;
+const EditThumbnail = CommunityActivityItemType.EditThumbnail;
+const EditHeader = CommunityActivityItemType.EditHeader;
+const EditDetails = CommunityActivityItemType.EditDetails;
+const EditHeaderRemove = CommunityActivityItemType.EditHeaderRemove;
 
-	readonly EditDescription = CommunityActivityItemType.EditDescription;
-	readonly EditThumbnail = CommunityActivityItemType.EditThumbnail;
-	readonly EditHeader = CommunityActivityItemType.EditHeader;
-	readonly EditDetails = CommunityActivityItemType.EditDetails;
-	readonly EditHeaderRemove = CommunityActivityItemType.EditHeaderRemove;
+const ChannelAdd = CommunityActivityItemType.ChannelAdd;
+const ChannelRemove = CommunityActivityItemType.ChannelRemove;
+const ChannelEdit = CommunityActivityItemType.ChannelEdit;
+const ChannelRename = CommunityActivityItemType.ChannelRename;
 
-	readonly ChannelAdd = CommunityActivityItemType.ChannelAdd;
-	readonly ChannelRemove = CommunityActivityItemType.ChannelRemove;
-	readonly ChannelEdit = CommunityActivityItemType.ChannelEdit;
-	readonly ChannelRename = CommunityActivityItemType.ChannelRename;
+const GameLink = CommunityActivityItemType.GameLink;
+const GameUnlink = CommunityActivityItemType.GameUnlink;
 
-	readonly GameLink = CommunityActivityItemType.GameLink;
-	readonly GameUnlink = CommunityActivityItemType.GameUnlink;
+const CompetitionEditSettings = CommunityActivityItemType.CompetitionEditSettings;
+const CompetitionEditVoting = CommunityActivityItemType.CompetitionEditVoting;
+const CompetitionVotingSetActive = CommunityActivityItemType.CompetitionVotingSetActive;
+const CompetitionEntryRemove = CommunityActivityItemType.CompetitionEntryRemove;
+const CompetitionEntryUnremove = CommunityActivityItemType.CompetitionEntryUnremove;
+const CompetitionEntryGiveAward = CommunityActivityItemType.CompetitionEntryGiveAward;
 
-	readonly CompetitionEditSettings = CommunityActivityItemType.CompetitionEditSettings;
-	readonly CompetitionEditVoting = CommunityActivityItemType.CompetitionEditVoting;
-	readonly CompetitionVotingSetActive = CommunityActivityItemType.CompetitionVotingSetActive;
-	readonly CompetitionEntryRemove = CommunityActivityItemType.CompetitionEntryRemove;
-	readonly CompetitionEntryUnremove = CommunityActivityItemType.CompetitionEntryUnremove;
-	readonly CompetitionEntryGiveAward = CommunityActivityItemType.CompetitionEntryGiveAward;
+const FiresideStart = CommunityActivityItemType.FiresideStart;
+const FiresideStartDraft = CommunityActivityItemType.FiresideStartDraft;
+const FiresidePublish = CommunityActivityItemType.FiresidePublish;
+const FiresideExtinguish = CommunityActivityItemType.FiresideExtinguish;
+const FiresideFeature = CommunityActivityItemType.FiresideFeature;
+const FiresideUnfeature = CommunityActivityItemType.FiresideUnfeature;
+const FiresideEject = CommunityActivityItemType.FiresideEject;
 
-	readonly FiresideStart = CommunityActivityItemType.FiresideStart;
-	readonly FiresideStartDraft = CommunityActivityItemType.FiresideStartDraft;
-	readonly FiresidePublish = CommunityActivityItemType.FiresidePublish;
-	readonly FiresideExtinguish = CommunityActivityItemType.FiresideExtinguish;
-	readonly FiresideFeature = CommunityActivityItemType.FiresideFeature;
-	readonly FiresideUnfeature = CommunityActivityItemType.FiresideUnfeature;
-	readonly FiresideEject = CommunityActivityItemType.FiresideEject;
+const { item, showIcon } = toRefs(props);
 
-	get loggedOn() {
-		return formatDate(this.item.added_on, 'medium');
+const icon = computed(() => {
+	return item.value.getTypeIcon()?.icon;
+});
+
+const shouldShowIcon = computed(() => {
+	return !!icon.value && showIcon.value;
+});
+
+const color = computed(() => {
+	return item.value.getTypeIcon()?.color;
+});
+
+const isToday = computed(() => {
+	return formatDate(item.value.added_on, 'mediumDate') === formatDate(Date.now(), 'mediumDate');
+});
+
+const isYesterday = computed(() => {
+	const oneDay = 24 * 60 * 60 * 1000;
+	return (
+		formatDate(item.value.added_on, 'mediumDate') ===
+		formatDate(Date.now() - oneDay, 'mediumDate')
+	);
+});
+
+const actionTo = computed((): RouteLocationRaw | undefined => {
+	if (item.value.action_resource instanceof FiresidePostModel) {
+		return item.value.action_resource.routeLocation;
+	} else if (item.value.action_resource instanceof UserModel) {
+		return item.value.action_resource.url;
+	} else if (item.value.action_resource instanceof UserBlockModel) {
+		return item.value.action_resource.user.url;
+	} else if (item.value.action_resource instanceof CommunityChannelModel) {
+		return {
+			name: 'communities.view.channel',
+			params: {
+				channel: item.value.action_resource.title,
+			},
+		};
+	} else if (item.value.action_resource instanceof GameModel) {
+		return item.value.action_resource.routeLocation;
+	} else if (item.value.action_resource instanceof CommunityCompetitionModel) {
+		// For community competitions, the channel title is encoded in the extra data.
+		const channelTitle = getExtraData('channel-title');
+		return {
+			name: 'communities.view.channel',
+			params: {
+				channel: channelTitle,
+			},
+		};
+	} else if (item.value.action_resource instanceof CommunityCompetitionEntryModel) {
+		// For community competition entries, the channel title is encoded in the extra data.
+		const channelTitle = getExtraData('channel-title');
+		return {
+			name: 'communities.view.channel.entries',
+			params: {
+				channel: channelTitle,
+			},
+			hash: '#entry-' + item.value.action_resource.id,
+		};
+	} else if (item.value.action_resource instanceof FiresideModel) {
+		return item.value.action_resource.routeLocation;
+	}
+});
+
+const actionText = computed(() => {
+	if (item.value.action_resource instanceof FiresidePostModel) {
+		return item.value.action_resource.getShortLead();
+	} else if (item.value.action_resource instanceof UserModel) {
+		return '@' + item.value.action_resource.username;
+	} else if (item.value.action_resource instanceof UserBlockModel) {
+		return '@' + item.value.action_resource.user.username;
+	} else if (item.value.action_resource instanceof CommunityChannelModel) {
+		return item.value.action_resource.title;
+	} else if (item.value.action_resource instanceof GameModel) {
+		return item.value.action_resource.title;
+	} else if (item.value.action_resource instanceof CommunityCompetitionModel) {
+		// For community competitions, the channel title is encoded in the extra data.
+		const channelTitle = getExtraData('channel-title');
+		return channelTitle;
+	} else if (item.value.action_resource instanceof CommunityCompetitionEntryModel) {
+		return item.value.action_resource.resource.title;
+	} else if (item.value.action_resource instanceof FiresideModel) {
+		return item.value.action_resource.title;
+	}
+});
+
+const shouldShowActionSecondLine = computed(() => {
+	return !!actionTo.value || !!actionText.value;
+});
+
+const extraData = computed((): Record<string, any> => {
+	return JSON.parse(item.value.extra_data);
+});
+
+const reasonText = computed(() => {
+	// The user block resource comes with a reason.
+	if (item.value.action_resource instanceof UserBlockModel) {
+		return getSingleReasonText(item.value.action_resource.reason);
 	}
 
-	get shouldShowIcon() {
-		return !!this.icon && this.showIcon;
+	// Some other actions might encode a "reason" field in the extra data.
+	const reason = getExtraData('reason');
+	if (!reason) {
+		return null;
 	}
 
-	get icon() {
-		return this.item.getTypeIcon()?.icon;
-	}
+	return getSingleReasonText(reason);
+});
 
-	get color() {
-		return this.item.getTypeIcon()?.color;
-	}
+const hasReason = computed(() => {
+	return !!reasonText.value;
+});
 
-	get actionIsFiresidePost() {
-		return this.item.action_resource instanceof FiresidePostModel;
-	}
-
-	get actionIsUser() {
-		return this.item.action_resource instanceof UserModel;
-	}
-
-	get isToday() {
-		return (
-			formatDate(this.item.added_on, 'mediumDate') === formatDate(Date.now(), 'mediumDate')
-		);
-	}
-
-	get isYesterday() {
-		const oneDay = 24 * 60 * 60 * 1000;
-		return (
-			formatDate(this.item.added_on, 'mediumDate') ===
-			formatDate(Date.now() - oneDay, 'mediumDate')
-		);
-	}
-
-	get actionTo(): RouteLocationRaw | undefined {
-		if (this.item.action_resource instanceof FiresidePostModel) {
-			return this.item.action_resource.routeLocation;
-		} else if (this.item.action_resource instanceof UserModel) {
-			return this.item.action_resource.url;
-		} else if (this.item.action_resource instanceof UserBlockModel) {
-			return this.item.action_resource.user.url;
-		} else if (this.item.action_resource instanceof CommunityChannelModel) {
-			return {
-				name: 'communities.view.channel',
-				params: {
-					channel: this.item.action_resource.title,
-				},
-			};
-		} else if (this.item.action_resource instanceof GameModel) {
-			return this.item.action_resource.routeLocation;
-		} else if (this.item.action_resource instanceof CommunityCompetitionModel) {
-			// For community competitions, the channel title is encoded in the extra data.
-			const channelTitle = this.getExtraData('channel-title');
-			return {
-				name: 'communities.view.channel',
-				params: {
-					channel: channelTitle,
-				},
-			};
-		} else if (this.item.action_resource instanceof CommunityCompetitionEntryModel) {
-			// For community competition entries, the channel title is encoded in the extra data.
-			const channelTitle = this.getExtraData('channel-title');
-			return {
-				name: 'communities.view.channel.entries',
-				params: {
-					channel: channelTitle,
-				},
-				hash: '#entry-' + this.item.action_resource.id,
-			};
-		} else if (this.item.action_resource instanceof FiresideModel) {
-			return this.item.action_resource.routeLocation;
-		}
-	}
-
-	get actionText() {
-		if (this.item.action_resource instanceof FiresidePostModel) {
-			return this.item.action_resource.getShortLead();
-		} else if (this.item.action_resource instanceof UserModel) {
-			return '@' + this.item.action_resource.username;
-		} else if (this.item.action_resource instanceof UserBlockModel) {
-			return '@' + this.item.action_resource.user.username;
-		} else if (this.item.action_resource instanceof CommunityChannelModel) {
-			return this.item.action_resource.title;
-		} else if (this.item.action_resource instanceof GameModel) {
-			return this.item.action_resource.title;
-		} else if (this.item.action_resource instanceof CommunityCompetitionModel) {
-			// For community competitions, the channel title is encoded in the extra data.
-			const channelTitle = this.getExtraData('channel-title');
-			return channelTitle;
-		} else if (this.item.action_resource instanceof CommunityCompetitionEntryModel) {
-			return this.item.action_resource.resource.title;
-		} else if (this.item.action_resource instanceof FiresideModel) {
-			return this.item.action_resource.title;
-		}
-	}
-
-	get shouldShowActionSecondLine() {
-		return !!this.actionTo || !!this.actionText;
-	}
-
-	get extraData(): Record<string, any> {
-		return JSON.parse(this.item.extra_data);
-	}
-
-	get reasonText() {
-		// The user block resource comes with a reason.
-		if (this.item.action_resource instanceof UserBlockModel) {
-			return getSingleReasonText(this.item.action_resource.reason);
-		}
-
-		// Some other actions might encode a "reason" field in the extra data.
-		const reason = this.getExtraData('reason');
-		if (!reason) {
-			return null;
-		}
-
-		return getSingleReasonText(reason);
-	}
-
-	get hasReason() {
-		return !!this.reasonText;
-	}
-
-	getExtraData(key: string) {
-		return this.extraData[key];
-	}
+function getExtraData(key: string) {
+	return extraData.value[key];
 }
 </script>
 
@@ -233,7 +218,7 @@ export default class AppCommunityActivityItem extends Vue {
 				<!-- This is for when the user that took the action is not available anymore. -->
 				<template v-else>
 					<span class="text-muted">
-						<AppTranslate>Someone</AppTranslate>
+						${{ $gettext(`Someone`) }}
 						<AppJolticon
 							v-app-tooltip="$gettext(`This user is no longer active.`)"
 							icon="help-circle"
@@ -252,12 +237,8 @@ export default class AppCommunityActivityItem extends Vue {
 						"
 						class="-user-sub-date"
 					>
-						<span v-if="isToday">
-							<AppTranslate>Today</AppTranslate>
-						</span>
-						<span v-else-if="isYesterday">
-							<AppTranslate>Yesterday</AppTranslate>
-						</span>
+						<span v-if="isToday"> ${{ $gettext(`Today`) }} </span>
+						<span v-else-if="isYesterday"> ${{ $gettext(`Yesterday`) }} </span>
 						<span
 							v-if="isToday || isYesterday"
 							v-translate="{ time: formatDate(item.added_on, 'shortTime') }"
@@ -437,7 +418,7 @@ export default class AppCommunityActivityItem extends Vue {
 					<template v-if="hasReason">
 						<br />
 						<span class="-reason-row">
-							<AppTranslate>Reason:</AppTranslate>
+							${{ $gettext(`Reason:`) }}
 							<i>{{ ' ' + reasonText }}</i>
 						</span>
 					</template>

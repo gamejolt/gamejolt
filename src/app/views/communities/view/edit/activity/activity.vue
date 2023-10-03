@@ -1,11 +1,11 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
+import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/AppCommunityActivityItem.vue';
 import {
 	CommunityActivityItemModel,
 	CommunityActivityItemType,
 } from '../../../../../../_common/community/activity-item/activity-item.model';
-import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/activity-item.vue';
 import { formatDate } from '../../../../../../_common/filters/date';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import {
