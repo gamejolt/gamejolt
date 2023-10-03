@@ -18,7 +18,6 @@ import { BackgroundModel } from '../../../../../../_common/background/background
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { ComponentProps } from '../../../../../../_common/component-helpers';
 import { CreatorChangeRequestModel } from '../../../../../../_common/creator/change-request/creator-change-request.model';
-import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import AppForm, {
 	FormController,
 	createForm,
@@ -97,6 +96,13 @@ export const enum ShopProductPaymentType {
 	Free = 'free',
 	Premium = 'premium',
 }
+
+export const shopProductCommonProps = {
+	title: {
+		type: String,
+		required: true,
+	},
+};
 
 export function createShopProductBaseForm<
 	Fields extends Partial<BaseFields> & Record<string, any>,
@@ -679,7 +685,7 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 
 <template>
 	<AppForm :controller="form">
-		<AppExpand :when="!paymentType">
+		<template v-if="!paymentType">
 			<div
 				:style="{
 					display: `flex`,
@@ -719,9 +725,8 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 					</div>
 				</div>
 			</div>
-		</AppExpand>
-
-		<template v-if="!!paymentType">
+		</template>
+		<template v-else>
 			<AppShopProductDiff :dynamic-slots="dynamicDiffSlots">
 				<template #before>
 					<slot

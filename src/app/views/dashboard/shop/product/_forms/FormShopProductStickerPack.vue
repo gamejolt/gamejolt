@@ -16,6 +16,7 @@ import { $gettext } from '../../../../../../_common/translate/translate.service'
 import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '../../../../../../_styles/mixins';
 import { kStrongEaseOut } from '../../../../../../_styles/variables';
 import { useShopManagerStore } from '../../shop.store';
+import AppDashShopProductHeader from '../_header/AppDashShopProductHeader.vue';
 import FormShopProductBase, {
 	ShopProductPaymentType,
 	createShopProductBaseForm,
@@ -68,6 +69,17 @@ const data = createShopProductBaseForm({
 });
 
 const { form, initialFormModel, paymentType, isEditing, baseModel } = data;
+
+const headerMessage = computed(() => {
+	switch (paymentType.value) {
+		case ShopProductPaymentType.Premium:
+			return $gettext(`Premium sticker packs can be purchased in your shop.`);
+		case ShopProductPaymentType.Free:
+			return $gettext(
+				`Charge sticker packs are automatically rewarded to users for placing charged stickers on your content.`
+			);
+	}
+});
 
 const stickersError = computed(() => {
 	if (stickers.value.length < minStickers.value) {
@@ -160,6 +172,12 @@ const canModifyStickers = computed(() => {
 </script>
 
 <template>
+	<AppDashShopProductHeader
+		:payment-type="paymentType"
+		:heading="isEditing ? $gettext(`Sticker pack product`) : $gettext(`Add sticker pack`)"
+		:message="headerMessage"
+	/>
+
 	<FormShopProductBase :data="data" :diff-keys="['stickers']">
 		<template #default>
 			<h2>{{ $gettext(`Stickers`) }}</h2>

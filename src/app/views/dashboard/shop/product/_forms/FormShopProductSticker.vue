@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
+import { computed, ref, toRefs } from 'vue';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -14,7 +14,11 @@ import {
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { useShopManagerStore } from '../../shop.store';
-import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
+import AppDashShopProductHeader from '../_header/AppDashShopProductHeader.vue';
+import FormShopProductBase, {
+	ShopProductPaymentType,
+	createShopProductBaseForm,
+} from './FormShopProductBase.vue';
 
 const props = defineProps({
 	...defineFormProps<StickerModel>(),
@@ -51,10 +55,27 @@ const data = createShopProductBaseForm({
 	},
 });
 
-const { baseModel, getFieldAvailabilityUrl } = data;
+const { baseModel, getFieldAvailabilityUrl, paymentType, isEditing } = data;
+
+const headerMessage = computed(() => {
+	switch (paymentType.value) {
+		case ShopProductPaymentType.Premium:
+			return $gettext(
+				`Premium stickers can be placed into premium sticker packs, which can be purchased in your shop.`
+			);
+		case ShopProductPaymentType.Free:
+			return $gettext(`Charge stickers can be placed into charge sticker packs.`);
+	}
+});
 </script>
 
 <template>
+	<AppDashShopProductHeader
+		:payment-type="paymentType"
+		:heading="isEditing ? $gettext(`Sticker product`) : $gettext(`Add sticker`)"
+		:message="headerMessage"
+	/>
+
 	<!-- TODO(creator-shops) (call) This should be checking both `canEditPremium`
 	and `canEditFree` for the sticker group. -->
 	<FormShopProductBase :data="data" :diff-keys="['emoji_name']">
