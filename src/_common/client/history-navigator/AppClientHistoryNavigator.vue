@@ -1,11 +1,8 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { ClientHistoryNavigator } from './history-navigator.service';
 
-@Options({})
-export default class AppClientHistoryNavigator extends Vue {
-	readonly HistoryNavigator = ClientHistoryNavigator;
-}
+const HistoryNavigator = ClientHistoryNavigator;
 </script>
 
 <template>
