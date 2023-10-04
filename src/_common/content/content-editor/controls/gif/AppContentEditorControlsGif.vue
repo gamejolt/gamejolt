@@ -1,34 +1,20 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
+import AppJolticon from '../../../../jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
 import { editorInsertGif, useContentEditorController } from '../../content-editor-controller';
 import { showContentEditorGifModal } from '../../modals/gif/gif-modal.service';
 
-@Options({
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppContentEditorControlsGif extends Vue {
-	controller = setup(() => useContentEditorController()!);
+const controller = useContentEditorController()!;
+const visible = computed(() => controller.scope.isFocused && controller.capabilities.gif);
 
-	get view() {
-		return this.controller.view!;
+async function openGifModal() {
+	const gif = await showContentEditorGifModal();
+	if (gif === undefined) {
+		return;
 	}
 
-	get visible() {
-		return this.controller.scope.isFocused && this.controller.capabilities.gif;
-	}
-
-	async openGifModal() {
-		const gif = await showContentEditorGifModal();
-		if (gif === undefined) {
-			return;
-		}
-
-		editorInsertGif(this.controller, gif);
-	}
+	editorInsertGif(controller, gif);
 }
 </script>
 

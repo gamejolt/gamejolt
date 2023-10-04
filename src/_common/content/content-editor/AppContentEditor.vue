@@ -26,6 +26,7 @@ import {
 	ContentOwnerControllerKey,
 	createContentOwnerController,
 } from '../content-owner';
+import { ContentRules } from '../content-rules';
 import AppContentEditorNodeRenderer from './AppContentEditorNodeRenderer.vue';
 import {
 	ContentEditorController,
@@ -34,11 +35,10 @@ import {
 	editorCreateView,
 	editorFocus,
 } from './content-editor-controller';
-import { ContentRules } from '../content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
 import AppContentEditorBlockControls from './controls/block-controls.vue';
 import AppContentEditorControlsEmoji from './controls/emoji/AppContentEditorControlsEmoji.vue';
-import AppContentEditorControlsGif from './controls/gif/gif.vue';
+import AppContentEditorControlsGif from './controls/gif/AppContentEditorControlsGif.vue';
 import AppContentEditorInsetControls from './controls/inset-controls.vue';
 import AppContentEditorControlsMentionAutocomplete from './controls/mention/autocomplete.vue';
 import AppContentEditorTextControls from './controls/text-controls.vue';
