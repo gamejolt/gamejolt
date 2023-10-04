@@ -209,7 +209,6 @@ const itemBorderRadius = kBorderRadiusLg.value;
 					:border-radius="itemBorderRadius"
 					:border-width="itemBorderWidth"
 					:item-states="getShopItemStates(item)"
-					:can-edit="(item.is_premium ? data.canEditPremium : data.canEditFree) === true"
 				/>
 			</div>
 		</div>

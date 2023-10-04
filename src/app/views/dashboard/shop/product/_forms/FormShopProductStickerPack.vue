@@ -179,7 +179,7 @@ const canModifyStickers = computed(() => {
 	/>
 
 	<FormShopProductBase :data="data">
-		<template #default>
+		<template #default="{ formControlBindings }">
 			<h2>{{ $gettext(`Stickers`) }}</h2>
 
 			<div v-if="baseModel?.is_premium" :style="{ marginBottom: `12px`, fontWeight: `bold` }">
@@ -201,7 +201,11 @@ const canModifyStickers = computed(() => {
 
 			<AppButton
 				solid
-				:disabled="stickers.length >= maxStickers || !canModifyStickers"
+				:disabled="
+					stickers.length >= maxStickers ||
+					!canModifyStickers ||
+					formControlBindings.disabled
+				"
 				@click="addStickers()"
 			>
 				{{ $gettext(`Add stickers`) }}
@@ -228,7 +232,7 @@ const canModifyStickers = computed(() => {
 				>
 					<div v-bind="hoverBinding" :style="stickerItemStyles">
 						<div
-							v-if="canModifyStickers"
+							v-if="canModifyStickers && !formControlBindings.disabled"
 							:style="[
 								{
 									position: `absolute`,

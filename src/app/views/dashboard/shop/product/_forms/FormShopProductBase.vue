@@ -55,6 +55,7 @@ import {
 	ShopManagerGroupItemType,
 	ShopManagerStore,
 	productTypeFromTypename,
+	useShopManagerStore,
 } from '../../shop.store';
 import AppShopProductDiff from '../_diff/AppShopProductDiff.vue';
 
@@ -506,6 +507,8 @@ const {
 	diffData,
 } = props.data;
 
+const { avatarFrames, backgrounds, stickerPacks, stickers } = useShopManagerStore()!;
+
 const premiumSelectorStyle: CSSProperties = {
 	...styleBorderRadiusLg,
 	...styleChangeBg('bg-offset'),
@@ -521,6 +524,37 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 		marginBottom: kLineHeightComputed.px,
 	},
 };
+
+const formControlBindings = computed<Partial<ComponentProps<typeof AppFormControl>>>(() => {
+	// We don't want to show the label for the file field.
+	let disabled = false;
+	let group: ShopManagerGroup | null = null;
+	switch (typename) {
+		case 'Avatar_Frame':
+			group = avatarFrames.value;
+			break;
+		case 'Background':
+			group = backgrounds.value;
+			break;
+		case 'Sticker_Pack':
+			group = stickerPacks.value;
+			break;
+		case 'Sticker':
+			group = stickers.value;
+			break;
+	}
+
+	// TODO(creator-shops) Make sure everything is disabled properly.
+	if (paymentType.value === ShopProductPaymentType.Free) {
+		disabled = group.canEditFree !== true;
+	} else if (paymentType.value === ShopProductPaymentType.Premium) {
+		disabled = group.canEditPremium !== true;
+	}
+
+	return {
+		disabled,
+	};
+});
 </script>
 
 <template>
@@ -628,6 +662,7 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 				</p>
 
 				<AppFormControlUpload
+					v-bind="formControlBindings"
 					:validators="[
 						validateFilesize(maxFilesize),
 						validateImageMinDimensions({
@@ -662,6 +697,7 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 				name="name"
 			>
 				<AppFormControl
+					v-bind="formControlBindings"
 					:placeholder="$gettext(`Product name...`)"
 					:validators="[
 						validateMinLength(minNameLength),
@@ -676,10 +712,10 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 				<AppFormControlErrors />
 			</AppFormGroup>
 
-			<slot v-bind="{ formGroupBindings }" />
+			<slot v-bind="{ formGroupBindings, formControlBindings }" />
 
 			<AppFormStickySubmit
-				v-if="form.valid"
+				v-if="form.valid && !formControlBindings.disabled"
 				:style="{
 					marginTop: kLineHeightComputed.px,
 					// Fixes layering issues with some items.
