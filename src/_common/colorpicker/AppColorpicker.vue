@@ -1,6 +1,7 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { Sketch as VuePicker } from '@ckpack/vue-color';
-import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+import { ref, toRefs, watch } from 'vue';
+import AppButton from '../button/AppButton.vue';
 import AppPopper from '../popper/AppPopper.vue';
 import { Popper } from '../popper/popper.service';
 
@@ -8,45 +9,44 @@ type VueTouch = {
 	hex: string | null;
 };
 
-@Options({
-	components: {
-		VuePicker,
-		AppPopper,
+// TODO(component-setup-refactor): had error when omitted default value for modelValue
+// check if usages of modelValue are correct
+const props = defineProps({
+	modelValue: {
+		type: String,
+		default: '',
 	},
-})
-export default class AppColorpicker extends Vue {
-	@Prop({ type: String })
-	modelValue?: string;
+});
 
-	colors: VueTouch = {
-		hex: null,
+const emit = defineEmits({
+	'update:modelValue': (_modelValue: string) => true,
+});
+
+const { modelValue } = toRefs(props);
+const colors = ref<VueTouch>({
+	hex: null,
+});
+
+watch(modelValue, () => {
+	colors.value = {
+		hex: modelValue?.value ?? '',
 	};
+});
 
-	@Emit('update:modelValue')
-	emitUpdate(_modelValue: string) {}
+function onChange(value: VueTouch) {
+	colors.value = value;
+}
 
-	@Watch('modelValue', { immediate: true })
-	onValueChanged() {
-		this.colors = {
-			hex: this.modelValue ?? '',
-		};
-	}
+function accept() {
+	emit('update:modelValue', colors.value.hex!);
+	Popper.hideAll();
+}
 
-	onChange(value: VueTouch) {
-		this.colors = value;
-	}
-
-	accept() {
-		this.emitUpdate(this.colors.hex!);
-		Popper.hideAll();
-	}
-
-	cancel() {
-		this.colors = {
-			hex: this.modelValue ?? '',
-		};
-		Popper.hideAll();
-	}
+function cancel() {
+	colors.value = {
+		hex: modelValue?.value ?? '',
+	};
+	Popper.hideAll();
 }
 </script>
 
@@ -69,12 +69,12 @@ export default class AppColorpicker extends Vue {
 					<div class="colorpicker-well">
 						<div class="col">
 							<AppButton primary solid block @click="accept">
-								<AppTranslate>Accept</AppTranslate>
+								{{ $gettext(`Accept`) }}
 							</AppButton>
 						</div>
 						<div class="col">
 							<AppButton trans block @click="cancel">
-								<AppTranslate>Cancel</AppTranslate>
+								{{ $gettext(`Cancel`) }}
 							</AppButton>
 						</div>
 					</div>
