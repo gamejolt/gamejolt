@@ -233,17 +233,8 @@ async function setProductPublishState(publish: boolean) {
 		const response = await Api.sendRequest(url, postData, { detach: true });
 
 		if (response.pack) {
-			// TODO(creator-shops) free sticker packs don't have `is_active`
-			// updated - returns the old value.
 			storeModel(StickerPackModel, response.pack);
 		} else if (response.resource) {
-			// TODO(creator-shops) This only works to publish sometimes, though
-			// it's teated as a success.
-			//
-			// To replicate:
-			// - publish an item that hasn't been published before
-			// - unpublish the item
-			// - publish the item again
 			switch (typename) {
 				case 'Avatar_Frame':
 					storeModel(AvatarFrameModel, response.resource);
@@ -615,8 +606,8 @@ const jolticonStyles: CSSProperties = {
 										>
 											{{
 												baseModel?.was_approved
-													? $gettext(`Cancel`)
-													: $gettext(`Remove`)
+													? $gettext(`Cancel changes`)
+													: $gettext(`Delete product`)
 											}}
 										</AppButton>
 									</template>

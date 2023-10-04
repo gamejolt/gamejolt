@@ -548,7 +548,7 @@ const formControlBindings = computed<Partial<ComponentProps<typeof AppFormContro
 	if (paymentType.value === ShopProductPaymentType.Free) {
 		disabled = group.canEditFree !== true;
 	} else if (paymentType.value === ShopProductPaymentType.Premium) {
-		disabled = group.canEditPremium !== true;
+		disabled = group.canEditPremium !== true || baseModel?.was_approved === true;
 	}
 
 	return {
