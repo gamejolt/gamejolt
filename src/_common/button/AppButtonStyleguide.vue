@@ -1,8 +1,5 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-
-@Options({})
-export default class AppButtonStyleguide extends Vue {}
+<script lang="ts" setup>
+import AppButton from './AppButton.vue';
 </script>
 
 <template>
