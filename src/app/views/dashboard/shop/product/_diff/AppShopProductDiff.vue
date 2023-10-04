@@ -337,7 +337,7 @@ const afterSlotInnerHeaderType = computed(() => {
 	// TODO(creator-shops) Figure out if we should improve this by checking
 	// diffs instead of [form.changed] once it's decided how to refactor the
 	// form flow.
-	if (!form.changed && latestChangeRequest.value && !latestChangeRequest.value.rejected_on) {
+	if (!form.changed && latestChangeRequest.value) {
 		return 'cancel-button';
 	} else if (diffData.value.hasChange || !latestChangeRequest.value) {
 		return 'viewing-preview-text';
