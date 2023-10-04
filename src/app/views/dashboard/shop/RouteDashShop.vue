@@ -3,7 +3,7 @@ import { Ref, computed } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../_common/background/background.model';
-import { CreatorChangeRequestStatus } from '../../../../_common/creator/change-request/creator-change-request.model';
+import { CreatorChangeRequestModel } from '../../../../_common/creator/change-request/creator-change-request.model';
 import { storeModelList } from '../../../../_common/model/model-store.service';
 import { ModelData } from '../../../../_common/model/model.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
@@ -26,9 +26,7 @@ interface BaseProductPayload<T extends ShopManagerGroupItem> {
 	canEditPremium?: boolean;
 	slotAmount?: number;
 	maxSalesAmount?: number;
-	currentRequestStatus?: {
-		[key: number]: CreatorChangeRequestStatus;
-	};
+	changeRequests?: ModelData<CreatorChangeRequestModel>[];
 }
 
 interface StickerPackFields {
@@ -111,7 +109,7 @@ function _setGroupFields<T extends ShopManagerGroupItem>(
 		resources,
 		slotAmount,
 		maxSalesAmount,
-		currentRequestStatus,
+		changeRequests: rawChangeRequests,
 		stickerIds,
 	} = data || {
 		resources: [],
@@ -125,10 +123,10 @@ function _setGroupFields<T extends ShopManagerGroupItem>(
 	group.value.slotAmount = slotAmount;
 	group.value.maxSalesAmount = maxSalesAmount;
 
-	if (currentRequestStatus) {
-		const { productType } = group.value;
-		for (const [id, status] of Object.entries(currentRequestStatus)) {
-			changeRequests.value.set(getChangeRequestKey(productType, id), status);
+	if (rawChangeRequests) {
+		const requests = storeModelList(CreatorChangeRequestModel, rawChangeRequests);
+		for (const request of requests) {
+			changeRequests.value.set(getChangeRequestKey(request), request);
 		}
 	}
 

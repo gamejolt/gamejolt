@@ -104,7 +104,7 @@ export function createShopManagerStore() {
 	const stickerPacks = _makeEmptyGroup<StickerPackModel>('sticker-pack');
 	const stickers = _makeEmptyGroup<StickerModel>('sticker');
 
-	const changeRequests = ref(new Map<string, CreatorChangeRequestStatus>());
+	const changeRequests = ref(new Map<string, CreatorChangeRequestModel>());
 	const publishedStickers = ref(new Set<number>());
 
 	function getItemCountForSlots<T extends ShopManagerGroupItem>(group: ShopManagerGroup<T>) {
@@ -177,7 +177,7 @@ export function createShopManagerStore() {
 				published = item.has_active_sale;
 			}
 
-			const status = changeRequests.value.get(getChangeRequestKey(item));
+			const { status } = changeRequests.value.get(getChangeRequestKey(item)) || {};
 
 			return {
 				published,

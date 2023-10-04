@@ -178,7 +178,7 @@ const canModifyStickers = computed(() => {
 		:message="headerMessage"
 	/>
 
-	<FormShopProductBase :data="data" :diff-keys="['stickers']">
+	<FormShopProductBase :data="data">
 		<template #default>
 			<h2>{{ $gettext(`Stickers`) }}</h2>
 

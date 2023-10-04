@@ -86,7 +86,7 @@ const heading = computed(() => {
 
 	<!-- TODO(creator-shops) (call) This should be checking both `canEditPremium`
 	and `canEditFree` for the sticker group. -->
-	<FormShopProductBase :data="data" :diff-keys="['emoji_name']">
+	<FormShopProductBase :data="data">
 		<template #default="{ formGroupBindings }">
 			<AppFormGroup
 				v-bind="formGroupBindings"
