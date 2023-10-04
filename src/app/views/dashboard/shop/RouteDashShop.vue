@@ -36,7 +36,11 @@ interface StickerPackFields {
 }
 
 type ProductPayload<T extends ShopManagerGroupItem> = BaseProductPayload<T> &
-	(T extends StickerPackModel ? StickerPackFields : never);
+	(T extends StickerPackModel
+		? StickerPackFields
+		: {
+				[key: string]: never;
+		  });
 
 async function _makeSectionPromise<T extends ShopManagerGroupItem>(
 	typename: Exclude<ShopManagerGroupItemType, 'Sticker_Pack'> | 'packs'
@@ -56,9 +60,6 @@ async function fetchOverviewData() {
 		_makeSectionPromise<StickerPackModel>('packs'),
 		_makeSectionPromise<StickerModel>('Sticker'),
 	]);
-
-	// TODO(creator-shops) (backend) Change request data should be changed from
-	// {id=>status} to an array of change requests.
 
 	return {
 		avatarFrames,
