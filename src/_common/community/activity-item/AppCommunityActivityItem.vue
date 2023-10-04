@@ -79,10 +79,6 @@ const icon = computed(() => {
 	return item.value.getTypeIcon()?.icon;
 });
 
-const shouldShowIcon = computed(() => {
-	return !!icon.value && showIcon.value;
-});
-
 const color = computed(() => {
 	return item.value.getTypeIcon()?.color;
 });
@@ -260,7 +256,7 @@ function getExtraData(key: string) {
 						'-icon-other': color !== 'notice' && color !== 'theme',
 					}"
 				>
-					<AppJolticon v-if="shouldShowIcon" :icon="icon" />
+					<AppJolticon v-if="showIcon && icon" :icon="icon" />
 				</span>
 
 				<div class="-action">
