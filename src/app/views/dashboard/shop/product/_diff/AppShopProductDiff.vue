@@ -267,7 +267,7 @@ async function setProductPublishState(publish: boolean) {
 
 async function cancelChangeRequest() {
 	const changes = latestChangeRequest.value;
-	if (!changes || changes.rejected_on) {
+	if (!changes) {
 		return;
 	}
 
