@@ -7,7 +7,7 @@ import { FiresidePostModel } from '../../../../../_common/fireside/post/post-mod
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,

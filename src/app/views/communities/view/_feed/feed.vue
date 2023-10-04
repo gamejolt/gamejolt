@@ -9,7 +9,7 @@ import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
-import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';

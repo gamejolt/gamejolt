@@ -52,7 +52,7 @@ import AppMessageThread from '../../../../_common/message-thread/AppMessageThrea
 import AppMessageThreadAdd from '../../../../_common/message-thread/AppMessageThreadAdd.vue';
 import { storeModel } from '../../../../_common/model/model-store.service';
 import { Model } from '../../../../_common/model/model.service';
-import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { UserModel } from '../../../../_common/user/user.model';

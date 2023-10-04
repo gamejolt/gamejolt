@@ -6,6 +6,9 @@ import { kBorderRadiusBase, kBorderRadiusLg, kBorderRadiusSm } from './variables
  * Helper to make it easier to mix certain styles into a style binding depending
  * on a condition.
  *
+ * NOTE: Don't use an array of styles with this if it's used in the `<script>`
+ * tag or things will break.
+ *
  * @__NO_SIDE_EFFECTS__
  */
 export function styleWhen<T extends StyleValue = CSSProperties>(
@@ -20,6 +23,9 @@ export function styleWhen<T extends StyleValue = CSSProperties>(
  *
  * Using `v-bind` on an element breaks the typing for normal style bindings. Use
  * this to fix that.
+ *
+ * NOTE: Don't use an array of styles with this if it's used in the `<script>`
+ * tag or things will break.
  *
  * @__NO_SIDE_EFFECTS__
  */
