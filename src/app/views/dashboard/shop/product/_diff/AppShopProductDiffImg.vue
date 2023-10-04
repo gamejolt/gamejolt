@@ -26,9 +26,6 @@ const imgData = computed(() => {
 	let borderRadius = '';
 	let placeholderRatio = 1;
 	switch (typename.value) {
-		case 'Avatar_Frame':
-			borderRadius = `50%`;
-			break;
 		case 'Background':
 			borderRadius = kBorderRadiusLg.px;
 			break;
@@ -36,6 +33,8 @@ const imgData = computed(() => {
 			borderRadius = kBorderRadiusLg.px;
 			placeholderRatio = StickerPackRatio;
 			break;
+		// They're displayed the same way.
+		case 'Avatar_Frame':
 		case 'Sticker':
 			borderRadius = kBorderRadiusBase.px;
 			placeholderRatio = 1.54;
@@ -53,7 +52,7 @@ const imgData = computed(() => {
 	};
 });
 
-const stickerGridStyles: CSSProperties = {
+const multiSizeGridStyles: CSSProperties = {
 	display: `grid`,
 	gridTemplateAreas: `
 		"a a a a a a b b b"
@@ -68,18 +67,24 @@ const stickerGridStyles: CSSProperties = {
 	gap: `8px`,
 };
 
-function getSizeForStickerGridArea(gridArea: 'a' | 'b' | 'c' | 'd') {
-	switch (gridArea) {
-		case 'a':
-			return 200;
-		case 'b':
-			return 100;
-		case 'c':
-			return 64;
-		case 'd':
-			return 24;
-	}
-}
+const gridAreaSizes: Record<
+	Exclude<ShopManagerGroupItemType, 'Background' | 'Sticker_Pack'>,
+	{ a: number; b: number; c: number; d: number }
+> = {
+	// TODO(creator-shops) DODO(creator-shops) Adjust sizes as wanted.
+	Avatar_Frame: {
+		a: 200,
+		b: 100,
+		c: 64,
+		d: 24,
+	},
+	Sticker: {
+		a: 200,
+		b: 100,
+		c: 64,
+		d: 24,
+	},
+} as const;
 </script>
 
 <template>
@@ -93,21 +98,8 @@ function getSizeForStickerGridArea(gridArea: 'a' | 'b' | 'c' | 'd') {
 			}),
 		}"
 	>
-		<AppUserAvatarBubble
-			v-if="typename === 'Avatar_Frame'"
-			:user="null"
-			:frame-override="
-				imgUrl
-					? {
-							image_url: imgUrl,
-					  }
-					: undefined
-			"
-			smoosh
-			show-frame
-		/>
 		<div
-			v-else-if="typename === 'Background'"
+			v-if="typename === 'Background'"
 			:style="[
 				imgData.styles,
 				{
@@ -123,7 +115,10 @@ function getSizeForStickerGridArea(gridArea: 'a' | 'b' | 'c' | 'd') {
 			<img v-if="imgUrl" :style="imgData.styles" :src="imgUrl" />
 			<div v-else :style="imgData.styles" />
 		</AppAspectRatio>
-		<div v-else-if="typename === 'Sticker'" :style="stickerGridStyles">
+		<div
+			v-else-if="typename === 'Sticker' || typename === 'Avatar_Frame'"
+			:style="multiSizeGridStyles"
+		>
 			<template v-for="gridArea in (['a', 'b', 'c', 'd'] as const)" :key="gridArea">
 				<div v-if="gridArea !== 'd' || Screen.width > 500" :style="{ gridArea }">
 					<div :style="imgData.styles">
@@ -131,16 +126,38 @@ function getSizeForStickerGridArea(gridArea: 'a' | 'b' | 'c' | 'd') {
 							:ratio="1"
 							:inner-styles="[styleFlexCenter(), { padding: `2px` }]"
 						>
-							<img
-								v-if="imgUrl"
-								:style="{
-									maxWidth: `100%`,
-									maxHeight: `100%`,
-								}"
-								:width="getSizeForStickerGridArea(gridArea)"
-								:height="getSizeForStickerGridArea(gridArea)"
-								:src="imgUrl"
-							/>
+							<template v-if="typename === 'Sticker'">
+								<img
+									v-if="imgUrl"
+									:style="{
+										maxWidth: `100%`,
+										maxHeight: `100%`,
+									}"
+									:width="gridAreaSizes[typename][gridArea]"
+									:height="gridAreaSizes[typename][gridArea]"
+									:src="imgUrl"
+								/>
+							</template>
+							<template v-else>
+								<AppUserAvatarBubble
+									:user="null"
+									:style="{
+										width: `${gridAreaSizes[typename][gridArea]}px`,
+										height: `${gridAreaSizes[typename][gridArea]}px`,
+										maxWidth: `100%`,
+										maxHeight: `100%`,
+									}"
+									:frame-override="
+										imgUrl
+											? {
+													image_url: imgUrl,
+											  }
+											: undefined
+									"
+									smoosh
+									show-frame
+								/>
+							</template>
 						</AppAspectRatio>
 					</div>
 				</div>
