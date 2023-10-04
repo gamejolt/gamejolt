@@ -6,7 +6,7 @@ export async function showBlockModal(user: UserModel) {
 	return await showModal<boolean>({
 		modalId: 'Block',
 		size: 'sm',
-		component: defineAsyncComponent(() => import('./modal.vue')),
+		component: defineAsyncComponent(() => import('./AppReportModal.vue')),
 		props: { user },
 	});
 }
