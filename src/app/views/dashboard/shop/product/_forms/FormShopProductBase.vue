@@ -386,6 +386,12 @@ export function createShopProductBaseForm<
 	});
 
 	function _compareFormDiff(other: typeof initialFormModel.value) {
+		// Need to check differences in image urls between our base model and
+		// any latest changes.
+		if (existingImgUrl.value !== tempImgUrl.value) {
+			return true;
+		}
+
 		return Object.entries(other).some(([key, val]) => {
 			if (key === 'file' && form.controlErrors.file) {
 				return false;
