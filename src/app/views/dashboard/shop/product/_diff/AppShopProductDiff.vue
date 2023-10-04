@@ -11,7 +11,7 @@ import {
 } from '../../../../../../_common/component-helpers';
 import { CreatorChangeRequestModel } from '../../../../../../_common/creator/change-request/creator-change-request.model';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
+import AppJolticon, { Jolticon } from '../../../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { storeModel } from '../../../../../../_common/model/model-store.service';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/AppNavTabList.vue';
@@ -20,6 +20,8 @@ import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.mo
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import {
 	kThemeBgOffset,
+	kThemeFg,
+	kThemeFg10,
 	kThemeGjOverlayNotice,
 	kThemePrimary,
 	kThemePrimaryFg,
@@ -34,7 +36,7 @@ import {
 	styleTextOverflow,
 	styleWhen,
 } from '../../../../../../_styles/mixins';
-import { kFontSizeLarge } from '../../../../../../_styles/variables';
+import { kFontSizeBase } from '../../../../../../_styles/variables';
 import { arrayRemove } from '../../../../../../utils/array';
 import { isInstance } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
@@ -117,6 +119,45 @@ const itemStates = computed<ShopItemStates>(() => {
 		return {};
 	}
 	return getShopItemStates(latestChangeRequest.value);
+});
+
+const itemStateDisplay = computed(() => {
+	const { inReview, rejected } = itemStates.value;
+
+	let text: string;
+	let icon: Jolticon;
+	const style: CSSProperties = {
+		...styleBorderRadiusLg,
+		...styleFlexCenter({
+			display: `inline-flex`,
+			gap: `6px`,
+		}),
+		borderRadius: `12px`,
+		padding: `2px 8px`,
+		backgroundColor: kThemeFg10,
+		color: kThemeFg,
+		fontSize: kFontSizeBase.px,
+		fontWeight: `bold`,
+		marginRight: `auto`,
+	};
+
+	if (inReview) {
+		icon = 'clock';
+		text = $gettext(`In review`);
+	} else if (rejected) {
+		icon = 'exclamation-circle';
+		text = $gettext(`Changes rejected`);
+		style.backgroundColor = kThemeGjOverlayNotice;
+		style.color = `white`;
+	} else {
+		return null;
+	}
+
+	return {
+		text,
+		icon,
+		style,
+	};
 });
 
 function isChargePack(model: typeof baseModel): model is StickerPackModel {
@@ -403,32 +444,6 @@ const jolticonStyles: CSSProperties = {
 	justifySelf: `center`,
 	alignSelf: `center`,
 };
-
-function getStateBubbleStyles({
-	backgroundColor = kThemePrimary,
-}: { backgroundColor?: string } = {}): CSSProperties {
-	return {
-		...styleFlexCenter(),
-		...styleElevate(1),
-		borderRadius: `50%`,
-		backgroundColor,
-		padding: `4px`,
-	};
-}
-
-function getStateBubbleIconStyles({
-	fontSize = kFontSizeLarge.px,
-	color = kThemePrimaryFg,
-}: {
-	color?: string;
-	fontSize?: string;
-} = {}): CSSProperties {
-	return {
-		margin: 0,
-		fontSize,
-		color,
-	};
-}
 </script>
 
 <template>
@@ -577,63 +592,34 @@ function getStateBubbleIconStyles({
 								>
 									{{ $gettext(`Preview of changes`) }}
 								</div>
-								<template v-else-if="afterSlotInnerHeaderType === 'cancel-button'">
-									<!-- TODO(creator-shops) Update this to the new requested format. -->
-									<div
-										v-if="itemStates.rejected"
-										v-app-tooltip.touchable="
-											$gettext(
-												`This item was rejected. Please submit a new version.`
-											)
-										"
-										:style="
-											getStateBubbleStyles({
-												backgroundColor: kThemeGjOverlayNotice,
-											})
-										"
-									>
+								<template v-else>
+									<div v-if="itemStateDisplay" :style="itemStateDisplay.style">
 										<AppJolticon
-											icon="exclamation"
-											:style="getStateBubbleIconStyles({ color: `white` })"
+											:icon="itemStateDisplay.icon"
+											:style="{
+												margin: 0,
+												color: `inherit`,
+												fontSize: `inherit`,
+											}"
 										/>
-									</div>
-									<div
-										v-else-if="itemStates.inReview"
-										v-app-tooltip.touchable="
-											$gettext(
-												`This item is currently in review. You can still submit a new version for review, which will replace this.`
-											)
-										"
-										:style="getStateBubbleStyles()"
-									>
-										<AppJolticon
-											icon="clock"
-											:style="getStateBubbleIconStyles()"
-										/>
-									</div>
-									<div
-										v-else-if="itemStates.published"
-										v-app-tooltip.touchable="$gettext(`Available in the shop`)"
-										:style="getStateBubbleStyles()"
-									>
-										<AppJolticon
-											icon="marketplace"
-											:style="getStateBubbleIconStyles()"
-										/>
+
+										{{ itemStateDisplay.text }}
 									</div>
 
-									<!-- Cancel pending changes -->
-									<AppButton
-										:style="{ marginLeft: `auto` }"
-										solid
-										@click="cancelChangeRequest()"
-									>
-										{{
-											baseModel?.was_approved
-												? $gettext(`Cancel`)
-												: $gettext(`Remove`)
-										}}
-									</AppButton>
+									<template v-if="afterSlotInnerHeaderType === 'cancel-button'">
+										<!-- Cancel pending changes -->
+										<AppButton
+											:style="{ marginLeft: `auto` }"
+											solid
+											@click="cancelChangeRequest()"
+										>
+											{{
+												baseModel?.was_approved
+													? $gettext(`Cancel`)
+													: $gettext(`Remove`)
+											}}
+										</AppButton>
+									</template>
 								</template>
 							</div>
 
