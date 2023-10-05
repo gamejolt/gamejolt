@@ -46,13 +46,9 @@ const { post, location } = toRefs(props);
 const showLikeAnim = ref(false);
 const showDislikeAnim = ref(false);
 
-const likeCount = computed(() => {
-	return formatFuzzynumber(post.value.like_count);
-});
+const likeCount = computed(() => formatFuzzynumber(post.value.like_count));
 
-const liked = computed(() => {
-	return !!post.value.user_like;
-});
+const liked = computed(() => !!post.value.user_like);
 
 const tooltip = computed(() => {
 	liked.value ? $gettext('Liked!') : $gettext('Like This Post');
@@ -114,6 +110,7 @@ function showLikers() {
 <template>
 	<span class="fireside-post-like-widget">
 		<span class="-like">
+			<!--TODO(component-setup-refactor): warning on v-app-tooltip-->
 			<AppButton
 				v-app-tooltip="tooltip"
 				v-app-track-event="`fireside-post-like-widget:click`"
