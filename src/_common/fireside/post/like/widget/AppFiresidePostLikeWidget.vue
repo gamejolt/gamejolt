@@ -1,14 +1,16 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, ref, toRefs } from 'vue';
 import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';
+import { vAppTrackEvent } from '../../../../analytics/track-event.directive';
 import { vAppAuthRequired } from '../../../../auth/auth-required-directive';
+import AppButton from '../../../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../../../filters/fuzzynumber';
 import { showErrorGrowl } from '../../../../growls/growls.service';
+import AppJolticon from '../../../../jolticon/AppJolticon.vue';
 import { showLikersModal } from '../../../../likers/modal.service';
 import { Screen } from '../../../../screen/screen-service';
-import { useCommonStore } from '../../../../store/common-store';
 import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
+import { $gettext } from '../../../../translate/translate.service';
 import { FiresidePostModel } from '../../post-model';
 import {
 	$removeFiresidePostLike,
@@ -16,108 +18,96 @@ import {
 	FiresidePostLikeModel,
 } from '../like-model';
 
-@Options({
-	directives: {
-		AppAuthRequired: vAppAuthRequired,
-		AppTooltip: vAppTooltip,
+const props = defineProps({
+	post: {
+		type: Object as PropType<FiresidePostModel>,
+		required: true,
 	},
-})
-export default class AppFiresidePostLikeWidget extends Vue {
-	@Prop({ type: Object, required: true })
-	post!: FiresidePostModel;
+	location: {
+		type: String as PropType<PostControlsLocation>,
+		required: true,
+	},
+	overlay: {
+		type: Boolean,
+	},
+	trans: {
+		type: Boolean,
+	},
+	block: {
+		type: Boolean,
+	},
+});
 
-	@Prop({ type: String, required: true })
-	location!: PostControlsLocation;
+const emit = defineEmits({
+	change: (_value: boolean) => true,
+});
 
-	@Prop({ type: Boolean, default: false, required: false })
-	overlay!: boolean;
+const { post, location } = toRefs(props);
+const showLikeAnim = ref(false);
+const showDislikeAnim = ref(false);
 
-	@Prop({ type: Boolean, default: false, required: false })
-	trans!: boolean;
+const likeCount = computed(() => {
+	return formatFuzzynumber(post.value.like_count);
+});
 
-	@Prop({ type: Boolean, default: false, required: false })
-	block!: boolean;
+const liked = computed(() => {
+	return !!post.value.user_like;
+});
 
-	commonStore = setup(() => useCommonStore());
+const tooltip = computed(() => {
+	liked.value ? $gettext('Liked!') : $gettext('Like This Post');
+});
 
-	get app() {
-		return this.commonStore;
-	}
+async function toggleLike() {
+	const currentLike = post.value.user_like;
 
-	showLikeAnim = false;
-	showDislikeAnim = false;
-	readonly Screen = Screen;
+	if (!currentLike) {
+		emit('change', true);
 
-	@Emit('change')
-	emitChange(_value: boolean) {}
+		const newLike = new FiresidePostLikeModel({
+			fireside_post_id: post.value.id,
+		});
 
-	get likeCount() {
-		return formatFuzzynumber(this.post.like_count);
-	}
+		post.value.user_like = newLike;
+		++post.value.like_count;
+		showLikeAnim.value = true;
+		showDislikeAnim.value = false;
 
-	get liked() {
-		return !!this.post.user_like;
-	}
+		let failed = false;
+		try {
+			await $saveFiresidePostLike(newLike);
+		} catch (e) {
+			failed = true;
+			post.value.user_like = null;
+			--post.value.like_count;
+			showErrorGrowl(`Can't do that now. Try again later?`);
+		} finally {
+			trackPostLike(true, { failed, location: location.value });
+		}
+	} else {
+		emit('change', false);
 
-	get tooltip() {
-		if (!this.post.user_like) {
-			return this.$gettext('Like This Post');
-		} else {
-			return this.$gettext('Liked!');
+		post.value.user_like = null;
+		--post.value.like_count;
+		showLikeAnim.value = false;
+		showDislikeAnim.value = true;
+
+		let failed = false;
+		try {
+			await $removeFiresidePostLike(currentLike);
+		} catch (e) {
+			failed = true;
+			post.value.user_like = currentLike;
+			++post.value.like_count;
+			showErrorGrowl(`Can't do that now. Try again later?`);
+		} finally {
+			trackPostLike(false, { failed, location: location.value });
 		}
 	}
+}
 
-	async toggleLike() {
-		const currentLike = this.post.user_like;
-
-		if (!currentLike) {
-			this.emitChange(true);
-
-			const newLike = new FiresidePostLikeModel({
-				fireside_post_id: this.post.id,
-			});
-
-			this.post.user_like = newLike;
-			++this.post.like_count;
-			this.showLikeAnim = true;
-			this.showDislikeAnim = false;
-
-			let failed = false;
-			try {
-				await $saveFiresidePostLike(newLike);
-			} catch (e) {
-				failed = true;
-				this.post.user_like = null;
-				--this.post.like_count;
-				showErrorGrowl(`Can't do that now. Try again later?`);
-			} finally {
-				trackPostLike(true, { failed, location: this.location });
-			}
-		} else {
-			this.emitChange(false);
-
-			this.post.user_like = null;
-			--this.post.like_count;
-			this.showLikeAnim = false;
-			this.showDislikeAnim = true;
-
-			let failed = false;
-			try {
-				await $removeFiresidePostLike(currentLike);
-			} catch (e) {
-				failed = true;
-				this.post.user_like = currentLike;
-				++this.post.like_count;
-				showErrorGrowl(`Can't do that now. Try again later?`);
-			} finally {
-				trackPostLike(false, { failed, location: this.location });
-			}
-		}
-	}
-
-	showLikers() {
-		showLikersModal({ count: this.post.like_count, resource: this.post });
-	}
+function showLikers() {
+	showLikersModal({ count: post.value.like_count, resource: post.value });
 }
 </script>
 
