@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, Ref, computed, ref, toRefs, watch } from 'vue';
+import { Ref, computed, ref, toRefs, watch } from 'vue';
 import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
@@ -13,10 +13,15 @@ import AppStickerStackItem from '../../../../../../_common/sticker/stack/AppStic
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { kThemeBg, kThemeBgOffset, kThemeFg } from '../../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '../../../../../../_styles/mixins';
+import {
+	styleBorderRadiusLg,
+	styleFlexCenter,
+	styleTyped,
+	styleWhen,
+} from '../../../../../../_styles/mixins';
 import { kStrongEaseOut } from '../../../../../../_styles/variables';
 import { useShopManagerStore } from '../../shop.store';
-import AppDashShopProductHeader from '../_header/AppDashShopProductHeader.vue';
+import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
 import FormShopProductBase, {
 	ShopProductPaymentType,
 	createShopProductBaseForm,
@@ -68,7 +73,7 @@ const data = createShopProductBaseForm({
 	},
 });
 
-const { form, initialFormModel, paymentType, isEditing, baseModel } = data;
+const { form, initialFormModel, paymentType, isEditing } = data;
 
 const headerMessage = computed(() => {
 	switch (paymentType.value) {
@@ -149,26 +154,6 @@ async function removeSticker(sticker: StickerModel) {
 		stickers.value.filter(i => i !== sticker)
 	);
 }
-
-const stickerGridStyles: CSSProperties = {
-	display: `grid`,
-	gridTemplateColumns: `repeat(auto-fill, minmax(120px, 1fr))`,
-	gap: `12px`,
-};
-
-const stickerItemStyles: CSSProperties = {
-	...styleBorderRadiusLg,
-	backgroundColor: kThemeBgOffset,
-	padding: `12px`,
-	position: `relative`,
-};
-
-const canModifyStickers = computed(() => {
-	if (!baseModel) {
-		return true;
-	}
-	return !baseModel.is_premium || !baseModel.was_approved;
-});
 </script>
 
 <template>
@@ -179,35 +164,10 @@ const canModifyStickers = computed(() => {
 	/>
 
 	<FormShopProductBase :data="data">
-		<template #default="{ formControlBindings }">
+		<template #fields>
 			<h2>{{ $gettext(`Stickers`) }}</h2>
 
-			<div v-if="baseModel?.is_premium" :style="{ marginBottom: `12px`, fontWeight: `bold` }">
-				<template v-if="!canModifyStickers">
-					{{
-						$gettext(
-							`This sticker pack has been approved and the contents can't be changed.`
-						)
-					}}
-				</template>
-				<template v-else>
-					{{
-						$gettext(
-							`Careful! You won't be able to change the stickers in this pack once it's been approved.`
-						)
-					}}
-				</template>
-			</div>
-
-			<AppButton
-				solid
-				:disabled="
-					stickers.length >= maxStickers ||
-					!canModifyStickers ||
-					formControlBindings.disabled
-				"
-				@click="addStickers()"
-			>
+			<AppButton solid :disabled="stickers.length >= maxStickers" @click="addStickers()">
 				{{ $gettext(`Add stickers`) }}
 			</AppButton>
 
@@ -224,46 +184,57 @@ const canModifyStickers = computed(() => {
 				<AppSpacer vertical :scale="4" />
 			</template>
 
-			<div :style="stickerGridStyles">
+			<div
+				:style="{
+					display: `grid`,
+					gridTemplateColumns: `repeat(auto-fill, minmax(120px, 1fr))`,
+					gap: `12px`,
+				}"
+			>
 				<AppOnHover
 					v-for="sticker of stickers"
 					:key="sticker.id"
 					v-slot="{ hoverBinding, hovered }"
 				>
-					<div v-bind="hoverBinding" :style="stickerItemStyles">
+					<div
+						v-bind="hoverBinding"
+						:style="
+							styleTyped({
+								...styleBorderRadiusLg,
+								backgroundColor: kThemeBgOffset,
+								padding: `12px`,
+								position: `relative`,
+							})
+						"
+					>
 						<div
-							v-if="canModifyStickers && !formControlBindings.disabled"
-							:style="[
-								{
-									position: `absolute`,
-									padding: `20px`,
-									top: `-${20 + 8}px`,
-									right: `-${20 + 8}px`,
-									opacity: 0,
-									transform: `scale(0)`,
-									transition: `all 300ms ${kStrongEaseOut}`,
-									pointerEvents: `none`,
-									cursor: `pointer`,
-								},
-								styleWhen(hovered, {
+							:style="{
+								position: `absolute`,
+								padding: `20px`,
+								top: `-${20 + 8}px`,
+								right: `-${20 + 8}px`,
+								opacity: 0,
+								transform: `scale(0)`,
+								transition: `all 300ms ${kStrongEaseOut}`,
+								pointerEvents: `none`,
+								cursor: `pointer`,
+								...styleWhen(hovered, {
 									opacity: 1,
 									transform: `scale(1)`,
 									pointerEvents: `initial`,
 								}),
-							]"
+							}"
 							@click="removeSticker(sticker)"
 						>
 							<div
-								:style="[
-									styleFlexCenter(),
-									{
-										width: `30px`,
-										height: `30px`,
-										borderRadius: `50%`,
-										backgroundColor: kThemeFg,
-										color: kThemeBg,
-									},
-								]"
+								:style="{
+									...styleFlexCenter(),
+									width: `30px`,
+									height: `30px`,
+									borderRadius: `50%`,
+									backgroundColor: kThemeFg,
+									color: kThemeBg,
+								}"
 							>
 								<AppJolticon icon="remove" />
 							</div>

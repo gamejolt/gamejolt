@@ -7,7 +7,6 @@ import { routeDashCreator } from './creator/creator.route';
 import { routeDashGames } from './games/games.route';
 import { routeDashLinking } from './linking/linking.route';
 import { routeDashShop } from './shop/shop.route';
-import { routeDashStickers } from './stickers/stickers.route';
 import { routeDashSupporters } from './supporters/supporters.route';
 
 export const routeDash: RouteRecordRaw = {
@@ -21,7 +20,6 @@ export const routeDash: RouteRecordRaw = {
 		routeDashCommunities,
 		routeDashAnalytics,
 		routeDashLinking,
-		routeDashStickers,
 		routeDashSupporters,
 		routeDashShop,
 	],

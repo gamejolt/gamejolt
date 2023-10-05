@@ -11,40 +11,26 @@ import {
 } from '../../../../../../_common/component-helpers';
 import { CreatorChangeRequestModel } from '../../../../../../_common/creator/change-request/creator-change-request.model';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
-import AppJolticon, { Jolticon } from '../../../../../../_common/jolticon/AppJolticon.vue';
+import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { storeModel } from '../../../../../../_common/model/model-store.service';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
-import {
-	kThemeBgOffset,
-	kThemeFg,
-	kThemeFg10,
-	kThemeGjOverlayNotice,
-	kThemePrimary,
-	kThemePrimaryFg,
-} from '../../../../../../_common/theme/variables';
+import { kThemePrimary, kThemePrimaryFg } from '../../../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import {
-	styleAbsoluteFill,
-	styleBorderRadiusLg,
-	styleElevate,
-	styleFlexCenter,
-	styleTextOverflow,
-	styleWhen,
-} from '../../../../../../_styles/mixins';
-import { kFontSizeBase } from '../../../../../../_styles/variables';
+import { styleAbsoluteFill, styleWhen } from '../../../../../../_styles/mixins';
 import { arrayRemove } from '../../../../../../utils/array';
 import { isInstance } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
-import { useShopManagerStore } from '../../shop.store';
+import { ShopItemStates, useShopManagerStore } from '../../shop.store';
 import { ShopProductBaseForm } from '../_forms/FormShopProductBase.vue';
-import { ShopItemStates } from '../_item/AppDashShopItem.vue';
+import AppShopProductDiffCard from './AppShopProductDiffCard.vue';
 import AppShopProductDiffImg from './AppShopProductDiffImg.vue';
 import AppShopProductDiffMeta from './AppShopProductDiffMeta.vue';
+import AppShopProductDiffState from './AppShopProductDiffState.vue';
 
 const SlotProps = ['before', 'after'] as const;
 </script>
@@ -114,62 +100,18 @@ const availableTabs = computed(() => {
 	return tabs;
 });
 
-const itemStates = computed<ShopItemStates>(() => {
+const currentStates = computed<ShopItemStates>(() => {
+	if (!baseModel) {
+		return {};
+	}
+	return getShopItemStates(baseModel);
+});
+
+const changeStates = computed<ShopItemStates>(() => {
 	if (!latestChangeRequest.value) {
 		return {};
 	}
 	return getShopItemStates(latestChangeRequest.value);
-});
-
-const itemStateDisplay = computed(() => {
-	const { inReview, rejected } = itemStates.value;
-
-	let text: string;
-	let icon: Jolticon;
-	const style: CSSProperties = {
-		...styleBorderRadiusLg,
-		...styleFlexCenter({
-			display: `inline-flex`,
-			gap: `6px`,
-		}),
-		borderRadius: `12px`,
-		padding: `2px 8px`,
-		backgroundColor: kThemeFg10,
-		color: kThemeFg,
-		fontSize: kFontSizeBase.px,
-		fontWeight: `bold`,
-		marginRight: `auto`,
-	};
-
-	if (inReview) {
-		icon = 'clock';
-		text = $gettext(`In review`);
-	} else if (rejected) {
-		icon = 'exclamation-circle';
-		text = $gettext(`Changes rejected`);
-		style.backgroundColor = kThemeGjOverlayNotice;
-		style.color = `white`;
-	} else {
-		return null;
-	}
-
-	return {
-		text,
-		icon,
-		style,
-	};
-});
-
-function isChargePack(model: typeof baseModel): model is StickerPackModel {
-	return isInstance(model, StickerPackModel) && !model.is_premium;
-}
-
-const isPublished = computed(() => {
-	// Non-premium sticker packs are published if they're enabled.
-	if (isChargePack(baseModel)) {
-		return baseModel.is_active === true;
-	}
-	return baseModel?.has_active_sale === true;
 });
 
 function getSlotText(slot: (typeof SlotProps)[number]) {
@@ -194,19 +136,21 @@ async function setProductPublishState(publish: boolean) {
 		return;
 	}
 
-	const _isChargePack = isChargePack(baseModel);
+	const _isChargePack = currentStates.value.isChargePack;
 	let confirmText: string;
 	if (publish) {
 		if (_isChargePack) {
-			confirmText = $gettext(`Are you sure you want to enable this charge sticker pack?`);
+			confirmText = $gettext(`Are you sure you want to publish this charge sticker pack?`);
 		} else {
 			confirmText = $gettext(`Are you sure you want to publish this product to the shop?`);
 		}
 	} else {
 		if (_isChargePack) {
-			confirmText = $gettext(`Are you sure you want to disable this charge sticker pack?`);
+			confirmText = $gettext(`Are you sure you want to publish this charge sticker pack?`);
 		} else {
-			confirmText = $gettext(`Are you sure you want to remove this product from the shop?`);
+			confirmText = $gettext(
+				`Are you sure you want to unpublish this product from the shop?`
+			);
 		}
 	}
 
@@ -217,7 +161,7 @@ async function setProductPublishState(publish: boolean) {
 
 	let url: string;
 	let postData: any = {};
-	if (isChargePack(baseModel)) {
+	if (_isChargePack) {
 		url = `/web/dash/creators/shop/packs/set-enabled`;
 		postData = {
 			pack_id: baseModel.id,
@@ -325,10 +269,7 @@ async function cancelChangeRequest() {
 }
 
 const afterSlotInnerHeaderType = computed(() => {
-	// TODO(creator-shops) Figure out if we should improve this by checking
-	// diffs instead of [form.changed] once it's decided how to refactor the
-	// form flow.
-	if (!form.changed && latestChangeRequest.value) {
+	if (!diffData.value.hasChange && latestChangeRequest.value) {
 		return 'cancel-button';
 	} else if (diffData.value.hasChange || !latestChangeRequest.value) {
 		return 'viewing-preview-text';
@@ -357,19 +298,6 @@ const tabViewStyles: CSSProperties = {
 	position: `relative`,
 };
 
-const headerStyles: CSSProperties = {
-	...styleTextOverflow,
-	marginTop: 0,
-	marginBottom: `4px`,
-	minWidth: 0,
-};
-
-const sectionStyles: CSSProperties = {
-	height: `100%`,
-	display: `flex`,
-	flexDirection: `column`,
-};
-
 function getDiffContainerStyles(slot: 'before' | 'arrow' | 'after'): CSSProperties {
 	if (!useTabView.value) {
 		return {
@@ -396,45 +324,6 @@ function getDiffContainerStyles(slot: 'before' | 'arrow' | 'after'): CSSProperti
 		}),
 	};
 }
-
-const diffCardDecoratorStyles = computed<CSSProperties>(() => {
-	return {
-		...styleBorderRadiusLg,
-		...styleElevate(1),
-		backgroundColor: kThemeBgOffset,
-		padding: `24px`,
-		...styleWhen(Screen.isXs, {
-			padding: `12px`,
-		}),
-	};
-});
-
-const innerDiffCardHeaderStyles = computed<CSSProperties>(() => {
-	return {
-		...styleFlexCenter(),
-		gap: `12px`,
-		height: `40px`,
-		marginBottom: `24px`,
-		...styleWhen(useTabView.value, {
-			gap: `8px`,
-			marginBottom: `12px`,
-		}),
-	};
-});
-
-const diffCardStyles = computed<CSSProperties>(() => {
-	return {
-		display: `flex`,
-		flexDirection: `column`,
-	};
-});
-
-const jolticonStyles: CSSProperties = {
-	margin: 0,
-	fontSize: `24px`,
-	justifySelf: `center`,
-	alignSelf: `center`,
-};
 </script>
 
 <template>
@@ -461,89 +350,76 @@ const jolticonStyles: CSSProperties = {
 			<!-- Before -->
 			<div :style="getDiffContainerStyles('before')">
 				<Transition name="fade">
-					<div v-if="hasSlot('before') || useTabView" :style="sectionStyles">
-						<!-- Header -->
-						<h6 v-if="!useTabView" :style="headerStyles">
+					<AppShopProductDiffCard v-if="hasSlot('before') || useTabView">
+						<template v-if="!useTabView" #header>
 							{{ $gettext(`Current product`) }}
-						</h6>
+						</template>
 
-						<!-- Diff card -->
-						<div :style="diffCardDecoratorStyles">
-							<!-- Inner header/controls -->
-							<!-- This needs to always show to maintain the same height between items. -->
-							<div :style="innerDiffCardHeaderStyles">
-								<template
-									v-if="
-										baseModel &&
-										baseModel.was_approved &&
-										!isInstance(baseModel, StickerModel)
-									"
-								>
-									<div :style="{ position: `relative`, marginLeft: `auto` }">
-										<!-- TODO(creator-shops) Figure out what to
-										do about this disabled state once it's
-										decided how the form flow should be
-										refactored. It currently won't allow
-										publishing/unpublishing if the initialized
-										form doesn't match the approved baseModel
-										(editing a product with a change request).
-										-->
-										<AppButton
-											:disabled="diffData.hasChange"
-											solid
-											:primary="!isPublished"
-											@click="setProductPublishState(!isPublished)"
-										>
-											<template v-if="isPublished">
-												{{
-													isChargePack(baseModel)
-														? $gettext(`Disable charge pack`)
-														: $gettext(`Remove from shop`)
-												}}
-											</template>
-											<template v-else>
-												{{
-													isChargePack(baseModel)
-														? $gettext(`Enable charge pack`)
-														: $gettext(`Publish to shop`)
-												}}
-											</template>
-										</AppButton>
+						<template v-if="baseModel && baseModel.was_approved" #status>
+							<AppShopProductDiffState
+								:typename="typename"
+								:item-states="currentStates"
+							/>
+						</template>
 
-										<div
-											v-if="diffData.hasChange"
-											v-app-tooltip.touchable="
-												$gettext(
-													`You can't do this if you have unsaved changes.`
-												)
-											"
-											:style="styleAbsoluteFill()"
-										/>
-									</div>
+						<template v-if="!isInstance(baseModel, StickerModel)" #controls>
+							<AppButton
+								:disabled="diffData.hasChange"
+								solid
+								:primary="!currentStates.published"
+								@click="setProductPublishState(!currentStates.published)"
+							>
+								<template v-if="currentStates.published">
+									{{ $gettext(`Unpublish`) }}
+									<!-- TODO(creator-shops) -->
+									<!-- {{
+										currentStates.isChargePack
+											? $gettext(`Disable charge pack`)
+											: $gettext(`Unpublish`)
+									}} -->
 								</template>
-							</div>
+								<template v-else>
+									{{ $gettext(`Publish`) }}
+									<!-- TODO(creator-shops) -->
+									<!-- {{
+										currentStates.isChargePack
+											? $gettext(`Enable charge pack`)
+											: $gettext(`Publish`)
+									}} -->
+								</template>
+							</AppButton>
 
-							<!-- Diff view -->
-							<div :style="diffCardStyles">
-								<slot
-									name="before"
-									v-bind="{ imgUrl: existingImgUrl, model: initialFormModel }"
-								>
-									<AppShopProductDiffImg
-										:typename="typename"
-										:img-url="existingImgUrl"
-										:style="{ marginBottom: `16px` }"
-									/>
-									<AppShopProductDiffMeta
-										:current="{
-											name: initialFormModel.name,
-											...getExtraDiffData(initialFormModel),
-										}"
-									/>
-								</slot>
-							</div>
-						</div>
-					</div>
+							<div
+								v-if="diffData.hasChange"
+								v-app-tooltip.touchable="
+									$gettext(`You must save your changes first.`)
+								"
+								:style="{
+									...styleAbsoluteFill(),
+									cursor: `not-allowed`,
+								}"
+							/>
+						</template>
+
+						<template #default>
+							<slot
+								name="before"
+								v-bind="{ imgUrl: existingImgUrl, model: initialFormModel }"
+							>
+								<AppShopProductDiffImg
+									:typename="typename"
+									:img-url="existingImgUrl"
+									:style="{ marginBottom: `16px` }"
+								/>
+								<AppShopProductDiffMeta
+									:current="{
+										name: initialFormModel.name,
+										...getExtraDiffData(initialFormModel),
+									}"
+								/>
+							</slot>
+						</template>
+					</AppShopProductDiffCard>
 				</Transition>
 			</div>
 
@@ -553,7 +429,12 @@ const jolticonStyles: CSSProperties = {
 					<AppJolticon
 						v-if="hasSlot('before') && hasSlot('after')"
 						icon="arrow-right"
-						:style="jolticonStyles"
+						:style="{
+							margin: 0,
+							fontSize: `24px`,
+							justifySelf: `center`,
+							alignSelf: `center`,
+						}"
 					/>
 					<div v-else />
 				</Transition>
@@ -562,83 +443,67 @@ const jolticonStyles: CSSProperties = {
 			<div :style="getDiffContainerStyles('after')">
 				<!-- After -->
 				<Transition name="fade">
-					<div v-if="hasSlot('after') || useTabView" :style="sectionStyles">
-						<!-- Header -->
-						<h6 v-if="!useTabView" :style="headerStyles">
+					<AppShopProductDiffCard v-if="hasSlot('after') || useTabView">
+						<template v-if="!useTabView" #header>
 							{{
 								hasSlot('before')
 									? $gettext(`New changes`)
 									: $gettext(`New product`)
 							}}
-						</h6>
+						</template>
 
-						<!-- Diff card -->
-						<div :style="diffCardDecoratorStyles">
-							<!-- Inner header/controls -->
-							<div :style="innerDiffCardHeaderStyles">
-								<div
-									v-if="afterSlotInnerHeaderType === 'viewing-preview-text'"
-									class="text-center"
-									:style="{ fontWeight: `bold` }"
-								>
-									{{ $gettext(`Preview of changes`) }}
+						<template #status>
+							<template v-if="afterSlotInnerHeaderType === 'viewing-preview-text'">
+								<div class="text-center" :style="{ fontWeight: `bold` }">
+									{{ $gettext(`Preview`) }}
 								</div>
-								<template v-else>
-									<div v-if="itemStateDisplay" :style="itemStateDisplay.style">
-										<AppJolticon
-											:icon="itemStateDisplay.icon"
-											:style="{
-												margin: 0,
-												color: `inherit`,
-												fontSize: `inherit`,
-											}"
-										/>
+							</template>
+							<template v-else>
+								<AppShopProductDiffState
+									:typename="typename"
+									:item-states="changeStates"
+								/>
+							</template>
+						</template>
 
-										{{ itemStateDisplay.text }}
-									</div>
+						<template v-if="afterSlotInnerHeaderType === 'cancel-button'" #controls>
+							<!-- Cancel pending changes -->
+							<AppButton
+								:style="{ marginLeft: `auto` }"
+								solid
+								@click="cancelChangeRequest()"
+							>
+								{{
+									baseModel?.was_approved
+										? $gettext(`Cancel changes`)
+										: $gettext(`Delete product`)
+								}}
+							</AppButton>
+						</template>
 
-									<template v-if="afterSlotInnerHeaderType === 'cancel-button'">
-										<!-- Cancel pending changes -->
-										<AppButton
-											:style="{ marginLeft: `auto` }"
-											solid
-											@click="cancelChangeRequest()"
-										>
-											{{
-												baseModel?.was_approved
-													? $gettext(`Cancel changes`)
-													: $gettext(`Delete product`)
-											}}
-										</AppButton>
-									</template>
-								</template>
-							</div>
+						<template #default>
+							<slot
+								name="after"
+								v-bind="{ imgUrl: tempImgUrl, model: form.formModel }"
+							>
+								<AppShopProductDiffImg
+									:typename="typename"
+									:img-url="tempImgUrl"
+									:style="{ marginBottom: `16px` }"
+								/>
 
-							<!-- Diff view -->
-							<div :style="diffCardStyles">
-								<slot
-									name="after"
-									v-bind="{ imgUrl: tempImgUrl, model: form.formModel }"
-								>
-									<AppShopProductDiffImg
-										:typename="typename"
-										:img-url="tempImgUrl"
-										:style="{ marginBottom: `16px` }"
-									/>
-
-									<AppShopProductDiffMeta
-										:current="{
-											name: form.formModel.name || '',
-											...getExtraDiffData(form.formModel),
-										}"
-										:other="initialFormModel"
-										:diff-color="kThemePrimaryFg"
-										:diff-background="kThemePrimary"
-									/>
-								</slot>
-							</div>
-						</div>
-					</div>
+								<AppShopProductDiffMeta
+									:current="{
+										name: form.formModel.name || '',
+										...getExtraDiffData(form.formModel),
+									}"
+									:other="initialFormModel"
+									:diff-color="kThemePrimaryFg"
+									:diff-background="kThemePrimary"
+								/>
+							</slot>
+						</template>
+					</AppShopProductDiffCard>
 				</Transition>
 			</div>
 		</div>

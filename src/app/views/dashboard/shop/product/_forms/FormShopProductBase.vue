@@ -11,6 +11,7 @@ import {
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
+import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../../../_common/background/background.model';
@@ -25,7 +26,6 @@ import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vu
 import AppFormControlError from '../../../../../../_common/form-vue/AppFormControlError.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormStickySubmit from '../../../../../../_common/form-vue/AppFormStickySubmit.vue';
 import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateAvailability,
@@ -507,9 +507,9 @@ const {
 	diffData,
 } = props.data;
 
-const { avatarFrames, backgrounds, stickerPacks, stickers } = useShopManagerStore()!;
+const { getGroupForType } = useShopManagerStore()!;
 
-const premiumSelectorStyle: CSSProperties = {
+const paymentTypeSelectorStyle: CSSProperties = {
 	...styleBorderRadiusLg,
 	...styleChangeBg('bg-offset'),
 	padding: `24px`,
@@ -525,36 +525,7 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 	},
 };
 
-const formControlBindings = computed<Partial<ComponentProps<typeof AppFormControl>>>(() => {
-	// We don't want to show the label for the file field.
-	let disabled = false;
-	let group: ShopManagerGroup | null = null;
-	switch (typename) {
-		case 'Avatar_Frame':
-			group = avatarFrames.value;
-			break;
-		case 'Background':
-			group = backgrounds.value;
-			break;
-		case 'Sticker_Pack':
-			group = stickerPacks.value;
-			break;
-		case 'Sticker':
-			group = stickers.value;
-			break;
-	}
-
-	// TODO(creator-shops) Make sure everything is disabled properly.
-	if (paymentType.value === ShopProductPaymentType.Free) {
-		disabled = group.canEditFree !== true;
-	} else if (paymentType.value === ShopProductPaymentType.Premium) {
-		disabled = group.canEditPremium !== true || baseModel?.was_approved === true;
-	}
-
-	return {
-		disabled,
-	};
-});
+const managerGroup = computed(() => getGroupForType(typename));
 </script>
 
 <template>
@@ -568,7 +539,7 @@ const formControlBindings = computed<Partial<ComponentProps<typeof AppFormContro
 				}"
 			>
 				<div
-					:style="premiumSelectorStyle"
+					:style="paymentTypeSelectorStyle"
 					@click="choosePaymentType(ShopProductPaymentType.Free)"
 				>
 					<div :style="{ fontWeight: `bold` }">
@@ -584,7 +555,7 @@ const formControlBindings = computed<Partial<ComponentProps<typeof AppFormContro
 				</div>
 
 				<div
-					:style="premiumSelectorStyle"
+					:style="paymentTypeSelectorStyle"
 					@click="choosePaymentType(ShopProductPaymentType.Premium)"
 				>
 					<div :style="{ fontWeight: `bold` }">
@@ -613,122 +584,171 @@ const formControlBindings = computed<Partial<ComponentProps<typeof AppFormContro
 
 			<AppSpacer vertical :scale="4" />
 
-			<AppFormGroup
-				v-bind="formGroupBindings"
-				name="file"
-				:label="
-					paymentType === ShopProductPaymentType.Premium
-						? $gettext(`Upload animated image`)
-						: $gettext(`Upload image`)
-				"
-				:optional="isEditing"
+			<template
+				v-if="paymentType === ShopProductPaymentType.Free && !managerGroup.canEditFree"
 			>
-				<div class="help-block">
-					<div v-if="paymentType === ShopProductPaymentType.Premium">
-						{{ $gettext(`Your image must be an animated PNG (APNG).`) }}
-					</div>
-					<div v-else>{{ $gettext(`Your image must be a PNG.`) }}</div>
+				<AppAlertBox fill-color="offset" icon="notice">
+					{{ $gettext(`You are currently unable to edit free products.`) }}
+				</AppAlertBox>
+			</template>
+			<template
+				v-else-if="
+					paymentType === ShopProductPaymentType.Premium && !managerGroup.canEditPremium
+				"
+			>
+				<AppAlertBox fill-color="offset" icon="notice">
+					{{ $gettext(`You are currently unable to edit premium products.`) }}
+				</AppAlertBox>
+			</template>
+			<template
+				v-else-if="
+					paymentType === ShopProductPaymentType.Premium &&
+					baseModel?.was_approved === true
+				"
+			>
+				<!-- TODO(creator-shops) -->
+				<AppAlertBox fill-color="offset" icon="info-circle">
+					{{
+						$gettext(
+							`This product has been approved. You're no longer able to modify it.`
+						)
+					}}
+				</AppAlertBox>
+			</template>
+			<template v-else>
+				<AppFormGroup
+					v-bind="formGroupBindings"
+					name="file"
+					:label="
+						paymentType === ShopProductPaymentType.Premium
+							? $gettext(`Upload animated image`)
+							: $gettext(`Upload image`)
+					"
+					:optional="isEditing"
+				>
+					<div class="help-block">
+						<div v-if="paymentType === ShopProductPaymentType.Premium">
+							{{ $gettext(`Your image must be an animated PNG (APNG).`) }}
+						</div>
+						<div v-else>{{ $gettext(`Your image must be a PNG.`) }}</div>
 
-					<div
-						v-translate="{
-							min: `${minWidth}×${minHeight}`,
-							max: `${maxWidth}×${maxHeight}`,
-						}"
-					>
-						Images must be between
-						<code>%{min}</code>
-						and
-						<code>%{max}</code>
-						(ratio of 1 ÷
-						{{
-							aspectRatio === 1
-								? 1
-								: Math.trunc((1 / (maxWidth / maxHeight)) * 100) / 100
-						}}).
+						<div
+							v-translate="{
+								min: `${minWidth}×${minHeight}`,
+								max: `${maxWidth}×${maxHeight}`,
+							}"
+						>
+							Images must be between
+							<code>%{min}</code>
+							and
+							<code>%{max}</code>
+							(ratio of 1 ÷
+							{{
+								aspectRatio === 1
+									? 1
+									: Math.trunc((1 / (maxWidth / maxHeight)) * 100) / 100
+							}}).
+						</div>
 					</div>
+
+					<p class="help-block">
+						<!-- TODO(creator-shops) DODO(creator-shops) help docs. -->
+						<AppLinkHelpDocs
+							category="creators"
+							:page="productTypeFromTypename(typename)"
+							class="link-help"
+						>
+							{{
+								$gettext(
+									`What are the shop product image requirements and guidelines?`
+								)
+							}}
+						</AppLinkHelpDocs>
+					</p>
+
+					<AppFormControlUpload
+						:validators="[
+							validateFilesize(maxFilesize),
+							validateImageMinDimensions({
+								width: minWidth,
+								height: minHeight,
+							}),
+							validateImageMaxDimensions({
+								width: maxWidth,
+								height: maxHeight,
+							}),
+							validateImageAspectRatio({ ratio: aspectRatio }),
+						]"
+						accept=".png"
+						@changed="setFile"
+					/>
+
+					<AppFormControlErrors :label="$gettext(`image`)">
+						<AppFormControlError
+							when="file:missing-required-animated-image"
+							:message="
+								$gettext(
+									`Premium products must be animated. Please upload an animated PNG file.`
+								)
+							"
+						/>
+					</AppFormControlErrors>
+				</AppFormGroup>
+
+				<AppFormGroup
+					v-if="
+						paymentType === ShopProductPaymentType.Premium ||
+						typename !== 'Sticker_Pack'
+					"
+					v-bind="formGroupBindings"
+					name="name"
+				>
+					<AppFormControl
+						:placeholder="$gettext(`Product name...`)"
+						:validators="[
+							validateMinLength(minNameLength),
+							validateMaxLength(maxNameLength),
+							validateAvailability({
+								initVal: baseModel?.name,
+								url: getFieldAvailabilityUrl('name'),
+							}),
+						]"
+					/>
+
+					<AppFormControlErrors />
+				</AppFormGroup>
+
+				<slot name="fields" v-bind="{ formGroupBindings }" />
+
+				<AppAlertBox
+					v-if="paymentType !== ShopProductPaymentType.Free"
+					icon="notice"
+					fill-color="offset"
+				>
+					<strong>
+						{{ $gettext(`Careful!`) }}
+					</strong>
+					{{
+						$gettext(
+							`Since this is a premium product, you will not be able to make changes once it's been reviewed.`
+						)
+					}}
+				</AppAlertBox>
+
+				<AppSpacer vertical :scale="4" />
+
+				<div class="text-right">
+					<AppFormButton v-if="form.valid">
+						{{
+							paymentType === ShopProductPaymentType.Free
+								? $gettext(`Save`)
+								: $gettext(`Submit for review`)
+						}}
+					</AppFormButton>
 				</div>
 
-				<p class="help-block">
-					<!-- TODO(creator-shops) DODO(creator-shops) help docs. -->
-					<AppLinkHelpDocs
-						category="creators"
-						:page="productTypeFromTypename(typename)"
-						class="link-help"
-					>
-						{{
-							$gettext(`What are the shop product image requirements and guidelines?`)
-						}}
-					</AppLinkHelpDocs>
-				</p>
-
-				<AppFormControlUpload
-					v-bind="formControlBindings"
-					:validators="[
-						validateFilesize(maxFilesize),
-						validateImageMinDimensions({
-							width: minWidth,
-							height: minHeight,
-						}),
-						validateImageMaxDimensions({
-							width: maxWidth,
-							height: maxHeight,
-						}),
-						validateImageAspectRatio({ ratio: aspectRatio }),
-					]"
-					accept=".png"
-					@changed="setFile"
-				/>
-
-				<AppFormControlErrors :label="$gettext(`image`)">
-					<AppFormControlError
-						when="file:missing-required-animated-image"
-						:message="
-							$gettext(
-								`Premium products must be animated. Please upload an animated PNG file.`
-							)
-						"
-					/>
-				</AppFormControlErrors>
-			</AppFormGroup>
-
-			<AppFormGroup
-				v-if="paymentType === ShopProductPaymentType.Premium || typename !== 'Sticker_Pack'"
-				v-bind="formGroupBindings"
-				name="name"
-			>
-				<AppFormControl
-					v-bind="formControlBindings"
-					:placeholder="$gettext(`Product name...`)"
-					:validators="[
-						validateMinLength(minNameLength),
-						validateMaxLength(maxNameLength),
-						validateAvailability({
-							initVal: baseModel?.name,
-							url: getFieldAvailabilityUrl('name'),
-						}),
-					]"
-				/>
-
-				<AppFormControlErrors />
-			</AppFormGroup>
-
-			<slot v-bind="{ formGroupBindings, formControlBindings }" />
-
-			<AppFormStickySubmit
-				v-if="form.valid && !formControlBindings.disabled"
-				:style="{
-					marginTop: kLineHeightComputed.px,
-					// Fixes layering issues with some items.
-					position: `relative`,
-					zIndex: 2,
-				}"
-			>
-				<AppFormButton>
-					{{ $gettext(`Save & Submit`) }}
-				</AppFormButton>
-			</AppFormStickySubmit>
-
-			<AppSpacer vertical :scale="10" />
+				<AppSpacer vertical :scale="10" />
+			</template>
 		</template>
 	</AppForm>
 </template>

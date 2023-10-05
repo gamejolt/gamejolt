@@ -24,29 +24,27 @@ defineProps({
 <template>
 	<div
 		:class="`fill-${fillColor}`"
-		:style="[
-			styleBorderRadiusBase,
-			{
-				display: `flex`,
-				flexDirection: `row`,
-				alignItems: `center`,
-				padding: `24px`,
-				gridGap: `16px`,
-			},
-		]"
+		:style="{
+			...styleBorderRadiusBase,
+			display: `flex`,
+			flexDirection: `row`,
+			alignItems: `center`,
+			padding: `24px`,
+			gridGap: `16px`,
+		}"
 	>
 		<div
 			v-if="icon"
-			:style="[
-				styleWhen(color === 'default', {
+			:style="{
+				...styleWhen(color === 'default', {
 					color: kThemeFgMuted,
 				}),
-				styleWhen(color === 'primary', {
+				...styleWhen(color === 'primary', {
 					color: kThemePrimary,
 				}),
-			]"
+			}"
 		>
-			<AppJolticon :icon="icon" :style="{ fontSize: `24px` }" />
+			<AppJolticon :icon="icon" middle :style="{ fontSize: `24px` }" />
 		</div>
 		<div :style="{ fontSize: kFontSizeSmall.px }">
 			<slot />

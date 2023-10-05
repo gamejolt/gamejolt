@@ -1,5 +1,5 @@
 <script lang="ts">
-import { CSSProperties, computed } from 'vue';
+import { computed } from 'vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
@@ -9,16 +9,15 @@ import { StickerPackRatio } from '../../../../../_common/sticker/pack/AppSticker
 import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { touchUser } from '../../../../../_common/user/user.model';
-import { kBorderRadiusLg, kBorderWidthBase } from '../../../../../_styles/variables';
 import { isInstance } from '../../../../../utils/utils';
-import AppDashShopItem from '../product/_item/AppDashShopItem.vue';
-import AppDashShopItemAdd from '../product/_item/AppDashShopItemAdd.vue';
 import {
 	ShopManagerGroup,
 	ShopManagerGroupItem,
 	ShopManagerGroupItemType,
 	useShopManagerStore,
 } from '../shop.store';
+import AppDashShopItem from './_item/AppDashShopItem.vue';
+import AppDashShopItemAdd from './_item/AppDashShopItemAdd.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -118,25 +117,6 @@ const sectionData = computed<
 		},
 	];
 });
-
-const subheaderStyles: CSSProperties = {
-	marginTop: 0,
-	marginBottom: 0,
-};
-
-const helpBlockStyles: CSSProperties = {
-	marginTop: `4px`,
-};
-
-const gridStyles: CSSProperties = {
-	display: `grid`,
-	gridTemplateColumns: `repeat(auto-fill, minmax(120px, 1fr))`,
-	gap: `16px`,
-	marginBottom: `32px`,
-};
-
-const itemBorderWidth = kBorderWidthBase.value;
-const itemBorderRadius = kBorderRadiusLg.value;
 </script>
 
 <template>
@@ -145,27 +125,30 @@ const itemBorderRadius = kBorderRadiusLg.value;
 			{{ routeTitle }}
 		</h1>
 
-		<div class="help-block" :style="helpBlockStyles">
-			<p>
-				{{
-					$gettext(
-						`These are your shop products. You can submit and swap out active items to sell in the Content Shop. Some changes may require an approval process.`
-					)
-				}}
-			</p>
-		</div>
+		<p>
+			{{
+				$gettext(
+					`These are your shop products. You can submit and swap out active items to sell in the Content Shop. Some changes may require an approval process.`
+				)
+			}}
+		</p>
 
 		<AppSpacer vertical :scale="4" />
 
 		<div v-for="{ label, typename, data, ratio } of sectionData" :key="label">
-			<h4 :style="subheaderStyles">
+			<h4
+				:style="{
+					marginTop: 0,
+					marginBottom: 0,
+				}"
+			>
 				{{ label }}
 			</h4>
 
 			<div
 				v-if="data.slotAmount || data.maxSalesAmount"
 				class="help-block"
-				:style="helpBlockStyles"
+				:style="{ marginTop: `4px` }"
 			>
 				<p>
 					<template v-if="data.slotAmount">
@@ -192,22 +175,25 @@ const itemBorderRadius = kBorderRadiusLg.value;
 				</p>
 			</div>
 
-			<div :style="gridStyles">
+			<div
+				:style="{
+					display: `grid`,
+					gridTemplateColumns: `repeat(auto-fill, minmax(120px, 1fr))`,
+					gap: `16px`,
+					marginBottom: `32px`,
+				}"
+			>
 				<AppDashShopItemAdd
 					v-if="getCanAddForProductType(typename)"
 					key="add-item"
 					:typename="typename"
 					:ratio="ratio"
-					:border-radius="itemBorderRadius"
-					:border-width="itemBorderWidth"
 				/>
 
 				<AppDashShopItem
 					v-for="item in data.sortedItems"
 					:key="item.id"
 					:item="item"
-					:border-radius="itemBorderRadius"
-					:border-width="itemBorderWidth"
 					:item-states="getShopItemStates(item)"
 				/>
 			</div>

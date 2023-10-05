@@ -10,7 +10,7 @@ import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import { stringSort } from '../../../../utils/array';
 import { assertNever, isInstance } from '../../../../utils/utils';
-import { ShopItemStates } from './product/_item/AppDashShopItem.vue';
+import { ShopItemStates } from './overview/_item/AppDashShopItem.vue';
 
 export const ShopProductPremiumColor = '#ffbe00';
 
@@ -25,6 +25,18 @@ export interface ShopManagerGroup<T extends ShopManagerGroupItem = ShopManagerGr
 	maxSalesAmount?: number;
 	canEditFree?: boolean;
 	canEditPremium?: boolean;
+}
+
+export interface ShopItemStates {
+	/**
+	 * Either `published` for publishable items, or `is_active` for free sticker
+	 * packs. No visual distinction is made between the two.
+	 */
+	published?: boolean;
+	inReview?: boolean;
+	rejected?: boolean;
+	/** Whether or not this item is their charge pack. */
+	isChargePack: boolean;
 }
 
 const typenames = ['Avatar_Frame', 'Background', 'Sticker_Pack', 'Sticker'] as const;
@@ -66,11 +78,13 @@ export function createShopManagerStore() {
 		const sortedItems = computed(() => {
 			return items.value
 				.map(item => {
+					const itemStates = getShopItemStates(item);
+
 					let sort = 0;
 					if (item.is_premium) {
 						sort -= 100;
 					}
-					if (item.has_active_sale) {
+					if (itemStates.published) {
 						sort -= 10;
 					}
 					if (item.was_approved) {
@@ -147,6 +161,68 @@ export function createShopManagerStore() {
 		return list.map(grabSortValue).sort(stringSort);
 	}
 
+	function getShopItemStates(
+		item: ShopManagerGroupItem | CreatorChangeRequestModel
+	): ShopItemStates {
+		const isChangeRequest = isInstance(item, CreatorChangeRequestModel);
+		let published: boolean | undefined = undefined;
+		let isChargePack = false;
+
+		if (isInstance(item, StickerPackModel) && !item.is_premium) {
+			published = item.is_active;
+			isChargePack = true;
+		} else if (isInstance(item, StickerModel)) {
+			published = publishedStickers.value.has(item.id);
+		} else if (!isChangeRequest) {
+			published = item.has_active_sale;
+		}
+
+		const { status } = changeRequests.value.get(getChangeRequestKey(item)) || {};
+
+		return {
+			published,
+			inReview:
+				status === CreatorChangeRequestStatus.Submitted ||
+				status === CreatorChangeRequestStatus.InReview,
+			rejected: status === CreatorChangeRequestStatus.Rejected,
+
+			isChargePack,
+		};
+	}
+
+	function getGroupForType(type: ShopManagerGroupItemType) {
+		switch (type) {
+			case 'Avatar_Frame':
+				return avatarFrames.value;
+			case 'Background':
+				return backgrounds.value;
+			case 'Sticker_Pack':
+				return stickerPacks.value;
+			case 'Sticker':
+				return stickers.value;
+			default:
+				return assertNever(type);
+		}
+	}
+
+	function isSameValues(val: any, otherVal: any) {
+		if (Array.isArray(val) && Array.isArray(otherVal)) {
+			if (!val.length && !otherVal.length) {
+				return true;
+			}
+			if (val.length !== otherVal.length) {
+				return false;
+			}
+
+			// We need to sort the arrays so that we can compare them.
+			const sortedVal = sortUnknownList(val);
+			const sortedFormVal = sortUnknownList(otherVal);
+			return sortedVal.every((i, index) => i === sortedFormVal[index]);
+		}
+
+		return val === otherVal;
+	}
+
 	const c = shallowReadonly({
 		avatarFrames,
 		backgrounds,
@@ -165,49 +241,13 @@ export function createShopManagerStore() {
 		 * so we need to count them differently than just adding them all up.
 		 */
 		getItemCountForSlots,
-		getShopItemStates(item: ShopManagerGroupItem | CreatorChangeRequestModel): ShopItemStates {
-			const isChangeRequest = isInstance(item, CreatorChangeRequestModel);
-			let published: boolean | undefined = undefined;
-
-			if (isInstance(item, StickerPackModel) && !item.is_premium) {
-				published = item.is_active;
-			} else if (isInstance(item, StickerModel)) {
-				published = publishedStickers.value.has(item.id);
-			} else if (!isChangeRequest) {
-				published = item.has_active_sale;
-			}
-
-			const { status } = changeRequests.value.get(getChangeRequestKey(item)) || {};
-
-			return {
-				published,
-				inReview:
-					status === CreatorChangeRequestStatus.Submitted ||
-					status === CreatorChangeRequestStatus.InReview,
-				rejected: status === CreatorChangeRequestStatus.Rejected,
-			};
-		},
+		getShopItemStates,
+		getGroupForType,
 
 		/**
 		 * Returns a boolean indicating equality between two values.
 		 */
-		isSameValues(val: any, otherVal: any) {
-			if (Array.isArray(val) && Array.isArray(otherVal)) {
-				if (!val.length && !otherVal.length) {
-					return true;
-				}
-				if (val.length !== otherVal.length) {
-					return false;
-				}
-
-				// We need to sort the arrays so that we can compare them.
-				const sortedVal = sortUnknownList(val);
-				const sortedFormVal = sortUnknownList(otherVal);
-				return sortedVal.every((i, index) => i === sortedFormVal[index]);
-			}
-
-			return val === otherVal;
-		},
+		isSameValues,
 	});
 
 	provide(shopManagerStoreKey, c);

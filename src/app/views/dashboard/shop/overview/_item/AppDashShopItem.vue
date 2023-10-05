@@ -1,32 +1,15 @@
 <script lang="ts" setup>
 import { PropType, computed, toRefs } from 'vue';
-import AppDashShopHover from '../../AppDashShopHover.vue';
-import { ShopManagerGroupItem, getShopProductType } from '../../shop.store';
-import { routeDashShopProduct } from '../product.route';
+import { kThemeFgRgb } from '../../../../../../_common/theme/variables';
+import { routeDashShopProduct } from '../../product/product.route';
+import { ShopItemStates, ShopManagerGroupItem, getShopProductType } from '../../shop.store';
+import AppDashShopHover from '../AppDashShopHover.vue';
 import AppDashShopItemImpl from './AppDashShopItemImpl.vue';
-
-export interface ShopItemStates {
-	/**
-	 * Either `published` for publishable items, or `is_active` for free sticker
-	 * packs. No visual distinction is made between the two.
-	 */
-	published?: boolean;
-	inReview?: boolean;
-	rejected?: boolean;
-}
 
 const props = defineProps({
 	item: {
 		type: Object as PropType<ShopManagerGroupItem>,
 		required: true,
-	},
-	borderRadius: {
-		type: Number,
-		default: undefined,
-	},
-	borderWidth: {
-		type: Number,
-		default: undefined,
 	},
 	itemStates: {
 		type: Object as PropType<ShopItemStates>,
@@ -34,7 +17,7 @@ const props = defineProps({
 	},
 });
 
-const { item, borderRadius } = toRefs(props);
+const { item } = toRefs(props);
 
 const type = computed(() => getShopProductType(item.value));
 </script>
@@ -42,9 +25,11 @@ const type = computed(() => getShopProductType(item.value));
 <template>
 	<AppDashShopHover
 		v-if="type"
-		:border-radius="borderRadius"
-		:border-width="borderWidth"
 		:style="{ width: `100%` }"
+		:border-color="
+			itemStates.published ? `rgba(${kThemeFgRgb}, 0.7)` : `rgba(${kThemeFgRgb}, 0.2)`
+		"
+		:border-style="itemStates.published ? `solid` : `dashed`"
 		:to="{
 			name: routeDashShopProduct.name,
 			params: {
@@ -57,7 +42,7 @@ const type = computed(() => getShopProductType(item.value));
 			<AppDashShopItemImpl
 				:item="item"
 				:item-states="itemStates"
-				:border-radius="parentRadius"
+				:border-radius="parentRadius.value"
 				:hovered="hovered"
 			/>
 		</template>

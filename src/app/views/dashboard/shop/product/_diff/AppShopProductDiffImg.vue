@@ -3,7 +3,6 @@ import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { StickerPackRatio } from '../../../../../../_common/sticker/pack/AppStickerPack.vue';
-import { kThemeFg10 } from '../../../../../../_common/theme/variables';
 import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleFlexCenter, styleMaxWidthForOptions } from '../../../../../../_styles/mixins';
 import { kBorderRadiusBase, kBorderRadiusLg } from '../../../../../../_styles/variables';
@@ -44,7 +43,6 @@ const imgData = computed(() => {
 	return {
 		placeholderRatio,
 		styles: {
-			backgroundColor: kThemeFg10,
 			borderRadius,
 			width: `100%`,
 			height: `100%`,
@@ -71,7 +69,6 @@ const gridAreaSizes: Record<
 	Exclude<ShopManagerGroupItemType, 'Background' | 'Sticker_Pack'>,
 	{ a: number; b: number; c: number; d: number }
 > = {
-	// TODO(creator-shops) DODO(creator-shops) Adjust sizes as wanted.
 	Avatar_Frame: {
 		a: 200,
 		b: 100,

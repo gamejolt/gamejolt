@@ -4,7 +4,7 @@ import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { useShopManagerStore } from '../../shop.store';
-import AppDashShopProductHeader from '../_header/AppDashShopProductHeader.vue';
+import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
 import FormShopProductBase, {
 	ShopProductPaymentType,
 	createShopProductBaseForm,

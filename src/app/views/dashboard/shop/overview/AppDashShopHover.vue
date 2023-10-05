@@ -1,21 +1,21 @@
 <script lang="ts" setup>
 import { PropType, computed, toRefs } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
-import { useOnHover } from '../../../../_common/on/useOnHover';
+import { useOnHover } from '../../../../../_common/on/useOnHover';
 import {
 	kThemeBgOffset,
 	kThemeFg,
 	kThemeFgMuted,
 	kThemePrimary,
 	kThemePrimaryTrans,
-} from '../../../../_common/theme/variables';
+} from '../../../../../_common/theme/variables';
 import {
 	kElevateTransition,
 	styleElevate,
 	styleTyped,
 	styleWhen,
-} from '../../../../_styles/mixins';
-import { kBorderRadiusLg, kBorderWidthBase, kStrongEaseOut } from '../../../../_styles/variables';
+} from '../../../../../_styles/mixins';
+import { kBorderRadiusLg, kBorderWidthLg, kStrongEaseOut } from '../../../../../_styles/variables';
 
 const props = defineProps({
 	to: {
@@ -26,17 +26,13 @@ const props = defineProps({
 		type: Function,
 		default: undefined,
 	},
-	borderRadius: {
-		type: Number,
-		default: () => kBorderRadiusLg.value,
-	},
-	borderWidth: {
-		type: Number,
-		default: () => kBorderWidthBase.value,
-	},
 	borderColor: {
 		type: String,
 		default: kThemePrimaryTrans,
+	},
+	borderStyle: {
+		type: String as PropType<'solid' | 'dashed'>,
+		default: `solid`,
 	},
 	padding: {
 		type: Number,
@@ -67,22 +63,16 @@ const props = defineProps({
 	},
 });
 
-const {
-	onClick: onClickProp,
-	to,
-	borderWidth,
-	borderColor,
-	padding,
-	paddingH,
-	paddingV,
-} = toRefs(props);
+const { onClick: onClickProp, to, padding, paddingH, paddingV } = toRefs(props);
 
-const isClickable = computed(() => !!onClickProp?.value || !!to?.value);
+const BorderRadius = kBorderRadiusLg;
+const BorderWidth = kBorderWidthLg;
 
 const { hoverBinding, hovered } = useOnHover();
+const isClickable = computed(() => !!onClickProp?.value || !!to?.value);
 
 function _scalePadding(value: number | null | undefined) {
-	return Math.max(0, (value ?? padding.value) - borderWidth.value);
+	return Math.max(0, (value ?? padding.value) - BorderWidth.value);
 }
 
 const horizontalPadding = computed(() => _scalePadding(paddingH?.value));
@@ -107,10 +97,10 @@ const verticalPadding = computed(() => _scalePadding(paddingV?.value));
 					width: `100%`,
 					height: `100%`,
 					backgroundColor,
-					borderRadius: `${borderRadius}px`,
-					borderWidth: `${borderWidth}px`,
-					borderStyle: `solid`,
+					borderRadius: BorderRadius.px,
+					borderWidth: BorderWidth.px,
 					borderColor,
+					borderStyle,
 					padding: `${verticalPadding}px ${horizontalPadding}px`,
 					color: kThemeFg,
 				},
@@ -137,6 +127,9 @@ const verticalPadding = computed(() => _scalePadding(paddingV?.value));
 			])
 		"
 	>
-		<slot name="default" v-bind="{ hovered, borderRadius, borderWidth }" />
+		<slot
+			name="default"
+			v-bind="{ hovered, borderRadius: BorderRadius, borderWidth: BorderWidth }"
+		/>
 	</component>
 </template>

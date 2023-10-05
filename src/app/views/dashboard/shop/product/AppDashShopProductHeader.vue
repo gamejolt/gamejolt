@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
-import { kThemeGjDarkGreen, kThemeGjGreen } from '../../../../../../_common/theme/variables';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { styleBorderRadiusLg } from '../../../../../../_styles/mixins';
-import { ShopProductPremiumColor } from '../../shop.store';
-import { ShopProductPaymentType } from '../_forms/FormShopProductBase.vue';
+import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
+import { kThemeGjGreen } from '../../../../../_common/theme/variables';
+import { $gettext } from '../../../../../_common/translate/translate.service';
+import { styleBorderRadiusLg } from '../../../../../_styles/mixins';
+import { ShopProductPremiumColor } from '../shop.store';
+import { ShopProductPaymentType } from './_forms/FormShopProductBase.vue';
 
 defineProps({
 	paymentType: {
@@ -40,7 +40,7 @@ defineProps({
 						color: `black`,
 				  }
 				: {
-						backgroundColor: kThemeGjDarkGreen,
+						backgroundColor: `black`,
 						color: kThemeGjGreen,
 				  },
 		]"

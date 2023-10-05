@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
+import { CSSProperties, PropType, toRefs } from 'vue';
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import AppBackground from '../../../../../../_common/background/AppBackground.vue';
@@ -14,7 +14,6 @@ import {
 	kThemeBiFg,
 	kThemeFg,
 	kThemeFg10,
-	kThemeGjDarkGreen,
 	kThemeGjGreen,
 	kThemeGjOverlayNotice,
 } from '../../../../../../_common/theme/variables';
@@ -27,8 +26,7 @@ import {
 } from '../../../../../../_styles/mixins';
 import { kFontSizeSmall, kFontSizeTiny } from '../../../../../../_styles/variables';
 import { isInstance } from '../../../../../../utils/utils';
-import { ShopManagerGroupItem, ShopProductPremiumColor } from '../../shop.store';
-import { ShopItemStates } from './AppDashShopItem.vue';
+import { ShopItemStates, ShopManagerGroupItem, ShopProductPremiumColor } from '../../shop.store';
 
 const props = defineProps({
 	item: {
@@ -51,42 +49,11 @@ const props = defineProps({
 
 const { borderRadius, hovered } = toRefs(props);
 
-const backgroundStyles: CSSProperties = {
-	borderRadius: `${borderRadius.value}px`,
-	overflow: `hidden`,
-};
-
-const nameStyles: CSSProperties = {
-	...styleLineClamp(2),
-	marginTop: `4px`,
-	fontWeight: `bold`,
-	fontSize: kFontSizeTiny.px,
-	textAlign: `center`,
-};
-
-const publishedTagStyles = computed<CSSProperties>(() => ({
-	...styleFlexCenter(),
-	position: `absolute`,
-	top: `-12px`,
-	left: `-8px`,
-	zIndex: 1,
-	pointerEvents: `none`,
-	width: `24px`,
-	height: `24px`,
-	borderRadius: `50%`,
-	transition: `opacity 250ms`,
-	backgroundColor: kThemeBiBg,
-	color: kThemeBiFg,
-	...styleWhen(hovered.value, {
-		opacity: 0,
-	}),
-}));
-
 const baseOverlayTagStyles: CSSProperties = {
 	...styleBorderRadiusLg,
 	position: `absolute`,
 	top: `-12px`,
-	right: `-8px`,
+	right: `-12px`,
 	zIndex: 1,
 	pointerEvents: `none`,
 	fontWeight: `bold`,
@@ -94,30 +61,6 @@ const baseOverlayTagStyles: CSSProperties = {
 	padding: `2px 6px`,
 	transition: `opacity 250ms`,
 };
-
-const premiumTagStyles = computed<CSSProperties>(() => ({
-	...baseOverlayTagStyles,
-	backgroundColor: ShopProductPremiumColor,
-	color: `black`,
-	...styleWhen(hovered.value, {
-		opacity: 0,
-	}),
-}));
-
-const chargeTagStyles = computed<CSSProperties>(() => {
-	return {
-		...baseOverlayTagStyles,
-		...styleFlexCenter({
-			display: `inline-flex`,
-			gap: `6px`,
-		}),
-		backgroundColor: kThemeGjDarkGreen,
-		color: kThemeGjGreen,
-		...styleWhen(hovered.value, {
-			opacity: 0,
-		}),
-	};
-});
 
 const baseInfoTagStyles: CSSProperties = {
 	...styleBorderRadiusLg,
@@ -130,25 +73,6 @@ const baseInfoTagStyles: CSSProperties = {
 	fontWeight: `bold`,
 	marginTop: `4px`,
 };
-
-function getInfoTagStyles(type: 'inReview' | 'rejected') {
-	let color = '';
-	let backgroundColor = '';
-
-	if (type === 'inReview') {
-		backgroundColor = kThemeFg10;
-		color = kThemeFg;
-	} else if (type === 'rejected') {
-		backgroundColor = kThemeGjOverlayNotice;
-		color = `white`;
-	}
-
-	return {
-		...baseInfoTagStyles,
-		color,
-		backgroundColor,
-	};
-}
 </script>
 
 <template>
@@ -164,7 +88,10 @@ function getInfoTagStyles(type: 'inReview' | 'rejected') {
 		<AppBackground
 			v-else-if="isInstance(item, BackgroundModel)"
 			:background="item"
-			:style="backgroundStyles"
+			:style="{
+				borderRadius: `${borderRadius}px`,
+				overflow: `hidden`,
+			}"
 			:background-style="{
 				backgroundSize: `cover`,
 				backgroundPosition: `center`,
@@ -185,24 +112,49 @@ function getInfoTagStyles(type: 'inReview' | 'rejected') {
 			fit-parent
 		/>
 
-		<!-- Published tag -->
-		<div v-if="itemStates.published" :style="publishedTagStyles">
-			<AppJolticon icon="marketplace-filled" />
-		</div>
-
 		<!-- Premium/charge tag -->
-		<div v-if="item.is_premium" :style="premiumTagStyles">
+		<div
+			v-if="item.is_premium"
+			:style="{
+				...baseOverlayTagStyles,
+				backgroundColor: ShopProductPremiumColor,
+				color: `black`,
+				...styleWhen(hovered, {
+					opacity: 0,
+				}),
+			}"
+		>
 			{{ $gettext(`Premium`) }}
 		</div>
 		<div
 			v-else-if="isInstance(item, StickerPackModel) || isInstance(item, StickerModel)"
-			:style="chargeTagStyles"
+			:style="{
+				...baseOverlayTagStyles,
+				...styleFlexCenter({
+					display: `inline-flex`,
+					gap: `6px`,
+				}),
+				backgroundColor: `black`,
+				color: kThemeGjGreen,
+				...styleWhen(hovered, {
+					opacity: 0,
+				}),
+			}"
 		>
 			{{ $gettext(`Charge`) }}
 		</div>
 
 		<!-- Name -->
-		<div v-if="item.name" :style="nameStyles">
+		<div
+			v-if="item.name"
+			:style="{
+				...styleLineClamp(2),
+				marginTop: `4px`,
+				fontWeight: `bold`,
+				fontSize: kFontSizeTiny.px,
+				textAlign: `center`,
+			}"
+		>
 			{{ item.name }}
 		</div>
 
@@ -214,11 +166,36 @@ function getInfoTagStyles(type: 'inReview' | 'rejected') {
 				})
 			"
 		>
-			<div v-if="itemStates.inReview" :style="getInfoTagStyles('inReview')">
+			<div
+				v-if="itemStates.published"
+				:style="{
+					...baseInfoTagStyles,
+					backgroundColor: kThemeBiBg,
+					color: kThemeBiFg,
+				}"
+			>
+				<AppJolticon :style="{ margin: 0, fontSize: `inherit` }" icon="marketplace" />
+				{{ $gettext(`Published`) }}
+			</div>
+			<div
+				v-if="itemStates.inReview"
+				:style="{
+					...baseInfoTagStyles,
+					backgroundColor: kThemeFg10,
+					color: kThemeFg,
+				}"
+			>
 				<AppJolticon :style="{ margin: 0, fontSize: `inherit` }" icon="clock" />
 				{{ $gettext(`In review`) }}
 			</div>
-			<div v-if="itemStates.rejected" :style="getInfoTagStyles('rejected')">
+			<div
+				v-if="itemStates.rejected"
+				:style="{
+					...baseInfoTagStyles,
+					backgroundColor: kThemeGjOverlayNotice,
+					color: `white`,
+				}"
+			>
 				<AppJolticon
 					:style="{ margin: 0, fontSize: `inherit` }"
 					icon="exclamation-circle"
