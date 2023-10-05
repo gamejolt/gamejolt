@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
+import { RouterLink } from 'vue-router';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import AppCommunityCardBase from '../card-base/AppCommunityCardBase.vue';
 import { CommunityModel } from '../community.model';
@@ -43,9 +44,9 @@ function doTrackGotoCommunity() {
 		:track-goto="trackGoto"
 	>
 		<template #thumbnail>
-			<router-link :to="community.routeLocation" @click="doTrackGotoCommunity()">
+			<RouterLink :to="community.routeLocation" @click="doTrackGotoCommunity()">
 				<AppCommunityThumbnailImg :community="community" />
-			</router-link>
+			</RouterLink>
 		</template>
 	</AppCommunityCardBase>
 </template>
