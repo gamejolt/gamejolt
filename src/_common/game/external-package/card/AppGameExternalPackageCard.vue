@@ -1,57 +1,53 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, ref, toRefs } from 'vue';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import { Analytics } from '../../../analytics/analytics.service';
+import AppButton from '../../../button/AppButton.vue';
 import AppCard from '../../../card/AppCard.vue';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import { Navigate } from '../../../navigate/navigate.service';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
+import { $gettext } from '../../../translate/translate.service';
 import { GameBuildPlatformSupportInfo } from '../../build/build.model';
 import { GameExternalPackageModel } from '../external-package.model';
 
-@Options({
-	components: {
-		AppCard,
-		AppFadeCollapse,
+const props = defineProps({
+	package: {
+		type: Object as PropType<GameExternalPackageModel>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppGameExternalPackageCard extends Vue {
-	@Prop(Object)
-	package!: GameExternalPackageModel;
+});
 
-	showFullDescription = false;
-	canToggleDescription = false;
+const { package: gamePackage } = toRefs(props);
 
-	readonly GameBuildPlatformSupportInfo = GameBuildPlatformSupportInfo;
+const showFullDescription = ref(false);
+const canToggleDescription = ref(false);
 
-	get platforms() {
-		const platforms = [];
-		for (let prop in this.package) {
-			if (!(this.package as any)[prop]) {
+const platforms = computed(() => {
+	const platforms = [];
+	for (let prop in gamePackage.value) {
+		if (!(gamePackage.value as any)[prop]) {
+			continue;
+		}
+
+		for (let prefix of ['os_', 'type_']) {
+			if (!prop.startsWith(prefix)) {
 				continue;
 			}
 
-			for (let prefix of ['os_', 'type_']) {
-				if (!prop.startsWith(prefix)) {
-					continue;
-				}
-
-				const field = prop.substr(prefix.length);
-				if (field in GameBuildPlatformSupportInfo) {
-					platforms.push(field);
-				}
+			const field = prop.substr(prefix.length);
+			if (field in GameBuildPlatformSupportInfo) {
+				platforms.push(field);
 			}
 		}
-		return platforms;
 	}
+	return platforms;
+});
 
-	gotoExternal() {
-		Analytics.trackEvent('game-package-card', 'download', 'external');
+function gotoExternal() {
+	Analytics.trackEvent('game-package-card', 'download', 'external');
 
-		Navigate.newWindow(this.package.url);
-	}
+	Navigate.newWindow(gamePackage.value.url);
 }
 </script>
 
@@ -97,7 +93,7 @@ export default class AppGameExternalPackageCard extends Vue {
 				icon="world"
 				@click="gotoExternal()"
 			>
-				<AppTranslate>Play</AppTranslate>
+				{{ $gettext(`Play`) }}
 			</AppButton>
 		</div>
 	</AppCard>
