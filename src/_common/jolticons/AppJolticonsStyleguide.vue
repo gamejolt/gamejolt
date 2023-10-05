@@ -1,20 +1,13 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
 import { Jolticons } from '../jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../tooltip/tooltip-directive';
 
-@Options({
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppJolticonsStyleguide extends Vue {
-	filter = '';
+const filter = ref('');
 
-	get filteredIcons() {
-		return [...Jolticons].sort().filter(i => i.indexOf(this.filter) !== -1);
-	}
-}
+const filteredIcons = computed(() =>
+	[...Jolticons].sort().filter(i => i.indexOf(filter.value) !== -1)
+);
 </script>
 
 <template>
@@ -37,6 +30,7 @@ export default class AppJolticonsStyleguide extends Vue {
 			placeholder="Search for a Jolticon..."
 		/>
 
+		<!--TODO(component-setup-refactor): check if AppJolticon below is properly imported.-->
 		<div class="row">
 			<div v-for="jolticon of filteredIcons" :key="jolticon" class="col-xs-2 text-center">
 				<p v-app-tooltip="jolticon">

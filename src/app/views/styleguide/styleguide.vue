@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
 import AppButtonStyleguide from '../../../_common/button/AppButtonStyleguide.vue';
-import AppJolticonsStyleguide from '../../../_common/jolticons/jolticons-styleguide.vue';
+import AppJolticonsStyleguide from '../../../_common/jolticons/AppJolticonsStyleguide.vue';
 import AppListGroupStyleguide from '../../../_common/list-group/list-group-styleguide.vue';
 import AppProgressBarStyleguide from '../../../_common/progress/AppProgressBarStyleguide.vue';
 import {
