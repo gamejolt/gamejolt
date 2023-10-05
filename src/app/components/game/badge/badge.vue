@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import AppGameFollowWidget from '../../../../_common/game/follow-widget/follow-widget.vue';
+import AppGameFollowWidget from '../../../../_common/game/follow-widget/AppGameFollowWidget.vue';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
