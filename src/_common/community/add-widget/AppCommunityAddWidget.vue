@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+import { RouterLink } from 'vue-router';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import { showErrorGrowl } from '../../growls/growls.service';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
