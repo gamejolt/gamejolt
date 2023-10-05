@@ -8,6 +8,7 @@ import { showErrorGrowl } from '../../growls/growls.service';
 import { showModalConfirm } from '../../modal/confirm/confirm-service';
 import AppPopper from '../../popper/AppPopper.vue';
 import { useCommonStore } from '../../store/common-store';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
 import AppUserFollowButton from '../../user/follow/AppUserFollowButton.vue';
 import { UserFollowSuggestion } from '../../user/follow/suggestion.service';
