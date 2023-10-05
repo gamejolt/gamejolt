@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { $gettext } from '../../translate/translate.service';
 import AppCommunityAddWidget from '../add-widget/AppCommunityAddWidget.vue';
 </script>
 
