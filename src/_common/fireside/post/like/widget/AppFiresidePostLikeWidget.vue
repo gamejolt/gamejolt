@@ -50,9 +50,7 @@ const likeCount = computed(() => formatFuzzynumber(post.value.like_count));
 
 const liked = computed(() => !!post.value.user_like);
 
-const tooltip = computed(() => {
-	liked.value ? $gettext('Liked!') : $gettext('Like This Post');
-});
+const tooltip = computed(() => $gettext(liked.value ? 'Liked!' : 'Like This Post'));
 
 async function toggleLike() {
 	const currentLike = post.value.user_like;
@@ -110,7 +108,6 @@ function showLikers() {
 <template>
 	<span class="fireside-post-like-widget">
 		<span class="-like">
-			<!--TODO(component-setup-refactor): warning on v-app-tooltip-->
 			<AppButton
 				v-app-tooltip="tooltip"
 				v-app-track-event="`fireside-post-like-widget:click`"
