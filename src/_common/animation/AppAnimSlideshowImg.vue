@@ -43,7 +43,7 @@ function initAnimator(fromStart: boolean) {
 	}
 
 	timer = setInterval(() => {
-		const { frames, blankFrames } = sheet.value;
+		const { frames, blankFrames = 0 } = sheet.value;
 
 		if (frame.value + 1 >= frames + blankFrames) {
 			frame.value = 0;

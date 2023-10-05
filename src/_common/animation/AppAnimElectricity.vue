@@ -4,6 +4,7 @@ import { useResizeObserver } from '../../utils/resize-observer';
 import { Ruler } from '../ruler/ruler-service';
 import AppAnimSlideshow from './AppAnimSlideshow.vue';
 import {
+	getImgSlideshowData,
 	ImgSlideshow,
 	sheetShockRectBL,
 	sheetShockRectTR,
@@ -74,7 +75,7 @@ function onDimensionsChanged() {
 
 function getStyleForAsset(sheet: ImgSlideshow): CSSProperties {
 	const { width, height } = size.value;
-	const { frameAspectRatio } = sheet;
+	const { frameAspectRatio } = getImgSlideshowData(sheet);
 
 	const isBL = sheet === sheetShockRectBL;
 	const isTR = sheet === sheetShockRectTR;

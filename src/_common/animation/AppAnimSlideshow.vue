@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs } from 'vue';
+import { PropType, computed, ref, toRefs } from 'vue';
 import { styleWhen } from '../../_styles/mixins';
 import { useResizeObserver } from '../../utils/resize-observer';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
 import { Ruler } from '../ruler/ruler-service';
 import AppAnimSlideshowImg from './AppAnimSlideshowImg.vue';
-import { ImgSlideshow } from './slideshow/sheets';
+import { ImgSlideshow, getImgSlideshowData } from './slideshow/sheets';
 
 const props = defineProps({
 	sheet: {
@@ -29,6 +29,8 @@ const { sheet, overlay, pause, startOffset } = toRefs(props);
 
 const root = ref<HTMLDivElement>();
 const size = ref({ width: 200, height: 200 });
+
+const sheetData = computed(() => getImgSlideshowData(sheet.value));
 
 useResizeObserver({
 	target: root,
@@ -60,11 +62,11 @@ function onDimensionsChanged() {
 		<div
 			:style="{
 				width: `100%`,
-				maxWidth: Math.min(size.width, size.height * sheet.frameAspectRatio) + 'px',
+				maxWidth: Math.min(size.width, size.height * sheetData.frameAspectRatio) + 'px',
 			}"
 		>
 			<AppAspectRatio
-				:ratio="sheet.frameAspectRatio"
+				:ratio="sheetData.frameAspectRatio"
 				:style="[
 					{
 						position: `relative`,
