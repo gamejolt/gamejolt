@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { Jolticons } from '../jolticon/AppJolticon.vue';
+import AppJolticon, { Jolticons } from '../jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../tooltip/tooltip-directive';
 
 const filter = ref('');
@@ -30,7 +30,6 @@ const filteredIcons = computed(() =>
 			placeholder="Search for a Jolticon..."
 		/>
 
-		<!--TODO(component-setup-refactor): check if AppJolticon below is properly imported.-->
 		<div class="row">
 			<div v-for="jolticon of filteredIcons" :key="jolticon" class="col-xs-2 text-center">
 				<p v-app-tooltip="jolticon">
