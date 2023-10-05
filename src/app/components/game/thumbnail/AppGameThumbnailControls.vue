@@ -6,7 +6,7 @@
 
 import { PropType } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppGameFollowWidget from '../../../../_common/game/follow-widget/follow-widget.vue';
+import AppGameFollowWidget from '../../../../_common/game/follow-widget/AppGameFollowWidget.vue';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppGameModLinks from '../../../../_common/game/mod-links/mod-links.vue';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
