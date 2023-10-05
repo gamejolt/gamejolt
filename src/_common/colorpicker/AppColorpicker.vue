@@ -4,6 +4,7 @@ import { ref, toRefs, watch } from 'vue';
 import AppButton from '../button/AppButton.vue';
 import AppPopper from '../popper/AppPopper.vue';
 import { Popper } from '../popper/popper.service';
+import { $gettext } from '../translate/translate.service';
 
 type VueTouch = {
 	hex: string | null;
