@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { PropType, computed, onMounted, toRefs } from 'vue';
-import { RouteLocationRaw, useRoute, useRouter } from 'vue-router';
+import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 import AppButton from '../../../button/AppButton.vue';
 import { GameModel } from '../../../game/game.model';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppTimeAgo from '../../../time/AppTimeAgo.vue';
+import { $gettext } from '../../../translate/translate.service';
 import { FiresidePostModel, FiresidePostStatus } from '../post-model';
 
 export type Action = 'add' | 'publish' | 'scheduled-publish';
@@ -138,27 +139,27 @@ function onClickedView() {
 		</div>
 
 		<div class="-controls">
-			<router-link :to="post.routeLocation">
+			<RouterLink :to="post.routeLocation">
 				<AppButton @click="onClickedView">
 					{{ $gettext(`View Post`) }}
 				</AppButton>
-			</router-link>
+			</RouterLink>
 			{{ ' ' }}
-			<router-link v-if="isDraft" :to="draftsLocation">
+			<RouterLink v-if="isDraft" :to="draftsLocation">
 				<AppButton @click="onClickedView">
 					{{ $gettext(`All Drafts`) }}
 				</AppButton>
-			</router-link>
-			<router-link v-else-if="isScheduled" :to="scheduledLocation">
+			</RouterLink>
+			<RouterLink v-else-if="isScheduled" :to="scheduledLocation">
 				<AppButton @click="onClickedView">
 					{{ $gettext(`All Scheduled Posts`) }}
 				</AppButton>
-			</router-link>
-			<router-link v-else-if="shouldShowCommunityRedirect" :to="communityLocation">
+			</RouterLink>
+			<RouterLink v-else-if="shouldShowCommunityRedirect" :to="communityLocation">
 				<AppButton @click="onClickedView">
 					{{ $gettext(`Go to Community`) }}
 				</AppButton>
-			</router-link>
+			</RouterLink>
 		</div>
 	</div>
 </template>
