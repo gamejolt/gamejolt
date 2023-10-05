@@ -19,6 +19,8 @@ export class CreatorChangeRequestModel implements ModelStoreModel {
 	declare change_media_item?: MediaItemModel;
 	declare change_name?: string;
 	declare change_artist_user?: UserModel;
+	// TODO(creator-shops) DODO(creator-shops) Remove this - emoji_name and
+	// sticker_ids changes will be directly on this model instead.
 	declare change_data: string;
 
 	declare added_on: number;
