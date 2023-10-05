@@ -4,9 +4,7 @@ import { getDeviceOS } from '../../device/device.service';
 import { AppClientMacAppMenu } from '../mac-app-menu/mac-app-menu';
 import AppClientTray from '../tray/AppClientTray.vue';
 
-const os = computed(() => {
-	return getDeviceOS();
-});
+const os = computed(() => getDeviceOS());
 </script>
 
 <template>
