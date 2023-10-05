@@ -32,64 +32,17 @@ const props = defineProps({
 	},
 });
 
-const CommunityCreated = CommunityActivityItemType.CommunityCreated;
-const PostFeature = CommunityActivityItemType.PostFeature;
-const PostUnfeature = CommunityActivityItemType.PostUnfeature;
-const PostMove = CommunityActivityItemType.PostMove;
-const PostEject = CommunityActivityItemType.PostEject;
-
-const ModInvite = CommunityActivityItemType.ModInvite;
-const ModAccept = CommunityActivityItemType.ModAccept;
-const ModRemove = CommunityActivityItemType.ModRemove;
-
-const BlockUser = CommunityActivityItemType.BlockUser;
-
-const EditDescription = CommunityActivityItemType.EditDescription;
-const EditThumbnail = CommunityActivityItemType.EditThumbnail;
-const EditHeader = CommunityActivityItemType.EditHeader;
-const EditDetails = CommunityActivityItemType.EditDetails;
-const EditHeaderRemove = CommunityActivityItemType.EditHeaderRemove;
-
-const ChannelAdd = CommunityActivityItemType.ChannelAdd;
-const ChannelRemove = CommunityActivityItemType.ChannelRemove;
-const ChannelEdit = CommunityActivityItemType.ChannelEdit;
-const ChannelRename = CommunityActivityItemType.ChannelRename;
-
-const GameLink = CommunityActivityItemType.GameLink;
-const GameUnlink = CommunityActivityItemType.GameUnlink;
-
-const CompetitionEditSettings = CommunityActivityItemType.CompetitionEditSettings;
-const CompetitionEditVoting = CommunityActivityItemType.CompetitionEditVoting;
-const CompetitionVotingSetActive = CommunityActivityItemType.CompetitionVotingSetActive;
-const CompetitionEntryRemove = CommunityActivityItemType.CompetitionEntryRemove;
-const CompetitionEntryUnremove = CommunityActivityItemType.CompetitionEntryUnremove;
-const CompetitionEntryGiveAward = CommunityActivityItemType.CompetitionEntryGiveAward;
-
-const FiresideStart = CommunityActivityItemType.FiresideStart;
-const FiresideStartDraft = CommunityActivityItemType.FiresideStartDraft;
-const FiresidePublish = CommunityActivityItemType.FiresidePublish;
-const FiresideExtinguish = CommunityActivityItemType.FiresideExtinguish;
-const FiresideFeature = CommunityActivityItemType.FiresideFeature;
-const FiresideUnfeature = CommunityActivityItemType.FiresideUnfeature;
-const FiresideEject = CommunityActivityItemType.FiresideEject;
-
 const { item, showIcon } = toRefs(props);
 
-const icon = computed(() => {
-	return item.value.getTypeIcon()?.icon;
-});
+const icon = computed(() => item.value.getTypeIcon()?.icon);
 
-const shouldShowIcon = computed(() => {
-	return !!icon.value && showIcon.value;
-});
+const shouldShowIcon = computed(() => !!icon.value && showIcon.value);
 
-const color = computed(() => {
-	return item.value.getTypeIcon()?.color;
-});
+const color = computed(() => item.value.getTypeIcon()?.color);
 
-const isToday = computed(() => {
-	return formatDate(item.value.added_on, 'mediumDate') === formatDate(Date.now(), 'mediumDate');
-});
+const isToday = computed(
+	() => formatDate(item.value.added_on, 'mediumDate') === formatDate(Date.now(), 'mediumDate')
+);
 
 const isYesterday = computed(() => {
 	const oneDay = 24 * 60 * 60 * 1000;
@@ -265,24 +218,27 @@ function getExtraData(key: string) {
 
 				<div class="-action">
 					<!-- Show a text based on the action taken. -->
-					<span v-if="item.type === CommunityCreated" v-translate>
+					<span
+						v-if="item.type === CommunityActivityItemType.CommunityCreated"
+						v-translate
+					>
 						<em>Created</em> this awesome community.
 					</span>
 
 					<span
-						v-if="item.type === PostFeature"
+						v-if="item.type === CommunityActivityItemType.PostFeature"
 						v-translate="{ channel: getExtraData('in-channel') }"
 					>
 						<em>Featured</em> a post in the channel <i>%{ channel }</i>.
 					</span>
 					<span
-						v-else-if="item.type === PostUnfeature"
+						v-else-if="item.type === CommunityActivityItemType.PostUnfeature"
 						v-translate="{ channel: getExtraData('in-channel') }"
 					>
 						<em>Unfeatured</em> a post in the channel <i>%{ channel }</i>.
 					</span>
 					<span
-						v-else-if="item.type === PostMove"
+						v-else-if="item.type === CommunityActivityItemType.PostMove"
 						v-translate="{
 							fromChannel: getExtraData('from-channel'),
 							toChannel: getExtraData('to-channel'),
@@ -292,63 +248,87 @@ function getExtraData(key: string) {
 						channel <i>%{ toChannel }</i>.
 					</span>
 					<span
-						v-else-if="item.type === PostEject"
+						v-else-if="item.type === CommunityActivityItemType.PostEject"
 						v-translate="{ channel: getExtraData('in-channel') }"
 					>
 						<em>Ejected</em> a post from the channel <i>%{ channel }</i>.
 					</span>
 
 					<span
-						v-else-if="item.type === ModInvite"
+						v-else-if="item.type === CommunityActivityItemType.ModInvite"
 						v-translate="{ role: getExtraData('role') }"
 					>
 						<em>Invited</em> a user with the role <i>%{ role }</i>.
 					</span>
 					<span
-						v-else-if="item.type === ModAccept"
+						v-else-if="item.type === CommunityActivityItemType.ModAccept"
 						v-translate="{ role: getExtraData('role') }"
 					>
 						<em>Joined</em> this community with the role <i>%{ role }</i>.
 					</span>
 					<span
-						v-else-if="item.type === ModRemove"
+						v-else-if="item.type === CommunityActivityItemType.ModRemove"
 						v-translate="{ role: getExtraData('role') }"
 					>
 						<em>Removed</em> a moderater with the role <i>%{ role }</i> from this
 						community.
 					</span>
 
-					<span v-else-if="item.type === BlockUser" v-translate>
+					<span v-else-if="item.type === CommunityActivityItemType.BlockUser" v-translate>
 						<em>Blocked</em> a user from this community.
 					</span>
 
-					<span v-else-if="item.type === EditDescription" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.EditDescription"
+						v-translate
+					>
 						<em>Edited</em> the description of this community.
 					</span>
-					<span v-else-if="item.type === EditThumbnail" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.EditThumbnail"
+						v-translate
+					>
 						<em>Changed</em> the thumbnail of this community.
 					</span>
-					<span v-else-if="item.type === EditHeader" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.EditHeader"
+						v-translate
+					>
 						<em>Changed</em> the header of this community.
 					</span>
-					<span v-else-if="item.type === EditDetails" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.EditDetails"
+						v-translate
+					>
 						<em>Edited</em> the details of this community.
 					</span>
-					<span v-else-if="item.type === EditHeaderRemove" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.EditHeaderRemove"
+						v-translate
+					>
 						<em>Removed</em> the header of this community.
 					</span>
 
-					<span v-else-if="item.type === ChannelAdd" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.ChannelAdd"
+						v-translate
+					>
 						<em>Added</em> a new channel to this community.
 					</span>
-					<span v-else-if="item.type === ChannelRemove" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.ChannelRemove"
+						v-translate
+					>
 						<em>Removed</em> a channel from this community.
 					</span>
-					<span v-else-if="item.type === ChannelEdit" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.ChannelEdit"
+						v-translate
+					>
 						<em>Edited</em> a channel in this community.
 					</span>
 					<span
-						v-else-if="item.type === ChannelRename"
+						v-else-if="item.type === CommunityActivityItemType.ChannelRename"
 						v-translate="{
 							oldName: getExtraData('old-name'),
 							newName: getExtraData('new-name'),
@@ -357,21 +337,32 @@ function getExtraData(key: string) {
 						<em>Renamed</em> a channel from <i>%{ oldName }</i> to <i>%{ newName }</i>.
 					</span>
 
-					<span v-else-if="item.type === GameLink" v-translate>
+					<span v-else-if="item.type === CommunityActivityItemType.GameLink" v-translate>
 						<em>Linked</em> a game to this community.
 					</span>
-					<span v-else-if="item.type === GameUnlink" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.GameUnlink"
+						v-translate
+					>
 						<em>Unlinked</em> a game from this community.
 					</span>
 
-					<span v-else-if="item.type === CompetitionEditSettings" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.CompetitionEditSettings"
+						v-translate
+					>
 						<em>Edited</em> a jam in this community.
 					</span>
-					<span v-else-if="item.type === CompetitionEditVoting" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.CompetitionEditVoting"
+						v-translate
+					>
 						<em>Edited</em> voting settings for a jam in this community.
 					</span>
 					<span
-						v-else-if="item.type === CompetitionVotingSetActive"
+						v-else-if="
+							item.type === CommunityActivityItemType.CompetitionVotingSetActive
+						"
 						v-translate="{
 							action: getExtraData('is-active')
 								? $gettext(`Activated`)
@@ -381,36 +372,65 @@ function getExtraData(key: string) {
 						<em>%{ action }</em> voting for a jam in this community.
 					</span>
 					<span
-						v-else-if="item.type === CompetitionEntryGiveAward"
+						v-else-if="
+							item.type === CommunityActivityItemType.CompetitionEntryGiveAward
+						"
 						v-translate="{ award: getExtraData('award-name') }"
 					>
 						<em>Awarded</em> the <i>%{ award }</i> award to an entry.
 					</span>
-					<span v-else-if="item.type === CompetitionEntryRemove" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.CompetitionEntryRemove"
+						v-translate
+					>
 						<em>Hid</em> an entry from its jam.
 					</span>
-					<span v-else-if="item.type === CompetitionEntryUnremove" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.CompetitionEntryUnremove"
+						v-translate
+					>
 						<em>Readmitted</em> an entry to its jam.
 					</span>
-					<span v-else-if="item.type === FiresideStart" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.FiresideStart"
+						v-translate
+					>
 						<em>Started</em> a Fireside in this community.
 					</span>
-					<span v-else-if="item.type === FiresideStartDraft" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.FiresideStartDraft"
+						v-translate
+					>
 						<em>Started</em> a Fireside in <em>draft</em> mode in this community.
 					</span>
-					<span v-else-if="item.type === FiresidePublish" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.FiresidePublish"
+						v-translate
+					>
 						<em>Published</em> a Fireside in this community.
 					</span>
-					<span v-else-if="item.type === FiresideExtinguish" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.FiresideExtinguish"
+						v-translate
+					>
 						<em>Extinguished</em> this community's Fireside.
 					</span>
-					<span v-else-if="item.type === FiresideFeature" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.FiresideFeature"
+						v-translate
+					>
 						<em>Featured</em> a Fireside.
 					</span>
-					<span v-else-if="item.type === FiresideUnfeature" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.FiresideUnfeature"
+						v-translate
+					>
 						<em>Unfeatured</em> a Fireside.
 					</span>
-					<span v-else-if="item.type === FiresideEject" v-translate>
+					<span
+						v-else-if="item.type === CommunityActivityItemType.FiresideEject"
+						v-translate
+					>
 						<em>Ejected</em> a Fireside from this community.
 					</span>
 
