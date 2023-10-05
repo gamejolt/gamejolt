@@ -34,9 +34,7 @@ const props = defineProps({
 
 const { item, showIcon } = toRefs(props);
 
-const icon = computed(() => {
-	return item.value.getTypeIcon()?.icon;
-});
+const icon = computed(() => item.value.getTypeIcon()?.icon);
 
 const color = computed(() => item.value.getTypeIcon()?.color);
 
