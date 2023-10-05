@@ -8,6 +8,7 @@ import { GameModel } from '../../game/game.model';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { Screen } from '../../screen/screen-service';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import { $gettext } from '../../translate/translate.service';
 import { getSingleReasonText } from '../../user/action-reasons';
 import { UserBlockModel } from '../../user/block/block.model';
 import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
