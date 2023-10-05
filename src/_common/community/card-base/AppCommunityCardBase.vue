@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { useRoute } from 'vue-router';
+import { RouterLink, useRoute } from 'vue-router';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
+import { vAppTrackEvent } from '../../analytics/track-event.directive';
 import AppButton from '../../button/AppButton.vue';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
 import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
+import { $gettext } from '../../translate/translate.service';
 import { CommunityModel, isEditingCommunity } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/AppCommunityJoinWidget.vue';
 import AppCommunityVerifiedTick from '../verified-tick/AppCommunityVerifiedTick.vue';
