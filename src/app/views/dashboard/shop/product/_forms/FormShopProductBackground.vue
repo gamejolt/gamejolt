@@ -2,13 +2,11 @@
 import { computed, toRefs } from 'vue';
 import { BackgroundModel } from '../../../../../../_common/background/background.model';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
+import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { useShopManagerStore } from '../../shop.store';
+import { ShopDashProductType, useShopDashStore } from '../../shop.store';
 import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
-import FormShopProductBase, {
-	ShopProductPaymentType,
-	createShopProductBaseForm,
-} from './FormShopProductBase.vue';
+import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
 
 const props = defineProps({
 	...defineFormProps<BackgroundModel>(),
@@ -16,21 +14,21 @@ const props = defineProps({
 
 const { model } = toRefs(props);
 
-const shopStore = useShopManagerStore()!;
+const shopStore = useShopDashStore()!;
 
 const data = createShopProductBaseForm({
 	shopStore,
-	typename: 'Background',
+	resource: ShopProductResource.Background,
 	baseModel: model?.value,
 });
 
-const { paymentType, isEditing } = data;
+const { productType, isEditing } = data;
 
 // Only premium backgrounds are valid at the moment, so no need for free
 // messaging.
 const headerMessage = computed(() => {
-	switch (paymentType.value) {
-		case ShopProductPaymentType.Premium:
+	switch (productType.value) {
+		case ShopDashProductType.Premium:
 			return $gettext(`Premium backgrounds can be purchased in your shop.`);
 	}
 });
@@ -38,7 +36,7 @@ const headerMessage = computed(() => {
 
 <template>
 	<AppDashShopProductHeader
-		:payment-type="paymentType"
+		:product-type="productType"
 		:heading="isEditing ? $gettext(`Background product`) : $gettext(`Add background`)"
 		:message="headerMessage"
 	/>

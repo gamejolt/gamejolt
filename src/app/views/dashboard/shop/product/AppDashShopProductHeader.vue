@@ -1,15 +1,12 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import { kThemeGjGreen } from '../../../../../_common/theme/variables';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { styleBorderRadiusLg } from '../../../../../_styles/mixins';
-import { ShopProductPremiumColor } from '../shop.store';
-import { ShopProductPaymentType } from './_forms/FormShopProductBase.vue';
+import AppDashShopProductType from '../AppDashShopProductType.vue';
+import { ShopDashProductType } from '../shop.store';
 
 defineProps({
-	paymentType: {
-		type: String as PropType<ShopProductPaymentType | undefined>,
+	productType: {
+		type: String as PropType<ShopDashProductType | undefined>,
 		default: undefined,
 	},
 	heading: {
@@ -24,40 +21,14 @@ defineProps({
 </script>
 
 <template>
-	<!-- Premium/charge tag -->
-	<div
-		v-if="paymentType"
-		:style="[
-			styleBorderRadiusLg,
-			{
-				display: `inline-block`,
-				fontWeight: `bold`,
-				padding: `2px 6px`,
-			},
-			paymentType === ShopProductPaymentType.Premium
-				? {
-						backgroundColor: ShopProductPremiumColor,
-						color: `black`,
-				  }
-				: {
-						backgroundColor: `black`,
-						color: kThemeGjGreen,
-				  },
-		]"
-	>
-		<template v-if="paymentType === ShopProductPaymentType.Premium">
-			{{ $gettext(`Premium`) }}
-		</template>
-		<template v-else>
-			{{ $gettext(`Charge`) }}
-		</template>
-	</div>
+	<!-- Type tag tag -->
+	<AppDashShopProductType v-if="productType" :product-type="productType" />
 
 	<!-- Title -->
 	<h1 :style="{ margin: `4px 0` }">{{ heading }}</h1>
 
 	<!-- Extra message -->
-	<div v-if="paymentType && message">
+	<div v-if="productType && message">
 		{{ message }}
 	</div>
 

@@ -7,6 +7,7 @@ import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { storeModelList } from '../../../../../../_common/model/model-store.service';
 import AppOnHover from '../../../../../../_common/on/AppOnHover.vue';
+import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import AppStickerStackItem from '../../../../../../_common/sticker/stack/AppStickerStackItem.vue';
@@ -20,12 +21,9 @@ import {
 	styleWhen,
 } from '../../../../../../_styles/mixins';
 import { kStrongEaseOut } from '../../../../../../_styles/variables';
-import { useShopManagerStore } from '../../shop.store';
+import { ShopDashProductType, useShopDashStore } from '../../shop.store';
 import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
-import FormShopProductBase, {
-	ShopProductPaymentType,
-	createShopProductBaseForm,
-} from './FormShopProductBase.vue';
+import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
 import { showFormStickerSelectorModal } from './_sticker-selector/modal.service';
 
 const props = defineProps({
@@ -38,11 +36,11 @@ const minStickers = ref(3);
 const maxStickers = ref(5);
 const stickers = ref([]) as Ref<StickerModel[]>;
 
-const shopStore = useShopManagerStore()!;
+const shopStore = useShopDashStore()!;
 
 const data = createShopProductBaseForm({
 	shopStore,
-	typename: 'Sticker_Pack',
+	resource: ShopProductResource.StickerPack,
 	baseModel: model?.value,
 	fields: {
 		stickers: [] as number[],
@@ -56,7 +54,7 @@ const data = createShopProductBaseForm({
 		data.initialFormModel.value.stickers = currentStickers.map(i => i.id);
 
 		let changeRequestStickers: StickerModel[];
-		const changeData = JSON.parse(data.latestChangeRequest.value?.change_data || '{}');
+		const changeData = JSON.parse(data.changeRequest.value?.change_data || '{}');
 		if (Array.isArray(changeData.sticker_ids)) {
 			changeRequestStickers = (changeData.sticker_ids as number[]).reduce((acc, id) => {
 				const sticker = shopStore.stickers.value.items.find(sticker => sticker.id === id);
@@ -73,15 +71,16 @@ const data = createShopProductBaseForm({
 	},
 });
 
-const { form, initialFormModel, paymentType, isEditing } = data;
+const { form, initialFormModel, productType, isEditing } = data;
 
 const headerMessage = computed(() => {
-	switch (paymentType.value) {
-		case ShopProductPaymentType.Premium:
+	switch (productType.value) {
+		case ShopDashProductType.Premium:
 			return $gettext(`Premium sticker packs can be purchased in your shop.`);
-		case ShopProductPaymentType.Free:
+
+		case ShopDashProductType.Reward:
 			return $gettext(
-				`Charge sticker packs are automatically rewarded to users for placing charged stickers on your content.`
+				`This sticker pack is automatically rewarded to users for placing charged stickers on your content.`
 			);
 	}
 });
@@ -133,7 +132,7 @@ async function addStickers() {
 	// Will return all the stickers (the current in pack as well as new).
 	const newStickers = await showFormStickerSelectorModal({
 		stickerPackId: model?.value?.id,
-		premium: paymentType.value === ShopProductPaymentType.Premium,
+		premium: productType.value === ShopDashProductType.Premium,
 		currentStickers: stickers.value,
 		availableSlots: maxStickers.value,
 	});
@@ -158,7 +157,7 @@ async function removeSticker(sticker: StickerModel) {
 
 <template>
 	<AppDashShopProductHeader
-		:payment-type="paymentType"
+		:product-type="productType"
 		:heading="isEditing ? $gettext(`Sticker pack product`) : $gettext(`Add sticker pack`)"
 		:message="headerMessage"
 	/>

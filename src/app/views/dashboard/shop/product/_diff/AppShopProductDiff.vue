@@ -1,14 +1,10 @@
-<script lang="ts">
-import { CSSProperties, PropType, computed, ref, toRefs, watch } from 'vue';
+<script lang="ts" setup>
+import { CSSProperties, PropType, computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../../../_common/background/background.model';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
-import {
-	defineDynamicSlotProps,
-	useDynamicSlots,
-} from '../../../../../../_common/component-helpers';
 import { CreatorChangeRequestModel } from '../../../../../../_common/creator/change-request/creator-change-request.model';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
@@ -16,6 +12,7 @@ import { showModalConfirm } from '../../../../../../_common/modal/confirm/confir
 import { storeModel } from '../../../../../../_common/model/model-store.service';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
+import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { kThemePrimary, kThemePrimaryFg } from '../../../../../../_common/theme/variables';
@@ -23,29 +20,23 @@ import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { styleAbsoluteFill, styleWhen } from '../../../../../../_styles/mixins';
 import { arrayRemove } from '../../../../../../utils/array';
-import { isInstance } from '../../../../../../utils/utils';
+import { assertNever, isInstance } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
-import { ShopItemStates, useShopManagerStore } from '../../shop.store';
+import { ShopDashProductStates, useShopDashStore } from '../../shop.store';
 import { ShopProductBaseForm } from '../_forms/FormShopProductBase.vue';
 import AppShopProductDiffCard from './AppShopProductDiffCard.vue';
 import AppShopProductDiffImg from './AppShopProductDiffImg.vue';
 import AppShopProductDiffMeta from './AppShopProductDiffMeta.vue';
 import AppShopProductDiffState from './AppShopProductDiffState.vue';
 
-const SlotProps = ['before', 'after'] as const;
-</script>
-
-<script lang="ts" setup>
 const props = defineProps({
-	...defineDynamicSlotProps(SlotProps, true),
 	data: {
 		type: Object as PropType<ShopProductBaseForm>,
 		required: true,
 	},
 });
 
-const { dynamicSlots } = toRefs(props);
-const { hasSlot } = useDynamicSlots(dynamicSlots);
+type Section = 'before' | 'after';
 
 const router = useRouter();
 
@@ -54,15 +45,15 @@ const {
 	backgrounds,
 	stickerPacks,
 	stickers,
-	getShopItemStates,
-	changeRequests,
-	getChangeRequestKey,
-} = useShopManagerStore()!;
+	getShopProductStates,
+	storeChangeRequest,
+	removeChangeRequest,
+} = useShopDashStore()!;
 
 // eslint-disable-next-line vue/no-setup-props-destructure
 const {
 	form,
-	typename,
+	resource,
 	baseModel,
 	initialFormModel,
 	existingImgUrl,
@@ -70,55 +61,58 @@ const {
 	diffData,
 	diffKeys,
 	changeRequest,
-	rejectedChangeRequest,
-	latestChangeRequest,
 } = props.data;
 
-const tabSlot = ref<(typeof SlotProps)[number]>(hasSlot('before') ? 'before' : 'after');
+const currentSection = ref<Section>(diffData.value.hasBefore ? 'before' : 'after');
+
 watch(
-	() => hasSlot('after'),
+	() => diffData.value.hasAfter,
 	(hasAfter, prev) => {
 		if (!!hasAfter === !!prev) {
 			return;
 		}
-		tabSlot.value = hasAfter ? 'after' : 'before';
+		currentSection.value = hasAfter ? 'after' : 'before';
 	}
 );
 
 const useTabView = computed(() => Screen.isMobile);
 const availableTabs = computed(() => {
-	const tabs: (typeof SlotProps)[number][] = [];
+	const tabs: Section[] = [];
 	if (useTabView.value) {
-		const { before, after } = diffData.value.binding;
-		if (before) {
+		const { hasBefore, hasAfter } = diffData.value;
+		if (hasBefore) {
 			tabs.push('before');
 		}
-		if (after) {
+		if (hasAfter) {
 			tabs.push('after');
 		}
 	}
 	return tabs;
 });
 
-const currentStates = computed<ShopItemStates>(() => {
+const isChargePack = computed(
+	() => isInstance(baseModel, StickerPackModel) && !baseModel.is_premium
+);
+
+const currentStates = computed<ShopDashProductStates>(() => {
 	if (!baseModel) {
 		return {};
 	}
-	return getShopItemStates(baseModel);
+	return getShopProductStates(baseModel);
 });
 
-const changeStates = computed<ShopItemStates>(() => {
-	if (!latestChangeRequest.value) {
+const changeStates = computed<ShopDashProductStates>(() => {
+	if (!changeRequest.value) {
 		return {};
 	}
-	return getShopItemStates(latestChangeRequest.value);
+	return getShopProductStates(changeRequest.value);
 });
 
-function getSlotText(slot: (typeof SlotProps)[number]) {
-	if (slot === 'before') {
+function getSectionLabel(section: Section) {
+	if (section === 'before') {
 		return $gettext(`Current product`);
-	} else if (slot === 'after') {
-		return hasSlot('before') ? $gettext(`New changes`) : $gettext(`New product`);
+	} else if (section === 'after') {
+		return diffData.value.hasBefore ? $gettext(`New changes`) : $gettext(`New product`);
 	}
 }
 
@@ -136,16 +130,15 @@ async function setProductPublishState(publish: boolean) {
 		return;
 	}
 
-	const _isChargePack = currentStates.value.isChargePack;
 	let confirmText: string;
 	if (publish) {
-		if (_isChargePack) {
+		if (isChargePack.value) {
 			confirmText = $gettext(`Are you sure you want to publish this charge sticker pack?`);
 		} else {
 			confirmText = $gettext(`Are you sure you want to publish this product to the shop?`);
 		}
 	} else {
-		if (_isChargePack) {
+		if (isChargePack.value) {
 			confirmText = $gettext(`Are you sure you want to publish this charge sticker pack?`);
 		} else {
 			confirmText = $gettext(
@@ -161,16 +154,16 @@ async function setProductPublishState(publish: boolean) {
 
 	let url: string;
 	let postData: any = {};
-	if (_isChargePack) {
+	if (isChargePack.value) {
 		url = `/web/dash/creators/shop/packs/set-enabled`;
 		postData = {
 			pack_id: baseModel.id,
 			is_enabled: publish,
 		};
 	} else if (publish) {
-		url = `/web/dash/creators/shop/sales/create/${typename}/${baseModel.id}`;
+		url = `/web/dash/creators/shop/sales/create/${resource}/${baseModel.id}`;
 	} else {
-		url = `/web/dash/creators/shop/sales/remove/${typename}/${baseModel.id}`;
+		url = `/web/dash/creators/shop/sales/remove/${resource}/${baseModel.id}`;
 	}
 
 	try {
@@ -179,19 +172,21 @@ async function setProductPublishState(publish: boolean) {
 		if (response.pack) {
 			storeModel(StickerPackModel, response.pack);
 		} else if (response.resource) {
-			switch (typename) {
-				case 'Avatar_Frame':
+			switch (resource) {
+				case ShopProductResource.AvatarFrame:
 					storeModel(AvatarFrameModel, response.resource);
 					break;
-				case 'Background':
+				case ShopProductResource.Background:
 					storeModel(BackgroundModel, response.resource);
 					break;
-				case 'Sticker_Pack':
+				case ShopProductResource.StickerPack:
 					storeModel(StickerPackModel, response.resource);
 					break;
-				case 'Sticker':
+				case ShopProductResource.Sticker:
 					storeModel(StickerModel, response.resource);
 					break;
+				default:
+					assertNever(resource);
 			}
 		}
 	} catch (e) {
@@ -201,7 +196,7 @@ async function setProductPublishState(publish: boolean) {
 }
 
 async function cancelChangeRequest() {
-	const changes = latestChangeRequest.value;
+	const changes = changeRequest.value;
 	if (!changes) {
 		return;
 	}
@@ -224,37 +219,38 @@ async function cancelChangeRequest() {
 			{ detach: true }
 		);
 
-		const request = response.request
+		const updatedChangeRequest = response.request
 			? storeModel(CreatorChangeRequestModel, response.request)
 			: null;
-		changeRequest.value = request?.rejected_on ? null : request;
-		rejectedChangeRequest.value = request?.rejected_on ? request : null;
 
-		const key = baseModel ? getChangeRequestKey(baseModel) : null;
-		if (key) {
-			if (request) {
-				changeRequests.value.set(key, request);
-			} else {
-				changeRequests.value.delete(key);
-			}
+		if (!baseModel) {
+			return;
 		}
 
-		if (!latestChangeRequest.value && baseModel && !baseModel.was_approved) {
+		if (updatedChangeRequest) {
+			storeChangeRequest(baseModel, updatedChangeRequest);
+		} else {
+			removeChangeRequest(baseModel);
+		}
+
+		if (!updatedChangeRequest && !baseModel.was_approved) {
 			// Remove the item from the store if it was never approved and we
 			// have no change request remaining.
-			switch (typename) {
-				case 'Avatar_Frame':
+			switch (resource) {
+				case ShopProductResource.AvatarFrame:
 					arrayRemove(avatarFrames.value.items, i => i.id === baseModel.id);
 					break;
-				case 'Background':
+				case ShopProductResource.Background:
 					arrayRemove(backgrounds.value.items, i => i.id === baseModel.id);
 					break;
-				case 'Sticker_Pack':
+				case ShopProductResource.StickerPack:
 					arrayRemove(stickerPacks.value.items, i => i.id === baseModel.id);
 					break;
-				case 'Sticker':
+				case ShopProductResource.Sticker:
 					arrayRemove(stickers.value.items, i => i.id === baseModel.id);
 					break;
+				default:
+					assertNever(resource);
 			}
 
 			// Navigate back to the overview since there's no item anymore.
@@ -268,20 +264,11 @@ async function cancelChangeRequest() {
 	}
 }
 
-const afterSlotInnerHeaderType = computed(() => {
-	if (!diffData.value.hasChange && latestChangeRequest.value) {
-		return 'cancel-button';
-	} else if (diffData.value.hasChange || !latestChangeRequest.value) {
-		return 'viewing-preview-text';
-	}
-	return null;
-});
-
 const gridViewStyles = computed<CSSProperties>(() => {
-	const areas = ['a', 'arrow', 'b'];
-	// Creating a new product will only use the `after` slot. Reverse the grid
-	// areas so it shows on the left.
-	if (!diffData.value.binding.before) {
+	const areas = ['before', 'arrow', 'after'];
+	// Creating a new product will only use the `after` section. Reverse the
+	// grid areas so it shows on the left.
+	if (!diffData.value.hasBefore) {
 		areas.reverse();
 	}
 	return {
@@ -298,31 +285,23 @@ const tabViewStyles: CSSProperties = {
 	position: `relative`,
 };
 
-function getDiffContainerStyles(slot: 'before' | 'arrow' | 'after'): CSSProperties {
-	if (!useTabView.value) {
-		return {
-			position: `relative`,
-			width: `100%`,
-			height: slot === 'arrow' ? `36px` : `100%`,
-			gridArea: slot === 'before' ? 'a' : slot === 'after' ? 'b' : slot,
-		};
-	}
-
-	if (slot === 'arrow') {
-		return {
-			display: `none`,
-			visibility: `hidden`,
-		};
-	}
-
-	// Always try to render this or we may have content shifting as images are
-	// loaded in.
-	return {
-		...styleWhen(slot !== tabSlot.value, {
-			...styleAbsoluteFill({ zIndex: -1 }),
-			pointerEvents: `none`,
-		}),
-	};
+function getDiffContainerStyles(gridArea: 'before' | 'arrow' | 'after'): CSSProperties {
+	return useTabView.value
+		? {
+				// Always render the inactive sections or we may have content
+				// shifting as images are loaded in when switching between
+				// sections.
+				...styleWhen(gridArea !== currentSection.value, {
+					...styleAbsoluteFill({ zIndex: -1 }),
+					pointerEvents: `none`,
+				}),
+		  }
+		: {
+				position: `relative`,
+				width: `100%`,
+				height: gridArea === 'arrow' ? `36px` : `100%`,
+				gridArea,
+		  };
 }
 </script>
 
@@ -331,9 +310,9 @@ function getDiffContainerStyles(slot: 'before' | 'arrow' | 'after'): CSSProperti
 		<!-- Tab view -->
 		<AppNavTabList v-if="useTabView">
 			<ul>
-				<li v-for="slot in availableTabs" :key="slot">
-					<a :class="{ active: tabSlot === slot }" @click="tabSlot = slot">
-						{{ getSlotText(slot) }}
+				<li v-for="tab in availableTabs" :key="tab">
+					<a :class="{ active: currentSection === tab }" @click="currentSection = tab">
+						{{ getSectionLabel(tab) }}
 					</a>
 				</li>
 			</ul>
@@ -350,14 +329,14 @@ function getDiffContainerStyles(slot: 'before' | 'arrow' | 'after'): CSSProperti
 			<!-- Before -->
 			<div :style="getDiffContainerStyles('before')">
 				<Transition name="fade">
-					<AppShopProductDiffCard v-if="hasSlot('before') || useTabView">
+					<AppShopProductDiffCard v-if="diffData.hasBefore || useTabView">
 						<template v-if="!useTabView" #header>
-							{{ $gettext(`Current product`) }}
+							{{ getSectionLabel('before') }}
 						</template>
 
 						<template v-if="baseModel && baseModel.was_approved" #status>
 							<AppShopProductDiffState
-								:typename="typename"
+								:resource="resource"
 								:item-states="currentStates"
 							/>
 						</template>
@@ -402,22 +381,17 @@ function getDiffContainerStyles(slot: 'before' | 'arrow' | 'after'): CSSProperti
 						</template>
 
 						<template #default>
-							<slot
-								name="before"
-								v-bind="{ imgUrl: existingImgUrl, model: initialFormModel }"
-							>
-								<AppShopProductDiffImg
-									:typename="typename"
-									:img-url="existingImgUrl"
-									:style="{ marginBottom: `16px` }"
-								/>
-								<AppShopProductDiffMeta
-									:current="{
-										name: initialFormModel.name,
-										...getExtraDiffData(initialFormModel),
-									}"
-								/>
-							</slot>
+							<AppShopProductDiffImg
+								:resource="resource"
+								:img-url="existingImgUrl"
+								:style="{ marginBottom: `16px` }"
+							/>
+							<AppShopProductDiffMeta
+								:current="{
+									name: initialFormModel.name,
+									...getExtraDiffData(initialFormModel),
+								}"
+							/>
 						</template>
 					</AppShopProductDiffCard>
 				</Transition>
@@ -427,7 +401,7 @@ function getDiffContainerStyles(slot: 'before' | 'arrow' | 'after'): CSSProperti
 				<!-- Diff arrow -->
 				<Transition name="fade">
 					<AppJolticon
-						v-if="hasSlot('before') && hasSlot('after')"
+						v-if="diffData.hasChange"
 						icon="arrow-right"
 						:style="{
 							margin: 0,
@@ -436,37 +410,32 @@ function getDiffContainerStyles(slot: 'before' | 'arrow' | 'after'): CSSProperti
 							alignSelf: `center`,
 						}"
 					/>
-					<div v-else />
 				</Transition>
 			</div>
 
 			<div :style="getDiffContainerStyles('after')">
 				<!-- After -->
 				<Transition name="fade">
-					<AppShopProductDiffCard v-if="hasSlot('after') || useTabView">
+					<AppShopProductDiffCard v-if="diffData.hasAfter || useTabView">
 						<template v-if="!useTabView" #header>
-							{{
-								hasSlot('before')
-									? $gettext(`New changes`)
-									: $gettext(`New product`)
-							}}
+							{{ getSectionLabel('after') }}
 						</template>
 
 						<template #status>
-							<template v-if="afterSlotInnerHeaderType === 'viewing-preview-text'">
+							<template v-if="diffData.hasChange || !changeRequest">
 								<div class="text-center" :style="{ fontWeight: `bold` }">
 									{{ $gettext(`Preview`) }}
 								</div>
 							</template>
 							<template v-else>
 								<AppShopProductDiffState
-									:typename="typename"
+									:resource="resource"
 									:item-states="changeStates"
 								/>
 							</template>
 						</template>
 
-						<template v-if="afterSlotInnerHeaderType === 'cancel-button'" #controls>
+						<template v-if="!diffData.hasChange && changeRequest" #controls>
 							<!-- Cancel pending changes -->
 							<AppButton
 								:style="{ marginLeft: `auto` }"
@@ -482,26 +451,21 @@ function getDiffContainerStyles(slot: 'before' | 'arrow' | 'after'): CSSProperti
 						</template>
 
 						<template #default>
-							<slot
-								name="after"
-								v-bind="{ imgUrl: tempImgUrl, model: form.formModel }"
-							>
-								<AppShopProductDiffImg
-									:typename="typename"
-									:img-url="tempImgUrl"
-									:style="{ marginBottom: `16px` }"
-								/>
+							<AppShopProductDiffImg
+								:resource="resource"
+								:img-url="tempImgUrl"
+								:style="{ marginBottom: `16px` }"
+							/>
 
-								<AppShopProductDiffMeta
-									:current="{
-										name: form.formModel.name || '',
-										...getExtraDiffData(form.formModel),
-									}"
-									:other="initialFormModel"
-									:diff-color="kThemePrimaryFg"
-									:diff-background="kThemePrimary"
-								/>
-							</slot>
+							<AppShopProductDiffMeta
+								:current="{
+									name: form.formModel.name || '',
+									...getExtraDiffData(form.formModel),
+								}"
+								:other="initialFormModel"
+								:diff-color="kThemePrimaryFg"
+								:diff-background="kThemePrimary"
+							/>
 						</template>
 					</AppShopProductDiffCard>
 				</Transition>

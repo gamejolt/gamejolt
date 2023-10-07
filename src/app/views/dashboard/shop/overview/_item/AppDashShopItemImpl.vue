@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, toRefs } from 'vue';
+import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import AppBackground from '../../../../../../_common/background/AppBackground.vue';
 import { BackgroundModel } from '../../../../../../_common/background/background.model';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
+import { ShopProductModel } from '../../../../../../_common/shop/product/product-model';
 import AppStickerLayerDrawerItem from '../../../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
 import AppStickerPack from '../../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
@@ -14,7 +15,6 @@ import {
 	kThemeBiFg,
 	kThemeFg,
 	kThemeFg10,
-	kThemeGjGreen,
 	kThemeGjOverlayNotice,
 } from '../../../../../../_common/theme/variables';
 import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
@@ -24,13 +24,14 @@ import {
 	styleLineClamp,
 	styleWhen,
 } from '../../../../../../_styles/mixins';
-import { kFontSizeSmall, kFontSizeTiny } from '../../../../../../_styles/variables';
+import { kFontSizeTiny } from '../../../../../../_styles/variables';
 import { isInstance } from '../../../../../../utils/utils';
-import { ShopItemStates, ShopManagerGroupItem, ShopProductPremiumColor } from '../../shop.store';
+import AppDashShopProductType from '../../AppDashShopProductType.vue';
+import { ShopDashProductStates, getShopDashProductType } from '../../shop.store';
 
 const props = defineProps({
 	item: {
-		type: Object as PropType<ShopManagerGroupItem>,
+		type: Object as PropType<ShopProductModel>,
 		required: true,
 	},
 	borderRadius: {
@@ -42,25 +43,14 @@ const props = defineProps({
 		required: true,
 	},
 	itemStates: {
-		type: Object as PropType<ShopItemStates>,
+		type: Object as PropType<ShopDashProductStates>,
 		required: true,
 	},
 });
 
-const { borderRadius, hovered } = toRefs(props);
+const { item, borderRadius, hovered } = toRefs(props);
 
-const baseOverlayTagStyles: CSSProperties = {
-	...styleBorderRadiusLg,
-	position: `absolute`,
-	top: `-12px`,
-	right: `-12px`,
-	zIndex: 1,
-	pointerEvents: `none`,
-	fontWeight: `bold`,
-	fontSize: kFontSizeSmall.px,
-	padding: `2px 6px`,
-	transition: `opacity 250ms`,
-};
+const productType = computed(() => getShopDashProductType(item.value));
 
 const baseInfoTagStyles: CSSProperties = {
 	...styleBorderRadiusLg,
@@ -114,34 +104,20 @@ const baseInfoTagStyles: CSSProperties = {
 
 		<!-- Premium/charge tag -->
 		<div
-			v-if="item.is_premium"
 			:style="{
-				...baseOverlayTagStyles,
-				backgroundColor: ShopProductPremiumColor,
-				color: `black`,
+				...styleBorderRadiusLg,
+				position: `absolute`,
+				top: `-12px`,
+				right: `-12px`,
+				zIndex: 1,
+				pointerEvents: `none`,
+				transition: `opacity 250ms`,
 				...styleWhen(hovered, {
 					opacity: 0,
 				}),
 			}"
 		>
-			{{ $gettext(`Premium`) }}
-		</div>
-		<div
-			v-else-if="isInstance(item, StickerPackModel) || isInstance(item, StickerModel)"
-			:style="{
-				...baseOverlayTagStyles,
-				...styleFlexCenter({
-					display: `inline-flex`,
-					gap: `6px`,
-				}),
-				backgroundColor: `black`,
-				color: kThemeGjGreen,
-				...styleWhen(hovered, {
-					opacity: 0,
-				}),
-			}"
-		>
-			{{ $gettext(`Charge`) }}
+			<AppDashShopProductType :product-type="productType" />
 		</div>
 
 		<!-- Name -->

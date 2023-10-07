@@ -1,7 +1,7 @@
 import { ModelStoreModel } from '../model/model-store.service';
-import { ShopItemModelCommonFields } from '../model/shop-item-model.service';
+import { ShopProductCommonFields } from '../shop/product/product-model';
 
-export class AvatarFrameModel implements ModelStoreModel, ShopItemModelCommonFields {
+export class AvatarFrameModel implements ModelStoreModel, ShopProductCommonFields {
 	declare id: number;
 	declare image_url: string;
 	declare name: string;

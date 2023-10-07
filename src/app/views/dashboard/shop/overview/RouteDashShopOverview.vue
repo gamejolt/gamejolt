@@ -4,18 +4,17 @@ import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
+import {
+	ShopProductModel,
+	ShopProductResource,
+} from '../../../../../_common/shop/product/product-model';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { touchUser } from '../../../../../_common/user/user.model';
 import { isInstance } from '../../../../../utils/utils';
-import {
-	ShopManagerGroup,
-	ShopManagerGroupItem,
-	ShopManagerGroupItemType,
-	useShopManagerStore,
-} from '../shop.store';
+import { useShopDashStore } from '../shop.store';
 import AppDashShopItem from './_item/AppDashShopItem.vue';
 import AppDashShopItemAdd from './_item/AppDashShopItemAdd.vue';
 
@@ -28,22 +27,15 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeTitle = computed(() => $gettext(`Shop dashboard`));
+const { avatarFrames, backgrounds, stickerPacks, stickers } = useShopDashStore()!;
 
-const {
-	avatarFrames,
-	backgrounds,
-	stickerPacks,
-	stickers,
-	getItemCountForSlots,
-	getShopItemStates,
-} = useShopManagerStore()!;
+const routeTitle = computed(() => $gettext(`Shop dashboard`));
 
 createAppRoute({
 	routeTitle,
 });
 
-function getPublishedCount(items: ShopManagerGroupItem[]) {
+function getPublishedCount(items: ShopProductModel[]) {
 	return items.reduce((result, i) => {
 		// Free sticker packs aren't counted towards the published count.
 		if (isInstance(i, StickerPackModel) && !i.is_premium) {
@@ -56,19 +48,22 @@ function getPublishedCount(items: ShopManagerGroupItem[]) {
 	}, 0);
 }
 
-function getCanAddForProductType(type: ShopManagerGroupItemType) {
-	switch (type) {
+function getCanManageForProductResource(resource: ShopProductResource) {
+	switch (resource) {
 		// Can only add premium.
-		case 'Avatar_Frame':
+		case ShopProductResource.AvatarFrame:
 			return avatarFrames.value.canEditPremium === true;
+
 		// Can only add premium.
-		case 'Background':
-			return avatarFrames.value.canEditPremium === true;
+		case ShopProductResource.Background:
+			return backgrounds.value.canEditPremium === true;
+
 		// Can only add premium.
-		case 'Sticker_Pack':
+		case ShopProductResource.StickerPack:
 			return stickerPacks.value.canEditPremium === true;
+
 		// Need to check both canAdd fields.
-		case 'Sticker':
+		case ShopProductResource.Sticker:
 			return (stickers.value.canEditFree || stickers.value.canEditPremium) === true;
 	}
 }
@@ -77,45 +72,36 @@ function getLimitText(current: number, max: number, type: string) {
 	return `${current} / ${max} ${type}`;
 }
 
-const sectionData = computed<
-	{
-		typename: ShopManagerGroupItemType;
-		label: string;
-		data: ShopManagerGroup;
-		ratio: number;
-	}[]
->(() => {
-	const frameData = avatarFrames.value;
-	const backgroundData = backgrounds.value;
-	const stickerPackData = stickerPacks.value;
-	const stickerData = stickers.value;
-
+const sectionData = computed(() => {
 	return [
 		{
-			typename: `Avatar_Frame`,
+			resource: ShopProductResource.AvatarFrame,
 			label: $gettext(`Avatar frames`),
-			data: frameData,
+			group: avatarFrames.value,
 			ratio: 1,
 		},
 		{
-			typename: `Background`,
+			resource: ShopProductResource.Background,
 			label: $gettext(`Backgrounds`),
-			data: backgroundData,
+			group: backgrounds.value,
 			ratio: 1,
 		},
 		{
-			typename: `Sticker_Pack`,
+			resource: ShopProductResource.StickerPack,
 			label: $gettext(`Sticker packs`),
-			data: stickerPackData,
+			group: stickerPacks.value,
 			ratio: StickerPackRatio,
 		},
 		{
-			typename: `Sticker`,
+			resource: ShopProductResource.Sticker,
 			label: $gettext(`Stickers`),
-			data: stickerData,
+			group: stickers.value,
 			ratio: 1,
 		},
-	];
+	].map(i => ({
+		...i,
+		canManage: getCanManageForProductResource(i.resource),
+	}));
 });
 </script>
 
@@ -135,7 +121,7 @@ const sectionData = computed<
 
 		<AppSpacer vertical :scale="4" />
 
-		<div v-for="{ label, typename, data, ratio } of sectionData" :key="label">
+		<div v-for="{ label, resource, group, ratio, canManage } of sectionData" :key="label">
 			<h4
 				:style="{
 					marginTop: 0,
@@ -146,28 +132,28 @@ const sectionData = computed<
 			</h4>
 
 			<div
-				v-if="data.slotAmount || data.maxSalesAmount"
+				v-if="group.slotAmount || group.maxSalesAmount"
 				class="help-block"
 				:style="{ marginTop: `4px` }"
 			>
 				<p>
-					<template v-if="data.slotAmount">
+					<template v-if="group.slotAmount">
 						{{
 							getLimitText(
-								getItemCountForSlots(data),
-								data.slotAmount,
+								group.slotUsedCount,
+								group.slotAmount,
 								$gettext(`slots used`)
 							)
 						}}
 					</template>
 
-					<br v-if="data.slotAmount && data.maxSalesAmount" />
+					<br v-if="group.slotAmount && group.maxSalesAmount" />
 
-					<template v-if="data.maxSalesAmount">
+					<template v-if="group.maxSalesAmount">
 						{{
 							getLimitText(
-								getPublishedCount(data.items),
-								data.maxSalesAmount,
+								getPublishedCount(group.items),
+								group.maxSalesAmount,
 								$gettext(`published`)
 							)
 						}}
@@ -184,18 +170,13 @@ const sectionData = computed<
 				}"
 			>
 				<AppDashShopItemAdd
-					v-if="getCanAddForProductType(typename)"
+					v-if="canManage"
 					key="add-item"
-					:typename="typename"
+					:resource="resource"
 					:ratio="ratio"
 				/>
 
-				<AppDashShopItem
-					v-for="item in data.sortedItems"
-					:key="item.id"
-					:item="item"
-					:item-states="getShopItemStates(item)"
-				/>
+				<AppDashShopItem v-for="item in group.sortedItems" :key="item.id" :item="item" />
 			</div>
 		</div>
 	</div>

@@ -39,6 +39,10 @@ import {
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import AppLinkHelpDocs from '../../../../../../_common/link/AppLinkHelpDocs.vue';
 import { ModelStoreModel, storeModel } from '../../../../../../_common/model/model-store.service';
+import {
+	ShopProductModel,
+	ShopProductResource,
+} from '../../../../../../_common/shop/product/product-model';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
@@ -46,16 +50,17 @@ import { kThemeFg10 } from '../../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { styleBorderRadiusLg, styleChangeBg } from '../../../../../../_styles/mixins';
 import { kBorderWidthBase, kLineHeightComputed } from '../../../../../../_styles/variables';
+import { numberSort } from '../../../../../../utils/array';
 import { objectOmit } from '../../../../../../utils/object';
-import { run } from '../../../../../../utils/utils';
+import { assertNever, run } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
 import {
-	ShopManagerGroup,
-	ShopManagerGroupItem,
-	ShopManagerGroupItemType,
-	ShopManagerStore,
-	productTypeFromTypename,
-	useShopManagerStore,
+	ShopDashGroup,
+	ShopDashProductType,
+	ShopDashStore,
+	getShopDashProductResourceParam,
+	getShopDashProductType,
+	useShopDashStore,
 } from '../../shop.store';
 import AppShopProductDiff from '../_diff/AppShopProductDiff.vue';
 
@@ -69,12 +74,7 @@ export type ShopProductBaseFormFields = BaseFields;
 
 export type ShopProductBaseForm = ReturnType<typeof createShopProductBaseForm>;
 
-export const enum ShopProductPaymentType {
-	Free = 'free',
-	Premium = 'premium',
-}
-
-export const shopProductCommonProps = {
+export const ShopProductCommonProps = {
 	title: {
 		type: String,
 		required: true,
@@ -83,17 +83,17 @@ export const shopProductCommonProps = {
 
 export function createShopProductBaseForm<
 	Fields extends Partial<BaseFields> & Record<string, any>,
-	BaseModel extends ShopManagerGroupItem
+	BaseModel extends ShopProductModel
 >({
 	shopStore,
-	typename,
+	resource,
 	baseModel,
 	fields = {} as Fields,
 	complexFields,
 	onLoad,
 }: {
-	shopStore: ShopManagerStore;
-	typename: ShopManagerGroupItemType;
+	shopStore: ShopDashStore;
+	resource: ShopProductResource;
 	baseModel: BaseModel | undefined;
 	fields?: Fields;
 	complexFields?: (keyof Fields)[];
@@ -101,14 +101,13 @@ export function createShopProductBaseForm<
 }) {
 	const router = useRouter();
 
-	const paymentType = ref<ShopProductPaymentType>();
+	const productType = ref<ShopDashProductType>();
 	if (baseModel) {
-		paymentType.value = baseModel.is_premium
-			? ShopProductPaymentType.Premium
-			: ShopProductPaymentType.Free;
-	} else if (typename !== 'Sticker') {
-		paymentType.value = ShopProductPaymentType.Premium;
+		productType.value = getShopDashProductType(baseModel);
+	} else if (resource !== ShopProductResource.Sticker) {
+		productType.value = ShopDashProductType.Premium;
 	}
+
 	const minNameLength = ref(3);
 	const maxNameLength = ref(50);
 	const maxFilesize = ref(5 * 1024 * 1024);
@@ -119,9 +118,6 @@ export function createShopProductBaseForm<
 	const aspectRatio = ref(1);
 	const canEditFree = ref(false);
 	const canEditPremium = ref(false);
-
-	const changeRequest = ref(null) as Ref<CreatorChangeRequestModel | null>;
-	const rejectedChangeRequest = ref(null) as Ref<CreatorChangeRequestModel | null>;
 
 	const isEditing = Boolean(baseModel);
 	const processedFileData = ref() as Ref<{ file: File; url: string } | undefined>;
@@ -138,19 +134,9 @@ export function createShopProductBaseForm<
 		...fields,
 	});
 
-	const latestChangeRequest = computed(() => {
-		const change = changeRequest.value;
-		const rejectedChange = rejectedChangeRequest.value;
-
-		if (change && rejectedChange) {
-			return change.added_on > rejectedChange.added_on ? change : rejectedChange;
-		} else if (change) {
-			return change;
-		} else if (rejectedChange) {
-			return rejectedChange;
-		}
-		return null;
-	});
+	const changeRequest = computed(() =>
+		baseModel ? shopStore.getChangeRequest(baseModel) : undefined
+	);
 
 	const existingImgUrl = computed(() => {
 		if (baseModel) {
@@ -177,23 +163,21 @@ export function createShopProductBaseForm<
 	}
 
 	const loadUrl = computed(() => {
-		// We will only get data when there's a payment type set.
-		if (!paymentType.value) {
+		// We will only get data when there's a product type set.
+		if (!productType.value) {
 			return undefined;
 		}
 
 		let result: string;
-		if (typename === 'Sticker_Pack') {
+		if (resource === ShopProductResource.StickerPack) {
 			result = `/web/dash/creators/shop/packs/save`;
 		} else {
-			result = `/web/dash/creators/shop/collectibles/save/${typename}`;
+			result = `/web/dash/creators/shop/collectibles/save/${resource}`;
 		}
 		if (baseModel?.id) {
 			result += `/${baseModel.id}`;
 		}
-		return (
-			result + `?is_premium=${paymentType.value === ShopProductPaymentType.Premium ? 1 : 0}`
-		);
+		return result + `?is_premium=${productType.value === ShopDashProductType.Premium ? 1 : 0}`;
 	});
 
 	const form: FormController<typeof initialFormModel.value> = createForm({
@@ -201,8 +185,8 @@ export function createShopProductBaseForm<
 		model: initialFormModel,
 		loadUrl,
 		onLoad(payload: any) {
-			// We will only get data when there's a payment type set.
-			if (!paymentType.value) {
+			// We will only get data when there's a product type set.
+			if (!productType.value) {
 				return;
 			}
 
@@ -220,17 +204,29 @@ export function createShopProductBaseForm<
 			assignNonNull(canEditPremium, payload.canEditPremium);
 
 			// When editing
-			if (payload.changeRequest) {
-				changeRequest.value = storeModel(CreatorChangeRequestModel, payload.changeRequest);
-			}
-			if (payload.rejectedChangeRequest) {
-				rejectedChangeRequest.value = storeModel(
-					CreatorChangeRequestModel,
-					payload.rejectedChangeRequest
-				);
+
+			// Update the shop store with the latest change request data.
+			const latestChange = [payload.changeRequest, payload.rejectedChangeRequest]
+				.filter(i => i)
+				.map(i => storeModel(CreatorChangeRequestModel, i))
+				.sort((a, b) => numberSort(b.added_on, a.added_on))[0];
+
+			if (baseModel) {
+				if (latestChange) {
+					shopStore.storeChangeRequest(baseModel!, latestChange);
+				} else {
+					shopStore.removeChangeRequest(baseModel);
+				}
 			}
 
-			const latestChange = latestChangeRequest.value;
+			if (baseModel) {
+				if (latestChange) {
+					shopStore.storeChangeRequest(baseModel, latestChange);
+				} else {
+					shopStore.removeChangeRequest(baseModel);
+				}
+			}
+
 			if (latestChange) {
 				const name = latestChange.change_name || form.formModel.name;
 				form.formModel.name = name;
@@ -248,19 +244,21 @@ export function createShopProductBaseForm<
 				}
 			}
 
-			switch (typename) {
-				case 'Avatar_Frame':
+			switch (resource) {
+				case ShopProductResource.AvatarFrame:
 					maybeStoreModel(AvatarFrameModel);
 					break;
-				case 'Background':
+				case ShopProductResource.Background:
 					maybeStoreModel(BackgroundModel);
 					break;
-				case 'Sticker_Pack':
+				case ShopProductResource.StickerPack:
 					maybeStoreModel(StickerPackModel);
 					break;
-				case 'Sticker':
+				case ShopProductResource.Sticker:
 					maybeStoreModel(StickerModel);
 					break;
+				default:
+					assertNever(resource);
 			}
 
 			onLoad?.({ payload });
@@ -270,7 +268,7 @@ export function createShopProductBaseForm<
 				loadUrl.value!,
 				{
 					...objectOmit(form.formModel, ['description', 'file']),
-					is_premium: paymentType.value === ShopProductPaymentType.Premium ? 1 : 0,
+					is_premium: productType.value === ShopDashProductType.Premium ? 1 : 0,
 				},
 				{
 					detach: true,
@@ -283,8 +281,8 @@ export function createShopProductBaseForm<
 			showErrorGrowl($gettext(`There was an error saving your product.`));
 		},
 		onSubmitSuccess(response) {
-			function updateGroup<T extends ShopManagerGroupItem>(
-				group: Ref<ShopManagerGroup<T>>,
+			function updateGroup<T extends ShopProductModel>(
+				group: Ref<ShopDashGroup<T>>,
 				item: T
 			) {
 				if (!group.value.items.includes(item)) {
@@ -293,47 +291,48 @@ export function createShopProductBaseForm<
 				return item;
 			}
 
-			let updatedModel: ShopManagerGroupItem | undefined = baseModel;
+			let updatedModel: ShopProductModel | undefined = baseModel;
 
 			if (response.resource) {
-				switch (typename) {
-					case 'Avatar_Frame':
+				switch (resource) {
+					case ShopProductResource.AvatarFrame:
 						updatedModel = updateGroup(
 							shopStore.avatarFrames,
 							storeModel(AvatarFrameModel, response.resource)
 						);
 						break;
-					case 'Background':
+					case ShopProductResource.Background:
 						updatedModel = updateGroup(
 							shopStore.backgrounds,
 							storeModel(BackgroundModel, response.resource)
 						);
 						break;
-					case 'Sticker_Pack':
+					case ShopProductResource.StickerPack:
 						updatedModel = updateGroup(
 							shopStore.stickerPacks,
 							storeModel(StickerPackModel, response.resource)
 						);
 						break;
-					case 'Sticker':
+					case ShopProductResource.Sticker:
 						updatedModel = updateGroup(
 							shopStore.stickers,
 							storeModel(StickerModel, response.resource)
 						);
 						break;
+					default:
+						assertNever(resource);
 				}
 			}
 
 			if (updatedModel) {
-				const changeRequest = response.changeRequest
+				const updatedChangeRequest = response.changeRequest
 					? storeModel(CreatorChangeRequestModel, response.changeRequest)
 					: null;
-				const changeRequestKey = shopStore.getChangeRequestKey(updatedModel);
 
-				if (changeRequest) {
-					shopStore.changeRequests.value.set(changeRequestKey, changeRequest);
+				if (updatedChangeRequest) {
+					shopStore.storeChangeRequest(updatedModel, updatedChangeRequest);
 				} else {
-					shopStore.changeRequests.value.delete(changeRequestKey);
+					shopStore.removeChangeRequest(updatedModel);
 				}
 			}
 
@@ -345,12 +344,7 @@ export function createShopProductBaseForm<
 
 	// We'll assign to some Refs in here, so don't turn this into a computed.
 	watch(
-		[
-			() => form.formModel.file,
-			() => form.controlErrors.file,
-			latestChangeRequest,
-			existingImgUrl,
-		],
+		[() => form.formModel.file, () => form.controlErrors.file, changeRequest, existingImgUrl],
 		([file, fileError, latestChange, existingImgUrl]) => {
 			const url = run(() => {
 				if (!file || fileError || toRaw(file) === toRaw(processedFileData.value?.file)) {
@@ -404,7 +398,7 @@ export function createShopProductBaseForm<
 
 	return shallowReadonly({
 		form,
-		typename,
+		resource,
 		initialFormModel,
 		baseModel,
 
@@ -430,40 +424,32 @@ export function createShopProductBaseForm<
 		},
 		assignNonNull,
 		isEditing,
-		paymentType,
-		choosePaymentType(type: ShopProductPaymentType) {
-			paymentType.value = type;
+		productType,
+		chooseProductType(type: ShopDashProductType) {
+			productType.value = type;
 			form.reload();
 		},
 		changeRequest,
-		rejectedChangeRequest,
-		latestChangeRequest,
 		getFieldAvailabilityUrl(field: keyof typeof initialFormModel.value) {
 			const id = baseModel?.id || 0;
 			const safeField = String(field);
-			if (typename === 'Sticker_Pack') {
+			if (resource === ShopProductResource.StickerPack) {
 				return `/web/dash/creators/shop/packs/check-field-availability/${id}/${safeField}`;
 			}
-			return `/web/dash/creators/shop/collectibles/check-field-availability/${typename}/${id}/${safeField}`;
+			return `/web/dash/creators/shop/collectibles/check-field-availability/${resource}/${id}/${safeField}`;
 		},
 		diffData: computed(() => {
-			const before = !!baseModel && baseModel.was_approved;
-			const after = !before || _compareFormDiff(initialFormModel.value);
+			const hasBefore = !!baseModel && baseModel.was_approved;
+			const hasAfter = !hasBefore || _compareFormDiff(initialFormModel.value);
 
 			return {
-				/**
-				 * Intended for use with {@link AppShopProductDiff}
-				 * dynamic-slots.
-				 */
-				binding: {
-					before,
-					after,
-				},
+				hasBefore,
+				hasAfter,
 				/**
 				 * If there's a change between our {@link initialFormModel} and
 				 * the {@link form.formModel}.
 				 */
-				hasChange: before === after,
+				hasChange: hasBefore === hasAfter,
 			};
 		}),
 		diffKeys: Object.keys(fields).reduce((acc, key) => {
@@ -490,10 +476,10 @@ const props = defineProps({
 const {
 	form,
 	baseModel,
-	typename,
+	resource,
 	isEditing,
-	paymentType,
-	choosePaymentType,
+	productType,
+	chooseProductType,
 	setFile,
 	minWidth,
 	maxWidth,
@@ -504,12 +490,11 @@ const {
 	minNameLength,
 	maxNameLength,
 	getFieldAvailabilityUrl,
-	diffData,
 } = props.data;
 
-const { getGroupForType } = useShopManagerStore()!;
+const { getGroupForResource } = useShopDashStore()!;
 
-const paymentTypeSelectorStyle: CSSProperties = {
+const productTypeSelectorStyle: CSSProperties = {
 	...styleBorderRadiusLg,
 	...styleChangeBg('bg-offset'),
 	padding: `24px`,
@@ -525,12 +510,12 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 	},
 };
 
-const managerGroup = computed(() => getGroupForType(typename));
+const managerGroup = computed(() => getGroupForResource(resource));
 </script>
 
 <template>
 	<AppForm :controller="form">
-		<template v-if="!paymentType">
+		<template v-if="!productType">
 			<div
 				:style="{
 					display: `flex`,
@@ -539,24 +524,24 @@ const managerGroup = computed(() => getGroupForType(typename));
 				}"
 			>
 				<div
-					:style="paymentTypeSelectorStyle"
-					@click="choosePaymentType(ShopProductPaymentType.Free)"
+					:style="productTypeSelectorStyle"
+					@click="chooseProductType(ShopDashProductType.Basic)"
 				>
 					<div :style="{ fontWeight: `bold` }">
-						{{ $gettext(`Charge`) }}
+						{{ $gettext(`Basic`) }}
 					</div>
 					<div>
 						{{
 							$gettext(
-								`These are rewarded to users from charge sticker packs for placing charged stickers on your content. They can not be included in premium sticker packs. Static images only; they can't be animated.`
+								`These are rewarded to users from reward sticker packs for placing charged stickers on your content. They can not be included in premium sticker packs. Static images only; they can't be animated.`
 							)
 						}}
 					</div>
 				</div>
 
 				<div
-					:style="paymentTypeSelectorStyle"
-					@click="choosePaymentType(ShopProductPaymentType.Premium)"
+					:style="productTypeSelectorStyle"
+					@click="chooseProductType(ShopDashProductType.Premium)"
 				>
 					<div :style="{ fontWeight: `bold` }">
 						{{ $gettext(`Premium`) }}
@@ -572,20 +557,12 @@ const managerGroup = computed(() => getGroupForType(typename));
 			</div>
 		</template>
 		<template v-else>
-			<AppShopProductDiff :data="data" :dynamic-slots="diffData.binding">
-				<template #before="binding">
-					<slot name="diff" state="before" v-bind="binding" />
-				</template>
-
-				<template #after="binding">
-					<slot name="diff" state="after" v-bind="binding" />
-				</template>
-			</AppShopProductDiff>
+			<AppShopProductDiff :data="data" />
 
 			<AppSpacer vertical :scale="4" />
 
 			<template
-				v-if="paymentType === ShopProductPaymentType.Free && !managerGroup.canEditFree"
+				v-if="productType !== ShopDashProductType.Premium && !managerGroup.canEditFree"
 			>
 				<AppAlertBox fill-color="offset" icon="notice">
 					{{ $gettext(`You are currently unable to edit free products.`) }}
@@ -593,7 +570,7 @@ const managerGroup = computed(() => getGroupForType(typename));
 			</template>
 			<template
 				v-else-if="
-					paymentType === ShopProductPaymentType.Premium && !managerGroup.canEditPremium
+					productType === ShopDashProductType.Premium && !managerGroup.canEditPremium
 				"
 			>
 				<AppAlertBox fill-color="offset" icon="notice">
@@ -602,8 +579,7 @@ const managerGroup = computed(() => getGroupForType(typename));
 			</template>
 			<template
 				v-else-if="
-					paymentType === ShopProductPaymentType.Premium &&
-					baseModel?.was_approved === true
+					productType === ShopDashProductType.Premium && baseModel?.was_approved === true
 				"
 			>
 				<!-- TODO(creator-shops) -->
@@ -620,14 +596,14 @@ const managerGroup = computed(() => getGroupForType(typename));
 					v-bind="formGroupBindings"
 					name="file"
 					:label="
-						paymentType === ShopProductPaymentType.Premium
+						productType === ShopDashProductType.Premium
 							? $gettext(`Upload animated image`)
 							: $gettext(`Upload image`)
 					"
 					:optional="isEditing"
 				>
 					<div class="help-block">
-						<div v-if="paymentType === ShopProductPaymentType.Premium">
+						<div v-if="productType === ShopDashProductType.Premium">
 							{{ $gettext(`Your image must be an animated PNG (APNG).`) }}
 						</div>
 						<div v-else>{{ $gettext(`Your image must be a PNG.`) }}</div>
@@ -655,7 +631,7 @@ const managerGroup = computed(() => getGroupForType(typename));
 						<!-- TODO(creator-shops) DODO(creator-shops) help docs. -->
 						<AppLinkHelpDocs
 							category="creators"
-							:page="productTypeFromTypename(typename)"
+							:page="getShopDashProductResourceParam(resource)"
 							class="link-help"
 						>
 							{{
@@ -695,11 +671,9 @@ const managerGroup = computed(() => getGroupForType(typename));
 					</AppFormControlErrors>
 				</AppFormGroup>
 
+				<!-- Reward types are automatically named at the moment. -->
 				<AppFormGroup
-					v-if="
-						paymentType === ShopProductPaymentType.Premium ||
-						typename !== 'Sticker_Pack'
-					"
+					v-if="productType !== ShopDashProductType.Reward"
 					v-bind="formGroupBindings"
 					name="name"
 				>
@@ -721,7 +695,7 @@ const managerGroup = computed(() => getGroupForType(typename));
 				<slot name="fields" v-bind="{ formGroupBindings }" />
 
 				<AppAlertBox
-					v-if="paymentType !== ShopProductPaymentType.Free"
+					v-if="productType === ShopDashProductType.Premium"
 					icon="notice"
 					fill-color="offset"
 				>
@@ -738,11 +712,11 @@ const managerGroup = computed(() => getGroupForType(typename));
 				<AppSpacer vertical :scale="4" />
 
 				<div class="text-right">
-					<AppFormButton v-if="form.valid">
+					<AppFormButton v-if="form.changed && form.valid">
 						{{
-							paymentType === ShopProductPaymentType.Free
-								? $gettext(`Save`)
-								: $gettext(`Submit for review`)
+							productType === ShopDashProductType.Premium
+								? $gettext(`Submit for review`)
+								: $gettext(`Save`)
 						}}
 					</AppFormButton>
 				</div>

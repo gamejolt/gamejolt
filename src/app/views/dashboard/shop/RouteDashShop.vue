@@ -1,64 +1,37 @@
 <script lang="ts">
-import { Ref, computed } from 'vue';
+import { computed } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../_common/background/background.model';
 import { CreatorChangeRequestModel } from '../../../../_common/creator/change-request/creator-change-request.model';
 import { storeModelList } from '../../../../_common/model/model-store.service';
-import { ModelData } from '../../../../_common/model/model.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { ShopProductResource } from '../../../../_common/shop/product/product-model';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { RouteLocationRedirect } from '../../../../utils/router';
-import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import RouteLandingCreators from '../../landing/creators/RouteLandingCreators.vue';
-import {
-	ShopManagerGroup,
-	ShopManagerGroupItem,
-	ShopManagerGroupItemType,
-	createShopManagerStore,
-} from './shop.store';
+import { createShopDashStore, populateShopDashStoreGroup } from './shop.store';
+import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 
-interface BaseProductPayload<T extends ShopManagerGroupItem> {
-	resources: ModelData<T>[];
-	canEditFree?: boolean;
-	canEditPremium?: boolean;
-	slotAmount?: number;
-	maxSalesAmount?: number;
-	changeRequests?: ModelData<CreatorChangeRequestModel>[];
-}
-
-interface StickerPackFields {
-	stickerIds: {
-		[key: number]: number[];
-	};
-}
-
-type ProductPayload<T extends ShopManagerGroupItem> = BaseProductPayload<T> &
-	(T extends StickerPackModel
-		? StickerPackFields
-		: {
-				[key: string]: never;
-		  });
-
-async function _makeSectionPromise<T extends ShopManagerGroupItem>(
-	typename: Exclude<ShopManagerGroupItemType, 'Sticker_Pack'> | 'packs'
+async function _makeSectionPromise(
+	resource: Exclude<ShopProductResource, ShopProductResource.StickerPack> | 'packs'
 ) {
 	let url = `/web/dash/creators/shop`;
-	if (typename !== 'packs') {
+	if (resource !== 'packs') {
 		url += `/collectibles`;
 	}
-	url += `/${typename}`;
-	return await Api.sendRequest<ProductPayload<T>>(url);
+	url += `/${resource}`;
+	return await Api.sendRequest(url);
 }
 
 async function fetchOverviewData() {
 	const [avatarFrames, backgrounds, stickerPacks, stickers] = await Promise.all([
-		_makeSectionPromise<AvatarFrameModel>('Avatar_Frame'),
-		_makeSectionPromise<BackgroundModel>('Background'),
-		_makeSectionPromise<StickerPackModel>('packs'),
-		_makeSectionPromise<StickerModel>('Sticker'),
+		_makeSectionPromise(ShopProductResource.AvatarFrame),
+		_makeSectionPromise(ShopProductResource.Background),
+		_makeSectionPromise('packs'),
+		_makeSectionPromise(ShopProductResource.Sticker),
 	]);
 
 	return {
@@ -87,76 +60,36 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const {
-	avatarFrames,
-	backgrounds,
-	stickerPacks,
-	stickers,
-	changeRequests,
-	getChangeRequestKey,
-	publishedStickers,
-} = createShopManagerStore();
+const store = createShopDashStore();
+const { avatarFrames, backgrounds, stickerPacks, stickers } = store;
 
 const routeTitle = computed(() => $gettext(`Manage Shop Content`));
-
-function _setGroupFields<T extends ShopManagerGroupItem>(
-	group: Ref<ShopManagerGroup<T>>,
-	data: ProductPayload<T> | null,
-	makeModels: (items: ModelData<T>[]) => T[]
-) {
-	const {
-		canEditFree,
-		canEditPremium,
-		resources,
-		slotAmount,
-		maxSalesAmount,
-		changeRequests: rawChangeRequests,
-		stickerIds,
-	} = data || {
-		resources: [],
-	};
-
-	const items = makeModels(resources);
-
-	group.value.canEditFree = canEditFree;
-	group.value.canEditPremium = canEditPremium;
-	group.value.items = items;
-	group.value.slotAmount = slotAmount;
-	group.value.maxSalesAmount = maxSalesAmount;
-
-	if (rawChangeRequests) {
-		const requests = storeModelList(CreatorChangeRequestModel, rawChangeRequests);
-		for (const request of requests) {
-			changeRequests.value.set(getChangeRequestKey(request), request);
-		}
-	}
-
-	if (stickerIds) {
-		for (const ids of Object.values(stickerIds)) {
-			for (const id of ids) {
-				publishedStickers.value.add(id);
-			}
-		}
-	}
-}
 
 createAppRoute({
 	routeTitle,
 	async onResolved(data) {
 		const payload = data.payload as Awaited<ReturnType<typeof fetchOverviewData>>;
 
-		// Clear these out so we don't need to deal with merging data.
-		changeRequests.value.clear();
-		publishedStickers.value.clear();
-
-		_setGroupFields(avatarFrames, payload.avatarFrames, i =>
-			storeModelList(AvatarFrameModel, i)
-		);
-		_setGroupFields(backgrounds, payload.backgrounds, i => storeModelList(BackgroundModel, i));
-		_setGroupFields(stickerPacks, payload.stickerPacks, i =>
-			storeModelList(StickerPackModel, i)
-		);
-		_setGroupFields(stickers, payload.stickers, i => storeModelList(StickerModel, i));
+		(
+			[
+				[AvatarFrameModel, avatarFrames.value, payload.avatarFrames],
+				[BackgroundModel, backgrounds.value, payload.backgrounds],
+				[StickerPackModel, stickerPacks.value, payload.stickerPacks],
+				[StickerModel, stickers.value, payload.stickers],
+			] as const
+		).forEach(([modelConstructor, group, groupPayload]) => {
+			populateShopDashStoreGroup(
+				store,
+				group,
+				{
+					...groupPayload,
+					changeRequests: groupPayload.changeRequests
+						? storeModelList(CreatorChangeRequestModel, groupPayload.changeRequests)
+						: [],
+				},
+				storeModelList(modelConstructor as any, groupPayload.resources)
+			);
+		});
 	},
 });
 </script>

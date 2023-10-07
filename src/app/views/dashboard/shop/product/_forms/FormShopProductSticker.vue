@@ -11,14 +11,12 @@ import {
 	validateMaxLength,
 	validateMinLength,
 } from '../../../../../../_common/form-vue/validators';
+import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { useShopManagerStore } from '../../shop.store';
+import { ShopDashProductType, useShopDashStore } from '../../shop.store';
 import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
-import FormShopProductBase, {
-	ShopProductPaymentType,
-	createShopProductBaseForm,
-} from './FormShopProductBase.vue';
+import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
 
 const props = defineProps({
 	...defineFormProps<StickerModel>(),
@@ -30,11 +28,11 @@ const emojiNameMinLength = ref(3);
 const emojiNameMaxLength = ref(30);
 const emojiPrefix = ref(props.model?.emoji?.prefix);
 
-const shopStore = useShopManagerStore()!;
+const shopStore = useShopDashStore()!;
 
 const data = createShopProductBaseForm({
 	shopStore,
-	typename: 'Sticker',
+	resource: ShopProductResource.Sticker,
 	baseModel: model?.value,
 	fields: {
 		emoji_name: model?.value?.emoji?.short_name ?? '',
@@ -44,7 +42,7 @@ const data = createShopProductBaseForm({
 		emojiNameMaxLength.value = payload.emojiNameMaxLength || emojiNameMaxLength.value;
 		emojiPrefix.value = payload.emojiPrefix || emojiPrefix.value;
 
-		const changeData = JSON.parse(data.latestChangeRequest.value?.change_data || '{}');
+		const changeData = JSON.parse(data.changeRequest.value?.change_data || '{}');
 		if (changeData.emoji_name) {
 			data.form.formModel.emoji_name = changeData.emoji_name;
 			if (!data.isEditing || !model?.value?.was_approved) {
@@ -54,21 +52,21 @@ const data = createShopProductBaseForm({
 	},
 });
 
-const { baseModel, getFieldAvailabilityUrl, paymentType, isEditing } = data;
+const { baseModel, getFieldAvailabilityUrl, productType, isEditing } = data;
 
 const headerMessage = computed(() => {
-	switch (paymentType.value) {
-		case ShopProductPaymentType.Premium:
+	switch (productType.value) {
+		case ShopDashProductType.Premium:
 			return $gettext(
 				`Premium stickers can be placed into premium sticker packs, which can be purchased in your shop.`
 			);
-		case ShopProductPaymentType.Free:
-			return $gettext(`Charge stickers can be placed into charge sticker packs.`);
+		case ShopDashProductType.Basic:
+			return $gettext(`Basic stickers can be placed into reward sticker packs.`);
 	}
 });
 
 const heading = computed(() => {
-	if (paymentType.value === undefined) {
+	if (productType.value === undefined) {
 		return $gettext(`What type of sticker are you adding?`);
 	}
 
@@ -78,7 +76,7 @@ const heading = computed(() => {
 
 <template>
 	<AppDashShopProductHeader
-		:payment-type="paymentType"
+		:product-type="productType"
 		:heading="heading"
 		:message="headerMessage"
 	/>

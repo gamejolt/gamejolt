@@ -5,29 +5,28 @@ import {
 	CreatorChangeRequestModel,
 	CreatorChangeRequestStatus,
 } from '../../../../_common/creator/change-request/creator-change-request.model';
-import { ShopItemModelCommonFields } from '../../../../_common/model/shop-item-model.service';
+import {
+	ShopProductModel,
+	ShopProductResource,
+	getShopProductResource,
+} from '../../../../_common/shop/product/product-model';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import { stringSort } from '../../../../utils/array';
 import { assertNever, isInstance } from '../../../../utils/utils';
-import { ShopItemStates } from './overview/_item/AppDashShopItem.vue';
 
-export const ShopProductPremiumColor = '#ffbe00';
-
-type ItemModel = AvatarFrameModel | BackgroundModel | StickerPackModel | StickerModel;
-export type ShopManagerGroupItem = ItemModel & ShopItemModelCommonFields;
-
-export interface ShopManagerGroup<T extends ShopManagerGroupItem = ShopManagerGroupItem> {
-	productType: ProductType;
+export interface ShopDashGroup<T extends ShopProductModel = ShopProductModel> {
+	resource: ShopProductResource;
 	items: T[];
 	sortedItems: T[];
+	slotUsedCount: number;
 	slotAmount?: number;
 	maxSalesAmount?: number;
 	canEditFree?: boolean;
 	canEditPremium?: boolean;
 }
 
-export interface ShopItemStates {
+export interface ShopDashProductStates {
 	/**
 	 * Either `published` for publishable items, or `is_active` for free sticker
 	 * packs. No visual distinction is made between the two.
@@ -35,50 +34,81 @@ export interface ShopItemStates {
 	published?: boolean;
 	inReview?: boolean;
 	rejected?: boolean;
-	/** Whether or not this item is their charge pack. */
-	isChargePack: boolean;
 }
 
-const typenames = ['Avatar_Frame', 'Background', 'Sticker_Pack', 'Sticker'] as const;
-export type ShopManagerGroupItemType = (typeof typenames)[number];
-export type ProductType = 'avatar-frame' | 'background' | 'sticker' | 'sticker-pack';
-export const productTypes: { [key in ProductType]: ShopManagerGroupItemType } = {
-	'avatar-frame': 'Avatar_Frame',
-	background: 'Background',
-	sticker: 'Sticker',
-	'sticker-pack': 'Sticker_Pack',
-};
+// Simple mapping of the product resources to their "pretty" route params.
+const productResourceParams = {
+	[ShopProductResource.AvatarFrame]: 'avatar-frame',
+	[ShopProductResource.Background]: 'background',
+	[ShopProductResource.Sticker]: 'sticker',
+	[ShopProductResource.StickerPack]: 'sticker-pack',
+} as const satisfies Record<ShopProductResource, string>;
 
-export function productTypeFromTypename(typename: ShopManagerGroupItemType): ProductType;
-export function productTypeFromTypename(typename: string): ProductType;
-export function productTypeFromTypename(typename: ShopManagerGroupItemType | string) {
-	return Object.entries(productTypes).find(([, val]) => val === typename)?.[0];
+/**
+ * The route param that gets used to identify a product resource.
+ */
+export type ShopDashProductResourceParam =
+	(typeof productResourceParams)[keyof typeof productResourceParams];
+
+/**
+ * Returns the route param to use for a particular product.
+ */
+export function getShopDashProductResourceParam(
+	resourceOrModel: ShopProductResource | ShopProductModel
+) {
+	if (typeof resourceOrModel === 'object') {
+		resourceOrModel = getShopProductResource(resourceOrModel);
+	}
+
+	return productResourceParams[resourceOrModel];
 }
 
-export function getShopProductType(product: ItemModel): ProductType {
-	if (product instanceof AvatarFrameModel) {
-		return 'avatar-frame';
-	} else if (product instanceof BackgroundModel) {
-		return 'background';
-	} else if (product instanceof StickerPackModel) {
-		return 'sticker-pack';
-	} else if (product instanceof StickerModel) {
-		return 'sticker';
-	} else {
-		return assertNever(product);
+/**
+ * Returns the product resource from a route param.
+ */
+export function getShopDashProductResourceFromParam(param: ShopDashProductResourceParam) {
+	for (const [resource, checkParam] of Object.entries(productResourceParams)) {
+		if (checkParam === param) {
+			return resource as ShopProductResource;
+		}
 	}
 }
 
-export type ShopManagerStore = ReturnType<typeof createShopManagerStore>;
-const shopManagerStoreKey: InjectionKey<ShopManagerStore> = Symbol('shop-manager-store');
+export const enum ShopDashProductType {
+	Basic = 'basic',
+	Premium = 'premium',
+	Reward = 'reward',
+}
 
-export function createShopManagerStore() {
-	function _makeEmptyGroup<T extends ShopManagerGroupItem>(productType: ProductType) {
+export function getShopDashProductType(product: ShopProductModel): ShopDashProductType {
+	if (product.is_premium) {
+		return ShopDashProductType.Premium;
+	} else if (product instanceof StickerPackModel) {
+		return ShopDashProductType.Reward;
+	} else {
+		return ShopDashProductType.Basic;
+	}
+}
+
+export type ShopDashStore = ReturnType<typeof createShopDashStore>;
+const ShopDashStoreKey: InjectionKey<ShopDashStore> = Symbol('ShopDashStore');
+
+export function createShopDashStore() {
+	const publishedStickers = ref(new Set<number>());
+	const changeRequests = ref(new Map<string, CreatorChangeRequestModel>());
+
+	const avatarFrames = _makeEmptyGroup<AvatarFrameModel>(ShopProductResource.AvatarFrame);
+	const backgrounds = _makeEmptyGroup<BackgroundModel>(ShopProductResource.Background);
+	const stickerPacks = _makeEmptyGroup<StickerPackModel>(ShopProductResource.StickerPack);
+	const stickers = _makeEmptyGroup<StickerModel>(ShopProductResource.Sticker);
+
+	function _makeEmptyGroup<T extends ShopProductModel>(resource: ShopProductResource) {
 		const items = ref<T[]>([]);
+
 		const sortedItems = computed(() => {
 			return items.value
 				.map(item => {
-					const itemStates = getShopItemStates(item);
+					const itemStates = getShopProductStates(item);
 
 					let sort = 0;
 					if (item.is_premium) {
@@ -106,78 +136,70 @@ export function createShopManagerStore() {
 				.map(i => i.item);
 		});
 
+		const slotUsedCount = computed(() => {
+			// Need to count differently for certain model types.
+			if (items.value.length && items.value[0] instanceof StickerPackModel) {
+				return items.value.reduce((acc, item) => (item.is_premium ? acc + 1 : acc), 0);
+			}
+			return items.value.length;
+		});
+
 		return ref({
-			productType,
+			resource,
 			items,
 			sortedItems,
-		}) as Ref<ShopManagerGroup<T>>;
+			slotUsedCount,
+		}) as Ref<ShopDashGroup<T>>;
 	}
 
-	const avatarFrames = _makeEmptyGroup<AvatarFrameModel>('avatar-frame');
-	const backgrounds = _makeEmptyGroup<BackgroundModel>('background');
-	const stickerPacks = _makeEmptyGroup<StickerPackModel>('sticker-pack');
-	const stickers = _makeEmptyGroup<StickerModel>('sticker');
-
-	const changeRequests = ref(new Map<string, CreatorChangeRequestModel>());
-	const publishedStickers = ref(new Set<number>());
-
-	function getItemCountForSlots<T extends ShopManagerGroupItem>(group: ShopManagerGroup<T>) {
-		// Need to count differently for certain model types.
-		if (group.sortedItems.length && group.sortedItems[0] instanceof StickerPackModel) {
-			return group.sortedItems.reduce((acc, item) => (item.is_premium ? acc + 1 : acc), 0);
+	function getGroupForResource(resource: ShopProductResource) {
+		switch (resource) {
+			case ShopProductResource.AvatarFrame:
+				return avatarFrames.value;
+			case ShopProductResource.Background:
+				return backgrounds.value;
+			case ShopProductResource.StickerPack:
+				return stickerPacks.value;
+			case ShopProductResource.Sticker:
+				return stickers.value;
+			default:
+				return assertNever(resource);
 		}
-		return group.sortedItems.length;
 	}
 
-	function getChangeRequestKey(item: ShopManagerGroupItem | CreatorChangeRequestModel): string;
-	function getChangeRequestKey(type: ProductType, id: number | string): string;
-	function getChangeRequestKey(
-		itemOrType: ShopManagerGroupItem | CreatorChangeRequestModel | ProductType,
-		maybeId?: number | string | never
-	): string {
-		let type: ProductType;
-		let id: number | string;
-		if (typeof itemOrType === 'string') {
-			type = itemOrType;
-			id = maybeId!;
-		} else if (isInstance(itemOrType, CreatorChangeRequestModel)) {
-			type = productTypeFromTypename(itemOrType.resource);
-			id = itemOrType.resource_id;
-		} else {
-			type = getShopProductType(itemOrType);
-			id = itemOrType.id;
-		}
-		return `${type}:${id}`;
+	function getChangeRequest(product: ShopProductModel) {
+		const key = _makeChangeRequestKey(product);
+		return changeRequests.value.get(key);
 	}
 
-	function grabSortValue(val: any): string {
-		if (Object.hasOwn(val, 'id')) {
-			return `${val.id}`;
-		}
-		return `${val}`;
+	function storeChangeRequest(
+		product: ShopProductModel,
+		changeRequest: CreatorChangeRequestModel
+	) {
+		const key = _makeChangeRequestKey(product);
+		changeRequests.value.set(key, changeRequest);
 	}
 
-	function sortUnknownList(list: any[]): string[] {
-		return list.map(grabSortValue).sort(stringSort);
+	function removeChangeRequest(product: ShopProductModel) {
+		const key = _makeChangeRequestKey(product);
+		changeRequests.value.delete(key);
 	}
 
-	function getShopItemStates(
-		item: ShopManagerGroupItem | CreatorChangeRequestModel
-	): ShopItemStates {
+	function getShopProductStates(
+		item: ShopProductModel | CreatorChangeRequestModel
+	): ShopDashProductStates {
 		const isChangeRequest = isInstance(item, CreatorChangeRequestModel);
 		let published: boolean | undefined = undefined;
-		let isChargePack = false;
 
 		if (isInstance(item, StickerPackModel) && !item.is_premium) {
 			published = item.is_active;
-			isChargePack = true;
 		} else if (isInstance(item, StickerModel)) {
 			published = publishedStickers.value.has(item.id);
 		} else if (!isChangeRequest) {
 			published = item.has_active_sale;
 		}
 
-		const { status } = changeRequests.value.get(getChangeRequestKey(item)) || {};
+		const { status } = changeRequests.value.get(_makeChangeRequestKey(item)) || {};
 
 		return {
 			published,
@@ -185,24 +207,7 @@ export function createShopManagerStore() {
 				status === CreatorChangeRequestStatus.Submitted ||
 				status === CreatorChangeRequestStatus.InReview,
 			rejected: status === CreatorChangeRequestStatus.Rejected,
-
-			isChargePack,
 		};
-	}
-
-	function getGroupForType(type: ShopManagerGroupItemType) {
-		switch (type) {
-			case 'Avatar_Frame':
-				return avatarFrames.value;
-			case 'Background':
-				return backgrounds.value;
-			case 'Sticker_Pack':
-				return stickerPacks.value;
-			case 'Sticker':
-				return stickers.value;
-			default:
-				return assertNever(type);
-		}
 	}
 
 	function isSameValues(val: any, otherVal: any) {
@@ -215,12 +220,23 @@ export function createShopManagerStore() {
 			}
 
 			// We need to sort the arrays so that we can compare them.
-			const sortedVal = sortUnknownList(val);
-			const sortedFormVal = sortUnknownList(otherVal);
-			return sortedVal.every((i, index) => i === sortedFormVal[index]);
+			const sortedVal = _sortUnknownList(val);
+			const sortedOtherVal = _sortUnknownList(otherVal);
+			return sortedVal.every((i, index) => i === sortedOtherVal[index]);
 		}
 
 		return val === otherVal;
+	}
+
+	function _makeSortValue(val: any): string {
+		if (Object.hasOwn(val, 'id')) {
+			return `${val.id}`;
+		}
+		return `${val}`;
+	}
+
+	function _sortUnknownList(list: any[]): string[] {
+		return list.map(_makeSortValue).sort(stringSort);
 	}
 
 	const c = shallowReadonly({
@@ -228,10 +244,12 @@ export function createShopManagerStore() {
 		backgrounds,
 		stickerPacks,
 		stickers,
+		publishedStickers,
 
 		changeRequests,
-		getChangeRequestKey,
-		publishedStickers,
+		getChangeRequest,
+		storeChangeRequest,
+		removeChangeRequest,
 
 		/**
 		 * Helper to get the total number of items that take up a slot.
@@ -240,9 +258,8 @@ export function createShopManagerStore() {
 		 * of those non-premium versions aren't optional and can't be removed,
 		 * so we need to count them differently than just adding them all up.
 		 */
-		getItemCountForSlots,
-		getShopItemStates,
-		getGroupForType,
+		getShopProductStates,
+		getGroupForResource,
 
 		/**
 		 * Returns a boolean indicating equality between two values.
@@ -250,10 +267,69 @@ export function createShopManagerStore() {
 		isSameValues,
 	});
 
-	provide(shopManagerStoreKey, c);
+	provide(ShopDashStoreKey, c);
 	return c;
 }
 
-export function useShopManagerStore() {
-	return inject(shopManagerStoreKey, null);
+export function useShopDashStore() {
+	return inject(ShopDashStoreKey, null);
+}
+
+export function populateShopDashStoreGroup(
+	store: ShopDashStore,
+	group: ShopDashGroup,
+	data: Pick<
+		ShopDashGroup,
+		'canEditFree' | 'canEditPremium' | 'slotAmount' | 'maxSalesAmount'
+	> & {
+		changeRequests?: CreatorChangeRequestModel[];
+		stickerIds?: Record<number, number[]>;
+	},
+	items: ShopProductModel[]
+) {
+	const { canEditFree, canEditPremium, slotAmount, maxSalesAmount, changeRequests, stickerIds } =
+		data;
+
+	group.canEditFree = canEditFree;
+	group.canEditPremium = canEditPremium;
+	group.items = items;
+	group.slotAmount = slotAmount;
+	group.maxSalesAmount = maxSalesAmount;
+
+	// The below data goes into the store.
+	if (changeRequests) {
+		// const requests = storeModelList(CreatorChangeRequestModel, rawChangeRequests);
+		for (const request of changeRequests) {
+			store.changeRequests.value.set(_makeChangeRequestKey(request), request);
+		}
+	}
+
+	if (stickerIds) {
+		for (const ids of Object.values(stickerIds)) {
+			for (const id of ids) {
+				store.publishedStickers.value.add(id);
+			}
+		}
+	}
+}
+
+function _makeChangeRequestKey(model: ShopProductModel | CreatorChangeRequestModel): string;
+function _makeChangeRequestKey(resource: ShopProductResource, id: number | string): string;
+function _makeChangeRequestKey(
+	resourceOrModel: ShopProductModel | CreatorChangeRequestModel | ShopProductResource,
+	maybeId?: number | string | never
+): string {
+	let resource: ShopProductResource;
+	let id: number | string;
+	if (typeof resourceOrModel === 'string') {
+		resource = resourceOrModel;
+		id = maybeId!;
+	} else if (isInstance(resourceOrModel, CreatorChangeRequestModel)) {
+		resource = resourceOrModel.resource;
+		id = resourceOrModel.resource_id;
+	} else {
+		resource = getShopProductResource(resourceOrModel);
+		id = resourceOrModel.id;
+	}
+	return `${resource}:${id}`;
 }

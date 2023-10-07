@@ -2,16 +2,17 @@
 import { PropType } from 'vue';
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
+import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { kThemeBgSubtle } from '../../../../../../_common/theme/variables';
 import { styleFlexCenter } from '../../../../../../_styles/mixins';
 import { routeDashShopProduct } from '../../product/product.route';
-import { ShopManagerGroupItemType, productTypeFromTypename } from '../../shop.store';
+import { getShopDashProductResourceParam } from '../../shop.store';
 import AppDashShopHover from '../AppDashShopHover.vue';
 
 defineProps({
-	typename: {
-		type: String as PropType<ShopManagerGroupItemType>,
+	resource: {
+		type: String as PropType<ShopProductResource>,
 		required: true,
 	},
 	ratio: {
@@ -28,7 +29,7 @@ defineProps({
 		:to="{
 			name: routeDashShopProduct.name,
 			params: {
-				type: productTypeFromTypename(typename),
+				resource: getShopDashProductResourceParam(resource),
 			},
 		}"
 		center

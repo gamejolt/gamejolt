@@ -8,7 +8,7 @@ import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive
 import { styleAbsoluteFill, styleLineClamp, styleWhen } from '../../../../../../_styles/mixins';
 import { kFontSizeSmall, kLineHeightBase } from '../../../../../../_styles/variables';
 import { isInstance } from '../../../../../../utils/utils';
-import { useShopManagerStore } from '../../shop.store';
+import { useShopDashStore } from '../../shop.store';
 import { parseProductDiffEntry } from './AppShopProductDiffMeta.vue';
 
 const props = defineProps({
@@ -36,7 +36,7 @@ const props = defineProps({
 
 const { current, other, entry } = toRefs(props);
 
-const { isSameValues, stickers: shopStickers } = useShopManagerStore()!;
+const { isSameValues, stickers: shopStickers } = useShopDashStore()!;
 
 function isFieldEqual(key: string): boolean {
 	if (!other?.value) {

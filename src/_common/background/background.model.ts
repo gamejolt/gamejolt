@@ -1,7 +1,7 @@
 import { getMediaserverUrlForBounds } from '../../utils/image';
 import { MediaItemModel } from '../media-item/media-item-model';
 import { ModelStoreModel } from '../model/model-store.service';
-import { ShopItemModelCommonFields } from '../model/shop-item-model.service';
+import { ShopProductCommonFields } from '../shop/product/product-model';
 
 const DefaultScale = 2.0;
 
@@ -10,7 +10,7 @@ export const enum BackgroundScaling {
 	tile = 'tile',
 }
 
-export class BackgroundModel implements ModelStoreModel, ShopItemModelCommonFields {
+export class BackgroundModel implements ModelStoreModel, ShopProductCommonFields {
 	declare id: number;
 	declare scaling: BackgroundScaling;
 	declare media_item: MediaItemModel;

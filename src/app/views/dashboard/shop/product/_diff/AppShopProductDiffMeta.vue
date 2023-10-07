@@ -1,7 +1,7 @@
 <script lang="ts">
 import { PropType, computed, toRefs } from 'vue';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
-import { useShopManagerStore } from '../../shop.store';
+import { useShopDashStore } from '../../shop.store';
 import AppShopProductDiffMetaEntry from './AppShopProductDiffMetaEntry.vue';
 
 export function parseProductDiffEntry(key: string, val: any, extras: { stickers: StickerModel[] }) {
@@ -46,7 +46,7 @@ const props = defineProps({
 
 const { current, other } = toRefs(props);
 
-const { stickers } = useShopManagerStore()!;
+const { stickers } = useShopDashStore()!;
 
 const entries = computed(() =>
 	Object.entries(current.value).map(([key, val]) =>

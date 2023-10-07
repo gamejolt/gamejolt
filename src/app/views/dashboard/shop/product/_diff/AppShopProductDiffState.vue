@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { PropType, computed, toRefs } from 'vue';
 import AppJolticon, { Jolticon } from '../../../../../../_common/jolticon/AppJolticon.vue';
+import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import {
 	kThemeBiBg,
 	kThemeBiFg,
@@ -11,20 +12,20 @@ import {
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '../../../../../../_styles/mixins';
 import { kFontSizeBase } from '../../../../../../_styles/variables';
-import { ShopItemStates, ShopManagerGroupItemType } from '../../shop.store';
+import { ShopDashProductStates } from '../../shop.store';
 
 const props = defineProps({
-	typename: {
-		type: String as PropType<ShopManagerGroupItemType>,
+	resource: {
+		type: String as PropType<ShopProductResource>,
 		required: true,
 	},
 	itemStates: {
-		type: Object as PropType<ShopItemStates>,
+		type: Object as PropType<ShopDashProductStates>,
 		required: true,
 	},
 });
 
-const { typename, itemStates } = toRefs(props);
+const { resource, itemStates } = toRefs(props);
 
 const data = computed(() => {
 	const { inReview, rejected, published } = itemStates.value;
@@ -41,7 +42,7 @@ const data = computed(() => {
 		};
 	} else if (published) {
 		let label = $gettext(`Published`);
-		if (typename.value === 'Sticker') {
+		if (resource.value === ShopProductResource.Sticker) {
 			label = $gettext(`In published sticker pack`);
 		}
 

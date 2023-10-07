@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { AvatarFrameModel } from '../../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../../_common/background/background.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
@@ -9,11 +9,15 @@ import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
+import { ShopProductResource } from '../../../../../_common/shop/product/product-model';
 import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { assertNever } from '../../../../../utils/utils';
-import { ProductType, useShopManagerStore } from '../shop.store';
+import {
+	ShopDashProductResourceParam,
+	getShopDashProductResourceFromParam,
+	useShopDashStore,
+} from '../shop.store';
 import FormShopProductAvatarFrame from './_forms/FormShopProductAvatarFrame.vue';
 import FormShopProductBackground from './_forms/FormShopProductBackground.vue';
 import FormShopProductSticker from './_forms/FormShopProductSticker.vue';
@@ -22,7 +26,7 @@ import FormShopProductStickerPack from './_forms/FormShopProductStickerPack.vue'
 defineOptions(
 	defineAppRouteOptions({
 		deps: {
-			params: ['type', 'id'],
+			params: ['resource', 'id'],
 		},
 		// Empty resolver so that the shop store is resolved first.
 		resolver: () => Promise.resolve(),
@@ -30,23 +34,28 @@ defineOptions(
 );
 
 const route = useRoute();
-const { avatarFrames, backgrounds, stickerPacks, stickers } = useShopManagerStore()!;
+const router = useRouter();
+const { avatarFrames, backgrounds, stickerPacks, stickers } = useShopDashStore()!;
 
 const avatarFrame = ref<AvatarFrameModel>();
 const background = ref<BackgroundModel>();
 const sticker = ref<StickerModel>();
 const stickerPack = ref<StickerPackModel>();
 
-const productType = computed(() => route.params.type as ProductType);
+const resource = computed(() =>
+	getShopDashProductResourceFromParam(
+		router.currentRoute.value.params.resource as ShopDashProductResourceParam
+	)
+);
 
-const routeTitles: Record<ProductType, string> = {
-	'avatar-frame': $gettext(`Avatar frame product`),
-	background: $gettext(`Background product`),
-	sticker: $gettext(`Sticker product`),
-	'sticker-pack': $gettext(`Sticker pack product`),
+const routeTitles = {
+	[ShopProductResource.AvatarFrame]: $gettext(`Avatar frame product`),
+	[ShopProductResource.Background]: $gettext(`Background product`),
+	[ShopProductResource.Sticker]: $gettext(`Sticker product`),
+	[ShopProductResource.StickerPack]: $gettext(`Sticker pack product`),
 };
 
-const routeTitle = computed(() => routeTitles[productType.value]);
+const routeTitle = computed(() => (resource.value ? routeTitles[resource.value] : ''));
 
 const { isBootstrapped } = createAppRoute({
 	routeTitle,
@@ -57,21 +66,19 @@ const { isBootstrapped } = createAppRoute({
 
 		const modelId = parseInt(route.params.id as string, 10);
 
-		switch (productType.value) {
-			case 'avatar-frame':
+		switch (resource.value) {
+			case ShopProductResource.AvatarFrame:
 				avatarFrame.value = avatarFrames.value.items.find(i => i.id === modelId);
 				break;
-			case 'background':
+			case ShopProductResource.Background:
 				background.value = backgrounds.value.items.find(i => i.id === modelId);
 				break;
-			case 'sticker-pack':
+			case ShopProductResource.StickerPack:
 				stickerPack.value = stickerPacks.value.items.find(i => i.id === modelId);
 				break;
-			case 'sticker':
+			case ShopProductResource.Sticker:
 				sticker.value = stickers.value.items.find(i => i.id === modelId);
 				break;
-			default:
-				assertNever(productType.value);
 		}
 	},
 });
@@ -88,13 +95,22 @@ const { isBootstrapped } = createAppRoute({
 	</RouterLink>
 
 	<template v-if="isBootstrapped">
-		<FormShopProductAvatarFrame v-if="productType === 'avatar-frame'" :model="avatarFrame" />
-		<FormShopProductBackground v-else-if="productType === 'background'" :model="background" />
+		<FormShopProductAvatarFrame
+			v-if="resource === ShopProductResource.AvatarFrame"
+			:model="avatarFrame"
+		/>
+		<FormShopProductBackground
+			v-else-if="resource === ShopProductResource.Background"
+			:model="background"
+		/>
 		<FormShopProductStickerPack
-			v-else-if="productType === 'sticker-pack'"
+			v-else-if="resource === ShopProductResource.StickerPack"
 			:model="stickerPack"
 		/>
-		<FormShopProductSticker v-else-if="productType === 'sticker'" :model="sticker" />
+		<FormShopProductSticker
+			v-else-if="resource === ShopProductResource.Sticker"
+			:model="sticker"
+		/>
 		<template v-else>
 			{{ $gettext(`Uh oh, something went wrong...`) }}
 		</template>

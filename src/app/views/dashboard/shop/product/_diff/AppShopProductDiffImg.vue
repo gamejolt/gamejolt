@@ -2,15 +2,15 @@
 import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { Screen } from '../../../../../../_common/screen/screen-service';
+import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import { StickerPackRatio } from '../../../../../../_common/sticker/pack/AppStickerPack.vue';
 import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleFlexCenter, styleMaxWidthForOptions } from '../../../../../../_styles/mixins';
 import { kBorderRadiusBase, kBorderRadiusLg } from '../../../../../../_styles/variables';
-import { ShopManagerGroupItemType } from '../../shop.store';
 
 const props = defineProps({
-	typename: {
-		type: String as PropType<ShopManagerGroupItemType>,
+	resource: {
+		type: String as PropType<ShopProductResource>,
 		required: true,
 	},
 	imgUrl: {
@@ -19,22 +19,24 @@ const props = defineProps({
 	},
 });
 
-const { typename, imgUrl } = toRefs(props);
+const { resource, imgUrl } = toRefs(props);
 
 const imgData = computed(() => {
 	let borderRadius = '';
 	let placeholderRatio = 1;
-	switch (typename.value) {
-		case 'Background':
+	switch (resource.value) {
+		case ShopProductResource.Background:
 			borderRadius = kBorderRadiusLg.px;
 			break;
-		case 'Sticker_Pack':
+
+		case ShopProductResource.StickerPack:
 			borderRadius = kBorderRadiusLg.px;
 			placeholderRatio = StickerPackRatio;
 			break;
+
 		// They're displayed the same way.
-		case 'Avatar_Frame':
-		case 'Sticker':
+		case ShopProductResource.AvatarFrame:
+		case ShopProductResource.Sticker:
 			borderRadius = kBorderRadiusBase.px;
 			placeholderRatio = 1.54;
 			break;
@@ -65,23 +67,20 @@ const multiSizeGridStyles: CSSProperties = {
 	gap: `8px`,
 };
 
-const gridAreaSizes: Record<
-	Exclude<ShopManagerGroupItemType, 'Background' | 'Sticker_Pack'>,
-	{ a: number; b: number; c: number; d: number }
-> = {
-	Avatar_Frame: {
+const gridAreaSizes = {
+	[ShopProductResource.AvatarFrame]: {
 		a: 200,
 		b: 100,
 		c: 64,
 		d: 24,
 	},
-	Sticker: {
+	[ShopProductResource.Sticker]: {
 		a: 200,
 		b: 100,
 		c: 64,
 		d: 24,
 	},
-} as const;
+} as const satisfies Record<any, { a: number; b: number; c: number; d: number }>;
 </script>
 
 <template>
@@ -96,7 +95,7 @@ const gridAreaSizes: Record<
 		}"
 	>
 		<div
-			v-if="typename === 'Background'"
+			v-if="resource === ShopProductResource.Background"
 			:style="[
 				imgData.styles,
 				{
@@ -108,12 +107,18 @@ const gridAreaSizes: Record<
 		>
 			<AppAspectRatio :ratio="imgData.placeholderRatio" />
 		</div>
-		<AppAspectRatio v-else-if="typename === 'Sticker_Pack'" :ratio="imgData.placeholderRatio">
+		<AppAspectRatio
+			v-else-if="resource === ShopProductResource.StickerPack"
+			:ratio="imgData.placeholderRatio"
+		>
 			<img v-if="imgUrl" :style="imgData.styles" :src="imgUrl" />
 			<div v-else :style="imgData.styles" />
 		</AppAspectRatio>
 		<div
-			v-else-if="typename === 'Sticker' || typename === 'Avatar_Frame'"
+			v-else-if="
+				resource === ShopProductResource.Sticker ||
+				resource === ShopProductResource.AvatarFrame
+			"
 			:style="multiSizeGridStyles"
 		>
 			<template v-for="gridArea in (['a', 'b', 'c', 'd'] as const)" :key="gridArea">
@@ -123,15 +128,15 @@ const gridAreaSizes: Record<
 							:ratio="1"
 							:inner-styles="[styleFlexCenter(), { padding: `2px` }]"
 						>
-							<template v-if="typename === 'Sticker'">
+							<template v-if="resource === ShopProductResource.Sticker">
 								<img
 									v-if="imgUrl"
 									:style="{
 										maxWidth: `100%`,
 										maxHeight: `100%`,
 									}"
-									:width="gridAreaSizes[typename][gridArea]"
-									:height="gridAreaSizes[typename][gridArea]"
+									:width="gridAreaSizes[resource][gridArea]"
+									:height="gridAreaSizes[resource][gridArea]"
 									:src="imgUrl"
 								/>
 							</template>
@@ -139,8 +144,8 @@ const gridAreaSizes: Record<
 								<AppUserAvatarBubble
 									:user="null"
 									:style="{
-										width: `${gridAreaSizes[typename][gridArea]}px`,
-										height: `${gridAreaSizes[typename][gridArea]}px`,
+										width: `${gridAreaSizes[resource][gridArea]}px`,
+										height: `${gridAreaSizes[resource][gridArea]}px`,
 										maxWidth: `100%`,
 										maxHeight: `100%`,
 									}"

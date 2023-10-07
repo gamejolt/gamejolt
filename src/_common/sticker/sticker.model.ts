@@ -1,7 +1,7 @@
 import { EmojiModel } from '../emoji/emoji.model';
 import { MediaItemModel } from '../media-item/media-item-model';
 import { ModelStoreModel, storeModel } from '../model/model-store.service';
-import { ShopItemModelCommonFields } from '../model/shop-item-model.service';
+import { ShopProductCommonFields } from '../shop/product/product-model';
 import { UserModel } from '../user/user.model';
 
 /**
@@ -20,7 +20,7 @@ export const enum StickerRarity {
 	Epic = 3,
 }
 
-export class StickerModel implements ModelStoreModel, ShopItemModelCommonFields {
+export class StickerModel implements ModelStoreModel, ShopProductCommonFields {
 	declare id: number;
 	declare name: string;
 	declare description: string | undefined;

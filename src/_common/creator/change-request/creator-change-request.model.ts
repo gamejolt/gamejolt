@@ -1,5 +1,6 @@
 import { MediaItemModel } from '../../media-item/media-item-model';
 import { ModelStoreModel } from '../../model/model-store.service';
+import { ShopProductResource } from '../../shop/product/product-model';
 import { UserModel } from '../../user/user.model';
 
 export const enum CreatorChangeRequestStatus {
@@ -13,7 +14,7 @@ export const enum CreatorChangeRequestStatus {
 
 export class CreatorChangeRequestModel implements ModelStoreModel {
 	declare id: number;
-	declare resource: string;
+	declare resource: ShopProductResource;
 	declare resource_id: number;
 	declare status: CreatorChangeRequestStatus;
 	declare change_media_item?: MediaItemModel;
