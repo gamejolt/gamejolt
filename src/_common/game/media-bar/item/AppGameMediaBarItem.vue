@@ -1,12 +1,12 @@
+<script lang="ts">
+export const MediaBarItemMaxHeight = 150;
+</script>
+
 <script lang="ts" setup>
 import { ref, toRefs } from 'vue';
 import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
-
-// TODO(component-setup-refactor): since we can't export from here,
-// do we just define this var as local var wherever we import this to?
-const MediaBarItemMaxHeight = 150;
 
 const props = defineProps({
 	item: {
@@ -41,7 +41,6 @@ if (item.value.media_type === 'image') {
 		<a class="-wrapper" :style="{ height }">
 			<slot />
 			<AppMediaItemBackdrop class="-backdrop" :media-item="item.media_item" radius="lg">
-				<!--TODO(component-setup-refactor): Check alt below-->
 				<AppImgResponsive
 					v-if="item.media_type !== 'sketchfab'"
 					:src="item.img_thumbnail"
