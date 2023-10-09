@@ -1,23 +1,16 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { ref } from 'vue';
 
-@Options({})
-export default class AppListGroupStyleguide extends Vue {
-	lgSelector = 0;
-}
+const lgSelector = ref(0);
 </script>
 
 <template>
-	<section class="section" id="styleguide-list-groups">
+	<section id="styleguide-list-groups" class="section">
 		<h1 class="section-header">List Groups</h1>
 
 		<div class="list-group" style="max-width: 400px">
-			<div class="list-group-item">
-				This is an item
-			</div>
-			<div class="list-group-item">
-				This is a second item
-			</div>
+			<div class="list-group-item">This is an item</div>
+			<div class="list-group-item">This is a second item</div>
 			<div class="list-group-item">
 				<span class="badge">3</span>
 				You can add badges
@@ -37,7 +30,7 @@ export default class AppListGroupStyleguide extends Vue {
 				Notification tags get floated right
 			</div>
 			<div class="list-group-item has-icon">
-				<span class="jolticon jolticon-chevron-right"></span>
+				<span class="jolticon jolticon-chevron-right" />
 				Use
 				<code>.has-icon</code>
 				for ones with icons
@@ -82,12 +75,8 @@ export default class AppListGroupStyleguide extends Vue {
 		</p>
 
 		<div class="list-group" style="max-width: 400px">
-			<a class="list-group-item">
-				This is an item
-			</a>
-			<a class="list-group-item">
-				This is a second item
-			</a>
+			<a class="list-group-item"> This is an item </a>
+			<a class="list-group-item"> This is a second item </a>
 			<a class="list-group-item disabled">
 				Disable by adding
 				<code>.disabled</code>
@@ -98,25 +87,21 @@ export default class AppListGroupStyleguide extends Vue {
 
 		<div class="list-group" style="max-width: 400px">
 			<div class="list-group-item">
-				<h4 class="list-group-item-heading">
-					This is a Heading
-				</h4>
+				<h4 class="list-group-item-heading">This is a Heading</h4>
 				<p class="list-group-item-text">
-					This is some body content. It will wrap if the line gets too long, which I think is pretty
-					nice.
+					This is some body content. It will wrap if the line gets too long, which I think
+					is pretty nice.
 				</p>
 			</div>
 			<div class="list-group-item">
 				<div class="list-group-item-heading">
 					Headings don't have to be heading tags. They can appear as normal text.
 				</div>
-				<p class="list-group-item-text">
-					This is some body content.
-				</p>
+				<p class="list-group-item-text">This is some body content.</p>
 			</div>
 			<div class="list-group-item has-icon">
 				<h4 class="list-group-item-heading">
-					<span class="jolticon jolticon-notice"></span>
+					<span class="jolticon jolticon-notice" />
 					Icons work as well
 				</h4>
 				<p class="list-group-item-text">
@@ -124,9 +109,7 @@ export default class AppListGroupStyleguide extends Vue {
 				</p>
 			</div>
 			<div class="list-group-item">
-				<h4 class="list-group-item-heading">
-					Paragraphs
-				</h4>
+				<h4 class="list-group-item-heading">Paragraphs</h4>
 				<p class="list-group-item-text">
 					You can add multiple
 					<code>.list-group-item-text</code>
@@ -153,21 +136,21 @@ export default class AppListGroupStyleguide extends Vue {
 		<div class="list-group" style="max-width: 400px">
 			<a class="list-group-item has-addon" @click="lgSelector = 0">
 				<div class="list-group-item-addon">
-					<span class="jolticon jolticon-check" v-if="lgSelector === 0"></span>
+					<span v-if="lgSelector === 0" class="jolticon jolticon-check" />
 				</div>
 				Item One
 			</a>
 			<a class="list-group-item has-addon" @click="lgSelector = 1">
 				<div class="list-group-item-addon">
-					<span class="jolticon jolticon-check" v-if="lgSelector === 1"></span>
+					<span v-if="lgSelector === 1" class="jolticon jolticon-check" />
 				</div>
 				Item Two
 			</a>
 			<a class="list-group-item has-addon has-icon" @click="lgSelector = 2">
 				<div class="list-group-item-addon">
-					<span class="jolticon jolticon-check" v-if="lgSelector === 2"></span>
+					<span v-if="lgSelector === 2" class="jolticon jolticon-check" />
 				</div>
-				<span class="jolticon jolticon-html5"></span>
+				<span class="jolticon jolticon-html5" />
 				You can also add icons with addons
 			</a>
 		</div>
@@ -181,18 +164,10 @@ export default class AppListGroupStyleguide extends Vue {
 		</p>
 
 		<div class="list-group list-group-dark" style="max-width: 400px">
-			<a class="list-group-item">
-				This is an item
-			</a>
-			<a class="list-group-item">
-				This is a second item
-			</a>
-			<div class="list-group-item active">
-				Forced active state
-			</div>
-			<a class="list-group-item disabled">
-				Disabled
-			</a>
+			<a class="list-group-item"> This is an item </a>
+			<a class="list-group-item"> This is a second item </a>
+			<div class="list-group-item active">Forced active state</div>
+			<a class="list-group-item disabled"> Disabled </a>
 			<a class="list-group-item">
 				<span class="badge">3</span>
 				With badges
@@ -202,12 +177,12 @@ export default class AppListGroupStyleguide extends Vue {
 				With tags
 			</a>
 			<a class="list-group-item has-icon">
-				<span class="jolticon jolticon-chevron-right"></span>
+				<span class="jolticon jolticon-chevron-right" />
 				With icons
 			</a>
 			<a class="list-group-item has-icon">
 				<h4 class="list-group-item-heading">
-					<span class="jolticon jolticon-notice"></span>
+					<span class="jolticon jolticon-notice" />
 					Complex content
 				</h4>
 				<p class="list-group-item-text">
@@ -216,20 +191,18 @@ export default class AppListGroupStyleguide extends Vue {
 			</a>
 			<a class="list-group-item has-addon has-icon">
 				<div class="list-group-item-addon">
-					<span class="jolticon jolticon-check"></span>
+					<span class="jolticon jolticon-check" />
 				</div>
-				<span class="jolticon jolticon-html5"></span>
+				<span class="jolticon jolticon-html5" />
 				With addons
 			</a>
 			<div class="list-group-item has-icon">
 				<h4 class="list-group-item-heading">
-					<span class="jolticon jolticon-notice"></span>
+					<span class="jolticon jolticon-notice" />
 					Complex
 					<a>content</a>
 				</h4>
-				<p class="list-group-item-text">
-					This item is not a link, but it contains links.
-				</p>
+				<p class="list-group-item-text">This item is not a link, but it contains links.</p>
 				<p class="list-group-item-text">
 					It will
 					<a>indent the whole</a>
@@ -241,21 +214,16 @@ export default class AppListGroupStyleguide extends Vue {
 		<h3>In Popovers</h3>
 
 		<p>
-			In popover components they will be styled a tad differently to fit within the popover better.
+			In popover components they will be styled a tad differently to fit within the popover
+			better.
 		</p>
 
 		<div class="popover popover-in-place">
 			<div class="popover-content">
 				<div class="list-group">
-					<a class="list-group-item">
-						This is an item
-					</a>
-					<a class="list-group-item">
-						This is a second item
-					</a>
-					<a class="list-group-item disabled">
-						Disabled
-					</a>
+					<a class="list-group-item"> This is an item </a>
+					<a class="list-group-item"> This is a second item </a>
+					<a class="list-group-item disabled"> Disabled </a>
 				</div>
 			</div>
 		</div>

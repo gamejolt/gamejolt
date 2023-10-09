@@ -2,7 +2,7 @@
 import { Options } from 'vue-property-decorator';
 import AppButtonStyleguide from '../../../_common/button/AppButtonStyleguide.vue';
 import AppJolticonsStyleguide from '../../../_common/jolticons/AppJolticonsStyleguide.vue';
-import AppListGroupStyleguide from '../../../_common/list-group/list-group-styleguide.vue';
+import AppListGroupStyleguide from '../../../_common/list-group/AppListGroupStyleguide.vue';
 import AppProgressBarStyleguide from '../../../_common/progress/AppProgressBarStyleguide.vue';
 import {
 	LegacyRouteComponent,
