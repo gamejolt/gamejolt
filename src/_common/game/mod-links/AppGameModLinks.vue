@@ -1,38 +1,41 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, toRefs } from 'vue';
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import { showSuccessGrowl } from '../../growls/growls.service';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { GameModel } from '../game.model';
 
-@Options({})
-export default class AppGameModLinks extends Vue {
-	@Prop(Object) game!: GameModel;
+const props = defineProps({
+	game: {
+		type: Object as PropType<GameModel>,
+		required: true,
+	},
+});
 
-	Environment = Environment;
+const { game } = toRefs(props);
 
-	async tag(tag: string) {
-		// It won't return what site api expects for output, so gotta catch.
-		try {
-			await Api.sendRequest(`/games/tags/tag/${this.game.id}/${tag}`, null, {
-				apiPath: '/moderate',
-				processPayload: false,
-			});
-		} catch (_e) {
-			showSuccessGrowl('Tagged the game.');
-		}
+async function tag(tag: string) {
+	// It won't return what site api expects for output, so gotta catch.
+	try {
+		await Api.sendRequest(`/games/tags/tag/${game.value.id}/${tag}`, null, {
+			apiPath: '/moderate',
+			processPayload: false,
+		});
+	} catch (_e) {
+		showSuccessGrowl('Tagged the game.');
 	}
+}
 
-	async untag(tag: string) {
-		// It won't return what site api expects for output, so gotta catch.
-		try {
-			await Api.sendRequest(`/games/tags/untag/${this.game.id}/${tag}`, null, {
-				apiPath: '/moderate',
-				processPayload: false,
-			});
-		} catch (_e) {
-			showSuccessGrowl('Untagged the game.');
-		}
+async function untag(tag: string) {
+	// It won't return what site api expects for output, so gotta catch.
+	try {
+		await Api.sendRequest(`/games/tags/untag/${game.value.id}/${tag}`, null, {
+			apiPath: '/moderate',
+			processPayload: false,
+		});
+	} catch (_e) {
+		showSuccessGrowl('Untagged the game.');
 	}
 }
 </script>
