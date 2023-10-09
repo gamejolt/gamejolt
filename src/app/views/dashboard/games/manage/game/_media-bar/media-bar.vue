@@ -4,9 +4,7 @@ import { Options, Prop, Vue } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
 import AppEditableOverlay from '../../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { GameModel } from '../../../../../../../_common/game/game.model';
-import AppGameMediaBarItem, {
-	MediaBarItemMaxHeight,
-} from '../../../../../../../_common/game/media-bar/item/item.vue';
+import AppGameMediaBarItem from '../../../../../../../_common/game/media-bar/item/AppGameMediaBarItem.vue';
 import AppScrollScroller from '../../../../../../../_common/scroll/AppScrollScroller.vue';
 import { showGameMediaItemAddModal } from '../../../../../../components/game/media-item/add-modal/add-modal.service';
 import { showGameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
@@ -29,8 +27,8 @@ export default class AppManageGameMediaBar extends Vue {
 
 	routeStore = setup(() => useGameDashRouteController()!);
 
-	mediaBarHeight = MediaBarItemMaxHeight + 40;
-	addButtonSize = MediaBarItemMaxHeight;
+	addButtonSize = 150;
+	mediaBarHeight = this.addButtonSize + 40;
 
 	get draggableItems() {
 		return this.mediaItems;

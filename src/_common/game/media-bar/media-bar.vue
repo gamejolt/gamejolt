@@ -8,7 +8,7 @@ import AppLightboxItem from '../../lightbox/item/item.vue';
 import { createLightbox } from '../../lightbox/lightbox-helpers';
 import AppLoading from '../../loading/AppLoading.vue';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
-import AppGameMediaBarItem, { MediaBarItemMaxHeight } from './item/item.vue';
+import AppGameMediaBarItem from './item/AppGameMediaBarItem.vue';
 
 @Options({
 	components: {
@@ -22,8 +22,8 @@ export default class AppGameMediaBar extends Vue {
 	@Prop(Array) mediaItems!: any[];
 
 	private urlChecked = false;
-
-	mediaBarHeight = MediaBarItemMaxHeight + 40;
+	MediaBarItemMaxHeight = 150;
+	mediaBarHeight = this.MediaBarItemMaxHeight + 40;
 
 	lightbox = setup(() => {
 		return createLightbox(computed(() => (this.$props as this).mediaItems));
