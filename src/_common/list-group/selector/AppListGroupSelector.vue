@@ -1,22 +1,27 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType } from 'vue';
+import { TrophyNavGame } from '../../../app/views/profile/trophies/_nav/nav.vue';
+import { GameScoreTableModel } from '../../game/score-table/score-table.model';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppPopper from '../../popper/AppPopper.vue';
 
-@Options({
-	components: {
-		AppPopper,
+defineProps({
+	current: {
+		type: Object as PropType<TrophyNavGame | GameScoreTableModel | undefined>,
+		default: undefined,
 	},
-})
-export default class AppListGroupSelector extends Vue {
-	@Prop() current?: any;
-	@Prop({ type: Array, default: () => [] }) items!: any[];
+	items: {
+		type: Array as PropType<(TrophyNavGame | GameScoreTableModel)[]>,
+		default: () => [],
+	},
+});
 
-	@Emit('change')
-	emitChange(_item: any) {}
+const emit = defineEmits({
+	change: (_item: any) => true,
+});
 
-	select(item: any) {
-		this.emitChange(item);
-	}
+function select(item: any) {
+	emit('change', item);
 }
 </script>
 
