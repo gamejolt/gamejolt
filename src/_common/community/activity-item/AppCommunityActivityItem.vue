@@ -113,13 +113,9 @@ const actionText = computed(() => {
 	}
 });
 
-const shouldShowActionSecondLine = computed(() => {
-	return !!actionTo.value || !!actionText.value;
-});
+const shouldShowActionSecondLine = computed(() => !!actionTo.value || !!actionText.value);
 
-const extraData = computed<Record<string, any>>(() => {
-	return JSON.parse(item.value.extra_data);
-});
+const extraData = computed<Record<string, any>>(() => JSON.parse(item.value.extra_data));
 
 const reasonText = computed(() => {
 	// The user block resource comes with a reason.
@@ -136,9 +132,7 @@ const reasonText = computed(() => {
 	return getSingleReasonText(reason);
 });
 
-const hasReason = computed(() => {
-	return !!reasonText.value;
-});
+const hasReason = computed(() => !!reasonText.value);
 
 function getExtraData(key: string) {
 	return extraData.value[key];
