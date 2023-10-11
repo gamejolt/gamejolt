@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { TrophyNavGame } from '../../../app/views/profile/trophies/_nav/nav.vue';
+import { TrophyNavGame } from '../../../app/views/profile/trophies/_nav/AppProfileTrophiesNav.vue';
 import { GameScoreTableModel } from '../../game/score-table/score-table.model';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppPopper from '../../popper/AppPopper.vue';
