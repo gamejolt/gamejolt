@@ -65,7 +65,7 @@ function changeGame(game: TrophyNavGame) {
 				</RouterLink>
 			</li>
 			<li>
-				<router-link
+				<RouterLink
 					:to="{
 						name: 'profile.trophies.all',
 					}"
@@ -74,10 +74,10 @@ function changeGame(game: TrophyNavGame) {
 					{{ $gettext(`All Trophies`) }}
 					<!--TODO(component-setup-refactor): Why computed var is in Ref<number> form here? -->
 					<span class="badge">{{ formatNumber(trophyCount) }}</span>
-				</router-link>
+				</RouterLink>
 			</li>
 			<li>
-				<router-link
+				<RouterLink
 					:to="{
 						name: 'profile.trophies.site',
 					}"
@@ -85,7 +85,7 @@ function changeGame(game: TrophyNavGame) {
 				>
 					{{ $gettext(`Game Jolt Trophies`) }}
 					<span class="badge">{{ formatNumber(siteTrophyCount) }}</span>
-				</router-link>
+				</RouterLink>
 			</li>
 		</ul>
 		<template v-if="hasGames">
