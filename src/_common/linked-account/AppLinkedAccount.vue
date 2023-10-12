@@ -86,7 +86,7 @@ function onLink() {
 
 		<div class="-body">
 			<h5>
-				{{ $gettext(`providerName`) }}
+				{{ providerName }}
 			</h5>
 
 			<template v-if="!isAccountSet">

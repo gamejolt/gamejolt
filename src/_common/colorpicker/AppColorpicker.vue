@@ -10,12 +10,10 @@ type VueTouch = {
 	hex: string | null;
 };
 
-// TODO(component-setup-refactor): had error when omitted default value for modelValue
-// check if usages of modelValue are correct
 const props = defineProps({
 	modelValue: {
 		type: String,
-		default: '',
+		required: true,
 	},
 });
 
