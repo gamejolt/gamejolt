@@ -1,9 +1,9 @@
 <script lang="ts">
-export type TrophyNavGame = {
+export interface TrophyNavGame {
 	id: number;
 	trophyCount: number;
 	title: string;
-};
+}
 </script>
 
 <script lang="ts" setup>
@@ -28,12 +28,11 @@ const props = defineProps({
 	},
 });
 
-const routeStore = useProfileRouteController()!;
+const { trophyCount } = useProfileRouteController()!;
 const route = useRoute();
 const router = useRouter();
 
 const { games, unviewedGames } = toRefs(props);
-const trophyCount = computed(() => routeStore.trophyCount);
 
 const hasGames = computed(() => games.value.length > 0);
 
@@ -72,7 +71,7 @@ function changeGame(game: TrophyNavGame) {
 					exact-active-class="active"
 				>
 					{{ $gettext(`All Trophies`) }}
-					<!--TODO(component-setup-refactor): Why computed var is in Ref<number> form here? -->
+
 					<span class="badge">{{ formatNumber(trophyCount) }}</span>
 				</RouterLink>
 			</li>
@@ -104,7 +103,6 @@ function changeGame(game: TrophyNavGame) {
 							class="badge"
 							:class="{ 'badge-notice': gameHasUnviewedTrophies(item.id) }"
 						>
-							<!--TODO(component-setup-refactor): can we cast or do conditional print on the TrophyNavGame obj? -->
 							{{ formatNumber(item.trophyCount) }}
 						</span>
 						{{ item.title }}
