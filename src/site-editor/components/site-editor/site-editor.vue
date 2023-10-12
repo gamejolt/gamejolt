@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { Api } from '../../../_common/api/api.service';
-import AppContentBlockEditor from '../../../_common/content-block/editor/editor.vue';
+import AppContentBlockEditor from '../../../_common/content-block/editor/AppContentBlockEditor.vue';
 import { showSuccessGrowl } from '../../../_common/growls/growls.service';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import AppThemeSelector from '../../../_common/theme/selector/selector.vue';
