@@ -738,7 +738,15 @@ const helpDocLink = computed(() => {
 							when="file:missing-required-animated-image"
 							:message="
 								$gettext(
-									`Premium products must be animated. Please upload an animated PNG file.`
+									`Premium products must be animated. Please upload an animated APNG file.`
+								)
+							"
+						/>
+						<AppFormControlError
+							when="file:missing-required-static-image"
+							:message="
+								$gettext(
+									`Basic products must be static images. Please upload a plain PNG file.`
 								)
 							"
 						/>
