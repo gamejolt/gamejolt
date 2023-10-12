@@ -178,11 +178,6 @@ export function createShopDashStore() {
 		product: ShopProductModel | CreatorChangeRequestModel,
 		changeRequest: CreatorChangeRequestModel
 	) {
-		// TODO(creator-shops): bit of a hack, should be done in backend
-		if (changeRequest.status === CreatorChangeRequestStatus.Approved) {
-			return;
-		}
-
 		const key = _makeChangeRequestKey(product);
 		changeRequests.value.set(key, changeRequest);
 	}
