@@ -6,17 +6,11 @@ const controller = useContentEditorController()!;
 const container = ref<HTMLDivElement>();
 const top = ref(0);
 
-const shouldShow = computed(() => {
-	return !!view.value && !isOverflowing.value;
-});
+const shouldShow = computed(() => !!view.value && !isOverflowing.value);
 
-const view = computed(() => {
-	return controller.view;
-});
+const view = computed(() => controller.view);
 
-const isOverflowing = computed(() => {
-	return top.value <= -8 || controller.window.height - top.value <= 12;
-});
+const isOverflowing = computed(() => top.value <= -8 || controller.window.height - top.value <= 12);
 
 watch(
 	() => {
