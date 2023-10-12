@@ -54,8 +54,7 @@ watch(
 		const buttonHeight = 36;
 
 		const heightDiff = buttonHeight - cursorStartHeight;
-		top.value = relativeCursorTop - heightDiff / 2;
-		return top.value;
+		return relativeCursorTop - heightDiff / 2;
 	},
 	newValue => {
 		top.value = newValue;
