@@ -607,8 +607,8 @@ export type ShopShowLocation =
 	| 'sticker-drawer'
 	| 'shell-route';
 
-export function trackShopView(params: { location: ShopShowLocation; userId: number | undefined }) {
-	_trackEvent('shop_view', params);
+export function trackShopOpen(params: { location: ShopShowLocation; userId: number | undefined }) {
+	_trackEvent('shop_open', params);
 }
 
 export type ShopClickType =
@@ -619,8 +619,8 @@ export type ShopClickType =
 	| 'joltbux-card'
 	| 'unhandled-product';
 
-export function trackShopClick(params: { type: ShopClickType; productId?: number }) {
-	_trackEvent('shop_click', params);
+export function trackShopView(params: { type: ShopClickType; productId?: number }) {
+	_trackEvent('shop_view', params);
 }
 
 /**

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed, toRefs } from 'vue';
-import { ShopClickType, trackShopClick } from '../../../../../_common/analytics/analytics.service';
+import { ShopClickType, trackShopView } from '../../../../../_common/analytics/analytics.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { shorthandReadableTime } from '../../../../../_common/filters/duration';
@@ -64,7 +64,7 @@ function onClickProduct() {
 		type = 'sticker-pack';
 	}
 
-	trackShopClick({ type });
+	trackShopView({ type });
 	emit('purchase', shopProduct.value);
 }
 

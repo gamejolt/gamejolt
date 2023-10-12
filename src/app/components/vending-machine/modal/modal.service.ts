@@ -1,5 +1,5 @@
 import { defineAsyncComponent } from 'vue';
-import { ShopShowLocation, trackShopView } from '../../../../_common/analytics/analytics.service';
+import { ShopShowLocation, trackShopOpen } from '../../../../_common/analytics/analytics.service';
 import { showModal } from '../../../../_common/modal/modal.service';
 
 export async function showVendingMachineModal(options: {
@@ -8,7 +8,7 @@ export async function showVendingMachineModal(options: {
 }) {
 	const { userId, location } = options;
 
-	trackShopView({ userId, location });
+	trackShopOpen({ userId, location });
 
 	return await showModal<void>({
 		modalId: 'VendingMachine',
