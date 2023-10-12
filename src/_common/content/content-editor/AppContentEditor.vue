@@ -38,10 +38,10 @@ import {
 import { ContentTempResource } from './content-temp-resource.service';
 import AppContentEditorBlockControls from './controls/AppContentEditorBlockControls.vue';
 import AppContentEditorInsetControls from './controls/AppContentEditorInsetControls.vue';
+import AppContentEditorTextControls from './controls/AppContentEditorTextControls.vue';
 import AppContentEditorControlsEmoji from './controls/emoji/AppContentEditorControlsEmoji.vue';
 import AppContentEditorControlsGif from './controls/gif/AppContentEditorControlsGif.vue';
 import AppContentEditorControlsMentionAutocomplete from './controls/mention/autocomplete.vue';
-import AppContentEditorTextControls from './controls/text-controls.vue';
 import { FocusWatcher } from './focus-watcher';
 
 export interface AppContentEditorInterface {
