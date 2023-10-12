@@ -36,10 +36,10 @@ import {
 	editorFocus,
 } from './content-editor-controller';
 import { ContentTempResource } from './content-temp-resource.service';
+import AppContentEditorInsetControls from './controls/AppContentEditorInsetControls.vue';
 import AppContentEditorBlockControls from './controls/block-controls.vue';
 import AppContentEditorControlsEmoji from './controls/emoji/AppContentEditorControlsEmoji.vue';
 import AppContentEditorControlsGif from './controls/gif/AppContentEditorControlsGif.vue';
-import AppContentEditorInsetControls from './controls/inset-controls.vue';
 import AppContentEditorControlsMentionAutocomplete from './controls/mention/autocomplete.vue';
 import AppContentEditorTextControls from './controls/text-controls.vue';
 import { FocusWatcher } from './focus-watcher';
@@ -365,6 +365,7 @@ async function reset(shouldFocus = focusEnd.value) {
 	controller_.value.isEmpty = true;
 }
 
+// TODO(component-setup-refactor): Can be removed?
 function getContent() {
 	if (view.value) {
 		const data = ContentFormatAdapter.adaptOut(
