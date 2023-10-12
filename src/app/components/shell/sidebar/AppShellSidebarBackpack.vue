@@ -86,7 +86,7 @@ const form: FormController<FormModel> = createForm({
 });
 
 async function onClickVendingMachine() {
-	await showVendingMachineModal();
+	await showVendingMachineModal({ location: 'backpack' });
 }
 
 function openPack(pack: UserStickerPackModel) {

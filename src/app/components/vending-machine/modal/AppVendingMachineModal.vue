@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties, Ref, computed, onMounted, ref, toRefs } from 'vue';
+import { trackShopClick } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -219,8 +220,10 @@ async function purchaseProduct(shopProduct: InventoryShopProductSaleModel) {
 
 async function onClickCurrencyCard(currency: Currency) {
 	if (currency.id === CurrencyType.joltbux.id) {
+		trackShopClick({ type: 'joltbux-card' });
 		showPurchaseMicrotransactionModal();
 	} else if (currency.id === CurrencyType.coins.id) {
+		trackShopClick({ type: 'coins-card' });
 		const isRedirecting = await showGetCoinsRedirectModal();
 
 		if (isRedirecting) {

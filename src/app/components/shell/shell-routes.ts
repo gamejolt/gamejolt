@@ -84,7 +84,7 @@ export function initShellRoutes() {
 		shop: {
 			sidebar: undefined,
 			handler() {
-				showVendingMachineModal();
+				showVendingMachineModal({ location: 'shell-route' });
 				return { sidebar: undefined };
 			},
 		},

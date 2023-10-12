@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed, toRefs } from 'vue';
+import { ShopClickType, trackShopClick } from '../../../../../_common/analytics/analytics.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { shorthandReadableTime } from '../../../../../_common/filters/duration';
@@ -53,6 +54,17 @@ function onClickProduct() {
 		return;
 	}
 
+	let type: ShopClickType = 'unhandled-product';
+	const i = shopProduct.value;
+	if (i.avatarFrame) {
+		type = 'avatar-frame';
+	} else if (i.background) {
+		type = 'background';
+	} else if (i.stickerPack) {
+		type = 'sticker-pack';
+	}
+
+	trackShopClick({ type });
 	emit('purchase', shopProduct.value);
 }
 

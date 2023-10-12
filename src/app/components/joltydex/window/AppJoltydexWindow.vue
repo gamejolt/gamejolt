@@ -162,6 +162,7 @@ function close() {
 						@click="
 							showVendingMachineModal({
 								userId: selectedUser.id,
+								location: 'joltydex-collection',
 							})
 						"
 					>

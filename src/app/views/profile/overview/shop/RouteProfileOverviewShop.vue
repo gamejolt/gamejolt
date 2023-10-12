@@ -34,6 +34,7 @@ createAppRoute({
 async function handleShop() {
 	await showVendingMachineModal({
 		userId: user.value!.id,
+		location: 'user-profile',
 	});
 
 	// After closing, check if we need to route away from the shop or if the
