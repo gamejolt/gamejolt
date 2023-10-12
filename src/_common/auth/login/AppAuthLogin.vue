@@ -54,7 +54,6 @@ function onNeedsApprovedLogin(loginPollingToken: string) {
 
 <template>
 	<div class="auth-login">
-		<!--TODO(component-setup-refactor): what arguments to be passed to onLoggedIn? -->
 		<AppAuthLoginForm
 			:overlay="overlay"
 			@submit="onLoggedIn"
