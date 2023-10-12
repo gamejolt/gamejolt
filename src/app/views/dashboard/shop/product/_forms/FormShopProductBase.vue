@@ -18,7 +18,7 @@ import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../../../_common/background/background.model';
 import { ComponentProps } from '../../../../../../_common/component-helpers';
 import { CreatorChangeRequestModel } from '../../../../../../_common/creator/change-request/creator-change-request.model';
-import { formatNumber } from '../../../../../../_common/filters/number';
+import { formatFilesize } from '../../../../../../_common/filters/filesize';
 import AppForm, {
 	FormController,
 	createForm,
@@ -665,13 +665,12 @@ const helpDocLink = computed(() => {
 						</div>
 						<div v-else>{{ $gettext(`Your image must be a PNG.`) }}</div>
 
-						<div>
+						<div v-if="minWidth === maxWidth && minHeight === maxHeight">
 							{{
 								$gettext(
-									`Images must be between %{ min } and %{ max } (ratio of 1 ÷ %{ denominator }).`,
+									`Images must be %{ dimensions } (ratio of 1 ÷ %{ denominator }).`,
 									{
-										min: `${formatNumber(minWidth)}×${formatNumber(minHeight)}`,
-										max: `${formatNumber(maxWidth)}×${formatNumber(maxHeight)}`,
+										dimensions: `${minWidth}×${minHeight}`,
 										denominator:
 											aspectRatio === 1
 												? 1
@@ -679,6 +678,30 @@ const helpDocLink = computed(() => {
 												  100,
 									}
 								)
+							}}
+						</div>
+						<div v-else>
+							{{
+								$gettext(
+									`Images must be between %{ min } and %{ max } (ratio of 1 ÷ %{ denominator }).`,
+									{
+										min: `${minWidth}×${minHeight}`,
+										max: `${maxWidth}×${maxHeight}`,
+										denominator:
+											aspectRatio === 1
+												? 1
+												: Math.trunc((1 / (maxWidth / maxHeight)) * 100) /
+												  100,
+									}
+								)
+							}}
+						</div>
+
+						<div>
+							{{
+								$gettext(`Max filesize is %{ filesize }.`, {
+									filesize: formatFilesize(maxFilesize),
+								})
 							}}
 						</div>
 					</div>
