@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, onMounted, PropType, ref, toRefs } from 'vue';
-import { debounce } from '../../utils/utils';
-import { vAppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
+import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { useResizeObserver } from '../../utils/resize-observer';
 import { Ruler } from '../ruler/ruler-service';
 import AppAnimSlideshow from './AppAnimSlideshow.vue';
 import {
@@ -33,7 +32,6 @@ const _squareSheet = sheetShockSquare;
 const _rectSheets = [sheetShockRectBL, sheetShockRectTR];
 
 const root = ref<HTMLDivElement>();
-
 const size = ref({ width: 200, height: 200 });
 
 const chosenAsset = computed(() => {
@@ -62,8 +60,9 @@ const chosenAsset = computed(() => {
 	}
 });
 
-onMounted(() => {
-	onDimensionsChanged();
+useResizeObserver({
+	target: root,
+	callback: onDimensionsChanged,
 });
 
 function onDimensionsChanged() {
@@ -123,33 +122,27 @@ function getStyleForAsset(sheet: ImgSlideshow): CSSProperties {
 		...offset,
 	};
 }
-
-const debounceDimensionsChanged = debounce(onDimensionsChanged, 500);
 </script>
 
 <template>
-	<div ref="root" v-app-observe-dimensions="debounceDimensionsChanged" class="anim-electricity">
+	<div ref="root" :style="{ position: `relative` }">
 		<slot />
 
 		<template v-if="chosenAsset">
 			<div
 				v-for="(sheet, index) of chosenAsset"
 				:key="sheet.asset + `-${index}`"
-				:style="getStyleForAsset(sheet)"
-				class="-overlay"
+				:style="[
+					{
+						position: `absolute`,
+						zIndex: 1,
+						pointerEvents: `none`,
+					},
+					getStyleForAsset(sheet),
+				]"
 			>
 				<AppAnimSlideshow :sheet="sheet" />
 			</div>
 		</template>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.anim-electricity
-	position: relative
-
-.-overlay
-	position: absolute
-	z-index: 1
-	pointer-events: none
-</style>

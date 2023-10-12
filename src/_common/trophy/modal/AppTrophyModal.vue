@@ -41,10 +41,6 @@ const trophy = computed(() => userTrophy.value.trophy!);
 
 const bgClass = computed(() => '-trophy-difficulty-' + trophy.value.difficulty);
 
-const isGame = computed(
-	() => userTrophy.value instanceof UserGameTrophyModel && !!userTrophy.value.game
-);
-
 const canReceiveExp = computed(() =>
 	!userTrophy.value.trophy ? false : !userTrophy.value.trophy.is_owner
 );
@@ -68,6 +64,8 @@ const game = computed(() =>
 		? userTrophy.value.game
 		: undefined
 );
+
+const isGame = computed(() => !!game.value);
 
 const loggedInUserUnlocked = computed(() =>
 	Boolean(user.value && userTrophy.value.user_id === user.value.id)
@@ -133,7 +131,7 @@ async function populateFriends() {
 						{{ trophy.title }}
 					</h2>
 					<div class="-subtitle small text-muted">
-						<template v-if="isGame && game">
+						<template v-if="game">
 							<RouterLink
 								v-app-tooltip="game.title"
 								:to="game.routeLocation"

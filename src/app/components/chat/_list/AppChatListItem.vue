@@ -1,6 +1,7 @@
 <script lang="ts">
-import { computed, PropType, ref, toRefs, useSlots } from 'vue';
+import { PropType, ref, toRefs } from 'vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import { defineDynamicSlotProps, useDynamicSlots } from '../../../../_common/component-helpers';
 import AppPopper, {
 	PopperPlacementType,
 	PopperTriggerType,
@@ -12,11 +13,12 @@ import AppScrollInview, {
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 
-type ChatListItemSlot = 'leading' | 'title' | 'trailing';
+const validSlots = ['leading', 'title', 'trailing'] as const;
 </script>
 
 <script lang="ts" setup>
 const props = defineProps({
+	...defineDynamicSlotProps(validSlots, true),
 	horizontalPadding: {
 		type: Number,
 		default: 16,
@@ -43,27 +45,12 @@ const props = defineProps({
 		type: String as PropType<PopperPlacementType>,
 		default: 'bottom',
 	},
-	definedSlots: {
-		type: Array as PropType<ChatListItemSlot[]>,
-		default: undefined,
-	},
 });
 
-const { definedSlots } = toRefs(props);
-
-const slots = useSlots();
+const { dynamicSlots } = toRefs(props);
+const { hasSlot } = useDynamicSlots(dynamicSlots);
 
 const isInview = ref(false);
-
-const hasLeading = computed(() =>
-	definedSlots?.value ? definedSlots.value.includes('leading') : !!slots['leading']
-);
-const hasTitle = computed(() =>
-	definedSlots?.value ? definedSlots.value.includes('title') : !!slots['title']
-);
-const hasTrailing = computed(() =>
-	definedSlots?.value ? definedSlots.value.includes('trailing') : !!slots['trailing']
-);
 </script>
 
 <template>
@@ -100,7 +87,7 @@ const hasTrailing = computed(() =>
 					}"
 				>
 					<div
-						v-if="hasLeading"
+						v-if="hasSlot('leading')"
 						class="-leading"
 						:style="{
 							width: avatarSize + 'px',
@@ -117,11 +104,11 @@ const hasTrailing = computed(() =>
 						</AppAspectRatio>
 					</div>
 
-					<div v-if="hasTitle" class="-title">
+					<div v-if="hasSlot('title')" class="-title">
 						<slot name="title" />
 					</div>
 
-					<div v-if="hasTrailing" class="-trailing">
+					<div v-if="hasSlot('trailing')" class="-trailing">
 						<slot name="trailing" />
 					</div>
 				</a>

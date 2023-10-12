@@ -21,7 +21,7 @@ import {
 } from '../../../../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../../../../_common/loading/AppLoading.vue';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
-import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import AppProgressPoller from '../../../../../../../../_common/progress/poller/AppProgressPoller.vue';
 import {
 	LegacyRouteComponent,

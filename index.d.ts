@@ -22,6 +22,12 @@ declare global {
 }
 
 declare module '@vue/runtime-core' {
-	// eslint-disable-next-line @typescript-eslint/no-empty-interface
-	interface ComponentCustomProps extends HTMLAttributes {}
+	interface ComponentCustomProps {
+		title?: HTMLAttributes['title'];
+		draggable?: HTMLAttributes['draggable'];
+		tabindex?: HTMLAttributes['tabindex'];
+		placeholder?: HTMLAttributes['placeholder'];
+		onClick?: HTMLAttributes['onClick'];
+		onDragstart?: HTMLAttributes['onDragstart'];
+	}
 }

@@ -1,12 +1,11 @@
 import { AvatarFrameModel } from '../../avatar/frame.model';
 import { BackgroundModel } from '../../background/background.model';
 import { CurrencyCostData } from '../../currency/currency-type';
-import { ModelStoreModel, storeModelList } from '../../model/model-store.service';
-import { Model } from '../../model/model.service';
+import { ModelStoreModel, storeModel, storeModelList } from '../../model/model-store.service';
 import { StickerPackModel } from '../../sticker/pack/pack.model';
 import { InventoryShopProductSalePricingModel } from './inventory-shop-product-sale-pricing.model';
 
-interface ModelWithName extends Model {
+interface ModelWithName extends ModelStoreModel {
 	name?: string;
 }
 
@@ -18,10 +17,6 @@ export class InventoryShopProductSaleModel implements ModelStoreModel {
 	declare starts_on?: number;
 	declare ends_on?: number;
 
-	constructor(data: any = {}) {
-		this.update(data);
-	}
-
 	update(data: any) {
 		Object.assign(this, data);
 
@@ -32,15 +27,15 @@ export class InventoryShopProductSaleModel implements ModelStoreModel {
 		if (data.product) {
 			switch (data.product_type) {
 				case 'Sticker_Pack':
-					this.product = new StickerPackModel(data.product);
+					this.product = storeModel(StickerPackModel, data.product);
 					break;
 
 				case 'Avatar_Frame':
-					this.product = new AvatarFrameModel(data.product);
+					this.product = storeModel(AvatarFrameModel, data.product);
 					break;
 
 				case 'Background':
-					this.product = new BackgroundModel(data.product);
+					this.product = storeModel(BackgroundModel, data.product);
 					break;
 
 				default:

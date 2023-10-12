@@ -599,6 +599,30 @@ export function trackJoltydex(
 	_trackEvent('joltydex', params);
 }
 
+export type ShopShowLocation =
+	| 'joltydex'
+	| 'joltydex-collection'
+	| 'user-profile'
+	| 'backpack'
+	| 'sticker-drawer'
+	| 'shell-route';
+
+export function trackShopOpen(params: { location: ShopShowLocation; userId: number | undefined }) {
+	_trackEvent('shop_open', params);
+}
+
+export type ShopClickType =
+	| 'avatar-frame'
+	| 'background'
+	| 'sticker-pack'
+	| 'coins-card'
+	| 'joltbux-card'
+	| 'unhandled-product';
+
+export function trackShopView(params: { type: ShopClickType; productId?: number }) {
+	_trackEvent('shop_view', params);
+}
+
 /**
  * @deprecated This is left here so that old code doesn't break.
  */

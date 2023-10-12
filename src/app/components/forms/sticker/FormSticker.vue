@@ -28,6 +28,7 @@ import {
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { storeModel } from '../../../../_common/model/model-store.service';
 import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
@@ -38,6 +39,7 @@ import { kLineHeightComputed } from '../../../../_styles/variables';
 
 type FormModel = Partial<StickerModel> & {
 	emoji_name: string;
+	file: File | undefined;
 };
 
 const props = defineProps({
@@ -105,7 +107,7 @@ const form: FormController<FormModel> = createForm({
 		aspectRatio.value = payload.aspectRatio ?? aspectRatio.value;
 
 		if (payload.sticker) {
-			model?.value?.assign(payload.sticker);
+			storeModel(StickerModel, payload.sticker);
 			emojiPrefix.value = model?.value?.emoji?.prefix ?? emojiPrefix.value;
 			form.formModel.emoji_name =
 				model?.value?.emoji?.short_name ?? form.formModel.emoji_name;
@@ -135,7 +137,7 @@ const form: FormController<FormModel> = createForm({
 	},
 	onSubmitSuccess(response) {
 		emit('changed', response.sticker);
-		emit('pack', response.pack ? new StickerPackModel(response.pack) : undefined);
+		emit('pack', response.pack ? storeModel(StickerPackModel, response.pack) : undefined);
 	},
 });
 
@@ -304,7 +306,6 @@ async function onClickIsActive() {
 					validateImageAspectRatio({ ratio: aspectRatio }),
 				]"
 				accept=".png"
-				fix-overflow
 				@changed="onFileUploadChanged()"
 			/>
 

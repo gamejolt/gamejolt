@@ -3,6 +3,7 @@ import { computed, PropType, ref, Ref, toRefs } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
+import { storeModel } from '../../../../_common/model/model-store.service';
 import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
@@ -42,9 +43,9 @@ const model = computed(() => sticker?.value || newSticker.value);
 
 function onFormChanged(data: UnknownModelData | ModelData<StickerModel>) {
 	if (model.value) {
-		model.value.assign(data);
+		storeModel(StickerModel, data);
 	} else {
-		newSticker.value = new StickerModel(data);
+		newSticker.value = storeModel(StickerModel, data);
 		stickers?.value?.unshift(newSticker.value);
 	}
 }

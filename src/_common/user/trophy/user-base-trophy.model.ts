@@ -22,5 +22,6 @@ export abstract class UserBaseTrophyModel extends Model {
 }
 
 export function $viewUserBaseTrophyModel(model: UserBaseTrophyModel) {
-	return model.$_save(`/web/profile/trophies/view-site/${model.id}`, model.trophyType);
+	const typeKey = model.trophyType === 'userGameTrophy' ? 'game' : 'site';
+	return model.$_save(`/web/profile/trophies/view-${typeKey}/${model.id}`, model.trophyType);
 }

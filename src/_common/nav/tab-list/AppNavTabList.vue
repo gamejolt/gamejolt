@@ -61,8 +61,6 @@ defineProps({
 	@media $media-xs
 		padding-left: 0
 		padding-right: 0
-		// XS size will default to centered.
-		text-align: center
 
 		&-content
 			overflow-x: auto
@@ -120,6 +118,13 @@ defineProps({
 				// since all the events happen within the <a> tag.
 				& > *
 					pointer-events: none
+
+			@media $media-xs
+				&:first-child a
+					margin-left: $grid-gutter-width-xs * 0.5
+
+				&:last-child a
+					margin-right: $grid-gutter-width-xs * 0.5
 
 	&-centered
 		text-align: center

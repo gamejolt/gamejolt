@@ -61,7 +61,6 @@ const isFollowing = props.user.is_following;
 
 				<AppUserFollowButton
 					:user="user"
-					primary
 					block
 					solid
 					location="firesideOfflineFollow"

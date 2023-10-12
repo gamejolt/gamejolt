@@ -44,7 +44,6 @@ const localPackage = computed(() => findPackageToRepresentGameStatus(props.game.
 		<AppButton
 			v-if="browserBuilds.length > 0 && !localPackage"
 			primary
-			outline
 			icon="play"
 			@click="emit('play')"
 		>

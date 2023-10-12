@@ -19,19 +19,20 @@ const AppShellNotice = defineAsyncComponent(() => import('./notice/AppShellNotic
 </script>
 
 <template>
-	<AppLightboxPortal />
-	<AppTooltipPortal />
-	<AppBackdropPortal />
+	<AppTheme is-root>
+		<AppLightboxPortal />
+		<AppTooltipPortal />
+		<AppBackdropPortal />
 
-	<div v-bind="$attrs">
-		<AppScrollInviewParent>
-			<slot />
+		<div v-bind="$attrs">
+			<AppScrollInviewParent>
+				<slot />
 
-			<AppTheme />
-			<AppLoadingBar />
-			<AppGrowls />
-			<AppShellNotice />
-			<AppModalPortal />
-		</AppScrollInviewParent>
-	</div>
+				<AppLoadingBar />
+				<AppGrowls />
+				<AppShellNotice />
+				<AppModalPortal />
+			</AppScrollInviewParent>
+		</div>
+	</AppTheme>
 </template>

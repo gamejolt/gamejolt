@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import AppMediaItemCover from '../../../../../../_common/media-item/cover/AppMediaItemCover.vue';
-import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,

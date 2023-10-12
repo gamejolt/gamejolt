@@ -1,12 +1,15 @@
 <script lang="ts">
-import { computed, PropType, toRefs, useSlots } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import { Screen } from '../screen/screen-service';
 
-export type HeaderBarSlots = 'leading' | 'title' | 'actions' | 'bottom';
+const validSlots = ['leading', 'title', 'actions', 'bottom'] as const;
+export type HeaderBarSlots = (typeof validSlots)[number];
 </script>
 
 <script lang="ts" setup>
 const props = defineProps({
+	...defineDynamicSlotProps(validSlots, true),
 	centerTitle: {
 		type: Boolean,
 	},
@@ -32,15 +35,6 @@ const props = defineProps({
 		default: undefined,
 		validator: val => (typeof val === 'number' && val >= 0) || typeof val === 'undefined',
 	},
-	/**
-	 * Used to specifically define the slots that should be built. Can be used
-	 * to "remove" slots and prevent flex/grid gaps from being built around
-	 * empty items.
-	 */
-	definedSlots: {
-		type: Array as PropType<HeaderBarSlots[]>,
-		default: undefined,
-	},
 	reverseLeading: {
 		type: Boolean,
 	},
@@ -49,27 +43,21 @@ const props = defineProps({
 	},
 });
 
-const slots = useSlots();
-
 const {
 	centerTitle,
 	automaticallyImplyLeading,
 	elevation,
 	titleSpacing,
 	edgePadding,
-	definedSlots,
+	dynamicSlots,
 } = toRefs(props);
 
-const hasLeading = computed(() =>
-	definedSlots?.value ? definedSlots.value.includes('leading') : !!slots['leading']
-);
-const hasActions = computed(() =>
-	definedSlots?.value ? definedSlots.value.includes('actions') : !!slots['actions']
-);
+const { hasSlot } = useDynamicSlots(dynamicSlots);
 
-const noLeading = computed(() => definedSlots?.value && !definedSlots.value.includes('leading'));
-const noTitle = computed(() => definedSlots?.value && !definedSlots.value.includes('title'));
-const noActions = computed(() => definedSlots?.value && !definedSlots.value.includes('actions'));
+const hasLeading = computed(() => hasSlot('leading'));
+const hasTitle = computed(() => hasSlot('title'));
+const hasActions = computed(() => hasSlot('actions'));
+const hasBottom = computed(() => hasSlot('bottom'));
 
 const shouldShrinkLeading = computed(() => !automaticallyImplyLeading.value && !hasLeading.value);
 const shouldShrinkActions = computed(
@@ -80,7 +68,6 @@ const effectiveTitleSpacing = computed(() => {
 	if (typeof titleSpacing?.value === 'number') {
 		return titleSpacing.value;
 	}
-
 	return Screen.isXs ? 12 : 16;
 });
 
@@ -88,7 +75,6 @@ const effectiveEdgePadding = computed(() => {
 	if (typeof edgePadding?.value === 'number') {
 		return edgePadding.value;
 	}
-
 	return Screen.isXs ? 12 : 16;
 });
 </script>
@@ -106,7 +92,7 @@ const effectiveEdgePadding = computed(() => {
 			}"
 		>
 			<div
-				v-if="!noLeading"
+				v-if="hasLeading"
 				class="_leading"
 				:class="{
 					_shrink: shouldShrinkLeading,
@@ -117,7 +103,7 @@ const effectiveEdgePadding = computed(() => {
 			</div>
 
 			<div
-				v-if="!noTitle"
+				v-if="hasTitle"
 				class="_title"
 				:class="[
 					{
@@ -130,7 +116,7 @@ const effectiveEdgePadding = computed(() => {
 			</div>
 
 			<div
-				v-if="!noActions"
+				v-if="hasActions"
 				class="_actions"
 				:class="{
 					_shrink: shouldShrinkActions,
@@ -140,6 +126,8 @@ const effectiveEdgePadding = computed(() => {
 				<slot name="actions" />
 			</div>
 		</div>
+
+		<slot v-if="hasBottom" name="bottom" />
 	</div>
 </template>
 

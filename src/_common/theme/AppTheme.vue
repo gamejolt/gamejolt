@@ -1,6 +1,6 @@
 <script lang="ts">
 import { parseToRgb, transparentize } from 'polished';
-import { PropType, computed, useSlots } from 'vue';
+import { InjectionKey, MaybeRefOrGetter, PropType, computed, inject, provide, toRef } from 'vue';
 import AppStyle from '../AppStyle.vue';
 import { DefaultTheme, ThemeModel } from './theme.model';
 import { useThemeStore } from './theme.store';
@@ -38,10 +38,35 @@ function darkVar(varname: string) {
 		--theme-${varname}-rgb: var(--dark-theme-${varname}-rgb);
 	`;
 }
+
+const ThemeDataKey: InjectionKey<ThemeData> = Symbol('ThemeData');
+
+type ThemeData = ReturnType<typeof createThemeData>;
+
+export function useThemeData() {
+	return inject(ThemeDataKey)!;
+}
+
+function createThemeData(options: {
+	theme: MaybeRefOrGetter<ThemeModel>;
+	isDark: MaybeRefOrGetter<boolean>;
+}) {
+	const theme = toRef(options.theme);
+	const isDarkTheme = toRef(options.isDark);
+
+	return {
+		theme,
+		isDarkTheme,
+		isLightTheme: toRef(() => !isDarkTheme.value),
+	};
+}
 </script>
 
 <script lang="ts" setup>
 const props = defineProps({
+	isRoot: {
+		type: Boolean,
+	},
 	theme: {
 		type: Object as PropType<ThemeModel>,
 		default: null,
@@ -54,14 +79,23 @@ const props = defineProps({
 	},
 });
 
-const slots = useSlots();
-const { theme: storeTheme, isDark } = useThemeStore();
+const { theme: storeTheme, isDark: storeIsDark } = useThemeStore();
 
 // Not reactive on purpose.
 const scopeId = ++_inc;
 const id = 'theme-' + scopeId;
-const selector = slots.default ? '#' + id : ':root';
+const selector = props.isRoot ? ':root' : '#' + id;
+
 const theme = computed(() => props.theme ?? storeTheme.value ?? DefaultTheme);
+const isDark = computed(() => (storeIsDark.value && !props.forceLight) || props.forceDark);
+
+provide(
+	ThemeDataKey,
+	createThemeData({
+		theme,
+		isDark,
+	})
+);
 
 const styles = computed(() => {
 	let styles = '';
@@ -118,7 +152,7 @@ const styles = computed(() => {
 		}
 	`;
 
-	if ((isDark.value && !props.forceLight) || props.forceDark) {
+	if (isDark.value) {
 		// Sync with the theme-dark() stylus mixin.
 		styles += `
 			${selector} {
@@ -152,5 +186,3 @@ const styles = computed(() => {
 		<slot />
 	</div>
 </template>
-
-<style lang="stylus" scoped></style>

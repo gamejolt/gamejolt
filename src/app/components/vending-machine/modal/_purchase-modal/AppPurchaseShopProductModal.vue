@@ -19,6 +19,7 @@ import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/
 import { showPurchaseMicrotransactionModal } from '../../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
+import { storeModel } from '../../../../../_common/model/model-store.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppStickerPack, {
@@ -122,13 +123,13 @@ export async function purchaseShopProduct({
 		let item: UserStickerPackModel | UserAvatarFrameModel | BackgroundModel | null = null;
 
 		if (shopProduct.stickerPack) {
-			item = new UserStickerPackModel(rawProduct);
+			item = storeModel(UserStickerPackModel, rawProduct);
 			onItemPurchased?.pack?.(item);
 		} else if (shopProduct.avatarFrame) {
-			item = new UserAvatarFrameModel(rawProduct);
+			item = storeModel(UserAvatarFrameModel, rawProduct);
 			onItemPurchased?.avatarFrame?.(item);
 		} else if (shopProduct.background) {
-			item = new BackgroundModel(rawProduct);
+			item = storeModel(BackgroundModel, rawProduct);
 			onItemPurchased?.background?.(item);
 		} else {
 			console.error('No product model found after purchasing product', {

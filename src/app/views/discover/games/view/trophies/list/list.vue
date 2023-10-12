@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { GameTrophyModel } from '../../../../../../../_common/game/trophy/trophy.model';
-import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,

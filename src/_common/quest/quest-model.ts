@@ -58,10 +58,6 @@ export class QuestModel implements ModelStoreModel {
 	declare has_activity: boolean;
 	objectives: QuestObjectiveModel[] = [];
 
-	constructor(data: any = {}) {
-		this.update(data);
-	}
-
 	update(data: any): void {
 		Object.assign(this, data);
 

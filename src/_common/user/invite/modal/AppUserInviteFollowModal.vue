@@ -45,7 +45,6 @@ const modal = useModal<boolean>()!;
 			<AppUserFollowButton
 				:user="user"
 				block
-				solid
 				location="inviteFollow"
 				@follow="modal.resolve(true)"
 			/>

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType } from 'vue';
+import { PropType, StyleValue } from 'vue';
+import { styleWhen } from '../../_styles/mixins';
 
 /**
  * Used to create a box that takes the full-width of its parent and sizes its
@@ -17,30 +18,36 @@ defineProps({
 		type: Boolean,
 	},
 	innerStyles: {
-		type: Object as PropType<CSSProperties>,
-		default: undefined,
+		type: [Object, Array, String] as PropType<StyleValue>,
+		default: () => [],
 	},
 });
 </script>
 
 <template>
 	<div
-		:style="{
-			position: `relative`,
-			height: 0,
-			paddingTop: `${100 / ratio}%`,
-			overflow: !showOverflow ? 'hidden' : undefined,
-		}"
+		:style="[
+			{
+				position: `relative`,
+				height: 0,
+				paddingTop: `${100 / ratio}%`,
+			},
+			styleWhen(!showOverflow, {
+				overflow: `hidden`,
+			}),
+		]"
 	>
 		<div
-			:style="{
-				position: `absolute`,
-				top: 0,
-				left: 0,
-				width: `100%`,
-				height: `100%`,
-				...innerStyles,
-			}"
+			:style="[
+				{
+					position: `absolute`,
+					top: 0,
+					left: 0,
+					width: `100%`,
+					height: `100%`,
+				},
+				innerStyles,
+			]"
 		>
 			<slot />
 		</div>
