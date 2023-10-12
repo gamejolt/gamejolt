@@ -38,7 +38,6 @@ function onSubmittedBlock() {
 				{{ $gettext(`Close`) }}
 			</AppButton>
 		</div>
-		<!--TODO(component-setup-refactor): check :user below -->
 		<div class="modal-body">
 			<AppBlockForm :user="user" @submit="onSubmittedBlock" />
 		</div>

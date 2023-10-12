@@ -44,7 +44,6 @@ const providerIcon = computed(() => {
 	return getLinkedAccountPlatformIcon(provider);
 });
 
-//TODO(component-setup-refactor): Used in template, but not in script
 const providerName = computed(() => {
 	const provider = getProvider();
 	return getLinkedAccountProviderDisplayName(provider);
