@@ -1,7 +1,8 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue';
+import AppButton from '../../../button/AppButton.vue';
 import { showErrorGrowl } from '../../../growls/growls.service';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import { Screen } from '../../../screen/screen-service';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import { $gettext } from '../../../translate/translate.service';
@@ -17,137 +18,116 @@ import {
 	useContentEditorController,
 } from '../content-editor-controller';
 
-@Options({
-	components: {},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppContentEditorBlockControls extends Vue {
-	controller = setup(() => useContentEditorController()!);
+const controller = useContentEditorController()!;
+const container = ref<HTMLElement>();
+const top = ref(0);
 
-	private oldTop = 0;
+const contextCapabilities = computed(() => controller.contextCapabilities);
 
-	readonly Screen = Screen;
+const shouldShow = computed(() => visible.value && top.value >= -24 && !isOverflowingBottom.value);
 
-	declare $refs: {
-		container: HTMLElement;
-	};
+const isOverflowingBottom = computed(() => controller.window.height - top.value < 24);
 
-	get contextCapabilities() {
-		return this.controller.contextCapabilities;
+const collapsed = computed(() => controller.controlsCollapsed);
+
+const visible = computed(() => {
+	if (!controller.scope.isFocused || controller.scope.hasSelection) {
+		return false;
 	}
 
-	get view() {
-		return this.controller.view!;
-	}
+	return controller.capabilities.hasBlockControls;
+});
 
-	get shouldShow() {
-		return this.visible && this.top >= -24 && !this.isOverflowingBottom;
-	}
-
-	get isOverflowingBottom() {
-		return this.controller.window.height - this.top < 24;
-	}
-
-	get collapsed() {
-		return this.controller.controlsCollapsed;
-	}
-
-	get visible() {
-		if (!this.controller.scope.isFocused || this.controller.scope.hasSelection) {
-			return false;
-		}
-
-		return this.controller.capabilities.hasBlockControls;
-	}
-
-	get top() {
+watch(
+	() => {
 		// Use the previous value if our new scope doesn't allow block controls.
-		if (!this.visible) {
-			return this.oldTop;
+		if (!visible.value) {
+			return top.value;
 		}
 
 		const {
 			scope: { cursorStartHeight },
 			relativeCursorTop,
-		} = this.controller;
+		} = controller;
 
 		// AppButton line-height is ~36px by default
 		const buttonHeight = 36;
 
 		const heightDiff = buttonHeight - cursorStartHeight;
-		this.oldTop = relativeCursorTop - heightDiff / 2;
-		return this.oldTop;
+		top.value = relativeCursorTop - heightDiff / 2;
+		return top.value;
+	},
+	newValue => {
+		top.value = newValue;
 	}
+);
 
-	onClickExpand() {
-		this.controller.controlsCollapsed = !this.controller.controlsCollapsed;
-	}
+function onClickExpand() {
+	controller.controlsCollapsed = !controller.controlsCollapsed;
+}
 
-	onClickMedia() {
-		const input = document.createElement('input');
-		input.type = 'file';
-		input.accept = '.png,.jpg,.jpeg,.gif,.webp';
-		input.multiple = true;
+function onClickMedia() {
+	const input = document.createElement('input');
+	input.type = 'file';
+	input.accept = '.png,.jpg,.jpeg,.gif,.webp';
+	input.multiple = true;
 
-		input.onchange = e => {
-			if (e.target instanceof HTMLInputElement) {
-				const files = e.target.files;
-				if (files !== null) {
-					for (let i = 0; i < files.length; i++) {
-						const file = files[i];
-						const result = editorUploadImageFile(this.controller, file);
-						if (!result) {
-							showErrorGrowl({
-								title: $gettext(`Invalid file selected`),
-								message: $gettext(`"%{ filename }" is not a valid image file.`, {
-									filename: file.name,
-								}),
-							});
-						}
+	input.onchange = e => {
+		if (e.target instanceof HTMLInputElement) {
+			const files = e.target.files;
+			if (files !== null) {
+				for (let i = 0; i < files.length; i++) {
+					const file = files[i];
+					const result = editorUploadImageFile(controller, file);
+					if (!result) {
+						showErrorGrowl({
+							title: $gettext(`Invalid file selected`),
+							message: $gettext(`"%{ filename }" is not a valid image file.`, {
+								filename: file.name,
+							}),
+						});
 					}
 				}
 			}
-		};
+		}
+	};
 
-		input.click();
-	}
+	input.click();
+}
 
-	onClickEmbed() {
-		this.controller.controlsCollapsed = true;
-		editorInsertEmbed(this.controller);
-	}
+function onClickEmbed() {
+	controller.controlsCollapsed = true;
+	editorInsertEmbed(controller);
+}
 
-	onClickCodeBlock() {
-		this.controller.controlsCollapsed = true;
-		editorInsertCodeBlock(this.controller);
-	}
+function onClickCodeBlock() {
+	controller.controlsCollapsed = true;
+	editorInsertCodeBlock(controller);
+}
 
-	onClickBlockquote() {
-		this.controller.controlsCollapsed = true;
-		editorInsertBlockquote(this.controller);
-	}
+function onClickBlockquote() {
+	controller.controlsCollapsed = true;
+	editorInsertBlockquote(controller);
+}
 
-	onClickHr() {
-		this.controller.controlsCollapsed = true;
-		editorInsertHr(this.controller);
-	}
+function onClickHr() {
+	controller.controlsCollapsed = true;
+	editorInsertHr(controller);
+}
 
-	onClickSpoiler() {
-		this.controller.controlsCollapsed = true;
-		editorInsertSpoiler(this.controller);
-	}
+function onClickSpoiler() {
+	controller.controlsCollapsed = true;
+	editorInsertSpoiler(controller);
+}
 
-	onClickBulletList() {
-		this.controller.controlsCollapsed = true;
-		editorInsertBulletList(this.controller);
-	}
+function onClickBulletList() {
+	controller.controlsCollapsed = true;
+	editorInsertBulletList(controller);
+}
 
-	onClickOrderedList() {
-		this.controller.controlsCollapsed = true;
-		editorInsertNumberedList(this.controller);
-	}
+function onClickOrderedList() {
+	controller.controlsCollapsed = true;
+	editorInsertNumberedList(controller);
 }
 </script>
 

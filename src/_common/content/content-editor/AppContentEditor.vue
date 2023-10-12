@@ -36,8 +36,8 @@ import {
 	editorFocus,
 } from './content-editor-controller';
 import { ContentTempResource } from './content-temp-resource.service';
+import AppContentEditorBlockControls from './controls/AppContentEditorBlockControls.vue';
 import AppContentEditorInsetControls from './controls/AppContentEditorInsetControls.vue';
-import AppContentEditorBlockControls from './controls/block-controls.vue';
 import AppContentEditorControlsEmoji from './controls/emoji/AppContentEditorControlsEmoji.vue';
 import AppContentEditorControlsGif from './controls/gif/AppContentEditorControlsGif.vue';
 import AppContentEditorControlsMentionAutocomplete from './controls/mention/autocomplete.vue';
