@@ -517,7 +517,7 @@ const productTypeSelectorStyle: CSSProperties = {
 const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style: CSSProperties } = {
 	tinyLabelMargin: true,
 	style: {
-		marginBottom: kLineHeightComputed.px,
+		marginBottom: `30px`,
 	},
 };
 
