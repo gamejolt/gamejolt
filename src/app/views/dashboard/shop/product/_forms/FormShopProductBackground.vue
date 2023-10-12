@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
+import { toRefs } from 'vue';
 import { BackgroundModel } from '../../../../../../_common/background/background.model';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
+import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
 import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { ShopDashProductType, useShopDashStore } from '../../shop.store';
@@ -23,23 +24,29 @@ const data = createShopProductBaseForm({
 });
 
 const { productType, isEditing } = data;
-
-// Only premium backgrounds are valid at the moment, so no need for free
-// messaging.
-const headerMessage = computed(() => {
-	switch (productType.value) {
-		case ShopDashProductType.Premium:
-			return $gettext(`Premium backgrounds can be purchased in your shop.`);
-	}
-});
 </script>
 
 <template>
 	<AppDashShopProductHeader
 		:product-type="productType"
-		:heading="isEditing ? $gettext(`Background product`) : $gettext(`Add background`)"
-		:message="headerMessage"
-	/>
+		:heading="isEditing ? $gettext(`Edit background`) : $gettext(`Add background`)"
+	>
+		<!-- Only premium backgrounds are valid at the moment, so no need for free messaging. -->
+		<template v-if="productType === ShopDashProductType.Premium">
+			<div>
+				{{
+					$gettext(
+						`Premium backgrounds are animated and available for purchase with joltbux in your shop.`
+					)
+				}}
+			</div>
+			<div>
+				<AppLinkHelp page="shop">
+					{{ $gettext(`Learn about the shop.`) }}
+				</AppLinkHelp>
+			</div>
+		</template>
+	</AppDashShopProductHeader>
 
 	<FormShopProductBase :data="data" />
 </template>

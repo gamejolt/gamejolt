@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed } from 'vue';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
@@ -48,7 +49,7 @@ function getPublishedCount(items: ShopProductModel[]) {
 	}, 0);
 }
 
-function getCanManageForProductResource(resource: ShopProductResource) {
+function getCanAddForProductResource(resource: ShopProductResource) {
 	switch (resource) {
 		// Can only add premium.
 		case ShopProductResource.AvatarFrame:
@@ -62,7 +63,7 @@ function getCanManageForProductResource(resource: ShopProductResource) {
 		case ShopProductResource.StickerPack:
 			return stickerPacks.value.canEditPremium === true;
 
-		// Need to check both canAdd fields.
+		// Need to check both fields.
 		case ShopProductResource.Sticker:
 			return (stickers.value.canEditFree || stickers.value.canEditPremium) === true;
 	}
@@ -100,9 +101,14 @@ const sectionData = computed(() => {
 		},
 	].map(i => ({
 		...i,
-		canManage: getCanManageForProductResource(i.resource),
+		canAdd: getCanAddForProductResource(i.resource),
 	}));
 });
+
+/** If any of the groups allow management of premium items */
+const canManagePremium = computed(() =>
+	sectionData.value.some(({ group }) => group.canEditPremium)
+);
 </script>
 
 <template>
@@ -111,73 +117,95 @@ const sectionData = computed(() => {
 			{{ routeTitle }}
 		</h1>
 
-		<p>
-			{{
-				$gettext(
-					`These are your shop products. You can submit and swap out active items to sell in the Content Shop. Some changes may require an approval process.`
-				)
-			}}
-		</p>
+		<template v-if="canManagePremium">
+			<div>
+				{{
+					$gettext(
+						`The Game Jolt Shop enables you to design and sell your own sticker packs, backgrounds, and avatar frames, allowing your fans to show their support.`
+					)
+				}}
 
-		<AppSpacer vertical :scale="4" />
+				<AppSpacer vertical :scale="2" />
 
-		<div v-for="{ label, resource, group, ratio, canManage } of sectionData" :key="label">
-			<h4
-				:style="{
-					marginTop: 0,
-					marginBottom: 0,
-				}"
-			>
-				{{ label }}
-			</h4>
-
-			<div
-				v-if="group.slotAmount || group.maxSalesAmount"
-				class="help-block"
-				:style="{ marginTop: `4px` }"
-			>
-				<p>
-					<template v-if="group.slotAmount">
-						{{
-							getLimitText(
-								group.slotUsedCount,
-								group.slotAmount,
-								$gettext(`slots used`)
-							)
-						}}
-					</template>
-
-					<br v-if="group.slotAmount && group.maxSalesAmount" />
-
-					<template v-if="group.maxSalesAmount">
-						{{
-							getLimitText(
-								getPublishedCount(group.items),
-								group.maxSalesAmount,
-								$gettext(`published`)
-							)
-						}}
-					</template>
-				</p>
+				{{
+					$gettext(
+						`After uploading your creations, they will go through a review process. Our team will either approve them or email you for necessary modifications.`
+					)
+				}}
+				<AppLinkHelp page="shop">
+					{{ $gettext(`Learn more`) }}
+				</AppLinkHelp>
 			</div>
 
-			<div
-				:style="{
-					display: `grid`,
-					gridTemplateColumns: `repeat(auto-fill, minmax(120px, 1fr))`,
-					gap: `16px`,
-					marginBottom: `32px`,
-				}"
-			>
-				<AppDashShopItemAdd
-					v-if="canManage"
-					key="add-item"
-					:resource="resource"
-					:ratio="ratio"
-				/>
+			<AppSpacer vertical :scale="4" />
+		</template>
 
-				<AppDashShopItem v-for="item in group.sortedItems" :key="item.id" :item="item" />
-			</div>
+		<div
+			v-for="{ label, resource, group, ratio, canAdd } of sectionData"
+			:key="label"
+			:style="{
+				margin: `32px 0`,
+			}"
+		>
+			<template v-if="canAdd || group.items.length > 0">
+				<h4 class="sans-margin">
+					{{ label }}
+				</h4>
+
+				<!-- Slots -->
+				<div
+					v-if="group.slotAmount || group.maxSalesAmount"
+					class="help-block"
+					:style="{ marginTop: `4px`, marginBottom: 0 }"
+				>
+					<div>
+						<template v-if="group.slotAmount">
+							{{
+								getLimitText(
+									group.slotUsedCount,
+									group.slotAmount,
+									$gettext(`slots used`)
+								)
+							}}
+						</template>
+
+						<br v-if="group.slotAmount && group.maxSalesAmount" />
+
+						<template v-if="group.maxSalesAmount">
+							{{
+								getLimitText(
+									getPublishedCount(group.items),
+									group.maxSalesAmount,
+									$gettext(`published`)
+								)
+							}}
+						</template>
+					</div>
+				</div>
+
+				<AppSpacer vertical :scale="4" />
+
+				<div
+					:style="{
+						display: `grid`,
+						gridTemplateColumns: `repeat(auto-fill, minmax(120px, 1fr))`,
+						gap: `16px`,
+					}"
+				>
+					<AppDashShopItemAdd
+						v-if="canAdd"
+						key="add-item"
+						:resource="resource"
+						:ratio="ratio"
+					/>
+
+					<AppDashShopItem
+						v-for="item in group.sortedItems"
+						:key="item.id"
+						:item="item"
+					/>
+				</div>
+			</template>
 		</div>
 	</div>
 </template>

@@ -1,15 +1,6 @@
 <script lang="ts">
 import { parseToRgb, transparentize } from 'polished';
-import {
-	InjectionKey,
-	MaybeRefOrGetter,
-	PropType,
-	computed,
-	inject,
-	provide,
-	toRef,
-	toRefs,
-} from 'vue';
+import { InjectionKey, MaybeRefOrGetter, PropType, computed, inject, provide, toRef } from 'vue';
 import AppStyle from '../AppStyle.vue';
 import { DefaultTheme, ThemeModel } from './theme.model';
 import { useThemeStore } from './theme.store';
@@ -60,7 +51,8 @@ function createThemeData(options: {
 	theme: MaybeRefOrGetter<ThemeModel>;
 	isDark: MaybeRefOrGetter<boolean>;
 }) {
-	const { theme, isDark: isDarkTheme } = toRefs(options);
+	const theme = toRef(options.theme);
+	const isDarkTheme = toRef(options.isDark);
 
 	return {
 		theme,

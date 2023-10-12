@@ -65,7 +65,7 @@ run(async () => {
 
 const modalError = computed(() => {
 	if (combinedStickers.value.length >= availableSlots.value) {
-		return $gettext(`You've reached the limit of how many stickers you can add to this pack.`);
+		return $gettext(`You've hit the sticker limit for this pack.`);
 	}
 
 	return null;

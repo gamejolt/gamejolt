@@ -4,6 +4,7 @@ import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { storeModelList } from '../../../../../../_common/model/model-store.service';
 import AppOnHover from '../../../../../../_common/on/AppOnHover.vue';
@@ -15,10 +16,10 @@ import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { kThemeBg, kThemeBgOffset, kThemeFg } from '../../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import {
-	styleBorderRadiusLg,
-	styleFlexCenter,
-	styleTyped,
-	styleWhen,
+styleBorderRadiusLg,
+styleFlexCenter,
+styleTyped,
+styleWhen,
 } from '../../../../../../_styles/mixins';
 import { kStrongEaseOut } from '../../../../../../_styles/variables';
 import { ShopDashProductType, useShopDashStore } from '../../shop.store';
@@ -50,40 +51,31 @@ const data = createShopProductBaseForm({
 		minStickers.value = payload.minStickers || minStickers.value;
 		maxStickers.value = payload.maxStickers || maxStickers.value;
 
-		const currentStickers = storeModelList(StickerModel, payload.currentStickers);
+		// Set the initial sticker selection up. We want to either use the
+		// current stickers returned in the payload, or if there's one in the
+		// change request, map them over to our known stickers from the store.
+		let currentStickers = storeModelList(StickerModel, payload.currentStickers);
 		data.initialFormModel.value.stickers = currentStickers.map(i => i.id);
 
-		let changeRequestStickers: StickerModel[];
-		const changeData = JSON.parse(data.changeRequest.value?.change_data || '{}');
-		if (Array.isArray(changeData.sticker_ids)) {
-			changeRequestStickers = (changeData.sticker_ids as number[]).reduce((acc, id) => {
-				const sticker = shopStore.stickers.value.items.find(sticker => sticker.id === id);
+		const changeRequest = data.changeRequest.value;
+		const changeRequestStickerIds = changeRequest?.change_sticker_pack_sticker_ids || [];
+		if (changeRequestStickerIds.length) {
+			currentStickers = [];
+
+			// Filter to only the valid ones we know about.
+			for (const id of changeRequestStickerIds) {
+				const sticker = shopStore.stickers.value.items.find(i => i.id === id);
 				if (sticker) {
-					acc.push(sticker);
+					currentStickers.push(sticker);
 				}
-				return acc;
-			}, [] as StickerModel[]);
-		} else {
-			changeRequestStickers = currentStickers;
+			}
 		}
 
-		_setStickers(true, changeRequestStickers);
+		_setStickers(true, currentStickers);
 	},
 });
 
 const { form, initialFormModel, productType, isEditing } = data;
-
-const headerMessage = computed(() => {
-	switch (productType.value) {
-		case ShopDashProductType.Premium:
-			return $gettext(`Premium sticker packs can be purchased in your shop.`);
-
-		case ShopDashProductType.Reward:
-			return $gettext(
-				`This sticker pack is automatically rewarded to users for placing charged stickers on your content.`
-			);
-	}
-});
 
 const stickersError = computed(() => {
 	if (stickers.value.length < minStickers.value) {
@@ -123,7 +115,7 @@ function _setStickers(isInitial: boolean, newStickers: StickerModel[] | undefine
 
 	if (!isInitial) {
 		form.triggerChanged();
-	} else if (!isEditing || !model?.value?.was_approved) {
+	} else if (!model?.value?.was_approved) {
 		initialFormModel.value.stickers = stickerIds;
 	}
 }
@@ -158,9 +150,37 @@ async function removeSticker(sticker: StickerModel) {
 <template>
 	<AppDashShopProductHeader
 		:product-type="productType"
-		:heading="isEditing ? $gettext(`Sticker pack product`) : $gettext(`Add sticker pack`)"
-		:message="headerMessage"
-	/>
+		:heading="isEditing ? $gettext(`Edit sticker pack`) : $gettext(`Add sticker pack`)"
+	>
+		<template v-if="productType === ShopDashProductType.Reward">
+			<div>
+				{{
+					$gettext(
+						`Given out automatically to reward supporters for placing charged stickers on your content.`
+					)
+				}}
+			</div>
+			<div>
+				<AppLinkHelp page="stickers">
+					{{ $gettext(`Learn about stickers and sticker packs.`) }}
+				</AppLinkHelp>
+			</div>
+		</template>
+		<template v-else-if="productType === ShopDashProductType.Premium">
+			<div>
+				{{
+					$gettext(
+						`Premium sticker packs contain premium stickers that are animated and available for purchase for Joltbux in your shop.`
+					)
+				}}
+			</div>
+			<div>
+				<AppLinkHelp page="shop">
+					{{ $gettext(`Learn about the shop.`) }}
+				</AppLinkHelp>
+			</div>
+		</template>
+	</AppDashShopProductHeader>
 
 	<FormShopProductBase :data="data">
 		<template #fields>
@@ -176,7 +196,7 @@ async function removeSticker(sticker: StickerModel) {
 				<AppAlertBox fill-color="offset" icon="info-circle">
 					{{
 						$gettext(
-							`You've reached the limit of how many stickers you can add into this pack.`
+							`You've hit the sticker limit for this pack. You can either remove some stickers or create a new pack.`
 						)
 					}}
 				</AppAlertBox>

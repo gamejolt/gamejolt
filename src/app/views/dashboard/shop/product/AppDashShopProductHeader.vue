@@ -13,10 +13,6 @@ defineProps({
 		type: String,
 		required: true,
 	},
-	message: {
-		type: String,
-		default: '',
-	},
 });
 </script>
 
@@ -28,8 +24,8 @@ defineProps({
 	<h1 :style="{ margin: `4px 0` }">{{ heading }}</h1>
 
 	<!-- Extra message -->
-	<div v-if="productType && message">
-		{{ message }}
+	<div v-if="productType && $slots.default">
+		<slot />
 	</div>
 
 	<AppSpacer vertical :scale="6" />

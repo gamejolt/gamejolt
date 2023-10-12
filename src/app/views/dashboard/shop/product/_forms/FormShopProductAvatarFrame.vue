@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
+import { toRefs } from 'vue';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
+import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
 import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { ShopDashProductType, useShopDashStore } from '../../shop.store';
@@ -23,22 +24,26 @@ const data = createShopProductBaseForm({
 });
 
 const { productType, isEditing } = data;
-
-// Only premium avatars are valid at the moment, so no need for free messaging.
-const headerMessage = computed(() => {
-	switch (productType.value) {
-		case ShopDashProductType.Premium:
-			return $gettext(`Premium avatar frames can be purchased in your shop.`);
-	}
-});
 </script>
 
 <template>
 	<AppDashShopProductHeader
 		:product-type="productType"
-		:heading="isEditing ? $gettext(`Avatar frame product`) : $gettext(`Add avatar frame`)"
-		:message="headerMessage"
-	/>
+		:heading="isEditing ? $gettext(`Edit avatar frame`) : $gettext(`Add avatar frame`)"
+	>
+		<div v-if="productType === ShopDashProductType.Premium">
+			{{
+				$gettext(
+					`Premium avatar frames are animated and available for purchase with joltbux in your shop.`
+				)
+			}}
+		</div>
+		<div>
+			<AppLinkHelp page="shop">
+				{{ $gettext(`Learn about the shop.`) }}
+			</AppLinkHelp>
+		</div>
+	</AppDashShopProductHeader>
 
 	<FormShopProductBase :data="data" />
 </template>

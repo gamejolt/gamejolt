@@ -8,6 +8,7 @@ import {
 	ref,
 	shallowReadonly,
 	toRaw,
+	toRef,
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
@@ -17,6 +18,7 @@ import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../../../_common/background/background.model';
 import { ComponentProps } from '../../../../../../_common/component-helpers';
 import { CreatorChangeRequestModel } from '../../../../../../_common/creator/change-request/creator-change-request.model';
+import { formatNumber } from '../../../../../../_common/filters/number';
 import AppForm, {
 	FormController,
 	createForm,
@@ -37,7 +39,7 @@ import {
 	validateMinLength,
 } from '../../../../../../_common/form-vue/validators';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
-import AppLinkHelpDocs from '../../../../../../_common/link/AppLinkHelpDocs.vue';
+import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
 import { ModelStoreModel, storeModel } from '../../../../../../_common/model/model-store.service';
 import {
 	ShopProductModel,
@@ -58,9 +60,7 @@ import {
 	ShopDashGroup,
 	ShopDashProductType,
 	ShopDashStore,
-	getShopDashProductResourceParam,
 	getShopDashProductType,
-	useShopDashStore,
 } from '../../shop.store';
 import AppShopProductDiff from '../_diff/AppShopProductDiff.vue';
 
@@ -100,11 +100,22 @@ export function createShopProductBaseForm<
 	onLoad?: (data: { payload: any }) => void;
 }) {
 	const router = useRouter();
+	const dashGroup = toRef(() => shopStore.getGroupForResource(resource));
 
 	const productType = ref<ShopDashProductType>();
 	if (baseModel) {
 		productType.value = getShopDashProductType(baseModel);
-	} else if (resource !== ShopProductResource.Sticker) {
+	} else if (resource === ShopProductResource.Sticker) {
+		// For stickers we want to allow them to choose, unless they can't edit
+		// the particular types, in which case we want to choose for them.
+		if (!dashGroup.value.canEditFree) {
+			// This would be weird, but whatever.
+			productType.value = ShopDashProductType.Premium;
+		} else if (!dashGroup.value.canEditPremium) {
+			productType.value = ShopDashProductType.Basic;
+		}
+	} else {
+		// For other product types, you can currently only add premium.
 		productType.value = ShopDashProductType.Premium;
 	}
 
@@ -232,7 +243,7 @@ export function createShopProductBaseForm<
 				form.formModel.name = name;
 				// Update our initial form model with our common fields so that
 				// diffs work properly for items that haven't been approved yet.
-				if (!isEditing || !baseModel?.was_approved) {
+				if (!baseModel?.was_approved) {
 					initialFormModel.value.name = name;
 				}
 			}
@@ -401,6 +412,7 @@ export function createShopProductBaseForm<
 		resource,
 		initialFormModel,
 		baseModel,
+		dashGroup,
 
 		// Restrictions
 		minNameLength,
@@ -477,6 +489,7 @@ const {
 	form,
 	baseModel,
 	resource,
+	dashGroup,
 	isEditing,
 	productType,
 	chooseProductType,
@@ -491,8 +504,6 @@ const {
 	maxNameLength,
 	getFieldAvailabilityUrl,
 } = props.data;
-
-const { getGroupForResource } = useShopDashStore()!;
 
 const productTypeSelectorStyle: CSSProperties = {
 	...styleBorderRadiusLg,
@@ -510,7 +521,39 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 	},
 };
 
-const managerGroup = computed(() => getGroupForResource(resource));
+// The below are kind of weird states of not being able to edit things that
+// you've set up. We need them here for slow rollout.
+const isUneditableFree = computed(
+	() => productType.value !== ShopDashProductType.Premium && !dashGroup.value.canEditFree
+);
+
+const isUneditablePremium = computed(
+	() => productType.value === ShopDashProductType.Premium && !dashGroup.value.canEditPremium
+);
+
+const isPremiumApproved = computed(
+	() => productType.value === ShopDashProductType.Premium && baseModel?.was_approved === true
+);
+
+// Basically, if none of the states above are set, then we can edit the product.
+const canEdit = computed(
+	() => (isUneditableFree.value || isUneditablePremium.value || isPremiumApproved.value) === false
+);
+
+const helpDocLink = computed(() => {
+	switch (resource) {
+		case ShopProductResource.AvatarFrame:
+			return 'avatar-frames';
+		case ShopProductResource.Background:
+			return 'backgrounds';
+		case ShopProductResource.StickerPack:
+			return 'stickers';
+		case ShopProductResource.Sticker:
+			return 'stickers';
+		default:
+			assertNever(resource);
+	}
+});
 </script>
 
 <template>
@@ -525,22 +568,6 @@ const managerGroup = computed(() => getGroupForResource(resource));
 			>
 				<div
 					:style="productTypeSelectorStyle"
-					@click="chooseProductType(ShopDashProductType.Basic)"
-				>
-					<div :style="{ fontWeight: `bold` }">
-						{{ $gettext(`Basic`) }}
-					</div>
-					<div>
-						{{
-							$gettext(
-								`These are rewarded to users from reward sticker packs for placing charged stickers on your content. They can not be included in premium sticker packs. Static images only; they can't be animated.`
-							)
-						}}
-					</div>
-				</div>
-
-				<div
-					:style="productTypeSelectorStyle"
 					@click="chooseProductType(ShopDashProductType.Premium)"
 				>
 					<div :style="{ fontWeight: `bold` }">
@@ -549,49 +576,79 @@ const managerGroup = computed(() => getGroupForResource(resource));
 					<div>
 						{{
 							$gettext(
-								`Premium stickers can be sold in premium sticker packs from your shop. They can not be included in charge sticker packs. Only animated images are accepted.`
+								`You can sell premium stickers within premium packs in your shop for joltbux to make money from your supporters. Just remember, they must be animated, go through an approval process, and can't be added to reward packs.`
+							)
+						}}
+					</div>
+				</div>
+
+				<div
+					:style="productTypeSelectorStyle"
+					@click="chooseProductType(ShopDashProductType.Basic)"
+				>
+					<div :style="{ fontWeight: `bold` }">
+						{{ $gettext(`Basic`) }}
+					</div>
+					<div>
+						{{
+							$gettext(
+								`Supporters who place charged stickers on your content get a reward pack with basic stickers as a thank-you gesture. Basic stickers within reward packs cannot be sold for joltbux, can't go in premium packs, and must be static images without animations.`
 							)
 						}}
 					</div>
 				</div>
 			</div>
+
+			<div>
+				<h4>{{ $gettext(`FAQ`) }}</h4>
+				<div>
+					<AppLinkHelp page="stickers">
+						{{ $gettext(`Stickers and Sticker Packs`) }}
+					</AppLinkHelp>
+				</div>
+				<div>
+					<AppLinkHelp page="getting-paid">
+						{{ $gettext(`Charged stickers`) }}
+					</AppLinkHelp>
+				</div>
+				<div>
+					<AppLinkHelp page="shop">
+						{{ $gettext(`Shop`) }}
+					</AppLinkHelp>
+				</div>
+			</div>
 		</template>
 		<template v-else>
+			<template v-if="!canEdit">
+				<!-- All of these states should be the reason they can't edit. -->
+				<template v-if="isUneditableFree">
+					<AppAlertBox fill-color="offset" icon="notice">
+						{{ $gettext(`You are currently unable to edit free products.`) }}
+					</AppAlertBox>
+				</template>
+				<template v-else-if="isUneditablePremium">
+					<AppAlertBox fill-color="offset" icon="notice">
+						{{ $gettext(`You are currently unable to edit premium products.`) }}
+					</AppAlertBox>
+				</template>
+				<template v-else-if="isPremiumApproved">
+					<AppAlertBox fill-color="offset" icon="info-circle">
+						{{
+							$gettext(
+								`This premium product has been approved. You're no longer able to modify it.`
+							)
+						}}
+					</AppAlertBox>
+				</template>
+
+				<AppSpacer vertical :scale="6" />
+			</template>
+
 			<AppShopProductDiff :data="data" />
 
 			<AppSpacer vertical :scale="4" />
 
-			<template
-				v-if="productType !== ShopDashProductType.Premium && !managerGroup.canEditFree"
-			>
-				<AppAlertBox fill-color="offset" icon="notice">
-					{{ $gettext(`You are currently unable to edit free products.`) }}
-				</AppAlertBox>
-			</template>
-			<template
-				v-else-if="
-					productType === ShopDashProductType.Premium && !managerGroup.canEditPremium
-				"
-			>
-				<AppAlertBox fill-color="offset" icon="notice">
-					{{ $gettext(`You are currently unable to edit premium products.`) }}
-				</AppAlertBox>
-			</template>
-			<template
-				v-else-if="
-					productType === ShopDashProductType.Premium && baseModel?.was_approved === true
-				"
-			>
-				<!-- TODO(creator-shops) -->
-				<AppAlertBox fill-color="offset" icon="info-circle">
-					{{
-						$gettext(
-							`This product has been approved. You're no longer able to modify it.`
-						)
-					}}
-				</AppAlertBox>
-			</template>
-			<template v-else>
+			<template v-if="canEdit">
 				<AppFormGroup
 					v-bind="formGroupBindings"
 					name="file"
@@ -608,39 +665,33 @@ const managerGroup = computed(() => getGroupForResource(resource));
 						</div>
 						<div v-else>{{ $gettext(`Your image must be a PNG.`) }}</div>
 
-						<div
-							v-translate="{
-								min: `${minWidth}×${minHeight}`,
-								max: `${maxWidth}×${maxHeight}`,
-							}"
-						>
-							Images must be between
-							<code>%{min}</code>
-							and
-							<code>%{max}</code>
-							(ratio of 1 ÷
+						<div>
 							{{
-								aspectRatio === 1
-									? 1
-									: Math.trunc((1 / (maxWidth / maxHeight)) * 100) / 100
-							}}).
+								$gettext(
+									`Images must be between %{ min } and %{ max } (ratio of 1 ÷ %{ denominator }).`,
+									{
+										min: `${formatNumber(minWidth)}×${formatNumber(minHeight)}`,
+										max: `${formatNumber(maxWidth)}×${formatNumber(maxHeight)}`,
+										denominator:
+											aspectRatio === 1
+												? 1
+												: Math.trunc((1 / (maxWidth / maxHeight)) * 100) /
+												  100,
+									}
+								)
+							}}
 						</div>
 					</div>
 
-					<p class="help-block">
-						<!-- TODO(creator-shops) DODO(creator-shops) help docs. -->
-						<AppLinkHelpDocs
-							category="creators"
-							:page="getShopDashProductResourceParam(resource)"
-							class="link-help"
-						>
+					<div class="help-block">
+						<AppLinkHelp :page="helpDocLink" class="link-help">
 							{{
 								$gettext(
 									`What are the shop product image requirements and guidelines?`
 								)
 							}}
-						</AppLinkHelpDocs>
-					</p>
+						</AppLinkHelp>
+					</div>
 
 					<AppFormControlUpload
 						:validators="[
@@ -677,8 +728,18 @@ const managerGroup = computed(() => getGroupForResource(resource));
 					v-bind="formGroupBindings"
 					name="name"
 				>
+					<div class="help-block">
+						{{
+							$gettext(
+								`Give your product a name to keep things organized. These names will show in people's Joltydex and as such must follow our Site Guidelines.`
+							)
+						}}
+						<AppLinkHelp page="site-guidelines" class="link-help">
+							{{ $gettext(`Read our Site Guidelines.`) }}
+						</AppLinkHelp>
+					</div>
+
 					<AppFormControl
-						:placeholder="$gettext(`Product name...`)"
 						:validators="[
 							validateMinLength(minNameLength),
 							validateMaxLength(maxNameLength),

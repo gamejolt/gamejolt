@@ -173,9 +173,14 @@ export function createShopDashStore() {
 	}
 
 	function storeChangeRequest(
-		product: ShopProductModel,
+		product: ShopProductModel | CreatorChangeRequestModel,
 		changeRequest: CreatorChangeRequestModel
 	) {
+		// TODO(creator-shops): bit of a hack, should be done in backend
+		if (changeRequest.status === CreatorChangeRequestStatus.Approved) {
+			return;
+		}
+
 		const key = _makeChangeRequestKey(product);
 		changeRequests.value.set(key, changeRequest);
 	}
@@ -298,9 +303,8 @@ export function populateShopDashStoreGroup(
 
 	// The below data goes into the store.
 	if (changeRequests) {
-		// const requests = storeModelList(CreatorChangeRequestModel, rawChangeRequests);
 		for (const request of changeRequests) {
-			store.changeRequests.value.set(_makeChangeRequestKey(request), request);
+			store.storeChangeRequest(request, request);
 		}
 	}
 

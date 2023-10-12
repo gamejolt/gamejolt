@@ -11,6 +11,7 @@ import {
 	validateMaxLength,
 	validateMinLength,
 } from '../../../../../../_common/form-vue/validators';
+import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
 import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
@@ -42,47 +43,61 @@ const data = createShopProductBaseForm({
 		emojiNameMaxLength.value = payload.emojiNameMaxLength || emojiNameMaxLength.value;
 		emojiPrefix.value = payload.emojiPrefix || emojiPrefix.value;
 
-		const changeData = JSON.parse(data.changeRequest.value?.change_data || '{}');
-		if (changeData.emoji_name) {
-			data.form.formModel.emoji_name = changeData.emoji_name;
-			if (!data.isEditing || !model?.value?.was_approved) {
-				data.initialFormModel.value.emoji_name = changeData.emoji_name;
-			}
+		const changeRequest = data.changeRequest.value;
+		const formModel = data.form.formModel;
+		const initialFormModel = data.initialFormModel;
+
+		if (changeRequest) {
+			const emojiName = changeRequest.change_sticker_emoji_short_name || formModel.name;
+			formModel.emoji_name = emojiName;
+			initialFormModel.value.emoji_name = emojiName;
 		}
 	},
 });
 
 const { baseModel, getFieldAvailabilityUrl, productType, isEditing } = data;
 
-const headerMessage = computed(() => {
-	switch (productType.value) {
-		case ShopDashProductType.Premium:
-			return $gettext(
-				`Premium stickers can be placed into premium sticker packs, which can be purchased in your shop.`
-			);
-		case ShopDashProductType.Basic:
-			return $gettext(`Basic stickers can be placed into reward sticker packs.`);
-	}
-});
-
 const heading = computed(() => {
 	if (productType.value === undefined) {
 		return $gettext(`What type of sticker are you adding?`);
 	}
 
-	return isEditing ? $gettext(`Sticker product`) : $gettext(`Add sticker`);
+	return isEditing ? $gettext(`Edit sticker`) : $gettext(`Add sticker`);
 });
 </script>
 
 <template>
-	<AppDashShopProductHeader
-		:product-type="productType"
-		:heading="heading"
-		:message="headerMessage"
-	/>
+	<AppDashShopProductHeader :product-type="productType" :heading="heading">
+		<template v-if="productType === ShopDashProductType.Basic">
+			<div>
+				{{
+					$gettext(
+						`Basic stickers are a free-tier option, must be static, and can only be added to reward packs.`
+					)
+				}}
+			</div>
+			<div>
+				<AppLinkHelp page="stickers">
+					{{ $gettext(`Learn about stickers and sticker packs.`) }}
+				</AppLinkHelp>
+			</div>
+		</template>
+		<template v-else-if="productType === ShopDashProductType.Premium">
+			<div>
+				{{
+					$gettext(
+						`Premium stickers are animated and available for purchase within premium packs in your shop for joltbux.`
+					)
+				}}
+			</div>
+			<div>
+				<AppLinkHelp page="shop">
+					{{ $gettext(`Learn about the shop.`) }}
+				</AppLinkHelp>
+			</div>
+		</template>
+	</AppDashShopProductHeader>
 
-	<!-- TODO(creator-shops) (call) This should be checking both `canEditPremium`
-	and `canEditFree` for the sticker group. -->
 	<FormShopProductBase :data="data">
 		<template #fields="{ formGroupBindings }">
 			<AppFormGroup
@@ -91,9 +106,16 @@ const heading = computed(() => {
 				tiny-label-margin
 				:label="$gettext(`Emoji name`)"
 			>
+				<div class="help-block">
+					{{
+						$gettext(
+							`Once mastered your sticker can be used as an emoji. This is the name that will show when selecting the emoji to use.`
+						)
+					}}
+				</div>
+
 				<AppFormControlPrefix :prefix="emojiPrefix || ''">
 					<AppFormControl
-						:placeholder="emojiPrefix ? undefined : $gettext(`Emoji name...`)"
 						:validators="[
 							validateMinLength(emojiNameMinLength),
 							validateMaxLength(emojiNameMaxLength),

@@ -110,7 +110,7 @@ const changeStates = computed<ShopDashProductStates>(() => {
 
 function getSectionLabel(section: Section) {
 	if (section === 'before') {
-		return $gettext(`Current product`);
+		return $gettext(`Current`);
 	} else if (section === 'after') {
 		return diffData.value.hasBefore ? $gettext(`New changes`) : $gettext(`New product`);
 	}
@@ -131,20 +131,20 @@ async function setProductPublishState(publish: boolean) {
 	}
 
 	let confirmText: string;
-	if (publish) {
-		if (isChargePack.value) {
-			confirmText = $gettext(`Are you sure you want to publish this charge sticker pack?`);
-		} else {
-			confirmText = $gettext(`Are you sure you want to publish this product to the shop?`);
-		}
+	if (isChargePack.value) {
+		confirmText = publish
+			? $gettext(
+					`Ready to publish this reward pack and gift it to those that pay you in charged stickers?`
+			  )
+			: $gettext(
+					`Are you sure you want to unpublish this reward pack? Your supporters will no longer receive it when they give you charged stickers.`
+			  );
 	} else {
-		if (isChargePack.value) {
-			confirmText = $gettext(`Are you sure you want to publish this charge sticker pack?`);
-		} else {
-			confirmText = $gettext(
-				`Are you sure you want to unpublish this product from the shop?`
-			);
-		}
+		confirmText = publish
+			? $gettext(`Ready to make this available in your shop?`)
+			: $gettext(
+					`Are you sure you want to take this out of your shop? Those who've already bought it can still use it.`
+			  );
 	}
 
 	const canContinue = await showModalConfirm(confirmText);
@@ -350,21 +350,9 @@ function getDiffContainerStyles(gridArea: 'before' | 'arrow' | 'after'): CSSProp
 							>
 								<template v-if="currentStates.published">
 									{{ $gettext(`Unpublish`) }}
-									<!-- TODO(creator-shops) -->
-									<!-- {{
-										currentStates.isChargePack
-											? $gettext(`Disable charge pack`)
-											: $gettext(`Unpublish`)
-									}} -->
 								</template>
 								<template v-else>
 									{{ $gettext(`Publish`) }}
-									<!-- TODO(creator-shops) -->
-									<!-- {{
-										currentStates.isChargePack
-											? $gettext(`Enable charge pack`)
-											: $gettext(`Publish`)
-									}} -->
 								</template>
 							</AppButton>
 
