@@ -41,7 +41,7 @@ import AppContentEditorInsetControls from './controls/AppContentEditorInsetContr
 import AppContentEditorTextControls from './controls/AppContentEditorTextControls.vue';
 import AppContentEditorControlsEmoji from './controls/emoji/AppContentEditorControlsEmoji.vue';
 import AppContentEditorControlsGif from './controls/gif/AppContentEditorControlsGif.vue';
-import AppContentEditorControlsMentionAutocomplete from './controls/mention/autocomplete.vue';
+import AppContentEditorControlsMentionAutocomplete from './controls/mention/AppContentEditorControlsMentionAutocomplete.vue';
 import { FocusWatcher } from './focus-watcher';
 
 export interface AppContentEditorInterface {
