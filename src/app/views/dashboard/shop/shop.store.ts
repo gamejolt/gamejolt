@@ -94,7 +94,9 @@ export type ShopDashStore = ReturnType<typeof createShopDashStore>;
 const ShopDashStoreKey: InjectionKey<ShopDashStore> = Symbol('ShopDashStore');
 
 export function createShopDashStore() {
-	const publishedStickers = ref(new Set<number>());
+	/** Mapping of `StickerPackModel.id` => `StickerModel.id[]`. */
+	const stickerPackContents = ref(new Map<number, number[]>());
+
 	const changeRequests = ref(new Map<string, CreatorChangeRequestModel>());
 
 	const avatarFrames = _makeEmptyGroup<AvatarFrameModel>(ShopProductResource.AvatarFrame);
@@ -190,6 +192,35 @@ export function createShopDashStore() {
 		changeRequests.value.delete(key);
 	}
 
+	function _getStickerPacksForSticker(
+		sticker: StickerModel,
+		{ packState, first }: { packState?: 'published' | 'not-published'; first?: boolean } = {}
+	) {
+		const packs: StickerPackModel[] = [];
+		for (const [packId, stickers] of stickerPackContents.value.entries()) {
+			if (!stickers.includes(sticker.id)) {
+				continue;
+			}
+			const pack = stickerPacks.value.items.find(i => i.id === packId);
+			if (!pack) {
+				continue;
+			}
+			if (packState !== undefined) {
+				const published = getShopProductStates(pack).published;
+				const wantsPublished = packState === 'published';
+				if (published !== wantsPublished) {
+					continue;
+				}
+			}
+
+			packs.push(pack);
+			if (first) {
+				return packs;
+			}
+		}
+		return packs;
+	}
+
 	function getShopProductStates(
 		item: ShopProductModel | CreatorChangeRequestModel
 	): ShopDashProductStates {
@@ -199,7 +230,11 @@ export function createShopDashStore() {
 		if (isInstance(item, StickerPackModel) && !item.is_premium) {
 			published = item.is_active;
 		} else if (isInstance(item, StickerModel)) {
-			published = publishedStickers.value.has(item.id);
+			const publishedPacks = _getStickerPacksForSticker(item, {
+				packState: 'published',
+				first: true,
+			});
+			published = publishedPacks.length > 0;
 		} else if (!isChangeRequest) {
 			published = item.has_active_sale;
 		}
@@ -249,7 +284,7 @@ export function createShopDashStore() {
 		backgrounds,
 		stickerPacks,
 		stickers,
-		publishedStickers,
+		stickerPackContents,
 
 		changeRequests,
 		getChangeRequest,
@@ -309,10 +344,8 @@ export function populateShopDashStoreGroup(
 	}
 
 	if (stickerIds) {
-		for (const ids of Object.values(stickerIds)) {
-			for (const id of ids) {
-				store.publishedStickers.value.add(id);
-			}
+		for (const [packId, stickers] of Object.entries(stickerIds)) {
+			store.stickerPackContents.value.set(+packId, stickers);
 		}
 	}
 }

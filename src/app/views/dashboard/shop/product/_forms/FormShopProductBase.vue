@@ -51,8 +51,8 @@ import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { kThemeFg10 } from '../../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { styleBorderRadiusLg, styleChangeBg } from '../../../../../../_styles/mixins';
-import { kBorderWidthBase, kLineHeightComputed } from '../../../../../../_styles/variables';
-import { numberSort } from '../../../../../../utils/array';
+import { kBorderWidthBase } from '../../../../../../_styles/variables';
+import { arrayRemove, arrayUnique, numberSort } from '../../../../../../utils/array';
 import { objectOmit } from '../../../../../../utils/object';
 import { assertNever, run } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
@@ -354,18 +354,31 @@ export function createShopProductBaseForm<
 						? form.formModel.stickers
 						: [];
 
-					for (const id of oldIds) {
-						if (newIds.includes(id)) {
-							continue;
+					const packContents =
+						shopStore.stickerPackContents.value.get(updatedModel.id) || [];
+					// Remove any stickers that aren't in the pack from our pack
+					// contents array.
+					if (packContents.length) {
+						for (const id of oldIds) {
+							if (newIds.includes(id)) {
+								continue;
+							}
+							arrayRemove(packContents, i => i === id);
 						}
-						shopStore.publishedStickers.value.delete(id);
 					}
 
-					for (const id of newIds) {
-						if (oldIds.includes(id)) {
-							continue;
+					// Add new sticker ids to our pack contents.
+					if (newIds.length) {
+						for (const id of newIds) {
+							if (oldIds.includes(id)) {
+								continue;
+							}
+							packContents.push(id);
 						}
-						shopStore.publishedStickers.value.add(id);
+						shopStore.stickerPackContents.value.set(
+							updatedModel.id,
+							arrayUnique(packContents)
+						);
 					}
 				}
 			}
