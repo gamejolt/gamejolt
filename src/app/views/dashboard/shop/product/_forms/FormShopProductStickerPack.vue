@@ -16,10 +16,10 @@ import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { kThemeBg, kThemeBgOffset, kThemeFg } from '../../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import {
-styleBorderRadiusLg,
-styleFlexCenter,
-styleTyped,
-styleWhen,
+	styleBorderRadiusLg,
+	styleFlexCenter,
+	styleTyped,
+	styleWhen,
 } from '../../../../../../_styles/mixins';
 import { kStrongEaseOut } from '../../../../../../_styles/variables';
 import { ShopDashProductType, useShopDashStore } from '../../shop.store';

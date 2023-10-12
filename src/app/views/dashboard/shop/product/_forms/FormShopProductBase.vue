@@ -345,6 +345,29 @@ export function createShopProductBaseForm<
 				} else {
 					shopStore.removeChangeRequest(updatedModel);
 				}
+
+				// Update published state for stickers added/removed from free
+				// packs.
+				if (resource === ShopProductResource.StickerPack && !updatedModel.is_premium) {
+					const oldIds = initialFormModel.value.stickers;
+					const newIds = Object.hasOwn(form.formModel, 'stickers')
+						? form.formModel.stickers
+						: [];
+
+					for (const id of oldIds) {
+						if (newIds.includes(id)) {
+							continue;
+						}
+						shopStore.publishedStickers.value.delete(id);
+					}
+
+					for (const id of newIds) {
+						if (oldIds.includes(id)) {
+							continue;
+						}
+						shopStore.publishedStickers.value.add(id);
+					}
+				}
 			}
 
 			router.push({
