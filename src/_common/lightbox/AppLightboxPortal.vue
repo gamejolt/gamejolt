@@ -6,7 +6,7 @@ import { Screen, onScreenResize } from '../screen/screen-service';
 import AppShortkey from '../shortkey/AppShortkey.vue';
 import { EventSubscription } from '../system/event/event-topic';
 import AppTouch, { AppTouchInput } from '../touch/AppTouch.vue';
-import AppLightboxItem from './item/item.vue';
+import AppLightboxItem from './item/AppLightboxItem.vue';
 import { getActiveLightbox } from './lightbox-helpers';
 
 // The class we add to the document body when we have an active lightbox.

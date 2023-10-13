@@ -1,138 +1,124 @@
-<script lang="ts">
-import { nextTick } from 'vue';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, nextTick, onMounted, ref, toRefs, watch } from 'vue';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { onScreenResize, Screen } from '../../screen/screen-service';
+import { Screen, onScreenResize } from '../../screen/screen-service';
 import AppSketchfabEmbed from '../../sketchfab/embed/AppSketchfabEmbed.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
+import AppVideo from '../../video/AppVideo.vue';
 import AppVideoEmbed from '../../video/embed/AppVideoEmbed.vue';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
-import AppVideo from '../../video/AppVideo.vue';
 import { LightboxConfig, LightboxMediaModel } from '../lightbox-helpers';
 
-@Options({
-	components: {
-		AppVideoEmbed,
-		AppSketchfabEmbed,
-		AppImgResponsive,
-		AppMediaItemBackdrop,
-		AppVideo,
+const props = defineProps({
+	item: {
+		type: Object as PropType<LightboxMediaModel>,
+		required: true,
 	},
-})
-export default class AppLightboxItem extends Vue {
-	@Prop(Object) item!: LightboxMediaModel;
-	@Prop(Number) itemIndex!: number;
-	@Prop(Number) activeIndex!: number;
+	itemIndex: {
+		type: Number,
+		required: true,
+	},
+	activeIndex: {
+		type: Number,
+		required: true,
+	},
+});
 
-	isActive = false;
-	isNext = false;
-	isPrev = false;
-	initialized = false;
+const { item, itemIndex, activeIndex } = toRefs(props);
 
-	maxWidth = 0;
-	maxHeight = 0;
+const isActive = ref(false);
+const isNext = ref(false);
+const isPrev = ref(false);
+const initialized = ref(false);
+const maxWidth = ref(0);
+const maxHeight = ref(0);
+const caption = ref<HTMLDivElement>();
+const rootElem = ref<HTMLDivElement>();
 
-	declare $refs: {
-		caption: HTMLDivElement;
+const shouldVideoPlay = computed(() => isActive.value);
+
+const isGifWithoutVideo = computed(
+	() =>
+		mediaItem.value.is_animated &&
+		!mediaItem.value.mediaserver_url_mp4 &&
+		!mediaItem.value.mediaserver_url_webm
+);
+
+const mediaType = computed(() => item.value.getMediaType());
+
+const mediaItem = computed(() => item.value.getMediaItem()!);
+
+const videoController = computed(() => {
+	const sources = {
+		mp4: mediaItem.value.mediaserver_url_mp4,
+		webm: mediaItem.value.mediaserver_url_webm,
 	};
+	return getVideoPlayerFromSources(sources, 'gif', mediaItem.value.mediaserver_url);
+});
 
-	get shouldVideoPlay() {
-		return this.isActive;
+useEventSubscription(onScreenResize, () => calcDimensions());
+
+watch(activeIndex, () => calcActive());
+
+onMounted(async () => {
+	await calcActive();
+	await calcDimensions();
+
+	initialized.value = true;
+});
+
+async function calcDimensions() {
+	await nextTick();
+
+	if (Screen.isXs) {
+		return;
 	}
 
-	get isGifWithoutVideo() {
-		return (
-			this.mediaItem.is_animated &&
-			!this.mediaItem.mediaserver_url_mp4 &&
-			!this.mediaItem.mediaserver_url_webm
-		);
+	// Very fragile. Kinda lame.
+	maxWidth.value = Screen.width - LightboxConfig.buttonSize * 2;
+	maxHeight.value = Screen.height - LightboxConfig.controlsHeight * 2;
+
+	if (caption.value) {
+		maxHeight.value -= caption.value.offsetHeight;
 	}
 
-	get mediaType() {
-		return this.item.getMediaType();
+	if (item.value.getMediaType() === 'image') {
+		const dimensions = item.value
+			.getMediaItem()!
+			.getDimensions(maxWidth.value, maxHeight.value);
+		maxWidth.value = dimensions.width;
+		maxHeight.value = dimensions.height;
+	}
+}
+
+async function calcActive() {
+	if (!rootElem.value) {
+		return;
 	}
 
-	get mediaItem() {
-		return this.item.getMediaItem()!;
+	isActive.value = activeIndex.value === itemIndex.value;
+	isNext.value = activeIndex.value + 1 === itemIndex.value;
+	isPrev.value = activeIndex.value - 1 === itemIndex.value;
+
+	rootElem.value.classList.remove('active', 'next', 'prev');
+
+	if (isActive.value) {
+		rootElem.value.classList.add('active');
+	} else if (isPrev.value) {
+		rootElem.value.classList.add('prev');
+	} else if (isNext.value) {
+		rootElem.value.classList.add('next');
 	}
 
-	// get lightbox() {
-	// 	return getActiveLightbox();
-	// }
-
-	get videoController() {
-		const sources = {
-			mp4: this.mediaItem.mediaserver_url_mp4,
-			webm: this.mediaItem.mediaserver_url_webm,
-		};
-		return getVideoPlayerFromSources(sources, 'gif', this.mediaItem.mediaserver_url);
-	}
-
-	created() {
-		useEventSubscription(onScreenResize, () => this.calcDimensions());
-	}
-
-	async mounted() {
-		await this.calcActive();
-		await this.calcDimensions();
-
-		this.initialized = true;
-	}
-
-	@Watch('activeIndex')
-	activeIndexChange() {
-		this.calcActive();
-	}
-
-	async calcDimensions() {
-		await nextTick();
-
-		if (Screen.isXs) {
-			return;
-		}
-
-		// Very fragile. Kinda lame.
-		this.maxWidth = Screen.width - LightboxConfig.buttonSize * 2;
-		this.maxHeight = Screen.height - LightboxConfig.controlsHeight * 2;
-
-		if (this.$refs.caption) {
-			this.maxHeight -= this.$refs.caption.offsetHeight;
-		}
-
-		if (this.item.getMediaType() === 'image') {
-			const dimensions = this.item
-				.getMediaItem()!
-				.getDimensions(this.maxWidth, this.maxHeight);
-			this.maxWidth = dimensions.width;
-			this.maxHeight = dimensions.height;
-		}
-	}
-
-	async calcActive() {
-		this.isActive = this.activeIndex === this.itemIndex;
-		this.isNext = this.activeIndex + 1 === this.itemIndex;
-		this.isPrev = this.activeIndex - 1 === this.itemIndex;
-
-		this.$el.classList.remove('active', 'next', 'prev');
-
-		if (this.isActive) {
-			this.$el.classList.add('active');
-		} else if (this.isPrev) {
-			this.$el.classList.add('prev');
-		} else if (this.isNext) {
-			this.$el.classList.add('next');
-		}
-
-		if (this.isActive || this.isNext || this.isPrev) {
-			this.calcDimensions();
-		}
+	if (isActive.value || isNext.value || isPrev.value) {
+		calcDimensions();
 	}
 }
 </script>
 
 <template>
-	<div class="media-bar-lightbox-item">
+	<div ref="rootElem" class="media-bar-lightbox-item">
 		<div v-if="isActive || isNext || isPrev" class="-inner">
 			<!-- Image -->
 			<template v-if="mediaType === 'image'">
