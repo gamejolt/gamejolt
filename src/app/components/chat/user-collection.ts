@@ -1,5 +1,4 @@
 import { inject, InjectionKey, provide, toRaw } from 'vue';
-import { FiresideRTCHost } from '../../../_common/fireside/rtc/rtc';
 import { storeModel } from '../../../_common/model/model-store.service';
 import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
 import { ChatClient, isUserOnline } from './client';
@@ -30,7 +29,6 @@ export class ChatUserCollection {
 	private _byId = new Map<number, ChatUser>();
 	private _byRoomId = new Map<number, ChatUser>();
 	private _doingWork = false;
-	private _firesideHosts = new Map<number, FiresideRTCHost>();
 
 	get count() {
 		return this._users.length;
@@ -60,8 +58,6 @@ export class ChatUserCollection {
 			this._byRoomId.clear();
 
 			this._addAllUsers(newUsers);
-			// We keep the fireside host data since that's managed outside of
-			// this class.
 		});
 	}
 
@@ -105,11 +101,6 @@ export class ChatUserCollection {
 		return this._byRoomId.get(roomId);
 	}
 
-	getFiresideHost(input: number | ChatUser): FiresideRTCHost | undefined {
-		const userId = typeof input === 'number' ? input : input.id;
-		return this._firesideHosts.get(userId);
-	}
-
 	add(user: ChatUser) {
 		// Don't add the same user again, update with new data instead.
 		if (this.has(user)) {
@@ -149,20 +140,6 @@ export class ChatUserCollection {
 		}
 
 		this.recollect();
-	}
-
-	assignFiresideHostData(data: FiresideRTCHost[]) {
-		this.doBatchWork(() => {
-			this._firesideHosts.clear();
-
-			for (const hostData of data) {
-				const freshHostId = hostData.user.id;
-
-				// Store the new host set so we can use it when chat members get
-				// added or updated.
-				this._firesideHosts.set(freshHostId, hostData);
-			}
-		});
 	}
 
 	updated(user: ChatUser) {
@@ -242,9 +219,7 @@ export class ChatUserCollection {
 					.map(user => {
 						return {
 							user,
-							role: SortingGroup[
-								_getSortingGroupIndex(user, this.getFiresideHost(user))
-							],
+							role: SortingGroup[_getSortingGroupIndex(user)],
 							isFriend: this.chat.friendsList.has(user.id),
 							lowercaseDisplayName: user.display_name.toLowerCase(),
 						};
@@ -290,27 +265,18 @@ export class ChatUserCollection {
 
 const SortingGroup = {
 	owner: 0,
-	liveFiresideHost: 1,
-	firesideHost: 2,
-	moderator: 3,
-	staff: 4,
-	user: 5,
+	moderator: 1,
+	staff: 2,
+	user: 3,
 } as const;
 
-function _getSortingGroupIndex(
-	user: ChatUser | null | undefined,
-	firesideHost: FiresideRTCHost | undefined
-): keyof typeof SortingGroup {
+function _getSortingGroupIndex(user: ChatUser | null | undefined): keyof typeof SortingGroup {
 	if (!user) {
 		return 'user';
 	}
 
 	if (user.role === 'owner') {
 		return 'owner';
-	}
-
-	if (firesideHost) {
-		return firesideHost.isLive ? 'liveFiresideHost' : 'firesideHost';
 	}
 
 	if (user.isStaff) {

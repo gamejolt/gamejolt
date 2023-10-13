@@ -57,7 +57,6 @@
 		"@typescript-eslint/eslint-plugin": "5.51.0",
 		"@typescript-eslint/parser": "5.51.0",
 		"@vitejs/plugin-vue": "4.2.3",
-		"agora-rtc-sdk-ng": "4.17.2",
 		"autoprefixer": "10.4.2",
 		"autosize": "5.0.1",
 		"broadcast-channel": "3.1.0",
@@ -116,7 +115,6 @@
 	},
 	"optionalDependencies": {
 		"appdmg": "argv-minus-one/node-appdmg#node-12-temporary-fix",
-		"asg-prebuilt": "0.3.0",
 		"rcedit": "3.0.1"
 	},
 	"dependencies": {

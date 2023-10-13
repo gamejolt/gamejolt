@@ -6,7 +6,7 @@ import { CommunityUserNotificationModel } from '../../../_common/community/user-
 import {
 	$viewPost,
 	FiresidePostModel,
-	pullFiresideHashFromUrl,
+	pullFiresidePostHashFromUrl,
 } from '../../../_common/fireside/post/post-model';
 import { Meta } from '../../../_common/meta/meta-service';
 import { Registry } from '../../../_common/registry/registry.service';
@@ -48,7 +48,7 @@ const PostThemeKey = 'post';
 			return intentRedirect;
 		}
 
-		const postHash = pullFiresideHashFromUrl(route.params.slug.toString());
+		const postHash = pullFiresidePostHashFromUrl(route.params.slug.toString());
 		const payload = await Api.sendRequest('/web/posts/view/' + postHash);
 
 		if (payload?.post) {
@@ -104,7 +104,7 @@ export default class RoutePost extends LegacyRouteComponent {
 	}
 
 	routeCreated() {
-		const hash = pullFiresideHashFromUrl(this.$route.params.slug.toString());
+		const hash = pullFiresidePostHashFromUrl(this.$route.params.slug.toString());
 		this.post = Registry.find<FiresidePostModel>('FiresidePost', i => i.hash === hash);
 		this.setPageTheme();
 	}

@@ -1,4 +1,5 @@
 <script lang="ts">
+// TODO(remove-firesides) test this, make sure feeds are working properly.
 import {
 	computed,
 	defineAsyncComponent,
@@ -18,7 +19,6 @@ import {
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { configHomeFeedSwitcher } from '../../../_common/config/config.service';
-import { FiresideModel } from '../../../_common/fireside/fireside.model';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import AppInviteCard from '../../../_common/invite/AppInviteCard.vue';
 import {
@@ -30,7 +30,6 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppStickerChargeCard from '../../../_common/sticker/charge/AppStickerChargeCard.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
-import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { styleWhen } from '../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../_styles/variables';
@@ -39,7 +38,6 @@ import { fuzzysearch } from '../../../utils/string';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
 import { FeaturedItemModel } from '../../components/featured-item/featured-item.model';
-import { onFiresideStart } from '../../components/grid/client.service';
 import { useGridStore } from '../../components/grid/grid-store';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
@@ -47,7 +45,6 @@ import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
 import { fetchDailyQuests, useQuestStore } from '../../store/quest';
 import { createRealmRouteStore, RealmRouteStore } from '../realms/view/view.store';
-import AppHomeFireside from './_fireside/AppHomeFireside.vue';
 import AppHomeFeaturedBanner from './AppHomeFeaturedBanner.vue';
 import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
 import AppHomeFeedSwitcher, {
@@ -73,18 +70,6 @@ class DashGame {
 interface RealmFeedData {
 	store: RealmRouteStore;
 	feed: ActivityFeedView | null;
-	firesideData: FiresideFeedData;
-}
-
-interface FiresideFeedData {
-	loadUrl: string;
-	isLoading: boolean;
-	isBootstrapped: boolean;
-	featuredFireside: FiresideModel | undefined;
-	userFireside: FiresideModel | undefined;
-	eventFireside: FiresideModel | undefined;
-	firesides: FiresideModel[];
-	refresh: () => Promise<void>;
 }
 
 export type RouteActivityFeedController = ReturnType<typeof createActivityFeedController>;
@@ -142,28 +127,6 @@ const isShowingAllGames = ref(false);
 const featuredItem = ref<FeaturedItemModel>();
 const isLoadingQuests = ref(true);
 
-const homeFiresideData = ref(
-	reactive({
-		loadUrl: `/web/fireside/user-list?amount=14`,
-		isLoading: true,
-		isBootstrapped: false,
-		featuredFireside: undefined,
-		userFireside: undefined,
-		eventFireside: undefined,
-		firesides: [],
-		refresh: () => refreshHomeFiresides(homeFiresideData.value),
-	})
-) as Ref<FiresideFeedData>;
-
-const currentFiresideData = computed(() => {
-	if (configHomeFeedSwitcher.value && realmFeedData.value?.firesideData) {
-		return realmFeedData.value.firesideData;
-	}
-	return homeFiresideData.value;
-});
-
-let _firesideStartSubscription: EventSubscription | undefined;
-
 const controller = createActivityFeedController();
 provide('route-activity-feed', controller);
 
@@ -205,25 +168,6 @@ watch(realmPath, async path => {
 	const feedData: RealmFeedData = reactive({
 		store: shallowRef(feedStore),
 		feed: null,
-		firesideData: {
-			loadUrl: `/web/realms/${path}`,
-			isLoading: true,
-			isBootstrapped: false,
-			featuredFireside: undefined,
-			userFireside: feedStore.userFireside,
-			eventFireside: undefined,
-			firesides: feedStore.firesides,
-			refresh: async () => {
-				feedData.firesideData.isLoading = true;
-				try {
-					const payload = await Api.sendRequest(`/web/realms/${path}`);
-					feedStore.processPayload(payload);
-				} catch (e) {
-					console.error('Failed to refresh firesides for realm.', e);
-				}
-				feedData.firesideData.isLoading = false;
-			},
-		},
 	});
 	realmFeedData.value = feedData;
 
@@ -259,9 +203,6 @@ watch(realmPath, async path => {
 		feedPayload.items,
 		cachedFeed !== null
 	);
-
-	feedData.firesideData.isLoading = false;
-	feedData.firesideData.isBootstrapped = true;
 });
 
 const feedTab = computed(() => {
@@ -302,20 +243,11 @@ const appRoute = createAppRoute({
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
 			.reverse();
 
-		homeFiresideData.value.refresh();
 		refreshQuests();
-		_firesideStartSubscription = onFiresideStart.subscribe(() =>
-			homeFiresideData.value.refresh()
-		);
-
-		if (payload.eventFireside) {
-			homeFiresideData.value.eventFireside = new FiresideModel(payload.eventFireside);
-		}
 
 		afterRouteChange();
 	},
 	onDestroyed() {
-		_firesideStartSubscription?.close();
 		if (afterEachDeregister) {
 			afterEachDeregister();
 			afterEachDeregister = null;
@@ -371,32 +303,6 @@ function onPostAdded(post: FiresidePostModel) {
 			route,
 		});
 	}
-}
-
-async function refreshHomeFiresides(data: FiresideFeedData) {
-	if (!user.value) {
-		return;
-	}
-
-	data.isLoading = true;
-
-	try {
-		const payload = await Api.sendRequest(data.loadUrl, undefined, {
-			detach: true,
-		});
-		data.userFireside = payload.userFireside
-			? new FiresideModel(payload.userFireside)
-			: undefined;
-		data.firesides = payload.firesides ? FiresideModel.populate(payload.firesides) : [];
-		data.featuredFireside = payload.featuredFireside
-			? new FiresideModel(payload.featuredFireside)
-			: undefined;
-	} catch (error) {
-		console.error('Failed to refresh fireside data.', error);
-	}
-
-	data.isLoading = false;
-	data.isBootstrapped = true;
 }
 
 async function refreshQuests() {
@@ -535,16 +441,6 @@ async function refreshQuests() {
 						<AppHomeFeaturedBanner :featured-item="featuredItem" />
 						<AppSpacer vertical :scale="8" />
 					</template>
-
-					<AppHomeFireside
-						:featured-fireside="currentFiresideData.featuredFireside"
-						:user-fireside="currentFiresideData.userFireside"
-						:firesides="currentFiresideData.firesides"
-						:is-loading="currentFiresideData.isLoading"
-						:show-placeholders="!currentFiresideData.isBootstrapped"
-						:initial-realm="realm"
-						@request-refresh="currentFiresideData.refresh()"
-					/>
 				</template>
 
 				<AppHomeFeedMenu
@@ -569,15 +465,8 @@ async function refreshQuests() {
 						<AppSpacer vertical :scale="4" />
 					</template>
 
-					<AppHomeFireside
-						:user-fireside="currentFiresideData.userFireside"
-						:firesides="currentFiresideData.firesides"
-						:is-loading="currentFiresideData.isLoading"
-						:show-placeholders="!currentFiresideData.isBootstrapped"
-						:initial-realm="realm"
-						@request-refresh="currentFiresideData.refresh()"
-					/>
-
+					<!-- TODO(remove-firesides) Probably remove, seems like it
+					was just a divider for the firesides. -->
 					<hr class="full-bleed" />
 
 					<AppHomeFeedMenu

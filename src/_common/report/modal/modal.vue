@@ -3,7 +3,6 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppBlockForm from '../../block/form/form.vue';
 import { CommentModel } from '../../comment/comment-model';
 import { CommunityModel } from '../../community/community.model';
-import { FiresideModel } from '../../fireside/fireside.model';
 import { FiresidePostModel } from '../../fireside/post/post-model';
 import { ForumPostModel } from '../../forum/post/post.model';
 import { ForumTopicModel } from '../../forum/topic/topic.model';
@@ -29,8 +28,7 @@ export default class AppReportModal extends mixins(BaseModal) {
 		| FiresidePostModel
 		| ForumTopicModel
 		| ForumPostModel
-		| CommunityModel
-		| FiresideModel;
+		| CommunityModel;
 
 	page: 'report' | 'block' = 'report';
 
@@ -49,8 +47,6 @@ export default class AppReportModal extends mixins(BaseModal) {
 			return 'Forum_Post';
 		} else if (this.resource instanceof CommunityModel) {
 			return 'Community';
-		} else if (this.resource instanceof FiresideModel) {
-			return 'Fireside';
 		}
 		return '';
 	}
@@ -75,8 +71,6 @@ export default class AppReportModal extends mixins(BaseModal) {
 				return $gettext('Report Post');
 			case 'Community':
 				return $gettext(`Report Community`);
-			case 'Fireside':
-				return $gettext(`Report Fireside`);
 		}
 
 		return '';

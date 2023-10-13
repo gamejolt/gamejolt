@@ -23,7 +23,7 @@ import { Screen } from '../../../screen/screen-service';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../translate/translate.service';
-import AppStickerStackItem from '../../stack/AppStickerStackItem.vue';
+import AppStickerImg from '../../AppStickerImg.vue';
 import { CreatorStickersMap, sortStickerStacks, useStickerStore } from '../../sticker-store';
 import { StickerModel, StickerStack } from '../../sticker.model';
 import AppStickerPack from '../AppStickerPack.vue';
@@ -692,7 +692,8 @@ function addMs(value: number) {
 								}"
 							>
 								<!-- Stickers scale -->
-								<AppStickerStackItem
+								<!-- TODO(remove-firesides) Ensure this works as intended -->
+								<AppStickerImg
 									:style="{
 										transform:
 											stage === 'results-show' ? `scale(1)` : `scale(0.5)`,
@@ -706,7 +707,7 @@ function addMs(value: number) {
 											index * DurationStickerAnimationOffset
 										}ms`,
 									}"
-									:img-url="sticker.img_url"
+									:src="sticker.img_url"
 								/>
 							</div>
 						</div>

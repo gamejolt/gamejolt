@@ -4,7 +4,6 @@ import { useRoute } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { FiresideModel } from '../../../../_common/fireside/fireside.model';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
@@ -39,7 +38,6 @@ const route = useRoute();
 
 const featuredItem = ref<FeaturedItemModel>();
 const featuredCommunities = ref<CommunityModel[]>([]);
-const featuredFireside = ref<FiresideModel>();
 const featuredRealms = ref<RealmModel[]>([]);
 
 const heroPosts = shallowRef<FiresidePostModel[]>([]);
@@ -82,9 +80,6 @@ const { isBootstrapped } = createAppRoute({
 		}
 
 		featuredCommunities.value = CommunityModel.populate(payload.communities);
-		featuredFireside.value = payload.featuredFireside
-			? new FiresideModel(payload.featuredFireside)
-			: undefined;
 
 		heroPosts.value = FiresidePostModel.populate<FiresidePostModel>(payload.heroPosts).filter(
 			i => i.hasMedia || i.hasVideo
@@ -124,7 +119,6 @@ const { isBootstrapped } = createAppRoute({
 		:is-bootstrapped="isBootstrapped"
 		:featured-item="featuredItem"
 		:featured-communities="featuredCommunities"
-		:featured-fireside="featuredFireside"
 		:featured-realms="featuredRealms"
 		:creator-posts="creatorPosts"
 	/>

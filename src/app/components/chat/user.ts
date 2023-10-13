@@ -87,13 +87,6 @@ export function getChatUserRoleData(
 		};
 	}
 
-	if (room.memberCollection.getFiresideHost(user)) {
-		return {
-			icon: 'star-ten-pointed',
-			tooltip: $gettext(`Host`),
-		};
-	}
-
 	// In public rooms, display staff member status.
 	if (!room.isPrivateRoom && user.isStaff) {
 		return {

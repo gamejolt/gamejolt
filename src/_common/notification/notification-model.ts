@@ -1,3 +1,5 @@
+// TODO(remove-firesides) (ask) verify that this should still support firesides.
+
 import { CollaboratorModel } from '../collaborator/collaborator.model';
 import { CommentModel } from '../comment/comment-model';
 import { CommunityModel } from '../community/community.model';

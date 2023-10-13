@@ -1,12 +1,9 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import AppFiresideLiveTag from '../../../../_common/fireside/AppFiresideLiveTag.vue';
-import { FiresideRTCHost } from '../../../../_common/fireside/rtc/rtc';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { kThemeBg, kThemeFg, kThemePrimary } from '../../../../_common/theme/variables';
+import { kThemePrimary } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { useGridStore } from '../../grid/grid-store';
 import AppChatListItem from '../_list/AppChatListItem.vue';
@@ -25,22 +22,17 @@ const props = defineProps({
 		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
-	host: {
-		type: Object as PropType<FiresideRTCHost>,
-		default: undefined,
-	},
 	horizontalPadding: {
 		type: Number,
 		default: undefined,
 	},
 });
 
-const { user, room, host } = toRefs(props);
+const { user, room } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
 
-const showVerificationData = computed(() => room.value.isFiresideRoom);
 const isOnline = computed(() => {
-	if (!chat.value || showVerificationData.value) {
+	if (!chat.value) {
 		return null;
 	}
 
@@ -48,13 +40,6 @@ const isOnline = computed(() => {
 });
 
 const roleData = computed(() => getChatUserRoleData(room.value, user.value));
-const isLiveFiresideHost = computed(() => {
-	if (!host?.value) {
-		return false;
-	}
-
-	return !host.value.needsPermissionToView && host.value.isLive;
-});
 </script>
 
 <template>
@@ -78,20 +63,8 @@ const isLiveFiresideHost = computed(() => {
 		</template>
 
 		<template #leading-float>
-			<AppUserVerifiedTick
-				v-if="showVerificationData"
-				:style="{
-					borderRadius: '50%',
-					backgroundColor: kThemeBg,
-					color: kThemeFg,
-					margin: '4px 0px 0px',
-					padding: '1px',
-				}"
-				:user="user"
-				small
-			/>
 			<AppChatUserOnlineStatus
-				v-else-if="isOnline !== null"
+				v-if="isOnline !== null"
 				:is-online="isOnline"
 				:size="12"
 				:segment-width="1.5"
@@ -100,17 +73,6 @@ const isLiveFiresideHost = computed(() => {
 		</template>
 
 		<template #title>
-			<AppFiresideLiveTag
-				v-if="isLiveFiresideHost"
-				:style="{
-					overflow: `unset !important`,
-					whiteSpace: `unset !important`,
-					textOverflow: `unset !important`,
-				}"
-				size="sm"
-				sans-elevation
-			/>
-
 			<span>{{ user.display_name }}</span>
 			<span class="tiny text-muted">@{{ user.username }}</span>
 		</template>

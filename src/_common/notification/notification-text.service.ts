@@ -1,3 +1,5 @@
+// TODO(remove-firesides) (ask) verify that this should still support firesides.
+
 import { CommunityModel } from '../community/community.model';
 import {
 	CommunityUserNotificationModel,
@@ -6,7 +8,6 @@ import {
 import { CreatorExperienceLevelModel } from '../creator/experience/level.model';
 import { formatCurrency } from '../filters/currency';
 import { FiresideCommunityModel } from '../fireside/community/community.model';
-import { FiresideModel } from '../fireside/fireside.model';
 import { FiresidePostCommunityModel } from '../fireside/post/community/community.model';
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { FiresideStreamNotificationModel } from '../fireside/stream-notification/stream-notification.model';
@@ -471,17 +472,8 @@ export class NotificationText {
 			}
 
 			case NotificationType.FiresideStart: {
-				if (notification.action_model instanceof FiresideModel) {
-					return _process(
-						$gettext(
-							`<em>%{ subject }</em> is live!`,
-							this.getTranslationValues(notification),
-							{ enableHTMLEscaping: !plaintext }
-						)
-					);
-				}
-
-				break;
+				// No longer supported.
+				return undefined;
 			}
 
 			case NotificationType.FiresideStreamNotification: {

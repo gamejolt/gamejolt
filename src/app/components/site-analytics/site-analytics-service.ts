@@ -1,9 +1,9 @@
 import { computed } from 'vue';
-import { arrayIndexBy } from '../../../utils/array';
-import { objectPick } from '../../../utils/object';
 import { Api } from '../../../_common/api/api.service';
 import { Graph } from '../../../_common/graph/graph.service';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { arrayIndexBy } from '../../../utils/array';
+import { objectPick } from '../../../utils/object';
 
 export type ResourceName = 'Partner' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
 
@@ -83,6 +83,8 @@ export type Field =
 export type GameField = 'game_name' | 'game_model';
 export type UserField = 'user_display_name' | 'user_username' | 'user_model';
 export type PostField = 'post_lead' | 'post_model';
+// TODO(remove-firesides) Not sure what to do about `fireside_model` here, never
+// encountered these files myself.
 export type FiresideField = 'fireside_title' | 'fireside_model';
 
 export interface ResourceFields {

@@ -13,6 +13,7 @@ export type TypeIcon = {
 	color: string;
 };
 
+// TODO(remove-firesides) (ask) verify that this should still support firesides.
 export const enum CommunityActivityItemType {
 	CommunityCreated = 'community/created',
 

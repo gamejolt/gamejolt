@@ -47,7 +47,6 @@ export type UserFollowLocation =
 	| 'creatorCard'
 	| 'profilePage'
 	| 'inviteFollow'
-	| 'firesideOfflineFollow'
 	| 'userList'
 	| 'gameFollow';
 export type GameFollowLocation = 'thumbnail' | 'gamePage' | 'badge' | 'homeBanner' | 'library';
@@ -486,67 +485,6 @@ export function trackSearchAutocomplete(params: {
 	search_autocomplete_resource: 'realm' | 'community' | 'game' | 'user' | 'library_game' | 'all';
 }) {
 	_trackEvent('search_autocomplete', params);
-}
-
-interface FiresideActionData {
-	action: string;
-	trigger: string;
-	sidebarData?: FiresideSidebarData;
-}
-
-interface FiresideSidebarData {
-	previous: string;
-	current: string;
-}
-
-export function trackFiresideAction({
-	action: action_name,
-	trigger: action_trigger,
-	sidebarData,
-}: FiresideActionData) {
-	const { previous: previous_sidebar, current: current_sidebar } = sidebarData || {};
-
-	_trackEvent('fireside_action', {
-		action_name,
-		action_trigger,
-		previous_sidebar,
-		current_sidebar,
-	});
-}
-
-export function trackFiresideExtinguish(trigger: string) {
-	trackFiresideAction({ action: 'extinguish', trigger });
-}
-
-export function trackFiresidePublish(trigger: string) {
-	trackFiresideAction({ action: 'publish', trigger });
-}
-
-export function trackFiresideSidebarButton({
-	previous,
-	current,
-	trigger,
-}: {
-	previous: string;
-	current: string;
-	trigger: string;
-}) {
-	trackFiresideAction({
-		action: 'change-sidebar',
-		trigger,
-		sidebarData: {
-			previous,
-			current,
-		},
-	});
-}
-
-export function trackFiresideSidebarCollapse(collapsed: boolean, trigger: string) {
-	trackFiresideAction({ action: collapsed ? 'collapse-sidebar' : 'expand-sidebar', trigger });
-}
-
-export function trackFiresideStopStreaming(trigger: string) {
-	trackFiresideAction({ action: 'stop-streaming', trigger: trigger });
 }
 
 export function trackHomeFeedSwitch({

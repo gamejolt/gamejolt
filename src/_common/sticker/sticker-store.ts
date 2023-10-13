@@ -1,12 +1,10 @@
 import { computed, inject, InjectionKey, Ref, ref, shallowReactive, shallowRef, toRaw } from 'vue';
 import { arrayRemove, numberSort } from '../../utils/array';
 import { Api } from '../api/api.service';
-import { FiresideModel } from '../fireside/fireside.model';
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { showErrorGrowl } from '../growls/growls.service';
 import { setModalBodyWrapper } from '../modal/modal.service';
 import { ModelData } from '../model/model.service';
-import { EventTopic } from '../system/event/event-topic';
 import { $gettext } from '../translate/translate.service';
 import { UserModel } from '../user/user.model';
 import AppStickerLayer from './layer/AppStickerLayer.vue';
@@ -174,7 +172,7 @@ export function createStickerStore(options: { user: Ref<UserModel | null> }) {
 }
 
 export function isStickerTargetMine(store: StickerStore, target: StickerTargetController | null) {
-	const { user, placedItem } = store;
+	const { user } = store;
 	const myUserId = user.value?.id;
 
 	let tempController = target;
@@ -184,8 +182,6 @@ export function isStickerTargetMine(store: StickerStore, target: StickerTargetCo
 		const model = toRaw(tempController?.model);
 		if (model instanceof FiresidePostModel) {
 			isMine = model.displayUser.id === myUserId;
-		} else if (model instanceof FiresideModel) {
-			isMine = placedItem.value?.target_data.host_user_id === myUserId;
 		}
 
 		if (isMine) {
@@ -244,14 +240,9 @@ async function _initializeDrawerContent(store: StickerStore, layer: StickerLayer
 		throw new Error('Could not find a primary sticker controller for the given layer.');
 	}
 
-	const { model, targetData } = layerItem.controller;
+	const { model } = layerItem.controller;
 	const resourceType = getStickerModelResourceName(model);
-
-	let url = `/web/stickers/placeable/${resourceType}/${model.id}`;
-	if (targetData.value?.host_user_id) {
-		url += `?hostUserId=${targetData.value.host_user_id}`;
-	}
-	const payload = await Api.sendRequest(url);
+	const payload = await Api.sendRequest(`/web/stickers/placeable/${resourceType}/${model.id}`);
 
 	setChargeData({
 		charge: payload.currentCharge,
@@ -533,8 +524,6 @@ interface StickerPlacementPayloadData {
 
 export type CustomStickerPlacementRequest = (data: StickerPlacementPayloadData) => Promise<any>;
 
-export const onFiresideStickerPlaced = new EventTopic<StickerPlacementModel>();
-
 export async function commitStickerStoreItemPlacement(store: StickerStore) {
 	const {
 		placedItem: { value: sticker },
@@ -549,9 +538,8 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 		return;
 	}
 
-	const { model, placeStickerCallback } = targetController.value;
+	const { model } = targetController.value;
 	const resourceType = getStickerModelResourceName(model);
-
 	const isCharged = canPlaceChargedStickerOnResource.value && isChargingSticker.value;
 
 	const body = {
@@ -565,11 +553,7 @@ export async function commitStickerStoreItemPlacement(store: StickerStore) {
 	};
 
 	try {
-		const promise = placeStickerCallback
-			? placeStickerCallback(body)
-			: Api.sendRequest('/web/stickers/place', body, { detach: true });
-
-		const payload = await promise;
+		const payload = await Api.sendRequest('/web/stickers/place', body, { detach: true });
 		const { success, resource, parent: payloadParent, stickerPlacement } = payload;
 		if (success === false) {
 			throw payload;

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+// TODO(remove-firesides) (ask) verify that this should still support firesides.
+
 // We want to make sure it doesn't actually have to import all these models to
 // display.
 import type { CommentModel } from '../../../../../_common/comment/comment-model';

@@ -4,6 +4,7 @@ import { CommunityModel } from '../community.model';
 export const enum CommunityUserNotificationType {
 	POSTS_MOVE = 'posts/move',
 	POSTS_EJECT = 'posts/eject',
+	// TODO(remove-firesides) (ask) verify that this should still support firesides.
 	FIRESIDES_EJECT = 'firesides/eject',
 }
 

@@ -1,4 +1,6 @@
 <script lang="ts">
+// TODO(remove-firesides) (ask) verify that this should still support firesides.
+
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { RouteLocationRaw } from 'vue-router';
 import { formatDate } from '../../filters/date';
@@ -149,7 +151,8 @@ export default class AppCommunityActivityItem extends Vue {
 				hash: '#entry-' + this.item.action_resource.id,
 			};
 		} else if (this.item.action_resource instanceof FiresideModel) {
-			return this.item.action_resource.routeLocation;
+			// No longer supported.
+			return undefined;
 		}
 	}
 

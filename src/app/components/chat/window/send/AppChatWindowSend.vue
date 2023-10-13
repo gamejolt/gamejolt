@@ -44,7 +44,7 @@ const props = defineProps({
 	/** Duration in milliseconds */
 	slowmodeDuration: {
 		type: Number,
-		default: 2_000,
+		default: 0,
 	},
 	maxContentLength: {
 		type: Number,
@@ -292,18 +292,12 @@ function applyNextMessageTimeout(options: { ignoreLastMessageTimestamp: boolean 
 		return;
 	}
 
-	if (!room.value.isFiresideRoom) {
-		return;
-	}
-
 	const { currentUser } = chat.value;
-	// For fireside rooms, timeout the user from sending another message for 1.5s.
-	// Do not do this for the owner/mods.
-	if (currentUser?.id === room.value.owner_id) {
-		return;
-	}
-
 	if (currentUser) {
+		// Chat owner and moderators are ignored for slowmode timeouts.
+		if (currentUser.id === room.value.owner_id) {
+			return;
+		}
 		const userRole = tryGetRoomRole(room.value, currentUser);
 		if (userRole === 'owner' || userRole === 'moderator') {
 			return;
@@ -458,7 +452,7 @@ function disableTypingTimeout() {
 						<AppFormControlContent
 							:key="room.id"
 							ref="editor"
-							:content-context="room.messagesContentContext"
+							content-context="chat-message"
 							:capabilities="capabilities"
 							:temp-resource-context-data="contentEditorTempResourceContextData"
 							:placeholder="$gettext('Send a message')"
