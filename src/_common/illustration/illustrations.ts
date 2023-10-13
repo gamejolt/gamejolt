@@ -1,5 +1,4 @@
 import { IllustrationAsset } from './AppIllustration.vue';
-import illChargeOrbEmptyPath from './img/charge-orb-empty.png';
 import illCreatorInfographicPath from './img/creator-infographic.png';
 import illEndOfFeedPath from './img/end-of-feed.png';
 import illExtremeSadnessSmallPath from './img/extreme-sadness-small.png';
@@ -60,12 +59,6 @@ export const illNoChat: IllustrationAsset = {
 	path: illNoChatPath,
 	width: 584,
 	height: 362,
-};
-
-export const illChargeOrbEmpty: IllustrationAsset = {
-	path: illChargeOrbEmptyPath,
-	width: 500,
-	height: 500,
 };
 
 export const illCreatorInfographic: IllustrationAsset = {

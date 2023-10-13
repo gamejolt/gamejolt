@@ -49,6 +49,10 @@ const props = defineProps({
 	forceElevate: {
 		type: Boolean,
 	},
+	borderRadius: {
+		type: Number,
+		default: undefined,
+	},
 });
 
 const emit = defineEmits({
@@ -87,17 +91,22 @@ function onClickPack() {
 			>
 				<AppAspectRatio :ratio="StickerPackRatio" show-overflow>
 					<AppMediaItemBackdrop
-						:style="{
-							...styleWhen(forceElevate, styleElevate(1)),
-							...styleWhen(canClickPack, {
+						:style="[
+							styleWhen(forceElevate, styleElevate(1)),
+							styleWhen(canClickPack, {
 								cursor: `pointer`,
 							}),
-							width: `100%`,
-							height: `100%`,
-						}"
+							styleWhen(!!borderRadius, {
+								borderRadius: `${borderRadius}px`,
+							}),
+							{
+								width: `100%`,
+								height: `100%`,
+							},
+						]"
 						:media-item="pack.media_item"
 						:color-opacity="loadedImage ? 0 : 1"
-						radius="lg"
+						:radius="borderRadius ? 'full' : 'lg'"
 					>
 						<AppImgResponsive
 							:src="pack.media_item.mediaserver_url"

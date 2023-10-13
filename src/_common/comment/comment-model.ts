@@ -71,10 +71,6 @@ export class CommentModel implements ModelStoreModel, RemovableModel, Reactionab
 	isFollowPending = false;
 	_removed = false;
 
-	constructor(data: any) {
-		this.update(data);
-	}
-
 	update(data: any): void {
 		Object.assign(this, data);
 

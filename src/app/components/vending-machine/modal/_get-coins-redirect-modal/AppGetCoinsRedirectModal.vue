@@ -11,6 +11,7 @@ import { useAppStore } from '../../../../store/index';
 const modal = useModal()!;
 const { clearPanes, visibleLeftPane, toggleLeftPane } = useAppStore();
 
+// TODO(creator-shops): when this modal closes and it routes away, the panes end up closing
 function gotoQuests() {
 	// Close the modal, indicating that we're doing some form of redirect.
 	modal.resolve(true);

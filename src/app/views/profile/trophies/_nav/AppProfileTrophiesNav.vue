@@ -11,7 +11,7 @@ import { PropType, computed, toRefs } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppListGroupSelector from '../../../../../_common/list-group/selector/AppListGroupSelector.vue';
-import { useProfileRouteController } from '../../RouteProfile.vue';
+import { useProfileRouteStore } from '../../RouteProfile.vue';
 
 const props = defineProps({
 	games: {
@@ -28,7 +28,7 @@ const props = defineProps({
 	},
 });
 
-const { trophyCount } = useProfileRouteController()!;
+const { trophyCount } = useProfileRouteStore()!;
 const route = useRoute();
 const router = useRouter();
 

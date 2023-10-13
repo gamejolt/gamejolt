@@ -20,7 +20,7 @@ import { useGameDashRouteController } from '../../../../manage.store';
 	name: 'RouteDashGamesManageApiScoreboardsScoresView',
 })
 @OptionsForLegacyRoute({
-	deps: { params: ['score'] },
+	deps: { params: ['table', 'score'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			'/web/dash/developer/games/api/scores/' + route.params.id + '/' + route.params.score

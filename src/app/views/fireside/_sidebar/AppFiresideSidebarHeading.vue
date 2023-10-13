@@ -3,7 +3,7 @@ import { computed, ref, toRefs, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../_common/filters/number';
-import AppHeaderBar, { HeaderBarSlots } from '../../../../_common/header/AppHeaderBar.vue';
+import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useFiresideController } from '../../../components/fireside/controller/controller';
@@ -54,14 +54,6 @@ function _formatMemberCount(count: number) {
 
 	return formatNumber(count);
 }
-
-const definedSlots = computed(() => {
-	const result: HeaderBarSlots[] = ['title', 'actions'];
-	if (!isSidebarHome.value && !collapsed.value) {
-		result.push('leading');
-	}
-	return result;
-});
 </script>
 
 <template>
@@ -72,7 +64,12 @@ const definedSlots = computed(() => {
 		}"
 		:elevation="2"
 		:automatically-imply-leading="false"
-		:defined-slots="definedSlots"
+		:dynamic-slots="{
+			title: true,
+			actions: true,
+			leading: !collapsed && !isSidebarHome,
+			bottom: false,
+		}"
 		:reverse-actions="reverseActions"
 	>
 		<template #leading>

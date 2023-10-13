@@ -1,6 +1,7 @@
 import { getMediaserverUrlForBounds } from '../../utils/image';
 import { MediaItemModel } from '../media-item/media-item-model';
-import { Model } from '../model/model.service';
+import { ModelStoreModel } from '../model/model-store.service';
+import { ShopProductCommonFields } from '../shop/product/product-model';
 
 const DefaultScale = 2.0;
 
@@ -9,15 +10,23 @@ export const enum BackgroundScaling {
 	tile = 'tile',
 }
 
-export class BackgroundModel extends Model {
+export class BackgroundModel implements ModelStoreModel, ShopProductCommonFields {
+	declare id: number;
 	declare scaling: BackgroundScaling;
 	declare media_item: MediaItemModel;
 	declare scale: number;
-	declare name?: string;
+	declare name: string;
+	declare description: string | undefined;
 	declare rarity?: number;
 
-	constructor(data: any = {}) {
-		super(data);
+	// Shop fields
+	declare is_premium: boolean;
+	declare has_active_sale: boolean;
+	declare was_approved: boolean;
+	declare added_on: number | undefined;
+
+	update(data: any) {
+		Object.assign(this, data);
 
 		if (data.media_item) {
 			this.media_item = new MediaItemModel(data.media_item);

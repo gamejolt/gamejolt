@@ -4,6 +4,7 @@ import { CancelToken } from '../../../utils/cancel-token';
 import { Api } from '../../api/api.service';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppLoading from '../../loading/AppLoading.vue';
+import { storeModelList } from '../../model/model-store.service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
@@ -48,7 +49,7 @@ watch(
 			return;
 		}
 
-		stickers.value = StickerModel.populate(payload.packContents || []);
+		stickers.value = storeModelList(StickerModel, payload.packContents || []);
 		isLoading.value = false;
 	},
 	{ immediate: true }

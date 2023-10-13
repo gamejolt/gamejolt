@@ -6,10 +6,6 @@ export class InventoryShopProductSalePricingModel implements ModelStoreModel {
 	declare currency_identifier: string;
 	declare price: number;
 
-	constructor(data: any = {}) {
-		this.update(data);
-	}
-
 	update(data: any) {
 		Object.assign(this, data);
 	}

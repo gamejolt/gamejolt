@@ -97,9 +97,9 @@ function onPostAdded(post: FiresidePostModel) {
 	ActivityFeedService.onPostAdded({
 		feed: feed.value!,
 		post,
-		appRoute: appRoute,
-		route: route,
-		router: router,
+		appRoute,
+		route,
+		router,
 	});
 }
 </script>

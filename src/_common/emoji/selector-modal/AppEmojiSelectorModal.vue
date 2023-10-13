@@ -122,17 +122,19 @@ async function init() {
 
 		const newCollections: EmojiGroupModel[] = [];
 		if (rawRecentEmojis.length) {
-			newCollections.push(
-				new EmojiGroupModel({
-					id: -1,
-					name: 'Recently used',
-					emojis: rawRecentEmojis,
-					num_emojis: rawRecentEmojis.length,
-					added_on: Date.now(),
-					type: EmojiGroupType.LocalRecent,
-					media_item: undefined,
-				} as ModelData<EmojiGroupModel>)
-			);
+			// We want to keep this out of the model store since we generate it.
+			const recentlyUsed = new EmojiGroupModel();
+			recentlyUsed.update({
+				id: -1,
+				name: 'Recently used',
+				emojis: rawRecentEmojis,
+				num_emojis: rawRecentEmojis.length,
+				added_on: Date.now(),
+				type: EmojiGroupType.LocalRecent,
+				media_item: undefined,
+			} as ModelData<EmojiGroupModel>);
+
+			newCollections.push(recentlyUsed);
 		}
 		newCollections.push(...storeModelList(EmojiGroupModel, response['groups']));
 

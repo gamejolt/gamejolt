@@ -133,6 +133,14 @@ export function assertNever(x: never): never {
 	throw new Error('Unexpected object: ' + x);
 }
 
+/**
+ * Use when you need to call a function when doing an instanceof check. It can
+ * help resolve a bug in volar where the templates break with instanceof.
+ */
+export function isInstance<T>(item: any, constructor: new (...data: any) => T): item is T {
+	return item instanceof constructor;
+}
+
 export type Primitives = number | string | boolean;
 export type Properties<T, U> = { [K in keyof T]: T[K] extends U ? K : never }[keyof T];
 

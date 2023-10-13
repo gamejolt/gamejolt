@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
+import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
+import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
 import AppPagination from '../../../../_common/pagination/pagination.vue';
 import { vAppNoAutoscroll } from '../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import AppScrollInview, {

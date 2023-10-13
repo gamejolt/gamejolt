@@ -9,7 +9,7 @@ import {
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { GameCollectionModel } from '../../../components/game/collection/collection.model';
 import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
-import { useProfileRouteController } from '../RouteProfile.vue';
+import { useProfileRouteStore } from '../RouteProfile.vue';
 
 @Options({
 	name: 'RouteProfileLibrary',
@@ -22,7 +22,7 @@ import { useProfileRouteController } from '../RouteProfile.vue';
 	resolver: ({ route }) => Api.sendRequest('/web/library/@' + route.params.username),
 })
 export default class RouteProfileLibrary extends LegacyRouteComponent {
-	routeStore = setup(() => useProfileRouteController()!);
+	routeStore = setup(() => useProfileRouteStore()!);
 
 	collections: GameCollectionModel[] = [];
 
