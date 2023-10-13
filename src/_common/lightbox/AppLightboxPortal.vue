@@ -1,11 +1,14 @@
 <script lang="ts" setup>
 import { computed, nextTick, ref, watch } from 'vue';
 import { Analytics } from '../analytics/analytics.service';
+import AppButton from '../button/AppButton.vue';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
+import AppJolticon from '../jolticon/AppJolticon.vue';
 import { Screen, onScreenResize } from '../screen/screen-service';
 import AppShortkey from '../shortkey/AppShortkey.vue';
 import { EventSubscription } from '../system/event/event-topic';
 import AppTouch, { AppTouchInput } from '../touch/AppTouch.vue';
+import { $gettext } from '../translate/translate.service';
 import AppLightboxItem from './item/AppLightboxItem.vue';
 import { getActiveLightbox } from './lightbox-helpers';
 
@@ -202,10 +205,10 @@ function panEnd(event: AppTouchInput) {
 							:href="activeMediaItem.img_url"
 							target="_blank"
 						>
-							<AppTranslate>Download</AppTranslate>
+							{{ $gettext(`Download`) }}
 						</AppButton>
 						<AppButton @click="close">
-							<AppTranslate>Close</AppTranslate>
+							{{ $gettext(`Close`) }}
 						</AppButton>
 					</div>
 
