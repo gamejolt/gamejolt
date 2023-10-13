@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import { PropType, computed, nextTick, onMounted, ref, toRefs, watch } from 'vue';
+import { isInstance } from '../../../utils/utils';
+import { GameSketchfabModel } from '../../game/sketchfab/sketchfab.model';
+import { GameVideoModel } from '../../game/video/video.model';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import { Screen, onScreenResize } from '../../screen/screen-service';
 import AppSketchfabEmbed from '../../sketchfab/embed/AppSketchfabEmbed.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
@@ -44,8 +48,6 @@ const isGifWithoutVideo = computed(
 		!mediaItem.value.mediaserver_url_mp4 &&
 		!mediaItem.value.mediaserver_url_webm
 );
-
-const mediaType = computed(() => item.value.getMediaType());
 
 const mediaItem = computed(() => item.value.getMediaItem()!);
 
@@ -121,7 +123,7 @@ async function calcActive() {
 	<div ref="rootElem" class="media-bar-lightbox-item">
 		<div v-if="isActive || isNext || isPrev" class="-inner">
 			<!-- Image -->
-			<template v-if="mediaType === 'image'">
+			<template v-if="isInstance(item, MediaItemModel)">
 				<div class="-embed">
 					<!-- The min/max will be the actual dimensions for the image thumbnail. -->
 					<AppMediaItemBackdrop
@@ -139,13 +141,12 @@ async function calcActive() {
 							v-if="!mediaItem.is_animated || !shouldVideoPlay"
 							class="-img"
 							:src="item.img_thumbnail"
-							:alt="item.caption"
 						/>
 						<img
 							v-else-if="isGifWithoutVideo"
 							class="img-responsive"
 							:src="mediaItem.img_url"
-							:alt="item.caption"
+							alt=""
 						/>
 						<AppVideo
 							v-else-if="videoController"
@@ -155,14 +156,10 @@ async function calcActive() {
 						/>
 					</AppMediaItemBackdrop>
 				</div>
-
-				<div v-if="item.caption" ref="caption" class="-caption">
-					<h4>{{ item.caption }}</h4>
-				</div>
 			</template>
 
-			<!-- Video -->
-			<template v-else-if="mediaType === 'video'">
+			<!-- Video mediaType === 'video'-->
+			<template v-else-if="isInstance(item, GameVideoModel)">
 				<div v-if="isActive" class="-embed">
 					<!-- We want to wait until the size is properly calculated, otherwise the player won't size properly. -->
 					<AppVideoEmbed
@@ -182,7 +179,7 @@ async function calcActive() {
 			</template>
 
 			<!-- Sketchfab -->
-			<template v-else-if="mediaType === 'sketchfab'">
+			<template v-else-if="isInstance(item, GameSketchfabModel)">
 				<div v-if="isActive" class="-embed">
 					<AppSketchfabEmbed
 						:sketchfab-id="item.sketchfab_id"
