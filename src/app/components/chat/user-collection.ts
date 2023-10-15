@@ -1,11 +1,11 @@
 import { inject, InjectionKey, provide, toRaw } from 'vue';
 import { storeModel } from '../../../_common/model/model-store.service';
-import { arrayRemove, numberSort, stringSortRaw } from '../../../utils/array';
+import { arrayRemove, stringSortRaw } from '../../../utils/array';
 import { ChatClient, isUserOnline } from './client';
 import { ChatRoomModel } from './room';
 import { ChatUser } from './user';
 
-type RoomType = 'friend' | 'room' | 'fireside';
+type RoomType = 'friend' | 'room';
 
 const Key: InjectionKey<ChatUserCollection> = Symbol('chat-user-collection');
 
@@ -20,7 +20,6 @@ export function useChatUserCollection() {
 export class ChatUserCollection {
 	static readonly TYPE_FRIEND = 'friend';
 	static readonly TYPE_ROOM = 'room';
-	static readonly TYPE_FIRESIDE = 'fireside';
 
 	onlineCount = 0;
 	offlineCount = 0;
@@ -205,40 +204,13 @@ export class ChatUserCollection {
 
 		if (this.type === ChatUserCollection.TYPE_FRIEND) {
 			this._users = this._sortCollection('lastMessage');
-		} else if (this.type === ChatUserCollection.TYPE_FIRESIDE) {
-			this._users = this._sortCollection('role');
 		} else {
 			this._users = this._sortCollection('title');
 		}
 	}
 
-	private _sortCollection(mode: 'lastMessage' | 'title' | 'role') {
+	private _sortCollection(mode: 'lastMessage' | 'title') {
 		switch (mode) {
-			case 'role': {
-				return toRaw(this._users)
-					.map(user => {
-						return {
-							user,
-							role: SortingGroup[_getSortingGroupIndex(user)],
-							isFriend: this.chat.friendsList.has(user.id),
-							lowercaseDisplayName: user.display_name.toLowerCase(),
-						};
-					})
-					.sort((a, b) => {
-						const roleDiff = numberSort(a.role, b.role);
-						if (roleDiff !== 0) {
-							return roleDiff;
-						}
-
-						if (a.isFriend !== b.isFriend) {
-							return a.isFriend ? -1 : 1;
-						}
-
-						return stringSortRaw(a.lowercaseDisplayName, b.lowercaseDisplayName);
-					})
-					.map(i => i.user);
-			}
-
 			case 'lastMessage':
 				return sortByLastMessageOn([...this._users]);
 
@@ -261,29 +233,6 @@ export class ChatUserCollection {
 					.map(i => i.user);
 		}
 	}
-}
-
-const SortingGroup = {
-	owner: 0,
-	moderator: 1,
-	staff: 2,
-	user: 3,
-} as const;
-
-function _getSortingGroupIndex(user: ChatUser | null | undefined): keyof typeof SortingGroup {
-	if (!user) {
-		return 'user';
-	}
-
-	if (user.role === 'owner') {
-		return 'owner';
-	}
-
-	if (user.isStaff) {
-		return 'staff';
-	}
-
-	return user.role ?? 'user';
 }
 
 function _getSortVal(chat: ChatClient, user: ChatUser) {
