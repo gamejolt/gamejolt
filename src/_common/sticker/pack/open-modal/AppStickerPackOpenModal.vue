@@ -159,7 +159,7 @@ const stickerSizing = computed(() => {
 	if (Screen.isXs) {
 		size = Math.min(size, Math.max(Screen.width * 0.2, size / 2));
 	}
-	return `${size}px`;
+	return size;
 });
 
 onMounted(() => afterMount());
@@ -655,8 +655,8 @@ function addMs(value: number) {
 						transform: 'translateX(-50%)',
 						zIndex: 3 + index,
 						pointerEvents: 'none',
-						width: stickerSizing,
-						height: stickerSizing,
+						width: `${stickerSizing}px`,
+						height: `${stickerSizing}px`,
 					}"
 				>
 					<!-- Stickers rotation -->
