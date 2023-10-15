@@ -65,6 +65,20 @@
 		"prefix": "vue-prop",
 		"body": ["${1:name}: {", "\ttype: ${2:String},", "\trequired: true,", "},"]
 	},
+	"CSS properties": {
+		"prefix": "styles-object",
+		"body": ["const ${1:some}Styles: CSSProperties = {", "\t${2:}", "};"]
+	},
+	"CSS properties reactive": {
+		"prefix": "styles-reactive",
+		"body": [
+			"const ${1:some}Styles = computed<CSSProperties>(() => {",
+			"\treturn {",
+			"\t\t${2:}",
+			"\t};",
+			"});"
+		]
+	},
 	"Pure assignment": {
 		"prefix": "pure",
 		"body": "/** @__PURE__ */"

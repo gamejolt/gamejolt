@@ -4,7 +4,7 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { GameScoreTableModel } from '../../../../../../../_common/game/score-table/score-table.model';
 import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
-import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { Popper } from '../../../../../../../_common/popper/popper.service';
 import {
 	LegacyRouteComponent,

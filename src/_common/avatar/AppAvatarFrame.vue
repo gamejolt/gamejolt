@@ -8,7 +8,7 @@ const BASE_FRAME_SIZE = 100 - BASE_FRAME_INSET * 2;
 
 const props = defineProps({
 	frame: {
-		type: [Object, null] as PropType<AvatarFrameModel | null>,
+		type: [Object, null] as PropType<Pick<AvatarFrameModel, 'image_url'> | null>,
 		required: true,
 	},
 	inset: {

@@ -1,3 +1,4 @@
+import { storeModelList } from '../model/model-store.service';
 import { Model } from '../model/model.service';
 import { StickerModel } from '../sticker/sticker.model';
 
@@ -33,7 +34,7 @@ export class QuestObjectiveModel extends Model {
 		super(data);
 
 		if (data.stickers_to_place) {
-			this.stickers_to_place = StickerModel.populate(data.stickers_to_place);
+			this.stickers_to_place = storeModelList(StickerModel, data.stickers_to_place);
 		}
 	}
 

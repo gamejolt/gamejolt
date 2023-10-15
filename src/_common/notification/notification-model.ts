@@ -230,7 +230,7 @@ export class NotificationModel extends Model {
 		} else if (this.type === NotificationType.CreatorLevelUp) {
 			this.action_model = new CreatorExperienceLevelModel(data.action_resource_model);
 		} else if (this.type === NotificationType.UnlockedAvatarFrame) {
-			this.action_model = new UserAvatarFrameModel(data.action_resource_model);
+			this.action_model = storeModel(UserAvatarFrameModel, data.action_resource_model);
 		}
 
 		// Keep memory clean after bootstrapping the models (the super

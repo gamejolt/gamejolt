@@ -1,6 +1,7 @@
 import { EmojiModel } from '../emoji/emoji.model';
 import { MediaItemModel } from '../media-item/media-item-model';
-import { Model } from '../model/model.service';
+import { ModelStoreModel, storeModel } from '../model/model-store.service';
+import { ShopProductCommonFields } from '../shop/product/product-model';
 import { UserModel } from '../user/user.model';
 
 /**
@@ -19,22 +20,29 @@ export const enum StickerRarity {
 	Epic = 3,
 }
 
-export class StickerModel extends Model {
-	declare name?: string;
+export class StickerModel implements ModelStoreModel, ShopProductCommonFields {
+	declare id: number;
+	declare name: string;
+	declare description: string | undefined;
 	declare rarity: number;
 	declare img_url: string;
 	declare is_event: boolean;
 	declare is_secret?: boolean;
 	declare is_active?: boolean;
-	declare added_on?: number;
 	declare media_item?: MediaItemModel;
 	declare artist?: UserModel;
 	declare owner_user?: UserModel;
 	declare mastery?: number;
 	declare emoji?: EmojiModel;
 
-	constructor(data: any = {}) {
-		super(data);
+	// Shop fields
+	declare is_premium: boolean;
+	declare has_active_sale: boolean;
+	declare was_approved: boolean;
+	declare added_on: number | undefined;
+
+	update(data: any) {
+		Object.assign(this, data);
 
 		if (data.media_item) {
 			this.media_item = new MediaItemModel(data.media_item);
@@ -49,7 +57,7 @@ export class StickerModel extends Model {
 		}
 
 		if (data.emoji) {
-			this.emoji = new EmojiModel(data.emoji);
+			this.emoji = storeModel(EmojiModel, data.emoji);
 		}
 	}
 

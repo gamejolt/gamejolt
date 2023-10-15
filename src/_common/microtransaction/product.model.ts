@@ -16,10 +16,6 @@ export class MicrotransactionProductModel implements ModelStoreModel {
 	declare is_active: boolean;
 	declare sellable?: SellableModel;
 
-	constructor(data: UnknownModelData | ModelData<MicrotransactionProductModel> = {}) {
-		this.update(data);
-	}
-
 	update(data: UnknownModelData | ModelData<MicrotransactionProductModel>) {
 		Object.assign(this, data);
 

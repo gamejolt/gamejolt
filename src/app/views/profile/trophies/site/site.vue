@@ -10,7 +10,7 @@ import AppTrophyCard from '../../../../../_common/trophy/AppTrophyCard.vue';
 import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import { useProfileRouteController } from '../../RouteProfile.vue';
+import { useProfileRouteStore } from '../../RouteProfile.vue';
 
 @Options({
 	name: 'RouteProfileTrophiesSite',
@@ -25,7 +25,7 @@ import { useProfileRouteController } from '../../RouteProfile.vue';
 		Api.sendRequest('/web/profile/trophies/site/@' + route.params.username),
 })
 export default class RouteProfileTrophiesSite extends LegacyRouteComponent {
-	routeStore = setup(() => useProfileRouteController()!);
+	routeStore = setup(() => useProfileRouteStore()!);
 
 	trophies: UserBaseTrophyModel[] = [];
 

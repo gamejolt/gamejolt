@@ -39,15 +39,15 @@ import AppPageHeaderControls from '../../components/page-header/controls/control
 import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 
-const Key: InjectionKey<Controller> = Symbol('profile-route');
+const ProfileRouteStoreKey: InjectionKey<ProfileRouteStore> = Symbol('profile-route');
 
-type Controller = ReturnType<typeof createController>;
+type ProfileRouteStore = ReturnType<typeof createProfileRouteStore>;
 
-export function useProfileRouteController() {
-	return inject(Key);
+export function useProfileRouteStore() {
+	return inject(ProfileRouteStoreKey);
 }
 
-function createController() {
+function createProfileRouteStore() {
 	const isOverviewLoaded = ref(false);
 
 	// We will bootstrap this right away, so it should always be set for use.
@@ -227,8 +227,8 @@ defineOptions(
 	})
 );
 
-const routeStore = createController();
-provide(Key, routeStore);
+const routeStore = createProfileRouteStore();
+provide(ProfileRouteStoreKey, routeStore);
 
 const { user: routeUser, trophyCount, userFriendship, bootstrapUser, profilePayload } = routeStore;
 

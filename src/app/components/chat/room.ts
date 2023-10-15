@@ -1,5 +1,5 @@
 import { BackgroundModel } from '../../../_common/background/background.model';
-import { ModelStoreModel } from '../../../_common/model/model-store.service';
+import { ModelStoreModel, storeModel } from '../../../_common/model/model-store.service';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { ChatClient } from './client';
 import { ChatMessageModel } from './message';
@@ -42,10 +42,6 @@ export class ChatRoomModel implements ModelStoreModel {
 
 	declare messageLimit: number | null;
 
-	constructor(data: any) {
-		this.update(data);
-	}
-
 	update(data: any = {}) {
 		Object.assign(this, data);
 
@@ -60,7 +56,7 @@ export class ChatRoomModel implements ModelStoreModel {
 		}
 
 		if (data.background) {
-			this.background = new BackgroundModel(data.background);
+			this.background = storeModel(BackgroundModel, data.background);
 		}
 
 		const initialMembers = data.members || [];

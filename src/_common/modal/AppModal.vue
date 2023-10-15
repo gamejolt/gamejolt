@@ -1,7 +1,8 @@
 <script lang="ts">
-import { computed, onMounted, onUnmounted, PropType, ref, useSlots } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, ref, toRef } from 'vue';
 import { isNavigationFailure, useRouter } from 'vue-router';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
+import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
@@ -28,7 +29,7 @@ const _modalBackdropChecks: (() => boolean)[] = [];
 </script>
 
 <script lang="ts" setup>
-defineProps({
+const props = defineProps({
 	theme: {
 		type: Object as PropType<ThemeModel>,
 		default: undefined,
@@ -37,6 +38,7 @@ defineProps({
 		type: String as PropType<'dark' | 'light'>,
 		default: undefined,
 	},
+	...defineDynamicSlotProps(['footer'], false),
 });
 
 const emit = defineEmits({
@@ -47,7 +49,8 @@ defineExpose<AppModalInterface>({
 	scrollTo,
 });
 
-const slots = useSlots();
+const { hasSlot } = useDynamicSlots(toRef(props, 'dynamicSlots'));
+
 const router = useRouter();
 const modal = useModal()!;
 const scroller = createScroller();
@@ -60,7 +63,7 @@ let _afterEachDeregister: (() => void) | undefined;
 let _escapeCallback: EscapeStackCallback | undefined;
 
 const zIndex = computed(() => 1050 + modal.index);
-const hasFooter = computed(() => !!slots.footer);
+const hasFooter = computed(() => hasSlot('footer'));
 
 onMounted(() => {
 	if (!modal.noBackdrop) {

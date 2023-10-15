@@ -5,7 +5,7 @@ import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { EventItemModel } from '../../../../../../_common/event-item/event-item.model';
 import { FiresidePostModel } from '../../../../../../_common/fireside/post/post-model';
-import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,

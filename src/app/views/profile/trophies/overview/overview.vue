@@ -18,7 +18,7 @@ import { UserSiteTrophyModel } from '../../../../../_common/user/trophy/site-tro
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { numberSort } from '../../../../../utils/array';
-import { useProfileRouteController } from '../../RouteProfile.vue';
+import { useProfileRouteStore } from '../../RouteProfile.vue';
 
 type TrophyEntry = {
 	gameId?: number;
@@ -41,7 +41,7 @@ type TrophyEntry = {
 		Api.sendRequest('/web/profile/trophies/overview/@' + route.params.username),
 })
 export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
-	routeStore = setup(() => useProfileRouteController()!);
+	routeStore = setup(() => useProfileRouteStore()!);
 	commonStore = setup(() => useCommonStore());
 
 	trophyEntries: TrophyEntry[] = [];

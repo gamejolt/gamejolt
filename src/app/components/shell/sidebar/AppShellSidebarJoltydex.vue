@@ -140,7 +140,7 @@ async function loadUsers() {
 					</div>
 					<br />
 					<div>
-						<a @click="showVendingMachineModal()">
+						<a @click="showVendingMachineModal({ location: 'joltydex' })">
 							{{ $gettext(`Get some cool stuff from the Shop!`) }}
 						</a>
 					</div>

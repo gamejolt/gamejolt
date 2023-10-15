@@ -15,6 +15,7 @@ import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import { showModalConfirm } from '../../../_common/modal/confirm/confirm-service';
+import { storeModelList } from '../../../_common/model/model-store.service';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
@@ -99,7 +100,7 @@ type FormBackground = {
 const backgroundForm: FormController<FormBackground> = createForm({
 	loadUrl: `/web/chat/rooms/backgrounds/${room.value.id}`,
 	onLoad(payload) {
-		backgrounds.value = BackgroundModel.populate(payload.backgrounds);
+		backgrounds.value = storeModelList(BackgroundModel, payload.backgrounds);
 		roomBackgroundId.value = payload.roomBackgroundId || null;
 		backgroundForm.formModel.background_id = roomBackgroundId.value;
 	},

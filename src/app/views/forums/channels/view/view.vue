@@ -5,7 +5,7 @@ import { Api } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';
 import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
-import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import AppPagination from '../../../../../_common/pagination/pagination.vue';
 import {
 	LegacyRouteComponent,

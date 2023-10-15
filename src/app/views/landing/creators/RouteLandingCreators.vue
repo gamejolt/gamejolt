@@ -19,6 +19,7 @@ import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import { ImgHelper } from '../../../../_common/img/helper/helper-service';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
+import { storeModel } from '../../../../_common/model/model-store.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -142,7 +143,7 @@ const { isBootstrapped, isDestroyed } = createAppRoute({
 		testimonialUsers.value = UserModel.populate(payload.testimonialUsers);
 		testimonials.value = payload.testimonials;
 		whyBackground.value = payload.background
-			? new BackgroundModel(payload.background)
+			? storeModel(BackgroundModel, payload.background)
 			: undefined;
 		applyUrl.value = payload.applyUrl;
 	},

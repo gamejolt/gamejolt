@@ -19,6 +19,7 @@ import { illBackpackClosed, illBackpackOpen } from '../../../img/ill/illustratio
 import AppLoading from '../../../loading/AppLoading.vue';
 import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
+import { storeModelList } from '../../../model/model-store.service';
 import { Screen } from '../../../screen/screen-service';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
@@ -208,7 +209,7 @@ async function _openPack() {
 			throw Error('Got no stickers returned when opening pack.');
 		}
 
-		const newStickers: StickerModel[] = StickerModel.populate(rawStickers);
+		const newStickers = storeModelList(StickerModel, rawStickers);
 		openedStickers.value = newStickers;
 		// Sort our owned stickers, adding our new stickers to the list.
 		sortMyStickers(newStickers);

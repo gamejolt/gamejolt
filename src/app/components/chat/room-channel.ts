@@ -344,7 +344,7 @@ export function createChatRoomChannel(
 		const { title, fallback_title, background } = json;
 		room.value.title = title || '';
 		room.value.fallback_title = fallback_title || '';
-		room.value.background = background ? new BackgroundModel(background) : undefined;
+		room.value.background = background ? storeModel(BackgroundModel, background) : undefined;
 	}
 
 	function _onOwnerSync(data: OwnerSyncPayload) {

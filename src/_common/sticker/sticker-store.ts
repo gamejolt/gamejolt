@@ -4,6 +4,7 @@ import { Api } from '../api/api.service';
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { showErrorGrowl } from '../growls/growls.service';
 import { setModalBodyWrapper } from '../modal/modal.service';
+import { storeModel, storeModelList } from '../model/model-store.service';
 import { ModelData } from '../model/model.service';
 import { $gettext } from '../translate/translate.service';
 import { UserModel } from '../user/user.model';
@@ -294,7 +295,7 @@ export function getStickerStacksFromPayloadData({
 	const creatorStickers: CreatorStickersMap = new Map();
 	const generalStickers: CreatorStickersList = [];
 
-	const unownedMasteries = StickerModel.populate(unownedStickerMasteries || []);
+	const unownedMasteries = storeModelList(StickerModel, unownedStickerMasteries || []);
 
 	const addItemToList = (item: StickerStack) => {
 		const stickerCreator = item.sticker.owner_user;
@@ -323,7 +324,7 @@ export function getStickerStacksFromPayloadData({
 		const item: StickerStack = {
 			count: stickerCountPayload.count,
 			sticker_id: stickerCountPayload.sticker_id,
-			sticker: new StickerModel(stickerData),
+			sticker: storeModel(StickerModel, stickerData),
 		};
 
 		addItemToList(item);

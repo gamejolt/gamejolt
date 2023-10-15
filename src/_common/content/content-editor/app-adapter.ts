@@ -3,6 +3,7 @@ import { objectPick } from '../../../utils/object';
 import { assertNever } from '../../../utils/utils';
 import { EmojiModel } from '../../emoji/emoji.model';
 import { MediaItemModel } from '../../media-item/media-item-model';
+import { storeModel } from '../../model/model-store.service';
 import { ThemeModel } from '../../theme/theme.model';
 import { ThemeStore } from '../../theme/theme.store';
 import { ContentContext, ContextCapabilities } from '../content-context';
@@ -351,7 +352,7 @@ export class ContentEditorAppAdapterMessage {
 					controller,
 					typeof this.data.emoji === 'string'
 						? this.data.emoji
-						: new EmojiModel(this.data.emoji)
+						: storeModel(EmojiModel, this.data.emoji)
 				);
 
 			case 'gif':

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import AppNavTabList from '../../../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
