@@ -1,5 +1,3 @@
-// TODO(remove-firesides) (ask) verify that this should still support firesides.
-
 import { Router } from 'vue-router';
 import { CommentModel, getCommentUrl } from '../../../../../_common/comment/comment-model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
@@ -83,9 +81,6 @@ export function getNotificationRouteLocation(
 				case CommunityUserNotificationType.POSTS_MOVE:
 				case CommunityUserNotificationType.POSTS_EJECT:
 					return getRouteLocationForModel(to_model as FiresidePostModel);
-				case CommunityUserNotificationType.FIRESIDES_EJECT:
-					// No longer supported.
-					return '';
 			}
 			break;
 
@@ -127,12 +122,6 @@ export function getNotificationRouteLocation(
 					return assertNever(mention.resource);
 			}
 		}
-
-		case NotificationType.FiresideStreamNotification:
-		case NotificationType.FiresideStart:
-		case NotificationType.FiresideFeaturedInCommunity:
-			// No longer supported.
-			return '';
 
 		case NotificationType.QuestNotification:
 			// Handled in the [go] function.
