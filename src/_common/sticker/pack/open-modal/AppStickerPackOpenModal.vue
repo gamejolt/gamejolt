@@ -154,12 +154,12 @@ const stickerAnimationDuration = computed(() =>
 	expandStickers.value ? DurationStickerShow : DurationStickerStash
 );
 
-const stickerSizing = computed<CSSProperties>(() => {
+const stickerSizing = computed(() => {
 	let size = 128;
 	if (Screen.isXs) {
 		size = Math.min(size, Math.max(Screen.width * 0.2, size / 2));
 	}
-	return { width: `${size}px`, height: `${size}px` };
+	return `${size}px`;
 });
 
 onMounted(() => afterMount());
@@ -655,7 +655,8 @@ function addMs(value: number) {
 						transform: 'translateX(-50%)',
 						zIndex: 3 + index,
 						pointerEvents: 'none',
-						...stickerSizing,
+						width: stickerSizing,
+						height: stickerSizing,
 					}"
 				>
 					<!-- Stickers rotation -->
@@ -707,6 +708,7 @@ function addMs(value: number) {
 											index * DurationStickerAnimationOffset
 										}ms`,
 									}"
+									:size="stickerSizing"
 									:src="sticker.img_url"
 								/>
 							</div>
