@@ -1,13 +1,13 @@
 <script lang="ts">
 import {
-	computed,
-	CSSProperties,
-	nextTick,
-	onMounted,
-	onUnmounted,
-	PropType,
-	ref,
-	toRefs,
+computed,
+CSSProperties,
+nextTick,
+onMounted,
+onUnmounted,
+PropType,
+ref,
+toRefs,
 } from 'vue';
 import { arrayRemove } from '../../../../utils/array';
 import { sleep } from '../../../../utils/utils';
@@ -693,7 +693,6 @@ function addMs(value: number) {
 								}"
 							>
 								<!-- Stickers scale -->
-								<!-- TODO(remove-firesides) Ensure this works as intended -->
 								<AppStickerImg
 									:style="{
 										transform:

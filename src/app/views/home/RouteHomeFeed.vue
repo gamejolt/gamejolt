@@ -1,5 +1,4 @@
 <script lang="ts">
-// TODO(remove-firesides) test this, make sure feeds are working properly.
 import {
 	computed,
 	defineAsyncComponent,
@@ -464,10 +463,6 @@ async function refreshQuests() {
 						<AppHomeFeaturedBanner :featured-item="featuredItem" />
 						<AppSpacer vertical :scale="4" />
 					</template>
-
-					<!-- TODO(remove-firesides) Probably remove, seems like it
-					was just a divider for the firesides. -->
-					<hr class="full-bleed" />
 
 					<AppHomeFeedMenu
 						v-if="!configHomeFeedSwitcher.value && typeof feedTab === 'string'"

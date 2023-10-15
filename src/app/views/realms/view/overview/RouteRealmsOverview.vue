@@ -83,7 +83,6 @@ function onPostAdded(post: FiresidePostModel) {
 
 <template>
 	<div>
-		<!-- TODO(remove-firesides) Make sure this looks okay without the removed elements -->
 		<AppPostAddButton
 			v-if="realm"
 			:realm="realm"
