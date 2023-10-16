@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppStickerStackItem from '../../../../../../../_common/sticker/stack/AppStickerStackItem.vue';
+import AppStickerImg from '../../../../../../../_common/sticker/AppStickerImg.vue';
 import { StickerModel } from '../../../../../../../_common/sticker/sticker.model';
 import {
 	kThemeBgOffset,
@@ -75,7 +75,7 @@ function onClickSticker(event: Event) {
 
 <template>
 	<div :style="baseStyles" @click="onClickSticker">
-		<AppStickerStackItem :img-url="sticker.img_url" />
+		<AppStickerImg :src="sticker.img_url" :style="{ width: `100%`, height: `100%` }" />
 
 		<div
 			:style="[

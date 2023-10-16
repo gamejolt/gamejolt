@@ -10,8 +10,8 @@ import { storeModelList } from '../../../../../../_common/model/model-store.serv
 import AppOnHover from '../../../../../../_common/on/AppOnHover.vue';
 import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
+import AppStickerImg from '../../../../../../_common/sticker/AppStickerImg.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
-import AppStickerStackItem from '../../../../../../_common/sticker/stack/AppStickerStackItem.vue';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { kThemeBg, kThemeBgOffset, kThemeFg } from '../../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
@@ -258,7 +258,10 @@ async function removeSticker(sticker: StickerModel) {
 								<AppJolticon icon="remove" />
 							</div>
 						</div>
-						<AppStickerStackItem :img-url="sticker.img_url" />
+						<AppStickerImg
+							:src="sticker.img_url"
+							:style="{ width: `100%`, height: `100%` }"
+						/>
 					</div>
 				</AppOnHover>
 			</div>
