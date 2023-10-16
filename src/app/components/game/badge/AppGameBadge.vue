@@ -1,21 +1,21 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType } from 'vue';
+import { RouterLink } from 'vue-router';
 import AppGameFollowWidget from '../../../../_common/game/follow-widget/AppGameFollowWidget.vue';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 
-@Options({
-	components: {
-		AppTheme,
-		AppMediaItemBackdrop,
-		AppGameFollowWidget,
+defineProps({
+	game: {
+		type: Object as PropType<GameModel>,
+		required: true,
 	},
-})
-export default class AppGameBadge extends Vue {
-	@Prop({ type: Object, required: true }) game!: GameModel;
-	@Prop({ type: Boolean, default: false }) fullBleed!: boolean;
-}
+	fullBleed: {
+		type: Boolean,
+	},
+});
 </script>
 
 <template>
@@ -41,11 +41,11 @@ export default class AppGameBadge extends Vue {
 		</AppMediaItemBackdrop>
 
 		<div class="-content">
-			<router-link class="-link" :to="game.getUrl()" />
+			<RouterLink class="-link" :to="game.getUrl()" />
 
 			<div class="-details">
 				<div class="tag">
-					<AppTranslate>Game</AppTranslate>
+					{{ $gettext(`Game`) }}
 				</div>
 				<div class="-name">
 					{{ game.title }}
