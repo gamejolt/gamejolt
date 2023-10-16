@@ -590,6 +590,13 @@ const helpDocLink = computed(() => {
 			assertNever(resource);
 	}
 });
+
+const isAnimated = computed(
+	() =>
+		// Sticker packs are not animated no matter what right now.
+		resource !== ShopProductResource.StickerPack &&
+		productType.value === ShopDashProductType.Premium
+);
 </script>
 
 <template>
@@ -689,14 +696,12 @@ const helpDocLink = computed(() => {
 					v-bind="formGroupBindings"
 					name="file"
 					:label="
-						productType === ShopDashProductType.Premium
-							? $gettext(`Upload animated image`)
-							: $gettext(`Upload image`)
+						isAnimated ? $gettext(`Upload animated image`) : $gettext(`Upload image`)
 					"
 					:optional="isEditing"
 				>
 					<div class="help-block">
-						<div v-if="productType === ShopDashProductType.Premium">
+						<div v-if="isAnimated">
 							{{ $gettext(`Your image must be an animated PNG (APNG).`) }}
 						</div>
 						<div v-else>{{ $gettext(`Your image must be a PNG.`) }}</div>
@@ -774,7 +779,7 @@ const helpDocLink = computed(() => {
 							when="file:missing-required-animated-image"
 							:message="
 								$gettext(
-									`Premium products must be animated. Please upload an animated APNG file.`
+									`This product must be animated. Please upload an animated APNG file.`
 								)
 							"
 						/>
@@ -782,7 +787,7 @@ const helpDocLink = computed(() => {
 							when="file:missing-required-static-image"
 							:message="
 								$gettext(
-									`Basic products must be static images. Please upload a plain PNG file.`
+									`This product must be a static image. Please upload a plain PNG file.`
 								)
 							"
 						/>

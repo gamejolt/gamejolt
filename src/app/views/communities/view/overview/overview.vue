@@ -1,11 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
-import { canCommunityCreateFiresides } from '../../../../../_common/community/community.model';
-import {
-	FiresideModel,
-	canDeviceCreateFiresides,
-} from '../../../../../_common/fireside/fireside.model';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
@@ -15,14 +10,9 @@ import {
 } from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { arrayRemove } from '../../../../../utils/array';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
-import AppFiresideAvatar, {
-	FiresideAvatarEvent,
-} from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
-import AppFiresideAvatarAdd from '../../../../components/fireside/avatar/AppFiresideAvatarAdd.vue';
 import { useGridStore } from '../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../store/index';
 import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
@@ -43,8 +33,6 @@ import {
 		AppCommunitiesViewPageContainer,
 		AppCommunitySidebar,
 		AppCommunitiesViewFeed,
-		AppFiresideAvatar,
-		AppFiresideAvatarAdd,
 		AppLoadingFade,
 	},
 	directives: {
@@ -80,9 +68,6 @@ export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 	finishedLoading = false;
-	previewFiresides: FiresideModel[] = [];
-	userFireside: FiresideModel | null = null;
-	userHasFireside = false;
 
 	get community() {
 		return this.routeStore.community;
@@ -120,32 +105,6 @@ export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 		return this.canAcceptCollaboration ? '' : this.$gettext(`You are in too many communities.`);
 	}
 
-	get canCreateFireside() {
-		return (
-			!this.userHasFireside &&
-			canCommunityCreateFiresides(this.community) &&
-			canDeviceCreateFiresides()
-		);
-	}
-
-	get firesidesGridColumns() {
-		return 5;
-	}
-
-	get firesidesGridStyling() {
-		return {
-			gridTemplateColumns: `repeat(${this.firesidesGridColumns}, 1fr)`,
-		};
-	}
-
-	get displayablePreviewFiresides() {
-		const previewable = this.userFireside
-			? [this.userFireside, ...this.previewFiresides]
-			: this.previewFiresides;
-
-		return previewable.slice(0, this.firesidesGridColumns - (this.canCreateFireside ? 1 : 0));
-	}
-
 	@Watch('communityState.hasUnreadFeaturedPosts', { immediate: true })
 	onChannelUnreadChanged() {
 		if (this.feed && this.feed.newCount === 0 && this.communityState.hasUnreadFeaturedPosts) {
@@ -177,16 +136,6 @@ export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 			this.grid?.pushViewNotifications('community-featured', {
 				communityId: this.community.id,
 			});
-		}
-
-		if ($payload.userFireside) {
-			this.userFireside = new FiresideModel($payload.userFireside);
-		}
-
-		this.userHasFireside = $payload.userHasFireside;
-
-		if ($payload.previewFiresides) {
-			this.previewFiresides = FiresideModel.populate($payload.previewFiresides);
 		}
 	}
 
@@ -221,13 +170,6 @@ export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 	async declineCollaboration() {
 		await declineCollaboration(this.routeStore);
 	}
-
-	onFiresideEject({ fireside, community }: FiresideAvatarEvent) {
-		if (community.community.id !== this.community.id) {
-			return;
-		}
-		arrayRemove(this.previewFiresides, i => i === fireside);
-	}
 }
 </script>
 
@@ -258,42 +200,6 @@ export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 
 		<AppCommunitiesViewPageContainer>
 			<template #default>
-				<div v-if="displayablePreviewFiresides.length > 0">
-					<div class="-firesides-header">
-						<h4 class="section-header">
-							<AppTranslate>Firesides</AppTranslate>
-						</h4>
-
-						<AppButton
-							trans
-							:to="{
-								name: 'communities.view.firesides',
-								params: { path: community.path },
-							}"
-						>
-							<AppTranslate>View All</AppTranslate>
-						</AppButton>
-					</div>
-				</div>
-
-				<AppLoadingFade :is-loading="!isRouteBootstrapped">
-					<div
-						v-if="displayablePreviewFiresides.length > 0 || canCreateFireside"
-						class="-firesides-grid"
-						:style="firesidesGridStyling"
-					>
-						<AppFiresideAvatarAdd v-if="canCreateFireside" :community="community" />
-
-						<AppFiresideAvatar
-							v-for="fireside in displayablePreviewFiresides"
-							:key="fireside.id"
-							:fireside="fireside"
-							hide-community
-							@eject="onFiresideEject"
-						/>
-					</div>
-				</AppLoadingFade>
-
 				<AppCommunitiesViewFeed
 					:feed="feed"
 					@add-post="onPostAdded"
@@ -306,14 +212,3 @@ export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 		</AppCommunitiesViewPageContainer>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-firesides-grid
-	display: grid
-	grid-gap: $line-height-computed
-	margin-bottom: $line-height-computed
-
-.-firesides-header
-	display: flex
-	justify-content: space-between
-</style>

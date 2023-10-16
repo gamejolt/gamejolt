@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import { Api } from '../../../../_common/api/api.service';
-import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
@@ -78,23 +76,6 @@ const canModerate = computed(() => {
 	return userCanModerateOtherUser(room.value, chat.value.currentUser, user.value);
 });
 
-const canChangeModerator = computed(() => {
-	if (!chat.value.currentUser || isRobojolt.value) {
-		return false;
-	}
-	if (!room.value.canElectModerators) {
-		return false;
-	}
-
-	// In public rooms, staff members cannot lose their mod status.
-	if (!room.value.isPrivateRoom && user.value.isStaff) {
-		return false;
-	}
-
-	// Only the owner of the room can promote/demote moderators.
-	return chat.value.currentUser.id === room.value.owner_id;
-});
-
 const canKick = computed(() => {
 	// Cannot kick one of your mods, gotta demote first.
 	if (isModerator.value || isRobojolt.value) {
@@ -132,52 +113,6 @@ async function onClickKick() {
 
 	if (confirm) {
 		kickGroupMember(chat.value, room.value, user.value.id);
-	}
-}
-
-async function onClickPromoteModerator() {
-	const result = await showModalConfirm(
-		$gettext(
-			`Do you want to promote @%{ username } to moderator? They will be able to remove messages and kick users from the chat. You can demote them at any time.`,
-			{ username: user.value.username }
-		)
-	);
-
-	if (result) {
-		const payload = await Api.sendRequest(
-			`/web/dash/fireside/chat/promote-moderator/${room.value.id}/${user.value.id}`,
-			{}
-		);
-
-		if (payload.success && payload.role) {
-			showSuccessGrowl(
-				$gettext(`@%{ username } has been promoted to moderator.`, {
-					username: user.value.username,
-				})
-			);
-		}
-	}
-}
-
-async function onClickDemoteModerator() {
-	const result = await showModalConfirm(
-		$gettext(`Do you want to demote @%{ username } to a normal user?`, {
-			username: user.value.username,
-		})
-	);
-
-	if (result) {
-		const payload = await Api.sendRequest(
-			`/web/dash/fireside/chat/demote-moderator/${room.value.id}/${user.value.id}`,
-			{}
-		);
-		if (payload.success && payload.role) {
-			showSuccessGrowl(
-				$gettext(`@%{ username } is no longer a moderator.`, {
-					username: user.value.username,
-				})
-			);
-		}
 	}
 }
 
@@ -313,30 +248,12 @@ const styleStatusIcon: CSSProperties = {
 				<AppJolticon icon="message" />
 				{{ $gettext(`Send message`) }}
 			</a>
-			<template v-if="canModerate">
-				<template v-if="canChangeModerator">
-					<hr />
-					<template v-if="!isModerator">
-						<a class="list-group-item has-icon" @click="onClickPromoteModerator">
-							<AppJolticon icon="star" />
-							{{ $gettext(`Promote to moderator`) }}
-						</a>
-					</template>
-					<template v-else>
-						<a class="list-group-item has-icon" @click="onClickDemoteModerator">
-							<AppJolticon icon="remove" notice />
-							{{ $gettext(`Demote moderator`) }}
-						</a>
-					</template>
-				</template>
-
-				<template v-if="canKick">
-					<hr />
-					<a class="list-group-item has-icon" @click="onClickKick">
-						<AppJolticon icon="logout" notice />
-						{{ $gettext(`Kick from room`) }}
-					</a>
-				</template>
+			<template v-if="canModerate && canKick">
+				<hr />
+				<a class="list-group-item has-icon" @click="onClickKick">
+					<AppJolticon icon="logout" notice />
+					{{ $gettext(`Kick from room`) }}
+				</a>
 			</template>
 		</div>
 	</div>

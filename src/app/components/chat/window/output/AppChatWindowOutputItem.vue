@@ -309,7 +309,6 @@ async function onMessageClick() {
 					}"
 					:user="message.user"
 					disable-link
-					show-verified
 					show-frame
 					verified-size="small"
 				/>

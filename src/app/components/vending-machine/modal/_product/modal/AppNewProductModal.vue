@@ -157,7 +157,7 @@ function getStyles(ratio: number): CSSProperties {
 			</template>
 			<template v-else-if="isBackground(product)">
 				<div>
-					{{ $gettext(`You can use this background when creating posts and firesides!`) }}
+					{{ $gettext(`You can use this background when creating posts!`) }}
 				</div>
 
 				<AppSpacer vertical :scale="4" />

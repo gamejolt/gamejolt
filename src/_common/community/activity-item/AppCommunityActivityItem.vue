@@ -2,7 +2,6 @@
 import { computed, PropType, toRefs } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 import { formatDate } from '../../filters/date';
-import { FiresideModel } from '../../fireside/fireside.model';
 import { FiresidePostModel } from '../../fireside/post/post-model';
 import { GameModel } from '../../game/game.model';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
@@ -86,8 +85,6 @@ const actionTo = computed<RouteLocationRaw | undefined>(() => {
 			},
 			hash: '#entry-' + item.value.action_resource.id,
 		};
-	} else if (item.value.action_resource instanceof FiresideModel) {
-		return item.value.action_resource.routeLocation;
 	}
 });
 
@@ -108,8 +105,6 @@ const actionText = computed(() => {
 		return channelTitle;
 	} else if (item.value.action_resource instanceof CommunityCompetitionEntryModel) {
 		return item.value.action_resource.resource.title;
-	} else if (item.value.action_resource instanceof FiresideModel) {
-		return item.value.action_resource.title;
 	}
 });
 
@@ -383,48 +378,6 @@ function getExtraData(key: string) {
 						v-translate
 					>
 						<em>Readmitted</em> an entry to its jam.
-					</span>
-					<span
-						v-else-if="item.type === CommunityActivityItemType.FiresideStart"
-						v-translate
-					>
-						<em>Started</em> a Fireside in this community.
-					</span>
-					<span
-						v-else-if="item.type === CommunityActivityItemType.FiresideStartDraft"
-						v-translate
-					>
-						<em>Started</em> a Fireside in <em>draft</em> mode in this community.
-					</span>
-					<span
-						v-else-if="item.type === CommunityActivityItemType.FiresidePublish"
-						v-translate
-					>
-						<em>Published</em> a Fireside in this community.
-					</span>
-					<span
-						v-else-if="item.type === CommunityActivityItemType.FiresideExtinguish"
-						v-translate
-					>
-						<em>Extinguished</em> this community's Fireside.
-					</span>
-					<span
-						v-else-if="item.type === CommunityActivityItemType.FiresideFeature"
-						v-translate
-					>
-						<em>Featured</em> a Fireside.
-					</span>
-					<span
-						v-else-if="item.type === CommunityActivityItemType.FiresideUnfeature"
-						v-translate
-					>
-						<em>Unfeatured</em> a Fireside.
-					</span>
-					<span
-						v-else-if="item.type === CommunityActivityItemType.FiresideEject"
-						v-translate
-					>
-						<em>Ejected</em> a Fireside from this community.
 					</span>
 
 					<!-- Adds a row to display the given reason for an action.  -->

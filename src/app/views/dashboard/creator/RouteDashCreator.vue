@@ -22,8 +22,6 @@ import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop
 import { routeLandingCreators } from '../../landing/creators/creators.route';
 import { routeLandingHelpCategory, routeLandingHelpRedirect } from '../../landing/help/help.route';
 import { routeDashAccountBlocks } from '../account/blocks/blocks.route';
-import { routeDashAccountChatCommands } from '../account/chat-commands/chat-commands.route';
-import { routeDashAccountChatTimers } from '../account/chat-timers/chat-timers.route';
 import { routeDashAccountReferrals } from '../account/referrals/referrals.route';
 import { routeDashAccountWallet } from '../account/wallet/wallet.route';
 import { routeDashAnalytics } from '../analytics/analytics.route';
@@ -106,16 +104,6 @@ const buttons = computed<Button[]>(() => [
 		to: routeDashAccountReferrals.name!,
 		label: $gettext(`Referrals`),
 		icon: 'users',
-	},
-	{
-		to: routeDashAccountChatCommands.name!,
-		label: $gettext(`Chat commands`),
-		icon: 'wand',
-	},
-	{
-		to: routeDashAccountChatTimers.name!,
-		label: $gettext(`Chat timers`),
-		icon: 'timer',
 	},
 	{
 		to: routeDashAccountBlocks.name!,
