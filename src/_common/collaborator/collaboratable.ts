@@ -22,13 +22,7 @@ export type Perm =
 	| 'community-blocks'
 	| 'community-games'
 	| 'community-activity'
-	| 'community-competitions'
-	| 'community-firesides'
-	| 'fireside-collaborators'
-	| 'fireside-edit'
-	| 'fireside-extend'
-	| 'fireside-extinguish'
-	| 'fireside-publish';
+	| 'community-competitions';
 
 export const Collaboratable = <T extends new (...args: any[]) => Model>(Base: T) =>
 	class extends Base {

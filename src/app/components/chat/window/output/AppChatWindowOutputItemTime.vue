@@ -25,22 +25,16 @@ const props = defineProps({
 	},
 });
 
-const { message, room, timestampMarginLeft, showAmPm } = toRefs(props);
+const { message, timestampMarginLeft, showAmPm } = toRefs(props);
 
 const loggedOn = computed(() => {
-	if (!room.value.shouldShowTimestamp) {
-		return null;
-	}
-
-	const result = {
+	return {
 		template: formatDate(
 			message.value.logged_on,
 			showAmPm.value ? 'shortTime' : 'shortTimeNoMeridiem'
 		),
 		tooltip: formatDate(message.value.logged_on, 'medium'),
 	};
-
-	return result;
 });
 </script>
 

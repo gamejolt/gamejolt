@@ -1,7 +1,7 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 // import { visualizer } from 'rollup-plugin-visualizer';
 import { copyFileSync, readFileSync } from 'fs-extra';
-import { defineConfig, UserConfig as ViteUserConfig } from 'vite';
+import { UserConfig as ViteUserConfig, defineConfig } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import {
@@ -485,7 +485,7 @@ export default defineConfig(async () => {
 				}),
 
 				...onlyInDesktopApp<RollupOptions>({
-					external: ['client-voodoo', 'asg-prebuilt'],
+					external: ['client-voodoo'],
 				}),
 			},
 
@@ -514,7 +514,7 @@ export default defineConfig(async () => {
 			}),
 		},
 		optimizeDeps: {
-			exclude: ['client-voodoo', 'asg-prebuilt'],
+			exclude: ['client-voodoo'],
 		},
 		resolve: {
 			alias: {

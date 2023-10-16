@@ -2,7 +2,6 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { RouteLocationRaw } from 'vue-router';
 import { formatDate } from '../../filters/date';
-import { FiresideModel } from '../../fireside/fireside.model';
 import { FiresidePostModel } from '../../fireside/post/post-model';
 import { GameModel } from '../../game/game.model';
 import { Screen } from '../../screen/screen-service';
@@ -66,14 +65,6 @@ export default class AppCommunityActivityItem extends Vue {
 	readonly CompetitionEntryRemove = CommunityActivityItemType.CompetitionEntryRemove;
 	readonly CompetitionEntryUnremove = CommunityActivityItemType.CompetitionEntryUnremove;
 	readonly CompetitionEntryGiveAward = CommunityActivityItemType.CompetitionEntryGiveAward;
-
-	readonly FiresideStart = CommunityActivityItemType.FiresideStart;
-	readonly FiresideStartDraft = CommunityActivityItemType.FiresideStartDraft;
-	readonly FiresidePublish = CommunityActivityItemType.FiresidePublish;
-	readonly FiresideExtinguish = CommunityActivityItemType.FiresideExtinguish;
-	readonly FiresideFeature = CommunityActivityItemType.FiresideFeature;
-	readonly FiresideUnfeature = CommunityActivityItemType.FiresideUnfeature;
-	readonly FiresideEject = CommunityActivityItemType.FiresideEject;
 
 	get loggedOn() {
 		return formatDate(this.item.added_on, 'medium');
@@ -148,8 +139,6 @@ export default class AppCommunityActivityItem extends Vue {
 				},
 				hash: '#entry-' + this.item.action_resource.id,
 			};
-		} else if (this.item.action_resource instanceof FiresideModel) {
-			return this.item.action_resource.routeLocation;
 		}
 	}
 
@@ -170,8 +159,6 @@ export default class AppCommunityActivityItem extends Vue {
 			return channelTitle;
 		} else if (this.item.action_resource instanceof CommunityCompetitionEntryModel) {
 			return this.item.action_resource.resource.title;
-		} else if (this.item.action_resource instanceof FiresideModel) {
-			return this.item.action_resource.title;
 		}
 	}
 
@@ -410,27 +397,6 @@ export default class AppCommunityActivityItem extends Vue {
 					</span>
 					<span v-else-if="item.type === CompetitionEntryUnremove" v-translate>
 						<em>Readmitted</em> an entry to its jam.
-					</span>
-					<span v-else-if="item.type === FiresideStart" v-translate>
-						<em>Started</em> a Fireside in this community.
-					</span>
-					<span v-else-if="item.type === FiresideStartDraft" v-translate>
-						<em>Started</em> a Fireside in <em>draft</em> mode in this community.
-					</span>
-					<span v-else-if="item.type === FiresidePublish" v-translate>
-						<em>Published</em> a Fireside in this community.
-					</span>
-					<span v-else-if="item.type === FiresideExtinguish" v-translate>
-						<em>Extinguished</em> this community's Fireside.
-					</span>
-					<span v-else-if="item.type === FiresideFeature" v-translate>
-						<em>Featured</em> a Fireside.
-					</span>
-					<span v-else-if="item.type === FiresideUnfeature" v-translate>
-						<em>Unfeatured</em> a Fireside.
-					</span>
-					<span v-else-if="item.type === FiresideEject" v-translate>
-						<em>Ejected</em> a Fireside from this community.
 					</span>
 
 					<!-- Adds a row to display the given reason for an action.  -->

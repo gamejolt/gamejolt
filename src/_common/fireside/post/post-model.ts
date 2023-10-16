@@ -435,7 +435,7 @@ export class FiresidePostModel extends Model implements ContentContainerModel, C
 /**
  * Given a URL will try to find the post hash.
  */
-export function pullFiresideHashFromUrl(url: string) {
+export function pullFiresidePostHashFromUrl(url: string) {
 	return url.substring(url.lastIndexOf('-') + 1);
 }
 

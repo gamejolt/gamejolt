@@ -8,10 +8,8 @@ import {
 import { showCreatorExperienceLevelUpModal } from '../../../../../_common/creator/experience/level-up-modal/modal.service';
 import { CreatorExperienceLevelModel } from '../../../../../_common/creator/experience/level.model';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import { FiresideModel } from '../../../../../_common/fireside/fireside.model';
 import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import { FiresideStreamNotificationModel } from '../../../../../_common/fireside/stream-notification/stream-notification.model';
 import { ForumPostModel, getForumPostUrl } from '../../../../../_common/forum/post/post.model';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
@@ -40,7 +38,6 @@ function getRouteLocationForModel(
 		| UserModel
 		| FiresidePostModel
 		| CommunityModel
-		| FiresideModel
 		| QuestNotificationModel
 		| undefined
 ): RouteLocationDefinition | '' {
@@ -51,8 +48,6 @@ function getRouteLocationForModel(
 	} else if (model instanceof FiresidePostModel) {
 		return model.routeLocation;
 	} else if (model instanceof CommunityModel) {
-		return model.routeLocation;
-	} else if (model instanceof FiresideModel) {
 		return model.routeLocation;
 	}
 	return '';
@@ -86,8 +81,6 @@ export function getNotificationRouteLocation(
 				case CommunityUserNotificationType.POSTS_MOVE:
 				case CommunityUserNotificationType.POSTS_EJECT:
 					return getRouteLocationForModel(to_model as FiresidePostModel);
-				case CommunityUserNotificationType.FIRESIDES_EJECT:
-					return getRouteLocationForModel(to_model as FiresideModel);
 			}
 			break;
 
@@ -129,17 +122,6 @@ export function getNotificationRouteLocation(
 					return assertNever(mention.resource);
 			}
 		}
-
-		case NotificationType.FiresideStart:
-			return getRouteLocationForModel(action_model as FiresideModel);
-
-		case NotificationType.FiresideStreamNotification:
-			return getRouteLocationForModel(
-				(action_model as FiresideStreamNotificationModel).fireside
-			);
-
-		case NotificationType.FiresideFeaturedInCommunity:
-			return getRouteLocationForModel(to_model as FiresideModel);
 
 		case NotificationType.QuestNotification:
 			// Handled in the [go] function.

@@ -2,9 +2,6 @@ import { RouteRecordRaw } from 'vue-router';
 import { routeDashAccountAddresses } from './addresses/addresses.route';
 import { routeDashAccountBlocks } from './blocks/blocks.route';
 import { routeDashAccountChangePassword } from './change-password/change-password.route';
-import { routeDashAccountChatCommands } from './chat-commands/chat-commands.route';
-import { routeDashAccountChatMods } from './chat-mods/chat-mods.route';
-import { routeDashAccountChatTimers } from './chat-timers/chat-timers.route';
 import { routeDashAccountDeviceSettings } from './device-settings/device-settings.route';
 import { routeDashAccountEdit } from './edit/edit.route';
 import { routeDashAccountEmailPreferences } from './email-preferences/email-preferences.route';
@@ -36,9 +33,6 @@ export const routeDashAccount: RouteRecordRaw = {
 		routeDashAccountWallet,
 		routeDashAccountBlocks,
 		routeDashAccountDeviceSettings,
-		routeDashAccountChatCommands,
-		routeDashAccountChatTimers,
-		routeDashAccountChatMods,
 		routeDashAccountReferrals,
 	],
 };

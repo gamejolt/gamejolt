@@ -4,14 +4,10 @@ import { Analytics } from '../../../_common/analytics/analytics.service';
 import { CommunityModel } from '../../../_common/community/community.model';
 import { ensureConfig } from '../../../_common/config/config.service';
 import { Environment } from '../../../_common/environment/environment.service';
-import { FiresideModel } from '../../../_common/fireside/fireside.model';
 import { FiresidePostCommunityModel } from '../../../_common/fireside/post/community/community.model';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import { FiresideStreamNotificationModel } from '../../../_common/fireside/stream-notification/stream-notification.model';
 import { GameTrophyModel } from '../../../_common/game/trophy/trophy.model';
 import { showInfoGrowl } from '../../../_common/growls/growls.service';
-import { ModelStoreModel } from '../../../_common/model/model-store.service';
-import { Model } from '../../../_common/model/model.service';
 import {
 	NotificationModel,
 	NotificationType,
@@ -25,7 +21,6 @@ import {
 	createSocketController,
 } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
-import { EventTopic } from '../../../_common/system/event/event-topic';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { getTrophyImg } from '../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { UserGameTrophyModel } from '../../../_common/user/trophy/game-trophy.model';
@@ -44,11 +39,7 @@ import {
 	GridCommentChannel,
 	createGridCommentChannel,
 } from './comment-channel';
-import { GridFiresideChannel } from './fireside-channel';
-import { GridFiresideDMChannel } from './fireside-dm-channel';
 import { GridNotificationChannel, createGridNotificationChannel } from './notification-channel';
-
-export const onFiresideStart = new EventTopic<Model | ModelStoreModel>();
 
 type ClearNotificationsType =
 	// For the user's activity feed.
@@ -131,8 +122,6 @@ export class GridClient {
 	bootstrapTimestamp = 0;
 	bootstrapDelay = 1;
 	chat: ChatClient | null = null;
-	firesideChannels: GridFiresideChannel[] = [];
-	firesideDMChannels: GridFiresideDMChannel[] = [];
 	notificationChannel: GridNotificationChannel | null = null;
 
 	commentChannel: GridCommentChannel | null = null;
@@ -231,9 +220,9 @@ export class GridClient {
 			return;
 		}
 
-		// Guest connections are only used for realtime stuff like fireside
-		// state updates. They don't need to do any more setup work beyond
-		// successfully connecting to the socket.
+		// Guest connections are only used for realtime stuff. They don't need
+		// to do any more setup work beyond successfully connecting to the
+		// socket.
 		if (this.isGuest) {
 			this.markConnected();
 		}
@@ -288,8 +277,6 @@ export class GridClient {
 		this.bootstrapReceived = false;
 		this.bootstrapTimestamp = 0;
 
-		this.firesideChannels = [];
-		this.firesideDMChannels = [];
 		this.notificationChannel = null;
 		this.commentChannel = null;
 
@@ -404,15 +391,6 @@ export class GridClient {
 			} else if (notification.type === NotificationType.PostFeaturedInCommunity) {
 				if (notification.action_model instanceof FiresidePostCommunityModel) {
 					icon = notification.action_model.community.img_thumbnail;
-				}
-			} else if (notification.type === NotificationType.FiresideStart) {
-				if (notification.action_model instanceof FiresideModel) {
-					title = notification.action_model.title;
-				}
-			} else if (notification.type === NotificationType.FiresideStreamNotification) {
-				if (notification.action_model instanceof FiresideStreamNotificationModel) {
-					title = $gettext('Fireside Stream');
-					icon = notification.action_model.users[0].img_avatar;
 				}
 			} else if (notification.type === NotificationType.ChargedSticker) {
 				title = $gettext('Charged Sticker');

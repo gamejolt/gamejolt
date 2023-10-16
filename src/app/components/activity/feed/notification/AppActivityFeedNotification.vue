@@ -3,8 +3,6 @@
 // display.
 import type { CommentModel } from '../../../../../_common/comment/comment-model';
 import type { CommunityModel } from '../../../../../_common/community/community.model';
-import type { FiresideCommunityModel } from '../../../../../_common/fireside/community/community.model';
-import type { FiresideModel } from '../../../../../_common/fireside/fireside.model';
 import type { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
 import type { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import type { MentionModel } from '../../../../../_common/mention/mention.model';
@@ -105,7 +103,6 @@ const hasDetails = computed(() => {
 		NotificationType.CommentAdd,
 		NotificationType.CommentAddObjectOwner,
 		NotificationType.PostFeaturedInCommunity,
-		NotificationType.FiresideFeaturedInCommunity,
 		NotificationType.QuestNotification,
 		NotificationType.GameTrophyAchieved,
 		NotificationType.SiteTrophyAchieved,
@@ -177,14 +174,12 @@ function onMarkRead() {
 								<template
 									v-else-if="
 										notification.type ===
-											NotificationType.PostFeaturedInCommunity ||
-										notification.type ===
-											NotificationType.FiresideFeaturedInCommunity
+										NotificationType.PostFeaturedInCommunity
 									"
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											:community="(notification.action_model as FiresidePostCommunityModel | FiresideCommunityModel).community"
+											:community="(notification.action_model as FiresidePostCommunityModel).community"
 										/>
 									</div>
 								</template>
@@ -302,17 +297,6 @@ function onMarkRead() {
 														(
 															notification.action_model as FiresidePostCommunityModel
 														).fireside_post?.getShortLead()
-													}}
-												</span>
-												<span
-													v-else-if="
-														notification.type ===
-														NotificationType.FiresideFeaturedInCommunity
-													"
-												>
-													{{
-														(notification.to_model as FiresideModel)
-															.title
 													}}
 												</span>
 												<span

@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 defineProps({
 	src: {
 		type: String,
@@ -11,7 +9,7 @@ defineProps({
 		default: '',
 	},
 	size: {
-		type: [Number, String] as PropType<number | string>,
+		type: Number,
 		default: undefined,
 	},
 });

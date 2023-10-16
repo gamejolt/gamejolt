@@ -197,58 +197,6 @@ export default class AppReportForm extends mixins(Wrapper) implements FormOnSubm
 					},
 				];
 
-			case 'Fireside':
-				return [
-					{
-						radioValue: 'abuse',
-						text: this.$gettext(
-							'Fireside is used to show/promote hate speech or graphic content'
-						),
-						contexts: [
-							{
-								checkValue: 'fireside/title',
-								text: this.$gettext('Title'),
-							},
-							{
-								checkValue: 'fireside/chat',
-								text: this.$gettext('Chat messages'),
-							},
-							{
-								checkValue: 'fireside/audio-video',
-								text: this.$gettext('Audio or video stream'),
-							},
-						],
-					},
-					{
-						radioValue: 'explicit',
-						text: this.$gettext('Fireside contains explicit or sensitive material'),
-						contexts: [
-							{
-								checkValue: 'fireside/title',
-								text: this.$gettext('Title'),
-							},
-							{
-								checkValue: 'fireside/chat',
-								text: this.$gettext('Chat messages'),
-							},
-							{
-								checkValue: 'fireside/audio-video',
-								text: this.$gettext('Audio or video stream'),
-							},
-						],
-					},
-					{
-						radioValue: 'no-moderation',
-						text: this.$gettext(
-							"This fireside's chat is not actively moderated by its moderators"
-						),
-					},
-					{
-						radioValue: 'other',
-						text: this.$gettext('Other'),
-					},
-				];
-
 			case 'User':
 				return [
 					{
