@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, nextTick, onMounted, ref, toRefs, watch } from 'vue';
+import { PropType, computed, nextTick, onMounted, ref, toRef, toRefs, watch } from 'vue';
 import { isInstance } from '../../../utils/utils';
 import { GameSketchfabModel } from '../../game/sketchfab/sketchfab.model';
 import { GameVideoModel } from '../../game/video/video.model';
@@ -40,16 +40,16 @@ const maxHeight = ref(0);
 const caption = ref<HTMLDivElement>();
 const rootElem = ref<HTMLDivElement>();
 
-const shouldVideoPlay = computed(() => isActive.value);
+const shouldVideoPlay = toRef(() => isActive.value);
 
-const isGifWithoutVideo = computed(
+const isGifWithoutVideo = toRef(
 	() =>
 		mediaItem.value.is_animated &&
 		!mediaItem.value.mediaserver_url_mp4 &&
 		!mediaItem.value.mediaserver_url_webm
 );
 
-const mediaItem = computed(() => item.value.getMediaItem()!);
+const mediaItem = toRef(() => item.value.getMediaItem()!);
 
 const videoController = computed(() => {
 	const sources = {
@@ -122,7 +122,7 @@ async function calcActive() {
 <template>
 	<div ref="rootElem" class="media-bar-lightbox-item">
 		<div v-if="isActive || isNext || isPrev" class="-inner">
-			<!-- Image -->
+			<!-- Media Item (screenshots/gifs/images) -->
 			<template v-if="isInstance(item, MediaItemModel)">
 				<div class="-embed">
 					<!-- The min/max will be the actual dimensions for the image thumbnail. -->
@@ -158,7 +158,7 @@ async function calcActive() {
 				</div>
 			</template>
 
-			<!-- Video mediaType === 'video'-->
+			<!-- Video -->
 			<template v-else-if="isInstance(item, GameVideoModel)">
 				<div v-if="isActive" class="-embed">
 					<!-- We want to wait until the size is properly calculated, otherwise the player won't size properly. -->

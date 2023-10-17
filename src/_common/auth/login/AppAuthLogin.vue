@@ -11,7 +11,7 @@ const props = defineProps({
 	},
 	redirectTo: {
 		type: String,
-		default: undefined,
+		required: true,
 	},
 });
 
@@ -28,7 +28,7 @@ function onLoggedIn(_formModel: any, response: any) {
 	// Otherwise, log them in!
 	authOnLogin('email');
 
-	const location = redirectTo?.value ? getRedirectUrl(redirectTo.value) : undefined;
+	const location = getRedirectUrl(redirectTo.value);
 	if (location) {
 		if (!GJ_IS_DESKTOP_APP) {
 			Navigate.goto(location);

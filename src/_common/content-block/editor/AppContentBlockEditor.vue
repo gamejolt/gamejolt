@@ -222,10 +222,6 @@ function insertAtCaret(text: string) {
 				</div>
 			</div>
 
-			<!--
-			The ng-repeat will refresh the DOM any time the current block changes.
-			This will create a new editor instance and refresh the block content.
-		-->
 			<FormContentBlockEditor :mode="site.game_id ? 'game' : 'user'" :model="contentBlock" />
 		</div>
 	</div>

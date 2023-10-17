@@ -3,7 +3,7 @@ import AppButton from './AppButton.vue';
 </script>
 
 <template>
-	<section class="section" id="styleguide-buttons">
+	<section id="styleguide-buttons" class="section">
 		<h1 class="section-header">Buttons</h1>
 
 		<h3>Button Types</h3>

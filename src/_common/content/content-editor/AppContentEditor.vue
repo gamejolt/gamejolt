@@ -19,7 +19,6 @@ import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensio
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
-import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
 import {
 	ContentEditorModelData,
 	ContentOwnerController,
@@ -363,18 +362,6 @@ async function reset(shouldFocus = focusEnd.value) {
 	const doc = new ContentDocument(controller_.value.contentContext);
 	await setContent(doc, shouldFocus);
 	controller_.value.isEmpty = true;
-}
-
-// TODO(component-setup-refactor): Can be removed?
-function getContent() {
-	if (view.value) {
-		const data = ContentFormatAdapter.adaptOut(
-			view.value.state.doc.toJSON() as ProsemirrorEditorFormat,
-			controller_.value.contentContext
-		);
-		return data;
-	}
-	return null;
 }
 
 async function setContent(newDoc: ContentDocument, shouldFocus = focusEnd.value) {

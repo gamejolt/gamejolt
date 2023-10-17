@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, nextTick, onUpdated, ref, toRefs, watch } from 'vue';
+import { PropType, nextTick, onUpdated, ref, toRef, toRefs, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { Analytics } from '../../analytics/analytics.service';
 import { showErrorGrowl } from '../../growls/growls.service';
@@ -19,20 +19,15 @@ const props = defineProps({
 	},
 });
 
-const router = useRouter();
 const { mediaItems } = toRefs(props);
+const router = useRouter();
 
 const urlChecked = ref(false);
 const mediaBarHeight = ref(MediaBarItemMaxHeight + 40);
 
 const lightbox = createLightbox(mediaItems);
 
-const activeItem = computed(() => {
-	if (!lightbox.isShowing) {
-		return null;
-	}
-	return lightbox.activeItem;
-});
+const activeItem = toRef(() => (lightbox.isShowing ? lightbox.activeItem : null));
 
 watch(activeItem, () => {
 	let hash = '';

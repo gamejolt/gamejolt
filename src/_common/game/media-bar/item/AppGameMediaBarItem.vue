@@ -1,13 +1,13 @@
 <script lang="ts">
-export const MediaBarItemMaxHeight = 150;
-</script>
-
-<script lang="ts" setup>
 import { ref, toRefs } from 'vue';
 import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
 
+export const MediaBarItemMaxHeight = 150;
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	item: {
 		type: Object,

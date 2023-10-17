@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
+import { CSSProperties, computed, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
 import { Api } from '../../../../api/api.service';
 import AppJolticon from '../../../../jolticon/AppJolticon.vue';
 import AppLoading from '../../../../loading/AppLoading.vue';
@@ -11,7 +11,6 @@ import { UserModel } from '../../../../user/user.model';
 import { editorInsertMention, useContentEditorController } from '../../content-editor-controller';
 import ContentEditorMentionCache from './cache.service';
 
-const controller = useContentEditorController()!;
 const props = defineProps({
 	canShow: {
 		type: Boolean,
@@ -20,6 +19,7 @@ const props = defineProps({
 });
 
 const { canShow } = toRefs(props);
+const controller = useContentEditorController()!;
 
 const query = ref(''); // Currently active suggestion query
 const selectedIndex = ref(0);
@@ -47,7 +47,7 @@ const visible = computed(() => controller.capabilities.hasMentionControls && can
 // above ("inverted")
 const isInverted = computed(() => (controller.window.top ?? 0) / Screen.height >= 0.5);
 
-const styling = computed(() => {
+const styles = computed<CSSProperties>(() => {
 	const {
 		relativeCursorTop,
 		window: { left },
@@ -192,7 +192,7 @@ function insertUser(user: UserModel) {
 </script>
 
 <template>
-	<div ref="container" :style="styling" class="-container">
+	<div ref="container" :style="styles" class="-container">
 		<transition name="fade">
 			<div v-if="visible" ref="list" class="-autocomplete">
 				<AppLoading

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, onMounted, toRefs } from 'vue';
+import { PropType, computed, onMounted, onUnmounted, toRef, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 import AppButton from '../../../button/AppButton.vue';
 import { GameModel } from '../../../game/game.model';
@@ -25,26 +25,22 @@ const emit = defineEmits({
 	close: () => true,
 });
 
+const { post } = toRefs(props);
 const route = useRoute();
 const router = useRouter();
 
-const { post } = toRefs(props);
-
-const isActive = computed(() => post.value.status === FiresidePostStatus.Active);
-
-const isScheduled = computed(
+const isActive = toRef(() => post.value.status === FiresidePostStatus.Active);
+const isScheduled = toRef(
 	() => post.value.isScheduled && post.value.status === FiresidePostStatus.Draft
 );
-
-const isDraft = computed(
+const isDraft = toRef(
 	() => !post.value.isScheduled && post.value.status === FiresidePostStatus.Draft
 );
 
 const draftsLocation = computed<RouteLocationRaw>(() => getFeedLocation('draft'));
-
 const scheduledLocation = computed<RouteLocationRaw>(() => getFeedLocation('scheduled'));
 
-const hasOneCommunity = computed(() => post.value.communities.length === 1);
+const hasOneCommunity = toRef(() => post.value.communities.length === 1);
 
 const communityLocation = computed(() => {
 	const communityLink = post.value.communities[0];
@@ -71,12 +67,17 @@ const shouldShowCommunityRedirect = computed(() => {
 	);
 });
 
+let deregisterGuard: (() => void) | undefined;
 onMounted(() => {
 	// Close this modal when the user navigates.
-	router.beforeResolve((_to, _from, next) => {
+	deregisterGuard = router.beforeResolve((_to, _from, next) => {
 		emit('close');
 		next();
 	});
+});
+
+onUnmounted(() => {
+	deregisterGuard?.();
 });
 
 function getFeedLocation(tab: string): RouteLocationRaw {
@@ -132,13 +133,13 @@ function onClickedView() {
 			</span>
 		</h4>
 
-		<div v-if="isScheduled">
+		<div v-if="isScheduled && post.scheduled_for">
 			It's scheduled to be published automatically in
 			<AppTimeAgo :date="post.scheduled_for" without-suffix />
 			.
 		</div>
 
-		<div class="-controls">
+		<div :style="{ marginTop: `16px` }">
 			<RouterLink :to="post.routeLocation">
 				<AppButton @click="onClickedView">
 					{{ $gettext(`View Post`) }}
@@ -163,8 +164,3 @@ function onClickedView() {
 		</div>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-controls
-	margin-top: 16px
-</style>

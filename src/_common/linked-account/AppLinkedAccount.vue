@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { PropType, computed, toRef, toRefs } from 'vue';
 import AppButton from '../button/AppButton.vue';
 import AppCard from '../card/AppCard.vue';
 import AppJolticon from '../jolticon/AppJolticon.vue';
@@ -12,13 +12,13 @@ import {
 } from './linked-account.model';
 
 const props = defineProps({
-	account: {
-		type: Object as PropType<LinkedAccountModel>,
-		default: null,
-	},
 	provider: {
 		type: String as PropType<LinkedAccountProvider>,
 		required: true,
+	},
+	account: {
+		type: Object as PropType<LinkedAccountModel>,
+		default: null,
 	},
 	preview: {
 		type: Boolean,
@@ -39,41 +39,39 @@ const emit = defineEmits({
 
 const { account, provider } = toRefs(props);
 
+const actualProvider = toRef(() => (account.value ? account.value.provider : provider.value));
+
 const providerIcon = computed(() => {
-	const provider = getProvider();
+	const provider = actualProvider.value;
 	return getLinkedAccountPlatformIcon(provider);
 });
 
 const providerName = computed(() => {
-	const provider = getProvider();
+	const provider = actualProvider.value;
 	return getLinkedAccountProviderDisplayName(provider);
 });
 
-const platformLink = computed(() => {
+const platformLink = toRef(() => {
 	if (account.value) {
 		return account.value.platformLink;
 	}
 	return undefined;
 });
 
-const isAccountSet = computed(() => {
+const isAccountSet = toRef(() => {
 	return !!account.value && account.value.provider_id && account.value.name;
 });
 
-function getProvider() {
-	return account.value ? account.value.provider : provider.value;
-}
-
 function onSync() {
-	emit('sync', getProvider());
+	emit('sync', actualProvider.value);
 }
 
 function onUnlink() {
-	emit('unlink', getProvider());
+	emit('unlink', actualProvider.value);
 }
 
 function onLink() {
-	emit('link', getProvider());
+	emit('link', actualProvider.value);
 }
 </script>
 

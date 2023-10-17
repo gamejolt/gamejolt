@@ -33,7 +33,7 @@ defineProps({
 			<div
 				class="-header"
 				:style="{
-					'background-image': 'url(' + game.header_media_item.mediaserver_url + ')',
+					backgroundImage: 'url(' + game.header_media_item.mediaserver_url + ')',
 				}"
 			>
 				<div class="-header-gradient" />

@@ -26,11 +26,15 @@ const colors = ref<VueTouch>({
 	hex: null,
 });
 
-watch(modelValue, () => {
-	colors.value = {
-		hex: modelValue?.value ?? '',
-	};
-});
+watch(
+	modelValue,
+	() => {
+		colors.value = {
+			hex: modelValue?.value ?? '',
+		};
+	},
+	{ immediate: true }
+);
 
 function onChange(value: VueTouch) {
 	colors.value = value;
@@ -56,7 +60,7 @@ function cancel() {
 				class="color"
 				:class="{ empty: !colors.hex }"
 				:style="{
-					'background-color': colors.hex,
+					backgroundColor: colors.hex || undefined,
 				}"
 			/>
 

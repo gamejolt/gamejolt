@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from 'vue';
+import { nextTick, ref, toRef, watch } from 'vue';
 import { Analytics } from '../analytics/analytics.service';
 import AppButton from '../button/AppButton.vue';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
@@ -21,37 +21,23 @@ const slider = ref<null | HTMLElement>(null);
 let currentSliderOffset = 0;
 const isDragging = ref(false);
 
-const lightbox = computed(() => getActiveLightbox());
+const lightbox = toRef(() => getActiveLightbox());
 
-const items = computed(() => {
-	if (!lightbox.value) {
-		return [];
-	}
-	return lightbox.value.items;
-});
+const items = toRef(() => (lightbox.value ? lightbox.value.items : []));
+const activeIndex = toRef(() => (lightbox.value ? lightbox.value.index : 0));
 
-const activeIndex = computed(() => {
-	if (!lightbox.value) {
-		return 0;
-	}
-	return lightbox.value.index;
-});
+const hasNext = toRef(() =>
+	lightbox.value ? activeIndex.value < lightbox.value.length - 1 : false
+);
 
-const hasNext = computed(() => {
-	if (!lightbox.value) {
-		return false;
-	}
-	return activeIndex.value < lightbox.value.length - 1;
-});
-
-const activeMediaItem = computed(() => {
+const activeMediaItem = toRef(() => {
 	if (!lightbox.value || !lightbox.value.activeItem) {
 		return null;
 	}
 	return lightbox.value.activeItem.getMediaItem();
 });
 
-const activeMediaType = computed(() => {
+const activeMediaType = toRef(() => {
 	if (!lightbox.value || !lightbox.value.activeItem) {
 		return null;
 	}

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
+import { PropType, computed, ref, toRef, toRefs } from 'vue';
 import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';
 import { vAppTrackEvent } from '../../../../analytics/track-event.directive';
 import { vAppAuthRequired } from '../../../../auth/auth-required-directive';
@@ -48,9 +48,9 @@ const showDislikeAnim = ref(false);
 
 const likeCount = computed(() => formatFuzzynumber(post.value.like_count));
 
-const liked = computed(() => !!post.value.user_like);
+const liked = toRef(() => !!post.value.user_like);
 
-const tooltip = computed(() => $gettext(liked.value ? 'Liked!' : 'Like This Post'));
+const tooltip = computed(() => (liked.value ? $gettext(`Liked!`) : $gettext(`Like This Post`)));
 
 async function toggleLike() {
 	const currentLike = post.value.user_like;
@@ -74,7 +74,7 @@ async function toggleLike() {
 			failed = true;
 			post.value.user_like = null;
 			--post.value.like_count;
-			showErrorGrowl(`Can't do that now. Try again later?`);
+			showErrorGrowl($gettext(`Can't do that now. Try again later?`));
 		} finally {
 			trackPostLike(true, { failed, location: location.value });
 		}
@@ -93,7 +93,7 @@ async function toggleLike() {
 			failed = true;
 			post.value.user_like = currentLike;
 			++post.value.like_count;
-			showErrorGrowl(`Can't do that now. Try again later?`);
+			showErrorGrowl($gettext(`Can't do that now. Try again later?`));
 		} finally {
 			trackPostLike(false, { failed, location: location.value });
 		}

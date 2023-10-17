@@ -26,12 +26,12 @@ const canToggleDescription = ref(false);
 
 const platforms = computed(() => {
 	const platforms = [];
-	for (let prop in gamePackage.value) {
+	for (const prop in gamePackage.value) {
 		if (!(gamePackage.value as any)[prop]) {
 			continue;
 		}
 
-		for (let prefix of ['os_', 'type_']) {
+		for (const prefix of ['os_', 'type_']) {
 			if (!prop.startsWith(prefix)) {
 				continue;
 			}

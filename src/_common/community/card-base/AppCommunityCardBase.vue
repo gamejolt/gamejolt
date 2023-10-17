@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import { vAppTrackEvent } from '../../analytics/track-event.directive';
@@ -33,20 +33,15 @@ const props = defineProps({
 	},
 });
 
+const { community, trackGoto } = toRefs(props);
 const { user } = useCommonStore();
 const route = useRoute();
 
-const { community, trackGoto } = toRefs(props);
-
-const memberCount = computed(() => community.value.member_count || 0);
-
-const headerBackgroundImage = computed(() =>
-	community.value.header ? `url('${community.value.header.mediaserver_url}')` : undefined
-);
+const memberCount = toRef(() => community.value.member_count || 0);
 
 const isEditing = computed(() => isEditingCommunity(route));
 
-const shouldShowModTools = computed(() => user.value && user.value.isMod);
+const shouldShowModTools = toRef(() => user.value && user.value.isMod);
 
 function doTrackGotoCommunity() {
 	if (trackGoto.value) {
@@ -69,7 +64,9 @@ function doTrackGotoCommunity() {
 			<div
 				class="-header"
 				:style="{
-					'background-image': headerBackgroundImage,
+					backgroundImage: community.header
+						? `url('${community.header.mediaserver_url}')`
+						: undefined,
 				}"
 			/>
 

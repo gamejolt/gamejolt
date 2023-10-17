@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
+import { PropType, computed, ref, toRef, toRefs } from 'vue';
 import { GameFollowLocation, trackGameFollow } from '../../analytics/analytics.service';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
@@ -46,8 +46,9 @@ const props = defineProps({
 	},
 });
 
-const { user } = useCommonStore();
 const { game, hideCount, location, circle, showUserFollow } = toRefs(props);
+const { user } = useCommonStore();
+
 const isShowingFollowPopover = ref(false);
 
 const shouldShowFollow = computed(() => {
@@ -65,7 +66,7 @@ const shouldShowFollow = computed(() => {
 	return true;
 });
 
-const widgetId = computed(() => `game-follow-widget-${game.value.id}`);
+const widgetId = toRef(() => `game-follow-widget-${game.value.id}`);
 
 const badge = computed(() =>
 	!circle.value && !hideCount.value && game.value.follower_count
@@ -82,9 +83,9 @@ const tooltip = computed(() =>
 		: undefined
 );
 
-const icon = computed(() => {
+const icon = toRef(() => {
 	if (!circle.value) {
-		return '';
+		return undefined;
 	}
 
 	return !game.value.is_following ? 'subscribe' : 'subscribed';

@@ -1,25 +1,23 @@
 <script lang="ts" setup>
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { ClientHistoryNavigator } from './history-navigator.service';
-
-const HistoryNavigator = ClientHistoryNavigator;
 </script>
 
 <template>
 	<span>
 		<a
-			v-if="HistoryNavigator.canGoBack"
+			v-if="ClientHistoryNavigator.canGoBack"
 			class="navbar-item"
 			title="Go back"
-			@click="HistoryNavigator.back()"
+			@click="ClientHistoryNavigator.back()"
 		>
 			<AppJolticon icon="chevron-left" />
 		</a>
 		<a
-			v-if="HistoryNavigator.canGoForward"
+			v-if="ClientHistoryNavigator.canGoForward"
 			class="navbar-item"
 			title="Go forward"
-			@click="HistoryNavigator.forward()"
+			@click="ClientHistoryNavigator.forward()"
 		>
 			<AppJolticon icon="chevron-right" />
 		</a>

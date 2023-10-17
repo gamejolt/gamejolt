@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 import { formatDate } from '../../filters/date';
 import { FiresidePostModel } from '../../fireside/post/post-model';
@@ -35,7 +35,6 @@ const props = defineProps({
 const { item, showIcon } = toRefs(props);
 
 const icon = computed(() => item.value.getTypeIcon()?.icon);
-
 const color = computed(() => item.value.getTypeIcon()?.color);
 
 const isToday = computed(
@@ -108,7 +107,7 @@ const actionText = computed(() => {
 	}
 });
 
-const shouldShowActionSecondLine = computed(() => !!actionTo.value || !!actionText.value);
+const shouldShowActionSecondLine = toRef(() => !!actionTo.value || !!actionText.value);
 
 const extraData = computed<Record<string, any>>(() => JSON.parse(item.value.extra_data));
 
@@ -127,7 +126,7 @@ const reasonText = computed(() => {
 	return getSingleReasonText(reason);
 });
 
-const hasReason = computed(() => !!reasonText.value);
+const hasReason = toRef(() => !!reasonText.value);
 
 function getExtraData(key: string) {
 	return extraData.value[key];

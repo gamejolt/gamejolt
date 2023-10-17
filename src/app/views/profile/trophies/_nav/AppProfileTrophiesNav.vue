@@ -1,4 +1,10 @@
 <script lang="ts">
+import { PropType, computed, toRefs } from 'vue';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { formatNumber } from '../../../../../_common/filters/number';
+import AppListGroupSelector from '../../../../../_common/list-group/selector/AppListGroupSelector.vue';
+import { useProfileRouteStore } from '../../RouteProfile.vue';
+
 export interface TrophyNavGame {
 	id: number;
 	trophyCount: number;
@@ -7,12 +13,6 @@ export interface TrophyNavGame {
 </script>
 
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
-import { RouterLink, useRoute, useRouter } from 'vue-router';
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppListGroupSelector from '../../../../../_common/list-group/selector/AppListGroupSelector.vue';
-import { useProfileRouteStore } from '../../RouteProfile.vue';
-
 const props = defineProps({
 	games: {
 		type: Array as PropType<TrophyNavGame[]>,
@@ -28,11 +28,10 @@ const props = defineProps({
 	},
 });
 
+const { games, unviewedGames } = toRefs(props);
 const { trophyCount } = useProfileRouteStore()!;
 const route = useRoute();
 const router = useRouter();
-
-const { games, unviewedGames } = toRefs(props);
 
 const hasGames = computed(() => games.value.length > 0);
 
