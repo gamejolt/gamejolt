@@ -3,7 +3,7 @@ import { computed, PropType, toRefs } from 'vue';
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
+import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppContentTarget from './AppContentTarget.vue';
 

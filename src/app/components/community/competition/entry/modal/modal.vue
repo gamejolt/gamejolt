@@ -18,7 +18,7 @@ import AppUserVerifiedTick from '../../../../../../_common/user/AppUserVerifiedT
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { numberSort } from '../../../../../../utils/array';
-import AppGameBadge from '../../../../game/badge/badge.vue';
+import AppGameBadge from '../../../../game/badge/AppGameBadge.vue';
 import AppCommunityCompetitionVotingWidget from '../../voting/widget.vue';
 
 @Options({

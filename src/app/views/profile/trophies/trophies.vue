@@ -8,7 +8,7 @@ import {
 import { Screen } from '../../../../_common/screen/screen-service';
 import { stringSort } from '../../../../utils/array';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import AppProfileTrophiesNav, { TrophyNavGame } from './_nav/nav.vue';
+import AppProfileTrophiesNav, { TrophyNavGame } from './_nav/AppProfileTrophiesNav.vue';
 
 @Options({
 	name: 'RouteProfileTrophies',

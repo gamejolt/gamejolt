@@ -1,5 +1,6 @@
 import { FiresidePostModel } from '../../fireside/post/post-model';
 import { GameModel } from '../../game/game.model';
+import { Jolticon } from '../../jolticon/AppJolticon.vue';
 import { Model } from '../../model/model.service';
 import { UserBlockModel } from '../../user/block/block.model';
 import { UserModel } from '../../user/user.model';
@@ -7,8 +8,8 @@ import { CommunityChannelModel } from '../channel/channel.model';
 import { CommunityCompetitionModel } from '../competition/competition.model';
 import { CommunityCompetitionEntryModel } from '../competition/entry/entry.model';
 
-export type TypeIcon = {
-	icon: string;
+type TypeIcon = {
+	icon: Jolticon;
 	color: string;
 };
 

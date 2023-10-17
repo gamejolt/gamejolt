@@ -3,16 +3,16 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
+import AppLinkedAccount from '../../../../../_common/linked-account/AppLinkedAccount.vue';
 import {
-	LinkedAccountModel,
-	LinkedAccountProvider,
-	getLinkedAccountProviderDisplayName,
+LinkedAccountModel,
+LinkedAccountProvider,
+getLinkedAccountProviderDisplayName,
 } from '../../../../../_common/linked-account/linked-account.model';
-import AppLinkedAccount from '../../../../../_common/linked-account/linked-account.vue';
 import { LinkedAccounts } from '../../../../../_common/linked-account/linked-accounts.service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
+LegacyRouteComponent,
+OptionsForLegacyRoute,
 } from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
