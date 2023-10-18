@@ -95,7 +95,7 @@ function onEditorBlur() {
 </script>
 
 <template>
-	<AppModal :dynamic-slots="['footer']">
+	<AppModal>
 		<div class="modal-controls">
 			<AppButton @click="modal.dismiss()">
 				<AppTranslate>Close</AppTranslate>
