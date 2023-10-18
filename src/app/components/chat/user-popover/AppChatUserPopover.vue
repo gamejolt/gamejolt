@@ -7,7 +7,7 @@ import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { kThemeDarkest } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleWhen } from '../../../../_styles/mixins';
 import {
 	kBorderWidthLg,
@@ -158,14 +158,15 @@ const styleStatusIcon: CSSProperties = {
 					}"
 				>
 					<AppOnHover v-slot="{ hoverBinding, hovered }">
-						<AppUserAvatar
+						<AppUserAvatarBubble
 							v-bind="{
 								...hoverBinding,
 								style: [
 									{
+										position: `relative`,
+										zIndex: 2,
 										width: `72px`,
 										height: `72px`,
-										zIndex: 2,
 										transition: `filter 0.1s ease`,
 									},
 									styleWhen(hovered, {
@@ -174,9 +175,11 @@ const styleStatusIcon: CSSProperties = {
 								],
 							}"
 							:user="user"
+							show-frame
 						/>
 					</AppOnHover>
 					<div
+						v-if="!user.avatar_frame"
 						:style="{
 							position: `absolute`,
 							top: `-4px`,
