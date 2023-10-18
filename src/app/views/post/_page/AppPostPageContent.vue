@@ -7,7 +7,7 @@ import { FiresidePostVideoModel } from '../../../../_common/fireside/post/video/
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { createLightbox } from '../../../../_common/lightbox/lightbox-helpers';
 import { MediaItemModel } from '../../../../_common/media-item/media-item-model';
-import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
+import AppMediaItemPost from '../../../../_common/media-item/post/AppMediaItemPost.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { StickerTargetController } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';

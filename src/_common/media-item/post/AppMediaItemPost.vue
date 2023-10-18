@@ -1,7 +1,6 @@
-<script lang="ts">
-import { computed, unref } from 'vue';
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { shallowSetup } from '../../../utils/vue';
+<script lang="ts" setup>
+import { PropType, computed, ref, toRefs, unref } from 'vue';
+import AppButton from '../../button/AppButton.vue';
 import { useContentFocusService } from '../../content-focus/content-focus.service';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppResponsiveDimensions, {
@@ -20,118 +19,117 @@ import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
 import { MediaItemModel } from '../media-item-model';
 
-@Options({
-	components: {
-		AppImgResponsive,
-		AppMediaItemBackdrop,
-		AppVideo,
-		AppResponsiveDimensions,
-		AppStickerTarget,
+const props = defineProps({
+	mediaItem: {
+		type: Object as PropType<MediaItemModel>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	isPostHydrated: {
+		type: Boolean,
+		default: true,
 	},
-})
-export default class AppMediaItemPost extends Vue {
-	@Prop({ type: Object, required: true }) mediaItem!: MediaItemModel;
-	@Prop({ type: Boolean, default: true }) isPostHydrated!: boolean;
-	@Prop({ type: Boolean, default: false }) isActive!: boolean;
-	@Prop({ type: Boolean, default: false }) restrictDeviceMaxHeight!: boolean;
-	@Prop({ type: Boolean, default: false }) inline!: boolean;
-	@Prop({ type: Boolean, default: false }) canPlaceSticker!: boolean;
+	isActive: {
+		type: Boolean,
+	},
+	restrictDeviceMaxHeight: {
+		type: Boolean,
+	},
+	inline: {
+		type: Boolean,
+	},
+	canPlaceSticker: {
+		type: Boolean,
+	},
+});
 
-	parentStickerTarget = shallowSetup(() => useStickerTargetController());
+const emit = defineEmits({
+	bootstrap: () => true,
+	fullscreen: (_mediaItem: MediaItemModel) => true,
+});
 
-	stickerTargetController!: StickerTargetController;
+const { mediaItem, isPostHydrated, isActive, restrictDeviceMaxHeight, inline, canPlaceSticker } =
+	toRefs(props);
 
-	isFilled = false;
+const parentStickerTarget = useStickerTargetController();
+const stickerTargetController = ref<StickerTargetController>();
+const isFilled = ref(false);
 
-	readonly Screen = Screen;
+const shouldShowFullscreenOption = computed(
+	() =>
+		restrictDeviceMaxHeight.value &&
+		mediaItem.value.height >= 100 &&
+		mediaItem.value.width >= 100
+);
 
-	@Emit('bootstrap') emitBootstrap() {}
-	@Emit('fullscreen') emitFullscreen(_mediaItem: MediaItemModel) {}
+const shouldVideoPlay = computed(
+	() => isActive.value && useContentFocusService().hasContentFocus.value
+);
 
-	get shouldShowFullscreenOption() {
-		return (
-			this.restrictDeviceMaxHeight &&
-			this.mediaItem.height >= 100 &&
-			this.mediaItem.width >= 100
-		);
+const videoController = computed(() => {
+	const sources = {
+		mp4: mediaItem.value.mediaserver_url_mp4,
+		webm: mediaItem.value.mediaserver_url_webm,
+	};
+	return getVideoPlayerFromSources(sources, 'gif', mediaItem.value.mediaserver_url);
+});
+
+const itemRadius = computed(() => {
+	if (inline.value) {
+		return isFilled.value ? undefined : 'lg';
 	}
 
-	get shouldVideoPlay() {
-		return this.isActive && useContentFocusService().hasContentFocus.value;
-	}
+	return Screen.isXs && isFilled.value ? undefined : 'lg';
+});
 
-	get videoController() {
-		const sources = {
-			mp4: this.mediaItem.mediaserver_url_mp4,
-			webm: this.mediaItem.mediaserver_url_webm,
-		};
-		return getVideoPlayerFromSources(sources, 'gif', this.mediaItem.mediaserver_url);
-	}
+const itemStyling = computed(() => {
+	const style: any = {};
 
-	get itemRadius() {
-		if (this.inline) {
-			return this.isFilled ? undefined : 'lg';
-		}
-
-		return Screen.isXs && this.isFilled ? undefined : 'lg';
-	}
-
-	get itemStyling() {
-		const style: any = {};
-
-		if (!import.meta.env.SSR) {
-			Object.assign(style, {
-				maxWidth: this.mediaItem.width + 'px',
-				maxHeight: this.mediaItem.height + 'px',
-			});
-		}
-
-		return style;
-	}
-
-	get deviceMaxHeight() {
-		if (import.meta.env.SSR || !this.restrictDeviceMaxHeight) {
-			return undefined;
-		}
-
-		// If the screen size is considered mobile, we want to treat
-		// the mobile keyboard as if it doesn't exist. Using the
-		// 'window.screen.height' will let us get the height of
-		// the screen, rather than the viewport.
-		if (Screen.isMobile) {
-			return window.screen.height * 0.45;
-		}
-		return Screen.height * 0.45;
-	}
-
-	get stickersDisabled() {
-		return !this.isActive || !this.canPlaceSticker;
-	}
-
-	created() {
-		this.stickerTargetController = createStickerTargetController(this.mediaItem, {
-			parent: computed(() => unref(this.parentStickerTarget)),
-			isCreator: computed(
-				() => this.stickerTargetController.parent.value?.isCreator.value === true
-			),
+	if (!import.meta.env.SSR) {
+		Object.assign(style, {
+			maxWidth: mediaItem.value.width + 'px',
+			maxHeight: mediaItem.value.height + 'px',
 		});
 	}
 
-	async onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {
-		this.emitBootstrap();
-		this.isFilled = e.isFilled;
+	return style;
+});
+
+const deviceMaxHeight = computed(() => {
+	if (import.meta.env.SSR || !restrictDeviceMaxHeight.value) {
+		return undefined;
 	}
 
-	onClickImage() {
-		// In feed means we are inline, and we use the fullscreen button to go fullscreen.
-		// Clicking on the image in feed does nothing.
-		// In the post view however, we don't show the button and instead a click anywhere on the image goes fullscreen.
-		if (!this.inline) {
-			this.emitFullscreen(this.mediaItem);
-		}
+	// If the screen size is considered mobile, we want to treat
+	// the mobile keyboard as if it doesn't exist. Using the
+	// 'window.screen.height' will let us get the height of
+	// the screen, rather than the viewport.
+	if (Screen.isMobile) {
+		return window.screen.height * 0.45;
+	}
+	return Screen.height * 0.45;
+});
+
+const stickersDisabled = toRef(() => !isActive.value || !canPlaceSticker.value);
+
+stickerTargetController.value = createStickerTargetController(mediaItem.value, {
+	parent: computed(() => unref(parentStickerTarget)),
+	isCreator: computed(
+		() => stickerTargetController.value?.parent.value?.isCreator.value === true
+	),
+});
+
+async function onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {
+	emit('bootstrap');
+
+	isFilled.value = e.isFilled;
+}
+
+function onClickImage() {
+	// In feed means we are inline, and we use the fullscreen button to go fullscreen.
+	// Clicking on the image in feed does nothing.
+	// In the post view however, we don't show the button and instead a click anywhere on the image goes fullscreen.
+	if (!inline.value) {
+		emit('fullscreen', mediaItem.value);
 	}
 }
 </script>
@@ -155,7 +153,7 @@ export default class AppMediaItemPost extends Vue {
 					circle
 					trans
 					icon="fullscreen"
-					@click="emitFullscreen(mediaItem)"
+					@click="emit('fullscreen', mediaItem)"
 				/>
 			</div>
 			<AppMediaItemBackdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
