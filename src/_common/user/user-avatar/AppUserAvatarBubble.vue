@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import { styleChangeBg } from '../../../_styles/mixins';
 import AppAvatarFrame from '../../avatar/AppAvatarFrame.vue';
 import { AvatarFrameModel } from '../../avatar/frame.model';
@@ -61,6 +61,10 @@ const props = defineProps({
 	smoosh: {
 		type: Boolean,
 	},
+	imgWrapperStyles: {
+		type: Object as PropType<CSSProperties>,
+		default: () => ({}),
+	},
 });
 
 const {
@@ -110,6 +114,7 @@ const href = computed(() => {
 							// and break things, even if width and height on the parent
 							// are assigned to 1:1 ratios.
 							lineHeight: 0,
+							...imgWrapperStyles,
 						}"
 					>
 						<slot>
