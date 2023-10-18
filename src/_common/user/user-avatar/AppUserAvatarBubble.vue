@@ -51,17 +51,7 @@ const props = defineProps({
 	 * the User has equipped.
 	 */
 	frameOverride: {
-		type: Object as PropType<Pick<AvatarFrameModel, 'image_url'>>,
-		default: undefined,
-	},
-	/**
-	 * Allows extra inset to be added/removed from the avatar frame.
-	 *
-	 * Has no effect if {@link showFrame} is `false`.
-	 */
-	frameInset: {
-		type: Number,
-		validator: value => value === undefined || typeof value === 'number',
+		type: Object as PropType<Pick<AvatarFrameModel, 'image_url' | 'scale'>>,
 		default: undefined,
 	},
 	/**
@@ -82,7 +72,6 @@ const {
 	verifiedSize,
 	showFrame,
 	frameOverride,
-	frameInset,
 	smoosh,
 } = toRefs(props);
 
@@ -111,12 +100,7 @@ const href = computed(() => {
 				:small="verifiedSize === 'small'"
 				:tiny="verifiedSize === 'tiny'"
 			>
-				<AppAvatarFrame
-					:frame="avatarFrame"
-					:hide-frame="!showFrame"
-					:inset="frameInset"
-					:smoosh="smoosh"
-				>
+				<AppAvatarFrame :frame="avatarFrame" :hide-frame="!showFrame" :smoosh="smoosh">
 					<div
 						:style="{
 							...styleChangeBg(bgColor),
