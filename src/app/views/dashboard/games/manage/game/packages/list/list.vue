@@ -21,7 +21,7 @@ import { SellableModel } from '../../../../../../../../_common/sellable/sellable
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { arrayIndexBy } from '../../../../../../../../utils/array';
 import { shallowSetup } from '../../../../../../../../utils/vue';
-import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
+import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
 import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../../manage.store';
