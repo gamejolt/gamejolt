@@ -5,7 +5,7 @@ import { CommunityChannelModel } from '../../../../../../_common/community/chann
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
-import AppCommunityChannelCard from '../../../../../components/community/channel/card/card.vue';
+import AppCommunityChannelCard from '../../../../../components/community/channel/card/AppCommunityChannelCard.vue';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import { useAppStore } from '../../../../../store';
 import {

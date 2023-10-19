@@ -1,83 +1,123 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, onMounted, ref, toRef, toRefs } from 'vue';
+import { RouterLink } from 'vue-router';
 import {
 	CommunityModel,
 	CommunityPresetChannelType,
 } from '../../../../../_common/community/community.model';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 // Sync up with the './variables' file.
-const CARD_WIDTH = 270;
-const CARD_HEIGHT = 70;
+// TODO(component-setup-refactor): sync up manually?
+const CardWidth = 270;
+const CardHeight = 70;
 
-@Options({
-	components: {
-		AppMediaItemBackdrop,
+// TODO(component-setup-refactor): resolve backgroundItem
+const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
-		AppObserveDimensions: vAppObserveDimensions,
+	path: {
+		type: String,
+		required: true,
 	},
-})
-export default class AppCommunityChannelCard extends Vue {
-	@Prop({ type: Object, required: true }) community!: CommunityModel;
-	@Prop({ type: String, required: true }) path!: string;
-	@Prop({ type: String, required: true }) label!: string;
-	@Prop(Object) backgroundItem?: MediaItemModel;
-	@Prop({ type: Boolean, default: false }) isActive!: boolean;
-	@Prop({ type: Boolean, default: false }) isUnread!: boolean;
-	@Prop({ type: String, default: undefined }) sort?: string;
-	@Prop({ type: Boolean, default: false }) isLocked!: boolean;
-	@Prop({ type: Boolean, default: false }) isUnpublished!: boolean;
-	@Prop({ type: Boolean, default: false }) isArchived!: boolean;
-	@Prop(String) channelType?: string;
+	label: {
+		type: String,
+		required: true,
+	},
+	backgroundItem: {
+		type: Object as PropType<MediaItemModel>,
+		required: false,
+	},
+	isActive: {
+		type: Boolean,
+	},
+	isUnread: {
+		type: Boolean,
+	},
+	sort: {
+		type: String,
+		required: false,
+		default: undefined,
+	},
+	isLocked: {
+		type: Boolean,
+	},
+	isUnpublished: {
+		type: Boolean,
+	},
+	isArchived: {
+		type: Boolean,
+	},
+	channelType: {
+		type: String,
+		required: false,
+		default: undefined,
+	},
+});
 
-	cardHeight = CARD_HEIGHT;
+const {
+	community,
+	path,
+	label,
+	backgroundItem,
+	isActive,
+	isUnread,
+	sort,
+	isLocked,
+	isUnpublished,
+	isArchived,
+	channelType,
+} = toRefs(props);
 
-	declare $el: HTMLElement;
+const rootElem = ref<HTMLDivElement>();
+const cardHeight = ref<number>(CardHeight);
 
-	mounted() {
-		// Initialize cardHeight to be based off the card width, maintaining aspect ratio.
-		this.updateCardHeight();
+const height = toRef(() => cardHeight.value + 'px');
+
+const linkTo = computed(() => {
+	if (path.value === CommunityPresetChannelType.FEATURED) {
+		return {
+			name: 'communities.view.overview',
+			params: { path: community.value.path },
+		};
 	}
 
-	get height() {
-		return this.cardHeight + 'px';
+	const link = {
+		name: 'communities.view.channel',
+		params: { path: community.value.path, channel: path.value },
+	} as any;
+
+	if (sort?.value) {
+		link.query = { sort: sort.value };
 	}
 
-	get linkTo() {
-		if (this.path === CommunityPresetChannelType.FEATURED) {
-			return {
-				name: 'communities.view.overview',
-				params: { path: this.community.path },
-			};
-		}
+	return link;
+});
 
-		const link = {
-			name: 'communities.view.channel',
-			params: { path: this.community.path, channel: this.path },
-		} as any;
+onMounted(() => {
+	// Initialize cardHeight to be based off the card width, maintaining aspect ratio.
+	updateCardHeight();
+});
 
-		if (this.sort) {
-			link.query = { sort: this.sort };
-		}
-
-		return link;
+function updateCardHeight() {
+	// This gets triggered when the card resizes, setting the new card height appropriately.
+	if (!rootElem.value) {
+		return;
 	}
 
-	updateCardHeight() {
-		// This gets triggered when the card resizes, setting the new card height appropriately.
-		this.cardHeight = (this.$el.offsetWidth / CARD_WIDTH) * CARD_HEIGHT;
-	}
+	cardHeight.value = (rootElem.value.offsetWidth / CardWidth) * CardHeight;
 }
 </script>
 
 <template>
-	<div class="community-channel-card-container">
-		<router-link
+	<div ref="rootElem" class="community-channel-card-container">
+		<RouterLink
 			v-app-observe-dimensions="updateCardHeight"
 			class="community-channel-card sheet sheet-no-full-bleed sheet-full"
 			:class="{ '-active': isActive, 'theme-dark': backgroundItem }"
@@ -133,7 +173,7 @@ export default class AppCommunityChannelCard extends Vue {
 			</div>
 
 			<div v-if="isUnpublished || isArchived" class="-card-unpublished" />
-		</router-link>
+		</RouterLink>
 	</div>
 </template>
 
