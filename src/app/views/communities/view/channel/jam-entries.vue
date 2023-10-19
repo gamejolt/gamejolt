@@ -15,7 +15,7 @@ import {
 } from '../../../../../_common/route/legacy-route-component';
 import { vAppNoAutoscroll } from '../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/grid.vue';
+import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
 import {
 	CommunityCompetitionEntryModalHashDeregister,
 	showCommunityCompetitionEntryModalIdFromHash,

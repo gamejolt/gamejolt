@@ -1,5 +1,5 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, toRefs } from 'vue';
 import {
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
@@ -9,55 +9,74 @@ import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_comm
 import { formatNumber } from '../../../../../../_common/filters/number';
 import AppCommunityCompetitionEntryThumbnail from '../thumbnail/thumbnail.vue';
 
-@Options({
-	components: {
-		AppCommunityCompetitionEntryThumbnail,
+const props = defineProps({
+	competition: {
+		type: Object as PropType<CommunityCompetitionModel>,
+		required: true,
 	},
-})
-export default class AppCommunityCompetitionEntryGrid extends Vue {
-	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
-	@Prop({ type: Array, required: true }) entries!: CommunityCompetitionEntryModel[];
-	@Prop({ type: Number, default: 0 }) currentPage!: number;
-	@Prop({ type: Number, default: 0 }) pageCount!: number;
-	@Prop({ type: Number, default: 6 }) numPlaceholders!: number;
-	@Prop(Object)
-	category?: CommunityCompetitionVotingCategoryModel;
-	@Prop({ type: Boolean, default: false }) showRemove!: boolean;
+	entries: {
+		type: Array as PropType<CommunityCompetitionEntryModel[]>,
+		required: true,
+	},
+	currentPage: {
+		type: Number,
+		default: 0,
+	},
+	pageCount: {
+		type: Number,
+		default: 0,
+	},
+	numPlaceholders: {
+		type: Number,
+		default: 6,
+	},
+	category: {
+		type: Object as PropType<CommunityCompetitionVotingCategoryModel>,
+		// TODO(component-setup-refactor): default = undefined?
+	},
+	showRemove: {
+		type: Boolean,
+	},
+});
 
-	readonly formatNumber = formatNumber;
+const emit = defineEmits({
+	remove: (_entry: CommunityCompetitionEntryModel) => true,
+});
 
-	get placeholderCount() {
-		const iterators = [];
-		for (let i = 0; i < this.numPlaceholders; i++) {
-			iterators.push(i);
-		}
-		return iterators;
+const { competition, entries, currentPage, pageCount, numPlaceholders, category, showRemove } =
+	toRefs(props);
+
+const placeholderCount = computed(() => {
+	const iterators = [];
+	for (let i = 0; i < numPlaceholders.value; i++) {
+		iterators.push(i);
 	}
+	return iterators;
+});
 
-	get shouldShowThumbnailRanks() {
-		return (
-			this.competition.is_voting_enabled &&
-			this.competition.has_community_voting &&
-			this.competition.are_results_calculated
-		);
-	}
+const shouldShowThumbnailRanks = computed(
+	() =>
+		competition.value.is_voting_enabled &&
+		competition.value.has_community_voting &&
+		competition.value.are_results_calculated
+);
 
-	get shouldShowThumbnailAwards() {
-		return (
-			this.competition.is_voting_enabled &&
-			this.competition.has_awards &&
-			this.competition.periodNum >= CompetitionPeriodVoting
-		);
-	}
+const shouldShowThumbnailAwards = computed(
+	() =>
+		competition.value.is_voting_enabled &&
+		competition.value.has_awards &&
+		competition.value.periodNum >= CompetitionPeriodVoting
+);
 
-	@Emit('remove')
-	emitRemove(_entry: CommunityCompetitionEntryModel) {}
+function emitRemove(entry: CommunityCompetitionEntryModel) {
+	emit('remove', entry);
 }
 </script>
 
 <template>
 	<div>
 		<p v-if="pageCount > 0 && currentPage > 0" class="text-muted small">
+			<!--TODO(component-setup-refactor): how to include :translate-params into gettext-->
 			<AppTranslate
 				:translate-params="{
 					count: formatNumber(pageCount),

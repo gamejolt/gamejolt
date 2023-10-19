@@ -22,7 +22,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { arrayRemove } from '../../../../../utils/array';
 import AppCommunityCompetitionCountdown from '../../../../components/community/competition/countdown/AppCommunityCompetitionCountdown.vue';
-import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/grid.vue';
+import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
 import { AppCommunityPerms } from '../../../../components/community/perms/perms';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import {
