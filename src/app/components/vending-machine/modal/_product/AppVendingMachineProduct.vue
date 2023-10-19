@@ -3,6 +3,7 @@ import { PropType, computed, toRef, toRefs } from 'vue';
 import { ShopViewType, trackShopView } from '../../../../../_common/analytics/analytics.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
+import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
 import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import { useOnHover } from '../../../../../_common/on/useOnHover';
@@ -17,7 +18,6 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleElevate, styleTyped, styleWhen } from '../../../../../_styles/mixins';
 import { kBorderRadiusLg, kFontSizeSmall, kStrongEaseOut } from '../../../../../_styles/variables';
-import AppProductCurrencyTags from './AppProductCurrencyTags.vue';
 
 const props = defineProps({
 	shopProduct: {
@@ -64,8 +64,6 @@ function onClickProduct() {
 	trackShopView({ type });
 	emit('purchase', shopProduct.value);
 }
-
-const popperConfirmRadius = kBorderRadiusLg;
 
 const overlayTagZIndex = 2;
 
@@ -116,6 +114,8 @@ const nameFontSize = kFontSizeSmall;
 				...styleWhen(disablePurchases, {
 					cursor: `default`,
 				}),
+				display: `flex`,
+				flexDirection: `column`,
 			})
 		"
 		@click="onClickProduct()"
@@ -148,21 +148,20 @@ const nameFontSize = kFontSizeSmall;
 					smoosh
 					disable-link
 				/>
-				<AppAspectRatio v-else-if="shopProduct.background" :ratio="1">
-					<AppBackground
-						:background="shopProduct.background"
-						:backdrop-style="{
-							borderRadius: popperConfirmRadius.px,
-						}"
-						:background-style="{
-							backgroundSize: `contain`,
-							backgroundPosition: `center`,
-						}"
-						darken
-					>
-						<AppAspectRatio :ratio="1" />
-					</AppBackground>
-				</AppAspectRatio>
+				<AppBackground
+					v-else-if="shopProduct.background"
+					:background="shopProduct.background"
+					:backdrop-style="{
+						borderRadius: kBorderRadiusLg.px,
+					}"
+					:background-style="{
+						backgroundSize: `contain`,
+						backgroundPosition: `center`,
+					}"
+					darken
+				>
+					<AppAspectRatio :ratio="1" />
+				</AppBackground>
 			</AppAspectRatio>
 		</div>
 
@@ -178,18 +177,10 @@ const nameFontSize = kFontSizeSmall;
 				color: kThemeFg,
 				borderBottomRightRadius: kBorderRadiusLg.px,
 				borderBottomLeftRadius: kBorderRadiusLg.px,
+				textAlign: `center`,
+				flex: `auto`,
 			}"
 		>
-			<div
-				v-if="name && name.length"
-				:style="{
-					textAlign: `right`,
-					fontWeight: 700,
-				}"
-			>
-				{{ name }}
-			</div>
-
 			<div
 				v-if="productType"
 				:style="{
@@ -201,14 +192,26 @@ const nameFontSize = kFontSizeSmall;
 				{{ productType }}
 			</div>
 
-			<AppProductCurrencyTags
+			<div
+				v-if="name && name.length"
 				:style="{
-					marginTop: `4px`,
+					fontWeight: 700,
+				}"
+			>
+				{{ name }}
+			</div>
+
+			<div :style="{ marginTop: `auto`, height: `4px` }" />
+
+			<AppCurrencyPillList
+				:style="{
 					alignSelf: `flex-end`,
 				}"
-				:shop-product="shopProduct"
-				fill-color="bg-offset"
+				:currencies="shopProduct.validPricingsData"
 				direction="row"
+				cross-align="flex-end"
+				fill-color="bg-offset"
+				:gap="4"
 			/>
 		</div>
 

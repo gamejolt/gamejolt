@@ -27,7 +27,6 @@ import { storeModelList } from '../../../../_common/model/model-store.service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { StickerPackRatio } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
@@ -35,6 +34,7 @@ import {
 	kThemeBgActual,
 	kThemeBgBackdrop,
 	kThemeBgOffset,
+	kThemeBgSubtle,
 	kThemeFg,
 	kThemeFg10,
 	kThemeFgMuted,
@@ -59,6 +59,7 @@ import {
 	kFontFamilyDisplay,
 	kFontFamilyHeading,
 	kFontSizeH2,
+	kLineHeightBase,
 	kStrongEaseOut,
 } from '../../../../_styles/variables';
 import { numberSort } from '../../../../utils/array';
@@ -524,11 +525,11 @@ const currencyCardTransitionStyles: CSSProperties = {
 								<div
 									:style="{
 										...styleBorderRadiusLg,
-										height: kFontSizeH2.px,
+										height: `${kFontSizeH2.value * kLineHeightBase}px`,
 										margin: 0,
-										padding: `8px 12px 0`,
+										padding: `8px 12px 12px`,
 										marginBottom: `12px`,
-										backgroundColor: kThemeFgMuted,
+										backgroundColor: kThemeBgSubtle,
 										width: `25%`,
 									}"
 								/>
@@ -542,11 +543,8 @@ const currencyCardTransitionStyles: CSSProperties = {
 											...styleChangeBg('bg-subtle'),
 										}"
 									>
-										<AppAspectRatio
-											:ratio="(StickerPackRatio + 1) / 2"
-											show-overflow
-										/>
-										<AppSpacer vertical :scale="12" />
+										<AppAspectRatio :ratio="1" show-overflow />
+										<div :style="{ height: `80px` }" />
 									</div>
 								</div>
 							</div>
@@ -565,6 +563,7 @@ const currencyCardTransitionStyles: CSSProperties = {
 										}"
 									>
 										<h2
+											v-if="sections.size > 1"
 											:style="{
 												display: `flex`,
 												alignItems: `center`,
