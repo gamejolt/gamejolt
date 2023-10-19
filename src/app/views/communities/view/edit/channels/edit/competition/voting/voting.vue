@@ -28,7 +28,7 @@ import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import { arrayRemove } from '../../../../../../../../../utils/array';
-import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
+import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
 import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/award.vue';
 import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/category.vue';
 import FormCommunityCompetitionVotingEdit from '../../../../../../../../components/forms/community/competition/voting/edit/edit.vue';

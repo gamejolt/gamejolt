@@ -13,7 +13,7 @@ import {
 } from '../../../../../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
-import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
+import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
 
 @Options({

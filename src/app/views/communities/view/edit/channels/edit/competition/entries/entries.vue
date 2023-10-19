@@ -27,7 +27,7 @@ import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-
 import AppUserVerifiedTick from '../../../../../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
+import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
 import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../components/community/competition/entry/modal/modal.service';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
 
