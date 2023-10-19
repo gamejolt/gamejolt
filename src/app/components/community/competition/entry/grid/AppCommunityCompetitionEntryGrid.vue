@@ -32,7 +32,8 @@ const props = defineProps({
 	},
 	category: {
 		type: Object as PropType<CommunityCompetitionVotingCategoryModel>,
-		// TODO(component-setup-refactor): default = undefined?
+		// TODO(component-setup-refactor):check this
+		default: undefined,
 	},
 	showRemove: {
 		type: Boolean,
