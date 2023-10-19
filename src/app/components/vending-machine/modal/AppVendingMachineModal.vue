@@ -72,7 +72,7 @@ interface Section {
 	title: string;
 	description: string;
 	sort: number;
-	items: { product: InventoryShopProductSaleModel; sort: number | undefined }[];
+	items: { product: InventoryShopProductSaleModel; sort: number }[];
 }
 
 const props = defineProps({
@@ -139,23 +139,22 @@ async function init() {
 		]);
 
 		const payload = p[0];
-		const newProducts = payload.sales
+		const sales = payload.sales
 			? storeModelList(InventoryShopProductSaleModel, payload.sales)
 			: [];
 
-		// TODO(shop-sections) improve
 		const newSections: typeof sections.value = new Map();
-		const missingItems: InventoryShopProductSaleModel[] = [];
+		const unsupportedItems: InventoryShopProductSaleModel[] = [];
 		const sectionItems = storeModelList(InventoryShopSectionModel, payload.sections);
 
-		for (const product of newProducts) {
+		for (const product of sales) {
 			if (!product.stickerPack && !product.avatarFrame && !product.background) {
-				missingItems.push(product);
+				unsupportedItems.push(product);
 				continue;
 			}
 
 			let sort: number | undefined = undefined;
-			const section = sectionItems.find(section => {
+			const sectionData = sectionItems.find(section => {
 				const item = section.resource.items.find(item => item.sale_id === product.id);
 				if (item) {
 					sort = item.sort;
@@ -164,42 +163,29 @@ async function init() {
 				return false;
 			});
 
-			const sectionKey = section?.title || 'Default';
-			let sectionData = newSections.get(sectionKey);
-			if (!sectionData) {
-				sectionData = {
-					title: sectionKey,
-					description: section?.description || '',
-					sort: section?.sort || 100,
+			const key = sectionData?.title || 'Default';
+			let section = newSections.get(key);
+			if (!section) {
+				section = {
+					title: key,
+					description: sectionData?.description || '',
+					sort: sectionData?.sort ?? 1000,
 					items: [],
 				};
 			}
-			sectionData.items.push({ product, sort });
-			newSections.set(sectionKey, sectionData);
-		}
-
-		const sortedSections: [string, Section][] = [];
-		for (const [key, section] of newSections) {
-			sortedSections.push([key, section]);
-		}
-		sortedSections.sort(([, a], [, b]) => numberSort(b.sort, a.sort));
-
-		newSections.clear();
-		for (const [key, section] of sortedSections) {
-			section.items.sort((a, b) => {
-				if (a.sort === undefined && b.sort === undefined) {
-					return 0;
-				} else if (a.sort === undefined) {
-					return 1;
-				} else if (b.sort === undefined) {
-					return -1;
-				}
-				return numberSort(a.sort, b.sort);
-			});
+			section.items.push({ product: product, sort: sort ?? 1000 });
 			newSections.set(key, section);
 		}
 
-		sections.value = newSections;
+		// Sort both sections and their items by their sort values.
+		const sortedSections: [string, Section][] = [...newSections]
+			.sort(([, a], [, b]) => numberSort(b.sort, a.sort))
+			.map(data => {
+				data[1].items.sort((a, b) => numberSort(a.sort, b.sort));
+				return data;
+			});
+
+		sections.value = new Map(sortedSections);
 
 		if (payload.shopOwner) {
 			shopOwner.value = payload.shopOwner;
