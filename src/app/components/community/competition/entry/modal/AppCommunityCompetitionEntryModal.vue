@@ -15,7 +15,7 @@ import AppModal from '../../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../../_common/modal/modal.service';
 import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { $gettext, $ngettext } from '../../../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../../_common/user/user-avatar/AppUserAvatar.vue';
@@ -207,15 +207,18 @@ function copyShareUrl() {
 
 				<div class="-section">
 					<span v-if="shouldShowVoteCount" class="-vote-count">
-						<!--TODO(component-setup-refactor): replace with gettext-->
-						<AppTranslate
-							:translate-n="m_entry.vote_count"
-							:translate-params="{ count: m_entry.vote_count }"
-							translate-plural="This entry has %{ count } votes, currently. Check back after the voting period to see the final results."
-						>
-							This entry has %{ count } vote, currently. Check back after the voting
-							period to see the final results.
-						</AppTranslate>
+						{{
+							$ngettext(
+								'This entry has %{ count } vote, currently.',
+								'This entry has %{ count } votes, currently.',
+								m_entry.vote_count,
+								{ count: m_entry.vote_count }
+							)
+						}}
+						{{ ' ' }}
+						{{
+							$gettext(`Check back after the voting period to see the final results.`)
+						}}
 					</span>
 
 					<template v-if="competition">
