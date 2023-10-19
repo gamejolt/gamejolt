@@ -1,28 +1,25 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, ref } from 'vue';
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 
-@Options({
-	components: {
-		AppContentViewer,
-		AppFadeCollapse,
+defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
 	},
-})
-export default class AppCommunityDescription extends Vue {
-	@Prop({ type: Object, required: true }) community!: CommunityModel;
+});
 
-	canToggleDescription = false;
-	isDescriptionOpen = false;
+const canToggleDescription = ref(false);
+const isDescriptionOpen = ref(false);
 
-	toggleDescription() {
-		this.isDescriptionOpen = !this.isDescriptionOpen;
-	}
+function toggleDescription() {
+	isDescriptionOpen.value = !isDescriptionOpen.value;
+}
 
-	canToggleDescriptionChanged(canToggle: boolean) {
-		this.canToggleDescription = canToggle;
-	}
+function canToggleDescriptionChanged(canToggle: boolean) {
+	canToggleDescription.value = canToggle;
 }
 </script>
 

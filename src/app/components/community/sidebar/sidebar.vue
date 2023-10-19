@@ -15,7 +15,7 @@ import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvata
 import { UserModel } from '../../../../_common/user/user.model';
 import { getAbsoluteLink } from '../../../../utils/router';
 import AppGameList from '../../game/list/list.vue';
-import AppCommunityDescription from '../description/description.vue';
+import AppCommunityDescription from '../description/AppCommunityDescription.vue';
 import { CommunitySidebarData } from './sidebar-data';
 
 const GAME_LIST_COLLAPSED_COUNT = 3;
