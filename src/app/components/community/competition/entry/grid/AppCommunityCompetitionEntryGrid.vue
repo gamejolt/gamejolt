@@ -77,15 +77,12 @@ function emitRemove(entry: CommunityCompetitionEntryModel) {
 <template>
 	<div>
 		<p v-if="pageCount > 0 && currentPage > 0" class="text-muted small">
-			<!--TODO(component-setup-refactor): how to include :translate-params into gettext-->
-			<AppTranslate
-				:translate-params="{
-					count: formatNumber(pageCount),
+			{{
+				$gettext(`Page %{ page } of %{ count }`, {
 					page: formatNumber(currentPage),
-				}"
-			>
-				Page %{ page } of %{ count }
-			</AppTranslate>
+					count: formatNumber(pageCount),
+				})
+			}}
 		</p>
 
 		<div class="-grid-items">
