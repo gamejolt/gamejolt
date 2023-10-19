@@ -1,6 +1,6 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, toRef, toRefs } from 'vue';
+import AppButton from '../../../../../../_common/button/AppButton.vue';
 import {
 	$removeCommunityCompetitionEntry,
 	CommunityCompetitionEntryModel,
@@ -9,118 +9,111 @@ import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_comm
 import { GameModel } from '../../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { showEntryFromCommunityCompetitionEntryModal } from '../modal/modal.service';
 
-@Options({
-	components: {
-		AppGameThumbnailImg,
+const props = defineProps({
+	entry: {
+		type: Object as PropType<CommunityCompetitionEntryModel>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	showRemove: {
+		type: Boolean,
 	},
-})
-export default class AppCommunityCompetitionEntryThumbnail extends Vue {
-	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntryModel;
-	@Prop({ type: Boolean, default: false }) showRemove!: boolean;
-	@Prop({ type: Boolean, default: false }) showRank!: boolean;
-	/** Voting category the rank should be shown from. No voting category means Overall. */
-	@Prop(Object)
-	votingCategory?: CommunityCompetitionVotingCategoryModel;
-	@Prop({ type: Boolean, default: false }) showAwards!: boolean;
+	showRank: {
+		type: Boolean,
+	},
+	votingCategory: {
+		type: Object as PropType<CommunityCompetitionVotingCategoryModel>,
+		default: undefined,
+	},
+	showAwards: {
+		type: Boolean,
+	},
+});
 
-	commonStore = setup(() => useCommonStore());
+const emit = defineEmits({
+	remove: () => true,
+});
 
-	get user() {
-		return this.commonStore.user;
+const { entry, showRemove, showRank, votingCategory, showAwards } = toRefs(props);
+const { user } = useCommonStore();
+
+const shouldShowRemove = computed(
+	() => showRemove.value && user.value && user.value.id === entry.value.user.id
+);
+
+const game = toRef(() => entry.value.resource as GameModel);
+
+const shouldShowRank = computed(() => {
+	if (!showRank.value) {
+		return false;
 	}
 
-	@Emit('remove')
-	emitRemove() {}
-
-	get shouldShowRemove() {
-		return this.showRemove && this.user && this.user.id === this.entry.user.id;
+	if (!entry.value.vote_results || entry.value.vote_results.length === 0) {
+		return false;
 	}
 
-	get game() {
-		return this.entry.resource as GameModel;
+	return !!displayRank.value;
+});
+
+const shouldShowNoVotes = computed(
+	() =>
+		showRank.value &&
+		!votingCategory?.value &&
+		(!entry.value.vote_results || entry.value.vote_results.length === 0)
+);
+
+const displayRank = computed(() => {
+	// Find the result for the given category.
+	const categoryId = votingCategory?.value ? votingCategory.value.id : null;
+	const voteResult = entry.value.vote_results.find(
+		i => i.community_competition_voting_category_id === categoryId
+	);
+	if (voteResult) {
+		return voteResult.rank;
+	}
+});
+
+const displayCategoryName = computed(() => {
+	if (votingCategory?.value) {
+		return votingCategory.value.name;
 	}
 
-	get shouldShowRank() {
-		if (!this.showRank) {
-			return false;
-		}
+	return $gettext(`Overall`);
+});
 
-		if (!this.entry.vote_results || this.entry.vote_results.length === 0) {
-			return false;
-		}
+const hasAwards = computed(() => entry.value.awards && entry.value.awards.length > 0);
 
-		return !!this.displayRank;
-	}
+const shouldShowAwards = computed(() => showAwards.value && hasAwards.value);
 
-	get shouldShowNoVotes() {
-		return (
-			this.showRank &&
-			!this.votingCategory &&
-			(!this.entry.vote_results || this.entry.vote_results.length === 0)
-		);
-	}
+async function onClickRemove() {
+	const result = await showModalConfirm(
+		$gettext(`Are you sure you want to remove this entry from the jam?`)
+	);
 
-	get displayRank() {
-		// Find the result for the given category.
-		const categoryId = this.votingCategory ? this.votingCategory.id : null;
-		const voteResult = this.entry.vote_results.find(
-			i => i.community_competition_voting_category_id === categoryId
-		);
-		if (voteResult) {
-			return voteResult.rank;
-		}
-	}
-
-	get displayCategoryName() {
-		if (this.votingCategory) {
-			return this.votingCategory.name;
-		}
-
-		return this.$gettext(`Overall`);
-	}
-
-	get hasAwards() {
-		return this.entry.awards && this.entry.awards.length > 0;
-	}
-
-	get shouldShowAwards() {
-		return this.showAwards && this.hasAwards;
-	}
-
-	async onClickRemove() {
-		const result = await showModalConfirm(
-			this.$gettext(`Are you sure you want to remove this entry from the jam?`)
-		);
-
-		if (result) {
-			await $removeCommunityCompetitionEntry(this.entry);
-			if (this.entry._removed) {
-				showSuccessGrowl(
-					this.$gettext(`Your entry was successfully removed from the jam.`)
-				);
-				this.emitRemove();
-			}
+	if (result) {
+		await $removeCommunityCompetitionEntry(entry.value);
+		if (entry.value._removed) {
+			showSuccessGrowl($gettext(`Your entry was successfully removed from the jam.`));
+			emit('remove');
 		}
 	}
+}
 
-	/** Instead of navigating to the link target, open the entry modal instead. */
-	onClickThumbnail() {
-		showEntryFromCommunityCompetitionEntryModal(this.entry);
-	}
+/** Instead of navigating to the link target, open the entry modal instead. */
+function onClickThumbnail() {
+	showEntryFromCommunityCompetitionEntryModal(entry.value);
 }
 </script>
 
 <template>
 	<div class="-container">
-		<router-link :to="game.routeLocation">
+		<RouterLink :to="game.routeLocation">
 			<div @click.prevent="onClickThumbnail">
 				<div class="-thumb">
 					<AppGameThumbnailImg :game="game" class="-game-img" />
@@ -130,11 +123,11 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 					<div class="-inner">
 						<div v-if="shouldShowRank" class="-rank">
 							{{ displayCategoryName }}
-							<AppTranslate>Rank</AppTranslate>
+							{{ $gettext(`Rank`) }}
 							<b>#{{ displayRank }}</b>
 						</div>
 						<div v-else-if="shouldShowNoVotes" class="-rank">
-							<AppTranslate>No Votes</AppTranslate>
+							{{ $gettext(`No Votes`) }}
 						</div>
 						<div v-if="shouldShowRemove" class="-remove">
 							<AppButton
@@ -178,7 +171,7 @@ export default class AppCommunityCompetitionEntryThumbnail extends Vue {
 					</div>
 				</div>
 			</div>
-		</router-link>
+		</RouterLink>
 	</div>
 </template>
 

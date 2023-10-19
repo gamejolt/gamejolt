@@ -7,7 +7,7 @@ import {
 import { CommunityCompetitionEntryModel } from '../../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { formatNumber } from '../../../../../../_common/filters/number';
-import AppCommunityCompetitionEntryThumbnail from '../thumbnail/thumbnail.vue';
+import AppCommunityCompetitionEntryThumbnail from '../thumbnail/AppCommunityCompetitionEntryThumbnail.vue';
 
 const props = defineProps({
 	competition: {
