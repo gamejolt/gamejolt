@@ -1,19 +1,21 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, onMounted, ref, toRef, toRefs } from 'vue';
+import { RouterLink } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
 import { CommunityCompetitionModel } from '../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntryModel } from '../../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionEntryVoteModel } from '../../../../../../_common/community/competition/entry/vote/vote.model';
 import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { formatDate } from '../../../../../../_common/filters/date';
+import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
-import { BaseModal } from '../../../../../../_common/modal/base';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../../../_common/store/common-store';
+import AppModal from '../../../../../../_common/modal/AppModal.vue';
+import { useModal } from '../../../../../../_common/modal/modal.service';
 import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../../../_common/user/user-avatar/AppUserAvatar.vue';
@@ -21,118 +23,94 @@ import { numberSort } from '../../../../../../utils/array';
 import AppGameBadge from '../../../../game/badge/AppGameBadge.vue';
 import AppCommunityCompetitionVotingWidget from '../../voting/widget.vue';
 
-@Options({
-	components: {
-		AppTimeAgo,
-		AppUserCardHover,
-		AppUserVerifiedTick,
-		AppUserAvatar,
-		AppLoading,
-		AppCommunityCompetitionVotingWidget,
-		AppGameBadge,
+const props = defineProps({
+	entry: {
+		type: Object as PropType<CommunityCompetitionEntryModel>,
+		default: undefined,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	entryId: {
+		type: Number,
+		default: undefined,
 	},
-})
-export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal) {
-	@Prop(Object) entry?: CommunityCompetitionEntryModel;
-	@Prop(Number) entryId?: number;
+});
 
-	commonStore = setup(() => useCommonStore());
+const { entry, entryId } = toRefs(props);
+const modal = useModal()!;
 
-	get user() {
-		return this.commonStore.user;
+const m_entry = ref<CommunityCompetitionEntryModel | null>(null);
+const competition = ref<CommunityCompetitionModel | null>(null);
+const votingCategories = ref<CommunityCompetitionVotingCategoryModel[]>([]);
+const userVotes = ref<CommunityCompetitionEntryVoteModel[]>([]);
+const isParticipant = ref(false);
+const isArchived = ref(false);
+const isBlocked = ref(false);
+const isLoading = ref(true);
+
+const author = toRef(() => m_entry.value!.author);
+
+const shouldShowVoteCount = computed(
+	() =>
+		m_entry.value &&
+		competition.value &&
+		m_entry.value.vote_count > 0 &&
+		!competition.value.are_results_calculated
+);
+
+const shouldShowAwards = computed(
+	() =>
+		competition.value &&
+		competition.value.has_awards &&
+		m_entry.value &&
+		m_entry.value.awards &&
+		m_entry.value.awards.length > 0
+);
+
+const sortedAwards = computed(() =>
+	m_entry.value!.awards!.sort((a, b) =>
+		numberSort(a.community_competition_award.sort, b.community_competition_award.sort)
+	)
+);
+
+if (entry?.value) {
+	m_entry.value = entry.value;
+}
+
+onMounted(async () => {
+	const newEntryId = entryId?.value || entry?.value?.id;
+	if (!newEntryId) {
+		throw new Error('Entry or entryId has to be provided.');
 	}
 
-	m_entry: CommunityCompetitionEntryModel | null = null;
-	competition: CommunityCompetitionModel | null = null;
-	votingCategories: CommunityCompetitionVotingCategoryModel[] = [];
-	userVotes: CommunityCompetitionEntryVoteModel[] = [];
-	isParticipant = false;
-	isArchived = false;
-	isBlocked = false;
-	isLoading = true;
+	const payload = await Api.sendRequest(
+		`/web/communities/competitions/entries/view-entry/${newEntryId}`
+	);
 
-	readonly Screen = Screen;
-	readonly formatDate = formatDate;
+	isParticipant.value = payload.isParticipant;
+	isArchived.value = payload.isArchived;
+	isBlocked.value = payload.isBlocked;
 
-	get title() {
-		return this.m_entry ? this.m_entry.resource.title : this.$gettext(`Loading...`);
+	if (m_entry.value) {
+		m_entry.value.assign(payload.entry);
+	} else {
+		m_entry.value = new CommunityCompetitionEntryModel(payload.entry);
 	}
 
-	get author() {
-		return this.m_entry!.author;
-	}
+	competition.value = new CommunityCompetitionModel(payload.competition);
 
-	get shouldShowVoteCount() {
-		return (
-			this.m_entry &&
-			this.competition &&
-			this.m_entry.vote_count > 0 &&
-			!this.competition.are_results_calculated
+	if (payload.votingCategories) {
+		votingCategories.value = CommunityCompetitionVotingCategoryModel.populate(
+			payload.votingCategories
 		);
 	}
-
-	get shouldShowAwards() {
-		return (
-			this.competition &&
-			this.competition.has_awards &&
-			this.m_entry &&
-			this.m_entry.awards &&
-			this.m_entry.awards.length > 0
-		);
+	if (payload.userVotes) {
+		userVotes.value = CommunityCompetitionEntryVoteModel.populate(payload.userVotes);
 	}
 
-	get sortedAwards() {
-		return this.m_entry!.awards!.sort((a, b) =>
-			numberSort(a.community_competition_award.sort, b.community_competition_award.sort)
-		);
-	}
+	isLoading.value = false;
+});
 
-	created() {
-		if (this.entry) {
-			this.m_entry = this.entry;
-		}
-	}
-
-	async mounted() {
-		const entryId = this.entryId || this.entry?.id;
-		if (!entryId) {
-			throw new Error('Entry or entryId has to be provided.');
-		}
-
-		const payload = await Api.sendRequest(
-			`/web/communities/competitions/entries/view-entry/${entryId}`
-		);
-
-		this.isParticipant = payload.isParticipant;
-		this.isArchived = payload.isArchived;
-		this.isBlocked = payload.isBlocked;
-
-		if (this.m_entry) {
-			this.m_entry.assign(payload.entry);
-		} else {
-			this.m_entry = new CommunityCompetitionEntryModel(payload.entry);
-		}
-
-		this.competition = new CommunityCompetitionModel(payload.competition);
-
-		if (payload.votingCategories) {
-			this.votingCategories = CommunityCompetitionVotingCategoryModel.populate(
-				payload.votingCategories
-			);
-		}
-		if (payload.userVotes) {
-			this.userVotes = CommunityCompetitionEntryVoteModel.populate(payload.userVotes);
-		}
-
-		this.isLoading = false;
-	}
-
-	copyShareUrl() {
-		Clipboard.copy(this.m_entry!.permalink);
-	}
+function copyShareUrl() {
+	Clipboard.copy(m_entry.value!.permalink);
 }
 </script>
 
@@ -140,7 +118,7 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 	<AppModal class="-entry-modal">
 		<div class="modal-controls">
 			<AppButton @click="modal.dismiss()">
-				<AppTranslate>Close</AppTranslate>
+				{{ $gettext(`Close`) }}
 			</AppButton>
 		</div>
 		<div class="modal-body">
@@ -155,9 +133,9 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 					</div>
 					<div>
 						<div class="-author-name">
-							<AppTranslate>By</AppTranslate>
+							{{ $gettext(`By`) }}
 							<AppUserCardHover class="-hover-card" :user="author">
-								<router-link
+								<RouterLink
 									:to="{
 										name: 'profile.overview',
 										params: { username: author.username },
@@ -165,11 +143,11 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 								>
 									{{ author.display_name }}
 									<AppUserVerifiedTick :user="author" />
-								</router-link>
+								</RouterLink>
 							</AppUserCardHover>
 						</div>
 						<div class="-entered-date">
-							<AppTranslate>Entered on</AppTranslate>
+							{{ $gettext(`Entered on`) }}
 							<b>{{ formatDate(m_entry.added_on, 'short') }}</b>
 							<i class="text-muted">
 								(<AppTimeAgo :date="m_entry.added_on" strict />)
@@ -186,21 +164,23 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 							icon="chevron-right"
 							:to="m_entry.resource.routeLocation"
 						>
-							<AppTranslate>View Game</AppTranslate>
+							{{ $gettext(`View Game`) }}
 						</AppButton>
 					</div>
 					<div class="col-sm-6 -entry-button">
 						<AppButton block icon="link" @click="copyShareUrl">
-							<AppTranslate>Copy Voting Link</AppTranslate>
+							{{ $gettext(`Copy Voting Link`) }}
 						</AppButton>
 					</div>
 				</div>
 
 				<div v-if="m_entry.is_removed" class="-section alert alert-notice">
 					<p>
-						<AppTranslate>
-							This entry was removed from the jam and cannot be viewed anymore.
-						</AppTranslate>
+						{{
+							$gettext(
+								`This entry was removed from the jam and cannot be viewed anymore.`
+							)
+						}}
 					</p>
 				</div>
 
@@ -227,6 +207,7 @@ export default class AppCommunityCompetitionEntryModal extends mixins(BaseModal)
 
 				<div class="-section">
 					<span v-if="shouldShowVoteCount" class="-vote-count">
+						<!--TODO(component-setup-refactor): replace with gettext-->
 						<AppTranslate
 							:translate-n="m_entry.vote_count"
 							:translate-params="{ count: m_entry.vote_count }"
