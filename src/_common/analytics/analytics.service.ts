@@ -537,7 +537,7 @@ export function trackJoltydex(
 	_trackEvent('joltydex', params);
 }
 
-export type ShopShowLocation =
+export type ShopOpenLocation =
 	| 'joltydex'
 	| 'joltydex-collection'
 	| 'user-profile'
@@ -545,11 +545,11 @@ export type ShopShowLocation =
 	| 'sticker-drawer'
 	| 'shell-route';
 
-export function trackShopOpen(params: { location: ShopShowLocation; userId: number | undefined }) {
+export function trackShopOpen(params: { location: ShopOpenLocation; userId: number | undefined }) {
 	_trackEvent('shop_open', params);
 }
 
-export type ShopClickType =
+export type ShopViewType =
 	| 'avatar-frame'
 	| 'background'
 	| 'sticker-pack'
@@ -557,7 +557,7 @@ export type ShopClickType =
 	| 'joltbux-card'
 	| 'unhandled-product';
 
-export function trackShopView(params: { type: ShopClickType; productId?: number }) {
+export function trackShopView(params: { type: ShopViewType; productId?: number }) {
 	_trackEvent('shop_view', params);
 }
 

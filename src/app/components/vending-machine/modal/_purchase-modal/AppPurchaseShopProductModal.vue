@@ -16,6 +16,7 @@ import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
@@ -30,6 +31,8 @@ import { showStickerPackOpenModal } from '../../../../../_common/sticker/pack/op
 import { UserStickerPackModel } from '../../../../../_common/sticker/pack/user-pack.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
+import { kThemeFgMuted } from '../../../../../_common/theme/variables';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserAvatarFrameModel } from '../../../../../_common/user/user-avatar/frame/frame.model';
@@ -268,15 +271,28 @@ const showPackHelpDocsLink = computed(
 	() => !!joltbuxEntry.value && !!shopProduct.value.stickerPack
 );
 
-const headerLabel = computed(() => {
+const headerData = computed<{ label: string; tooltip?: string }>(() => {
 	if (shopProduct.value.stickerPack) {
-		return $gettext(`Purchase sticker pack`);
+		return {
+			label: $gettext(`Purchase sticker pack`),
+			tooltip: $gettext(
+				`Sticker packs contain a random set of stickers which you can collect and place on content throughout Game Jolt.`
+			),
+		};
 	} else if (shopProduct.value.avatarFrame) {
-		return $gettext(`Purchase avatar frame`);
+		return {
+			label: $gettext(`Purchase avatar frame`),
+			tooltip: $gettext(`Equip an avatar frame to make yourself stand out in the community.`),
+		};
 	} else if (shopProduct.value.background) {
-		return $gettext(`Purchase background`);
+		return {
+			label: $gettext(`Purchase background`),
+			tooltip: $gettext(
+				`Backgrounds can be added to your posts to make your content stand out in the feeds.`
+			),
+		};
 	}
-	return $gettext(`Purchase item`);
+	return { label: $gettext(`Purchase item`) };
 });
 
 onUnmounted(() => {
@@ -353,8 +369,26 @@ function getItemWidthStyles(ratio: number) {
 		</div>
 
 		<div class="modal-header">
-			<h2 class="modal-title">
-				{{ headerLabel }}
+			<h2
+				class="modal-title"
+				:style="{
+					display: `flex`,
+					alignItems: `center`,
+					gap: `12px`,
+				}"
+			>
+				{{ headerData.label }}
+
+				<AppJolticon
+					v-if="headerData.tooltip"
+					v-app-tooltip.touchable="headerData.tooltip"
+					icon="help-circle"
+					:style="{
+						margin: 0,
+						color: kThemeFgMuted,
+						fontSize: `inherit`,
+					}"
+				/>
 			</h2>
 		</div>
 
@@ -459,11 +493,11 @@ function getItemWidthStyles(ratio: number) {
 					</AppButton>
 				</div>
 
-				<template v-if="!canPurchaseAny">
-					<AppSpacer vertical :scale="3" />
+				<template v-if="!canPurchaseAny && currencyOptionsList.length == 1 && joltbuxEntry">
+					<AppSpacer vertical :scale="6" />
 
 					<div class="text-center">
-						{{ $gettext(`You don't have enough funds to purchase this`) }}
+						{{ $gettext(`You can purchase this item with Joltbux`) }}
 					</div>
 				</template>
 
@@ -480,6 +514,7 @@ function getItemWidthStyles(ratio: number) {
 
 					<div class="text-center">
 						<RouterLink
+							class="link-muted"
 							:to="{
 								name: routeLandingHelpRedirect.name,
 								params: {

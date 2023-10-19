@@ -96,9 +96,6 @@ function onClickPack() {
 							styleWhen(canClickPack, {
 								cursor: `pointer`,
 							}),
-							styleWhen(!!borderRadius, {
-								borderRadius: `${borderRadius}px`,
-							}),
 							{
 								width: `100%`,
 								height: `100%`,
@@ -106,7 +103,6 @@ function onClickPack() {
 						]"
 						:media-item="pack.media_item"
 						:color-opacity="loadedImage ? 0 : 1"
-						:radius="borderRadius ? 'full' : 'lg'"
 					>
 						<AppImgResponsive
 							:src="pack.media_item.mediaserver_url"
@@ -130,7 +126,7 @@ function onClickPack() {
 		<div
 			v-if="showName"
 			:style="{
-				marginTop: `8px`,
+				marginTop: `4px`,
 				fontWeight: 700,
 			}"
 		>
