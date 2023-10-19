@@ -1,21 +1,22 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType } from 'vue';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { MediaItemModel } from '../../../../../../_common/media-item/media-item-model';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 
-@Options({
-	components: {
-		AppEditableOverlay,
+defineProps({
+	background: {
+		type: Object as PropType<MediaItemModel | null>,
+		default: null,
 	},
-})
-export default class AppCommunityChannelCardEdit extends Vue {
-	@Prop({ type: Object, default: null }) background!: MediaItemModel | null;
+});
 
-	@Emit('click') emitClick() {}
+const emit = defineEmits({
+	click: () => true,
+});
 
-	onClickEdit() {
-		this.emitClick();
-	}
+function onClickEdit() {
+	emit('click');
 }
 </script>
 
@@ -23,7 +24,7 @@ export default class AppCommunityChannelCardEdit extends Vue {
 	<AppEditableOverlay class="-background-overlay" @click="onClickEdit">
 		<template #overlay>
 			<span>
-				<AppTranslate>Change Background</AppTranslate>
+				{{ $gettext(`Change Background`) }}
 			</span>
 		</template>
 

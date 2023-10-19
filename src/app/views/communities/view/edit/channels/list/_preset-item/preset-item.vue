@@ -7,7 +7,7 @@ import {
 	getCommunityChannelBackground,
 } from '../../../../../../../../_common/community/community.model';
 import { assertNever } from '../../../../../../../../utils/utils';
-import AppCommunityChannelCardEdit from '../../../../../../../components/community/channel/card/edit/edit.vue';
+import AppCommunityChannelCardEdit from '../../../../../../../components/community/channel/card/edit/AppCommunityChannelCardEdit.vue';
 import { showCommunityChannelPresetBackgroundModal } from '../../../../../../../components/community/channel/preset-background-modal/preset-background-modal.service';
 
 @Options({
