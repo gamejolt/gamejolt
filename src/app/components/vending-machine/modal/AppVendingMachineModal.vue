@@ -179,7 +179,7 @@ async function init() {
 
 		// Sort both sections and their items by their sort values.
 		const sortedSections: [string, Section][] = [...newSections]
-			.sort(([, a], [, b]) => numberSort(b.sort, a.sort))
+			.sort(([, a], [, b]) => numberSort(a.sort, b.sort))
 			.map(data => {
 				data[1].items.sort((a, b) => numberSort(a.sort, b.sort));
 				return data;
