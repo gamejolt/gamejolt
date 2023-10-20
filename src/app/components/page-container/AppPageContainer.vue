@@ -115,6 +115,10 @@ const scrollerStyles = computed<CSSProperties>(() => {
 					<component
 						:is="useStickySides ? AppScrollScroller : 'div'"
 						class="_left"
+						:class="{
+							// Only used to prevent some glitches when going from 2+ col to 1.
+							'_scrollbar-fix': useStickySides,
+						}"
 						:style="scrollerStyles"
 						thin
 					>
@@ -233,12 +237,13 @@ $-main-max-width = 650px
 	._main-container
 		-main-max-width(2)
 
-// Fixes visual glitches when going from md to sm/xs breakpoints.
+// Fixes visual glitches when going from 2+ columns to 1.
 //
 // ScreenService breakpoints are slower than media queries, so sizing and
 // AppScrollAffix things aren't triggered at the same time. This fix prevents a
 // strobe-like effect when switching between these breakpoints.
 @media $media-mobile
+	._left._scrollbar-fix
 	._right._scrollbar-fix
 		display: none
 </style>
