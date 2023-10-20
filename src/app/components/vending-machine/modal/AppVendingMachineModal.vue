@@ -167,7 +167,7 @@ async function init() {
 			let section = newSections.get(id);
 			if (!section) {
 				section = {
-					title: sectionData?.title || 'Default',
+					title: sectionData?.title || 'Shop',
 					description: sectionData?.description || '',
 					sort: sectionData?.sort ?? 1000,
 					items: [],
