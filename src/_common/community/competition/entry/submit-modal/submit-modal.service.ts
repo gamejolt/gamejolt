@@ -8,7 +8,9 @@ export async function showCommunityCompetitionEntrySubmitModal(
 ) {
 	return await showModal<CommunityCompetitionEntryModel>({
 		modalId: 'CommunityCompetitionEntrySubmit',
-		component: defineAsyncComponent(() => import('./submit-modal.vue')),
+		component: defineAsyncComponent(
+			() => import('./AppCommunityCompetitionEntrySubmitModal.vue')
+		),
 		props: {
 			competition,
 		},

@@ -27,7 +27,7 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { sleep } from '../../../utils/utils';
 import { shallowSetup } from '../../../utils/vue';
-import AppGameBadge from '../../components/game/badge/badge.vue';
+import AppGameBadge from '../../components/game/badge/AppGameBadge.vue';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 
 const DownloadDelay = 3000;

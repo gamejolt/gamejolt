@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import AppGameMediaBar from '../../game/media-bar/media-bar.vue';
+import AppGameMediaBar from '../../game/media-bar/AppGameMediaBar.vue';
 import { MediaItemModel } from '../../media-item/media-item-model';
 
 @Options({

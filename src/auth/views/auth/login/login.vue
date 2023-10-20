@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import AppAuthLogin from '../../../../_common/auth/login/login.vue';
+import AppAuthLogin from '../../../../_common/auth/login/AppAuthLogin.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import {
 	LegacyRouteComponent,

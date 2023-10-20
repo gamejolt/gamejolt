@@ -1,8 +1,8 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
-import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/join-widget.vue';
-import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/verified-tick.vue';
+import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/AppCommunityJoinWidget.vue';
+import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';

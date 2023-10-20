@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
+import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
 	$removeCommunityUserNotification,

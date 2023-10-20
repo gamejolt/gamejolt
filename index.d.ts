@@ -23,6 +23,7 @@ declare global {
 
 declare module '@vue/runtime-core' {
 	interface ComponentCustomProps {
+		id?: HTMLAttributes['id'];
 		title?: HTMLAttributes['title'];
 		draggable?: HTMLAttributes['draggable'];
 		tabindex?: HTMLAttributes['tabindex'];

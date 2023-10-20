@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { GameScoreTableModel } from '../../../../_common/game/score-table/score-table.model';
-import AppListGroupSelector from '../../../../_common/list-group/selector/selector.vue';
+import AppListGroupSelector from '../../../../_common/list-group/selector/AppListGroupSelector.vue';
 
 @Options({
 	components: {

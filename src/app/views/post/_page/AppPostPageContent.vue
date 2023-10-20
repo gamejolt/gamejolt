@@ -19,7 +19,7 @@ import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAva
 import { styleOverlayTextShadow, styleWhen } from '../../../../_styles/mixins';
 import { arrayRemove } from '../../../../utils/array';
 import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
-import AppGameBadge from '../../../components/game/badge/badge.vue';
+import AppGameBadge from '../../../components/game/badge/AppGameBadge.vue';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPostContent from '../../../components/post/AppPostContent.vue';
 

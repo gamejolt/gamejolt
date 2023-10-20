@@ -107,7 +107,7 @@ const gridStyles: CSSProperties = {
 </script>
 
 <template>
-	<AppModal :dynamic-slots="{ footer: !!modalError }">
+	<AppModal>
 		<template #default>
 			<div class="modal-controls">
 				<AppButton @click="modal.dismiss()">
@@ -192,7 +192,7 @@ const gridStyles: CSSProperties = {
 			</div>
 		</template>
 
-		<template #footer>
+		<template v-if="modalError" #footer>
 			<div
 				:style="{
 					display: `flex`,
