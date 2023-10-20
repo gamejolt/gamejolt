@@ -12,14 +12,14 @@ import { arrayRemove } from '../../utils/array';
 import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';
 import { CommentVoteType } from '../comment/vote/vote-model';
-import { ConfigOption } from '../config/config.service';
+import { ConfigOption, ensureConfig } from '../config/config.service';
 import { DeviceArch, DeviceOs, isDynamicGoogleBot } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 import { AppPromotionSource } from '../mobile-app/store';
 import { onRouteChangeAfter } from '../route/route-component';
 import { SettingThemeDark } from '../settings/settings.service';
 import { ShareProvider, ShareResource } from '../share/share.service';
-import { CommonStore } from '../store/common-store';
+import { CommonStore, commonStore } from '../store/common-store';
 import { getTranslationLang } from '../translate/translate.service';
 
 export const SOCIAL_NETWORK_FB = 'facebook';
@@ -284,7 +284,7 @@ function _getExperimentValue(option: ConfigOption) {
  *
  * We rate limit this so that it doesn't trigger too much.
  */
-export function trackExperimentEngagement(option: ConfigOption) {
+export async function trackExperimentEngagement(option: ConfigOption) {
 	// If we already tracked an experiment engagement for this config option
 	// within the expiry time, we want to ignore.
 	const prevEngagement = _expEngagements.find(
@@ -293,6 +293,11 @@ export function trackExperimentEngagement(option: ConfigOption) {
 	if (prevEngagement) {
 		return;
 	}
+
+	// Only track their experiment engagement once we're sure everything is
+	// loaded in for them.
+	await commonStore.userBootstrappedPromise;
+	await ensureConfig();
 
 	_trackEvent('experiment_engagement', {
 		[_getExperimentKey(option)]: _getExperimentValue(option),

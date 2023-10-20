@@ -4,6 +4,7 @@ import { Inject, Options } from 'vue-property-decorator';
 import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
 import { useAdsController } from '../../../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
+import { trackExperimentEngagement } from '../../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/AppCard.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
@@ -13,6 +14,7 @@ import {
 	CommentStoreManagerKey,
 	getCommentStore,
 } from '../../../../../../_common/comment/comment-store';
+import { configGuestNoAuthRequired } from '../../../../../../_common/config/config.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../../_common/filters/number';
@@ -262,6 +264,9 @@ export default class RouteDiscoverGamesViewOverview extends LegacyRouteComponent
 	}
 
 	get shouldShowCommentAdd() {
+		if (configGuestNoAuthRequired.value) {
+			return false;
+		}
 		return Boolean(this.game && canCommentOnModel(this.game));
 	}
 
@@ -309,6 +314,8 @@ export default class RouteDiscoverGamesViewOverview extends LegacyRouteComponent
 			payload.posts,
 			fromCache
 		);
+
+		trackExperimentEngagement(configGuestNoAuthRequired);
 	}
 
 	routeDestroyed() {

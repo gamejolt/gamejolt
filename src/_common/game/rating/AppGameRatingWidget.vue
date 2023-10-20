@@ -1,7 +1,9 @@
 <script lang="ts">
-import { PropType, computed, toRefs } from 'vue';
+import { PropType, computed, onMounted, toRefs } from 'vue';
+import { trackExperimentEngagement } from '../../analytics/analytics.service';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
+import { configGuestNoAuthRequired } from '../../config/config.service';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { showLikersModal } from '../../likers/modal.service';
@@ -44,6 +46,10 @@ const { game, userRating, hideCount } = toRefs(props);
 
 const hasLiked = computed(() => userRating?.value?.rating === GameRatingValue.Like);
 const hasDisliked = computed(() => userRating?.value?.rating === GameRatingValue.Dislike);
+
+onMounted(() => {
+	trackExperimentEngagement(configGuestNoAuthRequired);
+});
 
 function showLikers() {
 	showLikersModal({ count: game.value.like_count, resource: game.value });
@@ -116,7 +122,7 @@ async function updateVote(rating: number) {
 </script>
 
 <template>
-	<div class="rating-widget">
+	<div v-if="!configGuestNoAuthRequired.value" class="rating-widget">
 		<span v-app-auth-required>
 			<AppButton
 				class="-like-button"
