@@ -4,7 +4,7 @@ import { ComponentProps } from '../../../_common/component-helpers';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
-import { kGridGutterWidth, kGridGutterWidthXs } from '../../../_styles/variables';
+import { kGridGutterWidth } from '../../../_styles/variables';
 import { kShellTopNavHeight } from '../../styles/variables';
 
 const validOrder = ['main', 'left', 'right'];
@@ -96,7 +96,7 @@ const scrollerStyles = computed<CSSProperties>(() => {
 	return {
 		marginTop: `-${stickyTopMargin.value}px`,
 		paddingTop: `${stickyTopMargin.value}px`,
-		paddingBottom: `${Screen.isXs ? kGridGutterWidthXs.px : kGridGutterWidth.px}`,
+		paddingBottom: kGridGutterWidth.px,
 		height: `calc(100vh - ${kShellTopNavHeight.px})`,
 	};
 });
