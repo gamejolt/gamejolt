@@ -16,6 +16,11 @@ import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppStickerChargeCard from '../../../_common/sticker/charge/AppStickerChargeCard.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
+import {
+	buildCSSPixelValue,
+	kGridGutterWidth,
+	kGridGutterWidthXs,
+} from '../../../_styles/variables';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
@@ -176,15 +181,25 @@ async function refreshQuests() {
 	await fetchDailyQuests(questStore);
 	isLoadingQuests.value = false;
 }
+
+// We add this margin to try to shift the page content below the For You |
+// Following tabs.
+const topSpacerHeight = buildCSSPixelValue(58);
 </script>
 
 <template>
 	<AppShellPageBackdrop>
 		<section class="section">
-			<AppPageContainer xl>
+			<AppPageContainer
+				xl
+				sticky-sides
+				:sticky-side-top-margin="
+					Screen.isXs ? kGridGutterWidthXs.value : kGridGutterWidth.value
+				"
+			>
 				<template #left>
 					<template v-if="Screen.isDesktop">
-						<div class="-top-spacer" />
+						<div :style="{ height: topSpacerHeight.px }" />
 
 						<AppStickerChargeCard
 							header-charge
@@ -276,8 +291,8 @@ async function refreshQuests() {
 					</template>
 				</template>
 
-				<template v-if="!Screen.isMobile" #right>
-					<div class="-top-spacer" />
+				<template v-if="!Screen.isMobile" #right="{ combined }">
+					<div v-if="!combined" :style="{ height: topSpacerHeight.px }" />
 
 					<template v-if="featuredItem">
 						<AppHomeFeaturedBanner :featured-item="featuredItem" />
@@ -307,11 +322,6 @@ async function refreshQuests() {
 </template>
 
 <style lang="stylus" scoped>
-// We add this margin to try to shift the page content below the For You |
-// Following tabs.
-.-top-spacer
-	margin-top: 58px
-
 .-game-list
 	a
 		text-overflow()
