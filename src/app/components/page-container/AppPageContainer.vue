@@ -1,5 +1,5 @@
 <script lang="ts">
-import { CSSProperties, computed, toRefs } from 'vue';
+import { CSSProperties, computed, toRef, toRefs } from 'vue';
 import { ComponentProps } from '../../../_common/component-helpers';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
@@ -38,7 +38,8 @@ const props = defineProps({
 		type: Boolean,
 	},
 	/**
-	 * Distance between the top of the page contents and the top of a column. Used to offset some things so we
+	 * Distance between the top of the page contents and the top of a column.
+	 * Used to offset some things so the sticky sides don't shift around.
 	 */
 	stickySideTopMargin: {
 		type: Number,
@@ -48,12 +49,13 @@ const props = defineProps({
 
 const { xl, noLeft, noRight, order, stickySides, stickySideTopMargin } = toRefs(props);
 
-const hasLeftColumn = computed(() => !noLeft.value && Screen.isLg);
-const hasRightColumn = computed(() => !noRight.value);
-const shouldCombineColumns = computed(() => !noLeft.value && !Screen.isLg);
-const useStickySides = computed(
+const hasLeftColumn = toRef(() => !noLeft.value && Screen.isLg);
+const hasRightColumn = toRef(() => !noRight.value);
+const shouldCombineColumns = toRef(() => !noLeft.value && !Screen.isLg);
+const useStickySides = toRef(
 	() => stickySides.value && Screen.isDesktop && (hasLeftColumn.value || hasRightColumn.value)
 );
+const stickyTopMargin = toRef(() => stickySideTopMargin?.value ?? 0);
 
 const classes = computed(() => {
 	return {
@@ -79,11 +81,10 @@ const keySuffix = computed(() =>
 	].join('')
 );
 
-const padding = computed(() => stickySideTopMargin?.value ?? 0);
-
 const scrollAffixProps = computed<ComponentProps<typeof AppScrollAffix>>(() => {
 	return {
-		padding: padding.value + 1,
+		// 1px so things can un-affix if needed.
+		padding: stickyTopMargin.value + 1,
 	};
 });
 
@@ -93,8 +94,8 @@ const scrollerStyles = computed<CSSProperties>(() => {
 	}
 
 	return {
-		marginTop: `-${padding.value}px`,
-		paddingTop: `${padding.value}px`,
+		marginTop: `-${stickyTopMargin.value}px`,
+		paddingTop: `${stickyTopMargin.value}px`,
 		paddingBottom: `${Screen.isXs ? kGridGutterWidthXs.px : kGridGutterWidth.px}`,
 		height: `calc(100vh - ${kShellTopNavHeight.px})`,
 	};
