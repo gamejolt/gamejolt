@@ -90,7 +90,7 @@ const { coinBalance, joltbuxBalance } = useCommonStore();
 const modal = useModal()!;
 
 const shopOwner = ref<UserModel>();
-const sections = ref(new Map<string, Section>());
+const sections = ref(new Map<number, Section>());
 
 const isLoading = ref(false);
 const productProcessing = ref<number>();
@@ -163,22 +163,22 @@ async function init() {
 				return false;
 			});
 
-			const key = sectionData?.title || 'Default';
-			let section = newSections.get(key);
+			const id = sectionData?.id ?? -1;
+			let section = newSections.get(id);
 			if (!section) {
 				section = {
-					title: key,
+					title: sectionData?.title || 'Default',
 					description: sectionData?.description || '',
 					sort: sectionData?.sort ?? 1000,
 					items: [],
 				};
 			}
 			section.items.push({ product: product, sort: sort ?? 1000 });
-			newSections.set(key, section);
+			newSections.set(id, section);
 		}
 
 		// Sort both sections and their items by their sort values.
-		const sortedSections: [string, Section][] = [...newSections]
+		const sortedSections: [number, Section][] = [...newSections]
 			.sort(([, a], [, b]) => numberSort(a.sort, b.sort))
 			.map(data => {
 				data[1].items.sort((a, b) => numberSort(a.sort, b.sort));
@@ -535,7 +535,7 @@ const currencyCardTransitionStyles: CSSProperties = {
 								</div>
 							</div>
 							<template v-else-if="hasProducts">
-								<template v-for="[label, section] in sections" :key="label">
+								<template v-for="[id, section] in sections" :key="id">
 									<div
 										v-if="section.items.length"
 										class="fill-offset"
@@ -561,7 +561,7 @@ const currencyCardTransitionStyles: CSSProperties = {
 												color: kThemeFg,
 											}"
 										>
-											{{ label }}
+											{{ section.title }}
 
 											<AppJolticon
 												v-if="section.description"
