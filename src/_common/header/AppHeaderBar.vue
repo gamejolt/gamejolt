@@ -1,12 +1,15 @@
 <script lang="ts">
-import { computed, PropType, toRefs, useSlots } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import { Screen } from '../screen/screen-service';
 
-export type HeaderBarSlots = 'leading' | 'title' | 'actions' | 'bottom';
+const validSlots = ['leading', 'title', 'actions', 'bottom'] as const;
+export type HeaderBarSlots = (typeof validSlots)[number];
 </script>
 
 <script lang="ts" setup>
 const props = defineProps({
+	...defineDynamicSlotProps(validSlots, true),
 	centerTitle: {
 		type: Boolean,
 	},
@@ -32,15 +35,6 @@ const props = defineProps({
 		default: undefined,
 		validator: val => (typeof val === 'number' && val >= 0) || typeof val === 'undefined',
 	},
-	/**
-	 * Used to specifically define the slots that should be built. Can be used
-	 * to "remove" slots and prevent flex/grid gaps from being built around
-	 * empty items.
-	 */
-	definedSlots: {
-		type: Array as PropType<HeaderBarSlots[]>,
-		default: undefined,
-	},
 	reverseLeading: {
 		type: Boolean,
 	},
@@ -49,30 +43,21 @@ const props = defineProps({
 	},
 });
 
-const slots = useSlots();
-
 const {
 	centerTitle,
 	automaticallyImplyLeading,
 	elevation,
 	titleSpacing,
 	edgePadding,
-	definedSlots,
+	dynamicSlots,
 } = toRefs(props);
 
-const hasLeading = computed(() =>
-	definedSlots?.value ? definedSlots.value.includes('leading') : !!slots['leading']
-);
-const hasActions = computed(() =>
-	definedSlots?.value ? definedSlots.value.includes('actions') : !!slots['actions']
-);
-const hasBottom = computed(() =>
-	definedSlots?.value ? definedSlots.value.includes('bottom') : !!slots['bottom']
-);
+const { hasSlot } = useDynamicSlots(dynamicSlots);
 
-const noLeading = computed(() => definedSlots?.value && !definedSlots.value.includes('leading'));
-const noTitle = computed(() => definedSlots?.value && !definedSlots.value.includes('title'));
-const noActions = computed(() => definedSlots?.value && !definedSlots.value.includes('actions'));
+const hasLeading = computed(() => hasSlot('leading'));
+const hasTitle = computed(() => hasSlot('title'));
+const hasActions = computed(() => hasSlot('actions'));
+const hasBottom = computed(() => hasSlot('bottom'));
 
 const shouldShrinkLeading = computed(() => !automaticallyImplyLeading.value && !hasLeading.value);
 const shouldShrinkActions = computed(
@@ -83,7 +68,6 @@ const effectiveTitleSpacing = computed(() => {
 	if (typeof titleSpacing?.value === 'number') {
 		return titleSpacing.value;
 	}
-
 	return Screen.isXs ? 12 : 16;
 });
 
@@ -91,17 +75,16 @@ const effectiveEdgePadding = computed(() => {
 	if (typeof edgePadding?.value === 'number') {
 		return edgePadding.value;
 	}
-
-	return Screen.isXs ? 0 : 16;
+	return Screen.isXs ? 12 : 16;
 });
 </script>
 
 <template>
-	<div class="header-bar" :class="`-elevate-${elevation}`">
+	<div class="header-bar" :class="`_elevate-${elevation}`">
 		<div
-			class="-inner-row"
+			class="_inner-row"
 			:class="{
-				'-center': centerTitle,
+				_center: centerTitle,
 			}"
 			:style="{
 				padding: `0 ${effectiveEdgePadding}px`,
@@ -109,10 +92,10 @@ const effectiveEdgePadding = computed(() => {
 			}"
 		>
 			<div
-				v-if="!noLeading"
-				class="-leading"
+				v-if="hasLeading"
+				class="_leading"
 				:class="{
-					'-shrink': shouldShrinkLeading,
+					_shrink: shouldShrinkLeading,
 					'-reverse': reverseLeading,
 				}"
 			>
@@ -120,33 +103,31 @@ const effectiveEdgePadding = computed(() => {
 			</div>
 
 			<div
-				v-if="!noTitle"
-				class="-title"
+				v-if="hasTitle"
+				class="_title"
 				:class="[
 					{
-						'-center': centerTitle,
+						_center: centerTitle,
 					},
-					`-size-${titleSize}`,
+					`_size-${titleSize}`,
 				]"
 			>
 				<slot name="title" />
 			</div>
 
 			<div
-				v-if="!noActions"
-				class="-actions"
+				v-if="hasActions"
+				class="_actions"
 				:class="{
-					'-shrink': shouldShrinkActions,
-					'-reverse': reverseActions,
+					_shrink: shouldShrinkActions,
+					_reverse: reverseActions,
 				}"
 			>
 				<slot name="actions" />
 			</div>
 		</div>
 
-		<div v-if="hasBottom" class="-bottom">
-			<slot name="bottom" />
-		</div>
+		<slot v-if="hasBottom" name="bottom" />
 	</div>
 </template>
 
@@ -158,7 +139,7 @@ const effectiveEdgePadding = computed(() => {
 	flex-wrap: nowrap
 	background-color: var(--theme-bg)
 
-.-inner-row
+._inner-row
 	display: flex
 	flex-direction: row
 	flex-wrap: nowrap
@@ -168,52 +149,52 @@ const effectiveEdgePadding = computed(() => {
 	align-items: center
 	justify-content: flex-start
 
-	&.-center
+	&._center
 		justify-content: space-between
 
-		.-leading
-		.-actions
+		._leading
+		._actions
 			flex: 1
 
-		.-leading
+		._leading
 			margin-right: 0
 
-		.-title
+		._title
 			flex: none
 
-		.-actions
+		._actions
 			margin-left: 0
 
-.-leading
-.-actions
+._leading
+._actions
 	flex: none
 	flex-basis: auto
 	display: inline-flex
 
-	&.-reverse
+	&._reverse
 		flex-direction: row-reverse
 
-.-leading
+._leading
 	justify-content: flex-start
 
-.-title
+._title
 	font-weight: 800
 	font-size: 19px
 	font-family: $font-family-heading
 	min-width: 0
 
-.-size-lg
+._size-lg
 	font-size: 24px
 	line-height: 28px
 
-.-actions
+._actions
 	margin-left: auto
 	justify-content: flex-end
 
-.-shrink
+._shrink
 	flex-basis: 0
 
 for i in 0..3
-	.-elevate-{i}
+	._elevate-{i}
 		elevate-{i}()
 </style>

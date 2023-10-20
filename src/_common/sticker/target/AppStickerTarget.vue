@@ -15,7 +15,7 @@ import {
 	useStickerLayer,
 } from '../layer/layer-controller';
 import { StickerLayerItem } from '../layer/layer-item';
-import { StickerPlacement } from '../placement/placement.model';
+import { StickerPlacementModel } from '../placement/placement.model';
 import {
 	assignStickerStoreItem,
 	closeStickerDrawer,
@@ -127,7 +127,7 @@ async function _loadStickers() {
 		}
 	);
 
-	controller.value.stickers.value = StickerPlacement.populate(stickers);
+	controller.value.stickers.value = StickerPlacementModel.populate(stickers);
 }
 
 async function onInview() {
@@ -160,18 +160,17 @@ function onPlaceDrawerSticker(pointer: PointerPosition) {
 	}
 
 	// Sticker placement is in percentage of container
-	const stickerPlacement = new StickerPlacement({
+	const stickerPlacement = new StickerPlacementModel({
 		position_x: (pointer.x - rect.x) / rect.width,
 		position_y: (pointer.y - rect.y) / rect.height,
 		rotation: Math.random(),
 		sticker: storeSticker.value,
-		target_data: controller.value.targetData.value,
 	});
 
 	assignStickerStoreItem(stickerStore, stickerPlacement, controller.value);
 }
 
-function getStickerAnimationDelay(placement: StickerPlacement, index: number) {
+function getStickerAnimationDelay(placement: StickerPlacementModel, index: number) {
 	// Immediately show stickers if we're in a Live context.
 	if (controller.value.isLive) {
 		return 'unset';

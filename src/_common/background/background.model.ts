@@ -1,23 +1,35 @@
 import { getMediaserverUrlForBounds } from '../../utils/image';
-import { MediaItem } from '../media-item/media-item-model';
-import { Model } from '../model/model.service';
+import { MediaItemModel } from '../media-item/media-item-model';
+import { ModelStoreModel } from '../model/model-store.service';
+import { ShopProductCommonFields } from '../shop/product/product-model';
 
-const ScalingStretch = 'stretch';
-const ScalingTile = 'tile';
 const DefaultScale = 2.0;
 
-export class Background extends Model {
-	declare scaling: string;
-	declare media_item: MediaItem;
+export const enum BackgroundScaling {
+	stretch = 'stretch',
+	tile = 'tile',
+}
+
+export class BackgroundModel implements ModelStoreModel, ShopProductCommonFields {
+	declare id: number;
+	declare scaling: BackgroundScaling;
+	declare media_item: MediaItemModel;
 	declare scale: number;
-	declare name?: string;
+	declare name: string;
+	declare description: string | undefined;
 	declare rarity?: number;
 
-	constructor(data: any = {}) {
-		super(data);
+	// Shop fields
+	declare is_premium: boolean;
+	declare has_active_sale: boolean;
+	declare was_approved: boolean;
+	declare added_on: number | undefined;
+
+	update(data: any) {
+		Object.assign(this, data);
 
 		if (data.media_item) {
-			this.media_item = new MediaItem(data.media_item);
+			this.media_item = new MediaItemModel(data.media_item);
 		}
 
 		if (typeof data.scale === 'number' && data.scale > 0) {
@@ -38,7 +50,7 @@ export class Background extends Model {
 		}
 
 		let src = mediaserver_url;
-		if (this.scaling === ScalingTile) {
+		if (this.scaling === BackgroundScaling.tile) {
 			src = getMediaserverUrlForBounds({
 				src,
 				maxWidth: width / this.scale,
@@ -49,18 +61,18 @@ export class Background extends Model {
 	}
 
 	get cssBackgroundSize() {
-		if (this.scaling === ScalingTile) {
+		if (this.scaling === BackgroundScaling.tile) {
 			const width = this.media_item.width / this.scale;
 			const height = this.media_item.height / this.scale;
 			return `${width}px ${height}px`;
-		} else if (this.scaling === ScalingStretch) {
+		} else if (this.scaling === BackgroundScaling.stretch) {
 			return '100% 100%';
 		}
 		return 'cover';
 	}
 
 	get cssBackgroundRepeat() {
-		if (this.scaling === ScalingTile) {
+		if (this.scaling === BackgroundScaling.tile) {
 			return 'repeat';
 		}
 		return 'no-repeat';
@@ -70,5 +82,3 @@ export class Background extends Model {
 		return 'top';
 	}
 }
-
-Model.create(Background);

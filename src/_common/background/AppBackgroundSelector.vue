@@ -2,15 +2,15 @@
 import { PropType, toRefs } from 'vue';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppScrollScroller from '../scroll/AppScrollScroller.vue';
-import { Background } from './background.model';
+import { BackgroundModel } from './background.model';
 
 const props = defineProps({
 	backgrounds: {
-		type: Array as PropType<Array<Background>>,
+		type: Array as PropType<Array<BackgroundModel>>,
 		required: true,
 	},
 	background: {
-		type: Object as PropType<Background>,
+		type: Object as PropType<BackgroundModel>,
 		default: undefined,
 	},
 	tileSize: {
@@ -33,10 +33,10 @@ const props = defineProps({
 const { backgrounds, background, tileSize, disabled } = toRefs(props);
 
 const emit = defineEmits({
-	backgroundChange: (_item?: Background) => true,
+	backgroundChange: (_item?: BackgroundModel) => true,
 });
 
-function onSelect(item: Background | undefined) {
+function onSelect(item: BackgroundModel | undefined) {
 	if (disabled.value) {
 		return;
 	}

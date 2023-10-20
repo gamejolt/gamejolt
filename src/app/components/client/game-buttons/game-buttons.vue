@@ -1,19 +1,23 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { arrayGroupBy } from '../../../../utils/array';
-import { shallowSetup } from '../../../../utils/vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
-import { Game } from '../../../../_common/game/game.model';
+import {
+	GameModel,
+	chooseBestGameBuild,
+	pluckInstallableGameBuilds,
+} from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
-import { GamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
+import { showGamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { arrayGroupBy } from '../../../../utils/array';
+import { shallowSetup } from '../../../../utils/vue';
 import { useClientLibraryStore } from '../../../store/client-library';
 import AppClientInstallProgress from '../AppClientInstallProgress.vue';
-import { ClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
+import { showClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
 import { LocalDbPackage } from '../local-db/package/package.model';
 
 @Options({
@@ -29,7 +33,7 @@ export default class AppClientGameButtons extends Vue {
 	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
 
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	@Prop(Boolean)
 	overlay?: boolean;
@@ -112,16 +116,16 @@ export default class AppClientGameButtons extends Vue {
 		const byPackageId = arrayGroupBy(packageData.installableBuilds!, 'game_package_id');
 		// If more than one package for their OS, then we have to show an install package modal.
 		if (Object.keys(byPackageId).length > 1) {
-			ClientInstallPackageModal.show(this.game);
+			showClientInstallPackageModal(this.game);
 			return;
 		}
 
-		const build = Game.chooseBestBuild(packageData.installableBuilds!, this.os!, this.arch);
+		const build = chooseBestGameBuild(packageData.installableBuilds!, this.os!, this.arch);
 
 		// If the build belongs to a pwyw package, open up the package
 		// payment form.
 		if (build._package!.shouldShowNamePrice()) {
-			GamePackagePurchaseModal.show({
+			showGamePackagePurchaseModal({
 				game: this.game,
 				package: build._package!,
 				build: build,
@@ -143,7 +147,7 @@ export default class AppClientGameButtons extends Vue {
 		const payload = await Api.sendRequest('/web/discover/games/packages/' + this.game.id);
 
 		const packageData = new GamePackagePayloadModel(payload);
-		packageData.installableBuilds = Game.pluckInstallableBuilds(
+		packageData.installableBuilds = pluckInstallableGameBuilds(
 			packageData.packages,
 			this.os!,
 			this.arch

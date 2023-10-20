@@ -1,6 +1,6 @@
 import { Model } from '../../model/model.service';
 
-export class CreatorExperience extends Model {
+export class CreatorExperienceModel extends Model {
 	declare current_level: number;
 	declare current_level_xp: number;
 	declare current_level_xp_required: number;
@@ -9,5 +9,3 @@ export class CreatorExperience extends Model {
 	declare ability_on_level_up_display: string | null;
 	declare is_max_level: boolean;
 }
-
-Model.create(CreatorExperience);

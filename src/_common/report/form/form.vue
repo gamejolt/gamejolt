@@ -2,10 +2,10 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { arrayRemove } from '../../../utils/array';
 import { Api } from '../../api/api.service';
-import { FiresidePost } from '../../fireside/post/post-model';
+import { FiresidePostModel } from '../../fireside/post/post-model';
 import AppFormControlTextarea from '../../form-vue/controls/AppFormControlTextarea.vue';
 import { BaseForm, FormOnSubmit } from '../../form-vue/form.service';
-import { Game } from '../../game/game.model';
+import { GameModel } from '../../game/game.model';
 
 interface FormModel {
 	reason: string;
@@ -127,8 +127,8 @@ export default class AppReportForm extends mixins(Wrapper) implements FormOnSubm
 				// For a devlog post of a game that is maturity restricted, we don't want to show the "explicit" report option.
 				// Those devlog posts can be explicit, and we don't want to encourage false reports.
 				const isAdultGamePost =
-					this.resource instanceof FiresidePost &&
-					this.resource.game instanceof Game &&
+					this.resource instanceof FiresidePostModel &&
+					this.resource.game instanceof GameModel &&
 					this.resource.game.tigrs_age === 3;
 
 				// However, in cases where the post may be shown outside of the game page, we won't disable reporting.
@@ -189,58 +189,6 @@ export default class AppReportForm extends mixins(Wrapper) implements FormOnSubm
 						radioValue: 'no-moderation',
 						text: this.$gettext(
 							'This community is not actively moderated by its moderators'
-						),
-					},
-					{
-						radioValue: 'other',
-						text: this.$gettext('Other'),
-					},
-				];
-
-			case 'Fireside':
-				return [
-					{
-						radioValue: 'abuse',
-						text: this.$gettext(
-							'Fireside is used to show/promote hate speech or graphic content'
-						),
-						contexts: [
-							{
-								checkValue: 'fireside/title',
-								text: this.$gettext('Title'),
-							},
-							{
-								checkValue: 'fireside/chat',
-								text: this.$gettext('Chat messages'),
-							},
-							{
-								checkValue: 'fireside/audio-video',
-								text: this.$gettext('Audio or video stream'),
-							},
-						],
-					},
-					{
-						radioValue: 'explicit',
-						text: this.$gettext('Fireside contains explicit or sensitive material'),
-						contexts: [
-							{
-								checkValue: 'fireside/title',
-								text: this.$gettext('Title'),
-							},
-							{
-								checkValue: 'fireside/chat',
-								text: this.$gettext('Chat messages'),
-							},
-							{
-								checkValue: 'fireside/audio-video',
-								text: this.$gettext('Audio or video stream'),
-							},
-						],
-					},
-					{
-						radioValue: 'no-moderation',
-						text: this.$gettext(
-							"This fireside's chat is not actively moderated by its moderators"
 						),
 					},
 					{

@@ -1,8 +1,6 @@
 <script lang="ts">
 import { computed, Ref } from 'vue';
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../utils/array';
-import { shallowSetup } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppCardListItem from '../../../../../_common/card/list/AppCardListItem.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
@@ -11,18 +9,31 @@ import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
-import { GameBuild } from '../../../../../_common/game/build/build.model';
-import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
-import { Game } from '../../../../../_common/game/game.model';
-import { GamePackage } from '../../../../../_common/game/package/package.model';
-import { GameRelease } from '../../../../../_common/game/release/release.model';
+import {
+	$saveGameBuild,
+	GameBuildEmulatorInfo,
+	GameBuildError,
+	GameBuildModel,
+	GameBuildStatus,
+	GameBuildType,
+} from '../../../../../_common/game/build/build.model';
+import {
+	GameBuildLaunchablePlatforms,
+	GameBuildLaunchOptionModel,
+} from '../../../../../_common/game/build/launch-option/launch-option.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import { GamePackageModel } from '../../../../../_common/game/package/package.model';
+import { GameReleaseModel } from '../../../../../_common/game/release/release.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import AppProgressPoller from '../../../../../_common/progress/poller/AppProgressPoller.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../_common/translate/translate.service';
+import { arrayRemove } from '../../../../../utils/array';
+import { shallowSetup } from '../../../../../utils/vue';
 import { useFormGameRelease } from '../release/release.vue';
-import { ArchiveFileSelectorModal } from './archive-file-selector-modal.service';
+import { showArchiveFileSelectorModal } from './archive-file-selector-modal.service';
 
 export interface FormGameBuildInterface {
 	buildId: number;
@@ -30,7 +41,7 @@ export interface FormGameBuildInterface {
 	save: () => Promise<boolean>;
 }
 
-type GameBuildFormModel = GameBuild & {
+type GameBuildFormModel = GameBuildModel & {
 	launch_windows: string;
 	launch_windows_64: string;
 	launch_mac: string;
@@ -56,19 +67,20 @@ class Wrapper extends BaseForm<GameBuildFormModel> {}
 	},
 })
 export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad {
-	modelClass = GameBuild as any;
+	modelClass = GameBuildModel as any;
+	modelSaveHandler = $saveGameBuild;
 
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	@Prop(Object)
-	package!: GamePackage;
+	package!: GamePackageModel;
 
 	@Prop(Object)
-	release!: GameRelease;
+	release!: GameReleaseModel;
 
 	@Prop(Array)
-	releaseLaunchOptions!: GameBuildLaunchOption[];
+	releaseLaunchOptions!: GameBuildLaunchOptionModel[];
 
 	@Prop(Object)
 	buildDownloadCounts!: {
@@ -76,7 +88,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 	};
 
 	@Prop(Array)
-	builds!: GameBuild[];
+	builds!: GameBuildModel[];
 
 	releaseForm = shallowSetup(() => useFormGameRelease()!);
 
@@ -86,13 +98,30 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 	romTypes: string[] = [];
 	isSettingPlatform = false;
 	prevCount = -1;
-	buildLaunchOptions: GameBuildLaunchOption[] = [];
+	buildLaunchOptions: GameBuildLaunchOptionModel[] = [];
 	wasChanged = false;
 
 	readonly formatNumber = formatNumber;
 	readonly formatFuzzynumber = formatFuzzynumber;
 	readonly formatFilesize = formatFilesize;
-	readonly GameBuild = GameBuild;
+	readonly GameBuild = GameBuildModel;
+	readonly GameBuildTypes = {
+		downloadable: GameBuildType.Downloadable,
+		html: GameBuildType.Html,
+		flash: GameBuildType.Flash,
+		unity: GameBuildType.Unity,
+		silverlight: GameBuildType.Silverlight,
+		applet: GameBuildType.Applet,
+		rom: GameBuildType.Rom,
+	};
+	readonly GameBuildStatuses = {
+		adding: GameBuildStatus.Adding,
+		active: GameBuildStatus.Active,
+	};
+	readonly GameBuildErrors = {
+		missingFields: GameBuildError.MissingFields,
+	};
+	readonly GameBuildEmulatorInfo = GameBuildEmulatorInfo;
 
 	@Emit('remove-build')
 	emitRemoveBuild(_formModel: GameBuildFormModel) {}
@@ -113,7 +142,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 	}
 
 	get shouldPollProgress() {
-		return this.model && this.model.status === GameBuild.STATUS_ADDING && !this.archiveError;
+		return this.model && this.model.status === GameBuildStatus.Adding && !this.archiveError;
 	}
 
 	get archiveError() {
@@ -121,18 +150,18 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 			return '';
 		}
 
-		if (this.model.hasError(GameBuild.ERROR_INVALID_ARCHIVE)) {
-			return this.$gettext(
+		if (this.model.hasError(GameBuildError.InvalidArchive)) {
+			return $gettext(
 				`The archive you uploaded looks corrupted, we can't extract it on our end.`
 			);
 		}
 
-		if (this.model.hasError(GameBuild.ERROR_PASSWORD_ARCHIVE)) {
-			return this.$gettext(`The archive you uploaded is password-protected.`);
+		if (this.model.hasError(GameBuildError.PasswordArchive)) {
+			return $gettext(`The archive you uploaded is password-protected.`);
 		}
 
-		if (this.model.hasError(GameBuild.ERROR_NOT_HTML_ARCHIVE)) {
-			return this.$gettext(
+		if (this.model.hasError(GameBuildError.NotHtmlArchive)) {
+			return $gettext(
 				`The archive you uploaded doesn't look like a valid html build. We expect a zip with an index.html at the root of the archive.`
 			);
 		}
@@ -155,8 +184,8 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 	get isDeprecated() {
 		return Boolean(
 			this.model &&
-				(this.model.type === GameBuild.TYPE_APPLET ||
-					this.model.type === GameBuild.TYPE_SILVERLIGHT)
+				(this.model.type === GameBuildType.Applet ||
+					this.model.type === GameBuildType.Silverlight)
 		);
 	}
 
@@ -164,38 +193,37 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 		return [
 			{
 				key: 'windows',
-				label: this.$gettext('Windows'),
+				label: $gettext('Windows'),
 				icon: 'windows',
 			},
 			{
 				key: 'windows_64',
-				label: this.$gettext('Windows 64-bit'),
+				label: $gettext('Windows 64-bit'),
 				icon: 'windows',
 			},
 			{
 				key: 'mac',
-				label: this.$gettext('Mac'),
+				label: $gettext('Mac'),
 				icon: 'mac',
 			},
 			{
 				key: 'mac_64',
-				label: this.$gettext('Mac 64-bit'),
+				label: $gettext('Mac 64-bit'),
 				icon: 'mac',
 			},
 			{
 				key: 'linux',
-				label: this.$gettext('Linux'),
+				label: $gettext('Linux'),
 				icon: 'linux',
 			},
 			{
 				key: 'linux_64',
-				label: this.$gettext('Linux 64-bit'),
+				label: $gettext('Linux 64-bit'),
 				icon: 'linux',
 			},
 			{
 				key: 'other',
-				// TODO(vue3) translate-comment="As in other than the rest of the things specified"
-				label: this.$gettext('Other'),
+				label: $gettext('Other'),
 				icon: 'other-os',
 			},
 		];
@@ -206,7 +234,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 			return false;
 		}
 
-		if (this.model.type !== GameBuild.TYPE_DOWNLOADABLE) {
+		if (this.model.type !== GameBuildType.Downloadable) {
 			return true;
 		}
 
@@ -227,23 +255,6 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 		}
 
 		return this.platformOptions.filter(platform => (this.model as any)[`os_${platform.key}`]);
-	}
-
-	get emulatorsInfo(): { [type: string]: string } {
-		return {
-			[GameBuild.EMULATOR_GB]: this.$gettext('Game Boy'),
-			[GameBuild.EMULATOR_GBC]: this.$gettext('Game Boy Color'),
-			[GameBuild.EMULATOR_GBA]: this.$gettext('Game Boy Advance'),
-			[GameBuild.EMULATOR_NES]: this.$gettext('NES'),
-			[GameBuild.EMULATOR_SNES]: this.$gettext('SNES'),
-			[GameBuild.EMULATOR_VBOY]: this.$gettext('Virtual Boy'),
-			[GameBuild.EMULATOR_GENESIS]: this.$gettext('Genesis/Mega Drive'),
-			[GameBuild.EMULATOR_ATARI2600]: this.$gettext('Atari 2600'),
-			[GameBuild.EMULATOR_ZX]: this.$gettext('ZX Spectrum'),
-			[GameBuild.EMULATOR_C64]: this.$gettext('Commodore 64'),
-			[GameBuild.EMULATOR_CPC]: this.$gettext('Amstrad CPC'),
-			[GameBuild.EMULATOR_MSX]: this.$gettext('MSX'),
-		};
 	}
 
 	get isFitToScreen() {
@@ -351,7 +362,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 			this.game.assign(response.game);
 
 			// Copy new platforms to the form model.
-			for (const _platform of GameBuildLaunchOption.LAUNCHABLE_PLATFORMS) {
+			for (const _platform of GameBuildLaunchablePlatforms) {
 				const key = 'os_' + _platform;
 
 				// oh geez
@@ -362,7 +373,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 			this.emitUpdateLaunchOptions(this.model!, response.launchOptions);
 		} catch (err) {
 			console.error(err);
-			showErrorGrowl(this.$gettext('Could not set the platform for some reason.'));
+			showErrorGrowl($gettext('Could not set the platform for some reason.'));
 		} finally {
 			this.isSettingPlatform = false;
 		}
@@ -416,7 +427,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 	}
 
 	async openFileSelector(platform: string) {
-		const selected = await ArchiveFileSelectorModal.show(
+		const selected = await showArchiveFileSelectorModal(
 			this.game.id,
 			this.package.id,
 			this.release.id,
@@ -487,31 +498,31 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 		</div>
 
 		<div class="card-meta">
-			<span v-if="model.type === GameBuild.TYPE_DOWNLOADABLE" class="tag">
+			<span v-if="model.type === GameBuildTypes.downloadable" class="tag">
 				<AppJolticon icon="download" />
 				<AppTranslate>Downloadable</AppTranslate>
 			</span>
-			<span v-else-if="model.type === GameBuild.TYPE_HTML" class="tag">
+			<span v-else-if="model.type === GameBuildTypes.html" class="tag">
 				<AppJolticon icon="html5" />
 				<AppTranslate>HTML</AppTranslate>
 			</span>
-			<span v-else-if="model.type === GameBuild.TYPE_FLASH" class="tag">
+			<span v-else-if="model.type === GameBuildTypes.flash" class="tag">
 				<AppJolticon icon="flash" />
 				<AppTranslate>Flash</AppTranslate>
 			</span>
-			<span v-else-if="model.type === GameBuild.TYPE_UNITY" class="tag">
+			<span v-else-if="model.type === GameBuildTypes.unity" class="tag">
 				<AppJolticon icon="unity" />
 				<AppTranslate>Unity</AppTranslate>
 			</span>
-			<span v-else-if="model.type === GameBuild.TYPE_SILVERLIGHT" class="tag">
+			<span v-else-if="model.type === GameBuildTypes.silverlight" class="tag">
 				<AppJolticon icon="silverlight" />
 				<AppTranslate>Silverlight</AppTranslate>
 			</span>
-			<span v-else-if="model.type === GameBuild.TYPE_APPLET" class="tag">
+			<span v-else-if="model.type === GameBuildTypes.applet" class="tag">
 				<AppJolticon icon="java" />
 				<AppTranslate>Java Applet</AppTranslate>
 			</span>
-			<span v-else-if="model.type === GameBuild.TYPE_ROM" class="tag">
+			<span v-else-if="model.type === GameBuildTypes.rom" class="tag">
 				<AppJolticon icon="rom" />
 				<AppTranslate>ROM</AppTranslate>
 			</span>
@@ -519,17 +530,17 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 			<!--
 				Missing fields.
 			-->
-			<span v-if="model.hasError(GameBuild.ERROR_MISSING_FIELDS)" class="tag tag-notice">
+			<span v-if="model.hasError(GameBuildErrors.missingFields)" class="tag tag-notice">
 				<AppJolticon icon="notice" />
 				<AppTranslate>Incomplete</AppTranslate>
 			</span>
 
 			<span v-else>
-				<span v-if="model.status === GameBuild.STATUS_ADDING" class="tag">
+				<span v-if="model.status === GameBuildStatuses.adding" class="tag">
 					<AppTranslate>Processing</AppTranslate>
 				</span>
 				<span
-					v-else-if="model.status === GameBuild.STATUS_ACTIVE"
+					v-else-if="model.status === GameBuildStatuses.active"
 					class="tag tag-highlight"
 				>
 					<AppJolticon icon="check" />
@@ -562,7 +573,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 		<template #body>
 			<AppForm :controller="form">
 				<div
-					v-if="model.type === GameBuild.TYPE_APPLET"
+					v-if="model.type === GameBuildTypes.applet"
 					class="alert alert-notice sans-margin"
 				>
 					<AppJolticon icon="notice" />
@@ -575,7 +586,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 					</AppTranslate>
 				</div>
 				<div
-					v-else-if="model.type === GameBuild.TYPE_SILVERLIGHT"
+					v-else-if="model.type === GameBuildTypes.silverlight"
 					class="alert alert-notice sans-margin"
 				>
 					<AppJolticon icon="notice" />
@@ -630,7 +641,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							Platform Selector
 						-->
 						<div
-							v-if="model.type === GameBuild.TYPE_DOWNLOADABLE && !forceOther"
+							v-if="model.type === GameBuildTypes.downloadable && !forceOther"
 							class="downloadable-platforms"
 						>
 							<!--
@@ -707,7 +718,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 						<fieldset
 							v-if="
 								!hasPlatformsError &&
-								model.type === GameBuild.TYPE_DOWNLOADABLE &&
+								model.type === GameBuildTypes.downloadable &&
 								!model.os_other
 							"
 							class="form-horizontal"
@@ -862,7 +873,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							Unity Right Click Menu
 						-->
 						<AppFormGroup
-							v-if="formModel.type === GameBuild.TYPE_UNITY"
+							v-if="formModel.type === GameBuildTypes.unity"
 							name="browser_disable_right_click"
 							:label="$gettext(`Disable right click?`)"
 						>
@@ -875,7 +886,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							<AppFormControlToggle @changed="onBuildFieldChanged" />
 						</AppFormGroup>
 
-						<div v-if="model.type === GameBuild.TYPE_UNITY" class="alert alert-notice">
+						<div v-if="model.type === GameBuildTypes.unity" class="alert alert-notice">
 							<AppJolticon icon="notice" />
 							<strong>
 								<AppTranslate>
@@ -885,11 +896,11 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							<AppTranslate>Please consider exporting to WebGL instead.</AppTranslate>
 						</div>
 
-						<p v-if="model.type === GameBuild.TYPE_ROM" class="sans-margin">
+						<p v-if="model.type === GameBuildTypes.rom" class="sans-margin">
 							<AppJolticon icon="info-circle" />
 							<AppTranslate
 								:translate-params="{
-									platform: emulatorsInfo[model.emulator_type],
+									platform: GameBuildEmulatorInfo[model.emulator_type],
 								}"
 								translate-comment="%{ platform } will be the platform this ROM works on, such as Game Boy, NES, etc."
 							>

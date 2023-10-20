@@ -1,27 +1,27 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { GameBuild } from '../../../../_common/game/build/build.model';
-import { Game } from '../../../../_common/game/game.model';
+import { GameBuildModel } from '../../../../_common/game/build/build.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useClientLibraryStore } from '../../../store/client-library';
 import AppClientGameButtons from '../game-buttons/game-buttons.vue';
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	downloadableBuilds: {
-		type: Array as PropType<GameBuild[]>,
+		type: Array as PropType<GameBuildModel[]>,
 		required: true,
 	},
 	browserBuilds: {
-		type: Array as PropType<GameBuild[]>,
+		type: Array as PropType<GameBuildModel[]>,
 		required: true,
 	},
 	installableBuilds: {
-		type: Array as PropType<GameBuild[]>,
+		type: Array as PropType<GameBuildModel[]>,
 		required: true,
 	},
 });
@@ -44,7 +44,6 @@ const localPackage = computed(() => findPackageToRepresentGameStatus(props.game.
 		<AppButton
 			v-if="browserBuilds.length > 0 && !localPackage"
 			primary
-			outline
 			icon="play"
 			@click="emit('play')"
 		>

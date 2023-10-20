@@ -1,8 +1,6 @@
 import { DOMOutputSpec, Fragment, Mark, MarkSpec } from 'prosemirror-model';
 import { ContentEditorSchema } from '../../content-editor-schema';
 
-export const LINK_LENGTH = 23;
-
 const linkAttrs = {
 	href: {},
 	title: { default: null },

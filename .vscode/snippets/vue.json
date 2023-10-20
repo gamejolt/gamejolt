@@ -14,10 +14,7 @@
 			"const props = defineProps({});",
 			"</script>",
 			"",
-			"<template></template>",
-			"",
-			"<style lang=\"stylus\" scoped>",
-			"</style>"
+			"<template></template>"
 		]
 	},
 	"Vue route component": {
@@ -43,22 +40,19 @@
 		"prefix": "vue-form",
 		"body": [
 			"<script lang=\"ts\" setup>",
-			"type FormModel = ${2:Game} & {};",
+			"type FormModel = ${1:Game} & {};",
 			"",
 			"const props = defineProps({",
-			"\t${1:game}: {",
-			"\t\ttype: ${2:Game},",
-			"\t\trequired: true,",
-			"\t}",
+			"\t...defineFormProps<${1:Game}>(true),",
 			"});",
 			"",
 			"const emit = defineEmits({",
-			"\tsubmit: (_model: ${2:Game}) => true,",
+			"\tsubmit: (_model: FormModel) => true,",
 			"});",
 			"",
 			"const form: FormController<FormModel> = createForm({",
-			"\tmodelClass: ${2:Game},",
-			"\tmodel: toRef(props, '${1:game}'),",
+			"\tmodelClass: ${1:Game},",
+			"\tmodel: toRef(props, 'model'),",
 			"});",
 			"</script>",
 			"",
@@ -70,5 +64,27 @@
 	"Vue prop": {
 		"prefix": "vue-prop",
 		"body": ["${1:name}: {", "\ttype: ${2:String},", "\trequired: true,", "},"]
+	},
+	"CSS properties": {
+		"prefix": "styles-object",
+		"body": ["const ${1:some}Styles: CSSProperties = {", "\t${2:}", "};"]
+	},
+	"CSS properties reactive": {
+		"prefix": "styles-reactive",
+		"body": [
+			"const ${1:some}Styles = computed<CSSProperties>(() => {",
+			"\treturn {",
+			"\t\t${2:}",
+			"\t};",
+			"});"
+		]
+	},
+	"Pure assignment": {
+		"prefix": "pure",
+		"body": "/** @__PURE__ */"
+	},
+	"Side effect free function": {
+		"prefix": "no-side-effects",
+		"body": "@__NO_SIDE_EFFECTS__"
 	}
 }

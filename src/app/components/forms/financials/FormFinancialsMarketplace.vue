@@ -1,11 +1,10 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { bangRef } from '../../../../utils/vue';
 import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatCurrency } from '../../../../_common/filters/currency';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlError from '../../../../_common/form-vue/AppFormControlError.vue';
@@ -21,7 +20,8 @@ import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserStripeManagedAccount } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { UserStripeManagedAccountModel } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { bangRef } from '../../../../utils/vue';
 import AppDeveloperTerms from './AppDeveloperTerms.vue';
 import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
 import FormFinancialsManagedAccount from './managed-account/managed-account.vue';
@@ -36,7 +36,7 @@ interface FormModel {
 const { user: maybeUser } = useCommonStore();
 const user = bangRef(maybeUser);
 
-const account = ref<UserStripeManagedAccount>();
+const account = ref<UserStripeManagedAccountModel>();
 
 const maxWallet = ref(0);
 const maxPayout = ref(0);
@@ -60,7 +60,9 @@ const form: FormController<FormModel> = createForm({
 			user.value.assign(payload.user);
 		}
 
-		account.value = payload.account ? new UserStripeManagedAccount(payload.account) : undefined;
+		account.value = payload.account
+			? new UserStripeManagedAccountModel(payload.account)
+			: undefined;
 
 		maxWallet.value = payload.maxWallet;
 		maxPayout.value = payload.maxPayout;

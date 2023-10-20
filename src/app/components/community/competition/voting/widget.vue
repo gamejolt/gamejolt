@@ -1,20 +1,20 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { numberSort } from '../../../../../utils/array';
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import {
-	CommunityCompetition,
+	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
 } from '../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionEntryVote } from '../../../../../_common/community/competition/entry/vote/vote.model';
-import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
+import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryVoteModel } from '../../../../../_common/community/competition/entry/vote/vote.model';
+import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { numberSort } from '../../../../../utils/array';
 import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/cast.vue';
 
 @Options({
@@ -28,10 +28,11 @@ import FormCommunityCompetitionVotingCast from '../../../forms/community/competi
 	},
 })
 export default class AppCommunityCompetitionVotingWidget extends Vue {
-	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
-	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntry;
-	@Prop({ type: Array, required: true }) votingCategories!: CommunityCompetitionVotingCategory[];
-	@Prop({ type: Array, required: true }) userVotes!: CommunityCompetitionEntryVote[];
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
+	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntryModel;
+	@Prop({ type: Array, required: true })
+	votingCategories!: CommunityCompetitionVotingCategoryModel[];
+	@Prop({ type: Array, required: true }) userVotes!: CommunityCompetitionEntryVoteModel[];
 	@Prop({ type: Boolean, required: true }) isParticipant!: boolean;
 	@Prop({ type: Boolean, required: true }) isArchived!: boolean;
 	@Prop({ type: Boolean, required: true }) isBlocked!: boolean;

@@ -1,13 +1,11 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
-import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
-import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
+import { FeaturedItemModel } from '../../../components/featured-item/featured-item.model';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppDiscoverHomeBanner from './_home-default/AppDiscoverHomeBanner.vue';
 import AppDiscoverHomeRealms from './_home-default/AppDiscoverHomeRealms.vue';
@@ -17,23 +15,19 @@ defineProps({
 		type: Boolean,
 	},
 	featuredItem: {
-		type: Object as PropType<FeaturedItem>,
+		type: Object as PropType<FeaturedItemModel>,
 		default: null,
 	},
 	featuredCommunities: {
-		type: Array as PropType<Community[]>,
+		type: Array as PropType<CommunityModel[]>,
 		default: () => [],
 	},
-	featuredFireside: {
-		type: Object as PropType<Fireside>,
-		default: null,
-	},
 	featuredRealms: {
-		type: Array as PropType<Realm[]>,
+		type: Array as PropType<RealmModel[]>,
 		default: () => [],
 	},
 	creatorPosts: {
-		type: Array as PropType<FiresidePost[]>,
+		type: Array as PropType<FiresidePostModel[]>,
 		default: () => [],
 	},
 });
@@ -48,32 +42,6 @@ const cardColumnsXs = 2;
 		<AppDiscoverHomeBanner :is-loading="!isBootstrapped" :item="featuredItem" />
 
 		<section class="section">
-			<template v-if="featuredFireside">
-				<div class="-content-row container">
-					<div class="text-center">
-						<h2 class="section-header">
-							{{ $gettext(`Featured livestream`) }}
-						</h2>
-						<p>
-							{{
-								$gettext(
-									`Stream together with your friends and creators in firesides!`
-								)
-							}}
-						</p>
-						<hr class="underbar underbar-center" />
-					</div>
-
-					<div class="row">
-						<div class="col-lg-10 col-centered">
-							<AppFiresideBadge :fireside="featuredFireside" show-preview />
-						</div>
-					</div>
-				</div>
-
-				<br />
-			</template>
-
 			<div v-if="!isBootstrapped || creatorPosts.length" class="-content-row container">
 				<h2 class="-content-row-header">
 					<AppUserCreatorBadge size="lg" />

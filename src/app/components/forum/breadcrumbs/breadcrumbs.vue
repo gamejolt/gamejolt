@@ -1,10 +1,10 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { ForumChannel } from '../../../../_common/forum/channel/channel.model';
+import { ForumChannelModel } from '../../../../_common/forum/channel/channel.model';
 
 @Options({})
 export default class AppForumBreadcrumbs extends Vue {
-	@Prop(Object) channel?: ForumChannel;
+	@Prop(Object) channel?: ForumChannelModel;
 	@Prop(String) sort?: string;
 	@Prop(String) page?: string;
 }
@@ -15,9 +15,7 @@ export default class AppForumBreadcrumbs extends Vue {
 		<ul>
 			<li>
 				<router-link :to="{ name: 'forums.landing.overview' }">
-					<span class="breadcrumb-tag">
-						&nbsp;
-					</span>
+					<span class="breadcrumb-tag"> &nbsp; </span>
 					<AppTranslate>Forums</AppTranslate>
 				</router-link>
 				<AppJolticon v-if="channel" icon="chevron-right" class="breadcrumb-separator" />
@@ -39,9 +37,7 @@ export default class AppForumBreadcrumbs extends Vue {
 
 			<li v-if="page">
 				<span class="active">
-					<span class="breadcrumb-tag">
-						&nbsp;
-					</span>
+					<span class="breadcrumb-tag"> &nbsp; </span>
 					<template v-if="page === 'add-topic'">
 						<AppTranslate>New Topic</AppTranslate>
 					</template>

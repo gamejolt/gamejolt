@@ -1,5 +1,7 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
-import { defineConfig, UserConfig as ViteUserConfig } from 'vite';
+// import { visualizer } from 'rollup-plugin-visualizer';
+import { copyFileSync, readFileSync } from 'fs-extra';
+import { UserConfig as ViteUserConfig, defineConfig } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import {
@@ -11,7 +13,6 @@ import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { readFromViteEnv } from './scripts/build/vite-runner';
 
 const path = require('path') as typeof import('path');
-const fs = require('fs-extra') as typeof import('fs-extra');
 
 type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 
@@ -109,7 +110,7 @@ export default defineConfig(async () => {
 	let inputHtmlFile = indexHtml;
 	if (gjOpts.buildType !== 'serve-hmr' && gjOpts.section !== 'app') {
 		inputHtmlFile = path.resolve(indexHtml, '..', `${gjOpts.section}.html`);
-		fs.copyFileSync(indexHtml, inputHtmlFile);
+		copyFileSync(indexHtml, inputHtmlFile);
 	}
 
 	return {
@@ -172,7 +173,7 @@ export default defineConfig(async () => {
 							'<!-- gj:firebase-shenanigans -->',
 							`
 		<script>
-			${fs.readFileSync(
+			${readFileSync(
 				path.resolve(
 					__dirname,
 					'node_modules/first-input-delay/dist/first-input-delay.min.js'
@@ -259,6 +260,8 @@ export default defineConfig(async () => {
 			md({
 				mode: [MarkdownMode.HTML],
 			}),
+			// Can include to try to visualize the chunks and dependencies.
+			// visualizer(),
 		],
 
 		root: 'src',
@@ -394,7 +397,21 @@ export default defineConfig(async () => {
 			minify: gjOpts.environment === 'production' && gjOpts.buildType === 'build',
 
 			rollupOptions: {
+				// Can use this to see which modules are causing side effects.
+				// experimentalLogSideEffects: true,
+
+				treeshake: {
+					// We don't do any side effects with property access, so turn it off.
+					propertyReadSideEffects: false,
+				},
+
 				...(() => {
+					// Update this when you want to force cache busting for
+					// all of our assets regardless of if their contents
+					// changed.
+					const hashVersion = '';
+					// const hashVersion = '-v2';
+
 					// By default vite outputs filenames with their chunks, but
 					// some ad blockers are outrageously aggressive with their
 					// filter lists, for example blocking any file that contains
@@ -405,16 +422,34 @@ export default defineConfig(async () => {
 						gjOpts.buildType === 'build' &&
 						['web'].includes(gjOpts.platform)
 					) {
-						// Update this when you want to force cache busting for
-						// all of our assets regardless of if their contents
-						// changed.
-						const hashVersion = '';
-						// const hashVersion = '-v2';
-
 						return <RollupOptions>{
 							output: {
+								manualChunks(id) {
+									// We never want translations to be chunked
+									// together, they should always be in their
+									// own modules since they're big and not
+									// needed unless you're actually using the
+									// language.
+									if (id.includes('/translations/')) {
+										return id
+											.substring(
+												id.lastIndexOf('/translations/') + 1,
+												id.lastIndexOf('.json')
+											)
+											.replace(/\//g, '_');
+									}
+
+									if (id.includes('chunkName')) {
+										return id.match(/[?&]chunkName=(.+?)(&|$)/)![1];
+									}
+								},
 								chunkFileNames: `assets/[hash]${hashVersion}.js`,
 								assetFileNames: `assets/[hash]${hashVersion}.[ext]`,
+
+								// Attempts to collapse small chunks together.
+								// This should result in about a 50KB file after
+								// gzip.
+								experimentalMinChunkSize: 200_000,
 							},
 						};
 					}
@@ -425,6 +460,9 @@ export default defineConfig(async () => {
 					if (['mobile', 'ssr'].includes(gjOpts.platform)) {
 						return <RollupOptions>{
 							output: {
+								chunkFileNames: `assets/[hash]${hashVersion}.js`,
+								assetFileNames: `assets/[hash]${hashVersion}.[ext]`,
+
 								// Vite itself sets manualChunks so that it can
 								// pull out the vendor library code into a
 								// chunk. We need to disable that first.
@@ -447,7 +485,7 @@ export default defineConfig(async () => {
 				}),
 
 				...onlyInDesktopApp<RollupOptions>({
-					external: ['client-voodoo', 'asg-prebuilt'],
+					external: ['client-voodoo'],
 				}),
 			},
 
@@ -476,7 +514,7 @@ export default defineConfig(async () => {
 			}),
 		},
 		optimizeDeps: {
-			exclude: ['client-voodoo', 'asg-prebuilt'],
+			exclude: ['client-voodoo'],
 		},
 		resolve: {
 			alias: {

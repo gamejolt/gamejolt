@@ -1,29 +1,29 @@
-import { CommunityChannel } from '../../../community/channel/channel.model';
-import { Community } from '../../../community/community.model';
+import { CommunityChannelModel } from '../../../community/channel/channel.model';
+import { CommunityModel } from '../../../community/community.model';
 import { Model } from '../../../model/model.service';
-import { FiresidePost } from '../post-model';
+import { FiresidePostModel } from '../post-model';
 
-export class FiresidePostCommunity extends Model {
-	fireside_post_id!: number;
-	fireside_post?: FiresidePost;
-	community!: Community;
-	channel?: CommunityChannel;
-	added_on!: number;
-	featured_on!: number;
+export class FiresidePostCommunityModel extends Model {
+	declare fireside_post_id: number;
+	declare fireside_post?: FiresidePostModel;
+	declare community: CommunityModel;
+	declare channel?: CommunityChannelModel;
+	declare added_on: number;
+	declare featured_on: number;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.fireside_post) {
-			this.fireside_post = new FiresidePost(data.fireside_post);
+			this.fireside_post = new FiresidePostModel(data.fireside_post);
 		}
 
 		if (data.community) {
-			this.community = new Community(data.community);
+			this.community = new CommunityModel(data.community);
 		}
 
 		if (data.channel) {
-			this.channel = new CommunityChannel(data.channel);
+			this.channel = new CommunityChannelModel(data.channel);
 		}
 	}
 
@@ -31,5 +31,3 @@ export class FiresidePostCommunity extends Model {
 		return this.featured_on;
 	}
 }
-
-Model.create(FiresidePostCommunity);

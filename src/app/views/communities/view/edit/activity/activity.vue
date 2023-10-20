@@ -1,19 +1,22 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
-import { CommunityActivityItem } from '../../../../../../_common/community/activity-item/activity-item.model';
-import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/activity-item.vue';
+import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/AppCommunityActivityItem.vue';
+import {
+	CommunityActivityItemModel,
+	CommunityActivityItemType,
+} from '../../../../../../_common/community/activity-item/activity-item.model';
 import { formatDate } from '../../../../../../_common/filters/date';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 
 type ActivityItem = {
-	item: CommunityActivityItem;
+	item: CommunityActivityItemModel;
 	timesplit: boolean;
 	usersplit: boolean;
 	showIcon: boolean;
@@ -27,13 +30,13 @@ type ActivityItem = {
 		AppLoading,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id'] },
 	resolver({ route }) {
 		return Api.sendRequest('/web/dash/communities/activity/' + route.params.id);
 	},
 })
-export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditActivity extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
@@ -65,7 +68,9 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 	}
 
 	private handlePayload(payload: any) {
-		const items = CommunityActivityItem.populate(payload.items) as CommunityActivityItem[];
+		const items = CommunityActivityItemModel.populate(
+			payload.items
+		) as CommunityActivityItemModel[];
 		const perPage = payload.perPage;
 
 		if (items.length > 0) {
@@ -77,7 +82,7 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 		}
 	}
 
-	private addItems(items: CommunityActivityItem[]) {
+	private addItems(items: CommunityActivityItemModel[]) {
 		for (const item of items) {
 			const newItem = {
 				item,
@@ -88,7 +93,7 @@ export default class RouteCommunitiesViewEditActivity extends BaseRouteComponent
 
 			if (
 				this.items.length === 0 ||
-				item.type === CommunityActivityItem.TYPE_COMMUNITY_CREATED
+				item.type === CommunityActivityItemType.CommunityCreated
 			) {
 				// The first item will always be a user/time split.
 				newItem.timesplit = true;

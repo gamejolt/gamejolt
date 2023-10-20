@@ -1,22 +1,26 @@
-import { Model } from '../model/model.service';
-import { User } from '../user/user.model';
 import { Api } from '../api/api.service';
-import { GamePlaylistGame } from './game/game.model';
+import { Model } from '../model/model.service';
+import { UserModel } from '../user/user.model';
+import {
+	$removeGamePlaylistGame,
+	$saveGamePlaylistGame,
+	GamePlaylistGameModel,
+} from './game/game.model';
 
-export class GamePlaylist extends Model {
-	user_id!: number;
-	user!: User;
-	name!: string;
-	slug!: string;
-	is_secret!: boolean;
-	added_on!: number;
-	updated_on!: number;
+export class GamePlaylistModel extends Model {
+	declare user_id: number;
+	declare user: UserModel;
+	declare name: string;
+	declare slug: string;
+	declare is_secret: boolean;
+	declare added_on: number;
+	declare updated_on: number;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 	}
 
@@ -31,39 +35,37 @@ export class GamePlaylist extends Model {
 		});
 
 		return {
-			playlists: GamePlaylist.populate(response.playlists) as GamePlaylist[],
+			playlists: GamePlaylistModel.populate(response.playlists) as GamePlaylistModel[],
 			playlistsWithGame: (response.playlistsWithGame || []) as number[],
 		};
 	}
+}
 
-	async $addGame(gameId: number) {
-		const playlistGame = new GamePlaylistGame();
-		playlistGame.game_playlist_id = this.id;
-		playlistGame.game_id = gameId;
+export async function $addGameToGamePlaylist(model: GamePlaylistModel, gameId: number) {
+	const playlistGame = new GamePlaylistGameModel();
+	playlistGame.game_playlist_id = model.id;
+	playlistGame.game_id = gameId;
 
-		await playlistGame.$save();
-		return playlistGame;
-	}
+	await $saveGamePlaylistGame(playlistGame);
+	return playlistGame;
+}
 
-	$removeGame(gameId: number) {
-		const playlistGame = new GamePlaylistGame();
-		playlistGame.game_playlist_id = this.id;
-		playlistGame.game_id = gameId;
+export function $removeGameFromGamePlaylist(model: GamePlaylistModel, gameId: number) {
+	const playlistGame = new GamePlaylistGameModel();
+	playlistGame.game_playlist_id = model.id;
+	playlistGame.game_id = gameId;
 
-		return playlistGame.$remove();
-	}
+	return $removeGamePlaylistGame(playlistGame);
+}
 
-	$save() {
-		if (!this.id) {
-			return this.$_save('/web/library/playlists/save', 'gamePlaylist');
-		} else {
-			return this.$_save('/web/library/playlists/save/' + this.id, 'gamePlaylist');
-		}
-	}
-
-	$remove() {
-		return this.$_remove('/web/library/playlists/remove/' + this.id);
+export function $saveGamePlaylist(model: GamePlaylistModel) {
+	if (!model.id) {
+		return model.$_save('/web/library/playlists/save', 'gamePlaylist');
+	} else {
+		return model.$_save('/web/library/playlists/save/' + model.id, 'gamePlaylist');
 	}
 }
 
-Model.create(GamePlaylist);
+export function $removeGamePlaylist(model: GamePlaylistModel) {
+	return model.$_remove('/web/library/playlists/remove/' + model.id);
+}

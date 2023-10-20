@@ -1,12 +1,12 @@
 import { Router } from 'vue-router';
 import { Api } from '../api/api.service';
 import { Navigate } from '../navigate/navigate.service';
-import { Provider } from './linked-account.model';
+import { LinkedAccountProvider } from './linked-account.model';
 
 export class LinkedAccounts {
 	static async link(
 		router: Router,
-		provider: Provider | '',
+		provider: LinkedAccountProvider | '',
 		routeUrl: string,
 		resource: 'User' | 'Game',
 		resourceId: number | null = null
@@ -38,7 +38,7 @@ export class LinkedAccounts {
 		}
 	}
 
-	static async login(router: Router, provider: Provider) {
+	static async login(router: Router, provider: LinkedAccountProvider) {
 		let url = '/web/auth/linked-accounts/link/' + provider;
 		if (GJ_IS_DESKTOP_APP) {
 			url += '?client';

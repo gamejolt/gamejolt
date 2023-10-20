@@ -1,28 +1,26 @@
 import { defineAsyncComponent } from 'vue';
-import { Comment } from '../comment/comment-model';
-import { FiresidePost } from '../fireside/post/post-model';
-import { Game } from '../game/game.model';
+import { CommentModel } from '../comment/comment-model';
+import { FiresidePostModel } from '../fireside/post/post-model';
+import { GameModel } from '../game/game.model';
 import { showModal } from '../modal/modal.service';
 
-export type LikersResource = Comment | FiresidePost | Game;
+export type LikersResource = CommentModel | FiresidePostModel | GameModel;
 
 interface LikersModalOptions {
 	count: number;
 	resource?: LikersResource;
 }
 
-export class LikersModal {
-	static async show(options: LikersModalOptions) {
-		const { count, resource } = options;
+export async function showLikersModal(options: LikersModalOptions) {
+	const { count, resource } = options;
 
-		return await showModal<void>({
-			modalId: 'Likers',
-			component: defineAsyncComponent(() => import('./modal.vue')),
-			props: {
-				count,
-				resource,
-			},
-			size: 'sm',
-		});
-	}
+	return await showModal<void>({
+		modalId: 'Likers',
+		component: defineAsyncComponent(() => import('./AppLikesModal.vue')),
+		props: {
+			count,
+			resource,
+		},
+		size: 'sm',
+	});
 }

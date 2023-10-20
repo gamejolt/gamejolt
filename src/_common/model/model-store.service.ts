@@ -1,11 +1,18 @@
 import { reactive, ref } from 'vue';
+import { Api, type RequestOptions } from '../api/api.service';
+
+export type ModelSaveRequestOptions = RequestOptions & { data?: any };
 
 export interface ModelStoreModel {
 	modelStoreId?(): number | string;
 	update(data: any): void;
 }
 
-type ModelConstructor<T extends ModelStoreModel> = new (data: any) => T;
+export interface RemovableModel {
+	_removed: boolean;
+}
+
+type ModelConstructor<T extends ModelStoreModel> = new () => T;
 
 const _models = ref(new Map<string, ModelStoreModel>());
 
@@ -15,11 +22,11 @@ const _models = ref(new Map<string, ModelStoreModel>());
  */
 export function storeModel<T extends ModelStoreModel>(
 	modelConstructor: ModelConstructor<T>,
-	data?: Record<string, any>
+	data: Record<string, any>
 ): T {
 	const typename = modelConstructor.name;
 
-	if (!data) {
+	if (!data || Object.keys(data).length === 0) {
 		throw new Error(`Called storeModel with empty data: ${typename}.`);
 	}
 
@@ -32,7 +39,8 @@ export function storeModel<T extends ModelStoreModel>(
 		return targetModel;
 	}
 
-	targetModel = reactive(new modelConstructor(data)) as T;
+	targetModel = reactive(new modelConstructor()) as T;
+	targetModel.update(data);
 	_models.value.set(key, targetModel);
 
 	return targetModel;
@@ -87,4 +95,83 @@ function _generateKey(typename: string, id?: number | string) {
 	}
 
 	return `${typename}:${id}`;
+}
+
+export async function saveModel<T extends ModelStoreModel>(
+	modelConstructor: ModelConstructor<T>,
+	{
+		url,
+		field,
+		data,
+		requestOptions,
+	}: {
+		/**
+		 * The API endpoint that we'll call.
+		 */
+		url: string;
+
+		/**
+		 * This is the field name in the response object that the updated model
+		 * data should be returned.
+		 */
+		field: string;
+
+		/**
+		 * The model data that we'll send to the API. It can be empty if the
+		 * endpoint doesn't expect any data. For example, for endpoints that
+		 * just create and return the newly created model.
+		 */
+		data?: any;
+
+		/**
+		 * Any additional options to pass to the API call.
+		 */
+		requestOptions?: RequestOptions;
+	}
+) {
+	// Always force a POST (passing in an object).
+	const response = await Api.sendRequest(url, data || {}, requestOptions);
+	return _processSaveModel(modelConstructor, response, field);
+}
+
+async function _processSaveModel<T extends ModelStoreModel>(
+	modelConstructor: ModelConstructor<T>,
+	response: any,
+	field: string
+) {
+	if (response.success && response[field]) {
+		return {
+			model: storeModel(modelConstructor, response[field]),
+			response,
+		};
+	}
+
+	throw response;
+}
+
+export async function removeModel<T = any>(
+	model: RemovableModel,
+	url: string,
+	options?: ModelSaveRequestOptions
+) {
+	// Always force a POST (passing in an object).
+	const response = await Api.sendRequest<T>(
+		url,
+		options && options.data ? options.data : {},
+		options
+	);
+	return _processRemoveModel(model, response);
+}
+
+function _processRemoveModel(model: RemovableModel, response: any) {
+	if (response.notProcessed) {
+		return Promise.resolve(response);
+	}
+
+	if (response.success) {
+		model._removed = true;
+		return Promise.resolve(response);
+	}
+
+	return Promise.reject(response);
 }

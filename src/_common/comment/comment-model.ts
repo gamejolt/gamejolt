@@ -2,14 +2,30 @@ import { trackCommentVote } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import { ContentDocument } from '../content/content-document';
 import { Environment } from '../environment/environment.service';
-import { FiresidePost } from '../fireside/post/post-model';
-import { Game } from '../game/game.model';
+import { FiresidePostModel } from '../fireside/post/post-model';
+import { GameModel } from '../game/game.model';
 import { showErrorGrowl } from '../growls/growls.service';
+import {
+	ModelStoreModel,
+	RemovableModel,
+	removeModel,
+	saveModel,
+	storeModel,
+} from '../model/model-store.service';
 import { Model } from '../model/model.service';
-import { ReactionableModel, ReactionCount } from '../reaction/reaction-count';
-import { Subscription } from '../subscription/subscription.model';
-import { User } from '../user/user.model';
-import { CommentVote } from './vote/vote-model';
+import { ReactionCount, ReactionableModel } from '../reaction/reaction-count';
+import {
+	$createSubscription,
+	$removeSubscription,
+	SubscriptionModel,
+} from '../subscription/subscription.model';
+import { UserModel } from '../user/user.model';
+import {
+	$removeCommentVote,
+	$saveCommentVote,
+	CommentVoteModel,
+	CommentVoteType,
+} from './vote/vote-model';
 
 export interface CommentableModel {
 	canViewComments: boolean;
@@ -17,123 +33,80 @@ export interface CommentableModel {
 	canInteractWithComments: boolean;
 }
 
-export class Comment extends Model implements ReactionableModel {
-	static readonly STATUS_REMOVED = 0;
-	static readonly STATUS_VISIBLE = 1;
-	static readonly STATUS_SPAM = 2;
+export const enum CommentStatus {
+	Removed = 0,
+	Visible = 1,
+	Spam = 2,
+}
 
-	static readonly SORT_HOT = 'hot';
-	static readonly SORT_TOP = 'top';
-	static readonly SORT_NEW = 'new';
-	static readonly SORT_YOU = 'you';
+export const enum CommentSort {
+	Hot = 'hot',
+	Top = 'top',
+	New = 'new',
+	You = 'you',
+}
 
-	parent_id!: number;
-	resource!: 'Game' | 'Fireside_Post' | 'User';
-	resource_id!: number;
-	user!: User;
-	votes!: number;
-	user_vote?: CommentVote;
-	status!: number;
-	posted_on!: number;
-	modified_on?: number;
-	lang!: string;
-	subscription?: Subscription;
-	is_pinned!: boolean;
-	comment_content!: string;
+export class CommentModel implements ModelStoreModel, RemovableModel, ReactionableModel {
+	declare id: number;
+	declare parent_id?: number;
+	declare resource: 'Game' | 'Fireside_Post' | 'User';
+	declare resource_id: number;
+	declare user: UserModel;
+	declare votes: number;
+	declare user_vote?: CommentVoteModel;
+	declare status: CommentStatus;
+	declare posted_on: number;
+	declare modified_on?: number;
+	declare lang: string;
+	declare subscription?: SubscriptionModel;
+	declare is_pinned: boolean;
+	declare comment_content: string;
+	declare has_owner_like: boolean;
+	declare has_owner_reply: boolean;
+
 	reaction_counts: ReactionCount[] = [];
-	has_owner_like!: boolean;
-	has_owner_reply!: boolean;
+	reaction_counts_queue: Map<number, number> = new Map();
+	supporters: UserModel[] = [];
 
 	isFollowPending = false;
+	_removed = false;
 
-	get typename__() {
+	update(data: any): void {
+		Object.assign(this, data);
+
+		if (data.user) {
+			this.user = new UserModel(data.user);
+		}
+
+		if (data.user_vote) {
+			this.user_vote = new CommentVoteModel(data.user_vote);
+		}
+
+		if (data.subscription) {
+			this.subscription = new SubscriptionModel(data.subscription);
+		}
+
+		if (data.reaction_counts) {
+			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
+			this.reaction_counts_queue = new Map();
+		}
+	}
+
+	get resourceName() {
 		return 'Comment';
 	}
 
 	get permalink() {
 		return Environment.baseUrl + '/x/permalink/comment/' + this.id;
 	}
-
-	constructor(data: any = {}) {
-		super(data);
-
-		if (data.user) {
-			this.user = new User(data.user);
-		}
-
-		if (data.user_vote) {
-			this.user_vote = new CommentVote(data.user_vote);
-		}
-
-		if (data.subscription) {
-			this.subscription = new Subscription(data.subscription);
-		}
-
-		if (data.reaction_counts) {
-			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
-		}
-	}
-
-	$save() {
-		if (!this.id) {
-			return this.$_save(`/comments/save`, 'comment', {
-				detach: true,
-			});
-		} else {
-			return this.$_save(`/comments/save/${this.id}`, 'comment', {
-				detach: true,
-			});
-		}
-	}
-
-	$remove() {
-		if (!this.id) {
-			throw new Error('Tried removing a comment that does not exist');
-		} else {
-			return this.$_remove(`/comments/remove/${this.id}`, {
-				detach: true,
-			});
-		}
-	}
-
-	async $follow() {
-		if (this.subscription || this.isFollowPending) {
-			return;
-		}
-		this.isFollowPending = true;
-
-		const subscription = await Subscription.$subscribe(this.id);
-		this.subscription = subscription;
-		this.isFollowPending = false;
-	}
-
-	async $removeFollow() {
-		if (!this.subscription || this.isFollowPending) {
-			return;
-		}
-		this.isFollowPending = true;
-
-		await this.subscription.$remove();
-		this.subscription = undefined;
-		this.isFollowPending = false;
-	}
-
-	// applies pin operation to current comment and returns the comment that
-	// got unpinned (or null if that didn't happen)
-	async $pin(): Promise<Comment | null> {
-		const result = await this.$_save(`/comments/pin/${this.id}`, 'comment');
-		return result['otherComment'] ? new Comment(result['otherComment']) : null;
-	}
 }
-
-Model.create(Comment);
 
 export async function fetchComment(id: number) {
 	try {
 		const payload = await Api.sendRequest(`/comments/get-comment/${id}`, null, {
 			detach: true,
 		});
-		return new Comment(payload.comment);
+		return storeModel(CommentModel, payload.comment);
 	} catch (e) {
 		// Probably removed.
 	}
@@ -141,7 +114,7 @@ export async function fetchComment(id: number) {
 
 export type CommentBlockReason = 'commenter-blocked' | 'mentioned-blocked-user';
 
-export function getCommentBlockReason(comment: Comment): CommentBlockReason | false {
+export function getCommentBlockReason(comment: CommentModel): CommentBlockReason | false {
 	if (comment.user.is_blocked) {
 		return 'commenter-blocked';
 	}
@@ -163,11 +136,11 @@ export function getCommentBlockReason(comment: Comment): CommentBlockReason | fa
 }
 
 export function getCommentModelResourceName(model: Model) {
-	if (model instanceof Game) {
+	if (model instanceof GameModel) {
 		return 'Game';
-	} else if (model instanceof User) {
+	} else if (model instanceof UserModel) {
 		return 'User';
-	} else if (model instanceof FiresidePost) {
+	} else if (model instanceof FiresidePostModel) {
 		return 'Fireside_Post';
 	}
 	throw new Error('Model cannot contain comments');
@@ -178,7 +151,7 @@ export function getCommentModelResourceName(model: Model) {
  * {@link CommentableModel} passed in. Will also check any parent comment passed
  * in to make sure they have the correct permissions on that comment as well.
  */
-export function canCommentOnModel(model: CommentableModel, parentComment?: Comment) {
+export function canCommentOnModel(model: CommentableModel, parentComment?: CommentModel) {
 	if (parentComment?.user.hasAnyBlock) {
 		return false;
 	}
@@ -186,14 +159,15 @@ export function canCommentOnModel(model: CommentableModel, parentComment?: Comme
 	return model.canMakeComment;
 }
 
-/**
- * @param options scrollId is a timestamp that controls where fetching starts (posted_on)
- */
 export async function fetchComments(
 	resource: string,
 	resourceId: number,
-	sort: string,
-	options: { scrollId?: number | null; page?: number | null }
+	sort: CommentSort,
+	options: {
+		/** is a timestamp that controls where fetching starts (posted_on) */
+		scrollId?: number | null;
+		page?: number | null;
+	}
 ) {
 	const { scrollId, page } = options;
 	let query = '';
@@ -223,13 +197,71 @@ export async function getCommentUrl(commentId: number): Promise<string> {
 	return response.url;
 }
 
-export async function addCommentVote(comment: Comment, vote: number) {
+export async function saveComment(data: Partial<CommentModel>) {
+	const { model } = await saveModel(CommentModel, {
+		url: !data.id ? `/comments/save` : `/comments/save/${data.id}`,
+		field: 'comment',
+		data,
+		requestOptions: {
+			detach: true,
+		},
+	});
+
+	return model;
+}
+
+export async function removeComment(comment: CommentModel) {
+	if (!comment.id) {
+		throw new Error('Tried removing a comment that does not exist');
+	}
+
+	return removeModel(comment, `/comments/remove/${comment.id}`, {
+		detach: true,
+	});
+}
+
+export async function $followComment(comment: CommentModel) {
+	if (comment.subscription || comment.isFollowPending) {
+		return;
+	}
+	comment.isFollowPending = true;
+
+	const subscription = await $createSubscription(comment.id);
+	comment.subscription = subscription;
+	comment.isFollowPending = false;
+}
+
+export async function $unfollowComment(comment: CommentModel) {
+	if (!comment.subscription || comment.isFollowPending) {
+		return;
+	}
+	comment.isFollowPending = true;
+
+	await $removeSubscription(comment.subscription);
+	comment.subscription = undefined;
+	comment.isFollowPending = false;
+}
+
+/**
+ * Applies pin operation to current comment and returns the comment that got
+ * unpinned (or null if that didn't happen).
+ */
+export async function $pinComment(comment: CommentModel) {
+	const { response } = await saveModel(CommentModel, {
+		url: `/comments/pin/${comment.id}`,
+		field: 'comment',
+	});
+
+	return response['otherComment'] ? storeModel(CommentModel, response['otherComment']) : null;
+}
+
+export async function $voteOnComment(comment: CommentModel, vote: number) {
 	// Don't do anything if they are setting the same vote.
 	if (comment.user_vote && comment.user_vote.vote === vote) {
 		return;
 	}
 
-	const newVote = new CommentVote({ comment_id: comment.id, vote });
+	const newVote = new CommentVoteModel({ comment_id: comment.id, vote });
 
 	const previousVote = comment.user_vote;
 	const hadPreviousVote = !!previousVote;
@@ -239,7 +271,7 @@ export async function addCommentVote(comment: Comment, vote: number) {
 	// they had previously set it to upvote and are changing to downvote to signify the removal
 	// of the upvote only.
 	let operation = 0;
-	if (vote === CommentVote.VOTE_UPVOTE) {
+	if (vote === CommentVoteType.Upvote) {
 		operation = 1;
 	} else if (hadPreviousVote) {
 		// Their previous vote had to be an upvote in this case.
@@ -249,7 +281,7 @@ export async function addCommentVote(comment: Comment, vote: number) {
 
 	let failed = false;
 	try {
-		return await newVote.$save();
+		return await $saveCommentVote(newVote);
 	} catch (e) {
 		failed = true;
 		comment.votes -= operation;
@@ -261,7 +293,7 @@ export async function addCommentVote(comment: Comment, vote: number) {
 	}
 }
 
-export async function removeCommentVote(comment: Comment) {
+export async function $unvoteOnComment(comment: CommentModel) {
 	if (!comment.user_vote) {
 		return;
 	}
@@ -269,14 +301,14 @@ export async function removeCommentVote(comment: Comment) {
 	const previousVote = comment.user_vote;
 
 	// Votes only show upvotes, so don't modify vote count if it was a downvote.
-	if (previousVote.vote === CommentVote.VOTE_UPVOTE) {
+	if (previousVote.vote === CommentVoteType.Upvote) {
 		--comment.votes;
 	}
 	comment.user_vote = undefined;
 
 	let failed = false;
 	try {
-		return await previousVote.$remove();
+		return await $removeCommentVote(previousVote);
 	} catch (e) {
 		failed = true;
 		comment.user_vote = previousVote;

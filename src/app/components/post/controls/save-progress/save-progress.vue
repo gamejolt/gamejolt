@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import AppProgressPoller from '../../../../../_common/progress/poller/AppProgressPoller.vue';
 
@@ -12,7 +12,7 @@ import AppProgressPoller from '../../../../../_common/progress/poller/AppProgres
 })
 export default class AppPostControlsSaveProgress extends Vue {
 	@Prop({ type: Object, required: true })
-	post!: FiresidePost;
+	post!: FiresidePostModel;
 
 	// Before the first bit of progress arrives, show a full indeterminate bar.
 	progress = 1;
@@ -30,7 +30,7 @@ export default class AppPostControlsSaveProgress extends Vue {
 
 	private assignPost(postData: any) {
 		if (postData) {
-			const post = new FiresidePost(postData);
+			const post = new FiresidePostModel(postData);
 			this.post.assign(post);
 		}
 	}

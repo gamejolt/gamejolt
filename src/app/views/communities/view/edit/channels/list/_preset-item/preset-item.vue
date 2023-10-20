@@ -1,14 +1,14 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { assertNever } from '../../../../../../../../utils/utils';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import {
-	Community,
+	CommunityModel,
 	CommunityPresetChannelType,
 	getCommunityChannelBackground,
 } from '../../../../../../../../_common/community/community.model';
+import { assertNever } from '../../../../../../../../utils/utils';
 import AppCommunityChannelCardEdit from '../../../../../../../components/community/channel/card/edit/edit.vue';
-import { CommunityChannelPresetBackgroundModal } from '../../../../../../../components/community/channel/preset-background-modal/preset-background-modal.service';
+import { showCommunityChannelPresetBackgroundModal } from '../../../../../../../components/community/channel/preset-background-modal/preset-background-modal.service';
 
 @Options({
 	components: {
@@ -17,7 +17,7 @@ import { CommunityChannelPresetBackgroundModal } from '../../../../../../../comp
 	},
 })
 export default class AppCommunitiesEditChannelListPresetItem extends Vue {
-	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
 	@Prop({ type: String, required: true }) presetType!: CommunityPresetChannelType;
 
 	@Emit('edit') emitEdit() {}
@@ -43,7 +43,7 @@ export default class AppCommunitiesEditChannelListPresetItem extends Vue {
 	}
 
 	async onClickEditBackground() {
-		await CommunityChannelPresetBackgroundModal.show(this.community, this.presetType);
+		await showCommunityChannelPresetBackgroundModal(this.community, this.presetType);
 		this.emitEdit();
 	}
 }
@@ -58,10 +58,7 @@ export default class AppCommunitiesEditChannelListPresetItem extends Vue {
 		</div>
 
 		<template #body>
-			<AppCommunityChannelCardEdit
-				:background="background"
-				@click="onClickEditBackground"
-			/>
+			<AppCommunityChannelCardEdit :background="background" @click="onClickEditBackground" />
 		</template>
 	</AppCardListItem>
 </template>

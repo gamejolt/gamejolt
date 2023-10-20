@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Inject, Options, Vue } from 'vue-property-decorator';
-import AppCommunityCardBase from '../../../../../_common/community/card-base/card-base.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import AppCommunityCardBase from '../../../../../_common/community/card-base/AppCommunityCardBase.vue';
 import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 
 @Options({
 	components: {

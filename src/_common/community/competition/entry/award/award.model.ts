@@ -1,43 +1,41 @@
 import { Api } from '../../../../api/api.service';
 import { Model } from '../../../../model/model.service';
-import { CommunityCompetitionAward } from '../../award/award.model';
+import { CommunityCompetitionAwardModel } from '../../award/award.model';
 
-export class CommunityCompetitionEntryAward extends Model {
-	community_competition_entry_id!: number;
-	sort!: number;
+export class CommunityCompetitionEntryAwardModel extends Model {
+	declare community_competition_entry_id: number;
+	declare sort: number;
 
-	community_competition_award!: CommunityCompetitionAward;
+	declare community_competition_award: CommunityCompetitionAwardModel;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.community_competition_award) {
-			this.community_competition_award = new CommunityCompetitionAward(
+			this.community_competition_award = new CommunityCompetitionAwardModel(
 				data.community_competition_award
 			);
 		}
 	}
-
-	static $saveSort(awardId: number, sortedIds: number[]) {
-		return Api.sendRequest(
-			`/web/dash/communities/competitions/awards/save-entry-sort/${awardId}`,
-			sortedIds
-		);
-	}
-
-	static $assign(entryId: number, awardId: number) {
-		return Api.sendRequest(
-			`/web/dash/communities/competitions/awards/entry-assign/${awardId}/${entryId}`,
-			{}
-		);
-	}
-
-	static $unassign(entryId: number, awardId: number) {
-		return Api.sendRequest(
-			`/web/dash/communities/competitions/awards/entry-unassign/${awardId}/${entryId}`,
-			{}
-		);
-	}
 }
 
-Model.create(CommunityCompetitionEntryAward);
+export function $saveSortCommunityCompetitionEntryAward(awardId: number, sortedIds: number[]) {
+	return Api.sendRequest(
+		`/web/dash/communities/competitions/awards/save-entry-sort/${awardId}`,
+		sortedIds
+	);
+}
+
+export function $assignCommunityCompetitionEntryAward(entryId: number, awardId: number) {
+	return Api.sendRequest(
+		`/web/dash/communities/competitions/awards/entry-assign/${awardId}/${entryId}`,
+		{}
+	);
+}
+
+export function $unassignCommunityCompetitionEntryAward(entryId: number, awardId: number) {
+	return Api.sendRequest(
+		`/web/dash/communities/competitions/awards/entry-unassign/${awardId}/${entryId}`,
+		{}
+	);
+}

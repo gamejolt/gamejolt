@@ -8,12 +8,12 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../_common/form-vue/form.service';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { User } from '../../../../_common/user/user.model';
+import { $clearUserHeader, $saveUserHeader, UserModel } from '../../../../_common/user/user.model';
 
-type FormModel = User & {
-	header_crop: any;
+type FormModel = UserModel & {
+	header_crop?: any;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -33,8 +33,8 @@ export default class FormUserHeader
 	get app() {
 		return this.commonStore;
 	}
-	modelClass = User as any;
-	saveMethod = '$saveHeader' as const;
+	modelClass = UserModel;
+	modelSaveHandler = $saveUserHeader;
 
 	maxFilesize = 0;
 	minAspectRatio = 0;
@@ -75,12 +75,12 @@ export default class FormUserHeader
 	}
 
 	async clearHeader() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to remove your profile header?`)
 		);
 
 		if (result) {
-			this.formModel.$clearHeader();
+			$clearUserHeader(this.formModel);
 		}
 	}
 
@@ -106,12 +106,12 @@ export default class FormUserHeader
 					near the center of the image.
 				</AppTranslate>
 			</p>
-			<p class="help-block" v-translate>
+			<p v-translate class="help-block">
 				Your image must be a PNG or JPG.
 				<br />
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
-			<p class="help-block strong" v-translate="{ dimensions: '2000×500' }">
+			<p v-translate="{ dimensions: '2000×500' }" class="help-block strong">
 				The recommended size for a header image is
 				<code>%{dimensions}</code>
 				(ratio of 4 ÷ 1).
@@ -136,9 +136,9 @@ export default class FormUserHeader
 		</AppFormGroup>
 
 		<AppFormGroup
+			v-if="formModel.header_media_item && !formModel.file"
 			name="header_crop"
 			:label="$gettext(`Crop Current Header`)"
-			v-if="formModel.header_media_item && !formModel.file"
 		>
 			<div class="form-control-static">
 				<AppFormControlCrop

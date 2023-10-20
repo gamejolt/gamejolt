@@ -1,13 +1,17 @@
 <script lang="ts">
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
-import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../../../utils/regex';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
-import { GameVideo } from '../../../../../_common/game/video/video.model';
-import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
+import { GameModel } from '../../../../../_common/game/game.model';
+import {
+	$saveGameVideo,
+	GameVideoModel,
+	GameVideoType,
+} from '../../../../../_common/game/video/video.model';
+import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
+import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../../../utils/regex';
 
-type FormModel = GameVideo & {
-	_url: string;
+type FormModel = GameVideoModel & {
+	_url?: string;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -18,9 +22,10 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormGameVideo extends mixins(Wrapper) {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 
-	modelClass = GameVideo as any;
+	modelClass = GameVideoModel;
+	modelSaveHandler = $saveGameVideo;
 
 	readonly REGEX_VIDEO = REGEX_VIDEO;
 
@@ -36,12 +41,12 @@ export default class FormGameVideo extends mixins(Wrapper) {
 
 		const youtubeMatch = url.match(REGEX_YOUTUBE);
 		if (youtubeMatch) {
-			return { id: youtubeMatch[youtubeMatch.length - 1], type: GameVideo.TYPE_YOUTUBE };
+			return { id: youtubeMatch[youtubeMatch.length - 1], type: GameVideoType.Youtube };
 		}
 
 		const vimeoMatch = url.match(REGEX_VIMEO);
 		if (vimeoMatch) {
-			return { id: vimeoMatch[vimeoMatch.length - 1], type: GameVideo.TYPE_VIMEO };
+			return { id: vimeoMatch[vimeoMatch.length - 1], type: GameVideoType.Vimeo };
 		}
 	}
 
@@ -55,9 +60,9 @@ export default class FormGameVideo extends mixins(Wrapper) {
 
 		// We use _url as the form model's URL and copy back and forth.
 		if (this.formModel.url) {
-			if (this.formModel.type === GameVideo.TYPE_VIMEO) {
+			if (this.formModel.type === GameVideoType.Vimeo) {
 				this.setField('_url', 'https://www.vimeo.com/' + this.formModel.url);
-			} else if (this.formModel.type === GameVideo.TYPE_YOUTUBE) {
+			} else if (this.formModel.type === GameVideoType.Youtube) {
 				this.setField('_url', 'https://www.youtube.com/watch?v=' + this.formModel.url);
 			}
 		}
@@ -83,9 +88,7 @@ export default class FormGameVideo extends mixins(Wrapper) {
 		<AppFormGroup name="_url" :label="$gettext(`Video URL`)">
 			<AppFormControl type="text" :validators="[validatePattern(REGEX_VIDEO)]" />
 
-			<AppFormControlErrors
-				:label="$gettext(`video URL`)"
-			/>
+			<AppFormControlErrors :label="$gettext(`video URL`)" />
 
 			<p v-translate class="help-block">
 				We currently only support videos from Vimeo or YouTube.
@@ -109,11 +112,7 @@ export default class FormGameVideo extends mixins(Wrapper) {
 			<AppFormControlErrors />
 		</AppFormGroup>
 
-		<AppFormGroup
-			name="description"
-			:label="$gettext(`Description`)"
-			:optional="true"
-		>
+		<AppFormGroup name="description" :label="$gettext(`Description`)" :optional="true">
 			<AppFormControlTextarea rows="5" :validators="[validateMaxLength(2500)]" />
 			<AppFormControlErrors />
 		</AppFormGroup>

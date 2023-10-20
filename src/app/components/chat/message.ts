@@ -1,11 +1,12 @@
 import { ModelStoreModel, storeModel } from '../../../_common/model/model-store.service';
+import { ReactionCount, ReactionableModel } from '../../../_common/reaction/reaction-count';
 import { ChatUser } from './user';
 
 export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued message should be displayed as such.
 
 export type ChatMessageType = 'content' | 'sticker' | 'invite';
 
-export class ChatMessage implements ModelStoreModel {
+export class ChatMessageModel implements ModelStoreModel, ReactionableModel {
 	declare id: number;
 	declare user_id: number;
 	declare user: ChatUser;
@@ -19,6 +20,8 @@ export class ChatMessage implements ModelStoreModel {
 	declare showAvatar?: boolean;
 	declare dateSplit?: boolean;
 	declare is_automated?: boolean;
+	reaction_counts: ReactionCount[] = [];
+	reaction_counts_queue: Map<number, number> = new Map();
 
 	// Used for rendering.
 	_collapsable = false;
@@ -28,8 +31,8 @@ export class ChatMessage implements ModelStoreModel {
 	_isProcessing = false;
 	_error = false; // When an error was received trying to send the message.
 
-	constructor(data: any) {
-		this.update(data);
+	get resourceName() {
+		return 'Chat_Message';
 	}
 
 	update(data: any) {
@@ -53,6 +56,11 @@ export class ChatMessage implements ModelStoreModel {
 
 		if (this.is_automated === undefined) {
 			this.is_automated = false;
+		}
+
+		if (data.reaction_counts) {
+			this.reaction_counts = ReactionCount.populate(data.reaction_counts);
+			this.reaction_counts_queue = new Map();
 		}
 	}
 

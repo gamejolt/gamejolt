@@ -2,10 +2,14 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
-import { GameScoreTable } from '../../../../../_common/game/score-table/score-table.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import {
+	$saveGameScoreTable,
+	GameScoreTableModel,
+	GameScoreTableSorting,
+} from '../../../../../_common/game/score-table/score-table.model';
 
-class Wrapper extends BaseForm<GameScoreTable> {}
+class Wrapper extends BaseForm<GameScoreTableModel> {}
 
 @Options({
 	components: {
@@ -13,17 +17,20 @@ class Wrapper extends BaseForm<GameScoreTable> {}
 	},
 })
 export default class FormGameScoreTable extends mixins(Wrapper) {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 
-	modelClass = GameScoreTable;
-	GameScoreTable = GameScoreTable;
+	modelClass = GameScoreTableModel;
+	modelSaveHandler = $saveGameScoreTable;
+
+	readonly DirectionAscend = GameScoreTableSorting.DirectionAsc;
+	readonly DirectionDescend = GameScoreTableSorting.DirectionDesc;
 
 	onInit() {
 		this.setField('game_id', this.game.id);
 
 		if (this.method === 'add') {
 			this.setField('unique_scores', true);
-			this.setField('scores_sorting_direction', GameScoreTable.SORTING_DIRECTION_DESC);
+			this.setField('scores_sorting_direction', GameScoreTableSorting.DirectionDesc);
 		}
 	}
 }
@@ -36,40 +43,27 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 			<AppFormControlErrors />
 		</AppFormGroup>
 
-		<AppFormGroup
-			name="description"
-			:optional="true"
-			:label="$gettext(`Description`)"
-		>
+		<AppFormGroup name="description" :optional="true" :label="$gettext(`Description`)">
 			<AppFormControlTextarea rows="5" :validators="[validateMaxLength(250)]" />
 			<AppFormControlErrors />
 		</AppFormGroup>
 
-		<AppFormGroup
-			name="allow_guest_scores"
-			:label="$gettext(`Guest Scoring`)"
-		>
+		<AppFormGroup name="allow_guest_scores" :label="$gettext(`Guest Scoring`)">
 			<p class="help-block">
 				<AppTranslate>Allow guests to submit scores?</AppTranslate>
 			</p>
 			<AppFormControlToggle />
 		</AppFormGroup>
 
-		<AppFormGroup
-			name="unique_scores"
-			:label="$gettext(`Unique Scores`)"
-		>
+		<AppFormGroup name="unique_scores" :label="$gettext(`Unique Scores`)">
 			<p class="help-block"><AppTranslate>Only show a user's best score?</AppTranslate></p>
 			<AppFormControlToggle />
 		</AppFormGroup>
 
-		<AppFormGroup
-			name="scores_sorting_direction"
-			:label="$gettext(`Sort Direction`)"
-		>
+		<AppFormGroup name="scores_sorting_direction" :label="$gettext(`Sort Direction`)">
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="GameScoreTable.SORTING_DIRECTION_DESC" />
+					<AppFormControlRadio :value="DirectionDescend" />
 					<AppTranslate translate-comment="As in going from highest to lowest">
 						Descending
 					</AppTranslate>
@@ -81,7 +75,7 @@ export default class FormGameScoreTable extends mixins(Wrapper) {
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="GameScoreTable.SORTING_DIRECTION_ASC" />
+					<AppFormControlRadio :value="DirectionAscend" />
 					<AppTranslate translate-comment="As in going from lowest to highest">
 						Ascending
 					</AppTranslate>

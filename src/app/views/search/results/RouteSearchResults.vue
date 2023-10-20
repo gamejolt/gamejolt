@@ -1,7 +1,6 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { getQuery } from '../../../../utils/router';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/AppCommunityThumbnail.vue';
 import { formatNumber } from '../../../../_common/filters/number';
@@ -9,8 +8,9 @@ import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCard from '../../../../_common/user/card/AppUserCard.vue';
+import { getQuery } from '../../../../utils/router';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
 import AppGameGrid from '../../../components/game/grid/grid.vue';
@@ -41,7 +41,7 @@ const feed = ref(null) as Ref<ActivityFeedView | null>;
 
 createAppRoute({
 	routeTitle: computed(() =>
-		$gettextInterpolate(`"%{ query }" on Game Jolt`, {
+		$gettext(`"%{ query }" on Game Jolt`, {
 			query: query.value,
 		})
 	),

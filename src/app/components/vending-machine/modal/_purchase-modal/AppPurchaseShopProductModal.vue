@@ -1,9 +1,9 @@
 <script lang="ts">
-import { PropType, Ref, computed, ref, toRefs } from 'vue';
+import { PropType, Ref, computed, onUnmounted, ref, toRefs, watchEffect } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
-import { Background } from '../../../../../_common/background/background.model';
+import { BackgroundModel } from '../../../../../_common/background/background.model';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import {
@@ -12,34 +12,38 @@ import {
 	CurrencyType,
 	canAffordCurrency,
 } from '../../../../../_common/currency/currency-type';
+import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
-import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import { showPurchaseMicrotransactionModal } from '../../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
+import { storeModel } from '../../../../../_common/model/model-store.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppStickerPack, {
 	StickerPackRatio,
 } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
-import { StickerPackOpenModal } from '../../../../../_common/sticker/pack/open-modal/modal.service';
-import { UserStickerPack } from '../../../../../_common/sticker/pack/user-pack.model';
+import AppStickerPackContents from '../../../../../_common/sticker/pack/AppStickerPackContents.vue';
+import { showStickerPackOpenModal } from '../../../../../_common/sticker/pack/open-modal/modal.service';
+import { UserStickerPackModel } from '../../../../../_common/sticker/pack/user-pack.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext, $gettextInterpolate } from '../../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserAvatarFrame } from '../../../../../_common/user/user-avatar/frame/frame.model';
+import { UserAvatarFrameModel } from '../../../../../_common/user/user-avatar/frame/frame.model';
 import {
 	styleBorderRadiusLg,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 } from '../../../../../_styles/mixins';
+import { getCurrentServerTime } from '../../../../../utils/server-time';
 import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.route';
 import { showNewProductModal } from '../_product/modal/modal.service';
 
 interface PurchaseData {
-	shopProduct: InventoryShopProductSale;
+	shopProduct: InventoryShopProductSaleModel;
 	currency: Currency;
 	balanceRefs: {
 		coinBalance: Ref<number>;
@@ -50,10 +54,12 @@ interface PurchaseData {
 interface PurchaseDataCallbacks {
 	beforeRequest?: () => void;
 	onItemPurchased?: {
-		pack?: (product: UserStickerPack) => void;
-		avatarFrame?: (product: UserAvatarFrame) => void;
-		background?: (product: Background) => void;
-		all?: (product: UserStickerPack | UserAvatarFrame | Background | null) => void;
+		pack?: (product: UserStickerPackModel) => void;
+		avatarFrame?: (product: UserAvatarFrameModel) => void;
+		background?: (product: BackgroundModel) => void;
+		all?: (
+			product: UserStickerPackModel | UserAvatarFrameModel | BackgroundModel | null
+		) => void;
 	};
 }
 
@@ -69,7 +75,7 @@ export async function purchaseShopProduct({
 
 	if (!pricing || !canAffordCurrency(currency.id, pricing.price, balanceRefs)) {
 		showErrorGrowl(
-			$gettextInterpolate(`You don't have enough %{ label } to purchase this product.`, {
+			$gettext(`You don't have enough %{ label } to purchase this product.`, {
 				label: currency.label,
 			})
 		);
@@ -114,16 +120,16 @@ export async function purchaseShopProduct({
 			}
 		}
 
-		let item: UserStickerPack | UserAvatarFrame | Background | null = null;
+		let item: UserStickerPackModel | UserAvatarFrameModel | BackgroundModel | null = null;
 
 		if (shopProduct.stickerPack) {
-			item = new UserStickerPack(rawProduct);
+			item = storeModel(UserStickerPackModel, rawProduct);
 			onItemPurchased?.pack?.(item);
 		} else if (shopProduct.avatarFrame) {
-			item = new UserAvatarFrame(rawProduct);
+			item = storeModel(UserAvatarFrameModel, rawProduct);
 			onItemPurchased?.avatarFrame?.(item);
 		} else if (shopProduct.background) {
-			item = new Background(rawProduct);
+			item = storeModel(BackgroundModel, rawProduct);
 			onItemPurchased?.background?.(item);
 		} else {
 			console.error('No product model found after purchasing product', {
@@ -147,7 +153,7 @@ export async function purchaseShopProduct({
 <script lang="ts" setup>
 const props = defineProps({
 	shopProduct: {
-		type: Object as PropType<InventoryShopProductSale>,
+		type: Object as PropType<InventoryShopProductSaleModel>,
 		required: true,
 	},
 	currencyOptions: {
@@ -169,6 +175,55 @@ const { user: myUser, coinBalance, joltbuxBalance } = useCommonStore();
 const balanceRefs = { coinBalance, joltbuxBalance };
 
 const processingPurchaseCurrencyId = ref<string>();
+
+let timerBuilder: NodeJS.Timer | null = null;
+const timeRemaining = ref<string>();
+
+const isExpired = ref(false);
+
+function clearTimerBuilder() {
+	if (timerBuilder) {
+		clearInterval(timerBuilder);
+		timerBuilder = null;
+	}
+}
+
+/**
+ * Updates the {@link timeRemaining} text and {@link isExpired} state, and
+ * clears the timer once we've hit an expired state.
+ */
+function checkTimeRemaining(endsOn: number) {
+	if (endsOn - getCurrentServerTime() < 1_000) {
+		clearTimerBuilder();
+		timeRemaining.value = $gettext(`No longer for sale.`);
+		isExpired.value = true;
+		return;
+	}
+
+	timeRemaining.value = $gettext(`Limited time to purchase: %{ time }`, {
+		time: shorthandReadableTime(endsOn, {
+			nowText: '0s',
+			precision: 'exact',
+			allowFuture: true,
+		}),
+	});
+}
+
+watchEffect(() => {
+	const endsOn = shopProduct.value.ends_on;
+	// Not sure if endsOn is different due to a prop changing, so we should just
+	// always clear the timer builder and set up fresh again as required.
+	clearTimerBuilder();
+
+	if (endsOn) {
+		timerBuilder = setInterval(() => checkTimeRemaining(endsOn), 1_000);
+		checkTimeRemaining(endsOn);
+		return;
+	}
+
+	timeRemaining.value = undefined;
+	isExpired.value = false;
+});
 
 const currencyOptionsList = computed(() => Object.entries(currencyOptions.value));
 
@@ -224,6 +279,13 @@ const headerLabel = computed(() => {
 	return $gettext(`Purchase item`);
 });
 
+onUnmounted(() => {
+	if (timerBuilder) {
+		clearInterval(timerBuilder);
+		timerBuilder = null;
+	}
+});
+
 /**
  * Purchases an inventory shop product using the specified Currency.
  */
@@ -255,11 +317,7 @@ async function purchaseProduct(options: PurchaseData) {
 	processingPurchaseCurrencyId.value = undefined;
 }
 
-function handleStickerPackPurchase(product: UserStickerPack) {
-	if (!(product instanceof UserStickerPack)) {
-		return;
-	}
-
+function handleStickerPackPurchase(product: UserStickerPackModel) {
 	if (stickerPacks.value.some(i => i.id === product.id)) {
 		// Was probably handled somewhere already, ignore.
 		return;
@@ -268,7 +326,7 @@ function handleStickerPackPurchase(product: UserStickerPack) {
 
 	// Show the PackOpen modal. This should ask them if they want to open right
 	// away or save their pack for later.
-	StickerPackOpenModal.show({
+	showStickerPackOpenModal({
 		pack: product,
 		openImmediate: false,
 	});
@@ -345,6 +403,14 @@ function getItemWidthStyles(ratio: number) {
 
 				<AppSpacer vertical :scale="4" />
 
+				<template v-if="timeRemaining">
+					<div>
+						{{ timeRemaining }}
+					</div>
+
+					<AppSpacer vertical :scale="4" />
+				</template>
+
 				<div v-if="currencyOptionsList.length !== 1" class="text-center">
 					<template v-if="!currencyOptionsList.length">
 						{{ $gettext(`This item is not available for purchase`) }}
@@ -371,6 +437,7 @@ function getItemWidthStyles(ratio: number) {
 							margin: 0,
 						}"
 						:disabled="
+							isExpired ||
 							!!processingPurchaseCurrencyId ||
 							!canAffordCurrency(currency.id, amount, balanceRefs)
 						"
@@ -424,6 +491,11 @@ function getItemWidthStyles(ratio: number) {
 						</RouterLink>
 					</div>
 				</template>
+
+				<div v-if="shopProduct.stickerPack" :style="{ width: `100%` }">
+					<AppSpacer vertical :scale="8" />
+					<AppStickerPackContents :pack="shopProduct.stickerPack" />
+				</div>
 			</div>
 		</div>
 	</AppModal>

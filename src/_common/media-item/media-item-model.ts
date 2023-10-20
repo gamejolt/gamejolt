@@ -2,66 +2,60 @@ import { LightboxMediaModel, LightboxMediaType } from '../lightbox/lightbox-help
 import { Model } from '../model/model.service';
 import { StickerCount, constructStickerCounts } from '../sticker/sticker-count';
 
-export class MediaItem extends Model implements LightboxMediaModel {
-	static readonly TYPE_GAME_THUMBNAIL = 'game-thumbnail';
-	static readonly TYPE_GAME_HEADER = 'game-header';
-	static readonly TYPE_GAME_SCREENSHOT = 'game-screenshot';
-	static readonly TYPE_GAME_TROPHY = 'game-trophy';
-	static readonly TYPE_GAME_DESCRIPTION = 'game-description';
+export const enum MediaItemType {
+	GameThumbnail = 'game-thumbnail',
+	GameHeader = 'game-header',
+	GameScreenshot = 'game-screenshot',
+	GameTrophy = 'game-trophy',
+	GameDescription = 'game-description',
+	FiresidePostHeader = 'fireside-post-header',
+	FiresidePostImage = 'fireside-post-image',
+	FiresidePostVideo = 'fireside-post-video',
+	FiresidePostArticleImage = 'fireside-post-article-image',
+	FeaturedHeader = 'featured-header',
+	Comment = 'comment',
+	ForumPost = 'forum-post',
+	CommunityDescription = 'community-description',
+	CommunityChannelDescription = 'community-channel-description',
+	ChatMessage = 'chat-message',
+	ChatCommand = 'chat-command',
+	VideoPoster = 'video-poster',
+	VideoManifest = 'video-manifest',
+	TranscodedVideo = 'transcoded-video',
+	TranscodedVideoCard = 'transcoded-video-card',
+	HelpPageImage = 'help-page-image',
+}
 
-	static readonly TYPE_FIRESIDE_POST_HEADER = 'fireside-post-header';
-	static readonly TYPE_FIRESIDE_POST_IMAGE = 'fireside-post-image';
-	static readonly TYPE_FIRESIDE_POST_VIDEO = 'fireside-post-video';
-	static readonly TYPE_FIRESIDE_POST_ARTICLE_IMAGE = 'fireside-post-article-image';
+export const enum MediaItemStatus {
+	Active = 'active',
+	Removed = 'removed',
+	Inactive = 'inactive',
+}
 
-	static readonly TYPE_FEATURED_HEADER = 'featured-header';
-
-	static readonly TYPE_COMMENT = 'comment';
-
-	static readonly TYPE_FORUM_POST = 'forum-post';
-
-	static readonly TYPE_COMMUNITY_DESCRIPTION = 'community-description';
-
-	static readonly TYPE_COMMUNITY_CHANNEL_DESCRIPTION = 'community-channel-description';
-
-	static readonly TYPE_CHAT_MESSAGE = 'chat-message';
-	static readonly TYPE_CHAT_COMMAND = 'chat-command';
-
-	static readonly TYPE_VIDEO_POSTER = 'video-poster';
-	static readonly TYPE_VIDEO_MANIFEST = 'video-manifest';
-	static readonly TYPE_TRANSCODED_VIDEO = 'transcoded-video';
-	static readonly TYPE_TRANSCODED_VIDEO_CARD = 'transcoded-video-card';
-
-	static readonly TYPE_HELP_PAGE_IMAGE = 'help-page-image';
-
-	static readonly STATUS_ACTIVE = 'active';
-	static readonly STATUS_REMOVED = 'removed';
-	static readonly STATUS_INACTIVE = 'inactive';
-
-	type!: string;
-	parent_id!: number;
-	hash!: string;
-	filename!: string;
-	filetype!: string;
-	is_animated!: boolean;
-	width!: number;
-	height!: number;
-	filesize!: number;
-	crop_start_x!: number;
-	crop_start_y!: number;
-	crop_end_x!: number;
-	crop_end_y!: number;
-	added_on!: number;
-	status!: string;
-	img_url!: string;
-	mediaserver_url_webm!: string;
-	mediaserver_url_mp4!: string;
-	mediaserver_url!: string;
-	avg_img_color!: null | string;
-	img_has_transparency!: boolean;
+export class MediaItemModel extends Model implements LightboxMediaModel {
+	declare type: MediaItemType;
+	declare parent_id: number;
+	declare hash: string;
+	declare filename: string;
+	declare filetype: string;
+	declare is_animated: boolean;
+	declare width: number;
+	declare height: number;
+	declare filesize: number;
+	declare crop_start_x: number;
+	declare crop_start_y: number;
+	declare crop_end_x: number;
+	declare crop_end_y: number;
+	declare added_on: number;
+	declare status: MediaItemStatus;
+	declare img_url: string;
+	declare mediaserver_url_webm: string;
+	declare mediaserver_url_mp4: string;
+	declare mediaserver_url: string;
+	declare avg_img_color: null | string;
+	declare img_has_transparency: boolean;
+	declare post_id?: number;
 	sticker_counts: StickerCount[] = [];
-
-	post_id?: number;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -109,7 +103,8 @@ export class MediaItem extends Model implements LightboxMediaModel {
 	}
 
 	getMediaItem() {
-		return this;
+		// Have to type it like this so we don't do a circular type reference.
+		return this as any;
 	}
 
 	getDimensions(
@@ -177,5 +172,3 @@ export class MediaItem extends Model implements LightboxMediaModel {
 		};
 	}
 }
-
-Model.create(MediaItem);

@@ -5,7 +5,7 @@ import AppTranslate from '../../translate/AppTranslate.vue';
 import AppShareControl from '../AppShareControl.vue';
 import { ShareProvider, ShareResource } from '../share.service';
 import AppShareCardTile from './AppShareCardTile.vue';
-import { ShareModal } from './_modal/modal.service';
+import { showShareModal } from './_modal/modal.service';
 
 const props = defineProps({
 	resource: {
@@ -30,7 +30,7 @@ const props = defineProps({
 const providers: ShareProvider[] = ['facebook', 'twitter'];
 
 function openShareModal() {
-	ShareModal.show({
+	showShareModal({
 		resource: props.resource,
 		url: props.url,
 	});

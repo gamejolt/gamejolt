@@ -1,9 +1,9 @@
-import type { LaunchInstance as TypeofLaunchInstance, OldLaunchInstance } from 'client-voodoo';
+import type { OldLaunchInstance, LaunchInstance as TypeofLaunchInstance } from 'client-voodoo';
 import type { Ref } from 'vue';
-import { arrayRemove } from '../../../utils/array';
 import { Api } from '../../../_common/api/api.service';
-import { Launcher, LaunchInstance } from '../../../_common/client/client-voodoo-imports';
-import { Translate } from '../../../_common/translate/translate.service';
+import { LaunchInstance, Launcher } from '../../../_common/client/client-voodoo-imports';
+import { $gettext } from '../../../_common/translate/translate.service';
+import { arrayRemove } from '../../../utils/array';
 import type { LocalDbPackage } from '../../components/client/local-db/package/package.model';
 import { handleClientVoodooError, trackClientVoodooOperation } from './client-voodoo';
 import type ClientLibraryPackageDataMutations from './package-data-mutations';
@@ -46,7 +46,7 @@ export default class ClientLibraryPackageLaunchOperations {
 			trackClientVoodooOperation('launch', true);
 		} catch (err) {
 			console.error(err);
-			handleClientVoodooError(err, 'launch', Translate.$gettext('Could not launch game.'));
+			handleClientVoodooError(err, 'launch', $gettext('Could not launch game.'));
 			this.launcherClear(localPackage);
 		}
 	}

@@ -1,24 +1,31 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { enforceLocation } from '../../../../utils/router';
-import { shallowSetup } from '../../../../utils/vue';
 import { Api } from '../../../../_common/api/api.service';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { formatNumber } from '../../../../_common/filters/number';
-import { GameBundle } from '../../../../_common/game-bundle/game-bundle.model';
-import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
-import { Game } from '../../../../_common/game/game.model';
+import { GameBundleModel } from '../../../../_common/game-bundle/game-bundle.model';
+import { GamePlaylistModel } from '../../../../_common/game-playlist/game-playlist.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { User } from '../../../../_common/user/user.model';
-import { GameCollection } from '../../../components/game/collection/collection.model';
+import { UserModel } from '../../../../_common/user/user.model';
+import { enforceLocation } from '../../../../utils/router';
+import { shallowSetup } from '../../../../utils/vue';
+import {
+	GameCollectionModel,
+	GameCollectionType,
+	GameCollectionUserTypes,
+} from '../../../components/game/collection/collection.model';
 import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
 import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/thumbnail.vue';
 import { GameFilteringContainer } from '../../../components/game/filtering/container';
@@ -39,7 +46,6 @@ import {
 const CollectionThemeKey = 'collection';
 
 const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
-const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 
 @Options({
 	name: 'RouteLibraryCollection',
@@ -58,17 +64,17 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		AppAuthRequired: vAppAuthRequired,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	// Not really able to make this lazy since it needs payload to build out the
 	// header.
 	cache: true,
 	async resolver({ route }) {
-		const type = route.meta.collectionType as string;
+		const type = route.meta.collectionType as GameCollectionType;
 		const filtering = new GameFilteringContainer(route);
 		const query = filtering.getQueryString(route);
 
 		let id: string = route.params.id as string;
-		if (GameCollection.USER_TYPES.indexOf(type) !== -1) {
+		if (GameCollectionUserTypes.indexOf(type) !== -1) {
 			id = '@' + id;
 		}
 
@@ -90,7 +96,7 @@ const UserTypes = ['followed', 'owned', 'developer', 'recommended'];
 		return payload;
 	},
 })
-export default class RouteLibraryCollection extends BaseRouteComponent {
+export default class RouteLibraryCollection extends LegacyRouteComponent {
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	themeStore = setup(() => useThemeStore());
@@ -104,18 +110,18 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		return this.libraryStore.collections.value;
 	}
 
-	type = '';
+	type: GameCollectionType | null = null;
 	followerCount = 0;
 
-	collection: GameCollection = null as any;
-	bundle: GameBundle | null = null;
-	playlist: GamePlaylist | null = null;
-	user: User | null = null;
+	collection: GameCollectionModel = null as any;
+	bundle: GameBundleModel | null = null;
+	playlist: GamePlaylistModel | null = null;
+	user: UserModel | null = null;
 
 	filtering: GameFilteringContainer | null = null;
 	listing: GameListingContainer | null = null;
 
-	recommendedGames: Game[] = [];
+	recommendedGames: GameModel[] = [];
 	isLoadingRecommended = false;
 
 	metaTitle = '';
@@ -129,15 +135,15 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		if (this.metaTitle) {
 			return this.metaTitle;
 		} else if (this.type) {
-			if (this.type === GameCollection.TYPE_FOLLOWED && this.user && this.collection) {
+			if (this.type === GameCollectionType.Followed && this.user && this.collection) {
 				const params = { user: '@' + this.user.username };
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Followed Games');
 				} else {
-					return this.$gettextInterpolate('Games Followed by %{ user }', params);
+					return this.$gettext('Games Followed by %{ user }', params);
 				}
 			} else if (
-				this.type === GameCollection.TYPE_PLAYLIST &&
+				this.type === GameCollectionType.Playlist &&
 				this.playlist &&
 				this.user &&
 				this.collection
@@ -149,28 +155,24 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 				if (this.collection.isOwner) {
 					return this.playlist.name;
 				} else {
-					return this.$gettextInterpolate('%{ playlist } by %{ user }', params);
+					return this.$gettext('%{ playlist } by %{ user }', params);
 				}
-			} else if (
-				this.type === GameCollection.TYPE_DEVELOPER &&
-				this.user &&
-				this.collection
-			) {
+			} else if (this.type === GameCollectionType.Developer && this.user && this.collection) {
 				const params = { user: '@' + this.user.username };
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Games');
 				} else {
-					return this.$gettextInterpolate('Games by %{ user }', params);
+					return this.$gettext('Games by %{ user }', params);
 				}
-			} else if (this.type === GameCollection.TYPE_OWNED && this.user && this.collection) {
+			} else if (this.type === GameCollectionType.Owned && this.user && this.collection) {
 				const params = { user: '@' + this.user.username };
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Owned Games');
 				} else {
-					return this.$gettextInterpolate('Games Owned by %{ user }', params);
+					return this.$gettext('Games Owned by %{ user }', params);
 				}
 			} else if (
-				this.type === GameCollection.TYPE_RECOMMENDED &&
+				this.type === GameCollectionType.Recommended &&
 				this.collection &&
 				this.user
 			) {
@@ -178,9 +180,9 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 				if (this.collection.isOwner) {
 					return this.$gettext('Your Daily Mix');
 				} else {
-					return this.$gettextInterpolate('Daily Mix for %{ user }', params);
+					return this.$gettext('Daily Mix for %{ user }', params);
 				}
-			} else if (this.type === GameCollection.TYPE_BUNDLE && this.bundle) {
+			} else if (this.type === GameCollectionType.Bundle && this.bundle) {
 				return this.bundle.title;
 			}
 		}
@@ -196,12 +198,12 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			await this.store.tillStoreBootstrapped;
 		}
 
-		this.type = this.$route.meta.collectionType as string;
+		this.type = this.$route.meta.collectionType as GameCollectionType;
 
 		if (!this.listing || !this.filtering) {
 			this.filtering = new GameFilteringContainer(this.$route);
 			this.listing = new GameListingContainer({
-				loadInfinitely: this.type === GameCollection.TYPE_DEVELOPER,
+				loadInfinitely: this.type === GameCollectionType.Developer,
 			});
 		}
 
@@ -217,21 +219,25 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 			) || null;
 
 		if (!collection) {
-			collection = new GameCollection($payload.collection);
-			this.playlist = $payload.playlist ? new GamePlaylist($payload.playlist) : null;
+			collection = new GameCollectionModel($payload.collection);
+			this.playlist = $payload.playlist ? new GamePlaylistModel($payload.playlist) : null;
 		} else {
 			this.playlist = collection.playlist || null;
 		}
 		this.collection = collection;
 
 		this.followerCount = $payload.followerCount || 0;
-		this.bundle = $payload.bundle ? new GameBundle($payload.bundle) : null;
+		this.bundle = $payload.bundle ? new GameBundleModel($payload.bundle) : null;
 
 		this.user = null;
-		if (this.type === 'followed' || this.type === 'owned' || this.type === 'recommended') {
-			this.user = new User($payload.user);
-		} else if (this.type === 'developer') {
-			this.user = new User($payload.developer);
+		if (
+			this.type === GameCollectionType.Followed ||
+			this.type === GameCollectionType.Owned ||
+			this.type === GameCollectionType.Recommended
+		) {
+			this.user = new UserModel($payload.user);
+		} else if (this.type === GameCollectionType.Developer) {
+			this.user = new UserModel($payload.developer);
 		} else if (this.playlist) {
 			this.user = this.playlist.user;
 		}
@@ -277,7 +283,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	get processedId() {
 		// Get the collection id.
 		let id = this.id;
-		if (GameCollection.USER_TYPES.indexOf(this.type) !== -1) {
+		if (this.type && GameCollectionUserTypes.indexOf(this.type) !== -1) {
 			id = '@' + id;
 		}
 
@@ -285,7 +291,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	}
 
 	get shouldShowFollowers() {
-		return this.type !== GameCollection.TYPE_BUNDLE && this.type !== GameCollection.TYPE_OWNED;
+		return this.type !== GameCollectionType.Bundle && this.type !== GameCollectionType.Owned;
 	}
 
 	get shouldShowFollow() {
@@ -294,7 +300,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		}
 
 		// Don't show follow for owned collections
-		if (this.collection.isOwner || this.collection.type === GameCollection.TYPE_OWNED) {
+		if (this.collection.isOwner || this.collection.type === GameCollectionType.Owned) {
 			return false;
 		}
 
@@ -315,20 +321,20 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 	get shouldShowEditPlaylist() {
 		return (
 			!this.shouldShowFollow &&
-			this.collection.type === GameCollection.TYPE_PLAYLIST &&
+			this.collection.type === GameCollectionType.Playlist &&
 			this.collection.isOwner
 		);
 	}
 
 	get canReorder() {
 		return (
-			this.collection.type === GameCollection.TYPE_DEVELOPER &&
+			this.collection.type === GameCollectionType.Developer &&
 			this.collection.isOwner &&
 			(this.filtering === null || this.filtering.areTagFiltersEmpty)
 		);
 	}
 
-	async onSortedGames(games: Game[]) {
+	async onSortedGames(games: GameModel[]) {
 		if (!this.canReorder || !this.listing) {
 			return;
 		}
@@ -347,7 +353,7 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		);
 	}
 
-	async removeFromPlaylist(game: Game) {
+	async removeFromPlaylist(game: GameModel) {
 		const playlist = this.collection.playlist!;
 		if (
 			await libraryRemoveGameFromPlaylist(this.libraryStore, playlist, game, {
@@ -358,14 +364,14 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		}
 	}
 
-	async removeFromLibrary(game: Game) {
+	async removeFromLibrary(game: GameModel) {
 		if (await libraryUnfollowGame(this.libraryStore, game)) {
 			this.reloadRoute();
 		}
 	}
 
 	async mixPlaylist(shouldRefresh = false) {
-		if (MixableTypes.indexOf(this.type) === -1) {
+		if (!this.type || MixableTypes.indexOf(this.type) === -1) {
 			this.recommendedGames = [];
 			return;
 		}
@@ -377,12 +383,12 @@ export default class RouteLibraryCollection extends BaseRouteComponent {
 		const payload = await Api.sendRequest(
 			`/web/library/games/${action}/` + this.type + '/' + id
 		);
-		this.recommendedGames = Game.populate(payload.games);
+		this.recommendedGames = GameModel.populate(payload.games);
 		this.isLoadingRecommended = false;
 	}
 
 	async loadMore() {
-		if (!this.filtering || !this.listing || this.listing.isLoadingMore) {
+		if (!this.filtering || !this.listing || this.listing.isLoadingMore || !this.type) {
 			return;
 		}
 

@@ -1,11 +1,14 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { CommunityCompetition } from '../../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionVotingCategory } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
+import { CommunityCompetitionModel } from '../../../../../../../_common/community/competition/competition.model';
+import {
+	$saveCommunityCompetitionVotingCategory,
+	CommunityCompetitionVotingCategoryModel,
+} from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import AppFormControlTextarea from '../../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
 import { BaseForm, FormOnBeforeSubmit } from '../../../../../../../_common/form-vue/form.service';
 
-class Wrapper extends BaseForm<CommunityCompetitionVotingCategory> {}
+class Wrapper extends BaseForm<CommunityCompetitionVotingCategoryModel> {}
 
 @Options({
 	components: {
@@ -16,9 +19,10 @@ export default class FormCommunityCompetitionVotingCategory
 	extends mixins(Wrapper)
 	implements FormOnBeforeSubmit
 {
-	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
 
-	modelClass = CommunityCompetitionVotingCategory;
+	modelClass = CommunityCompetitionVotingCategoryModel;
+	modelSaveHandler = $saveCommunityCompetitionVotingCategory;
 
 	get isAdding() {
 		return !this.model;

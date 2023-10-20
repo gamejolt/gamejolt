@@ -9,20 +9,20 @@ interface ScrollToOptions {
 	preventDirections?: ('up' | 'down')[];
 }
 
-export class Scroll {
-	static shouldAutoScroll = true;
-	static autoscrollAnchor?: AppAutoscrollAnchor;
-	static offsetTop = 0;
+class ScrollService {
+	shouldAutoScroll = true;
+	autoscrollAnchor?: AppAutoscrollAnchor;
+	offsetTop = 0;
 
 	/**
 	 * Sets the extra offset for scrolling. This can be used if there is a fixed
 	 * nav on the top that we need to always offset from.
 	 */
-	static setOffsetTop(offset: number) {
+	setOffsetTop(offset: number) {
 		this.offsetTop = offset;
 	}
 
-	static getScrollTop(element?: ScrollContext): number {
+	getScrollTop(element?: ScrollContext): number {
 		if (!element) {
 			element = document;
 		}
@@ -34,7 +34,7 @@ export class Scroll {
 		return element.scrollTop;
 	}
 
-	static getScrollLeft(element?: ScrollContext): number {
+	getScrollLeft(element?: ScrollContext): number {
 		if (!element) {
 			element = document;
 		}
@@ -48,7 +48,7 @@ export class Scroll {
 		return element.scrollLeft;
 	}
 
-	static getScrollHeight(element?: ScrollContext): number {
+	getScrollHeight(element?: ScrollContext): number {
 		if (!element) {
 			element = document;
 		}
@@ -60,7 +60,7 @@ export class Scroll {
 		return element.scrollHeight;
 	}
 
-	static getScrollWidth(element?: ScrollContext): number {
+	getScrollWidth(element?: ScrollContext): number {
 		if (!element) {
 			element = document;
 		}
@@ -72,7 +72,7 @@ export class Scroll {
 		return element.scrollWidth;
 	}
 
-	static getScrollWindowHeight(element?: ScrollContext): number {
+	getScrollWindowHeight(element?: ScrollContext): number {
 		if (!element) {
 			element = document;
 		}
@@ -80,7 +80,7 @@ export class Scroll {
 		return element === document ? window.innerHeight : (element as HTMLElement).clientHeight;
 	}
 
-	static getScrollWindowWidth(element?: ScrollContext): number {
+	getScrollWindowWidth(element?: ScrollContext): number {
 		if (!element) {
 			element = document;
 		}
@@ -91,14 +91,14 @@ export class Scroll {
 	/**
 	 * Returns the element's offset from the top of the scroll context.
 	 */
-	static getElementOffsetTopFromContext(element: HTMLElement) {
+	getElementOffsetTopFromContext(element: HTMLElement) {
 		return Ruler.offset(element).top - this.offsetTop;
 	}
 
 	/**
 	 * Returns the element's offset from the bottom of the scroll context.
 	 */
-	static getElementOffsetBottomFromContext(element: HTMLElement) {
+	getElementOffsetBottomFromContext(element: HTMLElement) {
 		const { top, height } = Ruler.offset(element);
 		return top + height;
 	}
@@ -106,7 +106,7 @@ export class Scroll {
 	/**
 	 * Scrolls to the element passed in.
 	 */
-	static to(input: string | number | HTMLElement, options: ScrollToOptions = {}) {
+	to(input: string | number | HTMLElement, options: ScrollToOptions = {}) {
 		if (import.meta.env.SSR) {
 			return;
 		}
@@ -143,16 +143,12 @@ export class Scroll {
 		}, 20);
 	}
 
-	private static scrollToElement(
-		element: HTMLElement,
-		offset: number,
-		options: ScrollToOptions = {}
-	) {
+	private scrollToElement(element: HTMLElement, offset: number, options: ScrollToOptions = {}) {
 		const top = this.getScrollTop(document) + element.getBoundingClientRect().top - offset;
 		this.scrollTo(top, options);
 	}
 
-	private static scrollTo(to: number, options: ScrollToOptions = {}) {
+	private scrollTo(to: number, options: ScrollToOptions = {}) {
 		if (options.preventDirections) {
 			const scrollY = window.scrollY;
 			if (
@@ -166,3 +162,5 @@ export class Scroll {
 		window.scrollTo({ top: to, behavior: options.animate ? 'smooth' : 'auto' });
 	}
 }
+
+export const Scroll = /** @__PURE__ */ new ScrollService();

@@ -1,22 +1,19 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Inject, Options, Watch } from 'vue-property-decorator';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import { illNoComments } from '../../../../../_common/illustration/illustrations';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { useGridStore } from '../../../../components/grid/grid-store';
-import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import { useAppStore } from '../../../../store';
-import {
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
-	isVirtualChannel,
-	setCommunityMeta,
-} from '../view.store';
 import {
 	doFeedChannelPayload,
 	getFeedChannelSort,
@@ -24,6 +21,12 @@ import {
 } from '../_feed/feed-helpers';
 import AppCommunitiesViewFeed from '../_feed/feed.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
+import {
+	CommunityRouteStore,
+	CommunityRouteStoreKey,
+	isVirtualChannel,
+	setCommunityMeta,
+} from '../view.store';
 import { CommunitiesViewChannelDeps } from './channel.vue';
 
 @Options({
@@ -34,13 +37,13 @@ import { CommunitiesViewChannelDeps } from './channel.vue';
 		AppIllustration,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	lazy: true,
 	deps: CommunitiesViewChannelDeps,
 	resolver: ({ route }) => doFeedChannelPayload(route),
 })
-export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent {
+export default class RouteCommunitiesViewChannelFeed extends LegacyRouteComponent {
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	gridStore = setup(() => useGridStore());
@@ -91,7 +94,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 			return null;
 		}
 
-		const title = this.$gettextInterpolate(`%{ name } Community on Game Jolt`, {
+		const title = this.$gettext(`%{ name } Community on Game Jolt`, {
 			name: this.community.name,
 		});
 
@@ -113,13 +116,13 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 		switch (this.sort) {
 			case 'hot':
 				return prefixWith(
-					this.$gettextInterpolate('Hot posts in %{ channel }', {
+					this.$gettext('Hot posts in %{ channel }', {
 						channel: this.channel ? this.channel.displayTitle : this.channelPath,
 					})
 				);
 			case 'new':
 				return prefixWith(
-					this.$gettextInterpolate('New posts in %{ channel }', {
+					this.$gettext('New posts in %{ channel }', {
 						channel: this.channel ? this.channel.displayTitle : this.channelPath,
 					})
 				);
@@ -197,7 +200,7 @@ export default class RouteCommunitiesViewChannelFeed extends BaseRouteComponent 
 		}
 	}
 
-	onPostAdded(post: FiresidePost) {
+	onPostAdded(post: FiresidePostModel) {
 		ActivityFeedService.onPostAdded({
 			feed: this.feed!,
 			post,

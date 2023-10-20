@@ -1,9 +1,9 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { Site } from '../../../../_common/site/site-model';
+import { SiteModel } from '../../../../_common/site/site-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import FormSiteDomain from '../../forms/site/domain/domain.vue';
 
@@ -13,8 +13,8 @@ import FormSiteDomain from '../../forms/site/domain/domain.vue';
 	},
 })
 export default class AppSitesManagePageDomain extends Vue {
-	@Prop(Object) site!: Site;
-	@Prop(Object) game?: Game;
+	@Prop(Object) site!: SiteModel;
+	@Prop(Object) game?: GameModel;
 
 	commonStore = setup(() => useCommonStore());
 

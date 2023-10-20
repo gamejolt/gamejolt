@@ -9,11 +9,11 @@ import { useModal } from '../../modal/modal.service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import { $gettext } from '../../translate/translate.service';
 import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
-import { SupporterAction } from '../action.model';
+import { SupporterActionModel } from '../action.model';
 
 const props = defineProps({
 	action: {
-		type: Object as PropType<SupporterAction>,
+		type: Object as PropType<SupporterActionModel>,
 		required: true,
 	},
 });

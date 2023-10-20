@@ -1,43 +1,45 @@
 <script lang="ts" setup>
 // We want to make sure it doesn't actually have to import all these models to
 // display.
-import type { Comment } from '../../../../../_common/comment/comment-model';
-import type { Community } from '../../../../../_common/community/community.model';
-import type { FiresideCommunity } from '../../../../../_common/fireside/community/community.model';
-import type { Fireside } from '../../../../../_common/fireside/fireside.model';
-import type { FiresidePostCommunity } from '../../../../../_common/fireside/post/community/community.model';
-import type { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import type { Mention } from '../../../../../_common/mention/mention.model';
-import type { QuestNotification } from '../../../../../_common/quest/quest-notification-model';
-import type { UserGameTrophy } from '../../../../../_common/user/trophy/game-trophy.model';
-import type { UserSiteTrophy } from '../../../../../_common/user/trophy/site-trophy.model';
+import type { CommentModel } from '../../../../../_common/comment/comment-model';
+import type { CommunityModel } from '../../../../../_common/community/community.model';
+import type { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
+import type { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
+import type { MentionModel } from '../../../../../_common/mention/mention.model';
+import type { QuestNotificationModel } from '../../../../../_common/quest/quest-notification-model';
+import type { UserGameTrophyModel } from '../../../../../_common/user/trophy/game-trophy.model';
+import type { UserSiteTrophyModel } from '../../../../../_common/user/trophy/site-trophy.model';
 
 import { computed, PropType, ref, toRefs } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
-import { AvatarFrame } from '../../../../../_common/avatar/frame.model';
+import { AvatarFrameModel } from '../../../../../_common/avatar/frame.model';
 import '../../../../../_common/comment/comment.styl';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
-	CommunityUserNotification,
-	NotificationType,
+	CommunityUserNotificationModel,
+	CommunityUserNotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
-import { CreatorExperienceLevel } from '../../../../../_common/creator/experience/level.model';
+import { CreatorExperienceLevelModel } from '../../../../../_common/creator/experience/level.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { Notification } from '../../../../../_common/notification/notification-model';
+import {
+	$readNotification,
+	NotificationModel,
+	NotificationType,
+} from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
-import { SupporterAction } from '../../../../../_common/supporters/action.model';
+import { SupporterActionModel } from '../../../../../_common/supporters/action.model';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { BaseTrophy } from '../../../../../_common/trophy/base-trophy.model';
+import { BaseTrophyModel } from '../../../../../_common/trophy/base-trophy.model';
 import { getTrophyImg } from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
-import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
+import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { UserAvatarFrame } from '../../../../../_common/user/user-avatar/frame/frame.model';
-import { User } from '../../../../../_common/user/user.model';
+import { UserAvatarFrameModel } from '../../../../../_common/user/user-avatar/frame/frame.model';
+import { UserModel } from '../../../../../_common/user/user.model';
 import { useAppStore } from '../../../../store/index';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
@@ -61,10 +63,10 @@ const router = useRouter();
 
 const canToggleContent = ref(false);
 
-const notification = computed(() => item.value.feedItem as Notification);
+const notification = computed(() => item.value.feedItem as NotificationModel);
 const isNew = computed(() => feed.isItemUnread(item.value));
-const isFromUser = computed(() => notification.value.from_model instanceof User);
-const showTime = computed(() => notification.value.type !== Notification.TYPE_QUEST_NOTIFICATION);
+const isFromUser = computed(() => notification.value.from_model instanceof UserModel);
+const showTime = computed(() => notification.value.type !== NotificationType.QuestNotification);
 const titleText = computed(() => NotificationText.getText(notification.value, false));
 
 // Only show when there is a title text for the notification.
@@ -75,42 +77,45 @@ const notificationLocation = computed(() => getNotificationRouteLocation(notific
 const hasDetails = computed(() => {
 	const { type, action_model } = notification.value;
 
-	if (type === Notification.TYPE_MENTION && (action_model as Mention).resource === 'Comment') {
+	if (
+		type === NotificationType.Mention &&
+		(action_model as MentionModel).resource === 'Comment'
+	) {
 		return true;
 	}
 
 	// Community user notifications with a post want to show the post lead.
 	if (
-		type === Notification.TYPE_COMMUNITY_USER_NOTIFICATION &&
-		[NotificationType.POSTS_EJECT, NotificationType.POSTS_MOVE].includes(
-			(action_model as CommunityUserNotification).type
-		)
+		type === NotificationType.CommunityUserNotification &&
+		[
+			CommunityUserNotificationType.POSTS_EJECT,
+			CommunityUserNotificationType.POSTS_MOVE,
+		].includes((action_model as CommunityUserNotificationModel).type)
 	) {
 		return true;
 	}
 
-	if (type === Notification.TYPE_SUPPORTER_MESSAGE) {
-		return !!(action_model as SupporterAction).message?.content;
+	if (type === NotificationType.SupporterMessage) {
+		return !!(action_model as SupporterActionModel).message?.content;
 	}
 
 	return [
-		Notification.TYPE_COMMENT_ADD,
-		Notification.TYPE_COMMENT_ADD_OBJECT_OWNER,
-		Notification.TYPE_POST_FEATURED_IN_COMMUNITY,
-		Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY,
-		Notification.TYPE_QUEST_NOTIFICATION,
-		Notification.TYPE_GAME_TROPHY_ACHIEVED,
-		Notification.TYPE_SITE_TROPHY_ACHIEVED,
-		Notification.TYPE_POLL_ENDED,
-		Notification.TYPE_CREATOR_LEVEL_UP,
-		Notification.TYPE_UNLOCKED_AVATAR_FRAME,
+		NotificationType.CommentAdd,
+		NotificationType.CommentAddObjectOwner,
+		NotificationType.PostFeaturedInCommunity,
+		NotificationType.QuestNotification,
+		NotificationType.GameTrophyAchieved,
+		NotificationType.SiteTrophyAchieved,
+		NotificationType.PollEnded,
+		NotificationType.CreatorLevelUp,
+		NotificationType.UnlockedAvatarFrame,
 	].includes(type);
 });
 
 const trophyImg = computed(() => {
 	if (
-		notification.value.action_model instanceof UserBaseTrophy &&
-		notification.value.action_model.trophy instanceof BaseTrophy
+		notification.value.action_model instanceof UserBaseTrophyModel &&
+		notification.value.action_model.trophy instanceof BaseTrophyModel
 	) {
 		return getTrophyImg(notification.value.action_model.trophy);
 	}
@@ -118,21 +123,21 @@ const trophyImg = computed(() => {
 
 const avatarFrameImg = computed(() => {
 	if (
-		notification.value.action_model instanceof UserAvatarFrame &&
-		notification.value.action_model.avatar_frame instanceof AvatarFrame
+		notification.value.action_model instanceof UserAvatarFrameModel &&
+		notification.value.action_model.avatar_frame instanceof AvatarFrameModel
 	) {
 		return notification.value.action_model.avatar_frame.image_url;
 	}
 });
 
 function go() {
-	notification.value.$read();
+	$readNotification(notification.value);
 	gotoNotification(notification.value, { router, appStore });
 	emit('clicked');
 }
 
 function onMarkRead() {
-	notification.value.$read();
+	$readNotification(notification.value);
 }
 </script>
 
@@ -147,49 +152,48 @@ function onMarkRead() {
 								<template
 									v-if="
 										notification.type ===
-										Notification.TYPE_COMMUNITY_USER_NOTIFICATION
+										NotificationType.CommunityUserNotification
 									"
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											:community="(notification.from_model as Community)"
+											:community="(notification.from_model as CommunityModel)"
 										/>
 									</div>
 								</template>
 								<template v-else-if="isFromUser">
 									<AppUserCardHover
-										:user="(notification.from_model as User)"
+										:user="(notification.from_model as UserModel)"
 										:disabled="!feed.shouldShowUserCards"
 									>
-										<AppUserAvatar :user="(notification.from_model as User)" />
+										<AppUserAvatar
+											:user="(notification.from_model as UserModel)"
+										/>
 									</AppUserCardHover>
 								</template>
 								<template
 									v-else-if="
 										notification.type ===
-											Notification.TYPE_POST_FEATURED_IN_COMMUNITY ||
-										notification.type ===
-											Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY
+										NotificationType.PostFeaturedInCommunity
 									"
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											:community="(notification.action_model as FiresidePostCommunity | FiresideCommunity).community"
+											:community="(notification.action_model as FiresidePostCommunityModel).community"
 										/>
 									</div>
 								</template>
 								<template
 									v-else-if="
-										notification.type ===
-											Notification.TYPE_GAME_TROPHY_ACHIEVED ||
-										notification.type === Notification.TYPE_SITE_TROPHY_ACHIEVED
+										notification.type === NotificationType.GameTrophyAchieved ||
+										notification.type === NotificationType.SiteTrophyAchieved
 									"
 								>
 									<img class="img-circle -trophy-img" :src="trophyImg" />
 								</template>
 								<template
 									v-else-if="
-										notification.type === Notification.TYPE_QUEST_NOTIFICATION
+										notification.type === NotificationType.QuestNotification
 									"
 								>
 									<div class="-avatar-icon">
@@ -197,7 +201,7 @@ function onMarkRead() {
 									</div>
 								</template>
 								<template
-									v-else-if="notification.type === Notification.TYPE_POLL_ENDED"
+									v-else-if="notification.type === NotificationType.PollEnded"
 								>
 									<div class="-avatar-icon">
 										<AppJolticon icon="pedestals-numbers" />
@@ -205,8 +209,9 @@ function onMarkRead() {
 								</template>
 								<template
 									v-else-if="
-										notification.type === Notification.TYPE_CREATOR_LEVEL_UP &&
-										notification.action_model instanceof CreatorExperienceLevel
+										notification.type === NotificationType.CreatorLevelUp &&
+										notification.action_model instanceof
+											CreatorExperienceLevelModel
 									"
 								>
 									<div class="-avatar-icon">
@@ -215,8 +220,7 @@ function onMarkRead() {
 								</template>
 								<template
 									v-else-if="
-										notification.type ===
-										Notification.TYPE_UNLOCKED_AVATAR_FRAME
+										notification.type === NotificationType.UnlockedAvatarFrame
 									"
 								>
 									<img class="img-circle -trophy-img" :src="avatarFrameImg" />
@@ -244,112 +248,104 @@ function onMarkRead() {
 												<AppContentViewer
 													v-if="
 														notification.type ===
-															Notification.TYPE_COMMENT_ADD ||
+															NotificationType.CommentAdd ||
 														notification.type ===
-															Notification.TYPE_COMMENT_ADD_OBJECT_OWNER
+															NotificationType.CommentAddObjectOwner
 													"
 													:source="
-														(notification.action_model as Comment).comment_content
+														(notification.action_model as CommentModel).comment_content
 													"
 												/>
 												<AppContentViewer
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_MENTION
+														NotificationType.Mention
 													"
 													:source="
-														(notification.action_model as Mention).comment
+														(notification.action_model as MentionModel).comment
 															?.comment_content
 													"
 												/>
 												<AppContentViewer
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_SUPPORTER_MESSAGE
+														NotificationType.SupporterMessage
 													"
 													:source="
-														(notification.action_model as SupporterAction).message?.content
+														(notification.action_model as SupporterActionModel).message?.content
 													"
 												/>
 												<span
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_POLL_ENDED
+														NotificationType.PollEnded
 													"
 												>
 													{{
 														(
-															notification.from_model as FiresidePost
+															notification.from_model as FiresidePostModel
 														).getShortLead()
 													}}
 												</span>
 												<span
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_POST_FEATURED_IN_COMMUNITY
+														NotificationType.PostFeaturedInCommunity
 													"
 												>
 													{{
 														(
-															notification.action_model as FiresidePostCommunity
+															notification.action_model as FiresidePostCommunityModel
 														).fireside_post?.getShortLead()
 													}}
 												</span>
 												<span
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_FIRESIDE_FEATURED_IN_COMMUNITY
-													"
-												>
-													{{ (notification.to_model as Fireside).title }}
-												</span>
-												<span
-													v-else-if="
-														notification.type ===
-														Notification.TYPE_COMMUNITY_USER_NOTIFICATION
+														NotificationType.CommunityUserNotification
 													"
 												>
 													{{
 														(
-															notification.to_model as FiresidePost
+															notification.to_model as FiresidePostModel
 														).getShortLead()
 													}}
 												</span>
 												<span
 													v-else-if="
 														notification.type ===
-															Notification.TYPE_GAME_TROPHY_ACHIEVED ||
+															NotificationType.GameTrophyAchieved ||
 														notification.type ===
-															Notification.TYPE_SITE_TROPHY_ACHIEVED
+															NotificationType.SiteTrophyAchieved
 													"
 												>
 													{{
 														(
 															notification.action_model as
-																| UserGameTrophy
-																| UserSiteTrophy
+																| UserGameTrophyModel
+																| UserSiteTrophyModel
 														).trophy?.description
 													}}
 												</span>
 												<span
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_QUEST_NOTIFICATION
+														NotificationType.QuestNotification
 													"
 													class="tiny text-muted"
 												>
 													{{
 														(
-															notification.action_model as QuestNotification
+															notification.action_model as QuestNotificationModel
 														).subtitle
 													}}
 												</span>
 												<span
 													v-else-if="
 														notification.type ===
-															Notification.TYPE_CREATOR_LEVEL_UP &&
+															NotificationType.CreatorLevelUp &&
 														notification.action_model instanceof
-															CreatorExperienceLevel &&
+															CreatorExperienceLevelModel &&
 														notification.action_model.ability !== null
 													"
 												>
@@ -362,7 +358,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-														Notification.TYPE_UNLOCKED_AVATAR_FRAME
+														NotificationType.UnlockedAvatarFrame
 													"
 												>
 													{{ $gettext(`Click to equip!`) }}

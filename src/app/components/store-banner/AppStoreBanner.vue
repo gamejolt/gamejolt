@@ -1,17 +1,16 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
-import { StoreBanner } from './store-banner-model';
-import AppButton from '../../../_common/button/AppButton.vue';
 import { trackBannerClick } from '../../../_common/analytics/analytics.service';
+import AppButton from '../../../_common/button/AppButton.vue';
+import { StoreBannerModel } from './store-banner-model';
 
 const props = defineProps({
 	banner: {
-		type: Object as PropType<StoreBanner>,
+		type: Object as PropType<StoreBannerModel>,
 		required: true,
 	},
 });
 
-// @ts-expect-error unused variable
 const backgroundImage = computed(() => `url('${props.banner.banner_media?.mediaserver_url}')`);
 </script>
 

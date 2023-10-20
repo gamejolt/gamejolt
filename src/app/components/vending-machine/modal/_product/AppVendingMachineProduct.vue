@@ -1,20 +1,22 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed, toRefs } from 'vue';
+import { ShopClickType, trackShopView } from '../../../../../_common/analytics/analytics.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { shorthandReadableTime } from '../../../../../_common/filters/duration';
-import { InventoryShopProductSale } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppStickerPack, {
 	StickerPackExpiryStyles,
 } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { kBorderRadiusLg } from '../../../../../_styles/variables';
 import AppProductCurrencyTags from './AppProductCurrencyTags.vue';
 
 const props = defineProps({
 	shopProduct: {
-		type: Object as PropType<InventoryShopProductSale>,
+		type: Object as PropType<InventoryShopProductSaleModel>,
 		required: true,
 	},
 	/**
@@ -28,7 +30,7 @@ const props = defineProps({
 const { shopProduct, disablePurchases } = toRefs(props);
 
 const emit = defineEmits({
-	purchase: (_shopProduct: InventoryShopProductSale) => true,
+	purchase: (_shopProduct: InventoryShopProductSaleModel) => true,
 });
 
 const { user: myUser } = useCommonStore();
@@ -52,6 +54,17 @@ function onClickProduct() {
 		return;
 	}
 
+	let type: ShopClickType = 'unhandled-product';
+	const i = shopProduct.value;
+	if (i.avatarFrame) {
+		type = 'avatar-frame';
+	} else if (i.background) {
+		type = 'background';
+	} else if (i.stickerPack) {
+		type = 'sticker-pack';
+	}
+
+	trackShopView({ type });
 	emit('purchase', shopProduct.value);
 }
 
@@ -74,6 +87,27 @@ const anchorStyles = computed<CSSProperties>(() => {
 	}
 	return {};
 });
+
+const readableEndsOnStyles: CSSProperties = {
+	...StickerPackExpiryStyles,
+	zIndex: overlayTagZIndex,
+};
+
+const readableEndsOn = computed(() => {
+	const endsOn = shopProduct.value.ends_on;
+	if (!endsOn) {
+		return;
+	}
+
+	return shorthandReadableTime(endsOn, {
+		allowFuture: true,
+		precision: 'rough',
+		nowText: $gettext(`No longer for sale`),
+		timeTransformer(time) {
+			return $gettext(`%{ time } left to purchase`, { time });
+		},
+	});
+});
 </script>
 
 <template>
@@ -87,12 +121,15 @@ const anchorStyles = computed<CSSProperties>(() => {
 			<AppStickerPack
 				v-if="shopProduct.stickerPack"
 				:pack="shopProduct.stickerPack"
-				:expiry-info="shopProduct.ends_on"
 				:can-click-pack="!disablePurchases"
 				show-details
 				@click-pack="onClickProduct()"
 			>
 				<template #overlay-children>
+					<div v-if="readableEndsOn" :style="readableEndsOnStyles">
+						{{ readableEndsOn }}
+					</div>
+
 					<AppProductCurrencyTags
 						:style="currencyTagStyles"
 						:shop-product="shopProduct"
@@ -124,20 +161,8 @@ const anchorStyles = computed<CSSProperties>(() => {
 					</AppBackground>
 				</AppAspectRatio>
 
-				<div
-					v-if="shopProduct.ends_on"
-					:style="{
-						...StickerPackExpiryStyles,
-						zIndex: overlayTagZIndex,
-					}"
-				>
-					{{
-						shorthandReadableTime(shopProduct.ends_on, {
-							allowFuture: true,
-							precision: 'rough',
-							nowText: $gettext(`Expired`),
-						})
-					}}
+				<div v-if="readableEndsOn" :style="readableEndsOnStyles">
+					{{ readableEndsOn }}
 				</div>
 
 				<AppProductCurrencyTags :style="currencyTagStyles" :shop-product="shopProduct" />

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, Ref, computed, onMounted, ref } from 'vue';
+import { CSSProperties, Ref, computed, onMounted, ref, toRefs } from 'vue';
+import { trackShopView } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -14,7 +15,7 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
-import { InventoryShopProductSale } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import { InventoryShopProductSaleModel } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../_common/microtransaction/purchase-modal/modal.service';
@@ -35,11 +36,13 @@ import {
 	kThemeBgOffset,
 	kThemeFg,
 	kThemeFg10,
-	kThemeFgMuted,
 } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
+import { UserModel } from '../../../../_common/user/user.model';
 import {
+	kElevateTransition,
 	styleBorderRadiusBase,
 	styleBorderRadiusLg,
 	styleChangeBg,
@@ -47,12 +50,13 @@ import {
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 	styleOverlayTextShadow,
+	styleTextOverflow,
 	styleWhen,
 } from '../../../../_styles/mixins';
 import {
 	kFontFamilyDisplay,
 	kFontFamilyHeading,
-	kFontSizeH3,
+	kFontSizeH2,
 	kStrongEaseOut,
 } from '../../../../_styles/variables';
 import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
@@ -67,17 +71,26 @@ interface ProductChunks {
 }
 
 interface ProductChunk {
-	items: InventoryShopProductSale[];
+	items: InventoryShopProductSaleModel[];
 	type: keyof ProductChunks;
 }
+
+const props = defineProps({
+	userId: {
+		type: Number,
+		default: undefined,
+	},
+});
+
+const { userId } = toRefs(props);
 
 const { isDark } = useThemeStore();
 const { coinBalance, joltbuxBalance } = useCommonStore();
 
 const modal = useModal()!;
 
+const shopOwner = ref<UserModel>();
 const availableProducts = ref({}) as Ref<ProductChunks>;
-
 const isLoading = ref(false);
 const productProcessing = ref<number>();
 
@@ -106,63 +119,74 @@ async function init() {
 	}
 	isLoading.value = true;
 
-	const p = await Promise.all([
-		Api.sendRequest('/web/inventory/shop/sales', undefined, { detach: true }),
-		Api.sendFieldsRequest(
-			'/mobile/me',
-			{
-				coinBalance: true,
-				buxBalance: true,
-			},
-			{ detach: true }
-		),
-	]);
-
-	const payload = p[0];
-	const newProducts = payload.sales
-		? storeModelList(InventoryShopProductSale, payload.sales)
-		: [];
-
-	const productChunks: ProductChunks = {};
-	const missingItems: InventoryShopProductSale[] = [];
-
-	for (const shopProduct of newProducts) {
-		let key: keyof ProductChunks | null = null;
-
-		if (shopProduct.stickerPack) {
-			key = 'packs';
-		} else if (shopProduct.avatarFrame) {
-			key = 'avatarFrames';
-		} else if (shopProduct.background) {
-			key = 'backgrounds';
-		}
-
-		if (!key) {
-			missingItems.push(shopProduct);
-			continue;
-		}
-
-		const items = (productChunks[key]?.items || []).concat(shopProduct);
-		productChunks[key] = { type: key, items };
+	let productUrl = `/web/inventory/shop/sales`;
+	if (userId?.value) {
+		productUrl += `?userId=${userId.value}`;
 	}
 
-	if (missingItems.length > 0) {
-		console.warn(`Got some products that we don't support yet.`, {
-			missingCount: missingItems.length,
-			types: missingItems.reduce((result, i) => {
-				result.set(i.product_type, (result.get(i.product_type) || 0) + 1);
-				return result;
-			}, new Map<string, number>()),
-		});
+	try {
+		const p = await Promise.all([
+			Api.sendRequest(productUrl, undefined, { detach: true }),
+			Api.sendFieldsRequest(
+				'/mobile/me',
+				{
+					coinBalance: true,
+					buxBalance: true,
+				},
+				{ detach: true }
+			),
+			fetchFeatureToggles([featureMicrotransactions]),
+		]);
+
+		const payload = p[0];
+		const newProducts = payload.sales
+			? storeModelList(InventoryShopProductSaleModel, payload.sales)
+			: [];
+
+		const productChunks: ProductChunks = {};
+		const missingItems: InventoryShopProductSaleModel[] = [];
+
+		for (const shopProduct of newProducts) {
+			let key: keyof ProductChunks | null = null;
+
+			if (shopProduct.stickerPack) {
+				key = 'packs';
+			} else if (shopProduct.avatarFrame) {
+				key = 'avatarFrames';
+			} else if (shopProduct.background) {
+				key = 'backgrounds';
+			}
+
+			if (!key) {
+				missingItems.push(shopProduct);
+				continue;
+			}
+
+			const items = (productChunks[key]?.items || []).concat(shopProduct);
+			productChunks[key] = { type: key, items };
+		}
+
+		if (missingItems.length > 0) {
+			console.warn(`Got some products that we don't support yet.`, {
+				missingCount: missingItems.length,
+				types: missingItems.reduce((result, i) => {
+					result.set(i.product_type, (result.get(i.product_type) || 0) + 1);
+					return result;
+				}, new Map<string, number>()),
+			});
+		}
+
+		availableProducts.value = productChunks;
+		if (payload.shopOwner) {
+			shopOwner.value = payload.shopOwner;
+		}
+
+		const mePayload = p[1];
+		coinBalance.value = mePayload.coinBalance;
+		joltbuxBalance.value = mePayload.buxBalance;
+	} catch (e) {
+		console.error('Failed to load vending machine data', e);
 	}
-
-	availableProducts.value = productChunks;
-
-	const mePayload = p[1];
-	coinBalance.value = mePayload.coinBalance;
-	joltbuxBalance.value = mePayload.buxBalance;
-
-	await fetchFeatureToggles([featureMicrotransactions]);
 
 	isLoading.value = false;
 }
@@ -171,7 +195,7 @@ onMounted(() => {
 	init();
 });
 
-async function purchaseProduct(shopProduct: InventoryShopProductSale) {
+async function purchaseProduct(shopProduct: InventoryShopProductSaleModel) {
 	if (productProcessing.value) {
 		return;
 	}
@@ -196,8 +220,10 @@ async function purchaseProduct(shopProduct: InventoryShopProductSale) {
 
 async function onClickCurrencyCard(currency: Currency) {
 	if (currency.id === CurrencyType.joltbux.id) {
+		trackShopView({ type: 'joltbux-card' });
 		showPurchaseMicrotransactionModal();
 	} else if (currency.id === CurrencyType.coins.id) {
+		trackShopView({ type: 'coins-card' });
 		const isRedirecting = await showGetCoinsRedirectModal();
 
 		if (isRedirecting) {
@@ -252,12 +278,41 @@ const currencyCardImgStyles: CSSProperties = {
 	width: `100%`,
 	height: `100%`,
 };
+
+const shopOwnerNameStyles: CSSProperties = {
+	...styleTextOverflow,
+	flex: `auto`,
+	minWidth: 0,
+};
+
+const currencyCardBaseStyles: CSSProperties = {
+	...styleBorderRadiusBase,
+	...styleElevate(1),
+	backgroundColor: kThemeBgOffset,
+	padding: `12px`,
+	flex: `auto`,
+	display: `flex`,
+	flexDirection: `column`,
+	alignItems: `center`,
+	gap: `8px`,
+	cursor: `pointer`,
+	color: kThemeFg,
+};
+
+const currencyCardTransitionStyles: CSSProperties = {
+	transition: `background-color 200ms ${kStrongEaseOut}, ${kElevateTransition}`,
+};
 </script>
 
 <template>
 	<AppModal force-theme="dark">
 		<div :style="containerStyles">
-			<AppModalFloatingHeader>
+			<AppModalFloatingHeader
+				:dynamic-slots="{
+					title: true,
+					bottom: false,
+				}"
+			>
 				<template #modal-controls>
 					<div
 						:style="{
@@ -286,6 +341,35 @@ const currencyCardImgStyles: CSSProperties = {
 						>
 							{{ $gettext(`Close`) }}
 						</AppButton>
+					</div>
+				</template>
+
+				<template #title>
+					<div
+						v-if="shopOwner"
+						:style="{
+							display: `flex`,
+							gap: `12px`,
+							alignItems: `center`,
+						}"
+					>
+						<AppUserAvatarBubble
+							:style="{
+								width: `40px`,
+								height: `40px`,
+								flex: `none`,
+							}"
+							:user="shopOwner"
+							show-frame
+						/>
+
+						<div :style="shopOwnerNameStyles">
+							{{
+								$gettext(`@%{ username }'s Shop`, {
+									username: shopOwner.username,
+								})
+							}}
+						</div>
 					</div>
 				</template>
 			</AppModalFloatingHeader>
@@ -320,103 +404,92 @@ const currencyCardImgStyles: CSSProperties = {
 								v-for="{ currency, amount } of currencyCardData"
 								:key="currency.id"
 							>
-								<AppOnHover>
-									<template #default="{ binding, hovered }">
-										<div
-											v-bind="binding"
-											:style="{
-												...styleBorderRadiusBase,
-												...styleElevate(1),
-												backgroundColor: kThemeBgOffset,
-												padding: `12px`,
-												flex: `auto`,
-												display: `flex`,
-												flexDirection: `column`,
-												alignItems: `center`,
-												gap: `8px`,
-												cursor: `pointer`,
-												color: kThemeFg,
-												...styleWhen(hovered, {
+								<AppOnHover v-slot="{ hoverBinding, hovered }">
+									<div
+										v-bind="{
+											...hoverBinding,
+											style: [
+												currencyCardBaseStyles,
+												styleWhen(hovered, {
 													...styleElevate(2),
 													backgroundColor: kThemeBgBackdrop,
 												}),
-												// Need this to override the style from the `styleElevate` functions.
-												transition: `background-color 200ms ${kStrongEaseOut}, box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important`,
+												currencyCardTransitionStyles,
+											],
+										}"
+										@click="onClickCurrencyCard(currency)"
+									>
+										<div
+											class="text-center"
+											:style="{
+												fontFamily: kFontFamilyDisplay,
+												fontSize: kFontSizeH2.px,
 											}"
-											@click="onClickCurrencyCard(currency)"
 										>
-											<div
-												class="text-center"
-												:style="{
-													fontFamily: kFontFamilyDisplay,
-													fontSize: kFontSizeH3.px,
-												}"
-											>
-												{{ currency.label }}
-											</div>
-
-											<div
-												:style="{
-													...styleMaxWidthForOptions({
-														ratio: 1,
-														maxWidth: Screen.isXs ? 64 : 128,
-														maxHeight: Screen.height * 0.2,
-													}),
-													width: `100%`,
-												}"
-											>
-												<AppAspectRatio
-													:ratio="1"
-													:style="{
-														backgroundColor: kThemeFg10,
-														width: `100%`,
-														borderRadius: `50%`,
-													}"
-													:inner-styles="{
-														...styleFlexCenter(),
-														padding: `16px`,
-													}"
-													show-overflow
-												>
-													<AppCurrencyImg
-														asset-size="large"
-														:currency="currency"
-														:max-width="0"
-														:style="currencyCardImgStyles"
-														:ill-styles="currencyCardImgStyles"
-													/>
-												</AppAspectRatio>
-											</div>
-
-											<div
-												class="text-center"
-												:style="{
-													...styleOverlayTextShadow,
-													fontWeight: `bold`,
-													fontSize: `17px`,
-													fontFamily: kFontFamilyHeading,
-													marginBottom: `8px`,
-												}"
-											>
-												{{ formatNumber(amount) }}
-											</div>
-
-											<AppButton
-												block
-												solid
-												:force-hover="hovered"
-												:style="{
-													pointerEvents: `none`,
-												}"
-											>
-												{{
-													$gettextInterpolate(`Get %{ label }`, {
-														label: currency.label,
-													})
-												}}
-											</AppButton>
+											{{ currency.label }}
 										</div>
-									</template>
+
+										<div
+											:style="{
+												...styleMaxWidthForOptions({
+													ratio: 1,
+													maxWidth: Screen.isXs ? 64 : 128,
+													maxHeight: Screen.height * 0.2,
+												}),
+												width: `100%`,
+											}"
+										>
+											<AppAspectRatio
+												:ratio="1"
+												:style="{
+													backgroundColor: kThemeFg10,
+													width: `100%`,
+													borderRadius: `50%`,
+												}"
+												:inner-styles="{
+													...styleFlexCenter(),
+													padding: `16px`,
+												}"
+												show-overflow
+											>
+												<AppCurrencyImg
+													asset-size="large"
+													:currency="currency"
+													:max-width="0"
+													:style="currencyCardImgStyles"
+													:ill-styles="currencyCardImgStyles"
+												/>
+											</AppAspectRatio>
+										</div>
+
+										<div
+											class="text-center"
+											:style="{
+												...styleOverlayTextShadow,
+												fontWeight: `bold`,
+												fontSize: `17px`,
+												fontFamily: kFontFamilyHeading,
+												marginBottom: `8px`,
+											}"
+										>
+											{{ formatNumber(amount) }}
+										</div>
+
+										<AppButton
+											block
+											solid
+											:force-hover="hovered"
+											:style="{
+												pointerEvents: `none`,
+											}"
+										>
+											{{
+												$gettext(`Get %{ label }`, {
+													label: currency.label,
+												})
+											}}
+										</AppButton>
+									</div>
 								</AppOnHover>
 							</template>
 						</div>
@@ -453,18 +526,15 @@ const currencyCardImgStyles: CSSProperties = {
 							<template v-else-if="hasProducts">
 								<template v-for="chunk in availableProducts" :key="chunk.type">
 									<template v-if="chunk && chunk.items.length">
-										<h3
+										<h2
 											:style="{
-												marginTop: 0,
-												marginBottom: `8px`,
-												padding: `12px 16px`,
-												background: `linear-gradient(to right, ${
-													isDark ? 'rgba(0,0,0,0.26)' : 'rgba(0,0,0,0.12)'
-												} 0%, rgba(0,0,0,0) 100%)`,
-												fontWeight: `bold`,
 												display: `flex`,
-												gap: `12px`,
 												alignItems: `center`,
+												gap: `12px`,
+												marginTop: 0,
+												padding: `12px 16px 0`,
+												fontFamily: kFontFamilyDisplay,
+												fontWeight: `bold`,
 												color: kThemeFg,
 											}"
 										>
@@ -482,12 +552,11 @@ const currencyCardImgStyles: CSSProperties = {
 												v-app-tooltip.touchable="getTooltipText(chunk.type)"
 												icon="help-circle"
 												:style="{
-													color: kThemeFgMuted,
 													fontSize: `inherit`,
-													margin: `0 0 0 auto`,
+													margin: 0,
 												}"
 											/>
-										</h3>
+										</h2>
 
 										<AppSpacer vertical :scale="2" />
 
@@ -538,7 +607,7 @@ const currencyCardImgStyles: CSSProperties = {
 							width: `100%`,
 						}"
 					>
-						<AppAspectRatio :ratio="1000 / 250">
+						<AppAspectRatio :ratio="4">
 							<img
 								:src="imageVance"
 								:style="{

@@ -5,7 +5,7 @@ import { formatFuzzynumber } from '../../../../../../../_common/filters/fuzzynum
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import AppGameRatingWidget from '../../../../../../../_common/game/rating/AppGameRatingWidget.vue';
 import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
-import { LikersModal } from '../../../../../../../_common/likers/modal.service';
+import { showLikersModal } from '../../../../../../../_common/likers/modal.service';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { useGameRouteController } from '../../view.vue';
 
@@ -45,7 +45,7 @@ export default class AppDiscoverGamesViewOverviewStatbar extends Vue {
 	}
 
 	showLikers() {
-		LikersModal.show({ count: this.likeCount, resource: this.game });
+		showLikersModal({ count: this.likeCount, resource: this.game });
 	}
 }
 </script>

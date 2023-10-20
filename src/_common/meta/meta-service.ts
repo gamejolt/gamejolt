@@ -83,7 +83,7 @@ class MetaService extends MetaContainer {
 	}
 }
 
-export const Meta = reactive(new MetaService()) as MetaService;
+export const Meta = reactive(/** @__PURE__ */ new MetaService()) as MetaService;
 
 export function initMetaService(router: Router) {
 	router.beforeEach((_to, _from, next) => {

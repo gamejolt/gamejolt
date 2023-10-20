@@ -1,28 +1,28 @@
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 
 export class CommunitySidebarData {
-	owner: User;
+	owner: UserModel;
 
-	knownMembers: User[];
+	knownMembers: UserModel[];
 	knownMemberCount: number;
 
-	collaborators: User[];
+	collaborators: UserModel[];
 	collaboratorCount: number;
 	initialCollaboratorCount: number;
 
 	constructor($payload: any) {
-		this.knownMembers = User.populate($payload.knownMembers || []);
+		this.knownMembers = UserModel.populate($payload.knownMembers || []);
 		this.knownMemberCount = $payload.knownMemberCount || 0;
 
 		if (!$payload.owner) {
 			throw new Error('No owner returned in payload.');
 		}
-		this.owner = new User($payload.owner);
+		this.owner = new UserModel($payload.owner);
 
 		if (!$payload.collaborators) {
 			throw new Error('No collaborator list returned in payload.');
 		}
-		this.collaborators = User.populate($payload.collaborators);
+		this.collaborators = UserModel.populate($payload.collaborators);
 		this.collaboratorCount = $payload.collaboratorCount;
 		this.initialCollaboratorCount = $payload.initialCollaboratorCount;
 	}

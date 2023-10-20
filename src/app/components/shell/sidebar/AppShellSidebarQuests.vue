@@ -4,7 +4,7 @@ import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.se
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments, illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import { Quest, QuestRepeatType, QuestSeries } from '../../../../_common/quest/quest-model';
+import { QuestModel, QuestRepeatType, QuestSeries } from '../../../../_common/quest/quest-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -35,7 +35,7 @@ interface QuestChunk {
 	 * Translated label for the chunk.
 	 */
 	label: string;
-	quests: Quest[];
+	quests: QuestModel[];
 }
 
 const { toggleLeftPane } = useAppStore();
@@ -50,17 +50,19 @@ const {
 	activeQuestId,
 } = questStore;
 
-useEscapeStack(() => {
-	const hadQuestWindow = !!activeQuest.value;
-	// Clear out the [activeQuest], closing the quest window.
-	activeQuest.value = undefined;
+useEscapeStack(
+	() => {
+		const hadQuestWindow = !!activeQuest.value;
+		// Clear out the [activeQuest], closing the quest window.
+		activeQuest.value = undefined;
 
-	// Mobile sizes should close the quest window before closing the sidebar.
-	// Desktop should close the sidebar always.
-	if (!hadQuestWindow || Screen.isDesktop) {
-		toggleLeftPane('');
-	}
-});
+		// Mobile sizes should close the quest window before closing the sidebar.
+		// Desktop should close the sidebar always.
+		if (!hadQuestWindow || Screen.isDesktop) {
+			toggleLeftPane('');
+		}
+	},
+);
 
 const questChunks = computed(() => {
 	const items = allQuests.value

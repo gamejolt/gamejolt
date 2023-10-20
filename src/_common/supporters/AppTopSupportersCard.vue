@@ -17,10 +17,10 @@ import { kThemeFg, kThemeFg10, kThemeFgMuted } from '../theme/variables';
 import { vAppTooltip } from '../tooltip/tooltip-directive';
 import AppUserCardHover from '../user/card/AppUserCardHover.vue';
 import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
-import { User } from '../user/user.model';
+import { UserModel } from '../user/user.model';
 
 export interface TopSupporter {
-	user: User;
+	user: UserModel;
 
 	/**
 	 * Times this user has supported in the last 30 days.

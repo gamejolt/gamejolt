@@ -1,60 +1,60 @@
 import { Model } from '../model/model.service';
-import { SiteBuild } from './build/build-model';
-import { SiteContentBlock } from './content-block/content-block-model';
-import { SiteTheme } from './theme/theme-model';
+import { SiteBuildModel } from './build/build-model';
+import { SiteContentBlockModel } from './content-block/content-block-model';
+import { SiteThemeModel } from './theme/theme-model';
 
-export class Site extends Model {
-	static STATUS_INACTIVE = 'inactive';
-	static STATUS_ACTIVE = 'active';
-	static STATUS_REMOVED = 'removed';
+export const enum SiteStatus {
+	Inactive = 'inactive',
+	Active = 'active',
+	Removed = 'removed',
+}
 
-	user_id!: number;
-	game_id!: number;
-	domain_type!: string;
-	domain?: string;
-	url!: string;
-	theme!: SiteTheme;
-	content_blocks?: SiteContentBlock[];
-	is_static!: boolean;
-	build?: SiteBuild;
-	title?: string;
-	description?: string;
-	ga_tracking_id?: string;
-	status!: string;
+export class SiteModel extends Model {
+	declare user_id: number;
+	declare game_id: number;
+	declare domain_type: string;
+	declare domain?: string;
+	declare url: string;
+	declare theme: SiteThemeModel;
+	declare content_blocks?: SiteContentBlockModel[];
+	declare is_static: boolean;
+	declare build?: SiteBuildModel;
+	declare title?: string;
+	declare description?: string;
+	declare ga_tracking_id?: string;
+	declare status: SiteStatus;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.theme) {
-			this.theme = new SiteTheme(data.theme);
+			this.theme = new SiteThemeModel(data.theme);
 		}
 
 		if (data.content_blocks) {
-			this.content_blocks = SiteContentBlock.populate(data.content_blocks);
+			this.content_blocks = SiteContentBlockModel.populate(data.content_blocks);
 		}
 
 		if (data.build) {
-			this.build = new SiteBuild(data.build);
+			this.build = new SiteBuildModel(data.build);
 		}
-	}
-
-	$save() {
-		return this.$_save(`/web/dash/sites/save/${this.id}`, 'site');
-	}
-
-	$saveDomain() {
-		return this.$_save(`/web/dash/sites/save-domain/${this.id}`, 'site');
-	}
-
-	$activate() {
-		return this.$_save(`/web/dash/sites/activate/${this.id}`, 'site', {
-			noErrorRedirect: true,
-		});
-	}
-
-	$deactivate() {
-		return this.$_save(`/web/dash/sites/deactivate/${this.id}`, 'site');
 	}
 }
 
-Model.create(Site);
+export function $saveSite(model: SiteModel) {
+	return model.$_save(`/web/dash/sites/save/${model.id}`, 'site');
+}
+
+export function $saveDomainSite(model: SiteModel) {
+	return model.$_save(`/web/dash/sites/save-domain/${model.id}`, 'site');
+}
+
+export function $activateSite(model: SiteModel) {
+	return model.$_save(`/web/dash/sites/activate/${model.id}`, 'site', {
+		noErrorRedirect: true,
+	});
+}
+
+export function $deactivateSite(model: SiteModel) {
+	return model.$_save(`/web/dash/sites/deactivate/${model.id}`, 'site');
+}

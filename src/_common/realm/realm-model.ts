@@ -2,29 +2,29 @@ import { RouteLocationDefinition } from '../../utils/router';
 import { RealmFollowSource, trackRealmFollow } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import { showErrorGrowl } from '../growls/growls.service';
-import { MediaItem } from '../media-item/media-item-model';
-import { ModalConfirm } from '../modal/confirm/confirm-service';
+import { MediaItemModel } from '../media-item/media-item-model';
+import { showModalConfirm } from '../modal/confirm/confirm-service';
 import { Model } from '../model/model.service';
 import { $gettext } from '../translate/translate.service';
 
-export class Realm extends Model {
-	constructor(data: any = {}) {
-		super(data);
-
-		if (data.cover) {
-			this.cover = new MediaItem(data.cover);
-		}
-	}
-
+export class RealmModel extends Model {
 	declare name: string;
 	declare path: string;
 	declare added_on: number;
 
-	declare cover: MediaItem;
+	declare cover: MediaItemModel;
 
 	declare is_following: boolean;
 	declare follower_count: number;
 	declare can_moderate: boolean;
+
+	constructor(data: any = {}) {
+		super(data);
+
+		if (data.cover) {
+			this.cover = new MediaItemModel(data.cover);
+		}
+	}
 
 	get routeLocation(): RouteLocationDefinition {
 		return {
@@ -36,9 +36,7 @@ export class Realm extends Model {
 	}
 }
 
-Model.create(Realm);
-
-export async function followRealm(realm: Realm) {
+async function _followRealm(realm: RealmModel) {
 	realm.is_following = true;
 	++realm.follower_count;
 
@@ -59,7 +57,7 @@ export async function followRealm(realm: Realm) {
 	}
 }
 
-export async function unfollowRealm(realm: Realm) {
+async function _unfollowRealm(realm: RealmModel) {
 	realm.is_following = false;
 	--realm.follower_count;
 
@@ -80,10 +78,10 @@ export async function unfollowRealm(realm: Realm) {
 	}
 }
 
-export async function toggleRealmFollow(realm: Realm, source: RealmFollowSource) {
+export async function $toggleRealmFollow(realm: RealmModel, source: RealmFollowSource) {
 	if (!realm.is_following) {
 		try {
-			await followRealm(realm);
+			await _followRealm(realm);
 			trackRealmFollow(true, { source });
 		} catch (e) {
 			console.error(e);
@@ -92,13 +90,13 @@ export async function toggleRealmFollow(realm: Realm, source: RealmFollowSource)
 		}
 	} else {
 		try {
-			const result = await ModalConfirm.show(
+			const result = await showModalConfirm(
 				$gettext(`Are you sure you want to unfollow this realm?`),
 				$gettext(`Unfollow realm?`)
 			);
 
 			if (result) {
-				await unfollowRealm(realm);
+				await _unfollowRealm(realm);
 				trackRealmFollow(false, { source });
 			}
 		} catch (e) {

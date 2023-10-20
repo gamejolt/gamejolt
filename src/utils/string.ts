@@ -1,5 +1,8 @@
 const KebabCaseRegex = /[A-Z]/g;
 
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
 export function kebabCase(name: string) {
 	return name.replace(KebabCaseRegex, (letter, pos) => (pos ? '-' : '') + letter.toLowerCase());
 }
@@ -42,6 +45,9 @@ const lcWords = [
 	'With',
 ];
 
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
 export function titleCase(str: string, options?: TitleCaseOptions) {
 	options = options || {};
 
@@ -73,7 +79,11 @@ export function titleCase(str: string, options?: TitleCaseOptions) {
 	});
 }
 
-// Pulled from: https://github.com/bevacqua/fuzzysearch
+/**
+ * Pulled from: https://github.com/bevacqua/fuzzysearch
+ *
+ * @__NO_SIDE_EFFECTS__
+ */
 export function fuzzysearch(query: string, text: string) {
 	const tlen = text.length;
 	const qlen = query.length;
@@ -95,6 +105,9 @@ export function fuzzysearch(query: string, text: string) {
 	return true;
 }
 
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
 export function escapeRegex(str: string) {
 	return str.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&');
 }

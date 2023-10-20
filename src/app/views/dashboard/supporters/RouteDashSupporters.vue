@@ -10,16 +10,16 @@ import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { SupporterAction } from '../../../../_common/supporters/action.model';
-import { SupporterMessage } from '../../../../_common/supporters/message.model';
-import { DoSupporterMessageModal } from '../../../../_common/supporters/message/do/modal.service';
+import { SupporterActionModel } from '../../../../_common/supporters/action.model';
+import { SupporterMessageModel } from '../../../../_common/supporters/message.model';
+import { showDoSupporterMessageModal } from '../../../../_common/supporters/message/do/modal.service';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { getCurrentServerTime } from '../../../../utils/server-time';
@@ -29,6 +29,7 @@ const ACTIONS_PER_PAGE = 25;
 
 export default {
 	...defineAppRouteOptions({
+		deps: {},
 		resolver: () =>
 			Api.sendFieldsRequest('/mobile/dash/creators/supporters', {
 				actions: {
@@ -68,8 +69,8 @@ const isLoadingMore = ref(false);
 const hasError = ref(false);
 const reachedEnd = ref(false);
 
-const actions = ref([]) as Ref<SupporterAction[]>;
-const templateMessage = ref<SupporterMessage>({ content: '{}' } as SupporterMessage);
+const actions = ref([]) as Ref<SupporterActionModel[]>;
+const templateMessage = ref<SupporterMessageModel>({ content: '{}' } as SupporterMessageModel);
 
 const routeTitle = computed(() => $gettext(`Your Supporters`));
 const sendAllUrl = computed(() => `/web/dash/creators/supporters/send_all`);
@@ -91,14 +92,14 @@ const { reload } = createAppRoute({
 		const rawActions = payload.actions;
 
 		if (rawActions.length) {
-			actions.value = SupporterAction.populate(rawActions);
+			actions.value = SupporterActionModel.populate(rawActions);
 		} else {
 			actions.value = [];
 		}
 
 		// We'll reload this route after sending to everyone. Ensure we're
 		// resetting state as needed.
-		templateMessage.value = new SupporterMessage(payload.templateMessage);
+		templateMessage.value = new SupporterMessageModel(payload.templateMessage);
 		replyTimeLimit.value = payload.replyTimeLimit;
 		isSending.value = payload.isSending === true;
 		canSendAll.value = payload.canSendAll === true;
@@ -135,7 +136,7 @@ async function loadMore() {
 		});
 
 		if (response.actions.length) {
-			actions.value.push(...SupporterAction.populate(response.actions));
+			actions.value.push(...SupporterActionModel.populate(response.actions));
 		}
 
 		if (!response.actions || response.actions.length < ACTIONS_PER_PAGE) {
@@ -177,7 +178,7 @@ async function onClickSendAll() {
 		return;
 	}
 
-	const shouldSend = await ModalConfirm.show(
+	const shouldSend = await showModalConfirm(
 		$gettext(
 			`Are you sure you want to thank your recent supporters using your existing message template? Each person will only get one message.`
 		)
@@ -224,7 +225,7 @@ async function onClickSendAll() {
 }
 
 async function onClickEdit() {
-	const newTemplate = await DoSupporterMessageModal.show({
+	const newTemplate = await showDoSupporterMessageModal({
 		model: templateMessage.value,
 	});
 
@@ -235,8 +236,8 @@ async function onClickEdit() {
 	templateMessage.value = newTemplate;
 }
 
-async function onClickCreateCustom(action: SupporterAction) {
-	const sentMessage = await DoSupporterMessageModal.show({
+async function onClickCreateCustom(action: SupporterActionModel) {
+	const sentMessage = await showDoSupporterMessageModal({
 		model: action.message,
 		action,
 	});
@@ -252,11 +253,11 @@ async function onClickCreateCustom(action: SupporterAction) {
 	}
 }
 
-function _isActionStale(action: SupporterAction) {
+function _isActionStale(action: SupporterActionModel) {
 	return getCurrentServerTime() - action.added_on >= replyTimeLimit.value * 1_000;
 }
 
-function _canThankSupporterAction(action: SupporterAction) {
+function _canThankSupporterAction(action: SupporterActionModel) {
 	if (action.isThanked || action.message?.skipped_on) {
 		return false;
 	}

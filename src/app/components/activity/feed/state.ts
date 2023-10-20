@@ -1,8 +1,8 @@
+import { EventItemModel } from '../../../../_common/event-item/event-item.model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
+import { GameModel } from '../../../../_common/game/game.model';
+import { UserModel } from '../../../../_common/user/user.model';
 import { arrayRemove } from '../../../../utils/array';
-import { EventItem } from '../../../../_common/event-item/event-item.model';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import { Game } from '../../../../_common/game/game.model';
-import { User } from '../../../../_common/user/user.model';
 import { ActivityFeedItem } from './item-service';
 
 export interface ActivityFeedStateOptions {
@@ -50,8 +50,8 @@ export class ActivityFeedState {
 	suppressTicks: boolean;
 
 	items: ActivityFeedItem[] = [];
-	users: { [k: number]: User } = {};
-	games: { [k: number]: Game } = {};
+	users: { [k: number]: UserModel } = {};
+	games: { [k: number]: GameModel } = {};
 	notificationWatermark = 0; // Timestamp.
 	viewedItems: string[] = [];
 	isBootstrapped = false;
@@ -90,8 +90,8 @@ export class ActivityFeedState {
 			if (this.items.length > 0) {
 				const firstItem = this.items[0].feedItem;
 				if (
-					firstItem instanceof EventItem &&
-					firstItem.action instanceof FiresidePost &&
+					firstItem instanceof EventItemModel &&
+					firstItem.action instanceof FiresidePostModel &&
 					firstItem.action.is_pinned
 				) {
 					pinnedItem = this.items.shift();
@@ -134,7 +134,7 @@ export class ActivityFeedState {
 	 */
 	processUsers(items: ActivityFeedItem[]) {
 		for (const item of items) {
-			if (item.feedItem instanceof EventItem) {
+			if (item.feedItem instanceof EventItemModel) {
 				const user = item.feedItem.user;
 				if (user) {
 					if (!this.users[user.id]) {
@@ -154,7 +154,7 @@ export class ActivityFeedState {
 	 */
 	processGames(items: ActivityFeedItem[]) {
 		for (const item of items) {
-			if (item.feedItem instanceof EventItem) {
+			if (item.feedItem instanceof EventItemModel) {
 				const game = item.feedItem.game;
 				if (game) {
 					if (!this.games[game.id]) {

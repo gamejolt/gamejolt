@@ -1,16 +1,16 @@
 import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-helpers';
-import { MediaItem } from '../../media-item/media-item-model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
-import { Game } from '../game.model';
+import { GameModel } from '../game.model';
 
-export class GameSketchfab extends Model implements LightboxMediaModel {
-	media_type!: 'sketchfab';
+export class GameSketchfabModel extends Model implements LightboxMediaModel {
+	declare media_type: 'sketchfab';
 
-	game_id!: number;
-	sketchfab_id!: string;
-	added_on!: number;
-	status!: string;
-	media_item!: MediaItem;
+	declare game_id: number;
+	declare sketchfab_id: string;
+	declare added_on: number;
+	declare status: string;
+	declare media_item: MediaItemModel;
 
 	// Needed for lightbox and other components that are used together with GameVideo.
 	get img_thumbnail() {
@@ -25,7 +25,7 @@ export class GameSketchfab extends Model implements LightboxMediaModel {
 		super(data);
 
 		if (data.media_item) {
-			this.media_item = new MediaItem(data.media_item);
+			this.media_item = new MediaItemModel(data.media_item);
 		}
 	}
 
@@ -41,29 +41,27 @@ export class GameSketchfab extends Model implements LightboxMediaModel {
 		return this.media_item;
 	}
 
-	getUrl(game: Game) {
+	getUrl(game: GameModel) {
 		return game.getUrl() + '#sketchfab-' + this.id;
 	}
+}
 
-	$save() {
-		if (!this.id) {
-			return this.$_save(
-				'/web/dash/developer/games/media/save/sketchfab/' + this.game_id,
-				'gameSketchfab'
-			);
-		} else {
-			return this.$_save(
-				'/web/dash/developer/games/media/save/sketchfab/' + this.game_id + '/' + this.id,
-				'gameSketchfab'
-			);
-		}
-	}
-
-	$remove() {
-		return this.$_remove(
-			'/web/dash/developer/games/media/remove/sketchfab/' + this.game_id + '/' + this.id
+export function $saveGameSketchfab(model: GameSketchfabModel) {
+	if (!model.id) {
+		return model.$_save(
+			'/web/dash/developer/games/media/save/sketchfab/' + model.game_id,
+			'gameSketchfab'
+		);
+	} else {
+		return model.$_save(
+			'/web/dash/developer/games/media/save/sketchfab/' + model.game_id + '/' + model.id,
+			'gameSketchfab'
 		);
 	}
 }
 
-Model.create(GameSketchfab);
+export function $removeGameSketchfab(model: GameSketchfabModel) {
+	return model.$_remove(
+		'/web/dash/developer/games/media/remove/sketchfab/' + model.game_id + '/' + model.id
+	);
+}

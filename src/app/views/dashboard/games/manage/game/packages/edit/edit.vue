@@ -1,32 +1,39 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../../../../../utils/vue';
 import { Api } from '../../../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../../../_common/card/AppCard.vue';
 import AppExpand from '../../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../../_common/filters/number';
-import AppGamePackageCard from '../../../../../../../../_common/game/package/card/card.vue';
+import AppGamePackageCard from '../../../../../../../../_common/game/package/card/AppGamePackageCard.vue';
 import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';
-import { GamePackage } from '../../../../../../../../_common/game/package/package.model';
-import { GameRelease } from '../../../../../../../../_common/game/release/release.model';
+import {
+	GamePackageModel,
+	GamePackageVisibility,
+} from '../../../../../../../../_common/game/package/package.model';
+import {
+	$removeGameRelease,
+	GameReleaseModel,
+	GameReleaseStatus,
+} from '../../../../../../../../_common/game/release/release.model';
 import {
 	showErrorGrowl,
 	showSuccessGrowl,
 } from '../../../../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../../../../_common/loading/AppLoading.vue';
-import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
-import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
+import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+import AppNavTabList from '../../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import AppProgressPoller from '../../../../../../../../_common/progress/poller/AppProgressPoller.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../_common/route/route-component';
-import { Sellable } from '../../../../../../../../_common/sellable/sellable.model';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../_common/route/legacy-route-component';
+import { SellableModel } from '../../../../../../../../_common/sellable/sellable.model';
 import AppTimeAgo from '../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
+import { shallowSetup } from '../../../../../../../../utils/vue';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
-import { GamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
+import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../../manage.store';
 
@@ -48,34 +55,36 @@ import { useGameDashRouteController } from '../../../manage.store';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['packageId'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			'/web/dash/developer/games/packages/' + route.params.id + '/' + route.params.packageId
 		),
 })
-export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteComponent {
+export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteComponent {
 	routeStore = shallowSetup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game.value!;
 	}
 
-	package: GamePackage = null as any;
-	sellable: Sellable = null as any;
-	releases: GameRelease[] = [];
+	package: GamePackageModel = null as any;
+	sellable: SellableModel = null as any;
+	releases: GameReleaseModel[] = [];
 
-	previewPackage: GamePackage | null = null;
-	previewSellable: Sellable | null = null;
+	previewPackage: GamePackageModel | null = null;
+	previewSellable: SellableModel | null = null;
 	previewData: GamePackagePayloadModel | null = null;
 	buildsProcessingCount = 0;
 	isLoadingPreview = false;
 	isAddingRelease = false;
 
-	GamePackage = GamePackage;
-	GameRelease = GameRelease;
-	formatNumber = formatNumber;
+	readonly GameRelease = GameReleaseModel;
+	readonly formatNumber = formatNumber;
+	readonly GamePackageVisibilityPublic = GamePackageVisibility.Public;
+	readonly GameReleaseStatusHidden = GameReleaseStatus.Hidden;
+	readonly GameReleaseStatusPublished = GameReleaseStatus.Published;
 
 	get hasBuildsPerms() {
 		return this.game && this.game.hasPerms('builds');
@@ -87,7 +96,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 
 	get routeTitle() {
 		if (this.game && this.package) {
-			return this.$gettextInterpolate(`Edit Package %{ package } - %{ game }`, {
+			return this.$gettext(`Edit Package %{ package } - %{ game }`, {
 				game: this.game.title,
 				package: this.package.title || this.game.title,
 			});
@@ -96,9 +105,9 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 	}
 
 	routeResolved($payload: any) {
-		this.package = new GamePackage($payload.package);
-		this.sellable = new Sellable($payload.sellable);
-		this.releases = GameRelease.populate($payload.releases);
+		this.package = new GamePackageModel($payload.package);
+		this.sellable = new SellableModel($payload.sellable);
+		this.releases = GameReleaseModel.populate($payload.releases);
 
 		this.previewData = null;
 		this.previewPackage = null;
@@ -120,7 +129,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 
 		// We pull all new stuff for the preview so that we don't step on the form.
 		this.previewData = new GamePackagePayloadModel(response);
-		this.previewSellable = response.sellable ? new Sellable(response.sellable) : null;
+		this.previewSellable = response.sellable ? new SellableModel(response.sellable) : null;
 		this.previewPackage = this.previewData.packages.find(i => i.id === this.package.id) || null;
 		this.buildsProcessingCount = response.buildsProcessingCount || 0;
 		this.isLoadingPreview = false;
@@ -141,7 +150,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 
 	async editPackage() {
 		// Keep our preview in sync.
-		await GamePackageEditModal.show(this.routeStore, this.package, this.sellable);
+		await showGamePackageEditModal(this.routeStore, this.package, this.sellable);
 		this.loadPreview();
 	}
 
@@ -171,8 +180,8 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 		}
 	}
 
-	async removeRelease(release: GameRelease) {
-		const result = await ModalConfirm.show(
+	async removeRelease(release: GameReleaseModel) {
+		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to remove this release? All of its builds will be removed as well.'
 			)
@@ -182,7 +191,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 			return;
 		}
 
-		await release.$remove(this.game);
+		await $removeGameRelease(release, this.game);
 
 		showSuccessGrowl(
 			this.$gettext('The release and its builds have been removed from the package.'),
@@ -254,9 +263,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 			<div class="row">
 				<div class="col-sm-8">
 					<div
-						v-if="
-							game._is_devlog && package.visibility === GamePackage.VISIBILITY_PUBLIC
-						"
+						v-if="game._is_devlog && package.visibility === GamePackageVisibilityPublic"
 						class="alert alert-notice"
 					>
 						<AppJolticon icon="notice" />
@@ -283,7 +290,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 						:class="{
 							'section-header': !(
 								game._is_devlog &&
-								package.visibility === GamePackage.VISIBILITY_PUBLIC
+								package.visibility === GamePackageVisibilityPublic
 							),
 						}"
 					>
@@ -397,7 +404,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 							</div>
 
 							<div class="card-meta">
-								<template v-if="release.status === GameRelease.STATUS_HIDDEN">
+								<template v-if="release.status === GameReleaseStatusHidden">
 									<span
 										v-if="!release.isScheduled"
 										v-app-tooltip="
@@ -430,7 +437,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends BaseRouteCompo
 								</template>
 
 								<span
-									v-if="release.status === GameRelease.STATUS_PUBLISHED"
+									v-if="release.status === GameReleaseStatusPublished"
 									v-app-tooltip="
 										$gettext(
 											`This release is published and can be accessed from your game page.`

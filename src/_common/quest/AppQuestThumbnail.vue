@@ -5,11 +5,11 @@ import { kFontSizeSmall } from '../../_styles/variables';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppQuestFrame from './AppQuestFrame.vue';
-import { Quest } from './quest-model';
+import { QuestModel } from './quest-model';
 
 const props = defineProps({
 	quest: {
-		type: Object as PropType<Quest>,
+		type: Object as PropType<QuestModel>,
 		required: true,
 	},
 	hideMeta: {

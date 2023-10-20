@@ -3,16 +3,16 @@ import { Options, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { Environment } from '../../../../../../../../../_common/environment/environment.service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../../../../_common/screen/screen-service';
-import { Sellable } from '../../../../../../../../../_common/sellable/sellable.model';
+import { SellableModel } from '../../../../../../../../../_common/sellable/sellable.model';
 
 @Options({
 	name: 'RouteDashGamesManageGamePackagesEditWidget',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest(
@@ -22,8 +22,8 @@ import { Sellable } from '../../../../../../../../../_common/sellable/sellable.m
 				route.params.packageId
 		),
 })
-export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRouteComponent {
-	sellable: Sellable | null = null;
+export default class RouteDashGamesManageGamePackagesEditWidget extends LegacyRouteComponent {
+	sellable: SellableModel | null = null;
 	theme: string = null as any;
 	widgetUrl = '';
 	widgetCode = '';
@@ -31,7 +31,7 @@ export default class RouteDashGamesManageGamePackagesEditWidget extends BaseRout
 	readonly Screen = Screen;
 
 	routeResolved($payload: any) {
-		this.sellable = $payload.sellable ? new Sellable($payload.sellable) : null;
+		this.sellable = $payload.sellable ? new SellableModel($payload.sellable) : null;
 		this.theme = ''; // Default to dark.
 	}
 

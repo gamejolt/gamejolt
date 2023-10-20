@@ -1,5 +1,5 @@
 import { RouteLocationNormalized } from 'vue-router';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 
 export class GameListingContainer {
 	constructor({
@@ -17,7 +17,7 @@ export class GameListingContainer {
 	readonly loadInfinitely: boolean;
 
 	isBootstrapped = false;
-	games: Game[] = [];
+	games: GameModel[] = [];
 	gameIds = new Set<number>();
 	gamesCount = 0;
 	perPage = 10;
@@ -32,7 +32,7 @@ export class GameListingContainer {
 		this.perPage = payload.perPage;
 
 		this.resetGames();
-		this.addGames(Game.populate(payload.games));
+		this.addGames(GameModel.populate(payload.games));
 
 		this.currentPage = route.query.page ? parseInt(route.query.page + '', 10) : 1;
 		this.section = (route.params.section as string) ?? 'featured';
@@ -43,7 +43,7 @@ export class GameListingContainer {
 			this.resetGames();
 		}
 
-		const addedGames = this.addGames(Game.populate(payload.games));
+		const addedGames = this.addGames(GameModel.populate(payload.games));
 
 		if (!addedGames.length) {
 			this.reachedEnd = true;
@@ -59,8 +59,8 @@ export class GameListingContainer {
 		this.gameIds = new Set();
 	}
 
-	private addGames(newGames: Game[]) {
-		const addedGames: Game[] = [];
+	private addGames(newGames: GameModel[]) {
+		const addedGames: GameModel[] = [];
 
 		for (const game of newGames) {
 			// Only add each game once, in case of dupes.
@@ -76,7 +76,7 @@ export class GameListingContainer {
 		return addedGames;
 	}
 
-	public setGames(games: Game[]) {
+	public setGames(games: GameModel[]) {
 		this.resetGames();
 		this.addGames(games);
 	}

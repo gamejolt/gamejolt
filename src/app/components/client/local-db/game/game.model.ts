@@ -1,9 +1,9 @@
-import { Game } from '../../../../../_common/game/game.model';
-import { MediaItem } from '../../../../../_common/media-item/media-item-model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
 import { LocalDbModel } from '../model.service';
 
 export class LocalDbGame extends LocalDbModel<LocalDbGame> {
-	private static readonly CachedGames = new WeakMap<LocalDbGame, Game>();
+	private static readonly CachedGames = new WeakMap<LocalDbGame, GameModel>();
 
 	id = 0;
 
@@ -14,8 +14,8 @@ export class LocalDbGame extends LocalDbModel<LocalDbGame> {
 	// Shouldn't this have fields/types?
 	compatibility: unknown = null;
 
-	header_media_item: MediaItem | null = null;
-	thumbnail_media_item: MediaItem | null = null;
+	header_media_item: MediaItemModel | null = null;
+	thumbnail_media_item: MediaItemModel | null = null;
 
 	developer = {
 		id: 0,
@@ -29,7 +29,7 @@ export class LocalDbGame extends LocalDbModel<LocalDbGame> {
 	get _game() {
 		let game = LocalDbGame.CachedGames.get(this);
 		if (!game) {
-			game = new Game(this);
+			game = new GameModel(this);
 			LocalDbGame.CachedGames.set(this, game);
 		}
 
@@ -38,11 +38,11 @@ export class LocalDbGame extends LocalDbModel<LocalDbGame> {
 
 	hydrate() {
 		if (this.header_media_item) {
-			this.header_media_item = new MediaItem(this.header_media_item);
+			this.header_media_item = new MediaItemModel(this.header_media_item);
 		}
 
 		if (this.thumbnail_media_item) {
-			this.thumbnail_media_item = new MediaItem(this.thumbnail_media_item);
+			this.thumbnail_media_item = new MediaItemModel(this.thumbnail_media_item);
 		}
 	}
 
@@ -66,12 +66,12 @@ export class LocalDbGame extends LocalDbModel<LocalDbGame> {
 		this.header_media_item = updateData.header_media_item;
 		this.thumbnail_media_item = updateData.thumbnail_media_item;
 
-		if (this.header_media_item && !(this.header_media_item instanceof MediaItem)) {
-			this.header_media_item = new MediaItem(updateData.header_media_item);
+		if (this.header_media_item && !(this.header_media_item instanceof MediaItemModel)) {
+			this.header_media_item = new MediaItemModel(updateData.header_media_item);
 		}
 
-		if (this.thumbnail_media_item && !(this.thumbnail_media_item instanceof MediaItem)) {
-			this.thumbnail_media_item = new MediaItem(updateData.thumbnail_media_item);
+		if (this.thumbnail_media_item && !(this.thumbnail_media_item instanceof MediaItemModel)) {
+			this.thumbnail_media_item = new MediaItemModel(updateData.thumbnail_media_item);
 		}
 	}
 }

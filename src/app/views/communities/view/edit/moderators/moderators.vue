@@ -1,20 +1,25 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../../utils/array';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
-import { Collaborator } from '../../../../../../_common/collaborator/collaborator.model';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	$removeCollaboratorInvite,
+	CollaboratorModel,
+	CollaboratorRole,
+	CollaboratorStatus,
+} from '../../../../../../_common/collaborator/collaborator.model';
+import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
+import { arrayRemove } from '../../../../../../utils/array';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditModerators',
@@ -26,21 +31,25 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		FormCommunityCollaborator,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id'] },
 	resolver({ route }) {
 		return Api.sendRequest('/web/dash/communities/collaborators/' + route.params.id);
 	},
 })
-export default class RouteCommunitiesViewEditModerators extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditModerators extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	collaborators: Collaborator[] = [];
-	activeCollaborator: Collaborator | null = null;
+	collaborators: CollaboratorModel[] = [];
+	activeCollaborator: CollaboratorModel | null = null;
 	isShowingCollaboratorAdd = false;
 
-	readonly Collaborator = Collaborator;
+	readonly Collaborator = CollaboratorModel;
+	readonly CollaboratorStatusActive = CollaboratorStatus.Active;
+	readonly CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
+	readonly CollaboratorRoleModerator = CollaboratorRole.Moderator;
+	readonly CollaboratorRoleJamOrganizer = CollaboratorRole.JamOrganizer;
 
 	get community() {
 		return this.routeStore.community;
@@ -48,14 +57,14 @@ export default class RouteCommunitiesViewEditModerators extends BaseRouteCompone
 
 	routeResolved($payload: any) {
 		if ($payload.collaborators) {
-			this.collaborators = Collaborator.populate($payload.collaborators);
+			this.collaborators = CollaboratorModel.populate($payload.collaborators);
 			if (!this.collaborators.length) {
 				this.isShowingCollaboratorAdd = true;
 			}
 		}
 	}
 
-	onAddedCollaborator(collaborator: Collaborator) {
+	onAddedCollaborator(collaborator: CollaboratorModel) {
 		this.isShowingCollaboratorAdd = false;
 		this.collaborators.push(collaborator);
 	}
@@ -64,8 +73,8 @@ export default class RouteCommunitiesViewEditModerators extends BaseRouteCompone
 		this.activeCollaborator = null;
 	}
 
-	async removeCollaborator(collaborator: Collaborator) {
-		const ret = await ModalConfirm.show(
+	async removeCollaborator(collaborator: CollaboratorModel) {
+		const ret = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to remove this collaborator? They will no longer be able to make changes to the community.`
 			),
@@ -77,7 +86,7 @@ export default class RouteCommunitiesViewEditModerators extends BaseRouteCompone
 		}
 
 		try {
-			await collaborator.$remove();
+			await $removeCollaboratorInvite(collaborator);
 
 			showSuccessGrowl(
 				this.$gettext('The collaborator has been removed.'),
@@ -132,19 +141,19 @@ export default class RouteCommunitiesViewEditModerators extends BaseRouteCompone
 
 				<div class="card-meta">
 					<span class="tag">
-						<template v-if="collaborator.role === Collaborator.ROLE_EQUAL_COLLABORATOR">
+						<template v-if="collaborator.role === CollaboratorRoleEqualCollaborator">
 							<AppTranslate>Full Collaborator</AppTranslate>
 						</template>
-						<template v-else-if="collaborator.role === Collaborator.ROLE_JAM_ORGANIZER">
+						<template v-else-if="collaborator.role === CollaboratorRoleJamOrganizer">
 							<AppTranslate>Jam Organizer</AppTranslate>
 						</template>
-						<template v-else-if="collaborator.role === Collaborator.ROLE_MODERATOR">
+						<template v-else-if="collaborator.role === CollaboratorRoleModerator">
 							<AppTranslate>Moderator</AppTranslate>
 						</template>
 						<template v-else> - </template>
 					</span>
 
-					<template v-if="collaborator.status !== Collaborator.STATUS_ACTIVE">
+					<template v-if="collaborator.status !== CollaboratorStatusActive">
 						<span class="tag"><AppTranslate>Invited</AppTranslate></span>
 						<br />
 						<AppTranslate>This user hasn't accepted their invitation yet.</AppTranslate>

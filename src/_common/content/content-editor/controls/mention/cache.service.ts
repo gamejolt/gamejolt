@@ -1,9 +1,9 @@
-import { User } from '../../../../user/user.model';
+import { UserModel } from '../../../../user/user.model';
 
 export default class ContentEditorMentionCache {
-	private static _results: { [query: string]: User[] } = {};
+	private static _results: { [query: string]: UserModel[] } = {};
 
-	public static setResults(query: string, users: User[]) {
+	public static setResults(query: string, users: UserModel[]) {
 		this._results[query] = users;
 	}
 
@@ -11,7 +11,7 @@ export default class ContentEditorMentionCache {
 		return query in this._results;
 	}
 
-	public static getResults(query: string): User[] {
+	public static getResults(query: string): UserModel[] {
 		if (this.hasResults(query)) {
 			return this._results[query];
 		}

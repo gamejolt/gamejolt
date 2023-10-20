@@ -10,7 +10,7 @@ import AppFormControlTheme from '../../form-vue/controls/AppFormControlTheme.vue
 import AppFormControlToggle from '../../form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm } from '../../form-vue/form.service';
 import AppTheme from '../AppTheme.vue';
-import { Theme } from '../theme.model';
+import { ThemeModel } from '../theme.model';
 import { useThemeStore } from '../theme.store';
 import AppThemeSvg from './AppThemeSvg.vue';
 
@@ -21,7 +21,7 @@ interface VueColor {
 interface FormModel {
 	file?: string;
 	color?: string;
-	theme?: null | Theme;
+	theme?: null | ThemeModel;
 	custom?: string;
 	strictColors?: boolean;
 }

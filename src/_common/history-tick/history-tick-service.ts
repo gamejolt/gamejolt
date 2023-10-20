@@ -10,8 +10,8 @@ export interface BeaconOptions {
 	sourceFeed?: string;
 }
 
-export class HistoryTick {
-	private static _sources: Record<string, string | undefined> = {};
+class HistoryTickService {
+	private _sources: Record<string, string | undefined> = {};
 
 	/**
 	 * You can track a source for a particular parent resource.
@@ -23,7 +23,7 @@ export class HistoryTick {
 	 * If you get to this resource through different means we'll still just
 	 * track the initial way of getting there.
 	 */
-	static trackSource(resource: string, resourceId: number) {
+	trackSource(resource: string, resourceId: number) {
 		// Look specifically for undefined and not just null.
 		// There may have been a null referrer if we got here through a direct page hit.
 		if (typeof this._sources[resource + ':' + resourceId] === 'undefined') {
@@ -31,11 +31,11 @@ export class HistoryTick {
 		}
 	}
 
-	static getSource(resource: string, resourceId: number) {
+	getSource(resource: string, resourceId: number) {
 		return this._sources[resource + ':' + resourceId];
 	}
 
-	static sendBeacon(type: string, resourceId?: number, options: BeaconOptions = {}) {
+	sendBeacon(type: string, resourceId?: number, options: BeaconOptions = {}) {
 		if (import.meta.env.SSR || isDynamicGoogleBot()) {
 			return;
 		}
@@ -109,3 +109,5 @@ export class HistoryTick {
 		});
 	}
 }
+
+export const HistoryTick = /** @__PURE__ */ new HistoryTickService();

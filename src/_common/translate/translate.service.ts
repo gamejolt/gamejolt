@@ -52,7 +52,7 @@ const _currentTranslations = computed(
 	() => _translations.value[_language.value] ?? _translations.value[_language.value.split('_')[0]]
 );
 
-let _translationsReady: Promise<void> = new Promise(() => {});
+let _translationsReady: Promise<void> = /** @__PURE__ */ new Promise(() => {});
 
 export function initTranslations(app: App) {
 	// Initialize our starting values. [loadCurrentLanguage] should be called
@@ -69,7 +69,6 @@ export function initTranslations(app: App) {
 	// Convenience to make it easier to translate in templates.
 	app.config.globalProperties.$gettext = $gettext;
 	app.config.globalProperties.$ngettext = $ngettext;
-	app.config.globalProperties.$gettextInterpolate = $gettextInterpolate;
 
 	// Add into the global app for convenience of usage.
 	app.component('AppTranslate', AppTranslate);
@@ -254,22 +253,63 @@ export const TranslationLangs = [
 export const TranslationLangsByCode = arrayIndexBy(TranslationLangs, 'code');
 
 /**
+ * A mapping for interpolated values in a translated string.
+ */
+export type TranslationContext = Record<string, string | number>;
+
+export type TranslateInterpolationOptions = {
+	enableHTMLEscaping?: boolean;
+};
+
+/**
  * Returns the translated string.
  */
-export function $gettext(msgid: string) {
-	return getTranslation(msgid);
+export function $gettext(
+	msgid: string,
+	context?: TranslationContext | false,
+	options: TranslateInterpolationOptions = {}
+) {
+	let translatedString = getTranslation(msgid);
+
+	if (context) {
+		translatedString = interpolateTranslation(translatedString, context, options);
+	}
+
+	return translatedString;
+}
+
+/**
+ * Returns a translated string of either the singular or plural, based on the
+ * number given.
+ */
+export function $ngettext(
+	msgid: string,
+	plural: string,
+	n: number,
+	context?: TranslationContext | false,
+	options: TranslateInterpolationOptions = {}
+) {
+	let translatedString = getTranslation(msgid, n, plural);
+
+	if (context) {
+		translatedString = interpolateTranslation(translatedString, context, options);
+	}
+
+	return translatedString;
 }
 
 /**
  * Replaces placeholders with values in a translated string.
  * Example: 'Hi %{ name }' => 'Hi David'
+ *
+ * @__NO_SIDE_EFFECTS__
  */
-export function $gettextInterpolate(
-	msgid: string,
-	context: Record<string, string | number>,
-	enableHTMLEscaping = false
+export function interpolateTranslation(
+	translatedString: string,
+	context: TranslationContext,
+	{ enableHTMLEscaping = false }: TranslateInterpolationOptions
 ) {
-	return msgid.replace(InterpolationRegex, (_match, token) => {
+	return translatedString.replace(InterpolationRegex, (_match, token) => {
 		const key = token.trim();
 
 		// This is for safety so that even if it's null or undefined we don't
@@ -280,14 +320,6 @@ export function $gettextInterpolate(
 			? evaluated.replace(/[&<>"']/g, (i: keyof typeof EscapeHTMLMap) => EscapeHTMLMap[i])
 			: evaluated;
 	});
-}
-
-/**
- * Returns a translated string of either the singular or plural, based on the
- * number given.
- */
-export function $ngettext(msgid: string, plural: string, n: number) {
-	return getTranslation(msgid, n, plural);
 }
 
 export function getTranslation(msgid: string, n = 1, defaultPlural: string | null = null): string {
@@ -310,14 +342,12 @@ export function getTranslation(msgid: string, n = 1, defaultPlural: string | nul
 
 	let translated = _currentTranslations.value[msgid];
 
-	// TODO: there has to be a more efficient way than this.
-	if (!translated && /\s{2,}/g.test(msgid)) {
-		Object.keys(_currentTranslations.value).some(key => {
-			if (key.replace(/\s{2,}/g, ' ') === msgid.trim().replace(/\s{2,}/g, ' ')) {
-				translated = _currentTranslations.value[key];
-				return !!translated;
-			}
-		});
+	// If the fastpath of search for the wrong string didn't work, we need to
+	// search for a trimmed and normalized version. This is in case there's some
+	// extra formatting around the text for code reasons.
+	if (!translated) {
+		msgid = msgid.trim().replace(/\s{2,}/g, ' ');
+		translated = _currentTranslations.value[msgid];
 	}
 
 	if (!translated) {
@@ -490,22 +520,5 @@ function _getTranslationIndex(languageCode: string, n: number | string) {
 		default:
 			// Everything else
 			return n !== 1 ? 1 : 0;
-	}
-}
-
-// For backwards compatibility.
-export class Translate {
-	/** @deprecated Use the imported version instead */
-	static $gettext(msgid: string) {
-		return $gettext(msgid);
-	}
-
-	/** @deprecated Use the imported version instead */
-	static $gettextInterpolate(
-		msgid: string,
-		context: Record<string, string | number>,
-		enableHTMLEscaping = false
-	) {
-		return $gettextInterpolate(msgid, context, enableHTMLEscaping);
 	}
 }

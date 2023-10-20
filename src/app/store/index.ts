@@ -4,24 +4,21 @@ import { CommunityJoinLocation } from '../../_common/analytics/analytics.service
 import { Api } from '../../_common/api/api.service';
 import { Backdrop, BackdropController } from '../../_common/backdrop/backdrop.service';
 import {
-	Community,
+	CommunityModel,
 	joinCommunity as joinCommunityModel,
 	leaveCommunity as leaveCommunityModel,
 } from '../../_common/community/community.model';
 import { Connection } from '../../_common/connection/connection-service';
-import {
-	ContentFocus,
-	registerContentFocusWatcher as registerFocusWatcher,
-} from '../../_common/content-focus/content-focus.service';
+import { registerContentFocusWatcher as registerFocusWatcher } from '../../_common/content-focus/content-focus.service';
 import { showSuccessGrowl } from '../../_common/growls/growls.service';
-import { ModalConfirm } from '../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../_common/screen/screen-service';
 import { SidebarStore } from '../../_common/sidebar/sidebar.store';
 import { StickerStore } from '../../_common/sticker/sticker-store';
 import { CommonStore } from '../../_common/store/common-store';
 import { $gettext } from '../../_common/translate/translate.service';
 import { ActivityFeedState } from '../components/activity/feed/state';
-import { BroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
+import { checkBroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
 import type { GridClient } from '../components/grid/client.service';
 import { CommunityStates } from './community-state';
 import { LibraryStore } from './library';
@@ -36,7 +33,8 @@ export type TogglableLeftPane =
 	| 'library'
 	| 'mobile'
 	| 'backpack'
-	| 'quests';
+	| 'quests'
+	| 'joltydex';
 
 export const AppStoreKey: InjectionKey<AppStore> = Symbol('app-store');
 
@@ -85,8 +83,8 @@ export function createAppStore({
 	const hasContentSidebar = ref(false);
 
 	/** Will be set to the community they're currently viewing (if any). */
-	const activeCommunity = ref<Community>();
-	const communities = ref<Community[]>([]);
+	const activeCommunity = ref<CommunityModel>();
+	const communities = ref<CommunityModel[]>([]);
 	const communityStates = ref(new CommunityStates());
 
 	const _backdrop = shallowRef(null) as ShallowRef<BackdropController | null>;
@@ -131,7 +129,6 @@ export function createAppStore({
 
 	// Sync with the ContentFocus service.
 	registerFocusWatcher(
-		ContentFocus,
 		// We only care if the panes are overlaying, not if they're visible in
 		// the page without overlaying. Example is that context panes show
 		// in-page on large displays.
@@ -177,12 +174,12 @@ export function createAppStore({
 		_setBootstrapped();
 
 		if (!GJ_IS_DESKTOP_APP && !import.meta.env.SSR) {
-			BroadcastModal.check();
+			checkBroadcastModal();
 		}
 	}
 
 	async function logout() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			$gettext('Are you seriously going to leave us?'),
 			$gettext('Logout?')
 		);
@@ -363,11 +360,11 @@ export function createAppStore({
 
 	function _shellPayload(payload: any) {
 		isShellBootstrapped.value = true;
-		communities.value = Community.populate(payload.communities);
+		communities.value = CommunityModel.populate(payload.communities);
 	}
 
 	async function joinCommunity(
-		community: Community,
+		community: CommunityModel,
 		options: { grid: GridClient | undefined; location?: CommunityJoinLocation }
 	) {
 		const { grid, location } = options;
@@ -390,7 +387,7 @@ export function createAppStore({
 	}
 
 	async function leaveCommunity(
-		community: Community,
+		community: CommunityModel,
 		options: {
 			grid: GridClient | undefined;
 			location?: CommunityJoinLocation;
@@ -401,7 +398,7 @@ export function createAppStore({
 
 		if (community.is_member && !community._removed) {
 			if (shouldConfirm) {
-				const result = await ModalConfirm.show(
+				const result = await showModalConfirm(
 					$gettext(`Are you sure you want to leave this community?`),
 					$gettext(`Leave community?`)
 				);
@@ -427,7 +424,7 @@ export function createAppStore({
 		communities.value.splice(idx, 1);
 	}
 
-	function setActiveCommunity(community: Community) {
+	function setActiveCommunity(community: CommunityModel) {
 		activeCommunity.value = community;
 	}
 
@@ -435,7 +432,7 @@ export function createAppStore({
 		activeCommunity.value = undefined;
 	}
 
-	function viewCommunity(community: Community) {
+	function viewCommunity(community: CommunityModel) {
 		const communityState = communityStates.value.getCommunityState(community);
 		communityState.hasUnreadFeaturedPosts = false;
 

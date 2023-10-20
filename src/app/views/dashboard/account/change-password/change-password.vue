@@ -2,7 +2,10 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import FormChangePassword from '../../../../components/forms/change-password/change-password.vue';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
@@ -13,11 +16,11 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 		FormChangePassword,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/dash/account/has-password'),
 })
-export default class RouteDashAccountChangePassword extends BaseRouteComponent {
+export default class RouteDashAccountChangePassword extends LegacyRouteComponent {
 	routeStore = setup(() => useAccountRouteController()!);
 
 	hasPassword = true;

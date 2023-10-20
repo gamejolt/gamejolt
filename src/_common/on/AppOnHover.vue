@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs, watch } from 'vue';
+import { toRefs } from 'vue';
+import { useOnHover } from './useOnHover';
 
 const props = defineProps({
 	/**
@@ -16,37 +17,9 @@ const props = defineProps({
 });
 
 const { stateKey, disable } = toRefs(props);
-watch(
-	() => stateKey?.value,
-	() => {
-		hovered.value = false;
-	}
-);
-
-const hovered = ref(false);
-
-const showHovered = computed(() => {
-	return !disable.value && hovered.value;
-});
-
-/**
- * This should be bound to the slot components that want to affect the hover
- * state.
- */
-const binding = {
-	onMouseenter,
-	onMouseleave,
-};
-
-function onMouseenter() {
-	hovered.value = true;
-}
-
-function onMouseleave() {
-	hovered.value = false;
-}
+const { hoverBinding, hovered } = useOnHover({ stateKey, disable });
 </script>
 
 <template>
-	<slot :hovered="showHovered" :binding="binding" />
+	<slot :hovered="hovered" :hover-binding="hoverBinding" />
 </template>

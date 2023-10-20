@@ -11,7 +11,7 @@ import { Router } from 'vue-router';
 import { arrayRemove } from '../../utils/array';
 import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';
-import { CommentVote } from '../comment/vote/vote-model';
+import { CommentVoteType } from '../comment/vote/vote-model';
 import { ConfigOption } from '../config/config.service';
 import { DeviceArch, DeviceOs, isDynamicGoogleBot } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
@@ -47,7 +47,6 @@ export type UserFollowLocation =
 	| 'creatorCard'
 	| 'profilePage'
 	| 'inviteFollow'
-	| 'firesideOfflineFollow'
 	| 'userList'
 	| 'gameFollow';
 export type GameFollowLocation = 'thumbnail' | 'gamePage' | 'badge' | 'homeBanner' | 'library';
@@ -224,7 +223,6 @@ function _untrackUserId() {
 		return;
 	}
 
-	// TODO: Check to make sure this actually works.
 	setUserId(_getFirebaseAnalytics(), '');
 }
 
@@ -368,9 +366,9 @@ export function trackCommentVote(vote: number, params: { failed: boolean; toggle
 	const { failed, toggled } = params;
 
 	let type = '';
-	if (vote === CommentVote.VOTE_UPVOTE) {
+	if (vote === CommentVoteType.Upvote) {
 		type = 'like';
-	} else if (vote === CommentVote.VOTE_DOWNVOTE) {
+	} else if (vote === CommentVoteType.Downvote) {
 		type = 'dislike';
 	} else {
 		return;
@@ -489,67 +487,6 @@ export function trackSearchAutocomplete(params: {
 	_trackEvent('search_autocomplete', params);
 }
 
-interface FiresideActionData {
-	action: string;
-	trigger: string;
-	sidebarData?: FiresideSidebarData;
-}
-
-interface FiresideSidebarData {
-	previous: string;
-	current: string;
-}
-
-export function trackFiresideAction({
-	action: action_name,
-	trigger: action_trigger,
-	sidebarData,
-}: FiresideActionData) {
-	const { previous: previous_sidebar, current: current_sidebar } = sidebarData || {};
-
-	_trackEvent('fireside_action', {
-		action_name,
-		action_trigger,
-		previous_sidebar,
-		current_sidebar,
-	});
-}
-
-export function trackFiresideExtinguish(trigger: string) {
-	trackFiresideAction({ action: 'extinguish', trigger });
-}
-
-export function trackFiresidePublish(trigger: string) {
-	trackFiresideAction({ action: 'publish', trigger });
-}
-
-export function trackFiresideSidebarButton({
-	previous,
-	current,
-	trigger,
-}: {
-	previous: string;
-	current: string;
-	trigger: string;
-}) {
-	trackFiresideAction({
-		action: 'change-sidebar',
-		trigger,
-		sidebarData: {
-			previous,
-			current,
-		},
-	});
-}
-
-export function trackFiresideSidebarCollapse(collapsed: boolean, trigger: string) {
-	trackFiresideAction({ action: collapsed ? 'collapse-sidebar' : 'expand-sidebar', trigger });
-}
-
-export function trackFiresideStopStreaming(trigger: string) {
-	trackFiresideAction({ action: 'stop-streaming', trigger: trigger });
-}
-
 export function trackHomeFeedSwitch({ path, isActive }: { path: string; isActive: boolean }) {
 	_trackEvent('home_feed_switch', {
 		path,
@@ -572,11 +509,48 @@ export function trackCbarControlClick(
 	_trackEvent('cbar_control_click', params);
 }
 
+export function trackJoltydex(
+	params:
+		| {
+				action: 'show';
+		  }
+		| {
+				action: 'show-collection';
+				collectionId: number;
+		  }
+) {
+	_trackEvent('joltydex', params);
+}
+
+export type ShopShowLocation =
+	| 'joltydex'
+	| 'joltydex-collection'
+	| 'user-profile'
+	| 'backpack'
+	| 'sticker-drawer'
+	| 'shell-route';
+
+export function trackShopOpen(params: { location: ShopShowLocation; userId: number | undefined }) {
+	_trackEvent('shop_open', params);
+}
+
+export type ShopClickType =
+	| 'avatar-frame'
+	| 'background'
+	| 'sticker-pack'
+	| 'coins-card'
+	| 'joltbux-card'
+	| 'unhandled-product';
+
+export function trackShopView(params: { type: ShopClickType; productId?: number }) {
+	_trackEvent('shop_view', params);
+}
+
 /**
  * @deprecated This is left here so that old code doesn't break.
  */
-export class Analytics {
-	private static warnDeprecated(name: string) {
+class AnalyticsService {
+	private warnDeprecated(name: string) {
 		if (import.meta.env.MODE === 'development' || import.meta.env.DEV) {
 			console.warn(
 				`[Analytics] - [${name}] is deprecated and no longer functional. Use new analytics functions instead.`
@@ -584,7 +558,7 @@ export class Analytics {
 		}
 	}
 
-	static trackEvent(_category: string, _action: string, _label?: string, _value?: string) {
+	trackEvent(_category: string, _action: string, _label?: string, _value?: string) {
 		this.warnDeprecated('trackEvent');
 		return;
 
@@ -607,7 +581,7 @@ export class Analytics {
 		// }
 	}
 
-	static trackSocial(_network: string, _action: string, _target: string) {
+	trackSocial(_network: string, _action: string, _target: string) {
 		this.warnDeprecated('trackSocial');
 		return;
 
@@ -625,7 +599,7 @@ export class Analytics {
 		// }
 	}
 
-	static trackTiming(_category: string, _timingVar: string, _value: number, _label?: string) {
+	trackTiming(_category: string, _timingVar: string, _value: number, _label?: string) {
 		this.warnDeprecated('trackTiming');
 		return;
 
@@ -643,3 +617,8 @@ export class Analytics {
 		// }
 	}
 }
+
+/**
+ * @deprecated This is left here so that old code doesn't break.
+ */
+export const Analytics = /** @__PURE__ */ new AnalyticsService();

@@ -5,11 +5,11 @@ import { vAppAuthRequired } from '../auth/auth-required-directive';
 import AppButton from '../button/AppButton.vue';
 import { useCommonStore } from '../store/common-store';
 import AppTranslate from '../translate/AppTranslate.vue';
-import { Realm, toggleRealmFollow } from './realm-model';
+import { $toggleRealmFollow, RealmModel } from './realm-model';
 
 const props = defineProps({
 	realm: {
-		type: Object as PropType<Realm>,
+		type: Object as PropType<RealmModel>,
 		required: true,
 	},
 	source: {
@@ -43,7 +43,7 @@ async function onClick() {
 	}
 
 	isProcessing.value = true;
-	await toggleRealmFollow(realm.value, source.value);
+	await $toggleRealmFollow(realm.value, source.value);
 	isProcessing.value = false;
 }
 </script>

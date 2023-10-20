@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType, Ref, computed, onBeforeUnmount, ref, toRefs, watch } from 'vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { MediaItem } from '../../../../../_common/media-item/media-item-model';
+import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
 import AppScrollInview, {
 	createScrollInview,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
@@ -28,7 +28,7 @@ const LoadDelay = 300;
 
 const props = defineProps({
 	mediaItem: {
-		type: Object as PropType<MediaItem>,
+		type: Object as PropType<MediaItemModel>,
 		required: true,
 	},
 	manifests: {

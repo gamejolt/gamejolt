@@ -61,11 +61,13 @@ export const kThemeBgOffset = `var(--theme-bg-offset)`;
 export const kThemeBgBackdrop = `var(--theme-bg-backdrop)`;
 export const kThemeBgSubtle = `var(--theme-bg-subtle)`;
 export const kThemeFg = `var(--theme-fg)`;
-export const kThemeFg10 = `rgba(var(--theme-fg-rgb), 0.1)`;
+export const kThemeFgRgb = `var(--theme-fg-rgb)`;
+export const kThemeFg10 = `rgba(${kThemeFgRgb}, 0.1)`;
 export const kThemeFgMuted = `var(--theme-fg-muted)`;
 export const kThemeLink = `var(--theme-link)`;
 export const kThemeLinkHover = `var(--theme-link-hover)`;
 export const kThemePrimary = `var(--theme-primary)`;
+export const kThemePrimaryTrans = `var(--theme-primary-trans)`;
 export const kThemePrimaryFg = `var(--theme-primary-fg)`;
 
 export const kDarkThemeHighlight = `var(--dark-theme-highlight)`;
@@ -84,3 +86,6 @@ export const kDarkThemeLink = `var(--dark-theme-link)`;
 export const kDarkThemeLinkHover = `var(--dark-theme-link-hover)`;
 export const kDarkThemePrimary = `var(--dark-theme-primary)`;
 export const kDarkThemePrimaryFg = `var(--dark-theme-primary-fg)`;
+
+// Context colors
+export const kThemePlaceholderBg = kThemeBgSubtle;

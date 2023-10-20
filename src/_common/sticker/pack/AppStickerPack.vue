@@ -6,11 +6,11 @@ import {
 	styleElevate,
 	styleWhen,
 } from '../../../_styles/mixins';
+import { kFontSizeSmall } from '../../../_styles/variables';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import { shorthandReadableTime } from '../../filters/duration';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { StickerPack } from './pack.model';
+import { StickerPackModel } from './pack.model';
 
 export const StickerPackRatio = 2 / 3;
 
@@ -21,6 +21,7 @@ export const StickerPackExpiryStyles: CSSProperties = {
 	padding: `2px 6px`,
 	color: `white`,
 	fontWeight: 700,
+	fontSize: kFontSizeSmall.px,
 	right: `4px`,
 	top: `4px`,
 };
@@ -35,7 +36,7 @@ type PackDetailsOptions = boolean | StickerPackDetails;
 
 const props = defineProps({
 	pack: {
-		type: Object as PropType<StickerPack>,
+		type: Object as PropType<StickerPackModel>,
 		required: true,
 	},
 	showDetails: {
@@ -48,7 +49,7 @@ const props = defineProps({
 	forceElevate: {
 		type: Boolean,
 	},
-	expiryInfo: {
+	borderRadius: {
 		type: Number,
 		default: undefined,
 	},
@@ -58,7 +59,7 @@ const emit = defineEmits({
 	clickPack: () => true,
 });
 
-const { pack, showDetails, canClickPack, forceElevate, expiryInfo } = toRefs(props);
+const { pack, showDetails, canClickPack, forceElevate } = toRefs(props);
 
 const loadedImage = ref(false);
 
@@ -77,7 +78,6 @@ function onClickPack() {
 </script>
 
 <template>
-	<!-- AppStickerPack -->
 	<div>
 		<div :style="{ position: `relative` }">
 			<a
@@ -91,17 +91,22 @@ function onClickPack() {
 			>
 				<AppAspectRatio :ratio="StickerPackRatio" show-overflow>
 					<AppMediaItemBackdrop
-						:style="{
-							...styleWhen(forceElevate, styleElevate(1)),
-							...styleWhen(canClickPack, {
+						:style="[
+							styleWhen(forceElevate, styleElevate(1)),
+							styleWhen(canClickPack, {
 								cursor: `pointer`,
 							}),
-							width: `100%`,
-							height: `100%`,
-						}"
+							styleWhen(!!borderRadius, {
+								borderRadius: `${borderRadius}px`,
+							}),
+							{
+								width: `100%`,
+								height: `100%`,
+							},
+						]"
 						:media-item="pack.media_item"
 						:color-opacity="loadedImage ? 0 : 1"
-						radius="lg"
+						:radius="borderRadius ? 'full' : 'lg'"
 					>
 						<AppImgResponsive
 							:src="pack.media_item.mediaserver_url"
@@ -118,16 +123,6 @@ function onClickPack() {
 					</AppMediaItemBackdrop>
 				</AppAspectRatio>
 			</a>
-
-			<div v-if="expiryInfo" :style="StickerPackExpiryStyles">
-				{{
-					shorthandReadableTime(expiryInfo, {
-						allowFuture: true,
-						precision: 'rough',
-						nowText: $gettext(`Expired`),
-					})
-				}}
-			</div>
 
 			<slot name="overlay-children" />
 		</div>

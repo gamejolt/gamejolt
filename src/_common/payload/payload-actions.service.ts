@@ -1,8 +1,9 @@
-import { CreatorExperience } from '../creator/experience/experience.model';
+import { CreatorExperienceModel } from '../creator/experience/experience.model';
+import { storeModel } from '../model/model-store.service';
 import { UnknownModelData } from '../model/model.service';
 import { getShellNotice } from '../shell/notice/notice.service';
-import { StickerPackOpenModal } from '../sticker/pack/open-modal/modal.service';
-import { UserStickerPack } from '../sticker/pack/user-pack.model';
+import { showStickerPackOpenModal } from '../sticker/pack/open-modal/modal.service';
+import { UserStickerPackModel } from '../sticker/pack/user-pack.model';
 
 interface PayloadData {
 	actions?: (PackAction | CreatorExperienceAction)[];
@@ -34,8 +35,8 @@ export default function handlePayloadActions(payload: PayloadData) {
 			case 'unlock-sticker-pack': {
 				const { user_sticker_pack } = data;
 
-				StickerPackOpenModal.show({
-					pack: new UserStickerPack(user_sticker_pack),
+				showStickerPackOpenModal({
+					pack: storeModel(UserStickerPackModel, user_sticker_pack),
 				});
 				break;
 			}
@@ -45,7 +46,7 @@ export default function handlePayloadActions(payload: PayloadData) {
 
 				getShellNotice().addNotice({
 					type: 'creator-experience',
-					experience: new CreatorExperience(experience),
+					experience: new CreatorExperienceModel(experience),
 					leveledUp: leveled_up,
 					xpGained: xp_gained,
 				});

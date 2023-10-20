@@ -9,3 +9,7 @@ export const AppActivityFeedLazy = defineAsyncComponent({
 	loader: () => import('./activity/feed/AppActivityFeed.vue'),
 	loadingComponent: AppActivityFeedPlaceholder,
 });
+
+export const AppCommentWidgetLazy = defineAsyncComponent(
+	() => import('./comment/widget/AppCommentWidget.vue')
+);

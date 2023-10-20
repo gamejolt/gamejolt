@@ -1,14 +1,16 @@
 <script lang="ts">
 import { computed, CSSProperties, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import { ContentRules } from '../../../../../_common/content/content-editor/content-rules';
 import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
+import { ContentRules } from '../../../../../_common/content/content-rules';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppPopper, { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
+import AppReactionList from '../../../../../_common/reaction/list/AppReactionList.vue';
+import { selectReactionForResource } from '../../../../../_common/reaction/reaction-count';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
@@ -24,15 +26,15 @@ import {
 	retryFailedQueuedMessage,
 	userCanModerateOtherUser,
 } from '../../client';
-import { ChatMessage } from '../../message';
-import { ChatRoom } from '../../room';
+import { ChatMessageModel } from '../../message';
+import { ChatRoomModel } from '../../room';
 import { getChatUserRoleData } from '../../user';
 import AppChatUserPopover from '../../user-popover/AppChatUserPopover.vue';
 import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '../variables';
 import AppChatWindowOutputItemTime from './AppChatWindowOutputItemTime.vue';
 
 export interface ChatMessageEditEvent {
-	message: ChatMessage;
+	message: ChatMessageModel;
 }
 
 const InviewConfig = new ScrollInviewConfig();
@@ -43,11 +45,11 @@ const DisplayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 
 <script lang="ts" setup>
 const props = defineProps({
 	message: {
-		type: Object as PropType<ChatMessage>,
+		type: Object as PropType<ChatMessageModel>,
 		required: true,
 	},
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 	messagePadding: {
@@ -130,7 +132,9 @@ const messageState = computed<{ icon?: Jolticon; display: string; tooltip?: stri
 	return null;
 });
 
-const shouldShowMessageOptions = computed(() => canRemoveMessage.value || canEditMessage.value);
+const shouldShowMessageOptions = computed(
+	() => canRemoveMessage.value || canReactToMessage.value || canEditMessage.value
+);
 
 const dataAnchorWidth = computed(() => {
 	const itemWidth = 40;
@@ -146,6 +150,9 @@ const dataAnchorWidth = computed(() => {
 		++itemCount;
 	}
 	if (canEditMessage.value) {
+		++itemCount;
+	}
+	if (canReactToMessage.value) {
 		++itemCount;
 	}
 	if (!itemCount) {
@@ -171,7 +178,7 @@ const canRemoveMessage = computed(() => {
 	return userCanModerateOtherUser(room.value, chat.value.currentUser, message.value.user);
 });
 
-const canEditMessage = computed(() => {
+const canReactToMessage = computed(() => {
 	if (message.value.is_automated) {
 		return false;
 	}
@@ -185,8 +192,16 @@ const canEditMessage = computed(() => {
 		return false;
 	}
 
+	return true;
+});
+
+const canEditMessage = computed(() => {
+	if (!canReactToMessage.value) {
+		return false;
+	}
+
 	// Only the owner of the message can edit.
-	return chat.value.currentUser.id === message.value.user.id;
+	return !!chat.value.currentUser && chat.value.currentUser.id === message.value.user.id;
 });
 
 const roleData = computed(() =>
@@ -222,7 +237,7 @@ function stopEdit() {
 async function removeMessage() {
 	Popper.hideAll();
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to remove this message?`)
 	);
 
@@ -289,12 +304,11 @@ async function onMessageClick() {
 			>
 				<AppUserAvatarBubble
 					:style="{
-						...styleElevate(1),
 						...avatarSizeStyles,
 					}"
+					:img-wrapper-styles="styleElevate(1)"
 					:user="message.user"
 					disable-link
-					show-verified
 					show-frame
 					verified-size="small"
 				/>
@@ -368,6 +382,15 @@ async function onMessageClick() {
 						<AppJolticon v-if="messageState.icon" :icon="messageState.icon" />
 						<AppTranslate>{{ messageState.display }}</AppTranslate>
 					</span>
+
+					<div v-if="message.reaction_counts.length">
+						<AppReactionList
+							:model="message"
+							click-action="toggle"
+							context-action="show-details"
+							sans-margin-bottom
+						/>
+					</div>
 				</div>
 
 				<div v-if="!message.showMeta" class="-floating-data-left">
@@ -396,6 +419,15 @@ async function onMessageClick() {
 								</a>
 							</template>
 							<template v-else>
+								<a
+									v-if="canReactToMessage"
+									v-app-tooltip="$gettext('Add reaction')"
+									class="-message-actions-item"
+									@click="selectReactionForResource(message)"
+								>
+									<AppJolticon icon="add-reaction" />
+								</a>
+
 								<a
 									v-if="canEditMessage"
 									v-app-tooltip="$gettext('Edit message')"

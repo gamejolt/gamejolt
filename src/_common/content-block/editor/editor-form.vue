@@ -2,9 +2,9 @@
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import AppFormControlMarkdown from '../../form-vue/controls/markdown/AppFormControlMarkdown.vue';
 import { BaseForm } from '../../form-vue/form.service';
-import { SiteContentBlock } from '../../site/content-block/content-block-model';
+import { SiteContentBlockModel } from '../../site/content-block/content-block-model';
 
-class Wrapper extends BaseForm<SiteContentBlock> {}
+class Wrapper extends BaseForm<SiteContentBlockModel> {}
 
 @Options({
 	components: {
@@ -12,7 +12,7 @@ class Wrapper extends BaseForm<SiteContentBlock> {}
 	},
 })
 export default class FormContentBlockEditor extends mixins(Wrapper) {
-	modelClass = SiteContentBlock;
+	modelClass = SiteContentBlockModel;
 
 	@Prop(String) mode!: string;
 
@@ -20,7 +20,7 @@ export default class FormContentBlockEditor extends mixins(Wrapper) {
 	onContentChanged(content: string) {
 		if (this.model) {
 			// TODO: why are we setting on the model directly? Is this a bug?
-			(this.model as SiteContentBlock).content_markdown! = content;
+			(this.model as SiteContentBlockModel).content_markdown! = content;
 		}
 	}
 

@@ -1,13 +1,16 @@
 import { h } from 'vue';
 import { Options } from 'vue-property-decorator';
 import { RouterView } from 'vue-router';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 
 @Options({
 	name: 'RouteAuthLinkedAccount',
 })
-@OptionsForRoute()
-export default class RouteAuthLinkedAccount extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteAuthLinkedAccount extends LegacyRouteComponent {
 	render() {
 		return h(RouterView);
 	}

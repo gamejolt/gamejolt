@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, onMounted, PropType, ref } from 'vue';
-import { FiresidePost } from '../../fireside/post/post-model';
-import { Game } from '../../game/game.model';
-import { User } from '../../user/user.model';
+import { FiresidePostModel } from '../../fireside/post/post-model';
+import { GameModel } from '../../game/game.model';
+import { UserModel } from '../../user/user.model';
 import { AdSlot } from '../ad-slot-info';
 import {
 	addAd,
@@ -39,13 +39,13 @@ const resourceInfo = computed(() => {
 	let resourceId: number = undefined as any;
 
 	const adResource = adsController.settings.resource;
-	if (adResource instanceof Game) {
+	if (adResource instanceof GameModel) {
 		resource = 'Game';
 		resourceId = adResource.id;
-	} else if (adResource instanceof User) {
+	} else if (adResource instanceof UserModel) {
 		resource = 'User';
 		resourceId = adResource.id;
-	} else if (adResource instanceof FiresidePost) {
+	} else if (adResource instanceof FiresidePostModel) {
 		resource = 'Fireside_Post';
 		resourceId = adResource.id;
 	}

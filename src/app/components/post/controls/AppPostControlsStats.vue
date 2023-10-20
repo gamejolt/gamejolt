@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { formatNumber } from '../../../../_common/filters/number';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	overlay: {

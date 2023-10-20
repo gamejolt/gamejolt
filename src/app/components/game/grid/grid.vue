@@ -5,7 +5,7 @@ import draggable from 'vuedraggable';
 import { useAdsController } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { formatNumber } from '../../../../_common/filters/number';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppGameThumbnailControls from '../thumbnail/AppGameThumbnailControls.vue';
@@ -25,7 +25,7 @@ let idCounter = 0;
 	},
 })
 export default class AppGameGrid extends Vue {
-	@Prop({ type: Array, default: () => [] }) games!: Game[];
+	@Prop({ type: Array, default: () => [] }) games!: GameModel[];
 	@Prop({ type: Number, default: 0 }) gamesCount!: number;
 	@Prop({ type: Number, default: 0 }) currentPage!: number;
 	@Prop({ type: Boolean, default: false }) truncateToFit!: boolean;
@@ -35,7 +35,7 @@ export default class AppGameGrid extends Vue {
 	@Prop({ type: Boolean, default: false }) canReorder!: boolean;
 	@Prop(String) eventLabel?: string;
 
-	@Emit('sort') emitSort(_games: Game[]) {}
+	@Emit('sort') emitSort(_games: GameModel[]) {}
 
 	ads = setup(() => useAdsController());
 
@@ -74,7 +74,7 @@ export default class AppGameGrid extends Vue {
 		return games.slice(0, chunkSize);
 	}
 
-	set processedGames(games: Game[]) {
+	set processedGames(games: GameModel[]) {
 		this.emitSort(games);
 	}
 

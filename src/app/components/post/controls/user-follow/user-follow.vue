@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppUserFollowButton from '../../../../../_common/user/follow/AppUserFollowButton.vue';
 
@@ -11,7 +11,7 @@ import AppUserFollowButton from '../../../../../_common/user/follow/AppUserFollo
 })
 export default class AppPostControlsUserFollow extends Vue {
 	@Prop({ type: Object, required: true })
-	post!: FiresidePost;
+	post!: FiresidePostModel;
 
 	@Prop({ type: Boolean, required: false, default: false })
 	shouldShow!: boolean;

@@ -1,14 +1,14 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
+import { Analytics } from '../../../../_common/analytics/analytics.service';
+import { vAppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
+import { GamePlaylistModel } from '../../../../_common/game-playlist/game-playlist.model';
+import { GameModel } from '../../../../_common/game/game.model';
+import AppLoading from '../../../../_common/loading/AppLoading.vue';
+import { Popper } from '../../../../_common/popper/popper.service';
 import { stringSort } from '../../../../utils/array';
 import { fuzzysearch } from '../../../../utils/string';
 import { shallowSetup } from '../../../../utils/vue';
-import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { vAppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
-import { GamePlaylist } from '../../../../_common/game-playlist/game-playlist.model';
-import { Game } from '../../../../_common/game/game.model';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { Popper } from '../../../../_common/popper/popper.service';
 import {
 	libraryAddGameToPlaylist,
 	libraryNewPlaylist,
@@ -26,11 +26,11 @@ import {
 })
 export default class AppGamePlaylistAddToPopover extends Vue {
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	libraryStore = shallowSetup(() => useLibraryStore());
 
-	playlists: GamePlaylist[] = [];
+	playlists: GamePlaylistModel[] = [];
 	playlistsWithGame: number[] = [];
 
 	isLoading = true;
@@ -52,7 +52,7 @@ export default class AppGamePlaylistAddToPopover extends Vue {
 	}
 
 	async fetchPlaylists() {
-		const response = await GamePlaylist.fetchPlaylists({
+		const response = await GamePlaylistModel.fetchPlaylists({
 			gameId: this.game.id,
 		});
 
@@ -61,7 +61,7 @@ export default class AppGamePlaylistAddToPopover extends Vue {
 		this.isLoading = false;
 	}
 
-	selectPlaylist(playlist: GamePlaylist) {
+	selectPlaylist(playlist: GamePlaylistModel) {
 		if (this.playlistsWithGame.indexOf(playlist.id) === -1) {
 			this.addToPlaylist(playlist);
 			Analytics.trackEvent('add-to-playlist', 'add-game');
@@ -71,14 +71,14 @@ export default class AppGamePlaylistAddToPopover extends Vue {
 		}
 	}
 
-	async addToPlaylist(playlist: GamePlaylist) {
+	async addToPlaylist(playlist: GamePlaylistModel) {
 		const game = this.game;
 		if (await libraryAddGameToPlaylist(this.libraryStore, playlist, game)) {
 			this.playlistsWithGame.push(playlist.id);
 		}
 	}
 
-	async removeFromPlaylist(playlist: GamePlaylist) {
+	async removeFromPlaylist(playlist: GamePlaylistModel) {
 		const game = this.game;
 		if (await libraryRemoveGameFromPlaylist(this.libraryStore, playlist, game)) {
 			const index = this.playlistsWithGame.indexOf(playlist.id);

@@ -19,7 +19,7 @@ import {
 	setStickerStoreActiveItem,
 	useStickerStore,
 } from '../sticker-store';
-import { Sticker, StickerStack } from '../sticker.model';
+import { StickerModel, StickerStack } from '../sticker.model';
 import AppStickerLayerDrawerItem from './AppStickerLayerDrawerItem.vue';
 
 const stickerStore = useStickerStore();
@@ -41,7 +41,7 @@ const {
 const _drawerPadding = 8;
 const _stickerSpacing = 8;
 
-let _touchedSticker: Sticker | null = null;
+let _touchedSticker: StickerModel | null = null;
 let _escapeCallback: EscapeStackCallback | null = null;
 
 const sheetPage = ref(1);
@@ -258,7 +258,7 @@ function panStart(event: AppTouchInput) {
 	}
 }
 
-function pan(event: AppTouchInput) {
+function panMove(event: AppTouchInput) {
 	if (isDragging.value) {
 		isSwipingSheets.value = false;
 		return;
@@ -338,7 +338,7 @@ function onContentDimensionsChanged() {
 
 function onClickPurchasePacks() {
 	closeStickerDrawer(stickerStore);
-	showVendingMachineModal();
+	showVendingMachineModal({ location: 'sticker-drawer' });
 }
 </script>
 
@@ -421,7 +421,7 @@ function onClickPurchasePacks() {
 							class="-scroller"
 							v-bind="drawerNavigationProps"
 							@panstart="panStart"
-							@pan="pan"
+							@panmove="panMove"
 							@panend="panEnd"
 						>
 							<div ref="slider" class="-drawer-inner">

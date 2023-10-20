@@ -1,24 +1,20 @@
 import type { RouteLocationDefinition } from '../../utils/router';
 import { trackUserFollow, UserFollowLocation } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
-import { AvatarFrame } from '../avatar/frame.model';
+import { AvatarFrameModel } from '../avatar/frame.model';
 import { CommentableModel } from '../comment/comment-model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
-import { ContentSetCacheService } from '../content/content-set-cache';
+import { ContentSetCache } from '../content/content-set-cache';
 import { DogtagData } from '../dogtag/dogtag-data';
 import { showErrorGrowl } from '../growls/growls.service';
-import { MediaItem } from '../media-item/media-item-model';
-import { ModalConfirm } from '../modal/confirm/confirm-service';
+import { MediaItemModel } from '../media-item/media-item-model';
+import { showModalConfirm } from '../modal/confirm/confirm-service';
+import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
-import { Theme } from '../theme/theme.model';
+import { ThemeModel } from '../theme/theme.model';
 import { $gettext } from '../translate/translate.service';
-
-export const CreatorStatusCreator = 1;
-export const CreatorStatusApplied = 2;
-export const CreatorStatusSuspended = 3;
-
 /**
  * When you have code that needs to work on either User | ChatUser, you can use
  * this interface to specify it only works with the fields that are common to
@@ -32,119 +28,127 @@ export interface UserCommonFields {
 	permission_level: number;
 	is_verified: boolean;
 	is_creator?: boolean;
-	avatar_frame?: AvatarFrame;
+	avatar_frame?: AvatarFrameModel;
 }
 
-export class User
+export const enum UserType {
+	Gamer = 'User',
+	Developer = 'Developer',
+}
+
+export const enum CreatorStatus {
+	Creator = 1,
+	Applied = 2,
+	Suspended = 3,
+}
+
+export class UserModel
 	extends Model
 	implements UserCommonFields, ContentContainerModel, CommentableModel
 {
-	static readonly TYPE_GAMER = 'User';
-	static readonly TYPE_DEVELOPER = 'Developer';
+	declare type: UserType;
+	declare username: string;
+	declare name: string;
+	declare web_site: string;
+	declare display_name: string;
+	declare url: string;
+	declare slug: string;
+	declare img_avatar: string;
+	declare dogtags?: DogtagData[];
+	declare shouts_enabled: boolean;
+	declare is_spawnday: boolean;
 
-	type!: 'User' | 'Developer';
-	username!: string;
-	name!: string;
-	web_site!: string;
-	display_name!: string;
-	url!: string;
-	slug!: string;
-	img_avatar!: string;
-	dogtags?: DogtagData[];
-	shouts_enabled!: boolean;
-	is_spawnday!: boolean;
+	declare status: number;
+	declare permission_level: number;
+	declare is_verified: boolean;
+	declare is_partner: boolean | null;
+	declare creator_status?: number;
+	declare friend_requests_enabled: boolean;
+	declare liked_posts_enabled?: boolean;
+	declare mentions_setting?: number;
 
-	status!: number;
-	permission_level!: number;
-	is_verified!: boolean;
-	is_partner!: boolean | null;
-	creator_status?: number;
-	friend_requests_enabled!: boolean;
-	liked_posts_enabled?: boolean;
-	mentions_setting?: number;
+	declare created_on: number;
 
-	created_on!: number;
-
-	theme!: Theme | null;
-	follower_count!: number;
-	following_count!: number;
-	comment_count!: number;
-	is_following?: boolean;
-	follows_you?: boolean;
-	is_blocked?: boolean;
-	blocked_you?: boolean;
+	declare theme: ThemeModel | null;
+	declare follower_count: number;
+	declare following_count: number;
+	declare comment_count: number;
+	declare is_following?: boolean;
+	declare follows_you?: boolean;
+	declare is_blocked?: boolean;
+	declare blocked_you?: boolean;
 
 	// exp settings.
-	level?: number;
-	experience?: number;
-	experience_next?: number;
-	level_next_percentage?: number;
+	declare level?: number;
+	declare experience?: number;
+	declare experience_next?: number;
+	declare level_next_percentage?: number;
 
 	// Profile settings.
-	avatar_media_item?: MediaItem;
-	header_media_item?: MediaItem;
-	disable_gravatar?: boolean;
-	avatar_frame?: AvatarFrame;
+	declare avatar_media_item?: MediaItemModel;
+	declare header_media_item?: MediaItemModel;
+	declare disable_gravatar?: boolean;
+	declare avatar_frame?: AvatarFrameModel;
 
-	bio_content!: string;
+	declare bio_content: string;
 
 	// Notifications settings.
-	newsletter?: boolean;
-	notify_shouts?: boolean;
-	notify_comments?: boolean;
-	notify_comment_replies?: boolean;
-	notify_ratings?: boolean;
-	notify_game_follows?: boolean;
-	notify_user_follows?: boolean;
-	notify_user_uploads?: boolean;
-	notify_private_messages?: boolean;
-	notify_friendships?: boolean;
-	notify_forum_posts?: boolean;
-	notify_followed_game_updates?: boolean;
-	notify_sales?: boolean;
-	notify_collaborator_invites?: boolean;
-	notify_mentions?: boolean;
-	notify_gj_news?: boolean;
-	notify_gj_recommendations?: boolean;
+	declare newsletter?: boolean;
+	declare notify_shouts?: boolean;
+	declare notify_comments?: boolean;
+	declare notify_comment_replies?: boolean;
+	declare notify_ratings?: boolean;
+	declare notify_game_follows?: boolean;
+	declare notify_user_follows?: boolean;
+	declare notify_user_uploads?: boolean;
+	declare notify_private_messages?: boolean;
+	declare notify_friendships?: boolean;
+	declare notify_forum_posts?: boolean;
+	declare notify_followed_game_updates?: boolean;
+	declare notify_sales?: boolean;
+	declare notify_collaborator_invites?: boolean;
+	declare notify_mentions?: boolean;
+	declare notify_gj_news?: boolean;
+	declare notify_gj_recommendations?: boolean;
 
 	// Email settings
-	email_address?: string;
+	declare email_address?: string;
 
 	// Financials
-	paypal_id?: string;
-	paypal_email_address?: string;
-	revenue_percentage?: number;
-	revenue_payout_minimum?: number;
-	revenue_wallet_maximum?: number;
+	declare paypal_id?: string;
+	declare paypal_email_address?: string;
+	declare revenue_percentage?: number;
+	declare revenue_payout_minimum?: number;
+	declare revenue_wallet_maximum?: number;
 
 	// Fireside.
-	can_manage?: boolean;
-	fireside_ga_tracking_id?: string;
+	declare can_manage?: boolean;
+	declare fireside_ga_tracking_id?: string;
 
 	// Fireside profile
-	fireside_profile?: string;
-	compiled_fireside_profile?: string;
-	fireside_about?: string;
-	compiled_fireside_about?: string;
+	declare fireside_profile?: string;
+	declare compiled_fireside_profile?: string;
+	declare fireside_about?: string;
+	declare compiled_fireside_about?: string;
 
 	// Card
-	post_count?: number;
-	game_count?: number;
-	like_count?: number;
+	declare post_count?: number;
+	declare game_count?: number;
+	declare like_count?: number;
 
 	is_gamer = false;
 	is_developer = false;
-	is_creator?: boolean;
+	declare is_creator?: boolean;
 
-	can_join_communities?: boolean;
-	can_create_communities?: boolean;
+	declare can_join_communities?: boolean;
+	declare can_create_communities?: boolean;
 
 	get isMod() {
 		return this.permission_level >= 3;
 	}
 
 	get hasBio() {
-		const cache = ContentSetCacheService.getCache(this, 'user-bio');
+		const cache = ContentSetCache.getCache(this, 'user-bio');
 		return cache.hasContent;
 	}
 
@@ -181,22 +185,22 @@ export class User
 	constructor(data: any = {}) {
 		super(data);
 
-		if (this.type === User.TYPE_GAMER) {
+		if (this.type === UserType.Gamer) {
 			this.is_gamer = true;
-		} else if (this.type === User.TYPE_DEVELOPER) {
+		} else if (this.type === UserType.Developer) {
 			this.is_developer = true;
 		}
 
 		if (data.avatar_media_item) {
-			this.avatar_media_item = new MediaItem(data.avatar_media_item);
+			this.avatar_media_item = new MediaItemModel(data.avatar_media_item);
 		}
 
 		if (data.header_media_item) {
-			this.header_media_item = new MediaItem(data.header_media_item);
+			this.header_media_item = new MediaItemModel(data.header_media_item);
 		}
 
 		if (data.theme) {
-			this.theme = new Theme(data.theme);
+			this.theme = new ThemeModel(data.theme);
 		}
 
 		if (data.dogtags) {
@@ -204,73 +208,25 @@ export class User
 		}
 
 		if (data.avatar_frame) {
-			this.avatar_frame = new AvatarFrame(data.avatar_frame);
+			this.avatar_frame = storeModel(AvatarFrameModel, data.avatar_frame);
 		}
 
 		Registry.store('User', this);
 	}
-
-	static touch() {
-		// We don't want to wait for the touch in Client since we know it gets loaded in
-		// immediately.
-		if (GJ_IS_DESKTOP_APP) {
-			Api.sendRequest('/web/touch', null, { detach: true });
-			return Promise.resolve();
-		}
-
-		return Api.sendRequest('/web/touch');
-	}
-
-	$save() {
-		// You can only save yourself, so we don't pass in an ID to the endpoint.
-		return this.$_save('/web/dash/profile/save', 'user', {
-			allowComplexData: ['theme', 'dogtags', 'pronoun_dogtags'],
-		});
-	}
-
-	$saveAvatar() {
-		// You can only save yourself, so we don't pass in an ID to the endpoint.
-		return this.$_save('/web/dash/avatar/save', 'user', {
-			file: this.file,
-			allowComplexData: ['crop'],
-		});
-	}
-
-	$clearAvatar() {
-		return this.$_save('/web/dash/avatar/clear', 'user');
-	}
-
-	$saveHeader() {
-		// You can only save yourself, so we don't pass in an ID to the endpoint.
-		return this.$_save('/web/dash/header/save', 'user', {
-			file: this.file,
-			allowComplexData: ['crop'],
-		});
-	}
-
-	$clearHeader() {
-		return this.$_save('/web/dash/header/clear', 'user');
-	}
-
-	$saveEmailPreferences() {
-		// You can only save yourself, so we don't pass in an ID to the endpoint.
-		return this.$_save('/web/dash/email-preferences/save', 'user');
-	}
-
-	$toggleEmails(state: boolean) {
-		return this.$_save('/web/dash/email-preferences/toggle-emails', 'user', {
-			data: { state },
-		});
-	}
-
-	$unlinkAccount(provider: string) {
-		return this.$_save('/web/dash/linked-accounts/unlink/' + provider, 'user');
-	}
 }
 
-Model.create(User);
+export async function touchUser() {
+	// We don't want to wait for the touch in Client since we know it gets loaded in
+	// immediately.
+	if (GJ_IS_DESKTOP_APP) {
+		Api.sendRequest('/web/touch', null, { detach: true });
+		return Promise.resolve();
+	}
 
-export async function followUser(user: User) {
+	return Api.sendRequest('/web/touch');
+}
+
+async function _followUser(user: UserModel) {
 	user.is_following = true;
 	++user.follower_count;
 
@@ -291,7 +247,7 @@ export async function followUser(user: User) {
 	}
 }
 
-export async function unfollowUser(user: User) {
+export async function $unfollowUser(user: UserModel) {
 	user.is_following = false;
 	--user.follower_count;
 
@@ -312,8 +268,8 @@ export async function unfollowUser(user: User) {
 	}
 }
 
-export async function toggleUserFollow(
-	user: User,
+export async function $toggleUserFollow(
+	user: UserModel,
 	location: UserFollowLocation
 ): Promise<boolean | null> {
 	let failed = false,
@@ -321,7 +277,7 @@ export async function toggleUserFollow(
 
 	if (!user.is_following) {
 		try {
-			await followUser(user);
+			await _followUser(user);
 		} catch (e) {
 			failed = true;
 			showErrorGrowl($gettext(`Something has prevented you from following this user.`));
@@ -330,7 +286,7 @@ export async function toggleUserFollow(
 		}
 	} else {
 		try {
-			result = await ModalConfirm.show(
+			result = await showModalConfirm(
 				$gettext(`Are you sure you want to unfollow this user?`),
 				$gettext(`Unfollow user?`)
 			);
@@ -339,7 +295,7 @@ export async function toggleUserFollow(
 				return null;
 			}
 
-			await unfollowUser(user);
+			await $unfollowUser(user);
 		} catch (e) {
 			failed = true;
 			showErrorGrowl($gettext(`For some reason we couldn't unfollow this user.`));
@@ -355,10 +311,52 @@ export async function toggleUserFollow(
 	return !failed;
 }
 
-export function userCanAccessCreatorForm(user: User) {
+export function userCanAccessCreatorForm(user: UserModel) {
 	return (
-		user.creator_status === CreatorStatusApplied ||
-		user.creator_status === CreatorStatusCreator ||
-		user.creator_status === CreatorStatusSuspended
+		user.creator_status === CreatorStatus.Applied ||
+		user.creator_status === CreatorStatus.Creator ||
+		user.creator_status === CreatorStatus.Suspended
 	);
+}
+
+export function $saveUser(user: UserModel) {
+	// You can only save yourself, so we don't pass in an ID to the endpoint.
+	return user.$_save('/web/dash/profile/save', 'user', {
+		allowComplexData: ['theme', 'dogtags', 'pronoun_dogtags'],
+	});
+}
+
+export function $saveUserAvatar(user: UserModel) {
+	// You can only save yourself, so we don't pass in an ID to the endpoint.
+	return user.$_save('/web/dash/avatar/save', 'user', {
+		file: user.file,
+		allowComplexData: ['crop'],
+	});
+}
+
+export function $clearUserAvatar(user: UserModel) {
+	return user.$_save('/web/dash/avatar/clear', 'user');
+}
+
+export function $saveUserHeader(user: UserModel) {
+	// You can only save yourself, so we don't pass in an ID to the endpoint.
+	return user.$_save('/web/dash/header/save', 'user', {
+		file: user.file,
+		allowComplexData: ['crop'],
+	});
+}
+
+export function $clearUserHeader(user: UserModel) {
+	return user.$_save('/web/dash/header/clear', 'user');
+}
+
+export function $saveUserEmailPreferences(user: UserModel) {
+	// You can only save yourself, so we don't pass in an ID to the endpoint.
+	return user.$_save('/web/dash/email-preferences/save', 'user');
+}
+
+export function $toggleUserEmails(user: UserModel, state: boolean) {
+	return user.$_save('/web/dash/email-preferences/toggle-emails', 'user', {
+		data: { state },
+	});
 }

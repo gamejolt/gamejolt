@@ -3,15 +3,14 @@ import { computed, CSSProperties, inject, InjectionKey, provide, ref } from 'vue
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 import { vAppTrackEvent } from '../../../_common/analytics/track-event.directive';
 import { Api } from '../../../_common/api/api.service';
-import { BlockModal } from '../../../_common/block/modal/modal.service';
+import { showBlockModal } from '../../../_common/block/modal/modal.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { CommentModal } from '../../../_common/comment/modal/modal.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { formatNumber } from '../../../_common/filters/number';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Registry } from '../../../_common/registry/registry.service';
-import { ReportModal } from '../../../_common/report/modal/modal.service';
+import { showReportModal } from '../../../_common/report/modal/modal.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { copyShareLink } from '../../../_common/share/share.service';
@@ -22,12 +21,16 @@ import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
 import AppUserDogtag from '../../../_common/user/AppUserDogtag.vue';
 import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
-import { UserFriendship } from '../../../_common/user/friendship/friendship.model';
+import {
+	UserFriendshipModel,
+	UserFriendshipState,
+} from '../../../_common/user/friendship/friendship.model';
 import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophy } from '../../../_common/user/trophy/user-base-trophy.model';
-import { User } from '../../../_common/user/user.model';
+import { UserBaseTrophyModel } from '../../../_common/user/trophy/user-base-trophy.model';
+import { UserModel } from '../../../_common/user/user.model';
 import { kFontFamilyBase } from '../../../_styles/variables';
 import { isUserOnline } from '../../components/chat/client';
+import { showCommentModal } from '../../components/comment/modal/modal.service';
 import { useGridStore } from '../../components/grid/grid-store';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
@@ -36,28 +39,28 @@ import AppPageHeaderControls from '../../components/page-header/controls/control
 import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 
-const Key: InjectionKey<Controller> = Symbol('profile-route');
+const ProfileRouteStoreKey: InjectionKey<ProfileRouteStore> = Symbol('profile-route');
 
-type Controller = ReturnType<typeof createController>;
+type ProfileRouteStore = ReturnType<typeof createProfileRouteStore>;
 
-export function useProfileRouteController() {
-	return inject(Key);
+export function useProfileRouteStore() {
+	return inject(ProfileRouteStoreKey);
 }
 
-function createController() {
+function createProfileRouteStore() {
 	const isOverviewLoaded = ref(false);
 
 	// We will bootstrap this right away, so it should always be set for use.
-	const user = ref<User>();
+	const user = ref<UserModel>();
 
 	const gamesCount = ref(0);
 	const communitiesCount = ref(0);
 	const placeholderCommunitiesCount = ref(0);
 	const trophyCount = ref(0);
-	const userFriendship = ref<UserFriendship>();
-	const previewTrophies = ref<UserBaseTrophy[]>([]);
+	const userFriendship = ref<UserFriendshipModel>();
+	const previewTrophies = ref<UserBaseTrophyModel[]>([]);
 
-	function _updateUser(newUser?: User) {
+	function _updateUser(newUser?: UserModel) {
 		// If we already have a user, just assign new data into it to keep it
 		// fresh.
 		if (user.value && newUser && user.value.id === newUser.id) {
@@ -126,8 +129,10 @@ function createController() {
 	function bootstrapUser(username: string) {
 		const prevId = user.value?.id;
 		const newUser =
-			Registry.find<User>('User', i => i.username.toLowerCase() === username.toLowerCase()) ??
-			undefined;
+			Registry.find<UserModel>(
+				'User',
+				i => i.username.toLowerCase() === username.toLowerCase()
+			) ?? undefined;
 
 		_updateUser(newUser);
 
@@ -143,7 +148,7 @@ function createController() {
 	}
 
 	function profilePayload(payload: any) {
-		const newUser = new User(payload.user);
+		const newUser = new UserModel(payload.user);
 		_updateUser(newUser);
 
 		gamesCount.value = payload.gamesCount || 0;
@@ -152,7 +157,7 @@ function createController() {
 		trophyCount.value = payload.trophyCount || 0;
 
 		userFriendship.value = payload.userFriendship
-			? new UserFriendship(payload.userFriendship)
+			? new UserFriendshipModel(payload.userFriendship)
 			: undefined;
 
 		previewTrophies.value = payload.previewTrophies
@@ -165,7 +170,7 @@ function createController() {
 		isOverviewLoaded.value = true;
 	}
 
-	function _setUserFriendship(friendship?: UserFriendship) {
+	function _setUserFriendship(friendship?: UserFriendshipModel) {
 		userFriendship.value = friendship;
 	}
 
@@ -222,8 +227,8 @@ defineOptions(
 	})
 );
 
-const routeStore = createController();
-provide(Key, routeStore);
+const routeStore = createProfileRouteStore();
+provide(ProfileRouteStoreKey, routeStore);
 
 const { user: routeUser, trophyCount, userFriendship, bootstrapUser, profilePayload } = routeStore;
 
@@ -302,7 +307,7 @@ function setPageTheme() {
 
 function showComments() {
 	if (routeUser.value) {
-		CommentModal.show({
+		showCommentModal({
 			model: routeUser.value,
 			displayMode: 'shouts',
 		});
@@ -319,13 +324,13 @@ function copyShareUrl() {
 
 function report() {
 	if (routeUser.value) {
-		ReportModal.show(routeUser.value);
+		showReportModal(routeUser.value);
 	}
 }
 
 async function blockUser() {
 	if (routeUser.value) {
-		const result = await BlockModal.show(routeUser.value);
+		const result = await showBlockModal(routeUser.value);
 
 		// Navigate away from the page after blocking.
 		if (result) {
@@ -410,7 +415,7 @@ const headingUsernameStyles = computed<CSSProperties>(() => ({
 							<span
 								v-if="
 									userFriendship &&
-									userFriendship.state === UserFriendship.STATE_FRIENDS
+									userFriendship.state === UserFriendshipState.Friends
 								"
 								v-app-tooltip="$gettext('You are friends! Awwww!')"
 								class="tag tag-highlight"
@@ -542,7 +547,7 @@ const headingUsernameStyles = computed<CSSProperties>(() => ({
 													v-if="
 														userFriendship &&
 														userFriendship.state ===
-															UserFriendship.STATE_FRIENDS
+															UserFriendshipState.Friends
 													"
 													class="list-group-item has-icon"
 													@click="routeStore.removeFriend()"

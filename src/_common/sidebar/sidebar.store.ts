@@ -1,4 +1,4 @@
-import { Component, computed, inject, InjectionKey, markRaw, ref } from 'vue';
+import { InjectionKey, computed, inject, markRaw, ref, type Component } from 'vue';
 import { arrayRemove } from '../../utils/array';
 
 export const SidebarStoreKey: InjectionKey<SidebarStore> = Symbol('sidebar-store');

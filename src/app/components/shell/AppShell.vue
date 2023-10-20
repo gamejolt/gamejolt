@@ -10,6 +10,7 @@ import { Screen, triggerOnScreenResize } from '../../../_common/screen/screen-se
 import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue';
 import { useBannerStore } from '../../store/banner';
 import { useAppStore } from '../../store/index';
+import { useJoltydexStore } from '../../store/joltydex';
 import { useQuestStore } from '../../store/quest';
 import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
 import { useGridStore } from '../grid/grid-store';
@@ -23,6 +24,9 @@ import AppShellSidebar from './sidebar/AppShellSidebar.vue';
 
 const AppQuestWindow = defineAsyncComponent(() => import('../quest/window/AppQuestWindow.vue'));
 const AppChatWindow = defineAsyncComponent(() => import('../chat/window/AppChatWindow.vue'));
+const AppJoltydexWindow = defineAsyncComponent(
+	() => import('../joltydex/window/AppJoltydexWindow.vue')
+);
 
 export const CBAR_WIDTH = 70;
 </script>
@@ -40,11 +44,9 @@ const {
 } = useAppStore();
 
 const { hasBanner } = useBannerStore();
-
 const { chat } = useGridStore();
-
 const { activeQuestId, activeQuestResource } = useQuestStore();
-
+const { selectedJoltydexUser } = useJoltydexStore();
 const route = useRoute();
 
 initShellRoutes();
@@ -137,6 +139,11 @@ watch([totalChatNotificationsCount, unreadActivityCount, unreadNotificationsCoun
 			:key="activeQuestId"
 			:quest-id="activeQuestId"
 			:resource="activeQuestResource"
+		/>
+		<AppJoltydexWindow
+			v-else-if="visibleLeftPane === 'joltydex' && selectedJoltydexUser"
+			:key="selectedJoltydexUser.id"
+			:selected-user="selectedJoltydexUser"
 		/>
 
 		<div v-if="GJ_IS_DESKTOP_APP" key="shell-client">

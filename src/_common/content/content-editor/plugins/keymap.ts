@@ -18,7 +18,7 @@ import {
 	editorUnlink,
 } from '../content-editor-controller';
 import { ContentListService } from '../content-list.service';
-import { ContentEditorLinkModal } from '../modals/link/link-modal.service';
+import { showContentEditorLinkModal } from '../modals/link/link-modal.service';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 
 export type PMDispatch = (tr: Transaction<ContentEditorSchema>) => void;
@@ -241,7 +241,7 @@ function showLinkModal(c: ContentEditorController) {
 			editorUnlink(c);
 		} else {
 			const selectedText = editorGetSelectedText(c);
-			const result = await ContentEditorLinkModal.show(selectedText);
+			const result = await showContentEditorLinkModal(selectedText);
 			if (result) {
 				editorLink(c, result.href);
 			}

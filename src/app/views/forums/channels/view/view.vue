@@ -3,11 +3,14 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
-import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
-import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
+import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';
+import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
+import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import AppPagination from '../../../../../_common/pagination/pagination.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -27,7 +30,7 @@ import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue'
 		AppForumRules,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	deps: { params: ['name', 'sort'], query: ['page'] },
 	resolver({ route }) {
@@ -37,17 +40,17 @@ import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue'
 		);
 	},
 })
-export default class RouteForumsChannelsView extends BaseRouteComponent {
+export default class RouteForumsChannelsView extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 
 	get app() {
 		return this.commonStore;
 	}
 
-	channel: ForumChannel = null as any;
-	topics: ForumTopic[] = [];
+	channel: ForumChannelModel = null as any;
+	topics: ForumTopicModel[] = [];
 	postCountPerPage = 0;
-	stickyTopics: ForumTopic[] = [];
+	stickyTopics: ForumTopicModel[] = [];
 	perPage = 0;
 	currentPage = 1;
 	listableTopicsCount = 0;
@@ -66,7 +69,7 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 
 	get routeTitle() {
 		if (this.channel) {
-			return this.$gettextInterpolate(`%{ channel } Forum`, {
+			return this.$gettext(`%{ channel } Forum`, {
 				channel: '#' + this.channel.name,
 			});
 		}
@@ -74,13 +77,13 @@ export default class RouteForumsChannelsView extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.channel = new ForumChannel($payload.channel);
-		this.topics = ForumTopic.populate($payload.topics);
+		this.channel = new ForumChannelModel($payload.channel);
+		this.topics = ForumTopicModel.populate($payload.topics);
 		this.postCountPerPage = $payload.postCountPerPage;
 		this.listableTopicsCount = $payload.listableTopicsCount;
 
 		if ($payload.stickyTopics && $payload.stickyTopics.length) {
-			this.stickyTopics = ForumTopic.populate($payload.stickyTopics);
+			this.stickyTopics = ForumTopicModel.populate($payload.stickyTopics);
 		} else {
 			this.stickyTopics = [];
 		}

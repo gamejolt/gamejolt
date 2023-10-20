@@ -4,17 +4,19 @@ import { RouteLocationRaw, useRoute, useRouter } from 'vue-router';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
 import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
-import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
+import { CommunityUserNotificationModel } from '../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { isDynamicGoogleBot } from '../../../../_common/device/device.service';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import {
+	FiresidePostModel,
+	FiresidePostStatus,
+} from '../../../../_common/fireside/post/post-model';
 import {
 	$viewPostVideo,
-	FiresidePostVideo,
+	FiresidePostVideoModel,
 } from '../../../../_common/fireside/post/video/video-model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { AppCommentWidgetLazy } from '../../../../_common/lazy';
 import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
@@ -33,6 +35,7 @@ import AppVideoPlayer from '../../../../_common/video/player/AppVideoPlayer.vue'
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 import AppContentTargets from '../../../components/content/AppContentTargets.vue';
 import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
+import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPollVoting from '../../../components/poll/AppPollVoting.vue';
 import AppPostControls from '../../../components/post/controls/AppPostControls.vue';
@@ -41,11 +44,11 @@ import AppPostPageRecommendations from './recommendations/AppPostPageRecommendat
 
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	communityNotifications: {
-		type: Array as PropType<CommunityUserNotification[]>,
+		type: Array as PropType<CommunityUserNotificationModel[]>,
 		default: () => [],
 	},
 });
@@ -72,9 +75,9 @@ const videoProcessingErrorMsg = ref('');
 const communities = computed(() => post.value.communities || []);
 const realms = computed(() => post.value.realms.map(i => i.realm));
 const shouldShowCommunityPublishError = computed(
-	() => post.value.status === FiresidePost.STATUS_DRAFT && !post.value.canPublishToCommunities()
+	() => post.value.status === FiresidePostStatus.Draft && !post.value.canPublishToCommunities()
 );
-const video = computed<FiresidePostVideo | null>(() => post.value.videos[0] || null);
+const video = computed<FiresidePostVideoModel | null>(() => post.value.videos[0] || null);
 const background = computed(() => post.value.background);
 
 if (typeof route.query.t === 'string') {
@@ -248,7 +251,7 @@ function onVideoPlay() {
 					</div>
 
 					<AppStickerControlsOverlay v-if="post.hasPoll">
-						<AppPollVoting :post="post" :poll="post.poll" />
+						<AppPollVoting :post="post" :poll="post.poll!" />
 
 						<br />
 					</AppStickerControlsOverlay>

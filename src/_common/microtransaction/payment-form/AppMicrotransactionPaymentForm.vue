@@ -13,16 +13,16 @@ import AppFormControl from '../../form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../form-vue/AppFormGroup.vue';
 import AppFormControlSelect from '../../form-vue/controls/AppFormControlSelect.vue';
-import { Geo, Region } from '../../geo/geo.service';
+import { Geo, GeoRegion } from '../../geo/geo.service';
 import { showErrorGrowl } from '../../growls/growls.service';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppLoading from '../../loading/AppLoading.vue';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import { Navigate } from '../../navigate/navigate.service';
-import { OrderPayment } from '../../order/payment/payment.model';
+import { OrderPaymentMethod } from '../../order/payment/payment.model';
 import AppPopper from '../../popper/AppPopper.vue';
 import { Screen } from '../../screen/screen-service';
-import { Sellable } from '../../sellable/sellable.model';
+import { SellableModel } from '../../sellable/sellable.model';
 import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
@@ -39,7 +39,7 @@ interface FormModel {
 
 const props = defineProps({
 	sellable: {
-		type: Object as PropType<Sellable>,
+		type: Object as PropType<SellableModel>,
 		required: true,
 	},
 });
@@ -60,7 +60,7 @@ const addresses = ref([]) as Ref<any[]>;
 const calculatedAddressTax = ref(false);
 const addressTaxAmount = ref(0);
 const countries = Geo.getCountries();
-const regions = ref(null) as Ref<Region[] | null>;
+const regions = ref(null) as Ref<GeoRegion[] | null>;
 const walletBalance = ref(0);
 const walletTax = ref(0);
 const minOrderAmount = ref(50);
@@ -149,7 +149,7 @@ const form: FormController<FormModel> = createForm({
 	onSubmitSuccess(response: any) {
 		if (GJ_IS_DESKTOP_APP) {
 			// Our checkout can be done in client.
-			if (checkoutType.value === OrderPayment.METHOD_CC_STRIPE) {
+			if (checkoutType.value === OrderPaymentMethod.CCStripe) {
 				Navigate.goto(Environment.checkoutBaseUrl + '/checkout/' + response.cart.hash);
 			} else {
 				// Otherwise we have to open in browser.

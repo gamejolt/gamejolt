@@ -6,7 +6,7 @@ import AppButton from '../../../_common/button/AppButton.vue';
 import { Client } from '../../../_common/client/safe-exports';
 import { formatCurrency } from '../../../_common/filters/currency';
 import { formatNumber } from '../../../_common/filters/number';
-import { InviteModal } from '../../../_common/invite/modal/modal.service';
+import { showInviteModal } from '../../../_common/invite/modal/modal.service';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -16,10 +16,10 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserWallet } from '../../../_common/user/wallet/wallet.model';
+import { UserWalletModel } from '../../../_common/user/wallet/wallet.model';
 import { useAppStore } from '../../store';
 import { routeDashCreator } from '../../views/dashboard/creator/creator.route';
-import { UserTokenModal } from '../user/token-modal/token-modal.service';
+import { showUserTokenModal } from '../user/token-modal/token-modal.service';
 
 const { logout } = useAppStore();
 const { user } = useCommonStore();
@@ -29,7 +29,7 @@ const isShowing = ref(false);
 
 const isFetchingWallet = ref(true);
 const marketplaceAmount = ref(0);
-const gemWallet = ref<UserWallet>();
+const gemWallet = ref<UserWalletModel>();
 
 function onShow() {
 	isShowing.value = true;
@@ -41,7 +41,7 @@ function onHide() {
 }
 
 function showToken() {
-	UserTokenModal.show();
+	showUserTokenModal();
 }
 
 function toggleDark() {
@@ -62,12 +62,12 @@ async function _getWallet() {
 	);
 
 	marketplaceAmount.value = response.marketplaceWalletBalance || 0;
-	gemWallet.value = response.gemWallet ? new UserWallet(response.gemWallet) : undefined;
+	gemWallet.value = response.gemWallet ? new UserWalletModel(response.gemWallet) : undefined;
 	isFetchingWallet.value = false;
 }
 
-function showInviteModal() {
-	InviteModal.show({ user: user.value! });
+function openInviteModal() {
+	showInviteModal({ user: user.value! });
 }
 
 function quit() {
@@ -235,7 +235,7 @@ function quit() {
 				</div>
 
 				<div class="-invite-well">
-					<AppButton block primary solid @click="showInviteModal()">
+					<AppButton block primary solid @click="openInviteModal()">
 						<AppTranslate>Invite a friend</AppTranslate>
 					</AppButton>
 				</div>

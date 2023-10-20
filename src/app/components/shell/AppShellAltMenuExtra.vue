@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
-import { TranslateLangSelectorModal } from '../../../_common/translate/lang-selector/lang-selector-modal.service';
+import { showTranslateLangSelectorModal } from '../../../_common/translate/lang-selector/lang-selector-modal.service';
 import { routeLandingHelpRedirect } from '../../views/landing/help/help.route';
 import { routeLegalCookies } from '../../views/legal/cookies/cookies.route';
 import { routeLegalPrivacy } from '../../views/legal/privacy/privacy.route';
 import { routeLegalTerms } from '../../views/legal/terms/terms.route';
 
 function showLangSelector() {
-	TranslateLangSelectorModal.show();
+	showTranslateLangSelectorModal();
 }
 </script>
 

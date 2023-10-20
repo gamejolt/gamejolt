@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, onMounted, onUnmounted, PropType, ref, useSlots } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, ref } from 'vue';
 import { isNavigationFailure, useRouter } from 'vue-router';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
@@ -7,7 +7,7 @@ import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 import AppScrollScroller, { createScroller } from '../scroll/AppScrollScroller.vue';
 import AppTheme from '../theme/AppTheme.vue';
-import { Theme } from '../theme/theme.model';
+import { ThemeModel } from '../theme/theme.model';
 import { ModalDismissReason, Modals, useModal } from './modal.service';
 
 export interface AppModalInterface {
@@ -30,7 +30,7 @@ const _modalBackdropChecks: (() => boolean)[] = [];
 <script lang="ts" setup>
 defineProps({
 	theme: {
-		type: Object as PropType<Theme>,
+		type: Object as PropType<ThemeModel>,
 		default: undefined,
 	},
 	forceTheme: {
@@ -47,7 +47,6 @@ defineExpose<AppModalInterface>({
 	scrollTo,
 });
 
-const slots = useSlots();
 const router = useRouter();
 const modal = useModal()!;
 const scroller = createScroller();
@@ -60,7 +59,6 @@ let _afterEachDeregister: (() => void) | undefined;
 let _escapeCallback: EscapeStackCallback | undefined;
 
 const zIndex = computed(() => 1050 + modal.index);
-const hasFooter = computed(() => !!slots.footer);
 
 onMounted(() => {
 	if (!modal.noBackdrop) {
@@ -171,7 +169,7 @@ function scrollTo(offsetY: number) {
 				>
 					<slot />
 
-					<AppScrollAffix v-if="hasFooter" anchor="bottom" :padding="0">
+					<AppScrollAffix v-if="$slots.footer" anchor="bottom" :padding="0">
 						<div class="-footer fill-offset">
 							<slot name="footer" />
 						</div>

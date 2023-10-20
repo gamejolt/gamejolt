@@ -1,10 +1,10 @@
 <script lang="ts">
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { User } from '../../../_common/user/user.model';
+import { touchUser } from '../../../_common/user/user.model';
 
 export default {
 	...defineAppRouteOptions({
-		resolver: () => User.touch(),
+		resolver: () => touchUser(),
 	}),
 };
 </script>

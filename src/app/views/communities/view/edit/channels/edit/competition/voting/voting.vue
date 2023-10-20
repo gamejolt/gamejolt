@@ -1,26 +1,33 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../../../../../utils/array';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../../../_common/card/list/AppCardListItem.vue';
-import { CommunityCompetitionAward } from '../../../../../../../../../_common/community/competition/award/award.model';
+import {
+	$removeCommunityCompetitionAward,
+	$saveCommunityCompetitionAwardSort,
+	CommunityCompetitionAwardModel,
+} from '../../../../../../../../../_common/community/competition/award/award.model';
 import {
 	CompetitionPeriodPostComp,
 	CompetitionPeriodVoting,
 } from '../../../../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionVotingCategory } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { showErrorGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	$removeCommunityCompetitionVotingCategory,
+	CommunityCompetitionVotingCategoryModel,
+} from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
+import { showErrorGrowl } from '../../../../../../../../../_common/growls/growls.service';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
+import { arrayRemove } from '../../../../../../../../../utils/array';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
 import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/award.vue';
 import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/category.vue';
@@ -47,22 +54,22 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id', 'channel'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			`/web/dash/communities/competitions/voting/${route.params.id}/${route.params.channel}`
 		),
 })
-export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends BaseRouteComponent {
+export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends LegacyRouteComponent {
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
 
-	awards: CommunityCompetitionAward[] = [];
-	activeAward: CommunityCompetitionAward | null = null;
+	awards: CommunityCompetitionAwardModel[] = [];
+	activeAward: CommunityCompetitionAwardModel | null = null;
 	isShowingAwardAdd = false;
-	votingCategories: CommunityCompetitionVotingCategory[] = [];
-	activeVotingCategory: CommunityCompetitionVotingCategory | null = null;
+	votingCategories: CommunityCompetitionVotingCategoryModel[] = [];
+	activeVotingCategory: CommunityCompetitionVotingCategoryModel | null = null;
 	isShowingVotingCategoryAdd = false;
 	isEditing = false;
 
@@ -109,10 +116,10 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 	}
 
 	routeResolved($payload: any) {
-		this.votingCategories = CommunityCompetitionVotingCategory.populate(
+		this.votingCategories = CommunityCompetitionVotingCategoryModel.populate(
 			$payload.votingCategories
 		);
-		this.awards = CommunityCompetitionAward.populate($payload.awards);
+		this.awards = CommunityCompetitionAwardModel.populate($payload.awards);
 	}
 
 	/**
@@ -148,62 +155,65 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends B
 	}
 
 	onCategoryAddSubmit($payload: any) {
-		const category = new CommunityCompetitionVotingCategory($payload);
+		const category = new CommunityCompetitionVotingCategoryModel($payload);
 		this.votingCategories.push(category);
 		this.isShowingVotingCategoryAdd = false;
 	}
 
-	async saveCategorySort(sortedCategories: CommunityCompetitionVotingCategory[]) {
+	async saveCategorySort(sortedCategories: CommunityCompetitionVotingCategoryModel[]) {
 		// Reorder the categories to see the result of the ordering right away.
 		this.votingCategories.splice(0, this.votingCategories.length, ...sortedCategories);
 
 		const sortedIds = sortedCategories.map(i => i.id);
 		try {
-			await CommunityCompetitionVotingCategory.$saveSort(this.competition.id, sortedIds);
+			await Api.sendRequest(
+				`/web/dash/communities/competitions/voting-categories/save-sort/${this.competition.id}`,
+				sortedIds
+			);
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl(this.$gettext(`Could not save category arrangement.`));
 		}
 	}
 
-	async onClickRemoveCategory(category: CommunityCompetitionVotingCategory) {
-		const result = await ModalConfirm.show(
+	async onClickRemoveCategory(category: CommunityCompetitionVotingCategoryModel) {
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure want to remove this voting category?`)
 		);
 
 		if (result) {
 			arrayRemove(this.votingCategories, i => i.id === category.id);
-			await category.$remove();
+			await $removeCommunityCompetitionVotingCategory(category);
 		}
 	}
 
 	onAwardAddSubmit($payload: any) {
-		const award = new CommunityCompetitionAward($payload);
+		const award = new CommunityCompetitionAwardModel($payload);
 		this.awards.push(award);
 		this.isShowingAwardAdd = false;
 	}
 
-	async saveAwardSort(sortedAwards: CommunityCompetitionAward[]) {
+	async saveAwardSort(sortedAwards: CommunityCompetitionAwardModel[]) {
 		// Reorder the awards to see the result of the ordering right away.
 		this.awards.splice(0, this.awards.length, ...sortedAwards);
 
 		const sortedIds = sortedAwards.map(i => i.id);
 		try {
-			await CommunityCompetitionAward.$saveSort(this.competition.id, sortedIds);
+			await $saveCommunityCompetitionAwardSort(this.competition.id, sortedIds);
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl(this.$gettext(`Could not save award arrangement.`));
 		}
 	}
 
-	async onClickRemoveAward(award: CommunityCompetitionAward) {
-		const result = await ModalConfirm.show(
+	async onClickRemoveAward(award: CommunityCompetitionAwardModel) {
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure want to remove this award?`)
 		);
 
 		if (result) {
 			arrayRemove(this.awards, i => i.id === award.id);
-			await award.$remove();
+			await $removeCommunityCompetitionAward(award);
 		}
 	}
 }

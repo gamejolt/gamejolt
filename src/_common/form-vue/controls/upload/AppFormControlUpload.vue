@@ -35,16 +35,10 @@ const props = defineProps({
 		type: String,
 		default: null,
 	},
-	/**
-	 * Attempts to fix overflow issues with filenames.
-	 */
-	fixOverflow: {
-		type: Boolean,
-	},
 });
 
 const emit = defineEmits({
-	...defineFormControlEmits(),
+	...defineFormControlEmits<File | File[] | null>(),
 });
 
 const validators = computed(() => {
@@ -64,7 +58,7 @@ const form = useForm()!;
 const { name } = useFormGroup()!;
 
 const { id, controlVal, applyValue } = createFormControl({
-	initialValue: [] as File | File[] | null,
+	initialValue: null as File | File[] | null,
 	validators,
 	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
@@ -72,12 +66,13 @@ const { id, controlVal, applyValue } = createFormControl({
 
 const input = ref<AppFormControlUploadFileInterface>();
 const isDropActive = ref(false);
+const clearKey = ref(0);
 
 /**
  * Will be an array even if not a `multiple` upload type.
  */
 const files = computed(() => {
-	if (controlVal.value === null) {
+	if (!controlVal.value) {
 		return [];
 	}
 
@@ -138,7 +133,7 @@ function showFileSelect() {
 }
 
 // Normal file select.
-function onChange(files: File[]) {
+function onChange(files: File[] | File | null | undefined) {
 	setFiles(files);
 }
 
@@ -150,6 +145,7 @@ function clearFile(file: File) {
 
 			if (!files.value.length) {
 				applyValue(null);
+				++clearKey.value;
 			} else {
 				applyValue(controlVal.value);
 			}
@@ -157,17 +153,20 @@ function clearFile(file: File) {
 	} else {
 		if (controlVal.value === file) {
 			applyValue(null);
+			++clearKey.value;
 		}
 	}
 }
 
-function setFiles(files: File[] | null) {
+function setFiles(files: File[] | File | null | undefined) {
 	if (!files) {
 		applyValue(null);
 	} else if (props.multiple) {
 		applyValue(files);
-	} else {
+	} else if (Array.isArray(files)) {
 		applyValue(files[0]);
+	} else {
+		applyValue(files);
 	}
 }
 
@@ -287,12 +286,12 @@ defineExpose<AppFormControlUploadInterface>({
 			<AppFormControlUploadFile
 				v-show="!uploadLinkLabel"
 				:id="id!"
+				:key="clearKey"
 				ref="input"
 				:name="name"
 				:multiple="multiple"
 				:accept="accept"
 				:value="controlVal"
-				:fix-overflow="fixOverflow"
 				@input="onChange"
 			/>
 		</div>

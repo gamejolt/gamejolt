@@ -11,23 +11,23 @@ import {
 	validateImageMaxDimensions,
 	validateImageMinDimensions,
 } from '../../../../../_common/form-vue/validators';
-import { Game } from '../../../../../_common/game/game.model';
+import { $saveGameThumbnail, GameModel } from '../../../../../_common/game/game.model';
 import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
-type FormModel = Game & {
+type FormModel = GameModel & {
 	thumb_crop: any;
 };
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 });
 
 const emit = defineEmits({
-	submit: (_game: Game) => true,
+	submit: (_game: GameModel) => true,
 });
 
 const maxFilesize = ref(0);
@@ -38,9 +38,9 @@ const maxHeight = ref(0);
 const cropAspectRatio = ref(0);
 
 const form: FormController<FormModel> = createForm({
-	modelClass: Game,
+	modelClass: GameModel,
+	modelSaveHandler: $saveGameThumbnail,
 	model: toRef(props, 'game'),
-	saveMethod: '$saveThumbnail',
 	warnOnDiscard: false,
 	resetOnSubmit: true,
 	loadUrl: computed(() => `/web/dash/developer/games/thumbnail/save/${props.game.id}`),
@@ -140,11 +140,7 @@ function thumbSelected() {
 		<AppFormGroup
 			v-if="form.isLoaded && thumb && !form.formModel.file"
 			name="thumb_crop"
-			:label="
-				canCrop
-					? $gettext('Crop Current Thumbnail')
-					: $gettext('Current Thumbnail')
-			"
+			:label="canCrop ? $gettext('Crop Current Thumbnail') : $gettext('Current Thumbnail')"
 		>
 			<div v-if="canCrop && thumb.is_animated" class="alert">
 				<p>

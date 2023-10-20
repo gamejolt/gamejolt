@@ -4,7 +4,7 @@ import { $gettext } from '../../translate/translate.service';
 
 <template>
 	<div>
-		<h1>{{ $gettext(`Forbidden`) }}`</h1>
-		<p>{{ $gettext(`You do not have access to this page.`) }}`</p>
+		<h1>{{ $gettext(`Forbidden`) }}</h1>
+		<p>{{ $gettext(`You do not have access to this page.`) }}</p>
 	</div>
 </template>

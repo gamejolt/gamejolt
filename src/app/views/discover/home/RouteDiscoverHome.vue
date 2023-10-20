@@ -2,19 +2,18 @@
 import { computed, ref, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { arrayShuffle } from '../../../../utils/array';
-import { FeaturedItem } from '../../../components/featured-item/featured-item.model';
+import { FeaturedItemModel } from '../../../components/featured-item/featured-item.model';
 import socialImage from '../../../img/social/social-share-header.png';
 import AppHomeDefault from './AppHomeDefault.vue';
 import AppHomeSlider from './AppHomeSlider.vue';
@@ -36,13 +35,12 @@ export default {
 const { user, userBootstrapped } = useCommonStore();
 const route = useRoute();
 
-const featuredItem = ref<FeaturedItem>();
-const featuredCommunities = ref<Community[]>([]);
-const featuredFireside = ref<Fireside>();
-const featuredRealms = ref<Realm[]>([]);
+const featuredItem = ref<FeaturedItemModel>();
+const featuredCommunities = ref<CommunityModel[]>([]);
+const featuredRealms = ref<RealmModel[]>([]);
 
-const heroPosts = shallowRef<FiresidePost[]>([]);
-const creatorPosts = shallowRef<FiresidePost[]>([]);
+const heroPosts = shallowRef<FiresidePostModel[]>([]);
+const creatorPosts = shallowRef<FiresidePostModel[]>([]);
 
 const { isBootstrapped } = createAppRoute({
 	routeTitle: computed(() => (user.value ? $gettext(`Discover`) : null)),
@@ -69,7 +67,7 @@ const { isBootstrapped } = createAppRoute({
 		};
 
 		featuredItem.value = payload.featuredItem
-			? new FeaturedItem(payload.featuredItem)
+			? new FeaturedItemModel(payload.featuredItem)
 			: undefined;
 
 		if (payload.isFollowingFeatured && featuredItem.value) {
@@ -80,12 +78,9 @@ const { isBootstrapped } = createAppRoute({
 			}
 		}
 
-		featuredCommunities.value = Community.populate(payload.communities);
-		featuredFireside.value = payload.featuredFireside
-			? new Fireside(payload.featuredFireside)
-			: undefined;
+		featuredCommunities.value = CommunityModel.populate(payload.communities);
 
-		heroPosts.value = FiresidePost.populate<FiresidePost>(payload.heroPosts).filter(
+		heroPosts.value = FiresidePostModel.populate<FiresidePostModel>(payload.heroPosts).filter(
 			i => i.hasMedia || i.hasVideo
 		);
 
@@ -94,7 +89,7 @@ const { isBootstrapped } = createAppRoute({
 		if (cachedRealms) {
 			featuredRealms.value = cachedRealms;
 		} else {
-			featuredRealms.value = Realm.populate(payload.featuredRealms);
+			featuredRealms.value = RealmModel.populate(payload.featuredRealms);
 			HistoryCache.store(route, featuredRealms.value, CachedRealmsKey);
 		}
 
@@ -103,7 +98,7 @@ const { isBootstrapped } = createAppRoute({
 			creatorPosts.value = cachedCreators;
 		} else {
 			creatorPosts.value = payload.creatorPosts
-				? arrayShuffle(FiresidePost.populate(payload.creatorPosts))
+				? arrayShuffle(FiresidePostModel.populate(payload.creatorPosts))
 				: [];
 			HistoryCache.store(route, creatorPosts.value, CachedCreatorsKey);
 		}
@@ -121,7 +116,6 @@ const { isBootstrapped } = createAppRoute({
 		:is-bootstrapped="isBootstrapped"
 		:featured-item="featuredItem"
 		:featured-communities="featuredCommunities"
-		:featured-fireside="featuredFireside"
 		:featured-realms="featuredRealms"
 		:creator-posts="creatorPosts"
 	/>

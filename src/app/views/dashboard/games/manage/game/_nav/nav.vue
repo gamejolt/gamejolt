@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
-import { Game } from '../../../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../../../_common/game/game.model';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../manage.store';
@@ -33,7 +33,7 @@ export default class AppManageGameNav extends Vue {
 		return this.commonStore;
 	}
 
-	Game = Game;
+	Game = GameModel;
 }
 </script>
 

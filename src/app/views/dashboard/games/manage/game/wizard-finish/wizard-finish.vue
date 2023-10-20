@@ -2,16 +2,16 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageGameWizardFinish',
 })
-@OptionsForRoute()
-export default class RouteDashGamesManageGameWizardFinish extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteDashGamesManageGameWizardFinish extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get canPublish() {

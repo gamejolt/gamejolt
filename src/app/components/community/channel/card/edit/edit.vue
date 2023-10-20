@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
+import { MediaItemModel } from '../../../../../../_common/media-item/media-item-model';
 
 @Options({
 	components: {
@@ -9,7 +9,7 @@ import { MediaItem } from '../../../../../../_common/media-item/media-item-model
 	},
 })
 export default class AppCommunityChannelCardEdit extends Vue {
-	@Prop({ type: Object, default: null }) background!: MediaItem | null;
+	@Prop({ type: Object, default: null }) background!: MediaItemModel | null;
 
 	@Emit('click') emitClick() {}
 

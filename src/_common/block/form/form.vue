@@ -3,7 +3,7 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import { Api } from '../../api/api.service';
 import AppFormControlToggle from '../../form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnSubmit } from '../../form-vue/form.service';
-import { User } from '../../user/user.model';
+import { UserModel } from '../../user/user.model';
 
 interface FormModel {
 	removeComments: boolean;
@@ -18,7 +18,7 @@ class Wrapper extends BaseForm<FormModel> {}
 })
 export default class AppBlockForm extends mixins(Wrapper) implements FormOnSubmit {
 	@Prop(Object)
-	user!: User;
+	user!: UserModel;
 
 	onSubmit() {
 		const data = {

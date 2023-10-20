@@ -1,12 +1,10 @@
 import { Model } from '../../model/model.service';
 
-export class ForumCategory extends Model {
-	title!: string;
-	url!: string;
-	description!: string;
-	type!: string;
-	status!: string;
-	created_on!: number;
+export class ForumCategoryModel extends Model {
+	declare title: string;
+	declare url: string;
+	declare description: string;
+	declare type: string;
+	declare status: string;
+	declare created_on: number;
 }
-
-Model.create(ForumCategory);

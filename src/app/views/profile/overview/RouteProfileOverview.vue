@@ -5,40 +5,34 @@ import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCommentAddButton from '../../../../_common/comment/add-button/add-button.vue';
-import { Comment } from '../../../../_common/comment/comment-model';
+import { CommentModel } from '../../../../_common/comment/comment-model';
 import {
 	CommentStoreManagerKey,
 	CommentStoreModel,
+	commentStoreCount,
 	lockCommentStore,
 	releaseCommentStore,
-	setCommentCount,
 } from '../../../../_common/comment/comment-store';
-import { CommentModal } from '../../../../_common/comment/modal/modal.service';
-import {
-	CommentThreadModal,
-	CommentThreadModalPermalinkDeregister,
-} from '../../../../_common/comment/thread/modal.service';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/verified-tick.vue';
+import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
-import { Fireside } from '../../../../_common/fireside/fireside.model';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import { LinkedAccount, Provider } from '../../../../_common/linked-account/linked-account.model';
+import {
+	LinkedAccountModel,
+	LinkedAccountProvider,
+} from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { storeModelList } from '../../../../_common/model/model-store.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTopSupportersCard, {
@@ -47,26 +41,31 @@ import AppTopSupportersCard, {
 } from '../../../../_common/supporters/AppTopSupportersCard.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { showUserFiresideFollowModal } from '../../../../_common/user/fireside/modal/follow-modal.service';
-import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
+import { showTrophyModal } from '../../../../_common/trophy/modal/modal.service';
+import AppTrophyThumbnail from '../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
+import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
-import { UserBaseTrophy } from '../../../../_common/user/trophy/user-base-trophy.model';
-import { User, unfollowUser } from '../../../../_common/user/user.model';
+import { UserBaseTrophyModel } from '../../../../_common/user/trophy/user-base-trophy.model';
+import { $unfollowUser, UserModel } from '../../../../_common/user/user.model';
 import { numberSort } from '../../../../utils/array';
 import { removeQuery } from '../../../../utils/router';
 import { openChatRoom } from '../../../components/chat/client';
 import AppCommentOverview from '../../../components/comment/AppCommentOverview.vue';
-import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
+import AppCommentAddButton from '../../../components/comment/add-button/AppCommentAddButton.vue';
+import { showCommentModal } from '../../../components/comment/modal/modal.service';
+import {
+	CommentThreadModalPermalinkDeregister,
+	showCommentThreadModalFromPermalink,
+	watchForCommentThreadModalPermalink,
+} from '../../../components/comment/thread/modal.service';
 import AppGameList from '../../../components/game/list/list.vue';
 import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
 import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import { TrophyModal } from '../../../../_common/trophy/modal/modal.service';
-import AppTrophyThumbnail from '../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useAppStore } from '../../../store/index';
-import { useProfileRouteController } from '../RouteProfile.vue';
+import { useProfileRouteStore } from '../RouteProfile.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -79,11 +78,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const FiresideScrollInviewConfig = new ScrollInviewConfig({
-	emitsOn: 'partial-overlap',
-	trackFocused: false,
-});
-
 const {
 	isOverviewLoaded,
 	gamesCount,
@@ -99,7 +93,7 @@ const {
 	removeFriend,
 	sendFriendRequest,
 	cancelFriendRequest,
-} = useProfileRouteController()!;
+} = useProfileRouteStore()!;
 
 const { toggleLeftPane } = useAppStore();
 const { user: myUser } = useCommonStore();
@@ -116,21 +110,17 @@ const showFullDescription = ref(false);
 const canToggleDescription = ref(false);
 const showAllCommunities = ref(false);
 const isLoadingAllCommunities = ref(false);
-const games = ref<Game[]>([]);
-const communities = ref<Community[]>([]);
-const allCommunities = ref<Community[] | null>(null);
+const games = ref<GameModel[]>([]);
+const communities = ref<CommunityModel[]>([]);
+const allCommunities = ref<CommunityModel[] | null>(null);
 const supportersData = ref() as Ref<
 	{ supporters: TopSupporter[]; ownSupport: OwnSupport } | undefined
 >;
-const overviewComments = ref<Comment[]>([]);
-const linkedAccounts = ref<LinkedAccount[]>([]);
-const knownFollowers = ref<User[]>([]);
+const hasSales = ref(false);
+const overviewComments = ref<CommentModel[]>([]);
+const linkedAccounts = ref<LinkedAccountModel[]>([]);
+const knownFollowers = ref<UserModel[]>([]);
 const knownFollowerCount = ref(0);
-const fireside = ref<Fireside | null>(null);
-const hadInitialFireside = ref(false);
-const isFiresideInview = ref(false);
-const firesideHasVideo = ref(false);
-const maintainFiresideOutviewSpace = ref(false);
 
 let permalinkWatchDeregister: CommentThreadModalPermalinkDeregister | undefined = undefined;
 
@@ -181,7 +171,7 @@ const hasCommunitiesSection = computed(() => {
 });
 
 const twitchAccount = computed(() => {
-	return getLinkedAccount(LinkedAccount.PROVIDER_TWITCH);
+	return getLinkedAccount(LinkedAccountProvider.Twitch);
 });
 
 const addCommentPlaceholder = computed(() => {
@@ -208,7 +198,7 @@ const shouldShowShouts = computed(() => {
 });
 
 const isFriend = computed(() => {
-	return userFriendship.value && userFriendship.value.state === UserFriendship.STATE_FRIENDS;
+	return userFriendship.value && userFriendship.value.state === UserFriendshipState.Friends;
 });
 
 const canMessage = computed(() => {
@@ -260,25 +250,7 @@ const userBlockedYou = computed(() => {
 	return routeUser.value && routeUser.value.blocked_you;
 });
 
-const shouldShowFireside = computed(() => {
-	// Keep the FiresideBadge around so we don't mess with their scroll
-	// position when a fireside expires.
-	return (!!fireside.value && fireside.value.canJoin()) || hadInitialFireside.value;
-});
-
-const canShowFiresidePreview = computed(() => {
-	if (!shouldShowFireside.value) {
-		return false;
-	}
-
-	if (isFiresideInview.value) {
-		return firesideHasVideo.value;
-	}
-
-	return maintainFiresideOutviewSpace.value;
-});
-
-function getLinkedAccount(provider: Provider) {
+function getLinkedAccount(provider: LinkedAccountProvider) {
 	if (
 		routeUser.value &&
 		linkedAccounts.value &&
@@ -304,6 +276,7 @@ createAppRoute({
 		linkedAccounts.value = [];
 		overviewComments.value = [];
 		supportersData.value = undefined;
+		hasSales.value = false;
 	},
 	onResolved({ payload }) {
 		Meta.description = payload.metaDescription;
@@ -318,10 +291,11 @@ createAppRoute({
 		showFullDescription.value = false;
 		showAllCommunities.value = false;
 		isLoadingAllCommunities.value = false;
-		games.value = Game.populate(payload.developerGamesTeaser);
-		communities.value = Community.populate(payload.communities);
-		linkedAccounts.value = LinkedAccount.populate(payload.linkedAccounts);
-		overviewComments.value = Comment.populate(payload.comments);
+		games.value = GameModel.populate(payload.developerGamesTeaser);
+		communities.value = CommunityModel.populate(payload.communities);
+		linkedAccounts.value = LinkedAccountModel.populate(payload.linkedAccounts);
+		overviewComments.value = storeModelList(CommentModel, payload.comments);
+		hasSales.value = payload.hasSales === true;
 
 		let supporters: TopSupporter[] = [];
 		if (payload.topSupporters && Array.isArray(payload.topSupporters)) {
@@ -331,7 +305,7 @@ createAppRoute({
 			for (const { user, value } of supportersData) {
 				if (user && value) {
 					newSupporters.push({
-						user: new User(user),
+						user: new UserModel(user),
 						value,
 					});
 				}
@@ -348,8 +322,8 @@ createAppRoute({
 		};
 
 		if (routeUser.value) {
-			CommentThreadModal.showFromPermalink(router, routeUser.value, 'shouts');
-			permalinkWatchDeregister = CommentThreadModal.watchForPermalink(
+			showCommentThreadModalFromPermalink(router, routeUser.value, 'shouts');
+			permalinkWatchDeregister = watchForCommentThreadModalPermalink(
 				router,
 				routeUser.value,
 				'shouts'
@@ -357,7 +331,7 @@ createAppRoute({
 
 			// Initialize a CommentStore lock for profile shouts.
 			commentStore.value = lockCommentStore(commentManager, 'User', routeUser.value.id);
-			setCommentCount(commentStore.value, routeUser.value.comment_count);
+			commentStoreCount(commentStore.value, routeUser.value.comment_count);
 
 			// They came from an invite link.
 			if (route.query['invite'] !== undefined) {
@@ -368,23 +342,14 @@ createAppRoute({
 
 				removeQuery(router, 'invite');
 			}
-
-			// They came from a /fireside/@user link, but they're not streaming.
-			if (route.query['fireside'] !== undefined) {
-				showUserFiresideFollowModal(routeUser.value);
-				removeQuery(router, 'fireside');
-			}
 		}
 
 		if (payload.knownFollowers) {
-			knownFollowers.value = User.populate(payload.knownFollowers);
+			knownFollowers.value = UserModel.populate(payload.knownFollowers);
 		}
 		if (payload.knownFollowerCount) {
 			knownFollowerCount.value = payload.knownFollowerCount;
 		}
-
-		fireside.value = payload.fireside ? new Fireside(payload.fireside) : null;
-		hadInitialFireside.value = !!fireside.value;
 
 		overviewPayload(payload);
 	},
@@ -406,7 +371,7 @@ function clearCommentStore() {
 
 function showComments() {
 	if (routeUser.value) {
-		CommentModal.show({
+		showCommentModal({
 			model: routeUser.value,
 			displayMode: 'shouts',
 		});
@@ -423,20 +388,6 @@ function openMessaging() {
 			openChatRoom(chat.value, chatUser.room_id);
 		}
 	}
-}
-
-function onFiresideInview() {
-	isFiresideInview.value = true;
-	maintainFiresideOutviewSpace.value = false;
-}
-
-function onFiresideOutview() {
-	maintainFiresideOutviewSpace.value = canShowFiresidePreview.value;
-	isFiresideInview.value = false;
-}
-
-function onFiresideBadgeChanged(hasVideo: boolean, _isStreaming: boolean) {
-	firesideHasVideo.value = hasVideo;
 }
 
 async function toggleShowAllCommunities() {
@@ -458,7 +409,7 @@ async function toggleShowAllCommunities() {
 				null,
 				{ detach: true }
 			);
-			allCommunities.value = Community.populate(payload.communities);
+			allCommunities.value = CommunityModel.populate(payload.communities);
 		} catch (e) {
 			console.error(`Failed to load all communities for user ${routeUser.value.id}`);
 			console.error(e);
@@ -474,18 +425,18 @@ async function reloadPreviewComments() {
 		const $payload = await Api.sendRequest(
 			'/web/profile/comment-overview/@' + routeUser.value.username
 		);
-		overviewComments.value = Comment.populate($payload.comments);
+		overviewComments.value = storeModelList(CommentModel, $payload.comments);
 		routeUser.value.comment_count = $payload.count;
 	}
 }
 
-function onClickTrophy(userTrophy: UserBaseTrophy) {
-	TrophyModal.show(userTrophy);
+function onClickTrophy(userTrophy: UserBaseTrophyModel) {
+	showTrophyModal(userTrophy);
 }
 
 async function onClickUnfollow() {
 	if (routeUser.value) {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			$gettext(`Are you sure you want to unfollow this user?`),
 			$gettext(`Unfollow user?`)
 		);
@@ -494,7 +445,7 @@ async function onClickUnfollow() {
 			return;
 		}
 
-		unfollowUser(routeUser.value);
+		$unfollowUser(routeUser.value);
 	}
 }
 
@@ -612,6 +563,13 @@ async function onFriendRequestReject() {
 								:supporters="supportersData.supporters"
 								:own-support="supportersData.ownSupport"
 							/>
+							<br />
+						</template>
+
+						<template v-if="hasSales">
+							<AppButton solid primary block :to="{ name: 'profile.shop' }">
+								{{ $gettext(`Open creator shop`) }}
+							</AppButton>
 							<br />
 						</template>
 					</template>
@@ -817,7 +775,7 @@ async function onFriendRequestReject() {
 										v-for="trophy of previewTrophies"
 										:key="trophy.key"
 										class="_trophy"
-										:trophy="trophy.trophy"
+										:trophy="trophy.trophy!"
 										no-difficulty
 										no-highlight
 										@click="onClickTrophy(trophy)"
@@ -859,13 +817,13 @@ async function onFriendRequestReject() {
 						<!-- Friend Requests -->
 						<template v-if="userFriendship">
 							<AppExpand
-								:when="userFriendship.state === UserFriendship.STATE_REQUEST_SENT"
+								:when="userFriendship.state === UserFriendshipState.RequestSent"
 								:animate-initial="true"
 							>
 								<div class="alert">
 									<p>
 										{{
-											$gettextInterpolate(
+											$gettext(
 												`Friend request to %{ username } pending acceptance.`,
 												{
 													username:
@@ -881,15 +839,13 @@ async function onFriendRequestReject() {
 							</AppExpand>
 
 							<AppExpand
-								:when="
-									userFriendship.state === UserFriendship.STATE_REQUEST_RECEIVED
-								"
+								:when="userFriendship.state === UserFriendshipState.RequestReceived"
 								:animate-initial="true"
 							>
 								<div class="alert">
 									<p>
 										{{
-											$gettextInterpolate(
+											$gettext(
 												`%{ username } would like to be your friend.`,
 												{
 													username: '@' + userFriendship.user.username,
@@ -910,21 +866,6 @@ async function onFriendRequestReject() {
 								</div>
 							</AppExpand>
 						</template>
-
-						<!-- Fireside -->
-						<AppScrollInview
-							v-if="shouldShowFireside"
-							:config="FiresideScrollInviewConfig"
-							@inview="onFiresideInview"
-							@outview="onFiresideOutview"
-						>
-							<AppFiresideBadge
-								:key="fireside?.hash || `no-fireside-${routeUser.id}`"
-								:fireside="fireside"
-								:show-preview="canShowFiresidePreview"
-								@changed="onFiresideBadgeChanged"
-							/>
-						</AppScrollInview>
 
 						<RouterView />
 					</template>

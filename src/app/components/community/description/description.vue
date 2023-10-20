@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 
 @Options({
@@ -11,7 +11,7 @@ import AppContentViewer from '../../../../_common/content/content-viewer/AppCont
 	},
 })
 export default class AppCommunityDescription extends Vue {
-	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
 
 	canToggleDescription = false;
 	isDescriptionOpen = false;

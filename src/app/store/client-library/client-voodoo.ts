@@ -1,8 +1,8 @@
-import { isErrnoException } from '../../../utils/utils.client';
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { getExecutable } from '../../../_common/client/client-voodoo-imports';
 import { showErrorGrowl } from '../../../_common/growls/growls.service';
-import { ClientAntiVirusModal } from '../../components/client/anti-virus-modal/anti-virus-modal.service';
+import { isErrnoException } from '../../../utils/utils.client';
+import { showClientAntiVirusModal } from '../../components/client/anti-virus-modal/anti-virus-modal.service';
 
 const path = require('path') as typeof import('path');
 
@@ -39,7 +39,7 @@ export function handleClientVoodooError(
 		}
 
 		if (message) {
-			ClientAntiVirusModal.show(message, title);
+			showClientAntiVirusModal(message, title);
 		}
 		return;
 	}

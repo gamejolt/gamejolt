@@ -5,7 +5,7 @@ import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppUserCard from '../../../../_common/user/card/AppUserCard.vue';
 import AppUserCardPlaceholder from '../../../../_common/user/card/AppUserCardPlaceholder.vue';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 
 @Options({
 	components: {
@@ -22,15 +22,15 @@ export default class AppFollowerList extends Vue {
 	count!: number;
 
 	@Prop(Array)
-	initialUsers!: User[];
+	initialUsers!: UserModel[];
 
-	users: User[] = [];
+	users: UserModel[] = [];
 	page = 1;
 	isLoading = false;
 	reachedEnd = false;
 
 	@Watch('initialUsers', { immediate: true })
-	onInitialUsersChange(users: User[]) {
+	onInitialUsersChange(users: UserModel[]) {
 		// If the initial users changed, it means that the route was bootstrapped. Gotta clear
 		// everything out again.
 
@@ -67,7 +67,7 @@ export default class AppFollowerList extends Vue {
 		}
 
 		const payload = await Api.sendRequest(url);
-		return User.populate(payload.users);
+		return UserModel.populate(payload.users);
 	}
 
 	async loadMore() {

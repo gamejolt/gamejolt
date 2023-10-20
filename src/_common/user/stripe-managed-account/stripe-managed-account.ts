@@ -1,34 +1,36 @@
 import { Model } from '../../model/model.service';
 
-export class UserStripeManagedAccount extends Model {
-	static readonly TYPE_COMPANY = 'company';
-	static readonly TYPE_INDIVIDUAL = 'individual';
+export const enum UserStripeManagedAccountType {
+	Company = 'company',
+	Individual = 'individual',
+}
 
-	static readonly STATUS_UNVERIFIED = 'unverified';
-	static readonly STATUS_PENDING = 'pending';
-	static readonly STATUS_VERIFIED = 'verified';
+export const enum UserStripeManagedAccountStatus {
+	Unverified = 'unverified',
+	Pending = 'pending',
+	Verified = 'verified',
+}
 
-	static readonly TERMS_DISTRIBUTION_VERSION = 2;
-	static readonly TERMS_PARTNER_VERSION = 1;
-	static readonly TERMS_CREATOR_VERSION = 1;
+export const ManagedAccountTermsDistributionVersion = 2;
+export const ManagedAccountTermsPartnerVersion = 1;
+export const ManagedAccountTermsCreatorVersion = 1;
 
-	type!: 'company' | 'individual';
-	country_code!: 'string';
-	status!: 'unverified' | 'pending' | 'verified';
-	tos_signed_developer!: number;
-	tos_signed_developer_timestamp!: number;
-	tos_signed_partner!: number;
-	tos_signed_partner_timestamp!: number;
-	tos_signed_creator!: number;
-	tos_signed_creator_timestamp!: number;
-	is_stripe_initialized!: boolean;
-	is_verified!: boolean;
-	skip_stripe!: boolean;
-	created_on!: number;
+export class UserStripeManagedAccountModel extends Model {
+	declare type: UserStripeManagedAccountType;
+	declare country_code: string;
+	declare status: UserStripeManagedAccountStatus;
+	declare tos_signed_developer: number;
+	declare tos_signed_developer_timestamp: number;
+	declare tos_signed_partner: number;
+	declare tos_signed_partner_timestamp: number;
+	declare tos_signed_creator: number;
+	declare tos_signed_creator_timestamp: number;
+	declare is_stripe_initialized: boolean;
+	declare is_verified: boolean;
+	declare skip_stripe: boolean;
+	declare created_on: number;
 
 	constructor(data: any = {}) {
 		super(data);
 	}
 }
-
-Model.create(UserStripeManagedAccount);

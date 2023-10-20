@@ -1,35 +1,36 @@
 <script lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { arrayIndexBy, arrayShuffle } from '../../../../utils/array';
 import { trackCreatorApply } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
-import { Background } from '../../../../_common/background/background.model';
+import { BackgroundModel } from '../../../../_common/background/background.model';
 import AppBean from '../../../../_common/bean/AppBean.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
+import {
+	illMobileKikkerstein,
+	illPointyThing,
+	illStreamingJelly,
+} from '../../../../_common/illustration/illustrations';
 import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import { ImgHelper } from '../../../../_common/img/helper/helper-service';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
+import { storeModel } from '../../../../_common/model/model-store.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { DefaultTheme } from '../../../../_common/theme/theme.model';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { User } from '../../../../_common/user/user.model';
-import {
-	illMobileKikkerstein,
-	illPointyThing,
-	illStreamingJelly,
-} from '../../../../_common/illustration/illustrations';
+import { UserModel } from '../../../../_common/user/user.model';
+import { arrayIndexBy, arrayShuffle } from '../../../../utils/array';
 import AppCreatorMooMoo from './AppCreatorMooMoo.vue';
-import socialImage from './social.png';
 import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
+import socialImage from './social.png';
 
 const postImages = import.meta.glob('./_posts/*.jpg', { eager: true, as: 'url' });
 
@@ -82,9 +83,9 @@ let _hasPostTimer = false;
 
 const applyUrl = ref<string>();
 const postIndex = ref(0);
-const creatorPosts = ref<FiresidePost[]>([]);
-const whyBackground = ref<Background>();
-const testimonialUsers = ref<User[]>([]);
+const creatorPosts = ref<FiresidePostModel[]>([]);
+const whyBackground = ref<BackgroundModel>();
+const testimonialUsers = ref<UserModel[]>([]);
 const testimonials = ref<Testimonial[]>([]);
 
 const headerPost = computed(() => getPostFromIndex(postIndex.value));
@@ -119,7 +120,7 @@ const { isBootstrapped, isDestroyed } = createAppRoute({
 	routeTitle,
 	disableTitleSuffix: true,
 	onInit() {
-		Meta.description = `BOOM! Be a Game Jolt Creator and make money with your gaming content. Your fans never have to jump through hoops to see your latest post, video, or stream.`;
+		Meta.description = `BOOM! Be a Game Jolt Creator and make money with your gaming content. Your fans never have to jump through hoops to see your latest post, video, or status update.`;
 
 		Meta.fb = {
 			type: 'website',
@@ -136,12 +137,14 @@ const { isBootstrapped, isDestroyed } = createAppRoute({
 		Meta.fb.image = Meta.twitter.image = socialImage;
 	},
 	onResolved({ payload }) {
-		const posts = FiresidePost.populate(payload.posts);
+		const posts = FiresidePostModel.populate(payload.posts);
 
 		creatorPosts.value = posts.sort(() => Math.random() - 0.5);
-		testimonialUsers.value = User.populate(payload.testimonialUsers);
+		testimonialUsers.value = UserModel.populate(payload.testimonialUsers);
 		testimonials.value = payload.testimonials;
-		whyBackground.value = payload.background ? new Background(payload.background) : undefined;
+		whyBackground.value = payload.background
+			? storeModel(BackgroundModel, payload.background)
+			: undefined;
 		applyUrl.value = payload.applyUrl;
 	},
 });
@@ -387,8 +390,8 @@ function getRandomStickers(count = 3) {
 
 						<div>
 							Don't tie yourself down to a single communication format with your fans.
-							Chat, post images, upload videos, livestream and share your status all
-							from your profile.
+							Chat, post images, upload videos and share your status all from your
+							profile.
 						</div>
 					</div>
 				</div>

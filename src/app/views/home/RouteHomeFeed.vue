@@ -4,8 +4,7 @@ import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { Fireside } from '../../../_common/fireside/fireside.model';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import AppInviteCard from '../../../_common/invite/AppInviteCard.vue';
 import {
 	asyncRouteLoader,
@@ -16,21 +15,18 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppStickerChargeCard from '../../../_common/sticker/charge/AppStickerChargeCard.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
-import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
-import { FeaturedItem } from '../../components/featured-item/featured-item.model';
-import { onFiresideStart } from '../../components/grid/client.service';
+import { FeaturedItemModel } from '../../components/featured-item/featured-item.model';
 import { useGridStore } from '../../components/grid/grid-store';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
 import { fetchDailyQuests, useQuestStore } from '../../store/quest';
-import AppHomeFireside from './_fireside/AppHomeFireside.vue';
 import AppHomeFeaturedBanner from './AppHomeFeaturedBanner.vue';
 import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
 import { HOME_FEED_ACTIVITY, HOME_FEED_FYP, HomeFeedService } from './home-feed.service';
@@ -91,17 +87,8 @@ const games = ref<DashGame[]>([]);
 const gameFilterQuery = ref('');
 const isShowingAllGames = ref(false);
 
-const featuredItem = ref<FeaturedItem>();
+const featuredItem = ref<FeaturedItemModel>();
 const isLoadingQuests = ref(true);
-
-const isFiresidesLoading = ref(true);
-const isFiresidesBootstrapped = ref(false);
-const featuredFireside = ref<Fireside>();
-const userFireside = ref<Fireside>();
-const eventFireside = ref<Fireside>();
-const firesides = ref([]) as Ref<Fireside[]>;
-
-let _firesideStartSubscription: EventSubscription | undefined;
 
 const controller = createActivityFeedController();
 provide('route-activity-feed', controller);
@@ -136,7 +123,7 @@ const appRoute = createAppRoute({
 	routeTitle: null,
 	onResolved({ payload }) {
 		featuredItem.value = payload.featuredItem
-			? new FeaturedItem(payload.featuredItem)
+			? new FeaturedItemModel(payload.featuredItem)
 			: undefined;
 
 		games.value = (payload.ownerGames as DashGame[])
@@ -144,16 +131,7 @@ const appRoute = createAppRoute({
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
 			.reverse();
 
-		refreshHomeFiresides();
 		refreshQuests();
-		_firesideStartSubscription = onFiresideStart.subscribe(() => refreshHomeFiresides());
-
-		if (payload.eventFireside) {
-			eventFireside.value = new Fireside(payload.eventFireside);
-		}
-	},
-	onDestroyed() {
-		_firesideStartSubscription?.close();
 	},
 });
 
@@ -176,7 +154,7 @@ function _checkGameFilter(game: DashGame) {
 	return false;
 }
 
-function onPostAdded(post: FiresidePost) {
+function onPostAdded(post: FiresidePostModel) {
 	const feed = controller.feed.value;
 	if (feed) {
 		ActivityFeedService.onPostAdded({
@@ -187,26 +165,6 @@ function onPostAdded(post: FiresidePost) {
 			route,
 		});
 	}
-}
-
-async function refreshHomeFiresides() {
-	isFiresidesLoading.value = true;
-
-	try {
-		const payload = await Api.sendRequest(`/web/fireside/user-list?amount=14`, undefined, {
-			detach: true,
-		});
-		userFireside.value = payload.userFireside ? new Fireside(payload.userFireside) : undefined;
-		firesides.value = payload.firesides ? Fireside.populate(payload.firesides) : [];
-		featuredFireside.value = payload.featuredFireside
-			? new Fireside(payload.featuredFireside)
-			: undefined;
-	} catch (error) {
-		console.error('Failed to refresh fireside data.', error);
-	}
-
-	isFiresidesLoading.value = false;
-	isFiresidesBootstrapped.value = true;
 }
 
 async function refreshQuests() {
@@ -230,6 +188,8 @@ async function refreshQuests() {
 
 						<AppStickerChargeCard
 							header-charge
+							elevate
+							header-spacer-height="6px"
 							allow-fully-charged-text
 							:is-loading="isLoadingCharge"
 						/>
@@ -323,15 +283,6 @@ async function refreshQuests() {
 						<AppHomeFeaturedBanner :featured-item="featuredItem" />
 						<AppSpacer vertical :scale="8" />
 					</template>
-
-					<AppHomeFireside
-						:featured-fireside="featuredFireside"
-						:user-fireside="userFireside"
-						:firesides="firesides"
-						:is-loading="isFiresidesLoading"
-						:show-placeholders="!isFiresidesBootstrapped"
-						@request-refresh="refreshHomeFiresides()"
-					/>
 				</template>
 
 				<AppHomeFeedMenu v-if="Screen.isDesktop" :tabs="tabs" :active-tab="activeFeedTab" />
@@ -344,16 +295,6 @@ async function refreshQuests() {
 						<AppHomeFeaturedBanner :featured-item="featuredItem" />
 						<AppSpacer vertical :scale="4" />
 					</template>
-
-					<AppHomeFireside
-						:user-fireside="userFireside"
-						:firesides="firesides"
-						:is-loading="isFiresidesLoading"
-						:show-placeholders="!isFiresidesBootstrapped"
-						@request-refresh="refreshHomeFiresides()"
-					/>
-
-					<hr class="full-bleed" />
 
 					<AppHomeFeedMenu :tabs="tabs" :active-tab="activeFeedTab" />
 				</template>

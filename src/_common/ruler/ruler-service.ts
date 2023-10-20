@@ -32,24 +32,24 @@ function elementParentOffset(el: HTMLElement) {
 	return offsetParent || document;
 }
 
-export class Ruler {
-	static width(elem: HTMLElement | Document) {
+class RulerService {
+	width(elem: HTMLElement | Document) {
 		return this.dimensions('clientWidth', elem);
 	}
 
-	static height(elem: HTMLElement | Document) {
+	height(elem: HTMLElement | Document) {
 		return this.dimensions('clientHeight', elem);
 	}
 
-	static outerWidth(elem: HTMLElement | Document) {
+	outerWidth(elem: HTMLElement | Document) {
 		return this.dimensions('offsetWidth', elem);
 	}
 
-	static outerHeight(elem: HTMLElement | Document) {
+	outerHeight(elem: HTMLElement | Document) {
 		return this.dimensions('offsetHeight', elem);
 	}
 
-	static position(el: HTMLElement) {
+	position(el: HTMLElement) {
 		const elOffset = this.offset(el);
 		let parentRect = { top: 0, left: 0 };
 		const offsetParentEl = elementParentOffset(el);
@@ -68,7 +68,7 @@ export class Ruler {
 		};
 	}
 
-	static offset(el: HTMLElement) {
+	offset(el: HTMLElement) {
 		const rect = el.getBoundingClientRect();
 		return {
 			width: rect.width || el.offsetWidth,
@@ -78,7 +78,7 @@ export class Ruler {
 		};
 	}
 
-	private static dimensions(
+	private dimensions(
 		baseProp: 'clientWidth' | 'clientHeight' | 'offsetWidth' | 'offsetHeight',
 		_elem: HTMLElement | Document
 	): number {
@@ -126,3 +126,5 @@ export class Ruler {
 		return val;
 	}
 }
+
+export const Ruler = /** @__PURE__ */ new RulerService();

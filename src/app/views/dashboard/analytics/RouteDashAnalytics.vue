@@ -1,16 +1,15 @@
 <script lang="ts">
 import { computed, ComputedRef, onMounted, reactive, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { useResizeObserver } from '../../../../utils/resize-observer';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatCurrency } from '../../../../_common/filters/currency';
 import { formatDate } from '../../../../_common/filters/date';
 import { formatNumber } from '../../../../_common/filters/number';
-import { Game } from '../../../../_common/game/game.model';
-import { GamePackage } from '../../../../_common/game/package/package.model';
-import { GameRelease } from '../../../../_common/game/release/release.model';
+import { GameModel } from '../../../../_common/game/game.model';
+import { GamePackageModel } from '../../../../_common/game/package/package.model';
+import { GameReleaseModel } from '../../../../_common/game/release/release.model';
 import AppGraph from '../../../../_common/graph/AppGraph.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
@@ -23,7 +22,8 @@ import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
+import { useResizeObserver } from '../../../../utils/resize-observer';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
@@ -77,10 +77,10 @@ const route = useRoute();
 
 // We want vue to think there's always a user since it's a requirement for this
 // route.
-const user = ref() as Ref<User>;
-const game = ref<Game>();
-const gamePackage = ref<GamePackage>();
-const release = ref<GameRelease>();
+const user = ref() as Ref<UserModel>;
+const game = ref<GameModel>();
+const gamePackage = ref<GamePackageModel>();
+const release = ref<GameReleaseModel>();
 
 const pageReports = ref<SiteAnalyticsReport[]>([]);
 
@@ -132,10 +132,10 @@ const { isBootstrapped } = createAppRoute({
 			viewAs.value = appUser.value!.id;
 		}
 
-		user.value = new User(payload.user);
-		game.value = payload.game ? new Game(payload.game) : undefined;
-		gamePackage.value = payload.package ? new GamePackage(payload.package) : undefined;
-		release.value = payload.release ? new GameRelease(payload.release) : undefined;
+		user.value = new UserModel(payload.user);
+		game.value = payload.game ? new GameModel(payload.game) : undefined;
+		gamePackage.value = payload.package ? new GamePackageModel(payload.package) : undefined;
+		release.value = payload.release ? new GameReleaseModel(payload.release) : undefined;
 
 		period.value = (route.query['period'] as any) || 'monthly';
 		resource.value = route.params['resource'] as any;

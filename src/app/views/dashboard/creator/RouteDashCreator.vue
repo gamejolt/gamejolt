@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { RouteParamsRaw, RouteRecordName } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import { CreatorExperience } from '../../../../_common/creator/experience/experience.model';
+import { CreatorExperienceModel } from '../../../../_common/creator/experience/experience.model';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
 import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
@@ -22,12 +22,10 @@ import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop
 import { routeLandingCreators } from '../../landing/creators/creators.route';
 import { routeLandingHelpCategory, routeLandingHelpRedirect } from '../../landing/help/help.route';
 import { routeDashAccountBlocks } from '../account/blocks/blocks.route';
-import { routeDashAccountChatCommands } from '../account/chat-commands/chat-commands.route';
-import { routeDashAccountChatTimers } from '../account/chat-timers/chat-timers.route';
 import { routeDashAccountReferrals } from '../account/referrals/referrals.route';
 import { routeDashAccountWallet } from '../account/wallet/wallet.route';
 import { routeDashAnalytics } from '../analytics/analytics.route';
-import { routeDashStickers } from '../stickers/stickers.route';
+import { routeDashShopOverview } from '../shop/overview/overview.route';
 import { routeDashSupporters } from '../supporters/supporters.route';
 
 export default {
@@ -50,20 +48,20 @@ export default {
 };
 
 interface InitPayload {
-	creatorExperience: ModelData<CreatorExperience> | null;
+	creatorExperience: ModelData<CreatorExperienceModel> | null;
 }
 </script>
 
 <script lang="ts" setup>
 const { user } = useCommonStore();
 
-const experience = ref<CreatorExperience | null>(null);
+const experience = ref<CreatorExperienceModel | null>(null);
 
 const { isBootstrapped } = createAppRoute({
 	routeTitle: computed(() => $gettext(`Creator HUD`)),
 	onResolved({ payload }: { payload: InitPayload }) {
 		if (payload.creatorExperience) {
-			experience.value = new CreatorExperience(payload.creatorExperience);
+			experience.value = new CreatorExperienceModel(payload.creatorExperience);
 		} else {
 			experience.value = null;
 		}
@@ -78,6 +76,11 @@ interface Button {
 }
 
 const buttons = computed<Button[]>(() => [
+	{
+		to: routeDashShopOverview.name!,
+		label: $gettext(`Your shop`),
+		icon: 'marketplace-filled',
+	},
 	{
 		to: routeDashSupporters.name!,
 		label: $gettext(`Supporters`),
@@ -98,24 +101,9 @@ const buttons = computed<Button[]>(() => [
 		icon: 'gem',
 	},
 	{
-		to: routeDashStickers.name!,
-		label: $gettext(`Custom stickers`),
-		icon: 'sticker-filled',
-	},
-	{
 		to: routeDashAccountReferrals.name!,
 		label: $gettext(`Referrals`),
 		icon: 'users',
-	},
-	{
-		to: routeDashAccountChatCommands.name!,
-		label: $gettext(`Chat commands`),
-		icon: 'wand',
-	},
-	{
-		to: routeDashAccountChatTimers.name!,
-		label: $gettext(`Chat timers`),
-		icon: 'timer',
 	},
 	{
 		to: routeDashAccountBlocks.name!,

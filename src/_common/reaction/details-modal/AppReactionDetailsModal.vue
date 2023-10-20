@@ -11,7 +11,7 @@ import AppScrollAutoload from '../../scroll/AppScrollAutoload.vue';
 import { kThemeFgMuted } from '../../theme/variables';
 import { $gettext } from '../../translate/translate.service';
 import AppUserList from '../../user/list/AppUserList.vue';
-import { User } from '../../user/user.model';
+import { UserModel } from '../../user/user.model';
 import AppReactionList from '../list/AppReactionList.vue';
 import { ReactionableModel, ReactionCount } from '../reaction-count';
 
@@ -19,7 +19,7 @@ const perPage = 30;
 
 interface ReactionDetailsFeed {
 	reaction: ReactionCount;
-	users: Ref<User[]>;
+	users: Ref<UserModel[]>;
 	page: number;
 	isLoadingMore: Ref<boolean>;
 	isBootstrapped: Ref<boolean>;
@@ -111,7 +111,7 @@ async function bootstrapFeed(feed: ReactionDetailsFeed) {
 		}
 
 		feed.page = newPage;
-		const users = User.populate(response.users);
+		const users = UserModel.populate(response.users);
 		feed.users.value = users;
 
 		if (!users.length) {
@@ -151,7 +151,7 @@ async function loadMore(feed: ReactionDetailsFeed | null) {
 		}
 
 		feed.page = newPage;
-		const users = User.populate(response.users);
+		const users = UserModel.populate(response.users);
 
 		if (!users.length) {
 			feed.reachedEnd.value = true;
@@ -168,7 +168,7 @@ async function loadMore(feed: ReactionDetailsFeed | null) {
 
 function getQueryParamsForFeed(feed: ReactionDetailsFeed, newPage: number) {
 	return [
-		`resource=${model.value.typename__}`,
+		`resource=${model.value.resourceName}`,
 		`resourceId=${model.value.id}`,
 		`emojiId=${feed.reaction.id}`,
 		`page=${newPage}`,

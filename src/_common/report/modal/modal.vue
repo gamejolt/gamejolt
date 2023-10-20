@@ -1,16 +1,16 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppBlockForm from '../../block/form/form.vue';
-import { Comment } from '../../comment/comment-model';
-import { Community } from '../../community/community.model';
-import { Fireside } from '../../fireside/fireside.model';
-import { FiresidePost } from '../../fireside/post/post-model';
-import { ForumPost } from '../../forum/post/post.model';
-import { ForumTopic } from '../../forum/topic/topic.model';
-import { Game } from '../../game/game.model';
+import { CommentModel } from '../../comment/comment-model';
+import { CommunityModel } from '../../community/community.model';
+import { FiresidePostModel } from '../../fireside/post/post-model';
+import { ForumPostModel } from '../../forum/post/post.model';
+import { ForumTopicModel } from '../../forum/topic/topic.model';
+import { GameModel } from '../../game/game.model';
 import { showInfoGrowl } from '../../growls/growls.service';
 import { BaseModal } from '../../modal/base';
-import { User } from '../../user/user.model';
+import { $gettext } from '../../translate/translate.service';
+import { UserModel } from '../../user/user.model';
 import AppReportForm from '../form/form.vue';
 
 @Options({
@@ -21,53 +21,56 @@ import AppReportForm from '../form/form.vue';
 })
 export default class AppReportModal extends mixins(BaseModal) {
 	@Prop(Object)
-	resource!: Comment | User | Game | FiresidePost | ForumTopic | ForumPost | Community | Fireside;
+	resource!:
+		| CommentModel
+		| UserModel
+		| GameModel
+		| FiresidePostModel
+		| ForumTopicModel
+		| ForumPostModel
+		| CommunityModel;
 
 	page: 'report' | 'block' = 'report';
 
 	get type() {
-		if (this.resource instanceof Comment) {
+		if (this.resource instanceof CommentModel) {
 			return 'Comment';
-		} else if (this.resource instanceof User) {
+		} else if (this.resource instanceof UserModel) {
 			return 'User';
-		} else if (this.resource instanceof Game) {
+		} else if (this.resource instanceof GameModel) {
 			return 'Game';
-		} else if (this.resource instanceof FiresidePost) {
+		} else if (this.resource instanceof FiresidePostModel) {
 			return 'Fireside_Post';
-		} else if (this.resource instanceof ForumTopic) {
+		} else if (this.resource instanceof ForumTopicModel) {
 			return 'Forum_Topic';
-		} else if (this.resource instanceof ForumPost) {
+		} else if (this.resource instanceof ForumPostModel) {
 			return 'Forum_Post';
-		} else if (this.resource instanceof Community) {
+		} else if (this.resource instanceof CommunityModel) {
 			return 'Community';
-		} else if (this.resource instanceof Fireside) {
-			return 'Fireside';
 		}
 		return '';
 	}
 
 	get title() {
 		if (this.page === 'block') {
-			return this.$gettext('Block User');
+			return $gettext('Block User');
 		}
 
 		switch (this.type) {
 			case 'Comment':
-				return this.$gettext('Report Comment');
+				return $gettext('Report Comment');
 			case 'Game':
-				return this.$gettext('Report Game');
+				return $gettext('Report Game');
 			case 'Fireside_Post':
-				return this.$gettext('Report Post');
+				return $gettext('Report Post');
 			case 'User':
-				return this.$gettext('Report User');
+				return $gettext('Report User');
 			case 'Forum_Topic':
-				return this.$gettext('Report Topic');
+				return $gettext('Report Topic');
 			case 'Forum_Post':
-				return this.$gettext('Report Post');
+				return $gettext('Report Post');
 			case 'Community':
-				return this.$gettext(`Report Community`);
-			case 'Fireside':
-				return this.$gettext(`Report Fireside`);
+				return $gettext(`Report Community`);
 		}
 
 		return '';
@@ -75,10 +78,10 @@ export default class AppReportModal extends mixins(BaseModal) {
 
 	onSubmittedReport() {
 		showInfoGrowl(
-			this.$gettext(
+			$gettext(
 				`Thanks for helping us make Game Jolt a place for everyone. We will take a look as soon as possible!`
 			),
-			this.$gettext('Reported')
+			$gettext('Reported')
 		);
 
 		if (this.type === 'User') {
@@ -89,12 +92,12 @@ export default class AppReportModal extends mixins(BaseModal) {
 	}
 
 	onSubmittedBlock() {
-		if (this.resource instanceof User) {
+		if (this.resource instanceof UserModel) {
 			showInfoGrowl(
-				this.$gettextInterpolate(`You blocked %{ user }!`, {
+				$gettext(`You blocked %{ user }!`, {
 					user: this.resource.username,
 				}),
-				this.$gettext('Blocked')
+				$gettext('Blocked')
 			);
 		}
 

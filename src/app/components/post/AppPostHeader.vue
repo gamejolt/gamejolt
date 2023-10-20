@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { UserFollowLocation } from '../../../_common/analytics/analytics.service';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
@@ -15,7 +15,7 @@ import { ActivityFeedView } from '../activity/feed/view';
 
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	followLocation: {

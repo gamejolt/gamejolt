@@ -1,17 +1,19 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../../../modal/modal.service';
-import { CommunityCompetition } from '../../competition.model';
-import { CommunityCompetitionEntry } from '../entry.model';
+import { CommunityCompetitionModel } from '../../competition.model';
+import { CommunityCompetitionEntryModel } from '../entry.model';
 
-export class CommunityCompetitionEntrySubmitModal {
-	static async show(competition: CommunityCompetition) {
-		return await showModal<CommunityCompetitionEntry>({
-			modalId: 'CommunityCompetitionEntrySubmit',
-			component: defineAsyncComponent(() => import('./submit-modal.vue')),
-			props: {
-				competition,
-			},
-			size: 'sm',
-		});
-	}
+export async function showCommunityCompetitionEntrySubmitModal(
+	competition: CommunityCompetitionModel
+) {
+	return await showModal<CommunityCompetitionEntryModel>({
+		modalId: 'CommunityCompetitionEntrySubmit',
+		component: defineAsyncComponent(
+			() => import('./AppCommunityCompetitionEntrySubmitModal.vue')
+		),
+		props: {
+			competition,
+		},
+		size: 'sm',
+	});
 }

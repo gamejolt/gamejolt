@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import {
-	FiresidePostEmbed,
+	FiresidePostEmbedModel,
 	TYPE_SKETCHFAB,
 	TYPE_YOUTUBE,
 } from '../../../../../_common/fireside/post/embed/embed.model';
@@ -11,9 +11,9 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/embed.vue';
+import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/AppSketchfabEmbed.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
+import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px` });
 
@@ -29,7 +29,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px`
 	},
 })
 export default class AppFiresidePostEmbed extends Vue {
-	@Prop({ type: Object, required: true }) embed!: FiresidePostEmbed;
+	@Prop({ type: Object, required: true }) embed!: FiresidePostEmbedModel;
 	@Prop({ type: Boolean, default: true }) hideOutview!: boolean;
 
 	readonly InviewConfig = InviewConfig;

@@ -2,13 +2,13 @@
 import { CSSProperties, Ref, onMounted, ref } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
 import { kBorderWidthBase } from '../../../_styles/variables';
-import { illExtremeSadness } from '../../illustration/illustrations';
 import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
 import { formatCurrency } from '../../filters/currency';
 import { formatNumber } from '../../filters/number';
 import { showSuccessGrowl } from '../../growls/growls.service';
 import AppIllustration from '../../illustration/AppIllustration.vue';
+import { illExtremeSadness } from '../../illustration/illustrations';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
@@ -17,17 +17,17 @@ import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import { useCommonStore } from '../../store/common-store';
 import { kThemeFg10 } from '../../theme/variables';
-import { $gettext, $gettextInterpolate } from '../../translate/translate.service';
+import { $gettext } from '../../translate/translate.service';
 import AppMicrotransactionItem from '../AppMicrotransactionItem.vue';
 import AppMicrotransactionPaymentForm from '../payment-form/AppMicrotransactionPaymentForm.vue';
-import { MicrotransactionProduct } from '../product.model';
+import { MicrotransactionProductModel } from '../product.model';
 
 const { joltbuxBalance } = useCommonStore();
 
 const isLoading = ref(true);
 const hasError = ref(false);
-const mtxProducts = ref([]) as Ref<MicrotransactionProduct[]>;
-const selectedProduct = ref(null) as Ref<MicrotransactionProduct | null>;
+const mtxProducts = ref([]) as Ref<MicrotransactionProductModel[]>;
+const selectedProduct = ref(null) as Ref<MicrotransactionProductModel | null>;
 const isProcessingPayment = ref(false);
 
 onMounted(async () => {
@@ -48,9 +48,10 @@ onMounted(async () => {
 
 		if (response.products && Array.isArray(response.products)) {
 			// Only show products that have a valid price.
-			mtxProducts.value = storeModelList(MicrotransactionProduct, response.products).filter(
-				i => !!i.sellable && i.sellable.pricings.length
-			);
+			mtxProducts.value = storeModelList(
+				MicrotransactionProductModel,
+				response.products
+			).filter(i => !!i.sellable && i.sellable.pricings.length);
 		}
 	} catch (e) {
 		console.error('Error loading products', e);
@@ -62,14 +63,14 @@ onMounted(async () => {
 
 const modal = useModal()!;
 
-function onBought(product: MicrotransactionProduct) {
+function onBought(product: MicrotransactionProductModel) {
 	const { product_type: type, product_amount: amount } = product;
 	let message = '';
 
 	if (type === 'joltbux') {
 		if (amount > 0) {
 			joltbuxBalance.value += amount;
-			message = $gettextInterpolate(`%{ amount } Joltbux have been added to your account`, {
+			message = $gettext(`%{ amount } Joltbux have been added to your account`, {
 				amount: formatNumber(amount),
 			});
 		}

@@ -1,34 +1,34 @@
-import { Sellable } from '../../sellable/sellable.model';
-import { GameBuild } from '../build/build.model';
-import { GameBuildLaunchOption } from '../build/launch-option/launch-option.model';
-import { GameExternalPackage } from '../external-package/external-package.model';
-import { GameRelease } from '../release/release.model';
-import { GamePackage } from './package.model';
+import { SellableModel } from '../../sellable/sellable.model';
+import { GameBuildModel } from '../build/build.model';
+import { GameBuildLaunchOptionModel } from '../build/launch-option/launch-option.model';
+import { GameExternalPackageModel } from '../external-package/external-package.model';
+import { GameReleaseModel } from '../release/release.model';
+import { GamePackageModel } from './package.model';
 
 export class GamePackagePayloadModel {
-	packages: GamePackage[];
-	releases: GameRelease[];
-	builds: GameBuild[];
-	launchOptions: GameBuildLaunchOption[];
-	sellables: Sellable[];
-	installableBuilds?: GameBuild[];
-	externalPackages: GameExternalPackage[];
+	packages: GamePackageModel[];
+	releases: GameReleaseModel[];
+	builds: GameBuildModel[];
+	launchOptions: GameBuildLaunchOptionModel[];
+	sellables: SellableModel[];
+	installableBuilds?: GameBuildModel[];
+	externalPackages: GameExternalPackageModel[];
 
 	constructor(payload: any) {
-		this.packages = payload.packages ? GamePackage.populate(payload.packages) : [];
-		this.releases = payload.releases ? GameRelease.populate(payload.releases) : [];
-		this.builds = payload.builds ? GameBuild.populate(payload.builds) : [];
+		this.packages = payload.packages ? GamePackageModel.populate(payload.packages) : [];
+		this.releases = payload.releases ? GameReleaseModel.populate(payload.releases) : [];
+		this.builds = payload.builds ? GameBuildModel.populate(payload.builds) : [];
 		this.launchOptions = payload.launchOptions
-			? GameBuildLaunchOption.populate(payload.launchOptions)
+			? GameBuildLaunchOptionModel.populate(payload.launchOptions)
 			: [];
-		this.sellables = payload.sellables ? Sellable.populate(payload.sellables) : [];
+		this.sellables = payload.sellables ? SellableModel.populate(payload.sellables) : [];
 		this.externalPackages = payload.externalPackages
-			? GameExternalPackage.populate(payload.externalPackages)
+			? GameExternalPackageModel.populate(payload.externalPackages)
 			: [];
 
-		const indexedPackages: { [k: number]: GamePackage } = {};
-		const indexedReleases: { [k: number]: GameRelease } = {};
-		const indexedSellables: { [k: number]: Sellable } = {};
+		const indexedPackages: { [k: number]: GamePackageModel } = {};
+		const indexedReleases: { [k: number]: GameReleaseModel } = {};
+		const indexedSellables: { [k: number]: SellableModel } = {};
 
 		this.packages.forEach(p => (indexedPackages[p.id] = p));
 		this.releases.forEach(r => (indexedReleases[r.id] = r));

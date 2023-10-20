@@ -1,9 +1,13 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { AnchorHTMLAttributes, PropType, computed } from 'vue';
 
 const props = defineProps({
 	targetSelf: {
 		type: Boolean,
+	},
+	href: {
+		type: String as PropType<AnchorHTMLAttributes['href']>,
+		required: true,
 	},
 });
 
@@ -16,7 +20,7 @@ const target = computed(() => {
 </script>
 
 <template>
-	<a rel="nofollow noopener" :target="target">
+	<a rel="nofollow noopener" :target="target" :href="href">
 		<slot />
 	</a>
 </template>

@@ -1,9 +1,10 @@
 import { markRaw, reactive } from 'vue';
 import { objectPick } from '../../../utils/object';
 import { assertNever } from '../../../utils/utils';
-import { Emoji } from '../../emoji/emoji.model';
-import { MediaItem } from '../../media-item/media-item-model';
-import { Theme } from '../../theme/theme.model';
+import { EmojiModel } from '../../emoji/emoji.model';
+import { MediaItemModel } from '../../media-item/media-item-model';
+import { storeModel } from '../../model/model-store.service';
+import { ThemeModel } from '../../theme/theme.model';
 import { ThemeStore } from '../../theme/theme.store';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentHydrationType } from '../content-hydrator';
@@ -47,7 +48,7 @@ export class ContentEditorAppAdapter {
 	controller?: ContentEditorController;
 	initialContent = '';
 	placeholder = '';
-	theme?: Theme;
+	theme?: ThemeModel;
 
 	capabilitiesKey = Math.random();
 
@@ -88,7 +89,7 @@ export class ContentEditorAppAdapter {
 		this.context = context;
 		this.initialContent = initialContent ?? '';
 		this.placeholder = placeholder ?? '';
-		this.theme = theme ? new Theme(theme) : undefined;
+		this.theme = theme ? new ThemeModel(theme) : undefined;
 
 		this.controller = createContentEditor({
 			contentContext: this.context!,
@@ -351,7 +352,7 @@ export class ContentEditorAppAdapterMessage {
 					controller,
 					typeof this.data.emoji === 'string'
 						? this.data.emoji
-						: new Emoji(this.data.emoji)
+						: storeModel(EmojiModel, this.data.emoji)
 				);
 
 			case 'gif':
@@ -382,7 +383,7 @@ export class ContentEditorAppAdapterMessage {
 					return;
 				}
 
-				const mediaItem = new MediaItem(this.data.mediaItem);
+				const mediaItem = new MediaItemModel(this.data.mediaItem);
 				return editorMediaUploadFinalize(uploadTask, mediaItem);
 			}
 

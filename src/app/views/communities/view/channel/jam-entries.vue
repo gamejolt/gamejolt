@@ -2,20 +2,24 @@
 import { Inject, Options, Prop, Watch } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
-import { CommunityCompetitionEntry } from '../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionVotingCategory } from '../../../../../_common/community/competition/voting-category/voting-category.model';
+import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import AppPagination from '../../../../../_common/pagination/pagination.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { vAppNoAutoscroll } from '../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/grid.vue';
 import {
-	CommunityCompetitionEntryModal,
 	CommunityCompetitionEntryModalHashDeregister,
+	showCommunityCompetitionEntryModalIdFromHash,
+	watchCommunityCompetitionEntryModalForHash,
 } from '../../../../components/community/competition/entry/modal/modal.service';
 import {
 	CommunityRouteStore,
@@ -142,15 +146,15 @@ function makeRequest(route: RouteLocationNormalized) {
 		AppNoAutoscroll: vAppNoAutoscroll,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {
 		params: ['path', 'channel'],
 		query: ['sort', 'page', 'category', 'ignore-awards'],
 	},
 	resolver: ({ route }) => makeRequest(route),
 })
-export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComponent {
-	@Prop({ type: Array, required: true }) categories!: CommunityCompetitionVotingCategory[];
+export default class RouteCommunitiesViewChannelJamEntries extends LegacyRouteComponent {
+	@Prop({ type: Array, required: true }) categories!: CommunityCompetitionVotingCategoryModel[];
 
 	@Inject({ from: CommunityRouteStoreKey })
 	routeStore!: CommunityRouteStore;
@@ -158,7 +162,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 	readonly formatNumber = formatNumber;
 	readonly illNoComments = illNoComments;
 
-	entries: CommunityCompetitionEntry[] = [];
+	entries: CommunityCompetitionEntryModel[] = [];
 	perPage = 50;
 	page = 1;
 	sort = 'random';
@@ -283,10 +287,9 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 
 	routeResolved($payload: any) {
 		this.handlePayload($payload);
-
-		CommunityCompetitionEntryModal.showFromHash(this.$router);
+		showCommunityCompetitionEntryModalIdFromHash(this.$router);
 		if (!this.hashWatchDeregister) {
-			this.hashWatchDeregister = CommunityCompetitionEntryModal.watchForHash(this.$router);
+			this.hashWatchDeregister = watchCommunityCompetitionEntryModalForHash(this.$router);
 		}
 	}
 
@@ -328,7 +331,7 @@ export default class RouteCommunitiesViewChannelJamEntries extends BaseRouteComp
 	}
 
 	handlePayload($payload: any) {
-		this.entries = CommunityCompetitionEntry.populate($payload.entries);
+		this.entries = CommunityCompetitionEntryModel.populate($payload.entries);
 		if (this.entries.length > this.competition.entry_count) {
 			this.competition.entry_count = this.entries.length;
 		}

@@ -5,7 +5,6 @@ import AppButton from '../_common/button/AppButton.vue';
 import { AppClientBase, ClientHistoryNavigator } from '../_common/client/safe-exports';
 import { Connection } from '../_common/connection/connection-service';
 import AppContactLink from '../_common/contact-link/AppContactLink.vue';
-import AppCookieBanner from '../_common/cookie/banner/AppCookieBanner.vue';
 import { Environment } from '../_common/environment/environment.service';
 import AppErrorPage from '../_common/error/page/AppErrorPage.vue';
 import { formatDate } from '../_common/filters/date';
@@ -14,7 +13,7 @@ import { useCommonStore } from '../_common/store/common-store';
 import AppTranslate from '../_common/translate/AppTranslate.vue';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
 import AppUserBar from '../_common/user/user-bar/AppUserBar.vue';
-import { User } from '../_common/user/user.model';
+import { touchUser } from '../_common/user/user.model';
 
 const { user } = useCommonStore();
 const curDate = new Date();
@@ -22,7 +21,7 @@ const curDate = new Date();
 onMounted(() => {
 	// Will load the user in asynchronously so that the user-bar in the
 	// shell will get loaded with a user.
-	User.touch();
+	touchUser();
 
 	loadCurrentLanguage();
 });
@@ -34,8 +33,6 @@ function navigateBack() {
 
 <template>
 	<AppCommonShell :class="{ 'is-client-offline': Connection.isClientOffline }">
-		<AppCookieBanner />
-
 		<div id="shell">
 			<div id="header" class="theme-dark">
 				<AppUserBar :user="user">

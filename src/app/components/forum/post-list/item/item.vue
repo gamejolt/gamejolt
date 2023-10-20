@@ -9,15 +9,16 @@ import { Environment } from '../../../../../_common/environment/environment.serv
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatDate } from '../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { ForumPost } from '../../../../../_common/forum/post/post.model';
-import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { ForumPostModel } from '../../../../../_common/forum/post/post.model';
+import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppMessageThread from '../../../../../_common/message-thread/AppMessageThread.vue';
 import AppMessageThreadAdd from '../../../../../_common/message-thread/AppMessageThreadAdd.vue';
 import AppMessageThreadItem from '../../../../../_common/message-thread/AppMessageThreadItem.vue';
+import { $readNotification } from '../../../../../_common/notification/notification-model';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
-import { ReportModal } from '../../../../../_common/report/modal/modal.service';
+import { showReportModal } from '../../../../../_common/report/modal/modal.service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
@@ -47,8 +48,8 @@ const InviewConfig = new ScrollInviewConfig();
 	},
 })
 export default class AppForumPostListItem extends Vue {
-	@Prop(Object) topic!: ForumTopic;
-	@Prop(Object) post!: ForumPost;
+	@Prop(Object) topic!: ForumTopicModel;
+	@Prop(Object) post!: ForumPostModel;
 	@Prop(Boolean) isReply!: boolean;
 	@Prop(Boolean) showReplies!: boolean;
 	@Prop(Boolean) isLastInThread?: boolean;
@@ -63,8 +64,8 @@ export default class AppForumPostListItem extends Vue {
 	isShowingReplies = false;
 
 	showingParent = false;
-	parent: ForumPost | null = null;
-	replies: ForumPost[] = [];
+	parent: ForumPostModel | null = null;
+	replies: ForumPostModel[] = [];
 	totalReplyCount = 0;
 
 	readonly InviewConfig = InviewConfig;
@@ -107,7 +108,7 @@ export default class AppForumPostListItem extends Vue {
 				{ noErrorRedirect: true }
 			);
 
-			this.replies = ForumPost.populate(payload.replies);
+			this.replies = ForumPostModel.populate(payload.replies);
 			this.totalReplyCount = payload.repliesCount || 0;
 
 			if (!this.isShowingReplies) {
@@ -140,7 +141,7 @@ export default class AppForumPostListItem extends Vue {
 					noErrorRedirect: true,
 				}
 			);
-			this.parent = new ForumPost(payload.parent);
+			this.parent = new ForumPostModel(payload.parent);
 			this.showingParent = true;
 		} catch (e) {
 			// The post was probably removed.
@@ -159,13 +160,13 @@ export default class AppForumPostListItem extends Vue {
 	}
 
 	report() {
-		ReportModal.show(this.post);
+		showReportModal(this.post);
 	}
 
 	onInviewChange(isInView: boolean) {
 		if (isInView && this.post.notification) {
 			// Don't wait for success before updating the view.
-			this.post.notification.$read();
+			$readNotification(this.post.notification);
 			this.post.notification = undefined;
 		}
 	}

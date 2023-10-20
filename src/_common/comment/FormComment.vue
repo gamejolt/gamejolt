@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { computed, nextTick, PropType, ref, toRefs } from 'vue';
+import { kFontSizeSmall } from '../../_styles/variables';
 import AppAlertBox from '../alert/AppAlertBox.vue';
 import { trackCommentAdd } from '../analytics/analytics.service';
 import AppButton from '../button/AppButton.vue';
 import { ContentContext, ContextCapabilities } from '../content/content-context';
-import { ContentRules } from '../content/content-editor/content-rules';
-import { FiresidePost } from '../fireside/post/post-model';
+import { ContentRules } from '../content/content-rules';
+import { FiresidePostAllowComments, FiresidePostModel } from '../fireside/post/post-model';
 import AppForm, { createForm, FormController } from '../form-vue/AppForm.vue';
 import AppFormButton from '../form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../form-vue/AppFormControlErrors.vue';
@@ -25,17 +26,16 @@ import AppTranslate from '../translate/AppTranslate.vue';
 import { $gettext } from '../translate/translate.service';
 import {
 	canCommentOnModel,
-	Comment,
 	CommentableModel,
+	CommentModel,
 	getCommentModelResourceName,
+	saveComment,
 } from './comment-model';
 import './comment.styl';
 
-type FormModel = Comment;
-
 const props = defineProps({
 	comment: {
-		type: Object as PropType<Comment>,
+		type: Object as PropType<CommentModel>,
 		default: undefined,
 	},
 	/** The model that the comment is attached to */
@@ -59,7 +59,7 @@ const props = defineProps({
 const { comment, model, parentId, autofocus, placeholder } = toRefs(props);
 
 const emit = defineEmits({
-	submit: (_model: Comment) => true,
+	submit: (_model: CommentModel) => true,
 	'editor-focus': () => true,
 	'editor-blur': () => true,
 	cancel: () => true,
@@ -76,25 +76,31 @@ const loadUrl = computed(() => {
 	}
 });
 
+type FormModel = {
+	id?: CommentModel['id'];
+	comment_content: CommentModel['comment_content'];
+	resource: CommentModel['resource'];
+	resource_id: CommentModel['resource_id'];
+	parent_id: CommentModel['parent_id'];
+};
+
 const form: FormController<FormModel> = createForm({
 	resetOnSubmit: true,
-	modelClass: Comment,
-	model: comment,
 	loadUrl,
 	async onInit() {
-		if (!comment?.value) {
-			form.formModel.comment_content = '';
-			form.formModel.resource = getCommentModelResourceName(model.value);
-			form.formModel.resource_id = model.value.id;
+		const _comment = comment?.value;
 
-			if (parentId?.value) {
-				form.formModel.parent_id = parentId.value;
-			}
+		form.method = _comment ? 'edit' : 'add';
+		form.formModel.id = _comment?.id;
 
-			// Wait for errors, then clear them.
-			await nextTick();
-			form.clearErrors();
-		}
+		form.formModel.comment_content = _comment?.comment_content ?? '';
+		form.formModel.resource = _comment?.resource ?? getCommentModelResourceName(model.value);
+		form.formModel.resource_id = _comment?.resource_id ?? model.value.id;
+		form.formModel.parent_id = _comment?.parent_id ?? parentId?.value;
+
+		// Wait for errors, then clear them.
+		await nextTick();
+		form.clearErrors();
 	},
 	onLoad(payload: any) {
 		lengthLimit.value = payload.lengthLimit;
@@ -102,11 +108,12 @@ const form: FormController<FormModel> = createForm({
 			payload.contentCapabilities
 		);
 	},
-	onSubmitSuccess() {
+	onSubmit: () => saveComment(form.formModel),
+	onSubmitSuccess(savedComment) {
 		if (form.method === 'add') {
 			trackCommentAdd();
 		}
-		emit('submit', form.formModel);
+		emit('submit', savedComment);
 	},
 	onSubmitError() {
 		showErrorGrowl($gettext(`Couldn't add your comment for some reason.`));
@@ -148,11 +155,13 @@ const contentModelId = computed(() => comment?.value?.id);
 const canComment = computed(() => canCommentOnModel(model.value));
 
 /** If the model we're commenting on is a post, this will return it. */
-const postModel = computed(() => (model.value instanceof FiresidePost ? model.value : undefined));
+const postModel = computed(() =>
+	model.value instanceof FiresidePostModel ? model.value : undefined
+);
 
 /** Whether or not only friends can comment */
 const onlyFriends = computed(
-	() => postModel.value?.allow_comments === FiresidePost.ALLOW_COMMENTS_FRIENDS
+	() => postModel.value?.allow_comments === FiresidePostAllowComments.Friends
 );
 </script>
 
@@ -206,11 +215,22 @@ const onlyFriends = computed(
 			<AppFormControlErrors label="comment" />
 		</AppFormGroup>
 
-		<p v-if="shouldShowGuidelines" class="-guidelines">
+		<p
+			v-if="shouldShowGuidelines"
+			:style="{
+				fontSize: kFontSizeSmall.px,
+				marginBottom: `8px`,
+			}"
+		>
 			Remember to be respectful and follow our
 			<AppLinkHelp page="guidelines">Site Guidelines</AppLinkHelp>.
 		</p>
-		<div v-else class="-buttons">
+		<div
+			v-else
+			:style="{
+				textAlign: `right`,
+			}"
+		>
 			<AppButton v-if="form.method === 'edit'" trans @click="emit('cancel')">
 				<AppTranslate>Cancel</AppTranslate>
 			</AppButton>
@@ -224,13 +244,6 @@ const onlyFriends = computed(
 </template>
 
 <style lang="stylus" scoped>
-.-guidelines
-	font-size: $font-size-small
-	margin-bottom: 8px
-
-.-buttons
-	text-align: right
-
 ::v-deep(.form-group)
 	margin-bottom: 8px
 </style>

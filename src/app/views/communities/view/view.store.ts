@@ -1,16 +1,20 @@
 import { RouteLocationNormalized } from 'vue-router';
-import { numberSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
-import { Collaborator } from '../../../../_common/collaborator/collaborator.model';
-import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
 import {
-	Community,
+	$acceptCollaboratorInvite,
+	$removeCollaboratorInvite,
+	CollaboratorModel,
+} from '../../../../_common/collaborator/collaborator.model';
+import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
+import {
+	CommunityModel,
 	CommunityPresetChannelType,
 } from '../../../../_common/community/community.model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { Translate } from '../../../../_common/translate/translate.service';
-import { User } from '../../../../_common/user/user.model';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import { UserModel } from '../../../../_common/user/user.model';
+import { numberSort } from '../../../../utils/array';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
 import { routeCommunitiesViewOverview } from './overview/overview.route';
 
@@ -18,16 +22,16 @@ export const CommunityRouteStoreKey = Symbol('community-route');
 
 export class CommunityRouteStore {
 	isLoaded = false;
-	community: Community = null as any;
-	frontpageChannel: CommunityChannel = null as any;
-	allChannel: CommunityChannel = null as any;
+	community: CommunityModel = null as any;
+	frontpageChannel: CommunityChannelModel = null as any;
+	allChannel: CommunityChannelModel = null as any;
 	channelPath: null | string = null;
 
 	sidebarData: null | CommunitySidebarData = null;
-	collaborator: null | Collaborator = null;
+	collaborator: null | CollaboratorModel = null;
 
 	/** Gets populated when visiting an archived channel (just one) or viewing them in the sidebar/edit section. */
-	archivedChannels: CommunityChannel[] = [];
+	archivedChannels: CommunityChannelModel[] = [];
 	expandedArchivedChannels = false;
 	loadedArchivedChannels = false;
 
@@ -58,7 +62,7 @@ export class CommunityRouteStore {
 	}
 }
 
-export function setCommunity(store: CommunityRouteStore, community: Community) {
+export function setCommunity(store: CommunityRouteStore, community: CommunityModel) {
 	store.isLoaded = true;
 
 	// When the community changes, reset archive channel settings.
@@ -90,12 +94,12 @@ function _updateChannels(store: CommunityRouteStore) {
 		sort: 0,
 		permissions: true,
 	};
-	store.frontpageChannel = new CommunityChannel({
+	store.frontpageChannel = new CommunityChannelModel({
 		title: CommunityPresetChannelType.FEATURED,
 		background: community.featured_background,
 		...commonFields,
 	});
-	store.allChannel = new CommunityChannel({
+	store.allChannel = new CommunityChannelModel({
 		title: CommunityPresetChannelType.ALL,
 		background: community.all_background,
 		...commonFields,
@@ -109,17 +113,17 @@ export function setChannelPathFromRoute(
 	store.channelPath = getChannelPathFromRoute(route);
 }
 
-export function isVirtualChannel(store: CommunityRouteStore, channel: CommunityChannel) {
+export function isVirtualChannel(store: CommunityRouteStore, channel: CommunityChannelModel) {
 	return [store.frontpageChannel, store.allChannel].includes(channel);
 }
 
-export async function acceptCollaboration(store: CommunityRouteStore, currentUser: User) {
+export async function acceptCollaboration(store: CommunityRouteStore, currentUser: UserModel) {
 	const invite = store.collaborator;
 	if (!invite) {
 		return;
 	}
 
-	await invite.$accept();
+	await $acceptCollaboratorInvite(invite);
 	const { community, sidebarData } = store;
 
 	// Accepting the collaboration also automatically follow you to the
@@ -147,7 +151,7 @@ export async function declineCollaboration(store: CommunityRouteStore) {
 		return;
 	}
 
-	await store.collaborator.$remove();
+	await $removeCollaboratorInvite(store.collaborator);
 	store.collaborator = null;
 }
 
@@ -161,8 +165,8 @@ export function getChannelPathFromRoute(route: RouteLocationNormalized) {
 /**
  * Initializes the route metadata for a community page.
  */
-export function setCommunityMeta(community: Community, title: string) {
-	const description = Translate.$gettextInterpolate(
+export function setCommunityMeta(community: CommunityModel, title: string) {
+	const description = $gettext(
 		`Welcome to the %{ name } community on Game Jolt! Discover %{ name } fan art, lets plays and catch up on the latest news and theories!`,
 		{ name: community.name }
 	);
@@ -190,7 +194,7 @@ export async function loadArchivedChannels(store: CommunityRouteStore) {
 		`/web/communities/fetch-archived-channels/` + store.community.path
 	);
 	if (payload.channels) {
-		const channels = CommunityChannel.populate(payload.channels);
+		const channels = CommunityChannelModel.populate(payload.channels);
 
 		// For each retrieved channel, either assign to one that's already in the list
 		// or push. The channel could already be there when it got added through viewing

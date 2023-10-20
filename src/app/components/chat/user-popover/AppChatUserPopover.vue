@@ -1,15 +1,13 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import { Api } from '../../../../_common/api/api.service';
-import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { kThemeDarkest } from '../../../../_common/theme/variables';
-import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleWhen } from '../../../../_styles/mixins';
 import {
 	kBorderWidthLg,
@@ -26,7 +24,7 @@ import {
 	tryGetRoomRole,
 	userCanModerateOtherUser,
 } from '../client';
-import { ChatRoom } from '../room';
+import { ChatRoomModel } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 
@@ -36,7 +34,7 @@ const props = defineProps({
 		required: true,
 	},
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 });
@@ -78,23 +76,6 @@ const canModerate = computed(() => {
 	return userCanModerateOtherUser(room.value, chat.value.currentUser, user.value);
 });
 
-const canChangeModerator = computed(() => {
-	if (!chat.value.currentUser || isRobojolt.value) {
-		return false;
-	}
-	if (!room.value.canElectModerators) {
-		return false;
-	}
-
-	// In public rooms, staff members cannot lose their mod status.
-	if (!room.value.isPrivateRoom && user.value.isStaff) {
-		return false;
-	}
-
-	// Only the owner of the room can promote/demote moderators.
-	return chat.value.currentUser.id === room.value.owner_id;
-});
-
 const canKick = computed(() => {
 	// Cannot kick one of your mods, gotta demote first.
 	if (isModerator.value || isRobojolt.value) {
@@ -118,66 +99,20 @@ function onClickSendMessage() {
 
 async function onClickKick() {
 	const message = canMessage.value
-		? $gettextInterpolate(`Are you sure you want to kick %{ user } from the room?`, {
+		? $gettext(`Are you sure you want to kick %{ user } from the room?`, {
 				user: user.value.display_name,
 		  })
-		: $gettextInterpolate(
+		: $gettext(
 				`Are you sure you want to kick @%{ username } from this room? You're not friends with this user, so you won't be able to invite them back into this room.`,
 				{ username: user.value.username }
 		  );
-	const confirm = await ModalConfirm.show(
+	const confirm = await showModalConfirm(
 		message,
-		$gettextInterpolate(`Kick @%{ username }`, { username: user.value.username })
+		$gettext(`Kick @%{ username }`, { username: user.value.username })
 	);
 
 	if (confirm) {
 		kickGroupMember(chat.value, room.value, user.value.id);
-	}
-}
-
-async function onClickPromoteModerator() {
-	const result = await ModalConfirm.show(
-		$gettextInterpolate(
-			`Do you want to promote @%{ username } to moderator? They will be able to remove messages and kick users from the chat. You can demote them at any time.`,
-			{ username: user.value.username }
-		)
-	);
-
-	if (result) {
-		const payload = await Api.sendRequest(
-			`/web/dash/fireside/chat/promote-moderator/${room.value.id}/${user.value.id}`,
-			{}
-		);
-
-		if (payload.success && payload.role) {
-			showSuccessGrowl(
-				$gettextInterpolate(`@%{ username } has been promoted to moderator.`, {
-					username: user.value.username,
-				})
-			);
-		}
-	}
-}
-
-async function onClickDemoteModerator() {
-	const result = await ModalConfirm.show(
-		$gettextInterpolate(`Do you want to demote @%{ username } to a normal user?`, {
-			username: user.value.username,
-		})
-	);
-
-	if (result) {
-		const payload = await Api.sendRequest(
-			`/web/dash/fireside/chat/demote-moderator/${room.value.id}/${user.value.id}`,
-			{}
-		);
-		if (payload.success && payload.role) {
-			showSuccessGrowl(
-				$gettextInterpolate(`@%{ username } is no longer a moderator.`, {
-					username: user.value.username,
-				})
-			);
-		}
 	}
 }
 
@@ -222,22 +157,29 @@ const styleStatusIcon: CSSProperties = {
 						borderRadius: `50%`,
 					}"
 				>
-					<AppOnHover v-slot="{ binding, hovered }">
-						<AppUserAvatar
-							v-bind="binding"
-							:style="{
-								width: `72px`,
-								height: `72px`,
-								zIndex: 2,
-								transition: `filter 0.1s ease`,
-								...styleWhen(hovered, {
-									filter: `brightness(0.6) contrast(1.1)`,
-								}),
+					<AppOnHover v-slot="{ hoverBinding, hovered }">
+						<AppUserAvatarBubble
+							v-bind="{
+								...hoverBinding,
+								style: [
+									{
+										position: `relative`,
+										zIndex: 2,
+										width: `72px`,
+										height: `72px`,
+										transition: `filter 0.1s ease`,
+									},
+									styleWhen(hovered, {
+										filter: `brightness(0.6) contrast(1.1)`,
+									}),
+								],
 							}"
 							:user="user"
+							show-frame
 						/>
 					</AppOnHover>
 					<div
+						v-if="!user.avatar_frame"
 						:style="{
 							position: `absolute`,
 							top: `-4px`,
@@ -309,30 +251,12 @@ const styleStatusIcon: CSSProperties = {
 				<AppJolticon icon="message" />
 				{{ $gettext(`Send message`) }}
 			</a>
-			<template v-if="canModerate">
-				<template v-if="canChangeModerator">
-					<hr />
-					<template v-if="!isModerator">
-						<a class="list-group-item has-icon" @click="onClickPromoteModerator">
-							<AppJolticon icon="star" />
-							{{ $gettext(`Promote to moderator`) }}
-						</a>
-					</template>
-					<template v-else>
-						<a class="list-group-item has-icon" @click="onClickDemoteModerator">
-							<AppJolticon icon="remove" notice />
-							{{ $gettext(`Demote moderator`) }}
-						</a>
-					</template>
-				</template>
-
-				<template v-if="canKick">
-					<hr />
-					<a class="list-group-item has-icon" @click="onClickKick">
-						<AppJolticon icon="logout" notice />
-						{{ $gettext(`Kick from room`) }}
-					</a>
-				</template>
+			<template v-if="canModerate && canKick">
+				<hr />
+				<a class="list-group-item has-icon" @click="onClickKick">
+					<AppJolticon icon="logout" notice />
+					{{ $gettext(`Kick from room`) }}
+				</a>
 			</template>
 		</div>
 	</div>

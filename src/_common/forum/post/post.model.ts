@@ -1,85 +1,83 @@
 import { Api } from '../../api/api.service';
 import { Environment } from '../../environment/environment.service';
 import { Model } from '../../model/model.service';
-import { Notification } from '../../notification/notification-model';
-import { User } from '../../user/user.model';
-import { ForumTopic } from '../topic/topic.model';
+import { NotificationModel } from '../../notification/notification-model';
+import { UserModel } from '../../user/user.model';
+import { ForumTopicModel } from '../topic/topic.model';
 
-export class ForumPost extends Model {
-	static readonly STATUS_ACTIVE = 'active';
-	static readonly STATUS_SPAM = 'spam';
-	static readonly STATUS_REMOVED = 'removed';
+export const enum ForumPostStatus {
+	Active = 'active',
+	Spam = 'spam',
+	Removed = 'removed',
+}
 
-	user_id!: number;
-	user!: User;
-	topic_id!: number;
-	parent_post_id!: number;
-	status!: string;
-	posted_on!: number;
-	replied_to?: User;
-	replies_count?: number;
-	modified_by?: number;
-	modified_by_user?: User;
-	modified_on?: number;
-
-	text_content!: string;
-
-	notification?: Notification;
-	topic!: ForumTopic;
+export class ForumPostModel extends Model {
+	declare user_id: number;
+	declare user: UserModel;
+	declare topic_id: number;
+	declare parent_post_id: number;
+	declare status: ForumPostStatus;
+	declare posted_on: number;
+	declare replied_to?: UserModel;
+	declare replies_count?: number;
+	declare modified_by?: number;
+	declare modified_by_user?: UserModel;
+	declare modified_on?: number;
+	declare text_content: string;
+	declare notification?: NotificationModel;
+	declare topic: ForumTopicModel;
 
 	// Filled in when saving a reply.
-	reply_to?: number;
+	declare reply_to?: number;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 
 		if (data.replied_to) {
-			this.replied_to = new User(data.replied_to);
+			this.replied_to = new UserModel(data.replied_to);
 		}
 
 		if (data.modified_by_user) {
-			this.modified_by_user = new User(data.modified_by_user);
+			this.modified_by_user = new UserModel(data.modified_by_user);
 		}
 
 		if (data.notification) {
-			this.notification = new Notification(data.notification);
+			this.notification = new NotificationModel(data.notification);
 		}
 
 		if (data.topic) {
-			this.topic = new ForumTopic(data.topic);
+			this.topic = new ForumTopicModel(data.topic);
 		}
-	}
-
-	static async getPostUrl(postId: number) {
-		const response = await Api.sendRequest('/web/forums/posts/get-post-url/' + postId, null, {
-			detach: true,
-		});
-
-		if (!response || response.error) {
-			throw response.error;
-		}
-
-		return response.url;
 	}
 
 	getPermalink() {
 		return Environment.baseUrl + '/x/permalink/forum-post/' + this.id;
 	}
-
-	$save() {
-		const url = '/web/forums/posts/save/' + this.topic_id;
-		let query = '';
-
-		if (this.reply_to) {
-			query = '?reply_to=' + this.reply_to;
-		}
-
-		return this.$_save(url + '/' + this.id + query, 'forumPost');
-	}
 }
 
-Model.create(ForumPost);
+export async function getForumPostUrl(postId: number) {
+	const response = await Api.sendRequest('/web/forums/posts/get-post-url/' + postId, null, {
+		detach: true,
+	});
+
+	if (!response || response.error) {
+		throw response.error;
+	}
+
+	return response.url;
+}
+
+export function $saveForumPost(model: ForumPostModel) {
+	const url = '/web/forums/posts/save/' + model.topic_id;
+	let query = '';
+
+	if (model.reply_to) {
+		query = '?reply_to=' + model.reply_to;
+	}
+
+	return model.$_save(url + '/' + model.id + query, 'forumPost');
+}
