@@ -1,25 +1,27 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType } from 'vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
-import { BaseModal } from '../../../../../_common/modal/base';
+import AppModal from '../../../../../_common/modal/AppModal.vue';
+import { useModal } from '../../../../../_common/modal/modal.service';
 import AppCommunityRemoveChannel from '../AppCommunityRemoveChannel.vue';
 
-@Options({
-	components: {
-		AppCommunityRemoveChannel,
+defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
 	},
-})
-export default class AppCommunityRemoveChannelModal extends mixins(BaseModal) {
-	@Prop(Object)
-	community!: CommunityModel;
+	channel: {
+		type: Object as PropType<CommunityChannelModel>,
+		required: true,
+	},
+});
 
-	@Prop(Object)
-	channel!: CommunityChannelModel;
+const modal = useModal()!;
 
-	onRemoved(postsMovedTo?: CommunityChannelModel) {
-		this.modal.resolve(postsMovedTo || null);
-	}
+function onRemoved(postsMovedTo?: CommunityChannelModel) {
+	modal.resolve(postsMovedTo || null);
 }
 </script>
 
@@ -27,15 +29,13 @@ export default class AppCommunityRemoveChannelModal extends mixins(BaseModal) {
 	<AppModal>
 		<div class="modal-controls">
 			<AppButton @click="modal.dismiss()">
-				<AppTranslate>Close</AppTranslate>
+				{{ $gettext(`Close`) }}
 			</AppButton>
 		</div>
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<AppTranslate :translate-params="{ title: channel.title }">
-					Remove "%{ title }" channel?
-				</AppTranslate>
+				{{ $gettext(`Remove %{ title } channel?`, { title: channel.title }) }}
 			</h2>
 		</div>
 
@@ -43,7 +43,7 @@ export default class AppCommunityRemoveChannelModal extends mixins(BaseModal) {
 			<template v-if="channel.type === 'competition'">
 				<div class="alert">
 					<h4 class="sans-margin-top">
-						<AppTranslate>Removing a Jam Channel</AppTranslate>
+						{{ $gettext(`Removing a Jam Channel`) }}
 					</h4>
 					<p>
 						<span v-translate>
