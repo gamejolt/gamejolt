@@ -1,6 +1,6 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, ref, toRef, toRefs } from 'vue';
+import { useRoute } from 'vue-router';
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import {
 	CommunityCompetitionModel,
@@ -11,135 +11,136 @@ import { CommunityCompetitionEntryVoteModel } from '../../../../../_common/commu
 import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { numberSort } from '../../../../../utils/array';
 import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/cast.vue';
 
-@Options({
-	components: {
-		AppTimeAgo,
-		FormCommunityCompetitionVotingCast,
+const props = defineProps({
+	competition: {
+		type: Object as PropType<CommunityCompetitionModel>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
-		AppAuthRequired: vAppAuthRequired,
+	entry: {
+		type: Object as PropType<CommunityCompetitionEntryModel>,
+		required: true,
 	},
-})
-export default class AppCommunityCompetitionVotingWidget extends Vue {
-	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
-	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntryModel;
-	@Prop({ type: Array, required: true })
-	votingCategories!: CommunityCompetitionVotingCategoryModel[];
-	@Prop({ type: Array, required: true }) userVotes!: CommunityCompetitionEntryVoteModel[];
-	@Prop({ type: Boolean, required: true }) isParticipant!: boolean;
-	@Prop({ type: Boolean, required: true }) isArchived!: boolean;
-	@Prop({ type: Boolean, required: true }) isBlocked!: boolean;
+	votingCategories: {
+		type: Array as PropType<CommunityCompetitionVotingCategoryModel[]>,
+		required: true,
+	},
+	userVotes: {
+		type: Array as PropType<CommunityCompetitionEntryVoteModel[]>,
+		required: true,
+	},
+	isParticipant: {
+		type: Boolean,
+		required: true,
+	},
+	isArchived: {
+		type: Boolean,
+		required: true,
+	},
+	isBlocked: {
+		type: Boolean,
+		required: true,
+	},
+});
 
-	commonStore = setup(() => useCommonStore());
+const { competition, entry, votingCategories, userVotes } = toRefs(props);
 
-	get user() {
-		return this.commonStore.user;
+const { user } = useCommonStore();
+const route = useRoute();
+
+const moreVoteResultInfoVisible = ref(false);
+
+const loginUrl = computed(() => {
+	let url = Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath);
+
+	// Append the current entry modal hash to open it back up if there isn't one on the current url.
+	if (!route.hash) {
+		const entryHash = '#entry-' + entry.value.id;
+		url += encodeURIComponent(entryHash);
 	}
 
-	moreVoteResultInfoVisible = false;
+	return url;
+});
 
-	readonly formatNumber = formatNumber;
+const shouldShow = computed(
+	() =>
+		competition.value.is_voting_enabled &&
+		competition.value.has_community_voting &&
+		competition.value.periodNum >= CompetitionPeriodVoting
+);
 
-	get loginUrl() {
-		let url =
-			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath);
+const votingActive = toRef(() => competition.value.period === 'voting');
 
-		// Append the current entry modal hash to open it back up if there isn't one on the current url.
-		if (!this.$route.hash) {
-			const entryHash = '#entry-' + this.entry.id;
-			url += encodeURIComponent(entryHash);
-		}
+const votingCategoryError = toRef(
+	() => competition.value.voting_type === 'categories' && votingCategories.value.length === 0
+);
 
-		return url;
+const isOwner = toRef(() => entry.value.author.id === user.value?.id);
+
+const hasNoVotes = toRef(() => !entry.value.vote_results || entry.value.vote_results.length === 0);
+
+const overallRank = computed(() => {
+	const overallResult = entry.value.vote_results.find(
+		i => i.community_competition_voting_category_id === null
+	);
+	if (overallResult) {
+		return overallResult.rank;
 	}
 
-	get shouldShow() {
-		return (
-			this.competition.is_voting_enabled &&
-			this.competition.has_community_voting &&
-			this.competition.periodNum >= CompetitionPeriodVoting
+	return 1;
+});
+
+const sortedVoteResults = computed(() => {
+	// Sort the vote results in the same manner as the categories are sorted.
+	const categoryResults = entry.value.vote_results
+		.filter(i => i.community_competition_voting_category_id !== null)
+		.sort((a, b) =>
+			numberSort(
+				votingCategories.value.find(
+					i => i.id === a.community_competition_voting_category_id
+				)!.sort,
+				votingCategories.value.find(
+					i => i.id === b.community_competition_voting_category_id
+				)!.sort
+			)
 		);
+
+	// Put the "overall" result last.
+	const overallResult = entry.value.vote_results.find(
+		i => i.community_competition_voting_category_id === null
+	)!;
+
+	return [...categoryResults, overallResult];
+});
+
+function onClickMoreInfo() {
+	moreVoteResultInfoVisible.value = true;
+}
+
+function getVotingCategoryDisplayName(votingCategoryId: number | null) {
+	if (votingCategoryId === null) {
+		return $gettext(`Overall`);
 	}
 
-	get votingActive() {
-		return this.competition.period === 'voting';
+	const category = votingCategories.value.find(i => i.id === votingCategoryId);
+	if (category) {
+		return category.name;
 	}
 
-	get votingCategoryError() {
-		return this.competition.voting_type === 'categories' && this.votingCategories.length === 0;
-	}
+	return $gettext(`Unknown`);
+}
 
-	get isOwner() {
-		return this.entry.author.id === this.user?.id;
-	}
-
-	get hasNoVotes() {
-		return !this.entry.vote_results || this.entry.vote_results.length === 0;
-	}
-
-	get overallRank() {
-		const overallResult = this.entry.vote_results.find(
-			i => i.community_competition_voting_category_id === null
-		);
-		if (overallResult) {
-			return overallResult.rank;
-		}
-
-		return 1;
-	}
-
-	get sortedVoteResults() {
-		// Sort the vote results in the same manner as the categories are sorted.
-		const categoryResults = this.entry.vote_results
-			.filter(i => i.community_competition_voting_category_id !== null)
-			.sort((a, b) =>
-				numberSort(
-					this.votingCategories.find(
-						i => i.id === a.community_competition_voting_category_id
-					)!.sort,
-					this.votingCategories.find(
-						i => i.id === b.community_competition_voting_category_id
-					)!.sort
-				)
-			);
-
-		// Put the "overall" result last.
-		const overallResult = this.entry.vote_results.find(
-			i => i.community_competition_voting_category_id === null
-		)!;
-
-		return [...categoryResults, overallResult];
-	}
-
-	onClickMoreInfo() {
-		this.moreVoteResultInfoVisible = true;
-	}
-
-	getVotingCategoryDisplayName(votingCategoryId: number | null) {
-		if (votingCategoryId === null) {
-			return this.$gettext(`Overall`);
-		}
-
-		const category = this.votingCategories.find(i => i.id === votingCategoryId);
-		if (category) {
-			return category.name;
-		}
-
-		return this.$gettext(`Unknown`);
-	}
-
-	getVotingCategoryDescription(votingCategoryId: number | null) {
-		const category = this.votingCategories.find(i => i.id === votingCategoryId);
-		if (category) {
-			return category.description;
-		}
+function getVotingCategoryDescription(votingCategoryId: number | null) {
+	const category = votingCategories.value.find(i => i.id === votingCategoryId);
+	if (category) {
+		return category.description;
 	}
 }
 </script>
@@ -147,7 +148,7 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 <template>
 	<div v-if="shouldShow">
 		<template v-if="votingActive">
-			<h3><AppTranslate>Cast Your Vote</AppTranslate></h3>
+			<h3>{{ $gettext(`Cast Your Vote`) }}</h3>
 			<template v-if="!user">
 				<div class="alert">
 					<p>
@@ -184,9 +185,11 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 			<template v-else-if="isOwner">
 				<div class="alert">
 					<p>
-						<AppTranslate>
-							Nice try, my friend, but you can't vote on your own submission!
-						</AppTranslate>
+						{{
+							$gettext(
+								`Nice try, my friend, but you can't vote on your own submission!`
+							)
+						}}
 					</p>
 				</div>
 			</template>
@@ -195,10 +198,12 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 			>
 				<div class="alert">
 					<p>
-						<AppTranslate>
-							Only participants can vote on entries of this jam. To participate,
-							submit an entry to this jam.
-						</AppTranslate>
+						{{
+							$gettext(`
+						Only participants can vote on entries of this jam. To participate,
+						submit an entry to this jam.
+						`)
+						}}
 					</p>
 				</div>
 			</template>
@@ -213,7 +218,7 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 					<p class="help-block">
 						<i>
 							<span>
-								<AppTranslate>The voting period will end in:</AppTranslate>
+								{{ $gettext(`The voting period will end in:`) }}
 								<b>
 									<AppTimeAgo
 										is-future
@@ -224,12 +229,14 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 							</span>
 							<br />
 							<span>
-								<AppTranslate>
+								{{
+									$gettext(`
 									Votes must be cast during the voting period. You can change your
 									vote at any time before then, but after voting has ended, your
 									decision will be finalized. You can vote for as many entries as
 									you wish.
-								</AppTranslate>
+								`)
+								}}
 							</span>
 						</i>
 					</p>
@@ -245,22 +252,26 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 		</template>
 
 		<template v-else>
-			<h3><AppTranslate>Voting Results</AppTranslate></h3>
+			<h3>
+				{{ $gettext(`Voting Results`) }}
+			</h3>
 
 			<template v-if="!competition.are_results_calculated">
 				<p>
-					<AppTranslate>
-						We are currently working on processing the voting results. Check back later
-						to see the final results!
-					</AppTranslate>
+					{{
+						$gettext(`We are currently working on processing the voting results. Check back later
+						to see the final results!`)
+					}}
 				</p>
 			</template>
 			<template v-else-if="hasNoVotes">
 				<p>
-					<AppTranslate>
+					{{
+						$gettext(`
 						Aw, shucks! This entry wasn't voted on during the voting period, which means
 						it has no voting results. You can still check the game out, though!
-					</AppTranslate>
+						`)
+					}}
 				</p>
 			</template>
 			<template v-else>
@@ -285,48 +296,58 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 					</i>
 					<small v-if="!moreVoteResultInfoVisible">
 						[
-						<a @click="onClickMoreInfo"><AppTranslate>more info</AppTranslate></a>
+						<a @click="onClickMoreInfo"> {{ $gettext(`more info`) }}</a>
 						]
 					</small>
 				</p>
 				<template v-if="moreVoteResultInfoVisible">
-					<h4><AppTranslate>How Are Voting Results Calculated?</AppTranslate></h4>
+					<h4>{{ $gettext(`How Are Voting Results Calculated?`) }}</h4>
 					<p>
-						<AppTranslate>
+						{{
+							$gettext(`
 							First, everyone rates entries from 1-5 in one or more categories. The
 							ratings for each category are averaged to calculate a final score.
 							Ratings of "n/a" are not included in the calculations.
-						</AppTranslate>
+						`)
+						}}
 					</p>
 					<p>
-						<AppTranslate>
+						{{
+							$gettext(`
 							When the voting period ends, all scores given by all voters are
 							tabulated to arrive at a weighted average for each entry. The weighted
 							averages determine the entries' overall rankings.
-						</AppTranslate>
+						`)
+						}}
 					</p>
-					<h4><AppTranslate>What's a Weighted Average?</AppTranslate></h4>
+					<h4>
+						{{ $gettext(`What's a Weighted Average?`) }}
+					</h4>
 					<p>
-						<AppTranslate>
-							To arrive at a weighted average for a particular entry, its scores are
+						{{
+							$gettext(`To arrive at a weighted average for a particular entry, its scores are
 							compared to those of every other entry. Higher occurrences of the same
-							score are given more value, or "weight".
-						</AppTranslate>
+							score are given more value, or "weight".`)
+						}}
 					</p>
 					<p>
-						<AppTranslate>
-							The goal is to come up with a projection, based on all available data,
+						{{
+							$gettext(`
+						The goal is to come up with a projection, based on all available data,
 							of the entry's "true average". The more votes an entry has, the more
 							accurate this average will be.
-						</AppTranslate>
+						`)
+						}}
 					</p>
 					<p>
-						<AppTranslate>
+						{{
+							$gettext(`
 							Using weighted averages prevents an entry with a single 5 rating from
 							trumping entries with, for example, several 4 ratings. Similarly, if an
 							entry gets only one low vote and several high ones, its overall score
 							won't be crushed.
-						</AppTranslate>
+						`)
+						}}
 					</p>
 				</template>
 				<div>
@@ -334,13 +355,13 @@ export default class AppCommunityCompetitionVotingWidget extends Vue {
 						<thead>
 							<tr>
 								<th>
-									<AppTranslate>Category</AppTranslate>
+									{{ $gettext(`Category`) }}
 								</th>
 								<th>
-									<AppTranslate>Rank</AppTranslate>
+									{{ $gettext(`Rank`) }}
 								</th>
 								<th>
-									<AppTranslate>Score</AppTranslate>
+									{{ $gettext(`Score`) }}
 								</th>
 							</tr>
 						</thead>

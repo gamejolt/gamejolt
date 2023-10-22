@@ -21,7 +21,7 @@ import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHov
 import AppUserAvatar from '../../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { numberSort } from '../../../../../../utils/array';
 import AppGameBadge from '../../../../game/badge/AppGameBadge.vue';
-import AppCommunityCompetitionVotingWidget from '../../voting/widget.vue';
+import AppCommunityCompetitionVotingWidget from '../../voting/AppCommunityCompetitionVotingWidget.vue';
 
 const props = defineProps({
 	entry: {
