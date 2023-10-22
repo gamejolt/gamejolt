@@ -1,67 +1,66 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, onMounted, ref, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { BaseModal } from '../../../../_common/modal/base';
+import AppModal from '../../../../_common/modal/AppModal.vue';
+import { useModal } from '../../../../_common/modal/modal.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../_common/translate/translate.service';
 
-@Options({
-	components: {
-		AppLoading,
-		AppGameThumbnailImg,
+const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppCommunityLinkGameModal extends mixins(BaseModal) {
-	@Prop({ type: Object, required: true }) community!: CommunityModel;
+});
 
-	page = 1;
-	isLoading = true;
-	lastPage = false;
-	games: GameModel[] = [];
+const { community } = toRefs(props);
+const modal = useModal()!;
+const page = ref(1);
+const isLoading = ref(true);
+const lastPage = ref(false);
+const games = ref<GameModel[]>([]);
 
-	mounted() {
-		this.loadPage();
-	}
+onMounted(() => {
+	loadPage();
+});
 
-	async loadPage() {
-		this.isLoading = true;
+async function loadPage() {
+	isLoading.value = true;
 
-		try {
-			const payload = await Api.sendRequest(
-				'/web/dash/communities/games/list/' + this.community.id + '?page=' + this.page,
-				undefined,
-				{ noErrorRedirect: true }
-			);
+	try {
+		const payload = await Api.sendRequest(
+			'/web/dash/communities/games/list/' + community.value.id + '?page=' + page.value,
+			undefined,
+			{ noErrorRedirect: true }
+		);
 
-			const games = GameModel.populate(payload.games);
-			if (games.length < payload.perPage) {
-				this.lastPage = true;
-			}
-			this.games.push(...games);
-		} catch (error) {
-			console.error(error);
-			showErrorGrowl(this.$gettext(`Failed to load games.`));
-			this.modal.resolve();
+		const games = GameModel.populate(payload.games);
+		if (games.length < payload.perPage) {
+			lastPage.value = true;
 		}
-
-		this.isLoading = false;
+		games.push(...games);
+	} catch (error) {
+		console.error(error);
+		showErrorGrowl($gettext(`Failed to load games.`));
+		modal.resolve();
 	}
 
-	onClickLoadMore() {
-		this.page++;
-		this.loadPage();
-	}
+	isLoading.value = false;
+}
 
-	onClickLink(game: GameModel) {
-		this.modal.resolve(game);
-	}
+function onClickLoadMore() {
+	page.value++;
+	loadPage();
+}
+
+function onClickLink(game: GameModel) {
+	modal.resolve(game);
 }
 </script>
 
@@ -69,12 +68,12 @@ export default class AppCommunityLinkGameModal extends mixins(BaseModal) {
 	<AppModal>
 		<div class="modal-controls">
 			<AppButton @click="modal.dismiss()">
-				<AppTranslate>Close</AppTranslate>
+				{{ $gettext(`Close`) }}
 			</AppButton>
 		</div>
 		<div class="modal-header">
 			<h2 class="modal-title">
-				<AppTranslate>Choose a game to link</AppTranslate>
+				{{ $gettext(`Choose a game to link`) }}
 			</h2>
 		</div>
 		<div class="modal-body">
@@ -92,24 +91,24 @@ export default class AppCommunityLinkGameModal extends mixins(BaseModal) {
 									$gettext(`Unlisted games do not show in the community sidebar.`)
 								"
 							>
-								<AppTranslate>Unlisted</AppTranslate>
+								{{ $gettext(`Unlisted`) }}
 							</span>
 						</div>
 					</div>
 
 					<div class="-game-button">
 						<AppButton primary @click="onClickLink(game)">
-							<AppTranslate>Link</AppTranslate>
+							{{ $gettext(`Link`) }}
 						</AppButton>
 					</div>
 				</div>
 			</template>
 			<div v-else-if="!isLoading" class="page-help">
 				<p>
-					<AppTranslate>
-						You have no more games available to link. Just remember, games can only be
-						linked to a single community.
-					</AppTranslate>
+					{{
+						$gettext(`You have no more games available to link. Just remember, games can only be
+						linked to a single community.`)
+					}}
 				</p>
 			</div>
 
@@ -117,7 +116,7 @@ export default class AppCommunityLinkGameModal extends mixins(BaseModal) {
 			<template v-else-if="!lastPage">
 				<div class="page-cut">
 					<AppButton @click="onClickLoadMore">
-						<AppTranslate>Load More</AppTranslate>
+						{{ $gettext(`Load More`) }}
 					</AppButton>
 				</div>
 			</template>
