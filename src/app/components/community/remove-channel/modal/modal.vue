@@ -3,7 +3,7 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../_common/modal/base';
-import AppCommunityRemoveChannel from '../remove-channel.vue';
+import AppCommunityRemoveChannel from '../AppCommunityRemoveChannel.vue';
 
 @Options({
 	components: {
