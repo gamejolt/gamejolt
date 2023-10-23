@@ -17,7 +17,7 @@ import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
 import { useAppStore } from '../../../../store';
-import AppBlockedNotice from '../_blocked-notice/blocked-notice.vue';
+import AppBlockedNotice from '../_blocked-notice/AppBlockedNotice.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
 
 @Options({
