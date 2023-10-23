@@ -2,8 +2,8 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../_common/modal/base';
+import AppCommunitySidebar from '../AppCommunitySidebar.vue';
 import { CommunitySidebarData } from '../sidebar-data';
-import AppCommunitySidebar from '../sidebar.vue';
 
 @Options({
 	components: {

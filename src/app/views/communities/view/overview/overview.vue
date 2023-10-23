@@ -12,7 +12,7 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
+import AppCommunitySidebar from '../../../../components/community/sidebar/AppCommunitySidebar.vue';
 import { useGridStore } from '../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../store/index';
 import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
