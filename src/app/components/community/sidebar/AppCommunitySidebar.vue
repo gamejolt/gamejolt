@@ -71,10 +71,6 @@ const shouldShowKnownMembers = computed(
 		!!user.value && sidebarData.value.knownMembers && sidebarData.value.knownMembers.length > 0
 );
 
-// TODO(component-setup-refactor): why is this marked as error,
-// the membersYouKnowCount is being used in the template
-const membersYouKnowCount = computed(() => formatNumber(sidebarData.value.knownMemberCount));
-
 const shareUrl = computed(() => {
 	return getAbsoluteLink(router, community.value.routeLocation);
 });
@@ -166,8 +162,14 @@ function onClickReport() {
 	<div>
 		<div v-if="shouldShowKnownMembers">
 			<h5 class="section-header">
-				$ngettext( `1 member you know`, `%{ count } members you know`, membersYouKnowCount,
-				{ count: membersYouKnowCount } )
+				{{
+					$ngettext(
+						`1 member you know`,
+						`%{ count } members you know`,
+						sidebarData.knownMemberCount,
+						{ count: formatNumber(sidebarData.knownMemberCount) }
+					)
+				}}
 			</h5>
 			<AppUserAvatarList :users="sidebarData.knownMembers" />
 			<br />
