@@ -72,7 +72,7 @@ interface Section {
 	title: string;
 	description: string;
 	sort: number;
-	items: { product: InventoryShopProductSaleModel; sort: number }[];
+	sales: InventoryShopProductSaleModel[];
 }
 
 const props = defineProps({
@@ -97,8 +97,8 @@ const productProcessing = ref<number>();
 
 const hasProducts = computed(() => {
 	const data = sections.value.values();
-	for (const { items } of data) {
-		if (items.length > 0) {
+	for (const { sales } of data) {
+		if (sales.length > 0) {
 			return true;
 		}
 	}
@@ -144,46 +144,56 @@ async function init() {
 			: [];
 
 		const newSections: typeof sections.value = new Map();
+		const validSales: InventoryShopProductSaleModel[] = [];
 		const unsupportedItems: InventoryShopProductSaleModel[] = [];
 		const sectionItems = storeModelList(InventoryShopSectionModel, payload.sections);
 
-		for (const product of sales) {
-			if (!product.stickerPack && !product.avatarFrame && !product.background) {
-				unsupportedItems.push(product);
+		// Prune the sales to only supported ones.
+		for (const idx in sales) {
+			const sale = sales[idx];
+			if (!sale.stickerPack && !sale.avatarFrame && !sale.background) {
+				unsupportedItems.push(sale);
 				continue;
 			}
-
-			let sort: number | undefined = undefined;
-			const sectionData = sectionItems.find(section => {
-				const item = section.resource.items.find(item => item.sale_id === product.id);
-				if (item) {
-					sort = item.sort;
-					return true;
-				}
-				return false;
-			});
-
-			const id = sectionData?.id ?? -1;
-			let section = newSections.get(id);
-			if (!section) {
-				section = {
-					title: sectionData?.title || 'Shop',
-					description: sectionData?.description || '',
-					sort: sectionData?.sort ?? 1000,
-					items: [],
-				};
-			}
-			section.items.push({ product: product, sort: sort ?? 1000 });
-			newSections.set(id, section);
+			validSales.push(sale);
 		}
 
-		// Sort both sections and their items by their sort values.
-		const sortedSections: [number, Section][] = [...newSections]
-			.sort(([, a], [, b]) => numberSort(a.sort, b.sort))
-			.map(data => {
-				data[1].items.sort((a, b) => numberSort(a.sort, b.sort));
-				return data;
-			});
+		// Populate the section data objects with their sales.
+		for (const sectionItem of sectionItems) {
+			const sectionData: Section = {
+				title: sectionItem?.title || 'Shop',
+				description: sectionItem?.description || '',
+				sort: sectionItem?.sort ?? 1000,
+				sales: [],
+			};
+
+			if (sectionItem.item_list) {
+				for (const saleId of sectionItem.item_list.sale_ids) {
+					const sale = validSales.find(x => x.id == saleId);
+					if (!sale) {
+						if (unsupportedItems.find(x => x.id == saleId)) {
+							console.warn(
+								`Item list referenced a sale (id: ${saleId}) that is not a supported type of sale.`
+							);
+						} else {
+							console.warn(
+								`Item list referenced a sale (id: ${saleId}) that is not present in the 'sales' field.`
+							);
+						}
+						continue;
+					}
+					sectionData.sales.push(sale);
+				}
+				newSections.set(sectionItem.id, sectionData);
+			} else {
+				console.warn(`Unsupported section type for section ${sectionItem.id}`);
+			}
+		}
+
+		// Sort the sections by their sort value.
+		const sortedSections: [number, Section][] = [...newSections].sort(([, a], [, b]) =>
+			numberSort(a.sort, b.sort)
+		);
 
 		sections.value = new Map(sortedSections);
 
@@ -537,7 +547,7 @@ const currencyCardTransitionStyles: CSSProperties = {
 							<template v-else-if="hasProducts">
 								<template v-for="[id, section] in sections" :key="id">
 									<div
-										v-if="section.items.length"
+										v-if="section.sales.length"
 										class="fill-offset"
 										:style="{
 											...styleBorderRadiusLg,
@@ -576,12 +586,9 @@ const currencyCardTransitionStyles: CSSProperties = {
 										</h2>
 
 										<div class="_items">
-											<template
-												v-for="{ product } in section.items"
-												:key="product.id"
-											>
+											<template v-for="sale in section.sales" :key="sale.id">
 												<AppVendingMachineProduct
-													:shop-product="product"
+													:shop-product="sale"
 													:disable-purchases="!!productProcessing"
 													@purchase="purchaseProduct($event)"
 												/>

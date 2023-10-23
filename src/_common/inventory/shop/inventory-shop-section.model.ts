@@ -5,20 +5,14 @@ export class InventoryShopSectionModel implements ModelStoreModel {
 	declare title: string;
 	declare description: string;
 	declare sort: number;
-	declare resource: ShopSectionInterface;
+	declare item_list: ShopSectionItemList | undefined;
 
 	update(data: any) {
 		Object.assign(this, data);
 	}
 }
 
-interface ShopSectionInterface {
+interface ShopSectionItemList {
 	id: number;
-	items: ShopSectionItem[];
-}
-
-interface ShopSectionItem {
-	id: number;
-	sale_id: number;
-	sort: number;
+	sale_ids: number[];
 }
