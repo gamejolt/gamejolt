@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, computed, onMounted, ref, toRefs } from 'vue';
+import { CSSProperties, Ref, computed, onMounted, ref, toRefs } from 'vue';
 import { trackShopView } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -69,6 +69,7 @@ import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
 import imageVance from './vance.png';
 
 interface Section {
+	id: number;
 	title: string;
 	description: string;
 	sort: number;
@@ -90,7 +91,7 @@ const { coinBalance, joltbuxBalance } = useCommonStore();
 const modal = useModal()!;
 
 const shopOwner = ref<UserModel>();
-const sections = ref(new Map<number, Section>());
+const sections = ref([]) as Ref<Section[]>;
 
 const isLoading = ref(false);
 const productProcessing = ref<number>();
@@ -143,7 +144,7 @@ async function init() {
 			? storeModelList(InventoryShopProductSaleModel, payload.sales)
 			: [];
 
-		const newSections: typeof sections.value = new Map();
+		const newSections: typeof sections.value = [];
 		const validSales = new Map<number, InventoryShopProductSaleModel>();
 		const unsupportedSales = new Map<number, InventoryShopProductSaleModel>();
 		const sectionItems = storeModelList(InventoryShopSectionModel, payload.sections);
@@ -161,6 +162,7 @@ async function init() {
 		// Populate the section data objects with their sales.
 		for (const sectionModel of sectionItems) {
 			const section: Section = {
+				id: sectionModel.id,
 				title: sectionModel.title,
 				description: sectionModel.description,
 				sort: sectionModel.sort,
@@ -168,8 +170,13 @@ async function init() {
 			};
 
 			if (sectionModel.item_list) {
+				// Loop through the sale IDs and grab any matching valid sales.
+				// The IDs are already sorted in the order the sales are meant
+				// to be displayed.
 				for (const saleId of sectionModel.item_list.sale_ids) {
 					const sale = validSales.get(saleId);
+					// Skip this section and log a warning if we don't have a
+					// valid sale with this ID.
 					if (!sale) {
 						if (unsupportedSales.has(saleId)) {
 							console.warn(
@@ -184,21 +191,25 @@ async function init() {
 					}
 					section.sales.push(sale);
 				}
-				newSections.set(sectionModel.id, section);
+
+				// Only add the section if it has sales.
+				if (section.sales.length > 0) {
+					newSections.push(section);
+				}
 			} else {
 				console.warn(`Unsupported section type for section ${sectionModel.id}`);
 			}
 		}
 
-		// Sort the sections by their sort value.
-		const sortedSections: [number, Section][] = [...newSections].sort(([, a], [, b]) =>
-			numberSort(a.sort, b.sort)
-		);
+		// Sort the sections by their sort value. Sale items within the sections
+		// are already pre-sorted.
+		sections.value = newSections.sort((a, b) => numberSort(a.sort, b.sort));
 
-		sections.value = new Map(sortedSections);
-
-		if (payload.shopOwner) {
-			shopOwner.value = payload.shopOwner;
+		// Assign to our existing shopOwner or create a new one if available.
+		if (shopOwner.value && payload.shopOwner) {
+			shopOwner.value.assign(payload.shopOwner);
+		} else {
+			shopOwner.value = payload.shopOwner ? new UserModel(payload.shopOwner) : undefined;
 		}
 
 		const mePayload = p[1];
@@ -545,7 +556,7 @@ const currencyCardTransitionStyles: CSSProperties = {
 								</div>
 							</div>
 							<template v-else-if="hasProducts">
-								<template v-for="[id, section] in sections" :key="id">
+								<template v-for="section in sections" :key="section.id">
 									<div
 										v-if="section.sales.length"
 										class="fill-offset"
@@ -559,7 +570,7 @@ const currencyCardTransitionStyles: CSSProperties = {
 										}"
 									>
 										<h2
-											v-if="sections.size > 1"
+											v-if="sections.length > 1"
 											:style="{
 												display: `flex`,
 												alignItems: `center`,
