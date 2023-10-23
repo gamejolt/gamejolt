@@ -144,34 +144,34 @@ async function init() {
 			: [];
 
 		const newSections: typeof sections.value = new Map();
-		const validSales: InventoryShopProductSaleModel[] = [];
-		const unsupportedItems: InventoryShopProductSaleModel[] = [];
+		const validSales = new Map<number, InventoryShopProductSaleModel>();
+		const unsupportedSales = new Map<number, InventoryShopProductSaleModel>();
 		const sectionItems = storeModelList(InventoryShopSectionModel, payload.sections);
 
 		// Prune the sales to only supported ones.
 		for (const idx in sales) {
 			const sale = sales[idx];
 			if (!sale.stickerPack && !sale.avatarFrame && !sale.background) {
-				unsupportedItems.push(sale);
+				unsupportedSales.set(sale.id, sale);
 				continue;
 			}
-			validSales.push(sale);
+			validSales.set(sale.id, sale);
 		}
 
 		// Populate the section data objects with their sales.
-		for (const sectionItem of sectionItems) {
-			const sectionData: Section = {
-				title: sectionItem?.title || 'Shop',
-				description: sectionItem?.description || '',
-				sort: sectionItem?.sort ?? 1000,
+		for (const sectionModel of sectionItems) {
+			const section: Section = {
+				title: sectionModel.title,
+				description: sectionModel.description,
+				sort: sectionModel.sort,
 				sales: [],
 			};
 
-			if (sectionItem.item_list) {
-				for (const saleId of sectionItem.item_list.sale_ids) {
-					const sale = validSales.find(x => x.id == saleId);
+			if (sectionModel.item_list) {
+				for (const saleId of sectionModel.item_list.sale_ids) {
+					const sale = validSales.get(saleId);
 					if (!sale) {
-						if (unsupportedItems.find(x => x.id == saleId)) {
+						if (unsupportedSales.has(saleId)) {
 							console.warn(
 								`Item list referenced a sale (id: ${saleId}) that is not a supported type of sale.`
 							);
@@ -182,11 +182,11 @@ async function init() {
 						}
 						continue;
 					}
-					sectionData.sales.push(sale);
+					section.sales.push(sale);
 				}
-				newSections.set(sectionItem.id, sectionData);
+				newSections.set(sectionModel.id, section);
 			} else {
-				console.warn(`Unsupported section type for section ${sectionItem.id}`);
+				console.warn(`Unsupported section type for section ${sectionModel.id}`);
 			}
 		}
 
