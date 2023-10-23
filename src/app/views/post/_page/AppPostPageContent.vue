@@ -18,7 +18,7 @@ import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowBu
 import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleOverlayTextShadow, styleWhen } from '../../../../_styles/mixins';
 import { arrayRemove } from '../../../../utils/array';
-import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
+import AppCommunityUserNotification from '../../../components/community/user-notification/AppCommunityUserNotification.vue';
 import AppGameBadge from '../../../components/game/badge/AppGameBadge.vue';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPostContent from '../../../components/post/AppPostContent.vue';

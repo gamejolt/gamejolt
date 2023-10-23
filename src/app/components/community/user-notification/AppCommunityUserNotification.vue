@@ -1,5 +1,5 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, toRefs } from 'vue';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
@@ -8,65 +8,62 @@ import {
 	CommunityUserNotificationType,
 } from '../../../../_common/community/user-notification/user-notification.model';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import {
 	getCommunityEjectPostReasons,
 	getCommunityMovePostReasons,
 } from '../../../../_common/user/action-reasons';
 
-@Options({
-	components: {
-		AppCommunityThumbnailImg,
-		AppAlertDismissable,
-		AppTimeAgo,
+const props = defineProps({
+	notification: {
+		type: Object as PropType<CommunityUserNotificationModel>,
+		required: true,
 	},
-})
-export default class AppCommunityUserNotification extends Vue {
-	@Prop({ type: Object, required: true }) notification!: CommunityUserNotificationModel;
+});
 
-	@Emit('dismiss')
-	emitDismiss() {}
+const emit = defineEmits({
+	dismiss: () => true,
+});
 
-	readonly TypePostsEject = CommunityUserNotificationType.POSTS_EJECT;
-	readonly TypePostsMove = CommunityUserNotificationType.POSTS_MOVE;
+const { notification } = toRefs(props);
 
-	get notificationReasons() {
-		switch (this.notification.type) {
-			case CommunityUserNotificationType.POSTS_MOVE:
-				return getCommunityMovePostReasons();
-			case CommunityUserNotificationType.POSTS_EJECT:
-				return getCommunityEjectPostReasons();
-		}
-
-		throw new Error('No reasons defined.');
+const notificationReasons = computed(() => {
+	switch (notification.value.type) {
+		case CommunityUserNotificationType.POSTS_MOVE:
+			return getCommunityMovePostReasons();
+		case CommunityUserNotificationType.POSTS_EJECT:
+			return getCommunityEjectPostReasons();
 	}
 
-	get hasReason() {
-		return this.notification.reason !== null;
+	throw new Error('No reasons defined.');
+});
+
+const hasReason = computed(() => notification.value.reason !== null);
+
+const reasonText = computed(() => {
+	const reason = notification.value.reason;
+	if (reason === null) {
+		return null;
 	}
 
-	get reasonText() {
-		const reason = this.notification.reason;
-		if (reason === null) {
-			return null;
-		}
-
-		const reasons = this.notificationReasons;
-		if (reasons[reason]) {
-			return reasons[reason];
-		}
-		return reason;
+	const reasons = notificationReasons.value;
+	if (reasons[reason]) {
+		return reasons[reason];
 	}
+	return reason;
+});
 
-	onDismiss() {
-		// Hope it succeeds, but don't wait on it.
-		$removeCommunityUserNotification(this.notification);
-		this.emitDismiss();
-	}
+function onDismiss() {
+	// Hope it succeeds, but don't wait on it.
+	$removeCommunityUserNotification(notification.value);
+	emit('dismiss');
 }
 </script>
 
 <template>
+	<!--TODO(component-setup-refactor): adding alert-type 'info' to AppAlertDismissable-->
 	<AppAlertDismissable
+		alert-type="info"
 		class="-notification"
 		no-margin
 		:dismiss-tooltip="$gettext(`Dismiss`)"
@@ -83,7 +80,7 @@ export default class AppCommunityUserNotification extends Vue {
 
 		<div class="-message">
 			<div>
-				<template v-if="notification.type === TypePostsMove">
+				<template v-if="notification.type === CommunityUserNotificationType.POSTS_MOVE">
 					<span
 						v-translate="{
 							fromChannel: notification.extra_data['from-channel'],
@@ -94,13 +91,17 @@ export default class AppCommunityUserNotification extends Vue {
 						the <i>%{ toChannel }</i> channel.
 					</span>
 				</template>
-				<template v-else-if="notification.type === TypePostsEject">
+				<template
+					v-else-if="notification.type === CommunityUserNotificationType.POSTS_EJECT"
+				>
 					<span v-translate>Your post has been <b>ejected</b> from the community.</span>
 				</template>
 			</div>
 
 			<template v-if="hasReason">
-				<div><AppTranslate>The reason for this action is as follows:</AppTranslate></div>
+				<div>
+					{{ $gettext(`The reason for this action is as follows:`) }}
+				</div>
 				<div class="-reason">
 					<em>
 						<strong>
