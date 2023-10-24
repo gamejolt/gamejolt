@@ -1,25 +1,25 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { toRef, useSlots } from 'vue';
 import './item-content.styl';
 
-@Options({})
-export default class AppTimelineListItem extends Vue {
-	@Prop(Boolean)
-	isActive?: boolean;
+defineProps({
+	isActive: {
+		type: Boolean,
+	},
+	isNew: {
+		type: Boolean,
+	},
+	isThread: {
+		type: Boolean,
+	},
+	isLast: {
+		type: Boolean,
+	},
+});
 
-	@Prop(Boolean)
-	isNew?: boolean;
+const slots = useSlots();
 
-	@Prop(Boolean)
-	isThread?: boolean;
-
-	@Prop(Boolean)
-	isLast?: boolean;
-
-	get hasBubble() {
-		return !!this.$slots.bubble;
-	}
-}
+const hasBubble = toRef(() => !!slots.bubble);
 </script>
 
 <template>
