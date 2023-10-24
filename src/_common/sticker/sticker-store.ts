@@ -82,34 +82,37 @@ export function createStickerStore(options: { user: Ref<UserModel | null> }) {
 
 	const activeLayer = shallowRef<StickerLayerController | null>(null);
 
-	const shouldShowCharge = computed(() => isLayerOrTargetCreatorResource.value);
+	const shouldShowCharge = computed(() => isLayerOrTargetChargeableResource.value);
 
 	function _isTargetMine(controller: StickerTargetController): boolean {
 		return isStickerTargetMine(c, controller);
 	}
 
 	/// Checks the [AppStickerTargetController] of either our [activeLayer] or
-	/// [placedSticker] to determine if we're placing on the resource of a
-	/// [UserModel] that is a creator.
+	/// [placedSticker] to determine if the resource can receive charged
+	/// stickers.
 	///
 	/// Returns `false` if this is our own resource (can't place charged
 	/// stickers on your own content.)
-	const isLayerOrTargetCreatorResource = computed(() => {
+	const isLayerOrTargetChargeableResource = computed(() => {
 		const layer = activeLayer.value;
 		if (!layer) {
 			return false;
 		}
 
 		if (targetController.value) {
-			return targetController.value.isCreator.value && !_isTargetMine(targetController.value);
+			return (
+				targetController.value.canReceiveCharge.value &&
+				!_isTargetMine(targetController.value)
+			);
 		}
 
-		return layer.isAllCreator.value;
+		return layer.canChargeAllTargets.value;
 	});
 
 	const canChargeSticker = computed(() => currentCharge.value >= chargeLimit.value);
 	const canPlaceChargedStickerOnResource = computed(
-		() => canChargeSticker.value && isLayerOrTargetCreatorResource.value
+		() => canChargeSticker.value && isLayerOrTargetChargeableResource.value
 	);
 
 	function setChargeData({
@@ -163,7 +166,7 @@ export function createStickerStore(options: { user: Ref<UserModel | null> }) {
 		_updateGhostPosition,
 		activeLayer,
 		shouldShowCharge,
-		isLayerOrTargetCreatorResource,
+		isLayerOrTargetChargeableResource,
 		canChargeSticker,
 		canPlaceChargedStickerOnResource,
 		setChargeData,

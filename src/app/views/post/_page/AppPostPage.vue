@@ -60,7 +60,7 @@ const router = useRouter();
 
 const stickerTargetController = shallowRef<StickerTargetController>(
 	createStickerTargetController(post.value, {
-		isCreator: computed(() => post.value.displayUser.is_creator === true),
+		canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
 	})
 );
 
@@ -98,7 +98,7 @@ watch(
 	() => post.value.id,
 	() => {
 		stickerTargetController.value = createStickerTargetController(post.value, {
-			isCreator: computed(() => post.value.displayUser.is_creator === true),
+			canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
 		});
 	}
 );

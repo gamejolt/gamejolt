@@ -111,7 +111,7 @@ function quit() {
 
 				<div class="-quick-actions">
 					<RouterLink
-						v-if="user.is_creator"
+						v-if="user.is_creator || user.is_brand"
 						class="-quick-action"
 						:to="{ name: routeDashCreator.name }"
 					>

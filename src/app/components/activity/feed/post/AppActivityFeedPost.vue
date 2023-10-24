@@ -59,7 +59,7 @@ const eventItem = computed(() => item.value.feedItem as EventItemModel);
 const post = computed(() => eventItem.value.action as FiresidePostModel);
 
 const stickerTargetController = createStickerTargetController(post.value, {
-	isCreator: computed(() => user.value.is_creator === true),
+	canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
 });
 
 provideStickerTargetController(stickerTargetController);
