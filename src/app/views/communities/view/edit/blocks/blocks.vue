@@ -5,7 +5,7 @@ import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import AppPagination from '../../../../../../_common/pagination/pagination.vue';
+import AppPagination from '../../../../../../_common/pagination/AppPagination.vue';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,

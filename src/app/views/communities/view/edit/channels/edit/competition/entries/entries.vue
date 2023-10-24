@@ -3,23 +3,23 @@ import { Inject, Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import {
-	CompetitionPeriodPreComp,
-	CompetitionPeriodVoting,
+CompetitionPeriodPreComp,
+CompetitionPeriodVoting,
 } from '../../../../../../../../../_common/community/competition/competition.model';
 import {
-	$hideCommunityCompetitionEntry,
-	$unhideCommunityCompetitionEntry,
-	CommunityCompetitionEntryModel,
+$hideCommunityCompetitionEntry,
+$unhideCommunityCompetitionEntry,
+CommunityCompetitionEntryModel,
 } from '../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../../../../../../_common/illustration/illustrations';
 import AppLoading from '../../../../../../../../../_common/loading/AppLoading.vue';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
-import AppPagination from '../../../../../../../../../_common/pagination/pagination.vue';
+import AppPagination from '../../../../../../../../../_common/pagination/AppPagination.vue';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
+LegacyRouteComponent,
+OptionsForLegacyRoute,
 } from '../../../../../../../../../_common/route/legacy-route-component';
 import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';

@@ -1,17 +1,17 @@
 <script lang="ts">
 import { computed, inject, InjectionKey, provide, ref } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
-import { getQuery } from '../../../utils/router';
 import AppExpand from '../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../_common/filters/number';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Meta } from '../../../_common/meta/meta-service';
-import AppPagination from '../../../_common/pagination/pagination.vue';
+import AppPagination from '../../../_common/pagination/AppPagination.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { Scroll } from '../../../_common/scroll/scroll.service';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { getQuery } from '../../../utils/router';
 import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
 import AppSearch from '../../components/search/AppSearch.vue';
 import { Search, SearchPayload } from '../../components/search/search-service';

@@ -7,7 +7,7 @@ import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments } from '../../../../../_common/illustration/illustrations';
-import AppPagination from '../../../../../_common/pagination/pagination.vue';
+import AppPagination from '../../../../../_common/pagination/AppPagination.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import {
 	LegacyRouteComponent,

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { toRef, toRefs } from 'vue';
-import AppPagination from '../../pagination/pagination.vue';
+import AppPagination from '../../pagination/AppPagination.vue';
 import AppTimelineListItem from '../../timeline-list/item/AppTimelineListItem.vue';
 
 const props = defineProps({
