@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineAsyncComponent } from 'vue';
-import { RouteLocationNormalized, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../_common/growls/growls.service';
@@ -21,17 +21,6 @@ const RouteHomeFeed = defineAsyncComponent(() =>
 const RouteDiscoverHome = defineAsyncComponent(() =>
 	asyncRouteLoader(router, import('../discover/home/RouteDiscoverHome.vue'))
 );
-
-/**
- * Returns the current analytics path we have assigned.
- */
-export function getCurrentHomeRouteAnalyticsPath(route: RouteLocationNormalized) {
-	const path = route.meta.analyticsPath;
-	if (path && typeof path === 'string') {
-		return path;
-	}
-	return undefined;
-}
 
 export default {
 	...defineAppRouteOptions({
