@@ -1,6 +1,11 @@
 <script lang="ts">
-import { computed, toRefs } from 'vue';
+import { CSSProperties, computed, toRef, toRefs } from 'vue';
+import { ComponentProps } from '../../../_common/component-helpers';
 import { Screen } from '../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
+import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
+import { kGridGutterWidth } from '../../../_styles/variables';
+import { kShellTopNavHeight } from '../../styles/variables';
 
 const validOrder = ['main', 'left', 'right'];
 
@@ -25,13 +30,32 @@ const props = defineProps({
 		default: 'main,left,right',
 		validator: validateOrder,
 	},
+	/**
+	 * Sticks the left and/or right columns to the top of the page when
+	 * scrolling.
+	 */
+	stickySides: {
+		type: Boolean,
+	},
+	/**
+	 * Distance between the top of the page contents and the top of a column.
+	 * Used to offset some things so the sticky sides don't shift around.
+	 */
+	stickySideTopMargin: {
+		type: Number,
+		default: undefined,
+	},
 });
 
-const { xl, noLeft, noRight, order } = toRefs(props);
+const { xl, noLeft, noRight, order, stickySides, stickySideTopMargin } = toRefs(props);
 
-const hasLeftColumn = computed(() => !noLeft.value && Screen.isLg);
-const hasRightColumn = computed(() => !noRight.value);
-const shouldCombineColumns = computed(() => !noLeft.value && !Screen.isLg);
+const hasLeftColumn = toRef(() => !noLeft.value && Screen.isLg);
+const hasRightColumn = toRef(() => !noRight.value);
+const shouldCombineColumns = toRef(() => !noLeft.value && !Screen.isLg);
+const useStickySides = toRef(
+	() => stickySides.value && Screen.isDesktop && (hasLeftColumn.value || hasRightColumn.value)
+);
+const stickyTopMargin = toRef(() => stickySideTopMargin?.value ?? 0);
 
 const classes = computed(() => {
 	return {
@@ -56,25 +80,83 @@ const keySuffix = computed(() =>
 		':' + order.value,
 	].join('')
 );
+
+const scrollAffixProps = computed<ComponentProps<typeof AppScrollAffix>>(() => {
+	return {
+		// 1px so things can un-affix if needed.
+		padding: stickyTopMargin.value + 1,
+	};
+});
+
+const scrollerStyles = computed<CSSProperties>(() => {
+	if (!useStickySides.value) {
+		return {};
+	}
+
+	return {
+		marginTop: `-${stickyTopMargin.value}px`,
+		paddingTop: `${stickyTopMargin.value}px`,
+		paddingBottom: kGridGutterWidth.px,
+		height: `calc(100vh - ${kShellTopNavHeight.px})`,
+	};
+});
 </script>
 
 <template>
 	<div :class="classes">
-		<div class="-row">
-			<div v-if="hasLeftColumn" :key="`left:${keySuffix}`" class="-left">
-				<slot name="left" />
-				<slot name="left-bottom" />
-			</div>
+		<div class="_row">
+			<template v-if="hasLeftColumn">
+				<component
+					:is="useStickySides ? AppScrollAffix : 'div'"
+					:key="`left:${keySuffix}`"
+					class="_left-container"
+					v-bind="scrollAffixProps"
+				>
+					<component
+						:is="useStickySides ? AppScrollScroller : 'div'"
+						class="_left"
+						:class="{
+							// Only used to prevent some glitches when going from 2+ col to 1.
+							'_scrollbar-fix': useStickySides,
+						}"
+						:style="scrollerStyles"
+						thin
+					>
+						<slot name="left" />
+						<slot name="left-bottom" />
+					</component>
+				</component>
+			</template>
 
-			<div :key="`main:${keySuffix}`" class="-main">
+			<div :key="`main:${keySuffix}`" class="_main-container">
 				<slot name="default" />
 			</div>
 
-			<div v-if="hasRightColumn" :key="`right:${keySuffix}`" class="-right">
-				<slot v-if="shouldCombineColumns" name="left" />
-				<slot name="right" />
-				<slot v-if="shouldCombineColumns" name="left-bottom" />
-			</div>
+			<template v-if="hasRightColumn">
+				<component
+					:is="useStickySides ? AppScrollAffix : 'div'"
+					:key="`right:${keySuffix}`"
+					class="_right-container"
+					:class="{
+						'_scrollbar-fix': useStickySides,
+					}"
+					v-bind="scrollAffixProps"
+				>
+					<component
+						:is="useStickySides ? AppScrollScroller : 'div'"
+						class="_right"
+						:class="{
+							'_scrollbar-fix': useStickySides,
+						}"
+						:style="scrollerStyles"
+						thin
+					>
+						<slot v-if="shouldCombineColumns" name="left" />
+						<slot name="right" v-bind="{ combined: shouldCombineColumns }" />
+						<slot v-if="shouldCombineColumns" name="left-bottom" />
+					</component>
+				</component>
+			</template>
 		</div>
 	</div>
 </template>
@@ -91,54 +173,77 @@ $-main-max-width = 650px
 	max-width: $-main-max-width
 
 // On xs the content stacks, we shove "main" to the bottom.
-.-row
+._row
 	display: flex
 	flex-direction: column
 
 // On mobile the left/right columns show before main.
-.-left
+._left-container
 	order: 0
 
-.-right
+._right-container
 	order: 1
 
-.-main
+._main-container
 	order: 2
 
 // On sm we keep them in same column, but set a max size and center the content.
 @media $media-sm
-	.-row
+	._row
 		align-items: center
 
-	.-main
-	.-left
-	.-right
+	._main-container
+	._left
+	._right
 		width: ($container-sm / 12 * 10)
 
 // Desktop sizes is where we break it out into different columns.
 @media $media-md-up
-	.-row
+	._row
 		flex-direction: row
 		justify-content: center
 
-	.-left
+	._left-container
 		flex: 1 0
-		padding-right: $grid-gutter-width
-		min-width: $percentage-3
 		order: 0
+		min-width: $percentage-3
+		// Padding is split between inner and outer elements so that the
+		// scrollbar is aligned a bit better.
+		padding-right: $grid-gutter-width * 0.5
 
-	.-main
+	._left
+		padding-right: $grid-gutter-width * 0.5
+
+	._main-container
 		-main-max-width(1)
 		flex: 2 0
 		order: 1
 
-	.-right
+	._right-container
 		flex: 1 0
-		padding-left: $grid-gutter-width
-		min-width: $percentage-3
 		order: 2
+		min-width: $percentage-3
+		padding-left: $grid-gutter-width
+
+		&._scrollbar-fix
+			padding-left: $grid-gutter-width * 0.5
+
+	// Adjust padding to help prevent weird scrollbar contact.
+	._right._scrollbar-fix
+		padding-left: $grid-gutter-width * 0.25
+		padding-right: $grid-gutter-width * 0.25
 
 @media $media-lg
-	.-main
+	._main-container
 		-main-max-width(2)
+
+// Fixes visual glitches when going from 2+ columns to 1.
+//
+// ScreenService breakpoints are slower than media queries, so sizing and
+// AppScrollAffix things aren't triggered at the same time. This fix prevents a
+// strobe-like effect when switching between these breakpoints.
+@media $media-mobile
+	._left._scrollbar-fix
+	._right._scrollbar-fix
+		display: none
 </style>
