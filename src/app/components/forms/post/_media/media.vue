@@ -151,10 +151,12 @@ export default class AppFormPostMedia
 	}
 
 	onSubmitSuccess(response: any) {
+		this.$refs.upload?.clearAllFiles();
 		this.emitUpload(MediaItemModel.populate(response.mediaItems));
 	}
 
 	onSubmitError(response: any) {
+		this.$refs.upload?.clearAllFiles();
 		this.emitError(response.reason);
 	}
 }

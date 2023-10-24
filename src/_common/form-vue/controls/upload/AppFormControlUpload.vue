@@ -19,6 +19,8 @@ import AppFormControlUploadFile, {
 
 export interface AppFormControlUploadInterface {
 	showFileSelect: () => void;
+	clearFile: (file: File) => void;
+	clearAllFiles: () => void;
 	drop: (e: DragEvent) => Promise<void>;
 }
 
@@ -158,6 +160,11 @@ function clearFile(file: File) {
 	}
 }
 
+function clearAllFiles() {
+	applyValue(null);
+	++clearKey.value;
+}
+
 function setFiles(files: File[] | File | null | undefined) {
 	if (!files) {
 		applyValue(null);
@@ -258,6 +265,8 @@ async function getFiles(e: DragEvent) {
 
 defineExpose<AppFormControlUploadInterface>({
 	showFileSelect,
+	clearFile,
+	clearAllFiles,
 	drop,
 });
 </script>
