@@ -59,6 +59,12 @@ export class SiteAnalyticsReport {
 			if (conditionFields.indexOf('partner_generated_donation') !== -1) {
 				conditions.push('has-donations', 'has-partner');
 			}
+			if (
+				conditionFields.indexOf('gem_amount') !== -1 ||
+				conditionFields.indexOf('gem_recipient') !== -1
+			) {
+				conditions.push('gem-purchases-only');
+			}
 			conditions = arrayUnique(conditions);
 
 			// Replace the pseudo fields by their normal fields
@@ -358,6 +364,14 @@ export class SiteAnalyticsReport {
 			case 'partner':
 			case 'fireside':
 				return displayValue;
+
+			case 'shop_product':
+				return {
+					resource: 'Inventory_Shop_Product',
+					resourceId: resourceId,
+					value: displayValue,
+					isAnalyticsEntry: true,
+				};
 		}
 	}
 }

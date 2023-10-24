@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { formatCurrency } from '../../../../../_common/filters/currency';
+import { formatCurrency, formatGemsCurrency } from '../../../../../_common/filters/currency';
 import { formatNumber } from '../../../../../_common/filters/number';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
 defineProps({
@@ -28,7 +29,16 @@ defineProps({
 				<template v-else-if="reportData.fieldType === 'currency'">
 					{{ formatCurrency(reportData.data) }}
 				</template>
+				<template v-else-if="reportData.fieldType === 'gems'">
+					<AppJolticon icon="gem" class="-gem-icon" />
+					{{ formatGemsCurrency(reportData.data) }}
+				</template>
 			</div>
 		</div>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+.-gem-icon
+	color: $gj-blue
+</style>

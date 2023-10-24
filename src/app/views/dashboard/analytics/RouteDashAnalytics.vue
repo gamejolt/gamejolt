@@ -3,8 +3,9 @@ import { computed, ComputedRef, onMounted, reactive, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { CurrencyType } from '../../../../_common/currency/currency-type';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { formatCurrency } from '../../../../_common/filters/currency';
+import { formatCurrency, formatGemsCurrency } from '../../../../_common/filters/currency';
 import { formatDate } from '../../../../_common/filters/date';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
@@ -34,6 +35,8 @@ import {
 	ReportCommentLanguages,
 	ReportComponent,
 	ReportCountries,
+	ReportCreatorShopRevenue,
+	ReportCreatorShopSales,
 	ReportDevRevenue,
 	ReportInvitedUsers,
 	ReportOs,
@@ -105,6 +108,9 @@ const availableMetricsBang = computed(() => availableMetrics.value as Required<M
 
 const metricsElem = ref<HTMLDivElement>();
 const metricsHeight = ref('0');
+
+const { gems } = CurrencyType;
+
 onMounted(() => {
 	useResizeObserver({
 		target: metricsElem,
@@ -185,6 +191,11 @@ const { isBootstrapped } = createAppRoute({
 
 			case 'Game_Release':
 				_addMetrics(SiteAnalytics.releaseMetrics);
+				_selectMetric();
+				break;
+
+			case 'Inventory_Shop_Product':
+				_addMetrics(SiteAnalytics.productMetrics);
 				_selectMetric();
 				break;
 
@@ -347,6 +358,25 @@ function _metricChanged() {
 
 			case 'user-invite':
 				pullReport($gettext('Latest Invited Users'), ...ReportInvitedUsers);
+				break;
+
+			case 'creator-shop-sale':
+				pullReport($gettext('Creator Shop Sales'), ...ReportCreatorShopSales);
+				break;
+
+			case 'creator-shop-revenue':
+				pullReport($gettext('Creator Shop Revenue'), ...ReportCreatorShopRevenue);
+				break;
+		}
+	} else if (resource.value === 'Inventory_Shop_Product') {
+		switch (selectedMetric.value.key) {
+			case 'creator-shop-sale':
+				pullReport($gettext('Creator Shop Sales'), ...ReportCreatorShopSales);
+				break;
+
+			case 'creator-shop-revenue':
+				pullReport($gettext('Creator Shop Revenue'), ...ReportCreatorShopRevenue);
+				break;
 		}
 	} else {
 		switch (selectedMetric.value.key) {
@@ -600,6 +630,14 @@ function _metricChanged() {
 											<template v-else-if="metric.type === 'currency'">
 												{{ formatCurrency(metricData[metric.key]?.total) }}
 											</template>
+											<template v-else-if="metric.type === 'gems'">
+												<AppJolticon icon="gem" class="-gem-icon" />
+												{{
+													formatGemsCurrency(
+														metricData[metric.key]?.total
+													)
+												}}
+											</template>
 										</div>
 									</div>
 
@@ -688,4 +726,7 @@ function _metricChanged() {
 	position: relative
 	min-height: calc(100vh - var(--shell-top) - v-bind(metricsHeight))
 	z-index: 0
+
+.-gem-icon
+	color: $gj-blue
 </style>

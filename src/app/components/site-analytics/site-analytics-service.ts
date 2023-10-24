@@ -5,7 +5,13 @@ import { $gettext } from '../../../_common/translate/translate.service';
 import { arrayIndexBy } from '../../../utils/array';
 import { objectPick } from '../../../utils/object';
 
-export type ResourceName = 'Partner' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
+export type ResourceName =
+	| 'Partner'
+	| 'User'
+	| 'Game'
+	| 'Game_Package'
+	| 'Game_Release'
+	| 'Inventory_Shop_Product';
 
 export type Analyzer =
 	| 'count'
@@ -31,7 +37,8 @@ export type Collection =
 	| 'follows'
 	| 'sales'
 	| 'user-charges'
-	| 'user-invites';
+	| 'user-invites'
+	| 'shop-product-purchases';
 
 export type Condition =
 	| 'time'
@@ -46,9 +53,11 @@ export type Condition =
 	| 'no-donations'
 	| 'has-partner'
 	| 'no-partner'
-	| 'partner';
+	| 'partner'
+	| 'shop-creator'
+	| 'gem-purchases-only';
 
-export type PseudoField =
+type PseudoField =
 	| 'partner_generated_revenue' // Translates to revenue field with conditions has partner
 	| 'partner_generated_donation'; // Translates to donation field with conditions has partner
 
@@ -78,12 +87,22 @@ export type Field =
 	| 'fireside_post'
 	| 'fireside'
 	| 'creator_supporter'
-	| 'invited_user';
+	| 'invited_user'
+	| 'shop_product'
+	| 'shop_product_resource'
+	| 'shop_owner'
+	| 'currency_identifier'
+	| 'currency_amount'
+	| 'gem_recipient'
+	| 'gem_amount';
 
-export type GameField = 'game_name' | 'game_model';
-export type UserField = 'user_display_name' | 'user_username' | 'user_model';
-export type PostField = 'post_lead' | 'post_model';
-export type FiresideField = 'fireside_title';
+type GameField = 'game_name' | 'game_model';
+type UserField = 'user_display_name' | 'user_username' | 'user_model';
+type PostField = 'post_lead' | 'post_model';
+type FiresideField = 'fireside_title';
+type ShopProductField = 'shop_product_resource_name' | 'shop_product_resource_model';
+
+type ResourceField = GameField | UserField | PostField | FiresideField | ShopProductField;
 
 export interface ResourceFields {
 	game?: GameField[];
@@ -93,6 +112,9 @@ export interface ResourceFields {
 	invited_user?: UserField[];
 	fireside_post?: PostField[];
 	fireside?: FiresideField[];
+	shop_owner?: UserField[];
+	gem_recipient?: UserField[];
+	shop_product?: ShopProductField[];
 }
 
 export type MetricKey =
@@ -105,13 +127,15 @@ export type MetricKey =
 	| 'sale'
 	| 'revenue'
 	| 'user-charge'
-	| 'user-invite';
+	| 'user-invite'
+	| 'creator-shop-sale'
+	| 'creator-shop-revenue';
 
 export interface Metric {
 	key: MetricKey;
 	collection: Collection;
 	label: string;
-	type: 'number' | 'currency';
+	type: 'number' | 'currency' | 'gems';
 	field?: Field;
 }
 
@@ -139,7 +163,7 @@ export interface Request {
 	field?: Field;
 	conditions?: Condition[];
 	fetch_fields?: Field[];
-	resource_fields?: (GameField | UserField)[];
+	resource_fields?: ResourceField[];
 	size?: number;
 
 	// Date info is Optional.
@@ -152,10 +176,10 @@ export interface ReportComponent {
 	type: Analyzer;
 	field: Field;
 	fieldLabel: string;
-	fieldType?: 'currency';
+	fieldType?: 'number' | 'currency' | 'gems';
 	fetchFields?: Field[];
 	resourceFields?: ResourceFields;
-	displayField?: Field | GameField | UserField | PostField | FiresideField;
+	displayField?: Field | ResourceField;
 	size?: number;
 
 	// These are only filled out for report component responses.
@@ -366,6 +390,50 @@ export const ReportInvitedUsers: ReportComponent[] = [
 	},
 ];
 
+export const ReportCreatorShopSales: ReportComponent[] = [
+	{
+		type: 'top-composition',
+		field: 'shop_product',
+		fieldLabel: 'Best Selling Products',
+		resourceFields: {
+			shop_product: ['shop_product_resource_name'],
+		},
+		displayField: 'shop_product_resource_name',
+	},
+	{
+		type: 'top-composition',
+		field: 'shop_product_resource',
+		fieldLabel: 'Best Selling Product Types',
+	},
+];
+
+export const ReportCreatorShopRevenue: ReportComponent[] = [
+	{
+		type: 'sum',
+		field: 'gem_amount',
+		fieldType: 'gems',
+		fieldLabel: 'Total Gems',
+	},
+	{
+		type: 'top-composition-sum',
+		field: 'shop_product',
+		fieldType: 'gems',
+		fetchFields: ['gem_amount'],
+		resourceFields: {
+			shop_product: ['shop_product_resource_name'],
+		},
+		fieldLabel: 'Gems by Product',
+		displayField: 'shop_product_resource_name',
+	},
+	{
+		type: 'top-composition-sum',
+		field: 'shop_product_resource',
+		fieldLabel: 'Gems by Product Type',
+		fieldType: 'gems',
+		fetchFields: ['gem_amount'],
+	},
+];
+
 export class SiteAnalytics {
 	private static _metrics: Metric[] = [
 		{
@@ -430,6 +498,19 @@ export class SiteAnalytics {
 			label: $gettext(`User Invites`),
 			type: 'number',
 		},
+		{
+			key: 'creator-shop-sale',
+			collection: 'shop-product-purchases',
+			label: $gettext(`Creator Shop Sales`),
+			type: 'number',
+		},
+		{
+			key: 'creator-shop-revenue',
+			collection: 'shop-product-purchases',
+			label: $gettext(`Creator Shop Revenue`),
+			type: 'gems',
+			field: 'gem_amount',
+		},
 	];
 
 	static allMetrics = computed((): MetricMap => {
@@ -441,7 +522,15 @@ export class SiteAnalytics {
 	});
 
 	static creatorMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, ['user-charge']);
+		return objectPick(this.allMetrics.value, [
+			'user-charge',
+			'creator-shop-sale',
+			'creator-shop-revenue',
+		]);
+	});
+
+	static productMetrics = computed((): MetricMap => {
+		return objectPick(this.allMetrics.value, ['creator-shop-sale', 'creator-shop-revenue']);
 	});
 
 	static gameDevMetrics = computed((): MetricMap => {
@@ -555,7 +644,7 @@ export class SiteAnalytics {
 		Object.values(metrics).forEach(metric => {
 			let _analyzer = analyzer;
 
-			if (metric.type === 'currency') {
+			if (metric.type === 'currency' || metric.type === 'gems') {
 				if (_analyzer === 'histogram') {
 					_analyzer = 'histogram-sum';
 				} else if (_analyzer === 'count') {
