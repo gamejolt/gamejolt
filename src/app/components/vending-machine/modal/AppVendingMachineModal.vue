@@ -321,12 +321,7 @@ const currencyCardTransitionStyles: CSSProperties = {
 <template>
 	<AppModal force-theme="dark">
 		<div :style="containerStyles">
-			<AppModalFloatingHeader
-				:dynamic-slots="{
-					title: true,
-					bottom: false,
-				}"
-			>
+			<AppModalFloatingHeader>
 				<template #modal-controls>
 					<div
 						:style="{
