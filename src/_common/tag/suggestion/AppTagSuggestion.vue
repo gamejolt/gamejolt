@@ -104,8 +104,6 @@ const otherTags = computed(() => {
 		);
 	}
 });
-
-// AppTagSuggestion
 </script>
 
 <template>
