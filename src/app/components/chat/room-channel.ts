@@ -638,16 +638,24 @@ export function useChatRoomMembers(room: Ref<ChatRoomModel | undefined>) {
 	});
 	const memberCollection = computed(() => room.value?.memberCollection);
 
-	watch([roomChannel, mounted], () => {
-		// TODO: this should clean up the lock before getting a new one.
-		if (mounted.value && roomChannel.value) {
-			if (!lock) {
-				lock = roomChannel.value.getMemberWatchLock();
+	watch(
+		[roomChannel, mounted],
+		([roomChannelVal, mountedVal], [roomChannelPrev, _mountedPrev]) => {
+			// If we're not set up with data, or the room channel changed, we
+			// need to clean ourselves out.
+			if (!mountedVal || !roomChannelVal || roomChannelVal !== roomChannelPrev) {
+				cleanup();
 			}
-		} else {
-			cleanup();
+
+			if (roomChannelVal) {
+				// It shouldn't be the case that we ever have a lock at this
+				// point, but just to be safe.
+				if (!lock) {
+					lock = roomChannelVal.getMemberWatchLock();
+				}
+			}
 		}
-	});
+	);
 
 	onMounted(() => {
 		mounted.value = true;
