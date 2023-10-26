@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { ContentDocument } from '../../../../../../_common/content/content-document';
-import AppTagSuggestion from '../../../../../../_common/tag/suggestion/suggestion.vue';
+import AppTagSuggestion from '../../../../../../_common/tag/suggestion/AppTagSuggestion.vue';
 
 @Options({
 	components: {
@@ -36,8 +36,9 @@ export default class AppFormGameDescriptionTags extends Vue {
 
 		<p class="help-block">
 			<AppTranslate>
-				Tag your game to increase its visibility. It's recommended to include at least one of the
-				listed tags, although you can add your own by putting a #hashtag in your description.
+				Tag your game to increase its visibility. It's recommended to include at least one
+				of the listed tags, although you can add your own by putting a #hashtag in your
+				description.
 			</AppTranslate>
 		</p>
 	</AppTagSuggestion>
