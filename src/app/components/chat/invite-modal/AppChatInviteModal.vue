@@ -2,6 +2,7 @@
 import { PropType, computed, ref, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import { vAppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
@@ -43,13 +44,6 @@ const invitableFriends = ref(friends.value);
 run(async function () {
 	let filteredFriends = invitableFriends.value;
 
-	// We want to put the initial user at the top of the list.
-	if (initialUser.value) {
-		const initialUserId = initialUser.value.id;
-		filteredFriends = filteredFriends.filter(i => i.id !== initialUserId);
-		filteredFriends.unshift(initialUser.value);
-	}
-
 	// Get which of the friends can be invited to this particular room.
 	const payload = await Api.sendRequest(`/web/chat/rooms/invitable-users/${room.value.id}`);
 
@@ -59,6 +53,13 @@ run(async function () {
 	} else {
 		// None allowed...
 		filteredFriends = [];
+	}
+
+	// We want to put the initial user at the top of the list.
+	if (initialUser.value) {
+		const initialUserId = initialUser.value.id;
+		filteredFriends = filteredFriends.filter(i => i.id !== initialUserId);
+		filteredFriends.unshift(initialUser.value);
 	}
 
 	invitableFriends.value = filteredFriends;
@@ -123,6 +124,7 @@ function selected(user: ChatUser) {
 				<div v-else class="friend-select-widget">
 					<input
 						v-model="filterQuery"
+						v-app-focus-when
 						class="-filter form-control"
 						placeholder="Filter..."
 					/>
