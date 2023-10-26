@@ -639,6 +639,7 @@ export function useChatRoomMembers(room: Ref<ChatRoomModel | undefined>) {
 	const memberCollection = computed(() => room.value?.memberCollection);
 
 	watch([roomChannel, mounted], () => {
+		// TODO: this should clean up the lock before getting a new one.
 		if (mounted.value && roomChannel.value) {
 			if (!lock) {
 				lock = roomChannel.value.getMemberWatchLock();

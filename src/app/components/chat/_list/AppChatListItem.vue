@@ -1,7 +1,6 @@
 <script lang="ts">
-import { PropType, ref, toRefs } from 'vue';
+import { PropType, ref } from 'vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import { defineDynamicSlotProps, useDynamicSlots } from '../../../../_common/component-helpers';
 import AppPopper, {
 	PopperPlacementType,
 	PopperTriggerType,
@@ -12,13 +11,10 @@ import AppScrollInview, {
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
-
-const validSlots = ['leading', 'title', 'trailing'] as const;
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	...defineDynamicSlotProps(validSlots, true),
+defineProps({
 	horizontalPadding: {
 		type: Number,
 		default: 16,
@@ -46,9 +42,6 @@ const props = defineProps({
 		default: 'bottom',
 	},
 });
-
-const { dynamicSlots } = toRefs(props);
-const { hasSlot } = useDynamicSlots(dynamicSlots);
 
 const isInview = ref(false);
 </script>
@@ -87,7 +80,7 @@ const isInview = ref(false);
 					}"
 				>
 					<div
-						v-if="hasSlot('leading')"
+						v-if="$slots.leading || $slots['leading-float']"
 						class="-leading"
 						:style="{
 							width: avatarSize + 'px',
@@ -104,11 +97,11 @@ const isInview = ref(false);
 						</AppAspectRatio>
 					</div>
 
-					<div v-if="hasSlot('title')" class="-title">
+					<div v-if="$slots.title" class="-title">
 						<slot name="title" />
 					</div>
 
-					<div v-if="hasSlot('trailing')" class="-trailing">
+					<div v-if="$slots.trailing" class="-trailing">
 						<slot name="trailing" />
 					</div>
 				</a>

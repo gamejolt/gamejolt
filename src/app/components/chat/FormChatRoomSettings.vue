@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { computed, PropType, ref, toRef, toRefs, watch } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import { BackgroundModel } from '../../../_common/background/background.model';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -24,7 +24,7 @@ import { useGridStore } from '../grid/grid-store';
 import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './client';
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
 import { ChatRoomModel } from './room';
-import { ChatUser } from './user';
+import { useChatRoomMembers } from './room-channel';
 
 const props = defineProps({
 	room: {
@@ -34,10 +34,6 @@ const props = defineProps({
 	showMembersPreview: {
 		type: Boolean,
 	},
-	members: {
-		type: Array as PropType<ChatUser[]>,
-		default: () => [] as ChatUser[],
-	},
 });
 
 const emit = defineEmits({
@@ -45,8 +41,11 @@ const emit = defineEmits({
 	viewMembers: () => true,
 });
 
-const { room, showMembersPreview, members } = toRefs(props);
+const { room, showMembersPreview } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
+const { memberCollection } = useChatRoomMembers(room);
+
+const members = toRef(() => memberCollection.value?.users || []);
 
 const titleMinLength = ref<number>();
 const titleMaxLength = ref<number>();
@@ -132,15 +131,15 @@ const notificationLevelForm: FormController<FormNotificationLevel> = createForm(
 	},
 });
 
-const isOwner = computed(
+const isOwner = toRef(
 	() =>
 		room.value && !!chat.value.currentUser && room.value.owner_id === chat.value.currentUser.id
 );
 
-const canEditTitle = computed(() => !room.value.isPmRoom && isOwner.value);
-const canEditBackground = computed(() => backgrounds.value.length > 0);
-const shouldShowLeave = computed(() => !room.value.isPmRoom);
-const hasLoadedBackgrounds = computed(() => backgroundForm.isLoadedBootstrapped);
+const canEditTitle = toRef(() => !room.value.isPmRoom && isOwner.value);
+const canEditBackground = toRef(() => backgrounds.value.length > 0);
+const shouldShowLeave = toRef(() => !room.value.isPmRoom);
+const hasLoadedBackgrounds = toRef(() => backgroundForm.isLoadedBootstrapped);
 
 const membersPreview = computed(() => {
 	if (showMembersPreview.value) {

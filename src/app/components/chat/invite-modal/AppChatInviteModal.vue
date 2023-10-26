@@ -1,101 +1,105 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, ref, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { BaseModal } from '../../../../_common/modal/base';
+import AppModal from '../../../../_common/modal/AppModal.vue';
+import { useModal } from '../../../../_common/modal/modal.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
 import { fuzzysearch } from '../../../../utils/string';
+import { run } from '../../../../utils/utils';
 import { useGridStore } from '../../grid/grid-store';
 import { addGroupMembers, addGroupRoom } from '../client';
 import { ChatRoomModel } from '../room';
 import { ChatUser } from '../user';
 
-@Options({
-	components: {
-		AppScrollScroller,
-		AppUserAvatarImg,
-		AppUserAvatarList,
-		AppLoading,
+const props = defineProps({
+	room: {
+		type: Object as PropType<ChatRoomModel>,
+		required: true,
 	},
-})
-export default class AppChatInviteModal extends mixins(BaseModal) {
-	@Prop({ type: Object, required: true }) room!: ChatRoomModel;
-	@Prop({ type: Array, required: true }) friends!: ChatUser[];
-	@Prop({ type: Object, default: null }) initialUser!: ChatUser | null;
+	friends: {
+		type: Array as PropType<ChatUser[]>,
+		required: true,
+	},
+	initialUser: {
+		type: Object as PropType<ChatUser>,
+		default: null,
+	},
+});
 
-	gridStore = setup(() => useGridStore());
+const { room, friends, initialUser } = toRefs(props);
+const { chatUnsafe: chat } = useGridStore();
+const modal = useModal()!;
 
-	isLoading = true;
-	invitableFriends: ChatUser[] = this.friends;
-	filterQuery = '';
-	selectedUsers: ChatUser[] = this.initialUser ? [this.initialUser] : [];
+const isLoading = ref(true);
+const filterQuery = ref('');
+const selectedUsers = ref(initialUser.value ? [initialUser.value] : []);
+const invitableFriends = ref(friends.value);
 
-	get chat() {
-		return this.gridStore.chatUnsafe;
+run(async function () {
+	let filteredFriends = invitableFriends.value;
+
+	// We want to put the initial user at the top of the list.
+	if (initialUser.value) {
+		const initialUserId = initialUser.value.id;
+		filteredFriends = filteredFriends.filter(i => i.id !== initialUserId);
+		filteredFriends.unshift(initialUser.value);
 	}
 
-	get filteredUsers() {
-		if (!this.filterQuery) {
-			return this.invitableFriends;
-		}
+	// Get which of the friends can be invited to this particular room.
+	const payload = await Api.sendRequest(`/web/chat/rooms/invitable-users/${room.value.id}`);
 
-		const filter = this.filterQuery.toLowerCase();
-		return this.invitableFriends.filter(
-			i =>
-				fuzzysearch(filter, i.display_name.toLowerCase()) ||
-				fuzzysearch(filter, i.username.toLowerCase())
-		);
+	if (payload.user_ids) {
+		// Filter the set of friends to only those that were allowed from backend.
+		filteredFriends = filteredFriends.filter(i => payload.user_ids.includes(i.id));
+	} else {
+		// None allowed...
+		filteredFriends = [];
 	}
 
-	async created() {
-		// When it's a PM room, this modal is used for creating a new room, so no need to filter
-		// anything: All friends are eligible to be added to a new room.
-		if (!this.room.isPmRoom) {
-			this.isLoading = true;
+	invitableFriends.value = filteredFriends;
+	isLoading.value = false;
+});
 
-			// Get which of the friends can be invited to this particular room.
-			const payload = await Api.sendRequest(
-				`/web/chat/rooms/invitable-users/${this.room.id}`
-			);
-
-			if (payload.user_ids) {
-				this.invitableFriends = this.invitableFriends.filter(x =>
-					payload.user_ids.includes(x.id)
-				);
-			} else {
-				this.invitableFriends = [];
-			}
-		}
-
-		this.isLoading = false;
+const filteredUsers = computed(() => {
+	if (!filterQuery.value) {
+		return invitableFriends.value;
 	}
 
-	invite() {
-		const selectedUsers = this.selectedUsers.map(chatUser => chatUser.id);
+	const filter = filterQuery.value.toLowerCase();
+	return invitableFriends.value.filter(
+		i =>
+			fuzzysearch(filter, i.display_name.toLowerCase()) ||
+			fuzzysearch(filter, i.username.toLowerCase())
+	);
+});
 
-		if (this.room.isPmRoom) {
-			addGroupRoom(this.chat, selectedUsers);
-		} else {
-			addGroupMembers(this.chat, this.room.id, selectedUsers);
-		}
-		this.modal.resolve(true);
-	}
+function invite() {
+	const selectedUserIds = selectedUsers.value.map(chatUser => chatUser.id);
 
-	toggle(user: ChatUser) {
-		const index = this.selectedUsers.findIndex(chatUser => chatUser.id === user.id);
-		if (index !== -1) {
-			this.selectedUsers.splice(index, 1);
-		} else {
-			this.selectedUsers.push(user);
-		}
+	if (room.value.isPmRoom) {
+		addGroupRoom(chat.value, selectedUserIds);
+	} else {
+		addGroupMembers(chat.value, room.value.id, selectedUserIds);
 	}
+	modal.resolve(true);
+}
 
-	selected(user: ChatUser) {
-		return this.selectedUsers.some(chatUser => chatUser.id === user.id);
+function toggle(user: ChatUser) {
+	const index = selectedUsers.value.findIndex(chatUser => chatUser.id === user.id);
+	if (index !== -1) {
+		selectedUsers.value.splice(index, 1);
+	} else {
+		selectedUsers.value.push(user);
 	}
+}
+
+function selected(user: ChatUser) {
+	return selectedUsers.value.some(chatUser => chatUser.id === user.id);
 }
 </script>
 
@@ -104,13 +108,13 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 		<template #default>
 			<div class="modal-controls">
 				<AppButton @click="modal.dismiss()">
-					<AppTranslate>Close</AppTranslate>
+					{{ $gettext(`Close`) }}
 				</AppButton>
 			</div>
 
 			<div class="modal-header">
 				<h2 class="modal-title">
-					<AppTranslate>Choose Friends</AppTranslate>
+					{{ $gettext(`Choose friends`) }}
 				</h2>
 			</div>
 
@@ -164,10 +168,10 @@ export default class AppChatInviteModal extends mixins(BaseModal) {
 
 				<AppButton primary block :disabled="selectedUsers.length < 1" @click="invite">
 					<template v-if="room.isPmRoom">
-						<AppTranslate>Create Group</AppTranslate>
+						{{ $gettext(`Create group`) }}
 					</template>
 					<template v-else>
-						<AppTranslate>Add To Group</AppTranslate>
+						{{ $gettext(`Add to group`) }}
 					</template>
 				</AppButton>
 			</div>

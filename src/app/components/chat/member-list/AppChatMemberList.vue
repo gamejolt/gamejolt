@@ -1,15 +1,11 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { PropType, toRefs } from 'vue';
 import AppChatList from '../_list/AppChatList.vue';
 import { ChatRoomModel } from '../room';
-import { ChatUserCollection } from '../user-collection';
+import { useChatRoomMembers } from '../room-channel';
 import AppChatMemberListItem from './AppChatMemberListItem.vue';
 
-defineProps({
-	collection: {
-		type: Object as PropType<ChatUserCollection>,
-		required: true,
-	},
+const props = defineProps({
 	room: {
 		type: Object as PropType<ChatRoomModel>,
 		required: true,
@@ -22,10 +18,17 @@ defineProps({
 		default: undefined,
 	},
 });
+
+const { room } = toRefs(props);
+const { memberCollection } = useChatRoomMembers(room);
 </script>
 
 <template>
-	<AppChatList :entries="collection.users" :hide-filter="hideFilter">
+	<AppChatList
+		v-if="memberCollection"
+		:entries="memberCollection.users"
+		:hide-filter="hideFilter"
+	>
 		<template #default="{ item }">
 			<AppChatMemberListItem
 				:room="room"
