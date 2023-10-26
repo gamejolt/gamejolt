@@ -23,7 +23,7 @@ import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { AppGamePerms } from '../../../game/perms/perms';
 import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
-import AppFormGameDescriptionTags from './tags/tags.vue';
+import AppFormGameDescriptionTags from './tags/AppFormGameDescriptionTags.vue';
 
 type DescriptionFormModel = GameModel & {
 	autotag?: string;
