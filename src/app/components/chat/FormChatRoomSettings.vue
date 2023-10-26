@@ -2,7 +2,6 @@
 import { computed, PropType, ref, toRef, toRefs, watch } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import { BackgroundModel } from '../../../_common/background/background.model';
-import AppButton from '../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
@@ -22,9 +21,8 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { useGridStore } from '../grid/grid-store';
 import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './client';
-import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
+import FormChatRoomSettingsMemberPreview from './FormChatRoomSettingsMemberPreview.vue';
 import { ChatRoomModel } from './room';
-import { useChatRoomMembers } from './room-channel';
 
 const props = defineProps({
 	room: {
@@ -43,9 +41,6 @@ const emit = defineEmits({
 
 const { room, showMembersPreview } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
-const { memberCollection } = useChatRoomMembers(room);
-
-const members = toRef(() => memberCollection.value?.users || []);
 
 const titleMinLength = ref<number>();
 const titleMaxLength = ref<number>();
@@ -140,13 +135,6 @@ const canEditTitle = toRef(() => !room.value.isPmRoom && isOwner.value);
 const canEditBackground = toRef(() => backgrounds.value.length > 0);
 const shouldShowLeave = toRef(() => !room.value.isPmRoom);
 const hasLoadedBackgrounds = toRef(() => backgroundForm.isLoadedBootstrapped);
-
-const membersPreview = computed(() => {
-	if (showMembersPreview.value) {
-		return members.value.slice(0, 5);
-	}
-	return [];
-});
 
 const notificationSettings = computed(() => {
 	const settings = [];
@@ -295,27 +283,11 @@ async function leaveRoom() {
 				</AppFormGroup>
 			</AppForm>
 
-			<template v-if="showMembersPreview && membersPreview.length > 0">
-				<AppSpacer vertical :scale="6" />
-				<hr />
-				<AppSpacer vertical :scale="6" />
-
-				<ul class="shell-nav">
-					<AppChatMemberListItem
-						v-for="user of membersPreview"
-						:key="user.id"
-						:user="user"
-						:room="room"
-					/>
-
-					<div class="-pad">
-						<AppSpacer vertical :scale="4" />
-						<AppButton block @click="emit('viewMembers')">
-							<AppTranslate>View all members</AppTranslate>
-						</AppButton>
-					</div>
-				</ul>
-			</template>
+			<FormChatRoomSettingsMemberPreview
+				v-if="showMembersPreview"
+				:room="room"
+				@view-members="emit('viewMembers')"
+			/>
 
 			<template v-if="shouldShowLeave">
 				<AppSpacer vertical :scale="6" />
