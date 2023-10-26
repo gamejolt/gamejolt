@@ -5,7 +5,7 @@ import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
 import AppLoading from '../../loading/AppLoading.vue';
 import AppPopper from '../../popper/AppPopper.vue';
-import AppThemeBubble from '../../theme/bubble/bubble.vue';
+import AppThemeBubble from '../../theme/bubble/AppThemeBubble.vue';
 import { ThemePresetModel } from '../../theme/preset/preset.model';
 import {
 	DefaultTheme,
@@ -15,6 +15,7 @@ import {
 } from '../../theme/theme.model';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
+import { $gettext } from '../../translate/translate.service';
 import {
 	createFormControl,
 	defineFormControlEmits,
@@ -98,6 +99,8 @@ function clear() {
 	<div class="form-control-theme">
 		<AppPopper @show="onPopover()">
 			<a class="-current">
+				<!--TODO(component-setup-refactor): should we change the 'string | null' type
+					to 'string | undefined' for :backlight?-->
 				<AppThemeBubble :highlight="highlight" :backlight="backlight" active />
 			</a>
 
@@ -111,7 +114,7 @@ function clear() {
 										:class="{ active: activeTab === 'preset' }"
 										@click="activeTab = 'preset'"
 									>
-										<AppTranslate>Theme Preset</AppTranslate>
+										{{ $gettext(`Theme Preset`) }}
 									</a>
 								</li>
 								<li>
@@ -119,7 +122,7 @@ function clear() {
 										:class="{ active: activeTab === 'custom' }"
 										@click="activeTab = 'custom'"
 									>
-										<AppTranslate>Custom Color</AppTranslate>
+										{{ $gettext(`Custom Color`) }}
 									</a>
 								</li>
 							</ul>

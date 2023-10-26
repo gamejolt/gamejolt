@@ -1,17 +1,17 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
-
-@Options({})
-export default class AppThemeBubble extends Vue {
-	@Prop(String)
-	highlight!: string;
-
-	@Prop(String)
-	backlight?: string;
-
-	@Prop(Boolean)
-	active?: boolean;
-}
+<script lang="ts" setup>
+defineProps({
+	highlight: {
+		type: String,
+		required: true,
+	},
+	backlight: {
+		type: String,
+		default: undefined,
+	},
+	active: {
+		type: Boolean,
+	},
+});
 </script>
 
 <template>
