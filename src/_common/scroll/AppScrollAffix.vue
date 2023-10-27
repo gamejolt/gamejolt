@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import { computed, nextTick, PropType, ref, toRefs } from 'vue';
+import { computed, PropType, ref, toRefs } from 'vue';
+import { useResizeObserver } from '../../utils/resize-observer';
 import { Ruler } from '../ruler/ruler-service';
-import { onScreenResize } from '../screen/screen-service';
-import { useEventSubscription } from '../system/event/event-topic';
 import AppScrollInview, { ScrollInviewConfig } from './inview/AppScrollInview.vue';
 import { Scroll } from './scroll.service';
 
@@ -40,21 +39,14 @@ const width = ref<number>();
 const height = ref(0);
 const inviewConfig = _createInviewConfig();
 
-// If we resized, then the element dimensions most likely changed.
-useEventSubscription(onScreenResize, async () => {
-	// Always save dimensions, even if disabled, since we need to make
-	// sure that if they enable at any point we're ready to affix it
-	// properly.
-	if (!shouldAffix.value) {
-		return;
-	}
-
-	// Pull from the placeholder which should be the source of the
-	// true width now.
-	await nextTick();
-	if (placeholder.value) {
-		width.value = Ruler.outerWidth(placeholder.value);
-	}
+useResizeObserver({
+	target: placeholder,
+	callback: entries => {
+		if (!shouldAffix.value) {
+			return;
+		}
+		width.value = entries[0].contentRect.width;
+	},
 });
 
 const isAffixed = computed(() => shouldAffix.value && !disabled.value);
@@ -83,7 +75,6 @@ function outview() {
 		return;
 	}
 
-	width.value = Ruler.outerWidth(container.value!);
 	height.value = Ruler.outerHeight(container.value!);
 	shouldAffix.value = true;
 }

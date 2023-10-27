@@ -1,6 +1,18 @@
 <script lang="ts">
+import { useOverlayScrollbars } from 'overlayscrollbars-vue';
 import { darken, lighten } from 'polished';
-import { computed, inject, InjectionKey, onMounted, PropType, provide, ref, toRefs } from 'vue';
+import {
+	InjectionKey,
+	PropType,
+	computed,
+	inject,
+	onMounted,
+	provide,
+	ref,
+	toRefs,
+	watchPostEffect,
+} from 'vue';
+import { Screen } from '../screen/screen-service';
 import { DefaultTheme, GrayLight, GraySubtle } from '../theme/theme.model';
 import { useThemeStore } from '../theme/theme.store';
 import AppScrollInviewParent from './inview/AppScrollInviewParent.vue';
@@ -45,15 +57,54 @@ const props = defineProps({
 	hideScrollbar: {
 		type: Boolean,
 	},
+	modalScroller: {
+		type: Boolean,
+	},
+	overlay: {
+		type: Boolean,
+	},
 });
 
-const { controller } = toRefs(props);
+const { controller, horizontal, overlay } = toRefs(props);
 
 provide(Key, controller.value);
 
 const { element } = controller.value;
 const { theme } = useThemeStore();
 const isMounted = ref(import.meta.env.SSR);
+
+const [initOverlayScrollbar, getOverlayScrollbarInstance] = useOverlayScrollbars(
+	computed(() => {
+		return {
+			options: {
+				overflow: {
+					x: horizontal.value ? 'scroll' : 'hidden',
+					y: horizontal.value ? 'hidden' : 'scroll',
+				},
+				scrollbars: {
+					autoHide: 'move',
+					autoHideDelay: 1_000,
+					clickScroll: false,
+					dragScroll: true,
+					visibility: 'auto',
+				},
+				showNativeOverlaidScrollbars: false,
+				paddingAbsolute: false,
+			},
+		};
+	})
+);
+
+watchPostEffect(onCleanup => {
+	if (element.value && overlay.value) {
+		initOverlayScrollbar({
+			target: element.value,
+		});
+	} else {
+		getOverlayScrollbarInstance()?.destroy();
+	}
+	onCleanup(() => getOverlayScrollbarInstance()?.destroy());
+});
 
 const actualTheme = computed(() => {
 	// Use the form/page/user theme, or the default theme if none exist.
@@ -73,11 +124,16 @@ onMounted(() => {
 <template>
 	<div
 		ref="element"
+		v-bind="overlay ? { 'data-overlayscrollbars-initialize': true } : {}"
 		class="scroll-scroller"
 		:class="{
-			'-thin': thin,
-			'-horizontal': horizontal,
-			'-hide-scrollbar': hideScrollbar,
+			'_default-scroller': !overlay,
+			'_overlay-scroller': overlay,
+			'_modal-scroller': modalScroller,
+			_mouse: Screen.isPointerMouse,
+			_thin: thin,
+			_horizontal: horizontal,
+			'_hide-scrollbar': hideScrollbar,
 		}"
 		:style="hoverColors"
 	>
@@ -87,6 +143,7 @@ onMounted(() => {
 	</div>
 </template>
 
+<style lang="css" src="overlayscrollbars/overlayscrollbars.css"></style>
 <style lang="stylus" scoped>
 // 6px appears to be the width for the 'thin' scrollbar on Firefox
 $-size-default = 9px
@@ -99,56 +156,69 @@ $-thumb-modal = var(--theme-gray-subtle)
 $-track-modal = var(--theme-bg)
 
 .scroll-scroller
-	scrollable()
+	&._default-scroller
+		scrollable()
 
-	&.-horizontal
-		scrollable-x()
+		&._horizontal
+			scrollable-x()
 
-	&.-hide-scrollbar
-		// Firefox
-		scrollbar-width: none
+		&._hide-scrollbar
+			// Firefox
+			scrollbar-width: none
 
-		// Other browsers
-		&::-webkit-scrollbar
-			display: none
+			// Other browsers, overlay scrollers
+			&::-webkit-scrollbar
+			::v-deep(.os-scrollbar)
+			::v-deep(.os-scrollbar-handle)
+				display: none
 
-	/* mouse, touch pad, and stylus-based screens */
-	@media not screen and (pointer: coarse)
+	&._mouse
+	&._overlay-scroller
 		scrollbar-color: $-thumb-default $-track-default
 
 		&::-webkit-scrollbar
+		::v-deep(.os-scrollbar)
 			background-color: $-track-default
 			width: $-size-default
+
+		&::-webkit-scrollbar
 			height: $-size-default
 
-			&-thumb
-				background-color: $-thumb-default
-				border-radius: $-size-default
+		&::-webkit-scrollbar-thumb
+		::v-deep(.os-scrollbar-handle)
+			background-color: $-thumb-default
+			border-radius: $-size-default
 
-				&:hover
-					background-color: $-thumb-default-hover
+			&:hover
+				background-color: $-thumb-default-hover
 
-		&.-thin
+		&._thin
 			scrollbar-width: thin
 
 			&::-webkit-scrollbar
+			::v-deep(.os-scrollbar)
 				width: $-size-thin
+
+			&::-webkit-scrollbar
 				height: $-size-thin
 
-				&-thumb
-					border-radius: $-size-thin
+			&::-webkit-scrollbar-thumb
+			::v-deep(.os-scrollbar-handle)
+				border-radius: $-size-thin
 
 		// Override colors so transparency doesn't look weird
 		// with body background or others in full-screen modals.
-		&.modal
+		&._modal-scroller
 			scrollbar-color: $-thumb-modal $-track-modal
 
 			&::-webkit-scrollbar
+			::v-deep(.os-scrollbar)
 				background-color: $-track-modal
 
-				&-thumb
-					background-color: $-thumb-modal
+			&::-webkit-scrollbar-thumb
+			::v-deep(.os-scrollbar-handle)
+				background-color: $-thumb-modal
 
-					&:hover
-						background-color: $-thumb-modal-hover
+				&:hover
+					background-color: $-thumb-modal-hover
 </style>
