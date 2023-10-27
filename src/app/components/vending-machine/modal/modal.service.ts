@@ -1,10 +1,10 @@
 import { defineAsyncComponent } from 'vue';
-import { ShopShowLocation, trackShopOpen } from '../../../../_common/analytics/analytics.service';
+import { ShopOpenLocation, trackShopOpen } from '../../../../_common/analytics/analytics.service';
 import { showModal } from '../../../../_common/modal/modal.service';
 
 export async function showVendingMachineModal(options: {
 	userId?: number;
-	location: ShopShowLocation;
+	location: ShopOpenLocation;
 }) {
 	const { userId, location } = options;
 

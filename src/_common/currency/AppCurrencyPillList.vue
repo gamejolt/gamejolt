@@ -70,7 +70,7 @@ const { currencies, direction, mainAlign, crossAlign, gap, wrap, fillColor, over
 		}"
 	>
 		<AppCurrencyPill
-			v-for="[, [currency, amount]] in Object.entries(currencies)"
+			v-for="[currency, amount] in Object.values(currencies)"
 			:key="currency.id"
 			:currency="currency"
 			:amount="amount"

@@ -1,4 +1,33 @@
 <script lang="ts">
+import { computed, nextTick, onMounted, PropType, ref, shallowRef, toRefs } from 'vue';
+import { Api, RequestOptions } from '../../../../../_common/api/api.service';
+import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
+import { formatNumber } from '../../../../../_common/filters/number';
+import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
+import { illPointyThing } from '../../../../../_common/illustration/illustrations';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
+import AppModal from '../../../../../_common/modal/AppModal.vue';
+import AppModalFloatingHeader from '../../../../../_common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '../../../../../_common/modal/modal.service';
+import AppRealmFullCard, {
+	REALM_CARD_RATIO,
+} from '../../../../../_common/realm/AppRealmFullCard.vue';
+import { RealmModel } from '../../../../../_common/realm/realm-model';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppScrollScroller, {
+	createScroller,
+} from '../../../../../_common/scroll/AppScrollScroller.vue';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
+import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
+import { arrayRemove } from '../../../../../utils/array';
+import { debounce } from '../../../../../utils/utils';
+import AppContentTargetRealm from '../AppContentTargetRealm.vue';
+
 type RealmSearchFeed = ReturnType<typeof createRealmSearchFeed>;
 
 function createRealmSearchFeed(query: string) {
@@ -111,35 +140,6 @@ function createRealmSearchFeed(query: string) {
 </script>
 
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, PropType, ref, shallowRef, toRefs } from 'vue';
-import { Api, RequestOptions } from '../../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { illPointyThing } from '../../../../../_common/illustration/illustrations';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import AppModalFloatingHeader from '../../../../../_common/modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import AppRealmFullCard, {
-	REALM_CARD_RATIO,
-} from '../../../../../_common/realm/AppRealmFullCard.vue';
-import { RealmModel } from '../../../../../_common/realm/realm-model';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollScroller, {
-	createScroller,
-} from '../../../../../_common/scroll/AppScrollScroller.vue';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import { arrayRemove } from '../../../../../utils/array';
-import { debounce } from '../../../../../utils/utils';
-import AppContentTargetRealm from '../AppContentTargetRealm.vue';
-
 const COL_COUNT_BASE = 4;
 const COL_COUNT_XS = 2;
 

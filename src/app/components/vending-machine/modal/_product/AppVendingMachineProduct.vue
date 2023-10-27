@@ -1,18 +1,23 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
-import { ShopClickType, trackShopView } from '../../../../../_common/analytics/analytics.service';
+import { PropType, computed, toRef, toRefs } from 'vue';
+import { ShopViewType, trackShopView } from '../../../../../_common/analytics/analytics.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
+import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
 import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import { useOnHover } from '../../../../../_common/on/useOnHover';
+import { Screen } from '../../../../../_common/screen/screen-service';
 import AppStickerPack, {
 	StickerPackExpiryStyles,
+	StickerPackRatio,
 } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
+import { kThemeFg, kThemeFgMuted, kThemeGray } from '../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { kBorderRadiusLg } from '../../../../../_styles/variables';
-import AppProductCurrencyTags from './AppProductCurrencyTags.vue';
+import { styleElevate, styleTyped, styleWhen } from '../../../../../_styles/mixins';
+import { kBorderRadiusLg, kFontSizeSmall, kStrongEaseOut } from '../../../../../_styles/variables';
 
 const props = defineProps({
 	shopProduct: {
@@ -35,18 +40,10 @@ const emit = defineEmits({
 
 const { user: myUser } = useCommonStore();
 
-const name = computed(() => {
-	const product = shopProduct.value;
-	if (product.stickerPack) {
-		// This is handled in the AppStickerPack component.
-		return null;
-	} else if (product.avatarFrame) {
-		return product.avatarFrame.name || '';
-	} else if (product.background) {
-		return product.background.name || '';
-	}
+const name = computed(() => shopProduct.value.product?.name || '');
 
-	return null;
+const { hoverBinding, hovered } = useOnHover({
+	disable: toRef(() => !Screen.isPointerMouse),
 });
 
 function onClickProduct() {
@@ -54,7 +51,7 @@ function onClickProduct() {
 		return;
 	}
 
-	let type: ShopClickType = 'unhandled-product';
+	let type: ShopViewType = 'unhandled-product';
 	const i = shopProduct.value;
 	if (i.avatarFrame) {
 		type = 'avatar-frame';
@@ -68,30 +65,19 @@ function onClickProduct() {
 	emit('purchase', shopProduct.value);
 }
 
-const popperConfirmRadius = kBorderRadiusLg;
-
 const overlayTagZIndex = 2;
-const currencyTagStyles: CSSProperties = {
-	position: `absolute`,
-	bottom: `4px`,
-	right: `4px`,
-	zIndex: overlayTagZIndex,
-};
 
-const anchorStyles = computed<CSSProperties>(() => {
-	if (disablePurchases.value) {
-		// Revert the cursor if we're not allowing purchases. Using a
-		// <component> tag and swapping between <a> and <div> was causing some
-		// item images to flicker.
-		return { cursor: `inherit` };
+const productType = computed(() => {
+	const product = shopProduct.value;
+	if (product.avatarFrame) {
+		return $gettext(`Avatar frame`);
+	} else if (product.background) {
+		return $gettext(`Background`);
+	} else if (product.stickerPack) {
+		return $gettext(`Sticker pack`);
 	}
-	return {};
+	return null;
 });
-
-const readableEndsOnStyles: CSSProperties = {
-	...StickerPackExpiryStyles,
-	zIndex: overlayTagZIndex,
-};
 
 const readableEndsOn = computed(() => {
 	const endsOn = shopProduct.value.ends_on;
@@ -108,75 +94,147 @@ const readableEndsOn = computed(() => {
 		},
 	});
 });
+
+const parentRatio = 1 ?? (1 + StickerPackRatio) / 2;
+const nameFontSize = kFontSizeSmall;
 </script>
 
 <template>
-	<div>
+	<a
+		v-bind="hoverBinding"
+		class="theme-dark"
+		:style="
+			styleTyped({
+				borderRadius: kBorderRadiusLg.px,
+				position: `relative`,
+				...styleElevate(0),
+				...styleWhen(hovered && !disablePurchases, styleElevate(2)),
+				backgroundColor: kThemeGray,
+				backgroundImage: `radial-gradient(circle at center bottom, rgba(128, 128, 128, 0.75), transparent 69%)`,
+				...styleWhen(disablePurchases, {
+					cursor: `default`,
+				}),
+				display: `flex`,
+				flexDirection: `column`,
+			})
+		"
+		@click="onClickProduct()"
+	>
 		<div
 			:style="{
+				// Only need the pointer to interact with the root item.
+				// This should prevent our scale transforms from causing a hover outside of the parent bounds.
+				pointerEvents: `none`,
 				position: `relative`,
 				zIndex: 1,
+				padding: `12px`,
+				transition: `transform ${kStrongEaseOut} 250ms`,
+				...styleWhen(hovered, {
+					transform: `translateY(-16px) scale(1.2)`,
+				}),
 			}"
 		>
-			<AppStickerPack
-				v-if="shopProduct.stickerPack"
-				:pack="shopProduct.stickerPack"
-				:can-click-pack="!disablePurchases"
-				show-details
-				@click-pack="onClickProduct()"
+			<AppAspectRatio
+				:ratio="parentRatio"
+				:child-ratio="shopProduct.stickerPack ? StickerPackRatio : 1"
+				show-overflow
 			>
-				<template #overlay-children>
-					<div v-if="readableEndsOn" :style="readableEndsOnStyles">
-						{{ readableEndsOn }}
-					</div>
-
-					<AppProductCurrencyTags
-						:style="currencyTagStyles"
-						:shop-product="shopProduct"
-					/>
-				</template>
-			</AppStickerPack>
-			<a v-else-if="shopProduct.product" :style="anchorStyles" @click="onClickProduct()">
+				<AppStickerPack v-if="shopProduct.stickerPack" :pack="shopProduct.stickerPack" />
 				<AppUserAvatarBubble
-					v-if="shopProduct.avatarFrame"
+					v-else-if="shopProduct.avatarFrame"
 					:user="myUser"
 					:frame-override="shopProduct.avatarFrame"
 					show-frame
 					smoosh
 					disable-link
 				/>
-				<AppAspectRatio v-else-if="shopProduct.background" :ratio="1">
-					<AppBackground
-						:background="shopProduct.background"
-						:backdrop-style="{
-							borderRadius: popperConfirmRadius.px,
-						}"
-						:background-style="{
-							backgroundSize: `contain`,
-							backgroundPosition: `center`,
-						}"
-						darken
-					>
-						<AppAspectRatio :ratio="1" />
-					</AppBackground>
-				</AppAspectRatio>
-
-				<div v-if="readableEndsOn" :style="readableEndsOnStyles">
-					{{ readableEndsOn }}
-				</div>
-
-				<AppProductCurrencyTags :style="currencyTagStyles" :shop-product="shopProduct" />
-			</a>
+				<AppBackground
+					v-else-if="shopProduct.background"
+					:background="shopProduct.background"
+					:backdrop-style="{
+						borderRadius: kBorderRadiusLg.px,
+					}"
+					:background-style="{
+						backgroundSize: `contain`,
+						backgroundPosition: `center`,
+					}"
+					darken
+				>
+					<AppAspectRatio :ratio="1" />
+				</AppBackground>
+			</AppAspectRatio>
 		</div>
 
 		<div
-			v-if="name && name.length"
 			:style="{
-				marginTop: `8px`,
-				fontWeight: 700,
+				backgroundColor: `black`,
+				width: `100%`,
+				padding: `8px`,
+				display: `flex`,
+				flexDirection: `column`,
+				alignItems: `center`,
+				fontSize: nameFontSize.px,
+				color: kThemeFg,
+				borderBottomRightRadius: kBorderRadiusLg.px,
+				borderBottomLeftRadius: kBorderRadiusLg.px,
+				textAlign: `center`,
+				flex: `auto`,
 			}"
 		>
-			{{ name }}
+			<div
+				v-if="productType"
+				:style="{
+					alignSelf: `center`,
+					color: kThemeFgMuted,
+					fontSize: `${nameFontSize.value - 2}px`,
+				}"
+			>
+				{{ productType }}
+			</div>
+
+			<div
+				v-if="name && name.length"
+				:style="{
+					fontWeight: 700,
+				}"
+			>
+				{{ name }}
+			</div>
+
+			<div :style="{ marginTop: `auto`, height: `4px` }" />
+
+			<AppCurrencyPillList
+				:style="{
+					alignSelf: `flex-end`,
+				}"
+				:currencies="shopProduct.validPricingsData"
+				direction="row"
+				cross-align="flex-end"
+				fill-color="bg-offset"
+				:gap="4"
+			/>
 		</div>
-	</div>
+
+		<Transition name="fade">
+			<div
+				v-if="readableEndsOn && !hovered"
+				:style="{
+					...StickerPackExpiryStyles,
+					zIndex: overlayTagZIndex,
+				}"
+			>
+				{{ readableEndsOn }}
+			</div>
+		</Transition>
+	</a>
 </template>
+
+<style lang="stylus" scoped>
+.fade-enter-active
+.fade-leave-active
+	transition: opacity 200ms
+
+.fade-enter-from
+.fade-leave-to
+	opacity: 0
+</style>
