@@ -1,116 +1,82 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { ref, toRef } from 'vue';
 import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
+import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 import AppCommunityChannelCard from '../../../../../components/community/channel/card/AppCommunityChannelCard.vue';
-import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import { useAppStore } from '../../../../../store';
 import { loadArchivedChannels, useCommunityRouteStore } from '../../view.store';
 
-@Options({
-	components: {
-		AppCommunityPerms,
-		AppCommunityChannelCard,
-		AppLoading,
-	},
-})
-export default class AppNavChannels extends Vue {
-	store = setup(() => useAppStore());
-	commonStore = setup(() => useCommonStore());
+const store = useAppStore();
+const { user } = useCommonStore();
+const routeStore = useCommunityRouteStore()!;
 
-	routeStore = setup(() => useCommunityRouteStore())!;
+const isLoadingArchivedChannels = ref(false);
 
-	isLoadingArchivedChannels = false;
+const communities = toRef(() => store.communities);
+const communityStates = toRef(() => store.communityStates);
+const community = toRef(() => routeStore.community);
+const frontpageChannel = toRef(() => routeStore.frontpageChannel);
+const allChannel = toRef(() => routeStore.allChannel);
+const activeChannel = toRef(() => routeStore.channel);
+const communityState = toRef(() => communityStates.value.value.getCommunityState(community.value));
 
-	get communities() {
-		return this.store.communities;
-	}
-
-	get communityStates() {
-		return this.store.communityStates;
-	}
-
-	get user() {
-		return this.commonStore.user;
-	}
-
-	get community() {
-		return this.routeStore.community;
-	}
-
-	get frontpageChannel() {
-		return this.routeStore.frontpageChannel;
-	}
-
-	get allChannel() {
-		return this.routeStore.allChannel;
-	}
-
-	get activeChannel() {
-		return this.routeStore.channel;
-	}
-
-	get communityState() {
-		return this.communityStates.getCommunityState(this.community);
-	}
-
-	isChannelLocked(channel: CommunityChannelModel) {
-		// Don't show the locked status to guests.
-		if (!this.user) {
-			return false;
-		}
-
-		// Don't show for jams since you can't post.
-		if (channel.type === 'competition') {
-			return false;
-		}
-
-		// Don't show in the draft stage, because no one can post in that stage.
-		return !channel.canPost && channel.visibility !== 'draft';
-	}
-
-	isChannelUnread(channel: CommunityChannelModel) {
-		if (channel === this.allChannel) {
-			// Never show "unread" status on the All Posts channel.
-			return false;
-		}
-
-		if (channel === this.frontpageChannel) {
-			return this.communityState.hasUnreadFeaturedPosts;
-		}
-
-		// We need to access the reactive community from the Store here.
-		const stateCommunity = this.communities.find(c => c.id === this.community.id);
-		if (channel && stateCommunity instanceof CommunityModel) {
-			return this.communityState.unreadChannels.includes(channel.id);
-		}
-
+function isChannelLocked(channel: CommunityChannelModel) {
+	// Don't show the locked status to guests.
+	if (!user) {
 		return false;
 	}
 
-	isChannelUnpublished(channel: CommunityChannelModel) {
-		return channel.isUnpublished;
+	// Don't show for jams since you can't post.
+	if (channel.type === 'competition') {
+		return false;
 	}
 
-	async onClickArchivedChannels() {
-		if (this.isLoadingArchivedChannels) {
-			return;
-		}
+	// Don't show in the draft stage, because no one can post in that stage.
+	return !channel.canPost && channel.visibility !== 'draft';
+}
 
-		this.routeStore.expandedArchivedChannels = !this.routeStore.expandedArchivedChannels;
+function isChannelUnread(channel: CommunityChannelModel) {
+	if (channel === allChannel.value) {
+		// Never show "unread" status on the All Posts channel.
+		return false;
+	}
 
-		// Load in archived channels.
-		if (this.routeStore.expandedArchivedChannels && !this.routeStore.loadedArchivedChannels) {
-			this.isLoadingArchivedChannels = true;
+	if (channel === frontpageChannel.value) {
+		return communityState.value.hasUnreadFeaturedPosts;
+	}
 
-			await loadArchivedChannels(this.routeStore);
+	// We need to access the reactive community from the Store here.
+	const stateCommunity = communities.value.value.find(c => c.id === community.value.id);
+	if (channel && stateCommunity instanceof CommunityModel) {
+		return communityState.value.unreadChannels.includes(channel.id);
+	}
 
-			this.routeStore.loadedArchivedChannels = true;
-			this.isLoadingArchivedChannels = false;
-		}
+	return false;
+}
+
+function isChannelUnpublished(channel: CommunityChannelModel) {
+	return channel.isUnpublished;
+}
+
+async function onClickArchivedChannels() {
+	if (isLoadingArchivedChannels.value) {
+		return;
+	}
+
+	routeStore.expandedArchivedChannels = !routeStore.expandedArchivedChannels;
+
+	// Load in archived channels.
+	if (routeStore.expandedArchivedChannels && !routeStore.loadedArchivedChannels) {
+		isLoadingArchivedChannels.value = true;
+
+		await loadArchivedChannels(routeStore);
+
+		routeStore.loadedArchivedChannels = true;
+		isLoadingArchivedChannels.value = false;
 	}
 }
 </script>
@@ -139,7 +105,7 @@ export default class AppNavChannels extends Vue {
 		/>
 
 		<h5 class="-heading">
-			<AppTranslate>Channels</AppTranslate>
+			{{ $gettext(`Channels`) }}
 		</h5>
 
 		<template v-if="community.channels">
@@ -164,7 +130,7 @@ export default class AppNavChannels extends Vue {
 				<AppJolticon
 					:icon="routeStore.expandedArchivedChannels ? 'chevron-down' : 'chevron-right'"
 				/>
-				<AppTranslate>Archived Channels</AppTranslate>
+				{{ $gettext(`Archived Channels`) }}
 			</h5>
 
 			<template
