@@ -201,7 +201,7 @@ const scrollerStyles = computed<CSSProperties>(() => {
 	._main
 		flex: 2 0
 		order: 1
-		max-width: 650px
+		max-width: 650px + $grid-gutter-width
 
 	._right-container
 		flex: 1 0
