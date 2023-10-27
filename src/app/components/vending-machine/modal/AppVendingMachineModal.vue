@@ -352,35 +352,6 @@ const currencyCardTransitionStyles: CSSProperties = {
 						</AppButton>
 					</div>
 				</template>
-
-				<template #title>
-					<div
-						v-if="shopOwner"
-						:style="{
-							display: `flex`,
-							gap: `12px`,
-							alignItems: `center`,
-						}"
-					>
-						<AppUserAvatarBubble
-							:style="{
-								width: `40px`,
-								height: `40px`,
-								flex: `none`,
-							}"
-							:user="shopOwner"
-							show-frame
-						/>
-
-						<div :style="shopOwnerNameStyles">
-							{{
-								$gettext(`@%{ username }'s Shop`, {
-									username: shopOwner.username,
-								})
-							}}
-						</div>
-					</div>
-				</template>
 			</AppModalFloatingHeader>
 
 			<div
@@ -393,6 +364,35 @@ const currencyCardTransitionStyles: CSSProperties = {
 					flexDirection: `column`,
 				}"
 			>
+				<div
+					v-if="shopOwner"
+					:style="{
+						display: `flex`,
+						gap: `12px`,
+						alignItems: `center`,
+						paddingTop: `8px`,
+						paddingBottom: `16px`,
+					}"
+				>
+					<AppUserAvatarBubble
+						:style="{
+							width: `40px`,
+							height: `40px`,
+							flex: `none`,
+						}"
+						:user="shopOwner"
+						show-frame
+					/>
+
+					<div :style="shopOwnerNameStyles">
+						{{
+							$gettext(`@%{ username }'s Shop`, {
+								username: shopOwner.username,
+							})
+						}}
+					</div>
+				</div>
+
 				<AppTheme :force-dark="isDark" :force-light="!isDark">
 					<AppLoadingFade
 						class="fill-offset"

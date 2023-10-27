@@ -8,14 +8,13 @@ import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 			<slot name="modal-controls" />
 		</div>
 
-		<div v-if="$slots.title || $slots.bottom" class="-floating-top">
+		<div class="-floating-top">
 			<div v-if="$slots.title" class="-sans-padding-horizontal modal-header">
 				<h2 class="modal-title">
-					<div class="-title">
-						<slot name="title" />
-					</div>
+					<slot name="title" />
 				</h2>
 			</div>
+			<div v-else :style="{ height: `8px` }" />
 
 			<slot v-if="$slots.bottom" name="bottom" />
 		</div>
