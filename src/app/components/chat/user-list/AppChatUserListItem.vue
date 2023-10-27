@@ -87,11 +87,6 @@ async function leaveRoom() {
 		:title="hoverTitle"
 		:horizontal-padding="16"
 		:force-hover="isActive"
-		:dynamic-slots="{
-			leading: true,
-			title: true,
-			trailing: notificationsCount > 0,
-		}"
 		popper-placement="bottom"
 		popper-trigger="right-click"
 		popper-hide-on-state-change

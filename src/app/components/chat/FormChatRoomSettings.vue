@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { computed, PropType, ref, toRef, toRefs, watch } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import { BackgroundModel } from '../../../_common/background/background.model';
-import AppButton from '../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
@@ -22,9 +21,8 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { useGridStore } from '../grid/grid-store';
 import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './client';
-import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
+import FormChatRoomSettingsMemberPreview from './FormChatRoomSettingsMemberPreview.vue';
 import { ChatRoomModel } from './room';
-import { ChatUser } from './user';
 
 const props = defineProps({
 	room: {
@@ -34,10 +32,6 @@ const props = defineProps({
 	showMembersPreview: {
 		type: Boolean,
 	},
-	members: {
-		type: Array as PropType<ChatUser[]>,
-		default: () => [] as ChatUser[],
-	},
 });
 
 const emit = defineEmits({
@@ -45,7 +39,7 @@ const emit = defineEmits({
 	viewMembers: () => true,
 });
 
-const { room, showMembersPreview, members } = toRefs(props);
+const { room, showMembersPreview } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
 
 const titleMinLength = ref<number>();
@@ -132,22 +126,15 @@ const notificationLevelForm: FormController<FormNotificationLevel> = createForm(
 	},
 });
 
-const isOwner = computed(
+const isOwner = toRef(
 	() =>
 		room.value && !!chat.value.currentUser && room.value.owner_id === chat.value.currentUser.id
 );
 
-const canEditTitle = computed(() => !room.value.isPmRoom && isOwner.value);
-const canEditBackground = computed(() => backgrounds.value.length > 0);
-const shouldShowLeave = computed(() => !room.value.isPmRoom);
-const hasLoadedBackgrounds = computed(() => backgroundForm.isLoadedBootstrapped);
-
-const membersPreview = computed(() => {
-	if (showMembersPreview.value) {
-		return members.value.slice(0, 5);
-	}
-	return [];
-});
+const canEditTitle = toRef(() => !room.value.isPmRoom && isOwner.value);
+const canEditBackground = toRef(() => backgrounds.value.length > 0);
+const shouldShowLeave = toRef(() => !room.value.isPmRoom);
+const hasLoadedBackgrounds = toRef(() => backgroundForm.isLoadedBootstrapped);
 
 const notificationSettings = computed(() => {
 	const settings = [];
@@ -296,27 +283,11 @@ async function leaveRoom() {
 				</AppFormGroup>
 			</AppForm>
 
-			<template v-if="showMembersPreview && membersPreview.length > 0">
-				<AppSpacer vertical :scale="6" />
-				<hr />
-				<AppSpacer vertical :scale="6" />
-
-				<ul class="shell-nav">
-					<AppChatMemberListItem
-						v-for="user of membersPreview"
-						:key="user.id"
-						:user="user"
-						:room="room"
-					/>
-
-					<div class="-pad">
-						<AppSpacer vertical :scale="4" />
-						<AppButton block @click="emit('viewMembers')">
-							<AppTranslate>View all members</AppTranslate>
-						</AppButton>
-					</div>
-				</ul>
-			</template>
+			<FormChatRoomSettingsMemberPreview
+				v-if="showMembersPreview"
+				:room="room"
+				@view-members="emit('viewMembers')"
+			/>
 
 			<template v-if="shouldShowLeave">
 				<AppSpacer vertical :scale="6" />
