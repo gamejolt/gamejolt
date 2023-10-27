@@ -124,7 +124,7 @@ onMounted(() => {
 <template>
 	<div
 		ref="element"
-		data-overlayscrollbars-initialize
+		v-bind="overlay ? { 'data-overlayscrollbars-initialize': true } : {}"
 		class="scroll-scroller"
 		:class="{
 			'_default-scroller': !overlay,
