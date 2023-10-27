@@ -3,7 +3,7 @@ import { CSSProperties, Ref, computed, onMounted, ref, toRefs } from 'vue';
 import { trackShopView } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import { showAuthModal } from '../../../../_common/auth/auth-modal.service';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
 import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
@@ -251,13 +251,12 @@ async function purchaseProduct(shopProduct: InventoryShopProductSaleModel) {
 }
 
 async function onClickCurrencyCard(currency: Currency) {
-	if (currency.id === CurrencyType.joltbux.id) {
-		// Only authed users can buy joltbux.
-		if (!authUser.value) {
-			showAuthModal();
-			return;
-		}
+	// Only authed users can interact with these.
+	if (!authUser.value) {
+		return;
+	}
 
+	if (currency.id === CurrencyType.joltbux.id) {
 		trackShopView({ type: 'joltbux-card' });
 		showPurchaseMicrotransactionModal();
 	} else if (currency.id === CurrencyType.coins.id) {
@@ -422,6 +421,7 @@ const currencyCardTransitionStyles: CSSProperties = {
 							>
 								<AppOnHover v-slot="{ hoverBinding, hovered }">
 									<div
+										v-app-auth-required
 										v-bind="{
 											...hoverBinding,
 											style: [
