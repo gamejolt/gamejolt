@@ -16,7 +16,7 @@ import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { getAbsoluteLink } from '../../../../../utils/router';
 import { showCommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
 import { useAppStore } from '../../../../store';
-import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue';
+import AppEditableThumbnail from '../_editable-thumbnail/AppEditableThumbnail.vue';
 import { useCommunityRouteStore } from '../view.store';
 
 @Options({

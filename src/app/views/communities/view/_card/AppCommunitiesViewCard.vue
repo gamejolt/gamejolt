@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import AppCommunityCardBase from '../../../../../_common/community/card-base/AppCommunityCardBase.vue';
-import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue';
+import AppEditableThumbnail from '../_editable-thumbnail/AppEditableThumbnail.vue';
 import { useCommunityRouteStore } from '../view.store';
 
 const routeStore = useCommunityRouteStore()!;
