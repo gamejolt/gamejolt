@@ -3106,6 +3106,16 @@ orderedmap@^1.1.0:
   resolved "https://registry.yarnpkg.com/orderedmap/-/orderedmap-1.1.1.tgz#c618e77611b3b21d0fe3edc92586265e0059c789"
   integrity sha512-3Ux8um0zXbVacKUkcytc0u3HgC0b0bBLT+I60r2J/En72cI0nZffqrA7Xtf2Hqs27j1g82llR5Mhbd0Z1XW4AQ==
 
+overlayscrollbars-vue@0.5.6:
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/overlayscrollbars-vue/-/overlayscrollbars-vue-0.5.6.tgz#cae11d204ece52b170702c0cea15703869526731"
+  integrity sha512-gBraPkblG/pE6P74+q0vOnULzmD1sePth7S3D6Cb8hLLLrkJNE66cNWzxUgVPtUP3gp5PK6R3rZsxNNo3Xs3GQ==
+
+overlayscrollbars@2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/overlayscrollbars/-/overlayscrollbars-2.4.3.tgz#2a6b4aa0392b1444e679f63ff6495eaf08d0d085"
+  integrity sha512-DG//Rd7AVVEvaVtBcjg+NlfT9IWbBWw2vO7+zFVLz86AVHQA3KcaAd/WByFtUMNwzTW2DDOqgb/bXQOw6OZLMw==
+
 p-finally@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/p-finally/-/p-finally-1.0.0.tgz#3fbcfb15b899a44123b34b6dcc18b724336a2cae"

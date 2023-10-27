@@ -114,13 +114,10 @@ const scrollerStyles = computed<CSSProperties>(() => {
 				>
 					<component
 						:is="useStickySides ? AppScrollScroller : 'div'"
-						class="_left"
-						:class="{
-							// Only used to prevent some glitches when going from 2+ col to 1.
-							'_scrollbar-fix': useStickySides,
-						}"
+						class="_left-scroller"
 						:style="scrollerStyles"
 						thin
+						overlay
 					>
 						<slot name="left" />
 						<slot name="left-bottom" />
@@ -128,7 +125,7 @@ const scrollerStyles = computed<CSSProperties>(() => {
 				</component>
 			</template>
 
-			<div :key="`main:${keySuffix}`" class="_main-container">
+			<div :key="`main:${keySuffix}`" class="_main">
 				<slot name="default" />
 			</div>
 
@@ -137,19 +134,14 @@ const scrollerStyles = computed<CSSProperties>(() => {
 					:is="useStickySides ? AppScrollAffix : 'div'"
 					:key="`right:${keySuffix}`"
 					class="_right-container"
-					:class="{
-						'_scrollbar-fix': useStickySides,
-					}"
 					v-bind="scrollAffixProps"
 				>
 					<component
 						:is="useStickySides ? AppScrollScroller : 'div'"
-						class="_right"
-						:class="{
-							'_scrollbar-fix': useStickySides,
-						}"
+						class="_right-scroller"
 						:style="scrollerStyles"
 						thin
+						overlay
 					>
 						<slot v-if="shouldCombineColumns" name="left" />
 						<slot name="right" v-bind="{ combined: shouldCombineColumns }" />
@@ -162,16 +154,6 @@ const scrollerStyles = computed<CSSProperties>(() => {
 </template>
 
 <style lang="stylus" scoped>
-$-main-max-width = 650px
-
-// Because flexbox allows the columns to flexibly size, we need to do a manual
-// cut-off by setting the width forcefully. This calc line basically tries to
-// find the correct width for the main content column and should work at any
-// screen width since it's using calc() with the percentage.
--main-max-width($-num-columns)
-	width: s('calc(100% - calc(100% / 12 * 3 * %s) - %s)', $-num-columns, ($grid-gutter-width * $-num-columns))
-	max-width: $-main-max-width
-
 // On xs the content stacks, we shove "main" to the bottom.
 ._row
 	display: flex
@@ -184,7 +166,8 @@ $-main-max-width = 650px
 ._right-container
 	order: 1
 
-._main-container
+._main
+	min-width: 0
 	order: 2
 
 // On sm we keep them in same column, but set a max size and center the content.
@@ -192,9 +175,9 @@ $-main-max-width = 650px
 	._row
 		align-items: center
 
-	._main-container
-	._left
-	._right
+	._main
+	._left-container
+	._right-container
 		width: ($container-sm / 12 * 10)
 
 // Desktop sizes is where we break it out into different columns.
@@ -202,48 +185,25 @@ $-main-max-width = 650px
 	._row
 		flex-direction: row
 		justify-content: center
+		margin-left: -($grid-gutter-width * 0.5)
+		margin-right: -($grid-gutter-width * 0.5)
+
+	._main
+	._left-scroller
+	._right-scroller
+		padding-left: $grid-gutter-width * 0.5
+		padding-right: $grid-gutter-width * 0.5
 
 	._left-container
 		flex: 1 0
 		order: 0
-		min-width: $percentage-3
-		// Padding is split between inner and outer elements so that the
-		// scrollbar is aligned a bit better.
-		padding-right: $grid-gutter-width * 0.5
 
-	._left
-		padding-right: $grid-gutter-width * 0.5
-
-	._main-container
-		-main-max-width(1)
+	._main
 		flex: 2 0
 		order: 1
+		max-width: 650px
 
 	._right-container
 		flex: 1 0
 		order: 2
-		min-width: $percentage-3
-		padding-left: $grid-gutter-width
-
-		&._scrollbar-fix
-			padding-left: $grid-gutter-width * 0.5
-
-	// Adjust padding to help prevent weird scrollbar contact.
-	._right._scrollbar-fix
-		padding-left: $grid-gutter-width * 0.25
-		padding-right: $grid-gutter-width * 0.25
-
-@media $media-lg
-	._main-container
-		-main-max-width(2)
-
-// Fixes visual glitches when going from 2+ columns to 1.
-//
-// ScreenService breakpoints are slower than media queries, so sizing and
-// AppScrollAffix things aren't triggered at the same time. This fix prevents a
-// strobe-like effect when switching between these breakpoints.
-@media $media-mobile
-	._left._scrollbar-fix
-	._right._scrollbar-fix
-		display: none
 </style>
