@@ -1,6 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/AppCommunityJoinWidget.vue';
 import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -17,7 +17,7 @@ import { getAbsoluteLink } from '../../../../../utils/router';
 import { showCommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
 import { useAppStore } from '../../../../store';
 import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import { useCommunityRouteStore } from '../view.store';
 
 @Options({
 	components: {
@@ -38,8 +38,7 @@ export default class AppMobileHeader extends Vue {
 	commonStore = setup(() => useCommonStore());
 	sidebarStore = setup(() => useSidebarStore());
 
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	get user() {
 		return this.commonStore.user;

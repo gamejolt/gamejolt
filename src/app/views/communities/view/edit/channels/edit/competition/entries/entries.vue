@@ -1,15 +1,16 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import {
-CompetitionPeriodPreComp,
-CompetitionPeriodVoting,
+	CompetitionPeriodPreComp,
+	CompetitionPeriodVoting,
 } from '../../../../../../../../../_common/community/competition/competition.model';
 import {
-$hideCommunityCompetitionEntry,
-$unhideCommunityCompetitionEntry,
-CommunityCompetitionEntryModel,
+	$hideCommunityCompetitionEntry,
+	$unhideCommunityCompetitionEntry,
+	CommunityCompetitionEntryModel,
 } from '../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../../../../../_common/illustration/AppIllustration.vue';
@@ -18,8 +19,8 @@ import AppLoading from '../../../../../../../../../_common/loading/AppLoading.vu
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPagination from '../../../../../../../../../_common/pagination/AppPagination.vue';
 import {
-LegacyRouteComponent,
-OptionsForLegacyRoute,
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
 } from '../../../../../../../../../_common/route/legacy-route-component';
 import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
@@ -29,7 +30,7 @@ import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUs
 import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
 import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../components/community/competition/entry/modal/modal.service';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
+import { useCommunityRouteStore } from '../../../../../view.store';
 
 type Payload = {
 	entryCount: number;
@@ -123,8 +124,7 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 	},
 })
 export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	entryCount = 0;
 	entries: CommunityCompetitionEntryModel[] = [];

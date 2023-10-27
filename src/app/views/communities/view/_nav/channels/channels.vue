@@ -1,6 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
-import { Inject, Options, Vue } from 'vue-property-decorator';
+import { Options, Vue } from 'vue-property-decorator';
 import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
@@ -8,11 +8,7 @@ import { useCommonStore } from '../../../../../../_common/store/common-store';
 import AppCommunityChannelCard from '../../../../../components/community/channel/card/AppCommunityChannelCard.vue';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import { useAppStore } from '../../../../../store';
-import {
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
-	loadArchivedChannels,
-} from '../../view.store';
+import { loadArchivedChannels, useCommunityRouteStore } from '../../view.store';
 
 @Options({
 	components: {
@@ -25,8 +21,7 @@ export default class AppNavChannels extends Vue {
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	isLoadingArchivedChannels = false;
 

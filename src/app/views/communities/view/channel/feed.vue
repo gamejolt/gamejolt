@@ -1,6 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
-import { Inject, Options, Watch } from 'vue-property-decorator';
+import { Options, Watch } from 'vue-property-decorator';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments } from '../../../../../_common/illustration/illustrations';
@@ -21,12 +21,7 @@ import {
 } from '../_feed/feed-helpers';
 import AppCommunitiesViewFeed from '../_feed/feed.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
-import {
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
-	isVirtualChannel,
-	setCommunityMeta,
-} from '../view.store';
+import { isVirtualChannel, setCommunityMeta, useCommunityRouteStore } from '../view.store';
 import { CommunitiesViewChannelDeps } from './channel.vue';
 
 @Options({
@@ -48,8 +43,7 @@ export default class RouteCommunitiesViewChannelFeed extends LegacyRouteComponen
 	commonStore = setup(() => useCommonStore());
 	gridStore = setup(() => useGridStore());
 
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	get user() {
 		return this.commonStore.user;

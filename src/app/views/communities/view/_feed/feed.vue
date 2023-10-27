@@ -1,6 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
-import { Emit, Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
@@ -18,7 +18,7 @@ import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
 import { useAppStore } from '../../../../store';
 import AppBlockedNotice from '../_blocked-notice/AppBlockedNotice.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey, isVirtualChannel } from '../view.store';
+import { isVirtualChannel, useCommunityRouteStore } from '../view.store';
 
 @Options({
 	components: {
@@ -39,9 +39,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
-
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	get user() {
 		return this.commonStore.user;
@@ -60,7 +58,7 @@ export default class AppCommunitiesViewFeed extends Vue {
 	}
 
 	get communityState() {
-		return this.communityStates.getCommunityState(this.community);
+		return this.communityStates.getCommunityState(this.community!);
 	}
 
 	get channel() {

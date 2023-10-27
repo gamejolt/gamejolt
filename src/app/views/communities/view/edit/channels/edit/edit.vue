@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { CommunityChannelModel } from '../../../../../../../_common/community/channel/channel.model';
 import {
@@ -12,7 +13,7 @@ import { AppCommunityPerms } from '../../../../../../components/community/perms/
 import AppPageHeader from '../../../../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../../../../components/page-header/controls/controls.vue';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../view.store';
+import { useCommunityRouteStore } from '../../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditChannelsEdit',
@@ -34,8 +35,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../view.store
 		),
 })
 export default class RouteCommunitiesViewEditChannelsEdit extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	get competition() {
 		return this.routeStore.competition;

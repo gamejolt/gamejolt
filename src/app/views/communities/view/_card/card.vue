@@ -1,8 +1,9 @@
 <script lang="ts">
-import { Inject, Options, Vue } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
 import AppCommunityCardBase from '../../../../../_common/community/card-base/AppCommunityCardBase.vue';
 import AppEditableThumbnail from '../_editable-thumbnail/editable-thumbnail.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import { useCommunityRouteStore } from '../view.store';
 
 @Options({
 	components: {
@@ -11,8 +12,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 	},
 })
 export default class AppCommunitiesViewCard extends Vue {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	get community() {
 		return this.routeStore.community;

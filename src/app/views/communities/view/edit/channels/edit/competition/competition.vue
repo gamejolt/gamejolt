@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { formatNumber } from '../../../../../../../../_common/filters/number';
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import {
@@ -9,7 +10,7 @@ import {
 import { Screen } from '../../../../../../../../_common/screen/screen-service';
 import { Timezone } from '../../../../../../../../_common/timezone/timezone.service';
 import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
+import { useCommunityRouteStore } from '../../../../view.store';
 import AppCommunitiesEditCompetitionNav from './_nav/nav.vue';
 
 @Options({
@@ -25,8 +26,7 @@ import AppCommunitiesEditCompetitionNav from './_nav/nav.vue';
 	resolver: () => Timezone.getTimezones(),
 })
 export default class RouteCommunitiesViewEditChannelsCompetition extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	readonly Screen = Screen;
 	readonly formatNumber = formatNumber;

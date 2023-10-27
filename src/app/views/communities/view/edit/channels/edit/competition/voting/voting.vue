@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../../../_common/card/list/AppCardListAdd.vue';
@@ -34,7 +35,7 @@ import FormCommunityCompetitionVotingCategory from '../../../../../../../../comp
 import FormCommunityCompetitionVotingEdit from '../../../../../../../../components/forms/community/competition/voting/edit/edit.vue';
 import FormCommunityCompetitionVotingToggleTS from '../../../../../../../../components/forms/community/competition/voting/toggle/toggle';
 import FormCommunityCompetitionVotingToggle from '../../../../../../../../components/forms/community/competition/voting/toggle/toggle.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
+import { useCommunityRouteStore } from '../../../../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetitionVoting',
@@ -62,8 +63,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		),
 })
 export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	awards: CommunityCompetitionAwardModel[] = [];
 	activeAward: CommunityCompetitionAwardModel | null = null;

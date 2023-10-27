@@ -1,6 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
-import { Inject, Options } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import AppAlertDismissable from '../../../../../../_common/alert/dismissable/AppAlertDismissable.vue';
 import { $removeCollaboratorInvite } from '../../../../../../_common/collaborator/collaborator.model';
 import { $removeCommunity } from '../../../../../../_common/community/community.model';
@@ -21,7 +21,7 @@ import { useGridStore } from '../../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../../store';
 import { CommunityThemeKey } from '../../RouteCommunitiesView.vue';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+import { useCommunityRouteStore } from '../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditDetails',
@@ -36,8 +36,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 })
 @OptionsForLegacyRoute()
 export default class RouteCommunitiesViewEditDetails extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	store = setup(() => useAppStore());
 	themeStore = setup(() => useThemeStore());

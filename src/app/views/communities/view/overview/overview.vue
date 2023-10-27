@@ -1,6 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
-import { Inject, Options, Watch } from 'vue-property-decorator';
+import { Options, Watch } from 'vue-property-decorator';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
@@ -20,11 +20,10 @@ import AppCommunitiesViewFeed from '../_feed/feed.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { CommunitiesViewChannelDeps } from '../channel/channel.vue';
 import {
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
 	acceptCollaboration,
 	declineCollaboration,
 	setCommunityMeta,
+	useCommunityRouteStore,
 } from '../view.store';
 
 @Options({
@@ -50,8 +49,7 @@ export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 	gridStore = setup(() => useGridStore());
 
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	get user() {
 		return this.commonStore.user;

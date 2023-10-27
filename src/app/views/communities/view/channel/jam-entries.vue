@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options, Prop, Watch } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options, Prop, Watch } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
@@ -21,11 +22,7 @@ import {
 	showCommunityCompetitionEntryModalIdFromHash,
 	watchCommunityCompetitionEntryModalForHash,
 } from '../../../../components/community/competition/entry/modal/modal.service';
-import {
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
-	getChannelPathFromRoute,
-} from '../view.store';
+import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
 
 function getSeedSessionStorageKey(route: RouteLocationNormalized) {
 	return (
@@ -156,8 +153,7 @@ function makeRequest(route: RouteLocationNormalized) {
 export default class RouteCommunitiesViewChannelJamEntries extends LegacyRouteComponent {
 	@Prop({ type: Array, required: true }) categories!: CommunityCompetitionVotingCategoryModel[];
 
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	readonly formatNumber = formatNumber;
 	readonly illNoComments = illNoComments;

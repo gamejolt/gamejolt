@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineAsyncComponent } from 'vue';
 import { setup } from 'vue-class-component';
-import { Inject, Options } from 'vue-property-decorator';
+import { Options } from 'vue-property-decorator';
 import { router } from '../../..';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import { Api } from '../../../../../_common/api/api.service';
@@ -25,12 +25,7 @@ import AppCommunityCompetitionCountdown from '../../../../components/community/c
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
 import { AppCommunityPerms } from '../../../../components/community/perms/perms';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
-import {
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
-	getChannelPathFromRoute,
-	setCommunityMeta,
-} from '../view.store';
+import { getChannelPathFromRoute, setCommunityMeta, useCommunityRouteStore } from '../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewChannelJam',
@@ -58,8 +53,7 @@ import {
 export default class RouteCommunitiesViewChannelJam extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	get user() {
 		return this.commonStore.user;
