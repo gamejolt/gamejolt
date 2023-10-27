@@ -3,7 +3,7 @@ import { PropType, computed, provide } from 'vue';
 import { useRoute } from 'vue-router';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
 import { useAppStore } from '../../../../store';
-import AppCommunitiesViewCard from '../_card/card.vue';
+import AppCommunitiesViewCard from '../_card/AppCommunitiesViewCard.vue';
 import AppNavChannels from '../_nav/channels/channels.vue';
 import AppNavEdit from '../_nav/edit/edit.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
@@ -28,8 +28,6 @@ function onChangeSection(path: string) {
 		store.toggleLeftPane();
 	}
 }
-
-// AppCommunitiesViewContext
 </script>
 
 <template>
