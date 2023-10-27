@@ -2,6 +2,7 @@
 import { PropType, Ref, computed, onUnmounted, ref, toRefs, watchEffect } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { BackgroundModel } from '../../../../../_common/background/background.model';
 import AppButton from '../../../../../_common/button/AppButton.vue';
@@ -173,7 +174,7 @@ const { shopProduct, currencyOptions, onItemPurchased } = toRefs(props);
 
 const modal = useModal()!;
 const { stickerPacks } = useStickerStore();
-const { user: myUser, coinBalance, joltbuxBalance } = useCommonStore();
+const { user: authUser, coinBalance, joltbuxBalance } = useCommonStore();
 
 const balanceRefs = { coinBalance, joltbuxBalance };
 
@@ -348,6 +349,15 @@ function handleStickerPackPurchase(product: UserStickerPackModel) {
 	});
 }
 
+function onClickGetJoltbux() {
+	// vAppAuthRequired didn't seem to prevent the onClick directly on the
+	// button, so check here before showing the modal.
+	if (!authUser.value) {
+		return;
+	}
+	showPurchaseMicrotransactionModal();
+}
+
 function getItemWidthStyles(ratio: number) {
 	return {
 		...styleMaxWidthForOptions({
@@ -405,7 +415,7 @@ function getItemWidthStyles(ratio: number) {
 				<div v-else-if="shopProduct.product" :style="getItemWidthStyles(1)">
 					<AppUserAvatarBubble
 						v-if="shopProduct.avatarFrame"
-						:user="myUser"
+						:user="authUser"
 						:frame-override="shopProduct.avatarFrame"
 						show-frame
 						smoosh
@@ -504,7 +514,7 @@ function getItemWidthStyles(ratio: number) {
 				<template v-if="showPurchaseJoltbuxButton">
 					<AppSpacer vertical :scale="3" />
 
-					<AppButton primary trans block @click="showPurchaseMicrotransactionModal()">
+					<AppButton v-app-auth-required primary trans block @click="onClickGetJoltbux()">
 						{{ $gettext(`Get Joltbux`) }}
 					</AppButton>
 				</template>
