@@ -5,7 +5,7 @@ import { isEditingCommunity } from '../../../../../_common/community/community.m
 import { useAppStore } from '../../../../store';
 import AppCommunitiesViewCard from '../_card/AppCommunitiesViewCard.vue';
 import AppNavChannels from '../_nav/channels/AppNavChannels.vue';
-import AppNavEdit from '../_nav/edit/edit.vue';
+import AppNavEdit from '../_nav/edit/AppNavEdit.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 
 const props = defineProps({

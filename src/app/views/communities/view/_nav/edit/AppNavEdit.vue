@@ -1,26 +1,19 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Emit, Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { toRef } from 'vue';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
 import { useCommunityRouteStore } from '../../view.store';
 
-@Options({
-	components: {
-		AppCommunityPerms,
-	},
-})
-export default class AppNavEdit extends Vue {
-	routeStore = setup(() => useCommunityRouteStore())!;
+const emit = defineEmits({
+	'change-section': (_path: string) => true,
+});
 
-	@Emit('change-section') emitChangeSection(_path: string) {}
+const routeStore = useCommunityRouteStore()!;
 
-	get community() {
-		return this.routeStore.community;
-	}
+const community = toRef(() => routeStore.community);
 
-	onChangeSection(path: string) {
-		this.emitChangeSection(path);
-	}
+function onChangeSection(path: string) {
+	emit('change-section', path);
 }
 </script>
 
@@ -28,7 +21,7 @@ export default class AppNavEdit extends Vue {
 	<nav class="platform-list">
 		<ul>
 			<li @click.capture="onChangeSection('communities.view.edit.details')">
-				<router-link
+				<RouterLink
 					:to="{
 						name: 'communities.view.edit.details',
 						params: {
@@ -37,8 +30,8 @@ export default class AppNavEdit extends Vue {
 					}"
 					exact-active-class="active"
 				>
-					<AppTranslate>Details</AppTranslate>
-				</router-link>
+					{{ $gettext(`Details`) }}
+				</RouterLink>
 			</li>
 			<AppCommunityPerms
 				tag="li"
@@ -47,7 +40,7 @@ export default class AppNavEdit extends Vue {
 				either
 				@click.capture="onChangeSection('communities.view.edit.channels.list')"
 			>
-				<router-link
+				<RouterLink
 					:to="{
 						name: 'communities.view.edit.channels.list',
 						params: {
@@ -56,8 +49,8 @@ export default class AppNavEdit extends Vue {
 					}"
 					active-class="active"
 				>
-					<AppTranslate>Channels</AppTranslate>
-				</router-link>
+					{{ $gettext(`Channels`) }}
+				</RouterLink>
 			</AppCommunityPerms>
 			<AppCommunityPerms
 				tag="li"
@@ -65,7 +58,7 @@ export default class AppNavEdit extends Vue {
 				required="community-games"
 				@click.capture="onChangeSection('communities.view.edit.games')"
 			>
-				<router-link
+				<RouterLink
 					:to="{
 						name: 'communities.view.edit.games',
 						params: {
@@ -74,8 +67,8 @@ export default class AppNavEdit extends Vue {
 					}"
 					active-class="active"
 				>
-					<AppTranslate>Games</AppTranslate>
-				</router-link>
+					{{ $gettext(`Games`) }}
+				</RouterLink>
 			</AppCommunityPerms>
 			<AppCommunityPerms
 				tag="li"
@@ -83,7 +76,7 @@ export default class AppNavEdit extends Vue {
 				required="community-moderators"
 				@click.capture="onChangeSection('communities.view.edit.moderators')"
 			>
-				<router-link
+				<RouterLink
 					:to="{
 						name: 'communities.view.edit.moderators',
 						params: {
@@ -92,8 +85,8 @@ export default class AppNavEdit extends Vue {
 					}"
 					active-class="active"
 				>
-					<AppTranslate>Collaborators</AppTranslate>
-				</router-link>
+					{{ $gettext(`Collaborators`) }}
+				</RouterLink>
 			</AppCommunityPerms>
 			<AppCommunityPerms
 				tag="li"
@@ -101,7 +94,7 @@ export default class AppNavEdit extends Vue {
 				required="community-blocks"
 				@click.capture="onChangeSection('communities.view.edit.blocks')"
 			>
-				<router-link
+				<RouterLink
 					:to="{
 						name: 'communities.view.edit.blocks',
 						params: {
@@ -110,11 +103,11 @@ export default class AppNavEdit extends Vue {
 					}"
 					active-class="active"
 				>
-					<AppTranslate>Blocked Users</AppTranslate>
-				</router-link>
+					{{ $gettext(`Blocked Users`) }}
+				</RouterLink>
 			</AppCommunityPerms>
 			<AppCommunityPerms tag="li" :community="community" required="community-activity">
-				<router-link
+				<RouterLink
 					:to="{
 						name: 'communities.view.edit.activity',
 						params: {
@@ -124,8 +117,8 @@ export default class AppNavEdit extends Vue {
 					active-class="active"
 					@click.capture="onChangeSection('communities.view.edit.blocks')"
 				>
-					<AppTranslate>Audit Log</AppTranslate>
-				</router-link>
+					{{ $gettext(`Audit Log`) }}
+				</RouterLink>
 			</AppCommunityPerms>
 		</ul>
 	</nav>
