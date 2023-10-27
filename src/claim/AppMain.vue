@@ -45,7 +45,9 @@ onMounted(() => {
 							<AppContactLink email="contact@gamejolt.com">
 								Contact Game Jolt
 							</AppContactLink>
-							&nbsp; | &nbsp;
+
+							<br />
+
 							<a :href="Environment.baseUrl + '/terms'" target="_blank">Terms</a>
 							&nbsp; | &nbsp;
 							<a :href="Environment.baseUrl + '/privacy'" target="_blank">

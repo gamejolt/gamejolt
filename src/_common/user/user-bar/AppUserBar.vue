@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+import { styleWhen } from '../../../_styles/mixins';
 import { Environment } from '../../environment/environment.service';
+import { Screen } from '../../screen/screen-service';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
 import { UserModel } from '../user.model';
 
@@ -13,8 +15,16 @@ defineProps({
 </script>
 
 <template>
-	<div class="container">
-		<nav class="user-bar navbar">
+	<div
+		class="container"
+		:style="{
+			...styleWhen(Screen.isXs, {
+				paddingLeft: 0,
+				paddingRight: 0,
+			}),
+		}"
+	>
+		<nav class="navbar">
 			<div class="navbar-center">
 				<div class="links">
 					<slot />
@@ -24,10 +34,30 @@ defineProps({
 			<div v-if="user" class="navbar-right">
 				<ul class="navbar-items">
 					<li>
-						<a class="user-bar-user" :href="Environment.baseUrl + '/dashboard'">
-							<AppUserAvatarImg class="user-bar-avatar" :user="user" />
+						<a
+							:style="{
+								paddingTop: `10px !important`,
+								paddingBottom: `10px !important`,
+							}"
+							:href="Environment.baseUrl + '/dashboard'"
+						>
+							<AppUserAvatarImg
+								:style="{
+									display: `inline-block`,
+									width: `30px`,
+									height: `30px`,
+									verticalAlign: `middle`,
+								}"
+								:user="user"
+							/>
 
-							<span class="user-bar-username">
+							<span
+								v-if="Screen.isDesktop"
+								:style="{
+									display: `inline-block`,
+									marginLeft: `10px`,
+								}"
+							>
 								{{ user.username }}
 							</span>
 						</a>
@@ -37,33 +67,3 @@ defineProps({
 		</nav>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.user-bar
-	$avatar-size = 30px
-
-	@media $media-xs
-		.container
-			padding-left: 0
-			padding-right: 0
-
-.user-bar-user
-	padding-top: 10px !important
-	padding-bottom: 10px !important
-
-.user-bar-avatar
-	display: inline-block !important
-	width: $avatar-size
-	height: $avatar-size
-	vertical-align: middle
-
-.user-bar-username
-	display: inline-block
-	margin-left: 10px
-
-	@media $media-mobile
-		display: none
-
-.button
-	margin-top: 7px // Blah, stupid hardcoded
-</style>

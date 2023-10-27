@@ -27,11 +27,11 @@ export default class AppGameGridPlaceholder extends Vue {
 		}
 
 		let rowSize: number;
-		if (Screen.breakpoint === 'sm') {
+		if (Screen.isXs) {
 			rowSize = GameGridRowSizeSm;
-		} else if (Screen.breakpoint === 'md') {
+		} else if (Screen.isMd) {
 			rowSize = GameGridRowSizeMd;
-		} else if (Screen.breakpoint === 'lg') {
+		} else if (Screen.isLg) {
 			rowSize = GameGridRowSizeLg;
 		} else {
 			rowSize = this.num;
