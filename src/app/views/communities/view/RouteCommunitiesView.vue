@@ -24,7 +24,7 @@ import { showCommunityHeaderModal } from '../../../components/forms/community/he
 import { useGridStore } from '../../../components/grid/grid-store';
 import AppShellContentWithSidebar from '../../../components/shell/AppShellContentWithSidebar.vue';
 import { useAppStore } from '../../../store/index';
-import AppCommunitiesViewContext from './_context/context.vue';
+import AppCommunitiesViewContext from './_context/AppCommunitiesViewContext.vue';
 import AppMobileHeader from './_mobile-header/mobile-header.vue';
 import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
 import {

@@ -1,38 +1,35 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Prop, Provide, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, provide } from 'vue';
+import { useRoute } from 'vue-router';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
 import { useAppStore } from '../../../../store';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 import AppCommunitiesViewCard from '../_card/card.vue';
 import AppNavChannels from '../_nav/channels/channels.vue';
 import AppNavEdit from '../_nav/edit/edit.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 
-@Options({
-	components: {
-		AppCommunitiesViewCard,
-		AppNavChannels,
-		AppNavEdit,
+const props = defineProps({
+	routeStore: {
+		type: Object as PropType<CommunityRouteStore>,
+		required: true,
 	},
-})
-export default class AppCommunitiesViewContext extends Vue {
-	@Prop({ type: Object, required: true })
-	@Provide({ to: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+});
 
-	store = setup(() => useAppStore());
+provide(CommunityRouteStoreKey, props.routeStore);
 
-	get isEditing() {
-		return isEditingCommunity(this.$route);
-	}
+const store = useAppStore();
+const route = useRoute();
 
-	onChangeSection(path: string) {
-		// If changing channels, hide the left pane/context sidebar.
-		if (this.$route.path !== path) {
-			this.store.toggleLeftPane();
-		}
+const isEditing = computed(() => isEditingCommunity(route));
+
+function onChangeSection(path: string) {
+	// If changing channels, hide the left pane/context sidebar.
+	if (route.path !== path) {
+		store.toggleLeftPane();
 	}
 }
+
+// AppCommunitiesViewContext
 </script>
 
 <template>
