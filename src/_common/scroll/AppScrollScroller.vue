@@ -129,7 +129,7 @@ onMounted(() => {
 		:class="{
 			'_default-scroller': !overlay,
 			'_overlay-scroller': overlay,
-			'_model-scroller': modalScroller,
+			'_modal-scroller': modalScroller,
 			_mouse: Screen.isPointerMouse,
 			_thin: thin,
 			_horizontal: horizontal,
