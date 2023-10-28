@@ -161,9 +161,11 @@ const scrollerStyles = computed<CSSProperties>(() => {
 
 // On mobile the left/right columns show before main.
 ._left-container
+	min-width: 0
 	order: 0
 
 ._right-container
+	min-width: 0
 	order: 1
 
 ._main
