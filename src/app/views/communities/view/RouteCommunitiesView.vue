@@ -25,7 +25,7 @@ import { useGridStore } from '../../../components/grid/grid-store';
 import AppShellContentWithSidebar from '../../../components/shell/AppShellContentWithSidebar.vue';
 import { useAppStore } from '../../../store/index';
 import AppCommunitiesViewContext from './_context/AppCommunitiesViewContext.vue';
-import AppMobileHeader from './_mobile-header/mobile-header.vue';
+import AppMobileHeader from './_mobile-header/AppMobileHeader.vue';
 import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
 import {
 	CommunityRouteStore,

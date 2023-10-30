@@ -1,10 +1,13 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, toRef, toRefs } from 'vue';
+import { useRouter } from 'vue-router';
+import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/AppCommunityJoinWidget.vue';
 import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -12,113 +15,73 @@ import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTheme from '../../../../../_common/theme/AppTheme.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { getAbsoluteLink } from '../../../../../utils/router';
 import { showCommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
 import { useAppStore } from '../../../../store';
 import AppEditableThumbnail from '../_editable-thumbnail/AppEditableThumbnail.vue';
 import { useCommunityRouteStore } from '../view.store';
 
-@Options({
-	components: {
-		AppPopper,
-		AppTheme,
-		AppCommunityVerifiedTick,
-		AppEditableThumbnail,
-		AppCommunityJoinWidget,
+const props = defineProps({
+	hasUnread: {
+		type: Boolean,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppMobileHeader extends Vue {
-	@Prop({ type: Boolean, default: false }) hasUnread!: boolean;
+});
 
-	store = setup(() => useAppStore());
-	commonStore = setup(() => useCommonStore());
-	sidebarStore = setup(() => useSidebarStore());
+const { hasUnread } = toRefs(props);
 
-	routeStore = setup(() => useCommunityRouteStore())!;
+const store = useAppStore();
+const router = useRouter();
+const routeStore = useCommunityRouteStore()!;
 
-	get user() {
-		return this.commonStore.user;
-	}
-	get activeContextPane() {
-		return this.sidebarStore.activeContextPane;
-	}
+const { user } = useCommonStore();
+const { activeContextPane } = useSidebarStore();
+const { community, channel } = routeStore;
 
-	readonly Environment = Environment;
-	readonly Screen = Screen;
-	readonly formatNumber = formatNumber;
+const memberCount = toRef(() => community.member_count || 0);
+const shouldShowModTools = computed(() => user.value?.isMod === true);
+const shouldShowChannelsMenu = computed(() => !!activeContextPane.value);
+const isJam = computed(() => channel?.type === 'competition');
 
-	get community() {
-		return this.routeStore.community;
-	}
-
-	get channel() {
-		return this.routeStore.channel;
-	}
-
-	get memberCount() {
-		return this.community.member_count || 0;
-	}
-
-	get shouldShowModTools() {
-		return this.user?.isMod === true;
-	}
-
-	get isFeaturedChannel() {
-		return this.routeStore.channelPath === 'featured';
-	}
-
-	get shouldShowChannelsMenu() {
-		return !!this.activeContextPane;
-	}
-
-	get isJam() {
-		return this.channel?.type === 'competition';
-	}
-
-	get shouldShowAbout() {
-		// It's too confusing to see an "About" button for the community as well
-		// as the jam info.
-		if (this.isJam) {
-			return false;
-		}
-
-		if (this.routeStore.sidebarData) {
-			return Screen.isMobile;
-		}
-
+const shouldShowAbout = computed(() => {
+	// It's too confusing to see an "About" button for the community as well
+	// as the jam info.
+	if (isJam.value) {
 		return false;
 	}
 
-	onClickMenu() {
-		this.store.toggleLeftPane('context');
+	if (routeStore.sidebarData) {
+		return Screen.isMobile;
 	}
 
-	onClickAbout() {
-		const { sidebarData, community } = this.routeStore;
+	return false;
+});
 
-		if (sidebarData) {
-			showCommunitySidebarModal({
-				isEditing: false,
-				sidebarData,
-				community,
-			});
-		}
+function onClickMenu() {
+	store.toggleLeftPane('context');
+}
+
+function onClickAbout() {
+	const { sidebarData, community } = routeStore;
+
+	if (sidebarData) {
+		showCommunitySidebarModal({
+			isEditing: false,
+			sidebarData,
+			community,
+		});
 	}
+}
 
-	onClickExtrasOption() {
-		Popper.hideAll();
-	}
+function onClickExtrasOption() {
+	Popper.hideAll();
+}
 
-	copyShareUrl() {
-		const url = getAbsoluteLink(this.$router, this.community.routeLocation);
-		copyShareLink(url, 'community');
+function copyShareUrl() {
+	const url = getAbsoluteLink(router, community.routeLocation);
+	copyShareLink(url, 'community');
 
-		Popper.hideAll();
-	}
+	Popper.hideAll();
 }
 </script>
 
@@ -136,13 +99,13 @@ export default class AppMobileHeader extends Vue {
 			<!-- Name / Members -->
 			<div class="-details">
 				<div class="-name">
-					<router-link :to="community.routeLocation" class="link-unstyled">
+					<RouterLink :to="community.routeLocation" class="link-unstyled">
 						{{ community.name }}
-					</router-link>
+					</RouterLink>
 				</div>
 
 				<div class="-members small">
-					<router-link
+					<RouterLink
 						v-app-track-event="`community-mobile-header:community-members`"
 						v-translate="{ count: formatNumber(memberCount) }"
 						:translate-n="memberCount"
@@ -154,7 +117,7 @@ export default class AppMobileHeader extends Vue {
 					>
 						<b>1</b>
 						member
-					</router-link>
+					</RouterLink>
 				</div>
 			</div>
 		</div>
@@ -173,10 +136,10 @@ export default class AppMobileHeader extends Vue {
 				>
 					<div v-if="hasUnread" class="-unread-blip" />
 					<template v-if="!Screen.isXs || !shouldShowAbout">
-						<AppTranslate v-if="routeStore && routeStore.channelPath">
-							Channels
-						</AppTranslate>
-						<AppTranslate v-else>Menu</AppTranslate>
+						<div v-if="routeStore && routeStore.channelPath">
+							{{ $gettext(`Channels`) }}
+						</div>
+						<div v-else>{{ $gettext(`Menu`) }}</div>
 					</template>
 				</AppButton>
 			</div>
@@ -187,7 +150,6 @@ export default class AppMobileHeader extends Vue {
 			<div v-if="!community.hasPerms()" class="-controls-item -controls-primary">
 				<AppCommunityJoinWidget
 					:community="community"
-					:disabled="!!community.user_block"
 					block
 					hide-count
 					location="communityPage"
@@ -201,7 +163,7 @@ export default class AppMobileHeader extends Vue {
 				class="-controls-item -about"
 			>
 				<AppButton trans @click="onClickAbout">
-					<AppTranslate>About</AppTranslate>
+					{{ $gettext(`About`) }}
 				</AppButton>
 			</div>
 
@@ -217,7 +179,7 @@ export default class AppMobileHeader extends Vue {
 							@click="copyShareUrl"
 						>
 							<AppJolticon icon="link" />
-							<AppTranslate>Copy link to community</AppTranslate>
+							{{ $gettext(`Copy link to community`) }}
 						</a>
 						<a
 							v-if="shouldShowModTools"
