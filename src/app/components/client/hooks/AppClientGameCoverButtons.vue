@@ -5,7 +5,7 @@ import { GameBuildModel } from '../../../../_common/game/build/build.model';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useClientLibraryStore } from '../../../store/client-library';
-import AppClientGameButtons from '../game-buttons/game-buttons.vue';
+import AppClientGameButtons from '../game-buttons/AppClientGameButtons.vue';
 
 const props = defineProps({
 	game: {

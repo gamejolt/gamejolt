@@ -1,7 +1,9 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, ref, toRefs, watch } from 'vue';
+import { RouterLink } from 'vue-router';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
 import {
 	GameModel,
@@ -10,225 +12,210 @@ import {
 } from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { showGamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { arrayGroupBy } from '../../../../utils/array';
-import { shallowSetup } from '../../../../utils/vue';
 import { useClientLibraryStore } from '../../../store/client-library';
 import AppClientInstallProgress from '../AppClientInstallProgress.vue';
 import { showClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
 import { LocalDbPackage } from '../local-db/package/package.model';
 
-@Options({
-	components: {
-		AppPopper,
-		AppClientInstallProgress,
+const props = defineProps({
+	game: {
+		type: Object as PropType<GameModel>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	overlay: {
+		type: Boolean,
 	},
-})
-export default class AppClientGameButtons extends Vue {
-	readonly clientLibrary = shallowSetup(() => useClientLibraryStore());
+	small: {
+		type: Boolean,
+	},
+	large: {
+		type: Boolean,
+	},
+	label: {
+		type: String,
+		default: undefined,
+	},
+	hasInstallableBuilds: {
+		type: Boolean,
+	},
+	canInstall: {
+		type: Boolean,
+	},
+	noProgress: {
+		type: Boolean,
+	},
+});
 
-	@Prop(Object)
-	game!: GameModel;
+const emit = defineEmits({
+	'show-launch-options': () => true,
+	'hide-launch-options': () => true,
+	'show-options': () => true,
+	'hide-options': () => true,
+});
 
-	@Prop(Boolean)
-	overlay?: boolean;
+const { game, overlay, small, large, canInstall, noProgress } = toRefs(props);
 
-	@Prop(Boolean)
-	small?: boolean;
+const clientLibrary = useClientLibraryStore();
 
-	@Prop(Boolean)
-	large?: boolean;
+const isLoadingPackageData = ref(false);
+const packageDataPromise = ref<Promise<GamePackagePayloadModel> | null>(null);
 
-	@Prop(String)
-	label?: string;
+watch(game, () => {
+	isLoadingPackageData.value = false;
+	packageDataPromise.value = null;
+});
 
-	@Prop(Boolean)
-	hasInstallableBuilds?: boolean;
+// We try to pull a package with some action on it.
+// For example, if a package is installing, we want to pull that one to show.
+const localPackage = computed(() => clientLibrary.findPackageToRepresentGameStatus(game.value.id));
 
-	@Prop(Boolean)
-	canInstall?: boolean;
+const gamePackages = computed(() => clientLibrary.packagesByGameId.value[game.value.id] || []);
 
-	@Prop(Boolean)
-	noProgress?: boolean;
+const settledGamePackages = computed(() => gamePackages.value.filter(p => p.isSettled));
 
-	isLoadingPackageData = false;
-	packageDataPromise: Promise<GamePackagePayloadModel> | null = null;
+const uninstallableGamePackages = computed(() =>
+	gamePackages.value.filter(p => !p.install_state && !p.isRemoving)
+);
 
-	readonly LocalDbPackage = LocalDbPackage;
-	readonly os = getDeviceOS();
-	readonly arch = getDeviceArch();
+const installTooltip = computed(() => {
+	if (!canInstall.value) {
+		return $gettext(`This game is not available for installing on your OS.`);
+	}
+});
 
-	@Emit('show-launch-options')
-	emitShowLaunchOptions() {}
+const os = computed(() => getDeviceOS());
 
-	@Emit('hide-launch-options')
-	emitHideLaunchOptions() {}
+const arch = computed(() => getDeviceArch());
 
-	@Emit('show-options')
-	emitShowOptions() {}
+async function install() {
+	Analytics.trackEvent('client-game-buttons', 'install');
 
-	@Emit('hide-options')
-	emitHideOptions() {}
-
-	@Watch('game')
-	onGameChange() {
-		this.isLoadingPackageData = false;
-		this.packageDataPromise = null;
+	if (!packageDataPromise.value) {
+		packageDataPromise.value = fetchPackageData();
 	}
 
-	// We try to pull a package with some action on it.
-	// For example, if a package is installing, we want to pull that one to show.
-	get localPackage() {
-		return this.clientLibrary.findPackageToRepresentGameStatus(this.game.id);
+	const packageData = await packageDataPromise.value;
+	const byPackageId = arrayGroupBy(packageData.installableBuilds!, 'game_package_id');
+	// If more than one package for their OS, then we have to show an install package modal.
+	if (Object.keys(byPackageId).length > 1) {
+		showClientInstallPackageModal(game.value);
+		return;
 	}
 
-	get gamePackages() {
-		return this.clientLibrary.packagesByGameId.value[this.game.id] || [];
-	}
+	const build = chooseBestGameBuild(packageData.installableBuilds!, os.value!, arch.value);
 
-	get settledGamePackages() {
-		return this.gamePackages.filter(p => p.isSettled);
-	}
-
-	get uninstallableGamePackages() {
-		return this.gamePackages.filter(p => !p.install_state && !p.isRemoving);
-	}
-
-	get installTooltip() {
-		if (!this.canInstall) {
-			return this.$gettext(`This game is not available for installing on your OS.`);
-		}
-	}
-
-	async install() {
-		Analytics.trackEvent('client-game-buttons', 'install');
-
-		if (!this.packageDataPromise) {
-			this.packageDataPromise = this.fetchPackageData();
-		}
-
-		const packageData = await this.packageDataPromise;
-		const byPackageId = arrayGroupBy(packageData.installableBuilds!, 'game_package_id');
-		// If more than one package for their OS, then we have to show an install package modal.
-		if (Object.keys(byPackageId).length > 1) {
-			showClientInstallPackageModal(this.game);
-			return;
-		}
-
-		const build = chooseBestGameBuild(packageData.installableBuilds!, this.os!, this.arch);
-
-		// If the build belongs to a pwyw package, open up the package
-		// payment form.
-		if (build._package!.shouldShowNamePrice()) {
-			showGamePackagePurchaseModal({
-				game: this.game,
-				package: build._package!,
-				build: build,
-				fromExtraSection: false,
-			});
-			return;
-		}
-
-		return this.clientLibrary.packageInstall(
-			this.game,
-			build._package!,
-			build._release!,
-			build,
-			build._launch_options!
-		);
-	}
-
-	private async fetchPackageData() {
-		const payload = await Api.sendRequest('/web/discover/games/packages/' + this.game.id);
-
-		const packageData = new GamePackagePayloadModel(payload);
-		packageData.installableBuilds = pluckInstallableGameBuilds(
-			packageData.packages,
-			this.os!,
-			this.arch
-		);
-
-		return packageData;
-	}
-
-	pause() {
-		if (!this.localPackage) {
-			return;
-		}
-
-		Analytics.trackEvent('client-game-buttons', 'pause-install');
-		this.clientLibrary.installerPause(this.localPackage);
-	}
-
-	resume() {
-		if (!this.localPackage) {
-			return;
-		}
-
-		Analytics.trackEvent('client-game-buttons', 'resume-install');
-		this.clientLibrary.installerResume(this.localPackage);
-	}
-
-	cancel() {
-		if (!this.localPackage) {
-			return;
-		}
-
-		Analytics.trackEvent('client-game-buttons', 'cancel-install');
-		this.clientLibrary.packageUninstall(this.localPackage);
-	}
-
-	retryInstall() {
-		if (!this.localPackage) {
-			return;
-		}
-
-		Analytics.trackEvent('client-game-buttons', 'retry-install');
-		this.clientLibrary.installerRetry(this.localPackage);
-	}
-
-	launch(localPackage: LocalDbPackage) {
-		// If already running, do nothing.
-		if (localPackage.isRunning) {
-			return;
-		}
-
-		Analytics.trackEvent('client-game-buttons', 'launch');
-		Popper.hideAll();
-		return this.clientLibrary.launcherLaunch(localPackage);
-	}
-
-	openFolder(localPackage: LocalDbPackage) {
-		const fs = require('fs') as typeof import('fs');
-		const path = require('path') as typeof import('path');
-
-		fs.readdir(path.resolve(localPackage.install_dir), function (err, files) {
-			if (err) {
-				return;
-			}
-
-			// Just open the first file in the folder.
-			// This way we open within the package folder instead of the parent folder.
-			nw.Shell.showItemInFolder(path.resolve(localPackage.install_dir, files[0]));
+	// If the build belongs to a pwyw package, open up the package
+	// payment form.
+	if (build._package!.shouldShowNamePrice()) {
+		showGamePackagePurchaseModal({
+			game: game.value,
+			package: build._package!,
+			build: build,
+			fromExtraSection: false,
 		});
+		return;
 	}
 
-	async uninstallPackage(localPackage: LocalDbPackage) {
-		// If running, do nothing.
-		if (localPackage.isRunning) {
+	return clientLibrary.packageInstall(
+		game.value,
+		build._package!,
+		build._release!,
+		build,
+		build._launch_options!
+	);
+}
+
+async function fetchPackageData() {
+	const payload = await Api.sendRequest('/web/discover/games/packages/' + game.value.id);
+
+	const packageData = new GamePackagePayloadModel(payload);
+	packageData.installableBuilds = pluckInstallableGameBuilds(
+		packageData.packages,
+		os.value!,
+		arch.value
+	);
+
+	return packageData;
+}
+
+function pause() {
+	if (!localPackage.value) {
+		return;
+	}
+
+	Analytics.trackEvent('client-game-buttons', 'pause-install');
+	clientLibrary.installerPause(localPackage.value);
+}
+
+function resume() {
+	if (!localPackage.value) {
+		return;
+	}
+
+	Analytics.trackEvent('client-game-buttons', 'resume-install');
+	clientLibrary.installerResume(localPackage.value);
+}
+
+function cancel() {
+	if (!localPackage.value) {
+		return;
+	}
+
+	Analytics.trackEvent('client-game-buttons', 'cancel-install');
+	clientLibrary.packageUninstall(localPackage.value);
+}
+
+function retryInstall() {
+	if (!localPackage.value) {
+		return;
+	}
+
+	Analytics.trackEvent('client-game-buttons', 'retry-install');
+	clientLibrary.installerRetry(localPackage.value);
+}
+
+function launch(localPackage: LocalDbPackage) {
+	// If already running, do nothing.
+	if (localPackage.isRunning) {
+		return;
+	}
+
+	Analytics.trackEvent('client-game-buttons', 'launch');
+	Popper.hideAll();
+	return clientLibrary.launcherLaunch(localPackage);
+}
+
+function openFolder(localPackage: LocalDbPackage) {
+	const fs = require('fs') as typeof import('fs');
+	const path = require('path') as typeof import('path');
+
+	fs.readdir(path.resolve(localPackage.install_dir), function (err, files) {
+		if (err) {
 			return;
 		}
 
-		Analytics.trackEvent('client-game-buttons', 'uninstall');
-		Popper.hideAll();
+		// Just open the first file in the folder.
+		// This way we open within the package folder instead of the parent folder.
+		nw.Shell.showItemInFolder(path.resolve(localPackage.install_dir, files[0]));
+	});
+}
 
-		await this.clientLibrary.packageUninstall(localPackage);
+async function uninstallPackage(localPackage: LocalDbPackage) {
+	// If running, do nothing.
+	if (localPackage.isRunning) {
+		return;
 	}
+
+	Analytics.trackEvent('client-game-buttons', 'uninstall');
+	Popper.hideAll();
+
+	await clientLibrary.packageUninstall(localPackage);
 }
 </script>
 
@@ -245,7 +232,7 @@ export default class AppClientGameButtons extends Vue {
 				:lg="large"
 				@click.stop="install()"
 			>
-				<AppTranslate>Install</AppTranslate>
+				{{ $gettext(`Install`) }}
 			</AppButton>
 		</span>
 
@@ -267,7 +254,7 @@ export default class AppClientGameButtons extends Vue {
 						:lg="large"
 						@click.stop="retryInstall()"
 					>
-						<AppTranslate>Retry</AppTranslate>
+						{{ $gettext(`Retry`) }}
 					</AppButton>
 				</template>
 
@@ -275,11 +262,15 @@ export default class AppClientGameButtons extends Vue {
 
 				<template v-if="localPackage.isPatching">
 					<template v-if="localPackage.isPatchQueued">
-						<AppTranslate class="tag">QUEUED</AppTranslate>
+						<div class="tag">
+							{{ $gettext(`QUEUED`) }}
+						</div>
 					</template>
 
 					<template v-else-if="localPackage.isUpdating">
-						<AppTranslate class="tag tag-highlight">UPDATING</AppTranslate>
+						<div class="tag tag-highlight">
+							{{ $gettext(`UPDATING`) }}
+						</div>
 					</template>
 
 					<template v-else-if="!localPackage.isPatchQueued">
@@ -290,7 +281,9 @@ export default class AppClientGameButtons extends Vue {
 								:lg="large"
 								@click.stop="pause()"
 							>
-								<AppTranslate v-if="!small">Pause</AppTranslate>
+								<div v-if="!small">
+									{{ $gettext(`Pause`) }}
+								</div>
 							</AppButton>
 						</template>
 
@@ -302,7 +295,9 @@ export default class AppClientGameButtons extends Vue {
 								:lg="large"
 								@click.stop="resume()"
 							>
-								<AppTranslate v-if="!small">Resume</AppTranslate>
+								<div v-if="!small">
+									{{ $gettext(`Resume`) }}
+								</div>
 							</AppButton>
 						</template>
 					</template>
@@ -339,7 +334,7 @@ export default class AppClientGameButtons extends Vue {
 						:lg="large"
 						@click.stop="launch(localPackage!)"
 					>
-						<AppTranslate>Launch</AppTranslate>
+						{{ $gettext(`Launch`) }}
 					</AppButton>
 				</template>
 
@@ -347,11 +342,11 @@ export default class AppClientGameButtons extends Vue {
 				<AppPopper
 					v-if="gamePackages.length > 1"
 					popover-class="fill-darkest"
-					@show="emitShowLaunchOptions()"
-					@hide="emitHideLaunchOptions()"
+					@show="emit('show-launch-options')"
+					@hide="emit('hide-launch-options')"
 				>
 					<AppButton primary solid icon="play" :overlay="overlay" :sm="small" :lg="large">
-						<AppTranslate>Launch</AppTranslate>
+						{{ $gettext(`Launch`) }}
 					</AppButton>
 
 					<template #popover>
@@ -376,8 +371,8 @@ export default class AppClientGameButtons extends Vue {
 			<AppPopper
 				v-if="!localPackage.install_state"
 				class="fill-darkest"
-				@show="emitShowOptions()"
-				@hide="emitHideOptions()"
+				@show="emit('show-options')"
+				@hide="emit('hide-options')"
 			>
 				<AppButton
 					circle
@@ -390,7 +385,7 @@ export default class AppClientGameButtons extends Vue {
 
 				<template #popover>
 					<div class="list-group list-group-dark thin">
-						<router-link
+						<RouterLink
 							class="list-group-item has-icon"
 							:to="{
 								name: 'discover.games.view.overview',
@@ -401,8 +396,8 @@ export default class AppClientGameButtons extends Vue {
 							}"
 						>
 							<AppJolticon icon="gamepad" />
-							<AppTranslate>View Game</AppTranslate>
-						</router-link>
+							{{ $gettext(`View Game`) }}
+						</RouterLink>
 						<a
 							v-for="pkg of settledGamePackages"
 							:key="`open-folder-${pkg.id}`"
