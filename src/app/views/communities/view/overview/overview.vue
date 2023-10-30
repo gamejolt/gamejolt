@@ -15,8 +15,8 @@ import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppCommunitySidebar from '../../../../components/community/sidebar/AppCommunitySidebar.vue';
 import { useGridStore } from '../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../store/index';
+import AppCommunitiesViewFeed from '../_feed/AppCommunitiesViewFeed.vue';
 import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
-import AppCommunitiesViewFeed from '../_feed/feed.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { CommunitiesViewChannelDeps } from '../channel/channel.vue';
 import {

@@ -5,8 +5,8 @@ import { FiresidePostModel } from '../../../../../_common/fireside/post/post-mod
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments } from '../../../../../_common/illustration/illustrations';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
+LegacyRouteComponent,
+OptionsForLegacyRoute,
 } from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -14,12 +14,12 @@ import { ActivityFeedService } from '../../../../components/activity/feed/feed-s
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { useGridStore } from '../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../store';
+import AppCommunitiesViewFeed from '../_feed/AppCommunitiesViewFeed.vue';
 import {
-	doFeedChannelPayload,
-	getFeedChannelSort,
-	resolveFeedChannelPayload,
+doFeedChannelPayload,
+getFeedChannelSort,
+resolveFeedChannelPayload,
 } from '../_feed/feed-helpers';
-import AppCommunitiesViewFeed from '../_feed/feed.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { isVirtualChannel, setCommunityMeta, useCommunityRouteStore } from '../view.store';
 import { CommunitiesViewChannelDeps } from './channel.vue';
