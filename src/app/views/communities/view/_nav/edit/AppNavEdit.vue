@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { AppCommunityPerms } from '../../../../../components/community/perms/AppCommunityPerms';
+import AppCommunityPerms from '../../../../../components/community/perms/AppCommunityPerms.vue';
 import { useCommunityRouteStore } from '../../view.store';
 
 const emit = defineEmits({
@@ -34,91 +34,83 @@ function onChangeSection(path: string) {
 				</RouterLink>
 			</li>
 			<AppCommunityPerms
-				tag="li"
 				:community="community"
 				required="community-channels,community-competitions"
 				either
-				@click.capture="onChangeSection('communities.view.edit.channels.list')"
 			>
-				<RouterLink
-					:to="{
-						name: 'communities.view.edit.channels.list',
-						params: {
-							id: community.id,
-						},
-					}"
-					active-class="active"
-				>
-					{{ $gettext(`Channels`) }}
-				</RouterLink>
+				<li @click.capture="onChangeSection('communities.view.edit.channels.list')">
+					<RouterLink
+						:to="{
+							name: 'communities.view.edit.channels.list',
+							params: {
+								id: community.id,
+							},
+						}"
+						active-class="active"
+					>
+						{{ $gettext(`Channels`) }}
+					</RouterLink>
+				</li>
 			</AppCommunityPerms>
-			<AppCommunityPerms
-				tag="li"
-				:community="community"
-				required="community-games"
-				@click.capture="onChangeSection('communities.view.edit.games')"
-			>
-				<RouterLink
-					:to="{
-						name: 'communities.view.edit.games',
-						params: {
-							id: community.id,
-						},
-					}"
-					active-class="active"
-				>
-					{{ $gettext(`Games`) }}
-				</RouterLink>
+			<AppCommunityPerms :community="community" required="community-games">
+				<li @click.capture="onChangeSection('communities.view.edit.games')">
+					<RouterLink
+						:to="{
+							name: 'communities.view.edit.games',
+							params: {
+								id: community.id,
+							},
+						}"
+						active-class="active"
+					>
+						{{ $gettext(`Games`) }}
+					</RouterLink>
+				</li>
 			</AppCommunityPerms>
-			<AppCommunityPerms
-				tag="li"
-				:community="community"
-				required="community-moderators"
-				@click.capture="onChangeSection('communities.view.edit.moderators')"
-			>
-				<RouterLink
-					:to="{
-						name: 'communities.view.edit.moderators',
-						params: {
-							id: community.id,
-						},
-					}"
-					active-class="active"
-				>
-					{{ $gettext(`Collaborators`) }}
-				</RouterLink>
+			<AppCommunityPerms :community="community" required="community-moderators">
+				<li @click.capture="onChangeSection('communities.view.edit.moderators')">
+					<RouterLink
+						:to="{
+							name: 'communities.view.edit.moderators',
+							params: {
+								id: community.id,
+							},
+						}"
+						active-class="active"
+					>
+						{{ $gettext(`Collaborators`) }}
+					</RouterLink>
+				</li>
 			</AppCommunityPerms>
-			<AppCommunityPerms
-				tag="li"
-				:community="community"
-				required="community-blocks"
-				@click.capture="onChangeSection('communities.view.edit.blocks')"
-			>
-				<RouterLink
-					:to="{
-						name: 'communities.view.edit.blocks',
-						params: {
-							id: community.id,
-						},
-					}"
-					active-class="active"
-				>
-					{{ $gettext(`Blocked Users`) }}
-				</RouterLink>
+			<AppCommunityPerms :community="community" required="community-blocks">
+				<li @click.capture="onChangeSection('communities.view.edit.blocks')">
+					<RouterLink
+						:to="{
+							name: 'communities.view.edit.blocks',
+							params: {
+								id: community.id,
+							},
+						}"
+						active-class="active"
+					>
+						{{ $gettext(`Blocked Users`) }}
+					</RouterLink>
+				</li>
 			</AppCommunityPerms>
-			<AppCommunityPerms tag="li" :community="community" required="community-activity">
-				<RouterLink
-					:to="{
-						name: 'communities.view.edit.activity',
-						params: {
-							id: community.id,
-						},
-					}"
-					active-class="active"
-					@click.capture="onChangeSection('communities.view.edit.blocks')"
-				>
-					{{ $gettext(`Audit Log`) }}
-				</RouterLink>
+			<AppCommunityPerms :community="community" required="community-activity">
+				<li @click.capture="onChangeSection('communities.view.edit.activity')">
+					<RouterLink
+						:to="{
+							name: 'communities.view.edit.activity',
+							params: {
+								id: community.id,
+							},
+						}"
+						active-class="active"
+					>
+						{{ $gettext(`Audit Log`) }}
+					</RouterLink>
+				</li>
 			</AppCommunityPerms>
 		</ul>
 	</nav>

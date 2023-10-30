@@ -1,8 +1,7 @@
-import { PropType, computed, h, toRefs, useSlots } from 'vue';
+<script lang="ts" setup>
+import { PropType, computed, toRefs } from 'vue';
 import { Perm } from '../../../../_common/collaborator/collaboratable';
 import { CommunityModel } from '../../../../_common/community/community.model';
-
-// <!--TODO(component-setup-refactor): This component needs to be converted as well?
 
 const props = defineProps({
 	community: {
@@ -16,13 +15,10 @@ const props = defineProps({
 	either: {
 		type: Boolean,
 	},
-	tag: {
-		type: String,
-		default: 'span',
-	},
 });
 
-const { community, required, either, tag } = toRefs(props);
+const { community, required, either } = toRefs(props);
+
 const hasPerms = computed(() => {
 	const perms = required.value.split(',') as Perm[];
 
@@ -31,11 +27,10 @@ const hasPerms = computed(() => {
 		either.value
 	);
 });
+</script>
 
-const slots = useSlots();
-
-function render() {
-	if (hasPerms.value) {
-		return h(tag, {}, slots.default?.());
-	}
-}
+<template>
+	<template v-if="hasPerms">
+		<slot />
+	</template>
+</template>

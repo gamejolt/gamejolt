@@ -19,7 +19,7 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../../../../_common/route/legacy-route-component';
-import { AppCommunityPerms } from '../../../../../../components/community/perms/AppCommunityPerms';
+import AppCommunityPerms from '../../../../../../components/community/perms/AppCommunityPerms.vue';
 import { showCommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';
 import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/add.vue';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';

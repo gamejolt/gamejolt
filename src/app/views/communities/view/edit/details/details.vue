@@ -14,7 +14,7 @@ import {
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { useThemeStore } from '../../../../../../_common/theme/theme.store';
 import { enforceLocation } from '../../../../../../utils/router';
-import { AppCommunityPerms } from '../../../../../components/community/perms/AppCommunityPerms';
+import AppCommunityPerms from '../../../../../components/community/perms/AppCommunityPerms.vue';
 import FormCommunity from '../../../../../components/forms/community/community.vue';
 import FormCommunityDescription from '../../../../../components/forms/community/description/FormCommunityDescription.vue';
 import { useGridStore } from '../../../../../components/grid/grid-store';
