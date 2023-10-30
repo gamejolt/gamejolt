@@ -29,30 +29,27 @@ import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
 import {
-	Metric,
-	MetricKey,
-	MetricMap,
-	ReportCommentLanguages,
-	ReportComponent,
-	ReportCountries,
-	ReportCreatorShopRevenue,
-	ReportCreatorShopSales,
-	ReportDevRevenue,
-	ReportInvitedUsers,
-	ReportOs,
-	ReportPartnerGeneratedRevenue,
-	ReportRatingBreakdown,
-	ReportReferringPages,
-	ReportTopChargedFiresides,
-	ReportTopChargedPosts,
-	ReportTopCreatorSupporters,
-	ReportTopGameRevenue,
-	ReportTopGames,
-	ReportTopPartnerRevenue,
-	ReportTopPartners,
-	ReportTopSources,
-	ResourceName,
-	SiteAnalytics,
+Metric,
+MetricKey,
+MetricMap,
+ReportCommentLanguages,
+ReportComponent,
+ReportCountries,
+ReportCreatorShopRevenue,
+ReportCreatorShopSales,
+ReportDevRevenue,
+ReportInvitedUsers,
+ReportOs,
+ReportRatingBreakdown,
+ReportReferringPages,
+ReportTopChargedFiresides,
+ReportTopChargedPosts,
+ReportTopCreatorSupporters,
+ReportTopGameRevenue,
+ReportTopGames,
+ReportTopSources,
+ResourceName,
+SiteAnalytics,
 } from '../../../components/site-analytics/site-analytics-service';
 import AppAnalyticsReportRatingBreakdown from './_report/AppAnalyticsReportRatingBreakdown.vue';
 import AppAnalyticsReportSimpleStat from './_report/AppAnalyticsReportSimpleStat.vue';
@@ -303,7 +300,6 @@ function _metricChanged() {
 				pullReport($gettext('Top Games'), ...ReportTopGames);
 				pullReport($gettext('Top Sources'), ...ReportTopSources);
 				pullReport($gettext('Countries'), ...ReportCountries);
-				pullReport($gettext('Partners'), ...ReportTopPartners);
 				break;
 
 			case 'download':
@@ -311,7 +307,6 @@ function _metricChanged() {
 				pullReport($gettext('Operating Systems'), ...ReportOs);
 				pullReport($gettext('Top Sources'), ...ReportTopSources);
 				pullReport($gettext('Countries'), ...ReportCountries);
-				pullReport($gettext('Partners'), ...ReportTopPartners);
 				break;
 
 			case 'install':
@@ -340,14 +335,11 @@ function _metricChanged() {
 				pullReport($gettext('Top Sources'), ...ReportTopSources);
 				pullReport($gettext('Countries'), ...ReportCountries);
 				pullReport($gettext('Operating Systems'), ...ReportOs);
-				pullReport($gettext('Partners'), ...ReportTopPartners);
 				break;
 
 			case 'revenue':
 				pullReport($gettext('Revenue Stats'), ...ReportDevRevenue);
 				pullReport($gettext('Top Profitable Games'), ...ReportTopGameRevenue);
-				pullReport($gettext('Revenue from Partners'), ...ReportPartnerGeneratedRevenue);
-				pullReport($gettext('Top Profitable Partners'), ...ReportTopPartnerRevenue);
 				break;
 
 			case 'user-charge':
@@ -361,11 +353,11 @@ function _metricChanged() {
 				break;
 
 			case 'creator-shop-sale':
-				pullReport($gettext('Creator Shop Sales'), ...ReportCreatorShopSales);
+				pullReport($gettext('Shop Sales'), ...ReportCreatorShopSales);
 				break;
 
 			case 'creator-shop-revenue':
-				pullReport($gettext('Creator Shop Revenue'), ...ReportCreatorShopRevenue);
+				pullReport($gettext('Shop Revenue'), ...ReportCreatorShopRevenue);
 				break;
 		}
 	} else if (resource.value === 'Inventory_Shop_Product') {
@@ -375,7 +367,7 @@ function _metricChanged() {
 				break;
 
 			case 'creator-shop-revenue':
-				pullReport($gettext('Creator Shop Revenue'), ...ReportCreatorShopRevenue);
+				pullReport($gettext('Shop Revenue'), ...ReportCreatorShopRevenue);
 				break;
 		}
 	} else {
@@ -384,7 +376,6 @@ function _metricChanged() {
 				pullReport($gettext('Top Sources'), ...ReportTopSources);
 				pullReport($gettext('Referring Pages'), ...ReportReferringPages);
 				pullReport($gettext('Countries'), ...ReportCountries);
-				pullReport($gettext('Partners'), ...ReportTopPartners);
 				break;
 
 			case 'download':
@@ -392,7 +383,6 @@ function _metricChanged() {
 				pullReport($gettext('Top Sources'), ...ReportTopSources);
 				pullReport($gettext('Referring Pages'), ...ReportReferringPages);
 				pullReport($gettext('Countries'), ...ReportCountries);
-				pullReport($gettext('Partners'), ...ReportTopPartners);
 				break;
 
 			case 'install':
@@ -417,13 +407,10 @@ function _metricChanged() {
 				pullReport($gettext('Referring Pages'), ...ReportReferringPages);
 				pullReport($gettext('Countries'), ...ReportCountries);
 				pullReport($gettext('Operating Systems'), ...ReportOs);
-				pullReport($gettext('Partners'), ...ReportTopPartners);
 				break;
 
 			case 'revenue':
 				pullReport($gettext('Revenue Stats'), ...ReportDevRevenue);
-				pullReport($gettext('Revenue from Partners'), ...ReportPartnerGeneratedRevenue);
-				pullReport($gettext('Top Profitable Partners'), ...ReportTopPartnerRevenue);
 				break;
 		}
 	}
@@ -515,7 +502,6 @@ function _metricChanged() {
 									params: $route.params,
 									query: {
 										period: 'all',
-										partner: $route.query.partner,
 									},
 								}"
 								:class="{ active: period === 'all' }"
@@ -530,7 +516,6 @@ function _metricChanged() {
 									params: $route.params,
 									query: {
 										period: 'monthly',
-										partner: $route.query.partner,
 									},
 								}"
 								:class="{ active: period === 'monthly' }"
@@ -556,7 +541,6 @@ function _metricChanged() {
 									period: 'monthly',
 									year: prevYear,
 									month: prevMonth,
-									partner: $route.query.partner,
 								},
 							}"
 						/>
@@ -580,7 +564,6 @@ function _metricChanged() {
 									period: 'monthly',
 									year: nextYear,
 									month: nextMonth,
-									partner: $route.query.partner,
 								},
 							}"
 						/>

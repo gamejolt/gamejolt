@@ -288,57 +288,6 @@ export const ReportTopGameRevenue: ReportComponent[] = [
 		displayField: 'game_name',
 	},
 ];
-export const ReportTopPartners: ReportComponent[] = [
-	{
-		type: 'top-composition',
-		field: 'partner',
-		fieldLabel: 'Partner',
-		resourceFields: {
-			partner: ['user_display_name'],
-		},
-		displayField: 'user_display_name',
-	},
-];
-
-export const ReportPartnerGeneratedRevenue: ReportComponent[] = [
-	{
-		type: 'sum',
-		field: 'partner_generated_revenue',
-		fieldLabel: 'Total Revenue',
-		fieldType: 'currency',
-	},
-	{
-		type: 'average',
-		field: 'partner_generated_donation',
-		fieldLabel: 'Average Support',
-		fieldType: 'currency',
-	},
-];
-
-export const ReportTopPartnerRevenue: ReportComponent[] = [
-	{
-		type: 'top-composition-sum',
-		field: 'partner',
-		fetchFields: ['revenue'],
-		resourceFields: {
-			partner: ['user_display_name'],
-		},
-		fieldLabel: 'Revenue by Partner',
-		fieldType: 'currency',
-		displayField: 'user_display_name',
-	},
-	{
-		type: 'top-composition-avg',
-		field: 'partner',
-		fetchFields: ['donation'],
-		resourceFields: {
-			partner: ['user_display_name'],
-		},
-		fieldLabel: 'Average Support by Partner',
-		fieldType: 'currency',
-		displayField: 'user_display_name',
-	},
-];
 
 export const ReportTopCreatorSupporters: ReportComponent[] = [
 	{
@@ -501,13 +450,13 @@ export class SiteAnalytics {
 		{
 			key: 'creator-shop-sale',
 			collection: 'shop-product-purchases',
-			label: $gettext(`Creator Shop Sales`),
+			label: $gettext(`Shop Sales`),
 			type: 'number',
 		},
 		{
 			key: 'creator-shop-revenue',
 			collection: 'shop-product-purchases',
-			label: $gettext(`Creator Shop Revenue`),
+			label: $gettext(`Shop Revenue`),
 			type: 'gems',
 			field: 'gem_amount',
 		},
