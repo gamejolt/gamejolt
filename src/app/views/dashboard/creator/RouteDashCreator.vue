@@ -153,7 +153,7 @@ const creatorNextUnlock = computed(() => {
 					{{ $gettext(`Creator HUD`) }}
 				</h1>
 
-				<template v-if="experience">
+				<template v-if="experience && user.is_creator">
 					<div :style="styleFlexCenter({ direction: `column` })">
 						<div
 							:style="{
