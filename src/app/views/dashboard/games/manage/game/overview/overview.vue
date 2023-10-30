@@ -13,7 +13,7 @@ import {
 } from '../../../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
+import { AppCommunityPerms } from '../../../../../../components/community/perms/AppCommunityPerms';
 import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/AppGameDevStageSelector.vue';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../manage.store';

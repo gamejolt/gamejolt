@@ -16,7 +16,7 @@ import {
 } from '../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { showCommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
-import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
+import { AppCommunityPerms } from '../../../../../components/community/perms/AppCommunityPerms';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 import { useCommunityRouteStore } from '../../view.store';
 

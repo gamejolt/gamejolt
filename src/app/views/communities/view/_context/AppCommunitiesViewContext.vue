@@ -38,6 +38,7 @@ function onChangeSection(path: string) {
 		</div>
 
 		<AppNavChannels v-if="!isEditing" />
+		<!--TODO(component-setup-refactor): Check below.-->
 		<AppNavEdit v-else @change-section="onChangeSection" />
 	</div>
 </template>

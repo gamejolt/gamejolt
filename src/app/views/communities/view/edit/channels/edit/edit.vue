@@ -9,7 +9,7 @@ import {
 } from '../../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { showCommunityCompetitionHeaderModal } from '../../../../../../components/community/competition/header-modal/header-modal.service';
-import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
+import { AppCommunityPerms } from '../../../../../../components/community/perms/AppCommunityPerms';
 import AppPageHeader from '../../../../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../../../../components/page-header/controls/controls.vue';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';

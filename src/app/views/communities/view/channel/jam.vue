@@ -23,7 +23,7 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import { arrayRemove } from '../../../../../utils/array';
 import AppCommunityCompetitionCountdown from '../../../../components/community/competition/countdown/AppCommunityCompetitionCountdown.vue';
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
-import { AppCommunityPerms } from '../../../../components/community/perms/perms';
+import { AppCommunityPerms } from '../../../../components/community/perms/AppCommunityPerms';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { getChannelPathFromRoute, setCommunityMeta, useCommunityRouteStore } from '../view.store';
 
