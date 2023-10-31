@@ -3,6 +3,7 @@ import { computed, ComputedRef, onMounted, reactive, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
 import { CurrencyType } from '../../../../_common/currency/currency-type';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatCurrency, formatGemsCurrency } from '../../../../_common/filters/currency';
@@ -36,7 +37,8 @@ import {
 	ReportComponent,
 	ReportCountries,
 	ReportCreatorShopRevenue,
-	ReportCreatorShopSales,
+	ReportCreatorTopShopSales,
+	ReportCreatorTopShopTypes,
 	ReportDevRevenue,
 	ReportInvitedUsers,
 	ReportOs,
@@ -353,7 +355,8 @@ function _metricChanged() {
 				break;
 
 			case 'creator-shop-sale':
-				pullReport($gettext('Shop Sales'), ...ReportCreatorShopSales);
+				pullReport($gettext('Top Products'), ...ReportCreatorTopShopSales);
+				pullReport($gettext('Top Product Types'), ...ReportCreatorTopShopTypes);
 				break;
 
 			case 'creator-shop-revenue':
@@ -362,10 +365,6 @@ function _metricChanged() {
 		}
 	} else if (resource.value === 'Inventory_Shop_Product') {
 		switch (selectedMetric.value.key) {
-			case 'creator-shop-sale':
-				pullReport($gettext('Creator Shop Sales'), ...ReportCreatorShopSales);
-				break;
-
 			case 'creator-shop-revenue':
 				pullReport($gettext('Shop Revenue'), ...ReportCreatorShopRevenue);
 				break;
@@ -614,7 +613,7 @@ function _metricChanged() {
 												{{ formatCurrency(metricData[metric.key]?.total) }}
 											</template>
 											<template v-else-if="metric.type === 'gems'">
-												<AppJolticon icon="gem" class="-gem-icon" />
+												<AppCurrencyImg :currency="gems" />
 												{{
 													formatGemsCurrency(
 														metricData[metric.key]?.total
@@ -709,7 +708,4 @@ function _metricChanged() {
 	position: relative
 	min-height: calc(100vh - var(--shell-top) - v-bind(metricsHeight))
 	z-index: 0
-
-.-gem-icon
-	color: $gj-blue
 </style>

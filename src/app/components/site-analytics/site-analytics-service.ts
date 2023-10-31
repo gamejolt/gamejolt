@@ -339,20 +339,23 @@ export const ReportInvitedUsers: ReportComponent[] = [
 	},
 ];
 
-export const ReportCreatorShopSales: ReportComponent[] = [
+export const ReportCreatorTopShopSales: ReportComponent[] = [
 	{
 		type: 'top-composition',
 		field: 'shop_product',
-		fieldLabel: 'Best Selling Products',
+		fieldLabel: 'Product',
 		resourceFields: {
 			shop_product: ['shop_product_resource_name'],
 		},
 		displayField: 'shop_product_resource_name',
 	},
+];
+
+export const ReportCreatorTopShopTypes: ReportComponent[] = [
 	{
 		type: 'top-composition',
 		field: 'shop_product_resource',
-		fieldLabel: 'Best Selling Product Types',
+		fieldLabel: 'Product Type',
 	},
 ];
 
@@ -363,24 +366,25 @@ export const ReportCreatorShopRevenue: ReportComponent[] = [
 		fieldType: 'gems',
 		fieldLabel: 'Total Gems',
 	},
-	{
-		type: 'top-composition-sum',
-		field: 'shop_product',
-		fieldType: 'gems',
-		fetchFields: ['gem_amount'],
-		resourceFields: {
-			shop_product: ['shop_product_resource_name'],
-		},
-		fieldLabel: 'Gems by Product',
-		displayField: 'shop_product_resource_name',
-	},
-	{
-		type: 'top-composition-sum',
-		field: 'shop_product_resource',
-		fieldLabel: 'Gems by Product Type',
-		fieldType: 'gems',
-		fetchFields: ['gem_amount'],
-	},
+	// Sums are not working well, so turning this off.
+	// {
+	// 	type: 'top-composition-sum',
+	// 	field: 'shop_product',
+	// 	fieldType: 'gems',
+	// 	fetchFields: ['gem_amount'],
+	// 	resourceFields: {
+	// 		shop_product: ['shop_product_resource_name'],
+	// 	},
+	// 	fieldLabel: 'Gems by Product',
+	// 	displayField: 'shop_product_resource_name',
+	// },
+	// {
+	// 	type: 'top-composition-sum',
+	// 	field: 'shop_product_resource',
+	// 	fieldLabel: 'Gems by Product Type',
+	// 	fieldType: 'gems',
+	// 	fetchFields: ['gem_amount'],
+	// },
 ];
 
 export class SiteAnalytics {
@@ -479,7 +483,7 @@ export class SiteAnalytics {
 	});
 
 	static productMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, ['creator-shop-sale', 'creator-shop-revenue']);
+		return objectPick(this.allMetrics.value, ['creator-shop-revenue']);
 	});
 
 	static gameDevMetrics = computed((): MetricMap => {
