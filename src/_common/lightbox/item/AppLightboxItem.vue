@@ -159,6 +159,13 @@ async function calcActive() {
 						/>
 					</AppMediaItemBackdrop>
 				</div>
+				<div
+					v-if="isInstance(item, GameScreenshotModel) && item.caption"
+					ref="caption"
+					class="-caption"
+				>
+					<h4>{{ item.caption }}</h4>
+				</div>
 			</template>
 
 			<!-- Video -->
