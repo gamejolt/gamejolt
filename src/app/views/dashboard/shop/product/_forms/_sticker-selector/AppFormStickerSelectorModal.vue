@@ -137,7 +137,7 @@ const gridStyles: CSSProperties = {
 					{{ $gettext(`Only premium stickers can be added into premium sticker packs.`) }}
 				</div>
 				<div v-else>
-					{{ $gettext(`Only charge stickers can be added into charge sticker packs.`) }}
+					{{ $gettext(`Only basic stickers can be added into reward sticker packs.`) }}
 				</div>
 			</div>
 
