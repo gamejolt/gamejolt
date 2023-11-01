@@ -59,7 +59,7 @@ const emit = defineEmits({
 	'hide-options': () => true,
 });
 
-const { game, overlay, small, large, canInstall, noProgress } = toRefs(props);
+const { game, canInstall } = toRefs(props);
 
 const clientLibrary = useClientLibraryStore();
 
