@@ -47,19 +47,21 @@ const emit = defineEmits({
 	fullscreen: (_mediaItem: MediaItemModel) => true,
 });
 
-const { mediaItem, isPostHydrated, isActive, restrictDeviceMaxHeight, inline, canPlaceSticker } =
-	toRefs(props);
+const { mediaItem, isActive, restrictDeviceMaxHeight, inline, canPlaceSticker } = toRefs(props);
 
 const parentStickerTarget = useStickerTargetController();
+
 const stickerTargetController = ref<StickerTargetController>();
 const isFilled = ref(false);
 
-const shouldShowFullscreenOption = computed(
+const shouldShowFullscreenOption = toRef(
 	() =>
 		restrictDeviceMaxHeight.value &&
 		mediaItem.value.height >= 100 &&
 		mediaItem.value.width >= 100
 );
+
+const stickersDisabled = toRef(() => !isActive.value || !canPlaceSticker.value);
 
 const shouldVideoPlay = computed(
 	() => isActive.value && useContentFocusService().hasContentFocus.value
@@ -108,8 +110,6 @@ const deviceMaxHeight = computed(() => {
 	}
 	return Screen.height * 0.45;
 });
-
-const stickersDisabled = toRef(() => !isActive.value || !canPlaceSticker.value);
 
 stickerTargetController.value = createStickerTargetController(mediaItem.value, {
 	parent: computed(() => unref(parentStickerTarget)),
