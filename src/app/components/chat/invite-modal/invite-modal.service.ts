@@ -11,7 +11,7 @@ export async function showChatInviteModal(
 	return await showModal<boolean | undefined>({
 		modalId: 'ChatInvite',
 		size: 'sm',
-		component: defineAsyncComponent(() => import('./invite-modal.vue')),
+		component: defineAsyncComponent(() => import('./AppChatInviteModal.vue')),
 		props: { room, friends, initialUser },
 	});
 }

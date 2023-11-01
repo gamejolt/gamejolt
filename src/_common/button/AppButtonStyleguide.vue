@@ -13,6 +13,7 @@ import AppButton from './AppButton.vue';
 			<AppButton primary>Primary</AppButton>
 			<AppButton primary solid>Primary Solid</AppButton>
 			<AppButton trans>Transparent</AppButton>
+			<AppButton primary trans>Primary Transparent</AppButton>
 		</div>
 
 		<h3>Icons</h3>
@@ -22,6 +23,7 @@ import AppButton from './AppButton.vue';
 			<AppButton icon="heart" primary>Primary</AppButton>
 			<AppButton icon="heart" primary solid>Primary Solid</AppButton>
 			<AppButton icon="heart" trans>Transparent</AppButton>
+			<AppButton icon="heart" primary trans>Primary Transparent</AppButton>
 		</div>
 
 		<h3>Sparse (icon-only)</h3>
@@ -31,6 +33,7 @@ import AppButton from './AppButton.vue';
 			<AppButton sparse icon="heart" primary />
 			<AppButton sparse icon="heart" primary solid />
 			<AppButton sparse icon="heart" trans />
+			<AppButton sparse icon="heart" primary trans />
 		</div>
 
 		<h3>Circle (icon-only)</h3>
@@ -40,6 +43,7 @@ import AppButton from './AppButton.vue';
 			<AppButton circle icon="heart" primary />
 			<AppButton circle icon="heart" primary solid />
 			<AppButton circle icon="heart" trans />
+			<AppButton circle icon="heart" primary trans />
 		</div>
 
 		<h3>Badges</h3>
@@ -49,6 +53,7 @@ import AppButton from './AppButton.vue';
 			<AppButton badge="42" primary>Primary</AppButton>
 			<AppButton badge="42" primary solid>Primary Solid</AppButton>
 			<AppButton badge="42" trans>Transparent</AppButton>
+			<AppButton badge="42" primary trans>Primary Transparent</AppButton>
 		</div>
 
 		<h3>Overlay (over images)</h3>
@@ -58,6 +63,7 @@ import AppButton from './AppButton.vue';
 			<AppButton overlay icon="heart" primary>Primary</AppButton>
 			<AppButton overlay icon="heart" primary solid>Primary Solid</AppButton>
 			<AppButton overlay icon="heart" trans>Transparent</AppButton>
+			<AppButton overlay icon="heart" primary trans>Primary Transparent</AppButton>
 		</div>
 
 		<h3>Block Buttons</h3>
@@ -67,6 +73,7 @@ import AppButton from './AppButton.vue';
 			<AppButton block primary>Primary</AppButton>
 			<AppButton block primary solid>Primary Solid</AppButton>
 			<AppButton block trans>Transparent</AppButton>
+			<AppButton block primary trans>Primary Transparent</AppButton>
 		</div>
 
 		<h3>Disabled</h3>
@@ -76,6 +83,7 @@ import AppButton from './AppButton.vue';
 			<AppButton disabled primary>Primary</AppButton>
 			<AppButton disabled primary solid>Primary Solid</AppButton>
 			<AppButton disabled trans>Transparent</AppButton>
+			<AppButton disabled primary trans>Primary Transparent</AppButton>
 		</div>
 	</section>
 </template>

@@ -2,8 +2,8 @@
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
+import { formatGemsCurrency } from '../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../_common/filters/date';
-import { formatNumber } from '../../../../../_common/filters/number';
 import { imageGems } from '../../../../../_common/img/images';
 import AppInviteCard from '../../../../../_common/invite/AppInviteCard.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
@@ -206,7 +206,7 @@ function getEarnedGems(referral: ReferralData) {
 						</div>
 						<div class="stat-big-digit">
 							<img :src="imageGems" width="24" height="24" alt="Gems" />
-							{{ formatNumber(getEarnedGems(referral)) }}
+							{{ formatGemsCurrency(getEarnedGems(referral)) }}
 						</div>
 					</div>
 				</div>

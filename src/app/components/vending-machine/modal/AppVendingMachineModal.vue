@@ -3,6 +3,7 @@ import { CSSProperties, Ref, computed, onMounted, ref, toRefs } from 'vue';
 import { trackShopView } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
 import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
@@ -16,6 +17,7 @@ import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import { InventoryShopProductSaleModel } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import { InventoryShopSectionModel } from '../../../../_common/inventory/shop/inventory-shop-section.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../_common/microtransaction/purchase-modal/modal.service';
@@ -26,7 +28,6 @@ import { storeModelList } from '../../../../_common/model/model-store.service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { StickerPackRatio } from '../../../../_common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
@@ -34,8 +35,10 @@ import {
 	kThemeBgActual,
 	kThemeBgBackdrop,
 	kThemeBgOffset,
+	kThemeBgSubtle,
 	kThemeFg,
 	kThemeFg10,
+	kThemeFgMuted,
 } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -57,22 +60,21 @@ import {
 	kFontFamilyDisplay,
 	kFontFamilyHeading,
 	kFontSizeH2,
+	kLineHeightBase,
 	kStrongEaseOut,
 } from '../../../../_styles/variables';
+import { numberSort } from '../../../../utils/array';
 import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
 import AppVendingMachineProduct from './_product/AppVendingMachineProduct.vue';
 import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
 import imageVance from './vance.png';
 
-interface ProductChunks {
-	packs?: ProductChunk;
-	avatarFrames?: ProductChunk;
-	backgrounds?: ProductChunk;
-}
-
-interface ProductChunk {
-	items: InventoryShopProductSaleModel[];
-	type: keyof ProductChunks;
+interface Section {
+	id: number;
+	title: string;
+	description: string;
+	sort: number;
+	sales: InventoryShopProductSaleModel[];
 }
 
 const props = defineProps({
@@ -85,24 +87,24 @@ const props = defineProps({
 const { userId } = toRefs(props);
 
 const { isDark } = useThemeStore();
-const { coinBalance, joltbuxBalance } = useCommonStore();
+const { user: authUser, coinBalance, joltbuxBalance } = useCommonStore();
 
 const modal = useModal()!;
 
 const shopOwner = ref<UserModel>();
-const availableProducts = ref({}) as Ref<ProductChunks>;
+const sections = ref([]) as Ref<Section[]>;
+
 const isLoading = ref(false);
 const productProcessing = ref<number>();
 
 const hasProducts = computed(() => {
-	const e = availableProducts.value;
-
-	return (
-		(e.packs?.items.length ||
-			e.avatarFrames?.items.length ||
-			e.backgrounds?.items.length ||
-			0) > 0
-	);
+	const data = sections.value.values();
+	for (const { sales } of data) {
+		if (sales.length > 0) {
+			return true;
+		}
+	}
+	return false;
 });
 
 const currencyCardData = computed(() => {
@@ -139,46 +141,76 @@ async function init() {
 		]);
 
 		const payload = p[0];
-		const newProducts = payload.sales
+		const sales = payload.sales
 			? storeModelList(InventoryShopProductSaleModel, payload.sales)
 			: [];
 
-		const productChunks: ProductChunks = {};
-		const missingItems: InventoryShopProductSaleModel[] = [];
+		const newSections: typeof sections.value = [];
+		const validSales = new Map<number, InventoryShopProductSaleModel>();
+		const unsupportedSales = new Map<number, InventoryShopProductSaleModel>();
+		const sectionItems = storeModelList(InventoryShopSectionModel, payload.sections);
 
-		for (const shopProduct of newProducts) {
-			let key: keyof ProductChunks | null = null;
-
-			if (shopProduct.stickerPack) {
-				key = 'packs';
-			} else if (shopProduct.avatarFrame) {
-				key = 'avatarFrames';
-			} else if (shopProduct.background) {
-				key = 'backgrounds';
-			}
-
-			if (!key) {
-				missingItems.push(shopProduct);
+		// Prune the sales to only supported ones.
+		for (const idx in sales) {
+			const sale = sales[idx];
+			if (!sale.stickerPack && !sale.avatarFrame && !sale.background) {
+				unsupportedSales.set(sale.id, sale);
 				continue;
 			}
-
-			const items = (productChunks[key]?.items || []).concat(shopProduct);
-			productChunks[key] = { type: key, items };
+			validSales.set(sale.id, sale);
 		}
 
-		if (missingItems.length > 0) {
-			console.warn(`Got some products that we don't support yet.`, {
-				missingCount: missingItems.length,
-				types: missingItems.reduce((result, i) => {
-					result.set(i.product_type, (result.get(i.product_type) || 0) + 1);
-					return result;
-				}, new Map<string, number>()),
-			});
+		// Populate the section data objects with their sales.
+		for (const sectionModel of sectionItems) {
+			const section: Section = {
+				id: sectionModel.id,
+				title: sectionModel.title,
+				description: sectionModel.description,
+				sort: sectionModel.sort,
+				sales: [],
+			};
+
+			if (sectionModel.item_list) {
+				// Loop through the sale IDs and grab any matching valid sales.
+				// The IDs are already sorted in the order the sales are meant
+				// to be displayed.
+				for (const saleId of sectionModel.item_list.sale_ids) {
+					const sale = validSales.get(saleId);
+					// Skip this section and log a warning if we don't have a
+					// valid sale with this ID.
+					if (!sale) {
+						if (unsupportedSales.has(saleId)) {
+							console.warn(
+								`Item list referenced a sale (id: ${saleId}) that is not a supported type of sale.`
+							);
+						} else {
+							console.warn(
+								`Item list referenced a sale (id: ${saleId}) that is not present in the 'sales' field.`
+							);
+						}
+						continue;
+					}
+					section.sales.push(sale);
+				}
+
+				// Only add the section if it has sales.
+				if (section.sales.length > 0) {
+					newSections.push(section);
+				}
+			} else {
+				console.warn(`Unsupported section type for section ${sectionModel.id}`);
+			}
 		}
 
-		availableProducts.value = productChunks;
-		if (payload.shopOwner) {
-			shopOwner.value = payload.shopOwner;
+		// Sort the sections by their sort value. Sale items within the sections
+		// are already pre-sorted.
+		sections.value = newSections.sort((a, b) => numberSort(a.sort, b.sort));
+
+		// Assign to our existing shopOwner or create a new one if available.
+		if (shopOwner.value && payload.shopOwner) {
+			shopOwner.value.assign(payload.shopOwner);
+		} else {
+			shopOwner.value = payload.shopOwner ? new UserModel(payload.shopOwner) : undefined;
 		}
 
 		const mePayload = p[1];
@@ -219,6 +251,11 @@ async function purchaseProduct(shopProduct: InventoryShopProductSaleModel) {
 }
 
 async function onClickCurrencyCard(currency: Currency) {
+	// Only authed users can interact with these.
+	if (!authUser.value) {
+		return;
+	}
+
 	if (currency.id === CurrencyType.joltbux.id) {
 		trackShopView({ type: 'joltbux-card' });
 		showPurchaseMicrotransactionModal();
@@ -231,23 +268,6 @@ async function onClickCurrencyCard(currency: Currency) {
 		}
 	} else {
 		console.error('Unknown currency type', currency);
-	}
-}
-
-function getTooltipText(type: ProductChunk['type']) {
-	switch (type) {
-		case 'packs':
-			return $gettext(
-				`Sticker packs contain a random set of stickers which you can collect and place on content throughout Game Jolt.`
-			);
-
-		case 'avatarFrames':
-			return $gettext(`Equip an avatar frame to make yourself stand out in the community.`);
-
-		case 'backgrounds':
-			return $gettext(
-				`Backgrounds can be added to your posts to make your content stand out in the feeds.`
-			);
 	}
 }
 
@@ -307,12 +327,7 @@ const currencyCardTransitionStyles: CSSProperties = {
 <template>
 	<AppModal force-theme="dark">
 		<div :style="containerStyles">
-			<AppModalFloatingHeader
-				:dynamic-slots="{
-					title: true,
-					bottom: false,
-				}"
-			>
+			<AppModalFloatingHeader>
 				<template #modal-controls>
 					<div
 						:style="{
@@ -343,35 +358,6 @@ const currencyCardTransitionStyles: CSSProperties = {
 						</AppButton>
 					</div>
 				</template>
-
-				<template #title>
-					<div
-						v-if="shopOwner"
-						:style="{
-							display: `flex`,
-							gap: `12px`,
-							alignItems: `center`,
-						}"
-					>
-						<AppUserAvatarBubble
-							:style="{
-								width: `40px`,
-								height: `40px`,
-								flex: `none`,
-							}"
-							:user="shopOwner"
-							show-frame
-						/>
-
-						<div :style="shopOwnerNameStyles">
-							{{
-								$gettext(`@%{ username }'s Shop`, {
-									username: shopOwner.username,
-								})
-							}}
-						</div>
-					</div>
-				</template>
 			</AppModalFloatingHeader>
 
 			<div
@@ -384,6 +370,35 @@ const currencyCardTransitionStyles: CSSProperties = {
 					flexDirection: `column`,
 				}"
 			>
+				<div
+					v-if="shopOwner"
+					:style="{
+						display: `flex`,
+						gap: `12px`,
+						alignItems: `center`,
+						paddingTop: `8px`,
+						paddingBottom: `16px`,
+					}"
+				>
+					<AppUserAvatarBubble
+						:style="{
+							width: `40px`,
+							height: `40px`,
+							flex: `none`,
+						}"
+						:user="shopOwner"
+						show-frame
+					/>
+
+					<div :style="shopOwnerNameStyles">
+						{{
+							$gettext(`@%{ username }'s Shop`, {
+								username: shopOwner.username,
+							})
+						}}
+					</div>
+				</div>
+
 				<AppTheme :force-dark="isDark" :force-light="!isDark">
 					<AppLoadingFade
 						class="fill-offset"
@@ -406,6 +421,7 @@ const currencyCardTransitionStyles: CSSProperties = {
 							>
 								<AppOnHover v-slot="{ hoverBinding, hovered }">
 									<div
+										v-app-auth-required
 										v-bind="{
 											...hoverBinding,
 											style: [
@@ -495,89 +511,103 @@ const currencyCardTransitionStyles: CSSProperties = {
 						</div>
 
 						<div
-							:style="[
-								styleWhen(!hasProducts, {
-									padding: `12px`,
-								}),
+							:style="
 								styleWhen(!hasProducts && !isLoading, {
+									padding: `12px`,
 									gridTemplateColumns: '1fr',
 									alignContent: 'center',
-								}),
-							]"
+								})
+							"
 						>
-							<div v-if="isLoading && !hasProducts" class="_items">
-								<AppAspectRatio
-									v-for="i in 3"
-									:key="i"
-									:ratio="StickerPackRatio"
-									show-overflow
-								>
+							<div
+								v-if="isLoading && !hasProducts"
+								class="fill-offset"
+								:style="{
+									...styleBorderRadiusLg,
+									...styleElevate(1),
+									padding: `8px`,
+									marginLeft: `8px`,
+									marginRight: `8px`,
+									marginBottom: `12px`,
+								}"
+							>
+								<div
+									:style="{
+										...styleBorderRadiusLg,
+										height: `${kFontSizeH2.value * kLineHeightBase}px`,
+										margin: 0,
+										padding: `8px 12px 12px`,
+										marginBottom: `12px`,
+										backgroundColor: kThemeBgSubtle,
+										width: `25%`,
+									}"
+								/>
+
+								<div class="_items">
 									<div
+										v-for="i in 2"
+										:key="i"
 										:style="{
 											...styleBorderRadiusLg,
 											...styleChangeBg('bg-subtle'),
-											...styleElevate(1),
-											width: `100%`,
-											height: `100%`,
 										}"
-									/>
-								</AppAspectRatio>
+									>
+										<AppAspectRatio :ratio="1" show-overflow />
+										<div :style="{ height: `80px` }" />
+									</div>
+								</div>
 							</div>
 							<template v-else-if="hasProducts">
-								<template v-for="chunk in availableProducts" :key="chunk.type">
-									<template v-if="chunk && chunk.items.length">
+								<template v-for="section in sections" :key="section.id">
+									<div
+										v-if="section.sales.length"
+										class="fill-offset"
+										:style="{
+											...styleBorderRadiusLg,
+											...styleElevate(1),
+											padding: `8px`,
+											marginLeft: `8px`,
+											marginRight: `8px`,
+											marginBottom: `12px`,
+										}"
+									>
 										<h2
+											v-if="sections.length > 1"
 											:style="{
 												display: `flex`,
 												alignItems: `center`,
 												gap: `12px`,
-												marginTop: 0,
-												padding: `12px 16px 0`,
+												margin: 0,
+												padding: `8px 12px 12px`,
 												fontFamily: kFontFamilyDisplay,
 												fontWeight: `bold`,
 												color: kThemeFg,
 											}"
 										>
-											<template v-if="chunk.type === 'packs'">
-												{{ $gettext(`Sticker packs`) }}
-											</template>
-											<template v-else-if="chunk.type === 'avatarFrames'">
-												{{ $gettext(`Avatar frames`) }}
-											</template>
-											<template v-else-if="chunk.type === 'backgrounds'">
-												{{ $gettext(`Backgrounds`) }}
-											</template>
+											{{ section.title }}
 
 											<AppJolticon
-												v-app-tooltip.touchable="getTooltipText(chunk.type)"
-												icon="help-circle"
+												v-if="section.description"
+												v-app-tooltip.touchable="section.description"
+												icon="info-circle"
 												:style="{
-													fontSize: `inherit`,
 													margin: 0,
+													fontSize: `inherit`,
+													color: kThemeFgMuted,
 												}"
 											/>
 										</h2>
 
-										<AppSpacer vertical :scale="2" />
-
-										<div
-											class="_items"
-											:style="{
-												padding: `0 12px 16px`,
-											}"
-										>
-											<template
-												v-for="shopProduct in chunk.items"
-												:key="shopProduct.id"
-											>
+										<div class="_items">
+											<template v-for="sale in section.sales" :key="sale.id">
 												<AppVendingMachineProduct
-													:shop-product="shopProduct"
+													:shop-product="sale"
 													:disable-purchases="!!productProcessing"
 													@purchase="purchaseProduct($event)"
 												/>
 											</template>
 										</div>
-									</template>
+									</div>
 								</template>
 							</template>
 							<AppIllustration v-else :asset="illNoCommentsSmall">
@@ -586,6 +616,8 @@ const currencyCardTransitionStyles: CSSProperties = {
 								</div>
 							</AppIllustration>
 						</div>
+
+						<AppSpacer vertical :scale="2" />
 					</AppLoadingFade>
 				</AppTheme>
 
@@ -601,7 +633,7 @@ const currencyCardTransitionStyles: CSSProperties = {
 					<div
 						:style="{
 							...styleMaxWidthForOptions({
-								ratio: 1000 / 250,
+								ratio: 4,
 								maxHeight: Math.max(Screen.height * 0.15, 80),
 							}),
 							width: `100%`,
@@ -631,7 +663,6 @@ const currencyCardTransitionStyles: CSSProperties = {
 	--pack-min-width: 200px
 	color: var(--theme-fg)
 	position: relative
-	overflow: hidden
 	display: grid
 	grid-template-columns: repeat(auto-fill, minmax(var(--pack-min-width), 1fr))
 	align-content: start

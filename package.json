@@ -1,6 +1,6 @@
 {
 	"name": "game-jolt-client",
-	"version": "1.37.2",
+	"version": "1.37.4",
 	"scripts": {
 		"check": "tsc --noEmit",
 		"lint": "eslint --ext .js,.vue src",
@@ -35,8 +35,8 @@
 		"@types/fs-extra": "11.0.1",
 		"@types/grecaptcha": "2.0.35",
 		"@types/jstimezonedetect": "1.0.1",
-		"@types/node-fetch": "2.6.1",
 		"@types/node": "16.18.34",
+		"@types/node-fetch": "2.6.1",
 		"@types/nw.js": "0.13.14",
 		"@types/phoenix": "1.4.4",
 		"@types/prosemirror-commands": "1.0.1",
@@ -75,6 +75,8 @@
 		"jstimezonedetect": "1.0.7",
 		"minimist": "1.2.8",
 		"node-fetch": "2.6.7",
+		"overlayscrollbars": "2.4.3",
+		"overlayscrollbars-vue": "0.5.6",
 		"phoenix": "1.5.1",
 		"polished": "4.1.4",
 		"prettier": "2.8.4",
