@@ -466,48 +466,56 @@ export class SiteAnalytics {
 		},
 	];
 
-	static allMetrics = computed((): MetricMap => {
-		return arrayIndexBy(this._metrics, 'key');
+	static allMetrics = computed((): MetricMap => arrayIndexBy(this._metrics, 'key'));
+
+	static userMetrics = computed(
+		(): MetricMap => objectPick(this.allMetrics.value, ['user-invite'])
+	);
+
+	static creatorMetrics = computed(
+		(): MetricMap =>
+			objectPick(this.allMetrics.value, [
+				'user-charge',
+				'creator-shop-sale',
+				'creator-shop-revenue',
+			])
+	);
+
+	// Brands don't get charge or gems.
+	static brandMetrics = computed(
+		(): MetricMap => objectPick(this.allMetrics.value, ['creator-shop-sale'])
+	);
+
+	static productMetrics = computed(
+		(): MetricMap => objectPick(this.allMetrics.value, ['creator-shop-revenue'])
+	);
+
+	static gameDevMetrics = computed(
+		(): MetricMap =>
+			objectPick(this.allMetrics.value, [
+				'view',
+				'download',
+				'install',
+				'comment',
+				'rating',
+				'follow',
+				'sale',
+				'revenue',
+			])
+	);
+
+	static gameMetrics = computed(() => {
+		return this.gameDevMetrics.value;
 	});
 
-	static userMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, ['user-invite']);
-	});
+	static packageMetrics = computed(
+		(): MetricMap =>
+			objectPick(this.allMetrics.value, ['download', 'install', 'sale', 'revenue'])
+	);
 
-	static creatorMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, [
-			'user-charge',
-			'creator-shop-sale',
-			'creator-shop-revenue',
-		]);
-	});
-
-	static productMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, ['creator-shop-revenue']);
-	});
-
-	static gameDevMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, [
-			'view',
-			'download',
-			'install',
-			'comment',
-			'rating',
-			'follow',
-			'sale',
-			'revenue',
-		]);
-	});
-
-	static gameMetrics = computed(() => this.gameDevMetrics.value);
-
-	static packageMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, ['download', 'install', 'sale', 'revenue']);
-	});
-
-	static releaseMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, ['download', 'install']);
-	});
+	static releaseMetrics = computed(
+		(): MetricMap => objectPick(this.allMetrics.value, ['download', 'install'])
+	);
 
 	static async getHistogram(
 		resource: ResourceName,

@@ -1,13 +1,15 @@
 <script lang="ts" setup>
+import { DeepReadonly, PropType } from 'vue';
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import { CurrencyType } from '../../../../../_common/currency/currency-type';
 import { formatCurrency, formatGemsCurrency } from '../../../../../_common/filters/currency';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { ReportComponent } from '../../../../components/site-analytics/site-analytics-service';
 
 defineProps({
 	reportData: {
-		type: Object,
+		type: Object as PropType<DeepReadonly<ReportComponent>>,
 		required: true,
 	},
 });
