@@ -22,12 +22,12 @@ const props = defineProps({
 		required: true,
 	},
 	model: {
-		type: [Object, undefined] as PropType<ShopProductModel | undefined>,
-		required: true,
+		type: Object as PropType<ShopProductModel>,
+		default: undefined,
 	},
 	imgUrl: {
-		type: [String, null] as PropType<string | null>,
-		required: true,
+		type: String,
+		default: undefined,
 	},
 });
 
