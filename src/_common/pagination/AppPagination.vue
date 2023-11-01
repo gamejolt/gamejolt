@@ -64,11 +64,6 @@ const {
 
 const route = useRoute();
 
-const totalPages = computed(() => {
-	const totalPages = Math.ceil(totalItems.value / itemsPerPage.value);
-	return Math.max(totalPages || 0, 1);
-});
-
 const hasPrevious = toRef(() => currentPage.value > 1);
 
 const hasNext = toRef(() => currentPage.value < totalPages.value);
@@ -77,6 +72,11 @@ const hasNext = toRef(() => currentPage.value < totalPages.value);
 const prevPage = toRef(() => (hasPrevious.value ? currentPage.value - 1 : undefined));
 
 const nextPage = toRef(() => currentPage.value + 1);
+
+const totalPages = computed(() => {
+	const totalPages = Math.ceil(totalItems.value / itemsPerPage.value);
+	return Math.max(totalPages || 0, 1);
+});
 
 const pages = computed(() => {
 	const edgePages = getEdgePages();
