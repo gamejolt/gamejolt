@@ -79,10 +79,9 @@ const childSizing = computed<CSSProperties>(() => {
 					height: `100%`,
 				},
 				styleWhen(childSizing.width !== childSizing.height, styleFlexCenter()),
-				innerStyles,
 			]"
 		>
-			<div :style="[childSizing, { position: `relative` }]">
+			<div :style="[childSizing, { position: `relative` }, innerStyles]">
 				<slot />
 			</div>
 		</div>
