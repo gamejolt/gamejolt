@@ -2,7 +2,7 @@
 defineProps({
 	highlight: {
 		type: String,
-		required: true,
+		default: undefined,
 	},
 	backlight: {
 		type: String,

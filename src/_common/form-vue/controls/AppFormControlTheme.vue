@@ -8,18 +8,18 @@ import AppPopper from '../../popper/AppPopper.vue';
 import AppThemeBubble from '../../theme/bubble/AppThemeBubble.vue';
 import { ThemePresetModel } from '../../theme/preset/preset.model';
 import {
-	DefaultTheme,
-	ThemeModel,
-	makeThemeFromColor,
-	makeThemeFromPreset,
+DefaultTheme,
+ThemeModel,
+makeThemeFromColor,
+makeThemeFromPreset,
 } from '../../theme/theme.model';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext } from '../../translate/translate.service';
 import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
+createFormControl,
+defineFormControlEmits,
+defineFormControlProps,
 } from '../AppFormControl.vue';
 
 const props = defineProps({
@@ -46,20 +46,20 @@ const presets = ref([] as ThemePresetModel[]);
 const activeTab = ref('preset' as 'preset' | 'custom');
 const customSelection = ref({ hex: null } as VueColor);
 
-const currentTheme = computed(() => {
-	return controlVal.value || DefaultTheme;
-});
-
+const currentTheme = computed(() => controlVal.value || DefaultTheme);
 const highlight = computed(() => {
-	return controlVal.value && (controlVal.value.custom || controlVal.value.highlight);
+	if (!controlVal.value) {
+		return undefined;
+	}
+	return controlVal.value.custom || controlVal.value.highlight;
 });
 
 const backlight = computed(() => {
 	if (controlVal.value) {
 		// Don't show backlight when a custom color is chosen.
-		return controlVal.value.custom ? null : controlVal.value.backlight;
+		return controlVal.value.custom ? undefined : controlVal.value.backlight;
 	}
-	return null;
+	return undefined;
 });
 
 async function onPopover() {
@@ -99,8 +99,6 @@ function clear() {
 	<div class="form-control-theme">
 		<AppPopper @show="onPopover()">
 			<a class="-current">
-				<!--TODO(component-setup-refactor): should we change the 'string | null' type
-					to 'string | undefined' for :backlight?-->
 				<AppThemeBubble :highlight="highlight" :backlight="backlight" active />
 			</a>
 
