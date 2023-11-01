@@ -6,7 +6,7 @@ import { UserModel } from '../../../../_common/user/user.model';
 export async function showCommunityBlockUserModal(user: UserModel, community: CommunityModel) {
 	return await showModal<boolean>({
 		modalId: 'CommunityBlockUser',
-		component: defineAsyncComponent(() => import('./AppCommunityBlocKUserModal.vue')),
+		component: defineAsyncComponent(() => import('./AppCommunityBlockUserModal.vue')),
 		props: { user, community },
 		size: 'lg',
 	});

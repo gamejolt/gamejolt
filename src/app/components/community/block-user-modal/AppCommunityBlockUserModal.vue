@@ -4,6 +4,7 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../_common/user/user.model';
 import FormCommunityBlock from '../../forms/community/ban/block.vue';
 
