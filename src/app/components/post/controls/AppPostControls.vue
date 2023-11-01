@@ -268,7 +268,9 @@ function onUserFollowDismissal() {
 								<AppAnimElectricity
 									shock-anim="square"
 									:disabled="
-										!canChargeSticker || !stickerLayer?.isAllCreator.value
+										!canChargeSticker ||
+										!stickerLayer ||
+										!stickerLayer.canChargeAllTargets.value
 									"
 									ignore-asset-padding
 								>
