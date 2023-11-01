@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ComputedRef, onMounted, reactive, Ref, ref } from 'vue';
+import { computed, ComputedRef, onMounted, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -28,7 +28,10 @@ import { UserModel } from '../../../../_common/user/user.model';
 import { useResizeObserver } from '../../../../utils/resize-observer';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
-import { SiteAnalyticsReport } from '../../../components/site-analytics/report-service';
+import {
+	createSiteAnalyticsReport,
+	SiteAnalyticsReport,
+} from '../../../components/site-analytics/report-service';
 import {
 	Metric,
 	MetricKey,
@@ -74,7 +77,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { user: appUser } = useCommonStore();
+const { user: sessionUser } = useCommonStore();
 const route = useRoute();
 
 // We want vue to think there's always a user since it's a requirement for this
@@ -134,7 +137,7 @@ const { isBootstrapped } = createAppRoute({
 		}
 
 		if (!viewAs.value) {
-			viewAs.value = appUser.value!.id;
+			viewAs.value = sessionUser.value!.id;
 		}
 
 		user.value = new UserModel(payload.user);
@@ -171,6 +174,10 @@ const { isBootstrapped } = createAppRoute({
 
 				if (user.value.is_creator) {
 					_addMetrics(SiteAnalytics.creatorMetrics);
+				}
+
+				if (user.value.is_brand) {
+					_addMetrics(SiteAnalytics.brandMetrics);
 				}
 
 				_addMetrics(SiteAnalytics.userMetrics);
@@ -279,18 +286,18 @@ async function counts() {
 }
 
 function pullReport(title: string, ...components: ReportComponent[]) {
-	const report = reactive(new SiteAnalyticsReport(title, components)) as SiteAnalyticsReport;
-
-	report.init(
-		resource.value,
-		resourceId.value,
-		selectedMetric.value.collection,
-		viewAs.value,
-		startTime.value,
-		endTime.value
+	pageReports.value.push(
+		createSiteAnalyticsReport({
+			title,
+			components,
+			resource: resource.value,
+			resourceId: resourceId.value,
+			collection: selectedMetric.value.collection,
+			viewAs: user.value,
+			startTime: startTime.value,
+			endTime: endTime.value,
+		})
 	);
-
-	pageReports.value.push(report);
 }
 
 function _metricChanged() {

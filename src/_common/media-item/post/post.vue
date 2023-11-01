@@ -114,8 +114,8 @@ export default class AppMediaItemPost extends Vue {
 	created() {
 		this.stickerTargetController = createStickerTargetController(this.mediaItem, {
 			parent: computed(() => unref(this.parentStickerTarget)),
-			isCreator: computed(
-				() => this.stickerTargetController.parent.value?.isCreator.value === true
+			canReceiveCharge: computed(
+				() => this.stickerTargetController.parent.value?.canReceiveCharge.value === true
 			),
 		});
 	}

@@ -32,6 +32,8 @@ export default {
 	...defineAppRouteOptions({
 		resolver: async () => {
 			try {
+				// TODO(brand-creators) Make sure this works with brand accounts
+				// or change to something else.
 				return await Api.sendFieldsRequest(
 					`/mobile/me`,
 					{ creatorExperience: true },
@@ -75,18 +77,28 @@ interface Button {
 	routeParams?: RouteParamsRaw;
 }
 
-const buttons = computed<Button[]>(() => [
-	{
+const buttons = computed<Button[]>(() => {
+	const buttons: Button[] = [];
+	const isCreator = user.value?.is_creator === true;
+	const isBrand = user.value?.is_brand === true;
+
+	function addButton(condition: boolean, button: Button) {
+		if (condition) {
+			buttons.push(button);
+		}
+	}
+
+	addButton(isCreator || isBrand, {
 		to: routeDashShopOverview.name!,
 		label: $gettext(`Your shop`),
 		icon: 'marketplace-filled',
-	},
-	{
+	});
+	addButton(isCreator, {
 		to: routeDashSupporters.name!,
 		label: $gettext(`Supporters`),
 		icon: 'heart-filled',
-	},
-	{
+	});
+	addButton(isCreator || isBrand, {
 		to: routeDashAnalytics.name!,
 		routeParams: {
 			resource: 'User',
@@ -94,31 +106,33 @@ const buttons = computed<Button[]>(() => [
 		},
 		label: $gettext(`Analytics`),
 		icon: 'chart',
-	},
-	{
+	});
+	addButton(isCreator, {
 		to: routeDashAccountWallet.name!,
 		label: $gettext(`Wallet`),
 		icon: 'gem',
-	},
-	{
+	});
+	addButton(isCreator, {
 		to: routeDashAccountReferrals.name!,
 		label: $gettext(`Referrals`),
 		icon: 'users',
-	},
-	{
+	});
+	addButton(isCreator, {
 		to: routeDashAccountBlocks.name!,
 		label: $gettext(`Blocked users`),
 		icon: 'friend-remove-2',
-	},
-	{
+	});
+	addButton(isCreator || isBrand, {
 		to: routeLandingHelpCategory.name!,
 		routeParams: {
 			category: 'creators',
 		},
 		label: $gettext(`Help and FAQs`),
 		icon: 'help-circle',
-	},
-]);
+	});
+
+	return buttons;
+});
 
 const creatorNextUnlock = computed(() => {
 	if (experience.value) {
@@ -139,7 +153,7 @@ const creatorNextUnlock = computed(() => {
 					{{ $gettext(`Creator HUD`) }}
 				</h1>
 
-				<template v-if="experience">
+				<template v-if="experience && user.is_creator">
 					<div :style="styleFlexCenter({ direction: `column` })">
 						<div
 							:style="{
