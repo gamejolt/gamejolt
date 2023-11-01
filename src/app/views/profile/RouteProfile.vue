@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, CSSProperties, inject, InjectionKey, provide, ref } from 'vue';
+import { computed, CSSProperties, inject, InjectionKey, provide, ref, toRef } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 import { vAppTrackEvent } from '../../../_common/analytics/track-event.directive';
 import { Api } from '../../../_common/api/api.service';
@@ -244,16 +244,16 @@ const router = useRouter();
  * let's make sure we reset the autoscroll anchor so that it scrolls to the
  * top again.
  */
-const autoscrollAnchorKey = computed(() => routeUser.value!.id);
+const autoscrollAnchorKey = toRef(() => routeUser.value!.id);
 
-const commentsCount = computed(() => {
+const commentsCount = toRef(() => {
 	if (routeUser.value && routeUser.value.comment_count) {
 		return routeUser.value.comment_count;
 	}
 	return 0;
 });
 
-const canBlock = computed(
+const canBlock = toRef(
 	() =>
 		routeUser.value &&
 		!routeUser.value.is_blocked &&
@@ -261,16 +261,17 @@ const canBlock = computed(
 		routeUser.value.id !== myUser.value.id
 );
 
-const shouldShowFollow = computed(
+const isMe = toRef(() => myUser.value && routeUser.value && myUser.value.id === routeUser.value.id);
+
+const shouldShowFollow = toRef(
 	() =>
-		myUser.value &&
 		routeUser.value &&
-		myUser.value.id !== routeUser.value.id &&
 		!routeUser.value.is_blocked &&
-		!routeUser.value.blocked_you
+		!routeUser.value.blocked_you &&
+		!isMe.value
 );
 
-const shouldShowEdit = computed(
+const shouldShowEdit = toRef(
 	() => myUser.value && routeUser.value && myUser.value.id === routeUser.value.id
 );
 
