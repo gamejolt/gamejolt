@@ -338,7 +338,7 @@ function sortStickers(sorting: StickerSortMethod) {
 
 ._packs
 	display: grid
-	gap: var(--half-pad)
+	gap: var(--base-pad)
 	grid-template-columns: repeat(3, 1fr)
 
 	@media $media-xs

@@ -3,8 +3,10 @@ import { computed, ComputedRef, onMounted, reactive, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
+import { CurrencyType } from '../../../../_common/currency/currency-type';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { formatCurrency } from '../../../../_common/filters/currency';
+import { formatCurrency, formatGemsCurrency } from '../../../../_common/filters/currency';
 import { formatDate } from '../../../../_common/filters/date';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
@@ -34,10 +36,12 @@ import {
 	ReportCommentLanguages,
 	ReportComponent,
 	ReportCountries,
+	ReportCreatorShopRevenue,
+	ReportCreatorTopShopSales,
+	ReportCreatorTopShopTypes,
 	ReportDevRevenue,
 	ReportInvitedUsers,
 	ReportOs,
-	ReportPartnerGeneratedRevenue,
 	ReportRatingBreakdown,
 	ReportReferringPages,
 	ReportTopChargedFiresides,
@@ -45,8 +49,6 @@ import {
 	ReportTopCreatorSupporters,
 	ReportTopGameRevenue,
 	ReportTopGames,
-	ReportTopPartnerRevenue,
-	ReportTopPartners,
 	ReportTopSources,
 	ResourceName,
 	SiteAnalytics,
@@ -105,6 +107,9 @@ const availableMetricsBang = computed(() => availableMetrics.value as Required<M
 
 const metricsElem = ref<HTMLDivElement>();
 const metricsHeight = ref('0');
+
+const { gems } = CurrencyType;
+
 onMounted(() => {
 	useResizeObserver({
 		target: metricsElem,
@@ -185,6 +190,11 @@ const { isBootstrapped } = createAppRoute({
 
 			case 'Game_Release':
 				_addMetrics(SiteAnalytics.releaseMetrics);
+				_selectMetric();
+				break;
+
+			case 'Inventory_Shop_Product':
+				_addMetrics(SiteAnalytics.productMetrics);
 				_selectMetric();
 				break;
 
@@ -292,7 +302,6 @@ function _metricChanged() {
 				pullReport($gettext('Top Games'), ...ReportTopGames);
 				pullReport($gettext('Top Sources'), ...ReportTopSources);
 				pullReport($gettext('Countries'), ...ReportCountries);
-				pullReport($gettext('Partners'), ...ReportTopPartners);
 				break;
 
 			case 'download':
@@ -300,7 +309,6 @@ function _metricChanged() {
 				pullReport($gettext('Operating Systems'), ...ReportOs);
 				pullReport($gettext('Top Sources'), ...ReportTopSources);
 				pullReport($gettext('Countries'), ...ReportCountries);
-				pullReport($gettext('Partners'), ...ReportTopPartners);
 				break;
 
 			case 'install':
@@ -329,14 +337,11 @@ function _metricChanged() {
 				pullReport($gettext('Top Sources'), ...ReportTopSources);
 				pullReport($gettext('Countries'), ...ReportCountries);
 				pullReport($gettext('Operating Systems'), ...ReportOs);
-				pullReport($gettext('Partners'), ...ReportTopPartners);
 				break;
 
 			case 'revenue':
 				pullReport($gettext('Revenue Stats'), ...ReportDevRevenue);
 				pullReport($gettext('Top Profitable Games'), ...ReportTopGameRevenue);
-				pullReport($gettext('Revenue from Partners'), ...ReportPartnerGeneratedRevenue);
-				pullReport($gettext('Top Profitable Partners'), ...ReportTopPartnerRevenue);
 				break;
 
 			case 'user-charge':
@@ -347,6 +352,22 @@ function _metricChanged() {
 
 			case 'user-invite':
 				pullReport($gettext('Latest Invited Users'), ...ReportInvitedUsers);
+				break;
+
+			case 'creator-shop-sale':
+				pullReport($gettext('Top Products'), ...ReportCreatorTopShopSales);
+				pullReport($gettext('Top Product Types'), ...ReportCreatorTopShopTypes);
+				break;
+
+			case 'creator-shop-revenue':
+				pullReport($gettext('Shop Revenue'), ...ReportCreatorShopRevenue);
+				break;
+		}
+	} else if (resource.value === 'Inventory_Shop_Product') {
+		switch (selectedMetric.value.key) {
+			case 'creator-shop-revenue':
+				pullReport($gettext('Shop Revenue'), ...ReportCreatorShopRevenue);
+				break;
 		}
 	} else {
 		switch (selectedMetric.value.key) {
@@ -354,7 +375,6 @@ function _metricChanged() {
 				pullReport($gettext('Top Sources'), ...ReportTopSources);
 				pullReport($gettext('Referring Pages'), ...ReportReferringPages);
 				pullReport($gettext('Countries'), ...ReportCountries);
-				pullReport($gettext('Partners'), ...ReportTopPartners);
 				break;
 
 			case 'download':
@@ -362,7 +382,6 @@ function _metricChanged() {
 				pullReport($gettext('Top Sources'), ...ReportTopSources);
 				pullReport($gettext('Referring Pages'), ...ReportReferringPages);
 				pullReport($gettext('Countries'), ...ReportCountries);
-				pullReport($gettext('Partners'), ...ReportTopPartners);
 				break;
 
 			case 'install':
@@ -387,13 +406,10 @@ function _metricChanged() {
 				pullReport($gettext('Referring Pages'), ...ReportReferringPages);
 				pullReport($gettext('Countries'), ...ReportCountries);
 				pullReport($gettext('Operating Systems'), ...ReportOs);
-				pullReport($gettext('Partners'), ...ReportTopPartners);
 				break;
 
 			case 'revenue':
 				pullReport($gettext('Revenue Stats'), ...ReportDevRevenue);
-				pullReport($gettext('Revenue from Partners'), ...ReportPartnerGeneratedRevenue);
-				pullReport($gettext('Top Profitable Partners'), ...ReportTopPartnerRevenue);
 				break;
 		}
 	}
@@ -485,7 +501,6 @@ function _metricChanged() {
 									params: $route.params,
 									query: {
 										period: 'all',
-										partner: $route.query.partner,
 									},
 								}"
 								:class="{ active: period === 'all' }"
@@ -500,7 +515,6 @@ function _metricChanged() {
 									params: $route.params,
 									query: {
 										period: 'monthly',
-										partner: $route.query.partner,
 									},
 								}"
 								:class="{ active: period === 'monthly' }"
@@ -526,7 +540,6 @@ function _metricChanged() {
 									period: 'monthly',
 									year: prevYear,
 									month: prevMonth,
-									partner: $route.query.partner,
 								},
 							}"
 						/>
@@ -550,7 +563,6 @@ function _metricChanged() {
 									period: 'monthly',
 									year: nextYear,
 									month: nextMonth,
-									partner: $route.query.partner,
 								},
 							}"
 						/>
@@ -599,6 +611,14 @@ function _metricChanged() {
 											</template>
 											<template v-else-if="metric.type === 'currency'">
 												{{ formatCurrency(metricData[metric.key]?.total) }}
+											</template>
+											<template v-else-if="metric.type === 'gems'">
+												<AppCurrencyImg :currency="gems" />
+												{{
+													formatGemsCurrency(
+														metricData[metric.key]?.total
+													)
+												}}
 											</template>
 										</div>
 									</div>

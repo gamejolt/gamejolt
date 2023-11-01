@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { PropType, computed, nextTick, onMounted, ref, toRef, toRefs, watch } from 'vue';
 import { isInstance } from '../../../utils/utils';
+import { GameScreenshotModel } from '../../game/screenshot/screenshot.model';
 import { GameSketchfabModel } from '../../game/sketchfab/sketchfab.model';
 import { GameVideoModel } from '../../game/video/video.model';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
@@ -123,7 +124,9 @@ async function calcActive() {
 	<div ref="rootElem" class="media-bar-lightbox-item">
 		<div v-if="isActive || isNext || isPrev" class="-inner">
 			<!-- Media Item (screenshots/gifs/images) -->
-			<template v-if="isInstance(item, MediaItemModel)">
+			<template
+				v-if="isInstance(item, MediaItemModel) || isInstance(item, GameScreenshotModel)"
+			>
 				<div class="-embed">
 					<!-- The min/max will be the actual dimensions for the image thumbnail. -->
 					<AppMediaItemBackdrop
@@ -155,6 +158,13 @@ async function calcActive() {
 							show-loading
 						/>
 					</AppMediaItemBackdrop>
+				</div>
+				<div
+					v-if="isInstance(item, GameScreenshotModel) && item.caption"
+					ref="caption"
+					class="-caption"
+				>
+					<h4>{{ item.caption }}</h4>
 				</div>
 			</template>
 

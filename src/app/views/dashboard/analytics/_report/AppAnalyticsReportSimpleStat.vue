@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-import { formatCurrency } from '../../../../../_common/filters/currency';
+import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
+import { CurrencyType } from '../../../../../_common/currency/currency-type';
+import { formatCurrency, formatGemsCurrency } from '../../../../../_common/filters/currency';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
@@ -9,6 +11,8 @@ defineProps({
 		required: true,
 	},
 });
+
+const { gems } = CurrencyType;
 </script>
 
 <template>
@@ -27,6 +31,10 @@ defineProps({
 				</template>
 				<template v-else-if="reportData.fieldType === 'currency'">
 					{{ formatCurrency(reportData.data) }}
+				</template>
+				<template v-else-if="reportData.fieldType === 'gems'">
+					<AppCurrencyImg :currency="gems" />
+					{{ formatGemsCurrency(reportData.data) }}
 				</template>
 			</div>
 		</div>

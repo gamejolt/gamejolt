@@ -46,11 +46,6 @@ const roleData = computed(() => getChatUserRoleData(room.value, user.value));
 	<AppChatListItem
 		:horizontal-padding="horizontalPadding"
 		:popper-placement="Screen.isMobile ? 'bottom' : 'left'"
-		:dynamic-slots="{
-			leading: true,
-			title: true,
-			trailing: !!roleData,
-		}"
 		popper-trigger="click"
 	>
 		<template #leading>
@@ -81,8 +76,8 @@ const roleData = computed(() => getChatUserRoleData(room.value, user.value));
 			<span class="tiny text-muted">@{{ user.username }}</span>
 		</template>
 
-		<template #trailing>
-			<span v-if="roleData" v-app-tooltip="roleData.tooltip">
+		<template v-if="roleData" #trailing>
+			<span v-app-tooltip="roleData.tooltip">
 				<AppJolticon
 					:style="{
 						color: kThemePrimary,

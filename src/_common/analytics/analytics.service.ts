@@ -12,14 +12,14 @@ import { arrayRemove } from '../../utils/array';
 import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';
 import { CommentVoteType } from '../comment/vote/vote-model';
-import { ConfigOption } from '../config/config.service';
+import { ConfigOption, ensureConfig } from '../config/config.service';
 import { DeviceArch, DeviceOs, isDynamicGoogleBot } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 import { AppPromotionSource } from '../mobile-app/store';
 import { onRouteChangeAfter } from '../route/route-component';
 import { SettingThemeDark } from '../settings/settings.service';
 import { ShareProvider, ShareResource } from '../share/share.service';
-import { CommonStore } from '../store/common-store';
+import { CommonStore, commonStore } from '../store/common-store';
 import { getTranslationLang } from '../translate/translate.service';
 
 export const SOCIAL_NETWORK_FB = 'facebook';
@@ -284,7 +284,7 @@ function _getExperimentValue(option: ConfigOption) {
  *
  * We rate limit this so that it doesn't trigger too much.
  */
-export function trackExperimentEngagement(option: ConfigOption) {
+export async function trackExperimentEngagement(option: ConfigOption) {
 	// If we already tracked an experiment engagement for this config option
 	// within the expiry time, we want to ignore.
 	const prevEngagement = _expEngagements.find(
@@ -293,6 +293,11 @@ export function trackExperimentEngagement(option: ConfigOption) {
 	if (prevEngagement) {
 		return;
 	}
+
+	// Only track their experiment engagement once we're sure everything is
+	// loaded in for them.
+	await commonStore.userBootstrappedPromise;
+	await ensureConfig();
 
 	_trackEvent('experiment_engagement', {
 		[_getExperimentKey(option)]: _getExperimentValue(option),
@@ -487,25 +492,10 @@ export function trackSearchAutocomplete(params: {
 	_trackEvent('search_autocomplete', params);
 }
 
-export function trackHomeFeedSwitch({
-	path,
-	isActive: is_active,
-	realmId: realm_id,
-	realmIndex: realm_index,
-	realmCount: realm_count,
-}: {
-	path: string;
-	isActive: boolean;
-	realmId: number | undefined;
-	realmIndex: number | undefined;
-	realmCount: number | undefined;
-}) {
+export function trackHomeFeedSwitch({ path, isActive }: { path: string; isActive: boolean }) {
 	_trackEvent('home_feed_switch', {
 		path,
-		is_active,
-		realm_id,
-		realm_index,
-		realm_count,
+		is_active: isActive,
 	});
 }
 
@@ -537,7 +527,7 @@ export function trackJoltydex(
 	_trackEvent('joltydex', params);
 }
 
-export type ShopShowLocation =
+export type ShopOpenLocation =
 	| 'joltydex'
 	| 'joltydex-collection'
 	| 'user-profile'
@@ -545,11 +535,11 @@ export type ShopShowLocation =
 	| 'sticker-drawer'
 	| 'shell-route';
 
-export function trackShopOpen(params: { location: ShopShowLocation; userId: number | undefined }) {
+export function trackShopOpen(params: { location: ShopOpenLocation; userId: number | undefined }) {
 	_trackEvent('shop_open', params);
 }
 
-export type ShopClickType =
+export type ShopViewType =
 	| 'avatar-frame'
 	| 'background'
 	| 'sticker-pack'
@@ -557,7 +547,7 @@ export type ShopClickType =
 	| 'joltbux-card'
 	| 'unhandled-product';
 
-export function trackShopView(params: { type: ShopClickType; productId?: number }) {
+export function trackShopView(params: { type: ShopViewType; productId?: number }) {
 	_trackEvent('shop_view', params);
 }
 

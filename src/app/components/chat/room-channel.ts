@@ -638,13 +638,11 @@ export function useChatRoomMembers(room: Ref<ChatRoomModel | undefined>) {
 	});
 	const memberCollection = computed(() => room.value?.memberCollection);
 
-	watch([roomChannel, mounted], () => {
-		if (mounted.value && roomChannel.value) {
-			if (!lock) {
-				lock = roomChannel.value.getMemberWatchLock();
-			}
-		} else {
-			cleanup();
+	watch([roomChannel, mounted], ([roomChannelVal, mountedVal]) => {
+		cleanup();
+
+		if (mountedVal && roomChannelVal) {
+			lock = roomChannelVal.getMemberWatchLock();
 		}
 	});
 

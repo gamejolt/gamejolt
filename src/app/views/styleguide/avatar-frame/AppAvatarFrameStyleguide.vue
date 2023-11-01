@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, Ref } from 'vue';
 import AppAvatarFrame from '../../../../_common/avatar/AppAvatarFrame.vue';
-import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
+import { AvatarFrameModel, DefaultAvatarFrameScale } from '../../../../_common/avatar/frame.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
@@ -217,7 +217,12 @@ function setFiles(files: File[]) {
 							maxWidth: `${avatarSize}px`,
 						}"
 						:frame="
-							form.formModel.imageUrl ? { image_url: form.formModel.imageUrl } : null
+							form.formModel.imageUrl
+								? {
+										image_url: form.formModel.imageUrl,
+										scale: DefaultAvatarFrameScale,
+								  }
+								: null
 						"
 					>
 						<AppUserAvatarImg

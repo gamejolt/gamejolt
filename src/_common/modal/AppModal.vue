@@ -153,6 +153,7 @@ function scrollTo(offsetY: number) {
 				'modal-lg': modal.size === 'lg',
 				'modal-full': modal.size === 'full',
 			}"
+			modal-scroller
 		>
 			<component
 				:is="Modals.modalBodyWrapper || 'div'"

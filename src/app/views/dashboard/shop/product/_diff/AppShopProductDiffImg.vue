@@ -1,16 +1,28 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import {
+	AvatarFrameModel,
+	DefaultAvatarFrameScale,
+} from '../../../../../../_common/avatar/frame.model';
 import { Screen } from '../../../../../../_common/screen/screen-service';
-import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
+import {
+	ShopProductModel,
+	ShopProductResource,
+} from '../../../../../../_common/shop/product/product-model';
 import { StickerPackRatio } from '../../../../../../_common/sticker/pack/AppStickerPack.vue';
 import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleFlexCenter, styleMaxWidthForOptions } from '../../../../../../_styles/mixins';
 import { kBorderRadiusBase, kBorderRadiusLg } from '../../../../../../_styles/variables';
+import { isInstance } from '../../../../../../utils/utils';
 
 const props = defineProps({
 	resource: {
 		type: String as PropType<ShopProductResource>,
+		required: true,
+	},
+	model: {
+		type: [Object, undefined] as PropType<ShopProductModel | undefined>,
 		required: true,
 	},
 	imgUrl: {
@@ -153,6 +165,10 @@ const gridAreaSizes = {
 										imgUrl
 											? {
 													image_url: imgUrl,
+													scale:
+														model && isInstance(model, AvatarFrameModel)
+															? model.scale
+															: DefaultAvatarFrameScale,
 											  }
 											: undefined
 									"
