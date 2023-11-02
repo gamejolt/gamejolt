@@ -66,7 +66,6 @@ function onClickAbout() {
 
 	if (sidebarData) {
 		showCommunitySidebarModal({
-			isEditing: false,
 			sidebarData,
 			community,
 		});

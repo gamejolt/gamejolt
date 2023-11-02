@@ -21,10 +21,6 @@ import AppCommunityDescription from '../description/AppCommunityDescription.vue'
 import { CommunitySidebarData } from './sidebar-data';
 
 const props = defineProps({
-	isEditing: {
-		type: Boolean,
-		required: true,
-	},
 	community: {
 		type: Object as PropType<CommunityModel>,
 		required: true,
@@ -35,9 +31,9 @@ const props = defineProps({
 	},
 });
 
-const GAME_LIST_COLLAPSED_COUNT = 3;
+const GameListCollapsedCount = 3;
 
-const { isEditing, community, sidebarData } = toRefs(props);
+const { community, sidebarData } = toRefs(props);
 
 const { user } = useCommonStore();
 const router = useRouter();
@@ -71,9 +67,7 @@ const shouldShowKnownMembers = computed(
 		!!user.value && sidebarData.value.knownMembers && sidebarData.value.knownMembers.length > 0
 );
 
-const shareUrl = computed(() => {
-	return getAbsoluteLink(router, community.value.routeLocation);
-});
+const shareUrl = computed(() => getAbsoluteLink(router, community.value.routeLocation));
 
 const hasMoreCollaborators = toRef(
 	() => currentCollaboratorCount.value > sidebarData.value.initialCollaboratorCount
@@ -103,7 +97,7 @@ const filteredGames = computed(() => community.value.games?.filter(i => i.isVisi
 const shouldShowGames = toRef(() => filteredGames.value && filteredGames.value.length);
 
 const hasMoreGames = toRef(
-	() => filteredGames.value && filteredGames.value.length > GAME_LIST_COLLAPSED_COUNT
+	() => filteredGames.value && filteredGames.value.length > GameListCollapsedCount
 );
 
 const visibleGames = computed(() => {
@@ -112,7 +106,7 @@ const visibleGames = computed(() => {
 	}
 
 	if (gameListCollapsed.value) {
-		return filteredGames.value.slice(0, GAME_LIST_COLLAPSED_COUNT);
+		return filteredGames.value.slice(0, GameListCollapsedCount);
 	}
 
 	return filteredGames.value;
@@ -175,11 +169,9 @@ function onClickReport() {
 			<br />
 		</div>
 
-		<AppCommunityDescription
-			:key="community.id"
-			:community="community"
-			:is-editing="isEditing"
-		/>
+		<!--TODO(component-setup-refactor): Removed isEditing as it's
+			not defined in AppCommunityDescription -->
+		<AppCommunityDescription :key="community.id" :community="community" />
 
 		<div v-if="shouldShowGames" class="-game-list">
 			<div class="clearfix">
@@ -238,7 +230,7 @@ function onClickReport() {
 								<AppUserCreatorBadge
 									v-if="mod.is_creator"
 									class="-mod-creator"
-									small
+									size="sm"
 								/>
 								<AppJolticon
 									v-else-if="mod.is_verified"
