@@ -34,7 +34,7 @@ const { firesidePostCommunity, post, channels } = toRefs(props);
 const { user } = useCommonStore();
 const modal = useModal()!;
 
-const selectedChannel = ref<CommunityChannelModel | null>(null);
+const selectedChannel = ref<CommunityChannelModel | undefined>(undefined);
 const reasonFormModel = ref<FormModel | null>(null);
 
 const selectableChannels = computed(() => {
@@ -67,7 +67,7 @@ function onChangeForm(formModel: FormModel) {
 }
 
 function onMove() {
-	if (selectedChannel.value === null || reasonFormModel.value === null) {
+	if (selectedChannel.value === undefined || reasonFormModel.value === null) {
 		return;
 	}
 
