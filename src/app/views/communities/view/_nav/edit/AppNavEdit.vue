@@ -5,7 +5,7 @@ import AppCommunityPerms from '../../../../../components/community/perms/AppComm
 import { useCommunityRouteStore } from '../../view.store';
 
 const emit = defineEmits({
-	'change-section': (_path: string) => true,
+	changeSection: (_path: string) => true,
 });
 
 const routeStore = useCommunityRouteStore()!;
@@ -13,7 +13,7 @@ const routeStore = useCommunityRouteStore()!;
 const community = toRef(() => routeStore.community);
 
 function onChangeSection(path: string) {
-	emit('change-section', path);
+	emit('changeSection', path);
 }
 </script>
 

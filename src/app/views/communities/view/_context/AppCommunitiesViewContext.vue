@@ -33,12 +33,10 @@ function onChangeSection(path: string) {
 <template>
 	<div v-if="routeStore.isLoaded" class="sidebar-context-channels">
 		<div class="-card">
-			<!--TODO(component-setup-refactor): Removing overflow from below. check if it's needed-->
 			<AppCommunitiesViewCard />
 		</div>
 
 		<AppNavChannels v-if="!isEditing" />
-		<!--TODO(component-setup-refactor): Check below.-->
 		<AppNavEdit v-else @change-section="onChangeSection" />
 	</div>
 </template>
