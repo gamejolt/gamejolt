@@ -21,6 +21,7 @@ const props = defineProps({
 
 const { community } = toRefs(props);
 const modal = useModal()!;
+
 const page = ref(1);
 const isLoading = ref(true);
 const lastPage = ref(false);
@@ -40,11 +41,11 @@ async function loadPage() {
 			{ noErrorRedirect: true }
 		);
 
-		const games = GameModel.populate(payload.games);
-		if (games.length < payload.perPage) {
+		const populatedGames = GameModel.populate(payload.games);
+		if (populatedGames.length < payload.perPage) {
 			lastPage.value = true;
 		}
-		games.push(...games);
+		games.value.push(...populatedGames);
 	} catch (error) {
 		console.error(error);
 		showErrorGrowl($gettext(`Failed to load games.`));
