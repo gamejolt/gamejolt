@@ -19,7 +19,6 @@ import AppPostAddButton from '../../../../components/post/add-button/AppPostAddB
 import AppBlockedNotice from '../_blocked-notice/AppBlockedNotice.vue';
 import { isVirtualChannel, useCommunityRouteStore } from '../view.store';
 
-// TODO(component-setup-refactor): feed below was optional before?
 const props = defineProps({
 	feed: {
 		type: Object as PropType<ActivityFeedView>,
