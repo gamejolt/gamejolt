@@ -16,7 +16,8 @@ import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 const CardWidth = 270;
 const CardHeight = 70;
 
-// TODO(component-setup-refactor): resolve backgroundItem
+// TODO(component-setup-refactor): changing the required of backgroundItem to true
+// as it's being provided in the parent component.
 const props = defineProps({
 	community: {
 		type: Object as PropType<CommunityModel>,
@@ -32,7 +33,7 @@ const props = defineProps({
 	},
 	backgroundItem: {
 		type: Object as PropType<MediaItemModel>,
-		required: false,
+		required: true,
 	},
 	isActive: {
 		type: Boolean,
