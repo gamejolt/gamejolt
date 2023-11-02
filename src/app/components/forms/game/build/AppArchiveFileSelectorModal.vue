@@ -5,6 +5,7 @@ import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
 const props = defineProps({
 	gameId: {
