@@ -33,7 +33,7 @@ function onChangeSection(path: string) {
 <template>
 	<div v-if="routeStore.isLoaded" class="sidebar-context-channels">
 		<div class="-card">
-			<!--TODO(component-setup-refactor): Removing  from below, overflow. check if it's needed-->
+			<!--TODO(component-setup-refactor): Removing overflow from below. check if it's needed-->
 			<AppCommunitiesViewCard />
 		</div>
 
