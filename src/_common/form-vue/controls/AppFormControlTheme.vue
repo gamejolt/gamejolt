@@ -8,18 +8,18 @@ import AppPopper from '../../popper/AppPopper.vue';
 import AppThemeBubble from '../../theme/bubble/AppThemeBubble.vue';
 import { ThemePresetModel } from '../../theme/preset/preset.model';
 import {
-DefaultTheme,
-ThemeModel,
-makeThemeFromColor,
-makeThemeFromPreset,
+	DefaultTheme,
+	ThemeModel,
+	makeThemeFromColor,
+	makeThemeFromPreset,
 } from '../../theme/theme.model';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext } from '../../translate/translate.service';
 import {
-createFormControl,
-defineFormControlEmits,
-defineFormControlProps,
+	createFormControl,
+	defineFormControlEmits,
+	defineFormControlProps,
 } from '../AppFormControl.vue';
 
 const props = defineProps({
