@@ -29,7 +29,7 @@ const emit = defineEmits({
 
 const { community, channel } = toRefs(props);
 
-const selectedChannel = ref<CommunityChannelModel | null>(null);
+const selectedChannel = ref<CommunityChannelModel | undefined>(undefined);
 const moving = ref(false);
 
 const channels = computed(() => {
