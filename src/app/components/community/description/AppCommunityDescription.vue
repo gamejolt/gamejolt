@@ -33,10 +33,6 @@ function canToggleDescriptionChanged(canToggle: boolean) {
 			<AppContentViewer :source="community.description_content" />
 		</AppFadeCollapse>
 
-		<a
-			class="hidden-text-expander"
-			v-if="canToggleDescription"
-			@click="toggleDescription()"
-		></a>
+		<a v-if="canToggleDescription" class="hidden-text-expander" @click="toggleDescription()" />
 	</div>
 </template>
