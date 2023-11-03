@@ -41,11 +41,11 @@ async function loadPage() {
 			{ noErrorRedirect: true }
 		);
 
-		const populatedGames = GameModel.populate(payload.games);
-		if (populatedGames.length < payload.perPage) {
+		const newGames = GameModel.populate(payload.games);
+		if (newGames.length < payload.perPage) {
 			lastPage.value = true;
 		}
-		games.value.push(...populatedGames);
+		games.value.push(...newGames);
 	} catch (error) {
 		console.error(error);
 		showErrorGrowl($gettext(`Failed to load games.`));
