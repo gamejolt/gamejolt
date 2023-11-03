@@ -14,9 +14,7 @@ const route = useRoute();
 
 const community = toRef(() => routeStore.community);
 
-const isEditing = computed(() => {
-	return isEditingCommunity(route);
-});
+const isEditing = computed(() => isEditingCommunity(route));
 
 const canEdit = computed(
 	() =>
@@ -26,12 +24,12 @@ const canEdit = computed(
 );
 
 function showEditAvatar() {
-	showCommunityThumbnailModal(routeStore.community);
+	showCommunityThumbnailModal(community.value);
 }
 </script>
 
 <template>
-	<AppEditableOverlay v-if="canEdit" class="-fill" @click="showEditAvatar()">
+	<AppEditableOverlay v-if="canEdit" class="-fill" @click="showEditAvatar">
 		<template #overlay>
 			{{ $gettext(`Change`) }}
 		</template>
