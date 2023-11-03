@@ -64,7 +64,6 @@ function onClickMenu() {
 
 function onClickAbout() {
 	const { sidebarData } = routeStore;
-	console.log(community.value.name);
 
 	if (sidebarData) {
 		showCommunitySidebarModal({
