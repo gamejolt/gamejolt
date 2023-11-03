@@ -29,16 +29,14 @@ const props = defineProps({
 });
 
 const { hasUnread } = toRefs(props);
+const { community, channel, sidebarData, channelPath } = toRefs(useCommunityRouteStore()!);
 
 const store = useAppStore();
 const router = useRouter();
-const routeStore = useCommunityRouteStore()!;
 
 const { user } = useCommonStore();
 const { activeContextPane } = useSidebarStore();
 
-const community = toRef(() => routeStore.community);
-const channel = toRef(() => routeStore.channel);
 const memberCount = toRef(() => community.value.member_count || 0);
 const shouldShowModTools = computed(() => user.value?.isMod === true);
 const shouldShowChannelsMenu = computed(() => !!activeContextPane.value);
@@ -51,7 +49,7 @@ const shouldShowAbout = computed(() => {
 		return false;
 	}
 
-	if (routeStore.sidebarData) {
+	if (sidebarData.value) {
 		return Screen.isMobile;
 	}
 
@@ -63,11 +61,9 @@ function onClickMenu() {
 }
 
 function onClickAbout() {
-	const { sidebarData } = routeStore;
-
-	if (sidebarData) {
+	if (sidebarData.value) {
 		showCommunitySidebarModal({
-			sidebarData,
+			sidebarData: sidebarData.value,
 			community: community.value,
 		});
 	}
@@ -136,7 +132,7 @@ function copyShareUrl() {
 				>
 					<div v-if="hasUnread" class="-unread-blip" />
 					<template v-if="!Screen.isXs || !shouldShowAbout">
-						<div v-if="routeStore && routeStore.channelPath">
+						<div v-if="channelPath">
 							{{ $gettext(`Channels`) }}
 						</div>
 						<div v-else>{{ $gettext(`Menu`) }}</div>
