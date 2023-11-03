@@ -9,10 +9,6 @@ import AppCommunitySidebar from '../AppCommunitySidebar.vue';
 import { CommunitySidebarData } from '../sidebar-data';
 
 defineProps({
-	isEditing: {
-		type: Boolean,
-		required: true,
-	},
 	community: {
 		type: Object as PropType<CommunityModel>,
 		required: true,
@@ -35,11 +31,7 @@ const modal = useModal()!;
 		</div>
 
 		<div class="modal-body">
-			<AppCommunitySidebar
-				:is-editing="isEditing"
-				:community="community"
-				:sidebar-data="sidebarData"
-			/>
+			<AppCommunitySidebar :community="community" :sidebar-data="sidebarData" />
 		</div>
 	</AppModal>
 </template>

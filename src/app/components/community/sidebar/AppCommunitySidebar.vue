@@ -21,10 +21,6 @@ import AppCommunityDescription from '../description/AppCommunityDescription.vue'
 import { CommunitySidebarData } from './sidebar-data';
 
 const props = defineProps({
-	isEditing: {
-		type: Boolean,
-		required: true,
-	},
 	community: {
 		type: Object as PropType<CommunityModel>,
 		required: true,
@@ -173,11 +169,7 @@ function onClickReport() {
 			<br />
 		</div>
 
-		<AppCommunityDescription
-			:key="community.id"
-			:community="community"
-			:is-editing="isEditing"
-		/>
+		<AppCommunityDescription :key="community.id" :community="community" />
 
 		<div v-if="shouldShowGames" class="-game-list">
 			<div class="clearfix">
