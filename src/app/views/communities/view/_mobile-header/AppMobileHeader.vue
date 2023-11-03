@@ -36,9 +36,10 @@ const routeStore = useCommunityRouteStore()!;
 
 const { user } = useCommonStore();
 const { activeContextPane } = useSidebarStore();
-const { community, channel } = routeStore;
+const { channel } = routeStore;
 
-const memberCount = toRef(() => community.member_count || 0);
+const community = toRef(() => routeStore.community);
+const memberCount = toRef(() => community.value.member_count || 0);
 const shouldShowModTools = computed(() => user.value?.isMod === true);
 const shouldShowChannelsMenu = computed(() => !!activeContextPane.value);
 const isJam = computed(() => channel?.type === 'competition');
@@ -62,12 +63,14 @@ function onClickMenu() {
 }
 
 function onClickAbout() {
-	const { sidebarData, community } = routeStore;
+	const { sidebarData } = routeStore;
+	console.log(community.value.name);
 
 	if (sidebarData) {
 		showCommunitySidebarModal({
+			isEditing: false,
 			sidebarData,
-			community,
+			community: community.value,
 		});
 	}
 }
@@ -77,7 +80,7 @@ function onClickExtrasOption() {
 }
 
 function copyShareUrl() {
-	const url = getAbsoluteLink(router, community.routeLocation);
+	const url = getAbsoluteLink(router, community.value.routeLocation);
 	copyShareLink(url, 'community');
 
 	Popper.hideAll();
