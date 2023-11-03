@@ -36,13 +36,13 @@ const routeStore = useCommunityRouteStore()!;
 
 const { user } = useCommonStore();
 const { activeContextPane } = useSidebarStore();
-const { channel } = routeStore;
 
 const community = toRef(() => routeStore.community);
+const channel = toRef(() => routeStore.channel);
 const memberCount = toRef(() => community.value.member_count || 0);
 const shouldShowModTools = computed(() => user.value?.isMod === true);
 const shouldShowChannelsMenu = computed(() => !!activeContextPane.value);
-const isJam = computed(() => channel?.type === 'competition');
+const isJam = computed(() => channel.value?.type === 'competition');
 
 const shouldShowAbout = computed(() => {
 	// It's too confusing to see an "About" button for the community as well
