@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRef } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
@@ -22,7 +22,9 @@ const community = toRef(() => routeStore.community);
 const frontpageChannel = toRef(() => routeStore.frontpageChannel);
 const allChannel = toRef(() => routeStore.allChannel);
 const activeChannel = toRef(() => routeStore.channel);
-const communityState = toRef(() => communityStates.value.value.getCommunityState(community.value));
+const communityState = computed(() =>
+	communityStates.value.value.getCommunityState(community.value)
+);
 
 function isChannelLocked(channel: CommunityChannelModel) {
 	// Don't show the locked status to guests.
