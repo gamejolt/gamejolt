@@ -6,6 +6,7 @@ import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { run } from '../../../../../utils/utils';
 
 const props = defineProps({
 	gameId: {
@@ -50,25 +51,27 @@ const filteredFiles = computed(() => {
 	return files.value.filter(file => file.indexOf(filter.value) !== -1);
 });
 
-try {
-	const params = [
-		gameId.value,
-		packageId.value,
-		releaseId.value,
-		buildId.value,
-		primaryFileId.value,
-		platform.value,
-	];
+run(async () => {
+	try {
+		const params = [
+			gameId.value,
+			packageId.value,
+			releaseId.value,
+			buildId.value,
+			primaryFileId.value,
+			platform.value,
+		];
 
-	const response = await Api.sendRequest(
-		'/web/dash/developer/games/builds/files/archive-file-list/' + params.join('/')
-	);
-	files.value = response.fileList || [];
-} catch (err) {
-	files.value = [];
-} finally {
-	isLoaded.value = true;
-}
+		const response = await Api.sendRequest(
+			'/web/dash/developer/games/builds/files/archive-file-list/' + params.join('/')
+		);
+		files.value = response.fileList || [];
+	} catch (err) {
+		files.value = [];
+	} finally {
+		isLoaded.value = true;
+	}
+});
 
 function select(selected: string) {
 	modal.resolve(selected);
