@@ -17,7 +17,7 @@ const props = defineProps({
 
 const { date, timezone } = toRefs(props);
 
-// TODO(component-setup-refactor): check the ref type
+// TODO(component-setup-refactor): check if the ref type is okay
 const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] }>(null as any);
 
 // date is UTC, add the set offset, and remove the local timezone offset.

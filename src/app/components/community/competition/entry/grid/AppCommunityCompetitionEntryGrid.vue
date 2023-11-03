@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { PropType, computed, toRef, toRefs } from 'vue';
 import {
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
@@ -32,7 +32,6 @@ const props = defineProps({
 	},
 	category: {
 		type: Object as PropType<CommunityCompetitionVotingCategoryModel>,
-		// TODO(component-setup-refactor):check this
 		default: undefined,
 	},
 	showRemove: {
@@ -44,8 +43,21 @@ const emit = defineEmits({
 	remove: (_entry: CommunityCompetitionEntryModel) => true,
 });
 
-const { competition, entries, currentPage, pageCount, numPlaceholders, category, showRemove } =
-	toRefs(props);
+const { competition, numPlaceholders } = toRefs(props);
+
+const shouldShowThumbnailRanks = toRef(
+	() =>
+		competition.value.is_voting_enabled &&
+		competition.value.has_community_voting &&
+		competition.value.are_results_calculated
+);
+
+const shouldShowThumbnailAwards = toRef(
+	() =>
+		competition.value.is_voting_enabled &&
+		competition.value.has_awards &&
+		competition.value.periodNum >= CompetitionPeriodVoting
+);
 
 const placeholderCount = computed(() => {
 	const iterators = [];
@@ -54,20 +66,6 @@ const placeholderCount = computed(() => {
 	}
 	return iterators;
 });
-
-const shouldShowThumbnailRanks = computed(
-	() =>
-		competition.value.is_voting_enabled &&
-		competition.value.has_community_voting &&
-		competition.value.are_results_calculated
-);
-
-const shouldShowThumbnailAwards = computed(
-	() =>
-		competition.value.is_voting_enabled &&
-		competition.value.has_awards &&
-		competition.value.periodNum >= CompetitionPeriodVoting
-);
 
 function emitRemove(entry: CommunityCompetitionEntryModel) {
 	emit('remove', entry);

@@ -49,6 +49,17 @@ const shouldShowRemove = computed(
 
 const game = toRef(() => entry.value.resource as GameModel);
 
+const hasAwards = toRef(() => entry.value.awards && entry.value.awards.length > 0);
+
+const shouldShowAwards = toRef(() => showAwards.value && hasAwards.value);
+
+const shouldShowNoVotes = toRef(
+	() =>
+		showRank.value &&
+		!votingCategory?.value &&
+		(!entry.value.vote_results || entry.value.vote_results.length === 0)
+);
+
 const shouldShowRank = computed(() => {
 	if (!showRank.value) {
 		return false;
@@ -60,13 +71,6 @@ const shouldShowRank = computed(() => {
 
 	return !!displayRank.value;
 });
-
-const shouldShowNoVotes = computed(
-	() =>
-		showRank.value &&
-		!votingCategory?.value &&
-		(!entry.value.vote_results || entry.value.vote_results.length === 0)
-);
 
 const displayRank = computed(() => {
 	// Find the result for the given category.
@@ -86,10 +90,6 @@ const displayCategoryName = computed(() => {
 
 	return $gettext(`Overall`);
 });
-
-const hasAwards = computed(() => entry.value.awards && entry.value.awards.length > 0);
-
-const shouldShowAwards = computed(() => showAwards.value && hasAwards.value);
 
 async function onClickRemove() {
 	const result = await showModalConfirm(

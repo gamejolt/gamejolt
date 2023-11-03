@@ -48,7 +48,7 @@ const isLoading = ref(true);
 
 const author = toRef(() => m_entry.value!.author);
 
-const shouldShowVoteCount = computed(
+const shouldShowVoteCount = toRef(
 	() =>
 		m_entry.value &&
 		competition.value &&
@@ -56,7 +56,7 @@ const shouldShowVoteCount = computed(
 		!competition.value.are_results_calculated
 );
 
-const shouldShowAwards = computed(
+const shouldShowAwards = toRef(
 	() =>
 		competition.value &&
 		competition.value.has_awards &&

@@ -50,7 +50,7 @@ const props = defineProps({
 	},
 });
 
-const { competition, entry, votingCategories, userVotes } = toRefs(props);
+const { competition, entry, votingCategories } = toRefs(props);
 
 const { user } = useCommonStore();
 const route = useRoute();
