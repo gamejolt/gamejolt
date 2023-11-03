@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { PropType, computed, toRefs } from 'vue';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { GameCollectionModel } from '../collection.model';
 
