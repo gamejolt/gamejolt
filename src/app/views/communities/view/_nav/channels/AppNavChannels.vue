@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, toRef } from 'vue';
+import { computed, ref, toRefs } from 'vue';
 import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
@@ -10,21 +10,14 @@ import AppCommunityChannelCard from '../../../../../components/community/channel
 import { useAppStore } from '../../../../../store';
 import { loadArchivedChannels, useCommunityRouteStore } from '../../view.store';
 
-const store = useAppStore();
 const { user } = useCommonStore();
+const store = useAppStore();
 const routeStore = useCommunityRouteStore()!;
+const { communities, communityStates } = toRefs(store);
+const { community, frontpageChannel, allChannel, channel: activeChannel } = toRefs(routeStore);
 
 const isLoadingArchivedChannels = ref(false);
-
-const communities = toRef(() => store.communities);
-const communityStates = toRef(() => store.communityStates);
-const community = toRef(() => routeStore.community);
-const frontpageChannel = toRef(() => routeStore.frontpageChannel);
-const allChannel = toRef(() => routeStore.allChannel);
-const activeChannel = toRef(() => routeStore.channel);
-const communityState = computed(() =>
-	communityStates.value.value.getCommunityState(community.value)
-);
+const communityState = computed(() => communityStates.value.getCommunityState(community.value));
 
 function isChannelLocked(channel: CommunityChannelModel) {
 	// Don't show the locked status to guests.
@@ -52,7 +45,7 @@ function isChannelUnread(channel: CommunityChannelModel) {
 	}
 
 	// We need to access the reactive community from the Store here.
-	const stateCommunity = communities.value.value.find(c => c.id === community.value.id);
+	const stateCommunity = communities.value.find(c => c.id === community.value.id);
 	if (channel && stateCommunity instanceof CommunityModel) {
 		return communityState.value.unreadChannels.includes(channel.id);
 	}
