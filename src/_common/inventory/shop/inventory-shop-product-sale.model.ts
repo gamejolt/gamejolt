@@ -16,9 +16,21 @@ export class InventoryShopProductSaleModel implements ModelStoreModel {
 	declare pricings: InventoryShopProductSalePricingModel[];
 	declare starts_on?: number;
 	declare ends_on?: number;
+	declare can_purchase: boolean;
+	declare is_product_owned: boolean;
 
 	update(data: any) {
 		Object.assign(this, data);
+
+		// TODO(collectible-sales): remove debug code
+		if (import.meta.env.DEV) {
+			if (data.can_purchase === undefined) {
+				this.can_purchase = this.id % 2 === 0 || data.product_type === 'Background';
+			}
+			if (data.is_product_owned === undefined) {
+				this.is_product_owned = this.id % 2 !== 0 || data.product_type === 'Background';
+			}
+		}
 
 		if (data.pricings) {
 			this.pricings = storeModelList(InventoryShopProductSalePricingModel, data.pricings);

@@ -4,10 +4,16 @@ import { CollectibleModel, CollectibleType } from '../collectible/collectible.mo
 import { storeModelList } from '../model/model-store.service';
 import { UserModel } from '../user/user.model';
 
+// TODO(collectible-sales) revisit this
 export type JoltydexFeed = ReturnType<typeof makeJoltydexFeed>;
+// export interface JoltydexFeedItem {
+// 	collectible: CollectibleModel;
+// 	sale?: InventoryShopProductSaleModel;
+// }
+export interface JoltydexFeedItem extends CollectibleModel {}
 
 export function makeJoltydexFeed(type: CollectibleType) {
-	const collectibles = ref<CollectibleModel[]>([]);
+	const collectibles = ref<JoltydexFeedItem[]>([]);
 	const count = ref(0);
 	const isLoading = ref(false);
 
@@ -51,6 +57,12 @@ export async function loadJoltydexFeed({
 				perPage,
 				pos,
 			},
+			// TODO(collectible-sales) revisit this
+			// collectibleSales: {
+			// 	...commonFields,
+			// 	perPage,
+			// 	pos,
+			// },
 			collectibleCount: {
 				...commonFields,
 			},
@@ -58,10 +70,51 @@ export async function loadJoltydexFeed({
 		{ detach: true }
 	);
 
-	const collectibles = new Map<CollectibleType, CollectibleModel[]>();
-	for (const type of types) {
-		if (payload.collectibles[type]) {
-			collectibles.set(type, storeModelList(CollectibleModel, payload.collectibles[type]));
+	const collectibles = new Map<CollectibleType, JoltydexFeedItem[]>();
+
+	// TODO(collectible-sales) revisit this
+	if (false) {
+		// for (const type of types) {
+		// 	// Unsupported type, ignore.
+		// 	if (!payload.collectibles[type]) {
+		// 		continue;
+		// 	}
+		// 	const collectiblesForType = storeModelList(
+		// 		CollectibleModel,
+		// 		payload.collectibles[type]
+		// 	);
+		// 	const salesForType = payload.collectibleSales[type] as Record<
+		// 		number,
+		// 		PartialModelData<InventoryShopProductSaleModel>[]
+		// 	>;
+		// 	collectibles.set(
+		// 		type,
+		// 		collectiblesForType.map(collectible => {
+		// 			let sale: InventoryShopProductSaleModel | undefined;
+		// 			// CollectibleModel id is a string with the typename prepended,
+		// 			// so we need to strip it out.
+		// 			const id = parseInt(collectible.id.replaceAll(/[^\d]/g, ''), 10);
+		// 			if (id) {
+		// 				const sales = salesForType[id];
+		// 				if (sales && sales.length) {
+		// 					sale = storeModel(InventoryShopProductSaleModel, sales[0]);
+		// 				}
+		// 			}
+		// 			return {
+		// 				collectible,
+		// 				sale,
+		// 			};
+		// 		})
+		// 	);
+		// }
+	} else {
+		for (const type of types) {
+			if (payload.collectibles[type]) {
+				collectibles.set(
+					type,
+					storeModelList(CollectibleModel, payload.collectibles[type])
+				);
+			}
 		}
 	}
 

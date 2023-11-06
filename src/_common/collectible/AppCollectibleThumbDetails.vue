@@ -132,5 +132,24 @@ const mutedStyles: CSSProperties = {
 				{{ collectible.description }}
 			</div>
 		</div>
+
+		<!-- TODO(collectible-sales) Revisit this -->
+		<!-- <AppButton
+			v-if="sale"
+			block
+			solid
+			primary
+			@click="
+				showPurchaseShopProductModal({
+					shopProduct: sale,
+					currencyOptions: sale.validPricingsData,
+					onItemPurchased() {
+						// TODO(collectible-sales): Should have a way to mark this as purchased.
+					},
+				})
+			"
+		>
+			{{ $gettext(`Purchase item`) }}
+		</AppButton> -->
 	</div>
 </template>

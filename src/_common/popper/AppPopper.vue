@@ -221,9 +221,9 @@ const props = defineProps({
 
 const emit = defineEmits({
 	triggerClicked: (_event: MouseEvent) => true,
-	contextMenu: (_event: MouseEvent) => true,
-	mouseEnter: (_event: MouseEvent) => true,
-	mouseLeave: (_event: MouseEvent) => true,
+	contextmenu: (_event: MouseEvent) => true,
+	mouseenter: (_event: MouseEvent) => true,
+	mouseleave: (_event: MouseEvent) => true,
 	clickAway: (_event: MouseEvent) => true,
 	show: () => true,
 	hide: () => true,
@@ -369,7 +369,7 @@ function onTriggerClicked(event: MouseEvent) {
 }
 
 function onContextMenu(event: MouseEvent) {
-	emit('contextMenu', event);
+	emit('contextmenu', event);
 
 	if (trigger.value !== 'right-click') {
 		return;
@@ -405,7 +405,7 @@ function onMouseEnter(event: PointerEvent) {
 		return;
 	}
 
-	emit('mouseEnter', event);
+	emit('mouseenter', event);
 
 	if (trigger.value !== 'hover') {
 		return;
@@ -434,7 +434,7 @@ function onMouseLeave(event: PointerEvent) {
 		return;
 	}
 
-	emit('mouseLeave', event);
+	emit('mouseleave', event);
 
 	if (trigger.value !== 'hover') {
 		return;

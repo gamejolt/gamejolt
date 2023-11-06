@@ -1,5 +1,6 @@
 <script lang="ts">
-import { PropType, Ref, computed, onUnmounted, ref, toRefs, watchEffect } from 'vue';
+import { PropType, Ref, computed, onUnmounted, ref, toRef, toRefs, watchEffect } from 'vue';
+import AppAlertBox from '../../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
@@ -67,6 +68,9 @@ interface PurchaseDataCallbacks {
 	};
 }
 
+/**
+ * Purchases a shop product without asking for confirmation.
+ */
 export async function purchaseShopProduct({
 	shopProduct,
 	currency,
@@ -166,7 +170,7 @@ const props = defineProps({
 	},
 	onItemPurchased: {
 		type: Function as PropType<() => void>,
-		required: true,
+		default: undefined,
 	},
 });
 
@@ -227,6 +231,33 @@ watchEffect(() => {
 
 	timeRemaining.value = undefined;
 	isExpired.value = false;
+});
+
+const purchaseOptionsHeaderText = toRef<
+	() => { text: string; hidePurchaseOptions?: boolean } | null
+>(() => {
+	// TODO(collectible-sales) revisit this
+	if (!shopProduct.value.can_purchase) {
+		// Let them know they already own this if it's not a sticker pack.
+		return {
+			text:
+				shopProduct.value.is_product_owned && !shopProduct.value.stickerPack
+					? $gettext(`You already own this item`)
+					: $gettext(`You're unable to purchase this`),
+			hidePurchaseOptions: true,
+		};
+	}
+
+	const optionsCount = currencyOptionsList.value.length;
+	if (!optionsCount) {
+		return {
+			text: $gettext(`This item is not available for purchase`),
+			hidePurchaseOptions: true,
+		};
+	} else if (optionsCount !== 1) {
+		return { text: $gettext(`Choose a purchase option`) };
+	}
+	return null;
 });
 
 const currencyOptionsList = computed(() => Object.entries(currencyOptions.value));
@@ -326,7 +357,7 @@ async function purchaseProduct(options: PurchaseData) {
 			},
 			all() {
 				modal.dismiss();
-				onItemPurchased.value();
+				onItemPurchased?.value?.();
 			},
 		},
 	});
@@ -455,18 +486,24 @@ function getItemWidthStyles(ratio: number) {
 					<AppSpacer vertical :scale="4" />
 				</template>
 
-				<div v-if="currencyOptionsList.length !== 1" class="text-center">
-					<template v-if="!currencyOptionsList.length">
-						{{ $gettext(`This item is not available for purchase`) }}
-					</template>
-					<template v-else>
-						{{ $gettext(`Choose a purchase option`) }}
-					</template>
+				<div v-if="purchaseOptionsHeaderText" :style="{ width: `100%` }">
+					<AppAlertBox
+						v-if="purchaseOptionsHeaderText.hidePurchaseOptions"
+						icon="info-circle"
+					>
+						{{ purchaseOptionsHeaderText.text }}
+					</AppAlertBox>
+					<div v-else class="text-center">
+						{{ purchaseOptionsHeaderText.text }}
+					</div>
 
 					<AppSpacer vertical :scale="3" />
 				</div>
 
 				<div
+					v-if="
+						!purchaseOptionsHeaderText || !purchaseOptionsHeaderText.hidePurchaseOptions
+					"
 					:style="{
 						...styleFlexCenter(),
 						width: `100%`,
@@ -481,6 +518,7 @@ function getItemWidthStyles(ratio: number) {
 							margin: 0,
 						}"
 						:disabled="
+							!shopProduct.can_purchase ||
 							isExpired ||
 							!!processingPurchaseCurrencyId ||
 							!canAffordCurrency(currency.id, amount, balanceRefs)

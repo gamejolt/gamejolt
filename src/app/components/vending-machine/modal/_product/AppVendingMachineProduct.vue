@@ -3,6 +3,7 @@ import { PropType, computed, toRef, toRefs } from 'vue';
 import { ShopViewType, trackShopView } from '../../../../../_common/analytics/analytics.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
+import AppCollectibleUnlockedRibbon from '../../../../../_common/collectible/AppCollectibleUnlockedRibbon.vue';
 import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
 import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
@@ -16,7 +17,12 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import { kThemeFg, kThemeFgMuted, kThemeGray } from '../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleElevate, styleTyped, styleWhen } from '../../../../../_styles/mixins';
+import {
+	kElevateTransition,
+	styleElevate,
+	styleTyped,
+	styleWhen,
+} from '../../../../../_styles/mixins';
 import { kBorderRadiusLg, kFontSizeSmall, kStrongEaseOut } from '../../../../../_styles/variables';
 
 const props = defineProps({
@@ -107,15 +113,22 @@ const nameFontSize = kFontSizeSmall;
 			styleTyped({
 				borderRadius: kBorderRadiusLg.px,
 				position: `relative`,
-				...styleElevate(0),
-				...styleWhen(hovered && !disablePurchases, styleElevate(2)),
 				backgroundColor: kThemeGray,
 				backgroundImage: `radial-gradient(circle at center bottom, rgba(128, 128, 128, 0.75), transparent 69%)`,
+				display: `flex`,
+				flexDirection: `column`,
+				...styleElevate(0),
+				...styleWhen(hovered && !disablePurchases, {
+					...styleElevate(2),
+				}),
+				...styleWhen(!hovered && !shopProduct.can_purchase, {
+					opacity: 0.4,
+				}),
 				...styleWhen(disablePurchases, {
 					cursor: `default`,
 				}),
-				display: `flex`,
-				flexDirection: `column`,
+				// Needs to go after any styleElevate calls.
+				transition: `${kElevateTransition}, opacity 250ms ${kStrongEaseOut}`,
 			})
 		"
 		@click="onClickProduct()"
@@ -226,6 +239,11 @@ const nameFontSize = kFontSizeSmall;
 				{{ readableEndsOn }}
 			</div>
 		</Transition>
+
+		<AppCollectibleUnlockedRibbon
+			v-if="shopProduct.is_product_owned && !hovered"
+			:style="{ zIndex: overlayTagZIndex }"
+		/>
 	</a>
 </template>
 
