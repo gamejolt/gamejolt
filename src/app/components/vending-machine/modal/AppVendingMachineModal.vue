@@ -454,7 +454,7 @@ const rewardPackImageSize = run(() => {
 																`Users will get this reward pack every time they place a charged sticker on your content`
 														  )
 														: $gettext(
-																`Place a charged sticker on this users's content to get their reward pack`
+																`Place a charged sticker on this user's content to get their reward pack`
 														  )
 												}}
 											</div>
