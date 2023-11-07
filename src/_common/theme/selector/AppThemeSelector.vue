@@ -1,41 +1,42 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, ref, toRefs, watch } from 'vue';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppPopper from '../../popper/AppPopper.vue';
-import { Popper } from '../../popper/popper.service';
 import { SiteTemplateModel } from '../../site/template/template-model';
 
-@Options({
-	components: {
-		AppPopper,
+const props = defineProps({
+	templates: {
+		type: Array as PropType<SiteTemplateModel[]>,
+		required: true,
 	},
-})
-export default class AppThemeSelector extends Vue {
-	@Prop(Array)
-	templates!: SiteTemplateModel[];
+	currentTemplate: {
+		type: Number,
+		required: true,
+	},
+});
 
-	@Prop(Number)
-	currentTemplate!: number;
+const emit = defineEmits({
+	change: (_id: number) => true,
+});
 
-	current: SiteTemplateModel | null = null;
+const { templates, currentTemplate } = toRefs(props);
 
-	@Emit('change')
-	emitChange(_id: number) {}
+const current = ref<SiteTemplateModel | null>(null);
 
-	@Watch('currentTemplate')
-	onTemplateChange() {
-		this.current = this.templates.find(t => t.id === this.currentTemplate) || null;
-	}
+if (currentTemplate.value) {
+	onTemplateChange();
+}
 
-	created() {
-		if (this.currentTemplate) {
-			this.onTemplateChange();
-		}
-	}
+watch(
+	currentTemplate,
+	() => {
+		onTemplateChange();
+	},
+	{ immediate: true }
+);
 
-	select(id: number) {
-		this.emitChange(id);
-		Popper.hideAll();
-	}
+function onTemplateChange() {
+	current.value = templates.value.find(t => t.id === currentTemplate.value) || null;
 }
 </script>
 
@@ -46,7 +47,7 @@ export default class AppThemeSelector extends Vue {
 				<a class="list-group-item has-icon">
 					<template v-if="!current">
 						<AppJolticon icon="chevron-down" class="list-group-item-icon" />
-						<em><AppTranslate>Please choose a theme...</AppTranslate></em>
+						<em>{{ $gettext(`Please choose a theme...`) }}</em>
 					</template>
 					<template v-else>
 						<div class="list-group-item-heading">

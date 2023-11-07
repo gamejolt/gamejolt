@@ -5,7 +5,7 @@ import { Api } from '../../../_common/api/api.service';
 import AppContentBlockEditor from '../../../_common/content-block/editor/AppContentBlockEditor.vue';
 import { showSuccessGrowl } from '../../../_common/growls/growls.service';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
-import AppThemeSelector from '../../../_common/theme/selector/selector.vue';
+import AppThemeSelector from '../../../_common/theme/selector/AppThemeSelector.vue';
 import AppThemeEditor from '../../../_common/theme/theme-editor/theme-editor.vue';
 import { useSiteEditorStore } from '../../store/index';
 
