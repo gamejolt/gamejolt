@@ -6,7 +6,7 @@ import AppColorpicker from '../../colorpicker/AppColorpicker.vue';
 import AppLoading from '../../loading/AppLoading.vue';
 import { SiteTemplateModel } from '../../site/template/template-model';
 import AppThemeEditorFontSelector from './AppThemeEditorFontSelector.vue';
-import AppThemeEditorImage from './image.vue';
+import AppThemeEditorImage from './AppThemeEditorImage.vue';
 
 interface StyleGroup {
 	name: string;
