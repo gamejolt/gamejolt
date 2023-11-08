@@ -6,7 +6,7 @@ import AppContentBlockEditor from '../../../_common/content-block/editor/AppCont
 import { showSuccessGrowl } from '../../../_common/growls/growls.service';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import AppThemeSelector from '../../../_common/theme/selector/AppThemeSelector.vue';
-import AppThemeEditor from '../../../_common/theme/theme-editor/theme-editor.vue';
+import AppThemeEditor from '../../../_common/theme/theme-editor/AppThemeEditor.vue';
 import { useSiteEditorStore } from '../../store/index';
 
 @Options({
