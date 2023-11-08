@@ -19,7 +19,7 @@ import AppScrollInview, {
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppActivityFeedItem from './item/AppActivityFeedItem.vue';
-import AppActivityFeedNewButton from './new-button/new-button.vue';
+import AppActivityFeedNewButton from './new-button/AppActivityFeedNewButton.vue';
 import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from './view';
 
 const InviewConfigShowNew = new ScrollInviewConfig({ margin: `-${Scroll.offsetTop}px` });

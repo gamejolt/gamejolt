@@ -1,0 +1,16 @@
+<script lang="ts" setup>
+import AppButton from '../../../../../_common/button/AppButton.vue';
+
+const emit = defineEmits({
+	click: (_e: Event) => true,
+});
+</script>
+
+<template>
+	<p>
+		<!--TODO(component-setup-refactor): outline removed as not found as a prop in AppButton -->
+		<AppButton primary block @click="emit('click', $event)">
+			<slot />
+		</AppButton>
+	</p>
+</template>

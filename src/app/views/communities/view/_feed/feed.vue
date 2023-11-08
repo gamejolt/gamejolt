@@ -12,7 +12,7 @@ import { illNoCommentsSmall } from '../../../../../_common/illustration/illustra
 import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
-import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/new-button.vue';
+import AppActivityFeedNewButton from '../../../../components/activity/feed/new-button/AppActivityFeedNewButton.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
