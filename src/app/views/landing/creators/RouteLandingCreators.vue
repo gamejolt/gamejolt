@@ -19,6 +19,7 @@ import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import { ImgHelper } from '../../../../_common/img/helper/helper-service';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
+import { storeModel } from '../../../../_common/model/model-store.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -119,7 +120,7 @@ const { isBootstrapped, isDestroyed } = createAppRoute({
 	routeTitle,
 	disableTitleSuffix: true,
 	onInit() {
-		Meta.description = `BOOM! Be a Game Jolt Creator and make money with your gaming content. Your fans never have to jump through hoops to see your latest post, video, or stream.`;
+		Meta.description = `BOOM! Be a Game Jolt Creator and make money with your gaming content. Your fans never have to jump through hoops to see your latest post, video, or status update.`;
 
 		Meta.fb = {
 			type: 'website',
@@ -142,7 +143,7 @@ const { isBootstrapped, isDestroyed } = createAppRoute({
 		testimonialUsers.value = UserModel.populate(payload.testimonialUsers);
 		testimonials.value = payload.testimonials;
 		whyBackground.value = payload.background
-			? new BackgroundModel(payload.background)
+			? storeModel(BackgroundModel, payload.background)
 			: undefined;
 		applyUrl.value = payload.applyUrl;
 	},
@@ -389,8 +390,8 @@ function getRandomStickers(count = 3) {
 
 						<div>
 							Don't tie yourself down to a single communication format with your fans.
-							Chat, post images, upload videos, livestream and share your status all
-							from your profile.
+							Chat, post images, upload videos and share your status all from your
+							profile.
 						</div>
 					</div>
 				</div>

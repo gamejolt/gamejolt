@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
-import AppAlertDismissable from '../../../../../../_common/alert/dismissable/dismissable.vue';
+import AppAlertDismissable from '../../../../../../_common/alert/dismissable/AppAlertDismissable.vue';
 import { $removeCollaboratorInvite } from '../../../../../../_common/collaborator/collaborator.model';
 import { $removeCommunity } from '../../../../../../_common/community/community.model';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';

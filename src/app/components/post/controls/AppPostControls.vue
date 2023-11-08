@@ -18,7 +18,7 @@ import {
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/widget.vue';
+import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue';
 import {
 	$publishFiresidePost,
 	FiresidePostModel,
@@ -268,7 +268,9 @@ function onUserFollowDismissal() {
 								<AppAnimElectricity
 									shock-anim="square"
 									:disabled="
-										!canChargeSticker || !stickerLayer?.isAllCreator.value
+										!canChargeSticker ||
+										!stickerLayer ||
+										!stickerLayer.canChargeAllTargets.value
 									"
 									ignore-asset-padding
 								>

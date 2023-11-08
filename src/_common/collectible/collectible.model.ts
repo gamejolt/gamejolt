@@ -20,10 +20,6 @@ export class CollectibleModel implements ModelStoreModel {
 	declare is_unlocked: boolean;
 	declare sticker_mastery?: number;
 
-	constructor(data: any = {}) {
-		this.update(data);
-	}
-
 	update(data: any) {
 		Object.assign(this, data);
 	}

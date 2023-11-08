@@ -304,12 +304,11 @@ async function onMessageClick() {
 			>
 				<AppUserAvatarBubble
 					:style="{
-						...styleElevate(1),
 						...avatarSizeStyles,
 					}"
+					:img-wrapper-styles="styleElevate(1)"
 					:user="message.user"
 					disable-link
-					show-verified
 					show-frame
 					verified-size="small"
 				/>

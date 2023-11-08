@@ -8,6 +8,7 @@ import AppForm, { createForm, FormController } from '../../../../_common/form-vu
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illPointyThing } from '../../../../_common/illustration/illustrations';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { storeModelList } from '../../../../_common/model/model-store.service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -70,7 +71,7 @@ const form: FormController<FormModel> = createForm({
 		});
 	},
 	async onLoad(payload) {
-		stickerPacks.value = UserStickerPackModel.populate(payload.ownedPacks);
+		stickerPacks.value = storeModelList(UserStickerPackModel, payload.ownedPacks);
 
 		const data = getStickerStacksFromPayloadData({
 			stickerCounts: payload.ownedStickers.stickerCounts,
@@ -85,7 +86,7 @@ const form: FormController<FormModel> = createForm({
 });
 
 async function onClickVendingMachine() {
-	await showVendingMachineModal();
+	await showVendingMachineModal({ location: 'backpack' });
 }
 
 function openPack(pack: UserStickerPackModel) {
@@ -337,7 +338,7 @@ function sortStickers(sorting: StickerSortMethod) {
 
 ._packs
 	display: grid
-	gap: var(--half-pad)
+	gap: var(--base-pad)
 	grid-template-columns: repeat(3, 1fr)
 
 	@media $media-xs

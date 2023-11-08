@@ -1,4 +1,4 @@
-import { CSSProperties } from 'vue';
+import { CSSProperties, StyleValue } from 'vue';
 import { ThemeColor } from '../_common/theme/variables';
 import { kBorderRadiusBase, kBorderRadiusLg, kBorderRadiusSm } from './variables';
 
@@ -6,10 +6,31 @@ import { kBorderRadiusBase, kBorderRadiusLg, kBorderRadiusSm } from './variables
  * Helper to make it easier to mix certain styles into a style binding depending
  * on a condition.
  *
+ * NOTE: Don't use an array of styles with this if it's used in the `<script>`
+ * tag or things will break.
+ *
  * @__NO_SIDE_EFFECTS__
  */
-export function styleWhen(condition: boolean | null | undefined, style: CSSProperties) {
+export function styleWhen<T extends StyleValue = CSSProperties>(
+	condition: boolean | null | undefined,
+	style: T
+) {
 	return condition ? style : {};
+}
+
+/**
+ * Helper to enforce the typing of a style binding for an element.
+ *
+ * Using `v-bind` on an element breaks the typing for normal style bindings. Use
+ * this to fix that.
+ *
+ * NOTE: Don't use an array of styles with this if it's used in the `<script>`
+ * tag or things will break.
+ *
+ * @__NO_SIDE_EFFECTS__
+ */
+export function styleTyped(value: StyleValue) {
+	return value;
 }
 
 export const styleBorderRadiusBase: CSSProperties = {
@@ -90,9 +111,11 @@ export function styleElevate(elevation: number): CSSProperties {
 	};
 }
 
+export const kElevateTransition = `box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1)`;
+
 const _elevateTransition: CSSProperties = {
 	// If elevations change, we want to transition the shadow.
-	transition: `box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1)`,
+	transition: kElevateTransition,
 };
 
 const _mdcElevationUmbraMap: Record<number, string> = {
@@ -202,14 +225,17 @@ export function styleLineClamp(lines = 2): CSSProperties {
 export function styleFlexCenter({
 	display = 'flex',
 	direction,
+	gap,
 }: {
 	display?: 'flex' | 'inline-flex';
 	direction?: CSSProperties['flex-direction'];
+	gap?: CSSProperties['gap'];
 } = {}): CSSProperties {
 	return {
 		display,
 		alignItems: `center`,
 		justifyContent: `center`,
+		gap,
 		...styleWhen(!!direction, {
 			flexDirection: direction,
 		}),
@@ -246,11 +272,6 @@ export function styleAbsoluteFill({
 
 export const styleOverlayTextShadow: CSSProperties = {
 	textShadow: `0.5px 0.5px 1.5px rgba(0, 0, 0, 0.38)`,
-};
-
-// Used for the overlayed text on the fireside page specifically
-export const styleFiresideOverlayTextShadow: CSSProperties = {
-	textShadow: `0px 4px 4px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(0, 0, 0, 0.15), 0px 1px 8px rgba(0, 0, 0, 0.09)`,
 };
 
 type MaxWidthForOptionsResult = { maxWidth?: string };

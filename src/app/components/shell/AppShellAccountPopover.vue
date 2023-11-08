@@ -4,8 +4,7 @@ import { RouterLink } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { Client } from '../../../_common/client/safe-exports';
-import { formatCurrency } from '../../../_common/filters/currency';
-import { formatNumber } from '../../../_common/filters/number';
+import { formatCurrency, formatGemsCurrency } from '../../../_common/filters/currency';
 import { showInviteModal } from '../../../_common/invite/modal/modal.service';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
@@ -111,7 +110,7 @@ function quit() {
 
 				<div class="-quick-actions">
 					<RouterLink
-						v-if="user.is_creator"
+						v-if="user.is_creator || user.is_brand"
 						class="-quick-action"
 						:to="{ name: routeDashCreator.name }"
 					>
@@ -218,7 +217,7 @@ function quit() {
 									<AppJolticon icon="gem" />
 								</span>
 								<span>
-									{{ formatNumber(gemWallet.available_balance) }}
+									{{ formatGemsCurrency(gemWallet.available_balance) }}
 								</span>
 							</template>
 

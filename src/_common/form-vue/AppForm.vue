@@ -16,7 +16,6 @@ import {
 	toRefs,
 } from 'vue';
 import { useRouter } from 'vue-router';
-import { arrayRemove, arrayUnique } from '../../utils/array';
 import { CancelToken } from '../../utils/cancel-token';
 import { uuidv4 } from '../../utils/uuid';
 import { Api } from '../api/api.service';
@@ -135,12 +134,12 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 	const isProcessing = ref(false);
 	const submitted = ref(false);
 	const serverErrors = ref<PayloadFormErrors>({});
-	const customErrors = ref<string[]>([]);
+	const customErrors = ref(new Set<string>());
 	const _validationToken = ref(new CancelToken()) as Ref<CancelToken>;
 	const _groups = shallowRef<FormGroupController[]>([]);
 
 	const valid = computed(
-		() => _groups.value.every(i => i.valid.value) && customErrors.value.length === 0
+		() => _groups.value.every(i => i.valid.value) && customErrors.value.size === 0
 	);
 	const invalid = computed(() => !valid.value);
 
@@ -294,15 +293,15 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 	}
 
 	function setCustomError(error: string) {
-		customErrors.value = arrayUnique([...customErrors.value, error]);
+		customErrors.value.add(error);
 	}
 
 	function clearCustomError(error: string) {
-		arrayRemove(customErrors.value, i => i === error);
+		customErrors.value.delete(error);
 	}
 
 	function hasCustomError(error: string) {
-		return customErrors.value.indexOf(error) !== -1;
+		customErrors.value.has(error);
 	}
 
 	async function validate() {
@@ -314,7 +313,7 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		await Promise.all(promises);
 	}
 
-	function _onControlChanged() {
+	function triggerChanged() {
 		changed.value = true;
 		onChange?.(formModel.value as T);
 	}
@@ -411,7 +410,6 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		submitted,
 		controlErrors,
 		serverErrors,
-		customErrors,
 		validate,
 		valid,
 		invalid,
@@ -421,9 +419,9 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 		setCustomError,
 		clearCustomError,
 		hasCustomError,
+		triggerChanged,
 
 		_groups,
-		_onControlChanged,
 		_validationToken,
 		_override,
 	}) as FormController<T>;
@@ -445,7 +443,6 @@ export interface FormController<T = any> {
 	submitted: boolean;
 	controlErrors: Record<string, FormValidatorError>;
 	serverErrors: PayloadFormErrors;
-	customErrors: string[];
 	validate: () => Promise<void>;
 	readonly valid: boolean;
 	readonly invalid: boolean;
@@ -455,10 +452,14 @@ export interface FormController<T = any> {
 	setCustomError: (error: string) => void;
 	clearCustomError: (error: string) => void;
 	hasCustomError: (error: string) => boolean;
+	/**
+	 * You can call this to mark the form as dirty/changed. It will also trigger
+	 * the onChange event.
+	 */
+	triggerChanged: () => void;
 
 	// Internal.
 	_groups: FormGroupController[];
-	_onControlChanged: () => void;
 	_validationToken: CancelToken;
 	_override: (overrides: Partial<CreateFormOptions<T>>) => void;
 }

@@ -79,9 +79,10 @@ createAppRoute({
 					<div class="row">
 						<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 							<p>
-								Whether you're into livestreaming together with your followers, or
-								sharing your fan art for the most popular games, music, film and TV
-								shows in the world, Game Jolt is the best platform for creators.
+								Whether you're into posting daily snapshots of your gaming
+								adventures, or sharing your fan art for the most popular games,
+								music, film, and TV shows in the world, Game Jolt is the best
+								platform for creators.
 							</p>
 							<p>
 								<a href="https://gamejolt.com/join">Join</a> a growing population of

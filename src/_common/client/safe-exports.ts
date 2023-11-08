@@ -7,20 +7,15 @@
 
 import { defineAsyncComponent } from 'vue';
 import AppNoop from '../AppNoop.vue';
-import { getDeviceOS } from '../device/device.service';
-import type { startDesktopAudioCapture as startDesktopAudioCaptureType } from './asg/asg';
 import type { ClientAutoStart as ClientAutoStartType } from './autostart/autostart.service';
-import type AppClientBaseType from './base/base.vue';
+import type AppClientBaseType from './base/AppClientBase.vue';
 import type { Client as ClientType } from './client.service';
+import type AppClientHistoryNavigatorType from './history-navigator/AppClientHistoryNavigator.vue';
 import type { ClientHistoryNavigator as ClientHistoryNavigatorType } from './history-navigator/history-navigator.service';
-import type AppClientHistoryNavigatorType from './history-navigator/history-navigator.vue';
 
 // Vue components
 export let AppClientHistoryNavigator: typeof AppClientHistoryNavigatorType = AppNoop as any;
 export let AppClientBase: typeof AppClientBaseType = AppNoop as any;
-
-// ASG
-export let startDesktopAudioCapture: typeof startDesktopAudioCaptureType = null as any;
 
 // Misc
 export let Client: typeof ClientType = null as any;
@@ -34,15 +29,11 @@ export async function initSafeExportsForClient() {
 
 	// Vue components
 	AppClientHistoryNavigator = defineAsyncComponent(
-		async () => (await import('./history-navigator/history-navigator.vue')).default
+		async () => (await import('./history-navigator/AppClientHistoryNavigator.vue')).default
 	);
-	AppClientBase = defineAsyncComponent(async () => (await import('./base/base.vue')).default);
-
-	// ASG
-	if (getDeviceOS() === 'windows') {
-		const asg = await import('./asg/asg');
-		startDesktopAudioCapture = asg.startDesktopAudioCapture;
-	}
+	AppClientBase = defineAsyncComponent(
+		async () => (await import('./base/AppClientBase.vue')).default
+	);
 
 	// Misc
 	Client = (await import('./client.service')).Client;

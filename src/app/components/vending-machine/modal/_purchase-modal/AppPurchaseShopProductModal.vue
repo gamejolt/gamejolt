@@ -2,6 +2,7 @@
 import { PropType, Ref, computed, onUnmounted, ref, toRefs, watchEffect } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { BackgroundModel } from '../../../../../_common/background/background.model';
 import AppButton from '../../../../../_common/button/AppButton.vue';
@@ -16,9 +17,11 @@ import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
+import { storeModel } from '../../../../../_common/model/model-store.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppStickerPack, {
@@ -29,6 +32,8 @@ import { showStickerPackOpenModal } from '../../../../../_common/sticker/pack/op
 import { UserStickerPackModel } from '../../../../../_common/sticker/pack/user-pack.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
+import { kThemeFgMuted } from '../../../../../_common/theme/variables';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserAvatarFrameModel } from '../../../../../_common/user/user-avatar/frame/frame.model';
@@ -122,13 +127,13 @@ export async function purchaseShopProduct({
 		let item: UserStickerPackModel | UserAvatarFrameModel | BackgroundModel | null = null;
 
 		if (shopProduct.stickerPack) {
-			item = new UserStickerPackModel(rawProduct);
+			item = storeModel(UserStickerPackModel, rawProduct);
 			onItemPurchased?.pack?.(item);
 		} else if (shopProduct.avatarFrame) {
-			item = new UserAvatarFrameModel(rawProduct);
+			item = storeModel(UserAvatarFrameModel, rawProduct);
 			onItemPurchased?.avatarFrame?.(item);
 		} else if (shopProduct.background) {
-			item = new BackgroundModel(rawProduct);
+			item = storeModel(BackgroundModel, rawProduct);
 			onItemPurchased?.background?.(item);
 		} else {
 			console.error('No product model found after purchasing product', {
@@ -169,7 +174,7 @@ const { shopProduct, currencyOptions, onItemPurchased } = toRefs(props);
 
 const modal = useModal()!;
 const { stickerPacks } = useStickerStore();
-const { user: myUser, coinBalance, joltbuxBalance } = useCommonStore();
+const { user: authUser, coinBalance, joltbuxBalance } = useCommonStore();
 
 const balanceRefs = { coinBalance, joltbuxBalance };
 
@@ -267,15 +272,28 @@ const showPackHelpDocsLink = computed(
 	() => !!joltbuxEntry.value && !!shopProduct.value.stickerPack
 );
 
-const headerLabel = computed(() => {
+const headerData = computed<{ label: string; tooltip?: string }>(() => {
 	if (shopProduct.value.stickerPack) {
-		return $gettext(`Purchase sticker pack`);
+		return {
+			label: $gettext(`Purchase sticker pack`),
+			tooltip: $gettext(
+				`Sticker packs contain a random set of stickers which you can collect and place on content throughout Game Jolt.`
+			),
+		};
 	} else if (shopProduct.value.avatarFrame) {
-		return $gettext(`Purchase avatar frame`);
+		return {
+			label: $gettext(`Purchase avatar frame`),
+			tooltip: $gettext(`Equip an avatar frame to make yourself stand out in the community.`),
+		};
 	} else if (shopProduct.value.background) {
-		return $gettext(`Purchase background`);
+		return {
+			label: $gettext(`Purchase background`),
+			tooltip: $gettext(
+				`Backgrounds can be added to your posts to make your content stand out in the feeds.`
+			),
+		};
 	}
-	return $gettext(`Purchase item`);
+	return { label: $gettext(`Purchase item`) };
 });
 
 onUnmounted(() => {
@@ -331,6 +349,15 @@ function handleStickerPackPurchase(product: UserStickerPackModel) {
 	});
 }
 
+function onClickGetJoltbux() {
+	// vAppAuthRequired didn't seem to prevent the onClick directly on the
+	// button, so check here before showing the modal.
+	if (!authUser.value) {
+		return;
+	}
+	showPurchaseMicrotransactionModal();
+}
+
 function getItemWidthStyles(ratio: number) {
 	return {
 		...styleMaxWidthForOptions({
@@ -352,8 +379,26 @@ function getItemWidthStyles(ratio: number) {
 		</div>
 
 		<div class="modal-header">
-			<h2 class="modal-title">
-				{{ headerLabel }}
+			<h2
+				class="modal-title"
+				:style="{
+					display: `flex`,
+					alignItems: `center`,
+					gap: `12px`,
+				}"
+			>
+				{{ headerData.label }}
+
+				<AppJolticon
+					v-if="headerData.tooltip"
+					v-app-tooltip.touchable="headerData.tooltip"
+					icon="help-circle"
+					:style="{
+						margin: 0,
+						color: kThemeFgMuted,
+						fontSize: `inherit`,
+					}"
+				/>
 			</h2>
 		</div>
 
@@ -370,7 +415,7 @@ function getItemWidthStyles(ratio: number) {
 				<div v-else-if="shopProduct.product" :style="getItemWidthStyles(1)">
 					<AppUserAvatarBubble
 						v-if="shopProduct.avatarFrame"
-						:user="myUser"
+						:user="authUser"
 						:frame-override="shopProduct.avatarFrame"
 						show-frame
 						smoosh
@@ -458,18 +503,18 @@ function getItemWidthStyles(ratio: number) {
 					</AppButton>
 				</div>
 
-				<template v-if="!canPurchaseAny">
-					<AppSpacer vertical :scale="3" />
+				<template v-if="!canPurchaseAny && currencyOptionsList.length == 1 && joltbuxEntry">
+					<AppSpacer vertical :scale="6" />
 
 					<div class="text-center">
-						{{ $gettext(`You don't have enough funds to purchase this`) }}
+						{{ $gettext(`You can purchase this item with Joltbux`) }}
 					</div>
 				</template>
 
 				<template v-if="showPurchaseJoltbuxButton">
 					<AppSpacer vertical :scale="3" />
 
-					<AppButton primary trans block @click="showPurchaseMicrotransactionModal()">
+					<AppButton v-app-auth-required primary trans block @click="onClickGetJoltbux()">
 						{{ $gettext(`Get Joltbux`) }}
 					</AppButton>
 				</template>
@@ -479,6 +524,7 @@ function getItemWidthStyles(ratio: number) {
 
 					<div class="text-center">
 						<RouterLink
+							class="link-muted"
 							:to="{
 								name: routeLandingHelpRedirect.name,
 								params: {

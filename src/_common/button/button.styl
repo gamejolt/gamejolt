@@ -1,4 +1,3 @@
-/* Have to put all the sizing information here. */
 make-button-size(size)
 	font-size: lookup('$button-' + size + '-font-size')
 	font-weight: lookup('$button-' + size + '-font-weight')
@@ -43,17 +42,14 @@ make-button-size(size)
 	user-select: none
 
 	// Hover state is always the same.
-	&:hover
-	&.-hover
+	&:hover:not(.-disabled):not([disabled])
+	&.-hover:not(.-disabled):not([disabled])
+	fieldset:not([disabled]) &:hover
 		change-bg(
 			'bi-bg',
 			true
 		)
-		theme-prop(
-			'border-color',
-			'bi-bg',
-			true
-		)
+		border-color: var(--theme-bi-bg) !important
 		text-decoration: none
 		cursor: pointer
 
@@ -61,11 +57,7 @@ make-button-size(size)
 		.-icon
 		::v-deep(.jolticon-addon)
 		::v-deep(small)
-			theme-prop(
-				'color',
-				'bi-fg',
-				true
-			)
+			color: var(--theme-bi-fg) !important
 
 	// Disabled state.
 	&.-disabled
@@ -80,14 +72,14 @@ make-button-size(size)
 
 	// Content
 	::v-deep(.jolticon-addon)
-		theme-prop('color', 'fg-muted')
+		color: var(--theme-fg-muted)
 		position: relative
 		top: -1px
 		vertical-align: middle
 		margin-left: 5px
 
 	::v-deep(small)
-		theme-prop('color', 'fg-muted')
+		color: var(--theme-fg-muted)
 		font-weight: normal
 		font-size: $font-size-tiny
 		vertical-align: baseline
@@ -127,7 +119,7 @@ make-button-size(size)
 			color: white !important
 
 .-badge
-	theme-prop('color', 'highlight')
+	color: var(--theme-highlight)
 	background-color: $black
 	float: right
 	display: inline-block
@@ -139,26 +131,28 @@ make-button-size(size)
  */
 .button
 	change-bg('fg')
-	theme-prop('color', 'bg')
+	color: var(--theme-bg)
 
 .-primary
 	change-bg('bi-bg')
-	theme-prop('color', 'bi-fg')
+	color: var(--theme-bi-fg)
 
 .-outline
-	theme-prop('border-color', 'fg')
-	theme-prop('color', 'fg')
+	border-color: var(--theme-fg)
+	color: var(--theme-fg)
 	background-color: transparent
 
 	&.-primary
-		theme-prop('border-color', 'bi-bg')
-		theme-prop('color', 'fg')
+		border-color: var(--theme-bi-bg)
+		color: var(--theme-fg)
 
-/**
- * Trans buttons
- */
 .-trans
+	color: var(--theme-fg)
 	border-color: transparent
+	background-color: transparent
+
+	&.-primary
+		color: var(--theme-primary)
 
 /**
  * Overlay buttons
@@ -173,6 +167,7 @@ make-button-size(size)
 		border-color: $dark-theme-fg
 
 	&.-trans
+		// Primary trans overlay is not allowed.
 		border-color: transparent
 
 /**

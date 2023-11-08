@@ -1,3 +1,4 @@
+import { Ref, readonly, ref } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import { Geo } from '../../../_common/geo/geo.service';
@@ -15,125 +16,125 @@ import {
 	ResourceName,
 } from './site-analytics-service';
 
-export class SiteAnalyticsReport {
-	isLoaded = false;
+export type SiteAnalyticsReport = ReturnType<typeof createSiteAnalyticsReport>;
 
-	constructor(public title: string, public components: ReportComponent[]) {}
+export function createSiteAnalyticsReport(options: {
+	title: string;
+	components: ReportComponent[];
+	resource: ResourceName;
+	resourceId: number;
+	collection: Collection;
+	viewAs: UserModel | undefined;
+	startTime: number | undefined;
+	endTime: number | undefined;
+}) {
+	const { title, resource, resourceId, collection, viewAs, startTime, endTime } = options;
 
-	init(
-		resource: ResourceName,
-		resourceId: number,
-		collection: Collection,
-		viewAs: number | undefined,
-		startTime: number | undefined,
-		endTime: number | undefined
-	) {
-		const promises = this.components.map(component => {
-			let analyzer = component.type;
-			if (analyzer === 'rating-breakdown') {
-				analyzer = 'top-composition';
-			}
+	const isLoaded = ref(false);
 
-			let conditions: Condition[] = [];
-			let field = component.field,
-				fetchFields = component.fetchFields;
+	// The below async code will end up populating fields on the components, so
+	// it needs to be reactive.
+	const components = ref(options.components) as Ref<ReportComponent[]>;
 
-			// Conditions are added based on the fields that we're searching on in either the component.field or component.fetchFields fields.
-			let conditionFields = [field];
-			if (fetchFields) {
-				conditionFields = conditionFields.concat(fetchFields);
-			}
+	const promises = components.value.map(component => {
+		let analyzer = component.type;
+		if (analyzer === 'rating-breakdown') {
+			analyzer = 'top-composition';
+		}
 
-			if (conditionFields.indexOf('source_url') !== -1) {
-				conditions.push('source-external');
-			}
-			if (conditionFields.indexOf('donation') !== -1) {
-				conditions.push('has-donations');
-			}
-			if (conditionFields.indexOf('partner') !== -1) {
-				conditions.push('has-partner');
-			}
-			if (conditionFields.indexOf('partner_generated_revenue') !== -1) {
-				conditions.push('has-partner');
-			}
-			if (conditionFields.indexOf('partner_generated_donation') !== -1) {
-				conditions.push('has-donations', 'has-partner');
-			}
-			conditions = arrayUnique(conditions);
+		let conditions: Condition[] = [];
+		let field = component.field,
+			fetchFields = component.fetchFields;
 
-			// Replace the pseudo fields by their normal fields
-			if (field === 'partner_generated_revenue') {
-				field = 'revenue';
-			} else if (field === 'partner_generated_donation') {
-				field = 'donation';
-			}
+		// Conditions are added based on the fields that we're searching on in either the component.field or component.fetchFields fields.
+		let conditionFields = [field];
+		if (fetchFields) {
+			conditionFields = conditionFields.concat(fetchFields);
+		}
 
-			if (fetchFields) {
-				fetchFields = fetchFields.map(fetchField => {
-					let result: Field;
-					if (fetchField === 'partner_generated_revenue') {
-						result = 'revenue';
-					} else if (fetchField === 'partner_generated_donation') {
-						result = 'donation';
-					} else {
-						result = fetchField;
-					}
-					return result;
-				});
-			}
+		if (conditionFields.indexOf('source_url') !== -1) {
+			conditions.push('source-external');
+		}
+		if (conditionFields.indexOf('donation') !== -1) {
+			conditions.push('has-donations');
+		}
+		if (conditionFields.indexOf('partner') !== -1) {
+			conditions.push('has-partner');
+		}
+		if (conditionFields.indexOf('partner_generated_revenue') !== -1) {
+			conditions.push('has-partner');
+		}
+		if (conditionFields.indexOf('partner_generated_donation') !== -1) {
+			conditions.push('has-donations', 'has-partner');
+		}
+		if (
+			conditionFields.indexOf('gem_amount') !== -1 ||
+			conditionFields.indexOf('gem_recipient') !== -1
+		) {
+			conditions.push('gem-purchases-only');
+		}
+		conditions = arrayUnique(conditions);
 
-			return this.sendComponentRequest(
-				resource,
-				resourceId,
-				collection,
-				analyzer,
-				field,
-				viewAs,
-				conditions,
-				fetchFields,
-				component.resourceFields,
-				startTime,
-				endTime,
-				component.size
-			);
-		});
+		// Replace the pseudo fields by their normal fields
+		if (field === 'partner_generated_revenue') {
+			field = 'revenue';
+		} else if (field === 'partner_generated_donation') {
+			field = 'donation';
+		}
 
-		Promise.all(promises).then((componentResponses: any) => {
-			this.isLoaded = true;
-
-			this.components.forEach((component, i) => {
-				const response = this.processComponentResponse(
-					component,
-					componentResponses[i].data,
-					componentResponses[i].gathers
-				);
-
-				component.data = response.result;
-				component.graph = response.graph;
-				component.total = response.total;
-
-				if (component.type === 'sum' || component.type === 'average') {
-					component.hasData =
-						typeof component.data !== 'undefined' && component.data !== null;
+		if (fetchFields) {
+			fetchFields = fetchFields.map(fetchField => {
+				let result: Field;
+				if (fetchField === 'partner_generated_revenue') {
+					result = 'revenue';
+				} else if (fetchField === 'partner_generated_donation') {
+					result = 'donation';
 				} else {
-					component.hasData = component.data && Object.keys(component.data).length > 0;
+					result = fetchField;
 				}
+				return result;
 			});
-		});
-	}
+		}
 
-	private sendComponentRequest(
-		resource: ResourceName,
-		resourceId: number,
-		collection: Collection,
+		return _sendComponentRequest(
+			analyzer,
+			field,
+			conditions,
+			fetchFields,
+			component.resourceFields,
+			component.size
+		);
+	});
+
+	Promise.all(promises).then((componentResponses: any) => {
+		isLoaded.value = true;
+
+		components.value.forEach((component, i) => {
+			const response = _processComponentResponse(
+				component,
+				componentResponses[i].data,
+				componentResponses[i].gathers
+			);
+
+			component.data = response.result;
+			component.graph = response.graph;
+			component.total = response.total;
+
+			if (component.type === 'sum' || component.type === 'average') {
+				component.hasData =
+					typeof component.data !== 'undefined' && component.data !== null;
+			} else {
+				component.hasData = component.data && Object.keys(component.data).length > 0;
+			}
+		});
+	});
+
+	function _sendComponentRequest(
 		analyzer: Analyzer,
 		field: Field,
-		viewAs: number | undefined,
 		conditions: Condition[] | undefined,
 		fetchFields: Field[] | undefined,
 		resourceFields: ResourceFields | undefined,
-		startTime: number | undefined,
-		endTime: number | undefined,
 		size: number | undefined
 	) {
 		const request: Request = {
@@ -145,7 +146,7 @@ export class SiteAnalyticsReport {
 		};
 
 		if (viewAs) {
-			request.view_as = viewAs;
+			request.view_as = viewAs.id;
 		}
 
 		if (conditions) {
@@ -183,7 +184,7 @@ export class SiteAnalyticsReport {
 		);
 	}
 
-	private processComponentResponse(component: ReportComponent, _response: any, gathers?: any) {
+	function _processComponentResponse(component: ReportComponent, _response: any, gathers?: any) {
 		const { field, type: analyzer, displayField } = component;
 
 		// Copy the response.
@@ -211,7 +212,7 @@ export class SiteAnalyticsReport {
 				}
 
 				data.push({
-					label: this.getGatheredData(rowData as string, displayField!, gathers),
+					label: _getGatheredData(rowData as string, displayField!, gathers),
 				});
 			}
 
@@ -260,7 +261,7 @@ export class SiteAnalyticsReport {
 			// Top composition fields may refer to gathered fields. In this case replace them in now.
 			if (gathers && displayField) {
 				for (const dataEntry of response.result) {
-					dataEntry.label = this.getGatheredData(dataEntry.label, displayField, gathers);
+					dataEntry.label = _getGatheredData(dataEntry.label, displayField, gathers);
 				}
 			}
 
@@ -295,7 +296,7 @@ export class SiteAnalyticsReport {
 		return response;
 	}
 
-	private getGatheredData(
+	function _getGatheredData(
 		fieldLabel: string,
 		displayField: string,
 		gathers: Record<string, any>
@@ -358,6 +359,22 @@ export class SiteAnalyticsReport {
 			case 'partner':
 			case 'fireside':
 				return displayValue;
+
+			case 'shop_product':
+				return {
+					resource: 'Inventory_Shop_Product',
+					resourceId: resourceId,
+					value: displayValue,
+					// Brands currently can't view shop product analytics since
+					// it only shows gems and they don't receive gems.
+					isAnalyticsEntry: viewAs?.is_brand ? false : true,
+				};
 		}
 	}
+
+	return readonly({
+		title,
+		components,
+		isLoaded,
+	});
 }

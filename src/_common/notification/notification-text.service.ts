@@ -5,11 +5,8 @@ import {
 } from '../community/user-notification/user-notification.model';
 import { CreatorExperienceLevelModel } from '../creator/experience/level.model';
 import { formatCurrency } from '../filters/currency';
-import { FiresideCommunityModel } from '../fireside/community/community.model';
-import { FiresideModel } from '../fireside/fireside.model';
 import { FiresidePostCommunityModel } from '../fireside/post/community/community.model';
 import { FiresidePostModel } from '../fireside/post/post-model';
-import { FiresideStreamNotificationModel } from '../fireside/stream-notification/stream-notification.model';
 import { ForumTopicModel } from '../forum/topic/topic.model';
 import { GameModel } from '../game/game.model';
 import { GameTrophyModel } from '../game/trophy/trophy.model';
@@ -125,19 +122,6 @@ export class NotificationText {
 				);
 			}
 
-			case NotificationType.FiresideFeaturedInCommunity: {
-				return _process(
-					$gettext(
-						`Your Fireside in the <em>%{ community }</em> community has been featured!`,
-						{
-							community: (notification.action_model as FiresideCommunityModel)
-								.community.name,
-						},
-						{ enableHTMLEscaping: !plaintext }
-					)
-				);
-			}
-
 			case NotificationType.CommunityUserNotification:
 				{
 					const userNotification =
@@ -158,16 +142,6 @@ export class NotificationText {
 							return _process(
 								$gettext(
 									`Your post has been <b>ejected</b> from the <em>%{ community }</em> community.`,
-									{
-										community: userNotification.community.name,
-									},
-									{ enableHTMLEscaping: !plaintext }
-								)
-							);
-						case CommunityUserNotificationType.FIRESIDES_EJECT:
-							return _process(
-								$gettext(
-									`Your Fireside has been <b>ejected</b> from the <em>%{ community }</em> community.`,
 									{
 										community: userNotification.community.name,
 									},
@@ -468,65 +442,6 @@ export class NotificationText {
 				}
 
 				break;
-			}
-
-			case NotificationType.FiresideStart: {
-				if (notification.action_model instanceof FiresideModel) {
-					return _process(
-						$gettext(
-							`<em>%{ subject }</em> is live!`,
-							this.getTranslationValues(notification),
-							{ enableHTMLEscaping: !plaintext }
-						)
-					);
-				}
-
-				break;
-			}
-
-			case NotificationType.FiresideStreamNotification: {
-				const users = (notification.action_model as FiresideStreamNotificationModel).users;
-
-				if (users.length === 0) {
-					return undefined;
-				}
-
-				const userInterpolates: { [name: string]: string } = {};
-				let i = 1;
-				for (const user of users) {
-					userInterpolates[`user${i}`] = `@${user.username}`;
-					i++;
-				}
-
-				switch (users.length) {
-					case 1:
-						return _process(
-							$gettext(`<em>%{ user1 }</em> is live!`, userInterpolates, {
-								enableHTMLEscaping: !plaintext,
-							})
-						);
-
-					case 2:
-						return _process(
-							$gettext(
-								`<em>%{ user1 }</em> and <em>%{ user2 }</em> are live!`,
-								userInterpolates,
-								{ enableHTMLEscaping: !plaintext }
-							)
-						);
-
-					default:
-						return _process(
-							$gettext(
-								`<em>%{ user1 }</em>, <em>%{ user2 }</em> and <em>%{ more }</em> more are live!`,
-								{
-									...userInterpolates,
-									more: users.length - 2,
-								},
-								{ enableHTMLEscaping: !plaintext }
-							)
-						);
-				}
 			}
 
 			case NotificationType.ChargedSticker: {

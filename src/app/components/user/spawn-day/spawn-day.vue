@@ -3,7 +3,7 @@ import { formatDistanceStrict } from 'date-fns';
 import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
+import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../_common/content/content-writer';
 import {

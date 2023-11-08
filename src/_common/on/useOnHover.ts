@@ -1,4 +1,4 @@
-import { Ref, computed, ref, watch } from 'vue';
+import { Ref, computed, ref, shallowReadonly, watch } from 'vue';
 
 export function useOnHover({
 	disable,
@@ -32,12 +32,12 @@ export function useOnHover({
 		},
 	};
 
-	return {
+	return shallowReadonly({
 		/**
 		 * This should be bound to the slot components that want to affect the hover
 		 * state.
 		 */
 		hoverBinding,
 		hovered: computed(() => !disable?.value && hovered.value),
-	};
+	});
 }

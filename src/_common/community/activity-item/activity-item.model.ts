@@ -1,6 +1,6 @@
-import { FiresideModel } from '../../fireside/fireside.model';
 import { FiresidePostModel } from '../../fireside/post/post-model';
 import { GameModel } from '../../game/game.model';
+import { Jolticon } from '../../jolticon/AppJolticon.vue';
 import { Model } from '../../model/model.service';
 import { UserBlockModel } from '../../user/block/block.model';
 import { UserModel } from '../../user/user.model';
@@ -8,8 +8,8 @@ import { CommunityChannelModel } from '../channel/channel.model';
 import { CommunityCompetitionModel } from '../competition/competition.model';
 import { CommunityCompetitionEntryModel } from '../competition/entry/entry.model';
 
-export type TypeIcon = {
-	icon: string;
+type TypeIcon = {
+	icon: Jolticon;
 	color: string;
 };
 
@@ -47,14 +47,6 @@ export const enum CommunityActivityItemType {
 	CompetitionEntryRemove = 'competition/entry/remove',
 	CompetitionEntryUnremove = 'competition/entry/unremove',
 	CompetitionEntryGiveAward = 'competition/entry/give-award',
-
-	FiresideStart = 'fireside/start',
-	FiresideStartDraft = 'fireside/start-draft',
-	FiresidePublish = 'fireside/publish',
-	FiresideExtinguish = 'fireside/extinguish',
-	FiresideFeature = 'fireside/feature',
-	FiresideUnfeature = 'fireside/unfeature',
-	FiresideEject = 'fireside/eject',
 }
 
 export class CommunityActivityItemModel extends Model {
@@ -71,8 +63,7 @@ export class CommunityActivityItemModel extends Model {
 		| UserBlockModel
 		| GameModel
 		| CommunityCompetitionModel
-		| CommunityCompetitionEntryModel
-		| FiresideModel;
+		| CommunityCompetitionEntryModel;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -122,16 +113,6 @@ export class CommunityActivityItemModel extends Model {
 				case CommunityActivityItemType.CompetitionEntryGiveAward:
 					this.action_resource = new CommunityCompetitionEntryModel(data.action_resource);
 					break;
-
-				case CommunityActivityItemType.FiresideStart:
-				case CommunityActivityItemType.FiresideStartDraft:
-				case CommunityActivityItemType.FiresidePublish:
-				case CommunityActivityItemType.FiresideExtinguish:
-				case CommunityActivityItemType.FiresideFeature:
-				case CommunityActivityItemType.FiresideUnfeature:
-				case CommunityActivityItemType.FiresideEject:
-					this.action_resource = new FiresideModel(data.action_resource);
-					break;
 			}
 		}
 	}
@@ -142,15 +123,12 @@ export class CommunityActivityItemModel extends Model {
 				return { icon: 'heart-filled', color: 'notice' };
 
 			case CommunityActivityItemType.PostFeature:
-			case CommunityActivityItemType.FiresideFeature:
 				return { icon: 'star', color: '' };
 			case CommunityActivityItemType.PostUnfeature:
-			case CommunityActivityItemType.FiresideUnfeature:
 				return { icon: 'star', color: '' };
 			case CommunityActivityItemType.PostMove:
 				return { icon: 'arrow-forward', color: '' };
 			case CommunityActivityItemType.PostEject:
-			case CommunityActivityItemType.FiresideEject:
 				return { icon: 'eject', color: 'notice' };
 
 			case CommunityActivityItemType.ModInvite:
@@ -194,13 +172,6 @@ export class CommunityActivityItemModel extends Model {
 
 			case CommunityActivityItemType.CompetitionEntryGiveAward:
 				return { icon: 'medal', color: '' };
-
-			case CommunityActivityItemType.FiresideStart:
-			case CommunityActivityItemType.FiresideStartDraft:
-			case CommunityActivityItemType.FiresidePublish:
-				return { icon: 'fireside', color: '' };
-			case CommunityActivityItemType.FiresideExtinguish:
-				return { icon: 'remove', color: '' };
 		}
 	}
 }

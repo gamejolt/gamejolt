@@ -2,12 +2,10 @@
 import { PropType } from 'vue';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
-import { FiresideModel } from '../../../../_common/fireside/fireside.model';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import { RealmModel } from '../../../../_common/realm/realm-model';
 import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
 import { FeaturedItemModel } from '../../../components/featured-item/featured-item.model';
-import AppFiresideBadge from '../../../components/fireside/badge/badge.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppDiscoverHomeBanner from './_home-default/AppDiscoverHomeBanner.vue';
 import AppDiscoverHomeRealms from './_home-default/AppDiscoverHomeRealms.vue';
@@ -23,10 +21,6 @@ defineProps({
 	featuredCommunities: {
 		type: Array as PropType<CommunityModel[]>,
 		default: () => [],
-	},
-	featuredFireside: {
-		type: Object as PropType<FiresideModel>,
-		default: null,
 	},
 	featuredRealms: {
 		type: Array as PropType<RealmModel[]>,
@@ -48,32 +42,6 @@ const cardColumnsXs = 2;
 		<AppDiscoverHomeBanner :is-loading="!isBootstrapped" :item="featuredItem" />
 
 		<section class="section">
-			<template v-if="featuredFireside">
-				<div class="-content-row container">
-					<div class="text-center">
-						<h2 class="section-header">
-							{{ $gettext(`Featured livestream`) }}
-						</h2>
-						<p>
-							{{
-								$gettext(
-									`Stream together with your friends and creators in firesides!`
-								)
-							}}
-						</p>
-						<hr class="underbar underbar-center" />
-					</div>
-
-					<div class="row">
-						<div class="col-lg-10 col-centered">
-							<AppFiresideBadge :fireside="featuredFireside" show-preview />
-						</div>
-					</div>
-				</div>
-
-				<br />
-			</template>
-
 			<div v-if="!isBootstrapped || creatorPosts.length" class="-content-row container">
 				<h2 class="-content-row-header">
 					<AppUserCreatorBadge size="lg" />

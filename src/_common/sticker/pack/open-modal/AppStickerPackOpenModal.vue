@@ -1,13 +1,13 @@
 <script lang="ts">
 import {
-	computed,
-	CSSProperties,
-	nextTick,
-	onMounted,
-	onUnmounted,
-	PropType,
-	ref,
-	toRefs,
+computed,
+CSSProperties,
+nextTick,
+onMounted,
+onUnmounted,
+PropType,
+ref,
+toRefs,
 } from 'vue';
 import { arrayRemove } from '../../../../utils/array';
 import { sleep } from '../../../../utils/utils';
@@ -19,11 +19,12 @@ import { illBackpackClosed, illBackpackOpen } from '../../../img/ill/illustratio
 import AppLoading from '../../../loading/AppLoading.vue';
 import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
+import { storeModelList } from '../../../model/model-store.service';
 import { Screen } from '../../../screen/screen-service';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
 import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../translate/translate.service';
-import AppStickerStackItem from '../../stack/AppStickerStackItem.vue';
+import AppStickerImg from '../../AppStickerImg.vue';
 import { CreatorStickersMap, sortStickerStacks, useStickerStore } from '../../sticker-store';
 import { StickerModel, StickerStack } from '../../sticker.model';
 import AppStickerPack from '../AppStickerPack.vue';
@@ -154,12 +155,12 @@ const stickerAnimationDuration = computed(() =>
 	expandStickers.value ? DurationStickerShow : DurationStickerStash
 );
 
-const stickerSizing = computed<CSSProperties>(() => {
+const stickerSizing = computed(() => {
 	let size = 128;
 	if (Screen.isXs) {
 		size = Math.min(size, Math.max(Screen.width * 0.2, size / 2));
 	}
-	return { width: `${size}px`, height: `${size}px` };
+	return size;
 });
 
 onMounted(() => afterMount());
@@ -208,7 +209,7 @@ async function _openPack() {
 			throw Error('Got no stickers returned when opening pack.');
 		}
 
-		const newStickers: StickerModel[] = StickerModel.populate(rawStickers);
+		const newStickers = storeModelList(StickerModel, rawStickers);
 		openedStickers.value = newStickers;
 		// Sort our owned stickers, adding our new stickers to the list.
 		sortMyStickers(newStickers);
@@ -655,7 +656,8 @@ function addMs(value: number) {
 						transform: 'translateX(-50%)',
 						zIndex: 3 + index,
 						pointerEvents: 'none',
-						...stickerSizing,
+						width: `${stickerSizing}px`,
+						height: `${stickerSizing}px`,
 					}"
 				>
 					<!-- Stickers rotation -->
@@ -692,7 +694,7 @@ function addMs(value: number) {
 								}"
 							>
 								<!-- Stickers scale -->
-								<AppStickerStackItem
+								<AppStickerImg
 									:style="{
 										transform:
 											stage === 'results-show' ? `scale(1)` : `scale(0.5)`,
@@ -706,7 +708,8 @@ function addMs(value: number) {
 											index * DurationStickerAnimationOffset
 										}ms`,
 									}"
-									:img-url="sticker.img_url"
+									:size="stickerSizing"
+									:src="sticker.img_url"
 								/>
 							</div>
 						</div>

@@ -10,6 +10,7 @@ import { DogtagData } from '../dogtag/dogtag-data';
 import { showErrorGrowl } from '../growls/growls.service';
 import { MediaItemModel } from '../media-item/media-item-model';
 import { showModalConfirm } from '../modal/confirm/confirm-service';
+import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
 import { Registry } from '../registry/registry.service';
 import { ThemeModel } from '../theme/theme.model';
@@ -138,6 +139,7 @@ export class UserModel
 	is_gamer = false;
 	is_developer = false;
 	declare is_creator?: boolean;
+	declare is_brand?: boolean;
 
 	declare can_join_communities?: boolean;
 	declare can_create_communities?: boolean;
@@ -207,7 +209,7 @@ export class UserModel
 		}
 
 		if (data.avatar_frame) {
-			this.avatar_frame = new AvatarFrameModel(data.avatar_frame);
+			this.avatar_frame = storeModel(AvatarFrameModel, data.avatar_frame);
 		}
 
 		Registry.store('User', this);

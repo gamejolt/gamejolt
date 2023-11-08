@@ -4,7 +4,6 @@ import { CommunityModel } from '../community.model';
 export const enum CommunityUserNotificationType {
 	POSTS_MOVE = 'posts/move',
 	POSTS_EJECT = 'posts/eject',
-	FIRESIDES_EJECT = 'firesides/eject',
 }
 
 export class CommunityUserNotificationModel extends Model {

@@ -4,14 +4,15 @@ import { useRouter } from 'vue-router';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
-	$unvoteOnComment,
-	$voteOnComment,
-	CommentModel,
+$unvoteOnComment,
+$voteOnComment,
+CommentModel,
 } from '../../../../_common/comment/comment-model';
 import { CommentVoteType } from '../../../../_common/comment/vote/vote-model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
 import { showLikersModal } from '../../../../_common/likers/modal.service';
+import { storeModel } from '../../../../_common/model/model-store.service';
 import { Model } from '../../../../_common/model/model.service';
 import { selectReactionForResource } from '../../../../_common/reaction/reaction-count';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -154,8 +155,9 @@ async function $voteComment(vote: number) {
 	}
 
 	if (result && result.comment) {
-		const resultComment = new CommentModel(result.comment);
-		comment.value.has_owner_like = resultComment.has_owner_like;
+		// Update the parent model so that it gets the latest data, like whether
+		// or not it has an owner like.
+		storeModel(CommentModel, result.comment);
 	}
 }
 

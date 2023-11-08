@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import AppButton from '../button/AppButton.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
 import { copyShareLink, ShareResource } from './share.service';
 
 const props = defineProps({
@@ -25,8 +24,8 @@ function copyLink() {
 		<!-- force update on input so that the URL re-applies and they can't edit -->
 		<input class="-url form-control" :value="url" @input="$forceUpdate()" />
 
-		<AppButton @click="copyLink()">
-			<AppTranslate>Copy</AppTranslate>
+		<AppButton :style="{ flex: `none` }" @click="copyLink()">
+			{{ $gettext(`Copy`) }}
 		</AppButton>
 	</div>
 </template>

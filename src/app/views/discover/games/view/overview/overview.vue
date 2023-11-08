@@ -4,6 +4,7 @@ import { Inject, Options } from 'vue-property-decorator';
 import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
 import { useAdsController } from '../../../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
+import { trackExperimentEngagement } from '../../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCard from '../../../../../../_common/card/AppCard.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
@@ -13,13 +14,14 @@ import {
 	CommentStoreManagerKey,
 	getCommentStore,
 } from '../../../../../../_common/comment/comment-store';
+import { configGuestNoAuthRequired } from '../../../../../../_common/config/config.service';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../../_common/filters/number';
 import { FiresidePostModel } from '../../../../../../_common/fireside/post/post-model';
-import AppGameExternalPackageCard from '../../../../../../_common/game/external-package/card/card.vue';
+import AppGameExternalPackageCard from '../../../../../../_common/game/external-package/card/AppGameExternalPackageCard.vue';
 import { GameModel } from '../../../../../../_common/game/game.model';
-import AppGameMediaBar from '../../../../../../_common/game/media-bar/media-bar.vue';
+import AppGameMediaBar from '../../../../../../_common/game/media-bar/AppGameMediaBar.vue';
 import AppGamePackageCard from '../../../../../../_common/game/package/card/AppGamePackageCard.vue';
 import AppGameSoundtrackCard from '../../../../../../_common/game/soundtrack/card/card.vue';
 import { HistoryTick } from '../../../../../../_common/history-tick/history-tick-service';
@@ -262,6 +264,9 @@ export default class RouteDiscoverGamesViewOverview extends LegacyRouteComponent
 	}
 
 	get shouldShowCommentAdd() {
+		if (configGuestNoAuthRequired.value) {
+			return false;
+		}
 		return Boolean(this.game && canCommentOnModel(this.game));
 	}
 
@@ -309,6 +314,8 @@ export default class RouteDiscoverGamesViewOverview extends LegacyRouteComponent
 			payload.posts,
 			fromCache
 		);
+
+		trackExperimentEngagement(configGuestNoAuthRequired);
 	}
 
 	routeDestroyed() {

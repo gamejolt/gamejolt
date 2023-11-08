@@ -19,13 +19,13 @@ import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensio
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
-import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
 import {
 	ContentEditorModelData,
 	ContentOwnerController,
 	ContentOwnerControllerKey,
 	createContentOwnerController,
 } from '../content-owner';
+import { ContentRules } from '../content-rules';
 import AppContentEditorNodeRenderer from './AppContentEditorNodeRenderer.vue';
 import {
 	ContentEditorController,
@@ -34,14 +34,13 @@ import {
 	editorCreateView,
 	editorFocus,
 } from './content-editor-controller';
-import { ContentRules } from '../content-rules';
 import { ContentTempResource } from './content-temp-resource.service';
-import AppContentEditorBlockControls from './controls/block-controls.vue';
+import AppContentEditorBlockControls from './controls/AppContentEditorBlockControls.vue';
+import AppContentEditorInsetControls from './controls/AppContentEditorInsetControls.vue';
+import AppContentEditorTextControls from './controls/AppContentEditorTextControls.vue';
 import AppContentEditorControlsEmoji from './controls/emoji/AppContentEditorControlsEmoji.vue';
-import AppContentEditorControlsGif from './controls/gif/gif.vue';
-import AppContentEditorInsetControls from './controls/inset-controls.vue';
-import AppContentEditorControlsMentionAutocomplete from './controls/mention/autocomplete.vue';
-import AppContentEditorTextControls from './controls/text-controls.vue';
+import AppContentEditorControlsGif from './controls/gif/AppContentEditorControlsGif.vue';
+import AppContentEditorControlsMentionAutocomplete from './controls/mention/AppContentEditorControlsMentionAutocomplete.vue';
 import { FocusWatcher } from './focus-watcher';
 
 export interface AppContentEditorInterface {
@@ -363,17 +362,6 @@ async function reset(shouldFocus = focusEnd.value) {
 	const doc = new ContentDocument(controller_.value.contentContext);
 	await setContent(doc, shouldFocus);
 	controller_.value.isEmpty = true;
-}
-
-function getContent() {
-	if (view.value) {
-		const data = ContentFormatAdapter.adaptOut(
-			view.value.state.doc.toJSON() as ProsemirrorEditorFormat,
-			controller_.value.contentContext
-		);
-		return data;
-	}
-	return null;
 }
 
 async function setContent(newDoc: ContentDocument, shouldFocus = focusEnd.value) {

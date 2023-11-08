@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Inject, Options } from 'vue-property-decorator';
 import { formatNumber } from '../../../../../../../../_common/filters/number';
-import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, Ref } from 'vue';
 import AppAvatarFrame from '../../../../_common/avatar/AppAvatarFrame.vue';
-import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
+import { AvatarFrameModel, DefaultAvatarFrameScale } from '../../../../_common/avatar/frame.model';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
@@ -19,6 +19,7 @@ import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '../../../..
 import { kBorderWidthBase } from '../../../../_styles/variables';
 
 interface FormModel {
+	imageUrl?: string;
 	avatarFrame?: AvatarFrameModel;
 	useFallbackAvatar?: boolean;
 	avatarSize: number;
@@ -58,7 +59,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 	model,
 });
 
-const avatarFrame = computed(() => form.formModel.avatarFrame || null);
+// const avatarFrame = computed(() => form.formModel.avatarFrame || null);
 const avatarSize = computed(() => form.formModel.avatarSize || fallbackAvatarSize);
 const avatarUser = computed(() => (form.formModel.useFallbackAvatar ? null : user.value));
 
@@ -143,9 +144,7 @@ function setFiles(files: File[]) {
 	const oldUrl = form.formModel.avatarFrame?.image_url;
 	const windowUrl = window.URL || window.webkitURL;
 
-	form.formModel.avatarFrame = new AvatarFrameModel({
-		image_url: windowUrl.createObjectURL(files[0]),
-	} as Partial<AvatarFrameModel>);
+	form.formModel.imageUrl = windowUrl.createObjectURL(files[0]);
 
 	if (oldUrl) {
 		windowUrl.revokeObjectURL(oldUrl);
@@ -217,7 +216,14 @@ function setFiles(files: File[]) {
 							width: `100%`,
 							maxWidth: `${avatarSize}px`,
 						}"
-						:frame="avatarFrame"
+						:frame="
+							form.formModel.imageUrl
+								? {
+										image_url: form.formModel.imageUrl,
+										scale: DefaultAvatarFrameScale,
+								  }
+								: null
+						"
 					>
 						<AppUserAvatarImg
 							:style="{
@@ -234,7 +240,7 @@ function setFiles(files: File[]) {
 					</AppAvatarFrame>
 
 					<AppButton
-						v-if="avatarFrame"
+						v-if="form.formModel.imageUrl"
 						:style="{
 							position: `absolute`,
 							top: `12px`,
@@ -246,7 +252,7 @@ function setFiles(files: File[]) {
 						overlay
 						circle
 						trans
-						@click="form.formModel.avatarFrame = undefined"
+						@click="form.formModel.imageUrl = undefined"
 					/>
 				</div>
 			</AppForm>

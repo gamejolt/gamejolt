@@ -1,11 +1,17 @@
 import { computed } from 'vue';
-import { arrayIndexBy } from '../../../utils/array';
-import { objectPick } from '../../../utils/object';
 import { Api } from '../../../_common/api/api.service';
 import { Graph } from '../../../_common/graph/graph.service';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { arrayIndexBy } from '../../../utils/array';
+import { objectPick } from '../../../utils/object';
 
-export type ResourceName = 'Partner' | 'User' | 'Game' | 'Game_Package' | 'Game_Release';
+export type ResourceName =
+	| 'Partner'
+	| 'User'
+	| 'Game'
+	| 'Game_Package'
+	| 'Game_Release'
+	| 'Inventory_Shop_Product';
 
 export type Analyzer =
 	| 'count'
@@ -31,7 +37,8 @@ export type Collection =
 	| 'follows'
 	| 'sales'
 	| 'user-charges'
-	| 'user-invites';
+	| 'user-invites'
+	| 'shop-product-purchases';
 
 export type Condition =
 	| 'time'
@@ -46,9 +53,11 @@ export type Condition =
 	| 'no-donations'
 	| 'has-partner'
 	| 'no-partner'
-	| 'partner';
+	| 'partner'
+	| 'shop-creator'
+	| 'gem-purchases-only';
 
-export type PseudoField =
+type PseudoField =
 	| 'partner_generated_revenue' // Translates to revenue field with conditions has partner
 	| 'partner_generated_donation'; // Translates to donation field with conditions has partner
 
@@ -78,12 +87,22 @@ export type Field =
 	| 'fireside_post'
 	| 'fireside'
 	| 'creator_supporter'
-	| 'invited_user';
+	| 'invited_user'
+	| 'shop_product'
+	| 'shop_product_resource'
+	| 'shop_owner'
+	| 'currency_identifier'
+	| 'currency_amount'
+	| 'gem_recipient'
+	| 'gem_amount';
 
-export type GameField = 'game_name' | 'game_model';
-export type UserField = 'user_display_name' | 'user_username' | 'user_model';
-export type PostField = 'post_lead' | 'post_model';
-export type FiresideField = 'fireside_title' | 'fireside_model';
+type GameField = 'game_name' | 'game_model';
+type UserField = 'user_display_name' | 'user_username' | 'user_model';
+type PostField = 'post_lead' | 'post_model';
+type FiresideField = 'fireside_title';
+type ShopProductField = 'shop_product_resource_name' | 'shop_product_resource_model';
+
+type ResourceField = GameField | UserField | PostField | FiresideField | ShopProductField;
 
 export interface ResourceFields {
 	game?: GameField[];
@@ -93,6 +112,9 @@ export interface ResourceFields {
 	invited_user?: UserField[];
 	fireside_post?: PostField[];
 	fireside?: FiresideField[];
+	shop_owner?: UserField[];
+	gem_recipient?: UserField[];
+	shop_product?: ShopProductField[];
 }
 
 export type MetricKey =
@@ -105,13 +127,15 @@ export type MetricKey =
 	| 'sale'
 	| 'revenue'
 	| 'user-charge'
-	| 'user-invite';
+	| 'user-invite'
+	| 'creator-shop-sale'
+	| 'creator-shop-revenue';
 
 export interface Metric {
 	key: MetricKey;
 	collection: Collection;
 	label: string;
-	type: 'number' | 'currency';
+	type: 'number' | 'currency' | 'gems';
 	field?: Field;
 }
 
@@ -139,7 +163,7 @@ export interface Request {
 	field?: Field;
 	conditions?: Condition[];
 	fetch_fields?: Field[];
-	resource_fields?: (GameField | UserField)[];
+	resource_fields?: ResourceField[];
 	size?: number;
 
 	// Date info is Optional.
@@ -152,10 +176,10 @@ export interface ReportComponent {
 	type: Analyzer;
 	field: Field;
 	fieldLabel: string;
-	fieldType?: 'currency';
+	fieldType?: 'number' | 'currency' | 'gems';
 	fetchFields?: Field[];
 	resourceFields?: ResourceFields;
-	displayField?: Field | GameField | UserField | PostField | FiresideField;
+	displayField?: Field | ResourceField;
 	size?: number;
 
 	// These are only filled out for report component responses.
@@ -264,57 +288,6 @@ export const ReportTopGameRevenue: ReportComponent[] = [
 		displayField: 'game_name',
 	},
 ];
-export const ReportTopPartners: ReportComponent[] = [
-	{
-		type: 'top-composition',
-		field: 'partner',
-		fieldLabel: 'Partner',
-		resourceFields: {
-			partner: ['user_display_name'],
-		},
-		displayField: 'user_display_name',
-	},
-];
-
-export const ReportPartnerGeneratedRevenue: ReportComponent[] = [
-	{
-		type: 'sum',
-		field: 'partner_generated_revenue',
-		fieldLabel: 'Total Revenue',
-		fieldType: 'currency',
-	},
-	{
-		type: 'average',
-		field: 'partner_generated_donation',
-		fieldLabel: 'Average Support',
-		fieldType: 'currency',
-	},
-];
-
-export const ReportTopPartnerRevenue: ReportComponent[] = [
-	{
-		type: 'top-composition-sum',
-		field: 'partner',
-		fetchFields: ['revenue'],
-		resourceFields: {
-			partner: ['user_display_name'],
-		},
-		fieldLabel: 'Revenue by Partner',
-		fieldType: 'currency',
-		displayField: 'user_display_name',
-	},
-	{
-		type: 'top-composition-avg',
-		field: 'partner',
-		fetchFields: ['donation'],
-		resourceFields: {
-			partner: ['user_display_name'],
-		},
-		fieldLabel: 'Average Support by Partner',
-		fieldType: 'currency',
-		displayField: 'user_display_name',
-	},
-];
 
 export const ReportTopCreatorSupporters: ReportComponent[] = [
 	{
@@ -364,6 +337,54 @@ export const ReportInvitedUsers: ReportComponent[] = [
 		displayField: 'user_username',
 		size: 100,
 	},
+];
+
+export const ReportCreatorTopShopSales: ReportComponent[] = [
+	{
+		type: 'top-composition',
+		field: 'shop_product',
+		fieldLabel: 'Product',
+		resourceFields: {
+			shop_product: ['shop_product_resource_name'],
+		},
+		displayField: 'shop_product_resource_name',
+	},
+];
+
+export const ReportCreatorTopShopTypes: ReportComponent[] = [
+	{
+		type: 'top-composition',
+		field: 'shop_product_resource',
+		fieldLabel: 'Product Type',
+	},
+];
+
+export const ReportCreatorShopRevenue: ReportComponent[] = [
+	{
+		type: 'sum',
+		field: 'gem_amount',
+		fieldType: 'gems',
+		fieldLabel: 'Total Gems',
+	},
+	// Sums are not working well, so turning this off.
+	// {
+	// 	type: 'top-composition-sum',
+	// 	field: 'shop_product',
+	// 	fieldType: 'gems',
+	// 	fetchFields: ['gem_amount'],
+	// 	resourceFields: {
+	// 		shop_product: ['shop_product_resource_name'],
+	// 	},
+	// 	fieldLabel: 'Gems by Product',
+	// 	displayField: 'shop_product_resource_name',
+	// },
+	// {
+	// 	type: 'top-composition-sum',
+	// 	field: 'shop_product_resource',
+	// 	fieldLabel: 'Gems by Product Type',
+	// 	fieldType: 'gems',
+	// 	fetchFields: ['gem_amount'],
+	// },
 ];
 
 export class SiteAnalytics {
@@ -430,42 +451,71 @@ export class SiteAnalytics {
 			label: $gettext(`User Invites`),
 			type: 'number',
 		},
+		{
+			key: 'creator-shop-sale',
+			collection: 'shop-product-purchases',
+			label: $gettext(`Shop Sales`),
+			type: 'number',
+		},
+		{
+			key: 'creator-shop-revenue',
+			collection: 'shop-product-purchases',
+			label: $gettext(`Shop Revenue`),
+			type: 'gems',
+			field: 'gem_amount',
+		},
 	];
 
-	static allMetrics = computed((): MetricMap => {
-		return arrayIndexBy(this._metrics, 'key');
+	static allMetrics = computed((): MetricMap => arrayIndexBy(this._metrics, 'key'));
+
+	static userMetrics = computed(
+		(): MetricMap => objectPick(this.allMetrics.value, ['user-invite'])
+	);
+
+	static creatorMetrics = computed(
+		(): MetricMap =>
+			objectPick(this.allMetrics.value, [
+				'user-charge',
+				'creator-shop-sale',
+				'creator-shop-revenue',
+			])
+	);
+
+	// Brands don't get charge or gems.
+	static brandMetrics = computed(
+		(): MetricMap => objectPick(this.allMetrics.value, ['creator-shop-sale'])
+	);
+
+	static productMetrics = computed(
+		(): MetricMap => objectPick(this.allMetrics.value, ['creator-shop-revenue'])
+	);
+
+	static gameDevMetrics = computed(
+		(): MetricMap =>
+			objectPick(this.allMetrics.value, [
+				'view',
+				'download',
+				'install',
+				'comment',
+				'rating',
+				'follow',
+				'sale',
+				'revenue',
+			])
+	);
+
+	static gameMetrics = computed(() => {
+		return this.gameDevMetrics.value;
 	});
 
-	static userMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, ['user-invite']);
-	});
+	static packageMetrics = computed(
+		(): MetricMap =>
+			objectPick(this.allMetrics.value, ['download', 'install', 'sale', 'revenue'])
+	);
 
-	static creatorMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, ['user-charge']);
-	});
-
-	static gameDevMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, [
-			'view',
-			'download',
-			'install',
-			'comment',
-			'rating',
-			'follow',
-			'sale',
-			'revenue',
-		]);
-	});
-
-	static gameMetrics = computed(() => this.gameDevMetrics.value);
-
-	static packageMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, ['download', 'install', 'sale', 'revenue']);
-	});
-
-	static releaseMetrics = computed((): MetricMap => {
-		return objectPick(this.allMetrics.value, ['download', 'install']);
-	});
+	static releaseMetrics = computed(
+		(): MetricMap => objectPick(this.allMetrics.value, ['download', 'install'])
+	);
 
 	static async getHistogram(
 		resource: ResourceName,
@@ -555,7 +605,7 @@ export class SiteAnalytics {
 		Object.values(metrics).forEach(metric => {
 			let _analyzer = analyzer;
 
-			if (metric.type === 'currency') {
+			if (metric.type === 'currency' || metric.type === 'gems') {
 				if (_analyzer === 'histogram') {
 					_analyzer = 'histogram-sum';
 				} else if (_analyzer === 'count') {

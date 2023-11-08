@@ -6,7 +6,7 @@ import {
 	getCommentStore,
 } from '../../../../../_common/comment/comment-store';
 import { formatNumber } from '../../../../../_common/filters/number';
-import AppGameModLinks from '../../../../../_common/game/mod-links/mod-links.vue';
+import AppGameModLinks from '../../../../../_common/game/mod-links/AppGameModLinks.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { showReportModal } from '../../../../../_common/report/modal/modal.service';

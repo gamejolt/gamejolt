@@ -15,6 +15,7 @@ import { HistoryTick } from '../../history-tick/history-tick-service';
 import { KeyGroupModel } from '../../key-group/key-group.model';
 import { MediaItemModel } from '../../media-item/media-item-model';
 import { showModalConfirm } from '../../modal/confirm/confirm-service';
+import { storeModel } from '../../model/model-store.service';
 import { Model, ModelSaveRequestOptions } from '../../model/model.service';
 import { PollModel } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
@@ -119,6 +120,7 @@ export class FiresidePostModel extends Model implements ContentContainerModel, C
 	 * If post comment restrictions allow us to view comments at all.
 	 */
 	declare can_view_comments: boolean;
+	declare can_receive_charged_stickers: boolean;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -177,7 +179,7 @@ export class FiresidePostModel extends Model implements ContentContainerModel, C
 		}
 
 		if (data.background) {
-			this.background = new BackgroundModel(data.background);
+			this.background = storeModel(BackgroundModel, data.background);
 		}
 
 		Registry.store('FiresidePost', this);
@@ -434,7 +436,7 @@ export class FiresidePostModel extends Model implements ContentContainerModel, C
 /**
  * Given a URL will try to find the post hash.
  */
-export function pullFiresideHashFromUrl(url: string) {
+export function pullFiresidePostHashFromUrl(url: string) {
 	return url.substring(url.lastIndexOf('-') + 1);
 }
 

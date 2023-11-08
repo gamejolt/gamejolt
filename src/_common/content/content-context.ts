@@ -15,7 +15,6 @@ export type ContentContext =
 	| 'community-description'
 	| 'community-channel-description'
 	| 'chat-message'
-	| 'fireside-chat-message'
 	| 'chat-command'
 	| 'quest-stage-description'
 	| 'supporter-message'
@@ -223,7 +222,6 @@ export function getMediaItemTypeForContext(context: ContentContext) {
 		case 'community-description':
 			return MediaItemType.CommunityDescription;
 		case 'chat-message':
-		case 'fireside-chat-message':
 			return MediaItemType.ChatMessage;
 		case 'chat-command':
 			return MediaItemType.ChatCommand;

@@ -9,6 +9,7 @@ import {
 	setPageAdsSettings,
 	useAdsController,
 } from '../../../../../_common/ad/ad-store';
+import { trackExperimentEngagement } from '../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../_common/api/api.service';
 import {
 	$acceptCollaboratorInvite,
@@ -25,6 +26,10 @@ import {
 	lockCommentStore,
 	releaseCommentStore,
 } from '../../../../../_common/comment/comment-store';
+import {
+	configGuestNoAuthRequired,
+	configRemoveGameDownloadBanner,
+} from '../../../../../_common/config/config.service';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { GameBuildType } from '../../../../../_common/game/build/build.model';
@@ -452,6 +457,7 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 	commentStore: CommentStoreModel | null = null;
 
 	readonly Screen = Screen;
+	readonly configGuestNoAuthRequired = configGuestNoAuthRequired;
 
 	private ratingChange$?: EventSubscription;
 
@@ -510,6 +516,10 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 	}
 
 	get shouldShowCoverButtons() {
+		if (configRemoveGameDownloadBanner.value) {
+			return false;
+		}
+
 		// Only show cover buttons on the overview page.
 		return !!(
 			(!Screen.isXs &&
@@ -558,6 +568,9 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 		}
 		this.commentStore = lockCommentStore(this.commentManager, 'Game', this.game!.id);
 		commentStoreCount(this.commentStore, payload.commentsCount || 0);
+
+		trackExperimentEngagement(configRemoveGameDownloadBanner);
+		trackExperimentEngagement(configGuestNoAuthRequired);
 	}
 
 	routeDestroyed() {
@@ -696,7 +709,7 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 				</template>
 
 				<template #controls>
-					<AppDiscoverGamesViewControls />
+					<AppDiscoverGamesViewControls v-if="!configGuestNoAuthRequired.value" />
 				</template>
 
 				<h1 :class="{ h2: Screen.isMobile }">

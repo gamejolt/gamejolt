@@ -30,6 +30,11 @@ export function createCommonStore() {
 	const user = ref<UserModel | null>(null);
 	const userBootstrapped = ref(false);
 
+	let _resolveUserBootstrapped: (() => void) | null = null;
+	const userBootstrappedPromise = new Promise<void>(resolve => {
+		_resolveUserBootstrapped = resolve;
+	});
+
 	const reactionsData = ref(new Map()) as Ref<Map<number, EmojiGroupData>>;
 	const reactionsCursor = ref<string>();
 
@@ -102,6 +107,7 @@ export function createCommonStore() {
 		}
 
 		userBootstrapped.value = true;
+		_resolveUserBootstrapped?.();
 	}
 
 	function setTimeout(newTimeout: UserTimeoutModel) {
@@ -116,6 +122,7 @@ export function createCommonStore() {
 	function clearUser() {
 		user.value = null;
 		userBootstrapped.value = true;
+		_resolveUserBootstrapped?.();
 		reactionsData.value = new Map();
 		coinBalance.value = 0;
 		joltbuxBalance.value = 0;
@@ -146,6 +153,7 @@ export function createCommonStore() {
 	return {
 		user,
 		userBootstrapped,
+		userBootstrappedPromise,
 		reactionsData,
 		reactionsCursor,
 		consents,
