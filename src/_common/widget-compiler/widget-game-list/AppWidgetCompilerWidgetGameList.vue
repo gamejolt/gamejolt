@@ -1,26 +1,23 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed } from 'vue';
 import { Environment } from '../../environment/environment.service';
 import { GameModel } from '../../game/game.model';
 import AppGameThumbnailImg from '../../game/thumbnail/AppGameThumbnailImg.vue';
 import { WidgetCompiler } from '../widget-compiler.service';
 
-@Options({
-	components: {
-		AppGameThumbnailImg,
+defineProps({
+	games: {
+		type: Array as PropType<GameModel[]>,
+		default: () => [],
 	},
-})
-export default class AppWidgetCompilerWidgetGameList extends Vue {
-	@Prop({ type: Array, default: () => [] })
-	games!: GameModel[];
+});
 
-	get contentClass() {
-		return WidgetCompiler.getContentClass();
-	}
+const contentClass = computed(() => {
+	return WidgetCompiler.getContentClass();
+});
 
-	url(game: GameModel) {
-		return game.site ? game.site.url : Environment.baseUrl + game.getUrl();
-	}
+function url(game: GameModel) {
+	return game.site ? game.site.url : Environment.baseUrl + game.getUrl();
 }
 </script>
 
