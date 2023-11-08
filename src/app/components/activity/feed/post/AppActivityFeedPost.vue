@@ -34,7 +34,7 @@ import { useActivityFeed } from '../view';
 import AppActivityFeedPostBlocked from './AppActivityFeedPostBlocked.vue';
 import AppActivityFeedPostMedia from './AppActivityFeedPostMedia.vue';
 import AppActivityFeedPostVideo from './AppActivityFeedPostVideo.vue';
-import AppActivityFeedPostText from './text/text.vue';
+import AppActivityFeedPostText from './text/AppActivityFeedPostText.vue';
 
 const props = defineProps({
 	item: {
