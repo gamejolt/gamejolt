@@ -34,7 +34,7 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import AppVideoPlayer from '../../../../_common/video/player/AppVideoPlayer.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 import AppContentTargets from '../../../components/content/AppContentTargets.vue';
-import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
+import AppFiresidePostEmbed from '../../../components/fireside/post/embed/AppFiresidePostEmbed.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPollVoting from '../../../components/poll/AppPollVoting.vue';

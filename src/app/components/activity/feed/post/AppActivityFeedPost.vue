@@ -22,7 +22,7 @@ import {
 import { kThemeGjOverlayNotice } from '../../../../../_common/theme/variables';
 import { RouteLocationDefinition } from '../../../../../utils/router';
 import AppContentTargets from '../../../content/AppContentTargets.vue';
-import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
+import AppFiresidePostEmbed from '../../../fireside/post/embed/AppFiresidePostEmbed.vue';
 import AppPollVoting from '../../../poll/AppPollVoting.vue';
 import AppPostContent from '../../../post/AppPostContent.vue';
 import AppPostHeader from '../../../post/AppPostHeader.vue';
