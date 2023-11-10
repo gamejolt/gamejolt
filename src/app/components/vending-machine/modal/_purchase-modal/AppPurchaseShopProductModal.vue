@@ -1,33 +1,37 @@
 <script lang="ts">
-import { PropType, Ref, computed, onUnmounted, ref, toRef, toRefs, watchEffect } from 'vue';
+import { PropType, Ref, computed, onUnmounted, ref, toRef, toRefs, watch, watchEffect } from 'vue';
 import AppAlertBox from '../../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
-import AppBackground from '../../../../../_common/background/AppBackground.vue';
+import { DefaultAvatarFrameScale } from '../../../../../_common/avatar/frame.model';
+import AppBackgroundFade from '../../../../../_common/background/AppBackgroundFade.vue';
 import { BackgroundModel } from '../../../../../_common/background/background.model';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import {
+	AcquisitionData,
+	CollectibleAcquisitionMethod,
+	getCollectibleAcquisition,
+} from '../../../../../_common/collectible/collectible.model';
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import {
 	Currency,
-	CurrencyCostData,
 	CurrencyType,
 	canAffordCurrency,
 } from '../../../../../_common/currency/currency-type';
 import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
+import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
-import { storeModel } from '../../../../../_common/model/model-store.service';
+import { storeModel, storeModelList } from '../../../../../_common/model/model-store.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import AppStickerPack, {
-	StickerPackRatio,
-} from '../../../../../_common/sticker/pack/AppStickerPack.vue';
+import { StickerPackRatio } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
 import AppStickerPackContents from '../../../../../_common/sticker/pack/AppStickerPackContents.vue';
 import { showStickerPackOpenModal } from '../../../../../_common/sticker/pack/open-modal/modal.service';
 import { UserStickerPackModel } from '../../../../../_common/sticker/pack/user-pack.model';
@@ -46,9 +50,10 @@ import {
 import { getCurrentServerTime } from '../../../../../utils/server-time';
 import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.route';
 import { showNewProductModal } from '../_product/modal/modal.service';
+import { ProductPurchaseData } from './modal.service';
 
 interface PurchaseData {
-	shopProduct: InventoryShopProductSaleModel;
+	sale: InventoryShopProductSaleModel;
 	currency: Currency;
 	balanceRefs: {
 		coinBalance: Ref<number>;
@@ -72,14 +77,14 @@ interface PurchaseDataCallbacks {
  * Purchases a shop product without asking for confirmation.
  */
 export async function purchaseShopProduct({
-	shopProduct,
+	sale,
 	currency,
 	balanceRefs,
 	beforeRequest,
 	onItemPurchased,
 }: PurchaseData & PurchaseDataCallbacks) {
 	const { coinBalance, joltbuxBalance } = balanceRefs;
-	const pricing = shopProduct.validPricings.find(i => i.knownCurrencyType?.id === currency.id);
+	const pricing = sale.validPricings.find(i => i.knownCurrencyType?.id === currency.id);
 
 	if (!pricing || !canAffordCurrency(currency.id, pricing.price, balanceRefs)) {
 		showErrorGrowl(
@@ -130,20 +135,20 @@ export async function purchaseShopProduct({
 
 		let item: UserStickerPackModel | UserAvatarFrameModel | BackgroundModel | null = null;
 
-		if (shopProduct.stickerPack) {
+		if (sale.stickerPack) {
 			item = storeModel(UserStickerPackModel, rawProduct);
 			onItemPurchased?.pack?.(item);
-		} else if (shopProduct.avatarFrame) {
+		} else if (sale.avatarFrame) {
 			item = storeModel(UserAvatarFrameModel, rawProduct);
 			onItemPurchased?.avatarFrame?.(item);
-		} else if (shopProduct.background) {
+		} else if (sale.background) {
 			item = storeModel(BackgroundModel, rawProduct);
 			onItemPurchased?.background?.(item);
 		} else {
 			console.error('No product model found after purchasing product', {
 				currency_type: pricing.knownCurrencyType,
 				pricing_id: pricing.id,
-				product_id: shopProduct.id,
+				product_id: sale.id,
 			});
 		}
 
@@ -152,7 +157,7 @@ export async function purchaseShopProduct({
 		console.error('Error purchasing product', {
 			currency_type: pricing.knownCurrencyType,
 			pricing_id: pricing.id,
-			product_id: shopProduct.id,
+			product_id: sale.id,
 		});
 	}
 }
@@ -160,12 +165,8 @@ export async function purchaseShopProduct({
 
 <script lang="ts" setup>
 const props = defineProps({
-	shopProduct: {
-		type: Object as PropType<InventoryShopProductSaleModel>,
-		required: true,
-	},
-	currencyOptions: {
-		type: Object as PropType<CurrencyCostData>,
+	productData: {
+		type: Object as PropType<ProductPurchaseData>,
 		required: true,
 	},
 	onItemPurchased: {
@@ -174,19 +175,98 @@ const props = defineProps({
 	},
 });
 
-const { shopProduct, currencyOptions, onItemPurchased } = toRefs(props);
+const { productData, onItemPurchased } = toRefs(props);
 
 const modal = useModal()!;
 const { stickerPacks } = useStickerStore();
 const { user: authUser, coinBalance, joltbuxBalance } = useCommonStore();
 
-const balanceRefs = { coinBalance, joltbuxBalance };
+const sale = ref<InventoryShopProductSaleModel>();
 
+const acquisitions = ref([]) as Ref<AcquisitionData[]>;
+const isLoadingSaleData = ref(false);
+
+const currencyOptions = computed(() => {
+	if (!sale.value) {
+		return {};
+	}
+	return sale.value.validPricingsData;
+});
+
+// Fetch everything we need to display sale, acquisition, and product data.
+//
+// TODO(collectible-sales) Should check registry or something to see if we have
+// all this loaded in already.
+watch(
+	productData.value,
+	async (product, oldProduct) => {
+		const { type: resource, id: resourceId } = product;
+		const { type: oldResource, id: oldResourceId } = oldProduct || {};
+		if (resource === oldResource && resourceId === oldResourceId) {
+			return;
+		}
+		isLoadingSaleData.value = true;
+
+		try {
+			// TODO(collectible-sales) change to single API call to get:
+			// - ?sale (if available)
+			// - ?product (if found)
+			// - acquisitions
+			const acquisitionResponse = await Api.sendRequest(
+				`/web/inventory/acquisition/${resource}/${resourceId}`,
+				undefined,
+				{ detach: true }
+			);
+
+			acquisitions.value = acquisitionResponse[resource][resourceId] || [];
+
+			const saleAcquisitions = getCollectibleAcquisition(
+				acquisitions.value,
+				CollectibleAcquisitionMethod.ShopPurchase
+			);
+			const primarySaleAcquisition = saleAcquisitions.length
+				? saleAcquisitions[0]
+				: undefined;
+			if (!primarySaleAcquisition) {
+				sale.value = undefined;
+				return;
+			}
+
+			const saleResponse = await Api.sendFieldsRequest(
+				`/mobile/shop-sale`,
+				{
+					sales: {
+						id: primarySaleAcquisition.data.sale.id,
+					},
+				},
+				{ detach: true }
+			);
+
+			const newSales = storeModelList(InventoryShopProductSaleModel, saleResponse.sales);
+			const primarySale = newSales.length ? newSales[0] : undefined;
+			if (!primarySale) {
+				throw new Error('No sale returned for the requested ID');
+			}
+			if (!primarySale.validProduct) {
+				throw new Error(`No supported product found for this sale`);
+			}
+			sale.value = primarySale;
+		} catch (e) {
+			console.error('Failed to fetch primary sale through resource/resourceId pair.', e);
+			sale.value = undefined;
+			acquisitions.value = [];
+		} finally {
+			isLoadingSaleData.value = false;
+		}
+	},
+	{ immediate: true }
+);
+
+const balanceRefs = { coinBalance, joltbuxBalance };
 const processingPurchaseCurrencyId = ref<string>();
 
 let timerBuilder: NodeJS.Timer | null = null;
 const timeRemaining = ref<string>();
-
 const isExpired = ref(false);
 
 function clearTimerBuilder() {
@@ -218,7 +298,7 @@ function checkTimeRemaining(endsOn: number) {
 }
 
 watchEffect(() => {
-	const endsOn = shopProduct.value.ends_on;
+	const endsOn = sale.value?.ends_on;
 	// Not sure if endsOn is different due to a prop changing, so we should just
 	// always clear the timer builder and set up fresh again as required.
 	clearTimerBuilder();
@@ -233,31 +313,42 @@ watchEffect(() => {
 	isExpired.value = false;
 });
 
-const purchaseOptionsHeaderText = toRef<
-	() => { text: string; hidePurchaseOptions?: boolean } | null
->(() => {
-	// TODO(collectible-sales) revisit this
-	if (!shopProduct.value.can_purchase) {
+const actionOptionsData = toRef<() => { text?: string; canPurchase?: boolean }>(() => {
+	if (!sale.value) {
+		if (isLoadingSaleData.value) {
+			return {};
+		}
+		// TODO(collectible-sales) Would be nice if we could link to the user
+		// here. Not really possible with only user-id though, as far as I know.
+		if (acquisitions.value.some(i => i.method === CollectibleAcquisitionMethod.ChargeReward)) {
+			return {
+				text: $gettext(
+					`You can obtain this by placing a charged sticker on the creator's content`
+				),
+				canPurchase: false,
+			};
+		}
+		return {};
+	}
+
+	if (sale.value.is_product_owned) {
 		// Let them know they already own this if it's not a sticker pack.
 		return {
-			text:
-				shopProduct.value.is_product_owned && !shopProduct.value.stickerPack
-					? $gettext(`You already own this item`)
-					: $gettext(`You're unable to purchase this`),
-			hidePurchaseOptions: true,
+			text: $gettext(`You already own this`),
 		};
 	}
 
 	const optionsCount = currencyOptionsList.value.length;
 	if (!optionsCount) {
 		return {
-			text: $gettext(`This item is not available for purchase`),
-			hidePurchaseOptions: true,
+			text: $gettext(`This is not available for purchase`),
 		};
-	} else if (optionsCount !== 1) {
-		return { text: $gettext(`Choose a purchase option`) };
 	}
-	return null;
+
+	return {
+		text: optionsCount !== 1 ? $gettext(`Choose a purchase option`) : undefined,
+		canPurchase: true,
+	};
 });
 
 const currencyOptionsList = computed(() => Object.entries(currencyOptions.value));
@@ -300,31 +391,59 @@ const showPurchaseJoltbuxButton = computed(() => {
  * pack.
  */
 const showPackHelpDocsLink = computed(
-	() => !!joltbuxEntry.value && !!shopProduct.value.stickerPack
+	() => productData.value.type === 'Sticker_Pack' && !!joltbuxEntry.value
 );
 
 const headerData = computed<{ label: string; tooltip?: string }>(() => {
-	if (shopProduct.value.stickerPack) {
+	if (isLoadingSaleData.value) {
+		return { label: $gettext(`Loading...`) };
+	}
+
+	const hasSale = !!sale.value;
+	const { type } = productData.value;
+
+	// TODO(collectible-sales) revisit this
+	if (type === 'Sticker_Pack') {
 		return {
-			label: $gettext(`Purchase sticker pack`),
-			tooltip: $gettext(
-				`Sticker packs contain a random set of stickers which you can collect and place on content throughout Game Jolt.`
-			),
+			label: hasSale ? $gettext(`Purchase sticker pack`) : $gettext(`Sticker pack`),
+			tooltip: hasSale
+				? $gettext(
+						`Sticker packs contain a random set of stickers which you can collect and place on content throughout Game Jolt.`
+				  )
+				: undefined,
 		};
-	} else if (shopProduct.value.avatarFrame) {
+	} else if (type === 'Avatar_Frame') {
 		return {
-			label: $gettext(`Purchase avatar frame`),
-			tooltip: $gettext(`Equip an avatar frame to make yourself stand out in the community.`),
+			label: hasSale ? $gettext(`Purchase avatar frame`) : $gettext(`Avatar frame`),
+			tooltip: hasSale
+				? $gettext(`Equip an avatar frame to make yourself stand out in the community.`)
+				: undefined,
 		};
-	} else if (shopProduct.value.background) {
+	} else if (type === 'Background') {
 		return {
-			label: $gettext(`Purchase background`),
-			tooltip: $gettext(
-				`Backgrounds can be added to your posts to make your content stand out in the feeds.`
-			),
+			label: hasSale ? $gettext(`Purchase background`) : $gettext(`Background`),
+			tooltip: hasSale
+				? $gettext(
+						`Backgrounds can be added to your posts to make your content stand out in the feeds.`
+				  )
+				: undefined,
 		};
 	}
-	return { label: $gettext(`Purchase item`) };
+	return { label: $gettext(`Uh oh...`) };
+});
+
+const frameOverride = toRef(() => {
+	const data = productData.value;
+	let scale = DefaultAvatarFrameScale;
+	// Was having template issues where it wasn't casting the type correctly, so
+	// this toRef is a workaround.
+	if (data.type === 'Avatar_Frame' && data.scale !== undefined) {
+		scale = data.scale;
+	}
+	return {
+		image_url: data.imgUrl,
+		scale,
+	};
 });
 
 onUnmounted(() => {
@@ -337,14 +456,16 @@ onUnmounted(() => {
 /**
  * Purchases an inventory shop product using the specified Currency.
  */
-async function purchaseProduct(options: PurchaseData) {
-	if (processingPurchaseCurrencyId.value) {
+async function purchaseProduct(currency: PurchaseData['currency']) {
+	if (processingPurchaseCurrencyId.value || !sale.value) {
 		return;
 	}
-	processingPurchaseCurrencyId.value = options.currency.id;
+	processingPurchaseCurrencyId.value = currency.id;
 
 	await purchaseShopProduct({
-		...options,
+		sale: sale.value,
+		currency,
+		balanceRefs,
 		onItemPurchased: {
 			pack(product) {
 				handleStickerPackPurchase(product);
@@ -434,46 +555,81 @@ function getItemWidthStyles(ratio: number) {
 		</div>
 
 		<div class="modal-body">
+			<!-- <div v-if="!sale" :style="styleFlexCenter({ direction: 'column' })">
+				<template v-if="isLoadingShopProduct">
+					<div :style="getItemWidthStyles(1)">
+						<AppAspectRatio :ratio="1" :inner-styles="styleFlexCenter()">
+							<AppLoading centered big />
+						</AppAspectRatio>
+					</div>
+				</template>
+				<template v-else>
+					<AppIllustration :asset="illExtremeSadness">
+						{{
+							$gettext(
+								`It doesn't look like that's for sale. Please try again later.`
+							)
+						}}
+					</AppIllustration>
+				</template>
+			</div> -->
 			<div :style="styleFlexCenter({ direction: 'column' })">
-				<AppStickerPack
-					v-if="shopProduct.stickerPack"
-					:style="getItemWidthStyles(StickerPackRatio)"
-					:pack="shopProduct.stickerPack"
-					:show-details="{
-						name: true,
-					}"
-				/>
-				<div v-else-if="shopProduct.product" :style="getItemWidthStyles(1)">
+				<div
+					:style="
+						getItemWidthStyles(
+							productData.type === 'Sticker_Pack' ? StickerPackRatio : 1
+						)
+					"
+				>
 					<AppUserAvatarBubble
-						v-if="shopProduct.avatarFrame"
+						v-if="productData.type === 'Avatar_Frame'"
 						:user="authUser"
-						:frame-override="shopProduct.avatarFrame"
+						:frame-override="frameOverride"
 						show-frame
 						smoosh
 						disable-link
 					/>
-					<AppBackground
-						v-else-if="shopProduct.background"
-						:background="shopProduct.background"
-						:backdrop-style="styleBorderRadiusLg"
-						:background-style="{
-							backgroundSize: `cover`,
-							backgroundPosition: `center`,
-						}"
-						darken
+					<AppAspectRatio
+						v-else
+						v-bind="
+							productData.type === 'Sticker_Pack'
+								? { ratio: StickerPackRatio }
+								: {
+										ratio: 1,
+										style: styleBorderRadiusLg,
+								  }
+						"
 					>
-						<AppAspectRatio :ratio="1" />
-					</AppBackground>
+						<AppImgResponsive
+							v-if="productData.processMediaserverUrl"
+							:style="{
+								width: `100%`,
+								height: `100%`,
+							}"
+							:src="productData.imgUrl"
+							alt=""
+						/>
+						<img
+							v-else
+							:style="{
+								width: `100%`,
+								height: `100%`,
+							}"
+							:src="productData.imgUrl"
+							alt=""
+						/>
+						<AppBackgroundFade v-if="productData.type === 'Background'" />
+					</AppAspectRatio>
+				</div>
 
-					<div
-						v-if="shopProduct.product.name"
-						:style="{
-							marginTop: `8px`,
-							fontWeight: 700,
-						}"
-					>
-						{{ shopProduct.product.name }}
-					</div>
+				<div
+					v-if="productData.name"
+					:style="{
+						marginTop: `8px`,
+						fontWeight: 700,
+					}"
+				>
+					{{ productData.name }}
 				</div>
 
 				<AppSpacer vertical :scale="4" />
@@ -486,24 +642,19 @@ function getItemWidthStyles(ratio: number) {
 					<AppSpacer vertical :scale="4" />
 				</template>
 
-				<div v-if="purchaseOptionsHeaderText" :style="{ width: `100%` }">
-					<AppAlertBox
-						v-if="purchaseOptionsHeaderText.hidePurchaseOptions"
-						icon="info-circle"
-					>
-						{{ purchaseOptionsHeaderText.text }}
+				<div v-if="actionOptionsData.text" :style="{ width: `100%` }">
+					<AppAlertBox v-if="!actionOptionsData.canPurchase" icon="info-circle">
+						{{ actionOptionsData.text }}
 					</AppAlertBox>
 					<div v-else class="text-center">
-						{{ purchaseOptionsHeaderText.text }}
+						{{ actionOptionsData.text }}
 					</div>
 
 					<AppSpacer vertical :scale="3" />
 				</div>
 
 				<div
-					v-if="
-						!purchaseOptionsHeaderText || !purchaseOptionsHeaderText.hidePurchaseOptions
-					"
+					v-if="actionOptionsData.canPurchase"
 					:style="{
 						...styleFlexCenter(),
 						width: `100%`,
@@ -518,7 +669,6 @@ function getItemWidthStyles(ratio: number) {
 							margin: 0,
 						}"
 						:disabled="
-							!shopProduct.can_purchase ||
 							isExpired ||
 							!!processingPurchaseCurrencyId ||
 							!canAffordCurrency(currency.id, amount, balanceRefs)
@@ -527,7 +677,7 @@ function getItemWidthStyles(ratio: number) {
 						lg
 						solid
 						block
-						@click="() => purchaseProduct({ shopProduct, currency, balanceRefs })"
+						@click="() => purchaseProduct(currency)"
 					>
 						<template #icon="{ size }">
 							<AppCurrencyImg
@@ -575,9 +725,9 @@ function getItemWidthStyles(ratio: number) {
 					</div>
 				</template>
 
-				<div v-if="shopProduct.stickerPack" :style="{ width: `100%` }">
+				<div v-if="productData.type === 'Sticker_Pack'" :style="{ width: `100%` }">
 					<AppSpacer vertical :scale="8" />
-					<AppStickerPackContents :pack="shopProduct.stickerPack" />
+					<AppStickerPackContents :pack="productData" />
 				</div>
 			</div>
 		</div>

@@ -121,9 +121,6 @@ const nameFontSize = kFontSizeSmall;
 				...styleWhen(hovered && !disablePurchases, {
 					...styleElevate(2),
 				}),
-				...styleWhen(!hovered && !shopProduct.can_purchase, {
-					opacity: 0.4,
-				}),
 				...styleWhen(disablePurchases, {
 					cursor: `default`,
 				}),

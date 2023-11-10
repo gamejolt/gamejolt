@@ -1,23 +1,106 @@
 import { computed, ref, shallowReadonly } from 'vue';
+import { arrayUnique } from '../../utils/array';
+import { isInstance } from '../../utils/utils';
 import { Api } from '../api/api.service';
-import { CollectibleModel, CollectibleType } from '../collectible/collectible.model';
+import {
+	AcquisitionData,
+	CollectibleAcquisitionMethod,
+	CollectibleModel,
+	CollectibleType,
+	getCollectibleAcquisition,
+} from '../collectible/collectible.model';
 import { storeModelList } from '../model/model-store.service';
+import { StickerPackModel } from '../sticker/pack/pack.model';
 import { UserModel } from '../user/user.model';
 
-// TODO(collectible-sales) revisit this
 export type JoltydexFeed = ReturnType<typeof makeJoltydexFeed>;
-// export interface JoltydexFeedItem {
-// 	collectible: CollectibleModel;
-// 	sale?: InventoryShopProductSaleModel;
-// }
-export interface JoltydexFeedItem extends CollectibleModel {}
+
+/**
+ * Can either be a sticker pack or some info about a pack we're trying to fetch.
+ *
+ * @see loading will be `true` if we're actively fetching a pack, or `false` if
+ * we did request it and it wasn't found.
+ */
+export type JoltydexMaybePack = { id: number; loading: boolean } | StickerPackModel;
 
 export function makeJoltydexFeed(type: CollectibleType) {
-	const collectibles = ref<JoltydexFeedItem[]>([]);
+	const collectibles = ref<CollectibleModel[]>([]);
 	const count = ref(0);
 	const isLoading = ref(false);
 
 	const reachedEnd = computed(() => collectibles.value.length >= count.value);
+
+	/**
+	 * Contains a map of sticker pack IDs to either the pack or loading state
+	 * for the pack.
+	 */
+	const _packLoadingData = ref(new Map<number, JoltydexMaybePack>());
+
+	/**
+	 * Gets sticker packs that are loaded in or currently loading.
+	 */
+	function getAcquisitionPacks(acquisitions: AcquisitionData[]) {
+		const packOpenAcquisitions = getCollectibleAcquisition(
+			acquisitions,
+			CollectibleAcquisitionMethod.PackOpen
+		);
+		return packOpenAcquisitions.reduce((packs, i) => {
+			const { pack } = i.data;
+			const packData = _packLoadingData.value.get(pack.id);
+			if (packData && (isInstance(packData, StickerPackModel) || packData.loading)) {
+				packs.push(packData);
+			}
+			return packs;
+		}, [] as JoltydexMaybePack[]);
+	}
+
+	/**
+	 * Fetches packs from a list of IDs.
+	 *
+	 * Ignores packs that are currently loading, have loaded in, or were not
+	 * found.
+	 */
+	async function loadPacks(packIds: number[]) {
+		const packsRequiringLoad = arrayUnique(packIds.filter(i => !_packLoadingData.value.has(i)));
+		if (!packsRequiringLoad.length) {
+			return;
+		}
+		for (const packId of packsRequiringLoad) {
+			// Mark packs as loading so we can show loading states.
+			_packLoadingData.value.set(packId, { id: packId, loading: true });
+		}
+		try {
+			const payload = await Api.sendFieldsRequest(
+				`/mobile/sticker`,
+				{
+					packs: {
+						id: packsRequiringLoad,
+					},
+				},
+				{ detach: true }
+			);
+
+			const packs = storeModelList(StickerPackModel, payload.packs);
+			for (const id of packsRequiringLoad) {
+				const pack = packs.find(i => i.id === id);
+				if (pack) {
+					_packLoadingData.value.set(id, pack);
+				} else {
+					// Mark this pack as not found so we don't try to load it again.
+					_packLoadingData.value.set(id, { id, loading: false });
+				}
+			}
+		} catch (e) {
+			console.error('Failed to load packs for pack IDs', e, packIds);
+			for (const id of packsRequiringLoad) {
+				// Unset all packs that failed to load.
+				const packData = _packLoadingData.value.get(id);
+				if (packData && !isInstance(packData, StickerPackModel)) {
+					_packLoadingData.value.delete(id);
+				}
+			}
+		}
+	}
 
 	return shallowReadonly({
 		type,
@@ -25,6 +108,8 @@ export function makeJoltydexFeed(type: CollectibleType) {
 		count,
 		isLoading,
 		reachedEnd,
+		getAcquisitionPacks,
+		loadPacks,
 	});
 }
 
@@ -57,12 +142,6 @@ export async function loadJoltydexFeed({
 				perPage,
 				pos,
 			},
-			// TODO(collectible-sales) revisit this
-			// collectibleSales: {
-			// 	...commonFields,
-			// 	perPage,
-			// 	pos,
-			// },
 			collectibleCount: {
 				...commonFields,
 			},
@@ -70,51 +149,11 @@ export async function loadJoltydexFeed({
 		{ detach: true }
 	);
 
-	const collectibles = new Map<CollectibleType, JoltydexFeedItem[]>();
+	const collectibles = new Map<CollectibleType, CollectibleModel[]>();
 
-	// TODO(collectible-sales) revisit this
-	if (false) {
-		// for (const type of types) {
-		// 	// Unsupported type, ignore.
-		// 	if (!payload.collectibles[type]) {
-		// 		continue;
-		// 	}
-		// 	const collectiblesForType = storeModelList(
-		// 		CollectibleModel,
-		// 		payload.collectibles[type]
-		// 	);
-		// 	const salesForType = payload.collectibleSales[type] as Record<
-		// 		number,
-		// 		PartialModelData<InventoryShopProductSaleModel>[]
-		// 	>;
-		// 	collectibles.set(
-		// 		type,
-		// 		collectiblesForType.map(collectible => {
-		// 			let sale: InventoryShopProductSaleModel | undefined;
-		// 			// CollectibleModel id is a string with the typename prepended,
-		// 			// so we need to strip it out.
-		// 			const id = parseInt(collectible.id.replaceAll(/[^\d]/g, ''), 10);
-		// 			if (id) {
-		// 				const sales = salesForType[id];
-		// 				if (sales && sales.length) {
-		// 					sale = storeModel(InventoryShopProductSaleModel, sales[0]);
-		// 				}
-		// 			}
-		// 			return {
-		// 				collectible,
-		// 				sale,
-		// 			};
-		// 		})
-		// 	);
-		// }
-	} else {
-		for (const type of types) {
-			if (payload.collectibles[type]) {
-				collectibles.set(
-					type,
-					storeModelList(CollectibleModel, payload.collectibles[type])
-				);
-			}
+	for (const type of types) {
+		if (payload.collectibles[type]) {
+			collectibles.set(type, storeModelList(CollectibleModel, payload.collectibles[type]));
 		}
 	}
 

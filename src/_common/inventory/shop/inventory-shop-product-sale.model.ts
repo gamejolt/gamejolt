@@ -5,32 +5,19 @@ import { ModelStoreModel, storeModel, storeModelList } from '../../model/model-s
 import { StickerPackModel } from '../../sticker/pack/pack.model';
 import { InventoryShopProductSalePricingModel } from './inventory-shop-product-sale-pricing.model';
 
-interface ModelWithName extends ModelStoreModel {
-	name?: string;
-}
+export type InventoryShopProduct = StickerPackModel | AvatarFrameModel | BackgroundModel;
 
 export class InventoryShopProductSaleModel implements ModelStoreModel {
 	declare id: number;
 	declare product_type: string;
-	declare product?: ModelWithName;
+	declare product?: InventoryShopProduct;
 	declare pricings: InventoryShopProductSalePricingModel[];
 	declare starts_on?: number;
 	declare ends_on?: number;
-	declare can_purchase: boolean;
 	declare is_product_owned: boolean;
 
 	update(data: any) {
 		Object.assign(this, data);
-
-		// TODO(collectible-sales): remove debug code
-		if (import.meta.env.DEV) {
-			if (data.can_purchase === undefined) {
-				this.can_purchase = this.id % 2 === 0 || data.product_type === 'Background';
-			}
-			if (data.is_product_owned === undefined) {
-				this.is_product_owned = this.id % 2 !== 0 || data.product_type === 'Background';
-			}
-		}
 
 		if (data.pricings) {
 			this.pricings = storeModelList(InventoryShopProductSalePricingModel, data.pricings);
@@ -52,6 +39,7 @@ export class InventoryShopProductSaleModel implements ModelStoreModel {
 
 				default:
 					console.warn('Unsupported product type', data.product_type);
+					this.product = undefined;
 					break;
 			}
 		}
@@ -76,6 +64,10 @@ export class InventoryShopProductSaleModel implements ModelStoreModel {
 			return this.product;
 		}
 		return null;
+	}
+
+	get validProduct() {
+		return this.stickerPack || this.avatarFrame || this.background;
 	}
 
 	get validPricings() {

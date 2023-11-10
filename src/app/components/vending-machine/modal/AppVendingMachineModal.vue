@@ -13,7 +13,6 @@ import {
 	fetchFeatureToggles,
 } from '../../../../_common/features/features.service';
 import { formatNumber } from '../../../../_common/filters/number';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import { InventoryShopProductSaleModel } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
@@ -122,8 +121,13 @@ async function init() {
 	isLoading.value = true;
 
 	let productUrl = `/web/inventory/shop/sales`;
+	// TODO(collectible-sales) double-check this
+	const productUrlParams: string[] = [`include_unpurchasable=true`];
 	if (userId?.value) {
-		productUrl += `?userId=${userId.value}`;
+		productUrlParams.push(`userId=${userId.value}`);
+	}
+	if (productUrlParams.length) {
+		productUrl += `?${productUrlParams.join('&')}`;
 	}
 
 	try {
@@ -227,26 +231,17 @@ onMounted(() => {
 	init();
 });
 
-async function purchaseProduct(shopProduct: InventoryShopProductSaleModel) {
+async function purchaseProduct(sale: InventoryShopProductSaleModel) {
 	if (productProcessing.value) {
 		return;
 	}
-	const currencyOptions = shopProduct.validPricingsData;
-	const currencyOptionsList = Object.entries(currencyOptions);
-	if (currencyOptionsList.length === 0) {
-		showErrorGrowl($gettext(`This item is not available for purchase right now.`));
-		return;
-	}
-
-	productProcessing.value = shopProduct.id;
+	productProcessing.value = sale.id;
 
 	// Show a modal to let the user choose which currency to use.
 	await showPurchaseShopProductModal({
-		shopProduct,
-		currencyOptions,
+		product: sale,
 		onItemPurchased: () => init(),
 	});
-
 	productProcessing.value = undefined;
 }
 

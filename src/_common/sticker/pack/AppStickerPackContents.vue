@@ -13,8 +13,10 @@ import { StickerModel } from '../sticker.model';
 import { StickerPackModel } from './pack.model';
 
 const props = defineProps({
+	// TODO(collectible-sales) Have this take a list of stickers in case we
+	// already have it loaded in.
 	pack: {
-		type: Object as PropType<StickerPackModel>,
+		type: Object as PropType<StickerPackModel | Pick<StickerPackModel, 'id'>>,
 		required: true,
 	},
 });

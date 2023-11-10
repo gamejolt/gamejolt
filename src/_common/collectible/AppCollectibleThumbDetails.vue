@@ -1,21 +1,48 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
-import { styleWhen } from '../../_styles/mixins';
+import { CSSProperties, PropType, computed, onMounted, toRefs } from 'vue';
+import { styleBorderRadiusBase, styleFlexCenter, styleWhen } from '../../_styles/mixins';
 import { kBorderRadiusBase, kFontSizeLarge, kFontSizeSmall } from '../../_styles/variables';
+import { showPurchaseShopProductModal } from '../../app/components/vending-machine/modal/_purchase-modal/modal.service';
+import { isInstance } from '../../utils/utils';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
+import AppButton from '../button/AppButton.vue';
+import { JoltydexFeed } from '../joltydex/joltydex-feed';
+import AppCircularProgress from '../progress/AppCircularProgress.vue';
 import AppStickerMastery from '../sticker/AppStickerMastery.vue';
-import { kThemeFgMuted } from '../theme/variables';
+import AppStickerPack, { StickerPackRatio } from '../sticker/pack/AppStickerPack.vue';
+import { StickerPackModel } from '../sticker/pack/pack.model';
+import { kThemeFg10, kThemeFgMuted } from '../theme/variables';
 import { $gettext } from '../translate/translate.service';
-import { CollectibleModel, CollectibleType } from './collectible.model';
+import {
+	CollectibleAcquisitionMethod,
+	CollectibleModel,
+	CollectibleType,
+	getCollectibleAcquisition,
+} from './collectible.model';
 
 const props = defineProps({
 	collectible: {
 		type: Object as PropType<CollectibleModel>,
 		required: true,
 	},
+	feed: {
+		type: Object as PropType<JoltydexFeed>,
+		required: true,
+	},
 });
 
-const { collectible } = toRefs(props);
+const { collectible, feed } = toRefs(props);
+
+onMounted(async () => {
+	const packIds = getCollectibleAcquisition(
+		collectible.value.acquisition,
+		CollectibleAcquisitionMethod.PackOpen
+	).map(i => i.data.pack.id);
+
+	await feed.value.loadPacks(packIds);
+});
+
+const maybePacks = computed(() => feed.value.getAcquisitionPacks(collectible.value.acquisition));
 
 const stickerMasteryInfo = computed(() => {
 	if (typeof collectible.value.sticker_mastery !== 'number') {
@@ -133,23 +160,70 @@ const mutedStyles: CSSProperties = {
 			</div>
 		</div>
 
-		<!-- TODO(collectible-sales) Revisit this -->
-		<!-- <AppButton
-			v-if="sale"
+		<template v-if="maybePacks.length">
+			<h2 :style="headingStyles">
+				{{ $gettext(`Packs`) }}
+			</h2>
+
+			<div
+				:style="{
+					display: `grid`,
+					gridTemplateColumns: `repeat(2, 1fr)`,
+					gap: `8px`,
+				}"
+			>
+				<div v-for="pack in maybePacks" :key="pack.id">
+					<AppStickerPack
+						v-if="isInstance(pack, StickerPackModel)"
+						:pack="pack"
+						show-name
+						can-click-pack
+						@click-pack="
+							() =>
+								showPurchaseShopProductModal({
+									product: pack,
+									onItemPurchased() {
+										// TODO(collectible-sales) better
+										collectible.value.is_unlocked = true;
+									},
+								})
+						"
+					/>
+					<AppAspectRatio
+						v-else
+						:style="{
+							...styleBorderRadiusBase,
+							backgroundColor: kThemeFg10,
+						}"
+						:ratio="StickerPackRatio"
+						:inner-styles="styleFlexCenter()"
+					>
+						<AppCircularProgress :style="{ width: `36px`, maxWidth: `100%` }" />
+					</AppAspectRatio>
+				</div>
+			</div>
+		</template>
+
+		<AppButton
+			v-if="
+				collectible.acquisition.some(
+					i => i.method === CollectibleAcquisitionMethod.ShopPurchase
+				)
+			"
 			block
 			solid
 			primary
 			@click="
 				showPurchaseShopProductModal({
-					shopProduct: sale,
-					currencyOptions: sale.validPricingsData,
+					product: collectible,
 					onItemPurchased() {
-						// TODO(collectible-sales): Should have a way to mark this as purchased.
+						// TODO(collectible-sales): Should have a better way to mark this as purchased.
+						collectible.value.is_unlocked = true;
 					},
 				})
 			"
 		>
-			{{ $gettext(`Purchase item`) }}
-		</AppButton> -->
+			{{ $gettext(`View in shop`) }}
+		</AppButton>
 	</div>
 </template>

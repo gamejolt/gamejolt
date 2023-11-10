@@ -1,3 +1,4 @@
+import { CSSProperties } from 'vue';
 import { getMediaserverUrlForBounds } from '../../utils/image';
 import { MediaItemModel } from '../media-item/media-item-model';
 import { ModelStoreModel } from '../model/model-store.service';
@@ -38,47 +39,56 @@ export class BackgroundModel implements ModelStoreModel, ShopProductCommonFields
 			this.scale = DefaultScale;
 		}
 	}
+}
 
-	get cssBackgroundImage() {
-		if (!this.media_item) {
-			return;
-		}
-
-		const { is_animated, img_url, mediaserver_url, width, height } = this.media_item;
-		if (is_animated && img_url) {
-			return `url(${img_url})`;
-		}
-
-		let src = mediaserver_url;
-		if (this.scaling === BackgroundScaling.tile) {
-			src = getMediaserverUrlForBounds({
-				src,
-				maxWidth: width / this.scale,
-				maxHeight: height / this.scale,
-			});
-		}
-		return `url(${src})`;
+/**
+ * Returns {@link img_url} for animated backgrounds or pre-scaled
+ * {@link mediaserver_url} for others.
+ */
+export function getBackgroundImgUrl(background: BackgroundModel) {
+	const { is_animated, img_url, mediaserver_url, width, height } = background.media_item;
+	if (is_animated && img_url) {
+		return img_url;
 	}
 
-	get cssBackgroundSize() {
-		if (this.scaling === BackgroundScaling.tile) {
-			const width = this.media_item.width / this.scale;
-			const height = this.media_item.height / this.scale;
-			return `${width}px ${height}px`;
-		} else if (this.scaling === BackgroundScaling.stretch) {
-			return '100% 100%';
+	const { scaling, scale } = background;
+	let src = mediaserver_url;
+	if (scaling === BackgroundScaling.tile) {
+		src = getMediaserverUrlForBounds({
+			src,
+			maxWidth: width / scale,
+			maxHeight: height / scale,
+		});
+	}
+	return src;
+}
+/**
+ * Helper function to assign CSSProperties based on the {@link background} data.
+ */
+export function getBackgroundCSSProperties(background: BackgroundModel) {
+	const { scaling, media_item, scale } = background;
+
+	let backgroundSize = 'cover';
+	let backgroundRepeat = 'no-repeat';
+
+	switch (scaling) {
+		case BackgroundScaling.tile: {
+			const width = media_item.width / scale;
+			const height = media_item.height / scale;
+			backgroundSize = `${width}px ${height}px`;
+			backgroundRepeat = 'repeat';
+			break;
 		}
-		return 'cover';
+
+		case BackgroundScaling.stretch:
+			backgroundSize = `100% 100%`;
+			break;
 	}
 
-	get cssBackgroundRepeat() {
-		if (this.scaling === BackgroundScaling.tile) {
-			return 'repeat';
-		}
-		return 'no-repeat';
-	}
-
-	get cssBackgroundPosition() {
-		return 'top';
-	}
+	return {
+		backgroundImage: `url(${getBackgroundImgUrl(background)})`,
+		backgroundPosition: `top`,
+		backgroundRepeat,
+		backgroundSize,
+	} satisfies CSSProperties;
 }

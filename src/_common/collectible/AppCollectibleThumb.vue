@@ -1,21 +1,43 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-import { styleElevate, styleLineClamp, styleTyped, styleWhen } from '../../_styles/mixins';
-import { kBorderRadiusBase, kBorderRadiusLg, kStrongEaseOut } from '../../_styles/variables';
+import { PropType, computed, toRefs } from 'vue';
+import {
+	styleBorderRadiusLg,
+	styleElevate,
+	styleFlexCenter,
+	styleLineClamp,
+	styleTyped,
+	styleWhen,
+} from '../../_styles/mixins';
+import {
+	kBorderRadiusBase,
+	kBorderRadiusLg,
+	kFontSizeTiny,
+	kStrongEaseOut,
+} from '../../_styles/variables';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
+import AppJolticon from '../jolticon/AppJolticon.vue';
+import { JoltydexFeed } from '../joltydex/joltydex-feed';
 import { useOnHover } from '../on/useOnHover';
 import AppPopper from '../popper/AppPopper.vue';
 import { Screen } from '../screen/screen-service';
 import AppStickerMastery from '../sticker/AppStickerMastery.vue';
-import { kThemeBgOffset } from '../theme/variables';
+import { kThemeBgOffset, kThemeBiBg, kThemeBiFg, kThemeGjBlue } from '../theme/variables';
 import AppCollectibleThumbDetails from './AppCollectibleThumbDetails.vue';
 import AppCollectibleUnlockedRibbon from './AppCollectibleUnlockedRibbon.vue';
-import { CollectibleModel, CollectibleType } from './collectible.model';
+import {
+	CollectibleAcquisitionMethod,
+	CollectibleModel,
+	CollectibleType,
+} from './collectible.model';
 import { showCollectibleDetailsModal } from './details-modal/modal.service';
 
 const props = defineProps({
 	collectible: {
 		type: Object as PropType<CollectibleModel>,
+		required: true,
+	},
+	feed: {
+		type: Object as PropType<JoltydexFeed>,
 		required: true,
 	},
 });
@@ -32,6 +54,26 @@ function onClick(e: MouseEvent) {
 	showCollectibleDetailsModal(collectible.value);
 	e.stopImmediatePropagation();
 }
+
+const acquisitionStates = computed(() => {
+	let hasSale = false;
+	let hasChargeReward = false;
+
+	for (const acquisition of collectible.value.acquisition) {
+		const { method, data } = acquisition;
+		if (method === CollectibleAcquisitionMethod.ShopPurchase && data.sale.id) {
+			hasSale = true;
+		}
+		if (method === CollectibleAcquisitionMethod.ChargeReward && data.user.id) {
+			hasChargeReward = true;
+		}
+		if (hasSale && hasChargeReward) {
+			break;
+		}
+	}
+
+	return { hasSale, hasChargeReward };
+});
 </script>
 
 <template>
@@ -129,9 +171,8 @@ function onClick(e: MouseEvent) {
 						</div>
 
 						<!-- Availability -->
-						<!-- TODO(collectible-sales) Revisit this -->
-						<!-- <div
-							v-if="sale"
+						<div
+							v-if="acquisitionStates.hasSale"
 							:style="[
 								styleBorderRadiusLg,
 								styleFlexCenter({
@@ -153,7 +194,33 @@ function onClick(e: MouseEvent) {
 								icon="marketplace"
 							/>
 							{{ $gettext(`Available in shop`) }}
-						</div> -->
+						</div>
+
+						<div
+							v-if="acquisitionStates.hasChargeReward"
+							:style="[
+								styleBorderRadiusLg,
+								styleFlexCenter({
+									display: `inline-flex`,
+									gap: `6px`,
+								}),
+								{
+									padding: `2px 8px`,
+									fontSize: kFontSizeTiny.px,
+									fontWeight: `bold`,
+									marginTop: `4px`,
+									backgroundColor: kThemeGjBlue,
+									color: `black`,
+								},
+							]"
+						>
+							<!-- TODO(collectible-sales) icon -->
+							<AppJolticon
+								:style="{ margin: 0, fontSize: `inherit` }"
+								icon="sticker-filled"
+							/>
+							{{ $gettext(`Charge reward`) }}
+						</div>
 					</div>
 				</div>
 
@@ -170,6 +237,7 @@ function onClick(e: MouseEvent) {
 		<template #popover>
 			<AppCollectibleThumbDetails
 				:collectible="collectible"
+				:feed="feed"
 				:style="{
 					width: `250px`,
 					padding: `16px`,
