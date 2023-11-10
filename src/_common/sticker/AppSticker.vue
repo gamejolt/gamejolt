@@ -82,11 +82,14 @@ function onClickRemove() {
 			<component :is="showCharged ? AppAnimElectricity : 'div'" v-bind="electricityProps">
 				<AppStickerImg
 					:size="size"
-					:style="
+					:style="[
+						{
+							transform: `rotate(${sticker.rotation * 90 - 45}deg)`,
+						},
 						styleWhen(isClickable, {
 							cursor: `pointer`,
-						})
-					"
+						}),
+					]"
 					:src="sticker.sticker.img_url"
 					:alt="sticker.sticker.name || ''"
 				/>
