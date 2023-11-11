@@ -4,15 +4,17 @@ import AppAlertBox from '../../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
-import { DefaultAvatarFrameScale } from '../../../../../_common/avatar/frame.model';
+import {
+	AvatarFrameModel,
+	DefaultAvatarFrameScale,
+} from '../../../../../_common/avatar/frame.model';
 import AppBackgroundFade from '../../../../../_common/background/AppBackgroundFade.vue';
 import { BackgroundModel } from '../../../../../_common/background/background.model';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import {
-	AcquisitionData,
-	CollectibleAcquisitionMethod,
-	getCollectibleAcquisition,
-} from '../../../../../_common/collectible/collectible.model';
+	AcquisitionMethod,
+	AcquisitionModel,
+} from '../../../../../_common/collectible/acquisition.model';
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import {
 	Currency,
@@ -24,18 +26,19 @@ import { formatNumber } from '../../../../../_common/filters/number';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
 import { storeModel, storeModelList } from '../../../../../_common/model/model-store.service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
+import AppStickerGrid from '../../../../../_common/sticker/pack/AppStickerGrid.vue';
 import { StickerPackRatio } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
-import AppStickerPackContents from '../../../../../_common/sticker/pack/AppStickerPackContents.vue';
 import { showStickerPackOpenModal } from '../../../../../_common/sticker/pack/open-modal/modal.service';
+import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
 import { UserStickerPackModel } from '../../../../../_common/sticker/pack/user-pack.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
+import { StickerModel } from '../../../../../_common/sticker/sticker.model';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { kThemeFgMuted } from '../../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -47,6 +50,7 @@ import {
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 } from '../../../../../_styles/mixins';
+import { kFontFamilyTiny, kFontSizeSmall, kFontSizeTiny } from '../../../../../_styles/variables';
 import { getCurrentServerTime } from '../../../../../utils/server-time';
 import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.route';
 import { showNewProductModal } from '../_product/modal/modal.service';
@@ -183,7 +187,8 @@ const { user: authUser, coinBalance, joltbuxBalance } = useCommonStore();
 
 const sale = ref<InventoryShopProductSaleModel>();
 
-const acquisitions = ref([]) as Ref<AcquisitionData[]>;
+const acquisitions = ref([]) as Ref<AcquisitionModel[]>;
+const packContents = ref([]) as Ref<StickerModel[]>;
 const isLoadingSaleData = ref(false);
 
 const currencyOptions = computed(() => {
@@ -208,50 +213,31 @@ watch(
 		isLoadingSaleData.value = true;
 
 		try {
-			// TODO(collectible-sales) change to single API call to get:
-			// - ?sale (if available)
-			// - ?product (if found)
-			// - acquisitions
-			const acquisitionResponse = await Api.sendRequest(
-				`/web/inventory/acquisition/${resource}/${resourceId}`,
-				undefined,
-				{ detach: true }
-			);
-
-			acquisitions.value = acquisitionResponse[resource][resourceId] || [];
-
-			const saleAcquisitions = getCollectibleAcquisition(
-				acquisitions.value,
-				CollectibleAcquisitionMethod.ShopPurchase
-			);
-			const primarySaleAcquisition = saleAcquisitions.length
-				? saleAcquisitions[0]
-				: undefined;
-			if (!primarySaleAcquisition) {
-				sale.value = undefined;
-				return;
-			}
-
-			const saleResponse = await Api.sendFieldsRequest(
-				`/mobile/shop-sale`,
+			const payload = await Api.sendFieldsRequest(
+				`/mobile/shop-product/${resource}/${resourceId}`,
 				{
-					sales: {
-						id: primarySaleAcquisition.data.sale.id,
+					product: true,
+					acquisitionMethods: {
+						primaryOnly: true,
 					},
+					packContents: true,
 				},
 				{ detach: true }
 			);
 
-			const newSales = storeModelList(InventoryShopProductSaleModel, saleResponse.sales);
-			const primarySale = newSales.length ? newSales[0] : undefined;
-			if (!primarySale) {
-				throw new Error('No sale returned for the requested ID');
+			acquisitions.value = storeModelList(AcquisitionModel, payload.acquisitionMethods);
+			packContents.value = storeModelList(StickerModel, payload.packContents);
+			sale.value = acquisitions.value.find(i => i.sale)?.sale;
+
+			if (resource === 'Avatar_Frame') {
+				storeModel(AvatarFrameModel, payload.product);
+			} else if (resource === 'Background') {
+				storeModel(BackgroundModel, payload.product);
+			} else if (resource === 'Sticker_Pack') {
+				storeModel(StickerPackModel, payload.product);
 			}
-			if (!primarySale.validProduct) {
-				throw new Error(`No supported product found for this sale`);
-			}
-			sale.value = primarySale;
 		} catch (e) {
+			// TODO(collectible-sales) fix
 			console.error('Failed to fetch primary sale through resource/resourceId pair.', e);
 			sale.value = undefined;
 			acquisitions.value = [];
@@ -313,14 +299,13 @@ watchEffect(() => {
 	isExpired.value = false;
 });
 
-const actionOptionsData = toRef<() => { text?: string; canPurchase?: boolean }>(() => {
+const actionOptionsData = toRef<() => { text: string; canPurchase?: boolean } | null>(() => {
 	if (!sale.value) {
 		if (isLoadingSaleData.value) {
-			return {};
+			return null;
 		}
-		// TODO(collectible-sales) Would be nice if we could link to the user
-		// here. Not really possible with only user-id though, as far as I know.
-		if (acquisitions.value.some(i => i.method === CollectibleAcquisitionMethod.ChargeReward)) {
+		// TODO(collectible-sales) Show user info here
+		if (acquisitions.value.some(i => i.method === AcquisitionMethod.ChargeReward)) {
 			return {
 				text: $gettext(
 					`You can obtain this by placing a charged sticker on the creator's content`
@@ -328,7 +313,7 @@ const actionOptionsData = toRef<() => { text?: string; canPurchase?: boolean }>(
 				canPurchase: false,
 			};
 		}
-		return {};
+		return null;
 	}
 
 	if (sale.value.is_product_owned) {
@@ -346,7 +331,8 @@ const actionOptionsData = toRef<() => { text?: string; canPurchase?: boolean }>(
 	}
 
 	return {
-		text: optionsCount !== 1 ? $gettext(`Choose a purchase option`) : undefined,
+		// TODO(collectible-sales) better single-currency purchase text
+		text: optionsCount !== 1 ? $gettext(`Choose a purchase option`) : $gettext(`Purchase?`),
 		canPurchase: true,
 	};
 });
@@ -394,42 +380,16 @@ const showPackHelpDocsLink = computed(
 	() => productData.value.type === 'Sticker_Pack' && !!joltbuxEntry.value
 );
 
-const headerData = computed<{ label: string; tooltip?: string }>(() => {
-	if (isLoadingSaleData.value) {
-		return { label: $gettext(`Loading...`) };
-	}
-
-	const hasSale = !!sale.value;
+const productType = computed(() => {
 	const { type } = productData.value;
-
-	// TODO(collectible-sales) revisit this
-	if (type === 'Sticker_Pack') {
-		return {
-			label: hasSale ? $gettext(`Purchase sticker pack`) : $gettext(`Sticker pack`),
-			tooltip: hasSale
-				? $gettext(
-						`Sticker packs contain a random set of stickers which you can collect and place on content throughout Game Jolt.`
-				  )
-				: undefined,
-		};
-	} else if (type === 'Avatar_Frame') {
-		return {
-			label: hasSale ? $gettext(`Purchase avatar frame`) : $gettext(`Avatar frame`),
-			tooltip: hasSale
-				? $gettext(`Equip an avatar frame to make yourself stand out in the community.`)
-				: undefined,
-		};
+	if (type === 'Avatar_Frame') {
+		return $gettext(`Avatar frame`);
 	} else if (type === 'Background') {
-		return {
-			label: hasSale ? $gettext(`Purchase background`) : $gettext(`Background`),
-			tooltip: hasSale
-				? $gettext(
-						`Backgrounds can be added to your posts to make your content stand out in the feeds.`
-				  )
-				: undefined,
-		};
+		return $gettext(`Background`);
+	} else if (type === 'Sticker_Pack') {
+		return $gettext(`Sticker pack`);
 	}
-	return { label: $gettext(`Uh oh...`) };
+	return null;
 });
 
 const frameOverride = toRef(() => {
@@ -530,49 +490,7 @@ function getItemWidthStyles(ratio: number) {
 			</AppButton>
 		</div>
 
-		<div class="modal-header">
-			<h2
-				class="modal-title"
-				:style="{
-					display: `flex`,
-					alignItems: `center`,
-					gap: `12px`,
-				}"
-			>
-				{{ headerData.label }}
-
-				<AppJolticon
-					v-if="headerData.tooltip"
-					v-app-tooltip.touchable="headerData.tooltip"
-					icon="help-circle"
-					:style="{
-						margin: 0,
-						color: kThemeFgMuted,
-						fontSize: `inherit`,
-					}"
-				/>
-			</h2>
-		</div>
-
 		<div class="modal-body">
-			<!-- <div v-if="!sale" :style="styleFlexCenter({ direction: 'column' })">
-				<template v-if="isLoadingShopProduct">
-					<div :style="getItemWidthStyles(1)">
-						<AppAspectRatio :ratio="1" :inner-styles="styleFlexCenter()">
-							<AppLoading centered big />
-						</AppAspectRatio>
-					</div>
-				</template>
-				<template v-else>
-					<AppIllustration :asset="illExtremeSadness">
-						{{
-							$gettext(
-								`It doesn't look like that's for sale. Please try again later.`
-							)
-						}}
-					</AppIllustration>
-				</template>
-			</div> -->
 			<div :style="styleFlexCenter({ direction: 'column' })">
 				<div
 					:style="
@@ -623,9 +541,19 @@ function getItemWidthStyles(ratio: number) {
 				</div>
 
 				<div
-					v-if="productData.name"
 					:style="{
 						marginTop: `8px`,
+						alignSelf: `center`,
+						color: kThemeFgMuted,
+						fontSize: kFontSizeSmall.px,
+					}"
+				>
+					{{ productType }}
+				</div>
+
+				<div
+					v-if="productData.name"
+					:style="{
 						fontWeight: 700,
 					}"
 				>
@@ -642,7 +570,7 @@ function getItemWidthStyles(ratio: number) {
 					<AppSpacer vertical :scale="4" />
 				</template>
 
-				<div v-if="actionOptionsData.text" :style="{ width: `100%` }">
+				<div v-if="actionOptionsData && actionOptionsData.text" :style="{ width: `100%` }">
 					<AppAlertBox v-if="!actionOptionsData.canPurchase" icon="info-circle">
 						{{ actionOptionsData.text }}
 					</AppAlertBox>
@@ -654,7 +582,7 @@ function getItemWidthStyles(ratio: number) {
 				</div>
 
 				<div
-					v-if="actionOptionsData.canPurchase"
+					v-if="actionOptionsData && actionOptionsData.canPurchase"
 					:style="{
 						...styleFlexCenter(),
 						width: `100%`,
@@ -725,9 +653,46 @@ function getItemWidthStyles(ratio: number) {
 					</div>
 				</template>
 
-				<div v-if="productData.type === 'Sticker_Pack'" :style="{ width: `100%` }">
-					<AppSpacer vertical :scale="8" />
-					<AppStickerPackContents :pack="productData" />
+				<AppSpacer vertical :scale="8" />
+
+				<div :style="{ width: `100%` }">
+					<template v-if="productData.type === 'Sticker_Pack'">
+						{{
+							$gettext(
+								`You'll get a random selection of these stickers when you open this pack. Collect them all! Place them on top of posts!`
+							)
+						}}
+
+						{{ ' ' }}
+
+						<span
+							v-app-tooltip.touchable="$gettext(`yum`)"
+							:style="{
+								textDecoration: 'line-through',
+								fontSize: kFontSizeTiny.px,
+								fontFamily: kFontFamilyTiny,
+							}"
+						>
+							{{ $gettext(`Eat them!`) }}
+						</span>
+
+						<AppSpacer vertical :scale="4" />
+						<AppStickerGrid :stickers="packContents" />
+					</template>
+					<template v-else-if="productData.type === 'Avatar_Frame'">
+						{{
+							$gettext(
+								`Equip an avatar frame to make yourself stand out in the community.`
+							)
+						}}
+					</template>
+					<template v-else-if="productData.type === 'Background'">
+						{{
+							$gettext(
+								`Backgrounds can be added to your posts to make your content stand out in the feeds.`
+							)
+						}}
+					</template>
 				</div>
 			</div>
 		</div>

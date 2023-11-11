@@ -48,8 +48,7 @@ export type ProductPurchaseData =
 	| BackgroundPurchaseData
 	| StickerPackPurchaseData;
 
-// TODO(collectible-sales) Might want to take just resource/resourceID as an
-// option. Depends on if backend returns the product or not.
+// TODO(collectible-sales) add resource/resourceId fetching instead of requiring full product data.
 export function getShopProductDisplayData(data: ShopProductDisplay): ProductPurchaseData {
 	if (isInstance(data, CollectibleModel)) {
 		const id = parseInt(data.id.split(':').reverse()[0], 10);

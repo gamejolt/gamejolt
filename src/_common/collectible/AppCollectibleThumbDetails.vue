@@ -13,12 +13,8 @@ import AppStickerPack, { StickerPackRatio } from '../sticker/pack/AppStickerPack
 import { StickerPackModel } from '../sticker/pack/pack.model';
 import { kThemeFg10, kThemeFgMuted } from '../theme/variables';
 import { $gettext } from '../translate/translate.service';
-import {
-	CollectibleAcquisitionMethod,
-	CollectibleModel,
-	CollectibleType,
-	getCollectibleAcquisition,
-} from './collectible.model';
+import { AcquisitionMethod, filterAcquisitionMethods } from './acquisition.model';
+import { CollectibleModel, CollectibleType } from './collectible.model';
 
 const props = defineProps({
 	collectible: {
@@ -34,10 +30,10 @@ const props = defineProps({
 const { collectible, feed } = toRefs(props);
 
 onMounted(async () => {
-	const packIds = getCollectibleAcquisition(
+	const packIds = filterAcquisitionMethods(
 		collectible.value.acquisition,
-		CollectibleAcquisitionMethod.PackOpen
-	).map(i => i.data.pack.id);
+		AcquisitionMethod.PackOpen
+	).map(i => i.sticker_pack_id);
 
 	await feed.value.loadPacks(packIds);
 });
@@ -205,11 +201,7 @@ const mutedStyles: CSSProperties = {
 		</template>
 
 		<AppButton
-			v-if="
-				collectible.acquisition.some(
-					i => i.method === CollectibleAcquisitionMethod.ShopPurchase
-				)
-			"
+			v-if="collectible.acquisition.some(i => i.method === AcquisitionMethod.ShopPurchase)"
 			block
 			solid
 			primary

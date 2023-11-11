@@ -24,11 +24,7 @@ import AppStickerMastery from '../sticker/AppStickerMastery.vue';
 import { kThemeBgOffset, kThemeBiBg, kThemeBiFg, kThemeGjBlue } from '../theme/variables';
 import AppCollectibleThumbDetails from './AppCollectibleThumbDetails.vue';
 import AppCollectibleUnlockedRibbon from './AppCollectibleUnlockedRibbon.vue';
-import {
-	CollectibleAcquisitionMethod,
-	CollectibleModel,
-	CollectibleType,
-} from './collectible.model';
+import { CollectibleModel, CollectibleType } from './collectible.model';
 import { showCollectibleDetailsModal } from './details-modal/modal.service';
 
 const props = defineProps({
@@ -59,12 +55,11 @@ const acquisitionStates = computed(() => {
 	let hasSale = false;
 	let hasChargeReward = false;
 
-	for (const acquisition of collectible.value.acquisition) {
-		const { method, data } = acquisition;
-		if (method === CollectibleAcquisitionMethod.ShopPurchase && data.sale.id) {
+	for (const i of collectible.value.acquisition) {
+		if (i.sale_id || i.sticker_pack_is_premium) {
 			hasSale = true;
 		}
-		if (method === CollectibleAcquisitionMethod.ChargeReward && data.user.id) {
+		if (i.sticker_pack_is_charge_reward) {
 			hasChargeReward = true;
 		}
 		if (hasSale && hasChargeReward) {

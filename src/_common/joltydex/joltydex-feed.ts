@@ -3,12 +3,11 @@ import { arrayUnique } from '../../utils/array';
 import { isInstance } from '../../utils/utils';
 import { Api } from '../api/api.service';
 import {
-	AcquisitionData,
-	CollectibleAcquisitionMethod,
-	CollectibleModel,
-	CollectibleType,
-	getCollectibleAcquisition,
-} from '../collectible/collectible.model';
+	AcquisitionMethod,
+	AcquisitionModel,
+	filterAcquisitionMethods,
+} from '../collectible/acquisition.model';
+import { CollectibleModel, CollectibleType } from '../collectible/collectible.model';
 import { storeModelList } from '../model/model-store.service';
 import { StickerPackModel } from '../sticker/pack/pack.model';
 import { UserModel } from '../user/user.model';
@@ -39,14 +38,13 @@ export function makeJoltydexFeed(type: CollectibleType) {
 	/**
 	 * Gets sticker packs that are loaded in or currently loading.
 	 */
-	function getAcquisitionPacks(acquisitions: AcquisitionData[]) {
-		const packOpenAcquisitions = getCollectibleAcquisition(
+	function getAcquisitionPacks(acquisitions: AcquisitionModel[]) {
+		const packOpenAcquisitions = filterAcquisitionMethods(
 			acquisitions,
-			CollectibleAcquisitionMethod.PackOpen
+			AcquisitionMethod.PackOpen
 		);
 		return packOpenAcquisitions.reduce((packs, i) => {
-			const { pack } = i.data;
-			const packData = _packLoadingData.value.get(pack.id);
+			const packData = _packLoadingData.value.get(i.sticker_pack_id);
 			if (packData && (isInstance(packData, StickerPackModel) || packData.loading)) {
 				packs.push(packData);
 			}
