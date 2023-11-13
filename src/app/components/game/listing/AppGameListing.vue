@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
+import { isAdEnthused } from '../../../../_common/ad/ad-store';
+import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
@@ -51,6 +53,8 @@ const InviewConfig = new ScrollInviewConfig();
 	<div id="games" class="game-listing">
 		<section class="section">
 			<div class="container-xl">
+				<AppAdWidget v-if="isAdEnthused" size="leaderboard" placement="content" />
+
 				<AppNavTabList v-if="!hideSectionNav">
 					<ul>
 						<li v-if="includeFeaturedSection">

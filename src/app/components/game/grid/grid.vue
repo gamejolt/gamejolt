@@ -147,9 +147,9 @@ export default class AppGameGrid extends Vue {
 		</p>
 
 		<div :class="{ 'scrollable-grid': isScrollable }">
-			<div class="game-grid-items">
-				<div v-if="Screen.isDesktop && shouldShowAds" class="game-grid-ad">
-					<div class="game-grid-ad-inner">
+			<div class="_game-grid-items">
+				<div v-if="Screen.isDesktop && shouldShowAds" class="_game-grid-ad">
+					<div class="_game-grid-ad-inner">
 						<AppAdWidget
 							size="rectangle"
 							placement="content"
@@ -165,7 +165,7 @@ export default class AppGameGrid extends Vue {
 						item-key="id"
 					>
 						<template #item="{ element }">
-							<div class="game-grid-item">
+							<div class="_game-grid-item">
 								<AppGameThumbnail
 									v-app-track-event="
 										eventLabel ? 'game-grid:click:' + eventLabel : undefined
@@ -188,8 +188,8 @@ export default class AppGameGrid extends Vue {
 						space.
 					-->
 					<template v-for="(game, i) of processedGames" :key="game.id">
-						<div v-if="shouldShowAd(i)" class="game-grid-ad">
-							<div class="game-grid-ad-inner">
+						<div v-if="shouldShowAd(i)" class="_game-grid-ad">
+							<div class="_game-grid-ad-inner">
 								<AppAdWidget
 									size="rectangle"
 									placement="content"
@@ -197,7 +197,7 @@ export default class AppGameGrid extends Vue {
 								/>
 							</div>
 						</div>
-						<div class="game-grid-item">
+						<div class="_game-grid-item">
 							<AppGameThumbnail
 								v-app-track-event="
 									eventLabel ? 'game-grid:click:' + eventLabel : undefined

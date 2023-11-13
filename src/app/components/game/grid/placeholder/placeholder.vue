@@ -44,8 +44,8 @@ export default class AppGameGridPlaceholder extends Vue {
 
 <template>
 	<div :class="{ 'scrollable-grid-xs': scrollable }">
-		<div class="game-grid-items">
-			<div v-for="i of count" :key="i" class="game-grid-item">
+		<div class="_game-grid-items">
+			<div v-for="i of count" :key="i" class="_game-grid-item">
 				<AppGameThumbnailPlaceholder />
 			</div>
 		</div>
