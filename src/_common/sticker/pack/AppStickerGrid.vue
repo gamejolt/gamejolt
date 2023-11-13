@@ -12,6 +12,11 @@ defineProps({
 		type: Array as PropType<StickerModel[]>,
 		required: true,
 	},
+	minWidth: {
+		type: Number,
+		default: 56,
+		validator: (val: number) => val > 0,
+	},
 });
 </script>
 
@@ -20,7 +25,7 @@ defineProps({
 		:style="{
 			display: `grid`,
 			gap: `8px`,
-			gridTemplateColumns: `repeat(auto-fill, minmax(56px, 1fr))`,
+			gridTemplateColumns: `repeat(auto-fill, minmax(${minWidth}px, 1fr))`,
 		}"
 	>
 		<div v-for="sticker of stickers" :key="sticker.id">

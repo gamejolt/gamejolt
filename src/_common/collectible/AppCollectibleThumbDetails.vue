@@ -61,17 +61,26 @@ const stickerMasteryInfo = computed(() => {
 	return $gettext(`You've mastered this sticker and can now use it for emojis and reactions!`);
 });
 
-const headingStyles: CSSProperties = {
+function showPurchaseModal(product: CollectibleModel | StickerPackModel) {
+	showPurchaseShopProductModal({
+		product,
+		onItemPurchased: () => {
+			collectible.value.is_unlocked = true;
+		},
+	});
+}
+
+const headingStyles = {
 	textTransform: `uppercase`,
 	fontSize: kFontSizeSmall.px,
 	fontWeight: `bold`,
 	margin: `0 0 8px 0`,
-};
+} satisfies CSSProperties;
 
-const mutedStyles: CSSProperties = {
+const mutedStyles = {
 	fontStyle: `italic`,
 	color: kThemeFgMuted,
-};
+} satisfies CSSProperties;
 </script>
 
 <template>
@@ -174,15 +183,7 @@ const mutedStyles: CSSProperties = {
 						:pack="pack"
 						show-name
 						can-click-pack
-						@click-pack="
-							() =>
-								showPurchaseShopProductModal({
-									product: pack,
-									onItemPurchased() {
-										collectible.value.is_unlocked = true;
-									},
-								})
-						"
+						@click-pack="showPurchaseModal(pack)"
 					/>
 					<AppAspectRatio
 						v-else
@@ -204,14 +205,7 @@ const mutedStyles: CSSProperties = {
 			block
 			solid
 			primary
-			@click="
-				showPurchaseShopProductModal({
-					product: collectible,
-					onItemPurchased() {
-						collectible.value.is_unlocked = true;
-					},
-				})
-			"
+			@click="showPurchaseModal(collectible)"
 		>
 			{{ $gettext(`View in shop`) }}
 		</AppButton>

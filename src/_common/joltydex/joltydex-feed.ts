@@ -148,7 +148,6 @@ export async function loadJoltydexFeed({
 	);
 
 	const collectibles = new Map<CollectibleType, CollectibleModel[]>();
-
 	for (const type of types) {
 		if (payload.collectibles[type]) {
 			collectibles.set(type, storeModelList(CollectibleModel, payload.collectibles[type]));

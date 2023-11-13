@@ -83,22 +83,25 @@ import { getCurrentServerTime } from '../../../../../utils/server-time';
 import { isInstance } from '../../../../../utils/utils';
 import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.route';
 import { showNewProductModal } from '../_product/modal/modal.service';
-import { PurchasableProduct } from './modal.service';
+import { PurchasableProduct, PurchasableProductType } from './modal.service';
 
 interface BasePurchaseData {
-	resource: 'Avatar_Frame' | 'Background' | 'Sticker_Pack';
+	resource: (typeof PurchasableProductType)[number];
 	resourceId: number;
 	name: string | undefined;
 	imgUrl: string | undefined;
 	processMediaserverUrl?: boolean;
 }
+
 interface AvatarFramePurchaseData extends BasePurchaseData {
 	resource: 'Avatar_Frame';
 	scale?: number;
 }
+
 interface BackgroundPurchaseData extends BasePurchaseData {
 	resource: 'Background';
 }
+
 interface StickerPackPurchaseData extends BasePurchaseData {
 	resource: 'Sticker_Pack';
 }
@@ -295,7 +298,7 @@ export async function purchaseShopProduct({
 			console.error('No product model found after purchasing product', {
 				currency_type: pricing.knownCurrencyType,
 				pricing_id: pricing.id,
-				product_id: sale.id,
+				sale_id: sale.id,
 			});
 		}
 
@@ -304,7 +307,7 @@ export async function purchaseShopProduct({
 		console.error('Error purchasing product', {
 			currency_type: pricing.knownCurrencyType,
 			pricing_id: pricing.id,
-			product_id: sale.id,
+			sale_id: sale.id,
 		});
 	}
 }
@@ -763,7 +766,6 @@ function getItemWidthStyles(ratio: number) {
 											...styleBorderRadiusLg,
 											borderColor: `transparent`,
 											display: `block`,
-											// borderColor: kThemePrimary,
 											borderStyle: `solid`,
 											borderWidth: kBorderWidthBase.px,
 											padding: `${12 - kBorderWidthBase.value}px`,

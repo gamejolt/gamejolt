@@ -6,7 +6,7 @@ import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/
 import { showModal } from '../../../../../_common/modal/modal.service';
 import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
 
-const PurchasableProductType = ['Avatar_Frame', 'Background', 'Sticker_Pack'] as const;
+export const PurchasableProductType = ['Avatar_Frame', 'Background', 'Sticker_Pack'] as const;
 
 export type PurchasableProduct =
 	| { resource: (typeof PurchasableProductType)[number]; resourceId: number }
