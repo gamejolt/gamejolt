@@ -109,21 +109,17 @@ const verticalPadding = computed(() => _scalePadding(paddingV?.value));
 					cursor: `not-allowed`,
 					color: kThemeFgMuted,
 				}),
-				styleWhen(isClickable, [
-					styleWhen(hovered, [
-						styleElevate(2),
-						styleWhen(!noScale && hoverScale !== 1, {
+				styleWhen(isClickable, {
+					...styleWhen(hovered, {
+						...styleElevate(2),
+						...styleWhen(!noScale && hoverScale !== 1, {
 							transform: `scale(${hoverScale})`,
 						}),
-						{
-							borderColor: kThemePrimary,
-						},
-					]),
-					{
-						// Transition needs to come after the styleEvelate calls so it isn't overwritten.
-						transition: `${kElevateTransition}, border-color 300ms ${kStrongEaseOut}, transform 300ms ${kStrongEaseOut}`,
-					},
-				]),
+						borderColor: kThemePrimary,
+					}),
+					// Transition needs to come after the styleEvelate calls so it isn't overwritten.
+					transition: `${kElevateTransition}, border-color 300ms ${kStrongEaseOut}, transform 300ms ${kStrongEaseOut}`,
+				}),
 			])
 		"
 	>

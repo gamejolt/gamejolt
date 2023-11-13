@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import {
 	styleBorderRadiusLg,
 	styleElevate,
@@ -37,8 +37,7 @@ const props = defineProps({
 	},
 });
 
-const { collectible } = toRefs(props);
-
+const { collectible, feed } = toRefs(props);
 const { hoverBinding, hovered } = useOnHover();
 
 function onClick(e: MouseEvent) {
@@ -46,7 +45,7 @@ function onClick(e: MouseEvent) {
 		return;
 	}
 
-	showCollectibleDetailsModal(collectible.value);
+	showCollectibleDetailsModal({ collectible: collectible.value, feed: feed.value });
 	e.stopImmediatePropagation();
 }
 
@@ -68,6 +67,18 @@ const acquisitionStates = computed(() => {
 
 	return { hasSale, hasChargeReward };
 });
+
+const availabilityTagStyles = {
+	...styleBorderRadiusLg,
+	...styleFlexCenter({
+		display: `inline-flex`,
+		gap: `6px`,
+	}),
+	padding: `2px 8px`,
+	fontSize: kFontSizeTiny.px,
+	fontWeight: `bold`,
+	marginTop: `4px`,
+} satisfies CSSProperties;
 </script>
 
 <template>
@@ -168,19 +179,8 @@ const acquisitionStates = computed(() => {
 						<div
 							v-if="acquisitionStates.hasSale"
 							:style="[
-								styleBorderRadiusLg,
-								styleFlexCenter({
-									display: `inline-flex`,
-									gap: `6px`,
-								}),
-								{
-									padding: `2px 8px`,
-									fontSize: kFontSizeTiny.px,
-									fontWeight: `bold`,
-									marginTop: `4px`,
-									backgroundColor: kThemeBiBg,
-									color: kThemeBiFg,
-								},
+								availabilityTagStyles,
+								{ backgroundColor: kThemeBiBg, color: kThemeBiFg },
 							]"
 						>
 							{{ $gettext(`Available in shop`) }}
@@ -189,16 +189,8 @@ const acquisitionStates = computed(() => {
 						<div
 							v-if="acquisitionStates.hasChargeReward"
 							:style="[
-								styleBorderRadiusLg,
-								styleFlexCenter({
-									display: `inline-flex`,
-									gap: `6px`,
-								}),
+								availabilityTagStyles,
 								{
-									padding: `2px 8px`,
-									fontSize: kFontSizeTiny.px,
-									fontWeight: `bold`,
-									marginTop: `4px`,
 									backgroundColor: kThemeGjBlue,
 									color: `black`,
 								},

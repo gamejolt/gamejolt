@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, StyleValue, toRefs, watch } from 'vue';
+import { CSSProperties, PropType, computed, ref, toRefs, watch } from 'vue';
 import { styleWhen } from '../../_styles/mixins';
 import { ImgHelper } from '../img/helper/helper-service';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
@@ -18,11 +18,11 @@ const props = defineProps({
 		type: Boolean,
 	},
 	backdropStyle: {
-		type: Object as PropType<StyleValue>,
+		type: Object as PropType<CSSProperties>,
 		default: undefined,
 	},
 	backgroundStyle: {
-		type: Object as PropType<StyleValue>,
+		type: Object as PropType<CSSProperties>,
 		default: undefined,
 	},
 	fadeOpacity: {

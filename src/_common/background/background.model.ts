@@ -62,6 +62,7 @@ export function getBackgroundImgUrl(background: BackgroundModel) {
 	}
 	return src;
 }
+
 /**
  * Helper function to assign CSSProperties based on the {@link background} data.
  */
