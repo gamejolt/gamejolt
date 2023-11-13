@@ -19,7 +19,10 @@ import {
 	AcquisitionMethod,
 	AcquisitionModel,
 } from '../../../../../_common/collectible/acquisition.model';
-import { CollectibleModel } from '../../../../../_common/collectible/collectible.model';
+import {
+	CollectibleModel,
+	markProductAsPurchased,
+} from '../../../../../_common/collectible/collectible.model';
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import {
 	Currency,
@@ -300,6 +303,10 @@ export async function purchaseShopProduct({
 				pricing_id: pricing.id,
 				sale_id: sale.id,
 			});
+		}
+
+		if (item) {
+			markProductAsPurchased(item);
 		}
 
 		onItemPurchased?.all?.(item);

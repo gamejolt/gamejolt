@@ -64,9 +64,6 @@ const stickerMasteryInfo = computed(() => {
 function showPurchaseModal(product: CollectibleModel | StickerPackModel) {
 	showPurchaseShopProductModal({
 		product,
-		onItemPurchased: () => {
-			collectible.value.is_unlocked = true;
-		},
 	});
 }
 
