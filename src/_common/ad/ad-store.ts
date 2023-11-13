@@ -1,4 +1,4 @@
-import { inject, InjectionKey, onUnmounted, provide, reactive } from 'vue';
+import { inject, InjectionKey, onUnmounted, provide, reactive, toRef } from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
 import { objectEquals } from '../../utils/object';
 import { isDynamicGoogleBot } from '../device/device.service';
@@ -7,14 +7,24 @@ import { Model } from '../model/model.service';
 import { onRouteChangeAfter } from '../route/route-component';
 import { AdSlot } from './ad-slot-info';
 import { AdAdapter } from './adapter-base';
+import { AdEnthusiastAdapter } from './enthusiast/enthusiast-adapter';
 import { AdPlaywireAdapter } from './playwire/playwire-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';
 
 export const AdsControllerKey: InjectionKey<AdsController> = Symbol('ads');
 
 // To show ads on the page for dev, just change this to false.
-export const AdsDisabledDev = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build';
-// export const AdsDisabledDev = false;
+// export const AdsDisabledDev = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build';
+export const AdsDisabledDev = false;
+
+export function areAdsDisabledDevice() {
+	return GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev;
+}
+
+// TODO(enthusiast-ads): Temporary until we roll out.
+export const isAdEnthused = toRef(
+	() => !areAdsDisabledDevice() && window.location.search.includes('be_enthused')
+);
 
 /**
  * This is the interface that our ad components must register with us.
@@ -39,20 +49,6 @@ export const AdResourceTypeFiresidePost = 4;
 
 const defaultSettings = new AdSettingsContainer();
 
-/**
- * Inclusive of min and exclusive of max.
- */
-function _getRandom(min: number, max: number) {
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min)) + min;
-}
-
-function _chooseAdapter(): new () => AdAdapter {
-	const adapters = [AdProperAdapter];
-	return adapters[_getRandom(0, adapters.length)];
-}
-
 function _didRouteChange(from: RouteLocationNormalized, to: RouteLocationNormalized) {
 	// We don't want to consider a route changing if just the hash changed. This
 	// helps with stuff like media bar.
@@ -64,19 +60,33 @@ function _didRouteChange(from: RouteLocationNormalized, to: RouteLocationNormali
 }
 
 class AdsController {
-	videoAdapter = new AdPlaywireAdapter();
-	adapter = new (_chooseAdapter())();
+	// videoAdapter: AdAdapter = new AdEnthusiastAdapter();
+	// adapter: AdAdapter = new AdEnthusiastAdapter();
+	readonly videoAdapter: AdAdapter;
+	readonly adapter: AdAdapter;
 
 	routeResolved = false;
 	ads = new Set<AdInterface>();
 	pageSettings: AdSettingsContainer | null = null;
+
+	constructor() {
+		if (!import.meta.env.SSR) {
+			if (isAdEnthused.value) {
+				this.videoAdapter = new AdEnthusiastAdapter();
+				this.adapter = new AdEnthusiastAdapter();
+			}
+		}
+
+		this.videoAdapter ??= new AdPlaywireAdapter();
+		this.adapter ??= new AdProperAdapter();
+	}
 
 	get settings() {
 		return this.pageSettings || defaultSettings;
 	}
 
 	get shouldShow() {
-		if (GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot()) {
+		if (areAdsDisabledDevice()) {
 			return false;
 		}
 
@@ -92,7 +102,7 @@ export function createAdsController() {
 	const c = reactive(new AdsController()) as AdsController;
 	provide(AdsControllerKey, c);
 
-	if (GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev) {
+	if (areAdsDisabledDevice()) {
 		return c;
 	}
 
@@ -146,13 +156,6 @@ export function chooseAdAdapterForSlot(c: AdsController, slot: AdSlot) {
 		return c.videoAdapter;
 	}
 	return c.adapter;
-}
-
-/**
- * Should only be used for testing!
- */
-export function overrideAdsAdapter(c: AdsController, adapter: AdAdapter) {
-	c.adapter = adapter;
 }
 
 export function addAd(c: AdsController, ad: AdInterface) {
