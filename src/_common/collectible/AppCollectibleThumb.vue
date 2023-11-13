@@ -15,7 +15,6 @@ import {
 	kStrongEaseOut,
 } from '../../_styles/variables';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import AppJolticon from '../jolticon/AppJolticon.vue';
 import { JoltydexFeed } from '../joltydex/joltydex-feed';
 import { useOnHover } from '../on/useOnHover';
 import AppPopper from '../popper/AppPopper.vue';
@@ -184,10 +183,6 @@ const acquisitionStates = computed(() => {
 								},
 							]"
 						>
-							<AppJolticon
-								:style="{ margin: 0, fontSize: `inherit` }"
-								icon="marketplace"
-							/>
 							{{ $gettext(`Available in shop`) }}
 						</div>
 
@@ -209,11 +204,6 @@ const acquisitionStates = computed(() => {
 								},
 							]"
 						>
-							<!-- TODO(collectible-sales) icon -->
-							<AppJolticon
-								:style="{ margin: 0, fontSize: `inherit` }"
-								icon="sticker-filled"
-							/>
 							{{ $gettext(`Charge reward`) }}
 						</div>
 					</div>

@@ -121,7 +121,6 @@ async function init() {
 	isLoading.value = true;
 
 	let productUrl = `/web/inventory/shop/sales`;
-	// TODO(collectible-sales) double-check this
 	const productUrlParams: string[] = [`include_unpurchasable=true`];
 	if (userId?.value) {
 		productUrlParams.push(`userId=${userId.value}`);

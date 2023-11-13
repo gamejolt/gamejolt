@@ -179,7 +179,6 @@ const mutedStyles: CSSProperties = {
 								showPurchaseShopProductModal({
 									product: pack,
 									onItemPurchased() {
-										// TODO(collectible-sales) better
 										collectible.value.is_unlocked = true;
 									},
 								})
@@ -209,7 +208,6 @@ const mutedStyles: CSSProperties = {
 				showPurchaseShopProductModal({
 					product: collectible,
 					onItemPurchased() {
-						// TODO(collectible-sales): Should have a better way to mark this as purchased.
 						collectible.value.is_unlocked = true;
 					},
 				})
