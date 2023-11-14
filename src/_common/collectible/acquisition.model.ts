@@ -51,7 +51,7 @@ export function filterAcquisitionMethods<T extends AcquisitionMethod>(
 }
 
 export class AcquisitionModel implements ModelStoreModel {
-	declare id: number;
+	declare id: string;
 	declare method: AcquisitionMethod;
 
 	declare sticker_pack_id?: number;
