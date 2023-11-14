@@ -23,7 +23,6 @@ import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '../../../../_common/sticker/pack/AppStickerPack.vue';
-import { showStickerPackContentsModal } from '../../../../_common/sticker/pack/contents-modal/modal.service';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
@@ -424,7 +423,11 @@ const rewardPackImageSize = run(() => {
 												transition: `background-color 200ms ${kStrongEaseOut}, border-color 250ms ${kStrongEaseOut}, ${kElevateTransition}`,
 											}),
 										}"
-										@click="showStickerPackContentsModal(chargeRewardPack)"
+										@click="
+											showPurchaseShopProductModal({
+												product: chargeRewardPack,
+											})
+										"
 									>
 										<!-- Label and description -->
 										<div>
