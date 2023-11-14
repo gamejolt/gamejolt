@@ -3,7 +3,6 @@ import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import {
 	styleBorderRadiusLg,
 	styleElevate,
-	styleFlexCenter,
 	styleLineClamp,
 	styleTyped,
 	styleWhen,
@@ -70,14 +69,10 @@ const acquisitionStates = computed(() => {
 
 const availabilityTagStyles = {
 	...styleBorderRadiusLg,
-	...styleFlexCenter({
-		display: `inline-flex`,
-		gap: `6px`,
-	}),
+	marginTop: `4px`,
 	padding: `2px 8px`,
 	fontSize: kFontSizeTiny.px,
 	fontWeight: `bold`,
-	marginTop: `4px`,
 } satisfies CSSProperties;
 </script>
 
