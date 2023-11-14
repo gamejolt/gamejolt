@@ -24,6 +24,7 @@ import {
 	markProductAsPurchased,
 } from '../../../../../_common/collectible/collectible.model';
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
+import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
 import {
 	Currency,
 	CurrencyType,
@@ -39,6 +40,7 @@ import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
+import AppModalFloatingHeader from '../../../../../_common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
 import {
 	getModel,
@@ -669,11 +671,38 @@ function getItemWidthStyles(ratio: number) {
 
 <template>
 	<AppModal>
-		<div class="modal-controls">
-			<AppButton @click="modal.dismiss()">
-				{{ $gettext(`Close`) }}
-			</AppButton>
-		</div>
+		<AppModalFloatingHeader>
+			<template #modal-controls>
+				<div
+					:style="{
+						display: `flex`,
+						width: `100%`,
+					}"
+				>
+					<AppCurrencyPillList
+						:style="{
+							marginTop: `8px`,
+						}"
+						:currencies="{
+							[CurrencyType.joltbux.id]: [CurrencyType.joltbux, joltbuxBalance],
+							[CurrencyType.coins.id]: [CurrencyType.coins, coinBalance],
+						}"
+						direction="row"
+						:gap="8"
+					/>
+
+					<AppButton
+						:style="{
+							marginLeft: `auto`,
+							alignSelf: `flex-start`,
+						}"
+						@click="modal.dismiss()"
+					>
+						{{ $gettext(`Close`) }}
+					</AppButton>
+				</div>
+			</template>
+		</AppModalFloatingHeader>
 
 		<div class="modal-body">
 			<div v-if="!productData" :style="styleFlexCenter({ direction: 'column' })">
