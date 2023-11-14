@@ -51,10 +51,7 @@ const stickerMasteryInfo = computed(() => {
 
 	if (collectible.value.sticker_mastery !== 100) {
 		return $gettext(
-			`Use this sticker to gain mastery. Once you master it, you'll be able to use it for emojis and reactions!`,
-			{
-				progress: collectible.value.sticker_mastery,
-			}
+			`Use this sticker to gain mastery. Once you master it, you'll be able to use it for emojis and reactions!`
 		);
 	}
 

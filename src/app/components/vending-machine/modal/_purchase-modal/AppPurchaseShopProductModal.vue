@@ -566,7 +566,7 @@ const actionOptionsData = computed<{
 				canPurchase: false,
 			};
 		}
-		return null;
+		return { text: $gettext(`This is currently unobtainable`) };
 	}
 
 	if (sale.value.is_product_owned) {
