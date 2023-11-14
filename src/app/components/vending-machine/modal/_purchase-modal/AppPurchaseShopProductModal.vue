@@ -429,7 +429,7 @@ onMounted(async () => {
 		const payload = await Api.sendFieldsRequest(
 			`/mobile/shop-product/${resource}/${resourceId}`,
 			{
-				product: true,
+				resource: true,
 				acquisitionMethods: {
 					primaryOnly: true,
 				},
@@ -444,15 +444,15 @@ onMounted(async () => {
 
 		if (resource === 'Avatar_Frame') {
 			newProductData = getShopProductDisplayData(
-				storeModel(AvatarFrameModel, payload.product)
+				storeModel(AvatarFrameModel, payload.resource)
 			);
 		} else if (resource === 'Background') {
 			newProductData = getShopProductDisplayData(
-				storeModel(BackgroundModel, payload.product)
+				storeModel(BackgroundModel, payload.resource)
 			);
 		} else if (resource === 'Sticker_Pack') {
 			newProductData = getShopProductDisplayData(
-				storeModel(StickerPackModel, payload.product)
+				storeModel(StickerPackModel, payload.resource)
 			);
 		}
 	} catch (e) {
