@@ -66,6 +66,7 @@ import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useAppStore } from '../../../store/index';
 import { useProfileRouteStore } from '../RouteProfile.vue';
+import AppProfileShopButton from './shop/AppProfileShopButton.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -565,13 +566,6 @@ async function onFriendRequestReject() {
 							/>
 							<br />
 						</template>
-
-						<template v-if="hasSales">
-							<AppButton solid primary block :to="{ name: 'profile.shop' }">
-								{{ $gettext(`Open creator shop`) }}
-							</AppButton>
-							<br />
-						</template>
 					</template>
 
 					<template #left-bottom>
@@ -866,6 +860,8 @@ async function onFriendRequestReject() {
 								</div>
 							</AppExpand>
 						</template>
+
+						<AppProfileShopButton v-if="hasSales" :user="routeUser" />
 
 						<RouterView />
 					</template>
