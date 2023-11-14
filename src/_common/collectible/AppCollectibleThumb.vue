@@ -71,6 +71,7 @@ const availabilityTagStyles = {
 	...styleBorderRadiusLg,
 	marginTop: `4px`,
 	padding: `2px 8px`,
+	display: `inline-block`,
 	fontSize: kFontSizeTiny.px,
 	fontWeight: `bold`,
 } satisfies CSSProperties;
