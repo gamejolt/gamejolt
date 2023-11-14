@@ -52,9 +52,10 @@ const { hoverBinding, hovered } = useOnHover();
 						width: `100%`,
 						height: `100%`,
 						objectFit: `cover`,
+						filter: `blur(1.5px)`,
 					}"
 				/>
-				<AppBackgroundFade />
+				<AppBackgroundFade :fade-opacity="0.3" />
 			</div>
 
 			<!-- Content -->
