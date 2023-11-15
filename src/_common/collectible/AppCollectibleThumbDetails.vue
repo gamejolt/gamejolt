@@ -59,20 +59,18 @@ const stickerMasteryInfo = computed(() => {
 });
 
 const collectibleResourceAcquisition = computed(() => {
-	const resourceId = getCollectibleResourceId(collectible.value);
-	for (const acquisition of collectible.value.acquisition) {
-		if (acquisition.method !== AcquisitionMethod.ShopPurchase) {
-			continue;
-		}
-
-		const productType = collectible.value.type;
-		if (!productType || productType === CollectibleType.Sticker) {
-			continue;
-		}
-
-		return { resource: productType, resourceId };
+	const productType = collectible.value.type;
+	if (!productType || productType === CollectibleType.Sticker) {
+		return null;
 	}
-	return null;
+	// Ignore if we have no shop purchase acquisitions.
+	if (collectible.value.acquisition.every(i => i.method !== AcquisitionMethod.ShopPurchase)) {
+		return null;
+	}
+	return {
+		resource: productType,
+		resourceId: getCollectibleResourceId(collectible.value),
+	};
 });
 
 const headingStyles = {
