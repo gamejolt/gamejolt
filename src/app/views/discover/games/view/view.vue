@@ -64,7 +64,6 @@ import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { UserModel } from '../../../../../_common/user/user.model';
 import { enforceLocation } from '../../../../../utils/router';
-import AppGameCoverButtons from '../../../../components/game/cover-buttons/AppGameCoverButtons.vue';
 import AppGameMaturityBlock from '../../../../components/game/maturity-block/maturity-block.vue';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
@@ -351,7 +350,6 @@ const GameThemeKey = 'game';
 		AppDiscoverGamesViewNav,
 		AppDiscoverGamesViewControls,
 		AppGameMaturityBlock,
-		AppGameCoverButtons,
 		AppGamePerms,
 		AppUserVerifiedTick,
 		AppPageHeaderAvatar,
