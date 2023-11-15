@@ -380,6 +380,7 @@ onMounted(async () => {
 	let newSale: InventoryShopProductSaleModel | undefined = undefined;
 
 	try {
+		// TODO(collectible-sales) fetch coinBalance and buxBalance?
 		const payload = await Api.sendFieldsRequest(
 			`/mobile/shop-product/${resource}/${resourceId}`,
 			{
