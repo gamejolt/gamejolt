@@ -78,9 +78,11 @@ export function makeJoltydexFeed(type: CollectibleType) {
 				{ detach: true }
 			);
 
-			const packs = storeModelList(StickerPackModel, payload.packs);
+			const packs = new Map(
+				storeModelList(StickerPackModel, payload.packs).map(i => [i.id, i])
+			);
 			for (const id of packsRequiringLoad) {
-				const pack = packs.find(i => i.id === id);
+				const pack = packs.get(id);
 				if (pack) {
 					_packLoadingData.value.set(id, pack);
 				} else {

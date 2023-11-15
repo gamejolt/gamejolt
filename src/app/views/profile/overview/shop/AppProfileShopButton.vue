@@ -78,7 +78,11 @@ const { hoverBinding, hovered } = useOnHover();
 					{{ $gettext(`@%{ username }'s Shop`, { username: user.username }) }}
 				</h3>
 
-				<AppButton :force-hover="hovered" :overlay="!!user.header_media_item">
+				<AppButton
+					:force-hover="hovered"
+					:overlay="!!user.header_media_item"
+					:solid="!user.header_media_item"
+				>
 					{{ $gettext(`Open shop`) }}
 				</AppButton>
 			</div>

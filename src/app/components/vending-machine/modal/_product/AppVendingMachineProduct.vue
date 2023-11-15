@@ -17,12 +17,7 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import { kThemeFg, kThemeFgMuted, kThemeGray } from '../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import {
-	kElevateTransition,
-	styleElevate,
-	styleTyped,
-	styleWhen,
-} from '../../../../../_styles/mixins';
+import { styleElevate, styleTyped, styleWhen } from '../../../../../_styles/mixins';
 import { kBorderRadiusLg, kFontSizeSmall, kStrongEaseOut } from '../../../../../_styles/variables';
 
 const props = defineProps({
@@ -124,8 +119,6 @@ const nameFontSize = kFontSizeSmall;
 				...styleWhen(disablePurchases, {
 					cursor: `default`,
 				}),
-				// Needs to go after any styleElevate calls.
-				transition: `${kElevateTransition}, opacity 250ms ${kStrongEaseOut}`,
 			})
 		"
 		@click="onClickProduct()"

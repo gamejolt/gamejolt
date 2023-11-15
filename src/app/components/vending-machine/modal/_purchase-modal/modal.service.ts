@@ -1,5 +1,4 @@
 import { defineAsyncComponent } from 'vue';
-import { CollectibleModel } from '../../../../../_common/collectible/collectible.model';
 import { showModal } from '../../../../../_common/modal/modal.service';
 
 export type PurchasableProductData = {
@@ -10,11 +9,6 @@ export type PurchasableProductData = {
 /**
  * Shows a modal that allows the user to purchase a product or gives some info
  * on how to obtain it.
- *
- * @param productData supports either the direct Model we want to purchase, or a
- * resource/resourceId pair that will be used to fetch the model.
- *
- * NOTE: Does not support {@link CollectibleModel} with a type of `Sticker`.
  */
 export async function showPurchaseShopProductModal({
 	resource,

@@ -58,19 +58,22 @@ const stickerMasteryInfo = computed(() => {
 	return $gettext(`You've mastered this sticker and can now use it for emojis and reactions!`);
 });
 
-function showPurchaseModal(product: CollectibleModel | StickerPackModel) {
-	const resource = isInstance(product, CollectibleModel) ? product.type : 'Sticker_Pack';
-	if (resource === CollectibleType.Sticker) {
-		return;
-	}
+const collectibleResourceAcquisition = computed(() => {
+	const resourceId = getCollectibleResourceId(collectible.value);
+	for (const acquisition of collectible.value.acquisition) {
+		if (acquisition.method !== AcquisitionMethod.ShopPurchase) {
+			continue;
+		}
 
-	showPurchaseShopProductModal({
-		resource,
-		resourceId: isInstance(product, CollectibleModel)
-			? getCollectibleResourceId(product)
-			: product.id,
-	});
-}
+		const productType = collectible.value.type;
+		if (!productType || productType === CollectibleType.Sticker) {
+			continue;
+		}
+
+		return { resource: productType, resourceId };
+	}
+	return null;
+});
 
 const headingStyles = {
 	textTransform: `uppercase`,
@@ -185,7 +188,12 @@ const mutedStyles = {
 						:pack="pack"
 						show-name
 						can-click-pack
-						@click-pack="showPurchaseModal(pack)"
+						@click-pack="
+							showPurchaseShopProductModal({
+								resource: 'Sticker_Pack',
+								resourceId: pack.id,
+							})
+						"
 					/>
 					<AppAspectRatio
 						v-else
@@ -203,11 +211,11 @@ const mutedStyles = {
 		</template>
 
 		<AppButton
-			v-if="collectible.acquisition.some(i => i.method === AcquisitionMethod.ShopPurchase)"
+			v-if="collectibleResourceAcquisition"
 			block
 			solid
 			primary
-			@click="showPurchaseModal(collectible)"
+			@click="showPurchaseShopProductModal(collectibleResourceAcquisition)"
 		>
 			{{ $gettext(`View in shop`) }}
 		</AppButton>
