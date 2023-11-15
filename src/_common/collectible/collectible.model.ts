@@ -37,7 +37,11 @@ export class CollectibleModel implements ModelStoreModel {
 	}
 }
 
-export function markProductAsPurchased(
+/**
+ * Tries finding an existing [CollectibleModel] through the [ModelService] and
+ * updates the [isOwned] state.
+ */
+export function markProductAsOwned(
 	purchasedProduct:
 		| UserAvatarFrameModel
 		| AvatarFrameModel

@@ -21,7 +21,7 @@ import {
 } from '../../../../../_common/collectible/acquisition.model';
 import {
 	CollectibleModel,
-	markProductAsPurchased,
+	markProductAsOwned,
 } from '../../../../../_common/collectible/collectible.model';
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
@@ -308,7 +308,7 @@ export async function purchaseShopProduct({
 		}
 
 		if (item) {
-			markProductAsPurchased(item);
+			markProductAsOwned(item);
 		}
 
 		onItemPurchased?.all?.(item);
