@@ -17,11 +17,7 @@ const props = defineProps({
 const { channel } = toRefs(props);
 const modal = useModal()!;
 
-const previousBackgroundId = ref<number | null>(null);
-
-if (channel.value.background) {
-	previousBackgroundId.value = channel.value.background.id;
-}
+const previousBackgroundId = ref(channel.value.background?.id || null);
 
 function onSubmit(channel: CommunityChannelModel) {
 	const newBackgroundId = (channel.background && channel.background.id) || null;

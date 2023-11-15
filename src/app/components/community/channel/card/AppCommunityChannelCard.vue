@@ -1,5 +1,5 @@
-<script lang="ts" setup>
-import { PropType, computed, onMounted, ref, toRef, toRefs } from 'vue';
+<script lang="ts">
+import { PropType, computed, onMounted, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import {
 	CommunityModel,
@@ -13,11 +13,11 @@ import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
 // Sync up with the './variables' file.
 // TODO(component-setup-refactor): sync up manually?
-const CardWidth = 270;
-const CardHeight = 70;
+export const CommunityChannelCardWidth = 270;
+export const CommunityChannelCardHeight = 70;
+</script>
 
-// TODO(component-setup-refactor): changing the required of backgroundItem to true
-// as it's being provided in the parent component.
+<script lang="ts" setup>
 const props = defineProps({
 	community: {
 		type: Object as PropType<CommunityModel>,
@@ -43,7 +43,6 @@ const props = defineProps({
 	},
 	sort: {
 		type: String,
-		required: false,
 		default: undefined,
 	},
 	isLocked: {
@@ -57,7 +56,6 @@ const props = defineProps({
 	},
 	channelType: {
 		type: String,
-		required: false,
 		default: undefined,
 	},
 });
@@ -77,9 +75,7 @@ const {
 } = toRefs(props);
 
 const rootElem = ref<HTMLDivElement>();
-const cardHeight = ref<number>(CardHeight);
-
-const height = toRef(() => cardHeight.value + 'px');
+const cardHeight = ref<number>(CommunityChannelCardHeight);
 
 const linkTo = computed(() => {
 	if (path.value === CommunityPresetChannelType.FEATURED) {
@@ -112,25 +108,34 @@ function updateCardHeight() {
 		return;
 	}
 
-	cardHeight.value = (rootElem.value.offsetWidth / CardWidth) * CardHeight;
+	cardHeight.value =
+		(rootElem.value.offsetWidth / CommunityChannelCardWidth) * CommunityChannelCardHeight;
 }
 </script>
 
 <template>
-	<div ref="rootElem" class="community-channel-card-container">
+	<div
+		ref="rootElem"
+		:style="{
+			maxWidth: `${CommunityChannelCardWidth}px`,
+		}"
+	>
 		<RouterLink
 			v-app-observe-dimensions="updateCardHeight"
 			class="community-channel-card sheet sheet-no-full-bleed sheet-full"
 			:class="{ '-active': isActive, 'theme-dark': backgroundItem }"
+			:style="{
+				maxHeight: `${CommunityChannelCardHeight}px`,
+				height: `${cardHeight}px`,
+			}"
 			:to="linkTo"
-			:style="{ height }"
 		>
 			<div v-if="backgroundItem" class="-card-bg">
 				<AppMediaItemBackdrop :media-item="backgroundItem" radius="lg">
 					<div
 						class="-card-bg-img"
 						:style="{
-							'background-image': `url('${backgroundItem.mediaserver_url}')`,
+							backgroundImage: `url('${backgroundItem.mediaserver_url}')`,
 						}"
 					/>
 					<div class="-overlay" />
@@ -178,4 +183,119 @@ function updateCardHeight() {
 	</div>
 </template>
 
-<style lang="stylus" src="./card.styl" scoped></style>
+<style lang="stylus" scoped>
+.community-channel-card
+	elevate-hover-1()
+	position: relative
+	display: block
+	flex-shrink: 0
+	overflow: hidden
+	cursor: pointer
+	outline: none
+	transition: border 200ms
+	// Overwrite sheet styling
+	margin-bottom: ($line-height-computed / 2)
+
+	&:hover
+		theme-prop('border-color', 'link')
+
+		.-card-bg-img
+		.-card-unpublished
+			filter: grayscale(0.6)
+
+		.-overlay
+			opacity: 0
+
+	&.-active
+		elevate-2()
+		border-color: var(--theme-link)
+
+		.-card-bg-img
+			filter: none !important
+			transform: scale(1.1)
+
+		.-card-unpublished
+			transform: scale(1.1)
+
+		.-overlay
+			opacity: 0
+
+		.-card-content-title
+			background-color: var(--theme-bi-bg)
+			color: var(--theme-bi-fg)
+
+.-overlay
+	change-bg('bg-offset')
+	position: absolute
+	opacity: 0.2
+	width: 100%
+	height: 100%
+	transition: opacity 200ms
+
+.-card
+	&-bg
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		height: 100%
+		z-index: 1
+
+		&-img
+			position: absolute
+			top: 0
+			left: 0
+			width: 100%
+			height: 100%
+			background-size: cover
+			background-position: center center
+			background-repeat: no-repeat
+			filter: grayscale(0.9)
+			transition: transform 200ms, filter 200ms
+
+	&-content
+		position: relative
+		z-index: 3
+		margin: 8px
+		display: flex
+		justify-content: space-between
+
+		&-title
+			rounded-corners()
+			text-overflow()
+			font-weight: 600
+			padding: 2px 6px
+			background-color: var(--theme-darkest)
+			color: var(--dark-theme-fg)
+
+			& > *
+				vertical-align: middle
+
+		&-unread
+			margin-top: 4px
+			width: 12px
+			height: 12px
+			background-color: var(--theme-notice)
+			flex-shrink: 0
+			border: 2px solid var(--theme-bg-offset)
+			border-radius: 50%
+			filter: drop-shadow(0 0 7px var(--theme-notice))
+
+	&-unpublished
+		position: absolute
+		z-index: 2
+		top: 0
+		left: 0
+		width: 100%
+		height: 100%
+		background: repeating-linear-gradient(
+			45deg,
+			var(--theme-bi-bg),
+			var(--theme-bi-bg) 8px,
+			transparent 8px,
+			transparent 16px
+		)
+		filter: grayscale(0.6)
+		opacity: 0.15
+		transition: transform 200ms, filter 200ms
+</style>

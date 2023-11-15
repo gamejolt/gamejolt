@@ -3,6 +3,11 @@ import { PropType } from 'vue';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { MediaItemModel } from '../../../../../../_common/media-item/media-item-model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { styleBorderRadiusLg } from '../../../../../../_styles/mixins';
+import {
+	CommunityChannelCardHeight,
+	CommunityChannelCardWidth,
+} from '../AppCommunityChannelCard.vue';
 
 defineProps({
 	background: {
@@ -21,7 +26,15 @@ function onClickEdit() {
 </script>
 
 <template>
-	<AppEditableOverlay class="-background-overlay" @click="onClickEdit">
+	<AppEditableOverlay
+		:style="{
+			...styleBorderRadiusLg,
+			width: `${CommunityChannelCardWidth}px`,
+			height: `${CommunityChannelCardHeight}px`,
+			overflow: `hidden`,
+		}"
+		@click="onClickEdit"
+	>
 		<template #overlay>
 			<span>
 				{{ $gettext(`Change Background`) }}
@@ -29,9 +42,19 @@ function onClickEdit() {
 		</template>
 
 		<template #default>
-			<div class="-background-preview">
+			<div
+				:style="{
+					...styleBorderRadiusLg,
+					display: `flex`,
+					alignItems: `center`,
+					width: `${CommunityChannelCardWidth}px`,
+					height: `${CommunityChannelCardHeight}px`,
+					overflow: `hidden`,
+				}"
+			>
 				<img
 					v-if="background"
+					:style="{ width: `100%` }"
 					:src="background.mediaserver_url"
 					:alt="background.mediaserver_url"
 				/>
@@ -39,24 +62,3 @@ function onClickEdit() {
 		</template>
 	</AppEditableOverlay>
 </template>
-
-<style lang="stylus" scoped>
-@import '../variables'
-
-.-background-overlay
-	rounded-corners-lg()
-	overflow: hidden
-	width: $card-width
-	height: $card-height
-
-.-background-preview
-	rounded-corners-lg()
-	display: flex
-	align-items: center
-	width: $card-width
-	height: $card-height
-	overflow: hidden
-
-	img
-		width: 100%
-</style>

@@ -61,7 +61,16 @@ const emit = defineEmits({
 
 const { game, canInstall } = toRefs(props);
 
-const clientLibrary = useClientLibraryStore();
+const {
+	findPackageToRepresentGameStatus,
+	packagesByGameId,
+	packageInstall,
+	packageUninstall,
+	installerPause,
+	installerResume,
+	installerRetry,
+	launcherLaunch,
+} = useClientLibraryStore();
 
 const isLoadingPackageData = ref(false);
 const packageDataPromise = ref<Promise<GamePackagePayloadModel> | null>(null);
@@ -73,12 +82,9 @@ watch(game, () => {
 
 // We try to pull a package with some action on it.
 // For example, if a package is installing, we want to pull that one to show.
-const localPackage = computed(() => clientLibrary.findPackageToRepresentGameStatus(game.value.id));
-
-const gamePackages = computed(() => clientLibrary.packagesByGameId.value[game.value.id] || []);
-
+const localPackage = computed(() => findPackageToRepresentGameStatus(game.value.id));
+const gamePackages = computed(() => packagesByGameId.value[game.value.id] || []);
 const settledGamePackages = computed(() => gamePackages.value.filter(p => p.isSettled));
-
 const uninstallableGamePackages = computed(() =>
 	gamePackages.value.filter(p => !p.install_state && !p.isRemoving)
 );
@@ -90,7 +96,6 @@ const installTooltip = computed(() => {
 });
 
 const os = computed(() => getDeviceOS());
-
 const arch = computed(() => getDeviceArch());
 
 async function install() {
@@ -122,7 +127,7 @@ async function install() {
 		return;
 	}
 
-	return clientLibrary.packageInstall(
+	return packageInstall(
 		game.value,
 		build._package!,
 		build._release!,
@@ -150,7 +155,7 @@ function pause() {
 	}
 
 	Analytics.trackEvent('client-game-buttons', 'pause-install');
-	clientLibrary.installerPause(localPackage.value);
+	installerPause(localPackage.value);
 }
 
 function resume() {
@@ -159,7 +164,7 @@ function resume() {
 	}
 
 	Analytics.trackEvent('client-game-buttons', 'resume-install');
-	clientLibrary.installerResume(localPackage.value);
+	installerResume(localPackage.value);
 }
 
 function cancel() {
@@ -168,7 +173,7 @@ function cancel() {
 	}
 
 	Analytics.trackEvent('client-game-buttons', 'cancel-install');
-	clientLibrary.packageUninstall(localPackage.value);
+	packageUninstall(localPackage.value);
 }
 
 function retryInstall() {
@@ -177,7 +182,7 @@ function retryInstall() {
 	}
 
 	Analytics.trackEvent('client-game-buttons', 'retry-install');
-	clientLibrary.installerRetry(localPackage.value);
+	installerRetry(localPackage.value);
 }
 
 function launch(localPackage: LocalDbPackage) {
@@ -188,7 +193,7 @@ function launch(localPackage: LocalDbPackage) {
 
 	Analytics.trackEvent('client-game-buttons', 'launch');
 	Popper.hideAll();
-	return clientLibrary.launcherLaunch(localPackage);
+	return launcherLaunch(localPackage);
 }
 
 function openFolder(localPackage: LocalDbPackage) {
@@ -215,7 +220,7 @@ async function uninstallPackage(localPackage: LocalDbPackage) {
 	Analytics.trackEvent('client-game-buttons', 'uninstall');
 	Popper.hideAll();
 
-	await clientLibrary.packageUninstall(localPackage);
+	await packageUninstall(localPackage);
 }
 </script>
 
@@ -405,9 +410,11 @@ async function uninstallPackage(localPackage: LocalDbPackage) {
 							@click="openFolder(pkg)"
 						>
 							<AppJolticon icon="folder-open" />
-							<span v-translate="{ title: pkg.title || game.title }">
-								Open Folder for %{ title }
-							</span>
+							{{
+								$gettext(`Open Folder for %{ title }`, {
+									title: pkg.title || game.title,
+								})
+							}}
 						</a>
 						<a
 							v-for="pkg of uninstallableGamePackages"
@@ -419,9 +426,11 @@ async function uninstallPackage(localPackage: LocalDbPackage) {
 							@click="uninstallPackage(pkg)"
 						>
 							<AppJolticon icon="remove" notice />
-							<span v-translate="{ title: pkg.title || game.title }">
-								Uninstall %{ title }
-							</span>
+							{{
+								$gettext(`Uninstall %{ title }`, {
+									title: pkg.title || game.title,
+								})
+							}}
 						</a>
 					</div>
 				</template>

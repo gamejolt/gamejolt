@@ -80,6 +80,7 @@ function clearPollTimeout() {
 	}
 }
 </script>
+
 <template>
 	<slot />
 </template>

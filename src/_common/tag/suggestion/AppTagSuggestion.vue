@@ -13,7 +13,7 @@ const props = defineProps({
 	},
 	content: {
 		type: Array as PropType<ContentDocument[]>,
-		default: undefined,
+		required: true,
 	},
 });
 
