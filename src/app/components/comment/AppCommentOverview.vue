@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, inject, PropType, toRefs, watch } from 'vue';
+import { computed, PropType, toRefs, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
 import {
@@ -8,9 +8,9 @@ import {
 	getCommentModelResourceName,
 } from '../../../_common/comment/comment-model';
 import {
-	CommentStoreManagerKey,
 	CommentStoreModel,
 	getCommentStore,
+	useCommentStoreManager,
 } from '../../../_common/comment/comment-store';
 import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
@@ -42,7 +42,7 @@ const emit = defineEmits({
 	'reload-comments': () => true,
 });
 
-const commentManager = inject(CommentStoreManagerKey)!;
+const commentManager = useCommentStoreManager()!;
 const router = useRouter();
 
 const displayComments = computed(() => {

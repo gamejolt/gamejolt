@@ -14,7 +14,7 @@ import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreator
 import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
 import { UserModel } from '../../../../_common/user/user.model';
 import { getAbsoluteLink } from '../../../../utils/router';
-import AppGameList from '../../game/list/list.vue';
+import AppGameList from '../../game/list/AppGameList.vue';
 import AppCommunityDescription from '../description/description.vue';
 import { CommunitySidebarData } from './sidebar-data';
 

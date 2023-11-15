@@ -21,7 +21,7 @@ import {
 	GameFilteringContainer,
 	checkGameFilteringRoute,
 } from '../../../../components/game/filtering/container';
-import AppGameGrid from '../../../../components/game/grid/grid.vue';
+import AppGameGrid from '../../../../components/game/grid/AppGameGrid.vue';
 import AppGameListing from '../../../../components/game/listing/AppGameListing.vue';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
 import AppStoreBanner from '../../../../components/store-banner/AppStoreBanner.vue';

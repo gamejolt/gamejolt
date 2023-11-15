@@ -76,5 +76,6 @@ export const kLayerLoadingBar = 2000;
 export const kLayerGrowls = 1200;
 export const kLayerContentEditor = 200;
 export const kLayerBackdrop = 20;
+export const kLayerAds = 19;
 export const kLayerPlayButtonOverlay = 11;
 export const kLayerStickerLayer = kLayerModal + 1;
