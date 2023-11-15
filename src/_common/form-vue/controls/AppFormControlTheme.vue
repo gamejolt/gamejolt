@@ -14,7 +14,6 @@ import {
 	makeThemeFromPreset,
 } from '../../theme/theme.model';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext } from '../../translate/translate.service';
 import {
 	createFormControl,
@@ -155,7 +154,7 @@ function clear() {
 						</div>
 
 						<AppButton v-if="!!controlVal" block trans @click="clear()">
-							<AppTranslate>Clear Theme</AppTranslate>
+							{{ $gettext(`Clear Theme`) }}
 						</AppButton>
 					</div>
 				</div>

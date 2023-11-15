@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, toRef, toRefs } from 'vue';
-import { useRoute } from 'vue-router';
+import { RouteLocationRaw, useRoute } from 'vue-router';
 import AppButton from '../button/AppButton.vue';
 import { Screen } from '../screen/screen-service';
 import { vAppNoAutoscroll } from '../scroll/auto-scroll/no-autoscroll.directive';
@@ -48,8 +48,6 @@ const emit = defineEmits({
 	pagechange: (_page: number, _event: Event) => true,
 });
 
-const MaxPagesShown = 5;
-
 const {
 	totalItems,
 	itemsPerPage,
@@ -64,14 +62,12 @@ const {
 
 const route = useRoute();
 
+const MaxPagesShown = 5;
+
 const hasPrevious = toRef(() => currentPage.value > 1);
-
 const hasNext = toRef(() => currentPage.value < totalPages.value);
-
-// TODO(component-setup-refactor): having error in template, should we return negative number instead of undefined?
 const prevPage = toRef(() => (hasPrevious.value ? currentPage.value - 1 : undefined));
-
-const nextPage = toRef(() => currentPage.value + 1);
+const nextPage = toRef(() => (hasNext.value ? currentPage.value + 1 : undefined));
 
 const totalPages = computed(() => {
 	const totalPages = Math.ceil(totalItems.value / itemsPerPage.value);
@@ -118,9 +114,9 @@ function getEdgePages() {
 	return [startPage, endPage];
 }
 
-function getPageLocation(page: number) {
+function getPageLocation(page: number): RouteLocationRaw {
 	return {
-		name: route.name,
+		name: route.name || undefined,
 		params: route.params,
 		query: getQuery(page),
 	};
@@ -143,13 +139,11 @@ function onPageClick(event: Event, page: number) {
 
 <template>
 	<div>
-		<!--
-			Number pagination type
-		-->
+		<!-- Number pagination type -->
 		<template v-if="!pager && !Screen.isXs">
 			<div v-if="totalItems > itemsPerPage" class="pagination">
 				<div
-					v-if="hasPrevious && currentPage !== 2"
+					v-if="prevPage && prevPage !== 1"
 					class="pagination-item"
 					@click.capture="onPageClick($event, 1)"
 				>
@@ -158,7 +152,7 @@ function onPageClick(event: Event, page: number) {
 					</AppButton>
 				</div>
 				<div
-					v-if="hasPrevious"
+					v-if="prevPage"
 					class="pagination-item"
 					@click.capture="onPageClick($event, prevPage)"
 				>
@@ -184,12 +178,11 @@ function onPageClick(event: Event, page: number) {
 					:class="{ active: page === currentPage }"
 					@click.capture="onPageClick($event, page)"
 				>
-					<!--TODO(component-setup-refactor): -1 instead of undefined?-->
 					<AppButton
 						v-if="page !== currentPage"
 						v-app-no-autoscroll
 						sparse
-						:to="getPageLocation(page > 1 ? page : undefined)"
+						:to="getPageLocation(page)"
 					>
 						{{ page }}
 					</AppButton>
@@ -209,7 +202,7 @@ function onPageClick(event: Event, page: number) {
 				</div>
 
 				<div
-					v-if="hasNext"
+					v-if="nextPage"
 					class="pagination-item"
 					@click.capture="onPageClick($event, nextPage)"
 				>
@@ -218,7 +211,7 @@ function onPageClick(event: Event, page: number) {
 					</AppButton>
 				</div>
 				<div
-					v-if="hasNext && currentPage !== totalPages - 1"
+					v-if="nextPage && nextPage !== totalPages"
 					class="pagination-item"
 					@click.capture="onPageClick($event, totalPages)"
 				>
@@ -229,20 +222,17 @@ function onPageClick(event: Event, page: number) {
 			</div>
 		</template>
 
-		<!--
-			Pager type
-		-->
+		<!-- Pager type -->
 		<template v-else-if="pager || Screen.isXs">
 			<div class="pager" :class="{ reverse: reverseButtons }">
 				<div
-					v-if="hasPrevious"
+					v-if="prevPage"
 					class="pagination-item previous"
 					@click.capture="onPageClick($event, prevPage)"
 				>
 					<AppButton v-app-no-autoscroll :to="getPageLocation(prevPage)">
 						{{ previousText || '&laquo; Previous' }}
 					</AppButton>
-					<span v-if="!hasPrevious">{{ previousText || '&laquo; Previous' }}</span>
 				</div>
 				<div v-if="currentPage > 1" class="pagination-item">
 					<AppButton solid sparse>
@@ -250,14 +240,13 @@ function onPageClick(event: Event, page: number) {
 					</AppButton>
 				</div>
 				<div
-					v-if="hasNext"
+					v-if="nextPage"
 					class="pagination-item next"
 					@click.capture="onPageClick($event, nextPage)"
 				>
 					<AppButton v-app-no-autoscroll :to="getPageLocation(nextPage)">
 						{{ nextText || 'Next &raquo;' }}
 					</AppButton>
-					<span v-if="!hasNext">{{ nextText || 'Next &raquo;' }}</span>
 				</div>
 			</div>
 		</template>
