@@ -14,7 +14,7 @@ import { StickerPackModel } from '../sticker/pack/pack.model';
 import { kThemeFg10, kThemeFgMuted } from '../theme/variables';
 import { $gettext } from '../translate/translate.service';
 import { AcquisitionMethod, filterAcquisitionMethods } from './acquisition.model';
-import { CollectibleModel, CollectibleType } from './collectible.model';
+import { CollectibleModel, CollectibleType, getCollectibleResourceId } from './collectible.model';
 
 const props = defineProps({
 	collectible: {
@@ -59,8 +59,16 @@ const stickerMasteryInfo = computed(() => {
 });
 
 function showPurchaseModal(product: CollectibleModel | StickerPackModel) {
+	const resource = isInstance(product, CollectibleModel) ? product.type : 'Sticker_Pack';
+	if (resource === CollectibleType.Sticker) {
+		return;
+	}
+
 	showPurchaseShopProductModal({
-		product,
+		resource,
+		resourceId: isInstance(product, CollectibleModel)
+			? getCollectibleResourceId(product)
+			: product.id,
 	});
 }
 

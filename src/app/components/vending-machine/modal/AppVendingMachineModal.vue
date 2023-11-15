@@ -239,11 +239,17 @@ async function purchaseProduct(sale: InventoryShopProductSaleModel) {
 	if (productProcessing.value) {
 		return;
 	}
+	const resourceId = sale.avatarFrame?.id || sale.background?.id || sale.stickerPack?.id;
+	if (!resourceId) {
+		return;
+	}
+
 	productProcessing.value = sale.id;
 
 	// Show a modal to let the user choose which currency to use.
 	await showPurchaseShopProductModal({
-		product: sale,
+		resource: sale.product_type,
+		resourceId,
 		onItemPurchased: () => init(),
 	});
 	productProcessing.value = undefined;
@@ -425,7 +431,8 @@ const rewardPackImageSize = run(() => {
 										}"
 										@click="
 											showPurchaseShopProductModal({
-												product: chargeRewardPack,
+												resource: 'Sticker_Pack',
+												resourceId: chargeRewardPack.id,
 											})
 										"
 									>

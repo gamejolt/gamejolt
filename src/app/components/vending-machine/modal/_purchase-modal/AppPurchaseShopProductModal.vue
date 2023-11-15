@@ -19,10 +19,7 @@ import {
 	AcquisitionMethod,
 	AcquisitionModel,
 } from '../../../../../_common/collectible/acquisition.model';
-import {
-	CollectibleModel,
-	markProductAsOwned,
-} from '../../../../../_common/collectible/collectible.model';
+import { markProductAsOwned } from '../../../../../_common/collectible/collectible.model';
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
 import {
@@ -85,14 +82,13 @@ import {
 	kStrongEaseOut,
 } from '../../../../../_styles/variables';
 import { getCurrentServerTime } from '../../../../../utils/server-time';
-import { isInstance } from '../../../../../utils/utils';
 import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.route';
 import { showNewProductModal } from '../_product/modal/modal.service';
-import { PurchasableProduct, PurchasableProductType } from './modal.service';
+import { PurchasableProductData } from './modal.service';
 
 interface BasePurchaseData {
-	resource: (typeof PurchasableProductType)[number];
-	resourceId: number;
+	resource: PurchasableProductData['resource'];
+	resourceId: PurchasableProductData['resourceId'];
 	name: string | undefined;
 	imgUrl: string | undefined;
 	processMediaserverUrl?: boolean;
@@ -116,66 +112,21 @@ type NormalizedProductData =
 	| BackgroundPurchaseData
 	| StickerPackPurchaseData;
 
-function getShopProductDisplayData(data: PurchasableProduct): NormalizedProductData | undefined {
-	if (isInstance(data, CollectibleModel)) {
-		const resource = data.type;
-		const resourceId = parseInt(data.id.split(':').reverse()[0], 10);
+function getShopProductDisplayData({
+	resource,
+	resourceId,
+}: PurchasableProductData): NormalizedProductData {
+	let avatarFrame: AvatarFrameModel | null = null;
+	let background: BackgroundModel | null = null;
+	let stickerPack: StickerPackModel | null = null;
 
-		if (resource === 'Avatar_Frame') {
-			return {
-				resource,
-				resourceId,
-				imgUrl: data.image_url,
-				name: data.name,
-				scale: DefaultAvatarFrameScale,
-			};
-		} else if (resource === 'Background') {
-			return {
-				resource,
-				resourceId,
-				imgUrl: data.image_url,
-				name: data.name,
-			};
-		}
-		// Unsupported resource.
-		return undefined;
-	}
-
-	let avatarFrame = isInstance(data, AvatarFrameModel) ? data : null;
-	let background = isInstance(data, BackgroundModel) ? data : null;
-	let stickerPack = isInstance(data, StickerPackModel) ? data : null;
-
-	if (isInstance(data, InventoryShopProductSaleModel)) {
-		if (data.avatarFrame) {
-			avatarFrame = data.avatarFrame;
-		} else if (data.background) {
-			background = data.background;
-		} else if (data.stickerPack) {
-			stickerPack = data.stickerPack;
-		}
-	}
-
-	if ('resource' in data && 'resourceId' in data) {
-		const { resource, resourceId } = data;
-		// Check the model store for existing data we can use.
-		if (resource === 'Avatar_Frame') {
-			avatarFrame = getModel(AvatarFrameModel, resourceId) || null;
-		} else if (resource === 'Background') {
-			background = getModel(BackgroundModel, resourceId) || null;
-		} else if (resource === 'Sticker_Pack') {
-			stickerPack = getModel(StickerPackModel, resourceId) || null;
-		}
-
-		// If we haven't loaded in these models yet, return the
-		// resource/resourceId pair so we can fetch it.
-		if (!avatarFrame && !background && !stickerPack) {
-			return {
-				resourceId,
-				resource,
-				name: undefined,
-				imgUrl: undefined,
-			};
-		}
+	// Check the model store for existing data we can use.
+	if (resource === 'Avatar_Frame') {
+		avatarFrame = getModel(AvatarFrameModel, resourceId) || null;
+	} else if (resource === 'Background') {
+		background = getModel(BackgroundModel, resourceId) || null;
+	} else if (resource === 'Sticker_Pack') {
+		stickerPack = getModel(StickerPackModel, resourceId) || null;
 	}
 
 	if (avatarFrame) {
@@ -204,7 +155,15 @@ function getShopProductDisplayData(data: PurchasableProduct): NormalizedProductD
 			processMediaserverUrl: !!mediaserverUrl,
 		};
 	}
-	return undefined;
+
+	// If we haven't loaded in these models yet, return the resource/resourceId
+	// pair so we can fetch it.
+	return {
+		resourceId,
+		resource,
+		name: undefined,
+		imgUrl: undefined,
+	};
 }
 
 interface PurchaseData {
@@ -324,8 +283,8 @@ export async function purchaseShopProduct({
 
 <script lang="ts" setup>
 const props = defineProps({
-	initialProduct: {
-		type: Object as PropType<PurchasableProduct>,
+	initialProductData: {
+		type: Object as PropType<PurchasableProductData>,
 		required: true,
 	},
 	onItemPurchased: {
@@ -334,7 +293,7 @@ const props = defineProps({
 	},
 });
 
-const { initialProduct, onItemPurchased } = toRefs(props);
+const { initialProductData, onItemPurchased } = toRefs(props);
 
 const modal = useModal()!;
 const router = useRouter();
@@ -342,7 +301,7 @@ const { stickerPacks } = useStickerStore();
 const { user: authUser, coinBalance, joltbuxBalance } = useCommonStore();
 
 const sale = ref<InventoryShopProductSaleModel>();
-const partialProductData = ref(getShopProductDisplayData(initialProduct.value));
+const partialProductData = ref(getShopProductDisplayData(initialProductData.value));
 
 const productData = computed(() => {
 	const data = partialProductData.value;
@@ -413,17 +372,12 @@ watchEffect(() => {
 
 // Fetch everything we need to display sale, acquisition, and product data.
 onMounted(async () => {
-	// Invalid item.
-	if (!partialProductData.value) {
-		return;
-	}
-	const { resource: resource, resourceId: resourceId } = partialProductData.value;
+	const { resource, resourceId } = partialProductData.value;
 	isLoading.value = true;
 
 	let newAcquisitions: AcquisitionModel[] = [];
 	let newPackContents: StickerModel[] = [];
 	let newSale: InventoryShopProductSaleModel | undefined = undefined;
-	let newProductData: NormalizedProductData | undefined = undefined;
 
 	try {
 		const payload = await Api.sendFieldsRequest(
@@ -442,18 +396,13 @@ onMounted(async () => {
 		newPackContents = storeModelList(StickerModel, payload.packContents);
 		newSale = newAcquisitions.find(i => i.sale)?.sale;
 
+		// Add the new models to the model store.
 		if (resource === 'Avatar_Frame') {
-			newProductData = getShopProductDisplayData(
-				storeModel(AvatarFrameModel, payload.resource)
-			);
+			storeModel(AvatarFrameModel, payload.resource);
 		} else if (resource === 'Background') {
-			newProductData = getShopProductDisplayData(
-				storeModel(BackgroundModel, payload.resource)
-			);
+			storeModel(BackgroundModel, payload.resource);
 		} else if (resource === 'Sticker_Pack') {
-			newProductData = getShopProductDisplayData(
-				storeModel(StickerPackModel, payload.resource)
-			);
+			storeModel(StickerPackModel, payload.resource);
 		}
 	} catch (e) {
 		console.error('Failed to fetch sale through resource/resourceId pair.', e);
@@ -461,7 +410,12 @@ onMounted(async () => {
 		acquisitions.value = newAcquisitions;
 		packContents.value = newPackContents;
 		sale.value = newSale;
-		partialProductData.value = newProductData;
+		// Grab new model data now that it may have been loading into the model
+		// store.
+		partialProductData.value = getShopProductDisplayData({
+			resource,
+			resourceId,
+		});
 		isLoading.value = false;
 	}
 });

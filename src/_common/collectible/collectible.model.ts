@@ -37,6 +37,11 @@ export class CollectibleModel implements ModelStoreModel {
 	}
 }
 
+export function getCollectibleResourceId(collectible: CollectibleModel) {
+	const idStrings = collectible.id.split(':');
+	return parseInt(idStrings[idStrings.length - 1], 10);
+}
+
 /**
  * Tries finding an existing [CollectibleModel] through the [ModelService] and
  * updates the [isOwned] state.
