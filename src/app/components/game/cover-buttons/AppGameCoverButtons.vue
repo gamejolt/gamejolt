@@ -12,7 +12,6 @@ import type { GamePackageModel } from '../../../../_common/game/package/package.
 import { showGamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
 import { showGamePlayModal } from '../../../../_common/game/play-modal/play-modal.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import type { UserModel } from '../../../../_common/user/user.model';
 import { arrayUnique } from '../../../../utils/array';
 import AppGameCoverButtonsBuildButtons from './build-buttons.vue';
 
@@ -44,14 +43,6 @@ const props = defineProps({
 	installableBuilds: {
 		type: Array as PropType<GameBuildModel[]>,
 		required: true,
-	},
-	partnerKey: {
-		type: String,
-		default: undefined,
-	},
-	partner: {
-		type: Object as PropType<UserModel>,
-		default: undefined,
 	},
 });
 
