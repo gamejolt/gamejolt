@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { getQuery } from '../../../../utils/router';
-import AppGameGrid from '../../../components/game/grid/grid.vue';
+import AppGameGrid from '../../../components/game/grid/AppGameGrid.vue';
 import { sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../RouteSearch.vue';
 

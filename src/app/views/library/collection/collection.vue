@@ -29,7 +29,7 @@ import {
 import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
 import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/thumbnail.vue';
 import { GameFilteringContainer } from '../../../components/game/filtering/container';
-import AppGameGrid from '../../../components/game/grid/grid.vue';
+import AppGameGrid from '../../../components/game/grid/AppGameGrid.vue';
 import AppGameListing from '../../../components/game/listing/AppGameListing.vue';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';

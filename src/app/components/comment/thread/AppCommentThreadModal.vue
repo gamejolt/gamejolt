@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, inject, PropType, ref, toRefs } from 'vue';
+import { computed, PropType, ref, toRefs } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
 import {
@@ -9,8 +9,8 @@ import {
 } from '../../../../_common/comment/comment-model';
 import {
 	commentStoreHandleAdd,
-	CommentStoreManagerKey,
 	getCommentStore,
+	useCommentStoreManager,
 } from '../../../../_common/comment/comment-store';
 import { FormCommentLazy } from '../../../../_common/lazy';
 import AppMessageThreadAdd from '../../../../_common/message-thread/AppMessageThreadAdd.vue';
@@ -47,7 +47,7 @@ const emit = defineEmits({
 const { commentId, model, autofocus } = toRefs(props);
 
 const { user } = useCommonStore();
-const commentManager = inject(CommentStoreManagerKey)!;
+const commentManager = useCommentStoreManager()!;
 const modal = useModal()!;
 
 const hasError = ref(false);

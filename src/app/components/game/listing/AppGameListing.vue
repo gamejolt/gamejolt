@@ -16,7 +16,7 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppGameFilteringTags from '../filtering/AppGameFilteringTags.vue';
 import { GameFilteringContainer } from '../filtering/container';
 import AppGameFilteringWidget from '../filtering/widget.vue';
-import AppGameGridPlaceholder from '../grid/placeholder/placeholder.vue';
+import AppGameGridPlaceholder from '../grid/AppGameGridPlaceholder.vue';
 import { GameListingContainer } from './listing-container-service';
 
 defineProps({

@@ -43,7 +43,6 @@ function _makeAdSlot() {
 <template>
 	<div v-if="shouldShow" :style="{ textAlign: `center` }">
 		<div
-			class="-content"
 			:style="[
 				{
 					display: `flex`,
@@ -55,16 +54,19 @@ function _makeAdSlot() {
 					minHeight: `115px`,
 				}),
 				styleWhen(adSlot.size === 'rectangle', {
-					minHeight: `275px`,
+					minHeight: `250px`,
+				}),
+				styleWhen(adSlot.size === 'video', {
+					minHeight: `250px`,
 				}),
 			]"
 		>
 			<AppAdWidgetInner
-				:ad-slot="adSlot"
 				:style="{
 					// Make sure the ad is able to take up the full width.
 					flex: `auto`,
 				}"
+				:ad-slot="adSlot"
 			/>
 		</div>
 	</div>
