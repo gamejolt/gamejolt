@@ -7,9 +7,15 @@ import { InventoryShopProductSalePricingModel } from './inventory-shop-product-s
 
 export type InventoryShopProduct = StickerPackModel | AvatarFrameModel | BackgroundModel;
 
+export const enum PurchasableProductType {
+	StickerPack = 'Sticker_Pack',
+	AvatarFrame = 'Avatar_Frame',
+	Background = 'Background',
+}
+
 export class InventoryShopProductSaleModel implements ModelStoreModel {
 	declare id: number;
-	declare product_type: string;
+	declare product_type: PurchasableProductType;
 	declare product?: InventoryShopProduct;
 	declare pricings: InventoryShopProductSalePricingModel[];
 	declare starts_on?: number;
@@ -24,16 +30,16 @@ export class InventoryShopProductSaleModel implements ModelStoreModel {
 		}
 
 		if (data.product) {
-			switch (data.product_type) {
-				case 'Sticker_Pack':
+			switch (this.product_type) {
+				case PurchasableProductType.StickerPack:
 					this.product = storeModel(StickerPackModel, data.product);
 					break;
 
-				case 'Avatar_Frame':
+				case PurchasableProductType.AvatarFrame:
 					this.product = storeModel(AvatarFrameModel, data.product);
 					break;
 
-				case 'Background':
+				case PurchasableProductType.Background:
 					this.product = storeModel(BackgroundModel, data.product);
 					break;
 
