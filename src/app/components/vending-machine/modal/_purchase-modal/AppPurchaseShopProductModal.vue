@@ -380,19 +380,26 @@ onMounted(async () => {
 	let newSale: InventoryShopProductSaleModel | undefined = undefined;
 
 	try {
-		// TODO(collectible-sales) fetch coinBalance and buxBalance?
-		const payload = await Api.sendFieldsRequest(
-			`/mobile/shop-product/${resource}/${resourceId}`,
-			{
-				resource: true,
-				acquisitionMethods: {
-					primaryOnly: true,
+		const payloads = await Promise.all([
+			Api.sendFieldsRequest(
+				`/mobile/shop-product/${resource}/${resourceId}`,
+				{
+					resource: true,
+					acquisitionMethods: {
+						primaryOnly: true,
+					},
+					packContents: true,
 				},
-				packContents: true,
-			},
-			{ detach: true }
-		);
+				{ detach: true }
+			),
+			Api.sendFieldsRequest(
+				'/mobile/me',
+				{ coinBalance: true, buxBalance: true },
+				{ detach: true }
+			),
+		]);
 
+		const payload = payloads[0];
 		newAcquisitions = storeModelList(AcquisitionModel, payload.acquisitionMethods);
 		newPackContents = storeModelList(StickerModel, payload.packContents);
 		newSale = newAcquisitions.find(i => i.sale)?.sale;
@@ -404,6 +411,14 @@ onMounted(async () => {
 			storeModel(BackgroundModel, payload.resource);
 		} else if (resource === 'Sticker_Pack') {
 			storeModel(StickerPackModel, payload.resource);
+		}
+
+		const currencyPayload = payloads[1];
+		if (typeof currencyPayload.coinBalance === 'number') {
+			coinBalance.value = payload.coinBalance;
+		}
+		if (typeof currencyPayload.buxBalance === 'number') {
+			joltbuxBalance.value = payload.buxBalance;
 		}
 	} catch (e) {
 		console.error('Failed to fetch sale through resource/resourceId pair.', e);
