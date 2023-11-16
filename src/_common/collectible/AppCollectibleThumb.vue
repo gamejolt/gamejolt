@@ -74,6 +74,7 @@ const availabilityTagStyles = {
 	display: `inline-block`,
 	fontSize: kFontSizeTiny.px,
 	fontWeight: `bold`,
+	alignSelf: `center`,
 } satisfies CSSProperties;
 </script>
 
@@ -170,33 +171,35 @@ const availabilityTagStyles = {
 						>
 							{{ collectible.name }}
 						</div>
-
-						<!-- Availability -->
-						<div
-							v-if="acquisitionStates.hasSale"
-							:style="[
-								availabilityTagStyles,
-								{ backgroundColor: kThemeBiBg, color: kThemeBiFg },
-							]"
-						>
-							{{ $gettext(`Available in shop`) }}
-						</div>
-
-						<div
-							v-if="acquisitionStates.hasChargeReward"
-							:style="[
-								availabilityTagStyles,
-								{
-									backgroundColor: kThemeGjBlue,
-									color: `black`,
-								},
-							]"
-						>
-							{{ $gettext(`Charge reward`) }}
-						</div>
 					</div>
 				</div>
 
+				<!-- Availability -->
+				<div
+					v-if="acquisitionStates.hasSale"
+					:style="[
+						availabilityTagStyles,
+						{
+							backgroundColor: kThemeBiBg,
+							color: kThemeBiFg,
+						},
+					]"
+				>
+					{{ $gettext(`Available in shop`) }}
+				</div>
+
+				<div
+					v-if="acquisitionStates.hasChargeReward"
+					:style="[
+						availabilityTagStyles,
+						{
+							backgroundColor: kThemeGjBlue,
+							color: `black`,
+						},
+					]"
+				>
+					{{ $gettext(`Charge reward`) }}
+				</div>
 				<div
 					v-if="typeof collectible.sticker_mastery === 'number'"
 					:style="{ flex: `none`, paddingTop: `12px` }"

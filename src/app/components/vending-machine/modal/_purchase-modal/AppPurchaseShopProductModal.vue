@@ -414,11 +414,13 @@ onMounted(async () => {
 		}
 
 		const currencyPayload = payloads[1];
-		if (typeof currencyPayload.coinBalance === 'number') {
-			coinBalance.value = payload.coinBalance;
+		const newCoinBalance = currencyPayload.coinBalance;
+		const newJoltbuxBalance = currencyPayload.buxBalance;
+		if (typeof newCoinBalance === 'number') {
+			coinBalance.value = newCoinBalance;
 		}
-		if (typeof currencyPayload.buxBalance === 'number') {
-			joltbuxBalance.value = payload.buxBalance;
+		if (typeof newJoltbuxBalance === 'number') {
+			joltbuxBalance.value = newJoltbuxBalance;
 		}
 	} catch (e) {
 		console.error('Failed to fetch sale through resource/resourceId pair.', e);
