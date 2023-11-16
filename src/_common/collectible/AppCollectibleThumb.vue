@@ -53,12 +53,23 @@ const acquisitionStates = computed(() => {
 	let hasChargeReward = false;
 
 	for (const i of collectible.value.acquisition) {
-		if (i.sale_id || i.sticker_pack_is_premium) {
+		// Anything with a sale id is sellable.
+		if (i.sale_id) {
 			hasSale = true;
 		}
-		if (i.sticker_pack_is_charge_reward) {
-			hasChargeReward = true;
+
+		if (i.sticker_pack_id) {
+			// Premium sticker packs are always sellable. If it's not premium,
+			// then it's considered sellable only if it isn't a charge reward
+			// pack.
+			if (i.sticker_pack_is_premium || !i.sticker_pack_is_charge_reward) {
+				hasSale = true;
+			}
+			if (i.sticker_pack_is_charge_reward) {
+				hasChargeReward = true;
+			}
 		}
+
 		if (hasSale && hasChargeReward) {
 			break;
 		}
