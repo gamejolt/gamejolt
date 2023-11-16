@@ -21,12 +21,13 @@
 ._game-grid-ad-inner
 	margin: 0 auto
 	padding: 0
-	width: 300px
 
 	@media screen and (min-width: 1550px)
 		change-bg('bg-offset')
-		padding: 20px
-		width: 300px + @padding * 2
+		rounded-corners()
+		padding: 16px
+		margin-left: ($grid-gutter-width / 2)
+		margin-right: ($grid-gutter-width / 2)
 
 ._game-grid-items
 	@media $media-sm-up

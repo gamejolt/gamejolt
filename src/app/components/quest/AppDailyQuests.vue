@@ -59,7 +59,7 @@ const props = defineProps({
 	},
 	gridStyles: {
 		type: Object as PropType<CSSProperties>,
-		default: () => {},
+		default: () => ({}),
 	},
 });
 

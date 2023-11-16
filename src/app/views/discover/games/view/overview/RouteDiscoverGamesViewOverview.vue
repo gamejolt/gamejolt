@@ -2,6 +2,7 @@
 import { Ref, computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
+import AppAdStickyRail from '../../../../../../_common/ad/AppAdStickyRail.vue';
 import { isAdEnthused, useAdsController } from '../../../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
 import { trackExperimentEngagement } from '../../../../../../_common/analytics/analytics.service';
@@ -37,7 +38,7 @@ import AppShareCard from '../../../../../../_common/share/card/AppShareCard.vue'
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { kThemeBgSubtle } from '../../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { styleChangeBg } from '../../../../../../_styles/mixins';
+import { styleChangeBg, styleElevate, styleWhen } from '../../../../../../_styles/mixins';
 import {
 	kBorderRadiusLg,
 	kBorderWidthSm,
@@ -264,22 +265,7 @@ async function reloadPreviewComments() {
 				placement="top"
 			/>
 
-			<!-- We use this as a container to attach the sticky skyscraper ads -->
-			<div :style="{ position: `relative` }">
-				<div
-					v-if="ads.shouldShow && isAdEnthused && Screen.width >= 2000"
-					:style="{
-						position: `absolute`,
-						left: `20px`,
-						top: 0,
-						width: `160px`,
-					}"
-				>
-					<AppScrollAffix :padding="80">
-						<AppAdWidget size="skyscraper-1" placement="side" />
-					</AppScrollAffix>
-				</div>
-
+			<AppAdStickyRail :affix-padding="Screen.isLg ? 80 : 8">
 				<AppPageContainer xl>
 					<template #left>
 						<AppDiscoverGamesViewOverviewStatbar />
@@ -332,16 +318,21 @@ async function reloadPreviewComments() {
 						<template v-if="ads.shouldShow && !Screen.isMobile">
 							<AppScrollAffix
 								:style="{ position: `relative`, zIndex: kLayerAds }"
-								:padding="80"
+								:padding="Screen.isLg ? 80 : 8"
+								:affixed-styles="styleWhen(Screen.width > 2300, { right: `8px` })"
 								:disabled="!isAdEnthused"
 							>
 								<AppAdWidget
 									:style="{
 										...styleChangeBg('bg'),
+										...styleElevate(3),
 										minWidth: `300px`,
 										paddingTop: `8px`,
 										paddingBottom: `8px`,
 										borderRadius: kBorderRadiusLg.px,
+										...styleWhen(isAdEnthused, {
+											padding: `8px`,
+										}),
 									}"
 									:size="isAdEnthused ? 'video' : 'rectangle'"
 									placement="side"
@@ -535,7 +526,7 @@ async function reloadPreviewComments() {
 						</template>
 					</template>
 				</AppPageContainer>
-			</div>
+			</AppAdStickyRail>
 		</section>
 	</AppShellPageBackdrop>
 </template>

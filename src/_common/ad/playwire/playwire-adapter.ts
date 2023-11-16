@@ -3,14 +3,13 @@ import { loadScript, MaybePromise } from '../../../utils/utils';
 import { isDynamicGoogleBot } from '../../device/device.service';
 import { AdSlot } from '../ad-slot-info';
 import { AdAdapter, AdAdapterHelper } from '../adapter-base';
-import AppAdPlaywire from './AppAdPlaywire.vue';
 import AppAdPlaywireVideo from './AppAdPlaywireVideo.vue';
 
 export class AdPlaywireAdapter implements AdAdapter {
 	private helper = new AdAdapterHelper();
 
-	component(slot: AdSlot): Component {
-		return slot.size === 'video' ? AppAdPlaywireVideo : AppAdPlaywire;
+	component(_slot: AdSlot): Component {
+		return AppAdPlaywireVideo;
 	}
 
 	ensureLoaded() {

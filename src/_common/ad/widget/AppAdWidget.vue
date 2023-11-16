@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { PropType, ref, toRefs, watch } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
-import { AdSlot, AdSlotMeta, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
+import { AdSlot, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
 import { useAdsController } from '../ad-store';
 import AppAdWidgetInner from './AppAdWidgetInner.vue';
 
@@ -14,17 +14,12 @@ const props = defineProps({
 		type: String as PropType<AdSlotPlacement>,
 		default: 'content',
 	},
-	meta: {
-		type: Object as PropType<AdSlotMeta>,
-		default: () => ({}),
-	},
 });
 
-const { size, placement, meta } = toRefs(props);
+const { size, placement } = toRefs(props);
 
-const adsController = useAdsController();
+const controller = useAdsController();
 const adSlot = ref(_makeAdSlot());
-const shouldShow = computed(() => adsController.shouldShow);
 
 // If anything within our props changes, regenerate.
 watch(
@@ -36,12 +31,12 @@ watch(
 );
 
 function _makeAdSlot() {
-	return new AdSlot(size.value, placement.value, meta.value);
+	return new AdSlot(size.value, placement.value);
 }
 </script>
 
 <template>
-	<div v-if="shouldShow" :style="{ textAlign: `center` }">
+	<div v-if="controller.shouldShow" :style="{ textAlign: `center` }">
 		<div
 			:style="[
 				{

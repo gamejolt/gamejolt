@@ -1,5 +1,5 @@
 <script lang="ts">
-import { PropType, computed, toRefs } from 'vue';
+import { PropType, computed, toRef, toRefs } from 'vue';
 import draggable from 'vuedraggable';
 import { isAdEnthused, useAdsController } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
@@ -7,6 +7,9 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
+import { styleWhen } from '../../../../_styles/mixins';
+import { kLayerAds } from '../../../../_styles/variables';
 import AppGameThumbnailControls from '../thumbnail/AppGameThumbnailControls.vue';
 
 export const GameGridRowSizeSm = 2;
@@ -60,10 +63,11 @@ const ads = useAdsController();
 
 const id = ++idCounter;
 
-const shouldShowAds = computed(() => !canReorder.value && showAds.value && ads.shouldShow);
-const isScrollable = computed(() => (Screen.isXs && scrollable.value) || forceScrollable.value);
+const shouldShowAds = toRef(() => !canReorder.value && showAds.value && ads.shouldShow);
+const isScrollable = toRef(() => (Screen.isXs && scrollable.value) || forceScrollable.value);
+const shouldShowStickyVideoAd = toRef(() => isAdEnthused.value && Screen.width >= 2100);
 
-const rowSize = computed(() => {
+const rowSize = toRef(() => {
 	if (Screen.isSm) {
 		return GameGridRowSizeSm;
 	} else if (Screen.isMd) {
@@ -154,12 +158,27 @@ function shouldShowAd(index: number) {
 		<div :class="{ 'scrollable-grid': isScrollable }">
 			<div class="_game-grid-items">
 				<div v-if="Screen.isDesktop && shouldShowAds" class="_game-grid-ad">
-					<div class="_game-grid-ad-inner">
-						<AppAdWidget
-							:size="isAdEnthused ? 'video' : 'rectangle'"
-							placement="content"
-							:meta="{ staticSize: true }"
-						/>
+					<div
+						:style="{
+							...styleWhen(shouldShowStickyVideoAd, {
+								margin: `0 auto`,
+								maxWidth: `400px`,
+							}),
+						}"
+					>
+						<AppScrollAffix
+							:style="{ position: `relative`, zIndex: kLayerAds }"
+							:disabled="!shouldShowStickyVideoAd"
+							:padding="8"
+							:affixed-styles="{ right: `8px` }"
+						>
+							<div class="_game-grid-ad-inner">
+								<AppAdWidget
+									:size="shouldShowStickyVideoAd ? 'video' : 'rectangle'"
+									placement="content"
+								/>
+							</div>
+						</AppScrollAffix>
 					</div>
 				</div>
 
@@ -195,11 +214,7 @@ function shouldShowAd(index: number) {
 					<template v-for="(game, i) of processedGames" :key="game.id">
 						<div v-if="shouldShowAd(i)" class="_game-grid-ad">
 							<div class="_game-grid-ad-inner">
-								<AppAdWidget
-									size="rectangle"
-									placement="content"
-									:meta="{ staticSize: true }"
-								/>
+								<AppAdWidget size="rectangle" placement="content" />
 							</div>
 						</div>
 						<div class="_game-grid-item">
