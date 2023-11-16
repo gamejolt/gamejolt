@@ -65,7 +65,7 @@ const id = ++idCounter;
 
 const shouldShowAds = toRef(() => !canReorder.value && showAds.value && ads.shouldShow);
 const isScrollable = toRef(() => (Screen.isXs && scrollable.value) || forceScrollable.value);
-const shouldShowStickyVideoAd = toRef(() => isAdEnthused.value && Screen.width >= 2100);
+const shouldShowStickyVideoAd = toRef(() => isAdEnthused && Screen.width >= 2100);
 
 const rowSize = toRef(() => {
 	if (Screen.isSm) {

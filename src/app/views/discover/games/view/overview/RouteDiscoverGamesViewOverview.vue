@@ -265,7 +265,7 @@ async function reloadPreviewComments() {
 				placement="top"
 			/>
 
-			<AppAdStickyRail :affix-padding="Screen.isLg ? 80 : 8">
+			<AppAdStickyRail show-left>
 				<AppPageContainer xl>
 					<template #left>
 						<AppDiscoverGamesViewOverviewStatbar />

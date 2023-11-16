@@ -63,7 +63,7 @@ const InviewConfig = new ScrollInviewConfig();
 				<AppSpacer vertical :scale="6" />
 			</template>
 
-			<AppAdStickyRail>
+			<AppAdStickyRail show-left>
 				<div class="container-xl">
 					<AppNavTabList v-if="!hideSectionNav">
 						<ul>

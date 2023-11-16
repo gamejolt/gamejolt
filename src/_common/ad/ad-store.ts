@@ -1,4 +1,4 @@
-import { inject, InjectionKey, onUnmounted, provide, reactive, toRef } from 'vue';
+import { inject, InjectionKey, onUnmounted, provide, reactive } from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
 import { objectEquals } from '../../utils/object';
 import { isDynamicGoogleBot } from '../device/device.service';
@@ -17,14 +17,12 @@ export const AdsControllerKey: InjectionKey<AdsController> = Symbol('ads');
 // export const AdsDisabledDev = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build';
 export const AdsDisabledDev = false;
 
-export function areAdsDisabledDevice() {
-	return GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev;
-}
+const areAdsDisabledForDevice =
+	GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev;
 
 // TODO(enthusiast-ads): Temporary until we roll out.
-export const isAdEnthused = toRef(
-	() => !areAdsDisabledDevice() && window.location.search.includes('be_enthused')
-);
+export const isAdEnthused =
+	!areAdsDisabledForDevice && window.location.search.includes('be_enthused');
 
 /**
  * This is the interface that our ad components must register with us.
@@ -71,7 +69,7 @@ class AdsController {
 
 	constructor() {
 		if (!import.meta.env.SSR) {
-			if (isAdEnthused.value) {
+			if (isAdEnthused) {
 				this.videoAdapter = new AdEnthusiastAdapter();
 				this.adapter = new AdEnthusiastAdapter();
 			}
@@ -86,7 +84,7 @@ class AdsController {
 	}
 
 	get shouldShow() {
-		if (areAdsDisabledDevice()) {
+		if (areAdsDisabledForDevice) {
 			return false;
 		}
 
@@ -102,7 +100,7 @@ export function createAdsController() {
 	const c = reactive(new AdsController()) as AdsController;
 	provide(AdsControllerKey, c);
 
-	if (areAdsDisabledDevice()) {
+	if (areAdsDisabledForDevice) {
 		return c;
 	}
 

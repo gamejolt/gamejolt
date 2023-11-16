@@ -6,9 +6,18 @@ import { isAdEnthused, useAdsController } from './ad-store';
 import AppAdWidget from './widget/AppAdWidget.vue';
 
 defineProps({
-	affixPadding: {
+	showLeft: {
+		type: Boolean,
+	},
+	showRight: {
+		type: Boolean,
+	},
+	/**
+	 * The minimum width in pixels that the screen must be for the ads to show.
+	 */
+	minWidth: {
 		type: Number,
-		default: 8,
+		default: 2000,
 	},
 });
 
@@ -18,7 +27,7 @@ const ads = useAdsController();
 <template>
 	<div :style="{ position: `relative` }">
 		<div
-			v-if="ads.shouldShow && isAdEnthused && Screen.width >= 2000"
+			v-if="showLeft && ads.shouldShow && isAdEnthused && Screen.width >= minWidth"
 			:style="{
 				position: `absolute`,
 				left: `20px`,
@@ -27,8 +36,25 @@ const ads = useAdsController();
 				zIndex: kLayerAds,
 			}"
 		>
-			<AppScrollAffix :padding="affixPadding">
+			<!-- We set the padding to 80 just in case there's a top nav affixed -->
+			<AppScrollAffix :padding="80">
 				<AppAdWidget size="skyscraper-1" placement="side" />
+			</AppScrollAffix>
+		</div>
+
+		<div
+			v-if="showRight && ads.shouldShow && isAdEnthused && Screen.width >= minWidth"
+			:style="{
+				position: `absolute`,
+				right: `20px`,
+				top: 0,
+				width: `160px`,
+				zIndex: kLayerAds,
+			}"
+		>
+			<!-- We set the padding to 80 just in case there's a top nav affixed -->
+			<AppScrollAffix :padding="80">
+				<AppAdWidget size="skyscraper-2" placement="side" />
 			</AppScrollAffix>
 		</div>
 
