@@ -126,10 +126,7 @@ const gridStyles = {
 		</AppIllustration>
 	</template>
 	<template v-else>
-		<template
-			v-for="[feedType, { collectibles, isLoading, reachedEnd }] of filteredFeeds"
-			:key="feedType"
-		>
+		<template v-for="[feedType, feed] of filteredFeeds" :key="feedType">
 			<h2
 				:style="{
 					marginTop: `0`,
@@ -141,9 +138,10 @@ const gridStyles = {
 
 			<div :style="gridStyles">
 				<AppCollectibleThumb
-					v-for="(collectible, i) of collectibles.value"
+					v-for="(collectible, i) of feed.collectibles.value"
 					:key="collectible.id"
 					:collectible="collectible"
+					:feed="feed"
 					class="anim-fade-in-enlarge"
 					:style="{
 						animationDelay: `${15 * (i % ItemsPerPage)}ms`,
@@ -153,9 +151,9 @@ const gridStyles = {
 
 			<AppSpacer vertical :scale="6" />
 
-			<div v-if="!reachedEnd.value" class="page-cut">
-				<AppButton :disabled="isLoading.value" @click="loadMore(feedType)">
-					{{ isLoading.value ? $gettext(`Loading...`) : $gettext(`Load more`) }}
+			<div v-if="!feed.reachedEnd.value" class="page-cut">
+				<AppButton :disabled="feed.isLoading.value" @click="loadMore(feedType)">
+					{{ feed.isLoading.value ? $gettext(`Loading...`) : $gettext(`Load more`) }}
 				</AppButton>
 			</div>
 

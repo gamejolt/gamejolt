@@ -9,7 +9,6 @@ import {
 	featureMicrotransactions,
 	fetchFeatureToggles,
 } from '../../../../_common/features/features.service';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import { InventoryShopProductSaleModel } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
@@ -24,7 +23,6 @@ import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '../../../../_common/sticker/pack/AppStickerPack.vue';
-import { showStickerPackContentsModal } from '../../../../_common/sticker/pack/contents-modal/modal.service';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
@@ -124,8 +122,12 @@ async function init() {
 	isLoading.value = true;
 
 	let productUrl = `/web/inventory/shop/sales`;
+	const productUrlParams: string[] = [`include_unpurchasable=true`];
 	if (userId?.value) {
-		productUrl += `?userId=${userId.value}`;
+		productUrlParams.push(`userId=${userId.value}`);
+	}
+	if (productUrlParams.length) {
+		productUrl += `?${productUrlParams.join('&')}`;
 	}
 
 	try {
@@ -233,26 +235,23 @@ onMounted(() => {
 	init();
 });
 
-async function purchaseProduct(shopProduct: InventoryShopProductSaleModel) {
+async function purchaseProduct(sale: InventoryShopProductSaleModel) {
 	if (productProcessing.value) {
 		return;
 	}
-	const currencyOptions = shopProduct.validPricingsData;
-	const currencyOptionsList = Object.entries(currencyOptions);
-	if (currencyOptionsList.length === 0) {
-		showErrorGrowl($gettext(`This item is not available for purchase right now.`));
+	const resourceId = sale.avatarFrame?.id || sale.background?.id || sale.stickerPack?.id;
+	if (!resourceId) {
 		return;
 	}
 
-	productProcessing.value = shopProduct.id;
+	productProcessing.value = sale.id;
 
 	// Show a modal to let the user choose which currency to use.
 	await showPurchaseShopProductModal({
-		shopProduct,
-		currencyOptions,
+		resource: sale.product_type,
+		resourceId,
 		onItemPurchased: () => init(),
 	});
-
 	productProcessing.value = undefined;
 }
 
@@ -430,7 +429,12 @@ const rewardPackImageSize = run(() => {
 												transition: `background-color 200ms ${kStrongEaseOut}, border-color 250ms ${kStrongEaseOut}, ${kElevateTransition}`,
 											}),
 										}"
-										@click="showStickerPackContentsModal(chargeRewardPack)"
+										@click="
+											showPurchaseShopProductModal({
+												resource: 'Sticker_Pack',
+												resourceId: chargeRewardPack.id,
+											})
+										"
 									>
 										<!-- Label and description -->
 										<div>

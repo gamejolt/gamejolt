@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { CSSProperties, PropType, ref, toRefs } from 'vue';
 import {
 	styleBorderRadiusLg,
 	styleChangeBgRgba,
@@ -28,20 +28,13 @@ export const StickerPackExpiryStyles: CSSProperties = {
 </script>
 
 <script lang="ts" setup>
-interface StickerPackDetails {
-	name?: boolean;
-}
-
-type PackDetailsOptions = boolean | StickerPackDetails;
-
 const props = defineProps({
 	pack: {
 		type: Object as PropType<StickerPackModel>,
 		required: true,
 	},
-	showDetails: {
-		type: [Object, Boolean] as PropType<PackDetailsOptions>,
-		default: false,
+	showName: {
+		type: Boolean,
 	},
 	canClickPack: {
 		type: Boolean,
@@ -49,26 +42,15 @@ const props = defineProps({
 	forceElevate: {
 		type: Boolean,
 	},
-	borderRadius: {
-		type: Number,
-		default: undefined,
-	},
 });
 
 const emit = defineEmits({
 	clickPack: () => true,
 });
 
-const { pack, showDetails, canClickPack, forceElevate } = toRefs(props);
+const { pack, canClickPack, forceElevate } = toRefs(props);
 
 const loadedImage = ref(false);
-
-const showName = computed(() => {
-	if (!showDetails.value) {
-		return false;
-	}
-	return showDetails.value === true || showDetails.value.name === true;
-});
 
 function onClickPack() {
 	if (canClickPack.value) {

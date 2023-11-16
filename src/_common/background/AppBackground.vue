@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, StyleValue, toRefs, watch } from 'vue';
-import { kStrongEaseOut } from '../../_styles/variables';
+import { CSSProperties, PropType, computed, ref, toRefs, watch } from 'vue';
+import { styleWhen } from '../../_styles/mixins';
 import { ImgHelper } from '../img/helper/helper-service';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { BackgroundModel } from './background.model';
+import AppBackgroundFade from './AppBackgroundFade.vue';
+import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
 const props = defineProps({
 	background: {
@@ -17,16 +18,16 @@ const props = defineProps({
 		type: Boolean,
 	},
 	backdropStyle: {
-		type: Object as PropType<StyleValue>,
+		type: Object as PropType<CSSProperties>,
 		default: undefined,
 	},
 	backgroundStyle: {
-		type: Object as PropType<StyleValue>,
+		type: Object as PropType<CSSProperties>,
 		default: undefined,
 	},
 	fadeOpacity: {
 		type: Number,
-		default: 0.1,
+		default: undefined,
 	},
 	/**
 	 * Will scroll the background infinitely in the chosen direction.
@@ -43,8 +44,7 @@ const props = defineProps({
 	},
 });
 
-const { background, darken, bleed, backdropStyle, backgroundStyle, fadeOpacity, scrollDirection } =
-	toRefs(props);
+const { background, bleed, backdropStyle, backgroundStyle, scrollDirection } = toRefs(props);
 
 const mediaItem = computed(() => background?.value?.media_item);
 const hasMedia = computed(() => !!mediaItem.value);
@@ -75,64 +75,49 @@ if (import.meta.env.SSR) {
 </script>
 
 <template>
-	<div class="-background">
+	<div class="AppBackground">
 		<AppMediaItemBackdrop
 			v-if="hasMedia"
 			:media-item="mediaItem"
-			class="-backdrop"
-			:class="{ '-bleed': bleed }"
+			class="_backdrop"
+			:class="{ _bleed: bleed }"
 			:style="backdropStyle"
 		>
-			<div v-if="background" class="-stretch anim-fade-in">
+			<div v-if="background" class="_stretch anim-fade-in">
 				<Transition name="fade">
 					<div
 						v-if="loadedBackground"
 						:key="loadedBackground.id"
 						:class="[
-							'-stretch',
+							'_stretch',
 							'anim-fade-in',
 							{
-								'-scroll': scrollDirection,
-								[`-scroll-${scrollDirection}`]: scrollDirection,
+								_scroll: scrollDirection,
+								[`_scroll-${scrollDirection}`]: scrollDirection,
 							},
 						]"
 						:style="[
-							{
-								backgroundImage: loadedBackground.cssBackgroundImage,
-								backgroundRepeat: loadedBackground.cssBackgroundRepeat,
-								backgroundSize: loadedBackground.cssBackgroundSize,
-								backgroundPosition: loadedBackground.cssBackgroundPosition,
-							},
-							backgroundStyle || {},
+							getBackgroundCSSProperties(loadedBackground),
+							styleWhen(!!backgroundStyle, backgroundStyle!)
 						]"
 					/>
 				</Transition>
 
-				<template v-if="darken">
-					<div v-if="!noEdges" class="-fade-top" />
-					<div
-						class="-stretch"
-						:style="{
-							backgroundColor: `rgba(0, 0, 0, ${fadeOpacity})`,
-							transition: `background-color 300ms ${kStrongEaseOut}`,
-						}"
-					/>
-					<div v-if="!noEdges" class="-fade-bottom" />
-				</template>
+				<AppBackgroundFade v-if="darken" :fade-opacity="fadeOpacity" :no-edges="noEdges" />
 			</div>
 		</AppMediaItemBackdrop>
 
-		<div class="-inner" :class="{ '-active': hasMedia }">
+		<div class="_inner" :class="{ '-active': hasMedia }">
 			<slot />
 		</div>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-.-background
+.AppBackground
 	position: relative
 
-.-backdrop
+._backdrop
 	--background-pos: 0
 	position: absolute
 	z-index: 0
@@ -143,57 +128,37 @@ if (import.meta.env.SSR) {
 	width: unset
 	height: unset
 
-.-bleed
+._bleed
 	--background-pos: -($grid-gutter-width-xs / 2 + $border-width-base)
 
 	@media $media-md-up
 		--background-pos: -($grid-gutter-width / 2 + $border-width-base)
 
-.-stretch
+._stretch
 	position: absolute
 	left: 0
 	top: 0
 	right: 0
 	bottom: 0
 
-.-scroll
+._scroll
 	animation-timing-function: linear !important
 	animation-duration: 20s
 	animation-iteration-count: infinite
 
-.-scroll-left
-.-scroll-right
+._scroll-left
+._scroll-right
 	animation-name: anim-scroll-h
 
-.-scroll-up
-.-scroll-down
+._scroll-up
+._scroll-down
 	animation-name: anim-scroll-v
 
-.-scroll-left
-.-scroll-down
+._scroll-left
+._scroll-down
 	animation-direction: reverse
 
-.-fade-top
-.-fade-bottom
-	position: absolute
-	left: 0
-	right: 0
-	height: 150px
-	max-height: 100%
-	background-repeat: no-repeat
-	background-size: cover
-
-.-fade-top
-	top: 0
-	background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3),  rgba(0, 0, 0, 0))
-	background-position: top
-
-.-fade-bottom
-	bottom: 0
-	background-image: linear-gradient(to top, rgba(0, 0, 0, 0.3),  rgba(0, 0, 0, 0))
-	background-position: bottom
-
-.-inner
+._inner
 	z-index: 1
 	position: relative
 	width: 100%

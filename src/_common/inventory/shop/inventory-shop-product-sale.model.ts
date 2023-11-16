@@ -5,17 +5,22 @@ import { ModelStoreModel, storeModel, storeModelList } from '../../model/model-s
 import { StickerPackModel } from '../../sticker/pack/pack.model';
 import { InventoryShopProductSalePricingModel } from './inventory-shop-product-sale-pricing.model';
 
-interface ModelWithName extends ModelStoreModel {
-	name?: string;
+export type InventoryShopProduct = StickerPackModel | AvatarFrameModel | BackgroundModel;
+
+export const enum PurchasableProductType {
+	StickerPack = 'Sticker_Pack',
+	AvatarFrame = 'Avatar_Frame',
+	Background = 'Background',
 }
 
 export class InventoryShopProductSaleModel implements ModelStoreModel {
 	declare id: number;
-	declare product_type: string;
-	declare product?: ModelWithName;
+	declare product_type: PurchasableProductType;
+	declare product?: InventoryShopProduct;
 	declare pricings: InventoryShopProductSalePricingModel[];
 	declare starts_on?: number;
 	declare ends_on?: number;
+	declare is_product_owned: boolean;
 
 	update(data: any) {
 		Object.assign(this, data);
@@ -25,21 +30,22 @@ export class InventoryShopProductSaleModel implements ModelStoreModel {
 		}
 
 		if (data.product) {
-			switch (data.product_type) {
-				case 'Sticker_Pack':
+			switch (this.product_type) {
+				case PurchasableProductType.StickerPack:
 					this.product = storeModel(StickerPackModel, data.product);
 					break;
 
-				case 'Avatar_Frame':
+				case PurchasableProductType.AvatarFrame:
 					this.product = storeModel(AvatarFrameModel, data.product);
 					break;
 
-				case 'Background':
+				case PurchasableProductType.Background:
 					this.product = storeModel(BackgroundModel, data.product);
 					break;
 
 				default:
 					console.warn('Unsupported product type', data.product_type);
+					this.product = undefined;
 					break;
 			}
 		}
@@ -64,6 +70,10 @@ export class InventoryShopProductSaleModel implements ModelStoreModel {
 			return this.product;
 		}
 		return null;
+	}
+
+	get validProduct() {
+		return this.stickerPack || this.avatarFrame || this.background;
 	}
 
 	get validPricings() {
