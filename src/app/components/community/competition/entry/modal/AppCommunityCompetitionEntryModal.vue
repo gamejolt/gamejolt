@@ -37,7 +37,7 @@ const props = defineProps({
 const { entry, entryId } = toRefs(props);
 const modal = useModal()!;
 
-const m_entry = ref<CommunityCompetitionEntryModel | null>(null);
+const m_entry = ref<CommunityCompetitionEntryModel | null>(entry?.value || null);
 const competition = ref<CommunityCompetitionModel | null>(null);
 const votingCategories = ref<CommunityCompetitionVotingCategoryModel[]>([]);
 const userVotes = ref<CommunityCompetitionEntryVoteModel[]>([]);
@@ -70,10 +70,6 @@ const sortedAwards = computed(() =>
 		numberSort(a.community_competition_award.sort, b.community_competition_award.sort)
 	)
 );
-
-if (entry?.value) {
-	m_entry.value = entry.value;
-}
 
 onMounted(async () => {
 	const newEntryId = entryId?.value || entry?.value?.id;

@@ -19,11 +19,7 @@ const modal = useModal()!;
 
 // We don't want to close the modal after they've uploaded a header since they can set a crop
 // after. We want to auto-close it after they've saved the crop, though.
-const previousHeaderId = ref<number | null>(null);
-
-if (competition.value.header) {
-	previousHeaderId.value = competition.value.header.id;
-}
+const previousHeaderId = ref<number | null>(competition.value.header?.id || null);
 
 function onSubmit(inputCompetition: CommunityCompetitionModel) {
 	const newHeaderId = (inputCompetition.header && inputCompetition.header.id) || null;
@@ -47,5 +43,3 @@ function onSubmit(inputCompetition: CommunityCompetitionModel) {
 		</div>
 	</AppModal>
 </template>
-
-<style lang="stylus" scoped></style>

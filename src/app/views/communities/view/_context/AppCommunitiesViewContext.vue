@@ -2,6 +2,7 @@
 import { PropType, computed, provide } from 'vue';
 import { useRoute } from 'vue-router';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
+import { CommunityChannelCardWidth } from '../../../../components/community/channel/card/AppCommunityChannelCard.vue';
 import { useAppStore } from '../../../../store';
 import AppCommunitiesViewCard from '../_card/AppCommunitiesViewCard.vue';
 import AppNavChannels from '../_nav/channels/AppNavChannels.vue';
@@ -17,7 +18,7 @@ const props = defineProps({
 
 provide(CommunityRouteStoreKey, props.routeStore);
 
-const store = useAppStore();
+const { toggleLeftPane } = useAppStore();
 const route = useRoute();
 
 const isEditing = computed(() => isEditingCommunity(route));
@@ -25,14 +26,18 @@ const isEditing = computed(() => isEditingCommunity(route));
 function onChangeSection(path: string) {
 	// If changing channels, hide the left pane/context sidebar.
 	if (route.path !== path) {
-		store.toggleLeftPane();
+		toggleLeftPane();
 	}
 }
 </script>
 
 <template>
 	<div v-if="routeStore.isLoaded" class="sidebar-context-channels">
-		<div class="-card">
+		<div
+			:style="{
+				maxWidth: `${CommunityChannelCardWidth}px`,
+			}"
+		>
 			<AppCommunitiesViewCard />
 		</div>
 
@@ -42,14 +47,9 @@ function onChangeSection(path: string) {
 </template>
 
 <style lang="stylus" scoped>
-@import '../../../../components/community/channel/card/variables'
-
 .sidebar-context-channels
 	padding: var(--shell-content-sidebar-padding)
 
 	@media $media-sm-up
 		padding-right: 0
-
-	> .-card
-		max-width: $card-width
 </style>

@@ -17,20 +17,20 @@ const props = defineProps({
 
 const { collection } = toRefs(props);
 
-const tagHighlight = computed(() => {
+const tagText = computed(() => {
 	switch (collection.value.type) {
 		case 'developer':
-			return $gettext("Developer's Games");
+			return $gettext(`Developer's Games`);
 		case 'followed':
-			return $gettext('Followed Games');
+			return $gettext(`Followed Games`);
 		case 'playlist':
-			return $gettext('Playlist');
+			return $gettext(`Playlist`);
 		case 'bundle':
-			return $gettext('Bundle');
+			return $gettext(`Bundle`);
 		case 'owned':
-			return $gettext('Owned Games');
+			return $gettext(`Owned Games`);
 		case 'recommended':
-			return $gettext('Daily Mix');
+			return $gettext(`Daily Mix`);
 	}
 });
 </script>
@@ -38,7 +38,7 @@ const tagHighlight = computed(() => {
 <template>
 	<div class="collection-thumbnail">
 		<span v-if="!hideTag" class="tag tag-highlight">
-			{{ tagHighlight }}
+			{{ tagText }}
 		</span>
 
 		<AppJolticon icon="playlist" />

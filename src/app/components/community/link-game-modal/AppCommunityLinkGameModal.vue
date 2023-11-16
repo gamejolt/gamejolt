@@ -107,8 +107,9 @@ function onClickLink(game: GameModel) {
 			<div v-else-if="!isLoading" class="page-help">
 				<p>
 					{{
-						$gettext(`You have no more games available to link. Just remember, games can only be
-						linked to a single community.`)
+						$gettext(
+							`You have no more games available to link. Just remember, games can only be linked to a single community.`
+						)
 					}}
 				</p>
 			</div>

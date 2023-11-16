@@ -36,7 +36,7 @@ function onRemoved(postsMovedTo?: CommunityChannelModel) {
 
 		<div class="modal-header">
 			<h2 class="modal-title">
-				{{ $gettext(`Remove %{ title } channel?`, { title: channel.title }) }}
+				{{ $gettext(`Remove "%{ title }" channel?`, { title: channel.title }) }}
 			</h2>
 		</div>
 
@@ -54,8 +54,8 @@ function onRemoved(postsMovedTo?: CommunityChannelModel) {
 						</span>
 					</p>
 					<p>
-						<span v-translate class="-jam-warning">
-							<b>This action is irreversible!</b>
+						<span class="-jam-warning">
+							<b>{{ $gettext(`This action is irreversible!`) }}</b>
 						</span>
 					</p>
 				</div>

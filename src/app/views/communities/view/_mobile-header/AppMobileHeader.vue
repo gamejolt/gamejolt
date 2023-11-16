@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, toRef, toRefs } from 'vue';
+import { toRef, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import AppButton from '../../../../../_common/button/AppButton.vue';
@@ -30,19 +30,17 @@ const props = defineProps({
 
 const { hasUnread } = toRefs(props);
 const { community, channel, sidebarData, channelPath } = toRefs(useCommunityRouteStore()!);
-
-const store = useAppStore();
-const router = useRouter();
-
+const { toggleLeftPane } = useAppStore();
 const { user } = useCommonStore();
 const { activeContextPane } = useSidebarStore();
+const router = useRouter();
 
 const memberCount = toRef(() => community.value.member_count || 0);
-const shouldShowModTools = computed(() => user.value?.isMod === true);
-const shouldShowChannelsMenu = computed(() => !!activeContextPane.value);
-const isJam = computed(() => channel.value?.type === 'competition');
+const shouldShowModTools = toRef(() => user.value?.isMod === true);
+const shouldShowChannelsMenu = toRef(() => !!activeContextPane.value);
+const isJam = toRef(() => channel.value?.type === 'competition');
 
-const shouldShowAbout = computed(() => {
+const shouldShowAbout = toRef(() => {
 	// It's too confusing to see an "About" button for the community as well
 	// as the jam info.
 	if (isJam.value) {
@@ -57,7 +55,7 @@ const shouldShowAbout = computed(() => {
 });
 
 function onClickMenu() {
-	store.toggleLeftPane('context');
+	toggleLeftPane('context');
 }
 
 function onClickAbout() {
@@ -132,10 +130,10 @@ function copyShareUrl() {
 				>
 					<div v-if="hasUnread" class="-unread-blip" />
 					<template v-if="!Screen.isXs || !shouldShowAbout">
-						<div v-if="channelPath">
+						<template v-if="channelPath">
 							{{ $gettext(`Channels`) }}
-						</div>
-						<div v-else>{{ $gettext(`Menu`) }}</div>
+						</template>
+						<template v-else>{{ $gettext(`Menu`) }}</template>
 					</template>
 				</AppButton>
 			</div>
@@ -144,6 +142,7 @@ function copyShareUrl() {
 
 			<!-- Join / Edit / View -->
 			<div v-if="!community.hasPerms()" class="-controls-item -controls-primary">
+				<!-- TODO(component-setup-refactor-1): check to see if we're actually able to get rid of the disabled. it seems like we need it -->
 				<AppCommunityJoinWidget
 					:community="community"
 					block

@@ -7,15 +7,15 @@ import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAd
 import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
 import {
-$removeGameSong,
-$saveGameSongSort,
-GameSongModel,
+	$removeGameSong,
+	$saveGameSongSort,
+	GameSongModel,
 } from '../../../../../../../_common/game/song/song.model';
 import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
 import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import {
-LegacyRouteComponent,
-OptionsForLegacyRoute,
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
 } from '../../../../../../../_common/route/legacy-route-component';
 import { arrayRemove } from '../../../../../../../utils/array';
 import FormGameSong from '../../../../../../components/forms/game/song/song.vue';

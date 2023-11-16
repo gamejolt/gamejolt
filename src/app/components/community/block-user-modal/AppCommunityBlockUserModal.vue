@@ -43,5 +43,3 @@ function onFormSubmit() {
 		</div>
 	</AppModal>
 </template>
-
-<style lang="stylus" scoped></style>

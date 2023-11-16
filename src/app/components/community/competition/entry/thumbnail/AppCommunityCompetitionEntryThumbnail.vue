@@ -27,6 +27,7 @@ const props = defineProps({
 	showRank: {
 		type: Boolean,
 	},
+	/** Voting category the rank should be shown from. No voting category means Overall. */
 	votingCategory: {
 		type: Object as PropType<CommunityCompetitionVotingCategoryModel>,
 		default: undefined,

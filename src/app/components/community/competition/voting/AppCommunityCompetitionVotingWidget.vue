@@ -199,10 +199,9 @@ function getVotingCategoryDescription(votingCategoryId: number | null) {
 				<div class="alert">
 					<p>
 						{{
-							$gettext(`
-						Only participants can vote on entries of this jam. To participate,
-						submit an entry to this jam.
-						`)
+							$gettext(
+								`Only participants can vote on entries of this jam. To participate, submit an entry to this jam.`
+							)
 						}}
 					</p>
 				</div>
@@ -230,12 +229,9 @@ function getVotingCategoryDescription(votingCategoryId: number | null) {
 							<br />
 							<span>
 								{{
-									$gettext(`
-									Votes must be cast during the voting period. You can change your
-									vote at any time before then, but after voting has ended, your
-									decision will be finalized. You can vote for as many entries as
-									you wish.
-								`)
+									$gettext(
+										`Votes must be cast during the voting period. You can change your vote at any time before then, but after voting has ended, your decision will be finalized. You can vote for as many entries as you wish.`
+									)
 								}}
 							</span>
 						</i>
@@ -259,18 +255,18 @@ function getVotingCategoryDescription(votingCategoryId: number | null) {
 			<template v-if="!competition.are_results_calculated">
 				<p>
 					{{
-						$gettext(`We are currently working on processing the voting results. Check back later
-						to see the final results!`)
+						$gettext(
+							`We are currently working on processing the voting results. Check back later to see the final results!`
+						)
 					}}
 				</p>
 			</template>
 			<template v-else-if="hasNoVotes">
 				<p>
 					{{
-						$gettext(`
-						Aw, shucks! This entry wasn't voted on during the voting period, which means
-						it has no voting results. You can still check the game out, though!
-						`)
+						$gettext(
+							`Aw, shucks! This entry wasn't voted on during the voting period, which means it has no voting results. You can still check the game out, though!`
+						)
 					}}
 				</p>
 			</template>
@@ -304,20 +300,16 @@ function getVotingCategoryDescription(votingCategoryId: number | null) {
 					<h4>{{ $gettext(`How Are Voting Results Calculated?`) }}</h4>
 					<p>
 						{{
-							$gettext(`
-							First, everyone rates entries from 1-5 in one or more categories. The
-							ratings for each category are averaged to calculate a final score.
-							Ratings of "n/a" are not included in the calculations.
-						`)
+							$gettext(
+								`First, everyone rates entries from 1-5 in one or more categories. The ratings for each category are averaged to calculate a final score. Ratings of "n/a" are not included in the calculations.`
+							)
 						}}
 					</p>
 					<p>
 						{{
-							$gettext(`
-							When the voting period ends, all scores given by all voters are
-							tabulated to arrive at a weighted average for each entry. The weighted
-							averages determine the entries' overall rankings.
-						`)
+							$gettext(
+								`When the voting period ends, all scores given by all voters are tabulated to arrive at a weighted average for each entry. The weighted averages determine the entries' overall rankings.`
+							)
 						}}
 					</p>
 					<h4>
@@ -325,28 +317,23 @@ function getVotingCategoryDescription(votingCategoryId: number | null) {
 					</h4>
 					<p>
 						{{
-							$gettext(`To arrive at a weighted average for a particular entry, its scores are
-							compared to those of every other entry. Higher occurrences of the same
-							score are given more value, or "weight".`)
+							$gettext(
+								`To arrive at a weighted average for a particular entry, its scores are compared to those of every other entry. Higher occurrences of the same score are given more value, or "weight".`
+							)
 						}}
 					</p>
 					<p>
 						{{
-							$gettext(`
-						The goal is to come up with a projection, based on all available data,
-							of the entry's "true average". The more votes an entry has, the more
-							accurate this average will be.
-						`)
+							$gettext(
+								`The goal is to come up with a projection, based on all available data, of the entry's "true average". The more votes an entry has, the more accurate this average will be.`
+							)
 						}}
 					</p>
 					<p>
 						{{
-							$gettext(`
-							Using weighted averages prevents an entry with a single 5 rating from
-							trumping entries with, for example, several 4 ratings. Similarly, if an
-							entry gets only one low vote and several high ones, its overall score
-							won't be crushed.
-						`)
+							$gettext(
+								`Using weighted averages prevents an entry with a single 5 rating from trumping entries with, for example, several 4 ratings. Similarly, if an entry gets only one low vote and several high ones, its overall score won't be crushed.`
+							)
 						}}
 					</p>
 				</template>

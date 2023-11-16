@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { PropType, computed, toRef, toRefs } from 'vue';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
@@ -38,7 +38,7 @@ const notificationReasons = computed(() => {
 	throw new Error('No reasons defined.');
 });
 
-const hasReason = computed(() => notification.value.reason !== null);
+const hasReason = toRef(() => notification.value.reason !== null);
 
 const reasonText = computed(() => {
 	const reason = notification.value.reason;
@@ -61,7 +61,6 @@ function onDismiss() {
 </script>
 
 <template>
-	<!--TODO(component-setup-refactor): adding alert-type 'info' to AppAlertDismissable-->
 	<AppAlertDismissable
 		alert-type="info"
 		class="-notification"

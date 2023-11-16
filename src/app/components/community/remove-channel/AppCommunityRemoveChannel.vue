@@ -29,7 +29,7 @@ const emit = defineEmits({
 
 const { community, channel } = toRefs(props);
 
-const selectedChannel = ref<CommunityChannelModel | undefined>(undefined);
+const selectedChannel = ref<CommunityChannelModel>();
 const moving = ref(false);
 
 const channels = computed(() => {
@@ -90,7 +90,9 @@ async function removeChannel(moveToChannel?: CommunityChannelModel) {
 				{{ $gettext(`Eject`) }}
 			</AppButton>
 		</template>
-		<span v-else class="-where-to">Where to?</span>
+		<span v-else class="-where-to">
+			{{ $gettext(`Where to?`) }}
+		</span>
 
 		<AppExpand :when="moving">
 			<AppCommunityChannelSelect

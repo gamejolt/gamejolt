@@ -20,9 +20,11 @@ import AppBlockedNotice from '../_blocked-notice/AppBlockedNotice.vue';
 import { isVirtualChannel, useCommunityRouteStore } from '../view.store';
 
 const props = defineProps({
+	// It's optional since it may not have loaded into the page yet. In that
+	// case, we show a placeholder and wait.
 	feed: {
 		type: Object as PropType<ActivityFeedView>,
-		required: true,
+		default: undefined,
 	},
 });
 
@@ -32,14 +34,12 @@ const emit = defineEmits({
 });
 
 const { feed } = toRefs(props);
-
 const routeStore = useCommunityRouteStore()!;
 const { user } = useCommonStore();
 const route = useRoute();
 
 const community = toRef(() => routeStore.community);
-
-const channel = computed(() => routeStore.channel!);
+const channel = toRef(() => routeStore.channel!);
 
 const tab = computed(() => {
 	if (route.query.sort === 'hot') {
@@ -76,7 +76,7 @@ const shouldShowTabs = computed(() => {
 		return false;
 	}
 
-	if (!feed.value || feed.value.hasItems) {
+	if (!feed?.value || feed.value.hasItems) {
 		return true;
 	}
 
@@ -115,7 +115,7 @@ function onLoadedNew() {
 
 function onPostUnfeatured(eventItem: EventItemModel, communityInput: CommunityModel) {
 	if (
-		feed.value &&
+		feed?.value &&
 		channel.value === routeStore.frontpageChannel &&
 		community.value.id === communityInput.id
 	) {
@@ -124,14 +124,14 @@ function onPostUnfeatured(eventItem: EventItemModel, communityInput: CommunityMo
 }
 
 function onPostRejected(eventItem: EventItemModel, communityInput: CommunityModel) {
-	if (feed.value && community.value.id === communityInput.id) {
+	if (feed?.value && community.value.id === communityInput.id) {
 		feed.value.remove([eventItem]);
 	}
 }
 
 function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannelModel) {
 	if (
-		feed.value &&
+		feed?.value &&
 		community.value.id === movedTo.community_id &&
 		!isVirtualChannel(routeStore, channel.value) &&
 		channel.value.title !== movedTo.title
@@ -205,9 +205,13 @@ function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannel
 				@load-new="onLoadedNew"
 			/>
 			<div v-else-if="channel !== routeStore.frontpageChannel">
-				<div v-if="channel.canPost" v-translate="{ message: noPostsMessage }" class="alert">
-					<b>There are no posts here yet.</b>
-					What are you waiting for? %{ message } Make people happy.
+				<div v-if="channel.canPost" class="alert">
+					<b>{{ $gettext(`There are no posts here yet.`) }}</b>
+					{{
+						$gettext(`What are you waiting for? %{ message } Make people happy.`, {
+							message: noPostsMessage,
+						})
+					}}
 				</div>
 				<div v-else-if="channel.is_archived">
 					<AppIllustration :asset="illNoCommentsSmall">

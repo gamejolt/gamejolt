@@ -51,13 +51,15 @@ const communityBlockReason = computed(() => {
 
 		<div>
 			{{
-				$gettext(`You are unable to create any new posts in this community until your block gets
-				lifted or expires.`)
+				$gettext(
+					`You are unable to create any new posts in this community until your block gets lifted or expires.`
+				)
 			}}
 		</div>
 
 		<div v-if="community.user_block && community.user_block.doesExpire">
-			Your block will expire in
+			{{ $gettext(`Your block will expire in:`) }}
+			{{ ' ' }}
 			<b><AppTimeAgo :date="community.user_block.expires_on" without-suffix /></b>
 		</div>
 	</div>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, onMounted, ref, toRefs } from 'vue';
+import { PropType, onBeforeUnmount, onMounted, ref, toRefs } from 'vue';
 import { CommunityCompetitionModel } from '../../../../../_common/community/competition/competition.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 
@@ -18,15 +18,20 @@ const props = defineProps({
 
 const { competition } = toRefs(props);
 
-const updateTimer = ref<NodeJS.Timer | null>(null);
+let updateTimer: NodeJS.Timer | null = null;
 const blocksData = ref<BlockData[]>([]);
 const titleText = ref('');
 
 onMounted(() => {
-	updateTimer.value = setInterval(() => {
-		updateDisplayData();
-	}, 1000);
+	updateTimer = setInterval(() => updateDisplayData(), 1000);
 	updateDisplayData();
+});
+
+onBeforeUnmount(() => {
+	if (updateTimer) {
+		clearInterval(updateTimer);
+		updateTimer = null;
+	}
 });
 
 function updateDisplayData() {

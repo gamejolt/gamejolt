@@ -25,12 +25,9 @@ const props = defineProps({
 const { community, presetType } = toRefs(props);
 
 const modal = useModal()!;
-const previousBackgroundId = ref<number | null>(null);
 
 const background = getCommunityChannelBackground(community.value, presetType.value);
-if (background) {
-	previousBackgroundId.value = background.id;
-}
+const previousBackgroundId = ref(background?.id || null);
 
 function onSubmit(inputCommunity: CommunityModel) {
 	const background = getCommunityChannelBackground(inputCommunity, presetType.value);

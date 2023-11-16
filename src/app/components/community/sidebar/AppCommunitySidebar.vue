@@ -31,16 +31,14 @@ const props = defineProps({
 	},
 });
 
-const GameListCollapsedCount = 3;
-
 const { community, sidebarData } = toRefs(props);
-
 const { user } = useCommonStore();
 const router = useRouter();
 
+const GameListCollapsedCount = 3;
+
 const currentCollaborators = ref<UserModel[]>([]);
 const currentCollaboratorCount = ref(0);
-
 const collaboratorListCollapsed = ref(true);
 const isLoadingMoreCollaborators = ref(false);
 const loadedAllCollaborators = ref(false);
@@ -48,7 +46,7 @@ const gameListCollapsed = ref(true);
 
 watch(
 	() => sidebarData.value.collaborators,
-	(collaborators: UserModel[]) => {
+	collaborators => {
 		currentCollaborators.value = collaborators;
 	},
 	{ immediate: true, deep: true }
@@ -56,7 +54,7 @@ watch(
 
 watch(
 	() => sidebarData.value.collaboratorCount,
-	(collaboratorCount: number) => {
+	collaboratorCount => {
 		currentCollaboratorCount.value = collaboratorCount;
 	},
 	{ immediate: true }
@@ -176,10 +174,10 @@ function onClickReport() {
 				<div v-if="hasMoreGames" class="pull-right">
 					<AppButton trans @click="toggleGamesList">
 						<div v-if="gameListCollapsed">
-							{{ $gettext(` View All `) }}
+							{{ $gettext(`View all`) }}
 						</div>
 						<div v-else>
-							{{ $gettext(` Show fewer `) }}
+							{{ $gettext(`Show fewer`) }}
 						</div>
 					</AppButton>
 				</div>
@@ -200,10 +198,10 @@ function onClickReport() {
 						@click="toggleCollaboratorList"
 					>
 						<div v-if="collaboratorListCollapsed || isLoadingMoreCollaborators">
-							{{ $gettext(` View All `) }}
+							{{ $gettext(`View all`) }}
 						</div>
 						<div v-else>
-							{{ $gettext(` Show fewer `) }}
+							{{ $gettext(`Show fewer`) }}
 						</div>
 					</AppButton>
 				</div>

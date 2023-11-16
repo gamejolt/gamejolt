@@ -13,13 +13,11 @@ const props = defineProps({
 });
 
 const { disabled } = toRefs(props);
-const gameDashStore = ref(useGameDashRouteController());
+const gameDashStore = useGameDashRouteController();
 const form = ref(useForm());
 
-const isWizard = toRef(() => !gameDashStore.value || gameDashStore.value.isWizard);
-
+const isWizard = toRef(() => !gameDashStore || gameDashStore.isWizard);
 const inForm = toRef(() => !!form.value);
-
 const canProceed = toRef(() => !form.value || form.value.valid || disabled.value);
 
 async function next(_e: Event, formResult?: boolean) {
@@ -27,7 +25,7 @@ async function next(_e: Event, formResult?: boolean) {
 		return;
 	}
 
-	gameDashStore.value?.wizardNext();
+	gameDashStore?.wizardNext();
 }
 </script>
 

@@ -11,17 +11,25 @@ import { useAppStore } from '../../../../../store';
 import { loadArchivedChannels, useCommunityRouteStore } from '../../view.store';
 
 const { user } = useCommonStore();
-const store = useAppStore();
+const { toggleLeftPane, communities, communityStates } = useAppStore();
 const routeStore = useCommunityRouteStore()!;
-const { communities, communityStates } = toRefs(store);
-const { community, frontpageChannel, allChannel, channel: activeChannel } = toRefs(routeStore);
+const {
+	community,
+	frontpageChannel,
+	allChannel,
+	channel: activeChannel,
+	archivedChannels,
+	expandedArchivedChannels,
+	loadedArchivedChannels,
+} = toRefs(routeStore);
 
 const isLoadingArchivedChannels = ref(false);
+
 const communityState = computed(() => communityStates.value.getCommunityState(community.value));
 
 function isChannelLocked(channel: CommunityChannelModel) {
 	// Don't show the locked status to guests.
-	if (!user) {
+	if (!user.value) {
 		return false;
 	}
 
@@ -53,24 +61,20 @@ function isChannelUnread(channel: CommunityChannelModel) {
 	return false;
 }
 
-function isChannelUnpublished(channel: CommunityChannelModel) {
-	return channel.isUnpublished;
-}
-
 async function onClickArchivedChannels() {
 	if (isLoadingArchivedChannels.value) {
 		return;
 	}
 
-	routeStore.expandedArchivedChannels = !routeStore.expandedArchivedChannels;
+	expandedArchivedChannels.value = !expandedArchivedChannels.value;
 
 	// Load in archived channels.
-	if (routeStore.expandedArchivedChannels && !routeStore.loadedArchivedChannels) {
+	if (expandedArchivedChannels.value && !loadedArchivedChannels.value) {
 		isLoadingArchivedChannels.value = true;
 
 		await loadArchivedChannels(routeStore);
 
-		routeStore.loadedArchivedChannels = true;
+		loadedArchivedChannels.value = true;
 		isLoadingArchivedChannels.value = false;
 	}
 }
@@ -85,7 +89,7 @@ async function onClickArchivedChannels() {
 			:background-item="frontpageChannel.background"
 			:is-active="activeChannel === frontpageChannel"
 			:is-unread="isChannelUnread(frontpageChannel)"
-			@click="store.toggleLeftPane()"
+			@click="toggleLeftPane()"
 		/>
 
 		<AppCommunityChannelCard
@@ -96,7 +100,7 @@ async function onClickArchivedChannels() {
 			:background-item="allChannel.background"
 			:is-active="activeChannel === allChannel"
 			:is-unread="isChannelUnread(allChannel)"
-			@click="store.toggleLeftPane()"
+			@click="toggleLeftPane()"
 		/>
 
 		<h5 class="-heading">
@@ -114,29 +118,24 @@ async function onClickArchivedChannels() {
 				:is-active="activeChannel === channel"
 				:is-unread="isChannelUnread(channel)"
 				:is-locked="isChannelLocked(channel)"
-				:is-unpublished="isChannelUnpublished(channel)"
+				:is-unpublished="channel.isUnpublished"
 				:channel-type="channel.type"
-				@click="store.toggleLeftPane()"
+				@click="toggleLeftPane()"
 			/>
 		</template>
 
 		<template v-if="community.has_archived_channels">
 			<h5 class="-heading -archived-heading" @click="onClickArchivedChannels">
-				<AppJolticon
-					:icon="routeStore.expandedArchivedChannels ? 'chevron-down' : 'chevron-right'"
-				/>
+				<AppJolticon :icon="expandedArchivedChannels ? 'chevron-down' : 'chevron-right'" />
 				{{ $gettext(`Archived Channels`) }}
 			</h5>
 
 			<template
-				v-if="
-					routeStore.expandedArchivedChannels ||
-					(activeChannel && activeChannel.is_archived)
-				"
+				v-if="expandedArchivedChannels || (activeChannel && activeChannel.is_archived)"
 			>
-				<template v-if="routeStore.archivedChannels.length">
+				<template v-if="archivedChannels.length">
 					<AppCommunityChannelCard
-						v-for="channel of routeStore.archivedChannels"
+						v-for="channel of archivedChannels"
 						:key="channel.id"
 						:community="community"
 						:path="channel.title"
@@ -146,9 +145,9 @@ async function onClickArchivedChannels() {
 						:is-unread="isChannelUnread(channel)"
 						:is-locked="isChannelLocked(channel)"
 						:is-archived="channel.is_archived"
-						:is-unpublished="isChannelUnpublished(channel)"
+						:is-unpublished="channel.isUnpublished"
 						:channel-type="channel.type"
-						@click="store.toggleLeftPane()"
+						@click="toggleLeftPane()"
 					/>
 				</template>
 

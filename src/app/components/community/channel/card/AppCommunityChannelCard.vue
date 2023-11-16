@@ -11,8 +11,6 @@ import { MediaItemModel } from '../../../../../_common/media-item/media-item-mod
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 
-// Sync up with the './variables' file.
-// TODO(component-setup-refactor): sync up manually?
 export const CommunityChannelCardWidth = 270;
 export const CommunityChannelCardHeight = 70;
 </script>
@@ -33,7 +31,7 @@ const props = defineProps({
 	},
 	backgroundItem: {
 		type: Object as PropType<MediaItemModel>,
-		required: true,
+		default: undefined,
 	},
 	isActive: {
 		type: Boolean,

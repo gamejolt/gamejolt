@@ -36,9 +36,9 @@ const documents = toRef(() => [content.value]);
 
 		<p class="help-block">
 			{{
-				$gettext(`Tag your game to increase its visibility. It's recommended to include at least one
-				of the listed tags, although you can add your own by putting a #hashtag in your
-				description.`)
+				$gettext(
+					`Tag your game to increase its visibility. It's recommended to include at least one of the listed tags, although you can add your own by putting a #hashtag in your description.`
+				)
 			}}
 		</p>
 	</AppTagSuggestion>
