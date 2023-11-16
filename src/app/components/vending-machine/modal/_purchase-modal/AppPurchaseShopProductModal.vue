@@ -35,6 +35,7 @@ import { illExtremeSadness } from '../../../../../_common/illustration/illustrat
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
+import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import AppModalFloatingHeader from '../../../../../_common/modal/AppModalFloatingHeader.vue';
@@ -677,293 +678,297 @@ function getItemWidthStyles(ratio: number) {
 		</AppModalFloatingHeader>
 
 		<div class="modal-body">
-			<div v-if="!productData" :style="styleFlexCenter({ direction: 'column' })">
-				<div v-if="isLoading" :style="{ ...styleFlexCenter(), minHeight: `300px` }">
-					<AppLoading centered stationary />
+			<AppLoadingFade :is-loading="isLoading">
+				<div v-if="!productData" :style="styleFlexCenter({ direction: 'column' })">
+					<div v-if="isLoading" :style="{ ...styleFlexCenter(), minHeight: `300px` }">
+						<AppLoading centered stationary />
+					</div>
+					<template v-else>
+						<AppIllustration :asset="illExtremeSadness">
+							{{
+								$gettext(
+									`We couldn't find what you were looking for. Please try again another time.`
+								)
+							}}
+						</AppIllustration>
+					</template>
 				</div>
-				<template v-else>
-					<AppIllustration :asset="illExtremeSadness">
-						{{
-							$gettext(
-								`We couldn't find what you were looking for. Please try again another time.`
+				<div v-else :style="styleFlexCenter({ direction: 'column' })">
+					<div
+						:style="
+							getItemWidthStyles(
+								productData.resource === 'Sticker_Pack' ? StickerPackRatio : 1
 							)
-						}}
-					</AppIllustration>
-				</template>
-			</div>
-			<div v-else :style="styleFlexCenter({ direction: 'column' })">
-				<div
-					:style="
-						getItemWidthStyles(
-							productData.resource === 'Sticker_Pack' ? StickerPackRatio : 1
-						)
-					"
-				>
-					<AppUserAvatarBubble
-						v-if="productData.resource === 'Avatar_Frame'"
-						:user="authUser"
-						:frame-override="frameOverride"
-						:show-frame="!!frameOverride"
-						smoosh
-						disable-link
-					/>
-					<AppAspectRatio
-						v-else
-						v-bind="
-							productData.resource === 'Sticker_Pack'
-								? { ratio: StickerPackRatio }
-								: {
-										ratio: 1,
-										style: styleBorderRadiusLg,
-								  }
 						"
 					>
-						<AppImgResponsive
-							v-if="productData.processMediaserverUrl"
-							:style="{
-								width: `100%`,
-								height: `100%`,
-							}"
-							:src="productData.imgUrl"
-							alt=""
+						<AppUserAvatarBubble
+							v-if="productData.resource === 'Avatar_Frame'"
+							:user="authUser"
+							:frame-override="frameOverride"
+							:show-frame="!!frameOverride"
+							smoosh
+							disable-link
 						/>
-						<img
+						<AppAspectRatio
 							v-else
-							:style="{
-								width: `100%`,
-								height: `100%`,
-							}"
-							:src="productData.imgUrl"
-							alt=""
-						/>
-						<AppBackgroundFade v-if="productData.resource === 'Background'" />
-					</AppAspectRatio>
-				</div>
-
-				<div
-					:style="{
-						marginTop: `8px`,
-						alignSelf: `center`,
-						color: kThemeFgMuted,
-						fontSize: kFontSizeSmall.px,
-					}"
-				>
-					{{ productType }}
-				</div>
-
-				<div
-					v-if="productData.name"
-					:style="{
-						fontWeight: 700,
-					}"
-				>
-					{{ productData.name }}
-				</div>
-
-				<AppSpacer vertical :scale="8" />
-
-				<div v-if="actionOptionsData" :style="{ width: `100%` }">
-					<template v-if="actionOptionsData.chargeUser">
-						<AppOnHover>
-							<template #default="{ hoverBinding, hovered }">
-								<a
-									v-bind="{
-										...hoverBinding,
-										style: {
-											background: kThemeBgOffset,
-											...styleBorderRadiusLg,
-											borderColor: `transparent`,
-											display: `block`,
-											borderStyle: `solid`,
-											borderWidth: kBorderWidthBase.px,
-											padding: `${12 - kBorderWidthBase.value}px`,
-											transition: `border-color 300ms ${kStrongEaseOut}`,
-											...styleWhen(hovered, {
-												borderColor: kThemePrimary,
-											}),
-										},
-									}"
-									@click="gotoCreator(actionOptionsData.chargeUser)"
-								>
-									<div
-										:style="{
-											display: `grid`,
-											gridTemplateColumns: `64px minmax(0, 1fr)`,
-											gap: `12px`,
-											color: kThemeFg,
-										}"
-									>
-										<AppUserAvatarBubble
-											:user="actionOptionsData.chargeUser"
-											smoosh
-											disable-link
-										/>
-										<div>
-											<div :style="{ color: kThemeFgMuted }">
-												@{{ actionOptionsData.chargeUser.username }}
-											</div>
-											{{ actionOptionsData.text }}
-										</div>
-									</div>
-
-									<AppButton
-										:style="{ marginTop: `12px` }"
-										:force-hover="hovered"
-										block
-									>
-										{{ $gettext(`View profile`) }}
-									</AppButton>
-								</a>
-							</template>
-						</AppOnHover>
-					</template>
-					<AppAlertBox v-else-if="!actionOptionsData.canPurchase" icon="info-circle">
-						{{ actionOptionsData.text }}
-					</AppAlertBox>
-					<div
-						v-else
-						class="text-center"
-						:style="{ fontFamily: kFontFamilyDisplay, fontSize: kFontSizeH2.px }"
-					>
-						{{ actionOptionsData.text }}
+							v-bind="
+								productData.resource === 'Sticker_Pack'
+									? { ratio: StickerPackRatio }
+									: {
+											ratio: 1,
+											style: styleBorderRadiusLg,
+									  }
+							"
+						>
+							<AppImgResponsive
+								v-if="productData.processMediaserverUrl"
+								:style="{
+									width: `100%`,
+									height: `100%`,
+								}"
+								:src="productData.imgUrl"
+								alt=""
+							/>
+							<img
+								v-else
+								:style="{
+									width: `100%`,
+									height: `100%`,
+								}"
+								:src="productData.imgUrl"
+								alt=""
+							/>
+							<AppBackgroundFade v-if="productData.resource === 'Background'" />
+						</AppAspectRatio>
 					</div>
-				</div>
 
-				<template v-if="timeRemaining">
-					<AppSpacer vertical :scale="2" />
-
-					<div>
-						{{ timeRemaining }}
-					</div>
-				</template>
-
-				<AppSpacer vertical :scale="4" />
-
-				<template v-if="actionOptionsData && actionOptionsData.canPurchase">
 					<div
 						:style="{
-							...styleFlexCenter(),
-							width: `100%`,
-							gap: `12px`,
+							marginTop: `8px`,
+							alignSelf: `center`,
+							color: kThemeFgMuted,
+							fontSize: kFontSizeSmall.px,
 						}"
 					>
-						<AppButton
-							v-for="[id, [currency, amount]] in currencyOptionsList"
-							:key="id"
-							:style="{
-								// Remove automatic margin from adjacent <button> elements.
-								margin: 0,
-							}"
-							:disabled="
-								isExpired ||
-								!!processingPurchaseCurrencyId ||
-								!canAffordCurrency(currency.id, amount, balanceRefs)
-							"
-							:dynamic-slots="['icon']"
-							lg
-							solid
-							block
-							@click="() => purchaseProduct(currency)"
-						>
-							<template #icon="{ size }">
-								<AppCurrencyImg
-									:currency="currency"
-									asset-size="small"
-									:max-width="size"
-								/>
-							</template>
-
-							{{ formatNumber(amount) }}
-						</AppButton>
+						{{ productType }}
 					</div>
 
-					<template
-						v-if="!canPurchaseAny && currencyOptionsList.length == 1 && joltbuxEntry"
+					<div
+						v-if="productData.name"
+						:style="{
+							fontWeight: 700,
+						}"
 					>
-						<AppSpacer vertical :scale="6" />
+						{{ productData.name }}
+					</div>
 
-						<div class="text-center">
-							{{ $gettext(`You can purchase this item with Joltbux`) }}
+					<AppSpacer vertical :scale="8" />
+
+					<div v-if="actionOptionsData" :style="{ width: `100%` }">
+						<template v-if="actionOptionsData.chargeUser">
+							<AppOnHover>
+								<template #default="{ hoverBinding, hovered }">
+									<a
+										v-bind="{
+											...hoverBinding,
+											style: {
+												background: kThemeBgOffset,
+												...styleBorderRadiusLg,
+												borderColor: `transparent`,
+												display: `block`,
+												borderStyle: `solid`,
+												borderWidth: kBorderWidthBase.px,
+												padding: `${12 - kBorderWidthBase.value}px`,
+												transition: `border-color 300ms ${kStrongEaseOut}`,
+												...styleWhen(hovered, {
+													borderColor: kThemePrimary,
+												}),
+											},
+										}"
+										@click="gotoCreator(actionOptionsData.chargeUser)"
+									>
+										<div
+											:style="{
+												display: `grid`,
+												gridTemplateColumns: `64px minmax(0, 1fr)`,
+												gap: `12px`,
+												color: kThemeFg,
+											}"
+										>
+											<AppUserAvatarBubble
+												:user="actionOptionsData.chargeUser"
+												smoosh
+												disable-link
+											/>
+											<div>
+												<div :style="{ color: kThemeFgMuted }">
+													@{{ actionOptionsData.chargeUser.username }}
+												</div>
+												{{ actionOptionsData.text }}
+											</div>
+										</div>
+
+										<AppButton
+											:style="{ marginTop: `12px` }"
+											:force-hover="hovered"
+											block
+										>
+											{{ $gettext(`View profile`) }}
+										</AppButton>
+									</a>
+								</template>
+							</AppOnHover>
+						</template>
+						<AppAlertBox v-else-if="!actionOptionsData.canPurchase" icon="info-circle">
+							{{ actionOptionsData.text }}
+						</AppAlertBox>
+						<div
+							v-else
+							class="text-center"
+							:style="{ fontFamily: kFontFamilyDisplay, fontSize: kFontSizeH2.px }"
+						>
+							{{ actionOptionsData.text }}
+						</div>
+					</div>
+
+					<template v-if="timeRemaining">
+						<AppSpacer vertical :scale="2" />
+
+						<div>
+							{{ timeRemaining }}
 						</div>
 					</template>
 
-					<template v-if="showPurchaseJoltbuxButton">
-						<AppSpacer vertical :scale="3" />
-
-						<AppButton
-							v-app-auth-required
-							primary
-							trans
-							block
-							@click="onClickGetJoltbux()"
-						>
-							{{ $gettext(`Get Joltbux`) }}
-						</AppButton>
-					</template>
-				</template>
-
-				<template v-if="showPackHelpDocsLink">
-					<AppSpacer vertical :scale="6" />
-
-					<div class="text-center">
-						<RouterLink
-							class="link-muted"
-							:to="{
-								name: routeLandingHelpRedirect.name,
-								params: {
-									path: 'drop-rates',
-								},
-							}"
-						>
-							{{ $gettext(`Learn more about packs`) }}
-						</RouterLink>
-					</div>
-
 					<AppSpacer vertical :scale="4" />
-				</template>
 
-				<AppSpacer vertical :scale="4" />
-
-				<div :style="{ width: `100%` }">
-					<template v-if="productData.resource === 'Sticker_Pack'">
-						{{
-							$gettext(
-								`You'll get a random selection of these stickers when you open this pack. Collect them all! Place them on top of posts!`
-							)
-						}}
-
-						{{ ' ' }}
-
-						<span
-							v-app-tooltip.touchable="$gettext(`yum`)"
+					<template v-if="actionOptionsData && actionOptionsData.canPurchase">
+						<div
 							:style="{
-								textDecoration: 'line-through',
-								fontSize: kFontSizeTiny.px,
-								fontFamily: kFontFamilyTiny,
+								...styleFlexCenter(),
+								width: `100%`,
+								gap: `12px`,
 							}"
 						>
-							{{ $gettext(`Eat them!`) }}
-						</span>
+							<AppButton
+								v-for="[id, [currency, amount]] in currencyOptionsList"
+								:key="id"
+								:style="{
+									// Remove automatic margin from adjacent <button> elements.
+									margin: 0,
+								}"
+								:disabled="
+									isExpired ||
+									!!processingPurchaseCurrencyId ||
+									!canAffordCurrency(currency.id, amount, balanceRefs)
+								"
+								:dynamic-slots="['icon']"
+								lg
+								solid
+								block
+								@click="() => purchaseProduct(currency)"
+							>
+								<template #icon="{ size }">
+									<AppCurrencyImg
+										:currency="currency"
+										asset-size="small"
+										:max-width="size"
+									/>
+								</template>
+
+								{{ formatNumber(amount) }}
+							</AppButton>
+						</div>
+
+						<template
+							v-if="
+								!canPurchaseAny && currencyOptionsList.length == 1 && joltbuxEntry
+							"
+						>
+							<AppSpacer vertical :scale="6" />
+
+							<div class="text-center">
+								{{ $gettext(`You can purchase this item with Joltbux`) }}
+							</div>
+						</template>
+
+						<template v-if="showPurchaseJoltbuxButton">
+							<AppSpacer vertical :scale="3" />
+
+							<AppButton
+								v-app-auth-required
+								primary
+								trans
+								block
+								@click="onClickGetJoltbux()"
+							>
+								{{ $gettext(`Get Joltbux`) }}
+							</AppButton>
+						</template>
+					</template>
+
+					<template v-if="showPackHelpDocsLink">
+						<AppSpacer vertical :scale="6" />
+
+						<div class="text-center">
+							<RouterLink
+								class="link-muted"
+								:to="{
+									name: routeLandingHelpRedirect.name,
+									params: {
+										path: 'drop-rates',
+									},
+								}"
+							>
+								{{ $gettext(`Learn more about packs`) }}
+							</RouterLink>
+						</div>
 
 						<AppSpacer vertical :scale="4" />
-						<AppStickerGrid :stickers="packContents" />
 					</template>
-					<template v-else-if="productData.resource === 'Avatar_Frame'">
-						{{
-							$gettext(
-								`Equip an avatar frame to make yourself stand out in the community.`
-							)
-						}}
-					</template>
-					<template v-else-if="productData.resource === 'Background'">
-						{{
-							$gettext(
-								`Backgrounds can be added to your posts to make your content stand out in the feeds.`
-							)
-						}}
-					</template>
+
+					<AppSpacer vertical :scale="4" />
+
+					<div :style="{ width: `100%` }">
+						<template v-if="productData.resource === 'Sticker_Pack'">
+							{{
+								$gettext(
+									`You'll get a random selection of these stickers when you open this pack. Collect them all! Place them on top of posts!`
+								)
+							}}
+
+							{{ ' ' }}
+
+							<span
+								v-app-tooltip.touchable="$gettext(`yum`)"
+								:style="{
+									textDecoration: 'line-through',
+									fontSize: kFontSizeTiny.px,
+									fontFamily: kFontFamilyTiny,
+								}"
+							>
+								{{ $gettext(`Eat them!`) }}
+							</span>
+
+							<AppSpacer vertical :scale="4" />
+							<AppStickerGrid :stickers="packContents" />
+						</template>
+						<template v-else-if="productData.resource === 'Avatar_Frame'">
+							{{
+								$gettext(
+									`Equip an avatar frame to make yourself stand out in the community.`
+								)
+							}}
+						</template>
+						<template v-else-if="productData.resource === 'Background'">
+							{{
+								$gettext(
+									`Backgrounds can be added to your posts to make your content stand out in the feeds.`
+								)
+							}}
+						</template>
+					</div>
 				</div>
-			</div>
+			</AppLoadingFade>
 		</div>
 	</AppModal>
 </template>
