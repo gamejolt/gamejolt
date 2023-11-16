@@ -762,7 +762,7 @@ function getItemWidthStyles(ratio: number) {
 
 				<AppSpacer vertical :scale="8" />
 
-				<div v-if="actionOptionsData && actionOptionsData.text" :style="{ width: `100%` }">
+				<div v-if="actionOptionsData" :style="{ width: `100%` }">
 					<template v-if="actionOptionsData.chargeUser">
 						<AppOnHover>
 							<template #default="{ hoverBinding, hovered }">
@@ -839,58 +839,67 @@ function getItemWidthStyles(ratio: number) {
 
 				<AppSpacer vertical :scale="4" />
 
-				<div
-					v-if="actionOptionsData && actionOptionsData.canPurchase"
-					:style="{
-						...styleFlexCenter(),
-						width: `100%`,
-						gap: `12px`,
-					}"
-				>
-					<AppButton
-						v-for="[id, [currency, amount]] in currencyOptionsList"
-						:key="id"
+				<template v-if="actionOptionsData && actionOptionsData.canPurchase">
+					<div
 						:style="{
-							// Remove automatic margin from adjacent <button> elements.
-							margin: 0,
+							...styleFlexCenter(),
+							width: `100%`,
+							gap: `12px`,
 						}"
-						:disabled="
-							isExpired ||
-							!!processingPurchaseCurrencyId ||
-							!canAffordCurrency(currency.id, amount, balanceRefs)
-						"
-						:dynamic-slots="['icon']"
-						lg
-						solid
-						block
-						@click="() => purchaseProduct(currency)"
 					>
-						<template #icon="{ size }">
-							<AppCurrencyImg
-								:currency="currency"
-								asset-size="small"
-								:max-width="size"
-							/>
-						</template>
+						<AppButton
+							v-for="[id, [currency, amount]] in currencyOptionsList"
+							:key="id"
+							:style="{
+								// Remove automatic margin from adjacent <button> elements.
+								margin: 0,
+							}"
+							:disabled="
+								isExpired ||
+								!!processingPurchaseCurrencyId ||
+								!canAffordCurrency(currency.id, amount, balanceRefs)
+							"
+							:dynamic-slots="['icon']"
+							lg
+							solid
+							block
+							@click="() => purchaseProduct(currency)"
+						>
+							<template #icon="{ size }">
+								<AppCurrencyImg
+									:currency="currency"
+									asset-size="small"
+									:max-width="size"
+								/>
+							</template>
 
-						{{ formatNumber(amount) }}
-					</AppButton>
-				</div>
-
-				<template v-if="!canPurchaseAny && currencyOptionsList.length == 1 && joltbuxEntry">
-					<AppSpacer vertical :scale="6" />
-
-					<div class="text-center">
-						{{ $gettext(`You can purchase this item with Joltbux`) }}
+							{{ formatNumber(amount) }}
+						</AppButton>
 					</div>
-				</template>
 
-				<template v-if="showPurchaseJoltbuxButton">
-					<AppSpacer vertical :scale="3" />
+					<template
+						v-if="!canPurchaseAny && currencyOptionsList.length == 1 && joltbuxEntry"
+					>
+						<AppSpacer vertical :scale="6" />
 
-					<AppButton v-app-auth-required primary trans block @click="onClickGetJoltbux()">
-						{{ $gettext(`Get Joltbux`) }}
-					</AppButton>
+						<div class="text-center">
+							{{ $gettext(`You can purchase this item with Joltbux`) }}
+						</div>
+					</template>
+
+					<template v-if="showPurchaseJoltbuxButton">
+						<AppSpacer vertical :scale="3" />
+
+						<AppButton
+							v-app-auth-required
+							primary
+							trans
+							block
+							@click="onClickGetJoltbux()"
+						>
+							{{ $gettext(`Get Joltbux`) }}
+						</AppButton>
+					</template>
 				</template>
 
 				<template v-if="showPackHelpDocsLink">
