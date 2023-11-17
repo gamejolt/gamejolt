@@ -47,7 +47,9 @@ const badge = computed(() =>
 
 // Guests should always be allowed to attempt to join stuff.
 // When they log in, we can check if they are actually allowed.
-const canJoin = computed(() => !user.value || !!user.value.can_join_communities);
+const canJoin = computed(
+	() => !user.value || (!!user.value.can_join_communities && !community.value.user_block)
+);
 
 const isDisabled = computed(() => {
 	if (isProcessing.value) {

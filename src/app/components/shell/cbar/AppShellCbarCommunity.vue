@@ -15,7 +15,7 @@ import { useThemeStore } from '../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useAppStore } from '../../../store';
-import { AppCommunityPerms } from '../../community/perms/perms';
+import AppCommunityPerms from '../../community/perms/AppCommunityPerms.vue';
 import { useGridStore } from '../../grid/grid-store';
 import AppShellCbarItem from './AppShellCbarItem.vue';
 

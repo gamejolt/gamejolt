@@ -1,6 +1,6 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
-import { Inject, Options, Watch } from 'vue-property-decorator';
+import { Options, Watch } from 'vue-property-decorator';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
@@ -12,19 +12,18 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
+import AppCommunitySidebar from '../../../../components/community/sidebar/AppCommunitySidebar.vue';
 import { useGridStore } from '../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../store/index';
+import AppCommunitiesViewFeed from '../_feed/AppCommunitiesViewFeed.vue';
 import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
-import AppCommunitiesViewFeed from '../_feed/feed.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { CommunitiesViewChannelDeps } from '../channel/channel.vue';
 import {
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
 	acceptCollaboration,
 	declineCollaboration,
 	setCommunityMeta,
+	useCommunityRouteStore,
 } from '../view.store';
 
 @Options({
@@ -50,8 +49,7 @@ export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 	gridStore = setup(() => useGridStore());
 
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	get user() {
 		return this.commonStore.user;

@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
@@ -19,7 +20,7 @@ import {
 import { arrayRemove } from '../../../../../../utils/array';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+import { useCommunityRouteStore } from '../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditModerators',
@@ -38,8 +39,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 	},
 })
 export default class RouteCommunitiesViewEditModerators extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	collaborators: CollaboratorModel[] = [];
 	activeCollaborator: CollaboratorModel | null = null;

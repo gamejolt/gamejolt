@@ -4,7 +4,7 @@ import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { createLightbox } from '../../../../../_common/lightbox/lightbox-helpers';
-import AppMediaItemPost from '../../../../../_common/media-item/post/post.vue';
+import AppMediaItemPost from '../../../../../_common/media-item/post/AppMediaItemPost.vue';
 import AppEventItemMediaIndicator from '../../../../../_common/pagination/AppPageIndicator.vue';
 import { kThemeBgActual } from '../../../../../_common/theme/variables';
 import AppTouch, { AppTouchInput } from '../../../../../_common/touch/AppTouch.vue';

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
-import { AdSlot, AdSlotMeta, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
+import { PropType, ref, toRefs, watch } from 'vue';
+import { styleWhen } from '../../../_styles/mixins';
+import { AdSlot, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
 import { useAdsController } from '../ad-store';
 import AppAdWidgetInner from './AppAdWidgetInner.vue';
 
@@ -13,17 +14,12 @@ const props = defineProps({
 		type: String as PropType<AdSlotPlacement>,
 		default: 'content',
 	},
-	meta: {
-		type: Object as PropType<AdSlotMeta>,
-		default: () => ({}),
-	},
 });
 
-const { size, placement, meta } = toRefs(props);
+const { size, placement } = toRefs(props);
 
-const adsController = useAdsController();
+const controller = useAdsController();
 const adSlot = ref(_makeAdSlot());
-const shouldShow = computed(() => adsController.shouldShow);
 
 // If anything within our props changes, regenerate.
 watch(
@@ -35,44 +31,44 @@ watch(
 );
 
 function _makeAdSlot() {
-	return new AdSlot(size.value, placement.value, meta.value);
+	return new AdSlot(size.value, placement.value);
 }
 </script>
 
 <template>
-	<div
-		v-if="shouldShow"
-		class="-ad-widget"
-		:class="{
-			'-size-leaderboard': adSlot.size === 'leaderboard',
-			'-size-rectangle': adSlot.size === 'rectangle',
-		}"
-	>
-		<div class="-content">
-			<AppAdWidgetInner class="-inner" :ad-slot="adSlot" />
+	<div v-if="controller.shouldShow" :style="{ textAlign: `center` }">
+		<div
+			:style="{
+				display: `flex`,
+				alignItems: `center`,
+				justifyContent: `center`,
+				margin: `0 auto`,
+				...styleWhen(adSlot.size === 'leaderboard', {
+					minHeight: `115px`,
+				}),
+				...styleWhen(adSlot.size === 'rectangle', {
+					minHeight: `250px`,
+				}),
+				...styleWhen(adSlot.size === 'video', {
+					minHeight: `200px`,
+				}),
+				// For debugging ad placements.
+				...styleWhen(GJ_BUILD_TYPE !== 'build', {
+					background: `rgba(255, 0, 0, 0.2)`,
+					...styleWhen(adSlot.size === 'skyscraper-1' || adSlot.size === 'skyscraper-2', {
+						minWidth: `160px`,
+						minHeight: `600px`,
+					}),
+				}),
+			}"
+		>
+			<AppAdWidgetInner
+				:style="{
+					// Make sure the ad is able to take up the full width.
+					flex: `auto`,
+				}"
+				:ad-slot="adSlot"
+			/>
 		</div>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-ad-widget
-	text-align: center
-
-.-content
-	display: flex
-	align-items: center
-	justify-content: center
-	margin: 0 auto
-
-	// Make sure the ad is able to take up the full width.
-	> .-inner
-		flex: auto
-
-.-size-leaderboard
-	.-content
-		min-height: 115px
-
-.-size-rectangle
-	.-content
-		min-height: 275px
-</style>

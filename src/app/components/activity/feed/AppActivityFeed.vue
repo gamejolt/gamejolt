@@ -226,11 +226,7 @@ function shouldShowAd(index: number) {
 					v-if="shouldShowAd(i)"
 					class="-ad-container well fill-offset full-bleed-xs text-center"
 				>
-					<AppAdWidget
-						size="rectangle"
-						placement="content"
-						:meta="{ staticSize: true }"
-					/>
+					<AppAdWidget size="rectangle" placement="content" />
 				</div>
 			</div>
 		</div>

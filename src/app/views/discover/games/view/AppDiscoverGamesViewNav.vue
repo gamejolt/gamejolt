@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import {
-	CommentStoreManagerKey,
 	getCommentStore,
+	useCommentStoreManager,
 } from '../../../../../_common/comment/comment-store';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppGameModLinks from '../../../../../_common/game/mod-links/AppGameModLinks.vue';
@@ -20,7 +20,7 @@ import { useGameRouteController } from './view.vue';
 
 const { game, trophiesCount, hasScores, primaryScoreTable } = useGameRouteController()!;
 const { user: globalUser } = useCommonStore();
-const commentManager = inject(CommentStoreManagerKey)!;
+const commentManager = useCommentStoreManager()!;
 const router = useRouter();
 
 const hasAnyPerms = computed(() => Boolean(game.value?.hasPerms()));

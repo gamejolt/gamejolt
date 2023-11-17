@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useCommonStore } from '../store/common-store';
-import AppTimelineListItem from '../timeline-list/item/item.vue';
+import AppTimelineListItem from '../timeline-list/item/AppTimelineListItem.vue';
 import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
 
 defineProps({

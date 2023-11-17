@@ -30,12 +30,12 @@ import {
 	commentStoreHandleAdd,
 	commentStoreHandleEdit,
 	commentStoreHandleRemove,
-	CommentStoreManagerKey,
 	CommentStoreModel,
 	commentStorePin,
 	commentStoreSort,
 	lockCommentStore,
 	releaseCommentStore,
+	useCommentStoreManager,
 } from '../../../../_common/comment/comment-store';
 import {
 	CommentStoreSliceView,
@@ -91,7 +91,7 @@ export function createCommentWidget(options: {
 	const collaborators = ref<CollaboratorModel[]>([]);
 
 	const route = useRoute();
-	const commentManager = inject(CommentStoreManagerKey)!;
+	const commentManager = useCommentStoreManager()!;
 
 	const loginUrl = computed(
 		() => Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath)

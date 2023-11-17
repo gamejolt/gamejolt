@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Ref, computed, inject, ref } from 'vue';
+import { Ref, computed, ref } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import { Api } from '../../../../_common/api/api.service';
@@ -7,11 +7,11 @@ import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue'
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommentModel } from '../../../../_common/comment/comment-model';
 import {
-	CommentStoreManagerKey,
 	CommentStoreModel,
 	commentStoreCount,
 	lockCommentStore,
 	releaseCommentStore,
+	useCommentStoreManager,
 } from '../../../../_common/comment/comment-store';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
@@ -58,8 +58,8 @@ import {
 	showCommentThreadModalFromPermalink,
 	watchForCommentThreadModalPermalink,
 } from '../../../components/comment/thread/modal.service';
-import AppGameList from '../../../components/game/list/list.vue';
-import AppGameListPlaceholder from '../../../components/game/list/placeholder/placeholder.vue';
+import AppGameList from '../../../components/game/list/AppGameList.vue';
+import AppGameListPlaceholder from '../../../components/game/list/AppGameListPlaceholder.vue';
 import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
@@ -103,7 +103,7 @@ const { grid, chat } = useGridStore();
 const route = useRoute();
 const router = useRouter();
 
-const commentManager = inject(CommentStoreManagerKey)!;
+const commentManager = useCommentStoreManager()!;
 
 const commentStore = ref<CommentStoreModel | null>(null);
 

@@ -2,7 +2,6 @@
 import { computed, inject, InjectionKey, provide, ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Inject, Options } from 'vue-property-decorator';
-import { Router, useRouter } from 'vue-router';
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
@@ -26,12 +25,8 @@ import {
 	lockCommentStore,
 	releaseCommentStore,
 } from '../../../../../_common/comment/comment-store';
-import {
-	configGuestNoAuthRequired,
-	configRemoveGameDownloadBanner,
-} from '../../../../../_common/config/config.service';
+import { configGuestNoAuthRequired } from '../../../../../_common/config/config.service';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
-import { Environment } from '../../../../../_common/environment/environment.service';
 import { GameBuildType } from '../../../../../_common/game/build/build.model';
 import {
 	CustomGameMessage,
@@ -53,14 +48,12 @@ import { GameVideoModel } from '../../../../../_common/game/video/video.model';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
 import { LinkedAccountModel } from '../../../../../_common/linked-account/linked-account.model';
 import { storeModelList } from '../../../../../_common/model/model-store.service';
-import { PartnerReferral } from '../../../../../_common/partner-referral/partner-referral-service';
 import { Registry } from '../../../../../_common/registry/registry.service';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { EventSubscription } from '../../../../../_common/system/event/event-topic';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
@@ -71,7 +64,6 @@ import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { UserModel } from '../../../../../_common/user/user.model';
 import { enforceLocation } from '../../../../../utils/router';
-import AppGameCoverButtons from '../../../../components/game/cover-buttons/AppGameCoverButtons.vue';
 import AppGameMaturityBlock from '../../../../components/game/maturity-block/maturity-block.vue';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
@@ -89,7 +81,7 @@ export function useGameRouteController() {
 	return inject(Key);
 }
 
-function createController({ router }: { router: Router }) {
+function createController() {
 	const isOverviewLoaded = ref(false);
 
 	// We will bootstrap this right away, so it should always be set for use.
@@ -103,11 +95,6 @@ function createController({ router }: { router: Router }) {
 
 	const packagePayload = ref<GamePackagePayloadModel>();
 	const shouldShowMultiplePackagesMessage = ref(false);
-
-	const userPartnerKey = ref<string>();
-
-	const partnerKey = ref('');
-	const partner = ref<UserModel>();
 
 	const collaboratorInvite = ref<CollaboratorModel>();
 
@@ -184,29 +171,6 @@ function createController({ router }: { router: Router }) {
 		);
 	});
 
-	const partnerLink = computed(() => {
-		if (userPartnerKey.value && game.value) {
-			let urlPath = router.resolve({
-				name: 'discover.games.view.overview',
-				params: {
-					id: game.value.id + '',
-					slug: game.value.slug,
-				},
-				query: {
-					ref: userPartnerKey.value,
-				},
-			}).href;
-
-			if (GJ_IS_DESKTOP_APP) {
-				// The client urls are prefixed with a hashtag (#) that needs to be removed when referring to external links
-				urlPath = urlPath.slice(1);
-			}
-
-			return `${Environment.baseUrl}${urlPath}`;
-		}
-		return undefined;
-	});
-
 	function _updateGame(newGame?: GameModel) {
 		// If we already have a game, just assign new data into it to keep it
 		// fresh.
@@ -248,7 +212,6 @@ function createController({ router }: { router: Router }) {
 			: undefined;
 		twitterShareMessage.value = payload.twitterShareMessage || 'Check out this game!';
 
-		userPartnerKey.value = payload.userPartnerKey;
 		collaboratorInvite.value = payload.invite
 			? new CollaboratorModel(payload.invite)
 			: undefined;
@@ -292,11 +255,6 @@ function createController({ router }: { router: Router }) {
 		linkedAccounts.value = LinkedAccountModel.populate(payload.linkedAccounts);
 
 		overviewComments.value = storeModelList(CommentModel, payload.comments);
-
-		partnerKey.value = payload.partnerReferredKey || '';
-		partner.value = payload.partnerReferredBy
-			? new UserModel(payload.partnerReferredBy)
-			: undefined;
 
 		knownFollowers.value = UserModel.populate(payload.knownFollowers);
 		knownFollowerCount.value = payload.knownFollowerCount || 0;
@@ -343,9 +301,6 @@ function createController({ router }: { router: Router }) {
 		twitterShareMessage,
 		packagePayload,
 		shouldShowMultiplePackagesMessage,
-		userPartnerKey,
-		partnerKey,
-		partner,
 		collaboratorInvite,
 		userRating,
 		mediaItems,
@@ -370,7 +325,6 @@ function createController({ router }: { router: Router }) {
 		downloadableBuilds,
 		browserBuilds,
 		hasReleasesSection,
-		partnerLink,
 
 		bootstrapGame,
 		processPayload,
@@ -396,7 +350,6 @@ const GameThemeKey = 'game';
 		AppDiscoverGamesViewNav,
 		AppDiscoverGamesViewControls,
 		AppGameMaturityBlock,
-		AppGameCoverButtons,
 		AppGamePerms,
 		AppUserVerifiedTick,
 		AppPageHeaderAvatar,
@@ -411,7 +364,6 @@ const GameThemeKey = 'game';
 	deps: { params: ['slug', 'id'], query: ['intent'] },
 	async resolver({ route }) {
 		HistoryTick.trackSource('Game', parseInt(route.params.id as string));
-		PartnerReferral.trackReferrer('Game', parseInt(route.params.id as string), route);
 
 		const intentRedirect = IntentService.checkRoute(
 			route,
@@ -442,7 +394,7 @@ const GameThemeKey = 'game';
 })
 export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 	routeStore = setup(() => {
-		const c = createController({ router: useRouter() });
+		const c = createController();
 		provide(Key, c);
 		return c;
 	});
@@ -475,36 +427,12 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 		return this.routeStore.game;
 	}
 
-	get partner() {
-		return this.routeStore.partner;
-	}
-
-	get partnerKey() {
-		return this.routeStore.partnerKey;
-	}
-
-	get packages() {
-		return this.routeStore.packages;
-	}
-
 	get collaboratorInvite() {
 		return this.routeStore.collaboratorInvite;
 	}
 
-	get downloadableBuilds() {
-		return this.routeStore.downloadableBuilds;
-	}
-
-	get browserBuilds() {
-		return this.routeStore.browserBuilds;
-	}
-
 	get profileCount() {
 		return this.routeStore.profileCount;
-	}
-
-	get installableBuilds() {
-		return this.routeStore.installableBuilds;
 	}
 
 	get roleName() {
@@ -516,17 +444,8 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 	}
 
 	get shouldShowCoverButtons() {
-		if (configRemoveGameDownloadBanner.value) {
-			return false;
-		}
-
-		// Only show cover buttons on the overview page.
-		return !!(
-			(!Screen.isXs &&
-				this.$route.name === 'discover.games.view.overview' &&
-				this.packages.length > 0) ||
-			this.game?.hasPerms()
-		);
+		// Only show cover buttons if they have permissions to edit it.
+		return this.game?.hasPerms();
 	}
 
 	/**
@@ -569,7 +488,6 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 		this.commentStore = lockCommentStore(this.commentManager, 'Game', this.game!.id);
 		commentStoreCount(this.commentStore, payload.commentsCount || 0);
 
-		trackExperimentEngagement(configRemoveGameDownloadBanner);
 		trackExperimentEngagement(configGuestNoAuthRequired);
 	}
 
@@ -598,11 +516,6 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 	async declineCollaboration() {
 		await $removeCollaboratorInvite(this.collaboratorInvite!);
 		this.routeStore.declineCollaboratorInvite();
-	}
-
-	scrollToMultiplePackages() {
-		this.routeStore.showMultiplePackagesMessage();
-		Scroll.to('game-releases');
 	}
 
 	private setPageTheme() {
@@ -649,10 +562,6 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 				</div>
 			</section>
 
-			<!--
-				Don't affix the nav on download pages.
-				It takes a lot of space out vertically when on small browser size.
-			-->
 			<AppPageHeader
 				:cover-media-item="game.header_media_item"
 				should-affix-nav
@@ -660,20 +569,7 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 				:show-cover-buttons="shouldShowCoverButtons"
 			>
 				<template v-if="shouldShowCoverButtons" #cover-buttons>
-					<AppGameCoverButtons
-						v-if="!Screen.isXs"
-						:game="game"
-						:packages="packages"
-						:downloadable-builds="downloadableBuilds"
-						:browser-builds="browserBuilds"
-						:installable-builds="installableBuilds"
-						@show-multiple-packages="scrollToMultiplePackages"
-					/>
-
 					<AppGamePerms :game="game">
-						<!-- we need this stupid space for some reason -->
-						&nbsp;
-
 						<AppButton
 							v-app-tooltip="$gettext(`Manage Game`)"
 							circle
@@ -684,19 +580,19 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 								params: { id: game.id },
 							}"
 						/>
+					</AppGamePerms>
 
-						<AppGamePerms :game="game" required="analytics">
-							<AppButton
-								v-app-tooltip="$gettext(`View Game Analytics`)"
-								circle
-								trans
-								icon="chart"
-								:to="{
-									name: 'dash.analytics',
-									params: { resource: 'Game', resourceId: game.id },
-								}"
-							/>
-						</AppGamePerms>
+					<AppGamePerms :game="game" required="analytics">
+						<AppButton
+							v-app-tooltip="$gettext(`View Game Analytics`)"
+							circle
+							trans
+							icon="chart"
+							:to="{
+								name: 'dash.analytics',
+								params: { resource: 'Game', resourceId: game.id },
+							}"
+						/>
 					</AppGamePerms>
 				</template>
 

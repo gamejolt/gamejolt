@@ -12,7 +12,6 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { arrayShuffle } from '../../../../../utils/array';
 import { RouteLocationRedirect, getParam } from '../../../../../utils/router';
@@ -21,7 +20,7 @@ import {
 	GameFilteringContainer,
 	checkGameFilteringRoute,
 } from '../../../../components/game/filtering/container';
-import AppGameGrid from '../../../../components/game/grid/grid.vue';
+import AppGameGrid from '../../../../components/game/grid/AppGameGrid.vue';
 import AppGameListing from '../../../../components/game/listing/AppGameListing.vue';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
 import AppStoreBanner from '../../../../components/store-banner/AppStoreBanner.vue';
@@ -282,7 +281,7 @@ async function loadMore() {
 		<section v-if="section !== 'by-date'" class="fill-offset">
 			<div class="container-xl">
 				<h2 class="-browse-heading text-center">
-					<AppTranslate>Browse Games</AppTranslate>
+					{{ $gettext(`Browse Games`) }}
 				</h2>
 			</div>
 			<AppTagList />
@@ -300,14 +299,15 @@ async function loadMore() {
 			include-featured-section
 			:hide-section-nav="section === 'by-date'"
 			:is-loading="isLoading"
+			show-ads
 			@load="loadMore"
 		>
 			<div v-if="section === 'new'" class="alert alert-info anim-fade-in-enlarge">
-				<AppTranslate>
-					Newly added games are not moderated, curated, or vetted by the community. You
-					can find a goldmine of undiscovered talent or you may see some of the scariest
-					shit of your life.
-				</AppTranslate>
+				{{
+					$gettext(
+						`Newly added games are not moderated, curated, or vetted by the community. You can find a goldmine of undiscovered talent or you may see some of the scariest shit of your life.`
+					)
+				}}
 			</div>
 
 			<AppGameGrid :games="listing.games" show-ads event-label="browse-games" />

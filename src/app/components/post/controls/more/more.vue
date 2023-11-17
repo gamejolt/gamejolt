@@ -29,7 +29,7 @@ import { useAppStore } from '../../../../store';
 import { showCommunityBlockUserModal } from '../../../community/block-user-modal/block-user-modal.service';
 import { showCommunityEjectPostModal } from '../../../community/eject-post/modal/modal.service';
 import { showCommunityMovePostModal } from '../../../community/move-post/modal/modal.service';
-import { AppCommunityPerms } from '../../../community/perms/perms';
+import AppCommunityPerms from '../../../community/perms/AppCommunityPerms.vue';
 import { useGridStore } from '../../../grid/grid-store';
 
 @Options({
