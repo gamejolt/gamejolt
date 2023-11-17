@@ -13,7 +13,7 @@ import { arrayRemove } from '../../../../utils/array';
 import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../api/api.service';
 import AppButton from '../../../button/AppButton.vue';
-import { markProductAsOwned } from '../../../collectible/collectible.model';
+import { markProductAsUnlocked } from '../../../collectible/collectible.model';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import { ImgHelper } from '../../../img/helper/helper-service';
 import { illBackpackClosed, illBackpackOpen } from '../../../img/ill/illustrations';
@@ -216,7 +216,7 @@ async function _openPack() {
 		// Mark all received stickers as owned. This should update any
 		// CollectibleModels that may be shown in the background of this modal.
 		for (const sticker of newStickers) {
-			markProductAsOwned(sticker);
+			markProductAsUnlocked(sticker);
 		}
 
 		// Sort our owned stickers, adding our new stickers to the list.

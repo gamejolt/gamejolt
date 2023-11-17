@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, toRefs } from 'vue';
+import { CSSProperties, computed, toRefs } from 'vue';
 import { styleAbsoluteFill, styleWhen } from '../../_styles/mixins';
 import { kStrongEaseOut } from '../../_styles/variables';
 
@@ -38,10 +38,13 @@ function createFadeStyles(edge: 'top' | 'bottom') {
 		}),
 	} satisfies CSSProperties;
 }
+
+const fadeTopStyles = computed(() => createFadeStyles('top'));
+const fadeBottomStyles = computed(() => createFadeStyles('bottom'));
 </script>
 
 <template>
-	<div v-if="!noEdges" :style="createFadeStyles('top')" />
+	<div v-if="!noEdges" :style="fadeTopStyles" />
 	<div
 		:style="{
 			...styleAbsoluteFill({ zIndex }),
@@ -49,5 +52,5 @@ function createFadeStyles(edge: 'top' | 'bottom') {
 			transition: `background-color 300ms ${kStrongEaseOut}`,
 		}"
 	/>
-	<div v-if="!noEdges" :style="createFadeStyles('bottom')" />
+	<div v-if="!noEdges" :style="fadeBottomStyles" />
 </template>

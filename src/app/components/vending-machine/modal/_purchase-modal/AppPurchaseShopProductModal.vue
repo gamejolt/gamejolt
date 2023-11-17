@@ -19,7 +19,7 @@ import {
 	AcquisitionMethod,
 	AcquisitionModel,
 } from '../../../../../_common/collectible/acquisition.model';
-import { markProductAsOwned } from '../../../../../_common/collectible/collectible.model';
+import { markProductAsUnlocked } from '../../../../../_common/collectible/collectible.model';
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
 import {
@@ -268,7 +268,7 @@ export async function purchaseShopProduct({
 		}
 
 		if (item) {
-			markProductAsOwned(item);
+			markProductAsUnlocked(item);
 		}
 
 		onItemPurchased?.all?.(item);

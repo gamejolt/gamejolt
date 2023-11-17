@@ -27,8 +27,7 @@ export class CollectibleModel implements ModelStoreModel {
 	declare is_secret: boolean;
 	declare is_unlocked: boolean;
 	declare sticker_mastery?: number;
-
-	acquisition: AcquisitionModel[] = [];
+	declare acquisition: AcquisitionModel[];
 
 	update(data: any) {
 		Object.assign(this, data);
@@ -43,10 +42,10 @@ export function getCollectibleResourceId(collectible: CollectibleModel) {
 }
 
 /**
- * Tries finding an existing [CollectibleModel] through the [ModelService] and
- * updates the [isOwned] state.
+ * Tries finding an existing {@link CollectibleModel} through the "model store"
+ * and updates the {@link CollectibleModel.is_unlocked} state.
  */
-export function markProductAsOwned(
+export function markProductAsUnlocked(
 	purchasedProduct:
 		| UserAvatarFrameModel
 		| AvatarFrameModel

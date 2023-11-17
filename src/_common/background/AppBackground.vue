@@ -46,12 +46,14 @@ const props = defineProps({
 
 const { background, bleed, backdropStyle, backgroundStyle, scrollDirection } = toRefs(props);
 
+const isLoaded = ref(false);
+const loadedBackground = ref<BackgroundModel>();
+
 const mediaItem = computed(() => background?.value?.media_item);
 const hasMedia = computed(() => !!mediaItem.value);
-
-const isLoaded = ref(false);
-
-const loadedBackground = ref<BackgroundModel>();
+const cssProperties = computed(() =>
+	loadedBackground.value ? getBackgroundCSSProperties(loadedBackground.value) : {}
+);
 
 if (import.meta.env.SSR) {
 	loadedBackground.value = background?.value;
@@ -97,7 +99,7 @@ if (import.meta.env.SSR) {
 							},
 						]"
 						:style="[
-							getBackgroundCSSProperties(loadedBackground),
+							cssProperties,
 							styleWhen(!!backgroundStyle, backgroundStyle!)
 						]"
 					/>
