@@ -14,7 +14,6 @@ import AppScrollInview, {
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppGameFilteringTags from '../filtering/AppGameFilteringTags.vue';
 import { GameFilteringContainer } from '../filtering/container';
 import AppGameFilteringWidget from '../filtering/widget.vue';
@@ -74,7 +73,7 @@ const InviewConfig = new ScrollInviewConfig();
 									:to="{ name: $route.name!, params: { section: null } }"
 									:class="{ active: !$route.params.section }"
 								>
-									<AppTranslate>Featured</AppTranslate>
+									{{ $gettext(`Featured`) }}
 								</RouterLink>
 							</li>
 							<li>
@@ -84,7 +83,7 @@ const InviewConfig = new ScrollInviewConfig();
 									:to="{ name: $route.name!, params: { section: 'hot' } }"
 									:class="{ active: $route.params.section === 'hot' }"
 								>
-									<AppTranslate>Hot</AppTranslate>
+									{{ $gettext(`Hot`) }}
 								</RouterLink>
 							</li>
 							<li>
@@ -94,7 +93,7 @@ const InviewConfig = new ScrollInviewConfig();
 									:to="{ name: $route.name!, params: { section: 'best' } }"
 									:class="{ active: $route.params.section === 'best' }"
 								>
-									<AppTranslate>Best</AppTranslate>
+									{{ $gettext(`Best`) }}
 								</RouterLink>
 							</li>
 							<li>
@@ -104,7 +103,7 @@ const InviewConfig = new ScrollInviewConfig();
 									:to="{ name: $route.name!, params: { section: 'new' } }"
 									:class="{ active: $route.params.section === 'new' }"
 								>
-									<AppTranslate>New</AppTranslate>
+									{{ $gettext(`New`) }}
 								</RouterLink>
 							</li>
 						</ul>
@@ -153,7 +152,7 @@ const InviewConfig = new ScrollInviewConfig();
 						class="alert alert-notice anim-fade-in-enlarge"
 					>
 						<p>
-							<AppTranslate>No games match your filters. Zoinks!</AppTranslate>
+							{{ $gettext(`No games match your filters. Zoinks!`) }}
 						</p>
 					</div>
 				</div>
