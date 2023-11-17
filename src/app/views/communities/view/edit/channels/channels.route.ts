@@ -4,6 +4,6 @@ import { routeCommunitiesViewEditChannelsList } from './list/list.route';
 
 export const routeCommunitiesViewEditChannels: RouteRecordRaw = {
 	path: 'channels',
-	component: () => import('./channels.vue'),
+	component: () => import('./RouteCommunitiesViewEditChannels.vue'),
 	children: [routeCommunitiesViewEditChannelsList, routeCommunitiesViewEditChannelsEdit],
 };
