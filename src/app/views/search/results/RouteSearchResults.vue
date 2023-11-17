@@ -1,15 +1,20 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
+import { isAdEnthused } from '../../../../_common/ad/ad-store';
+import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/AppCommunityThumbnail.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCard from '../../../../_common/user/card/AppUserCard.vue';
+import { styleChangeBg, styleElevate } from '../../../../_styles/mixins';
+import { kBorderRadiusLg, kLayerAds } from '../../../../_styles/variables';
 import { getQuery } from '../../../../utils/router';
 import { ActivityFeedService } from '../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../components/activity/feed/view';
@@ -73,7 +78,7 @@ const slicedUsers = computed(() =>
 	Screen.isXs ? searchPayload.value.users : searchPayload.value.users.slice(0, 2)
 );
 
-const slicedCommunities = computed(() => searchPayload.value.communities.slice(0, 6));
+const slicedCommunities = computed(() => searchPayload.value.communities.slice(0, 4));
 
 const slicedRealms = computed(() => {
 	let count = REALM_COL_DESKTOP;
@@ -88,63 +93,139 @@ const slicedRealms = computed(() => {
 </script>
 
 <template>
-	<section v-if="hasSearch">
+	<template v-if="hasSearch">
 		<template v-if="slicedRealms.length">
-			<section class="section section-thin">
-				<div class="container">
-					<h3 class="-heading">
-						Realms
+			<div class="container">
+				<h3 class="-heading">
+					{{ $gettext(`Realms`) }}
 
-						<AppButton
-							v-if="searchPayload.realmsCount > slicedRealms.length"
-							class="-heading-more"
-							:to="{ name: routeSearchRealms.name, query: { q: query } }"
-						>
-							{{ $gettext(`View All`) }}
-						</AppButton>
-					</h3>
-
-					<div
-						class="-realm-cards"
-						:style="[
-							`--col-desktop: ${REALM_COL_DESKTOP}`,
-							`--col-sm: ${REALM_COL_SM}`,
-							`--col-xs: ${REALM_COL_XS}`,
-						]"
+					<AppButton
+						v-if="searchPayload.realmsCount > slicedRealms.length"
+						class="-heading-more"
+						trans
+						:to="{ name: routeSearchRealms.name, query: { q: query } }"
 					>
-						<AppRealmFullCard
-							v-for="realm of slicedRealms"
-							:key="realm.id"
-							:realm="realm"
-							:to="realm.routeLocation"
-							overlay-content
-							no-sheet
-							no-follow
-							label-position="bottom-left"
-						/>
-					</div>
+						{{ $gettext(`View all`) }}
+					</AppButton>
+				</h3>
+
+				<div
+					class="-realm-cards"
+					:style="[
+						`--col-desktop: ${REALM_COL_DESKTOP}`,
+						`--col-sm: ${REALM_COL_SM}`,
+						`--col-xs: ${REALM_COL_XS}`,
+					]"
+				>
+					<AppRealmFullCard
+						v-for="realm of slicedRealms"
+						:key="realm.id"
+						:realm="realm"
+						:to="realm.routeLocation"
+						overlay-content
+						no-sheet
+						no-follow
+						label-position="bottom-left"
+					/>
 				</div>
-			</section>
+			</div>
+
+			<AppSpacer vertical :scale="4" />
 		</template>
 
-		<!-- Communities -->
-		<template v-if="searchPayload.communities.length">
-			<section class="section section-thin">
-				<div class="container">
+		<AppPageContainer no-left order="right,main">
+			<!-- Games -->
+			<template v-if="!Screen.isMobile" #right>
+				<AppSpacer vertical :scale="6" />
+
+				<AppScrollAffix
+					:style="{
+						position: `relative`,
+						zIndex: kLayerAds,
+						maxWidth: `350px`,
+						// Eyeballed to try to get the games and users headings
+						// to match up when there's communities.
+						minHeight: `225px`,
+						margin: `0 auto`,
+					}"
+					:disabled="!isAdEnthused"
+					:padding="Screen.isLg ? 80 : 8"
+				>
+					<AppAdWidget
+						:style="{
+							...styleChangeBg('bg'),
+							...styleElevate(3),
+							minWidth: `300px`,
+							paddingTop: `8px`,
+							paddingBottom: `8px`,
+							borderRadius: kBorderRadiusLg.px,
+							padding: `8px`,
+						}"
+						:size="isAdEnthused ? 'video' : 'rectangle'"
+						placement="content"
+					/>
+				</AppScrollAffix>
+
+				<template v-if="searchPayload.games.length">
+					<h3 class="-heading">
+						<AppButton
+							class="pull-right"
+							trans
+							:to="{ name: 'search.games', query: { q: query } }"
+						>
+							{{ $gettext(`View all`) }}
+						</AppButton>
+
+						<RouterLink
+							class="link-unstyled"
+							:to="{ name: 'search.games', query: { q: query } }"
+						>
+							{{ $gettext(`Games`) }}
+						</RouterLink>
+						{{ ' ' }}
+						<small>({{ formatNumber(searchPayload.gamesCount) }})</small>
+					</h3>
+
+					<AppGameGrid
+						v-if="Screen.isMobile"
+						:games="searchPayload.games"
+						force-scrollable
+						event-label="search-overview-games"
+					/>
+					<AppGameList
+						v-else
+						:games="searchPayload.games"
+						event-label="search-overview-games"
+					/>
+
+					<div class="hidden-xs hidden-sm">
+						<RouterLink
+							class="link-muted"
+							:to="{ name: 'search.games', query: { q: query } }"
+						>
+							{{ $gettext(`View all`) }}
+						</RouterLink>
+					</div>
+				</template>
+			</template>
+
+			<template #default>
+				<!-- Communities -->
+				<template v-if="searchPayload.communities.length">
 					<h3 class="-heading">
 						<AppButton
 							class="pull-right"
 							trans
 							:to="{ name: 'search.communities', query: { q: query } }"
 						>
-							<AppTranslate>View All</AppTranslate>
+							{{ $gettext(`View all`) }}
 						</AppButton>
 
 						<RouterLink
 							class="link-unstyled"
 							:to="{ name: 'search.communities', query: { q: query } }"
 						>
-							<AppTranslate>Communities</AppTranslate>
+							{{ $gettext(`Communities`) }}
 						</RouterLink>
 						{{ ' ' }}
 						<small>({{ formatNumber(searchPayload.communitiesCount) }})</small>
@@ -155,104 +236,61 @@ const slicedRealms = computed(() => {
 							<div
 								v-for="community of slicedCommunities"
 								:key="community.id"
-								class="scrollable-grid-item col-xs-5 col-sm-2"
+								class="scrollable-grid-item col-xs-5 col-sm-3"
 							>
 								<AppCommunityThumbnail :community="community" />
 							</div>
 						</div>
 					</div>
-				</div>
-			</section>
-		</template>
 
-		<AppPageContainer no-left order="right,main">
-			<!-- Games -->
-			<template v-if="!Screen.isMobile && searchPayload.games.length" #right>
-				<h3 class="-heading">
-					<AppButton
-						class="pull-right"
-						trans
-						:to="{ name: 'search.games', query: { q: query } }"
-					>
-						<AppTranslate>View All</AppTranslate>
-					</AppButton>
+					<AppSpacer vertical :scale="4" />
+				</template>
 
-					<RouterLink
-						class="link-unstyled"
-						:to="{ name: 'search.games', query: { q: query } }"
-					>
-						<AppTranslate>Games</AppTranslate>
-					</RouterLink>
-					{{ ' ' }}
-					<small>({{ formatNumber(searchPayload.gamesCount) }})</small>
-				</h3>
-
-				<AppGameGrid
-					v-if="Screen.isMobile"
-					:games="searchPayload.games"
-					force-scrollable
-					event-label="search-overview-games"
-				/>
-				<AppGameList
-					v-else
-					:games="searchPayload.games"
-					event-label="search-overview-games"
-				/>
-
-				<div class="hidden-xs hidden-sm">
-					<RouterLink
-						class="link-muted"
-						:to="{ name: 'search.games', query: { q: query } }"
-					>
-						<AppTranslate>View all</AppTranslate>
-					</RouterLink>
-				</div>
-			</template>
-
-			<!-- Users -->
-			<template v-if="searchPayload.users.length">
-				<h3 class="-heading">
-					<AppButton
-						class="pull-right"
-						trans
-						:to="{ name: 'search.users', query: { q: query } }"
-					>
-						<AppTranslate>View All</AppTranslate>
-					</AppButton>
-
-					<RouterLink
-						class="link-unstyled"
-						:to="{ name: 'search.users', query: { q: query } }"
-					>
-						<AppTranslate>Users</AppTranslate>
-					</RouterLink>
-					{{ ' ' }}
-					<small>({{ formatNumber(searchPayload.usersCount) }})</small>
-				</h3>
-
-				<div class="scrollable-grid-xs">
-					<div class="row">
-						<div
-							v-for="user of slicedUsers"
-							:key="user.id"
-							class="scrollable-grid-item col-xs-10 col-sm-6"
+				<!-- Users -->
+				<template v-if="searchPayload.users.length">
+					<h3 class="-heading">
+						<AppButton
+							class="pull-right"
+							trans
+							:to="{ name: 'search.users', query: { q: query } }"
 						>
-							<AppUserCard :user="user" elevate />
+							{{ $gettext(`View all`) }}
+						</AppButton>
+
+						<RouterLink
+							class="link-unstyled"
+							:to="{ name: 'search.users', query: { q: query } }"
+						>
+							{{ $gettext(`Users`) }}
+						</RouterLink>
+						{{ ' ' }}
+						<small>({{ formatNumber(searchPayload.usersCount) }})</small>
+					</h3>
+
+					<div class="scrollable-grid-xs">
+						<div class="row">
+							<div
+								v-for="user of slicedUsers"
+								:key="user.id"
+								class="scrollable-grid-item col-xs-10 col-sm-6"
+							>
+								<AppUserCard :user="user" elevate />
+							</div>
 						</div>
 					</div>
-				</div>
-			</template>
+				</template>
 
-			<!-- Posts -->
-			<template v-if="feed && feed.hasItems">
-				<h3 class="-heading">
-					<AppTranslate>Posts</AppTranslate>
-				</h3>
+				<!-- Posts -->
+				<template v-if="feed && feed.hasItems">
+					<h3 class="-heading">
+						{{ $gettext(`Posts`) }}
+					</h3>
 
-				<AppActivityFeed :feed="feed" show-ads />
+					<AppActivityFeed :feed="feed" show-ads />
+				</template>
 			</template>
 		</AppPageContainer>
-	</section>
+	</template>
 </template>
 
 <style lang="stylus" scoped>
