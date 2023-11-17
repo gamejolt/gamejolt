@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, onMounted, toRefs } from 'vue';
+import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import { styleBorderRadiusBase, styleFlexCenter, styleWhen } from '../../_styles/mixins';
 import { kBorderRadiusBase, kFontSizeLarge, kFontSizeSmall } from '../../_styles/variables';
 import { showPurchaseShopProductModal } from '../../app/components/vending-machine/modal/_purchase-modal/modal.service';
@@ -13,7 +13,7 @@ import AppStickerPack, { StickerPackRatio } from '../sticker/pack/AppStickerPack
 import { StickerPackModel } from '../sticker/pack/pack.model';
 import { kThemeFg10, kThemeFgMuted } from '../theme/variables';
 import { $gettext } from '../translate/translate.service';
-import { AcquisitionMethod, filterAcquisitionMethods } from './acquisition.model';
+import { AcquisitionMethod } from './acquisition.model';
 import { CollectibleModel, CollectibleType, getCollectibleResourceId } from './collectible.model';
 
 const props = defineProps({
@@ -28,15 +28,6 @@ const props = defineProps({
 });
 
 const { collectible, feed } = toRefs(props);
-
-onMounted(async () => {
-	const packIds = filterAcquisitionMethods(
-		collectible.value.acquisition,
-		AcquisitionMethod.PackOpen
-	).map(i => i.sticker_pack_id);
-
-	await feed.value.loadPacks(packIds);
-});
 
 const maybePacks = computed(() => feed.value.getAcquisitionPacks(collectible.value.acquisition));
 

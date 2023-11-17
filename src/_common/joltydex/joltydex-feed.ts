@@ -58,7 +58,7 @@ export function makeJoltydexFeed(type: CollectibleType) {
 	 * Ignores packs that are currently loading, have loaded in, or were not
 	 * found.
 	 */
-	async function loadPacks(packIds: number[]) {
+	async function _loadPacks(packIds: number[]) {
 		const packsRequiringLoad = arrayUnique(packIds.filter(i => !_packLoadingData.value.has(i)));
 		if (!packsRequiringLoad.length) {
 			return;
@@ -109,7 +109,7 @@ export function makeJoltydexFeed(type: CollectibleType) {
 		isLoading,
 		reachedEnd,
 		getAcquisitionPacks,
-		loadPacks,
+		_loadPacks,
 	});
 }
 
@@ -167,5 +167,18 @@ export function applyPayloadToJoltydexFeed(
 	feed: JoltydexFeed
 ) {
 	feed.count.value = payload.counts[feed.type] || 0;
-	feed.collectibles.value.push(...(payload.collectibles.get(feed.type) || []));
+	const newCollectibles = payload.collectibles.get(feed.type) || [];
+	feed.collectibles.value.push(...newCollectibles);
+
+	// Gather all sticker pack IDs for collectibles and fetch them immediately
+	// so they're loaded in before the collectible details are viewed.
+	const packIds: number[] = [];
+	for (const collectible of newCollectibles) {
+		const packIdsForCollectible = filterAcquisitionMethods(
+			collectible.acquisition,
+			AcquisitionMethod.PackOpen
+		).map(i => i.sticker_pack_id);
+		packIds.push(...packIdsForCollectible);
+	}
+	feed._loadPacks(packIds);
 }
