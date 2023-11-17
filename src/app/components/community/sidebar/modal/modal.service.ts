@@ -4,19 +4,17 @@ import { showModal } from '../../../../../_common/modal/modal.service';
 import { CommunitySidebarData } from '../sidebar-data';
 
 interface Options {
-	isEditing: boolean;
 	sidebarData: CommunitySidebarData;
 	community: CommunityModel;
 }
 
 export async function showCommunitySidebarModal(options: Options) {
-	const { isEditing, community, sidebarData } = options;
+	const { community, sidebarData } = options;
 
 	return await showModal<void>({
 		modalId: 'CommunitySidebarModal-' + community.id,
-		component: defineAsyncComponent(() => import('./modal.vue')),
+		component: defineAsyncComponent(() => import('./AppCommunitySidebarModal.vue')),
 		props: {
-			isEditing,
 			sidebarData,
 			community,
 		},

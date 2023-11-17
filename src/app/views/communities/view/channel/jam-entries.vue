@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options, Prop, Watch } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options, Prop, Watch } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
@@ -7,7 +8,7 @@ import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments } from '../../../../../_common/illustration/illustrations';
-import AppPagination from '../../../../../_common/pagination/pagination.vue';
+import AppPagination from '../../../../../_common/pagination/AppPagination.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import {
 	LegacyRouteComponent,
@@ -15,17 +16,13 @@ import {
 } from '../../../../../_common/route/legacy-route-component';
 import { vAppNoAutoscroll } from '../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/grid.vue';
+import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
 import {
 	CommunityCompetitionEntryModalHashDeregister,
 	showCommunityCompetitionEntryModalIdFromHash,
 	watchCommunityCompetitionEntryModalForHash,
 } from '../../../../components/community/competition/entry/modal/modal.service';
-import {
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
-	getChannelPathFromRoute,
-} from '../view.store';
+import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
 
 function getSeedSessionStorageKey(route: RouteLocationNormalized) {
 	return (
@@ -156,8 +153,7 @@ function makeRequest(route: RouteLocationNormalized) {
 export default class RouteCommunitiesViewChannelJamEntries extends LegacyRouteComponent {
 	@Prop({ type: Array, required: true }) categories!: CommunityCompetitionVotingCategoryModel[];
 
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	readonly formatNumber = formatNumber;
 	readonly illNoComments = illNoComments;

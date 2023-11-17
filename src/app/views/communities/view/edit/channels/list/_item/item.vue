@@ -1,10 +1,11 @@
 <script lang="ts">
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { showCommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
+import { useCommunityRouteStore } from '../../../../view.store';
 
 @Options({
 	components: {
@@ -17,8 +18,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.st
 export default class AppCommunitiesEditChannelListItem extends Vue {
 	@Prop({ type: Object, required: true }) channel!: CommunityChannelModel;
 
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	get community() {
 		return this.routeStore.community;

@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/AppCommunityActivityItem.vue';
 import {
@@ -13,7 +14,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../../_common/route/legacy-route-component';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+import { useCommunityRouteStore } from '../../view.store';
 
 type ActivityItem = {
 	item: CommunityActivityItemModel;
@@ -37,8 +38,7 @@ type ActivityItem = {
 	},
 })
 export default class RouteCommunitiesViewEditActivity extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	items: ActivityItem[] = [];
 	isAtEnd = false;

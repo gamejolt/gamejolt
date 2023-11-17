@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
 import { CollaboratorModel } from '../../../../../_common/collaborator/collaborator.model';
 import {
@@ -8,7 +9,7 @@ import {
 } from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { enforceLocation } from '../../../../../utils/router';
-import { CommunityRouteStore, CommunityRouteStoreKey, updateCommunity } from '../view.store';
+import { updateCommunity, useCommunityRouteStore } from '../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEdit',
@@ -29,8 +30,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey, updateCommunity } from '..
 	},
 })
 export default class RouteCommunitiesViewEdit extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	readonly Screen = Screen;
 

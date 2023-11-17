@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineAsyncComponent } from 'vue';
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { router } from '../../..';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
@@ -9,11 +10,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../_common/route/legacy-route-component';
 import { asyncRouteLoader } from '../../../../../_common/route/route-component';
-import {
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
-	getChannelPathFromRoute,
-} from '../view.store';
+import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
 
 /**
  * Route dependencies for channel-type pages.
@@ -42,8 +39,7 @@ export const CommunitiesViewChannelDeps = {
 	},
 })
 export default class RouteCommunitiesViewChannel extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	get community() {
 		return this.routeStore.community;

@@ -7,7 +7,7 @@ import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
-import AppPagination from '../../../../_common/pagination/pagination.vue';
+import AppPagination from '../../../../_common/pagination/AppPagination.vue';
 import { vAppNoAutoscroll } from '../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import AppScrollInview, {
 	ScrollInviewConfig,

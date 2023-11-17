@@ -1,11 +1,12 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import AppPagination from '../../../../../../_common/pagination/pagination.vue';
+import AppPagination from '../../../../../../_common/pagination/AppPagination.vue';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
@@ -17,7 +18,7 @@ import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHov
 import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import FormCommunityBlock from '../../../../../components/forms/community/ban/block.vue';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+import { useCommunityRouteStore } from '../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditBlocks',
@@ -42,8 +43,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 	},
 })
 export default class RouteCommunitiesViewEditBlocks extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	isAdding = false;
 	blocks: UserBlockModel[] = [];

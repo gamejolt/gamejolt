@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { $publishCommunityChannel } from '../../../../../../../../../_common/community/channel/channel.model';
 import { CommunityCompetitionVotingCategoryModel } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
@@ -13,8 +14,8 @@ import {
 } from '../../../../../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
-import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
+import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
+import { useCommunityRouteStore } from '../../../../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetitionOverview',
@@ -34,8 +35,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		),
 })
 export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	votingCategories: CommunityCompetitionVotingCategoryModel[] = [];
 	isLoading = true;

@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
@@ -18,16 +19,11 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../../../../_common/route/legacy-route-component';
-import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
+import AppCommunityPerms from '../../../../../../components/community/perms/AppCommunityPerms.vue';
 import { showCommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';
 import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/add.vue';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
-import {
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
-	loadArchivedChannels,
-	updateCommunity,
-} from '../../../view.store';
+import { loadArchivedChannels, updateCommunity, useCommunityRouteStore } from '../../../view.store';
 import AppCommunitiesEditChannelListItem from './_item/item.vue';
 import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.vue';
 
@@ -47,8 +43,7 @@ import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.
 })
 @OptionsForLegacyRoute()
 export default class RouteCommunitiesViewEditChannelsList extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	activeItem: CommunityChannelModel | CommunityModel | CommunityPresetChannelType | null = null;
 	isShowingChannelAdd = false;

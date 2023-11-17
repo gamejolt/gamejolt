@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, provide, ref, watch } from 'vue';
+import { computed, provide, reactive, ref, watch } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import {
 	AdSettingsContainer,
@@ -24,8 +24,8 @@ import { showCommunityHeaderModal } from '../../../components/forms/community/he
 import { useGridStore } from '../../../components/grid/grid-store';
 import AppShellContentWithSidebar from '../../../components/shell/AppShellContentWithSidebar.vue';
 import { useAppStore } from '../../../store/index';
-import AppCommunitiesViewContext from './_context/context.vue';
-import AppMobileHeader from './_mobile-header/mobile-header.vue';
+import AppCommunitiesViewContext from './_context/AppCommunitiesViewContext.vue';
+import AppMobileHeader from './_mobile-header/AppMobileHeader.vue';
 import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
 import {
 	CommunityRouteStore,
@@ -57,7 +57,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = ref(new CommunityRouteStore());
+const routeStore = reactive(new CommunityRouteStore()) as CommunityRouteStore;
 provide(CommunityRouteStoreKey, routeStore);
 
 const { communityStates, setActiveCommunity, clearActiveCommunity, viewCommunity } = useAppStore();
@@ -71,25 +71,23 @@ const route = useRoute();
 
 const contextPane = ref<ContextPane | null>(null);
 
-const community = computed(() => routeStore.value.community);
+const community = computed(() => routeStore.community);
 const isEditing = computed(() => isEditingCommunity(route));
-const competitionHeader = computed(() => routeStore.value.channel?.competition?.header ?? null);
+const competitionHeader = computed(() => routeStore.channel?.competition?.header ?? null);
 const coverMediaItem = computed(() => competitionHeader.value ?? community.value.header ?? null);
 const coverEditable = computed(
 	() =>
 		isEditing.value &&
-		routeStore.value.canEditMedia &&
+		routeStore.canEditMedia &&
 		route.name === routeCommunitiesViewEditDetails.name
 );
 const hasUnreadPosts = computed(
 	() => communityStates.value.getCommunityState(community.value).isUnread
 );
-const isFrontpage = computed(
-	() => routeStore.value.channelPath === routeStore.value.frontpageChannel.title
-);
+const isFrontpage = computed(() => routeStore.channelPath === routeStore.frontpageChannel.title);
 
 const isShowingHeader = computed(() => {
-	if (routeStore.value.channel?.type === 'competition') {
+	if (routeStore.channel?.type === 'competition') {
 		return !!competitionHeader.value && !isEditing.value;
 	}
 
@@ -115,7 +113,7 @@ createAppRoute({
 
 		// Assign the props required for 'sidebarComponent'.
 		if (contextPane.value) {
-			contextPane.value.props = { routeStore: routeStore.value };
+			contextPane.value.props = { routeStore };
 		}
 
 		setAppPromotionCohort(appPromotionStore, 'community');
@@ -123,11 +121,9 @@ createAppRoute({
 	onResolved({ payload }) {
 		const community = new CommunityModel(payload.community);
 
-		setCommunity(routeStore.value, community);
-		routeStore.value.sidebarData = new CommunitySidebarData(payload);
-		routeStore.value.collaborator = payload.invite
-			? new CollaboratorModel(payload.invite)
-			: null;
+		setCommunity(routeStore, community);
+		routeStore.sidebarData = new CommunitySidebarData(payload);
+		routeStore.collaborator = payload.invite ? new CollaboratorModel(payload.invite) : null;
 
 		setActiveCommunity(community);
 		viewCommunity(community);
@@ -160,7 +156,7 @@ createAppRoute({
 watch(
 	() => route,
 	() => {
-		setChannelPathFromRoute(routeStore.value, route);
+		setChannelPathFromRoute(routeStore, route);
 	},
 	{ immediate: true, deep: true }
 );
