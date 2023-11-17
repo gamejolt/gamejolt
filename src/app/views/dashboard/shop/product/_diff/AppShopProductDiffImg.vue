@@ -169,20 +169,7 @@ const gridAreaSizes = {
 						}),
 					]"
 				>
-					<AppAspectRatio :ratio="imgData.placeholderRatio">
-						<!-- Debug -->
-						<!-- <div
-							:style="{
-								position: `absolute`,
-								left: 0,
-								top: `50%`,
-								transform: `translateY(-50%)`,
-								width: `${backgroundData?.tileSize.width}px`,
-								height: `${backgroundData?.tileSize.height}px`,
-								border: `1.5px solid red`,
-							}"
-						/> -->
-					</AppAspectRatio>
+					<AppAspectRatio :ratio="imgData.placeholderRatio" />
 				</div>
 			</AppScrollScroller>
 			<div
