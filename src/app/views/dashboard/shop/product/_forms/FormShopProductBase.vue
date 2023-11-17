@@ -560,10 +560,16 @@ export function createShopProductBaseForm<
 						height: getSize(minHeight.value, maxHeight.value),
 					};
 					styles.backgroundSize = `${tileSize.width}px ${tileSize?.height}px`;
-					styles.backgroundPosition = 'left center';
 				} else {
 					styles.backgroundRepeat = 'no-repeat';
 				}
+			}
+
+			// We always want to position tiled images so that there's a bit of
+			// tiling on the top and the left. This is because we want to show
+			// the user that the image will tile.
+			if (tileSize) {
+				styles.backgroundPosition = 'center';
 			}
 
 			return {

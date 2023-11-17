@@ -140,12 +140,13 @@ const gridAreaSizes = {
 			width: `100%`,
 			alignSelf: `center`,
 			// Can't clamp our image sizes if we're tiling a background.
-			...(backgroundData?.tileSize
-				? {}
-				: styleMaxWidthForOptions({
-						ratio: imgData.placeholderRatio,
-						maxHeight: Math.max(250, Screen.height * 0.3),
-				  })),
+			...styleWhen(
+				!backgroundData?.tileSize,
+				styleMaxWidthForOptions({
+					ratio: imgData.placeholderRatio,
+					maxHeight: Math.max(250, Screen.height * 0.3),
+				})
+			),
 		}"
 	>
 		<template v-if="resource === ShopProductResource.Background">
@@ -163,7 +164,7 @@ const gridAreaSizes = {
 						imgData.styles,
 						backgroundData.styles,
 						styleWhen(!!scrollableBackgroundSize, {
-							width: scrollableBackgroundSize?.width,
+							width: scrollableBackgroundSize!.width,
 							height: `100%`,
 						}),
 					]"
