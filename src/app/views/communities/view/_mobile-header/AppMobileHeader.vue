@@ -47,7 +47,7 @@ const shouldShowAbout = toRef(() => {
 		return false;
 	}
 
-	if (sidebarData.value) {
+	if (sidebarData?.value) {
 		return Screen.isMobile;
 	}
 
@@ -59,9 +59,9 @@ function onClickMenu() {
 }
 
 function onClickAbout() {
-	if (sidebarData.value) {
+	if (sidebarData?.value) {
 		showCommunitySidebarModal({
-			sidebarData: sidebarData.value,
+			sidebarData: sidebarData?.value,
 			community: community.value,
 		});
 	}
