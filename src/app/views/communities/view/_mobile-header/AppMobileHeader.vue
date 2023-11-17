@@ -38,7 +38,7 @@ const router = useRouter();
 const memberCount = toRef(() => community.value.member_count || 0);
 const shouldShowModTools = toRef(() => user.value?.isMod === true);
 const shouldShowChannelsMenu = toRef(() => !!activeContextPane.value);
-const isJam = toRef(() => channel.value?.type === 'competition');
+const isJam = toRef(() => channel?.value?.type === 'competition');
 
 const shouldShowAbout = toRef(() => {
 	// It's too confusing to see an "About" button for the community as well
@@ -142,7 +142,6 @@ function copyShareUrl() {
 
 			<!-- Join / Edit / View -->
 			<div v-if="!community.hasPerms()" class="-controls-item -controls-primary">
-				<!-- TODO(component-setup-refactor-1): check to see if we're actually able to get rid of the disabled. it seems like we need it -->
 				<AppCommunityJoinWidget
 					:community="community"
 					block
