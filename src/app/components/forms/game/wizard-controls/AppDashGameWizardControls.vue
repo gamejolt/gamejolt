@@ -16,7 +16,7 @@ const { disabled } = toRefs(props);
 const gameDashStore = useGameDashRouteController();
 const form = ref(useForm());
 
-const isWizard = toRef(() => !gameDashStore || gameDashStore.isWizard);
+const isWizard = toRef(() => !gameDashStore || gameDashStore.isWizard.value);
 const inForm = toRef(() => !!form.value);
 const canProceed = toRef(() => !form.value || form.value.valid || disabled.value);
 
