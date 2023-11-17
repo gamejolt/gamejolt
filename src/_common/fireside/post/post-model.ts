@@ -120,6 +120,7 @@ export class FiresidePostModel extends Model implements ContentContainerModel, C
 	 * If post comment restrictions allow us to view comments at all.
 	 */
 	declare can_view_comments: boolean;
+	declare can_receive_charged_stickers: boolean;
 
 	constructor(data: any = {}) {
 		super(data);

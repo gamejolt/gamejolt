@@ -44,18 +44,18 @@ export type StickerTargetController = {
 	parent: ComputedRef<StickerTargetController | null>;
 	isLive: boolean;
 
-	isCreator: ComputedRef<boolean>;
+	canReceiveCharge: ComputedRef<boolean>;
 };
 
 interface StickerTargetOptions {
-	isCreator: MaybeComputedRef<boolean>;
+	canReceiveCharge: MaybeComputedRef<boolean>;
 	parent?: MaybeRef<StickerTargetController | null>;
 	isLive?: boolean;
 }
 
 export function createStickerTargetController(
 	model: StickerTargetModel,
-	{ isCreator, parent, isLive = false }: StickerTargetOptions
+	{ canReceiveCharge, parent, isLive = false }: StickerTargetOptions
 ) {
 	model = reactive(model) as StickerTargetModel;
 	const isInview = ref(false);
@@ -114,7 +114,7 @@ export function createStickerTargetController(
 		model,
 		parent: refParent,
 		isLive,
-		isCreator: computed(() => unref(isCreator)),
+		canReceiveCharge: computed(() => unref(canReceiveCharge)),
 	});
 
 	if (refParent.value) {
@@ -124,12 +124,7 @@ export function createStickerTargetController(
 	return c;
 }
 
-export function provideStickerTargetController(
-	controller?: MaybeRef<StickerTargetController | null>
-) {
-	if (!controller) {
-		return;
-	}
+export function provideStickerTargetController(controller: MaybeRef<StickerTargetController>) {
 	provide(StickerTargetParentControllerKey, controller);
 }
 

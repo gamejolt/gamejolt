@@ -2,19 +2,18 @@ import type { Component } from 'vue';
 import { loadScript, MaybePromise } from '../../../utils/utils';
 import { isDynamicGoogleBot } from '../../device/device.service';
 import { AdSlot } from '../ad-slot-info';
-import { AdAdapterBase } from '../adapter-base';
-import AppAdPlaywire from './AppAdPlaywire.vue';
+import { AdAdapter, AdAdapterHelper } from '../adapter-base';
 import AppAdPlaywireVideo from './AppAdPlaywireVideo.vue';
 
-export class AdPlaywireAdapter extends AdAdapterBase {
-	hasVideoSupport = true;
+export class AdPlaywireAdapter implements AdAdapter {
+	private helper = new AdAdapterHelper();
 
-	component(slot: AdSlot): Component {
-		return slot.size === 'video' ? AppAdPlaywireVideo : AppAdPlaywire;
+	component(_slot: AdSlot): Component {
+		return AppAdPlaywireVideo;
 	}
 
 	ensureLoaded() {
-		this.runOnce(() => {
+		this.helper.runOnce(() => {
 			(window as any).ramp = {
 				mode: 'ramp',
 				que: [],
@@ -43,9 +42,11 @@ export class AdPlaywireAdapter extends AdAdapterBase {
 		});
 	}
 
-	onBeforeRouteChange(): void {
+	onBeforeRouteChange() {
 		this.run(ramp => {
 			ramp.destroyUnits('all');
 		});
 	}
+
+	onRouteChanged() {}
 }

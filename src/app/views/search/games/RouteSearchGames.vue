@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { getQuery } from '../../../../utils/router';
-import AppGameGrid from '../../../components/game/grid/grid.vue';
+import AppGameGrid from '../../../components/game/grid/AppGameGrid.vue';
 import { sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../RouteSearch.vue';
 
@@ -35,15 +35,13 @@ createAppRoute({
 </script>
 
 <template>
-	<section class="section">
-		<div v-if="hasSearch" class="container-xl">
-			<AppGameGrid
-				:games="searchPayload.games"
-				:games-count="searchPayload.gamesCount"
-				:current-page="searchPayload.page"
-				show-ads
-				event-label="search-games"
-			/>
-		</div>
-	</section>
+	<div v-if="hasSearch" class="container-xl">
+		<AppGameGrid
+			:games="searchPayload.games"
+			:games-count="searchPayload.gamesCount"
+			:current-page="searchPayload.page"
+			show-ads
+			event-label="search-games"
+		/>
+	</div>
 </template>

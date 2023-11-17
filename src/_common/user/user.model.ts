@@ -139,6 +139,7 @@ export class UserModel
 	is_gamer = false;
 	is_developer = false;
 	declare is_creator?: boolean;
+	declare is_brand?: boolean;
 
 	declare can_join_communities?: boolean;
 	declare can_create_communities?: boolean;

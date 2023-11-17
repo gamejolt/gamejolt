@@ -113,8 +113,8 @@ const deviceMaxHeight = computed(() => {
 
 stickerTargetController.value = createStickerTargetController(mediaItem.value, {
 	parent: computed(() => unref(parentStickerTarget)),
-	isCreator: computed(
-		() => stickerTargetController.value?.parent.value?.isCreator.value === true
+	canReceiveCharge: computed(
+		() => stickerTargetController.value?.parent.value?.canReceiveCharge.value === true
 	),
 });
 

@@ -22,6 +22,7 @@ export class CreatorChangeRequestModel implements ModelStoreModel {
 	declare change_artist_user?: UserModel;
 	declare change_sticker_emoji_short_name?: string;
 	declare change_sticker_pack_sticker_ids?: number[];
+	declare rejection_message?: string;
 
 	declare added_on: number;
 	declare approved_on: number;

@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, inject, InjectionKey, provide, ref } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
+import AppAdStickyRail from '../../../_common/ad/AppAdStickyRail.vue';
 import AppExpand from '../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../_common/filters/number';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
@@ -84,6 +85,7 @@ const c = createController();
 provide(Key, c);
 
 const { isBootstrapped, hasSearch, query, searchPayload } = c;
+const route = useRoute();
 
 createAppRoute({
 	routeTitle: computed(() => $gettext(`Search`)),
@@ -103,126 +105,133 @@ const noResults = computed(() => {
 </script>
 
 <template>
-	<div>
-		<AppPageHeader should-affix-nav :hide-nav="!hasSearch">
-			<template v-if="Screen.isXs">
-				<label>
-					<AppTranslate>Enter your search</AppTranslate>
-				</label>
-				<!--
+	<AppPageHeader should-affix-nav :hide-nav="!hasSearch">
+		<template v-if="Screen.isXs">
+			<label>
+				<AppTranslate>Enter your search</AppTranslate>
+			</label>
+			<!--
 					If they click into a tag (which goes to search page), we
 					don't want to autofocus the input since they're trying to
 					see results. Only autofocus search on mobile if they haven't
 					searched for anything yet.
 				-->
-				<AppSearch autocomplete-disabled :autofocus="!hasSearch" />
+			<AppSearch autocomplete-disabled :autofocus="!hasSearch" />
+		</template>
+		<template v-else>
+			<template v-if="!hasSearch">
+				<p class="text-center text-muted">
+					<AppJolticon icon="chevron-up" />
+					<AppTranslate>Enter your search query above.</AppTranslate>
+					<AppJolticon icon="chevron-up" />
+				</p>
 			</template>
 			<template v-else>
-				<template v-if="!hasSearch">
-					<p class="text-center text-muted">
-						<AppJolticon icon="chevron-up" />
-						<AppTranslate>Enter your search query above.</AppTranslate>
-						<AppJolticon icon="chevron-up" />
-					</p>
-				</template>
-				<template v-else>
-					<div class="small text-upper text-muted">
-						<AppTranslate>Showing results for</AppTranslate>
-					</div>
-
-					<h2 class="sans-margin-top">
-						{{ query }}
-					</h2>
-
-					<br />
-				</template>
-			</template>
-
-			<template v-if="hasSearch" #nav>
-				<nav class="platform-list inline">
-					<ul>
-						<li>
-							<RouterLink
-								:to="{ name: 'search.results', query: { q: query } }"
-								exact-active-class="active"
-							>
-								{{ $gettext(`All`) }}
-							</RouterLink>
-						</li>
-						<li v-if="searchPayload.realmsCount">
-							<RouterLink
-								:to="{ name: routeSearchRealms.name, query: { q: query } }"
-								exact-active-class="active"
-							>
-								{{ $gettext(`Realms`) }}
-
-								<span class="badge">
-									{{ formatNumber(searchPayload.realmsCount) }}
-								</span>
-							</RouterLink>
-						</li>
-						<li v-if="searchPayload.communitiesCount">
-							<RouterLink
-								:to="{ name: 'search.communities', query: { q: query } }"
-								exact-active-class="active"
-							>
-								{{ $gettext(`Communities`) }}
-
-								<span class="badge">
-									{{ formatNumber(searchPayload.communitiesCount) }}
-								</span>
-							</RouterLink>
-						</li>
-						<li v-if="searchPayload.usersCount">
-							<RouterLink
-								:to="{ name: 'search.users', query: { q: query } }"
-								exact-active-class="active"
-							>
-								{{ $gettext(`Users`) }}
-
-								<span class="badge">
-									{{ formatNumber(searchPayload.usersCount) }}
-								</span>
-							</RouterLink>
-						</li>
-						<li v-if="searchPayload.gamesCount">
-							<RouterLink
-								:to="{ name: 'search.games', query: { q: query } }"
-								exact-active-class="active"
-							>
-								{{ $gettext(`Games`) }}
-
-								<span class="badge">
-									{{ formatNumber(searchPayload.gamesCount) }}
-								</span>
-							</RouterLink>
-						</li>
-					</ul>
-				</nav>
-			</template>
-		</AppPageHeader>
-
-		<AppExpand :when="noResults">
-			<section class="section fill-offset">
-				<div class="container">
-					<AppTranslate>No results for that search query.</AppTranslate>
+				<div class="small text-upper text-muted">
+					<AppTranslate>Showing results for</AppTranslate>
 				</div>
-			</section>
-		</AppExpand>
 
-		<AppShellPageBackdrop id="search-results">
-			<RouterView />
+				<h2 class="sans-margin-top">
+					{{ query }}
+				</h2>
 
-			<br />
+				<br />
+			</template>
+		</template>
 
-			<AppPagination
-				v-if="searchPayload.perPage && searchPayload.count"
-				class="text-center"
-				:items-per-page="searchPayload.perPage"
-				:total-items="searchPayload.count"
-				:current-page="searchPayload.page"
-				@pagechange="Scroll.to('search-results', { animate: false })"
-			/>
-		</AppShellPageBackdrop>
-	</div>
+		<template v-if="hasSearch" #nav>
+			<nav class="platform-list inline">
+				<ul>
+					<li>
+						<RouterLink
+							:to="{ name: 'search.results', query: { q: query } }"
+							exact-active-class="active"
+						>
+							{{ $gettext(`All`) }}
+						</RouterLink>
+					</li>
+					<li v-if="searchPayload.realmsCount">
+						<RouterLink
+							:to="{ name: routeSearchRealms.name, query: { q: query } }"
+							exact-active-class="active"
+						>
+							{{ $gettext(`Realms`) }}
+
+							<span class="badge">
+								{{ formatNumber(searchPayload.realmsCount) }}
+							</span>
+						</RouterLink>
+					</li>
+					<li v-if="searchPayload.communitiesCount">
+						<RouterLink
+							:to="{ name: 'search.communities', query: { q: query } }"
+							exact-active-class="active"
+						>
+							{{ $gettext(`Communities`) }}
+
+							<span class="badge">
+								{{ formatNumber(searchPayload.communitiesCount) }}
+							</span>
+						</RouterLink>
+					</li>
+					<li v-if="searchPayload.usersCount">
+						<RouterLink
+							:to="{ name: 'search.users', query: { q: query } }"
+							exact-active-class="active"
+						>
+							{{ $gettext(`Users`) }}
+
+							<span class="badge">
+								{{ formatNumber(searchPayload.usersCount) }}
+							</span>
+						</RouterLink>
+					</li>
+					<li v-if="searchPayload.gamesCount">
+						<RouterLink
+							:to="{ name: 'search.games', query: { q: query } }"
+							exact-active-class="active"
+						>
+							{{ $gettext(`Games`) }}
+
+							<span class="badge">
+								{{ formatNumber(searchPayload.gamesCount) }}
+							</span>
+						</RouterLink>
+					</li>
+				</ul>
+			</nav>
+		</template>
+	</AppPageHeader>
+
+	<AppExpand :when="noResults">
+		<section class="section fill-offset">
+			<div class="container">
+				<AppTranslate>No results for that search query.</AppTranslate>
+			</div>
+		</section>
+	</AppExpand>
+
+	<AppShellPageBackdrop id="search-results">
+		<section v-if="hasSearch" class="section">
+			<!-- Game results are wider and already show a sticky video ad on the right -->
+			<AppAdStickyRail
+				show-left
+				:show-right="route.name !== 'search.games'"
+				:min-width="route.name === 'search.games' ? 2000 : 1600"
+			>
+				<RouterView />
+
+				<br />
+
+				<AppPagination
+					v-if="searchPayload.perPage && searchPayload.count"
+					class="text-center"
+					:items-per-page="searchPayload.perPage"
+					:total-items="searchPayload.count"
+					:current-page="searchPayload.page"
+					@pagechange="Scroll.to('search-results', { animate: false })"
+				/>
+			</AppAdStickyRail>
+		</section>
+	</AppShellPageBackdrop>
 </template>

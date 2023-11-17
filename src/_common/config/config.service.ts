@@ -181,16 +181,6 @@ export const configShowStoreInMoreMenu = /** @__PURE__ */ new ConfigOptionBoolea
 	false
 );
 
-export const configRemoveGameDownloadBanner = /** @__PURE__ */ new ConfigOptionBoolean(
-	'web_remove_game_download_banner',
-	false,
-	{
-		conditions: {
-			authed: false,
-		},
-	}
-);
-
 /**
  * Removes buttons that have `auth-required` directives.
  *
