@@ -113,7 +113,7 @@ function _createInviewConfig() {
 					paddingTop: `${padding}px`,
 				}),
 				...styleWhen(isAffixed && anchor === 'bottom', {
-					top: `var(--scroll-affix-bottom, 0)`,
+					bottom: `var(--scroll-affix-bottom, 0)`,
 					paddingBottom: `${padding}px`,
 				}),
 				...styleWhen(isAffixed, {
