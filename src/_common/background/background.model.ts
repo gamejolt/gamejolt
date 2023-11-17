@@ -4,7 +4,7 @@ import { MediaItemModel } from '../media-item/media-item-model';
 import { ModelStoreModel } from '../model/model-store.service';
 import { ShopProductCommonFields } from '../shop/product/product-model';
 
-const DefaultScale = 2.0;
+export const BackgroundDefaultScale = 2.0;
 
 export const enum BackgroundScaling {
 	stretch = 'stretch',
@@ -36,7 +36,7 @@ export class BackgroundModel implements ModelStoreModel, ShopProductCommonFields
 		if (typeof data.scale === 'number' && data.scale > 0) {
 			this.scale = data.scale;
 		} else {
-			this.scale = DefaultScale;
+			this.scale = BackgroundDefaultScale;
 		}
 	}
 }
@@ -87,7 +87,7 @@ export function getBackgroundCSSProperties(background: BackgroundModel) {
 	}
 
 	return {
-		backgroundImage: `url(${getBackgroundImgUrl(background)})`,
+		backgroundImage: `url(${getBackgroundImgUrl(background)})` as string,
 		backgroundPosition: `top`,
 		backgroundRepeat,
 		backgroundSize,
