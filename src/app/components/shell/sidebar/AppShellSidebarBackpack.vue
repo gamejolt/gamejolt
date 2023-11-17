@@ -146,9 +146,7 @@ function sortStickers(sorting: StickerSortMethod) {
 					v-for="userPack in stickerPacks"
 					:key="userPack.id"
 					:pack="userPack.sticker_pack"
-					:show-details="{
-						name: true,
-					}"
+					show-name
 					can-click-pack
 					@click-pack="openPack(userPack)"
 				>

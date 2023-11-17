@@ -68,7 +68,7 @@ export function storeModelList<T extends ModelStoreModel>(
  */
 export function getModel<T extends ModelStoreModel>(
 	modelConstructor: ModelConstructor<T>,
-	id: number
+	id: number | string
 ) {
 	const key = _generateKey(modelConstructor.name, id);
 	return _models.value.get(key) as T | undefined;

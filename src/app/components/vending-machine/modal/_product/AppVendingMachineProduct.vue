@@ -3,6 +3,7 @@ import { PropType, computed, toRef, toRefs } from 'vue';
 import { ShopViewType, trackShopView } from '../../../../../_common/analytics/analytics.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
+import AppCollectibleUnlockedRibbon from '../../../../../_common/collectible/AppCollectibleUnlockedRibbon.vue';
 import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
 import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
@@ -107,15 +108,17 @@ const nameFontSize = kFontSizeSmall;
 			styleTyped({
 				borderRadius: kBorderRadiusLg.px,
 				position: `relative`,
-				...styleElevate(0),
-				...styleWhen(hovered && !disablePurchases, styleElevate(2)),
 				backgroundColor: kThemeGray,
 				backgroundImage: `radial-gradient(circle at center bottom, rgba(128, 128, 128, 0.75), transparent 69%)`,
+				display: `flex`,
+				flexDirection: `column`,
+				...styleElevate(0),
+				...styleWhen(hovered && !disablePurchases, {
+					...styleElevate(2),
+				}),
 				...styleWhen(disablePurchases, {
 					cursor: `default`,
 				}),
-				display: `flex`,
-				flexDirection: `column`,
 			})
 		"
 		@click="onClickProduct()"
@@ -226,6 +229,11 @@ const nameFontSize = kFontSizeSmall;
 				{{ readableEndsOn }}
 			</div>
 		</Transition>
+
+		<AppCollectibleUnlockedRibbon
+			v-if="shopProduct.is_product_owned && !hovered"
+			:style="{ zIndex: overlayTagZIndex }"
+		/>
 	</a>
 </template>
 
