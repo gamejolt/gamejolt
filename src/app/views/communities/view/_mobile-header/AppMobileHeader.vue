@@ -29,16 +29,21 @@ const props = defineProps({
 });
 
 const { hasUnread } = toRefs(props);
-const { community, channel, sidebarData, channelPath } = toRefs(useCommunityRouteStore()!);
+const routeStore = useCommunityRouteStore()!;
 const { toggleLeftPane } = useAppStore();
 const { user } = useCommonStore();
 const { activeContextPane } = useSidebarStore();
 const router = useRouter();
 
+const community = toRef(() => routeStore.community);
+const channel = toRef(() => routeStore.channel);
+const sidebarData = toRef(() => routeStore.sidebarData);
+const channelPath = toRef(() => routeStore.channelPath);
+
 const memberCount = toRef(() => community.value.member_count || 0);
 const shouldShowModTools = toRef(() => user.value?.isMod === true);
 const shouldShowChannelsMenu = toRef(() => !!activeContextPane.value);
-const isJam = toRef(() => channel?.value?.type === 'competition');
+const isJam = toRef(() => channel.value?.type === 'competition');
 
 const shouldShowAbout = toRef(() => {
 	// It's too confusing to see an "About" button for the community as well
@@ -47,7 +52,7 @@ const shouldShowAbout = toRef(() => {
 		return false;
 	}
 
-	if (sidebarData?.value) {
+	if (sidebarData.value) {
 		return Screen.isMobile;
 	}
 
@@ -59,9 +64,9 @@ function onClickMenu() {
 }
 
 function onClickAbout() {
-	if (sidebarData?.value) {
+	if (sidebarData.value) {
 		showCommunitySidebarModal({
-			sidebarData: sidebarData?.value,
+			sidebarData: sidebarData.value,
 			community: community.value,
 		});
 	}
