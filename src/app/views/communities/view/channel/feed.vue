@@ -22,7 +22,7 @@ import {
 } from '../_feed/feed-helpers';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { isVirtualChannel, setCommunityMeta, useCommunityRouteStore } from '../view.store';
-import { CommunitiesViewChannelDeps } from './channel.vue';
+import { CommunitiesViewChannelDeps } from './RouteCommunitiesViewChannel.vue';
 
 @Options({
 	name: 'RouteCommunitiesViewChannelFeed',

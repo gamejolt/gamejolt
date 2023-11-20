@@ -18,7 +18,7 @@ import { useAppStore } from '../../../../store/index';
 import AppCommunitiesViewFeed from '../_feed/AppCommunitiesViewFeed.vue';
 import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
-import { CommunitiesViewChannelDeps } from '../channel/channel.vue';
+import { CommunitiesViewChannelDeps } from '../channel/RouteCommunitiesViewChannel.vue';
 import {
 	acceptCollaboration,
 	declineCollaboration,
