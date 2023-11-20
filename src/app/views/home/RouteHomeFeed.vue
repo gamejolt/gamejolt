@@ -2,6 +2,8 @@
 import { computed, defineAsyncComponent, provide, Ref, ref, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
+import { isAdEnthused } from '../../../_common/ad/ad-store';
+import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
@@ -197,6 +199,7 @@ const topSpacerHeight = buildCSSPixelValue(58);
 					Screen.isXs ? kGridGutterWidthXs.value : kGridGutterWidth.value
 				"
 			>
+				<!-- Left sidebar -->
 				<template #left>
 					<template v-if="Screen.isDesktop">
 						<div :style="{ height: topSpacerHeight.px }" />
@@ -291,6 +294,7 @@ const topSpacerHeight = buildCSSPixelValue(58);
 					</template>
 				</template>
 
+				<!-- Right sidebar -->
 				<template v-if="!Screen.isMobile" #right="{ combined }">
 					<div v-if="!combined" :style="{ height: topSpacerHeight.px }" />
 
@@ -298,24 +302,33 @@ const topSpacerHeight = buildCSSPixelValue(58);
 						<AppHomeFeaturedBanner :featured-item="featuredItem" />
 						<AppSpacer vertical :scale="8" />
 					</template>
+
+					<AppAdWidget v-if="isAdEnthused" size="video" placement="side" />
 				</template>
 
-				<AppHomeFeedMenu v-if="Screen.isDesktop" :tabs="tabs" :active-tab="activeFeedTab" />
+				<!-- Main -->
+				<template #default>
+					<AppHomeFeedMenu
+						v-if="Screen.isDesktop"
+						:tabs="tabs"
+						:active-tab="activeFeedTab"
+					/>
 
-				<!-- Realm feed will handle its own add button. -->
-				<AppPostAddButton @add="onPostAdded" />
+					<!-- Realm feed will handle its own add button. -->
+					<AppPostAddButton @add="onPostAdded" />
 
-				<template v-if="Screen.isMobile">
-					<template v-if="!Screen.isXs && featuredItem">
-						<AppHomeFeaturedBanner :featured-item="featuredItem" />
-						<AppSpacer vertical :scale="4" />
+					<template v-if="Screen.isMobile">
+						<template v-if="!Screen.isXs && featuredItem">
+							<AppHomeFeaturedBanner :featured-item="featuredItem" />
+							<AppSpacer vertical :scale="4" />
+						</template>
+
+						<AppHomeFeedMenu :tabs="tabs" :active-tab="activeFeedTab" />
 					</template>
 
-					<AppHomeFeedMenu :tabs="tabs" :active-tab="activeFeedTab" />
+					<RouteHomeActivity v-if="activeFeedTab === HOME_FEED_ACTIVITY" />
+					<RouteHomeFyp v-else-if="activeFeedTab === HOME_FEED_FYP" />
 				</template>
-
-				<RouteHomeActivity v-if="activeFeedTab === HOME_FEED_ACTIVITY" />
-				<RouteHomeFyp v-else-if="activeFeedTab === HOME_FEED_FYP" />
 			</AppPageContainer>
 		</section>
 	</AppShellPageBackdrop>

@@ -5,7 +5,7 @@ import { showModal } from '../../../../../_common/modal/modal.service';
 export async function showCommunityCompetitionHeaderModal(competition: CommunityCompetitionModel) {
 	return await showModal<CommunityCompetitionModel>({
 		modalId: 'CommunityCompetitionHeader',
-		component: defineAsyncComponent(() => import('./header-modal.vue')),
+		component: defineAsyncComponent(() => import('./AppCommunityCompetitionHeaderModal.vue')),
 		props: {
 			competition,
 		},

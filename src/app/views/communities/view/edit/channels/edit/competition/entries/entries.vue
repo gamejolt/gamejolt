@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import {
@@ -16,7 +17,7 @@ import AppIllustration from '../../../../../../../../../_common/illustration/App
 import { illNoCommentsSmall } from '../../../../../../../../../_common/illustration/illustrations';
 import AppLoading from '../../../../../../../../../_common/loading/AppLoading.vue';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
-import AppPagination from '../../../../../../../../../_common/pagination/pagination.vue';
+import AppPagination from '../../../../../../../../../_common/pagination/AppPagination.vue';
 import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
@@ -27,9 +28,9 @@ import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-
 import AppUserVerifiedTick from '../../../../../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
+import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
 import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../components/community/competition/entry/modal/modal.service';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
+import { useCommunityRouteStore } from '../../../../../view.store';
 
 type Payload = {
 	entryCount: number;
@@ -123,8 +124,7 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 	},
 })
 export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	entryCount = 0;
 	entries: CommunityCompetitionEntryModel[] = [];

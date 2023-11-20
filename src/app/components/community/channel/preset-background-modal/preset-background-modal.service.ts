@@ -11,7 +11,9 @@ export async function showCommunityChannelPresetBackgroundModal(
 ) {
 	return await showModal<CommunityModel>({
 		modalId: 'CommunityChannelPresetBackground',
-		component: defineAsyncComponent(() => import('./preset-background-modal.vue')),
+		component: defineAsyncComponent(
+			() => import('./AppCommunityChannelPresetBackgroundModal.vue')
+		),
 		props: {
 			community,
 			presetType,

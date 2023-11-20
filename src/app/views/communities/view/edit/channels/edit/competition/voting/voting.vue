@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../../../_common/card/list/AppCardListAdd.vue';
@@ -28,13 +29,13 @@ import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import { arrayRemove } from '../../../../../../../../../utils/array';
-import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
+import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
 import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/award.vue';
 import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/category.vue';
 import FormCommunityCompetitionVotingEdit from '../../../../../../../../components/forms/community/competition/voting/edit/edit.vue';
 import FormCommunityCompetitionVotingToggleTS from '../../../../../../../../components/forms/community/competition/voting/toggle/toggle';
 import FormCommunityCompetitionVotingToggle from '../../../../../../../../components/forms/community/competition/voting/toggle/toggle.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
+import { useCommunityRouteStore } from '../../../../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetitionVoting',
@@ -62,8 +63,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		),
 })
 export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	awards: CommunityCompetitionAwardModel[] = [];
 	activeAward: CommunityCompetitionAwardModel | null = null;

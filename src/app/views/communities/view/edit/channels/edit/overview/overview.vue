@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import {
 	$archiveCommunityChannel,
 	$unarchiveCommunityChannel,
@@ -20,7 +21,7 @@ import { arrayRemove } from '../../../../../../../../utils/array';
 import FormCommunityChannelDescription from '../../../../../../../components/forms/community/channel/description/FormCommunityChannelDescription.vue';
 import FormCommunityChannelEdit from '../../../../../../../components/forms/community/channel/edit/edit.vue';
 import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
+import { useCommunityRouteStore } from '../../../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditChannelsOverview',
@@ -32,8 +33,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.st
 })
 @OptionsForLegacyRoute()
 export default class RouteCommunitiesViewEditChannelsOverview extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	readonly Screen = Screen;
 

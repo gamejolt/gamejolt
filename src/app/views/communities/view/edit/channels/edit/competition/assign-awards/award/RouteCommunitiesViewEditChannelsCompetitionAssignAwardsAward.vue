@@ -14,7 +14,7 @@ import { CommunityCompetitionEntryModel } from '../../../../../../../../../../_c
 import { showErrorGrowl } from '../../../../../../../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../../../../../../../_common/loading/AppLoadingFade.vue';
-import AppPagination from '../../../../../../../../../../_common/pagination/pagination.vue';
+import AppPagination from '../../../../../../../../../../_common/pagination/AppPagination.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,

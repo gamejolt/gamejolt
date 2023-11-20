@@ -69,15 +69,15 @@
 	},
 	"CSS properties": {
 		"prefix": "styles-object",
-		"body": ["const ${1:some}Styles: CSSProperties = {", "\t${2:}", "};"]
+		"body": ["const ${1:some}Styles = {", "\t${2:}", "} satisfies CSSProperties;"]
 	},
 	"CSS properties reactive": {
 		"prefix": "styles-reactive",
 		"body": [
-			"const ${1:some}Styles = computed<CSSProperties>(() => {",
+			"const ${1:some}Styles = computed(() => {",
 			"\treturn {",
 			"\t\t${2:}",
-			"\t};",
+			"\t} satisfies CSSProperties;",
 			"});"
 		]
 	},

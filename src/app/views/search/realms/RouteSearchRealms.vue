@@ -35,24 +35,22 @@ createAppRoute({
 </script>
 
 <template>
-	<section class="section">
-		<div v-if="hasSearch" class="container">
-			<div class="row">
-				<div class="-grid">
-					<AppRealmFullCard
-						v-for="realm of searchPayload.realms"
-						:key="realm.id"
-						:realm="realm"
-						:to="realm.routeLocation"
-						label-position="bottom-left"
-						overlay-content
-						no-sheet
-						no-follow
-					/>
-				</div>
+	<div v-if="hasSearch" class="container">
+		<div class="row">
+			<div class="-grid">
+				<AppRealmFullCard
+					v-for="realm of searchPayload.realms"
+					:key="realm.id"
+					:realm="realm"
+					:to="realm.routeLocation"
+					label-position="bottom-left"
+					overlay-content
+					no-sheet
+					no-follow
+				/>
 			</div>
 		</div>
-	</section>
+	</div>
 </template>
 
 <style lang="stylus" scoped>
