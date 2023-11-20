@@ -16,15 +16,9 @@ import AppJolticon from '../../../../../../../../../../_common/jolticon/AppJolti
 import AppLoadingFade from '../../../../../../../../../../_common/loading/AppLoadingFade.vue';
 import AppPagination from '../../../../../../../../../../_common/pagination/pagination.vue';
 import {
-<<<<<<< Updated upstream:src/app/views/communities/view/edit/channels/edit/competition/assign-awards/award/award.vue
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../../../../_common/route/legacy-route-component';
-=======
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../../../../../../_common/route/route-component';
->>>>>>> Stashed changes:src/app/views/communities/view/edit/channels/edit/competition/assign-awards/award/RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAward.vue
 import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../../../../../_common/translate/translate.service';
 import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
