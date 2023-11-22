@@ -37,7 +37,7 @@ import { getChannelPathFromRoute, setCommunityMeta, useCommunityRouteStore } fro
 		AppContentViewer,
 		AppCommunityPerms,
 		RouteCommunitiesViewChannelJamEntries: defineAsyncComponent(() =>
-			asyncRouteLoader(router, import('./jam-entries.vue'))
+			asyncRouteLoader(router, import('./RouteCommunitiesViewChannelJamEntries.vue'))
 		),
 	},
 })
