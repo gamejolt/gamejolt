@@ -28,6 +28,8 @@ const route = useRoute();
 const awards = ref<CommunityCompetitionAwardModel[]>([]);
 const isLoading = ref(true);
 
+const noAwardSelected = toRef(() => !selectedAwardId.value);
+
 const selectedAwardId = computed(() => {
 	const id = route.params.awardId;
 	if (typeof id === 'string') {
@@ -36,8 +38,6 @@ const selectedAwardId = computed(() => {
 		return id;
 	}
 });
-
-const noAwardSelected = toRef(() => !selectedAwardId.value);
 
 function isAwardSelected(award: CommunityCompetitionAwardModel) {
 	return selectedAwardId.value === award.id;
@@ -122,8 +122,9 @@ createAppRoute({
 					{{ award.name }}
 				</AppButton>
 			</div>
-			<!--TODO(component-setup-refactor-routes-0): revisit error below@ router-view-->
-			<router-view @assign="onAssignAward($event)" @unassign="onUnassignAward($event)" />
+			<!--TODO(component-setup-refactor-routes-0): revisit error below@
+			Type '{ onAssign: any; onUnassign: any; }' has no properties in common with type 'AllowedComponentProps & ...-->
+			<RouterView @assign="onAssignAward($event)" @unassign="onUnassignAward($event)" />
 		</template>
 	</div>
 </template>

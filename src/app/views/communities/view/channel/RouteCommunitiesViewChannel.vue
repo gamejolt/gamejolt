@@ -1,5 +1,5 @@
 <script lang="ts">
-import { toRef } from 'vue';
+import { computed, toRef } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import {
@@ -34,6 +34,7 @@ const routeStore = useCommunityRouteStore()!;
 const channel = toRef(() => routeStore.channel);
 
 createAppRoute({
+	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
 		if (payload.channel) {
 			const newChannel = new CommunityChannelModel(payload.channel);

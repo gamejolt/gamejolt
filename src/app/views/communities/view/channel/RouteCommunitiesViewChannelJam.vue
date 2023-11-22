@@ -87,12 +87,12 @@ const canSubmitEntry = computed(
 		!channel.value.is_archived
 );
 
-const routeTitle = computed(() => {
-	return $gettext(`%{ channel } - %{ name } Community on Game Jolt`, {
+const routeTitle = computed(() =>
+	$gettext(`%{ channel } - %{ name } Community on Game Jolt`, {
 		name: community.value.name,
 		channel: channel.value?.displayTitle || '',
-	});
-});
+	})
+);
 
 function toggleDescription() {
 	isDescriptionOpen.value = !isDescriptionOpen.value;

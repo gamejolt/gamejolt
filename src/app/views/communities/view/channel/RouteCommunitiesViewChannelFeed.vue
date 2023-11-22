@@ -43,16 +43,13 @@ const router = useRouter();
 const { grid } = useGridStore();
 const { user } = useCommonStore();
 
-const communityStates = toRef(() => {
-	return store.communityStates;
-});
-
 const feed = ref<ActivityFeedView | null>(null);
 const isBootstrapped = ref(false);
 // TODO(component-setup-refactor-routes-0): How are the @overrides are used?
 /** @override */
 // const disableRouteTitleSuffix = ref(true);
 
+const communityStates = toRef(() => store.communityStates);
 const community = toRef(() => routeStore.community);
 const channel = toRef(() => routeStore.channel);
 const channelPath = toRef(() => routeStore.channelPath!);
@@ -159,6 +156,7 @@ function onPostAdded(post: FiresidePostModel) {
 	});
 }
 
+// TODO(component-setup-refactor-routes-0): is it okay feeding the appRoute into onPostAdded()?
 const appRoute = createAppRoute({
 	routeTitle: routeTitle.value,
 	onInit() {

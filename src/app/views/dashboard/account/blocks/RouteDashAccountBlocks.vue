@@ -90,8 +90,6 @@ async function onClickUnblock(block: UserBlockModel) {
 	arrayRemove(blocks.value, i => i.id === block.id);
 }
 
-// TODO(component-setup-refactor-routes-0): these two vars are correct
-// replacement for isRouteBootstrapped & isRouteLoading?
 const { isBootstrapped, isLoading } = createAppRoute({
 	routeTitle: computed(() => routeStore.heading.value),
 	onInit() {

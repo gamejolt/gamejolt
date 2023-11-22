@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
 import draggable from 'vuedraggable';
 import { Api } from '../../../../../../../../../../_common/api/api.service';
@@ -57,13 +57,8 @@ const filterValue = ref('');
 const page = ref(1);
 const filterDispatcher = ref<NodeJS.Timer | undefined>(undefined);
 
-const noAwards = computed(() => {
-	return awardedEntries.value.length === 0;
-});
-
-const unassignedCount = computed(() => {
-	return entryCount.value - awardedEntries.value.length;
-});
+const noAwards = toRef(() => awardedEntries.value.length === 0);
+const unassignedCount = toRef(() => entryCount.value - awardedEntries.value.length);
 
 const draggableItems = computed({
 	get() {
@@ -83,30 +78,6 @@ function handlePayload(payload: Payload) {
 
 	isLoading.value = false;
 }
-
-createAppRoute({
-	routeTitle: computed(() => ``),
-	onInit() {
-		// When clicking an award in the parent route, this route gets recreated.
-		isLoading.value = true;
-		filterValue.value = '';
-		page.value = 1;
-
-		if (filterDispatcher.value) {
-			clearTimeout(filterDispatcher.value);
-			filterDispatcher.value = undefined;
-		}
-	},
-	onDestroyed() {
-		if (filterDispatcher.value) {
-			clearTimeout(filterDispatcher.value);
-			filterDispatcher.value = undefined;
-		}
-	},
-	onResolved({ payload }) {
-		handlePayload(payload);
-	},
-});
 
 function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '') {
 	let url = `/web/dash/communities/competitions/awards/view/${route.params.awardId}`;
@@ -189,6 +160,30 @@ async function onPageChanged(newPage: number) {
 	const payload = await makeRequest(route, page.value, filterValue.value);
 	handlePayload(payload);
 }
+
+createAppRoute({
+	routeTitle: computed(() => ``),
+	onInit() {
+		// When clicking an award in the parent route, this route gets recreated.
+		isLoading.value = true;
+		filterValue.value = '';
+		page.value = 1;
+
+		if (filterDispatcher.value) {
+			clearTimeout(filterDispatcher.value);
+			filterDispatcher.value = undefined;
+		}
+	},
+	onDestroyed() {
+		if (filterDispatcher.value) {
+			clearTimeout(filterDispatcher.value);
+			filterDispatcher.value = undefined;
+		}
+	},
+	onResolved({ payload }) {
+		handlePayload(payload);
+	},
+});
 </script>
 
 <template>
