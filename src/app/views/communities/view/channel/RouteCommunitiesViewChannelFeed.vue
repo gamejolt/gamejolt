@@ -148,7 +148,7 @@ function pushViewToGrid() {
 
 function onPostAdded(post: FiresidePostModel) {
 	ActivityFeedService.onPostAdded({
-		feed: feed.value!,
+		feed: feed.value! as ActivityFeedView,
 		post,
 		route: route,
 		router: router,
@@ -167,7 +167,7 @@ const appRoute = createAppRoute({
 		// type mismatch error: ... is missing the following properties from type 'ActivityFeedView': _getRequestBody,
 		// _getRequestOptions, addItems, getItemState
 		feed.value = resolveFeedChannelPayload(
-			feed.value,
+			feed.value as ActivityFeedView,
 			community.value,
 			route,
 			payload,
@@ -214,7 +214,7 @@ const appRoute = createAppRoute({
 			</div>
 			<AppCommunitiesViewFeed
 				v-else
-				:feed="feed"
+				:feed="feed!"
 				@add-post="onPostAdded"
 				@load-new="loadedNew"
 			/>
