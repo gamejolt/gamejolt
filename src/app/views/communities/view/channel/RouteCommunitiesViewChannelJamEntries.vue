@@ -25,8 +25,6 @@ import {
 } from '../../../../components/community/competition/entry/modal/modal.service';
 import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
 
-// TODO(component-setup-refactor-routes-0): RouteCommunitiesViewChannelJam which uses this route component doesn't seem to be used anywhere.
-// might need to remove this as well.
 export default {
 	...defineAppRouteOptions({
 		deps: {
@@ -47,10 +45,11 @@ const props = defineProps({
 	},
 });
 
+const { categories } = toRefs(props);
+
 const routeStore = useCommunityRouteStore()!;
 const route = useRoute();
 const router = useRouter();
-const { categories } = toRefs(props);
 
 const entries = ref<CommunityCompetitionEntryModel[]>([]);
 const perPage = ref(50);
@@ -283,6 +282,7 @@ function makeRequest(route: RouteLocationNormalized) {
 }
 
 createAppRoute({
+	routeTitle: computed(() => ``),
 	onInit() {
 		entries.value = [];
 

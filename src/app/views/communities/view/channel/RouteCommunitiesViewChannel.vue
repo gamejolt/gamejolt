@@ -7,6 +7,8 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
+import RouteCommunitiesViewChannelFeed from './RouteCommunitiesViewChannelFeed.vue';
+import RouteCommunitiesViewChannelJam from './jam.vue';
 
 /**
  * Route dependencies for channel-type pages.
@@ -47,8 +49,8 @@ createAppRoute({
 
 <template>
 	<div v-if="channel">
-		<route-communities-view-channel-jam v-if="channel.type === 'competition'" />
-		<route-communities-view-channel-feed v-else />
+		<RouteCommunitiesViewChannelJam v-if="channel.type === 'competition'" />
+		<RouteCommunitiesViewChannelFeed v-else />
 	</div>
 </template>
 
