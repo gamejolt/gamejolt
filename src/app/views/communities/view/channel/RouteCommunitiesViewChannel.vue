@@ -8,7 +8,7 @@ import {
 } from '../../../../../_common/route/route-component';
 import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
 import RouteCommunitiesViewChannelFeed from './RouteCommunitiesViewChannelFeed.vue';
-import RouteCommunitiesViewChannelJam from './jam.vue';
+import RouteCommunitiesViewChannelJam from './RouteCommunitiesViewChannelJam.vue';
 
 /**
  * Route dependencies for channel-type pages.

@@ -1,189 +1,155 @@
 <script lang="ts">
-import { defineAsyncComponent } from 'vue';
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
-import { router } from '../../..';
+import { computed, ref, toRef } from 'vue';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import { Api } from '../../../../../_common/api/api.service';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { CompetitionPeriodVoting } from '../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
 import { showCommunityCompetitionEntrySubmitModal } from '../../../../../_common/community/competition/entry/submit-modal/submit-modal.service';
 import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { formatDate } from '../../../../../_common/filters/date';
-import { formatNumber } from '../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../_common/route/legacy-route-component';
-import { asyncRouteLoader } from '../../../../../_common/route/route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../utils/array';
 import AppCommunityCompetitionCountdown from '../../../../components/community/competition/countdown/AppCommunityCompetitionCountdown.vue';
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
 import AppCommunityPerms from '../../../../components/community/perms/AppCommunityPerms.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { getChannelPathFromRoute, setCommunityMeta, useCommunityRouteStore } from '../view.store';
+import RouteCommunitiesViewChannelJamEntries from './RouteCommunitiesViewChannelJamEntries.vue';
 
-@Options({
-	name: 'RouteCommunitiesViewChannelJam',
-	components: {
-		AppCommunitiesViewPageContainer,
-		AppCommunityCompetitionEntryGrid,
-		AppCommunityCompetitionCountdown,
-		AppFadeCollapse,
-		AppContentViewer,
-		AppCommunityPerms,
-		RouteCommunitiesViewChannelJamEntries: defineAsyncComponent(() =>
-			asyncRouteLoader(router, import('./RouteCommunitiesViewChannelJamEntries.vue'))
-		),
-	},
-})
-@OptionsForLegacyRoute({
-	deps: { params: ['path', 'channel'] },
-	resolver: ({ route }) => {
-		const channel = getChannelPathFromRoute(route);
-		return Api.sendRequest(
-			`/web/communities/competitions/entries/view/${route.params.path}/${channel}`
-		);
-	},
-})
-export default class RouteCommunitiesViewChannelJam extends LegacyRouteComponent {
-	commonStore = setup(() => useCommonStore());
+export default {
+	...defineAppRouteOptions({
+		deps: { params: ['path', 'channel'] },
+		resolver: ({ route }) => {
+			const channel = getChannelPathFromRoute(route);
+			return Api.sendRequest(
+				`/web/communities/competitions/entries/view/${route.params.path}/${channel}`
+			);
+		},
+	}),
+};
+</script>
 
-	routeStore = setup(() => useCommunityRouteStore())!;
+<script lang="ts" setup>
+const routeStore = useCommunityRouteStore()!;
+const { user } = useCommonStore();
 
-	get user() {
-		return this.commonStore.user;
+const canToggleDescription = ref(false);
+const isDescriptionOpen = ref(false);
+const isLoading = ref(true);
+const userEntries = ref<CommunityCompetitionEntryModel[]>([]);
+const categories = ref<CommunityCompetitionVotingCategoryModel[]>([]);
+
+// TODO(component-setup-refactor-routes-0): How are the @overrides are used?
+/** @override */
+// disableRouteTitleSuffix = true;
+
+const community = toRef(() => routeStore.community);
+const channel = toRef(() => routeStore.channel);
+const competition = toRef(() => routeStore.competition!);
+const hasSubmittedEntries = toRef(() => userEntries.value.length > 0);
+
+const shouldShowUserSubmissions = computed(() => {
+	if (isLoading.value || !competition.value) {
+		return false;
 	}
 
-	readonly Screen = Screen;
-	readonly formatNumber = formatNumber;
-	readonly formatDate = formatDate;
-
-	canToggleDescription = false;
-	isDescriptionOpen = false;
-	isLoading = true;
-	userEntries: CommunityCompetitionEntryModel[] = [];
-	categories: CommunityCompetitionVotingCategoryModel[] = [];
-
-	/** @override */
-	disableRouteTitleSuffix = true;
-
-	get community() {
-		return this.routeStore.community;
+	// Guests can't submit.
+	if (!user.value) {
+		return false;
 	}
 
-	get channel() {
-		return this.routeStore.channel;
+	// Can't submit entries when you are blocked from the community.
+	if (community.value.isBlocked) {
+		return false;
 	}
 
-	get competition() {
-		return this.routeStore.competition;
+	// Competition is over and no submissions have been entered.
+	if (competition.value.periodNum >= CompetitionPeriodVoting && userEntries.value.length === 0) {
+		return false;
 	}
 
-	get shouldShowUserSubmissions() {
-		if (this.isLoading || !this.competition) {
-			return false;
-		}
+	return true;
+});
 
-		// Guests can't submit.
-		if (!this.user) {
-			return false;
-		}
+const canSubmitEntry = computed(
+	() =>
+		competition.value?.period === 'running' &&
+		channel.value?.visibility === 'published' &&
+		!channel.value.is_archived
+);
 
-		// Can't submit entries when you are blocked from the community.
-		if (this.community.isBlocked) {
-			return false;
-		}
+const routeTitle = computed(() => {
+	return $gettext(`%{ channel } - %{ name } Community on Game Jolt`, {
+		name: community.value.name,
+		channel: channel.value?.displayTitle || '',
+	});
+});
 
-		// Competition is over and no submissions have been entered.
-		if (
-			this.competition.periodNum >= CompetitionPeriodVoting &&
-			this.userEntries.length === 0
-		) {
-			return false;
-		}
+function toggleDescription() {
+	isDescriptionOpen.value = !isDescriptionOpen.value;
+}
 
-		return true;
+function canToggleDescriptionChanged(canToggle: boolean) {
+	canToggleDescription.value = canToggle;
+}
+
+async function onClickSubmit() {
+	if (!competition.value) {
+		return;
 	}
 
-	get canSubmitEntry() {
-		return (
-			this.competition?.period === 'running' &&
-			this.channel?.visibility === 'published' &&
-			!this.channel.is_archived
-		);
-	}
+	const result = await showCommunityCompetitionEntrySubmitModal(competition.value);
+	if (result) {
+		userEntries.value.unshift(result);
 
-	get hasSubmittedEntries() {
-		return this.userEntries.length > 0;
-	}
+		showSuccessGrowl($gettext(`Successfully submitted your entry to the jam!`));
 
-	get routeTitle() {
-		return this.$gettext(`%{ channel } - %{ name } Community on Game Jolt`, {
-			name: this.community.name,
-			channel: this.channel?.displayTitle || '',
-		});
-	}
-
-	routeResolved($payload: any) {
-		if ($payload.entries) {
-			this.userEntries = CommunityCompetitionEntryModel.populate($payload.entries);
-		}
-		if ($payload.categories) {
-			this.categories = CommunityCompetitionVotingCategoryModel.populate($payload.categories);
-		}
-		this.isLoading = false;
-
-		if (this.routeTitle) {
-			setCommunityMeta(this.community, this.routeTitle);
-		}
-	}
-
-	toggleDescription() {
-		this.isDescriptionOpen = !this.isDescriptionOpen;
-	}
-
-	canToggleDescriptionChanged(canToggle: boolean) {
-		this.canToggleDescription = canToggle;
-	}
-
-	async onClickSubmit() {
-		if (!this.competition) {
-			return;
-		}
-
-		const result = await showCommunityCompetitionEntrySubmitModal(this.competition);
-		if (result) {
-			this.userEntries.unshift(result);
-
-			showSuccessGrowl(this.$gettext(`Successfully submitted your entry to the jam!`));
-
-			if (this.competition) {
-				// Triggers the grid to refetch.
-				this.competition.entry_count++;
-			}
-		}
-	}
-
-	onEntryRemoved(entry: CommunityCompetitionEntryModel) {
-		arrayRemove(this.userEntries, i => i.id === entry.id);
-
-		if (this.competition) {
+		if (competition.value) {
 			// Triggers the grid to refetch.
-			this.competition.entry_count--;
+			competition.value.entry_count++;
 		}
 	}
 }
+
+function onEntryRemoved(entry: CommunityCompetitionEntryModel) {
+	arrayRemove(userEntries.value, i => i.id === entry.id);
+
+	if (competition.value) {
+		// Triggers the grid to refetch.
+		competition.value.entry_count--;
+	}
+}
+createAppRoute({
+	routeTitle: routeTitle,
+	onResolved({ payload }) {
+		if (payload.entries) {
+			userEntries.value = CommunityCompetitionEntryModel.populate(payload.entries);
+		}
+		if (payload.categories) {
+			categories.value = CommunityCompetitionVotingCategoryModel.populate(payload.categories);
+		}
+		isLoading.value = false;
+
+		if (routeTitle.value) {
+			setCommunityMeta(community.value, routeTitle.value);
+		}
+	},
+});
 </script>
 
 <template>
 	<div>
 		<AppCommunitiesViewPageContainer full>
-			<AppCommunityPerms :community="community" perms="community-competitions">
+			<AppCommunityPerms :community="community" required="community-competitions">
 				<AppButton
 					icon="edit"
 					:to="{
@@ -191,7 +157,7 @@ export default class RouteCommunitiesViewChannelJam extends LegacyRouteComponent
 						params: { id: community.id },
 					}"
 				>
-					<AppTranslate>Edit Jam</AppTranslate>
+					{{ $gettext(`Edit Jam`) }}
 				</AppButton>
 				<hr />
 			</AppCommunityPerms>
@@ -216,7 +182,7 @@ export default class RouteCommunitiesViewChannelJam extends LegacyRouteComponent
 					</div>
 					<div v-if="canSubmitEntry" class="-header-actions">
 						<AppButton primary solid @click="onClickSubmit">
-							<AppTranslate>Submit an entry</AppTranslate>
+							{{ $gettext(`Submit an entry`) }}
 						</AppButton>
 					</div>
 				</div>
@@ -233,56 +199,56 @@ export default class RouteCommunitiesViewChannelJam extends LegacyRouteComponent
 
 				<div v-if="canToggleDescription" class="page-cut page-cut-no-margin">
 					<AppButton trans @click="toggleDescription()">
-						<AppTranslate v-if="!isDescriptionOpen">Show More</AppTranslate>
-						<AppTranslate v-else>Less</AppTranslate>
+						<div v-if="!isDescriptionOpen">
+							{{ $gettext(`Show More`) }}
+						</div>
+						<div v-else>{{ $gettext(`Less`) }}</div>
 					</AppButton>
 				</div>
 			</div>
 
 			<template v-if="shouldShowUserSubmissions">
 				<h2>
-					<AppTranslate>Your submissions</AppTranslate>
+					{{ $gettext(`Your submissions`) }}
 
 					<div v-if="canSubmitEntry" class="-submission-button">
 						<AppButton @click="onClickSubmit">
-							<AppTranslate>Submit an entry</AppTranslate>
+							{{ $gettext(`Submit an entry`) }}
 						</AppButton>
 					</div>
 				</h2>
 
 				<template v-if="canSubmitEntry">
 					<p v-if="!hasSubmittedEntries" class="help-block">
-						<AppTranslate>
-							You have not submitted an entry to this jam... yet?
-						</AppTranslate>
+						{{ $gettext(`You have not submitted an entry to this jam... yet?`) }}
 					</p>
 				</template>
 				<template v-else-if="competition && competition.period === 'pre-comp'">
 					<p class="help-block">
-						<AppTranslate>
-							You'll be able to submit your entry from this page once the jam starts.
-						</AppTranslate>
+						{{
+							$gettext(
+								`You'll be able to submit your entry from this page once the jam starts.`
+							)
+						}}
 					</p>
 				</template>
 				<template v-else-if="competition && competition.periodNum >= 2">
 					<p class="help-block">
-						<AppTranslate>
-							The jam has ended and submissions are now closed.
-						</AppTranslate>
+						{{ $gettext(`The jam has ended and submissions are now closed.`) }}
 					</p>
 				</template>
 				<template v-else-if="channel && channel.visibility === 'draft'">
 					<p v-if="!hasSubmittedEntries" class="help-block">
-						<AppTranslate>
-							The jam is set up as a draft. Publish the jam to open submissions.
-						</AppTranslate>
+						{{
+							$gettext(
+								`The jam is set up as a draft. Publish the jam to open submissions.`
+							)
+						}}
 					</p>
 				</template>
 				<template v-else-if="channel && channel.is_archived">
 					<p class="help-block">
-						<AppTranslate>
-							This channel is archived and entries cannot be submitted.
-						</AppTranslate>
+						{{ $gettext(`This channel is archived and entries cannot be submitted.`) }}
 					</p>
 				</template>
 
@@ -300,7 +266,7 @@ export default class RouteCommunitiesViewChannelJam extends LegacyRouteComponent
 			</template>
 
 			<template v-if="competition && competition.hasStarted">
-				<route-communities-view-channel-jam-entries :categories="categories" />
+				<RouteCommunitiesViewChannelJamEntries :categories="categories" />
 			</template>
 		</AppCommunitiesViewPageContainer>
 	</div>
