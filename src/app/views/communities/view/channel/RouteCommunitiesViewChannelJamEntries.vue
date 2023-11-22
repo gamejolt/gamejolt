@@ -25,6 +25,8 @@ import {
 } from '../../../../components/community/competition/entry/modal/modal.service';
 import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
 
+// TODO(component-setup-refactor-routes-0): RouteCommunitiesViewChannelJam which uses this route component doesn't seem to be used anywhere.
+// might need to remove this as well.
 export default {
 	...defineAppRouteOptions({
 		deps: {
