@@ -159,7 +159,6 @@ createAppRoute({
 
 		<AppCardList :is-adding="isAdding">
 			<AppCardListAdd :label="$gettext('Block User')" @toggle="isAdding = !isAdding">
-				<!--TODO(component-setup-refactor): revisit the error below (community)-->
 				<FormCommunityBlock :community="community" @submit="onBlockSubmit" />
 			</AppCardListAdd>
 		</AppCardList>
