@@ -48,10 +48,6 @@ const isLoading = ref(true);
 const userEntries = ref<CommunityCompetitionEntryModel[]>([]);
 const categories = ref<CommunityCompetitionVotingCategoryModel[]>([]);
 
-// TODO(component-setup-refactor-routes-0): How are the @overrides are used?
-/** @override */
-// disableRouteTitleSuffix = true;
-
 const community = toRef(() => routeStore.community);
 const channel = toRef(() => routeStore.channel);
 const competition = toRef(() => routeStore.competition!);
@@ -130,6 +126,7 @@ function onEntryRemoved(entry: CommunityCompetitionEntryModel) {
 }
 createAppRoute({
 	routeTitle: routeTitle,
+	disableTitleSuffix: true,
 	onResolved({ payload }) {
 		if (payload.entries) {
 			userEntries.value = CommunityCompetitionEntryModel.populate(payload.entries);

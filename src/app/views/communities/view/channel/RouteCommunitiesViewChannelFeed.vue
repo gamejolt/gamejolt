@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, toRef, watch } from 'vue';
+import { Ref, computed, ref, toRef, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
@@ -43,11 +43,8 @@ const router = useRouter();
 const { grid } = useGridStore();
 const { user } = useCommonStore();
 
-const feed = ref<ActivityFeedView | null>(null);
+const feed = ref(null) as Ref<ActivityFeedView | null>;
 const isBootstrapped = ref(false);
-// TODO(component-setup-refactor-routes-0): How are the @overrides are used?
-/** @override */
-// const disableRouteTitleSuffix = ref(true);
 
 const communityStates = toRef(() => store.communityStates);
 const community = toRef(() => routeStore.community);
@@ -159,15 +156,13 @@ function onPostAdded(post: FiresidePostModel) {
 // TODO(component-setup-refactor-routes-0): is it okay feeding the appRoute into onPostAdded()?
 const appRoute = createAppRoute({
 	routeTitle: routeTitle.value,
+	disableTitleSuffix: true,
 	onInit() {
 		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);
 	},
 	onResolved({ payload, fromCache }) {
-		// TODO(component-setup-refactor-routes-0): check why feed is not having some of the functions:
-		// type mismatch error: ... is missing the following properties from type 'ActivityFeedView': _getRequestBody,
-		// _getRequestOptions, addItems, getItemState
 		feed.value = resolveFeedChannelPayload(
-			feed.value as ActivityFeedView,
+			feed.value,
 			community.value,
 			route,
 			payload,

@@ -36,9 +36,7 @@ const votingCategories = ref<CommunityCompetitionVotingCategoryModel[]>([]);
 const isLoading = ref(true);
 
 const channel = toRef(() => routeStore.channel!);
-
 const competition = toRef(() => routeStore.competition!);
-
 const community = toRef(() => routeStore.community);
 
 const competitionRuntime = computed(
@@ -73,6 +71,7 @@ async function onClickPublish() {
 		showSuccessGrowl($gettext(`Your jam has been published!`));
 	}
 }
+
 createAppRoute({
 	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
@@ -277,5 +276,3 @@ createAppRoute({
 		</table>
 	</div>
 </template>
-
-<style lang="stylus" scoped></style>
