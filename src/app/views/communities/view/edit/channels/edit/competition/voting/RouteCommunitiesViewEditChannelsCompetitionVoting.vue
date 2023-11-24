@@ -1,7 +1,7 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, ref, toRef } from 'vue';
 import { Api } from '../../../../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
 import AppCardList from '../../../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../../../_common/card/list/AppCardListDraggable.vue';
@@ -20,209 +20,172 @@ import {
 	CommunityCompetitionVotingCategoryModel,
 } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { showErrorGrowl } from '../../../../../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../../../../../utils/array';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
 import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/award.vue';
 import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/category.vue';
 import FormCommunityCompetitionVotingEdit from '../../../../../../../../components/forms/community/competition/voting/edit/edit.vue';
-import FormCommunityCompetitionVotingToggleTS from '../../../../../../../../components/forms/community/competition/voting/toggle/toggle';
 import FormCommunityCompetitionVotingToggle from '../../../../../../../../components/forms/community/competition/voting/toggle/toggle.vue';
 import { useCommunityRouteStore } from '../../../../../view.store';
+export default {
+	...defineAppRouteOptions({
+		deps: { params: ['id', 'channel'] },
+		resolver: ({ route }) =>
+			Api.sendRequest(
+				`/web/dash/communities/competitions/voting/${route.params.id}/${route.params.channel}`
+			),
+	}),
+};
+</script>
 
-@Options({
-	name: 'RouteCommunitiesViewEditChannelsCompetitionVoting',
-	components: {
-		FormCommunityCompetitionVotingToggle,
-		AppCommunityCompetitionDate,
-		AppTimeAgo,
-		AppCardList,
-		AppCardListItem,
-		AppCardListAdd,
-		FormCommunityCompetitionVotingCategory,
-		FormCommunityCompetitionAward,
-		FormCommunityCompetitionVotingEdit,
-		AppCardListDraggable,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	deps: { params: ['id', 'channel'] },
-	resolver: ({ route }) =>
-		Api.sendRequest(
-			`/web/dash/communities/competitions/voting/${route.params.id}/${route.params.channel}`
-		),
-})
-export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends LegacyRouteComponent {
-	routeStore = setup(() => useCommunityRouteStore())!;
+<script lang="ts" setup>
+const routeStore = useCommunityRouteStore()!;
+const awards = ref<CommunityCompetitionAwardModel[]>([]);
+const votingCategories = ref<CommunityCompetitionVotingCategoryModel[]>([]);
+const activeAward = ref<CommunityCompetitionAwardModel | undefined>(undefined);
+const activeVotingCategory = ref<CommunityCompetitionVotingCategoryModel | undefined>(undefined);
+const isShowingAwardAdd = ref(false);
+const isShowingVotingCategoryAdd = ref(false);
+const isEditing = ref(false);
+const toggleForm = ref<FormCommunityCompetitionVotingToggle>();
 
-	awards: CommunityCompetitionAwardModel[] = [];
-	activeAward: CommunityCompetitionAwardModel | null = null;
-	isShowingAwardAdd = false;
-	votingCategories: CommunityCompetitionVotingCategoryModel[] = [];
-	activeVotingCategory: CommunityCompetitionVotingCategoryModel | null = null;
-	isShowingVotingCategoryAdd = false;
-	isEditing = false;
+const competition = toRef(() => routeStore.competition!);
+const hasVotingCategories = toRef(() => votingCategories.value.length > 0);
+const hasAwards = toRef(() => awards.value.length > 0);
+const canToggleVoting = toRef(() => competition.value.periodNum < CompetitionPeriodVoting);
+const canEditVoting = toRef(() => competition.value.periodNum < CompetitionPeriodPostComp);
 
-	readonly CompetitionPeriodVoting = CompetitionPeriodVoting;
+const canEditVotingCategories = toRef(
+	() => competition.value.periodNum < CompetitionPeriodVoting && votingCategoriesEnabled.value
+);
 
-	declare $refs: {
-		toggleForm: FormCommunityCompetitionVotingToggleTS;
-	};
+const canEditAwards = toRef(
+	() => competition.value.is_voting_enabled && competition.value.has_awards
+);
 
-	get competition() {
-		return this.routeStore.competition!;
+const votingCategoriesEnabled = computed(
+	() =>
+		competition.value.is_voting_enabled &&
+		competition.value.has_community_voting &&
+		competition.value.voting_type === 'categories'
+);
+/**
+ * Gets called when voting gets toggled on/off, but has never been set up.
+ * In that case, instead of saving the toggle state, the form to set up
+ * voting for the first time will show (or hide on toggle off).
+ */
+function onToggleNotSetUp() {
+	isEditing.value = !isEditing.value;
+}
+
+function onFormCancel() {
+	isEditing.value = false;
+	// Because the form was not submitted, reset voting to disabled when not initialized.
+	if (toggleForm.value && !competition.value.isVotingSetUp) {
+		toggleForm.value.setField('is_voting_enabled', false);
 	}
 
-	get hasVotingCategories() {
-		return this.votingCategories.length > 0;
-	}
+	// Scroll to top of page, because the form got removed and would leave us with an almost
+	// white space otherwise.
+	Scroll.to(0);
+}
 
-	get hasAwards() {
-		return this.awards.length > 0;
-	}
+function onFormSubmit() {
+	isEditing.value = false;
 
-	get canToggleVoting() {
-		return this.competition.periodNum < CompetitionPeriodVoting;
-	}
+	// Scroll to top of page to show new voting information.
+	Scroll.to(0);
+}
 
-	get canEditVoting() {
-		return this.competition.periodNum < CompetitionPeriodPostComp;
-	}
+function onClickChange() {
+	isEditing.value = true;
+}
 
-	get votingCategoriesEnabled() {
-		return (
-			this.competition.is_voting_enabled &&
-			this.competition.has_community_voting &&
-			this.competition.voting_type === 'categories'
+function onCategoryAddSubmit($payload: any) {
+	const category = new CommunityCompetitionVotingCategoryModel($payload);
+	votingCategories.value.push(category);
+	isShowingVotingCategoryAdd.value = false;
+}
+
+async function saveCategorySort(sortedCategories: CommunityCompetitionVotingCategoryModel[]) {
+	// Reorder the categories to see the result of the ordering right away.
+	votingCategories.value.splice(0, votingCategories.value.length, ...sortedCategories);
+
+	const sortedIds = sortedCategories.map(i => i.id);
+	try {
+		await Api.sendRequest(
+			`/web/dash/communities/competitions/voting-categories/save-sort/${competition.value.id}`,
+			sortedIds
 		);
-	}
-
-	get canEditVotingCategories() {
-		return this.competition.periodNum < CompetitionPeriodVoting && this.votingCategoriesEnabled;
-	}
-
-	get canEditAwards() {
-		return this.competition.is_voting_enabled && this.competition.has_awards;
-	}
-
-	routeResolved($payload: any) {
-		this.votingCategories = CommunityCompetitionVotingCategoryModel.populate(
-			$payload.votingCategories
-		);
-		this.awards = CommunityCompetitionAwardModel.populate($payload.awards);
-	}
-
-	/**
-	 * Gets called when voting gets toggled on/off, but has never been set up.
-	 * In that case, instead of saving the toggle state, the form to set up
-	 * voting for the first time will show (or hide on toggle off).
-	 */
-	onToggleNotSetUp() {
-		this.isEditing = !this.isEditing;
-	}
-
-	onFormCancel() {
-		this.isEditing = false;
-		// Because the form was not submitted, reset voting to disabled when not initialized.
-		if (!this.competition.isVotingSetUp) {
-			this.$refs.toggleForm.setField('is_voting_enabled', false);
-		}
-
-		// Scroll to top of page, because the form got removed and would leave us with an almost
-		// white space otherwise.
-		Scroll.to(0);
-	}
-
-	onFormSubmit() {
-		this.isEditing = false;
-
-		// Scroll to top of page to show new voting information.
-		Scroll.to(0);
-	}
-
-	onClickChange() {
-		this.isEditing = true;
-	}
-
-	onCategoryAddSubmit($payload: any) {
-		const category = new CommunityCompetitionVotingCategoryModel($payload);
-		this.votingCategories.push(category);
-		this.isShowingVotingCategoryAdd = false;
-	}
-
-	async saveCategorySort(sortedCategories: CommunityCompetitionVotingCategoryModel[]) {
-		// Reorder the categories to see the result of the ordering right away.
-		this.votingCategories.splice(0, this.votingCategories.length, ...sortedCategories);
-
-		const sortedIds = sortedCategories.map(i => i.id);
-		try {
-			await Api.sendRequest(
-				`/web/dash/communities/competitions/voting-categories/save-sort/${this.competition.id}`,
-				sortedIds
-			);
-		} catch (e) {
-			console.error(e);
-			showErrorGrowl(this.$gettext(`Could not save category arrangement.`));
-		}
-	}
-
-	async onClickRemoveCategory(category: CommunityCompetitionVotingCategoryModel) {
-		const result = await showModalConfirm(
-			this.$gettext(`Are you sure want to remove this voting category?`)
-		);
-
-		if (result) {
-			arrayRemove(this.votingCategories, i => i.id === category.id);
-			await $removeCommunityCompetitionVotingCategory(category);
-		}
-	}
-
-	onAwardAddSubmit($payload: any) {
-		const award = new CommunityCompetitionAwardModel($payload);
-		this.awards.push(award);
-		this.isShowingAwardAdd = false;
-	}
-
-	async saveAwardSort(sortedAwards: CommunityCompetitionAwardModel[]) {
-		// Reorder the awards to see the result of the ordering right away.
-		this.awards.splice(0, this.awards.length, ...sortedAwards);
-
-		const sortedIds = sortedAwards.map(i => i.id);
-		try {
-			await $saveCommunityCompetitionAwardSort(this.competition.id, sortedIds);
-		} catch (e) {
-			console.error(e);
-			showErrorGrowl(this.$gettext(`Could not save award arrangement.`));
-		}
-	}
-
-	async onClickRemoveAward(award: CommunityCompetitionAwardModel) {
-		const result = await showModalConfirm(
-			this.$gettext(`Are you sure want to remove this award?`)
-		);
-
-		if (result) {
-			arrayRemove(this.awards, i => i.id === award.id);
-			await $removeCommunityCompetitionAward(award);
-		}
+	} catch (e) {
+		console.error(e);
+		showErrorGrowl($gettext(`Could not save category arrangement.`));
 	}
 }
+
+async function onClickRemoveCategory(category: CommunityCompetitionVotingCategoryModel) {
+	const result = await showModalConfirm(
+		$gettext(`Are you sure want to remove this voting category?`)
+	);
+
+	if (result) {
+		arrayRemove(votingCategories.value, i => i.id === category.id);
+		await $removeCommunityCompetitionVotingCategory(category);
+	}
+}
+
+function onAwardAddSubmit($payload: any) {
+	const award = new CommunityCompetitionAwardModel($payload);
+	awards.value.push(award);
+	isShowingAwardAdd.value = false;
+}
+
+async function saveAwardSort(sortedAwards: CommunityCompetitionAwardModel[]) {
+	// Reorder the awards to see the result of the ordering right away.
+	awards.value.splice(0, awards.value.length, ...sortedAwards);
+
+	const sortedIds = sortedAwards.map(i => i.id);
+	try {
+		await $saveCommunityCompetitionAwardSort(competition.value.id, sortedIds);
+	} catch (e) {
+		console.error(e);
+		showErrorGrowl($gettext(`Could not save award arrangement.`));
+	}
+}
+
+async function onClickRemoveAward(award: CommunityCompetitionAwardModel) {
+	const result = await showModalConfirm($gettext(`Are you sure want to remove this award?`));
+
+	if (result) {
+		arrayRemove(awards.value, i => i.id === award.id);
+		await $removeCommunityCompetitionAward(award);
+	}
+}
+createAppRoute({
+	routeTitle: computed(() => ``),
+	onResolved({ payload }) {
+		votingCategories.value = CommunityCompetitionVotingCategoryModel.populate(
+			payload.votingCategories
+		);
+		awards.value = CommunityCompetitionAwardModel.populate(payload.awards);
+	},
+});
 </script>
 
 <template>
 	<div>
 		<h2 class="sans-margin-top">
-			<AppTranslate>Voting</AppTranslate>
+			{{ $gettext(`Voting`) }}
 		</h2>
 
 		<FormCommunityCompetitionVotingToggle
@@ -234,9 +197,11 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends L
 
 		<div v-else-if="!competition.is_voting_enabled" class="alert">
 			<p>
-				<AppTranslate>
-					Voting is disabled. Because the jam is already over, it cannot be enabled.
-				</AppTranslate>
+				{{
+					$gettext(
+						`Voting is disabled. Because the jam is already over, it cannot be enabled.`
+					)
+				}}
 			</p>
 		</div>
 
@@ -253,7 +218,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends L
 				<tbody>
 					<tr>
 						<th>
-							<AppTranslate>Voting end date</AppTranslate>
+							{{ $gettext(`Voting end date`) }}
 						</th>
 						<td>
 							<AppCommunityCompetitionDate
@@ -262,7 +227,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends L
 							/>
 							<span class="help-inline">
 								<template v-if="competition.periodNum <= CompetitionPeriodVoting">
-									(<AppTranslate>in</AppTranslate>
+									({{ $gettext(`in`) }}
 									<AppTimeAgo
 										without-suffix
 										is-future
@@ -277,55 +242,55 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends L
 					</tr>
 					<tr>
 						<th>
-							<AppTranslate>Community voting?</AppTranslate>
+							{{ $gettext(`Community voting?`) }}
 						</th>
 						<td>
 							<span v-if="competition.has_community_voting" class="tag tag-highlight">
-								<AppTranslate>On</AppTranslate>
+								{{ $gettext(`On`) }}
 							</span>
 							<span v-else class="tag">
-								<AppTranslate>Off</AppTranslate>
+								{{ $gettext(`Off`) }}
 							</span>
 						</td>
 					</tr>
 					<template v-if="competition.has_community_voting">
 						<tr>
 							<th>
-								<AppTranslate>Who can vote?</AppTranslate>
+								{{ $gettext(`Who can vote?`) }}
 							</th>
 							<td>
 								<template v-if="competition.voting_user_restriction === 'users'">
-									<AppTranslate>Any Game Jolt user</AppTranslate>
+									{{ $gettext(`Any Game Jolt user`) }}
 								</template>
 								<template v-else>
-									<AppTranslate>Only jam participants</AppTranslate>
+									{{ $gettext(`Only jam participants`) }}
 								</template>
 							</td>
 						</tr>
 						<tr>
 							<th>
-								<AppTranslate>Voting type</AppTranslate>
+								{{ $gettext(`Voting type`) }}
 							</th>
 							<td>
 								<template v-if="competition.voting_type === 'overall'">
-									<AppTranslate>Overall</AppTranslate>
+									{{ $gettext(`Overall`) }}
 								</template>
 								<template v-else>
-									<AppTranslate>Categories</AppTranslate>
+									{{ $gettext(`Categories`) }}
 								</template>
 							</td>
 						</tr>
 					</template>
 					<tr>
 						<th>
-							<AppTranslate>Awards?</AppTranslate>
+							{{ $gettext(`Awards?`) }}
 						</th>
 						<td>
 							<span v-if="competition.has_awards" class="tag tag-highlight">
-								<AppTranslate>On</AppTranslate>
+								{{ $gettext(`On`) }}
 							</span>
 							<span v-else class="tag">
-								<AppTranslate>Off</AppTranslate>
+								{{ $gettext(`Off`) }}
 							</span>
 						</td>
 					</tr>
@@ -333,31 +298,32 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends L
 			</table>
 
 			<AppButton v-if="canEditVoting" icon="edit" @click="onClickChange">
-				<AppTranslate>Change</AppTranslate>
+				{{ $gettext(`Change`) }}
 			</AppButton>
 
 			<template v-if="votingCategoriesEnabled">
 				<h3>
-					<AppTranslate>Voting Categories</AppTranslate>
+					{{ $gettext(`Voting Categories`) }}
 				</h3>
 
 				<p class="help-block">
-					<AppTranslate>
-						These are the categories on which users can vote. Voters can give entries a
-						rating in each category you create. You can only edit categories before
-						voting starts.
-					</AppTranslate>
+					{{
+						$gettext(
+							`These are the categories on which users can vote. Voters can give entries a rating in each category you create. You can only edit categories before voting starts.`
+						)
+					}}
 				</p>
 				<p class="help-block">
-					<AppTranslate>
-						Entries are ranked within each category and assigned an overall rank based
-						on their category ratings.
-					</AppTranslate>
+					{{
+						$gettext(
+							`Entries are ranked within each category and assigned an overall rank based on their category ratings.`
+						)
+					}}
 				</p>
 
 				<template v-if="canEditVotingCategories">
 					<div v-if="!hasVotingCategories" class="alert alert-notice">
-						<AppTranslate>You must add categories before voting starts.</AppTranslate>
+						{{ $gettext(`You must add categories before voting starts.`) }}
 					</div>
 
 					<AppCardList
@@ -412,10 +378,11 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends L
 
 				<template v-else>
 					<div v-if="!hasVotingCategories" class="alert alert-notice">
-						<AppTranslate>
-							No voting categories were added before voting began. Because of this,
-							users cannot vote on entries.
-						</AppTranslate>
+						{{
+							$gettext(
+								`No voting categories were added before voting began. Because of this, users cannot vote on entries.`
+							)
+						}}
 					</div>
 					<template v-else>
 						<AppCardList :items="votingCategories">
@@ -439,27 +406,26 @@ export default class RouteCommunitiesViewEditChannelsCompetitionVoting extends L
 
 			<template v-if="canEditAwards">
 				<h3>
-					<AppTranslate>Awards</AppTranslate>
+					{{ $gettext(`Awards`) }}
 				</h3>
 
 				<p class="help-block">
-					<AppTranslate>
-						These are the awards that can be assigned to entries. Awards can be added
-						and assigned at any time, but we recommend assigning them during the voting
-						period.
-					</AppTranslate>
+					{{
+						$gettext(
+							`These are the awards that can be assigned to entries. Awards can be added and assigned at any time, but we recommend assigning them during the voting period.`
+						)
+					}}
 				</p>
 				<p class="help-block">
-					<AppTranslate>
-						Award-winning entries are displayed by default at the top of the Games page
-						based on the order they appear below.
-					</AppTranslate>
+					{{
+						$gettext(
+							`Award-winning entries are displayed by default at the top of the Games page based on the order they appear below.`
+						)
+					}}
 				</p>
 
 				<div v-if="!hasAwards" class="alert alert-notice">
-					<AppTranslate>
-						You must add awards before you can assign them to entries.
-					</AppTranslate>
+					{{ $gettext(`You must add awards before you can assign them to entries.`) }}
 				</div>
 
 				<AppCardList
