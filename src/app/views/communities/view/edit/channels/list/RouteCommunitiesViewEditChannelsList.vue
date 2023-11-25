@@ -1,6 +1,5 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, ref, toRef } from 'vue';
 import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
@@ -14,125 +13,100 @@ import {
 	CommunityPresetChannelType,
 } from '../../../../../../../_common/community/community.model';
 import { showErrorGrowl } from '../../../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../../../../_common/loading/AppLoading.vue';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../_common/route/route-component';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import AppCommunityPerms from '../../../../../../components/community/perms/AppCommunityPerms.vue';
-import { showCommunityRemoveChannelModal } from '../../../../../../components/community/remove-channel/modal/modal.service';
 import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/add.vue';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
 import { loadArchivedChannels, updateCommunity, useCommunityRouteStore } from '../../../view.store';
 import AppCommunitiesEditChannelListItem from './_item/item.vue';
 import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.vue';
+export default {
+	...defineAppRouteOptions({}),
+};
+</script>
 
-@Options({
-	name: 'RouteCommunitiesViewEditChannels',
-	components: {
-		AppCommunitiesViewPageContainer,
-		AppCommunityPerms,
-		AppCardList,
-		AppCardListAdd,
-		FormCommunityChannelAdd,
-		AppCommunitiesEditChannelListPresetItem,
-		AppCommunitiesEditChannelListItem,
-		AppCardListDraggable,
-		AppLoading,
-	},
-})
-@OptionsForLegacyRoute()
-export default class RouteCommunitiesViewEditChannelsList extends LegacyRouteComponent {
-	routeStore = setup(() => useCommunityRouteStore())!;
+<script lang="ts" setup>
+const routeStore = useCommunityRouteStore()!;
 
-	activeItem: CommunityChannelModel | CommunityModel | CommunityPresetChannelType | null = null;
-	isShowingChannelAdd = false;
-	isLoadingArchivedChannels = false;
+const activeItem = ref<
+	CommunityChannelModel | CommunityModel | CommunityPresetChannelType | undefined
+>(undefined);
+const isShowingChannelAdd = ref(false);
+const isLoadingArchivedChannels = ref(false);
 
-	get community() {
-		return this.routeStore.community;
-	}
+const community = toRef(() => routeStore.community);
+const communityPresetChannels = toRef(() => [
+	CommunityPresetChannelType.FEATURED,
+	CommunityPresetChannelType.ALL,
+]);
+const hasFullChannelsPermission = computed(() => community.value.hasPerms('community-channels'));
 
-	get communityPresetChannels() {
-		return [CommunityPresetChannelType.FEATURED, CommunityPresetChannelType.ALL];
-	}
+async function saveChannelSort(sortedChannels: CommunityChannelModel[]) {
+	// Reorder the channels to see the result of the ordering right away.
+	community.value.channels!.splice(0, community.value.channels!.length, ...sortedChannels);
 
-	get hasFullChannelsPermission() {
-		return this.community.hasPerms('community-channels');
-	}
-
-	async saveChannelSort(sortedChannels: CommunityChannelModel[]) {
-		// Reorder the channels to see the result of the ordering right away.
-		this.community.channels!.splice(0, this.community.channels!.length, ...sortedChannels);
-
-		const sortedIds = sortedChannels.map(i => i.id);
-		try {
-			await $saveCommunityChannelSort(this.community.id, sortedIds);
-		} catch (e) {
-			console.error(e);
-			showErrorGrowl(this.$gettext(`Could not save channel arrangement.`));
-		}
-	}
-
-	async saveChannelSortArchived(sortedChannels: CommunityChannelModel[]) {
-		// Reorder the channels to see the result of the ordering right away.
-		this.routeStore.archivedChannels.splice(
-			0,
-			this.routeStore.archivedChannels.length,
-			...sortedChannels
-		);
-
-		const sortedIds = sortedChannels.map(i => i.id);
-		try {
-			await $saveCommunityChannelSortArchived(this.community.id, sortedIds);
-		} catch (e) {
-			console.error(e);
-			showErrorGrowl(this.$gettext(`Could not save channel arrangement.`));
-		}
-	}
-
-	onChannelAdded(channel: CommunityChannelModel) {
-		this.community.channels!.push(channel);
-		// Close form after adding a channel.
-		this.isShowingChannelAdd = false;
-	}
-
-	onPresetListItemSaved(community: CommunityModel) {
-		// Since the preset channels are stored on the community, we have to let
-		// the routeStore know to update the community with the new information.
-		updateCommunity(this.routeStore, community);
-	}
-
-	onActivate(item: typeof this.activeItem) {
-		this.activeItem = item;
-	}
-
-	async onClickRemoveChannel(channel: CommunityChannelModel) {
-		await showCommunityRemoveChannelModal(this.community, channel);
-
-		if (channel._removed) {
-			this.community.channels = this.community.channels!.filter(i => i.id !== channel.id);
-		}
-	}
-
-	async onClickArchivedChannels() {
-		if (this.isLoadingArchivedChannels) {
-			return;
-		}
-
-		this.routeStore.expandedArchivedChannels = !this.routeStore.expandedArchivedChannels;
-
-		// Load in archived channels.
-		if (this.routeStore.expandedArchivedChannels && !this.routeStore.loadedArchivedChannels) {
-			this.isLoadingArchivedChannels = true;
-
-			await loadArchivedChannels(this.routeStore);
-
-			this.routeStore.loadedArchivedChannels = true;
-			this.isLoadingArchivedChannels = false;
-		}
+	const sortedIds = sortedChannels.map(i => i.id);
+	try {
+		await $saveCommunityChannelSort(community.value.id, sortedIds);
+	} catch (e) {
+		console.error(e);
+		showErrorGrowl($gettext(`Could not save channel arrangement.`));
 	}
 }
+
+async function saveChannelSortArchived(sortedChannels: CommunityChannelModel[]) {
+	// Reorder the channels to see the result of the ordering right away.
+	routeStore.archivedChannels.splice(0, routeStore.archivedChannels.length, ...sortedChannels);
+
+	const sortedIds = sortedChannels.map(i => i.id);
+	try {
+		await $saveCommunityChannelSortArchived(community.value.id, sortedIds);
+	} catch (e) {
+		console.error(e);
+		showErrorGrowl($gettext(`Could not save channel arrangement.`));
+	}
+}
+
+function onChannelAdded(channel: CommunityChannelModel) {
+	community.value.channels!.push(channel);
+	// Close form after adding a channel.
+	isShowingChannelAdd.value = false;
+}
+
+function onPresetListItemSaved(community: CommunityModel) {
+	// Since the preset channels are stored on the community, we have to let
+	// the routeStore know to update the community with the new information.
+	updateCommunity(routeStore, community);
+}
+
+function onActivate(item: typeof activeItem.value) {
+	activeItem.value = item;
+}
+
+async function onClickArchivedChannels() {
+	if (isLoadingArchivedChannels.value) {
+		return;
+	}
+
+	routeStore.expandedArchivedChannels = !routeStore.expandedArchivedChannels;
+
+	// Load in archived channels.
+	if (routeStore.expandedArchivedChannels && !routeStore.loadedArchivedChannels) {
+		isLoadingArchivedChannels.value = true;
+
+		await loadArchivedChannels(routeStore);
+
+		routeStore.loadedArchivedChannels = true;
+		isLoadingArchivedChannels.value = false;
+	}
+}
+createAppRoute({});
 </script>
 
 <template>
@@ -143,15 +117,16 @@ export default class RouteCommunitiesViewEditChannelsList extends LegacyRouteCom
 			either
 		>
 			<h2 class="section-header">
-				<AppTranslate>Channels</AppTranslate>
+				{{ $gettext(`Channels`) }}
 			</h2>
 
 			<div class="page-help">
 				<p>
-					<AppTranslate>
-						Channels make it easy for your community members to organize their posts
-						into individual sub-topics.
-					</AppTranslate>
+					{{
+						$gettext(
+							`Channels make it easy for your community members to organize their posts into individual sub-topics.`
+						)
+					}}
 				</p>
 			</div>
 
@@ -189,6 +164,7 @@ export default class RouteCommunitiesViewEditChannelsList extends LegacyRouteCom
 				:is-draggable="hasFullChannelsPermission"
 			>
 				<AppCardListDraggable item-key="id" @change="saveChannelSort">
+					<!--TODO(component-setup-refactor-routes-1): where the channel is coming from?-->
 					<template #item="{ element: channel }">
 						<AppCommunitiesEditChannelListItem :channel="channel" />
 					</template>
@@ -202,7 +178,7 @@ export default class RouteCommunitiesViewEditChannelsList extends LegacyRouteCom
 							routeStore.expandedArchivedChannels ? 'chevron-down' : 'chevron-right'
 						"
 					/>
-					<AppTranslate>Archived Channels</AppTranslate>
+					{{ $gettext(`Archived Channels`) }}
 				</h3>
 
 				<template v-if="routeStore.expandedArchivedChannels">
