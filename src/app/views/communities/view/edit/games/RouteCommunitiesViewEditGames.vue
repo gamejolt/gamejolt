@@ -103,6 +103,7 @@ async function onClickUnlinkGame(game: GameModel) {
 		showErrorGrowl($gettext(`Failed to unlink game from community.`));
 	}
 }
+
 createAppRoute({
 	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
