@@ -1,24 +1,19 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
+import { RouterView } from 'vue-router';
 import AppNavTabList from '../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppManageGameApiNav from './AppManageGameApiNav.vue';
+export default {
+	...defineAppRouteOptions({}),
+};
+</script>
 
-@Options({
-	name: 'RouteDashGamesManageApi',
-	components: {
-		AppManageGameApiNav,
-		AppNavTabList,
-	},
-})
-@OptionsForLegacyRoute()
-export default class RouteDashGamesManageApi extends LegacyRouteComponent {
-	readonly Screen = Screen;
-}
+<script lang="ts" setup>
+createAppRoute({});
 </script>
 
 <template>
@@ -39,7 +34,7 @@ export default class RouteDashGamesManageApi extends LegacyRouteComponent {
 						</nav>
 					</div>
 					<div class="col-xs-12 col-md-10">
-						<router-view />
+						<RouterView />
 					</div>
 				</div>
 			</div>
