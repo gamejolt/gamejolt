@@ -1,7 +1,8 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { Api } from '../../../../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
 import {
 	$removeGameDataStoreItem,
@@ -9,70 +10,66 @@ import {
 } from '../../../../../../../../../_common/game/data-store/item/item.model';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../../../_common/route/route-component';
+import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
 import { useGameDashRouteController } from '../../../../manage.store';
 
-@Options({
-	name: 'RouteDashGamesManageApiDataStorageItemsView',
-})
-@OptionsForLegacyRoute({
-	deps: { params: ['item'] },
-	resolver: ({ route }) =>
-		Api.sendRequest(
-			'/web/dash/developer/games/api/data-storage/' +
-				route.params.id +
-				'/' +
-				route.params.item
-		),
-})
-export default class RouteDashGamesManageApiDataStorageItemsView extends LegacyRouteComponent {
-	routeStore = setup(() => useGameDashRouteController()!);
+export default {
+	...defineAppRouteOptions({
+		deps: { params: ['item'] },
+		resolver: ({ route }) =>
+			Api.sendRequest(
+				'/web/dash/developer/games/api/data-storage/' +
+					route.params.id +
+					'/' +
+					route.params.item
+			),
+	}),
+};
+</script>
 
-	get game() {
-		return this.routeStore.game!;
+<script lang="ts" setup>
+const { game } = useGameDashRouteController()!;
+const router = useRouter();
+
+const item = ref<GameDataStoreItemModel>(null as any);
+
+async function remove() {
+	const result = await showModalConfirm($gettext('Are you sure you want to remove this item?'));
+
+	if (!result) {
+		return;
 	}
 
-	item: GameDataStoreItemModel = null as any;
+	await $removeGameDataStoreItem(item.value);
+	router.push({ name: 'dash.games.manage.api.data-storage.items.list' });
+}
 
-	readonly formatDate = formatDate;
-
-	get routeTitle() {
-		if (this.game) {
-			return this.$gettext('Item Details - %{ game }', {
-				game: this.game.title,
+const { isBootstrapped } = createAppRoute({
+	routeTitle: computed(() => {
+		if (game) {
+			return $gettext('Item Details - %{ game }', {
+				game: game.value!.title,
 			});
 		}
 		return null;
-	}
-
-	routeResolved($payload: any) {
-		this.item = new GameDataStoreItemModel($payload.item);
-	}
-
-	async remove() {
-		const result = await showModalConfirm(
-			this.$gettext('Are you sure you want to remove this item?')
-		);
-
-		if (!result) {
-			return;
-		}
-
-		await $removeGameDataStoreItem(this.item);
-		this.$router.push({ name: 'dash.games.manage.api.data-storage.items.list' });
-	}
-}
+	}),
+	onResolved({ payload }) {
+		item.value = new GameDataStoreItemModel(payload.item);
+	},
+});
 </script>
 
 <template>
-	<div v-if="isRouteBootstrapped">
+	<div v-if="isBootstrapped">
 		<h2 class="section-header">
 			<div class="section-header-controls">
 				<AppButton sparse icon="remove" @click="remove" />
 			</div>
-
+			<!--TODO(component-setup-refactor-routes-1): how do we replace AppTranslates
+				which are with translate-comment-->
 			<AppTranslate translate-comment="Refers to game API data store items">
 				Item Details
 			</AppTranslate>
