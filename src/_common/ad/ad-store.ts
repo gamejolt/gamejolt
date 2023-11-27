@@ -70,8 +70,9 @@ class AdsController {
 	constructor() {
 		if (!import.meta.env.SSR) {
 			if (isAdEnthused) {
-				this.videoAdapter = new AdEnthusiastAdapter();
-				this.adapter = new AdEnthusiastAdapter();
+				const adapter = new AdEnthusiastAdapter();
+				this.videoAdapter = adapter;
+				this.adapter = adapter;
 			}
 		}
 
@@ -112,7 +113,9 @@ export function createAdsController() {
 		// changed.
 		if (_didRouteChange(from, to)) {
 			c.adapter.onBeforeRouteChange();
+			if (c.adapter !== c.videoAdapter) {
 			c.videoAdapter.onBeforeRouteChange();
+			}
 			c.routeResolved = false;
 		}
 		next();
@@ -125,7 +128,9 @@ export function createAdsController() {
 
 		c.routeResolved = true;
 		c.adapter.onRouteChanged();
+		if (c.adapter !== c.videoAdapter) {
 		c.videoAdapter.onRouteChanged();
+		}
 		_displayAds(Array.from(c.ads));
 	});
 

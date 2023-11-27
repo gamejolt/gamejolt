@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
+import AppAdFeedBeacon from '../../../../_common/ad/AppAdFeedBeacon.vue';
 import AppAdStickyRail from '../../../../_common/ad/AppAdStickyRail.vue';
 import { isAdEnthused, useAdsController } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
@@ -58,6 +59,8 @@ const InviewConfig = new ScrollInviewConfig();
 	<div id="games" class="game-listing">
 		<section class="section section-thin">
 			<template v-if="showAds && ads.shouldShow && isAdEnthused">
+				<AppAdFeedBeacon :ping="listing.currentPage" />
+
 				<AppAdWidget size="leaderboard" placement="content" />
 				<AppSpacer vertical :scale="6" />
 			</template>
