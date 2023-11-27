@@ -1,87 +1,82 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, ref } from 'vue';
+import { RouterLink, useRouter } from 'vue-router';
 import { Api } from '../../../../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../../../../../_common/filters/number';
 import { GameScoreTableModel } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../../../_common/route/route-component';
+import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
 import {
 	$removeUserGameScore,
 	UserGameScoreModel,
 } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { useGameDashRouteController } from '../../../../manage.store';
 
-@Options({
-	name: 'RouteDashGamesManageApiScoreboardsScoresView',
-})
-@OptionsForLegacyRoute({
-	deps: { params: ['table', 'score'] },
-	resolver: ({ route }) =>
-		Api.sendRequest(
-			'/web/dash/developer/games/api/scores/' + route.params.id + '/' + route.params.score
-		),
-})
-export default class RouteDashGamesManageApiScoreboardsScoresView extends LegacyRouteComponent {
-	routeStore = setup(() => useGameDashRouteController()!);
+export default {
+	...defineAppRouteOptions({
+		deps: { params: ['table', 'score'] },
+		resolver: ({ route }) =>
+			Api.sendRequest(
+				'/web/dash/developer/games/api/scores/' + route.params.id + '/' + route.params.score
+			),
+	}),
+};
+</script>
 
-	get game() {
-		return this.routeStore.game!;
+<script lang="ts" setup>
+const router = useRouter();
+const { game } = useGameDashRouteController()!;
+
+const score = ref<UserGameScoreModel>(null as any);
+const scoreTable = ref<GameScoreTableModel>(null as any);
+
+async function removeScore() {
+	const result = await showModalConfirm($gettext('Are you sure you want to remove this score?'));
+
+	if (!result) {
+		return;
 	}
 
-	score: UserGameScoreModel = null as any;
-	scoreTable: GameScoreTableModel = null as any;
+	await $removeUserGameScore(score.value);
 
-	readonly formatNumber = formatNumber;
-	readonly formatDate = formatDate;
+	router.push({
+		name: 'dash.games.manage.api.scoreboards.scores.list',
+		params: {
+			table: score.value.table_id + '',
+		},
+	});
+}
 
-	get routeTitle() {
-		if (this.game) {
-			return this.$gettext('Score Details - %{ game }', {
-				game: this.game.title,
+const { isBootstrapped } = createAppRoute({
+	routeTitle: computed(() => {
+		if (game.value) {
+			return $gettext('Score Details - %{ game }', {
+				game: game.value.title,
 			});
 		}
 		return null;
-	}
-
-	routeResolved($payload: any) {
-		this.score = new UserGameScoreModel($payload.score);
-		this.scoreTable = new GameScoreTableModel($payload.scoreTable);
-	}
-
-	async removeScore() {
-		const result = await showModalConfirm(
-			this.$gettext('Are you sure you want to remove this score?')
-		);
-
-		if (!result) {
-			return;
-		}
-
-		await $removeUserGameScore(this.score);
-
-		this.$router.push({
-			name: 'dash.games.manage.api.scoreboards.scores.list',
-			params: {
-				table: this.score.table_id + '',
-			},
-		});
-	}
-}
+	}),
+	onResolved({ payload }) {
+		score.value = new UserGameScoreModel(payload.score);
+		scoreTable.value = new GameScoreTableModel(payload.scoreTable);
+	},
+});
 </script>
 
 <template>
-	<div v-if="isRouteBootstrapped">
+	<div v-if="isBootstrapped">
 		<h2 class="section-header">
 			<div class="section-header-controls">
 				<AppButton sparse icon="remove" @click="removeScore" />
 			</div>
 
-			<AppTranslate>Score Details</AppTranslate>
+			{{ $gettext(`Score Details`) }}
 		</h2>
 
 		<div class="table-responsive">
@@ -92,11 +87,11 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends Legacy
 				<tbody>
 					<tr>
 						<th>
-							<AppTranslate>User</AppTranslate>
+							{{ $gettext(`User`) }}
 						</th>
 						<td>
 							<!-- User Score -->
-							<router-link
+							<RouterLink
 								v-if="score.user_id"
 								:to="{
 									name: 'dash.games.manage.api.scoreboards.scores.user',
@@ -104,50 +99,51 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends Legacy
 								}"
 							>
 								{{ score.user.display_name }}
-							</router-link>
+							</RouterLink>
 
 							<!-- Guest Score -->
 							<span v-else>
 								{{ score.guest }}
 								<br />
 								<small class="text-muted">
-									<AppTranslate>Guest</AppTranslate>
+									{{ $gettext(`Guest`) }}
 								</small>
 							</span>
 						</td>
 					</tr>
 					<tr>
 						<th>
+							<!-- TODO(component-setup-refactor-routes-2): AppTranslate with translate-comment-->
 							<AppTranslate translate-comment="Refers to game scoreboard table">
 								Table
 							</AppTranslate>
 						</th>
 						<td>
-							<router-link
+							<RouterLink
 								:to="{
 									name: 'dash.games.manage.api.scoreboards.scores.list',
 									params: { table: scoreTable.id },
 								}"
 							>
 								{{ scoreTable.name }}
-							</router-link>
+							</RouterLink>
 						</td>
 					</tr>
 					<tr>
 						<th>
-							<AppTranslate>Score String</AppTranslate>
+							{{ $gettext(`Score String`) }}
 						</th>
 						<td>{{ score.score }}</td>
 					</tr>
 					<tr>
 						<th>
-							<AppTranslate>Sort Value</AppTranslate>
+							{{ $gettext(`Sort Value`) }}
 						</th>
 						<td>{{ formatNumber(score.sort) }}</td>
 					</tr>
 					<tr>
 						<th>
-							<AppTranslate>Scored On</AppTranslate>
+							{{ $gettext(`Scored On`) }}
 						</th>
 						<td>
 							{{ formatDate(score.logged_on, 'medium') }}
@@ -155,16 +151,16 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends Legacy
 					</tr>
 					<tr>
 						<th>
-							<AppTranslate>Extra Data</AppTranslate>
+							{{ $gettext(`Extra Data`) }}
 						</th>
 						<td>
 							<pre v-if="score.extra_data" class="small">{{ score.extra_data }}</pre>
 							<span v-else class="small text-muted">
-								<AppTranslate>
-									No extra data for this score. You can use the extra data field
-									to store information to help you weed out cheaters and validate
-									scores. It's never shown to users.
-								</AppTranslate>
+								{{
+									$gettext(
+										`No extra data for this score. You can use the extra data field to store information to help you weed out cheaters and validate scores. It's never shown to users.`
+									)
+								}}
 							</span>
 						</td>
 					</tr>
