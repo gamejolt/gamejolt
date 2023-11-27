@@ -1,14 +1,15 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
-import { useRouter } from 'vue-router';
+import { computed } from 'vue';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { GameLockedStatus } from '../../../../../_common/game/game.model';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
@@ -19,107 +20,94 @@ import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
 import { ManageGameThemeKey, createGameDashRouteController } from './manage.store';
 
-@Options({
-	name: 'RouteDashGamesManage',
-	components: {
-		AppPageHeader,
-		AppExpand,
-		AppTimeAgo,
-		AppGamePerms,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	deps: { params: ['id'], query: ['intent'] },
-	async resolver({ route }) {
-		const intentRedirect = IntentService.checkRoute(route, {
-			intent: 'accept-game-collaboration',
-			message: $gettext(`You're now a collaborator for this project!`),
-		});
-		if (intentRedirect) {
-			return intentRedirect;
-		}
+export default {
+	...defineAppRouteOptions({
+		deps: { params: ['id'], query: ['intent'] },
+		async resolver({ route }) {
+			const intentRedirect = IntentService.checkRoute(route, {
+				intent: 'accept-game-collaboration',
+				message: $gettext(`You're now a collaborator for this project!`),
+			});
+			if (intentRedirect) {
+				return intentRedirect;
+			}
 
-		return Api.sendRequest('/web/dash/developer/games/' + route.params.id);
-	},
-})
-export default class RouteDashGamesManage extends LegacyRouteComponent {
-	routeStore = setup(() => createGameDashRouteController({ router: useRouter() }));
-	commonStore = setup(() => useCommonStore());
-	themeStore = setup(() => useThemeStore());
+			return Api.sendRequest('/web/dash/developer/games/' + route.params.id);
+		},
+	}),
+};
+</script>
 
-	readonly GAME_LOCKED_STATUS_DMCA = GameLockedStatus.Dmca;
-	readonly GAME_LOCKED_STATUS_ADULT = GameLockedStatus.Adult;
+<script lang="ts" setup>
+const routeStore = createGameDashRouteController({ router: useRouter() });
+const themeStore = useThemeStore();
+const route = useRoute();
+const { user } = useCommonStore();
 
-	get user() {
-		return this.commonStore.user!;
-	}
+const { game, isWizard } = routeStore;
+//const game = toRef(() => routeStore.game);
+//
+//const isWizard = toRef(() => routeStore.isWizard);
 
-	get game() {
-		return this.routeStore.game;
-	}
-
-	get isWizard() {
-		return this.routeStore.isWizard;
-	}
-
-	routeResolved(payload: any) {
-		this.routeStore.populate(payload);
-		this.setPageTheme();
-	}
-
-	routeDestroyed() {
-		this.themeStore.clearPageTheme(ManageGameThemeKey);
-	}
-
-	private setPageTheme() {
-		const theme = this.game?.theme ?? null;
-		this.themeStore.setPageTheme({
+function setPageTheme() {
+	const theme = game?.value?.theme ?? null;
+	if (theme !== null) {
+		themeStore.setPageTheme({
 			key: ManageGameThemeKey,
 			theme,
 		});
 	}
 }
+
+const { isBootstrapped } = createAppRoute({
+	routeTitle: computed(() => ``),
+	onDestroyed() {
+		themeStore.clearPageTheme(ManageGameThemeKey);
+	},
+	onResolved({ payload }) {
+		routeStore.populate(payload);
+		setPageTheme();
+	},
+});
 </script>
 
 <template>
-	<div v-if="isRouteBootstrapped && game">
+	<div v-if="isBootstrapped && game">
 		<section v-if="game.is_locked" class="section section-thin fill-notice">
 			<div class="container">
 				<div class="col-sm-10 col-md-8 col-lg-6 col-centered text-center">
 					<p>
 						<AppJolticon icon="notice" big />
 					</p>
-					<template v-if="game.locked_status === GAME_LOCKED_STATUS_DMCA">
+					<template v-if="game.locked_status === GameLockedStatus.Dmca">
 						<div key="locked-reason-dmca">
 							<p>
 								<b>
-									<AppTranslate>
-										This game was removed from the site.
-									</AppTranslate>
+									{{ $gettext(`This game was removed from the site.`) }}
 								</b>
 							</p>
 							<p>
-								<AppTranslate>
-									We have received a DMCA takedown notice and were required to
-									remove it from the site. Only you are able to view it.
-								</AppTranslate>
+								{{
+									$gettext(
+										`We have received a DMCA takedown notice and were required to remove it from the site. Only you are able to view it.`
+									)
+								}}
 							</p>
 						</div>
 					</template>
-					<template v-else-if="game.locked_status === GAME_LOCKED_STATUS_ADULT">
+					<template v-else-if="game.locked_status === GameLockedStatus.Adult">
 						<div key="locked-reason-adult">
 							<p>
-								<b><AppTranslate>This page is made private.</AppTranslate></b>
+								<b>
+									{{ $gettext(`This page is made private.`) }}
+								</b>
 							</p>
 							<p>
-								<AppTranslate>
-									The game page has been removed from Game Jolt's public listings.
-									You have access to this page and its contents until December 31,
-									2022.
-								</AppTranslate>
+								{{
+									$gettext(
+										`The game page has been removed from Game Jolt's public listings. You have access to this page and its contents until December 31, 2022.`
+									)
+								}}
 							</p>
 						</div>
 					</template>
@@ -132,7 +120,7 @@ export default class RouteDashGamesManage extends LegacyRouteComponent {
 				<div class="col-sm-8">
 					<template v-if="isWizard">
 						<h1 class="section-header">
-							<AppTranslate>Add Game</AppTranslate>
+							{{ $gettext(`Add Game`) }}
 						</h1>
 						<h4 class="section-header">
 							{{ game.title }}
@@ -140,9 +128,9 @@ export default class RouteDashGamesManage extends LegacyRouteComponent {
 					</template>
 					<template v-else>
 						<h1 class="section-header">
-							<template v-if="game.developer.id !== user.id">
+							<template v-if="user && user.id !== game.developer.id">
 								<small>
-									<router-link
+									<RouterLink
 										:to="{
 											name: 'profile.overview',
 											params: {
@@ -151,7 +139,7 @@ export default class RouteDashGamesManage extends LegacyRouteComponent {
 										}"
 									>
 										@{{ game.developer.username }}
-									</router-link>
+									</RouterLink>
 								</small>
 								<br />
 							</template>
@@ -161,20 +149,20 @@ export default class RouteDashGamesManage extends LegacyRouteComponent {
 
 					<p class="text-muted small">
 						<span v-if="game._is_wip" class="tag">
-							<AppTranslate>Early Access</AppTranslate>
+							{{ $gettext(`Early Access`) }}
 						</span>
 						<span v-else-if="game._is_devlog" class="tag">
-							<AppTranslate>Devlog</AppTranslate>
+							{{ $gettext(`Devlog`) }}
 						</span>
 
 						<template v-if="!isWizard">
 							<span v-if="game.isUnlisted" class="tag tag-notice">
-								<AppTranslate>Unlisted</AppTranslate>
+								{{ $gettext(`Unlisted`) }}
 							</span>
 
 							<template v-if="game.isVisible && game.published_on">
 								<span class="tag tag-highlight">
-									<AppTranslate>Published</AppTranslate>
+									{{ $gettext(`Published`) }}
 								</span>
 								<span class="dot-separator" />
 								<AppTimeAgo :date="game.published_on" />
@@ -193,12 +181,12 @@ export default class RouteDashGamesManage extends LegacyRouteComponent {
 									params: { resource: 'Game', resourceId: game.id },
 								}"
 							>
-								<AppTranslate>View Analytics</AppTranslate>
+								{{ $gettext(`View Analytics`) }}
 							</AppButton>
 						</AppGamePerms>
 						{{ ' ' }}
 						<AppButton icon="arrow-forward" :to="game.getUrl()">
-							<AppTranslate>View Game Page</AppTranslate>
+							{{ $gettext(`View Game Page`) }}
 						</AppButton>
 					</p>
 				</div>
@@ -206,16 +194,17 @@ export default class RouteDashGamesManage extends LegacyRouteComponent {
 
 			<AppExpand :when="!isWizard && game.isUnlisted">
 				<div class="alert alert-notice">
-					<AppTranslate>
-						This game is currently unlisted from the public game listings, but can still
-						be accessed through your game's URL.
-					</AppTranslate>
+					{{
+						$gettext(
+							`This game is currently unlisted from the public game listings, but can still be accessed through your game's URL.`
+						)
+					}}
 					<template v-if="!game.published_on">
-						<AppTranslate>
-							We recommend keeping it unlisted until you've finished filling out the
-							details and added some media. Don't forget to publish it when it's
-							ready!
-						</AppTranslate>
+						{{
+							$gettext(
+								`We recommend keeping it unlisted until you've finished filling out the details and added some media. Don't forget to publish it when it's ready!`
+							)
+						}}
 					</template>
 				</div>
 			</AppExpand>
@@ -235,24 +224,28 @@ export default class RouteDashGamesManage extends LegacyRouteComponent {
 								$gettext(`Set up your game page and manage its builds.`)
 							"
 						>
-							<router-link
+							<RouterLink
 								:to="{ name: 'dash.games.manage.game.overview' }"
 								:class="{
-									active: $route.name.indexOf('dash.games.manage.game') === 0,
+									active:
+										typeof route.name === 'string' &&
+										route.name.indexOf('dash.games.manage.game') === 0,
 								}"
 							>
-								<AppTranslate>Overview/Setup</AppTranslate>
-							</router-link>
+								{{ $gettext(`Overview/Setup`) }}
+							</RouterLink>
 						</li>
 						<li v-app-tooltip.bottom="$gettext(`Manage news updates for your game.`)">
-							<router-link
+							<RouterLink
 								:to="{ name: 'dash.games.manage.devlog' }"
 								:class="{
-									active: $route.name.indexOf('dash.games.manage.devlog') === 0,
+									active:
+										typeof route.name === 'string' &&
+										route.name.indexOf('dash.games.manage.devlog') === 0,
 								}"
 							>
-								<AppTranslate>Devlog</AppTranslate>
-							</router-link>
+								{{ $gettext(`Devlog`) }}
+							</RouterLink>
 						</li>
 						<AppGamePerms
 							v-app-tooltip.bottom="
@@ -263,14 +256,16 @@ export default class RouteDashGamesManage extends LegacyRouteComponent {
 							required="game-api"
 							tag="li"
 						>
-							<router-link
+							<RouterLink
 								:to="{ name: 'dash.games.manage.api.overview' }"
 								:class="{
-									active: $route.name.indexOf('dash.games.manage.api') === 0,
+									active:
+										typeof route.name === 'string' &&
+										route.name.indexOf('dash.games.manage.api') === 0,
 								}"
 							>
-								<AppTranslate>Game API</AppTranslate>
-							</router-link>
+								{{ $gettext(`Game API`) }}
+							</RouterLink>
 						</AppGamePerms>
 						<AppGamePerms
 							v-if="!game.is_locked"
@@ -280,15 +275,16 @@ export default class RouteDashGamesManage extends LegacyRouteComponent {
 							required="sales"
 							tag="li"
 						>
-							<router-link
+							<RouterLink
 								:to="{ name: 'dash.games.manage.key-groups.list' }"
 								:class="{
 									active:
-										$route.name.indexOf('dash.games.manage.key-groups') === 0,
+										typeof route.name === 'string' &&
+										route.name.indexOf('dash.games.manage.key-groups') === 0,
 								}"
 							>
-								<AppTranslate>Keys/Access</AppTranslate>
-							</router-link>
+								{{ $gettext(`Keys/Access`) }}
+							</RouterLink>
 						</AppGamePerms>
 						<AppGamePerms
 							v-app-tooltip.bottom="
@@ -299,26 +295,26 @@ export default class RouteDashGamesManage extends LegacyRouteComponent {
 							required="all"
 							tag="li"
 						>
-							<router-link
+							<RouterLink
 								:to="{ name: 'dash.games.manage.site' }"
 								active-class="active"
 							>
-								<AppTranslate>Site</AppTranslate>
-							</router-link>
+								{{ $gettext(`Site`) }}
+							</RouterLink>
 						</AppGamePerms>
 
 						<li
-							v-if="game.developer.id == user.id"
+							v-if="user && user.id == game.developer.id"
 							v-app-tooltip.bottom="
 								$gettext(`Allow other users to manage your game.`)
 							"
 						>
-							<router-link
+							<RouterLink
 								:to="{ name: 'dash.games.manage.collaborators' }"
 								active-class="active"
 							>
-								<AppTranslate>Collaborators</AppTranslate>
-							</router-link>
+								{{ $gettext(`Collaborators`) }}
+							</RouterLink>
 						</li>
 					</ul>
 				</nav>
