@@ -1,77 +1,72 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
 import {
 	$removeGameDataStoreItem,
 	GameDataStoreItemModel,
 } from '../../../../../../../../../_common/game/data-store/item/item.model';
+import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '../../../../../../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../../../../../_common/popper/AppPopper.vue';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../../../_common/route/route-component';
+import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
 import { useGameDashRouteController } from '../../../../manage.store';
 
-@Options({
-	name: 'RouteDashGamesManageApiDataStorageItemsList',
-	components: {
-		AppPopper,
-	},
-})
-@OptionsForLegacyRoute({
-	deps: {},
-	resolver: ({ route }) =>
-		Api.sendRequest('/web/dash/developer/games/api/data-storage/' + route.params.id),
-})
-export default class RouteDashGamesManageApiDataStorageItemsList extends LegacyRouteComponent {
-	routeStore = setup(() => useGameDashRouteController()!);
+export default {
+	...defineAppRouteOptions({
+		deps: {},
+		resolver: ({ route }) =>
+			Api.sendRequest('/web/dash/developer/games/api/data-storage/' + route.params.id),
+	}),
+};
+</script>
 
-	get game() {
-		return this.routeStore.game!;
+<script lang="ts" setup>
+const { game } = useGameDashRouteController()!;
+
+const items = ref<GameDataStoreItemModel[]>([]);
+
+async function removeItem(item: GameDataStoreItemModel) {
+	const result = await showModalConfirm($gettext('Are you sure you want to remove this item?'));
+
+	if (!result) {
+		return;
 	}
 
-	items: GameDataStoreItemModel[] = [];
+	await $removeGameDataStoreItem(item);
 
-	readonly formatDate = formatDate;
+	const index = items.value.findIndex(i => i.id === item.id);
+	if (index !== -1) {
+		items.value.splice(index, 1);
+	}
+}
 
-	get routeTitle() {
-		if (this.game) {
-			return this.$gettext('Manage Data Storage for %{ game }', {
-				game: this.game.title,
+createAppRoute({
+	routeTitle: computed(() => {
+		if (game) {
+			return $gettext('Manage Data Storage for %{ game }', {
+				game: game.value!.title,
 			});
 		}
 		return null;
-	}
-
-	routeResolved($payload: any) {
-		this.items = GameDataStoreItemModel.populate($payload.items);
-	}
-
-	async removeItem(item: GameDataStoreItemModel) {
-		const result = await showModalConfirm(
-			this.$gettext('Are you sure you want to remove this item?')
-		);
-
-		if (!result) {
-			return;
-		}
-
-		await $removeGameDataStoreItem(item);
-
-		const index = this.items.findIndex(i => i.id === item.id);
-		if (index !== -1) {
-			this.items.splice(index, 1);
-		}
-	}
-}
+	}),
+	onResolved({ payload }) {
+		items.value = GameDataStoreItemModel.populate(payload.items);
+	},
+});
 </script>
 
 <template>
 	<div>
 		<h2 class="section-header">
+			<!--TODO(component-setup-refactor-routes-1): how do we replace AppTranslates
+				which are with translate-comment-->
 			<AppTranslate translate-comment="Refers to game API data store">
 				Data Storage Items
 			</AppTranslate>
@@ -84,14 +79,15 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends LegacyR
 				All stored data items will show up here.
 			</p>
 			<p>
-				<AppTranslate>
-					Currently, you can only view (and remove) globally stored data items. Stored
-					user data items are not viewable at this time.
-				</AppTranslate>
+				{{
+					$gettext(
+						`Currently, you can only view (and remove) globally stored data items. Stored user data items are not viewable at this time.`
+					)
+				}}
 			</p>
 			<p>
 				<AppLinkHelp page="dev-data-storage" class="link-help">
-					<AppTranslate>Learn more about data storage...</AppTranslate>
+					{{ $gettext(`Learn more about data storage...`) }}
 				</AppLinkHelp>
 			</p>
 		</div>
@@ -131,7 +127,7 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends LegacyR
 				<tbody>
 					<tr v-for="item of items" :key="item.id">
 						<td class="small">
-							<router-link
+							<RouterLink
 								class="table-primary-link"
 								:to="{
 									name: 'dash.games.manage.api.data-storage.items.view',
@@ -139,7 +135,7 @@ export default class RouteDashGamesManageApiDataStorageItemsList extends LegacyR
 								}"
 							>
 								<code>{{ item.key }}</code>
-							</router-link>
+							</RouterLink>
 						</td>
 						<td class="small">
 							{{ item.data.slice(0, 50) }}
