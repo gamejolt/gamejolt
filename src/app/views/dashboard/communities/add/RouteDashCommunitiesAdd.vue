@@ -1,34 +1,30 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../_common/route/route-component';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { touchUser } from '../../../../../_common/user/user.model';
 import FormCommunity from '../../../../components/forms/community/community.vue';
 import AppPageContainer from '../../../../components/page-container/AppPageContainer.vue';
+export default {
+	...defineAppRouteOptions({
+		deps: {},
+		resolver: () => touchUser(),
+	}),
+	components: { AppPageContainer },
+};
+const router = useRouter();
 
-@Options({
-	name: 'RouteDashCommunitiesAdd',
-	components: {
-		AppPageContainer,
-		FormCommunity,
-	},
-})
-@OptionsForLegacyRoute({
-	deps: {},
-	resolver: () => touchUser(),
-})
-export default class RouteDashCommunitiesAdd extends LegacyRouteComponent {
-	get routeTitle() {
-		return this.$gettext('Create a community');
-	}
-
-	onSubmit(community: CommunityModel) {
-		this.$router.push(community.routeEditLocation);
-	}
+function onSubmit(community: CommunityModel) {
+	router.push(community.routeEditLocation);
 }
+createAppRoute({
+	routeTitle: computed(() => $gettext('Create a community')),
+});
 </script>
 
 <template>
