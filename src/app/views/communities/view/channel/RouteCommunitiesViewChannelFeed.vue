@@ -209,7 +209,7 @@ const appRoute = createAppRoute({
 			</div>
 			<AppCommunitiesViewFeed
 				v-else
-				:feed="feed!"
+				:feed="feed"
 				@add-post="onPostAdded"
 				@load-new="loadedNew"
 			/>
