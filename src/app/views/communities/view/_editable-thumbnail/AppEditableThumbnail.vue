@@ -29,7 +29,7 @@ function showEditAvatar() {
 </script>
 
 <template>
-	<AppEditableOverlay v-if="canEdit" class="-fill" @click="showEditAvatar">
+	<AppEditableOverlay v-if="canEdit" class="-fill" @toggle="showEditAvatar">
 		<template #overlay>
 			{{ $gettext(`Change`) }}
 		</template>

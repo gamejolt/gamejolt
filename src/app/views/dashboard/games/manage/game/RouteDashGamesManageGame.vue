@@ -35,11 +35,7 @@ createAppRoute({
 <template>
 	<div>
 		<AppExpand :when="route.name === 'dash.games.manage.game.design'">
-			<!--TODO(component-setup-refactor-routes-2): Getting the following error:
-			Type '($event: MouseEvent) => void' is not assignable to type '() => any'.ts(2322)
-			but the click emit defined to take no parameters.
-			-->
-			<AppEditableOverlay @click="showEditHeader()">
+			<AppEditableOverlay @toggle="showEditHeader()">
 				<template #overlay>
 					<span>
 						<div v-if="!game!.header_media_item">
