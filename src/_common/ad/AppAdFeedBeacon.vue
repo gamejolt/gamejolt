@@ -12,7 +12,7 @@ defineProps({
 </script>
 
 <template>
-	<div id="ad-feed-beacon">
+	<div id="ad-feed-beacon" :data-ping="ping">
 		<div :key="ping" />
 	</div>
 </template>
