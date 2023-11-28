@@ -13,7 +13,10 @@ import {
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { createAppRoute } from '../../../../../../_common/route/route-component';
+import {
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../../utils/array';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
@@ -21,11 +24,12 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 import { useCommunityRouteStore } from '../../view.store';
 
 export default {
-	deps: { params: ['id'] },
-	// TODO(component-setup-refactor-routes-0): route's type
-	resolver({ route }) {
-		return Api.sendRequest('/web/dash/communities/collaborators/' + route.params.id);
-	},
+	...defineAppRouteOptions({
+		deps: { params: ['id'] },
+		resolver({ route }) {
+			return Api.sendRequest('/web/dash/communities/collaborators/' + route.params.id);
+		},
+	}),
 };
 </script>
 

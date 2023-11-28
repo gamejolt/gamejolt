@@ -68,11 +68,7 @@ const { isBootstrapped } = createAppRoute({
 			<div class="section-header-controls">
 				<AppButton sparse icon="remove" @click="remove" />
 			</div>
-			<!--TODO(component-setup-refactor-routes-1): how do we replace AppTranslates
-				which are with translate-comment-->
-			<AppTranslate translate-comment="Refers to game API data store items">
-				Item Details
-			</AppTranslate>
+			{{ $gettext(`Item Details`) }}
 		</h2>
 
 		<div class="table-responsive">
@@ -83,9 +79,7 @@ const { isBootstrapped } = createAppRoute({
 				<tbody>
 					<tr>
 						<th>
-							<AppTranslate translate-comment="This refers to game API key">
-								Key
-							</AppTranslate>
+							{{ $gettext(`Key`) }}
 						</th>
 						<td>
 							<code>{{ item.key }}</code>
@@ -93,11 +87,7 @@ const { isBootstrapped } = createAppRoute({
 					</tr>
 					<tr>
 						<th>
-							<AppTranslate
-								translate-comment="Refers to the date/time when a game API data store item was created"
-							>
-								Stored On
-							</AppTranslate>
+							{{ $gettext(`Stored On`) }}
 						</th>
 						<td>
 							{{ formatDate(item.posted_on, 'medium') }}
@@ -105,11 +95,7 @@ const { isBootstrapped } = createAppRoute({
 					</tr>
 					<tr>
 						<th>
-							<AppTranslate
-								translate-comment="Refers to the value of a game API data store item"
-							>
-								Item Data
-							</AppTranslate>
+							{{ $gettext(`Item Data`) }}
 						</th>
 						<td class="small">
 							<pre>{{ item.data }}</pre>

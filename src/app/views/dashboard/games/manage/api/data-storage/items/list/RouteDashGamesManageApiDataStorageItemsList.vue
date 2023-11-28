@@ -65,11 +65,7 @@ createAppRoute({
 <template>
 	<div>
 		<h2 class="section-header">
-			<!--TODO(component-setup-refactor-routes-1): how do we replace AppTranslates
-				which are with translate-comment-->
-			<AppTranslate translate-comment="Refers to game API data store">
-				Data Storage Items
-			</AppTranslate>
+			{{ $gettext(`Data Storage Items`) }}
 		</h2>
 
 		<div class="page-help">
@@ -101,25 +97,13 @@ createAppRoute({
 				<thead>
 					<tr>
 						<th>
-							<AppTranslate
-								translate-comment="Refers to the key name for a game API data store item"
-							>
-								Key
-							</AppTranslate>
+							{{ $gettext(`Key`) }}
 						</th>
 						<th>
-							<AppTranslate
-								translate-comment="Used when previewing a game API data store item value"
-							>
-								Data Preview
-							</AppTranslate>
+							{{ $gettext(`Data Preview`) }}
 						</th>
 						<th>
-							<AppTranslate
-								translate-comment="Refers to the date/time when a game API data store item was created"
-							>
-								Stored On
-							</AppTranslate>
+							{{ $gettext(`Stored On`) }}
 						</th>
 						<th />
 					</tr>
@@ -159,11 +143,7 @@ createAppRoute({
 											>
 												<AppJolticon icon="remove" notice />
 												{{ ' ' }}
-												<AppTranslate
-													translate-comment="Used to remove a game API data store item"
-												>
-													Remove Item
-												</AppTranslate>
+												{{ $gettext(`Remove Item`) }}
 											</a>
 										</div>
 									</template>

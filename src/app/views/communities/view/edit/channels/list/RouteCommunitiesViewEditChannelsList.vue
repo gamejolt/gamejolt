@@ -165,7 +165,7 @@ createAppRoute({});
 			>
 				<AppCardListDraggable item-key="id" @change="saveChannelSort">
 					<!--TODO(component-setup-refactor-routes-1): where the channel is coming from?-->
-					<template #item="{ element: channel }">
+					<template #item="{ element: channel }: { element: CommunityChannelModel }">
 						<AppCommunitiesEditChannelListItem :channel="channel" />
 					</template>
 				</AppCardListDraggable>
