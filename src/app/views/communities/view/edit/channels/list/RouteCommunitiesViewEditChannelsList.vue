@@ -24,7 +24,7 @@ import AppCommunityPerms from '../../../../../../components/community/perms/AppC
 import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/add.vue';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
 import { loadArchivedChannels, updateCommunity, useCommunityRouteStore } from '../../../view.store';
-import AppCommunitiesEditChannelListItem from './_item/item.vue';
+import AppCommunitiesEditChannelListItem from './_item/AppCommunitiesEditChannelListItem.vue';
 import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.vue';
 export default {
 	...defineAppRouteOptions({}),
@@ -164,7 +164,6 @@ createAppRoute({});
 				:is-draggable="hasFullChannelsPermission"
 			>
 				<AppCardListDraggable item-key="id" @change="saveChannelSort">
-					<!--TODO(component-setup-refactor-routes-1): where the channel is coming from?-->
 					<template #item="{ element: channel }: { element: CommunityChannelModel }">
 						<AppCommunitiesEditChannelListItem :channel="channel" />
 					</template>
