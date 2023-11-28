@@ -4,6 +4,6 @@ import { routeDashGamesManage } from './manage/manage.route';
 
 export const routeDashGames: RouteRecordRaw = {
 	path: 'games',
-	component: () => import('./games'),
+	component: () => import('./RouteDashGames.vue'),
 	children: [routeDashGamesAdd, routeDashGamesManage],
 };
