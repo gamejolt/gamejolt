@@ -54,6 +54,7 @@ onMounted(async () => {
 
 	isLoadingNotificationSettings.value = false;
 });
+
 async function onClickSetNotificationLevel(level: string) {
 	// Set it right away for immediate feedback.
 	notificationLevel.value = level;

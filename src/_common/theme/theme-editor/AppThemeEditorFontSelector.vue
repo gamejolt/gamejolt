@@ -2,7 +2,7 @@
 import { PropType, computed, nextTick, ref, toRefs, watch } from 'vue';
 import { Api } from '../../api/api.service';
 import { $gettext } from '../../translate/translate.service';
-import { AppThemeEditorFontSelectorStyleInjector } from './font-selector-style-injector';
+import AppThemeEditorFontSelectorStyleInjector from './AppThemeEditorFontSelectorStyleInjector.vue';
 
 interface FontDefinition {
 	family: string;
@@ -94,10 +94,7 @@ async function toggleSelector() {
 				updateFontDefinitions();
 			}
 		},
-
-		// TODO: Fix once TS has this type def.
-
-		{ passive: true } as any
+		{ passive: true }
 	);
 }
 

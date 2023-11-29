@@ -1,5 +1,5 @@
-<script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
+<script lang="ts">
+import { PropType, computed, ref, toRef, toRefs } from 'vue';
 import {
 	FiresidePostEmbedModel,
 	TYPE_SKETCHFAB,
@@ -13,10 +13,13 @@ import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/AppSketchfabEmbed.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
 
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px` });
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	embed: {
 		type: Object as PropType<FiresidePostEmbedModel>,
@@ -30,15 +33,13 @@ const props = defineProps({
 
 const { embed, hideOutview } = toRefs(props);
 
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px` });
-
 const isOpen = ref(false);
 const shouldAutoplay = ref(true);
 const isInview = ref(true);
 
-const shouldShow = computed(() => {
-	return embed.value.type === TYPE_YOUTUBE || embed.value.type === TYPE_SKETCHFAB;
-});
+const shouldShow = toRef(
+	() => embed.value.type === TYPE_YOUTUBE || embed.value.type === TYPE_SKETCHFAB
+);
 
 const thumbUrl = computed(() => {
 	if (embed.value.metadata && embed.value.metadata.image_media_item) {
@@ -114,13 +115,8 @@ const description = computed(() => {
 	return embed.value.url;
 });
 
-const shouldShowEmbedContent = computed(() => {
-	return isInview.value || !hideOutview.value;
-});
-
-const imageAlt = computed(() => {
-	return embed.value.metadata?.image_alt;
-});
+const shouldShowEmbedContent = toRef(() => isInview.value || !hideOutview.value);
+const imageAlt = toRef(() => embed.value.metadata?.image_alt);
 
 const playIcon = computed(() => {
 	switch (embed.value.type) {
@@ -212,8 +208,6 @@ function onInviewChanged(isInviewNew: boolean) {
 						@outview="onInviewChanged(false)"
 					>
 						<template v-if="shouldShowEmbedContent">
-							<!--TODO(component-setup-refactor): AppVideoEmbed requires max-video-height="" and max-video-width="" and
-							AppSketchfabEmbed requires max-height="" and max-width=""-->
 							<AppVideoEmbed
 								v-if="embed.type === TYPE_YOUTUBE"
 								:video-id="embed.extraData.videoId"

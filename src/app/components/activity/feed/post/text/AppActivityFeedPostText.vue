@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
-import { Analytics } from '../../../../../../_common/analytics/analytics.service';
+import { PropType, computed, ref, toRef, toRefs } from 'vue';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import {
@@ -27,21 +26,13 @@ const props = defineProps({
 const { item, post } = toRefs(props);
 const feed = useActivityFeed()!;
 
+const rootElem = ref<HTMLDivElement>();
 const isToggling = ref(false);
 const isLoaded = ref(!!post.value.article_content);
-const rootElem = ref<HTMLDivElement>();
 
-const isHydrated = computed(() => {
-	return feed.isItemHydrated(item.value);
-});
-
-const isLoading = computed(() => {
-	return isToggling.value && !isLoaded.value;
-});
-
-const isOpen = computed(() => {
-	return feed.isItemOpen(item.value);
-});
+const isHydrated = computed(() => feed.isItemHydrated(item.value));
+const isLoading = toRef(() => isToggling.value && !isLoaded.value);
+const isOpen = computed(() => feed.isItemOpen(item.value));
 
 async function toggleFull() {
 	if (isToggling.value) {
@@ -51,10 +42,8 @@ async function toggleFull() {
 	isToggling.value = true;
 
 	if (!isOpen.value) {
-		Analytics.trackEvent('activity-feed', 'article-open');
 		await expand();
 	} else {
-		Analytics.trackEvent('activity-feed', 'article-close');
 		await collapse();
 	}
 
@@ -74,6 +63,7 @@ async function collapse() {
 	if (!rootElem.value) {
 		return;
 	}
+
 	// We will scroll to the bottom of the element minus some extra padding.
 	// This keeps the element in view a bit.
 	const elementOffset = Scroll.getElementOffsetTopFromContext(rootElem.value);
@@ -115,12 +105,7 @@ async function collapse() {
 					@click.stop
 				/>
 				<AppButton v-else trans @click.stop="toggleFull()">
-					<div v-if="!isOpen">
-						{{ $gettext(`Read article`) }}
-					</div>
-					<div v-else>
-						{{ $gettext(`Less`) }}
-					</div>
+					{{ !isOpen ? $gettext(`Read article`) : $gettext(`Less`) }}
 				</AppButton>
 			</div>
 		</div>

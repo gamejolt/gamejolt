@@ -38,22 +38,25 @@ const modal = useModal()!;
 		<div class="modal-body">
 			<p>
 				{{
-					$gettext(`Looks like your anti-virus program removed an executable we need to manage your
-					game library.`)
+					$gettext(
+						`Looks like your anti-virus program removed an executable we need to manage your game library.`
+					)
 				}}
 			</p>
 
 			<p>
 				{{
-					$gettext(`Sadly, it's common for anti-virus programs to quarantine legitimate programs
-					like the Client that require access to your file system.`)
+					$gettext(
+						`Sadly, it's common for anti-virus programs to quarantine legitimate programs like the Game Jolt desktop app that require access to your file system.`
+					)
 				}}
 			</p>
 
 			<p>
 				{{
-					$gettext(`There should be a way to mark the Client as trusted in your anti-virus program
-					to restore functionality of the Client.`)
+					$gettext(
+						`There should be a way to mark the Game Jolt desktop app as trusted in your anti-virus program to restore functionality.`
+					)
 				}}
 			</p>
 		</div>

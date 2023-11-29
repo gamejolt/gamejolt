@@ -22,13 +22,7 @@ const shouldShowLogo = ref(false);
 const shouldShowLoading = ref(false);
 const shouldTransitionOut = ref(false);
 
-// TODO(component-setup-refactor): should initialStateChangeResolver be a ref? and if so, how to initialize?
-// Originally: private initialStateChangeResolver: Function = null as any;
-const initialStateChangeResolver = ref<(value: any) => void>(() => {});
-
-// TODO(component-setup-refactor): Following
-// how EventSubscription is used in AppLightboxPortal.
-// Or should we use ref instead?
+let initialStateChangeResolver: (value?: any) => void = null as any;
 let routeChangeAfter$: EventSubscription | null = null;
 
 run(async () => {
@@ -37,16 +31,16 @@ run(async () => {
 	// Whatever happens first.
 	// The page loaded or the connection is gone.
 	const initialStateChangePromise = new Promise(
-		resolve => (initialStateChangeResolver.value = resolve)
+		resolve => (initialStateChangeResolver = resolve)
 	);
 
 	// If we started offline, skip immediately.
 	if (Connection.isOffline) {
-		initialStateChangeResolver.value();
+		initialStateChangeResolver();
 	}
 
 	routeChangeAfter$ = onRouteChangeAfter.subscribe(() => {
-		initialStateChangeResolver.value();
+		initialStateChangeResolver();
 	});
 
 	// We only show the intro if they're logged in. Otherwise we just keep everything hidden and
@@ -110,7 +104,7 @@ watch(
 	() => Connection.isOffline,
 	() => {
 		if (Connection.isOffline) {
-			initialStateChangeResolver.value();
+			initialStateChangeResolver();
 		}
 	}
 );

@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import { kFontSizeBase } from '../../../../_styles/variables';
 import { Api } from '../../../api/api.service';
@@ -11,7 +11,9 @@ import AppEmojiSelectorGroupItemLazy from './item/AppEmojiSelectorGroupItemLazy.
 
 const GroupInviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 const EmojiInviewConfig = new ScrollInviewConfig({ margin: `200px` });
+</script>
 
+<script lang="ts" setup>
 const props = defineProps({
 	groupData: {
 		type: Object as PropType<EmojiGroupData>,

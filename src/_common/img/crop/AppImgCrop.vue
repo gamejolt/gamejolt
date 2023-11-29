@@ -69,15 +69,14 @@ const {
 	disabled,
 } = toRefs(props);
 
-const cropper = ref<Cropper>();
+let cropper: Cropper;
 const refImg = ref<HTMLImageElement>();
 
 onMounted(() => {
 	const useAspectRatio =
 		minAspectRatio?.value && maxAspectRatio?.value ? undefined : maxAspectRatio?.value;
 
-	// TODO(component-setup-refactor): do we need to await here for refImg before initializing the cropper?
-	cropper.value = new Cropper(refImg.value!, {
+	cropper = new Cropper(refImg.value!, {
 		aspectRatio: useAspectRatio,
 		viewMode: 1,
 		guides: false,
@@ -96,15 +95,15 @@ onMounted(() => {
 
 			// If the aspect ratio is outside a set min/max aspect ratio, resize the crop box.
 			if (minAspectRatio?.value && maxAspectRatio?.value && !aspectRatio?.value) {
-				const containerData = cropper.value!.getContainerData();
-				const cropBoxData = cropper.value!.getCropBoxData();
+				const containerData = cropper!.getContainerData();
+				const cropBoxData = cropper!.getCropBoxData();
 				const aspectRatio = cropBoxData.width / cropBoxData.height;
 
 				if (aspectRatio < minAspectRatio.value || aspectRatio > maxAspectRatio.value) {
 					const newCropBoxWidth =
 						cropBoxData.height * ((minAspectRatio.value + maxAspectRatio.value) / 2);
 
-					cropper.value!.setCropBoxData({
+					cropper!.setCropBoxData({
 						left: (containerData.width - newCropBoxWidth) / 2,
 						width: newCropBoxWidth,
 					});
@@ -126,7 +125,7 @@ onMounted(() => {
 						e.detail.width < minWidth.value ? minWidth.value : e.detail.width;
 					const targetHeight =
 						e.detail.height < minHeight.value ? minHeight.value : e.detail.height;
-					cropper.value!.setData(
+					cropper!.setData(
 						Object.assign({}, e.detail, {
 							width: targetWidth,
 							height: targetHeight,
@@ -138,8 +137,8 @@ onMounted(() => {
 
 			// Enforce aspect ratios.
 			if (minAspectRatio?.value && maxAspectRatio?.value && !aspectRatio?.value) {
-				const cropBoxData = cropper.value!.getCropBoxData();
-				const containerData = cropper.value!.getContainerData();
+				const cropBoxData = cropper!.getCropBoxData();
+				const containerData = cropper!.getContainerData();
 				const aspectRatio = cropBoxData.width / cropBoxData.height;
 
 				if (
@@ -152,7 +151,7 @@ onMounted(() => {
 						targetWidth = containerData.width;
 						targetHeight = targetWidth / minAspectRatio.value;
 					}
-					cropper.value!.setCropBoxData({
+					cropper!.setCropBoxData({
 						width: targetWidth,
 						height: targetHeight,
 					});
@@ -161,7 +160,7 @@ onMounted(() => {
 					aspectRatio > maxAspectRatio.value &&
 					Math.abs(aspectRatio - maxAspectRatio.value) > 0.01
 				) {
-					cropper.value!.setCropBoxData({
+					cropper!.setCropBoxData({
 						width: cropBoxData.height * maxAspectRatio.value,
 					});
 					return;
@@ -178,18 +177,18 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-	cropper.value!.destroy();
+	cropper!.destroy();
 });
 
 watch(
 	() => aspectRatio?.value,
 	() => {
-		cropper.value!.setAspectRatio(maxAspectRatio?.value || 0);
+		cropper!.setAspectRatio(maxAspectRatio?.value || 0);
 	}
 );
 
 watch(src, () => {
-	cropper.value!.replace(src.value);
+	cropper!.replace(src.value);
 });
 
 watch(disabled, () => {
@@ -211,7 +210,7 @@ watch(
  * work with.
  */
 function getCropperDataAsCropData(): CropData {
-	const cropperData = cropper.value!.getData();
+	const cropperData = cropper!.getData();
 
 	// Due to rounding errors introduced by scaling down the image in the
 	// cropper, the crop needs to be rounded to full pixels and consider
@@ -300,19 +299,19 @@ function getCropperDataAsCropData(): CropData {
 }
 
 function onDisabledChange() {
-	if (!cropper.value) {
+	if (!cropper) {
 		return;
 	}
 	if (disabled.value) {
-		cropper.value.disable();
+		cropper.disable();
 	} else {
-		cropper.value.enable();
+		cropper.enable();
 	}
 }
 
 function onCropValueChange() {
 	if (cropValue?.value) {
-		cropper.value!.setData({
+		cropper!.setData({
 			x: cropValue.value.x,
 			y: cropValue.value.y,
 			width: cropValue.value.x2 - cropValue.value.x,
@@ -322,18 +321,13 @@ function onCropValueChange() {
 			scaleY: 1,
 		});
 	} else {
-		cropper.value!.clear();
+		cropper!.clear();
 	}
 }
 </script>
 
 <template>
 	<div class="img-crop">
-		<img ref="refImg" :src="src" alt="" />
+		<img ref="refImg" :style="{ maxWidth: `100%` }" :src="src" alt="" />
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-img
-	max-width: 100%
-</style>

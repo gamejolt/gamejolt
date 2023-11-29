@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed } from 'vue';
+import { PropType, toRef } from 'vue';
 import { Environment } from '../../environment/environment.service';
 import { GameModel } from '../../game/game.model';
 import AppGameThumbnailImg from '../../game/thumbnail/AppGameThumbnailImg.vue';
@@ -12,9 +12,7 @@ defineProps({
 	},
 });
 
-const contentClass = computed(() => {
-	return WidgetCompiler.getContentClass();
-});
+const contentClass = toRef(() => WidgetCompiler.getContentClass());
 
 function url(game: GameModel) {
 	return game.site ? game.site.url : Environment.baseUrl + game.getUrl();

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
+import { computed, toRefs } from 'vue';
 
 const props = defineProps({
 	trackId: {
@@ -13,18 +13,20 @@ const props = defineProps({
 });
 
 const { trackId, color } = toRefs(props);
-const embedSrc = ref('');
 
-embedSrc.value =
-	'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + trackId.value;
+const embedSrc = computed(() => {
+	let src =
+		'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + trackId.value;
 
-if (color.value) {
-	embedSrc.value += '&amp;color=' + color.value;
-}
+	if (color.value) {
+		src += '&amp;color=' + color.value;
+	}
+
+	return src;
+});
 </script>
 
 <template>
-	<!--TODO(component-setup-refactor): Test this, changed to self closing tag-->
 	<iframe
 		class="widget-compiler-widget-soundcloud"
 		nwdisable

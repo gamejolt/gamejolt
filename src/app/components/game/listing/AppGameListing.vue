@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
@@ -17,6 +17,10 @@ import AppGameFilteringWidget from '../filtering/widget.vue';
 import AppGameGridPlaceholder from '../grid/placeholder/placeholder.vue';
 import { GameListingContainer } from './listing-container-service';
 
+const InviewConfig = new ScrollInviewConfig();
+</script>
+
+<script lang="ts" setup>
 defineProps({
 	listing: {
 		type: Object as PropType<GameListingContainer>,
@@ -43,8 +47,6 @@ defineProps({
 const emit = defineEmits({
 	load: () => true,
 });
-
-const InviewConfig = new ScrollInviewConfig();
 </script>
 
 <template>

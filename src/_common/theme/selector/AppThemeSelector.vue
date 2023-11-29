@@ -2,6 +2,7 @@
 import { PropType, ref, toRefs, watch } from 'vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppPopper from '../../popper/AppPopper.vue';
+import { Popper } from '../../popper/popper.service';
 import { SiteTemplateModel } from '../../site/template/template-model';
 
 const props = defineProps({
@@ -37,6 +38,11 @@ watch(
 
 function onTemplateChange() {
 	current.value = templates.value.find(t => t.id === currentTemplate.value) || null;
+}
+
+function select(id: number) {
+	emit('change', id);
+	Popper.hideAll();
 }
 </script>
 

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, nextTick, ref, toRaw, toRefs, watch } from 'vue';
+import { run } from '../../../utils/utils';
 import { Api } from '../../api/api.service';
 import AppColorpicker from '../../colorpicker/AppColorpicker.vue';
 import AppLoading from '../../loading/AppLoading.vue';
@@ -42,27 +43,34 @@ const emit = defineEmits({
 const { windowId, template, theme, resourceId } = toRefs(props);
 
 const isLoaded = ref(false);
-
 const selectedGroup = ref<StyleGroup>(null as any);
 const templateObj = ref<SiteTemplateModel>({} as any);
 const definition = ref<any>({});
 
-const response = await Api.sendRequest('/sites-io/get-template/' + template.value, undefined, {
-	detach: true,
+run(async () => {
+	const response = await Api.sendRequest('/sites-io/get-template/' + template.value, undefined, {
+		detach: true,
+	});
+
+	isLoaded.value = true;
+
+	templateObj.value = new SiteTemplateModel(response.template);
+	definition.value = templateObj.value.data;
+	selectedGroup.value = definition.value.styleGroups[0];
+
+	// Make sure we update the page with the current theme.
+	refresh(true);
 });
-
-isLoaded.value = true;
-
-templateObj.value = new SiteTemplateModel(response.template);
-definition.value = templateObj.value.data;
-selectedGroup.value = definition.value.styleGroups[0];
-
-// Make sure we update the page with the current theme.
-refresh(true);
 
 watch(
 	() => theme.value,
-	() => refresh(),
+	() => {
+		if (!isLoaded.value) {
+			return;
+		}
+
+		refresh();
+	},
 	{ deep: true }
 );
 

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs, watch } from 'vue';
+import { PropType, ref, toRef, toRefs, watch } from 'vue';
 import { vAppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -21,7 +21,7 @@ const props = defineProps({
 	},
 	initialUsers: {
 		type: Array as PropType<UserModel[]>,
-		default: () => [],
+		required: true,
 	},
 });
 
@@ -32,7 +32,7 @@ const page = ref(1);
 const isLoading = ref(false);
 const reachedEnd = ref(false);
 
-const placeholderCount = computed(() => {
+const placeholderCount = toRef(() => {
 	// 2 rows, except for xs.
 	if (Screen.isXs) {
 		return 1;
@@ -44,9 +44,7 @@ const placeholderCount = computed(() => {
 	return 8;
 });
 
-const shouldShowLoadMore = computed(() => {
-	return users.value.length < count.value && !reachedEnd.value;
-});
+const shouldShowLoadMore = toRef(() => users.value.length < count.value && !reachedEnd.value);
 
 watch(
 	initialUsers,

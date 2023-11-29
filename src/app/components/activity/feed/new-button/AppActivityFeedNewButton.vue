@@ -8,7 +8,6 @@ const emit = defineEmits({
 
 <template>
 	<p>
-		<!--TODO(component-setup-refactor): outline removed as not found as a prop in AppButton -->
 		<AppButton primary block @click="emit('click', $event)">
 			<slot />
 		</AppButton>

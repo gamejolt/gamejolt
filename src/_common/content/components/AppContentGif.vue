@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { computed, ref, toRefs, unref } from 'vue';
 import { useContentFocusService } from '../../content-focus/content-focus.service';
 import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
@@ -11,7 +11,9 @@ import { useContentOwnerController } from '../content-owner';
 import AppBaseContentComponent from './AppBaseContentComponent.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.25}px` });
+</script>
 
+<script lang="ts" setup>
 const props = defineProps({
 	gifId: {
 		type: String,
