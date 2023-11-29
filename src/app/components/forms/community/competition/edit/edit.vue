@@ -1,9 +1,9 @@
 <script lang="ts">
 import { mixins, Options } from 'vue-property-decorator';
 import {
-	$saveCommunityCompetition,
-	CommunityCompetitionModel,
-	CompetitionPeriodVoting,
+$saveCommunityCompetition,
+CommunityCompetitionModel,
+CompetitionPeriodVoting,
 } from '../../../../../../_common/community/competition/competition.model';
 import { formatDate } from '../../../../../../_common/filters/date';
 import AppFormLegend from '../../../../../../_common/form-vue/AppFormLegend.vue';
@@ -11,7 +11,7 @@ import AppFormControlDate from '../../../../../../_common/form-vue/controls/AppF
 import { FormTimezoneService } from '../../../../../../_common/form-vue/form-timezone.service';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
-import AppCommunityCompetitionDate from '../../../../community/competition/date/date.vue';
+import AppCommunityCompetitionDate from '../../../../community/competition/date/AppCommunityCompetitionDate.vue';
 
 class Wrapper extends BaseForm<CommunityCompetitionModel> {}
 

@@ -1,5 +1,6 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
@@ -15,9 +16,9 @@ import {
 } from '../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { showCommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
-import { AppCommunityPerms } from '../../../../../components/community/perms/perms';
+import AppCommunityPerms from '../../../../../components/community/perms/AppCommunityPerms.vue';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
+import { useCommunityRouteStore } from '../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditGames',
@@ -41,8 +42,7 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 	},
 })
 export default class RouteCommunitiesViewEditGames extends LegacyRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	maxLinkedGames = 10;
 	hasMoreGamesToLink = false;

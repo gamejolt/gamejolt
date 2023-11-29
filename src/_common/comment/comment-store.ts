@@ -1,4 +1,4 @@
-import { InjectionKey } from 'vue';
+import { InjectionKey, inject } from 'vue';
 import { arrayGroupBy, arrayRemove, numberSort } from '../../utils/array';
 import { Api } from '../api/api.service';
 import { showSuccessGrowl } from '../growls/growls.service';
@@ -13,6 +13,10 @@ import {
 } from './comment-model';
 
 export const CommentStoreManagerKey: InjectionKey<CommentStoreManager> = Symbol('comment-store');
+
+export function useCommentStoreManager() {
+	return inject(CommentStoreManagerKey, undefined);
+}
 
 export class CommentStoreModel {
 	totalCount = 0;

@@ -2,7 +2,7 @@ import type { Component } from 'vue';
 import { loadScript } from '../../../utils/utils';
 import { isDynamicGoogleBot } from '../../device/device.service';
 import { AdSlot } from '../ad-slot-info';
-import { AdAdapterBase } from '../adapter-base';
+import { AdAdapter, AdAdapterHelper } from '../adapter-base';
 import AppAdProper from './AppAdProper.vue';
 
 export const ProperTagUnits = {
@@ -24,7 +24,8 @@ export const ProperTagUnits = {
 
 export type ProperTagPlacement = keyof typeof ProperTagUnits;
 
-export class AdProperAdapter extends AdAdapterBase {
+export class AdProperAdapter implements AdAdapter {
+	private helper = new AdAdapterHelper();
 	tagUnits = { ...ProperTagUnits };
 
 	component(_slot: AdSlot): Component {
@@ -36,7 +37,7 @@ export class AdProperAdapter extends AdAdapterBase {
 			return;
 		}
 
-		this.runOnce(() => {
+		this.helper.runOnce(() => {
 			const w = window as any;
 
 			// https://proper-media.groovehq.com/help/single-page-applications-prefetch-implementation
@@ -66,6 +67,8 @@ export class AdProperAdapter extends AdAdapterBase {
 			(window as any).properSpaNewPage();
 		});
 	}
+
+	onRouteChanged() {}
 
 	getTagUnit(placement: ProperTagPlacement) {
 		return this.tagUnits[placement]?.shift() ?? null;

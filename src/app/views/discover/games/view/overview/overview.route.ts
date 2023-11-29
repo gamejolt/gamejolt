@@ -3,5 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeDiscoverGamesViewOverview: RouteRecordRaw = {
 	name: 'discover.games.view.overview',
 	path: '',
-	component: () => import('./overview.vue'),
+	component: () => import('./RouteDiscoverGamesViewOverview.vue'),
 };

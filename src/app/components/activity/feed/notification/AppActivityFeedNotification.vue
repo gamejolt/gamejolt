@@ -31,7 +31,7 @@ import {
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
 import { SupporterActionModel } from '../../../../../_common/supporters/action.model';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
+import AppTimelineListItem from '../../../../../_common/timeline-list/item/AppTimelineListItem.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophyModel } from '../../../../../_common/trophy/base-trophy.model';
 import { getTrophyImg } from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';

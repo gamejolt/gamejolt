@@ -35,17 +35,15 @@ createAppRoute({
 </script>
 
 <template>
-	<section class="section">
-		<div v-if="hasSearch" class="container">
-			<div class="row">
-				<div
-					v-for="user of searchPayload.users"
-					:key="user.id"
-					class="-item col-sm-6 col-md-4 col-lg-3"
-				>
-					<AppUserCard :user="user" elevate />
-				</div>
+	<div v-if="hasSearch" class="container">
+		<div class="row">
+			<div
+				v-for="user of searchPayload.users"
+				:key="user.id"
+				class="-item col-sm-6 col-md-4 col-lg-3"
+			>
+				<AppUserCard :user="user" elevate />
 			</div>
 		</div>
-	</section>
+	</div>
 </template>

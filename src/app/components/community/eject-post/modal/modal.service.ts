@@ -14,7 +14,7 @@ export async function showCommunityEjectPostModal(
 ) {
 	return await showModal<CommunityEjectPostModalResult>({
 		modalId: 'CommunityEjectPost',
-		component: defineAsyncComponent(() => import('./modal.vue')),
+		component: defineAsyncComponent(() => import('./AppCommunityEjectPostModal.vue')),
 		props: { firesidePostCommunity, post },
 		size: 'sm',
 	});

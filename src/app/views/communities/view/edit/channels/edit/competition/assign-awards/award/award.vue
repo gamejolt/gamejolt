@@ -5,18 +5,18 @@ import draggable from 'vuedraggable';
 import { Api } from '../../../../../../../../../../_common/api/api.service';
 import { CommunityCompetitionAwardModel } from '../../../../../../../../../../_common/community/competition/award/award.model';
 import {
-	$assignCommunityCompetitionEntryAward,
-	$saveSortCommunityCompetitionEntryAward,
-	$unassignCommunityCompetitionEntryAward,
+$assignCommunityCompetitionEntryAward,
+$saveSortCommunityCompetitionEntryAward,
+$unassignCommunityCompetitionEntryAward,
 } from '../../../../../../../../../../_common/community/competition/entry/award/award.model';
 import { CommunityCompetitionEntryModel } from '../../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showErrorGrowl } from '../../../../../../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../../../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../../../../../../../_common/loading/AppLoadingFade.vue';
-import AppPagination from '../../../../../../../../../../_common/pagination/pagination.vue';
+import AppPagination from '../../../../../../../../../../_common/pagination/AppPagination.vue';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
+LegacyRouteComponent,
+OptionsForLegacyRoute,
 } from '../../../../../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
 import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';

@@ -4,7 +4,7 @@ import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { $saveGameMaturity, GameModel } from '../../../../../_common/game/game.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
+import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
 
 type MaturityField = {
 	label?: string;

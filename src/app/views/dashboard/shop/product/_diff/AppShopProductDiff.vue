@@ -372,6 +372,7 @@ function getDiffContainerStyles(gridArea: 'before' | 'arrow' | 'after'): CSSProp
 							<AppShopProductDiffImg
 								:resource="resource"
 								:model="baseModel"
+								:form="data"
 								:img-url="existingImgUrl || undefined"
 								:style="{ marginBottom: `16px` }"
 							/>
@@ -443,6 +444,7 @@ function getDiffContainerStyles(gridArea: 'before' | 'arrow' | 'after'): CSSProp
 							<AppShopProductDiffImg
 								:resource="resource"
 								:model="baseModel"
+								:form="data"
 								:img-url="tempImgUrl || undefined"
 								:style="{ marginBottom: `16px` }"
 							/>

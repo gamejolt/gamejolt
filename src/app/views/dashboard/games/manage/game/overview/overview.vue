@@ -13,7 +13,7 @@ import {
 } from '../../../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import { AppCommunityPerms } from '../../../../../../components/community/perms/perms';
+import AppCommunityPerms from '../../../../../../components/community/perms/AppCommunityPerms.vue';
 import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/AppGameDevStageSelector.vue';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../manage.store';
@@ -182,7 +182,7 @@ export default class RouteDashGamesManageGameOverview extends LegacyRouteCompone
 		</div>
 
 		<div v-if="game.community" class="row">
-			<AppCommunityPerms :community="game.community" tag="div">
+			<AppCommunityPerms :community="game.community">
 				<div class="col-lg-8">
 					<router-link :to="game.community.routeEditLocation">
 						<AppButton icon="users">Edit Community</AppButton>

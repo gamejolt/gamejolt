@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, inject, onUnmounted, PropType, ref, toRefs } from 'vue';
+import { computed, onUnmounted, PropType, ref, toRefs } from 'vue';
 import {
 	Analytics,
 	PostControlsLocation,
@@ -10,10 +10,10 @@ import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directi
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
 	commentStoreCount,
-	CommentStoreManagerKey,
 	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
+	useCommentStoreManager,
 } from '../../../../_common/comment/comment-store';
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../_common/community/community.model';
@@ -91,7 +91,7 @@ const emit = defineEmits({
 	sticker: () => true,
 });
 
-const commentManager = inject(CommentStoreManagerKey)!;
+const commentManager = useCommentStoreManager()!;
 const stickerLayer = useStickerLayer();
 
 const { user } = useCommonStore();

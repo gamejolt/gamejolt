@@ -10,7 +10,7 @@ import {
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import AppTimelineList from '../../../../../_common/timeline-list/AppTimelineList.vue';
-import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
+import AppTimelineListItem from '../../../../../_common/timeline-list/item/AppTimelineListItem.vue';
 import { showTrophyModal } from '../../../../../_common/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { UserGameTrophyModel } from '../../../../../_common/user/trophy/game-trophy.model';

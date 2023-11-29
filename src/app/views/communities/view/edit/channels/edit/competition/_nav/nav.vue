@@ -1,13 +1,13 @@
 <script lang="ts">
-import { Inject, Options, Vue } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options, Vue } from 'vue-property-decorator';
 import { CompetitionPeriodVoting } from '../../../../../../../../../_common/community/competition/competition.model';
 import { formatNumber } from '../../../../../../../../../_common/filters/number';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
+import { useCommunityRouteStore } from '../../../../../view.store';
 
 @Options({})
 export default class AppCommunitiesEditCompetitionNav extends Vue {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	readonly formatNumber = formatNumber;
 

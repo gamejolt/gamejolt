@@ -9,7 +9,7 @@ import { $saveGame, GameModel } from '../../../../_common/game/game.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppGameDevStageSelector from './dev-stage-selector/AppGameDevStageSelector.vue';
-import AppDashGameWizardControls from './wizard-controls/wizard-controls.vue';
+import AppDashGameWizardControls from './wizard-controls/AppDashGameWizardControls.vue';
 
 class Wrapper extends BaseForm<GameModel> {}
 

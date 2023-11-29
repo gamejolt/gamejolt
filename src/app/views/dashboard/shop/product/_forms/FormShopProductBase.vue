@@ -15,9 +15,17 @@ import { useRouter } from 'vue-router';
 import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
-import { BackgroundModel } from '../../../../../../_common/background/background.model';
+import {
+	BackgroundDefaultScale,
+	BackgroundModel,
+	BackgroundScaling,
+	getBackgroundCSSProperties,
+} from '../../../../../../_common/background/background.model';
 import { ComponentProps } from '../../../../../../_common/component-helpers';
-import { CreatorChangeRequestModel } from '../../../../../../_common/creator/change-request/creator-change-request.model';
+import {
+	CreatorChangeRequestModel,
+	CreatorChangeRequestStatus,
+} from '../../../../../../_common/creator/change-request/creator-change-request.model';
 import { formatFilesize } from '../../../../../../_common/filters/filesize';
 import AppForm, {
 	FormController,
@@ -48,13 +56,17 @@ import {
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
-import { kThemeFg10 } from '../../../../../../_common/theme/variables';
+import {
+	kThemeBgOffset,
+	kThemeFg10,
+	kThemeGjOverlayNotice,
+} from '../../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { styleBorderRadiusLg, styleChangeBg } from '../../../../../../_styles/mixins';
-import { kBorderWidthBase } from '../../../../../../_styles/variables';
+import { kBorderRadiusBase, kBorderWidthBase } from '../../../../../../_styles/variables';
 import { arrayRemove, arrayUnique, numberSort } from '../../../../../../utils/array';
 import { objectOmit } from '../../../../../../utils/object';
-import { assertNever, run } from '../../../../../../utils/utils';
+import { assertNever, isInstance, run } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
 import {
 	ShopDashGroup,
@@ -129,6 +141,9 @@ export function createShopProductBaseForm<
 	const aspectRatio = ref(1);
 	const canEditFree = ref(false);
 	const canEditPremium = ref(false);
+
+	const backgroundDefaultScaling = ref(BackgroundScaling.tile);
+	const backgroundDefaultScale = ref(BackgroundDefaultScale);
 
 	const isEditing = Boolean(baseModel);
 	const processedFileData = ref() as Ref<{ file: File; url: string } | undefined>;
@@ -213,6 +228,9 @@ export function createShopProductBaseForm<
 			assignNonNull(aspectRatio, payload.aspectRatio);
 			assignNonNull(canEditFree, payload.canEditFree);
 			assignNonNull(canEditPremium, payload.canEditPremium);
+
+			assignNonNull(backgroundDefaultScaling, payload.backgroundDefaultScaling);
+			assignNonNull(backgroundDefaultScale, payload.backgroundDefaultScale);
 
 			// When editing
 
@@ -508,6 +526,57 @@ export function createShopProductBaseForm<
 			}
 			return acc;
 		}, [] as string[]),
+		getBackgroundSize(data?: BaseModel | string) {
+			let styles = {
+				backgroundRepeat: 'repeat',
+				backgroundImage: ``,
+				backgroundPosition: 'center',
+				backgroundSize: '100% 100%',
+			} satisfies ReturnType<typeof getBackgroundCSSProperties>;
+
+			let tileSize: { width: number; height: number } | null = null;
+
+			if (isInstance(data, BackgroundModel)) {
+				styles = getBackgroundCSSProperties(data);
+				if (data.scaling === BackgroundScaling.tile) {
+					tileSize = {
+						width: data.media_item.croppedWidth / data.scale,
+						height: data.media_item.croppedHeight / data.scale,
+					};
+				}
+			} else {
+				styles.backgroundImage = `url(${data})`;
+
+				if (backgroundDefaultScaling.value === BackgroundScaling.tile) {
+					const getSize = (min: number, max: number) => {
+						let size = min;
+						if (min !== max) {
+							size = (min + max) / 2;
+						}
+						return size / backgroundDefaultScale.value;
+					};
+					tileSize = {
+						width: getSize(minWidth.value, maxWidth.value),
+						height: getSize(minHeight.value, maxHeight.value),
+					};
+					styles.backgroundSize = `${tileSize.width}px ${tileSize?.height}px`;
+				} else {
+					styles.backgroundRepeat = 'no-repeat';
+				}
+			}
+
+			// We always want to position tiled images so that there's a bit of
+			// tiling on the top and the left. This is because we want to show
+			// the user that the image will tile.
+			if (tileSize) {
+				styles.backgroundPosition = 'center';
+			}
+
+			return {
+				tileSize,
+				styles,
+			};
+		},
 	});
 }
 </script>
@@ -539,6 +608,7 @@ const {
 	minNameLength,
 	maxNameLength,
 	getFieldAvailabilityUrl,
+	changeRequest,
 } = props.data;
 
 const productTypeSelectorStyle: CSSProperties = {
@@ -683,6 +753,45 @@ const isAnimated = computed(
 						}}
 					</AppAlertBox>
 				</template>
+
+				<AppSpacer vertical :scale="6" />
+			</template>
+
+			<template v-if="changeRequest?.status === CreatorChangeRequestStatus.Rejected">
+				<div
+					:style="{
+						backgroundColor: kThemeBgOffset,
+						borderRadius: kBorderRadiusBase.px,
+						border: `${kBorderWidthBase.px} solid ${kThemeGjOverlayNotice}`,
+						padding: `24px`,
+						fontWeight: `bold`,
+					}"
+				>
+					<template v-if="!changeRequest.rejection_message">
+						{{ $gettext(`The latest changes were rejected.`) }}
+					</template>
+					<template v-else>
+						<div :style="{ marginBottom: `8px` }">
+							{{
+								$gettext(
+									`The latest changes were rejected with the following reason:`
+								)
+							}}
+						</div>
+						<div
+							:style="{
+								whiteSpace: `pre-wrap`,
+								fontWeight: `normal`,
+							}"
+						>
+							{{ changeRequest.rejection_message }}
+						</div>
+					</template>
+
+					<div :style="{ marginTop: `8px` }">
+						{{ $gettext(`Please fix the issues and submit again.`) }}
+					</div>
+				</div>
 
 				<AppSpacer vertical :scale="6" />
 			</template>

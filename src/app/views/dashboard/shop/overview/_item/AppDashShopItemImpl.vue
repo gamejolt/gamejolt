@@ -89,11 +89,7 @@ const baseInfoTagStyles: CSSProperties = {
 		>
 			<AppAspectRatio :ratio="1" />
 		</AppBackground>
-		<AppStickerPack
-			v-else-if="isInstance(item, StickerPackModel)"
-			:pack="item"
-			:border-radius="borderRadius"
-		/>
+		<AppStickerPack v-else-if="isInstance(item, StickerPackModel)" :pack="item" />
 		<AppStickerLayerDrawerItem
 			v-else-if="isInstance(item, StickerModel)"
 			:sticker="item"

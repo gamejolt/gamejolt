@@ -4,7 +4,7 @@ import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFo
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { validateGaTrackingId } from '../../../../../_common/form-vue/validators';
 import { $saveGameSettings, GameModel } from '../../../../../_common/game/game.model';
-import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
+import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
 
 class Wrapper extends BaseForm<GameModel> {}
 

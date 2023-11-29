@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, inject, PropType, provide, reactive, ref, toRefs } from 'vue';
 import { useAdsController } from '../../../../_common/ad/ad-store';
+import AppAdFeedBeacon from '../../../../_common/ad/AppAdFeedBeacon.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
@@ -206,6 +207,8 @@ function shouldShowAd(index: number) {
 	to them get picked up again.
 	-->
 	<div :key="feed.id" ref="container" class="activity-feed">
+		<AppAdFeedBeacon v-if="shouldShowAds" :ping="feed.id + ':' + feed.totalTimesLoaded" />
+
 		<template v-if="newCount > 0 || feed.isLoadingNew">
 			<AppScrollInview :config="InviewConfigShowNew" @inview="onNewButtonInview">
 				<AppExpand v-if="!feed.isLoadingNew" :when="isNewButtonInview">
@@ -226,11 +229,7 @@ function shouldShowAd(index: number) {
 					v-if="shouldShowAd(i)"
 					class="-ad-container well fill-offset full-bleed-xs text-center"
 				>
-					<AppAdWidget
-						size="rectangle"
-						placement="content"
-						:meta="{ staticSize: true }"
-					/>
+					<AppAdWidget size="rectangle" placement="content" />
 				</div>
 			</div>
 		</div>

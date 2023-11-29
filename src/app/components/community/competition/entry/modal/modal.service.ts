@@ -8,7 +8,7 @@ export type CommunityCompetitionEntryModalHashDeregister = () => void;
 async function _show(props: any) {
 	return await showModal<void>({
 		modalId: 'CommunityCompetitionEntry',
-		component: defineAsyncComponent(() => import('./modal.vue')),
+		component: defineAsyncComponent(() => import('./AppCommunityCompetitionEntryModal.vue')),
 		props,
 		size: 'sm',
 	});
