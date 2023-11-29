@@ -239,9 +239,8 @@ function onInviewChanged(isInviewNew: boolean) {
 </template>
 
 <style lang="stylus" scoped>
-@import './variables'
-import hide from '@popperjs/core/lib/modifiers/hide';
-import { toRefs } from 'vue';
+// TODO(component-setup-refactor-2): can we remove these imports,
+// seemed like not used here?
 
 .-embed
 	full-bleed-xs()
