@@ -183,12 +183,12 @@ onBeforeUnmount(() => {
 watch(
 	() => aspectRatio?.value,
 	() => {
-		cropper!.setAspectRatio(maxAspectRatio?.value || 0);
+		cropper?.setAspectRatio(maxAspectRatio?.value || 0);
 	}
 );
 
 watch(src, () => {
-	cropper!.replace(src.value);
+	cropper?.replace(src.value);
 });
 
 watch(disabled, () => {
@@ -302,6 +302,7 @@ function onDisabledChange() {
 	if (!cropper) {
 		return;
 	}
+
 	if (disabled.value) {
 		cropper.disable();
 	} else {
@@ -310,8 +311,12 @@ function onDisabledChange() {
 }
 
 function onCropValueChange() {
+	if (!cropper) {
+		return;
+	}
+
 	if (cropValue?.value) {
-		cropper!.setData({
+		cropper.setData({
 			x: cropValue.value.x,
 			y: cropValue.value.y,
 			width: cropValue.value.x2 - cropValue.value.x,
@@ -321,7 +326,7 @@ function onCropValueChange() {
 			scaleY: 1,
 		});
 	} else {
-		cropper!.clear();
+		cropper.clear();
 	}
 }
 </script>
