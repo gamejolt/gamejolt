@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, toRef } from 'vue';
+import { toRef } from 'vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
@@ -15,13 +15,9 @@ export default {
 <script lang="ts" setup>
 const routeStore = useCommunityRouteStore()!;
 
-const competition = toRef(() => {
-	return routeStore.competition!;
-});
+const competition = toRef(() => routeStore.competition!);
 
-createAppRoute({
-	routeTitle: computed(() => ``),
-});
+createAppRoute({});
 </script>
 
 <template>

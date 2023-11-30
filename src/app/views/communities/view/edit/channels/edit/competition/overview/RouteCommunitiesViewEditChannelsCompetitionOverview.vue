@@ -18,6 +18,7 @@ import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-
 import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
 import { useCommunityRouteStore } from '../../../../../view.store';
+
 export default {
 	...defineAppRouteOptions({
 		deps: { params: ['id', 'channel'] },
@@ -73,7 +74,6 @@ async function onClickPublish() {
 }
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
 		if (payload && payload.votingCategories) {
 			votingCategories.value = CommunityCompetitionVotingCategoryModel.populate(
@@ -140,18 +140,19 @@ createAppRoute({
 		</p>
 
 		<div v-if="shouldShowCategoryWarning" class="alert alert-notice">
-			<!--TODO(component-setup-refactor-routes-0): these need to be replaced with $gettext()?-->
 			<p>
-				<span v-translate>
-					Your jam is set to let users vote within categories once the voting period
-					starts. However, <b>no voting categories are set up</b>.
-				</span>
+				{{
+					$gettext(
+						`Your jam is set to let users vote within categories once the voting period starts. However, no voting categories are set up.`
+					)
+				}}
 			</p>
 			<p>
-				<span v-translate>
-					You must set up voting categories before the jam is over, or users
-					<b>will not be able to vote on entries</b>.
-				</span>
+				{{
+					$gettext(
+						`You must set up voting categories before the jam is over, or users will not be able to vote on entries.`
+					)
+				}}
 			</p>
 
 			<AppButton

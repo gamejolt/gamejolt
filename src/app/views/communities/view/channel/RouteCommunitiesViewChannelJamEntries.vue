@@ -33,146 +33,7 @@ export default {
 		},
 		resolver: ({ route }) => makeRequest(route),
 	}),
-	components: { AppIllustration },
 };
-</script>
-
-<script lang="ts" setup>
-const props = defineProps({
-	categories: {
-		type: Array as PropType<CommunityCompetitionVotingCategoryModel[]>,
-		required: true,
-	},
-});
-
-const { categories } = toRefs(props);
-
-const routeStore = useCommunityRouteStore()!;
-const route = useRoute();
-const router = useRouter();
-
-const entries = ref<CommunityCompetitionEntryModel[]>([]);
-const perPage = ref(50);
-const page = ref(1);
-const sort = ref('random');
-const category = ref<string | null>(null);
-const ignoreAwards = ref<boolean | null>(null);
-const hashWatchDeregister = ref<CommunityCompetitionEntryModalHashDeregister | undefined>(
-	undefined
-);
-
-const competition = toRef(() => routeStore.competition!);
-const hasCategories = toRef(() => categories.value.length > 0);
-const shouldShowAwardsFirstOption = toRef(
-	() => competition.value.are_results_calculated && competition.value.has_awards
-);
-
-const numPlaceholders = computed(() => Math.min(competition.value.entry_count, 6));
-
-const canSortBest = computed(
-	() =>
-		competition.value.has_community_voting &&
-		competition.value.is_voting_enabled &&
-		competition.value.period === 'post-comp' &&
-		competition.value.are_results_calculated
-);
-
-const sortOptions = computed(() => {
-	const options = [
-		{
-			text: $gettext(`Random`),
-			sort: 'random',
-		},
-		{
-			text: $gettext(`Newest`),
-			sort: 'new',
-		},
-		{
-			text: $gettext(`Oldest`),
-			sort: 'old',
-		},
-		{
-			text: $gettext(`Name`),
-			sort: 'name',
-		},
-	];
-
-	// Allow sorting by best when community voting and jam is done.
-	if (canSortBest.value) {
-		options.unshift({
-			text: $gettext(`Rank`),
-			sort: 'best',
-		});
-	}
-
-	return options;
-});
-
-const selectedSortOption = computed(() => sortOptions.value.find(i => i.sort === sort.value)!);
-
-const pageCount = computed(() => Math.ceil(competition.value.entry_count / perPage.value));
-
-const categoryOptions = computed(() => {
-	const options = [
-		{
-			text: $gettext(`All Entries`),
-			category: null,
-		} as any,
-	];
-
-	for (const category of categories.value) {
-		options.push({
-			text: category.name,
-			category: category.name,
-		});
-	}
-
-	return options;
-});
-
-const selectedCategory = computed(() => categories.value.find(i => i.name === category.value));
-
-// Watch the entry count change.
-// It does when the user adds/removes one of their entries.
-// In that case, we want to reset the view to page 1 of newest games.
-// That way, they will see their newly added entry in the list of entries instead of
-// having to refresh.
-watch(
-	() => competition.value.entry_count,
-	() => {
-		if (route.query.sort !== 'new' || route.query.page !== undefined) {
-			Scroll.shouldAutoScroll = false;
-			router.push({
-				query: {
-					sort: 'new',
-					page: undefined,
-				},
-			});
-		} else {
-			// Already viewing that page? Reload page.
-			reloadPage();
-		}
-	}
-);
-
-async function reloadPage() {
-	const payload = await makeRequest(route);
-	handlePayload(payload);
-}
-
-function handlePayload(payload: any) {
-	entries.value = CommunityCompetitionEntryModel.populate(payload.entries);
-	if (entries.value.length > competition.value.entry_count) {
-		competition.value.entry_count = entries.value.length;
-	}
-	perPage.value = payload.perPage;
-
-	// If we receive a seed from backend, store it so it can be sent with the next request.
-	const seed = payload.seed;
-	if (seed && !import.meta.env.SSR) {
-		sessionStorage.setItem(getSeedSessionStorageKey(route), seed);
-	}
-}
 
 function getSeedSessionStorageKey(route: RouteLocationNormalized) {
 	return (
@@ -183,12 +44,12 @@ function getSeedSessionStorageKey(route: RouteLocationNormalized) {
 	);
 }
 
-function getValidSortQueryParam(route: RouteLocationNormalized) {
+const ValidSortOptions = ['new', 'old', 'name', 'random', 'best'];
+type SortOption = (typeof ValidSortOptions)[number];
+
+function getValidSortQueryParam(route: RouteLocationNormalized): SortOption | null {
 	const paramValue = route.query.sort;
-	if (
-		typeof paramValue === 'string' &&
-		['new', 'old', 'name', 'random', 'best'].includes(paramValue)
-	) {
+	if (typeof paramValue === 'string' && ValidSortOptions.includes(paramValue)) {
 		return paramValue;
 	}
 
@@ -280,9 +141,142 @@ function makeRequest(route: RouteLocationNormalized) {
 
 	return Api.sendRequest(url);
 }
+</script>
+
+<script lang="ts" setup>
+const props = defineProps({
+	categories: {
+		type: Array as PropType<CommunityCompetitionVotingCategoryModel[]>,
+		required: true,
+	},
+});
+
+const { categories } = toRefs(props);
+const routeStore = useCommunityRouteStore()!;
+const route = useRoute();
+const router = useRouter();
+
+const entries = ref<CommunityCompetitionEntryModel[]>([]);
+const perPage = ref(50);
+const page = ref(1);
+const sort = ref<SortOption>('random');
+const category = ref<string | null>(null);
+const ignoreAwards = ref<boolean | null>(null);
+let hashWatchDeregister: CommunityCompetitionEntryModalHashDeregister | undefined;
+
+const competition = toRef(() => routeStore.competition!);
+const hasCategories = toRef(() => categories.value.length > 0);
+const shouldShowAwardsFirstOption = toRef(
+	() => competition.value.are_results_calculated && competition.value.has_awards
+);
+
+const numPlaceholders = computed(() => Math.min(competition.value.entry_count, 6));
+
+const canSortBest = computed(
+	() =>
+		competition.value.has_community_voting &&
+		competition.value.is_voting_enabled &&
+		competition.value.period === 'post-comp' &&
+		competition.value.are_results_calculated
+);
+
+const sortOptions = computed(() => {
+	const options = [
+		{
+			text: $gettext(`Random`),
+			sort: 'random',
+		},
+		{
+			text: $gettext(`Newest`),
+			sort: 'new',
+		},
+		{
+			text: $gettext(`Oldest`),
+			sort: 'old',
+		},
+		{
+			text: $gettext(`Name`),
+			sort: 'name',
+		},
+	];
+
+	// Allow sorting by best when community voting and jam is done.
+	if (canSortBest.value) {
+		options.unshift({
+			text: $gettext(`Rank`),
+			sort: 'best',
+		});
+	}
+
+	return options;
+});
+
+const selectedSortOption = computed(() => sortOptions.value.find(i => i.sort === sort.value)!);
+const pageCount = computed(() => Math.ceil(competition.value.entry_count / perPage.value));
+
+const categoryOptions = computed(() => {
+	const options = [
+		{
+			text: $gettext(`All Entries`),
+			category: null,
+		} as any,
+	];
+
+	for (const category of categories.value) {
+		options.push({
+			text: category.name,
+			category: category.name,
+		});
+	}
+
+	return options;
+});
+
+const selectedCategory = computed(() => categories.value.find(i => i.name === category.value));
+
+// Watch the entry count change.
+// It does when the user adds/removes one of their entries.
+// In that case, we want to reset the view to page 1 of newest games.
+// That way, they will see their newly added entry in the list of entries instead of
+// having to refresh.
+watch(
+	() => competition.value.entry_count,
+	() => {
+		if (route.query.sort !== 'new' || route.query.page !== undefined) {
+			Scroll.shouldAutoScroll = false;
+			router.push({
+				query: {
+					sort: 'new',
+					page: undefined,
+				},
+			});
+		} else {
+			// Already viewing that page? Reload page.
+			reloadPage();
+		}
+	}
+);
+
+async function reloadPage() {
+	const payload = await makeRequest(route);
+	handlePayload(payload);
+}
+
+function handlePayload(payload: any) {
+	entries.value = CommunityCompetitionEntryModel.populate(payload.entries);
+	if (entries.value.length > competition.value.entry_count) {
+		competition.value.entry_count = entries.value.length;
+	}
+	perPage.value = payload.perPage;
+
+	// If we receive a seed from backend, store it so it can be sent with the next request.
+	const seed = payload.seed;
+	if (seed && !import.meta.env.SSR) {
+		sessionStorage.setItem(getSeedSessionStorageKey(route), seed);
+	}
+}
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onInit() {
 		entries.value = [];
 
@@ -311,18 +305,17 @@ createAppRoute({
 			ignoreAwards.value = validIgnoreAwards || null;
 		}
 	},
-
-	onDestroyed() {
-		if (hashWatchDeregister.value) {
-			hashWatchDeregister.value();
-			hashWatchDeregister.value = undefined;
-		}
-	},
 	onResolved({ payload }) {
 		handlePayload(payload);
 		showCommunityCompetitionEntryModalIdFromHash(router);
-		if (!hashWatchDeregister.value) {
-			hashWatchDeregister.value = watchCommunityCompetitionEntryModalForHash(router);
+		if (!hashWatchDeregister) {
+			hashWatchDeregister = watchCommunityCompetitionEntryModalForHash(router);
+		}
+	},
+	onDestroyed() {
+		if (hashWatchDeregister) {
+			hashWatchDeregister();
+			hashWatchDeregister = undefined;
 		}
 	},
 });
@@ -386,7 +379,7 @@ createAppRoute({
 							query: { page: undefined, sort: sort, 'ignore-awards': +!ignoreAwards },
 						}"
 					>
-						{{ $gettext(`Show Awards first`) }}
+						{{ $gettext(`Show awards first`) }}
 					</AppButton>
 					{{ $gettext(`Sort by`) }}
 					{{ ' ' }}

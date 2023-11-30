@@ -5,8 +5,8 @@ import AppButton from '../../../../../_common/button/AppButton.vue';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import {
-	createAppRoute,
-	defineAppRouteOptions,
+createAppRoute,
+defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -21,10 +21,10 @@ import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-h
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { CommunitiesViewChannelDeps } from '../channel/RouteCommunitiesViewChannel.vue';
 import {
-	acceptCollaboration,
-	declineCollaboration,
-	setCommunityMeta,
-	useCommunityRouteStore,
+acceptCollaboration,
+declineCollaboration,
+setCommunityMeta,
+useCommunityRouteStore,
 } from '../view.store';
 
 export default {
@@ -38,21 +38,19 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const store = useAppStore();
+const { communityStates, joinCommunity } = useAppStore();
 const { user } = useCommonStore();
 const { grid } = useGridStore();
-const isBootstrapped = ref(false);
+const routeStore = useCommunityRouteStore()!;
 const route = useRoute();
 const router = useRouter();
 
-const routeStore = useCommunityRouteStore()!;
-
-const communityStates = toRef(() => store.communityStates);
+const isBootstrapped = ref(false);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 const finishedLoading = ref(false);
 
 const community = toRef(() => routeStore.community);
-const communityState = toRef(() => communityStates.value.value.getCommunityState(community.value));
+const communityState = toRef(() => communityStates.value.getCommunityState(community.value));
 const sidebarData = toRef(() => routeStore.sidebarData!);
 
 const collaboratorInvite = toRef(() => {
@@ -117,7 +115,7 @@ async function receiveCollaboration() {
 	}
 
 	await acceptCollaboration(routeStore, user.value);
-	store.joinCommunity(community.value, { grid: grid.value });
+	joinCommunity(community.value, { grid: grid.value });
 	showSuccessGrowl($gettext(`You are now a collaborator on this community!`));
 }
 
@@ -126,7 +124,7 @@ async function rejectCollaboration() {
 }
 
 const appRoute = createAppRoute({
-	routeTitle: routeTitle.value,
+	routeTitle,
 	onInit: () => {
 		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);
 		finishedLoading.value = false;

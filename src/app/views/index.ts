@@ -1,5 +1,4 @@
 import { initRouter } from '../../utils/router';
-import { routeBadgeFeatured } from './badge/featured/featured.route';
 import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
@@ -40,7 +39,6 @@ const routes = [
 	routeIntent,
 	routeWeplay,
 	routeWelcome,
-	routeBadgeFeatured,
 	routeTimeout,
 	routeRealmsView,
 	routeQuests,

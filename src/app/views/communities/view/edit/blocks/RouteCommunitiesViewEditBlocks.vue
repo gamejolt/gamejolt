@@ -127,7 +127,6 @@ function onPageChanged(newPage: number) {
 }
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
 		blocks.value = UserBlockModel.populate(payload.blocks);
 		totalCount.value = payload.totalCount;

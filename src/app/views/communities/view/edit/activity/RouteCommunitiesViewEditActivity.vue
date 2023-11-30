@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { vAppTrackEvent } from '../../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
@@ -136,7 +136,6 @@ function addItems(newItems: CommunityActivityItemModel[]) {
 }
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
 		handlePayload(payload);
 	},
@@ -160,7 +159,6 @@ createAppRoute({
 				<div v-if="item.timesplit" class="-date-split">
 					<span class="-inner">{{ formatDate(item.item.added_on, 'mediumDate') }}</span>
 				</div>
-				<!--TODO(component-setup-refactor): type mismatch error on :item-->
 				<AppCommunityActivityItem
 					:item="item.item"
 					:usersplit="item.usersplit"

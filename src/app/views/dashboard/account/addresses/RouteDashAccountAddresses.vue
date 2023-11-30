@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import {
 	createAppRoute,
@@ -20,7 +20,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useAccountRouteController()!;
+const { heading } = useAccountRouteController()!;
 
 const billingAddresses = ref<UserAddressModel[]>([]);
 
@@ -29,9 +29,9 @@ function onRemove(address: UserAddressModel) {
 }
 
 const { isBootstrapped } = createAppRoute({
-	routeTitle: computed(() => routeStore.heading.value),
+	routeTitle: heading,
 	onInit() {
-		routeStore.heading.value = $gettext('Saved Addresses');
+		heading.value = $gettext('Saved Addresses');
 	},
 	onResolved({ payload }) {
 		billingAddresses.value = UserAddressModel.populate(payload.billingAddresses);

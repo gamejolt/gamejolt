@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { ref, toRef } from 'vue';
 import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
@@ -32,14 +32,14 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useAccountRouteController()!;
+const { heading } = useAccountRouteController()!;
 
 const isBlocking = ref(false);
 const blocks = ref<UserBlockModel[]>([]);
 const totalCount = ref(0);
 const isLoadingMore = ref(false);
 
-const shouldShowLoadMore = computed(
+const shouldShowLoadMore = toRef(
 	() => blocks.value.length < totalCount.value && !isLoadingMore.value
 );
 
@@ -91,9 +91,9 @@ async function onClickUnblock(block: UserBlockModel) {
 }
 
 const { isBootstrapped, isLoading } = createAppRoute({
-	routeTitle: computed(() => routeStore.heading.value),
+	routeTitle: heading,
 	onInit() {
-		routeStore.heading.value = $gettext(`Blocked Users`);
+		heading.value = $gettext(`Blocked Users`);
 	},
 	onResolved({ payload }) {
 		blocks.value = UserBlockModel.populate(payload.blocks);

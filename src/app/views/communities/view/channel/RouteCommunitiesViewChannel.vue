@@ -1,14 +1,21 @@
 <script lang="ts">
-import { computed, toRef } from 'vue';
+import { defineAsyncComponent, toRef } from 'vue';
+import { router } from '../../..';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import {
+	asyncRouteLoader,
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
-import RouteCommunitiesViewChannelFeed from './RouteCommunitiesViewChannelFeed.vue';
-import RouteCommunitiesViewChannelJam from './RouteCommunitiesViewChannelJam.vue';
+
+const RouteCommunitiesViewChannelFeed = defineAsyncComponent(() =>
+	asyncRouteLoader(router, import('./RouteCommunitiesViewChannelFeed.vue'))
+);
+const RouteCommunitiesViewChannelJam = defineAsyncComponent(() =>
+	asyncRouteLoader(router, import('./RouteCommunitiesViewChannelJam.vue'))
+);
 
 /**
  * Route dependencies for channel-type pages.
@@ -18,6 +25,7 @@ export const CommunitiesViewChannelDeps = {
 	params: ['path', 'channel'],
 	query: ['sort', 'feed_last_id'],
 };
+
 export default {
 	...defineAppRouteOptions({
 		deps: { params: ['path', 'channel'] },
@@ -34,7 +42,6 @@ const routeStore = useCommunityRouteStore()!;
 const channel = toRef(() => routeStore.channel);
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
 		if (payload.channel) {
 			const newChannel = new CommunityChannelModel(payload.channel);

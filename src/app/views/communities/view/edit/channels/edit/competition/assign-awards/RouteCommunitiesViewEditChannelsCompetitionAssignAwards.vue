@@ -62,7 +62,6 @@ function onUnassignAward(awardId: number) {
 }
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
 		awards.value = CommunityCompetitionAwardModel.populate(payload.awards);
 		isLoading.value = false;
@@ -84,8 +83,9 @@ createAppRoute({
 			<div class="alert">
 				<p>
 					{{
-						$gettext(`You have created no awards for this jam yet. Go over to the Voting section
-						to create awards.`)
+						$gettext(
+							`You have created no awards for this jam yet. Go over to the Voting section to create awards.`
+						)
 					}}
 				</p>
 				<AppButton
@@ -100,8 +100,9 @@ createAppRoute({
 		<template v-else>
 			<p v-if="noAwardSelected">
 				{{
-					$gettext(`These are the awards you've created. Select an award below to choose which
-					entries to give it to.`)
+					$gettext(
+						`These are the awards you've created. Select an award below to choose which entries to give it to.`
+					)
 				}}
 			</p>
 
@@ -122,8 +123,6 @@ createAppRoute({
 					{{ award.name }}
 				</AppButton>
 			</div>
-			<!--TODO(component-setup-refactor-routes-0): revisit error below@
-			Type '{ onAssign: any; onUnassign: any; }' has no properties in common with type 'AllowedComponentProps & ...-->
 			<RouterView @assign="onAssignAward($event)" @unassign="onUnassignAward($event)" />
 		</template>
 	</div>

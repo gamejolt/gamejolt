@@ -36,25 +36,22 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const store = useAppStore();
 const routeStore = useCommunityRouteStore()!;
-const route = useRoute();
-const router = useRouter();
+const { communityStates } = useAppStore();
 const { grid } = useGridStore();
 const { user } = useCommonStore();
+const route = useRoute();
+const router = useRouter();
 
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 const isBootstrapped = ref(false);
 
-const communityStates = toRef(() => store.communityStates);
 const community = toRef(() => routeStore.community);
 const channel = toRef(() => routeStore.channel);
 const channelPath = toRef(() => routeStore.channelPath!);
 
 const sort = computed(() => getFeedChannelSort(route));
-const communityState = computed(() =>
-	communityStates.value.value.getCommunityState(community.value)
-);
+const communityState = computed(() => communityStates.value.getCommunityState(community.value));
 
 const routeTitle = computed(() => {
 	if (!channel.value) {
@@ -145,7 +142,7 @@ function pushViewToGrid() {
 
 function onPostAdded(post: FiresidePostModel) {
 	ActivityFeedService.onPostAdded({
-		feed: feed.value! as ActivityFeedView,
+		feed: feed.value!,
 		post,
 		route: route,
 		router: router,
@@ -153,9 +150,8 @@ function onPostAdded(post: FiresidePostModel) {
 	});
 }
 
-// TODO(component-setup-refactor-routes-0): is it okay feeding the appRoute into onPostAdded()?
 const appRoute = createAppRoute({
-	routeTitle: routeTitle.value,
+	routeTitle,
 	disableTitleSuffix: true,
 	onInit() {
 		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);

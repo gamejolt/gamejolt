@@ -1,5 +1,4 @@
 <script lang="ts">
-import { computed } from 'vue';
 import { RouterView } from 'vue-router';
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import {
@@ -12,15 +11,15 @@ import AppCommunitiesEditCompetitionNav from './_nav/nav.vue';
 
 export default {
 	...defineAppRouteOptions({
-		// A lot of components and displays in the child routes need timezone info, so just fetch it here.
+		// A lot of components and displays in the child routes need timezone
+		// info, so just fetch it here.
 		resolver: () => Timezone.getTimezones(),
 	}),
-	components: { AppNavTabList },
 };
+</script>
 
-createAppRoute({
-	routeTitle: computed(() => ``),
-});
+<script lang="ts" setup>
+createAppRoute({});
 </script>
 
 <template>

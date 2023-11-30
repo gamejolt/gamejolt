@@ -14,6 +14,7 @@ import { showCommunityCompetitionHeaderModal } from '../../../../../../component
 import AppPageHeader from '../../../../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../../../../components/page-header/controls/controls.vue';
 import { useCommunityRouteStore } from '../../../view.store';
+
 export default {
 	...defineAppRouteOptions({
 		deps: { params: ['id', 'channel'] },
@@ -28,19 +29,11 @@ export default {
 <script lang="ts" setup>
 const routeStore = useCommunityRouteStore()!;
 
-const competition = toRef(() => {
-	return routeStore.competition;
-});
+const competition = toRef(() => routeStore.competition);
+const channel = toRef(() => routeStore.channel!);
+const canEditHeader = toRef(() => !!competition.value);
 
-const channel = toRef(() => {
-	return routeStore.channel!;
-});
-
-const canEditHeader = toRef(() => {
-	return !!competition.value;
-});
-
-const pageHeaderProps = toRef(() => {
+const pageHeaderProps = computed(() => {
 	if (!competition.value) {
 		return {};
 	}
@@ -57,7 +50,6 @@ async function onClickEditHeader() {
 }
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
 		if (payload.channel) {
 			const newChannel = new CommunityChannelModel(payload.channel);

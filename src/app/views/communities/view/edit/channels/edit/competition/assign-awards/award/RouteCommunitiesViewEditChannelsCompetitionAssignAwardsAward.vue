@@ -37,6 +37,23 @@ type Payload = {
 	perPage: number;
 	entryCount: number;
 };
+
+function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '') {
+	let url = `/web/dash/communities/competitions/awards/view/${route.params.awardId}`;
+	let query = '';
+
+	if (page !== 1) {
+		query += '?page=' + page;
+	}
+	if (filterValue) {
+		query += query === '' ? '?' : '&';
+		query += 'q=' + filterValue;
+	}
+
+	url += query;
+
+	return Api.sendRequest<Payload>(url);
+}
 </script>
 
 <script lang="ts" setup>
@@ -55,7 +72,8 @@ const perPage = ref(50);
 const isLoading = ref(true);
 const filterValue = ref('');
 const page = ref(1);
-const filterDispatcher = ref<NodeJS.Timer | undefined>(undefined);
+
+let filterDispatcher: NodeJS.Timer | undefined;
 
 const noAwards = toRef(() => awardedEntries.value.length === 0);
 const unassignedCount = toRef(() => entryCount.value - awardedEntries.value.length);
@@ -79,37 +97,20 @@ function handlePayload(payload: Payload) {
 	isLoading.value = false;
 }
 
-function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '') {
-	let url = `/web/dash/communities/competitions/awards/view/${route.params.awardId}`;
-	let query = '';
-
-	if (page !== 1) {
-		query += '?page=' + page;
-	}
-	if (filterValue) {
-		query += query === '' ? '?' : '&';
-		query += 'q=' + filterValue;
-	}
-
-	url += query;
-
-	return Api.sendRequest(url);
-}
-
 function onClickShowEntry(entry: CommunityCompetitionEntryModel) {
 	showEntryFromCommunityCompetitionEntryModal(entry);
 }
 
 function onFilterInput(event: InputEvent) {
-	if (filterDispatcher.value) {
-		clearTimeout(filterDispatcher.value);
-		filterDispatcher.value = undefined;
+	if (filterDispatcher) {
+		clearTimeout(filterDispatcher);
+		filterDispatcher = undefined;
 	}
 
 	const currFilterValue = (event.target as HTMLInputElement).value;
 	if (currFilterValue !== filterValue.value) {
 		filterValue.value = currFilterValue;
-		filterDispatcher.value = setTimeout(() => executeFilter(), 500);
+		filterDispatcher = setTimeout(() => executeFilter(), 500);
 	}
 }
 
@@ -162,26 +163,25 @@ async function onPageChanged(newPage: number) {
 }
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onInit() {
 		// When clicking an award in the parent route, this route gets recreated.
 		isLoading.value = true;
 		filterValue.value = '';
 		page.value = 1;
 
-		if (filterDispatcher.value) {
-			clearTimeout(filterDispatcher.value);
-			filterDispatcher.value = undefined;
-		}
-	},
-	onDestroyed() {
-		if (filterDispatcher.value) {
-			clearTimeout(filterDispatcher.value);
-			filterDispatcher.value = undefined;
+		if (filterDispatcher) {
+			clearTimeout(filterDispatcher);
+			filterDispatcher = undefined;
 		}
 	},
 	onResolved({ payload }) {
 		handlePayload(payload);
+	},
+	onDestroyed() {
+		if (filterDispatcher) {
+			clearTimeout(filterDispatcher);
+			filterDispatcher = undefined;
+		}
 	},
 });
 </script>
@@ -198,8 +198,9 @@ createAppRoute({
 				<div v-if="awardedEntries.length > 1" class="alert">
 					<p>
 						{{
-							$gettext(`You can sort the entries within this award to decide their order on the
-							Games page.`)
+							$gettext(
+								`You can sort the entries within this award to decide their order on the Games page.`
+							)
 						}}
 					</p>
 				</div>

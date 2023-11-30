@@ -68,10 +68,48 @@ export default {
 				url += param[0] + '=' + param[1];
 			}
 
-			return Api.sendRequest(url);
+			return Api.sendRequest<Payload>(url);
 		},
 	}),
 };
+
+function getValidPageQueryParam(route: RouteLocationNormalized) {
+	const paramValue = route.query.page;
+	if (typeof paramValue === 'string') {
+		const pageNum = parseInt(paramValue, 10);
+		if (pageNum >= 1) {
+			return pageNum;
+		}
+	} else if (typeof paramValue === 'number') {
+		const pageNum = Math.round(paramValue);
+		if (pageNum >= 1) {
+			return pageNum;
+		}
+	}
+
+	return null;
+}
+
+function getValidSortQueryParam(route: RouteLocationNormalized) {
+	const paramValue = route.query.sort;
+	if (
+		typeof paramValue === 'string' &&
+		['name', 'time', 'user', 'visibility'].includes(paramValue)
+	) {
+		return paramValue;
+	}
+
+	return null;
+}
+
+function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
+	const paramValue = route.query['sort-direction'];
+	if (typeof paramValue === 'string' && ['asc', 'desc'].includes(paramValue)) {
+		return paramValue;
+	}
+
+	return null;
+}
 </script>
 
 <script lang="ts" setup>
@@ -86,7 +124,7 @@ const perPage = ref(50);
 const competition = toRef(() => routeStore.competition!);
 const sortIcon = toRef(() => (isSortInAscendingDirection.value ? 'chevron-up' : 'chevron-down'));
 
-const sortDirectionLabel = toRef(() =>
+const sortDirectionLabel = computed(() =>
 	isSortInAscendingDirection.value ? $gettext('Ascending') : $gettext('Descending')
 );
 
@@ -163,46 +201,7 @@ async function onClickRemoveEntry(entry: CommunityCompetitionEntryModel) {
 	}
 }
 
-function getValidPageQueryParam(route: RouteLocationNormalized) {
-	const paramValue = route.query.page;
-	if (typeof paramValue === 'string') {
-		const pageNum = parseInt(paramValue, 10);
-		if (pageNum >= 1) {
-			return pageNum;
-		}
-	} else if (typeof paramValue === 'number') {
-		const pageNum = Math.round(paramValue);
-		if (pageNum >= 1) {
-			return pageNum;
-		}
-	}
-
-	return null;
-}
-
-function getValidSortQueryParam(route: RouteLocationNormalized) {
-	const paramValue = route.query.sort;
-	if (
-		typeof paramValue === 'string' &&
-		['name', 'time', 'user', 'visibility'].includes(paramValue)
-	) {
-		return paramValue;
-	}
-
-	return null;
-}
-
-function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
-	const paramValue = route.query['sort-direction'];
-	if (typeof paramValue === 'string' && ['asc', 'desc'].includes(paramValue)) {
-		return paramValue;
-	}
-
-	return null;
-}
-
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onResolved({ payload }: { payload: Payload }) {
 		entryCount.value = payload.entryCount;
 		entries.value = CommunityCompetitionEntryModel.populate(payload.entries);

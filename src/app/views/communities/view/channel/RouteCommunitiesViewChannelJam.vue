@@ -1,5 +1,6 @@
 <script lang="ts">
-import { computed, ref, toRef } from 'vue';
+import { computed, defineAsyncComponent, ref, toRef } from 'vue';
+import { router } from '../../..';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
@@ -11,6 +12,7 @@ import AppContentViewer from '../../../../../_common/content/content-viewer/AppC
 import { formatDate } from '../../../../../_common/filters/date';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import {
+	asyncRouteLoader,
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
@@ -23,7 +25,10 @@ import AppCommunityCompetitionEntryGrid from '../../../../components/community/c
 import AppCommunityPerms from '../../../../components/community/perms/AppCommunityPerms.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { getChannelPathFromRoute, setCommunityMeta, useCommunityRouteStore } from '../view.store';
-import RouteCommunitiesViewChannelJamEntries from './RouteCommunitiesViewChannelJamEntries.vue';
+
+const RouteCommunitiesViewChannelJamEntries = defineAsyncComponent(() =>
+	asyncRouteLoader(router, import('./RouteCommunitiesViewChannelJamEntries.vue'))
+);
 
 export default {
 	...defineAppRouteOptions({
@@ -76,7 +81,7 @@ const shouldShowUserSubmissions = computed(() => {
 	return true;
 });
 
-const canSubmitEntry = computed(
+const canSubmitEntry = toRef(
 	() =>
 		competition.value?.period === 'running' &&
 		channel.value?.visibility === 'published' &&
@@ -125,7 +130,7 @@ function onEntryRemoved(entry: CommunityCompetitionEntryModel) {
 	}
 }
 createAppRoute({
-	routeTitle: routeTitle,
+	routeTitle,
 	disableTitleSuffix: true,
 	onResolved({ payload }) {
 		if (payload.entries) {
