@@ -1,9 +1,9 @@
 <script lang="ts">
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppAdFeedBeacon from '../../../../_common/ad/AppAdFeedBeacon.vue';
 import AppAdStickyRail from '../../../../_common/ad/AppAdStickyRail.vue';
-import { isAdEnthused, useAdsController } from '../../../../_common/ad/ad-store';
+import { isAdEnthused, useAdStore } from '../../../../_common/ad/ad-store';
+import AppAdFeedBeacon from '../../../../_common/ad/feed-beacon/AppAdFeedBeacon.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -55,14 +55,14 @@ const emit = defineEmits({
 	load: () => true,
 });
 
-const ads = useAdsController();
+const { shouldShow: globalShouldShowAds } = useAdStore();
 </script>
 
 <template>
 	<div id="games" class="game-listing">
 		<section class="section section-thin">
-			<template v-if="showAds && ads.shouldShow && isAdEnthused">
-				<AppAdFeedBeacon :ping="listing.currentPage" />
+			<template v-if="showAds && globalShouldShowAds && isAdEnthused">
+				<AppAdFeedBeacon />
 
 				<AppAdWidget size="leaderboard" placement="content" />
 				<AppSpacer vertical :scale="6" />
