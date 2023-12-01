@@ -1,12 +1,13 @@
-<script lang="ts">
-import { nextTick, toRaw, watch } from 'vue';
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, nextTick, ref, toRaw, toRefs, watch } from 'vue';
+import { run } from '../../../utils/utils';
 import { Api } from '../../api/api.service';
 import AppColorpicker from '../../colorpicker/AppColorpicker.vue';
 import AppLoading from '../../loading/AppLoading.vue';
 import { SiteTemplateModel } from '../../site/template/template-model';
-import AppThemeEditorFontSelector from './font-selector.vue';
-import AppThemeEditorImage from './image.vue';
+import { $gettext } from '../../translate/translate.service';
+import AppThemeEditorFontSelector from './AppThemeEditorFontSelector.vue';
+import AppThemeEditorImage from './AppThemeEditorImage.vue';
 
 interface StyleGroup {
 	name: string;
@@ -16,79 +17,87 @@ interface StyleGroup {
 	}[];
 }
 
-@Options({
-	components: {
-		AppLoading,
-		AppThemeEditorFontSelector,
-		AppThemeEditorImage,
-		AppColorpicker,
+const props = defineProps({
+	windowId: {
+		type: String,
+		required: true,
 	},
-})
-export default class AppThemeEditor extends Vue {
-	@Prop(String) windowId!: string;
-	@Prop(Number) template!: number;
-	@Prop(Object) theme!: any;
-	@Prop(Number) resourceId!: number;
+	template: {
+		type: Number,
+		required: true,
+	},
+	theme: {
+		type: Object as PropType<any>,
+		required: true,
+	},
+	resourceId: {
+		type: Number,
+		required: true,
+	},
+});
 
-	isLoaded = false;
+const emit = defineEmits({
+	change: (_theme: any) => true,
+});
 
-	selectedGroup: StyleGroup = null as any;
-	templateObj: SiteTemplateModel = {} as any;
-	definition: any = {};
+const { windowId, template, theme, resourceId } = toRefs(props);
 
-	@Emit('change')
-	emitChange(_theme: any) {}
+const isLoaded = ref(false);
+const selectedGroup = ref<StyleGroup>(null as any);
+const templateObj = ref<SiteTemplateModel>({} as any);
+const definition = ref<any>({});
 
-	async created() {
-		const response = await Api.sendRequest(
-			'/sites-io/get-template/' + this.template,
-			undefined,
-			{
-				detach: true,
-			}
-		);
+run(async () => {
+	const response = await Api.sendRequest('/sites-io/get-template/' + template.value, undefined, {
+		detach: true,
+	});
 
-		this.isLoaded = true;
+	isLoaded.value = true;
 
-		this.templateObj = new SiteTemplateModel(response.template);
-		this.definition = this.templateObj.data;
-		this.selectedGroup = this.definition.styleGroups[0];
+	templateObj.value = new SiteTemplateModel(response.template);
+	definition.value = templateObj.value.data;
+	selectedGroup.value = definition.value.styleGroups[0];
 
-		// Make sure we update the page with the current theme.
-		this.refresh(true);
+	// Make sure we update the page with the current theme.
+	refresh(true);
+});
 
-		watch(
-			() => this.theme,
-			() => this.refresh(),
-			{ deep: true }
-		);
-	}
-
-	async refresh(initial = false) {
-		// Gotta wait for the value to be saved.
-		await nextTick();
-
-		const iframe = document.getElementById(this.windowId) as HTMLIFrameElement | undefined;
-		if (iframe && iframe.contentWindow) {
-			const msg = {
-				type: 'theme-update',
-				template: toRaw(this.templateObj),
-				definition: toRaw(this.definition),
-				theme: toRaw(this.theme),
-			};
-
-			iframe.contentWindow.postMessage(msg, '*');
+watch(
+	() => theme.value,
+	() => {
+		if (!isLoaded.value) {
+			return;
 		}
 
-		if (!initial) {
-			this.emitChange(this.theme);
-		}
+		refresh();
+	},
+	{ deep: true }
+);
+
+async function refresh(initial = false) {
+	// Gotta wait for the value to be saved.
+	await nextTick();
+
+	const iframe = document.getElementById(windowId.value) as HTMLIFrameElement | undefined;
+	if (iframe && iframe.contentWindow) {
+		const msg = {
+			type: 'theme-update',
+			template: toRaw(templateObj.value),
+			definition: toRaw(definition.value),
+			theme: toRaw(theme.value),
+		};
+
+		iframe.contentWindow.postMessage(msg, '*');
 	}
 
-	updateField(field: string, content?: string) {
-		this.theme[field] = content;
-		this.refresh();
+	if (!initial) {
+		emit('change', theme.value);
 	}
+}
+
+function updateField(field: string, content?: string) {
+	theme.value[field] = content;
+	refresh();
 }
 </script>
 
@@ -141,7 +150,7 @@ export default class AppThemeEditor extends Vue {
 									class="clear-link"
 									@click="updateField(definitionField, undefined)"
 								>
-									<AppTranslate>clear</AppTranslate>
+									{{ $gettext(`clear`) }}
 								</a>
 								<AppColorpicker v-model="theme[definitionField]" />
 							</div>
@@ -192,16 +201,16 @@ export default class AppThemeEditor extends Vue {
 							>
 								<select v-model="theme[definitionField]" class="form-control">
 									<option :value="undefined">
-										<AppTranslate>Repeat</AppTranslate>
+										{{ $gettext(`Repeat`) }}
 									</option>
 									<option value="repeat-x">
-										<AppTranslate>Repeat Horizontal</AppTranslate>
+										{{ $gettext(`Repeat Horizontal`) }}
 									</option>
 									<option value="repeat-y">
-										<AppTranslate>Repeat Vertical</AppTranslate>
+										{{ $gettext(`Repeat Vertical`) }}
 									</option>
 									<option value="no-repeat">
-										<AppTranslate>Don't Repeat</AppTranslate>
+										{{ $gettext(`Don't Repeat`) }}
 									</option>
 								</select>
 							</div>
@@ -216,13 +225,13 @@ export default class AppThemeEditor extends Vue {
 							>
 								<select v-model="theme[definitionField]" class="form-control">
 									<option :value="undefined">
-										<AppTranslate>Auto (Default)</AppTranslate>
+										{{ $gettext(`Auto (Default)`) }}
 									</option>
 									<option value="cover">
-										<AppTranslate>Cover</AppTranslate>
+										{{ $gettext(`Cover`) }}
 									</option>
 									<option value="contain">
-										<AppTranslate>Contain</AppTranslate>
+										{{ $gettext(`Contain`) }}
 									</option>
 								</select>
 							</div>
@@ -237,29 +246,31 @@ export default class AppThemeEditor extends Vue {
 							>
 								<select v-model="theme[definitionField]" class="form-control">
 									<option :value="undefined">
-										<AppTranslate>Top</AppTranslate>
+										{{ $gettext(`Top`) }}
 									</option>
 									<option value="topLeft">
-										<AppTranslate>Top Left</AppTranslate>
+										{{ $gettext(`Top Left`) }}
 									</option>
 									<option value="right">
-										<AppTranslate>Right</AppTranslate>
+										{{ $gettext(`Right`) }}
 									</option>
 									<option value="topRight">
-										<AppTranslate>Top Right</AppTranslate>
+										{{ $gettext(`Top Right`) }}
 									</option>
 									<option value="bottomRight">
-										<AppTranslate>Bottom Right</AppTranslate>
+										{{ $gettext(`Bottom Right`) }}
 									</option>
 									<option value="bottom">
-										<AppTranslate>Bottom</AppTranslate>
+										{{ $gettext(`Bottom`) }}
 									</option>
 									<option value="bottomLeft">
-										<AppTranslate>Bottom Left</AppTranslate>
+										{{ $gettext(`Bottom Left`) }}
 									</option>
-									<option value="left"><AppTranslate>Left</AppTranslate></option>
+									<option value="left">
+										{{ $gettext(`Left`) }}
+									</option>
 									<option value="center">
-										<AppTranslate>Center</AppTranslate>
+										{{ $gettext(`Center`) }}
 									</option>
 								</select>
 							</div>

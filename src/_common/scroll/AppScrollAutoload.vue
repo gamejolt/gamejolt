@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { nextTick, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import { queuedThrottle } from '../../utils/utils';
 import AppLoading from '../loading/AppLoading.vue';
@@ -8,7 +8,9 @@ const InviewConfig = new ScrollInviewConfig({
 	emitsOn: 'partial-overlap',
 	margin: '0px 0px 300px 0px',
 });
+</script>
 
+<script lang="ts" setup>
 const props = defineProps({
 	loadMore: {
 		type: Function as PropType<() => Promise<void>>,

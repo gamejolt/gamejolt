@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppAdFeedBeacon from '../../../../_common/ad/AppAdFeedBeacon.vue';
@@ -21,6 +21,10 @@ import AppGameFilteringWidget from '../filtering/widget.vue';
 import AppGameGridPlaceholder from '../grid/AppGameGridPlaceholder.vue';
 import { GameListingContainer } from './listing-container-service';
 
+const InviewConfig = new ScrollInviewConfig();
+</script>
+
+<script lang="ts" setup>
 defineProps({
 	listing: {
 		type: Object as PropType<GameListingContainer>,
@@ -52,7 +56,6 @@ const emit = defineEmits({
 });
 
 const ads = useAdsController();
-const InviewConfig = new ScrollInviewConfig();
 </script>
 
 <template>

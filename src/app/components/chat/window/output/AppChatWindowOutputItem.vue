@@ -38,7 +38,6 @@ export interface ChatMessageEditEvent {
 }
 
 const InviewConfig = new ScrollInviewConfig();
-
 const DisplayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 });
 </script>
 

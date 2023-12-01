@@ -1,10 +1,11 @@
 <script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+import { PropType, computed, ref, toRef, toRefs } from 'vue';
 import {
 	FiresidePostEmbedModel,
 	TYPE_SKETCHFAB,
 	TYPE_YOUTUBE,
 } from '../../../../../_common/fireside/post/embed/embed.model';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import AppResponsiveDimensions from '../../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -12,150 +13,140 @@ import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/AppSketchfabEmbed.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px` });
+</script>
 
-@Options({
-	components: {
-		AppVideoEmbed,
-		AppScrollInview,
-		AppResponsiveDimensions,
-		AppSketchfabEmbed,
+<script lang="ts" setup>
+const props = defineProps({
+	embed: {
+		type: Object as PropType<FiresidePostEmbedModel>,
+		required: true,
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
+	hideOutview: {
+		type: Boolean,
+		default: true,
 	},
-})
-export default class AppFiresidePostEmbed extends Vue {
-	@Prop({ type: Object, required: true }) embed!: FiresidePostEmbedModel;
-	@Prop({ type: Boolean, default: true }) hideOutview!: boolean;
+});
 
-	readonly InviewConfig = InviewConfig;
-	readonly TYPE_YOUTUBE = TYPE_YOUTUBE;
-	readonly TYPE_SKETCHFAB = TYPE_SKETCHFAB;
+const { embed, hideOutview } = toRefs(props);
 
-	isOpen = false;
-	shouldAutoplay = true;
-	isInview = true;
+const isOpen = ref(false);
+const shouldAutoplay = ref(true);
+const isInview = ref(true);
 
-	get shouldShow() {
-		return this.embed.type === TYPE_YOUTUBE || this.embed.type === TYPE_SKETCHFAB;
+const shouldShow = toRef(
+	() => embed.value.type === TYPE_YOUTUBE || embed.value.type === TYPE_SKETCHFAB
+);
+
+const thumbUrl = computed(() => {
+	if (embed.value.metadata && embed.value.metadata.image_media_item) {
+		return embed.value.metadata.image_media_item.mediaserver_url;
 	}
 
-	get thumbUrl() {
-		if (this.embed.metadata && this.embed.metadata.image_media_item) {
-			return this.embed.metadata.image_media_item.mediaserver_url;
-		}
-
-		switch (this.embed.type) {
-			case TYPE_YOUTUBE: {
-				const videoId = this.embed.extraData.videoId;
-				return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
-			}
-		}
-
-		return undefined;
-	}
-
-	get title() {
-		if (this.embed.metadata && this.embed.metadata.title) {
-			return this.embed.metadata.title;
-		}
-
-		switch (this.embed.type) {
-			case TYPE_YOUTUBE:
-				return this.$gettext(`YouTube`);
-			case TYPE_SKETCHFAB:
-				return this.$gettext(`Sketchfab`);
-			default:
-				return undefined;
+	switch (embed.value.type) {
+		case TYPE_YOUTUBE: {
+			const videoId = embed.value.extraData.videoId;
+			return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 		}
 	}
 
-	get website() {
-		if (this.embed.metadata && this.embed.metadata.site_url) {
-			// Node SSR doesn't support the URL api.
-			if (import.meta.env.SSR) {
-				return this.embed.metadata.site_url;
-			}
+	return undefined;
+});
 
-			const url = new URL(this.embed.metadata.site_url);
-			let website = url.hostname;
-			if (
-				this.embed.metadata.site_name &&
-				this.embed.metadata.site_name !== this.embed.metadata.url
-			) {
-				website = this.embed.metadata.site_name + ' | ' + website;
-			}
-			return website;
-		}
-
-		switch (this.embed.type) {
-			case TYPE_YOUTUBE:
-				return 'youtube.com';
-			case TYPE_SKETCHFAB:
-				return 'sketchfab.com';
-			default:
-				return undefined;
-		}
+const title = computed(() => {
+	if (embed.value.metadata && embed.value.metadata.title) {
+		return embed.value.metadata.title;
 	}
 
-	get description() {
-		if (this.embed.metadata) {
-			if (this.embed.metadata.description) {
-				return this.embed.metadata.description.replace('\n', ' ');
-			}
+	switch (embed.value.type) {
+		case TYPE_YOUTUBE:
+			return $gettext(`YouTube`);
+		case TYPE_SKETCHFAB:
+			return $gettext(`Sketchfab`);
+		default:
+			return undefined;
+	}
+});
 
-			if (this.embed.metadata.site_name) {
-				return this.embed.metadata.site_name;
-			}
-
-			return this.embed.metadata.site_url;
+const website = computed(() => {
+	if (embed.value.metadata && embed.value.metadata.site_url) {
+		// Node SSR doesn't support the URL api.
+		if (import.meta.env.SSR) {
+			return embed.value.metadata.site_url;
 		}
 
-		return this.embed.url;
+		const url = new URL(embed.value.metadata.site_url);
+		let website = url.hostname;
+		if (
+			embed.value.metadata.site_name &&
+			embed.value.metadata.site_name !== embed.value.metadata.url
+		) {
+			website = embed.value.metadata.site_name + ' | ' + website;
+		}
+		return website;
 	}
 
-	get shouldShowEmbedContent() {
-		return this.isInview || !this.hideOutview;
+	switch (embed.value.type) {
+		case TYPE_YOUTUBE:
+			return 'youtube.com';
+		case TYPE_SKETCHFAB:
+			return 'sketchfab.com';
+		default:
+			return undefined;
 	}
+});
 
-	get imageAlt() {
-		return this.embed.metadata?.image_alt;
-	}
-
-	get playIcon() {
-		switch (this.embed.type) {
-			case TYPE_SKETCHFAB:
-				return 'sketchfab';
-			case TYPE_YOUTUBE:
-				return 'play';
+const description = computed(() => {
+	if (embed.value.metadata) {
+		if (embed.value.metadata.description) {
+			return embed.value.metadata.description.replace('\n', ' ');
 		}
 
-		return 'blog-article';
+		if (embed.value.metadata.site_name) {
+			return embed.value.metadata.site_name;
+		}
+
+		return embed.value.metadata.site_url;
 	}
 
-	onClick() {
-		if (this.embed.is_processing) {
-			return;
-		}
+	return embed.value.url;
+});
 
-		if (!this.isOpen) {
-			this.isOpen = true;
-		} else {
-			Navigate.newWindow(this.embed.url);
-		}
+const shouldShowEmbedContent = toRef(() => isInview.value || !hideOutview.value);
+const imageAlt = toRef(() => embed.value.metadata?.image_alt);
+
+const playIcon = computed(() => {
+	switch (embed.value.type) {
+		case TYPE_SKETCHFAB:
+			return 'sketchfab';
+		case TYPE_YOUTUBE:
+			return 'play';
 	}
 
-	onInviewChanged(isInview: boolean) {
-		this.isInview = isInview;
+	return 'blog-article';
+});
 
-		// Disable autoplay when it was already opened
-		if (!isInview && this.isOpen) {
-			this.shouldAutoplay = false;
-		}
+function onClick() {
+	if (embed.value.is_processing) {
+		return;
+	}
+
+	if (!isOpen.value) {
+		isOpen.value = true;
+	} else {
+		Navigate.newWindow(embed.value.url);
+	}
+}
+
+function onInviewChanged(isInviewNew: boolean) {
+	isInview.value = isInviewNew;
+
+	// Disable autoplay when it was already opened
+	if (!isInviewNew && isOpen.value) {
+		shouldAutoplay.value = false;
 	}
 }
 </script>
@@ -248,7 +239,8 @@ export default class AppFiresidePostEmbed extends Vue {
 </template>
 
 <style lang="stylus" scoped>
-@import './variables'
+// TODO(component-setup-refactor-2): can we remove these imports,
+// seemed like not used here?
 
 .-embed
 	full-bleed-xs()
