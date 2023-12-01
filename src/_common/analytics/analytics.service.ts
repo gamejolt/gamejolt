@@ -567,7 +567,7 @@ export function trackGiftAction(
 ) {
 	_trackEvent('gift_action', {
 		...params,
-		currency: 'currency' in params ? params.currency?.id : undefined,
+		currency: 'currency' in params ? params.currency.id : undefined,
 	});
 }
 

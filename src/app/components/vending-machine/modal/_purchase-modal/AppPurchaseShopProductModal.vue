@@ -379,7 +379,7 @@ async function purchaseProduct(currency: Currency) {
 
 	const baseData = {
 		sale: sale.value,
-		storeStickers: stickerPacks,
+		stickerPacks,
 		currency,
 		balanceRefs,
 		onSuccess,

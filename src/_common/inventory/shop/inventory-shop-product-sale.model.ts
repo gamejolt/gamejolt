@@ -97,7 +97,7 @@ interface PurchaseData {
 	sale: InventoryShopProductSaleModel;
 	currency: Currency;
 	balanceRefs: BalanceRefs;
-	storeStickers: Ref<UserStickerPackModel[]>;
+	stickerPacks: Ref<UserStickerPackModel[]>;
 	beforeRequest?: () => void;
 	onSuccess?: () => void;
 }
@@ -115,7 +115,7 @@ function _validateCurrency({ sale, currency, balanceRefs }: PurchaseData) {
  * Purchases a shop product without asking for confirmation.
  */
 export async function purchaseShopProduct(data: PurchaseData) {
-	const { sale, currency, storeStickers, balanceRefs, beforeRequest, onSuccess } = data;
+	const { sale, currency, stickerPacks, balanceRefs, beforeRequest, onSuccess } = data;
 
 	const pricing = _validateCurrency(data);
 	if (!pricing) {
@@ -147,7 +147,7 @@ export async function purchaseShopProduct(data: PurchaseData) {
 			balanceRefs,
 			productType: sale.product_type,
 			rawProduct,
-			stickerPacks: storeStickers,
+			stickerPacks,
 			currencyData: {
 				newBalance: response.new_balance,
 				currency,
