@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, toRef } from 'vue';
+import { ref, toRef } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { PaymentSourceModel } from '../../../../../_common/payment-source/payment-source.model';
 import {
@@ -19,7 +19,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useAccountRouteController()!;
+const { heading } = useAccountRouteController()!;
 
 const paymentSources = ref<PaymentSourceModel[]>([]);
 
@@ -30,9 +30,9 @@ function onRemove(source: PaymentSourceModel) {
 }
 
 const { isBootstrapped } = createAppRoute({
-	routeTitle: computed(() => routeStore.heading.value),
+	routeTitle: heading,
 	onInit() {
-		routeStore.heading.value = $gettext(`Payment Methods`);
+		heading.value = $gettext(`Payment Methods`);
 	},
 	onResolved({ payload }) {
 		paymentSources.value = PaymentSourceModel.populate(payload.paymentSources);

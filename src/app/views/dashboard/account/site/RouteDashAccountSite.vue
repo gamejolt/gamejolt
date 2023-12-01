@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import {
 	createAppRoute,
@@ -19,14 +19,14 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useAccountRouteController()!;
+const { heading } = useAccountRouteController()!;
 
 const site = ref<SiteModel>(null as any);
 
 const { isBootstrapped } = createAppRoute({
-	routeTitle: computed(() => routeStore.heading.value),
+	routeTitle: heading,
 	onInit() {
-		routeStore.heading.value = $gettext(`Manage Portfolio Site`);
+		heading.value = $gettext(`Manage Portfolio Site`);
 	},
 	onResolved({ payload }) {
 		site.value = new SiteModel(payload.site);

@@ -24,12 +24,11 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { community } = useCommunityRouteStore()!;
 
 const users = ref<UserModel[]>([]);
 const route = useRoute();
 
-const community = toRef(() => routeStore.community);
 const loadUrl = toRef(() => getFetchUrl(route));
 
 function getFetchUrl(route: RouteLocationNormalized) {
@@ -37,9 +36,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 }
 
 createAppRoute({
-	routeTitle: computed(() =>
-		community.value ? `Members of the ${community.value.name} Community` : null
-	),
+	routeTitle: computed(() => (community ? `Members of the ${community.name} Community` : null)),
 	onResolved({ payload }) {
 		users.value = UserModel.populate(payload.users);
 	},

@@ -49,7 +49,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { competition } = useCommunityRouteStore()!;
+
 const awards = ref<CommunityCompetitionAwardModel[]>([]);
 const votingCategories = ref<CommunityCompetitionVotingCategoryModel[]>([]);
 const activeAward = ref<CommunityCompetitionAwardModel | undefined>(undefined);
@@ -59,25 +60,20 @@ const isShowingVotingCategoryAdd = ref(false);
 const isEditing = ref(false);
 const toggleForm = ref<FormCommunityCompetitionVotingToggle>();
 
-const competition = toRef(() => routeStore.competition!);
 const hasVotingCategories = toRef(() => votingCategories.value.length > 0);
 const hasAwards = toRef(() => awards.value.length > 0);
-const canToggleVoting = toRef(() => competition.value.periodNum < CompetitionPeriodVoting);
-const canEditVoting = toRef(() => competition.value.periodNum < CompetitionPeriodPostComp);
-
+const canToggleVoting = toRef(() => competition!.periodNum < CompetitionPeriodVoting);
+const canEditVoting = toRef(() => competition!.periodNum < CompetitionPeriodPostComp);
+const canEditAwards = toRef(() => competition!.is_voting_enabled && competition!.has_awards);
 const canEditVotingCategories = toRef(
-	() => competition.value.periodNum < CompetitionPeriodVoting && votingCategoriesEnabled.value
-);
-
-const canEditAwards = toRef(
-	() => competition.value.is_voting_enabled && competition.value.has_awards
+	() => competition!.periodNum < CompetitionPeriodVoting && votingCategoriesEnabled.value
 );
 
 const votingCategoriesEnabled = computed(
 	() =>
-		competition.value.is_voting_enabled &&
-		competition.value.has_community_voting &&
-		competition.value.voting_type === 'categories'
+		competition!.is_voting_enabled &&
+		competition!.has_community_voting &&
+		competition!.voting_type === 'categories'
 );
 /**
  * Gets called when voting gets toggled on/off, but has never been set up.
@@ -91,7 +87,7 @@ function onToggleNotSetUp() {
 function onFormCancel() {
 	isEditing.value = false;
 	// Because the form was not submitted, reset voting to disabled when not initialized.
-	if (toggleForm.value && !competition.value.isVotingSetUp) {
+	if (toggleForm.value && !competition!.isVotingSetUp) {
 		toggleForm.value.setField('is_voting_enabled', false);
 	}
 
@@ -124,7 +120,7 @@ async function saveCategorySort(sortedCategories: CommunityCompetitionVotingCate
 	const sortedIds = sortedCategories.map(i => i.id);
 	try {
 		await Api.sendRequest(
-			`/web/dash/communities/competitions/voting-categories/save-sort/${competition.value.id}`,
+			`/web/dash/communities/competitions/voting-categories/save-sort/${competition!.id}`,
 			sortedIds
 		);
 	} catch (e) {
@@ -156,7 +152,7 @@ async function saveAwardSort(sortedAwards: CommunityCompetitionAwardModel[]) {
 
 	const sortedIds = sortedAwards.map(i => i.id);
 	try {
-		await $saveCommunityCompetitionAwardSort(competition.value.id, sortedIds);
+		await $saveCommunityCompetitionAwardSort(competition!.id, sortedIds);
 	} catch (e) {
 		console.error(e);
 		showErrorGrowl($gettext(`Could not save award arrangement.`));
@@ -172,7 +168,6 @@ async function onClickRemoveAward(award: CommunityCompetitionAwardModel) {
 	}
 }
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
 		votingCategories.value = CommunityCompetitionVotingCategoryModel.populate(
 			payload.votingCategories
@@ -195,7 +190,7 @@ createAppRoute({
 			@toggle-not-set-up="onToggleNotSetUp"
 		/>
 
-		<div v-else-if="!competition.is_voting_enabled" class="alert">
+		<div v-else-if="!competition!.is_voting_enabled" class="alert">
 			<p>
 				{{
 					$gettext(
@@ -213,7 +208,7 @@ createAppRoute({
 			/>
 		</template>
 
-		<template v-else-if="competition.is_voting_enabled">
+		<template v-else-if="competition!.is_voting_enabled">
 			<table class="table">
 				<tbody>
 					<tr>
@@ -222,20 +217,20 @@ createAppRoute({
 						</th>
 						<td>
 							<AppCommunityCompetitionDate
-								:date="competition.voting_ends_on"
-								:timezone="competition.timezone"
+								:date="competition!.voting_ends_on"
+								:timezone="competition!.timezone"
 							/>
 							<span class="help-inline">
-								<template v-if="competition.periodNum <= CompetitionPeriodVoting">
+								<template v-if="competition!.periodNum <= CompetitionPeriodVoting">
 									({{ $gettext(`in`) }}
 									<AppTimeAgo
 										without-suffix
 										is-future
-										:date="competition.voting_ends_on"
+										:date="competition!.voting_ends_on"
 									/>)
 								</template>
 								<template v-else>
-									(<AppTimeAgo :date="competition.voting_ends_on" />)
+									(<AppTimeAgo :date="competition!.voting_ends_on" />)
 								</template>
 							</span>
 						</td>
@@ -245,7 +240,10 @@ createAppRoute({
 							{{ $gettext(`Community voting?`) }}
 						</th>
 						<td>
-							<span v-if="competition.has_community_voting" class="tag tag-highlight">
+							<span
+								v-if="competition!.has_community_voting"
+								class="tag tag-highlight"
+							>
 								{{ $gettext(`On`) }}
 							</span>
 							<span v-else class="tag">
@@ -253,13 +251,13 @@ createAppRoute({
 							</span>
 						</td>
 					</tr>
-					<template v-if="competition.has_community_voting">
+					<template v-if="competition!.has_community_voting">
 						<tr>
 							<th>
 								{{ $gettext(`Who can vote?`) }}
 							</th>
 							<td>
-								<template v-if="competition.voting_user_restriction === 'users'">
+								<template v-if="competition!.voting_user_restriction === 'users'">
 									{{ $gettext(`Any Game Jolt user`) }}
 								</template>
 								<template v-else>
@@ -272,7 +270,7 @@ createAppRoute({
 								{{ $gettext(`Voting type`) }}
 							</th>
 							<td>
-								<template v-if="competition.voting_type === 'overall'">
+								<template v-if="competition!.voting_type === 'overall'">
 									{{ $gettext(`Overall`) }}
 								</template>
 								<template v-else>
@@ -286,7 +284,7 @@ createAppRoute({
 							{{ $gettext(`Awards?`) }}
 						</th>
 						<td>
-							<span v-if="competition.has_awards" class="tag tag-highlight">
+							<span v-if="competition!.has_awards" class="tag tag-highlight">
 								{{ $gettext(`On`) }}
 							</span>
 							<span v-else class="tag">

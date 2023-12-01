@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, toRef } from 'vue';
+import { ref, toRef } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
@@ -33,23 +33,22 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { community } = useCommunityRouteStore()!;
 
 const maxLinkedGames = ref(10);
 const hasMoreGamesToLink = ref(false);
 
-const community = toRef(() => routeStore.community);
-const hasLinkedGames = toRef(() => community.value.games && community.value.games.length > 0);
+const hasLinkedGames = toRef(() => community.games && community.games.length > 0);
 const canLinkNewGames = toRef(
-	() => community.value.games && community.value.games.length < maxLinkedGames.value
+	() => community.games && community.games.length < maxLinkedGames.value
 );
 
 async function saveSort(sortedGames: GameModel[]) {
 	// Reorder the games to see the result of the ordering right away.
-	community.value.games!.splice(0, community.value.games!.length, ...sortedGames);
+	community.games!.splice(0, community.games!.length, ...sortedGames);
 
 	try {
-		await $saveCommunityGameSort(community.value);
+		await $saveCommunityGameSort(community);
 	} catch (e) {
 		console.error(e);
 		showErrorGrowl($gettext(`Could not save game arrangement.`));
@@ -57,7 +56,7 @@ async function saveSort(sortedGames: GameModel[]) {
 }
 
 async function onClickLinkGame() {
-	const game = await showCommunityLinkGameModal(community.value);
+	const game = await showCommunityLinkGameModal(community);
 	if (!game) {
 		return;
 	}
@@ -66,14 +65,14 @@ async function onClickLinkGame() {
 		const payload = await Api.sendRequest(
 			'/web/dash/communities/games/link',
 			{
-				community_id: community.value.id,
+				community_id: community.id,
 				game_id: game.id,
 			},
 			{ noErrorRedirect: true }
 		);
 
 		if (payload.success) {
-			community.value.games = GameModel.populate(payload.community.games);
+			community.games = GameModel.populate(payload.community.games);
 		}
 	} catch (e) {
 		console.error(e);
@@ -86,14 +85,14 @@ async function onClickUnlinkGame(game: GameModel) {
 		const payload = await Api.sendRequest(
 			'/web/dash/communities/games/unlink',
 			{
-				community_id: community.value.id,
+				community_id: community.id,
 				game_id: game.id,
 			},
 			{ noErrorRedirect: true }
 		);
 
 		if (payload.success) {
-			community.value.games = GameModel.populate(payload.community.games);
+			community.games = GameModel.populate(payload.community.games);
 			// After unlinking a game, there is a free slot and at least one
 			// more game to link.
 			hasMoreGamesToLink.value = true;
@@ -105,7 +104,6 @@ async function onClickUnlinkGame(game: GameModel) {
 }
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
 		hasMoreGamesToLink.value = !!payload.hasMoreGamesToLink;
 		maxLinkedGames.value = payload.maxLinkedGames;

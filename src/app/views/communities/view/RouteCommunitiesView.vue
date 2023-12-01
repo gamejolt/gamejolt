@@ -103,7 +103,6 @@ const isShowingHeader = computed(() => {
 });
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onInit() {
 		// Add a new context pane if we haven't already.
 		if (!contextPane.value) {

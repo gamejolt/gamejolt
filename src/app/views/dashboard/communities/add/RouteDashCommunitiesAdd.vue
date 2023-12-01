@@ -22,6 +22,7 @@ const router = useRouter();
 function onSubmit(community: CommunityModel) {
 	router.push(community.routeEditLocation);
 }
+
 createAppRoute({
 	routeTitle: computed(() => $gettext('Create a community')),
 });

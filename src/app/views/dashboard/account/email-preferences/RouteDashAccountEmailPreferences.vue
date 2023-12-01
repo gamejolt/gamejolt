@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import {
 	createAppRoute,
@@ -30,13 +30,13 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useAccountRouteController()!;
+const { heading } = useAccountRouteController()!;
 const user = ref<UserModel>(null as any);
 
 const { isBootstrapped } = createAppRoute({
-	routeTitle: computed(() => routeStore.heading.value),
+	routeTitle: heading,
 	onInit() {
-		routeStore.heading.value = $gettext(`Email Preferences`);
+		heading.value = $gettext(`Email Preferences`);
 	},
 	onResolved({ payload }) {
 		user.value = new UserModel(payload.user);

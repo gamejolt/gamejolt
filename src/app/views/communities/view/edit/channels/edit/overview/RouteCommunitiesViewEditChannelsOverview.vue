@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, toRef } from 'vue';
+import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import {
@@ -29,25 +29,19 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { community, channel, archivedChannels } = useCommunityRouteStore()!;
+
 const route = useRoute();
 const router = useRouter();
 
-const community = toRef(() => routeStore.community);
-
-const channel = toRef(() => routeStore.channel!);
-
-const canEditDescription = computed(() => channel.value.type === 'competition');
+const canEditDescription = computed(() => channel!.type === 'competition');
 
 const canArchive = computed(
-	() =>
-		!channel.value.is_archived &&
-		channel.value.visibility === 'published' &&
-		community.value.canRemoveChannel
+	() => !channel!.is_archived && channel!.visibility === 'published' && community.canRemoveChannel
 );
 
 const shouldShowArchiveOptions = computed(
-	() => channel.value.visibility === 'published' && community.value.hasPerms('community-channels')
+	() => channel!.visibility === 'published' && community.hasPerms('community-channels')
 );
 
 function onSubmit(model: CommunityChannelModel) {
@@ -59,7 +53,7 @@ function onSubmit(model: CommunityChannelModel) {
 }
 
 function onBackgroundChange(model: CommunityChannelModel) {
-	Object.assign(channel.value, model);
+	Object.assign(channel!, model);
 }
 
 async function onClickArchive() {
@@ -69,17 +63,17 @@ async function onClickArchive() {
 
 	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to archive the channel %{ channel }?`, {
-			channel: channel.value.displayTitle,
+			channel: channel!.displayTitle,
 		})
 	);
 
 	if (result) {
-		const payload = await $archiveCommunityChannel(channel.value);
+		const payload = await $archiveCommunityChannel(channel!);
 
 		if (payload.success) {
-			routeStore.archivedChannels.push(channel.value);
-			arrayRemove(community.value.channels!, i => i.id === channel.value.id);
-			community.value.has_archived_channels = true;
+			archivedChannels.push(channel!);
+			arrayRemove(community.channels!, i => i.id === channel!.id);
+			community.has_archived_channels = true;
 
 			showSuccessGrowl($gettext(`Channel is now archived.`));
 			Scroll.to(0);
@@ -90,18 +84,18 @@ async function onClickArchive() {
 async function onClickUnarchive() {
 	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to restore the channel %{ channel } from the archive?`, {
-			channel: channel.value.displayTitle,
+			channel: channel!.displayTitle,
 		})
 	);
 
 	if (result) {
 		try {
-			await $unarchiveCommunityChannel(channel.value);
-			community.value.channels!.push(channel.value);
-			arrayRemove(routeStore.archivedChannels, i => i.id === channel.value.id);
+			await $unarchiveCommunityChannel(channel!);
+			community.channels!.push(channel!);
+			arrayRemove(archivedChannels, i => i.id === channel!.id);
 
-			if (routeStore.archivedChannels.length === 0) {
-				community.value.has_archived_channels = false;
+			if (archivedChannels.length === 0) {
+				community.has_archived_channels = false;
 			}
 
 			showSuccessGrowl($gettext(`Channel was restored from the archive.`));
@@ -120,9 +114,7 @@ async function onClickUnarchive() {
 	}
 }
 
-createAppRoute({
-	routeTitle: computed(() => ``),
-});
+createAppRoute({});
 </script>
 
 <template>
@@ -144,7 +136,7 @@ createAppRoute({
 					<h2>
 						{{ $gettext(`Edit Description`) }}
 					</h2>
-					<FormCommunityChannelDescription :model="channel" />
+					<FormCommunityChannelDescription :model="channel!" />
 				</template>
 			</div>
 		</div>
@@ -153,7 +145,7 @@ createAppRoute({
 				<div class="row">
 					<div class="col-md-8">
 						<div class="well fill-offset">
-							<template v-if="!channel.is_archived">
+							<template v-if="!channel!.is_archived">
 								<h4 class="section-header">
 									{{ $gettext(`Archive Channel`) }}
 								</h4>

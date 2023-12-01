@@ -27,7 +27,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useAccountRouteController()!;
+const { heading } = useAccountRouteController()!;
 const { user } = useCommonStore();
 const router = useRouter();
 
@@ -97,9 +97,9 @@ async function onUnlink(provider: LinkedAccountProvider) {
 }
 
 createAppRoute({
-	routeTitle: computed(() => routeStore.heading.value),
+	routeTitle: heading,
 	onInit() {
-		routeStore.heading.value = $gettext(`Linked Accounts`);
+		heading.value = $gettext(`Linked Accounts`);
 	},
 	onResolved({ payload }) {
 		accounts.value = LinkedAccountModel.populate(payload.accounts);

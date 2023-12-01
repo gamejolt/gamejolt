@@ -1,5 +1,4 @@
 <script lang="ts">
-import { computed } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
@@ -39,20 +38,15 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = createGameDashRouteController({ router: useRouter() });
-const themeStore = useThemeStore();
-const route = useRoute();
+const { game, isWizard, populate } = createGameDashRouteController({ router: useRouter() });
+const { setPageTheme, clearPageTheme } = useThemeStore();
 const { user } = useCommonStore();
+const route = useRoute();
 
-const { game, isWizard } = routeStore;
-//const game = toRef(() => routeStore.game);
-//
-//const isWizard = toRef(() => routeStore.isWizard);
-
-function setPageTheme() {
+function applyPageTheme() {
 	const theme = game?.value?.theme ?? null;
 	if (theme !== null) {
-		themeStore.setPageTheme({
+		setPageTheme({
 			key: ManageGameThemeKey,
 			theme,
 		});
@@ -60,13 +54,12 @@ function setPageTheme() {
 }
 
 const { isBootstrapped } = createAppRoute({
-	routeTitle: computed(() => ``),
 	onDestroyed() {
-		themeStore.clearPageTheme(ManageGameThemeKey);
+		clearPageTheme(ManageGameThemeKey);
 	},
 	onResolved({ payload }) {
-		routeStore.populate(payload);
-		setPageTheme();
+		populate(payload);
+		applyPageTheme();
 	},
 });
 </script>
