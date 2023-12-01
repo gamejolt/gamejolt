@@ -155,17 +155,7 @@ createAppRoute({
 						block
 						icon="arrow-forward"
 					>
-						{{ $gettext(`View Jam`) }}
-					</AppButton>
-					<AppButton
-						v-else
-						:to="{
-							name: 'communities.view.channel',
-						}"
-						block
-						icon="arrow-forward"
-					>
-						{{ $gettext(`View Channel`) }}
+						{{ competition ? $gettext(`View Jam`) : $gettext(`View Channel`) }}
 					</AppButton>
 				</AppPageHeaderControls>
 			</template>
