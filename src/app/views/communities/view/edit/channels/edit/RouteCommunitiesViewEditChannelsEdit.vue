@@ -148,18 +148,24 @@ createAppRoute({
 			<template #controls>
 				<AppPageHeaderControls>
 					<AppButton
+						v-if="competition"
 						:to="{
 							name: 'communities.view.channel',
 						}"
 						block
 						icon="arrow-forward"
 					>
-						<div v-if="competition">
-							{{ $gettext(`View Jam`) }}
-						</div>
-						<div v-else>
-							{{ $gettext(`View Channel`) }}
-						</div>
+						{{ $gettext(`View Jam`) }}
+					</AppButton>
+					<AppButton
+						v-else
+						:to="{
+							name: 'communities.view.channel',
+						}"
+						block
+						icon="arrow-forward"
+					>
+						{{ $gettext(`View Channel`) }}
 					</AppButton>
 				</AppPageHeaderControls>
 			</template>
