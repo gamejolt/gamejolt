@@ -22,7 +22,7 @@ export async function showGiftActionModal({
 	 * Should be sticker packs from the sticker store. We'll push into this when
 	 * we get a new item.
 	 */
-	stickerPacks: Ref<UserStickerPackModel[]>;
+	stickerPacks: Ref<UserStickerPackModel[]> | undefined;
 }) {
 	const result = await showModal<GiftAction>({
 		modalId: 'GiftAction',
