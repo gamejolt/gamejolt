@@ -56,7 +56,6 @@ async function onClickRemoveChannel(channelToRemove: CommunityChannelModel) {
 
 	if (channelToRemove._removed) {
 		if (channelToRemove.is_archived) {
-			// TODO(component-setup-refactor-routes-1): test- will this be applied to the routeStore?
 			routeStore.archivedChannels = routeStore.archivedChannels.filter(
 				i => i.id !== channelToRemove.id
 			);

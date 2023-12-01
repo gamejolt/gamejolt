@@ -31,7 +31,7 @@ const { heading } = useAccountRouteController()!;
 const { user } = useCommonStore();
 const router = useRouter();
 
-const accounts = ref<LinkedAccountModel[]>([]);
+let accounts = ref<LinkedAccountModel[]>([]);
 const loading = ref(false);
 
 const facebookAccount = computed(() => getAccount(LinkedAccountProvider.Facebook));
