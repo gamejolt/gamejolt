@@ -1,21 +1,19 @@
 <script lang="ts" setup>
 import { PropType, computed, toRefs } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
-import { useOnHover } from '../../../../../_common/on/useOnHover';
+import { kElevateTransition, styleElevate, styleTyped, styleWhen } from '../../_styles/mixins';
+import { kBorderRadiusLg, kBorderWidthLg, kStrongEaseOut } from '../../_styles/variables';
+import { useOnHover } from '../on/useOnHover';
 import {
 	kThemeBgOffset,
 	kThemeFg,
 	kThemeFgMuted,
 	kThemePrimary,
 	kThemePrimaryTrans,
-} from '../../../../../_common/theme/variables';
-import {
-	kElevateTransition,
-	styleElevate,
-	styleTyped,
-	styleWhen,
-} from '../../../../../_styles/mixins';
-import { kBorderRadiusLg, kBorderWidthLg, kStrongEaseOut } from '../../../../../_styles/variables';
+} from '../theme/variables';
+
+const BorderRadius = kBorderRadiusLg;
+const BorderWidth = kBorderWidthLg;
 
 const props = defineProps({
 	to: {
@@ -34,6 +32,10 @@ const props = defineProps({
 		type: String as PropType<'solid' | 'dashed'>,
 		default: `solid`,
 	},
+	backgroundColor: {
+		type: String,
+		default: kThemeBgOffset,
+	},
 	padding: {
 		type: Number,
 		default: 8,
@@ -47,15 +49,11 @@ const props = defineProps({
 		type: Number,
 		default: undefined,
 	},
-	backgroundColor: {
-		type: String,
-		default: kThemeBgOffset,
-	},
 	hoverScale: {
 		type: Number,
 		default: 1.1,
 	},
-	noScale: {
+	disableScale: {
 		type: Boolean,
 	},
 	center: {
@@ -65,10 +63,8 @@ const props = defineProps({
 
 const { onClick: onClickProp, to, padding, paddingH, paddingV } = toRefs(props);
 
-const BorderRadius = kBorderRadiusLg;
-const BorderWidth = kBorderWidthLg;
-
 const { hoverBinding, hovered } = useOnHover();
+
 const isClickable = computed(() => !!onClickProp?.value || !!to?.value);
 
 function _scalePadding(value: number | null | undefined) {
@@ -112,7 +108,7 @@ const verticalPadding = computed(() => _scalePadding(paddingV?.value));
 				styleWhen(isClickable, {
 					...styleWhen(hovered, {
 						...styleElevate(2),
-						...styleWhen(!noScale && hoverScale !== 1, {
+						...styleWhen(!disableScale && hoverScale !== 1, {
 							transform: `scale(${hoverScale})`,
 						}),
 						borderColor: kThemePrimary,

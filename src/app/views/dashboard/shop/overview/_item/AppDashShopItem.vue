@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { PropType, computed, toRefs } from 'vue';
+import AppHoverCard from '../../../../../../_common/card/AppHoverCard.vue';
 import { ShopProductModel } from '../../../../../../_common/shop/product/product-model';
 import { kThemeFgRgb } from '../../../../../../_common/theme/variables';
 import { routeDashShopProduct } from '../../product/product.route';
 import { getShopDashProductResourceParam, useShopDashStore } from '../../shop.store';
-import AppDashShopHover from '../AppDashShopHover.vue';
 import AppDashShopItemImpl from './AppDashShopItemImpl.vue';
 
 const props = defineProps({
@@ -22,7 +22,7 @@ const resourceParam = computed(() => getShopDashProductResourceParam(item.value)
 </script>
 
 <template>
-	<AppDashShopHover
+	<AppHoverCard
 		v-if="resourceParam"
 		:style="{ width: `100%` }"
 		:border-color="
@@ -45,5 +45,5 @@ const resourceParam = computed(() => getShopDashProductResourceParam(item.value)
 				:hovered="hovered"
 			/>
 		</template>
-	</AppDashShopHover>
+	</AppHoverCard>
 </template>

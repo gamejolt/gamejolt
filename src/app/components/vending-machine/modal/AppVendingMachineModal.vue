@@ -13,6 +13,7 @@ import AppIllustration from '../../../../_common/illustration/AppIllustration.vu
 import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import { InventoryShopProductSaleModel } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import { InventoryShopSectionModel } from '../../../../_common/inventory/shop/inventory-shop-section.model';
+import { PurchasableProductType } from '../../../../_common/inventory/shop/product-owner-helpers';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
@@ -431,7 +432,7 @@ const rewardPackImageSize = run(() => {
 										}"
 										@click="
 											showPurchaseShopProductModal({
-												resource: 'Sticker_Pack',
+												resource: PurchasableProductType.StickerPack,
 												resourceId: chargeRewardPack.id,
 											})
 										"

@@ -31,7 +31,7 @@
 			"import { defineAsyncComponent } from 'vue';",
 			"",
 			"export async function show${1:Login}Modal($2) {",
-			"\treturn await showModal<${3:boolean}>({",
+			"\treturn await showModal<${3:void}>({",
 			"\tmodalId: '${1:Login}',",
 			"\t\tcomponent: defineAsyncComponent(() => import('./App${1:Login}Modal.vue')),",
 			"\t\tprops: { $4 },",

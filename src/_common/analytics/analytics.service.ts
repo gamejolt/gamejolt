@@ -13,6 +13,7 @@ import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';
 import { CommentVoteType } from '../comment/vote/vote-model';
 import { ConfigOption, ensureConfig } from '../config/config.service';
+import { Currency } from '../currency/currency-type';
 import { DeviceArch, DeviceOs, isDynamicGoogleBot } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 import { AppPromotionSource } from '../mobile-app/store';
@@ -549,6 +550,25 @@ export type ShopViewType =
 
 export function trackShopView(params: { type: ShopViewType; productId?: number }) {
 	_trackEvent('shop_view', params);
+}
+
+export function trackGiftAction(
+	params:
+		| {
+				action: 'send';
+				currency: Currency;
+				saleId: number;
+				userId: number;
+		  }
+		| {
+				action: 'view' | 'accept' | 'reject' | 'ignore';
+				giftId: number;
+		  }
+) {
+	_trackEvent('gift_action', {
+		...params,
+		currency: 'currency' in params ? params.currency?.id : undefined,
+	});
 }
 
 /**
