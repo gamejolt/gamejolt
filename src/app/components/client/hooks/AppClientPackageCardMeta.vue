@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import { GamePackageCardModel } from '../../../../_common/game/package/card/card.model';
-import { GamePackage } from '../../../../_common/game/package/package.model';
+import { GamePackageModel } from '../../../../_common/game/package/package.model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useClientLibraryStore } from '../../../store/client-library';
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	package: {
-		type: Object as PropType<GamePackage>,
+		type: Object as PropType<GamePackageModel>,
 		required: true,
 	},
 	card: {

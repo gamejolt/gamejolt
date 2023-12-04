@@ -1,10 +1,8 @@
 <script lang="ts">
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { inject, InjectionKey, provide, shallowRef } from 'vue';
-import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../utils/array';
-import { shallowSetup } from '../../../../../utils/vue';
+import { InjectionKey, inject, provide, shallowRef } from 'vue';
+import { Emit, Options, Prop, mixins } from 'vue-property-decorator';
 import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlDate from '../../../../../_common/form-vue/controls/AppFormControlDate.vue';
@@ -14,20 +12,26 @@ import {
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
 import { validateSemver } from '../../../../../_common/form-vue/validators';
-import { GameBuild } from '../../../../../_common/game/build/build.model';
-import { GameBuildLaunchOption } from '../../../../../_common/game/build/launch-option/launch-option.model';
-import { Game } from '../../../../../_common/game/game.model';
-import { GamePackage } from '../../../../../_common/game/package/package.model';
-import { GameRelease } from '../../../../../_common/game/release/release.model';
+import { $removeGameBuild, GameBuildModel } from '../../../../../_common/game/build/build.model';
+import { GameBuildLaunchOptionModel } from '../../../../../_common/game/build/launch-option/launch-option.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import { GamePackageModel } from '../../../../../_common/game/package/package.model';
+import {
+	$saveGameRelease,
+	GameReleaseModel,
+	GameReleaseStatus,
+} from '../../../../../_common/game/release/release.model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
+import { arrayRemove } from '../../../../../utils/array';
+import { shallowSetup } from '../../../../../utils/vue';
 import FormGameBuild, { FormGameBuildInterface } from '../build/build.vue';
 import FormGameNewBuild from '../new-build/new-build.vue';
 
-type GameReleaseFormModel = GameRelease & {
-	should_publish: boolean;
+type GameReleaseFormModel = GameReleaseModel & {
+	should_publish?: boolean;
 };
 
 type Controller = ReturnType<typeof createFormGameRelease>;
@@ -65,19 +69,20 @@ export default class FormGameRelease
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmitSuccess
 {
-	modelClass = GameRelease as any;
+	modelClass = GameReleaseModel;
+	modelSaveHandler = $saveGameRelease;
 
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	@Prop(Object)
-	package!: GamePackage;
+	package!: GamePackageModel;
 
 	@Prop(Array)
-	builds!: GameBuild[];
+	builds!: GameBuildModel[];
 
 	@Prop(Array)
-	launchOptions!: GameBuildLaunchOption[];
+	launchOptions!: GameBuildLaunchOptionModel[];
 
 	@Prop(Object)
 	buildDownloadCounts!: { [buildId: number]: number };
@@ -95,8 +100,9 @@ export default class FormGameRelease
 	now = 0;
 
 	readonly Screen = Screen;
-	readonly GameRelease = GameRelease;
+	readonly GameRelease = GameReleaseModel;
 	readonly validateSemver = validateSemver;
+	readonly GameReleaseStatusPublished = GameReleaseStatus.Published;
 
 	@Emit('unpublish-release')
 	emitUnpublishRelease(_release: GameReleaseFormModel) {}
@@ -139,12 +145,12 @@ export default class FormGameRelease
 		}
 	}
 
-	onBuildProcessingComplete(build: GameBuild, response: any) {
+	onBuildProcessingComplete(build: GameBuildModel, response: any) {
 		// Just copy over the new build data into our current one.
 		build.assign(response.build);
 	}
 
-	onBuildAdded(build: GameBuild) {
+	onBuildAdded(build: GameBuildModel) {
 		this.builds.push(build);
 	}
 
@@ -153,7 +159,7 @@ export default class FormGameRelease
 	 * When launch options are modified for a build, we need to merge the
 	 * changes back into the global array of them.
 	 **/
-	updateBuildLaunchOptions(build: GameBuild, launchOptions: GameBuildLaunchOption[]) {
+	updateBuildLaunchOptions(build: GameBuildModel, launchOptions: GameBuildLaunchOptionModel[]) {
 		// Remove old ones for build.
 		if (this.launchOptions && this.launchOptions.length) {
 			arrayRemove(
@@ -168,18 +174,18 @@ export default class FormGameRelease
 		}
 
 		// Add the new ones into the global list.
-		const newLaunchOptions = GameBuildLaunchOption.populate(launchOptions);
+		const newLaunchOptions = GameBuildLaunchOptionModel.populate(launchOptions);
 		for (const launchOption of newLaunchOptions) {
 			this.launchOptions.push(launchOption);
 		}
 	}
 
-	onBuildEdited(build: GameBuild, response: any) {
+	onBuildEdited(build: GameBuildModel, response: any) {
 		this.updateBuildLaunchOptions(build, response.launchOptions);
 	}
 
-	async removeBuild(build: GameBuild) {
-		const result = await ModalConfirm.show(
+	async removeBuild(build: GameBuildModel) {
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this build?')
 		);
 
@@ -187,7 +193,7 @@ export default class FormGameRelease
 			return;
 		}
 
-		await build.$remove(this.game);
+		await $removeGameBuild(build, this.game);
 		arrayRemove(this.builds, _build => _build.id === build.id);
 
 		showSuccessGrowl(
@@ -204,7 +210,7 @@ export default class FormGameRelease
 	}
 
 	async savePublished() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to publish this release? All of its builds will become active on your game page.'
 			)
@@ -308,7 +314,7 @@ export default class FormGameRelease
 					validateMaxLength(50),
 					validateAvailability({
 						url: `/web/dash/developer/games/releases/check-field-availability/${game.id}/${package.id}/version_number`,
-						initVal: model.version_number,
+						initVal: model && model.version_number,
 					}),
 				]"
 				:validate-delay="500"
@@ -383,7 +389,7 @@ export default class FormGameRelease
 			</div>
 		</fieldset>
 
-		<fieldset v-if="model.status !== GameRelease.STATUS_PUBLISHED">
+		<fieldset v-if="model && model.status !== GameReleaseStatusPublished">
 			<AppFormLegend compact>
 				<AppTranslate>Schedule publishing of release</AppTranslate>
 			</AppFormLegend>
@@ -404,9 +410,9 @@ export default class FormGameRelease
 			<template v-else-if="isScheduling && timezones">
 				<AppFormGroup name="scheduled_for_timezone" :label="$gettext(`Timezone`)">
 					<p class="help-block">
-						<AppTranslate
-							>All time selection below will use this timezone.</AppTranslate
-						>
+						<AppTranslate>
+							All time selection below will use this timezone.
+						</AppTranslate>
 					</p>
 
 					<p class="help-block">
@@ -419,12 +425,12 @@ export default class FormGameRelease
 
 					<AppFormControlSelect>
 						<optgroup
-							v-for="(timezones, region) of timezones"
+							v-for="(timezoneData, region) of timezones"
 							:key="region"
 							:label="region"
 						>
 							<option
-								v-for="timezone of timezones"
+								v-for="timezone of timezoneData"
 								:key="timezone.label"
 								:value="timezone.i"
 							>
@@ -458,7 +464,7 @@ export default class FormGameRelease
 			The buttons in this template do submit the form through their click handlers.
 			We don't use app-form-button because we needed to do some async operations before submitting.
 		-->
-		<template v-if="model.status !== GameRelease.STATUS_PUBLISHED">
+		<template v-if="model && model.status !== GameReleaseStatusPublished">
 			<AppButton
 				v-if="isScheduling"
 				primary
@@ -496,7 +502,7 @@ export default class FormGameRelease
 			<br class="visible-xs" />
 
 			<AppButton
-				v-if="model.status === GameRelease.STATUS_PUBLISHED"
+				v-if="model && model.status === GameReleaseStatusPublished"
 				trans
 				@click="unpublish()"
 			>

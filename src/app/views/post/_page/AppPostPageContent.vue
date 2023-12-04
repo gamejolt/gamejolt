@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
-import { CommunityUserNotification } from '../../../../_common/community/user-notification/user-notification.model';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import { FiresidePostVideo } from '../../../../_common/fireside/post/video/video-model';
+import { CommunityUserNotificationModel } from '../../../../_common/community/user-notification/user-notification.model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
+import { FiresidePostVideoModel } from '../../../../_common/fireside/post/video/video-model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { createLightbox } from '../../../../_common/lightbox/lightbox-helpers';
-import { MediaItem } from '../../../../_common/media-item/media-item-model';
-import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
+import { MediaItemModel } from '../../../../_common/media-item/media-item-model';
+import AppMediaItemPost from '../../../../_common/media-item/post/AppMediaItemPost.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { StickerTargetController } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -18,8 +18,8 @@ import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowBu
 import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleOverlayTextShadow, styleWhen } from '../../../../_styles/mixins';
 import { arrayRemove } from '../../../../utils/array';
-import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
-import AppGameBadge from '../../../components/game/badge/badge.vue';
+import AppCommunityUserNotification from '../../../components/community/user-notification/AppCommunityUserNotification.vue';
+import AppGameBadge from '../../../components/game/badge/AppGameBadge.vue';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPostContent from '../../../components/post/AppPostContent.vue';
 
@@ -27,7 +27,7 @@ const UserFollowLocation = 'postPage' as const;
 
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	stickerTargetController: {
@@ -35,7 +35,7 @@ const props = defineProps({
 		required: true,
 	},
 	communityNotifications: {
-		type: Array as PropType<CommunityUserNotification[]>,
+		type: Array as PropType<CommunityUserNotificationModel[]>,
 		default: () => [],
 	},
 });
@@ -51,7 +51,7 @@ const videoStartTime = ref(0);
 const lightbox = createLightbox(computed(() => post.value.media));
 
 const displayUser = computed(() => post.value.displayUser);
-const video = computed<FiresidePostVideo | null>(() => post.value.videos[0] || null);
+const video = computed<FiresidePostVideoModel | null>(() => post.value.videos[0] || null);
 const background = computed(() => post.value.background);
 const shouldOverlay = computed(() => !!background.value);
 
@@ -69,12 +69,12 @@ if (typeof route.query.t === 'string') {
 	} as RouteLocationRaw);
 }
 
-function onClickFullscreen(mediaItem: MediaItem) {
+function onClickFullscreen(mediaItem: MediaItemModel) {
 	const index = post.value.media.findIndex(i => i.id === mediaItem.id);
 	lightbox.show(index !== -1 ? index : null);
 }
 
-function onDismissNotification(notification: CommunityUserNotification) {
+function onDismissNotification(notification: CommunityUserNotificationModel) {
 	arrayRemove(communityNotifications.value, i => i.id === notification.id);
 }
 

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	link: {

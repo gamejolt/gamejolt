@@ -1,12 +1,16 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
-import { User } from '../../../../../_common/user/user.model';
-import AppFollowerList from '../../../../components/follower/list/list.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
+import { UserModel } from '../../../../../_common/user/user.model';
+import AppFollowerList from '../../../../components/follower/list/AppFollowerList.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
+import { useCommunityRouteStore } from '../view.store';
 
 function getFetchUrl(route: RouteLocationNormalized) {
 	return `/web/communities/members/${route.params.path}`;
@@ -19,7 +23,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 		AppCommunitiesViewPageContainer,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	lazy: true,
 	deps: {
@@ -27,11 +31,10 @@ function getFetchUrl(route: RouteLocationNormalized) {
 	},
 	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
 })
-export default class RouteCommunitiesViewMembers extends BaseRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+export default class RouteCommunitiesViewMembers extends LegacyRouteComponent {
+	routeStore = setup(() => useCommunityRouteStore())!;
 
-	users: User[] = [];
+	users: UserModel[] = [];
 
 	get community() {
 		return this.routeStore.community;
@@ -46,7 +49,7 @@ export default class RouteCommunitiesViewMembers extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.users = User.populate($payload.users);
+		this.users = UserModel.populate($payload.users);
 	}
 }
 </script>

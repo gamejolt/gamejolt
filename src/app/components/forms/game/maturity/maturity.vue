@@ -2,16 +2,16 @@
 import { Emit, mixins, Options } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
+import { $saveGameMaturity, GameModel } from '../../../../../_common/game/game.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
+import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
 
 type MaturityField = {
 	label?: string;
 	description?: string;
 };
 
-class Wrapper extends BaseForm<Game> {}
+class Wrapper extends BaseForm<GameModel> {}
 
 @Options({
 	components: {
@@ -20,8 +20,8 @@ class Wrapper extends BaseForm<Game> {}
 	},
 })
 export default class FormGameMaturity extends mixins(Wrapper) {
-	modelClass = Game;
-	saveMethod = '$saveMaturity' as const;
+	modelClass = GameModel;
+	modelSaveHandler = $saveGameMaturity;
 
 	age: MaturityField[] = [
 		{
@@ -56,7 +56,9 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 		{
 			// TODO(vue3) translate-comment="Used as a quantity/tendency"
 			label: $gettext('Intense'),
-			description: $gettext('Graphic depictions of violence involving cartoon-like characters.'),
+			description: $gettext(
+				'Graphic depictions of violence involving cartoon-like characters.'
+			),
 		},
 	];
 
@@ -67,17 +69,23 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 		{
 			// TODO(vue3) translate-comment="Used as a quantity/tendency"
 			label: $gettext('Mild'),
-			description: $gettext('Depictions of characters in unsafe situations easily distinguishable from real life.'),
+			description: $gettext(
+				'Depictions of characters in unsafe situations easily distinguishable from real life.'
+			),
 		},
 		{
 			// TODO(vue3) translate-comment="Used as a quantity/tendency"
 			label: $gettext('Moderate'),
-			description: $gettext('Depictions of characters in aggressive conflict easily distinguishable from real life.'),
+			description: $gettext(
+				'Depictions of characters in aggressive conflict easily distinguishable from real life.'
+			),
 		},
 		{
 			// TODO(vue3) translate-comment="Used as a quantity/tendency"
 			label: $gettext('Intense'),
-			description: $gettext('Graphic depictions of violence involving situations easily distinguishable from real life.'),
+			description: $gettext(
+				'Graphic depictions of violence involving situations easily distinguishable from real life.'
+			),
 		},
 	];
 
@@ -129,7 +137,9 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 		},
 		{
 			label: $gettext('Sexual Violence'),
-			description: $gettext('Depictions of or graphic references to rape or other violent sexual behavior.'),
+			description: $gettext(
+				'Depictions of or graphic references to rape or other violent sexual behavior.'
+			),
 		},
 	];
 
@@ -247,7 +257,9 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 		{
 			// TODO(vue3) translate-comment="Used as a quantity/tendency"
 			label: $gettext('Moderate'),
-			description: $gettext('Depictions of or dialog including vulgar humor; bathroom humor.'),
+			description: $gettext(
+				'Depictions of or dialog including vulgar humor; bathroom humor.'
+			),
 		},
 		{
 			// TODO(vue3) translate-comment="Used as a quantity/tendency"
@@ -271,10 +283,10 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 	];
 
 	@Emit('changed')
-	emitChanged(_game: Game) {}
+	emitChanged(_game: GameModel) {}
 
 	onInit() {
-		const fields: (keyof Game)[] = [
+		const fields: (keyof GameModel)[] = [
 			'tigrs_age',
 			'tigrs_cartoon_violence',
 			'tigrs_fantasy_violence',
@@ -301,7 +313,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 <template>
 	<AppForm :controller="form" @changed="emitChanged($event)">
 		<AppFormGroup name="tigrs_age" :label="$gettext(`Age Rating`)">
-			<p v-if="model._is_wip" class="help-block">
+			<p v-if="model && model._is_wip" class="help-block">
 				<AppTranslate>
 					If you don't know what the final content of your game will be, give an educated
 					guess. You can make changes later.
@@ -325,10 +337,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			<fieldset>
 				<legend><AppTranslate>Violence</AppTranslate></legend>
 
-				<AppFormGroup
-					name="tigrs_cartoon_violence"
-					:label="$gettext(`Cartoon Violence`)"
-				>
+				<AppFormGroup name="tigrs_cartoon_violence" :label="$gettext(`Cartoon Violence`)">
 					<div v-for="(item, index) in cartoonViolence" :key="index" class="radio">
 						<label>
 							<AppFormControlRadio :value="index" />
@@ -341,10 +350,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 					<AppFormControlErrors />
 				</AppFormGroup>
 
-				<AppFormGroup
-					name="tigrs_fantasy_violence"
-					:label="$gettext(`Fantasy Violence`)"
-				>
+				<AppFormGroup name="tigrs_fantasy_violence" :label="$gettext(`Fantasy Violence`)">
 					<div v-for="(item, index) in fantasyViolence" :key="index" class="radio">
 						<label>
 							<AppFormControlRadio :value="index" />
@@ -373,10 +379,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 					<AppFormControlErrors />
 				</AppFormGroup>
 
-				<AppFormGroup
-					name="tigrs_bloodshed"
-					:label="$gettext(`Bloodshed`)"
-				>
+				<AppFormGroup name="tigrs_bloodshed" :label="$gettext(`Bloodshed`)">
 					<div v-for="(item, index) in bloodshed" :key="index" class="radio">
 						<label>
 							<AppFormControlRadio :value="index" />
@@ -389,10 +392,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 					<AppFormControlErrors />
 				</AppFormGroup>
 
-				<AppFormGroup
-					name="tigrs_sexual_violence"
-					:label="$gettext(`Sexual Violence`)"
-				>
+				<AppFormGroup name="tigrs_sexual_violence" :label="$gettext(`Sexual Violence`)">
 					<div v-for="(item, index) in sexualViolence" :key="index" class="radio">
 						<label>
 							<AppFormControlRadio :value="index" />
@@ -409,10 +409,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			<fieldset>
 				<legend><AppTranslate>Substances</AppTranslate></legend>
 
-				<AppFormGroup
-					name="tigrs_alcohol"
-					:label="$gettext(`Alcohol`)"
-				>
+				<AppFormGroup name="tigrs_alcohol" :label="$gettext(`Alcohol`)">
 					<div v-for="(item, index) in alcohol" :key="index" class="radio">
 						<label>
 							<AppFormControlRadio :value="index" />
@@ -425,10 +422,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 					<AppFormControlErrors />
 				</AppFormGroup>
 
-				<AppFormGroup
-					name="tigrs_drugs"
-					:label="$gettext(`Drugs`)"
-				>
+				<AppFormGroup name="tigrs_drugs" :label="$gettext(`Drugs`)">
 					<div v-for="(item, index) in drugs" :key="index" class="radio">
 						<label>
 							<AppFormControlRadio :value="index" />
@@ -441,10 +435,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 					<AppFormControlErrors />
 				</AppFormGroup>
 
-				<AppFormGroup
-					name="tigrs_tobacco"
-					:label="$gettext(`Tobacco`)"
-				>
+				<AppFormGroup name="tigrs_tobacco" :label="$gettext(`Tobacco`)">
 					<div v-for="(item, index) in tobacco" :key="index" class="radio">
 						<label>
 							<AppFormControlRadio :value="index" />
@@ -461,10 +452,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			<fieldset>
 				<legend><AppTranslate>Sex/Nudity</AppTranslate></legend>
 
-				<AppFormGroup
-					name="tigrs_nudity"
-					:label="$gettext(`Nudity`)"
-				>
+				<AppFormGroup name="tigrs_nudity" :label="$gettext(`Nudity`)">
 					<div v-for="(item, index) in nudity" :key="index" class="radio">
 						<label>
 							<AppFormControlRadio :value="index" />
@@ -477,10 +465,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 					<AppFormControlErrors />
 				</AppFormGroup>
 
-				<AppFormGroup
-					name="tigrs_sexual_themes"
-					:label="$gettext(`Sexual Themes`)"
-				>
+				<AppFormGroup name="tigrs_sexual_themes" :label="$gettext(`Sexual Themes`)">
 					<div v-for="(item, index) in sexualThemes" :key="index" class="radio">
 						<label>
 							<AppFormControlRadio :value="index" />
@@ -497,10 +482,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 			<fieldset>
 				<legend><AppTranslate>Miscellaneous</AppTranslate></legend>
 
-				<AppFormGroup
-					name="tigrs_language"
-					:label="$gettext(`Language`)"
-				>
+				<AppFormGroup name="tigrs_language" :label="$gettext(`Language`)">
 					<div v-for="(item, index) in language" :key="index" class="radio">
 						<label>
 							<AppFormControlRadio :value="index" />
@@ -513,10 +495,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 					<AppFormControlErrors />
 				</AppFormGroup>
 
-				<AppFormGroup
-					name="tigrs_humor"
-					:label="$gettext(`Humor`)"
-				>
+				<AppFormGroup name="tigrs_humor" :label="$gettext(`Humor`)">
 					<div v-for="(item, index) in humor" :key="index" class="radio">
 						<label>
 							<AppFormControlRadio :value="index" />
@@ -529,10 +508,7 @@ export default class FormGameMaturity extends mixins(Wrapper) {
 					<AppFormControlErrors />
 				</AppFormGroup>
 
-				<AppFormGroup
-					name="tigrs_gambling"
-					:label="$gettext(`Gambling`)"
-				>
+				<AppFormGroup name="tigrs_gambling" :label="$gettext(`Gambling`)">
 					<div v-for="(item, index) in gambling" :key="index" class="radio">
 						<label>
 							<AppFormControlRadio :value="index" />

@@ -2,16 +2,16 @@
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import { routeLandingHelpPage } from '../../views/landing/help/help.route';
-import HelpCategory from './category/category.model';
-import HelpPage from './page/page.model';
+import { HelpCategoryModel } from './category/category.model';
+import { HelpPageModel } from './page/page.model';
 
 defineProps({
 	category: {
-		type: Object as PropType<HelpCategory>,
+		type: Object as PropType<HelpCategoryModel>,
 		required: true,
 	},
 	pages: {
-		type: Array as PropType<HelpPage[]>,
+		type: Array as PropType<HelpPageModel[]>,
 		required: true,
 	},
 });

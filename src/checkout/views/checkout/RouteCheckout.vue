@@ -3,21 +3,21 @@ import { CSSProperties, computed, ref } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import AppAspectRatio from '../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { Environment } from '../../../_common/environment/environment.service';
-import { Game } from '../../../_common/game/game.model';
-import { GamePackage } from '../../../_common/game/package/package.model';
+import { GameModel } from '../../../_common/game/game.model';
+import { GamePackageModel } from '../../../_common/game/package/package.model';
 import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';
-import { MicrotransactionProduct } from '../../../_common/microtransaction/product.model';
+import { MicrotransactionProductModel } from '../../../_common/microtransaction/product.model';
 import { ModelData } from '../../../_common/model/model.service';
 import { Navigate } from '../../../_common/navigate/navigate.service';
-import { Order } from '../../../_common/order/order.model';
+import { OrderModel } from '../../../_common/order/order.model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import { kThemeFgMuted } from '../../../_common/theme/variables';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { styleFlexCenter, styleMaxWidthForOptions } from '../../../_styles/mixins';
 import { kFontFamilyDisplay, kLineHeightComputed } from '../../../_styles/variables';
 import FormPayment from '../../components/forms/FormPayment.vue';
@@ -31,14 +31,14 @@ export default {
 const CheckoutThemeKey = 'checkout';
 
 interface Payload {
-	order: ModelData<Order>;
+	order: ModelData<OrderModel>;
 	cards: any[];
 	stripePublishableKey: string;
 }
 </script>
 
 <script lang="ts" setup>
-const order = ref<Order | null>(null);
+const order = ref<OrderModel | null>(null);
 const cards = ref<any[]>([]);
 const { setPageTheme, clearPageTheme } = useThemeStore();
 
@@ -51,12 +51,12 @@ const routeTitle = computed(() => {
 	const orderItem = order.value.items[0];
 	if (orderItem.sellable) {
 		if (order.value.items.length > 1) {
-			return $gettextInterpolate('Buy %{ title } and %{ num } other(s)', {
+			return $gettext('Buy %{ title } and %{ num } other(s)', {
 				title: orderItem.sellable.title,
 				num: order.value.items.length - 1,
 			});
 		} else {
-			return $gettextInterpolate('Buy %{ title }', {
+			return $gettext('Buy %{ title }', {
 				title: orderItem.sellable.title,
 			});
 		}
@@ -92,8 +92,8 @@ const maybeGame = computed(() => {
 
 	for (const orderItem of order.value.items) {
 		if (
-			orderItem.sellable.resource_model instanceof GamePackage &&
-			orderItem.sellable.resource_model.game instanceof Game
+			orderItem.sellable.resource_model instanceof GamePackageModel &&
+			orderItem.sellable.resource_model.game instanceof GameModel
 		) {
 			return orderItem.sellable.resource_model.game;
 		}
@@ -108,7 +108,7 @@ const maybeMicrotransaction = computed(() => {
 	}
 
 	for (const orderItem of order.value.items) {
-		if (orderItem.sellable.resource_model instanceof MicrotransactionProduct) {
+		if (orderItem.sellable.resource_model instanceof MicrotransactionProductModel) {
 			return orderItem.sellable.resource_model;
 		}
 	}
@@ -119,7 +119,7 @@ const maybeMicrotransaction = computed(() => {
 const { isBootstrapped } = createAppRoute({
 	routeTitle,
 	onResolved({ payload }: { payload: Payload }) {
-		order.value = new Order(payload.order);
+		order.value = new OrderModel(payload.order);
 		cards.value = payload.cards || [];
 
 		setTheme();

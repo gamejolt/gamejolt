@@ -1,16 +1,20 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
-import { enforceLocation } from '../../../../../utils/router';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import { CollaboratorModel } from '../../../../../_common/collaborator/collaborator.model';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
-import { CommunityRouteStore, CommunityRouteStoreKey, updateCommunity } from '../view.store';
+import { enforceLocation } from '../../../../../utils/router';
+import { updateCommunity, useCommunityRouteStore } from '../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEdit',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id'] },
 	async resolver({ route }) {
 		const payload = await Api.sendRequest('/web/dash/communities/' + route.params.id);
@@ -25,14 +29,13 @@ import { CommunityRouteStore, CommunityRouteStoreKey, updateCommunity } from '..
 		return payload;
 	},
 })
-export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+export default class RouteCommunitiesViewEdit extends LegacyRouteComponent {
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	readonly Screen = Screen;
 
 	get routeTitle() {
-		return this.$gettextInterpolate(`Edit Community - %{ community }`, {
+		return this.$gettext(`Edit Community - %{ community }`, {
 			community: this.community.name,
 		});
 	}
@@ -44,7 +47,7 @@ export default class RouteCommunitiesViewEdit extends BaseRouteComponent {
 	routeResolved($payload: any) {
 		updateCommunity(this.routeStore, $payload.community);
 		this.routeStore.collaborator = $payload.collaboration
-			? new Collaborator($payload.collaboration)
+			? new CollaboratorModel($payload.collaboration)
 			: null;
 	}
 }

@@ -1,7 +1,6 @@
 import { arrayRemove } from '../../utils/array';
 import { isPromise } from '../../utils/utils';
 import { Api } from '../api/api.service';
-import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './content-editor/app-adapter';
 
 /**
  * The type of source passed into the hydrator, not what the resulting hydration data will be.
@@ -63,7 +62,7 @@ export class ContentHydrator {
 			source,
 		};
 
-		const requestKey = ContentHydrationRequest.makeKey(type, source);
+		const requestKey = _makeKey(type, source);
 
 		// We only allow one hydration request to get created.
 		if (!this.hydrationRequests.has(requestKey)) {
@@ -77,9 +76,14 @@ export class ContentHydrator {
 			} else {
 				// The app will get a message over the adapter channel with the
 				// response and will eventually call [setData] which will
-				// resolve the request.
-				const msg = ContentEditorAppAdapterMessage.requestHydration(type, source);
-				editorGetAppAdapter().send(msg);
+				// resolve the request. Do a dynamic import so that it doesn't
+				// need to get pulled in except for the mobile app editor.
+				import('./content-editor/app-adapter').then(
+					({ ContentEditorAppAdapterMessage, editorGetAppAdapter }) => {
+						const msg = ContentEditorAppAdapterMessage.requestHydration(type, source);
+						editorGetAppAdapter().send(msg);
+					}
+				);
 			}
 
 			this.hydrationRequests.set(requestKey, hydrationRequest);
@@ -99,7 +103,7 @@ export class ContentHydrator {
 
 		// If there was a hydration request active, let's resolve it with the
 		// data we have.
-		const requestKey = ContentHydrationRequest.makeKey(type, source);
+		const requestKey = _makeKey(type, source);
 
 		const hydrationRequest = this.hydrationRequests.get(requestKey);
 		if (hydrationRequest) {
@@ -123,8 +127,6 @@ class ContentHydrationRequest {
 	readonly promise: Promise<any>;
 	private resolver?: (entry: ContentHydrationDataEntry) => void;
 
-	static makeKey = (type: ContentHydrationType, source: string) => `${type}:${source}`;
-
 	constructor() {
 		this.promise = new Promise(resolve => {
 			this.resolver = resolve;
@@ -134,4 +136,8 @@ class ContentHydrationRequest {
 	resolveWithData(entry: ContentHydrationDataEntry) {
 		this.resolver?.(entry.data);
 	}
+}
+
+function _makeKey(type: ContentHydrationType, source: string) {
+	return `${type}:${source}`;
 }

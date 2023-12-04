@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { onMounted } from '@vue/runtime-core';
+import { onMounted } from 'vue';
 import AppJolticon from '../_common/jolticon/AppJolticon.vue';
-import { Sellable } from '../_common/sellable/sellable.model';
+import { SellableType } from '../_common/sellable/sellable.model';
 import AppTheme from '../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../_common/theme/theme.store';
 import AppTooltipPortal from '../_common/tooltip/AppTooltipPortal.vue';
@@ -56,33 +56,38 @@ function dismissError() {
 			'has-invalid-key-error': hasInvalidKey,
 		}"
 	>
-		<AppTheme :force-dark="!isLightTheme" :force-light="isLightTheme" />
-		<AppTooltipPortal />
+		<AppTheme :force-dark="!isLightTheme" :force-light="isLightTheme" is-root>
+			<AppTooltipPortal />
 
-		<div v-if="hasInvalidKey" class="alert alert-notice text-center">
-			<AppJolticon icon="notice" />
-			Invalid widget key.
-		</div>
+			<div v-if="hasInvalidKey" class="alert alert-notice text-center">
+				<AppJolticon icon="notice" />
+				Invalid widget key.
+			</div>
 
-		<transition>
-			<AppProcessingOverlay v-if="isProcessing" />
-		</transition>
+			<transition>
+				<AppProcessingOverlay v-if="isProcessing" />
+			</transition>
 
-		<transition name="slide-up">
-			<AppToast v-if="hasFailure === 'setup-order'" type="error" @dismiss="dismissError()">
-				Something went wrong!
-			</AppToast>
-		</transition>
+			<transition name="slide-up">
+				<AppToast
+					v-if="hasFailure === 'setup-order'"
+					type="error"
+					@dismiss="dismissError()"
+				>
+					Something went wrong!
+				</AppToast>
+			</transition>
 
-		<div v-if="isLoaded">
-			<AppGameHeader />
-			<FormPayment
-				v-if="sellable && sellable.type === Sellable.TYPE_PAID && !sellable.is_owned"
-			/>
-			<AppDownload v-else />
-		</div>
+			<div v-if="isLoaded">
+				<AppGameHeader />
+				<FormPayment
+					v-if="sellable && sellable.type === SellableType.Paid && !sellable.is_owned"
+				/>
+				<AppDownload v-else />
+			</div>
 
-		<AppFooter />
+			<AppFooter />
+		</AppTheme>
 	</div>
 </template>
 

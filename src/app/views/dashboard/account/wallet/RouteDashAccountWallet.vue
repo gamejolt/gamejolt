@@ -5,20 +5,19 @@ import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCard from '../../../../../_common/card/AppCard.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { formatCurrency } from '../../../../../_common/filters/currency';
-import { formatNumber } from '../../../../../_common/filters/number';
+import { formatCurrency, formatGemsCurrency } from '../../../../../_common/filters/currency';
 import { imageGems } from '../../../../../_common/img/images';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import {
-	createAppRoute,
-	defineAppRouteOptions,
+createAppRoute,
+defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { UserWallet } from '../../../../../_common/user/wallet/wallet.model';
+import { UserWalletModel } from '../../../../../_common/user/wallet/wallet.model';
 import { showWalletWithdrawModal } from '../../../../components/wallet/withdraw/withdraw-modal.service';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 import marketplaceImage from './marketplace.png';
@@ -51,7 +50,7 @@ const marketplaceRevenueSpent = ref(0);
 const marketplaceRevenueCurrent = ref(0);
 const marketplaceRevenuePendingWithdraw = ref(0);
 const marketplaceRevenuePendingActivation = ref(0);
-const gemWallet = ref<UserWallet>();
+const gemWallet = ref<UserWalletModel>();
 
 const isShowingRevenueBreakdown = ref(false);
 
@@ -82,7 +81,7 @@ const { isBootstrapped, reload } = createAppRoute({
 			payload.marketplaceRevenuePendingActivation || 0;
 		marketplaceWalletBalance.value = payload.marketplaceWalletBalance || 0;
 
-		gemWallet.value = payload.gemWallet ? new UserWallet(payload.gemWallet) : undefined;
+		gemWallet.value = payload.gemWallet ? new UserWalletModel(payload.gemWallet) : undefined;
 	},
 });
 
@@ -126,7 +125,7 @@ async function withdraw() {
 										<AppTranslate>Gems balance</AppTranslate>
 									</div>
 									<div class="stat-big-digit">
-										{{ formatNumber(gemWallet.available_balance) }}
+										{{ formatGemsCurrency(gemWallet.available_balance) }}
 									</div>
 								</div>
 							</div>
@@ -136,7 +135,7 @@ async function withdraw() {
 										<AppTranslate>Pending gems</AppTranslate>
 									</div>
 									<div class="stat-big-digit">
-										{{ formatNumber(gemWallet.pending_balance) }}
+										{{ formatGemsCurrency(gemWallet.pending_balance) }}
 										<AppJolticon
 											v-app-tooltip.touchable="
 												$gettext(

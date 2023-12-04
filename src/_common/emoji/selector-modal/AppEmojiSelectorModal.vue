@@ -24,8 +24,8 @@ import { storeModelList } from '../../model/model-store.service';
 import { ModelData } from '../../model/model.service';
 import { EmojiGroupData, useCommonStore } from '../../store/common-store';
 import { $gettext } from '../../translate/translate.service';
-import { EmojiGroup } from '../emoji-group.model';
-import { Emoji } from '../emoji.model';
+import { EmojiGroupModel, EmojiGroupType } from '../emoji-group.model';
+import { EmojiModel } from '../emoji.model';
 import AppEmojiSelectorGroup from './_group/AppEmojiSelectorGroup.vue';
 
 const props = defineProps({
@@ -41,7 +41,7 @@ const props = defineProps({
 
 const { modelData } = toRefs(props);
 
-const modal = useModal<Emoji>()!;
+const modal = useModal<EmojiModel>()!;
 const { reactionsData, reactionsCursor } = useCommonStore();
 
 let didInitialFetch = false;
@@ -120,21 +120,23 @@ async function init() {
 			oldCounts.set(groupId, data.group.num_emojis);
 		}
 
-		const newCollections: EmojiGroup[] = [];
+		const newCollections: EmojiGroupModel[] = [];
 		if (rawRecentEmojis.length) {
-			newCollections.push(
-				new EmojiGroup({
-					id: -1,
-					name: 'Recently used',
-					emojis: rawRecentEmojis,
-					num_emojis: rawRecentEmojis.length,
-					added_on: Date.now(),
-					type: EmojiGroup.TYPE_LOCAL_RECENT,
-					media_item: undefined,
-				} as ModelData<EmojiGroup>)
-			);
+			// We want to keep this out of the model store since we generate it.
+			const recentlyUsed = new EmojiGroupModel();
+			recentlyUsed.update({
+				id: -1,
+				name: 'Recently used',
+				emojis: rawRecentEmojis,
+				num_emojis: rawRecentEmojis.length,
+				added_on: Date.now(),
+				type: EmojiGroupType.LocalRecent,
+				media_item: undefined,
+			} as ModelData<EmojiGroupModel>);
+
+			newCollections.push(recentlyUsed);
 		}
-		newCollections.push(...storeModelList(EmojiGroup, response['groups']));
+		newCollections.push(...storeModelList(EmojiGroupModel, response['groups']));
 
 		const newData = newCollections.reduce<Map<number, EmojiGroupData>>((result, newGroup) => {
 			const old = reactionsData.value.get(newGroup.id);
@@ -285,7 +287,7 @@ async function fetchGroups(groups: EmojiGroupData[]) {
 		const staleIds = Array.isArray(response['bustCache']) ? response['bustCache'] : [];
 
 		// This will update any collections defined on the group data wrappers.
-		storeModelList(EmojiGroup, response['groups']);
+		storeModelList(EmojiGroupModel, response['groups']);
 
 		// Update data for the groups we just fetched.
 		groupData.forEach(item => {
@@ -326,7 +328,7 @@ async function fetchGroups(groups: EmojiGroupData[]) {
 	}
 }
 
-function selectEmoji(emoji: Emoji) {
+function selectEmoji(emoji: EmojiModel) {
 	modal.resolve(emoji);
 }
 

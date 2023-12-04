@@ -1,9 +1,9 @@
 <script lang="ts">
 import { computed } from 'vue';
-import { getQuery } from '../../../../utils/router';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import { getQuery } from '../../../../utils/router';
 import { sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../RouteSearch.vue';
 
@@ -24,7 +24,7 @@ const { processPayload, hasSearch, searchPayload, query } = useSearchRouteContro
 
 createAppRoute({
 	routeTitle: computed(() =>
-		$gettextInterpolate(`"%{ query }" realms`, {
+		$gettext(`"%{ query }" realms`, {
 			query: query.value,
 		})
 	),
@@ -35,24 +35,22 @@ createAppRoute({
 </script>
 
 <template>
-	<section class="section">
-		<div v-if="hasSearch" class="container">
-			<div class="row">
-				<div class="-grid">
-					<AppRealmFullCard
-						v-for="realm of searchPayload.realms"
-						:key="realm.id"
-						:realm="realm"
-						:to="realm.routeLocation"
-						label-position="bottom-left"
-						overlay-content
-						no-sheet
-						no-follow
-					/>
-				</div>
+	<div v-if="hasSearch" class="container">
+		<div class="row">
+			<div class="-grid">
+				<AppRealmFullCard
+					v-for="realm of searchPayload.realms"
+					:key="realm.id"
+					:realm="realm"
+					:to="realm.routeLocation"
+					label-position="bottom-left"
+					overlay-content
+					no-sheet
+					no-follow
+				/>
 			</div>
 		</div>
-	</section>
+	</div>
 </template>
 
 <style lang="stylus" scoped>

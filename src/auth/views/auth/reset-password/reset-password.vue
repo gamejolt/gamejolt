@@ -2,7 +2,10 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import FormResetPassword from '../../../components/forms/reset-password/reset-password.vue';
 
 @Options({
@@ -11,14 +14,14 @@ import FormResetPassword from '../../../components/forms/reset-password/reset-pa
 		FormResetPassword,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	// Will return a 404 if the key isn't correct for this user.
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/auth/check-reset-key/' + route.params.userId, {
 			key: route.params.token,
 		}),
 })
-export default class RouteAuthResetPassword extends BaseRouteComponent {
+export default class RouteAuthResetPassword extends LegacyRouteComponent {
 	get userId() {
 		return parseInt(this.$route.params.userId, 10);
 	}

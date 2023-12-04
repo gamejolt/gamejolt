@@ -1,6 +1,5 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import { RouteLocationRedirect } from '../../../../utils/router';
 import {
 	authOnLogin,
 	getRedirectUrl,
@@ -9,7 +8,11 @@ import {
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
 import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
+import { RouteLocationRedirect } from '../../../../utils/router';
 
 @Options({
 	name: 'RouteApproveLogin',
@@ -18,7 +21,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/r
 		AppLoading,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	async resolver({ route }) {
 		if (!import.meta.env.SSR) {
 			const pollingToken = sessionStorage.getItem('login-polling-token');
@@ -35,7 +38,7 @@ import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/r
 		return null;
 	},
 })
-export default class RouteApproveLogin extends BaseRouteComponent {
+export default class RouteApproveLogin extends LegacyRouteComponent {
 	pollingToken: string | null = null;
 
 	isExpired = false;

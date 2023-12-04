@@ -2,12 +2,15 @@
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../_common/api/api.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
-import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import AppTrophyCard from '../../../../../_common/trophy/AppTrophyCard.vue';
 import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
-import { useProfileRouteController } from '../../RouteProfile.vue';
+import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
+import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
+import { useProfileRouteStore } from '../../RouteProfile.vue';
 
 @Options({
 	name: 'RouteProfileTrophiesSite',
@@ -16,15 +19,15 @@ import { useProfileRouteController } from '../../RouteProfile.vue';
 		AppTrophyListPaged,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/profile/trophies/site/@' + route.params.username),
 })
-export default class RouteProfileTrophiesSite extends BaseRouteComponent {
-	routeStore = setup(() => useProfileRouteController()!);
+export default class RouteProfileTrophiesSite extends LegacyRouteComponent {
+	routeStore = setup(() => useProfileRouteStore()!);
 
-	trophies: UserBaseTrophy[] = [];
+	trophies: UserBaseTrophyModel[] = [];
 
 	get user() {
 		return this.routeStore.user;
@@ -32,7 +35,7 @@ export default class RouteProfileTrophiesSite extends BaseRouteComponent {
 
 	get routeTitle() {
 		if (this.user) {
-			return this.$gettextInterpolate(`@%{ user }'s achieved Game Jolt Trophies`, {
+			return this.$gettext(`@%{ user }'s achieved Game Jolt Trophies`, {
 				user: this.user.username,
 			});
 		}

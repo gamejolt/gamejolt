@@ -5,18 +5,18 @@ export type DestructorFunc = (href?: string) => void;
 
 export const logger = createLogger('Navigate');
 
-export class Navigate {
-	private static redirecting = false;
-	private static destructors: DestructorFunc[] = [];
+class NavigateService {
+	private redirecting = false;
+	private destructors: DestructorFunc[] = [];
 
-	static get isRedirecting() {
+	get isRedirecting() {
 		return this.redirecting;
 	}
 
 	/**
 	 * Only usable in client.
 	 */
-	static get currentClientSection() {
+	get currentClientSection() {
 		if (!GJ_IS_DESKTOP_APP) {
 			throw new Error('Attempted to use Navigate.currentClientSection outside of client');
 		}
@@ -42,7 +42,7 @@ export class Navigate {
 		return null;
 	}
 
-	private static callDestructors(href?: string) {
+	private callDestructors(href?: string) {
 		while (this.destructors.length > 0) {
 			const destructor = this.destructors.shift();
 			if (destructor) {
@@ -51,11 +51,11 @@ export class Navigate {
 		}
 	}
 
-	static registerDestructor(destructor: DestructorFunc) {
+	registerDestructor(destructor: DestructorFunc) {
 		this.destructors.push(destructor);
 	}
 
-	static reload() {
+	reload() {
 		logger.info('Reloading');
 		this.redirecting = true;
 
@@ -68,7 +68,7 @@ export class Navigate {
 		}
 	}
 
-	public static goto(href: string) {
+	public goto(href: string) {
 		logger.info('Going to ' + href);
 
 		this.redirecting = true;
@@ -77,7 +77,7 @@ export class Navigate {
 		window.location.href = href;
 	}
 
-	static gotoExternal(href: string) {
+	gotoExternal(href: string) {
 		logger.info('Going to in a new tab ' + href);
 
 		if (GJ_IS_DESKTOP_APP) {
@@ -87,7 +87,7 @@ export class Navigate {
 		}
 	}
 
-	static newWindow(
+	newWindow(
 		url: string,
 		/**
 		 * Including this will attempt to open as a new window instead of a new
@@ -140,3 +140,5 @@ export class Navigate {
 		}
 	}
 }
+
+export const Navigate = /** @__PURE__ */ new NavigateService();

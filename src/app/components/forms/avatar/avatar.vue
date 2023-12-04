@@ -10,11 +10,11 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../_common/form-vue/form.service';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { User } from '../../../../_common/user/user.model';
+import { $clearUserAvatar, $saveUserAvatar, UserModel } from '../../../../_common/user/user.model';
 
-type FormModel = User & {
+type FormModel = UserModel & {
 	avatar_crop?: any;
 };
 
@@ -28,8 +28,8 @@ class Wrapper extends BaseForm<FormModel> {}
 	},
 })
 export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, FormOnBeforeSubmit {
-	modelClass = User;
-	saveMethod = '$saveAvatar' as const;
+	modelClass = UserModel;
+	modelSaveHandler = $saveUserAvatar;
 
 	maxFilesize = 0;
 	minSize = 0;
@@ -80,12 +80,12 @@ export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, F
 	}
 
 	async clearAvatar() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to remove your avatar?`)
 		);
 
 		if (result) {
-			this.formModel.$clearAvatar();
+			$clearUserAvatar(this.formModel);
 		}
 	}
 

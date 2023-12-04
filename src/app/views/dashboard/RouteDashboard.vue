@@ -4,7 +4,9 @@ import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/ro
 import { useCommonStore } from '../../../_common/store/common-store';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		deps: {},
+	}),
 };
 </script>
 

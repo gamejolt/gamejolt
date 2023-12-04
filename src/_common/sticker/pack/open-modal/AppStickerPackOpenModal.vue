@@ -8,27 +8,29 @@ import {
 	PropType,
 	ref,
 	toRefs,
-	unref,
 } from 'vue';
 import { arrayRemove } from '../../../../utils/array';
 import { sleep } from '../../../../utils/utils';
-import { MaybeRef } from '../../../../utils/vue';
 import { Api } from '../../../api/api.service';
 import AppButton from '../../../button/AppButton.vue';
+import { markProductAsUnlocked } from '../../../collectible/collectible.model';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import { ImgHelper } from '../../../img/helper/helper-service';
 import { illBackpackClosed, illBackpackOpen } from '../../../img/ill/illustrations';
 import AppLoading from '../../../loading/AppLoading.vue';
 import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
+import { storeModelList } from '../../../model/model-store.service';
 import { Screen } from '../../../screen/screen-service';
+import AppSpacer from '../../../spacer/AppSpacer.vue';
 import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../translate/translate.service';
-import AppStickerStackItem from '../../stack/AppStickerStackItem.vue';
+import AppStickerImg from '../../AppStickerImg.vue';
 import { CreatorStickersMap, sortStickerStacks, useStickerStore } from '../../sticker-store';
-import { Sticker, StickerStack } from '../../sticker.model';
+import { StickerModel, StickerStack } from '../../sticker.model';
 import AppStickerPack from '../AppStickerPack.vue';
-import { UserStickerPack } from '../user-pack.model';
+import { showStickerPackContentsModal } from '../contents-modal/modal.service';
+import { UserStickerPackModel } from '../user-pack.model';
 
 const DurationStickerShow = 500;
 const DurationStickerStash = 750;
@@ -73,7 +75,7 @@ export function checkPackOpenPayloadErrors({
 	 * Provide to remove packs matching {@link packId} under certain error
 	 * conditions.
 	 */
-	myPacks: UserStickerPack[];
+	myPacks: UserStickerPackModel[];
 }) {
 	if (payload.success) {
 		return null;
@@ -115,7 +117,7 @@ const modal = useModal()!;
 
 const props = defineProps({
 	pack: {
-		type: Object as PropType<UserStickerPack>,
+		type: Object as PropType<UserStickerPackModel>,
 		required: true,
 	},
 	/**
@@ -142,7 +144,7 @@ const packSlice = ref<HTMLDivElement>();
 const packTrash = ref<HTMLDivElement>();
 
 const stage = ref<PackOpenStage>('confirm');
-const openedStickers = ref<Sticker[]>([]);
+const openedStickers = ref<StickerModel[]>([]);
 const expandStickers = ref(false);
 
 const shownContainer = ref<'pack' | 'backpack'>('pack');
@@ -154,12 +156,12 @@ const stickerAnimationDuration = computed(() =>
 	expandStickers.value ? DurationStickerShow : DurationStickerStash
 );
 
-const stickerSizing = computed<CSSProperties>(() => {
+const stickerSizing = computed(() => {
 	let size = 128;
 	if (Screen.isXs) {
 		size = Math.min(size, Math.max(Screen.width * 0.2, size / 2));
 	}
-	return { width: `${size}px`, height: `${size}px` };
+	return size;
 });
 
 onMounted(() => afterMount());
@@ -208,8 +210,15 @@ async function _openPack() {
 			throw Error('Got no stickers returned when opening pack.');
 		}
 
-		const newStickers: Sticker[] = Sticker.populate(rawStickers);
+		const newStickers = storeModelList(StickerModel, rawStickers);
 		openedStickers.value = newStickers;
+
+		// Mark all received stickers as owned. This should update any
+		// CollectibleModels that may be shown in the background of this modal.
+		for (const sticker of newStickers) {
+			markProductAsUnlocked(sticker);
+		}
+
 		// Sort our owned stickers, adding our new stickers to the list.
 		sortMyStickers(newStickers);
 
@@ -237,7 +246,6 @@ async function playSliceAnimations() {
 	for (const item of elements) {
 		if (item) {
 			item.style.animationPlayState = 'running';
-			// playAnimation(item);
 		}
 	}
 	await sleep(DelayPackTrash + DurationPackTrash * 0.5);
@@ -252,7 +260,7 @@ function preloadImages() {
 	urls.forEach(url => ImgHelper.loaded(url));
 }
 
-function sortMyStickers(newStickers: Sticker[]) {
+function sortMyStickers(newStickers: StickerModel[]) {
 	const myStickers = [...allStickers.value];
 
 	// Increment or add new stickers to our existing list as required.
@@ -348,7 +356,6 @@ async function setStage(newStage: PackOpenStage) {
 			const element = stickerElements[i];
 
 			element.style.animationPlayState = 'running';
-			// playAnimation(element);
 
 			if (i === stickerElements.length - 1) {
 				const cb = () => {
@@ -372,19 +379,6 @@ async function setStage(newStage: PackOpenStage) {
 	if (newStage === 'results-stash') {
 		// Tell the stickers to animate back towards the pack/backpack.
 		expandStickers.value = false;
-
-		for (let i = 0; i < openedStickers.value.length; i++) {
-			const element = root.value?.querySelector<HTMLDivElement>(`._sticker-${i}`);
-			if (!element) {
-				continue;
-			}
-
-			// Reverse animations, causing stickers to animate towards the
-			// backpack.
-			playAnimation(element, {
-				reverse: true,
-			});
-		}
 		return;
 	}
 
@@ -392,29 +386,6 @@ async function setStage(newStage: PackOpenStage) {
 		closeModal();
 		return;
 	}
-}
-
-/**
- * "Resets" the animation of an element, changing direction as directed.
- */
-function playAnimation(
-	element: MaybeRef<HTMLElement | null | undefined>,
-	{ reverse }: { reverse?: boolean } = {}
-) {
-	const rawElement = unref(element);
-	if (!rawElement) {
-		return;
-	}
-
-	rawElement.style.animationName = 'unset';
-	if (reverse) {
-		rawElement.style.animationDirection = 'reverse';
-	} else if (rawElement.style.animationDirection === 'reverse') {
-		rawElement.style.animationDirection = 'normal';
-	}
-	// Force a reflow so it animates again.
-	rawElement.offsetWidth;
-	rawElement.style.animationName = '';
 }
 
 function getBottomForRotation(angle: number) {
@@ -639,24 +610,41 @@ function addMs(value: number) {
 							@click.capture.stop="setStage('closing')"
 						/>
 
-						<!-- Open button -->
-						<AppButton
+						<div
 							class="_strong-ease-out"
 							:style="{
 								position: 'absolute',
 								top: 'calc(100% + 16px)',
+								width: `100%`,
 								opacity: stage === 'confirm' ? 1 : 0,
 								transition: 'opacity 200ms',
 								...ignoreWhen(stage !== 'confirm'),
 							}"
-							solid
-							primary
-							block
-							overlay
-							@click.capture.stop="setStage('pack-open')"
 						>
-							{{ $gettext(`Open pack`) }}
-						</AppButton>
+							<!-- Open button -->
+							<AppButton
+								solid
+								primary
+								block
+								overlay
+								@click.capture.stop="setStage('pack-open')"
+							>
+								{{ $gettext(`Open pack`) }}
+							</AppButton>
+
+							<AppSpacer vertical :scale="2" />
+
+							<!-- Pack contents button -->
+							<AppButton
+								block
+								overlay
+								@click.capture.stop="
+									showStickerPackContentsModal(pack.sticker_pack)
+								"
+							>
+								{{ $gettext(`View contents`) }}
+							</AppButton>
+						</div>
 					</div>
 				</div>
 
@@ -676,7 +664,8 @@ function addMs(value: number) {
 						transform: 'translateX(-50%)',
 						zIndex: 3 + index,
 						pointerEvents: 'none',
-						...stickerSizing,
+						width: `${stickerSizing}px`,
+						height: `${stickerSizing}px`,
 					}"
 				>
 					<!-- Stickers rotation -->
@@ -689,12 +678,11 @@ function addMs(value: number) {
 						<!-- Stickers offset -->
 						<div
 							class="_anim-sticker"
-							:class="[
-								`_sticker-${index}`,
-								{
-									'_strong-ease-out': expandStickers,
-								},
-							]"
+							:class="{
+								'_anim-sticker-reverse':
+									shownContainer === 'backpack' && !expandStickers,
+								'_strong-ease-out': expandStickers,
+							}"
 							:style="{
 								transition: `bottom`,
 								transitionDelay: `${index * DurationStickerAnimationOffset}ms`,
@@ -714,7 +702,7 @@ function addMs(value: number) {
 								}"
 							>
 								<!-- Stickers scale -->
-								<AppStickerStackItem
+								<AppStickerImg
 									:style="{
 										transform:
 											stage === 'results-show' ? `scale(1)` : `scale(0.5)`,
@@ -728,7 +716,8 @@ function addMs(value: number) {
 											index * DurationStickerAnimationOffset
 										}ms`,
 									}"
-									:img-url="sticker.img_url"
+									:size="stickerSizing"
+									:src="sticker.img_url"
 								/>
 							</div>
 						</div>
@@ -823,6 +812,9 @@ function addMs(value: number) {
 	animation-fill-mode: both
 	animation-play-state: paused
 
+._anim-sticker-reverse
+	animation-name: anim-sticker-reverse !important
+
 ._anim-slice
 	animation-name: anim-slice
 	animation-fill-mode: both
@@ -867,6 +859,19 @@ function addMs(value: number) {
 
 	50%
 		opacity: 1
+
+	100%
+		opacity: 1
+
+@keyframes anim-sticker-reverse
+	0%
+		opacity: 1
+
+	50%
+		opacity: 1
+
+	100%
+		opacity: 0
 
 @keyframes anim-slice
 	0%

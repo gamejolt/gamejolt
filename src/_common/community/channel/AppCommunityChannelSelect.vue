@@ -1,21 +1,21 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
 import AppPill from '../../pill/AppPill.vue';
-import { CommunityChannel } from './channel.model';
+import { CommunityChannelModel } from './channel.model';
 
 const props = defineProps({
 	channels: {
-		type: Array as PropType<CommunityChannel[]>,
+		type: Array as PropType<CommunityChannelModel[]>,
 		required: true,
 	},
 	modelValue: {
-		type: Object as PropType<CommunityChannel>,
+		type: Object as PropType<CommunityChannelModel>,
 		default: undefined,
 	},
 });
 
 const emit = defineEmits({
-	'update:modelValue': (_modelValue: CommunityChannel) => true,
+	'update:modelValue': (_modelValue: CommunityChannelModel) => true,
 });
 
 const validChannels = computed(() => props.channels.filter(i => i.canPost));

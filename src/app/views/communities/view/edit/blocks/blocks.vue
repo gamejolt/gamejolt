@@ -1,23 +1,24 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import AppPagination from '../../../../../../_common/pagination/pagination.vue';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import AppPagination from '../../../../../../_common/pagination/AppPagination.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { UserBlock } from '../../../../../../_common/user/block/block.model';
+import { UserBlockModel } from '../../../../../../_common/user/block/block.model';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import FormCommunityBlock from '../../../../../components/forms/community/ban/block.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../view.store';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+import { useCommunityRouteStore } from '../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditBlocks',
@@ -35,18 +36,17 @@ import AppCommunitiesViewPageContainer from '../../_page-container/page-containe
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id'] },
 	resolver({ route }) {
 		return Api.sendRequest('/web/dash/communities/blocks/' + route.params.id);
 	},
 })
-export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+export default class RouteCommunitiesViewEditBlocks extends LegacyRouteComponent {
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	isAdding = false;
-	blocks: UserBlock[] = [];
+	blocks: UserBlockModel[] = [];
 	totalCount = 0;
 	perPage = 0;
 
@@ -80,7 +80,7 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.blocks = UserBlock.populate($payload.blocks);
+		this.blocks = UserBlockModel.populate($payload.blocks);
 		this.totalCount = $payload.totalCount;
 		this.perPage = $payload.perPage;
 
@@ -98,7 +98,7 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 	async refetch() {
 		const url = `/web/dash/communities/blocks/${this.community.id}?page=${this.page}&sort=${this.sort}&sort-direction=${this.sortDirection}`;
 		const payload = await Api.sendRequest(url);
-		this.blocks = UserBlock.populate(payload.blocks);
+		this.blocks = UserBlockModel.populate(payload.blocks);
 	}
 
 	changeSort(sort: string) {
@@ -113,9 +113,9 @@ export default class RouteCommunitiesViewEditBlocks extends BaseRouteComponent {
 		this.refetch();
 	}
 
-	async onClickLift(block: UserBlock) {
-		const response = await ModalConfirm.show(
-			this.$gettextInterpolate(
+	async onClickLift(block: UserBlockModel) {
+		const response = await showModalConfirm(
+			this.$gettext(
 				'Do you really want to lift the block for the user @%{ username } early? The reason they were blocked: %{ reason }',
 				{ username: block.user.username, reason: block.reason }
 			),

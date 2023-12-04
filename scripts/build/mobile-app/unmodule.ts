@@ -1,5 +1,5 @@
 import * as fg from 'fast-glob';
-import * as fs from 'fs-extra';
+import { readFile, writeFile } from 'fs-extra';
 
 const path = require('path') as typeof import('path');
 
@@ -20,13 +20,13 @@ async function main() {
 
 	// Vite builds a module by default. We need to convert this to a non-module JS
 	// file.
-	let editorHtml = await fs.readFile(editorHtmlPath, 'utf8');
+	let editorHtml = await readFile(editorHtmlPath, 'utf8');
 
 	// Gotta replace the HTML import of the script tag to no longer be a module import.
 	editorHtml = editorHtml.replace(`type="module" crossorigin`, `defer`);
-	await fs.writeFile(editorHtmlPath, editorHtml, 'utf8');
+	await writeFile(editorHtmlPath, editorHtml, 'utf8');
 
-	let editorJs = await fs.readFile(editorJsPath, 'utf8');
+	let editorJs = await readFile(editorJsPath, 'utf8');
 
 	// Wrap in a function that will execute immediately.
 	editorJs = '(function() {' + editorJs + '})();';
@@ -38,7 +38,7 @@ async function main() {
 		"(`${window.location.href}`.replace('editor.html', '') + 'assets/')"
 	);
 
-	await fs.writeFile(editorJsPath, editorJs, 'utf8');
+	await writeFile(editorJsPath, editorJs, 'utf8');
 
 	console.log('Unmoduled editor.');
 }

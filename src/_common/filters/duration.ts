@@ -46,6 +46,14 @@ interface ShorthandTimeOptions {
 	precision?: ShorthandTimePrecision;
 	joiner?: string;
 	nowText?: string;
+	/**
+	 * An optional function allowing easy wrapping of the shorthand time in
+	 * [gettext].
+	 *
+	 * This is only used when remaining time is displayed, and has no effect
+	 * when {@link nowText} is displayed.
+	 */
+	timeTransformer?: (time: string) => string;
 }
 
 export function shorthandReadableTime(
@@ -55,6 +63,7 @@ export function shorthandReadableTime(
 		precision = 'exact',
 		joiner = ', ',
 		nowText = 'now',
+		timeTransformer,
 	}: ShorthandTimeOptions = {}
 ): string {
 	const now = getCurrentServerTime();
@@ -115,5 +124,9 @@ export function shorthandReadableTime(
 		return nowText;
 	}
 
-	return strings.join(joiner);
+	const joinedText = strings.join(joiner);
+	if (timeTransformer) {
+		return timeTransformer(joinedText);
+	}
+	return joinedText;
 }

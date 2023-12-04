@@ -1,8 +1,9 @@
 <script lang="ts">
 import { mixins, Options } from 'vue-property-decorator';
 import {
-	CommunityCompetition,
-	CompetitionPeriodVoting,
+$saveCommunityCompetition,
+CommunityCompetitionModel,
+CompetitionPeriodVoting,
 } from '../../../../../../_common/community/competition/competition.model';
 import { formatDate } from '../../../../../../_common/filters/date';
 import AppFormLegend from '../../../../../../_common/form-vue/AppFormLegend.vue';
@@ -10,9 +11,9 @@ import AppFormControlDate from '../../../../../../_common/form-vue/controls/AppF
 import { FormTimezoneService } from '../../../../../../_common/form-vue/form-timezone.service';
 import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
-import AppCommunityCompetitionDate from '../../../../community/competition/date/date.vue';
+import AppCommunityCompetitionDate from '../../../../community/competition/date/AppCommunityCompetitionDate.vue';
 
-class Wrapper extends BaseForm<CommunityCompetition> {}
+class Wrapper extends BaseForm<CommunityCompetitionModel> {}
 
 @Options({
 	components: {
@@ -23,8 +24,10 @@ class Wrapper extends BaseForm<CommunityCompetition> {}
 	},
 })
 export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
-	modelClass = CommunityCompetition;
-	timezoneService: FormTimezoneService<CommunityCompetition> | null = null;
+	modelClass = CommunityCompetitionModel;
+	modelSaveHandler = $saveCommunityCompetition;
+
+	timezoneService: FormTimezoneService<CommunityCompetitionModel> | null = null;
 
 	readonly formatDate = formatDate;
 

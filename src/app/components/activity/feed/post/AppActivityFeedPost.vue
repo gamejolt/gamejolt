@@ -3,12 +3,12 @@ import { computed, PropType, ref, toRefs } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
-import { CommunityChannel } from '../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import { isDynamicGoogleBot } from '../../../../../_common/device/device.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import { EventItem } from '../../../../../_common/event-item/event-item.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { EventItemModel } from '../../../../../_common/event-item/event-item.model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
@@ -22,7 +22,7 @@ import {
 import { kThemeGjOverlayNotice } from '../../../../../_common/theme/variables';
 import { RouteLocationDefinition } from '../../../../../utils/router';
 import AppContentTargets from '../../../content/AppContentTargets.vue';
-import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
+import AppFiresidePostEmbed from '../../../fireside/post/embed/AppFiresidePostEmbed.vue';
 import AppPollVoting from '../../../poll/AppPollVoting.vue';
 import AppPostContent from '../../../post/AppPostContent.vue';
 import AppPostHeader from '../../../post/AppPostHeader.vue';
@@ -34,7 +34,7 @@ import { useActivityFeed } from '../view';
 import AppActivityFeedPostBlocked from './AppActivityFeedPostBlocked.vue';
 import AppActivityFeedPostMedia from './AppActivityFeedPostMedia.vue';
 import AppActivityFeedPostVideo from './AppActivityFeedPostVideo.vue';
-import AppActivityFeedPostText from './text/text.vue';
+import AppActivityFeedPostText from './text/AppActivityFeedPostText.vue';
 
 const props = defineProps({
 	item: {
@@ -55,11 +55,11 @@ const feedInterface = useActivityFeedInterface()!;
 const route = useRoute();
 const router = useRouter();
 
-const eventItem = computed(() => item.value.feedItem as EventItem);
-const post = computed(() => eventItem.value.action as FiresidePost);
+const eventItem = computed(() => item.value.feedItem as EventItemModel);
+const post = computed(() => eventItem.value.action as FiresidePostModel);
 
 const stickerTargetController = createStickerTargetController(post.value, {
-	isCreator: computed(() => user.value.is_creator === true),
+	canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
 });
 
 provideStickerTargetController(stickerTargetController);
@@ -184,39 +184,39 @@ function scrollToStickers() {
 	}
 }
 
-function onPostEdited(item: EventItem) {
+function onPostEdited(item: EventItemModel) {
 	feedInterface.onPostEdited(item);
 }
 
-function onPostPublished(item: EventItem) {
+function onPostPublished(item: EventItemModel) {
 	feedInterface.onPostPublished(item);
 }
 
-function onPostRemoved(item: EventItem) {
+function onPostRemoved(item: EventItemModel) {
 	feedInterface.onPostRemoved(item);
 }
 
-function onPostFeatured(item: EventItem, community: Community) {
+function onPostFeatured(item: EventItemModel, community: CommunityModel) {
 	feedInterface.onPostFeatured(item, community);
 }
 
-function onPostUnfeatured(item: EventItem, community: Community) {
+function onPostUnfeatured(item: EventItemModel, community: CommunityModel) {
 	feedInterface.onPostUnfeatured(item, community);
 }
 
-function onPostMovedChannel(item: EventItem, movedTo: CommunityChannel) {
+function onPostMovedChannel(item: EventItemModel, movedTo: CommunityChannelModel) {
 	feedInterface.onPostMovedChannel(item, movedTo);
 }
 
-function onPostRejected(item: EventItem, community: Community) {
+function onPostRejected(item: EventItemModel, community: CommunityModel) {
 	feedInterface.onPostRejected(item, community);
 }
 
-function onPostPinned(item: EventItem) {
+function onPostPinned(item: EventItemModel) {
 	feedInterface.onPostPinned(item);
 }
 
-function onPostUnpinned(item: EventItem) {
+function onPostUnpinned(item: EventItemModel) {
 	feedInterface.onPostUnpinned(item);
 }
 </script>

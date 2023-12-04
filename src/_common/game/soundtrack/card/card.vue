@@ -9,8 +9,8 @@ import { Environment } from '../../../environment/environment.service';
 import { formatNumber } from '../../../filters/number';
 import { Navigate } from '../../../navigate/navigate.service';
 import { Screen } from '../../../screen/screen-service';
-import { Game } from '../../game.model';
-import { GameSong } from '../../song/song.model';
+import { GameModel } from '../../game.model';
+import { GameSongModel } from '../../song/song.model';
 
 @Options({
 	components: {
@@ -21,10 +21,10 @@ import { GameSong } from '../../song/song.model';
 })
 export default class AppGameSoundtrackCard extends Vue {
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	@Prop(Array)
-	songs!: GameSong[];
+	songs!: GameSongModel[];
 
 	isPlaying = false;
 	isShowingSoundtrack = false;

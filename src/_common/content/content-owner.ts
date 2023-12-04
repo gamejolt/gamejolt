@@ -1,7 +1,6 @@
-import { computed, inject, InjectionKey, reactive, ref } from 'vue';
-import { MaybeRef } from '../../utils/vue';
+import { computed, inject, InjectionKey, MaybeRef, reactive, ref } from 'vue';
 import { ContentContext, ContextCapabilities } from './content-context';
-import { ContentRules } from './content-editor/content-rules';
+import { ContentRules } from './content-rules';
 import { ContentHydrator } from './content-hydrator';
 
 export const ContentOwnerControllerKey: InjectionKey<ContentOwnerController> = Symbol(

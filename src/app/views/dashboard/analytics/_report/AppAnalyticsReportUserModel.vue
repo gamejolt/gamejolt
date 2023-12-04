@@ -3,11 +3,11 @@ import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserAvatarImg from '../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { User } from '../../../../../_common/user/user.model';
+import { UserModel } from '../../../../../_common/user/user.model';
 
 defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 });

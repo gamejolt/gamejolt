@@ -1,19 +1,30 @@
-import { InjectionKey } from '@vue/runtime-core';
+import { InjectionKey, inject } from 'vue';
 import { arrayGroupBy, arrayRemove, numberSort } from '../../utils/array';
 import { Api } from '../api/api.service';
 import { showSuccessGrowl } from '../growls/growls.service';
-import { Translate } from '../translate/translate.service';
-import { Comment, fetchComments } from './comment-model';
+import { storeModel, storeModelList } from '../model/model-store.service';
+import { $gettext } from '../translate/translate.service';
+import {
+	$pinComment,
+	CommentModel,
+	CommentSort,
+	CommentStatus,
+	fetchComments,
+} from './comment-model';
 
 export const CommentStoreManagerKey: InjectionKey<CommentStoreManager> = Symbol('comment-store');
+
+export function useCommentStoreManager() {
+	return inject(CommentStoreManagerKey, undefined);
+}
 
 export class CommentStoreModel {
 	totalCount = 0;
 	count = 0;
 	parentCount = 0;
-	comments: Comment[] = [];
+	comments: CommentModel[] = [];
 	locks = 0;
-	sort = Comment.SORT_HOT;
+	sort = CommentSort.Hot;
 	// This flag gets set for every change (add/remove/update), that prompts the
 	// overview component owner to update the comment info
 	overviewNeedsRefresh = false;
@@ -40,7 +51,7 @@ export class CommentStoreModel {
 		return arrayGroupBy(comments, 'parent_id');
 	}
 
-	contains(comment: Comment) {
+	contains(comment: CommentModel) {
 		return this.comments.findIndex(i => i.id === comment.id) !== -1;
 	}
 
@@ -105,13 +116,13 @@ export function releaseCommentStore(manager: CommentStoreManager, store: Comment
 	}
 }
 
-export async function fetchCommentThread(store: CommentStoreModel, parentId: number) {
+export async function commentStoreFetchThread(store: CommentStoreModel, parentId: number) {
 	const response = await Api.sendRequest(`/comments/get-thread/${parentId}`, null, {
 		noErrorRedirect: true,
 	});
 
-	const parent = new Comment(response.parent);
-	const children = Comment.populate(response.children);
+	const parent = storeModel(CommentModel, response.parent);
+	const children = storeModelList(CommentModel, response.children);
 
 	const comments = children;
 	comments.push(parent);
@@ -121,11 +132,11 @@ export async function fetchCommentThread(store: CommentStoreModel, parentId: num
 	return response;
 }
 
-export async function fetchStoreComments(store: CommentStoreModel, page?: number) {
+export async function commentStoreFetch(store: CommentStoreModel, page?: number) {
 	let response: any;
 
 	// 'new' and 'you' sort by last timestamp using scroll
-	if (store.sort === Comment.SORT_NEW || store.sort === Comment.SORT_YOU) {
+	if (store.sort === CommentSort.New || store.sort === CommentSort.You) {
 		// load comments after the last timestamp
 		const lastComment =
 			store.parentComments.length === 0
@@ -148,19 +159,19 @@ export async function fetchStoreComments(store: CommentStoreModel, page?: number
 
 	const count = response.count || 0;
 	const parentCount = response.parentCount || 0;
-	const comments = Comment.populate(response.comments).concat(
-		Comment.populate(response.childComments)
+	const comments = storeModelList(CommentModel, response.comments).concat(
+		storeModelList(CommentModel, response.childComments)
 	);
 
-	setCommentCount(store, count);
+	commentStoreCount(store, count);
 	_setParentCommentCount(store, parentCount);
 	_addComments(store, comments);
 
 	return response;
 }
 
-export async function pinComment(manager: CommentStoreManager, comment: Comment) {
-	await comment.$pin();
+export async function commentStorePin(manager: CommentStoreManager, comment: CommentModel) {
+	await $pinComment(comment);
 
 	const store = getCommentStore(manager, comment.resource, comment.resource_id);
 	if (store instanceof CommentStoreModel) {
@@ -168,13 +179,13 @@ export async function pinComment(manager: CommentStoreManager, comment: Comment)
 	}
 }
 
-export function setCommentSort(store: CommentStoreModel, sort: string) {
+export function commentStoreSort(store: CommentStoreModel, sort: CommentSort) {
 	store.sort = sort;
 	// clear the store's comments and prepare for reload
 	store.clear();
 }
 
-function _addComments(store: CommentStoreModel, comments: Comment[]) {
+function _addComments(store: CommentStoreModel, comments: CommentModel[]) {
 	for (const comment of comments) {
 		// Replace an old instance of the comment in the store if it exists.
 		const index = store.comments.findIndex(c => c.id === comment.id);
@@ -190,7 +201,7 @@ function _setParentCommentCount(store: CommentStoreModel, count: number) {
 	store.parentCount = count;
 }
 
-export function setCommentCount(store: CommentStoreModel, count: number) {
+export function commentStoreCount(store: CommentStoreModel, count: number) {
 	store.count = count;
 
 	if (count) {
@@ -198,26 +209,26 @@ export function setCommentCount(store: CommentStoreModel, count: number) {
 	}
 }
 
-export function updateComment(store: CommentStoreModel, commentId: number, data: any) {
+export function commentStoreUpdate(store: CommentStoreModel, commentId: number, data: any) {
 	const comment = store.comments.find(i => i.id === commentId);
 	if (comment) {
-		comment.assign(data);
+		comment.update(data);
 	}
 }
 
-export function onCommentAdd(manager: CommentStoreManager, comment: Comment) {
+export function commentStoreHandleAdd(manager: CommentStoreManager, comment: CommentModel) {
 	const store = getCommentStore(manager, comment.resource, comment.resource_id);
 
-	if (comment.status === Comment.STATUS_SPAM) {
+	if (comment.status === CommentStatus.Spam) {
 		showSuccessGrowl(
-			Translate.$gettext(
-				'Your comment has been marked for review. Please allow some time for it to show on the site.'
+			$gettext(
+				`Your comment has been marked for review. Please allow some time for it to show on the site.`
 			),
-			Translate.$gettext('Almost there...')
+			$gettext(`Almost there...`)
 		);
 	} else if (store && !store.contains(comment)) {
 		// insert the new comment at the beginning
-		if (store.sort === Comment.SORT_YOU || comment.parent_id) {
+		if (store.sort === CommentSort.You || comment.parent_id) {
 			++store.count;
 			store.comments.unshift(comment);
 			if (!comment.parent_id) {
@@ -228,14 +239,14 @@ export function onCommentAdd(manager: CommentStoreManager, comment: Comment) {
 	}
 }
 
-export function onCommentEdit(manager: CommentStoreManager, comment: Comment) {
+export function commentStoreHandleEdit(manager: CommentStoreManager, comment: CommentModel) {
 	// Was it marked as possible spam?
-	if (comment.status === Comment.STATUS_SPAM) {
+	if (comment.status === CommentStatus.Spam) {
 		showSuccessGrowl(
-			Translate.$gettext(
-				'Your comment has been marked for review. Please allow some time for it to show on the site.'
+			$gettext(
+				`Your comment has been marked for review. Please allow some time for it to show on the site.`
 			),
-			Translate.$gettext('Almost there...')
+			$gettext(`Almost there...`)
 		);
 	}
 	const store = getCommentStore(manager, comment.resource, comment.resource_id);
@@ -244,7 +255,7 @@ export function onCommentEdit(manager: CommentStoreManager, comment: Comment) {
 	}
 }
 
-export function onCommentRemove(manager: CommentStoreManager, comment: Comment) {
+export function commentStoreHandleRemove(manager: CommentStoreManager, comment: CommentModel) {
 	const store = getCommentStore(manager, comment.resource, comment.resource_id);
 	if (!store) {
 		return;

@@ -3,15 +3,18 @@ import { formatDistanceStrict } from 'date-fns';
 import { nextTick } from 'vue';
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { sleep } from '../../../../utils/utils';
-import AppAlertDismissable from '../../../../_common/alert/dismissable/dismissable.vue';
-import { CommentModal } from '../../../../_common/comment/modal/modal.service';
+import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../_common/content/content-writer';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import {
+	$createFiresidePost,
+	FiresidePostModel,
+} from '../../../../_common/fireside/post/post-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import { User } from '../../../../_common/user/user.model';
-import { PostEditModal } from '../../post/edit-modal/edit-modal-service';
+import { UserModel } from '../../../../_common/user/user.model';
+import { sleep } from '../../../../utils/utils';
+import { showCommentModal } from '../../comment/modal/modal.service';
+import { showPostEditModal } from '../../post/edit-modal/edit-modal-service';
 
 @Options({
 	components: {
@@ -20,7 +23,7 @@ import { PostEditModal } from '../../post/edit-modal/edit-modal-service';
 })
 export default class AppUserSpawnDay extends Vue {
 	@Prop(Object)
-	user!: User;
+	user!: UserModel;
 
 	commonStore = setup(() => useCommonStore());
 
@@ -33,7 +36,7 @@ export default class AppUserSpawnDay extends Vue {
 	};
 
 	@Emit('post-add')
-	emitPostAdd(_post: FiresidePost) {}
+	emitPostAdd(_post: FiresidePostModel) {}
 
 	get shouldShowSpawnDay() {
 		return !!this.user.is_spawnday;
@@ -56,7 +59,7 @@ export default class AppUserSpawnDay extends Vue {
 
 	showComments() {
 		if (this.user) {
-			CommentModal.show({
+			showCommentModal({
 				model: this.user,
 				displayMode: 'shouts',
 			});
@@ -64,7 +67,7 @@ export default class AppUserSpawnDay extends Vue {
 	}
 
 	async showNewPost() {
-		const postProvider = FiresidePost.$create().then(newPost => {
+		const postProvider = $createFiresidePost().then(newPost => {
 			// Create a doc and append the "#spawnday" tag.
 			const spawnDayDoc = new ContentDocument('fireside-post-lead', []);
 			const writer = new ContentWriter(spawnDayDoc);
@@ -74,7 +77,7 @@ export default class AppUserSpawnDay extends Vue {
 			return newPost;
 		});
 
-		const post = await PostEditModal.show(postProvider);
+		const post = await showPostEditModal(postProvider);
 
 		if (!post) {
 			return;
@@ -151,7 +154,7 @@ export default class AppUserSpawnDay extends Vue {
 		alert-type="info"
 		:dismiss-key="`user-spawn-day-${user.id}-${spawnDayYear}`"
 	>
-		<div ref="container" class="-confetti-container"></div>
+		<div ref="container" class="-confetti-container" />
 
 		<template v-if="isOwnSpawnDay">
 			<h4>

@@ -19,9 +19,13 @@ export default {
 
 <script lang="ts" setup>
 const isSuccess = ref(false);
+// routeTitle wants access to isBootstrapped from the app route, but the
+// declaration order was breaking things. Use this instead of isBootstrapped,
+// the timing should be pretty much the same.
+const isRouteResolved = ref(false);
 
 const routeTitle = computed(() => {
-	if (!isBootstrapped.value) {
+	if (!isRouteResolved.value) {
 		return $gettext('Just one moment...');
 	}
 
@@ -35,6 +39,8 @@ const routeTitle = computed(() => {
 const { isBootstrapped } = createAppRoute({
 	routeTitle,
 	onResolved({ payload }) {
+		isRouteResolved.value = true;
+
 		isSuccess.value = payload.success === true;
 		if (!isSuccess.value) {
 			return;

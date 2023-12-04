@@ -1,5 +1,4 @@
-import { computed } from '@vue/reactivity';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Screen } from '../_common/screen/screen-service';
 
 /**

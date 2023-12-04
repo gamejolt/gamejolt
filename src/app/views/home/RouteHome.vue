@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineAsyncComponent } from 'vue';
-import { RouteLocationNormalized, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { router } from '..';
 import { Api } from '../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../_common/growls/growls.service';
@@ -10,11 +10,9 @@ import {
 	defineAppRouteOptions,
 } from '../../../_common/route/route-component';
 import { useCommonStore } from '../../../_common/store/common-store';
-import { $gettextInterpolate } from '../../../_common/translate/translate.service';
-import { User } from '../../../_common/user/user.model';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { objectOmit } from '../../../utils/object';
 import { IntentService } from '../../components/intent/intent.service';
-import { RealmPathHistoryStateKey } from './feed-switcher/AppHomeFeedSwitcher.vue';
 import { HomeFeedService } from './home-feed.service';
 
 const RouteHomeFeed = defineAsyncComponent(() =>
@@ -23,48 +21,6 @@ const RouteHomeFeed = defineAsyncComponent(() =>
 const RouteDiscoverHome = defineAsyncComponent(() =>
 	asyncRouteLoader(router, import('../discover/home/RouteDiscoverHome.vue'))
 );
-
-/**
- * Returns the current analytics path we have assigned.
- */
-export function getCurrentHomeRouteAnalyticsPath(route: RouteLocationNormalized) {
-	const path = route.meta.analyticsPath;
-	if (path && typeof path === 'string') {
-		return path;
-	}
-	return undefined;
-}
-
-/**
- * Returns the analytics path we should assign to the route.
- */
-export function getNewHomeRouteAnalyticsPath(route: RouteLocationNormalized, user: User | null) {
-	// The route content, but not the path, changes depending on the user state
-	// - so we need to track the page view through a analyticsPath meta value
-	// that aligns with our route content.
-	let analyticsPath = '/discover';
-	if (user) {
-		const tab = route.params?.tab;
-		if (tab === HomeFeedService.fypTab) {
-			analyticsPath = '/fyp';
-		} else if (tab === HomeFeedService.activityTab) {
-			analyticsPath = '/'; // For clarification purposes that "activity" => "/".
-		} else {
-			const realmPath = router.options.history.state[RealmPathHistoryStateKey];
-
-			if (typeof realmPath === 'string' && realmPath.length) {
-				analyticsPath = `/realm-${realmPath}`;
-			} else {
-				analyticsPath = '/';
-			}
-		}
-	}
-	return analyticsPath;
-}
-
-export function updateHomeRouteAnalyticsPath(route: RouteLocationNormalized, user: User | null) {
-	route.meta.analyticsPath = getNewHomeRouteAnalyticsPath(route, user);
-}
 
 export default {
 	...defineAppRouteOptions({
@@ -109,10 +65,24 @@ createAppRoute({
 			message = `%{ type } were added to your account.`;
 		}
 
-		showSuccessGrowl($gettextInterpolate(message, { type }));
+		showSuccessGrowl($gettext(message, { type }));
 	},
 	onResolved() {
-		updateHomeRouteAnalyticsPath(route, user.value);
+		// The route content, but not the path, changes depending on the user
+		// state - so we need to track the page view through a analyticsPath
+		// meta value that aligns with our route content.
+		let analyticsPath = '/discover';
+		if (user.value) {
+			if (route.params?.tab === HomeFeedService.fypTab) {
+				analyticsPath = '/fyp';
+			} else if (route.params?.tab === HomeFeedService.activityTab) {
+				analyticsPath = '/'; // For clarification purposes that "activity" => "/".
+			} else {
+				analyticsPath = '/';
+			}
+		}
+
+		route.meta.analyticsPath = analyticsPath;
 	},
 });
 </script>

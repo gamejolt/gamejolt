@@ -1,29 +1,37 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { arrayShuffle } from '../../../../utils/array';
-import { useFullscreenHeight } from '../../../../utils/fullscreen';
+import { useRoute } from 'vue-router';
 import {
-	trackAppDownload,
-	trackAppPromotionClick,
+trackAppDownload,
+trackAppPromotionClick,
 } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
-import { Background } from '../../../../_common/background/background.model';
+import { BackgroundModel } from '../../../../_common/background/background.model';
 import AppBean from '../../../../_common/bean/AppBean.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
 import { DeviceArch, DeviceOs, getDeviceOS } from '../../../../_common/device/device.service';
-import { Game } from '../../../../_common/game/game.model';
+import {
+chooseBestGameBuild,
+pluckInstallableGameBuilds,
+} from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
 import { getAppUrl, useAppPromotionStore } from '../../../../_common/mobile-app/store';
+import { storeModel, storeModelList } from '../../../../_common/model/model-store.service';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import { kThemeGjOverlayNotice } from '../../../../_common/theme/variables';
+import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
+import { kFontSizeLarge } from '../../../../_styles/variables';
+import { arrayShuffle } from '../../../../utils/array';
+import { useFullscreenHeight } from '../../../../utils/fullscreen';
 import laptopImage from './laptop.webp';
 import mobileImage from './mobile.webp';
 import footerImage from './peek-jelly.png';
@@ -43,18 +51,21 @@ export default {
 <script lang="ts" setup>
 const appPromotion = useAppPromotionStore();
 const fullscreenHeight = useFullscreenHeight();
+const route = useRoute();
 
 const packageData = ref<GamePackagePayloadModel>();
 const fallbackUrl = ref('https://gamejolt.com');
-const headerBackground = ref<Background>();
-const mobileBackground = ref<Background>();
-const laptopBackground = ref<Background>();
+const headerBackground = ref<BackgroundModel>();
+const mobileBackground = ref<BackgroundModel>();
+const laptopBackground = ref<BackgroundModel>();
 
 const detectedDevice = getDeviceOS();
 
 const routeTitle = computed(() => `Get the Game Jolt app`);
 const playStoreUrl = computed(() => getAppUrl(appPromotion, { targetStore: 'play' }));
 const appStoreUrl = computed(() => getAppUrl(appPromotion, { targetStore: 'app' }));
+
+const hasKeyClaimIntent = computed(() => route.query.intent === 'claim-key');
 
 createAppRoute({
 	routeTitle: routeTitle.value,
@@ -80,11 +91,11 @@ createAppRoute({
 		packageData.value = new GamePackagePayloadModel(payload.packageData);
 		fallbackUrl.value = payload.clientGameUrl;
 
-		headerBackground.value = new Background(payload.headerBackground);
+		headerBackground.value = storeModel(BackgroundModel, payload.headerBackground);
 
-		const backgrounds = arrayShuffle(Background.populate<Background>(payload.backgrounds));
-		laptopBackground.value = backgrounds.pop()!;
-		mobileBackground.value = backgrounds.pop()!;
+		const backgrounds = arrayShuffle(storeModelList(BackgroundModel, payload.backgrounds));
+		laptopBackground.value = backgrounds.pop();
+		mobileBackground.value = backgrounds.pop();
 	},
 });
 
@@ -110,12 +121,12 @@ async function _getDownloadUrl(platform: string, arch: string) {
 		return null;
 	}
 
-	const installableBuilds = Game.pluckInstallableBuilds(
+	const installableBuilds = pluckInstallableGameBuilds(
 		packageData.value.packages,
 		platform,
 		arch
 	);
-	const bestBuild = Game.chooseBestBuild(installableBuilds, platform, arch);
+	const bestBuild = chooseBestGameBuild(installableBuilds, platform, arch);
 	if (!bestBuild) {
 		return null;
 	}
@@ -136,6 +147,34 @@ async function _getDownloadUrl(platform: string, arch: string) {
 <template>
 	<div class="route-landing-app">
 		<AppBackground :background="headerBackground" scroll-direction="right">
+			<div
+				v-if="hasKeyClaimIntent"
+				:style="{
+					backgroundColor: kThemeGjOverlayNotice,
+					padding: `24px`,
+					textAlign: `center`,
+					fontWeight: `bold`,
+					color: `white`,
+					fontSize: kFontSizeLarge.px,
+				}"
+			>
+				<div :style="[styleFlexCenter(), { marginBottom: `12px` }]">
+					<AppJolticon icon="notice" big :style="{ color: `white` }" />
+				</div>
+
+				<span>
+					{{ $gettext(`Keys can only be claimed using the Game Jolt mobile app.`) }}
+					{{ ' ' }}
+				</span>
+
+				<a
+					href="https://app.gamejolt.com/qr"
+					class="link-unstyled"
+					:style="{ textDecoration: 'underline' }"
+				>
+					{{ $gettext(`Get the mobile app now!`) }}
+				</a>
+			</div>
 			<section class="-header theme-dark">
 				<div class="-header-darken" />
 
@@ -192,7 +231,9 @@ async function _getDownloadUrl(platform: string, arch: string) {
 						<div class="-content-col-spacer" />
 
 						<div class="-content-col-buttons">
-							<div class="-content-heading">at home</div>
+							<div class="-content-heading">
+								{{ $gettext(`Desktop app`) }}
+							</div>
 
 							<AppSpacer vertical :scale="6" />
 
@@ -225,12 +266,16 @@ async function _getDownloadUrl(platform: string, arch: string) {
 
 					<div
 						class="-mobile-row -content-row"
-						:style="{
-							order:
-								detectedDevice === 'ios' || detectedDevice === 'android'
-									? -1
-									: undefined,
-						}"
+						:style="
+							styleWhen(
+								detectedDevice === 'ios' ||
+									detectedDevice === 'android' ||
+									hasKeyClaimIntent,
+								{
+									order: -1,
+								}
+							)
+						"
 					>
 						<AppBean class="-bean" no-clamp>
 							<template #background>
@@ -246,7 +291,9 @@ async function _getDownloadUrl(platform: string, arch: string) {
 						<div class="-content-col-spacer" />
 
 						<div class="-content-col-buttons">
-							<div class="-content-heading">on the go</div>
+							<div class="-content-heading">
+								{{ $gettext(`Mobile app`) }}
+							</div>
 
 							<AppSpacer vertical :scale="6" />
 

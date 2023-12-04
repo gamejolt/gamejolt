@@ -1,41 +1,46 @@
 import { arrayUnique } from '../../../../utils/array';
 import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
 import { Jolticon } from '../../../jolticon/AppJolticon.vue';
-import { LinkedKey } from '../../../linked-key/linked-key.model';
-import { Sellable } from '../../../sellable/sellable.model';
-import { GameBuild } from '../../build/build.model';
-import { GameRelease } from '../../release/release.model';
+import { LinkedKeyModel } from '../../../linked-key/linked-key.model';
+import { SellableModel } from '../../../sellable/sellable.model';
+import {
+	GameBuildModel,
+	GameBuildPlatformSupportInfo,
+	GameBuildType,
+	pluckGameBuildOsSupport,
+} from '../../build/build.model';
+import { GameReleaseModel } from '../../release/release.model';
 
 interface ExtraBuild {
 	type: string;
 	icon: Jolticon;
-	build: GameBuild;
+	build: GameBuildModel;
 	platform: string;
 	arch: string | null;
 }
 
 export class GamePackageCardModel {
-	platformSupportInfo = Object.assign({}, GameBuild.platformSupportInfo);
+	platformSupportInfo = Object.assign({}, GameBuildPlatformSupportInfo);
 	platformSupport: string[] = [];
-	downloadableBuild: GameBuild | null = null;
-	browserBuild: GameBuild | null = null;
+	downloadableBuild: GameBuildModel | null = null;
+	browserBuild: GameBuildModel | null = null;
 	extraBuilds: ExtraBuild[] = [];
-	showcasedRelease: GameRelease | null = null;
+	showcasedRelease: GameReleaseModel | null = null;
 	showcasedOs = '';
 	showcasedOsIcon = '';
 	showcasedBrowserIcon = '';
 	otherOnly = false;
-	linkedKeys: LinkedKey[] = [];
+	linkedKeys: LinkedKeyModel[] = [];
 
 	get hasSteamKey() {
 		return this.platformSupport.indexOf('steam') !== -1;
 	}
 
 	constructor(
-		sellable: Sellable,
-		releases: GameRelease[],
-		builds: GameBuild[],
-		linkedKeys?: LinkedKey[]
+		sellable: SellableModel,
+		releases: GameReleaseModel[],
+		builds: GameBuildModel[],
+		linkedKeys?: LinkedKeyModel[]
 	) {
 		if (builds) {
 			const os = getDeviceOS();
@@ -43,20 +48,20 @@ export class GamePackageCardModel {
 
 			// Indexes by the os/type of the build: [ { type: build } ]
 			// While looping we also gather all OS/browser support for this complete package.
-			const indexedBuilds: { [k: string]: GameBuild } = {};
-			const otherBuilds: GameBuild[] = [];
+			const indexedBuilds: { [k: string]: GameBuildModel } = {};
+			const otherBuilds: GameBuildModel[] = [];
 			builds.forEach(build => {
 				if (build.isBrowserBased) {
 					indexedBuilds[build.type] = build;
 					this.platformSupport.push(build.type);
-				} else if (build.type === GameBuild.TYPE_ROM) {
+				} else if (build.type === GameBuildType.Rom) {
 					indexedBuilds[build.type] = build;
 					this.platformSupport.push(build.type);
 					otherBuilds.push(build);
 				} else if (build.os_other) {
 					otherBuilds.push(build);
 				} else {
-					GameBuild.pluckOsSupport(build).forEach(platform => {
+					pluckGameBuildOsSupport(build).forEach(platform => {
 						indexedBuilds[platform] = build;
 						this.platformSupport.push(this.platformSupportInfo[platform].icon);
 					});
@@ -142,7 +147,7 @@ export class GamePackageCardModel {
 				this.showcasedRelease = this.browserBuild._release || null;
 			}
 
-			const addExtraBuild = (build: GameBuild, type: string) => {
+			const addExtraBuild = (build: GameBuildModel, type: string) => {
 				// Whether or not we stored this build in extra builds yet.
 				let alreadyAdded = false;
 				this.extraBuilds.forEach(extraBuild => {
@@ -172,7 +177,7 @@ export class GamePackageCardModel {
 					return;
 				}
 
-				if (build.type !== GameBuild.TYPE_DOWNLOADABLE) {
+				if (build.type !== GameBuildType.Downloadable) {
 					if (this.browserBuild && this.browserBuild.id === build.id) {
 						return;
 					}
@@ -185,7 +190,7 @@ export class GamePackageCardModel {
 			if (otherBuilds.length) {
 				otherBuilds.forEach(build => {
 					let supportKey = 'other';
-					if (build.type === GameBuild.TYPE_ROM) {
+					if (build.type === GameBuildType.Rom) {
 						supportKey = 'rom';
 					}
 

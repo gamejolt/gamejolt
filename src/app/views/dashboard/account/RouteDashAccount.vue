@@ -15,14 +15,11 @@ import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatar
 import { bangRef } from '../../../../utils/vue';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderAvatar from '../../../components/page-header/AppPageHeaderAvatar.vue';
-import { UserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
-import { UserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
+import { showUserAvatarModal } from '../../../components/user/avatar-modal/avatar-modal.service';
+import { showUserHeaderModal } from '../../../components/user/header-modal/header-modal.service';
 import { routeDashAccountAddresses } from './addresses/addresses.route';
 import { routeDashAccountBlocks } from './blocks/blocks.route';
 import { routeDashAccountChangePassword } from './change-password/change-password.route';
-import { routeDashAccountChatCommands } from './chat-commands/chat-commands.route';
-import { routeDashAccountChatMods } from './chat-mods/chat-mods.route';
-import { routeDashAccountChatTimers } from './chat-timers/chat-timers.route';
 import { routeDashAccountDeviceSettings } from './device-settings/device-settings.route';
 import { routeDashAccountEdit } from './edit/edit.route';
 import { routeDashAccountEmailPreferences } from './email-preferences/email-preferences.route';
@@ -75,11 +72,11 @@ const { isBootstrapped } = createAppRoute({
 });
 
 function showEditHeader() {
-	UserHeaderModal.show();
+	showUserHeaderModal();
 }
 
 function showEditAvatar() {
-	UserAvatarModal.show();
+	showUserAvatarModal();
 }
 </script>
 
@@ -197,33 +194,6 @@ function showEditAvatar() {
 										active-class="active"
 									>
 										{{ $gettext(`Password`) }}
-									</RouterLink>
-								</li>
-							</ul>
-							<hr />
-							<ul>
-								<li>
-									<RouterLink
-										:to="{ name: routeDashAccountChatCommands.name }"
-										active-class="active"
-									>
-										{{ $gettext(`Chat commands`) }}
-									</RouterLink>
-								</li>
-								<li>
-									<RouterLink
-										:to="{ name: routeDashAccountChatTimers.name }"
-										active-class="active"
-									>
-										{{ $gettext(`Chat timers`) }}
-									</RouterLink>
-								</li>
-								<li>
-									<RouterLink
-										:to="{ name: routeDashAccountChatMods.name }"
-										active-class="active"
-									>
-										{{ $gettext(`Chat moderators`) }}
 									</RouterLink>
 								</li>
 							</ul>

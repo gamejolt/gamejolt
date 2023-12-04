@@ -1,23 +1,14 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import { FiresideController } from '../../fireside/controller/controller';
+import { PropType, toRefs } from 'vue';
 import AppChatList from '../_list/AppChatList.vue';
-import { ChatRoom } from '../room';
-import { ChatUserCollection } from '../user-collection';
+import { ChatRoomModel } from '../room';
+import { useChatRoomMembers } from '../room-channel';
 import AppChatMemberListItem from './AppChatMemberListItem.vue';
 
 const props = defineProps({
-	collection: {
-		type: Object as PropType<ChatUserCollection>,
-		required: true,
-	},
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
-	},
-	firesideController: {
-		type: Object as PropType<FiresideController>,
-		default: undefined,
 	},
 	hideFilter: {
 		type: Boolean,
@@ -28,34 +19,20 @@ const props = defineProps({
 	},
 });
 
-const { collection, firesideController } = toRefs(props);
-
-/**
- * For firesides we filter out unlistable hosts.
- */
-const users = computed(() => {
-	if (!firesideController?.value) {
-		return collection.value.users;
-	}
-
-	const { listableHostIds } = firesideController.value;
-	return collection.value.users.filter(i => {
-		const firesideHost = collection.value.getFiresideHost(i);
-
-		return (
-			!firesideHost || !firesideHost.needsPermissionToView || listableHostIds.value.has(i.id)
-		);
-	});
-});
+const { room } = toRefs(props);
+const { memberCollection } = useChatRoomMembers(room);
 </script>
 
 <template>
-	<AppChatList :entries="users" :hide-filter="hideFilter">
+	<AppChatList
+		v-if="memberCollection"
+		:entries="memberCollection.users"
+		:hide-filter="hideFilter"
+	>
 		<template #default="{ item }">
 			<AppChatMemberListItem
 				:room="room"
 				:user="item"
-				:host="collection.getFiresideHost(item.id)"
 				:horizontal-padding="horizontalPadding"
 			/>
 		</template>

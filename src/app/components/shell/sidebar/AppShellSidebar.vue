@@ -2,8 +2,6 @@
 import { defineAsyncComponent, watch } from 'vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import AppShortkey from '../../../../_common/shortkey/AppShortkey.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
 import { useAppStore } from '../../../store';
 
 const AppShellSidebarBackpack = defineAsyncComponent(() => import('./AppShellSidebarBackpack.vue'));
@@ -12,9 +10,9 @@ const AppShellSidebarLibrary = defineAsyncComponent(() => import('./AppShellSide
 const AppShellSidebarMobile = defineAsyncComponent(() => import('./AppShellSidebarMobile.vue'));
 const AppShellSidebarQuests = defineAsyncComponent(() => import('./AppShellSidebarQuests.vue'));
 const AppShellSidebarChat = defineAsyncComponent(() => import('./AppShellSidebarChat.vue'));
+const AppShellSidebarJoltydex = defineAsyncComponent(() => import('./AppShellSidebarJoltydex.vue'));
 
-const { visibleLeftPane, checkBackdrop, toggleLeftPane } = useAppStore();
-const { user } = useCommonStore();
+const { visibleLeftPane, checkBackdrop } = useAppStore();
 
 watch(
 	() => Screen.isLg,
@@ -38,16 +36,13 @@ watch(
 		class="shell-pane shell-pane-left"
 		thin
 	>
-		<AppShortkey v-if="user" shortkey="c" @press="toggleLeftPane('chat')" />
-		<AppShortkey v-if="user" shortkey="m" @press="toggleLeftPane('library')" />
-		<AppShortkey shortkey="y" @press="toggleLeftPane('context')" />
-
 		<AppShellSidebarChat v-if="visibleLeftPane === 'chat'" />
 		<AppShellSidebarLibrary v-else-if="visibleLeftPane === 'library'" />
 		<AppShellSidebarContext v-else-if="visibleLeftPane === 'context'" />
 		<AppShellSidebarMobile v-else-if="visibleLeftPane === 'mobile'" />
 		<AppShellSidebarBackpack v-else-if="visibleLeftPane === 'backpack'" />
 		<AppShellSidebarQuests v-else-if="visibleLeftPane === 'quests'" />
+		<AppShellSidebarJoltydex v-else-if="visibleLeftPane === 'joltydex'" />
 	</component>
 </template>
 

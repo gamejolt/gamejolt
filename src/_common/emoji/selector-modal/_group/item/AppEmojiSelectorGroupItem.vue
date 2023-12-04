@@ -2,11 +2,11 @@
 import { computed, PropType, ref, toRefs } from 'vue';
 import { ComponentProps } from '../../../../component-helpers';
 import AppScrollInview, { ScrollInviewConfig } from '../../../../scroll/inview/AppScrollInview.vue';
-import { Emoji } from '../../../emoji.model';
+import { EmojiModel } from '../../../emoji.model';
 
 const props = defineProps({
 	emoji: {
-		type: Object as PropType<Emoji>,
+		type: Object as PropType<EmojiModel>,
 		required: true,
 	},
 	/**
@@ -21,7 +21,7 @@ const props = defineProps({
 const { emoji, inviewConfig } = toRefs(props);
 
 const emit = defineEmits({
-	select: (_emoji: Emoji) => true,
+	select: (_emoji: EmojiModel) => true,
 });
 
 const isHydrated = ref(import.meta.env.SSR);

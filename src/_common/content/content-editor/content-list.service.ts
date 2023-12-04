@@ -1,11 +1,11 @@
 import { Fragment, NodeRange, NodeType, Slice } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
-import { liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
+import { ReplaceAroundStep, liftTarget } from 'prosemirror-transform';
 import { ContentEditorSchema } from './schemas/content-editor-schema';
 
 type DispatchFunc = (tr: Transaction<ContentEditorSchema>) => void;
 
-export class ContentListService {
+class ContentListServiceImpl {
 	/**
 	 * Moves a list item one level up in the list indentation, but does NOT have
 	 * the ability to lift it out of the list completely.
@@ -15,11 +15,11 @@ export class ContentListService {
 	 *
 	 * Also includes the liftToOuterList function defined below.
 	 */
-	public static liftListItem(itemType: NodeType<ContentEditorSchema>) {
+	public liftListItem(itemType: NodeType<ContentEditorSchema>) {
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const that = this;
 
-		return function(state: EditorState<ContentEditorSchema>, dispatch: DispatchFunc) {
+		return function (state: EditorState<ContentEditorSchema>, dispatch: DispatchFunc) {
 			const { $from, $to } = state.selection;
 			const range = $from.blockRange(
 				$to,
@@ -41,7 +41,7 @@ export class ContentListService {
 		};
 	}
 
-	private static liftToOuterList(
+	private liftToOuterList(
 		state: EditorState<ContentEditorSchema>,
 		dispatch: DispatchFunc,
 		itemType: NodeType<ContentEditorSchema>,
@@ -74,3 +74,5 @@ export class ContentListService {
 		return true;
 	}
 }
+
+export const ContentListService = /** @__PURE__ */ new ContentListServiceImpl();

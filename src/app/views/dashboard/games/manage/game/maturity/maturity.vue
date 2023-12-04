@@ -1,12 +1,12 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { Game } from '../../../../../../../_common/game/game.model';
+import { GameModel } from '../../../../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.vue';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
@@ -22,21 +22,21 @@ import { useGameDashRouteController } from '../../manage.store';
 		FormGameMaturity,
 	},
 })
-@OptionsForRoute()
-export default class RouteDashGamesManageGameMaturity extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteDashGamesManageGameMaturity extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game!;
 	}
 
-	current: Game = null as any;
+	current: GameModel = null as any;
 
 	readonly Screen = Screen;
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate(`Edit Maturity Rating for %{ game }`, {
+			return this.$gettext(`Edit Maturity Rating for %{ game }`, {
 				game: this.game.title,
 			});
 		}

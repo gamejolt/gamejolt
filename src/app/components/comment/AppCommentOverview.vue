@@ -1,29 +1,29 @@
 <script lang="ts" setup>
-import { computed, inject, PropType, toRefs, watch } from 'vue';
+import { computed, PropType, toRefs, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
 import {
-	Comment,
+	CommentModel,
 	getCommentBlockReason,
 	getCommentModelResourceName,
 } from '../../../_common/comment/comment-model';
 import {
-	CommentStoreManagerKey,
 	CommentStoreModel,
 	getCommentStore,
+	useCommentStoreManager,
 } from '../../../_common/comment/comment-store';
-import { DisplayMode } from '../../../_common/comment/modal/modal.service';
-import { CommentThreadModal } from '../../../_common/comment/thread/modal.service';
 import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '../../../_common/illustration/illustrations';
 import { Model } from '../../../_common/model/model.service';
 import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { illNoCommentsSmall } from '../../../_common/illustration/illustrations';
+import { DisplayMode } from './modal/modal.service';
+import { showCommentThreadModal } from './thread/modal.service';
 
 const props = defineProps({
 	comments: {
-		type: Array as PropType<Comment[]>,
+		type: Array as PropType<CommentModel[]>,
 		required: true,
 	},
 	model: {
@@ -42,7 +42,7 @@ const emit = defineEmits({
 	'reload-comments': () => true,
 });
 
-const commentManager = inject(CommentStoreManagerKey)!;
+const commentManager = useCommentStoreManager()!;
 const router = useRouter();
 
 const displayComments = computed(() => {
@@ -89,8 +89,8 @@ watch(commentStoreDirtyState, dirtyState => {
 	}
 });
 
-function open(comment: Comment) {
-	CommentThreadModal.show({
+function open(comment: CommentModel) {
+	showCommentThreadModal({
 		router,
 		model: model.value,
 		commentId: comment.id,

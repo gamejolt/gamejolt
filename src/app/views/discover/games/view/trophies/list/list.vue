@@ -3,16 +3,19 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../../../_common/filters/number';
-import { GameTrophy } from '../../../../../../../_common/game/trophy/trophy.model';
-import AppNavTabList from '../../../../../../../_common/nav/tab-list/tab-list.vue';
+import { GameTrophyModel } from '../../../../../../../_common/game/trophy/trophy.model';
+import AppNavTabList from '../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
-import { UserGameTrophy } from '../../../../../../../_common/user/trophy/game-trophy.model';
 import AppTrophyCompletion from '../../../../../../../_common/trophy/AppTrophyCompletion.vue';
 import AppTrophyList from '../../../../../../../_common/trophy/list/AppTrophyList.vue';
+import {
+	UserGameTrophyModel,
+	indexAchievedGameTrophies,
+} from '../../../../../../../_common/user/trophy/game-trophy.model';
 import { useGameRouteController } from '../../view.vue';
 
 @Options({
@@ -23,17 +26,17 @@ import { useGameRouteController } from '../../view.vue';
 		AppNavTabList,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/discover/games/trophies/' + route.params.id),
 })
-export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteComponent {
+export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteComponent {
 	routeStore = setup(() => useGameRouteController()!);
 	commonStore = setup(() => useCommonStore());
 
-	trophies: GameTrophy[] = [];
-	achieved: UserGameTrophy[] = [];
+	trophies: GameTrophyModel[] = [];
+	achieved: UserGameTrophyModel[] = [];
 	experience = 0;
 	showInvisibleTrophyMessage = false;
 
@@ -49,7 +52,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate(`Trophies for %{ game }`, {
+			return this.$gettext(`Trophies for %{ game }`, {
 				game: this.game.title,
 			});
 		}
@@ -65,15 +68,15 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 	}
 
 	routeResolved($payload: any) {
-		this.trophies = GameTrophy.populate($payload.trophies);
+		this.trophies = GameTrophyModel.populate($payload.trophies);
 		this.achieved = $payload.trophiesAchieved
-			? UserGameTrophy.populate($payload.trophiesAchieved)
+			? UserGameTrophyModel.populate($payload.trophiesAchieved)
 			: [];
 		this.experience = $payload.trophiesExperienceAchieved || 0;
 		this.showInvisibleTrophyMessage = $payload.trophiesShowInvisibleTrophyMessage || false;
 
-		this.achievedIndexed = UserGameTrophy.indexAchieved(this.achieved);
-		this.filteredTrophies = GameTrophy.splitAchieved(this.trophies, this.achievedIndexed);
+		this.achievedIndexed = indexAchievedGameTrophies(this.achieved);
+		this.filteredTrophies = GameTrophyModel.splitAchieved(this.trophies, this.achievedIndexed);
 
 		this.currentFilter = 'all';
 	}
@@ -162,10 +165,9 @@ export default class RouteDiscoverGamesViewTrophiesList extends BaseRouteCompone
 
 		<section v-if="!trophies.length" class="section fill-offset">
 			<div class="container text-center">
-				<AppTranslate
-					>There are no trophies for this game yet. Bug the developer about adding
-					some!</AppTranslate
-				>
+				<AppTranslate>
+					There are no trophies for this game yet. Bug the developer about adding some!
+				</AppTranslate>
 			</div>
 		</section>
 	</div>

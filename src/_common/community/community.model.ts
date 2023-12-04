@@ -4,75 +4,72 @@ import { assertNever } from '../../utils/utils';
 import { CommunityJoinLocation, trackCommunityJoin } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import { Collaboratable, Perm } from '../collaborator/collaboratable';
-import { Game } from '../game/game.model';
-import { MediaItem } from '../media-item/media-item-model';
+import { GameModel } from '../game/game.model';
+import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
-import { Theme } from '../theme/theme.model';
-import { UserBlock } from '../user/block/block.model';
-import { CommunityChannel } from './channel/channel.model';
+import { ThemeModel } from '../theme/theme.model';
+import { UserBlockModel } from '../user/block/block.model';
+import { CommunityChannelModel } from './channel/channel.model';
 import noThumbImage from './no-thumb.png';
 
-export class Community extends Collaboratable(Model) {
-	name!: string;
-	path!: string;
-	added_on!: number;
-	post_placeholder_text!: string | null;
-	description_content!: string;
-	is_verified!: boolean;
-	has_archived_channels!: boolean | null;
-
-	thumbnail?: MediaItem;
-	header?: MediaItem;
-	theme?: Theme;
-	games?: Game[];
-	channels?: CommunityChannel[];
-	featured_background?: MediaItem;
-	all_background?: MediaItem;
-	user_block?: UserBlock;
-
-	member_count!: number;
-	is_member?: boolean;
-
-	perms?: Perm[];
+export class CommunityModel extends Collaboratable(Model) {
+	declare name: string;
+	declare path: string;
+	declare added_on: number;
+	declare post_placeholder_text: string | null;
+	declare description_content: string;
+	declare is_verified: boolean;
+	declare has_archived_channels: boolean | null;
+	declare thumbnail?: MediaItemModel;
+	declare header?: MediaItemModel;
+	declare theme?: ThemeModel;
+	declare games?: GameModel[];
+	declare channels?: CommunityChannelModel[];
+	declare featured_background?: MediaItemModel;
+	declare all_background?: MediaItemModel;
+	declare user_block?: UserBlockModel;
+	declare member_count: number;
+	declare is_member?: boolean;
+	declare perms?: Perm[];
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.header) {
-			this.header = new MediaItem(data.header);
+			this.header = new MediaItemModel(data.header);
 		}
 
 		if (data.thumbnail) {
-			this.thumbnail = new MediaItem(data.thumbnail);
+			this.thumbnail = new MediaItemModel(data.thumbnail);
 		}
 
 		if (data.theme) {
-			this.theme = new Theme(data.theme);
+			this.theme = new ThemeModel(data.theme);
 		}
 
 		if (data.games) {
-			this.games = Game.populate(data.games);
+			this.games = GameModel.populate(data.games);
 		}
 
 		if (data.channels) {
-			this.channels = CommunityChannel.populate(data.channels);
+			this.channels = CommunityChannelModel.populate(data.channels);
 		}
 
 		if (data.featured_background) {
-			this.featured_background = new MediaItem(data.featured_background);
+			this.featured_background = new MediaItemModel(data.featured_background);
 		}
 
 		if (data.all_background) {
-			this.all_background = new MediaItem(data.all_background);
+			this.all_background = new MediaItemModel(data.all_background);
 		}
 
 		if (data.user_block) {
-			this.user_block = new UserBlock(data.user_block);
+			this.user_block = new UserBlockModel(data.user_block);
 		}
 	}
 
 	get img_thumbnail() {
-		if (this.thumbnail instanceof MediaItem) {
+		if (this.thumbnail instanceof MediaItemModel) {
 			return this.thumbnail.mediaserver_url;
 		}
 		return noThumbImage;
@@ -98,7 +95,7 @@ export class Community extends Collaboratable(Model) {
 	}
 
 	get isBlocked() {
-		return this.user_block instanceof UserBlock;
+		return this.user_block instanceof UserBlockModel;
 	}
 
 	get postableChannels() {
@@ -119,7 +116,7 @@ export class Community extends Collaboratable(Model) {
 		return this.channels.filter(i => i.visibility === 'published').length > 1;
 	}
 
-	channelRouteLocation(channel: CommunityChannel): RouteLocationDefinition {
+	channelRouteLocation(channel: CommunityChannelModel): RouteLocationDefinition {
 		return {
 			name: 'communities.view.channel',
 			params: {
@@ -128,81 +125,96 @@ export class Community extends Collaboratable(Model) {
 			},
 		};
 	}
+}
 
-	$save() {
-		if (this.id) {
-			return this.$_save('/web/dash/communities/save/' + this.id, 'community', {
-				allowComplexData: ['theme'],
-			});
-		} else {
-			return this.$_save('/web/dash/communities/save', 'community', {
-				allowComplexData: ['theme'],
-			});
-		}
-	}
-
-	$saveHeader() {
-		return this.$_save('/web/dash/communities/design/save-header/' + this.id, 'community', {
-			file: this.file,
-			allowComplexData: ['crop'],
+export function $saveCommunity(model: CommunityModel) {
+	if (model.id) {
+		return model.$_save('/web/dash/communities/save/' + model.id, 'community', {
+			allowComplexData: ['theme'],
 		});
-	}
-
-	async $clearHeader() {
-		return this.$_save('/web/dash/communities/design/clear-header/' + this.id, 'community');
-	}
-
-	$saveThumbnail() {
-		return this.$_save('/web/dash/communities/design/save-thumbnail/' + this.id, 'community', {
-			file: this.file,
-			allowComplexData: ['crop'],
+	} else {
+		return model.$_save('/web/dash/communities/save', 'community', {
+			allowComplexData: ['theme'],
 		});
-	}
-
-	$saveDescription() {
-		return this.$_save('/web/dash/communities/description/save/' + this.id, 'community');
-	}
-
-	$remove() {
-		return this.$_remove('/web/dash/communities/remove/' + this.id);
-	}
-
-	$savePresetChannelBackground(presetType: CommunityPresetChannelType) {
-		return this.$_save(
-			`/web/dash/communities/channels/save-preset-background/${this.id}/${presetType}`,
-			'community',
-			{
-				file: this.file,
-				allowComplexData: ['crop'],
-			}
-		);
-	}
-
-	$clearPresetChannelBackground(presetType: CommunityPresetChannelType) {
-		return this.$_save(
-			`/web/dash/communities/channels/clear-preset-background/${this.id}/${presetType}`,
-			'community'
-		);
-	}
-
-	async saveGameSort() {
-		const response = await Api.sendRequest(
-			`/web/dash/communities/games/save-sort/${this.id}`,
-			this.games!.map(i => i.id),
-			{
-				noErrorRedirect: true,
-			}
-		);
-		if (response.success) {
-			this.assign(response.community);
-		}
-		return response;
 	}
 }
 
-Model.create(Community);
+export function $saveCommunityHeader(community: CommunityModel) {
+	return community.$_save(
+		'/web/dash/communities/design/save-header/' + community.id,
+		'community',
+		{
+			file: community.file,
+			allowComplexData: ['crop'],
+		}
+	);
+}
 
-export async function joinCommunity(community: Community, location?: CommunityJoinLocation) {
+export async function $clearCommunityHeader(community: CommunityModel) {
+	return community.$_save(
+		'/web/dash/communities/design/clear-header/' + community.id,
+		'community'
+	);
+}
+
+export function $saveCommunityThumbnail(community: CommunityModel) {
+	return community.$_save(
+		'/web/dash/communities/design/save-thumbnail/' + community.id,
+		'community',
+		{
+			file: community.file,
+			allowComplexData: ['crop'],
+		}
+	);
+}
+
+export function $saveCommunityDescription(community: CommunityModel) {
+	return community.$_save('/web/dash/communities/description/save/' + community.id, 'community');
+}
+
+export function $removeCommunity(community: CommunityModel) {
+	return community.$_remove('/web/dash/communities/remove/' + community.id);
+}
+
+export function $saveCommunityPresetChannelBackground(
+	community: CommunityModel,
+	presetType: CommunityPresetChannelType
+) {
+	return community.$_save(
+		`/web/dash/communities/channels/save-preset-background/${community.id}/${presetType}`,
+		'community',
+		{
+			file: community.file,
+			allowComplexData: ['crop'],
+		}
+	);
+}
+
+export function $clearCommunityPresetChannelBackground(
+	community: CommunityModel,
+	presetType: CommunityPresetChannelType
+) {
+	return community.$_save(
+		`/web/dash/communities/channels/clear-preset-background/${community.id}/${presetType}`,
+		'community'
+	);
+}
+
+export async function $saveCommunityGameSort(community: CommunityModel) {
+	const response = await Api.sendRequest(
+		`/web/dash/communities/games/save-sort/${community.id}`,
+		community.games!.map(i => i.id),
+		{
+			noErrorRedirect: true,
+		}
+	);
+	if (response.success) {
+		community.assign(response.community);
+	}
+	return response;
+}
+
+export async function joinCommunity(community: CommunityModel, location?: CommunityJoinLocation) {
 	community.is_member = true;
 	++community.member_count;
 
@@ -237,7 +249,7 @@ export async function joinCommunity(community: Community, location?: CommunityJo
 	}
 }
 
-export async function leaveCommunity(community: Community, location?: CommunityJoinLocation) {
+export async function leaveCommunity(community: CommunityModel, location?: CommunityJoinLocation) {
 	community.is_member = false;
 	--community.member_count;
 
@@ -273,7 +285,7 @@ export function isEditingCommunity(route: RouteLocationNormalized) {
 }
 
 export function getCommunityChannelBackground(
-	community: Community,
+	community: CommunityModel,
 	presetType: CommunityPresetChannelType
 ) {
 	switch (presetType) {
@@ -284,19 +296,4 @@ export function getCommunityChannelBackground(
 		default:
 			assertNever(presetType);
 	}
-}
-
-/**
- * @deprecated we always auto-feature now
- */
-export function canCommunityFeatureFireside(_community: Community) {
-	return false;
-}
-
-export function canCommunityEjectFireside(community: Community) {
-	return !!community.hasPerms('community-firesides');
-}
-
-export function canCommunityCreateFiresides(community: Community) {
-	return community.hasPerms('community-firesides');
 }

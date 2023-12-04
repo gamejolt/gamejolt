@@ -2,7 +2,7 @@
 import { computed, PropType, ref, toRefs } from 'vue';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppClientGameButtons from '../../../components/client/game-buttons/game-buttons.vue';
+import AppClientGameButtons from '../../../components/client/game-buttons/AppClientGameButtons.vue';
 import { LocalDbGame } from '../../../components/client/local-db/game/game.model';
 import { useClientLibraryStore } from '../../../store/client-library/index';
 

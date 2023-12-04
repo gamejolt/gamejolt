@@ -13,7 +13,7 @@ import AppQuestActionButton from '../../../../_common/quest/AppQuestActionButton
 import AppQuestObjective from '../../../../_common/quest/AppQuestObjective.vue';
 import AppProgressBarQuest from '../../../../_common/quest/AppQuestProgress.vue';
 import AppQuestReward from '../../../../_common/quest/AppQuestReward.vue';
-import { Quest } from '../../../../_common/quest/quest-model';
+import { QuestModel } from '../../../../_common/quest/quest-model';
 import { QuestReward } from '../../../../_common/quest/quest-reward-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
@@ -24,7 +24,7 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
 import {
-	CSSPixelValue,
+	buildCSSPixelValue,
 	kFontFamilyDisplay,
 	kFontSizeSmall,
 	kFontSizeTiny,
@@ -33,7 +33,7 @@ import {
 import { numberSort } from '../../../../utils/array';
 import { useAppStore } from '../../../store/index';
 import { useQuestStore } from '../../../store/quest';
-import AppShellWindow from '../../shell/window/AppShellWindow.vue';
+import AppShellWindow from '../../shell/AppShellWindow.vue';
 import AppQuestTimer from '../AppQuestTimer.vue';
 
 const props = defineProps({
@@ -42,7 +42,7 @@ const props = defineProps({
 		required: true,
 	},
 	resource: {
-		type: Object as PropType<Quest>,
+		type: Object as PropType<QuestModel>,
 		default: undefined,
 	},
 });
@@ -56,7 +56,7 @@ const isLoading = ref(false);
 const hasError = ref(false);
 const hasActionButtonError = ref(false);
 
-const localQuest = ref() as Ref<Quest | undefined>;
+const localQuest = ref() as Ref<QuestModel | undefined>;
 
 const quest = computed(() => localQuest.value || resource?.value);
 
@@ -122,7 +122,7 @@ async function init() {
 		);
 
 		if (payload.quest) {
-			onNewQuest(storeModel(Quest, payload.quest));
+			onNewQuest(storeModel(QuestModel, payload.quest));
 		}
 	} catch (e) {
 		console.error('Failed to load quest data', e);
@@ -154,7 +154,7 @@ function closeQuests() {
 	}
 }
 
-function onNewQuest(data: Quest) {
+function onNewQuest(data: QuestModel) {
 	localQuest.value = data;
 
 	if (!data.is_new) {
@@ -165,7 +165,7 @@ function onNewQuest(data: Quest) {
 	}
 }
 
-const headerHeight = new CSSPixelValue(300);
+const headerHeight = buildCSSPixelValue(300);
 
 // Uses the base padding from `.container` class while allowing the width to
 // stretch.
@@ -297,7 +297,7 @@ const fillStyles: CSSProperties = {
 										<div v-if="quest.total_stages > 1">
 											<strong>
 												{{
-													$gettextInterpolate(
+													$gettext(
 														`Stage %{currentStage}/%{totalStages}`,
 														{
 															currentStage: quest.current_stage,

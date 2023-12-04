@@ -1,11 +1,14 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../utils/vue';
 import { Connection } from '../../../../_common/connection/connection-service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import { GameCollection } from '../../../components/game/collection/collection.model';
+import { shallowSetup } from '../../../../utils/vue';
+import { GameCollectionModel } from '../../../components/game/collection/collection.model';
 import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
 import AppGameCollectionList from '../../../components/game/collection/list/list.vue';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
@@ -20,8 +23,8 @@ import { useLibraryStore } from '../../../store/library';
 		AppGameCollectionList,
 	},
 })
-@OptionsForRoute()
-export default class RouteLibraryOverview extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteLibraryOverview extends LegacyRouteComponent {
 	store = setup(() => useAppStore());
 	libraryStore = shallowSetup(() => useLibraryStore());
 
@@ -76,7 +79,7 @@ export default class RouteLibraryOverview extends BaseRouteComponent {
 	}
 
 	get mainCollections() {
-		const main: GameCollection[] = [];
+		const main: GameCollectionModel[] = [];
 
 		if (this.followedCollection) {
 			main.push(this.followedCollection);

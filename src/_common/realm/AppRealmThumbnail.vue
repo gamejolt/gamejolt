@@ -2,11 +2,11 @@
 import { PropType } from 'vue';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppResponsiveDimensions from '../responsive-dimensions/AppResponsiveDimensions.vue';
-import { Realm } from './realm-model';
+import { RealmModel } from './realm-model';
 
 defineProps({
 	realm: {
-		type: Object as PropType<Realm>,
+		type: Object as PropType<RealmModel>,
 		required: true,
 	},
 	maxHeight: {

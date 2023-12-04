@@ -1,14 +1,12 @@
-import { defineAsyncComponent } from '@vue/runtime-core';
+import { defineAsyncComponent } from 'vue';
 import { showModal } from '../modal/modal.service';
 
-export class AuthModal {
-	static async show() {
-		return await showModal<void>({
-			modalId: 'Auth',
-			component: defineAsyncComponent(() => import('./auth-modal.vue')),
-			size: 'sm',
-			props: {},
-			noBackdropClose: true,
-		});
-	}
+export async function showAuthModal() {
+	return await showModal<void>({
+		modalId: 'Auth',
+		component: defineAsyncComponent(() => import('./AppAuthModal.vue')),
+		size: 'sm',
+		props: {},
+		noBackdropClose: true,
+	});
 }

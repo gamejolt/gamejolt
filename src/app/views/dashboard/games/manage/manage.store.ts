@@ -1,15 +1,24 @@
 import { computed, inject, InjectionKey, provide, ref, unref } from 'vue';
 import { Router } from 'vue-router';
-import { arrayRemove } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
-import { Collaborator } from '../../../../../_common/collaborator/collaborator.model';
-import { Game } from '../../../../../_common/game/game.model';
-import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
-import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
-import { GameVideo } from '../../../../../_common/game/video/video.model';
+import {
+	$removeCollaboratorInvite,
+	CollaboratorModel,
+} from '../../../../../_common/collaborator/collaborator.model';
+import {
+	$removeGame,
+	$setGameCanceled,
+	$setGameStatus,
+	GameModel,
+	GameStatus,
+} from '../../../../../_common/game/game.model';
+import { GameScreenshotModel } from '../../../../../_common/game/screenshot/screenshot.model';
+import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketchfab.model';
+import { GameVideoModel } from '../../../../../_common/game/video/video.model';
 import { showInfoGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { arrayRemove } from '../../../../../utils/array';
 
 const Key: InjectionKey<GameDashRouteController> = Symbol('game-dash-route');
 const WizardKey = 'manage-game-wizard';
@@ -33,7 +42,7 @@ const TransitionMapDevlog: any = {
 };
 
 export type GameDashRouteController = ReturnType<typeof createGameDashRouteController>;
-export type Media = GameScreenshot | GameVideo | GameSketchfab;
+export type Media = GameScreenshotModel | GameVideoModel | GameSketchfabModel;
 
 export function useGameDashRouteController() {
 	return inject(Key, null);
@@ -48,8 +57,8 @@ export function startWizard() {
 }
 
 export function createGameDashRouteController({ router }: { router: Router }) {
-	const game = ref<Game>();
-	const collaboration = ref<Collaborator>();
+	const game = ref<GameModel>();
+	const collaboration = ref<CollaboratorModel>();
 	const media = ref<Media[]>([]);
 	const isWizard = ref(false);
 
@@ -92,20 +101,20 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 
 	function _instantiateMediaItem(item: any) {
 		if (item.media_type === 'image') {
-			return new GameScreenshot(item);
+			return new GameScreenshotModel(item);
 		} else if (item.media_type === 'video') {
-			return new GameVideo(item);
+			return new GameVideoModel(item);
 		} else if (item.media_type === 'sketchfab') {
-			return new GameSketchfab(item);
+			return new GameSketchfabModel(item);
 		} else {
 			throw new Error(`Invalid media item type.`);
 		}
 	}
 
 	function populate(payload: any) {
-		game.value = new Game(payload.game);
+		game.value = new GameModel(payload.game);
 		collaboration.value = payload.collaboration
-			? new Collaborator(payload.collaboration)
+			? new CollaboratorModel(payload.collaboration)
 			: undefined;
 		isWizard.value = !!window.sessionStorage.getItem(WizardKey);
 	}
@@ -164,7 +173,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 	}
 
 	async function publish() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			$gettext(
 				`Publishing your game makes it visible on the site, so make sure your game page is lookin' good!`
 			)
@@ -173,7 +182,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			return;
 		}
 
-		await game.value!.$setStatus(Game.STATUS_VISIBLE);
+		await $setGameStatus(game.value!, GameStatus.Visible);
 
 		showSuccessGrowl(
 			$gettext(
@@ -201,46 +210,45 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 	}
 
 	async function hide() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			$gettext('Are you sure you want to unlist your game page?')
 		);
 		if (!result) {
 			return;
 		}
 
-		await game.value!.$setStatus(Game.STATUS_HIDDEN);
+		await $setGameStatus(game.value!, GameStatus.Hidden);
 
 		showInfoGrowl($gettext('Your game page is now unlisted.'), $gettext('Game Unlisted'));
 	}
 
 	async function cancel() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			$gettext('Are you sure you want to cancel your game?')
 		);
 		if (!result) {
 			return;
 		}
 
-		await game.value!.$setCanceled(true);
+		await $setGameCanceled(game.value!, true);
 
 		showInfoGrowl($gettext('Your game is now canceled.'), $gettext('Game Canceled'));
 	}
 
 	async function uncancel() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			$gettext('Are you sure you want to uncancel your game?')
 		);
 		if (!result) {
 			return;
 		}
-
-		await game.value!.$setCanceled(false);
+		await $setGameCanceled(game.value!, false);
 
 		showInfoGrowl($gettext('Your game is no longer canceled.'), $gettext('Game Uncanceled'));
 	}
 
 	async function removeGame() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			$gettext('Are you sure you want to permanently remove your game?')
 		);
 
@@ -248,7 +256,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			return;
 		}
 
-		await game.value!.$remove();
+		await $removeGame(game.value!);
 
 		showInfoGrowl(
 			$gettext(
@@ -265,7 +273,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			return;
 		}
 
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			$gettext(`Are you sure you want to leave this project?`),
 			$gettext('Leave project?')
 		);
@@ -274,7 +282,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			return;
 		}
 
-		await collaboration.value.$remove();
+		await $removeCollaboratorInvite(collaboration.value);
 
 		showSuccessGrowl(
 			$gettext('You left the project. You will be missed! ;A;'),

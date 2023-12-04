@@ -2,20 +2,22 @@ export interface PopperComponentInterface {
 	onHideAll: () => void;
 }
 
-export class Popper {
-	static popperInterfaces = new Map<number, PopperComponentInterface>();
+class PopperService {
+	popperInterfaces = new Map<number, PopperComponentInterface>();
 
-	static registerPopper(id: number, popper: PopperComponentInterface) {
+	registerPopper(id: number, popper: PopperComponentInterface) {
 		this.popperInterfaces.set(id, popper);
 	}
 
-	static deregisterPopper(id: number) {
+	deregisterPopper(id: number) {
 		this.popperInterfaces.delete(id);
 	}
 
-	static hideAll() {
+	hideAll() {
 		for (const [_id, popper] of this.popperInterfaces) {
 			popper.onHideAll();
 		}
 	}
 }
+
+export const Popper = /** @__PURE__ */ new PopperService();

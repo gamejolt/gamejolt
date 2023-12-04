@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+import { styleWhen } from '../../../_styles/mixins';
 import { getMediaserverUrlForBounds } from '../../../utils/image';
 import AppButton from '../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
@@ -13,11 +14,11 @@ import AppUserDogtag from '../AppUserDogtag.vue';
 import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
 import AppUserAvatarBubble from '../user-avatar/AppUserAvatarBubble.vue';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
-import { User } from '../user.model';
+import { UserModel } from '../user.model';
 
 const props = defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 	isLoading: {
@@ -92,7 +93,16 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 				verified-position="top-right"
 				bg-color="bg"
 			>
-				<AppUserAvatarImg class="-avatar-img" :user="user" />
+				<AppUserAvatarImg
+					class="-avatar-img"
+					:style="
+						// Hide the border when there's an avatar frame.
+						styleWhen(!!user.avatar_frame, {
+							border: `none`,
+						})
+					"
+					:user="user"
+				/>
 			</AppUserAvatarBubble>
 
 			<div class="-well fill-bg">

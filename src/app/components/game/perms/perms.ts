@@ -2,13 +2,13 @@ import { h, ref } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Perm } from '../../../../_common/collaborator/collaboratable';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import { useGameDashRouteController } from '../../../views/dashboard/games/manage/manage.store';
 
 @Options({})
 export class AppGamePerms extends Vue {
 	@Prop(Object)
-	game?: Game;
+	game?: GameModel;
 
 	@Prop({ type: String, default: '' })
 	required!: string;

@@ -1,13 +1,13 @@
-import { AvatarFrame } from '../../../_common/avatar/frame.model';
+import { AvatarFrameModel } from '../../../_common/avatar/frame.model';
 import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
-import { ModelStoreModel } from '../../../_common/model/model-store.service';
+import { ModelStoreModel, storeModel } from '../../../_common/model/model-store.service';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { UserCommonFields } from '../../../_common/user/user.model';
 import { objectOmit } from '../../../utils/object';
 import { tryGetRoomRole } from './client';
-import { ChatMessage } from './message';
+import { ChatMessageModel } from './message';
 import { CHAT_ROLES } from './role';
-import { ChatRoom } from './room';
+import { ChatRoomModel } from './room';
 
 export class ChatUser implements UserCommonFields, ModelStoreModel {
 	declare id: number;
@@ -20,7 +20,7 @@ export class ChatUser implements UserCommonFields, ModelStoreModel {
 	declare is_verified: boolean;
 	declare is_creator?: boolean;
 
-	declare avatar_frame?: AvatarFrame;
+	declare avatar_frame?: AvatarFrameModel;
 
 	isOnline = false;
 	role: CHAT_ROLES | null = null;
@@ -42,7 +42,7 @@ export class ChatUser implements UserCommonFields, ModelStoreModel {
 		Object.assign(this, objectOmit(data, ['url']));
 
 		if (data.avatar_frame) {
-			this.avatar_frame = new AvatarFrame(data.avatar_frame);
+			this.avatar_frame = storeModel(AvatarFrameModel, data.avatar_frame);
 		}
 	}
 
@@ -61,14 +61,14 @@ interface ChatRoleData {
 }
 
 export function getChatUserRoleData(
-	room: ChatRoom,
+	room: ChatRoomModel,
 	user: ChatUser,
 	extras: {
 		/**
 		 * Can be provided to display a robot Jolticon for automated chat
 		 * messages.
 		 */
-		mesage?: ChatMessage;
+		mesage?: ChatMessageModel;
 	} = {}
 ): ChatRoleData | undefined {
 	if (extras.mesage?.is_automated) {
@@ -84,13 +84,6 @@ export function getChatUserRoleData(
 		return {
 			icon: 'crown',
 			tooltip: $gettext(`Room Owner`),
-		};
-	}
-
-	if (room.memberCollection.getFiresideHost(user)) {
-		return {
-			icon: 'star-ten-pointed',
-			tooltip: $gettext(`Host`),
 		};
 	}
 

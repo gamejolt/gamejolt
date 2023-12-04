@@ -1,13 +1,4 @@
 <script lang="ts">
-type DownloadPackageHook = (game: Game, build: GameBuild) => void;
-let downloadPackageHook: DownloadPackageHook | undefined;
-
-export function setDownloadPackageHook(newHook: DownloadPackageHook) {
-	downloadPackageHook = newHook;
-}
-</script>
-
-<script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { Analytics } from '../../../analytics/analytics.service';
@@ -16,39 +7,39 @@ import { showSuccessGrowl } from '../../../growls/growls.service';
 import AppModal from '../../../modal/AppModal.vue';
 import { useModal } from '../../../modal/modal.service';
 import AppTranslate from '../../../translate/AppTranslate.vue';
-import { $gettext, $gettextInterpolate } from '../../../translate/translate.service';
-import type { User } from '../../../user/user.model';
-import { GameBuild } from '../../build/build.model';
+import { $gettext } from '../../../translate/translate.service';
+import { GameBuildModel, GameBuildType } from '../../build/build.model';
 import { GameDownloader } from '../../downloader/downloader.service';
-import type { Game } from '../../game.model';
-import { GamePlayModal } from '../../play-modal/play-modal.service';
-import type { GamePackage } from '../package.model';
-import FormGamePackagePayment from '../payment-form/payment-form.vue';
+import type { GameModel } from '../../game.model';
+import { showGamePlayModal } from '../../play-modal/play-modal.service';
+import type { GamePackageModel } from '../package.model';
+import FormGamePackagePayment from '../payment-form/FormGamePackagePayment.vue';
 
+type DownloadPackageHook = (game: GameModel, build: GameBuildModel) => void;
+let downloadPackageHook: DownloadPackageHook | undefined;
+
+export function setDownloadPackageHook(newHook: DownloadPackageHook) {
+	downloadPackageHook = newHook;
+}
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	package: {
-		type: Object as PropType<GamePackage>,
+		type: Object as PropType<GamePackageModel>,
 		required: true,
 	},
 	build: {
-		type: Object as PropType<GameBuild | null>,
+		type: Object as PropType<GameBuildModel | null>,
 		required: true,
 	},
 	fromExtraSection: {
 		type: Boolean,
 		required: true,
-	},
-	partnerKey: {
-		type: String,
-		default: undefined,
-	},
-	partner: {
-		type: Object as PropType<User>,
-		default: undefined,
 	},
 });
 
@@ -65,8 +56,8 @@ const packageOperation = computed(() => {
 	}
 
 	let operation: 'download' | 'play' =
-		build.value.type === GameBuild.TYPE_DOWNLOADABLE ? 'download' : 'play';
-	if (build.value.type === GameBuild.TYPE_ROM && fromExtraSection) {
+		build.value.type === GameBuildType.Downloadable ? 'download' : 'play';
+	if (build.value.type === GameBuildType.Rom && fromExtraSection) {
 		operation = 'download';
 	}
 	return operation;
@@ -81,10 +72,9 @@ function bought() {
 
 	showSuccessGrowl({
 		title: $gettext('Order Complete'),
-		message: $gettextInterpolate(
-			'Warm thanks from both %{ developer } and the Game Jolt team.',
-			{ developer: game.value.developer.display_name }
-		),
+		message: $gettext('Warm thanks from both %{ developer } and the Game Jolt team.', {
+			developer: game.value.developer.display_name,
+		}),
 		sticky: true,
 	});
 
@@ -111,14 +101,14 @@ function skipPayment() {
 	modal.dismiss();
 }
 
-function _download(gameBuild: GameBuild) {
+function _download(gameBuild: GameBuildModel) {
 	Analytics.trackEvent('game-purchase-modal', 'download', 'download');
 	GameDownloader.download(router, game.value, gameBuild);
 }
 
-function _showBrowserModal(gameBuild: GameBuild) {
+function _showBrowserModal(gameBuild: GameBuildModel) {
 	Analytics.trackEvent('game-purchase-modal', 'download', 'play');
-	GamePlayModal.show(game.value, gameBuild);
+	showGamePlayModal(game.value, gameBuild);
 }
 </script>
 
@@ -139,11 +129,9 @@ function _showBrowserModal(gameBuild: GameBuild) {
 		<div class="modal-body">
 			<FormGamePackagePayment
 				:game="game"
-				:package="gamePackage"
+				:game-package="gamePackage"
 				:build="build"
 				:sellable="sellable"
-				:partner-key="partnerKey"
-				:partner="partner"
 				:operation="packageOperation"
 				@bought="bought"
 				@skip="skipPayment"

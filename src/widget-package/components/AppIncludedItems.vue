@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { formatFilesize } from '../../_common/filters/filesize';
-import { GameBuild } from '../../_common/game/build/build.model';
+import { GameBuildModel } from '../../_common/game/build/build.model';
 import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
 import { useWidgetPackageStore } from '../store/index';
 
@@ -11,15 +11,15 @@ const gamePackage = computed(() => store.gamePackage.value!);
 const packagePayload = computed(() => store.packagePayload.value!);
 const packageCard = computed(() => store.packageCard.value!);
 
-function hasSupport(build: GameBuild, os: string) {
+function hasSupport(build: GameBuildModel, os: string) {
 	return _checkBuildSupport(build, os) || _checkBuildSupport(build, os + '_64');
 }
 
-function is64BitOnly(build: GameBuild, os: string) {
+function is64BitOnly(build: GameBuildModel, os: string) {
 	return !_checkBuildSupport(build, os) && _checkBuildSupport(build, os + '_64');
 }
 
-function _checkBuildSupport(build: GameBuild, os: string) {
+function _checkBuildSupport(build: GameBuildModel, os: string) {
 	return (build as any)['os_' + os] ?? false;
 }
 </script>

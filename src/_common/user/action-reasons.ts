@@ -1,4 +1,4 @@
-import { Translate } from '../translate/translate.service';
+import { $gettext } from '../translate/translate.service';
 
 export const REASON_SPAM = 'spam';
 export const REASON_OFF_TOPIC = 'off-topic';
@@ -42,22 +42,19 @@ function getReasons(reasons: string[]) {
 
 	for (const reason of reasons) {
 		let reasonText = null;
-		const reasonTest = reason
-			.toLowerCase()
-			.replace('_', '-')
-			.replace(' ', '-');
+		const reasonTest = reason.toLowerCase().replace('_', '-').replace(' ', '-');
 		switch (reasonTest) {
 			case REASON_SPAM:
-				reasonText = Translate.$gettext(`Spam`);
+				reasonText = $gettext(`Spam`);
 				break;
 			case REASON_OFF_TOPIC:
-				reasonText = Translate.$gettext(`Off Topic`);
+				reasonText = $gettext(`Off Topic`);
 				break;
 			case REASON_ABUSE:
-				reasonText = Translate.$gettext(`Offensive or insulting`);
+				reasonText = $gettext(`Offensive or insulting`);
 				break;
 			case REASON_OTHER:
-				reasonText = Translate.$gettext(`Other`);
+				reasonText = $gettext(`Other`);
 				break;
 		}
 

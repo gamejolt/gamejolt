@@ -1,27 +1,25 @@
 import { defineAsyncComponent } from 'vue';
 import { showModal } from '../../../../../_common/modal/modal.service';
-import { Realm } from '../../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../../_common/realm/realm-model';
 
 interface ContentTargetManageRealmsModalOptions {
-	selectedRealms: Realm[];
+	selectedRealms: RealmModel[];
 	maxRealms: number;
 }
 
-export class ContentTargetManageRealmsModal {
-	static async show(options: ContentTargetManageRealmsModalOptions) {
-		const { selectedRealms, maxRealms } = options;
+export async function showContentTargetManageRealmsModal(
+	options: ContentTargetManageRealmsModalOptions
+) {
+	const { selectedRealms, maxRealms } = options;
 
-		return await showModal<void>({
-			modalId: 'ContentTargetManageRealms',
-			component: defineAsyncComponent(
-				() => import('./AppContentTargetManageRealmsModal.vue')
-			),
-			props: {
-				selectedRealms,
-				maxRealms,
-			},
-			size: 'sm',
-			noBackdropClose: true,
-		});
-	}
+	return await showModal<void>({
+		modalId: 'ContentTargetManageRealms',
+		component: defineAsyncComponent(() => import('./AppContentTargetManageRealmsModal.vue')),
+		props: {
+			selectedRealms,
+			maxRealms,
+		},
+		size: 'sm',
+		noBackdropClose: true,
+	});
 }

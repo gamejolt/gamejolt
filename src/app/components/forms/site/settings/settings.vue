@@ -2,29 +2,29 @@
 import { mixins, Options } from 'vue-property-decorator';
 import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { validateGaTrackingId } from '../../../../../_common/form-vue/validators';
-import { Site } from '../../../../../_common/site/site-model';
+import { $saveSite, SiteModel } from '../../../../../_common/site/site-model';
 
-class Wrapper extends BaseForm<Site> {}
+class Wrapper extends BaseForm<SiteModel> {}
 
 @Options({})
 export default class FormSiteSettings extends mixins(Wrapper) {
-	modelClass = Site;
+	modelClass = SiteModel;
+	modelSaveHandler = $saveSite;
 
 	readonly validateGaTrackingId = validateGaTrackingId;
 }
 </script>
 
-import { validateGaTrackingId } from '../../../../../_common/form-vue/validators';
 <template>
 	<AppForm :controller="form">
 		<AppFormGroup name="title" :label="$gettext(`Page Title`)" :optional="true">
-			<div class="help-block" v-if="!formModel.game_id">
+			<div v-if="!formModel.game_id" class="help-block">
 				<AppTranslate>
 					You can override the default title for your site. This will show in search
 					engines, and in the tab bar of browsers. By default it's your display name.
 				</AppTranslate>
 			</div>
-			<div class="help-block" v-else>
+			<div v-else class="help-block">
 				<AppTranslate>
 					You can override the default title for your site. This will show in search
 					engines, and in the tab bar of browsers. By default it's the title of your game.
@@ -56,9 +56,7 @@ import { validateGaTrackingId } from '../../../../../_common/form-vue/validators
 				:placeholder="$gettext(`Example: UA-1234567-1`)"
 			/>
 
-			<AppFormControlErrors
-				:label="$gettext(`tracking ID`)"
-			/>
+			<AppFormControlErrors :label="$gettext(`tracking ID`)" />
 
 			<div class="help-block">
 				<p>

@@ -9,7 +9,7 @@ import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { kThemeFgMuted } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import HelpPage from '../../../components/help/page/page.model';
+import { HelpPageModel } from '../../../components/help/page/page.model';
 
 export default {
 	...defineAppRouteOptions({
@@ -23,7 +23,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const page = ref<HelpPage>();
+const page = ref<HelpPageModel>();
 
 const { user } = useCommonStore();
 
@@ -32,7 +32,7 @@ const routeTitle = computed(() => page.value?.title || $gettext(`Help Docs`));
 createAppRoute({
 	routeTitle,
 	onResolved({ payload }) {
-		page.value = new HelpPage(payload.page);
+		page.value = new HelpPageModel(payload.page);
 
 		if (payload.meta) {
 			const meta = payload.meta;

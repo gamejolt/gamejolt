@@ -4,41 +4,44 @@ import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../../../../../_common/filters/number';
-import { GameScoreTable } from '../../../../../../../../../_common/game/score-table/score-table.model';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import { GameScoreTableModel } from '../../../../../../../../../_common/game/score-table/score-table.model';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
-import { UserGameScore } from '../../../../../../../../../_common/user/game-score/game-score.model';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
+import {
+	$removeUserGameScore,
+	UserGameScoreModel,
+} from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { useGameDashRouteController } from '../../../../manage.store';
 
 @Options({
 	name: 'RouteDashGamesManageApiScoreboardsScoresView',
 })
-@OptionsForRoute({
-	deps: { params: ['score'] },
+@OptionsForLegacyRoute({
+	deps: { params: ['table', 'score'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			'/web/dash/developer/games/api/scores/' + route.params.id + '/' + route.params.score
 		),
 })
-export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRouteComponent {
+export default class RouteDashGamesManageApiScoreboardsScoresView extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game!;
 	}
 
-	score: UserGameScore = null as any;
-	scoreTable: GameScoreTable = null as any;
+	score: UserGameScoreModel = null as any;
+	scoreTable: GameScoreTableModel = null as any;
 
 	readonly formatNumber = formatNumber;
 	readonly formatDate = formatDate;
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Score Details - %{ game }', {
+			return this.$gettext('Score Details - %{ game }', {
 				game: this.game.title,
 			});
 		}
@@ -46,12 +49,12 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 	}
 
 	routeResolved($payload: any) {
-		this.score = new UserGameScore($payload.score);
-		this.scoreTable = new GameScoreTable($payload.scoreTable);
+		this.score = new UserGameScoreModel($payload.score);
+		this.scoreTable = new GameScoreTableModel($payload.scoreTable);
 	}
 
 	async removeScore() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this score?')
 		);
 
@@ -59,7 +62,7 @@ export default class RouteDashGamesManageApiScoreboardsScoresView extends BaseRo
 			return;
 		}
 
-		await this.score.$remove();
+		await $removeUserGameScore(this.score);
 
 		this.$router.push({
 			name: 'dash.games.manage.api.scoreboards.scores.list',

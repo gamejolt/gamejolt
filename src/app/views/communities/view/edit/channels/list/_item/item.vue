@@ -1,10 +1,11 @@
 <script lang="ts">
-import { Inject, Options, Prop, Vue } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options, Prop, Vue } from 'vue-property-decorator';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
-import { CommunityChannel } from '../../../../../../../../_common/community/channel/channel.model';
+import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
-import { CommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
+import { showCommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
+import { useCommunityRouteStore } from '../../../../view.store';
 
 @Options({
 	components: {
@@ -15,10 +16,9 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.st
 	},
 })
 export default class AppCommunitiesEditChannelListItem extends Vue {
-	@Prop({ type: Object, required: true }) channel!: CommunityChannel;
+	@Prop({ type: Object, required: true }) channel!: CommunityChannelModel;
 
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	get community() {
 		return this.routeStore.community;
@@ -55,8 +55,8 @@ export default class AppCommunitiesEditChannelListItem extends Vue {
 		return this.community.hasPerms('community-channels');
 	}
 
-	async onClickRemoveChannel(channel: CommunityChannel) {
-		await CommunityRemoveChannelModal.show(this.community, channel);
+	async onClickRemoveChannel(channel: CommunityChannelModel) {
+		await showCommunityRemoveChannelModal(this.community, channel);
 
 		if (channel._removed) {
 			if (channel.is_archived) {

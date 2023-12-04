@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { GameCollection } from '../collection.model';
+import { GameCollectionModel } from '../collection.model';
 import AppGameCollectionGridItem from './item/item.vue';
 
 @Options({
@@ -9,7 +9,7 @@ import AppGameCollectionGridItem from './item/item.vue';
 	},
 })
 export default class AppGameCollectionGrid extends Vue {
-	@Prop(Array) collections!: GameCollection[];
+	@Prop(Array) collections!: GameCollectionModel[];
 	@Prop(String) eventLabel?: string;
 }
 </script>

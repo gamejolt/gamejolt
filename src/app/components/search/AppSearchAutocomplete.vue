@@ -2,15 +2,15 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { trackSearch, trackSearchAutocomplete } from '../../../_common/analytics/analytics.service';
-import { Community } from '../../../_common/community/community.model';
+import { CommunityModel } from '../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import { Game } from '../../../_common/game/game.model';
+import { GameModel } from '../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import AppRealmThumbnail from '../../../_common/realm/AppRealmThumbnail.vue';
-import { Realm } from '../../../_common/realm/realm-model';
+import { RealmModel } from '../../../_common/realm/realm-model';
 import AppUserVerifiedTick from '../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { User } from '../../../_common/user/user.model';
+import { UserModel } from '../../../_common/user/user.model';
 import { debounce } from '../../../utils/utils';
 import type { LocalDbGame as LocalDbGameType } from '../client/local-db/game/game.model';
 import { LocalDbGame } from '../client/safe-exports';
@@ -25,10 +25,10 @@ const router = useRouter();
 const { isEmpty, query, setKeydownSpy, removeKeydownSpy, focusToken } = useSearchController()!;
 
 const selected = ref(0);
-const realms = ref<Realm[]>([]);
-const communities = ref<Community[]>([]);
-const games = ref<Game[]>([]);
-const users = ref<User[]>([]);
+const realms = ref<RealmModel[]>([]);
+const communities = ref<CommunityModel[]>([]);
+const games = ref<GameModel[]>([]);
+const users = ref<UserModel[]>([]);
 const libraryGames = ref<LocalDbGameType[]>([]);
 
 const isHidden = computed(() => isEmpty.value);
@@ -117,13 +117,13 @@ function selectActive() {
 		viewAll();
 	} else {
 		const item = items.value[selected.value - 1];
-		if (item instanceof Realm) {
+		if (item instanceof RealmModel) {
 			selectRealm(item);
-		} else if (item instanceof Community) {
+		} else if (item instanceof CommunityModel) {
 			selectCommunity(item);
-		} else if (item instanceof Game) {
+		} else if (item instanceof GameModel) {
 			selectGame(item);
-		} else if (item instanceof User) {
+		} else if (item instanceof UserModel) {
 			selectUser(item);
 		} else if (LocalDbGame) {
 			if (item instanceof LocalDbGame) {
@@ -147,7 +147,7 @@ function viewAll() {
 	});
 }
 
-function selectRealm(realm: Realm) {
+function selectRealm(realm: RealmModel) {
 	router.push(realm.routeLocation);
 
 	trackSearchAutocomplete({
@@ -156,7 +156,7 @@ function selectRealm(realm: Realm) {
 	});
 }
 
-function selectCommunity(community: Community) {
+function selectCommunity(community: CommunityModel) {
 	router.push(community.routeLocation);
 
 	trackSearchAutocomplete({
@@ -165,7 +165,7 @@ function selectCommunity(community: Community) {
 	});
 }
 
-function selectGame(game: Game) {
+function selectGame(game: GameModel) {
 	router.push({
 		name: 'discover.games.view.overview',
 		params: { slug: game.slug, id: game.id + '' },
@@ -177,7 +177,7 @@ function selectGame(game: Game) {
 	});
 }
 
-function selectUser(user: User) {
+function selectUser(user: UserModel) {
 	router.push({
 		name: 'profile.overview',
 		params: { username: user.username },

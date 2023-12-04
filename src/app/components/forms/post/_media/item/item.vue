@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import AppImgResponsive from '../../../../../../_common/img/AppImgResponsive.vue';
-import { MediaItem } from '../../../../../../_common/media-item/media-item-model';
+import { MediaItemModel } from '../../../../../../_common/media-item/media-item-model';
 
 @Options({
 	components: {
@@ -10,7 +10,7 @@ import { MediaItem } from '../../../../../../_common/media-item/media-item-model
 })
 export default class AppFormPostMediaItem extends Vue {
 	@Prop(Object)
-	item!: MediaItem;
+	item!: MediaItemModel;
 
 	width = 'auto';
 	height = 'auto';

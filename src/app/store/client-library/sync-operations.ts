@@ -1,10 +1,10 @@
 import { ComputedRef } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../_common/device/device.service';
-import type { GameBuild } from '../../../_common/game/build/build.model';
-import type { GameBuildLaunchOption } from '../../../_common/game/build/launch-option/launch-option.model';
-import type { GamePackage } from '../../../_common/game/package/package.model';
-import type { GameRelease } from '../../../_common/game/release/release.model';
+import type { GameBuildModel } from '../../../_common/game/build/build.model';
+import type { GameBuildLaunchOptionModel } from '../../../_common/game/build/launch-option/launch-option.model';
+import type { GamePackageModel } from '../../../_common/game/package/package.model';
+import type { GameReleaseModel } from '../../../_common/game/release/release.model';
 import type { LocalDbGame } from '../../components/client/local-db/game/game.model';
 import { LocalDbPackage } from '../../components/client/local-db/package/package.model';
 import type ClientLibraryGameDataMutations from './game-data-mutations';
@@ -112,10 +112,12 @@ export default class ClientLibrarySyncOperations {
 			throw new Error('Game is not set in localdb.');
 		}
 
-		const pkg = (data.packages as GamePackage[]).find(a => a.id == localPackage.id);
-		const release = (data.releases as GameRelease[]).find(a => a.id == localPackage.release.id);
-		const build = (data.builds as GameBuild[]).find(a => a.id == localPackage.build.id);
-		const launchOptions = (data.launchOptions as GameBuildLaunchOption[]).filter(
+		const pkg = (data.packages as GamePackageModel[]).find(a => a.id == localPackage.id);
+		const release = (data.releases as GameReleaseModel[]).find(
+			a => a.id == localPackage.release.id
+		);
+		const build = (data.builds as GameBuildModel[]).find(a => a.id == localPackage.build.id);
+		const launchOptions = (data.launchOptions as GameBuildLaunchOptionModel[]).filter(
 			a => a.game_build_id == localPackage.build.id
 		);
 

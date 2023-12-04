@@ -1,4 +1,4 @@
-import { CSSPixelValue } from '../../../../_styles/variables';
+import { buildCSSPixelValue } from '../../../../_styles/variables';
 
-export const ChatWindowLeftGutterSize = new CSSPixelValue(32);
-export const ChatWindowAvatarSize = new CSSPixelValue(24);
+export const ChatWindowLeftGutterSize = buildCSSPixelValue(32);
+export const ChatWindowAvatarSize = buildCSSPixelValue(24);

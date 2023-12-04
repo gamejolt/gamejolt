@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
-import { arrayIndexBy } from '../../../utils/array';
-import { CommunityChannel } from '../../../_common/community/channel/channel.model';
-import { Community } from '../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../_common/community/community.model';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { Realm } from '../../../_common/realm/realm-model';
+import { RealmModel } from '../../../_common/realm/realm-model';
 import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
 import { vAppScrollWhen } from '../../../_common/scroll/scroll-when.directive';
+import { arrayIndexBy } from '../../../utils/array';
 import AppFormsPillSelectorCommunities from '../forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
+import AppContentTargetAddCommunity from './target/_add/AppContentTargetAddCommunity.vue';
 import AppContentTarget from './target/AppContentTarget.vue';
 import AppContentTargetCommunity from './target/AppContentTargetCommunity.vue';
 import AppContentTargetRealm from './target/AppContentTargetRealm.vue';
-import { ContentTargetManageRealmsModal } from './target/manage-realms/modal.service';
-import AppContentTargetAddCommunity from './target/_add/AppContentTargetAddCommunity.vue';
+import { showContentTargetManageRealmsModal } from './target/manage-realms/modal.service';
 
 const props = defineProps({
 	/**
@@ -22,7 +22,7 @@ const props = defineProps({
 	 */
 	communities: {
 		type: Array as PropType<
-			{ community: Community; channel?: CommunityChannel; featured_on?: number }[]
+			{ community: CommunityModel; channel?: CommunityChannelModel; featured_on?: number }[]
 		>,
 		required: true,
 	},
@@ -30,15 +30,15 @@ const props = defineProps({
 	 * Similar to communities, these are not mutated by this component directly.
 	 */
 	realms: {
-		type: Array as PropType<Realm[]>,
+		type: Array as PropType<RealmModel[]>,
 		required: true,
 	},
 	incompleteCommunity: {
-		type: Object as PropType<Community>,
+		type: Object as PropType<CommunityModel>,
 		default: undefined,
 	},
 	targetableCommunities: {
-		type: Array as PropType<Community[]>,
+		type: Array as PropType<CommunityModel[]>,
 		default: () => [],
 	},
 	noCommunityChannels: {
@@ -68,19 +68,6 @@ const props = defineProps({
 	hasLinks: {
 		type: Boolean,
 	},
-	/**
-	 * Makes the targetables background color use --theme-bg instead of
-	 * --theme-bg-offset.
-	 *
-	 * @deprecated This prop is a single-use quick hack for fireside settings sidebar,
-	 * it isnt tested anywhere else. if you want this capability in other
-	 * components it's time to rewrite this into a proper solution where we pass
-	 * in a bg-color prop instead, and propogate it through all the nested
-	 * components all the way through AppPill and AppPillBi.
-	 */
-	bgColorOffset: {
-		type: Boolean,
-	},
 });
 
 const {
@@ -96,16 +83,16 @@ const {
 	canRemoveCommunities,
 	canRemoveRealms,
 	hasLinks,
-	bgColorOffset,
 } = toRefs(props);
 
 const emit = defineEmits({
 	showCommunities: () => true,
-	selectCommunity: (_community: Community, _channel?: CommunityChannel) => true,
-	selectIncompleteCommunity: (_community: Community, _channel?: CommunityChannel) => true,
-	selectRealm: (_realm: Realm) => true,
-	removeCommunity: (_community: Community) => true,
-	removeRealm: (_realm: Realm) => true,
+	selectCommunity: (_community: CommunityModel, _channel?: CommunityChannelModel) => true,
+	selectIncompleteCommunity: (_community: CommunityModel, _channel?: CommunityChannelModel) =>
+		true,
+	selectRealm: (_realm: RealmModel) => true,
+	removeCommunity: (_community: CommunityModel) => true,
+	removeRealm: (_realm: RealmModel) => true,
 });
 
 const scrollingKey = ref(0);
@@ -176,24 +163,24 @@ const isEditing = computed(
 		canRemoveRealms.value
 );
 
-function onRemoveRealm(realm: Realm) {
+function onRemoveRealm(realm: RealmModel) {
 	emit('removeRealm', realm);
 }
 
-function onRemoveCommunity(community: Community) {
+function onRemoveCommunity(community: CommunityModel) {
 	emit('removeCommunity', community);
 }
 
-function selectCommunity(community: Community, channel?: CommunityChannel) {
+function selectCommunity(community: CommunityModel, channel?: CommunityChannelModel) {
 	emit('selectCommunity', community, channel);
 	_scrollToEnd();
 }
 
-function selectIncompleteCommunity(community: Community, channel?: CommunityChannel) {
+function selectIncompleteCommunity(community: CommunityModel, channel?: CommunityChannelModel) {
 	emit('selectIncompleteCommunity', community, channel);
 }
 
-function selectRealm(realm: Realm) {
+function selectRealm(realm: RealmModel) {
 	emit('selectRealm', realm);
 }
 
@@ -205,7 +192,7 @@ async function onClickAddRealm() {
 	const curRealms = realms.value;
 	const newRealms = [...curRealms];
 
-	await ContentTargetManageRealmsModal.show({
+	await showContentTargetManageRealmsModal({
 		selectedRealms: newRealms,
 		maxRealms: maxRealms?.value || 0,
 	});
@@ -233,7 +220,7 @@ async function onClickAddRealm() {
 
 <template>
 	<AppScrollScroller v-if="canShow" horizontal thin>
-		<TransitionGroup tag="div" :class="['-list', { '-bg-color-offset': bgColorOffset }]">
+		<TransitionGroup tag="div" class="-list">
 			<AppFormsPillSelectorCommunities
 				v-if="incompleteCommunity"
 				key="incomplete-item"
@@ -301,9 +288,6 @@ async function onClickAddRealm() {
 </template>
 
 <style lang="stylus" scoped>
-.-bg-color-offset ::v-deep(.pill)
-	background-color: var(--theme-bg)
-
 .-list
 	display: flex
 	flex-wrap: nowrap

@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { RouteParamsRaw, RouteRecordName } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import { CreatorExperience } from '../../../../_common/creator/experience/experience.model';
+import { CreatorExperienceModel } from '../../../../_common/creator/experience/experience.model';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
 import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
@@ -22,18 +22,18 @@ import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop
 import { routeLandingCreators } from '../../landing/creators/creators.route';
 import { routeLandingHelpCategory, routeLandingHelpRedirect } from '../../landing/help/help.route';
 import { routeDashAccountBlocks } from '../account/blocks/blocks.route';
-import { routeDashAccountChatCommands } from '../account/chat-commands/chat-commands.route';
-import { routeDashAccountChatTimers } from '../account/chat-timers/chat-timers.route';
 import { routeDashAccountReferrals } from '../account/referrals/referrals.route';
 import { routeDashAccountWallet } from '../account/wallet/wallet.route';
 import { routeDashAnalytics } from '../analytics/analytics.route';
-import { routeDashStickers } from '../stickers/stickers.route';
+import { routeDashShopOverview } from '../shop/overview/overview.route';
 import { routeDashSupporters } from '../supporters/supporters.route';
 
 export default {
 	...defineAppRouteOptions({
 		resolver: async () => {
 			try {
+				// TODO(brand-creators) Make sure this works with brand accounts
+				// or change to something else.
 				return await Api.sendFieldsRequest(
 					`/mobile/me`,
 					{ creatorExperience: true },
@@ -50,20 +50,20 @@ export default {
 };
 
 interface InitPayload {
-	creatorExperience: ModelData<CreatorExperience> | null;
+	creatorExperience: ModelData<CreatorExperienceModel> | null;
 }
 </script>
 
 <script lang="ts" setup>
 const { user } = useCommonStore();
 
-const experience = ref<CreatorExperience | null>(null);
+const experience = ref<CreatorExperienceModel | null>(null);
 
 const { isBootstrapped } = createAppRoute({
 	routeTitle: computed(() => $gettext(`Creator HUD`)),
 	onResolved({ payload }: { payload: InitPayload }) {
 		if (payload.creatorExperience) {
-			experience.value = new CreatorExperience(payload.creatorExperience);
+			experience.value = new CreatorExperienceModel(payload.creatorExperience);
 		} else {
 			experience.value = null;
 		}
@@ -77,13 +77,28 @@ interface Button {
 	routeParams?: RouteParamsRaw;
 }
 
-const buttons = computed<Button[]>(() => [
-	{
+const buttons = computed<Button[]>(() => {
+	const buttons: Button[] = [];
+	const isCreator = user.value?.is_creator === true;
+	const isBrand = user.value?.is_brand === true;
+
+	function addButton(condition: boolean, button: Button) {
+		if (condition) {
+			buttons.push(button);
+		}
+	}
+
+	addButton(isCreator || isBrand, {
+		to: routeDashShopOverview.name!,
+		label: $gettext(`Your shop`),
+		icon: 'marketplace-filled',
+	});
+	addButton(isCreator, {
 		to: routeDashSupporters.name!,
 		label: $gettext(`Supporters`),
 		icon: 'heart-filled',
-	},
-	{
+	});
+	addButton(isCreator || isBrand, {
 		to: routeDashAnalytics.name!,
 		routeParams: {
 			resource: 'User',
@@ -91,46 +106,33 @@ const buttons = computed<Button[]>(() => [
 		},
 		label: $gettext(`Analytics`),
 		icon: 'chart',
-	},
-	{
+	});
+	addButton(isCreator, {
 		to: routeDashAccountWallet.name!,
 		label: $gettext(`Wallet`),
 		icon: 'gem',
-	},
-	{
-		to: routeDashStickers.name!,
-		label: $gettext(`Custom stickers`),
-		icon: 'sticker-filled',
-	},
-	{
+	});
+	addButton(isCreator, {
 		to: routeDashAccountReferrals.name!,
 		label: $gettext(`Referrals`),
 		icon: 'users',
-	},
-	{
-		to: routeDashAccountChatCommands.name!,
-		label: $gettext(`Chat commands`),
-		icon: 'wand',
-	},
-	{
-		to: routeDashAccountChatTimers.name!,
-		label: $gettext(`Chat timers`),
-		icon: 'timer',
-	},
-	{
+	});
+	addButton(isCreator, {
 		to: routeDashAccountBlocks.name!,
 		label: $gettext(`Blocked users`),
 		icon: 'friend-remove-2',
-	},
-	{
+	});
+	addButton(isCreator || isBrand, {
 		to: routeLandingHelpCategory.name!,
 		routeParams: {
 			category: 'creators',
 		},
 		label: $gettext(`Help and FAQs`),
 		icon: 'help-circle',
-	},
-]);
+	});
+
+	return buttons;
+});
 
 const creatorNextUnlock = computed(() => {
 	if (experience.value) {
@@ -151,7 +153,7 @@ const creatorNextUnlock = computed(() => {
 					{{ $gettext(`Creator HUD`) }}
 				</h1>
 
-				<template v-if="experience">
+				<template v-if="experience && user.is_creator">
 					<div :style="styleFlexCenter({ direction: `column` })">
 						<div
 							:style="{

@@ -1,45 +1,45 @@
 import { Model } from '../model/model.service';
-import { PollItem } from './item/item.model';
+import { PollItemModel, buildPollItemForPoll } from './item/item.model';
 
-export class Poll extends Model {
-	static readonly STATUS_ACTIVE = 'active';
-	static readonly STATUS_REMOVED = 'removed';
+export const enum PollStatus {
+	Active = 'active',
+	Removed = 'removed',
+}
 
-	fireside_post_id!: number;
-	created_on!: number;
-	end_time!: number;
-	duration!: number;
-	is_private!: boolean;
-	status!: string;
+export class PollModel extends Model {
+	declare fireside_post_id: number;
+	declare created_on: number;
+	declare end_time: number;
+	declare duration: number;
+	declare is_private: boolean;
+	declare status: PollStatus;
+	declare vote_count: number;
 
-	items: PollItem[] = [];
-	vote_count!: number;
+	items: PollItemModel[] = [];
 
 	constructor(data?: any) {
 		super(data);
 
 		if (data && data.items) {
-			this.items = PollItem.populate(data.items);
+			this.items = PollItemModel.populate(data.items);
 		}
 	}
 
 	ensureMinimumItems() {
 		for (let i = this.items.length; i < 2; i++) {
-			PollItem.createForPoll(this, '');
+			buildPollItemForPoll(this, '');
 		}
-	}
-
-	$vote(itemId: number) {
-		return this.$_save(`/web/polls/vote/${this.id}`, 'poll', { data: { item_id: itemId } });
-	}
-
-	$refresh() {
-		if (!this.id) {
-			throw new Error(`Cannot refresh a poll that doesn't exist yet`);
-		}
-
-		return this.$_save(`/web/polls/refresh/${this.id}`, 'poll', { detach: true });
 	}
 }
 
-Model.create(Poll);
+export function $voteOnPoll(model: PollModel, itemId: number) {
+	return model.$_save(`/web/polls/vote/${model.id}`, 'poll', { data: { item_id: itemId } });
+}
+
+export function $refreshPoll(model: PollModel) {
+	if (!model.id) {
+		throw new Error(`Cannot refresh a poll that doesn't exist yet`);
+	}
+
+	return model.$_save(`/web/polls/refresh/${model.id}`, 'poll', { detach: true });
+}

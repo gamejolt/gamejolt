@@ -2,13 +2,12 @@ import { lift, toggleMark, wrapIn } from 'prosemirror-commands';
 import { Fragment, Mark, MarkType, Node, NodeType } from 'prosemirror-model';
 import { EditorState, Plugin, Selection, TextSelection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { inject, InjectionKey, markRaw, nextTick, reactive, unref, watch } from 'vue';
+import { InjectionKey, MaybeRef, inject, markRaw, nextTick, reactive, unref, watch } from 'vue';
 import { isImage } from '../../../utils/image';
 import { uuidv4 } from '../../../utils/uuid';
-import { MaybeRef } from '../../../utils/vue';
 import { GJ_EMOJIS } from '../../emoji/AppEmoji.vue';
-import { Emoji } from '../../emoji/emoji.model';
-import { MediaItem } from '../../media-item/media-item-model';
+import { EmojiModel } from '../../emoji/emoji.model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
 import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
@@ -16,7 +15,7 @@ import { ContentOwnerController } from '../content-owner';
 import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapter';
 import { ContentEditorService } from './content-editor.service';
 import buildEditorEvents from './events/build-events';
-import { createMediaUploadTask, MediaUploadTask } from './media-upload-task';
+import { MediaUploadTask, createMediaUploadTask } from './media-upload-task';
 import { SearchResult } from './modals/gif/gif-modal.service';
 import { NodeViewRenderData } from './node-views/base';
 import { buildEditorNodeViews } from './node-views/node-view-builder';
@@ -883,7 +882,7 @@ export function editorShowEmojiPanel(c: ContentEditorController) {
 
 export function editorInsertEmoji(
 	c: ContentEditorController,
-	emoji: Emoji | (typeof GJ_EMOJIS)[number]
+	emoji: EmojiModel | (typeof GJ_EMOJIS)[number]
 ) {
 	if (!c.capabilities.emoji) {
 		return;
@@ -969,7 +968,7 @@ export function editorMediaUploadInsert(c: ContentEditorController, uploadTask: 
  * Finalized a media upload and replaces the media upload placeholder node with
  * the actual media item that was uploaded.
  */
-export function editorMediaUploadFinalize(uploadTask: MediaUploadTask, mediaItem: MediaItem) {
+export function editorMediaUploadFinalize(uploadTask: MediaUploadTask, mediaItem: MediaItemModel) {
 	const c = uploadTask.editorController;
 	if (!c.view) {
 		return;

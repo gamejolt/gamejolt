@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import AppEmoji from '../emoji/AppEmoji.vue';
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
+import { $gettext } from '../translate/translate.service';
 import { useForm } from './AppForm.vue';
 
 const form = useForm();
@@ -19,7 +19,7 @@ const shouldShow = computed(() => form?.changed);
 						<div class="-emoji">
 							<AppEmoji emoji="yush" />
 						</div>
-						<AppTranslate>Don't forget to save!</AppTranslate>
+						{{ $gettext(`Don't forget to save!`) }}
 					</div>
 				</div>
 				<div class="-trailing">

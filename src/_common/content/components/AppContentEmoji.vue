@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
-import AppEmoji, { emojiBaseSize, GJ_EMOJIS } from '../../emoji/AppEmoji.vue';
-import { Emoji } from '../../emoji/emoji.model';
+import AppEmoji, { GJ_EMOJIS, emojiBaseSize } from '../../emoji/AppEmoji.vue';
+import { EmojiModel } from '../../emoji/emoji.model';
+import { storeModel } from '../../model/model-store.service';
 import { useContentOwnerController } from '../content-owner';
 
 const props = defineProps({
@@ -18,12 +19,12 @@ const props = defineProps({
 
 const owner = useContentOwnerController()!;
 
-const emoji = ref<Emoji | (typeof GJ_EMOJIS)[number]>();
+const emoji = ref<EmojiModel | (typeof GJ_EMOJIS)[number]>();
 
 if (props.emojiId) {
 	owner.hydrator.useData('emoji-id', props.emojiId.toString(), data => {
 		if (data) {
-			emoji.value = new Emoji(data);
+			emoji.value = storeModel(EmojiModel, data);
 		}
 	});
 } else {

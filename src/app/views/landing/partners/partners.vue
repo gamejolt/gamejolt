@@ -1,6 +1,9 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { imageJolt } from '../../../img/images';
 
@@ -10,8 +13,8 @@ import { imageJolt } from '../../../img/images';
 		AppThemeSvg,
 	},
 })
-@OptionsForRoute()
-export default class RouteLandingPartners extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteLandingPartners extends LegacyRouteComponent {
 	readonly imageJolt = imageJolt;
 	readonly assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
 

@@ -1,26 +1,29 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { numberSort } from '../../../../../utils/array';
 import { Api } from '../../../../../_common/api/api.service';
-import { Game } from '../../../../../_common/game/game.model';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import { GameModel } from '../../../../../_common/game/game.model';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
-import AppTimelineList from '../../../../../_common/timeline-list/timeline-list.vue';
-import { UserGameTrophy } from '../../../../../_common/user/trophy/game-trophy.model';
-import { UserSiteTrophy } from '../../../../../_common/user/trophy/site-trophy.model';
-import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophy } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import { TrophyModal } from '../../../../../_common/trophy/modal/modal.service';
+import AppTimelineList from '../../../../../_common/timeline-list/AppTimelineList.vue';
+import AppTimelineListItem from '../../../../../_common/timeline-list/item/AppTimelineListItem.vue';
+import { showTrophyModal } from '../../../../../_common/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
-import { useProfileRouteController } from '../../RouteProfile.vue';
+import { UserGameTrophyModel } from '../../../../../_common/user/trophy/game-trophy.model';
+import { UserSiteTrophyModel } from '../../../../../_common/user/trophy/site-trophy.model';
+import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
+import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
+import { numberSort } from '../../../../../utils/array';
+import { useProfileRouteStore } from '../../RouteProfile.vue';
 
 type TrophyEntry = {
 	gameId?: number;
-	game?: Game;
-	trophies: UserBaseTrophy[];
+	game?: GameModel;
+	trophies: UserBaseTrophyModel[];
 };
 
 @Options({
@@ -32,13 +35,13 @@ type TrophyEntry = {
 		AppTrophyThumbnail,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/profile/trophies/overview/@' + route.params.username),
 })
-export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
-	routeStore = setup(() => useProfileRouteController()!);
+export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
+	routeStore = setup(() => useProfileRouteStore()!);
 	commonStore = setup(() => useCommonStore());
 
 	trophyEntries: TrophyEntry[] = [];
@@ -57,7 +60,7 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 
 	get routeTitle() {
 		if (this.user) {
-			return this.$gettextInterpolate(`@%{ user }'s Trophy Case`, {
+			return this.$gettext(`@%{ user }'s Trophy Case`, {
 				user: this.user.username,
 			});
 		}
@@ -79,7 +82,7 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 	routeResolved(payload: any) {
 		this.pageSize = payload.pageSize;
 
-		let trophies: UserBaseTrophy[] = [];
+		let trophies: UserBaseTrophyModel[] = [];
 		if (payload.trophies) {
 			trophies = populateTrophies(payload.trophies);
 		}
@@ -100,11 +103,11 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 	 * Each entry is a group of trophies of the same origin (same game or site).
 	 * It also creates a new entry if the difference between achieved trophies is larger than 24 hours.
 	 */
-	private insertTrophy(userTrophy: UserBaseTrophy) {
+	private insertTrophy(userTrophy: UserBaseTrophyModel) {
 		// Set the game/id for this user trophy (undefined for site trophies)
-		let game: Game | undefined = undefined;
+		let game: GameModel | undefined = undefined;
 		let gameId: number | undefined = undefined;
-		if (userTrophy instanceof UserGameTrophy) {
+		if (userTrophy instanceof UserGameTrophyModel) {
 			game = userTrophy.game;
 			gameId = userTrophy.game_id;
 		}
@@ -130,7 +133,7 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 		}
 	}
 
-	private updateCanLoadMore(loadedTrophies: UserBaseTrophy[]) {
+	private updateCanLoadMore(loadedTrophies: UserBaseTrophyModel[]) {
 		// We have to receive a page size from the api to be able to load more.
 		if (!this.pageSize) {
 			this.canLoadMore = false;
@@ -139,8 +142,8 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 
 		// When we have less than the page size in new trophies for both game AND site trophies,
 		// we know there are no new trophies to load at all.
-		const loadedGameTrophies = loadedTrophies.filter(i => i instanceof UserGameTrophy);
-		const loadedSiteTrophies = loadedTrophies.filter(i => i instanceof UserSiteTrophy);
+		const loadedGameTrophies = loadedTrophies.filter(i => i instanceof UserGameTrophyModel);
+		const loadedSiteTrophies = loadedTrophies.filter(i => i instanceof UserSiteTrophyModel);
 		if (
 			loadedGameTrophies.length < this.pageSize &&
 			loadedSiteTrophies.length < this.pageSize
@@ -150,8 +153,8 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 		}
 
 		const allTrophies = this.trophyEntries.flatMap(i => i.trophies);
-		const gameTrophies = allTrophies.filter(i => i instanceof UserGameTrophy);
-		const siteTrophies = allTrophies.filter(i => i instanceof UserSiteTrophy);
+		const gameTrophies = allTrophies.filter(i => i instanceof UserGameTrophyModel);
+		const siteTrophies = allTrophies.filter(i => i instanceof UserSiteTrophyModel);
 
 		// For either trophy type:
 		// When we have more than 0 new trophies and more than 0 total,
@@ -174,8 +177,8 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 		);
 	}
 
-	onClickTrophy(userTrophy: UserBaseTrophy) {
-		TrophyModal.show(userTrophy);
+	onClickTrophy(userTrophy: UserBaseTrophyModel) {
+		showTrophyModal(userTrophy);
 	}
 
 	async onClickShowMore() {
@@ -188,17 +191,17 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 		let url = '/web/profile/trophies/overview/@' + this.user.username;
 
 		// Find the oldest game and site trophy to use as scroll
-		let oldestGameTrophy: UserGameTrophy | null = null,
-			oldestSiteTrophy: UserSiteTrophy | null = null;
+		let oldestGameTrophy: UserGameTrophyModel | null = null,
+			oldestSiteTrophy: UserSiteTrophyModel | null = null;
 
 		const allTrophies = this.trophyEntries.flatMap(i => i.trophies);
 
 		for (const userTrophy of allTrophies) {
-			if (userTrophy instanceof UserGameTrophy) {
+			if (userTrophy instanceof UserGameTrophyModel) {
 				if (!oldestGameTrophy || oldestGameTrophy.logged_on > userTrophy.logged_on) {
 					oldestGameTrophy = userTrophy;
 				}
-			} else if (userTrophy instanceof UserSiteTrophy) {
+			} else if (userTrophy instanceof UserSiteTrophyModel) {
 				if (!oldestSiteTrophy || oldestSiteTrophy.logged_on > userTrophy.logged_on) {
 					oldestSiteTrophy = userTrophy;
 				}
@@ -215,7 +218,7 @@ export default class RouteProfileTrophiesOverview extends BaseRouteComponent {
 
 		const payload = await Api.sendRequest(url);
 
-		let trophies: UserBaseTrophy[] = [];
+		let trophies: UserBaseTrophyModel[] = [];
 		if (payload.trophies) {
 			trophies = populateTrophies(payload.trophies);
 		}

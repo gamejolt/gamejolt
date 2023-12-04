@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra';
+import { copy, mkdirp, pathExists } from 'fs-extra';
 import * as os from 'os';
 import * as path from 'path';
 import { downloadFile, unzip } from '../utils';
@@ -44,7 +44,7 @@ export async function acquirePrebuiltFFmpeg(opts: AcquireOptions) {
 		throw new Error(`Unsupported arch '${arch}'`);
 	}
 
-	await fs.mkdirp(opts.cacheDir);
+	await mkdirp(opts.cacheDir);
 
 	const cachePath = path.resolve(
 		opts.cacheDir,
@@ -52,7 +52,7 @@ export async function acquirePrebuiltFFmpeg(opts: AcquireOptions) {
 	);
 
 	// If we don't have it in cache yet, get it.
-	const exists = await fs.pathExists(cachePath);
+	const exists = await pathExists(cachePath);
 	if (!exists || (opts.noCache ?? false)) {
 		let url = `https://github.com/iteufel/nwjs-ffmpeg-prebuilt/releases/download/${opts.nwjsVersion}/${opts.nwjsVersion}`;
 		url += `-${platformShortname}`;
@@ -68,6 +68,6 @@ export async function acquirePrebuiltFFmpeg(opts: AcquireOptions) {
 	console.log(
 		`Installing ffmpeg-prebuilt to the build dir: ${path.resolve(cachePath, filename)} -> ${to}`
 	);
-	await fs.copy(path.resolve(cachePath, filename), to);
+	await copy(path.resolve(cachePath, filename), to);
 	return to;
 }

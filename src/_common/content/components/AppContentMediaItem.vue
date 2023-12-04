@@ -6,10 +6,10 @@ import { createLightbox } from '../../lightbox/lightbox-helpers';
 import AppLinkExternal from '../../link/AppLinkExternal.vue';
 import AppLoading from '../../loading/AppLoading.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItem } from '../../media-item/media-item-model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
-import { ContentEditorLinkModal } from '../content-editor/modals/link/link-modal.service';
+import { showContentEditorLinkModal } from '../content-editor/modals/link/link-modal.service';
 import { defineEditableNodeViewProps } from '../content-editor/node-views/base';
 import { useContentOwnerController } from '../content-owner';
 import AppBaseContentComponent from './AppBaseContentComponent.vue';
@@ -63,7 +63,7 @@ const {
 } = toRefs(props);
 
 const container = ref<InstanceType<typeof AppResponsiveDimensions>>();
-const mediaItem = ref<MediaItem>();
+const mediaItem = ref<MediaItemModel>();
 const hasError = ref(false);
 const imageLoaded = ref(false);
 
@@ -76,7 +76,7 @@ const title = computed(() => {
 	if (mediaItem.value && hasLink.value) {
 		return displayHref.value;
 	}
-	if (mediaItem.value instanceof MediaItem) {
+	if (mediaItem.value instanceof MediaItemModel) {
 		let filename = mediaItem.value.filename;
 		// If possible, remove the hash from the filename.
 		// The filename is matching the pattern 'filename-8chrhere.ext'
@@ -165,7 +165,7 @@ const lightbox = createLightbox(lightboxItems);
 
 owner.hydrator.useData('media-item-id', mediaItemId.value.toString(), data => {
 	if (data) {
-		mediaItem.value = new MediaItem(data);
+		mediaItem.value = new MediaItemModel(data);
 	} else {
 		hasError.value = true;
 	}
@@ -175,7 +175,7 @@ async function onEdit() {
 	if (hasLink.value) {
 		removeLink();
 	} else {
-		const result = await ContentEditorLinkModal.show(href.value);
+		const result = await showContentEditorLinkModal(href.value);
 		if (result !== undefined) {
 			onUpdateAttrs?.value?.({ href: result.href });
 		}
@@ -250,7 +250,7 @@ function onItemFullscreen() {
 							/>
 							<img
 								v-else
-								class="img-responsive content-image egsdega"
+								class="img-responsive content-image"
 								:src="mediaItem.img_url"
 								:alt="title"
 								:title="title"

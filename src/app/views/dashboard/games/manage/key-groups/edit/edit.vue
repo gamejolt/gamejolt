@@ -1,27 +1,31 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../../../utils/array';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { Clipboard } from '../../../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../../../_common/environment/environment.service';
 import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../_common/filters/number';
-import { GamePackage } from '../../../../../../../_common/game/package/package.model';
+import { GamePackageModel } from '../../../../../../../_common/game/package/package.model';
 import {
 	showErrorGrowl,
 	showSuccessGrowl,
 } from '../../../../../../../_common/growls/growls.service';
-import { KeyGroup } from '../../../../../../../_common/key-group/key-group.model';
-import { Key } from '../../../../../../../_common/key/key-model';
-import { ModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import {
+	$removeKeyGroup,
+	KeyGroupModel,
+	KeyGroupType,
+} from '../../../../../../../_common/key-group/key-group.model';
+import { $removeKey, KeyModel } from '../../../../../../../_common/key/key-model';
+import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { arrayRemove } from '../../../../../../../utils/array';
 import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/add-keys.vue';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
 import { useGameDashRouteController } from '../../manage.store';
@@ -39,23 +43,23 @@ import { useGameDashRouteController } from '../../manage.store';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['keyGroupId'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			`/web/dash/developer/games/key-groups/${route.params.id}/${route.params.keyGroupId}`
 		),
 })
-export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponent {
+export default class RouteDashGamesManageKeyGroupsEdit extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game!;
 	}
 
-	keyGroup: KeyGroup = null as any;
-	packages: GamePackage[] = [];
-	keys: Key[] = [];
+	keyGroup: KeyGroupModel = null as any;
+	packages: GamePackageModel[] = [];
+	keys: KeyModel[] = [];
 
 	isShowingAddKeys = false;
 
@@ -66,11 +70,12 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 
 	readonly formatNumber = formatNumber;
 	readonly Environment = Environment;
-	readonly KeyGroup = KeyGroup;
+	readonly KeyGroupTypeUser = KeyGroupType.User;
+	readonly KeyGroupTypeEmail = KeyGroupType.Email;
 
 	get routeTitle() {
 		if (this.keyGroup) {
-			return this.$gettextInterpolate('Edit Key Group: %{ name }', {
+			return this.$gettext('Edit Key Group: %{ name }', {
 				name: this.keyGroup.name,
 			});
 		}
@@ -78,9 +83,9 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 	}
 
 	routeResolved($payload: any) {
-		this.keyGroup = new KeyGroup($payload.keyGroup);
-		this.packages = GamePackage.populate($payload.packages);
-		this.keys = Key.populate($payload.keys);
+		this.keyGroup = new KeyGroupModel($payload.keyGroup);
+		this.packages = GamePackageModel.populate($payload.packages);
+		this.keys = KeyModel.populate($payload.keys);
 	}
 
 	async searchKeys() {
@@ -90,10 +95,10 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 			this.search
 		);
 
-		this.keys = Key.populate(response.keys);
+		this.keys = KeyModel.populate(response.keys);
 	}
 
-	copyKeyLink(key: Key) {
+	copyKeyLink(key: KeyModel) {
 		Clipboard.copy(`${Environment.baseUrl}/claim/${key.key}`);
 	}
 
@@ -103,8 +108,8 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 		this.isShowingAddKeys = false;
 	}
 
-	async removeGroup(keyGroup: KeyGroup) {
-		const resolved = await ModalConfirm.show(
+	async removeGroup(keyGroup: KeyGroupModel) {
+		const resolved = await showModalConfirm(
 			this.$gettext(
 				'Are you sure you want to remove this key group? All keys within this key group will be invalidated. Any access that users may have gained from these keys will be revoked. This can not be reversed.'
 			),
@@ -116,7 +121,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 		}
 
 		try {
-			await keyGroup.$remove();
+			await $removeKeyGroup(keyGroup);
 		} catch (e) {
 			showErrorGrowl(this.$gettext('Could not remove key group for some reason.'));
 			return;
@@ -132,8 +137,8 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 		});
 	}
 
-	async removeKey(key: Key) {
-		const resolved = await ModalConfirm.show(
+	async removeKey(key: KeyModel) {
+		const resolved = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to remove this key? This will revoke this key's access, or anyone that has claimed this key. This can not be reversed.`
 			),
@@ -145,7 +150,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 		}
 
 		try {
-			await key.$remove();
+			await $removeKey(key);
 		} catch (e) {
 			showErrorGrowl(this.$gettext('Could not remove key for some reason.'));
 			return;
@@ -170,7 +175,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 					<FormGameKeyGroup :game="game" :packages="packages" :model="keyGroup" />
 				</div>
 				<div class="col-sm-10 col-md-4 col-md-offset-1 col-lg-5">
-					<div v-if="keyGroup.type === KeyGroup.TYPE_EMAIL" class="alert">
+					<div v-if="keyGroup.type === KeyGroupTypeEmail" class="alert">
 						<p>
 							<AppTranslate>
 								You can hand out this URL for people to retrieve the keys attached
@@ -181,7 +186,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 							{{ Environment.baseUrl }}/claim/g-{{ game.id }}
 						</a>
 					</div>
-					<div v-else-if="keyGroup.type === KeyGroup.TYPE_USER" class="alert">
+					<div v-else-if="keyGroup.type === KeyGroupTypeUser" class="alert">
 						<p v-translate>
 							<b>Not so fast!</b>
 							In order for the users in this key group to gain access, you'll need to
@@ -308,7 +313,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 									Key
 								</AppTranslate>
 							</th>
-							<th v-if="keyGroup.type === KeyGroup.TYPE_EMAIL">
+							<th v-if="keyGroup.type === KeyGroupTypeEmail">
 								<AppTranslate>Email</AppTranslate>
 							</th>
 							<th><AppTranslate>User</AppTranslate></th>
@@ -333,7 +338,7 @@ export default class RouteDashGamesManageKeyGroupsEdit extends BaseRouteComponen
 								</a>
 							</td>
 
-							<td v-if="keyGroup.type === KeyGroup.TYPE_EMAIL">
+							<td v-if="keyGroup.type === KeyGroupTypeEmail">
 								{{ key.email }}
 							</td>
 

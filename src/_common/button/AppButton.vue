@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs, useAttrs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
+import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
 import { kJolticonSize } from '../../_styles/variables';
 import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
+import AppCircularProgress from '../progress/AppCircularProgress.vue';
 
 const props = defineProps({
 	tag: {
@@ -67,6 +69,13 @@ const props = defineProps({
 		type: Boolean,
 	},
 	/**
+	 * Shows an indeterminate {@link AppCircularProgress} in place of all
+	 * content.
+	 */
+	loading: {
+		type: Boolean,
+	},
+	/**
 	 * Allows a custom icon to be built into the button. Does nothing if
 	 * {@link icon} is set.
 	 */
@@ -97,7 +106,7 @@ const { hasSlot } = useDynamicSlots(dynamicSlots);
 		:class="{
 			'-primary': primary,
 			'-trans': trans,
-			'-outline': !solid,
+			'-outline': !solid && !trans,
 			'-overlay': overlay,
 			'-circle': circle,
 			'-sparse': sparse || circle,
@@ -109,21 +118,39 @@ const { hasSlot } = useDynamicSlots(dynamicSlots);
 			'-hover': forceHover,
 			[`-fill-color-${fillColor}`]: !!fillColor,
 		}"
+		:style="
+			styleWhen((sparse || circle) && loading, {
+				padding: 0,
+			})
+		"
 		:to="to"
 		:disabled="disabled === true ? 'disabled' : null"
 	>
-		<span v-if="badge" class="-badge">{{ badge }}</span>
-		<AppJolticon
-			v-if="icon"
-			class="-icon"
-			:class="[iconColor ? `-icon-color-${iconColor}` : undefined]"
-			:icon="icon"
-			:big="lg"
-		/>
-		<div v-else-if="hasSlot('icon')" class="-icon" :style="{ display: `inline-block` }">
-			<slot name="icon" :size="lg ? kJolticonSize.value * 2 : kJolticonSize.value" />
+		<div v-if="loading" :style="styleFlexCenter()">
+			<AppCircularProgress
+				:style="{
+					height: `33px`,
+					width: `33px`,
+					paddingTop: `6px`,
+					paddingBottom: `6px`,
+				}"
+			/>
 		</div>
-		<slot />
+		<template v-else>
+			<span v-if="badge" class="-badge">{{ badge }}</span>
+			<AppJolticon
+				v-if="icon"
+				class="-icon"
+				:class="[iconColor ? `-icon-color-${iconColor}` : undefined]"
+				:icon="icon"
+				:big="lg"
+			/>
+			<div v-else-if="hasSlot('icon')" class="-icon" :style="{ display: `inline-block` }">
+				<slot name="icon" :size="lg ? kJolticonSize.value * 2 : kJolticonSize.value" />
+			</div>
+
+			<slot />
+		</template>
 	</component>
 </template>
 

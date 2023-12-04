@@ -2,8 +2,11 @@
 import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
-import { FiresidePostVideo } from '../../../../../_common/fireside/post/video/video-model';
+import {
+	$removeFiresidePostVideo,
+	FiresidePostModel,
+} from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostVideoModel } from '../../../../../_common/fireside/post/video/video-model';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlUpload, {
 	AppFormControlUploadInterface,
@@ -18,10 +21,10 @@ import {
 } from '../../../../../_common/form-vue/form.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
-import AppVideoEmbed from '../../../../../_common/video/embed/embed.vue';
+import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
 import AppVideoPlayer from '../../../../../_common/video/player/AppVideoPlayer.vue';
 import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 
@@ -63,7 +66,7 @@ export default class AppFormPostVideo
 	extends mixins(Wrapper)
 	implements FormOnSubmit, FormOnLoad, FormOnSubmitError, FormOnSubmitSuccess
 {
-	@Prop({ type: Object }) post!: FiresidePost;
+	@Prop({ type: Object }) post!: FiresidePostModel;
 	@Prop({ type: Boolean, required: true }) wasPublished!: boolean;
 
 	// These fields are populated through the form load.
@@ -78,7 +81,7 @@ export default class AppFormPostVideo
 	hasVideoProcessingError = false;
 	videoProcessingErrorMsg = '';
 
-	readonly FiresidePostVideo = FiresidePostVideo;
+	readonly FiresidePostVideo = FiresidePostVideoModel;
 	readonly formatNumber = formatNumber;
 
 	declare $refs: {
@@ -92,7 +95,7 @@ export default class AppFormPostVideo
 	emitVideoStatusChange(_status: VideoStatus) {}
 
 	@Emit('video-change')
-	emitVideoChange(_video: FiresidePostVideo | null) {}
+	emitVideoChange(_video: FiresidePostVideoModel | null) {}
 
 	get loadUrl() {
 		return `/web/posts/manage/add-video/${this.post.id}`;
@@ -207,7 +210,7 @@ export default class AppFormPostVideo
 			return;
 		}
 
-		this.emitVideoChange(new FiresidePostVideo($payload.video));
+		this.emitVideoChange(new FiresidePostVideoModel($payload.video));
 	}
 
 	videoSelected() {
@@ -280,7 +283,7 @@ export default class AppFormPostVideo
 			system: true,
 		});
 
-		this.emitVideoChange(new FiresidePostVideo(video));
+		this.emitVideoChange(new FiresidePostVideoModel(video));
 	}
 
 	onProcessingError(err: string | Error) {
@@ -309,7 +312,7 @@ export default class AppFormPostVideo
 
 	async onDeleteUpload() {
 		if (this.videoStatus !== VideoStatus.IDLE) {
-			const result = await ModalConfirm.show(
+			const result = await showModalConfirm(
 				this.$gettext(
 					`Are you sure you want to remove this video? You'll be able to add another one later.`
 				),
@@ -330,7 +333,7 @@ export default class AppFormPostVideo
 		// in this case specifically I think it makes sense since the video is
 		// unpublishable anyways.
 		if (this.videoStatus === VideoStatus.ERROR) {
-			await this.post.$removeVideo();
+			await $removeFiresidePostVideo(this.post);
 		}
 
 		this.hasVideoProcessingError = false;

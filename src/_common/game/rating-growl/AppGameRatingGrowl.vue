@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
 import { useEventSubscription } from '../../system/event/event-topic';
-import { Game } from '../game.model';
+import { GameModel } from '../game.model';
 import AppGameRatingWidget, { onRatingWidgetChange } from '../rating/AppGameRatingWidget.vue';
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 });

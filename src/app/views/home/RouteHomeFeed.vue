@@ -1,25 +1,12 @@
 <script lang="ts">
-import {
-	computed,
-	defineAsyncComponent,
-	provide,
-	reactive,
-	Ref,
-	ref,
-	shallowRef,
-	watch,
-} from 'vue';
+import { computed, defineAsyncComponent, provide, Ref, ref, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
-import {
-	trackExperimentEngagement,
-	trackPageViewAfterRoute,
-} from '../../../_common/analytics/analytics.service';
+import { isAdEnthused } from '../../../_common/ad/ad-store';
+import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
-import { configHomeFeedSwitcher } from '../../../_common/config/config.service';
-import { Fireside } from '../../../_common/fireside/fireside.model';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import AppInviteCard from '../../../_common/invite/AppInviteCard.vue';
 import {
 	asyncRouteLoader,
@@ -30,36 +17,33 @@ import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppStickerChargeCard from '../../../_common/sticker/charge/AppStickerChargeCard.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
-import { EventSubscription } from '../../../_common/system/event/event-topic';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { styleWhen } from '../../../_styles/mixins';
-import { kLineHeightComputed } from '../../../_styles/variables';
+import {
+	buildCSSPixelValue,
+	kGridGutterWidth,
+	kGridGutterWidthXs,
+} from '../../../_styles/variables';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../components/activity/feed/view';
-import { FeaturedItem } from '../../components/featured-item/featured-item.model';
-import { onFiresideStart } from '../../components/grid/client.service';
+import { FeaturedItemModel } from '../../components/featured-item/featured-item.model';
 import { useGridStore } from '../../components/grid/grid-store';
 import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
 import { fetchDailyQuests, useQuestStore } from '../../store/quest';
-import { createRealmRouteStore, RealmRouteStore } from '../realms/view/view.store';
-import AppHomeFireside from './_fireside/AppHomeFireside.vue';
 import AppHomeFeaturedBanner from './AppHomeFeaturedBanner.vue';
 import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
-import AppHomeFeedSwitcher, {
-	RealmPathHistoryStateKey,
-	RealmTabData,
-} from './feed-switcher/AppHomeFeedSwitcher.vue';
 import { HOME_FEED_ACTIVITY, HOME_FEED_FYP, HomeFeedService } from './home-feed.service';
-import {
-	getCurrentHomeRouteAnalyticsPath,
-	getNewHomeRouteAnalyticsPath,
-	updateHomeRouteAnalyticsPath,
-} from './RouteHome.vue';
+
+const RouteHomeActivity = defineAsyncComponent(() =>
+	asyncRouteLoader(router, import('./RouteHomeActivity.vue'))
+);
+const RouteHomeFyp = defineAsyncComponent(() =>
+	asyncRouteLoader(router, import('./RouteHomeFYP.vue'))
+);
 
 class DashGame {
 	constructor(
@@ -70,39 +54,12 @@ class DashGame {
 	) {}
 }
 
-interface RealmFeedData {
-	store: RealmRouteStore;
-	feed: ActivityFeedView | null;
-	firesideData: FiresideFeedData;
-}
-
-interface FiresideFeedData {
-	loadUrl: string;
-	isLoading: boolean;
-	isBootstrapped: boolean;
-	featuredFireside: Fireside | undefined;
-	userFireside: Fireside | undefined;
-	eventFireside: Fireside | undefined;
-	firesides: Fireside[];
-	refresh: () => Promise<void>;
-}
-
 export type RouteActivityFeedController = ReturnType<typeof createActivityFeedController>;
 
 function createActivityFeedController() {
 	const feed = ref(null) as Ref<ActivityFeedView | null>;
 	return { feed };
 }
-
-const RouteHomeRealm = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('./RouteHomeRealm.vue'))
-);
-const RouteHomeActivity = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('./RouteHomeActivity.vue'))
-);
-const RouteHomeFyp = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('./RouteHomeFYP.vue'))
-);
 
 export default {
 	...defineAppRouteOptions({
@@ -133,36 +90,12 @@ if (isLoadingCharge.value) {
 	);
 }
 
-let afterEachDeregister: (() => void) | null = null;
-
 const games = ref<DashGame[]>([]);
 const gameFilterQuery = ref('');
 const isShowingAllGames = ref(false);
 
-const featuredItem = ref<FeaturedItem>();
+const featuredItem = ref<FeaturedItemModel>();
 const isLoadingQuests = ref(true);
-
-const homeFiresideData = ref(
-	reactive({
-		loadUrl: `/web/fireside/user-list?amount=14`,
-		isLoading: true,
-		isBootstrapped: false,
-		featuredFireside: undefined,
-		userFireside: undefined,
-		eventFireside: undefined,
-		firesides: [],
-		refresh: () => refreshHomeFiresides(homeFiresideData.value),
-	})
-) as Ref<FiresideFeedData>;
-
-const currentFiresideData = computed(() => {
-	if (configHomeFeedSwitcher.value && realmFeedData.value?.firesideData) {
-		return realmFeedData.value.firesideData;
-	}
-	return homeFiresideData.value;
-});
-
-let _firesideStartSubscription: EventSubscription | undefined;
 
 const controller = createActivityFeedController();
 provide('route-activity-feed', controller);
@@ -183,93 +116,7 @@ const isShowAllGamesVisible = computed(() => {
 	return !isShowingAllGames.value && games.value.length > 7 && gameFilterQuery.value === '';
 });
 
-const realmPath = ref<string>();
-const realmFeedData = ref(null) as Ref<RealmFeedData | null>;
-
-const realm = computed(() => realmFeedData.value?.store.realm.value);
-const realmFeed = computed(() => realmFeedData.value?.feed);
-
-watch(realmPath, async path => {
-	// If our realm path changed, we need to update our analytics path. If we
-	// don't do this, we won't be logging page views properly when navigating
-	// between realms and our root page feed (url is the same, history state
-	// data is different).
-	afterRouteChange();
-
-	if (!path || !configHomeFeedSwitcher.value) {
-		realmFeedData.value = null;
-		return;
-	}
-
-	const feedStore = createRealmRouteStore();
-	const feedData: RealmFeedData = reactive({
-		store: shallowRef(feedStore),
-		feed: null,
-		firesideData: {
-			loadUrl: `/web/realms/${path}`,
-			isLoading: true,
-			isBootstrapped: false,
-			featuredFireside: undefined,
-			userFireside: feedStore.userFireside,
-			eventFireside: undefined,
-			firesides: feedStore.firesides,
-			refresh: async () => {
-				feedData.firesideData.isLoading = true;
-				try {
-					const payload = await Api.sendRequest(`/web/realms/${path}`);
-					feedStore.processPayload(payload);
-				} catch (e) {
-					console.error('Failed to refresh firesides for realm.', e);
-				}
-				feedData.firesideData.isLoading = false;
-			},
-		},
-	});
-	realmFeedData.value = feedData;
-
-	const cacheTag = `realm-${path}`;
-	const cachedFeed = ActivityFeedService.bootstrapFeedFromCache({ cacheTag });
-	feedData.feed = cachedFeed;
-
-	const [realmPayload, feedPayload] = await Promise.all([
-		Api.sendRequest(`/web/realms/${path}`),
-		Api.sendRequest(ActivityFeedService.makeFeedUrl(route, `/web/posts/fetch/realm/${path}`)),
-	]);
-
-	if (realmPath.value !== path) {
-		console.warn('Realm path changed again, aborting.', path, realmPath.value);
-		return;
-	}
-	if (!realmPayload || !feedPayload) {
-		console.warn('Realm payload or feed payload is missing, aborting.');
-		return;
-	}
-	feedStore.processPayload(realmPayload);
-
-	feedData.feed = ActivityFeedService.routed(
-		feedData.feed,
-		{
-			type: 'EventItem',
-			name: 'realm',
-			url: `/web/posts/fetch/realm/${path}`,
-			shouldShowFollow: true,
-			itemsPerPage: feedPayload.perPage,
-			cacheTag,
-		},
-		feedPayload.items,
-		cachedFeed !== null
-	);
-
-	feedData.firesideData.isLoading = false;
-	feedData.firesideData.isBootstrapped = true;
-});
-
-const feedTab = computed(() => {
-	if (configHomeFeedSwitcher.value && realmPath.value) {
-		return { realmPath: realmPath.value } as RealmTabData;
-	}
-	return HomeFeedService.getRouteFeedTab(route);
-});
+const activeFeedTab = computed(() => HomeFeedService.getRouteFeedTab(route));
 
 const tabs = computed(() => {
 	if (HomeFeedService.getDefault() === HOME_FEED_FYP) {
@@ -281,20 +128,9 @@ const tabs = computed(() => {
 
 const appRoute = createAppRoute({
 	routeTitle: null,
-	onInit() {
-		realmPath.value = history.state[RealmPathHistoryStateKey];
-
-		if (!afterEachDeregister) {
-			afterEachDeregister = router.afterEach(() => {
-				realmPath.value = history.state[RealmPathHistoryStateKey];
-			});
-		}
-	},
 	onResolved({ payload }) {
-		trackExperimentEngagement(configHomeFeedSwitcher);
-
 		featuredItem.value = payload.featuredItem
-			? new FeaturedItem(payload.featuredItem)
+			? new FeaturedItemModel(payload.featuredItem)
 			: undefined;
 
 		games.value = (payload.ownerGames as DashGame[])
@@ -302,38 +138,9 @@ const appRoute = createAppRoute({
 			.sort((a, b) => numberSort(a.createdOn, b.createdOn))
 			.reverse();
 
-		homeFiresideData.value.refresh();
 		refreshQuests();
-		_firesideStartSubscription = onFiresideStart.subscribe(() =>
-			homeFiresideData.value.refresh()
-		);
-
-		if (payload.eventFireside) {
-			homeFiresideData.value.eventFireside = new Fireside(payload.eventFireside);
-		}
-
-		afterRouteChange();
-	},
-	onDestroyed() {
-		_firesideStartSubscription?.close();
-		if (afterEachDeregister) {
-			afterEachDeregister();
-			afterEachDeregister = null;
-		}
 	},
 });
-
-function afterRouteChange() {
-	const currentPath = getCurrentHomeRouteAnalyticsPath(route);
-	const proposedPath = getNewHomeRouteAnalyticsPath(route, user.value);
-	// Ignore if our analytics path won't be changed.
-	if (currentPath === proposedPath) {
-		return;
-	}
-
-	updateHomeRouteAnalyticsPath(route, user.value);
-	trackPageViewAfterRoute(router);
-}
 
 function _checkGameFilter(game: DashGame) {
 	let text = '';
@@ -354,14 +161,8 @@ function _checkGameFilter(game: DashGame) {
 	return false;
 }
 
-function onPostAdded(post: FiresidePost) {
-	let feed: ActivityFeedView | null = null;
-	if (realmFeedData.value?.feed) {
-		feed = realmFeedData.value.feed;
-	} else {
-		feed = controller.feed.value;
-	}
-
+function onPostAdded(post: FiresidePostModel) {
+	const feed = controller.feed.value;
 	if (feed) {
 		ActivityFeedService.onPostAdded({
 			feed,
@@ -373,30 +174,6 @@ function onPostAdded(post: FiresidePost) {
 	}
 }
 
-async function refreshHomeFiresides(data: FiresideFeedData) {
-	if (!user.value) {
-		return;
-	}
-
-	data.isLoading = true;
-
-	try {
-		const payload = await Api.sendRequest(data.loadUrl, undefined, {
-			detach: true,
-		});
-		data.userFireside = payload.userFireside ? new Fireside(payload.userFireside) : undefined;
-		data.firesides = payload.firesides ? Fireside.populate(payload.firesides) : [];
-		data.featuredFireside = payload.featuredFireside
-			? new Fireside(payload.featuredFireside)
-			: undefined;
-	} catch (error) {
-		console.error('Failed to refresh fireside data.', error);
-	}
-
-	data.isLoading = false;
-	data.isBootstrapped = true;
-}
-
 async function refreshQuests() {
 	if (!user.value) {
 		return;
@@ -406,35 +183,26 @@ async function refreshQuests() {
 	await fetchDailyQuests(questStore);
 	isLoadingQuests.value = false;
 }
+
+// We add this margin to try to shift the page content below the For You |
+// Following tabs.
+const topSpacerHeight = buildCSSPixelValue(58);
 </script>
 
 <template>
 	<AppShellPageBackdrop>
-		<AppHomeFeedSwitcher
-			v-if="configHomeFeedSwitcher.value"
-			:style="{
-				marginTop: `8px`,
-				position: `relative`,
-				zIndex: 2,
-				marginBottom: kLineHeightComputed.px,
-			}"
-			:feed-tab="feedTab"
-		/>
-
-		<section
-			class="section"
-			:style="
-				styleWhen(configHomeFeedSwitcher.value, {
-					position: `relative`,
-					zIndex: 1,
-					paddingTop: 0,
-				})
-			"
-		>
-			<AppPageContainer xl>
+		<section class="section">
+			<AppPageContainer
+				xl
+				sticky-sides
+				:sticky-side-top-margin="
+					Screen.isXs ? kGridGutterWidthXs.value : kGridGutterWidth.value
+				"
+			>
+				<!-- Left sidebar -->
 				<template #left>
 					<template v-if="Screen.isDesktop">
-						<div v-if="!configHomeFeedSwitcher.value" class="-top-spacer" />
+						<div :style="{ height: topSpacerHeight.px }" />
 
 						<AppStickerChargeCard
 							header-charge
@@ -526,85 +294,47 @@ async function refreshQuests() {
 					</template>
 				</template>
 
-				<template v-if="!Screen.isMobile" #right>
-					<div v-if="!configHomeFeedSwitcher.value" class="-top-spacer" />
+				<!-- Right sidebar -->
+				<template v-if="!Screen.isMobile" #right="{ combined }">
+					<div v-if="!combined" :style="{ height: topSpacerHeight.px }" />
 
 					<template v-if="featuredItem">
 						<AppHomeFeaturedBanner :featured-item="featuredItem" />
 						<AppSpacer vertical :scale="8" />
 					</template>
 
-					<AppHomeFireside
-						:featured-fireside="currentFiresideData.featuredFireside"
-						:user-fireside="currentFiresideData.userFireside"
-						:firesides="currentFiresideData.firesides"
-						:is-loading="currentFiresideData.isLoading"
-						:show-placeholders="!currentFiresideData.isBootstrapped"
-						:initial-realm="realm"
-						@request-refresh="currentFiresideData.refresh()"
-					/>
+					<AppAdWidget v-if="isAdEnthused" size="video" placement="side" />
 				</template>
 
-				<AppHomeFeedMenu
-					v-if="
-						!configHomeFeedSwitcher.value &&
-						Screen.isDesktop &&
-						typeof feedTab === 'string'
-					"
-					:tabs="tabs"
-					:feed-tab="feedTab"
-				/>
+				<!-- Main -->
+				<template #default>
+					<AppHomeFeedMenu
+						v-if="Screen.isDesktop"
+						:tabs="tabs"
+						:active-tab="activeFeedTab"
+					/>
 
-				<!-- Realm feed will handle its own add button. -->
-				<AppPostAddButton
-					v-if="!configHomeFeedSwitcher.value || !realmPath"
-					@add="onPostAdded"
-				/>
+					<!-- Realm feed will handle its own add button. -->
+					<AppPostAddButton @add="onPostAdded" />
 
-				<template v-if="Screen.isMobile">
-					<template v-if="!Screen.isXs && featuredItem">
-						<AppHomeFeaturedBanner :featured-item="featuredItem" />
-						<AppSpacer vertical :scale="4" />
+					<template v-if="Screen.isMobile">
+						<template v-if="!Screen.isXs && featuredItem">
+							<AppHomeFeaturedBanner :featured-item="featuredItem" />
+							<AppSpacer vertical :scale="4" />
+						</template>
+
+						<AppHomeFeedMenu :tabs="tabs" :active-tab="activeFeedTab" />
 					</template>
 
-					<AppHomeFireside
-						:user-fireside="currentFiresideData.userFireside"
-						:firesides="currentFiresideData.firesides"
-						:is-loading="currentFiresideData.isLoading"
-						:show-placeholders="!currentFiresideData.isBootstrapped"
-						:initial-realm="realm"
-						@request-refresh="currentFiresideData.refresh()"
-					/>
-
-					<hr class="full-bleed" />
-
-					<AppHomeFeedMenu
-						v-if="!configHomeFeedSwitcher.value && typeof feedTab === 'string'"
-						:tabs="tabs"
-						:feed-tab="feedTab"
-					/>
+					<RouteHomeActivity v-if="activeFeedTab === HOME_FEED_ACTIVITY" />
+					<RouteHomeFyp v-else-if="activeFeedTab === HOME_FEED_FYP" />
 				</template>
-
-				<RouteHomeRealm
-					v-if="configHomeFeedSwitcher.value && realmPath"
-					:key="realmPath"
-					:realm="realm"
-					:feed="realmFeed"
-					@post-added="onPostAdded"
-				/>
-				<RouteHomeActivity v-else-if="feedTab === 'activity'" />
-				<RouteHomeFyp v-else-if="feedTab === 'fyp'" />
 			</AppPageContainer>
 		</section>
 	</AppShellPageBackdrop>
 </template>
 
 <style lang="stylus" scoped>
-// We add this margin to try to shift the page content below the For You |
-// Following tabs.
-.-top-spacer
-	margin-top: 58px
-
 .-game-list
 	a
 		text-overflow()

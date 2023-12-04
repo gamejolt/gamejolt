@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { CSSProperties, PropType, computed, toRefs } from 'vue';
 import { styleChangeBg } from '../../../_styles/mixins';
 import AppAvatarFrame from '../../avatar/AppAvatarFrame.vue';
-import { AvatarFrame } from '../../avatar/frame.model';
+import { AvatarFrameModel } from '../../avatar/frame.model';
 import { ComponentProps } from '../../component-helpers';
 import { Environment } from '../../environment/environment.service';
 import { ThemeColor } from '../../theme/variables';
@@ -51,17 +51,7 @@ const props = defineProps({
 	 * the User has equipped.
 	 */
 	frameOverride: {
-		type: Object as PropType<AvatarFrame>,
-		default: undefined,
-	},
-	/**
-	 * Allows extra inset to be added/removed from the avatar frame.
-	 *
-	 * Has no effect if {@link showFrame} is `false`.
-	 */
-	frameInset: {
-		type: Number,
-		validator: value => value === undefined || typeof value === 'number',
+		type: Object as PropType<Pick<AvatarFrameModel, 'image_url' | 'scale'>>,
 		default: undefined,
 	},
 	/**
@@ -70,6 +60,10 @@ const props = defineProps({
 	 */
 	smoosh: {
 		type: Boolean,
+	},
+	imgWrapperStyles: {
+		type: Object as PropType<CSSProperties>,
+		default: () => ({}),
 	},
 });
 
@@ -82,7 +76,6 @@ const {
 	verifiedSize,
 	showFrame,
 	frameOverride,
-	frameInset,
 	smoosh,
 } = toRefs(props);
 
@@ -111,20 +104,17 @@ const href = computed(() => {
 				:small="verifiedSize === 'small'"
 				:tiny="verifiedSize === 'tiny'"
 			>
-				<AppAvatarFrame
-					:frame="avatarFrame"
-					:hide-frame="!showFrame"
-					:inset="frameInset"
-					:smoosh="smoosh"
-				>
+				<AppAvatarFrame :frame="avatarFrame" :hide-frame="!showFrame" :smoosh="smoosh">
 					<div
 						:style="{
 							...styleChangeBg(bgColor),
 							borderRadius: `50%`,
+							overflow: `hidden`,
 							// Some containers end up adjusting the size of this avatar
 							// and break things, even if width and height on the parent
 							// are assigned to 1:1 ratios.
 							lineHeight: 0,
+							...imgWrapperStyles,
 						}"
 					>
 						<slot>

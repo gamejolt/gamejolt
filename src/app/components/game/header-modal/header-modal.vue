@@ -1,6 +1,6 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import { BaseModal } from '../../../../_common/modal/base';
 import FormGameHeader from '../../forms/game/header/header.vue';
 
@@ -11,7 +11,7 @@ import FormGameHeader from '../../forms/game/header/header.vue';
 })
 export default class AppGameHeaderEditModal extends mixins(BaseModal) {
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 
 	// We don't want to close the modal after they've uploaded a header since they can set a crop
 	// after. We want to auto-close it after they've saved the crop, though.
@@ -23,7 +23,7 @@ export default class AppGameHeaderEditModal extends mixins(BaseModal) {
 		}
 	}
 
-	onSubmit(game: Game) {
+	onSubmit(game: GameModel) {
 		const newHeaderId = (game.header_media_item && game.header_media_item.id) || null;
 		if (this.previousHeaderId === newHeaderId) {
 			this.modal.resolve(this.game);

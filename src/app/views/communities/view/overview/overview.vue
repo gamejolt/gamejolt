@@ -1,35 +1,30 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
-import { Inject, Options, Watch } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../utils/array';
-import { canCommunityCreateFiresides } from '../../../../../_common/community/community.model';
-import { canDeviceCreateFiresides, Fireside } from '../../../../../_common/fireside/fireside.model';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { Options, Watch } from 'vue-property-decorator';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import AppCommunitySidebar from '../../../../components/community/sidebar/sidebar.vue';
-import AppFiresideAvatar, {
-	FiresideAvatarEvent,
-} from '../../../../components/fireside/avatar/AppFiresideAvatar.vue';
-import AppFiresideAvatarAdd from '../../../../components/fireside/avatar/AppFiresideAvatarAdd.vue';
+import AppCommunitySidebar from '../../../../components/community/sidebar/AppCommunitySidebar.vue';
 import { useGridStore } from '../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../store/index';
+import AppCommunitiesViewFeed from '../_feed/AppCommunitiesViewFeed.vue';
+import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
+import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { CommunitiesViewChannelDeps } from '../channel/channel.vue';
 import {
 	acceptCollaboration,
-	CommunityRouteStore,
-	CommunityRouteStoreKey,
 	declineCollaboration,
 	setCommunityMeta,
+	useCommunityRouteStore,
 } from '../view.store';
-import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
-import AppCommunitiesViewFeed from '../_feed/feed.vue';
-import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 
 @Options({
 	name: 'RouteCommunitiesViewOverview',
@@ -37,27 +32,24 @@ import AppCommunitiesViewPageContainer from '../_page-container/page-container.v
 		AppCommunitiesViewPageContainer,
 		AppCommunitySidebar,
 		AppCommunitiesViewFeed,
-		AppFiresideAvatar,
-		AppFiresideAvatarAdd,
 		AppLoadingFade,
 	},
 	directives: {
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	lazy: true,
 	deps: CommunitiesViewChannelDeps,
 	resolver: ({ route }) => doFeedChannelPayload(route),
 })
-export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
+export default class RouteCommunitiesViewOverview extends LegacyRouteComponent {
 	store = setup(() => useAppStore());
 	commonStore = setup(() => useCommonStore());
 	gridStore = setup(() => useGridStore());
 
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	get user() {
 		return this.commonStore.user;
@@ -74,9 +66,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	feed: ActivityFeedView | null = null;
 	finishedLoading = false;
-	previewFiresides: Fireside[] = [];
-	userFireside: Fireside | null = null;
-	userHasFireside = false;
 
 	get community() {
 		return this.routeStore.community;
@@ -101,12 +90,9 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 			return null;
 		}
 
-		return this.$gettextInterpolate(
-			`%{ name } Community - Fan art, videos, guides, polls and more`,
-			{
-				name: this.community.name,
-			}
-		);
+		return this.$gettext(`%{ name } Community - Fan art, videos, guides, polls and more`, {
+			name: this.community.name,
+		});
 	}
 
 	get canAcceptCollaboration() {
@@ -115,32 +101,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	get acceptCollaborationTooltip() {
 		return this.canAcceptCollaboration ? '' : this.$gettext(`You are in too many communities.`);
-	}
-
-	get canCreateFireside() {
-		return (
-			!this.userHasFireside &&
-			canCommunityCreateFiresides(this.community) &&
-			canDeviceCreateFiresides()
-		);
-	}
-
-	get firesidesGridColumns() {
-		return 5;
-	}
-
-	get firesidesGridStyling() {
-		return {
-			gridTemplateColumns: `repeat(${this.firesidesGridColumns}, 1fr)`,
-		};
-	}
-
-	get displayablePreviewFiresides() {
-		const previewable = this.userFireside
-			? [this.userFireside, ...this.previewFiresides]
-			: this.previewFiresides;
-
-		return previewable.slice(0, this.firesidesGridColumns - (this.canCreateFireside ? 1 : 0));
 	}
 
 	@Watch('communityState.hasUnreadFeaturedPosts', { immediate: true })
@@ -175,16 +135,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 				communityId: this.community.id,
 			});
 		}
-
-		if ($payload.userFireside) {
-			this.userFireside = new Fireside($payload.userFireside);
-		}
-
-		this.userHasFireside = $payload.userHasFireside;
-
-		if ($payload.previewFiresides) {
-			this.previewFiresides = Fireside.populate($payload.previewFiresides);
-		}
 	}
 
 	loadedNew() {
@@ -195,7 +145,7 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		}
 	}
 
-	onPostAdded(post: FiresidePost) {
+	onPostAdded(post: FiresidePostModel) {
 		ActivityFeedService.onPostAdded({
 			feed: this.feed!,
 			post,
@@ -217,13 +167,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 	async declineCollaboration() {
 		await declineCollaboration(this.routeStore);
-	}
-
-	onFiresideEject({ fireside, community }: FiresideAvatarEvent) {
-		if (community.community.id !== this.community.id) {
-			return;
-		}
-		arrayRemove(this.previewFiresides, i => i === fireside);
 	}
 }
 </script>
@@ -255,42 +198,6 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 
 		<AppCommunitiesViewPageContainer>
 			<template #default>
-				<div v-if="displayablePreviewFiresides.length > 0">
-					<div class="-firesides-header">
-						<h4 class="section-header">
-							<AppTranslate>Firesides</AppTranslate>
-						</h4>
-
-						<AppButton
-							trans
-							:to="{
-								name: 'communities.view.firesides',
-								params: { path: community.path },
-							}"
-						>
-							<AppTranslate>View All</AppTranslate>
-						</AppButton>
-					</div>
-				</div>
-
-				<AppLoadingFade :is-loading="!isRouteBootstrapped">
-					<div
-						v-if="displayablePreviewFiresides.length > 0 || canCreateFireside"
-						class="-firesides-grid"
-						:style="firesidesGridStyling"
-					>
-						<AppFiresideAvatarAdd v-if="canCreateFireside" :community="community" />
-
-						<AppFiresideAvatar
-							v-for="fireside in displayablePreviewFiresides"
-							:key="fireside.id"
-							:fireside="fireside"
-							hide-community
-							@eject="onFiresideEject"
-						/>
-					</div>
-				</AppLoadingFade>
-
 				<AppCommunitiesViewFeed
 					:feed="feed"
 					@add-post="onPostAdded"
@@ -303,14 +210,3 @@ export default class RouteCommunitiesViewOverview extends BaseRouteComponent {
 		</AppCommunitiesViewPageContainer>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-firesides-grid
-	display: grid
-	grid-gap: $line-height-computed
-	margin-bottom: $line-height-computed
-
-.-firesides-header
-	display: flex
-	justify-content: space-between
-</style>

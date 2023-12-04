@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { Game } from '../../../../_common/game/game.model';
+import { GameModel } from '../../../../_common/game/game.model';
 import AppGameOgrsTag from './tag.vue';
 
 @Options({
@@ -9,7 +9,7 @@ import AppGameOgrsTag from './tag.vue';
 	},
 })
 export default class AppGameOgrs extends Vue {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 	@Prop(Boolean) hideDescriptors?: boolean;
 	@Prop(Boolean) hideTag?: boolean;
 

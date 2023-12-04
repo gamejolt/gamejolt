@@ -1,7 +1,7 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { mixins, Options } from 'vue-property-decorator';
-import { Community } from '../../../../_common/community/community.model';
+import { $saveCommunity, CommunityModel } from '../../../../_common/community/community.model';
 import AppFormControlPrefix from '../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import { BaseForm, FormOnSubmitSuccess } from '../../../../_common/form-vue/form.service';
@@ -12,7 +12,7 @@ import { useAppStore } from '../../../store';
 import { useGridStore } from '../../grid/grid-store';
 import AppPostAddButtonFormControl from '../../post/add-button/AppPostAddButtonFormControl.vue';
 
-class Wrapper extends BaseForm<Community> {}
+class Wrapper extends BaseForm<CommunityModel> {}
 
 @Options({
 	components: {
@@ -22,7 +22,8 @@ class Wrapper extends BaseForm<Community> {}
 	},
 })
 export default class FormCommunity extends mixins(Wrapper) implements FormOnSubmitSuccess {
-	modelClass = Community;
+	modelClass = CommunityModel;
+	modelSaveHandler = $saveCommunity;
 
 	store = setup(() => useAppStore());
 	gridStore = setup(() => useGridStore());
@@ -39,7 +40,7 @@ export default class FormCommunity extends mixins(Wrapper) implements FormOnSubm
 			return;
 		}
 
-		const community = new Community(response.community);
+		const community = new CommunityModel(response.community);
 
 		// When creating a community you get auto joined to it,
 		// but aside from the actual join operation we also do other things

@@ -1,17 +1,17 @@
-import { CSSPixelValue, kGridGutterWidth, kGridGutterWidthXs } from '../../_styles/variables';
+import { buildCSSPixelValue, kGridGutterWidth, kGridGutterWidthXs } from '../../_styles/variables';
 
 /**
  * Shell
  */
 export const kShellBorderColor = `#000`;
 
-export const kShellPaneWidth = new CSSPixelValue(280);
-export const kShellTopNavHeight = new CSSPixelValue(56);
-export const kShellUserBoxHeight = new CSSPixelValue(125);
-export const kShellCbarWidth = new CSSPixelValue(70);
-export const kStatusBarHeight = new CSSPixelValue(28);
-export const kShellContentSidebarPadding = new CSSPixelValue(12);
-export const kShellContentSidebarWidth = new CSSPixelValue(
+export const kShellPaneWidth = buildCSSPixelValue(280);
+export const kShellTopNavHeight = buildCSSPixelValue(56);
+export const kShellUserBoxHeight = buildCSSPixelValue(125);
+export const kShellCbarWidth = buildCSSPixelValue(70);
+export const kStatusBarHeight = buildCSSPixelValue(28);
+export const kShellContentSidebarPadding = buildCSSPixelValue(12);
+export const kShellContentSidebarWidth = buildCSSPixelValue(
 	270 + kShellContentSidebarPadding.value * 2
 );
 export const kShellBodyContentBg = `#fff`;
@@ -19,37 +19,37 @@ export const kShellBodyContentBg = `#fff`;
 /**
  * Chat
  */
-export const kChatBubbleSize = new CSSPixelValue(60);
-export const kChatRoomWindowWidth = new CSSPixelValue(900);
-export const kChatRoomWindowPaddingH = new CSSPixelValue(12);
-export const kChatRoomWindowPaddingV = new CSSPixelValue(16);
+export const kChatBubbleSize = buildCSSPixelValue(60);
+export const kChatRoomWindowWidth = buildCSSPixelValue(900);
+export const kChatRoomWindowPaddingH = buildCSSPixelValue(12);
+export const kChatRoomWindowPaddingV = buildCSSPixelValue(16);
 /** This includes v and h padding as a string. */
 export const kChatRoomWindowPadding = `${kChatRoomWindowPaddingV.px} ${kChatRoomWindowPaddingH.px}`;
 
 /**
  * Forums
  */
-export const kForumPostListIconSize = new CSSPixelValue(50);
-export const kForumPostListAvatarMargin = new CSSPixelValue(kGridGutterWidth.value);
+export const kForumPostListIconSize = buildCSSPixelValue(50);
+export const kForumPostListAvatarMargin = buildCSSPixelValue(kGridGutterWidth.value);
 
 /**
  * Minbar
  */
-export const kMinbarOffsetRight = new CSSPixelValue(kChatBubbleSize.value);
+export const kMinbarOffsetRight = buildCSSPixelValue(kChatBubbleSize.value);
 
 /**
  * Modals
  */
-export const kModalPadding = new CSSPixelValue(kGridGutterWidth.value / 2);
-export const kModalPaddingXs = new CSSPixelValue(kGridGutterWidthXs.value / 2);
+export const kModalPadding = buildCSSPixelValue(kGridGutterWidth.value / 2);
+export const kModalPaddingXs = buildCSSPixelValue(kGridGutterWidthXs.value / 2);
 
 /**
  * Page Header
  */
-export const kPageHeaderSpotlightSize = new CSSPixelValue(100);
-export const kPageHeaderSpotlightMargin = new CSSPixelValue(kGridGutterWidth.value / 2);
+export const kPageHeaderSpotlightSize = buildCSSPixelValue(100);
+export const kPageHeaderSpotlightMargin = buildCSSPixelValue(kGridGutterWidth.value / 2);
 
 /**
  * Cbar
  */
-export const kCbarHPadding = new CSSPixelValue(10);
+export const kCbarHPadding = buildCSSPixelValue(10);

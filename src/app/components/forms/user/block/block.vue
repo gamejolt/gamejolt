@@ -9,6 +9,7 @@ import {
 	FormOnSubmitSuccess,
 } from '../../../../../_common/form-vue/form.service';
 import { showInfoGrowl } from '../../../../../_common/growls/growls.service';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
 interface FormModel {
 	username: string;
@@ -39,7 +40,7 @@ export default class FormUserBlock
 		if (response.success) {
 			if (this.formModel.removeComments) {
 				showInfoGrowl({
-					message: this.$gettextInterpolate(
+					message: $gettext(
 						'You blocked %{ user }! It might take a few moments for their comments/shouts to disappear',
 						{
 							user: this.formModel.username,
@@ -48,7 +49,7 @@ export default class FormUserBlock
 				});
 			} else {
 				showInfoGrowl({
-					message: this.$gettextInterpolate('You blocked %{ user }!', {
+					message: $gettext('You blocked %{ user }!', {
 						user: this.formModel.username,
 					}),
 				});

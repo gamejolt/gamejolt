@@ -1,7 +1,10 @@
 <script lang="ts">
 import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
-import { CommunityChannel } from '../../../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../../../_common/community/community.model';
+import {
+	$saveCommunityChannel,
+	CommunityChannelModel,
+} from '../../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	BaseForm,
@@ -9,11 +12,11 @@ import {
 	FormOnSubmitSuccess,
 } from '../../../../../../_common/form-vue/form.service';
 import AppImgResponsive from '../../../../../../_common/img/AppImgResponsive.vue';
-import { CommunityChannelBackgroundModal } from '../../../../community/channel/background-modal/background-modal.service';
-import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/edit.vue';
+import { showCommunityChannelBackgroundModal } from '../../../../community/channel/background-modal/background-modal.service';
+import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/AppCommunityChannelCardEdit.vue';
 import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
-class FormModel extends CommunityChannel {
+class FormModel extends CommunityChannelModel {
 	permission_posting = 'all';
 }
 
@@ -31,15 +34,16 @@ export default class FormCommunityChannelEdit
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnSubmitSuccess
 {
-	@Prop({ type: Object, required: true }) community!: Community;
+	@Prop({ type: Object, required: true }) community!: CommunityModel;
 
 	maxFilesize = 0;
 	maxWidth = 0;
 	maxHeight = 0;
 
 	modelClass = FormModel;
+	modelSaveHandler = $saveCommunityChannel;
 
-	@Emit('background-change') emitBackgroundChange(_model: CommunityChannel) {}
+	@Emit('background-change') emitBackgroundChange(_model: CommunityChannelModel) {}
 
 	get competitionId() {
 		return this.model!.competition?.id;
@@ -72,7 +76,7 @@ export default class FormCommunityChannelEdit
 	}
 
 	async onClickEditBackground() {
-		await CommunityChannelBackgroundModal.show(this.formModel);
+		await showCommunityChannelBackgroundModal(this.formModel);
 		this.emitBackgroundChange(this.formModel);
 	}
 }

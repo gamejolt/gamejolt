@@ -1,28 +1,30 @@
 /**
  * A simple wrapper around a CSS pixel value.
+ *
+ * @__NO_SIDE_EFFECTS__
  */
-export class CSSPixelValue {
-	constructor(public readonly value: number) {}
-
-	/**
-	 * Will return the value with `px` appended to be used in a CSS property.
-	 */
-	get px() {
-		return `${this.value}px`;
-	}
+export function buildCSSPixelValue(value: number) {
+	return Object.freeze({
+		value,
+		get px() {
+			return `${value}px`;
+		},
+	});
 }
 
-export const kGridColumns = new CSSPixelValue(12);
-export const kGridGutterWidth = new CSSPixelValue(40);
-export const kGridGutterWidthXs = new CSSPixelValue(16 * 2);
+export type CSSPixelValue = ReturnType<typeof buildCSSPixelValue>;
 
-export const kBorderRadiusBase = new CSSPixelValue(6);
-export const kBorderRadiusSm = new CSSPixelValue(2);
-export const kBorderRadiusLg = new CSSPixelValue(12);
+export const kGridColumns = buildCSSPixelValue(12);
+export const kGridGutterWidth = buildCSSPixelValue(40);
+export const kGridGutterWidthXs = buildCSSPixelValue(16 * 2);
 
-export const kBorderWidthBase = new CSSPixelValue(1.5);
-export const kBorderWidthSm = new CSSPixelValue(1);
-export const kBorderWidthLg = new CSSPixelValue(2);
+export const kBorderRadiusBase = buildCSSPixelValue(6);
+export const kBorderRadiusSm = buildCSSPixelValue(2);
+export const kBorderRadiusLg = buildCSSPixelValue(12);
+
+export const kBorderWidthBase = buildCSSPixelValue(1.5);
+export const kBorderWidthSm = buildCSSPixelValue(1);
+export const kBorderWidthLg = buildCSSPixelValue(2);
 
 export const kFontFamilySansSerif = `'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
 export const kFontFamilyHeading = `'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
@@ -32,21 +34,21 @@ export const kFontFamilyDisplay = `'Staatliches', 'Lato', 'Helvetica Neue', Helv
 export const kFontFamilyBase = kFontFamilySansSerif;
 export const kFontFamilyTiny = kFontFamilyBase;
 
-export const kFontSizeBase = new CSSPixelValue(15);
-export const kFontSizeTiny = new CSSPixelValue(11);
-export const kFontSizeLarge = new CSSPixelValue(19);
-export const kFontSizeSmall = new CSSPixelValue(13);
-export const kFontSizeH1 = new CSSPixelValue(28);
-export const kFontSizeH2 = new CSSPixelValue(24);
-export const kFontSizeH3 = new CSSPixelValue(21);
-export const kFontSizeH4 = new CSSPixelValue(18);
-export const kFontSizeH5 = new CSSPixelValue(kFontSizeBase.value);
-export const kFontSizeH6 = new CSSPixelValue(13);
+export const kFontSizeBase = buildCSSPixelValue(15);
+export const kFontSizeTiny = buildCSSPixelValue(11);
+export const kFontSizeLarge = buildCSSPixelValue(19);
+export const kFontSizeSmall = buildCSSPixelValue(13);
+export const kFontSizeH1 = buildCSSPixelValue(28);
+export const kFontSizeH2 = buildCSSPixelValue(24);
+export const kFontSizeH3 = buildCSSPixelValue(21);
+export const kFontSizeH4 = buildCSSPixelValue(18);
+export const kFontSizeH5 = buildCSSPixelValue(kFontSizeBase.value);
+export const kFontSizeH6 = buildCSSPixelValue(13);
 
-export const kJolticonSize = new CSSPixelValue(16);
+export const kJolticonSize = buildCSSPixelValue(16);
 
 export const kLineHeightBase = 1.428571429;
-export const kLineHeightComputed = new CSSPixelValue(
+export const kLineHeightComputed = buildCSSPixelValue(
 	Math.floor(kFontSizeBase.value * kLineHeightBase)
 );
 
@@ -66,3 +68,14 @@ export const kStrongEaseInOut = `cubic-bezier(1, 0, 0, 1)`;
 export const kEaseInBack = `cubic-bezier(0.6, -0.28, 0.735, 0.045)`;
 export const kEaseOutBack = `cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
 export const kEaseInOutBack = `cubic-bezier(0.68, -0.55, 0.265, 1.55)`;
+
+export const kLayerModal = 1050;
+export const kLayerPopover = 1060;
+export const kLayerTooltip = 1300;
+export const kLayerLoadingBar = 2000;
+export const kLayerGrowls = 1200;
+export const kLayerContentEditor = 200;
+export const kLayerBackdrop = 20;
+export const kLayerAds = 19;
+export const kLayerPlayButtonOverlay = 11;
+export const kLayerStickerLayer = kLayerModal + 1;

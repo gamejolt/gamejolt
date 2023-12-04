@@ -2,7 +2,7 @@
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { Site } from '../../../../_common/site/site-model';
+import { $activateSite, SiteModel } from '../../../../_common/site/site-model';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import FormSiteSettings from '../../forms/site/settings/settings.vue';
 
@@ -15,7 +15,7 @@ import FormSiteSettings from '../../forms/site/settings/settings.vue';
 	},
 })
 export default class AppSitesManagePageTemplate extends Vue {
-	@Prop(Object) site?: Site;
+	@Prop(Object) site?: SiteModel;
 	@Prop(Boolean) enabled?: boolean;
 	@Prop(Boolean) staticEnabled?: boolean;
 
@@ -40,7 +40,7 @@ export default class AppSitesManagePageTemplate extends Vue {
 			return;
 		}
 
-		this.site.$activate().catch(e => {
+		$activateSite(this.site).catch(e => {
 			if (e.errors && e.errors.domain_in_use) {
 				showErrorGrowl(this.$gettext('Domain is already in use in another site.'));
 			}

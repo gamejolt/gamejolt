@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
-import { Realm } from '../../../../_common/realm/realm-model';
+import { RealmModel } from '../../../../_common/realm/realm-model';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 
 type FormModel = {
@@ -14,7 +14,7 @@ const emit = defineEmits({
 	next: () => true,
 });
 
-const realms = ref<Realm[]>([]);
+const realms = ref<RealmModel[]>([]);
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
@@ -23,7 +23,7 @@ const form: FormController<FormModel> = createForm({
 	},
 	loadUrl: '/web/onboarding/realms',
 	onLoad(payload) {
-		realms.value = Realm.populate(payload.realms);
+		realms.value = RealmModel.populate(payload.realms);
 	},
 	onBeforeSubmit() {
 		Onboarding.trackEvent(joinedAnyRealm.value ? 'follow-realms-set' : 'follow-realms-skip');

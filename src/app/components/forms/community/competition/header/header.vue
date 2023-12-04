@@ -1,6 +1,10 @@
 <script lang="ts">
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import { CommunityCompetition } from '../../../../../../_common/community/competition/competition.model';
+import {
+	$clearCommunityCompetitionHeader,
+	$saveCommunityCompetitionHeader,
+	CommunityCompetitionModel,
+} from '../../../../../../_common/community/competition/competition.model';
 import AppFormControlCrop from '../../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
@@ -8,10 +12,10 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../../../_common/form-vue/form.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
-type FormModel = CommunityCompetition & {
-	header_crop: any;
+type FormModel = CommunityCompetitionModel & {
+	header_crop?: any;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -26,8 +30,8 @@ export default class FormCommunityCompetitionHeader
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	modelClass = CommunityCompetition as any;
-	saveMethod = '$saveHeader' as const;
+	modelClass = CommunityCompetitionModel;
+	modelSaveHandler = $saveCommunityCompetitionHeader;
 
 	maxFilesize = 0;
 	minAspectRatio = 0;
@@ -66,12 +70,13 @@ export default class FormCommunityCompetitionHeader
 	}
 
 	async clearHeader() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to remove your competition's header?`)
 		);
 
 		if (result) {
-			const payload = await this.formModel.$clearHeader();
+			const payload = await $clearCommunityCompetitionHeader(this.formModel);
+
 			// Overwrite the base model's header media item here.
 			// This needs to be done because this form does not resolve (and may never resolve)
 			// after cleaning a header. Need to ensure that the base model's header gets cleared.

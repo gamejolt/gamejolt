@@ -2,19 +2,19 @@ import { computed, reactive, shallowReadonly } from 'vue';
 import { Router } from 'vue-router';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { CurrencyType } from '../../../_common/currency/currency-type';
-import { Fireside } from '../../../_common/fireside/fireside.model';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
-import { FiresidePost } from '../../../_common/fireside/post/post-model';
-import { showInfoGrowl } from '../../../_common/growls/growls.service';
-import { Notification } from '../../../_common/notification/notification-model';
-import { QuestNotification } from '../../../_common/quest/quest-notification-model';
+import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
+import {
+	NotificationModel,
+	NotificationType,
+} from '../../../_common/notification/notification-model';
+import { QuestNotificationModel } from '../../../_common/quest/quest-notification-model';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
 import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { addNewQuestIds, addQuestActivityIds } from '../../store/quest';
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
-import { GridClient, onFiresideStart } from './client.service';
+import { GridClient } from './client.service';
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
 
 export type GridNotificationChannel = ReturnType<typeof createGridNotificationChannel>;
@@ -106,12 +106,6 @@ interface FeaturePayload {
 	post_id: string;
 }
 
-interface FeatureFiresidePayload {
-	community_id: string;
-	fireside_id: string;
-	fireside_data: any;
-}
-
 interface NewPostPayload {
 	community_id: string;
 	channel_id: string;
@@ -122,7 +116,7 @@ export function createGridNotificationChannel(
 	options: { userId: number; router: Router }
 ) {
 	const { socketController, appStore } = client;
-	const { userId, router } = options;
+	const { userId } = options;
 	const { communityStates, stickerStore } = appStore;
 
 	let _tabLeader: TabLeaderInterface | null = null;
@@ -141,7 +135,6 @@ export function createGridNotificationChannel(
 	// from community channel
 	channelController.listenTo('feature', _onFeature);
 	channelController.listenTo('new-post', _onNewPost);
-	channelController.listenTo('feature-fireside', _onFeatureFireside);
 
 	const joinPromise = channelController.join({
 		async onJoin(payload: JoinPayload) {
@@ -239,23 +232,17 @@ export function createGridNotificationChannel(
 
 	function _onNewNotification(payload: NewNotificationPayload) {
 		const data = payload.notification_data.event_item;
-		const notification = reactive(new Notification(data)) as Notification;
+		const notification = reactive(new NotificationModel(data)) as NotificationModel;
 
 		switch (notification.type) {
-			case Notification.TYPE_FRIENDSHIP_REQUEST:
+			case NotificationType.FriendshipRequest:
 				// For an incoming friend request, set that they have a new friend request.
 				appStore.setHasNewFriendRequests(true);
 				client.spawnNotification(notification);
 				break;
 
-			case Notification.TYPE_FIRESIDE_START:
-				// Emit event that different components can pick up to update their views.
-				onFiresideStart.next(notification.action_model);
-				client.spawnNotification(notification);
-				break;
-
-			case Notification.TYPE_QUEST_NOTIFICATION: {
-				if (!(notification.action_model instanceof QuestNotification)) {
+			case NotificationType.QuestNotification: {
+				if (!(notification.action_model instanceof QuestNotificationModel)) {
 					break;
 				}
 
@@ -288,7 +275,7 @@ export function createGridNotificationChannel(
 	}
 
 	function _onPostUpdated(payload: PostUpdatedPayload) {
-		const post = reactive(new FiresidePost(payload.post_data)) as FiresidePost;
+		const post = reactive(new FiresidePostModel(payload.post_data)) as FiresidePostModel;
 
 		if (payload.was_published) {
 			// Send out a growl to let the user know that their post was updated.
@@ -336,36 +323,6 @@ export function createGridNotificationChannel(
 			parseInt(payload.community_id, 10)
 		);
 		communityState.markChannelUnread(channelId);
-	}
-
-	function _onFeatureFireside(payload: FeatureFiresidePayload) {
-		const fireside = new Fireside(payload.fireside_data);
-		if (!fireside.community) {
-			console.error('Featured fireside must have a community, but it does not.');
-			return;
-		}
-
-		if (commonStore.user.value && fireside.user.id === commonStore.user.value.id) {
-			console.log('Suppress featured fireside notification for fireside owner.');
-			return;
-		}
-
-		showInfoGrowl({
-			title: $gettext(`New Featured Fireside!`),
-			message: $gettextInterpolate(
-				`@%{ username }'s fireside %{ firesideTitle } was featured in %{ communityName }!`,
-				{
-					username: fireside.user.username,
-					firesideTitle: fireside.title,
-					communityName: fireside.community.name,
-				}
-			),
-			icon: fireside.user.img_avatar,
-			onClick: () => {
-				router.push(fireside.routeLocation);
-			},
-			system: true,
-		});
 	}
 
 	/**

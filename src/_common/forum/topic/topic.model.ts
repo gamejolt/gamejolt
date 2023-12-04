@@ -1,55 +1,55 @@
 import { Model } from '../../model/model.service';
-import { User } from '../../user/user.model';
-import { ForumPost } from '../post/post.model';
+import { UserModel } from '../../user/user.model';
+import { ForumPostModel } from '../post/post.model';
 
-export class ForumTopic extends Model {
-	static readonly STATUS_ACTIVE = 'active';
-	static readonly STATUS_SPAM = 'spam';
-	static readonly STATUS_REMOVED = 'removed';
+export const enum ForumTopicStatus {
+	Active = 'active',
+	Spam = 'spam',
+	Removed = 'removed',
+}
 
-	user_id!: number;
-	user!: User;
-	channel_id!: number;
-	title!: string;
-	slug!: string;
-	main_post!: ForumPost;
-	status!: string;
-	posted_on!: number;
-	is_sticky!: boolean;
-	is_locked!: boolean;
-	is_upvoted?: boolean;
-	can_upvote!: boolean;
+export class ForumTopicModel extends Model {
+	declare user_id: number;
+	declare user: UserModel;
+	declare channel_id: number;
+	declare title: string;
+	declare slug: string;
+	declare main_post: ForumPostModel;
+	declare status: ForumTopicStatus;
+	declare posted_on: number;
+	declare is_sticky: boolean;
+	declare is_locked: boolean;
+	declare is_upvoted?: boolean;
+	declare can_upvote: boolean;
 
-	replies_count?: number;
-	followers_count?: number;
-	upvotes_count?: number;
+	declare replies_count?: number;
+	declare followers_count?: number;
+	declare upvotes_count?: number;
 
 	notifications: Notification[] = [];
-	latest_post?: ForumPost;
+	declare latest_post?: ForumPostModel;
 
 	// When saving.
-	text_content?: string;
+	declare text_content?: string;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 
 		if (data.main_post) {
-			this.main_post = new ForumPost(data.main_post);
+			this.main_post = new ForumPostModel(data.main_post);
 		}
 
 		if (data.latest_post) {
-			this.latest_post = new ForumPost(data.latest_post);
+			this.latest_post = new ForumPostModel(data.latest_post);
 		}
-	}
-
-	$save() {
-		const url = '/web/forums/topics/save/' + this.channel_id;
-		return this.$_save(url + '/' + this.id, 'forumTopic');
 	}
 }
 
-Model.create(ForumTopic);
+export function $saveForumTopic(model: ForumTopicModel) {
+	const url = '/web/forums/topics/save/' + model.channel_id;
+	return model.$_save(url + '/' + model.id, 'forumTopic');
+}

@@ -26,15 +26,11 @@ export type SearchResult = {
 	favorite: boolean;
 };
 
-export class ContentEditorGifModal {
-	static categories?: Category[];
-
-	static async show() {
-		return await showModal<SearchResult>({
-			modalId: 'ContentEditorGif',
-			component: AppContentEditorGifModal,
-			size: 'lg',
-			props: {},
-		});
-	}
+export async function showContentEditorGifModal() {
+	return await showModal<SearchResult>({
+		modalId: 'ContentEditorGif',
+		component: AppContentEditorGifModal,
+		size: 'lg',
+		props: {},
+	});
 }

@@ -1,24 +1,24 @@
 import { Environment } from '../../../environment/environment.service';
-import { Game } from '../../../game/game.model';
+import { GameModel } from '../../../game/game.model';
 import { Model } from '../../../model/model.service';
-import { User } from '../../../user/user.model';
-import { CommunityCompetitionEntryAward } from './award/award.model';
-import { CommunityCompetitionEntryVoteResult } from './vote/vote-result.model';
+import { UserModel } from '../../../user/user.model';
+import { CommunityCompetitionEntryAwardModel } from './award/award.model';
+import { CommunityCompetitionEntryVoteResultModel } from './vote/vote-result.model';
 
 type EntryType = 'Game';
 
-export class CommunityCompetitionEntry extends Model {
-	community_competition_id!: number;
-	added_on!: number;
-	type!: EntryType;
-	vote_count!: number;
+export class CommunityCompetitionEntryModel extends Model {
+	declare community_competition_id: number;
+	declare added_on: number;
+	declare type: EntryType;
+	declare vote_count: number;
 
-	is_removed!: boolean | null;
+	declare is_removed: boolean | null;
 
-	user!: User;
-	resource!: Game;
-	vote_results!: CommunityCompetitionEntryVoteResult[];
-	awards!: CommunityCompetitionEntryAward[];
+	declare user: UserModel;
+	declare resource: GameModel;
+	declare vote_results: CommunityCompetitionEntryVoteResultModel[];
+	declare awards: CommunityCompetitionEntryAwardModel[];
 
 	get author() {
 		return this.resource.developer;
@@ -32,13 +32,13 @@ export class CommunityCompetitionEntry extends Model {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 
 		if (data.resource) {
 			switch (this.type) {
 				case 'Game':
-					this.resource = new Game(data.resource);
+					this.resource = new GameModel(data.resource);
 					break;
 				default:
 					console.error('Not implemented resource type', this.type);
@@ -47,27 +47,27 @@ export class CommunityCompetitionEntry extends Model {
 		}
 
 		if (data.vote_results) {
-			this.vote_results = CommunityCompetitionEntryVoteResult.populate(data.vote_results);
+			this.vote_results = CommunityCompetitionEntryVoteResultModel.populate(
+				data.vote_results
+			);
 		}
-	}
-
-	$remove() {
-		return this.$_remove(`/web/communities/competitions/entries/remove-entry/${this.id}`);
-	}
-
-	$hideEntry() {
-		return this.$_save(
-			`/web/dash/communities/competitions/entries/remove-entry/${this.id}`,
-			'entry'
-		);
-	}
-
-	$unhideEntry() {
-		return this.$_save(
-			`/web/dash/communities/competitions/entries/unremove-entry/${this.id}`,
-			'entry'
-		);
 	}
 }
 
-Model.create(CommunityCompetitionEntry);
+export function $removeCommunityCompetitionEntry(model: CommunityCompetitionEntryModel) {
+	return model.$_remove(`/web/communities/competitions/entries/remove-entry/${model.id}`);
+}
+
+export function $hideCommunityCompetitionEntry(model: CommunityCompetitionEntryModel) {
+	return model.$_save(
+		`/web/dash/communities/competitions/entries/remove-entry/${model.id}`,
+		'entry'
+	);
+}
+
+export function $unhideCommunityCompetitionEntry(model: CommunityCompetitionEntryModel) {
+	return model.$_save(
+		`/web/dash/communities/competitions/entries/unremove-entry/${model.id}`,
+		'entry'
+	);
+}

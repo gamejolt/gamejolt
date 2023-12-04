@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import { computed, PropType, ref } from 'vue';
+import { computed, PropType, ref, toRefs } from 'vue';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import { ContentFocus } from '../../content-focus/content-focus.service';
+import { useContentFocusService } from '../../content-focus/content-focus.service';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { Screen } from '../../screen/screen-service';
-import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppVideo from '../../video/AppVideo.vue';
-import { Game } from '../game.model';
+import { getVideoPlayerFromSources } from '../../video/player/controller';
+import { GameModel } from '../game.model';
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 	hideMedia: {
@@ -30,16 +30,16 @@ const props = defineProps({
 	},
 });
 
+const { game, animate } = toRefs(props);
+const { hasContentFocus } = useContentFocusService();
+
 const isThumbnailLoaded = ref(import.meta.env.SSR);
 
-const mediaItem = computed(() => props.game.thumbnail_media_item);
-
+const mediaItem = computed(() => game.value.thumbnail_media_item);
 const hasVideo = computed(
-	() => mediaItem.value?.is_animated && Screen.isDesktop && !import.meta.env.SSR && props.animate
+	() => mediaItem.value?.is_animated && Screen.isDesktop && !import.meta.env.SSR && animate.value
 );
-
-const shouldPlayVideo = computed(() => hasVideo.value && ContentFocus.hasFocus);
-
+const shouldPlayVideo = computed(() => hasVideo.value && hasContentFocus.value);
 const videoController = computed(() => {
 	if (!mediaItem.value) {
 		return;

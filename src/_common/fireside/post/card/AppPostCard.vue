@@ -2,14 +2,14 @@
 import { computed, PropType, toRefs, useSlots } from 'vue';
 import { RouterLink } from 'vue-router';
 import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
-import { ContentRules } from '../../../content/content-editor/content-rules';
+import { ContentRules } from '../../../content/content-rules';
 import AppContentViewer from '../../../content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../environment/environment.service';
 import { formatFuzzynumber } from '../../../filters/fuzzynumber';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppUserAvatar from '../../../user/user-avatar/AppUserAvatar.vue';
 import { VideoPlayerControllerContext } from '../../../video/player/controller';
-import { FiresidePost } from '../post-model';
+import { FiresidePostModel } from '../post-model';
 import AppPostCardBase from './AppPostCardBase.vue';
 
 const displayRules = new ContentRules({
@@ -19,7 +19,7 @@ const displayRules = new ContentRules({
 
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	source: {

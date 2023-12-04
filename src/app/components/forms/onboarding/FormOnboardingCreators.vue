@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { arrayShuffle } from '../../../../utils/array';
 import AppCreatorCard from '../../../../_common/creator/AppCreatorCard.vue';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
+import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+import { arrayShuffle } from '../../../../utils/array';
 
 type FormModel = {
 	// nothing
@@ -15,7 +15,7 @@ const emit = defineEmits({
 	next: () => true,
 });
 
-const creatorPosts = ref<FiresidePost[]>([]);
+const creatorPosts = ref<FiresidePostModel[]>([]);
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
@@ -25,11 +25,11 @@ const form: FormController<FormModel> = createForm({
 	loadUrl: '/web/onboarding/creators',
 	onLoad(payload) {
 		let newCreatorPosts = payload.creatorPosts
-			? arrayShuffle(FiresidePost.populate<FiresidePost>(payload.creatorPosts))
+			? arrayShuffle(FiresidePostModel.populate<FiresidePostModel>(payload.creatorPosts))
 			: [];
 
 		// Filter out posts so we only display one per user.
-		const uniqueCreatorPosts: Record<number, FiresidePost> = {};
+		const uniqueCreatorPosts: Record<number, FiresidePostModel> = {};
 		for (const post of newCreatorPosts) {
 			uniqueCreatorPosts[post.displayUser.id] ??= post;
 		}

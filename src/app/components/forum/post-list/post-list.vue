@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { ForumPost } from '../../../../_common/forum/post/post.model';
-import { ForumTopic } from '../../../../_common/forum/topic/topic.model';
+import { ForumPostModel } from '../../../../_common/forum/post/post.model';
+import { ForumTopicModel } from '../../../../_common/forum/topic/topic.model';
 import AppMessageThread from '../../../../_common/message-thread/AppMessageThread.vue';
 import AppForumPostListItem from './item/item.vue';
 
@@ -12,8 +12,8 @@ import AppForumPostListItem from './item/item.vue';
 	},
 })
 export default class AppForumPostList extends Vue {
-	@Prop(Object) topic!: ForumTopic;
-	@Prop(Array) posts!: ForumPost[];
+	@Prop(Object) topic!: ForumTopicModel;
+	@Prop(Array) posts!: ForumPostModel[];
 	@Prop(String) sort!: string;
 
 	// No longer showing this.

@@ -4,16 +4,16 @@ import { formatDate } from '../../../../../_common/filters/date';
 import { kThemeFgMuted } from '../../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { kFontSizeTiny } from '../../../../../_styles/variables';
-import { ChatMessage } from '../../message';
-import { ChatRoom } from '../../room';
+import { ChatMessageModel } from '../../message';
+import { ChatRoomModel } from '../../room';
 
 const props = defineProps({
 	message: {
-		type: Object as PropType<ChatMessage>,
+		type: Object as PropType<ChatMessageModel>,
 		required: true,
 	},
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 	timestampMarginLeft: {
@@ -25,22 +25,16 @@ const props = defineProps({
 	},
 });
 
-const { message, room, timestampMarginLeft, showAmPm } = toRefs(props);
+const { message, timestampMarginLeft, showAmPm } = toRefs(props);
 
 const loggedOn = computed(() => {
-	if (!room.value.shouldShowTimestamp) {
-		return null;
-	}
-
-	const result = {
+	return {
 		template: formatDate(
 			message.value.logged_on,
 			showAmPm.value ? 'shortTime' : 'shortTimeNoMeridiem'
 		),
 		tooltip: formatDate(message.value.logged_on, 'medium'),
 	};
-
-	return result;
 });
 </script>
 

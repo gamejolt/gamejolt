@@ -1,21 +1,22 @@
 import { defineAsyncComponent } from 'vue';
 import { bootstrapCommon } from '../_common/bootstrap';
-import { setChatInviteComponent } from '../_common/content/content-viewer/components/chat-invite';
-import { GamePlayModal } from '../_common/game/play-modal/play-modal.service';
+import { setChatInviteComponent } from '../_common/content/content-viewer/components/AppContentViewerChatInvite.vue';
+import { initGamePlayModal } from '../_common/game/play-modal/play-modal.service';
 import { addModalBackdropCheck } from '../_common/modal/AppModal.vue';
 import handlePayloadActions from '../_common/payload/payload-actions.service';
-import { assignPayloadActionsHandler } from '../_common/payload/payload-service';
+import { Payload } from '../_common/payload/payload-service';
 import { Registry } from '../_common/registry/registry.service';
 import { Scroll } from '../_common/scroll/scroll.service';
-import { createSidebarStore, SidebarStoreKey } from '../_common/sidebar/sidebar.store';
-import { createStickerStore, StickerStoreKey } from '../_common/sticker/sticker-store';
+import { SidebarStoreKey, createSidebarStore } from '../_common/sidebar/sidebar.store';
+import { StickerStoreKey, createStickerStore } from '../_common/sticker/sticker-store';
 import { initSafeExportsForClient } from './components/client/safe-exports';
-import { createGridStore, GridStoreKey } from './components/grid/grid-store';
+import { GridStoreKey, createGridStore } from './components/grid/grid-store';
 import './main.styl';
 import { BannerStoreKey, createBannerStore } from './store/banner';
 import { AppStoreKey, createAppStore } from './store/index';
-import { createLibraryStore, LibraryStoreKey } from './store/library';
-import { createQuestStore, QuestStoreKey } from './store/quest';
+import { JoltydexStoreKey, createJoltydexStore } from './store/joltydex';
+import { LibraryStoreKey, createLibraryStore } from './store/library';
+import { QuestStoreKey, createQuestStore } from './store/quest';
 import { router } from './views/index';
 
 export async function createApp() {
@@ -45,6 +46,7 @@ export async function createApp() {
 
 	const gridStore = createGridStore({ appStore });
 	const questStore = createQuestStore({ user: commonStore.user, grid: gridStore.grid });
+	const joltydexStore = createJoltydexStore();
 
 	// Section stores.
 	app.provide(SidebarStoreKey, sidebarStore);
@@ -54,6 +56,7 @@ export async function createApp() {
 	app.provide(AppStoreKey, appStore);
 	app.provide(GridStoreKey, gridStore);
 	app.provide(QuestStoreKey, questStore);
+	app.provide(JoltydexStoreKey, joltydexStore);
 
 	if (GJ_IS_DESKTOP_APP) {
 		const { bootstrapClient } = await import('./bootstrap-client');
@@ -69,9 +72,9 @@ export async function createApp() {
 	setChatInviteComponent(AppContentChatInview);
 
 	// PayloadService doesn't play nice with importing certain things.
-	assignPayloadActionsHandler(handlePayloadActions);
+	Payload.assignPayloadActionsHandler(handlePayloadActions);
 
-	GamePlayModal.init({ canMinimize: true });
+	initGamePlayModal({ canMinimize: true });
 
 	Registry.setConfig('Game', { maxItems: 100 });
 	Registry.setConfig('User', { maxItems: 150 });

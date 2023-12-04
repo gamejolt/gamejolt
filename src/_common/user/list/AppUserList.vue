@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { User } from '../user.model';
+import { UserModel } from '../user.model';
 import AppUserListItem from './AppUserListItem.vue';
 
 defineProps({
 	users: {
-		type: Array as PropType<User[]>,
+		type: Array as PropType<UserModel[]>,
 		required: true,
 	},
 	eventLabel: {
@@ -18,8 +18,8 @@ defineProps({
 });
 
 const emit = defineEmits({
-	follow: (_user: User) => true,
-	unfollow: (_user: User) => true,
+	follow: (_user: UserModel) => true,
+	unfollow: (_user: UserModel) => true,
 });
 </script>
 

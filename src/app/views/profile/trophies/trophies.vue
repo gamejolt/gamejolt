@@ -1,11 +1,14 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import { stringSort } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { stringSort } from '../../../../utils/array';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import AppProfileTrophiesNav, { TrophyNavGame } from './_nav/nav.vue';
+import AppProfileTrophiesNav, { TrophyNavGame } from './_nav/AppProfileTrophiesNav.vue';
 
 @Options({
 	name: 'RouteProfileTrophies',
@@ -14,11 +17,11 @@ import AppProfileTrophiesNav, { TrophyNavGame } from './_nav/nav.vue';
 		AppShellPageBackdrop,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) => Api.sendRequest('/web/profile/trophies/@' + route.params.username),
 })
-export default class RouteProfileTrophies extends BaseRouteComponent {
+export default class RouteProfileTrophies extends LegacyRouteComponent {
 	games: TrophyNavGame[] = [];
 	siteTrophyCount = 0;
 	unviewedGames: number[] = [];

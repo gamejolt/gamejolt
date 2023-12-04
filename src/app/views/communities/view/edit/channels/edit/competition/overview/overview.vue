@@ -1,19 +1,21 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
-import { CommunityCompetitionVotingCategory } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
+import { $publishCommunityChannel } from '../../../../../../../../../_common/community/channel/channel.model';
+import { CommunityCompetitionVotingCategoryModel } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { Environment } from '../../../../../../../../../_common/environment/environment.service';
 import { formatDuration } from '../../../../../../../../../_common/filters/duration';
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
-import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/date.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view.store';
+import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
+import { useCommunityRouteStore } from '../../../../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditChannelsCompetitionOverview',
@@ -25,18 +27,17 @@ import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../../view
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: { params: ['id', 'channel'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			`/web/dash/communities/competitions/${route.params.id}/${route.params.channel}`
 		),
 })
-export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends BaseRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends LegacyRouteComponent {
+	routeStore = setup(() => useCommunityRouteStore())!;
 
-	votingCategories: CommunityCompetitionVotingCategory[] = [];
+	votingCategories: CommunityCompetitionVotingCategoryModel[] = [];
 	isLoading = true;
 
 	readonly Environment = Environment;
@@ -75,7 +76,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 
 	routeResolved($payload: any) {
 		if ($payload && $payload.votingCategories) {
-			this.votingCategories = CommunityCompetitionVotingCategory.populate(
+			this.votingCategories = CommunityCompetitionVotingCategoryModel.populate(
 				$payload.votingCategories
 			);
 		}
@@ -83,7 +84,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 	}
 
 	async onClickPublish() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(
 				`Are you sure you want to publish your jam? You will not be able to set it back to draft.`
 			),
@@ -91,7 +92,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionOverview extends
 		);
 
 		if (result) {
-			await this.channel.$publish();
+			await $publishCommunityChannel(this.channel);
 
 			showSuccessGrowl(this.$gettext(`Your jam has been published!`));
 		}

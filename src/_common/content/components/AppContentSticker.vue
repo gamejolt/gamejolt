@@ -2,7 +2,8 @@
 import { ref } from 'vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppLoading from '../../loading/AppLoading.vue';
-import { Sticker } from '../../sticker/sticker.model';
+import { storeModel } from '../../model/model-store.service';
+import { StickerModel } from '../../sticker/sticker.model';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { useContentOwnerController } from '../content-owner';
 
@@ -18,12 +19,12 @@ const props = defineProps({
 
 const owner = useContentOwnerController()!;
 
-const sticker = ref<Sticker>();
+const sticker = ref<StickerModel>();
 const hasError = ref(false);
 
 owner.hydrator.useData('sticker-id', props.stickerId.toString(), data => {
 	if (data) {
-		sticker.value = new Sticker(data);
+		sticker.value = storeModel(StickerModel, data);
 	} else {
 		hasError.value = true;
 	}

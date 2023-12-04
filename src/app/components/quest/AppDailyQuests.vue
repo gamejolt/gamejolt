@@ -2,8 +2,8 @@
 import { CSSProperties, PropType, computed, ref, toRefs, watch } from 'vue';
 import AppAnimChargeOrb from '../../../_common/animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../../_common/animation/AppAnimElectricity.vue';
+import { illChargeOrbEmpty } from '../../../_common/animation/slideshow/sheets';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
-import { illChargeOrbEmpty } from '../../../_common/illustration/illustrations';
 import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppStickerChargeTooltip from '../../../_common/sticker/charge/AppStickerChargeTooltip.vue';
@@ -59,7 +59,7 @@ const props = defineProps({
 	},
 	gridStyles: {
 		type: Object as PropType<CSSProperties>,
-		default: () => {},
+		default: () => ({}),
 	},
 });
 

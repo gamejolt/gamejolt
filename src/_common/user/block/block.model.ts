@@ -1,15 +1,15 @@
 import { Model } from '../../model/model.service';
-import { User } from '../user.model';
+import { UserModel } from '../user.model';
 
-export class UserBlock extends Model {
-	blocked_on!: number;
-	expires_on!: number;
-	reason!: string;
-	resource!: 'Community' | 'User';
-	resource_id!: number;
+export class UserBlockModel extends Model {
+	declare blocked_on: number;
+	declare expires_on: number;
+	declare reason: string;
+	declare resource: 'Community' | 'User';
+	declare resource_id: number;
 
-	user!: User;
-	blocked_by_user?: User | null;
+	declare user: UserModel;
+	declare blocked_by_user?: UserModel | null;
 
 	get doesExpire() {
 		return this.expires_on > 0;
@@ -19,12 +19,10 @@ export class UserBlock extends Model {
 		super(data);
 
 		if (data.user) {
-			this.user = new User(data.user);
+			this.user = new UserModel(data.user);
 		}
 		if (data.blocked_by_user) {
-			this.blocked_by_user = new User(data.blocked_by_user);
+			this.blocked_by_user = new UserModel(data.blocked_by_user);
 		}
 	}
 }
-
-Model.create(UserBlock);

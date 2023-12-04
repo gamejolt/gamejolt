@@ -5,14 +5,14 @@ import { formatFilesize } from '../../../filters/filesize';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppPopper from '../../../popper/AppPopper.vue';
 import AppTranslate from '../../../translate/AppTranslate.vue';
-import { GameBuild } from '../../build/build.model';
-import { GamePackage } from '../package.model';
+import { GameBuildModel } from '../../build/build.model';
+import { GamePackageModel } from '../package.model';
 import AppGamePackageCardMoreOptions from './AppGamePackageCardMoreOptions.vue';
 import { GamePackageCardModel } from './card.model';
 
 defineProps({
 	package: {
-		type: Object as PropType<GamePackage>,
+		type: Object as PropType<GamePackageModel>,
 		required: true,
 	},
 	card: {
@@ -22,10 +22,10 @@ defineProps({
 });
 
 const emit = defineEmits({
-	click: (_data: { build: GameBuild; fromExtraSection: boolean }) => true,
+	click: (_data: { build: GameBuildModel; fromExtraSection: boolean }) => true,
 });
 
-function click(build: GameBuild, fromExtraSection = false) {
+function click(build: GameBuildModel, fromExtraSection = false) {
 	emit('click', { build, fromExtraSection });
 }
 </script>

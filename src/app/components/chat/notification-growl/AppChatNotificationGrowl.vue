@@ -6,7 +6,7 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { styleTextOverflow } from '../../../../_styles/mixins';
 import { ChatClient } from '../client';
-import { ChatMessage } from '../message';
+import { ChatMessageModel } from '../message';
 
 defineProps({
 	chat: {
@@ -14,7 +14,7 @@ defineProps({
 		required: true,
 	},
 	message: {
-		type: Object as PropType<ChatMessage>,
+		type: Object as PropType<ChatMessageModel>,
 		required: true,
 	},
 });

@@ -41,5 +41,11 @@ export class SeoMetaContainer {
 }
 
 export function ssrRenderSeoMetaContainer(seo: SeoMetaContainer) {
-	return ssrRenderMetaContainer(seo.meta) + `<link rel="canonical" href="${seo.canonicalLink}">`;
+	let meta = ssrRenderMetaContainer(seo.meta);
+
+	if (seo.canonicalLink) {
+		meta += `<link rel="canonical" href="${seo.canonicalLink}">`;
+	}
+
+	return meta;
 }
