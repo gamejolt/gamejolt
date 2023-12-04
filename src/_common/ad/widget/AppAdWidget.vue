@@ -2,7 +2,7 @@
 import { PropType, ref, toRefs, watch } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
 import { AdSlot, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
-import { useAdsController } from '../ad-store';
+import { useAdStore } from '../ad-store';
 import AppAdWidgetInner from './AppAdWidgetInner.vue';
 
 const props = defineProps({
@@ -17,8 +17,8 @@ const props = defineProps({
 });
 
 const { size, placement } = toRefs(props);
+const { shouldShow } = useAdStore();
 
-const controller = useAdsController();
 const adSlot = ref(_makeAdSlot());
 
 // If anything within our props changes, regenerate.
@@ -36,7 +36,7 @@ function _makeAdSlot() {
 </script>
 
 <template>
-	<div v-if="controller.shouldShow" :style="{ textAlign: `center` }">
+	<div v-if="shouldShow" :style="{ textAlign: `center` }">
 		<div
 			:style="{
 				display: `flex`,
@@ -46,7 +46,7 @@ function _makeAdSlot() {
 				...styleWhen(adSlot.size === 'leaderboard', {
 					minHeight: `115px`,
 				}),
-				...styleWhen(adSlot.size === 'rectangle', {
+				...styleWhen(adSlot.size === 'rectangle' || adSlot.size === 'rectangle-fix', {
 					minHeight: `250px`,
 				}),
 				...styleWhen(adSlot.size === 'video', {

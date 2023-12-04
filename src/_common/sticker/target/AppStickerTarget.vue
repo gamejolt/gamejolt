@@ -1,8 +1,4 @@
 <script lang="ts">
-export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'MediaItem' | 'Fireside';
-</script>
-
-<script lang="ts" setup>
 import { computed, nextTick, onBeforeUnmount, PropType, ref, toRaw, toRefs, watch } from 'vue';
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../api/api.service';
@@ -24,8 +20,12 @@ import {
 } from '../sticker-store';
 import { getStickerModelResourceName, StickerTargetController } from './target-controller';
 
-const InviewConfig = new ScrollInviewConfig();
+export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'MediaItem' | 'Fireside';
 
+const InviewConfig = new ScrollInviewConfig();
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	controller: {
 		type: Object as PropType<StickerTargetController>,

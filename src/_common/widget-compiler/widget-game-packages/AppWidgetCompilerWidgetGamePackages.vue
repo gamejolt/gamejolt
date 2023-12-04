@@ -1,17 +1,18 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType } from 'vue';
 import { Environment } from '../../environment/environment.service';
 import { SellableModel } from '../../sellable/sellable.model';
 
-@Options({})
-export default class AppWidgetCompilerWidgetGamePackages extends Vue {
-	@Prop({ type: Array, default: () => [] })
-	sellables!: SellableModel[];
-	@Prop({ type: String, default: 'dark' })
-	theme!: string;
-
-	widgetHost = Environment.widgetHost;
-}
+defineProps({
+	sellables: {
+		type: Array as PropType<SellableModel[]>,
+		default: () => [],
+	},
+	theme: {
+		type: String,
+		default: 'dark',
+	},
+});
 </script>
 
 <template>
@@ -20,7 +21,7 @@ export default class AppWidgetCompilerWidgetGamePackages extends Vue {
 			<iframe
 				nwdisable
 				nwfaketop
-				:src="`${widgetHost}/sale/v1?key=${sellable.key}&theme=${theme}`"
+				:src="`${Environment.widgetHost}/sale/v1?key=${sellable.key}&theme=${theme}`"
 				frameborder="0"
 				width="100%"
 				height="245"

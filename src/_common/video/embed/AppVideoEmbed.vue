@@ -15,11 +15,11 @@ const props = defineProps({
 	},
 	maxVideoHeight: {
 		type: Number,
-		required: true,
+		default: 0,
 	},
 	maxVideoWidth: {
 		type: Number,
-		required: true,
+		default: 0,
 	},
 	autoplay: {
 		type: Boolean,

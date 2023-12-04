@@ -1,7 +1,7 @@
 import { h } from 'vue';
 import { WidgetCompilerWidget } from '../widget';
 import { WidgetCompilerContext } from '../widget-compiler.service';
-import AppWidgetCompilerWidgetSoundcloud from './widget-soundcloud.vue';
+import AppWidgetCompilerWidgetSoundcloud from './AppWidgetCompilerWidgetSoundcloud.vue';
 
 export class WidgetCompilerWidgetSoundcloud extends WidgetCompilerWidget {
 	readonly name = 'soundcloud';

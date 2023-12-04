@@ -1,22 +1,10 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-import { Screen } from '../screen/screen-service';
+<script lang="ts" setup>
 import { vAppTooltip } from '../tooltip/tooltip-directive';
 import { Minbar, MinbarItem } from './minbar.service';
 
-@Options({
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppMinbar extends Vue {
-	readonly Minbar = Minbar;
-	readonly Screen = Screen;
-
-	onItemClick(item: MinbarItem) {
-		if (item.onClick) {
-			item.onClick();
-		}
+function onItemClick(item: MinbarItem) {
+	if (item.onClick) {
+		item.onClick();
 	}
 }
 </script>

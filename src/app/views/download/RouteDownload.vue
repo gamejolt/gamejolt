@@ -6,7 +6,7 @@ import {
 	isAdEnthused,
 	releasePageAdsSettings,
 	setPageAdsSettings,
-	useAdsController,
+	useAdStore,
 } from '../../../_common/ad/ad-store';
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
@@ -67,7 +67,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const ads = useAdsController();
+const adStore = useAdStore();
 const appPromotionStore = useAppPromotionStore();
 const route = useRoute();
 
@@ -154,11 +154,11 @@ function _setAdSettings() {
 	settings.isPageDisabled =
 		game.value.has_adult_content || game.value.isOwned || game.value.is_paid_game;
 
-	setPageAdsSettings(ads, settings);
+	setPageAdsSettings(adStore, settings);
 }
 
 function _releaseAdSettings() {
-	releasePageAdsSettings(ads);
+	releasePageAdsSettings(adStore);
 }
 </script>
 

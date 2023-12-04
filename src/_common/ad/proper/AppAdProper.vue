@@ -19,7 +19,7 @@ if (placement.value === 'top') {
 		tagPlacement.value = 'content';
 	}
 } else {
-	tagPlacement.value = placement.value;
+	tagPlacement.value = placement.value === 'feed' ? 'content' : placement.value;
 }
 
 tagUnit.value = props.adapter.getTagUnit(tagPlacement.value);

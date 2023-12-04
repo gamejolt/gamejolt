@@ -1,39 +1,40 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType } from 'vue';
+import { $gettext } from '../../translate/translate.service';
 import FormThemeEditorImage from './image-form.vue';
 
-@Options({
-	components: {
-		FormThemeEditorImage,
+defineProps({
+	type: {
+		type: String,
+		required: true,
 	},
-})
-export default class AppThemeEditorImage extends Vue {
-	@Prop({ type: String, required: true })
-	type!: string;
+	parentId: {
+		type: Number,
+		required: true,
+	},
+	modelValue: {
+		type: Object as PropType<any>,
+		required: true,
+	},
+});
 
-	@Prop({ type: Number, required: true })
-	parentId!: number;
+const emit = defineEmits({
+	'update:modelValue': (_modelValue?: any) => true,
+});
 
-	@Prop({ type: Object, required: true })
-	modelValue!: any;
+function onImageAdded(_model: any, response: any) {
+	emit('update:modelValue', response.mediaItem);
+}
 
-	@Emit('update:modelValue')
-	emitUpdate(_modelValue: any) {}
-
-	onImageAdded(_model: any, response: any) {
-		this.emitUpdate(response.mediaItem);
-	}
-
-	clear() {
-		this.emitUpdate(undefined);
-	}
+function clear() {
+	emit('update:modelValue', undefined);
 }
 </script>
 
 <template>
 	<div class="theme-editor-image">
 		<a v-if="modelValue" class="theme-editor-image-clear" @click="clear()">
-			<AppTranslate>clear</AppTranslate>
+			{{ $gettext(`clear`) }}
 		</a>
 
 		<div class="theme-editor-image-content">
