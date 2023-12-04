@@ -14,7 +14,7 @@ import AppQuestObjective from '../../../../_common/quest/AppQuestObjective.vue';
 import AppProgressBarQuest from '../../../../_common/quest/AppQuestProgress.vue';
 import AppQuestReward from '../../../../_common/quest/AppQuestReward.vue';
 import { QuestModel } from '../../../../_common/quest/quest-model';
-import { QuestReward } from '../../../../_common/quest/quest-reward-model';
+import { QuestRewardModel } from '../../../../_common/quest/quest-reward-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -74,14 +74,14 @@ const rewards = computed(() => {
 		return [];
 	}
 
-	const rewards = new Map<string, QuestReward>();
+	const rewards = new Map<string, QuestRewardModel>();
 
 	for (const reward of _quest.rewards) {
 		const rewardKey = reward.getGroupKey();
 		if (rewards.has(rewardKey)) {
 			rewards.get(rewardKey)!.amount += reward.amount;
 		} else {
-			const fakeReward = new QuestReward({
+			const fakeReward = new QuestRewardModel({
 				...reward,
 				amount: reward.amount,
 			});

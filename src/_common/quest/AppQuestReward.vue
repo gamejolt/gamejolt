@@ -6,11 +6,11 @@ import AppJolticon from '../jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../tooltip/tooltip-directive';
 import { $gettext } from '../translate/translate.service';
 import { QuestRewardTypes } from './quest-objective-reward-model';
-import { QuestReward } from './quest-reward-model';
+import { QuestRewardModel } from './quest-reward-model';
 
 const props = defineProps({
 	reward: {
-		type: Object as PropType<QuestReward>,
+		type: Object as PropType<QuestRewardModel>,
 		required: true,
 	},
 });

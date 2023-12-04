@@ -1,4 +1,4 @@
-import { MediaItem } from '../media-item/media-item-model';
+import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
 
 /**
@@ -7,12 +7,12 @@ import { Model } from '../model/model.service';
  *
  * @see QuestObjectiveReward for reward for completed objectives.
  */
-export class QuestReward extends Model {
+export class QuestRewardModel extends Model {
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.media) {
-			this.media = new MediaItem(data.media);
+			this.media = new MediaItemModel(data.media);
 		}
 	}
 
@@ -22,7 +22,7 @@ export class QuestReward extends Model {
 	declare is_secret: boolean;
 	declare name: string;
 	declare amount: number;
-	declare media?: MediaItem;
+	declare media?: MediaItemModel;
 
 	getGroupKey(): string {
 		let key = this.type + '-' + this.name;
@@ -33,5 +33,3 @@ export class QuestReward extends Model {
 		return key;
 	}
 }
-
-Model.create(QuestReward);

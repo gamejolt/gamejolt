@@ -2,7 +2,7 @@ import { getCurrentServerTime } from '../../utils/server-time';
 import { MediaItemModel } from '../media-item/media-item-model';
 import { ModelStoreModel } from '../model/model-store.service';
 import { QuestObjectiveModel } from './quest-objective-model';
-import { QuestReward } from './quest-reward-model';
+import { QuestRewardModel } from './quest-reward-model';
 
 export const QuestStatus = {
 	inactive: 0,
@@ -60,7 +60,7 @@ export class QuestModel implements ModelStoreModel {
 	declare current_stage: number;
 	declare total_stages: number;
 	objectives: QuestObjectiveModel[] = [];
-	rewards: QuestReward[] = [];
+	rewards: QuestRewardModel[] = [];
 
 	constructor(data: any = {}) {
 		this.update(data);
@@ -82,7 +82,7 @@ export class QuestModel implements ModelStoreModel {
 		}
 
 		if (data.rewards) {
-			this.rewards = QuestReward.populate(data.rewards);
+			this.rewards = QuestRewardModel.populate(data.rewards);
 		}
 	}
 
