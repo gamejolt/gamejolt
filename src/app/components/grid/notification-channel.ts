@@ -32,6 +32,7 @@ interface ChargeData {
 
 interface JoinPayload {
 	hasNewFriendRequests: boolean;
+	hasUnreadNotifications: boolean;
 	lastNotificationTime: number;
 	notificationCount: number;
 	activityUnreadCount: number;
@@ -151,14 +152,8 @@ export function createGridNotificationChannel(
 				activityUnreadCount = payload.activityUnreadCounts['following'];
 			}
 
-			appStore.setNotificationCount({
-				type: 'activity',
-				count: activityUnreadCount,
-			});
-			appStore.setNotificationCount({
-				type: 'notifications',
-				count: payload.notificationUnreadCount,
-			});
+			appStore.setUnreadActivityCount(activityUnreadCount);
+			appStore.setHasUnreadNotifications(payload.hasUnreadNotifications);
 
 			appStore.setHasNewFriendRequests(payload.hasNewFriendRequests);
 
@@ -313,7 +308,7 @@ export function createGridNotificationChannel(
 		// Only increment when we use the activity feed as the home feed, as it
 		// includes the community items only at that point.
 		if (!shouldUseFYPDefault()) {
-			appStore.incrementNotificationCount({ count: 1, type: 'activity' });
+			appStore.incrementUnreadActivityCount(1);
 		}
 	}
 

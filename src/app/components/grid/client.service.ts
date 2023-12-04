@@ -306,7 +306,11 @@ export class GridClient {
 			(feedType === 'notifications' && notification.is_notification_feed_item);
 
 		if (wantsCountIncrement) {
-			this.appStore.incrementNotificationCount({ count: 1, type: feedType });
+			if (feedType === 'activity') {
+				this.appStore.incrementUnreadActivityCount(1);
+			} else if (feedType === 'notifications') {
+				this.appStore.setHasUnreadNotifications(true);
+			}
 		}
 
 		// In Client when the feed notifications setting is disabled, don't show them notifications.
@@ -415,16 +419,10 @@ export class GridClient {
 	clearNotifications(type: ClearNotificationsType, data: ClearNotificationsData = {}) {
 		switch (type) {
 			case 'activity':
-				this.appStore.setNotificationCount({
-					type: 'activity',
-					count: 0,
-				});
+				this.appStore.setUnreadActivityCount(0);
 				break;
 			case 'notifications':
-				this.appStore.setNotificationCount({
-					type: 'notifications',
-					count: 0,
-				});
+				this.appStore.setHasUnreadNotifications(false);
 				break;
 			case 'community-channel':
 				{

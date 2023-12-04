@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, Ref, watch } from 'vue';
+import { computed, ref, Ref } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -64,7 +64,7 @@ function getNotificationTypesFromQuery(route: RouteLocationNormalized, queryKey:
 </script>
 
 <script lang="ts" setup>
-const { unreadNotificationsCount, markNotificationsAsRead } = useAppStore();
+const { hasUnreadNotifications, markNotificationsAsRead } = useAppStore();
 const { grid } = useGridStore();
 const route = useRoute();
 
@@ -85,19 +85,19 @@ const hasFilter = computed(
 		existingFilters.value.length !== SUPPORTED_NOTIFICATION_FEED_TYPES.length
 );
 
-watch(
-	unreadNotificationsCount,
-	() => {
-		if (
-			feed.value &&
-			!hasFilter.value &&
-			unreadNotificationsCount.value > feed.value.newCount
-		) {
-			feed.value.newCount = unreadNotificationsCount.value;
-		}
-	},
-	{ immediate: true }
-);
+// watch(
+// 	unreadNotificationsCount,
+// 	() => {
+// 		if (
+// 			feed.value &&
+// 			!hasFilter.value &&
+// 			unreadNotificationsCount.value > feed.value.newCount
+// 		) {
+// 			feed.value.newCount = unreadNotificationsCount.value;
+// 		}
+// 	},
+// 	{ immediate: true }
+// );
 
 createAppRoute({
 	routeTitle,
@@ -135,7 +135,7 @@ createAppRoute({
 });
 
 function onLoadedNew() {
-	if (unreadNotificationsCount.value > 0) {
+	if (hasUnreadNotifications.value) {
 		grid.value?.pushViewNotifications('notifications');
 	}
 }

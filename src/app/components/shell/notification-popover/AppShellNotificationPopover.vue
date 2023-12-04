@@ -26,7 +26,7 @@ import { AppActivityFeedLazy } from '../../lazy';
 
 const route = useRoute();
 const router = useRouter();
-const { notificationState, unreadNotificationsCount, markNotificationsAsRead } = useAppStore();
+const { notificationState, hasUnreadNotifications, markNotificationsAsRead } = useAppStore();
 const { grid } = useGridStore();
 
 const isShowing = ref(false);
@@ -104,11 +104,11 @@ async function onShow() {
 		}
 		// If it is already bootstrapped, we just want to load new items if
 		// there is any.
-		else if (unreadNotificationsCount.value > 0) {
+		else if (hasUnreadNotifications.value) {
 			await feed.value.reload();
 		}
 
-		if (unreadNotificationsCount.value > 0) {
+		if (hasUnreadNotifications.value) {
 			grid.value?.pushViewNotifications('notifications');
 		}
 	}
@@ -145,12 +145,7 @@ function onClickFilter() {
 			:class="{ active: isNavbarItemActive }"
 			@click.capture="onNavbarItemClick"
 		>
-			<span
-				v-if="unreadNotificationsCount"
-				class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-			>
-				{{ unreadNotificationsCount }}
-			</span>
+			<div v-if="hasUnreadNotifications" class="_new-tag anim-fade-enter anim-fade-leave" />
 			<AppJolticon icon="bell-filled" />
 		</a>
 
@@ -210,4 +205,18 @@ function onClickFilter() {
 	display: flex
 	justify-content: flex-end
 	gap: 12px
+
+._new-tag
+	border-radius: 50%
+	width: 12px
+	height: 12px
+	display: block
+	change-bg('highlight')
+	position: absolute
+	bottom: 10px
+	right: 4px
+	display: block
+	border-color: var(--theme-darkest)
+	border-width: 2px
+	border-style: solid
 </style>
