@@ -21,11 +21,11 @@ import { QuestRewardTypes } from './quest-objective-reward-model';
 import { QuestRewardModel } from './quest-reward-model';
 
 const itemsWithCount = new Set([
-	QuestRewardTypes.sticker,
-	QuestRewardTypes.randomSticker,
-	QuestRewardTypes.userCharge,
-	QuestRewardTypes.coin,
-	QuestRewardTypes.stickerPack,
+	QuestRewardTypes.Sticker,
+	QuestRewardTypes.RandomSticker,
+	QuestRewardTypes.UserCharge,
+	QuestRewardTypes.Coin,
+	QuestRewardTypes.StickerPack,
 ]);
 </script>
 
@@ -53,15 +53,15 @@ const subtitle = computed(() => {
 	}
 
 	switch (reward.value.type) {
-		case QuestRewardTypes.sticker:
+		case QuestRewardTypes.Sticker:
 			return $gettext(`Sticker`);
-		case QuestRewardTypes.siteTrophy:
+		case QuestRewardTypes.SiteTrophy:
 			return $gettext(`Trophy`);
-		case QuestRewardTypes.background:
+		case QuestRewardTypes.Background:
 			return $gettext(`Background`);
-		case QuestRewardTypes.stickerPack:
+		case QuestRewardTypes.StickerPack:
 			return $gettext(`Sticker pack`);
-		case QuestRewardTypes.avatarFrame:
+		case QuestRewardTypes.AvatarFrame:
 			return $gettext(`Avatar frame`);
 		default:
 			return null;
