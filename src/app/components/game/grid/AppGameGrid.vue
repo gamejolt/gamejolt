@@ -1,7 +1,7 @@
 <script lang="ts">
 import { PropType, computed, toRef, toRefs } from 'vue';
 import draggable from 'vuedraggable';
-import { isAdEnthused, useAdsController } from '../../../../_common/ad/ad-store';
+import { isAdEnthused, useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
@@ -59,11 +59,11 @@ const emit = defineEmits({
 });
 
 const { canReorder, showAds, truncateToFit, scrollable, forceScrollable, games } = toRefs(props);
-const ads = useAdsController();
+const { shouldShow: globalShouldShowAds } = useAdStore();
 
 const id = ++idCounter;
 
-const shouldShowAds = toRef(() => !canReorder.value && showAds.value && ads.shouldShow);
+const shouldShowAds = toRef(() => !canReorder.value && showAds.value && globalShouldShowAds);
 const isScrollable = toRef(() => (Screen.isXs && scrollable.value) || forceScrollable.value);
 const shouldShowStickyVideoAd = toRef(() => isAdEnthused && Screen.width >= 2100);
 
@@ -174,8 +174,8 @@ function shouldShowAd(index: number) {
 						>
 							<div class="_game-grid-ad-inner">
 								<AppAdWidget
-									:size="shouldShowStickyVideoAd ? 'video' : 'rectangle'"
-									placement="content"
+									:size="shouldShowStickyVideoAd ? 'video' : 'rectangle-fix'"
+									placement="feed"
 								/>
 							</div>
 						</AppScrollAffix>
@@ -214,7 +214,7 @@ function shouldShowAd(index: number) {
 					<template v-for="(game, i) of processedGames" :key="game.id">
 						<div v-if="shouldShowAd(i)" class="_game-grid-ad">
 							<div class="_game-grid-ad-inner">
-								<AppAdWidget size="rectangle" placement="content" />
+								<AppAdWidget size="rectangle" placement="feed" />
 							</div>
 						</div>
 						<div class="_game-grid-item">

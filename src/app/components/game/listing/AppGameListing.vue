@@ -1,8 +1,9 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppAdStickyRail from '../../../../_common/ad/AppAdStickyRail.vue';
-import { isAdEnthused, useAdsController } from '../../../../_common/ad/ad-store';
+import { isAdEnthused, useAdStore } from '../../../../_common/ad/ad-store';
+import AppAdFeedBeacon from '../../../../_common/ad/feed-beacon/AppAdFeedBeacon.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -20,6 +21,10 @@ import AppGameFilteringWidget from '../filtering/widget.vue';
 import AppGameGridPlaceholder from '../grid/AppGameGridPlaceholder.vue';
 import { GameListingContainer } from './listing-container-service';
 
+const InviewConfig = new ScrollInviewConfig();
+</script>
+
+<script lang="ts" setup>
 defineProps({
 	listing: {
 		type: Object as PropType<GameListingContainer>,
@@ -50,14 +55,15 @@ const emit = defineEmits({
 	load: () => true,
 });
 
-const ads = useAdsController();
-const InviewConfig = new ScrollInviewConfig();
+const { shouldShow: globalShouldShowAds } = useAdStore();
 </script>
 
 <template>
 	<div id="games" class="game-listing">
 		<section class="section section-thin">
-			<template v-if="showAds && ads.shouldShow && isAdEnthused">
+			<template v-if="showAds && globalShouldShowAds && isAdEnthused">
+				<AppAdFeedBeacon />
+
 				<AppAdWidget size="leaderboard" placement="content" />
 				<AppSpacer vertical :scale="6" />
 			</template>

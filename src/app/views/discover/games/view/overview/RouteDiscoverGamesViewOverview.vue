@@ -3,7 +3,7 @@ import { Ref, computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
 import AppAdStickyRail from '../../../../../../_common/ad/AppAdStickyRail.vue';
-import { isAdEnthused, useAdsController } from '../../../../../../_common/ad/ad-store';
+import { isAdEnthused, useAdStore } from '../../../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
 import { trackExperimentEngagement } from '../../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -124,7 +124,7 @@ const {
 	toggleDetails,
 } = useGameRouteController()!;
 
-const ads = useAdsController();
+const { shouldShow: globalShouldShowAds } = useAdStore();
 const commentManager = useCommentStoreManager()!;
 const router = useRouter();
 const route = useRoute();
@@ -254,7 +254,7 @@ async function reloadPreviewComments() {
 
 		<section class="section section-thin">
 			<AppAdWidget
-				v-if="ads.shouldShow && !Screen.isMobile"
+				v-if="globalShouldShowAds && !Screen.isMobile"
 				class="-leaderboard-ad"
 				:style="{
 					paddingBottom: `8px`,
@@ -315,7 +315,7 @@ async function reloadPreviewComments() {
 					</template>
 
 					<template #right>
-						<template v-if="ads.shouldShow && !Screen.isMobile">
+						<template v-if="globalShouldShowAds && !Screen.isMobile">
 							<AppScrollAffix
 								:style="{ position: `relative`, zIndex: kLayerAds }"
 								:padding="Screen.isLg ? 80 : 8"

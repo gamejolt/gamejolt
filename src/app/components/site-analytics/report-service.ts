@@ -58,15 +58,6 @@ export function createSiteAnalyticsReport(options: {
 		if (conditionFields.indexOf('donation') !== -1) {
 			conditions.push('has-donations');
 		}
-		if (conditionFields.indexOf('partner') !== -1) {
-			conditions.push('has-partner');
-		}
-		if (conditionFields.indexOf('partner_generated_revenue') !== -1) {
-			conditions.push('has-partner');
-		}
-		if (conditionFields.indexOf('partner_generated_donation') !== -1) {
-			conditions.push('has-donations', 'has-partner');
-		}
 		if (
 			conditionFields.indexOf('gem_amount') !== -1 ||
 			conditionFields.indexOf('gem_recipient') !== -1
@@ -74,27 +65,6 @@ export function createSiteAnalyticsReport(options: {
 			conditions.push('gem-purchases-only');
 		}
 		conditions = arrayUnique(conditions);
-
-		// Replace the pseudo fields by their normal fields
-		if (field === 'partner_generated_revenue') {
-			field = 'revenue';
-		} else if (field === 'partner_generated_donation') {
-			field = 'donation';
-		}
-
-		if (fetchFields) {
-			fetchFields = fetchFields.map(fetchField => {
-				let result: Field;
-				if (fetchField === 'partner_generated_revenue') {
-					result = 'revenue';
-				} else if (fetchField === 'partner_generated_donation') {
-					result = 'donation';
-				} else {
-					result = fetchField;
-				}
-				return result;
-			});
-		}
 
 		return _sendComponentRequest(
 			analyzer,
@@ -356,7 +326,6 @@ export function createSiteAnalyticsReport(options: {
 					},
 				};
 
-			case 'partner':
 			case 'fireside':
 				return displayValue;
 

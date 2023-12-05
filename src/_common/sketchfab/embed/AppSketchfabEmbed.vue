@@ -47,11 +47,11 @@ const props = defineProps({
 	},
 	maxWidth: {
 		type: Number,
-		required: true,
+		default: 0,
 	},
 	maxHeight: {
 		type: Number,
-		required: true,
+		default: 0,
 	},
 	autoplay: {
 		type: Boolean,

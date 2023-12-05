@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, inject, PropType, provide, reactive, ref, toRefs } from 'vue';
-import { useAdsController } from '../../../../_common/ad/ad-store';
+import { useAdStore } from '../../../../_common/ad/ad-store';
+import AppAdFeedBeacon from '../../../../_common/ad/feed-beacon/AppAdFeedBeacon.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
@@ -19,7 +20,7 @@ import AppScrollInview, {
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppActivityFeedItem from './item/AppActivityFeedItem.vue';
-import AppActivityFeedNewButton from './new-button/new-button.vue';
+import AppActivityFeedNewButton from './new-button/AppActivityFeedNewButton.vue';
 import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from './view';
 
 const InviewConfigShowNew = new ScrollInviewConfig({ margin: `-${Scroll.offsetTop}px` });
@@ -74,7 +75,7 @@ const emit = defineEmits({
 });
 
 const { feed, showAds } = toRefs(props);
-const ads = useAdsController();
+const { shouldShow: globalShouldShowAds } = useAdStore();
 
 provide(ActivityFeedKey, feed.value);
 
@@ -107,7 +108,7 @@ const shouldShowLoadMore = computed(
 );
 const lastPostScrollId = computed(() => feed.value.state.endScrollId);
 const newCount = computed(() => feed.value.newCount);
-const shouldShowAds = computed(() => showAds.value && ads.shouldShow);
+const shouldShowAds = computed(() => showAds.value && globalShouldShowAds.value);
 
 function onNewButtonInview() {
 	isNewButtonInview.value = true;
@@ -206,6 +207,8 @@ function shouldShowAd(index: number) {
 	to them get picked up again.
 	-->
 	<div :key="feed.id" ref="container" class="activity-feed">
+		<AppAdFeedBeacon v-if="shouldShowAds" />
+
 		<template v-if="newCount > 0 || feed.isLoadingNew">
 			<AppScrollInview :config="InviewConfigShowNew" @inview="onNewButtonInview">
 				<AppExpand v-if="!feed.isLoadingNew" :when="isNewButtonInview">
@@ -226,7 +229,7 @@ function shouldShowAd(index: number) {
 					v-if="shouldShowAd(i)"
 					class="-ad-container well fill-offset full-bleed-xs text-center"
 				>
-					<AppAdWidget size="rectangle" placement="content" />
+					<AppAdWidget size="rectangle" placement="feed" />
 				</div>
 			</div>
 		</div>

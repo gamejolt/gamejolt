@@ -30,6 +30,11 @@ import AppContentTargetRealm from '../AppContentTargetRealm.vue';
 
 type RealmSearchFeed = ReturnType<typeof createRealmSearchFeed>;
 
+const COL_COUNT_BASE = 4;
+const COL_COUNT_XS = 2;
+
+const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
+
 function createRealmSearchFeed(query: string) {
 	const safeQuery = encodeURIComponent(query);
 	const perPage = 12;
@@ -140,11 +145,6 @@ function createRealmSearchFeed(query: string) {
 </script>
 
 <script lang="ts" setup>
-const COL_COUNT_BASE = 4;
-const COL_COUNT_XS = 2;
-
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
-
 const props = defineProps({
 	selectedRealms: {
 		type: Array as PropType<RealmModel[]>,

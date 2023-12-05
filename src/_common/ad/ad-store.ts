@@ -1,5 +1,6 @@
-import { inject, InjectionKey, onUnmounted, provide, reactive } from 'vue';
+import { inject, InjectionKey, onUnmounted, provide, ref, shallowReadonly, toRef } from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
+import { createLogger } from '../../utils/logging';
 import { objectEquals } from '../../utils/object';
 import { isDynamicGoogleBot } from '../device/device.service';
 import { Environment } from '../environment/environment.service';
@@ -11,7 +12,10 @@ import { AdEnthusiastAdapter } from './enthusiast/enthusiast-adapter';
 import { AdPlaywireAdapter } from './playwire/playwire-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';
 
-export const AdsControllerKey: InjectionKey<AdsController> = Symbol('ads');
+const logger = createLogger('Ads Store');
+
+type AdStore = ReturnType<typeof createAdStore>;
+const AdStoreKey: InjectionKey<AdStore> = Symbol('ads');
 
 // To show ads on the page for dev, just change this to false.
 export const AdsDisabledDev = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build';
@@ -34,71 +38,69 @@ export class AdSettingsContainer {
 	resource: Model | null = null;
 }
 
-export const AdEventView = 'view';
-export const AdEventClick = 'click';
-
-export const AdTypeDisplay = 'display';
-export const AdTypeVideo = 'video';
-
-export const AdResourceTypeNone = 1;
-export const AdResourceTypeGame = 2;
-export const AdResourceTypeUser = 3;
-export const AdResourceTypeFiresidePost = 4;
-
-const defaultSettings = new AdSettingsContainer();
-
-function _didRouteChange(from: RouteLocationNormalized, to: RouteLocationNormalized) {
-	// We don't want to consider a route changing if just the hash changed. This
-	// helps with stuff like media bar.
-	return (
-		from.path !== to.path ||
-		!objectEquals(from.params, to.params) ||
-		!objectEquals(from.query, to.query)
-	);
+export const enum AdEvent {
+	View = 'view',
+	Click = 'click',
 }
 
-class AdsController {
-	// videoAdapter: AdAdapter = new AdEnthusiastAdapter();
-	// adapter: AdAdapter = new AdEnthusiastAdapter();
-	readonly videoAdapter: AdAdapter;
-	readonly adapter: AdAdapter;
+export const enum AdType {
+	Display = 'display',
+	Video = 'video',
+}
 
-	routeResolved = false;
-	ads = new Set<AdInterface>();
-	pageSettings: AdSettingsContainer | null = null;
+export const enum AdResourceType {
+	None = 1,
+	Game = 2,
+	User = 3,
+	FiresidePost = 4,
+}
 
-	constructor() {
-		if (!import.meta.env.SSR) {
-			if (isAdEnthused) {
-				this.videoAdapter = new AdEnthusiastAdapter();
-				this.adapter = new AdEnthusiastAdapter();
-			}
+export function createAdStore() {
+	const routeResolved = ref(false);
+	const ads = ref(new Set<AdInterface>());
+	const pageSettings = ref<AdSettingsContainer | null>(null);
+	const _defaultSettings = new AdSettingsContainer();
+
+	/** We use this to know when an infinite loading feed has new ad slots shown. */
+	const feedBeaconPing = ref(0);
+
+	let videoAdapter: AdAdapter;
+	let adapter: AdAdapter;
+	if (!import.meta.env.SSR) {
+		if (isAdEnthused) {
+			const newAdapter = new AdEnthusiastAdapter();
+			videoAdapter = newAdapter;
+			adapter = newAdapter;
 		}
-
-		this.videoAdapter ??= new AdPlaywireAdapter();
-		this.adapter ??= new AdProperAdapter();
 	}
+	videoAdapter ??= new AdPlaywireAdapter();
+	adapter ??= new AdProperAdapter();
 
-	get settings() {
-		return this.pageSettings || defaultSettings;
-	}
+	const settings = toRef(() => pageSettings.value || _defaultSettings);
 
-	get shouldShow() {
+	const shouldShow = toRef(() => {
 		if (areAdsDisabledForDevice) {
 			return false;
 		}
 
-		if (this.settings.isPageDisabled) {
+		if (settings.value.isPageDisabled) {
 			return false;
 		}
 
 		return true;
-	}
-}
+	});
 
-export function createAdsController() {
-	const c = reactive(new AdsController()) as AdsController;
-	provide(AdsControllerKey, c);
+	const c = shallowReadonly({
+		videoAdapter,
+		adapter,
+		routeResolved,
+		ads,
+		pageSettings,
+		feedBeaconPing,
+		settings,
+		shouldShow,
+	});
+	provide(AdStoreKey, c);
 
 	if (areAdsDisabledForDevice) {
 		return c;
@@ -111,22 +113,26 @@ export function createAdsController() {
 		// since this gets called even if just a simple hash has
 		// changed.
 		if (_didRouteChange(from, to)) {
-			c.adapter.onBeforeRouteChange();
-			c.videoAdapter.onBeforeRouteChange();
-			c.routeResolved = false;
+			adapter.onBeforeRouteChange();
+			if (adapter !== videoAdapter) {
+				videoAdapter.onBeforeRouteChange();
+			}
+			routeResolved.value = false;
 		}
 		next();
 	});
 
 	const routeAfter$ = onRouteChangeAfter.subscribe(() => {
-		if (c.routeResolved) {
+		if (routeResolved.value) {
 			return;
 		}
 
-		c.routeResolved = true;
-		c.adapter.onRouteChanged();
-		c.videoAdapter.onRouteChanged();
-		_displayAds(Array.from(c.ads));
+		routeResolved.value = true;
+		adapter.onRouteChanged();
+		if (adapter !== videoAdapter) {
+			videoAdapter.onRouteChanged();
+		}
+		_displayAds(Array.from(ads.value));
 	});
 
 	onUnmounted(() => {
@@ -137,48 +143,77 @@ export function createAdsController() {
 	return c;
 }
 
-export function useAdsController() {
-	return inject(AdsControllerKey)!;
+function _didRouteChange(from: RouteLocationNormalized, to: RouteLocationNormalized) {
+	// We don't want to consider a route changing if just the hash changed. This
+	// helps with stuff like media bar.
+	return (
+		from.path !== to.path ||
+		!objectEquals(from.params, to.params) ||
+		!objectEquals(from.query, to.query)
+	);
 }
 
-export function setPageAdsSettings(c: AdsController, container: AdSettingsContainer) {
-	c.pageSettings = container;
+export function useAdStore() {
+	return inject(AdStoreKey)!;
 }
 
-export function releasePageAdsSettings(c: AdsController) {
-	c.pageSettings = null;
+export function setPageAdsSettings({ pageSettings }: AdStore, container: AdSettingsContainer) {
+	pageSettings.value = container;
 }
 
-export function chooseAdAdapterForSlot(c: AdsController, slot: AdSlot) {
+export function releasePageAdsSettings({ pageSettings }: AdStore) {
+	pageSettings.value = null;
+}
+
+export function chooseAdAdapterForSlot({ videoAdapter, adapter }: AdStore, slot: AdSlot) {
 	if (slot.size === 'video') {
-		return c.videoAdapter;
+		return videoAdapter;
 	}
-	return c.adapter;
+	return adapter;
 }
 
-export function addAd(c: AdsController, ad: AdInterface) {
-	c.ads.add(ad);
+export function addAd(c: AdStore, ad: AdInterface, slot: AdSlot) {
+	const { ads, routeResolved } = c;
+	ads.value.add(ad);
 
 	// If the route already resolved then this ad was mounted after the
 	// fact. We have to call the initial display.
-	if (c.routeResolved) {
+	if (routeResolved.value) {
 		_displayAds([ad]);
+	}
+
+	if (slot.placement === 'feed') {
+		logger.info('Queuing the feed beacon ping.');
+		_queueFeedBeaconPing(c);
 	}
 }
 
-export function removeAd(c: AdsController, ad: AdInterface) {
-	c.ads.delete(ad);
+export function removeAd({ ads }: AdStore, ad: AdInterface) {
+	ads.value.delete(ad);
 }
 
-async function _displayAds(ads: AdInterface[]) {
-	for (const ad of ads) {
+async function _displayAds(displayedAds: AdInterface[]) {
+	for (const ad of displayedAds) {
 		ad.display();
 	}
 }
 
+let _feedBeaconPingTimeout: number | undefined;
+function _queueFeedBeaconPing({ feedBeaconPing }: AdStore) {
+	// Batch up the pings so that all the ads have a chance to hopefully render
+	// into the view. We don't technically need the timeout and can instead just
+	// to it all on nextTick, but may as well try to be a little fuzzier with
+	// it just in case some rendering happens in other ticks.
+	_feedBeaconPingTimeout ??= window.setTimeout(() => {
+		++feedBeaconPing.value;
+		_feedBeaconPingTimeout = undefined;
+		logger.info('Pinged the feed beacon.');
+	}, 250);
+}
+
 export async function sendAdBeacon(
-	event: string,
-	type: string,
+	event: AdEvent,
+	type: AdType,
 	resource?: string,
 	resourceId?: number
 ) {
@@ -189,26 +224,26 @@ export async function sendAdBeacon(
 
 	if (resource) {
 		if (resource === 'Game') {
-			queryString += '&resource_type=' + AdResourceTypeGame;
+			queryString += '&resource_type=' + AdResourceType.Game;
 			queryString += '&resource_id=' + resourceId;
 		} else if (resource === 'User') {
-			queryString += '&resource_type=' + AdResourceTypeUser;
+			queryString += '&resource_type=' + AdResourceType.User;
 			queryString += '&resource_id=' + resourceId;
 		} else if (resource === 'Fireside_Post') {
-			queryString += '&resource_type=' + AdResourceTypeFiresidePost;
+			queryString += '&resource_type=' + AdResourceType.FiresidePost;
 			queryString += '&resource_id=' + resourceId;
 		}
 	}
 
 	let path = '/adserver';
-	if (event === AdEventClick) {
+	if (event === AdEvent.Click) {
 		path += '/click';
 	} else {
 		path += `/log/${type}`;
 	}
 
 	if (AdsDisabledDev) {
-		console.log('Sending ad beacon.', { event, type, resource, resourceId });
+		logger.info('Sending ad beacon.', { event, type, resource, resourceId });
 	}
 
 	// This is enough to send the beacon.

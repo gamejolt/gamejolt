@@ -4,7 +4,7 @@ import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
 import { formatTime } from '../../filters/time';
 import { GameSongModel } from '../../game/song/song.model';
 import { AppAudioPlayer } from '../player/player';
-import AppAudioScrubber from '../scrubber/scrubber.vue';
+import AppAudioScrubber from '../scrubber/AppAudioScrubber.vue';
 
 @Options({
 	components: {
