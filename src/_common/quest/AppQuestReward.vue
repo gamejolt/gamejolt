@@ -4,6 +4,7 @@ import {
 	styleBorderRadiusLg,
 	styleChangeBg,
 	styleElevate,
+	styleFlexCenter,
 	styleLineClamp,
 	styleOverlayTextShadow,
 	styleTyped,
@@ -125,15 +126,26 @@ const { hovered, hoverBinding } = useOnHover();
 			<div
 				v-app-tooltip.touchable="nameTooltip"
 				:style="{
-					...styleLineClamp(2),
+					...styleFlexCenter({
+						direction: `column`,
+					}),
+					flex: `auto`,
 					width: `100%`,
 					textAlign: `center`,
 				}"
 			>
-				{{ reward.name }}
+				<div
+					:style="{
+						...styleLineClamp(2),
+					}"
+				>
+					{{ reward.name }}
+				</div>
+
 				<div
 					v-if="subtitle"
 					:style="{
+						marginTop: `auto`,
 						fontSize: kFontSizeTiny.px,
 						fontStyle: `italic`,
 						color: kThemeFgMuted,
