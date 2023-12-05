@@ -1,8 +1,8 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
-import { RouteLocationNormalized } from 'vue-router';
+import { computed, ref, toRef } from 'vue';
+import { RouteLocationNormalized, RouteLocationRaw, RouterLink, useRoute } from 'vue-router';
 import { Api } from '../../../../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
 import {
 	CompetitionPeriodPreComp,
 	CompetitionPeriodVoting,
@@ -15,16 +15,18 @@ import {
 import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../../../../../../_common/illustration/illustrations';
+import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../../../../../../_common/loading/AppLoading.vue';
 import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPagination from '../../../../../../../../../_common/pagination/AppPagination.vue';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../../../_common/route/route-component';
 import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
@@ -36,6 +38,39 @@ type Payload = {
 	entryCount: number;
 	entries: any[];
 	perPage: number;
+};
+
+export default {
+	...defineAppRouteOptions({
+		deps: { params: ['id', 'channel'], query: ['sort', 'sort-direction', 'page'] },
+		resolver: ({ route }) => {
+			const query = [];
+
+			const sort = getValidSortQueryParam(route);
+			if (sort !== null) {
+				query.push(['sort', sort]);
+			}
+
+			const sortDirection = getValidSortDirectionQueryParam(route);
+			if (sortDirection !== null) {
+				query.push(['sort-direction', sortDirection]);
+			}
+
+			const page = getValidPageQueryParam(route);
+			if (page !== null) {
+				query.push(['page', page]);
+			}
+
+			let url = `/web/dash/communities/competitions/entries/${route.params.id}/${route.params.channel}`;
+			for (let i = 0; i < query.length; i++) {
+				const param = query[i];
+				url += i === 0 ? '?' : '&';
+				url += param[0] + '=' + param[1];
+			}
+
+			return Api.sendRequest<Payload>(url);
+		},
+	}),
 };
 
 function getValidPageQueryParam(route: RouteLocationNormalized) {
@@ -75,193 +110,127 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 
 	return null;
 }
+</script>
 
-@Options({
-	name: 'RouteCommunitiesViewEditChannelsCompetitionEntries',
-	components: {
-		AppCommunityCompetitionDate,
-		AppIllustration,
-		AppLoading,
-		AppUserCardHover,
-		AppUserAvatarImg,
-		AppUserVerifiedTick,
-		AppTimeAgo,
-		AppPagination,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-		AppNoAutoscroll: vAppNoAutoscroll,
-	},
-})
-@OptionsForLegacyRoute({
-	deps: { params: ['id', 'channel'], query: ['sort', 'sort-direction', 'page'] },
-	resolver: ({ route }) => {
-		const query = [];
+<script lang="ts" setup>
+const routeStore = useCommunityRouteStore()!;
+const route = useRoute();
 
-		const sort = getValidSortQueryParam(route);
-		if (sort !== null) {
-			query.push(['sort', sort]);
+const entries = ref<CommunityCompetitionEntryModel[]>([]);
+const entryCount = ref(0);
+const isLoading = ref(true);
+const perPage = ref(50);
+
+const competition = toRef(() => routeStore.competition!);
+const sortIcon = toRef(() => (isSortInAscendingDirection.value ? 'chevron-up' : 'chevron-down'));
+
+const sortDirectionLabel = computed(() =>
+	isSortInAscendingDirection.value ? $gettext('Ascending') : $gettext('Descending')
+);
+
+const currentSort = computed(() => getValidSortQueryParam(route) || 'time');
+const isSortInAscendingDirection = computed(() => getValidSortDirectionQueryParam(route) === 'asc');
+const currentPage = computed(() => getValidPageQueryParam(route) || 1);
+
+function patchQuery(query: any, paramName: string, paramValue: any) {
+	return Object.assign({}, query, {
+		[paramName]: paramValue,
+	});
+}
+
+function patchLocation(query: any): RouteLocationRaw {
+	return {
+		name: route.name || undefined,
+		params: route.params,
+		query,
+	};
+}
+
+function getFirstPageLocation() {
+	const query = patchQuery(route.query, 'page', 1);
+	return patchLocation(query);
+}
+
+function getSortLocation(sort: string) {
+	let query = route.query;
+
+	// When clicking on the currently selected sort, flip sort direction.
+	if (currentSort.value === sort) {
+		const newSortDirection = isSortInAscendingDirection.value ? 'desc' : 'asc';
+		query = patchQuery(query, 'sort-direction', newSortDirection);
+	}
+	// Otherwise, reset sort direction to desc and set sort.
+	else {
+		query = patchQuery(query, 'sort', sort);
+		query = patchQuery(query, 'sort-direction', 'desc');
+	}
+
+	// When changing sort, always go back to page 1.
+	query = patchQuery(query, 'page', 1);
+
+	return patchLocation(query);
+}
+
+function onClickShowEntry(entry: CommunityCompetitionEntryModel) {
+	showEntryFromCommunityCompetitionEntryModal(entry);
+}
+
+async function onClickRemoveEntry(entry: CommunityCompetitionEntryModel) {
+	if (entry.is_removed) {
+		const result = await showModalConfirm(
+			$gettext(`Are you sure you want to readmit this entry to the jam?`)
+		);
+		if (result) {
+			await $unhideCommunityCompetitionEntry(entry);
+
+			showSuccessGrowl($gettext(`Entry was readmitted to the jam.`));
+			competition.value.entry_count++;
 		}
+	} else {
+		const result = await showModalConfirm(
+			$gettext(
+				`Are you sure you want to hide this entry from the jam? The user will not be able to submit the same entry again, but they can submit other entries.`
+			)
+		);
+		if (result) {
+			await $hideCommunityCompetitionEntry(entry);
 
-		const sortDirection = getValidSortDirectionQueryParam(route);
-		if (sortDirection !== null) {
-			query.push(['sort-direction', sortDirection]);
-		}
-
-		const page = getValidPageQueryParam(route);
-		if (page !== null) {
-			query.push(['page', page]);
-		}
-
-		let url = `/web/dash/communities/competitions/entries/${route.params.id}/${route.params.channel}`;
-		for (let i = 0; i < query.length; i++) {
-			const param = query[i];
-			url += i === 0 ? '?' : '&';
-			url += param[0] + '=' + param[1];
-		}
-
-		return Api.sendRequest(url);
-	},
-})
-export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends LegacyRouteComponent {
-	routeStore = setup(() => useCommunityRouteStore())!;
-
-	entryCount = 0;
-	entries: CommunityCompetitionEntryModel[] = [];
-	isLoading = true;
-	perPage = 50;
-
-	readonly CompetitionPeriodPreComp = CompetitionPeriodPreComp;
-	readonly CompetitionPeriodVoting = CompetitionPeriodVoting;
-	readonly illNoCommentsSmall = illNoCommentsSmall;
-
-	get competition() {
-		return this.routeStore.competition!;
-	}
-
-	get sortIcon() {
-		if (this.currentSortDirection === 'asc') {
-			return 'chevron-up';
-		} else {
-			return 'chevron-down';
-		}
-	}
-
-	get sortDirectionLabel() {
-		if (this.currentSortDirection === 'asc') {
-			return this.$gettext('Ascending');
-		} else {
-			return this.$gettext('Descending');
-		}
-	}
-
-	get currentSort() {
-		return getValidSortQueryParam(this.$route) || 'time';
-	}
-
-	get currentSortDirection() {
-		return getValidSortDirectionQueryParam(this.$route) || 'desc';
-	}
-
-	get currentPage() {
-		return getValidPageQueryParam(this.$route) || 1;
-	}
-
-	routeResolved($payload: Payload) {
-		this.entryCount = $payload.entryCount;
-		this.entries = CommunityCompetitionEntryModel.populate($payload.entries);
-		this.perPage = $payload.perPage;
-
-		this.isLoading = false;
-	}
-
-	patchQuery(query: any, paramName: string, paramValue: any) {
-		return Object.assign({}, query, {
-			[paramName]: paramValue,
-		});
-	}
-
-	patchLocation(query: any) {
-		return {
-			name: this.$route.name,
-			params: this.$route.params,
-			query,
-		};
-	}
-
-	getFirstPageLocation() {
-		const query = this.patchQuery(this.$route.query, 'page', 1);
-		return this.patchLocation(query);
-	}
-
-	getSortLocation(sort: string) {
-		let query = this.$route.query;
-
-		// When clicking on the currently selected sort, flip sort direction.
-		if (this.currentSort === sort) {
-			const newSortDirection = this.currentSortDirection === 'asc' ? 'desc' : 'asc';
-			query = this.patchQuery(query, 'sort-direction', newSortDirection);
-		}
-		// Otherwise, reset sort direction to desc and set sort.
-		else {
-			query = this.patchQuery(query, 'sort', sort);
-			query = this.patchQuery(query, 'sort-direction', 'desc');
-		}
-
-		// When changing sort, always go back to page 1.
-		query = this.patchQuery(query, 'page', 1);
-
-		return this.patchLocation(query);
-	}
-
-	onClickShowEntry(entry: CommunityCompetitionEntryModel) {
-		showEntryFromCommunityCompetitionEntryModal(entry);
-	}
-
-	async onClickRemoveEntry(entry: CommunityCompetitionEntryModel) {
-		if (entry.is_removed) {
-			const result = await showModalConfirm(
-				this.$gettext(`Are you sure you want to readmit this entry to the jam?`)
-			);
-			if (result) {
-				await $unhideCommunityCompetitionEntry(entry);
-
-				showSuccessGrowl(this.$gettext(`Entry was readmitted to the jam.`));
-				this.competition.entry_count++;
-			}
-		} else {
-			const result = await showModalConfirm(
-				this.$gettext(
-					`Are you sure you want to hide this entry from the jam? The user will not be able to submit the same entry again, but they can submit other entries.`
-				)
-			);
-			if (result) {
-				await $hideCommunityCompetitionEntry(entry);
-
-				showSuccessGrowl(this.$gettext(`Entry was hidden from the jam.`));
-				this.competition.entry_count--;
-			}
+			showSuccessGrowl($gettext(`Entry was hidden from the jam.`));
+			competition.value.entry_count--;
 		}
 	}
 }
+
+createAppRoute({
+	onResolved({ payload }: { payload: Payload }) {
+		entryCount.value = payload.entryCount;
+		entries.value = CommunityCompetitionEntryModel.populate(payload.entries);
+		perPage.value = payload.perPage;
+
+		isLoading.value = false;
+	},
+});
 </script>
 
 <template>
 	<div>
-		<h2 class="sans-margin-top"><AppTranslate>Manage Jam Entries</AppTranslate></h2>
+		<h2 class="sans-margin-top">
+			{{ $gettext(`Manage Jam Entries`) }}
+		</h2>
 
 		<template v-if="isLoading">
 			<AppLoading centered />
 		</template>
 		<template v-else-if="competition.periodNum === CompetitionPeriodPreComp">
 			<p>
-				<AppTranslate>
-					The jam has not yet begun and has no entries. Check back later when the jam has
-					started.
-				</AppTranslate>
+				{{
+					$gettext(
+						`The jam has not yet begun and has no entries. Check back later when the jam has started.`
+					)
+				}}
 			</p>
 			<p class="help-block">
-				<AppTranslate>The Jam starts on:</AppTranslate>
+				{{ $gettext(`The Jam starts on:`) }}
 
 				<AppCommunityCompetitionDate
 					:date="competition.starts_on"
@@ -273,14 +242,17 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 			<template v-if="entryCount === 0">
 				<AppIllustration :asset="illNoCommentsSmall">
 					<p>
-						<AppTranslate v-if="competition.periodNum >= CompetitionPeriodVoting">
-							No new entries can be submitted to the jam, and none have been submitted
-							during its runtime.
-						</AppTranslate>
-						<AppTranslate v-else>
-							There are currently no submissions entered into the jam yet. Once they
-							are entered, they will show up here.
-						</AppTranslate>
+						<span>
+							{{
+								competition.periodNum >= CompetitionPeriodVoting
+									? $gettext(
+											`No new entries can be submitted to the jam, and none have been submitted during its runtime.`
+									  )
+									: $gettext(
+											`There are currently no submissions entered into the jam yet. Once they are entered, they will show up here.`
+									  )
+							}}
+						</span>
 					</p>
 				</AppIllustration>
 			</template>
@@ -303,7 +275,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 						</span>
 					</template>
 					<template v-else>
-						<AppTranslate>No entries have been hidden.</AppTranslate>
+						{{ $gettext(`No entries have been hidden.`) }}
 					</template>
 				</p>
 
@@ -312,64 +284,64 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 						<thead>
 							<tr>
 								<th>
-									<router-link
+									<RouterLink
 										v-app-no-autoscroll
 										:to="getSortLocation('name')"
 										class="link-unstyled -header"
 									>
-										<span><AppTranslate>Title</AppTranslate></span>
+										<span>{{ $gettext(`Title`) }}</span>
 										<span v-if="currentSort === 'name'">
 											<AppJolticon
 												v-app-tooltip="sortDirectionLabel"
 												:icon="sortIcon"
 											/>
 										</span>
-									</router-link>
+									</RouterLink>
 								</th>
 								<th>
-									<router-link
+									<RouterLink
 										v-app-no-autoscroll
 										:to="getSortLocation('user')"
 										class="link-unstyled -header"
 									>
-										<span><AppTranslate>Developer</AppTranslate></span>
+										<span>{{ $gettext(`Developer`) }}</span>
 										<span v-if="currentSort === 'user'">
 											<AppJolticon
 												v-app-tooltip="sortDirectionLabel"
 												:icon="sortIcon"
 											/>
 										</span>
-									</router-link>
+									</RouterLink>
 								</th>
 								<th>
-									<router-link
+									<RouterLink
 										v-app-no-autoscroll
 										:to="getSortLocation('time')"
 										class="link-unstyled -header"
 									>
-										<span><AppTranslate>Entered</AppTranslate></span>
+										<span>{{ $gettext(`Entered`) }}</span>
 										<span v-if="currentSort === 'time'">
 											<AppJolticon
 												v-app-tooltip="sortDirectionLabel"
 												:icon="sortIcon"
 											/>
 										</span>
-									</router-link>
+									</RouterLink>
 								</th>
 								<th>
-									<router-link
+									<RouterLink
 										v-app-no-autoscroll
 										:to="getSortLocation('visibility')"
 										class="link-unstyled -header"
 									>
-										<span><AppTranslate>Visibility</AppTranslate></span>
+										<span>{{ $gettext(`Visibility`) }}</span>
 										<span v-if="currentSort === 'visibility'">
 											<AppJolticon
 												v-app-tooltip="sortDirectionLabel"
 												:icon="sortIcon"
 											/>
 										</span>
-									</router-link>
+									</RouterLink>
 								</th>
 							</tr>
 						</thead>
@@ -382,7 +354,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 									</a>
 								</th>
 								<td>
-									<router-link
+									<RouterLink
 										:to="{
 											name: 'profile.overview',
 											params: { username: entry.resource.developer.username },
@@ -404,7 +376,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 												/>
 											</span>
 										</AppUserCardHover>
-									</router-link>
+									</RouterLink>
 								</td>
 								<td>
 									<AppTimeAgo :date="entry.added_on" />
@@ -419,10 +391,11 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 										sm
 										@click="onClickRemoveEntry(entry)"
 									>
-										<AppTranslate v-if="entry.is_removed">
-											Readmit Entry
-										</AppTranslate>
-										<AppTranslate v-else>Hide Entry</AppTranslate>
+										{{
+											entry.is_removed
+												? $gettext(`Readmit Entry`)
+												: $gettext(`Hide Entry`)
+										}}
 									</AppButton>
 								</td>
 							</tr>
@@ -439,10 +412,10 @@ export default class RouteCommunitiesViewEditChannelsCompetitionEntries extends 
 				<!-- Probably on a too high page due to editing url. -->
 				<template v-if="entryCount > 0 && entries.length === 0">
 					<h4>
-						<AppTranslate>Whoops! There are no entries back here...</AppTranslate>
+						{{ $gettext(`Whoops! There are no entries back here...`) }}
 					</h4>
 					<AppButton :to="getFirstPageLocation()" icon="reply">
-						<AppTranslate>Go back</AppTranslate>
+						{{ $gettext(`Go back`) }}
 					</AppButton>
 				</template>
 			</template>

@@ -1,16 +1,18 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { ref, toRef } from 'vue';
+import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../_common/api/api.service';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../_common/card/list/AppCardListAdd.vue';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../_common/route/route-component';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
@@ -20,120 +22,109 @@ import { arrayRemove } from '../../../../../utils/array';
 import FormUserBlock from '../../../../components/forms/user/block/block.vue';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 
-@Options({
-	name: 'RouteDashAccountBlocks',
-	components: {
-		FormUserBlock,
-		AppLoading,
-		AppCardList,
-		AppCardListAdd,
-		AppUserAvatar,
-		AppTimeAgo,
-		AppUserVerifiedTick,
-	},
-	directives: {},
-})
-@OptionsForLegacyRoute({
-	deps: {},
-	lazy: false,
-	resolver: () => Api.sendRequest('/web/dash/blocks'),
-})
-export default class RouteDashAccountBlocks extends LegacyRouteComponent {
-	routeStore = setup(() => useAccountRouteController()!);
+export default {
+	...defineAppRouteOptions({
+		deps: {},
+		lazy: false,
+		resolver: () => Api.sendRequest('/web/dash/blocks'),
+	}),
+};
+</script>
 
-	isBlocking = false;
-	blocks: UserBlockModel[] = [];
-	totalCount = 0;
-	isLoadingMore = false;
+<script lang="ts" setup>
+const { heading } = useAccountRouteController()!;
 
-	get routeTitle() {
-		return this.routeStore.heading;
+const isBlocking = ref(false);
+const blocks = ref<UserBlockModel[]>([]);
+const totalCount = ref(0);
+const isLoadingMore = ref(false);
+
+const shouldShowLoadMore = toRef(
+	() => blocks.value.length < totalCount.value && !isLoadingMore.value
+);
+
+async function loadMore() {
+	isLoadingMore.value = true;
+
+	const from = blocks.value.length > 0 ? blocks.value[blocks.value.length - 1].blocked_on : '';
+	const payload = await Api.sendRequest('/web/dash/blocks/more?from=' + from);
+	if (payload.blocks) {
+		const newBlocks = UserBlockModel.populate(payload.blocks);
+		blocks.value.push(...newBlocks);
 	}
 
-	get shouldShowLoadMore() {
-		return this.blocks.length < this.totalCount && !this.isLoadingMore;
-	}
-
-	routeCreated() {
-		this.routeStore.heading = $gettext(`Blocked Users`);
-	}
-
-	routeResolved($payload: any) {
-		this.blocks = UserBlockModel.populate($payload.blocks);
-		this.totalCount = $payload.total || 0;
-	}
-
-	async loadMore() {
-		this.isLoadingMore = true;
-
-		const from = this.blocks.length > 0 ? this.blocks[this.blocks.length - 1].blocked_on : '';
-		const payload = await Api.sendRequest('/web/dash/blocks/more?from=' + from);
-		if (payload.blocks) {
-			const blocks = UserBlockModel.populate(payload.blocks);
-			this.blocks.push(...blocks);
-		}
-
-		this.isLoadingMore = false;
-	}
-
-	onBlockSubmit() {
-		this.isBlocking = false;
-		this.blocks = [];
-		this.totalCount++;
-		this.loadMore();
-	}
-
-	async onClickUnblock(block: UserBlockModel) {
-		const confirm = await showModalConfirm(
-			this.$gettext(`Are you sure you want to unblock %{ name }?`, {
-				name: block.user.display_name,
-			}),
-			this.$gettext(`Unblock user`)
-		);
-		if (!confirm) {
-			return;
-		}
-
-		const payload = await Api.sendRequest(`/web/dash/blocks/remove/${block.id}`, {});
-		if (!payload.success) {
-			showErrorGrowl(this.$gettext('Failed to unblock user. Try again in a bit.'));
-			return;
-		}
-
-		showSuccessGrowl(
-			this.$gettext('Unblocked %{ name }!', {
-				name: block.user.display_name,
-			})
-		);
-
-		this.totalCount--;
-		arrayRemove(this.blocks, i => i.id === block.id);
-	}
+	isLoadingMore.value = false;
 }
+
+function onBlockSubmit() {
+	isBlocking.value = false;
+	blocks.value = [];
+	totalCount.value++;
+	loadMore();
+}
+
+async function onClickUnblock(block: UserBlockModel) {
+	const confirm = await showModalConfirm(
+		$gettext(`Are you sure you want to unblock %{ name }?`, {
+			name: block.user.display_name,
+		}),
+		$gettext(`Unblock user`)
+	);
+	if (!confirm) {
+		return;
+	}
+
+	const payload = await Api.sendRequest(`/web/dash/blocks/remove/${block.id}`, {});
+	if (!payload.success) {
+		showErrorGrowl($gettext('Failed to unblock user. Try again in a bit.'));
+		return;
+	}
+
+	showSuccessGrowl(
+		$gettext('Unblocked %{ name }!', {
+			name: block.user.display_name,
+		})
+	);
+
+	totalCount.value--;
+	arrayRemove(blocks.value, i => i.id === block.id);
+}
+
+const { isBootstrapped, isLoading } = createAppRoute({
+	routeTitle: heading,
+	onInit() {
+		heading.value = $gettext(`Blocked Users`);
+	},
+	onResolved({ payload }) {
+		blocks.value = UserBlockModel.populate(payload.blocks);
+		totalCount.value = payload.total || 0;
+	},
+});
 </script>
 
 <template>
 	<div class="row">
 		<div class="col-md-3 col-md-push-9 col-lg-4 col-lg-push-8">
 			<div class="page-help">
-				<AppTranslate>
-					When you block someone, that user won't be able to follow you, send you a friend
-					request, or reply to your posts and comments.
-				</AppTranslate>
+				{{
+					$gettext(
+						`When you block someone, that user won't be able to follow you, send you a friend request, or reply to your posts and comments.`
+					)
+				}}
 				{{ ' ' }}
 				<AppLinkHelp page="blocking-users" class="link-help">
-					<AppTranslate>Learn more about what happens when you block a user</AppTranslate>
+					{{ $gettext(`Learn more about what happens when you block a user`) }}
 				</AppLinkHelp>
 			</div>
 		</div>
 		<div class="col-md-9 col-md-pull-3 col-lg-8 col-lg-pull-4">
-			<template v-if="!isRouteBootstrapped || isRouteLoading">
+			<template v-if="!isBootstrapped || isLoading">
 				<AppLoading centered />
 			</template>
 			<template v-else>
 				<template v-if="totalCount === 0">
 					<p class="lead text-center">
-						<AppTranslate>You aren't blocking anyone.</AppTranslate>
+						{{ $gettext(`You aren't blocking anyone.`) }}
 					</p>
 					<br />
 				</template>
@@ -160,14 +151,14 @@ export default class RouteDashAccountBlocks extends LegacyRouteComponent {
 							<div class="-item-username">@{{ block.user.username }}</div>
 
 							<small>
-								<AppTranslate>Blocked:</AppTranslate>
+								{{ $gettext(`Blocked:`) }}
 								{{ ' ' }}
 								<AppTimeAgo :date="block.blocked_on" />
 							</small>
 						</div>
 
 						<AppButton class="-item-controls" @click="onClickUnblock(block)">
-							<AppTranslate>Unblock</AppTranslate>
+							{{ $gettext(`Unblock`) }}
 						</AppButton>
 					</div>
 
@@ -177,7 +168,7 @@ export default class RouteDashAccountBlocks extends LegacyRouteComponent {
 							trans
 							@click="loadMore()"
 						>
-							<AppTranslate>Load More</AppTranslate>
+							{{ $gettext(`Load More`) }}
 						</AppButton>
 					</div>
 					<AppLoading v-else-if="isLoadingMore" centered />

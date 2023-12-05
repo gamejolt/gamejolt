@@ -1,25 +1,34 @@
 <script lang="ts">
-import { Emit, Options } from 'vue-property-decorator';
-import { RouteLocationNormalized } from 'vue-router';
+import { computed, ref, toRef } from 'vue';
+import { RouteLocationNormalized, useRoute } from 'vue-router';
 import draggable from 'vuedraggable';
 import { Api } from '../../../../../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../../../../../_common/button/AppButton.vue';
 import { CommunityCompetitionAwardModel } from '../../../../../../../../../../_common/community/competition/award/award.model';
 import {
-$assignCommunityCompetitionEntryAward,
-$saveSortCommunityCompetitionEntryAward,
-$unassignCommunityCompetitionEntryAward,
+	$assignCommunityCompetitionEntryAward,
+	$saveSortCommunityCompetitionEntryAward,
+	$unassignCommunityCompetitionEntryAward,
 } from '../../../../../../../../../../_common/community/competition/entry/award/award.model';
 import { CommunityCompetitionEntryModel } from '../../../../../../../../../../_common/community/competition/entry/entry.model';
 import { showErrorGrowl } from '../../../../../../../../../../_common/growls/growls.service';
-import AppLoading from '../../../../../../../../../../_common/loading/AppLoading.vue';
+import AppJolticon from '../../../../../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../../../../../../../_common/loading/AppLoadingFade.vue';
 import AppPagination from '../../../../../../../../../../_common/pagination/AppPagination.vue';
 import {
-LegacyRouteComponent,
-OptionsForLegacyRoute,
-} from '../../../../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../../../../_common/route/route-component';
 import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../../../../../../_common/translate/translate.service';
 import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
+
+export default {
+	...defineAppRouteOptions({
+		deps: { params: ['awardId'] },
+		resolver: ({ route }) => makeRequest(route),
+	}),
+};
 
 type Payload = {
 	award: any;
@@ -43,156 +52,138 @@ function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '')
 
 	url += query;
 
-	return Api.sendRequest(url);
+	return Api.sendRequest<Payload>(url);
+}
+</script>
+
+<script lang="ts" setup>
+const emit = defineEmits({
+	assign: (_awardId: number) => true,
+	unassign: (_awardId: number) => true,
+});
+
+const route = useRoute();
+
+const award = ref<CommunityCompetitionAwardModel | null>(null);
+const awardedEntries = ref<CommunityCompetitionEntryModel[]>([]);
+const entries = ref<CommunityCompetitionEntryModel[]>([]);
+const entryCount = ref(0);
+const perPage = ref(50);
+const isLoading = ref(true);
+const filterValue = ref('');
+const page = ref(1);
+
+let filterDispatcher: NodeJS.Timer | undefined;
+
+const noAwards = toRef(() => awardedEntries.value.length === 0);
+const unassignedCount = toRef(() => entryCount.value - awardedEntries.value.length);
+
+const draggableItems = computed({
+	get() {
+		return awardedEntries.value;
+	},
+	set(sortedEntries: CommunityCompetitionEntryModel[]) {
+		saveEntrySort(sortedEntries);
+	},
+});
+
+function handlePayload(payload: Payload) {
+	award.value = new CommunityCompetitionAwardModel(payload.award);
+	awardedEntries.value = CommunityCompetitionEntryModel.populate(payload.awardedEntries);
+	entries.value = CommunityCompetitionEntryModel.populate(payload.entries);
+	perPage.value = payload.perPage;
+	entryCount.value = payload.entryCount;
+
+	isLoading.value = false;
 }
 
-@Options({
-	name: 'RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAward',
-	components: {
-		AppLoading,
-		AppLoadingFade,
-		draggable,
-		AppPagination,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	deps: { params: ['awardId'] },
-	resolver: ({ route }) => makeRequest(route),
-})
-export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAward extends LegacyRouteComponent {
-	award!: CommunityCompetitionAwardModel;
-	awardedEntries: CommunityCompetitionEntryModel[] = [];
-	entries: CommunityCompetitionEntryModel[] = [];
-	entryCount!: number;
-	perPage = 50;
-	isLoading = true;
-	filterValue = '';
-	page = 1;
+function onClickShowEntry(entry: CommunityCompetitionEntryModel) {
+	showEntryFromCommunityCompetitionEntryModal(entry);
+}
 
-	filterDispatcher?: NodeJS.Timer;
-
-	@Emit('assign')
-	emitAssign(_awardId: number) {}
-	@Emit('unassign')
-	emitUnassign(_awardId: number) {}
-
-	get noAwards() {
-		return this.awardedEntries.length === 0;
+function onFilterInput(event: InputEvent) {
+	if (filterDispatcher) {
+		clearTimeout(filterDispatcher);
+		filterDispatcher = undefined;
 	}
 
-	get unassignedCount() {
-		return this.entryCount - this.awardedEntries.length;
+	const currFilterValue = (event.target as HTMLInputElement).value;
+	if (currFilterValue !== filterValue.value) {
+		filterValue.value = currFilterValue;
+		filterDispatcher = setTimeout(() => executeFilter(), 500);
 	}
+}
 
-	get draggableItems() {
-		return this.awardedEntries;
+async function executeFilter() {
+	// Reset page when fetching with a new filter.
+	page.value = 1;
+
+	const payload = await makeRequest(route, page.value, filterValue.value);
+	handlePayload(payload);
+}
+
+async function onClickAssign(entry: CommunityCompetitionEntryModel) {
+	await $assignCommunityCompetitionEntryAward(entry.id, award.value!.id);
+
+	emit('assign', award.value!.id);
+
+	isLoading.value = true;
+	const payload = await makeRequest(route, page.value, filterValue.value);
+	handlePayload(payload);
+}
+
+async function onClickUnassign(entry: CommunityCompetitionEntryModel) {
+	await $unassignCommunityCompetitionEntryAward(entry.id, award.value!.id);
+
+	emit('unassign', award.value!.id);
+
+	isLoading.value = true;
+	const payload = await makeRequest(route, page.value, filterValue.value);
+	handlePayload(payload);
+}
+
+async function saveEntrySort(sortedEntries: CommunityCompetitionEntryModel[]) {
+	// Reorder the entries to see the result of the ordering right away.
+	awardedEntries.value.splice(0, awardedEntries.value.length, ...sortedEntries);
+
+	const sortedIds = sortedEntries.map(i => i.id);
+	try {
+		await $saveSortCommunityCompetitionEntryAward(award.value!.id, sortedIds);
+	} catch (e) {
+		console.error(e);
+		showErrorGrowl($gettext(`Could not save entry arrangement.`));
 	}
+}
 
-	set draggableItems(sortedEntries: CommunityCompetitionEntryModel[]) {
-		this.saveEntrySort(sortedEntries);
-	}
+async function onPageChanged(newPage: number) {
+	page.value = newPage;
 
-	routeCreated() {
+	const payload = await makeRequest(route, page.value, filterValue.value);
+	handlePayload(payload);
+}
+
+createAppRoute({
+	onInit() {
 		// When clicking an award in the parent route, this route gets recreated.
-		this.isLoading = true;
-		this.filterValue = '';
-		this.page = 1;
+		isLoading.value = true;
+		filterValue.value = '';
+		page.value = 1;
 
-		if (this.filterDispatcher) {
-			clearTimeout(this.filterDispatcher);
-			this.filterDispatcher = undefined;
+		if (filterDispatcher) {
+			clearTimeout(filterDispatcher);
+			filterDispatcher = undefined;
 		}
-	}
-
-	routeResolved($payload: Payload) {
-		this.handlePayload($payload);
-	}
-
-	routeDestroyed() {
-		if (this.filterDispatcher) {
-			clearTimeout(this.filterDispatcher);
-			this.filterDispatcher = undefined;
+	},
+	onResolved({ payload }) {
+		handlePayload(payload);
+	},
+	onDestroyed() {
+		if (filterDispatcher) {
+			clearTimeout(filterDispatcher);
+			filterDispatcher = undefined;
 		}
-	}
-
-	handlePayload($payload: Payload) {
-		this.award = new CommunityCompetitionAwardModel($payload.award);
-		this.awardedEntries = CommunityCompetitionEntryModel.populate($payload.awardedEntries);
-		this.entries = CommunityCompetitionEntryModel.populate($payload.entries);
-		this.perPage = $payload.perPage;
-		this.entryCount = $payload.entryCount;
-
-		this.isLoading = false;
-	}
-
-	onClickShowEntry(entry: CommunityCompetitionEntryModel) {
-		showEntryFromCommunityCompetitionEntryModal(entry);
-	}
-
-	onFilterInput(event: InputEvent) {
-		if (this.filterDispatcher) {
-			clearTimeout(this.filterDispatcher);
-			this.filterDispatcher = undefined;
-		}
-
-		const filterValue = (event.target as HTMLInputElement).value;
-		if (filterValue !== this.filterValue) {
-			this.filterValue = filterValue;
-			this.filterDispatcher = setTimeout(() => this.executeFilter(), 500);
-		}
-	}
-
-	async executeFilter() {
-		// Reset page when fetching with a new filter.
-		this.page = 1;
-
-		const payload = await makeRequest(this.$route, this.page, this.filterValue);
-		this.handlePayload(payload);
-	}
-
-	async onClickAssign(entry: CommunityCompetitionEntryModel) {
-		await $assignCommunityCompetitionEntryAward(entry.id, this.award.id);
-
-		this.emitAssign(this.award.id);
-
-		this.isLoading = true;
-		const payload = await makeRequest(this.$route, this.page, this.filterValue);
-		this.handlePayload(payload);
-	}
-
-	async onClickUnassign(entry: CommunityCompetitionEntryModel) {
-		await $unassignCommunityCompetitionEntryAward(entry.id, this.award.id);
-
-		this.emitUnassign(this.award.id);
-
-		this.isLoading = true;
-		const payload = await makeRequest(this.$route, this.page, this.filterValue);
-		this.handlePayload(payload);
-	}
-
-	async saveEntrySort(sortedEntries: CommunityCompetitionEntryModel[]) {
-		// Reorder the entries to see the result of the ordering right away.
-		this.awardedEntries.splice(0, this.awardedEntries.length, ...sortedEntries);
-
-		const sortedIds = sortedEntries.map(i => i.id);
-		try {
-			await $saveSortCommunityCompetitionEntryAward(this.award.id, sortedIds);
-		} catch (e) {
-			console.error(e);
-			showErrorGrowl(this.$gettext(`Could not save entry arrangement.`));
-		}
-	}
-
-	async onPageChanged(page: number) {
-		this.page = page;
-
-		const payload = await makeRequest(this.$route, this.page, this.filterValue);
-		this.handlePayload(payload);
-	}
-}
+	},
+});
 </script>
 
 <template>
@@ -200,16 +191,17 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 		<AppLoadingFade :is-loading="isLoading">
 			<div v-if="noAwards" class="alert">
 				<p>
-					<AppTranslate>No entries have been chosen for this award yet.</AppTranslate>
+					{{ $gettext(`No entries have been chosen for this award yet.`) }}
 				</p>
 			</div>
 			<template v-else>
 				<div v-if="awardedEntries.length > 1" class="alert">
 					<p>
-						<AppTranslate>
-							You can sort the entries within this award to decide their order on the
-							Games page.
-						</AppTranslate>
+						{{
+							$gettext(
+								`You can sort the entries within this award to decide their order on the Games page.`
+							)
+						}}
 					</p>
 				</div>
 
@@ -225,10 +217,10 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 							<tr>
 								<th />
 								<th>
-									<AppTranslate>Entry</AppTranslate>
+									{{ $gettext(`Entry`) }}
 								</th>
 								<th>
-									<AppTranslate>Developer</AppTranslate>
+									{{ $gettext(`Developer`) }}
 								</th>
 							</tr>
 						</thead>
@@ -290,13 +282,13 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 				</div>
 			</template>
 
-			<h3><AppTranslate>Choose Entries</AppTranslate></h3>
+			<h3>{{ $gettext(`Choose Entries`) }}</h3>
 			<p class="help-block">
-				<AppTranslate>Choose an entry or entries to win this award.</AppTranslate>
+				{{ $gettext(`Choose an entry or entries to win this award.`) }}
 			</p>
 
 			<input
-				:key="$route.params.awardId"
+				:key="route.params.awardId"
 				type="text"
 				class="form-control -filter-input"
 				:placeholder="$gettext(`Filter entries...`)"
@@ -310,9 +302,7 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 							No entries matched your filter of <code>"%{ filter }"</code>.
 						</span>
 						<span v-else>
-							<AppTranslate
-								>There are no more entries without this award.</AppTranslate
-							>
+							{{ $gettext(`There are no more entries without this award.`) }}
 						</span>
 					</p>
 				</div>
@@ -331,10 +321,10 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 							<tr>
 								<th />
 								<th>
-									<AppTranslate>Entry</AppTranslate>
+									{{ $gettext(`Entry`) }}
 								</th>
 								<th>
-									<AppTranslate>Developer</AppTranslate>
+									{{ $gettext(`Developer`) }}
 								</th>
 							</tr>
 						</thead>
@@ -385,11 +375,9 @@ export default class RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAwar
 
 			<!-- Probably on a too high page -->
 			<template v-else>
-				<h4>
-					<AppTranslate>Whoops! There are no entries back here...</AppTranslate>
-				</h4>
+				<h4>{{ $gettext(`Whoops! There are no entries back here...`) }}</h4>
 				<AppButton icon="reply" @click="onPageChanged(1)">
-					<AppTranslate>Go back</AppTranslate>
+					{{ $gettext(`Go back`) }}
 				</AppButton>
 			</template>
 		</AppLoadingFade>

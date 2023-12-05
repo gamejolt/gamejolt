@@ -1,81 +1,66 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, toRef } from 'vue';
+import { RouterLink, RouterView } from 'vue-router';
 import { Api } from '../../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../../../../_common/community/channel/channel.model';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../_common/route/route-component';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import { showCommunityCompetitionHeaderModal } from '../../../../../../components/community/competition/header-modal/header-modal.service';
-import AppCommunityPerms from '../../../../../../components/community/perms/AppCommunityPerms.vue';
 import AppPageHeader from '../../../../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../../../../components/page-header/controls/controls.vue';
-import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
 import { useCommunityRouteStore } from '../../../view.store';
 
-@Options({
-	name: 'RouteCommunitiesViewEditChannelsEdit',
-	components: {
-		AppPageHeader,
-		AppCommunityPerms,
-		AppCommunitiesViewPageContainer,
-		AppPageHeaderControls,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	deps: { params: ['id', 'channel'] },
-	resolver: ({ route }) =>
-		Api.sendRequest(
-			'/web/dash/communities/channels/' + route.params.id + '/' + route.params.channel
-		),
-})
-export default class RouteCommunitiesViewEditChannelsEdit extends LegacyRouteComponent {
-	routeStore = setup(() => useCommunityRouteStore())!;
+export default {
+	...defineAppRouteOptions({
+		deps: { params: ['id', 'channel'] },
+		resolver: ({ route }) =>
+			Api.sendRequest(
+				'/web/dash/communities/channels/' + route.params.id + '/' + route.params.channel
+			),
+	}),
+};
+</script>
 
-	get competition() {
-		return this.routeStore.competition;
+<script lang="ts" setup>
+const routeStore = useCommunityRouteStore()!;
+
+const competition = toRef(() => routeStore.competition);
+const channel = toRef(() => routeStore.channel!);
+const canEditHeader = toRef(() => !!competition.value);
+
+const pageHeaderProps = computed(() => {
+	if (!competition.value) {
+		return {};
 	}
 
-	get channel() {
-		return this.routeStore.channel!;
-	}
+	return {
+		coverMediaItem: competition.value.header,
+		coverMaxHeight: 250,
+		coverEditable: true,
+	};
+});
 
-	get canEditHeader() {
-		return !!this.competition;
-	}
+async function onClickEditHeader() {
+	await showCommunityCompetitionHeaderModal(competition.value!);
+}
 
-	get pageHeaderProps() {
-		if (!this.competition) {
-			return {};
-		}
-
-		return {
-			coverMediaItem: this.competition.header,
-			coverMaxHeight: 250,
-			coverEditable: true,
-		};
-	}
-
-	routeResolved($payload: any) {
-		if ($payload.channel) {
-			const channel = new CommunityChannelModel($payload.channel);
-			if (this.channel) {
-				this.channel.assign(channel);
-			} else if (channel.is_archived) {
-				this.routeStore.archivedChannels.push(channel);
+createAppRoute({
+	onResolved({ payload }) {
+		if (payload.channel) {
+			const newChannel = new CommunityChannelModel(payload.channel);
+			if (channel.value) {
+				channel.value.assign(newChannel);
+			} else if (newChannel.is_archived) {
+				routeStore.archivedChannels.push(newChannel);
 			}
 		}
-	}
-
-	async onClickEditHeader() {
-		await showCommunityCompetitionHeaderModal(this.competition!);
-	}
-}
+	},
+});
 </script>
 
 <template>
@@ -83,33 +68,33 @@ export default class RouteCommunitiesViewEditChannelsEdit extends LegacyRouteCom
 	<div v-if="channel">
 		<AppPageHeader v-bind="pageHeaderProps" should-affix-nav @edit-cover="onClickEditHeader">
 			<template v-if="canEditHeader" #cover-edit-buttons>
-				<AppTranslate>Upload Header</AppTranslate>
+				{{ $gettext(`Upload Header`) }}
 			</template>
 
 			<template #default>
 				<div class="text-muted small">
 					<span v-if="channel.visibility === 'draft'" class="tag">
-						<AppTranslate>Draft</AppTranslate>
+						{{ $gettext(`Draft`) }}
 					</span>
 					<span v-else-if="channel.visibility === 'published'" class="tag tag-highlight">
-						<AppTranslate>Published</AppTranslate>
+						{{ $gettext(`Published`) }}
 					</span>
 
 					<template v-if="competition">
 						<span v-if="competition.period === 'pre-comp'" class="tag">
-							<AppTranslate>Future</AppTranslate>
+							{{ $gettext(`Future`) }}
 						</span>
 						<span
 							v-else-if="competition.period === 'running'"
 							class="tag tag-highlight"
 						>
-							<AppTranslate>Running</AppTranslate>
+							{{ $gettext(`Running`) }}
 						</span>
 						<span v-else-if="competition.period === 'voting'" class="tag tag-highlight">
-							<AppTranslate>Voting</AppTranslate>
+							{{ $gettext(`Voting`) }}
 						</span>
 						<span v-else-if="competition.period === 'post-comp'" class="tag">
-							<AppTranslate>Finished</AppTranslate>
+							{{ $gettext(`Finished`) }}
 						</span>
 					</template>
 
@@ -120,7 +105,7 @@ export default class RouteCommunitiesViewEditChannelsEdit extends LegacyRouteCom
 						"
 						class="tag tag-notice"
 					>
-						<AppTranslate>Archived</AppTranslate>
+						{{ $gettext(`Archived`) }}
 					</span>
 				</div>
 
@@ -134,7 +119,7 @@ export default class RouteCommunitiesViewEditChannelsEdit extends LegacyRouteCom
 					<nav class="platform-list inline">
 						<ul>
 							<li>
-								<router-link
+								<RouterLink
 									:to="{ name: 'communities.view.edit.channels.overview' }"
 									:class="{
 										active:
@@ -142,18 +127,18 @@ export default class RouteCommunitiesViewEditChannelsEdit extends LegacyRouteCom
 											'communities.view.edit.channels.overview',
 									}"
 								>
-									<AppTranslate>Channel</AppTranslate>
-								</router-link>
+									{{ $gettext(`Channel`) }}
+								</RouterLink>
 							</li>
 							<li v-if="competition">
-								<router-link
+								<RouterLink
 									:to="{
 										name: 'communities.view.edit.channels.competition.overview',
 									}"
 									active-class="active"
 								>
-									<AppTranslate>Manage Jam</AppTranslate>
-								</router-link>
+									{{ $gettext(`Manage Jam`) }}
+								</RouterLink>
 							</li>
 						</ul>
 					</nav>
@@ -163,20 +148,20 @@ export default class RouteCommunitiesViewEditChannelsEdit extends LegacyRouteCom
 			<template #controls>
 				<AppPageHeaderControls>
 					<AppButton
+						v-if="competition"
 						:to="{
 							name: 'communities.view.channel',
 						}"
 						block
 						icon="arrow-forward"
 					>
-						<AppTranslate v-if="competition">View Jam</AppTranslate>
-						<AppTranslate v-else>View Channel</AppTranslate>
+						{{ competition ? $gettext(`View Jam`) : $gettext(`View Channel`) }}
 					</AppButton>
 				</AppPageHeaderControls>
 			</template>
 		</AppPageHeader>
 
-		<router-view />
+		<RouterView />
 	</div>
 </template>
 

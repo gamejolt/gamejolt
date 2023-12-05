@@ -1,18 +1,19 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, ref, toRef } from 'vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
 import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import AppPagination from '../../../../../../_common/pagination/AppPagination.vue';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../_common/route/route-component';
 import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { UserBlockModel } from '../../../../../../_common/user/block/block.model';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
@@ -20,152 +21,138 @@ import FormCommunityBlock from '../../../../../components/forms/community/ban/bl
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 import { useCommunityRouteStore } from '../../view.store';
 
-@Options({
-	name: 'RouteCommunitiesViewEditBlocks',
-	components: {
-		AppCommunitiesViewPageContainer,
-		FormCommunityBlock,
-		AppCardListAdd,
-		AppCardList,
-		AppUserAvatarImg,
-		AppTimeAgo,
-		AppUserCardHover,
-		AppPagination,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	deps: { params: ['id'] },
-	resolver({ route }) {
-		return Api.sendRequest('/web/dash/communities/blocks/' + route.params.id);
-	},
-})
-export default class RouteCommunitiesViewEditBlocks extends LegacyRouteComponent {
-	routeStore = setup(() => useCommunityRouteStore())!;
+export default {
+	...defineAppRouteOptions({
+		deps: { params: ['id'] },
+		resolver({ route }) {
+			return Api.sendRequest('/web/dash/communities/blocks/' + route.params.id);
+		},
+	}),
+};
+</script>
 
-	isAdding = false;
-	blocks: UserBlockModel[] = [];
-	totalCount = 0;
-	perPage = 0;
+<script lang="ts" setup>
+const routeStore = useCommunityRouteStore()!;
 
-	page = 1;
-	// Default to showing new blocks first
-	sort = 'blocked-on';
-	sortDirection = 'desc';
+const blocks = ref<UserBlockModel[]>([]);
+const isAdding = ref(false);
+const totalCount = ref(0);
+const perPage = ref(0);
 
-	get community() {
-		return this.routeStore.community;
+const page = ref(1);
+// Default to showing new blocks first
+const sort = ref('blocked-on');
+const sortDirection = ref('desc');
+
+const community = toRef(() => routeStore.community);
+const hasBlocks = toRef(() => blocks.value.length > 0);
+
+const sortIcon = computed(() => {
+	if (sortDirection.value === 'asc') {
+		return 'chevron-up';
+	} else {
+		return 'chevron-down';
+	}
+});
+
+const sortDirectionLabel = computed(() => {
+	if (sortDirection.value === 'asc') {
+		return $gettext('Ascending');
+	} else {
+		return $gettext('Descending');
+	}
+});
+
+function onBlockSubmit() {
+	isAdding.value = false;
+	page.value = 1;
+	refetch();
+}
+
+async function refetch() {
+	const url = `/web/dash/communities/blocks/${community.value.id}?page=${page.value}&sort=${sort.value}&sort-direction=${sortDirection.value}`;
+	const payload = await Api.sendRequest(url);
+	blocks.value = UserBlockModel.populate(payload.blocks);
+}
+
+function changeSort(newSort: string) {
+	if (sort.value === newSort) {
+		sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+	} else {
+		sort.value = newSort;
+		sortDirection.value = 'asc';
 	}
 
-	get sortIcon() {
-		if (this.sortDirection === 'asc') {
-			return 'chevron-up';
+	page.value = 1;
+	refetch();
+}
+
+async function onClickLift(newBlock: UserBlockModel) {
+	const response = await showModalConfirm(
+		$gettext(
+			'Do you really want to lift the block for the user @%{ username } early? The reason they were blocked: %{ reason }',
+			{ username: newBlock.user.username, reason: newBlock.reason }
+		),
+		$gettext('Lift Block')
+	);
+
+	if (response) {
+		let success = false;
+		try {
+			const payload = await Api.sendRequest(
+				`/web/dash/communities/blocks/remove/${newBlock.id}`,
+				{},
+				{
+					detach: true,
+				}
+			);
+
+			success = payload && payload.success;
+		} catch (e) {
+			console.error(e);
+			success = false;
+		}
+
+		if (success) {
+			refetch();
 		} else {
-			return 'chevron-down';
+			showErrorGrowl($gettext('Failed to lift block.'));
 		}
-	}
-
-	get sortDirectionLabel() {
-		if (this.sortDirection === 'asc') {
-			return this.$gettext('Ascending');
-		} else {
-			return this.$gettext('Descending');
-		}
-	}
-
-	get hasBlocks() {
-		return this.blocks.length > 0;
-	}
-
-	routeResolved($payload: any) {
-		this.blocks = UserBlockModel.populate($payload.blocks);
-		this.totalCount = $payload.totalCount;
-		this.perPage = $payload.perPage;
-
-		if (this.blocks.length === 0) {
-			this.isAdding = true;
-		}
-	}
-
-	onBlockSubmit() {
-		this.isAdding = false;
-		this.page = 1;
-		this.refetch();
-	}
-
-	async refetch() {
-		const url = `/web/dash/communities/blocks/${this.community.id}?page=${this.page}&sort=${this.sort}&sort-direction=${this.sortDirection}`;
-		const payload = await Api.sendRequest(url);
-		this.blocks = UserBlockModel.populate(payload.blocks);
-	}
-
-	changeSort(sort: string) {
-		if (this.sort === sort) {
-			this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-		} else {
-			this.sort = sort;
-			this.sortDirection = 'asc';
-		}
-
-		this.page = 1;
-		this.refetch();
-	}
-
-	async onClickLift(block: UserBlockModel) {
-		const response = await showModalConfirm(
-			this.$gettext(
-				'Do you really want to lift the block for the user @%{ username } early? The reason they were blocked: %{ reason }',
-				{ username: block.user.username, reason: block.reason }
-			),
-			this.$gettext('Lift Block')
-		);
-
-		if (response) {
-			let success = false;
-			try {
-				const payload = await Api.sendRequest(
-					`/web/dash/communities/blocks/remove/${block.id}`,
-					{},
-					{
-						detach: true,
-					}
-				);
-
-				success = payload && payload.success;
-			} catch (e) {
-				console.error(e);
-				success = false;
-			}
-
-			if (success) {
-				this.refetch();
-			} else {
-				showErrorGrowl(this.$gettext('Failed to lift block.'));
-			}
-		}
-	}
-
-	onPageChanged(page: number) {
-		this.page = page;
-		this.refetch();
 	}
 }
+
+function onPageChanged(newPage: number) {
+	page.value = newPage;
+	refetch();
+}
+
+createAppRoute({
+	onResolved({ payload }) {
+		blocks.value = UserBlockModel.populate(payload.blocks);
+		totalCount.value = payload.totalCount;
+		perPage.value = payload.perPage;
+
+		if (blocks.value.length === 0) {
+			isAdding.value = true;
+		}
+	},
+});
 </script>
 
 <template>
 	<AppCommunitiesViewPageContainer full>
 		<h2 class="section-header">
-			<AppTranslate>Blocked Users</AppTranslate>
+			{{ $gettext(`Blocked Users`) }}
 		</h2>
 
 		<div class="page-help">
 			<p>
-				<AppTranslate>
+				{{
+					$gettext(`
 					Block users from contributing to this community. They will not be able to join
 					or post.
-				</AppTranslate>
+					`)
+				}}
 			</p>
 		</div>
 
@@ -179,25 +166,25 @@ export default class RouteCommunitiesViewEditBlocks extends LegacyRouteComponent
 				<thead>
 					<tr>
 						<th class="-header" @click="changeSort('name')">
-							<AppTranslate>Blocked user</AppTranslate>
+							{{ $gettext(`Blocked user`) }}
 							<span v-if="sort === 'name'">
 								<AppJolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th class="-header" @click="changeSort('blocker')">
-							<AppTranslate>Issued by</AppTranslate>
+							{{ $gettext(`Issued by`) }}
 							<span v-if="sort === 'blocker'">
 								<AppJolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th class="-header" @click="changeSort('blocked-on')">
-							<AppTranslate>Blocked on</AppTranslate>
+							{{ $gettext(`Blocked on`) }}
 							<span v-if="sort === 'blocked-on'">
 								<AppJolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
 						</th>
 						<th class="-header" @click="changeSort('expires-on')">
-							<AppTranslate>Expires</AppTranslate>
+							{{ $gettext(`Expires`) }}
 							<span v-if="sort === 'expires-on'">
 								<AppJolticon v-app-tooltip="sortDirectionLabel" :icon="sortIcon" />
 							</span>
@@ -255,7 +242,9 @@ export default class RouteCommunitiesViewEditBlocks extends LegacyRouteComponent
 						</td>
 
 						<td class="-info">
-							<AppTranslate v-if="!block.doesExpire"> Never </AppTranslate>
+							<span v-if="!block.doesExpire">
+								{{ $gettext(`Never`) }}
+							</span>
 							<AppTimeAgo v-else :date="block.expires_on" is-future />
 						</td>
 

@@ -4,5 +4,7 @@ import { lazyImportNoSSR } from '../../../../../../../../../_common/code-splitti
 export const routeCommunitiesViewEditChannelsCompetitionSettings: RouteRecordRaw = {
 	name: 'communities.view.edit.channels.competition.settings',
 	path: 'settings',
-	component: lazyImportNoSSR(() => import('./settings.vue')),
+	component: lazyImportNoSSR(
+		() => import('./RouteCommunitiesViewEditChannelsCompetitionSettings.vue')
+	),
 };
