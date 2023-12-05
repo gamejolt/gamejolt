@@ -35,9 +35,14 @@ const filteredUsers = computed(() => {
 			displayName: user.display_name.toLowerCase(),
 		};
 	});
-	return normalizedUserData.filter(
-		i => fuzzysearch(f, i.username) || fuzzysearch(f, i.displayName)
-	);
+
+	const result: UserModel[] = [];
+	for (const data of normalizedUserData) {
+		if (fuzzysearch(f, data.username) || fuzzysearch(f, data.displayName)) {
+			result.push(data.user);
+		}
+	}
+	return result;
 });
 
 onMounted(() => {
