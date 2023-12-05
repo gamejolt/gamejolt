@@ -54,9 +54,6 @@ const { user } = useCommonStore();
 const scoreTables = ref<GameScoreTableModel[]>([]);
 const scoreTable = ref<GameScoreTableModel | null>(null);
 const scores = ref<UserGameScoreModel[]>([]);
-let userScorePlacement = 0;
-let userScoreExperience = 0;
-let userBestScore: UserGameScoreModel | null = null;
 
 const type = computed(() => route.params.type as 'user' | 'best');
 // Even.
@@ -88,11 +85,6 @@ const { isLoading } = createAppRoute({
 		scoreTables.value = GameScoreTableModel.populate(payload.scoreTables);
 		scoreTable.value = payload.scoreTable ? new GameScoreTableModel(payload.scoreTable) : null;
 		scores.value = UserGameScoreModel.populate(payload.scores);
-		userBestScore = payload.scoresUserBestScore
-			? new UserGameScoreModel(payload.scoresUserBestScore)
-			: null;
-		userScorePlacement = payload.scoresUserScorePlacement || 0;
-		userScoreExperience = payload.scoresUserScoreExperience || 0;
 	},
 });
 </script>
