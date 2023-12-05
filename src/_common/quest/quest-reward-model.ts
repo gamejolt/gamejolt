@@ -1,11 +1,12 @@
 import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
+import { QuestRewardTypes } from './quest-objective-reward-model';
 
 /**
  * A reward for completing a quest objective that has not been achieved yet.
  * Used for example to display quest rewards before the user completed it.
  *
- * @see QuestObjectiveReward for reward for completed objectives.
+ * @see QuestObjectiveRewardModel for reward for completed objectives.
  */
 export class QuestRewardModel extends Model {
 	constructor(data: any = {}) {
@@ -17,7 +18,7 @@ export class QuestRewardModel extends Model {
 	}
 
 	declare objective_id: number;
-	declare type: number;
+	declare type: QuestRewardTypes;
 	declare is_condensed: boolean;
 	declare is_secret: boolean;
 	declare name: string;

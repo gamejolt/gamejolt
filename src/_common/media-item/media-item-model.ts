@@ -172,3 +172,11 @@ export class MediaItemModel extends Model implements LightboxMediaModel {
 		};
 	}
 }
+
+export function getMediaItemImageSrc(media: MediaItemModel) {
+	if (media.img_url && media.is_animated) {
+		return { src: media.img_url, isMediaserver: false };
+	} else {
+		return { src: media.mediaserver_url, isMediaserver: true };
+	}
+}

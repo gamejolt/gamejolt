@@ -5,27 +5,31 @@ import { Model } from '../model/model.service';
 import { SiteTrophyModel } from '../site/trophy/trophy.model';
 import { StickerRewardModel } from '../sticker/sticker-reward-model';
 
-export const QuestRewardTypes = {
-	exp: 0,
-	sticker: 1,
-	siteTrophy: 2,
-	randomSticker: 3,
+export const enum QuestRewardTypes {
+	// Not ever used.
+	//
+	// TODO(quest-rewards) remove this, treat as `custom` or something. Change
+	// to PascalCase.
+	exp = 0,
+	sticker = 1,
+	siteTrophy = 2,
+	randomSticker = 3,
 
 	/**
 	 * Should just use the fallback values so we can display it however backend
 	 * wants to.
 	 */
-	custom: 4,
-	background: 5,
+	custom = 4,
+	background = 5,
 
 	/**
 	 * Adds charge to the StickerStore.
 	 */
-	userCharge: 6,
-	coin: 7,
-	stickerPack: 8,
-	avatarFrame: 9,
-} as const;
+	userCharge = 6,
+	coin = 7,
+	stickerPack = 8,
+	avatarFrame = 9,
+}
 
 export class QuestObjectiveRewardModel extends Model {
 	constructor(data: any = {}) {
@@ -122,11 +126,11 @@ export class QuestObjectiveRewardModel extends Model {
 				break;
 
 			case QuestRewardTypes.stickerPack:
-				result = 'Sticker Pack';
+				result = 'Sticker pack';
 				break;
 
 			case QuestRewardTypes.avatarFrame:
-				result = 'Avatar Frame';
+				result = 'Avatar frame';
 				break;
 		}
 

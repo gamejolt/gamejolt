@@ -12,6 +12,10 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
+	alt: {
+		type: String,
+		default: '',
+	},
 });
 
 const emit = defineEmits({
@@ -74,5 +78,5 @@ async function _updateSrc() {
 </script>
 
 <template>
-	<img ref="root" class="img-responsive" :src="processedSrc" />
+	<img ref="root" class="img-responsive" :src="processedSrc" :alt="alt" />
 </template>

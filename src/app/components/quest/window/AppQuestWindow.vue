@@ -377,8 +377,9 @@ const fillStyles: CSSProperties = {
 											:key="quest.id"
 											:style="{
 												marginTop: `12px`,
-												display: `flex`,
-												gap: `12px`,
+												display: `grid`,
+												gridTemplateColumns: `repeat(auto-fill, minmax(120px, 1fr))`,
+												gap: `8px`,
 											}"
 										>
 											<template v-for="reward of rewards" :key="reward.id">
