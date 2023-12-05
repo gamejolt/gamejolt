@@ -31,7 +31,7 @@ const { heading } = useAccountRouteController()!;
 const { user } = useCommonStore();
 const router = useRouter();
 
-let accounts: LinkedAccountModel[] = [];
+const accounts = ref<LinkedAccountModel[]>([]);
 const loading = ref(false);
 
 const facebookAccount = computed(() => getAccount(LinkedAccountProvider.Facebook));
@@ -39,8 +39,8 @@ const googleAccount = computed(() => getAccount(LinkedAccountProvider.Google));
 const twitchAccount = computed(() => getAccount(LinkedAccountProvider.Twitch));
 
 function getAccount(provider: LinkedAccountProvider) {
-	if (accounts) {
-		for (const account of accounts) {
+	if (accounts.value) {
+		for (const account of accounts.value) {
 			if (account.provider === provider) {
 				return account;
 			}
@@ -65,7 +65,7 @@ async function onUnlink(provider: LinkedAccountProvider) {
 		{}
 	);
 	if (response.success) {
-		accounts = LinkedAccountModel.populate(response.accounts);
+		accounts.value = LinkedAccountModel.populate(response.accounts);
 		const providerName = getLinkedAccountProviderDisplayName(provider);
 		showSuccessGrowl(
 			$gettext(`Your %{ provider } account has been unlinked from the site.`, {
@@ -102,7 +102,7 @@ createAppRoute({
 		heading.value = $gettext(`Linked Accounts`);
 	},
 	onResolved({ payload }) {
-		accounts = LinkedAccountModel.populate(payload.accounts);
+		accounts.value = LinkedAccountModel.populate(payload.accounts);
 	},
 });
 </script>
