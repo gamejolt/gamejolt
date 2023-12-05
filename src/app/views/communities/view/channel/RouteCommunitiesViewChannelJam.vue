@@ -201,10 +201,7 @@ createAppRoute({
 
 				<div v-if="canToggleDescription" class="page-cut page-cut-no-margin">
 					<AppButton trans @click="toggleDescription()">
-						<div v-if="!isDescriptionOpen">
-							{{ $gettext(`Show More`) }}
-						</div>
-						<div v-else>{{ $gettext(`Less`) }}</div>
+						{{ !isDescriptionOpen ? $gettext(`Show More`) : $gettext(`Less`) }}
 					</AppButton>
 				</div>
 			</div>

@@ -242,20 +242,17 @@ createAppRoute({
 			<template v-if="entryCount === 0">
 				<AppIllustration :asset="illNoCommentsSmall">
 					<p>
-						<template v-if="competition.periodNum >= CompetitionPeriodVoting">
+						<span>
 							{{
-								$gettext(
-									`No new entries can be submitted to the jam, and none have been submitted during its runtime.`
-								)
+								competition.periodNum >= CompetitionPeriodVoting
+									? $gettext(
+											`No new entries can be submitted to the jam, and none have been submitted during its runtime.`
+									  )
+									: $gettext(
+											`There are currently no submissions entered into the jam yet. Once they are entered, they will show up here.`
+									  )
 							}}
-						</template>
-						<template v-else>
-							{{
-								$gettext(
-									`There are currently no submissions entered into the jam yet. Once they are entered, they will show up here.`
-								)
-							}}
-						</template>
+						</span>
 					</p>
 				</AppIllustration>
 			</template>
@@ -394,10 +391,11 @@ createAppRoute({
 										sm
 										@click="onClickRemoveEntry(entry)"
 									>
-										<div v-if="entry.is_removed">
-											{{ $gettext(`Readmit Entry`) }}
-										</div>
-										<div v-else>{{ $gettext(`Hide Entry`) }}</div>
+										{{
+											entry.is_removed
+												? $gettext(`Readmit Entry`)
+												: $gettext(`Hide Entry`)
+										}}
 									</AppButton>
 								</td>
 							</tr>

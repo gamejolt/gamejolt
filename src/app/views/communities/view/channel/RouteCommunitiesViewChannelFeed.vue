@@ -186,10 +186,9 @@ const appRoute = createAppRoute({
 	<AppCommunitiesViewPageContainer>
 		<template #default>
 			<h1 class="section-header" :class="{ 'h2 -text-overflow': Screen.isMobile }">
-				<div v-if="channel === routeStore.allChannel">
+				<template v-if="channel === routeStore.allChannel">
 					{{ $gettext(`All Posts`) }}
-				</div>
-
+				</template>
 				<template v-else-if="channel">{{ channel.displayTitle }}</template>
 				<small v-if="Screen.isDesktop">{{ ' ' }} in {{ community.name }}</small>
 			</h1>

@@ -242,10 +242,10 @@ createAppRoute({
 						</td>
 
 						<td class="-info">
-							<div v-if="!block.doesExpire">{{ $gettext(`Never`) }}</div>
-							<div v-else>
-								<AppTimeAgo :date="block.expires_on" is-future />
-							</div>
+							<span v-if="!block.doesExpire">
+								{{ $gettext(`Never`) }}
+							</span>
+							<AppTimeAgo v-else :date="block.expires_on" is-future />
 						</td>
 
 						<td>
