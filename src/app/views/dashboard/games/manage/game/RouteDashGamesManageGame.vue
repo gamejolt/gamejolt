@@ -1,5 +1,4 @@
 <script lang="ts">
-import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
@@ -14,6 +13,7 @@ import { showGameHeaderModal } from '../../../../../components/game/header-modal
 import { useGameDashRouteController } from '../manage.store';
 import AppManageGameMediaBar from './_media-bar/media-bar.vue';
 import AppManageGameNav from './_nav/nav.vue';
+
 export default {
 	...defineAppRouteOptions({}),
 };
@@ -27,9 +27,7 @@ function showEditHeader() {
 	showGameHeaderModal(game.value!);
 }
 
-createAppRoute({
-	routeTitle: computed(() => ``),
-});
+createAppRoute({});
 </script>
 
 <template>

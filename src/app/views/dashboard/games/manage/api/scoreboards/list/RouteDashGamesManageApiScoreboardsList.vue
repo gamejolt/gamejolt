@@ -38,7 +38,7 @@ const { game } = useGameDashRouteController()!;
 
 const scoreTables = ref<GameScoreTableModel[]>([]);
 const isAdding = ref(false);
-const activeItem = ref<GameScoreTableModel | undefined>(undefined);
+const activeItem = ref<GameScoreTableModel | undefined>();
 
 const currentSort = computed(() => scoreTables.value.map(item => item.id));
 
@@ -194,11 +194,7 @@ createAppRoute({
 										"
 										class="tag"
 									>
-										<AppTranslate
-											translate-comment="As in going from lowest to highest"
-										>
-											Ascending
-										</AppTranslate>
+										{{ $gettext(`Ascending`) }}
 									</span>
 									<span
 										v-if="
@@ -212,11 +208,7 @@ createAppRoute({
 										"
 										class="tag"
 									>
-										<AppTranslate
-											translate-comment="As in going from lowest to highest"
-										>
-											Descending
-										</AppTranslate>
+										{{ $gettext(`Descending`) }}
 									</span>
 								</div>
 

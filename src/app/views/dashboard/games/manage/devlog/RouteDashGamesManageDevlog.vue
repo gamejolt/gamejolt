@@ -23,6 +23,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 	const tab = route.query.tab || 'active';
 	return `/web/posts/fetch/game/${route.params.id}?tab=${tab}`;
 }
+
 export default {
 	...defineAppRouteOptions({
 		cache: false,
@@ -40,8 +41,8 @@ const router = useRouter();
 const { game } = useGameDashRouteController()!;
 
 const feed = ref(null) as Ref<ActivityFeedView | null>;
-
 const tab = toRef(() => route.query.tab || 'active');
+const isBootstrapped = ref(false);
 
 function onPostAdded(post: FiresidePostModel) {
 	ActivityFeedService.onPostAdded({
@@ -74,10 +75,10 @@ function onPostPublished(eventItem: EventItemModel) {
 const appRoute = createAppRoute({
 	routeTitle: computed(() => $gettext('Manage Devlog')),
 	onInit() {
-		// TODO(component-setup-refactor-routes-0): is it okay to refer appRoute in this functor, or should I create a ref?
-		feed.value = ActivityFeedService.routeInit(appRoute.isBootstrapped.value);
+		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);
 	},
 	onResolved({ payload, fromCache }) {
+		isBootstrapped.value = true;
 		feed.value = ActivityFeedService.routed(
 			feed.value,
 			{
@@ -94,7 +95,7 @@ const appRoute = createAppRoute({
 </script>
 
 <template>
-	<AppShellPageBackdrop v-if="appRoute.isBootstrapped">
+	<AppShellPageBackdrop v-if="isBootstrapped">
 		<section class="section">
 			<div class="container">
 				<div class="row">

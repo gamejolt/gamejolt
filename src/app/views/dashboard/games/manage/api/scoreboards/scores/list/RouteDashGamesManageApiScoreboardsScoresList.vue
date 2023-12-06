@@ -45,7 +45,6 @@ function changeTable() {
 			table: selectedTable.value,
 		}),
 	});
-	// $state.go($state.current, { table: tableId });
 }
 
 function onScoreRemoved(score: UserGameScoreModel) {

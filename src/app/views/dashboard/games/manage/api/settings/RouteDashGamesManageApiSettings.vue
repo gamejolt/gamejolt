@@ -101,14 +101,11 @@ createAppRoute({
 							<th>
 								{{ $gettext(`Game ID`) }}
 							</th>
-							<td>{{ game.id }}</td>
+							<td>{{ game?.id }}</td>
 						</tr>
 						<tr>
 							<th>
-								<!-- TODO(component-setup-refactor-routes-2): AppTranslate with translate-comment-->
-								<AppTranslate translate-comment="This refers to game API key">
-									Private Key
-								</AppTranslate>
+								{{ $gettext(`Private Key`) }}
 							</th>
 							<td>
 								<template v-if="shouldShowKey">
@@ -117,11 +114,7 @@ createAppRoute({
 								</template>
 								<p v-else>
 									<a class="link-muted" @click="shouldShowKey = true">
-										<AppTranslate
-											translate-comment="This refers to game API key"
-										>
-											(show key)
-										</AppTranslate>
+										{{ $gettext(`(show key)`) }}
 									</a>
 								</p>
 

@@ -27,6 +27,13 @@ import AppTrophyThumbnail from '../../../../../../../_common/trophy/thumbnail/Ap
 import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
+const trophyLabels = {
+	[BaseTrophyDifficulty.Bronze]: $gettext('Bronze'),
+	[BaseTrophyDifficulty.Silver]: $gettext('Silver'),
+	[BaseTrophyDifficulty.Gold]: $gettext('Gold'),
+	[BaseTrophyDifficulty.Platinum]: $gettext('Platinum'),
+};
+
 export default {
 	...defineAppRouteOptions({
 		deps: {},
@@ -56,27 +63,14 @@ const groupedTrophies = computed(() => {
 	return newTrophies;
 });
 
-const trophyLabels = computed(() => {
-	return {
-		[BaseTrophyDifficulty.Bronze]: $gettext('Bronze'),
-		[BaseTrophyDifficulty.Silver]: $gettext('Silver'),
-		[BaseTrophyDifficulty.Gold]: $gettext('Gold'),
-		[BaseTrophyDifficulty.Platinum]: $gettext('Platinum'),
-	};
-});
+const trophySorts = computed(() => ({
+	[BaseTrophyDifficulty.Bronze]: getTrophyGroup(BaseTrophyDifficulty.Bronze),
+	[BaseTrophyDifficulty.Silver]: getTrophyGroup(BaseTrophyDifficulty.Silver),
+	[BaseTrophyDifficulty.Gold]: getTrophyGroup(BaseTrophyDifficulty.Gold),
+	[BaseTrophyDifficulty.Platinum]: getTrophyGroup(BaseTrophyDifficulty.Platinum),
+}));
 
-const trophySorts = computed(() => {
-	return {
-		[BaseTrophyDifficulty.Bronze]: getTrophyGroup(BaseTrophyDifficulty.Bronze),
-		[BaseTrophyDifficulty.Silver]: getTrophyGroup(BaseTrophyDifficulty.Silver),
-		[BaseTrophyDifficulty.Gold]: getTrophyGroup(BaseTrophyDifficulty.Gold),
-		[BaseTrophyDifficulty.Platinum]: getTrophyGroup(BaseTrophyDifficulty.Platinum),
-	};
-});
-
-const hasHiddenTrophies = computed(() => {
-	return trophies.value.filter(item => !item.visible).length > 0;
-});
+const hasHiddenTrophies = computed(() => trophies.value.filter(item => !item.visible).length > 0);
 
 function getTrophyGroup(difficulty: number) {
 	const arrayOfTrophies = groupedTrophies.value[difficulty];

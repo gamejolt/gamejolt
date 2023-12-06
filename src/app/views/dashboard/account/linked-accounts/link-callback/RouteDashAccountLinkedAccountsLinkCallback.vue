@@ -1,5 +1,4 @@
 <script lang="ts">
-import { computed } from 'vue';
 import { RouteLocationNormalized, useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
@@ -49,7 +48,6 @@ const router = useRouter();
 const { user } = useCommonStore();
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onResolved({ payload }) {
 		if (!user.value) {
 			return;
@@ -129,13 +127,7 @@ createAppRoute({
 	},
 });
 </script>
-<template>
-	<!--TODO(component-setup-refactor-routes-2):
-	the render() just returned an empty div:
-		-> return h('div');
-	should I put an empty div or a RouterView?
 
-	-->
-	<RouterView />
-	<div></div>
+<template>
+	<div />
 </template>

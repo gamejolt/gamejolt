@@ -21,9 +21,7 @@ export default {
 
 <script lang="ts" setup>
 const themeStore = useThemeStore();
-const routeStore = useGameDashRouteController()!;
-
-const { game } = routeStore;
+const { game, populateMedia } = useGameDashRouteController()!;
 
 function onSubmit() {
 	themeStore.setPageTheme({
@@ -42,7 +40,7 @@ createAppRoute({
 		return null;
 	}),
 	onResolved({ payload }) {
-		routeStore.populateMedia(payload.mediaItems || []);
+		populateMedia(payload.mediaItems || []);
 	},
 });
 </script>

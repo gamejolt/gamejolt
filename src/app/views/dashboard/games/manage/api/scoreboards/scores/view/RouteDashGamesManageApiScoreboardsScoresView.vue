@@ -113,10 +113,7 @@ const { isBootstrapped } = createAppRoute({
 					</tr>
 					<tr>
 						<th>
-							<!-- TODO(component-setup-refactor-routes-2): AppTranslate with translate-comment-->
-							<AppTranslate translate-comment="Refers to game scoreboard table">
-								Table
-							</AppTranslate>
+							{{ $gettext(`Table`) }}
 						</th>
 						<td>
 							<RouterLink

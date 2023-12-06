@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { Ref, computed, ref } from 'vue';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { formatDuration } from '../../../../../../../_common/filters/duration';
 import { formatNumber } from '../../../../../../../_common/filters/number';
@@ -51,20 +51,20 @@ createAppRoute({
 	onResolved({ payload }) {
 		sessionStats.value = payload.sessionStats;
 
-		const fields = [
-			'numActiveTrophies',
-			'totalTrophyExp',
-			'totalAchievedTrophies',
-			'totalUsersWithTrophies',
-			'totalScores',
-			'totalUsersWithScores',
-			'numActiveSessions',
-			'numGlobalItems',
-		];
+		const fields: Record<string, Ref<number>> = {
+			numActiveTrophies: numActiveTrophies,
+			totalTrophyExp: totalTrophyExp,
+			totalAchievedTrophies: totalAchievedTrophies,
+			totalUsersWithTrophies: totalUsersWithTrophies,
+			totalScores: totalScores,
+			totalUsersWithScores: totalUsersWithScores,
+			numActiveSessions: numActiveSessions,
+			numGlobalItems: numGlobalItems,
+		};
 
-		fields.forEach(field => {
-			(this as any)[field] = payload[field] || 0;
-		});
+		for (const [key, field] of Object.entries(fields)) {
+			field.value = payload[key] || 0;
+		}
 	},
 });
 </script>
@@ -108,9 +108,7 @@ createAppRoute({
 		</div>
 
 		<h2 class="sans-margin-bottom">
-			<AppTranslate translate-comment="This refers to game API sessions"
-				>Sessions</AppTranslate
-			>
+			{{ $gettext(`Sessions`) }}
 		</h2>
 
 		<p class="text-muted small">
@@ -122,9 +120,7 @@ createAppRoute({
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game API sessions">
-								Active Sessions
-							</AppTranslate>
+							{{ $gettext(`Active Sessions`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(numActiveSessions) }}
@@ -134,11 +130,7 @@ createAppRoute({
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate
-								translate-comment="This refers to the total session time logged for a game"
-							>
-								Total Time
-							</AppTranslate>
+							{{ $gettext(`Total Time`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatDuration(sessionStats.time || 0) }}
@@ -148,9 +140,7 @@ createAppRoute({
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game API sessions">
-								Avg. Session Time
-							</AppTranslate>
+							{{ $gettext(`Avg. Session Time`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatDuration(sessionStats.avg || 0) }}
@@ -160,9 +150,7 @@ createAppRoute({
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate tarnslate-comment="This refers to game API sessions">
-								Users w/ Sessions
-							</AppTranslate>
+							{{ $gettext(`Users w/ Sessions`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(sessionStats['user-count']) }}
@@ -174,9 +162,7 @@ createAppRoute({
 
 		<h2>
 			<RouterLink class="link-unstyled" :to="{ name: 'dash.games.manage.api.trophies.list' }">
-				<AppTranslate translate-comment="This refers to game trophies">
-					Trophies
-				</AppTranslate>
+				{{ $gettext(`Trophies`) }}
 			</RouterLink>
 		</h2>
 
@@ -185,9 +171,7 @@ createAppRoute({
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game trophies">
-								Trophies
-							</AppTranslate>
+							{{ $gettext(`Trophies`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(numActiveTrophies) }}
@@ -197,9 +181,7 @@ createAppRoute({
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game trophies">
-								Trophy EXP
-							</AppTranslate>
+							{{ $gettext(`Trophy EXP`) }}
 							{{ ' ' }}
 							<AppJolticon
 								v-app-tooltip.touchable="
@@ -214,11 +196,7 @@ createAppRoute({
 							</template>
 							<template v-else>
 								{{ formatNumber(totalTrophyExp) + ' ' }}
-								<AppTranslate
-									translate-comment="As in abbreviation for experience. If one doesnt exist for your language, or if its not a short word just leave it as EXP."
-								>
-									EXP
-								</AppTranslate>
+								{{ $gettext(`EXP`) }}
 							</template>
 						</div>
 					</div>
@@ -226,9 +204,7 @@ createAppRoute({
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game trophies">
-								Trophies Achieved
-							</AppTranslate>
+							{{ $gettext(`Trophies Achieved`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(totalAchievedTrophies) }}
@@ -238,9 +214,7 @@ createAppRoute({
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game trophies">
-								Users w/ Trophies
-							</AppTranslate>
+							{{ $gettext(`Users w/ Trophies`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(totalUsersWithTrophies) }}
@@ -255,7 +229,7 @@ createAppRoute({
 				class="link-unstyled"
 				:to="{ name: 'dash.games.manage.api.scoreboards.list' }"
 			>
-				<AppTranslate translate-comment="This refers to game scores">Scores</AppTranslate>
+				{{ $gettext(`Scores`) }}
 			</RouterLink>
 		</h2>
 
@@ -264,9 +238,7 @@ createAppRoute({
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game scores">
-								Total Scores
-							</AppTranslate>
+							{{ $gettext(`Total Scores`) }}
 							{{ ' ' }}
 							<AppJolticon
 								v-app-tooltip.touchable="
@@ -309,9 +281,7 @@ createAppRoute({
 				class="link-unstyled"
 				:to="{ name: 'dash.games.manage.api.data-storage.items.list' }"
 			>
-				<AppTranslate translate-comment="This is referring to the Game API data store">
-					Data Store
-				</AppTranslate>
+				{{ $gettext(`Data Store`) }}
 			</RouterLink>
 		</h2>
 
@@ -320,11 +290,7 @@ createAppRoute({
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate
-								translate-comment="This is referring to global items set in the Game API data store."
-							>
-								Global Items
-							</AppTranslate>
+							{{ $gettext(`Global Items`) }}
 							{{ ' ' }}
 							<AppJolticon
 								v-app-tooltip.touchable="

@@ -144,7 +144,7 @@ const { isBootstrapped } = createAppRoute({
 			v-if="scores.length"
 			:score-table="scoreTable"
 			:scores="scores"
-			:is-for-user="true"
+			is-for-user
 			@remove="onScoreRemoved"
 		/>
 	</div>

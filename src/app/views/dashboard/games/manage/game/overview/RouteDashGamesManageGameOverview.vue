@@ -98,9 +98,16 @@ createAppRoute({
 					<AppProgressBar thin active indeterminate :percent="100" />
 
 					<p>
-						<span v-translate>
-							<strong>You still have builds that are being processed.</strong>
-							They won't show on your game page until they're finished processing.
+						<span>
+							<strong>
+								{{ $gettext(`You still have builds that are being processed.`) }}
+							</strong>
+							{{ ' ' }}
+							{{
+								$gettext(
+									`They won't show on your game page until they're finished processing.`
+								)
+							}}
 						</span>
 					</p>
 				</div>
@@ -116,7 +123,6 @@ createAppRoute({
 						</p>
 
 						<AppGamePerms required="all" tag="div" class="alert-actions">
-							<!-- TODO(vue3) translate-comment="Flavor text that shows up when you hover over the publish game button" -->
 							<AppButton
 								v-app-tooltip="$gettext(`Ohhhh, yeah!`)"
 								primary
@@ -158,7 +164,7 @@ createAppRoute({
 			<AppCommunityPerms :community="game!.community">
 				<div class="col-lg-8">
 					<RouterLink :to="game!.community.routeEditLocation">
-						<AppButton icon="users">Edit Community</AppButton>
+						<AppButton icon="users">{{ $gettext(`Edit Community`) }}</AppButton>
 					</RouterLink>
 				</div>
 			</AppCommunityPerms>
