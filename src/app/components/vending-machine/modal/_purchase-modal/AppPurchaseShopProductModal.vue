@@ -25,7 +25,6 @@ import { illExtremeSadness } from '../../../../../_common/illustration/illustrat
 import AppShopProductDisplay from '../../../../../_common/inventory/shop/AppShopProductDisplay.vue';
 import {
 	InventoryShopProductSaleModel,
-	giftShopProduct,
 	purchaseShopProduct,
 } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import {
@@ -377,19 +376,14 @@ async function purchaseProduct(currency: Currency) {
 		}
 	};
 
-	const baseData = {
+	await purchaseShopProduct({
 		sale: sale.value,
 		stickerPacks,
 		currency,
 		balanceRefs,
 		onSuccess,
-	};
-
-	if (giftTo) {
-		await giftShopProduct(baseData, { giftTo });
-	} else {
-		await purchaseShopProduct(baseData);
-	}
+		giftTo,
+	});
 
 	processingPurchaseCurrencyId.value = undefined;
 }

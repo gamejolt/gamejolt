@@ -100,6 +100,7 @@ interface PurchaseData {
 	stickerPacks: Ref<UserStickerPackModel[]>;
 	beforeRequest?: () => void;
 	onSuccess?: () => void;
+	giftTo?: UserModel;
 }
 
 function _validateCurrency({ sale, currency, balanceRefs }: PurchaseData) {
@@ -115,7 +116,7 @@ function _validateCurrency({ sale, currency, balanceRefs }: PurchaseData) {
  * Purchases a shop product without asking for confirmation.
  */
 export async function purchaseShopProduct(data: PurchaseData) {
-	const { sale, currency, stickerPacks, balanceRefs, beforeRequest, onSuccess } = data;
+	const { sale, currency, stickerPacks, balanceRefs, beforeRequest, onSuccess, giftTo } = data;
 
 	const pricing = _validateCurrency(data);
 	if (!pricing) {
@@ -131,29 +132,50 @@ export async function purchaseShopProduct(data: PurchaseData) {
 		beforeRequest();
 	}
 
+	if (giftTo) {
+		trackGiftAction({
+			action: 'send',
+			currency: currency,
+			userId: giftTo.id,
+			saleId: sale.id,
+		});
+	}
+
 	try {
-		const response = await Api.sendRequest(
-			`/web/inventory/shop/purchase/${pricing.id}`,
-			{},
-			{ detach: true }
-		);
+		const body = {} as any;
+		if (giftTo) {
+			body.target_resource_id = giftTo.id;
+		}
+
+		const response = await Api.sendRequest(`/web/inventory/shop/purchase/${pricing.id}`, body, {
+			detach: true,
+		});
 
 		if (response.success === false) {
 			throw new Error(`Failed to purchase product`);
 		}
 
-		const rawProduct = response.product;
-		handleProductReceipt({
-			balanceRefs,
-			productType: sale.product_type,
-			rawProduct,
-			stickerPacks,
-			currencyData: {
-				newBalance: response.new_balance,
-				currency,
-			},
-			onSuccess,
-		});
+		const currencyData: CurrencyData = {
+			newBalance: response.new_balance,
+			currency,
+		};
+
+		if (giftTo) {
+			// Gifting only cares about updating the balance.
+			processNewCurrencyBalance({ currencyData, balanceRefs });
+			onSuccess?.();
+		} else {
+			// Purchasing for self should do additional processing to get the
+			// product, display it, etc.
+			handleProductReceipt({
+				balanceRefs,
+				productType: sale.product_type,
+				rawProduct: response.product,
+				stickerPacks,
+				currencyData,
+				onSuccess,
+			});
+		}
 	} catch (e) {
 		console.error('Error purchasing product', {
 			currencyType: pricing.knownCurrencyType,
@@ -168,66 +190,27 @@ export async function purchaseShopProduct(data: PurchaseData) {
 	}
 }
 
-export async function giftShopProduct(data: PurchaseData, { giftTo }: { giftTo: UserModel }) {
-	const { sale, currency, balanceRefs, beforeRequest, onSuccess } = data;
+interface CurrencyData {
+	newBalance: unknown;
+	currency: Currency;
+}
 
-	const pricing = _validateCurrency(data);
-	if (!pricing) {
-		showErrorGrowl(
-			$gettext(`You don't have enough %{ label } to purchase this product.`, {
-				label: currency.label,
-			})
-		);
-		return;
-	}
-
-	if (beforeRequest) {
-		beforeRequest();
-	}
-
-	trackGiftAction({
-		action: 'send',
-		currency: currency,
-		userId: giftTo.id,
-		saleId: sale.id,
-	});
-
-	try {
-		const response = await Api.sendRequest(
-			`/web/inventory/gift/${pricing.id}/User/${giftTo.id}`,
-			{},
-			{ detach: true }
-		);
-
-		if (response.success === false) {
-			throw new Error(`Failed to purchase product`);
+function processNewCurrencyBalance({
+	currencyData: { newBalance, currency },
+	balanceRefs,
+}: {
+	currencyData: CurrencyData;
+	balanceRefs: BalanceRefs;
+}) {
+	if (typeof newBalance === 'number') {
+		switch (currency) {
+			case CurrencyType.coins:
+				balanceRefs.coinBalance.value = Math.max(0, newBalance);
+				break;
+			case CurrencyType.joltbux:
+				balanceRefs.joltbuxBalance.value = Math.max(0, newBalance);
+				break;
 		}
-
-		const newBalance = response.new_balance;
-		if (typeof newBalance === 'number') {
-			switch (currency) {
-				case CurrencyType.coins:
-					balanceRefs.coinBalance.value = Math.max(0, newBalance);
-					break;
-				case CurrencyType.joltbux:
-					balanceRefs.joltbuxBalance.value = Math.max(0, newBalance);
-					break;
-			}
-		}
-
-		onSuccess?.();
-	} catch (e) {
-		console.error('Error gifting product', {
-			currencyType: pricing.knownCurrencyType,
-			pricingId: pricing.id,
-			saleId: sale.id,
-			toUserId: giftTo.id,
-		});
-		showErrorGrowl(
-			$gettext(
-				`Something went wrong while gifting this item. Please try again in a few minutes.`
-			)
-		);
 	}
 }
 
@@ -243,10 +226,7 @@ export async function handleProductReceipt({
 	productType: string;
 	balanceRefs?: BalanceRefs;
 	stickerPacks?: Ref<UserStickerPackModel[]>;
-	currencyData?: {
-		newBalance?: number;
-		currency?: Currency;
-	};
+	currencyData?: CurrencyData;
 	onSuccess?: () => void;
 }) {
 	if (!rawProduct.id) {
@@ -257,19 +237,11 @@ export async function handleProductReceipt({
 		onSuccess();
 	}
 
-	if (currencyData != null && balanceRefs) {
-		const { currency, newBalance } = currencyData;
-
-		if (newBalance != null) {
-			switch (currency) {
-				case CurrencyType.coins:
-					balanceRefs.coinBalance.value = Math.max(0, newBalance);
-					break;
-				case CurrencyType.joltbux:
-					balanceRefs.joltbuxBalance.value = Math.max(0, newBalance);
-					break;
-			}
-		}
+	if (currencyData && balanceRefs) {
+		processNewCurrencyBalance({
+			currencyData,
+			balanceRefs,
+		});
 	}
 
 	let item: UserStickerPackModel | UserAvatarFrameModel | BackgroundModel | null = null;
