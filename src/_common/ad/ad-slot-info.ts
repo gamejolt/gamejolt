@@ -6,7 +6,7 @@ export type AdSlotSize =
 	| 'skyscraper-1'
 	| 'skyscraper-2';
 
-export type AdSlotPlacement = 'content' | 'side' | 'top' | 'feed';
+export type AdSlotPlacement = 'content' | 'side' | 'top';
 
 export class AdSlot {
 	constructor(public readonly size: AdSlotSize, public readonly placement: AdSlotPlacement) {}

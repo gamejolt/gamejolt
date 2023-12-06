@@ -1,6 +1,7 @@
 <script lang="ts">
 import { PropType, computed, toRef, toRefs } from 'vue';
 import draggable from 'vuedraggable';
+import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
 import { isAdEnthused, useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { formatNumber } from '../../../../_common/filters/number';
@@ -63,7 +64,7 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 
 const id = ++idCounter;
 
-const shouldShowAds = toRef(() => !canReorder.value && showAds.value && globalShouldShowAds);
+const shouldShowAds = toRef(() => !canReorder.value && showAds.value && globalShouldShowAds.value);
 const isScrollable = toRef(() => (Screen.isXs && scrollable.value) || forceScrollable.value);
 const shouldShowStickyVideoAd = toRef(() => isAdEnthused && Screen.width >= 2100);
 
@@ -156,7 +157,7 @@ function shouldShowAd(index: number) {
 		</p>
 
 		<div :class="{ 'scrollable-grid': isScrollable }">
-			<div class="_game-grid-items">
+			<AppAdFeedParent :is-active="shouldShowAds" class="_game-grid-items">
 				<div v-if="Screen.isDesktop && shouldShowAds" class="_game-grid-ad">
 					<div
 						:style="{
@@ -175,7 +176,7 @@ function shouldShowAd(index: number) {
 							<div class="_game-grid-ad-inner">
 								<AppAdWidget
 									:size="shouldShowStickyVideoAd ? 'video' : 'rectangle-fix'"
-									placement="feed"
+									placement="content"
 								/>
 							</div>
 						</AppScrollAffix>
@@ -214,7 +215,7 @@ function shouldShowAd(index: number) {
 					<template v-for="(game, i) of processedGames" :key="game.id">
 						<div v-if="shouldShowAd(i)" class="_game-grid-ad">
 							<div class="_game-grid-ad-inner">
-								<AppAdWidget size="rectangle" placement="feed" />
+								<AppAdWidget size="rectangle" placement="content" />
 							</div>
 						</div>
 						<div class="_game-grid-item">
@@ -231,7 +232,7 @@ function shouldShowAd(index: number) {
 						</div>
 					</template>
 				</template>
-			</div>
+			</AppAdFeedParent>
 		</div>
 	</div>
 </template>
