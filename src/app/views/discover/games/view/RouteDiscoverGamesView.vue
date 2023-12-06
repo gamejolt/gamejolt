@@ -1,7 +1,6 @@
 <script lang="ts">
-import { computed, inject, InjectionKey, provide, ref } from 'vue';
-import { setup } from 'vue-class-component';
-import { Inject, Options } from 'vue-property-decorator';
+import { computed, inject, InjectionKey, provide, ref, toRef } from 'vue';
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
@@ -10,16 +9,15 @@ import {
 } from '../../../../../_common/ad/ad-store';
 import { trackExperimentEngagement } from '../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../_common/api/api.service';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import {
 	$acceptCollaboratorInvite,
 	$removeCollaboratorInvite,
 	CollaboratorModel,
-	CollaboratorRole,
 } from '../../../../../_common/collaborator/collaborator.model';
 import { CommentModel } from '../../../../../_common/comment/comment-model';
 import {
 	commentStoreCount,
-	CommentStoreManager,
 	CommentStoreManagerKey,
 	CommentStoreModel,
 	lockCommentStore,
@@ -50,9 +48,9 @@ import { LinkedAccountModel } from '../../../../../_common/linked-account/linked
 import { storeModelList } from '../../../../../_common/model/model-store.service';
 import { Registry } from '../../../../../_common/registry/registry.service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { EventSubscription } from '../../../../../_common/system/event/event-topic';
@@ -60,11 +58,8 @@ import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { UserModel } from '../../../../../_common/user/user.model';
 import { enforceLocation } from '../../../../../utils/router';
-import { shallowSetup } from '../../../../../utils/vue';
 import AppGameMaturityBlock from '../../../../components/game/maturity-block/maturity-block.vue';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
@@ -74,13 +69,49 @@ import AppDiscoverGamesViewControls from './AppDiscoverGamesViewControls.vue';
 import AppDiscoverGamesViewNav from './AppDiscoverGamesViewNav.vue';
 import './view-content.styl';
 
-const Key: InjectionKey<Controller> = Symbol('game-route');
+export default {
+	...defineAppRouteOptions({
+		lazy: true,
+		cache: true,
+		deps: { params: ['slug', 'id'], query: ['intent'] },
+		async resolver({ route }) {
+			HistoryTick.trackSource('Game', parseInt(route.params.id as string));
 
-type Controller = ReturnType<typeof createController>;
+			const intentRedirect = IntentService.checkRoute(
+				route,
+				{
+					intent: 'follow-game',
+					message: $gettext(`You're now following this game.`),
+				},
+				{
+					intent: 'decline-game-collaboration',
+					message: $gettext(`You've declined the invitation to collaborate.`),
+				}
+			);
+			if (intentRedirect) {
+				return intentRedirect;
+			}
 
+			const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
+
+			if (payload && payload.game) {
+				const redirect = enforceLocation(route, { slug: payload.game.slug });
+				if (redirect) {
+					return redirect;
+				}
+			}
+
+			return payload;
+		},
+	}),
+};
+
+const Key = getRouteStoreKey();
 export function useGameRouteController() {
 	return inject(Key);
 }
+
+type Controller = ReturnType<typeof createController>;
 
 function createController() {
 	const isOverviewLoaded = ref(false);
@@ -340,209 +371,124 @@ function createController() {
 	};
 }
 
+// TODO(component-setup-refactor-routes-3): can we return symbol like this instead of having a variable?
+function getRouteStoreKey(): InjectionKey<Controller> {
+	return Symbol('game-route');
+}
+
 const GameThemeKey = 'game';
+</script>
 
-@Options({
-	name: 'RouteDiscoverGamesView',
-	components: {
-		AppPageHeader,
-		AppUserAvatar,
-		AppUserCardHover,
-		AppDiscoverGamesViewNav,
-		AppDiscoverGamesViewControls,
-		AppGameMaturityBlock,
-		AppGamePerms,
-		AppUserVerifiedTick,
-		AppPageHeaderAvatar,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	lazy: true,
-	cache: true,
-	deps: { params: ['slug', 'id'], query: ['intent'] },
-	async resolver({ route }) {
-		HistoryTick.trackSource('Game', parseInt(route.params.id as string));
+<script lang="ts" setup>
+const routeStore = createController();
+provide(getRouteStoreKey(), routeStore);
 
-		const intentRedirect = IntentService.checkRoute(
-			route,
-			{
-				intent: 'follow-game',
-				message: $gettext(`You're now following this game.`),
-			},
-			{
-				intent: 'decline-game-collaboration',
-				message: $gettext(`You've declined the invitation to collaborate.`),
-			}
-		);
-		if (intentRedirect) {
-			return intentRedirect;
-		}
+const commentManager = inject(CommentStoreManagerKey);
+const themeStore = useThemeStore();
+const adStore = useAdStore();
+const route = useRoute();
+const router = useRouter();
+const { game, collaboratorInvite } = routeStore;
+const { user } = useCommonStore();
 
-		const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
+let commentStore: CommentStoreModel | null = null;
+let ratingChange$: EventSubscription | undefined = undefined;
 
-		if (payload && payload.game) {
-			const redirect = enforceLocation(route, { slug: payload.game.slug });
-			if (redirect) {
-				return redirect;
-			}
-		}
+// Only show cover buttons if they have permissions to edit it.
+const shouldShowCoverButtons = computed(() => game.value?.hasPerms());
 
-		return payload;
-	},
-})
-export default class RouteDiscoverGamesView extends LegacyRouteComponent {
-	routeStore = setup(() => {
-		const c = createController();
-		provide(Key, c);
-		return c;
+/**
+ * The cover height changes when we switch to not showing the full cover, so
+ * let's make sure we reset the autoscroll anchor so that it scrolls to the
+ * top again.
+ */
+const autoscrollAnchorKey = toRef(() => game.value?.id);
+
+async function acceptCollaboration() {
+	try {
+		await $acceptCollaboratorInvite(collaboratorInvite.value!);
+		routeStore.acceptCollaboratorInvite(collaboratorInvite.value!);
+	} catch (error: any) {
+		console.log('Error status for accepting game collaboration.', error);
+		handleGameAddFailure(user.value!, error.reason, router);
+	}
+}
+
+async function declineCollaboration() {
+	await $removeCollaboratorInvite(collaboratorInvite.value!);
+	routeStore.declineCollaboratorInvite();
+}
+
+function setPageTheme() {
+	const theme = game.value?.theme ?? null;
+	themeStore.setPageTheme({
+		key: GameThemeKey,
+		theme,
 	});
+}
 
-	@Inject({ from: CommentStoreManagerKey })
-	commentManager!: CommentStoreManager;
-
-	themeStore = setup(() => useThemeStore());
-	adStore = shallowSetup(() => useAdStore());
-	commonStore = setup(() => useCommonStore());
-
-	commentStore: CommentStoreModel | null = null;
-
-	readonly Screen = Screen;
-	readonly configGuestNoAuthRequired = configGuestNoAuthRequired;
-
-	private ratingChange$?: EventSubscription;
-
-	private roleNames: { [k: string]: string } = {
-		[CollaboratorRole.EqualCollaborator]: $gettext('an equal collaborator'),
-		[CollaboratorRole.CommunityManager]: $gettext('a community manager'),
-		[CollaboratorRole.Developer]: $gettext('a developer'),
-	};
-
-	get user() {
-		return this.commonStore.user;
+function _setAdSettings() {
+	if (!game.value) {
+		return;
 	}
 
-	get game() {
-		return this.routeStore.game;
-	}
+	const settings = new AdSettingsContainer();
+	settings.resource = game.value;
+	settings.isPageDisabled = !game.value._should_show_ads;
 
-	get collaboratorInvite() {
-		return this.routeStore.collaboratorInvite;
-	}
+	setPageAdsSettings(adStore, settings);
+}
 
-	get profileCount() {
-		return this.routeStore.profileCount;
-	}
+function _releaseAdSettings() {
+	releasePageAdsSettings(adStore);
+}
 
-	get roleName() {
-		if (!this.collaboratorInvite) {
-			return '';
-		}
-
-		return this.roleNames[this.collaboratorInvite.role as string] || '';
-	}
-
-	get shouldShowCoverButtons() {
-		// Only show cover buttons if they have permissions to edit it.
-		return this.game?.hasPerms();
-	}
-
-	/**
-	 * The cover height changes when we switch to not showing the full cover, so
-	 * let's make sure we reset the autoscroll anchor so that it scrolls to the
-	 * top again.
-	 */
-	get autoscrollAnchorKey() {
-		return this.game?.id;
-	}
-
-	routeCreated() {
+createAppRoute({
+	routeTitle: computed(() => ``),
+	onInit() {
 		// This isn't needed by SSR or anything, so it's fine to call it here.
-		this.routeStore.bootstrapGame(parseInt(this.$route.params.id as string));
-		this.setPageTheme();
-		this._setAdSettings();
+		routeStore.bootstrapGame(parseInt(route.params.id as string));
+		setPageTheme();
+		_setAdSettings();
 
 		// Any game rating change will broadcast this event. We catch it so we
 		// can update the page with the new rating! Yay!
-		if (!this.ratingChange$) {
-			this.ratingChange$ = onRatingWidgetChange.subscribe(payload => {
+		if (!ratingChange$) {
+			ratingChange$ = onRatingWidgetChange.subscribe(payload => {
 				const { gameId, userRating } = payload;
-				if (gameId === this.game!.id) {
-					this.routeStore.setUserRating(userRating || undefined);
+				if (gameId === game.value!.id) {
+					routeStore.setUserRating(userRating || undefined);
 				}
 			});
 		}
-	}
+	},
+	onResolved({ payload }) {
+		routeStore.processPayload(payload);
 
-	routeResolved(payload: any) {
-		this.routeStore.processPayload(payload);
+		setPageTheme();
+		_setAdSettings();
 
-		this.setPageTheme();
-		this._setAdSettings();
-
-		if (this.commentStore) {
-			releaseCommentStore(this.commentManager, this.commentStore);
-			this.commentStore = null;
+		if (commentStore) {
+			releaseCommentStore(commentManager!, commentStore);
+			commentStore = null;
 		}
-		this.commentStore = lockCommentStore(this.commentManager, 'Game', this.game!.id);
-		commentStoreCount(this.commentStore, payload.commentsCount || 0);
+		commentStore = lockCommentStore(commentManager!, 'Game', game.value!.id);
+		commentStoreCount(commentStore, payload.commentsCount || 0);
 
 		trackExperimentEngagement(configGuestNoAuthRequired);
-	}
+	},
+	onDestroyed() {
+		themeStore.clearPageTheme(GameThemeKey);
+		_releaseAdSettings();
 
-	routeDestroyed() {
-		this.themeStore.clearPageTheme(GameThemeKey);
-		this._releaseAdSettings();
+		ratingChange$?.close();
 
-		this.ratingChange$?.close();
-
-		if (this.commentStore) {
-			releaseCommentStore(this.commentManager, this.commentStore);
-			this.commentStore = null;
+		if (commentStore) {
+			releaseCommentStore(commentManager!, commentStore);
+			commentStore = null;
 		}
-	}
-
-	async acceptCollaboration() {
-		try {
-			await $acceptCollaboratorInvite(this.collaboratorInvite!);
-			this.routeStore.acceptCollaboratorInvite(this.collaboratorInvite!);
-		} catch (error: any) {
-			console.log('Error status for accepting game collaboration.', error);
-			handleGameAddFailure(this.user!, error.reason, this.$router);
-		}
-	}
-
-	async declineCollaboration() {
-		await $removeCollaboratorInvite(this.collaboratorInvite!);
-		this.routeStore.declineCollaboratorInvite();
-	}
-
-	private setPageTheme() {
-		const theme = this.game?.theme ?? null;
-		this.themeStore.setPageTheme({
-			key: GameThemeKey,
-			theme,
-		});
-	}
-
-	private _setAdSettings() {
-		if (!this.game) {
-			return;
-		}
-
-		const settings = new AdSettingsContainer();
-		settings.resource = this.game;
-		settings.isPageDisabled = !this.game._should_show_ads;
-
-		setPageAdsSettings(this.adStore, settings);
-	}
-
-	private _releaseAdSettings() {
-		releasePageAdsSettings(this.adStore);
-	}
-}
+	},
+});
 </script>
 
 <template>
@@ -555,10 +501,10 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 						has invited you to collaborate on this game.
 					</p>
 					<AppButton solid @click="acceptCollaboration()">
-						<AppTranslate>Accept</AppTranslate>
+						{{ $gettext(`Accept`) }}
 					</AppButton>
 					<AppButton solid @click="declineCollaboration()">
-						<AppTranslate>Decline</AppTranslate>
+						{{ $gettext(`Decline`) }}
 					</AppButton>
 				</div>
 			</section>
@@ -610,15 +556,15 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 				</template>
 
 				<h1 :class="{ h2: Screen.isMobile }">
-					<router-link :to="{ name: 'discover.games.view.overview' }">
+					<RouterLink :to="{ name: 'discover.games.view.overview' }">
 						{{ game.title }}
-					</router-link>
+					</RouterLink>
 				</h1>
 
 				<div>
-					<AppTranslate>by</AppTranslate>
+					{{ $gettext(`by`) }}
 					{{ ' ' }}
-					<router-link
+					<RouterLink
 						:to="{
 							name: 'profile.overview',
 							params: { username: game.developer.username },
@@ -627,11 +573,11 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 						{{ game.developer.display_name }}
 						<AppUserVerifiedTick :user="game.developer" />
 						<small>@{{ game.developer.username }}</small>
-					</router-link>
+					</RouterLink>
 				</div>
 			</AppPageHeader>
 
-			<router-view />
+			<RouterView />
 		</AppGameMaturityBlock>
 	</div>
 </template>

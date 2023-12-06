@@ -16,7 +16,7 @@ import {
 	UserGameTrophyModel,
 	indexAchievedGameTrophies,
 } from '../../../../../../../_common/user/trophy/game-trophy.model';
-import { useGameRouteController } from '../../view.vue';
+import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 
 @Options({
 	name: 'RouteDiscoverGamesViewTrophiesList',

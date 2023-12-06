@@ -10,7 +10,7 @@ import {
 import { UserModel } from '../../../../../../_common/user/user.model';
 import AppFollowerList from '../../../../../components/follower/list/AppFollowerList.vue';
 import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
-import { useGameRouteController } from '../view.vue';
+import { useGameRouteController } from '../RouteDiscoverGamesView.vue';
 
 function getFetchUrl(route: RouteLocationNormalized) {
 	return `/web/discover/games/followers/${route.params.id}`;

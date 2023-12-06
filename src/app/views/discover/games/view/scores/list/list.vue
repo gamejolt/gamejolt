@@ -18,7 +18,7 @@ import { useCommonStore } from '../../../../../../../_common/store/common-store'
 import { UserGameScoreModel } from '../../../../../../../_common/user/game-score/game-score.model';
 import AppScoreList from '../../../../../../components/score/list/list.vue';
 import AppScoreboardSelector from '../../../../../../components/score/scoreboard-selector/scoreboard-selector.vue';
-import { useGameRouteController } from '../../view.vue';
+import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 
 @Options({
 	name: 'RouteDiscoverGamesViewScoresList',
