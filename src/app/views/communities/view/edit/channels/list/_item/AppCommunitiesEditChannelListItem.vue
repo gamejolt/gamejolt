@@ -4,6 +4,7 @@ import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
 import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../../../_common/translate/translate.service';
 import { showCommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
 import { useCommunityRouteStore } from '../../../../view.store';
