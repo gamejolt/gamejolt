@@ -8,7 +8,7 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../../_common/route/legacy-route-component';
 import { UserModel } from '../../../../../_common/user/user.model';
-import AppFollowerList from '../../../../components/follower/list/list.vue';
+import AppFollowerList from '../../../../components/follower/list/AppFollowerList.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { useCommunityRouteStore } from '../view.store';
 

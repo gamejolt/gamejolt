@@ -23,8 +23,8 @@ const props = defineProps({
 	// It's optional since it may not have loaded into the page yet. In that
 	// case, we show a placeholder and wait.
 	feed: {
-		type: Object as PropType<ActivityFeedView>,
-		default: undefined,
+		type: Object as PropType<ActivityFeedView | null>,
+		default: null,
 	},
 });
 

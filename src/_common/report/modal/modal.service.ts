@@ -7,7 +7,7 @@ export async function showReportModal(resource: Model | ModelStoreModel) {
 	await showModal({
 		modalId: 'Report',
 		size: 'sm',
-		component: defineAsyncComponent(() => import('./modal.vue')),
+		component: defineAsyncComponent(() => import('./AppReportModal.vue')),
 		props: { resource },
 	});
 }

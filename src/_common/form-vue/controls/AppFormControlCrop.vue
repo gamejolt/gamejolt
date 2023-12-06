@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
-import AppImgCrop from '../../img/crop/crop.vue';
+import AppImgCrop from '../../img/crop/AppImgCrop.vue';
 import {
 	createFormControl,
 	defineFormControlEmits,
@@ -72,7 +72,7 @@ function onChange(value: any) {
 		:max-width="maxWidth"
 		:max-height="maxHeight"
 		:disabled="disabled"
-		:value="controlVal"
+		:crop-value="controlVal"
 		@input="onChange"
 	/>
 </template>

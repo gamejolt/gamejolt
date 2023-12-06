@@ -6,7 +6,6 @@ import { arrayIndexBy } from '../../../utils/array';
 import { objectPick } from '../../../utils/object';
 
 export type ResourceName =
-	| 'Partner'
 	| 'User'
 	| 'Game'
 	| 'Game_Package'
@@ -51,18 +50,10 @@ export type Condition =
 	| 'non-promotional-only'
 	| 'has-donations'
 	| 'no-donations'
-	| 'has-partner'
-	| 'no-partner'
-	| 'partner'
 	| 'shop-creator'
 	| 'gem-purchases-only';
 
-type PseudoField =
-	| 'partner_generated_revenue' // Translates to revenue field with conditions has partner
-	| 'partner_generated_donation'; // Translates to donation field with conditions has partner
-
 export type Field =
-	| PseudoField
 	| 'country'
 	| 'source_url'
 	| 'source'
@@ -78,8 +69,6 @@ export type Field =
 	| 'revenue'
 	| 'gj_revenue'
 	| 'user'
-	| 'partner_revenue'
-	| 'partner'
 	| 'logged_on'
 	| 'charge_amount'
 	| 'charge_purpose'
@@ -107,7 +96,6 @@ type ResourceField = GameField | UserField | PostField | FiresideField | ShopPro
 export interface ResourceFields {
 	game?: GameField[];
 	user?: UserField[];
-	partner?: UserField[];
 	creator_supporter?: UserField[];
 	invited_user?: UserField[];
 	fireside_post?: PostField[];
@@ -157,7 +145,6 @@ export interface Request {
 	target: ResourceName;
 	target_id: number;
 	view_as?: number;
-	as_partner?: boolean;
 	collection: Collection;
 	analyzer: Analyzer;
 	field?: Field;

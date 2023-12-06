@@ -1,7 +1,7 @@
 import { h } from 'vue';
 import { WidgetCompilerWidget } from '../widget';
 import { WidgetCompilerContext } from '../widget-compiler.service';
-import AppWidgetCompilerWidgetGamePackages from './widget-game-packages.vue';
+import AppWidgetCompilerWidgetGamePackages from './AppWidgetCompilerWidgetGamePackages.vue';
 
 export class WidgetCompilerWidgetGamePackages extends WidgetCompilerWidget {
 	readonly name = 'game-packages';

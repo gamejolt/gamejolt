@@ -28,6 +28,10 @@ onMounted(() => {
 		node.id = 'div-gpt-ad-gjo-3';
 	} else if (size.value === 'video') {
 		node.className = 'eg-video-player';
+	} else if (size.value === 'rectangle-fix') {
+		// This is a hack to fix dynamic ads not properly loading in to the
+		// first viewport.
+		node.id = 'div-gpt-ad-gjo-4';
 	} else {
 		node.className = 'eg-dyn-medrec proper-ad-unit';
 	}

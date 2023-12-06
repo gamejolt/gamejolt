@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router';
 import { AppClientBase } from '../../../_common/client/safe-exports';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Meta } from '../../../_common/meta/meta-service';
-import AppMinbar from '../../../_common/minbar/minbar.vue';
+import AppMinbar from '../../../_common/minbar/AppMinbar.vue';
 import AppMobileAppPromotionBanner from '../../../_common/mobile-app/AppMobileAppPromotionBanner.vue';
 import { Screen, triggerOnScreenResize } from '../../../_common/screen/screen-service';
 import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue';

@@ -6,7 +6,7 @@ import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
 	setPageAdsSettings,
-	useAdsController,
+	useAdStore,
 } from '../../../../../_common/ad/ad-store';
 import { trackExperimentEngagement } from '../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../_common/api/api.service';
@@ -64,6 +64,7 @@ import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { UserModel } from '../../../../../_common/user/user.model';
 import { enforceLocation } from '../../../../../utils/router';
+import { shallowSetup } from '../../../../../utils/vue';
 import AppGameMaturityBlock from '../../../../components/game/maturity-block/maturity-block.vue';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
@@ -403,7 +404,7 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 	commentManager!: CommentStoreManager;
 
 	themeStore = setup(() => useThemeStore());
-	ads = setup(() => useAdsController());
+	adStore = shallowSetup(() => useAdStore());
 	commonStore = setup(() => useCommonStore());
 
 	commentStore: CommentStoreModel | null = null;
@@ -535,11 +536,11 @@ export default class RouteDiscoverGamesView extends LegacyRouteComponent {
 		settings.resource = this.game;
 		settings.isPageDisabled = !this.game._should_show_ads;
 
-		setPageAdsSettings(this.ads, settings);
+		setPageAdsSettings(this.adStore, settings);
 	}
 
 	private _releaseAdSettings() {
-		releasePageAdsSettings(this.ads);
+		releasePageAdsSettings(this.adStore);
 	}
 }
 </script>

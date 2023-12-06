@@ -5,7 +5,7 @@ import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
 	setPageAdsSettings,
-	useAdsController,
+	useAdStore,
 } from '../../../../_common/ad/ad-store';
 import { Api } from '../../../../_common/api/api.service';
 import { CollaboratorModel } from '../../../../_common/collaborator/collaborator.model';
@@ -66,7 +66,7 @@ const { user } = useCommonStore();
 const { setPageTheme, clearPageTheme } = useThemeStore();
 const { activeContextPane, addContextPane, removeContextPane } = useSidebarStore();
 const appPromotionStore = useAppPromotionStore();
-const ads = useAdsController();
+const adStore = useAdStore();
 const route = useRoute();
 
 const contextPane = ref<ContextPane | null>(null);
@@ -140,13 +140,13 @@ createAppRoute({
 			settings.isPageDisabled = true;
 		}
 
-		setPageAdsSettings(ads, settings);
+		setPageAdsSettings(adStore, settings);
 	},
 	onDestroyed() {
 		removeContextPane(contextPane.value);
 		clearActiveCommunity();
 		clearPageTheme(CommunityThemeKey);
-		releasePageAdsSettings(ads);
+		releasePageAdsSettings(adStore);
 		if (grid.value) {
 			grid.value.deregisterViewingCommunity(community.value.id);
 		}
