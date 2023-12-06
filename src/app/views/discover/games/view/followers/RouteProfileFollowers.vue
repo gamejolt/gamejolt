@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import {
@@ -25,12 +25,12 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { game } = useGameRouteController()!;
 const route = useRoute();
+const { game } = useGameRouteController()!;
 
 const users = ref<UserModel[]>([]);
 
-const loadUrl = computed(() => getFetchUrl(route));
+const loadUrl = toRef(() => getFetchUrl(route));
 
 createAppRoute({
 	routeTitle: computed(() => (game.value ? `People following ${game.value.title}` : null)),

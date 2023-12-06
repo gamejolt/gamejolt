@@ -13,4 +13,3 @@ createAppRoute({});
 <template>
 	<RouterView />
 </template>
-;

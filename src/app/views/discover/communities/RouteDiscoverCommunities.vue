@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, shallowRef } from 'vue';
+import { computed, ref, shallowRef, toRef } from 'vue';
 import { useRoute } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommunityCardCreatePlaceholder from '../../../../_common/community/card-create-placeholder/AppCommunityCardCreatePlaceholder.vue';
@@ -50,7 +50,7 @@ const isLoading = ref(false);
 const hasMore = ref(true);
 const route = useRoute();
 
-const showCreateCommunity = computed(
+const showCreateCommunity = toRef(
 	() => (!user.value || !!user.value.can_create_communities) && !hasMore.value
 );
 
