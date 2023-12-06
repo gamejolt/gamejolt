@@ -1,15 +1,15 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, ref } from 'vue';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { GameTrophyModel } from '../../../../../../../_common/game/trophy/trophy.model';
 import AppNavTabList from '../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import AppTrophyCompletion from '../../../../../../../_common/trophy/AppTrophyCompletion.vue';
 import AppTrophyList from '../../../../../../../_common/trophy/list/AppTrophyList.vue';
 import {
@@ -18,69 +18,55 @@ import {
 } from '../../../../../../../_common/user/trophy/game-trophy.model';
 import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 
-@Options({
-	name: 'RouteDiscoverGamesViewTrophiesList',
-	components: {
-		AppTrophyCompletion,
-		AppTrophyList,
-		AppNavTabList,
-	},
-})
-@OptionsForLegacyRoute({
-	cache: true,
-	deps: {},
-	resolver: ({ route }) => Api.sendRequest('/web/discover/games/trophies/' + route.params.id),
-})
-export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteComponent {
-	routeStore = setup(() => useGameRouteController()!);
-	commonStore = setup(() => useCommonStore());
+export default {
+	...defineAppRouteOptions({
+		cache: true,
+		deps: {},
+		resolver: ({ route }) => Api.sendRequest('/web/discover/games/trophies/' + route.params.id),
+	}),
+};
+</script>
 
-	trophies: GameTrophyModel[] = [];
-	achieved: UserGameTrophyModel[] = [];
-	experience = 0;
-	showInvisibleTrophyMessage = false;
+<script lang="ts" setup>
+const { game } = useGameRouteController()!;
+const { user } = useCommonStore();
 
-	achievedIndexed: any = null;
-	filteredTrophies: any = {
-		achieved: [],
-		unachieved: [],
-	};
+const trophies = ref<GameTrophyModel[]>([]);
+const achieved = ref<UserGameTrophyModel[]>([]);
+const experience = ref(0);
+const showInvisibleTrophyMessage = ref(false);
 
-	currentFilter = 'all';
+let achievedIndexed: any = null;
+const filteredTrophies = ref<any>({
+	achieved: [],
+	unachieved: [],
+});
 
-	readonly formatNumber = formatNumber;
+const currentFilter = ref('all');
 
-	get routeTitle() {
-		if (this.game) {
-			return this.$gettext(`Trophies for %{ game }`, {
-				game: this.game.title,
+createAppRoute({
+	routeTitle: computed(() => {
+		if (game.value) {
+			return $gettext(`Trophies for %{ game }`, {
+				game: game.value.title,
 			});
 		}
 		return null;
-	}
-
-	get game() {
-		return this.routeStore.game;
-	}
-
-	get app() {
-		return this.commonStore;
-	}
-
-	routeResolved($payload: any) {
-		this.trophies = GameTrophyModel.populate($payload.trophies);
-		this.achieved = $payload.trophiesAchieved
-			? UserGameTrophyModel.populate($payload.trophiesAchieved)
+	}),
+	onResolved({ payload }) {
+		trophies.value = GameTrophyModel.populate(payload.trophies);
+		achieved.value = payload.trophiesAchieved
+			? UserGameTrophyModel.populate(payload.trophiesAchieved)
 			: [];
-		this.experience = $payload.trophiesExperienceAchieved || 0;
-		this.showInvisibleTrophyMessage = $payload.trophiesShowInvisibleTrophyMessage || false;
+		experience.value = payload.trophiesExperienceAchieved || 0;
+		showInvisibleTrophyMessage.value = payload.trophiesShowInvisibleTrophyMessage || false;
 
-		this.achievedIndexed = indexAchievedGameTrophies(this.achieved);
-		this.filteredTrophies = GameTrophyModel.splitAchieved(this.trophies, this.achievedIndexed);
+		achievedIndexed = indexAchievedGameTrophies(achieved.value);
+		filteredTrophies.value = GameTrophyModel.splitAchieved(trophies.value, achievedIndexed);
 
-		this.currentFilter = 'all';
-	}
-}
+		currentFilter.value = 'all';
+	},
+});
 </script>
 
 <template>
@@ -88,13 +74,13 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 		<section class="section">
 			<div class="container">
 				<h2 class="section-header">
-					<AppTranslate>Trophies</AppTranslate>
+					{{ $gettext(`Trophies`) }}
 				</h2>
 
 				<div class="row">
 					<div class="col-sm-10 col-md-9 col-lg-5 col-lg-push-7">
 						<AppTrophyCompletion
-							v-if="app.user"
+							v-if="user"
 							:total="trophies.length"
 							:achieved="achieved.length"
 							:experience="experience"
@@ -108,7 +94,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 										:class="{ active: currentFilter === 'all' }"
 										@click="currentFilter = 'all'"
 									>
-										<AppTranslate>All</AppTranslate>
+										{{ $gettext(`All`) }}
 										<span class="badge hidden-xs">
 											{{ formatNumber(trophies.length) }}
 										</span>
@@ -119,11 +105,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 										:class="{ active: currentFilter === 'achieved' }"
 										@click="currentFilter = 'achieved'"
 									>
-										<AppTranslate
-											translate-comment="As in trophies that are achieved"
-										>
-											Achieved
-										</AppTranslate>
+										{{ $gettext(`Achieved`) }}
 										<span class="badge hidden-xs">
 											{{
 												' ' + formatNumber(filteredTrophies.achieved.length)
@@ -136,7 +118,7 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 										:class="{ active: currentFilter === 'unachieved' }"
 										@click="currentFilter = 'unachieved'"
 									>
-										<AppTranslate>Not Achieved</AppTranslate>
+										{{ $gettext(`Not Achieved`) }}
 										<span class="badge hidden-xs">
 											{{ formatNumber(filteredTrophies.unachieved.length) }}
 										</span>
@@ -146,10 +128,11 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 						</AppNavTabList>
 
 						<div v-if="showInvisibleTrophyMessage" class="alert alert-notice">
-							<AppTranslate>
-								Some trophies may be invisible to players. You're seeing them
-								because you're the developer.
-							</AppTranslate>
+							{{
+								$gettext(
+									`Some trophies may be invisible to players. You're seeing them because you're the developer.`
+								)
+							}}
 						</div>
 
 						<AppTrophyList
@@ -165,9 +148,11 @@ export default class RouteDiscoverGamesViewTrophiesList extends LegacyRouteCompo
 
 		<section v-if="!trophies.length" class="section fill-offset">
 			<div class="container text-center">
-				<AppTranslate>
-					There are no trophies for this game yet. Bug the developer about adding some!
-				</AppTranslate>
+				{{
+					$gettext(
+						`There are no trophies for this game yet. Bug the developer about adding some!`
+					)
+				}}
 			</div>
 		</section>
 	</div>
