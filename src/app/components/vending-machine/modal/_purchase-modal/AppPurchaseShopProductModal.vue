@@ -367,21 +367,19 @@ async function purchaseProduct(currency: Currency) {
 		}
 	}
 
-	const onSuccess = () => {
-		modal.dismiss();
-		onItemPurchased?.value?.();
-
-		if (giftTo) {
-			showInfoGrowl($gettext(`Your gift was sent to @${giftTo.username}`));
-		}
-	};
-
 	await purchaseShopProduct({
 		sale: sale.value,
 		stickerPacks,
 		currency,
 		balanceRefs,
-		onSuccess,
+		onSuccess() {
+			modal.dismiss();
+			onItemPurchased?.value?.();
+
+			if (giftTo) {
+				showInfoGrowl($gettext(`Your gift was sent to @${giftTo.username}`));
+			}
+		},
 		giftTo,
 	});
 
