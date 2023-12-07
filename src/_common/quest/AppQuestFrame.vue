@@ -13,7 +13,7 @@ const uniqueId = uuidv4();
 	<div style="position: relative">
 		<AppAspectRatio :ratio="1" show-overflow>
 			<div class="_container _rotate">
-				<div class="_above">
+				<div>
 					<slot name="above" />
 				</div>
 

@@ -16,7 +16,7 @@ const { activeCommunity, visibleLeftPane, toggleLeftPane } = useAppStore();
 const { user, showInitialPackWatermark } = useCommonStore();
 const { theme } = useThemeStore();
 const { chat } = useGridStore();
-const { questActivityIds } = useQuestStore();
+const { newQuestIds, questActivityIds } = useQuestStore();
 
 const highlight = computed(() => {
 	const _theme = activeCommunity.value?.theme ?? theme.value ?? DefaultTheme;
@@ -27,11 +27,9 @@ const highlight = computed(() => {
 	return undefined;
 });
 
-const showQuestsBlip = computed(() => {
-	// TODO(quest-blip-rework): Should check new quest ids too, but we need
-	// better ways to clear them first.
-	return questActivityIds.value.size > 0;
-});
+const showQuestsBlip = computed(
+	() => newQuestIds.value.size > 0 || questActivityIds.value.size > 0
+);
 
 function trackAndTogglePane(pane: TogglableLeftPane) {
 	const currentPane = visibleLeftPane.value;
