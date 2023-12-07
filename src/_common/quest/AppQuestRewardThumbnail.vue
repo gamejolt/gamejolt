@@ -63,12 +63,25 @@ const styleFill = {
 	width: `100%`,
 	height: `100%`,
 } satisfies CSSProperties;
+
+const iconWrapperStyles = {
+	...styleFill,
+	...styleFlexCenter(),
+} satisfies CSSProperties;
+
+const iconStyles = {
+	margin: 0,
+	fontSize: `52px`,
+} satisfies CSSProperties;
 </script>
 
 <template>
 	<AppAspectRatio :ratio="1.25" :child-ratio="childInfo.ratio" show-overflow>
+		<div v-if="reward.is_secret" :style="iconWrapperStyles">
+			<AppJolticon :icon="icon" :style="iconStyles" />
+		</div>
 		<AppIllustration
-			v-if="childInfo?.illAsset"
+			v-else-if="childInfo?.illAsset"
 			:asset="childInfo.illAsset"
 			:style="styleFill"
 		/>
@@ -78,21 +91,8 @@ const styleFill = {
 			:style="styleFill"
 		/>
 		<template v-else-if="reward.media">
-			<AppMediaItemImg
-				v-if="
-					reward.type === QuestRewardTypes.Sticker ||
-					reward.type === QuestRewardTypes.Custom ||
-					reward.type === QuestRewardTypes.Background ||
-					reward.type === QuestRewardTypes.StickerPack
-				"
-				:media-item="reward.media"
-				:style="{
-					...styleFill,
-					...styleWhen(reward.type === QuestRewardTypes.Background, styleBorderRadiusLg),
-				}"
-			/>
 			<AppUserAvatarBubble
-				v-else-if="reward.type === QuestRewardTypes.AvatarFrame"
+				v-if="reward.type === QuestRewardTypes.AvatarFrame"
 				:user="authUser"
 				disable-link
 				show-frame
@@ -102,15 +102,17 @@ const styleFill = {
 					scale: DefaultAvatarFrameScale,
 				}"
 			/>
+			<AppMediaItemImg
+				v-else
+				:media-item="reward.media"
+				:style="{
+					...styleFill,
+					...styleWhen(reward.type === QuestRewardTypes.Background, styleBorderRadiusLg),
+				}"
+			/>
 		</template>
-		<div
-			v-else
-			:style="{
-				...styleFill,
-				...styleFlexCenter(),
-			}"
-		>
-			<AppJolticon :icon="icon" :style="{ margin: 0, fontSize: `52px` }" />
+		<div v-else :style="iconWrapperStyles">
+			<AppJolticon :icon="icon" :style="iconStyles" />
 		</div>
 	</AppAspectRatio>
 </template>
