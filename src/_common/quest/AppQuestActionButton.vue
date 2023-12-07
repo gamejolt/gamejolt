@@ -121,17 +121,6 @@ async function onActionPressed() {
 						isCondensed,
 					});
 				}
-			} else if (reward.isExp) {
-				addOrUpdateReward({
-					// Combine all exp rewards into 1 listing
-					key: 'exp',
-					amount: reward.fallback_amount,
-					img_url: processMediaserverUrl(reward.fallback_media?.mediaserver_url),
-					name: reward.name,
-					icon: 'exp',
-					xAfterCount: false,
-					isCondensed,
-				});
 			} else if (reward.isTrophy && !!reward.trophy) {
 				const { id, img_thumbnail } = reward.trophy;
 				addOrUpdateReward({
