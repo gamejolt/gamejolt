@@ -10,6 +10,7 @@ import { ForumTopicModel } from '../forum/topic/topic.model';
 import { GameLibraryGameModel } from '../game-library/game/game.model';
 import { GameModel } from '../game/game.model';
 import { GameRatingModel } from '../game/rating/rating.model';
+import { InventoryShopGiftModel } from '../inventory/shop/inventory-shop-gift.model';
 import { MentionModel } from '../mention/mention.model';
 import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
@@ -51,6 +52,7 @@ export const enum NotificationType {
 	PollEnded = 'poll-ended',
 	CreatorLevelUp = 'creator-level-up',
 	UnlockedAvatarFrame = 'unlocked-avatar-frame',
+	ShopGiftReceived = 'shop-gift-received',
 }
 
 export const ActivityFeedTypes = [NotificationType.PostAdd];
@@ -75,6 +77,7 @@ export const NotificationFeedTypes = [
 	NotificationType.PollEnded,
 	NotificationType.CreatorLevelUp,
 	NotificationType.UnlockedAvatarFrame,
+	NotificationType.ShopGiftReceived,
 ];
 
 export class NotificationModel extends Model {
@@ -110,7 +113,8 @@ export class NotificationModel extends Model {
 		| SupporterActionModel
 		| PollModel
 		| CreatorExperienceLevelModel
-		| UserAvatarFrameModel;
+		| UserAvatarFrameModel
+		| InventoryShopGiftModel;
 
 	declare to_resource: string | null;
 	declare to_resource_id: number | null;
@@ -231,6 +235,9 @@ export class NotificationModel extends Model {
 			this.action_model = new CreatorExperienceLevelModel(data.action_resource_model);
 		} else if (this.type === NotificationType.UnlockedAvatarFrame) {
 			this.action_model = storeModel(UserAvatarFrameModel, data.action_resource_model);
+		} else if (this.type === NotificationType.ShopGiftReceived) {
+			this.action_model = storeModel(InventoryShopGiftModel, data.action_resource_model);
+			this.is_user_based = true;
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -272,6 +279,7 @@ export function getNotificationFeedTypeLabels(user: UserModel) {
 		[NotificationType.QuestNotification]: $gettext(`Quests`),
 		[NotificationType.SupporterMessage]: $gettext(`Creator thank-you messages`),
 		[NotificationType.PollEnded]: $gettext(`Polls`),
+		[NotificationType.ShopGiftReceived]: $gettext(`Gifts`),
 	} as Record<NotificationType, string>;
 
 	// Creator notification types.

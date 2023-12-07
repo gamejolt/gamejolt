@@ -39,7 +39,7 @@ function _animateItem() {
 		return;
 	}
 
-	if (timer != null) {
+	if (timer) {
 		hasQueuedTimer = true;
 		return;
 	}

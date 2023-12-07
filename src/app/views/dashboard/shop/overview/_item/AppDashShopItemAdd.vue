@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import AppHoverCard from '../../../../../../_common/card/AppHoverCard.vue';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
@@ -8,7 +9,6 @@ import { kThemeBgSubtle } from '../../../../../../_common/theme/variables';
 import { styleFlexCenter } from '../../../../../../_styles/mixins';
 import { routeDashShopProduct } from '../../product/product.route';
 import { getShopDashProductResourceParam } from '../../shop.store';
-import AppDashShopHover from '../AppDashShopHover.vue';
 
 defineProps({
 	resource: {
@@ -24,7 +24,7 @@ defineProps({
 </script>
 
 <template>
-	<AppDashShopHover
+	<AppHoverCard
 		:border-color="kThemeBgSubtle"
 		:to="{
 			name: routeDashShopProduct.name,
@@ -48,5 +48,5 @@ defineProps({
 				{{ $gettext(`Add`) }}
 			</div>
 		</AppAspectRatio>
-	</AppDashShopHover>
+	</AppHoverCard>
 </template>

@@ -1,27 +1,26 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, ref, toRaw, toRefs } from 'vue';
-import { Api } from '../../../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppBackground from '../../../../../../_common/background/AppBackground.vue';
-import { BackgroundModel } from '../../../../../../_common/background/background.model';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
-import AppIllustration from '../../../../../../_common/illustration/AppIllustration.vue';
-import { illPointyThing } from '../../../../../../_common/illustration/illustrations';
-import AppMediaItemBackdrop from '../../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import AppModal from '../../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../../_common/modal/modal.service';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserAvatarFrameModel } from '../../../../../../_common/user/user-avatar/frame/frame.model';
 import {
 	styleAbsoluteFill,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
-} from '../../../../../../_styles/mixins';
+} from '../../../../_styles/mixins';
+import { Api } from '../../../api/api.service';
+import AppAspectRatio from '../../../aspect-ratio/AppAspectRatio.vue';
+import AppBackground from '../../../background/AppBackground.vue';
+import { BackgroundModel } from '../../../background/background.model';
+import AppButton from '../../../button/AppButton.vue';
+import AppExpand from '../../../expand/AppExpand.vue';
+import AppIllustration from '../../../illustration/AppIllustration.vue';
+import { illPointyThing } from '../../../illustration/illustrations';
+import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppModal from '../../../modal/AppModal.vue';
+import { useModal } from '../../../modal/modal.service';
+import { Screen } from '../../../screen/screen-service';
+import AppSpacer from '../../../spacer/AppSpacer.vue';
+import { useCommonStore } from '../../../store/common-store';
+import AppUserAvatarBubble from '../../../user/user-avatar/AppUserAvatarBubble.vue';
+import { UserAvatarFrameModel } from '../../../user/user-avatar/frame/frame.model';
 
 const props = defineProps({
 	product: {

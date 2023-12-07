@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from 'vue';
-import { BackgroundModel } from '../../../../../../_common/background/background.model';
-import { showModal } from '../../../../../../_common/modal/modal.service';
-import { UserAvatarFrameModel } from '../../../../../../_common/user/user-avatar/frame/frame.model';
+import { BackgroundModel } from '../../../background/background.model';
+import { showModal } from '../../../modal/modal.service';
+import { UserAvatarFrameModel } from '../../../user/user-avatar/frame/frame.model';
 
 interface NewProductOptions {
 	product: UserAvatarFrameModel | BackgroundModel;

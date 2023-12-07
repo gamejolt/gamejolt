@@ -510,6 +510,16 @@ export class NotificationText {
 			case NotificationType.UnlockedAvatarFrame: {
 				return _process($gettext(`You unlocked a new <em>avatar frame</em>!`));
 			}
+
+			case NotificationType.ShopGiftReceived: {
+				return _process(
+					$gettext(
+						`<em>%{ subject }</em> sent you a gift!`,
+						this.getTranslationValues(notification),
+						{ enableHTMLEscaping: !plaintext }
+					)
+				);
+			}
 		}
 
 		// When the notification type has no implementation, we log and don't show it (return undefined).
