@@ -44,6 +44,9 @@ export type NormalizedProductData =
 	| BackgroundProductData
 	| StickerPackProductData;
 
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
 export function getShopProductDisplayData({
 	resource,
 	resourceId,
@@ -105,7 +108,11 @@ export function getShopProductDisplayData({
 	};
 }
 
-/** Creates the product based on the product type backend provides. */
+/**
+ * Creates the product based on the product type backend provides.
+ *
+ * @__NO_SIDE_EFFECTS__
+ */
 export function assignShopProductOwnerData(
 	model: {
 		product_type: PurchasableProductType;
@@ -136,6 +143,9 @@ export function assignShopProductOwnerData(
 	}
 }
 
+/**
+ * @__NO_SIDE_EFFECTS__
+ */
 export function getReadablePurchasableProductType(type: PurchasableProductType) {
 	switch (type) {
 		case PurchasableProductType.StickerPack:
