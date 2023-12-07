@@ -5,11 +5,11 @@ import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
-import { MediaItem } from '../media-item-model';
+import { MediaItemModel } from '../media-item-model';
 
 const props = defineProps({
 	mediaItem: {
-		type: MediaItem,
+		type: MediaItemModel,
 		required: true,
 	},
 	maxHeight: {

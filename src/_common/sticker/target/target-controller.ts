@@ -3,6 +3,7 @@ import {
 	ComputedRef,
 	inject,
 	InjectionKey,
+	MaybeRef,
 	provide,
 	reactive,
 	ref,
@@ -13,21 +14,19 @@ import {
 	unref,
 	WritableComputedRef,
 } from 'vue';
-import { MaybeComputedRef, MaybeRef } from '../../../utils/vue';
-import { Comment } from '../../comment/comment-model';
-import { Fireside } from '../../fireside/fireside.model';
-import { FiresidePost } from '../../fireside/post/post-model';
-import { MediaItem } from '../../media-item/media-item-model';
+import { MaybeComputedRef } from '../../../utils/vue';
+import { CommentModel } from '../../comment/comment-model';
+import { FiresidePostModel } from '../../fireside/post/post-model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
 import { StickerLayerController } from '../layer/layer-controller';
-import { StickerPlacement, StickerPlacementTargetData } from '../placement/placement.model';
-import { CustomStickerPlacementRequest } from '../sticker-store';
+import { StickerPlacementModel } from '../placement/placement.model';
 import { ValidStickerResource } from './AppStickerTarget.vue';
 
 const StickerTargetParentControllerKey: InjectionKey<MaybeRef<StickerTargetController>> =
 	Symbol('sticker-target-parent');
 
-type StickerTargetModel = FiresidePost | MediaItem | Fireside;
+type StickerTargetModel = FiresidePostModel | MediaItemModel;
 
 export type StickerTargetController = {
 	isInview: Ref<boolean>;
@@ -35,8 +34,8 @@ export type StickerTargetController = {
 	shouldLoad: ComputedRef<boolean>;
 	shouldShow: WritableComputedRef<boolean>;
 
-	stickers: Ref<StickerPlacement[]>;
-	newStickers: Ref<StickerPlacement[]>;
+	stickers: Ref<StickerPlacementModel[]>;
+	newStickers: Ref<StickerPlacementModel[]>;
 
 	layer: ShallowRef<StickerLayerController | null>;
 	children: ShallowRef<StickerTargetController[]>;
@@ -45,22 +44,18 @@ export type StickerTargetController = {
 	parent: ComputedRef<StickerTargetController | null>;
 	isLive: boolean;
 
-	placeStickerCallback?: CustomStickerPlacementRequest;
-	targetData: ComputedRef<StickerPlacementTargetData | undefined>;
-	isCreator: ComputedRef<boolean>;
+	canReceiveCharge: ComputedRef<boolean>;
 };
 
 interface StickerTargetOptions {
-	isCreator: MaybeComputedRef<boolean>;
+	canReceiveCharge: MaybeComputedRef<boolean>;
 	parent?: MaybeRef<StickerTargetController | null>;
 	isLive?: boolean;
-	placeStickerCallback?: CustomStickerPlacementRequest;
-	targetData?: MaybeComputedRef<StickerPlacementTargetData>;
 }
 
 export function createStickerTargetController(
 	model: StickerTargetModel,
-	{ isCreator, parent, isLive = false, placeStickerCallback, targetData }: StickerTargetOptions
+	{ canReceiveCharge, parent, isLive = false }: StickerTargetOptions
 ) {
 	model = reactive(model) as StickerTargetModel;
 	const isInview = ref(false);
@@ -96,9 +91,9 @@ export function createStickerTargetController(
 		},
 	});
 
-	const stickers = ref<StickerPlacement[]>([]);
+	const stickers = ref<StickerPlacementModel[]>([]);
 	/** The stickers that have been added since the last time freshly rendered the target. */
-	const newStickers = ref<StickerPlacement[]>([]);
+	const newStickers = ref<StickerPlacementModel[]>([]);
 
 	/**
 	 * This is the layer that this target lives within. It gets set when the
@@ -119,9 +114,7 @@ export function createStickerTargetController(
 		model,
 		parent: refParent,
 		isLive,
-		placeStickerCallback,
-		targetData: computed(() => unref(targetData)),
-		isCreator: computed(() => unref(isCreator)),
+		canReceiveCharge: computed(() => unref(canReceiveCharge)),
 	});
 
 	if (refParent.value) {
@@ -131,9 +124,7 @@ export function createStickerTargetController(
 	return c;
 }
 
-export function provideStickerTargetController(
-	controller?: MaybeRef<StickerTargetController | null>
-) {
+export function provideStickerTargetController(controller: MaybeRef<StickerTargetController>) {
 	provide(StickerTargetParentControllerKey, controller);
 }
 
@@ -163,19 +154,20 @@ export function toggleStickersShouldShow(
 }
 
 export function getStickerModelResourceName(model: Model): ValidStickerResource {
-	if (model instanceof Comment) {
+	if (model instanceof CommentModel) {
 		return 'Comment';
-	} else if (model instanceof MediaItem) {
+	} else if (model instanceof MediaItemModel) {
 		return 'MediaItem';
-	} else if (model instanceof FiresidePost) {
+	} else if (model instanceof FiresidePostModel) {
 		return 'Fireside_Post';
-	} else if (model instanceof Fireside) {
-		return 'Fireside';
 	}
 	throw new Error('Stickers targets cannot attach to that type of model');
 }
 
-export function addStickerToTarget(controller: StickerTargetController, sticker: StickerPlacement) {
+export function addStickerToTarget(
+	controller: StickerTargetController,
+	sticker: StickerPlacementModel
+) {
 	const { stickers, newStickers, isLive } = controller;
 
 	stickers.value.push(sticker);
@@ -192,7 +184,7 @@ export function addStickerToTarget(controller: StickerTargetController, sticker:
  */
 export function removeStickerFromTarget(
 	controller: StickerTargetController,
-	sticker: StickerPlacement
+	sticker: StickerPlacementModel
 ) {
 	const { stickers, newStickers } = controller;
 

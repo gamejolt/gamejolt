@@ -3,12 +3,16 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
-import { GameTrophy } from '../../../../../_common/game/trophy/trophy.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import {
+	$clearGameTrophyImage,
+	$saveGameTrophy,
+	GameTrophyModel,
+} from '../../../../../_common/game/trophy/trophy.model';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-
-class Wrapper extends BaseForm<GameTrophy> {}
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { BaseTrophyDifficulty } from '../../../../../_common/trophy/base-trophy.model';
+class Wrapper extends BaseForm<GameTrophyModel> {}
 
 @Options({
 	components: {
@@ -18,10 +22,11 @@ class Wrapper extends BaseForm<GameTrophy> {}
 	},
 })
 export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoad {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 	@Prop(Number) difficulty!: number;
 
-	modelClass = GameTrophy;
+	modelClass = GameTrophyModel;
+	modelSaveHandler = $saveGameTrophy;
 
 	maxFilesize = 0;
 	maxWidth = 0;
@@ -35,19 +40,19 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 		return [
 			{
 				label: this.$gettext('Bronze'),
-				value: GameTrophy.DIFFICULTY_BRONZE,
+				value: BaseTrophyDifficulty.Bronze,
 			},
 			{
 				label: this.$gettext('Silver'),
-				value: GameTrophy.DIFFICULTY_SILVER,
+				value: BaseTrophyDifficulty.Silver,
 			},
 			{
 				label: this.$gettext('Gold'),
-				value: GameTrophy.DIFFICULTY_GOLD,
+				value: BaseTrophyDifficulty.Gold,
 			},
 			{
 				label: this.$gettext('Platinum'),
-				value: GameTrophy.DIFFICULTY_PLATINUM,
+				value: BaseTrophyDifficulty.Platinum,
 			},
 		];
 	}
@@ -73,7 +78,7 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 	}
 
 	async clearImage() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to clear this trophy image?')
 		);
 
@@ -85,7 +90,7 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 		// This way we don't overwrite the form model with the current values from the server.
 		// They may have made changes and just want to clear the image and then save their form.
 		// Doing it in this order allows them to do that.
-		await this.model!.$clearImage();
+		await $clearGameTrophyImage(this.model!);
 
 		// Copy just the differences that we want.
 		this.setField('has_thumbnail', this.model!.has_thumbnail);

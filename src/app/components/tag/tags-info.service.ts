@@ -159,5 +159,11 @@ export class TagsInfo {
 			image: images['./images/undertale.png'],
 			imageSocial: images['./images/undertale-social.png'],
 		},
+		{
+			id: 'bendy',
+			label: '#bendy',
+			image: images['./images/bendy.png'],
+			imageSocial: images['./images/bendy-social.png'],
+		},
 	];
 }

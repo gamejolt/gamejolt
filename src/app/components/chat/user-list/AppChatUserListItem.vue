@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { kThemeBacklight, kThemeBacklightFg } from '../../../../_common/theme/variables';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -10,14 +10,14 @@ import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAva
 import { useGridStore } from '../../grid/grid-store';
 import AppChatListItem from '../_list/AppChatListItem.vue';
 import { isUserOnline, leaveGroupRoom, openChatRoom } from '../client';
-import AppChatNotificationSettings from '../notification-settings/notification-settings.vue';
-import { ChatRoom, getChatRoomTitle } from '../room';
+import AppChatNotificationSettings from '../notification-settings/AppChatNotificationSettings.vue';
+import { ChatRoomModel, getChatRoomTitle } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 
 const props = defineProps({
 	item: {
-		type: Object as PropType<ChatUser | ChatRoom>,
+		type: Object as PropType<ChatUser | ChatRoomModel>,
 		required: true,
 	},
 });
@@ -66,11 +66,11 @@ function onClick(e: Event) {
  * Only for group chats.
  */
 async function leaveRoom() {
-	if (!(item.value instanceof ChatRoom)) {
+	if (!(item.value instanceof ChatRoomModel)) {
 		return;
 	}
 
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to leave the group chat?`)
 	);
 
@@ -87,9 +87,6 @@ async function leaveRoom() {
 		:title="hoverTitle"
 		:horizontal-padding="16"
 		:force-hover="isActive"
-		:defined-slots="
-			notificationsCount ? ['leading', 'title', 'trailing'] : ['leading', 'title']
-		"
 		popper-placement="bottom"
 		popper-trigger="right-click"
 		popper-hide-on-state-change

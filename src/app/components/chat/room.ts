@@ -1,53 +1,46 @@
-import { Background } from '../../../_common/background/background.model';
-import { ContentContext } from '../../../_common/content/content-context';
-import { Fireside } from '../../../_common/fireside/fireside.model';
-import { ModelStoreModel } from '../../../_common/model/model-store.service';
+import { BackgroundModel } from '../../../_common/background/background.model';
+import { ModelStoreModel, storeModel } from '../../../_common/model/model-store.service';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { ChatClient } from './client';
-import { ChatMessage } from './message';
+import { ChatMessageModel } from './message';
 import { ChatRole } from './role';
 import { ChatUser } from './user';
 import { ChatUserCollection } from './user-collection';
 
-export type ChatRoomType = 'pm' | 'open_group' | 'closed_group' | 'viral_group' | 'fireside_group';
+const enum ChatRoomType {
+	PM = 'pm',
+	OPEN_GROUP = 'open_group',
+	CLOSED_GROUP = 'closed_group',
+	VIRAL_GROUP = 'viral_group',
+}
 
 interface TypingUserData {
 	username: string;
 }
 
-export class ChatRoom implements ModelStoreModel {
-	static readonly ROOM_PM = 'pm';
-	static readonly ROOM_OPEN_GROUP = 'open_group';
-	static readonly ROOM_CLOSED_GROUP = 'closed_group';
-	static readonly ROOM_VIRAL_GROUP = 'viral_group';
-	static readonly ROOM_FIRESIDE_GROUP = 'fireside_group';
-
+export class ChatRoomModel implements ModelStoreModel {
 	declare id: number;
 	declare title: string;
+	declare fallback_title: string;
 	declare type: ChatRoomType;
 	declare user?: ChatUser;
 	declare roles: ChatRole[];
 	declare member_count: number;
 	declare owner_id: number;
 	declare last_message_on: number;
-	declare background?: Background;
+	declare background?: BackgroundModel;
 
 	declare chat: ChatClient;
 	declare memberCollection: ChatUserCollection;
 	messagesPopulated = false;
-	messages: ChatMessage[] = [];
-	queuedMessages: ChatMessage[] = [];
-	messageEditing: null | ChatMessage = null;
-	/** One of the firesides that were started for this room. This is not an inverse of the Fireside -> Chat room relation. */
-	fireside: Fireside | null = null;
-	firesideStreamingUsers: ChatUser[] = [];
+	messages: ChatMessageModel[] = [];
+	queuedMessages: ChatMessageModel[] = [];
+	messageEditing: null | ChatMessageModel = null;
 
 	/** Indexed by user ID */
 	usersTyping = new Map<number, TypingUserData>();
 
-	constructor(data: any) {
-		this.update(data);
-	}
+	declare messageLimit: number | null;
 
 	update(data: any = {}) {
 		Object.assign(this, data);
@@ -63,7 +56,7 @@ export class ChatRoom implements ModelStoreModel {
 		}
 
 		if (data.background) {
-			this.background = new Background(data.background);
+			this.background = storeModel(BackgroundModel, data.background);
 		}
 
 		const initialMembers = data.members || [];
@@ -74,57 +67,42 @@ export class ChatRoom implements ModelStoreModel {
 		} else {
 			this.memberCollection = new ChatUserCollection(
 				this.chat,
-				this.isFiresideRoom
-					? ChatUserCollection.TYPE_FIRESIDE
-					: ChatUserCollection.TYPE_ROOM,
+				ChatUserCollection.TYPE_ROOM,
 				initialMembers
 			);
 		}
 
-		if (this.type === ChatRoom.ROOM_PM) {
+		if (this.type === ChatRoomType.PM) {
 			// We need to rename the room to the username
 			this.user = this.chat.friendsList.getByRoom(this.id);
+		}
+
+		// Assign the message limit according to the room type.
+		//
+		// NOTE: Left over from Firesides, but might be used in the future.
+		switch (this.type) {
+			case ChatRoomType.PM:
+			case ChatRoomType.CLOSED_GROUP:
+			case ChatRoomType.OPEN_GROUP:
+			case ChatRoomType.VIRAL_GROUP:
+				this.messageLimit = null;
 		}
 	}
 
 	get isPmRoom() {
-		return this.type === ChatRoom.ROOM_PM;
+		return this.type === ChatRoomType.PM;
 	}
 
 	get isPrivateRoom() {
-		return this.type === ChatRoom.ROOM_PM || this.type === ChatRoom.ROOM_CLOSED_GROUP;
+		return this.type === ChatRoomType.PM || this.type === ChatRoomType.CLOSED_GROUP;
 	}
 
 	get isGroupRoom() {
 		return (
-			this.type === ChatRoom.ROOM_OPEN_GROUP ||
-			this.type === ChatRoom.ROOM_CLOSED_GROUP ||
-			this.type === ChatRoom.ROOM_VIRAL_GROUP ||
-			this.type === ChatRoom.ROOM_FIRESIDE_GROUP
+			this.type === ChatRoomType.OPEN_GROUP ||
+			this.type === ChatRoomType.CLOSED_GROUP ||
+			this.type === ChatRoomType.VIRAL_GROUP
 		);
-	}
-
-	get isFiresideRoom() {
-		return this.type === ChatRoom.ROOM_FIRESIDE_GROUP;
-	}
-
-	get shouldShowTimestamp() {
-		return !this.isFiresideRoom;
-	}
-
-	/**
-	 * Returns whether members of the room can be made moderators.
-	 */
-	get canElectModerators() {
-		return this.isFiresideRoom;
-	}
-
-	get messagesContentContext(): ContentContext {
-		if (this.type === 'fireside_group') {
-			return 'fireside-chat-message';
-		}
-
-		return 'chat-message';
 	}
 
 	/**
@@ -154,19 +132,10 @@ export class ChatRoom implements ModelStoreModel {
 			this.owner_id = updatedUser.id;
 		}
 	}
-
-	updateFireside(fireside: Fireside | null, streamingUsers: ChatUser[]) {
-		this.fireside = fireside;
-		if (this.fireside) {
-			this.firesideStreamingUsers = streamingUsers;
-		} else {
-			this.firesideStreamingUsers = [];
-		}
-	}
 }
 
-export function getChatRoomTitle(room: ChatRoom) {
-	if (room.type === ChatRoom.ROOM_PM) {
+export function getChatRoomTitle(room: ChatRoomModel) {
+	if (room.type === ChatRoomType.PM) {
 		return room.user?.display_name ?? $gettext(`PM Chat`);
 	}
 
@@ -174,17 +143,9 @@ export function getChatRoomTitle(room: ChatRoom) {
 		return room.title;
 	}
 
-	// When no title is set and no/one member is in the chat, set the title
-	// to "Group Chat" instead of just the single name.
-	if (room.memberCollection.count <= 1) {
-		return $gettext(`Group Chat`);
+	if (room.fallback_title) {
+		return room.fallback_title;
 	}
 
-	// No room title, return a comma separated list of members.
-	const chat = room.chat;
-	return room.memberCollection.users
-		.filter(i => i.id !== chat.currentUser?.id)
-		.slice(0, 5)
-		.map(i => i.display_name)
-		.join(', ');
+	return $gettext(`Group Chat`);
 }

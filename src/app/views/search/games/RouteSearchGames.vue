@@ -1,9 +1,9 @@
 <script lang="ts">
 import { computed } from 'vue';
-import { getQuery } from '../../../../utils/router';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { $gettextInterpolate } from '../../../../_common/translate/translate.service';
-import AppGameGrid from '../../../components/game/grid/grid.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import { getQuery } from '../../../../utils/router';
+import AppGameGrid from '../../../components/game/grid/AppGameGrid.vue';
 import { sendSearch } from '../../../components/search/search-service';
 import { useSearchRouteController } from '../RouteSearch.vue';
 
@@ -24,7 +24,7 @@ const { processPayload, hasSearch, searchPayload, query } = useSearchRouteContro
 
 createAppRoute({
 	routeTitle: computed(() =>
-		$gettextInterpolate(`"%{ query }" games`, {
+		$gettext(`"%{ query }" games`, {
 			query: query.value,
 		})
 	),
@@ -35,15 +35,13 @@ createAppRoute({
 </script>
 
 <template>
-	<section class="section">
-		<div v-if="hasSearch" class="container-xl">
-			<AppGameGrid
-				:games="searchPayload.games"
-				:games-count="searchPayload.gamesCount"
-				:current-page="searchPayload.page"
-				show-ads
-				event-label="search-games"
-			/>
-		</div>
-	</section>
+	<div v-if="hasSearch" class="container-xl">
+		<AppGameGrid
+			:games="searchPayload.games"
+			:games-count="searchPayload.gamesCount"
+			:current-page="searchPayload.page"
+			show-ads
+			event-label="search-games"
+		/>
+	</div>
 </template>

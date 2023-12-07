@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import { styleBorderRadiusLg, styleChangeBg } from '../../../_styles/mixins';
-import { FiresidePost } from '../../fireside/post/post-model';
+import { FiresidePostModel } from '../../fireside/post/post-model';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppProgressBar from '../../progress/AppProgressBar.vue';
@@ -11,7 +11,7 @@ import { $gettext } from '../../translate/translate.service';
 
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 });

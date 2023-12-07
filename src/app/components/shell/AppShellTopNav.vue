@@ -7,7 +7,7 @@ import {
 } from '../../../_common/analytics/analytics.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { AppClientHistoryNavigator } from '../../../_common/client/safe-exports';
-import { configShowStoreInMoreMenu, ensureConfig } from '../../../_common/config/config.service';
+import { configShowStoreInMoreMenu } from '../../../_common/config/config.service';
 import { AppConfigLoaded } from '../../../_common/config/loaded';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
@@ -19,7 +19,6 @@ import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
 import { kThemeGjOverlayNotice } from '../../../_common/theme/variables';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { styleWhen } from '../../../_styles/mixins';
-import { run } from '../../../utils/utils';
 import { imageGameJoltLogo, imageJolt } from '../../img/images';
 import { useAppStore } from '../../store/index';
 import { useQuestStore } from '../../store/quest';
@@ -91,10 +90,7 @@ function _checkColWidths() {
 	baseMinColWidth.value = max;
 }
 
-run(async () => {
-	await ensureConfig();
-	trackExperimentEngagement(configShowStoreInMoreMenu);
-});
+trackExperimentEngagement(configShowStoreInMoreMenu);
 </script>
 
 <template>

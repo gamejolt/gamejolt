@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
 defineProps({
 	username: {
@@ -16,7 +17,7 @@ const emit = defineEmits({
 <template>
 	<div class="alert">
 		<span v-translate="{ username }">
-			{{ $gettextInterpolate(`Hidden post by blocked user @%{ username }.`, { username }) }}
+			{{ $gettext(`Hidden post by blocked user @%{ username }.`, { username }) }}
 		</span>
 		<AppButton trans @click="emit('show')">
 			{{ $gettext(`Show`) }}

@@ -4,8 +4,8 @@ import { RouterLink } from 'vue-router';
 import { routeLandingCreators } from '../../../app/views/landing/creators/creators.route';
 import AppAnimChargeOrb from '../../animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
+import { illChargeOrbEmpty } from '../../animation/slideshow/sheets';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import { illChargeOrbEmpty } from '../../illustration/illustrations';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import { Screen } from '../../screen/screen-service';
@@ -45,6 +45,14 @@ const props = defineProps({
 	isLoading: {
 		type: Boolean,
 	},
+	/**
+	 * Passed into the AppSpacer component between the header and the charge
+	 * card.
+	 */
+	headerSpacerHeight: {
+		type: String,
+		default: undefined,
+	},
 });
 
 const { elevate, headerCharge, allowFullyChargedText, paddingH, paddingV } = toRefs(props);
@@ -82,7 +90,14 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 		<div
 			ref="root"
 			class="sticker-charge-card"
-			:class="{ '-elevate': elevate, '-decorator': !headerCharge }"
+			:class="
+				headerCharge
+					? {}
+					: {
+							'-elevate': elevate,
+							'-decorator': true,
+					  }
+			"
 		>
 			<div class="-content" :class="{ '-col': headerCharge }">
 				<div :style="{ width: headerCharge ? '100%' : undefined }">
@@ -114,7 +129,10 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 					</RouterLink>
 				</div>
 
-				<AppSpacer v-if="headerCharge" vertical :scale="4" />
+				<template v-if="headerCharge">
+					<div v-if="headerSpacerHeight" :style="{ height: headerSpacerHeight }" />
+					<AppSpacer v-else vertical :scale="4" />
+				</template>
 				<AppLoadingFade
 					:style="{
 						width: '100%',
@@ -123,9 +141,14 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 				>
 					<div
 						class="-center-grid"
-						:class="{
-							'-decorator': headerCharge,
-						}"
+						:class="
+							!headerCharge
+								? {}
+								: {
+										'-elevate': elevate,
+										'-decorator': true,
+								  }
+						"
 					>
 						<AppAnimElectricity
 							class="-orbs"
@@ -176,7 +199,7 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 	padding: var(--padding-v) var(--padding-h)
 
 	&.-elevate
-		elevate-2()
+		elevate-1()
 
 .-content
 	display: inline-flex

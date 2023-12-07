@@ -7,11 +7,15 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import {
+	$clearGameHeader,
+	$saveGameHeader,
+	GameModel,
+} from '../../../../../_common/game/game.model';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 
-type FormModel = Game & {
-	header_crop: any;
+type FormModel = GameModel & {
+	header_crop?: any;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -26,8 +30,8 @@ export default class FormGameHeader
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	modelClass = Game as any;
-	saveMethod = '$saveHeader' as const;
+	modelClass = GameModel;
+	modelSaveHandler = $saveGameHeader;
 
 	maxFilesize = 0;
 	minAspectRatio = 0;
@@ -68,12 +72,12 @@ export default class FormGameHeader
 	}
 
 	async clearHeader() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to remove your game header?`)
 		);
 
 		if (result) {
-			const payload = await this.formModel.$clearHeader();
+			const payload = await $clearGameHeader(this.model!);
 			// Overwrite the base model's header media item here.
 			// This needs to be done because this form does not resolve (and may never resolve)
 			// after cleaning a header. Need to ensure that the base model's header gets cleared.

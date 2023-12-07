@@ -1,6 +1,5 @@
-import { reactive } from '@vue/reactivity';
 import type { MsgProgress, SelfUpdaterInstance } from 'client-voodoo';
-import { markRaw } from 'vue';
+import { markRaw, reactive } from 'vue';
 import { Environment } from '../environment/environment.service';
 import { Navigate } from '../navigate/navigate.service';
 import { Logger, PatcherState, SelfUpdater } from './client-voodoo-imports';

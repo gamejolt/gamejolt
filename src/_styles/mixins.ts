@@ -1,35 +1,60 @@
-import { CSSProperties } from 'vue';
+import { CSSProperties, StyleValue } from 'vue';
 import { ThemeColor } from '../_common/theme/variables';
 import { kBorderRadiusBase, kBorderRadiusLg, kBorderRadiusSm } from './variables';
 
 /**
  * Helper to make it easier to mix certain styles into a style binding depending
  * on a condition.
+ *
+ * NOTE: Don't use an array of styles with this if it's used in the `<script>`
+ * tag or things will break.
+ *
+ * @__NO_SIDE_EFFECTS__
  */
-export function styleWhen(condition: boolean | null | undefined, style: CSSProperties) {
-	return condition ? style : {};
+export function styleWhen<T extends CSSProperties>(
+	condition: boolean | null | undefined,
+	style: T
+) {
+	// `Partial<T>` typing is included here so we get some type info on hover.
+	return condition ? style : ({} as Partial<T>);
 }
 
-export const styleBorderRadiusBase: CSSProperties = {
+/**
+ * Helper to enforce the typing of a style binding for an element.
+ *
+ * Using `v-bind` on an element breaks the typing for normal style bindings. Use
+ * this to fix that.
+ *
+ * NOTE: Don't use an array of styles with this if it's used in the `<script>`
+ * tag or things will break.
+ *
+ * @__NO_SIDE_EFFECTS__
+ */
+export function styleTyped(value: StyleValue) {
+	return value;
+}
+
+export const styleBorderRadiusBase = {
 	borderRadius: kBorderRadiusBase.px,
-};
+} satisfies CSSProperties;
 
-export const styleBorderRadiusSm: CSSProperties = {
+export const styleBorderRadiusSm = {
 	borderRadius: kBorderRadiusSm.px,
-};
+} satisfies CSSProperties;
 
-export const styleBorderRadiusLg: CSSProperties = {
+export const styleBorderRadiusLg = {
 	borderRadius: kBorderRadiusLg.px,
-};
+} satisfies CSSProperties;
 
 /**
  * Requires inline-block or block for proper styling
  */
-export const styleTextOverflow: CSSProperties = {
+export const styleTextOverflow = {
 	overflow: `hidden`,
+
 	whiteSpace: `nowrap`,
 	textOverflow: `ellipsis`,
-};
+} satisfies CSSProperties;
 
 export function styleChangeBg(bg: ThemeColor, important = false): any {
 	return {
@@ -56,28 +81,28 @@ export function styleChangeBgRgba(rgb: string, opacity: number, important = fals
 /**
  * Will style a particular element to scrollable on the y-axis.
  */
-export const styleScrollable: CSSProperties = {
+export const styleScrollable = {
 	overflowY: `auto`,
 	overflowX: `hidden`,
 	willChange: `scroll-position`,
 	'-webkit-overflow-scrolling': `touch`,
-};
+} satisfies CSSProperties;
 
 /**
  * Will style a particular element to scrollable on the x-axis.
  */
-export const styleScrollableX: CSSProperties = {
+export const styleScrollableX = {
 	overflowY: `hidden`,
 	overflowX: `auto`,
 	willChange: `scroll-position`,
 	'-webkit-overflow-scrolling': `touch`,
-};
+} satisfies CSSProperties;
 
 /**
  * Will style the box such that it looks like it elevates off the page. You can
  * control elevation with the argument.
  */
-export function styleElevate(elevation: number): CSSProperties {
+export function styleElevate(elevation: number) {
 	const umbraZValue = _mdcElevationUmbraMap[elevation];
 	const penumbraZValue = _mdcElevationPenumbraMap[elevation];
 	const ambientZValue = _mdcElevationAmbientMap[elevation];
@@ -85,13 +110,15 @@ export function styleElevate(elevation: number): CSSProperties {
 	return {
 		..._elevateTransition,
 		boxShadow: `${umbraZValue} ${_mdcUmbraColor}, ${penumbraZValue} ${_mdcPenumbraColor}, ${ambientZValue} ${_mdcAmbientColor}`,
-	};
+	} satisfies CSSProperties;
 }
 
-const _elevateTransition: CSSProperties = {
+export const kElevateTransition = `box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1)`;
+
+const _elevateTransition = {
 	// If elevations change, we want to transition the shadow.
-	transition: `box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1)`,
-};
+	transition: kElevateTransition,
+} satisfies CSSProperties;
 
 const _mdcElevationUmbraMap: Record<number, string> = {
 	0: '0px 0px 0px 0px',
@@ -182,7 +209,7 @@ const _mdcUmbraColor = `rgba(0, 0, 0, 0.15)`;
 const _mdcPenumbraColor = `rgba(0, 0, 0, 0.1)`;
 const _mdcAmbientColor = `rgba(0, 0, 0, 0.09)`;
 
-export function styleLineClamp(lines = 2): CSSProperties {
+export function styleLineClamp(lines = 2) {
 	return {
 		// https://github.com/postcss/autoprefixer/issues/1141#issuecomment-431280891
 		overflow: `hidden`,
@@ -194,24 +221,27 @@ export function styleLineClamp(lines = 2): CSSProperties {
 		// should be identical.
 		wordBreak: `break-word`,
 		overflowWrap: `anywhere`,
-	};
+	} satisfies CSSProperties;
 }
 
 export function styleFlexCenter({
 	display = 'flex',
 	direction,
+	gap,
 }: {
 	display?: 'flex' | 'inline-flex';
 	direction?: CSSProperties['flex-direction'];
-} = {}): CSSProperties {
+	gap?: CSSProperties['gap'];
+} = {}) {
 	return {
 		display,
 		alignItems: `center`,
 		justifyContent: `center`,
+		gap,
 		...styleWhen(!!direction, {
-			flexDirection: direction,
+			flexDirection: direction!,
 		}),
-	};
+	} satisfies CSSProperties;
 }
 
 export function styleAbsoluteFill({
@@ -229,27 +259,21 @@ export function styleAbsoluteFill({
 	left?: string | 0;
 	zIndex?: CSSProperties['zIndex'];
 } = {}) {
-	const result: CSSProperties = {
+	return {
 		position: `absolute`,
 		top: top ?? inset,
 		left: left ?? inset,
 		right: right ?? inset,
 		bottom: bottom ?? inset,
-	};
-	if (zIndex !== undefined) {
-		result.zIndex = zIndex;
-	}
-	return result;
+		...styleWhen(!!zIndex, {
+			zIndex: zIndex!,
+		}),
+	} satisfies CSSProperties;
 }
 
-export const styleOverlayTextShadow: CSSProperties = {
+export const styleOverlayTextShadow = {
 	textShadow: `0.5px 0.5px 1.5px rgba(0, 0, 0, 0.38)`,
-};
-
-// Used for the overlayed text on the fireside page specifically
-export const styleFiresideOverlayTextShadow: CSSProperties = {
-	textShadow: `0px 4px 4px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(0, 0, 0, 0.15), 0px 1px 8px rgba(0, 0, 0, 0.09)`,
-};
+} satisfies CSSProperties;
 
 type MaxWidthForOptionsResult = { maxWidth?: string };
 

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
-import { CSSPixelValue } from '../../../_styles/variables';
+import { buildCSSPixelValue } from '../../../_styles/variables';
 import { ComponentProps } from '../../component-helpers';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../scroll/AppScrollScroller.vue';
-import { ReactionDetailsModal } from '../details-modal/modal.service';
-import { ReactionableModel, ReactionCount, toggleReactionOnResource } from '../reaction-count';
+import { showReactionDetailsModal } from '../details-modal/modal.service';
+import { ReactionCount, ReactionableModel, toggleReactionOnResource } from '../reaction-count';
 import AppReactionListItem from './AppReactionListItem.vue';
 
 type ClickAction = 'toggle' | 'emit-click';
@@ -43,6 +43,10 @@ const props = defineProps({
 	hoverScrollWidth: {
 		type: Number,
 		default: 24,
+	},
+	sansMarginBottom: {
+		type: Boolean,
+		default: false,
 	},
 });
 
@@ -103,7 +107,7 @@ function onItemContext(reaction: ReactionCount) {
 	if (contextAction.value === 'emit-context') {
 		emit('item-context', reaction);
 	} else if (contextAction.value === 'show-details') {
-		ReactionDetailsModal.show({
+		showReactionDetailsModal({
 			model: model.value,
 			initialReaction: reaction,
 		});
@@ -167,7 +171,7 @@ async function onMouseOverSide(side: typeof mouseOverSide) {
 	}
 }
 
-const scrollerMarginBottom = new CSSPixelValue(12);
+const scrollerMarginBottom = buildCSSPixelValue(12);
 </script>
 
 <template>
@@ -183,6 +187,9 @@ const scrollerMarginBottom = new CSSPixelValue(12);
 			:style="{
 				display: `inline-block`,
 				margin: `4px 0 8px 0`,
+				...styleWhen(sansMarginBottom, {
+					marginBottom: 0,
+				}),
 				...styleWhen(useScroller, {
 					display: `block`,
 				}),

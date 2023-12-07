@@ -6,7 +6,10 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { Connection } from '../../../../_common/connection/connection-service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { Notification } from '../../../../_common/notification/notification-model';
+import {
+	NotificationFeedTypes,
+	NotificationModel,
+} from '../../../../_common/notification/notification-model';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
@@ -15,7 +18,7 @@ import {
 	NOTIFICATION_FILTER_FIELD,
 	SUPPORTED_NOTIFICATION_FEED_TYPES,
 } from '../../../views/notifications/RouteNotifications.vue';
-import { NotificationsFilterModal } from '../../../views/notifications/filter/modal.service';
+import { showNotificationsFilterModal } from '../../../views/notifications/filter/modal.service';
 import { routeNotifications } from '../../../views/notifications/notifications.route';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { useGridStore } from '../../grid/grid-store';
@@ -92,7 +95,7 @@ async function onShow() {
 				}
 			);
 
-			const items = Notification.populate(payload.items);
+			const items = NotificationModel.populate(payload.items);
 			feed.value.append(items);
 
 			if (payload.perPage) {
@@ -118,8 +121,8 @@ function onHide() {
 }
 
 function onClickFilter() {
-	NotificationsFilterModal.show({
-		filters: Notification.NOTIFICATION_FEED_TYPES,
+	showNotificationsFilterModal({
+		filters: NotificationFeedTypes,
 		replaceRoute: route.name === routeNotifications.name,
 	});
 }

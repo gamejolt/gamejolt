@@ -1,5 +1,4 @@
 import { ref } from 'vue';
-import { hasDesktopAudioCaptureSupport } from '../fireside/rtc/device-capabilities';
 
 const STORAGE_PREFIX = 'settings.';
 
@@ -100,18 +99,5 @@ export const SettingVideoPlayerFeedAutoplay = new BooleanSetting(
 	'video-player-feed-autoplay',
 	true
 );
-// Stream Viewing
-export const SettingStreamDesktopVolume = new NumberSetting('stream-desktop-volume', 1);
-// Stream Setup
-export const SettingStreamProducerWebcam = new StringSetting('stream-producer-webcam', '');
-export const SettingStreamProducerMic = new StringSetting('stream-producer-mic', '');
-export const SettingStreamProducerShouldStreamDesktopAudio = new BooleanSetting(
-	'stream-producer-should-stream-desktop-audio',
-	hasDesktopAudioCaptureSupport
-);
-export const SettingStreamProducerDesktopAudioDevice = new StringSetting(
-	'stream-producer-desktop-audio-device',
-	''
-);
-export const SettingStreamProducerGroupAudio = new StringSetting('stream-producer-group-audio', '');
+// Post Form
 export const SettingPostBackgroundId = new NumberSetting('post-background-id', -1);

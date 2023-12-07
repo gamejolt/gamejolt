@@ -1,17 +1,20 @@
 import { Presence } from 'phoenix';
 import { computed, markRaw, onMounted, onUnmounted, Ref, ref, shallowReadonly, watch } from 'vue';
-import { arrayRemove } from '../../../utils/array';
-import { CancelToken } from '../../../utils/cancel-token';
-import { run } from '../../../utils/utils';
-import { Background } from '../../../_common/background/background.model';
+import { BackgroundModel } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
 import { MarkObject } from '../../../_common/content/mark-object';
-import { Fireside } from '../../../_common/fireside/fireside.model';
 import { getModel, storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
+import {
+	RealtimeReactionsPayload,
+	updateReactionCount,
+} from '../../../_common/reaction/reaction-count';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
-import { StickerPlacement } from '../../../_common/sticker/placement/placement.model';
+import { StickerPlacementModel } from '../../../_common/sticker/placement/placement.model';
+import { arrayRemove } from '../../../utils/array';
+import { CancelToken } from '../../../utils/cancel-token';
+import { run } from '../../../utils/utils';
 import {
 	ChatClient,
 	isInChatRoom,
@@ -19,8 +22,8 @@ import {
 	setTimeSplit,
 	updateChatRoomLastMessageOn,
 } from './client';
-import { ChatMessage } from './message';
-import { ChatRoom } from './room';
+import { ChatMessageModel } from './message';
+import { ChatRoomModel } from './room';
 import { ChatUser } from './user';
 
 export type ChatRoomChannel = ReturnType<typeof createChatRoomChannel>;
@@ -28,8 +31,6 @@ export type ChatRoomChannel = ReturnType<typeof createChatRoomChannel>;
 interface JoinPayload {
 	room: UnknownModelData;
 	messages: UnknownModelData[];
-	fireside: UnknownModelData | null;
-	streaming_users: UnknownModelData[];
 }
 
 interface RoomPresence {
@@ -61,22 +62,14 @@ interface OwnerSyncPayload {
 }
 
 export interface PlaceStickerPayload {
-	stickerPlacement: StickerPlacement;
+	stickerPlacement: StickerPlacementModel;
 	success?: boolean;
 	unlockedPack?: UnknownModelData;
 }
 
-interface StartFiresidePayload {
-	fireside: UnknownModelData;
-}
-
-interface UpdateFiresidePayload {
-	fireside: UnknownModelData | null;
-	streaming_users: UnknownModelData[];
-}
-
-interface FiresideSocketParams {
-	fireside_viewing_mode: string;
+interface UpdateChatMessageReactionPayload {
+	deltas: RealtimeReactionsPayload[];
+	chat_message_id: number;
 }
 
 export function createChatRoomChannel(
@@ -95,30 +88,21 @@ export function createChatRoomChannel(
 		 * logic.
 		 */
 		afterMemberKick?: (data: ChatRoomMemberKickedPayload) => void;
-
-		/**
-		 * Fireside socket params to pass to the socket controller.
-		 */
-		firesideSocketParams?: FiresideSocketParams;
 	}
 ) {
 	const { socketController } = client;
-	const { roomId, instanced, afterMemberKick, firesideSocketParams } = options;
+	const { roomId, instanced, afterMemberKick } = options;
 
 	// This is because the join set its up async, but all the functionality that
 	// attaches to this channel will be called after the room is set up. So we
 	// can just safely access it.
-	const _room = ref<ChatRoom>();
+	const _room = ref<ChatRoomModel>();
 	const room = computed(() => _room.value!);
 
 	let _freezeMessageLimitRemovals = false;
 	let _queuedMessageLimit: number | undefined = undefined;
 
-	const channelController = createSocketChannelController(
-		`room:${roomId}`,
-		socketController,
-		firesideSocketParams
-	);
+	const channelController = createSocketChannelController(`room:${roomId}`, socketController);
 	channelController.listenTo('message', _onMsg);
 	channelController.listenTo('user_updated', _onUserUpdated);
 	channelController.listenTo('message_update', _onUpdateMsg);
@@ -130,8 +114,7 @@ export function createChatRoomChannel(
 	channelController.listenTo('owner_sync', _onOwnerSync);
 	channelController.listenTo('room_update', _onRoomUpdate);
 	channelController.listenTo('kick_member', _onMemberKicked);
-	channelController.listenTo('fireside_start', _onFiresideStart);
-	channelController.listenTo('fireside_update', _onFiresideUpdate);
+	channelController.listenTo('update-reactions', _onUpdateReaction);
 
 	const { channel, isClosed } = channelController;
 
@@ -142,21 +125,16 @@ export function createChatRoomChannel(
 	const joinPromise = channelController.join({
 		async onJoin(response: JoinPayload) {
 			client.roomChannels.set(roomId, markRaw(c));
-			_room.value = storeModel(ChatRoom, { chat: client, ...response.room });
+			_room.value = storeModel(ChatRoomModel, { chat: client, ...response.room });
 
 			// Clear out any old messages so we don't use old data from the
 			// model store.
 			room.value.messages = [];
 
-			const messages = storeModelList(ChatMessage, response.messages);
+			const messages = storeModelList(ChatMessageModel, response.messages);
 			messages.reverse();
 			processNewChatOutput(room.value, messages, true);
 			room.value.messagesPopulated = true;
-
-			room.value.updateFireside(
-				response.fireside ? new Fireside(response.fireside) : null,
-				response.streaming_users.map(x => new ChatUser(x))
-			);
 
 			// Don't push for guests.
 			if (client.currentUser && client.isFocused) {
@@ -195,7 +173,6 @@ export function createChatRoomChannel(
 		pushStartTyping,
 		pushStopTyping,
 		pushPlaceSticker,
-		pushStartFireside,
 		getMemberWatchLock,
 		leave,
 	});
@@ -204,10 +181,10 @@ export function createChatRoomChannel(
 		channelController.leave();
 	}
 
-	function _onMsg(data: Partial<ChatMessage>) {
-		let message = getModel(ChatMessage, data.id!);
+	function _onMsg(data: Partial<ChatMessageModel>) {
+		let message = getModel(ChatMessageModel, data.id!);
 		const storedMessage = message !== undefined;
-		message = storeModel(ChatMessage, data);
+		message = storeModel(ChatMessageModel, data);
 
 		// If we already stored the message before, just update its data and return.
 		if (storedMessage) {
@@ -237,11 +214,24 @@ export function createChatRoomChannel(
 		processNewRoomMessage(message);
 	}
 
-	function _queueMessageLimitRemoval(maxMessages: number) {
+	/**
+	 * Either removes messages past our limit immediately or queues it up if
+	 * we're scrolled up to view old messages.
+	 *
+	 * Does nothing if the room type doesn't have a valid
+	 * {@link ChatRoomModel.messageLimit} value.
+	 */
+	function _queueMessageLimitRemoval() {
+		const limit = room.value.messageLimit;
+		if (!limit) {
+			_queuedMessageLimit = undefined;
+			return;
+		}
+
 		if (_freezeMessageLimitRemovals) {
-			_queuedMessageLimit = maxMessages;
+			_queuedMessageLimit = limit;
 		} else {
-			_removeMessagesPastLimit(maxMessages);
+			_removeMessagesPastLimit(limit);
 			_queuedMessageLimit = undefined;
 		}
 	}
@@ -299,13 +289,13 @@ export function createChatRoomChannel(
 		}
 	}
 
-	function _onUpdateMsg(data: Partial<ChatMessage>) {
+	function _onUpdateMsg(data: Partial<ChatMessageModel>) {
 		if (!room.value) {
 			return;
 		}
 
 		// This will edit it within the room's message list.
-		storeModel(ChatMessage, data);
+		storeModel(ChatMessageModel, data);
 	}
 
 	function _onMemberInc(data: MemberIncPayload) {
@@ -336,7 +326,7 @@ export function createChatRoomChannel(
 		const textMark = new MarkObject('code');
 		text.marks.push(textMark);
 		const p = new ContentObject('paragraph', [text]);
-		const doc = new ContentDocument(room.value.messagesContentContext, [p]);
+		const doc = new ContentDocument('chat-message', [p]);
 
 		const json = doc.toJson();
 
@@ -350,26 +340,41 @@ export function createChatRoomChannel(
 		afterMemberKick?.(data);
 	}
 
-	function _onRoomUpdate(json: Partial<ChatRoom>) {
-		const { title, background } = json;
+	function _onRoomUpdate(json: Partial<ChatRoomModel>) {
+		const { title, fallback_title, background } = json;
 		room.value.title = title || '';
-		room.value.background = background ? new Background(background) : undefined;
+		room.value.fallback_title = fallback_title || '';
+		room.value.background = background ? storeModel(BackgroundModel, background) : undefined;
 	}
 
 	function _onOwnerSync(data: OwnerSyncPayload) {
 		room.value.owner_id = data.owner_id;
 	}
 
-	function _onFiresideStart(data: StartFiresidePayload) {
-		room.value.updateFireside(new Fireside(data.fireside), []);
-	}
+	function _onUpdateReaction(payload: UpdateChatMessageReactionPayload) {
+		const message = getModel(ChatMessageModel, payload.chat_message_id!);
+		if (!message) {
+			return;
+		}
 
-	function _onFiresideUpdate(data: UpdateFiresidePayload) {
-		room.value.updateFireside(
-			// This returns `null` when the Fireside is expired.
-			data.fireside ? new Fireside(data.fireside) : null,
-			data.streaming_users.map(x => new ChatUser(x))
-		);
+		for (const data of payload.deltas) {
+			updateReactionCount(
+				{
+					currentUserId: client.currentUser ? client.currentUser.id : 0,
+					model: message,
+				},
+				{
+					deltaInc: data.delta_inc,
+					deltaDec: data.delta_dec,
+				},
+				{
+					emojiId: data.emoji_id,
+					emojiImgUrl: data.emoji_img_url,
+					emojiPrefix: data.emoji_prefix,
+					emojiShortName: data.emoji_short_name,
+				}
+			);
+		}
 	}
 
 	function _syncPresentUsers(presence: Presence) {
@@ -410,7 +415,7 @@ export function createChatRoomChannel(
 	}
 
 	// TODO: why is this here and not in the chat client?
-	function processNewRoomMessage(message: ChatMessage) {
+	function processNewRoomMessage(message: ChatMessageModel) {
 		const alreadyReceivedMessage = room.value.messages.some(i => i.id === message.id);
 		if (alreadyReceivedMessage) {
 			return;
@@ -419,9 +424,7 @@ export function createChatRoomChannel(
 		processNewChatOutput(room.value, [message], false);
 		updateChatRoomLastMessageOn(client, message);
 
-		if (room.value.isFiresideRoom) {
-			_queueMessageLimitRemoval(100);
-		}
+		_queueMessageLimitRemoval();
 	}
 
 	function freezeMessageLimitRemovals() {
@@ -544,13 +547,8 @@ export function createChatRoomChannel(
 		);
 	}
 
-	function pushStartFireside() {
-		return channelController.push<StartFiresidePayload>('start_fireside');
-	}
-
-	// Currently this only works for firesides. But if you want to get
-	// information from the member collection you need to first get a lock to
-	// watch the most up to date data.
+	// If you want to get information from the member collection you need to
+	// first get a lock to watch the most up to date data.
 	const _memberWatchLocks: ChatRoomChannelLock[] = [];
 	let _memberWatchCancelToken = new CancelToken();
 	let _isWatchingMembers = false;
@@ -628,7 +626,7 @@ class ChatRoomChannelLock {
  * Convenience for getting a member collection and releasing the lock on
  * component unmount.
  */
-export function useChatRoomMembers(room: Ref<ChatRoom | undefined>) {
+export function useChatRoomMembers(room: Ref<ChatRoomModel | undefined>) {
 	let lock: ChatRoomChannelLock | undefined;
 	const mounted = ref(false);
 
@@ -640,13 +638,11 @@ export function useChatRoomMembers(room: Ref<ChatRoom | undefined>) {
 	});
 	const memberCollection = computed(() => room.value?.memberCollection);
 
-	watch([roomChannel, mounted], () => {
-		if (mounted.value && roomChannel.value) {
-			if (!lock) {
-				lock = roomChannel.value.getMemberWatchLock();
-			}
-		} else {
-			cleanup();
+	watch([roomChannel, mounted], ([roomChannelVal, mountedVal]) => {
+		cleanup();
+
+		if (mountedVal && roomChannelVal) {
+			lock = roomChannelVal.getMemberWatchLock();
 		}
 	});
 

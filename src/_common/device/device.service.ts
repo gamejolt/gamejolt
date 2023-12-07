@@ -173,6 +173,8 @@ export function getDeviceType(): DeviceType {
  * Use this to specifically target GoogleBot's dynamic rendering. Note, this
  * just does detection against user agent. It's not static, so it won't tree
  * shake away anything in the build.
+ *
+ * @__NO_SIDE_EFFECTS__
  */
 export function isDynamicGoogleBot() {
 	if (GJ_IS_DESKTOP_APP || import.meta.env.SSR) {

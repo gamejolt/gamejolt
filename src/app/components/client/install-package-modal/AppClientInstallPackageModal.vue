@@ -1,22 +1,22 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
-import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
-import { GameBuild } from '../../../../_common/game/build/build.model';
-import { Game } from '../../../../_common/game/game.model';
-import AppGamePackageCard from '../../../../_common/game/package/card/card.vue';
+import { GameBuildModel } from '../../../../_common/game/build/build.model';
+import { GameModel, pluckInstallableGameBuilds } from '../../../../_common/game/game.model';
+import AppGamePackageCard from '../../../../_common/game/package/card/AppGamePackageCard.vue';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { arrayIndexBy } from '../../../../utils/array';
 
 const props = defineProps({
 	game: {
-		type: Object as PropType<Game>,
+		type: Object as PropType<GameModel>,
 		required: true,
 	},
 });
@@ -27,7 +27,7 @@ const modal = useModal()!;
 const isLoading = ref(true);
 const packageData = ref<GamePackagePayloadModel>();
 
-const buildsByPackage = computed((): { [packageId: number]: GameBuild } => {
+const buildsByPackage = computed((): { [packageId: number]: GameBuildModel } => {
 	const builds = packageData.value?.installableBuilds;
 	if (!builds) {
 		return {};
@@ -53,7 +53,7 @@ async function init() {
 
 	const os = getDeviceOS();
 	const arch = getDeviceArch();
-	packageData.value.installableBuilds = Game.pluckInstallableBuilds(
+	packageData.value.installableBuilds = pluckInstallableGameBuilds(
 		packageData.value.packages,
 		os!,
 		arch

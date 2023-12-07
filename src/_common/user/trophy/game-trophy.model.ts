@@ -1,24 +1,23 @@
 import { arrayIndexBy } from '../../../utils/array';
-import { Game } from '../../game/game.model';
-import { GameTrophy } from '../../game/trophy/trophy.model';
-import { Model } from '../../model/model.service';
-import { UserBaseTrophy } from './user-base-trophy.model';
+import { GameModel } from '../../game/game.model';
+import { GameTrophyModel } from '../../game/trophy/trophy.model';
+import { UserBaseTrophyModel } from './user-base-trophy.model';
 
-export class UserGameTrophy extends UserBaseTrophy {
-	game_id!: number;
-	game_trophy_id!: number;
+export class UserGameTrophyModel extends UserBaseTrophyModel {
+	declare game_id: number;
+	declare game_trophy_id: number;
 
-	game_trophy?: GameTrophy;
-	game?: Game;
+	declare game_trophy?: GameTrophyModel;
+	declare game?: GameModel;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.game_trophy) {
-			this.game_trophy = new GameTrophy(data.game_trophy);
+			this.game_trophy = new GameTrophyModel(data.game_trophy);
 		}
 		if (data.game) {
-			this.game = new Game(data.game);
+			this.game = new GameModel(data.game);
 		}
 	}
 
@@ -30,16 +29,14 @@ export class UserGameTrophy extends UserBaseTrophy {
 		return 'game-trophy-' + this.id;
 	}
 
-	async $view() {
-		this.$_save(`/web/profile/trophies/view-game/${this.id}`, 'userGameTrophy');
-	}
-
-	/**
-	 * Indexes the achieved trophies by their trophy ID.
-	 */
-	static indexAchieved(trophies: UserGameTrophy[]) {
-		return arrayIndexBy(trophies, 'game_trophy_id');
+	get trophyType() {
+		return 'userGameTrophy';
 	}
 }
 
-Model.create(UserGameTrophy);
+/**
+ * Indexes the achieved trophies by their trophy ID.
+ */
+export function indexAchievedGameTrophies(trophies: UserGameTrophyModel[]) {
+	return arrayIndexBy(trophies, 'game_trophy_id');
+}

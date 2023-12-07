@@ -1,9 +1,9 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { formatNumber } from '../../../../_common/filters/number';
-import { ForumCategory } from '../../../../_common/forum/category/category.model';
-import { ForumChannel } from '../../../../_common/forum/channel/channel.model';
-import { ForumPost } from '../../../../_common/forum/post/post.model';
+import { ForumCategoryModel } from '../../../../_common/forum/category/category.model';
+import { ForumChannelModel } from '../../../../_common/forum/channel/channel.model';
+import { ForumPostModel } from '../../../../_common/forum/post/post.model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
@@ -20,10 +20,10 @@ import { arrayIndexByFunc } from '../../../../utils/array';
 	},
 })
 export default class AppForumChannelList extends Vue {
-	@Prop(Object) category!: ForumCategory;
-	@Prop(Array) channels!: ForumChannel[];
+	@Prop(Object) category!: ForumCategoryModel;
+	@Prop(Array) channels!: ForumChannelModel[];
 	@Prop({ type: Array, default: [] })
-	latestPosts!: ForumPost[];
+	latestPosts!: ForumPostModel[];
 	@Prop(Number) postCountPerPage!: number;
 
 	readonly formatNumber = formatNumber;
@@ -33,7 +33,7 @@ export default class AppForumChannelList extends Vue {
 		return arrayIndexByFunc(this.latestPosts, item => item.topic!.channel_id);
 	}
 
-	getPostPage(post: ForumPost) {
+	getPostPage(post: ForumPostModel) {
 		if (!this.postCountPerPage) {
 			return undefined;
 		}

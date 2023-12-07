@@ -1,5 +1,6 @@
+import { storeModelList } from '../model/model-store.service';
 import { Model } from '../model/model.service';
-import { Sticker } from '../sticker/sticker.model';
+import { StickerModel } from '../sticker/sticker.model';
 
 export const QuestObjectiveStatus = {
 	locked: 0,
@@ -28,12 +29,12 @@ export const QuestObjectiveMilestoneType = {
 	segmented: 'segmented',
 } as const;
 
-export class QuestObjective extends Model {
+export class QuestObjectiveModel extends Model {
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.stickers_to_place) {
-			this.stickers_to_place = Sticker.populate(data.stickers_to_place);
+			this.stickers_to_place = storeModelList(StickerModel, data.stickers_to_place);
 		}
 	}
 
@@ -47,7 +48,7 @@ export class QuestObjective extends Model {
 	declare max_progress_ticks: number;
 	declare progress_visualization_type: string;
 	declare sort: number;
-	stickers_to_place: Sticker[] = [];
+	stickers_to_place: StickerModel[] = [];
 
 	get isDisabled() {
 		return this.status === QuestObjectiveStatus.locked
@@ -67,5 +68,3 @@ export class QuestObjective extends Model {
 		return this.progress_visualization_type === QuestObjectiveMilestoneType.segmented;
 	}
 }
-
-Model.create(QuestObjective);

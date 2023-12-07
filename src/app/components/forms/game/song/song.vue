@@ -3,10 +3,10 @@ import { mixins, Options, Prop } from 'vue-property-decorator';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
-import { Game } from '../../../../../_common/game/game.model';
-import { GameSong } from '../../../../../_common/game/song/song.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import { $saveGameSong, GameSongModel } from '../../../../../_common/game/song/song.model';
 
-class Wrapper extends BaseForm<GameSong> {}
+class Wrapper extends BaseForm<GameSongModel> {}
 
 @Options({
 	components: {
@@ -14,9 +14,10 @@ class Wrapper extends BaseForm<GameSong> {}
 	},
 })
 export default class FormGameSong extends mixins(Wrapper) implements FormOnLoad {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 
-	modelClass = GameSong;
+	modelClass = GameSongModel;
+	modelSaveHandler = $saveGameSong;
 
 	maxFilesize = 0;
 

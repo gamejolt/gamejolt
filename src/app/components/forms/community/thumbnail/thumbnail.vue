@@ -1,6 +1,9 @@
 <script lang="ts">
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import { Community } from '../../../../../_common/community/community.model';
+import {
+	$saveCommunityThumbnail,
+	CommunityModel,
+} from '../../../../../_common/community/community.model';
 import { formatFilesize } from '../../../../../_common/filters/filesize';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
@@ -10,7 +13,7 @@ import {
 	FormOnLoad,
 } from '../../../../../_common/form-vue/form.service';
 
-type FormModel = Community & {
+type FormModel = CommunityModel & {
 	thumbnail_crop?: any;
 };
 
@@ -26,8 +29,8 @@ export default class FormCommunityThumbnail
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	modelClass = Community;
-	saveMethod = '$saveThumbnail' as const;
+	modelClass = CommunityModel;
+	modelSaveHandler = $saveCommunityThumbnail;
 
 	maxFilesize = 0;
 	minSize = 0;

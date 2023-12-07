@@ -7,22 +7,25 @@ import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import { Screen } from '../../screen/screen-service';
-import { SiteTrophy } from '../../site/trophy/trophy.model';
+import { SiteTrophyModel } from '../../site/trophy/trophy.model';
 import { useCommonStore } from '../../store/common-store';
 import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext, $gettextInterpolate } from '../../translate/translate.service';
+import { $gettext } from '../../translate/translate.service';
 import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
-import { UserGameTrophy } from '../../user/trophy/game-trophy.model';
-import { UserBaseTrophy } from '../../user/trophy/user-base-trophy.model';
+import { UserGameTrophyModel } from '../../user/trophy/game-trophy.model';
+import {
+	$viewUserBaseTrophyModel,
+	UserBaseTrophyModel,
+} from '../../user/trophy/user-base-trophy.model';
 import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 import AppUserAvatarList from '../../user/user-avatar/AppUserAvatarList.vue';
-import { User } from '../../user/user.model';
+import { UserModel } from '../../user/user.model';
 import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
 
 const props = defineProps({
 	userTrophy: {
-		type: Object as PropType<UserBaseTrophy>,
+		type: Object as PropType<UserBaseTrophyModel>,
 		required: true,
 	},
 });
@@ -32,15 +35,11 @@ const { user } = useCommonStore();
 const modal = useModal()!;
 
 const completionPercentage = ref<number | null>(null);
-const friends = ref<User[]>([]);
+const friends = ref<UserModel[]>([]);
 
 const trophy = computed(() => userTrophy.value.trophy!);
 
 const bgClass = computed(() => '-trophy-difficulty-' + trophy.value.difficulty);
-
-const isGame = computed(
-	() => userTrophy.value instanceof UserGameTrophy && !!userTrophy.value.game
-);
 
 const canReceiveExp = computed(() =>
 	!userTrophy.value.trophy ? false : !userTrophy.value.trophy.is_owner
@@ -61,17 +60,19 @@ const completionPercentageForDisplay = computed(() => {
 const shouldShowFriends = computed(() => Boolean(friends.value && friends.value.length > 0));
 
 const game = computed(() =>
-	userTrophy.value instanceof UserGameTrophy && userTrophy.value.game
+	userTrophy.value instanceof UserGameTrophyModel && userTrophy.value.game
 		? userTrophy.value.game
 		: undefined
 );
+
+const isGame = computed(() => !!game.value);
 
 const loggedInUserUnlocked = computed(() =>
 	Boolean(user.value && userTrophy.value.user_id === user.value.id)
 );
 
 const artist = computed(() =>
-	trophy.value instanceof SiteTrophy && trophy.value.artist instanceof User
+	trophy.value instanceof SiteTrophyModel && trophy.value.artist instanceof UserModel
 		? trophy.value.artist
 		: undefined
 );
@@ -84,7 +85,7 @@ onMounted(() => {
 		populateFriends();
 
 		if (userTrophy.value.user_id === user.value.id && !userTrophy.value.viewed_on) {
-			userTrophy.value.$view();
+			$viewUserBaseTrophyModel(userTrophy.value);
 		}
 	}
 });
@@ -106,7 +107,7 @@ async function populateFriends() {
 		`/web/profile/trophies/friends/${type}/${trophy.value.id}`
 	);
 	if (payload.users) {
-		friends.value = User.populate(payload.users);
+		friends.value = UserModel.populate(payload.users);
 	}
 }
 </script>
@@ -130,7 +131,7 @@ async function populateFriends() {
 						{{ trophy.title }}
 					</h2>
 					<div class="-subtitle small text-muted">
-						<template v-if="isGame && game">
+						<template v-if="game">
 							<RouterLink
 								v-app-tooltip="game.title"
 								:to="game.routeLocation"
@@ -196,10 +197,9 @@ async function populateFriends() {
 								</span>
 								<span v-else>
 									{{
-										$gettextInterpolate(
-											`~%{ num }% of players achieved this trophy`,
-											{ num: completionPercentageForDisplay }
-										)
+										$gettext(`~%{ num }% of players achieved this trophy`, {
+											num: completionPercentageForDisplay,
+										})
 									}}
 								</span>
 							</span>

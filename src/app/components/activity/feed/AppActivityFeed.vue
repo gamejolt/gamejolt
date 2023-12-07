@@ -1,13 +1,14 @@
 <script lang="ts">
 import { computed, inject, PropType, provide, reactive, ref, toRefs } from 'vue';
-import { useAdsController } from '../../../../_common/ad/ad-store';
+import { useAdStore } from '../../../../_common/ad/ad-store';
+import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../_common/community/community.model';
-import { EventItem } from '../../../../_common/event-item/event-item.model';
+import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
+import { EventItemModel, EventItemType } from '../../../../_common/event-item/event-item.model';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illEndOfFeed } from '../../../../_common/illustration/illustrations';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -19,7 +20,7 @@ import AppScrollInview, {
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppActivityFeedItem from './item/AppActivityFeedItem.vue';
-import AppActivityFeedNewButton from './new-button/new-button.vue';
+import AppActivityFeedNewButton from './new-button/AppActivityFeedNewButton.vue';
 import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from './view';
 
 const InviewConfigShowNew = new ScrollInviewConfig({ margin: `-${Scroll.offsetTop}px` });
@@ -32,15 +33,15 @@ export type ActivityFeedInterface = ReturnType<typeof createActivityFeedInterfac
  * us know about state changes.
  */
 function createActivityFeedInterface(hooks: {
-	onPostEdited: (eventItem: EventItem) => void;
-	onPostPublished: (eventItem: EventItem) => void;
-	onPostRemoved: (eventItem: EventItem) => void;
-	onPostFeatured: (eventItem: EventItem, community: Community) => void;
-	onPostUnfeatured: (eventItem: EventItem, community: Community) => void;
-	onPostMovedChannel: (eventItem: EventItem, movedTo: CommunityChannel) => void;
-	onPostRejected: (eventItem: EventItem, community: Community) => void;
-	onPostPinned: (eventItem: EventItem) => void;
-	onPostUnpinned: (eventItem: EventItem) => void;
+	onPostEdited: (eventItem: EventItemModel) => void;
+	onPostPublished: (eventItem: EventItemModel) => void;
+	onPostRemoved: (eventItem: EventItemModel) => void;
+	onPostFeatured: (eventItem: EventItemModel, community: CommunityModel) => void;
+	onPostUnfeatured: (eventItem: EventItemModel, community: CommunityModel) => void;
+	onPostMovedChannel: (eventItem: EventItemModel, movedTo: CommunityChannelModel) => void;
+	onPostRejected: (eventItem: EventItemModel, community: CommunityModel) => void;
+	onPostPinned: (eventItem: EventItemModel) => void;
+	onPostUnpinned: (eventItem: EventItemModel) => void;
 }) {
 	return reactive({ ...hooks });
 }
@@ -62,19 +63,19 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	'edit-post': (_eventItem: EventItem) => true,
-	'publish-post': (_eventItem: EventItem) => true,
-	'remove-post': (_eventItem: EventItem) => true,
-	'feature-post': (_eventItem: EventItem, _community: Community) => true,
-	'unfeature-post': (_eventItem: EventItem, _community: Community) => true,
-	'move-channel-post': (_eventItem: EventItem, _: any) => true,
-	'reject-post': (_eventItem: EventItem, _community: Community) => true,
+	'edit-post': (_eventItem: EventItemModel) => true,
+	'publish-post': (_eventItem: EventItemModel) => true,
+	'remove-post': (_eventItem: EventItemModel) => true,
+	'feature-post': (_eventItem: EventItemModel, _community: CommunityModel) => true,
+	'unfeature-post': (_eventItem: EventItemModel, _community: CommunityModel) => true,
+	'move-channel-post': (_eventItem: EventItemModel, _: any) => true,
+	'reject-post': (_eventItem: EventItemModel, _community: CommunityModel) => true,
 	'load-new': () => true,
 	'load-more': () => true,
 });
 
 const { feed, showAds } = toRefs(props);
-const ads = useAdsController();
+const { shouldShow: globalShouldShowAds } = useAdStore();
 
 provide(ActivityFeedKey, feed.value);
 
@@ -107,46 +108,46 @@ const shouldShowLoadMore = computed(
 );
 const lastPostScrollId = computed(() => feed.value.state.endScrollId);
 const newCount = computed(() => feed.value.newCount);
-const shouldShowAds = computed(() => showAds.value && ads.shouldShow);
+const shouldShowAds = computed(() => showAds.value && globalShouldShowAds.value);
 
 function onNewButtonInview() {
 	isNewButtonInview.value = true;
 }
 
-function onPostEdited(eventItem: EventItem) {
+function onPostEdited(eventItem: EventItemModel) {
 	feed.value.update(eventItem);
 	emit('edit-post', eventItem);
 }
 
-function onPostPublished(eventItem: EventItem) {
+function onPostPublished(eventItem: EventItemModel) {
 	feed.value.update(eventItem);
 	emit('publish-post', eventItem);
 }
 
-function onPostRemoved(eventItem: EventItem) {
+function onPostRemoved(eventItem: EventItemModel) {
 	feed.value.remove([eventItem]);
 	emit('remove-post', eventItem);
 }
 
-function onPostPinned(eventItem: EventItem) {
+function onPostPinned(eventItem: EventItemModel) {
 	// Pin the passed in item, and unpin all others.
 	for (const item of feed.value.items) {
 		if (
-			item.feedItem instanceof EventItem &&
-			item.feedItem.type === EventItem.TYPE_POST_ADD &&
-			item.feedItem.action instanceof FiresidePost
+			item.feedItem instanceof EventItemModel &&
+			item.feedItem.type === EventItemType.PostAdd &&
+			item.feedItem.action instanceof FiresidePostModel
 		) {
 			item.feedItem.action.is_pinned = false;
 		}
 	}
 
-	if (eventItem.type === EventItem.TYPE_POST_ADD && eventItem.action instanceof FiresidePost) {
+	if (eventItem.type === EventItemType.PostAdd && eventItem.action instanceof FiresidePostModel) {
 		eventItem.action.is_pinned = true;
 	}
 }
 
-function onPostUnpinned(eventItem: EventItem) {
-	if (eventItem.type === EventItem.TYPE_POST_ADD && eventItem.action instanceof FiresidePost) {
+function onPostUnpinned(eventItem: EventItemModel) {
+	if (eventItem.type === EventItemType.PostAdd && eventItem.action instanceof FiresidePostModel) {
 		eventItem.action.is_pinned = false;
 	}
 	onPostEdited(eventItem);
@@ -217,8 +218,8 @@ function shouldShowAd(index: number) {
 			</AppScrollInview>
 		</template>
 
-		<!-- Need the div so that we can target the last child in the container. -->
-		<div>
+		<!-- We always need a parent element here so that we can target the last "item" for styling. -->
+		<AppAdFeedParent :is-active="shouldShowAds">
 			<div v-for="(item, i) of feed.items" :key="item.id" class="-item">
 				<AppActivityFeedItem :item="item" />
 
@@ -226,14 +227,10 @@ function shouldShowAd(index: number) {
 					v-if="shouldShowAd(i)"
 					class="-ad-container well fill-offset full-bleed-xs text-center"
 				>
-					<AppAdWidget
-						size="rectangle"
-						placement="content"
-						:meta="{ staticSize: true }"
-					/>
+					<AppAdWidget size="rectangle" placement="content" />
 				</div>
 			</div>
-		</div>
+		</AppAdFeedParent>
 
 		<!--
 		If they are viewing a slice of the state, then we don't want to allow loading more.

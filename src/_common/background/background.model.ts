@@ -1,74 +1,95 @@
+import { CSSProperties } from 'vue';
 import { getMediaserverUrlForBounds } from '../../utils/image';
-import { MediaItem } from '../media-item/media-item-model';
-import { Model } from '../model/model.service';
+import { MediaItemModel } from '../media-item/media-item-model';
+import { ModelStoreModel } from '../model/model-store.service';
+import { ShopProductCommonFields } from '../shop/product/product-model';
 
-const ScalingStretch = 'stretch';
-const ScalingTile = 'tile';
-const DefaultScale = 2.0;
+export const BackgroundDefaultScale = 2.0;
 
-export class Background extends Model {
-	declare scaling: string;
-	declare media_item: MediaItem;
+export const enum BackgroundScaling {
+	stretch = 'stretch',
+	tile = 'tile',
+}
+
+export class BackgroundModel implements ModelStoreModel, ShopProductCommonFields {
+	declare id: number;
+	declare scaling: BackgroundScaling;
+	declare media_item: MediaItemModel;
 	declare scale: number;
-	declare name?: string;
+	declare name: string;
+	declare description: string | undefined;
 	declare rarity?: number;
 
-	constructor(data: any = {}) {
-		super(data);
+	// Shop fields
+	declare is_premium: boolean;
+	declare has_active_sale: boolean;
+	declare was_approved: boolean;
+	declare added_on: number | undefined;
+
+	update(data: any) {
+		Object.assign(this, data);
 
 		if (data.media_item) {
-			this.media_item = new MediaItem(data.media_item);
+			this.media_item = new MediaItemModel(data.media_item);
 		}
 
 		if (typeof data.scale === 'number' && data.scale > 0) {
 			this.scale = data.scale;
 		} else {
-			this.scale = DefaultScale;
+			this.scale = BackgroundDefaultScale;
 		}
-	}
-
-	get cssBackgroundImage() {
-		if (!this.media_item) {
-			return;
-		}
-
-		const { is_animated, img_url, mediaserver_url, width, height } = this.media_item;
-		if (is_animated && img_url) {
-			return `url(${img_url})`;
-		}
-
-		let src = mediaserver_url;
-		if (this.scaling === ScalingTile) {
-			src = getMediaserverUrlForBounds({
-				src,
-				maxWidth: width / this.scale,
-				maxHeight: height / this.scale,
-			});
-		}
-		return `url(${src})`;
-	}
-
-	get cssBackgroundSize() {
-		if (this.scaling === ScalingTile) {
-			const width = this.media_item.width / this.scale;
-			const height = this.media_item.height / this.scale;
-			return `${width}px ${height}px`;
-		} else if (this.scaling === ScalingStretch) {
-			return '100% 100%';
-		}
-		return 'cover';
-	}
-
-	get cssBackgroundRepeat() {
-		if (this.scaling === ScalingTile) {
-			return 'repeat';
-		}
-		return 'no-repeat';
-	}
-
-	get cssBackgroundPosition() {
-		return 'top';
 	}
 }
 
-Model.create(Background);
+/**
+ * Returns {@link img_url} for animated backgrounds or pre-scaled
+ * {@link mediaserver_url} for others.
+ */
+export function getBackgroundImgUrl(background: BackgroundModel) {
+	const { is_animated, img_url, mediaserver_url, width, height } = background.media_item;
+	if (is_animated && img_url) {
+		return img_url;
+	}
+
+	const { scaling, scale } = background;
+	let src = mediaserver_url;
+	if (scaling === BackgroundScaling.tile) {
+		src = getMediaserverUrlForBounds({
+			src,
+			maxWidth: width / scale,
+			maxHeight: height / scale,
+		});
+	}
+	return src;
+}
+
+/**
+ * Helper function to assign CSSProperties based on the {@link background} data.
+ */
+export function getBackgroundCSSProperties(background: BackgroundModel) {
+	const { scaling, media_item, scale } = background;
+
+	let backgroundSize = 'cover';
+	let backgroundRepeat = 'no-repeat';
+
+	switch (scaling) {
+		case BackgroundScaling.tile: {
+			const width = media_item.width / scale;
+			const height = media_item.height / scale;
+			backgroundSize = `${width}px ${height}px`;
+			backgroundRepeat = 'repeat';
+			break;
+		}
+
+		case BackgroundScaling.stretch:
+			backgroundSize = `100% 100%`;
+			break;
+	}
+
+	return {
+		backgroundImage: `url(${getBackgroundImgUrl(background)})` as string,
+		backgroundPosition: `top`,
+		backgroundRepeat,
+		backgroundSize,
+	} satisfies CSSProperties;
+}

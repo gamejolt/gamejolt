@@ -11,7 +11,7 @@ import { Screen } from '../../screen/screen-service';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import AppThemeSvg from '../../theme/svg/AppThemeSvg.vue';
 import AppQuestThumbnail from '../AppQuestThumbnail.vue';
-import { Quest } from '../quest-model';
+import { QuestModel } from '../quest-model';
 
 export interface QuestRewardData {
 	key: string;
@@ -64,7 +64,7 @@ const modal = useModal<boolean>()!;
 
 const props = defineProps({
 	quest: {
-		type: Object as PropType<Quest>,
+		type: Object as PropType<QuestModel>,
 		required: true,
 	},
 	rewards: {

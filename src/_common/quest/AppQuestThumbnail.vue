@@ -6,7 +6,7 @@ import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 import { kThemeGjOverlayNotice, kThemePrimary, kThemePrimaryFg } from '../theme/variables';
 import AppQuestFrame from './AppQuestFrame.vue';
-import { Quest } from './quest-model';
+import { QuestModel } from './quest-model';
 
 interface QuestBlipState {
 	bgColor: string;
@@ -16,7 +16,7 @@ interface QuestBlipState {
 
 const props = defineProps({
 	quest: {
-		type: Object as PropType<Quest>,
+		type: Object as PropType<QuestModel>,
 		required: true,
 	},
 });

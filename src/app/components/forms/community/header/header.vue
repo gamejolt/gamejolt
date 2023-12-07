@@ -1,6 +1,10 @@
 <script lang="ts">
 import { mixins, Options, Watch } from 'vue-property-decorator';
-import { Community } from '../../../../../_common/community/community.model';
+import {
+	$clearCommunityHeader,
+	$saveCommunityHeader,
+	CommunityModel,
+} from '../../../../../_common/community/community.model';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
@@ -8,10 +12,10 @@ import {
 	FormOnBeforeSubmit,
 	FormOnLoad,
 } from '../../../../../_common/form-vue/form.service';
-import { ModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 
-type FormModel = Community & {
-	header_crop: any;
+type FormModel = CommunityModel & {
+	header_crop?: any;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -26,8 +30,8 @@ export default class FormCommunityHeader
 	extends mixins(Wrapper)
 	implements FormOnLoad, FormOnBeforeSubmit
 {
-	modelClass = Community as any;
-	saveMethod = '$saveHeader' as '$saveHeader' | '$clearHeader';
+	modelClass = CommunityModel;
+	modelSaveHandler = $saveCommunityHeader;
 
 	maxFilesize = 0;
 	minAspectRatio = 0;
@@ -61,26 +65,26 @@ export default class FormCommunityHeader
 	}
 
 	onBeforeSubmit() {
-		if (this.saveMethod === '$saveHeader') {
+		if (this.modelSaveHandler === $saveCommunityHeader) {
 			// Backend expects this field.
 			this.setField('crop' as any, this.formModel.header_crop);
 		}
 	}
 
 	async clearHeader() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to remove the community header?`)
 		);
 
 		if (result) {
-			this.saveMethod = '$clearHeader';
+			this.modelSaveHandler = $clearCommunityHeader;
 			this.form.submit();
 		}
 	}
 
 	headerSelected() {
 		if (this.formModel.file) {
-			this.saveMethod = '$saveHeader';
+			this.modelSaveHandler = $saveCommunityHeader;
 			this.form.submit();
 		}
 	}

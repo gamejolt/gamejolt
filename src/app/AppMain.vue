@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { onMounted, provide, reactive, watch } from 'vue';
 import { RouterView } from 'vue-router';
-import { createAdsController } from '../_common/ad/ad-store';
+import { createAdStore } from '../_common/ad/ad-store';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
-import AppCookieBanner from '../_common/cookie/banner/AppCookieBanner.vue';
 import AppErrorPage from '../_common/error/page/AppErrorPage.vue';
 import { createAppPromotionStore } from '../_common/mobile-app/store';
 import Onboarding from '../_common/onboarding/onboarding.service';
@@ -19,7 +18,7 @@ const { bootstrap, loadNotificationState, clear, clearNotificationState } = appS
 const { user } = useCommonStore();
 const { loadGrid, clearGrid } = useGridStore();
 
-createAdsController();
+createAdStore();
 createAppPromotionStore();
 provide(CommentStoreManagerKey, reactive(new CommentStoreManager()));
 
@@ -78,8 +77,6 @@ watch(
 
 <template>
 	<AppCommonShell>
-		<AppCookieBanner />
-
 		<AppShell>
 			<div id="content">
 				<AppErrorPage>

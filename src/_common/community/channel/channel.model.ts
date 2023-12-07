@@ -1,31 +1,28 @@
 import { Api } from '../../api/api.service';
-import { MediaItem } from '../../media-item/media-item-model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
-import { CommunityCompetition } from '../competition/competition.model';
+import { CommunityCompetitionModel } from '../competition/competition.model';
 import {
-	CommunityChannelPermissions,
 	COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING,
+	CommunityChannelPermissions,
 } from './channel-permissions';
 
 export type CommunityChannelType = 'post-feed' | 'competition';
-
 export type CommunityChannelVisibility = 'draft' | 'published';
 
-export class CommunityChannel extends Model {
-	community_id!: number;
-	title!: string;
-	added_on!: number;
-	sort!: number;
-	type!: CommunityChannelType;
-	visibility!: CommunityChannelVisibility;
-	display_title!: string | null;
-	description_content!: string | null;
-	is_archived!: boolean;
-
-	permissions!: CommunityChannelPermissions;
-
-	background?: MediaItem;
-	competition!: CommunityCompetition | null;
+export class CommunityChannelModel extends Model {
+	declare community_id: number;
+	declare title: string;
+	declare added_on: number;
+	declare sort: number;
+	declare type: CommunityChannelType;
+	declare visibility: CommunityChannelVisibility;
+	declare display_title: string | null;
+	declare description_content: string | null;
+	declare is_archived: boolean;
+	declare permissions: CommunityChannelPermissions;
+	declare background?: MediaItemModel;
+	declare competition: CommunityCompetitionModel | null;
 
 	get hasDisplayTitle() {
 		return !!this.display_title && this.display_title !== this.title;
@@ -52,93 +49,91 @@ export class CommunityChannel extends Model {
 		super(data);
 
 		if (data.background) {
-			this.background = new MediaItem(data.background);
+			this.background = new MediaItemModel(data.background);
 		}
 		if (data.competition) {
-			this.competition = new CommunityCompetition(data.competition);
+			this.competition = new CommunityCompetitionModel(data.competition);
 		}
 
 		this.permissions = new CommunityChannelPermissions(data.perms);
 	}
-
-	static $saveSort(communityId: number, channelIds: number[]) {
-		return Api.sendRequest(
-			'/web/dash/communities/channels/save-sort/' + communityId,
-			channelIds
-		);
-	}
-
-	static $saveSortArchived(communityId: number, channelIds: number[]) {
-		return Api.sendRequest(
-			'/web/dash/communities/channels/save-sort-archived/' + communityId,
-			channelIds
-		);
-	}
-
-	$save() {
-		if (this.id) {
-			return this.$_save(
-				'/web/dash/communities/channels/save/' + this.community_id + '/' + this.id,
-				'channel'
-			);
-		}
-
-		return this.$_save('/web/dash/communities/channels/save/' + this.community_id, 'channel');
-	}
-
-	$saveBackground() {
-		return this.$_save(
-			'/web/dash/communities/channels/save-background/' + this.community_id + '/' + this.id,
-			'channel',
-			{ file: this.file, allowComplexData: ['crop'] }
-		);
-	}
-
-	$saveDescription() {
-		return this.$_save('/web/dash/communities/description/save-channel/' + this.id, 'channel');
-	}
-
-	$publish() {
-		return this.$_save(
-			`/web/dash/communities/channels/publish/` + this.community_id + '/' + this.id,
-			'channel'
-		);
-	}
-
-	$clearBackground() {
-		return this.$_save(
-			`/web/dash/communities/channels/clear-background/${this.community_id}/${this.id}`,
-			'channel'
-		);
-	}
-
-	$remove(moveToChannel?: CommunityChannel) {
-		if (!this.id) {
-			return;
-		}
-
-		return this.$_remove(
-			'/web/dash/communities/channels/remove/' + this.community_id + '/' + this.id,
-			{
-				detach: true,
-				data: moveToChannel ? { move_to_channel: moveToChannel.id } : {},
-			}
-		);
-	}
-
-	$archive() {
-		return this.$_save(
-			`/web/dash/communities/channels/archive/` + this.community_id + '/' + this.id,
-			'channel'
-		);
-	}
-
-	$unarchive() {
-		return this.$_save(
-			`/web/dash/communities/channels/unarchive/` + this.community_id + '/' + this.id,
-			'channel'
-		);
-	}
 }
 
-Model.create(CommunityChannel);
+export function $publishCommunityChannel(model: CommunityChannelModel) {
+	return model.$_save(
+		`/web/dash/communities/channels/publish/` + model.community_id + '/' + model.id,
+		'channel'
+	);
+}
+
+export function $clearCommunityChannelBackground(model: CommunityChannelModel) {
+	return model.$_save(
+		`/web/dash/communities/channels/clear-background/${model.community_id}/${model.id}`,
+		'channel'
+	);
+}
+
+export function $removeCommunityChannel(
+	model: CommunityChannelModel,
+	moveToChannel?: CommunityChannelModel
+) {
+	if (!model.id) {
+		return;
+	}
+
+	return model.$_remove(
+		'/web/dash/communities/channels/remove/' + model.community_id + '/' + model.id,
+		{
+			detach: true,
+			data: moveToChannel ? { move_to_channel: moveToChannel.id } : {},
+		}
+	);
+}
+
+export function $archiveCommunityChannel(model: CommunityChannelModel) {
+	return model.$_save(
+		`/web/dash/communities/channels/archive/` + model.community_id + '/' + model.id,
+		'channel'
+	);
+}
+
+export function $unarchiveCommunityChannel(model: CommunityChannelModel) {
+	return model.$_save(
+		`/web/dash/communities/channels/unarchive/` + model.community_id + '/' + model.id,
+		'channel'
+	);
+}
+
+export function $saveCommunityChannelSort(communityId: number, channelIds: number[]) {
+	return Api.sendRequest('/web/dash/communities/channels/save-sort/' + communityId, channelIds);
+}
+
+export function $saveCommunityChannelSortArchived(communityId: number, channelIds: number[]) {
+	return Api.sendRequest(
+		'/web/dash/communities/channels/save-sort-archived/' + communityId,
+		channelIds
+	);
+}
+
+export function $saveCommunityChannel(model: CommunityChannelModel) {
+	if (model.id) {
+		return model.$_save(
+			'/web/dash/communities/channels/save/' + model.community_id + '/' + model.id,
+			'channel'
+		);
+	}
+
+	return model.$_save('/web/dash/communities/channels/save/' + model.community_id, 'channel');
+}
+
+export function $saveCommunityChannelBackground(model: CommunityChannelModel) {
+	return model.$_save(
+		'/web/dash/communities/channels/save-background/' + model.community_id + '/' + model.id,
+		'channel',
+		{ file: model.file, allowComplexData: ['crop'] }
+	);
+}
+
+export function $saveCommunityChannelDescription(model: CommunityChannelModel) {
+	return model.$_save('/web/dash/communities/description/save-channel/' + model.id, 'channel');
+}

@@ -1,6 +1,6 @@
 import { Ref, ref, shallowReadonly } from 'vue';
 import { arrayRemove } from '../../../utils/array';
-import { CreatorExperience } from '../../creator/experience/experience.model';
+import { CreatorExperienceModel } from '../../creator/experience/experience.model';
 
 interface ShellNoticeItem {
 	id: number;
@@ -17,7 +17,7 @@ interface CustomMessageNotice {
 
 export interface CreatorExperienceNotice {
 	type: 'creator-experience';
-	experience: CreatorExperience;
+	experience: CreatorExperienceModel;
 	leveledUp: boolean;
 	xpGained: number;
 }

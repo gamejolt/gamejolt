@@ -1,10 +1,10 @@
 import { computed, inject, InjectionKey, ref, Ref } from 'vue';
-import { EmojiGroup } from '../emoji/emoji-group.model';
+import { EmojiGroupModel } from '../emoji/emoji-group.model';
 import { Environment } from '../environment/environment.service';
 import '../model/model.service';
 import { Navigate } from '../navigate/navigate.service';
-import { UserTimeout } from '../user/timeout/timeout.model';
-import { User } from '../user/user.model';
+import { UserTimeoutModel } from '../user/timeout/timeout.model';
+import { UserModel } from '../user/user.model';
 
 interface UserConsents {
 	ads?: boolean;
@@ -12,7 +12,7 @@ interface UserConsents {
 }
 
 export interface EmojiGroupData {
-	group: EmojiGroup;
+	group: EmojiGroupModel;
 	isLoading: boolean;
 	isBootstrapped: boolean;
 	hasError: boolean;
@@ -27,15 +27,20 @@ export function useCommonStore() {
 }
 
 export function createCommonStore() {
-	const user = ref<User | null>(null);
+	const user = ref<UserModel | null>(null);
 	const userBootstrapped = ref(false);
+
+	let _resolveUserBootstrapped: (() => void) | null = null;
+	const userBootstrappedPromise = new Promise<void>(resolve => {
+		_resolveUserBootstrapped = resolve;
+	});
 
 	const reactionsData = ref(new Map()) as Ref<Map<number, EmojiGroupData>>;
 	const reactionsCursor = ref<string>();
 
 	const consents = ref<UserConsents>({});
 	const error = ref<number | string | null>(null);
-	const timeout = ref<UserTimeout | null>(null);
+	const timeout = ref<UserTimeoutModel | null>(null);
 
 	// Wallet currencies.
 	const coinBalance = ref(0);
@@ -87,7 +92,7 @@ export function createCommonStore() {
 		if (user.value) {
 			user.value.assign(newUser);
 		} else {
-			user.value = new User(newUser);
+			user.value = new UserModel(newUser);
 
 			if (getInitialPackWatermarkStorageValue()) {
 				showInitialPackWatermark.value = true;
@@ -95,16 +100,17 @@ export function createCommonStore() {
 		}
 
 		if (newUser.timeout) {
-			const timeout = new UserTimeout(newUser.timeout);
+			const timeout = new UserTimeoutModel(newUser.timeout);
 			setTimeout(timeout);
 		} else {
 			timeout.value = null;
 		}
 
 		userBootstrapped.value = true;
+		_resolveUserBootstrapped?.();
 	}
 
-	function setTimeout(newTimeout: UserTimeout) {
+	function setTimeout(newTimeout: UserTimeoutModel) {
 		if (!newTimeout.getIsActive()) {
 			timeout.value = null;
 		} else {
@@ -116,6 +122,7 @@ export function createCommonStore() {
 	function clearUser() {
 		user.value = null;
 		userBootstrapped.value = true;
+		_resolveUserBootstrapped?.();
 		reactionsData.value = new Map();
 		coinBalance.value = 0;
 		joltbuxBalance.value = 0;
@@ -146,6 +153,7 @@ export function createCommonStore() {
 	return {
 		user,
 		userBootstrapped,
+		userBootstrappedPromise,
 		reactionsData,
 		reactionsCursor,
 		consents,

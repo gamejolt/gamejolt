@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { ChatRoom } from '../room';
-import { ChatUser } from '../user';
 import AppChatList from '../_list/AppChatList.vue';
+import { ChatRoomModel } from '../room';
+import { ChatUser } from '../user';
 import AppChatUserListItem from './AppChatUserListItem.vue';
 
-type UserListEntries = (ChatUser | ChatRoom)[];
+type UserListEntries = (ChatUser | ChatRoomModel)[];
 
 defineProps({
 	entries: {

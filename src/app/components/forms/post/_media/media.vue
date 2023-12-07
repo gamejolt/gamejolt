@@ -2,7 +2,7 @@
 import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
 import draggable from 'vuedraggable';
 import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppFormControlUpload, {
 	AppFormControlUploadInterface,
 } from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
@@ -14,7 +14,7 @@ import {
 } from '../../../../../_common/form-vue/form.service';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { MediaItem } from '../../../../../_common/media-item/media-item-model';
+import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import AppFormPostMediaItem from './item/item.vue';
 
@@ -40,7 +40,7 @@ export default class AppFormPostMedia
 	implements FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
 {
 	@Prop({ type: Object })
-	post!: FiresidePost;
+	post!: FiresidePostModel;
 
 	@Prop(Number)
 	maxFilesize!: number;
@@ -52,7 +52,7 @@ export default class AppFormPostMedia
 	maxHeight!: number;
 
 	@Prop(Array)
-	mediaItems!: MediaItem[];
+	mediaItems!: MediaItemModel[];
 
 	@Prop(Boolean)
 	loading?: boolean;
@@ -64,16 +64,16 @@ export default class AppFormPostMedia
 	};
 
 	@Emit('upload')
-	emitUpload(_newMediaItems: MediaItem[]) {}
+	emitUpload(_newMediaItems: MediaItemModel[]) {}
 
 	@Emit('error')
 	emitError(_reason: string) {}
 
 	@Emit('sort')
-	emitSort(_mediaItems: MediaItem[]) {}
+	emitSort(_mediaItems: MediaItemModel[]) {}
 
 	@Emit('remove')
-	emitRemove(_mediaItem: MediaItem) {}
+	emitRemove(_mediaItem: MediaItemModel) {}
 
 	get isLoading() {
 		return this.form.isProcessing || this.loading;
@@ -83,7 +83,7 @@ export default class AppFormPostMedia
 		return this.mediaItems;
 	}
 
-	set internalItems(mediaItems: MediaItem[]) {
+	set internalItems(mediaItems: MediaItemModel[]) {
 		this.emitSort(mediaItems);
 	}
 
@@ -151,10 +151,12 @@ export default class AppFormPostMedia
 	}
 
 	onSubmitSuccess(response: any) {
-		this.emitUpload(MediaItem.populate(response.mediaItems));
+		this.$refs.upload?.clearAllFiles();
+		this.emitUpload(MediaItemModel.populate(response.mediaItems));
 	}
 
 	onSubmitError(response: any) {
+		this.$refs.upload?.clearAllFiles();
 		this.emitError(response.reason);
 	}
 }

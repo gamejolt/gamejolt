@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import { trackGotoCommunity } from '../../analytics/analytics.service';
-import { Community } from '../community.model';
-import AppCommunityThumbnailImg from './AppCommunityThumbnailImg.vue';
 import { RouterLink } from 'vue-router';
+import { trackGotoCommunity } from '../../analytics/analytics.service';
+import { CommunityModel } from '../community.model';
+import AppCommunityThumbnailImg from './AppCommunityThumbnailImg.vue';
 
 const props = defineProps({
 	community: {
-		type: Object as PropType<Community>,
+		type: Object as PropType<CommunityModel>,
 		required: true,
 	},
 });

@@ -1,17 +1,17 @@
 import { Api } from '../../api/api.service';
 import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-helpers';
-import { MediaItem } from '../../media-item/media-item-model';
+import { MediaItemModel } from '../../media-item/media-item-model';
 import { Model } from '../../model/model.service';
-import { Game } from '../game.model';
+import { GameModel } from '../game.model';
 
-export class GameScreenshot extends Model implements LightboxMediaModel {
-	media_type!: 'image';
+export class GameScreenshotModel extends Model implements LightboxMediaModel {
+	declare media_type: 'image';
 
-	game_id!: number;
-	caption!: string;
-	posted_on!: number;
-	status!: number;
-	media_item!: MediaItem;
+	declare game_id: number;
+	declare caption: string;
+	declare posted_on: number;
+	declare status: number;
+	declare media_item: MediaItemModel;
 
 	// Needed for lightbox and other components that are used together with GameVideo.
 	get img_thumbnail() {
@@ -26,7 +26,7 @@ export class GameScreenshot extends Model implements LightboxMediaModel {
 		super(data);
 
 		if (data.media_item) {
-			this.media_item = new MediaItem(data.media_item);
+			this.media_item = new MediaItemModel(data.media_item);
 		}
 	}
 
@@ -42,42 +42,40 @@ export class GameScreenshot extends Model implements LightboxMediaModel {
 		return this.media_item;
 	}
 
-	getUrl(game: Game) {
+	getUrl(game: GameModel) {
 		return game.getUrl() + `#screenshot-${this.id}`;
 	}
+}
 
-	async $save() {
-		if (!this.id) {
-			// When adding, we add multiple, so we can't treat it like a normal model save.
-			const response = await Api.sendRequest(
-				'/web/dash/developer/games/media/save/image/' + this.game_id,
-				this,
-				{
-					file: this.file,
-					progress: event => {
-						this._progress = event;
-					},
-				}
-			);
-
-			if (response.success) {
-				return response;
+export async function $saveGameScreenshot(model: GameScreenshotModel) {
+	if (!model.id) {
+		// When adding, we add multiple, so we can't treat it like a normal model save.
+		const response = await Api.sendRequest(
+			'/web/dash/developer/games/media/save/image/' + model.game_id,
+			model,
+			{
+				file: model.file,
+				progress: event => {
+					model._progress = event;
+				},
 			}
+		);
 
-			throw response;
-		} else {
-			return this.$_save(
-				'/web/dash/developer/games/media/save/image/' + this.game_id + '/' + this.id,
-				'gameScreenshot'
-			);
+		if (response.success) {
+			return response;
 		}
-	}
 
-	$remove() {
-		return this.$_remove(
-			'/web/dash/developer/games/media/remove/image/' + this.game_id + '/' + this.id
+		throw response;
+	} else {
+		return model.$_save(
+			'/web/dash/developer/games/media/save/image/' + model.game_id + '/' + model.id,
+			'gameScreenshot'
 		);
 	}
 }
 
-Model.create(GameScreenshot);
+export function $removeGameScreenshot(model: GameScreenshotModel) {
+	return model.$_remove(
+		'/web/dash/developer/games/media/remove/image/' + model.game_id + '/' + model.id
+	);
+}

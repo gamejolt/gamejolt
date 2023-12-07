@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { styleAbsoluteFill } from '../../../_styles/mixins';
-import { MediaItem } from '../media-item-model';
+import { MediaItemModel } from '../media-item-model';
 
 const props = defineProps({
 	mediaItem: {
-		type: Object as PropType<MediaItem>,
+		type: Object as PropType<MediaItemModel>,
 		default: undefined,
 	},
 	radius: {

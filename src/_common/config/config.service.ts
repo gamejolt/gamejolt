@@ -2,6 +2,7 @@ import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-con
 import { reactive } from 'vue';
 import { isDynamicGoogleBot } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
+import { commonStore } from '../store/common-store';
 
 const ConfigService_ = {
 	isLoaded: false,
@@ -24,6 +25,14 @@ interface Conditions {
 	 * if they create a new account.
 	 */
 	join?: boolean;
+	/**
+	 * Only returns the remote value if the local auth state matches.
+	 *
+	 * - `true` only targets authed users.
+	 * - `false` only targets guests.
+	 * - `undefined` targets both authed users and guests.
+	 */
+	authed?: boolean;
 }
 
 export abstract class ConfigOption<T extends ValueType = any> {
@@ -42,14 +51,24 @@ export abstract class ConfigOption<T extends ValueType = any> {
 	 * The option is considered excluded depending on if its conditions match.
 	 */
 	get isExcluded() {
+		const { join, authed } = this.conditions || {};
 		if (
 			// If join condition was set, we need to make sure the current
 			// config option was set at the time of join or not. Only use the
 			// remote value if it was.
-			this.conditions?.join &&
+			join &&
 			!_getJoinOptions().includes(this.name)
 		) {
 			return true;
+		}
+
+		if (authed !== undefined) {
+			const hasUser = !!commonStore.user.value;
+			// Exclude if our authed condition doesn't match the current login
+			// state.
+			if (authed !== hasUser) {
+				return true;
+			}
 		}
 
 		return false;
@@ -131,12 +150,16 @@ export class ConfigOptionString<T extends string = string> extends ConfigOption<
 	}
 }
 
-export const configFYPExperiment = new ConfigOptionString<string>('fyp_experiment', 'default', {
-	// Allow any value since we pass directly to backend, which does all the logic.
-	validValues: false,
-});
+export const configFYPExperiment = /** @__PURE__ */ new ConfigOptionString<string>(
+	'fyp_experiment',
+	'default',
+	{
+		// Allow any value since we pass directly to backend, which does all the logic.
+		validValues: false,
+	}
+);
 
-export const configCommunityFrontpageFeedType = new ConfigOptionString(
+export const configCommunityFrontpageFeedType = /** @__PURE__ */ new ConfigOptionString(
 	'web_community_frontpage_feed_type',
 	'default',
 	{
@@ -148,21 +171,44 @@ export const configCommunityFrontpageFeedType = new ConfigOptionString(
 /**
  * Whether or not to allow streaming of desktop video directly.
  */
-export const configCanStreamDesktopVideo = new ConfigOptionBoolean(
+export const configCanStreamDesktopVideo = /** @__PURE__ */ new ConfigOptionBoolean(
 	'client_can_stream_desktop_video',
 	false
 );
 
-export const configShowStoreInMoreMenu = new ConfigOptionBoolean(
+export const configShowStoreInMoreMenu = /** @__PURE__ */ new ConfigOptionBoolean(
 	'web_show_store_in_more_menu',
 	false
 );
 
-export const configHomeFeedSwitcher = new ConfigOptionBoolean('web_home_feed_switcher', false, {
-	conditions: {
-		join: true,
-	},
-});
+/**
+ * Removes buttons that have `auth-required` directives.
+ *
+ * NOTE: Only affects game pages.
+ */
+export const configGuestNoAuthRequired = /** @__PURE__ */ new ConfigOptionBoolean(
+	'web_guest_no_auth_required',
+	false,
+	{
+		conditions: {
+			authed: false,
+		},
+	}
+);
+
+/**
+ * Shows the discover screen to guests again instead of showing them a login
+ * screen.
+ */
+export const configGuestHomeDiscover = /** @__PURE__ */ new ConfigOptionBoolean(
+	'web_guest_home_discover',
+	false,
+	{
+		conditions: {
+			authed: false,
+		},
+	}
+);
 
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());

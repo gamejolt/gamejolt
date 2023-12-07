@@ -1,8 +1,11 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import nav from '../../../../lib/doc-game-api/v1.x/nav.json';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
+import nav from '../../../../lib/doc-game-api/v1.x/nav.json';
 import { imageJolt } from '../../../img/images';
 
 @Options({
@@ -11,8 +14,8 @@ import { imageJolt } from '../../../img/images';
 		AppThemeSvg,
 	},
 })
-@OptionsForRoute()
-export default class RouteLandingGameApiDoc extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteLandingGameApiDoc extends LegacyRouteComponent {
 	readonly nav = nav;
 	readonly imageJolt = imageJolt;
 

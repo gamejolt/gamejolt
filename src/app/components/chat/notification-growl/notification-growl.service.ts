@@ -2,15 +2,15 @@ import { ContentDocument } from '../../../../_common/content/content-document';
 import { showInfoGrowl } from '../../../../_common/growls/growls.service';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { ChatClient, isChatFocusedOnRoom, openChatRoom } from '../client';
-import { ChatMessage } from '../message';
-import { ChatRoom, getChatRoomTitle } from '../room';
+import { ChatMessageModel } from '../message';
+import { ChatRoomModel, getChatRoomTitle } from '../room';
 import AppChatNotificationGrowl from './AppChatNotificationGrowl.vue';
 
 export class ChatNotificationGrowl {
 	static async show(
 		chat: ChatClient,
-		message: ChatMessage,
-		groupRoom: ChatRoom | undefined,
+		message: ChatMessageModel,
+		groupRoom: ChatRoomModel | undefined,
 		system = true
 	) {
 		// Skip if already in the room.
@@ -60,8 +60,8 @@ export class ChatNotificationGrowl {
 	 *  - Replace gj emoji with :<emoji>:
 	 */
 	private static generateSystemMessage(
-		message: ChatMessage,
-		groupRoom: ChatRoom | undefined
+		message: ChatMessageModel,
+		groupRoom: ChatRoomModel | undefined
 	): string {
 		let systemMessage = '';
 

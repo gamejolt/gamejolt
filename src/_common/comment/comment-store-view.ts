@@ -1,8 +1,8 @@
-import { Comment } from './comment-model';
+import { CommentModel } from './comment-model';
 import { CommentStoreModel } from './comment-store';
 
 export interface CommentStoreView {
-	getParents(storeModel: CommentStoreModel): Comment[];
+	getParents(storeModel: CommentStoreModel): CommentModel[];
 }
 
 export class CommentStoreSliceView implements CommentStoreView {

@@ -3,13 +3,13 @@ import { setup } from 'vue-class-component';
 import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { formatNumber } from '../../../../_common/filters/number';
-import { Game } from '../../../../_common/game/game.model';
-import { GameScoreTable } from '../../../../_common/game/score-table/score-table.model';
+import { GameModel } from '../../../../_common/game/game.model';
+import { GameScoreTableModel } from '../../../../_common/game/score-table/score-table.model';
 import { Popper } from '../../../../_common/popper/popper.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
-import { UserGameScore } from '../../../../_common/user/game-score/game-score.model';
+import { UserGameScoreModel } from '../../../../_common/user/game-score/game-score.model';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppScoreList from '../list/list.vue';
 import AppScoreboardSelector from '../scoreboard-selector/scoreboard-selector.vue';
@@ -24,7 +24,7 @@ import AppScoreboardSelector from '../scoreboard-selector/scoreboard-selector.vu
 })
 export default class AppScoreOverview extends Vue {
 	@Prop(Object)
-	game!: Game;
+	game!: GameModel;
 	@Prop(Object)
 	initialPayload?: any;
 	@Prop({ type: String, default: 'full' })
@@ -36,10 +36,10 @@ export default class AppScoreOverview extends Vue {
 		return this.commonStore;
 	}
 
-	scoreTables: GameScoreTable[] = [];
-	scoreTable: GameScoreTable | null = null;
-	scores: UserGameScore[] = [];
-	userBestScore: UserGameScore | null = null;
+	scoreTables: GameScoreTableModel[] = [];
+	scoreTable: GameScoreTableModel | null = null;
+	scores: UserGameScoreModel[] = [];
+	userBestScore: UserGameScoreModel | null = null;
 	userScorePlacement = 0;
 	userScoreExperience = 0;
 
@@ -72,17 +72,19 @@ export default class AppScoreOverview extends Vue {
 	}
 
 	private processPayload(payload: any) {
-		this.scoreTables = payload.scoreTables ? GameScoreTable.populate(payload.scoreTables) : [];
-		this.scoreTable = payload.scoreTable ? new GameScoreTable(payload.scoreTable) : null;
-		this.scores = payload.scores ? UserGameScore.populate(payload.scores) : [];
+		this.scoreTables = payload.scoreTables
+			? GameScoreTableModel.populate(payload.scoreTables)
+			: [];
+		this.scoreTable = payload.scoreTable ? new GameScoreTableModel(payload.scoreTable) : null;
+		this.scores = payload.scores ? UserGameScoreModel.populate(payload.scores) : [];
 		this.userBestScore = payload.scoresUserBestScore
-			? new UserGameScore(payload.scoresUserBestScore)
+			? new UserGameScoreModel(payload.scoresUserBestScore)
 			: null;
 		this.userScorePlacement = payload.scoresUserScorePlacement || 0;
 		this.userScoreExperience = payload.scoresUserScoreExperience || 0;
 	}
 
-	async changeTable(table?: GameScoreTable) {
+	async changeTable(table?: GameScoreTableModel) {
 		Popper.hideAll();
 
 		// Only if not current table.

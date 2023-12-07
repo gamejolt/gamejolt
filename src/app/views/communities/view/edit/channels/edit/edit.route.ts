@@ -4,7 +4,7 @@ import { routeCommunitiesViewEditChannelsOverview } from './overview/overview.ro
 
 export const routeCommunitiesViewEditChannelsEdit: RouteRecordRaw = {
 	path: ':channel',
-	component: () => import('./edit.vue'),
+	component: () => import('./RouteCommunitiesViewEditChannelsEdit.vue'),
 	children: [
 		routeCommunitiesViewEditChannelsOverview,
 		routeCommunitiesViewEditChannelsCompetition,

@@ -2,7 +2,7 @@
 import { computed, PropType, toRefs } from 'vue';
 import AppQuestProgress from '../../../../../_common/quest/AppQuestProgress.vue';
 import AppQuestThumbnail from '../../../../../_common/quest/AppQuestThumbnail.vue';
-import { Quest } from '../../../../../_common/quest/quest-model';
+import { QuestModel } from '../../../../../_common/quest/quest-model';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import {
 	styleBorderRadiusLg,
@@ -16,7 +16,7 @@ import AppQuestTimer from '../../../quest/AppQuestTimer.vue';
 
 const props = defineProps({
 	quest: {
-		type: Object as PropType<Quest>,
+		type: Object as PropType<QuestModel>,
 		required: true,
 	},
 	active: {

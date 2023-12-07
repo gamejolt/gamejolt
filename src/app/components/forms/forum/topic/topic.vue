@@ -8,10 +8,10 @@ import {
 	validateContentNoActiveUploads,
 	validateContentRequired,
 } from '../../../../../_common/form-vue/validators';
-import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
-import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';
+import { $saveForumTopic, ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 
-class Wrapper extends BaseForm<ForumTopic> {}
+class Wrapper extends BaseForm<ForumTopicModel> {}
 
 @Options({
 	components: {
@@ -19,9 +19,10 @@ class Wrapper extends BaseForm<ForumTopic> {}
 	},
 })
 export default class FormForumTopic extends mixins(Wrapper) {
-	@Prop(Object) channel!: ForumChannel;
+	@Prop(Object) channel!: ForumChannelModel;
 
-	modelClass = ForumTopic;
+	modelClass = ForumTopicModel;
+	modelSaveHandler = $saveForumTopic;
 
 	readonly validateContentRequired = validateContentRequired;
 	readonly validateContentMaxLength = validateContentMaxLength;

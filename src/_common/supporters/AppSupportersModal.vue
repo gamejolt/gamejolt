@@ -3,14 +3,14 @@ import { computed, onMounted, PropType, ref, toRefs } from 'vue';
 import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';
 import { formatNumber } from '../filters/number';
-import { FiresidePost } from '../fireside/post/post-model';
-import { Game } from '../game/game.model';
+import { FiresidePostModel } from '../fireside/post/post-model';
+import { GameModel } from '../game/game.model';
 import AppLoading from '../loading/AppLoading.vue';
 import AppModal from '../modal/AppModal.vue';
 import { useModal } from '../modal/modal.service';
 import AppTranslate from '../translate/AppTranslate.vue';
 import AppUserList from '../user/list/AppUserList.vue';
-import { User } from '../user/user.model';
+import { UserModel } from '../user/user.model';
 import { SupportersModel } from './modal.service';
 
 const PerPage = 20;
@@ -32,9 +32,9 @@ const modal = useModal()!;
 const reachedEnd = ref(false);
 const isLoading = ref(false);
 const currentPage = ref(0);
-const users = ref<User[]>([]);
+const users = ref<UserModel[]>([]);
 
-const isGame = computed(() => model.value instanceof Game);
+const isGame = computed(() => model.value instanceof GameModel);
 
 // Just for display purposes, if we have more users than the count passed in,
 // display that instead. This can happen when the count was fetched before new
@@ -43,9 +43,9 @@ const realCount = computed(() => (count?.value ? Math.max(count.value, users.val
 const shouldShowLoadMore = computed(() => !isLoading.value && !reachedEnd.value);
 
 const requestUrl = computed(() => {
-	if (model.value instanceof FiresidePost) {
+	if (model.value instanceof FiresidePostModel) {
 		return `/web/posts/supporters/${model.value.id}?perPage=${PerPage}&offset=${users.value.length}`;
-	} else if (model.value instanceof Game) {
+	} else if (model.value instanceof GameModel) {
 		return `/web/discover/games/supporters/${model.value.id}?page=${currentPage.value}`;
 	}
 
@@ -65,7 +65,7 @@ async function loadMore() {
 	++currentPage.value;
 	const payload = await Api.sendRequest(requestUrl.value);
 
-	const newUsers = User.populate(payload.supporters);
+	const newUsers = UserModel.populate(payload.supporters);
 	users.value = [...users.value, ...newUsers];
 
 	if (newUsers.length < PerPage) {

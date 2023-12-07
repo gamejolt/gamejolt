@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, Ref, toRefs } from 'vue';
 import { Analytics } from '../../../../../_common/analytics/analytics.service';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { createLightbox } from '../../../../../_common/lightbox/lightbox-helpers';
-import AppMediaItemPost from '../../../../../_common/media-item/post/post.vue';
+import AppMediaItemPost from '../../../../../_common/media-item/post/AppMediaItemPost.vue';
+import AppEventItemMediaIndicator from '../../../../../_common/pagination/AppPageIndicator.vue';
 import { kThemeBgActual } from '../../../../../_common/theme/variables';
 import AppTouch, { AppTouchInput } from '../../../../../_common/touch/AppTouch.vue';
 import { styleBorderRadiusLg, styleElevate, styleWhen } from '../../../../../_styles/mixins';
-import AppEventItemMediaIndicator from '../../../../../_common/pagination/AppPageIndicator.vue';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
 
@@ -18,7 +18,7 @@ const props = defineProps({
 		required: true,
 	},
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	canPlaceSticker: {

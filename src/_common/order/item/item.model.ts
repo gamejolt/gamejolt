@@ -1,19 +1,17 @@
 import { Model } from '../../model/model.service';
-import { Sellable } from '../../sellable/sellable.model';
+import { SellableModel } from '../../sellable/sellable.model';
 
-export class OrderItem extends Model {
-	amount!: number;
-	tax_amount!: number;
-	is_refunded!: boolean;
-	sellable!: Sellable;
+export class OrderItemModel extends Model {
+	declare amount: number;
+	declare tax_amount: number;
+	declare is_refunded: boolean;
+	declare sellable: SellableModel;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.sellable) {
-			this.sellable = new Sellable(data.sellable);
+			this.sellable = new SellableModel(data.sellable);
 		}
 	}
 }
-
-Model.create(OrderItem);

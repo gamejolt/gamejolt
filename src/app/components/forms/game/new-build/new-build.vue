@@ -3,12 +3,16 @@ import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
-import { GameBuild } from '../../../../../_common/game/build/build.model';
-import { Game } from '../../../../../_common/game/game.model';
-import { GamePackage } from '../../../../../_common/game/package/package.model';
-import { GameRelease } from '../../../../../_common/game/release/release.model';
+import {
+	$saveGameBuild,
+	GameBuildModel,
+	GameBuildType,
+} from '../../../../../_common/game/build/build.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import { GamePackageModel } from '../../../../../_common/game/package/package.model';
+import { GameReleaseModel } from '../../../../../_common/game/release/release.model';
 
-type NewGameBuildFormModel = GameBuild & {
+type NewGameBuildFormModel = GameBuildModel & {
 	file: File;
 };
 
@@ -21,13 +25,14 @@ class Wrapper extends BaseForm<NewGameBuildFormModel> {}
 	},
 })
 export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnLoad {
-	modelClass = GameBuild as any;
+	modelClass = GameBuildModel as any;
+	modelSaveHandler = $saveGameBuild;
 
 	@Prop(String) type!: 'downloadable' | 'browser';
-	@Prop(Object) game!: Game;
-	@Prop(Object) package!: GamePackage;
-	@Prop(Object) release!: GameRelease;
-	@Prop(Array) builds!: GameBuild[];
+	@Prop(Object) game!: GameModel;
+	@Prop(Object) package!: GamePackageModel;
+	@Prop(Object) release!: GameReleaseModel;
+	@Prop(Array) builds!: GameBuildModel[];
 
 	maxFilesize = 0;
 	restrictedPlatforms: string[] = [];
@@ -54,7 +59,7 @@ export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnL
 		}
 
 		const releaseTypes = this.builds
-			.filter(build => build.type !== GameBuild.TYPE_DOWNLOADABLE)
+			.filter(build => build.type !== GameBuildType.Downloadable)
 			.map(build => build.type);
 
 		const accept = Object.entries(this.browserTypes)
@@ -78,15 +83,16 @@ export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnL
 
 	onInit() {
 		// Set the game ID on the form model from the game passed in.
+		// TODO(fix-form-saving) 'browser' doesn't exist, what is this typing meant to be?
 		this.setField('type', this.type);
 		this.setField('game_id', this.game.id);
 		this.setField('game_package_id', this.package.id);
 		this.setField('game_release_id', this.release.id);
 
 		this.browserTypes = {
-			'.zip': GameBuild.TYPE_HTML,
-			'.swf': GameBuild.TYPE_FLASH,
-			'.unity3d': GameBuild.TYPE_UNITY,
+			'.zip': GameBuildType.Html,
+			'.swf': GameBuildType.Flash,
+			'.unity3d': GameBuildType.Unity,
 		};
 	}
 
@@ -99,7 +105,7 @@ export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnL
 		// ROM types can change, so we pull from server.
 		if (this.romTypes) {
 			for (const ext of this.romTypes) {
-				this.browserTypes[ext] = GameBuild.TYPE_ROM;
+				this.browserTypes[ext] = GameBuildType.Rom;
 			}
 		}
 	}
@@ -153,7 +159,7 @@ export default class FormGameNewBuild extends mixins(Wrapper) implements FormOnL
 				</div>
 			</AppExpand>
 
-			<p class="help-block" v-if="type === 'browser'">
+			<p v-if="type === 'browser'" class="help-block">
 				<AppTranslate>
 					For HTML builds, upload a .zip archive containing all of your build's files and
 					assets. There must be an index.html file in the root folder.

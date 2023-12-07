@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, inject, onUnmounted, PropType, ref, toRefs } from 'vue';
+import { computed, onUnmounted, PropType, ref, toRefs } from 'vue';
 import {
 	Analytics,
 	PostControlsLocation,
@@ -9,18 +9,20 @@ import AppAnimElectricity from '../../../../_common/animation/AppAnimElectricity
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
-	CommentStoreManagerKey,
+	commentStoreCount,
 	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
-	setCommentCount,
+	useCommentStoreManager,
 } from '../../../../_common/comment/comment-store';
-import { CommentModal } from '../../../../_common/comment/modal/modal.service';
-import { CommunityChannel } from '../../../../_common/community/channel/channel.model';
-import { Community } from '../../../../_common/community/community.model';
+import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../_common/community/community.model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/widget.vue';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue';
+import {
+	$publishFiresidePost,
+	FiresidePostModel,
+} from '../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
@@ -31,10 +33,11 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
-import { User } from '../../../../_common/user/user.model';
+import { UserModel } from '../../../../_common/user/user.model';
 import { ActivityFeedItem } from '../../activity/feed/item-service';
 import { ActivityFeedView } from '../../activity/feed/view';
-import { PostEditModal } from '../edit-modal/edit-modal-service';
+import { showCommentModal } from '../../comment/modal/modal.service';
+import { showPostEditModal } from '../edit-modal/edit-modal-service';
 import AppPostControlsStats from './AppPostControlsStats.vue';
 import AppPostControlsMore from './more/more.vue';
 import AppPostControlsSaveProgress from './save-progress/save-progress.vue';
@@ -42,7 +45,7 @@ import AppPostControlsUserFollow from './user-follow/user-follow.vue';
 
 const props = defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 	feed: {
@@ -79,16 +82,16 @@ const emit = defineEmits({
 	postEdit: () => true,
 	postPublish: () => true,
 	postRemove: () => true,
-	postFeature: (_community: Community) => true,
-	postUnfeature: (_community: Community) => true,
-	postMoveChannel: (_movedTo: CommunityChannel) => true,
-	postReject: (_community: Community) => true,
+	postFeature: (_community: CommunityModel) => true,
+	postUnfeature: (_community: CommunityModel) => true,
+	postMoveChannel: (_movedTo: CommunityChannelModel) => true,
+	postReject: (_community: CommunityModel) => true,
 	postPin: () => true,
 	postUnpin: () => true,
 	sticker: () => true,
 });
 
-const commentManager = inject(CommentStoreManagerKey)!;
+const commentManager = useCommentStoreManager()!;
 const stickerLayer = useStickerLayer();
 
 const { user } = useCommonStore();
@@ -107,7 +110,7 @@ const shouldShowFollowState = ref(
 const commentStore = ref<CommentStoreModel | null>(
 	lockCommentStore(commentManager, 'Fireside_Post', post.value.id)
 );
-setCommentCount(commentStore.value!, post.value.comment_count);
+commentStoreCount(commentStore.value!, post.value.comment_count);
 
 const isShowingFollow = computed(() => {
 	if (!shouldShowFollow.value || !shouldShowFollowState.value || !post.value) {
@@ -141,7 +144,7 @@ const hasPerms = computed(() => {
 });
 
 const shouldShowEdit = computed(() => hasPerms.value);
-const shouldShowExtra = computed(() => user.value instanceof User);
+const shouldShowExtra = computed(() => user.value instanceof UserModel);
 const shouldShowCommentsButton = computed(() => showComments.value);
 const shouldShowStickersButton = computed(() => post.value.canPlaceSticker && !!stickerLayer);
 const shouldShowLike = computed(() => post.value.canLike);
@@ -159,7 +162,8 @@ onUnmounted(() => {
 
 function openComments() {
 	Analytics.trackEvent('post-controls', 'comments', eventLabel.value);
-	CommentModal.show({
+
+	showCommentModal({
 		model: post.value,
 		displayMode: 'comments',
 	});
@@ -167,14 +171,14 @@ function openComments() {
 
 async function openEdit() {
 	Analytics.trackEvent('post-controls', 'edit', eventLabel.value);
-	if (await PostEditModal.show(post.value)) {
+	if (await showPostEditModal(post.value)) {
 		emit('postEdit');
 	}
 }
 
 async function publish() {
 	trackPostPublish();
-	await post.value.$publish();
+	await $publishFiresidePost(post.value);
 	emit('postPublish');
 }
 
@@ -264,7 +268,9 @@ function onUserFollowDismissal() {
 								<AppAnimElectricity
 									shock-anim="square"
 									:disabled="
-										!canChargeSticker || !stickerLayer?.isAllCreator.value
+										!canChargeSticker ||
+										!stickerLayer ||
+										!stickerLayer.canChargeAllTargets.value
 									"
 									ignore-asset-padding
 								>

@@ -2,16 +2,20 @@
 import * as StripeData from 'stripe';
 import { inject, InjectionKey, provide, Ref, ref } from 'vue';
 import { mixins, Options } from 'vue-property-decorator';
-import { loadScript } from '../../../../../utils/utils';
-import { shallowSetup } from '../../../../../utils/vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatCurrency } from '../../../../../_common/filters/currency';
 import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { Geo } from '../../../../../_common/geo/geo.service';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import { UserStripeManagedAccount } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { User } from '../../../../../_common/user/user.model';
+import {
+	UserStripeManagedAccountModel,
+	UserStripeManagedAccountStatus,
+	UserStripeManagedAccountType,
+} from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { UserModel } from '../../../../../_common/user/user.model';
+import { loadScript } from '../../../../../utils/utils';
+import { shallowSetup } from '../../../../../utils/vue';
 import AppFinancialsManagedAccountCompanyDetails from './AppFinancialsManagedAccountCompanyDetails.vue';
 import AppFinancialsManagedAccountPerson, {
 	AppFinancialsManagedAccountPersonInterface,
@@ -34,8 +38,8 @@ type StripeMeta =
 
 type PayloadStripeData = {
 	publishableKey: string;
-	countries: { [code: string]: string };
-	currencies: { [code: string]: string[] };
+	countries: Record<string, string>;
+	currencies: Record<string, string>;
 
 	required: StripeMeta;
 	current: StripeData.accounts.IAccount;
@@ -55,8 +59,8 @@ export function useFormManagedAccount() {
 }
 
 function createFormManagedAccount() {
-	const user = ref() as Ref<User>;
-	const account = ref() as Ref<UserStripeManagedAccount>;
+	const user = ref() as Ref<UserModel>;
+	const account = ref() as Ref<UserStripeManagedAccountModel>;
 	const stripeMeta = ref() as Ref<StripeMeta>;
 	const stripe = ref() as Ref<PayloadStripeData>;
 
@@ -242,6 +246,10 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 	readonly Geo = Geo;
 	readonly formatCurrency = formatCurrency;
 
+	readonly IndividualAccountType = UserStripeManagedAccountType.Individual;
+	readonly CompanyAccountType = UserStripeManagedAccountType.Company;
+	readonly UnverifiedStatus = UserStripeManagedAccountStatus.Unverified;
+
 	declare $refs: {
 		individual: AppFinancialsManagedAccountPersonInterface;
 		representative: AppFinancialsManagedAccountPersonInterface;
@@ -266,8 +274,8 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 		this.stripePublishableKey = stripePayload.publishableKey;
 		this.stripeInst = Stripe(stripePayload.publishableKey);
 
-		user.value = new User(payload.user);
-		account.value = new UserStripeManagedAccount(payload.account);
+		user.value = new UserModel(payload.user);
+		account.value = new UserStripeManagedAccountModel(payload.account);
 		stripe.value = stripePayload;
 		stripeMeta.value = stripePayload.required;
 
@@ -316,7 +324,7 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 
 	get isVerificationPending() {
 		// If they're in pending state and we don't require more info from them.
-		if (!this.account || this.account.status !== 'pending') {
+		if (!this.account || this.account.status !== UserStripeManagedAccountStatus.Pending) {
 			return false;
 		}
 
@@ -329,7 +337,7 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 		}
 
 		const allPersons = Object.values(this.stripe.persons || []);
-		if (this.account.type === 'individual') {
+		if (this.account.type === UserStripeManagedAccountType.Individual) {
 			allPersons.push(this.stripe.current.individual as any);
 		}
 
@@ -556,10 +564,10 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 							<AppTranslate>Business Type</AppTranslate>
 						</label>
 						<div class="form-static col-sm-8">
-							<template v-if="account.type === 'individual'">
+							<template v-if="account.type === IndividualAccountType">
 								<AppTranslate>Individual</AppTranslate>
 							</template>
-							<template v-else-if="account.type === 'company'">
+							<template v-else-if="account.type === CompanyAccountType">
 								<AppTranslate>Company</AppTranslate>
 							</template>
 						</div>
@@ -571,10 +579,10 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 				<!--
 					Individual Account Setup
 				-->
-				<div v-if="account.type === 'individual'">
+				<div v-if="account.type === IndividualAccountType">
 					<h4><AppTranslate>Your Details</AppTranslate></h4>
 
-					<div v-if="account.status === 'unverified'" class="alert">
+					<div v-if="account.status === UnverifiedStatus" class="alert">
 						<p>
 							<AppTranslate>Please fill in your personal information.</AppTranslate>
 						</p>
@@ -590,14 +598,14 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 				<!--
 					Company Account Setup
 				-->
-				<div v-else-if="account.type === 'company'">
+				<div v-else-if="account.type === CompanyAccountType">
 					<h4><AppTranslate>Company Details</AppTranslate></h4>
 
 					<AppFinancialsManagedAccountCompanyDetails />
 
 					<h4><AppTranslate>Representative Details</AppTranslate></h4>
 
-					<div v-if="account.status === 'unverified'" class="alert">
+					<div v-if="account.status === UnverifiedStatus" class="alert">
 						<p>
 							<AppTranslate>
 								We are required to collection information for a representative of

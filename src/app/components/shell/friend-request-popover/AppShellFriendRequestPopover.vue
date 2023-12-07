@@ -8,7 +8,7 @@ import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
+import { UserFriendshipModel } from '../../../../_common/user/friendship/friendship.model';
 import { useAppStore } from '../../../store';
 import { useGridStore } from '../../grid/grid-store';
 import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
@@ -27,8 +27,8 @@ const isBootstrapped = ref(false);
 const activeTab = ref<Tab>('requests');
 const pendingCount = ref(0);
 const requestCount = ref(0);
-const incoming = ref<UserFriendship[]>([]);
-const outgoing = ref<UserFriendship[]>([]);
+const incoming = ref<UserFriendshipModel[]>([]);
+const outgoing = ref<UserFriendshipModel[]>([]);
 
 const requests = computed(() => {
 	return activeTab.value === 'requests' ? incoming.value : outgoing.value;
@@ -86,7 +86,7 @@ async function _loadTab() {
 	}
 
 	const payload = await Api.sendRequest(url, null, { detach: true });
-	const newRequests = UserFriendship.populate(payload.requests) as UserFriendship[];
+	const newRequests = UserFriendshipModel.populate(payload.requests) as UserFriendshipModel[];
 
 	requests.value.push(...newRequests);
 }
@@ -115,13 +115,13 @@ async function loadMore() {
 	isLoading.value = false;
 }
 
-async function acceptRequest(request: UserFriendship) {
+async function acceptRequest(request: UserFriendshipModel) {
 	await UserFriendshipHelper.acceptRequest(request);
 
 	_removeRequest(request);
 }
 
-async function rejectRequest(request: UserFriendship) {
+async function rejectRequest(request: UserFriendshipModel) {
 	if (!(await UserFriendshipHelper.rejectRequest(request))) {
 		return;
 	}
@@ -129,7 +129,7 @@ async function rejectRequest(request: UserFriendship) {
 	_removeRequest(request);
 }
 
-async function cancelRequest(request: UserFriendship) {
+async function cancelRequest(request: UserFriendshipModel) {
 	if (!(await UserFriendshipHelper.cancelRequest(request))) {
 		return;
 	}
@@ -138,7 +138,7 @@ async function cancelRequest(request: UserFriendship) {
 	pendingCount.value--;
 }
 
-function _removeRequest(request: UserFriendship) {
+function _removeRequest(request: UserFriendshipModel) {
 	const index = incoming.value.findIndex(item => item.id === request.id);
 	if (index !== -1) {
 		incoming.value.splice(index, 1);

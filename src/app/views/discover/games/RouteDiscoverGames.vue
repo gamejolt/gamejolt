@@ -1,14 +1,17 @@
 <script lang="ts">
 import { Options } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../utils/vue';
 import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
+import { shallowSetup } from '../../../../utils/vue';
 
 @Options({
 	name: 'RouteDiscoverGames',
 })
-@OptionsForRoute()
-export default class RouteDiscoverGames extends BaseRouteComponent {
+@OptionsForLegacyRoute()
+export default class RouteDiscoverGames extends LegacyRouteComponent {
 	appPromotionStore = shallowSetup(() => useAppPromotionStore());
 
 	/**

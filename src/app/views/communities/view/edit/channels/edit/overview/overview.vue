@@ -1,22 +1,27 @@
 <script lang="ts">
-import { Inject, Options } from 'vue-property-decorator';
-import { arrayRemove } from '../../../../../../../../utils/array';
-import { CommunityChannel } from '../../../../../../../../_common/community/channel/channel.model';
+import { setup } from 'vue-class-component';
+import { Options } from 'vue-property-decorator';
+import {
+	$archiveCommunityChannel,
+	$unarchiveCommunityChannel,
+	CommunityChannelModel,
+} from '../../../../../../../../_common/community/channel/channel.model';
 import {
 	showErrorGrowl,
 	showSuccessGrowl,
 } from '../../../../../../../../_common/growls/growls.service';
-import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../../../../_common/scroll/scroll.service';
+import { arrayRemove } from '../../../../../../../../utils/array';
 import FormCommunityChannelDescription from '../../../../../../../components/forms/community/channel/description/FormCommunityChannelDescription.vue';
 import FormCommunityChannelEdit from '../../../../../../../components/forms/community/channel/edit/edit.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../../../../view.store';
 import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
+import { useCommunityRouteStore } from '../../../../view.store';
 
 @Options({
 	name: 'RouteCommunitiesViewEditChannelsOverview',
@@ -26,10 +31,9 @@ import AppCommunitiesViewPageContainer from '../../../../_page-container/page-co
 		FormCommunityChannelDescription,
 	},
 })
-@OptionsForRoute()
-export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteComponent {
-	@Inject({ from: CommunityRouteStoreKey })
-	routeStore!: CommunityRouteStore;
+@OptionsForLegacyRoute()
+export default class RouteCommunitiesViewEditChannelsOverview extends LegacyRouteComponent {
+	routeStore = setup(() => useCommunityRouteStore())!;
 
 	readonly Screen = Screen;
 
@@ -59,7 +63,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 		);
 	}
 
-	onSubmit(model: CommunityChannel) {
+	onSubmit(model: CommunityChannelModel) {
 		// After submitting the form, redirect to the edit page with the new title if it changed.
 		// The title of the channel is part of the URL.
 		if (model.title !== this.$route.params.channel) {
@@ -67,7 +71,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 		}
 	}
 
-	onBackgroundChange(model: CommunityChannel) {
+	onBackgroundChange(model: CommunityChannelModel) {
 		Object.assign(this.channel, model);
 	}
 
@@ -76,14 +80,15 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 			return;
 		}
 
-		const result = await ModalConfirm.show(
-			this.$gettextInterpolate(`Are you sure you want to archive the channel %{ channel }?`, {
+		const result = await showModalConfirm(
+			this.$gettext(`Are you sure you want to archive the channel %{ channel }?`, {
 				channel: this.channel.displayTitle,
 			})
 		);
 
 		if (result) {
-			const payload = await this.channel.$archive();
+			const payload = await $archiveCommunityChannel(this.channel);
+
 			if (payload.success) {
 				this.routeStore.archivedChannels.push(this.channel);
 				arrayRemove(this.community.channels!, i => i.id === this.channel.id);
@@ -96,8 +101,8 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 	}
 
 	async onClickUnarchive() {
-		const result = await ModalConfirm.show(
-			this.$gettextInterpolate(
+		const result = await showModalConfirm(
+			this.$gettext(
 				`Are you sure you want to restore the channel %{ channel } from the archive?`,
 				{
 					channel: this.channel.displayTitle,
@@ -107,7 +112,7 @@ export default class RouteCommunitiesViewEditChannelsOverview extends BaseRouteC
 
 		if (result) {
 			try {
-				await this.channel.$unarchive();
+				await $unarchiveCommunityChannel(this.channel);
 				this.community.channels!.push(this.channel);
 				arrayRemove(this.routeStore.archivedChannels, i => i.id === this.channel.id);
 

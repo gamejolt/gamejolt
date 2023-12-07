@@ -9,15 +9,15 @@ interface HistoryCacheState<T = any> {
 	data?: T;
 }
 
-export class HistoryCache {
-	private static states: HistoryCacheState[] = [];
+class HistoryCacheService {
+	private states: HistoryCacheState[] = [];
 
 	/**
 	 * Returns the history state tracked by vue router, as long as we're not on
 	 * the latest entry. This is so that we try to get historical states only
 	 * (going back).
 	 */
-	static getHistoryState(): HistoryState | null {
+	getHistoryState(): HistoryState | null {
 		// vue-router maintains a history state for each route in the history.
 		const historyState = typeof history !== 'undefined' ? history.state : undefined;
 		if (!historyState || historyState.forward === null) {
@@ -27,7 +27,7 @@ export class HistoryCache {
 		return historyState;
 	}
 
-	static get<T = any>(route: RouteLocationNormalized, tag?: string | symbol) {
+	get<T = any>(route: RouteLocationNormalized, tag?: string | symbol) {
 		const state = this._get<T>(route, tag);
 
 		if (state) {
@@ -38,11 +38,11 @@ export class HistoryCache {
 		return undefined;
 	}
 
-	static has(route: RouteLocationNormalized, tag?: string | symbol) {
+	has(route: RouteLocationNormalized, tag?: string | symbol) {
 		return !!this._get(route, tag);
 	}
 
-	static store<T = any>(route: RouteLocationNormalized, data: T, tag?: string | symbol) {
+	store<T = any>(route: RouteLocationNormalized, data: T, tag?: string | symbol) {
 		const state = this._get(route, tag);
 
 		if (state) {
@@ -62,7 +62,7 @@ export class HistoryCache {
 		}
 	}
 
-	private static _get<T = any>(route: RouteLocationNormalized, tag?: string | symbol) {
+	private _get<T = any>(route: RouteLocationNormalized, tag?: string | symbol) {
 		const historyState = this.getHistoryState();
 		if (!historyState) {
 			return undefined;
@@ -77,8 +77,10 @@ export class HistoryCache {
 	 * Call this to put the state back on top of the states array so that it
 	 * doesn't get cleaned up.
 	 */
-	private static _touchState(state: HistoryCacheState) {
+	private _touchState(state: HistoryCacheState) {
 		arrayRemove(this.states, i => i === state);
 		this.states.push(state);
 	}
 }
+
+export const HistoryCache = /** @__PURE__ */ new HistoryCacheService();

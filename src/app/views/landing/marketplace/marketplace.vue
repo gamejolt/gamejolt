@@ -3,11 +3,14 @@ import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
-import { Game } from '../../../../_common/game/game.model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
+import { GameModel } from '../../../../_common/game/game.model';
 import { AppAuthJoinLazy } from '../../../../_common/lazy';
 import { Meta } from '../../../../_common/meta/meta-service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
@@ -22,19 +25,19 @@ import socialImage from './social.png';
 		AppContactLink,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: () => Api.sendRequest('/web/marketplace'),
 })
-export default class RouteLandingMarketplace extends BaseRouteComponent {
+export default class RouteLandingMarketplace extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 
 	get app() {
 		return this.commonStore;
 	}
 
-	firesidePosts: FiresidePost[] = [];
-	games: Game[] = [];
+	firesidePosts: FiresidePostModel[] = [];
+	games: GameModel[] = [];
 
 	readonly Screen = Screen;
 	readonly imageJolt = imageJolt;
@@ -50,8 +53,8 @@ export default class RouteLandingMarketplace extends BaseRouteComponent {
 		Meta.twitter = $payload.twitter;
 		Meta.fb.image = Meta.twitter.image = socialImage;
 
-		this.firesidePosts = FiresidePost.populate($payload.firesidePosts);
-		this.games = Game.populate($payload.games);
+		this.firesidePosts = FiresidePostModel.populate($payload.firesidePosts);
+		this.games = GameModel.populate($payload.games);
 	}
 }
 </script>

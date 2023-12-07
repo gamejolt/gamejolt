@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, ref, toRefs, useSlots } from 'vue';
+import { PropType, ref } from 'vue';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppPopper, {
 	PopperPlacementType,
@@ -11,12 +11,10 @@ import AppScrollInview, {
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
-
-type ChatListItemSlot = 'leading' | 'title' | 'trailing';
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
+defineProps({
 	horizontalPadding: {
 		type: Number,
 		default: 16,
@@ -43,27 +41,9 @@ const props = defineProps({
 		type: String as PropType<PopperPlacementType>,
 		default: 'bottom',
 	},
-	definedSlots: {
-		type: Array as PropType<ChatListItemSlot[]>,
-		default: undefined,
-	},
 });
 
-const { definedSlots } = toRefs(props);
-
-const slots = useSlots();
-
 const isInview = ref(false);
-
-const hasLeading = computed(() =>
-	definedSlots?.value ? definedSlots.value.includes('leading') : !!slots['leading']
-);
-const hasTitle = computed(() =>
-	definedSlots?.value ? definedSlots.value.includes('title') : !!slots['title']
-);
-const hasTrailing = computed(() =>
-	definedSlots?.value ? definedSlots.value.includes('trailing') : !!slots['trailing']
-);
 </script>
 
 <template>
@@ -100,7 +80,7 @@ const hasTrailing = computed(() =>
 					}"
 				>
 					<div
-						v-if="hasLeading"
+						v-if="$slots.leading || $slots['leading-float']"
 						class="-leading"
 						:style="{
 							width: avatarSize + 'px',
@@ -117,11 +97,11 @@ const hasTrailing = computed(() =>
 						</AppAspectRatio>
 					</div>
 
-					<div v-if="hasTitle" class="-title">
+					<div v-if="$slots.title" class="-title">
 						<slot name="title" />
 					</div>
 
-					<div v-if="hasTrailing" class="-trailing">
+					<div v-if="$slots.trailing" class="-trailing">
 						<slot name="trailing" />
 					</div>
 				</a>

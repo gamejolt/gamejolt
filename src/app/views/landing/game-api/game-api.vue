@@ -2,7 +2,10 @@
 import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../_common/api/api.service';
 import { formatNumber } from '../../../../_common/filters/number';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../_common/route/legacy-route-component';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { imageJolt } from '../../../img/images';
@@ -16,13 +19,13 @@ import { imageJolt } from '../../../img/images';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	lazy: true,
 	deps: {},
 	resolver: () => Api.sendRequest('/web/landing/game-api'),
 })
-export default class RouteLandingGameApi extends BaseRouteComponent {
+export default class RouteLandingGameApi extends LegacyRouteComponent {
 	totalScores = 0;
 	totalAchievedTrophies = 0;
 	sessionTime = 0;

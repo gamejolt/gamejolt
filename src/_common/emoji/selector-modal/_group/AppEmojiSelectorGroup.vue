@@ -1,17 +1,19 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import { kFontSizeBase } from '../../../../_styles/variables';
 import { Api } from '../../../api/api.service';
 import { Screen } from '../../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
 import { EmojiGroupData } from '../../../store/common-store';
-import { Emoji } from '../../emoji.model';
+import { EmojiModel } from '../../emoji.model';
 import AppEmojiSelectorGroupThumbnail from './AppEmojiSelectorGroupThumbnail.vue';
 import AppEmojiSelectorGroupItemLazy from './item/AppEmojiSelectorGroupItemLazy.vue';
 
 const GroupInviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 const EmojiInviewConfig = new ScrollInviewConfig({ margin: `200px` });
+</script>
 
+<script lang="ts" setup>
 const props = defineProps({
 	groupData: {
 		type: Object as PropType<EmojiGroupData>,
@@ -30,7 +32,7 @@ const inview = ref(false);
 const emit = defineEmits({
 	inview: () => true,
 	outview: () => true,
-	'select-emoji': (_emoji: Emoji) => true,
+	'select-emoji': (_emoji: EmojiModel) => true,
 });
 
 const itemCount = computed(() => {
@@ -53,7 +55,7 @@ function onOutview() {
 	emit('outview');
 }
 
-function selectEmoji(emoji: Emoji) {
+function selectEmoji(emoji: EmojiModel) {
 	Api.sendRequest(`/web/emojis/pick-emoji/${emoji.id}`, {}, { detach: true }).catch(e => {
 		console.error('Failed to update recently used emoji.', e);
 	});

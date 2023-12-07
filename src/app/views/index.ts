@@ -1,11 +1,8 @@
 import { initRouter } from '../../utils/router';
-import { routeBadgeFeatured } from './badge/featured/featured.route';
 import { routeCommunitiesView } from './communities/view/view.route';
 import { routeDash } from './dashboard/dashboard.route';
 import { routeDiscover } from './discover/discover.route';
 import { routeDownload } from './download/download.route';
-import { routeFireside } from './fireside/fireside.route';
-import { routeFiresideRedirect } from './fireside/redirect.route';
 import { routeForums } from './forums/forums.route';
 import { routeHome } from './home/home.route';
 import { routeIntent } from './intent/intent.route';
@@ -42,10 +39,7 @@ const routes = [
 	routeIntent,
 	routeWeplay,
 	routeWelcome,
-	routeBadgeFeatured,
 	routeTimeout,
-	routeFireside,
-	routeFiresideRedirect,
 	routeRealmsView,
 	routeQuests,
 	routeLandingCreators,

@@ -6,15 +6,18 @@ import { Api } from '../../../../../_common/api/api.service';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { ForumChannel } from '../../../../../_common/forum/channel/channel.model';
-import { ForumPost } from '../../../../../_common/forum/post/post.model';
-import { ForumTopic } from '../../../../../_common/forum/topic/topic.model';
+import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';
+import { ForumPostModel } from '../../../../../_common/forum/post/post.model';
+import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
-import AppMessageThreadPagination from '../../../../../_common/message-thread/pagination/pagination.vue';
+import AppMessageThreadPagination from '../../../../../_common/message-thread/pagination/AppMessageThreadPagination.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
-import { ReportModal } from '../../../../../_common/report/modal/modal.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../../../../_common/route/route-component';
+import { showReportModal } from '../../../../../_common/report/modal/modal.service';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/AppScrollAffix.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
@@ -61,7 +64,7 @@ import AppPageHeaderControls from '../../../../components/page-header/controls/c
 		AppScrollTo: vAppScrollTo,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	cache: true,
 	deps: { params: ['slug', 'id'], query: ['page'] },
 	async resolver({ route }) {
@@ -81,16 +84,16 @@ import AppPageHeaderControls from '../../../../components/page-header/controls/c
 		return payload;
 	},
 })
-export default class RouteForumsTopicsView extends BaseRouteComponent {
+export default class RouteForumsTopicsView extends LegacyRouteComponent {
 	commonStore = setup(() => useCommonStore());
 
 	get app() {
 		return this.commonStore;
 	}
 
-	topic: ForumTopic = null as any;
-	channel: ForumChannel = null as any;
-	posts: ForumPost[] = [];
+	topic: ForumTopicModel = null as any;
+	channel: ForumChannelModel = null as any;
+	posts: ForumPostModel[] = [];
 
 	isEditingTopic = false;
 	canToggleDescription = false;
@@ -124,9 +127,9 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 	}
 
 	routeResolved($payload: any) {
-		this.topic = new ForumTopic($payload.topic);
-		this.channel = new ForumChannel($payload.channel);
-		this.posts = ForumPost.populate($payload.posts);
+		this.topic = new ForumTopicModel($payload.topic);
+		this.channel = new ForumChannelModel($payload.channel);
+		this.posts = ForumPostModel.populate($payload.posts);
 
 		this.perPage = $payload.perPage;
 		this.currentPage = $payload.page || 1;
@@ -155,7 +158,7 @@ export default class RouteForumsTopicsView extends BaseRouteComponent {
 	}
 
 	report() {
-		ReportModal.show(this.topic);
+		showReportModal(this.topic);
 	}
 }
 </script>

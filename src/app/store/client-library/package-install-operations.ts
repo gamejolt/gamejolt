@@ -1,21 +1,21 @@
 import type { PatchEvents, PatchInstance } from 'client-voodoo';
-import { ComputedRef, markRaw, reactive, Ref } from 'vue';
+import { ComputedRef, Ref, markRaw, reactive } from 'vue';
 import { Api } from '../../../_common/api/api.service';
 import {
 	Patcher,
-	Rollbacker,
 	State as PatcherState,
+	Rollbacker,
 	Uninstaller,
 } from '../../../_common/client/client-voodoo-imports';
-import type { GameBuild } from '../../../_common/game/build/build.model';
-import type { GameBuildLaunchOption } from '../../../_common/game/build/launch-option/launch-option.model';
-import type { Game } from '../../../_common/game/game.model';
-import type { GamePackage } from '../../../_common/game/package/package.model';
-import type { GameRelease } from '../../../_common/game/release/release.model';
+import type { GameBuildModel } from '../../../_common/game/build/build.model';
+import type { GameBuildLaunchOptionModel } from '../../../_common/game/build/launch-option/launch-option.model';
+import type { GameModel } from '../../../_common/game/game.model';
+import type { GamePackageModel } from '../../../_common/game/package/package.model';
+import type { GameReleaseModel } from '../../../_common/game/release/release.model';
 import { showSuccessGrowl } from '../../../_common/growls/growls.service';
 import { HistoryTick } from '../../../_common/history-tick/history-tick-service';
 import { SettingGameInstallDir } from '../../../_common/settings/settings.service';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { LocalDbGame } from '../../components/client/local-db/game/game.model';
 import { LocalDb } from '../../components/client/local-db/local-db.service';
 import type { LocalDbPackageProgress } from '../../components/client/local-db/package/package.model';
@@ -44,11 +44,11 @@ export default class ClientLibraryPackageInstallOperations {
 	) {}
 
 	async packageInstall(
-		game: Game,
-		pkg: GamePackage,
-		release: GameRelease,
-		build: GameBuild,
-		launchOptions: GameBuildLaunchOption[]
+		game: GameModel,
+		pkg: GamePackageModel,
+		release: GameReleaseModel,
+		build: GameBuildModel,
+		launchOptions: GameBuildLaunchOptionModel[]
 	) {
 		// TODO: Are these needed?
 		HistoryTick.sendBeacon('game-build', build.id, {
@@ -533,10 +533,10 @@ export default class ClientLibraryPackageInstallOperations {
 
 			const message =
 				operation === 'install'
-					? $gettextInterpolate(`%{package} failed to install.`, {
+					? $gettext(`%{package} failed to install.`, {
 							package: packageTitle,
 					  })
-					: $gettextInterpolate(`%{package} failed to update.`, {
+					: $gettext(`%{package} failed to update.`, {
 							package: packageTitle,
 					  });
 
@@ -612,18 +612,15 @@ export default class ClientLibraryPackageInstallOperations {
 					handleClientVoodooError(
 						err,
 						uninstallOp,
-						$gettextInterpolate(
-							'Could not stop the installation of %{ packageTitle }.',
-							{
-								packageTitle,
-							}
-						)
+						$gettext('Could not stop the installation of %{ packageTitle }.', {
+							packageTitle,
+						})
 					);
 				} else {
 					handleClientVoodooError(
 						err,
 						uninstallOp,
-						$gettextInterpolate('Could not remove %{ packageTitle }.', {
+						$gettext('Could not remove %{ packageTitle }.', {
 							packageTitle,
 						}),
 						$gettext('Remove failed')
@@ -743,7 +740,7 @@ export default class ClientLibraryPackageInstallOperations {
 			trackClientVoodooOperation('patch-abort-end', true);
 		} catch (err) {
 			const title = $gettext('Update Failed');
-			const message = $gettextInterpolate(
+			const message = $gettext(
 				`%{ packageTitle } cannot abort at this time. Retry or uninstall it.`,
 				{ packageTitle }
 			);

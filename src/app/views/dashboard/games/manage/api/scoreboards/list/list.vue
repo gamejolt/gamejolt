@@ -6,12 +6,17 @@ import AppCardList from '../../../../../../../../_common/card/list/AppCardList.v
 import AppCardListAdd from '../../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
-import { GameScoreTable } from '../../../../../../../../_common/game/score-table/score-table.model';
-import { ModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../../_common/route/route-component';
+	$removeGameScoreTable,
+	$saveGameScoreTableSort,
+	GameScoreTableModel,
+	GameScoreTableSorting,
+} from '../../../../../../../../_common/game/score-table/score-table.model';
+import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../../_common/route/legacy-route-component';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import FormGameScoreTable from '../../../../../../../components/forms/game/score-table/score-table.vue';
 import { useGameDashRouteController } from '../../../manage.store';
@@ -29,23 +34,26 @@ import { useGameDashRouteController } from '../../../manage.store';
 		AppTooltip: vAppTooltip,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/api/scores/' + route.params.id),
 })
-export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteComponent {
+export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game!;
 	}
 
-	GameScoreTable = GameScoreTable;
+	GameScoreTable = GameScoreTableModel;
 
-	scoreTables: GameScoreTable[] = [];
+	scoreTables: GameScoreTableModel[] = [];
 	isAdding = false;
-	activeItem: GameScoreTable | null = null;
+	activeItem: GameScoreTableModel | null = null;
+
+	readonly DirectionAscend = GameScoreTableSorting.DirectionAsc;
+	readonly DirectionDescend = GameScoreTableSorting.DirectionDesc;
 
 	get currentSort() {
 		return this.scoreTables.map(item => item.id);
@@ -53,7 +61,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Manage Scoreboards for %{ game }', {
+			return this.$gettext('Manage Scoreboards for %{ game }', {
 				game: this.game.title,
 			});
 		}
@@ -61,10 +69,10 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 	}
 
 	routeResolved($payload: any) {
-		this.scoreTables = GameScoreTable.populate($payload.scoreTables);
+		this.scoreTables = GameScoreTableModel.populate($payload.scoreTables);
 	}
 
-	onTableAdded(table: GameScoreTable) {
+	onTableAdded(table: GameScoreTableModel) {
 		this.scoreTables.push(table);
 		this.isAdding = false;
 	}
@@ -73,13 +81,13 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 		this.activeItem = null;
 	}
 
-	saveSort(tables: GameScoreTable[]) {
+	saveSort(tables: GameScoreTableModel[]) {
 		this.scoreTables = tables;
-		GameScoreTable.$saveSort(this.game.id, this.currentSort);
+		$saveGameScoreTableSort(this.game.id, this.currentSort);
 	}
 
-	async removeTable(table: GameScoreTable) {
-		const result = await ModalConfirm.show(
+	async removeTable(table: GameScoreTableModel) {
+		const result = await showModalConfirm(
 			this.$gettext('Are you sure you want to remove this scoreboard?')
 		);
 
@@ -87,7 +95,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 			return;
 		}
 
-		await table.$remove();
+		await $removeGameScoreTable(table);
 
 		const index = this.scoreTables.findIndex(i => i.id === table.id);
 		if (index !== -1) {
@@ -192,8 +200,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 									</span>
 									<span
 										v-if="
-											scoreTable.scores_sorting_direction ===
-											GameScoreTable.SORTING_DIRECTION_ASC
+											scoreTable.scores_sorting_direction === DirectionAscend
 										"
 										v-app-tooltip="
 											$gettext(
@@ -210,8 +217,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends BaseRouteCom
 									</span>
 									<span
 										v-if="
-											scoreTable.scores_sorting_direction ===
-											GameScoreTable.SORTING_DIRECTION_DESC
+											scoreTable.scores_sorting_direction === DirectionDescend
 										"
 										v-app-tooltip="
 											$gettext(

@@ -1,5 +1,5 @@
 import { arrayRemove, stringSort } from '../../utils/array';
-import { MediaItem } from '../media-item/media-item-model';
+import { MediaItemType } from '../media-item/media-item-model';
 
 export const GJ_FORMAT_VERSION = '1';
 
@@ -15,7 +15,6 @@ export type ContentContext =
 	| 'community-description'
 	| 'community-channel-description'
 	| 'chat-message'
-	| 'fireside-chat-message'
 	| 'chat-command'
 	| 'quest-stage-description'
 	| 'supporter-message'
@@ -211,26 +210,25 @@ export class ContextCapabilities {
 export function getMediaItemTypeForContext(context: ContentContext) {
 	switch (context) {
 		case 'fireside-post-article':
-			return MediaItem.TYPE_FIRESIDE_POST_ARTICLE_IMAGE;
+			return MediaItemType.FiresidePostArticleImage;
 		case 'game-description':
-			return MediaItem.TYPE_GAME_DESCRIPTION;
+			return MediaItemType.GameDescription;
 		case 'fireside-post-comment':
 		case 'game-comment':
 		case 'user-comment':
-			return MediaItem.TYPE_COMMENT;
+			return MediaItemType.Comment;
 		case 'forum-post':
-			return MediaItem.TYPE_FORUM_POST;
+			return MediaItemType.ForumPost;
 		case 'community-description':
-			return MediaItem.TYPE_COMMUNITY_DESCRIPTION;
+			return MediaItemType.CommunityDescription;
 		case 'chat-message':
-		case 'fireside-chat-message':
-			return MediaItem.TYPE_CHAT_MESSAGE;
+			return MediaItemType.ChatMessage;
 		case 'chat-command':
-			return MediaItem.TYPE_CHAT_COMMAND;
+			return MediaItemType.ChatCommand;
 		case 'community-channel-description':
-			return MediaItem.TYPE_COMMUNITY_CHANNEL_DESCRIPTION;
+			return MediaItemType.CommunityChannelDescription;
 		case 'help-page':
-			return MediaItem.TYPE_HELP_PAGE_IMAGE;
+			return MediaItemType.HelpPageImage;
 	}
 	throw new Error('There is no matching media item type for the context ' + context);
 }

@@ -1,5 +1,4 @@
-import { reactive } from '@vue/reactivity';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { arrayRemove } from '../../utils/array';
 
 interface BackdropOptions {
@@ -19,7 +18,6 @@ function createBackdrop(
 		onClicked: ref<(() => void) | null>(null),
 	});
 }
-
 class BackdropsService {
 	backdrops: BackdropController[] = [];
 
@@ -68,6 +66,6 @@ class BackdropsService {
 	}
 }
 
-export const Backdrop = reactive(new BackdropsService()) as BackdropsService;
+export const Backdrop = reactive(/** @__PURE__ */ new BackdropsService()) as BackdropsService;
 
 export type BackdropController = ReturnType<typeof createBackdrop>;

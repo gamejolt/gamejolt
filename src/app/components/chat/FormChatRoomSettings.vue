@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { computed, PropType, ref, toRef, toRefs, watch } from 'vue';
 import { Api } from '../../../_common/api/api.service';
-import { Background } from '../../../_common/background/background.model';
-import AppButton from '../../../_common/button/AppButton.vue';
+import { BackgroundModel } from '../../../_common/background/background.model';
 import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
@@ -13,39 +12,34 @@ import AppFormControlBackground from '../../../_common/form-vue/controls/AppForm
 import AppFormControlToggleButton from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
 import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
-import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
-import { ModalConfirm } from '../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../_common/modal/confirm/confirm-service';
+import { storeModelList } from '../../../_common/model/model-store.service';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { useGridStore } from '../grid/grid-store';
 import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './client';
-import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
-import { ChatRoom } from './room';
-import { ChatUser } from './user';
+import FormChatRoomSettingsMemberPreview from './FormChatRoomSettingsMemberPreview.vue';
+import { ChatRoomModel } from './room';
 
 const props = defineProps({
 	room: {
-		type: Object as PropType<ChatRoom>,
+		type: Object as PropType<ChatRoomModel>,
 		required: true,
 	},
 	showMembersPreview: {
 		type: Boolean,
 	},
-	members: {
-		type: Array as PropType<ChatUser[]>,
-		default: () => [] as ChatUser[],
-	},
 });
 
 const emit = defineEmits({
-	submit: (_model: ChatRoom) => true,
+	submit: (_model: ChatRoomModel) => true,
 	viewMembers: () => true,
 });
 
-const { room, showMembersPreview, members } = toRefs(props);
+const { room, showMembersPreview } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
 
 const titleMinLength = ref<number>();
@@ -55,7 +49,7 @@ const isLoadingBackgrounds = ref(false);
 const isSettingBackground = ref(false);
 
 const notificationLevel = ref('');
-const backgrounds = ref<Background[]>([]);
+const backgrounds = ref<BackgroundModel[]>([]);
 const roomBackgroundId = ref(room.value.background?.id || null);
 
 // When a user selects a background in this form, it sends a grid message to
@@ -83,7 +77,7 @@ watch(
 	}
 );
 
-const form: FormController<ChatRoom> = createForm({
+const form: FormController<ChatRoomModel> = createForm({
 	model: room,
 	loadUrl: `/web/chat/rooms/room-edit`,
 	onLoad(payload) {
@@ -100,7 +94,7 @@ type FormBackground = {
 const backgroundForm: FormController<FormBackground> = createForm({
 	loadUrl: `/web/chat/rooms/backgrounds/${room.value.id}`,
 	onLoad(payload) {
-		backgrounds.value = Background.populate(payload.backgrounds);
+		backgrounds.value = storeModelList(BackgroundModel, payload.backgrounds);
 		roomBackgroundId.value = payload.roomBackgroundId || null;
 		backgroundForm.formModel.background_id = roomBackgroundId.value;
 	},
@@ -132,23 +126,15 @@ const notificationLevelForm: FormController<FormNotificationLevel> = createForm(
 	},
 });
 
-const isOwner = computed(
+const isOwner = toRef(
 	() =>
 		room.value && !!chat.value.currentUser && room.value.owner_id === chat.value.currentUser.id
 );
 
-const canEditTitle = computed(() => !room.value.isPmRoom && isOwner.value);
-const canEditBackground = computed(() => backgrounds.value.length > 0);
-const shouldShowLeave = computed(() => !room.value.isPmRoom);
-const hasLoadedBackgrounds = computed(() => backgroundForm.isLoadedBootstrapped);
-const canExtinguishFireside = computed(() => room.value.fireside && isOwner.value);
-
-const membersPreview = computed(() => {
-	if (showMembersPreview.value) {
-		return members.value.slice(0, 5);
-	}
-	return [];
-});
+const canEditTitle = toRef(() => !room.value.isPmRoom && isOwner.value);
+const canEditBackground = toRef(() => backgrounds.value.length > 0);
+const shouldShowLeave = toRef(() => !room.value.isPmRoom);
+const hasLoadedBackgrounds = toRef(() => backgroundForm.isLoadedBootstrapped);
 
 const notificationSettings = computed(() => {
 	const settings = [];
@@ -199,7 +185,7 @@ async function reloadBackgroundForm(retryOnDesync: boolean) {
 }
 
 async function leaveRoom() {
-	const result = await ModalConfirm.show(
+	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to leave the group chat?`)
 	);
 
@@ -208,39 +194,6 @@ async function leaveRoom() {
 	}
 
 	leaveGroupRoom(chat.value, room.value);
-}
-
-async function extinguishRoomFireside() {
-	if (!canExtinguishFireside.value) {
-		return;
-	}
-
-	const result = await ModalConfirm.show(
-		$gettext(`Are you sure you want to extinguish the fireside?`)
-	);
-
-	if (!result) {
-		return;
-	}
-
-	const fireside = room.value.fireside;
-	const roomId = room.value.id;
-	room.value.fireside = null;
-
-	try {
-		await Api.sendRequest(
-			`/web/dash/fireside/extinguish-for-room/${room.value.id}/${fireside!.hash}`,
-			{},
-			{ detach: true }
-		);
-	} catch (error) {
-		showErrorGrowl($gettext(`Could not extinguish fireside.`));
-		console.error('Failed to extinguish fireside.', error);
-
-		if (room.value.id === roomId && !room.value.fireside) {
-			room.value.fireside = fireside;
-		}
-	}
 }
 </script>
 
@@ -330,38 +283,16 @@ async function extinguishRoomFireside() {
 				</AppFormGroup>
 			</AppForm>
 
-			<template v-if="showMembersPreview && membersPreview.length > 0">
-				<AppSpacer vertical :scale="6" />
-				<hr />
-				<AppSpacer vertical :scale="6" />
-
-				<ul class="shell-nav">
-					<AppChatMemberListItem
-						v-for="user of membersPreview"
-						:key="user.id"
-						:user="user"
-						:room="room"
-					/>
-
-					<div class="-pad">
-						<AppSpacer vertical :scale="4" />
-						<AppButton block @click="emit('viewMembers')">
-							<AppTranslate>View all members</AppTranslate>
-						</AppButton>
-					</div>
-				</ul>
-			</template>
+			<FormChatRoomSettingsMemberPreview
+				v-if="showMembersPreview"
+				:room="room"
+				@view-members="emit('viewMembers')"
+			/>
 
 			<template v-if="shouldShowLeave">
 				<AppSpacer vertical :scale="6" />
 				<hr />
 				<AppSpacer vertical :scale="2" />
-
-				<a v-if="canExtinguishFireside" @click="extinguishRoomFireside">
-					<div class="-pad -action">
-						{{ $gettext(`Extinguish fireside`) }}
-					</div>
-				</a>
 
 				<a @click="leaveRoom">
 					<div class="-pad -action">

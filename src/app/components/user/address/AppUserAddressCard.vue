@@ -4,16 +4,19 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCard from '../../../../_common/card/AppCard.vue';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { ModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserAddress } from '../../../../_common/user/address/address.model';
+import {
+	$removeUserAddress,
+	UserAddressModel,
+} from '../../../../_common/user/address/address.model';
 import AppUserAddressDetails from './AppUserAddressDetails.vue';
-import { UserAddressEditModal } from './edit-modal/edit-modal.service';
+import { showUserAddressEditModal } from './edit-modal/edit-modal.service';
 
 const props = defineProps({
 	address: {
-		type: Object as PropType<UserAddress>,
+		type: Object as PropType<UserAddressModel>,
 		required: true,
 	},
 	showRemove: {
@@ -26,16 +29,16 @@ const emit = defineEmits({
 });
 
 function edit() {
-	UserAddressEditModal.show(props.address);
+	showUserAddressEditModal(props.address);
 }
 
 async function remove() {
-	const result = await ModalConfirm.show(`Are you sure you want to remove this address?`);
+	const result = await showModalConfirm(`Are you sure you want to remove this address?`);
 	if (!result) {
 		return;
 	}
 
-	await props.address.$remove();
+	await $removeUserAddress(props.address);
 
 	showSuccessGrowl(
 		$gettext(`Your address has successfully been removed.`),

@@ -1,7 +1,7 @@
-import { Component, markRaw, reactive } from 'vue';
+import { markRaw, reactive, type Component } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { Client } from '../client/safe-exports';
-import { Translate } from '../translate/translate.service';
+import { $gettext } from '../translate/translate.service';
 
 export type GrowlType = 'info' | 'success' | 'error';
 
@@ -52,9 +52,9 @@ export const Growls = reactive(new GrowlsService()) as GrowlsService;
 function _addGrowl(type: GrowlType, options: GrowlOptions) {
 	if (!options.title) {
 		if (type === 'error') {
-			options.title = Translate.$gettext('Oh no!');
+			options.title = $gettext('Oh no!');
 		} else if (type === 'success') {
-			options.title = Translate.$gettext('Huzzah!');
+			options.title = $gettext('Huzzah!');
 		}
 	}
 

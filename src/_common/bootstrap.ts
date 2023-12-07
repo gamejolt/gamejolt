@@ -1,4 +1,4 @@
-import { AsyncComponentLoader, Component, createApp, createSSRApp } from 'vue';
+import { AsyncComponentLoader, createApp, createSSRApp, type Component } from 'vue';
 import { Router } from 'vue-router';
 import { hijackLinks } from '../utils/router';
 import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.service';

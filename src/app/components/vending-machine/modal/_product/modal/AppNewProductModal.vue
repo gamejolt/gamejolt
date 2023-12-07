@@ -3,10 +3,11 @@ import { CSSProperties, PropType, ref, toRaw, toRefs } from 'vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppBackground from '../../../../../../_common/background/AppBackground.vue';
-import { Background } from '../../../../../../_common/background/background.model';
+import { BackgroundModel } from '../../../../../../_common/background/background.model';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import AppIllustration from '../../../../../../_common/illustration/AppIllustration.vue';
+import { illPointyThing } from '../../../../../../_common/illustration/illustrations';
 import AppMediaItemBackdrop from '../../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppModal from '../../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../../_common/modal/modal.service';
@@ -15,17 +16,16 @@ import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserAvatarFrame } from '../../../../../../_common/user/user-avatar/frame/frame.model';
+import { UserAvatarFrameModel } from '../../../../../../_common/user/user-avatar/frame/frame.model';
 import {
 	styleAbsoluteFill,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 } from '../../../../../../_styles/mixins';
-import { illPointyThing } from '../../../../../../_common/illustration/illustrations';
 
 const props = defineProps({
 	product: {
-		type: Object as PropType<UserAvatarFrame | Background>,
+		type: Object as PropType<UserAvatarFrameModel | BackgroundModel>,
 		required: true,
 	},
 });
@@ -65,12 +65,12 @@ async function equipAvatarFrame() {
 	}
 }
 
-function isUserAvatarFrame(item: typeof props.product): item is UserAvatarFrame {
-	return toRaw(item) instanceof UserAvatarFrame;
+function isUserAvatarFrame(item: typeof props.product): item is UserAvatarFrameModel {
+	return toRaw(item) instanceof UserAvatarFrameModel;
 }
 
-function isBackground(item: typeof props.product): item is Background {
-	return toRaw(item) instanceof Background;
+function isBackground(item: typeof props.product): item is BackgroundModel {
+	return toRaw(item) instanceof BackgroundModel;
 }
 
 function getStyles(ratio: number): CSSProperties {
@@ -157,7 +157,7 @@ function getStyles(ratio: number): CSSProperties {
 			</template>
 			<template v-else-if="isBackground(product)">
 				<div>
-					{{ $gettext(`You can use this background when creating posts and firesides!`) }}
+					{{ $gettext(`You can use this background when creating posts!`) }}
 				</div>
 
 				<AppSpacer vertical :scale="4" />

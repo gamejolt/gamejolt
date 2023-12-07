@@ -1,11 +1,11 @@
 const { spawn, exec } = require('child_process') as typeof import('child_process');
-const { https } = require('follow-redirects');
+const { https } = require('follow-redirects') as { https: typeof import('https') };
 const tar = require('tar');
 const path = require('path') as typeof import('path');
 const os = require('os') as typeof import('os');
 
 import { SpawnOptions } from 'child_process';
-import * as fs from 'fs-extra';
+import { createWriteStream, mkdirp } from 'fs-extra';
 
 export const packageJson = require('../../package.json');
 
@@ -28,11 +28,11 @@ export function createTarGz(src: string, dest: string) {
 }
 
 export async function extractTarGz(src: string, dest: string) {
-	await fs.mkdirp(dest);
+	await mkdirp(dest);
 	await tar.x({ file: src, gzip: true, cwd: path.resolve(dest, '..') });
 }
 
-export async function unzip(src, dest) {
+export async function unzip(src: string, dest: string) {
 	if (os.platform() === 'win32') {
 		await runShell(
 			`powershell -command "Expand-Archive ${shellEscape(src)} ${shellEscape(dest)}"`
@@ -112,7 +112,7 @@ export function execShell(command: string, options: ExecShellOptions = {}) {
 
 export function downloadFile(url: string, dest: string) {
 	return new Promise<void>((resolve, reject) => {
-		const file = fs.createWriteStream(dest);
+		const file = createWriteStream(dest);
 
 		https
 			.get(url, response => {
@@ -137,7 +137,7 @@ export function downloadFile(url: string, dest: string) {
  * Tries to run a particular function in a loop. If there's a failure, we back
  * off and try again.
  */
-export async function tryWithBackoff(cb, times) {
+export async function tryWithBackoff(cb: () => void, times: number) {
 	let err = null;
 	for (let i = 0; i < times; i++) {
 		if (i !== 0) {
@@ -158,7 +158,7 @@ export async function tryWithBackoff(cb, times) {
 	}
 }
 
-export function isObject(item) {
+export function isObject(item: any) {
 	return item && typeof item === 'object' && !Array.isArray(item);
 }
 
@@ -166,7 +166,7 @@ export function isObject(item) {
  * Deep merge to plain javascript objects, returning a new one.
  * It does not support merging arrays.
  */
-export function mergeDeep(target, source) {
+export function mergeDeep(target: any, source: any) {
 	if (!isObject(target) || !isObject(source)) {
 		return {};
 	}

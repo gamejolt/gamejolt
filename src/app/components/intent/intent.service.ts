@@ -1,7 +1,7 @@
 import { RouteLocationNormalized } from 'vue-router';
-import { RouteLocationRedirect } from '../../../utils/router';
 import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
-import { $gettext, $gettextInterpolate } from '../../../_common/translate/translate.service';
+import { $gettext } from '../../../_common/translate/translate.service';
+import { locationRedirectFromRoute } from '../../../utils/router';
 
 export interface Intent {
 	intent: string;
@@ -26,7 +26,7 @@ export class IntentService {
 					break;
 				}
 			}
-			return RouteLocationRedirect.fromRoute(route, {}, { intent: undefined });
+			return locationRedirectFromRoute(route, {}, { intent: undefined });
 		}
 		return null;
 	}
@@ -42,14 +42,14 @@ export class IntentService {
 			} else if (approveLoginError === 'already-rejected') {
 				showErrorGrowl({
 					sticky: true,
-					message: $gettextInterpolate(
+					message: $gettext(
 						`The device you're logging in from has been blocked. If you did not do this, or blocked the login by mistake, contact us at %{ email } right away. Your account may be compromised.`,
 						{ email: 'contact@gamejolt.com' }
 					),
 				});
 			}
 
-			return RouteLocationRedirect.fromRoute(
+			return locationRedirectFromRoute(
 				route,
 				{},
 				{ intent: undefined, approve_login_error: undefined }
@@ -66,14 +66,14 @@ export class IntentService {
 			} else if (rejectLoginError === 'already-approved') {
 				showErrorGrowl({
 					sticky: true,
-					message: $gettextInterpolate(
+					message: $gettext(
 						`The device you're logging in from has already been approved. If you did not do this, or blocked the login by mistake, contact us at %{ email } right away. Your account may be compromised.`,
 						{ email: 'contact@gamejolt.com' }
 					),
 				});
 			}
 
-			return RouteLocationRedirect.fromRoute(
+			return locationRedirectFromRoute(
 				route,
 				{},
 				{ intent: undefined, reject_login_error: undefined }

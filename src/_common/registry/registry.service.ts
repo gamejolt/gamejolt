@@ -2,15 +2,15 @@ export class RegistryItemConfig {
 	constructor(public maxItems = 0) {}
 }
 
-export class Registry {
-	static config: { [k: string]: RegistryItemConfig } = {};
-	static items: { [k: string]: any[] } = {};
+class RegistryService {
+	config: { [k: string]: RegistryItemConfig } = {};
+	items: { [k: string]: any[] } = {};
 
-	static setConfig(type: string, config: RegistryItemConfig) {
+	setConfig(type: string, config: RegistryItemConfig) {
 		this.config[type] = config;
 	}
 
-	static store(type: string, newItems: any[] | any) {
+	store(type: string, newItems: any[] | any) {
 		if (typeof this.config[type] === 'undefined') {
 			this.config[type] = new RegistryItemConfig();
 		}
@@ -49,7 +49,7 @@ export class Registry {
 		this.items[type] = this.items[type].slice(-this.config[type].maxItems);
 	}
 
-	static find<T>(type: string, fn: (i: T) => boolean): T | null {
+	find<T>(type: string, fn: (i: T) => boolean): T | null {
 		if (typeof this.items[type] === 'undefined') {
 			this.items[type] = [];
 		}
@@ -57,3 +57,5 @@ export class Registry {
 		return this.items[type].find(fn) || null;
 	}
 }
+
+export const Registry = /** @__PURE__ */ new RegistryService();

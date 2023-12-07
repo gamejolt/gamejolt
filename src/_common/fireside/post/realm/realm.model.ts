@@ -1,18 +1,16 @@
 import { Model } from '../../../model/model.service';
-import { Realm } from '../../../realm/realm-model';
+import { RealmModel } from '../../../realm/realm-model';
 
-export class FiresidePostRealm extends Model {
-	fireside_post_id!: number;
-	realm!: Realm;
-	added_on!: number;
+export class FiresidePostRealmModel extends Model {
+	declare fireside_post_id: number;
+	declare realm: RealmModel;
+	declare added_on: number;
 
 	constructor(data: any = {}) {
 		super(data);
 
 		if (data.realm) {
-			this.realm = new Realm(data.realm);
+			this.realm = new RealmModel(data.realm);
 		}
 	}
 }
-
-Model.create(FiresidePostRealm);

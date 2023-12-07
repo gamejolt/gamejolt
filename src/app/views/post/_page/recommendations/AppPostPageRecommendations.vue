@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
 import AppPostCardPlaceholder from '../../../../../_common/fireside/post/card/AppPostCardPlaceholder.vue';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
@@ -9,7 +9,7 @@ import AppPostPageRecommendationsPosts from './AppPostPageRecommendationsPosts.v
 
 defineProps({
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 });

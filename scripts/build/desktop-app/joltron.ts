@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra';
+import { chmod, copy, mkdirp, readFile, rename, writeFile } from 'fs-extra';
 import * as path from 'path';
 import * as readdirp from 'readdirp';
 import {
@@ -40,7 +40,7 @@ export async function ensureJoltronCloned() {
 	}
 
 	console.log('Ensuring joltron repo dir: ' + joltronRepoDir);
-	await fs.mkdirp(joltronRepoDir);
+	await mkdirp(joltronRepoDir);
 
 	const gitStatus = 'git -C ' + shellEscape(joltronRepoDir) + ' status';
 	const gitClone =
@@ -70,7 +70,7 @@ export async function buildJoltron(options: { environment: Options['environment'
 			parseInt(versionStuff[3]),
 		];
 
-		await fs.writeFile(
+		await writeFile(
 			path.resolve(joltronRepoDir, 'versioninfo.json'),
 			JSON.stringify({
 				FixedFileInfo: {
@@ -163,7 +163,7 @@ export async function restructureProject(options: {
 
 	const installerDir = path.resolve(options.packageDir, '..', 'installer');
 
-	await fs.mkdirp(installerDir);
+	await mkdirp(installerDir);
 
 	console.log('Copying main executable to root of installation directory');
 	// Joltron should be placed next to the client build's data folder. On
@@ -177,10 +177,10 @@ export async function restructureProject(options: {
 		isWindows() ? 'GameJoltClient.exe' : 'game-jolt-client'
 	);
 
-	await fs.copy(joltronExecutableFilepath!, joltronDest);
+	await copy(joltronExecutableFilepath!, joltronDest);
 
 	// Make sure it is executable.
-	await fs.chmod(joltronDest, '0755');
+	await chmod(joltronDest, '0755');
 
 	console.log('Moving package files to installer data folder');
 	// This is joltron's data directory for this client installer build
@@ -190,7 +190,7 @@ export async function restructureProject(options: {
 	);
 
 	// Rename our build folder (which is the contents of our package zip)
-	await fs.rename(options.packageDir, newPackageDir);
+	await rename(options.packageDir, newPackageDir);
 
 	console.log('Generating joltron manifest for installer package');
 	// Some more info is required for joltron's manifest. The correct host
@@ -222,7 +222,7 @@ export async function restructureProject(options: {
 		.sort();
 
 	// Finally create joltron's manifest file
-	await fs.writeFile(
+	await writeFile(
 		path.join(installerDir, '.manifest'),
 		JSON.stringify({
 			version: 2,
@@ -272,7 +272,7 @@ export async function createInstaller(options: {
 		// const clientApp = path.resolve(config.clientBuildDir, 'Game Jolt Client.app');
 
 		// // We copy it over to the build dir.
-		// await fs.copy(appTemplate, clientApp);
+		// await copy(appTemplate, clientApp);
 
 		// // We copy the entire joltron folder we generated in the previous
 		// // step into the app's Contents/Resources/app folder.
@@ -280,7 +280,7 @@ export async function createInstaller(options: {
 		// const appDir = path.resolve(clientApp, 'Contents', 'Resources', 'app');
 
 		// // TODO: check to make sure it copies the hidden dot files too
-		// await fs.copy(buildDir, appDir);
+		// await copy(buildDir, appDir);
 
 		// // // The . after the build dir makes it also copy hidden dot files
 		// // cp.execSync('cp -a "' + path.join(buildDir, '.') + '" "' + appDir + '"');
@@ -295,7 +295,7 @@ export async function createInstaller(options: {
 		// 	})
 		// 	.replace(/\{\{APP_VERSION\}\}/g, packageJson.version);
 
-		// await fs.writeFile(infoPlistFile, infoPlist, { encoding: 'utf8' });
+		// await writeFile(infoPlistFile, infoPlist, { encoding: 'utf8' });
 
 		// const _createDmg = () => {
 		// 	const appdmg = require('appdmg');
@@ -342,7 +342,7 @@ export async function createInstaller(options: {
 		// await _createDmg();
 	} else if (isWindows()) {
 		const manifest = JSON.parse(
-			await fs.readFile(path.join(options.installerDir, '.manifest'), {
+			await readFile(path.join(options.installerDir, '.manifest'), {
 				encoding: 'utf8',
 			})
 		);

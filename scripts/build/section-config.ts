@@ -11,7 +11,7 @@ export const gjSectionNames = Object.freeze([
 	'z',
 ] as const);
 
-export type GjSectionName = typeof gjSectionNames[number];
+export type GjSectionName = (typeof gjSectionNames)[number];
 
 export type GjSectionConfig = {
 	// Title to default to in the web page.
@@ -29,6 +29,8 @@ export type GjSectionConfig = {
 	// Additional scripts to embed in the index.html's head element.
 	jsScripts: string;
 
+	// Whether this section should get built for web app.
+	webApp: boolean;
 	// Whether this section should get built for desktop app.
 	desktopApp: boolean;
 	// Whether this section should get built for ssr.
@@ -43,6 +45,7 @@ const sectionDefaultConfig: GjSectionConfig = Object.freeze({
 	allowCrawlers: false,
 	htmlBodyClass: '',
 	jsScripts: '',
+	webApp: false,
 	desktopApp: false,
 	ssr: false,
 	mobileApp: false,
@@ -52,6 +55,7 @@ const sectionOverrides: Partial<Record<GjSectionName, Partial<GjSectionConfig>>>
 	app: {
 		title: 'Game Jolt - Share your creations',
 		allowCrawlers: true,
+		webApp: true,
 		desktopApp: true,
 		ssr: true,
 	},
@@ -59,22 +63,27 @@ const sectionOverrides: Partial<Record<GjSectionName, Partial<GjSectionConfig>>>
 		title: 'Game Jolt',
 		allowCrawlers: true,
 		htmlBodyClass: 'fill-darkest',
+		webApp: true,
 		desktopApp: true,
 	},
 	checkout: {
 		title: 'Checkout - Game Jolt',
 		jsScripts: '<script type="text/javascript" src="https://js.stripe.com/v2/"></script>',
+		webApp: true,
 		desktopApp: true,
 	},
 	claim: {
 		title: 'Claim - Game Jolt',
+		webApp: true,
 	},
 	'site-editor': {
 		title: 'Edit site - Game Jolt',
+		webApp: true,
 	},
 	gameserver: {
 		title: 'Playing Game - Game Jolt',
 		hasRouter: false,
+		webApp: true,
 	},
 	client: {
 		title: 'Game Jolt',
@@ -84,10 +93,12 @@ const sectionOverrides: Partial<Record<GjSectionName, Partial<GjSectionConfig>>>
 	'widget-package': {
 		title: 'Get game from Game Jolt',
 		hasRouter: false,
+		webApp: true,
 	},
 	z: {
 		title: 'Game Jolt Zection',
 		htmlBodyClass: 'main-body',
+		webApp: true,
 	},
 	editor: {
 		title: 'Editor',

@@ -18,10 +18,10 @@ type EmbedData = {
 	source: string;
 };
 
-export class ContentEmbedService {
-	private static _sources: EmbedSource[] | undefined = undefined;
+class ContentEmbedServiceImpl {
+	private _sources: EmbedSource[] | undefined = undefined;
 
-	private static get sources() {
+	private get sources() {
 		if (this._sources === undefined) {
 			this._sources = [
 				new YouTubeVideoEmbed(),
@@ -32,7 +32,7 @@ export class ContentEmbedService {
 		return this._sources;
 	}
 
-	public static get previewSources() {
+	public get previewSources() {
 		const previews = [] as PreviewEmbed[];
 		for (const source of this.sources) {
 			const preview = source.getEmbedPreview();
@@ -43,7 +43,7 @@ export class ContentEmbedService {
 		return previews;
 	}
 
-	public static async getEmbedData(
+	public async getEmbedData(
 		owner: ContentOwnerController,
 		input: string
 	): Promise<EmbedData | undefined> {
@@ -66,3 +66,5 @@ export class ContentEmbedService {
 		}
 	}
 }
+
+export const ContentEmbedService = /** @__PURE__ */ new ContentEmbedServiceImpl();

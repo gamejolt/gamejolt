@@ -3,20 +3,20 @@ import { arrayRemove } from '../../utils/array';
 
 export type EscapeStackCallback = () => void;
 
-export class EscapeStack {
-	static stack: EscapeStackCallback[] = [];
-	private static initialized = false;
+class EscapeStackService {
+	stack: EscapeStackCallback[] = [];
+	private initialized = false;
 
-	static register(cb: EscapeStackCallback) {
+	register(cb: EscapeStackCallback) {
 		this.stack.push(cb);
 		this.init();
 	}
 
-	static deregister(cb: EscapeStackCallback) {
+	deregister(cb: EscapeStackCallback) {
 		arrayRemove(this.stack, i => i === cb);
 	}
 
-	private static handle(e: KeyboardEvent) {
+	private handle(e: KeyboardEvent) {
 		if (e.key !== 'Escape') {
 			return;
 		}
@@ -27,7 +27,7 @@ export class EscapeStack {
 		}
 	}
 
-	private static init() {
+	private init() {
 		if (this.initialized) {
 			return;
 		}
@@ -36,6 +36,8 @@ export class EscapeStack {
 		this.initialized = true;
 	}
 }
+
+export const EscapeStack = /** @__PURE__ */ new EscapeStackService();
 
 export function useEscapeStack(cb: () => void) {
 	onMounted(() => {

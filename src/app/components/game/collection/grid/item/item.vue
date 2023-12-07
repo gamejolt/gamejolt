@@ -2,8 +2,8 @@
 import { setup } from 'vue-class-component';
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
-import { GameCollection } from '../../collection.model';
-import AppGameCollectionThumbnail from '../../thumbnail/thumbnail.vue';
+import { GameCollectionModel } from '../../collection.model';
+import AppGameCollectionThumbnail from '../../thumbnail/AppGameCollectionThumbnail.vue';
 
 @Options({
 	components: {
@@ -11,7 +11,7 @@ import AppGameCollectionThumbnail from '../../thumbnail/thumbnail.vue';
 	},
 })
 export default class AppGameCollectionGridItem extends Vue {
-	@Prop(Object) collection!: GameCollection;
+	@Prop(Object) collection!: GameCollectionModel;
 	@Prop(String) eventLabel?: string;
 
 	commonStore = setup(() => useCommonStore());

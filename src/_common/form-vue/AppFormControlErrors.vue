@@ -49,7 +49,6 @@ const form = useForm()!;
 const { name, humanLabel: groupLabel, error, dirty } = useFormGroup()!;
 
 const _label = computed(() => (props.label || groupLabel.value || '').toLocaleLowerCase());
-const hasServerError = computed(() => !!form.serverErrors[name.value]);
 
 const errorMessage = computed(() => {
 	// Only show input errors if the field has been modified from its initial
@@ -58,36 +57,35 @@ const errorMessage = computed(() => {
 		return _processMessage(error.value);
 	}
 
-	if (hasServerError.value) {
+	const serverErrors = form.serverErrors;
+
+	// Generic server error.
+	if (serverErrors[name.value]) {
 		return _processMessage({
 			type: 'server',
 			message: `The {} you've entered is invalid.`,
 		});
 	}
 
-	// There may be multiple server errors that are relevant for the same field.
-	// For example when adding a community channel a title can be invalid
-	// because its already in use, or is a reserved name.
-	//
-	// If we need to show different error messages for these, we need to be able
-	// to capture different custom server error, for example: "title-in-use" and
-	// "title-reserved".
-	//
-	// For this reason, we check the rest of the returning serverErrors against
-	// the error messages we overrode.
-	// TODO(vue3)
-	// const serverErrors = form.serverErrors;
-	// for (const errorType of Object.keys(serverErrors)) {
-	// 	if (serverErrors[errorType] && c.errorMessageOverrides[errorType]) {
-	// 		return _processMessage(errorType, label);
-	// 	}
-	// }
+	// We may have different server errors that are relevant to this field, such
+	// as 'title-reserved' or 'title-in-use', etc. We want to check all the
+	// overrides just in case one of them triggers against the server error.
+	for (const errorType of overrides.value.keys()) {
+		if (serverErrors[errorType]) {
+			return _processServerMessage(errorType);
+		}
+	}
 
 	return undefined;
 });
 
 function _processMessage(error: FormValidatorError) {
 	const message = overrides.value.get(error.type) ?? error.message;
+	return processFormValidatorErrorMessage(message, _label.value);
+}
+
+function _processServerMessage(errorType: string) {
+	const message = overrides.value.get(errorType)!;
 	return processFormValidatorErrorMessage(message, _label.value);
 }
 </script>

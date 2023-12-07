@@ -10,7 +10,7 @@ import AppScrollInview, {
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import { UserFriendship } from '../../../../_common/user/friendship/friendship.model';
+import { UserFriendshipModel } from '../../../../_common/user/friendship/friendship.model';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
@@ -19,7 +19,7 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 <script lang="ts" setup>
 const props = defineProps({
 	request: {
-		type: Object as PropType<UserFriendship>,
+		type: Object as PropType<UserFriendshipModel>,
 		required: true,
 	},
 });

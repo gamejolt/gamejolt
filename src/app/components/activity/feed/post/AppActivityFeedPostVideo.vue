@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
-import { FiresidePost } from '../../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../../../_common/fireside/post/video/video-model';
 import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 import AppActivityFeedVideoPlayer from '../_video-player/AppActivityFeedVideoPlayer.vue';
@@ -12,7 +12,7 @@ const props = defineProps({
 		required: true,
 	},
 	post: {
-		type: Object as PropType<FiresidePost>,
+		type: Object as PropType<FiresidePostModel>,
 		required: true,
 	},
 });

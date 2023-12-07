@@ -4,18 +4,18 @@ import { RouterLink } from 'vue-router';
 import { formatDate } from '../filters/date';
 import AppJolticon from '../jolticon/AppJolticon.vue';
 import AppTimeAgo from '../time/AppTimeAgo.vue';
-import AppTimelineListItem from '../timeline-list/item/item.vue';
+import AppTimelineListItem from '../timeline-list/item/AppTimelineListItem.vue';
 import AppUserCardHover from '../user/card/AppUserCardHover.vue';
 import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
-import { User } from '../user/user.model';
+import { UserModel } from '../user/user.model';
 
 defineProps({
 	user: {
-		type: [Object, null] as PropType<User | null>,
+		type: [Object, null] as PropType<UserModel | null>,
 		required: true,
 	},
 	repliedTo: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		default: undefined,
 	},
 	date: {

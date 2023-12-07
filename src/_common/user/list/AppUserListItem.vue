@@ -6,11 +6,11 @@ import { useCommonStore } from '../../store/common-store';
 import AppUserCardHover from '../card/AppUserCardHover.vue';
 import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
 import AppUserAvatarBubble from '../user-avatar/AppUserAvatarBubble.vue';
-import { User } from '../user.model';
+import { UserModel } from '../user.model';
 
 defineProps({
 	user: {
-		type: Object as PropType<User>,
+		type: Object as PropType<UserModel>,
 		required: true,
 	},
 	eventLabel: {

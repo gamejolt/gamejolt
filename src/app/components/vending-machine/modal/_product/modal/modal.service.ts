@@ -1,10 +1,10 @@
 import { defineAsyncComponent } from 'vue';
-import { Background } from '../../../../../../_common/background/background.model';
+import { BackgroundModel } from '../../../../../../_common/background/background.model';
 import { showModal } from '../../../../../../_common/modal/modal.service';
-import { UserAvatarFrame } from '../../../../../../_common/user/user-avatar/frame/frame.model';
+import { UserAvatarFrameModel } from '../../../../../../_common/user/user-avatar/frame/frame.model';
 
 interface NewProductOptions {
-	product: UserAvatarFrame | Background;
+	product: UserAvatarFrameModel | BackgroundModel;
 }
 
 export async function showNewProductModal(options: NewProductOptions) {

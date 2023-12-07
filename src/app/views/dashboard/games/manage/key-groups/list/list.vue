@@ -6,13 +6,16 @@ import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue'
 import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
 import { formatNumber } from '../../../../../../../_common/filters/number';
-import { GamePackage } from '../../../../../../../_common/game/package/package.model';
-import { KeyGroup } from '../../../../../../../_common/key-group/key-group.model';
+import { GamePackageModel } from '../../../../../../../_common/game/package/package.model';
+import {
+	KeyGroupModel,
+	KeyGroupType,
+} from '../../../../../../../_common/key-group/key-group.model';
 import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import {
-	BaseRouteComponent,
-	OptionsForRoute,
-} from '../../../../../../../_common/route/route-component';
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../../../../../../_common/route/legacy-route-component';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
@@ -26,28 +29,31 @@ import { useGameDashRouteController } from '../../manage.store';
 		FormGameKeyGroup,
 	},
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	deps: {},
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id),
 })
-export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponent {
+export default class RouteDashGamesManageKeyGroupsList extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 
 	get game() {
 		return this.routeStore.game!;
 	}
 
-	keyGroups: KeyGroup[] = [];
-	packages: GamePackage[] = [];
+	keyGroups: KeyGroupModel[] = [];
+	packages: GamePackageModel[] = [];
 	isAdding = false;
 
-	readonly KeyGroup = KeyGroup;
 	readonly formatNumber = formatNumber;
+	readonly KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
+	readonly KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
+	readonly KeyGroupTypeEmail = KeyGroupType.Email;
+	readonly KeyGroupTypeUser = KeyGroupType.User;
 
 	get routeTitle() {
 		if (this.game) {
-			return this.$gettextInterpolate('Manage Key Groups for %{ game }', {
+			return this.$gettext('Manage Key Groups for %{ game }', {
 				game: this.game.title,
 			});
 		}
@@ -55,11 +61,11 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 	}
 
 	routeResolved($payload: any) {
-		this.keyGroups = KeyGroup.populate($payload.keyGroups);
-		this.packages = GamePackage.populate($payload.packages);
+		this.keyGroups = KeyGroupModel.populate($payload.keyGroups);
+		this.packages = GamePackageModel.populate($payload.packages);
 	}
 
-	onKeyGroupAdded(keyGroup: KeyGroup) {
+	onKeyGroupAdded(keyGroup: KeyGroupModel) {
 		this.$router.push({
 			name: 'dash.games.manage.key-groups.edit',
 			params: {
@@ -126,28 +132,28 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 										<div class="card-meta">
 											<span class="tag">
 												<template
-													v-if="group.type === KeyGroup.TYPE_ANONYMOUS"
+													v-if="group.type === KeyGroupTypeAnonymous"
 												>
-													<AppTranslate
-														>Unrestricted (Anonymous)</AppTranslate
-													>
+													<AppTranslate>
+														Unrestricted (Anonymous)
+													</AppTranslate>
 												</template>
 												<template
 													v-else-if="
-														group.type === KeyGroup.TYPE_ANONYMOUS_CLAIM
+														group.type === KeyGroupTypeAnonymousClaim
 													"
 												>
 													<AppTranslate>Claim-Only</AppTranslate>
 												</template>
 												<template
-													v-else-if="group.type === KeyGroup.TYPE_EMAIL"
+													v-else-if="group.type === KeyGroupTypeEmail"
 												>
-													<AppTranslate
-														>Unrestricted (Email)</AppTranslate
-													>
+													<AppTranslate>
+														Unrestricted (Email)
+													</AppTranslate>
 												</template>
 												<template
-													v-else-if="group.type === KeyGroup.TYPE_USER"
+													v-else-if="group.type === KeyGroupTypeUser"
 												>
 													<AppTranslate>User</AppTranslate>
 												</template>
@@ -183,9 +189,9 @@ export default class RouteDashGamesManageKeyGroupsList extends BaseRouteComponen
 											<br />
 
 											<div>
-												<strong
-													><AppTranslate>Claimed</AppTranslate></strong
-												>
+												<strong>
+													<AppTranslate>Claimed</AppTranslate>
+												</strong>
 												{{ formatNumber(group.claimed_count || 0) }} /
 												{{ formatNumber(group.key_count || 0) }}
 												({{

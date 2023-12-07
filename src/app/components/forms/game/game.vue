@@ -5,13 +5,13 @@ import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { BaseForm, FormOnLoad } from '../../../../_common/form-vue/form.service';
 import { validateUrlPath } from '../../../../_common/form-vue/validators';
-import { Game } from '../../../../_common/game/game.model';
+import { $saveGame, GameModel } from '../../../../_common/game/game.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppGameDevStageSelector from './dev-stage-selector/dev-stage-selector.vue';
-import AppDashGameWizardControls from './wizard-controls/wizard-controls.vue';
+import AppGameDevStageSelector from './dev-stage-selector/AppGameDevStageSelector.vue';
+import AppDashGameWizardControls from './wizard-controls/AppDashGameWizardControls.vue';
 
-class Wrapper extends BaseForm<Game> {}
+class Wrapper extends BaseForm<GameModel> {}
 
 @Options({
 	components: {
@@ -32,7 +32,8 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 	}
 
 	// We need to reset all the "is published", "has builds" stuff.
-	modelClass = Game;
+	modelClass = GameModel;
+	modelSaveHandler = $saveGame;
 
 	account: any = null;
 	categories: any = null;

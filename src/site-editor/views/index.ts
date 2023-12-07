@@ -2,9 +2,12 @@ import { h } from 'vue';
 import { setup } from 'vue-class-component';
 import { Options } from 'vue-property-decorator';
 import { RouteRecordRaw } from 'vue-router';
-import { initRouter } from '../../utils/router';
 import { Api } from '../../_common/api/api.service';
-import { BaseRouteComponent, OptionsForRoute } from '../../_common/route/route-component';
+import {
+	LegacyRouteComponent,
+	OptionsForLegacyRoute,
+} from '../../_common/route/legacy-route-component';
+import { initRouter } from '../../utils/router';
 import { useSiteEditorStore } from '../store/index';
 
 // Empty route component. We just use it to send API calls and set up the store
@@ -12,7 +15,7 @@ import { useSiteEditorStore } from '../store/index';
 @Options({
 	name: 'RouteEditor',
 })
-@OptionsForRoute({
+@OptionsForLegacyRoute({
 	lazy: false,
 	cache: false,
 	resolver({ route }) {
@@ -20,7 +23,7 @@ import { useSiteEditorStore } from '../store/index';
 		return Api.sendRequest(`/web/dash/sites/editor/${siteId}`);
 	},
 })
-class RouteEditor extends BaseRouteComponent {
+class RouteEditor extends LegacyRouteComponent {
 	store = setup(() => useSiteEditorStore());
 
 	routeResolved(payload: any) {

@@ -1,7 +1,9 @@
 <script lang="ts">
 import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
 import {
-	Community,
+	$clearCommunityPresetChannelBackground,
+	$saveCommunityPresetChannelBackground,
+	CommunityModel,
 	CommunityPresetChannelType,
 	getCommunityChannelBackground,
 } from '../../../../../../_common/community/community.model';
@@ -13,10 +15,10 @@ import {
 	FormOnLoad,
 	FormOnSubmit,
 } from '../../../../../../_common/form-vue/form.service';
-import { ModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 
-type FormModel = Community & {
-	background_crop: any;
+type FormModel = CommunityModel & {
+	background_crop?: any;
 };
 
 class Wrapper extends BaseForm<FormModel> {}
@@ -33,7 +35,9 @@ export default class FormCommunityChannelPresetBackground
 {
 	@Prop({ type: String, required: true }) presetType!: CommunityPresetChannelType;
 
-	modelClass = Community as any;
+	modelClass = CommunityModel;
+	// Handled through onSubmit.
+	// modelSaveHandler = undefined;
 
 	maxFilesize = 0;
 	aspectRatio = 0;
@@ -74,7 +78,11 @@ export default class FormCommunityChannelPresetBackground
 	}
 
 	async onSubmit() {
-		const response = await this.formModel.$savePresetChannelBackground(this.presetType);
+		const response = await $saveCommunityPresetChannelBackground(
+			this.formModel,
+			this.presetType
+		);
+
 		if (this.model) {
 			Object.assign(this.model, this.formModel);
 		}
@@ -89,7 +97,7 @@ export default class FormCommunityChannelPresetBackground
 	}
 
 	async clearBackground() {
-		const result = await ModalConfirm.show(
+		const result = await showModalConfirm(
 			this.$gettext(`Are you sure you want to remove this channel's background?`)
 		);
 
@@ -97,7 +105,10 @@ export default class FormCommunityChannelPresetBackground
 			return;
 		}
 
-		const payload = await this.formModel.$clearPresetChannelBackground(this.presetType);
+		const payload = await $clearCommunityPresetChannelBackground(
+			this.formModel,
+			this.presetType
+		);
 
 		this.model?.assign(payload.community);
 	}

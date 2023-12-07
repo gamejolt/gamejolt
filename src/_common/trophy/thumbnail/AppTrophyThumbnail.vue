@@ -1,9 +1,8 @@
 <script lang="ts">
 import { PropType, computed, onMounted, ref, toRefs } from 'vue';
-import { GameTrophy } from '../../game/trophy/trophy.model';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { BaseTrophy } from '../base-trophy.model';
+import { BaseTrophyDifficulty, BaseTrophyModel } from '../base-trophy.model';
 import bronzeSecretImage from './bronze-secret.png';
 import bronzeImage from './bronze.png';
 import goldSecretImage from './gold-secret.png';
@@ -24,7 +23,7 @@ const imgMapping: any = {
 	'platinum-secret': platinumSecretImage,
 };
 
-export function getTrophyImg(trophy: BaseTrophy) {
+export function getTrophyImg(trophy: BaseTrophyModel) {
 	// Make sure we don't show thumbnails for secret trophies unless they've
 	// been achieved.
 	if (trophy.has_thumbnail && trophy.isInfoRevealed) {
@@ -32,13 +31,13 @@ export function getTrophyImg(trophy: BaseTrophy) {
 	}
 
 	let img = '';
-	if (trophy.difficulty === GameTrophy.DIFFICULTY_BRONZE) {
+	if (trophy.difficulty === BaseTrophyDifficulty.Bronze) {
 		img = 'bronze';
-	} else if (trophy.difficulty === GameTrophy.DIFFICULTY_SILVER) {
+	} else if (trophy.difficulty === BaseTrophyDifficulty.Silver) {
 		img = 'silver';
-	} else if (trophy.difficulty === GameTrophy.DIFFICULTY_GOLD) {
+	} else if (trophy.difficulty === BaseTrophyDifficulty.Gold) {
 		img = 'gold';
-	} else if (trophy.difficulty === GameTrophy.DIFFICULTY_PLATINUM) {
+	} else if (trophy.difficulty === BaseTrophyDifficulty.Platinum) {
 		img = 'platinum';
 	}
 
@@ -56,7 +55,7 @@ const BaseHeight = 35;
 <script lang="ts" setup>
 const props = defineProps({
 	trophy: {
-		type: Object as PropType<BaseTrophy>,
+		type: Object as PropType<BaseTrophyModel>,
 		required: true,
 	},
 	noTooltip: {

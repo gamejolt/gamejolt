@@ -5,12 +5,12 @@ import { kFontFamilyHeading, kFontSizeLarge, kLineHeightBase } from '../../_styl
 import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import { kThemeFg10 } from '../theme/variables';
-import { MicrotransactionProduct } from './product.model';
+import { MicrotransactionProductModel } from './product.model';
 
 const props = defineProps({
 	...defineDynamicSlotProps(['trailing'], false),
 	item: {
-		type: Object as PropType<MicrotransactionProduct>,
+		type: Object as PropType<MicrotransactionProductModel>,
 		default: undefined,
 	},
 	isPlaceholder: {

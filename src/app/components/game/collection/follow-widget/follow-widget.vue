@@ -1,17 +1,17 @@
 <script lang="ts">
 import { setup } from 'vue-class-component';
 import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../../utils/vue';
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import { shallowSetup } from '../../../../../utils/vue';
 import {
 	libraryFollowCollection,
 	libraryUnfollowCollection,
 	useLibraryStore,
 } from '../../../../store/library';
-import { GameCollection } from '../collection.model';
+import { GameCollectionModel, GameCollectionType } from '../collection.model';
 
 @Options({
 	directives: {
@@ -21,7 +21,7 @@ import { GameCollection } from '../collection.model';
 })
 export default class AppGameCollectionFollowWidget extends Vue {
 	@Prop(Object)
-	collection!: GameCollection;
+	collection!: GameCollectionModel;
 
 	@Prop(Number)
 	followerCount?: number;
@@ -53,7 +53,7 @@ export default class AppGameCollectionFollowWidget extends Vue {
 	emitUnfollow() {}
 
 	get isFollowing() {
-		if (this.collection.type === GameCollection.TYPE_DEVELOPER) {
+		if (this.collection.type === GameCollectionType.Developer) {
 			return this.collection.owner!.is_following;
 		}
 
@@ -72,7 +72,7 @@ export default class AppGameCollectionFollowWidget extends Vue {
 	}
 
 	get tooltip() {
-		if (this.collection.type === GameCollection.TYPE_DEVELOPER) {
+		if (this.collection.type === GameCollectionType.Developer) {
 			return undefined;
 		}
 

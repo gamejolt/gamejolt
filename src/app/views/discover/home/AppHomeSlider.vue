@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs, watch } from 'vue';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { FiresidePost } from '../../../../_common/fireside/post/post-model';
+import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import { AppAuthJoinLazy } from '../../../../_common/lazy';
 import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -15,7 +15,7 @@ import AppHomeFsPostMeta from './_home-slider/AppHomeFsPostMeta.vue';
 
 const props = defineProps({
 	posts: {
-		type: Array as PropType<FiresidePost[]>,
+		type: Array as PropType<FiresidePostModel[]>,
 		required: true,
 	},
 });
@@ -23,10 +23,10 @@ const props = defineProps({
 const { posts } = toRefs(props);
 const fullscreenHeight = useFullscreenHeight();
 
-const shuffledPosts = ref<FiresidePost[]>([]);
+const shuffledPosts = ref<FiresidePostModel[]>([]);
 const currentPostIndex = ref(0);
-const firstPost = ref<FiresidePost | null>(null);
-const secondPost = ref<FiresidePost | null>(null);
+const firstPost = ref<FiresidePostModel | null>(null);
+const secondPost = ref<FiresidePostModel | null>(null);
 const nextPostLoaded = ref(false);
 
 const shouldTransitionPosts = ref(false);
@@ -76,7 +76,7 @@ function _next() {
 	setTimeout(() => (shouldTransitionPosts.value = true), 8_000);
 }
 
-function onPostLoaded(post: FiresidePost) {
+function onPostLoaded(post: FiresidePostModel) {
 	if (post === secondPost.value) {
 		nextPostLoaded.value = true;
 	}

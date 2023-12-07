@@ -10,14 +10,7 @@ export type ShareProvider =
 	| 'whatsapp'
 	| 'reddit';
 
-export type ShareResource =
-	| 'post'
-	| 'community'
-	| 'user'
-	| 'game'
-	| 'fireside'
-	| 'realm'
-	| 'help-page';
+export type ShareResource = 'post' | 'community' | 'user' | 'game' | 'realm' | 'help-page';
 
 /**
  * Copies a link to the clipboard and tracks that it was from a share.

@@ -1,5 +1,6 @@
 /// <reference types="vite/client" />
 
+import { HTMLAttributes } from 'vue';
 import './typings/environment-vue.d.ts';
 import './typings/environment.d.ts';
 import './typings/html.d.ts';
@@ -17,5 +18,17 @@ declare global {
 			vuex: any;
 			components: any;
 		};
+	}
+}
+
+declare module '@vue/runtime-core' {
+	interface ComponentCustomProps {
+		id?: HTMLAttributes['id'];
+		title?: HTMLAttributes['title'];
+		draggable?: HTMLAttributes['draggable'];
+		tabindex?: HTMLAttributes['tabindex'];
+		placeholder?: HTMLAttributes['placeholder'];
+		onClick?: HTMLAttributes['onClick'];
+		onDragstart?: HTMLAttributes['onDragstart'];
 	}
 }

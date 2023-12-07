@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, PropType, ref } from 'vue';
-import { FiresidePost } from '../../fireside/post/post-model';
-import { Game } from '../../game/game.model';
-import { User } from '../../user/user.model';
+import { computed, onBeforeUnmount, onMounted, PropType, ref, toRef, toRefs } from 'vue';
+import { FiresidePostModel } from '../../fireside/post/post-model';
+import { GameModel } from '../../game/game.model';
+import { UserModel } from '../../user/user.model';
 import { AdSlot } from '../ad-slot-info';
 import {
 	addAd,
-	AdEventView,
+	AdEvent,
 	AdInterface,
-	AdTypeDisplay,
+	AdType,
 	chooseAdAdapterForSlot,
 	removeAd,
 	sendAdBeacon,
-	useAdsController,
+	useAdStore,
 } from '../ad-store';
 
 function _generateSlotId() {
@@ -26,7 +26,9 @@ const props = defineProps({
 	},
 });
 
-const adsController = useAdsController();
+const { adSlot } = toRefs(props);
+const adStore = useAdStore();
+const { settings } = adStore;
 
 /**
  * We change this as the route changes. This way we can tell any of the ad
@@ -38,14 +40,14 @@ const resourceInfo = computed(() => {
 	let resource: string = undefined as any;
 	let resourceId: number = undefined as any;
 
-	const adResource = adsController.settings.resource;
-	if (adResource instanceof Game) {
+	const adResource = settings.value.resource;
+	if (adResource instanceof GameModel) {
 		resource = 'Game';
 		resourceId = adResource.id;
-	} else if (adResource instanceof User) {
+	} else if (adResource instanceof UserModel) {
 		resource = 'User';
 		resourceId = adResource.id;
-	} else if (adResource instanceof FiresidePost) {
+	} else if (adResource instanceof FiresidePostModel) {
 		resource = 'Fireside_Post';
 		resourceId = adResource.id;
 	}
@@ -53,8 +55,8 @@ const resourceInfo = computed(() => {
 	return { resource, resourceId };
 });
 
-const adapter = computed(() => chooseAdAdapterForSlot(adsController, props.adSlot));
-const adComponent = computed(() => adapter.value.component(props.adSlot));
+const adapter = toRef(() => chooseAdAdapterForSlot(adStore, adSlot.value));
+const adComponent = toRef(() => adapter.value.component(adSlot.value));
 
 /**
  * The [AdsController] will call into this to display the ad when needed (when
@@ -67,21 +69,21 @@ const ad: AdInterface = {
 		slotId.value = _generateSlotId();
 
 		// Log that we viewed this ad immediately.
-		_sendBeacon(AdEventView);
+		_sendBeacon(AdEvent.View);
 	},
 };
 
 onMounted(() => {
-	addAd(adsController, ad);
+	addAd(adStore, ad);
 });
 
 onBeforeUnmount(() => {
-	removeAd(adsController, ad);
+	removeAd(adStore, ad);
 });
 
-function _sendBeacon(event: string) {
+function _sendBeacon(event: AdEvent) {
 	const { resource, resourceId } = resourceInfo.value;
-	sendAdBeacon(event, AdTypeDisplay, resource, resourceId);
+	sendAdBeacon(event, AdType.Display, resource, resourceId);
 }
 </script>
 

@@ -2,7 +2,7 @@
 import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { formatDate } from '../../../../../../../_common/filters/date';
-import { Game } from '../../../../../../../_common/game/game.model';
+import { GameCreationToolOther } from '../../../../../../../_common/game/game.model';
 import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
 import { useGameRouteController } from '../../view.vue';
 
@@ -26,7 +26,7 @@ export default class AppDiscoverGamesViewOverviewDetails extends Vue {
 
 	get creationTool() {
 		if (
-			this.game.creation_tool_human === Game.CREATION_TOOL_OTHER &&
+			this.game.creation_tool_human === GameCreationToolOther &&
 			this.game.creation_tool_other
 		) {
 			return this.game.creation_tool_other;

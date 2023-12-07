@@ -1,11 +1,11 @@
 <script lang="ts">
 import { mixins, Options, Prop } from 'vue-property-decorator';
-import { Game } from '../../../../../_common/game/game.model';
-import { GameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
-import { GameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
-import { GameVideo } from '../../../../../_common/game/video/video.model';
+import { GameModel } from '../../../../../_common/game/game.model';
+import { GameScreenshotModel } from '../../../../../_common/game/screenshot/screenshot.model';
+import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketchfab.model';
+import { GameVideoModel } from '../../../../../_common/game/video/video.model';
 import { BaseModal } from '../../../../../_common/modal/base';
-import AppNavTabList from '../../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import FormGameImage from '../../../forms/game/image/image.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
 import FormGameVideo from '../../../forms/game/video/video.vue';
@@ -19,19 +19,19 @@ import FormGameVideo from '../../../forms/game/video/video.vue';
 	},
 })
 export default class AppGameMediaItemAddModal extends mixins(BaseModal) {
-	@Prop(Object) game!: Game;
+	@Prop(Object) game!: GameModel;
 
 	tab: 'image' | 'video' | 'sketchfab' = 'image';
 
 	onImagesAdd(_model: any, response: any) {
-		this.modal.resolve(GameScreenshot.populate(response.screenshots));
+		this.modal.resolve(GameScreenshotModel.populate(response.screenshots));
 	}
 
-	onVideoAdd(video: GameVideo) {
+	onVideoAdd(video: GameVideoModel) {
 		this.modal.resolve([video]);
 	}
 
-	onSketchfabAdd(sketchfab: GameSketchfab) {
+	onSketchfabAdd(sketchfab: GameSketchfabModel) {
 		this.modal.resolve([sketchfab]);
 	}
 }
@@ -72,8 +72,9 @@ export default class AppGameMediaItemAddModal extends mixins(BaseModal) {
 				<div class="alert full-bleed-xs">
 					<p>
 						<AppTranslate>
-							Add screenshots, concept drawings, photos of little clay models, fake box covers, or
-							any other original art created for the game. Yes, even if it's a text-based game!
+							Add screenshots, concept drawings, photos of little clay models, fake
+							box covers, or any other original art created for the game. Yes, even if
+							it's a text-based game!
 						</AppTranslate>
 					</p>
 					<br />
@@ -90,13 +91,14 @@ export default class AppGameMediaItemAddModal extends mixins(BaseModal) {
 				<div class="alert full-bleed-xs">
 					<p>
 						<AppTranslate>
-							Add videos you've created, such as trailers, gameplay footage, walkthroughs, etc.
+							Add videos you've created, such as trailers, gameplay footage,
+							walkthroughs, etc.
 						</AppTranslate>
 					</p>
 					<p>
 						<AppTranslate>
-							Please don't add Let's Plays or reviews. Let the content owners do that themselves in
-							the comments.
+							Please don't add Let's Plays or reviews. Let the content owners do that
+							themselves in the comments.
 						</AppTranslate>
 					</p>
 					<br />
@@ -113,8 +115,9 @@ export default class AppGameMediaItemAddModal extends mixins(BaseModal) {
 				<div class="alert full-bleed-xs">
 					<p>
 						<AppTranslate>
-							With Sketchfab you can embed 3D content from your game in the browser. You can also
-							view that content from any Virtual Reality headset. AMAZING!
+							With Sketchfab you can embed 3D content from your game in the browser.
+							You can also view that content from any Virtual Reality headset.
+							AMAZING!
 						</AppTranslate>
 					</p>
 					<p>

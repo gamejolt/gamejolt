@@ -10,7 +10,7 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { bangRef } from '../../../../../utils/vue';
 import FormProfile from '../../../../components/forms/profile/FormProfile.vue';
-import { UserAvatarModal } from '../../../../components/user/avatar-modal/avatar-modal.service';
+import { showUserAvatarModal } from '../../../../components/user/avatar-modal/avatar-modal.service';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 export default {
@@ -37,7 +37,7 @@ createAppRoute({
 });
 
 function showEditAvatar() {
-	UserAvatarModal.show();
+	showUserAvatarModal();
 }
 
 function onProfileSaved() {

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { FiresidePost } from '../fireside/post/post-model';
+import { FiresidePostModel } from '../fireside/post/post-model';
 import { Screen } from '../screen/screen-service';
-import { User } from '../user/user.model';
+import { UserModel } from '../user/user.model';
 import AppStickerSupporters from './AppStickerSupporters.vue';
 import AppStickerReactions from './reactions/AppStickerReactions.vue';
 import { StickerCount } from './sticker-count';
@@ -14,7 +14,7 @@ const props = defineProps({
 		required: true,
 	},
 	supporters: {
-		type: Array as PropType<User[]>,
+		type: Array as PropType<UserModel[]>,
 		required: true,
 	},
 	stickers: {
@@ -31,7 +31,7 @@ const { stickerTargetController } = toRefs(props);
 
 // We only allow this type of model to show the supporters currently.
 const supportersModel = computed(() =>
-	stickerTargetController.value.model instanceof FiresidePost
+	stickerTargetController.value.model instanceof FiresidePostModel
 		? stickerTargetController.value.model
 		: undefined
 );

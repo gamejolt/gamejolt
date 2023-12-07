@@ -7,6 +7,7 @@
 
 import { defineAsyncComponent } from 'vue';
 import { Router } from 'vue-router';
+import AppNoop from '../../../_common/AppNoop.vue';
 import type { routeLibraryInstalled as routeLibraryInstalledType } from '../../views/library/installed/installed.route';
 import type AppClientShellType from './AppClientShell.vue';
 import type AppClientPackageCardButtonsType from './hooks/AppClientPackageCardButtons.vue';
@@ -15,14 +16,9 @@ import type AppClientStatusBarType from './status-bar/AppClientStatusBar.vue';
 import type { ClientSystemReportModal as ClientSystemReportModalType } from './system-report-modal/system-report-modal.service';
 
 // Vue components
-const AppNoopLoader = defineAsyncComponent(
-	async () => (await import('../../../_common/AppNoop.vue')).default
-);
-
-export let AppClientShell: typeof AppClientShellType = AppNoopLoader as any;
-export let AppClientStatusBar: typeof AppClientStatusBarType = AppNoopLoader as any;
-export let AppClientPackageCardButtons: typeof AppClientPackageCardButtonsType =
-	AppNoopLoader as any;
+export let AppClientShell: typeof AppClientShellType = AppNoop as any;
+export let AppClientStatusBar: typeof AppClientStatusBarType = AppNoop as any;
+export let AppClientPackageCardButtons: typeof AppClientPackageCardButtonsType = AppNoop as any;
 
 // Vue routes
 export let routeLibraryInstalled: typeof routeLibraryInstalledType = null as any;

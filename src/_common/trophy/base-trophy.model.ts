@@ -1,44 +1,46 @@
 import { Model } from '../model/model.service';
 
-export type TrophyDifficulty = 1 | 2 | 3 | 4;
+export const enum BaseTrophyDifficulty {
+	Bronze = 1,
+	Silver = 2,
+	Gold = 3,
+	Platinum = 4,
+}
 
-export abstract class BaseTrophy extends Model {
-	static readonly DIFFICULTY_BRONZE = 1;
-	static readonly DIFFICULTY_SILVER = 2;
-	static readonly DIFFICULTY_GOLD = 3;
-	static readonly DIFFICULTY_PLATINUM = 4;
+export const BaseTrophyDifficulties = <BaseTrophyDifficulty[]>[
+	BaseTrophyDifficulty.Bronze,
+	BaseTrophyDifficulty.Silver,
+	BaseTrophyDifficulty.Gold,
+	BaseTrophyDifficulty.Platinum,
+];
 
-	static readonly difficulties = <TrophyDifficulty[]>[
-		BaseTrophy.DIFFICULTY_BRONZE,
-		BaseTrophy.DIFFICULTY_SILVER,
-		BaseTrophy.DIFFICULTY_GOLD,
-		BaseTrophy.DIFFICULTY_PLATINUM,
-	];
-
-	static readonly difficultyLabels: { [k: string]: string } = {
-		[BaseTrophy.DIFFICULTY_BRONZE]: 'Bronze',
-		[BaseTrophy.DIFFICULTY_SILVER]: 'Silver',
-		[BaseTrophy.DIFFICULTY_GOLD]: 'Gold',
-		[BaseTrophy.DIFFICULTY_PLATINUM]: 'Platinum',
-	};
-
-	difficulty!: number;
-	title!: string;
-	description!: string;
-	experience!: number;
-	img_thumbnail!: string;
-	has_thumbnail!: boolean;
-	secret!: boolean;
-	is_owner!: boolean;
-	visible!: boolean;
-	is_achieved?: boolean;
-	has_perms?: boolean;
+export abstract class BaseTrophyModel extends Model {
+	declare difficulty: BaseTrophyDifficulty;
+	declare title: string;
+	declare description: string;
+	declare experience: number;
+	declare img_thumbnail: string;
+	declare has_thumbnail: boolean;
+	declare secret: boolean;
+	declare is_owner: boolean;
+	declare visible: boolean;
+	declare is_achieved?: boolean;
+	declare has_perms?: boolean;
 
 	get isInfoRevealed() {
 		return !this.secret || this.is_achieved || this.has_perms;
 	}
 
 	get difficultyLabel() {
-		return BaseTrophy.difficultyLabels[this.difficulty];
+		switch (this.difficulty) {
+			case BaseTrophyDifficulty.Bronze:
+				return 'Bronze';
+			case BaseTrophyDifficulty.Silver:
+				return 'Silver';
+			case BaseTrophyDifficulty.Gold:
+				return 'Gold';
+			case BaseTrophyDifficulty.Platinum:
+				return 'Platinum';
+		}
 	}
 }

@@ -16,3 +16,7 @@ const { setError } = useCommonStore();
 
 setError(404);
 </script>
+
+<template>
+	<slot />
+</template>

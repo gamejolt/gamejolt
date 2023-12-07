@@ -1,5 +1,6 @@
 import { HidePrivateKeys, Primitives } from '../../utils/utils';
 import { Api, ApiProgressEvent, RequestOptions } from '../api/api.service';
+import { removeModel } from './model-store.service';
 
 /**
  * Helper type that looks like our model classes.
@@ -31,6 +32,12 @@ export type ModelData<T> = HidePrivateKeys<{
 }>;
 
 /**
+ * When you only expect some model data to be passed, for example when creating
+ * or updating a model.
+ */
+export type PartialModelData<T> = Partial<ModelData<T>>;
+
+/**
  * When you don't know what data is returned from backend, but you know it's for
  * a model.
  */
@@ -45,44 +52,20 @@ export class Model {
 	_removed = false;
 	_progress: ApiProgressEvent | null = null;
 
-	// We need to create some methods dynamically on the model.
-	static populate: <T = any>(rows: (T | ModelData<T>)[]) => T[];
-	assign!: (other: any) => void;
+	constructor(data?: any) {
+		if (data) {
+			Object.assign(this, data);
+		}
+	}
 
-	static create(self: any) {
-		// These need to be created dynamically for each model type.
-		self.populate = function (rows: any[]): any[] {
-			const models: any[] = [];
-			if (rows && Array.isArray(rows) && rows.length) {
-				for (const row of rows) {
-					models.push(new self(row));
-				}
+	static populate<T>(this: new (data?: any) => T, rows: (T | ModelData<T>)[]): T[] {
+		const models: any[] = [];
+		if (rows && Array.isArray(rows) && rows.length) {
+			for (const row of rows) {
+				models.push(new this(row));
 			}
-			return models;
-		};
-
-		self.prototype.assign = function (this: any, other: any) {
-			// Some times the model constructors add new fields when populating.
-			// This way we retain those fields.
-			const newObj = new self(other);
-
-			const keys = Object.keys(newObj);
-			for (const k of keys) {
-				// For some reason this was throwing some weird errors when
-				// saving some forms (like key group form). Couldn't figure it
-				// out, so I'm wrapping it. It still seems to work okay.
-				try {
-					this[k] = newObj[k];
-				} catch (e) {
-					console.warn(`Got an error when setting a model value (key ${k}) in assign().`);
-					console.warn(e);
-				}
-			}
-		};
-
-		Object.assign(self.prototype, Model.prototype);
-
-		return self;
+		}
+		return models;
 	}
 
 	/**
@@ -101,9 +84,24 @@ export class Model {
 		return Promise.reject(response);
 	}
 
-	constructor(data?: any) {
-		if (data) {
-			Object.assign(this, data);
+	assign(other: any): void {
+		const modelConstructor = this.constructor as typeof Model;
+
+		// Some times the model constructors add new fields when populating.
+		// This way we retain those fields.
+		const newObj = new modelConstructor(other);
+
+		const keys = Object.keys(newObj);
+		for (const k of keys) {
+			// For some reason this was throwing some weird errors when
+			// saving some forms (like key group form). Couldn't figure it
+			// out, so I'm wrapping it. It still seems to work okay.
+			try {
+				(this as any)[k] = (newObj as any)[k];
+			} catch (e) {
+				console.warn(`Got an error when setting a model value (key ${k}) in assign().`);
+				console.warn(e);
+			}
 		}
 	}
 
@@ -127,10 +125,10 @@ export class Model {
 	}
 
 	/**
-	 * You can call this after an API call that removed the model.
-	 * Will handle error codes.
+	 * You can call this after an API call that removed the model. Will handle
+	 * error codes and set the _removed flag on the model.
 	 */
-	processRemove(response: any): Promise<any> {
+	processRemove(response: any) {
 		if (response.notProcessed) {
 			return Promise.resolve(response);
 		}
@@ -143,7 +141,7 @@ export class Model {
 		return Promise.reject(response);
 	}
 
-	async $_save(url: string, field: string, options: ModelSaveRequestOptions = {}): Promise<any> {
+	async $_save(url: string, field: string, options: ModelSaveRequestOptions = {}) {
 		// Keep track of progress within the model.
 		if (!options.progress) {
 			options.progress = event => (this._progress = event);
@@ -153,13 +151,7 @@ export class Model {
 		return this.processUpdate(response, field);
 	}
 
-	async $_remove(url: string, options?: ModelSaveRequestOptions): Promise<any> {
-		// Always force a POST (passing in an object).
-		const response = await Api.sendRequest(
-			url,
-			options && options.data ? options.data : {},
-			options
-		);
-		return this.processRemove(response);
+	$_remove(url: string, options?: ModelSaveRequestOptions) {
+		return removeModel(this, url, options);
 	}
 }

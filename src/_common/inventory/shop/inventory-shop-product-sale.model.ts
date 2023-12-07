@@ -1,74 +1,79 @@
-import { AvatarFrame } from '../../avatar/frame.model';
-import { Background } from '../../background/background.model';
+import { AvatarFrameModel } from '../../avatar/frame.model';
+import { BackgroundModel } from '../../background/background.model';
 import { CurrencyCostData } from '../../currency/currency-type';
-import { ModelStoreModel, storeModelList } from '../../model/model-store.service';
-import { Model } from '../../model/model.service';
-import { StickerPack } from '../../sticker/pack/pack.model';
-import { InventoryShopProductSalePricing } from './inventory-shop-product-sale-pricing.model';
+import { ModelStoreModel, storeModel, storeModelList } from '../../model/model-store.service';
+import { StickerPackModel } from '../../sticker/pack/pack.model';
+import { InventoryShopProductSalePricingModel } from './inventory-shop-product-sale-pricing.model';
 
-interface ModelWithName extends Model {
-	name?: string;
+export type InventoryShopProduct = StickerPackModel | AvatarFrameModel | BackgroundModel;
+
+export const enum PurchasableProductType {
+	StickerPack = 'Sticker_Pack',
+	AvatarFrame = 'Avatar_Frame',
+	Background = 'Background',
 }
 
-export class InventoryShopProductSale implements ModelStoreModel {
+export class InventoryShopProductSaleModel implements ModelStoreModel {
 	declare id: number;
-	declare product_type: string;
-	declare product?: ModelWithName;
-	declare pricings: InventoryShopProductSalePricing[];
+	declare product_type: PurchasableProductType;
+	declare product?: InventoryShopProduct;
+	declare pricings: InventoryShopProductSalePricingModel[];
 	declare starts_on?: number;
 	declare ends_on?: number;
-
-	constructor(data: any = {}) {
-		this.update(data);
-	}
+	declare is_product_owned: boolean;
 
 	update(data: any) {
 		Object.assign(this, data);
 
 		if (data.pricings) {
-			this.pricings = storeModelList(InventoryShopProductSalePricing, data.pricings);
+			this.pricings = storeModelList(InventoryShopProductSalePricingModel, data.pricings);
 		}
 
 		if (data.product) {
-			switch (data.product_type) {
-				case 'Sticker_Pack':
-					this.product = new StickerPack(data.product);
+			switch (this.product_type) {
+				case PurchasableProductType.StickerPack:
+					this.product = storeModel(StickerPackModel, data.product);
 					break;
 
-				case 'Avatar_Frame':
-					this.product = new AvatarFrame(data.product);
+				case PurchasableProductType.AvatarFrame:
+					this.product = storeModel(AvatarFrameModel, data.product);
 					break;
 
-				case 'Background':
-					this.product = new Background(data.product);
+				case PurchasableProductType.Background:
+					this.product = storeModel(BackgroundModel, data.product);
 					break;
 
 				default:
 					console.warn('Unsupported product type', data.product_type);
+					this.product = undefined;
 					break;
 			}
 		}
 	}
 
 	get stickerPack() {
-		if (this.product instanceof StickerPack) {
+		if (this.product instanceof StickerPackModel) {
 			return this.product;
 		}
 		return null;
 	}
 
 	get avatarFrame() {
-		if (this.product instanceof AvatarFrame) {
+		if (this.product instanceof AvatarFrameModel) {
 			return this.product;
 		}
 		return null;
 	}
 
 	get background() {
-		if (this.product instanceof Background) {
+		if (this.product instanceof BackgroundModel) {
 			return this.product;
 		}
 		return null;
+	}
+
+	get validProduct() {
+		return this.stickerPack || this.avatarFrame || this.background;
 	}
 
 	get validPricings() {

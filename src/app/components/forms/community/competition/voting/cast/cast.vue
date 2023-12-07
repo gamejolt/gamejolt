@@ -1,15 +1,15 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
-import { numberSort } from '../../../../../../../utils/array';
 import { Api } from '../../../../../../../_common/api/api.service';
-import { CommunityCompetition } from '../../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntry } from '../../../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionEntryVote } from '../../../../../../../_common/community/competition/entry/vote/vote.model';
-import { CommunityCompetitionVotingCategory } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
+import { CommunityCompetitionModel } from '../../../../../../../_common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '../../../../../../../_common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryVoteModel } from '../../../../../../../_common/community/competition/entry/vote/vote.model';
+import { CommunityCompetitionVotingCategoryModel } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { numberSort } from '../../../../../../../utils/array';
 
 @Options({
 	components: {
@@ -20,16 +20,16 @@ import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-direct
 	},
 })
 export default class FormCommunityCompetitionVotingCast extends Vue {
-	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntry;
-	@Prop({ type: Object, required: true }) competition!: CommunityCompetition;
+	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntryModel;
+	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
 
 	@Prop({ type: Array, default: () => [] })
-	votingCategories!: CommunityCompetitionVotingCategory[];
+	votingCategories!: CommunityCompetitionVotingCategoryModel[];
 
 	@Prop({ type: Array, default: () => [] })
-	initialVotes!: CommunityCompetitionEntryVote[];
+	initialVotes!: CommunityCompetitionEntryVoteModel[];
 
-	votes: CommunityCompetitionEntryVote[] = [];
+	votes: CommunityCompetitionEntryVoteModel[] = [];
 	hoveredRatings: number[] = [];
 	hasVoted = false;
 	isSaving = false;
@@ -73,7 +73,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 						i => i.community_competition_voting_category_id === votingCategory.id
 					)
 				) {
-					const vote = new CommunityCompetitionEntryVote({
+					const vote = new CommunityCompetitionEntryVoteModel({
 						community_competition_voting_category_id: votingCategory.id,
 						community_competition_entry_id: this.entry.id,
 						rating: 0,
@@ -86,7 +86,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 		} else {
 			if (this.votes.length === 0) {
 				this.votes.push(
-					new CommunityCompetitionEntryVote({
+					new CommunityCompetitionEntryVoteModel({
 						community_competition_voting_category_id: null,
 						community_competition_entry_id: this.entry.id,
 						rating: 0,
@@ -97,7 +97,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 		}
 	}
 
-	isCategoryVote(votingCategory: CommunityCompetitionVotingCategory | null, i: number) {
+	isCategoryVote(votingCategory: CommunityCompetitionVotingCategoryModel | null, i: number) {
 		const votingCategoryId = votingCategory?.id || null;
 		const vote = this.votes.find(
 			i => i.community_competition_voting_category_id === votingCategoryId
@@ -109,14 +109,14 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 		return vote.rating >= i;
 	}
 
-	isCategoryNA(votingCategory: CommunityCompetitionVotingCategory) {
+	isCategoryNA(votingCategory: CommunityCompetitionVotingCategoryModel) {
 		const vote = this.votes.find(
 			i => i.community_competition_voting_category_id === votingCategory.id
 		);
 		return !vote || vote.rating === 0;
 	}
 
-	onRatingMouseEnter(votingCategory: CommunityCompetitionVotingCategory | null, i: number) {
+	onRatingMouseEnter(votingCategory: CommunityCompetitionVotingCategoryModel | null, i: number) {
 		if (votingCategory === null) {
 			this.hoveredRatings[0] = i;
 		} else {
@@ -125,7 +125,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 		}
 	}
 
-	onRatingMouseLeave(votingCategory: CommunityCompetitionVotingCategory | null) {
+	onRatingMouseLeave(votingCategory: CommunityCompetitionVotingCategoryModel | null) {
 		if (votingCategory === null) {
 			this.hoveredRatings[0] = 0;
 		} else {
@@ -134,12 +134,15 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 		}
 	}
 
-	isCategoryRatingHovered(votingCategory: CommunityCompetitionVotingCategory | null, i: number) {
+	isCategoryRatingHovered(
+		votingCategory: CommunityCompetitionVotingCategoryModel | null,
+		i: number
+	) {
 		const index = votingCategory === null ? 0 : this.votingCategories.indexOf(votingCategory);
 		return this.hoveredRatings[index] >= i;
 	}
 
-	onClickRating(votingCategory: CommunityCompetitionVotingCategory | null, i: number) {
+	onClickRating(votingCategory: CommunityCompetitionVotingCategoryModel | null, i: number) {
 		const votingCategoryId = votingCategory?.id || null;
 		const vote = this.votes.find(
 			i => i.community_competition_voting_category_id === votingCategoryId
@@ -163,7 +166,7 @@ export default class FormCommunityCompetitionVotingCast extends Vue {
 			`/web/communities/competitions/voting/cast/${this.entry.id}`,
 			data
 		);
-		this.votes = CommunityCompetitionEntryVote.populate(payload.votes);
+		this.votes = CommunityCompetitionEntryVoteModel.populate(payload.votes);
 		this.fillVotes();
 		this.hasVoted = true;
 

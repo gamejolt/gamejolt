@@ -1,12 +1,12 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
-import { arrayShuffle } from '../../../../utils/array';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { arrayShuffle } from '../../../../utils/array';
 import { imageJolt } from '../../../img/images';
 import { routeLandingCreators } from '../creators/creators.route';
 
@@ -28,13 +28,11 @@ const staff = arrayShuffle([
 	'lorac',
 	'manu',
 	'spyros',
-	'unicornface',
 	'19thgreeny',
 ]);
 
 export default {
 	...defineAppRouteOptions({}),
-	components: { RouterLink },
 };
 </script>
 
@@ -81,9 +79,10 @@ createAppRoute({
 					<div class="row">
 						<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 							<p>
-								Whether you're into livestreaming together with your followers, or
-								sharing your fan art for the most popular games, music, film and TV
-								shows in the world, Game Jolt is the best platform for creators.
+								Whether you're into posting daily snapshots of your gaming
+								adventures, or sharing your fan art for the most popular games,
+								music, film, and TV shows in the world, Game Jolt is the best
+								platform for creators.
 							</p>
 							<p>
 								<a href="https://gamejolt.com/join">Join</a> a growing population of
