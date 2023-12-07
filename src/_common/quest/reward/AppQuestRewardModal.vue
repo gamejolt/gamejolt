@@ -270,7 +270,7 @@ function playAnimation(
 					animationDuration: DurationThumbnail + 'ms',
 				}"
 			>
-				<AppQuestThumbnail class="-thumbnail-inner" :quest="quest" active />
+				<AppQuestThumbnail class="-thumbnail-inner" :quest="quest" />
 			</div>
 		</div>
 	</AppModal>

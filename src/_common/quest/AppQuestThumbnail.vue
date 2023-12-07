@@ -1,104 +1,102 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { styleOverlayTextShadow } from '../../_styles/mixins';
-import { kFontSizeSmall } from '../../_styles/variables';
+import { styleElevate, styleFlexCenter, styleOverlayTextShadow } from '../../_styles/mixins';
+import { kFontSizeBase, kFontSizeTiny } from '../../_styles/variables';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
+import { kThemeGjOverlayNotice, kThemePrimary, kThemePrimaryFg } from '../theme/variables';
 import AppQuestFrame from './AppQuestFrame.vue';
 import { QuestModel } from './quest-model';
+
+interface QuestBlipState {
+	bgColor: string;
+	color: string;
+	icon: Jolticon | null;
+}
 
 const props = defineProps({
 	quest: {
 		type: Object as PropType<QuestModel>,
 		required: true,
 	},
-	hideMeta: {
-		type: Boolean,
-	},
-	active: {
-		type: Boolean,
-	},
 });
 
-const { quest, hideMeta, active } = toRefs(props);
+const { quest } = toRefs(props);
 
-const isActive = computed(() => active.value || quest.value.is_new);
-
-const metaData = computed<{ text?: string; icon?: Jolticon; bubble?: boolean } | undefined>(() => {
-	if (hideMeta.value) {
-		return;
-	}
-
+const questBlipState = computed<QuestBlipState | undefined>(() => {
 	const q = quest.value;
 	if (q.has_activity) {
-		return { icon: 'gift', bubble: true };
+		return {
+			bgColor: kThemeGjOverlayNotice,
+			color: 'white',
+			icon: 'gift',
+		};
 	} else if (q.isAllComplete) {
-		return { icon: 'double-check', bubble: true };
+		return {
+			bgColor: kThemePrimary,
+			color: kThemePrimaryFg,
+			icon: 'double-check',
+		};
 	} else if (q.isComplete) {
-		return { icon: 'check', bubble: true };
+		return {
+			bgColor: kThemePrimary,
+			color: kThemePrimaryFg,
+			icon: 'check',
+		};
 	} else if (q.is_new && !q.isExpired) {
-		return { text: 'NEW!' };
+		return {
+			bgColor: kThemeGjOverlayNotice,
+			color: 'white',
+			icon: null,
+		};
 	}
 });
 </script>
 
 <template>
-	<div class="_frame">
-		<AppQuestFrame :active="isActive">
-			<AppImgResponsive class="_img" :src="quest.avatar.mediaserver_url" alt="Quest Image" />
+	<div
+		:style="{
+			position: `relative`,
+		}"
+	>
+		<AppQuestFrame>
+			<AppImgResponsive
+				:style="{
+					width: `100%`,
+					height: `100%`,
+					objectFit: `cover`,
+				}"
+				:src="quest.avatar.mediaserver_url"
+				alt="Quest Image"
+			/>
 		</AppQuestFrame>
 
-		<div v-if="metaData" class="_meta" :class="{ _bubble: metaData.bubble }">
+		<div
+			v-if="questBlipState"
+			:style="{
+				...styleElevate(1),
+				...styleFlexCenter(),
+				backgroundColor: questBlipState.bgColor,
+				borderRadius: `50%`,
+				minWidth: kFontSizeBase.px,
+				minHeight: kFontSizeBase.px,
+				padding: `4px`,
+				position: `absolute`,
+				top: 0,
+				right: 0,
+				zIndex: 1,
+			}"
+		>
 			<AppJolticon
-				v-if="metaData.icon"
+				v-if="questBlipState.icon"
 				:style="{
+					...styleOverlayTextShadow,
 					margin: 0,
-					padding: 0,
-					fontSize: kFontSizeSmall.px,
+					fontSize: kFontSizeTiny.px,
+					color: questBlipState.color,
 				}"
-				:icon="metaData.icon"
+				:icon="questBlipState.icon"
 			/>
-			<div
-				v-else-if="metaData.text"
-				:style="{
-					textShadow: `0 0 4px var(--theme-link), ${styleOverlayTextShadow.textShadow}`,
-				}"
-			>
-				{{ metaData.text }}
-			</div>
 		</div>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-$-meta-font-size = 9px
-
-._frame
-	position: relative
-
-._img
-	width: 100%
-	height: 100%
-	object-fit: cover
-
-._meta
-	position: absolute
-	top: 0
-	right: 0
-	font-weight: bold
-	color: var(--theme-link)
-	font-size: $-meta-font-size
-	z-index: 1
-
-	&._bubble
-		img-circle()
-		elevate-1()
-		color: var(--theme-bi-fg)
-		background-color: var(--theme-bi-bg)
-		padding: 3px
-		display: flex
-		align-items: center
-		justify-content: center
-		min-width: $font-size-base
-		min-height: $font-size-base
-</style>
