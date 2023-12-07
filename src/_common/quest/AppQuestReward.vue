@@ -64,9 +64,8 @@ const subtitle = computed(() => {
 			return $gettext(`Sticker pack`);
 		case QuestRewardTypes.AvatarFrame:
 			return $gettext(`Avatar frame`);
-		default:
-			return null;
 	}
+	return null;
 });
 
 const nameTooltip = computed(() => {
