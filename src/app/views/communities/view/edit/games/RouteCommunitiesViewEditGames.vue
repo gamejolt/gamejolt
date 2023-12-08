@@ -38,7 +38,7 @@ const routeStore = useCommunityRouteStore()!;
 const maxLinkedGames = ref(10);
 const hasMoreGamesToLink = ref(false);
 
-const community = toRef(routeStore.community);
+const community = toRef(() => routeStore.community);
 const hasLinkedGames = toRef(() => community.value.games && community.value.games.length > 0);
 const canLinkNewGames = toRef(
 	() => community.value.games && community.value.games.length < maxLinkedGames.value

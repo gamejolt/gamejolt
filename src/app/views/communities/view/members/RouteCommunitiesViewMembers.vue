@@ -33,7 +33,7 @@ const route = useRoute();
 
 const users = ref<UserModel[]>([]);
 
-const community = toRef(routeStore.community);
+const community = toRef(() => routeStore.community);
 const loadUrl = toRef(() => getFetchUrl(route));
 
 createAppRoute({

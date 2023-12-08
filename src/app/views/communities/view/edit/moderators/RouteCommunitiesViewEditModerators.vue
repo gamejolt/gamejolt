@@ -40,7 +40,7 @@ const collaborators = ref<CollaboratorModel[]>([]);
 const activeCollaborator = ref<CollaboratorModel | undefined>(undefined);
 const isShowingCollaboratorAdd = ref(false);
 
-const community = toRef(routeStore.community);
+const community = toRef(() => routeStore.community);
 
 function onAddedCollaborator(collaborator: CollaboratorModel) {
 	isShowingCollaboratorAdd.value = false;

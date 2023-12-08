@@ -39,9 +39,9 @@ const router = useRouter();
 
 /* The owner's collaboration is not returned from backend.*/ /* The owner's collaboration is not returned from backend.*/
 
-const community = toRef(routeStore.community);
-const collaborator = toRef(routeStore.collaborator);
-const canEditDescription = toRef(routeStore.canEditDescription);
+const community = toRef(() => routeStore.community);
+const collaborator = toRef(() => routeStore.collaborator);
+const canEditDescription = toRef(() => routeStore.canEditDescription);
 const isOwner = toRef(() => collaborator.value === null);
 
 function onDetailsChange() {
