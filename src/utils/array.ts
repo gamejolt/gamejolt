@@ -72,7 +72,7 @@ export function arrayChunk<T>(arr: T[], size: number): T[][] {
  * For some reason, even for watchers with the default flush behaviour calling
  * splice(0) followed immediately by a push triggers the ref twice.
  *
- * @__NO_SIDE_EFFECTS__
+ * NOTE: This has side effects.
  */
 export function arrayAssignAll<T>(arr: T[], newArray: T[]): void {
 	arr.splice(0, arr.length, ...newArray);
@@ -82,7 +82,9 @@ export type ArrayRemoveOptions = Partial<{
 	onMissing: () => void;
 }>;
 
-/** @__NO_SIDE_EFFECTS__ */
+/**
+ * NOTE: This has side effects.
+ */
 export function arrayRemove<T>(arr: T[], predicate: (v: T) => boolean, opts?: ArrayRemoveOptions) {
 	const idx = arr.findIndex(predicate);
 	if (idx !== -1) {
@@ -96,7 +98,7 @@ export function arrayRemove<T>(arr: T[], predicate: (v: T) => boolean, opts?: Ar
 /**
  * Based off of https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm
  *
- * @__NO_SIDE_EFFECTS__
+ * NOTE: Probably doesn't have side effects, but I don't trust it.
  */
 export function arrayShuffle<T>(arr: T[]): T[] {
 	let j, tmp;

@@ -45,7 +45,7 @@ export type NormalizedProductData =
 	| StickerPackProductData;
 
 /**
- * @__NO_SIDE_EFFECTS__
+ * NOTE: Might have side effects.
  */
 export function getShopProductDisplayData({
 	resource,
@@ -111,7 +111,7 @@ export function getShopProductDisplayData({
 /**
  * Creates the product based on the product type backend provides.
  *
- * @__NO_SIDE_EFFECTS__
+ * NOTE: This has side effects.
  */
 export function assignShopProductOwnerData(
 	model: {
