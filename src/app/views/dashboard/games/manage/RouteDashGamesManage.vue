@@ -45,12 +45,10 @@ const route = useRoute();
 
 function applyPageTheme() {
 	const theme = game?.value?.theme ?? null;
-	if (theme !== null) {
-		setPageTheme({
-			key: ManageGameThemeKey,
-			theme,
-		});
-	}
+	setPageTheme({
+		key: ManageGameThemeKey,
+		theme,
+	});
 }
 
 const { isBootstrapped } = createAppRoute({
@@ -203,9 +201,12 @@ const { isBootstrapped } = createAppRoute({
 			</AppExpand>
 
 			<AppExpand :when="game.isVisible && !game.is_listable">
-				<div v-translate class="alert alert-notice">
-					<b>Your game page is no longer visible in game listings!</b>
-					It must have active game builds for it to show.
+				<div>
+					<b>
+						{{ $gettext(`Your game page is no longer visible in game listings!`) }}
+					</b>
+					{{ ' ' }}
+					{{ $gettext(`It must have active game builds for it to show.`) }}
 				</div>
 			</AppExpand>
 
@@ -314,6 +315,6 @@ const { isBootstrapped } = createAppRoute({
 			</template>
 		</AppPageHeader>
 
-		<router-view />
+		<RouterView />
 	</div>
 </template>

@@ -10,6 +10,11 @@ import { UserModel } from '../../../../../_common/user/user.model';
 import AppFollowerList from '../../../../components/follower/list/AppFollowerList.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { useCommunityRouteStore } from '../view.store';
+
+function getFetchUrl(route: RouteLocationNormalized) {
+	return `/web/communities/members/${route.params.path}`;
+}
+
 export default {
 	...defineAppRouteOptions({
 		cache: true,
@@ -23,19 +28,18 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { community } = useCommunityRouteStore()!;
-
-const users = ref<UserModel[]>([]);
+const routeStore = useCommunityRouteStore()!;
 const route = useRoute();
 
+const users = ref<UserModel[]>([]);
+
+const community = toRef(routeStore.community);
 const loadUrl = toRef(() => getFetchUrl(route));
 
-function getFetchUrl(route: RouteLocationNormalized) {
-	return `/web/communities/members/${route.params.path}`;
-}
-
 createAppRoute({
-	routeTitle: computed(() => (community ? `Members of the ${community.name} Community` : null)),
+	routeTitle: computed(() =>
+		community.value ? `Members of the ${community.value.name} Community` : null
+	),
 	onResolved({ payload }) {
 		users.value = UserModel.populate(payload.users);
 	},

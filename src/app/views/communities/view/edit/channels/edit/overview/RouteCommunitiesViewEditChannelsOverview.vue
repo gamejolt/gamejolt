@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed } from 'vue';
+import { computed, toRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import {
@@ -23,25 +23,34 @@ import FormCommunityChannelDescription from '../../../../../../../components/for
 import FormCommunityChannelEdit from '../../../../../../../components/forms/community/channel/edit/edit.vue';
 import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
 import { useCommunityRouteStore } from '../../../../view.store';
+
 export default {
 	...defineAppRouteOptions({}),
 };
 </script>
 
 <script lang="ts" setup>
-const { community, channel, archivedChannels } = useCommunityRouteStore()!;
+const routeStore = useCommunityRouteStore()!;
+
+const community = toRef(routeStore.community);
+const channel = toRef(routeStore.channel);
+const archivedChannels = toRef(routeStore.archivedChannels);
 
 const route = useRoute();
 const router = useRouter();
 
-const canEditDescription = computed(() => channel!.type === 'competition');
+const canEditDescription = computed(() => channel.value!.type === 'competition');
 
 const canArchive = computed(
-	() => !channel!.is_archived && channel!.visibility === 'published' && community.canRemoveChannel
+	() =>
+		!channel.value!.is_archived &&
+		channel.value!.visibility === 'published' &&
+		community.value.canRemoveChannel
 );
 
 const shouldShowArchiveOptions = computed(
-	() => channel!.visibility === 'published' && community.hasPerms('community-channels')
+	() =>
+		channel.value!.visibility === 'published' && community.value.hasPerms('community-channels')
 );
 
 function onSubmit(model: CommunityChannelModel) {
@@ -63,17 +72,17 @@ async function onClickArchive() {
 
 	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to archive the channel %{ channel }?`, {
-			channel: channel!.displayTitle,
+			channel: channel.value!.displayTitle,
 		})
 	);
 
 	if (result) {
-		const payload = await $archiveCommunityChannel(channel!);
+		const payload = await $archiveCommunityChannel(channel.value!);
 
 		if (payload.success) {
-			archivedChannels.push(channel!);
-			arrayRemove(community.channels!, i => i.id === channel!.id);
-			community.has_archived_channels = true;
+			archivedChannels.value.push(channel.value!);
+			arrayRemove(community.value.channels!, i => i.id === channel.value!.id);
+			community.value.has_archived_channels = true;
 
 			showSuccessGrowl($gettext(`Channel is now archived.`));
 			Scroll.to(0);
@@ -84,18 +93,18 @@ async function onClickArchive() {
 async function onClickUnarchive() {
 	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to restore the channel %{ channel } from the archive?`, {
-			channel: channel!.displayTitle,
+			channel: channel.value!.displayTitle,
 		})
 	);
 
 	if (result) {
 		try {
-			await $unarchiveCommunityChannel(channel!);
-			community.channels!.push(channel!);
-			arrayRemove(archivedChannels, i => i.id === channel!.id);
+			await $unarchiveCommunityChannel(channel.value!);
+			community.value.channels!.push(channel.value!);
+			arrayRemove(archivedChannels.value, i => i.id === channel.value!.id);
 
-			if (archivedChannels.length === 0) {
-				community.has_archived_channels = false;
+			if (archivedChannels.value.length === 0) {
+				community.value.has_archived_channels = false;
 			}
 
 			showSuccessGrowl($gettext(`Channel was restored from the archive.`));

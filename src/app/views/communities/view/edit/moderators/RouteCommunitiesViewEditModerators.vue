@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ref } from 'vue';
+import { ref, toRef } from 'vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
@@ -34,11 +34,13 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { community } = useCommunityRouteStore()!;
+const routeStore = useCommunityRouteStore()!;
 
 const collaborators = ref<CollaboratorModel[]>([]);
 const activeCollaborator = ref<CollaboratorModel | undefined>(undefined);
 const isShowingCollaboratorAdd = ref(false);
+
+const community = toRef(routeStore.community);
 
 function onAddedCollaborator(collaborator: CollaboratorModel) {
 	isShowingCollaboratorAdd.value = false;

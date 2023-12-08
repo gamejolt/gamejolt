@@ -69,10 +69,14 @@ createAppRoute({
 		</h2>
 
 		<div class="page-help">
-			<p v-translate>
-				You can use the API to store data...
-				<em>in the cloud!</em>
-				All stored data items will show up here.
+			<p>
+				{{ $gettext(`You can use the API to store data...`) }}
+				{{ ' ' }}
+				<em>
+					{{ $gettext(`in the cloud!`) }}
+				</em>
+				{{ ' ' }}
+				{{ $gettext(`All stored data items will show up here.`) }}
 			</p>
 			<p>
 				{{

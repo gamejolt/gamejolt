@@ -10,6 +10,7 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import { touchUser } from '../../../../../_common/user/user.model';
 import FormCommunity from '../../../../components/forms/community/community.vue';
 import AppPageContainer from '../../../../components/page-container/AppPageContainer.vue';
+
 export default {
 	...defineAppRouteOptions({
 		deps: {},
@@ -17,6 +18,9 @@ export default {
 	}),
 	components: { AppPageContainer },
 };
+</script>
+
+<script lang="ts" setup>
 const router = useRouter();
 
 function onSubmit(community: CommunityModel) {

@@ -37,6 +37,7 @@ import FormCommunityCompetitionVotingCategory from '../../../../../../../../comp
 import FormCommunityCompetitionVotingEdit from '../../../../../../../../components/forms/community/competition/voting/edit/edit.vue';
 import FormCommunityCompetitionVotingToggle from '../../../../../../../../components/forms/community/competition/voting/toggle/toggle.vue';
 import { useCommunityRouteStore } from '../../../../../view.store';
+
 export default {
 	...defineAppRouteOptions({
 		deps: { params: ['id', 'channel'] },
@@ -49,11 +50,13 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { competition } = useCommunityRouteStore()!;
+const routeStore = useCommunityRouteStore()!;
+
+const competition = toRef(() => routeStore.competition!);
 
 const awards = ref<CommunityCompetitionAwardModel[]>([]);
 const votingCategories = ref<CommunityCompetitionVotingCategoryModel[]>([]);
-const activeAward = ref<CommunityCompetitionAwardModel | undefined>(undefined);
+const activeAward = ref<CommunityCompetitionAwardModel>();
 const activeVotingCategory = ref<CommunityCompetitionVotingCategoryModel | undefined>(undefined);
 const isShowingAwardAdd = ref(false);
 const isShowingVotingCategoryAdd = ref(false);
@@ -62,18 +65,20 @@ const toggleForm = ref<FormCommunityCompetitionVotingToggle>();
 
 const hasVotingCategories = toRef(() => votingCategories.value.length > 0);
 const hasAwards = toRef(() => awards.value.length > 0);
-const canToggleVoting = toRef(() => competition!.periodNum < CompetitionPeriodVoting);
-const canEditVoting = toRef(() => competition!.periodNum < CompetitionPeriodPostComp);
-const canEditAwards = toRef(() => competition!.is_voting_enabled && competition!.has_awards);
+const canToggleVoting = toRef(() => competition.value!.periodNum < CompetitionPeriodVoting);
+const canEditVoting = toRef(() => competition.value!.periodNum < CompetitionPeriodPostComp);
+const canEditAwards = toRef(
+	() => competition.value!.is_voting_enabled && competition.value!.has_awards
+);
 const canEditVotingCategories = toRef(
-	() => competition!.periodNum < CompetitionPeriodVoting && votingCategoriesEnabled.value
+	() => competition.value!.periodNum < CompetitionPeriodVoting && votingCategoriesEnabled.value
 );
 
 const votingCategoriesEnabled = computed(
 	() =>
-		competition!.is_voting_enabled &&
-		competition!.has_community_voting &&
-		competition!.voting_type === 'categories'
+		competition.value!.is_voting_enabled &&
+		competition.value!.has_community_voting &&
+		competition.value!.voting_type === 'categories'
 );
 /**
  * Gets called when voting gets toggled on/off, but has never been set up.
@@ -87,7 +92,7 @@ function onToggleNotSetUp() {
 function onFormCancel() {
 	isEditing.value = false;
 	// Because the form was not submitted, reset voting to disabled when not initialized.
-	if (toggleForm.value && !competition!.isVotingSetUp) {
+	if (toggleForm.value && !competition.value!.isVotingSetUp) {
 		toggleForm.value.setField('is_voting_enabled', false);
 	}
 
@@ -120,7 +125,9 @@ async function saveCategorySort(sortedCategories: CommunityCompetitionVotingCate
 	const sortedIds = sortedCategories.map(i => i.id);
 	try {
 		await Api.sendRequest(
-			`/web/dash/communities/competitions/voting-categories/save-sort/${competition!.id}`,
+			`/web/dash/communities/competitions/voting-categories/save-sort/${
+				competition.value!.id
+			}`,
 			sortedIds
 		);
 	} catch (e) {
@@ -152,7 +159,7 @@ async function saveAwardSort(sortedAwards: CommunityCompetitionAwardModel[]) {
 
 	const sortedIds = sortedAwards.map(i => i.id);
 	try {
-		await $saveCommunityCompetitionAwardSort(competition!.id, sortedIds);
+		await $saveCommunityCompetitionAwardSort(competition.value!.id, sortedIds);
 	} catch (e) {
 		console.error(e);
 		showErrorGrowl($gettext(`Could not save award arrangement.`));
@@ -475,10 +482,3 @@ createAppRoute({
 		</template>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-category-controls
-	display: flex
-	justify-content: flex-end
-	margin-bottom: $line-height-computed
-</style>

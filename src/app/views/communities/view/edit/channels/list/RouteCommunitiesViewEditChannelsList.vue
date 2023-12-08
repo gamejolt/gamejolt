@@ -26,6 +26,12 @@ import AppCommunitiesViewPageContainer from '../../../_page-container/page-conta
 import { loadArchivedChannels, updateCommunity, useCommunityRouteStore } from '../../../view.store';
 import AppCommunitiesEditChannelListItem from './_item/AppCommunitiesEditChannelListItem.vue';
 import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.vue';
+
+const communityPresetChannels = [
+	CommunityPresetChannelType.FEATURED,
+	CommunityPresetChannelType.ALL,
+];
+
 export default {
 	...defineAppRouteOptions({}),
 };
@@ -41,10 +47,6 @@ const isShowingChannelAdd = ref(false);
 const isLoadingArchivedChannels = ref(false);
 
 const community = toRef(() => routeStore.community);
-const communityPresetChannels = toRef(() => [
-	CommunityPresetChannelType.FEATURED,
-	CommunityPresetChannelType.ALL,
-]);
 const hasFullChannelsPermission = computed(() => community.value.hasPerms('community-channels'));
 
 async function saveChannelSort(sortedChannels: CommunityChannelModel[]) {

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { GameScoreTableModel } from '../../../../../../../_common/game/score-table/score-table.model';
@@ -55,7 +55,7 @@ const scoreTables = ref<GameScoreTableModel[]>([]);
 const scoreTable = ref<GameScoreTableModel | null>(null);
 const scores = ref<UserGameScoreModel[]>([]);
 
-const type = computed(() => route.params.type as 'user' | 'best');
+const type = toRef(() => route.params.type as 'user' | 'best');
 // Even.
 const scoresLeft = computed(() => scores.value.filter((_score, i) => i % 2 === 0));
 // Odd.
