@@ -5,8 +5,14 @@ import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { useOnHover } from '../../../../../_common/on/useOnHover';
+import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppTheme from '../../../../../_common/theme/AppTheme.vue';
-import { kThemeFg } from '../../../../../_common/theme/variables';
+import {
+	kThemeFg,
+	kThemeGjBlue,
+	kThemeGjGreen,
+	kThemeGjPink,
+} from '../../../../../_common/theme/variables';
 import { UserModel } from '../../../../../_common/user/user.model';
 import {
 	styleAbsoluteFill,
@@ -61,9 +67,7 @@ const { hoverBinding, hovered } = useOnHover();
 			<!-- Content -->
 			<div
 				:style="{
-					...styleFlexCenter({
-						gap: `12px`,
-					}),
+					...styleFlexCenter(),
 					color: kThemeFg,
 					position: `relative`,
 					zIndex: 2,
@@ -72,11 +76,49 @@ const { hoverBinding, hovered } = useOnHover();
 					}),
 				}"
 			>
-				<AppJolticon icon="marketplace-filled" :style="{ margin: 0 }" big />
+				<div :style="{ position: `relative` }">
+					<!-- Icon -->
+					<AppJolticon
+						icon="marketplace-filled"
+						:style="{ margin: 0, color: `black`, textShadow: `unset` }"
+						big
+					/>
+
+					<!-- Creator stripe -->
+					<div
+						:style="
+							styleAbsoluteFill({
+								zIndex: -1,
+								left: `-30px`,
+								right: `-20px`,
+								top: `-50px`,
+								bottom: `-50px`,
+							})
+						"
+					>
+						<div
+							:style="{
+								width: `100%`,
+								height: `100%`,
+								display: `grid`,
+								gridTemplateColumns: `repeat(3, 1fr)`,
+								transform: `rotate(-22.5deg)`,
+							}"
+						>
+							<div :style="{ backgroundColor: kThemeGjGreen }" />
+							<div :style="{ backgroundColor: kThemeGjPink }" />
+							<div :style="{ backgroundColor: kThemeGjBlue }" />
+						</div>
+					</div>
+				</div>
+
+				<AppSpacer horizontal :scale="8" />
 
 				<h3 :style="{ flex: `auto`, margin: 0 }">
 					{{ $gettext(`@%{ username }'s Shop`, { username: user.username }) }}
 				</h3>
+
+				<AppSpacer horizontal :scale="3" />
 
 				<AppButton
 					:force-hover="hovered"
