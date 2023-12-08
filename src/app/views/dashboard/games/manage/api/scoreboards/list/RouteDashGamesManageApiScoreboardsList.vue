@@ -38,7 +38,7 @@ const { game } = useGameDashRouteController()!;
 
 const scoreTables = ref<GameScoreTableModel[]>([]);
 const isAdding = ref(false);
-const activeItem = ref<GameScoreTableModel | undefined>();
+const activeItem = ref<GameScoreTableModel>();
 
 const currentSort = computed(() => scoreTables.value.map(item => item.id));
 
