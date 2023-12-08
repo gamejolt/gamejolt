@@ -16,6 +16,7 @@ import {
 } from '../../../../../../_common/illustration/illustrations';
 import { InventoryShopProductSaleModel } from '../../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
+import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../../../_common/loading/AppLoadingFade.vue';
 import AppModal from '../../../../../../_common/modal/AppModal.vue';
 import AppModalFloatingHeader from '../../../../../../_common/modal/AppModalFloatingHeader.vue';
@@ -32,17 +33,13 @@ import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppU
 import { UserModel } from '../../../../../../_common/user/user.model';
 import {
 	styleChangeBg,
+	styleFlexCenter,
 	styleTextOverflow,
 	styleTyped,
 	styleWhen,
 } from '../../../../../../_styles/mixins';
 import { kFontSizeBase, kFontSizeLarge, kStrongEaseOut } from '../../../../../../_styles/variables';
 import { debounceWithCancel } from '../../../../../../utils/utils';
-
-interface UserGiftData {
-	user: UserModel;
-	canGift: boolean;
-}
 
 const props = defineProps({
 	sale: {
@@ -55,19 +52,10 @@ const { sale } = toRefs(props);
 
 const modal = useModal()!;
 
+const giftableUsers = ref<UserModel[]>([]);
 const possibleGiftRecipientsLimit = ref<number>();
 const searchLoading = ref<string>();
 const lastSearch = ref('');
-
-const allUsers = ref<UserGiftData[]>([]);
-const giftableUsers = computed(() => {
-	return allUsers.value.reduce<UserModel[]>((users, data) => {
-		if (data.canGift) {
-			users.push(data.user);
-		}
-		return users;
-	}, []);
-});
 
 const searchButtonStates = computed(() => {
 	const input = form.formModel.input;
@@ -89,7 +77,7 @@ const showSearchHint = computed(() => {
 	if (!limit) {
 		return false;
 	}
-	return allUsers.value.length >= limit;
+	return giftableUsers.value.length >= limit;
 });
 
 const loadUrl = computed(() => `/mobile/shop-sale/${sale.value.id}`);
@@ -152,23 +140,19 @@ function handlePayload(payload: any) {
 	}
 
 	const rawRecipients = payload.possibleGiftRecipients;
-	const userData: UserGiftData[] = [];
+	const newUsers: UserModel[] = [];
 
 	if (Array.isArray(rawRecipients)) {
 		for (const json of rawRecipients) {
 			const rawUser = json.user;
-			if (!rawUser || !rawUser.id) {
+			if (!rawUser || !rawUser.id || json.canGift === false) {
 				continue;
 			}
-			const user = new UserModel(rawUser);
-			userData.push({
-				user,
-				canGift: json.canGift === true,
-			});
+			newUsers.push(new UserModel(rawUser));
 		}
 	}
 
-	allUsers.value = userData;
+	giftableUsers.value = newUsers;
 }
 
 const form: FormController<{ input: string }> = createForm({
@@ -261,10 +245,15 @@ function clearSearch() {
 			</template>
 		</AppModalFloatingHeader>
 
-		<AppLoadingFade :is-loading="!!searchLoading">
+		<AppLoadingFade :is-loading="giftableUsers.length > 0 && searchLoading !== undefined">
 			<div class="modal-body">
 				<div>
-					<template v-if="!giftableUsers.length && !lastSearch?.length">
+					<template v-if="!giftableUsers.length && searchLoading !== undefined">
+						<div :style="{ minHeight: `300px`, ...styleFlexCenter() }">
+							<AppLoading stationary hide-label />
+						</div>
+					</template>
+					<template v-else-if="!giftableUsers.length && !lastSearch?.length">
 						<AppIllustration :asset="illExtremeSadness">
 							{{
 								$gettext(
