@@ -18,6 +18,7 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../../../_common/route/route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import {
 	BaseTrophyDifficulties,
