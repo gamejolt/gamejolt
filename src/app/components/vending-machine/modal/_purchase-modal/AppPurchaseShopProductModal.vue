@@ -554,6 +554,7 @@ async function onClickGift(sale: InventoryShopProductSaleModel) {
 								</div>
 								<AppButton
 									v-if="sale"
+									v-app-tooltip="$gettext(`Gift this to a friend`)"
 									icon="gift"
 									circle
 									solid
