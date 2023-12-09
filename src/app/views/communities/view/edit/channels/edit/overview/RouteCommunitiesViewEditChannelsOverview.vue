@@ -32,9 +32,9 @@ export default {
 <script lang="ts" setup>
 const routeStore = useCommunityRouteStore()!;
 
-const community = toRef(routeStore.community);
-const channel = toRef(routeStore.channel);
-const archivedChannels = toRef(routeStore.archivedChannels);
+const community = toRef(() => routeStore.community);
+const channel = toRef(() => routeStore.channel);
+const archivedChannels = toRef(() => routeStore.archivedChannels);
 
 const route = useRoute();
 const router = useRouter();
