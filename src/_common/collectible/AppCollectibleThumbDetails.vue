@@ -6,6 +6,7 @@ import { showPurchaseShopProductModal } from '../../app/components/vending-machi
 import { isInstance } from '../../utils/utils';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../button/AppButton.vue';
+import { PurchasableProductType } from '../inventory/shop/product-owner-helpers';
 import { JoltydexFeed } from '../joltydex/joltydex-feed';
 import AppCircularProgress from '../progress/AppCircularProgress.vue';
 import AppStickerMastery from '../sticker/AppStickerMastery.vue';
@@ -58,8 +59,18 @@ const collectibleResourceAcquisition = computed(() => {
 	if (collectible.value.acquisition.every(i => i.method !== AcquisitionMethod.ShopPurchase)) {
 		return null;
 	}
+
+	let resource: PurchasableProductType;
+	switch (productType) {
+		case CollectibleType.AvatarFrame:
+			resource = PurchasableProductType.AvatarFrame;
+			break;
+		case CollectibleType.Background:
+			resource = PurchasableProductType.Background;
+			break;
+	}
 	return {
-		resource: productType,
+		resource,
 		resourceId: getCollectibleResourceId(collectible.value),
 	};
 });
@@ -179,7 +190,7 @@ const mutedStyles = {
 						can-click-pack
 						@click-pack="
 							showPurchaseShopProductModal({
-								resource: 'Sticker_Pack',
+								resource: PurchasableProductType.StickerPack,
 								resourceId: pack.id,
 							})
 						"

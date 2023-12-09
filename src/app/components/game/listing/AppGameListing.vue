@@ -3,7 +3,6 @@ import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppAdStickyRail from '../../../../_common/ad/AppAdStickyRail.vue';
 import { isAdEnthused, useAdStore } from '../../../../_common/ad/ad-store';
-import AppAdFeedBeacon from '../../../../_common/ad/feed-beacon/AppAdFeedBeacon.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -62,8 +61,6 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 	<div id="games" class="game-listing">
 		<section class="section section-thin">
 			<template v-if="showAds && globalShouldShowAds && isAdEnthused">
-				<AppAdFeedBeacon />
-
 				<AppAdWidget size="leaderboard" placement="content" />
 				<AppSpacer vertical :scale="6" />
 			</template>

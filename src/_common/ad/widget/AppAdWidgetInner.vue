@@ -74,7 +74,7 @@ const ad: AdInterface = {
 };
 
 onMounted(() => {
-	addAd(adStore, ad, adSlot.value);
+	addAd(adStore, ad);
 });
 
 onBeforeUnmount(() => {

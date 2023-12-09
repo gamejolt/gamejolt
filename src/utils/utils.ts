@@ -48,17 +48,34 @@ export function debounce<T extends FunctionType>(
 	fn: T,
 	delayMs: number
 ): ChangeReturnType<T, void> {
+	return debounceWithCancel(fn, delayMs).call;
+}
+
+/**
+ * Allows manual canceling of the debounce.
+ */
+export function debounceWithCancel<T extends FunctionType>(
+	fn: T,
+	delayMs: number
+): { call: ChangeReturnType<T, void>; cancel: () => void } {
 	let timeout: NodeJS.Timer | null = null;
 
-	return function (this: unknown, ...args: any) {
+	function cancel() {
 		if (timeout) {
 			clearTimeout(timeout);
 		}
+	}
 
-		timeout = setTimeout(() => {
-			timeout = null;
-			fn.apply(this, args);
-		}, delayMs);
+	return {
+		call(this: unknown, ...args: any) {
+			cancel();
+
+			timeout = setTimeout(() => {
+				timeout = null;
+				fn.apply(this, args);
+			}, delayMs);
+		},
+		cancel,
 	};
 }
 

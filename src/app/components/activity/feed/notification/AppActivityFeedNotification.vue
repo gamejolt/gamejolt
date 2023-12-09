@@ -22,6 +22,8 @@ import {
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { CreatorExperienceLevelModel } from '../../../../../_common/creator/experience/level.model';
+import { InventoryShopGiftModel } from '../../../../../_common/inventory/shop/inventory-shop-gift.model';
+import { getReadablePurchasableProductType } from '../../../../../_common/inventory/shop/product-owner-helpers';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import {
 	$readNotification,
@@ -30,6 +32,7 @@ import {
 } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
 import { SupporterActionModel } from '../../../../../_common/supporters/action.model';
+import { kThemeFgMuted } from '../../../../../_common/theme/variables';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import AppTimelineListItem from '../../../../../_common/timeline-list/item/AppTimelineListItem.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -40,6 +43,7 @@ import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-bas
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { UserAvatarFrameModel } from '../../../../../_common/user/user-avatar/frame/frame.model';
 import { UserModel } from '../../../../../_common/user/user.model';
+import { isInstance } from '../../../../../utils/utils';
 import { useAppStore } from '../../../../store/index';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
@@ -65,7 +69,12 @@ const canToggleContent = ref(false);
 
 const notification = computed(() => item.value.feedItem as NotificationModel);
 const isNew = computed(() => feed.isItemUnread(item.value));
-const isFromUser = computed(() => notification.value.from_model instanceof UserModel);
+const showUserAvatar = computed(() => {
+	if (notification.value.type === NotificationType.ShopGiftReceived) {
+		return false;
+	}
+	return notification.value.from_model instanceof UserModel;
+});
 const showTime = computed(() => notification.value.type !== NotificationType.QuestNotification);
 const titleText = computed(() => NotificationText.getText(notification.value, false));
 
@@ -109,6 +118,7 @@ const hasDetails = computed(() => {
 		NotificationType.PollEnded,
 		NotificationType.CreatorLevelUp,
 		NotificationType.UnlockedAvatarFrame,
+		NotificationType.ShopGiftReceived,
 	].includes(type);
 });
 
@@ -161,7 +171,7 @@ function onMarkRead() {
 										/>
 									</div>
 								</template>
-								<template v-else-if="isFromUser">
+								<template v-else-if="showUserAvatar">
 									<AppUserCardHover
 										:user="(notification.from_model as UserModel)"
 										:disabled="!feed.shouldShowUserCards"
@@ -224,6 +234,15 @@ function onMarkRead() {
 									"
 								>
 									<img class="img-circle -trophy-img" :src="avatarFrameImg" />
+								</template>
+								<template
+									v-else-if="
+										notification.type === NotificationType.ShopGiftReceived
+									"
+								>
+									<div class="-avatar-icon">
+										<AppJolticon icon="gift" />
+									</div>
 								</template>
 							</template>
 
@@ -362,6 +381,29 @@ function onMarkRead() {
 													"
 												>
 													{{ $gettext(`Click to equip!`) }}
+												</span>
+												<span
+													v-else-if="
+														notification.type ===
+															NotificationType.ShopGiftReceived &&
+														isInstance(
+															notification.action_model,
+															InventoryShopGiftModel
+														)
+													"
+													:style="{
+														fontStyle: `italic`,
+														color: kThemeFgMuted,
+													}"
+												>
+													{{
+														getReadablePurchasableProductType(
+															notification.action_model.product_type
+														) +
+														(notification.action_model.product
+															? `: ${notification.action_model.product.name}`
+															: ``)
+													}}
 												</span>
 											</AppFadeCollapse>
 										</div>

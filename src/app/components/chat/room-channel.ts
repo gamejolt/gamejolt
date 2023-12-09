@@ -433,8 +433,8 @@ export function createChatRoomChannel(
 
 	function unfreezeMessageLimitRemovals() {
 		_freezeMessageLimitRemovals = false;
-		if (_queuedMessageLimit != null) {
-			_removeMessagesPastLimit(_queuedMessageLimit!);
+		if (typeof _queuedMessageLimit === 'number') {
+			_removeMessagesPastLimit(_queuedMessageLimit);
 			_queuedMessageLimit = undefined;
 		}
 	}

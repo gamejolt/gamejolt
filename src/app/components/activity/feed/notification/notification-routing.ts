@@ -13,6 +13,7 @@ import { FiresidePostModel } from '../../../../../_common/fireside/post/post-mod
 import { ForumPostModel, getForumPostUrl } from '../../../../../_common/forum/post/post.model';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
+import { InventoryShopGiftModel } from '../../../../../_common/inventory/shop/inventory-shop-gift.model';
 import { MentionModel } from '../../../../../_common/mention/mention.model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import {
@@ -31,6 +32,7 @@ import { assertNever } from '../../../../../utils/utils';
 import { AppStore } from '../../../../store/index';
 import { routeDashAccountEdit } from '../../../../views/dashboard/account/edit/edit.route';
 import { routeDashSupporters } from '../../../../views/dashboard/supporters/supporters.route';
+import { showGiftActionModal } from '../../../gift/modal.service';
 
 function getRouteLocationForModel(
 	model:
@@ -254,6 +256,14 @@ export async function gotoNotification(
 			}
 
 			activeQuest.value = quest_id;
+		}
+	} else if (type === NotificationType.ShopGiftReceived) {
+		if (action_model instanceof InventoryShopGiftModel && action_model.product) {
+			showGiftActionModal({
+				gift: action_model,
+				product: action_model.product,
+				stickerPacks: undefined,
+			});
 		}
 	}
 }
