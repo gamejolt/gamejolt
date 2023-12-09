@@ -133,7 +133,7 @@ const hasControls = computed(() => {
 				v-if="coverEditable"
 				:class="{ '-cover-img': !!coverMediaItem }"
 				:disabled="!coverEditable"
-				@click="emit('edit-cover')"
+				@toggle="emit('edit-cover')"
 			>
 				<template #overlay>
 					<span>

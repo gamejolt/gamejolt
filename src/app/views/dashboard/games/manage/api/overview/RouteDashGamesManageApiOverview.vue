@@ -1,125 +1,118 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { Ref, computed, ref } from 'vue';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { formatDuration } from '../../../../../../../_common/filters/duration';
 import { formatNumber } from '../../../../../../../_common/filters/number';
+import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../_common/route/route-component';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import { useGameDashRouteController } from '../../manage.store';
 
-@Options({
-	name: 'RouteDashGamesManageApiOverview',
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	deps: {},
-	resolver: ({ route }) => Api.sendRequest('/web/dash/developer/games/api/' + route.params.id),
-})
-export default class RouteDashGamesManageApiOverview extends LegacyRouteComponent {
-	routeStore = setup(() => useGameDashRouteController()!);
+export default {
+	...defineAppRouteOptions({
+		deps: {},
+		resolver: ({ route }) =>
+			Api.sendRequest('/web/dash/developer/games/api/' + route.params.id),
+	}),
+};
+</script>
 
-	get game() {
-		return this.routeStore.game!;
-	}
+<script lang="ts" setup>
+const { game } = useGameDashRouteController()!;
 
-	numActiveSessions = 0;
-	numActiveTrophies = 0;
-	numGlobalItems = 0;
-	totalAchievedTrophies = 0;
-	totalScores = 0;
-	totalTrophyExp = 0;
-	totalUsersWithScores = 0;
-	totalUsersWithTrophies = 0;
-	sessionStats: {
-		avg: number;
-		time: number;
-		'user-count': number;
-	} = {} as any;
+const numActiveSessions = ref(0);
+const numActiveTrophies = ref(0);
+const numGlobalItems = ref(0);
+const totalAchievedTrophies = ref(0);
+const totalScores = ref(0);
+const totalTrophyExp = ref(0);
+const totalUsersWithScores = ref(0);
+const totalUsersWithTrophies = ref(0);
 
-	readonly formatNumber = formatNumber;
-	readonly formatDuration = formatDuration;
+const sessionStats = ref<{
+	avg: number;
+	time: number;
+	'user-count': number;
+}>({} as any);
 
-	get routeTitle() {
-		if (this.game) {
-			return this.$gettext('Game API for %{ game }', {
-				game: this.game.title,
+createAppRoute({
+	routeTitle: computed(() => {
+		if (game.value) {
+			return $gettext('Game API for %{ game }', {
+				game: game.value.title,
 			});
 		}
 		return null;
-	}
+	}),
+	onResolved({ payload }) {
+		sessionStats.value = payload.sessionStats;
 
-	routeResolved($payload: any) {
-		this.sessionStats = $payload.sessionStats;
+		const fields: Record<string, Ref<number>> = {
+			numActiveTrophies: numActiveTrophies,
+			totalTrophyExp: totalTrophyExp,
+			totalAchievedTrophies: totalAchievedTrophies,
+			totalUsersWithTrophies: totalUsersWithTrophies,
+			totalScores: totalScores,
+			totalUsersWithScores: totalUsersWithScores,
+			numActiveSessions: numActiveSessions,
+			numGlobalItems: numGlobalItems,
+		};
 
-		const fields = [
-			'numActiveTrophies',
-			'totalTrophyExp',
-			'totalAchievedTrophies',
-			'totalUsersWithTrophies',
-			'totalScores',
-			'totalUsersWithScores',
-			'numActiveSessions',
-			'numGlobalItems',
-		];
-
-		fields.forEach(field => {
-			(this as any)[field] = $payload[field] || 0;
-		});
-	}
-}
+		for (const [key, field] of Object.entries(fields)) {
+			field.value = payload[key] || 0;
+		}
+	},
+});
 </script>
 
 <template>
 	<div>
 		<h2 class="section-header">
-			<AppTranslate>Game API Overview</AppTranslate>
+			{{ $gettext(`Game API Overview`) }}
 		</h2>
 
 		<div class="page-help">
 			<p>
-				<AppTranslate>
-					The Game API lets you spice up your game with scoreboards, trophies, cloud data
-					storage, session logging, and more.
-				</AppTranslate>
+				{{
+					$gettext(
+						`The Game API lets you spice up your game with scoreboards, trophies, cloud data storage, session logging, and more.`
+					)
+				}}
 			</p>
 			<p>
-				<AppTranslate>
-					You can check the links below to see if the community has already written an API
-					library or plugin for the engine/tool/language you use. Of course, you can
-					always write one yourself and share it in the forums!
-				</AppTranslate>
+				{{
+					$gettext(
+						`You can check the links below to see if the community has already written an API library or plugin for the engine/tool/language you use. Of course, you can always write one yourself and share it in the forums!`
+					)
+				}}
 			</p>
 			<p>
-				<router-link class="link-help" :to="{ name: 'landing.game-api' }">
-					<AppTranslate>Learn more about the Game API...</AppTranslate>
-				</router-link>
+				<RouterLink class="link-help" :to="{ name: 'landing.game-api' }">
+					{{ $gettext(`Learn more about the Game API...`) }}
+				</RouterLink>
 				<br />
-				<router-link
+				<RouterLink
 					class="link-help"
 					:to="{
 						name: 'forums.channels.view',
 						params: { name: 'gj-game-api', sort: 'archived' },
 					}"
 				>
-					<AppTranslate>Find help in the API forums...</AppTranslate>
-				</router-link>
+					{{ $gettext(`Find help in the API forums...`) }}
+				</RouterLink>
 			</p>
 		</div>
 
 		<h2 class="sans-margin-bottom">
-			<AppTranslate translate-comment="This refers to game API sessions"
-				>Sessions</AppTranslate
-			>
+			{{ $gettext(`Sessions`) }}
 		</h2>
 
 		<p class="text-muted small">
-			<AppTranslate>Sessions show you who's playing your game and for how long.</AppTranslate>
+			{{ $gettext(`Sessions show you who's playing your game and for how long.`) }}
 		</p>
 
 		<div class="well fill-offset full-bleed-xs sans-margin-bottom">
@@ -127,9 +120,7 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game API sessions">
-								Active Sessions
-							</AppTranslate>
+							{{ $gettext(`Active Sessions`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(numActiveSessions) }}
@@ -139,11 +130,7 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate
-								translate-comment="This refers to the total session time logged for a game"
-							>
-								Total Time
-							</AppTranslate>
+							{{ $gettext(`Total Time`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatDuration(sessionStats.time || 0) }}
@@ -153,9 +140,7 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game API sessions">
-								Avg. Session Time
-							</AppTranslate>
+							{{ $gettext(`Avg. Session Time`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatDuration(sessionStats.avg || 0) }}
@@ -165,9 +150,7 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate tarnslate-comment="This refers to game API sessions">
-								Users w/ Sessions
-							</AppTranslate>
+							{{ $gettext(`Users w/ Sessions`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(sessionStats['user-count']) }}
@@ -178,14 +161,9 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 		</div>
 
 		<h2>
-			<router-link
-				class="link-unstyled"
-				:to="{ name: 'dash.games.manage.api.trophies.list' }"
-			>
-				<AppTranslate translate-comment="This refers to game trophies">
-					Trophies
-				</AppTranslate>
-			</router-link>
+			<RouterLink class="link-unstyled" :to="{ name: 'dash.games.manage.api.trophies.list' }">
+				{{ $gettext(`Trophies`) }}
+			</RouterLink>
 		</h2>
 
 		<div class="well fill-offset full-bleed-xs sans-margin-bottom">
@@ -193,9 +171,7 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game trophies">
-								Trophies
-							</AppTranslate>
+							{{ $gettext(`Trophies`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(numActiveTrophies) }}
@@ -205,9 +181,7 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game trophies">
-								Trophy EXP
-							</AppTranslate>
+							{{ $gettext(`Trophy EXP`) }}
 							{{ ' ' }}
 							<AppJolticon
 								v-app-tooltip.touchable="
@@ -218,15 +192,11 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 						</div>
 						<div class="stat-big-digit">
 							<template v-if="!numActiveTrophies">
-								<AppTranslate>N/A</AppTranslate>
+								{{ $gettext(`N/A`) }}
 							</template>
 							<template v-else>
 								{{ formatNumber(totalTrophyExp) + ' ' }}
-								<AppTranslate
-									translate-comment="As in abbreviation for experience. If one doesnt exist for your language, or if its not a short word just leave it as EXP."
-								>
-									EXP
-								</AppTranslate>
+								{{ $gettext(`EXP`) }}
 							</template>
 						</div>
 					</div>
@@ -234,9 +204,7 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game trophies">
-								Trophies Achieved
-							</AppTranslate>
+							{{ $gettext(`Trophies Achieved`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(totalAchievedTrophies) }}
@@ -246,9 +214,7 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game trophies">
-								Users w/ Trophies
-							</AppTranslate>
+							{{ $gettext(`Users w/ Trophies`) }}
 						</div>
 						<div class="stat-big-digit">
 							{{ formatNumber(totalUsersWithTrophies) }}
@@ -259,12 +225,12 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 		</div>
 
 		<h2>
-			<router-link
+			<RouterLink
 				class="link-unstyled"
 				:to="{ name: 'dash.games.manage.api.scoreboards.list' }"
 			>
-				<AppTranslate translate-comment="This refers to game scores">Scores</AppTranslate>
-			</router-link>
+				{{ $gettext(`Scores`) }}
+			</RouterLink>
 		</h2>
 
 		<div class="well fill-offset full-bleed-xs sans-margin-bottom">
@@ -272,9 +238,7 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate translate-comment="This refers to game scores">
-								Total Scores
-							</AppTranslate>
+							{{ $gettext(`Total Scores`) }}
 							{{ ' ' }}
 							<AppJolticon
 								v-app-tooltip.touchable="
@@ -293,7 +257,7 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate>Users w/ Scores</AppTranslate>
+							{{ $gettext(`Users w/ Scores`) }}
 							{{ ' ' }}
 							<AppJolticon
 								v-app-tooltip.touchable="
@@ -313,14 +277,12 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 		</div>
 
 		<h2>
-			<router-link
+			<RouterLink
 				class="link-unstyled"
 				:to="{ name: 'dash.games.manage.api.data-storage.items.list' }"
 			>
-				<AppTranslate translate-comment="This is referring to the Game API data store">
-					Data Store
-				</AppTranslate>
-			</router-link>
+				{{ $gettext(`Data Store`) }}
+			</RouterLink>
 		</h2>
 
 		<div class="well fill-offset full-bleed-xs sans-margin-bottom">
@@ -328,11 +290,7 @@ export default class RouteDashGamesManageApiOverview extends LegacyRouteComponen
 				<div class="col-xs-6 col-sm-3">
 					<div class="stat-big stat-big-smaller sans-margin-bottom text-center">
 						<div class="stat-big-label">
-							<AppTranslate
-								translate-comment="This is referring to global items set in the Game API data store."
-							>
-								Global Items
-							</AppTranslate>
+							{{ $gettext(`Global Items`) }}
 							{{ ' ' }}
 							<AppJolticon
 								v-app-tooltip.touchable="

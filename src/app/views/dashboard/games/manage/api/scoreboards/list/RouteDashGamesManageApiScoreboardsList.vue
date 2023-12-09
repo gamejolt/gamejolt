@@ -1,7 +1,7 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, ref } from 'vue';
 import { Api } from '../../../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import AppCardList from '../../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
@@ -12,122 +12,106 @@ import {
 	GameScoreTableModel,
 	GameScoreTableSorting,
 } from '../../../../../../../../_common/game/score-table/score-table.model';
+import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '../../../../../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../../_common/route/route-component';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../../../../_common/translate/translate.service';
 import FormGameScoreTable from '../../../../../../../components/forms/game/score-table/score-table.vue';
 import { useGameDashRouteController } from '../../../manage.store';
 
-@Options({
-	name: 'RouteDashGamesManageApiScoreboardsList',
-	components: {
-		AppCardList,
-		AppCardListItem,
-		AppCardListAdd,
-		FormGameScoreTable,
-		AppCardListDraggable,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	deps: {},
-	resolver: ({ route }) =>
-		Api.sendRequest('/web/dash/developer/games/api/scores/' + route.params.id),
-})
-export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteComponent {
-	routeStore = setup(() => useGameDashRouteController()!);
+export default {
+	...defineAppRouteOptions({
+		deps: {},
+		resolver: ({ route }) =>
+			Api.sendRequest('/web/dash/developer/games/api/scores/' + route.params.id),
+	}),
+};
+</script>
 
-	get game() {
-		return this.routeStore.game!;
+<script lang="ts" setup>
+const { game } = useGameDashRouteController()!;
+
+const scoreTables = ref<GameScoreTableModel[]>([]);
+const isAdding = ref(false);
+const activeItem = ref<GameScoreTableModel>();
+
+const currentSort = computed(() => scoreTables.value.map(item => item.id));
+
+function onTableAdded(table: GameScoreTableModel) {
+	scoreTables.value.push(table);
+	isAdding.value = false;
+}
+
+function onTableEdited() {
+	activeItem.value = undefined;
+}
+
+function saveSort(tables: GameScoreTableModel[]) {
+	scoreTables.value = tables;
+	$saveGameScoreTableSort(game.value!.id, currentSort.value);
+}
+
+async function removeTable(table: GameScoreTableModel) {
+	const result = await showModalConfirm(
+		$gettext('Are you sure you want to remove this scoreboard?')
+	);
+
+	if (!result) {
+		return;
 	}
 
-	GameScoreTable = GameScoreTableModel;
+	await $removeGameScoreTable(table);
 
-	scoreTables: GameScoreTableModel[] = [];
-	isAdding = false;
-	activeItem: GameScoreTableModel | null = null;
-
-	readonly DirectionAscend = GameScoreTableSorting.DirectionAsc;
-	readonly DirectionDescend = GameScoreTableSorting.DirectionDesc;
-
-	get currentSort() {
-		return this.scoreTables.map(item => item.id);
+	const index = scoreTables.value.findIndex(i => i.id === table.id);
+	if (index !== -1) {
+		scoreTables.value.splice(index, 1);
 	}
+}
 
-	get routeTitle() {
-		if (this.game) {
-			return this.$gettext('Manage Scoreboards for %{ game }', {
-				game: this.game.title,
+createAppRoute({
+	routeTitle: computed(() => {
+		if (game.value) {
+			return $gettext('Manage Scoreboards for %{ game }', {
+				game: game.value.title,
 			});
 		}
 		return null;
-	}
-
-	routeResolved($payload: any) {
-		this.scoreTables = GameScoreTableModel.populate($payload.scoreTables);
-	}
-
-	onTableAdded(table: GameScoreTableModel) {
-		this.scoreTables.push(table);
-		this.isAdding = false;
-	}
-
-	onTableEdited() {
-		this.activeItem = null;
-	}
-
-	saveSort(tables: GameScoreTableModel[]) {
-		this.scoreTables = tables;
-		$saveGameScoreTableSort(this.game.id, this.currentSort);
-	}
-
-	async removeTable(table: GameScoreTableModel) {
-		const result = await showModalConfirm(
-			this.$gettext('Are you sure you want to remove this scoreboard?')
-		);
-
-		if (!result) {
-			return;
-		}
-
-		await $removeGameScoreTable(table);
-
-		const index = this.scoreTables.findIndex(i => i.id === table.id);
-		if (index !== -1) {
-			this.scoreTables.splice(index, 1);
-		}
-	}
-}
+	}),
+	onResolved({ payload }) {
+		scoreTables.value = GameScoreTableModel.populate(payload.scoreTables);
+	},
+});
 </script>
 
 <template>
 	<div>
 		<h2 class="section-header">
-			<AppTranslate>Scoreboards</AppTranslate>
+			{{ $gettext(`Scoreboards`) }}
 		</h2>
 
 		<div class="page-help">
 			<p>
-				<AppTranslate>
-					The API allows you to add multiple customized scoreboards, with control over
-					sorting options and guest scoring, and the ability to attach extra hidden data
-					to scores.
-				</AppTranslate>
+				{{
+					$gettext(
+						`The API allows you to add multiple customized scoreboards, with control over sorting options and guest scoring, and the ability to attach extra hidden data to scores.`
+					)
+				}}
 			</p>
 			<p>
-				<AppTranslate>
-					The primary scoreboard is the one that will show by default on your game's page.
-					Set a new primary by dragging a scoreboard into the first slot.
-				</AppTranslate>
+				{{
+					$gettext(
+						`The primary scoreboard is the one that will show by default on your game's page. Set a new primary by dragging a scoreboard into the first slot.`
+					)
+				}}
 			</p>
 			<p>
 				<AppLinkHelp page="dev-scoreboards" class="link-help">
-					<AppTranslate>Learn more about scoreboards...</AppTranslate>
+					{{ $gettext(`Learn more about scoreboards...`) }}
 				</AppLinkHelp>
 			</p>
 		</div>
@@ -156,7 +140,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 								<div class="card-stats">
 									<div class="stat-big">
 										<div class="stat-big-label">
-											<AppTranslate> Table ID </AppTranslate>
+											{{ $gettext(` Table ID `) }}
 										</div>
 										<div class="stat-big-digit">{{ scoreTable.id }}</div>
 									</div>
@@ -178,7 +162,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 										"
 										class="tag tag-highlight"
 									>
-										<AppTranslate>Primary Scoreboard</AppTranslate>
+										{{ $gettext(`Primary Scoreboard`) }}
 									</span>
 									<span
 										v-if="scoreTable.allow_guest_scores"
@@ -187,7 +171,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 										"
 										class="tag"
 									>
-										<AppTranslate>Guest Scoring</AppTranslate>
+										{{ $gettext(`Guest Scoring`) }}
 									</span>
 									<span
 										v-if="scoreTable.unique_scores"
@@ -196,11 +180,12 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 										"
 										class="tag"
 									>
-										<AppTranslate>Unique Scores</AppTranslate>
+										{{ $gettext(`Unique Scores`) }}
 									</span>
 									<span
 										v-if="
-											scoreTable.scores_sorting_direction === DirectionAscend
+											scoreTable.scores_sorting_direction ===
+											GameScoreTableSorting.DirectionAsc
 										"
 										v-app-tooltip="
 											$gettext(
@@ -209,15 +194,12 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 										"
 										class="tag"
 									>
-										<AppTranslate
-											translate-comment="As in going from lowest to highest"
-										>
-											Ascending
-										</AppTranslate>
+										{{ $gettext(`Ascending`) }}
 									</span>
 									<span
 										v-if="
-											scoreTable.scores_sorting_direction === DirectionDescend
+											scoreTable.scores_sorting_direction ===
+											GameScoreTableSorting.DirectionDesc
 										"
 										v-app-tooltip="
 											$gettext(
@@ -226,11 +208,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 										"
 										class="tag"
 									>
-										<AppTranslate
-											translate-comment="As in going from lowest to highest"
-										>
-											Descending
-										</AppTranslate>
+										{{ $gettext(`Descending`) }}
 									</span>
 								</div>
 
@@ -247,7 +225,7 @@ export default class RouteDashGamesManageApiScoreboardsList extends LegacyRouteC
 										}"
 										@click.stop
 									>
-										<AppTranslate>View Scores</AppTranslate>
+										{{ $gettext(`View Scores`) }}
 									</AppButton>
 								</div>
 

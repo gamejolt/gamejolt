@@ -7,7 +7,7 @@ defineProps({
 });
 
 const emit = defineEmits({
-	click: () => true,
+	toggle: () => true,
 });
 </script>
 
@@ -16,7 +16,7 @@ const emit = defineEmits({
 		<div
 			v-if="!disabled"
 			class="-overlay-container theme-dark"
-			@click.capture.stop="emit('click')"
+			@click.capture.stop="emit('toggle')"
 		>
 			<div class="-overlay" />
 			<div class="-overlay-content">

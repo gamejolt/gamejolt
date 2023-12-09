@@ -3,5 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeDashGamesManageApiTrophies: RouteRecordRaw = {
 	name: 'dash.games.manage.api.trophies.list',
 	path: 'trophies',
-	component: () => import('./trophies.vue'),
+	component: () => import('./RouteDashGamesManageApiTrophies.vue'),
 };

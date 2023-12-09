@@ -179,7 +179,7 @@ function showEditHeader() {
 				v-if="coverEditable"
 				:class="{ '-cover-img': !!coverMediaItem }"
 				:disabled="!coverEditable"
-				@click="showEditHeader()"
+				@toggle="showEditHeader()"
 			>
 				<template #overlay>
 					<AppTranslate v-if="!coverMediaItem">Upload Header</AppTranslate>

@@ -1,7 +1,5 @@
-import { h } from 'vue';
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
-import { RouteLocationNormalized } from 'vue-router';
+<script lang="ts">
+import { RouteLocationNormalized, useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import {
@@ -10,10 +8,21 @@ import {
 	getLinkedAccountProviderDisplayName,
 } from '../../../../../../_common/linked-account/linked-account.model';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
+
+export default {
+	...defineAppRouteOptions({
+		resolver({ route }) {
+			const url = constructUrl('/web/dash/linked-accounts/link-callback/', route);
+			// Force POST.
+			return Api.sendRequest(url, {});
+		},
+	}),
+};
 
 function constructUrl(baseUrl: string, route: RouteLocationNormalized) {
 	let url = baseUrl + route.params.provider;
@@ -31,36 +40,26 @@ function constructUrl(baseUrl: string, route: RouteLocationNormalized) {
 
 	return url;
 }
+</script>
 
-@Options({
-	name: 'RouteDashAccountLinkedAccountsLinkCallback',
-})
-@OptionsForLegacyRoute({
-	resolver({ route }) {
-		const url = constructUrl('/web/dash/linked-accounts/link-callback/', route);
-		// Force POST.
-		return Api.sendRequest(url, {});
-	},
-})
-export default class RouteDashAccountLinkedAccountsLinkCallback extends LegacyRouteComponent {
-	commonStore = setup(() => useCommonStore());
+<script lang="ts" setup>
+const route = useRoute();
+const router = useRouter();
+const { user } = useCommonStore();
 
-	get user() {
-		return this.commonStore.user;
-	}
-
-	routeResolved($payload: any) {
-		if (!this.user) {
+createAppRoute({
+	onResolved({ payload }) {
+		if (!user.value) {
 			return;
 		}
 
-		const provider = this.$route.params.provider as LinkedAccountProvider;
+		const provider = route.params.provider as LinkedAccountProvider;
 		const providerName = getLinkedAccountProviderDisplayName(provider);
-		if (!$payload.success) {
-			switch ($payload.reason) {
+		if (!payload.success) {
+			switch (payload.reason) {
 				case 'account-taken':
 					showErrorGrowl(
-						this.$gettext(
+						$gettext(
 							'This %{ provider } account is already linked to another Game Jolt account.',
 							{
 								provider: providerName,
@@ -71,7 +70,7 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends LegacyRo
 
 				case 'channel-taken':
 					showErrorGrowl(
-						this.$gettext(
+						$gettext(
 							'This YouTube channel is already linked to another Game Jolt account.'
 						)
 					);
@@ -79,25 +78,25 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends LegacyRo
 
 				case 'no-channel':
 					showErrorGrowl(
-						this.$gettext(
+						$gettext(
 							'The selected Google account has no valid YouTube channel associated with it.'
 						)
 					);
 					break;
 
 				case 'not-public':
-					showErrorGrowl(this.$gettext('This YouTube channel is not public.'));
+					showErrorGrowl($gettext('This YouTube channel is not public.'));
 					break;
 
 				case 'invalid-google-account':
 					showErrorGrowl(
-						this.$gettext('This Google account does not support Sign Up with Google.')
+						$gettext('This Google account does not support Sign Up with Google.')
 					);
 					break;
 
 				default:
 					showErrorGrowl(
-						this.$gettext('Unable to link your %{ provider } account.', {
+						$gettext('Unable to link your %{ provider } account.', {
 							provder: providerName,
 						})
 					);
@@ -109,28 +108,26 @@ export default class RouteDashAccountLinkedAccountsLinkCallback extends LegacyRo
 				case LinkedAccountProvider.Google:
 				case LinkedAccountProvider.Twitch:
 					{
-						const account = new LinkedAccountModel($payload.account);
+						const account = new LinkedAccountModel(payload.account);
 						showSuccessGrowl(
-							this.$gettext(
-								'Your %{ provider } account (%{ name }) has been linked.',
-								{
-									name: account.name,
-									provider: providerName,
-								}
-							),
-							this.$gettext('Account Linked')
+							$gettext('Your %{ provider } account (%{ name }) has been linked.', {
+								name: account.name,
+								provider: providerName,
+							}),
+							$gettext('Account Linked')
 						);
 					}
 					break;
 			}
 		}
 
-		this.$router.push({
+		router.push({
 			name: 'dash.account.linked-accounts',
 		});
-	}
+	},
+});
+</script>
 
-	render() {
-		return h('div');
-	}
-}
+<template>
+	<div />
+</template>
