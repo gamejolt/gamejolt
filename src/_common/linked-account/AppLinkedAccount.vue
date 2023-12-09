@@ -17,7 +17,7 @@ const props = defineProps({
 		required: true,
 	},
 	account: {
-		type: Object as PropType<LinkedAccountModel>,
+		type: Object as PropType<LinkedAccountModel | null>,
 		default: null,
 	},
 	preview: {

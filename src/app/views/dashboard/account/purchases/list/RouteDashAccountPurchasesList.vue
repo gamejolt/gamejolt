@@ -1,70 +1,68 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { Api } from '../../../../../../_common/api/api.service';
 import { formatCurrency } from '../../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../../_common/filters/date';
 import { OrderModel } from '../../../../../../_common/order/order.model';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { useAccountRouteController } from '../../RouteDashAccount.vue';
+export default {
+	...defineAppRouteOptions({
+		cache: true,
+		deps: {},
+		resolver: () => Api.sendRequest('/web/dash/purchases'),
+	}),
+};
+</script>
 
-@Options({
-	name: 'RouteDashAccountPurchasesList',
-})
-@OptionsForLegacyRoute({
-	cache: true,
-	deps: {},
-	resolver: () => Api.sendRequest('/web/dash/purchases'),
-})
-export default class RouteDashAccountPurchasesList extends LegacyRouteComponent {
-	routeStore = setup(() => useAccountRouteController()!);
+<script lang="ts" setup>
+const { heading } = useAccountRouteController()!;
 
-	orders: OrderModel[] = [];
+const orders = ref<OrderModel[]>([]);
 
-	readonly formatDate = formatDate;
-	readonly formatCurrency = formatCurrency;
-
-	get routeTitle() {
-		return this.routeStore.heading;
-	}
-
-	routeCreated() {
-		this.routeStore.heading = $gettext(`Order History`);
-	}
-
-	routeResolved($payload: any) {
-		this.orders = OrderModel.populate($payload.orders);
-	}
-}
+const { isBootstrapped } = createAppRoute({
+	routeTitle: heading,
+	onInit() {
+		heading.value = $gettext(`Order History`);
+	},
+	onResolved({ payload }) {
+		orders.value = OrderModel.populate(payload.orders);
+	},
+});
 </script>
 
 <template>
-	<div v-if="isRouteBootstrapped">
+	<div v-if="isBootstrapped">
 		<table v-if="orders.length" class="table">
 			<thead>
 				<tr>
-					<th><AppTranslate>Order #</AppTranslate></th>
-					<th><AppTranslate>Item(s)</AppTranslate></th>
-					<th><AppTranslate>Purchase Date</AppTranslate></th>
-					<th class="text-right"><AppTranslate>Amount</AppTranslate></th>
+					<th>
+						{{ $gettext(`Order #`) }}
+					</th>
+					<th>{{ $gettext(`Item(s)`) }}</th>
+					<th>{{ $gettext(`Purchase Date`) }}</th>
+					<th class="text-right">
+						{{ $gettext(`Amount`) }}
+					</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-for="order of orders" :key="order.id">
 					<td>
 						<strong>
-							<router-link
+							<RouterLink
 								:to="{
 									name: 'dash.account.purchases.view',
 									params: { hash: order.hash },
 								}"
 							>
 								{{ order.id }}
-							</router-link>
+							</RouterLink>
 						</strong>
 					</td>
 					<td>
@@ -75,7 +73,7 @@ export default class RouteDashAccountPurchasesList extends LegacyRouteComponent 
 					</td>
 					<td class="text-right">
 						<span v-if="order._is_refunded" class="tag tag-notice">
-							<AppTranslate>Refunded</AppTranslate>
+							{{ $gettext(`Refunded`) }}
 						</span>
 						{{ formatCurrency(order.total_amount) }}
 					</td>
@@ -85,10 +83,11 @@ export default class RouteDashAccountPurchasesList extends LegacyRouteComponent 
 		<div v-else class="row">
 			<div class="col-md-6 col-centered">
 				<p class="lead text-center">
-					<AppTranslate>
-						You haven't bought any games on the site yet. Once you do, you'll be able to
-						see all of your orders here and the details for each order.
-					</AppTranslate>
+					{{
+						$gettext(
+							`You haven't bought any games on the site yet. Once you do, you'll be able to see all of your orders here and the details for each order.`
+						)
+					}}
 				</p>
 			</div>
 		</div>

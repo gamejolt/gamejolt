@@ -1,124 +1,92 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, ref, toRef } from 'vue';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../../../../../_common/api/api.service';
 import { GameScoreTableModel } from '../../../../../../../_common/game/score-table/score-table.model';
 import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
 import AppNavTabList from '../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { Popper } from '../../../../../../../_common/popper/popper.service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../_common/route/route-component';
 import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.vue';
 import { vAppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import { UserGameScoreModel } from '../../../../../../../_common/user/game-score/game-score.model';
 import AppScoreList from '../../../../../../components/score/list/list.vue';
 import AppScoreboardSelector from '../../../../../../components/score/scoreboard-selector/scoreboard-selector.vue';
 import { useGameRouteController } from '../../view.vue';
 
-@Options({
-	name: 'RouteDiscoverGamesViewScoresList',
-	components: {
-		AppNavTabList,
-		AppScoreList,
-		AppScrollAffix,
-		AppScoreboardSelector,
-		AppLoadingFade,
-	},
-	directives: {
-		AppNoAutoscroll: vAppNoAutoscroll,
-	},
-})
-@OptionsForLegacyRoute({
-	cache: true,
-	deps: { params: ['tableId', 'type'], query: ['page'] },
-	resolver({ route }) {
-		let query = '';
-		if (parseInt(route.query.page as string, 10) > 1) {
-			query = '?page=' + route.query.page;
-		}
+export default {
+	...defineAppRouteOptions({
+		cache: true,
+		deps: { params: ['tableId', 'type'], query: ['page'] },
+		resolver({ route }) {
+			let query = '';
+			if (parseInt(route.query.page as string, 10) > 1) {
+				query = '?page=' + route.query.page;
+			}
 
-		const url =
-			'/web/discover/games/scores/' +
-			route.params.id +
-			'/' +
-			route.params.tableId +
-			'/' +
-			route.params.type;
+			const url =
+				'/web/discover/games/scores/' +
+				route.params.id +
+				'/' +
+				route.params.tableId +
+				'/' +
+				route.params.type;
 
-		return Api.sendRequest(url + query);
-	},
-})
-export default class RouteDiscoverGamesViewScoresList extends LegacyRouteComponent {
-	routeStore = setup(() => useGameRouteController()!);
-	commonStore = setup(() => useCommonStore());
+			return Api.sendRequest(url + query);
+		},
+	}),
+};
+</script>
 
-	scoreTables: GameScoreTableModel[] = [];
-	scoreTable: GameScoreTableModel | null = null;
-	scores: UserGameScoreModel[] = [];
-	userBestScore: UserGameScoreModel | null = null;
-	userScorePlacement = 0;
-	userScoreExperience = 0;
+<script lang="ts" setup>
+const route = useRoute();
+const router = useRouter();
+const { game } = useGameRouteController()!;
+const { user } = useCommonStore();
 
-	readonly Screen = Screen;
+const scoreTables = ref<GameScoreTableModel[]>([]);
+const scoreTable = ref<GameScoreTableModel | null>(null);
+const scores = ref<UserGameScoreModel[]>([]);
 
-	get game() {
-		return this.routeStore.game;
-	}
+const type = toRef(() => route.params.type as 'user' | 'best');
+// Even.
+const scoresLeft = computed(() => scores.value.filter((_score, i) => i % 2 === 0));
+// Odd.
+const scoresRight = computed(() => scores.value.filter((_score, i) => i % 2 === 1));
 
-	get app() {
-		return this.commonStore;
-	}
+function changeTable(table: GameScoreTableModel) {
+	Scroll.shouldAutoScroll = false;
 
-	get type() {
-		return this.$route.params.type as 'user' | 'best';
-	}
+	router.push({
+		name: 'discover.games.view.scores.list',
+		params: { tableId: table.id + '' },
+	});
 
-	// Even.
-	get scoresLeft() {
-		return this.scores.filter((_score, i) => i % 2 === 0);
-	}
+	Popper.hideAll();
+}
 
-	// Odd.
-	get scoresRight() {
-		return this.scores.filter((_score, i) => i % 2 === 1);
-	}
-
-	get routeTitle() {
-		if (this.game) {
-			return this.$gettext(`Scores for %{ game }`, {
-				game: this.game.title,
+const { isLoading } = createAppRoute({
+	routeTitle: computed(() => {
+		if (game.value) {
+			return $gettext(`Scores for %{ game }`, {
+				game: game.value.title,
 			});
 		}
 		return null;
-	}
-
-	routeResolved(payload: any) {
-		this.scoreTables = GameScoreTableModel.populate(payload.scoreTables);
-		this.scoreTable = payload.scoreTable ? new GameScoreTableModel(payload.scoreTable) : null;
-		this.scores = UserGameScoreModel.populate(payload.scores);
-		this.userBestScore = payload.scoresUserBestScore
-			? new UserGameScoreModel(payload.scoresUserBestScore)
-			: null;
-		this.userScorePlacement = payload.scoresUserScorePlacement || 0;
-		this.userScoreExperience = payload.scoresUserScoreExperience || 0;
-	}
-
-	changeTable(table: GameScoreTableModel) {
-		Scroll.shouldAutoScroll = false;
-
-		this.$router.push({
-			name: 'discover.games.view.scores.list',
-			params: { tableId: table.id + '' },
-		});
-
-		Popper.hideAll();
-	}
-}
+	}),
+	onResolved({ payload }) {
+		scoreTables.value = GameScoreTableModel.populate(payload.scoreTables);
+		scoreTable.value = payload.scoreTable ? new GameScoreTableModel(payload.scoreTable) : null;
+		scores.value = UserGameScoreModel.populate(payload.scores);
+	},
+});
 </script>
 
 <template>
@@ -142,33 +110,33 @@ export default class RouteDiscoverGamesViewScoresList extends LegacyRouteCompone
 						</p>
 						<br />
 
-						<AppNavTabList v-if="app.user">
+						<AppNavTabList v-if="user">
 							<ul>
 								<li>
-									<router-link
+									<RouterLink
 										v-app-no-autoscroll="true"
 										:to="{
 											name: 'discover.games.view.scores.list',
-											params: { ...$route.params, type: 'best' },
+											params: { ...route.params, type: 'best' },
 										}"
 										active-class="active"
 									>
-										<AppTranslate>All Scores</AppTranslate>
-									</router-link>
+										{{ $gettext(`All Scores`) }}
+									</RouterLink>
 								</li>
 								<li>
-									<router-link
+									<RouterLink
 										v-app-no-autoscroll="true"
 										:to="{
 											name: 'discover.games.view.scores.list',
-											params: Object.assign({}, $route.params, {
+											params: Object.assign({}, route.params, {
 												type: 'user',
 											}),
 										}"
 										active-class="active"
 									>
-										<AppTranslate>Your Scores</AppTranslate>
-									</router-link>
+										{{ $gettext(`Your Scores`) }}
+									</RouterLink>
 								</li>
 							</ul>
 						</AppNavTabList>
@@ -176,7 +144,7 @@ export default class RouteDiscoverGamesViewScoresList extends LegacyRouteCompone
 						<!--
 							When screen isn't XS, we split the scores out into two columns.
 						-->
-						<AppLoadingFade :is-loading="isRouteLoading">
+						<AppLoadingFade :is-loading="isLoading">
 							<div v-if="!Screen.isXs" class="row">
 								<div class="col-sm-6">
 									<AppScoreList :scores="scoresLeft" :step="2" />
@@ -190,18 +158,16 @@ export default class RouteDiscoverGamesViewScoresList extends LegacyRouteCompone
 						<!--
 							When screen is XS we just show as one long list.
 						-->
-						<AppLoadingFade :is-loading="isRouteLoading">
+						<AppLoadingFade :is-loading="isLoading">
 							<AppScoreList v-if="Screen.isXs" :scores="scores" />
 						</AppLoadingFade>
 
 						<div v-if="!scores.length" class="alert alert-notice full-bleed-xs">
 							<template v-if="type === 'best'">
-								<AppTranslate>
-									There are no scores on this scoreboard yet.
-								</AppTranslate>
+								{{ $gettext(`There are no scores on this scoreboard yet.`) }}
 							</template>
 							<template v-else-if="type === 'user'">
-								<AppTranslate>You don't have any scores here yet!</AppTranslate>
+								{{ $gettext(`You don't have any scores here yet!`) }}
 							</template>
 						</div>
 					</div>

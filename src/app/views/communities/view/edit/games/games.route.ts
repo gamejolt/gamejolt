@@ -3,5 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeCommunitiesViewEditGames: RouteRecordRaw = {
 	name: 'communities.view.edit.games',
 	path: 'games',
-	component: () => import('./games.vue'),
+	component: () => import('./RouteCommunitiesViewEditGames.vue'),
 };
