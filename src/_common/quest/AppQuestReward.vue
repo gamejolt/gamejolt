@@ -68,14 +68,6 @@ const subtitle = computed(() => {
 	return null;
 });
 
-const nameTooltip = computed(() => {
-	const tooltip = reward.value.name;
-	if (tooltip.length * 0.75 < 28) {
-		return undefined;
-	}
-	return tooltip;
-});
-
 const { hovered, hoverBinding } = useOnHover();
 </script>
 
@@ -123,7 +115,7 @@ const { hovered, hoverBinding } = useOnHover();
 			<AppSpacer vertical :scale="5" />
 
 			<div
-				v-app-tooltip.touchable="nameTooltip"
+				v-app-tooltip.touchable="reward.name"
 				:style="{
 					...styleFlexCenter({
 						direction: `column`,
@@ -135,7 +127,7 @@ const { hovered, hoverBinding } = useOnHover();
 			>
 				<div
 					:style="{
-						...styleLineClamp(2),
+						...styleLineClamp(3),
 					}"
 				>
 					{{ reward.name }}

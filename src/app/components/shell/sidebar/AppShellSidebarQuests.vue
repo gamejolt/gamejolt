@@ -22,7 +22,8 @@ const questChunkSorting = {
 	'Weekly Quests': 3,
 	'Active Quests': 4,
 	'Available Quests': 5,
-	'Expired Quests': 6,
+	'Completed Quests': 6,
+	'Expired Quests': 7,
 } as const;
 
 interface QuestChunk {
@@ -50,19 +51,17 @@ const {
 	activeQuestId,
 } = questStore;
 
-useEscapeStack(
-	() => {
-		const hadQuestWindow = !!activeQuest.value;
-		// Clear out the [activeQuest], closing the quest window.
-		activeQuest.value = undefined;
+useEscapeStack(() => {
+	const hadQuestWindow = !!activeQuest.value;
+	// Clear out the [activeQuest], closing the quest window.
+	activeQuest.value = undefined;
 
-		// Mobile sizes should close the quest window before closing the sidebar.
-		// Desktop should close the sidebar always.
-		if (!hadQuestWindow || Screen.isDesktop) {
-			toggleLeftPane('');
-		}
-	},
-);
+	// Mobile sizes should close the quest window before closing the sidebar.
+	// Desktop should close the sidebar always.
+	if (!hadQuestWindow || Screen.isDesktop) {
+		toggleLeftPane('');
+	}
+});
 
 const questChunks = computed(() => {
 	const items = allQuests.value
@@ -74,6 +73,11 @@ const questChunks = computed(() => {
 						return ['New Quests', $gettext('New Quests')];
 					}
 					return ['Available Quests', $gettext('Available Quests')];
+				}
+
+				// Don't show quests with activity in the "completed" section.
+				if (quest.isAllComplete && !quest.has_activity) {
+					return ['Completed Quests', $gettext('Completed Quests')];
 				}
 
 				if (quest.isExpired) {

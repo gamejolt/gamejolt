@@ -163,6 +163,11 @@ export function createGridNotificationChannel(
 			appStore.setHasNewFriendRequests(payload.hasNewFriendRequests);
 
 			const questStore = appStore.getQuestStore();
+
+			// Clear out old quest ids before adding new ones.
+			questStore.newQuestIds.value.clear();
+			questStore.questActivityIds.value.clear();
+
 			addNewQuestIds(questStore, payload.newQuestIds);
 			addQuestActivityIds(questStore, payload.questActivityIds);
 
