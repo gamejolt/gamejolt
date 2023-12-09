@@ -61,7 +61,33 @@ const { hoverBinding, hovered } = useOnHover();
 						filter: `blur(1.5px)`,
 					}"
 				/>
-				<AppBackgroundFade :fade-opacity="0.3" />
+				<AppBackgroundFade :fade-opacity="0.3" :style="{ zIndex: 2 }" />
+			</div>
+
+			<!-- Creator stripe -->
+			<div
+				:style="{
+					position: `absolute`,
+					top: `-50px`,
+					bottom: `-50px`,
+					left: `-12px`,
+					width: `40px`,
+					zIndex: 1,
+				}"
+			>
+				<div
+					:style="{
+						width: `100%`,
+						height: `100%`,
+						display: `grid`,
+						gridTemplateColumns: `10fr 9fr 8fr`,
+						transform: `rotate(-22.5deg)`,
+					}"
+				>
+					<div :style="{ backgroundColor: kThemeGjGreen }" />
+					<div :style="{ backgroundColor: kThemeGjPink }" />
+					<div :style="{ backgroundColor: kThemeGjBlue }" />
+				</div>
 			</div>
 
 			<!-- Content -->
@@ -71,48 +97,16 @@ const { hoverBinding, hovered } = useOnHover();
 					color: kThemeFg,
 					position: `relative`,
 					zIndex: 2,
+					paddingLeft: `32px`,
 					...styleWhen(!!user.header_media_item, {
 						...styleOverlayTextShadow,
 					}),
 				}"
 			>
-				<div :style="{ position: `relative` }">
-					<!-- Icon -->
-					<AppJolticon
-						icon="marketplace-filled"
-						:style="{ margin: 0, color: `black`, textShadow: `unset` }"
-						big
-					/>
+				<!-- Icon -->
+				<AppJolticon icon="marketplace-filled" :style="{ margin: 0 }" big />
 
-					<!-- Creator stripe -->
-					<div
-						:style="
-							styleAbsoluteFill({
-								zIndex: -1,
-								left: `-30px`,
-								right: `-20px`,
-								top: `-50px`,
-								bottom: `-50px`,
-							})
-						"
-					>
-						<div
-							:style="{
-								width: `100%`,
-								height: `100%`,
-								display: `grid`,
-								gridTemplateColumns: `repeat(3, 1fr)`,
-								transform: `rotate(-22.5deg)`,
-							}"
-						>
-							<div :style="{ backgroundColor: kThemeGjGreen }" />
-							<div :style="{ backgroundColor: kThemeGjPink }" />
-							<div :style="{ backgroundColor: kThemeGjBlue }" />
-						</div>
-					</div>
-				</div>
-
-				<AppSpacer horizontal :scale="8" />
+				<AppSpacer horizontal :scale="3" />
 
 				<h3 :style="{ flex: `auto`, margin: 0 }">
 					{{ $gettext(`@%{ username }'s Shop`, { username: user.username }) }}
