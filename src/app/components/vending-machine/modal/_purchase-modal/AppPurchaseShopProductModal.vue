@@ -1,25 +1,15 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { PropType, Ref, computed, onMounted, onUnmounted, ref, toRefs, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
-import AppAlertBox from '../../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
-import {
-	AvatarFrameModel,
-	DefaultAvatarFrameScale,
-} from '../../../../../_common/avatar/frame.model';
-import AppBackgroundFade from '../../../../../_common/background/AppBackgroundFade.vue';
-import {
-	BackgroundModel,
-	getBackgroundImgUrl,
-} from '../../../../../_common/background/background.model';
+import { AvatarFrameModel } from '../../../../../_common/avatar/frame.model';
+import { BackgroundModel } from '../../../../../_common/background/background.model';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import {
 	AcquisitionMethod,
 	AcquisitionModel,
 } from '../../../../../_common/collectible/acquisition.model';
-import { markProductAsUnlocked } from '../../../../../_common/collectible/collectible.model';
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
 import {
@@ -29,30 +19,30 @@ import {
 } from '../../../../../_common/currency/currency-type';
 import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
+import { showInfoGrowl } from '../../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illExtremeSadness } from '../../../../../_common/illustration/illustrations';
-import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
-import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import AppShopProductDisplay from '../../../../../_common/inventory/shop/AppShopProductDisplay.vue';
+import {
+	InventoryShopProductSaleModel,
+	purchaseShopProduct,
+} from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import {
+	PurchasableProductData,
+	getShopProductDisplayData,
+} from '../../../../../_common/inventory/shop/product-owner-helpers';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { showPurchaseMicrotransactionModal } from '../../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import AppModalFloatingHeader from '../../../../../_common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
-import {
-	getModel,
-	storeModel,
-	storeModelList,
-} from '../../../../../_common/model/model-store.service';
+import { storeModel, storeModelList } from '../../../../../_common/model/model-store.service';
 import AppOnHover from '../../../../../_common/on/AppOnHover.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
+import AppSectionTitle from '../../../../../_common/section/AppSectionTitle.vue';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppStickerGrid from '../../../../../_common/sticker/pack/AppStickerGrid.vue';
-import { StickerPackRatio } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
-import { showStickerPackOpenModal } from '../../../../../_common/sticker/pack/open-modal/modal.service';
 import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
-import { UserStickerPackModel } from '../../../../../_common/sticker/pack/user-pack.model';
 import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { StickerModel } from '../../../../../_common/sticker/sticker.model';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -65,224 +55,21 @@ import {
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserAvatarFrameModel } from '../../../../../_common/user/user-avatar/frame/frame.model';
 import { UserModel } from '../../../../../_common/user/user.model';
-import {
-	styleBorderRadiusLg,
-	styleFlexCenter,
-	styleMaxWidthForOptions,
-	styleWhen,
-} from '../../../../../_styles/mixins';
+import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '../../../../../_styles/mixins';
 import {
 	kBorderWidthBase,
 	kFontFamilyDisplay,
 	kFontFamilyTiny,
 	kFontSizeH2,
-	kFontSizeSmall,
 	kFontSizeTiny,
 	kStrongEaseOut,
 } from '../../../../../_styles/variables';
 import { getCurrentServerTime } from '../../../../../utils/server-time';
 import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.route';
-import { showNewProductModal } from '../_product/modal/modal.service';
-import { PurchasableProductData } from './modal.service';
+import { showPurchaseShopProductConfirmModal } from './confirm/modal.service';
+import { showGiftRecipientModal } from './gift-recipient/modal.service';
 
-interface BasePurchaseData {
-	resource: PurchasableProductData['resource'];
-	resourceId: PurchasableProductData['resourceId'];
-	name: string | undefined;
-	imgUrl: string | undefined;
-	processMediaserverUrl?: boolean;
-}
-
-interface AvatarFramePurchaseData extends BasePurchaseData {
-	resource: 'Avatar_Frame';
-	scale?: number;
-}
-
-interface BackgroundPurchaseData extends BasePurchaseData {
-	resource: 'Background';
-}
-
-interface StickerPackPurchaseData extends BasePurchaseData {
-	resource: 'Sticker_Pack';
-}
-
-type NormalizedProductData =
-	| AvatarFramePurchaseData
-	| BackgroundPurchaseData
-	| StickerPackPurchaseData;
-
-function getShopProductDisplayData({
-	resource,
-	resourceId,
-}: PurchasableProductData): NormalizedProductData {
-	let avatarFrame: AvatarFrameModel | null = null;
-	let background: BackgroundModel | null = null;
-	let stickerPack: StickerPackModel | null = null;
-
-	// Check the model store for existing data we can use.
-	if (resource === 'Avatar_Frame') {
-		avatarFrame = getModel(AvatarFrameModel, resourceId) || null;
-	} else if (resource === 'Background') {
-		background = getModel(BackgroundModel, resourceId) || null;
-	} else if (resource === 'Sticker_Pack') {
-		stickerPack = getModel(StickerPackModel, resourceId) || null;
-	}
-
-	if (avatarFrame) {
-		return {
-			resource: 'Avatar_Frame',
-			resourceId: avatarFrame.id,
-			name: avatarFrame.name,
-			scale: avatarFrame.scale,
-			imgUrl: avatarFrame.image_url,
-		};
-	} else if (background) {
-		return {
-			resource: 'Background',
-			resourceId: background.id,
-			name: background.name,
-			imgUrl: getBackgroundImgUrl(background),
-		};
-	} else if (stickerPack) {
-		const media = stickerPack.media_item;
-		const mediaserverUrl = media.is_animated ? null : media.mediaserver_url;
-		return {
-			resource: 'Sticker_Pack',
-			resourceId: stickerPack.id,
-			name: stickerPack.name,
-			imgUrl: mediaserverUrl ?? media.img_url,
-			processMediaserverUrl: !!mediaserverUrl,
-		};
-	}
-
-	// If we haven't loaded in these models yet, return the resource/resourceId
-	// pair so we can fetch it.
-	return {
-		resourceId,
-		resource,
-		name: undefined,
-		imgUrl: undefined,
-	};
-}
-
-interface PurchaseData {
-	sale: InventoryShopProductSaleModel;
-	currency: Currency;
-	balanceRefs: {
-		coinBalance: Ref<number>;
-		joltbuxBalance: Ref<number>;
-	};
-}
-
-interface PurchaseDataCallbacks {
-	beforeRequest?: () => void;
-	onItemPurchased?: {
-		pack?: (product: UserStickerPackModel) => void;
-		avatarFrame?: (product: UserAvatarFrameModel) => void;
-		background?: (product: BackgroundModel) => void;
-		all?: (
-			product: UserStickerPackModel | UserAvatarFrameModel | BackgroundModel | null
-		) => void;
-	};
-}
-
-/**
- * Purchases a shop product without asking for confirmation.
- */
-export async function purchaseShopProduct({
-	sale,
-	currency,
-	balanceRefs,
-	beforeRequest,
-	onItemPurchased,
-}: PurchaseData & PurchaseDataCallbacks) {
-	const { coinBalance, joltbuxBalance } = balanceRefs;
-	const pricing = sale.validPricings.find(i => i.knownCurrencyType?.id === currency.id);
-
-	if (!pricing || !canAffordCurrency(currency.id, pricing.price, balanceRefs)) {
-		showErrorGrowl(
-			$gettext(`You don't have enough %{ label } to purchase this product.`, {
-				label: currency.label,
-			})
-		);
-		return;
-	}
-
-	if (beforeRequest) {
-		beforeRequest();
-	}
-
-	try {
-		const response = await Api.sendRequest(
-			`/web/inventory/shop/purchase/${pricing.id}`,
-			{},
-			{ detach: true }
-		);
-
-		if (response.success === false) {
-			throw new Error(`Failed to purchase product`);
-		}
-
-		const rawProduct = response.product;
-		if (!rawProduct) {
-			throw new Error(`Product returned from backend is empty`);
-		}
-
-		const newBalance = response.new_balance;
-		if (typeof newBalance === 'number') {
-			let balance: Ref<number> | undefined = undefined;
-
-			switch (pricing.knownCurrencyType?.id) {
-				case CurrencyType.coins.id:
-					balance = coinBalance;
-					break;
-				case CurrencyType.joltbux.id:
-					balance = joltbuxBalance;
-					break;
-			}
-
-			if (balance) {
-				balance.value = Math.max(0, newBalance);
-			}
-		}
-
-		let item: UserStickerPackModel | UserAvatarFrameModel | BackgroundModel | null = null;
-
-		if (sale.stickerPack) {
-			item = storeModel(UserStickerPackModel, rawProduct);
-			onItemPurchased?.pack?.(item);
-		} else if (sale.avatarFrame) {
-			item = storeModel(UserAvatarFrameModel, rawProduct);
-			onItemPurchased?.avatarFrame?.(item);
-		} else if (sale.background) {
-			item = storeModel(BackgroundModel, rawProduct);
-			onItemPurchased?.background?.(item);
-		} else {
-			console.error('No product model found after purchasing product', {
-				currency_type: pricing.knownCurrencyType,
-				pricing_id: pricing.id,
-				sale_id: sale.id,
-			});
-		}
-
-		if (item) {
-			markProductAsUnlocked(item);
-		}
-
-		onItemPurchased?.all?.(item);
-	} catch (e) {
-		console.error('Error purchasing product', {
-			currency_type: pricing.knownCurrencyType,
-			pricing_id: pricing.id,
-			sale_id: sale.id,
-		});
-	}
-}
-</script>
-
-<script lang="ts" setup>
 const props = defineProps({
 	initialProductData: {
 		type: Object as PropType<PurchasableProductData>,
@@ -322,6 +109,7 @@ const isLoading = ref(false);
 
 const balanceRefs = { coinBalance, joltbuxBalance };
 const processingPurchaseCurrencyId = ref<string>();
+const giftUser = ref<UserModel>();
 
 let timerBuilder: NodeJS.Timer | null = null;
 const timeRemaining = ref<string>();
@@ -496,24 +284,22 @@ const showPackHelpDocsLink = computed(
 	() => productData.value?.resource === 'Sticker_Pack' && !!joltbuxEntry.value
 );
 
-const productType = computed(() => {
-	if (!productData.value) {
-		return null;
+const disablePurchaseButtons = computed(() => {
+	if (isExpired.value || !!processingPurchaseCurrencyId.value) {
+		return true;
 	}
-	const { resource } = productData.value;
-	if (resource === 'Avatar_Frame') {
-		return $gettext(`Avatar frame`);
-	} else if (resource === 'Background') {
-		return $gettext(`Background`);
-	} else if (resource === 'Sticker_Pack') {
-		return $gettext(`Sticker pack`);
+	if (giftUser.value) {
+		return false;
 	}
-	return null;
+	if (actionOptionsData.value?.canPurchaseForSelf) {
+		return false;
+	}
+	return true;
 });
 
 const actionOptionsData = computed<{
 	text: string;
-	canPurchase?: boolean;
+	canPurchaseForSelf?: boolean;
 	chargeUser?: UserModel;
 } | null>(() => {
 	if (!sale.value) {
@@ -536,7 +322,7 @@ const actionOptionsData = computed<{
 						: $gettext(
 								`You can obtain this by placing a charged sticker on this creator's content`
 						  ),
-				canPurchase: false,
+				canPurchaseForSelf: false,
 			};
 		}
 		return { text: $gettext(`This is currently unobtainable`) };
@@ -558,59 +344,43 @@ const actionOptionsData = computed<{
 
 	return {
 		text: $gettext(`Get this item`),
-		canPurchase: true,
-	};
-});
-
-const frameOverride = computed(() => {
-	if (!productData.value || productData.value.resource !== 'Avatar_Frame') {
-		return undefined;
-	}
-	return {
-		image_url: productData.value.imgUrl,
-		scale: productData.value.scale ?? DefaultAvatarFrameScale,
+		canPurchaseForSelf: true,
 	};
 });
 
 /**
  * Purchases an inventory shop product using the specified Currency.
  */
-async function purchaseProduct(currency: PurchaseData['currency']) {
+async function purchaseProduct(currency: Currency) {
 	if (processingPurchaseCurrencyId.value || !sale.value) {
 		return;
 	}
 	processingPurchaseCurrencyId.value = currency.id;
 
+	const giftTo = giftUser.value;
+	if (giftTo) {
+		const canContinue = await showPurchaseShopProductConfirmModal({ giftUser: giftTo });
+
+		if (!canContinue) {
+			processingPurchaseCurrencyId.value = undefined;
+			return;
+		}
+	}
+
 	await purchaseShopProduct({
 		sale: sale.value,
+		stickerPacks,
 		currency,
 		balanceRefs,
-		onItemPurchased: {
-			pack(product) {
-				if (stickerPacks.value.some(i => i.id === product.id)) {
-					// Was probably handled somewhere already, ignore.
-					return;
-				}
-				stickerPacks.value.push(product);
+		onSuccess() {
+			modal.dismiss();
+			onItemPurchased?.value?.();
 
-				// Show the PackOpen modal. This should ask them if they want to open right
-				// away or save their pack for later.
-				showStickerPackOpenModal({
-					pack: product,
-					openImmediate: false,
-				});
-			},
-			avatarFrame(product) {
-				showNewProductModal({ product });
-			},
-			background(product) {
-				showNewProductModal({ product });
-			},
-			all() {
-				modal.dismiss();
-				onItemPurchased?.value?.();
-			},
+			if (giftTo) {
+				showInfoGrowl($gettext(`Your gift was sent to @${giftTo.username}`));
+			}
 		},
+		giftTo,
 	});
 
 	processingPurchaseCurrencyId.value = undefined;
@@ -630,15 +400,13 @@ function gotoCreator(user: UserModel) {
 	router.push(user.routeLocation);
 }
 
-function getItemWidthStyles(ratio: number) {
-	return {
-		...styleMaxWidthForOptions({
-			ratio,
-			maxWidth: 320,
-			maxHeight: Screen.height / 3,
-		}),
-		width: `100%`,
-	};
+async function onClickGift(sale: InventoryShopProductSaleModel) {
+	const user = await showGiftRecipientModal({
+		sale,
+	});
+	if (user) {
+		giftUser.value = user;
+	}
 }
 </script>
 
@@ -694,73 +462,10 @@ function getItemWidthStyles(ratio: number) {
 					</template>
 				</div>
 				<div v-else :style="styleFlexCenter({ direction: 'column' })">
-					<div
-						:style="
-							getItemWidthStyles(
-								productData.resource === 'Sticker_Pack' ? StickerPackRatio : 1
-							)
-						"
-					>
-						<AppUserAvatarBubble
-							v-if="productData.resource === 'Avatar_Frame'"
-							:user="authUser"
-							:frame-override="frameOverride"
-							:show-frame="!!frameOverride"
-							smoosh
-							disable-link
-						/>
-						<AppAspectRatio
-							v-else
-							v-bind="
-								productData.resource === 'Sticker_Pack'
-									? { ratio: StickerPackRatio }
-									: {
-											ratio: 1,
-											style: styleBorderRadiusLg,
-									  }
-							"
-						>
-							<AppImgResponsive
-								v-if="productData.processMediaserverUrl"
-								:style="{
-									width: `100%`,
-									height: `100%`,
-								}"
-								:src="productData.imgUrl"
-								alt=""
-							/>
-							<img
-								v-else
-								:style="{
-									width: `100%`,
-									height: `100%`,
-								}"
-								:src="productData.imgUrl"
-								alt=""
-							/>
-							<AppBackgroundFade v-if="productData.resource === 'Background'" />
-						</AppAspectRatio>
-					</div>
-
-					<div
-						:style="{
-							marginTop: `8px`,
-							alignSelf: `center`,
-							color: kThemeFgMuted,
-							fontSize: kFontSizeSmall.px,
-						}"
-					>
-						{{ productType }}
-					</div>
-
-					<div
-						v-if="productData.name"
-						:style="{
-							fontWeight: 700,
-						}"
-					>
-						{{ productData.name }}
-					</div>
+					<AppShopProductDisplay
+						:product-data="productData"
+						:avatar-frame-user="giftUser"
+					/>
 
 					<AppSpacer vertical :scale="8" />
 
@@ -819,15 +524,82 @@ function getItemWidthStyles(ratio: number) {
 								</template>
 							</AppOnHover>
 						</template>
-						<AppAlertBox v-else-if="!actionOptionsData.canPurchase" icon="info-circle">
-							{{ actionOptionsData.text }}
-						</AppAlertBox>
 						<div
 							v-else
-							class="text-center"
-							:style="{ fontFamily: kFontFamilyDisplay, fontSize: kFontSizeH2.px }"
+							:style="{
+								display: `flex`,
+								columnGap: `8px`,
+								alignItems: `center`,
+								height: `56px`,
+								width: `100%`,
+							}"
 						>
-							{{ actionOptionsData.text }}
+							<template v-if="!giftUser">
+								<AppButton
+									v-if="sale"
+									icon="gift"
+									circle
+									solid
+									:style="{ visibility: `hidden`, pointerEvents: `none` }"
+								/>
+								<div
+									class="text-center"
+									:style="{
+										fontFamily: kFontFamilyDisplay,
+										fontSize: kFontSizeH2.px,
+										flex: `auto`,
+									}"
+								>
+									{{ actionOptionsData.text }}
+								</div>
+								<AppButton
+									v-if="sale"
+									v-app-tooltip="$gettext(`Gift this to a friend`)"
+									icon="gift"
+									circle
+									solid
+									@click="onClickGift(sale)"
+								/>
+							</template>
+							<template v-else>
+								<div
+									:style="{
+										display: `flex`,
+										columnGap: `12px`,
+										width: `100%`,
+										backgroundColor: kThemeBgOffset,
+										padding: `12px`,
+										...styleBorderRadiusLg,
+									}"
+								>
+									<AppSectionTitle :style="{ flex: `auto` }">
+										<template #avatar>
+											<AppUserAvatarBubble
+												:user="giftUser"
+												show-verified
+												show-frame
+												smoosh
+												disable-link
+											/>
+										</template>
+
+										<template #supertitle>
+											{{ $gettext(`Gifting to`) }}
+										</template>
+
+										<template #title> @{{ giftUser.username }} </template>
+									</AppSectionTitle>
+
+									<div :style="{ alignSelf: `center` }">
+										<AppButton
+											solid
+											circle
+											icon="remove"
+											@click="giftUser = undefined"
+										/>
+									</div>
+								</div>
+							</template>
 						</div>
 					</div>
 
@@ -841,7 +613,7 @@ function getItemWidthStyles(ratio: number) {
 
 					<AppSpacer vertical :scale="4" />
 
-					<template v-if="actionOptionsData && actionOptionsData.canPurchase">
+					<template v-if="!disablePurchaseButtons || sale">
 						<div
 							:style="{
 								...styleFlexCenter(),
@@ -857,8 +629,7 @@ function getItemWidthStyles(ratio: number) {
 									margin: 0,
 								}"
 								:disabled="
-									isExpired ||
-									!!processingPurchaseCurrencyId ||
+									disablePurchaseButtons ||
 									!canAffordCurrency(currency.id, amount, balanceRefs)
 								"
 								:dynamic-slots="['icon']"

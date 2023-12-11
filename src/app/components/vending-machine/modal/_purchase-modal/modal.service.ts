@@ -1,10 +1,6 @@
 import { defineAsyncComponent } from 'vue';
+import { PurchasableProductData } from '../../../../../_common/inventory/shop/product-owner-helpers';
 import { showModal } from '../../../../../_common/modal/modal.service';
-
-export type PurchasableProductData = {
-	resource: 'Avatar_Frame' | 'Background' | 'Sticker_Pack';
-	resourceId: number;
-};
 
 /**
  * Shows a modal that allows the user to purchase a product or gives some info

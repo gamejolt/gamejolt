@@ -33,7 +33,7 @@ function onClickEdit() {
 			height: `${CommunityChannelCardHeight}px`,
 			overflow: `hidden`,
 		}"
-		@click="onClickEdit"
+		@toggle="onClickEdit"
 	>
 		<template #overlay>
 			<span>

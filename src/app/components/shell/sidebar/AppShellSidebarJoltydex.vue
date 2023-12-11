@@ -27,8 +27,22 @@ const users = ref<UserModel[]>([]);
 const filter = ref('');
 
 const filteredUsers = computed(() => {
-	const f = filter.value;
-	return users.value.filter(i => fuzzysearch(f, i.username.toLowerCase()));
+	const f = filter.value.trim().toLowerCase();
+	const normalizedUserData = users.value.map(user => {
+		return {
+			user,
+			username: user.username.toLowerCase(),
+			displayName: user.display_name.toLowerCase(),
+		};
+	});
+
+	const result: UserModel[] = [];
+	for (const data of normalizedUserData) {
+		if (fuzzysearch(f, data.username) || fuzzysearch(f, data.displayName)) {
+			result.push(data.user);
+		}
+	}
+	return result;
 });
 
 onMounted(() => {

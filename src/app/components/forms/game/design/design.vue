@@ -90,7 +90,7 @@ export default class FormGameDesign extends mixins(Wrapper) {
 				</div>
 			</div>
 			<div class="col-sm-6">
-				<AppEditableOverlay class="-thumb-overlay" @click="showEditThumbnail()">
+				<AppEditableOverlay class="-thumb-overlay" @toggle="showEditThumbnail()">
 					<template #overlay>
 						<span>
 							<AppTranslate v-if="!model || !model.thumbnail_media_item">

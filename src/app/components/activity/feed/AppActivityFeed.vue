@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, inject, PropType, provide, reactive, ref, toRefs } from 'vue';
 import { useAdStore } from '../../../../_common/ad/ad-store';
-import AppAdFeedBeacon from '../../../../_common/ad/feed-beacon/AppAdFeedBeacon.vue';
+import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
@@ -207,8 +207,6 @@ function shouldShowAd(index: number) {
 	to them get picked up again.
 	-->
 	<div :key="feed.id" ref="container" class="activity-feed">
-		<AppAdFeedBeacon v-if="shouldShowAds" />
-
 		<template v-if="newCount > 0 || feed.isLoadingNew">
 			<AppScrollInview :config="InviewConfigShowNew" @inview="onNewButtonInview">
 				<AppExpand v-if="!feed.isLoadingNew" :when="isNewButtonInview">
@@ -220,8 +218,8 @@ function shouldShowAd(index: number) {
 			</AppScrollInview>
 		</template>
 
-		<!-- Need the div so that we can target the last child in the container. -->
-		<div>
+		<!-- We always need a parent element here so that we can target the last "item" for styling. -->
+		<AppAdFeedParent :is-active="shouldShowAds">
 			<div v-for="(item, i) of feed.items" :key="item.id" class="-item">
 				<AppActivityFeedItem :item="item" />
 
@@ -229,10 +227,10 @@ function shouldShowAd(index: number) {
 					v-if="shouldShowAd(i)"
 					class="-ad-container well fill-offset full-bleed-xs text-center"
 				>
-					<AppAdWidget size="rectangle" placement="feed" />
+					<AppAdWidget size="rectangle" placement="content" />
 				</div>
 			</div>
-		</div>
+		</AppAdFeedParent>
 
 		<!--
 		If they are viewing a slice of the state, then we don't want to allow loading more.

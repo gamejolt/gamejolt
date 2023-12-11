@@ -61,9 +61,6 @@ export function createAdStore() {
 	const pageSettings = ref<AdSettingsContainer | null>(null);
 	const _defaultSettings = new AdSettingsContainer();
 
-	/** We use this to know when an infinite loading feed has new ad slots shown. */
-	const feedBeaconPing = ref(0);
-
 	let videoAdapter: AdAdapter;
 	let adapter: AdAdapter;
 	if (!import.meta.env.SSR) {
@@ -96,7 +93,6 @@ export function createAdStore() {
 		routeResolved,
 		ads,
 		pageSettings,
-		feedBeaconPing,
 		settings,
 		shouldShow,
 	});
@@ -172,7 +168,7 @@ export function chooseAdAdapterForSlot({ videoAdapter, adapter }: AdStore, slot:
 	return adapter;
 }
 
-export function addAd(c: AdStore, ad: AdInterface, slot: AdSlot) {
+export function addAd(c: AdStore, ad: AdInterface) {
 	const { ads, routeResolved } = c;
 	ads.value.add(ad);
 
@@ -180,11 +176,6 @@ export function addAd(c: AdStore, ad: AdInterface, slot: AdSlot) {
 	// fact. We have to call the initial display.
 	if (routeResolved.value) {
 		_displayAds([ad]);
-	}
-
-	if (slot.placement === 'feed') {
-		logger.info('Queuing the feed beacon ping.');
-		_queueFeedBeaconPing(c);
 	}
 }
 
@@ -196,19 +187,6 @@ async function _displayAds(displayedAds: AdInterface[]) {
 	for (const ad of displayedAds) {
 		ad.display();
 	}
-}
-
-let _feedBeaconPingTimeout: number | undefined;
-function _queueFeedBeaconPing({ feedBeaconPing }: AdStore) {
-	// Batch up the pings so that all the ads have a chance to hopefully render
-	// into the view. We don't technically need the timeout and can instead just
-	// to it all on nextTick, but may as well try to be a little fuzzier with
-	// it just in case some rendering happens in other ticks.
-	_feedBeaconPingTimeout ??= window.setTimeout(() => {
-		++feedBeaconPing.value;
-		_feedBeaconPingTimeout = undefined;
-		logger.info('Pinged the feed beacon.');
-	}, 250);
 }
 
 export async function sendAdBeacon(

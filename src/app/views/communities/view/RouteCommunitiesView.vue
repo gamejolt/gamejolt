@@ -103,7 +103,6 @@ const isShowingHeader = computed(() => {
 });
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onInit() {
 		// Add a new context pane if we haven't already.
 		if (!contextPane.value) {
@@ -180,7 +179,7 @@ function showEditHeader() {
 				v-if="coverEditable"
 				:class="{ '-cover-img': !!coverMediaItem }"
 				:disabled="!coverEditable"
-				@click="showEditHeader()"
+				@toggle="showEditHeader()"
 			>
 				<template #overlay>
 					<AppTranslate v-if="!coverMediaItem">Upload Header</AppTranslate>

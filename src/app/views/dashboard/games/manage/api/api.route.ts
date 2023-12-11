@@ -11,7 +11,7 @@ import { routeDashGamesManageApiTrophies } from './trophies/trophies.route';
 
 export const routeDashGamesManageApi: RouteRecordRaw = {
 	path: 'api',
-	component: () => import('./api.vue'),
+	component: () => import('./RouteDashGamesManageApi.vue'),
 	children: [
 		routeDashGamesManageApiOverview,
 		routeDashGamesManageApiTrophies,

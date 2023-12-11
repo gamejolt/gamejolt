@@ -103,7 +103,7 @@ function showEditAvatar() {
 				<AppPageHeaderAvatar :user="user" disable-link>
 					<AppEditableOverlay
 						:disabled="route.name !== routeDashAccountEdit.name"
-						@click="showEditAvatar()"
+						@toggle="showEditAvatar()"
 					>
 						<template #overlay>
 							{{ $gettext(`Change`) }}
@@ -115,7 +115,7 @@ function showEditAvatar() {
 		</AppPageHeader>
 
 		<AppExpand :when="route.name === routeDashAccountEdit.name">
-			<AppEditableOverlay @click="showEditHeader()">
+			<AppEditableOverlay @toggle="showEditHeader()">
 				<template #overlay>
 					{{ $gettext(`Change profile header`) }}
 				</template>
@@ -275,7 +275,7 @@ function showEditAvatar() {
 										borderRadius: `50%`,
 										overflow: `hidden`,
 									}"
-									@click="showEditAvatar()"
+									@toggle="showEditAvatar()"
 								>
 									<template #overlay>
 										{{ $gettext(`Change`) }}
