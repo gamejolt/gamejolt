@@ -18,8 +18,8 @@ type AdStore = ReturnType<typeof createAdStore>;
 const AdStoreKey: InjectionKey<AdStore> = Symbol('ads');
 
 // To show ads on the page for dev, just change this to false.
-export const AdsDisabledDev = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build';
-// export const AdsDisabledDev = false;
+// export const AdsDisabledDev = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build';
+export const AdsDisabledDev = false;
 
 const areAdsDisabledForDevice =
 	GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev;

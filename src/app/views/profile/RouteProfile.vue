@@ -348,31 +348,23 @@ const headingStyles: CSSProperties = {
 	alignItems: `center`,
 };
 
-const headingUsernameStyles = computed<CSSProperties>(() => ({
+const headingUsernameStyles: CSSProperties = {
 	fontSize: `19px`,
 	fontFamily: kFontFamilyBase,
 	fontWeight: `bold`,
 	marginLeft: `8px`,
-}));
+};
 </script>
 
 <template>
 	<div v-if="routeUser">
-		<!--
-			If this user is banned, we show very little.
-		-->
+		<!-- If they're banned, show very litte -->
 		<template v-if="!routeUser.status">
 			<AppPageHeader>
 				<h1 :style="headingStyles">
 					{{ routeUser.display_name }}
 					<small :style="headingUsernameStyles">@{{ routeUser.username }}</small>
 				</h1>
-
-				<div class="text-muted small">
-					{{ $gettext(`Joined`) }}
-					{{ ' ' }}
-					<AppTimeAgo :date="routeUser.created_on" />
-				</div>
 			</AppPageHeader>
 
 			<RouterView />
@@ -457,7 +449,7 @@ const headingUsernameStyles = computed<CSSProperties>(() => ({
 						<AppPageHeaderAvatar :user="routeUser" />
 					</template>
 
-					<template #nav>
+					<template v-if="false" #nav>
 						<nav class="platform-list inline">
 							<ul>
 								<li>
@@ -468,58 +460,60 @@ const headingUsernameStyles = computed<CSSProperties>(() => ({
 										{{ $gettext(`Profile`) }}
 									</RouterLink>
 								</li>
-								<li>
-									<RouterLink
-										:to="{ name: 'profile.following' }"
-										active-class="active"
-									>
-										{{ $gettext(`Following`) }}
-										<span class="badge">
-											{{ formatNumber(routeUser.following_count) }}
-										</span>
-									</RouterLink>
-								</li>
-								<li>
-									<RouterLink
-										:to="{ name: 'profile.followers' }"
-										active-class="active"
-									>
-										{{ $gettext(`Followers`) }}
-										<span class="badge">
-											{{ formatNumber(routeUser.follower_count) }}
-										</span>
-									</RouterLink>
-								</li>
-								<!--
+								<template v-if="false">
+									<li>
+										<RouterLink
+											:to="{ name: 'profile.following' }"
+											active-class="active"
+										>
+											{{ $gettext(`Following`) }}
+											<span class="badge">
+												{{ formatNumber(routeUser.following_count) }}
+											</span>
+										</RouterLink>
+									</li>
+									<li>
+										<RouterLink
+											:to="{ name: 'profile.followers' }"
+											active-class="active"
+										>
+											{{ $gettext(`Followers`) }}
+											<span class="badge">
+												{{ formatNumber(routeUser.follower_count) }}
+											</span>
+										</RouterLink>
+									</li>
+									<!--
 									We only need to show this on mobile.
 								-->
-								<li v-if="routeUser.shouts_enabled && Screen.isMobile">
-									<a @click="showComments()">
-										{{ $gettext(`Shouts`) }}
-										<span class="badge">
-											{{ formatNumber(commentsCount) }}
-										</span>
-									</a>
-								</li>
-								<li>
-									<RouterLink
-										:to="{ name: 'profile.library' }"
-										active-class="active"
-									>
-										{{ $gettext(`Library`) }}
-									</RouterLink>
-								</li>
-								<li>
-									<RouterLink
-										:to="{ name: 'profile.trophies' }"
-										active-class="active"
-									>
-										{{ $gettext(`Trophies`) }}
-										<span class="badge">
-											{{ formatNumber(trophyCount) }}
-										</span>
-									</RouterLink>
-								</li>
+									<li v-if="routeUser.shouts_enabled && Screen.isMobile">
+										<a @click="showComments()">
+											{{ $gettext(`Shouts`) }}
+											<span class="badge">
+												{{ formatNumber(commentsCount) }}
+											</span>
+										</a>
+									</li>
+									<li>
+										<RouterLink
+											:to="{ name: 'profile.library' }"
+											active-class="active"
+										>
+											{{ $gettext(`Library`) }}
+										</RouterLink>
+									</li>
+									<li>
+										<RouterLink
+											:to="{ name: 'profile.trophies' }"
+											active-class="active"
+										>
+											{{ $gettext(`Trophies`) }}
+											<span class="badge">
+												{{ formatNumber(trophyCount) }}
+											</span>
+										</RouterLink>
+									</li>
+								</template>
 								<li>
 									<AppPopper popover-class="fill-darkest">
 										<a>

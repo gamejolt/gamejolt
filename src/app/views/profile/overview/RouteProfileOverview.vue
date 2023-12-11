@@ -1,7 +1,9 @@
 <script lang="ts">
-import { Ref, computed, ref } from 'vue';
-import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
+import { Ref, computed, ref, toRef } from 'vue';
+import { RouteLocationRaw, RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
+import { isAdEnthused } from '../../../../_common/ad/ad-store';
+import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -22,7 +24,7 @@ import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import {
 	LinkedAccountModel,
@@ -33,12 +35,15 @@ import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-serv
 import { storeModelList } from '../../../../_common/model/model-store.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTopSupportersCard, {
 	OwnSupport,
 	TopSupporter,
 } from '../../../../_common/supporters/AppTopSupportersCard.vue';
+import { kThemeFg, kThemeFg10 } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { showTrophyModal } from '../../../../_common/trophy/modal/modal.service';
@@ -47,6 +52,8 @@ import { UserFriendshipState } from '../../../../_common/user/friendship/friends
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
 import { UserBaseTrophyModel } from '../../../../_common/user/trophy/user-base-trophy.model';
 import { $unfollowUser, UserModel } from '../../../../_common/user/user.model';
+import { styleChangeBg, styleElevate } from '../../../../_styles/mixins';
+import { kBorderRadiusLg, kFontSizeSmall, kLayerAds } from '../../../../_styles/variables';
 import { numberSort } from '../../../../utils/array';
 import { removeQuery } from '../../../../utils/router';
 import { openChatRoom } from '../../../components/chat/client';
@@ -66,6 +73,7 @@ import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useAppStore } from '../../../store/index';
 import { useProfileRouteStore } from '../RouteProfile.vue';
+import AppRouteProfileOverviewBanned from './AppRouteProfileOverviewBanned.vue';
 import AppProfileShopButton from './shop/AppProfileShopButton.vue';
 
 export default {
@@ -140,8 +148,8 @@ const shareUrl = computed(() => {
 	return Environment.baseUrl + routeUser.value.url;
 });
 
-const canAddAsFriend = computed(() => {
-	return (
+const canAddAsFriend = toRef(
+	() =>
 		myUser.value &&
 		routeUser.value &&
 		routeUser.value.id !== myUser.value.id &&
@@ -149,31 +157,20 @@ const canAddAsFriend = computed(() => {
 		routeUser.value.friend_requests_enabled &&
 		!routeUser.value.is_blocked &&
 		!routeUser.value.blocked_you
-	);
-});
+);
 
-const hasQuickButtonsSection = computed(() => {
-	return canAddAsFriend.value || canMessage.value || (Screen.isMobile && gamesCount.value > 0);
-});
-
-const hasLinksSection = computed(() => {
-	return (
+const hasQuickButtonsSection = toRef(
+	() => canAddAsFriend.value || canMessage.value || (Screen.isMobile && gamesCount.value > 0)
+);
+const hasLinksSection = toRef(
+	() =>
 		routeUser.value &&
 		((linkedAccounts.value && linkedAccounts.value.length > 0) || routeUser.value.web_site)
-	);
-});
+);
+const hasGamesSection = toRef(() => !Screen.isMobile && gamesCount.value > 0);
+const hasCommunitiesSection = toRef(() => !Screen.isMobile && communitiesCount.value > 0);
 
-const hasGamesSection = computed(() => {
-	return !Screen.isMobile && gamesCount.value > 0;
-});
-
-const hasCommunitiesSection = computed(() => {
-	return !Screen.isMobile && communitiesCount.value > 0;
-});
-
-const twitchAccount = computed(() => {
-	return getLinkedAccount(LinkedAccountProvider.Twitch);
-});
+const twitchAccount = computed(() => getLinkedAccount(LinkedAccountProvider.Twitch));
 
 const addCommentPlaceholder = computed(() => {
 	if (!routeUser.value) {
@@ -186,70 +183,46 @@ const addCommentPlaceholder = computed(() => {
 		return $gettext('Shout') + ' @' + routeUser.value.username + '!';
 	}
 });
+const commentsCount = toRef(() =>
+	routeUser.value && routeUser.value.comment_count ? routeUser.value.comment_count : 0
+);
+const shouldShowShouts = toRef(
+	() => routeUser.value && !Screen.isMobile && routeUser.value.shouts_enabled
+);
 
-const commentsCount = computed(() => {
-	if (routeUser.value && routeUser.value.comment_count) {
-		return routeUser.value.comment_count;
-	}
-	return 0;
-});
+const isFriend = toRef(
+	() => userFriendship.value && userFriendship.value.state === UserFriendshipState.Friends
+);
 
-const shouldShowShouts = computed(() => {
-	return routeUser.value && !Screen.isMobile && routeUser.value.shouts_enabled;
-});
+const canMessage = toRef(() => isFriend.value && chat.value && chat.value.connected);
 
-const isFriend = computed(() => {
-	return userFriendship.value && userFriendship.value.state === UserFriendshipState.Friends;
-});
+const previewCommunityCount = toRef(() =>
+	isLoadingAllCommunities.value ? communitiesCount.value : placeholderCommunitiesCount.value
+);
+const canShowMoreCommunities = toRef(() => communitiesCount.value > communities.value.length);
+const shownCommunities = toRef(() =>
+	showAllCommunities.value && allCommunities.value ? allCommunities.value : communities.value
+);
 
-const canMessage = computed(() => {
-	return isFriend.value && chat.value && chat.value.connected;
-});
-
-const previewCommunityCount = computed(() => {
-	return isLoadingAllCommunities.value
-		? communitiesCount.value
-		: placeholderCommunitiesCount.value;
-});
-
-const canShowMoreCommunities = computed(() => {
-	return communitiesCount.value > communities.value.length;
-});
-
-const shownCommunities = computed(() => {
-	return showAllCommunities.value && allCommunities.value
-		? allCommunities.value
-		: communities.value;
-});
-
-const shouldShowKnownFollowers = computed(() => {
-	return (
+const shouldShowKnownFollowers = toRef(
+	() =>
 		!!myUser.value &&
 		!!routeUser.value &&
 		isOverviewLoaded.value &&
 		myUser.value.id !== routeUser.value.id
-	);
-});
+);
+const shouldShowTrophies = toRef(
+	() => !Screen.isMobile && !!previewTrophies.value && previewTrophies.value.length > 0
+);
+const shouldShowMoreTrophies = toRef(
+	() => shouldShowTrophies.value && trophyCount.value > previewTrophies.value!.length
+);
+const moreTrophyCount = toRef(
+	() => trophyCount.value - (previewTrophies.value ? previewTrophies.value.length : 0)
+);
+const shouldShowShoutAdd = toRef(() => routeUser.value && routeUser.value.canMakeComment);
 
-const shouldShowTrophies = computed(() => {
-	return !Screen.isMobile && !!previewTrophies.value && previewTrophies.value.length > 0;
-});
-
-const shouldShowMoreTrophies = computed(() => {
-	return shouldShowTrophies.value && trophyCount.value > previewTrophies.value!.length;
-});
-
-const moreTrophyCount = computed(() => {
-	return trophyCount.value - (previewTrophies.value || []).length;
-});
-
-const shouldShowShoutAdd = computed(() => {
-	return routeUser.value && routeUser.value.canMakeComment;
-});
-
-const userBlockedYou = computed(() => {
-	return routeUser.value && routeUser.value.blocked_you;
-});
+const userBlockedYou = toRef(() => routeUser.value && routeUser.value.blocked_you);
 
 function getLinkedAccount(provider: LinkedAccountProvider) {
 	if (
@@ -463,100 +436,241 @@ async function onFriendRequestReject() {
 		grid.value?.pushViewNotifications('friend-requests');
 	}
 }
+
+interface ProfileStat {
+	label: string;
+	value: string;
+	link?: RouteLocationRaw;
+}
+
+const stats = computed<ProfileStat[]>(() => [
+	{
+		label: $gettext('Following'),
+		value: formatNumber(routeUser.value?.following_count || 0),
+		link: {
+			name: 'profile.following',
+		},
+	},
+	{
+		label: $gettext('Followers'),
+		value: formatNumber(routeUser.value?.follower_count || 0),
+		link: {
+			name: 'profile.followers',
+		},
+	},
+	{
+		label: $gettext('Likes'),
+		value: formatNumber(routeUser.value?.like_count || 0),
+	},
+]);
+
+interface ProfileQuickLink {
+	label: string;
+	icon: Jolticon;
+	link: RouteLocationRaw;
+}
+
+const quickLinks = computed<ProfileQuickLink[]>(() => {
+	const items: ProfileQuickLink[] = [];
+
+	if (!routeUser.value) {
+		return items;
+	}
+
+	if (shouldShowShouts.value) {
+		items.push({
+			label: $gettext(`Shouts`),
+			icon: 'comment-filled',
+			// TODO
+			link: {
+				name: 'library.collection.developer',
+				params: { id: routeUser.value.username },
+			},
+		});
+	}
+
+	if (hasGamesSection.value) {
+		items.push({
+			label: $gettext(`Games`),
+			icon: 'gamepad',
+			link: {
+				name: 'library.collection.developer',
+				params: { id: routeUser.value.username },
+			},
+		});
+	}
+
+	if (shouldShowTrophies.value) {
+		items.push({
+			label: $gettext(`Trophies`),
+			icon: 'trophy',
+			// TODO
+			link: { name: 'profile.trophies' },
+		});
+	}
+
+	if (hasCommunitiesSection.value) {
+		items.push({
+			label: $gettext(`Communities`),
+			icon: 'communities',
+			// TODO
+			link: {
+				name: 'library.collection.developer',
+				params: { id: routeUser.value.username },
+			},
+		});
+	}
+
+	return items;
+});
+
+interface ProfileSocialLink {
+	label: string;
+	icon: Jolticon;
+	url: string;
+}
+
+const socialLinks = computed(() => {
+	const items: ProfileSocialLink[] = [];
+
+	if (!routeUser.value || !hasLinksSection.value) {
+		return items;
+	}
+
+	if (twitchAccount.value) {
+		items.push({
+			label: twitchAccount.value.name,
+			icon: twitchAccount.value.icon,
+			url: twitchAccount.value.platformLink,
+		});
+	}
+
+	if (routeUser.value.web_site) {
+		items.push({
+			label: $gettext(`Website`),
+			icon: 'link',
+			url: routeUser.value.web_site,
+		});
+	}
+
+	return items;
+});
 </script>
 
 <template>
 	<div v-if="routeUser">
-		<!--
-			If this user is banned, we show very little.
-		-->
-		<section v-if="!routeUser.status" class="section fill-notice">
-			<div class="container">
-				<h2 class="_banned-header">
-					{{ $gettext(`This account is banned.`) }}
-				</h2>
-
-				<AppExpand :when="isFriend">
-					<p>
-						<strong>
-							{{ $gettext(`This user was your friend.`) }}
-						</strong>
-						<br />
-						{{
-							$gettext(
-								`If you remove them from your friends list, you will no longer be able to access your chat history with them.`
-							)
-						}}
-					</p>
-
-					<AppButton solid @click="removeFriend()">
-						{{ $gettext(`Remove friend`) }}
-					</AppButton>
-				</AppExpand>
-
-				<AppExpand :when="routeUser.is_following">
-					<!-- Create some padding -->
-					<template v-if="isFriend">
-						<br />
-						<br />
-					</template>
-
-					<p>
-						<strong>
-							{{ $gettext(`You were following this user.`) }}
-						</strong>
-						<br />
-						{{
-							$gettext(
-								`If you unfollow them now, you won't be able to follow them again.`
-							)
-						}}
-					</p>
-
-					<AppButton solid @click="onClickUnfollow()">
-						{{ $gettext(`Unfollow`) }}
-					</AppButton>
-				</AppExpand>
-			</div>
-		</section>
+		<!-- If they're banned, show very litte -->
+		<AppRouteProfileOverviewBanned
+			v-if="!routeUser.status"
+			:user="routeUser"
+			:is-friend="isFriend"
+			@removefriend="removeFriend()"
+			@unfollow="onClickUnfollow()"
+		/>
 		<AppShellPageBackdrop v-else>
 			<section class="section">
 				<AppPageContainer xl order="left,main,right">
 					<template #left>
-						<!-- Bio -->
-						<template v-if="!isOverviewLoaded">
-							<div>
-								<span class="lazy-placeholder" />
-								<span class="lazy-placeholder" />
-								<span class="lazy-placeholder" />
-								<span class="lazy-placeholder" style="width: 40%" />
-							</div>
-							<br />
-						</template>
-						<template v-else-if="routeUser.hasBio">
-							<!--
-								Set a :key to let vue know that it should update
-								this when the user changes.
-							-->
-							<AppFadeCollapse
-								:key="routeUser.bio_content"
-								:collapse-height="200"
-								:is-open="showFullDescription"
-								:animate="false"
-								@require-change="canToggleDescription = $event"
-								@expand="showFullDescription = true"
+						<!-- <li>
+							<RouterLink
+								:to="{ name: 'profile.following' }"
+								active-class="active"
 							>
-								<AppContentViewer :source="routeUser.bio_content" />
-							</AppFadeCollapse>
+								{{ $gettext(`Following`) }}
+								<span class="badge">
+									{{ formatNumber(routeUser.following_count) }}
+								</span>
+							</RouterLink>
+						</li>
+						<li>
+							<RouterLink
+								:to="{ name: 'profile.followers' }"
+								active-class="active"
+							>
+								{{ $gettext(`Followers`) }}
+								<span class="badge">
+									{{ formatNumber(routeUser.follower_count) }}
+								</span>
+							</RouterLink>
+						</li> -->
 
-							<p>
-								<a
-									v-if="canToggleDescription"
-									class="hidden-text-expander"
-									@click="showFullDescription = !showFullDescription"
-								/>
-							</p>
-						</template>
+						<!-- Stats -->
+						<div class="sheet">
+							<div
+								:style="{
+									display: `flex`,
+									flexDirection: `row`,
+									justifyContent: `space-around`,
+								}"
+							>
+								<template v-for="stat of stats" :key="stat.label">
+									<component
+										:is="stat.link ? RouterLink : 'div'"
+										class="stat-big stat-big-smaller text-center"
+										:class="{
+											'link-unstyled': stat.link,
+										}"
+										:style="{
+											flex: 1,
+											marginBottom: 0,
+										}"
+										:to="stat.link"
+									>
+										<div class="stat-big-digit">
+											{{ stat.value }}
+										</div>
+										<div class="stat-big-label">
+											{{ stat.label }}
+										</div>
+									</component>
+								</template>
+							</div>
+
+							<!-- <div
+								:style="{
+									margin: `20px -20px`,
+									height: `1px`,
+									backgroundColor: kThemeFg10,
+								}"
+							/> -->
+						</div>
+
+						<!-- Bio -->
+						<div class="sheet">
+							<template v-if="!isOverviewLoaded">
+								<div>
+									<span class="lazy-placeholder" />
+									<span class="lazy-placeholder" />
+									<span class="lazy-placeholder" />
+									<span class="lazy-placeholder" style="width: 40%" />
+								</div>
+								<br />
+							</template>
+							<template v-else-if="routeUser.hasBio">
+								<!--
+							Set a :key to let vue know that it should update
+							this when the user changes.
+							-->
+								<AppFadeCollapse
+									:key="routeUser.bio_content"
+									:collapse-height="200"
+									:is-open="showFullDescription"
+									:animate="false"
+									@require-change="canToggleDescription = $event"
+									@expand="showFullDescription = true"
+								>
+									<AppContentViewer :source="routeUser.bio_content" />
+								</AppFadeCollapse>
+
+								<p>
+									<a
+										v-if="canToggleDescription"
+										class="hidden-text-expander"
+										@click="showFullDescription = !showFullDescription"
+									/>
+								</p>
+							</template>
+						</div>
 
 						<!-- Top supporters -->
 						<template v-if="supportersData && supportersData.supporters.length">
@@ -566,11 +680,97 @@ async function onFriendRequestReject() {
 							/>
 							<br />
 						</template>
+
+						<!-- Quick links -->
+						<div class="sheet">
+							<div
+								:style="{
+									display: `flex`,
+									flexDirection: `row`,
+									justifyContent: `space-around`,
+								}"
+							>
+								<template v-for="stat of stats" :key="stat.label">
+									<component
+										:is="stat.link ? RouterLink : 'div'"
+										class="stat-big stat-big-smaller text-center"
+										:class="{
+											'link-unstyled': stat.link,
+										}"
+										:style="{
+											flex: 1,
+											marginBottom: 0,
+										}"
+										:to="stat.link"
+									>
+										<div class="stat-big-digit">
+											{{ stat.value }}
+										</div>
+										<div class="stat-big-label">
+											{{ stat.label }}
+										</div>
+									</component>
+								</template>
+							</div>
+
+							<div
+								:style="{
+									margin: `20px -20px`,
+									height: `1px`,
+									backgroundColor: kThemeFg10,
+								}"
+							/>
+
+							<div
+								:style="{
+									display: `flex`,
+									flexDirection: `row`,
+									justifyContent: `space-around`,
+								}"
+							>
+								<RouterLink
+									v-for="link of quickLinks"
+									:key="link.label"
+									:style="{
+										display: `flex`,
+										flexDirection: `column`,
+										alignItems: `center`,
+										flex: 1,
+										gap: `4px`,
+										color: kThemeFg,
+									}"
+									:to="link.link"
+								>
+									<AppJolticon :icon="link.icon" :style="{ fontSize: `28px` }" />
+									<div
+										:style="{
+											fontWeight: `bold`,
+											fontSize: kFontSizeSmall.px,
+										}"
+									>
+										{{ link.label }}
+									</div>
+								</RouterLink>
+							</div>
+						</div>
+
+						<!-- Social links -->
+						<template v-if="socialLinks.length">
+							<template v-for="link of socialLinks" :key="link.label">
+								<AppLinkExternal :href="link.url">
+									<AppButton :icon="link.icon" block>
+										{{ link.label }}
+									</AppButton>
+								</AppLinkExternal>
+
+								<AppSpacer vertical :scale="1" />
+							</template>
+						</template>
 					</template>
 
 					<template #left-bottom>
 						<!-- Shouts -->
-						<template v-if="shouldShowShouts">
+						<template v-if="false && shouldShowShouts">
 							<div class="pull-right">
 								<AppButton trans @click="showComments()">
 									{{ $gettext(`View all`) }}
@@ -598,81 +798,9 @@ async function onFriendRequestReject() {
 								@reload-comments="reloadPreviewComments"
 							/>
 						</template>
-					</template>
-
-					<template #right>
-						<AppShareCard
-							v-if="!myUser || myUser.id !== routeUser.id"
-							resource="user"
-							:url="shareUrl"
-							bleed-padding
-						/>
-						<AppInviteCard v-else :user="myUser" />
-
-						<AppUserKnownFollowers
-							v-if="shouldShowKnownFollowers"
-							:users="knownFollowers"
-							:count="knownFollowerCount"
-						/>
-
-						<template v-if="hasQuickButtonsSection">
-							<!-- Add Friend -->
-							<AppButton v-if="canAddAsFriend" block @click="sendFriendRequest()">
-								{{ $gettext(`Send friend request`) }}
-							</AppButton>
-							<AppButton
-								v-else-if="canMessage"
-								block
-								icon="user-messages"
-								@click="openMessaging"
-							>
-								{{ $gettext(`Message`) }}
-							</AppButton>
-
-							<template v-if="Screen.isMobile">
-								<AppButton
-									v-if="gamesCount > 0"
-									block
-									:to="{
-										name: 'library.collection.developer',
-										params: { id: routeUser.username },
-									}"
-								>
-									{{ formatNumber(gamesCount) }} Games
-								</AppButton>
-							</template>
-
-							<br />
-						</template>
-
-						<!-- Social links -->
-						<template v-if="hasLinksSection">
-							<template v-if="linkedAccounts.length">
-								<div v-if="twitchAccount">
-									<AppLinkExternal
-										class="link-unstyled"
-										:href="twitchAccount.platformLink"
-									>
-										<AppJolticon :icon="twitchAccount.icon" />
-										{{ ' ' }}
-										{{ twitchAccount.name }}
-									</AppLinkExternal>
-								</div>
-							</template>
-							<div v-if="routeUser.web_site">
-								<AppLinkExternal class="link-unstyled" :href="routeUser.web_site">
-									<AppJolticon icon="link" />
-									{{ ' ' }}
-									{{ $gettext(`Website`) }}
-								</AppLinkExternal>
-							</div>
-
-							<br />
-							<br />
-						</template>
 
 						<!-- Communities -->
-						<template v-if="hasCommunitiesSection">
+						<template v-if="false && hasCommunitiesSection">
 							<div class="clearfix">
 								<div v-if="canShowMoreCommunities" class="pull-right">
 									<AppButton
@@ -726,9 +854,81 @@ async function onFriendRequestReject() {
 
 							<br />
 						</template>
+					</template>
+
+					<template #right>
+						<AppScrollAffix
+							:style="{
+								position: `relative`,
+								zIndex: kLayerAds,
+							}"
+							:padding="8"
+						>
+							<AppAdWidget
+								:style="{
+									...styleChangeBg('bg'),
+									...styleElevate(3),
+									minWidth: `300px`,
+									paddingTop: `8px`,
+									paddingBottom: `8px`,
+									borderRadius: kBorderRadiusLg.px,
+									padding: `8px`,
+								}"
+								:size="isAdEnthused ? 'video' : 'rectangle'"
+								placement="side"
+							/>
+						</AppScrollAffix>
+
+						<AppSpacer vertical :scale="6" />
+
+						<AppShareCard
+							v-if="!myUser || myUser.id !== routeUser.id"
+							resource="user"
+							:url="shareUrl"
+							bleed-padding
+						/>
+						<AppInviteCard v-else :user="myUser" />
+
+						<AppUserKnownFollowers
+							v-if="shouldShowKnownFollowers"
+							:users="knownFollowers"
+							:count="knownFollowerCount"
+						/>
+
+						<template v-if="false && hasQuickButtonsSection">
+							<!-- Add Friend -->
+							<AppButton v-if="canAddAsFriend" block @click="sendFriendRequest()">
+								{{ $gettext(`Send friend request`) }}
+							</AppButton>
+							<AppButton
+								v-else-if="canMessage"
+								block
+								icon="user-messages"
+								@click="openMessaging"
+							>
+								{{ $gettext(`Message`) }}
+							</AppButton>
+
+							<template v-if="Screen.isMobile">
+								<AppButton
+									v-if="gamesCount > 0"
+									block
+									:to="{
+										name: 'library.collection.developer',
+										params: { id: routeUser.username },
+									}"
+								>
+									{{ formatNumber(gamesCount) }} Games
+								</AppButton>
+							</template>
+
+							<br />
+						</template>
 
 						<!-- Latest Games -->
 						<template v-if="hasGamesSection">
+							<AppSpacer vertical :scale="6" />
+
 							<div class="clearfix">
 								<div class="pull-right">
 									<AppButton
@@ -758,7 +958,7 @@ async function onFriendRequestReject() {
 						</template>
 
 						<!-- Trophies -->
-						<template v-if="shouldShowTrophies">
+						<template v-if="false && shouldShowTrophies">
 							<h4 class="section-header">
 								{{ $gettext(`Trophies`) }}
 							</h4>
@@ -872,9 +1072,6 @@ async function onFriendRequestReject() {
 </template>
 
 <style lang="stylus" scoped>
-._banned-header
-	margin-top: 0
-
 ._supporters-card
 	rounded-corners-lg()
 	change-bg('bg')
