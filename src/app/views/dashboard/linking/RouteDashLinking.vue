@@ -17,7 +17,7 @@ export default {
 const route = useRoute();
 const router = useRouter();
 
-const token = ref<string>('');
+const token = ref('');
 
 function completed(response: any) {
 	const routeName = 'dash.account.linked-accounts.link-callback';

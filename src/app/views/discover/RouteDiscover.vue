@@ -10,6 +10,7 @@ export default {
 <script lang="ts" setup>
 createAppRoute({});
 </script>
+
 <template>
 	<RouterView />
 </template>

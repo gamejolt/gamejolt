@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, shallowRef, toRef } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppCommunityCardCreatePlaceholder from '../../../../_common/community/card-create-placeholder/AppCommunityCardCreatePlaceholder.vue';
@@ -7,11 +7,7 @@ import AppCommunityCard from '../../../../_common/community/card/AppCommunityCar
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import {
-	AppPromotionStore,
-	setAppPromotionCohort,
-	useAppPromotionStore,
-} from '../../../../_common/mobile-app/store';
+import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
@@ -42,7 +38,7 @@ export default {
 
 <script lang="ts" setup>
 const { user } = useCommonStore();
-const appPromotionStore = shallowRef<AppPromotionStore>(useAppPromotionStore());
+const appPromotionStore = useAppPromotionStore();
 
 const communities = ref<CommunityModel[]>([]);
 const page = ref(1);
@@ -95,7 +91,7 @@ const { isLoading: isRouteLoading } = createAppRoute({
 		isLoading.value = false;
 		hasMore.value = true;
 
-		setAppPromotionCohort(appPromotionStore.value, 'community');
+		setAppPromotionCohort(appPromotionStore, 'community');
 	},
 	onResolved({ payload }) {
 		const cachedData = HistoryCache.get<CacheData>(route, cacheKey);

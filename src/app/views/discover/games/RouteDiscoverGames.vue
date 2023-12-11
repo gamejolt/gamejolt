@@ -1,11 +1,7 @@
 <script lang="ts">
-import { computed, shallowRef } from 'vue';
+import { computed } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
-import {
-	AppPromotionStore,
-	setAppPromotionCohort,
-	useAppPromotionStore,
-} from '../../../../_common/mobile-app/store';
+import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 
 export default {
@@ -14,7 +10,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const appPromotionStore = shallowRef<AppPromotionStore>(useAppPromotionStore());
+const appPromotionStore = useAppPromotionStore();
 const route = useRoute();
 
 /**
@@ -27,7 +23,7 @@ const isGameListing = computed(() => String(route.name).startsWith('discover.gam
 
 createAppRoute({
 	onInit() {
-		setAppPromotionCohort(appPromotionStore.value, 'store');
+		setAppPromotionCohort(appPromotionStore, 'store');
 	},
 });
 </script>

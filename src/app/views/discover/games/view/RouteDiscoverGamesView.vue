@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, inject, InjectionKey, provide, ref, toRef } from 'vue';
+import { InjectionKey, computed, inject, provide, ref, toRef } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 import {
 	AdSettingsContainer,
@@ -17,11 +17,11 @@ import {
 } from '../../../../../_common/collaborator/collaborator.model';
 import { CommentModel } from '../../../../../_common/comment/comment-model';
 import {
-	commentStoreCount,
-	CommentStoreManagerKey,
 	CommentStoreModel,
+	commentStoreCount,
 	lockCommentStore,
 	releaseCommentStore,
+	useCommentStoreManager,
 } from '../../../../../_common/comment/comment-store';
 import { configGuestNoAuthRequired } from '../../../../../_common/config/config.service';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
@@ -69,49 +69,10 @@ import AppDiscoverGamesViewControls from './AppDiscoverGamesViewControls.vue';
 import AppDiscoverGamesViewNav from './AppDiscoverGamesViewNav.vue';
 import './view-content.styl';
 
-export default {
-	...defineAppRouteOptions({
-		lazy: true,
-		cache: true,
-		deps: { params: ['slug', 'id'], query: ['intent'] },
-		async resolver({ route }) {
-			HistoryTick.trackSource('Game', parseInt(route.params.id as string));
-
-			const intentRedirect = IntentService.checkRoute(
-				route,
-				{
-					intent: 'follow-game',
-					message: $gettext(`You're now following this game.`),
-				},
-				{
-					intent: 'decline-game-collaboration',
-					message: $gettext(`You've declined the invitation to collaborate.`),
-				}
-			);
-			if (intentRedirect) {
-				return intentRedirect;
-			}
-
-			const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
-
-			if (payload && payload.game) {
-				const redirect = enforceLocation(route, { slug: payload.game.slug });
-				if (redirect) {
-					return redirect;
-				}
-			}
-
-			return payload;
-		},
-	}),
-};
-
-const Key = getRouteStoreKey();
-export function useGameRouteController() {
-	return inject(Key);
-}
-
 type Controller = ReturnType<typeof createController>;
+
+const Key: InjectionKey<Controller> = Symbol('game-route');
+const GameThemeKey = 'game';
 
 function createController() {
 	const isOverviewLoaded = ref(false);
@@ -323,7 +284,7 @@ function createController() {
 		overviewComments.value = comments;
 	}
 
-	return {
+	const controller = {
 		isOverviewLoaded,
 		game,
 		postsCount,
@@ -369,27 +330,68 @@ function createController() {
 		toggleDetails,
 		setOverviewComments,
 	};
+	provide(Key, controller);
+	return controller;
 }
 
-// TODO(component-setup-refactor-routes-3): can we return symbol like this instead of having a variable?
-function getRouteStoreKey(): InjectionKey<Controller> {
-	return Symbol('game-route');
+export function useGameRouteController() {
+	return inject(Key);
 }
 
-const GameThemeKey = 'game';
+export default {
+	...defineAppRouteOptions({
+		lazy: true,
+		cache: true,
+		deps: { params: ['slug', 'id'], query: ['intent'] },
+		async resolver({ route }) {
+			HistoryTick.trackSource('Game', parseInt(route.params.id as string));
+
+			const intentRedirect = IntentService.checkRoute(
+				route,
+				{
+					intent: 'follow-game',
+					message: $gettext(`You're now following this game.`),
+				},
+				{
+					intent: 'decline-game-collaboration',
+					message: $gettext(`You've declined the invitation to collaborate.`),
+				}
+			);
+			if (intentRedirect) {
+				return intentRedirect;
+			}
+
+			const payload = await Api.sendRequest('/web/discover/games/' + route.params.id);
+
+			if (payload && payload.game) {
+				const redirect = enforceLocation(route, { slug: payload.game.slug });
+				if (redirect) {
+					return redirect;
+				}
+			}
+
+			return payload;
+		},
+	}),
+};
 </script>
 
 <script lang="ts" setup>
-const routeStore = createController();
-provide(getRouteStoreKey(), routeStore);
-
-const commentManager = inject(CommentStoreManagerKey);
-const themeStore = useThemeStore();
+const commentManager = useCommentStoreManager();
 const adStore = useAdStore();
 const route = useRoute();
 const router = useRouter();
-const { game, collaboratorInvite } = routeStore;
 const { user } = useCommonStore();
+const { setPageTheme, clearPageTheme } = useThemeStore();
+const {
+	game,
+	collaboratorInvite,
+	acceptCollaboratorInvite,
+	declineCollaboratorInvite,
+	bootstrapGame,
+	setUserRating,
+	processPayload,
+} = createController();
 
 let commentStore: CommentStoreModel | null = null;
 let ratingChange$: EventSubscription | undefined = undefined;
@@ -407,7 +409,7 @@ const autoscrollAnchorKey = toRef(() => game.value?.id);
 async function acceptCollaboration() {
 	try {
 		await $acceptCollaboratorInvite(collaboratorInvite.value!);
-		routeStore.acceptCollaboratorInvite(collaboratorInvite.value!);
+		acceptCollaboratorInvite(collaboratorInvite.value!);
 	} catch (error: any) {
 		console.log('Error status for accepting game collaboration.', error);
 		handleGameAddFailure(user.value!, error.reason, router);
@@ -416,12 +418,12 @@ async function acceptCollaboration() {
 
 async function declineCollaboration() {
 	await $removeCollaboratorInvite(collaboratorInvite.value!);
-	routeStore.declineCollaboratorInvite();
+	declineCollaboratorInvite();
 }
 
-function setPageTheme() {
+function applyPageTheme() {
 	const theme = game.value?.theme ?? null;
-	themeStore.setPageTheme({
+	setPageTheme({
 		key: GameThemeKey,
 		theme,
 	});
@@ -444,11 +446,10 @@ function _releaseAdSettings() {
 }
 
 createAppRoute({
-	routeTitle: computed(() => ``),
 	onInit() {
 		// This isn't needed by SSR or anything, so it's fine to call it here.
-		routeStore.bootstrapGame(parseInt(route.params.id as string));
-		setPageTheme();
+		bootstrapGame(parseInt(route.params.id as string));
+		applyPageTheme();
 		_setAdSettings();
 
 		// Any game rating change will broadcast this event. We catch it so we
@@ -457,15 +458,15 @@ createAppRoute({
 			ratingChange$ = onRatingWidgetChange.subscribe(payload => {
 				const { gameId, userRating } = payload;
 				if (gameId === game.value!.id) {
-					routeStore.setUserRating(userRating || undefined);
+					setUserRating(userRating || undefined);
 				}
 			});
 		}
 	},
 	onResolved({ payload }) {
-		routeStore.processPayload(payload);
+		processPayload(payload);
 
-		setPageTheme();
+		applyPageTheme();
 		_setAdSettings();
 
 		if (commentStore) {
@@ -478,7 +479,7 @@ createAppRoute({
 		trackExperimentEngagement(configGuestNoAuthRequired);
 	},
 	onDestroyed() {
-		themeStore.clearPageTheme(GameThemeKey);
+		clearPageTheme(GameThemeKey);
 		_releaseAdSettings();
 
 		ratingChange$?.close();
@@ -496,10 +497,12 @@ createAppRoute({
 		<AppGameMaturityBlock :game="game">
 			<section v-if="collaboratorInvite" class="section section-thin fill-highlight">
 				<div class="container text-center">
-					<p v-translate="{ username: game.developer.username }">
-						<b>@%{ username }</b>
-						has invited you to collaborate on this game.
+					<p>
+						<b> @{{ game.developer.username }} </b>
+						{{ ' ' }}
+						{{ $gettext(`has invited you to collaborate on this game.`) }}
 					</p>
+
 					<AppButton solid @click="acceptCollaboration()">
 						{{ $gettext(`Accept`) }}
 					</AppButton>
