@@ -3,7 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeForumsLandingOverview: RouteRecordRaw = {
 	name: 'forums.landing.overview',
 	path: '',
-	component: () => import('./overview.vue'),
+	component: () => import('./RouteForumsLandingOverview.vue'),
 	children: [
 		{
 			path: '/community/forums',
