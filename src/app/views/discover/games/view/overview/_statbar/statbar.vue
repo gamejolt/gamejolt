@@ -7,7 +7,7 @@ import AppGameRatingWidget from '../../../../../../../_common/game/rating/AppGam
 import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
 import { showLikersModal } from '../../../../../../../_common/likers/modal.service';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import { useGameRouteController } from '../../view.vue';
+import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 
 @Options({
 	components: {

@@ -66,7 +66,7 @@ import AppPageContainer from '../../../../../components/page-container/AppPageCo
 import AppPostAddButton from '../../../../../components/post/add-button/AppPostAddButton.vue';
 import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../../../components/user/known-followers/AppUserKnownFollowers.vue';
-import { useGameRouteController } from '../view.vue';
+import { useGameRouteController } from '../RouteDiscoverGamesView.vue';
 import AppDiscoverGamesViewOverviewSupporters from './AppDiscoverGamesViewOverviewSupporters.vue';
 import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
 import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
