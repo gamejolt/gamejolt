@@ -10,6 +10,7 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { TogglableLeftPane, useAppStore } from '../../../store/index';
 import { useQuestStore } from '../../../store/quest';
 import { useGridStore } from '../../grid/grid-store';
+import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 import AppShellCbarItem from './AppShellCbarItem.vue';
 
 const { activeCommunity, visibleLeftPane, toggleLeftPane } = useAppStore();
@@ -77,6 +78,21 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 					@click="trackAndTogglePane('chat')"
 				>
 					<AppJolticon class="-control-icon" icon="user-messages" />
+				</a>
+			</AppShellCbarItem>
+
+			<!-- Content Shop -->
+			<AppShellCbarItem class="-control" :highlight="highlight" is-control>
+				<a
+					v-app-tooltip.right="$gettext(`Content shop`)"
+					class="-control-item"
+					@click="
+						showVendingMachineModal({
+							location: 'cbar',
+						})
+					"
+				>
+					<AppJolticon class="-control-icon" icon="marketplace-filled" />
 				</a>
 			</AppShellCbarItem>
 

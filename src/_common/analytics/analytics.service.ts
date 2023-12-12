@@ -534,7 +534,8 @@ export type ShopOpenLocation =
 	| 'user-profile'
 	| 'backpack'
 	| 'sticker-drawer'
-	| 'shell-route';
+	| 'shell-route'
+	| 'cbar';
 
 export function trackShopOpen(params: { location: ShopOpenLocation; userId: number | undefined }) {
 	_trackEvent('shop_open', params);
