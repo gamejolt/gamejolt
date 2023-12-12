@@ -1,49 +1,38 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
+import { computed, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../_common/filters/number';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { imageJolt } from '../../../img/images';
 
-@Options({
-	name: 'RouteLandingGameApi',
-	components: {
-		AppThemeSvg,
+export default {
+	...defineAppRouteOptions({
+		cache: true,
+		lazy: true,
+		deps: {},
+		resolver: () => Api.sendRequest('/web/landing/game-api'),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+const totalScores = ref(0);
+const totalAchievedTrophies = ref(0);
+const sessionTime = ref(0);
+
+const assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
+
+createAppRoute({
+	routeTitle: computed(() => $gettext(`Game API`)),
+	onResolved({ payload }) {
+		totalScores.value = payload.totalScores || 0;
+		totalAchievedTrophies.value = payload.totalAchievedTrophies || 0;
+		sessionTime.value = payload.sessionTime ? Math.floor(payload.sessionTime / 60 / 60) : 0;
 	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	cache: true,
-	lazy: true,
-	deps: {},
-	resolver: () => Api.sendRequest('/web/landing/game-api'),
-})
-export default class RouteLandingGameApi extends LegacyRouteComponent {
-	totalScores = 0;
-	totalAchievedTrophies = 0;
-	sessionTime = 0;
-
-	readonly formatNumber = formatNumber;
-	readonly imageJolt = imageJolt;
-	readonly assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
-
-	get routeTitle() {
-		return this.$gettext(`Game API`);
-	}
-
-	routeResolved($payload: any) {
-		this.totalScores = $payload.totalScores || 0;
-		this.totalAchievedTrophies = $payload.totalAchievedTrophies || 0;
-		this.sessionTime = $payload.sessionTime ? Math.floor($payload.sessionTime / 60 / 60) : 0;
-	}
-}
+});
 </script>
 
 <template>
@@ -58,20 +47,22 @@ export default class RouteLandingGameApi extends LegacyRouteComponent {
 						:height="18 * 3"
 						strict-colors
 					/>
-					Game API
+					{{ $gettext(`Game API`) }}
 				</h1>
 
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 						<p>
-							By implementing the Game Jolt Game API you can add trophies,
-							leaderboards, cloud data storage, and sessions to your games to get
-							players coming back for more!
+							{{
+								$gettext(
+									`By implementing the Game Jolt Game API you can add trophies, leaderboards, cloud data storage, and sessions to your games to get players coming back for more!`
+								)
+							}}
 						</p>
 
 						<div class="text-center">
 							<AppButton primary :to="{ name: 'landing.game-api-doc' }">
-								Get Started
+								{{ $gettext(`Get Started`) }}
 							</AppButton>
 						</div>
 					</div>
@@ -88,7 +79,7 @@ export default class RouteLandingGameApi extends LegacyRouteComponent {
 							<div class="stat-big-digit">
 								{{ formatNumber(totalScores) }}
 							</div>
-							<div class="stat-big-label">Scores Logged</div>
+							<div class="stat-big-label">{{ $gettext(`Scores Logged`) }}</div>
 						</div>
 					</div>
 					<div class="col-lg-2">
@@ -96,7 +87,7 @@ export default class RouteLandingGameApi extends LegacyRouteComponent {
 							<div class="stat-big-digit">
 								{{ formatNumber(totalAchievedTrophies) }}
 							</div>
-							<div class="stat-big-label">Trophies Achieved</div>
+							<div class="stat-big-label">{{ $gettext(`Trophies Achieved`) }}</div>
 						</div>
 					</div>
 					<div class="col-lg-2">
@@ -104,7 +95,7 @@ export default class RouteLandingGameApi extends LegacyRouteComponent {
 							<div class="stat-big-digit">
 								{{ formatNumber(sessionTime) }}
 							</div>
-							<div class="stat-big-label">Hours Logged</div>
+							<div class="stat-big-label">{{ $gettext(`Hours Logged`) }}</div>
 						</div>
 					</div>
 				</div>
@@ -122,12 +113,14 @@ export default class RouteLandingGameApi extends LegacyRouteComponent {
 							/>
 						</div>
 
-						<h4 class="text-center">Leaderboards</h4>
+						<h4 class="text-center">{{ $gettext(`Leaderboards`) }}</h4>
 
 						<p>
-							Implement leaderboards in your game to allow anyone to battle it out for
-							the top spots. You create the leaderboards, you control the scoring. You
-							can even allow guests to score without a Game Jolt account.
+							{{
+								$gettext(
+									`Implement leaderboards in your game to allow anyone to battle it out for the top spots. You create the leaderboards, you control the scoring. You can even allow guests to score without a Game Jolt account.`
+								)
+							}}
 						</p>
 					</div>
 
@@ -136,11 +129,14 @@ export default class RouteLandingGameApi extends LegacyRouteComponent {
 							<AppThemeSvg :src="assetPaths['./trophies.svg']" alt="Trophies" />
 						</div>
 
-						<h4 class="text-center">Trophies</h4>
+						<h4 class="text-center">{{ $gettext(`Trophies`) }}</h4>
 
 						<p>
-							Feed into your player base's hunger for trophy hunting. Trophies will
-							sync to their Game Jolt profile for all to see as badges of honor.
+							{{
+								$gettext(
+									`Feed into your player base's hunger for trophy hunting. Trophies will sync to their Game Jolt profile for all to see as badges of honor.`
+								)
+							}}
 						</p>
 					</div>
 
@@ -152,12 +148,14 @@ export default class RouteLandingGameApi extends LegacyRouteComponent {
 							/>
 						</div>
 
-						<h4 class="text-center">Cloud Data Storage</h4>
+						<h4 class="text-center">{{ $gettext(`Cloud Data Storage`) }}</h4>
 
 						<p>
-							Sync saved games, user-created levels, friend lists, debug logs--save
-							any bit of data to the player's account, or globally for your game. The
-							clouds are the limit!
+							{{
+								$gettext(
+									`Sync saved games, user-created levels, friend lists, debug logs--save any bit of data to the player's account, or globally for your game. The clouds are the limit!`
+								)
+							}}
 						</p>
 					</div>
 
@@ -168,23 +166,25 @@ export default class RouteLandingGameApi extends LegacyRouteComponent {
 							<AppThemeSvg :src="assetPaths['./sessions.svg']" alt="Sessions" />
 						</div>
 
-						<h4 class="text-center">Sessions</h4>
+						<h4 class="text-center">{{ $gettext(`Sessions`) }}</h4>
 
 						<p>
-							Track when and how long each player is active in your game. You can then
-							view stats such as avg. play time per session, total time played across
-							users, and even see how many people are playing your game in real time.
+							{{
+								$gettext(
+									`Track when and how long each player is active in your game. You can then view stats such as avg. play time per session, total time played across users, and even see how many people are playing your game in real time.`
+								)
+							}}
 						</p>
 					</div>
 				</div>
 
 				<div class="row">
 					<div class="col-lg-6 col-centered text-center">
-						<h1>Sounds cool, yeah?</h1>
+						<h1>{{ $gettext(`Sounds cool, yeah?`) }}</h1>
 						<hr class="underbar underbar-center" />
 
 						<AppButton primary lg :to="{ name: 'landing.game-api-doc' }">
-							Get Started
+							{{ $gettext(`Get Started`) }}
 						</AppButton>
 					</div>
 				</div>
