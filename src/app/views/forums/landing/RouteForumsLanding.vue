@@ -1,24 +1,18 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
+import { RouterView } from 'vue-router';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import butterfliesImage from './butterflies.png';
 
-@Options({
-	name: 'RouteForumsLanding',
-	components: {
-		AppPageHeader,
-	},
-})
-@OptionsForLegacyRoute()
-export default class RouteForumsLanding extends LegacyRouteComponent {
-	readonly Screen = Screen;
-	readonly butterfliesImage = butterfliesImage;
-}
+export default {
+	...defineAppRouteOptions({}),
+};
+</script>
+
+<script lang="ts" setup>
+createAppRoute({});
 </script>
 
 <template>
@@ -26,7 +20,7 @@ export default class RouteForumsLanding extends LegacyRouteComponent {
 		<AppPageHeader class="forum-header-landing">
 			<div :class="{ 'text-center': Screen.isXs }">
 				<h1>
-					<AppTranslate>Game Jolt Forums</AppTranslate>
+					{{ $gettext(`Game Jolt Forums`) }}
 				</h1>
 				<img
 					class="forum-header-landing-mascot"
@@ -41,19 +35,19 @@ export default class RouteForumsLanding extends LegacyRouteComponent {
 				<nav class="platform-list inline">
 					<ul>
 						<li>
-							<router-link
+							<RouterLink
 								:to="{ name: 'forums.landing.overview' }"
 								:class="{ active: $route.name === 'forums.landing.overview' }"
 							>
-								<AppTranslate>Overview</AppTranslate>
-							</router-link>
+								{{ $gettext(`Overview`) }}
+							</RouterLink>
 						</li>
 					</ul>
 				</nav>
 			</template>
 		</AppPageHeader>
 
-		<router-view />
+		<RouterView />
 	</div>
 </template>
 

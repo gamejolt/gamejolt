@@ -4,6 +4,6 @@ import { routeForumsLandingOverview } from './overview/overview.route';
 
 export const routeForumsLanding: RouteRecordRaw = {
 	path: '',
-	component: () => import('./landing.vue'),
+	component: () => import('./RouteForumsLanding.vue'),
 	children: [routeForumsLandingOverview, routeForumsLandingActive],
 };
