@@ -42,7 +42,10 @@ const { hoverBinding, hovered } = useOnHover();
 					overflow: `hidden`,
 				})
 			"
-			:to="{ name: 'profile.shop' }"
+			:to="{
+				name: 'profile.shop',
+				params: { username: user.username },
+			}"
 		>
 			<!-- Backdrop -->
 			<div v-if="user.header_media_item" :style="styleAbsoluteFill({ zIndex: 1 })">

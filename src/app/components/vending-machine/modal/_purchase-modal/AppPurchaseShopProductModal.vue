@@ -67,6 +67,7 @@ import {
 } from '../../../../../_styles/variables';
 import { getCurrentServerTime } from '../../../../../utils/server-time';
 import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.route';
+import AppProfileShopButton from '../../../../views/profile/overview/shop/AppProfileShopButton.vue';
 import { showPurchaseShopProductConfirmModal } from './confirm/modal.service';
 import { showGiftRecipientModal } from './gift-recipient/modal.service';
 
@@ -110,6 +111,7 @@ const isLoading = ref(false);
 const balanceRefs = { coinBalance, joltbuxBalance };
 const processingPurchaseCurrencyId = ref<string>();
 const giftUser = ref<UserModel>();
+const productOwner = ref<UserModel>();
 
 let timerBuilder: NodeJS.Timer | null = null;
 const timeRemaining = ref<string>();
@@ -178,6 +180,7 @@ onMounted(async () => {
 						primaryOnly: true,
 					},
 					packContents: true,
+					owner: true,
 				},
 				{ detach: true }
 			),
@@ -201,6 +204,7 @@ onMounted(async () => {
 		} else if (resource === 'Sticker_Pack') {
 			storeModel(StickerPackModel, payload.resource);
 		}
+		productOwner.value = new UserModel(payload.owner);
 
 		const currencyPayload = payloads[1];
 		const newCoinBalance = currencyPayload.coinBalance;
@@ -462,6 +466,12 @@ async function onClickGift(sale: InventoryShopProductSaleModel) {
 					</template>
 				</div>
 				<div v-else :style="styleFlexCenter({ direction: 'column' })">
+					<AppProfileShopButton
+						v-if="productOwner"
+						:style="{ width: `100%` }"
+						:user="productOwner"
+					/>
+
 					<AppShopProductDisplay
 						:product-data="productData"
 						:avatar-frame-user="giftUser"
