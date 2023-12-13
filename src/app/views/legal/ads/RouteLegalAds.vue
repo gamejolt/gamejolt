@@ -3,6 +3,8 @@ import { computed } from 'vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
 
+// TODO(component-setup-refactor-routes-4): html not available in this import?
+import { html } from '../../../../lib/terms/ads/global.md';
 export default {
 	...defineAppRouteOptions({}),
 };
