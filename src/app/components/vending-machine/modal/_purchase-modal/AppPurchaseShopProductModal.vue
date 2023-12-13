@@ -204,7 +204,7 @@ onMounted(async () => {
 		} else if (resource === 'Sticker_Pack') {
 			storeModel(StickerPackModel, payload.resource);
 		}
-		productOwner.value = new UserModel(payload.owner);
+		productOwner.value = payload.owner ? new UserModel(payload.owner) : undefined;
 
 		const currencyPayload = payloads[1];
 		const newCoinBalance = currencyPayload.coinBalance;
