@@ -51,8 +51,8 @@ const progressStrokeWidth = kBorderWidthLg.value * 2;
 let squareInCircleData: { diameter: number; squareDimension: number } | undefined = undefined;
 
 const masteryData = computed(() => {
-	const progress = Math.max(0, data.value.progress);
 	const maxProgress = Math.max(1, data.value.max);
+	const progress = clampNumber(data.value.progress, 0, maxProgress);
 	const isMax = progress >= maxProgress;
 
 	const currentPercent = clampNumber(progress / maxProgress, 0, 1);
