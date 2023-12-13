@@ -196,20 +196,6 @@ export const configGuestNoAuthRequired = /** @__PURE__ */ new ConfigOptionBoolea
 	}
 );
 
-/**
- * Shows the discover screen to guests again instead of showing them a login
- * screen.
- */
-export const configGuestHomeDiscover = /** @__PURE__ */ new ConfigOptionBoolean(
-	'web_guest_home_discover',
-	false,
-	{
-		conditions: {
-			authed: false,
-		},
-	}
-);
-
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }

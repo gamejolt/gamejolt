@@ -1,10 +1,8 @@
 <script lang="ts">
 import { computed, ref, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
-import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityModel } from '../../../../_common/community/community.model';
-import { configGuestHomeDiscover } from '../../../../_common/config/config.service';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
@@ -104,8 +102,6 @@ const { isBootstrapped } = createAppRoute({
 				: [];
 			HistoryCache.store(route, creatorPosts.value, CachedCreatorsKey);
 		}
-
-		trackExperimentEngagement(configGuestHomeDiscover);
 	},
 });
 </script>
@@ -116,7 +112,7 @@ const { isBootstrapped } = createAppRoute({
 	</div>
 
 	<AppHomeDefault
-		v-if="user || configGuestHomeDiscover.value"
+		v-if="user"
 		:is-bootstrapped="isBootstrapped"
 		:featured-item="featuredItem"
 		:featured-communities="featuredCommunities"
