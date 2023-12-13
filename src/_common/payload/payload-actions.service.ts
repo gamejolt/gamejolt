@@ -65,7 +65,9 @@ export default function handlePayloadActions(payload: PayloadData) {
 			}
 
 			case 'sticker-mastery-progress': {
-				const { max, progress, sticker: stickerData } = data;
+				const { max: rawMax, progress: rawProgress, sticker: stickerData } = data;
+				const max = Math.max(1, rawMax);
+				const progress = clampNumber(rawProgress, 0, max);
 				const sticker = storeModel(StickerModel, stickerData);
 
 				// Manually update the sticker to have the new progress.
