@@ -1,12 +1,13 @@
 import { Ref, ref, shallowReadonly } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { CreatorExperienceModel } from '../../creator/experience/experience.model';
+import { StickerModel } from '../../sticker/sticker.model';
 
 interface ShellNoticeItem {
 	id: number;
 	// NOTE: If adding new types, make sure they each have a unique [type]. That
 	// should be enough to allow us to check [type] for different [data] types.
-	data: CustomMessageNotice | CreatorExperienceNotice;
+	data: CustomMessageNotice | CreatorExperienceNotice | StickerMasteryNotice;
 }
 
 interface CustomMessageNotice {
@@ -20,6 +21,13 @@ export interface CreatorExperienceNotice {
 	experience: CreatorExperienceModel;
 	leveledUp: boolean;
 	xpGained: number;
+}
+
+export interface StickerMasteryNotice {
+	type: 'sticker-mastery';
+	sticker: StickerModel;
+	progress: number;
+	max: number;
 }
 
 function createNoticeService() {

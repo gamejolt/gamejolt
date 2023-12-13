@@ -6,13 +6,21 @@ import {
 	styleBorderRadiusLg,
 	styleElevate,
 	styleFlexCenter,
+	styleTyped,
 	styleWhen,
 } from '../../../../_styles/mixins';
 import { kBorderWidthBase, kFontSizeLarge, kFontSizeSmall } from '../../../../_styles/variables';
+import { sleep } from '../../../../utils/utils';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
+import { useOnHover } from '../../../on/useOnHover';
 import { Screen } from '../../../screen/screen-service';
 import AppSpacer from '../../../spacer/AppSpacer.vue';
-import { kThemeFg10, kThemeFgMuted, kThemeGjOverlayNotice } from '../../../theme/variables';
+import {
+	kThemeBgOffset,
+	kThemeFg10,
+	kThemeFgMuted,
+	kThemeGjOverlayNotice,
+} from '../../../theme/variables';
 import { $gettext } from '../../../translate/translate.service';
 import { getShellNotice } from '../notice.service';
 
@@ -40,62 +48,85 @@ const props = defineProps({
 	 */
 	animDurationMs: {
 		type: Number,
-		default: undefined,
+		default: 500,
 	},
 });
 
-const { noticeId, message, autoCloseMs } = toRefs(props);
+const { noticeId, message, autoCloseMs, animDurationMs } = toRefs(props);
+
+const { hovered, hoverBinding } = useOnHover();
 
 const emit = defineEmits({
 	'show-transition-end': () => true,
 });
 
+const leadingSize = 48;
 let autoCloseTimeout: NodeJS.Timer | undefined;
 
+// Variables to keep track of auto-close timeout. Used so we can pause the
+// animation and timeout when hovered.
+const start = Date.now();
+let end = start + (autoCloseMs?.value ?? 0);
+let timeLeft = end - start;
+
 watch(
-	() => autoCloseMs?.value,
-	ms => {
-		if (ms && !autoCloseTimeout) {
-			autoCloseTimeout = setTimeout(() => {
-				removeShellNoticeItem(noticeId.value);
-			}, ms);
+	[hovered, () => autoCloseMs?.value],
+	([hovered, autoCloseMs]) => {
+		if (autoCloseMs === undefined || autoCloseMs <= 0) {
+			clearAutoCloseTimeout();
+			return;
 		}
-	}
+
+		if (hovered) {
+			clearAutoCloseTimeout();
+			timeLeft = end - Date.now();
+		} else {
+			end = Date.now() + timeLeft;
+			autoCloseTimeout ??= setTimeout(() => {
+				removeShellNoticeItem(noticeId.value);
+			}, timeLeft);
+		}
+	},
+	{ immediate: true }
 );
 
-onMounted(() => {
-	if (autoCloseMs?.value) {
-		autoCloseTimeout = setTimeout(() => {
-			removeShellNoticeItem(noticeId.value);
-		}, autoCloseMs.value);
-	}
+onMounted(async () => {
+	await sleep(animDurationMs.value);
+	emit('show-transition-end');
 });
 
-function onClick() {
+function clearAutoCloseTimeout() {
 	if (autoCloseTimeout) {
 		clearTimeout(autoCloseTimeout);
 		autoCloseTimeout = undefined;
 	}
+}
+
+function removeNotice() {
+	clearAutoCloseTimeout();
 	removeShellNoticeItem(noticeId.value);
 }
 </script>
 
 <template>
 	<div
+		v-bind="{ ...hoverBinding }"
 		:class="{
 			'anim-fade-enter-right anim-fade-leave-right': !Screen.isXs,
 			'anim-fade-enter-down anim-back-leave-up': Screen.isXs,
 		}"
-		:style="{
-			...styleWhen(!!animDurationMs, {
-				animationDuration: `${animDurationMs}ms`,
-			}),
-			display: `inline-flex`,
-			justifyContent: `flex-end`,
-			minWidth: `${Math.min(200, Screen.width - 32)}px`,
-			maxWidth: `max(350px, 100%)`,
-		}"
-		@animationend="emit('show-transition-end')"
+		:style="
+			styleTyped({
+				...styleWhen(animDurationMs >= 0, {
+					animationDuration: `${animDurationMs}ms`,
+				}),
+				display: `inline-flex`,
+				justifyContent: `flex-end`,
+				minWidth: `${Math.min(200, Screen.width - 32)}px`,
+				maxWidth: `350px`,
+				marginBottom: `4px`,
+			})
+		"
 	>
 		<a
 			class="fill-offset"
@@ -110,28 +141,43 @@ function onClick() {
 				display: `flex`,
 				alignItems: `center`,
 			}"
-			@click="onClick"
+			@click="removeNotice"
 		>
 			<div
 				:style="{
 					...styleBorderRadiusBase,
-					height: `40px`,
+					height: `${leadingSize - 8}px`,
 					width: `8px`,
-					background: kThemeGjOverlayNotice,
+					background: kThemeBgOffset,
 					marginRight: `8px`,
+					overflow: `hidden`,
 				}"
-			/>
+			>
+				<div
+					:class="{ '_anim-progress': autoCloseMs }"
+					:style="{
+						...styleBorderRadiusBase,
+						animationDuration: `${autoCloseMs}ms`,
+						animationPlayState: hovered ? `paused` : `running`,
+						animationFillMode: `both`,
+						animationTimingFunction: `linear`,
+						width: `100%`,
+						height: `100%`,
+						background: kThemeGjOverlayNotice,
+					}"
+				/>
+			</div>
 
 			<div
 				:style="{
-					width: `48px`,
-					height: `48px`,
+					width: `${leadingSize}px`,
+					height: `${leadingSize}px`,
 					flex: `none`,
 					marginRight: `8px`,
 					position: `relative`,
 				}"
 			>
-				<slot name="leading">
+				<slot name="leading" v-bind="{ size: leadingSize }">
 					<div
 						class="fill-offset"
 						:style="{
@@ -177,3 +223,14 @@ function onClick() {
 		</a>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+._anim-progress
+	animation: anim-progress
+
+@keyframes anim-progress
+	0%
+		transform: translateY(0%)
+	100%
+		transform: translateY(100%)
+</style>

@@ -78,6 +78,7 @@ useResizeObserver({
 		>
 			<AppAspectRatio :ratio="1" show-overflow>
 				<div
+					v-if="$slots.default"
 					:style="[
 						styleAbsoluteFill(),
 						styleFlexCenter({
