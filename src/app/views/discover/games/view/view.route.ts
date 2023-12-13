@@ -7,7 +7,7 @@ import { routeDiscoverGamesViewTrophiesList } from './trophies/list/list.route';
 
 export const routeDiscoverGamesView: RouteRecordRaw = {
 	path: ':slug/:id(\\d+)',
-	component: () => import('./view.vue'),
+	component: () => import('./RouteDiscoverGamesView.vue'),
 	children: [
 		routeDiscoverGamesViewOverview,
 		routeDiscoverGamesViewDevlogView,

@@ -16,7 +16,7 @@ import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { getAbsoluteLink } from '../../../../../utils/router';
 import { showCommentModal } from '../../../../components/comment/modal/modal.service';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
-import { useGameRouteController } from './view.vue';
+import { useGameRouteController } from './RouteDiscoverGamesView.vue';
 
 const { game, trophiesCount, hasScores, primaryScoreTable } = useGameRouteController()!;
 const { user: globalUser } = useCommonStore();

@@ -9,7 +9,7 @@ import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { UserModel } from '../../../../../../_common/user/user.model';
-import { useGameRouteController } from '../view.vue';
+import { useGameRouteController } from '../RouteDiscoverGamesView.vue';
 
 const props = defineProps({
 	supporters: {
