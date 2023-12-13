@@ -81,10 +81,10 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 				</a>
 			</AppShellCbarItem>
 
-			<!-- Content Shop -->
+			<!-- Shop -->
 			<AppShellCbarItem class="-control" :highlight="highlight" is-control>
 				<a
-					v-app-tooltip.right="$gettext(`Content shop`)"
+					v-app-tooltip.right="$gettext(`Shop`)"
 					class="-control-item"
 					@click="
 						showVendingMachineModal({
