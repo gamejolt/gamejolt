@@ -1,37 +1,22 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
-import { AppAuthJoinLazy } from '../../../../_common/lazy';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
+import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { imageJolt } from '../../../img/images';
 
-@Options({
-	name: 'RouteLandingLearn',
-	components: {
-		AppAuthJoin: AppAuthJoinLazy,
-		AppThemeSvg,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute()
-export default class RouteLandingLearn extends LegacyRouteComponent {
-	commonStore = setup(() => useCommonStore());
+const assetPaths = import.meta.glob('./*.(svg|png)', { eager: true, as: 'url' });
 
-	get app() {
-		return this.commonStore;
-	}
+export default {
+	...defineAppRouteOptions({}),
+};
+</script>
 
-	readonly imageJolt = imageJolt;
-	readonly assetPaths = import.meta.glob('./*.(svg|png)', { eager: true, as: 'url' });
-}
+<script lang="ts" setup>
+const { user } = useCommonStore();
+createAppRoute({});
 </script>
 
 <template>
@@ -50,7 +35,9 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 
 				<div class="row anim-fade-in-up">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-						<p class="lead">Discover, play, buy, and follow 100,000+ games!</p>
+						<p class="lead">
+							{{ $gettext(`Discover, play, buy, and follow 100,000+ games!`) }}
+						</p>
 					</div>
 				</div>
 			</div>
@@ -59,7 +46,7 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 		<div class="landing-body">
 			<section class="section">
 				<div class="container">
-					<h1 class="section-header text-center">Game Jolt Loves</h1>
+					<h1 class="section-header text-center">{{ $gettext(`Game Jolt Loves`) }}</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -70,12 +57,14 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 								<AppThemeSvg :src="assetPaths['./gamers.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">Gamers</h4>
+							<h4 class="text-center">{{ $gettext(`Gamers`) }}</h4>
 
 							<p>
-								Millions of gamers visit to play over 100k (and counting) games!
-								Game Jolt is completely free to use so you'll be playing non-stop.
-								Literally. Like, forever.
+								{{
+									$gettext(
+										`Millions of gamers visit to play over 100k (and counting) games! Game Jolt is completely free to use so you'll be playing non-stop. Literally. Like, forever.`
+									)
+								}}
 							</p>
 						</div>
 
@@ -84,12 +73,14 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 								<AppThemeSvg :src="assetPaths['./lpers.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">Let's Players</h4>
+							<h4 class="text-center">{{ $gettext(`Let's Players`) }}</h4>
 
 							<p>
-								Let's players and streamers have been a massive help in discovering
-								and sharing new games! Link your channel to Game Jolt and post
-								videos.
+								{{
+									$gettext(
+										`Let's players and streamers have been a massive help in discovering and sharing new games! Link your channel to Game Jolt and post videos.`
+									)
+								}}
 							</p>
 						</div>
 
@@ -100,12 +91,14 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 								<AppThemeSvg :src="assetPaths['./developers.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">Studios</h4>
+							<h4 class="text-center">{{ $gettext(`Studios`) }}</h4>
 
 							<p>
-								Since starting in 2002, the goal of Game Jolt has always been to
-								help studios get noticed. We give you the tools to build an
-								audience, distribute your games, and manage your base of players.
+								{{
+									$gettext(
+										`Since starting in 2002, the goal of Game Jolt has always been to help studios get noticed. We give you the tools to build an audience, distribute your games, and manage your base of players.`
+									)
+								}}
 							</p>
 						</div>
 					</div>
@@ -117,70 +110,79 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 					<div class="row">
 						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
-							<h2 class="section-header">Discover</h2>
+							<h2 class="section-header">{{ $gettext(`Discover`) }}</h2>
 							<hr class="underbar" />
 
 							<br />
-							<h4 class="sans-margin-top">Find New Games</h4>
-							<p>Browse game listings to discover new and old gems!</p>
+							<h4 class="sans-margin-top">{{ $gettext(`Find New Games`) }}</h4>
+							<p>
+								{{ $gettext(`Browse game listings to discover new and old gems!`) }}
+							</p>
 
 							<p>
-								Get started now by browsing
-								<router-link
+								{{ $gettext(`Get started now by browsing`) }}
+								{{ ' ' }}
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: null },
 									}"
 								>
-									Featured
-								</router-link>
-								,
-								<router-link
+									{{ $gettext(`Featured`) }}
+								</RouterLink>
+								{{ ', ' }}
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: null },
 									}"
 								>
-									Hot
-								</router-link>
-								,
-								<router-link
+									{{ $gettext(`Hot`) }}
+								</RouterLink>
+								{{ ', ' }}
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: 'best' },
 										query: { status: 'devlog' },
 									}"
 								>
-									Devlogs
-								</router-link>
-								,
-								<router-link
+									{{ $gettext(`Devlogs`) }}
+								</RouterLink>
+								{{ ', ' }}
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: 'best' },
 										query: { status: 'wip' },
 									}"
 								>
-									Early Access
-								</router-link>
-								or
-								<router-link
+									{{ $gettext(`Early Access`) }}
+								</RouterLink>
+								{{ ' ' }}
+								{{ $gettext(`or`) }}
+								{{ ' ' }}
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: 'best' },
 										query: { price: 'paid' },
 									}"
 								>
-									Paid
-								</router-link>
-								games!
+									{{ $gettext(`Paid`) }}
+								</RouterLink>
+								{{ ' ' }}
+								{{ $gettext(`games!`) }}
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">Recommendations</h4>
+							<h4 class="sans-margin-top">{{ $gettext(`Recommendations`) }}</h4>
 							<p>
-								Once you play, follow, and rate some games we'll start giving you
-								personalized game recommendations.
+								{{
+									$gettext(
+										`Once you play, follow, and rate some games we'll start giving you personalized game recommendations.`
+									)
+								}}
 							</p>
 						</div>
 						<div class="col-md-1" />
@@ -203,29 +205,37 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 						</div>
 						<div class="col-md-1" />
 						<div class="col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-0 col-lg-5">
-							<h2 class="section-header">Interact</h2>
+							<h2 class="section-header">{{ $gettext(`Interact`) }}</h2>
 							<hr class="underbar" />
 
 							<br />
-							<h4 class="sans-margin-top">Discuss</h4>
+							<h4 class="sans-margin-top">{{ $gettext(`Discuss`) }}</h4>
 							<p>
-								Ask questions, provide feedback, and discuss directly with studios
-								by commenting on their game pages.
+								{{
+									$gettext(
+										`Ask questions, provide feedback, and discuss directly with studios by commenting on their game pages.`
+									)
+								}}
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">Rate games</h4>
+							<h4 class="sans-margin-top">{{ $gettext(`Rate games`) }}</h4>
 							<p>
-								You're in control of what becomes popular on Game Jolt and&mdash;for
-								all we know&mdash;the gaming industry. Rate games you love onto Game
-								Jolt's home page and the top of game listings.
+								{{
+									$gettext(
+										`You're in control of what becomes popular on Game Jolt and&mdash;for all we know&mdash;the gaming industry. Rate games you love onto Game Jolt's home page and the top of game listings.`
+									)
+								}}
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">Let's Players</h4>
+							<h4 class="sans-margin-top">{{ $gettext(`Let's Players`) }}</h4>
 							<p>
-								If you're a Let's Player, link your YouTube or Twitch channel and
-								post video comments to the game page.
+								{{
+									$gettext(
+										`If you're a Let's Player, link your YouTube or Twitch channel and post video comments to the game page.`
+									)
+								}}
 							</p>
 						</div>
 					</div>
@@ -237,24 +247,28 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 					<div class="row">
 						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
-							<h2 class="section-header">Support Studios</h2>
+							<h2 class="section-header">{{ $gettext(`Support Studios`) }}</h2>
 							<hr class="underbar" />
 
 							<br />
-							<h4 class="sans-margin-top">Indie-Friendly</h4>
+							<h4 class="sans-margin-top">{{ $gettext(`Indie-Friendly`) }}</h4>
 							<p>
-								Be confident that the money you spend goes to the developer. We let
-								developers decide the percentage to give to Game Jolt! Every little
-								bit counts!
+								{{
+									$gettext(
+										`Be confident that the money you spend goes to the developer. We let developers decide the percentage to give to Game Jolt! Every little bit counts!`
+									)
+								}}
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">Be a Supporter</h4>
+							<h4 class="sans-margin-top">{{ $gettext(`Be a Supporter`) }}</h4>
 
 							<p>
-								We'll post your avatar as a supporter on the game's page when you
-								pay more than the developer's asking price. Lead by example and show
-								your support!
+								{{
+									$gettext(
+										`We'll post your avatar as a supporter on the game's page when you pay more than the developer's asking price. Lead by example and show your support!`
+									)
+								}}
 							</p>
 						</div>
 						<div class="col-md-1" />
@@ -277,47 +291,57 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 						</div>
 						<div class="col-md-1" />
 						<div class="col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-0 col-lg-5">
-							<h2 class="section-header">Devlogs</h2>
+							<h2 class="section-header">{{ $gettext(`Devlogs`) }}</h2>
 							<hr class="underbar" />
 
 							<br />
-							<h4 class="sans-margin-top">Early Access and In-Development</h4>
+							<h4 class="sans-margin-top">
+								{{ $gettext(`Early Access and In-Development`) }}
+							</h4>
 							<p>
-								Discover your future favorite game from its early devlog stage or
-								keep up to date with early access games. Gain access before the rest
-								of the world!
+								{{
+									$gettext(
+										`Discover your future favorite game from its early devlog stage or keep up to date with early access games. Gain access before the rest of the world!`
+									)
+								}}
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">Stay Updated</h4>
+							<h4 class="sans-margin-top">{{ $gettext(`Stay Updated`) }}</h4>
 							<p>
-								Be the first to know about new mechanics, concept art, releases and
-								anything else devs want to share with the world! Follow games to get
-								notified when new posts are added.
+								{{
+									$gettext(
+										`Be the first to know about new mechanics, concept art, releases and anything else devs want to share with the world! Follow games to get notified when new posts are added.`
+									)
+								}}
 							</p>
 
 							<p>
-								Browse
-								<router-link
+								{{ $gettext(`Browse`) }}
+								{{ ' ' }}
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: 'best' },
 										query: { status: 'devlog' },
 									}"
 								>
-									Devlogs
-								</router-link>
-								and
-								<router-link
+									{{ $gettext(`Devlogs`) }}
+								</RouterLink>
+								{{ ' ' }}
+								{{ $gettext(`and`) }}
+								{{ ' ' }}
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: 'best' },
 										query: { status: 'wip' },
 									}"
 								>
-									Early Access
-								</router-link>
-								games.
+									{{ $gettext(`Early Access`) }}
+								</RouterLink>
+								{{ ' ' }}
+								{{ $gettext(`games.`) }}
 							</p>
 						</div>
 					</div>
@@ -329,22 +353,27 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 					<div class="row">
 						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
-							<h2 class="section-header">Organize</h2>
+							<h2 class="section-header">{{ $gettext(`Organize`) }}</h2>
 							<hr class="underbar" />
 
 							<br />
-							<h4 class="sans-margin-top">Playlists</h4>
+							<h4 class="sans-margin-top">{{ $gettext(`Playlists`) }}</h4>
 							<p>
-								Organize the way you follow games, devlogs and developers with ease!
-								Others can discover, follow, and share your playlists.
+								{{
+									$gettext(
+										`Organize the way you follow games, devlogs and developers with ease! Others can discover, follow, and share your playlists.`
+									)
+								}}
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">Activity Feed</h4>
+							<h4 class="sans-margin-top">{{ $gettext(`Activity Feed`) }}</h4>
 							<p>
-								Any game you follow will show up in your Activity Feed. Keep track
-								of what matters to you, and stay updated with your slice of the
-								gaming world!
+								{{
+									$gettext(
+										`Any game you follow will show up in your Activity Feed. Keep track of what matters to you, and stay updated with your slice of the gaming world!`
+									)
+								}}
 							</p>
 						</div>
 						<div class="col-md-1" />
@@ -367,21 +396,27 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 						</div>
 						<div class="col-md-1" />
 						<div class="col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-0 col-lg-5">
-							<h2 class="section-header">Achievements</h2>
+							<h2 class="section-header">{{ $gettext(`Achievements`) }}</h2>
 							<hr class="underbar" />
 
 							<br />
-							<h4 class="sans-margin-top">Trophies</h4>
+							<h4 class="sans-margin-top">{{ $gettext(`Trophies`) }}</h4>
 							<p>
-								Hunt for trophies in games that implement the Game Jolt Game API.
-								Gotta get to 100% completion, eh?
+								{{
+									$gettext(
+										`Hunt for trophies in games that implement the Game Jolt Game API. Gotta get to 100% completion, eh?`
+									)
+								}}
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">Scores</h4>
+							<h4 class="sans-margin-top">{{ $gettext(`Scores`) }}</h4>
 							<p>
-								Battle to get the top scores in games. Never give up. Never let us
-								down. Never run around or desert us.
+								{{
+									$gettext(
+										`Battle to get the top scores in games. Never give up. Never let us down. Never run around or desert us.`
+									)
+								}}
 							</p>
 						</div>
 					</div>
@@ -390,7 +425,7 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 
 			<section class="section fill-black">
 				<div class="container">
-					<h1 class="section-header text-center">Community</h1>
+					<h1 class="section-header text-center">{{ $gettext(`Community`) }}</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -401,12 +436,14 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 								<AppThemeSvg :src="assetPaths['./friends.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">Friends</h4>
+							<h4 class="text-center">{{ $gettext(`Friends`) }}</h4>
 
 							<p>
-								Become friends on Game Jolt and get notified when your friends are
-								online, when they're playing games, or send them game
-								recommendations.
+								{{
+									$gettext(
+										`Become friends on Game Jolt and get notified when your friends are online, when they're playing games, or send them game recommendations.`
+									)
+								}}
 							</p>
 						</div>
 
@@ -415,11 +452,14 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 								<AppThemeSvg :src="assetPaths['./chat.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">Chat</h4>
+							<h4 class="text-center">{{ $gettext(`Chat`) }}</h4>
 
 							<p>
-								Meet other gamers, network and get help through private messaging
-								and available chat rooms.
+								{{
+									$gettext(
+										`Meet other gamers, network and get help through private messaging and available chat rooms.`
+									)
+								}}
 							</p>
 						</div>
 
@@ -430,12 +470,14 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 								<AppThemeSvg :src="assetPaths['./forums.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">Forums</h4>
+							<h4 class="text-center">{{ $gettext(`Forums`) }}</h4>
 
 							<p>
-								Find studios looking for testers, discuss the industry, participate
-								in existing conversations with let's players and devs, or start your
-								own topic! Haikus are encouraged!
+								{{
+									$gettext(
+										`Find studios looking for testers, discuss the industry, participate in existing conversations with let's players and devs, or start your own topic! Haikus are encouraged!`
+									)
+								}}
 							</p>
 						</div>
 					</div>
@@ -444,18 +486,28 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 
 			<section class="section fill-highlight">
 				<div class="container text-center">
-					<h1 class="section-header">Everywhere</h1>
+					<h1 class="section-header">{{ $gettext(`Everywhere`) }}</h1>
 
 					<div class="row">
 						<div class="col-lg-7 col-centered">
 							<p class="lead">
-								Play and follow games in your
-								<b>browser</b>, on your
-								<router-link :to="{ name: 'landing.app' }">desktop</router-link>,
-								and through the mobile site on your
-								<b>tablet</b>
-								and
-								<b>phone</b>.
+								{{ $gettext(`Play and follow games in your`) }}
+								{{ ' ' }}
+								<b>{{ $gettext(`browser`) }}</b>
+								{{ ' ' }}
+								{{ $gettext(`, on your`) }}
+								{{ ' ' }}
+								<RouterLink :to="{ name: 'landing.app' }">
+									{{ $gettext(`desktop`) }}
+								</RouterLink>
+								{{ ' ' }}
+								{{ $gettext(`, and through the mobile site on your`) }}
+								{{ ' ' }}
+								<b>{{ $gettext(`tablet`) }}</b>
+								{{ ' ' }}
+								{{ $gettext(`and`) }}
+								{{ ' ' }}
+								<b>{{ $gettext(`phone`) }}.</b>
 							</p>
 						</div>
 					</div>
@@ -495,15 +547,15 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 					<br />
 
 					<AppButton solid :to="{ name: 'landing.app' }">
-						<AppTranslate>Get the app</AppTranslate>
+						{{ $gettext(`Get the app`) }}
 					</AppButton>
 				</div>
 			</section>
 
-			<section v-if="!app.user" class="section">
+			<section v-if="!user" class="section">
 				<div class="container">
 					<h1 class="section-header text-center">
-						<AppTranslate>Join</AppTranslate>
+						{{ $gettext(`Join`) }}
 					</h1>
 
 					<hr class="underbar underbar-center" />
