@@ -12,7 +12,10 @@ import {
 } from '../../../../_common/notification/notification-model';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { kThemeDarkest } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { styleChangeBg } from '../../../../_styles/mixins';
+import { kBorderWidthLg } from '../../../../_styles/variables';
 import { useAppStore } from '../../../store';
 import {
 	NOTIFICATION_FILTER_FIELD,
@@ -145,7 +148,23 @@ function onClickFilter() {
 			:class="{ active: isNavbarItemActive }"
 			@click.capture="onNavbarItemClick"
 		>
-			<div v-if="hasUnreadNotifications" class="_new-tag anim-fade-enter anim-fade-leave" />
+			<div
+				v-if="hasUnreadNotifications"
+				class="anim-fade-enter anim-fade-leave"
+				:style="{
+					...styleChangeBg('highlight'),
+					borderRadius: `50%`,
+					width: `12px`,
+					height: `12px`,
+					display: `block`,
+					position: `absolute`,
+					bottom: `10px`,
+					right: `4px`,
+					borderWidth: kBorderWidthLg.px,
+					borderStyle: `solid`,
+					borderColor: kThemeDarkest,
+				}"
+			/>
 			<AppJolticon icon="bell-filled" />
 		</a>
 
@@ -205,18 +224,4 @@ function onClickFilter() {
 	display: flex
 	justify-content: flex-end
 	gap: 12px
-
-._new-tag
-	border-radius: 50%
-	width: 12px
-	height: 12px
-	display: block
-	change-bg('highlight')
-	position: absolute
-	bottom: 10px
-	right: 4px
-	display: block
-	border-color: var(--theme-darkest)
-	border-width: 2px
-	border-style: solid
 </style>
