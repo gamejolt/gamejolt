@@ -77,17 +77,14 @@ createAppRoute({
 						<br />
 
 						<p class="text-center">
-							{{
-								$gettext(
-									`Build your own customizable portfolio and game sites with an indie.af domain name through`
-								)
-							}}
+							Build your own customizable portfolio and game sites with an indie.af
+							domain name through
 							{{ ' ' }}
 							<a
 								href="http://fireside.gamejolt.com/post/custom-game-sites-portfolios-fgjzjsa8"
 								target="_blank"
 							>
-								{{ $gettext(`Game Jolt Sites`) }}
+								Game Jolt Sites
 							</a>
 							!
 						</p>
@@ -96,14 +93,13 @@ createAppRoute({
 						<div class="text-center">
 							<div>
 								<a v-app-scroll-to class="button-af" href="#get-indie-af">
-									{{ $gettext(`Get Indie.AF`) }}
+									Get Indie.AF
 								</a>
 							</div>
 							<br />
 							<p class="small text-muted">
-								{{ $gettext(`don't be`) }}
-								{{ ' ' }}
-								<em>{{ $gettext(`ew`) }}</em>
+								don't be
+								<em>ew</em>
 							</p>
 						</div>
 
@@ -149,12 +145,12 @@ createAppRoute({
 							<br />
 							<p class="text-center">
 								<a class="button-af" @click="state = 'indie'">
-									{{ $gettext(`Make this Indie.AF!`) }}
+									Make this Indie.AF!
 								</a>
 							</p>
 						</template>
 
-						<h2 class="text-center">{{ $gettext(`Why should you be INDIE.AF?`) }}</h2>
+						<h2 class="text-center">Why should you be INDIE.AF?</h2>
 						<hr class="underbar underbar-center" />
 						<br />
 
@@ -166,54 +162,45 @@ createAppRoute({
 
 						<div class="indieaf-vs-row">
 							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
-							<div class="indieaf-vs-col left">
-								{{ $gettext(`Trendy, but also bogus`) }}
-							</div>
+							<div class="indieaf-vs-col left">Trendy, but also bogus</div>
 							<div class="indieaf-vs-col right">
-								{{ $gettext(`Not bogus, not trendy. Radical AF!`) }}
+								Not bogus, not trendy. Radical AF!
 							</div>
 						</div>
 
 						<div class="indieaf-vs-row">
 							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
 							<div class="indieaf-vs-col left">
-								{{ $gettext(`Sounds like`) }}
-								{{ ' ' }}
-								<em>{{ $gettext(`ew`) }}</em>
+								Sounds like
+								<em>ew</em>
 							</div>
-							<div class="indieaf-vs-col right">
-								{{ $gettext(`Has a curse word AF!`) }}
-							</div>
+							<div class="indieaf-vs-col right">Has a curse word AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
 							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
-							<div class="indieaf-vs-col left">{{ $gettext(`Child's play`) }}</div>
-							<div class="indieaf-vs-col right">{{ $gettext(`Grown up AF!`) }}</div>
+							<div class="indieaf-vs-col left">Child's play</div>
+							<div class="indieaf-vs-col right">Grown up AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
 							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
-							<div class="indieaf-vs-col left">
-								{{ $gettext(`People wonder why it's not .com`) }}
-							</div>
-							<div class="indieaf-vs-col right">{{ $gettext(`.af AF!`) }}</div>
+							<div class="indieaf-vs-col left">People wonder why it's not .com</div>
+							<div class="indieaf-vs-col right">.af AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
 							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
-							<div class="indieaf-vs-col left">{{ $gettext(`Over saturated`) }}</div>
-							<div class="indieaf-vs-col right">
-								{{ $gettext(`No one is using AF!`) }}
-							</div>
+							<div class="indieaf-vs-col left">Over saturated</div>
+							<div class="indieaf-vs-col right">No one is using AF!</div>
 						</div>
 
 						<div class="indieaf-vs-row">
 							<img class="indieaf-vs-img" :src="assetPaths['./vs.png']" alt="" />
 							<div class="indieaf-vs-col left">
-								{{ $gettext(`Are you a startup, or are you indie?`) }}
+								Are you a startup, or are you indie?
 							</div>
-							<div class="indieaf-vs-col right">{{ $gettext(`INDIE AF!!!`) }}</div>
+							<div class="indieaf-vs-col right">INDIE AF!!!</div>
 						</div>
 
 						<h2 class="text-center">{{ $gettext(`What people are saying`) }}</h2>
@@ -222,88 +209,65 @@ createAppRoute({
 
 						<div class="indieaf-quote">
 							<p>
-								{{
-									$gettext(
-										`When I used to walk down the street, people would point and say, "Look at them, they're grody." Now I'm cool AF.`
-									)
-								}}
+								When I used to walk down the street, people would point and say,
+								"Look at them, they're grody." Now I'm cool AF.
 							</p>
 							<div class="indieaf-quote-who">- Cool AF kid</div>
 						</div>
 
 						<div class="indieaf-quote">
-							<p>
-								{{
-									$gettext(
-										`Everyone wants to get with me now I'm indie.af. Thanks Game Jolt!`
-									)
-								}}
-							</p>
-							<div class="indieaf-quote-who">{{ $gettext(`- Popular AF kid`) }}</div>
+							<p>Everyone wants to get with me now I'm indie.af. Thanks Game Jolt!</p>
+							<div class="indieaf-quote-who">- Popular AF kid</div>
 						</div>
 
 						<div class="indieaf-quote">
 							<p>
-								{{
-									$gettext(
-										`Before I became indie.af, I was a nobody, and no one played my games. Now I've been getting plays for days!`
-									)
-								}}
+								Before I became indie.af, I was a nobody, and no one played my
+								games. Now I've been getting plays for days!
 							</p>
-							<div class="indieaf-quote-who">{{ $gettext(`- Indie AF kid`) }}</div>
+							<div class="indieaf-quote-who">- Indie AF kid</div>
 						</div>
 
 						<div class="indieaf-quote">
 							<p>
-								{{
-									$gettext(
-										`Ever since I made the move, I've got a couple more Twitter followers!`
-									)
-								}}
+								Ever since I made the move, I've got a couple more Twitter
+								followers!
 							</p>
-							<div class="indieaf-quote-who">{{ $gettext(`- Twitter AF kid`) }}</div>
+							<div class="indieaf-quote-who">- Twitter AF kid</div>
 						</div>
 
 						<div class="indieaf-quote">
 							<p>
-								{{
-									$gettext(
-										`I don't really see the point. It's just a stupid domain name. No one will think you're actually cooler.`
-									)
-								}}
+								I don't really see the point. It's just a stupid domain name. No one
+								will think you're actually cooler.
 							</p>
-							<div class="indieaf-quote-who">{{ $gettext(`- Bogus IO kid`) }}</div>
+							<div class="indieaf-quote-who">- Bogus IO kid</div>
 						</div>
 
-						<h2 id="get-indie-af" class="text-center">
-							{{ $gettext(`Get Indie.AF`) }}
-						</h2>
+						<h2 id="get-indie-af" class="text-center">Get Indie.AF</h2>
 						<hr class="underbar underbar-center" />
 						<br />
 
 						<p>
-							{{ $gettext(`Create a portfolio site in your`) }}
+							Create a portfolio site in your
 							<RouterLink :to="{ name: 'dash.account.site' }">
-								{{ $gettext(`Edit Account`) }}
+								Edit Account
 							</RouterLink>
-							{{ ' ' }}
-							{{ $gettext(`section. To create custom game sites, click on the`) }}
-							{{ ' ' }}
-							<strong>{{ $gettext(`Sites`) }}</strong>
-							{{ ' ' }}
-							{{ $gettext(`tab when managing your game.`) }}
+							section. To create custom game sites, click on the
+							<strong>Sites</strong>
+							tab when managing your game.
 						</p>
 
 						<p>
-							{{ $gettext(`For the magic to begin, simply replace `) }}
+							For the magic to begin, simply replace
 							<code>gamejolt.io</code>
-							{{ $gettext(` in your Sites URL to `) }}
+							in your Sites URL to
 							<code>indie.af</code>
-							{{ $gettext(`. For example, `) }}
+							. For example,
 							<code>cros.gamejolt.io</code>
-							{{ $gettext(` becomes `) }}
+							becomes
 							<code>cros.indie.af</code>
-							{{ $gettext(`. Now you're legit.`) }}
+							. Now you're legit.
 						</p>
 
 						<section v-if="!user">

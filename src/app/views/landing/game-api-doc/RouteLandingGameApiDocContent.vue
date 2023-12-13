@@ -53,8 +53,5 @@ createAppRoute({
 </script>
 
 <template>
-	<!--TODO(component-setup-refactor-routes-4): revisit this-->
-	<div>
-		{{ content }}
-	</div>
+	<div v-html="content" />
 </template>

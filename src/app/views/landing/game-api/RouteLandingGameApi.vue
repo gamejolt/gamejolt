@@ -53,11 +53,9 @@ createAppRoute({
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 						<p>
-							{{
-								$gettext(
-									`By implementing the Game Jolt Game API you can add trophies, leaderboards, cloud data storage, and sessions to your games to get players coming back for more!`
-								)
-							}}
+							By implementing the Game Jolt Game API you can add trophies,
+							leaderboards, cloud data storage, and sessions to your games to get
+							players coming back for more!
 						</p>
 
 						<div class="text-center">
@@ -116,11 +114,9 @@ createAppRoute({
 						<h4 class="text-center">{{ $gettext(`Leaderboards`) }}</h4>
 
 						<p>
-							{{
-								$gettext(
-									`Implement leaderboards in your game to allow anyone to battle it out for the top spots. You create the leaderboards, you control the scoring. You can even allow guests to score without a Game Jolt account.`
-								)
-							}}
+							Implement leaderboards in your game to allow anyone to battle it out for
+							the top spots. You create the leaderboards, you control the scoring. You
+							can even allow guests to score without a Game Jolt account.
 						</p>
 					</div>
 
@@ -132,11 +128,8 @@ createAppRoute({
 						<h4 class="text-center">{{ $gettext(`Trophies`) }}</h4>
 
 						<p>
-							{{
-								$gettext(
-									`Feed into your player base's hunger for trophy hunting. Trophies will sync to their Game Jolt profile for all to see as badges of honor.`
-								)
-							}}
+							Feed into your player base's hunger for trophy hunting. Trophies will
+							sync to their Game Jolt profile for all to see as badges of honor.
 						</p>
 					</div>
 
@@ -151,11 +144,9 @@ createAppRoute({
 						<h4 class="text-center">{{ $gettext(`Cloud Data Storage`) }}</h4>
 
 						<p>
-							{{
-								$gettext(
-									`Sync saved games, user-created levels, friend lists, debug logs--save any bit of data to the player's account, or globally for your game. The clouds are the limit!`
-								)
-							}}
+							Sync saved games, user-created levels, friend lists, debug logs--save
+							any bit of data to the player's account, or globally for your game. The
+							clouds are the limit!
 						</p>
 					</div>
 
@@ -169,18 +160,16 @@ createAppRoute({
 						<h4 class="text-center">{{ $gettext(`Sessions`) }}</h4>
 
 						<p>
-							{{
-								$gettext(
-									`Track when and how long each player is active in your game. You can then view stats such as avg. play time per session, total time played across users, and even see how many people are playing your game in real time.`
-								)
-							}}
+							Track when and how long each player is active in your game. You can then
+							view stats such as avg. play time per session, total time played across
+							users, and even see how many people are playing your game in real time.
 						</p>
 					</div>
 				</div>
 
 				<div class="row">
 					<div class="col-lg-6 col-centered text-center">
-						<h1>{{ $gettext(`Sounds cool, yeah?`) }}</h1>
+						<h1>Sounds cool, yeah?</h1>
 						<hr class="underbar underbar-center" />
 
 						<AppButton primary lg :to="{ name: 'landing.game-api-doc' }">
