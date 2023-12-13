@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, Ref } from 'vue';
+import { computed, ref, Ref, watch } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -85,19 +85,15 @@ const hasFilter = computed(
 		existingFilters.value.length !== SUPPORTED_NOTIFICATION_FEED_TYPES.length
 );
 
-// watch(
-// 	unreadNotificationsCount,
-// 	() => {
-// 		if (
-// 			feed.value &&
-// 			!hasFilter.value &&
-// 			unreadNotificationsCount.value > feed.value.newCount
-// 		) {
-// 			feed.value.newCount = unreadNotificationsCount.value;
-// 		}
-// 	},
-// 	{ immediate: true }
-// );
+watch(
+	hasUnreadNotifications,
+	hasUnread => {
+		if (hasUnread && feed.value && feed.value.newCount <= 0 && !hasFilter.value) {
+			feed.value.newCount = 1;
+		}
+	},
+	{ immediate: true }
+);
 
 createAppRoute({
 	routeTitle,
