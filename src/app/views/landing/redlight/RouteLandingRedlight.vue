@@ -132,38 +132,23 @@ createAppRoute({
 					<div class="row">
 						<div class="col-sm-7 col-centered">
 							<p class="lead">
-								{{
-									$gettext(
-										`We've embraced inclusivity since 2002 and now, with your help, we're`
-									)
-								}}
-								{{ ' ' }}
-								<strong>
-									{{ $gettext(`expanding Game Jolt to incorporate AAA games`) }}
-								</strong>
-								{{ ' ' }}
-								{{ $gettext(`to our niche indie community.`) }}
+								We've embraced inclusivity since 2002 and now, with your help, we're
+								<strong>expanding Game Jolt to incorporate AAA games</strong>
+								to our niche indie community.
 							</p>
 
 							<p>
-								{{
-									$gettext(
-										`We've created a unique platform for AAA studios and non-indie publishers. Members will`
-									)
-								}}
-								{{ ' ' }}
-								<strong>{{ $gettext(`vote on your games`) }}</strong>
-								{{ ' ' }}
-								{{ $gettext(`in the Redlight program to judge if they're`) }}
-								{{ ' ' }}
-								<strong>{{ $gettext(`good enough quality to be redlit`) }}</strong>
-								{{ ' ' }}
-								{{ $gettext(`and part of Game Jolt.`) }}
+								We've created a unique platform for AAA studios and non-indie
+								publishers. Members will
+								<strong>vote on your games</strong>
+								in the Redlight program to judge if they're
+								<strong>good enough quality to be redlit</strong>
+								and part of Game Jolt.
 							</p>
 						</div>
 					</div>
 
-					<h1 class="text-center">{{ $gettext(`The process is simple and direct!`) }}</h1>
+					<h1 class="text-center">The process is simple and direct!</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -176,13 +161,10 @@ createAppRoute({
 
 							<p class="text-center">
 								<b>
-									{{
-										$gettext(
-											`Create a Game Jolt account yourself directly. No need for an account manager.`
-										)
-									}}
+									Create a Game Jolt account yourself directly. No need for an
+									account manager.
 									<br />
-									<em>{{ $gettext(`Finally!`) }}</em>
+									<em>Finally!</em>
 								</b>
 							</p>
 						</div>
@@ -194,11 +176,9 @@ createAppRoute({
 
 							<p class="text-center">
 								<b>
-									{{ $gettext(`Upload your game directly and add`) }}
-									{{ ' ' }}
+									Upload your game directly and add
 									<code>#redlight</code>
-									{{ ' ' }}
-									{{ $gettext(`to your description.`) }}
+									to your description.
 								</b>
 							</p>
 						</div>
@@ -212,11 +192,8 @@ createAppRoute({
 
 							<p class="text-center">
 								<b>
-									{{
-										$gettext(
-											`Let your fans know that you're on Redlight and require their help directly.`
-										)
-									}}
+									Let your fans know that you're on Redlight and require their
+									help directly.
 								</b>
 							</p>
 						</div>
@@ -230,74 +207,50 @@ createAppRoute({
 						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
 							<h2 class="section-header">
-								{{ $gettext(`Optional Steps`) }}
+								Optional Steps
 								<br />
-								<small>{{ $gettext(`(but required for success)`) }}</small>
+								<small>(but required for success)</small>
 							</h2>
 							<hr class="underbar" />
 
 							<p>
 								<AppJolticon icon="checkbox" />
-								{{
-									$gettext(
-										`Desperately fumble around trying to get votes from anywhere on the internet.`
-									)
-								}}
+								Desperately fumble around trying to get votes from anywhere on the
+								internet.
 							</p>
 							<p>
 								<AppJolticon icon="checkbox" />
-								{{
-									$gettext(
-										`Spend all your money and free time trying to get redlit.`
-									)
-								}}
+								Spend all your money and free time trying to get redlit.
 							</p>
 							<p>
 								<AppJolticon icon="checkbox" />
-								{{
-									$gettext(
-										`Include the Game Jolt Redlight logo on your game pages across all other platforms.`
-									)
-								}}
+								Include the Game Jolt Redlight logo on your game pages across all
+								other platforms.
 							</p>
 							<p>
 								<AppJolticon icon="checkbox" />
-								{{
-									$gettext(
-										`Add into your game demo "Vote for us on Game Jolt Redlight".`
-									)
-								}}
+								Add into your game demo "Vote for us on Game Jolt Redlight".
 							</p>
 							<p>
 								<AppJolticon icon="checkbox" />
-								{{
-									$gettext(
-										`Upload said demo to all platforms to direct traffic to your Game Jolt Redlight page.`
-									)
-								}}
+								Upload said demo to all platforms to direct traffic to your Game
+								Jolt Redlight page.
 							</p>
 							<p>
 								<AppJolticon icon="checkbox" />
-								{{
-									$gettext(
-										`Wipe away the tears and include Redlight every time you tweet whether your tweet is related or not.`
-									)
-								}}
+								Wipe away the tears and include Redlight every time you tweet
+								whether your tweet is related or not.
 							</p>
 							<p>
 								<AppJolticon icon="checkbox" />
-								{{
-									$gettext(
-										`Employ a team of people devoted to Redlight. After all, you have the money.`
-									)
-								}}
+								Employ a team of people devoted to Redlight. After all, you have the
+								money.
 							</p>
 							<p>
 								<AppJolticon icon="checkbox" />
-								{{ $gettext(`Once you're redlit,`) }}
-								{{ ' ' }}
+								Once you're redlit,
 								<RouterLink :to="{ name: 'landing.indieaf' }">
-									{{ $gettext(`get indie AF!`) }}
+									get indie AF!
 								</RouterLink>
 							</p>
 						</div>
@@ -316,42 +269,27 @@ createAppRoute({
 					<div class="row">
 						<div class="col-sm-7 col-centered">
 							<p class="lead">
-								{{
-									$gettext(
-										`Redlight simultaneously prevents our marketplace from becoming overly saturated while`
-									)
-								}}
-								{{ ' ' }}
-								<strong>{{ $gettext(`maintaining the high standards`) }}</strong>
-								{{ ' ' }}
-								{{
-									$gettext(`our users have come to expect from a Game Jolt game.`)
-								}}
+								Redlight simultaneously prevents our marketplace from becoming
+								overly saturated while
+								<strong>maintaining the high standards</strong>
+								our users have come to expect from a Game Jolt game.
 							</p>
 
-							<h2 class="text-center">{{ $gettext(`Spread the Word`) }}</h2>
+							<h2 class="text-center">Spread the Word</h2>
 							<hr class="underbar underbar-center" />
 
 							<p>
-								{{
-									$gettext(
-										`Do you love indie games, but also love AAA? Do you have a massive library of games built up on Game Jolt and don't want to use other platforms for your AAA content?`
-									)
-								}}
+								Do you love indie games, but also love AAA? Do you have a massive
+								library of games built up on Game Jolt and don't want to use other
+								platforms for your AAA content?
 							</p>
 
 							<p>
-								<strong>{{ $gettext(`Help us spread the word!`) }}</strong>
-								{{ ' ' }}
-								{{
-									$gettext(
-										`Tweet at all your favorite game publishers and AAA studios. Get them on board. Join the`
-									)
-								}}
-								{{ ' ' }}
+								<strong>Help us spread the word!</strong>
+								Tweet at all your favorite game publishers and AAA studios. Get them
+								on board. Join the
 								<strong>#REDLIGHT</strong>
-								{{ ' ' }}
-								{{ $gettext(`movement.`) }}
+								movement.
 							</p>
 
 							<div class="social-widgets">
@@ -370,22 +308,16 @@ createAppRoute({
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-7 col-centered">
-							<h2 class="text-center section-header">
-								{{ $gettext(`What the Industry is Saying`) }}
-							</h2>
+							<h2 class="text-center section-header">What the Industry is Saying</h2>
 							<hr class="underbar underbar-center" />
 
 							<p>
 								<AppLinkExternal
 									href="https://docs.google.com/document/d/1RMMr-9ZTfTFSQMD8Q-1JFkFo9ztX0OktORAn9Se02fg/edit"
 								>
-									{{ $gettext(`We sent out an email to all the top players.`) }}
+									We sent out an email to all the top players.
 								</AppLinkExternal>
-								{{
-									$gettext(
-										`No one has gotten back to us yet. We will update here when they do.`
-									)
-								}}
+								No one has gotten back to us yet. We will update here when they do.
 							</p>
 						</div>
 					</div>
@@ -396,163 +328,110 @@ createAppRoute({
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-7 col-centered">
-							<h2 class="text-center section-header">{{ $gettext(`FAQ`) }}</h2>
+							<h2 class="text-center section-header">FAQ</h2>
 							<hr class="underbar underbar-center" />
 
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`What is Redlight?`) }}</h4>
+							<h4 class="sans-margin-top">What is Redlight?</h4>
 							<p>
-								{{
-									$gettext(
-										`Game Jolt Redlight is a system that enlists the community's help in choosing new games to be released on Game Jolt. Publishers and AAA studios upload their games to seek a critical mass of community support in order to get selected for distribution.`
-									)
-								}}
+								Game Jolt Redlight is a system that enlists the community's help in
+								choosing new games to be released on Game Jolt. Publishers and AAA
+								studios upload their games to seek a critical mass of community
+								support in order to get selected for distribution.
 							</p>
 
 							<br />
 							<h4 class="sans-margin-top">
-								{{ $gettext(`Who should submit their games to Redlight?`) }}
+								Who should submit their games to Redlight?
 							</h4>
 							<p>
-								{{
-									$gettext(
-										`AAA studios and non-indie publishers looking to expand their audience to niche indie gamers.`
-									)
-								}}
+								AAA studios and non-indie publishers looking to expand their
+								audience to niche indie gamers.
 							</p>
 
 							<br />
 							<h4 class="sans-margin-top">
-								{{
-									$gettext(
-										`I know of a game that should be on here? What do I do?`
-									)
-								}}
+								I know of a game that should be on here? What do I do?
 							</h4>
 							<ol>
 								<li>
-									{{
-										$gettext(
-											`Publicly tweet at the developers/publishers until they add their games to Redlight.`
-										)
-									}}
+									Publicly tweet at the developers/publishers until they add their
+									games to Redlight.
 								</li>
-								<li>
-									{{
-										$gettext(
-											`Repeat this process on several different accounts.`
-										)
-									}}
-								</li>
+								<li>Repeat this process on several different accounts.</li>
 							</ol>
 
 							<br />
 							<h4 class="sans-margin-top">
-								{{
-									$gettext(
-										`There's a game on Redlight that I really want to see succeed. What can I do?`
-									)
-								}}
+								There's a game on Redlight that I really want to see succeed. What
+								can I do?
 							</h4>
-							<p>
-								{{ $gettext(`Go tell your friends; be super annoying about it.`) }}
-							</p>
+							<p>Go tell your friends; be super annoying about it.</p>
+
+							<br />
+							<h4 class="sans-margin-top">What about non-game Software?</h4>
+							<p>Games only. So don't try to upload your desktop application.</p>
 
 							<br />
 							<h4 class="sans-margin-top">
-								{{ $gettext(`What about non-game Software?`) }}
-							</h4>
-							<p>
-								{{
-									$gettext(
-										`Games only. So don't try to upload your desktop application.`
-									)
-								}}
-							</p>
-
-							<br />
-							<h4 class="sans-margin-top">
-								{{ $gettext(`What do I need in order to submit my game?`) }}
+								What do I need in order to submit my game?
 							</h4>
 							<ul>
-								<li>{{ $gettext(`Create a Game Jolt account`) }}</li>
-								<li>{{ $gettext(`Set up your marketplace account`) }}</li>
-								<li>{{ $gettext(`Upload your game`) }}</li>
+								<li>Create a Game Jolt account</li>
+								<li>Set up your marketplace account</li>
+								<li>Upload your game</li>
 								<li>
-									{{ $gettext(`Add`) }}
-									{{ ' ' }}
+									Add
 									<code>#redlight</code>
-									{{ ' ' }}
-									{{ $gettext(`to your game page description`) }}
+									to your game page description
 								</li>
 							</ul>
 
 							<br />
 							<h4 class="sans-margin-top">
-								{{
-									$gettext(`Are there any restrictions on what can be submitted?`)
-								}}
+								Are there any restrictions on what can be submitted?
 							</h4>
-							<p>{{ $gettext(`You must have distribution rights for the game.`) }}</p>
+							<p>You must have distribution rights for the game.</p>
 
 							<br />
-							<h4 class="sans-margin-top">
-								{{ $gettext(`How can I get more votes for my game?`) }}
-							</h4>
+							<h4 class="sans-margin-top">How can I get more votes for my game?</h4>
 							<p>
-								{{
-									$gettext(
-										`Pay influencers to talk about it constantly. Make sure they include the Redlight link at the beginning, middle, and end of their videos. And in their descriptions. And in their twitter bios.`
-									)
-								}}
+								Pay influencers to talk about it constantly. Make sure they include
+								the Redlight link at the beginning, middle, and end of their videos.
+								And in their descriptions. And in their twitter bios.
 							</p>
 
 							<br />
 							<h4 class="sans-margin-top">
-								{{
-									$gettext(
-										`How are games ranked on Redlight? How will I know if my game gets redlit?`
-									)
-								}}
+								How are games ranked on Redlight? How will I know if my game gets
+								redlit?
 							</h4>
 							<p>
-								{{
-									$gettext(
-										`It's a completely new and unique system. Games are ranked by the number of up-votes from the community. Once your game is submitted, you will receive an e-mail at the address associated with your account, notifying you when Redlit.`
-									)
-								}}
+								It's a completely new and unique system. Games are ranked by the
+								number of up-votes from the community. Once your game is submitted,
+								you will receive an e-mail at the address associated with your
+								account, notifying you when Redlit.
 							</p>
 
 							<br />
 							<h4 class="sans-margin-top">
-								{{
-									$gettext(
-										`I have specific questions about selling on Game Jolt and taxes/VAT.`
-									)
-								}}
+								I have specific questions about selling on Game Jolt and taxes/VAT.
 							</h4>
 							<p>
 								<RouterLink :to="{ name: 'landing.marketplace' }">
-									{{ $gettext(`Visit gamejolt.com/marketplace`) }}
+									Visit gamejolt.com/marketplace
 								</RouterLink>
-								{{ ' ' }}
-								{{
-									$gettext(
-										`for questions about selling on Game Jolt and taxes. If you don't find an answer there, email us. We'll just direct you to the forums.`
-									)
-								}}
+								for questions about selling on Game Jolt and taxes. If you don't
+								find an answer there, email us. We'll just direct you to the forums.
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">
-								{{ $gettext(`Does Redlight cost money to submit to?`) }}
-							</h4>
+							<h4 class="sans-margin-top">Does Redlight cost money to submit to?</h4>
 							<p>
-								{{
-									$gettext(
-										`For the initial months, we've decided to waive the $5,000-$10,000 submission fee. We'll continue discussing this internally to see if we should add a few extra zeros in there. This is obviously for QA reasons. Only people who make good games have money.`
-									)
-								}}
+								For the initial months, we've decided to waive the $5,000-$10,000
+								submission fee. We'll continue discussing this internally to see if
+								we should add a few extra zeros in there. This is obviously for QA
+								reasons. Only people who make good games have money.
 							</p>
 						</div>
 					</div>
@@ -561,7 +440,7 @@ createAppRoute({
 
 			<section v-if="!user" class="section fill-offset">
 				<div class="container">
-					<h1 class="section-header text-center">{{ $gettext(`Join`) }}</h1>
+					<h1 class="section-header text-center">Join</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
