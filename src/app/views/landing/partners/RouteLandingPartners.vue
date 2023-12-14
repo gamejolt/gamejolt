@@ -27,17 +27,14 @@ createAppRoute({
 			<div class="container">
 				<h1>
 					<AppThemeSvg class="bolt" :src="imageJolt" alt="" strict-colors />
-					{{ $gettext(`Partners`) }}
+					Partners
 				</h1>
 
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 						<p class="lead">
-							{{
-								$gettext(
-									`Promote games on your YouTube and Twitch channels and earn revenue when people buy the game!`
-								)
-							}}
+							Promote games on your YouTube and Twitch channels and earn revenue when
+							people buy the game!
 						</p>
 
 						<AppButton
@@ -45,7 +42,7 @@ createAppRoute({
 							href="https://docs.google.com/a/gamejolt.com/forms/d/1d_5jMXtKa8rYndFy1lZhzdiArdhZp6kycX-h1IOwjAU"
 							target="_blank"
 						>
-							{{ $gettext(`Apply Now`) }}
+							Apply Now
 						</AppButton>
 					</div>
 				</div>
@@ -61,14 +58,12 @@ createAppRoute({
 								<AppThemeSvg :src="assetPaths['./supporting-indies.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Indies supporting indies`) }}</h4>
+							<h4 class="text-center">Indies supporting indies</h4>
 
 							<p>
-								{{
-									$gettext(
-										`When you promote games from your favorite indie game developers on your YouTube or Twitch channels, they'll support you right back! Feel that indie fellowship.`
-									)
-								}}
+								When you promote games from your favorite indie game developers on
+								your YouTube or Twitch channels, they'll support you right back!
+								Feel that indie fellowship.
 							</p>
 						</div>
 
@@ -77,14 +72,13 @@ createAppRoute({
 								<AppThemeSvg :src="assetPaths['./revenue-share.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Revenue Share`) }}</h4>
+							<h4 class="text-center">Revenue Share</h4>
 
 							<p>
-								{{
-									$gettext(
-										`Developers in the program will show appreciation for your hard work by sharing 10% of revenue with you on sales resulting from your videos/streams! Mmm, 10% profit spells “pumpkin spice latte”, and it has your name on it.`
-									)
-								}}
+								Developers in the program will show appreciation for your hard work
+								by sharing 10% of revenue with you on sales resulting from your
+								videos/streams! Mmm, 10% profit spells “pumpkin spice latte”, and it
+								has your name on it.
 							</p>
 						</div>
 
@@ -95,14 +89,12 @@ createAppRoute({
 								<AppThemeSvg :src="assetPaths['./access-any-game.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Access any game`) }}</h4>
+							<h4 class="text-center">Access any game</h4>
 
 							<p>
-								{{
-									$gettext(
-										`No need to purchase games or ask for keys -- all games in the program have been willingly provided by their owners! No really, we didn’t force them or anything.`
-									)
-								}}
+								No need to purchase games or ask for keys -- all games in the
+								program have been willingly provided by their owners! No really, we
+								didn’t force them or anything.
 							</p>
 						</div>
 					</div>
@@ -113,92 +105,61 @@ createAppRoute({
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-							<h2 class="section-header text-center">
-								{{ $gettext(`Have some questions?`) }}
-							</h2>
+							<h2 class="section-header text-center">Have some questions?</h2>
 							<hr class="underbar underbar-center" />
 
-							<h3>{{ $gettext(`How does it work?`) }}</h3>
+							<h3>How does it work?</h3>
 
 							<p>
-								{{
-									$gettext(
-										`As a partner, you will be able to generate a referral link for any paid game in the partner program. Simply use that link in your video description, or while streaming. Any purchase resulting from that link gives you 10% of the sale.`
-									)
-								}}
+								As a partner, you will be able to generate a referral link for any
+								paid game in the partner program. Simply use that link in your video
+								description, or while streaming. Any purchase resulting from that
+								link gives you 10% of the sale.
 							</p>
 
 							<p>
-								{{
-									$gettext(
-										`Gamers will be presented with a message prior to their purchase letting them know the game is part of the Game Jolt Partner Program. They will be aware that a portion of the revenue will go to you as a partner, as well as the developer.`
-									)
-								}}
+								Gamers will be presented with a message prior to their purchase
+								letting them know the game is part of the Game Jolt Partner Program.
+								They will be aware that a portion of the revenue will go to you as a
+								partner, as well as the developer.
 							</p>
 
-							<h3>{{ $gettext(`Who should sign up?`) }}</h3>
+							<h3>Who should sign up?</h3>
 
 							<p>
 								<AppJolticon icon="youtube" />
-								<strong>{{ $gettext(`YouTubers`) }}</strong>
-								{{ ' ' }}
-								{{
-									$gettext(
-										`must have at least 50,000 subs and an average of 3,000 views per video.`
-									)
-								}}
+								<strong>YouTubers</strong>
+								must have at least 50,000 subs and an average of 3,000 views per
+								video.
 							</p>
 
 							<p>
 								<AppJolticon icon="twitch" />
-								<strong>{{ $gettext(`Twitch streamers`) }}</strong>
-								{{ ' ' }}
-								{{
-									$gettext(
-										`must have at least 3,000 followers. If you're a Twitch partner, we'll automatically make you a Game Jolt partner.`
-									)
-								}}
+								<strong>Twitch streamers</strong>
+								must have at least 3,000 followers. If you're a Twitch partner,
+								we'll automatically make you a Game Jolt partner.
 							</p>
 
 							<p>
-								{{
-									$gettext(
-										`If you don't meet these requirements, but would like to be considered, apply anyway!`
-									)
-								}}
+								If you don't meet these requirements, but would like to be
+								considered, apply anyway!
 							</p>
 
-							<h3>
-								{{ $gettext(`I'm a dev. How do I add my game to the program?`) }}
-							</h3>
+							<h3>I'm a dev. How do I add my game to the program?</h3>
 
 							<p>
-								{{
-									$gettext(
-										`If it's a new game, you will be presented with the option to include it when you add your game to the site.`
-									)
-								}}
+								If it's a new game, you will be presented with the option to include
+								it when you add your game to the site.
 							</p>
 
 							<p>
-								{{
-									$gettext(
-										`If it's an existing game, you will have to opt it in. Simply go to your`
-									)
-								}}
-								<RouterLink :to="{ name: 'home' }">{{
-									$gettext(`Dashboard`)
-								}}</RouterLink>
-								{{ ' ' }}
-								{{ $gettext(`, click to manage your game, click`) }}
-								{{ ' ' }}
-								<strong>{{ $gettext(`Details`) }}</strong>
-								{{ ' ' }}
-								{{
-									$gettext(
-										`on the left, and you will see the option to include your game into the program.`
-									)
-								}}
+								If it's an existing game, you will have to opt it in. Simply go to
+								your
+								<RouterLink :to="{ name: 'home' }">Dashboard</RouterLink>
+								, click to manage your game, click
+								<strong>Details</strong>
+								on the left, and you will see the option to include your game into
+								the program.
 							</p>
 
 							<AppButton
@@ -207,7 +168,7 @@ createAppRoute({
 								href="https://docs.google.com/a/gamejolt.com/forms/d/1d_5jMXtKa8rYndFy1lZhzdiArdhZp6kycX-h1IOwjAU"
 								target="_blank"
 							>
-								{{ $gettext(`Apply Now`) }}
+								Apply Now
 							</AppButton>
 						</div>
 					</div>

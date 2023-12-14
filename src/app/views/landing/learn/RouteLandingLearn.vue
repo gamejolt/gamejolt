@@ -35,9 +35,7 @@ createAppRoute({});
 
 				<div class="row anim-fade-in-up">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-						<p class="lead">
-							{{ $gettext(`Discover, play, buy, and follow 100,000+ games!`) }}
-						</p>
+						<p class="lead">Discover, play, buy, and follow 100,000+ games!</p>
 					</div>
 				</div>
 			</div>
@@ -46,7 +44,7 @@ createAppRoute({});
 		<div class="landing-body">
 			<section class="section">
 				<div class="container">
-					<h1 class="section-header text-center">{{ $gettext(`Game Jolt Loves`) }}</h1>
+					<h1 class="section-header text-center">Game Jolt Loves</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -57,14 +55,12 @@ createAppRoute({});
 								<AppThemeSvg :src="assetPaths['./gamers.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Gamers`) }}</h4>
+							<h4 class="text-center">Gamers</h4>
 
 							<p>
-								{{
-									$gettext(
-										`Millions of gamers visit to play over 100k (and counting) games! Game Jolt is completely free to use so you'll be playing non-stop. Literally. Like, forever.`
-									)
-								}}
+								Millions of gamers visit to play over 100k (and counting) games!
+								Game Jolt is completely free to use so you'll be playing non-stop.
+								Literally. Like, forever.
 							</p>
 						</div>
 
@@ -73,14 +69,12 @@ createAppRoute({});
 								<AppThemeSvg :src="assetPaths['./lpers.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Let's Players`) }}</h4>
+							<h4 class="text-center">Let's Players</h4>
 
 							<p>
-								{{
-									$gettext(
-										`Let's players and streamers have been a massive help in discovering and sharing new games! Link your channel to Game Jolt and post videos.`
-									)
-								}}
+								Let's players and streamers have been a massive help in discovering
+								and sharing new games! Link your channel to Game Jolt and post
+								videos.
 							</p>
 						</div>
 
@@ -91,14 +85,12 @@ createAppRoute({});
 								<AppThemeSvg :src="assetPaths['./developers.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Studios`) }}</h4>
+							<h4 class="text-center">Studios</h4>
 
 							<p>
-								{{
-									$gettext(
-										`Since starting in 2002, the goal of Game Jolt has always been to help studios get noticed. We give you the tools to build an audience, distribute your games, and manage your base of players.`
-									)
-								}}
+								Since starting in 2002, the goal of Game Jolt has always been to
+								help studios get noticed. We give you the tools to build an
+								audience, distribute your games, and manage your base of players.
 							</p>
 						</div>
 					</div>
@@ -110,36 +102,32 @@ createAppRoute({});
 					<div class="row">
 						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
-							<h2 class="section-header">{{ $gettext(`Discover`) }}</h2>
+							<h2 class="section-header">Discover</h2>
 							<hr class="underbar" />
-
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`Find New Games`) }}</h4>
-							<p>
-								{{ $gettext(`Browse game listings to discover new and old gems!`) }}
-							</p>
+							<h4 class="sans-margin-top">Find New Games</h4>
+							<p>Browse game listings to discover new and old gems!</p>
 
 							<p>
-								{{ $gettext(`Get started now by browsing`) }}
-								{{ ' ' }}
+								Get started now by browsing
 								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: null },
 									}"
 								>
-									{{ $gettext(`Featured`) }}
+									Featured
 								</RouterLink>
-								{{ ', ' }}
+								,
 								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: null },
 									}"
 								>
-									{{ $gettext(`Hot`) }}
+									Hot
 								</RouterLink>
-								{{ ', ' }}
+								,
 								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
@@ -147,9 +135,9 @@ createAppRoute({});
 										query: { status: 'devlog' },
 									}"
 								>
-									{{ $gettext(`Devlogs`) }}
+									Devlogs
 								</RouterLink>
-								{{ ', ' }}
+								,
 								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
@@ -157,11 +145,9 @@ createAppRoute({});
 										query: { status: 'wip' },
 									}"
 								>
-									{{ $gettext(`Early Access`) }}
+									Early Access
 								</RouterLink>
-								{{ ' ' }}
-								{{ $gettext(`or`) }}
-								{{ ' ' }}
+								or
 								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
@@ -169,20 +155,16 @@ createAppRoute({});
 										query: { price: 'paid' },
 									}"
 								>
-									{{ $gettext(`Paid`) }}
+									Paid
 								</RouterLink>
-								{{ ' ' }}
-								{{ $gettext(`games!`) }}
+								games!
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`Recommendations`) }}</h4>
+							<h4 class="sans-margin-top">Recommendations</h4>
 							<p>
-								{{
-									$gettext(
-										`Once you play, follow, and rate some games we'll start giving you personalized game recommendations.`
-									)
-								}}
+								Once you play, follow, and rate some games we'll start giving you
+								personalized game recommendations.
 							</p>
 						</div>
 						<div class="col-md-1" />
@@ -205,37 +187,29 @@ createAppRoute({});
 						</div>
 						<div class="col-md-1" />
 						<div class="col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-0 col-lg-5">
-							<h2 class="section-header">{{ $gettext(`Interact`) }}</h2>
+							<h2 class="section-header">Interact</h2>
 							<hr class="underbar" />
 
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`Discuss`) }}</h4>
+							<h4 class="sans-margin-top">Discuss</h4>
 							<p>
-								{{
-									$gettext(
-										`Ask questions, provide feedback, and discuss directly with studios by commenting on their game pages.`
-									)
-								}}
+								Ask questions, provide feedback, and discuss directly with studios
+								by commenting on their game pages.
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`Rate games`) }}</h4>
+							<h4 class="sans-margin-top">Rate games</h4>
 							<p>
-								{{
-									$gettext(
-										`You're in control of what becomes popular on Game Jolt and&mdash;for all we know&mdash;the gaming industry. Rate games you love onto Game Jolt's home page and the top of game listings.`
-									)
-								}}
+								You're in control of what becomes popular on Game Jolt and&mdash;for
+								all we know&mdash;the gaming industry. Rate games you love onto Game
+								Jolt's home page and the top of game listings.
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`Let's Players`) }}</h4>
+							<h4 class="sans-margin-top">Let's Players</h4>
 							<p>
-								{{
-									$gettext(
-										`If you're a Let's Player, link your YouTube or Twitch channel and post video comments to the game page.`
-									)
-								}}
+								If you're a Let's Player, link your YouTube or Twitch channel and
+								post video comments to the game page.
 							</p>
 						</div>
 					</div>
@@ -247,28 +221,24 @@ createAppRoute({});
 					<div class="row">
 						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
-							<h2 class="section-header">{{ $gettext(`Support Studios`) }}</h2>
+							<h2 class="section-header">Support Studios</h2>
 							<hr class="underbar" />
 
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`Indie-Friendly`) }}</h4>
+							<h4 class="sans-margin-top">Indie-Friendly</h4>
 							<p>
-								{{
-									$gettext(
-										`Be confident that the money you spend goes to the developer. We let developers decide the percentage to give to Game Jolt! Every little bit counts!`
-									)
-								}}
+								Be confident that the money you spend goes to the developer. We let
+								developers decide the percentage to give to Game Jolt! Every little
+								bit counts!
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`Be a Supporter`) }}</h4>
+							<h4 class="sans-margin-top">Be a Supporter</h4>
 
 							<p>
-								{{
-									$gettext(
-										`We'll post your avatar as a supporter on the game's page when you pay more than the developer's asking price. Lead by example and show your support!`
-									)
-								}}
+								We'll post your avatar as a supporter on the game's page when you
+								pay more than the developer's asking price. Lead by example and show
+								your support!
 							</p>
 						</div>
 						<div class="col-md-1" />
@@ -291,34 +261,27 @@ createAppRoute({});
 						</div>
 						<div class="col-md-1" />
 						<div class="col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-0 col-lg-5">
-							<h2 class="section-header">{{ $gettext(`Devlogs`) }}</h2>
+							<h2 class="section-header">Devlogs</h2>
 							<hr class="underbar" />
 
 							<br />
-							<h4 class="sans-margin-top">
-								{{ $gettext(`Early Access and In-Development`) }}
-							</h4>
+							<h4 class="sans-margin-top">Early Access and In-Development</h4>
 							<p>
-								{{
-									$gettext(
-										`Discover your future favorite game from its early devlog stage or keep up to date with early access games. Gain access before the rest of the world!`
-									)
-								}}
+								Discover your future favorite game from its early devlog stage or
+								keep up to date with early access games. Gain access before the rest
+								of the world!
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`Stay Updated`) }}</h4>
+							<h4 class="sans-margin-top">Stay Updated</h4>
 							<p>
-								{{
-									$gettext(
-										`Be the first to know about new mechanics, concept art, releases and anything else devs want to share with the world! Follow games to get notified when new posts are added.`
-									)
-								}}
+								Be the first to know about new mechanics, concept art, releases and
+								anything else devs want to share with the world! Follow games to get
+								notified when new posts are added.
 							</p>
 
 							<p>
-								{{ $gettext(`Browse`) }}
-								{{ ' ' }}
+								Browse
 								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
@@ -326,11 +289,9 @@ createAppRoute({});
 										query: { status: 'devlog' },
 									}"
 								>
-									{{ $gettext(`Devlogs`) }}
+									Devlogs
 								</RouterLink>
-								{{ ' ' }}
-								{{ $gettext(`and`) }}
-								{{ ' ' }}
+								and
 								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
@@ -338,10 +299,9 @@ createAppRoute({});
 										query: { status: 'wip' },
 									}"
 								>
-									{{ $gettext(`Early Access`) }}
+									Early Access
 								</RouterLink>
-								{{ ' ' }}
-								{{ $gettext(`games.`) }}
+								games.
 							</p>
 						</div>
 					</div>
@@ -353,27 +313,22 @@ createAppRoute({});
 					<div class="row">
 						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
-							<h2 class="section-header">{{ $gettext(`Organize`) }}</h2>
+							<h2 class="section-header">Organize</h2>
 							<hr class="underbar" />
 
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`Playlists`) }}</h4>
+							<h4 class="sans-margin-top">Playlists</h4>
 							<p>
-								{{
-									$gettext(
-										`Organize the way you follow games, devlogs and developers with ease! Others can discover, follow, and share your playlists.`
-									)
-								}}
+								Organize the way you follow games, devlogs and developers with ease!
+								Others can discover, follow, and share your playlists.
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`Activity Feed`) }}</h4>
+							<h4 class="sans-margin-top">Activity Feed</h4>
 							<p>
-								{{
-									$gettext(
-										`Any game you follow will show up in your Activity Feed. Keep track of what matters to you, and stay updated with your slice of the gaming world!`
-									)
-								}}
+								Any game you follow will show up in your Activity Feed. Keep track
+								of what matters to you, and stay updated with your slice of the
+								gaming world!
 							</p>
 						</div>
 						<div class="col-md-1" />
@@ -396,27 +351,21 @@ createAppRoute({});
 						</div>
 						<div class="col-md-1" />
 						<div class="col-sm-7 col-sm-pull-5 col-md-6 col-md-pull-0 col-lg-5">
-							<h2 class="section-header">{{ $gettext(`Achievements`) }}</h2>
+							<h2 class="section-header">Achievements</h2>
 							<hr class="underbar" />
 
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`Trophies`) }}</h4>
+							<h4 class="sans-margin-top">Trophies</h4>
 							<p>
-								{{
-									$gettext(
-										`Hunt for trophies in games that implement the Game Jolt Game API. Gotta get to 100% completion, eh?`
-									)
-								}}
+								Hunt for trophies in games that implement the Game Jolt Game API.
+								Gotta get to 100% completion, eh?
 							</p>
 
 							<br />
-							<h4 class="sans-margin-top">{{ $gettext(`Scores`) }}</h4>
+							<h4 class="sans-margin-top">Scores</h4>
 							<p>
-								{{
-									$gettext(
-										`Battle to get the top scores in games. Never give up. Never let us down. Never run around or desert us.`
-									)
-								}}
+								Battle to get the top scores in games. Never give up. Never let us
+								down. Never run around or desert us.
 							</p>
 						</div>
 					</div>
@@ -425,7 +374,7 @@ createAppRoute({});
 
 			<section class="section fill-black">
 				<div class="container">
-					<h1 class="section-header text-center">{{ $gettext(`Community`) }}</h1>
+					<h1 class="section-header text-center">Community</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -436,14 +385,12 @@ createAppRoute({});
 								<AppThemeSvg :src="assetPaths['./friends.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Friends`) }}</h4>
+							<h4 class="text-center">Friends</h4>
 
 							<p>
-								{{
-									$gettext(
-										`Become friends on Game Jolt and get notified when your friends are online, when they're playing games, or send them game recommendations.`
-									)
-								}}
+								Become friends on Game Jolt and get notified when your friends are
+								online, when they're playing games, or send them game
+								recommendations.
 							</p>
 						</div>
 
@@ -452,14 +399,11 @@ createAppRoute({});
 								<AppThemeSvg :src="assetPaths['./chat.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Chat`) }}</h4>
+							<h4 class="text-center">Chat</h4>
 
 							<p>
-								{{
-									$gettext(
-										`Meet other gamers, network and get help through private messaging and available chat rooms.`
-									)
-								}}
+								Meet other gamers, network and get help through private messaging
+								and available chat rooms.
 							</p>
 						</div>
 
@@ -470,14 +414,12 @@ createAppRoute({});
 								<AppThemeSvg :src="assetPaths['./forums.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Forums`) }}</h4>
+							<h4 class="text-center">Forums</h4>
 
 							<p>
-								{{
-									$gettext(
-										`Find studios looking for testers, discuss the industry, participate in existing conversations with let's players and devs, or start your own topic! Haikus are encouraged!`
-									)
-								}}
+								Find studios looking for testers, discuss the industry, participate
+								in existing conversations with let's players and devs, or start your
+								own topic! Haikus are encouraged!
 							</p>
 						</div>
 					</div>
@@ -486,28 +428,18 @@ createAppRoute({});
 
 			<section class="section fill-highlight">
 				<div class="container text-center">
-					<h1 class="section-header">{{ $gettext(`Everywhere`) }}</h1>
+					<h1 class="section-header">Everywhere</h1>
 
 					<div class="row">
 						<div class="col-lg-7 col-centered">
 							<p class="lead">
-								{{ $gettext(`Play and follow games in your`) }}
-								{{ ' ' }}
-								<b>{{ $gettext(`browser`) }}</b>
-								{{ ' ' }}
-								{{ $gettext(`, on your`) }}
-								{{ ' ' }}
-								<RouterLink :to="{ name: 'landing.app' }">
-									{{ $gettext(`desktop`) }}
-								</RouterLink>
-								{{ ' ' }}
-								{{ $gettext(`, and through the mobile site on your`) }}
-								{{ ' ' }}
-								<b>{{ $gettext(`tablet`) }}</b>
-								{{ ' ' }}
-								{{ $gettext(`and`) }}
-								{{ ' ' }}
-								<b>{{ $gettext(`phone`) }}.</b>
+								Play and follow games in your
+								<b>browser</b>, on your
+								<RouterLink :to="{ name: 'landing.app' }">desktop</RouterLink>, and
+								through the mobile site on your
+								<b>tablet</b>
+								and
+								<b>phone</b>.
 							</p>
 						</div>
 					</div>

@@ -27,7 +27,6 @@ export default {
 <script lang="ts" setup>
 const { user } = useCommonStore();
 
-// TODO(component-setup-refactor-routes-4): can I remove these 2?
 let firesidePosts: FiresidePostModel[] = [];
 let games: GameModel[] = [];
 
@@ -38,7 +37,7 @@ createAppRoute({
 		Meta.fb = payload.fb;
 		Meta.twitter = payload.twitter;
 		Meta.fb.image = Meta.twitter.image = socialImage;
-
+		// TODO(component-setup-refactor-routes-4): Seems like not being used elsewhere, can be removed?
 		firesidePosts = FiresidePostModel.populate(payload.firesidePosts);
 		games = GameModel.populate(payload.games);
 	},
@@ -51,7 +50,7 @@ createAppRoute({
 			<div class="container">
 				<h1>
 					<AppThemeSvg class="bolt" :src="imageJolt" alt="" strict-colors />
-					{{ $gettext(`Marketplace`) }}
+					Marketplace
 				</h1>
 			</div>
 		</section>
@@ -59,9 +58,7 @@ createAppRoute({
 		<div class="landing-body">
 			<section class="section">
 				<div class="container">
-					<h1 class="section-header text-center">
-						{{ $gettext(`This is how it works...`) }}
-					</h1>
+					<h1 class="section-header text-center">This is how it works...</h1>
 					<hr class="underbar underbar-center" />
 					<br />
 
@@ -71,21 +68,14 @@ createAppRoute({
 								<AppThemeSvg :src="assetPaths['./revenue-share.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Revenue Split`) }}</h4>
+							<h4 class="text-center">Revenue Split</h4>
 
 							<p>
-								{{
-									$gettext(
-										`As a developer, you set the percentage you'd like to give to Game Jolt, as long as it's`
-									)
-								}}
-								{{ ' ' }}
-								<strong>{{ $gettext(`less than 10%`) }}</strong>
-								{{
-									$gettext(
-										`. It's up to you. We will never guilt you into giving us more&mdash;in fact, you can't!`
-									)
-								}}
+								As a developer, you set the percentage you'd like to give to Game
+								Jolt, as long as it's
+								<strong>less than 10%</strong>
+								. It's up to you. We will never guilt you into giving us
+								more&mdash;in fact, you can't!
 							</p>
 						</div>
 
@@ -94,15 +84,9 @@ createAppRoute({
 								<AppThemeSvg :src="assetPaths['./taxes.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Taxes`) }}</h4>
+							<h4 class="text-center">Taxes</h4>
 
-							<p>
-								{{
-									$gettext(
-										`We will take care of taxes (including VAT) so you don't have to!`
-									)
-								}}
-							</p>
+							<p>We will take care of taxes (including VAT) so you don't have to!</p>
 						</div>
 
 						<div class="landing-break-sm" />
@@ -112,14 +96,11 @@ createAppRoute({
 								<AppThemeSvg :src="assetPaths['./payouts.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Payouts`) }}</h4>
+							<h4 class="text-center">Payouts</h4>
 
 							<p>
-								{{
-									$gettext(
-										`Withdraw your earnings whenever you'd like or keep them in your Game Jolt Wallet to buy games from other indies.`
-									)
-								}}
+								Withdraw your earnings whenever you'd like or keep them in your Game
+								Jolt Wallet to buy games from other indies.
 							</p>
 						</div>
 
@@ -130,14 +111,13 @@ createAppRoute({
 								<AppThemeSvg :src="assetPaths['./wallet.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Game Jolt Wallet`) }}</h4>
+							<h4 class="text-center">Game Jolt Wallet</h4>
 
 							<p>
-								{{
-									$gettext(
-										`Your earnings accumulate in your Wallet. Developers have the option of supporting one another by using funds from their Wallet to buy games without paying any payment processing fees. Additionally, when using your Wallet to buy games, we won't take a cut from the sale!`
-									)
-								}}
+								Your earnings accumulate in your Wallet. Developers have the option
+								of supporting one another by using funds from their Wallet to buy
+								games without paying any payment processing fees. Additionally, when
+								using your Wallet to buy games, we won't take a cut from the sale!
 							</p>
 						</div>
 					</div>
@@ -154,14 +134,12 @@ createAppRoute({
 								<AppThemeSvg :src="assetPaths['./selling-options.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Selling Options`) }}</h4>
+							<h4 class="text-center">Selling Options</h4>
 
 							<p>
-								{{
-									$gettext(
-										`Sell your game, artpack, levels, soundtrack; we've got you covered! You can assign an individual price to each item on your game page or choose the pay-what-you-want model.`
-									)
-								}}
+								Sell your game, artpack, levels, soundtrack; we've got you covered!
+								You can assign an individual price to each item on your game page or
+								choose the pay-what-you-want model.
 							</p>
 						</div>
 
@@ -170,24 +148,16 @@ createAppRoute({
 								<AppThemeSvg :src="assetPaths['./keys.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Flexible Key Management`) }}</h4>
+							<h4 class="text-center">Flexible Key Management</h4>
 
 							<p>
-								{{
-									$gettext(
-										`Control who has access to your game's packages through keys. Assign testers to your game, allowing them to get auto-updates through the`
-									)
-								}}
-								{{ ' ' }}
+								Control who has access to your game's packages through keys. Assign
+								testers to your game, allowing them to get auto-updates through the
 								<RouterLink :to="{ name: 'landing.app' }">
-									{{ $gettext(`Game Jolt Desktop App`) }}
+									Game Jolt Desktop App
 								</RouterLink>
-								{{ '. ' }}
-								{{
-									$gettext(
-										`Track press keys, and see when they view your games. Generate keys for prizes, bundles, etc.`
-									)
-								}}
+								. Track press keys, and see when they view your games. Generate keys
+								for prizes, bundles, etc.
 							</p>
 						</div>
 
@@ -198,14 +168,13 @@ createAppRoute({
 								<AppThemeSvg :src="assetPaths['./early-access.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Early Access`) }}</h4>
+							<h4 class="text-center">Early Access</h4>
 
 							<p>
-								{{
-									$gettext(
-										`Accept support at any stage of development by assigning pay what you want or a fixed price for your work in progress builds. Through your game's devlog, keep your supporters up to date with what you're working on, and gather feedback from early testers.`
-									)
-								}}
+								Accept support at any stage of development by assigning pay what you
+								want or a fixed price for your work in progress builds. Through your
+								game's devlog, keep your supporters up to date with what you're
+								working on, and gather feedback from early testers.
 							</p>
 						</div>
 
@@ -216,14 +185,14 @@ createAppRoute({
 								<AppThemeSvg :src="assetPaths['./analytics.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Powerful Analytics`) }}</h4>
+							<h4 class="text-center">Powerful Analytics</h4>
 
 							<p>
-								{{
-									$gettext(
-										`View detailed analytics for your game's sales, views, downloads, and even installs done through the Client. Find out what operating systems/devices your games are being downloaded on, geographical details of your audience, and which referring sites your sales are coming from.`
-									)
-								}}
+								View detailed analytics for your game's sales, views, downloads, and
+								even installs done through the Client. Find out what operating
+								systems/devices your games are being downloaded on, geographical
+								details of your audience, and which referring sites your sales are
+								coming from.
 							</p>
 						</div>
 
@@ -234,14 +203,12 @@ createAppRoute({
 								<AppThemeSvg :src="assetPaths['./supporter-focused.svg']" alt="" />
 							</div>
 
-							<h4 class="text-center">{{ $gettext(`Supporter Focused`) }}</h4>
+							<h4 class="text-center">Supporter Focused</h4>
 
 							<p>
-								{{
-									$gettext(
-										`As a reminder that we're all in this together, when people choose to buy your games for more than the asking price, they will show up as Supporters on your game pages!`
-									)
-								}}
+								As a reminder that we're all in this together, when people choose to
+								buy your games for more than the asking price, they will show up as
+								Supporters on your game pages!
 							</p>
 						</div>
 					</div>
@@ -250,9 +217,7 @@ createAppRoute({
 
 			<section class="section">
 				<div class="container">
-					<h1 class="section-header text-center">
-						{{ $gettext(`Start Selling Your Games`) }}
-					</h1>
+					<h1 class="section-header text-center">Start Selling Your Games</h1>
 
 					<hr class="underbar underbar-center" />
 					<br />
@@ -264,22 +229,20 @@ createAppRoute({
 								<br />
 							</template>
 							<div v-else class="text-center">
-								<p>{{ $gettext(`Get started at`) }}</p>
+								<p>Get started at</p>
 								<p>
 									<AppButton primary :to="{ name: 'dash.account.financials' }">
-										{{ $gettext(`Marketplace Account Setup`) }}
+										Marketplace Account Setup
 									</AppButton>
 								</p>
 							</div>
 
 							<p class="text-muted text-center">
-								{{ $gettext(`Or`) }}
-								{{ ' ' }}
+								Or
 								<AppContactLink email="contact@gamejolt.com">
-									{{ $gettext(`contact us`) }}
+									contact us
 								</AppContactLink>
-								{{ ' ' }}
-								{{ $gettext(`if you have questions!`) }}
+								if you have questions!
 							</p>
 						</div>
 					</div>
