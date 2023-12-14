@@ -73,6 +73,9 @@ class ScrollService {
 		}
 		this._isOnScrollBusy = true;
 
+		// Wait a bit so we don't do this too often.
+		await sleep(50);
+
 		if (this._subscriptions.length) {
 			const top = this.getScrollTop();
 			this.pageOffsetTop = top;
@@ -80,8 +83,6 @@ class ScrollService {
 				subscription.top.value = top;
 			}
 		}
-		// Wait a bit before allowing additional scroll events to be handled.
-		await sleep(50);
 		this._isOnScrollBusy = false;
 	}
 
