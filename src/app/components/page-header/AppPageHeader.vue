@@ -196,10 +196,10 @@ const hasControls = computed(() => {
 			</div>
 
 			<div class="container">
-				<div class="row">
+				<div v-if="$slots.default" class="row">
 					<div :class="colClasses">
 						<div class="page-header-content">
-							<slot />
+							<slot name="default" />
 						</div>
 					</div>
 				</div>

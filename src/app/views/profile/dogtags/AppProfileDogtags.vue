@@ -4,6 +4,13 @@ import AppUserDogtag from '../../../../_common/user/AppUserDogtag.vue';
 import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 
+defineProps({
+	noWrap: {
+		type: Boolean,
+		default: false,
+	},
+});
+
 const { user: routeUser, userFriendship, isOnline } = useProfileRouteStore()!;
 </script>
 
@@ -13,7 +20,7 @@ const { user: routeUser, userFriendship, isOnline } = useProfileRouteStore()!;
 		:style="{
 			display: `inline-flex`,
 			justifyContent: `center`,
-			flexWrap: `wrap-reverse`,
+			flexWrap: noWrap ? `nowrap` : `wrap-reverse`,
 			rowGap: `4px`,
 		}"
 	>

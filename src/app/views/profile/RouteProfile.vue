@@ -15,6 +15,7 @@ import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '../../../_common/user/trophy/user-base-trophy.model';
 import { UserModel } from '../../../_common/user/user.model';
 import { kFontFamilyBase } from '../../../_styles/variables';
+import { clampNumber } from '../../../utils/number';
 import { useResizeObserver } from '../../../utils/resize-observer';
 import { ChatClient, isUserOnline } from '../../components/chat/client';
 import { useGridStore } from '../../components/grid/grid-store';
@@ -55,6 +56,7 @@ function createProfileRouteStore({
 	const trophyCount = ref(0);
 	const userFriendship = ref<UserFriendshipModel>();
 	const previewTrophies = ref<UserBaseTrophyModel[]>([]);
+	const hasSales = ref(false);
 
 	const isOnline = computed<null | boolean>(() => {
 		if (!chat.value || !user.value) {
@@ -67,13 +69,21 @@ function createProfileRouteStore({
 	const _headerHeight = ref(0);
 	const { top: pageOffsetTop } = Scroll.getPageScrollSubscription();
 
-	const stickySides = computed(() => {
-		if (Screen.isMobile) {
-			// TODO(profile-scrunch) I want to show the user avatar near stats
-			// always for mobile. Probably better to do it outside of sticky
-			// sides though.
-			return true;
+	const pageScrollPositionThroughHeader = computed(() => {
+		if (!Screen.isMobile) {
+			return 0;
 		}
+		if (_headerHeight.value <= 0) {
+			return 0;
+		}
+		const limit = 2;
+		if (pageOffsetTop.value >= _headerHeight.value * limit) {
+			return limit;
+		}
+		return clampNumber(pageOffsetTop.value / _headerHeight.value, 0, limit);
+	});
+
+	const stickySides = computed(() => {
 		if (_headerHeight.value <= 0) {
 			return false;
 		}
@@ -213,7 +223,10 @@ function createProfileRouteStore({
 		trophyCount,
 		userFriendship,
 		previewTrophies,
+		hasSales,
 		isOnline,
+		pageOffsetTop,
+		pageScrollPositionThroughHeader,
 		stickySides,
 		sendFriendRequest,
 		acceptFriendRequest,
@@ -223,7 +236,6 @@ function createProfileRouteStore({
 		bootstrapUser,
 		profilePayload,
 		overviewPayload,
-		pageOffsetTop,
 	};
 }
 
@@ -340,35 +352,37 @@ const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
 						should-affix-nav
 						:autoscroll-anchor-key="autoscrollAnchorKey"
 					>
-						<RouterLink
-							:to="{
-								name: 'profile.overview',
-								params: { username: routeUser.username },
-							}"
-						>
-							<h1 :style="headingStyles">
-								{{ routeUser.display_name }}
-								<span :style="headingUsernameStyles">
-									@{{ routeUser.username }}
-								</span>
-							</h1>
-						</RouterLink>
-						<div>
-							<!-- Joined on -->
-							{{ $gettext(`Joined`) }}
-							{{ ' ' }}
-							<AppTimeAgo :date="routeUser.created_on" />
+						<template v-if="!Screen.isMobile" #default>
+							<RouterLink
+								:to="{
+									name: 'profile.overview',
+									params: { username: routeUser.username },
+								}"
+							>
+								<h1 :style="headingStyles">
+									{{ routeUser.display_name }}
+									<span :style="headingUsernameStyles">
+										@{{ routeUser.username }}
+									</span>
+								</h1>
+							</RouterLink>
+							<div>
+								<!-- Joined on -->
+								{{ $gettext(`Joined`) }}
+								{{ ' ' }}
+								<AppTimeAgo :date="routeUser.created_on" />
 
-							<template v-if="isBootstrapped">
-								<span class="dot-separator" />
+								<template v-if="isBootstrapped">
+									<span class="dot-separator" />
 
-								<AppProfileDogtags />
-							</template>
-						</div>
+									<AppProfileDogtags />
+								</template>
+							</div>
+						</template>
 
 						<template #spotlight>
 							<AppPageHeaderAvatar
-								v-if="!stickySides"
+								v-if="!Screen.isMobile || !stickySides"
 								class="anim-fade-in"
 								:user="routeUser"
 							/>

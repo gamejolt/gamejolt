@@ -192,7 +192,7 @@ const stickyScrollerStyles = computed<CSSProperties>(() => {
 						v-bind="{
 							...scrollerProps,
 							disabled: disabledProps.left,
-							controller: scrollerLeft,
+							controller: stickySideData.left ? scrollerLeft : undefined,
 						}"
 					>
 						<slot name="left" />
@@ -222,7 +222,7 @@ const stickyScrollerStyles = computed<CSSProperties>(() => {
 						v-bind="{
 							...scrollerProps,
 							disabled: disabledProps.right,
-							controller: scrollerRight,
+							controller: stickySideData.right ? scrollerRight : undefined,
 						}"
 					>
 						<slot v-if="shouldCombineColumns" name="left" />

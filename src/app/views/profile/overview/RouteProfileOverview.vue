@@ -6,7 +6,6 @@ import { isAdEnthused } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import { CommentModel } from '../../../../_common/comment/comment-model';
 import {
 	CommentStoreModel,
 	commentStoreCount,
@@ -29,7 +28,6 @@ import {
 } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { storeModelList } from '../../../../_common/model/model-store.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
@@ -42,14 +40,17 @@ import AppTopSupportersCard, {
 import { kThemeFg10 } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { showTrophyModal } from '../../../../_common/trophy/modal/modal.service';
 import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowButton.vue';
 import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
-import { UserBaseTrophyModel } from '../../../../_common/user/trophy/user-base-trophy.model';
 import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { $unfollowUser, UserModel } from '../../../../_common/user/user.model';
-import { styleChangeBg, styleElevate, styleFlexCenter } from '../../../../_styles/mixins';
+import {
+	styleChangeBg,
+	styleElevate,
+	styleFlexCenter,
+	styleWhen,
+} from '../../../../_styles/mixins';
 import { kBorderRadiusLg } from '../../../../_styles/variables';
 import { numberSort } from '../../../../utils/array';
 import { removeQuery } from '../../../../utils/router';
@@ -66,10 +67,10 @@ import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
-import { showVendingMachineModal } from '../../../components/vending-machine/modal/modal.service';
 import { useAppStore } from '../../../store/index';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 import AppProfileDogtags from '../dogtags/AppProfileDogtags.vue';
+import AppProfileFloatingHeader from './AppProfileFloatingHeader.vue';
 import AppRouteProfileOverviewBanned from './AppRouteProfileOverviewBanned.vue';
 import AppProfileShopButton from './shop/AppProfileShopButton.vue';
 import AppProfileShortcut from './shortcut/AppProfileShortcut.vue';
@@ -98,10 +99,10 @@ const {
 	isOverviewLoaded,
 	gamesCount,
 	communitiesCount,
-	placeholderCommunitiesCount,
+	// placeholderCommunitiesCount,
 	userFriendship,
 	previewTrophies,
-	trophyCount,
+	// trophyCount,
 	user: routeUser,
 	overviewPayload,
 	acceptFriendRequest,
@@ -110,6 +111,9 @@ const {
 	sendFriendRequest,
 	cancelFriendRequest,
 	stickySides,
+	pageOffsetTop,
+	hasSales,
+	pageScrollPositionThroughHeader,
 	isMe,
 } = useProfileRouteStore()!;
 
@@ -126,30 +130,29 @@ const commentStore = ref<CommentStoreModel | null>(null);
 
 const showFullDescription = ref(false);
 const canToggleDescription = ref(false);
-const showAllCommunities = ref(false);
-const isLoadingAllCommunities = ref(false);
+// const showAllCommunities = ref(false);
+// const isLoadingAllCommunities = ref(false);
 const games = ref<GameModel[]>([]);
 const communities = ref<CommunityModel[]>([]);
-const allCommunities = ref<CommunityModel[] | null>(null);
+// const allCommunities = ref<CommunityModel[] | null>(null);
 const supportersData = ref() as Ref<
 	{ supporters: TopSupporter[]; ownSupport: OwnSupport } | undefined
 >;
-const hasSales = ref(false);
-const overviewComments = ref<CommentModel[]>([]);
+// const overviewComments = ref<CommentModel[]>([]);
 const linkedAccounts = ref<LinkedAccountModel[]>([]);
 const knownFollowers = ref<UserModel[]>([]);
 const knownFollowerCount = ref(0);
 
 let permalinkWatchDeregister: CommentThreadModalPermalinkDeregister | undefined = undefined;
 
-const routeTitle = computed(() => {
+const routeTitle = toRef(() => {
 	if (routeUser.value) {
 		return `${routeUser.value.display_name} (@${routeUser.value.username})`;
 	}
 	return null;
 });
 
-const shareUrl = computed(() => {
+const shareUrl = toRef(() => {
 	if (!routeUser.value) {
 		return Environment.baseUrl;
 	}
@@ -178,41 +181,14 @@ const hasLinksSection = toRef(
 );
 const hasGamesSection = toRef(() => !Screen.isMobile && gamesCount.value > 0);
 const hasCommunitiesSection = toRef(() => !Screen.isMobile && communitiesCount.value > 0);
-
 const twitchAccount = computed(() => getLinkedAccount(LinkedAccountProvider.Twitch));
-
-const addCommentPlaceholder = computed(() => {
-	if (!routeUser.value) {
-		return undefined;
-	}
-
-	if (myUser.value && routeUser.value.id === myUser.value.id) {
-		return $gettext('Shout at yourself!');
-	} else {
-		return $gettext('Shout') + ' @' + routeUser.value.username + '!';
-	}
-});
-const commentsCount = toRef(() =>
-	routeUser.value && routeUser.value.comment_count ? routeUser.value.comment_count : 0
-);
 const shouldShowShouts = toRef(
 	() => routeUser.value && !Screen.isMobile && routeUser.value.shouts_enabled
 );
-
 const isFriend = toRef(
 	() => userFriendship.value && userFriendship.value.state === UserFriendshipState.Friends
 );
-
 const canMessage = toRef(() => isFriend.value && chat.value && chat.value.connected);
-
-const previewCommunityCount = toRef(() =>
-	isLoadingAllCommunities.value ? communitiesCount.value : placeholderCommunitiesCount.value
-);
-const canShowMoreCommunities = toRef(() => communitiesCount.value > communities.value.length);
-const shownCommunities = toRef(() =>
-	showAllCommunities.value && allCommunities.value ? allCommunities.value : communities.value
-);
-
 const shouldShowKnownFollowers = toRef(
 	() =>
 		!!myUser.value &&
@@ -223,14 +199,6 @@ const shouldShowKnownFollowers = toRef(
 const shouldShowTrophies = toRef(
 	() => !Screen.isMobile && !!previewTrophies.value && previewTrophies.value.length > 0
 );
-const shouldShowMoreTrophies = toRef(
-	() => shouldShowTrophies.value && trophyCount.value > previewTrophies.value!.length
-);
-const moreTrophyCount = toRef(
-	() => trophyCount.value - (previewTrophies.value ? previewTrophies.value.length : 0)
-);
-const shouldShowShoutAdd = toRef(() => routeUser.value && routeUser.value.canMakeComment);
-
 const userBlockedYou = toRef(() => routeUser.value && routeUser.value.blocked_you);
 
 function getLinkedAccount(provider: LinkedAccountProvider) {
@@ -251,13 +219,13 @@ createAppRoute({
 	routeTitle,
 	onInit() {
 		showFullDescription.value = false;
-		showAllCommunities.value = false;
-		isLoadingAllCommunities.value = false;
+		// showAllCommunities.value = false;
+		// isLoadingAllCommunities.value = false;
 		games.value = [];
 		communities.value = [];
-		allCommunities.value = null;
+		// allCommunities.value = null;
 		linkedAccounts.value = [];
-		overviewComments.value = [];
+		// overviewComments.value = [];
 		supportersData.value = undefined;
 		hasSales.value = false;
 	},
@@ -272,12 +240,12 @@ createAppRoute({
 		clearCommentStore();
 
 		showFullDescription.value = false;
-		showAllCommunities.value = false;
-		isLoadingAllCommunities.value = false;
+		// showAllCommunities.value = false;
+		// isLoadingAllCommunities.value = false;
 		games.value = GameModel.populate(payload.developerGamesTeaser);
 		communities.value = CommunityModel.populate(payload.communities);
 		linkedAccounts.value = LinkedAccountModel.populate(payload.linkedAccounts);
-		overviewComments.value = storeModelList(CommentModel, payload.comments);
+		// overviewComments.value = storeModelList(CommentModel, payload.comments);
 		hasSales.value = payload.hasSales === true;
 
 		let supporters: TopSupporter[] = [];
@@ -352,15 +320,6 @@ function clearCommentStore() {
 	}
 }
 
-function showComments() {
-	if (routeUser.value) {
-		showCommentModal({
-			model: routeUser.value,
-			displayMode: 'shouts',
-		});
-	}
-}
-
 function openMessaging() {
 	if (routeUser.value && chat.value) {
 		const chatUser = chat.value.friendsList.get(routeUser.value.id);
@@ -371,50 +330,6 @@ function openMessaging() {
 			openChatRoom(chat.value, chatUser.room_id);
 		}
 	}
-}
-
-async function toggleShowAllCommunities() {
-	if (!routeUser.value) {
-		return;
-	}
-
-	if (isLoadingAllCommunities.value) {
-		return;
-	}
-
-	showAllCommunities.value = !showAllCommunities.value;
-	if (showAllCommunities.value && allCommunities.value === null) {
-		isLoadingAllCommunities.value = true;
-
-		try {
-			const payload = await Api.sendRequest(
-				`/web/profile/communities/@${routeUser.value.username}`,
-				null,
-				{ detach: true }
-			);
-			allCommunities.value = CommunityModel.populate(payload.communities);
-		} catch (e) {
-			console.error(`Failed to load all communities for user ${routeUser.value.id}`);
-			console.error(e);
-			showAllCommunities.value = false;
-		} finally {
-			isLoadingAllCommunities.value = false;
-		}
-	}
-}
-
-async function reloadPreviewComments() {
-	if (routeUser.value) {
-		const $payload = await Api.sendRequest(
-			'/web/profile/comment-overview/@' + routeUser.value.username
-		);
-		overviewComments.value = storeModelList(CommentModel, $payload.comments);
-		routeUser.value.comment_count = $payload.count;
-	}
-}
-
-function onClickTrophy(userTrophy: UserBaseTrophyModel) {
-	showTrophyModal(userTrophy);
 }
 
 async function onClickUnfollow() {
@@ -481,11 +396,11 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 		items.push({
 			label: $gettext(`Shop`),
 			icon: 'marketplace-filled',
-			action() {
-				showVendingMachineModal({
-					userId: routeUser.value!.id,
-					location: 'user-profile',
-				});
+			location: {
+				name: 'profile.shop',
+				params: {
+					username: routeUser.value.username,
+				},
 			},
 		});
 	}
@@ -578,6 +493,14 @@ const shouldShowFollow = toRef(
 		!routeUser.value.blocked_you &&
 		!isMe.value
 );
+
+const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
+const fadeUpHeader = computed(
+	() =>
+		// TODO(profile-scrunch): Figure out if we want this
+		false ??
+		((Screen.isDesktop && !stickySides.value) || pageScrollPositionThroughHeader.value >= 1)
+);
 </script>
 
 <template>
@@ -591,7 +514,14 @@ const shouldShowFollow = toRef(
 			@unfollow="onClickUnfollow()"
 		/>
 		<AppShellPageBackdrop v-else>
-			<section class="section">
+			<section
+				class="section"
+				:style="{
+					...styleWhen(Screen.isMobile, {
+						paddingTop: 0,
+					}),
+				}"
+			>
 				<AppPageContainer
 					xl
 					order="left,main,right"
@@ -602,13 +532,13 @@ const shouldShowFollow = toRef(
 					<template #left>
 						<!-- Stats & Shortcuts -->
 						<!-- TODO(profile-scrunch) clean this up -->
-						<AppExpand :when="stickySides">
+						<AppExpand :when="showSidebarAvatar">
 							<AppSpacer vertical :scale="6" />
 						</AppExpand>
 						<div class="sheet">
 							<!-- Avatar/Tags -->
 							<AppExpand
-								:when="stickySides"
+								:when="showSidebarAvatar"
 								animate-initial
 								:style="{ overflow: `visible` }"
 							>
@@ -617,11 +547,16 @@ const shouldShowFollow = toRef(
 										height: `${100 / 2 + 24}px`,
 										width: `100%`,
 										position: `relative`,
+										...styleWhen(Screen.isMobile, {
+											transition: `opacity 100ms linear, transform 100ms linear`,
+											transform: `translateY(${fadeUpHeader ? -50 : 0}%)`,
+											opacity: fadeUpHeader ? 0 : 1,
+										}),
 									}"
 								>
 									<Transition>
 										<div
-											v-if="stickySides"
+											v-if="showSidebarAvatar"
 											class="anim-fade-in-down anim-fade-leave-up"
 											:style="{
 												...styleFlexCenter(),
@@ -780,9 +715,18 @@ const shouldShowFollow = toRef(
 							{{ $gettext(`Message`) }}
 						</AppButton>
 
-						<template v-if="shouldShowFollow || isMe || canAddAsFriend || canMessage">
-							<AppSpacer vertical :scale="4" />
-						</template>
+						<AppButton
+							v-if="Screen.isMobile && gamesCount > 0"
+							block
+							:to="{
+								name: 'library.collection.developer',
+								params: { id: routeUser.username },
+							}"
+						>
+							{{ formatNumber(gamesCount) }} Games
+						</AppButton>
+
+						<AppSpacer vertical :scale="4" />
 
 						<!-- TODO(profile-scrunch) Either scroll affix the ad or
 						have the whole sidebar sticky. I'd prefer to have the
@@ -794,13 +738,15 @@ const shouldShowFollow = toRef(
 							}"
 							:padding="8"
 						> -->
-						<!-- TODO(profile-scrunch) Can't do a static width
-							like this, sidebars are flexible. -->
 						<AppAdWidget
 							:style="{
 								...styleChangeBg('bg'),
 								...styleElevate(3),
-								minWidth: `300px`,
+								// TODO(profile-scrunch) Can't do a static width like this, sidebars are flexible.
+								// minWidth: `300px`,
+								width: `300px`,
+								maxWidth: `100%`,
+
 								paddingTop: `8px`,
 								paddingBottom: `8px`,
 								borderRadius: kBorderRadiusLg.px,
@@ -957,6 +903,12 @@ const shouldShowFollow = toRef(
 							</AppExpand>
 						</template>
 
+						<!-- Floating header -->
+						<!-- TODO(profile-scrunch) Maybe keep? -->
+						<Transition>
+							<AppProfileFloatingHeader v-if="Screen.isMobile && fadeUpHeader" />
+						</Transition>
+
 						<AppProfileShopButton v-if="hasSales" :user="routeUser" />
 
 						<RouterView />
@@ -966,89 +918,3 @@ const shouldShowFollow = toRef(
 		</AppShellPageBackdrop>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-._supporters-card
-	rounded-corners-lg()
-	change-bg('bg')
-	padding: 12px 16px
-	display: flex
-	gap: 16px
-
-._supporter
-	flex: 1
-	display: flex
-	flex-direction: column
-	align-items: center
-	justify-content: flex-end
-	min-width: 0
-	color: var(--theme-fg)
-
-._supporter-avatar
-	width: 100%
-	max-width: 56px
-
-._supporter-username
-	text-overflow()
-	max-width: 100%
-	min-width: 0
-	font-size: $font-size-small
-
-._supporter-value
-	rounded-corners()
-	change-bg('bg-offset')
-	min-width: 32px
-	padding: 0px 6px
-	font-weight: bold
-	display: inline-flex
-	justify-content: center
-	font-size: $font-size-small
-
-._communities
-	display: grid
-	grid-template-columns: repeat(5, minmax(55px, 1fr))
-	grid-gap: 8px
-
-._community-item
-	pressy()
-	display: inline-block
-	position: relative
-	outline: 0
-	width: 100%
-
-._community-thumb-placeholder
-	img-circle()
-	change-bg('bg-subtle')
-
-._community-verified-tick
-	position: absolute
-	right: -3px
-	bottom: -1px
-	change-bg('bg-offset')
-	border-radius: 50%
-
-._trophies
-	display: grid
-	grid-template-columns: repeat(5, 55px)
-	grid-gap: 5px 10px
-
-._trophies-more
-	change-bg('bg-offset')
-	rounded-corners-lg()
-	display: flex !important
-	justify-content: center
-	align-items: center
-	font-size: $font-size-h4
-	user-select: none
-
-	&:hover
-		text-decoration: none
-
-._trophy
-	width: 55px
-	height: 55px
-	pressy()
-	display: inline-block
-	position: relative
-	cursor: pointer
-</style>
