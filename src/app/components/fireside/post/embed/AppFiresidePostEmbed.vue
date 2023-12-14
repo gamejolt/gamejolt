@@ -240,8 +240,7 @@ function onInviewChanged(isInviewNew: boolean) {
 </template>
 
 <style lang="stylus" scoped>
-// TODO(component-setup-refactor-2): can we remove these imports,
-// seemed like not used here?
+@import './variables'
 
 .-embed
 	full-bleed-xs()
