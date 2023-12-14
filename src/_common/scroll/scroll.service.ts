@@ -1,3 +1,6 @@
+import { Ref, onScopeDispose, ref } from 'vue';
+import { arrayRemove } from '../../utils/array';
+import { sleep } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';
 import { AppAutoscrollAnchor } from './auto-scroll/anchor';
 
@@ -9,10 +12,78 @@ interface ScrollToOptions {
 	preventDirections?: ('up' | 'down')[];
 }
 
+export interface PageScrollSubscription {
+	id: number;
+	unsubscribe: () => void;
+	top: Ref<number>;
+}
+
 class ScrollService {
 	shouldAutoScroll = true;
 	autoscrollAnchor?: AppAutoscrollAnchor;
 	offsetTop = 0;
+
+	pageOffsetTop = 0;
+	_subscriptionId = 0;
+	_subscriptions: PageScrollSubscription[] = [];
+	_isOnScrollBusy = false;
+
+	/** Should only be used in a setup block */
+	getPageScrollSubscription() {
+		const id = ++this._subscriptionId;
+		const subscription: PageScrollSubscription = {
+			id,
+			top: ref(0),
+			unsubscribe: () => {
+				arrayRemove(this._subscriptions, i => i.id === id);
+				this._afterSubscriptionsChanged();
+			},
+		};
+
+		// TODO(profile-scrunch) Not sure if this or onUnmounted is preferred.
+		onScopeDispose(() => {
+			subscription.unsubscribe();
+		});
+
+		this._subscriptions.push(subscription);
+		this._afterSubscriptionsChanged();
+		return subscription;
+	}
+
+	_afterSubscriptionsChanged() {
+		if (this._subscriptions.length) {
+			window.document.addEventListener('scroll', this._onScroll.bind(this), {
+				passive: true,
+			});
+
+			// Need to call _onScroll lazily here, otherwise things may not be
+			// loaded in yet. This can happen if you're on a page that holds the
+			// only subscription, go to a new page, then go back through the
+			// browser.
+			sleep(0).then(() => this._onScroll());
+		} else {
+			window.document.removeEventListener('scroll', this._onScroll.bind(this));
+			this.pageOffsetTop = 0;
+		}
+	}
+
+	async _onScroll() {
+		if (this._isOnScrollBusy) {
+			return;
+		}
+		this._isOnScrollBusy = true;
+
+		if (this._subscriptions.length) {
+			const top = this.getScrollTop();
+			this.pageOffsetTop = top;
+			for (const subscription of this._subscriptions) {
+				subscription.top.value = top;
+			}
+		}
+		// Wait a bit before allowing additional scroll events to be handled.
+		await sleep(50);
+		this._isOnScrollBusy = false;
+	}
 
 	/**
 	 * Sets the extra offset for scrolling. This can be used if there is a fixed

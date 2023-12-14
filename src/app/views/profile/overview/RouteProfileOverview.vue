@@ -1,11 +1,10 @@
 <script lang="ts">
 import { Ref, computed, ref, toRef } from 'vue';
-import { RouteLocationRaw, RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
+import { RouteLocationRaw, RouterView, useRoute, useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import { isAdEnthused } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommentModel } from '../../../../_common/comment/comment-model';
 import {
@@ -16,8 +15,6 @@ import {
 	useCommentStoreManager,
 } from '../../../../_common/comment/comment-store';
 import { CommunityModel } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
@@ -35,7 +32,6 @@ import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-serv
 import { storeModelList } from '../../../../_common/model/model-store.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -43,22 +39,21 @@ import AppTopSupportersCard, {
 	OwnSupport,
 	TopSupporter,
 } from '../../../../_common/supporters/AppTopSupportersCard.vue';
-import { kThemeFg, kThemeFg10 } from '../../../../_common/theme/variables';
+import { kThemeFg10 } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { showTrophyModal } from '../../../../_common/trophy/modal/modal.service';
-import AppTrophyThumbnail from '../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
+import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowButton.vue';
 import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
 import { UserBaseTrophyModel } from '../../../../_common/user/trophy/user-base-trophy.model';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { $unfollowUser, UserModel } from '../../../../_common/user/user.model';
-import { styleChangeBg, styleElevate } from '../../../../_styles/mixins';
-import { kBorderRadiusLg, kFontSizeSmall, kLayerAds } from '../../../../_styles/variables';
+import { styleChangeBg, styleElevate, styleFlexCenter } from '../../../../_styles/mixins';
+import { kBorderRadiusLg } from '../../../../_styles/variables';
 import { numberSort } from '../../../../utils/array';
 import { removeQuery } from '../../../../utils/router';
 import { openChatRoom } from '../../../components/chat/client';
-import AppCommentOverview from '../../../components/comment/AppCommentOverview.vue';
-import AppCommentAddButton from '../../../components/comment/add-button/AppCommentAddButton.vue';
 import { showCommentModal } from '../../../components/comment/modal/modal.service';
 import {
 	CommentThreadModalPermalinkDeregister,
@@ -71,10 +66,22 @@ import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
+import { showVendingMachineModal } from '../../../components/vending-machine/modal/modal.service';
 import { useAppStore } from '../../../store/index';
 import { useProfileRouteStore } from '../RouteProfile.vue';
+import AppProfileDogtags from '../dogtags/AppProfileDogtags.vue';
 import AppRouteProfileOverviewBanned from './AppRouteProfileOverviewBanned.vue';
 import AppProfileShopButton from './shop/AppProfileShopButton.vue';
+import AppProfileShortcut from './shortcut/AppProfileShortcut.vue';
+import AppProfileShortcutExtras from './shortcut/AppProfileShortcutExtras.vue';
+import AppProfileShortcuts, { ProfileQuickLink } from './shortcut/AppProfileShortcuts.vue';
+import AppProfileStat from './stats/AppProfileStat.vue';
+import AppProfileStats, { ProfileStat } from './stats/AppProfileStats.vue';
+
+export type ProfileTileAction =
+	| { location: RouteLocationRaw; action?: never }
+	| { location?: never; action: () => void }
+	| { location?: never; action?: never };
 
 export default {
 	...defineAppRouteOptions({
@@ -102,6 +109,8 @@ const {
 	removeFriend,
 	sendFriendRequest,
 	cancelFriendRequest,
+	stickySides,
+	isMe,
 } = useProfileRouteStore()!;
 
 const { toggleLeftPane } = useAppStore();
@@ -437,54 +446,59 @@ async function onFriendRequestReject() {
 	}
 }
 
-interface ProfileStat {
-	label: string;
-	value: string;
-	link?: RouteLocationRaw;
-}
-
-const stats = computed<ProfileStat[]>(() => [
-	{
-		label: $gettext('Following'),
-		value: formatNumber(routeUser.value?.following_count || 0),
-		link: {
-			name: 'profile.following',
-		},
-	},
-	{
-		label: $gettext('Followers'),
-		value: formatNumber(routeUser.value?.follower_count || 0),
-		link: {
-			name: 'profile.followers',
-		},
-	},
-	{
-		label: $gettext('Likes'),
-		value: formatNumber(routeUser.value?.like_count || 0),
-	},
-]);
-
-interface ProfileQuickLink {
-	label: string;
-	icon: Jolticon;
-	link: RouteLocationRaw;
-}
+const stats = computed<ProfileStat[]>(
+	() =>
+		[
+			{
+				label: $gettext('Following'),
+				value: formatNumber(routeUser.value?.following_count || 0),
+				location: {
+					name: 'profile.following',
+				},
+			},
+			{
+				label: $gettext('Followers'),
+				value: formatNumber(routeUser.value?.follower_count || 0),
+				location: {
+					name: 'profile.followers',
+				},
+			},
+			{
+				label: $gettext('Likes'),
+				value: formatNumber(routeUser.value?.like_count || 0),
+			},
+		] satisfies ProfileStat[]
+);
 
 const quickLinks = computed<ProfileQuickLink[]>(() => {
 	const items: ProfileQuickLink[] = [];
 
-	if (!routeUser.value) {
+	if (!routeUser.value || Screen.isMobile) {
 		return items;
+	}
+
+	if (hasSales.value) {
+		items.push({
+			label: $gettext(`Shop`),
+			icon: 'marketplace-filled',
+			action() {
+				showVendingMachineModal({
+					userId: routeUser.value!.id,
+					location: 'user-profile',
+				});
+			},
+		});
 	}
 
 	if (shouldShowShouts.value) {
 		items.push({
 			label: $gettext(`Shouts`),
 			icon: 'comment-filled',
-			// TODO
-			link: {
-				name: 'library.collection.developer',
-				params: { id: routeUser.value.username },
+			action() {
+				showCommentModal({
+					model: routeUser.value!,
+					displayMode: 'shouts',
+				});
 			},
 		});
 	}
@@ -493,7 +507,8 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 		items.push({
 			label: $gettext(`Games`),
 			icon: 'gamepad',
-			link: {
+			// TODO(profile-scrunch) modal
+			location: {
 				name: 'library.collection.developer',
 				params: { id: routeUser.value.username },
 			},
@@ -504,8 +519,8 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 		items.push({
 			label: $gettext(`Trophies`),
 			icon: 'trophy',
-			// TODO
-			link: { name: 'profile.trophies' },
+			// TODO(profile-scrunch) modal
+			location: { name: 'profile.trophies' },
 		});
 	}
 
@@ -513,8 +528,8 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 		items.push({
 			label: $gettext(`Communities`),
 			icon: 'communities',
-			// TODO
-			link: {
+			// TODO(profile-scrunch) modal
+			location: {
 				name: 'library.collection.developer',
 				params: { id: routeUser.value.username },
 			},
@@ -555,11 +570,19 @@ const socialLinks = computed(() => {
 
 	return items;
 });
+
+const shouldShowFollow = toRef(
+	() =>
+		routeUser.value &&
+		!routeUser.value.is_blocked &&
+		!routeUser.value.blocked_you &&
+		!isMe.value
+);
 </script>
 
 <template>
 	<div v-if="routeUser">
-		<!-- If they're banned, show very litte -->
+		<!-- If they're banned, show very little -->
 		<AppRouteProfileOverviewBanned
 			v-if="!routeUser.status"
 			:user="routeUser"
@@ -569,107 +592,139 @@ const socialLinks = computed(() => {
 		/>
 		<AppShellPageBackdrop v-else>
 			<section class="section">
-				<AppPageContainer xl order="left,main,right">
+				<AppPageContainer
+					xl
+					order="left,main,right"
+					sticky-sides
+					:disable-sticky-sides="!stickySides"
+					:sticky-side-top-margin="40"
+				>
 					<template #left>
-						<!-- <li>
-							<RouterLink
-								:to="{ name: 'profile.following' }"
-								active-class="active"
-							>
-								{{ $gettext(`Following`) }}
-								<span class="badge">
-									{{ formatNumber(routeUser.following_count) }}
-								</span>
-							</RouterLink>
-						</li>
-						<li>
-							<RouterLink
-								:to="{ name: 'profile.followers' }"
-								active-class="active"
-							>
-								{{ $gettext(`Followers`) }}
-								<span class="badge">
-									{{ formatNumber(routeUser.follower_count) }}
-								</span>
-							</RouterLink>
-						</li> -->
-
-						<!-- Stats -->
+						<!-- Stats & Shortcuts -->
+						<!-- TODO(profile-scrunch) clean this up -->
+						<AppExpand :when="stickySides">
+							<AppSpacer vertical :scale="6" />
+						</AppExpand>
 						<div class="sheet">
-							<div
-								:style="{
-									display: `flex`,
-									flexDirection: `row`,
-									justifyContent: `space-around`,
-								}"
+							<!-- Avatar/Tags -->
+							<AppExpand
+								:when="stickySides"
+								animate-initial
+								:style="{ overflow: `visible` }"
 							>
-								<template v-for="stat of stats" :key="stat.label">
-									<component
-										:is="stat.link ? RouterLink : 'div'"
-										class="stat-big stat-big-smaller text-center"
-										:class="{
-											'link-unstyled': stat.link,
-										}"
-										:style="{
-											flex: 1,
-											marginBottom: 0,
-										}"
-										:to="stat.link"
-									>
-										<div class="stat-big-digit">
-											{{ stat.value }}
+								<div
+									:style="{
+										height: `${100 / 2 + 24}px`,
+										width: `100%`,
+										position: `relative`,
+									}"
+								>
+									<Transition>
+										<div
+											v-if="stickySides"
+											class="anim-fade-in-down anim-fade-leave-up"
+											:style="{
+												...styleFlexCenter(),
+												position: `absolute`,
+												width: `100%`,
+												bottom: `24px`,
+											}"
+										>
+											<AppUserAvatarBubble
+												:user="routeUser"
+												show-frame
+												show-verified
+												verified-size="big"
+												:verified-offset="0"
+												disable-link
+												:style="{
+													width: `100px`,
+												}"
+											/>
+											<div
+												:style="{
+													position: `absolute`,
+													bottom: `-16px`,
+													maxWidth: `100%`,
+													zIndex: 2,
+												}"
+											>
+												<AppProfileDogtags />
+											</div>
 										</div>
-										<div class="stat-big-label">
-											{{ stat.label }}
-										</div>
-									</component>
-								</template>
-							</div>
+									</Transition>
+								</div>
+							</AppExpand>
 
-							<!-- <div
+							<!-- Stats -->
+							<AppProfileStats :items="stats">
+								<template #default="item">
+									<AppProfileStat :item="item" />
+								</template>
+							</AppProfileStats>
+
+							<div
 								:style="{
 									margin: `20px -20px`,
 									height: `1px`,
 									backgroundColor: kThemeFg10,
 								}"
-							/> -->
+							/>
+
+							<!-- Shortcuts -->
+							<AppProfileShortcuts v-if="Screen.isDesktop" :items="quickLinks">
+								<template #default="item">
+									<AppProfileShortcut :item="item" />
+								</template>
+
+								<template #extras>
+									<AppProfileShortcutExtras />
+								</template>
+							</AppProfileShortcuts>
+							<template v-else>
+								<!-- TODO(profile-scrunch) Probably want to show
+								block buttons here on mobile (follow, edit,
+								friend-request, etc.) -->
+								<!--  -->
+							</template>
 						</div>
 
 						<!-- Bio -->
-						<div class="sheet">
-							<template v-if="!isOverviewLoaded">
-								<div>
-									<span class="lazy-placeholder" />
-									<span class="lazy-placeholder" />
-									<span class="lazy-placeholder" />
-									<span class="lazy-placeholder" style="width: 40%" />
-								</div>
-								<br />
-							</template>
-							<template v-else-if="routeUser.hasBio">
-								<!--
+						<!-- TODO(profile-scrunch) See how things look moving
+						this into the shortcuts sheet. Add the same divider we
+						have between stats and shortcuts. -->
+						<div v-if="!isOverviewLoaded" class="sheet">
+							<div>
+								<span class="lazy-placeholder" />
+								<span class="lazy-placeholder" />
+								<span class="lazy-placeholder" />
+								<span class="lazy-placeholder" style="width: 40%" />
+							</div>
+							<br />
+						</div>
+						<div v-else-if="routeUser.hasBio" class="sheet">
+							<!--
 							Set a :key to let vue know that it should update
 							this when the user changes.
 							-->
-								<AppFadeCollapse
-									:key="routeUser.bio_content"
-									:collapse-height="200"
-									:is-open="showFullDescription"
-									:animate="false"
-									@require-change="canToggleDescription = $event"
-									@expand="showFullDescription = true"
-								>
-									<AppContentViewer :source="routeUser.bio_content" />
-								</AppFadeCollapse>
+							<AppFadeCollapse
+								:key="routeUser.bio_content"
+								:collapse-height="200"
+								:is-open="showFullDescription"
+								:animate="false"
+								@require-change="canToggleDescription = $event"
+								@expand="showFullDescription = true"
+							>
+								<AppContentViewer :source="routeUser.bio_content" />
+							</AppFadeCollapse>
 
-								<p>
-									<a
-										v-if="canToggleDescription"
-										class="hidden-text-expander"
-										@click="showFullDescription = !showFullDescription"
-									/>
-								</p>
-							</template>
+							<!-- <p> -->
+							<a
+								v-if="canToggleDescription"
+								class="hidden-text-expander"
+								@click="showFullDescription = !showFullDescription"
+							/>
+							<!-- </p> -->
 						</div>
 
 						<!-- Top supporters -->
@@ -680,79 +735,6 @@ const socialLinks = computed(() => {
 							/>
 							<br />
 						</template>
-
-						<!-- Quick links -->
-						<div class="sheet">
-							<div
-								:style="{
-									display: `flex`,
-									flexDirection: `row`,
-									justifyContent: `space-around`,
-								}"
-							>
-								<template v-for="stat of stats" :key="stat.label">
-									<component
-										:is="stat.link ? RouterLink : 'div'"
-										class="stat-big stat-big-smaller text-center"
-										:class="{
-											'link-unstyled': stat.link,
-										}"
-										:style="{
-											flex: 1,
-											marginBottom: 0,
-										}"
-										:to="stat.link"
-									>
-										<div class="stat-big-digit">
-											{{ stat.value }}
-										</div>
-										<div class="stat-big-label">
-											{{ stat.label }}
-										</div>
-									</component>
-								</template>
-							</div>
-
-							<div
-								:style="{
-									margin: `20px -20px`,
-									height: `1px`,
-									backgroundColor: kThemeFg10,
-								}"
-							/>
-
-							<div
-								:style="{
-									display: `flex`,
-									flexDirection: `row`,
-									justifyContent: `space-around`,
-								}"
-							>
-								<RouterLink
-									v-for="link of quickLinks"
-									:key="link.label"
-									:style="{
-										display: `flex`,
-										flexDirection: `column`,
-										alignItems: `center`,
-										flex: 1,
-										gap: `4px`,
-										color: kThemeFg,
-									}"
-									:to="link.link"
-								>
-									<AppJolticon :icon="link.icon" :style="{ fontSize: `28px` }" />
-									<div
-										:style="{
-											fontWeight: `bold`,
-											fontSize: kFontSizeSmall.px,
-										}"
-									>
-										{{ link.label }}
-									</div>
-								</RouterLink>
-							</div>
-						</div>
 
 						<!-- Social links -->
 						<template v-if="socialLinks.length">
@@ -768,125 +750,70 @@ const socialLinks = computed(() => {
 						</template>
 					</template>
 
-					<template #left-bottom>
-						<!-- Shouts -->
-						<template v-if="false && shouldShowShouts">
-							<div class="pull-right">
-								<AppButton trans @click="showComments()">
-									{{ $gettext(`View all`) }}
-								</AppButton>
-							</div>
-
-							<h4 class="section-header">
-								{{ $gettext(`Shouts`) }}
-								<small v-if="commentsCount">
-									({{ formatNumber(commentsCount) }})
-								</small>
-							</h4>
-
-							<AppCommentAddButton
-								v-if="shouldShowShoutAdd"
-								:model="routeUser"
-								:placeholder="addCommentPlaceholder"
-								display-mode="shouts"
-							/>
-
-							<AppCommentOverview
-								:comments="overviewComments"
-								:model="routeUser"
-								display-mode="shouts"
-								@reload-comments="reloadPreviewComments"
-							/>
-						</template>
-
-						<!-- Communities -->
-						<template v-if="false && hasCommunitiesSection">
-							<div class="clearfix">
-								<div v-if="canShowMoreCommunities" class="pull-right">
-									<AppButton
-										trans
-										:disabled="isLoadingAllCommunities"
-										@click="toggleShowAllCommunities"
-									>
-										{{ $gettext(`View all`) }}
-										{{ ' ' }}
-										<small>({{ formatNumber(communitiesCount) }})</small>
-									</AppButton>
-								</div>
-
-								<h4 class="section-header">
-									{{ $gettext(`Communities`) }}
-								</h4>
-							</div>
-
-							<span class="_communities">
-								<template v-if="!isOverviewLoaded || isLoadingAllCommunities">
-									<div
-										v-for="i in previewCommunityCount"
-										:key="i"
-										class="_community-item _community-thumb-placeholder"
-									>
-										<AppAspectRatio :ratio="1" />
-									</div>
-								</template>
-								<template v-else>
-									<RouterLink
-										v-for="community of shownCommunities"
-										:key="community.id"
-										v-app-tooltip.bottom="community.name"
-										class="_community-item link-unstyled"
-										:to="community.routeLocation"
-									>
-										<div class="_community-item-align">
-											<AppCommunityThumbnailImg
-												class="-community-thumb"
-												:community="community"
-											/>
-											<AppCommunityVerifiedTick
-												class="_community-verified-tick"
-												:community="community"
-												no-tooltip
-											/>
-										</div>
-									</RouterLink>
-								</template>
-							</span>
-
-							<br />
-						</template>
-					</template>
-
 					<template #right>
-						<AppScrollAffix
+						<AppUserFollowButton
+							v-if="shouldShowFollow"
+							:user="routeUser"
+							block
+							location="profilePage"
+						/>
+						<AppButton
+							v-else-if="isMe"
+							primary
+							block
+							:to="{
+								name: 'dash.account.edit',
+							}"
+						>
+							{{ $gettext(`Edit profile`) }}
+						</AppButton>
+
+						<AppButton v-if="canAddAsFriend" block @click="sendFriendRequest()">
+							{{ $gettext(`Send friend request`) }}
+						</AppButton>
+						<AppButton
+							v-else-if="canMessage"
+							block
+							icon="user-messages"
+							@click="openMessaging"
+						>
+							{{ $gettext(`Message`) }}
+						</AppButton>
+
+						<template v-if="shouldShowFollow || isMe || canAddAsFriend || canMessage">
+							<AppSpacer vertical :scale="4" />
+						</template>
+
+						<!-- TODO(profile-scrunch) Either scroll affix the ad or
+						have the whole sidebar sticky. I'd prefer to have the
+						sidebars sticky.  -->
+						<!-- <AppScrollAffix
 							:style="{
 								position: `relative`,
 								zIndex: kLayerAds,
 							}"
 							:padding="8"
-						>
-							<AppAdWidget
-								:style="{
-									...styleChangeBg('bg'),
-									...styleElevate(3),
-									minWidth: `300px`,
-									paddingTop: `8px`,
-									paddingBottom: `8px`,
-									borderRadius: kBorderRadiusLg.px,
-									padding: `8px`,
-								}"
-								:size="isAdEnthused ? 'video' : 'rectangle'"
-								placement="side"
-							/>
-						</AppScrollAffix>
+						> -->
+						<!-- TODO(profile-scrunch) Can't do a static width
+							like this, sidebars are flexible. -->
+						<AppAdWidget
+							:style="{
+								...styleChangeBg('bg'),
+								...styleElevate(3),
+								minWidth: `300px`,
+								paddingTop: `8px`,
+								paddingBottom: `8px`,
+								borderRadius: kBorderRadiusLg.px,
+								padding: `8px`,
+							}"
+							:size="isAdEnthused ? 'video' : 'rectangle'"
+							placement="side"
+						/>
+						<!-- </AppScrollAffix> -->
 
 						<AppSpacer vertical :scale="6" />
 
-						<AppShareCard
-							v-if="!myUser || myUser.id !== routeUser.id"
-							resource="user"
-							:url="shareUrl"
-							bleed-padding
-						/>
+						<AppShareCard v-if="!myUser || !isMe" resource="user" :url="shareUrl" />
 						<AppInviteCard v-else :user="myUser" />
 
 						<AppUserKnownFollowers
@@ -895,6 +822,7 @@ const socialLinks = computed(() => {
 							:count="knownFollowerCount"
 						/>
 
+						<!-- TODO(profile-scrunch) -->
 						<template v-if="false && hasQuickButtonsSection">
 							<!-- Add Friend -->
 							<AppButton v-if="canAddAsFriend" block @click="sendFriendRequest()">
@@ -956,38 +884,6 @@ const socialLinks = computed(() => {
 								event-label="profile"
 							/>
 						</template>
-
-						<!-- Trophies -->
-						<template v-if="false && shouldShowTrophies">
-							<h4 class="section-header">
-								{{ $gettext(`Trophies`) }}
-							</h4>
-
-							<div class="_trophies">
-								<template v-if="previewTrophies.length">
-									<AppTrophyThumbnail
-										v-for="trophy of previewTrophies"
-										:key="trophy.key"
-										class="_trophy"
-										:trophy="trophy.trophy!"
-										no-difficulty
-										no-highlight
-										@click="onClickTrophy(trophy)"
-									/>
-								</template>
-
-								<RouterLink
-									v-if="shouldShowMoreTrophies"
-									v-app-tooltip="$gettext(`View All Trophies...`)"
-									class="_trophies-more _trophy link-unstyled"
-									:to="{ name: 'profile.trophies' }"
-								>
-									+{{ moreTrophyCount }}
-								</RouterLink>
-							</div>
-
-							<br />
-						</template>
 					</template>
 
 					<template #default>
@@ -1012,7 +908,7 @@ const socialLinks = computed(() => {
 						<template v-if="userFriendship">
 							<AppExpand
 								:when="userFriendship.state === UserFriendshipState.RequestSent"
-								:animate-initial="true"
+								animate-initial
 							>
 								<div class="alert">
 									<p>
@@ -1034,7 +930,7 @@ const socialLinks = computed(() => {
 
 							<AppExpand
 								:when="userFriendship.state === UserFriendshipState.RequestReceived"
-								:animate-initial="true"
+								animate-initial
 							>
 								<div class="alert">
 									<p>

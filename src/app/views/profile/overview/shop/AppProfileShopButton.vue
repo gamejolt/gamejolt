@@ -6,7 +6,7 @@ import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { useOnHover } from '../../../../../_common/on/useOnHover';
 import AppTheme from '../../../../../_common/theme/AppTheme.vue';
-import { kThemeFg } from '../../../../../_common/theme/variables';
+import { kThemeFg, kThemePrimary } from '../../../../../_common/theme/variables';
 import { UserModel } from '../../../../../_common/user/user.model';
 import {
 	styleAbsoluteFill,
@@ -16,6 +16,7 @@ import {
 	styleTyped,
 	styleWhen,
 } from '../../../../../_styles/mixins';
+import { kBorderWidthBase } from '../../../../../_styles/variables';
 
 defineProps({
 	user: {
@@ -40,6 +41,7 @@ const { hoverBinding, hovered } = useOnHover();
 					display: `block`,
 					position: `relative`,
 					overflow: `hidden`,
+					border: `${kBorderWidthBase.px} solid ${kThemePrimary}`,
 				})
 			"
 			:to="{
@@ -69,7 +71,7 @@ const { hoverBinding, hovered } = useOnHover();
 					}),
 					color: kThemeFg,
 					position: `relative`,
-					zIndex: 2,
+					zIndex: 3,
 					...styleWhen(!!user.header_media_item, {
 						...styleOverlayTextShadow,
 					}),
