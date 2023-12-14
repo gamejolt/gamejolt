@@ -3,7 +3,7 @@ import { Ref, computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
 import AppAdStickyRail from '../../../../../../_common/ad/AppAdStickyRail.vue';
-import { isAdEnthused, useAdStore } from '../../../../../../_common/ad/ad-store';
+import { useAdStore } from '../../../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
 import { trackExperimentEngagement } from '../../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../../_common/api/api.service';
@@ -320,21 +320,16 @@ async function reloadPreviewComments() {
 								:style="{ position: `relative`, zIndex: kLayerAds }"
 								:padding="Screen.isLg ? 80 : 8"
 								:affixed-styles="styleWhen(Screen.width > 2300, { right: `8px` })"
-								:disabled="!isAdEnthused"
 							>
 								<AppAdWidget
 									:style="{
 										...styleChangeBg('bg'),
 										...styleElevate(3),
 										minWidth: `300px`,
-										paddingTop: `8px`,
-										paddingBottom: `8px`,
+										padding: `8px`,
 										borderRadius: kBorderRadiusLg.px,
-										...styleWhen(isAdEnthused, {
-											padding: `8px`,
-										}),
 									}"
-									:size="isAdEnthused ? 'video' : 'rectangle'"
+									size="video"
 									placement="side"
 								/>
 							</AppScrollAffix>

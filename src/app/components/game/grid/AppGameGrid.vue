@@ -2,7 +2,7 @@
 import { PropType, computed, toRef, toRefs } from 'vue';
 import draggable from 'vuedraggable';
 import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
-import { isAdEnthused, useAdStore } from '../../../../_common/ad/ad-store';
+import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
@@ -66,7 +66,7 @@ const id = ++idCounter;
 
 const shouldShowAds = toRef(() => !canReorder.value && showAds.value && globalShouldShowAds.value);
 const isScrollable = toRef(() => (Screen.isXs && scrollable.value) || forceScrollable.value);
-const shouldShowStickyVideoAd = toRef(() => isAdEnthused && Screen.width >= 2100);
+const shouldShowStickyVideoAd = toRef(() => Screen.width >= 2100);
 
 const rowSize = toRef(() => {
 	if (Screen.isSm) {

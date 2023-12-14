@@ -1,7 +1,6 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { isAdEnthused } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/AppCommunityThumbnail.vue';
@@ -148,7 +147,6 @@ const slicedRealms = computed(() => {
 						minHeight: `225px`,
 						margin: `0 auto`,
 					}"
-					:disabled="!isAdEnthused"
 					:padding="Screen.isLg ? 80 : 8"
 				>
 					<AppAdWidget
@@ -161,7 +159,7 @@ const slicedRealms = computed(() => {
 							borderRadius: kBorderRadiusLg.px,
 							padding: `8px`,
 						}"
-						:size="isAdEnthused ? 'video' : 'rectangle'"
+						size="video"
 						placement="content"
 					/>
 				</AppScrollAffix>

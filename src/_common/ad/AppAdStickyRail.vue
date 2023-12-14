@@ -2,7 +2,7 @@
 import { kLayerAds } from '../../_styles/variables';
 import { Screen } from '../screen/screen-service';
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
-import { isAdEnthused, useAdStore } from './ad-store';
+import { useAdStore } from './ad-store';
 import AppAdWidget from './widget/AppAdWidget.vue';
 
 defineProps({
@@ -27,7 +27,7 @@ const { shouldShow } = useAdStore();
 <template>
 	<div :style="{ position: `relative` }">
 		<div
-			v-if="showLeft && shouldShow && isAdEnthused && Screen.width >= minWidth"
+			v-if="showLeft && shouldShow && Screen.width >= minWidth"
 			:style="{
 				position: `absolute`,
 				left: `20px`,
@@ -43,7 +43,7 @@ const { shouldShow } = useAdStore();
 		</div>
 
 		<div
-			v-if="showRight && shouldShow && isAdEnthused && Screen.width >= minWidth"
+			v-if="showRight && shouldShow && Screen.width >= minWidth"
 			:style="{
 				position: `absolute`,
 				right: `20px`,

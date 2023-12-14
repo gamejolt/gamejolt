@@ -2,7 +2,6 @@
 import { computed, defineAsyncComponent, provide, Ref, ref, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
-import { isAdEnthused } from '../../../_common/ad/ad-store';
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -303,7 +302,7 @@ const topSpacerHeight = buildCSSPixelValue(58);
 						<AppSpacer vertical :scale="8" />
 					</template>
 
-					<AppAdWidget v-if="isAdEnthused" size="video" placement="side" />
+					<AppAdWidget size="video" placement="side" />
 				</template>
 
 				<!-- Main -->
