@@ -198,6 +198,8 @@ function shouldShowAd(index: number) {
 	++index;
 	return index === firstAd || (index - firstAd) % adGap === 0;
 }
+
+const { top: pageOffsetTop } = Scroll.getPageScrollSubscription();
 </script>
 
 <template>
@@ -221,7 +223,7 @@ function shouldShowAd(index: number) {
 		<!-- We always need a parent element here so that we can target the last "item" for styling. -->
 		<AppAdFeedParent :is-active="shouldShowAds">
 			<div v-for="(item, i) of feed.items" :key="item.id" class="-item">
-				<AppActivityFeedItem :item="item" />
+				<AppActivityFeedItem :item="item" :page-offset="pageOffsetTop" />
 
 				<div
 					v-if="shouldShowAd(i)"

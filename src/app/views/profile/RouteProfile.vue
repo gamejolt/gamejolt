@@ -10,7 +10,10 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { UserFriendshipModel } from '../../../_common/user/friendship/friendship.model';
+import {
+	UserFriendshipModel,
+	UserFriendshipState,
+} from '../../../_common/user/friendship/friendship.model';
 import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '../../../_common/user/trophy/user-base-trophy.model';
 import { UserModel } from '../../../_common/user/user.model';
@@ -57,6 +60,21 @@ function createProfileRouteStore({
 	const userFriendship = ref<UserFriendshipModel>();
 	const previewTrophies = ref<UserBaseTrophyModel[]>([]);
 	const hasSales = ref(false);
+
+	const showFullDescription = ref(false);
+	const canToggleDescription = ref(false);
+
+	const hasGamesSection = toRef(() => !Screen.isMobile && gamesCount.value > 0);
+	const hasCommunitiesSection = toRef(() => !Screen.isMobile && communitiesCount.value > 0);
+	const shouldShowShouts = toRef(
+		() => user.value && !Screen.isMobile && user.value.shouts_enabled
+	);
+	const shouldShowTrophies = toRef(
+		() => !Screen.isMobile && !!previewTrophies.value && previewTrophies.value.length > 0
+	);
+	const isFriend = toRef(
+		() => userFriendship.value && userFriendship.value.state === UserFriendshipState.Friends
+	);
 
 	const isOnline = computed<null | boolean>(() => {
 		if (!chat.value || !user.value) {
@@ -216,6 +234,7 @@ function createProfileRouteStore({
 	return {
 		isOverviewLoaded,
 		user,
+		myUser,
 		isMe,
 		gamesCount,
 		communitiesCount,
@@ -224,6 +243,13 @@ function createProfileRouteStore({
 		userFriendship,
 		previewTrophies,
 		hasSales,
+		showFullDescription,
+		canToggleDescription,
+		hasGamesSection,
+		hasCommunitiesSection,
+		shouldShowShouts,
+		shouldShowTrophies,
+		isFriend,
 		isOnline,
 		pageOffsetTop,
 		pageScrollPositionThroughHeader,
@@ -382,7 +408,7 @@ const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
 
 						<template #spotlight>
 							<AppPageHeaderAvatar
-								v-if="!Screen.isMobile || !stickySides"
+								v-if="!Screen.isMobile && !stickySides"
 								class="anim-fade-in"
 								:user="routeUser"
 							/>

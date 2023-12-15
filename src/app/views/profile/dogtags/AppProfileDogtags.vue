@@ -1,13 +1,14 @@
 <script lang="ts" setup>
+import { CSSProperties, PropType } from 'vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserDogtag from '../../../../_common/user/AppUserDogtag.vue';
 import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 
 defineProps({
-	noWrap: {
-		type: Boolean,
-		default: false,
+	wrap: {
+		type: String as PropType<CSSProperties['flexWrap']>,
+		default: 'wrap-reverse',
 	},
 });
 
@@ -20,7 +21,7 @@ const { user: routeUser, userFriendship, isOnline } = useProfileRouteStore()!;
 		:style="{
 			display: `inline-flex`,
 			justifyContent: `center`,
-			flexWrap: noWrap ? `nowrap` : `wrap-reverse`,
+			flexWrap: wrap,
 			rowGap: `4px`,
 		}"
 	>

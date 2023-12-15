@@ -14,28 +14,49 @@ interface ScrollToOptions {
 
 export interface PageScrollSubscription {
 	id: number;
-	unsubscribe: () => void;
 	top: Ref<number>;
+	_forAnimation: boolean;
+	_disposed: boolean;
+	unsubscribe: () => void;
 }
 
 class ScrollService {
+	/**
+	 * Minimum interval in milliseconds that {@link _onScroll} will assign to
+	 * {@link PageScrollSubscription.top} refs.
+	 */
+	readonly onScrollTimeout = 1_000 / 24;
+
 	shouldAutoScroll = true;
 	autoscrollAnchor?: AppAutoscrollAnchor;
 	offsetTop = 0;
 
-	pageOffsetTop = 0;
 	_subscriptionId = 0;
 	_subscriptions: PageScrollSubscription[] = [];
 	_isOnScrollBusy = false;
 
 	/** Should only be used in a setup block */
-	getPageScrollSubscription() {
+	getPageScrollSubscription(
+		options: {
+			/**
+			 * Determines if a new animation frame should be requested before
+			 * assigning to {@link top}.
+			 */
+			forAnimation?: boolean;
+		} = {}
+	) {
 		const id = ++this._subscriptionId;
+		const top = ref(0);
+		const { forAnimation = false } = options;
 		const subscription: PageScrollSubscription = {
 			id,
-			top: ref(0),
+			top,
+			_forAnimation: forAnimation,
+			_disposed: false,
 			unsubscribe: () => {
 				arrayRemove(this._subscriptions, i => i.id === id);
+				subscription._disposed = true;
+				top.value = 0;
 				this._afterSubscriptionsChanged();
 			},
 		};
@@ -51,7 +72,7 @@ class ScrollService {
 	}
 
 	_afterSubscriptionsChanged() {
-		if (this._subscriptions.length) {
+		if (this._subscriptions.length && this._subscriptions.some(i => !i._disposed)) {
 			window.document.addEventListener('scroll', this._onScroll.bind(this), {
 				passive: true,
 			});
@@ -63,7 +84,6 @@ class ScrollService {
 			sleep(0).then(() => this._onScroll());
 		} else {
 			window.document.removeEventListener('scroll', this._onScroll.bind(this));
-			this.pageOffsetTop = 0;
 		}
 	}
 
@@ -74,15 +94,40 @@ class ScrollService {
 		this._isOnScrollBusy = true;
 
 		// Wait a bit so we don't do this too often.
-		await sleep(50);
+		await sleep(this.onScrollTimeout);
 
-		if (this._subscriptions.length) {
-			const top = this.getScrollTop();
-			this.pageOffsetTop = top;
-			for (const subscription of this._subscriptions) {
+		if (!this._subscriptions.length || this._subscriptions.every(i => i._disposed)) {
+			this._isOnScrollBusy = false;
+			return;
+		}
+
+		const top = this.getScrollTop();
+
+		for (const subscription of this._subscriptions) {
+			// Non-animator subscriptions can be set immediately.
+			if (!subscription._forAnimation && !subscription._disposed) {
 				subscription.top.value = top;
 			}
 		}
+
+		// Queue up an animation frame if any of our subscriptions are used for
+		// some animation.
+		//
+		// TODO(profile-scrunch) This seemed to perform better when animation
+		// background position on many items. Should probably test some more to
+		// see if it's actually an improvement.
+		if (this._subscriptions.some(i => i._forAnimation)) {
+			window.requestAnimationFrame(() => {
+				for (const subscription of this._subscriptions) {
+					if (subscription._forAnimation && !subscription._disposed) {
+						subscription.top.value = top;
+					}
+				}
+			});
+		}
+
+		// TODO(profile-scrunch) Should probably unset this within the animation
+		// frame if we request one.
 		this._isOnScrollBusy = false;
 	}
 

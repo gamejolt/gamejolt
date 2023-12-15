@@ -41,6 +41,10 @@ const props = defineProps({
 		type: Object as PropType<ActivityFeedItem>,
 		required: true,
 	},
+	pageOffset: {
+		type: Number,
+		default: undefined,
+	},
 });
 
 const { item } = toRefs(props);
@@ -249,6 +253,7 @@ function onPostUnpinned(item: EventItemModel) {
 					:background="post.background"
 					:darken="overlay"
 					:fade-opacity="post.hasAnyMedia ? 0.2 : undefined"
+					:page-y="pageOffset"
 					bleed
 				>
 					<AppPostHeader

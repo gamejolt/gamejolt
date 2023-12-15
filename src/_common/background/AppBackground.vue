@@ -3,6 +3,7 @@ import { CSSProperties, PropType, computed, ref, toRefs, watch } from 'vue';
 import { styleWhen } from '../../_styles/mixins';
 import { ImgHelper } from '../img/helper/helper-service';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
+import { Scroll } from '../scroll/scroll.service';
 import AppBackgroundFade from './AppBackgroundFade.vue';
 import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
@@ -42,18 +43,40 @@ const props = defineProps({
 	noEdges: {
 		type: Boolean,
 	},
+	pageY: {
+		type: Number,
+		default: 0,
+	},
 });
 
-const { background, bleed, backdropStyle, backgroundStyle, scrollDirection } = toRefs(props);
+const { background, bleed, backdropStyle, backgroundStyle, scrollDirection, pageY } = toRefs(props);
 
 const isLoaded = ref(false);
 const loadedBackground = ref<BackgroundModel>();
 
 const mediaItem = computed(() => background?.value?.media_item);
 const hasMedia = computed(() => !!mediaItem.value);
-const cssProperties = computed(() =>
-	loadedBackground.value ? getBackgroundCSSProperties(loadedBackground.value) : {}
-);
+const cssProperties = computed(() => {
+	const bg = loadedBackground.value;
+	if (!bg) {
+		return {};
+	}
+
+	const baseStyles = getBackgroundCSSProperties(bg);
+	const result = {
+		...baseStyles,
+		transition: undefined as string | undefined,
+	} satisfies CSSProperties;
+
+	if (pageY.value < -1 || pageY.value > 1) {
+		const position = pageY.value / 8;
+		const time = Scroll.onScrollTimeout + 50;
+		result.transition = `background-position ${time}ms cubic-bezier(0.35, 0.91, 0.33, 0.97)`;
+		result.backgroundPosition = `center ${position}px`;
+	}
+
+	return result;
+});
 
 if (import.meta.env.SSR) {
 	loadedBackground.value = background?.value;

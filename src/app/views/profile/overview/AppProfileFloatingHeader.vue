@@ -109,7 +109,7 @@ const { user: routeUser, hasSales } = useProfileRouteStore()!;
 
 					<!-- Dogtags -->
 					<AppProfileDogtagAutoscroll>
-						<AppProfileDogtags no-wrap />
+						<AppProfileDogtags wrap="nowrap" />
 					</AppProfileDogtagAutoscroll>
 				</div>
 

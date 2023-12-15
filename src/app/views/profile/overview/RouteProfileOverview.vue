@@ -1,7 +1,6 @@
 <script lang="ts">
 import { Ref, computed, ref, toRef } from 'vue';
 import { RouteLocationRaw, RouterView, useRoute, useRouter } from 'vue-router';
-import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import { isAdEnthused } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../_common/api/api.service';
@@ -14,7 +13,6 @@ import {
 	useCommentStoreManager,
 } from '../../../../_common/comment/comment-store';
 import { CommunityModel } from '../../../../_common/community/community.model';
-import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
@@ -32,30 +30,19 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTopSupportersCard, {
 	OwnSupport,
 	TopSupporter,
 } from '../../../../_common/supporters/AppTopSupportersCard.vue';
-import { kThemeFg10 } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowButton.vue';
 import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { $unfollowUser, UserModel } from '../../../../_common/user/user.model';
-import {
-	styleChangeBg,
-	styleElevate,
-	styleFlexCenter,
-	styleWhen,
-} from '../../../../_styles/mixins';
+import { styleChangeBg, styleElevate, styleWhen } from '../../../../_styles/mixins';
 import { kBorderRadiusLg } from '../../../../_styles/variables';
 import { numberSort } from '../../../../utils/array';
 import { removeQuery } from '../../../../utils/router';
-import { openChatRoom } from '../../../components/chat/client';
-import { showCommentModal } from '../../../components/comment/modal/modal.service';
 import {
 	CommentThreadModalPermalinkDeregister,
 	showCommentThreadModalFromPermalink,
@@ -67,17 +54,12 @@ import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
-import { useAppStore } from '../../../store/index';
 import { useProfileRouteStore } from '../RouteProfile.vue';
-import AppProfileDogtags from '../dogtags/AppProfileDogtags.vue';
+import AppProfileActionButtons from './AppProfileActionButtons.vue';
 import AppProfileFloatingHeader from './AppProfileFloatingHeader.vue';
+import AppProfileInfoCard from './AppProfileInfoCard.vue';
 import AppRouteProfileOverviewBanned from './AppRouteProfileOverviewBanned.vue';
 import AppProfileShopButton from './shop/AppProfileShopButton.vue';
-import AppProfileShortcut from './shortcut/AppProfileShortcut.vue';
-import AppProfileShortcutExtras from './shortcut/AppProfileShortcutExtras.vue';
-import AppProfileShortcuts, { ProfileQuickLink } from './shortcut/AppProfileShortcuts.vue';
-import AppProfileStat from './stats/AppProfileStat.vue';
-import AppProfileStats, { ProfileStat } from './stats/AppProfileStats.vue';
 
 export type ProfileTileAction =
 	| { location: RouteLocationRaw; action?: never }
@@ -98,28 +80,31 @@ export default {
 const {
 	isOverviewLoaded,
 	gamesCount,
-	communitiesCount,
+	// communitiesCount,
 	// placeholderCommunitiesCount,
 	userFriendship,
-	previewTrophies,
+	// previewTrophies,
 	// trophyCount,
 	user: routeUser,
+	myUser,
 	overviewPayload,
 	acceptFriendRequest,
 	rejectFriendRequest,
 	removeFriend,
-	sendFriendRequest,
+	// sendFriendRequest,
 	cancelFriendRequest,
 	stickySides,
-	pageOffsetTop,
+	// pageOffsetTop,
 	hasSales,
 	pageScrollPositionThroughHeader,
 	isMe,
+	showFullDescription,
+	// canToggleDescription,
+	hasGamesSection,
+	isFriend,
 } = useProfileRouteStore()!;
 
-const { toggleLeftPane } = useAppStore();
-const { user: myUser } = useCommonStore();
-const { grid, chat } = useGridStore();
+const { grid } = useGridStore();
 
 const route = useRoute();
 const router = useRouter();
@@ -128,8 +113,6 @@ const commentManager = useCommentStoreManager()!;
 
 const commentStore = ref<CommentStoreModel | null>(null);
 
-const showFullDescription = ref(false);
-const canToggleDescription = ref(false);
 // const showAllCommunities = ref(false);
 // const isLoadingAllCommunities = ref(false);
 const games = ref<GameModel[]>([]);
@@ -160,44 +143,19 @@ const shareUrl = toRef(() => {
 	return Environment.baseUrl + routeUser.value.url;
 });
 
-const canAddAsFriend = toRef(
-	() =>
-		myUser.value &&
-		routeUser.value &&
-		routeUser.value.id !== myUser.value.id &&
-		!userFriendship.value &&
-		routeUser.value.friend_requests_enabled &&
-		!routeUser.value.is_blocked &&
-		!routeUser.value.blocked_you
-);
-
-const hasQuickButtonsSection = toRef(
-	() => canAddAsFriend.value || canMessage.value || (Screen.isMobile && gamesCount.value > 0)
-);
 const hasLinksSection = toRef(
 	() =>
 		routeUser.value &&
 		((linkedAccounts.value && linkedAccounts.value.length > 0) || routeUser.value.web_site)
 );
-const hasGamesSection = toRef(() => !Screen.isMobile && gamesCount.value > 0);
-const hasCommunitiesSection = toRef(() => !Screen.isMobile && communitiesCount.value > 0);
 const twitchAccount = computed(() => getLinkedAccount(LinkedAccountProvider.Twitch));
-const shouldShowShouts = toRef(
-	() => routeUser.value && !Screen.isMobile && routeUser.value.shouts_enabled
-);
-const isFriend = toRef(
-	() => userFriendship.value && userFriendship.value.state === UserFriendshipState.Friends
-);
-const canMessage = toRef(() => isFriend.value && chat.value && chat.value.connected);
+
 const shouldShowKnownFollowers = toRef(
 	() =>
 		!!myUser.value &&
 		!!routeUser.value &&
 		isOverviewLoaded.value &&
 		myUser.value.id !== routeUser.value.id
-);
-const shouldShowTrophies = toRef(
-	() => !Screen.isMobile && !!previewTrophies.value && previewTrophies.value.length > 0
 );
 const userBlockedYou = toRef(() => routeUser.value && routeUser.value.blocked_you);
 
@@ -320,18 +278,6 @@ function clearCommentStore() {
 	}
 }
 
-function openMessaging() {
-	if (routeUser.value && chat.value) {
-		const chatUser = chat.value.friendsList.get(routeUser.value.id);
-		if (chatUser) {
-			if (Screen.isXs) {
-				toggleLeftPane('chat');
-			}
-			openChatRoom(chat.value, chatUser.room_id);
-		}
-	}
-}
-
 async function onClickUnfollow() {
 	if (routeUser.value) {
 		const result = await showModalConfirm(
@@ -360,99 +306,6 @@ async function onFriendRequestReject() {
 		grid.value?.pushViewNotifications('friend-requests');
 	}
 }
-
-const stats = computed<ProfileStat[]>(
-	() =>
-		[
-			{
-				label: $gettext('Following'),
-				value: formatNumber(routeUser.value?.following_count || 0),
-				location: {
-					name: 'profile.following',
-				},
-			},
-			{
-				label: $gettext('Followers'),
-				value: formatNumber(routeUser.value?.follower_count || 0),
-				location: {
-					name: 'profile.followers',
-				},
-			},
-			{
-				label: $gettext('Likes'),
-				value: formatNumber(routeUser.value?.like_count || 0),
-			},
-		] satisfies ProfileStat[]
-);
-
-const quickLinks = computed<ProfileQuickLink[]>(() => {
-	const items: ProfileQuickLink[] = [];
-
-	if (!routeUser.value || Screen.isMobile) {
-		return items;
-	}
-
-	if (hasSales.value) {
-		items.push({
-			label: $gettext(`Shop`),
-			icon: 'marketplace-filled',
-			location: {
-				name: 'profile.shop',
-				params: {
-					username: routeUser.value.username,
-				},
-			},
-		});
-	}
-
-	if (shouldShowShouts.value) {
-		items.push({
-			label: $gettext(`Shouts`),
-			icon: 'comment-filled',
-			action() {
-				showCommentModal({
-					model: routeUser.value!,
-					displayMode: 'shouts',
-				});
-			},
-		});
-	}
-
-	if (hasGamesSection.value) {
-		items.push({
-			label: $gettext(`Games`),
-			icon: 'gamepad',
-			// TODO(profile-scrunch) modal
-			location: {
-				name: 'library.collection.developer',
-				params: { id: routeUser.value.username },
-			},
-		});
-	}
-
-	if (shouldShowTrophies.value) {
-		items.push({
-			label: $gettext(`Trophies`),
-			icon: 'trophy',
-			// TODO(profile-scrunch) modal
-			location: { name: 'profile.trophies' },
-		});
-	}
-
-	if (hasCommunitiesSection.value) {
-		items.push({
-			label: $gettext(`Communities`),
-			icon: 'communities',
-			// TODO(profile-scrunch) modal
-			location: {
-				name: 'library.collection.developer',
-				params: { id: routeUser.value.username },
-			},
-		});
-	}
-
-	return items;
-});
 
 interface ProfileSocialLink {
 	label: string;
@@ -486,21 +339,14 @@ const socialLinks = computed(() => {
 	return items;
 });
 
-const shouldShowFollow = toRef(
-	() =>
-		routeUser.value &&
-		!routeUser.value.is_blocked &&
-		!routeUser.value.blocked_you &&
-		!isMe.value
-);
-
-const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
-const fadeUpHeader = computed(
+const showFloatingHeader = computed(
 	() =>
 		// TODO(profile-scrunch): Figure out if we want this
 		false ??
 		((Screen.isDesktop && !stickySides.value) || pageScrollPositionThroughHeader.value >= 1)
 );
+
+const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 </script>
 
 <template>
@@ -530,137 +376,11 @@ const fadeUpHeader = computed(
 					:sticky-side-top-margin="40"
 				>
 					<template #left>
-						<!-- Stats & Shortcuts -->
-						<!-- TODO(profile-scrunch) clean this up -->
-						<AppExpand :when="showSidebarAvatar">
-							<AppSpacer vertical :scale="6" />
-						</AppExpand>
-						<div class="sheet">
-							<!-- Avatar/Tags -->
-							<AppExpand
-								:when="showSidebarAvatar"
-								animate-initial
-								:style="{ overflow: `visible` }"
-							>
-								<div
-									:style="{
-										height: `${100 / 2 + 24}px`,
-										width: `100%`,
-										position: `relative`,
-										...styleWhen(Screen.isMobile, {
-											transition: `opacity 100ms linear, transform 100ms linear`,
-											transform: `translateY(${fadeUpHeader ? -50 : 0}%)`,
-											opacity: fadeUpHeader ? 0 : 1,
-										}),
-									}"
-								>
-									<Transition>
-										<div
-											v-if="showSidebarAvatar"
-											class="anim-fade-in-down anim-fade-leave-up"
-											:style="{
-												...styleFlexCenter(),
-												position: `absolute`,
-												width: `100%`,
-												bottom: `24px`,
-											}"
-										>
-											<AppUserAvatarBubble
-												:user="routeUser"
-												show-frame
-												show-verified
-												verified-size="big"
-												:verified-offset="0"
-												disable-link
-												:style="{
-													width: `100px`,
-												}"
-											/>
-											<div
-												:style="{
-													position: `absolute`,
-													bottom: `-16px`,
-													maxWidth: `100%`,
-													zIndex: 2,
-												}"
-											>
-												<AppProfileDogtags />
-											</div>
-										</div>
-									</Transition>
-								</div>
-							</AppExpand>
-
-							<!-- Stats -->
-							<AppProfileStats :items="stats">
-								<template #default="item">
-									<AppProfileStat :item="item" />
-								</template>
-							</AppProfileStats>
-
-							<div
-								:style="{
-									margin: `20px -20px`,
-									height: `1px`,
-									backgroundColor: kThemeFg10,
-								}"
-							/>
-
-							<!-- Shortcuts -->
-							<AppProfileShortcuts v-if="Screen.isDesktop" :items="quickLinks">
-								<template #default="item">
-									<AppProfileShortcut :item="item" />
-								</template>
-
-								<template #extras>
-									<AppProfileShortcutExtras />
-								</template>
-							</AppProfileShortcuts>
-							<template v-else>
-								<!-- TODO(profile-scrunch) Probably want to show
-								block buttons here on mobile (follow, edit,
-								friend-request, etc.) -->
-								<!--  -->
-							</template>
-						</div>
-
-						<!-- Bio -->
-						<!-- TODO(profile-scrunch) See how things look moving
-						this into the shortcuts sheet. Add the same divider we
-						have between stats and shortcuts. -->
-						<div v-if="!isOverviewLoaded" class="sheet">
-							<div>
-								<span class="lazy-placeholder" />
-								<span class="lazy-placeholder" />
-								<span class="lazy-placeholder" />
-								<span class="lazy-placeholder" style="width: 40%" />
-							</div>
-							<br />
-						</div>
-						<div v-else-if="routeUser.hasBio" class="sheet">
-							<!--
-							Set a :key to let vue know that it should update
-							this when the user changes.
-							-->
-							<AppFadeCollapse
-								:key="routeUser.bio_content"
-								:collapse-height="200"
-								:is-open="showFullDescription"
-								:animate="false"
-								@require-change="canToggleDescription = $event"
-								@expand="showFullDescription = true"
-							>
-								<AppContentViewer :source="routeUser.bio_content" />
-							</AppFadeCollapse>
-
-							<!-- <p> -->
-							<a
-								v-if="canToggleDescription"
-								class="hidden-text-expander"
-								@click="showFullDescription = !showFullDescription"
-							/>
-							<!-- </p> -->
-						</div>
+						<!-- Stats, Shortcuts, Bio -->
+						<AppProfileInfoCard
+							:fade-avatar="showFloatingHeader"
+							:show-avatar="showSidebarAvatar"
+						/>
 
 						<!-- Top supporters -->
 						<template v-if="supportersData && supportersData.supporters.length">
@@ -686,45 +406,7 @@ const fadeUpHeader = computed(
 					</template>
 
 					<template #right>
-						<AppUserFollowButton
-							v-if="shouldShowFollow"
-							:user="routeUser"
-							block
-							location="profilePage"
-						/>
-						<AppButton
-							v-else-if="isMe"
-							primary
-							block
-							:to="{
-								name: 'dash.account.edit',
-							}"
-						>
-							{{ $gettext(`Edit profile`) }}
-						</AppButton>
-
-						<AppButton v-if="canAddAsFriend" block @click="sendFriendRequest()">
-							{{ $gettext(`Send friend request`) }}
-						</AppButton>
-						<AppButton
-							v-else-if="canMessage"
-							block
-							icon="user-messages"
-							@click="openMessaging"
-						>
-							{{ $gettext(`Message`) }}
-						</AppButton>
-
-						<AppButton
-							v-if="Screen.isMobile && gamesCount > 0"
-							block
-							:to="{
-								name: 'library.collection.developer',
-								params: { id: routeUser.username },
-							}"
-						>
-							{{ formatNumber(gamesCount) }} Games
-						</AppButton>
+						<AppProfileActionButtons v-if="Screen.isDesktop" />
 
 						<AppSpacer vertical :scale="4" />
 
@@ -738,23 +420,26 @@ const fadeUpHeader = computed(
 							}"
 							:padding="8"
 						> -->
-						<AppAdWidget
-							:style="{
-								...styleChangeBg('bg'),
-								...styleElevate(3),
-								// TODO(profile-scrunch) Can't do a static width like this, sidebars are flexible.
-								// minWidth: `300px`,
-								width: `300px`,
-								maxWidth: `100%`,
+						<div :style="{ display: `flex` }">
+							<AppAdWidget
+								:style="{
+									...styleChangeBg('bg'),
+									...styleElevate(3),
+									// TODO(profile-scrunch) Can't do a static width like this, sidebars are flexible.
+									// minWidth: `300px`,
+									flex: `auto`,
+									width: `300px`,
+									maxWidth: `100%`,
 
-								paddingTop: `8px`,
-								paddingBottom: `8px`,
-								borderRadius: kBorderRadiusLg.px,
-								padding: `8px`,
-							}"
-							:size="isAdEnthused ? 'video' : 'rectangle'"
-							placement="side"
-						/>
+									paddingTop: `8px`,
+									paddingBottom: `8px`,
+									borderRadius: kBorderRadiusLg.px,
+									padding: `8px`,
+								}"
+								:size="isAdEnthused ? 'video' : 'rectangle'"
+								placement="side"
+							/>
+						</div>
 						<!-- </AppScrollAffix> -->
 
 						<AppSpacer vertical :scale="6" />
@@ -767,37 +452,6 @@ const fadeUpHeader = computed(
 							:users="knownFollowers"
 							:count="knownFollowerCount"
 						/>
-
-						<!-- TODO(profile-scrunch) -->
-						<template v-if="false && hasQuickButtonsSection">
-							<!-- Add Friend -->
-							<AppButton v-if="canAddAsFriend" block @click="sendFriendRequest()">
-								{{ $gettext(`Send friend request`) }}
-							</AppButton>
-							<AppButton
-								v-else-if="canMessage"
-								block
-								icon="user-messages"
-								@click="openMessaging"
-							>
-								{{ $gettext(`Message`) }}
-							</AppButton>
-
-							<template v-if="Screen.isMobile">
-								<AppButton
-									v-if="gamesCount > 0"
-									block
-									:to="{
-										name: 'library.collection.developer',
-										params: { id: routeUser.username },
-									}"
-								>
-									{{ formatNumber(gamesCount) }} Games
-								</AppButton>
-							</template>
-
-							<br />
-						</template>
 
 						<!-- Latest Games -->
 						<template v-if="hasGamesSection">
@@ -906,7 +560,9 @@ const fadeUpHeader = computed(
 						<!-- Floating header -->
 						<!-- TODO(profile-scrunch) Maybe keep? -->
 						<Transition>
-							<AppProfileFloatingHeader v-if="Screen.isMobile && fadeUpHeader" />
+							<AppProfileFloatingHeader
+								v-if="Screen.isMobile && showFloatingHeader"
+							/>
 						</Transition>
 
 						<AppProfileShopButton v-if="hasSales" :user="routeUser" />
