@@ -3,5 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeDashGamesManageGameMaturity: RouteRecordRaw = {
 	name: 'dash.games.manage.game.maturity',
 	path: 'maturity',
-	component: () => import('./maturity.vue'),
+	component: () => import('./RouteDashGamesManageGameMaturity.vue'),
 };

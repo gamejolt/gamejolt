@@ -10,7 +10,7 @@ import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAva
 import { useGridStore } from '../../grid/grid-store';
 import AppChatListItem from '../_list/AppChatListItem.vue';
 import { isUserOnline, leaveGroupRoom, openChatRoom } from '../client';
-import AppChatNotificationSettings from '../notification-settings/notification-settings.vue';
+import AppChatNotificationSettings from '../notification-settings/AppChatNotificationSettings.vue';
 import { ChatRoomModel, getChatRoomTitle } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
@@ -87,9 +87,6 @@ async function leaveRoom() {
 		:title="hoverTitle"
 		:horizontal-padding="16"
 		:force-hover="isActive"
-		:defined-slots="
-			notificationsCount ? ['leading', 'title', 'trailing'] : ['leading', 'title']
-		"
 		popper-placement="bottom"
 		popper-trigger="right-click"
 		popper-hide-on-state-change

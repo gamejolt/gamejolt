@@ -3,16 +3,14 @@ import { CommentModel } from '../comment/comment-model';
 import { CommunityModel } from '../community/community.model';
 import { CommunityUserNotificationModel } from '../community/user-notification/user-notification.model';
 import { CreatorExperienceLevelModel } from '../creator/experience/level.model';
-import { FiresideCommunityModel } from '../fireside/community/community.model';
-import { FiresideModel } from '../fireside/fireside.model';
 import { FiresidePostCommunityModel } from '../fireside/post/community/community.model';
 import { FiresidePostModel } from '../fireside/post/post-model';
-import { FiresideStreamNotificationModel } from '../fireside/stream-notification/stream-notification.model';
 import { ForumPostModel } from '../forum/post/post.model';
 import { ForumTopicModel } from '../forum/topic/topic.model';
 import { GameLibraryGameModel } from '../game-library/game/game.model';
 import { GameModel } from '../game/game.model';
 import { GameRatingModel } from '../game/rating/rating.model';
+import { InventoryShopGiftModel } from '../inventory/shop/inventory-shop-gift.model';
 import { MentionModel } from '../mention/mention.model';
 import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
@@ -48,15 +46,13 @@ export const enum NotificationType {
 	GameTrophyAchieved = 'game-trophy-achieved',
 	SiteTrophyAchieved = 'site-trophy-achieved',
 	CommunityUserNotification = 'community-user-notification',
-	FiresideStart = 'fireside-start',
-	FiresideStreamNotification = 'fireside-stream-notification',
-	FiresideFeaturedInCommunity = 'fireside-featured-in-community',
 	QuestNotification = 'quest-notification',
 	ChargedSticker = 'charged-sticker',
 	SupporterMessage = 'supporter-message',
 	PollEnded = 'poll-ended',
 	CreatorLevelUp = 'creator-level-up',
 	UnlockedAvatarFrame = 'unlocked-avatar-frame',
+	ShopGiftReceived = 'shop-gift-received',
 }
 
 export const ActivityFeedTypes = [NotificationType.PostAdd];
@@ -76,12 +72,12 @@ export const NotificationFeedTypes = [
 	NotificationType.GameTrophyAchieved,
 	NotificationType.SiteTrophyAchieved,
 	NotificationType.CommunityUserNotification,
-	NotificationType.FiresideFeaturedInCommunity,
 	NotificationType.ChargedSticker,
 	NotificationType.SupporterMessage,
 	NotificationType.PollEnded,
 	NotificationType.CreatorLevelUp,
 	NotificationType.UnlockedAvatarFrame,
+	NotificationType.ShopGiftReceived,
 ];
 
 export class NotificationModel extends Model {
@@ -112,15 +108,13 @@ export class NotificationModel extends Model {
 		| UserGameTrophyModel
 		| UserSiteTrophyModel
 		| CommunityUserNotificationModel
-		| FiresideModel
-		| FiresideStreamNotificationModel
-		| FiresideCommunityModel
 		| QuestNotificationModel
 		| StickerPlacementModel
 		| SupporterActionModel
 		| PollModel
 		| CreatorExperienceLevelModel
-		| UserAvatarFrameModel;
+		| UserAvatarFrameModel
+		| InventoryShopGiftModel;
 
 	declare to_resource: string | null;
 	declare to_resource_id: number | null;
@@ -130,8 +124,7 @@ export class NotificationModel extends Model {
 		| FiresidePostModel
 		| ForumTopicModel
 		| SellableModel
-		| CommunityModel
-		| FiresideModel;
+		| CommunityModel;
 
 	// For feeds.
 	declare scroll_id?: string;
@@ -179,8 +172,6 @@ export class NotificationModel extends Model {
 			this.to_model = new SellableModel(data.to_resource_model);
 		} else if (data.to_resource === 'Community') {
 			this.to_model = new CommunityModel(data.to_resource_model);
-		} else if (data.to_resource === 'Fireside') {
-			this.to_model = new FiresideModel(data.to_resource_model);
 		}
 
 		if (this.type === NotificationType.CommentAdd) {
@@ -230,13 +221,6 @@ export class NotificationModel extends Model {
 		} else if (this.type === NotificationType.CommunityUserNotification) {
 			this.action_model = new CommunityUserNotificationModel(data.action_resource_model);
 			this.is_community_based = true;
-		} else if (this.type === NotificationType.FiresideStart) {
-			this.action_model = new FiresideModel(data.action_resource_model);
-			this.is_user_based = true;
-		} else if (this.type === NotificationType.FiresideStreamNotification) {
-			this.action_model = new FiresideStreamNotificationModel(data.action_resource_model);
-		} else if (this.type === NotificationType.FiresideFeaturedInCommunity) {
-			this.action_model = new FiresideCommunityModel(data.action_resource_model);
 		} else if (this.type === NotificationType.QuestNotification) {
 			this.action_model = new QuestNotificationModel(data.action_resource_model);
 		} else if (this.type === NotificationType.ChargedSticker) {
@@ -250,7 +234,10 @@ export class NotificationModel extends Model {
 		} else if (this.type === NotificationType.CreatorLevelUp) {
 			this.action_model = new CreatorExperienceLevelModel(data.action_resource_model);
 		} else if (this.type === NotificationType.UnlockedAvatarFrame) {
-			this.action_model = new UserAvatarFrameModel(data.action_resource_model);
+			this.action_model = storeModel(UserAvatarFrameModel, data.action_resource_model);
+		} else if (this.type === NotificationType.ShopGiftReceived) {
+			this.action_model = storeModel(InventoryShopGiftModel, data.action_resource_model);
+			this.is_user_based = true;
 		}
 
 		// Keep memory clean after bootstrapping the models (the super
@@ -289,10 +276,10 @@ export function getNotificationFeedTypeLabels(user: UserModel) {
 		[NotificationType.GameTrophyAchieved]: $gettext(`Game trophies`),
 		[NotificationType.SiteTrophyAchieved]: $gettext(`Site trophies`),
 		[NotificationType.CommunityUserNotification]: $gettext(`Community actions`),
-		[NotificationType.FiresideFeaturedInCommunity]: $gettext(`Community featured firesides`),
 		[NotificationType.QuestNotification]: $gettext(`Quests`),
 		[NotificationType.SupporterMessage]: $gettext(`Creator thank-you messages`),
 		[NotificationType.PollEnded]: $gettext(`Polls`),
+		[NotificationType.ShopGiftReceived]: $gettext(`Gifts`),
 	} as Record<NotificationType, string>;
 
 	// Creator notification types.

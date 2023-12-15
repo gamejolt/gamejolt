@@ -1,15 +1,9 @@
 <script lang="ts" setup>
-import AppTimelineList from '../timeline-list/timeline-list.vue';
-
-defineProps({
-	isNested: {
-		type: Boolean,
-	},
-});
+import AppTimelineList from '../timeline-list/AppTimelineList.vue';
 </script>
 
 <template>
-	<AppTimelineList class="message-thread" :is-nested="isNested">
+	<AppTimelineList class="message-thread">
 		<slot />
 	</AppTimelineList>
 </template>

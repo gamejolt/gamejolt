@@ -1,21 +1,36 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed, toRefs } from 'vue';
-import { styleWhen } from '../../_styles/mixins';
+import { styleBorderRadiusBase, styleFlexCenter, styleWhen } from '../../_styles/mixins';
 import { kBorderRadiusBase, kFontSizeLarge, kFontSizeSmall } from '../../_styles/variables';
+import { showPurchaseShopProductModal } from '../../app/components/vending-machine/modal/_purchase-modal/modal.service';
+import { isInstance } from '../../utils/utils';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
+import AppButton from '../button/AppButton.vue';
+import { PurchasableProductType } from '../inventory/shop/product-owner-helpers';
+import { JoltydexFeed } from '../joltydex/joltydex-feed';
+import AppCircularProgress from '../progress/AppCircularProgress.vue';
 import AppStickerMastery from '../sticker/AppStickerMastery.vue';
-import { kThemeFgMuted } from '../theme/variables';
+import AppStickerPack, { StickerPackRatio } from '../sticker/pack/AppStickerPack.vue';
+import { StickerPackModel } from '../sticker/pack/pack.model';
+import { kThemeFg10, kThemeFgMuted } from '../theme/variables';
 import { $gettext } from '../translate/translate.service';
-import { CollectibleModel, CollectibleType } from './collectible.model';
+import { AcquisitionMethod } from './acquisition.model';
+import { CollectibleModel, CollectibleType, getCollectibleResourceId } from './collectible.model';
 
 const props = defineProps({
 	collectible: {
 		type: Object as PropType<CollectibleModel>,
 		required: true,
 	},
+	feed: {
+		type: Object as PropType<JoltydexFeed>,
+		required: true,
+	},
 });
 
-const { collectible } = toRefs(props);
+const { collectible, feed } = toRefs(props);
+
+const maybePacks = computed(() => feed.value.getAcquisitionPacks(collectible.value.acquisition));
 
 const stickerMasteryInfo = computed(() => {
 	if (typeof collectible.value.sticker_mastery !== 'number') {
@@ -28,27 +43,49 @@ const stickerMasteryInfo = computed(() => {
 
 	if (collectible.value.sticker_mastery !== 100) {
 		return $gettext(
-			`Use this sticker to gain mastery. Once you master it, you'll be able to use it for emojis and reactions!`,
-			{
-				progress: collectible.value.sticker_mastery,
-			}
+			`Use this sticker to gain mastery. Once you master it, you'll be able to use it for emojis and reactions!`
 		);
 	}
 
 	return $gettext(`You've mastered this sticker and can now use it for emojis and reactions!`);
 });
 
-const headingStyles: CSSProperties = {
+const collectibleResourceAcquisition = computed(() => {
+	const productType = collectible.value.type;
+	if (!productType || productType === CollectibleType.Sticker) {
+		return null;
+	}
+	// Ignore if we have no shop purchase acquisitions.
+	if (collectible.value.acquisition.every(i => i.method !== AcquisitionMethod.ShopPurchase)) {
+		return null;
+	}
+
+	let resource: PurchasableProductType;
+	switch (productType) {
+		case CollectibleType.AvatarFrame:
+			resource = PurchasableProductType.AvatarFrame;
+			break;
+		case CollectibleType.Background:
+			resource = PurchasableProductType.Background;
+			break;
+	}
+	return {
+		resource,
+		resourceId: getCollectibleResourceId(collectible.value),
+	};
+});
+
+const headingStyles = {
 	textTransform: `uppercase`,
 	fontSize: kFontSizeSmall.px,
 	fontWeight: `bold`,
 	margin: `0 0 8px 0`,
-};
+} satisfies CSSProperties;
 
-const mutedStyles: CSSProperties = {
+const mutedStyles = {
 	fontStyle: `italic`,
 	color: kThemeFgMuted,
-};
+} satisfies CSSProperties;
 </script>
 
 <template>
@@ -132,5 +169,55 @@ const mutedStyles: CSSProperties = {
 				{{ collectible.description }}
 			</div>
 		</div>
+
+		<template v-if="maybePacks.length">
+			<h2 :style="headingStyles">
+				{{ $gettext(`Packs`) }}
+			</h2>
+
+			<div
+				:style="{
+					display: `grid`,
+					gridTemplateColumns: `repeat(2, 1fr)`,
+					gap: `8px`,
+				}"
+			>
+				<div v-for="pack in maybePacks" :key="pack.id">
+					<AppStickerPack
+						v-if="isInstance(pack, StickerPackModel)"
+						:pack="pack"
+						show-name
+						can-click-pack
+						@click-pack="
+							showPurchaseShopProductModal({
+								resource: PurchasableProductType.StickerPack,
+								resourceId: pack.id,
+							})
+						"
+					/>
+					<AppAspectRatio
+						v-else
+						:style="{
+							...styleBorderRadiusBase,
+							backgroundColor: kThemeFg10,
+						}"
+						:ratio="StickerPackRatio"
+						:inner-styles="styleFlexCenter()"
+					>
+						<AppCircularProgress :style="{ width: `36px`, maxWidth: `100%` }" />
+					</AppAspectRatio>
+				</div>
+			</div>
+		</template>
+
+		<AppButton
+			v-if="collectibleResourceAcquisition"
+			block
+			solid
+			primary
+			@click="showPurchaseShopProductModal(collectibleResourceAcquisition)"
+		>
+			{{ $gettext(`View in shop`) }}
+		</AppButton>
 	</div>
 </template>

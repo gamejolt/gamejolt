@@ -241,7 +241,9 @@ export function createChatUserChannel(
 		const room = client.groupRooms.find(i => i.id === data.room_id);
 
 		if (room) {
-			room.background = data.background ? new BackgroundModel(data.background) : undefined;
+			room.background = data.background
+				? storeModel(BackgroundModel, data.background)
+				: undefined;
 		}
 	}
 

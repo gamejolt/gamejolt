@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { CSSProperties, PropType, ref, toRefs } from 'vue';
 import {
 	styleBorderRadiusLg,
 	styleChangeBgRgba,
@@ -28,20 +28,13 @@ export const StickerPackExpiryStyles: CSSProperties = {
 </script>
 
 <script lang="ts" setup>
-interface StickerPackDetails {
-	name?: boolean;
-}
-
-type PackDetailsOptions = boolean | StickerPackDetails;
-
 const props = defineProps({
 	pack: {
 		type: Object as PropType<StickerPackModel>,
 		required: true,
 	},
-	showDetails: {
-		type: [Object, Boolean] as PropType<PackDetailsOptions>,
-		default: false,
+	showName: {
+		type: Boolean,
 	},
 	canClickPack: {
 		type: Boolean,
@@ -55,16 +48,9 @@ const emit = defineEmits({
 	clickPack: () => true,
 });
 
-const { pack, showDetails, canClickPack, forceElevate } = toRefs(props);
+const { pack, canClickPack, forceElevate } = toRefs(props);
 
 const loadedImage = ref(false);
-
-const showName = computed(() => {
-	if (!showDetails.value) {
-		return false;
-	}
-	return showDetails.value === true || showDetails.value.name === true;
-});
 
 function onClickPack() {
 	if (canClickPack.value) {
@@ -87,17 +73,18 @@ function onClickPack() {
 			>
 				<AppAspectRatio :ratio="StickerPackRatio" show-overflow>
 					<AppMediaItemBackdrop
-						:style="{
-							...styleWhen(forceElevate, styleElevate(1)),
-							...styleWhen(canClickPack, {
+						:style="[
+							styleWhen(forceElevate, styleElevate(1)),
+							styleWhen(canClickPack, {
 								cursor: `pointer`,
 							}),
-							width: `100%`,
-							height: `100%`,
-						}"
+							{
+								width: `100%`,
+								height: `100%`,
+							},
+						]"
 						:media-item="pack.media_item"
 						:color-opacity="loadedImage ? 0 : 1"
-						radius="lg"
 					>
 						<AppImgResponsive
 							:src="pack.media_item.mediaserver_url"
@@ -121,7 +108,7 @@ function onClickPack() {
 		<div
 			v-if="showName"
 			:style="{
-				marginTop: `8px`,
+				marginTop: `4px`,
 				fontWeight: 700,
 			}"
 		>

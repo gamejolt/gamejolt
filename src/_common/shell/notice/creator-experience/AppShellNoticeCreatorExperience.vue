@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, onMounted, ref, toRefs } from 'vue';
+import { CSSProperties, PropType, computed, ref, toRefs } from 'vue';
 import { kFontSizeTiny } from '../../../../_styles/variables';
 import { sleep } from '../../../../utils/utils';
 import AppCircularProgress from '../../../progress/AppCircularProgress.vue';
 import { $gettext } from '../../../translate/translate.service';
 import AppShellNoticeBase from '../_base/AppShellNoticeBase.vue';
-import { CreatorExperienceNotice, getShellNotice } from '../notice.service';
+import { CreatorExperienceNotice } from '../notice.service';
 
 const props = defineProps({
 	noticeId: {
@@ -25,8 +25,6 @@ interface PercentContent {
 	text: string | number;
 	styles?: CSSProperties;
 }
-
-const noticeAnimDurationMs = 500;
 
 const percentTransitionMs = ref<number>(500);
 const percentData = ref<PercentContent>({ percent: 0, text: 0 });
@@ -98,13 +96,6 @@ const subtext = computed(() => {
 	return messages;
 });
 
-onMounted(async () => {
-	// Wait for the enter animation to finish before starting the animation
-	// flow.
-	await sleep(noticeAnimDurationMs);
-	afterIntroTransition();
-});
-
 async function afterIntroTransition() {
 	const { currentLevel, currentPercent } = creatorLevelUpData.value;
 	const { experience, leveledUp, xpGained } = data.value;
@@ -140,13 +131,6 @@ async function afterIntroTransition() {
 		percentTransitionMs.value = 500;
 		percentData.value.percent = currentPercent;
 	}
-
-	await sleep(3_000);
-	closeNotice();
-}
-
-function closeNotice() {
-	getShellNotice().remove(noticeId.value);
 }
 </script>
 
@@ -154,7 +138,8 @@ function closeNotice() {
 	<AppShellNoticeBase
 		:notice-id="noticeId"
 		:message="message"
-		:anim-duration-ms="noticeAnimDurationMs"
+		:auto-close-ms="5_000"
+		@show-transition-end="afterIntroTransition()"
 	>
 		<template #leading>
 			<AppCircularProgress

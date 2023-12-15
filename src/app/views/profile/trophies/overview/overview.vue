@@ -9,8 +9,8 @@ import {
 } from '../../../../../_common/route/legacy-route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import AppTimelineListItem from '../../../../../_common/timeline-list/item/item.vue';
-import AppTimelineList from '../../../../../_common/timeline-list/timeline-list.vue';
+import AppTimelineList from '../../../../../_common/timeline-list/AppTimelineList.vue';
+import AppTimelineListItem from '../../../../../_common/timeline-list/item/AppTimelineListItem.vue';
 import { showTrophyModal } from '../../../../../_common/trophy/modal/modal.service';
 import AppTrophyThumbnail from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { UserGameTrophyModel } from '../../../../../_common/user/trophy/game-trophy.model';
@@ -18,7 +18,7 @@ import { UserSiteTrophyModel } from '../../../../../_common/user/trophy/site-tro
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { numberSort } from '../../../../../utils/array';
-import { useProfileRouteController } from '../../RouteProfile.vue';
+import { useProfileRouteStore } from '../../RouteProfile.vue';
 
 type TrophyEntry = {
 	gameId?: number;
@@ -41,7 +41,7 @@ type TrophyEntry = {
 		Api.sendRequest('/web/profile/trophies/overview/@' + route.params.username),
 })
 export default class RouteProfileTrophiesOverview extends LegacyRouteComponent {
-	routeStore = setup(() => useProfileRouteController()!);
+	routeStore = setup(() => useProfileRouteStore()!);
 	commonStore = setup(() => useCommonStore());
 
 	trophyEntries: TrophyEntry[] = [];

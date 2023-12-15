@@ -1,13 +1,17 @@
 <script lang="ts" setup>
+import { Ref, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
 import { CurrencyType } from '../../../../_common/currency/currency-type';
 import { shorthandReadableTime } from '../../../../_common/filters/duration';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illPointyThing } from '../../../../_common/illustration/illustrations';
+import { InventoryShopGiftModel } from '../../../../_common/inventory/shop/inventory-shop-gift.model';
+import { InventoryShopProduct } from '../../../../_common/inventory/shop/product-owner-helpers';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { storeModelList } from '../../../../_common/model/model-store.service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -18,9 +22,9 @@ import AppStickerPack, {
 import { showStickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
 import { UserStickerPackModel } from '../../../../_common/sticker/pack/user-pack.model';
 import {
+	StickerSortMethod,
 	getStickerStacksFromPayloadData,
 	sortStickerStacks,
-	StickerSortMethod,
 	useStickerStore,
 } from '../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -28,8 +32,10 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { styleTextOverflow } from '../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../_styles/variables';
+import { arrayRemove } from '../../../../utils/array';
 import { run } from '../../../../utils/utils';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
+import AppBackpackGift from './_backpack/AppBackpackGift.vue';
 
 type FormModel = {
 	// nothing
@@ -39,6 +45,8 @@ const { stickerPacks, eventStickers, creatorStickers, generalStickers, allSticke
 	useStickerStore();
 
 const { coinBalance, joltbuxBalance, setInitialPackWatermarkStorageValue } = useCommonStore();
+
+const gifts = ref([]) as Ref<{ gift: InventoryShopGiftModel; product: InventoryShopProduct }[]>;
 
 const form: FormController<FormModel> = createForm({
 	loadUrl: `/mobile/sticker`,
@@ -68,9 +76,30 @@ const form: FormController<FormModel> = createForm({
 				joltbuxBalance.value = payload.buxBalance;
 			}
 		});
+
+		run(async () => {
+			try {
+				const payload = await Api.sendRequest('/web/inventory/gift/received');
+
+				const newGifts: typeof gifts.value = [];
+				for (const gift of storeModelList(InventoryShopGiftModel, payload.gifts)) {
+					const product = gift.product;
+					if (product) {
+						newGifts.push({
+							gift,
+							product,
+						});
+					}
+				}
+				gifts.value = newGifts;
+			} catch (e) {
+				console.error('Error loading gifts', e);
+				gifts.value = [];
+			}
+		});
 	},
 	async onLoad(payload) {
-		stickerPacks.value = UserStickerPackModel.populate(payload.ownedPacks);
+		stickerPacks.value = storeModelList(UserStickerPackModel, payload.ownedPacks);
 
 		const data = getStickerStacksFromPayloadData({
 			stickerCounts: payload.ownedStickers.stickerCounts,
@@ -85,7 +114,7 @@ const form: FormController<FormModel> = createForm({
 });
 
 async function onClickVendingMachine() {
-	await showVendingMachineModal();
+	await showVendingMachineModal({ location: 'backpack' });
 }
 
 function openPack(pack: UserStickerPackModel) {
@@ -105,6 +134,10 @@ function sortStickers(sorting: StickerSortMethod) {
 	eventStickers.value = data.eventStickers;
 	creatorStickers.value = data.creatorStickers;
 	generalStickers.value = data.generalStickers;
+}
+
+function onRemoveGift(gift: InventoryShopGiftModel) {
+	arrayRemove(gifts.value, i => i.gift.id === gift.id);
 }
 </script>
 
@@ -136,6 +169,27 @@ function sortStickers(sorting: StickerSortMethod) {
 
 		<AppSpacer vertical :scale="4" />
 
+		<template v-if="gifts.length">
+			<div class="_section-header">
+				{{ $gettext(`Gifts`) }}
+			</div>
+
+			<div
+				:style="{ display: `grid`, gridTemplateColumns: `minmax(0, 1fr)`, rowGap: `12px` }"
+			>
+				<!-- Gift items -->
+				<AppBackpackGift
+					v-for="{ gift, product } of gifts"
+					:key="gift.id"
+					:gift="gift"
+					:product="product"
+					@remove="onRemoveGift(gift)"
+				/>
+			</div>
+
+			<AppSpacer vertical :scale="4" />
+		</template>
+
 		<AppForm :controller="form">
 			<div class="_section-header">
 				{{ $gettext(`Sticker packs`) }}
@@ -145,9 +199,7 @@ function sortStickers(sorting: StickerSortMethod) {
 					v-for="userPack in stickerPacks"
 					:key="userPack.id"
 					:pack="userPack.sticker_pack"
-					:show-details="{
-						name: true,
-					}"
+					show-name
 					can-click-pack
 					@click-pack="openPack(userPack)"
 				>
@@ -337,7 +389,7 @@ function sortStickers(sorting: StickerSortMethod) {
 
 ._packs
 	display: grid
-	gap: var(--half-pad)
+	gap: var(--base-pad)
 	grid-template-columns: repeat(3, 1fr)
 
 	@media $media-xs

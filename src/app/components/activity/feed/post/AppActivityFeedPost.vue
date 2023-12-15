@@ -22,7 +22,7 @@ import {
 import { kThemeGjOverlayNotice } from '../../../../../_common/theme/variables';
 import { RouteLocationDefinition } from '../../../../../utils/router';
 import AppContentTargets from '../../../content/AppContentTargets.vue';
-import AppFiresidePostEmbed from '../../../fireside/post/embed/embed.vue';
+import AppFiresidePostEmbed from '../../../fireside/post/embed/AppFiresidePostEmbed.vue';
 import AppPollVoting from '../../../poll/AppPollVoting.vue';
 import AppPostContent from '../../../post/AppPostContent.vue';
 import AppPostHeader from '../../../post/AppPostHeader.vue';
@@ -34,7 +34,7 @@ import { useActivityFeed } from '../view';
 import AppActivityFeedPostBlocked from './AppActivityFeedPostBlocked.vue';
 import AppActivityFeedPostMedia from './AppActivityFeedPostMedia.vue';
 import AppActivityFeedPostVideo from './AppActivityFeedPostVideo.vue';
-import AppActivityFeedPostText from './text/text.vue';
+import AppActivityFeedPostText from './text/AppActivityFeedPostText.vue';
 
 const props = defineProps({
 	item: {
@@ -59,7 +59,7 @@ const eventItem = computed(() => item.value.feedItem as EventItemModel);
 const post = computed(() => eventItem.value.action as FiresidePostModel);
 
 const stickerTargetController = createStickerTargetController(post.value, {
-	isCreator: computed(() => user.value.is_creator === true),
+	canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
 });
 
 provideStickerTargetController(stickerTargetController);

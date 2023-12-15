@@ -20,9 +20,6 @@ import { showUserHeaderModal } from '../../../components/user/header-modal/heade
 import { routeDashAccountAddresses } from './addresses/addresses.route';
 import { routeDashAccountBlocks } from './blocks/blocks.route';
 import { routeDashAccountChangePassword } from './change-password/change-password.route';
-import { routeDashAccountChatCommands } from './chat-commands/chat-commands.route';
-import { routeDashAccountChatMods } from './chat-mods/chat-mods.route';
-import { routeDashAccountChatTimers } from './chat-timers/chat-timers.route';
 import { routeDashAccountDeviceSettings } from './device-settings/device-settings.route';
 import { routeDashAccountEdit } from './edit/edit.route';
 import { routeDashAccountEmailPreferences } from './email-preferences/email-preferences.route';
@@ -106,7 +103,7 @@ function showEditAvatar() {
 				<AppPageHeaderAvatar :user="user" disable-link>
 					<AppEditableOverlay
 						:disabled="route.name !== routeDashAccountEdit.name"
-						@click="showEditAvatar()"
+						@toggle="showEditAvatar()"
 					>
 						<template #overlay>
 							{{ $gettext(`Change`) }}
@@ -118,7 +115,7 @@ function showEditAvatar() {
 		</AppPageHeader>
 
 		<AppExpand :when="route.name === routeDashAccountEdit.name">
-			<AppEditableOverlay @click="showEditHeader()">
+			<AppEditableOverlay @toggle="showEditHeader()">
 				<template #overlay>
 					{{ $gettext(`Change profile header`) }}
 				</template>
@@ -204,33 +201,6 @@ function showEditAvatar() {
 							<ul>
 								<li>
 									<RouterLink
-										:to="{ name: routeDashAccountChatCommands.name }"
-										active-class="active"
-									>
-										{{ $gettext(`Chat commands`) }}
-									</RouterLink>
-								</li>
-								<li>
-									<RouterLink
-										:to="{ name: routeDashAccountChatTimers.name }"
-										active-class="active"
-									>
-										{{ $gettext(`Chat timers`) }}
-									</RouterLink>
-								</li>
-								<li>
-									<RouterLink
-										:to="{ name: routeDashAccountChatMods.name }"
-										active-class="active"
-									>
-										{{ $gettext(`Chat moderators`) }}
-									</RouterLink>
-								</li>
-							</ul>
-							<hr />
-							<ul>
-								<li>
-									<RouterLink
 										:to="{ name: routeDashAccountPaymentMethods.name }"
 										active-class="active"
 									>
@@ -305,7 +275,7 @@ function showEditAvatar() {
 										borderRadius: `50%`,
 										overflow: `hidden`,
 									}"
-									@click="showEditAvatar()"
+									@toggle="showEditAvatar()"
 								>
 									<template #overlay>
 										{{ $gettext(`Change`) }}

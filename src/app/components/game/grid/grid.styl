@@ -1,68 +1,67 @@
 @import '../../scrollable-grid/scrollable-grid'
 
-.game-grid
-	&-ad
-		@media $media-xs
-			full-bleed()
-			change-bg('bg-offset')
-			padding-top: ($grid-gutter-width-xs / 2)
-			padding-bottom: ($grid-gutter-width-xs / 2)
-			margin-bottom: $grid-gutter-width-xs
+._game-grid-ad
+	@media $media-xs
+		full-bleed()
+		change-bg('bg-offset')
+		padding-top: ($grid-gutter-width-xs / 2)
+		padding-bottom: ($grid-gutter-width-xs / 2)
+		margin-bottom: $grid-gutter-width-xs
 
-		@media $media-sm
-			change-bg('bg-offset')
-			padding-top: ($grid-gutter-width / 2)
-			padding-bottom: ($grid-gutter-width / 2)
-			margin-bottom: $grid-gutter-width
+	@media $media-sm
+		change-bg('bg-offset')
+		padding-top: ($grid-gutter-width / 2)
+		padding-bottom: ($grid-gutter-width / 2)
+		margin-bottom: $grid-gutter-width
 
-		@media $media-md-up
-			float: right
-			width: (100% / 3)
+	@media $media-md-up
+		float: right
+		width: (100% / 3)
 
-		&-inner
-			margin: 0 auto
-			padding: 0
-			width: 300px
-			text-align: center
+._game-grid-ad-inner
+	margin: 0 auto
+	padding: 0
 
-			@media screen and (min-width: 1550px)
-				change-bg('bg-offset')
-				padding: 20px
-				width: 300px + @padding * 2
+	@media screen and (min-width: 1550px)
+		change-bg('bg-offset')
+		rounded-corners()
+		padding: 16px
+		margin-left: ($grid-gutter-width / 2)
+		margin-right: ($grid-gutter-width / 2)
 
-	&-items
-		@media $media-sm-up
-			margin-left: -($grid-gutter-width / 2)
-			margin-right: -($grid-gutter-width / 2)
+._game-grid-items
+	@media $media-sm-up
+		margin-left: -($grid-gutter-width / 2)
+		margin-right: -($grid-gutter-width / 2)
 
-	&-item
-		display: inline-block
-		vertical-align: top
-		width: 100%
+._game-grid-item
+	display: inline-block
+	vertical-align: top
+	width: 100%
 
-		@media $media-sm-up
-			padding-left: ($grid-gutter-width / 2)
-			padding-right: ($grid-gutter-width / 2)
+	@media $media-sm-up
+		padding-left: ($grid-gutter-width / 2)
+		padding-right: ($grid-gutter-width / 2)
 
-		@media $media-sm
-			width: (100% / 2)
+	@media $media-sm
+		width: (100% / 2)
 
-		@media $media-md-up
-			width: (100% / 3)
+	@media $media-md-up
+		width: (100% / 3)
 
-.scrollable-grid .game-grid
-	&-items
+.scrollable-grid
+	._game-grid-items
 		margin-left: 0
 		margin-right: 0
 
 	@media $media-xs
-		&-item
+		._game-grid-item
 			padding-left: ($grid-gutter-width-xs / 2)
 			padding-right: ($grid-gutter-width-xs / 2)
 			width: 85%
 
 	@media $media-sm-up
-		&-item
+		._game-grid-item
 			padding-left: ($grid-gutter-width / 2)
 			padding-right: ($grid-gutter-width / 2)
 			width: 40%

@@ -78,6 +78,13 @@ export function createQuestStore({
 
 	function _assignQuests(newQuests: QuestModel[]) {
 		allQuests.value = newQuests;
+
+		// Mark any quests that are new so we can keep them in their own "New
+		// Quests" section for the current view.
+		newQuestIdsForView.value = new Set(
+			newQuests.filter(i => i.canAccept && i.is_new).map(i => i.id)
+		);
+
 		hasLoaded.value = true;
 	}
 
@@ -137,30 +144,54 @@ export function createQuestStore({
 	return c;
 }
 
-function _clearUnknownQuestWatermarks(store: QuestStore) {
+/**
+ * Clears any local new/activity watermarks for quests we no longer have, or
+ * quests that no longer match the respective state.
+ *
+ * NOTE: Doesn't actually push the view notifications, only clears local
+ * watermarks to match our current quests.
+ */
+function _syncLocalWatermarks(store: QuestStore) {
 	const { allQuests, newQuestIds, questActivityIds, clearNewQuestIds, clearQuestActivityIds } =
 		store;
-	const _newIds = [...newQuestIds.value.values()];
-	const _activityIds = [...questActivityIds.value.values()];
-	const _currentQuestIds = new Set(allQuests.value.map(i => i.id));
 
-	for (const id of _newIds) {
-		if (!_currentQuestIds.has(id)) {
-			clearNewQuestIds([id], { pushView: false });
+	const currentQuestIds = new Set(allQuests.value.map(i => i.id));
+	const newQuestRemovals = new Set<number>();
+	const activityRemovals = new Set<number>();
+
+	for (const quest of allQuests.value) {
+		if (!quest.is_new) {
+			newQuestRemovals.add(quest.id);
+		}
+		if (!quest.has_activity) {
+			activityRemovals.add(quest.id);
 		}
 	}
 
-	for (const id of _activityIds) {
-		if (!_currentQuestIds.has(id)) {
-			clearQuestActivityIds([id], { pushView: false });
+	for (const id of newQuestIds.value) {
+		if (!currentQuestIds.has(id)) {
+			newQuestRemovals.add(id);
 		}
 	}
 
-	_currentQuestIds.clear();
+	for (const id of questActivityIds.value) {
+		if (!currentQuestIds.has(id)) {
+			activityRemovals.add(id);
+		}
+	}
+
+	// Clear watermarks for quests that no longer exist or no longer match the
+	// state.
+	clearNewQuestIds([...newQuestRemovals], { pushView: false });
+	clearQuestActivityIds([...activityRemovals], { pushView: false });
+
+	currentQuestIds.clear();
+	newQuestRemovals.clear();
+	activityRemovals.clear();
 }
 
 export async function fetchAllQuests(store: QuestStore) {
-	const { isLoading, hasLoaded, newQuestIdsForView, _assignQuests } = store;
+	const { isLoading, hasLoaded, _assignQuests } = store;
 
 	if (isLoading.value) {
 		return;
@@ -196,12 +227,8 @@ export async function fetchAllQuests(store: QuestStore) {
 			newQuests.unshift(...storeModelList(QuestModel, payload.dailyQuests));
 		}
 
-		newQuestIdsForView.value = new Set(
-			newQuests.filter(i => i.canAccept && i.is_new).map(i => i.id)
-		);
-
 		_assignQuests(newQuests);
-		_clearUnknownQuestWatermarks(store);
+		_syncLocalWatermarks(store);
 	} catch (e) {
 		console.error('Failed to load Quest sidebar data.', e);
 	}

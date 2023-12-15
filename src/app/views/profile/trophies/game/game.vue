@@ -15,7 +15,7 @@ import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyList
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { RouteLocationRedirect } from '../../../../../utils/router';
-import { useProfileRouteController } from '../../RouteProfile.vue';
+import { useProfileRouteStore } from '../../RouteProfile.vue';
 
 type CompletionData = {
 	experience: number;
@@ -52,7 +52,7 @@ type CompletionData = {
 	},
 })
 export default class RouteProfileTrophiesGame extends LegacyRouteComponent {
-	routeStore = setup(() => useProfileRouteController()!);
+	routeStore = setup(() => useProfileRouteStore()!);
 	commonStore = setup(() => useCommonStore());
 
 	game: GameModel | null = null;

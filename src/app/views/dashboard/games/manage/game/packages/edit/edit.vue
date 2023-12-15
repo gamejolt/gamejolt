@@ -21,7 +21,7 @@ import {
 } from '../../../../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../../../../_common/loading/AppLoading.vue';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
-import AppNavTabList from '../../../../../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import AppProgressPoller from '../../../../../../../../_common/progress/poller/AppProgressPoller.vue';
 import {
 	LegacyRouteComponent,
@@ -32,7 +32,7 @@ import AppTimeAgo from '../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { shallowSetup } from '../../../../../../../../utils/vue';
 import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
-import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/wizard-controls.vue';
+import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
 import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../../manage.store';

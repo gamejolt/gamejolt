@@ -56,33 +56,38 @@ function dismissError() {
 			'has-invalid-key-error': hasInvalidKey,
 		}"
 	>
-		<AppTheme :force-dark="!isLightTheme" :force-light="isLightTheme" />
-		<AppTooltipPortal />
+		<AppTheme :force-dark="!isLightTheme" :force-light="isLightTheme" is-root>
+			<AppTooltipPortal />
 
-		<div v-if="hasInvalidKey" class="alert alert-notice text-center">
-			<AppJolticon icon="notice" />
-			Invalid widget key.
-		</div>
+			<div v-if="hasInvalidKey" class="alert alert-notice text-center">
+				<AppJolticon icon="notice" />
+				Invalid widget key.
+			</div>
 
-		<transition>
-			<AppProcessingOverlay v-if="isProcessing" />
-		</transition>
+			<transition>
+				<AppProcessingOverlay v-if="isProcessing" />
+			</transition>
 
-		<transition name="slide-up">
-			<AppToast v-if="hasFailure === 'setup-order'" type="error" @dismiss="dismissError()">
-				Something went wrong!
-			</AppToast>
-		</transition>
+			<transition name="slide-up">
+				<AppToast
+					v-if="hasFailure === 'setup-order'"
+					type="error"
+					@dismiss="dismissError()"
+				>
+					Something went wrong!
+				</AppToast>
+			</transition>
 
-		<div v-if="isLoaded">
-			<AppGameHeader />
-			<FormPayment
-				v-if="sellable && sellable.type === SellableType.Paid && !sellable.is_owned"
-			/>
-			<AppDownload v-else />
-		</div>
+			<div v-if="isLoaded">
+				<AppGameHeader />
+				<FormPayment
+					v-if="sellable && sellable.type === SellableType.Paid && !sellable.is_owned"
+				/>
+				<AppDownload v-else />
+			</div>
 
-		<AppFooter />
+			<AppFooter />
+		</AppTheme>
 	</div>
 </template>
 

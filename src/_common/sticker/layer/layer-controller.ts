@@ -27,7 +27,7 @@ export type StickerLayerController = {
 	isActive: Ref<boolean>;
 	isMask: Ref<boolean>;
 	isShowingDrawer: ComputedRef<boolean>;
-	isAllCreator: ComputedRef<boolean>;
+	canChargeAllTargets: ComputedRef<boolean>;
 
 	preferredMask: ComputedRef<StickerLayerController>;
 
@@ -63,14 +63,15 @@ export function createStickerLayerController(store: StickerStore) {
 	const isShowingDrawer = computed(() => store.isDrawerOpen.value && _isActiveLayer.value);
 
 	/**
-	 * Returns true if all sticker targets in the layer belong to a creator and
-	 * none of the targets belong to us.
+	 * Returns true if all sticker targets in the layer can receive a charged
+	 * sticker placement.
 	 */
-	const isAllCreator = computed(
+	const canChargeAllTargets = computed(
 		() =>
 			layerItems.value.length > 0 &&
 			layerItems.value.every(
-				i => !isStickerTargetMine(store, i.controller) && i.controller.isCreator.value
+				i =>
+					!isStickerTargetMine(store, i.controller) && i.controller.canReceiveCharge.value
 			)
 	);
 
@@ -106,7 +107,7 @@ export function createStickerLayerController(store: StickerStore) {
 		isActive,
 		isMask,
 		isShowingDrawer,
-		isAllCreator,
+		canChargeAllTargets,
 
 		preferredMask,
 
@@ -115,7 +116,7 @@ export function createStickerLayerController(store: StickerStore) {
 	return c;
 }
 
-export function provideStickerLayer(controller?: StickerLayerController | null) {
+export function provideStickerLayer(controller: StickerLayerController) {
 	return provide(StickerLayerKey, controller);
 }
 

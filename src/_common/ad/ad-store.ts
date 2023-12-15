@@ -1,20 +1,26 @@
-import { inject, InjectionKey, onUnmounted, provide, reactive } from 'vue';
+import { inject, InjectionKey, onUnmounted, provide, ref, shallowReadonly, toRef } from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
+import { createLogger } from '../../utils/logging';
 import { objectEquals } from '../../utils/object';
 import { isDynamicGoogleBot } from '../device/device.service';
 import { Environment } from '../environment/environment.service';
 import { Model } from '../model/model.service';
 import { onRouteChangeAfter } from '../route/route-component';
 import { AdSlot } from './ad-slot-info';
-import { AdAdapterBase } from './adapter-base';
-import { AdPlaywireAdapter } from './playwire/playwire-adapter';
-import { AdProperAdapter } from './proper/proper-adapter';
+import { AdAdapter } from './adapter-base';
+import { AdEnthusiastAdapter } from './enthusiast/enthusiast-adapter';
 
-export const AdsControllerKey: InjectionKey<AdsController> = Symbol('ads');
+const logger = createLogger('Ads Store');
+
+type AdStore = ReturnType<typeof createAdStore>;
+const AdStoreKey: InjectionKey<AdStore> = Symbol('ads');
 
 // To show ads on the page for dev, just change this to false.
 export const AdsDisabledDev = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build';
 // export const AdsDisabledDev = false;
+
+const areAdsDisabledForDevice =
+	GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev;
 
 /**
  * This is the interface that our ad components must register with us.
@@ -26,31 +32,97 @@ export class AdSettingsContainer {
 	resource: Model | null = null;
 }
 
-export const AdEventView = 'view';
-export const AdEventClick = 'click';
-
-export const AdTypeDisplay = 'display';
-export const AdTypeVideo = 'video';
-
-export const AdResourceTypeNone = 1;
-export const AdResourceTypeGame = 2;
-export const AdResourceTypeUser = 3;
-export const AdResourceTypeFiresidePost = 4;
-
-const defaultSettings = new AdSettingsContainer();
-
-/**
- * Inclusive of min and exclusive of max.
- */
-function _getRandom(min: number, max: number) {
-	min = Math.ceil(min);
-	max = Math.floor(max);
-	return Math.floor(Math.random() * (max - min)) + min;
+export const enum AdEvent {
+	View = 'view',
+	Click = 'click',
 }
 
-function _chooseAdapter() {
-	const adapters = [AdProperAdapter];
-	return adapters[_getRandom(0, adapters.length)];
+export const enum AdType {
+	Display = 'display',
+	Video = 'video',
+}
+
+export const enum AdResourceType {
+	None = 1,
+	Game = 2,
+	User = 3,
+	FiresidePost = 4,
+}
+
+export function createAdStore() {
+	const routeResolved = ref(false);
+	const ads = ref(new Set<AdInterface>());
+	const pageSettings = ref<AdSettingsContainer | null>(null);
+	const _defaultSettings = new AdSettingsContainer();
+
+	const _newAdapter = new AdEnthusiastAdapter();
+	const adapter: AdAdapter = _newAdapter;
+	const videoAdapter: AdAdapter = _newAdapter;
+
+	const settings = toRef(() => pageSettings.value || _defaultSettings);
+
+	const shouldShow = toRef(() => {
+		if (areAdsDisabledForDevice) {
+			return false;
+		}
+
+		if (settings.value.isPageDisabled) {
+			return false;
+		}
+
+		return true;
+	});
+
+	const c = shallowReadonly({
+		adapter,
+		videoAdapter,
+		routeResolved,
+		ads,
+		pageSettings,
+		settings,
+		shouldShow,
+	});
+	provide(AdStoreKey, c);
+
+	if (areAdsDisabledForDevice) {
+		return c;
+	}
+
+	// We set up events so that we know when a route begins and when the
+	// routing is fully resolved.
+	const beforeDeregister = useRouter().beforeEach((to, from, next) => {
+		// Make sure we only update if the route actually changed,
+		// since this gets called even if just a simple hash has
+		// changed.
+		if (_didRouteChange(from, to)) {
+			adapter.onBeforeRouteChange();
+			if (adapter !== videoAdapter) {
+				videoAdapter.onBeforeRouteChange();
+			}
+			routeResolved.value = false;
+		}
+		next();
+	});
+
+	const routeAfter$ = onRouteChangeAfter.subscribe(() => {
+		if (routeResolved.value) {
+			return;
+		}
+
+		routeResolved.value = true;
+		adapter.onRouteChanged();
+		if (adapter !== videoAdapter) {
+			videoAdapter.onRouteChanged();
+		}
+		_displayAds(Array.from(ads.value));
+	});
+
+	onUnmounted(() => {
+		beforeDeregister();
+		routeAfter$.close();
+	});
+
+	return c;
 }
 
 function _didRouteChange(from: RouteLocationNormalized, to: RouteLocationNormalized) {
@@ -63,121 +135,49 @@ function _didRouteChange(from: RouteLocationNormalized, to: RouteLocationNormali
 	);
 }
 
-class AdsController {
-	videoAdapter = new AdPlaywireAdapter();
-	adapter = new (_chooseAdapter())() as AdAdapterBase;
-
-	routeResolved = false;
-	ads = new Set<AdInterface>();
-	pageSettings: AdSettingsContainer | null = null;
-
-	get settings() {
-		return this.pageSettings || defaultSettings;
-	}
-
-	get shouldShow() {
-		if (GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot()) {
-			return false;
-		}
-
-		if (this.settings.isPageDisabled) {
-			return false;
-		}
-
-		return true;
-	}
+export function useAdStore() {
+	return inject(AdStoreKey)!;
 }
 
-export function createAdsController() {
-	const c = reactive(new AdsController()) as AdsController;
-	provide(AdsControllerKey, c);
-
-	if (GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev) {
-		return c;
-	}
-
-	// We set up events so that we know when a route begins and when the
-	// routing is fully resolved.
-	const beforeDeregister = useRouter().beforeEach((to, from, next) => {
-		// Make sure we only update if the route actually changed,
-		// since this gets called even if just a simple hash has
-		// changed.
-		if (_didRouteChange(from, to)) {
-			c.adapter.onBeforeRouteChange();
-			c.videoAdapter.onBeforeRouteChange();
-			c.routeResolved = false;
-		}
-		next();
-	});
-
-	const routeAfter$ = onRouteChangeAfter.subscribe(() => {
-		if (c.routeResolved) {
-			return;
-		}
-
-		c.routeResolved = true;
-		c.adapter.onRouteChanged();
-		c.videoAdapter.onRouteChanged();
-		_displayAds(Array.from(c.ads));
-	});
-
-	onUnmounted(() => {
-		beforeDeregister();
-		routeAfter$.close();
-	});
-
-	return c;
+export function setPageAdsSettings({ pageSettings }: AdStore, container: AdSettingsContainer) {
+	pageSettings.value = container;
 }
 
-export function useAdsController() {
-	return inject(AdsControllerKey)!;
+export function releasePageAdsSettings({ pageSettings }: AdStore) {
+	pageSettings.value = null;
 }
 
-export function setPageAdsSettings(c: AdsController, container: AdSettingsContainer) {
-	c.pageSettings = container;
-}
-
-export function releasePageAdsSettings(c: AdsController) {
-	c.pageSettings = null;
-}
-
-export function chooseAdAdapterForSlot(c: AdsController, slot: AdSlot) {
+export function chooseAdAdapterForSlot({ videoAdapter, adapter }: AdStore, slot: AdSlot) {
 	if (slot.size === 'video') {
-		return c.videoAdapter;
+		return videoAdapter;
 	}
-	return c.adapter;
+	return adapter;
 }
 
-/**
- * Should only be used for testing!
- */
-export function overrideAdsAdapter(c: AdsController, adapter: AdAdapterBase) {
-	c.adapter = adapter;
-}
-
-export function addAd(c: AdsController, ad: AdInterface) {
-	c.ads.add(ad);
+export function addAd(c: AdStore, ad: AdInterface) {
+	const { ads, routeResolved } = c;
+	ads.value.add(ad);
 
 	// If the route already resolved then this ad was mounted after the
 	// fact. We have to call the initial display.
-	if (c.routeResolved) {
+	if (routeResolved.value) {
 		_displayAds([ad]);
 	}
 }
 
-export function removeAd(c: AdsController, ad: AdInterface) {
-	c.ads.delete(ad);
+export function removeAd({ ads }: AdStore, ad: AdInterface) {
+	ads.value.delete(ad);
 }
 
-async function _displayAds(ads: AdInterface[]) {
-	for (const ad of ads) {
+async function _displayAds(displayedAds: AdInterface[]) {
+	for (const ad of displayedAds) {
 		ad.display();
 	}
 }
 
 export async function sendAdBeacon(
-	event: string,
-	type: string,
+	event: AdEvent,
+	type: AdType,
 	resource?: string,
 	resourceId?: number
 ) {
@@ -188,26 +188,26 @@ export async function sendAdBeacon(
 
 	if (resource) {
 		if (resource === 'Game') {
-			queryString += '&resource_type=' + AdResourceTypeGame;
+			queryString += '&resource_type=' + AdResourceType.Game;
 			queryString += '&resource_id=' + resourceId;
 		} else if (resource === 'User') {
-			queryString += '&resource_type=' + AdResourceTypeUser;
+			queryString += '&resource_type=' + AdResourceType.User;
 			queryString += '&resource_id=' + resourceId;
 		} else if (resource === 'Fireside_Post') {
-			queryString += '&resource_type=' + AdResourceTypeFiresidePost;
+			queryString += '&resource_type=' + AdResourceType.FiresidePost;
 			queryString += '&resource_id=' + resourceId;
 		}
 	}
 
 	let path = '/adserver';
-	if (event === AdEventClick) {
+	if (event === AdEvent.Click) {
 		path += '/click';
 	} else {
 		path += `/log/${type}`;
 	}
 
 	if (AdsDisabledDev) {
-		console.log('Sending ad beacon.', { event, type, resource, resourceId });
+		logger.info('Sending ad beacon.', { event, type, resource, resourceId });
 	}
 
 	// This is enough to send the beacon.

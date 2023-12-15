@@ -48,6 +48,7 @@ import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { KeyGroupModel } from '../../../../_common/key-group/key-group.model';
 import { MediaItemModel } from '../../../../_common/media-item/media-item-model';
+import { storeModelList } from '../../../../_common/model/model-store.service';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
 import { RealmModel } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -259,7 +260,7 @@ const form: FormController<FormPostModel> = createForm({
 		maxCommunities.value = payload.maxCommunities;
 		maxRealms.value = payload.maxRealms;
 
-		backgrounds.value = BackgroundModel.populate(payload.backgrounds);
+		backgrounds.value = storeModelList(BackgroundModel, payload.backgrounds);
 
 		// Use our saved background id if we're not editing.
 		if (!isEditing.value) {

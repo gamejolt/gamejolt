@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useCommonStore } from '../../../_common/store/common-store';
-import AppClientIntro from '../client/intro/intro.vue';
 import AppClientSystemProgress from './AppClientSystemProgress.vue';
+import AppClientIntro from './intro/AppClientIntro.vue';
 
 const { userBootstrapped } = useCommonStore();
 const isShowingIntro = ref(true);

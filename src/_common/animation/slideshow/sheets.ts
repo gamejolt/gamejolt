@@ -1,8 +1,11 @@
 import { IllustrationAsset } from '../../illustration/AppIllustration.vue';
 import illChargeOrbEmptyBasePath from '../../illustration/img/charge-orb/base/empty.png';
+import illChargeOrbEmptyDecemberPath from '../../illustration/img/charge-orb/december/empty.png';
 import illChargeOrbEmptyOctoberPath from '../../illustration/img/charge-orb/october/empty.png';
 import assetChargeOrbBottomBase from './sheets/charge-orb/base/bottom.png';
 import assetChargeOrbTopBase from './sheets/charge-orb/base/top.png';
+import assetChargeOrbBottomDecember from './sheets/charge-orb/december/bottom.png';
+import assetChargeOrbTopDecember from './sheets/charge-orb/december/top.png';
 import assetChargeOrbBottomOctober from './sheets/charge-orb/october/bottom.png';
 import assetChargeOrbTopOctober from './sheets/charge-orb/october/top.png';
 import assetFireplace from './sheets/fireplace.png';
@@ -29,13 +32,25 @@ export function getImgSlideshowData(slideshow: ImgSlideshow) {
 
 const month = /** @__PURE__ */ new Date().getMonth();
 const isOctober = month === 9;
+const isDecember = month === 11;
 
 /**
  * @__NO_SIDE_EFFECTS__
  */
-function createSeasonalAsset<T>({ base, october }: { base: T; october?: T }) {
+function createSeasonalAsset<T>({
+	base,
+	october,
+	december,
+}: {
+	base: T;
+	october?: T;
+	december?: T;
+}) {
 	if (isOctober) {
 		return october || base;
+	}
+	if (isDecember) {
+		return december || base;
 	}
 	return base;
 }
@@ -59,6 +74,11 @@ export const illChargeOrbEmpty = createSeasonalAsset<IllustrationAsset>({
 		width: 500,
 		height: 500,
 	},
+	december: {
+		path: illChargeOrbEmptyDecemberPath,
+		width: 500,
+		height: 500,
+	},
 });
 
 export const sheetChargeOrbBottom = createSeasonalAsset<ImgSlideshow>({
@@ -71,6 +91,13 @@ export const sheetChargeOrbBottom = createSeasonalAsset<ImgSlideshow>({
 	},
 	october: {
 		asset: assetChargeOrbBottomOctober,
+		assetWidth: 2500,
+		assetHeight: 500,
+		frames: 5,
+		fps: 3,
+	},
+	december: {
+		asset: assetChargeOrbBottomDecember,
 		assetWidth: 2500,
 		assetHeight: 500,
 		frames: 5,
@@ -93,6 +120,13 @@ export const sheetChargeOrbTop = createSeasonalAsset<ImgSlideshow>({
 		assetHeight: 500,
 		frames: 5,
 		blankFrames: 2,
+		fps: 6,
+	},
+	december: {
+		asset: assetChargeOrbTopDecember,
+		assetWidth: 2500,
+		assetHeight: 500,
+		frames: 5,
 		fps: 6,
 	},
 });

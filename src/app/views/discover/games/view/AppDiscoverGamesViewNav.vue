@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import {
-	CommentStoreManagerKey,
 	getCommentStore,
+	useCommentStoreManager,
 } from '../../../../../_common/comment/comment-store';
 import { formatNumber } from '../../../../../_common/filters/number';
-import AppGameModLinks from '../../../../../_common/game/mod-links/mod-links.vue';
+import AppGameModLinks from '../../../../../_common/game/mod-links/AppGameModLinks.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { showReportModal } from '../../../../../_common/report/modal/modal.service';
@@ -16,11 +16,11 @@ import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { getAbsoluteLink } from '../../../../../utils/router';
 import { showCommentModal } from '../../../../components/comment/modal/modal.service';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
-import { useGameRouteController } from './view.vue';
+import { useGameRouteController } from './RouteDiscoverGamesView.vue';
 
 const { game, trophiesCount, hasScores, primaryScoreTable } = useGameRouteController()!;
 const { user: globalUser } = useCommonStore();
-const commentManager = inject(CommentStoreManagerKey)!;
+const commentManager = useCommentStoreManager()!;
 const router = useRouter();
 
 const hasAnyPerms = computed(() => Boolean(game.value?.hasPerms()));

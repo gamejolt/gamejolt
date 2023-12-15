@@ -26,9 +26,11 @@ import { getCurrentServerTime } from '../../../../utils/server-time';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 
 const ACTIONS_PER_PAGE = 25;
+const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 
 export default {
 	...defineAppRouteOptions({
+		deps: {},
 		resolver: () =>
 			Api.sendFieldsRequest('/mobile/dash/creators/supporters', {
 				actions: {
@@ -52,8 +54,6 @@ type InitPayload = {
 </script>
 
 <script lang="ts" setup>
-const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}px` });
-
 let _sendAllInterval: NodeJS.Timer | null = null;
 
 /**

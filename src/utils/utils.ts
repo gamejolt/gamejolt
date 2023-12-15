@@ -48,17 +48,34 @@ export function debounce<T extends FunctionType>(
 	fn: T,
 	delayMs: number
 ): ChangeReturnType<T, void> {
+	return debounceWithCancel(fn, delayMs).call;
+}
+
+/**
+ * Allows manual canceling of the debounce.
+ */
+export function debounceWithCancel<T extends FunctionType>(
+	fn: T,
+	delayMs: number
+): { call: ChangeReturnType<T, void>; cancel: () => void } {
 	let timeout: NodeJS.Timer | null = null;
 
-	return function (this: unknown, ...args: any) {
+	function cancel() {
 		if (timeout) {
 			clearTimeout(timeout);
 		}
+	}
 
-		timeout = setTimeout(() => {
-			timeout = null;
-			fn.apply(this, args);
-		}, delayMs);
+	return {
+		call(this: unknown, ...args: any) {
+			cancel();
+
+			timeout = setTimeout(() => {
+				timeout = null;
+				fn.apply(this, args);
+			}, delayMs);
+		},
+		cancel,
 	};
 }
 
@@ -131,6 +148,14 @@ export function queuedThrottle(delay: number) {
 // For exhaustive switch matching: https://www.typescriptlang.org/docs/handbook/advanced-types.html
 export function assertNever(x: never): never {
 	throw new Error('Unexpected object: ' + x);
+}
+
+/**
+ * Use when you need to call a function when doing an instanceof check. It can
+ * help resolve a bug in volar where the templates break with instanceof.
+ */
+export function isInstance<T>(item: any, constructor: new (...data: any) => T): item is T {
+	return item instanceof constructor;
 }
 
 export type Primitives = number | string | boolean;

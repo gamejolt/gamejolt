@@ -5,14 +5,13 @@ import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCard from '../../../../../_common/card/AppCard.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { formatCurrency } from '../../../../../_common/filters/currency';
-import { formatNumber } from '../../../../../_common/filters/number';
+import { formatCurrency, formatGemsCurrency } from '../../../../../_common/filters/currency';
 import { imageGems } from '../../../../../_common/img/images';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import {
-	createAppRoute,
-	defineAppRouteOptions,
+createAppRoute,
+defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -126,7 +125,7 @@ async function withdraw() {
 										<AppTranslate>Gems balance</AppTranslate>
 									</div>
 									<div class="stat-big-digit">
-										{{ formatNumber(gemWallet.available_balance) }}
+										{{ formatGemsCurrency(gemWallet.available_balance) }}
 									</div>
 								</div>
 							</div>
@@ -136,7 +135,7 @@ async function withdraw() {
 										<AppTranslate>Pending gems</AppTranslate>
 									</div>
 									<div class="stat-big-digit">
-										{{ formatNumber(gemWallet.pending_balance) }}
+										{{ formatGemsCurrency(gemWallet.pending_balance) }}
 										<AppJolticon
 											v-app-tooltip.touchable="
 												$gettext(

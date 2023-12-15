@@ -153,7 +153,7 @@ async function chooseAvatar() {
 			</section>
 
 			<section class="-avatar">
-				<AppEditableOverlay @click="chooseAvatar()">
+				<AppEditableOverlay @toggle="chooseAvatar()">
 					<template #overlay>
 						{{ $gettext(`Change`) }}
 					</template>

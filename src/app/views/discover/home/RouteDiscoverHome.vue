@@ -1,10 +1,11 @@
 <script lang="ts">
 import { computed, ref, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
+import { trackExperimentEngagement } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityModel } from '../../../../_common/community/community.model';
+import { configGuestHomeDiscover } from '../../../../_common/config/config.service';
 import { Environment } from '../../../../_common/environment/environment.service';
-import { FiresideModel } from '../../../../_common/fireside/fireside.model';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
@@ -16,7 +17,6 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import { arrayShuffle } from '../../../../utils/array';
 import { FeaturedItemModel } from '../../../components/featured-item/featured-item.model';
 import socialImage from '../../../img/social/social-share-header.png';
-import { updateHomeRouteAnalyticsPath } from '../../home/RouteHome.vue';
 import AppHomeDefault from './AppHomeDefault.vue';
 import AppHomeSlider from './AppHomeSlider.vue';
 
@@ -39,7 +39,6 @@ const route = useRoute();
 
 const featuredItem = ref<FeaturedItemModel>();
 const featuredCommunities = ref<CommunityModel[]>([]);
-const featuredFireside = ref<FiresideModel>();
 const featuredRealms = ref<RealmModel[]>([]);
 
 const heroPosts = shallowRef<FiresidePostModel[]>([]);
@@ -82,9 +81,6 @@ const { isBootstrapped } = createAppRoute({
 		}
 
 		featuredCommunities.value = CommunityModel.populate(payload.communities);
-		featuredFireside.value = payload.featuredFireside
-			? new FiresideModel(payload.featuredFireside)
-			: undefined;
 
 		heroPosts.value = FiresidePostModel.populate<FiresidePostModel>(payload.heroPosts).filter(
 			i => i.hasMedia || i.hasVideo
@@ -109,7 +105,7 @@ const { isBootstrapped } = createAppRoute({
 			HistoryCache.store(route, creatorPosts.value, CachedCreatorsKey);
 		}
 
-		updateHomeRouteAnalyticsPath(route, user.value);
+		trackExperimentEngagement(configGuestHomeDiscover);
 	},
 });
 </script>
@@ -120,11 +116,10 @@ const { isBootstrapped } = createAppRoute({
 	</div>
 
 	<AppHomeDefault
-		v-if="user"
+		v-if="user || configGuestHomeDiscover.value"
 		:is-bootstrapped="isBootstrapped"
 		:featured-item="featuredItem"
 		:featured-communities="featuredCommunities"
-		:featured-fireside="featuredFireside"
 		:featured-realms="featuredRealms"
 		:creator-posts="creatorPosts"
 	/>

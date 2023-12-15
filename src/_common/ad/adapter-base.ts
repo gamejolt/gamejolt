@@ -2,22 +2,21 @@ import type { Component, PropType } from 'vue';
 import { isDynamicGoogleBot } from '../device/device.service';
 import { AdSlot } from './ad-slot-info';
 
-export abstract class AdAdapterBase {
+export interface AdAdapter {
+	component(slot: AdSlot): Component;
+	onBeforeRouteChange(): void;
+	onRouteChanged(): void;
+}
+
+export class AdAdapterHelper {
 	private ranOnce = false;
-	hasVideoSupport = false;
-
-	abstract component(slot: AdSlot): Component;
-
-	// Callbacks.
-	onBeforeRouteChange() {}
-	onRouteChanged() {}
 
 	/**
 	 * Convenience method to run something just once for this adapter. Most
 	 * likely an adapter would use this to load the ad script just once on the
 	 * first ad display (lazy initialization).
 	 */
-	protected runOnce(cb: () => void) {
+	runOnce(cb: () => void) {
 		if (import.meta.env.SSR || isDynamicGoogleBot() || this.ranOnce) {
 			return;
 		}
@@ -31,7 +30,7 @@ export abstract class AdAdapterBase {
  * Used to define the common interface for all ad adapter components. These are
  * always passed into every ad adapter's components to display the actual ads.
  */
-export function defineAdAdapterComponentProps<T extends AdAdapterBase>() {
+export function defineAdAdapterComponentProps<T extends AdAdapter>() {
 	return {
 		adSlot: {
 			type: Object as PropType<AdSlot>,

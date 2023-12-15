@@ -1,95 +1,111 @@
 <script lang="ts" setup>
-import { CSSProperties, Ref, computed, onMounted, ref } from 'vue';
+import { CSSProperties, Ref, computed, onMounted, ref, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
 import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
-import { Currency, CurrencyType } from '../../../../_common/currency/currency-type';
+import { CurrencyType } from '../../../../_common/currency/currency-type';
 import {
 	featureMicrotransactions,
 	fetchFeatureToggles,
 } from '../../../../_common/features/features.service';
-import { formatNumber } from '../../../../_common/filters/number';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import { InventoryShopProductSaleModel } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import { InventoryShopSectionModel } from '../../../../_common/inventory/shop/inventory-shop-section.model';
+import { PurchasableProductType } from '../../../../_common/inventory/shop/product-owner-helpers';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import { showPurchaseMicrotransactionModal } from '../../../../_common/microtransaction/purchase-modal/modal.service';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
-import { storeModelList } from '../../../../_common/model/model-store.service';
+import { storeModel, storeModelList } from '../../../../_common/model/model-store.service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '../../../../_common/sticker/pack/AppStickerPack.vue';
+import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
 import {
 	kThemeBgActual,
 	kThemeBgBackdrop,
-	kThemeBgOffset,
+	kThemeBgSubtle,
 	kThemeFg,
-	kThemeFg10,
 	kThemeFgMuted,
+	kThemePrimary,
 } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
+import { UserModel } from '../../../../_common/user/user.model';
 import {
-	styleBorderRadiusBase,
+	kElevateTransition,
 	styleBorderRadiusLg,
 	styleChangeBg,
 	styleElevate,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
-	styleOverlayTextShadow,
+	styleTextOverflow,
+	styleTyped,
 	styleWhen,
 } from '../../../../_styles/mixins';
 import {
+	kBorderWidthBase,
 	kFontFamilyDisplay,
-	kFontFamilyHeading,
+	kFontSizeBase,
+	kFontSizeH2,
 	kFontSizeH3,
+	kFontSizeSmall,
+	kLineHeightBase,
 	kStrongEaseOut,
 } from '../../../../_styles/variables';
-import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
+import { numberSort } from '../../../../utils/array';
+import { getMediaserverUrlForBounds } from '../../../../utils/image';
+import { run } from '../../../../utils/utils';
+import AppVendingMachineCurrencyCard from './AppVendingMachineCurrencyCard.vue';
 import AppVendingMachineProduct from './_product/AppVendingMachineProduct.vue';
 import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
 import imageVance from './vance.png';
 
-interface ProductChunks {
-	packs?: ProductChunk;
-	avatarFrames?: ProductChunk;
-	backgrounds?: ProductChunk;
+interface Section {
+	id: number;
+	title: string;
+	description: string;
+	sort: number;
+	sales: InventoryShopProductSaleModel[];
 }
 
-interface ProductChunk {
-	items: InventoryShopProductSaleModel[];
-	type: keyof ProductChunks;
-}
+const props = defineProps({
+	userId: {
+		type: Number,
+		default: undefined,
+	},
+});
+
+const { userId } = toRefs(props);
 
 const { isDark } = useThemeStore();
-const { coinBalance, joltbuxBalance } = useCommonStore();
+const { user: authUser, coinBalance, joltbuxBalance } = useCommonStore();
 
 const modal = useModal()!;
 
-const availableProducts = ref({}) as Ref<ProductChunks>;
+const shopOwner = ref<UserModel>();
+const sections = ref([]) as Ref<Section[]>;
+const chargeRewardPack = ref<StickerPackModel>();
 
 const isLoading = ref(false);
 const productProcessing = ref<number>();
 
 const hasProducts = computed(() => {
-	const e = availableProducts.value;
-
-	return (
-		(e.packs?.items.length ||
-			e.avatarFrames?.items.length ||
-			e.backgrounds?.items.length ||
-			0) > 0
-	);
+	const data = sections.value.values();
+	for (const { sales } of data) {
+		if (sales.length > 0) {
+			return true;
+		}
+	}
+	return false;
 });
 
 const currencyCardData = computed(() => {
@@ -106,63 +122,112 @@ async function init() {
 	}
 	isLoading.value = true;
 
-	const p = await Promise.all([
-		Api.sendRequest('/web/inventory/shop/sales', undefined, { detach: true }),
-		Api.sendFieldsRequest(
-			'/mobile/me',
-			{
-				coinBalance: true,
-				buxBalance: true,
-			},
-			{ detach: true }
-		),
-	]);
-
-	const payload = p[0];
-	const newProducts = payload.sales
-		? storeModelList(InventoryShopProductSaleModel, payload.sales)
-		: [];
-
-	const productChunks: ProductChunks = {};
-	const missingItems: InventoryShopProductSaleModel[] = [];
-
-	for (const shopProduct of newProducts) {
-		let key: keyof ProductChunks | null = null;
-
-		if (shopProduct.stickerPack) {
-			key = 'packs';
-		} else if (shopProduct.avatarFrame) {
-			key = 'avatarFrames';
-		} else if (shopProduct.background) {
-			key = 'backgrounds';
-		}
-
-		if (!key) {
-			missingItems.push(shopProduct);
-			continue;
-		}
-
-		const items = (productChunks[key]?.items || []).concat(shopProduct);
-		productChunks[key] = { type: key, items };
+	let productUrl = `/web/inventory/shop/sales`;
+	const productUrlParams: string[] = [`include_unpurchasable=true`];
+	if (userId?.value) {
+		productUrlParams.push(`userId=${userId.value}`);
+	}
+	if (productUrlParams.length) {
+		productUrl += `?${productUrlParams.join('&')}`;
 	}
 
-	if (missingItems.length > 0) {
-		console.warn(`Got some products that we don't support yet.`, {
-			missingCount: missingItems.length,
-			types: missingItems.reduce((result, i) => {
-				result.set(i.product_type, (result.get(i.product_type) || 0) + 1);
-				return result;
-			}, new Map<string, number>()),
-		});
+	try {
+		const p = await Promise.all([
+			Api.sendRequest(productUrl, undefined, { detach: true }),
+			Api.sendFieldsRequest(
+				'/mobile/me',
+				{
+					coinBalance: true,
+					buxBalance: true,
+				},
+				{ detach: true }
+			),
+			fetchFeatureToggles([featureMicrotransactions]),
+		]);
+
+		const payload = p[0];
+		chargeRewardPack.value = payload.chargeRewardPack
+			? storeModel(StickerPackModel, payload.chargeRewardPack)
+			: undefined;
+
+		const sales = payload.sales
+			? storeModelList(InventoryShopProductSaleModel, payload.sales)
+			: [];
+
+		const newSections: typeof sections.value = [];
+		const validSales = new Map<number, InventoryShopProductSaleModel>();
+		const unsupportedSales = new Map<number, InventoryShopProductSaleModel>();
+		const sectionItems = storeModelList(InventoryShopSectionModel, payload.sections);
+
+		// Prune the sales to only supported ones.
+		for (const idx in sales) {
+			const sale = sales[idx];
+			if (!sale.stickerPack && !sale.avatarFrame && !sale.background) {
+				unsupportedSales.set(sale.id, sale);
+				continue;
+			}
+			validSales.set(sale.id, sale);
+		}
+
+		// Populate the section data objects with their sales.
+		for (const sectionModel of sectionItems) {
+			const section: Section = {
+				id: sectionModel.id,
+				title: sectionModel.title,
+				description: sectionModel.description,
+				sort: sectionModel.sort,
+				sales: [],
+			};
+
+			if (sectionModel.item_list) {
+				// Loop through the sale IDs and grab any matching valid sales.
+				// The IDs are already sorted in the order the sales are meant
+				// to be displayed.
+				for (const saleId of sectionModel.item_list.sale_ids) {
+					const sale = validSales.get(saleId);
+					// Skip this section and log a warning if we don't have a
+					// valid sale with this ID.
+					if (!sale) {
+						if (unsupportedSales.has(saleId)) {
+							console.warn(
+								`Item list referenced a sale (id: ${saleId}) that is not a supported type of sale.`
+							);
+						} else {
+							console.warn(
+								`Item list referenced a sale (id: ${saleId}) that is not present in the 'sales' field.`
+							);
+						}
+						continue;
+					}
+					section.sales.push(sale);
+				}
+
+				// Only add the section if it has sales.
+				if (section.sales.length > 0) {
+					newSections.push(section);
+				}
+			} else {
+				console.warn(`Unsupported section type for section ${sectionModel.id}`);
+			}
+		}
+
+		// Sort the sections by their sort value. Sale items within the sections
+		// are already pre-sorted.
+		sections.value = newSections.sort((a, b) => numberSort(a.sort, b.sort));
+
+		// Assign to our existing shopOwner or create a new one if available.
+		if (shopOwner.value && payload.shopOwner) {
+			shopOwner.value.assign(payload.shopOwner);
+		} else {
+			shopOwner.value = payload.shopOwner ? new UserModel(payload.shopOwner) : undefined;
+		}
+
+		const mePayload = p[1];
+		coinBalance.value = mePayload.coinBalance;
+		joltbuxBalance.value = mePayload.buxBalance;
+	} catch (e) {
+		console.error('Failed to load vending machine data', e);
 	}
-
-	availableProducts.value = productChunks;
-
-	const mePayload = p[1];
-	coinBalance.value = mePayload.coinBalance;
-	joltbuxBalance.value = mePayload.buxBalance;
-
-	await fetchFeatureToggles([featureMicrotransactions]);
 
 	isLoading.value = false;
 }
@@ -171,58 +236,24 @@ onMounted(() => {
 	init();
 });
 
-async function purchaseProduct(shopProduct: InventoryShopProductSaleModel) {
+async function purchaseProduct(sale: InventoryShopProductSaleModel) {
 	if (productProcessing.value) {
 		return;
 	}
-	const currencyOptions = shopProduct.validPricingsData;
-	const currencyOptionsList = Object.entries(currencyOptions);
-	if (currencyOptionsList.length === 0) {
-		showErrorGrowl($gettext(`This item is not available for purchase right now.`));
+	const resourceId = sale.avatarFrame?.id || sale.background?.id || sale.stickerPack?.id;
+	if (!resourceId) {
 		return;
 	}
 
-	productProcessing.value = shopProduct.id;
+	productProcessing.value = sale.id;
 
 	// Show a modal to let the user choose which currency to use.
 	await showPurchaseShopProductModal({
-		shopProduct,
-		currencyOptions,
+		resource: sale.product_type,
+		resourceId,
 		onItemPurchased: () => init(),
 	});
-
 	productProcessing.value = undefined;
-}
-
-async function onClickCurrencyCard(currency: Currency) {
-	if (currency.id === CurrencyType.joltbux.id) {
-		showPurchaseMicrotransactionModal();
-	} else if (currency.id === CurrencyType.coins.id) {
-		const isRedirecting = await showGetCoinsRedirectModal();
-
-		if (isRedirecting) {
-			modal.dismiss();
-		}
-	} else {
-		console.error('Unknown currency type', currency);
-	}
-}
-
-function getTooltipText(type: ProductChunk['type']) {
-	switch (type) {
-		case 'packs':
-			return $gettext(
-				`Sticker packs contain a random set of stickers which you can collect and place on content throughout Game Jolt.`
-			);
-
-		case 'avatarFrames':
-			return $gettext(`Equip an avatar frame to make yourself stand out in the community.`);
-
-		case 'backgrounds':
-			return $gettext(
-				`Backgrounds can be added to your posts to make your content stand out in the feeds.`
-			);
-	}
 }
 
 // Make the vending machine content full-height for phone sizes.
@@ -247,11 +278,28 @@ const loadingFadeStyles = computed<CSSProperties>(() => {
 	};
 });
 
-const currencyCardImgStyles: CSSProperties = {
-	objectFit: `contain`,
-	width: `100%`,
-	height: `100%`,
+const shopOwnerNameStyles: CSSProperties = {
+	...styleTextOverflow,
+	flex: `auto`,
+	minWidth: 0,
+	margin: 0,
 };
+
+const rewardPackLabelFontSize = kFontSizeH3;
+const rewardPackDescriptionFontSize = kFontSizeBase;
+const rewardPackLinkHintFontSize = kFontSizeSmall;
+const rewardPackImageSize = run(() => {
+	const fontSizes =
+		rewardPackLabelFontSize.value +
+		rewardPackDescriptionFontSize.value +
+		rewardPackLinkHintFontSize.value;
+
+	const height = Math.floor(fontSizes * kLineHeightBase);
+	return {
+		width: height * StickerPackRatio,
+		height,
+	};
+});
 </script>
 
 <template>
@@ -300,219 +348,252 @@ const currencyCardImgStyles: CSSProperties = {
 					flexDirection: `column`,
 				}"
 			>
+				<div
+					v-if="shopOwner"
+					:style="{
+						display: `flex`,
+						gap: `12px`,
+						alignItems: `center`,
+						paddingTop: `8px`,
+						paddingBottom: `16px`,
+					}"
+				>
+					<AppUserAvatarBubble
+						:style="{
+							width: `40px`,
+							height: `40px`,
+							flex: `none`,
+						}"
+						:user="shopOwner"
+						show-frame
+					/>
+
+					<h2 :style="shopOwnerNameStyles">
+						{{
+							$gettext(`@%{ username }'s Shop`, {
+								username: shopOwner.username,
+							})
+						}}
+					</h2>
+				</div>
+
 				<AppTheme :force-dark="isDark" :force-light="!isDark">
 					<AppLoadingFade
 						class="fill-offset"
 						:style="loadingFadeStyles"
-						:content-styles="{
-							...loadingFadeStyles,
-						}"
+						:content-styles="loadingFadeStyles"
 						:is-loading="isLoading"
 					>
 						<div
 							:style="{
-								display: `flex`,
-								padding: `12px`,
+								display: `grid`,
+								gridTemplateColumns: `repeat(auto-fit, minmax(0, 1fr))`,
+								padding: `8px`,
 								gap: `12px`,
 							}"
 						>
-							<template
+							<AppVendingMachineCurrencyCard
 								v-for="{ currency, amount } of currencyCardData"
 								:key="currency.id"
-							>
-								<AppOnHover v-slot="{ hoverBinding, hovered }">
-									<div
-										v-bind="{
-											...hoverBinding,
-											style: [
-												styleBorderRadiusBase,
-												styleElevate(1),
-												{
-													backgroundColor: kThemeBgOffset,
-													padding: `12px`,
-													flex: `auto`,
-													display: `flex`,
-													flexDirection: `column`,
-													alignItems: `center`,
-													gap: `8px`,
-													cursor: `pointer`,
-													color: kThemeFg,
-												},
-												styleWhen(hovered, {
-													...styleElevate(2),
-													backgroundColor: kThemeBgBackdrop,
-												}),
-												{
-													// Need this to override the style from the `styleElevate` functions.
-													transition: `background-color 200ms ${kStrongEaseOut}, box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1)`,
-												},
-											],
-										}"
-										@click="onClickCurrencyCard(currency)"
-									>
-										<div
-											class="text-center"
-											:style="{
-												fontFamily: kFontFamilyDisplay,
-												fontSize: kFontSizeH3.px,
-											}"
-										>
-											{{ currency.label }}
-										</div>
-
-										<div
-											:style="{
-												...styleMaxWidthForOptions({
-													ratio: 1,
-													maxWidth: Screen.isXs ? 64 : 128,
-													maxHeight: Screen.height * 0.2,
-												}),
-												width: `100%`,
-											}"
-										>
-											<AppAspectRatio
-												:ratio="1"
-												:style="{
-													backgroundColor: kThemeFg10,
-													width: `100%`,
-													borderRadius: `50%`,
-												}"
-												:inner-styles="{
-													...styleFlexCenter(),
-													padding: `16px`,
-												}"
-												show-overflow
-											>
-												<AppCurrencyImg
-													asset-size="large"
-													:currency="currency"
-													:max-width="0"
-													:style="currencyCardImgStyles"
-													:ill-styles="currencyCardImgStyles"
-												/>
-											</AppAspectRatio>
-										</div>
-
-										<div
-											class="text-center"
-											:style="{
-												...styleOverlayTextShadow,
-												fontWeight: `bold`,
-												fontSize: `17px`,
-												fontFamily: kFontFamilyHeading,
-												marginBottom: `8px`,
-											}"
-										>
-											{{ formatNumber(amount) }}
-										</div>
-
-										<AppButton
-											block
-											solid
-											:force-hover="hovered"
-											:style="{
-												pointerEvents: `none`,
-											}"
-										>
-											{{
-												$gettext(`Get %{ label }`, {
-													label: currency.label,
-												})
-											}}
-										</AppButton>
-									</div>
-								</AppOnHover>
-							</template>
+								:currency="currency"
+								:amount="amount"
+							/>
 						</div>
 
+						<template v-if="chargeRewardPack">
+							<AppOnHover>
+								<template #default="{ hoverBinding, hovered }">
+									<!-- Charge/Reward pack info -->
+									<a
+										class="fill-offset"
+										v-bind="{
+											...hoverBinding,
+											style: styleTyped({
+												display: `flex`,
+												gap: `12px`,
+												justifyContent: `space-between`,
+												margin: `0 8px`,
+												padding: `${12 - kBorderWidthBase.value}px`,
+												borderWidth: kBorderWidthBase.px,
+												borderStyle: `solid`,
+												borderColor: `transparent`,
+												// Required for dark/light mode to work.
+												color: kThemeFg,
+												...styleBorderRadiusLg,
+												...styleElevate(1),
+												...styleWhen(hovered, {
+													...styleElevate(2),
+													borderColor: kThemePrimary,
+													backgroundColor: kThemeBgBackdrop,
+												}),
+												// Needs to come after [styleElevate] calls.
+												transition: `background-color 200ms ${kStrongEaseOut}, border-color 250ms ${kStrongEaseOut}, ${kElevateTransition}`,
+											}),
+										}"
+										@click="
+											showPurchaseShopProductModal({
+												resource: PurchasableProductType.StickerPack,
+												resourceId: chargeRewardPack.id,
+											})
+										"
+									>
+										<!-- Label and description -->
+										<div>
+											<div
+												:style="{
+													fontSize: rewardPackLabelFontSize.px,
+													fontFamily: kFontFamilyDisplay,
+												}"
+											>
+												{{ $gettext(`Reward Pack`) }}
+											</div>
+											<div
+												:style="{
+													fontSize: rewardPackDescriptionFontSize.px,
+													fontWeight: `500`,
+												}"
+											>
+												{{
+													authUser && authUser.id === shopOwner?.id
+														? $gettext(
+																`Users will get this reward pack every time they place a charged sticker on your content`
+														  )
+														: $gettext(
+																`Place a charged sticker on this user's content to get their reward pack`
+														  )
+												}}
+											</div>
+											<div
+												:style="{
+													fontSize: rewardPackLinkHintFontSize.px,
+													fontStyle: `italic`,
+												}"
+											>
+												({{ $gettext(`Click to view contents`) }})
+											</div>
+										</div>
+
+										<!-- Pack image -->
+										<img
+											:width="rewardPackImageSize.width"
+											:height="rewardPackImageSize.height"
+											:src="
+												chargeRewardPack.media_item.is_animated
+													? chargeRewardPack.media_item.img_url
+													: getMediaserverUrlForBounds({
+															src: chargeRewardPack.media_item
+																.mediaserver_url,
+															maxWidth: rewardPackImageSize.width,
+															maxHeight: rewardPackImageSize.height,
+													  })
+											"
+											alt=""
+										/>
+									</a>
+								</template>
+							</AppOnHover>
+
+							<AppSpacer :scale="2" vertical />
+						</template>
+
 						<div
-							:style="[
-								styleWhen(!hasProducts, {
-									padding: `12px`,
-								}),
+							:style="
 								styleWhen(!hasProducts && !isLoading, {
+									padding: `12px`,
 									gridTemplateColumns: '1fr',
 									alignContent: 'center',
-								}),
-							]"
+								})
+							"
 						>
-							<div v-if="isLoading && !hasProducts" class="_items">
-								<AppAspectRatio
-									v-for="i in 3"
-									:key="i"
-									:ratio="StickerPackRatio"
-									show-overflow
-								>
+							<div
+								v-if="isLoading && !hasProducts"
+								class="fill-offset"
+								:style="{
+									...styleBorderRadiusLg,
+									...styleElevate(1),
+									padding: `8px`,
+									marginLeft: `8px`,
+									marginRight: `8px`,
+									marginBottom: `12px`,
+								}"
+							>
+								<div
+									:style="{
+										...styleBorderRadiusLg,
+										height: `${kFontSizeH2.value * kLineHeightBase}px`,
+										margin: 0,
+										padding: `8px 12px 12px`,
+										marginBottom: `12px`,
+										backgroundColor: kThemeBgSubtle,
+										width: `25%`,
+									}"
+								/>
+
+								<div class="_items">
 									<div
+										v-for="i in 2"
+										:key="i"
 										:style="{
 											...styleBorderRadiusLg,
 											...styleChangeBg('bg-subtle'),
-											...styleElevate(1),
-											width: `100%`,
-											height: `100%`,
 										}"
-									/>
-								</AppAspectRatio>
+									>
+										<AppAspectRatio :ratio="1" show-overflow />
+										<div :style="{ height: `80px` }" />
+									</div>
+								</div>
 							</div>
 							<template v-else-if="hasProducts">
-								<template v-for="chunk in availableProducts" :key="chunk.type">
-									<template v-if="chunk && chunk.items.length">
-										<h3
+								<template v-for="section in sections" :key="section.id">
+									<div
+										v-if="section.sales.length"
+										class="fill-offset"
+										:style="{
+											...styleBorderRadiusLg,
+											...styleElevate(1),
+											padding: `8px`,
+											marginLeft: `8px`,
+											marginRight: `8px`,
+											marginBottom: `12px`,
+										}"
+									>
+										<h2
+											v-if="sections.length > 1"
 											:style="{
-												marginTop: 0,
-												marginBottom: `8px`,
-												padding: `12px 16px`,
-												background: `linear-gradient(to right, ${
-													isDark ? 'rgba(0,0,0,0.26)' : 'rgba(0,0,0,0.12)'
-												} 0%, rgba(0,0,0,0) 100%)`,
-												fontWeight: `bold`,
 												display: `flex`,
-												gap: `12px`,
 												alignItems: `center`,
+												gap: `12px`,
+												margin: 0,
+												padding: `8px 12px 12px`,
+												fontFamily: kFontFamilyDisplay,
+												fontWeight: `bold`,
 												color: kThemeFg,
 											}"
 										>
-											<template v-if="chunk.type === 'packs'">
-												{{ $gettext(`Sticker packs`) }}
-											</template>
-											<template v-else-if="chunk.type === 'avatarFrames'">
-												{{ $gettext(`Avatar frames`) }}
-											</template>
-											<template v-else-if="chunk.type === 'backgrounds'">
-												{{ $gettext(`Backgrounds`) }}
-											</template>
+											{{ section.title }}
 
 											<AppJolticon
-												v-app-tooltip.touchable="getTooltipText(chunk.type)"
-												icon="help-circle"
+												v-if="section.description"
+												v-app-tooltip.touchable="section.description"
+												icon="info-circle"
 												:style="{
-													color: kThemeFgMuted,
+													margin: 0,
 													fontSize: `inherit`,
-													margin: `0 0 0 auto`,
+													color: kThemeFgMuted,
 												}"
 											/>
-										</h3>
+										</h2>
 
-										<AppSpacer vertical :scale="2" />
-
-										<div
-											class="_items"
-											:style="{
-												padding: `0 12px 16px`,
-											}"
-										>
-											<template
-												v-for="shopProduct in chunk.items"
-												:key="shopProduct.id"
-											>
+										<div class="_items">
+											<template v-for="sale in section.sales" :key="sale.id">
 												<AppVendingMachineProduct
-													:shop-product="shopProduct"
+													:shop-product="sale"
 													:disable-purchases="!!productProcessing"
 													@purchase="purchaseProduct($event)"
 												/>
 											</template>
 										</div>
-									</template>
+									</div>
 								</template>
 							</template>
 							<AppIllustration v-else :asset="illNoCommentsSmall">
@@ -521,6 +602,8 @@ const currencyCardImgStyles: CSSProperties = {
 								</div>
 							</AppIllustration>
 						</div>
+
+						<AppSpacer vertical :scale="2" />
 					</AppLoadingFade>
 				</AppTheme>
 
@@ -536,13 +619,13 @@ const currencyCardImgStyles: CSSProperties = {
 					<div
 						:style="{
 							...styleMaxWidthForOptions({
-								ratio: 1000 / 250,
+								ratio: 4,
 								maxHeight: Math.max(Screen.height * 0.15, 80),
 							}),
 							width: `100%`,
 						}"
 					>
-						<AppAspectRatio :ratio="1000 / 250">
+						<AppAspectRatio :ratio="4">
 							<img
 								:src="imageVance"
 								:style="{
@@ -566,7 +649,6 @@ const currencyCardImgStyles: CSSProperties = {
 	--pack-min-width: 200px
 	color: var(--theme-fg)
 	position: relative
-	overflow: hidden
 	display: grid
 	grid-template-columns: repeat(auto-fill, minmax(var(--pack-min-width), 1fr))
 	align-content: start

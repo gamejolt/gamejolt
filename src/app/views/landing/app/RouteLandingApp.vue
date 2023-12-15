@@ -2,8 +2,8 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import {
-	trackAppDownload,
-	trackAppPromotionClick,
+trackAppDownload,
+trackAppPromotionClick,
 } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
@@ -13,8 +13,8 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
 import { DeviceArch, DeviceOs, getDeviceOS } from '../../../../_common/device/device.service';
 import {
-	chooseBestGameBuild,
-	pluckInstallableGameBuilds,
+chooseBestGameBuild,
+pluckInstallableGameBuilds,
 } from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
@@ -22,6 +22,7 @@ import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
 import { getAppUrl, useAppPromotionStore } from '../../../../_common/mobile-app/store';
+import { storeModel, storeModelList } from '../../../../_common/model/model-store.service';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -90,13 +91,11 @@ createAppRoute({
 		packageData.value = new GamePackagePayloadModel(payload.packageData);
 		fallbackUrl.value = payload.clientGameUrl;
 
-		headerBackground.value = new BackgroundModel(payload.headerBackground);
+		headerBackground.value = storeModel(BackgroundModel, payload.headerBackground);
 
-		const backgrounds = arrayShuffle(
-			BackgroundModel.populate<BackgroundModel>(payload.backgrounds)
-		);
-		laptopBackground.value = backgrounds.pop()!;
-		mobileBackground.value = backgrounds.pop()!;
+		const backgrounds = arrayShuffle(storeModelList(BackgroundModel, payload.backgrounds));
+		laptopBackground.value = backgrounds.pop();
+		mobileBackground.value = backgrounds.pop();
 	},
 });
 

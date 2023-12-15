@@ -10,7 +10,7 @@ import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.
 import { ForumPostModel } from '../../../../../_common/forum/post/post.model';
 import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
-import AppMessageThreadPagination from '../../../../../_common/message-thread/pagination/pagination.vue';
+import AppMessageThreadPagination from '../../../../../_common/message-thread/pagination/AppMessageThreadPagination.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import { showReportModal } from '../../../../../_common/report/modal/modal.service';

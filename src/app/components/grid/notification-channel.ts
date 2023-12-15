@@ -2,10 +2,8 @@ import { computed, reactive, shallowReadonly } from 'vue';
 import { Router } from 'vue-router';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { CurrencyType } from '../../../_common/currency/currency-type';
-import { FiresideModel } from '../../../_common/fireside/fireside.model';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import { showInfoGrowl } from '../../../_common/growls/growls.service';
 import {
 	NotificationModel,
 	NotificationType,
@@ -13,11 +11,10 @@ import {
 import { QuestNotificationModel } from '../../../_common/quest/quest-notification-model';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
-import { $gettext } from '../../../_common/translate/translate.service';
 import { TabLeaderInterface } from '../../../utils/tab-leader';
 import { addNewQuestIds, addQuestActivityIds } from '../../store/quest';
 import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
-import { GridClient, onFiresideStart } from './client.service';
+import { GridClient } from './client.service';
 const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
 
 export type GridNotificationChannel = ReturnType<typeof createGridNotificationChannel>;
@@ -109,12 +106,6 @@ interface FeaturePayload {
 	post_id: string;
 }
 
-interface FeatureFiresidePayload {
-	community_id: string;
-	fireside_id: string;
-	fireside_data: any;
-}
-
 interface NewPostPayload {
 	community_id: string;
 	channel_id: string;
@@ -125,7 +116,7 @@ export function createGridNotificationChannel(
 	options: { userId: number; router: Router }
 ) {
 	const { socketController, appStore } = client;
-	const { userId, router } = options;
+	const { userId } = options;
 	const { communityStates, stickerStore } = appStore;
 
 	let _tabLeader: TabLeaderInterface | null = null;
@@ -144,7 +135,6 @@ export function createGridNotificationChannel(
 	// from community channel
 	channelController.listenTo('feature', _onFeature);
 	channelController.listenTo('new-post', _onNewPost);
-	channelController.listenTo('feature-fireside', _onFeatureFireside);
 
 	const joinPromise = channelController.join({
 		async onJoin(payload: JoinPayload) {
@@ -173,6 +163,11 @@ export function createGridNotificationChannel(
 			appStore.setHasNewFriendRequests(payload.hasNewFriendRequests);
 
 			const questStore = appStore.getQuestStore();
+
+			// Clear out old quest ids before adding new ones.
+			questStore.newQuestIds.value.clear();
+			questStore.questActivityIds.value.clear();
+
 			addNewQuestIds(questStore, payload.newQuestIds);
 			addQuestActivityIds(questStore, payload.questActivityIds);
 
@@ -248,13 +243,6 @@ export function createGridNotificationChannel(
 			case NotificationType.FriendshipRequest:
 				// For an incoming friend request, set that they have a new friend request.
 				appStore.setHasNewFriendRequests(true);
-				client.spawnNotification(notification);
-				break;
-
-			case NotificationType.FiresideStart:
-				// Emit event that different components can pick up to update their views.
-
-				onFiresideStart.next(notification.action_model);
 				client.spawnNotification(notification);
 				break;
 
@@ -340,36 +328,6 @@ export function createGridNotificationChannel(
 			parseInt(payload.community_id, 10)
 		);
 		communityState.markChannelUnread(channelId);
-	}
-
-	function _onFeatureFireside(payload: FeatureFiresidePayload) {
-		const fireside = new FiresideModel(payload.fireside_data);
-		if (!fireside.community) {
-			console.error('Featured fireside must have a community, but it does not.');
-			return;
-		}
-
-		if (commonStore.user.value && fireside.user.id === commonStore.user.value.id) {
-			console.log('Suppress featured fireside notification for fireside owner.');
-			return;
-		}
-
-		showInfoGrowl({
-			title: $gettext(`New Featured Fireside!`),
-			message: $gettext(
-				`@%{ username }'s fireside %{ firesideTitle } was featured in %{ communityName }!`,
-				{
-					username: fireside.user.username,
-					firesideTitle: fireside.title,
-					communityName: fireside.community.name,
-				}
-			),
-			icon: fireside.user.img_avatar,
-			onClick: () => {
-				router.push(fireside.routeLocation);
-			},
-			system: true,
-		});
 	}
 
 	/**

@@ -10,13 +10,14 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { TogglableLeftPane, useAppStore } from '../../../store/index';
 import { useQuestStore } from '../../../store/quest';
 import { useGridStore } from '../../grid/grid-store';
+import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 import AppShellCbarItem from './AppShellCbarItem.vue';
 
 const { activeCommunity, visibleLeftPane, toggleLeftPane } = useAppStore();
 const { user, showInitialPackWatermark } = useCommonStore();
 const { theme } = useThemeStore();
 const { chat } = useGridStore();
-const { questActivityIds } = useQuestStore();
+const { newQuestIds, questActivityIds } = useQuestStore();
 
 const highlight = computed(() => {
 	const _theme = activeCommunity.value?.theme ?? theme.value ?? DefaultTheme;
@@ -26,6 +27,10 @@ const highlight = computed(() => {
 
 	return undefined;
 });
+
+const showQuestsBlip = computed(
+	() => newQuestIds.value.size > 0 || questActivityIds.value.size > 0
+);
 
 function trackAndTogglePane(pane: TogglableLeftPane) {
 	const currentPane = visibleLeftPane.value;
@@ -76,6 +81,21 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 				</a>
 			</AppShellCbarItem>
 
+			<!-- Shop -->
+			<AppShellCbarItem class="-control" :highlight="highlight" is-control>
+				<a
+					v-app-tooltip.right="$gettext(`Shop`)"
+					class="-control-item"
+					@click="
+						showVendingMachineModal({
+							location: 'cbar',
+						})
+					"
+				>
+					<AppJolticon class="-control-icon" icon="marketplace-filled" />
+				</a>
+			</AppShellCbarItem>
+
 			<!-- Backpack -->
 			<AppShellCbarItem
 				class="-control"
@@ -98,7 +118,7 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 				class="-control"
 				:highlight="highlight"
 				:is-active="visibleLeftPane === 'quests'"
-				:show-blip="questActivityIds.size > 0"
+				:show-blip="showQuestsBlip"
 				is-control
 			>
 				<a

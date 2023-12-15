@@ -3,5 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeDashCommunitiesAdd: RouteRecordRaw = {
 	name: 'dash.communities.add',
 	path: 'add',
-	component: () => import('./add.vue'),
+	component: () => import('./RouteDashCommunitiesAdd.vue'),
 };

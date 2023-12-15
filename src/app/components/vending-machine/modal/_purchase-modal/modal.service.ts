@@ -1,19 +1,31 @@
 import { defineAsyncComponent } from 'vue';
-import { CurrencyCostData } from '../../../../../_common/currency/currency-type';
-import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+import { PurchasableProductData } from '../../../../../_common/inventory/shop/product-owner-helpers';
 import { showModal } from '../../../../../_common/modal/modal.service';
 
-interface ShopProductPurchaseOptions {
-	shopProduct: InventoryShopProductSaleModel;
-	currencyOptions: CurrencyCostData;
-	onItemPurchased: () => void;
-}
+/**
+ * Shows a modal that allows the user to purchase a product or gives some info
+ * on how to obtain it.
+ */
+export async function showPurchaseShopProductModal({
+	resource,
+	resourceId,
+	onItemPurchased,
+}: {
+	resource: PurchasableProductData['resource'];
+	resourceId: PurchasableProductData['resourceId'];
 
-export async function showPurchaseShopProductModal(options: ShopProductPurchaseOptions) {
+	onItemPurchased?(): void;
+}) {
 	return await showModal<void>({
 		modalId: 'PurchaseShopProduct',
 		component: defineAsyncComponent(() => import('./AppPurchaseShopProductModal.vue')),
-		props: options,
+		props: {
+			initialProductData: {
+				resource,
+				resourceId,
+			},
+			onItemPurchased,
+		},
 		size: 'sm',
 	});
 }

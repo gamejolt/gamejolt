@@ -1,3 +1,4 @@
+import { InjectionKey, inject } from 'vue';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import {
@@ -18,7 +19,11 @@ import { numberSort } from '../../../../utils/array';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
 import { routeCommunitiesViewOverview } from './overview/overview.route';
 
-export const CommunityRouteStoreKey = Symbol('community-route');
+export const CommunityRouteStoreKey: InjectionKey<CommunityRouteStore> = Symbol('community-route');
+
+export function useCommunityRouteStore() {
+	return inject(CommunityRouteStoreKey);
+}
 
 export class CommunityRouteStore {
 	isLoaded = false;

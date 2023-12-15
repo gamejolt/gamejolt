@@ -12,7 +12,7 @@ export interface RemovableModel {
 	_removed: boolean;
 }
 
-type ModelConstructor<T extends ModelStoreModel> = new (data: any) => T;
+type ModelConstructor<T extends ModelStoreModel> = new () => T;
 
 const _models = ref(new Map<string, ModelStoreModel>());
 
@@ -22,11 +22,11 @@ const _models = ref(new Map<string, ModelStoreModel>());
  */
 export function storeModel<T extends ModelStoreModel>(
 	modelConstructor: ModelConstructor<T>,
-	data?: Record<string, any>
+	data: Record<string, any>
 ): T {
 	const typename = modelConstructor.name;
 
-	if (!data) {
+	if (!data || Object.keys(data).length === 0) {
 		throw new Error(`Called storeModel with empty data: ${typename}.`);
 	}
 
@@ -39,7 +39,8 @@ export function storeModel<T extends ModelStoreModel>(
 		return targetModel;
 	}
 
-	targetModel = reactive(new modelConstructor(data)) as T;
+	targetModel = reactive(new modelConstructor()) as T;
+	targetModel.update(data);
 	_models.value.set(key, targetModel);
 
 	return targetModel;
@@ -67,7 +68,7 @@ export function storeModelList<T extends ModelStoreModel>(
  */
 export function getModel<T extends ModelStoreModel>(
 	modelConstructor: ModelConstructor<T>,
-	id: number
+	id: number | string
 ) {
 	const key = _generateKey(modelConstructor.name, id);
 	return _models.value.get(key) as T | undefined;

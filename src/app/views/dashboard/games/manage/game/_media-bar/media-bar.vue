@@ -6,7 +6,7 @@ import AppEditableOverlay from '../../../../../../../_common/editable-overlay/Ap
 import { GameModel } from '../../../../../../../_common/game/game.model';
 import AppGameMediaBarItem, {
 	MediaBarItemMaxHeight,
-} from '../../../../../../../_common/game/media-bar/item/item.vue';
+} from '../../../../../../../_common/game/media-bar/item/AppGameMediaBarItem.vue';
 import AppScrollScroller from '../../../../../../../_common/scroll/AppScrollScroller.vue';
 import { showGameMediaItemAddModal } from '../../../../../../components/game/media-item/add-modal/add-modal.service';
 import { showGameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
@@ -90,7 +90,7 @@ export default class AppManageGameMediaBar extends Vue {
 				<template #item="{ element: item }">
 					<div>
 						<AppGameMediaBarItem class="-item" :item="item" @click="open(item)">
-							<AppEditableOverlay class="-item-hover hidden-xs" @click="open(item)">
+							<AppEditableOverlay class="-item-hover hidden-xs" @toggle="open(item)">
 								<template #overlay>
 									<AppTranslate>click to edit</AppTranslate>
 									<br />

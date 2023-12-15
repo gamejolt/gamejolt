@@ -9,7 +9,7 @@ import AppGameThumbnailImg from '../../../../../_common/game/thumbnail/AppGameTh
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import { showGameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
-import AppDashGameWizardControls from '../wizard-controls/wizard-controls.vue';
+import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
 
 class Wrapper extends BaseForm<GameModel> {}
 
@@ -90,7 +90,7 @@ export default class FormGameDesign extends mixins(Wrapper) {
 				</div>
 			</div>
 			<div class="col-sm-6">
-				<AppEditableOverlay class="-thumb-overlay" @click="showEditThumbnail()">
+				<AppEditableOverlay class="-thumb-overlay" @toggle="showEditThumbnail()">
 					<template #overlay>
 						<span>
 							<AppTranslate v-if="!model || !model.thumbnail_media_item">

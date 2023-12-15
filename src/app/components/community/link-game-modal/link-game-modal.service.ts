@@ -6,7 +6,7 @@ import { showModal } from '../../../../_common/modal/modal.service';
 export async function showCommunityLinkGameModal(community: CommunityModel) {
 	return await showModal<GameModel>({
 		modalId: 'CommunityLinkGame',
-		component: defineAsyncComponent(() => import('./link-game-modal.vue')),
+		component: defineAsyncComponent(() => import('./AppCommunityLinkGameModal.vue')),
 		props: { community },
 		size: 'sm',
 	});

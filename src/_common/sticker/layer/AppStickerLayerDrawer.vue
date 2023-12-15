@@ -338,7 +338,7 @@ function onContentDimensionsChanged() {
 
 function onClickPurchasePacks() {
 	closeStickerDrawer(stickerStore);
-	showVendingMachineModal();
+	showVendingMachineModal({ location: 'sticker-drawer' });
 }
 </script>
 

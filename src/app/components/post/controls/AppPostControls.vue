@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, inject, onUnmounted, PropType, ref, toRefs } from 'vue';
+import { computed, onUnmounted, PropType, ref, toRefs } from 'vue';
 import {
 	Analytics,
 	PostControlsLocation,
@@ -10,15 +10,15 @@ import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directi
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
 	commentStoreCount,
-	CommentStoreManagerKey,
 	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
+	useCommentStoreManager,
 } from '../../../../_common/comment/comment-store';
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/widget.vue';
+import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue';
 import {
 	$publishFiresidePost,
 	FiresidePostModel,
@@ -91,7 +91,7 @@ const emit = defineEmits({
 	sticker: () => true,
 });
 
-const commentManager = inject(CommentStoreManagerKey)!;
+const commentManager = useCommentStoreManager()!;
 const stickerLayer = useStickerLayer();
 
 const { user } = useCommonStore();
@@ -268,7 +268,9 @@ function onUserFollowDismissal() {
 								<AppAnimElectricity
 									shock-anim="square"
 									:disabled="
-										!canChargeSticker || !stickerLayer?.isAllCreator.value
+										!canChargeSticker ||
+										!stickerLayer ||
+										!stickerLayer.canChargeAllTargets.value
 									"
 									ignore-asset-padding
 								>

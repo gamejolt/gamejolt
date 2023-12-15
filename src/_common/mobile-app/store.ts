@@ -8,8 +8,7 @@ export type AppPromotionSource =
 	| 'sidebar'
 	| 'landing'
 	| 'home-hero'
-	| 'banner'
-	| 'fireside';
+	| 'banner';
 
 export type AppPromotionCohort = 'store' | 'community';
 

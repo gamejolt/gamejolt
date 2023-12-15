@@ -342,14 +342,12 @@ export function getTranslation(msgid: string, n = 1, defaultPlural: string | nul
 
 	let translated = _currentTranslations.value[msgid];
 
-	// TODO: there has to be a more efficient way than this.
-	if (!translated && /\s{2,}/g.test(msgid)) {
-		Object.keys(_currentTranslations.value).some(key => {
-			if (key.replace(/\s{2,}/g, ' ') === msgid.trim().replace(/\s{2,}/g, ' ')) {
-				translated = _currentTranslations.value[key];
-				return !!translated;
-			}
-		});
+	// If the fastpath of search for the wrong string didn't work, we need to
+	// search for a trimmed and normalized version. This is in case there's some
+	// extra formatting around the text for code reasons.
+	if (!translated) {
+		msgid = msgid.trim().replace(/\s{2,}/g, ' ');
+		translated = _currentTranslations.value[msgid];
 	}
 
 	if (!translated) {

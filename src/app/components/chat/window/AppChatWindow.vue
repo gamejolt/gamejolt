@@ -6,20 +6,17 @@ import {
 	onUnmounted,
 	ref,
 	shallowRef,
+	toRef,
 	toRefs,
 	watch,
 	watchEffect,
 } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { RouterLink } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { formatNumber } from '../../../../_common/filters/number';
-import {
-	canDeviceCreateFiresides,
-	FiresideModel,
-} from '../../../../_common/fireside/fireside.model';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
+import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { getModel } from '../../../../_common/model/model-store.service';
@@ -63,7 +60,6 @@ const emit = defineEmits({
 const { roomId } = toRefs(props);
 const { closeChatPane } = useAppStore();
 const { chatUnsafe: chat } = useGridStore();
-const router = useRouter();
 
 const headerAvatarSizeStyles: CSSProperties = {
 	width: `36px`,
@@ -152,7 +148,7 @@ const preferredSidebar = ref<SidebarTab | undefined>(
  * The sidebar we're actually displaying. Ignores 'members' sidebar when there's
  * nothing worth showing.
  */
-const sidebar = computed(() => {
+const sidebar = toRef(() => {
 	if (room.value?.isPmRoom && preferredSidebar.value === 'members') {
 		return undefined;
 	}
@@ -170,67 +166,24 @@ watch(sidebar, (value, oldValue) => {
 	}
 });
 
-const isShowingUsers = computed(() => preferredSidebar.value === 'members');
-const memberCollection = computed(() => room.value!.memberCollection);
-const membersCount = computed(() => formatNumber(room.value?.member_count || 0));
+const isShowingUsers = toRef(() => preferredSidebar.value === 'members');
+const membersCount = toRef(() => formatNumber(room.value?.member_count || 0));
 const roomTitle = computed(() => (!room.value ? $gettext(`Chat`) : getChatRoomTitle(room.value)));
-const showMembersViewButton = computed(() =>
+const showMembersViewButton = toRef(() =>
 	!room.value ? false : !room.value.isPmRoom && !Screen.isXs
 );
-const isStartingFireside = ref(false);
+const friends = toRef(() => chat.value.friendsList.users);
 
 // Sync with the setting.
 watchEffect(() => SettingChatGroupShowMembers.set(isShowingUsers.value));
-
-async function startFireside() {
-	if (!room.value) {
-		return;
-	}
-	if (isStartingFireside.value) {
-		return;
-	}
-
-	isStartingFireside.value = true;
-
-	try {
-		const payload = await roomChannel.value?.pushStartFireside();
-		if (payload && payload.fireside) {
-			const fireside = new FiresideModel(payload.fireside);
-			router.push(fireside.routeLocation);
-		}
-	} catch (e) {
-		console.error('Error starting Fireside in room', e);
-		const error = e as any;
-		switch (error.reason) {
-			case 'already-active':
-				showErrorGrowl($gettext(`You already have an active livestream.`));
-				break;
-
-			default:
-				showErrorGrowl($gettext(`Could not start a new livestream, try again later.`));
-				break;
-		}
-	}
-
-	isStartingFireside.value = false;
-}
 
 function addGroup() {
 	if (!room.value) {
 		return;
 	}
 
-	// When creating a group from a PM window,
-	// we want to put the room user at the top of the list
-	const initialUser = room.value.user;
-	const invitableUsers = chat.value.friendsList.users.filter(i => i.id !== initialUser?.id);
-
-	if (initialUser) {
-		invitableUsers.unshift(initialUser);
-	}
-
 	// Give the InviteModal the initialUser so it can set them as invited by default
-	showChatInviteModal(room.value, invitableUsers, initialUser);
+	showChatInviteModal(room.value, friends.value, room.value.user);
 }
 
 async function addMembers() {
@@ -238,10 +191,7 @@ async function addMembers() {
 		return;
 	}
 
-	// Filter out the room members as we don't want to add them again.
-	const members = memberCollection.value.users.map(i => i.id);
-	const invitableUsers = chat.value.friendsList.users.filter(({ id }) => !members.includes(id));
-	const result = await showChatInviteModal(room.value, invitableUsers);
+	const result = await showChatInviteModal(room.value, friends.value);
 	if (result) {
 		showSuccessGrowl(
 			$gettext(`Sent invites to users. They will be added to the chat once they accept.`)
@@ -360,18 +310,6 @@ function onMobileAppBarBack() {
 
 				<template #actions>
 					<template v-if="room">
-						<AppButton
-							v-if="room && !room.fireside && canDeviceCreateFiresides()"
-							v-app-tooltip="$gettext(`Start livestream/video call`)"
-							class="_header-control anim-fade-in"
-							trans
-							icon="video-camera"
-							sparse
-							circle
-							:disabled="isStartingFireside"
-							@click="startFireside()"
-						/>
-
 						<AppButton
 							v-app-tooltip="
 								room.isPmRoom
@@ -503,11 +441,10 @@ function onMobileAppBarBack() {
 										(!showMembersViewButton || Screen.isMobile) &&
 										room.isGroupRoom
 									"
-									:members="memberCollection.users"
 									:style="{
 										paddingTop: Screen.isXs ? '16px' : undefined,
 									}"
-									@view-members="sidebar = 'members'"
+									@view-members="preferredSidebar = 'members'"
 								/>
 							</AppScrollScroller>
 						</template>
@@ -517,11 +454,7 @@ function onMobileAppBarBack() {
 								<span> ({{ membersCount }}) </span>
 							</div>
 
-							<AppChatMemberList
-								v-if="memberCollection"
-								:collection="memberCollection"
-								:room="room"
-							/>
+							<AppChatMemberList :room="room" />
 						</template>
 					</div>
 				</div>

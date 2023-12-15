@@ -297,18 +297,3 @@ export function getCommunityChannelBackground(
 			assertNever(presetType);
 	}
 }
-
-/**
- * @deprecated we always auto-feature now
- */
-export function canCommunityFeatureFireside(_community: CommunityModel) {
-	return false;
-}
-
-export function canCommunityEjectFireside(community: CommunityModel) {
-	return !!community.hasPerms('community-firesides');
-}
-
-export function canCommunityCreateFiresides(community: CommunityModel) {
-	return community.hasPerms('community-firesides');
-}

@@ -1,6 +1,6 @@
 import { AvatarFrameModel } from '../../../_common/avatar/frame.model';
 import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
-import { ModelStoreModel } from '../../../_common/model/model-store.service';
+import { ModelStoreModel, storeModel } from '../../../_common/model/model-store.service';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { UserCommonFields } from '../../../_common/user/user.model';
 import { objectOmit } from '../../../utils/object';
@@ -42,7 +42,7 @@ export class ChatUser implements UserCommonFields, ModelStoreModel {
 		Object.assign(this, objectOmit(data, ['url']));
 
 		if (data.avatar_frame) {
-			this.avatar_frame = new AvatarFrameModel(data.avatar_frame);
+			this.avatar_frame = storeModel(AvatarFrameModel, data.avatar_frame);
 		}
 	}
 
@@ -84,13 +84,6 @@ export function getChatUserRoleData(
 		return {
 			icon: 'crown',
 			tooltip: $gettext(`Room Owner`),
-		};
-	}
-
-	if (room.memberCollection.getFiresideHost(user)) {
-		return {
-			icon: 'star-ten-pointed',
-			tooltip: $gettext(`Host`),
 		};
 	}
 

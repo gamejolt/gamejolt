@@ -12,7 +12,9 @@ import { storeModel } from '../../../../_common/model/model-store.service';
 import AppQuestActionButton from '../../../../_common/quest/AppQuestActionButton.vue';
 import AppQuestObjective from '../../../../_common/quest/AppQuestObjective.vue';
 import AppProgressBarQuest from '../../../../_common/quest/AppQuestProgress.vue';
+import AppQuestReward from '../../../../_common/quest/AppQuestReward.vue';
 import { QuestModel } from '../../../../_common/quest/quest-model';
+import { QuestRewardModel } from '../../../../_common/quest/quest-reward-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
@@ -64,6 +66,30 @@ const objectives = computed(() => {
 		return [];
 	}
 	return q.objectives.sort((a, b) => numberSort(a.sort, b.sort));
+});
+
+const rewards = computed(() => {
+	const _quest = quest.value;
+	if (!_quest) {
+		return [];
+	}
+
+	const rewards = new Map<string, QuestRewardModel>();
+
+	for (const reward of _quest.rewards) {
+		const rewardKey = reward.getGroupKey();
+		if (rewards.has(rewardKey)) {
+			rewards.get(rewardKey)!.amount += reward.amount;
+		} else {
+			const fakeReward = new QuestRewardModel({
+				...reward,
+				amount: reward.amount,
+			});
+			rewards.set(rewardKey, fakeReward);
+		}
+	}
+
+	return rewards.values();
 });
 
 /** If the QuestActionButton will be accepting the quest or not. */
@@ -268,6 +294,22 @@ const fillStyles: CSSProperties = {
 										</div>
 										<AppSpacer vertical :scale="4" />
 
+										<div v-if="quest.total_stages > 1">
+											<strong>
+												{{
+													$gettext(
+														`Stage %{currentStage}/%{totalStages}`,
+														{
+															currentStage: quest.current_stage,
+															totalStages: quest.total_stages,
+														}
+													)
+												}}
+											</strong>
+
+											<AppSpacer vertical :scale="2" />
+										</div>
+
 										<AppContentViewer
 											v-if="quest.description_content"
 											:source="quest.description_content"
@@ -313,6 +355,39 @@ const fillStyles: CSSProperties = {
 												:quest="quest"
 												:objective="objective"
 											/>
+										</div>
+									</section>
+
+									<section
+										v-if="quest.rewards.length > 0"
+										class="section"
+										:style="{ paddingTop: '0' }"
+									>
+										<div
+											:style="{
+												textTransform: `uppercase`,
+												color: kThemeFgMuted,
+												fontSize: kFontSizeTiny.px,
+												fontWeight: 600,
+											}"
+										>
+											Rewards
+										</div>
+										<div
+											:key="quest.id"
+											:style="{
+												marginTop: `12px`,
+												display: `grid`,
+												gridTemplateColumns: `repeat(auto-fill, minmax(120px, 1fr))`,
+												gap: `8px`,
+											}"
+										>
+											<template v-for="reward of rewards" :key="reward.id">
+												<AppQuestReward
+													:reward="reward"
+													class="anim-fade-in-right stagger"
+												/>
+											</template>
 										</div>
 									</section>
 								</div>

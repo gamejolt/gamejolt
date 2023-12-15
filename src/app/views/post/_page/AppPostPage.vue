@@ -34,7 +34,7 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import AppVideoPlayer from '../../../../_common/video/player/AppVideoPlayer.vue';
 import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 import AppContentTargets from '../../../components/content/AppContentTargets.vue';
-import AppFiresidePostEmbed from '../../../components/fireside/post/embed/embed.vue';
+import AppFiresidePostEmbed from '../../../components/fireside/post/embed/AppFiresidePostEmbed.vue';
 import { AppCommentWidgetLazy } from '../../../components/lazy';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPollVoting from '../../../components/poll/AppPollVoting.vue';
@@ -60,7 +60,7 @@ const router = useRouter();
 
 const stickerTargetController = shallowRef<StickerTargetController>(
 	createStickerTargetController(post.value, {
-		isCreator: computed(() => post.value.displayUser.is_creator === true),
+		canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
 	})
 );
 
@@ -98,7 +98,7 @@ watch(
 	() => post.value.id,
 	() => {
 		stickerTargetController.value = createStickerTargetController(post.value, {
-			isCreator: computed(() => post.value.displayUser.is_creator === true),
+			canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
 		});
 	}
 );

@@ -13,7 +13,7 @@ import {
 } from '../../../../../../_common/form-vue/form.service';
 import AppImgResponsive from '../../../../../../_common/img/AppImgResponsive.vue';
 import { showCommunityChannelBackgroundModal } from '../../../../community/channel/background-modal/background-modal.service';
-import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/edit.vue';
+import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/AppCommunityChannelCardEdit.vue';
 import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
 class FormModel extends CommunityChannelModel {

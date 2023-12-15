@@ -30,7 +30,7 @@ const modal = useModal()!;
 
 const post = computed(() => posts.value[0]);
 const stickerTargetController = createStickerTargetController(post.value, {
-	isCreator: computed(() => post.value.displayUser.is_creator === true),
+	canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
 });
 
 const video = computed(() => post.value.videos[0]);

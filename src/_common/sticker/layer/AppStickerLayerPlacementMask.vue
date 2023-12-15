@@ -21,7 +21,7 @@ const props = defineProps({
 
 const { layer } = toRefs(props);
 
-const { isAllCreator } = layer.value;
+const { canChargeAllTargets } = layer.value;
 
 const parentScroller = useScroller();
 const stickerStore = useStickerStore();
@@ -33,7 +33,7 @@ const _height = ref(0);
 
 const viewbox = computed(() => `0 0 ${_width.value} ${_height.value}`);
 
-const isTargetCreator = computed(() => targetController.value?.isCreator.value);
+const isChargeableResource = computed(() => targetController.value?.canReceiveCharge.value);
 const isTargetMine = computed(() => isStickerTargetMine(stickerStore, targetController.value));
 
 function onDimensionsChange([
@@ -115,7 +115,7 @@ function onClickMask() {
 
 		<AppStickerLayerDrawer class="-drawer" />
 		<div
-			v-if="isAllCreator || (isTargetCreator && !isTargetMine)"
+			v-if="canChargeAllTargets || (isChargeableResource && !isTargetMine)"
 			class="-charge-wrapper"
 			:class="{
 				'-charge-shift': isDragging,

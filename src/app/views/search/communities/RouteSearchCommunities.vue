@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed } from 'vue';
-import AppCommunityCard from '../../../../_common/community/card/card.vue';
+import AppCommunityCard from '../../../../_common/community/card/AppCommunityCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { getQuery } from '../../../../utils/router';
@@ -35,17 +35,15 @@ createAppRoute({
 </script>
 
 <template>
-	<section class="section">
-		<div v-if="hasSearch" class="container">
-			<div class="row">
-				<div
-					v-for="community of searchPayload.communities"
-					:key="community.id"
-					class="col-sm-6 col-md-4 col-lg-3 anim-fade-in"
-				>
-					<AppCommunityCard :community="community" track-goto elevate />
-				</div>
+	<div v-if="hasSearch" class="container">
+		<div class="row">
+			<div
+				v-for="community of searchPayload.communities"
+				:key="community.id"
+				class="col-sm-6 col-md-4 col-lg-3 anim-fade-in"
+			>
+				<AppCommunityCard :community="community" track-goto elevate />
 			</div>
 		</div>
-	</section>
+	</div>
 </template>

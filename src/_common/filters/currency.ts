@@ -1,3 +1,5 @@
+import { formatNumber } from './number';
+
 export function formatCurrency(amount: number, currencyCode = 'USD', fractionDigits = 2): string {
 	// No fraction if it's evenly divisible by 100.
 	if (amount % 100 === 0) {
@@ -18,4 +20,8 @@ export function formatCurrency(amount: number, currencyCode = 'USD', fractionDig
 	}
 
 	return formatter.format(amount);
+}
+
+export function formatGemsCurrency(amount: number): string {
+	return formatNumber(amount);
 }

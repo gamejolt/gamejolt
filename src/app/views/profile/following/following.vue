@@ -8,9 +8,9 @@ import {
 	OptionsForLegacyRoute,
 } from '../../../../_common/route/legacy-route-component';
 import { UserModel } from '../../../../_common/user/user.model';
-import AppFollowerList from '../../../components/follower/list/list.vue';
+import AppFollowerList from '../../../components/follower/list/AppFollowerList.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import { useProfileRouteController } from '../RouteProfile.vue';
+import { useProfileRouteStore } from '../RouteProfile.vue';
 
 function getFetchUrl(route: RouteLocationNormalized) {
 	return `/web/profile/following/@${route.params.username}`;
@@ -28,7 +28,7 @@ function getFetchUrl(route: RouteLocationNormalized) {
 	resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
 })
 export default class RouteProfileFollowing extends LegacyRouteComponent {
-	routeStore = setup(() => useProfileRouteController()!);
+	routeStore = setup(() => useProfileRouteStore()!);
 
 	users: UserModel[] = [];
 

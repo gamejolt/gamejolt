@@ -7,7 +7,7 @@ import { FiresidePostVideoModel } from '../../../../_common/fireside/post/video/
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { createLightbox } from '../../../../_common/lightbox/lightbox-helpers';
 import { MediaItemModel } from '../../../../_common/media-item/media-item-model';
-import AppMediaItemPost from '../../../../_common/media-item/post/post.vue';
+import AppMediaItemPost from '../../../../_common/media-item/post/AppMediaItemPost.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { StickerTargetController } from '../../../../_common/sticker/target/target-controller';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -18,8 +18,8 @@ import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowBu
 import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleOverlayTextShadow, styleWhen } from '../../../../_styles/mixins';
 import { arrayRemove } from '../../../../utils/array';
-import AppCommunityUserNotification from '../../../components/community/user-notification/user-notification.vue';
-import AppGameBadge from '../../../components/game/badge/badge.vue';
+import AppCommunityUserNotification from '../../../components/community/user-notification/AppCommunityUserNotification.vue';
+import AppGameBadge from '../../../components/game/badge/AppGameBadge.vue';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppPostContent from '../../../components/post/AppPostContent.vue';
 

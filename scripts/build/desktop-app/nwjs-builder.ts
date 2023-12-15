@@ -52,12 +52,6 @@ export class NwBuilder {
 		console.log(`Overriding package.json for client build.`, jsonOverrides);
 		const packageJson = mergeDeep(this.config.packageJson, jsonOverrides);
 
-		if (isWindows()) {
-			// ASG is not optional on windows.
-			packageJson.dependencies['asg-prebuilt'] =
-				packageJson.optionalDependencies['asg-prebuilt'];
-		}
-
 		// We don't need these bundled in.
 		delete packageJson['node-remote'];
 		delete packageJson.devDependencies;
@@ -342,21 +336,6 @@ export class NwBuilder {
 				],
 			},
 		];
-
-		if (isWindows()) {
-			commands.push(
-				// Run asg-prebuilt's post install to get the asg binaries in.
-				{
-					command: 'yarn',
-					args: [
-						'--cwd',
-						path.resolve(appDir, 'node_modules/asg-prebuilt'),
-						'run',
-						'postinstall',
-					],
-				}
-			);
-		}
 
 		for (const { command, args } of commands) {
 			await runShell(command, { args });

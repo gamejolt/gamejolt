@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Options, Prop, Vue } from 'vue-property-decorator';
 import { GameModel } from '../../../../_common/game/game.model';
-import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { $deactivateSite, SiteModel, SiteStatus } from '../../../../_common/site/site-model';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppSitesManagePageDomain from './domain.vue';

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, onMounted, onUnmounted, PropType, ref, useSlots } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, ref } from 'vue';
 import { isNavigationFailure, useRouter } from 'vue-router';
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
@@ -47,7 +47,6 @@ defineExpose<AppModalInterface>({
 	scrollTo,
 });
 
-const slots = useSlots();
 const router = useRouter();
 const modal = useModal()!;
 const scroller = createScroller();
@@ -60,7 +59,6 @@ let _afterEachDeregister: (() => void) | undefined;
 let _escapeCallback: EscapeStackCallback | undefined;
 
 const zIndex = computed(() => 1050 + modal.index);
-const hasFooter = computed(() => !!slots.footer);
 
 onMounted(() => {
 	if (!modal.noBackdrop) {
@@ -155,6 +153,7 @@ function scrollTo(offsetY: number) {
 				'modal-lg': modal.size === 'lg',
 				'modal-full': modal.size === 'full',
 			}"
+			modal-scroller
 		>
 			<component
 				:is="Modals.modalBodyWrapper || 'div'"
@@ -171,7 +170,7 @@ function scrollTo(offsetY: number) {
 				>
 					<slot />
 
-					<AppScrollAffix v-if="hasFooter" anchor="bottom" :padding="0">
+					<AppScrollAffix v-if="$slots.footer" anchor="bottom" :padding="0">
 						<div class="-footer fill-offset">
 							<slot name="footer" />
 						</div>

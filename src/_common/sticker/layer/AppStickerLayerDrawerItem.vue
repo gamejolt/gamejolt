@@ -56,6 +56,12 @@ const { sticker, count, size, fitParent, noDrag, hideCount } = toRefs(props);
 const { streak, isDragging, sticker: storeSticker } = useStickerStore();
 
 const displayCount = computed(() => count?.value || 0);
+const shouldFade = computed(() => {
+	if (hideCount.value) {
+		return false;
+	}
+	return !displayCount.value;
+});
 
 const currentStreak = computed(() => {
 	if (streak.value?.sticker.id !== sticker.value.id) {
@@ -120,7 +126,7 @@ const tagStyles: CSSProperties = {
 			:is="fitParent ? AppAspectRatio : 'div'"
 			:ratio="1"
 			:style="
-				styleWhen(!displayCount, {
+				styleWhen(shouldFade, {
 					opacity: 0.3,
 				})
 			"
@@ -148,7 +154,7 @@ const tagStyles: CSSProperties = {
 			:style="[
 				tagStyles,
 				{ top: 0, left: 0 },
-				styleWhen(!displayCount, {
+				styleWhen(shouldFade, {
 					opacity: 0.3,
 				}),
 			]"

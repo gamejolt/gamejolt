@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType, computed, toRefs } from 'vue';
-import { styleChangeBg } from '../../../_styles/mixins';
 import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
+import { kThemeBgSubtle } from '../../theme/variables';
 import { GameModel } from '../game.model';
 
 const props = defineProps({
@@ -54,14 +54,12 @@ const icons = computed(() => {
 			:key="platform"
 			class="-icon"
 			:icon="platform"
-			:style="[
-				styleChangeBg('bg-subtle'),
-				{
-					position: `relative`,
-					// Bump it down to match up with the bottom of the text more.
-					top: `1px`,
-				},
-			]"
+			:style="{
+				color: kThemeBgSubtle,
+				position: `relative`,
+				// Bump it down to match up with the bottom of the text more.
+				top: `1px`,
+			}"
 		/>
 	</span>
 </template>

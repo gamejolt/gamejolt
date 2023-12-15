@@ -30,12 +30,12 @@ import {
 	commentStoreHandleAdd,
 	commentStoreHandleEdit,
 	commentStoreHandleRemove,
-	CommentStoreManagerKey,
 	CommentStoreModel,
 	commentStorePin,
 	commentStoreSort,
 	lockCommentStore,
 	releaseCommentStore,
+	useCommentStoreManager,
 } from '../../../../_common/comment/comment-store';
 import {
 	CommentStoreSliceView,
@@ -52,7 +52,7 @@ import AppMessageThread from '../../../../_common/message-thread/AppMessageThrea
 import AppMessageThreadAdd from '../../../../_common/message-thread/AppMessageThreadAdd.vue';
 import { storeModel } from '../../../../_common/model/model-store.service';
 import { Model } from '../../../../_common/model/model.service';
-import AppNavTabList from '../../../../_common/nav/tab-list/tab-list.vue';
+import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { UserModel } from '../../../../_common/user/user.model';
@@ -91,7 +91,7 @@ export function createCommentWidget(options: {
 	const collaborators = ref<CollaboratorModel[]>([]);
 
 	const route = useRoute();
-	const commentManager = inject(CommentStoreManagerKey)!;
+	const commentManager = useCommentStoreManager()!;
 
 	const loginUrl = computed(
 		() => Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath)

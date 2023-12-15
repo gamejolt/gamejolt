@@ -2,34 +2,17 @@
 import { computed, nextTick, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { BackgroundModel } from '../../../../../_common/background/background.model';
-import AppButton from '../../../../../_common/button/AppButton.vue';
 import { formatDate } from '../../../../../_common/filters/date';
-import { canDeviceViewFiresides } from '../../../../../_common/fireside/fireside.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoChat } from '../../../../../_common/illustration/illustrations';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import AppOnHover from '../../../../../_common/on/AppOnHover.vue';
 import { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
 import AppScrollScroller, {
 	createScroller,
 } from '../../../../../_common/scroll/AppScrollScroller.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { useEventSubscription } from '../../../../../_common/system/event/event-topic';
-import { kThemeBiBg, kThemeBiFg } from '../../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import {
-	styleBorderRadiusBase,
-	styleElevate,
-	styleLineClamp,
-	styleWhen,
-} from '../../../../../_styles/mixins';
-import {
-	buildCSSPixelValue,
-	kFontFamilyHeading,
-	kFontSizeBase,
-} from '../../../../../_styles/variables';
 import { useResizeObserver } from '../../../../../utils/resize-observer';
 import { debounce } from '../../../../../utils/utils';
 import { useGridStore } from '../../../grid/grid-store';
@@ -94,10 +77,10 @@ const newestMessage = computed(() =>
 
 const allMessages = computed(() => [...messages.value, ...queuedMessages.value]);
 
-// Fireside rooms delete older messages as newer ones arrive, so they can't load
-// older.
+// Rooms with a message limit will delete older messages as newer ones arrive,
+// so they can't load older.
 const canLoadOlder = computed(
-	() => !room.value.isFiresideRoom && !reachedEnd.value && !isLoadingOlder.value
+	() => !room.value.messageLimit && !reachedEnd.value && !isLoadingOlder.value
 );
 
 const shouldShowIntro = computed(() => allMessages.value.length === 0);
@@ -111,10 +94,6 @@ const shouldShowNewMessagesButton = computed(() => {
 });
 
 const roomChannel = computed(() => chat.value.roomChannels.get(room.value.id));
-
-const fireside = computed(() => room.value.fireside);
-const streamingUsers = computed(() => room.value.firesideStreamingUsers);
-const showFiresideBanner = computed(() => !!fireside.value && canDeviceViewFiresides());
 
 useEventSubscription(onNewChatMessage, async message => {
 	// When the user sent a message, we want the chat to scroll all the way down
@@ -239,7 +218,7 @@ function onScroll() {
 
 	const offset = getOffsetFromBottom();
 
-	if (room.value.isFiresideRoom) {
+	if (room.value.messageLimit) {
 		const _lastOffset = _lastAutoscrollOffset ?? 0;
 		const _lastId = _lastScrollMessageId;
 
@@ -343,17 +322,6 @@ function _updateMaxContentWidth(width: number) {
 		100
 	);
 }
-
-const firesideBannerMargin = buildCSSPixelValue(8);
-const minFiresideBannerHeight = buildCSSPixelValue(40);
-
-/**
- * Margin added to the scroller content top so the banner doesn't obscure the
- * oldest messages.
- */
-const bannerScrollerMargin = computed(() =>
-	buildCSSPixelValue(firesideBannerMargin.value * 2 + minFiresideBannerHeight.value)
-);
 </script>
 
 <template>
@@ -374,11 +342,6 @@ const bannerScrollerMargin = computed(() =>
 			<div
 				v-app-observe-dimensions="tryAutoscroll"
 				class="_container anim-fade-in no-animate-leave"
-				:style="{
-					...styleWhen(!!fireside && showFiresideBanner, {
-						marginTop: bannerScrollerMargin.px,
-					}),
-				}"
 			>
 				<div v-if="shouldShowIntro" class="_intro">
 					<AppIllustration
@@ -389,13 +352,6 @@ const bannerScrollerMargin = computed(() =>
 							{{
 								$gettext(
 									`Your friend is still loading. Encourage them with a message!`
-								)
-							}}
-						</div>
-						<div v-else-if="room.isFiresideRoom">
-							{{
-								$gettext(
-									`Waiting for folks to load in. Spark the discussion with a message!`
 								)
 							}}
 						</div>
@@ -440,99 +396,6 @@ const bannerScrollerMargin = computed(() =>
 				</div>
 			</div>
 		</AppScrollScroller>
-
-		<AppOnHover v-if="fireside && showFiresideBanner" v-slot="{ hovered, hoverBinding }">
-			<div
-				:style="{
-					position: `absolute`,
-					left: `12px`,
-					right: `12px`,
-					top: firesideBannerMargin.px,
-					zIndex: 2,
-				}"
-			>
-				<RouterLink :to="fireside.routeLocation">
-					<div
-						v-bind="{
-							...hoverBinding,
-							style: [
-								styleElevate(2),
-								styleBorderRadiusBase,
-								{
-									backgroundColor: kThemeBiBg,
-									width: `100%`,
-									minHeight: minFiresideBannerHeight.px,
-									padding: `4px`,
-									display: `flex`,
-									alignItems: `center`,
-								},
-							],
-						}"
-					>
-						<div
-							:style="{
-								...styleLineClamp(1),
-								fontSize: kFontSizeBase.px,
-								fontWeight: `bold`,
-								fontFamily: kFontFamilyHeading,
-								color: kThemeBiFg,
-								marginLeft: `4px`,
-							}"
-						>
-							{{ fireside.title }}
-						</div>
-
-						<template v-if="streamingUsers.length">
-							<div
-								:style="{
-									display: `inline-flex`,
-									marginLeft: `8px`,
-								}"
-							>
-								<div
-									v-for="(streamer, index) in streamingUsers"
-									:key="streamer.id"
-									:style="{
-										position: `relative`,
-										width: `10px`,
-										zIndex: streamingUsers.length - index,
-									}"
-								>
-									<AppUserAvatarBubble
-										v-app-tooltip="`@${streamer.username}`"
-										:style="{
-											width: `16px`,
-											height: `16px`,
-										}"
-										:user="streamer"
-										disable-link
-										smoosh
-									/>
-								</div>
-							</div>
-						</template>
-
-						<div
-							:style="{
-								flex: `auto`,
-								minWidth: `8px`,
-							}"
-						/>
-
-						<AppButton
-							:style="{
-								flex: `none`,
-							}"
-							overlay
-							trans
-							:force-hover="hovered"
-						>
-							{{ $gettext(`View`) }}
-						</AppButton>
-					</div>
-				</RouterLink>
-			</div>
-		</AppOnHover>
 
 		<div v-if="shouldShowNewMessagesButton" class="_new-messages">
 			<div class="_new-messages-tap-target" @click.stop="onClickNewMessages">

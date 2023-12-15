@@ -11,8 +11,8 @@ import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
+LegacyRouteComponent,
+OptionsForLegacyRoute,
 } from '../../../../_common/route/legacy-route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -22,25 +22,25 @@ import { UserModel } from '../../../../_common/user/user.model';
 import { enforceLocation } from '../../../../utils/router';
 import { shallowSetup } from '../../../../utils/vue';
 import {
-	GameCollectionModel,
-	GameCollectionType,
-	GameCollectionUserTypes,
+GameCollectionModel,
+GameCollectionType,
+GameCollectionUserTypes,
 } from '../../../components/game/collection/collection.model';
 import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
-import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/thumbnail.vue';
+import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/AppGameCollectionThumbnail.vue';
 import { GameFilteringContainer } from '../../../components/game/filtering/container';
-import AppGameGrid from '../../../components/game/grid/grid.vue';
+import AppGameGrid from '../../../components/game/grid/AppGameGrid.vue';
 import AppGameListing from '../../../components/game/listing/AppGameListing.vue';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
 import { useAppStore } from '../../../store/index';
 import {
-	libraryEditPlaylist,
-	libraryRemoveGameFromPlaylist,
-	libraryRemovePlaylist,
-	libraryUnfollowGame,
-	useLibraryStore,
+libraryEditPlaylist,
+libraryRemoveGameFromPlaylist,
+libraryRemovePlaylist,
+libraryUnfollowGame,
+useLibraryStore,
 } from '../../../store/library';
 
 const CollectionThemeKey = 'collection';

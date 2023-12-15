@@ -74,6 +74,14 @@ jobs:
       # Enable VS2015 toolset
       - run: 'call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64'
         shell: cmd
+
+      # GCC provided by MinGW needs to be <12 to compile joltron.
+      - name: Set up MinGW 11.2.0
+        uses: egor-tensin/setup-mingw@v2
+        with:
+          platform: x64
+          version: 11.2.0
+
       - run: gcc -v
 
       - run: echo %PATH%

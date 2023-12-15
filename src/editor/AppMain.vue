@@ -11,20 +11,21 @@ const adapter = createContentEditorAppAdapter({ themeStore });
 
 <template>
 	<div id="editor">
-		<AppTheme :theme="adapter.theme" />
-		<AppContentEditor
-			v-if="adapter.isInitialized && adapter.controller"
-			ref="editor"
-			:key="adapter.capabilitiesKey"
-			:controller="adapter.controller"
-			:content-context="adapter.controller.contentContext"
-			:capabilities="adapter.controller.contextCapabilities"
-			:value="adapter.initialContent"
-			:placeholder="adapter.placeholder"
-			:min-height="0"
-			:max-height="0"
-			:model-data="null"
-			@input="adapter.onContentChange($event)"
-		/>
+		<AppTheme :theme="adapter.theme" is-root>
+			<AppContentEditor
+				v-if="adapter.isInitialized && adapter.controller"
+				ref="editor"
+				:key="adapter.capabilitiesKey"
+				:controller="adapter.controller"
+				:content-context="adapter.controller.contentContext"
+				:capabilities="adapter.controller.contextCapabilities"
+				:value="adapter.initialContent"
+				:placeholder="adapter.placeholder"
+				:min-height="0"
+				:max-height="0"
+				:model-data="null"
+				@input="adapter.onContentChange($event)"
+			/>
+		</AppTheme>
 	</div>
 </template>

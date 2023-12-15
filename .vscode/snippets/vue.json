@@ -20,13 +20,15 @@
 	"Vue route component": {
 		"prefix": "vue-route-component",
 		"body": [
-			"<script lang=\"ts\" setup>",
-			"defineOptions(",
-			"\tdefineAppRouteOptions({",
+			"<script lang=\"ts\">",
+			"export default {",
+			"\t...defineAppRouteOptions({",
 			"\t\tresolver: async ({ route }) => {},",
-			"\t})",
-			");",
+			"\t}),",
+			"};",
+			"</script>",
 			"",
+			"<script lang=\"ts\" setup>",
 			"createAppRoute({",
 			"\trouteTitle: computed(() => $gettext(``)),",
 			"\tonResolved({payload}) {},",
@@ -64,6 +66,20 @@
 	"Vue prop": {
 		"prefix": "vue-prop",
 		"body": ["${1:name}: {", "\ttype: ${2:String},", "\trequired: true,", "},"]
+	},
+	"CSS properties": {
+		"prefix": "styles-object",
+		"body": ["const ${1:some}Styles = {", "\t${2:}", "} satisfies CSSProperties;"]
+	},
+	"CSS properties reactive": {
+		"prefix": "styles-reactive",
+		"body": [
+			"const ${1:some}Styles = computed(() => {",
+			"\treturn {",
+			"\t\t${2:}",
+			"\t} satisfies CSSProperties;",
+			"});"
+		]
 	},
 	"Pure assignment": {
 		"prefix": "pure",

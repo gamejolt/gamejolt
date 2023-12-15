@@ -1,19 +1,12 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, toRefs } from 'vue';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { AvatarFrameModel } from './frame.model';
-
-const BASE_FRAME_INSET = -10;
-const BASE_FRAME_SIZE = 100 - BASE_FRAME_INSET * 2;
+import { AvatarFrameModel, DefaultAvatarFrameScale } from './frame.model';
 
 const props = defineProps({
 	frame: {
-		type: [Object, null] as PropType<AvatarFrameModel | null>,
+		type: [Object, null] as PropType<Pick<AvatarFrameModel, 'image_url' | 'scale'> | null>,
 		required: true,
-	},
-	inset: {
-		type: Number,
-		default: undefined,
 	},
 	hideFrame: {
 		type: Boolean,
@@ -27,7 +20,7 @@ const props = defineProps({
 	},
 });
 
-const { frame, inset, hideFrame, smoosh } = toRefs(props);
+const { frame, hideFrame, smoosh } = toRefs(props);
 
 const avatarStyling = computed(() => {
 	const result: CSSProperties = {
@@ -35,21 +28,22 @@ const avatarStyling = computed(() => {
 		zIndex: 0,
 	};
 
-	let insetBase = `0px`;
-	let sizeBase = `100%`;
+	let inset = `0%`;
+	let size = `100%`;
 
 	if (frame.value && smoosh.value) {
-		insetBase = `${BASE_FRAME_INSET * -1}%`;
-		sizeBase = `${100 + BASE_FRAME_INSET * 2}%`;
+		const smooshedSize = 100 / frame.value.scale;
+		inset = `${(100 - smooshedSize) / 2}%`;
+		size = `${smooshedSize}%`;
 	}
 
-	result.top = insetBase;
-	result.right = insetBase;
-	result.bottom = insetBase;
-	result.left = insetBase;
+	result.top = inset;
+	result.right = inset;
+	result.bottom = inset;
+	result.left = inset;
 
-	result.width = sizeBase;
-	result.height = sizeBase;
+	result.width = size;
+	result.height = size;
 
 	return result;
 });
@@ -61,15 +55,14 @@ const frameStyling = computed(() => {
 		zIndex: 1,
 	};
 
-	let insetBase = `${BASE_FRAME_INSET}%`;
-	let sizeBase = `${BASE_FRAME_SIZE}%`;
+	const scale = frame.value?.scale || DefaultAvatarFrameScale;
+	const expandedSize = 100 * scale;
+	let insetBase = `-${(expandedSize - 100) / 2}%`;
+	let sizeBase = `${expandedSize}%`;
 
 	if (frame.value && smoosh.value) {
-		insetBase = `0px`;
+		insetBase = `0%`;
 		sizeBase = `100%`;
-	} else if (inset?.value) {
-		insetBase = `calc(${insetBase} + ${inset.value}px)`;
-		sizeBase = `calc(${sizeBase} - ${inset.value * 2}px)`;
 	}
 
 	result.top = insetBase;
