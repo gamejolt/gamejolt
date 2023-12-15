@@ -96,7 +96,7 @@ const {
 	stickySides,
 	// pageOffsetTop,
 	hasSales,
-	pageScrollPositionThroughHeader,
+	// pageScrollPositionThroughHeader,
 	isMe,
 	showFullDescription,
 	// canToggleDescription,
@@ -342,8 +342,7 @@ const socialLinks = computed(() => {
 const showFloatingHeader = computed(
 	() =>
 		// TODO(profile-scrunch): Figure out if we want this
-		false ??
-		((Screen.isDesktop && !stickySides.value) || pageScrollPositionThroughHeader.value >= 1)
+		false ?? (Screen.isMobile && stickySides.value)
 );
 
 const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);

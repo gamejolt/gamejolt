@@ -2,6 +2,7 @@
 import { computed, CSSProperties, inject, InjectionKey, provide, Ref, ref, toRef } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
+import { cachedComputed } from '../../../_common/reactivity-helpers';
 import { Registry } from '../../../_common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -18,7 +19,6 @@ import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '../../../_common/user/trophy/user-base-trophy.model';
 import { UserModel } from '../../../_common/user/user.model';
 import { kFontFamilyBase } from '../../../_styles/variables';
-import { clampNumber } from '../../../utils/number';
 import { useResizeObserver } from '../../../utils/resize-observer';
 import { ChatClient, isUserOnline } from '../../components/chat/client';
 import { useGridStore } from '../../components/grid/grid-store';
@@ -87,21 +87,23 @@ function createProfileRouteStore({
 	const _headerHeight = ref(0);
 	const { top: pageOffsetTop } = Scroll.getPageScrollSubscription();
 
-	const pageScrollPositionThroughHeader = computed(() => {
-		if (!Screen.isMobile) {
-			return 0;
-		}
-		if (_headerHeight.value <= 0) {
-			return 0;
-		}
-		const limit = 2;
-		if (pageOffsetTop.value >= _headerHeight.value * limit) {
-			return limit;
-		}
-		return clampNumber(pageOffsetTop.value / _headerHeight.value, 0, limit);
-	});
+	// TODO(profile-scrunch) probably too slow
+	//
+	// const pageScrollPositionThroughHeader = computed(() => {
+	// 	if (!Screen.isMobile) {
+	// 		return 0;
+	// 	}
+	// 	if (_headerHeight.value <= 0) {
+	// 		return 0;
+	// 	}
+	// 	const limit = 2;
+	// 	if (pageOffsetTop.value >= _headerHeight.value * limit) {
+	// 		return limit;
+	// 	}
+	// 	return clampNumber(pageOffsetTop.value / _headerHeight.value, 0, limit);
+	// });
 
-	const stickySides = computed(() => {
+	const stickySides = cachedComputed(() => {
 		if (_headerHeight.value <= 0) {
 			return false;
 		}
@@ -252,7 +254,7 @@ function createProfileRouteStore({
 		isFriend,
 		isOnline,
 		pageOffsetTop,
-		pageScrollPositionThroughHeader,
+		// pageScrollPositionThroughHeader,
 		stickySides,
 		sendFriendRequest,
 		acceptFriendRequest,

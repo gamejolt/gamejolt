@@ -14,6 +14,7 @@ import {
 	toRefs,
 	watchPostEffect,
 } from 'vue';
+import { cachedComputed } from '../reactivity-helpers';
 import { Screen } from '../screen/screen-service';
 import { DefaultTheme, GrayLight, GraySubtle } from '../theme/theme.model';
 import { useThemeStore } from '../theme/theme.store';
@@ -84,6 +85,12 @@ const { element } = controller.value;
 const { theme } = useThemeStore();
 const isMounted = ref(import.meta.env.SSR);
 
+const shouldDisable = cachedComputed(() => disabled.value, {
+	// There can be some jank when this changes during a scroll event if this
+	// isn't set to `post`, causing the page to jump unexpectedly.
+	flush: 'post',
+});
+
 const [initOverlayScrollbar, getOverlayScrollbarInstance] = useOverlayScrollbars(
 	computed(() => {
 		return {
@@ -93,8 +100,8 @@ const [initOverlayScrollbar, getOverlayScrollbarInstance] = useOverlayScrollbars
 					// doesn't allow us to complete a smooth scroll (or any
 					// scroll) once it's disabled. Any smooth scroll will just
 					// stop at some point during the transition.
-					x: disabled.value ? 'hidden' : horizontal.value ? 'scroll' : 'hidden',
-					y: disabled.value ? 'hidden' : horizontal.value ? 'hidden' : 'scroll',
+					x: shouldDisable.value ? 'hidden' : horizontal.value ? 'scroll' : 'hidden',
+					y: shouldDisable.value ? 'hidden' : horizontal.value ? 'hidden' : 'scroll',
 				},
 				scrollbars: {
 					autoHide: 'move',

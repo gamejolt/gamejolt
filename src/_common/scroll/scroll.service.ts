@@ -1,4 +1,4 @@
-import { Ref, onScopeDispose, ref } from 'vue';
+import { InjectionKey, Ref, inject, onScopeDispose, readonly, ref } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { sleep } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';
@@ -13,11 +13,29 @@ interface ScrollToOptions {
 }
 
 export interface PageScrollSubscription {
+	/** Unique ID */
 	id: number;
+	/**
+	 * Current page scroll offset. Returns `0` if the subscription is not
+	 * active or has been disposed.
+	 */
 	top: Ref<number>;
 	_forAnimation: boolean;
+	_isActive: boolean;
 	_disposed: boolean;
-	unsubscribe: () => void;
+	/** Starts watching for page offsets if it wasn't already. */
+	activate(): void;
+	/** Stops watching for page offsets. */
+	deactivate(): void;
+	/** Removes the subscription and prevents it from getting future page offset events. */
+	dispose(): void;
+}
+
+export const PageScrollSubscriptionKey: InjectionKey<Omit<PageScrollSubscription, 'unsubscribe'>> =
+	Symbol('page-scroll-subscription');
+
+export function usePageScrollSubscription() {
+	return inject(PageScrollSubscriptionKey, null);
 }
 
 class ScrollService {
@@ -35,44 +53,74 @@ class ScrollService {
 	_subscriptions: PageScrollSubscription[] = [];
 	_isOnScrollBusy = false;
 
-	/** Should only be used in a setup block */
-	getPageScrollSubscription(
-		options: {
-			/**
-			 * Determines if a new animation frame should be requested before
-			 * assigning to {@link top}.
-			 */
-			forAnimation?: boolean;
-		} = {}
-	) {
-		const id = ++this._subscriptionId;
-		const top = ref(0);
-		const { forAnimation = false } = options;
+	/** Should only be used in a setup block. */
+	getPageScrollSubscription({
+		forAnimation = false,
+		active = true,
+	}: {
+		/**
+		 * Determines if a new animation frame should be requested before
+		 * assigning to {@link top}.
+		 */
+		forAnimation?: boolean;
+		/**
+		 * Determines if the subscription should be active immediately.
+		 */
+		active?: boolean;
+	} = {}) {
 		const subscription: PageScrollSubscription = {
-			id,
-			top,
+			id: ++this._subscriptionId,
+			top: ref(0),
 			_forAnimation: forAnimation,
+			_isActive: active,
 			_disposed: false,
-			unsubscribe: () => {
-				arrayRemove(this._subscriptions, i => i.id === id);
-				subscription._disposed = true;
-				top.value = 0;
-				this._afterSubscriptionsChanged();
+			activate() {
+				if (this._disposed) {
+					console.error('Tried to activate a disposed subscription.');
+					return;
+				}
+				if (!this._isActive) {
+					this._isActive = true;
+					Scroll._afterSubscriptionsChanged();
+				}
+			},
+			deactivate() {
+				if (this._disposed) {
+					return;
+				}
+				if (this._isActive) {
+					this._isActive = false;
+					this.top.value = 0;
+					Scroll._afterSubscriptionsChanged();
+				}
+			},
+			dispose() {
+				if (this._disposed) {
+					return;
+				}
+				arrayRemove(Scroll._subscriptions, i => i.id === this.id);
+				this._isActive = false;
+				this._disposed = true;
+				this.top.value = 0;
+				Scroll._afterSubscriptionsChanged();
 			},
 		};
 
 		// TODO(profile-scrunch) Not sure if this or onUnmounted is preferred.
 		onScopeDispose(() => {
-			subscription.unsubscribe();
+			subscription.dispose();
 		});
 
 		this._subscriptions.push(subscription);
-		this._afterSubscriptionsChanged();
-		return subscription;
+		// No reason to call this if we're not starting in an active state.
+		if (active) {
+			this._afterSubscriptionsChanged();
+		}
+		return readonly(subscription);
 	}
 
 	_afterSubscriptionsChanged() {
-		if (this._subscriptions.length && this._subscriptions.some(i => !i._disposed)) {
+		if (this._subscriptions.length && this._subscriptions.some(i => i._isActive)) {
 			window.document.addEventListener('scroll', this._onScroll.bind(this), {
 				passive: true,
 			});
@@ -95,17 +143,12 @@ class ScrollService {
 
 		// Wait a bit so we don't do this too often.
 		await sleep(this.onScrollTimeout);
-
-		if (!this._subscriptions.length || this._subscriptions.every(i => i._disposed)) {
-			this._isOnScrollBusy = false;
-			return;
-		}
-
 		const top = this.getScrollTop();
 
-		for (const subscription of this._subscriptions) {
-			// Non-animator subscriptions can be set immediately.
-			if (!subscription._forAnimation && !subscription._disposed) {
+		const subs = this._subscriptions.filter(i => i._isActive);
+		const animators: PageScrollSubscription[] = [];
+		for (const subscription of subs) {
+			if (!subscription._forAnimation) {
 				subscription.top.value = top;
 			}
 		}
@@ -116,12 +159,13 @@ class ScrollService {
 		// TODO(profile-scrunch) This seemed to perform better when animation
 		// background position on many items. Should probably test some more to
 		// see if it's actually an improvement.
-		if (this._subscriptions.some(i => i._forAnimation)) {
+		if (animators.length) {
 			window.requestAnimationFrame(() => {
-				for (const subscription of this._subscriptions) {
-					if (subscription._forAnimation && !subscription._disposed) {
-						subscription.top.value = top;
+				for (const subscription of animators) {
+					if (!subscription._isActive) {
+						continue;
 					}
+					subscription.top.value = top;
 				}
 			});
 		}

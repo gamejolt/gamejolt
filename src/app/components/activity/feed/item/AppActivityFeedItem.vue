@@ -20,10 +20,6 @@ const props = defineProps({
 		type: Object as PropType<ActivityFeedItem>,
 		required: true,
 	},
-	pageOffset: {
-		type: Number,
-		default: undefined,
-	},
 });
 
 const { item } = toRefs(props);
@@ -83,7 +79,6 @@ function onResize(height: number) {
 					<AppActivityFeedPost
 						v-if="item.type === 'event-item'"
 						:item="item"
-						:page-offset="pageOffset"
 						@resize="onResize"
 					/>
 					<AppActivityFeedNotification

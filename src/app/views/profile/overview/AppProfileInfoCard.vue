@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { CSSProperties, computed } from 'vue';
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { kThemeFg10 } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
+import { kStrongEaseOut } from '../../../../_styles/variables';
 import { showCommentModal } from '../../../components/comment/modal/modal.service';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 import AppProfileDogtags from '../dogtags/AppProfileDogtags.vue';
@@ -137,17 +137,19 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 
 	return items;
 });
+
+const avatarExpandStyles = {
+	transition: `height 600ms ${kStrongEaseOut}`,
+} satisfies CSSProperties;
 </script>
 
 <template>
 	<div v-if="routeUser">
 		<!-- TODO(profile-scrunch) clean this up -->
-		<AppExpand
-			:when="showAvatar"
-			animate-initial
+		<div
 			:style="{
-				overflow: `visible`,
-				maxHeight: `${avatarSize * 0.4}px`,
+				...avatarExpandStyles,
+				height: showAvatar ? `${avatarSize * 0.4}px` : 0,
 				...styleWhen(Screen.isMobile, {
 					marginLeft: `-20px`,
 					marginRight: `-20px`,
@@ -206,13 +208,16 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 					</div>
 				</Transition>
 			</div>
-		</AppExpand>
+		</div>
 
 		<div class="sheet">
 			<!-- Avatar/Tags -->
-			<AppExpand :when="showAvatar" animate-initial>
-				<div :style="{ height: `${avatarSize * 0.6 + 20}px` }" />
-			</AppExpand>
+			<div
+				:style="{
+					...avatarExpandStyles,
+					height: showAvatar ? `${avatarSize * 0.6 + 20}px` : 0,
+				}"
+			/>
 
 			<!-- Stats -->
 			<AppProfileStats :items="stats">

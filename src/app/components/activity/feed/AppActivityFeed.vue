@@ -17,7 +17,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import { Scroll } from '../../../../_common/scroll/scroll.service';
+import { PageScrollSubscriptionKey, Scroll } from '../../../../_common/scroll/scroll.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppActivityFeedItem from './item/AppActivityFeedItem.vue';
 import AppActivityFeedNewButton from './new-button/AppActivityFeedNewButton.vue';
@@ -199,7 +199,12 @@ function shouldShowAd(index: number) {
 	return index === firstAd || (index - firstAd) % adGap === 0;
 }
 
-const { top: pageOffsetTop } = Scroll.getPageScrollSubscription();
+// Provide this down for posts that need to know about the page scroll. Used to
+// transform post backgrounds.
+if (feed.value.state.feedType === 'EventItem') {
+	const pageScrollSubscription = Scroll.getPageScrollSubscription();
+	provide(PageScrollSubscriptionKey, pageScrollSubscription);
+}
 </script>
 
 <template>
@@ -223,7 +228,7 @@ const { top: pageOffsetTop } = Scroll.getPageScrollSubscription();
 		<!-- We always need a parent element here so that we can target the last "item" for styling. -->
 		<AppAdFeedParent :is-active="shouldShowAds">
 			<div v-for="(item, i) of feed.items" :key="item.id" class="-item">
-				<AppActivityFeedItem :item="item" :page-offset="pageOffsetTop" />
+				<AppActivityFeedItem :item="item" />
 
 				<div
 					v-if="shouldShowAd(i)"
