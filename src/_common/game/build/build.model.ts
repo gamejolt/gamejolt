@@ -1,4 +1,5 @@
 import { Api } from '../../api/api.service';
+import type { DeviceArch, DeviceOs } from '../../device/device.service';
 import { Jolticon } from '../../jolticon/AppJolticon.vue';
 import { Model } from '../../model/model.service';
 import { GameModel } from '../game.model';
@@ -173,6 +174,7 @@ export class GameBuildModel extends Model {
 	declare os_linux: boolean;
 	declare os_linux_64: boolean;
 	declare os_other: boolean;
+	declare is_installer: boolean;
 	declare emulator_type: GameBuildEmulator;
 	declare embed_width: number;
 	declare embed_height: number;
@@ -218,6 +220,9 @@ export class GameBuildModel extends Model {
 		return false;
 	}
 
+	/**
+	 * Note: ROM games, despite being quick playable are not considered browser based.
+	 */
 	get isBrowserBased() {
 		return GameBuildBrowserTypes.indexOf(this.type) !== -1;
 	}
@@ -257,41 +262,59 @@ export class GameBuildModel extends Model {
 	}
 }
 
-export function pluckGameBuildOsSupport(build: GameBuildModel) {
-	const support = [];
+/**
+ * Checks if the game build can be installed on the target device. Returns null if unknown.
+ */
+export function canInstallGameBuild(options: {
+	build: GameBuildModel;
+	/** If not given, will assume the build is compatible with the device. */
+	os?: DeviceOs;
+	/** If not given, will assume the build is compatible with the current arch. */
+	arch?: DeviceArch;
+	/** By default when using the desktop app installers are not supported. */
+	allowInstallers?: boolean;
+}) {
+	const { build, os, arch, allowInstallers } = options;
 
-	// We only include the 64-bit versions if the build doesn't have 32bit and 64bit
-	// on the same build. That basically just means it's a universal build.
-
-	if (build.os_windows) {
-		support.push('windows');
+	// The desktop app does not support installers.
+	if (GJ_IS_DESKTOP_APP && !allowInstallers && build.is_installer) {
+		return false;
 	}
 
-	if (build.os_windows_64 && !build.os_windows) {
-		support.push('windows_64');
+	if (!os) {
+		return true;
 	}
 
-	if (build.os_mac) {
-		support.push('mac');
+	return canRunGameBuild({ build, os, arch });
+}
+
+/**
+ * Helper function to check if the game build can run on the target device.
+ * Returns null if unknown.
+ */
+export function canRunGameBuild(options: {
+	build: GameBuildModel;
+	os: DeviceOs;
+	/** If not given, will assume the build is compatible with the current arch. */
+	arch?: DeviceArch;
+}): boolean | null {
+	const { build, os, arch } = options;
+
+	if (os !== 'windows' && os !== 'mac' && os !== 'linux') {
+		return null;
 	}
 
-	if (build.os_mac_64 && !build.os_mac) {
-		support.push('mac_64');
+	if (build[`os_${os}`]) {
+		return true;
 	}
 
-	if (build.os_linux) {
-		support.push('linux');
+	// If they are on 64bit, then we can check for 64bit only support as well.
+	// If there is no arch (web site context) then we allow 64bit builds as well.
+	if ((!arch || arch === '64') && build[`os_${os}_64`]) {
+		return true;
 	}
 
-	if (build.os_linux_64 && !build.os_linux) {
-		support.push('linux_64');
-	}
-
-	if (build.os_other) {
-		support.push('other');
-	}
-
-	return support;
+	return false;
 }
 
 export function $saveGameBuild(model: GameBuildModel) {

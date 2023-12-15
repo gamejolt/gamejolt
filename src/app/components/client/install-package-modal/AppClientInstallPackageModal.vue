@@ -53,11 +53,11 @@ async function init() {
 
 	const os = getDeviceOS();
 	const arch = getDeviceArch();
-	packageData.value.installableBuilds = pluckInstallableGameBuilds(
-		packageData.value.packages,
-		os!,
-		arch
-	);
+	packageData.value.installableBuilds = pluckInstallableGameBuilds({
+		packages: packageData.value.packages,
+		os,
+		arch,
+	});
 
 	isLoading.value = false;
 }

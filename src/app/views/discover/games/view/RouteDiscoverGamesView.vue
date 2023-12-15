@@ -132,7 +132,11 @@ function createController() {
 	const installableBuilds = computed(() => {
 		const os = getDeviceOS();
 		const arch = getDeviceArch();
-		return pluckInstallableGameBuilds(packages.value, os, arch);
+		return pluckInstallableGameBuilds({
+			packages: packages.value,
+			os,
+			arch,
+		});
 	});
 
 	const externalPackages = computed(() => {

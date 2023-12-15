@@ -116,16 +116,19 @@ async function downloadDesktopApp(platform: DeviceOs, arch: DeviceArch) {
 	}
 }
 
-async function _getDownloadUrl(platform: string, arch: string) {
+async function _getDownloadUrl(platform: DeviceOs, arch: DeviceArch) {
 	if (!packageData.value) {
 		return null;
 	}
 
-	const installableBuilds = pluckInstallableGameBuilds(
-		packageData.value.packages,
-		platform,
-		arch
-	);
+	const installableBuilds = pluckInstallableGameBuilds({
+		packages: packageData.value.packages,
+		os: platform,
+		arch,
+		// Specifically here we need to allow installers since this is not
+		// expected to ever show within the client.
+		allowInstallers: true,
+	});
 	const bestBuild = chooseBestGameBuild(installableBuilds, platform, arch);
 	if (!bestBuild) {
 		return null;

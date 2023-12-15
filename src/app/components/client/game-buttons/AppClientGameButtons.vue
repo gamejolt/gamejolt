@@ -41,9 +41,6 @@ const props = defineProps({
 		type: String,
 		default: undefined,
 	},
-	hasInstallableBuilds: {
-		type: Boolean,
-	},
 	canInstall: {
 		type: Boolean,
 	},
@@ -140,11 +137,11 @@ async function fetchPackageData() {
 	const payload = await Api.sendRequest('/web/discover/games/packages/' + game.value.id);
 
 	const packageData = new GamePackagePayloadModel(payload);
-	packageData.installableBuilds = pluckInstallableGameBuilds(
-		packageData.packages,
-		os.value!,
-		arch.value
-	);
+	packageData.installableBuilds = pluckInstallableGameBuilds({
+		packages: packageData.packages,
+		os: os.value!,
+		arch: arch.value,
+	});
 
 	return packageData;
 }
