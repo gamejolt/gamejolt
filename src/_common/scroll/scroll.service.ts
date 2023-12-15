@@ -1,4 +1,4 @@
-import { InjectionKey, Ref, inject, onScopeDispose, readonly, ref } from 'vue';
+import { DeepReadonly, InjectionKey, Ref, inject, onScopeDispose, ref, shallowReadonly } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { sleep } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';
@@ -13,26 +13,29 @@ interface ScrollToOptions {
 }
 
 export interface PageScrollSubscription {
-	/** Unique ID */
 	id: number;
 	/**
-	 * Current page scroll offset. Returns `0` if the subscription is not
-	 * active or has been disposed.
+	 * Current page scroll offset. Returns `0` if the subscription is not active
+	 * or has been disposed.
 	 */
 	top: Ref<number>;
 	_forAnimation: boolean;
 	_isActive: boolean;
-	_disposed: boolean;
+	_isDisposed: boolean;
 	/** Starts watching for page offsets if it wasn't already. */
 	activate(): void;
 	/** Stops watching for page offsets. */
 	deactivate(): void;
-	/** Removes the subscription and prevents it from getting future page offset events. */
+	/**
+	 * Removes the subscription and prevents it from getting future page offset
+	 * events.
+	 */
 	dispose(): void;
 }
 
-export const PageScrollSubscriptionKey: InjectionKey<Omit<PageScrollSubscription, 'unsubscribe'>> =
-	Symbol('page-scroll-subscription');
+export const PageScrollSubscriptionKey: InjectionKey<
+	DeepReadonly<Pick<PageScrollSubscription, 'id' | 'top'>>
+> = Symbol('page-scroll-subscription');
 
 export function usePageScrollSubscription() {
 	return inject(PageScrollSubscriptionKey, null);
@@ -73,9 +76,9 @@ class ScrollService {
 			top: ref(0),
 			_forAnimation: forAnimation,
 			_isActive: active,
-			_disposed: false,
+			_isDisposed: false,
 			activate() {
-				if (this._disposed) {
+				if (this._isDisposed) {
 					console.error('Tried to activate a disposed subscription.');
 					return;
 				}
@@ -85,7 +88,7 @@ class ScrollService {
 				}
 			},
 			deactivate() {
-				if (this._disposed) {
+				if (this._isDisposed) {
 					return;
 				}
 				if (this._isActive) {
@@ -95,12 +98,12 @@ class ScrollService {
 				}
 			},
 			dispose() {
-				if (this._disposed) {
+				if (this._isDisposed) {
 					return;
 				}
 				arrayRemove(Scroll._subscriptions, i => i.id === this.id);
 				this._isActive = false;
-				this._disposed = true;
+				this._isDisposed = true;
 				this.top.value = 0;
 				Scroll._afterSubscriptionsChanged();
 			},
@@ -116,11 +119,14 @@ class ScrollService {
 		if (active) {
 			this._afterSubscriptionsChanged();
 		}
-		return readonly(subscription);
+		return shallowReadonly(subscription);
 	}
 
 	_afterSubscriptionsChanged() {
-		if (this._subscriptions.length && this._subscriptions.some(i => i._isActive)) {
+		if (
+			this._subscriptions.length &&
+			this._subscriptions.some(i => i._isActive && !i._isDisposed)
+		) {
 			window.document.addEventListener('scroll', this._onScroll.bind(this), {
 				passive: true,
 			});
@@ -145,10 +151,14 @@ class ScrollService {
 		await sleep(this.onScrollTimeout);
 		const top = this.getScrollTop();
 
-		const subs = this._subscriptions.filter(i => i._isActive);
+		const subs = this._subscriptions.filter(i => i._isActive && !i._isDisposed);
 		const animators: PageScrollSubscription[] = [];
 		for (const subscription of subs) {
-			if (!subscription._forAnimation) {
+			if (subscription._forAnimation) {
+				// Animators should be queued up for the next animation frame.
+				animators.push(subscription);
+			} else {
+				// Non-animator subscriptions can be set immediately.
 				subscription.top.value = top;
 			}
 		}
@@ -162,7 +172,7 @@ class ScrollService {
 		if (animators.length) {
 			window.requestAnimationFrame(() => {
 				for (const subscription of animators) {
-					if (!subscription._isActive) {
+					if (!subscription._isActive || subscription._isDisposed) {
 						continue;
 					}
 					subscription.top.value = top;
