@@ -37,9 +37,7 @@ const props = defineProps({
 const { type, resource } = toRefs(props);
 
 const form: FormController<FormModel> = createForm({
-	onInit() {
-		form.warnOnDiscard = false;
-	},
+	warnOnDiscard: false,
 	onSubmit() {
 		const data = {
 			resourceName: type.value,
