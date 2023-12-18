@@ -13,7 +13,7 @@ import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import { $gettext } from '../../translate/translate.service';
 import { UserModel } from '../../user/user.model';
-import AppReportForm from '../form/form.vue';
+import AppReportForm from '../form/AppReportForm.vue';
 
 const props = defineProps({
 	resource: {
