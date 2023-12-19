@@ -1,17 +1,27 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { PropType, computed, ref, toRef, toRefs } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityModel } from '../../../../../_common/community/community.model';
+import AppForm, { FormController, createForm } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlError from '../../../../../_common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
+import {
+	validateAvailability,
+	validateMaxLength,
+} from '../../../../../_common/form-vue/validators';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import {
-	getCommunityBlockReasons,
 	REASON_OTHER,
 	REASON_SPAM,
+	getCommunityBlockReasons,
 } from '../../../../../_common/user/action-reasons';
 import { UserModel } from '../../../../../_common/user/user.model';
 
@@ -23,61 +33,54 @@ interface FormModel {
 	ejectPosts: boolean;
 }
 
-class Wrapper extends BaseForm<FormModel> {}
-@Options({
-	components: {
-		AppFormControlToggle,
-		AppFormControlPrefix,
+const expiryOptions = {
+	hour: $gettext('1 Hour'),
+	day: $gettext('1 Day'),
+	week: $gettext('1 Week'),
+	month: $gettext('1 Month'),
+	year: $gettext('1 Year'),
+	never: $gettext('Never'),
+};
+
+const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
 	},
-})
-export default class FormCommunityBlock extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop({ type: Object, required: true }) community!: CommunityModel;
-	@Prop({ type: Object, default: null }) user!: UserModel | null;
+	user: {
+		type: Object as PropType<UserModel>,
+		default: null,
+	},
+});
 
-	usernameLocked = false;
-	otherOptions: string[] = [];
+const { community, user } = toRefs(props);
 
-	get defaultReasons() {
-		return getCommunityBlockReasons();
-	}
+const usernameLocked = ref(false);
+const otherOptions = ref<string[]>([]);
 
-	get expiryOptions() {
-		return {
-			hour: $gettext('1 Hour'),
-			day: $gettext('1 Day'),
-			week: $gettext('1 Week'),
-			month: $gettext('1 Month'),
-			year: $gettext('1 Year'),
-			never: $gettext('Never'),
-		};
-	}
+const defaultReasons = toRef(() => getCommunityBlockReasons());
 
-	get showReasonOther() {
-		return this.formModel.reasonType === REASON_OTHER;
-	}
+const showReasonOther = computed(() => form.formModel.reasonType === REASON_OTHER);
 
-	created() {
-		this.form.resetOnSubmit = true;
-	}
-
+const form: FormController<FormModel> = createForm({
+	resetOnSubmit: true,
 	onInit() {
-		this.setField('reasonType', REASON_SPAM);
-		this.setField('expiry', 'week');
-		this.setField('ejectPosts', true);
+		form.formModel.reasonType = REASON_SPAM;
+		form.formModel.expiry = 'week';
+		form.formModel.ejectPosts = true;
 
-		if (this.user) {
-			this.setField('username', this.user.username);
-			this.usernameLocked = true;
+		if (user.value) {
+			form.formModel.username = user.value.username;
+			usernameLocked.value = true;
 		}
 
-		const options = getDatalistOptions('community-user-block', this.community.id.toString());
-		this.otherOptions = options.getList();
-	}
-
+		const options = getDatalistOptions('community-user-block', community.value.id.toString());
+		otherOptions.value = options.getList();
+	},
 	async onSubmit() {
 		const response = await Api.sendRequest(
-			`/web/dash/communities/blocks/add/${this.community.id}`,
-			this.formModel
+			`/web/dash/communities/blocks/add/${community.value.id}`,
+			form.formModel
 		);
 
 		if (!response.success) {
@@ -86,48 +89,48 @@ export default class FormCommunityBlock extends mixins(Wrapper) implements FormO
 					title: $gettext('Collaborators cannot be blocked'),
 					message: $gettext(
 						'%{ user } is a Collaborator on this Community. Remove them from the collaborators list first to block them.',
-						{ user: this.formModel.username }
+						{ user: form.formModel.username }
 					),
 				});
 			}
 		} else {
 			// Add custom options entry to list of options.
-			if (this.formModel.reasonType === REASON_OTHER && this.formModel.reason) {
+			if (form.formModel.reasonType === REASON_OTHER && form.formModel.reason) {
 				const options = getDatalistOptions(
 					'community-user-block',
-					this.community.id.toString()
+					community.value.id.toString()
 				);
-				options.unshiftItem(this.formModel.reason);
+				options.unshiftItem(form.formModel.reason);
 			}
 
-			if (this.formModel.ejectPosts) {
+			if (form.formModel.ejectPosts) {
 				const whatsRemoved = $gettext('posts');
 
 				const message = $gettext(
 					'%{ user } was blocked from this Community. It might take a few moments for their %{ stuff } to disappear.',
 					{
-						user: this.formModel.username,
+						user: form.formModel.username,
 						stuff: whatsRemoved,
 					}
 				);
 
 				showSuccessGrowl({
 					message: $gettext(message, {
-						user: this.formModel.username,
+						user: form.formModel.username,
 					}),
 				});
 			} else {
 				showSuccessGrowl({
 					message: $gettext('%{ user } was blocked from this Community.', {
-						user: this.formModel.username,
+						user: form.formModel.username,
 					}),
 				});
 			}
 		}
 
 		return response;
-	}
-}
+	},
+});
 </script>
 
 <template>
@@ -197,15 +200,18 @@ export default class FormCommunityBlock extends mixins(Wrapper) implements FormO
 			</template>
 
 			<p class="help-block">
-				<AppTranslate>
-					Once the user is blocked, all their posts will be ejected from the community.
-					This also affects their featured posts.
-				</AppTranslate>
+				{{
+					$gettext(
+						`Once the user is blocked, all their posts will be ejected from the community.`
+					)
+				}}
+				<br />
+				{{ $gettext(`This also affects their featured posts.`) }}
 			</p>
 		</AppFormGroup>
 
 		<AppFormButton :disabled="!valid">
-			<AppTranslate>Block</AppTranslate>
+			{{ $gettext(`Block`) }}
 		</AppFormButton>
 	</AppForm>
 </template>
