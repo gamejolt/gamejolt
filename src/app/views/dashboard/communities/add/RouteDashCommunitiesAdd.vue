@@ -8,7 +8,7 @@ import {
 } from '../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { touchUser } from '../../../../../_common/user/user.model';
-import FormCommunity from '../../../../components/forms/community/community.vue';
+import FormCommunity from '../../../../components/forms/community/FormCommunity.vue';
 import AppPageContainer from '../../../../components/page-container/AppPageContainer.vue';
 
 export default {
