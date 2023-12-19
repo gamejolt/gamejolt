@@ -210,7 +210,7 @@ const form: FormController<FormModel> = createForm({
 			</p>
 		</AppFormGroup>
 
-		<AppFormButton :disabled="!valid">
+		<AppFormButton :disabled="!form.valid">
 			{{ $gettext(`Block`) }}
 		</AppFormButton>
 	</AppForm>
