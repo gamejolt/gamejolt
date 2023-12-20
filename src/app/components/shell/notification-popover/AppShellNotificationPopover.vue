@@ -12,7 +12,10 @@ import {
 } from '../../../../_common/notification/notification-model';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import { kThemeDarkest } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { styleChangeBg } from '../../../../_styles/mixins';
+import { kBorderWidthLg } from '../../../../_styles/variables';
 import { useAppStore } from '../../../store';
 import {
 	NOTIFICATION_FILTER_FIELD,
@@ -26,7 +29,7 @@ import { AppActivityFeedLazy } from '../../lazy';
 
 const route = useRoute();
 const router = useRouter();
-const { notificationState, unreadNotificationsCount, markNotificationsAsRead } = useAppStore();
+const { notificationState, hasUnreadNotifications, markNotificationsAsRead } = useAppStore();
 const { grid } = useGridStore();
 
 const isShowing = ref(false);
@@ -104,11 +107,11 @@ async function onShow() {
 		}
 		// If it is already bootstrapped, we just want to load new items if
 		// there is any.
-		else if (unreadNotificationsCount.value > 0) {
+		else if (hasUnreadNotifications.value) {
 			await feed.value.reload();
 		}
 
-		if (unreadNotificationsCount.value > 0) {
+		if (hasUnreadNotifications.value) {
 			grid.value?.pushViewNotifications('notifications');
 		}
 	}
@@ -145,12 +148,23 @@ function onClickFilter() {
 			:class="{ active: isNavbarItemActive }"
 			@click.capture="onNavbarItemClick"
 		>
-			<span
-				v-if="unreadNotificationsCount"
-				class="notification-tag tag tag-highlight anim-fade-enter anim-fade-leave"
-			>
-				{{ unreadNotificationsCount }}
-			</span>
+			<div
+				v-if="hasUnreadNotifications"
+				class="anim-fade-enter anim-fade-leave"
+				:style="{
+					...styleChangeBg('highlight'),
+					borderRadius: `50%`,
+					width: `12px`,
+					height: `12px`,
+					display: `block`,
+					position: `absolute`,
+					bottom: `10px`,
+					right: `4px`,
+					borderWidth: kBorderWidthLg.px,
+					borderStyle: `solid`,
+					borderColor: kThemeDarkest,
+				}"
+			/>
 			<AppJolticon icon="bell-filled" />
 		</a>
 

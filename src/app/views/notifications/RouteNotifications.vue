@@ -64,7 +64,7 @@ function getNotificationTypesFromQuery(route: RouteLocationNormalized, queryKey:
 </script>
 
 <script lang="ts" setup>
-const { unreadNotificationsCount, markNotificationsAsRead } = useAppStore();
+const { hasUnreadNotifications, markNotificationsAsRead } = useAppStore();
 const { grid } = useGridStore();
 const route = useRoute();
 
@@ -86,14 +86,10 @@ const hasFilter = computed(
 );
 
 watch(
-	unreadNotificationsCount,
-	() => {
-		if (
-			feed.value &&
-			!hasFilter.value &&
-			unreadNotificationsCount.value > feed.value.newCount
-		) {
-			feed.value.newCount = unreadNotificationsCount.value;
+	hasUnreadNotifications,
+	hasUnread => {
+		if (hasUnread && feed.value && feed.value.newCount <= 0 && !hasFilter.value) {
+			feed.value.newCount = 1;
 		}
 	},
 	{ immediate: true }
@@ -135,7 +131,7 @@ createAppRoute({
 });
 
 function onLoadedNew() {
-	if (unreadNotificationsCount.value > 0) {
+	if (hasUnreadNotifications.value) {
 		grid.value?.pushViewNotifications('notifications');
 	}
 }

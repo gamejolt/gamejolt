@@ -24,8 +24,6 @@ import { CommunityStates } from './community-state';
 import { LibraryStore } from './library';
 import { QuestStore } from './quest';
 
-// the two types an event notification can assume, either "activity" for the post activity feed or "notifications"
-type UnreadItemType = 'activity' | 'notifications';
 export type TogglableLeftPane =
 	| ''
 	| 'chat'
@@ -68,8 +66,8 @@ export function createAppStore({
 
 	/** Unread items in the activity feed. */
 	const unreadActivityCount = ref(0);
-	/** Unread items in the notification feed. */
-	const unreadNotificationsCount = ref(0);
+	/** Are there unread notifications? */
+	const hasUnreadNotifications = ref(false);
 	const hasNewFriendRequests = ref(false);
 
 	const notificationState = ref<ActivityFeedState>();
@@ -122,10 +120,6 @@ export function createAppStore({
 	});
 
 	const visibleRightPane = computed(() => overlayedRightPane.value);
-
-	const notificationCount = computed(
-		() => unreadActivityCount.value + unreadNotificationsCount.value
-	);
 
 	// Sync with the ContentFocus service.
 	registerFocusWatcher(
@@ -329,20 +323,16 @@ export function createAppStore({
 		}
 	}
 
-	function incrementNotificationCount(payload: { type: UnreadItemType; count: number }) {
-		if (payload.type === 'activity') {
-			unreadActivityCount.value += payload.count;
-		} else {
-			unreadNotificationsCount.value += payload.count;
-		}
+	function incrementUnreadActivityCount(count: number) {
+		unreadActivityCount.value += count;
 	}
 
-	function setNotificationCount(payload: { type: UnreadItemType; count: number }) {
-		if (payload.type === 'activity') {
-			unreadActivityCount.value = payload.count;
-		} else {
-			unreadNotificationsCount.value = payload.count;
-		}
+	function setUnreadActivityCount(count: number) {
+		unreadActivityCount.value = count;
+	}
+
+	function setHasUnreadNotifications(has: boolean) {
+		hasUnreadNotifications.value = has;
 	}
 
 	function setHasNewFriendRequests(has: boolean) {
@@ -530,7 +520,7 @@ export function createAppStore({
 		isShellBootstrapped,
 		isShellHidden,
 		unreadActivityCount,
-		unreadNotificationsCount,
+		hasUnreadNotifications,
 		hasNewFriendRequests,
 		notificationState,
 		mobileCbarShowing,
@@ -546,7 +536,6 @@ export function createAppStore({
 		hasCbar,
 		visibleLeftPane,
 		visibleRightPane,
-		notificationCount,
 		bootstrap,
 		logout,
 		clear,
@@ -565,8 +554,9 @@ export function createAppStore({
 		hideShell,
 		showShell,
 		setHasContentSidebar,
-		incrementNotificationCount,
-		setNotificationCount,
+		incrementUnreadActivityCount,
+		setUnreadActivityCount,
+		setHasUnreadNotifications,
 		setHasNewFriendRequests,
 		joinCommunity,
 		leaveCommunity,
