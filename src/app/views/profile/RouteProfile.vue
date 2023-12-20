@@ -6,7 +6,7 @@ import { watched } from '../../../_common/reactivity-helpers';
 import { Registry } from '../../../_common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import { Scroll } from '../../../_common/scroll/scroll.service';
+import { getPageScrollSubscription } from '../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
@@ -85,7 +85,9 @@ function createProfileRouteStore({
 	});
 
 	const _headerHeight = ref(0);
-	const { top: pageOffsetTop } = Scroll.getPageScrollSubscription();
+	// TODO(profile-scrunch) move this and stickySides into overview, not needed
+	// for any other sub-routes.
+	const { top: pageOffsetTop } = getPageScrollSubscription();
 
 	const stickySides = watched(() => {
 		if (_headerHeight.value <= 0) {
@@ -363,6 +365,12 @@ const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
 						should-affix-nav
 						:autoscroll-anchor-key="autoscrollAnchorKey"
 					>
+						<!-- TODO(profile-scrunch) Might want to put
+						a "back" button somewhere on the profile
+						screen, just in case there are some nested
+						routes that aren't being turned into modals.
+						-->
+
 						<template v-if="!Screen.isMobile" #default>
 							<RouterLink
 								:to="{
@@ -397,40 +405,6 @@ const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
 								class="anim-fade-in"
 								:user="routeUser"
 							/>
-						</template>
-
-						<template v-if="false" #nav>
-							<nav class="platform-list inline">
-								<ul>
-									<!-- TODO(profile-scrunch) Might want to put
-									a "back" button somewhere on the profile
-									screen, just in case there are some nested
-									routes that aren't being turned into modals.
-									-->
-									<li>
-										<RouterLink
-											:to="{ name: 'profile.overview' }"
-											:class="{ active: route.name === 'profile.overview' }"
-										>
-											{{ $gettext(`Profile`) }}
-										</RouterLink>
-									</li>
-									<template v-if="false">
-										<!--
-											We only need to show this on mobile.
-										-->
-										<!-- TODO(profile-scrunch) remove -->
-										<li>
-											<RouterLink
-												:to="{ name: 'profile.library' }"
-												active-class="active"
-											>
-												{{ $gettext(`Library`) }}
-											</RouterLink>
-										</li>
-									</template>
-								</ul>
-							</nav>
 						</template>
 					</AppPageHeader>
 				</div>

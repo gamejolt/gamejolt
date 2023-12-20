@@ -12,176 +12,10 @@ interface ScrollToOptions {
 	preventDirections?: ('up' | 'down')[];
 }
 
-export interface PageScrollSubscription {
-	id: number;
-	/**
-	 * Current page scroll offset. Returns `0` if the subscription is not active
-	 * or has been disposed.
-	 */
-	top: Ref<number>;
-	_forAnimation: boolean;
-	_isActive: boolean;
-	_isDisposed: boolean;
-	/** Starts watching for page offsets if it wasn't already. */
-	activate(): void;
-	/** Stops watching for page offsets. */
-	deactivate(): void;
-	/**
-	 * Removes the subscription and prevents it from getting future page offset
-	 * events.
-	 */
-	dispose(): void;
-}
-
-export const PageScrollSubscriptionKey: InjectionKey<
-	DeepReadonly<Pick<PageScrollSubscription, 'id' | 'top'>>
-> = Symbol('page-scroll-subscription');
-
-export function usePageScrollSubscription() {
-	return inject(PageScrollSubscriptionKey, null);
-}
-
 class ScrollService {
-	/**
-	 * Minimum interval in milliseconds that {@link _onScroll} will assign to
-	 * {@link PageScrollSubscription.top} refs.
-	 */
-	readonly onScrollTimeout = 1_000 / 24;
-
 	shouldAutoScroll = true;
 	autoscrollAnchor?: AppAutoscrollAnchor;
 	offsetTop = 0;
-
-	// TODO(profile-scrunch) Move this into lets and consts outside of the
-	// ScrollService. We should only need to reach into this to call
-	// `getScrollTop`.
-	_subscriptionId = 0;
-	_subscriptions: PageScrollSubscription[] = [];
-	_isOnScrollBusy = false;
-
-	/** Should only be used in a setup block. */
-	getPageScrollSubscription({
-		forAnimation = false,
-		active = true,
-	}: {
-		/**
-		 * Determines if a new animation frame should be requested before
-		 * assigning to {@link top}.
-		 */
-		forAnimation?: boolean;
-		/**
-		 * Determines if the subscription should be active immediately.
-		 */
-		active?: boolean;
-	} = {}) {
-		const subscription: PageScrollSubscription = {
-			id: ++this._subscriptionId,
-			top: ref(0),
-			_forAnimation: forAnimation,
-			_isActive: active,
-			_isDisposed: false,
-			activate() {
-				if (this._isDisposed) {
-					console.error('Tried to activate a disposed subscription.');
-					return;
-				}
-				if (!this._isActive) {
-					this._isActive = true;
-					Scroll._afterSubscriptionsChanged();
-				}
-			},
-			deactivate() {
-				if (this._isDisposed) {
-					return;
-				}
-				if (this._isActive) {
-					this._isActive = false;
-					this.top.value = 0;
-					Scroll._afterSubscriptionsChanged();
-				}
-			},
-			dispose() {
-				if (this._isDisposed) {
-					return;
-				}
-				arrayRemove(Scroll._subscriptions, i => i.id === this.id);
-				this._isActive = false;
-				this._isDisposed = true;
-				this.top.value = 0;
-				Scroll._afterSubscriptionsChanged();
-			},
-		};
-
-		onUnmounted(() => {
-			subscription.dispose();
-		});
-
-		this._subscriptions.push(subscription);
-		// No reason to call this if we're not starting in an active state.
-		if (active) {
-			this._afterSubscriptionsChanged();
-		}
-		return shallowReadonly(subscription);
-	}
-
-	_afterSubscriptionsChanged() {
-		if (
-			this._subscriptions.length &&
-			this._subscriptions.some(i => i._isActive && !i._isDisposed)
-		) {
-			window.document.addEventListener('scroll', this._onScroll.bind(this), {
-				passive: true,
-			});
-
-			// Need to call _onScroll lazily here, otherwise things may not be
-			// loaded in yet. This can happen if you're on a page that holds the
-			// only subscription, go to a new page, then go back through the
-			// browser.
-			sleep(0).then(() => this._onScroll());
-		} else {
-			window.document.removeEventListener('scroll', this._onScroll.bind(this));
-		}
-	}
-
-	async _onScroll() {
-		if (this._isOnScrollBusy) {
-			return;
-		}
-		this._isOnScrollBusy = true;
-
-		// Wait a bit so we don't do this too often.
-		await sleep(this.onScrollTimeout);
-		const top = this.getScrollTop();
-
-		const subs = this._subscriptions.filter(i => i._isActive && !i._isDisposed);
-		const animators: PageScrollSubscription[] = [];
-		for (const subscription of subs) {
-			if (subscription._forAnimation) {
-				// Animators should be queued up for the next animation frame.
-				animators.push(subscription);
-			} else {
-				// Non-animator subscriptions can be set immediately.
-				subscription.top.value = top;
-			}
-		}
-
-		// Queue up an animation frame if any of our subscriptions are used for
-		// some animation.
-		//
-		// TODO(profile-scrunch) Remove animators, just do it all after sleeping.
-		if (animators.length) {
-			window.requestAnimationFrame(() => {
-				for (const subscription of animators) {
-					if (!subscription._isActive || subscription._isDisposed) {
-						continue;
-					}
-					subscription.top.value = top;
-				}
-			});
-		}
-
-		this._isOnScrollBusy = false;
-	}
 
 	/**
 	 * Sets the extra offset for scrolling. This can be used if there is a fixed
@@ -333,3 +167,134 @@ class ScrollService {
 }
 
 export const Scroll = /** @__PURE__ */ new ScrollService();
+
+/**
+ * Minimum interval in milliseconds that {@link _onScroll} will assign to
+ * {@link PageScrollSubscription.top} refs.
+ */
+export const pageScrollSubscriptionTimeout = 1_000 / 24;
+
+export interface PageScrollSubscription {
+	id: number;
+	/**
+	 * Current page scroll offset. Returns `0` if the subscription is not active
+	 * or has been disposed.
+	 */
+	top: Ref<number>;
+	_isActive: boolean;
+	_isDisposed: boolean;
+	/** Starts watching for page offsets if it wasn't already. */
+	activate(): void;
+	/** Stops watching for page offsets. */
+	deactivate(): void;
+	/**
+	 * Removes the subscription and prevents it from getting future page offset
+	 * events.
+	 */
+	dispose(): void;
+}
+
+export const PageScrollSubscriptionKey: InjectionKey<
+	DeepReadonly<Pick<PageScrollSubscription, 'id' | 'top'>>
+> = Symbol('page-scroll-subscription');
+
+export function usePageScrollSubscription() {
+	return inject(PageScrollSubscriptionKey, null);
+}
+
+let _subscriptionId = 0;
+const _subscriptions: PageScrollSubscription[] = [];
+let _isOnScrollBusy = false;
+
+/** Should only be used in a setup block. */
+export function getPageScrollSubscription({
+	active = true,
+}: {
+	/**
+	 * Determines if the subscription should be active immediately.
+	 */
+	active?: boolean;
+} = {}) {
+	const subscription: PageScrollSubscription = {
+		id: ++_subscriptionId,
+		top: ref(0),
+		_isActive: active,
+		_isDisposed: false,
+		activate() {
+			if (this._isDisposed) {
+				console.error('Tried to activate a disposed subscription.');
+				return;
+			}
+			if (!this._isActive) {
+				this._isActive = true;
+				_afterSubscriptionsChanged();
+			}
+		},
+		deactivate() {
+			if (this._isDisposed) {
+				return;
+			}
+			if (this._isActive) {
+				this._isActive = false;
+				this.top.value = 0;
+				_afterSubscriptionsChanged();
+			}
+		},
+		dispose() {
+			if (this._isDisposed) {
+				return;
+			}
+			arrayRemove(_subscriptions, i => i.id === this.id);
+			this._isActive = false;
+			this._isDisposed = true;
+			this.top.value = 0;
+			_afterSubscriptionsChanged();
+		},
+	};
+
+	onUnmounted(() => {
+		subscription.dispose();
+	});
+
+	_subscriptions.push(subscription);
+	// No reason to call this if we're not starting in an active state.
+	if (active) {
+		_afterSubscriptionsChanged();
+	}
+	return shallowReadonly(subscription);
+}
+
+function _afterSubscriptionsChanged() {
+	if (_subscriptions.length && _subscriptions.some(i => i._isActive && !i._isDisposed)) {
+		window.document.addEventListener('scroll', _onScroll, {
+			passive: true,
+		});
+
+		// Need to call _onScroll lazily here, otherwise things may not be
+		// loaded in yet. This can happen if you're on a page that holds the
+		// only subscription, go to a new page, then go back through the
+		// browser.
+		sleep(0).then(() => _onScroll());
+	} else {
+		window.document.removeEventListener('scroll', _onScroll);
+	}
+}
+
+async function _onScroll() {
+	if (_isOnScrollBusy) {
+		return;
+	}
+	_isOnScrollBusy = true;
+
+	// Wait a bit so we don't do this too often.
+	await sleep(pageScrollSubscriptionTimeout);
+
+	const activeSubscriptions = _subscriptions.filter(i => i._isActive && !i._isDisposed);
+	if (activeSubscriptions.length) {
+		const top = Scroll.getScrollTop();
+		for (const subscription of activeSubscriptions) {
+			subscription.top.value = top;
+		}
+	}
+	_isOnScrollBusy = false;
+}
