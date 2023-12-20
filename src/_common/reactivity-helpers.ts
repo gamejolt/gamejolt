@@ -1,13 +1,12 @@
 import { DeepReadonly, Ref, WatchOptionsBase, readonly, ref, watchEffect } from 'vue';
-import { Primitives } from '../utils/utils';
 
 /**
- * Returns a computed that only notifies when the value changes.
+ * Returns a readonly ref that only notifies when the watcher changes the ref.
+ *
+ * This solves issues with `computed` where it always notifies based on
+ * dependencies changing instead of the value changing.
  */
-export function cachedComputed<T extends Primitives>(
-	getter: () => T,
-	options?: WatchOptionsBase
-): DeepReadonly<Ref<T>> {
+export function watched<T>(getter: () => T, options?: WatchOptionsBase): DeepReadonly<Ref<T>> {
 	const cachedResult = ref() as Ref<T>;
 	watchEffect(() => {
 		cachedResult.value = getter();

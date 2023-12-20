@@ -11,6 +11,7 @@ import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
 import { kStrongEaseOut } from '../../../../_styles/variables';
 import { showCommentModal } from '../../../components/comment/modal/modal.service';
 import { useProfileRouteStore } from '../RouteProfile.vue';
+import { showProfileCommunitiesModal } from '../communities/modal.service';
 import AppProfileDogtags from '../dogtags/AppProfileDogtags.vue';
 import AppProfileActionButtons from './AppProfileActionButtons.vue';
 import AppProfileShortcut from './shortcut/AppProfileShortcut.vue';
@@ -127,10 +128,10 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 		items.push({
 			label: $gettext(`Communities`),
 			icon: 'communities',
-			// TODO(profile-scrunch) modal
-			location: {
-				name: 'library.collection.developer',
-				params: { id: routeUser.value.username },
+			action() {
+				showProfileCommunitiesModal({
+					user: routeUser.value!,
+				});
 			},
 		});
 	}
@@ -245,7 +246,6 @@ const avatarExpandStyles = {
 				</template>
 			</AppProfileShortcuts>
 			<template v-else>
-				<!-- TODO(profile-scrunch) -->
 				<AppProfileActionButtons />
 			</template>
 

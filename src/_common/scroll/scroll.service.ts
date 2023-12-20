@@ -1,4 +1,4 @@
-import { DeepReadonly, InjectionKey, Ref, inject, onScopeDispose, ref, shallowReadonly } from 'vue';
+import { DeepReadonly, InjectionKey, Ref, inject, onUnmounted, ref, shallowReadonly } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { sleep } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';
@@ -52,6 +52,9 @@ class ScrollService {
 	autoscrollAnchor?: AppAutoscrollAnchor;
 	offsetTop = 0;
 
+	// TODO(profile-scrunch) Move this into lets and consts outside of the
+	// ScrollService. We should only need to reach into this to call
+	// `getScrollTop`.
 	_subscriptionId = 0;
 	_subscriptions: PageScrollSubscription[] = [];
 	_isOnScrollBusy = false;
@@ -109,8 +112,7 @@ class ScrollService {
 			},
 		};
 
-		// TODO(profile-scrunch) Not sure if this or onUnmounted is preferred.
-		onScopeDispose(() => {
+		onUnmounted(() => {
 			subscription.dispose();
 		});
 
@@ -166,9 +168,7 @@ class ScrollService {
 		// Queue up an animation frame if any of our subscriptions are used for
 		// some animation.
 		//
-		// TODO(profile-scrunch) This seemed to perform better when animation
-		// background position on many items. Should probably test some more to
-		// see if it's actually an improvement.
+		// TODO(profile-scrunch) Remove animators, just do it all after sleeping.
 		if (animators.length) {
 			window.requestAnimationFrame(() => {
 				for (const subscription of animators) {
@@ -180,8 +180,6 @@ class ScrollService {
 			});
 		}
 
-		// TODO(profile-scrunch) Should probably unset this within the animation
-		// frame if we request one.
 		this._isOnScrollBusy = false;
 	}
 

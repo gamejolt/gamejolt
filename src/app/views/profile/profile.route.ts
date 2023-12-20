@@ -12,11 +12,15 @@ export const routeProfile: RouteRecordRaw = {
 	component: () => import('./RouteProfile.vue'),
 	children: [
 		routeProfileOverview,
+		// TODO(profile-scrunch) remove, redirect to overview
 		routeProfileLibrary,
 		routeProfilePostView,
 		routeProfileVideos,
+		// TODO(profile-scrunch) remove, make modal
 		routeProfileFollowers,
+		// TODO(profile-scrunch) remove, make modal
 		routeProfileFollowing,
+		// TODO(profile-scrunch) keep, make modal
 		routeProfileTrophies,
 	],
 };

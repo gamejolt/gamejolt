@@ -56,7 +56,6 @@ import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 import AppProfileActionButtons from './AppProfileActionButtons.vue';
-import AppProfileFloatingHeader from './AppProfileFloatingHeader.vue';
 import AppProfileInfoCard from './AppProfileInfoCard.vue';
 import AppRouteProfileOverviewBanned from './AppRouteProfileOverviewBanned.vue';
 import AppProfileShopButton from './shop/AppProfileShopButton.vue';
@@ -339,12 +338,6 @@ const socialLinks = computed(() => {
 	return items;
 });
 
-const showFloatingHeader = computed(
-	() =>
-		// TODO(profile-scrunch): Figure out if we want this
-		false ?? (Screen.isMobile && stickySides.value)
-);
-
 const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 </script>
 
@@ -376,10 +369,7 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 				>
 					<template #left>
 						<!-- Stats, Shortcuts, Bio -->
-						<AppProfileInfoCard
-							:fade-avatar="showFloatingHeader"
-							:show-avatar="showSidebarAvatar"
-						/>
+						<AppProfileInfoCard :show-avatar="showSidebarAvatar" />
 
 						<!-- Top supporters -->
 						<template v-if="supportersData && supportersData.supporters.length">
@@ -409,27 +399,13 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 
 						<AppSpacer vertical :scale="4" />
 
-						<!-- TODO(profile-scrunch) Either scroll affix the ad or
-						have the whole sidebar sticky. I'd prefer to have the
-						sidebars sticky.  -->
-						<!-- <AppScrollAffix
-							:style="{
-								position: `relative`,
-								zIndex: kLayerAds,
-							}"
-							:padding="8"
-						> -->
 						<div :style="{ display: `flex` }">
 							<AppAdWidget
 								:style="{
 									...styleChangeBg('bg'),
 									...styleElevate(3),
-									// TODO(profile-scrunch) Can't do a static width like this, sidebars are flexible.
-									// minWidth: `300px`,
-									flex: `auto`,
-									width: `300px`,
-									maxWidth: `100%`,
-
+									// Can't change this, needs to be at least 300px wide.
+									minWidth: `300px`,
 									paddingTop: `8px`,
 									paddingBottom: `8px`,
 									borderRadius: kBorderRadiusLg.px,
@@ -439,7 +415,6 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 								placement="side"
 							/>
 						</div>
-						<!-- </AppScrollAffix> -->
 
 						<AppSpacer vertical :scale="6" />
 
@@ -555,14 +530,6 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 								</div>
 							</AppExpand>
 						</template>
-
-						<!-- Floating header -->
-						<!-- TODO(profile-scrunch) Maybe keep? -->
-						<Transition>
-							<AppProfileFloatingHeader
-								v-if="Screen.isMobile && showFloatingHeader"
-							/>
-						</Transition>
 
 						<AppProfileShopButton v-if="hasSales" :user="routeUser" />
 

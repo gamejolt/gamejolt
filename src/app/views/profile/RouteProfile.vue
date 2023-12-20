@@ -2,7 +2,7 @@
 import { computed, CSSProperties, inject, InjectionKey, provide, Ref, ref, toRef } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
-import { cachedComputed } from '../../../_common/reactivity-helpers';
+import { watched } from '../../../_common/reactivity-helpers';
 import { Registry } from '../../../_common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -87,23 +87,7 @@ function createProfileRouteStore({
 	const _headerHeight = ref(0);
 	const { top: pageOffsetTop } = Scroll.getPageScrollSubscription();
 
-	// TODO(profile-scrunch) probably too slow
-	//
-	// const pageScrollPositionThroughHeader = computed(() => {
-	// 	if (!Screen.isMobile) {
-	// 		return 0;
-	// 	}
-	// 	if (_headerHeight.value <= 0) {
-	// 		return 0;
-	// 	}
-	// 	const limit = 2;
-	// 	if (pageOffsetTop.value >= _headerHeight.value * limit) {
-	// 		return limit;
-	// 	}
-	// 	return clampNumber(pageOffsetTop.value / _headerHeight.value, 0, limit);
-	// });
-
-	const stickySides = cachedComputed(() => {
+	const stickySides = watched(() => {
 		if (_headerHeight.value <= 0) {
 			return false;
 		}
@@ -254,7 +238,6 @@ function createProfileRouteStore({
 		isFriend,
 		isOnline,
 		pageOffsetTop,
-		// pageScrollPositionThroughHeader,
 		stickySides,
 		sendFriendRequest,
 		acceptFriendRequest,
@@ -436,7 +419,7 @@ const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
 										<!--
 											We only need to show this on mobile.
 										-->
-										<!-- TODO(profile-scrunch) make modal -->
+										<!-- TODO(profile-scrunch) remove -->
 										<li>
 											<RouterLink
 												:to="{ name: 'profile.library' }"

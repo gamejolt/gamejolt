@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, ref, toRefs, watch } from 'vue';
 import { styleWhen } from '../../_styles/mixins';
-import { cachedComputed } from '../reactivity-helpers';
+import { watched } from '../reactivity-helpers';
 import { Scroll, usePageScrollSubscription } from '../scroll/scroll.service';
 import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
@@ -31,7 +31,7 @@ watch(background, background => {
 	baseStyles.value = getBackgroundCSSProperties(background);
 });
 
-const translateY = cachedComputed(() => {
+const translateY = watched(() => {
 	if (pageScrollSubscription) {
 		return pageScrollSubscription.top.value / 5;
 	}

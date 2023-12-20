@@ -78,9 +78,6 @@ watch(
 
 		// We need to manually scroll to the top when disabling sticky sides,
 		// otherwise the scroller will be stuck wherever we left it.
-		//
-		// TODO(profile-scrunch) Either get smooth scroll working or do some
-		// custom transition so it's less jarring.
 		if (disableLeft) {
 			scrollerLeft.scrollTo(0);
 		}
