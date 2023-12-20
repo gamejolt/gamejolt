@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import { computed, ref } from 'vue';
 import { ViteMarkdownExport } from '../../../../../typings/markdown';
 import { buildPayloadErrorForStatusCode } from '../../../../_common/payload/payload-service';
@@ -8,27 +8,27 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 const paths = import.meta.glob<ViteMarkdownExport>('../../../../lib/doc-game-api/v1.x/**/*.md');
 
 export default {
-		...defineAppRouteOptions({
-			async resolver({ route }) {
-		console.log(route.params.path);
-		// First check the path as is, then check with "index".
-		let path = ((route.params.path || []) as string[]).join('/');
-		if (!path) {
-			path = 'index';
-		}
+	...defineAppRouteOptions({
+		async resolver({ route }) {
+			console.log(route.params.path);
+			// First check the path as is, then check with "index".
+			let path = ((route.params.path || []) as string[]).join('/');
+			if (!path) {
+				path = 'index';
+			}
 
-		console.log(paths);
+			console.log(paths);
 
-		if (paths[`../../../../lib/doc-game-api/v1.x/${path}.md`]) {
-			return (await paths[`../../../../lib/doc-game-api/v1.x/${path}.md`]()).html;
-		} else if (paths[`../../../../lib/doc-game-api/v1.x/${path}/index.md`]) {
-			return (await paths[`../../../../lib/doc-game-api/v1.x/${path}/index.md`]()).html;
-		}
+			if (paths[`../../../../lib/doc-game-api/v1.x/${path}.md`]) {
+				return (await paths[`../../../../lib/doc-game-api/v1.x/${path}.md`]()).html;
+			} else if (paths[`../../../../lib/doc-game-api/v1.x/${path}/index.md`]) {
+				return (await paths[`../../../../lib/doc-game-api/v1.x/${path}/index.md`]()).html;
+			}
 
-		return buildPayloadErrorForStatusCode(404);
-	},
-		}),
-	};
+			return buildPayloadErrorForStatusCode(404);
+		},
+	}),
+};
 </script>
 
 <script lang="ts" setup>
