@@ -2,7 +2,7 @@
 import { CSSProperties, PropType, ref, toRefs, watch } from 'vue';
 import { styleWhen } from '../../_styles/mixins';
 import { watched } from '../reactivity-helpers';
-import { Scroll, usePageScrollSubscription } from '../scroll/scroll.service';
+import { pageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
 import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
 const props = defineProps({
@@ -22,7 +22,7 @@ const baseStyles = ref(getBackgroundCSSProperties(background.value));
 const pageScrollSubscription = usePageScrollSubscription();
 
 const linearToEaseOut = `cubic-bezier(0.35, 0.91, 0.33, 0.97)`;
-const positionTransitionTime = Scroll.onScrollTimeout + 50;
+const positionTransitionTime = pageScrollSubscriptionTimeout + 50;
 const transitionStyles = {
 	transition: `background-position ${positionTransitionTime}ms ${linearToEaseOut}`,
 } satisfies CSSProperties;
