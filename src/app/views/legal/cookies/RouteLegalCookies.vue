@@ -3,7 +3,6 @@ import { computed } from 'vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
 
-// TODO(component-setup-refactor-routes-4): html not available in this import?
 import { html } from '../../../../lib/terms/cookies/global.md';
 
 const template = html;
@@ -24,7 +23,6 @@ function playwireSetCookie(cname: string, cvalue: string, exdays: number) {
 function playwireOptOut() {
 	playwireSetCookie('_pubcid_optout', '1', 1825);
 
-	// TODO(component-setup-refactor-routes-4): do we need this TODO still?
 	// TODO: should probably show some confirmation, yeah?
 	// At this point they should be opted out.
 }

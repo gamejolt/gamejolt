@@ -55,7 +55,7 @@ export default {
 const { user } = useCommonStore();
 
 const chosenHandle = handles[getRandomInt(0, handles.length)];
-const slogan = toRef(() => slogans[getRandomInt(0, slogans.length)]);
+const chosenSlogan = slogans[getRandomInt(0, slogans.length)];
 const tweet = computed(
 	() =>
 		`Hey @${chosenHandle}! I think your games would be a good fit for Game Jolt #redlight #gamedev`
@@ -106,7 +106,7 @@ createAppRoute({
 
 				<div class="row anim-fade-in-up">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-						<p class="lead">{{ slogan }}</p>
+						<p class="lead">{{ chosenSlogan }}</p>
 					</div>
 				</div>
 
@@ -163,7 +163,6 @@ createAppRoute({
 								<b>
 									Create a Game Jolt account yourself directly. No need for an
 									account manager.
-									<br />
 									<em>Finally!</em>
 								</b>
 							</p>
@@ -238,7 +237,7 @@ createAppRoute({
 							</p>
 							<p>
 								<AppJolticon icon="checkbox" />
-								Wipe away the tears and include Redlight every time you tweet
+								Wipe away the tears and include Redlight every time you tweet,
 								whether your tweet is related or not.
 							</p>
 							<p>

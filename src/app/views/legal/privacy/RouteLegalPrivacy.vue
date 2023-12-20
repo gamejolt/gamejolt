@@ -3,7 +3,6 @@ import { computed } from 'vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
 
-// TODO(component-setup-refactor-routes-4): html not available in this import?
 import { html } from '../../../../lib/terms/privacy/global.md';
 
 const template = html;
@@ -51,7 +50,7 @@ createAppRoute({
 			This simple ID that can be utilized to improve user matching, especially for delivering
 			ads to iOS and MacOS browsers. Users can opt out of the Common ID tracking cookie by
 			clicking
-			<a href="#opt-out" @click="playwireOptOut" />
+			<a href="#opt-out" @click="playwireOptOut">here</a>
 			.
 		</p>
 

@@ -4,8 +4,6 @@ import { Api } from '../../../../_common/api/api.service';
 import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import { GameModel } from '../../../../_common/game/game.model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
@@ -27,9 +25,6 @@ export default {
 <script lang="ts" setup>
 const { user } = useCommonStore();
 
-let firesidePosts: FiresidePostModel[] = [];
-let games: GameModel[] = [];
-
 createAppRoute({
 	routeTitle: computed(() => $gettext(`Sell Your Games`)),
 	onResolved({ payload }) {
@@ -37,9 +32,6 @@ createAppRoute({
 		Meta.fb = payload.fb;
 		Meta.twitter = payload.twitter;
 		Meta.fb.image = Meta.twitter.image = socialImage;
-		// TODO(component-setup-refactor-routes-4): Seems like not being used elsewhere, can be removed?
-		firesidePosts = FiresidePostModel.populate(payload.firesidePosts);
-		games = GameModel.populate(payload.games);
 	},
 });
 </script>
