@@ -61,7 +61,7 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 	<div id="games" class="game-listing">
 		<section class="section section-thin">
 			<template v-if="showAds && globalShouldShowAds">
-				<AppAdWidget size="leaderboard" placement="content" />
+				<AppAdWidget size="leaderboard" placement="top" />
 				<AppSpacer vertical :scale="6" />
 			</template>
 
