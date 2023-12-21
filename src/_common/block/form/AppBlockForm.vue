@@ -38,9 +38,11 @@ const form: FormController<BlockFormModel> = createForm({
 	<AppForm :controller="form">
 		<div>
 			<p>
-				<span v-translate="{ username: user.username }">
-					Are you sure you want to block
-					<b>@%{ username }</b>?
+				<span>
+					{{ $gettext(`Are you sure you want to block`) }}
+					{{ ' ' }}
+					<b>@{{ user.username }}</b>
+					?
 				</span>
 			</p>
 
