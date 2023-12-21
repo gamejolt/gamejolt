@@ -27,7 +27,6 @@ export const routeProfile: RouteRecordRaw = {
 				name: 'profile.overview',
 			},
 		},
-		// TODO(profile-scrunch) keep, make modal
 		routeProfileTrophies,
 	],
 };

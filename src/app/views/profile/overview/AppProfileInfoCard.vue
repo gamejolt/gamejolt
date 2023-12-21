@@ -116,7 +116,6 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 		items.push({
 			label: $gettext(`Games`),
 			icon: 'gamepad',
-			// TODO(profile-scrunch) modal
 			location: {
 				name: 'library.collection.developer',
 				params: { id: routeUser.value.username },
@@ -128,7 +127,6 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 		items.push({
 			label: $gettext(`Trophies`),
 			icon: 'trophy',
-			// TODO(profile-scrunch) modal
 			location: { name: 'profile.trophies' },
 		});
 	}
