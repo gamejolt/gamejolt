@@ -13,8 +13,8 @@ import { showCommentModal } from '../../../components/comment/modal/modal.servic
 import { useProfileRouteStore } from '../RouteProfile.vue';
 import { showProfileCommunitiesModal } from '../communities/modal.service';
 import AppProfileDogtags from '../dogtags/AppProfileDogtags.vue';
-import { showProfileFollowersModal } from '../followers/modal/modal.service';
-import { showProfileFollowingModal } from '../following/modal/modal.service';
+import { showProfileFollowersModal } from '../followers/modal.service';
+import { showProfileFollowingModal } from '../following/modal.service';
 import AppProfileActionButtons from './AppProfileActionButtons.vue';
 import AppProfileShortcut from './shortcut/AppProfileShortcut.vue';
 import AppProfileShortcutExtras from './shortcut/AppProfileShortcutExtras.vue';

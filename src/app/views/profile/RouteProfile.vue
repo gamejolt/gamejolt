@@ -85,10 +85,7 @@ function createProfileRouteStore({
 	});
 
 	const _headerHeight = ref(0);
-	// TODO(profile-scrunch) move this and stickySides into overview, not needed
-	// for any other sub-routes.
 	const { top: pageOffsetTop } = getPageScrollSubscription();
-
 	const stickySides = watched(() => {
 		if (_headerHeight.value <= 0) {
 			return false;
@@ -365,12 +362,6 @@ const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
 						should-affix-nav
 						:autoscroll-anchor-key="autoscrollAnchorKey"
 					>
-						<!-- TODO(profile-scrunch) Might want to put
-						a "back" button somewhere on the profile
-						screen, just in case there are some nested
-						routes that aren't being turned into modals.
-						-->
-
 						<template v-if="!Screen.isMobile" #default>
 							<RouterLink
 								:to="{

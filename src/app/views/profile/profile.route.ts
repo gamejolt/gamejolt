@@ -1,6 +1,4 @@
 import { RouteRecordRaw } from 'vue-router';
-import { routeProfileFollowers } from './followers/followers.route';
-import { routeProfileFollowing } from './following/following.route';
 import { routeProfileLibrary } from './library/library.route';
 import { routeProfileOverview } from './overview/overview.route';
 import { routeProfilePostView } from './post/view.route';
@@ -15,10 +13,20 @@ export const routeProfile: RouteRecordRaw = {
 		routeProfileLibrary,
 		routeProfilePostView,
 		routeProfileVideos,
-		// TODO(profile-scrunch) remove, make modal
-		routeProfileFollowers,
-		// TODO(profile-scrunch) remove, make modal
-		routeProfileFollowing,
+		{
+			name: 'profile.followers',
+			path: 'followers',
+			redirect: {
+				name: 'profile.overview',
+			},
+		},
+		{
+			name: 'profile.following',
+			path: 'following',
+			redirect: {
+				name: 'profile.overview',
+			},
+		},
 		// TODO(profile-scrunch) keep, make modal
 		routeProfileTrophies,
 	],
