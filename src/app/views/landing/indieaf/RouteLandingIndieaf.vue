@@ -1,63 +1,52 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
-import { AppAuthJoinLazy } from '../../../../_common/lazy';
+import { computed, ref } from 'vue';
+import { RouterLink } from 'vue-router';
+import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { vAppScrollTo } from '../../../../_common/scroll/to/to.directive';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import socialImage from './social.png';
 
-@Options({
-	name: 'RouteLandingIndieaf',
-	components: {
-		AppSocialTwitterShare,
-		AppSocialFacebookLike,
-		AppAuthJoin: AppAuthJoinLazy,
-	},
-	directives: {
-		AppScrollTo: vAppScrollTo,
-	},
-})
-@OptionsForLegacyRoute()
-export default class RouteLandingIndieaf extends LegacyRouteComponent {
-	commonStore = setup(() => useCommonStore());
+const assetPaths = import.meta.glob('./*.(svg|jpg|png)', { eager: true, as: 'url' });
 
-	get user() {
-		return this.commonStore.user;
-	}
+export default {
+	...defineAppRouteOptions({}),
+};
+</script>
 
-	state: 'bogus' | 'indie' = 'bogus';
+<script lang="ts" setup>
+const { user } = useCommonStore();
 
-	readonly assetPaths = import.meta.glob('./*.(svg|jpg|png)', { eager: true, as: 'url' });
+const state = ref<'bogus' | 'indie'>('bogus');
 
-	get routeTitle() {
-		return `Get Indie.AF // Freakin' legit customizable game sites`;
-	}
+const routeTitle = computed(() =>
+	$gettext(`Get Indie.AF // Freakin' legit customizable game sites`)
+);
 
-	routeCreated() {
+createAppRoute({
+	routeTitle,
+	onInit() {
 		Meta.description = `Build your own customizable site with an indie.af domain through Game Jolt Sites!`;
 
 		Meta.fb = {
 			type: 'website',
-			title: this.routeTitle,
+			title: routeTitle,
 			description: Meta.description,
 		};
 
 		Meta.twitter = {
 			card: 'summary_large_image',
-			title: this.routeTitle,
+			title: routeTitle,
 			description: Meta.description,
 		};
 
 		Meta.fb.image = Meta.twitter.image = socialImage;
-	}
-}
+	},
+});
 </script>
 
 <template>
@@ -90,6 +79,7 @@ export default class RouteLandingIndieaf extends LegacyRouteComponent {
 						<p class="text-center">
 							Build your own customizable portfolio and game sites with an indie.af
 							domain name through
+							{{ ' ' }}
 							<a
 								href="http://fireside.gamejolt.com/post/custom-game-sites-portfolios-fgjzjsa8"
 								target="_blank"
@@ -213,7 +203,7 @@ export default class RouteLandingIndieaf extends LegacyRouteComponent {
 							<div class="indieaf-vs-col right">INDIE AF!!!</div>
 						</div>
 
-						<h2 class="text-center">What people are saying</h2>
+						<h2 class="text-center">{{ $gettext(`What people are saying`) }}</h2>
 						<hr class="underbar underbar-center" />
 						<br />
 
@@ -260,9 +250,9 @@ export default class RouteLandingIndieaf extends LegacyRouteComponent {
 
 						<p>
 							Create a portfolio site in your
-							<router-link :to="{ name: 'dash.account.site' }">
+							<RouterLink :to="{ name: 'dash.account.site' }">
 								Edit Account
-							</router-link>
+							</RouterLink>
 							section. To create custom game sites, click on the
 							<strong>Sites</strong>
 							tab when managing your game.

@@ -18,7 +18,7 @@ const routeForumsChannelsRedirects: RouteRecordRaw[] = [
 
 export const routeForums: RouteRecordRaw = {
 	path: '/forums',
-	component: () => import('./forums'),
+	component: () => import('./RouteForums.vue'),
 	children: [
 		routeForumsLanding,
 		routeForumsChannelsView,

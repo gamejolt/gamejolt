@@ -1,8 +1,10 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
+import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../_common/api/api.service';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { formatNumber } from '../../../../../_common/filters/number';
@@ -10,26 +12,23 @@ import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.
 import { ForumPostModel } from '../../../../../_common/forum/post/post.model';
 import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppMessageThreadPagination from '../../../../../_common/message-thread/pagination/AppMessageThreadPagination.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../../_common/popper/popper.service';
 import { showReportModal } from '../../../../../_common/report/modal/modal.service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../_common/scroll/AppScrollAffix.vue';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { vAppScrollTo } from '../../../../../_common/scroll/to/to.directive';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { enforceLocation } from '../../../../../utils/router';
-import FormForumPost from '../../../../components/forms/forum/post/post.vue';
 import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
 import AppForumPostList from '../../../../components/forum/post-list/post-list.vue';
@@ -38,129 +37,92 @@ import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue'
 import AppPageHeaderAvatar from '../../../../components/page-header/AppPageHeaderAvatar.vue';
 import AppPageHeaderControls from '../../../../components/page-header/controls/controls.vue';
 
-@Options({
-	name: 'RouteForumsTopicsView',
-	components: {
-		AppPageHeader,
-		AppPageHeaderControls,
-		AppUserAvatar,
-		AppUserCardHover,
-		AppForumBreadcrumbs,
-		AppTimeAgo,
-		AppPopper,
-		AppFadeCollapse,
-		AppForumPostList,
-		AppScrollAffix,
-		AppMessageThreadPagination,
-		FormForumPost,
-		FormForumTopic,
-		AppContentViewer,
-		AppUserVerifiedTick,
-		AppForumRules,
-		AppPageHeaderAvatar,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-		AppScrollTo: vAppScrollTo,
-	},
-})
-@OptionsForLegacyRoute({
-	cache: true,
-	deps: { params: ['slug', 'id'], query: ['page'] },
-	async resolver({ route }) {
-		HistoryTick.sendBeacon('forum-topic', parseInt(route.params.id, 10));
+function validateString(str: string | string[]): string {
+	return Array.isArray(str) ? str[0] : str;
+}
 
-		const payload = await Api.sendRequest(
-			'/web/forums/topics/' + route.params.id + '?page=' + (route.query.page || 1)
-		);
+export default {
+	...defineAppRouteOptions({
+		cache: true,
+		deps: { params: ['slug', 'id'], query: ['page'] },
+		async resolver({ route }) {
+			HistoryTick.sendBeacon('forum-topic', parseInt(validateString(route.params.id), 10));
 
-		if (payload && payload.topic) {
-			const redirect = enforceLocation(route, { slug: payload.topic.slug });
-			if (redirect) {
-				return redirect;
+			const payload = await Api.sendRequest(
+				'/web/forums/topics/' + route.params.id + '?page=' + (route.query.page || 1)
+			);
+
+			if (payload && payload.topic) {
+				const redirect = enforceLocation(route, { slug: payload.topic.slug });
+				if (redirect) {
+					return redirect;
+				}
 			}
-		}
 
-		return payload;
-	},
-})
-export default class RouteForumsTopicsView extends LegacyRouteComponent {
-	commonStore = setup(() => useCommonStore());
+			return payload;
+		},
+	}),
+};
+</script>
 
-	get app() {
-		return this.commonStore;
-	}
+<script lang="ts" setup>
+const route = useRoute();
 
-	topic: ForumTopicModel = null as any;
-	channel: ForumChannelModel = null as any;
-	posts: ForumPostModel[] = [];
+const { user } = useCommonStore();
 
-	isEditingTopic = false;
-	canToggleDescription = false;
-	showFullDescription = false;
+const topic = ref<ForumTopicModel>(null as any);
+const channel = ref<ForumChannelModel>(null as any);
+const posts = ref<ForumPostModel[]>([]);
+const userPostCounts = ref<any>(null);
+const isEditingTopic = ref(false);
+const canToggleDescription = ref(false);
+const showFullDescription = ref(false);
+const currentPage = ref(1);
+const perPage = ref(0);
 
-	followerCount = 0;
-	currentPage = 1;
-	perPage = 0;
-	userPostCounts: any = null;
-	unfollowHover = false;
+const sort = computed(() => route.query.sort);
 
-	readonly Screen = Screen;
-	readonly Environment = Environment;
-	readonly formatNumber = formatNumber;
+function editTopic() {
+	isEditingTopic.value = true;
+	Popper.hideAll();
+}
 
-	get loginUrl() {
-		return (
-			Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(this.$route.fullPath)
-		);
-	}
+function closeEditTopic() {
+	isEditingTopic.value = false;
+}
 
-	get sort() {
-		return this.$route.query.sort;
-	}
+function pageChange() {
+	// We try to switch pages and give it time for the main post to cut off
+	// if it's too long. This is super hacky, it doesn't always work... I
+	// don't really know how to make this better. Maybe a scroll directive
+	// that gets loaded in once the content is loaded for main post? Would
+	// sure be a lot of work just to get the scrolling hook working better.
+	setTimeout(() => {
+		Scroll.to('forum-posts-list', { animate: true });
+	}, 200);
+}
 
-	get routeTitle() {
-		if (this.topic) {
-			return this.topic.title;
+function report() {
+	showReportModal(topic.value);
+}
+
+createAppRoute({
+	routeTitle: computed(() => {
+		if (topic.value) {
+			return topic.value.title;
 		}
 		return null;
-	}
+	}),
+	onResolved({ payload }) {
+		topic.value = new ForumTopicModel(payload.topic);
+		channel.value = new ForumChannelModel(payload.channel);
+		posts.value = ForumPostModel.populate(payload.posts);
 
-	routeResolved($payload: any) {
-		this.topic = new ForumTopicModel($payload.topic);
-		this.channel = new ForumChannelModel($payload.channel);
-		this.posts = ForumPostModel.populate($payload.posts);
-
-		this.perPage = $payload.perPage;
-		this.currentPage = $payload.page || 1;
-		this.followerCount = $payload.followerCount || 0;
-		this.userPostCounts = $payload.userPostCounts || {};
-	}
-
-	editTopic() {
-		this.isEditingTopic = true;
-		Popper.hideAll();
-	}
-
-	closeEditTopic() {
-		this.isEditingTopic = false;
-	}
-
-	pageChange() {
-		// We try to switch pages and give it time for the main post to cut off
-		// if it's too long. This is super hacky, it doesn't always work... I
-		// don't really know how to make this better. Maybe a scroll directive
-		// that gets loaded in once the content is loaded for main post? Would
-		// sure be a lot of work just to get the scrolling hook working better.
-		setTimeout(() => {
-			Scroll.to('forum-posts-list', { animate: true });
-		}, 200);
-	}
-
-	report() {
-		showReportModal(this.topic);
-	}
-}
+		perPage.value = payload.perPage;
+		currentPage.value = payload.page || 1;
+		userPostCounts.value = payload.userPostCounts || {};
+	},
+});
 </script>
 
 <template>
@@ -175,7 +137,7 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 					class="tag"
 				>
 					<AppJolticon icon="lock" />
-					<AppTranslate>Locked</AppTranslate>
+					{{ $gettext(`Locked`) }}
 				</span>
 			</div>
 
@@ -184,16 +146,16 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 			</h1>
 
 			<div>
-				<AppTranslate>by</AppTranslate>
+				{{ $gettext(`by`) }}
 				{{ ' ' }}
-				<router-link
+				<RouterLink
 					:to="{ name: 'profile.overview', params: { username: topic.user.username } }"
 				>
 					{{ topic.user.display_name }}
 					<AppUserVerifiedTick :user="topic.user" />
 					{{ ' ' }}
 					<small>@{{ topic.user.username }}</small>
-				</router-link>
+				</RouterLink>
 
 				<span v-if="!Screen.isXs" class="small">
 					<span class="dot-separator" />
@@ -209,9 +171,9 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 				<AppForumBreadcrumbs :channel="channel" :sort="sort" page="view-topic" />
 			</template>
 
-			<template v-if="app.user" #controls>
+			<template v-if="user" #controls>
 				<AppPageHeaderControls>
-					<template v-if="app.user" #end>
+					<template v-if="user" #end>
 						<AppPopper popover-class="fill-darkest">
 							<AppButton circle trans icon="ellipsis-v" />
 
@@ -219,10 +181,10 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 								<div class="list-group list-group-dark thin">
 									<a class="list-group-item has-icon" @click="report">
 										<AppJolticon icon="flag" notice />
-										<AppTranslate>Report Topic</AppTranslate>
+										{{ $gettext(`Report Topic`) }}
 									</a>
 									<a
-										v-if="app.user.permission_level > 0"
+										v-if="user.permission_level > 0"
 										class="list-group-item"
 										:href="
 											Environment.baseUrl +
@@ -230,10 +192,10 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 										"
 										target="_blank"
 									>
-										<AppTranslate>Remove Topic</AppTranslate>
+										{{ $gettext(`Remove Topic`) }}
 									</a>
 									<a
-										v-if="app.user.permission_level > 0"
+										v-if="user.permission_level > 0"
 										class="list-group-item"
 										:href="
 											Environment.baseUrl +
@@ -241,7 +203,7 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 										"
 										target="_blank"
 									>
-										<AppTranslate>Moderate User</AppTranslate>
+										{{ $gettext(`Moderate User`) }}
 									</a>
 								</div>
 							</template>
@@ -257,14 +219,14 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 
 				<div class="row">
 					<div class="col-sm-3 col-sm-push-9 col-md-offset-1 col-md-push-8">
-						<AppScrollAffix v-if="app.user" :disabled="!Screen.isDesktop">
+						<AppScrollAffix v-if="user" :disabled="!Screen.isDesktop">
 							<AppButton
-								v-if="topic.user_id === app.user.id && !topic.is_locked"
+								v-if="topic.user_id === user.id && !topic.is_locked"
 								block
 								:disabled="isEditingTopic"
 								@click="editTopic"
 							>
-								<AppTranslate>Edit</AppTranslate>
+								{{ $gettext(`Edit`) }}
 							</AppButton>
 						</AppScrollAffix>
 
@@ -313,7 +275,7 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 						</template>
 						<template v-else>
 							<h3 class="section-header">
-								<AppTranslate>Edit Topic</AppTranslate>
+								{{ $gettext(`Edit Topic`) }}
 							</h3>
 							<FormForumTopic
 								:model="topic"
@@ -325,14 +287,17 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 
 						<hr />
 
-						<p v-if="topic.replies_count > perPage" class="text-muted small">
+						<p
+							v-if="topic && topic.replies_count && topic.replies_count > perPage"
+							class="text-muted small"
+						>
 							Page {{ formatNumber(currentPage) }} of
 							{{ formatNumber(topic.replies_count) }} replies.
 						</p>
 
 						<AppMessageThreadPagination
 							:items-per-page="perPage"
-							:total-items="topic.replies_count"
+							:total-items="topic.replies_count || 0"
 							:current-page="currentPage"
 						/>
 
@@ -346,7 +311,7 @@ export default class RouteForumsTopicsView extends LegacyRouteComponent {
 
 						<AppMessageThreadPagination
 							:items-per-page="perPage"
-							:total-items="topic.replies_count"
+							:total-items="topic.replies_count || 0"
 							:current-page="currentPage"
 							@pagechange="pageChange"
 						/>
