@@ -47,6 +47,10 @@ const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
 
 export default {
 	...defineAppRouteOptions({
+		// Since this component is used for multiple routes, we need to always
+		// have to re-resolve since the params won't change, but the route name
+		// itself will.
+		deps: null,
 		// Not really able to make this lazy since it needs payload to build out the
 		// header.
 		cache: true,

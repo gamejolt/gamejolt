@@ -11,7 +11,9 @@ import { useClientLibraryStore } from '../../../store/client-library/index';
 import AppLibraryInstalledGame from './AppLibraryInstalledGame.vue';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		deps: {},
+	}),
 };
 </script>
 

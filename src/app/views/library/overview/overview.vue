@@ -23,7 +23,9 @@ import { useLibraryStore } from '../../../store/library';
 		AppGameCollectionList,
 	},
 })
-@OptionsForLegacyRoute()
+@OptionsForLegacyRoute({
+	deps: {},
+})
 export default class RouteLibraryOverview extends LegacyRouteComponent {
 	store = setup(() => useAppStore());
 	libraryStore = shallowSetup(() => useLibraryStore());
