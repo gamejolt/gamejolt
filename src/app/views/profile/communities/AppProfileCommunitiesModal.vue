@@ -14,7 +14,6 @@ import { useModal } from '../../../../_common/modal/modal.service';
 import AppSectionTitle from '../../../../_common/section/AppSectionTitle.vue';
 import { kThemeBgSubtle } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../../../../_common/user/user.model';
 import { styleChangeBg, styleLineClamp } from '../../../../_styles/mixins';
 import { kFontSizeSmall, kLineHeightBase } from '../../../../_styles/variables';
@@ -64,17 +63,9 @@ const nameMargin = 8;
 		</div>
 
 		<div class="modal-header">
-			<AppSectionTitle>
-				<template #avatar>
-					<AppUserAvatarBubble :user="user" />
-				</template>
-
+			<AppSectionTitle :slot-data="user" :avatar-height="48">
 				<template #title>
 					{{ $gettext('Communities') }}
-				</template>
-
-				<template #supertitle>
-					@{{ $gettext(`%{ username }'s`, { username: user.username }) }}
 				</template>
 			</AppSectionTitle>
 		</div>

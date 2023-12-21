@@ -1,8 +1,11 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
 import { styleMaxWidthForOptions, styleTextOverflow, styleWhen } from '../../_styles/mixins';
 import { kFontSizeLarge } from '../../_styles/variables';
+import { isInstance } from '../../utils/utils';
 import AppSpacer from '../spacer/AppSpacer.vue';
+import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
+import { UserModel } from '../user/user.model';
 
 const props = defineProps({
 	avatarHeight: {
@@ -16,6 +19,13 @@ const props = defineProps({
 	},
 	center: {
 		type: Boolean,
+	},
+	/**
+	 * Used to create default slots for avatar and supertitle.
+	 */
+	slotData: {
+		type: Object as PropType<UserModel>,
+		default: undefined,
 	},
 });
 
@@ -48,21 +58,35 @@ const maxWidth = computed(() =>
 				flexBasis: `100%`,
 			}"
 		>
-			<slot name="avatar" />
+			<slot name="avatar">
+				<template v-if="isInstance(slotData, UserModel)">
+					<AppUserAvatarBubble
+						:user="slotData"
+						disable-link
+						show-frame
+						show-verified
+						smoosh
+					/>
+				</template>
+			</slot>
 		</div>
 
 		<AppSpacer :scale="3" horizontal />
 
 		<div :style="{ minWidth: 0 }">
 			<div
-				v-if="$slots.supertitle"
+				v-if="$slots.supertitle || !!slotData"
 				:style="{
 					fontSize: `12px`,
 					fontWeight: `bold`,
 					...styleTextOverflow,
 				}"
 			>
-				<slot name="supertitle" />
+				<slot name="supertitle">
+					<template v-if="isInstance(slotData, UserModel)">
+						{{ '@' + $gettext(`%{ username }'s`, { username: slotData.username }) }}
+					</template>
+				</slot>
 			</div>
 			<div
 				v-if="$slots.title"

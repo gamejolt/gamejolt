@@ -13,6 +13,8 @@ import { showCommentModal } from '../../../components/comment/modal/modal.servic
 import { useProfileRouteStore } from '../RouteProfile.vue';
 import { showProfileCommunitiesModal } from '../communities/modal.service';
 import AppProfileDogtags from '../dogtags/AppProfileDogtags.vue';
+import { showProfileFollowersModal } from '../followers/modal/modal.service';
+import { showProfileFollowingModal } from '../following/modal/modal.service';
 import AppProfileActionButtons from './AppProfileActionButtons.vue';
 import AppProfileShortcut from './shortcut/AppProfileShortcut.vue';
 import AppProfileShortcutExtras from './shortcut/AppProfileShortcutExtras.vue';
@@ -46,29 +48,36 @@ const {
 	hasCommunitiesSection,
 } = useProfileRouteStore()!;
 
-const stats = computed<ProfileStat[]>(
-	() =>
-		[
-			{
-				label: $gettext('Following'),
-				value: formatNumber(routeUser.value?.following_count || 0),
-				location: {
-					name: 'profile.following',
-				},
-			},
-			{
-				label: $gettext('Followers'),
-				value: formatNumber(routeUser.value?.follower_count || 0),
-				location: {
-					name: 'profile.followers',
-				},
-			},
-			{
-				label: $gettext('Likes'),
-				value: formatNumber(routeUser.value?.like_count || 0),
-			},
-		] satisfies ProfileStat[]
-);
+const stats = computed<ProfileStat[]>(() => {
+	const user = routeUser.value;
+
+	return [
+		{
+			label: $gettext('Following'),
+			value: formatNumber(user?.following_count || 0),
+			action: user
+				? () => {
+						showProfileFollowingModal({ user });
+				  }
+				: undefined,
+			location: undefined,
+		},
+		{
+			label: $gettext('Followers'),
+			value: formatNumber(user?.follower_count || 0),
+			action: user
+				? () => {
+						showProfileFollowersModal({ user });
+				  }
+				: undefined,
+			location: undefined,
+		},
+		{
+			label: $gettext('Likes'),
+			value: formatNumber(user?.like_count || 0),
+		},
+	] satisfies ProfileStat[];
+});
 
 const quickLinks = computed<ProfileQuickLink[]>(() => {
 	const items: ProfileQuickLink[] = [];
@@ -170,6 +179,9 @@ const avatarExpandStyles = {
 					}),
 					...styleWhen(Screen.isMobile, {
 						height: 0,
+					}),
+					...styleWhen(!showAvatar, {
+						pointerEvents: `none`,
 					}),
 				}"
 			>
