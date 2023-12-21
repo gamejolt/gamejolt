@@ -350,6 +350,10 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 					<template #left>
 						<!-- Stats, Shortcuts, Bio -->
 						<AppProfileInfoCard
+							:style="{
+								position: `relative`,
+								zIndex: 2,
+							}"
 							:card-styles="{
 								...styleWhen(Screen.isMobile, {
 									borderTopLeftRadius: 0,
@@ -388,11 +392,21 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 
 						<AppSpacer vertical :scale="4" />
 
-						<div :style="{ display: `flex` }">
+						<div
+							:style="{
+								// TODO(profile-scrunch) check that this is okay on mobile.
+								// If not, just remove the whole parent and `flex: auto` on the child.
+								display: `flex`,
+								...styleWhen(Screen.isMobile, {
+									justifyContent: `center`,
+								}),
+							}"
+						>
 							<AppAdWidget
 								:style="{
 									...styleChangeBg('bg'),
 									...styleElevate(3),
+									flex: `auto`,
 									// Can't change this, needs to be at least 300px wide.
 									minWidth: `300px`,
 									paddingTop: `8px`,

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed } from 'vue';
+import { CSSProperties, PropType, computed, toRef } from 'vue';
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { kThemeFg10 } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -27,11 +28,6 @@ defineProps({
 	showAvatar: {
 		type: Boolean,
 	},
-	avatarSize: {
-		type: Number,
-		default: 100,
-		validator: val => typeof val === 'number' && val > 0,
-	},
 	fadeAvatar: {
 		type: Boolean,
 	},
@@ -51,6 +47,7 @@ const {
 	hasGamesSection,
 	shouldShowTrophies,
 	hasCommunitiesSection,
+	floatingAvatarSize,
 } = useProfileRouteStore()!;
 
 const stats = computed<ProfileStat[]>(() => {
@@ -160,119 +157,128 @@ const dividerStyles = {
 	height: `1px`,
 	backgroundColor: kThemeFg10,
 } satisfies CSSProperties;
+
+const floatingInfoSpacerExpandedHeight = toRef(() => floatingAvatarSize.value * 0.6 + 12);
 </script>
 
 <template>
 	<div v-if="routeUser">
-		<!-- Floating info (avatar, dogtags, names) -->
+		<!-- Floating info spacer -->
 		<div
 			:style="{
 				...avatarExpandStyles,
 				height: 0,
 				...styleWhen(Screen.isDesktop && showAvatar, {
-					height: `${avatarSize * 0.4}px`,
+					height: `${floatingAvatarSize.value * 0.4}px`,
 				}),
 			}"
-		>
-			<div
-				:style="{
-					minWidth: `100%`,
-					position: `relative`,
-					...styleWhen(Screen.isMobile, {
-						transition: `opacity 100ms linear, transform 100ms linear`,
-						transform: `translateY(${fadeAvatar ? -50 : 0}%)`,
-						opacity: fadeAvatar ? 0 : 1,
-					}),
-					...styleWhen(!showAvatar, {
-						pointerEvents: `none`,
-					}),
-				}"
-			>
-				<Transition>
-					<div
-						v-if="showAvatar"
-						class="anim-fade-in-down anim-fade-leave-up"
-						:style="{
-							...styleFlexCenter({ direction: `column` }),
-							position: `absolute`,
-							width: `100%`,
-							bottom: `${-avatarSize * 0.8}px`,
-						}"
-					>
-						<AppUserAvatarBubble
-							:style="{
-								width: `${avatarSize}px`,
-							}"
-							:user="routeUser"
-							show-frame
-							show-verified
-							verified-size="big"
-							:verified-offset="0"
-							disable-link
-							smoosh
-						/>
-						<div
-							:style="{
-								...styleFlexCenter({ direction: `column` }),
-								position: `relative`,
-								width: `100%`,
-								paddingTop: `8px`,
-							}"
-						>
-							<template v-if="Screen.isMobile">
-								<div
-									:style="{
-										fontSize: kFontSizeSmall.px,
-										fontWeight: `bold`,
-										marginTop: `24px`,
-										textAlign: `center`,
-									}"
-								>
-									@{{ routeUser.username }}
-								</div>
-								<div
-									v-app-tooltip.touchable="routeUser.display_name"
-									:style="{
-										fontSize: kFontSizeTiny.px,
-										textAlign: `center`,
-										...styleLineClamp(2),
-									}"
-								>
-									{{ routeUser.display_name }}
-								</div>
-							</template>
-
-							<AppProfileDogtags
-								:style="{
-									// Styled so that wrapped lines move the
-									// top of this component instead of the bottom.
-									position: `absolute`,
-									bottom: `100%`,
-									transform: `translateY(28px)`,
-									zIndex: 2,
-								}"
-								wrap="wrap-reverse"
-							/>
-						</div>
-					</div>
-				</Transition>
-			</div>
-		</div>
+		/>
 
 		<!-- Content/Card -->
 		<div class="sheet" :style="{ ...cardStyles }">
-			<!-- Floating info spacer -->
+			<div
+				v-if="!routeUser.header_media_item"
+				:style="{
+					height: `${floatingAvatarSize.value + 80 - floatingInfoSpacerExpandedHeight}px`,
+				}"
+			/>
+			<!-- Floating info (avatar, dogtags, names) -->
 			<div
 				:style="{
 					...avatarExpandStyles,
 					height: 0,
 					...styleWhen(showAvatar, {
-						height: Screen.isMobile
-							? `${avatarSize * 0.6 + 12}px`
-							: `${avatarSize * 0.6 - 12}px`,
+						height: Screen.isDesktop
+							? `${floatingAvatarSize.value * 0.6 - 12}px`
+							: `${floatingInfoSpacerExpandedHeight}px`,
 					}),
 				}"
-			/>
+			>
+				<div
+					:style="{
+						minWidth: `100%`,
+						height: `100%`,
+						position: `relative`,
+						...styleWhen(Screen.isMobile, {
+							transition: `opacity 100ms linear, transform 100ms linear`,
+							transform: `translateY(${fadeAvatar ? -50 : 0}%)`,
+							opacity: fadeAvatar ? 0 : 1,
+						}),
+						...styleWhen(!showAvatar, {
+							pointerEvents: `none`,
+						}),
+					}"
+				>
+					<Transition>
+						<div
+							v-if="showAvatar"
+							class="anim-fade-in-down anim-fade-leave-up"
+							:style="{
+								...styleFlexCenter({ direction: `column` }),
+								position: `absolute`,
+								width: `100%`,
+								bottom: 0,
+							}"
+						>
+							<AppUserAvatarBubble
+								:style="{
+									width: floatingAvatarSize.px,
+								}"
+								:user="routeUser"
+								show-frame
+								show-verified
+								verified-size="big"
+								:verified-offset="0"
+								disable-link
+								smoosh
+							/>
+							<div
+								:style="{
+									...styleFlexCenter({ direction: `column` }),
+									position: `relative`,
+									width: `100%`,
+									paddingTop: `8px`,
+								}"
+							>
+								<template v-if="Screen.isMobile">
+									<div
+										:style="{
+											fontSize: kFontSizeSmall.px,
+											fontWeight: `bold`,
+											marginTop: `24px`,
+											textAlign: `center`,
+										}"
+									>
+										@{{ routeUser.username }}
+									</div>
+									<div
+										v-app-tooltip.touchable="routeUser.display_name"
+										:style="{
+											fontSize: kFontSizeTiny.px,
+											textAlign: `center`,
+											...styleLineClamp(2),
+										}"
+									>
+										{{ routeUser.display_name }}
+									</div>
+								</template>
+
+								<AppProfileDogtags
+									:style="{
+										// Styled so that wrapped lines move the
+										// top of this component instead of the bottom.
+										position: `absolute`,
+										bottom: `100%`,
+										transform: `translateY(28px)`,
+										zIndex: 2,
+									}"
+									wrap="wrap-reverse"
+								/>
+							</div>
+						</div>
+					</Transition>
+				</div>
+			</div>
 
 			<!-- Stats -->
 			<AppProfileStats :items="stats">
@@ -281,7 +287,8 @@ const dividerStyles = {
 				</template>
 			</AppProfileStats>
 
-			<div :style="dividerStyles" />
+			<div v-if="Screen.isDesktop" :style="dividerStyles" />
+			<AppSpacer v-else vertical :scale="4" />
 
 			<!-- Shortcuts -->
 			<AppProfileShortcuts v-if="Screen.isDesktop" :items="quickLinks">
@@ -298,7 +305,7 @@ const dividerStyles = {
 			</template>
 
 			<!-- Bio divider -->
-			<div v-if="!isOverviewLoaded || routeUser.bio_content" :style="dividerStyles" />
+			<div v-if="!isOverviewLoaded || routeUser.hasBio" :style="dividerStyles" />
 
 			<!-- Bio -->
 			<template v-if="!isOverviewLoaded">

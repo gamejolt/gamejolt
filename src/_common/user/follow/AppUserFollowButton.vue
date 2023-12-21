@@ -4,6 +4,7 @@ import { UserFollowLocation } from '../../analytics/analytics.service';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
 import { formatNumber } from '../../filters/number';
+import { Jolticon } from '../../jolticon/AppJolticon.vue';
 import { useCommonStore } from '../../store/common-store';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppTranslate from '../../translate/AppTranslate.vue';
@@ -36,6 +37,10 @@ const props = defineProps({
 	},
 	forceHover: {
 		type: Boolean,
+	},
+	icon: {
+		type: String as PropType<Jolticon>,
+		default: undefined,
 	},
 });
 
@@ -107,6 +112,7 @@ async function onClick() {
 		:badge="badge"
 		:disabled="isDisabled"
 		:force-hover="forceHover"
+		:icon="icon"
 		@click.stop="onClick"
 	>
 		<template v-if="!user.is_following">

@@ -18,7 +18,8 @@ import {
 import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '../../../_common/user/trophy/user-base-trophy.model';
 import { UserModel } from '../../../_common/user/user.model';
-import { kFontFamilyBase } from '../../../_styles/variables';
+import { styleWhen } from '../../../_styles/mixins';
+import { buildCSSPixelValue, kFontFamilyBase } from '../../../_styles/variables';
 import { useResizeObserver } from '../../../utils/resize-observer';
 import { ChatClient, isUserOnline } from '../../components/chat/client';
 import { useGridStore } from '../../components/grid/grid-store';
@@ -238,6 +239,7 @@ function createProfileRouteStore({
 		isOnline,
 		pageOffsetTop,
 		stickySides,
+		floatingAvatarSize: buildCSSPixelValue(100),
 		sendFriendRequest,
 		acceptFriendRequest,
 		cancelFriendRequest,
@@ -290,7 +292,13 @@ const { setPageTheme: setThemeStorePageTheme, clearPageTheme } = useThemeStore()
 const routeStore = createProfileRouteStore({ myUser, header, chat });
 provide(ProfileRouteStoreKey, routeStore);
 
-const { user: routeUser, bootstrapUser, profilePayload, stickySides } = routeStore;
+const {
+	user: routeUser,
+	bootstrapUser,
+	profilePayload,
+	stickySides,
+	floatingAvatarSize,
+} = routeStore;
 
 const route = useRoute();
 
@@ -361,6 +369,12 @@ const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
 						:cover-max-height="coverMaxHeight"
 						should-affix-nav
 						:autoscroll-anchor-key="autoscrollAnchorKey"
+						:style="{
+							...styleWhen(Screen.isMobile && !routeUser.header_media_item, {
+								height: 0,
+								minHeight: 0,
+							}),
+						}"
 					>
 						<template v-if="!Screen.isMobile" #default>
 							<RouterLink
