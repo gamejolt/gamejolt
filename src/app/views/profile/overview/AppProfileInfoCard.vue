@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import { CSSProperties, computed } from 'vue';
+import { CSSProperties, PropType, computed } from 'vue';
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { kThemeFg10 } from '../../../../_common/theme/variables';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
-import { kStrongEaseOut } from '../../../../_styles/variables';
+import { styleFlexCenter, styleLineClamp, styleWhen } from '../../../../_styles/mixins';
+import { kFontSizeSmall, kFontSizeTiny, kStrongEaseOut } from '../../../../_styles/variables';
 import { showCommentModal } from '../../../components/comment/modal/modal.service';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 import { showProfileCommunitiesModal } from '../communities/modal.service';
@@ -33,6 +34,10 @@ defineProps({
 	},
 	fadeAvatar: {
 		type: Boolean,
+	},
+	cardStyles: {
+		type: Object as PropType<CSSProperties>,
+		default: () => ({}),
 	},
 });
 
@@ -149,19 +154,23 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 const avatarExpandStyles = {
 	transition: `height 600ms ${kStrongEaseOut}`,
 } satisfies CSSProperties;
+
+const dividerStyles = {
+	margin: `20px -20px`,
+	height: `1px`,
+	backgroundColor: kThemeFg10,
+} satisfies CSSProperties;
 </script>
 
 <template>
 	<div v-if="routeUser">
-		<!-- TODO(profile-scrunch) clean this up -->
+		<!-- Floating info (avatar, dogtags, names) -->
 		<div
 			:style="{
 				...avatarExpandStyles,
-				height: showAvatar ? `${avatarSize * 0.4}px` : 0,
-				...styleWhen(Screen.isMobile, {
-					marginLeft: `-20px`,
-					marginRight: `-20px`,
-					maxHeight: 0,
+				height: 0,
+				...styleWhen(Screen.isDesktop && showAvatar, {
+					height: `${avatarSize * 0.4}px`,
 				}),
 			}"
 		>
@@ -169,14 +178,10 @@ const avatarExpandStyles = {
 				:style="{
 					minWidth: `100%`,
 					position: `relative`,
-					height: `${avatarSize * 0.4}px`,
 					...styleWhen(Screen.isMobile, {
 						transition: `opacity 100ms linear, transform 100ms linear`,
 						transform: `translateY(${fadeAvatar ? -50 : 0}%)`,
 						opacity: fadeAvatar ? 0 : 1,
-					}),
-					...styleWhen(Screen.isMobile, {
-						height: 0,
 					}),
 					...styleWhen(!showAvatar, {
 						pointerEvents: `none`,
@@ -191,10 +196,13 @@ const avatarExpandStyles = {
 							...styleFlexCenter({ direction: `column` }),
 							position: `absolute`,
 							width: `100%`,
-							bottom: `${-avatarSize * 0.4}px`,
+							bottom: `${-avatarSize * 0.8}px`,
 						}"
 					>
 						<AppUserAvatarBubble
+							:style="{
+								width: `${avatarSize}px`,
+							}"
 							:user="routeUser"
 							show-frame
 							show-verified
@@ -202,31 +210,67 @@ const avatarExpandStyles = {
 							:verified-offset="0"
 							disable-link
 							smoosh
-							:style="{
-								width: `${avatarSize}px`,
-							}"
 						/>
-						<AppProfileDogtags
+						<div
 							:style="{
-								// Styled so that wrapped lines move the
-								// top of this component instead of the bottom.
-								position: `absolute`,
-								bottom: `-28px`,
-								zIndex: 2,
+								...styleFlexCenter({ direction: `column` }),
+								position: `relative`,
+								width: `100%`,
+								paddingTop: `8px`,
 							}"
-							wrap="wrap-reverse"
-						/>
+						>
+							<template v-if="Screen.isMobile">
+								<div
+									:style="{
+										fontSize: kFontSizeSmall.px,
+										fontWeight: `bold`,
+										marginTop: `24px`,
+										textAlign: `center`,
+									}"
+								>
+									@{{ routeUser.username }}
+								</div>
+								<div
+									v-app-tooltip.touchable="routeUser.display_name"
+									:style="{
+										fontSize: kFontSizeTiny.px,
+										textAlign: `center`,
+										...styleLineClamp(2),
+									}"
+								>
+									{{ routeUser.display_name }}
+								</div>
+							</template>
+
+							<AppProfileDogtags
+								:style="{
+									// Styled so that wrapped lines move the
+									// top of this component instead of the bottom.
+									position: `absolute`,
+									bottom: `100%`,
+									transform: `translateY(28px)`,
+									zIndex: 2,
+								}"
+								wrap="wrap-reverse"
+							/>
+						</div>
 					</div>
 				</Transition>
 			</div>
 		</div>
 
-		<div class="sheet">
-			<!-- Avatar/Tags -->
+		<!-- Content/Card -->
+		<div class="sheet" :style="{ ...cardStyles }">
+			<!-- Floating info spacer -->
 			<div
 				:style="{
 					...avatarExpandStyles,
-					height: showAvatar ? `${avatarSize * 0.6 + 20}px` : 0,
+					height: 0,
+					...styleWhen(showAvatar, {
+						height: Screen.isMobile
+							? `${avatarSize * 0.6 + 12}px`
+							: `${avatarSize * 0.6 - 12}px`,
+					}),
 				}"
 			/>
 
@@ -237,13 +281,7 @@ const avatarExpandStyles = {
 				</template>
 			</AppProfileStats>
 
-			<div
-				:style="{
-					margin: `20px -20px`,
-					height: `1px`,
-					backgroundColor: kThemeFg10,
-				}"
-			/>
+			<div :style="dividerStyles" />
 
 			<!-- Shortcuts -->
 			<AppProfileShortcuts v-if="Screen.isDesktop" :items="quickLinks">
@@ -260,14 +298,7 @@ const avatarExpandStyles = {
 			</template>
 
 			<!-- Bio divider -->
-			<div
-				v-if="!isOverviewLoaded || routeUser.bio_content"
-				:style="{
-					margin: `20px -20px`,
-					height: `1px`,
-					backgroundColor: kThemeFg10,
-				}"
-			/>
+			<div v-if="!isOverviewLoaded || routeUser.bio_content" :style="dividerStyles" />
 
 			<!-- Bio -->
 			<template v-if="!isOverviewLoaded">

@@ -20,7 +20,7 @@ defineProps({
 		:is="item.location ? RouterLink : item.action ? 'a' : tag"
 		class="stat-big stat-big-smaller text-center"
 		:class="{
-			'link-unstyled': item.location,
+			'link-unstyled': item.location || item.action,
 		}"
 		:style="{
 			flex: 1,

@@ -79,26 +79,18 @@ export default {
 const {
 	isOverviewLoaded,
 	gamesCount,
-	// communitiesCount,
-	// placeholderCommunitiesCount,
 	userFriendship,
-	// previewTrophies,
-	// trophyCount,
 	user: routeUser,
 	myUser,
 	overviewPayload,
 	acceptFriendRequest,
 	rejectFriendRequest,
 	removeFriend,
-	// sendFriendRequest,
 	cancelFriendRequest,
 	stickySides,
-	// pageOffsetTop,
 	hasSales,
-	// pageScrollPositionThroughHeader,
 	isMe,
 	showFullDescription,
-	// canToggleDescription,
 	hasGamesSection,
 	isFriend,
 } = useProfileRouteStore()!;
@@ -111,16 +103,11 @@ const router = useRouter();
 const commentManager = useCommentStoreManager()!;
 
 const commentStore = ref<CommentStoreModel | null>(null);
-
-// const showAllCommunities = ref(false);
-// const isLoadingAllCommunities = ref(false);
 const games = ref<GameModel[]>([]);
 const communities = ref<CommunityModel[]>([]);
-// const allCommunities = ref<CommunityModel[] | null>(null);
 const supportersData = ref() as Ref<
 	{ supporters: TopSupporter[]; ownSupport: OwnSupport } | undefined
 >;
-// const overviewComments = ref<CommentModel[]>([]);
 const linkedAccounts = ref<LinkedAccountModel[]>([]);
 const knownFollowers = ref<UserModel[]>([]);
 const knownFollowerCount = ref(0);
@@ -176,13 +163,9 @@ createAppRoute({
 	routeTitle,
 	onInit() {
 		showFullDescription.value = false;
-		// showAllCommunities.value = false;
-		// isLoadingAllCommunities.value = false;
 		games.value = [];
 		communities.value = [];
-		// allCommunities.value = null;
 		linkedAccounts.value = [];
-		// overviewComments.value = [];
 		supportersData.value = undefined;
 		hasSales.value = false;
 	},
@@ -197,12 +180,9 @@ createAppRoute({
 		clearCommentStore();
 
 		showFullDescription.value = false;
-		// showAllCommunities.value = false;
-		// isLoadingAllCommunities.value = false;
 		games.value = GameModel.populate(payload.developerGamesTeaser);
 		communities.value = CommunityModel.populate(payload.communities);
 		linkedAccounts.value = LinkedAccountModel.populate(payload.linkedAccounts);
-		// overviewComments.value = storeModelList(CommentModel, payload.comments);
 		hasSales.value = payload.hasSales === true;
 
 		let supporters: TopSupporter[] = [];
@@ -369,13 +349,22 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 				>
 					<template #left>
 						<!-- Stats, Shortcuts, Bio -->
-						<AppProfileInfoCard :show-avatar="showSidebarAvatar" />
+						<AppProfileInfoCard
+							:card-styles="{
+								...styleWhen(Screen.isMobile, {
+									borderTopLeftRadius: 0,
+									borderTopRightRadius: 0,
+								}),
+							}"
+							:show-avatar="showSidebarAvatar"
+						/>
 
 						<!-- Top supporters -->
 						<template v-if="supportersData && supportersData.supporters.length">
 							<AppTopSupportersCard
 								:supporters="supportersData.supporters"
 								:own-support="supportersData.ownSupport"
+								inset-header
 							/>
 							<br />
 						</template>

@@ -1,8 +1,9 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { PropType, onMounted, ref, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
+import AppHoverCard from '../../../../_common/card/AppHoverCard.vue';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
@@ -10,14 +11,19 @@ import AppIllustration from '../../../../_common/illustration/AppIllustration.vu
 import { illExtremeSadnessSmall } from '../../../../_common/illustration/illustrations';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
+import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import AppSectionTitle from '../../../../_common/section/AppSectionTitle.vue';
 import { kThemeBgSubtle } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../_common/user/user.model';
-import { styleChangeBg, styleLineClamp } from '../../../../_styles/mixins';
+import { styleBorderRadiusLg, styleChangeBg, styleLineClamp } from '../../../../_styles/mixins';
 import { kFontSizeSmall, kLineHeightBase } from '../../../../_styles/variables';
 
+const innerCircleEdge = 30 * (Math.SQRT2 - 1);
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	user: {
 		type: Object as PropType<UserModel>,
@@ -28,7 +34,6 @@ const props = defineProps({
 const { user } = toRefs(props);
 
 const communities = ref<CommunityModel[]>([]);
-
 const isBootstrapped = ref(false);
 
 const modal = useModal()!;
@@ -38,9 +43,7 @@ onMounted(async () => {
 		const payload = await Api.sendRequest(
 			`/web/profile/communities/@${user.value.username}`,
 			undefined,
-			{
-				detach: true,
-			}
+			{ detach: true }
 		);
 		communities.value = CommunityModel.populate(payload.communities);
 	} catch (e) {
@@ -56,19 +59,21 @@ const nameMargin = 8;
 
 <template>
 	<AppModal>
-		<div class="modal-controls">
-			<AppButton @click="modal.dismiss()">
-				{{ $gettext(`Close`) }}
-			</AppButton>
-		</div>
+		<AppModalFloatingHeader>
+			<template #inline-title>
+				<AppSectionTitle :slot-data="user" :avatar-height="48">
+					<template #title>
+						{{ $gettext('Communities') }}
+					</template>
+				</AppSectionTitle>
+			</template>
 
-		<div class="modal-header">
-			<AppSectionTitle :slot-data="user" :avatar-height="48">
-				<template #title>
-					{{ $gettext('Communities') }}
-				</template>
-			</AppSectionTitle>
-		</div>
+			<template #modal-controls>
+				<AppButton @click="modal.dismiss()">
+					{{ $gettext(`Close`) }}
+				</AppButton>
+			</template>
+		</AppModalFloatingHeader>
 
 		<div class="modal-body">
 			<AppLoadingFade :is-loading="!isBootstrapped">
@@ -81,12 +86,20 @@ const nameMargin = 8;
 					v-else
 					:style="{
 						display: `grid`,
-						gridTemplateColumns: `repeat(auto-fill, minmax(80px, 1fr))`,
-						gridGap: `12px`,
+						gridTemplateColumns: `repeat(auto-fill, minmax(100px, 1fr))`,
+						gridGap: `8px`,
 					}"
 				>
 					<template v-if="!isBootstrapped">
-						<template v-for="i in 5" :key="i">
+						<div
+							v-for="i in 5"
+							:key="i"
+							:style="{
+								...styleChangeBg('bg-offset'),
+								...styleBorderRadiusLg,
+								padding: `12px`,
+							}"
+						>
 							<AppAspectRatio
 								:ratio="1"
 								:style="{
@@ -103,10 +116,22 @@ const nameMargin = 8;
 									height: `${nameFontSize.value * kLineHeightBase}px`,
 								}"
 							/>
-						</template>
+						</div>
 					</template>
 					<template v-else>
-						<div v-for="community in communities" :key="community.id">
+						<AppHoverCard
+							v-for="community in communities"
+							:key="community.id"
+							class="_pressy"
+							:style="{
+								...styleChangeBg('bg-offset'),
+								...styleBorderRadiusLg,
+							}"
+							disable-scale
+							:padding="12"
+							:to="community.routeLocation"
+							:title="community.name"
+						>
 							<div
 								:style="{
 									width: `100%`,
@@ -114,16 +139,14 @@ const nameMargin = 8;
 									marginBottom: `${nameMargin}px`,
 								}"
 							>
-								<AppCommunityThumbnailImg class="_pressy" :community="community" />
+								<AppCommunityThumbnailImg :community="community" />
 								<AppCommunityVerifiedTick
 									:style="{
 										...styleChangeBg('bg-offset'),
 										position: `absolute`,
-										// TODO(profile-scrunch) Looks weird with flexible sizes
-										// right: `-3px`,
-										// bottom: `-1px`,
-										right: `5%`,
-										bottom: `5%`,
+										right: `${innerCircleEdge}%`,
+										bottom: `${innerCircleEdge}%`,
+										transform: `translate(50%, 50%)`,
 										borderRadius: `50%`,
 									}"
 									:community="community"
@@ -140,7 +163,7 @@ const nameMargin = 8;
 							>
 								{{ community.name }}
 							</div>
-						</div>
+						</AppHoverCard>
 					</template>
 				</div>
 			</AppLoadingFade>
