@@ -4,12 +4,11 @@ import {
 	routeDiscoverGamesListSection,
 	routeDiscoverGamesListTag,
 } from './list/list.route';
-import RouteDiscoverGames from './RouteDiscoverGames.vue';
 import { routeDiscoverGamesView } from './view/view.route';
 
 export const routeDiscoverGames: RouteRecordRaw = {
 	path: '/games',
-	component: RouteDiscoverGames,
+	component: () => import('./RouteDiscoverGames.vue'),
 	children: [
 		routeDiscoverGamesListSection,
 		routeDiscoverGamesListTag,
