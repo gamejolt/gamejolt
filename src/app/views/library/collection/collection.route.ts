@@ -9,10 +9,6 @@ const routes: Array<[string, string]> = [
 	['bundle', '/library/bundle/:slug/:id(\\d+)/games'],
 ];
 
-// TODO(profile-scrunch) This route doesn't get properly rebuilt when going
-// between these mapped routes. You can replicate this by viewing your games,
-// opening the cbar, and viewing a different route. Seems like it still shows
-// the original route, even though the url changes.
 export const routeLibraryCollectionRoutes: RouteRecordRaw[] = routes.map(route => {
 	return {
 		name: `library.collection.${route[0]}`,
