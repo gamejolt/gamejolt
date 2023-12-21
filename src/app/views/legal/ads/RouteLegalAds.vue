@@ -17,6 +17,5 @@ createAppRoute({
 </script>
 
 <template>
-	<!--TODO(component-setup-refactor-routes-4): usage of v-html-->
 	<div v-html="html" />
 </template>
