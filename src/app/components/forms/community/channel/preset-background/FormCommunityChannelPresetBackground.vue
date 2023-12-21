@@ -10,6 +10,7 @@ import {
 } from '../../../../../../_common/community/community.model';
 import AppForm, {
 	createForm,
+	defineFormProps,
 	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
@@ -30,14 +31,11 @@ type FormModel = CommunityModel & {
 };
 
 const props = defineProps({
-	model: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
 	presetType: {
 		type: String as PropType<CommunityPresetChannelType>,
 		required: true,
 	},
+	...defineFormProps<CommunityModel>(true),
 });
 
 const { model, presetType } = toRefs(props);
@@ -141,12 +139,13 @@ async function clearBackground() {
 				{{ ' ' }}
 				{{ '(' + $gettext(`ratio of`) }}
 				{{ ' ' }}
-				<strong> {{ aspectRatio + ' ÷ 1)' }}</strong>
+				<strong> {{ aspectRatio + ' ÷ 1' }}</strong>
+				{{ ').' }}
 				<br />
 				{{ $gettext(`Your channel image must be smaller than`) }}
 				{{ ' ' }}
 				<code>{{ maxWidth + '×' + maxHeight }}</code>
-				.
+				{{ '.' }}
 			</p>
 
 			<AppFormControlUpload
@@ -191,5 +190,3 @@ async function clearBackground() {
 		</template>
 	</AppForm>
 </template>
-
-<style lang="stylus" scoped></style>

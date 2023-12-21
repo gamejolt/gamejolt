@@ -136,7 +136,7 @@ createAppRoute({});
 
 				<FormCommunityChannelEdit
 					:community="community"
-					:model="channel"
+					:model="channel!"
 					@submit="onSubmit"
 					@background-change="onBackgroundChange"
 				/>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRef, watch } from 'vue';
+import { ref, toRef, toRefs, watch } from 'vue';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import {
 	$clearCommunityChannelBackground,
@@ -9,6 +9,7 @@ import {
 import AppForm, {
 	FormController,
 	createForm,
+	defineFormProps,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -24,7 +25,14 @@ import { $gettext } from '../../../../../../_common/translate/translate.service'
 
 type FormModel = CommunityChannelModel & {
 	background_crop?: any;
+	crop?: any;
 };
+
+const props = defineProps({
+	...defineFormProps<CommunityChannelModel>(true),
+});
+
+const { model } = toRefs(props);
 
 const maxFilesize = ref(0);
 const aspectRatio = ref(0);
@@ -33,9 +41,13 @@ const minHeight = ref(0);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
 
-const crop = toRef(() => {
-	return form.formModel.background ? form.formModel.background.getCrop() : undefined;
-});
+const crop = toRef(() =>
+	form.formModel.background ? form.formModel.background.getCrop() : undefined
+);
+
+const loadUrl = toRef(
+	() => `/web/dash/communities/channels/save/${form.formModel.community_id}/${form.formModel.id}`
+);
 
 watch(crop, () => {
 	form.formModel.background_crop = crop.value;
@@ -44,6 +56,8 @@ watch(crop, () => {
 const form: FormController<FormModel> = createForm({
 	modelClass: CommunityChannelModel,
 	modelSaveHandler: $saveCommunityChannelBackground,
+	loadUrl,
+	onInit() {},
 	onLoad(payload: any) {
 		maxFilesize.value = payload.maxFilesize;
 		aspectRatio.value = payload.aspectRatio;
@@ -53,10 +67,7 @@ const form: FormController<FormModel> = createForm({
 		maxHeight.value = payload.maxHeight;
 	},
 	onBeforeSubmit() {
-		// Backend expects this field.
-		// TODO(component-setup-refactor-form-0): Is this okay? no field named 'crop' in FormModel,
-		// if backend expects this field, why not add it to FormModel?
-		(form.formModel as any).crop = form.formModel.background_crop;
+		form.formModel.crop = form.formModel.background_crop;
 	},
 });
 
@@ -77,7 +88,7 @@ async function clearBackground() {
 
 	const payload = await $clearCommunityChannelBackground(form.formModel);
 
-	form.formModel?.assign(payload.channel);
+	model.value?.assign(payload.channel);
 }
 </script>
 
@@ -108,19 +119,20 @@ async function clearBackground() {
 				}}</strong>
 			</p>
 
-			<!--TODO(component-setup-refactor-form-0): how to convert the content of v-translate-->
-			<p
-				v-translate="{
-					dimensions: maxWidth + '×' + maxHeight,
-					ratio: aspectRatio + ' ÷ 1',
-				}"
-				class="help-block"
-			>
-				The recommended size for a channel image is <code>760x200</code> (ratio of
-				<strong>%{ratio}</strong>).
+			<p class="help-block">
+				{{ $gettext(`The recommended size for a channel image is`) }}
+				{{ '' }}
+				<code>760x200</code>
+				{{ ' ' }}
+				{{ '(' + $gettext(`(ratio of`) }}
+				{{ ' ' }}
+				<strong>{{ aspectRatio + ' ÷ 1' }}</strong>
+				{{ ').' }}
 				<br />
-				Your channel image must be smaller than
-				<code>%{dimensions}</code>.
+				{{ $gettext(`Your channel image must be smaller than`) }}
+				{{ ' ' }}
+				<code>{{ maxWidth + '×' + maxHeight }}</code>
+				{{ '.' }}
 			</p>
 
 			<AppFormControlUpload

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref, toRef, toRefs } from 'vue';
+import { PropType, toRef, toRefs } from 'vue';
 import {
 	$saveCommunityChannel,
 	CommunityChannelModel,
@@ -8,6 +8,7 @@ import { CommunityModel } from '../../../../../../_common/community/community.mo
 import AppForm, {
 	FormController,
 	createForm,
+	defineFormProps,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
@@ -33,42 +34,32 @@ const props = defineProps({
 		type: Object as PropType<CommunityModel>,
 		required: true,
 	},
-	model: {
-		type: Object as PropType<CommunityChannelModel>,
-		required: true,
-	},
+	...defineFormProps<CommunityChannelModel>(true),
 });
 
 const emit = defineEmits({
-	// TODO(component-setup-refactor-form-0): background-change to backgroundChange
 	backgroundChange: (_model: CommunityChannelModel) => true,
 });
 
 const { community, model } = toRefs(props);
 
-// TODO(component-setup-refactor-form-0): Only being used in onLoad, are these needed?
-const maxFilesize = ref(0);
-const maxWidth = ref(0);
-const maxHeight = ref(0);
+const titleAvailabilityUrl = toRef(
+	() =>
+		`/web/dash/communities/channels/check-field-availability/${community.value.id}/${
+			model.value!.id
+		}`
+);
+const loadUrl = toRef(
+	() => `/web/dash/communities/channels/save/${community.value.id}/${form.formModel.id}`
+);
 
-const titleAvailabilityUrl = toRef(() => {
-	return `/web/dash/communities/channels/check-field-availability/${community.value.id}/${
-		model.value!.id
-	}`;
-});
-
-const shouldShowPermissions = toRef(() => {
-	return model.value && !model.value.is_archived;
-});
+const shouldShowPermissions = toRef(() => model.value && !model.value.is_archived);
 
 const form: FormController<FormModel> = createForm({
 	modelClass: FormModel,
+	loadUrl,
 	modelSaveHandler: $saveCommunityChannel,
 	onLoad(payload: any) {
-		maxFilesize.value = payload.maxFilesize;
-		maxWidth.value = payload.maxWidth;
-		maxHeight.value = payload.maxHeight;
-
 		form.formModel.permission_posting = payload.permission_posting ?? 'all';
 	},
 	onSubmitSuccess() {
