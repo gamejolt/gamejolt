@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onUnmounted, toRef } from 'vue';
+import { onUnmounted, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { $saveCommunity, CommunityModel } from '../../../../_common/community/community.model';
 import AppForm, {
@@ -35,13 +35,19 @@ const props = defineProps({
 	...defineFormProps<CommunityModel>(),
 });
 
+const emit = defineEmits({
+	submit: (_model: CommunityModel) => true,
+});
+
+const { model } = toRefs(props);
+
 const { joinCommunity } = useAppStore();
 const { grid } = useGridStore();
 const { userTheme, setFormTheme } = useThemeStore();
 const router = useRouter();
 
 const form: FormController<FormCommunityModel> = createForm({
-	model: toRef(props, 'model'),
+	model,
 	modelClass: CommunityModel,
 	modelSaveHandler: $saveCommunity,
 	onInit() {
@@ -49,6 +55,7 @@ const form: FormController<FormCommunityModel> = createForm({
 	},
 	onSubmitSuccess(response: any) {
 		if (form.method !== 'add') {
+			emit('submit', model!.value!);
 			return;
 		}
 
@@ -60,6 +67,7 @@ const form: FormController<FormCommunityModel> = createForm({
 		joinCommunity(community, { grid: grid.value });
 
 		router.push(community.routeEditLocation);
+		emit('submit', community);
 	},
 });
 
