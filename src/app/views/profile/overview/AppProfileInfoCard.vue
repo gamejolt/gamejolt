@@ -177,7 +177,7 @@ const floatingInfoSpacerExpandedHeight = toRef(() => floatingAvatarSize.value * 
 		<!-- Content/Card -->
 		<div class="sheet" :style="{ ...cardStyles }">
 			<div
-				v-if="!routeUser.header_media_item"
+				v-if="Screen.isMobile && !routeUser.header_media_item"
 				:style="{
 					height: `${floatingAvatarSize.value + 80 - floatingInfoSpacerExpandedHeight}px`,
 				}"
@@ -218,6 +218,9 @@ const floatingInfoSpacerExpandedHeight = toRef(() => floatingAvatarSize.value * 
 								position: `absolute`,
 								width: `100%`,
 								bottom: 0,
+								...styleWhen(Screen.isDesktop, {
+									bottom: `24px`,
+								}),
 							}"
 						>
 							<AppUserAvatarBubble
@@ -301,7 +304,7 @@ const floatingInfoSpacerExpandedHeight = toRef(() => floatingAvatarSize.value * 
 				</template>
 			</AppProfileShortcuts>
 			<template v-else>
-				<AppProfileActionButtons />
+				<AppProfileActionButtons collapse />
 			</template>
 
 			<!-- Bio divider -->
