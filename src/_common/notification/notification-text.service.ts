@@ -481,6 +481,16 @@ export class NotificationText {
 					);
 				}
 
+				if (action?.isShopPurchase) {
+					return _process(
+						$gettext(
+							`<em>%{ subject }</em> thanked you for your purchase.`,
+							this.getTranslationValues(notification),
+							{ enableHTMLEscaping: !plaintext }
+						)
+					);
+				}
+
 				return _process(
 					$gettext(
 						`<em>%{ subject }</em> thanked you for supporting them.`,

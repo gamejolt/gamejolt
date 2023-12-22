@@ -1,24 +1,40 @@
+import { AvatarFrameModel } from '../avatar/frame.model';
+import { BackgroundModel } from '../background/background.model';
 import { FiresideModel } from '../fireside/fireside.model';
 import { FiresidePostModel } from '../fireside/post/post-model';
+import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
+import { StickerPackModel } from '../sticker/pack/pack.model';
 import { UserModel } from '../user/user.model';
 import { SupporterMessageModel } from './message.model';
 
 const RESOURCE_FIRESIDE_POST = 'Fireside_Post';
 const RESOURCE_FIRESIDE = 'Fireside';
+const RESOURCE_STICKER_PACK = 'Sticker_Pack';
+const RESOURCE_AVATAR_FRAME = 'Avatar_Frame';
+const RESOURCE_BACKGROUND = 'Background';
 
-const TYPE_CHARGED_STICKER = 'charged-sticker-placement';
+export const TYPE_CHARGED_STICKER = 'charged-sticker-placement';
+export const TYPE_SHOP_PURCHASE = 'shop-purchase';
+
+export type SupporterActionType = typeof TYPE_CHARGED_STICKER | typeof TYPE_SHOP_PURCHASE;
 
 export class SupporterActionModel extends Model {
 	declare user: UserModel;
-	declare type: string;
+	declare type: SupporterActionType;
 	declare added_on: number;
 	declare message?: SupporterMessageModel;
 
-	declare resource_type: string;
+	declare resource_type:
+		| typeof RESOURCE_FIRESIDE_POST
+		| typeof RESOURCE_FIRESIDE
+		| typeof RESOURCE_STICKER_PACK
+		| typeof RESOURCE_AVATAR_FRAME
+		| typeof RESOURCE_BACKGROUND;
 
 	declare post?: FiresidePostModel;
 	declare fireside?: FiresideModel;
+	declare inventory_shop_product?: AvatarFrameModel | StickerPackModel | BackgroundModel;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -31,15 +47,25 @@ export class SupporterActionModel extends Model {
 			this.message = new SupporterMessageModel(data.message);
 		}
 
-		if (data.resource && this.resource_type === RESOURCE_FIRESIDE_POST) {
-			this.post = new FiresidePostModel(data.resource);
-		}
+		if (data.resource) {
+			if (data.type === TYPE_CHARGED_STICKER) {
+				if (this.resource_type === RESOURCE_FIRESIDE_POST) {
+					this.post = new FiresidePostModel(data.resource);
+				} else if (this.resource_type === RESOURCE_FIRESIDE) {
+					this.fireside = new FiresideModel(data.resource);
+				}
+			} else if (data.type === TYPE_SHOP_PURCHASE) {
+				if (this.resource_type === RESOURCE_STICKER_PACK) {
+					this.inventory_shop_product = storeModel(StickerPackModel, data.resource);
+				} else if (this.resource_type === RESOURCE_AVATAR_FRAME) {
+					this.inventory_shop_product = storeModel(AvatarFrameModel, data.resource);
+				} else if (this.resource_type === RESOURCE_BACKGROUND) {
+					this.inventory_shop_product = storeModel(BackgroundModel, data.resource);
+				}
+			}
 
-		if (data.resource && this.resource_type === RESOURCE_FIRESIDE) {
-			this.fireside = new FiresideModel(data.resource);
+			delete (this as any).resource;
 		}
-
-		delete (this as any).resource;
 	}
 
 	get isThanked() {
@@ -48,5 +74,9 @@ export class SupporterActionModel extends Model {
 
 	get isChargedSticker() {
 		return this.type === TYPE_CHARGED_STICKER;
+	}
+
+	get isShopPurchase() {
+		return this.type === TYPE_SHOP_PURCHASE;
 	}
 }
