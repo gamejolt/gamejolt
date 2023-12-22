@@ -1,8 +1,12 @@
 <script lang="ts" setup>
-import { onUnmounted } from 'vue';
+import { onUnmounted, toRef } from 'vue';
 import { useRouter } from 'vue-router';
 import { $saveCommunity, CommunityModel } from '../../../../_common/community/community.model';
-import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, {
+	FormController,
+	createForm,
+	defineFormProps,
+} from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -27,11 +31,17 @@ interface FormCommunityModel extends CommunityModel {
 	post_placeholder_text: string | null;
 }
 
+const props = defineProps({
+	...defineFormProps<CommunityModel>(),
+});
+
 const { joinCommunity } = useAppStore();
 const { grid } = useGridStore();
 const { userTheme, setFormTheme } = useThemeStore();
 const router = useRouter();
+
 const form: FormController<FormCommunityModel> = createForm({
+	model: toRef(props, 'model'),
 	modelClass: CommunityModel,
 	modelSaveHandler: $saveCommunity,
 	onInit() {

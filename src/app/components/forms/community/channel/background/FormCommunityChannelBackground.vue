@@ -54,6 +54,7 @@ watch(crop, () => {
 });
 
 const form: FormController<FormModel> = createForm({
+	model,
 	modelClass: CommunityChannelModel,
 	modelSaveHandler: $saveCommunityChannelBackground,
 	loadUrl,

@@ -7,6 +7,7 @@ import {
 import { CommunityCompetitionModel } from '../../../../../../_common/community/competition/competition.model';
 import AppForm, {
 	createForm,
+	defineFormProps,
 	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
@@ -24,9 +25,10 @@ const props = defineProps({
 		type: Object as PropType<CommunityCompetitionModel>,
 		required: true,
 	},
+	...defineFormProps<CommunityCompetitionAwardModel>(),
 });
 
-const { competition } = toRefs(props);
+const { competition, model } = toRefs(props);
 
 const nameAvailabilityUrl = computed(() => {
 	let endpoint =
@@ -41,6 +43,7 @@ const nameAvailabilityUrl = computed(() => {
 });
 
 const form: FormController<CommunityCompetitionAwardModel> = createForm({
+	model,
 	modelClass: CommunityCompetitionAwardModel,
 	modelSaveHandler: $saveCommunityCompetitionAward,
 	onBeforeSubmit() {

@@ -56,6 +56,7 @@ const loadUrl = toRef(
 const shouldShowPermissions = toRef(() => model.value && !model.value.is_archived);
 
 const form: FormController<FormModel> = createForm({
+	model,
 	modelClass: FormModel,
 	loadUrl,
 	modelSaveHandler: $saveCommunityChannel,

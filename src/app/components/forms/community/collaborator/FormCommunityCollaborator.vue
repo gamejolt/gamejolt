@@ -6,7 +6,11 @@ import {
 	CollaboratorRole,
 } from '../../../../../_common/collaborator/collaborator.model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppForm, { FormController, createForm } from '../../../../../_common/form-vue/AppForm.vue';
+import AppForm, {
+	FormController,
+	createForm,
+	defineFormProps,
+} from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlError from '../../../../../_common/form-vue/AppFormControlError.vue';
@@ -24,11 +28,13 @@ const props = defineProps({
 		type: Object as PropType<CommunityModel>,
 		required: true,
 	},
+	...defineFormProps<CollaboratorModel>(),
 });
 
-const { community } = toRefs(props);
+const { community, model } = toRefs(props);
 
 const form: FormController<CollaboratorModel> = createForm({
+	model,
 	modelClass: CollaboratorModel,
 	modelSaveHandler: $inviteCollaborator,
 	resetOnSubmit: true,

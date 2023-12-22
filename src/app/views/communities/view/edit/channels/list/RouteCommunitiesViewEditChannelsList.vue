@@ -145,7 +145,7 @@ createAppRoute({});
 				>
 					<FormCommunityChannelAdd
 						:community="community"
-						:channels="community.channels"
+						:channels="community.channels!"
 						:archived-channels="routeStore.archivedChannels"
 						@submit="onChannelAdded"
 					/>

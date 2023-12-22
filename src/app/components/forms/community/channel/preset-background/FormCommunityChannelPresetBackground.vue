@@ -56,6 +56,7 @@ watch(crop, () => {
 });
 
 const form: FormController<FormModel> = createForm({
+	model,
 	modelClass: CommunityModel,
 	loadUrl: computed(
 		() => `/web/dash/communities/channels/save-preset-background/${model.value.id}`
