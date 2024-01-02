@@ -9,7 +9,6 @@ defineProps({
 </script>
 
 <template>
-	<!--  -->
 	<div
 		class="_button-group"
 		:style="{

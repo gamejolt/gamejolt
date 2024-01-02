@@ -1,7 +1,22 @@
 <script lang="ts">
-import { computed, CSSProperties, inject, InjectionKey, provide, Ref, ref, toRef } from 'vue';
+import {
+	CSSProperties,
+	InjectionKey,
+	Ref,
+	computed,
+	inject,
+	provide,
+	ref,
+	shallowReadonly,
+	toRef,
+} from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
+import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
+import {
+	LinkedAccountModel,
+	LinkedAccountProvider,
+} from '../../../_common/linked-account/linked-account.model';
 import { watched } from '../../../_common/reactivity-helpers';
 import { Registry } from '../../../_common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
@@ -32,10 +47,14 @@ import AppProfileDogtags from './dogtags/AppProfileDogtags.vue';
 
 const ProfileRouteStoreKey: InjectionKey<ProfileRouteStore> = Symbol('profile-route');
 
-type ProfileRouteStore = ReturnType<typeof createProfileRouteStore>;
+export type ProfileRouteStore = ReturnType<typeof createProfileRouteStore>;
 
 export function useProfileRouteStore() {
 	return inject(ProfileRouteStoreKey);
+}
+
+export function provideProfileRouteStore(store: ProfileRouteStore) {
+	provide(ProfileRouteStoreKey, store);
 }
 
 function createProfileRouteStore({
@@ -47,13 +66,13 @@ function createProfileRouteStore({
 	chat: Ref<ChatClient | undefined>;
 	myUser: Ref<UserModel | null | undefined>;
 }) {
-	const isOverviewLoaded = ref(false);
+	// TODO(profile-scrunch) Look through these, make sure everything is used
 
 	// We will bootstrap this right away, so it should always be set for use.
 	const user = ref<UserModel>();
+	const isMe = toRef(() => !!myUser.value && !!user.value && myUser.value.id === user.value.id);
 
-	const isMe = toRef(() => myUser.value && user.value && myUser.value.id === user.value.id);
-
+	const isOverviewLoaded = ref(false);
 	const gamesCount = ref(0);
 	const communitiesCount = ref(0);
 	const placeholderCommunitiesCount = ref(0);
@@ -61,18 +80,10 @@ function createProfileRouteStore({
 	const userFriendship = ref<UserFriendshipModel>();
 	const previewTrophies = ref<UserBaseTrophyModel[]>([]);
 	const hasSales = ref(false);
-
 	const showFullDescription = ref(false);
 	const canToggleDescription = ref(false);
+	const linkedAccounts = ref<LinkedAccountModel[]>([]);
 
-	const hasGamesSection = toRef(() => !Screen.isMobile && gamesCount.value > 0);
-	const hasCommunitiesSection = toRef(() => !Screen.isMobile && communitiesCount.value > 0);
-	const shouldShowShouts = toRef(
-		() => user.value && !Screen.isMobile && user.value.shouts_enabled
-	);
-	const shouldShowTrophies = toRef(
-		() => !Screen.isMobile && !!previewTrophies.value && previewTrophies.value.length > 0
-	);
 	const isFriend = toRef(
 		() => userFriendship.value && userFriendship.value.state === UserFriendshipState.Friends
 	);
@@ -101,6 +112,46 @@ function createProfileRouteStore({
 		callback([entry]) {
 			_headerHeight.value = entry.contentRect.height;
 		},
+	});
+
+	function _getLinkedAccount(provider: LinkedAccountProvider) {
+		if (
+			user.value &&
+			linkedAccounts.value &&
+			linkedAccounts.value.some(i => i.provider === provider)
+		) {
+			const account = linkedAccounts.value.find(i => i.provider === provider);
+			if (account) {
+				return account;
+			}
+		}
+		return null;
+	}
+
+	const socialLinks = computed(() => {
+		const items: { label: string; icon: Jolticon; url: string }[] = [];
+		if (!user.value || Screen.isMobile) {
+			return items;
+		}
+
+		const twitchAccount = _getLinkedAccount(LinkedAccountProvider.Twitch);
+		if (twitchAccount) {
+			items.push({
+				label: twitchAccount.name,
+				icon: twitchAccount.icon,
+				url: twitchAccount.platformLink,
+			});
+		}
+
+		if (user.value.web_site) {
+			items.push({
+				label: $gettext(`Website`),
+				icon: 'link',
+				url: user.value.web_site,
+			});
+		}
+
+		return items;
 	});
 
 	function _updateUser(newUser?: UserModel) {
@@ -217,7 +268,7 @@ function createProfileRouteStore({
 		userFriendship.value = friendship;
 	}
 
-	return {
+	return shallowReadonly({
 		isOverviewLoaded,
 		user,
 		myUser,
@@ -231,14 +282,12 @@ function createProfileRouteStore({
 		hasSales,
 		showFullDescription,
 		canToggleDescription,
-		hasGamesSection,
-		hasCommunitiesSection,
-		shouldShowShouts,
-		shouldShowTrophies,
+		linkedAccounts,
 		isFriend,
 		isOnline,
 		pageOffsetTop,
 		stickySides,
+		socialLinks,
 		floatingAvatarSize: buildCSSPixelValue(100),
 		sendFriendRequest,
 		acceptFriendRequest,
@@ -248,7 +297,7 @@ function createProfileRouteStore({
 		bootstrapUser,
 		profilePayload,
 		overviewPayload,
-	};
+	});
 }
 
 const ProfileThemeKey = 'profile';
@@ -290,15 +339,9 @@ const { user: myUser } = useCommonStore();
 const { setPageTheme: setThemeStorePageTheme, clearPageTheme } = useThemeStore();
 
 const routeStore = createProfileRouteStore({ myUser, header, chat });
-provide(ProfileRouteStoreKey, routeStore);
+provideProfileRouteStore(routeStore);
 
-const {
-	user: routeUser,
-	bootstrapUser,
-	profilePayload,
-	stickySides,
-	floatingAvatarSize,
-} = routeStore;
+const { user: routeUser, bootstrapUser, profilePayload, stickySides } = routeStore;
 
 const route = useRoute();
 

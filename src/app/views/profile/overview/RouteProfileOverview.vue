@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Ref, computed, ref, toRef } from 'vue';
+import { Ref, ref, toRef } from 'vue';
 import { RouteLocationRaw, RouterView, useRoute, useRouter } from 'vue-router';
 import { isAdEnthused } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
@@ -18,12 +18,8 @@ import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
-import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import {
-	LinkedAccountModel,
-	LinkedAccountProvider,
-} from '../../../../_common/linked-account/linked-account.model';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { LinkedAccountModel } from '../../../../_common/linked-account/linked-account.model';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
@@ -54,6 +50,7 @@ import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
+import AppProfileSocialLinks from '../AppProfileSocialLinks.vue';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 import AppProfileActionButtons from './AppProfileActionButtons.vue';
 import AppProfileInfoCard from './AppProfileInfoCard.vue';
@@ -91,8 +88,8 @@ const {
 	hasSales,
 	isMe,
 	showFullDescription,
-	hasGamesSection,
 	isFriend,
+	linkedAccounts,
 } = useProfileRouteStore()!;
 
 const { grid } = useGridStore();
@@ -108,7 +105,6 @@ const communities = ref<CommunityModel[]>([]);
 const supportersData = ref() as Ref<
 	{ supporters: TopSupporter[]; ownSupport: OwnSupport } | undefined
 >;
-const linkedAccounts = ref<LinkedAccountModel[]>([]);
 const knownFollowers = ref<UserModel[]>([]);
 const knownFollowerCount = ref(0);
 
@@ -129,13 +125,6 @@ const shareUrl = toRef(() => {
 	return Environment.baseUrl + routeUser.value.url;
 });
 
-const hasLinksSection = toRef(
-	() =>
-		routeUser.value &&
-		((linkedAccounts.value && linkedAccounts.value.length > 0) || routeUser.value.web_site)
-);
-const twitchAccount = computed(() => getLinkedAccount(LinkedAccountProvider.Twitch));
-
 const shouldShowKnownFollowers = toRef(
 	() =>
 		!!myUser.value &&
@@ -144,20 +133,6 @@ const shouldShowKnownFollowers = toRef(
 		myUser.value.id !== routeUser.value.id
 );
 const userBlockedYou = toRef(() => routeUser.value && routeUser.value.blocked_you);
-
-function getLinkedAccount(provider: LinkedAccountProvider) {
-	if (
-		routeUser.value &&
-		linkedAccounts.value &&
-		linkedAccounts.value.some(i => i.provider === provider)
-	) {
-		const account = linkedAccounts.value.find(i => i.provider === provider);
-		if (account) {
-			return account;
-		}
-	}
-	return null;
-}
 
 createAppRoute({
 	routeTitle,
@@ -286,38 +261,6 @@ async function onFriendRequestReject() {
 	}
 }
 
-interface ProfileSocialLink {
-	label: string;
-	icon: Jolticon;
-	url: string;
-}
-
-const socialLinks = computed(() => {
-	const items: ProfileSocialLink[] = [];
-
-	if (!routeUser.value || !hasLinksSection.value) {
-		return items;
-	}
-
-	if (twitchAccount.value) {
-		items.push({
-			label: twitchAccount.value.name,
-			icon: twitchAccount.value.icon,
-			url: twitchAccount.value.platformLink,
-		});
-	}
-
-	if (routeUser.value.web_site) {
-		items.push({
-			label: $gettext(`Website`),
-			icon: 'link',
-			url: routeUser.value.web_site,
-		});
-	}
-
-	return items;
-});
-
 const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 </script>
 
@@ -370,21 +313,11 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 								:own-support="supportersData.ownSupport"
 								inset-header
 							/>
-							<br />
+							<br v-if="Screen.isDesktop" />
 						</template>
 
 						<!-- Social links -->
-						<template v-if="socialLinks.length">
-							<template v-for="link of socialLinks" :key="link.label">
-								<AppLinkExternal :href="link.url">
-									<AppButton :icon="link.icon" block>
-										{{ link.label }}
-									</AppButton>
-								</AppLinkExternal>
-
-								<AppSpacer vertical :scale="1" />
-							</template>
-						</template>
+						<AppProfileSocialLinks v-if="Screen.isDesktop" />
 					</template>
 
 					<template #right>
@@ -431,7 +364,7 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 						/>
 
 						<!-- Latest Games -->
-						<template v-if="hasGamesSection">
+						<template v-if="Screen.isDesktop && gamesCount > 0">
 							<AppSpacer vertical :scale="6" />
 
 							<div class="clearfix">

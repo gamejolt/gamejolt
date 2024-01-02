@@ -1,7 +1,5 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed, toRef } from 'vue';
-import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
-import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -18,7 +16,7 @@ import AppProfileDogtags from '../dogtags/AppProfileDogtags.vue';
 import { showProfileFollowersModal } from '../followers/modal.service';
 import { showProfileFollowingModal } from '../following/modal.service';
 import AppProfileActionButtons from './AppProfileActionButtons.vue';
-import AppProfileShortcut from './shortcut/AppProfileShortcut.vue';
+import AppProfileBio from './AppProfileBio.vue';
 import AppProfileShortcutExtras from './shortcut/AppProfileShortcutExtras.vue';
 import AppProfileShortcuts, { ProfileQuickLink } from './shortcut/AppProfileShortcuts.vue';
 import AppProfileStat from './stats/AppProfileStat.vue';
@@ -43,10 +41,9 @@ const {
 	canToggleDescription,
 	showFullDescription,
 	hasSales,
-	shouldShowShouts,
-	hasGamesSection,
-	shouldShowTrophies,
-	hasCommunitiesSection,
+	gamesCount,
+	previewTrophies,
+	communitiesCount,
 	floatingAvatarSize,
 } = useProfileRouteStore()!;
 
@@ -83,8 +80,7 @@ const stats = computed<ProfileStat[]>(() => {
 
 const quickLinks = computed<ProfileQuickLink[]>(() => {
 	const items: ProfileQuickLink[] = [];
-
-	if (!routeUser.value || Screen.isMobile) {
+	if (!routeUser.value) {
 		return items;
 	}
 
@@ -101,7 +97,7 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 		});
 	}
 
-	if (shouldShowShouts.value) {
+	if (routeUser.value.shouts_enabled) {
 		items.push({
 			label: $gettext(`Shouts`),
 			icon: 'comment-filled',
@@ -114,7 +110,7 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 		});
 	}
 
-	if (hasGamesSection.value) {
+	if (gamesCount.value > 0) {
 		items.push({
 			label: $gettext(`Games`),
 			icon: 'gamepad',
@@ -125,7 +121,7 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 		});
 	}
 
-	if (shouldShowTrophies.value) {
+	if (previewTrophies.value.length > 0) {
 		items.push({
 			label: $gettext(`Trophies`),
 			icon: 'trophy',
@@ -133,7 +129,7 @@ const quickLinks = computed<ProfileQuickLink[]>(() => {
 		});
 	}
 
-	if (hasCommunitiesSection.value) {
+	if (communitiesCount.value > 0) {
 		items.push({
 			label: $gettext(`Communities`),
 			icon: 'communities',
@@ -175,7 +171,18 @@ const floatingInfoSpacerExpandedHeight = toRef(() => floatingAvatarSize.value * 
 		/>
 
 		<!-- Content/Card -->
-		<div class="sheet" :style="{ ...cardStyles }">
+		<div
+			class="sheet"
+			:style="{
+				...cardStyles,
+				...styleWhen(Screen.isMobile, {
+					// Use the same background as the parent on mobile.
+					backgroundColor: `inherit`,
+					// Bleed the bottom padding since this no longer appears as a sheet.
+					paddingBottom: 0,
+				}),
+			}"
+		>
 			<div
 				v-if="Screen.isMobile && !routeUser.header_media_item"
 				:style="{
@@ -295,51 +302,22 @@ const floatingInfoSpacerExpandedHeight = toRef(() => floatingAvatarSize.value * 
 
 			<!-- Shortcuts -->
 			<AppProfileShortcuts v-if="Screen.isDesktop" :items="quickLinks">
-				<template #default="item">
-					<AppProfileShortcut :item="item" />
-				</template>
-
-				<template #extras>
-					<AppProfileShortcutExtras />
+				<template #default="{ itemWidth }">
+					<AppProfileShortcutExtras :width="itemWidth" />
 				</template>
 			</AppProfileShortcuts>
 			<template v-else>
-				<AppProfileActionButtons collapse />
+				<AppProfileActionButtons :quick-links="quickLinks" collapse />
 			</template>
 
-			<!-- Bio divider -->
-			<div v-if="!isOverviewLoaded || routeUser.hasBio" :style="dividerStyles" />
+			<template v-if="Screen.isDesktop">
+				<!-- Bio divider -->
+				<div v-if="!isOverviewLoaded || routeUser.hasBio" :style="dividerStyles" />
 
-			<!-- Bio -->
-			<template v-if="!isOverviewLoaded">
-				<div>
-					<span class="lazy-placeholder" />
-					<span class="lazy-placeholder" />
-					<span class="lazy-placeholder" />
-					<span class="lazy-placeholder" style="width: 40%" />
-				</div>
-				<br />
-			</template>
-			<template v-else-if="routeUser.hasBio">
-				<!--
-					Set a :key to let vue know that it should update
-					this when the user changes.
-				-->
-				<AppFadeCollapse
-					:key="routeUser.bio_content"
-					:collapse-height="200"
-					:is-open="showFullDescription"
-					:animate="false"
-					@require-change="canToggleDescription = $event"
-					@expand="showFullDescription = true"
-				>
-					<AppContentViewer :source="routeUser.bio_content" />
-				</AppFadeCollapse>
-
-				<a
-					v-if="canToggleDescription"
-					class="hidden-text-expander"
-					@click="showFullDescription = !showFullDescription"
+				<!-- Bio -->
+				<AppProfileBio
+					v-model:can-toggle-description="canToggleDescription"
+					v-model:show-full-description="showFullDescription"
 				/>
 			</template>
 		</div>

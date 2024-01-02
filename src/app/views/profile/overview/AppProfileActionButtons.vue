@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { toRef } from 'vue';
+import { PropType, toRef, toRefs } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppButtonGroup from '../../../../_common/button/AppButtonGroup.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -8,22 +8,30 @@ import { openChatRoom } from '../../../components/chat/client';
 import { useGridStore } from '../../../components/grid/grid-store';
 import { useAppStore } from '../../../store';
 import { useProfileRouteStore } from '../RouteProfile.vue';
+import { showProfileAboutModal } from '../about/modal.service';
+import { ProfileQuickLink } from './shortcut/AppProfileShortcuts.vue';
 
-const {
-	user: routeUser,
-	myUser,
-	isMe,
-	sendFriendRequest,
-	userFriendship,
-	isFriend,
-} = useProfileRouteStore()!;
+const props = defineProps({
+	collapse: {
+		type: Boolean,
+	},
+	quickLinks: {
+		type: Array as PropType<ProfileQuickLink[]>,
+		default: undefined,
+	},
+});
+
+const { quickLinks } = toRefs(props);
+
+const routeStore = useProfileRouteStore()!;
+const { user: routeUser, myUser, isMe, sendFriendRequest, userFriendship, isFriend } = routeStore;
 
 const { chat } = useGridStore();
 const { toggleLeftPane } = useAppStore();
 
 const shouldShowFollow = toRef(
 	() =>
-		routeUser.value &&
+		!!routeUser.value &&
 		!routeUser.value.is_blocked &&
 		!routeUser.value.blocked_you &&
 		!isMe.value
@@ -54,10 +62,8 @@ function openMessaging() {
 	}
 }
 
-const collapse = toRef(() => Screen.isMobile);
-
-function showProfileAboutModal(_: { user: UserModel }) {
-	// TODO(profile-scrunch) "about" modal like app
+function showAboutModal() {
+	showProfileAboutModal({ routeStore, quickLinks: quickLinks?.value || [] });
 }
 </script>
 
@@ -84,13 +90,13 @@ function showProfileAboutModal(_: { user: UserModel }) {
 			</AppButton>
 
 			<template v-if="collapse">
-				<AppButton block @click="showProfileAboutModal({ user: routeUser })">
+				<AppButton block @click="showAboutModal()">
 					{{ $gettext(`About`) }}
 				</AppButton>
 			</template>
 		</AppButtonGroup>
 
-		<template v-if="Screen.isDesktop">
+		<template v-if="!collapse">
 			<AppButton v-if="canAddAsFriend" block @click="sendFriendRequest()">
 				{{ $gettext(`Send friend request`) }}
 			</AppButton>

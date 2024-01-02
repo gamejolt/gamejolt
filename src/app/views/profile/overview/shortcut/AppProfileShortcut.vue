@@ -11,6 +11,10 @@ defineProps({
 		type: Object as PropType<ProfileQuickLink>,
 		required: true,
 	},
+	width: {
+		type: Number,
+		required: true,
+	},
 	tag: {
 		type: String,
 		default: 'div',
@@ -22,13 +26,15 @@ defineProps({
 	<component
 		:is="item.location ? RouterLink : item.action ? 'a' : tag"
 		:key="item.label"
+		class="pressy"
 		:style="{
 			display: `flex`,
 			flexDirection: `column`,
 			alignItems: `center`,
-			flex: 1,
 			gap: `4px`,
 			color: kThemeFg,
+			width: `${width}px`,
+			flex: `none`,
 		}"
 		:to="item.location"
 		@click="item.action?.()"

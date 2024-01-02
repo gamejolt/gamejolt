@@ -1,12 +1,17 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { PropType, computed, toRefs } from 'vue';
 import { styleMaxWidthForOptions, styleTextOverflow, styleWhen } from '../../_styles/mixins';
 import { kFontSizeLarge } from '../../_styles/variables';
 import { isInstance } from '../../utils/utils';
+import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../user/user.model';
 
+const Slots = ['avatar', 'supertitle', 'title'] as const;
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	avatarHeight: {
 		type: Number,
@@ -27,9 +32,11 @@ const props = defineProps({
 		type: Object as PropType<UserModel>,
 		default: undefined,
 	},
+	...defineDynamicSlotProps(Slots, true),
 });
 
-const { avatarAspectRatio, avatarHeight, center } = toRefs(props);
+const { avatarAspectRatio, avatarHeight, center, dynamicSlots } = toRefs(props);
+const { hasSlot } = useDynamicSlots(dynamicSlots);
 
 const maxWidth = computed(() =>
 	styleMaxWidthForOptions({
@@ -50,6 +57,7 @@ const maxWidth = computed(() =>
 		}"
 	>
 		<div
+			v-if="hasSlot('avatar')"
 			:style="{
 				...maxWidth,
 				height: `${avatarHeight}px`,
@@ -75,7 +83,7 @@ const maxWidth = computed(() =>
 
 		<div :style="{ minWidth: 0 }">
 			<div
-				v-if="$slots.supertitle || !!slotData"
+				v-if="hasSlot('supertitle') && ($slots.supertitle || !!slotData)"
 				:style="{
 					fontSize: `12px`,
 					fontWeight: `bold`,
@@ -89,7 +97,7 @@ const maxWidth = computed(() =>
 				</slot>
 			</div>
 			<div
-				v-if="$slots.title"
+				v-if="hasSlot('title') && $slots.title"
 				:style="{
 					fontSize: `${kFontSizeLarge.value + 1}px`,
 					fontWeight: `bolder`,

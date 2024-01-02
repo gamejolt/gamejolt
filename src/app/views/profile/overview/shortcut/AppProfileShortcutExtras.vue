@@ -13,6 +13,13 @@ import { UserFriendshipState } from '../../../../../_common/user/friendship/frie
 import { useProfileRouteStore } from '../../RouteProfile.vue';
 import AppProfileShortcut from './AppProfileShortcut.vue';
 
+defineProps({
+	width: {
+		type: Number,
+		required: true,
+	},
+});
+
 const router = useRouter();
 
 const { user: myUser } = useCommonStore();
@@ -49,10 +56,11 @@ async function blockUser() {
 </script>
 
 <template>
-	<AppPopper v-if="routeUser" popover-class="fill-darkest">
+	<AppPopper v-if="routeUser" popover-class="fill-darkest" :style="{ flex: `none` }">
 		<template #default>
 			<AppProfileShortcut
 				tag="a"
+				:width="width"
 				:item="{
 					icon: 'ellipsis-h',
 					label: $gettext(`More`),

@@ -1,12 +1,16 @@
 <script lang="ts">
 import { PropType } from 'vue';
 import { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
+import { styleWhen } from '../../../../../_styles/mixins';
 import { ProfileTileAction } from '../RouteProfileOverview.vue';
+import AppProfileShortcut from './AppProfileShortcut.vue';
 
 export type ProfileQuickLink = {
 	label: string;
 	icon: Jolticon;
 } & ProfileTileAction;
+
+const itemWidth = 72;
 </script>
 
 <script lang="ts" setup>
@@ -15,6 +19,9 @@ defineProps({
 		type: Array as PropType<ProfileQuickLink[]>,
 		required: true,
 	},
+	centered: {
+		type: Boolean,
+	},
 });
 </script>
 
@@ -22,12 +29,23 @@ defineProps({
 	<div
 		v-if="$slots.default"
 		:style="{
-			display: `grid`,
-			gridTemplateColumns: `repeat(auto-fill, minmax(64px, 1fr))`,
-			gap: `12px`,
+			display: `flex`,
+			columnGap: `8px`,
+			rowGap: `12px`,
+			flexWrap: `wrap`,
+			justifyContent: `start`,
+			...styleWhen(centered, {
+				justifyContent: `center`,
+			}),
 		}"
 	>
-		<slot v-for="item in items" v-bind="item" :key="item.label" />
-		<slot name="extras" />
+		<AppProfileShortcut
+			v-for="item in items"
+			:key="item.label"
+			:item="item"
+			:width="itemWidth"
+		/>
+
+		<slot name="default" v-bind="{ itemWidth }" />
 	</div>
 </template>

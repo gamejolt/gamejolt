@@ -122,7 +122,7 @@ const nameMargin = 8;
 						<AppHoverCard
 							v-for="community in communities"
 							:key="community.id"
-							class="_pressy"
+							class="pressy"
 							:style="{
 								...styleChangeBg('bg-offset'),
 								...styleBorderRadiusLg,
@@ -170,8 +170,3 @@ const nameMargin = 8;
 		</div>
 	</AppModal>
 </template>
-
-<style lang="stylus" scoped>
-._pressy
-	pressy()
-</style>
