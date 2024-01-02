@@ -20,6 +20,10 @@ export const TYPE_SHOP_PURCHASE = 'shop-purchase';
 export type SupporterActionType = typeof TYPE_CHARGED_STICKER | typeof TYPE_SHOP_PURCHASE;
 
 export class SupporterActionModel extends Model {
+	// Note: the id of this model is not the id of the target resource for which
+	// the support is showing, but the id of the support action resource. e.g.
+	// UserChargeTransaction or Inventory_Shop_ProductPurchase.
+
 	declare user: UserModel;
 	declare type: SupporterActionType;
 	declare added_on: number;
@@ -34,7 +38,7 @@ export class SupporterActionModel extends Model {
 
 	declare post?: FiresidePostModel;
 	declare fireside?: FiresideModel;
-	declare inventory_shop_product?: AvatarFrameModel | StickerPackModel | BackgroundModel;
+	declare shopProductResource?: AvatarFrameModel | StickerPackModel | BackgroundModel;
 
 	constructor(data: any = {}) {
 		super(data);
@@ -56,11 +60,11 @@ export class SupporterActionModel extends Model {
 				}
 			} else if (data.type === TYPE_SHOP_PURCHASE) {
 				if (this.resource_type === RESOURCE_STICKER_PACK) {
-					this.inventory_shop_product = storeModel(StickerPackModel, data.resource);
+					this.shopProductResource = storeModel(StickerPackModel, data.resource);
 				} else if (this.resource_type === RESOURCE_AVATAR_FRAME) {
-					this.inventory_shop_product = storeModel(AvatarFrameModel, data.resource);
+					this.shopProductResource = storeModel(AvatarFrameModel, data.resource);
 				} else if (this.resource_type === RESOURCE_BACKGROUND) {
-					this.inventory_shop_product = storeModel(BackgroundModel, data.resource);
+					this.shopProductResource = storeModel(BackgroundModel, data.resource);
 				}
 			}
 

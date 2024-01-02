@@ -466,7 +466,7 @@ function _canThankSupporterAction(action: SupporterActionModel) {
 									{{ action.fireside.title }}
 								</div>
 							</template>
-							<template v-else-if="action.inventory_shop_product">
+							<template v-else-if="action.shopProductResource">
 								<div class="-subtle-header">
 									<template v-if="action.resource_type === 'Avatar_Frame'">
 										{{ $gettext(`Avatar Frame`) }}
@@ -482,7 +482,7 @@ function _canThankSupporterAction(action: SupporterActionModel) {
 									</template>
 								</div>
 								<div class="-resource-content">
-									{{ action.inventory_shop_product.name }}
+									{{ action.shopProductResource.name }}
 								</div>
 							</template>
 						</div>
