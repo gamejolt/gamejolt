@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import AppProfileSocialLinks from '../AppProfileSocialLinks.vue';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 
 defineProps({
@@ -11,6 +13,10 @@ defineProps({
 	canToggleDescription: {
 		type: Boolean,
 		required: true,
+	},
+	noBioText: {
+		type: String,
+		default: '',
 	},
 });
 
@@ -29,7 +35,7 @@ const { user: routeUser, isOverviewLoaded } = useProfileRouteStore()!;
 		</div>
 		<br />
 	</template>
-	<template v-else-if="routeUser && routeUser.hasBio">
+	<template v-else-if="routeUser">
 		<!--
 			Set a :key to let vue know that it should update this when the user
 			changes.
@@ -42,7 +48,14 @@ const { user: routeUser, isOverviewLoaded } = useProfileRouteStore()!;
 			@require-change="emit('update:canToggleDescription', $event)"
 			@expand="emit('update:showFullDescription', true)"
 		>
-			<AppContentViewer :source="routeUser.bio_content" />
+			<AppContentViewer v-if="routeUser.hasBio" :source="routeUser.bio_content" />
+			<div v-else-if="noBioText.length" class="small text-muted">
+				{{ noBioText }}
+			</div>
+
+			<AppSpacer :scale="2" vertical />
+
+			<AppProfileSocialLinks />
 		</AppFadeCollapse>
 
 		<a

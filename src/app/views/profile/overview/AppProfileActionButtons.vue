@@ -75,6 +75,7 @@ function showAboutModal() {
 				width: `100%`,
 				display: `flex`,
 				columnGap: `4px`,
+				flex: `auto`,
 			}"
 		>
 			<AppUserFollowButton
@@ -104,14 +105,13 @@ function showAboutModal() {
 				width: `100%`,
 				display: `flex`,
 				columnGap: `4px`,
+				flex: `auto`,
 			}"
 		>
 			<template v-if="collapse">
 				<AppButton block @click="showAboutModal()">
 					{{ $gettext(`About`) }}
 				</AppButton>
-
-				<AppProfileShortcutExtras :style="{ flex: `none` }" />
 			</template>
 			<template v-else>
 				<AppButton v-if="canAddAsFriend" block @click="sendFriendRequest()">
@@ -122,5 +122,7 @@ function showAboutModal() {
 				</AppButton>
 			</template>
 		</div>
+
+		<AppProfileShortcutExtras v-if="collapse" :style="{ flex: `none` }" />
 	</AppButtonGroup>
 </template>

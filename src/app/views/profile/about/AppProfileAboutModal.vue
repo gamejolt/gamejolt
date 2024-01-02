@@ -82,13 +82,10 @@ const showFullDescription = ref(false);
 				{{ $gettext(`Bio`) }}
 			</div>
 			<AppProfileBio
-				v-if="!isOverviewLoaded || routeUser?.hasBio"
 				v-model:can-toggle-description="canToggleDescription"
 				v-model:show-full-description="showFullDescription"
+				:no-bio-text="$gettext(`This user has no bio...`)"
 			/>
-			<div v-else class="small text-muted">
-				{{ $gettext(`This user has no bio...`) }}
-			</div>
 
 			<AppProfileSocialLinks />
 
