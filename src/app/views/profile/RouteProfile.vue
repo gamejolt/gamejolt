@@ -12,6 +12,7 @@ import {
 } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
+import { Environment } from '../../../_common/environment/environment.service';
 import { LinkedAccountModel } from '../../../_common/linked-account/linked-account.model';
 import { watched } from '../../../_common/reactivity-helpers';
 import { Registry } from '../../../_common/registry/registry.service';
@@ -85,8 +86,14 @@ function createProfileRouteStore({
 		if (!chat.value || !user.value) {
 			return null;
 		}
-
 		return isUserOnline(chat.value, user.value.id);
+	});
+
+	const shareUrl = toRef(() => {
+		if (!user.value) {
+			return Environment.baseUrl;
+		}
+		return Environment.baseUrl + user.value.url;
 	});
 
 	const _headerHeight = ref(0);
@@ -235,6 +242,7 @@ function createProfileRouteStore({
 		linkedAccounts,
 		isFriend,
 		isOnline,
+		shareUrl,
 		pageOffsetTop,
 		stickySides,
 		floatingAvatarSize: buildCSSPixelValue(100),

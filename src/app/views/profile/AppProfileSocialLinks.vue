@@ -53,15 +53,13 @@ const socialLinks = watched(() => {
 </script>
 
 <template>
-	<template v-if="socialLinks.length">
-		<template v-for="link of socialLinks" :key="link.label">
-			<AppLinkExternal :href="link.url">
-				<AppButton :icon="link.icon" block>
-					{{ link.label }}
-				</AppButton>
-			</AppLinkExternal>
+	<template v-for="link of socialLinks" :key="link.label">
+		<AppLinkExternal :href="link.url">
+			<AppButton :icon="link.icon" block>
+				{{ link.label }}
+			</AppButton>
+		</AppLinkExternal>
 
-			<AppSpacer vertical :scale="1" />
-		</template>
+		<AppSpacer vertical :scale="1" />
 	</template>
 </template>

@@ -3,6 +3,7 @@ import { toRef } from 'vue';
 import { useRouter } from 'vue-router';
 import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { showBlockModal } from '../../../../../_common/block/modal/modal.service';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
@@ -11,14 +12,6 @@ import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { UserFriendshipState } from '../../../../../_common/user/friendship/friendship.model';
 import { useProfileRouteStore } from '../../RouteProfile.vue';
-import AppProfileShortcut from './AppProfileShortcut.vue';
-
-defineProps({
-	width: {
-		type: Number,
-		required: true,
-	},
-});
 
 const router = useRouter();
 
@@ -58,14 +51,9 @@ async function blockUser() {
 <template>
 	<AppPopper v-if="routeUser" popover-class="fill-darkest" :style="{ flex: `none` }">
 		<template #default>
-			<AppProfileShortcut
-				tag="a"
-				:width="width"
-				:item="{
-					icon: 'ellipsis-h',
-					label: $gettext(`More`),
-				}"
-			/>
+			<slot name="default">
+				<AppButton icon="ellipsis-v" sparse />
+			</slot>
 		</template>
 
 		<template #popover>

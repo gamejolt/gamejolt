@@ -10,7 +10,8 @@ defineProps({
 
 <template>
 	<div
-		class="_button-group"
+		v-if="$slots.default"
+		class="button-group"
 		:style="{
 			...styleFlexCenter({
 				direction: row ? 'row' : 'column',
@@ -24,12 +25,7 @@ defineProps({
 
 <style lang="stylus" scoped>
 // Unset any built-in margin values added from adjacent buttons.
-._button-group
+.button-group
 	::v-deep(.button + .button)
 		margin: 0
-
-// TODO(profile-scrunch) Not sure we can get this working when a button sibling
-// is placed above this button group.
-._button-group + ::v-deep(.button.-block)
-	margin-top: 5px
 </style>

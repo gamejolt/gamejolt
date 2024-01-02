@@ -13,7 +13,6 @@ import {
 	useCommentStoreManager,
 } from '../../../../_common/comment/comment-store';
 import { CommunityModel } from '../../../../_common/community/community.model';
-import { Environment } from '../../../../_common/environment/environment.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
@@ -50,7 +49,6 @@ import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
-import AppProfileSocialLinks from '../AppProfileSocialLinks.vue';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 import AppProfileActionButtons from './AppProfileActionButtons.vue';
 import AppProfileInfoCard from './AppProfileInfoCard.vue';
@@ -90,6 +88,7 @@ const {
 	showFullDescription,
 	isFriend,
 	linkedAccounts,
+	shareUrl,
 } = useProfileRouteStore()!;
 
 const { grid } = useGridStore();
@@ -115,14 +114,6 @@ const routeTitle = toRef(() => {
 		return `${routeUser.value.display_name} (@${routeUser.value.username})`;
 	}
 	return null;
-});
-
-const shareUrl = toRef(() => {
-	if (!routeUser.value) {
-		return Environment.baseUrl;
-	}
-
-	return Environment.baseUrl + routeUser.value.url;
 });
 
 const shouldShowKnownFollowers = toRef(
@@ -287,6 +278,27 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 					:sticky-side-top-margin="40"
 				>
 					<template #left>
+						<template v-if="Screen.isMd">
+							<AppProfileActionButtons />
+
+							<AppSpacer vertical :scale="4" />
+							<AppAdWidget
+								:style="{
+									...styleChangeBg('bg'),
+									...styleElevate(3),
+									// Can't change this, needs to be at least 300px wide.
+									minWidth: `300px`,
+									paddingTop: `8px`,
+									paddingBottom: `8px`,
+									borderRadius: kBorderRadiusLg.px,
+									padding: `8px`,
+								}"
+								:size="isAdEnthused ? 'video' : 'rectangle'"
+								placement="side"
+							/>
+							<AppSpacer vertical :scale="6" />
+						</template>
+
 						<!-- Stats, Shortcuts, Bio -->
 						<AppProfileInfoCard
 							:style="{
@@ -311,31 +323,17 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 							/>
 							<br v-if="Screen.isDesktop" />
 						</template>
-
-						<!-- Social links -->
-						<AppProfileSocialLinks v-if="Screen.isDesktop" />
 					</template>
 
 					<template #right>
-						<AppProfileActionButtons v-if="Screen.isDesktop" />
+						<template v-if="Screen.isLg">
+							<AppProfileActionButtons />
 
-						<AppSpacer vertical :scale="4" />
-
-						<div
-							:style="{
-								// TODO(profile-scrunch) check that this is okay on mobile.
-								// If not, just remove the whole parent and `flex: auto` on the child.
-								display: `flex`,
-								...styleWhen(Screen.isMobile, {
-									justifyContent: `center`,
-								}),
-							}"
-						>
+							<AppSpacer vertical :scale="4" />
 							<AppAdWidget
 								:style="{
 									...styleChangeBg('bg'),
 									...styleElevate(3),
-									flex: `auto`,
 									// Can't change this, needs to be at least 300px wide.
 									minWidth: `300px`,
 									paddingTop: `8px`,
@@ -346,9 +344,10 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 								:size="isAdEnthused ? 'video' : 'rectangle'"
 								placement="side"
 							/>
-						</div>
+							<AppSpacer vertical :scale="6" />
+						</template>
 
-						<AppSpacer vertical :scale="6" />
+						<AppSpacer v-if="Screen.isXs" :scale="4" vertical />
 
 						<AppShareCard v-if="!myUser || !isMe" resource="user" :url="shareUrl" />
 						<AppInviteCard v-else :user="myUser" />

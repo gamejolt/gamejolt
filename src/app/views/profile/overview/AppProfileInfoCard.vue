@@ -17,7 +17,6 @@ import { showProfileFollowersModal } from '../followers/modal.service';
 import { showProfileFollowingModal } from '../following/modal.service';
 import AppProfileActionButtons from './AppProfileActionButtons.vue';
 import AppProfileBio from './AppProfileBio.vue';
-import AppProfileShortcutExtras from './shortcut/AppProfileShortcutExtras.vue';
 import AppProfileShortcuts, { ProfileQuickLink } from './shortcut/AppProfileShortcuts.vue';
 import AppProfileStat from './stats/AppProfileStat.vue';
 import AppProfileStats, { ProfileStat } from './stats/AppProfileStats.vue';
@@ -157,7 +156,7 @@ const floatingInfoSpacerExpandedHeight = toRef(() => floatingAvatarSize.value * 
 				...avatarExpandStyles,
 				height: 0,
 				...styleWhen(Screen.isDesktop && showAvatar, {
-					height: `${floatingAvatarSize.value * 0.4}px`,
+					height: `${floatingAvatarSize.value * 0.6}px`,
 				}),
 			}"
 		/>
@@ -172,6 +171,10 @@ const floatingInfoSpacerExpandedHeight = toRef(() => floatingAvatarSize.value * 
 					backgroundColor: `inherit`,
 					// Bleed the bottom padding since this no longer appears as a sheet.
 					paddingBottom: 0,
+				}),
+				...styleWhen(Screen.isSm, {
+					paddingLeft: 0,
+					paddingRight: 0,
 				}),
 			}"
 		>
@@ -293,11 +296,7 @@ const floatingInfoSpacerExpandedHeight = toRef(() => floatingAvatarSize.value * 
 			<AppSpacer v-else vertical :scale="4" />
 
 			<!-- Shortcuts -->
-			<AppProfileShortcuts v-if="Screen.isDesktop" :items="quickLinks">
-				<template #default="{ itemWidth }">
-					<AppProfileShortcutExtras :width="itemWidth" />
-				</template>
-			</AppProfileShortcuts>
+			<AppProfileShortcuts v-if="Screen.isDesktop" :items="quickLinks" />
 			<template v-else>
 				<AppProfileActionButtons :quick-links="quickLinks" collapse />
 			</template>

@@ -9,6 +9,7 @@ import { useGridStore } from '../../../components/grid/grid-store';
 import { useAppStore } from '../../../store';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 import { showProfileAboutModal } from '../about/modal.service';
+import AppProfileShortcutExtras from './shortcut/AppProfileShortcutExtras.vue';
 import { ProfileQuickLink } from './shortcut/AppProfileShortcuts.vue';
 
 const props = defineProps({
@@ -68,13 +69,19 @@ function showAboutModal() {
 </script>
 
 <template>
-	<template v-if="routeUser">
-		<AppButtonGroup :row="collapse">
+	<AppButtonGroup v-if="routeUser" :row="collapse">
+		<div
+			:style="{
+				width: `100%`,
+				display: `flex`,
+				columnGap: `4px`,
+			}"
+		>
 			<AppUserFollowButton
 				v-if="shouldShowFollow"
 				:user="routeUser"
-				:hide-count="collapse"
-				:icon="collapse && routeUser.is_following ? 'check' : undefined"
+				:icon="routeUser.is_following ? 'check' : undefined"
+				hide-count
 				block
 				location="profilePage"
 			/>
@@ -89,20 +96,31 @@ function showAboutModal() {
 				{{ $gettext(`Edit profile`) }}
 			</AppButton>
 
+			<AppProfileShortcutExtras v-if="!collapse" :style="{ flex: `none` }" />
+		</div>
+
+		<div
+			:style="{
+				width: `100%`,
+				display: `flex`,
+				columnGap: `4px`,
+			}"
+		>
 			<template v-if="collapse">
 				<AppButton block @click="showAboutModal()">
 					{{ $gettext(`About`) }}
 				</AppButton>
-			</template>
-		</AppButtonGroup>
 
-		<template v-if="!collapse">
-			<AppButton v-if="canAddAsFriend" block @click="sendFriendRequest()">
-				{{ $gettext(`Send friend request`) }}
-			</AppButton>
-			<AppButton v-else-if="canMessage" block icon="user-messages" @click="openMessaging">
-				{{ $gettext(`Message`) }}
-			</AppButton>
-		</template>
-	</template>
+				<AppProfileShortcutExtras :style="{ flex: `none` }" />
+			</template>
+			<template v-else>
+				<AppButton v-if="canAddAsFriend" block @click="sendFriendRequest()">
+					{{ $gettext(`Send friend request`) }}
+				</AppButton>
+				<AppButton v-else-if="canMessage" block icon="user-messages" @click="openMessaging">
+					{{ $gettext(`Message`) }}
+				</AppButton>
+			</template>
+		</div>
+	</AppButtonGroup>
 </template>

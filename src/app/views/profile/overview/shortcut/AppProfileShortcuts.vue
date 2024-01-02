@@ -26,7 +26,7 @@ defineProps({
 
 <template>
 	<div
-		v-if="$slots.default"
+		v-if="$slots.default || items.length"
 		:style="{
 			columnGap: `8px`,
 			rowGap: `12px`,

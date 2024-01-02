@@ -155,6 +155,7 @@ const nameMargin = 8;
 							</div>
 
 							<div
+								class="text-center"
 								:style="{
 									...styleLineClamp(2),
 									fontSize: nameFontSize.px,
