@@ -1,7 +1,6 @@
 <script lang="ts">
 import { PropType } from 'vue';
 import { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
-import { styleWhen } from '../../../../../_styles/mixins';
 import { ProfileTileAction } from '../RouteProfileOverview.vue';
 import AppProfileShortcut from './AppProfileShortcut.vue';
 
@@ -29,14 +28,19 @@ defineProps({
 	<div
 		v-if="$slots.default"
 		:style="{
-			display: `flex`,
 			columnGap: `8px`,
 			rowGap: `12px`,
-			flexWrap: `wrap`,
-			justifyContent: `start`,
-			...styleWhen(centered, {
-				justifyContent: `center`,
-			}),
+			...(centered
+				? {
+						display: `flex`,
+						flexWrap: `wrap`,
+						justifyContent: `center`,
+				  }
+				: {
+						display: `grid`,
+						gridTemplateColumns: `repeat(auto-fill, ${itemWidth}px)`,
+						justifyContent: `space-around`,
+				  }),
 		}"
 	>
 		<AppProfileShortcut

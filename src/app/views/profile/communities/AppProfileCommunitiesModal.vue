@@ -59,7 +59,7 @@ const nameMargin = 8;
 
 <template>
 	<AppModal>
-		<AppModalFloatingHeader>
+		<AppModalFloatingHeader :controls-gap="16">
 			<template #inline-title>
 				<AppSectionTitle :slot-data="user" :avatar-height="48">
 					<template #title>

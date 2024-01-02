@@ -375,20 +375,20 @@ function setPageTheme() {
 	});
 }
 
-const headingStyles: CSSProperties = {
+const headingStyles = {
 	marginBottom: `4px`,
 	display: `flex`,
 	alignItems: `center`,
-};
+} satisfies CSSProperties;
 
-const headingUsernameStyles: CSSProperties = {
+const headingUsernameStyles = {
 	fontSize: `19px`,
 	fontFamily: kFontFamilyBase,
 	fontWeight: `bold`,
 	marginLeft: `8px`,
-};
+} satisfies CSSProperties;
 
-const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
+const coverMaxHeight = watched(() => Math.min(Screen.height * 0.35, 400));
 </script>
 
 <template>

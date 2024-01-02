@@ -23,10 +23,12 @@ defineProps({
 </template>
 
 <style lang="stylus" scoped>
+// Unset any built-in margin values added from adjacent buttons.
 ._button-group
 	::v-deep(.button + .button)
 		margin: 0
 
+// TODO(profile-scrunch) Does order matter here, or do we need both orders?
 ._button-group + ::v-deep(.button.-block)
 	margin-top: 5px
 </style>

@@ -1,10 +1,18 @@
-<script lang="ts" setup>
+<script lang="ts">
 import { CSSProperties, PropType, ref, toRefs, watch } from 'vue';
 import { styleWhen } from '../../_styles/mixins';
 import { watched } from '../reactivity-helpers';
 import { pageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
 import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
+const positionTransitionTime = pageScrollSubscriptionTimeout + 50;
+const linearToEaseOut = `cubic-bezier(0.35, 0.91, 0.33, 0.97)`;
+const transitionStyles = {
+	transition: `background-position ${positionTransitionTime}ms ${linearToEaseOut}`,
+} satisfies CSSProperties;
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	background: {
 		type: Object as PropType<BackgroundModel>,
@@ -19,21 +27,15 @@ const props = defineProps({
 const { background } = toRefs(props);
 
 const baseStyles = ref(getBackgroundCSSProperties(background.value));
-const pageScrollSubscription = usePageScrollSubscription();
-
-const linearToEaseOut = `cubic-bezier(0.35, 0.91, 0.33, 0.97)`;
-const positionTransitionTime = pageScrollSubscriptionTimeout + 50;
-const transitionStyles = {
-	transition: `background-position ${positionTransitionTime}ms ${linearToEaseOut}`,
-} satisfies CSSProperties;
-
 watch(background, background => {
 	baseStyles.value = getBackgroundCSSProperties(background);
 });
 
+const pageScrollSubscription = usePageScrollSubscription();
+
 const translateY = watched(() => {
 	if (pageScrollSubscription) {
-		return pageScrollSubscription.top.value / 5;
+		return Math.round(pageScrollSubscription.top.value / 5);
 	}
 	return 0;
 });
@@ -47,7 +49,7 @@ const translateY = watched(() => {
 		}"
 		:style="[
 			baseStyles,
-			styleWhen(translateY !== 0, {
+			styleWhen(!!pageScrollSubscription, {
 				...transitionStyles,
 				backgroundPosition: `center ${translateY}px`,
 			}),
@@ -72,7 +74,6 @@ const translateY = watched(() => {
 ._scroll-left
 ._scroll-down
 	animation-direction: reverse
-
 
 @keyframes anim-scroll-h
 	0%

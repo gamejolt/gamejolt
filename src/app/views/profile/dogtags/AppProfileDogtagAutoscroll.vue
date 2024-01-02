@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { Ruler } from '../../../../_common/ruler/ruler-service';
 import { styleWhen } from '../../../../_styles/mixins';
+import { buildCSSPixelValue } from '../../../../_styles/variables';
 import { useResizeObserver } from '../../../../utils/resize-observer';
 
 const root = ref<HTMLElement>();
@@ -38,6 +39,8 @@ const autoscrollDuration = computed(() => {
 	const pixelsPerSecond = 25;
 	return Math.max(1_000, sizeDiff.value * (1_000 / pixelsPerSecond));
 });
+
+const bleed = buildCSSPixelValue(6);
 </script>
 
 <template>
@@ -45,19 +48,18 @@ const autoscrollDuration = computed(() => {
 		v-if="$slots.default"
 		:style="[
 			`--size-translation: ${-sizeDiff}px`,
-			`--bleed: 6px`,
 			{
 				overflow: `hidden`,
 				display: `block`,
 				width: `100%`,
 				maxWidth: `100%`,
 				minWidth: 0,
-				marginLeft: `0 - var(--bleed)`,
-				marginRight: `0 - var(--bleed)`,
-				paddingLeft: `var(--bleed)`,
-				paddingRight: `var(--bleed)`,
+				marginLeft: `0 - ${bleed.px}`,
+				marginRight: `0 - ${bleed.px}`,
+				paddingLeft: bleed.px,
+				paddingRight: bleed.px,
 				...styleWhen(sizeDiff > 0, {
-					maskImage: `linear-gradient(to right, transparent 0, black var(--bleed), black calc(100% - var(--bleed)), transparent 100%)`,
+					maskImage: `linear-gradient(to right, transparent 0, black ${bleed.px}, black calc(100% - var(--bleed)), transparent 100%)`,
 				}),
 			},
 		]"

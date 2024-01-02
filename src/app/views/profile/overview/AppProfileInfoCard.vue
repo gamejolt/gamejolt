@@ -54,21 +54,13 @@ const stats = computed<ProfileStat[]>(() => {
 		{
 			label: $gettext('Following'),
 			value: formatNumber(user?.following_count || 0),
-			action: user
-				? () => {
-						showProfileFollowingModal({ user });
-				  }
-				: undefined,
+			action: user ? () => showProfileFollowingModal({ user }) : undefined,
 			location: undefined,
 		},
 		{
 			label: $gettext('Followers'),
 			value: formatNumber(user?.follower_count || 0),
-			action: user
-				? () => {
-						showProfileFollowersModal({ user });
-				  }
-				: undefined,
+			action: user ? () => showProfileFollowersModal({ user }) : undefined,
 			location: undefined,
 		},
 		{

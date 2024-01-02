@@ -4,6 +4,7 @@ import { ComponentProps } from '../../../_common/component-helpers';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import AppScrollScroller, { createScroller } from '../../../_common/scroll/AppScrollScroller.vue';
+import { styleWhen } from '../../../_styles/mixins';
 import { kGridGutterWidth } from '../../../_styles/variables';
 import { kShellTopNavHeight } from '../../styles/variables';
 
@@ -48,12 +49,13 @@ const props = defineProps({
 	},
 	/**
 	 * Prevents the sticky sides from sticking and the scroller from scrolling.
+	 *
 	 * Workaround for sticky side children rebuilding when {@link stickySides}
 	 * changes.
 	 */
 	disableStickySides: {
 		type: [Boolean, Object] as PropType<boolean | { left?: boolean; right?: boolean }>,
-		default: () => ({}),
+		default: false,
 	},
 });
 
@@ -185,11 +187,13 @@ const stickyScrollerStyles = computed<CSSProperties>(() => {
 					<component
 						:is="stickySideData.left ? AppScrollScroller : 'div'"
 						class="_left-scroller"
-						:style="stickySideData.left ? stickyScrollerStyles : {}"
+						:style="{
+							...styleWhen(stickySideData.left, stickyScrollerStyles),
+						}"
 						v-bind="{
 							...scrollerProps,
 							disabled: disabledProps.left,
-							controller: stickySideData.left ? scrollerLeft : undefined,
+							...(stickySideData.left ? { controller: scrollerLeft } : {}),
 						}"
 					>
 						<slot name="left" />
@@ -215,11 +219,13 @@ const stickyScrollerStyles = computed<CSSProperties>(() => {
 					<component
 						:is="stickySideData.right ? AppScrollScroller : 'div'"
 						class="_right-scroller"
-						:style="stickySideData.right ? stickyScrollerStyles : {}"
+						:style="{
+							...styleWhen(stickySideData.right, stickyScrollerStyles),
+						}"
 						v-bind="{
 							...scrollerProps,
 							disabled: disabledProps.right,
-							controller: stickySideData.right ? scrollerRight : undefined,
+							...(stickySideData.right ? { controller: scrollerRight } : {}),
 						}"
 					>
 						<slot v-if="shouldCombineColumns" name="left" />

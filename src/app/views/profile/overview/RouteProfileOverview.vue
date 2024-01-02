@@ -126,11 +126,7 @@ const shareUrl = toRef(() => {
 });
 
 const shouldShowKnownFollowers = toRef(
-	() =>
-		!!myUser.value &&
-		!!routeUser.value &&
-		isOverviewLoaded.value &&
-		myUser.value.id !== routeUser.value.id
+	() => !!myUser.value && isOverviewLoaded.value && !isMe.value
 );
 const userBlockedYou = toRef(() => routeUser.value && routeUser.value.blocked_you);
 

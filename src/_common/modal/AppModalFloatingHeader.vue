@@ -1,5 +1,12 @@
 <script lang="ts" setup>
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
+
+defineProps({
+	controlsGap: {
+		type: Number,
+		default: undefined,
+	},
+});
 </script>
 
 <template>
@@ -18,6 +25,14 @@ import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 			>
 				<slot name="inline-title" />
 			</div>
+
+			<div
+				v-if="controlsGap !== undefined && controlsGap > 0"
+				:style="{
+					flex: `none`,
+					width: `${controlsGap}px`,
+				}"
+			/>
 
 			<div>
 				<slot name="modal-controls" />

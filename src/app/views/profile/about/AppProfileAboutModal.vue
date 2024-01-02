@@ -5,11 +5,13 @@ import AppModal from '../../../../_common/modal/AppModal.vue';
 import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import AppSectionTitle from '../../../../_common/section/AppSectionTitle.vue';
+import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { kThemeFg10 } from '../../../../_common/theme/variables';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppProfileSocialLinks from '../AppProfileSocialLinks.vue';
 import { ProfileRouteStore, provideProfileRouteStore } from '../RouteProfile.vue';
+import AppProfileActionButtons from '../overview/AppProfileActionButtons.vue';
 import AppProfileBio from '../overview/AppProfileBio.vue';
 import AppProfileShortcutExtras from '../overview/shortcut/AppProfileShortcutExtras.vue';
 import AppProfileShortcuts, {
@@ -40,7 +42,7 @@ const showFullDescription = ref(false);
 
 <template>
 	<AppModal>
-		<AppModalFloatingHeader>
+		<AppModalFloatingHeader :controls-gap="16">
 			<template #inline-title>
 				<AppSectionTitle :slot-data="routeUser" :avatar-height="48">
 					<template #supertitle>
@@ -67,9 +69,16 @@ const showFullDescription = ref(false);
 				</template>
 			</AppProfileShortcuts>
 
+			<AppSpacer vertical :scale="4" />
+
+			<!-- TODO(profile-scrunch) make sure we have everything we need here -->
+			<AppProfileActionButtons />
+
+			<AppSpacer vertical :scale="4" />
+
 			<div
 				:style="{
-					margin: `12px 0`,
+					marginBottom: `12px`,
 					height: `1px`,
 					backgroundColor: kThemeFg10,
 				}"
@@ -88,9 +97,6 @@ const showFullDescription = ref(false);
 			</div>
 
 			<AppProfileSocialLinks />
-
-			<!-- TODO(profile-scrunch) make sure we have everything we need here -->
-			<!-- <AppProfileActionButtons /> -->
 
 			<div v-if="routeUser" class="small text-muted" :style="{ marginTop: `32px` }">
 				{{ $gettext(`Joined`) }}

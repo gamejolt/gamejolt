@@ -96,10 +96,10 @@ const [initOverlayScrollbar, getOverlayScrollbarInstance] = useOverlayScrollbars
 		return {
 			options: {
 				overflow: {
-					// TODO(profile-scrunch) Unfortunately, disabling like this
-					// doesn't allow us to complete a smooth scroll (or any
-					// scroll) once it's disabled. Any smooth scroll will just
-					// stop at some point during the transition.
+					// Unfortunately, disabling like this doesn't allow us to
+					// complete a smooth scroll (or any scroll) once it's
+					// disabled. Any smooth scroll will just stop at some point
+					// during the transition.
 					x: shouldDisable.value ? 'hidden' : horizontal.value ? 'scroll' : 'hidden',
 					y: shouldDisable.value ? 'hidden' : horizontal.value ? 'hidden' : 'scroll',
 				},
@@ -118,9 +118,7 @@ const [initOverlayScrollbar, getOverlayScrollbarInstance] = useOverlayScrollbars
 );
 
 function setupOverlayScroller(target: HTMLElement) {
-	initOverlayScrollbar({
-		target,
-	});
+	initOverlayScrollbar({ target });
 	controller.value.getOverlayInstance.value = getOverlayScrollbarInstance;
 }
 

@@ -45,7 +45,7 @@ onMounted(async () => {
 
 <template>
 	<AppModal>
-		<AppModalFloatingHeader>
+		<AppModalFloatingHeader :controls-gap="16">
 			<template #inline-title>
 				<AppSectionTitle
 					:style="{ marginRight: `auto`, flex: `auto` }"

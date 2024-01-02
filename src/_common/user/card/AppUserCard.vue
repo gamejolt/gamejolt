@@ -46,7 +46,8 @@ const followingCount = toRef(() => user.value.following_count || 0);
 const postCount = toRef(() => user.value.post_count || 0);
 const gameCount = toRef(() => user.value.game_count || 0);
 const likeCount = toRef(() => user.value.like_count || 0);
-const theme = toRef(() => (user.value.theme ? user.value.theme : undefined));
+const dogtags = toRef(() => user.value.dogtags || []);
+const showTags = toRef(() => !!user.value.follows_you || dogtags.value.length > 0);
 
 const headerBackgroundImage = computed(() => {
 	let src = user.value.header_media_item?.mediaserver_url;
@@ -61,16 +62,13 @@ const headerBackgroundImage = computed(() => {
 	}
 	return undefined;
 });
-
-const dogtags = toRef(() => user.value.dogtags || []);
-const showTags = toRef(() => !!user.value.follows_you || dogtags.value.length > 0);
 </script>
 
 <template>
 	<AppTheme
 		class="user-card sheet sheet-full sheet-no-full-bleed"
 		:class="{ 'sheet-elevate': elevate }"
-		:theme="theme"
+		:theme="user.theme || undefined"
 	>
 		<div class="-user-info">
 			<div
