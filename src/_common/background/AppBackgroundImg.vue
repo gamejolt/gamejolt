@@ -1,5 +1,5 @@
 <script lang="ts">
-import { CSSProperties, PropType, ref, toRefs, watch } from 'vue';
+import { CSSProperties, PropType, ref, toRef, toRefs, watch } from 'vue';
 import { styleWhen } from '../../_styles/mixins';
 import { watched } from '../reactivity-helpers';
 import { pageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
@@ -22,9 +22,12 @@ const props = defineProps({
 		type: String,
 		default: undefined,
 	},
+	disablePageScroll: {
+		type: Boolean,
+	},
 });
 
-const { background } = toRefs(props);
+const { background, disablePageScroll } = toRefs(props);
 
 const baseStyles = ref(getBackgroundCSSProperties(background.value));
 watch(background, background => {
@@ -32,10 +35,17 @@ watch(background, background => {
 });
 
 const pageScrollSubscription = usePageScrollSubscription();
+const pageScrollTop = toRef(() => {
+	if (!pageScrollSubscription || disablePageScroll.value) {
+		return null;
+	}
+	return pageScrollSubscription.top.value;
+});
 
 const translateY = watched(() => {
-	if (pageScrollSubscription) {
-		return Math.round(pageScrollSubscription.top.value / 5);
+	const top = pageScrollTop.value;
+	if (top !== null) {
+		return Math.round((top / 5) * 4) / 4;
 	}
 	return 0;
 });
@@ -49,7 +59,7 @@ const translateY = watched(() => {
 		}"
 		:style="[
 			baseStyles,
-			styleWhen(!!pageScrollSubscription, {
+			styleWhen(pageScrollTop !== null, {
 				...transitionStyles,
 				backgroundPosition: `center ${translateY}px`,
 			}),

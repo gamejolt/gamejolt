@@ -43,6 +43,9 @@ const props = defineProps({
 	noEdges: {
 		type: Boolean,
 	},
+	disablePageScroll: {
+		type: Boolean,
+	},
 });
 
 const { background, bleed, backdropStyle, backgroundStyle, scrollDirection } = toRefs(props);
@@ -89,11 +92,12 @@ if (import.meta.env.SSR) {
 						v-if="loadedBackground"
 						:key="loadedBackground.id"
 						class="_stretch anim-fade-in"
-						:background="background"
-						:scroll-direction="scrollDirection"
 						:style="
 							styleWhen(!!backgroundStyle, backgroundStyle!)
 						"
+						:background="background"
+						:scroll-direction="scrollDirection"
+						:disable-page-scroll="disablePageScroll"
 					/>
 				</Transition>
 
