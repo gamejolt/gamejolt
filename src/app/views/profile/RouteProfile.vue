@@ -12,11 +12,7 @@ import {
 } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
-import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
-import {
-	LinkedAccountModel,
-	LinkedAccountProvider,
-} from '../../../_common/linked-account/linked-account.model';
+import { LinkedAccountModel } from '../../../_common/linked-account/linked-account.model';
 import { watched } from '../../../_common/reactivity-helpers';
 import { Registry } from '../../../_common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
@@ -66,8 +62,6 @@ function createProfileRouteStore({
 	chat: Ref<ChatClient | undefined>;
 	myUser: Ref<UserModel | null | undefined>;
 }) {
-	// TODO(profile-scrunch) Look through these, make sure everything is used
-
 	// We will bootstrap this right away, so it should always be set for use.
 	const user = ref<UserModel>();
 	const isMe = toRef(() => !!myUser.value && !!user.value && myUser.value.id === user.value.id);
@@ -75,7 +69,6 @@ function createProfileRouteStore({
 	const isOverviewLoaded = ref(false);
 	const gamesCount = ref(0);
 	const communitiesCount = ref(0);
-	const placeholderCommunitiesCount = ref(0);
 	const trophyCount = ref(0);
 	const userFriendship = ref<UserFriendshipModel>();
 	const previewTrophies = ref<UserBaseTrophyModel[]>([]);
@@ -114,46 +107,6 @@ function createProfileRouteStore({
 		},
 	});
 
-	function _getLinkedAccount(provider: LinkedAccountProvider) {
-		if (
-			user.value &&
-			linkedAccounts.value &&
-			linkedAccounts.value.some(i => i.provider === provider)
-		) {
-			const account = linkedAccounts.value.find(i => i.provider === provider);
-			if (account) {
-				return account;
-			}
-		}
-		return null;
-	}
-
-	const socialLinks = computed(() => {
-		const items: { label: string; icon: Jolticon; url: string }[] = [];
-		if (!user.value || Screen.isMobile) {
-			return items;
-		}
-
-		const twitchAccount = _getLinkedAccount(LinkedAccountProvider.Twitch);
-		if (twitchAccount) {
-			items.push({
-				label: twitchAccount.name,
-				icon: twitchAccount.icon,
-				url: twitchAccount.platformLink,
-			});
-		}
-
-		if (user.value.web_site) {
-			items.push({
-				label: $gettext(`Website`),
-				icon: 'link',
-				url: user.value.web_site,
-			});
-		}
-
-		return items;
-	});
-
 	function _updateUser(newUser?: UserModel) {
 		// If we already have a user, just assign new data into it to keep it
 		// fresh.
@@ -162,6 +115,10 @@ function createProfileRouteStore({
 		} else {
 			user.value = newUser;
 		}
+	}
+
+	function _setUserFriendship(friendship?: UserFriendshipModel) {
+		userFriendship.value = friendship;
 	}
 
 	async function sendFriendRequest() {
@@ -234,7 +191,6 @@ function createProfileRouteStore({
 			isOverviewLoaded.value = false;
 			gamesCount.value = 0;
 			communitiesCount.value = 0;
-			placeholderCommunitiesCount.value = 0;
 			trophyCount.value = 0;
 			userFriendship.value = undefined;
 			previewTrophies.value = [];
@@ -247,7 +203,6 @@ function createProfileRouteStore({
 
 		gamesCount.value = payload.gamesCount || 0;
 		communitiesCount.value = payload.communitiesCount || 0;
-		placeholderCommunitiesCount.value = payload.placeholderCommunitiesCount || 0;
 		trophyCount.value = payload.trophyCount || 0;
 
 		userFriendship.value = payload.userFriendship
@@ -264,10 +219,6 @@ function createProfileRouteStore({
 		isOverviewLoaded.value = true;
 	}
 
-	function _setUserFriendship(friendship?: UserFriendshipModel) {
-		userFriendship.value = friendship;
-	}
-
 	return shallowReadonly({
 		isOverviewLoaded,
 		user,
@@ -275,7 +226,6 @@ function createProfileRouteStore({
 		isMe,
 		gamesCount,
 		communitiesCount,
-		placeholderCommunitiesCount,
 		trophyCount,
 		userFriendship,
 		previewTrophies,
@@ -287,7 +237,6 @@ function createProfileRouteStore({
 		isOnline,
 		pageOffsetTop,
 		stickySides,
-		socialLinks,
 		floatingAvatarSize: buildCSSPixelValue(100),
 		sendFriendRequest,
 		acceptFriendRequest,

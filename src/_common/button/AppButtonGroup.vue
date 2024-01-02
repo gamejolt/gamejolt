@@ -28,7 +28,8 @@ defineProps({
 	::v-deep(.button + .button)
 		margin: 0
 
-// TODO(profile-scrunch) Does order matter here, or do we need both orders?
+// TODO(profile-scrunch) Not sure we can get this working when a button sibling
+// is placed above this button group.
 ._button-group + ::v-deep(.button.-block)
 	margin-top: 5px
 </style>
