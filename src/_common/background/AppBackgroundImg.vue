@@ -1,18 +1,8 @@
-<script lang="ts">
-import { CSSProperties, PropType, ref, toRef, toRefs, watch } from 'vue';
-import { styleWhen } from '../../_styles/mixins';
-import { watched } from '../reactivity-helpers';
+<script lang="ts" setup>
+import { PropType, ref, toRefs, watch, watchEffect } from 'vue';
 import { pageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
 import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
-const positionTransitionTime = pageScrollSubscriptionTimeout + 50;
-const linearToEaseOut = `cubic-bezier(0.35, 0.91, 0.33, 0.97)`;
-const transitionStyles = {
-	transition: `background-position ${positionTransitionTime}ms ${linearToEaseOut}`,
-} satisfies CSSProperties;
-</script>
-
-<script lang="ts" setup>
 const props = defineProps({
 	background: {
 		type: Object as PropType<BackgroundModel>,
@@ -27,43 +17,67 @@ const props = defineProps({
 	},
 });
 
-const { background, disablePageScroll } = toRefs(props);
+const { background, scrollDirection, disablePageScroll } = toRefs(props);
 
-const baseStyles = ref(getBackgroundCSSProperties(background.value));
-watch(background, background => {
-	baseStyles.value = getBackgroundCSSProperties(background);
+const root = ref<HTMLElement>();
+
+watchEffect(() => {
+	if (!root.value) {
+		return;
+	}
+	const baseStyles = getBackgroundCSSProperties(background.value);
+	for (const keyUnsafe in baseStyles) {
+		const key = keyUnsafe as keyof typeof baseStyles;
+		// Don't assign backgroundPosition if we're currently modifying it
+		// through page scroll offset.
+		if (
+			key === 'backgroundPosition' &&
+			pageScrollSubscription.isActive &&
+			!pageScrollSubscription.isDisposed
+		) {
+			continue;
+		}
+		root.value.style[key] = baseStyles[key];
+	}
 });
 
-const pageScrollSubscription = usePageScrollSubscription();
-const pageScrollTop = toRef(() => {
-	if (!pageScrollSubscription || disablePageScroll.value) {
-		return null;
+function attachPageOffsetBackgroundStyles(top: number) {
+	if (!root.value) {
+		return;
 	}
-	return pageScrollSubscription.top.value;
+	if (disablePageScroll.value || scrollDirection?.value) {
+		root.value.style.backgroundPosition = getBackgroundCSSProperties(
+			background.value
+		).backgroundPosition;
+		root.value.style.transition = '';
+	} else {
+		root.value.style.backgroundPosition = `center ${top / 5}px`;
+		root.value.style.transition = `background-position ${
+			pageScrollSubscriptionTimeout + 20
+		}ms ease-out`;
+	}
+}
+
+const pageScrollSubscription = usePageScrollSubscription(attachPageOffsetBackgroundStyles, {
+	active: !disablePageScroll.value,
 });
 
-const translateY = watched(() => {
-	const top = pageScrollTop.value;
-	if (top !== null) {
-		return Math.round((top / 5) * 4) / 4;
+watch(disablePageScroll, disablePageScroll => {
+	if (disablePageScroll) {
+		pageScrollSubscription.deactivate();
+	} else {
+		pageScrollSubscription.activate();
 	}
-	return 0;
 });
 </script>
 
 <template>
 	<div
+		ref="root"
 		:class="{
 			_scroll: scrollDirection,
 			[`_scroll-${scrollDirection}`]: scrollDirection,
 		}"
-		:style="[
-			baseStyles,
-			styleWhen(pageScrollTop !== null, {
-				...transitionStyles,
-				backgroundPosition: `center ${translateY}px`,
-			}),
-		]"
 	/>
 </template>
 

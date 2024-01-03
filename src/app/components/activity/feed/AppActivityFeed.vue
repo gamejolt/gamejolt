@@ -17,11 +17,7 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import {
-	getPageScrollSubscription,
-	PageScrollSubscriptionKey,
-	Scroll,
-} from '../../../../_common/scroll/scroll.service';
+import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppActivityFeedItem from './item/AppActivityFeedItem.vue';
 import AppActivityFeedNewButton from './new-button/AppActivityFeedNewButton.vue';
@@ -201,13 +197,6 @@ function shouldShowAd(index: number) {
 
 	++index;
 	return index === firstAd || (index - firstAd) % adGap === 0;
-}
-
-// Provide this down for posts that need to know about the page scroll. Used to
-// transform post backgrounds.
-if (feed.value.state.feedType === 'EventItem') {
-	const pageScrollSubscription = getPageScrollSubscription();
-	provide(PageScrollSubscriptionKey, pageScrollSubscription);
 }
 </script>
 

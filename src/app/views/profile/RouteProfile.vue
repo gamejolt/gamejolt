@@ -18,7 +18,7 @@ import { watched } from '../../../_common/reactivity-helpers';
 import { Registry } from '../../../_common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import { getPageScrollSubscription } from '../../../_common/scroll/scroll.service';
+import { usePageScrollSubscription } from '../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
@@ -97,12 +97,16 @@ function createProfileRouteStore({
 	});
 
 	const _headerHeight = ref(0);
-	const { top: pageOffsetTop } = getPageScrollSubscription();
+	const _pageOffsetTop = ref(0);
+	usePageScrollSubscription(top => {
+		_pageOffsetTop.value = top;
+	});
+
 	const stickySides = watched(() => {
 		if (_headerHeight.value <= 0) {
 			return false;
 		}
-		return pageOffsetTop.value >= _headerHeight.value;
+		return _pageOffsetTop.value >= _headerHeight.value;
 	});
 
 	// Watch for changes with the header so we know how far we need to scroll
@@ -243,7 +247,6 @@ function createProfileRouteStore({
 		isFriend,
 		isOnline,
 		shareUrl,
-		pageOffsetTop,
 		stickySides,
 		floatingAvatarSize: buildCSSPixelValue(100),
 		sendFriendRequest,
