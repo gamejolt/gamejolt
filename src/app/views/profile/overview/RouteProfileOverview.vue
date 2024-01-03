@@ -354,7 +354,7 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 							:count="knownFollowerCount"
 						/>
 
-						<!-- Latest Games -->
+						<!-- Developer's Games -->
 						<template v-if="Screen.isDesktop && gamesCount > 0">
 							<AppSpacer vertical :scale="6" />
 
@@ -374,7 +374,7 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 								</div>
 
 								<h4 class="section-header">
-									{{ $gettext(`Latest games`) }}
+									{{ $gettext(`Developer's Games`) }}
 								</h4>
 							</div>
 
