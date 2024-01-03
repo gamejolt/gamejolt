@@ -40,8 +40,8 @@ const shouldShowFollow = toRef(
 
 const canAddAsFriend = toRef(
 	() =>
-		myUser.value &&
-		routeUser.value &&
+		!!myUser.value &&
+		!!routeUser.value &&
 		!isMe.value &&
 		!userFriendship.value &&
 		routeUser.value.friend_requests_enabled &&

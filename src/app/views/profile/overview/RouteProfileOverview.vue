@@ -288,8 +288,6 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 									...styleElevate(3),
 									// Can't change this, needs to be at least 300px wide.
 									minWidth: `300px`,
-									paddingTop: `8px`,
-									paddingBottom: `8px`,
 									borderRadius: kBorderRadiusLg.px,
 									padding: `8px`,
 								}"
@@ -336,8 +334,6 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 									...styleElevate(3),
 									// Can't change this, needs to be at least 300px wide.
 									minWidth: `300px`,
-									paddingTop: `8px`,
-									paddingBottom: `8px`,
 									borderRadius: kBorderRadiusLg.px,
 									padding: `8px`,
 								}"

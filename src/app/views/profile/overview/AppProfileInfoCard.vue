@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRef } from 'vue';
+import { CSSProperties, PropType, computed } from 'vue';
 import { formatNumber } from '../../../../_common/filters/number';
+import { watched } from '../../../../_common/reactivity-helpers';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { kThemeFg10 } from '../../../../_common/theme/variables';
@@ -145,7 +146,7 @@ const dividerStyles = {
 	backgroundColor: kThemeFg10,
 } satisfies CSSProperties;
 
-const floatingInfoSpacerExpandedHeight = toRef(() => floatingAvatarSize.value * 0.6 + 12);
+const floatingInfoSpacerExpandedHeight = watched(() => floatingAvatarSize.value * 0.6 + 12);
 </script>
 
 <template>
