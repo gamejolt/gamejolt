@@ -37,7 +37,7 @@ const props = defineProps({
 	 */
 	stickySides: {
 		type: [Boolean, Object] as PropType<boolean | { left?: boolean; right?: boolean }>,
-		default: () => ({}),
+		default: false,
 	},
 	/**
 	 * Distance between the top of the page contents and the top of a column.
