@@ -34,7 +34,7 @@ const props = defineProps({
 // Route store shouldn't change, so this is fine.
 provideProfileRouteStore(props.routeStore);
 // eslint-disable-next-line vue/no-setup-props-destructure
-const { user: routeUser, myUser, isMe, isOverviewLoaded, shareUrl } = props.routeStore;
+const { user: routeUser, myUser, isMe, shareUrl } = props.routeStore;
 
 const modal = useModal()!;
 
