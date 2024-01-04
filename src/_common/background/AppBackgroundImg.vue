@@ -38,7 +38,6 @@ watchEffect(() => {
 });
 
 function attachPageOffsetBackgroundStyles(top: number) {
-	console.log('trying to scroll?');
 	if (!root.value) {
 		return;
 	}
