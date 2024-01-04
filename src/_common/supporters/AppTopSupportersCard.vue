@@ -10,7 +10,6 @@ import {
 import { kBorderWidthSm, kFontSizeSmall, kFontSizeTiny } from '../../_styles/variables';
 import AppAnimElectricity from '../animation/AppAnimElectricity.vue';
 import { formatFuzzynumberOverThreshold } from '../filters/fuzzynumber';
-import AppJolticon from '../jolticon/AppJolticon.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import { useCommonStore } from '../store/common-store';
 import { kThemeFg, kThemeFg10, kThemeFgMuted } from '../theme/variables';
@@ -18,6 +17,7 @@ import { vAppTooltip } from '../tooltip/tooltip-directive';
 import AppUserCardHover from '../user/card/AppUserCardHover.vue';
 import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../user/user.model';
+import AppTopSupportersHeader from './AppTopSupportersHeader.vue';
 
 export interface TopSupporter {
 	user: UserModel;
@@ -51,6 +51,9 @@ defineProps({
 		type: Object as PropType<OwnSupport>,
 		required: true,
 	},
+	insetHeader: {
+		type: Boolean,
+	},
 });
 
 const { user: myUser } = useCommonStore();
@@ -58,33 +61,7 @@ const { user: myUser } = useCommonStore();
 
 <template>
 	<div>
-		<div class="clearfix">
-			<h4 class="section-header">
-				<span>
-					{{ $gettext(`Top supporters (last 30 days)`) }}
-				</span>
-
-				<div
-					v-app-tooltip.touchable="
-						$gettext(`Top supporters that placed a charged sticker in the last 30 days`)
-					"
-					:style="{
-						display: 'inline-block',
-						minHeight: '100%',
-						paddingLeft: '4px',
-						paddingRight: '4px',
-					}"
-				>
-					<AppJolticon
-						:style="{
-							fontSize: '14px',
-							color: kThemeFgMuted,
-						}"
-						icon="help-circle"
-					/>
-				</div>
-			</h4>
-		</div>
+		<AppTopSupportersHeader v-if="!insetHeader" />
 
 		<div
 			:style="{
@@ -93,6 +70,8 @@ const { user: myUser } = useCommonStore();
 				padding: `12px 16px`,
 			}"
 		>
+			<AppTopSupportersHeader v-if="insetHeader" small />
+
 			<div
 				:style="{
 					display: `flex`,

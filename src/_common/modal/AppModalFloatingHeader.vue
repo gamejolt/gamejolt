@@ -1,11 +1,42 @@
 <script lang="ts" setup>
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
+
+defineProps({
+	controlsGap: {
+		type: Number,
+		default: undefined,
+	},
+});
 </script>
 
 <template>
 	<AppScrollAffix class="modal-floating-header" anchor="top" :offset-top="0" :padding="0">
 		<div class="modal-controls">
-			<slot name="modal-controls" />
+			<div
+				v-if="$slots['inline-title']"
+				:style="{
+					marginRight: `auto`,
+					flex: `auto`,
+					minWidth: 0,
+					alignSelf: `center`,
+					paddingTop: `8px`,
+					textAlign: `unset`,
+				}"
+			>
+				<slot name="inline-title" />
+			</div>
+
+			<div
+				v-if="controlsGap !== undefined && controlsGap > 0"
+				:style="{
+					flex: `none`,
+					width: `${controlsGap}px`,
+				}"
+			/>
+
+			<div>
+				<slot name="modal-controls" />
+			</div>
 		</div>
 
 		<div class="-floating-top">
@@ -37,7 +68,6 @@ import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 		z-index: 3
 
 		.modal-controls
-			padding-left: @padding-right
 			background-color: var(--theme-bg-actual)
 			position: relative
 			z-index: 2
@@ -50,6 +80,7 @@ import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 	padding-left: var(--float-padding)
 	display: flex
 	justify-content: flex-end
+	text-align: unset
 
 .-sans-padding-horizontal
 	padding-left: 0

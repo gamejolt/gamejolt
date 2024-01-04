@@ -4,7 +4,8 @@ import { styleWhen } from '../../_styles/mixins';
 import { ImgHelper } from '../img/helper/helper-service';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppBackgroundFade from './AppBackgroundFade.vue';
-import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
+import AppBackgroundImg from './AppBackgroundImg.vue';
+import { BackgroundModel } from './background.model';
 
 const props = defineProps({
 	background: {
@@ -42,6 +43,9 @@ const props = defineProps({
 	noEdges: {
 		type: Boolean,
 	},
+	disablePageScroll: {
+		type: Boolean,
+	},
 });
 
 const { background, bleed, backdropStyle, backgroundStyle, scrollDirection } = toRefs(props);
@@ -51,9 +55,6 @@ const loadedBackground = ref<BackgroundModel>();
 
 const mediaItem = computed(() => background?.value?.media_item);
 const hasMedia = computed(() => !!mediaItem.value);
-const cssProperties = computed(() =>
-	loadedBackground.value ? getBackgroundCSSProperties(loadedBackground.value) : {}
-);
 
 if (import.meta.env.SSR) {
 	loadedBackground.value = background?.value;
@@ -87,21 +88,16 @@ if (import.meta.env.SSR) {
 		>
 			<div v-if="background" class="_stretch anim-fade-in">
 				<Transition name="fade">
-					<div
+					<AppBackgroundImg
 						v-if="loadedBackground"
 						:key="loadedBackground.id"
-						:class="[
-							'_stretch',
-							'anim-fade-in',
-							{
-								_scroll: scrollDirection,
-								[`_scroll-${scrollDirection}`]: scrollDirection,
-							},
-						]"
-						:style="[
-							cssProperties,
+						class="_stretch anim-fade-in"
+						:style="
 							styleWhen(!!backgroundStyle, backgroundStyle!)
-						]"
+						"
+						:background="background"
+						:scroll-direction="scrollDirection"
+						:disable-page-scroll="disablePageScroll"
 					/>
 				</Transition>
 
@@ -143,40 +139,10 @@ if (import.meta.env.SSR) {
 	right: 0
 	bottom: 0
 
-._scroll
-	animation-timing-function: linear !important
-	animation-duration: 20s
-	animation-iteration-count: infinite
-
-._scroll-left
-._scroll-right
-	animation-name: anim-scroll-h
-
-._scroll-up
-._scroll-down
-	animation-name: anim-scroll-v
-
-._scroll-left
-._scroll-down
-	animation-direction: reverse
 
 ._inner
 	z-index: 1
 	position: relative
 	width: 100%
 	height: 100%
-
-@keyframes anim-scroll-h
-	0%
-		background-position: 0 0
-
-	100%
-		background-position: 800px 0
-
-@keyframes anim-scroll-v
-	0%
-		background-position: 0 0
-
-	100%
-		background-position: 0 -800px
 </style>

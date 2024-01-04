@@ -187,6 +187,8 @@ make-button-size(size)
 
 // Put a bit of spacing between two block buttons on top of each other.
 .-block + .-block
+::v-deep(.button-group) + .-block
+.-block + ::v-deep(.button-group)
 	margin-top: 5px
 
 // Block only on xs.

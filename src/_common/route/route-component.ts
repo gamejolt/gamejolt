@@ -15,7 +15,7 @@ export interface AppRouteOptions {
 	lazy?: boolean;
 	cache?: boolean;
 	reloadOnHashChange?: boolean;
-	deps?: { params?: string[]; query?: string[] };
+	deps?: null | { params?: string[]; query?: string[] };
 	resolver?: (data: { route: RouteLocationNormalized }) => Promise<any>;
 }
 
@@ -452,30 +452,28 @@ function _canSkipRouteUpdate(
 	to: RouteLocationNormalized
 ) {
 	const deps = _findDeps(resolverOptions, to);
+
+	// If deps weren't defined then we need to refresh since the route _might_
+	// depend on a changed param/query, or even the route itself (since the same
+	// component may be used across different routes).
+	if (deps === null) {
+		return false;
+	}
+
 	const changedParams = _getChangedProperties(from.params, to.params);
 	const changedQuery = _getChangedProperties(from.query, to.query);
 
-	if (deps === null) {
-		// If deps weren't defined, and either params or query has changed,
-		// then we need to refresh since the route _might_ depend on a
-		// changed param/query.
-		if (changedParams.length > 0 || changedQuery.length > 0) {
+	// Otherwise we should check the params and query against the deps to
+	// see if we actually need to update.
+	for (const param of changedParams) {
+		if (deps.params.indexOf(param) !== -1) {
 			return false;
 		}
-	} else {
-		// Otherwise we should check the params and query against the deps to
-		// see if we actually need to update.
+	}
 
-		for (const param of changedParams) {
-			if (deps.params.indexOf(param) !== -1) {
-				return false;
-			}
-		}
-
-		for (const query of changedQuery) {
-			if (deps.query.indexOf(query) !== -1) {
-				return false;
-			}
+	for (const query of changedQuery) {
+		if (deps.query.indexOf(query) !== -1) {
+			return false;
 		}
 	}
 

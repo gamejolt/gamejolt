@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, PropType, ref, toRef, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { styleWhen } from '../../../_styles/mixins';
 import { getMediaserverUrlForBounds } from '../../../utils/image';
@@ -39,16 +39,15 @@ const { user, isLoading, elevate } = toRefs(props);
 
 const headerElement = ref<HTMLElement>();
 
-const commonStore = useCommonStore();
+const { user: sessionUser } = useCommonStore();
 
-const appUser = computed(() => commonStore.user.value);
-
-const followerCount = computed(() => user.value.follower_count || 0);
-const followingCount = computed(() => user.value.following_count || 0);
-const postCount = computed(() => user.value.post_count || 0);
-const gameCount = computed(() => user.value.game_count || 0);
-const likeCount = computed(() => user.value.like_count || 0);
-const theme = computed(() => (user.value.theme ? user.value.theme : undefined));
+const followerCount = toRef(() => user.value.follower_count || 0);
+const followingCount = toRef(() => user.value.following_count || 0);
+const postCount = toRef(() => user.value.post_count || 0);
+const gameCount = toRef(() => user.value.game_count || 0);
+const likeCount = toRef(() => user.value.like_count || 0);
+const dogtags = toRef(() => user.value.dogtags || []);
+const showTags = toRef(() => !!user.value.follows_you || dogtags.value.length > 0);
 
 const headerBackgroundImage = computed(() => {
 	let src = user.value.header_media_item?.mediaserver_url;
@@ -63,16 +62,13 @@ const headerBackgroundImage = computed(() => {
 	}
 	return undefined;
 });
-
-const dogtags = computed(() => user.value.dogtags || []);
-const showTags = computed(() => !!user.value.follows_you || dogtags.value.length > 0);
 </script>
 
 <template>
 	<AppTheme
 		class="user-card sheet sheet-full sheet-no-full-bleed"
 		:class="{ 'sheet-elevate': elevate }"
-		:theme="theme"
+		:theme="user.theme || undefined"
 	>
 		<div class="-user-info">
 			<div
@@ -128,7 +124,7 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 
 				<div class="-follow-counts small">
 					<RouterLink
-						v-translate="{ count: formatNumber(followingCount || 0) }"
+						v-translate="{ count: formatNumber(followingCount) }"
 						:to="{
 							name: 'profile.following',
 							params: { username: user.username },
@@ -154,9 +150,9 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 					</RouterLink>
 				</div>
 
-				<div v-if="appUser" class="-follow">
+				<div v-if="sessionUser" class="-follow">
 					<AppUserFollowButton
-						v-if="user.id !== appUser.id"
+						v-if="user.id !== sessionUser.id"
 						:user="user"
 						location="card"
 						block
@@ -167,7 +163,7 @@ const showTags = computed(() => !!user.value.follows_you || dogtags.value.length
 						v-else
 						:to="{
 							name: 'profile.overview',
-							params: { username: appUser.username },
+							params: { username: sessionUser.username },
 						}"
 						block
 					>
