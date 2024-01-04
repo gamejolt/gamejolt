@@ -378,6 +378,11 @@ const coverMaxHeight = watched(() => Math.min(Screen.height * 0.35, 400));
 								minHeight: 0,
 							}),
 						}"
+						:cover-header-styles="{
+							...styleWhen(Screen.isMobile && !routeUser.header_media_item, {
+								background: `transparent`,
+							}),
+						}"
 					>
 						<template v-if="!Screen.isMobile" #default>
 							<RouterLink
