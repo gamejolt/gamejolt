@@ -1,27 +1,24 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
+import { computed } from 'vue';
+import { RouterLink } from 'vue-router';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { imageJolt } from '../../../img/images';
 
-@Options({
-	name: 'RouteLandingPartners',
-	components: {
-		AppThemeSvg,
-	},
-})
-@OptionsForLegacyRoute()
-export default class RouteLandingPartners extends LegacyRouteComponent {
-	readonly imageJolt = imageJolt;
-	readonly assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
+const assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
 
-	get routeTitle() {
-		return `Become a Partner`;
-	}
-}
+export default {
+	...defineAppRouteOptions({}),
+};
+</script>
+
+<script lang="ts" setup>
+createAppRoute({
+	routeTitle: computed(() => $gettext(`Become a Partner`)),
+});
 </script>
 
 <template>
@@ -158,7 +155,7 @@ export default class RouteLandingPartners extends LegacyRouteComponent {
 							<p>
 								If it's an existing game, you will have to opt it in. Simply go to
 								your
-								<router-link :to="{ name: 'home' }">Dashboard</router-link>
+								<RouterLink :to="{ name: 'home' }">Dashboard</RouterLink>
 								, click to manage your game, click
 								<strong>Details</strong>
 								on the left, and you will see the option to include your game into

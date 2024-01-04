@@ -74,7 +74,7 @@ const refImg = ref<HTMLImageElement>();
 
 onMounted(() => {
 	const useAspectRatio =
-		minAspectRatio?.value && maxAspectRatio?.value ? undefined : maxAspectRatio?.value;
+		minAspectRatio?.value && maxAspectRatio?.value ? undefined : aspectRatio?.value;
 
 	cropper = new Cropper(refImg.value!, {
 		aspectRatio: useAspectRatio,
@@ -182,8 +182,8 @@ onBeforeUnmount(() => {
 
 watch(
 	() => aspectRatio?.value,
-	() => {
-		cropper?.setAspectRatio(maxAspectRatio?.value || 0);
+	aspectRatio => {
+		cropper?.setAspectRatio(aspectRatio || 0);
 	}
 );
 

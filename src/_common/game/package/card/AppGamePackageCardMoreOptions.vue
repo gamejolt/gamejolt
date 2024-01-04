@@ -54,6 +54,7 @@ function click(build: GameBuildModel) {
 			</template>
 
 			<small v-if="extraBuild.arch === '64'">
+				{{ ' ' }}
 				<AppTranslate>64-bit</AppTranslate>
 			</small>
 

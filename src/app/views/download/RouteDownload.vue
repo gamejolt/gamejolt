@@ -3,7 +3,6 @@ import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
 import {
 	AdSettingsContainer,
-	isAdEnthused,
 	releasePageAdsSettings,
 	setPageAdsSettings,
 	useAdStore,
@@ -183,18 +182,12 @@ function _releaseAdSettings() {
 		<AppPageContainer xl>
 			<template v-if="Screen.isDesktop" #left>
 				<AppScrollAffix>
-					<AppAdWidget
-						:size="isAdEnthused ? 'skyscraper-1' : 'rectangle'"
-						placement="side"
-					/>
+					<AppAdWidget size="skyscraper-1" placement="side" />
 				</AppScrollAffix>
 			</template>
 			<template v-if="Screen.isLg" #right>
 				<AppScrollAffix>
-					<AppAdWidget
-						:size="isAdEnthused ? 'skyscraper-2' : 'rectangle'"
-						placement="side"
-					/>
+					<AppAdWidget size="skyscraper-2" placement="side" />
 				</AppScrollAffix>
 			</template>
 			<template #default>

@@ -1,6 +1,5 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed, ref } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';
@@ -8,90 +7,67 @@ import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model'
 import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import AppPagination from '../../../../../_common/pagination/AppPagination.vue';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../_common/route/route-component';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
+import { $gettext, $ngettext } from '../../../../../_common/translate/translate.service';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
 import AppForumRules from '../../../../components/forum/rules/rules.vue';
 import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
 
-@Options({
-	name: 'RouteForumsChannelsView',
-	components: {
-		AppPageHeader,
-		AppForumTopicList,
-		AppPagination,
-		AppForumBreadcrumbs,
-		AppNavTabList,
-		AppForumRules,
-	},
-})
-@OptionsForLegacyRoute({
-	cache: true,
-	deps: { params: ['name', 'sort'], query: ['page'] },
-	resolver({ route }) {
-		const sort = 'archived';
-		return Api.sendRequest(
-			`/web/forums/channels/${route.params.name}/${sort}?page=${route.query.page || 1}`
-		);
-	},
-})
-export default class RouteForumsChannelsView extends LegacyRouteComponent {
-	commonStore = setup(() => useCommonStore());
+const sort = 'archived';
 
-	get app() {
-		return this.commonStore;
-	}
+export default {
+	...defineAppRouteOptions({
+		cache: true,
+		deps: { params: ['name', 'sort'], query: ['page'] },
+		resolver({ route }) {
+			const sort = 'archived';
+			return Api.sendRequest(
+				`/web/forums/channels/${route.params.name}/${sort}?page=${route.query.page || 1}`
+			);
+		},
+	}),
+};
+</script>
 
-	channel: ForumChannelModel = null as any;
-	topics: ForumTopicModel[] = [];
-	postCountPerPage = 0;
-	stickyTopics: ForumTopicModel[] = [];
-	perPage = 0;
-	currentPage = 1;
-	listableTopicsCount = 0;
+<script lang="ts" setup>
+const channel = ref<ForumChannelModel>(null as any);
+const topics = ref<ForumTopicModel[]>([]);
+const stickyTopics = ref<ForumTopicModel[]>([]);
+const postCountPerPage = ref(0);
+const perPage = ref(0);
+const currentPage = ref(1);
+const listableTopicsCount = ref(0);
 
-	readonly formatNumber = formatNumber;
-	readonly Scroll = Scroll;
-	readonly Screen = Screen;
-
-	get sort() {
-		return 'archived';
-	}
-
-	get page() {
-		return this.$route.query.page || 1;
-	}
-
-	get routeTitle() {
-		if (this.channel) {
-			return this.$gettext(`%{ channel } Forum`, {
-				channel: '#' + this.channel.name,
+createAppRoute({
+	routeTitle: computed(() => {
+		if (channel.value) {
+			return $gettext(`%{ channel } Forum`, {
+				channel: '#' + channel.value.name,
 			});
 		}
 		return null;
-	}
+	}),
+	onResolved({ payload }) {
+		channel.value = new ForumChannelModel(payload.channel);
+		topics.value = ForumTopicModel.populate(payload.topics);
+		postCountPerPage.value = payload.postCountPerPage;
+		listableTopicsCount.value = payload.listableTopicsCount;
 
-	routeResolved($payload: any) {
-		this.channel = new ForumChannelModel($payload.channel);
-		this.topics = ForumTopicModel.populate($payload.topics);
-		this.postCountPerPage = $payload.postCountPerPage;
-		this.listableTopicsCount = $payload.listableTopicsCount;
-
-		if ($payload.stickyTopics && $payload.stickyTopics.length) {
-			this.stickyTopics = ForumTopicModel.populate($payload.stickyTopics);
+		if (payload.stickyTopics && payload.stickyTopics.length) {
+			stickyTopics.value = ForumTopicModel.populate(payload.stickyTopics);
 		} else {
-			this.stickyTopics = [];
+			stickyTopics.value = [];
 		}
 
-		this.perPage = $payload.perPage;
-		this.currentPage = $payload.page || 1;
-	}
-}
+		perPage.value = payload.perPage;
+		currentPage.value = payload.page || 1;
+	},
+});
 </script>
 
 <template>
@@ -147,16 +123,17 @@ export default class RouteForumsChannelsView extends LegacyRouteComponent {
 				<AppNavTabList>
 					<template v-if="topics.length" #meta>
 						<span class="text-muted small">
-							<AppTranslate
-								:translate-params="{
-									currentPage: formatNumber(currentPage),
-									count: formatNumber(listableTopicsCount),
-								}"
-								:translate-n="listableTopicsCount"
-								translate-plural="Page %{ currentPage } of %{ count } topics."
-							>
-								%{ count } topic.
-							</AppTranslate>
+							{{
+								$ngettext(
+									`%{ count } topic.`,
+									`Page %{ currentPage } of %{ count } topics.`,
+									listableTopicsCount,
+									{
+										currentPage: formatNumber(currentPage),
+										count: formatNumber(listableTopicsCount),
+									}
+								)
+							}}
 						</span>
 					</template>
 				</AppNavTabList>
@@ -181,7 +158,7 @@ export default class RouteForumsChannelsView extends LegacyRouteComponent {
 				</template>
 				<div v-else class="text-center">
 					<p class="lead">
-						<AppTranslate>There aren't any topics here.</AppTranslate>
+						{{ $gettext(`There aren't any topics here.`) }}
 					</p>
 				</div>
 			</div>

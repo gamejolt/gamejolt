@@ -7,6 +7,7 @@ import { CommunityModel } from '../community/community.model';
 import { ContentContainerModel } from '../content/content-container-model';
 import { ContentContext } from '../content/content-context';
 import { ContentSetCache } from '../content/content-set-cache';
+import { DeviceArch, DeviceOs } from '../device/device.service';
 import { showErrorGrowl } from '../growls/growls.service';
 import { MediaItemModel } from '../media-item/media-item-model';
 import { Model } from '../model/model.service';
@@ -16,7 +17,7 @@ import { SiteModel } from '../site/site-model';
 import { ThemeModel } from '../theme/theme.model';
 import { $gettext } from '../translate/translate.service';
 import { UserModel } from '../user/user.model';
-import { GameBuildModel, GameBuildType } from './build/build.model';
+import { GameBuildModel, GameBuildType, canInstallGameBuild } from './build/build.model';
 import { GamePackageModel } from './package/package.model';
 
 export interface CustomGameMessage {
@@ -282,63 +283,17 @@ export class GameModel
 		}
 		return '/games/' + this.slug + '/' + this.id;
 	}
-
-	hasDesktopSupport(): boolean {
-		const compat = this.compatibility;
-		return (
-			compat.os_windows ||
-			compat.os_windows_64 ||
-			compat.os_mac ||
-			compat.os_mac_64 ||
-			compat.os_linux ||
-			compat.os_linux_64
-		);
-	}
-
-	hasBrowserSupport(): boolean {
-		const compat = this.compatibility;
-		return (
-			compat.type_html ||
-			compat.type_flash ||
-			compat.type_unity ||
-			compat.type_applet ||
-			compat.type_silverlight
-		);
-	}
-
-	canInstall(os: string, arch: string | undefined): boolean {
-		// Obviously can't install if no desktop build.
-		if (!this.hasDesktopSupport()) {
-			return false;
-		}
-
-		return checkGameDeviceSupport(this.compatibility, os, arch);
-	}
 }
 
-/**
- * Helper function to check if the resource passed in has support for the
- * os/arch passed in.
- */
-export function checkGameDeviceSupport(obj: any, os: string, arch: string | undefined): boolean {
-	if (obj['os_' + os]) {
-		return true;
-	}
-
-	// If they are on 64bit, then we can check for 64bit only support as well.
-	// If there is no arch (web site context) then we allow 64bit builds as well.
-	if ((!arch || arch === '64') && obj['os_' + os + '_64']) {
-		return true;
-	}
-
-	return false;
-}
-
-export function pluckInstallableGameBuilds(
-	packages: GamePackageModel[],
-	os: string,
-	arch?: string
-): GameBuildModel[] {
+export function pluckInstallableGameBuilds(options: {
+	packages: GamePackageModel[];
+	os: DeviceOs;
+	arch?: DeviceArch;
+	/** Whether to treat installers as "installable". Normally the GJ app does
+	 * not support these. */
+	allowInstallers?: boolean;
+}): GameBuildModel[] {
+	const { packages, os, arch, allowInstallers } = options;
 	const pluckedBuilds: GameBuildModel[] = [];
 
 	packages.forEach(_package => {
@@ -354,7 +309,7 @@ export function pluckInstallableGameBuilds(
 
 		if (_package._builds) {
 			_package._builds.forEach(build => {
-				if (checkGameDeviceSupport(build, os, arch)) {
+				if (canInstallGameBuild({ build, os, arch, allowInstallers })) {
 					pluckedBuilds.push(build);
 				}
 			});

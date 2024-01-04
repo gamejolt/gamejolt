@@ -2,7 +2,7 @@
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppAdStickyRail from '../../../../_common/ad/AppAdStickyRail.vue';
-import { isAdEnthused, useAdStore } from '../../../../_common/ad/ad-store';
+import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -60,8 +60,8 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 <template>
 	<div id="games" class="game-listing">
 		<section class="section section-thin">
-			<template v-if="showAds && globalShouldShowAds && isAdEnthused">
-				<AppAdWidget size="leaderboard" placement="content" />
+			<template v-if="showAds && globalShouldShowAds">
+				<AppAdWidget size="leaderboard" placement="top" />
 				<AppSpacer vertical :scale="6" />
 			</template>
 

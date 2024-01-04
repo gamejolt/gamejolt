@@ -1,62 +1,39 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
+import { computed } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
+import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import { GameModel } from '../../../../_common/game/game.model';
-import { AppAuthJoinLazy } from '../../../../_common/lazy';
 import { Meta } from '../../../../_common/meta/meta-service';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { imageJolt } from '../../../img/images';
 import socialImage from './social.png';
 
-@Options({
-	name: 'RouteLandingMarketplace',
-	components: {
-		AppAuthJoin: AppAuthJoinLazy,
-		AppThemeSvg,
-		AppContactLink,
-	},
-})
-@OptionsForLegacyRoute({
-	deps: {},
-	resolver: () => Api.sendRequest('/web/marketplace'),
-})
-export default class RouteLandingMarketplace extends LegacyRouteComponent {
-	commonStore = setup(() => useCommonStore());
+const assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
 
-	get app() {
-		return this.commonStore;
-	}
+export default {
+	...defineAppRouteOptions({
+		deps: {},
+		resolver: () => Api.sendRequest('/web/marketplace'),
+	}),
+};
+</script>
 
-	firesidePosts: FiresidePostModel[] = [];
-	games: GameModel[] = [];
+<script lang="ts" setup>
+const { user } = useCommonStore();
 
-	readonly Screen = Screen;
-	readonly imageJolt = imageJolt;
-	readonly assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
-
-	get routeTitle() {
-		return 'Sell Your Games';
-	}
-
-	routeResolved($payload: any) {
-		Meta.description = $payload.metaDescription;
-		Meta.fb = $payload.fb;
-		Meta.twitter = $payload.twitter;
+createAppRoute({
+	routeTitle: computed(() => $gettext(`Sell Your Games`)),
+	onResolved({ payload }) {
+		Meta.description = payload.metaDescription;
+		Meta.fb = payload.fb;
+		Meta.twitter = payload.twitter;
 		Meta.fb.image = Meta.twitter.image = socialImage;
-
-		this.firesidePosts = FiresidePostModel.populate($payload.firesidePosts);
-		this.games = GameModel.populate($payload.games);
-	}
-}
+	},
+});
 </script>
 
 <template>
@@ -168,9 +145,9 @@ export default class RouteLandingMarketplace extends LegacyRouteComponent {
 							<p>
 								Control who has access to your game's packages through keys. Assign
 								testers to your game, allowing them to get auto-updates through the
-								<router-link :to="{ name: 'landing.app' }">
+								<RouterLink :to="{ name: 'landing.app' }">
 									Game Jolt Desktop App
-								</router-link>
+								</RouterLink>
 								. Track press keys, and see when they view your games. Generate keys
 								for prizes, bundles, etc.
 							</p>
@@ -239,7 +216,7 @@ export default class RouteLandingMarketplace extends LegacyRouteComponent {
 
 					<div class="row">
 						<div class="col-sm-6 col-md-5 col-lg-4 col-centered">
-							<template v-if="!app.user">
+							<template v-if="!user">
 								<AppAuthJoin />
 								<br />
 							</template>

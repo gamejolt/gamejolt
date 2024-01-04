@@ -9,7 +9,6 @@ import { onRouteChangeAfter } from '../route/route-component';
 import { AdSlot } from './ad-slot-info';
 import { AdAdapter } from './adapter-base';
 import { AdEnthusiastAdapter } from './enthusiast/enthusiast-adapter';
-import { AdPlaywireAdapter } from './playwire/playwire-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';
 
 const logger = createLogger('Ads Store');
@@ -24,10 +23,6 @@ export const AdsDisabledDev = false;
 
 const areAdsDisabledForDevice =
 	GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev;
-
-// TODO(enthusiast-ads): Temporary until we roll out.
-export const isAdEnthused =
-	!areAdsDisabledForDevice && window.location.search.includes('be_enthused');
 
 /**
  * This is the interface that our ad components must register with us.
@@ -62,17 +57,11 @@ export function createAdStore() {
 	const pageSettings = ref<AdSettingsContainer | null>(null);
 	const _defaultSettings = new AdSettingsContainer();
 
-	let videoAdapter: AdAdapter;
-	let adapter: AdAdapter;
-	if (!import.meta.env.SSR) {
-		if (isAdEnthused) {
-			const newAdapter = new AdEnthusiastAdapter();
-			videoAdapter = newAdapter;
-			adapter = newAdapter;
-		}
-	}
-	videoAdapter ??= new AdPlaywireAdapter();
-	adapter ??= new AdProperAdapter();
+	// const _newAdapter = new AdEnthusiastAdapter();
+	// const adapter: AdAdapter = _newAdapter;
+	// const videoAdapter: AdAdapter = _newAdapter;
+	const adapter: AdAdapter = new AdProperAdapter();
+	const videoAdapter: AdAdapter = new AdEnthusiastAdapter();
 
 	const settings = toRef(() => pageSettings.value || _defaultSettings);
 
@@ -89,8 +78,8 @@ export function createAdStore() {
 	});
 
 	const c = shallowReadonly({
-		videoAdapter,
 		adapter,
+		videoAdapter,
 		routeResolved,
 		ads,
 		pageSettings,

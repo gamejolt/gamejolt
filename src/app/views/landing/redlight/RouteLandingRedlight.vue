@@ -1,16 +1,67 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
-import { AppAuthJoinLazy } from '../../../../_common/lazy';
+import { computed, toRef } from 'vue';
+import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
 import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
 import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import socialImage from './social.png';
+
+const slogans = [
+	`Drive indie traffic to your AAA games`,
+	`A better platform for AAA`,
+	`Real games for real people`,
+	`AAA games with indie branding`,
+	`You too can be indie`,
+	`A direct way to distribute your games and grow an audience for AAA studios`,
+	`Turn those AAAs to $$$s`,
+	`Bringing hope to AAA studios`,
+	`Helping AAA studios to make a name for themselves`,
+	`Putting the indie in AAA`,
+	`Roses are red, violets are blue, indies are cool, now AAAs too!`,
+];
+
+const handles = [
+	'Blizzard_Ent',
+	'SquareEnix',
+	'Konami',
+	'Capcom_Unity',
+	'Ubisoft',
+	'Activision',
+	'CDPROJEKTRED',
+	'SNKPofficial',
+	'NISAmerica',
+	'EA',
+	'Rebellion',
+	'InfinityWard',
+	'SHGames',
+	'riotgames',
+	'Bungie',
+];
+
+const assetPaths = import.meta.glob('./*.(svg|png)', { eager: true, as: 'url' });
+
+export default {
+	...defineAppRouteOptions({}),
+};
+</script>
+
+<script lang="ts" setup>
+const { user } = useCommonStore();
+
+const chosenHandle = handles[getRandomInt(0, handles.length)];
+const chosenSlogan = slogans[getRandomInt(0, slogans.length)];
+const tweet = computed(
+	() =>
+		`Hey @${chosenHandle}! I think your games would be a good fit for Game Jolt #redlight #gamedev`
+);
+
+const routeTitle = toRef(() => `Redlight`);
 
 function getRandomInt(min: number, max: number) {
 	min = Math.ceil(min);
@@ -18,83 +69,26 @@ function getRandomInt(min: number, max: number) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-@Options({
-	name: 'RouteLandingRedlight',
-	components: {
-		AppSocialTwitterShare,
-		AppSocialFacebookLike,
-		AppAuthJoin: AppAuthJoinLazy,
-	},
-})
-@OptionsForLegacyRoute()
-export default class RouteLandingRedlight extends LegacyRouteComponent {
-	commonStore = setup(() => useCommonStore());
-
-	get user() {
-		return this.commonStore.user;
-	}
-
-	readonly slogans = [
-		`Drive indie traffic to your AAA games`,
-		`A better platform for AAA`,
-		`Real games for real people`,
-		`AAA games with indie branding`,
-		`You too can be indie`,
-		`A direct way to distribute your games and grow an audience for AAA studios`,
-		`Turn those AAAs to $$$s`,
-		`Bringing hope to AAA studios`,
-		`Helping AAA studios to make a name for themselves`,
-		`Putting the indie in AAA`,
-		`Roses are red, violets are blue, indies are cool, now AAAs too!`,
-	];
-
-	readonly handles = [
-		'Blizzard_Ent',
-		'SquareEnix',
-		'Konami',
-		'Capcom_Unity',
-		'Ubisoft',
-		'Activision',
-		'CDPROJEKTRED',
-		'SNKPofficial',
-		'NISAmerica',
-		'EA',
-		'Rebellion',
-		'InfinityWard',
-		'SHGames',
-		'riotgames',
-		'Bungie',
-	];
-
-	readonly slogan = this.slogans[getRandomInt(0, this.slogans.length)];
-	readonly chosenHandle = this.handles[getRandomInt(0, this.handles.length)];
-	readonly tweet = `Hey @${this.chosenHandle}! I think your games would be a good fit for Game Jolt #redlight #gamedev`;
-	readonly assetPaths = import.meta.glob('./*.(svg|png)', { eager: true, as: 'url' });
-
-	readonly Screen = Screen;
-
-	get routeTitle() {
-		return `Redlight`;
-	}
-
-	routeCreated() {
+createAppRoute({
+	routeTitle,
+	onInit() {
 		Meta.description = `A unique platform for AAA studios and non-indie publishers.`;
 
 		Meta.fb = {
 			type: 'website',
-			title: this.routeTitle,
+			title: routeTitle.value,
 			description: Meta.description,
 		};
 
 		Meta.twitter = {
 			card: 'summary_large_image',
-			title: this.routeTitle,
+			title: routeTitle.value,
 			description: Meta.description,
 		};
 
 		Meta.fb.image = Meta.twitter.image = socialImage;
-	}
-}
+	},
+});
 </script>
 
 <template>
@@ -112,7 +106,7 @@ export default class RouteLandingRedlight extends LegacyRouteComponent {
 
 				<div class="row anim-fade-in-up">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
-						<p class="lead">{{ slogan }}</p>
+						<p class="lead">{{ chosenSlogan }}</p>
 					</div>
 				</div>
 
@@ -254,9 +248,9 @@ export default class RouteLandingRedlight extends LegacyRouteComponent {
 							<p>
 								<AppJolticon icon="checkbox" />
 								Once you're redlit,
-								<router-link :to="{ name: 'landing.indieaf' }">
+								<RouterLink :to="{ name: 'landing.indieaf' }">
 									get indie AF!
-								</router-link>
+								</RouterLink>
 							</p>
 						</div>
 						<div class="col-md-1" />
@@ -423,9 +417,9 @@ export default class RouteLandingRedlight extends LegacyRouteComponent {
 								I have specific questions about selling on Game Jolt and taxes/VAT.
 							</h4>
 							<p>
-								<router-link :to="{ name: 'landing.marketplace' }">
+								<RouterLink :to="{ name: 'landing.marketplace' }">
 									Visit gamejolt.com/marketplace
-								</router-link>
+								</RouterLink>
 								for questions about selling on Game Jolt and taxes. If you don't
 								find an answer there, email us. We'll just direct you to the forums.
 							</p>

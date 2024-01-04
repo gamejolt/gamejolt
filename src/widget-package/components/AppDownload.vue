@@ -40,8 +40,8 @@ const clickedBuild = ref<GameBuildModel>();
 // "Convenience" I guess
 const hasBrowserBuild = computed(() => !!packageCard.value.browserBuild);
 const browserBuild = computed(() => packageCard.value.browserBuild!);
-const hasDownloadableBuild = computed(() => !!packageCard.value.downloadableBuild);
-const downloadableBuild = computed(() => packageCard.value.downloadableBuild!);
+const hasDownloadableBuild = computed(() => !!packageCard.value.primaryBuild);
+const downloadableBuild = computed(() => packageCard.value.primaryBuild!);
 const showcasedBrowserIcon = computed(() => packageCard.value.showcasedBrowserIcon);
 const platformSupportInfo = computed(() => packageCard.value.platformSupportInfo);
 const showcasedOs = computed(() => packageCard.value.showcasedOs);

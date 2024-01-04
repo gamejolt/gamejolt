@@ -1,37 +1,22 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
-import { AppAuthJoinLazy } from '../../../../_common/lazy';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
+import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { imageJolt } from '../../../img/images';
 
-@Options({
-	name: 'RouteLandingLearn',
-	components: {
-		AppAuthJoin: AppAuthJoinLazy,
-		AppThemeSvg,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute()
-export default class RouteLandingLearn extends LegacyRouteComponent {
-	commonStore = setup(() => useCommonStore());
+const assetPaths = import.meta.glob('./*.(svg|png)', { eager: true, as: 'url' });
 
-	get app() {
-		return this.commonStore;
-	}
+export default {
+	...defineAppRouteOptions({}),
+};
+</script>
 
-	readonly imageJolt = imageJolt;
-	readonly assetPaths = import.meta.glob('./*.(svg|png)', { eager: true, as: 'url' });
-}
+<script lang="ts" setup>
+const { user } = useCommonStore();
+createAppRoute({});
 </script>
 
 <template>
@@ -119,32 +104,31 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 						<div class="col-sm-7 col-md-6 col-lg-5">
 							<h2 class="section-header">Discover</h2>
 							<hr class="underbar" />
-
 							<br />
 							<h4 class="sans-margin-top">Find New Games</h4>
 							<p>Browse game listings to discover new and old gems!</p>
 
 							<p>
 								Get started now by browsing
-								<router-link
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: null },
 									}"
 								>
 									Featured
-								</router-link>
+								</RouterLink>
 								,
-								<router-link
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: null },
 									}"
 								>
 									Hot
-								</router-link>
+								</RouterLink>
 								,
-								<router-link
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: 'best' },
@@ -152,9 +136,9 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 									}"
 								>
 									Devlogs
-								</router-link>
+								</RouterLink>
 								,
-								<router-link
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: 'best' },
@@ -162,9 +146,9 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 									}"
 								>
 									Early Access
-								</router-link>
+								</RouterLink>
 								or
-								<router-link
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: 'best' },
@@ -172,7 +156,7 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 									}"
 								>
 									Paid
-								</router-link>
+								</RouterLink>
 								games!
 							</p>
 
@@ -298,7 +282,7 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 
 							<p>
 								Browse
-								<router-link
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: 'best' },
@@ -306,9 +290,9 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 									}"
 								>
 									Devlogs
-								</router-link>
+								</RouterLink>
 								and
-								<router-link
+								<RouterLink
 									:to="{
 										name: 'discover.games.list._fetch',
 										params: { section: 'best' },
@@ -316,7 +300,7 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 									}"
 								>
 									Early Access
-								</router-link>
+								</RouterLink>
 								games.
 							</p>
 						</div>
@@ -451,8 +435,8 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 							<p class="lead">
 								Play and follow games in your
 								<b>browser</b>, on your
-								<router-link :to="{ name: 'landing.app' }">desktop</router-link>,
-								and through the mobile site on your
+								<RouterLink :to="{ name: 'landing.app' }">desktop</RouterLink>, and
+								through the mobile site on your
 								<b>tablet</b>
 								and
 								<b>phone</b>.
@@ -495,15 +479,15 @@ export default class RouteLandingLearn extends LegacyRouteComponent {
 					<br />
 
 					<AppButton solid :to="{ name: 'landing.app' }">
-						<AppTranslate>Get the app</AppTranslate>
+						{{ $gettext(`Get the app`) }}
 					</AppButton>
 				</div>
 			</section>
 
-			<section v-if="!app.user" class="section">
+			<section v-if="!user" class="section">
 				<div class="container">
 					<h1 class="section-header text-center">
-						<AppTranslate>Join</AppTranslate>
+						{{ $gettext(`Join`) }}
 					</h1>
 
 					<hr class="underbar underbar-center" />

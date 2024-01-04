@@ -1,40 +1,39 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
+import { computed } from 'vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { $gettext } from '../../../../_common/translate/translate.service';
+
 import { html } from '../../../../lib/terms/privacy/global.md';
 
-@Options({
-	name: 'RouteLegalPrivacy',
-})
-@OptionsForLegacyRoute()
-export default class RouteLegalPrivacy extends LegacyRouteComponent {
-	readonly template = html;
+const template = html;
 
-	get routeTitle() {
-		return this.$gettext('Privacy Policy');
-	}
+export default {
+	...defineAppRouteOptions({}),
+};
+</script>
 
-	playwireSetCookie(cname: string, cvalue: string, exdays: number) {
-		const d = new Date();
-		d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-		const expires = 'expires=' + d.toUTCString();
-		document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
-	}
-
-	playwireOptOut() {
-		this.playwireSetCookie('_pubcid_optout', '1', 1825);
-
-		// TODO: should probably show some confirmation, yeah?
-		// At this point they should be opted out.
-	}
-
-	playwireShowConsentTool() {
-		(window as any).__cmp('showConsentTool');
-	}
+<script lang="ts" setup>
+function playwireSetCookie(cname: string, cvalue: string, exdays: number) {
+	const d = new Date();
+	d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+	const expires = 'expires=' + d.toUTCString();
+	document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
 }
+
+function playwireOptOut() {
+	playwireSetCookie('_pubcid_optout', '1', 1825);
+
+	// TODO: should probably show some confirmation, yeah?
+	// At this point they should be opted out.
+}
+
+function playwireShowConsentTool() {
+	(window as any).__cmp('showConsentTool');
+}
+
+createAppRoute({
+	routeTitle: computed(() => $gettext('Privacy Policy')),
+});
 </script>
 
 <template>
