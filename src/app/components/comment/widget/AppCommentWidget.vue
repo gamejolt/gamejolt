@@ -55,6 +55,7 @@ import { Model } from '../../../../_common/model/model.service';
 import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../_common/user/user.model';
 import type { DeregisterOnConnected } from '../../grid/client.service';
 import { useGridStore } from '../../grid/grid-store';
@@ -457,7 +458,20 @@ const {
 	shouldShowEmptyMessage,
 	loadMore,
 	onCommentAdd,
+	resourceOwner,
 } = c;
+
+const placeholder = computed(() => {
+	if (!resourceOwner.value) {
+		return undefined;
+	}
+
+	if (user.value && user.value.id === resourceOwner.value.id) {
+		return $gettext(`Shout at yourself!`);
+	} else {
+		return $gettext('Shout @%{ user }!', { user: resourceOwner.value.username });
+	}
+});
 
 function sortHot() {
 	setSort(CommentSort.Hot);
@@ -506,7 +520,12 @@ function sortYou() {
 		<div v-else-if="hasBootstrapped">
 			<template v-if="showAdd">
 				<AppMessageThreadAdd v-if="user" hide-message-split>
-					<FormCommentLazy :model="model" :autofocus="autofocus" @submit="onCommentAdd" />
+					<FormCommentLazy
+						:model="model"
+						:placeholder="placeholder"
+						:autofocus="autofocus"
+						@submit="onCommentAdd"
+					/>
 				</AppMessageThreadAdd>
 				<AppAlertBox v-else icon="notice">
 					You must be
