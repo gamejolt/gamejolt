@@ -1,4 +1,4 @@
-import { onUnmounted, shallowReadonly } from 'vue';
+import { onUnmounted, ref, shallowReadonly, toRef } from 'vue';
 import { arrayRemove } from '../../utils/array';
 import { sleep } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';
@@ -172,89 +172,77 @@ export const Scroll = /** @__PURE__ */ new ScrollService();
  * Minimum interval in milliseconds that {@link _onScroll} will assign to
  * {@link PageScrollSubscription.top} refs.
  */
-export const pageScrollSubscriptionTimeout = 1_000 / 24;
+export const PageScrollSubscriptionTimeout = 1_000 / 24;
 
-export interface PageScrollSubscription {
-	id: number;
-	/**
-	 * Current page scroll offset. Returns `0` if the subscription is not active
-	 * or has been disposed.
-	 */
-	onScroll: (top: number) => void;
-	isActive: boolean;
-	isDisposed: boolean;
-	/** Starts watching for page offsets if it wasn't already. */
-	activate(): void;
-	/** Stops watching for page offsets. */
-	deactivate(): void;
-}
+export type PageScrollSubscription = ReturnType<typeof usePageScrollSubscription>;
+type OnScrollCallback = (top: number) => void;
 
-let _subscriptionId = 0;
-const _subscriptions: PageScrollSubscription[] = [];
+const _onScrollCallbacks: OnScrollCallback[] = [];
 let _isOnScrollBusy = false;
 let _lastOnScrollTop: number | null = null;
 
 /** Should only be used in a setup block. */
 export function usePageScrollSubscription(
-	onScroll: (top: number) => void,
-	{
-		active = true,
-	}: {
+	onScroll: OnScrollCallback,
+	options: {
 		/**
 		 * Determines if the subscription should be active immediately.
 		 */
-		active?: boolean;
+		enable?: boolean;
 	} = {}
 ) {
-	const subscription: PageScrollSubscription = {
-		id: ++_subscriptionId,
-		onScroll,
-		isActive: active,
-		isDisposed: false,
-		activate() {
-			if (subscription.isDisposed) {
-				console.error('Tried to activate a disposed subscription.');
-				return;
-			}
-			if (!subscription.isActive) {
-				subscription.isActive = true;
-				_subscriptions.push(subscription);
-				if (_lastOnScrollTop !== null) {
-					onScroll(_lastOnScrollTop);
-				}
-				_afterSubscriptionsChanged();
-			}
-		},
-		deactivate() {
-			if (subscription.isActive) {
-				arrayRemove(_subscriptions, i => i.id === subscription.id);
-				subscription.isActive = false;
-				if (!subscription.isDisposed) {
-					onScroll(0);
-				}
-				_afterSubscriptionsChanged();
-			}
-		},
-	};
+	const isEnabled = ref(false);
+	const isDisposed = ref(false);
 
-	onUnmounted(() => {
-		subscription.isDisposed = true;
-		subscription.deactivate();
-	});
+	function enable() {
+		if (isDisposed.value) {
+			console.error(`Tried to activate a disposed subscription.`);
+			return;
+		}
 
-	_subscriptions.push(subscription);
-	// Attach listeners and immediately call onScroll if active.
-	if (active) {
+		if (isEnabled.value) {
+			return;
+		}
+
+		isEnabled.value = true;
+		_onScrollCallbacks.push(onScroll);
 		if (_lastOnScrollTop !== null) {
 			onScroll(_lastOnScrollTop);
 		}
 		_afterSubscriptionsChanged();
 	}
-	return shallowReadonly(subscription);
+
+	function disable() {
+		if (!isEnabled.value) {
+			return;
+		}
+
+		arrayRemove(_onScrollCallbacks, i => i === onScroll);
+		isEnabled.value = false;
+		if (!isDisposed.value) {
+			onScroll(0);
+		}
+		_afterSubscriptionsChanged();
+	}
+
+	onUnmounted(() => {
+		isDisposed.value = true;
+		disable();
+	});
+
+	if (options.enable) {
+		enable();
+	}
+
+	return shallowReadonly({
+		enable,
+		disable,
+		isActive: toRef(() => isEnabled.value && !isDisposed.value),
+	});
 }
 
 function _afterSubscriptionsChanged() {
-	if (_subscriptions.length && _subscriptions.some(i => i.isActive && !i.isDisposed)) {
+	if (_onScrollCallbacks.length) {
 		window.document.addEventListener('scroll', _onScroll, {
 			passive: true,
 		});
@@ -277,14 +265,13 @@ async function _onScroll() {
 	_isOnScrollBusy = true;
 
 	// Wait a bit so we don't do this too often.
-	await sleep(pageScrollSubscriptionTimeout);
+	await sleep(PageScrollSubscriptionTimeout);
 
-	const activeSubscriptions = _subscriptions.filter(i => i.isActive && !i.isDisposed);
 	let top = 0;
-	if (activeSubscriptions.length) {
+	if (_onScrollCallbacks.length) {
 		top = Scroll.getScrollTop();
-		for (const subscription of activeSubscriptions) {
-			subscription.onScroll(top);
+		for (const cb of _onScrollCallbacks) {
+			cb(top);
 		}
 	}
 	_lastOnScrollTop = top;

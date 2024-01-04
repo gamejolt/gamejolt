@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { PropType, ref, toRefs, watch, watchEffect } from 'vue';
-import { pageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
+import { PageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
 import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
 const props = defineProps({
@@ -30,11 +30,7 @@ watchEffect(() => {
 		const key = keyUnsafe as keyof typeof baseStyles;
 		// Don't assign backgroundPosition if we're currently modifying it
 		// through page scroll offset.
-		if (
-			key === 'backgroundPosition' &&
-			pageScrollSubscription.isActive &&
-			!pageScrollSubscription.isDisposed
-		) {
+		if (key === 'backgroundPosition' && pageScrollSubscription.isActive.value) {
 			continue;
 		}
 		root.value.style[key] = baseStyles[key];
@@ -42,6 +38,7 @@ watchEffect(() => {
 });
 
 function attachPageOffsetBackgroundStyles(top: number) {
+	console.log('trying to scroll?');
 	if (!root.value) {
 		return;
 	}
@@ -53,20 +50,20 @@ function attachPageOffsetBackgroundStyles(top: number) {
 	} else {
 		root.value.style.backgroundPosition = `center ${top / 5}px`;
 		root.value.style.transition = `background-position ${
-			pageScrollSubscriptionTimeout + 20
+			PageScrollSubscriptionTimeout + 20
 		}ms ease-out`;
 	}
 }
 
 const pageScrollSubscription = usePageScrollSubscription(attachPageOffsetBackgroundStyles, {
-	active: !disablePageScroll.value,
+	enable: !disablePageScroll.value,
 });
 
 watch(disablePageScroll, disablePageScroll => {
 	if (disablePageScroll) {
-		pageScrollSubscription.deactivate();
+		pageScrollSubscription.disable();
 	} else {
-		pageScrollSubscription.activate();
+		pageScrollSubscription.enable();
 	}
 });
 </script>
