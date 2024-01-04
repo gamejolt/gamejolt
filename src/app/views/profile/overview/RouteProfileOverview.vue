@@ -344,8 +344,10 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 
 						<AppSpacer v-if="Screen.isXs" :scale="4" vertical />
 
-						<AppShareCard v-if="!myUser || !isMe" resource="user" :url="shareUrl" />
-						<AppInviteCard v-else :user="myUser" />
+						<template v-if="Screen.isDesktop">
+							<AppShareCard v-if="!myUser || !isMe" resource="user" :url="shareUrl" />
+							<AppInviteCard v-else :user="myUser" />
+						</template>
 
 						<AppUserKnownFollowers
 							v-if="shouldShowKnownFollowers"
