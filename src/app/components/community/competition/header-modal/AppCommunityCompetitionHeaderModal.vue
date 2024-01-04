@@ -5,7 +5,7 @@ import { CommunityCompetitionModel } from '../../../../../_common/community/comp
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormCommunityCompetitionHeader from '../../../forms/community/competition/header/header.vue';
+import FormCommunityCompetitionHeader from '../../../forms/community/competition/header/FormCommunityCompetitionHeader.vue';
 
 const props = defineProps({
 	competition: {
