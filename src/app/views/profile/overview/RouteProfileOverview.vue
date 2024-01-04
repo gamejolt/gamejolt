@@ -1,7 +1,6 @@
 <script lang="ts">
 import { Ref, ref, toRef } from 'vue';
 import { RouteLocationRaw, RouterView, useRoute, useRouter } from 'vue-router';
-import { isAdEnthused } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -291,7 +290,7 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 									borderRadius: kBorderRadiusLg.px,
 									padding: `8px`,
 								}"
-								:size="isAdEnthused ? 'video' : 'rectangle'"
+								size="video"
 								placement="side"
 							/>
 							<AppSpacer vertical :scale="6" />
@@ -337,7 +336,7 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 									borderRadius: kBorderRadiusLg.px,
 									padding: `8px`,
 								}"
-								:size="isAdEnthused ? 'video' : 'rectangle'"
+								size="video"
 								placement="side"
 							/>
 							<AppSpacer vertical :scale="6" />
