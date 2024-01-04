@@ -2,7 +2,7 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import { BaseModal } from '../../../../../../_common/modal/base';
-import FormCommunityThumbnail from '../thumbnail.vue';
+import FormCommunityThumbnail from '../FormCommunityThumbnail.vue';
 
 @Options({
 	components: {
