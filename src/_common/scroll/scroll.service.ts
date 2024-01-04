@@ -192,7 +192,7 @@ export interface PageScrollSubscription {
 let _subscriptionId = 0;
 const _subscriptions: PageScrollSubscription[] = [];
 let _isOnScrollBusy = false;
-let _lastOnScrollTop = 0;
+let _lastOnScrollTop: number | null = null;
 
 /** Should only be used in a setup block. */
 export function usePageScrollSubscription(
@@ -219,7 +219,9 @@ export function usePageScrollSubscription(
 			if (!subscription.isActive) {
 				subscription.isActive = true;
 				_subscriptions.push(subscription);
-				onScroll(_lastOnScrollTop);
+				if (_lastOnScrollTop !== null) {
+					onScroll(_lastOnScrollTop);
+				}
 				_afterSubscriptionsChanged();
 			}
 		},
@@ -243,7 +245,9 @@ export function usePageScrollSubscription(
 	_subscriptions.push(subscription);
 	// Attach listeners and immediately call onScroll if active.
 	if (active) {
-		onScroll(_lastOnScrollTop);
+		if (_lastOnScrollTop !== null) {
+			onScroll(_lastOnScrollTop);
+		}
 		_afterSubscriptionsChanged();
 	}
 	return shallowReadonly(subscription);
@@ -262,6 +266,7 @@ function _afterSubscriptionsChanged() {
 		sleep(0).then(() => _onScroll());
 	} else {
 		window.document.removeEventListener('scroll', _onScroll);
+		_lastOnScrollTop = null;
 	}
 }
 
