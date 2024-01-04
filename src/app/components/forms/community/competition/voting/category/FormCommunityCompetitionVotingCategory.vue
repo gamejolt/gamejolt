@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
 import { CommunityCompetitionModel } from '../../../../../../../_common/community/competition/competition.model';
 import {
 	$saveCommunityCompetitionVotingCategory,
@@ -25,33 +25,47 @@ const props = defineProps({
 		type: Object as PropType<CommunityCompetitionModel>,
 		required: true,
 	},
-	...defineFormProps<CommunityCompetitionVotingCategoryModel>(true),
+	...defineFormProps<CommunityCompetitionVotingCategoryModel>(),
+});
+
+const emit = defineEmits({
+	submit: (_model: any) => true,
 });
 
 const { competition, model } = toRefs(props);
-
-const isAdding = toRef(() => !model.value);
 
 const nameAvailabilityUrl = computed(() => {
 	let endpoint =
 		'/web/dash/communities/competitions/voting-categories/check-field-availability/' +
 		competition.value.id;
 
-	if (model.value?.id) {
+	if (model?.value?.id) {
 		endpoint += '/' + model.value.id;
 	}
 
 	return endpoint;
 });
 
+let isAdding = false;
+
 const form: FormController<CommunityCompetitionVotingCategoryModel> = createForm({
 	model,
 	modelClass: CommunityCompetitionVotingCategoryModel,
 	modelSaveHandler: $saveCommunityCompetitionVotingCategory,
+	onInit() {
+		isAdding = !model?.value;
+	},
 	onBeforeSubmit() {
 		// When creating a new category, this field isn't set yet.
 		if (!form.formModel.community_competition_id) {
 			form.formModel.community_competition_id = competition.value.id;
+		}
+	},
+	// TODO(component-setup-refactor-forms-1): Adding this to support existing behavior of notifying the parent component.
+	// let me know if this is okay.
+	onSubmitSuccess() {
+		if (isAdding) {
+			emit('submit', form.formModel);
 		}
 	},
 });
