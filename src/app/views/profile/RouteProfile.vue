@@ -98,9 +98,12 @@ function createProfileRouteStore({
 
 	const _headerHeight = ref(0);
 	const _pageOffsetTop = ref(0);
-	usePageScrollSubscription(top => {
-		_pageOffsetTop.value = top;
-	});
+	usePageScrollSubscription(
+		top => {
+			_pageOffsetTop.value = top;
+		},
+		{ enable: true }
+	);
 
 	const stickySides = watched(() => {
 		if (_headerHeight.value <= 0) {
