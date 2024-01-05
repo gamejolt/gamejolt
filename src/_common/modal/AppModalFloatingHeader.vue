@@ -65,7 +65,7 @@ defineProps({
 		padding: 0 var(--float-padding)
 
 	::v-deep(.gj-scroll-affixed)
-		z-index: 3
+		z-index: 10
 
 		.modal-controls
 			background-color: var(--theme-bg-actual)
