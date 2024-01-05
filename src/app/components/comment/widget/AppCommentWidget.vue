@@ -420,6 +420,8 @@ const props = defineProps({
 	},
 });
 
+const { displayMode } = toRefs(props);
+
 const emit = defineEmits({
 	error: (_e: any) => true,
 	add: (_comment: CommentModel) => true,
@@ -462,7 +464,7 @@ const {
 } = c;
 
 const placeholder = computed(() => {
-	if (!resourceOwner.value) {
+	if (!resourceOwner.value || displayMode?.value !== 'shouts') {
 		return undefined;
 	}
 
