@@ -43,7 +43,7 @@ const props = defineProps({
 	noEdges: {
 		type: Boolean,
 	},
-	disablePageScroll: {
+	enablePageScroll: {
 		type: Boolean,
 	},
 });
@@ -97,7 +97,7 @@ if (import.meta.env.SSR) {
 						"
 						:background="background"
 						:scroll-direction="scrollDirection"
-						:disable-page-scroll="disablePageScroll"
+						:enable-page-scroll="enablePageScroll"
 					/>
 				</Transition>
 

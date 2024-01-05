@@ -253,7 +253,7 @@ const hydrated = watched(() => feed.isItemHydrated(item.value));
 					:darken="overlay"
 					:fade-opacity="post.hasAnyMedia ? 0.2 : undefined"
 					bleed
-					:disable-page-scroll="!hydrated"
+					:enable-page-scroll="hydrated"
 				>
 					<AppPostHeader
 						:post="post"

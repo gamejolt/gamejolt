@@ -1,6 +1,5 @@
 import { onUnmounted, ref, shallowReadonly, toRef } from 'vue';
 import { arrayRemove } from '../../utils/array';
-import { sleep } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';
 import { AppAutoscrollAnchor } from './auto-scroll/anchor';
 
@@ -172,14 +171,15 @@ export const Scroll = /** @__PURE__ */ new ScrollService();
  * Minimum interval in milliseconds that {@link _onScroll} will assign to
  * {@link PageScrollSubscription.top} refs.
  */
-export const PageScrollSubscriptionTimeout = 1_000 / 24;
+export const PageScrollSubscriptionTimeout = 1_000 / 30;
 
 export type PageScrollSubscription = ReturnType<typeof usePageScrollSubscription>;
 type OnScrollCallback = (top: number) => void;
 
 const _onScrollCallbacks: OnScrollCallback[] = [];
-let _isOnScrollBusy = false;
+let _isScrollLooping = false;
 let _lastOnScrollTop: number | null = null;
+let _lastScrollTime = 0;
 
 /** Should only be used in a setup block. */
 export function usePageScrollSubscription(
@@ -242,40 +242,41 @@ export function usePageScrollSubscription(
 }
 
 function _afterSubscriptionsChanged() {
-	if (_onScrollCallbacks.length) {
-		window.document.addEventListener('scroll', _onScroll, {
-			passive: true,
-		});
-
-		// Need to call _onScroll lazily here, otherwise things may not be
-		// loaded in yet. This can happen if you're on a page that holds the
-		// only subscription, go to a new page, then go back through the
-		// browser.
-		sleep(0).then(() => _onScroll());
-	} else {
-		window.document.removeEventListener('scroll', _onScroll);
-		_lastOnScrollTop = null;
-	}
-}
-
-async function _onScroll() {
-	if (_isOnScrollBusy) {
+	// If we don't have any scroll callbacks, the scroll loop will stop itself.
+	// We don't need to do anything here.
+	if (!_onScrollCallbacks.length) {
 		return;
 	}
-	_isOnScrollBusy = true;
 
-	window.requestAnimationFrame(() => {
-		// // Wait a bit so we don't do this too often.
-		// await sleep(PageScrollSubscriptionTimeout);
+	if (_isScrollLooping) {
+		return;
+	}
 
-		let top = 0;
-		if (_onScrollCallbacks.length) {
-			top = Scroll.getScrollTop();
+	// Start us next animation frame so that the page is finished mounting.
+	_isScrollLooping = true;
+	window.requestAnimationFrame(_scrollLoop);
+}
+
+function _scrollLoop() {
+	if (!_onScrollCallbacks.length) {
+		// Don't register another animation frame. Just reset ourselves.
+		_lastOnScrollTop = null;
+		_isScrollLooping = false;
+		return;
+	}
+
+	const startTime = Date.now();
+	if (startTime - _lastScrollTime >= PageScrollSubscriptionTimeout) {
+		const top = Scroll.getScrollTop();
+		if (top !== _lastOnScrollTop) {
 			for (const cb of _onScrollCallbacks) {
 				cb(top);
 			}
+			_lastOnScrollTop = top;
 		}
-		_lastOnScrollTop = top;
-		_isOnScrollBusy = false;
-	});
+		_lastScrollTime = startTime;
+	}
+
+	// Continue looping.
+	window.requestAnimationFrame(_scrollLoop);
 }

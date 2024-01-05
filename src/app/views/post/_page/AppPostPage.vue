@@ -156,7 +156,7 @@ function onVideoPlay() {
 			class="-section section-thin"
 			:class="{ '_sans-padding-top': !!background }"
 		>
-			<AppBackground :background="background" darken>
+			<AppBackground :background="background" darken enable-page-scroll>
 				<div v-if="video" class="container-xl">
 					<AppSpacer v-if="!Screen.isXs" vertical :scale="4" />
 
