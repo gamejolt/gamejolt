@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed } from 'vue';
-import { formatNumber } from '../../../../_common/filters/number';
 import { watched } from '../../../../_common/reactivity-helpers';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -49,23 +48,28 @@ const {
 
 const stats = computed<ProfileStat[]>(() => {
 	const user = routeUser.value;
+	// Convert to a fuzzy number when above this threshold.
+	const fuzzyThreshold = 10_000;
 
 	return [
 		{
 			label: $gettext('Following'),
-			value: formatNumber(user?.following_count || 0),
+			value: user?.following_count || 0,
+			fuzzyThreshold,
 			action: user ? () => showProfileFollowingModal({ user }) : undefined,
 			location: undefined,
 		},
 		{
 			label: $gettext('Followers'),
-			value: formatNumber(user?.follower_count || 0),
+			value: user?.follower_count || 0,
+			fuzzyThreshold,
 			action: user ? () => showProfileFollowersModal({ user }) : undefined,
 			location: undefined,
 		},
 		{
 			label: $gettext('Likes'),
-			value: formatNumber(user?.like_count || 0),
+			value: user?.like_count || 0,
+			fuzzyThreshold,
 		},
 	] satisfies ProfileStat[];
 });
@@ -297,7 +301,12 @@ const floatingInfoSpacerExpandedHeight = watched(() => floatingAvatarSize.value 
 			<AppSpacer v-else vertical :scale="4" />
 
 			<!-- Shortcuts -->
-			<AppProfileShortcuts v-if="Screen.isDesktop" :items="quickLinks" />
+			<AppProfileShortcuts
+				v-if="Screen.isDesktop"
+				class="full-bleed"
+				:style="{ paddingLeft: `8px`, paddingRight: `8px` }"
+				:items="quickLinks"
+			/>
 			<template v-else>
 				<AppProfileActionButtons :quick-links="quickLinks" collapse />
 			</template>

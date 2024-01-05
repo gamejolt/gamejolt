@@ -9,7 +9,7 @@ export type ProfileQuickLink = {
 	icon: Jolticon;
 } & ProfileTileAction;
 
-const itemWidth = 72;
+const itemWidth = 58;
 </script>
 
 <script lang="ts" setup>
