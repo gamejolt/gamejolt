@@ -34,7 +34,7 @@ import { arrayRemove } from '../../../../../../../../../utils/array';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
 import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/award.vue';
 import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/FormCommunityCompetitionVotingCategory.vue';
-import FormCommunityCompetitionVotingEdit from '../../../../../../../../components/forms/community/competition/voting/edit/edit.vue';
+import FormCommunityCompetitionVotingEdit from '../../../../../../../../components/forms/community/competition/voting/edit/FormCommunityCompetitionVotingEdit.vue';
 import FormCommunityCompetitionVotingToggle from '../../../../../../../../components/forms/community/competition/voting/toggle/FormCommunityCompetitionVotingToggle.vue';
 import { useCommunityRouteStore } from '../../../../../view.store';
 
