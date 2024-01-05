@@ -2,8 +2,8 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import {
-trackAppDownload,
-trackAppPromotionClick,
+	trackAppDownload,
+	trackAppPromotionClick,
 } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
@@ -13,8 +13,8 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
 import { DeviceArch, DeviceOs, getDeviceOS } from '../../../../_common/device/device.service';
 import {
-chooseBestGameBuild,
-pluckInstallableGameBuilds,
+	chooseBestGameBuild,
+	pluckInstallableGameBuilds,
 } from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
 import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
@@ -305,7 +305,7 @@ async function _getDownloadUrl(platform: DeviceOs, arch: DeviceArch) {
 									primary
 									block
 									:solid="detectedDevice === 'ios'"
-									:to="appStoreUrl"
+									:href="appStoreUrl"
 									@click="
 										trackAppPromotionClick({
 											source: 'landing',
@@ -321,7 +321,7 @@ async function _getDownloadUrl(platform: DeviceOs, arch: DeviceArch) {
 									primary
 									block
 									:solid="detectedDevice === 'android'"
-									:to="playStoreUrl"
+									:href="playStoreUrl"
 									:style="{
 										order: detectedDevice === 'android' ? -1 : undefined,
 									}"

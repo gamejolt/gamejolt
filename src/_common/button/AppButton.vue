@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs, useAttrs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
 import { kJolticonSize } from '../../_styles/variables';
@@ -65,6 +65,14 @@ const props = defineProps({
 		type: null as unknown as PropType<RouteLocationRaw>,
 		default: undefined,
 	},
+	href: {
+		type: String,
+		default: undefined,
+	},
+	target: {
+		type: String,
+		default: undefined,
+	},
 	forceHover: {
 		type: Boolean,
 	},
@@ -84,10 +92,8 @@ const props = defineProps({
 
 const { dynamicSlots } = toRefs(props);
 
-const attrs = useAttrs();
-
 const ourTag = computed(() => {
-	if (attrs.href) {
+	if (props.href) {
 		return 'a';
 	} else if (props.to) {
 		return RouterLink;
@@ -124,6 +130,8 @@ const { hasSlot } = useDynamicSlots(dynamicSlots);
 			})
 		"
 		:to="to"
+		:href="href"
+		:target="target"
 		:disabled="disabled === true ? 'disabled' : null"
 	>
 		<div v-if="loading" :style="styleFlexCenter()">
