@@ -1,6 +1,8 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs, watch, watchEffect } from 'vue';
-import { PageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
+import { CSSProperties, PropType, ref, toRefs, watch } from 'vue';
+import { styleAbsoluteFill } from '../../_styles/mixins';
+import { watched } from '../reactivity-helpers';
+import { usePageScrollSubscription } from '../scroll/scroll.service';
 import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
 const props = defineProps({
@@ -12,47 +14,95 @@ const props = defineProps({
 		type: String,
 		default: undefined,
 	},
+	backgroundStyle: {
+		type: Object as PropType<CSSProperties>,
+		default: undefined,
+	},
 	disablePageScroll: {
 		type: Boolean,
 	},
 });
 
-const { background, scrollDirection, disablePageScroll } = toRefs(props);
+const { background, scrollDirection, backgroundStyle, disablePageScroll } = toRefs(props);
 
 const root = ref<HTMLElement>();
 
-watchEffect(() => {
-	if (!root.value) {
-		return;
-	}
-	const baseStyles = getBackgroundCSSProperties(background.value);
-	for (const keyUnsafe in baseStyles) {
-		const key = keyUnsafe as keyof typeof baseStyles;
-		// Don't assign backgroundPosition if we're currently modifying it
-		// through page scroll offset.
-		if (key === 'backgroundPosition' && pageScrollSubscription.isActive.value) {
-			continue;
-		}
-		root.value.style[key] = baseStyles[key];
-	}
-});
+// watchEffect(() => {
+// 	if (!positionElem.value) {
+// 		return;
+// 	}
+// 	const baseStyles = getBackgroundCSSProperties(background.value);
+// 	for (const keyUnsafe in baseStyles) {
+// 		const key = keyUnsafe as keyof typeof baseStyles;
+// 		// Don't assign backgroundPosition if we're currently modifying it
+// 		// through page scroll offset.
+// 		if (key === 'backgroundPosition' && pageScrollSubscription.isActive.value) {
+// 			continue;
+// 		}
+// 		positionElem.value.style[key] = baseStyles[key];
+// 	}
+// });
 
+// We freeze the tile height for now since it shouldn't really change.
+const tileHeight = background.value.media_item.croppedHeight / background.value.scale;
+const baseStyles = watched(() => getBackgroundCSSProperties(background.value));
+
+// let previousTop = 0;
+// let previousTileIndex = 0;
 function attachPageOffsetBackgroundStyles(top: number) {
 	if (!root.value) {
 		return;
 	}
-	if (disablePageScroll.value || scrollDirection?.value) {
-		root.value.style.backgroundPosition = getBackgroundCSSProperties(
-			background.value
-		).backgroundPosition;
-		root.value.style.transition = '';
-	} else {
-		root.value.style.backgroundPosition = `center ${top / 5}px`;
-		root.value.style.transition = `background-position ${
-			PageScrollSubscriptionTimeout + 20
-		}ms ease-out`;
+
+	// TODO: revert style
+	if (disablePageScroll.value) {
+		root.value.style.transform = `translateY(0)`;
+		return;
 	}
+
+	// 	positionElem.value.style.backgroundPosition = getBackgroundCSSProperties(
+	// 		background.value
+	// 	).backgroundPosition;
+	// 	positionElem.value.style.transition = '';
+	// } else {
+
+	// const tileIndex = Math.floor(top / tileHeight);
+	top /= 5;
+	top %= tileHeight;
+
+	// if (tileIndex !== previousTileIndex) {
+	// 	root.value.style.transition = '';
+	// 	// Force a reflow so it animates again.
+	// 	root.value.offsetWidth;
+
+	// 	const positionDiff = top - previousTop;
+	// 	root.value.style.transform = `translateY(${tileHeight + positionDiff}px)`;
+	// 	console.log(top, previousTop, tileIndex, previousTileIndex, positionDiff);
+	// 	// if (tileIndex > previousTileIndex) {
+	// 	// } else if (tileIndex < previousTileIndex) {
+	// 	// 	root.value.style.transform = `translateY(${tileHeight + positionDiff}px)`;
+	// 	// }
+	// }
+
+	// root.value.style.transition = `transform ${PageScrollSubscriptionTimeout + 20}ms ease-out`;
+	root.value.style.transform = `translateY(${top}px)`;
+
+	// previousTop = top;
+	// previousTileIndex = tileIndex;
+
+	// transition: `transform ${PageScrollSubscriptionTimeout + 20}ms ease-out`,
+
+	// positionElem.value.style.backgroundPosition = `center ${top / 5}px`;
+	// positionElem.value.style.transition = `background-position ${
+	// 	PageScrollSubscriptionTimeout + 20
+	// }ms ease-out`;
+	// }
 }
+
+// const baseStyles = ref(getBackgroundCSSProperties(background.value));
+// watch(background, background => {
+// 	baseStyles.value = getBackgroundCSSProperties(background);
+// });
 
 const pageScrollSubscription = usePageScrollSubscription(attachPageOffsetBackgroundStyles, {
 	enable: !disablePageScroll.value,
@@ -70,11 +120,19 @@ watch(disablePageScroll, disablePageScroll => {
 <template>
 	<div
 		ref="root"
-		:class="{
-			_scroll: scrollDirection,
-			[`_scroll-${scrollDirection}`]: scrollDirection,
+		:style="{
+			...styleAbsoluteFill({ inset: `-${tileHeight}px` }),
 		}"
-	/>
+	>
+		<div
+			:class="scrollDirection ? ['_scroll', `_scroll-${scrollDirection}`] : []"
+			:style="{
+				...styleAbsoluteFill(),
+				...baseStyles,
+				...backgroundStyle,
+			}"
+		/>
+	</div>
 </template>
 
 <style lang="stylus" scoped>

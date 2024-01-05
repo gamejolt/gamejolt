@@ -92,7 +92,7 @@ if (import.meta.env.SSR) {
 						v-if="loadedBackground"
 						:key="loadedBackground.id"
 						class="_stretch anim-fade-in"
-						:style="
+						:background-style="
 							styleWhen(!!backgroundStyle, backgroundStyle!)
 						"
 						:background="background"

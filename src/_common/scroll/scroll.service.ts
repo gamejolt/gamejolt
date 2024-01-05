@@ -264,16 +264,18 @@ async function _onScroll() {
 	}
 	_isOnScrollBusy = true;
 
-	// Wait a bit so we don't do this too often.
-	await sleep(PageScrollSubscriptionTimeout);
+	window.requestAnimationFrame(() => {
+		// // Wait a bit so we don't do this too often.
+		// await sleep(PageScrollSubscriptionTimeout);
 
-	let top = 0;
-	if (_onScrollCallbacks.length) {
-		top = Scroll.getScrollTop();
-		for (const cb of _onScrollCallbacks) {
-			cb(top);
+		let top = 0;
+		if (_onScrollCallbacks.length) {
+			top = Scroll.getScrollTop();
+			for (const cb of _onScrollCallbacks) {
+				cb(top);
+			}
 		}
-	}
-	_lastOnScrollTop = top;
-	_isOnScrollBusy = false;
+		_lastOnScrollTop = top;
+		_isOnScrollBusy = false;
+	});
 }

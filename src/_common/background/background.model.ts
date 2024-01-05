@@ -74,8 +74,8 @@ export function getBackgroundCSSProperties(background: BackgroundModel) {
 
 	switch (scaling) {
 		case BackgroundScaling.tile: {
-			const width = media_item.width / scale;
-			const height = media_item.height / scale;
+			const width = media_item.croppedWidth / scale;
+			const height = media_item.croppedHeight / scale;
 			backgroundSize = `${width}px ${height}px`;
 			backgroundRepeat = 'repeat';
 			break;
