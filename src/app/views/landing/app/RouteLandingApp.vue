@@ -172,6 +172,7 @@ async function _getDownloadUrl(platform: DeviceOs, arch: DeviceArch) {
 
 				<a
 					href="https://app.gamejolt.com/qr"
+					target="_blank"
 					class="link-unstyled"
 					:style="{ textDecoration: 'underline' }"
 				>
@@ -306,6 +307,7 @@ async function _getDownloadUrl(platform: DeviceOs, arch: DeviceArch) {
 									block
 									:solid="detectedDevice === 'ios'"
 									:href="appStoreUrl"
+									target="_blank"
 									@click="
 										trackAppPromotionClick({
 											source: 'landing',
@@ -322,6 +324,7 @@ async function _getDownloadUrl(platform: DeviceOs, arch: DeviceArch) {
 									block
 									:solid="detectedDevice === 'android'"
 									:href="playStoreUrl"
+									target="_blank"
 									:style="{
 										order: detectedDevice === 'android' ? -1 : undefined,
 									}"
