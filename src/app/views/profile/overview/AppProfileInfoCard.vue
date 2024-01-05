@@ -301,12 +301,7 @@ const floatingInfoSpacerExpandedHeight = watched(() => floatingAvatarSize.value 
 			<AppSpacer v-else vertical :scale="4" />
 
 			<!-- Shortcuts -->
-			<AppProfileShortcuts
-				v-if="Screen.isDesktop"
-				class="full-bleed"
-				:style="{ paddingLeft: `8px`, paddingRight: `8px` }"
-				:items="quickLinks"
-			/>
+			<AppProfileShortcuts v-if="Screen.isDesktop" :items="quickLinks" />
 			<template v-else>
 				<AppProfileActionButtons :quick-links="quickLinks" collapse />
 			</template>
