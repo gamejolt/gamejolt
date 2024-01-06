@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs, watch, watchEffect } from 'vue';
+import { CSSProperties, PropType, computed, ref, toRefs, watch, watchEffect } from 'vue';
 import { PageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
 import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
@@ -8,32 +8,45 @@ const props = defineProps({
 		type: Object as PropType<BackgroundModel>,
 		required: true,
 	},
+	backgroundStyle: {
+		type: Object as PropType<CSSProperties>,
+		default: undefined,
+	},
 	scrollDirection: {
 		type: String,
 		default: undefined,
 	},
-	disablePageScroll: {
+	enablePageScroll: {
 		type: Boolean,
 	},
 });
 
-const { background, scrollDirection, disablePageScroll } = toRefs(props);
+const { background, backgroundStyle, scrollDirection, enablePageScroll } = toRefs(props);
 
 const root = ref<HTMLElement>();
+
+const baseStyles = computed(() => {
+	// We're casting this to CSSStyleDeclaration so that we can more easily
+	// apply to the style property.
+	return {
+		...getBackgroundCSSProperties(background.value),
+		...backgroundStyle?.value,
+	} as CSSStyleDeclaration;
+});
 
 watchEffect(() => {
 	if (!root.value) {
 		return;
 	}
-	const baseStyles = getBackgroundCSSProperties(background.value);
-	for (const keyUnsafe in baseStyles) {
-		const key = keyUnsafe as keyof typeof baseStyles;
+
+	const _styles = baseStyles.value;
+	for (const key in _styles) {
 		// Don't assign backgroundPosition if we're currently modifying it
 		// through page scroll offset.
 		if (key === 'backgroundPosition' && pageScrollSubscription.isActive.value) {
 			continue;
 		}
-		root.value.style[key] = baseStyles[key];
+		root.value.style[key] = _styles[key];
 	}
 });
 
@@ -41,10 +54,8 @@ function attachPageOffsetBackgroundStyles(top: number) {
 	if (!root.value) {
 		return;
 	}
-	if (disablePageScroll.value || scrollDirection?.value) {
-		root.value.style.backgroundPosition = getBackgroundCSSProperties(
-			background.value
-		).backgroundPosition;
+	if (!enablePageScroll.value || scrollDirection?.value) {
+		root.value.style.backgroundPosition = baseStyles.value.backgroundPosition;
 		root.value.style.transition = '';
 	} else {
 		root.value.style.backgroundPosition = `center ${top / 5}px`;
@@ -55,14 +66,14 @@ function attachPageOffsetBackgroundStyles(top: number) {
 }
 
 const pageScrollSubscription = usePageScrollSubscription(attachPageOffsetBackgroundStyles, {
-	enable: !disablePageScroll.value,
+	enable: enablePageScroll.value,
 });
 
-watch(disablePageScroll, disablePageScroll => {
-	if (disablePageScroll) {
-		pageScrollSubscription.disable();
-	} else {
+watch(enablePageScroll, enabled => {
+	if (enabled) {
 		pageScrollSubscription.enable();
+	} else {
+		pageScrollSubscription.disable();
 	}
 });
 </script>

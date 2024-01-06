@@ -1,9 +1,13 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+import { formatFuzzynumberOverThreshold } from '../../../../../_common/filters/fuzzynumber';
+import { formatNumber } from '../../../../../_common/filters/number';
+import { watched } from '../../../../../_common/reactivity-helpers';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ProfileStat } from './AppProfileStats.vue';
 
-defineProps({
+const props = defineProps({
 	item: {
 		type: Object as PropType<ProfileStat>,
 		required: true,
@@ -12,6 +16,20 @@ defineProps({
 		type: String,
 		default: 'div',
 	},
+});
+
+const { item } = toRefs(props);
+
+const displayData = watched(() => {
+	const { value, fuzzyThreshold } = item.value;
+	if (fuzzyThreshold && value >= fuzzyThreshold) {
+		return {
+			value: formatFuzzynumberOverThreshold(value, fuzzyThreshold),
+			tooltip: formatNumber(value),
+		};
+	}
+
+	return { value: formatNumber(value) };
 });
 </script>
 
@@ -29,8 +47,8 @@ defineProps({
 		:to="item.location"
 		@click="item.action?.()"
 	>
-		<div class="stat-big-digit">
-			{{ item.value }}
+		<div v-app-tooltip="displayData.tooltip" class="stat-big-digit">
+			{{ displayData.value }}
 		</div>
 		<div class="stat-big-label">
 			{{ item.label }}
