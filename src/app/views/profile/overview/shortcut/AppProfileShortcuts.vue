@@ -38,7 +38,7 @@ defineProps({
 				  }
 				: {
 						display: `grid`,
-						gridTemplateColumns: `repeat(auto-fill, ${itemWidth}px)`,
+						gridTemplateColumns: `repeat(auto-fit, ${itemWidth}px)`,
 						justifyContent: `space-around`,
 				  }),
 		}"
