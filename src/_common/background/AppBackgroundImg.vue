@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, computed, ref, toRefs, watch, watchEffect } from 'vue';
 import { PageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
+import { SettingParallaxBackgrounds } from '../settings/settings.service';
 import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
 const props = defineProps({
@@ -24,6 +25,8 @@ const props = defineProps({
 const { background, backgroundStyle, scrollDirection, enablePageScroll } = toRefs(props);
 
 const root = ref<HTMLElement>();
+
+const shouldParallax = computed(() => enablePageScroll.value && SettingParallaxBackgrounds.get());
 
 const baseStyles = computed(() => {
 	// We're casting this to CSSStyleDeclaration so that we can more easily
@@ -54,7 +57,7 @@ function attachPageOffsetBackgroundStyles(top: number) {
 	if (!root.value) {
 		return;
 	}
-	if (!enablePageScroll.value || scrollDirection?.value) {
+	if (!shouldParallax.value || scrollDirection?.value) {
 		root.value.style.backgroundPosition = baseStyles.value.backgroundPosition;
 		root.value.style.transition = '';
 	} else {
@@ -66,10 +69,10 @@ function attachPageOffsetBackgroundStyles(top: number) {
 }
 
 const pageScrollSubscription = usePageScrollSubscription(attachPageOffsetBackgroundStyles, {
-	enable: enablePageScroll.value,
+	enable: shouldParallax.value,
 });
 
-watch(enablePageScroll, enabled => {
+watch(shouldParallax, enabled => {
 	if (enabled) {
 		pageScrollSubscription.enable();
 	} else {
