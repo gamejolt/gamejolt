@@ -13,7 +13,6 @@ import AppFormControlRadio from '../../form-vue/controls/AppFormControlRadio.vue
 import AppFormControlTextarea from '../../form-vue/controls/AppFormControlTextarea.vue';
 import { validateMaxLength } from '../../form-vue/validators';
 import { GameModel } from '../../game/game.model';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { $gettext } from '../../translate/translate.service';
 
 interface FormModel {
@@ -85,7 +84,19 @@ const isDescriptionOptional = computed(() => {
 	return true;
 });
 
-const reasons = computed<any[]>(() => {
+interface Reason {
+	radioValue: string;
+	text: string;
+	contexts?: {
+		checkValue: string;
+		text: string;
+	}[];
+	source?: {
+		placeholder: string;
+	};
+}
+
+const reasons = computed<Reason[]>(() => {
 	switch (type.value) {
 		case 'Game':
 			return [
@@ -122,7 +133,8 @@ const reasons = computed<any[]>(() => {
 					radioValue: 'other',
 					text: $gettext('Other'),
 				},
-			];
+			] satisfies Reason[];
+
 		case 'Fireside_Post': {
 			const reasons = [
 				{
@@ -152,7 +164,7 @@ const reasons = computed<any[]>(() => {
 					radioValue: 'other',
 					text: $gettext('Other'),
 				},
-			];
+			] satisfies Reason[];
 
 			// For a devlog post of a game that is maturity restricted, we don't want to show the "explicit" report option.
 			// Those devlog posts can be explicit, and we don't want to encourage false reports.
@@ -195,7 +207,7 @@ const reasons = computed<any[]>(() => {
 					radioValue: 'other',
 					text: $gettext('Other'),
 				},
-			];
+			] satisfies Reason[];
 
 		case 'Community':
 			return [
@@ -221,7 +233,7 @@ const reasons = computed<any[]>(() => {
 					radioValue: 'other',
 					text: $gettext('Other'),
 				},
-			];
+			] satisfies Reason[];
 
 		case 'User':
 			return [
@@ -338,7 +350,7 @@ const reasons = computed<any[]>(() => {
 					radioValue: 'other',
 					text: $gettext('Other'),
 				},
-			];
+			] satisfies Reason[];
 	}
 
 	throw new Error('Resource has no reasons defined.');
@@ -409,7 +421,7 @@ function validateContextSelected() {
 
 				<div
 					v-if="form.formModel.reason === reason.radioValue && !!reason.contexts"
-					class="-context"
+					:style="{ marginLeft: `32px` }"
 				>
 					<AppFormGroup
 						name="context"
@@ -433,13 +445,6 @@ function validateContextSelected() {
 						<AppFormControlErrors />
 					</AppFormGroup>
 				</div>
-
-				<div v-if="form.formModel.reason === reason.radioValue && !!reason.infoText">
-					<p class="help-block">
-						<AppJolticon icon="exclamation-circle" />
-						{{ reason.infoText }}
-					</p>
-				</div>
 			</div>
 		</AppFormGroup>
 
@@ -458,8 +463,3 @@ function validateContextSelected() {
 		</AppFormButton>
 	</AppForm>
 </template>
-
-<style lang="stylus" scoped>
-.-context
-	margin-left: 32px
-</style>
