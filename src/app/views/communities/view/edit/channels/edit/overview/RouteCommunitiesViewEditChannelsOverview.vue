@@ -20,7 +20,7 @@ import { Scroll } from '../../../../../../../../_common/scroll/scroll.service';
 import { $gettext } from '../../../../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../../../../utils/array';
 import FormCommunityChannelDescription from '../../../../../../../components/forms/community/channel/description/FormCommunityChannelDescription.vue';
-import FormCommunityChannelEdit from '../../../../../../../components/forms/community/channel/edit/edit.vue';
+import FormCommunityChannelEdit from '../../../../../../../components/forms/community/channel/edit/FormCommunityChannelEdit.vue';
 import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
 import { useCommunityRouteStore } from '../../../../view.store';
 
@@ -136,7 +136,7 @@ createAppRoute({});
 
 				<FormCommunityChannelEdit
 					:community="community"
-					:model="channel"
+					:model="channel!"
 					@submit="onSubmit"
 					@background-change="onBackgroundChange"
 				/>

@@ -16,7 +16,7 @@ import { useThemeStore } from '../../../../../../_common/theme/theme.store';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { enforceLocation } from '../../../../../../utils/router';
 import AppCommunityPerms from '../../../../../components/community/perms/AppCommunityPerms.vue';
-import FormCommunity from '../../../../../components/forms/community/community.vue';
+import FormCommunity from '../../../../../components/forms/community/FormCommunity.vue';
 import FormCommunityDescription from '../../../../../components/forms/community/description/FormCommunityDescription.vue';
 import { useGridStore } from '../../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../../store';

@@ -9,7 +9,7 @@ import {
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormCommunityChannelPresetBackground from '../../../forms/community/channel/preset-background/preset-background.vue';
+import FormCommunityChannelPresetBackground from '../../../forms/community/channel/preset-background/FormCommunityChannelPresetBackground.vue';
 
 const props = defineProps({
 	community: {
