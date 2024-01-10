@@ -421,6 +421,7 @@ async function onClickGift(sale: InventoryShopProductSaleModel) {
 				<div
 					:style="{
 						display: `flex`,
+						gap: `12px`,
 						width: `100%`,
 					}"
 				>
