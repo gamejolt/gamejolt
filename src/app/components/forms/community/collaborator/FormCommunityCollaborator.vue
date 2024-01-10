@@ -42,7 +42,7 @@ const form: FormController<CollaboratorModel> = createForm({
 		form.formModel.resource = 'Community';
 		form.formModel.resource_id = community.value.id;
 
-		if (this.model) {
+		if (model?.value) {
 			form.formModel.username = form.formModel.user!.username;
 		}
 	},
@@ -91,7 +91,6 @@ const form: FormController<CollaboratorModel> = createForm({
 				<label>
 					<AppFormControlRadio :value="CollaboratorRole.JamOrganizer" />
 					{{ $gettext(`Jam Organizer`) }}
-					{{ ' ' }}
 					&mdash;
 					<span class="help-inline">
 						{{
@@ -106,7 +105,6 @@ const form: FormController<CollaboratorModel> = createForm({
 				<label>
 					<AppFormControlRadio :value="CollaboratorRole.Moderator" />
 					{{ $gettext(`Moderator`) }}
-					{{ ' ' }}
 					&mdash;
 					<span class="help-inline">
 						{{

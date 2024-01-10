@@ -25,12 +25,6 @@ import { useAppStore } from '../../../store';
 import { useGridStore } from '../../grid/grid-store';
 import AppPostAddButtonFormControl from '../../post/add-button/AppPostAddButtonFormControl.vue';
 
-interface FormCommunityModel extends CommunityModel {
-	name: string;
-	path: string;
-	post_placeholder_text: string | null;
-}
-
 const props = defineProps({
 	...defineFormProps<CommunityModel>(),
 });
@@ -46,7 +40,7 @@ const { grid } = useGridStore();
 const { userTheme, setFormTheme } = useThemeStore();
 const router = useRouter();
 
-const form: FormController<FormCommunityModel> = createForm({
+const form: FormController<CommunityModel> = createForm({
 	model,
 	modelClass: CommunityModel,
 	modelSaveHandler: $saveCommunity,

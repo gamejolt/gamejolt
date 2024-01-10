@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRef, toRefs, watch } from 'vue';
+import { ref, toRef, toRefs, watchEffect } from 'vue';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import {
 	$clearCommunityChannelBackground,
@@ -41,15 +41,13 @@ const minHeight = ref(0);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
 
-const crop = toRef(() =>
-	form.formModel.background ? form.formModel.background.getCrop() : undefined
-);
+const crop = toRef(() => form.formModel.background?.getCrop());
 
 const loadUrl = toRef(
 	() => `/web/dash/communities/channels/save/${form.formModel.community_id}/${form.formModel.id}`
 );
 
-watch(crop, () => {
+watchEffect(() => {
 	form.formModel.background_crop = crop.value;
 });
 
@@ -58,7 +56,6 @@ const form: FormController<FormModel> = createForm({
 	modelClass: CommunityChannelModel,
 	modelSaveHandler: $saveCommunityChannelBackground,
 	loadUrl,
-	onInit() {},
 	onLoad(payload: any) {
 		maxFilesize.value = payload.maxFilesize;
 		aspectRatio.value = payload.aspectRatio;
@@ -115,17 +112,17 @@ async function clearBackground() {
 			<p class="help-block">
 				{{ $gettext(`Your image must be a PNG or JPG.`) }}
 				<br />
-				<strong>{{
-					$gettext(`PNGs are highly recommended as they produce a lossless image.`)
-				}}</strong>
+				<strong>
+					{{ $gettext(`PNGs are highly recommended as they produce a lossless image.`) }}
+				</strong>
 			</p>
 
 			<p class="help-block">
 				{{ $gettext(`The recommended size for a channel image is`) }}
-				{{ '' }}
+				{{ ' ' }}
 				<code>760x200</code>
 				{{ ' ' }}
-				{{ '(' + $gettext(`(ratio of`) }}
+				{{ '(' + $gettext(`ratio of`) }}
 				{{ ' ' }}
 				<strong>{{ aspectRatio + ' ÷ 1' }}</strong>
 				{{ ').' }}

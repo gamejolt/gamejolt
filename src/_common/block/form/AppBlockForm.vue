@@ -9,9 +9,9 @@ import AppLinkHelp from '../../link/AppLinkHelp.vue';
 import { $gettext } from '../../translate/translate.service';
 import { UserModel } from '../../user/user.model';
 
-type BlockFormModel = {
+interface BlockFormModel {
 	removeComments: boolean;
-};
+}
 
 const props = defineProps({
 	user: {

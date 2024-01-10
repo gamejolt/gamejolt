@@ -37,6 +37,7 @@ const { type, resource } = toRefs(props);
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
+	loadUrl: '/web/report',
 	onSubmit() {
 		const data = {
 			resourceName: type.value,
@@ -60,6 +61,10 @@ const form: FormController<FormModel> = createForm({
 		return Api.sendRequest('/web/report/submit', data, {
 			allowComplexData: ['context'],
 		});
+	},
+	onLoad(payload: any) {
+		maxLengthDescription.value = payload.maxLengthDescription;
+		maxLengthSource.value = payload.maxLengthSource;
 	},
 });
 

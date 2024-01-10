@@ -33,10 +33,6 @@ const form: FormController<RetrieveLoginFormModel> = createForm({
 		return response;
 	},
 });
-
-function onChanged() {
-	invalidEmail.value = false;
-}
 </script>
 
 <template>
@@ -55,7 +51,6 @@ function onChanged() {
 					type="text"
 					validate-on-blur
 					:placeholder="$gettext('Email or Username')"
-					@changed="onChanged"
 				/>
 
 				<AppFormControlErrors />

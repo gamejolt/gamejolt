@@ -40,7 +40,7 @@ const expiryOptions = {
 	month: $gettext('1 Month'),
 	year: $gettext('1 Year'),
 	never: $gettext('Never'),
-};
+} as const;
 
 const props = defineProps({
 	community: {
@@ -49,7 +49,7 @@ const props = defineProps({
 	},
 	user: {
 		type: Object as PropType<UserModel>,
-		default: null,
+		default: undefined,
 	},
 });
 
@@ -58,9 +58,9 @@ const { community, user } = toRefs(props);
 const usernameLocked = ref(false);
 const otherOptions = ref<string[]>([]);
 
-const defaultReasons = toRef(() => getCommunityBlockReasons());
+const defaultReasons = computed(() => getCommunityBlockReasons());
 
-const showReasonOther = computed(() => form.formModel.reasonType === REASON_OTHER);
+const showReasonOther = toRef(() => form.formModel.reasonType === REASON_OTHER);
 
 const form: FormController<FormModel> = createForm({
 	resetOnSubmit: true,
@@ -69,7 +69,7 @@ const form: FormController<FormModel> = createForm({
 		form.formModel.expiry = 'week';
 		form.formModel.ejectPosts = true;
 
-		if (user.value) {
+		if (user?.value) {
 			form.formModel.username = user.value.username;
 			usernameLocked.value = true;
 		}

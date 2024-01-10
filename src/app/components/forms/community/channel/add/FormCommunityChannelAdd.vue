@@ -26,9 +26,9 @@ import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
 
-class FormModel extends CommunityChannelModel {
-	permission_posting = 'all';
-	timezone: string | null = null;
+interface FormModel extends CommunityChannelModel {
+	permission_posting?: string;
+	timezone?: string;
 }
 
 const types = [
@@ -85,10 +85,8 @@ const isValid = computed(() => {
 	);
 });
 
-// TODO(component-setup-refactor-form-0): is it okay to ignore the warning below?
-// Seen this in other converted forms whc have extended models.
 const form: FormController<FormModel> = createForm({
-	modelClass: FormModel,
+	modelClass: CommunityChannelModel,
 	modelSaveHandler: $saveCommunityChannel,
 	resetOnSubmit: true,
 	onInit() {

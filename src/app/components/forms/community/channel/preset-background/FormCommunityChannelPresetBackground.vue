@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { computed, PropType, ref, toRefs, watchEffect } from 'vue';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import {
 	$clearCommunityPresetChannelBackground,
@@ -49,9 +49,9 @@ const maxHeight = ref(0);
 
 const background = computed(() => getCommunityChannelBackground(form.formModel, presetType.value));
 
-const crop = computed(() => (background.value ? background.value.getCrop() : undefined));
+const crop = computed(() => background.value?.getCrop());
 
-watch(crop, () => {
+watchEffect(() => {
 	form.formModel.background_crop = crop.value;
 });
 
