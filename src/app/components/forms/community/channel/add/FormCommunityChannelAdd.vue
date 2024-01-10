@@ -67,10 +67,8 @@ const { user } = useCommonStore();
 
 const isTitleInitial = ref(true);
 
-// TODO: for now, only site mods (and wittleriri) are allowed to create jam channels.
-const shouldShowType = toRef(
-	() => user.value && (user.value.permission_level >= 3 || user.value.id === 5027906)
-);
+// TODO: for now, only site mods are allowed to create jam channels.
+const shouldShowType = toRef(() => user.value && user.value.permission_level >= 3);
 
 const isValid = computed(() => {
 	if (!form.valid) {
