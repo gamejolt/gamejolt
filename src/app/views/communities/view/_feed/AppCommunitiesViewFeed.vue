@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../_common/api/api.service';
@@ -17,7 +17,7 @@ import AppActivityFeedPlaceholder from '../../../../components/activity/feed/App
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
 import AppBlockedNotice from '../_blocked-notice/AppBlockedNotice.vue';
-import { isVirtualChannel, useCommunityRouteStore } from '../view.store';
+import { useCommunityRouteStore } from '../view.store';
 
 const props = defineProps({
 	// It's optional since it may not have loaded into the page yet. In that
@@ -34,12 +34,9 @@ const emit = defineEmits({
 });
 
 const { feed } = toRefs(props);
-const routeStore = useCommunityRouteStore()!;
+const { community, channel, frontpageChannel, isVirtualChannel } = useCommunityRouteStore()!;
 const { user } = useCommonStore();
 const route = useRoute();
-
-const community = toRef(() => routeStore.community);
-const channel = toRef(() => routeStore.channel!);
 
 const tab = computed(() => {
 	if (route.query.sort === 'hot') {
@@ -49,7 +46,7 @@ const tab = computed(() => {
 });
 
 const shouldShowPostAdd = computed(() => {
-	if (community.value.isBlocked) {
+	if (community.value!.isBlocked) {
 		return false;
 	}
 
@@ -58,21 +55,21 @@ const shouldShowPostAdd = computed(() => {
 		return true;
 	}
 
-	if (isVirtualChannel(routeStore, channel.value)) {
+	if (isVirtualChannel(channel.value!)) {
 		// Only show the post add if we have at least one target channel to
 		// post to.
-		if (community.value.channels) {
-			return community.value.channels.some(i => i.canPost);
+		if (community.value!.channels) {
+			return community.value!.channels.some(i => i.canPost);
 		}
 	} else {
-		return channel.value.canPost;
+		return channel.value!.canPost;
 	}
 
 	return true;
 });
 
 const shouldShowTabs = computed(() => {
-	if (channel.value === routeStore.frontpageChannel) {
+	if (channel.value === frontpageChannel.value) {
 		return false;
 	}
 
@@ -85,10 +82,10 @@ const shouldShowTabs = computed(() => {
 
 const placeholderText = computed(() => {
 	if (
-		!!community.value.post_placeholder_text &&
-		community.value.post_placeholder_text.length > 0
+		!!community.value!.post_placeholder_text &&
+		community.value!.post_placeholder_text.length > 0
 	) {
-		return community.value.post_placeholder_text;
+		return community.value!.post_placeholder_text;
 	}
 	return $gettext(`Share your creations!`);
 });
@@ -105,7 +102,7 @@ const noPostsMessage = computed(() => {
 function onLoadedNew() {
 	// Mark the community/channel as read after loading new posts.
 	Api.sendRequest(
-		`/web/communities/mark-as-read/${community.value.path}/${channel.value.title}`,
+		`/web/communities/mark-as-read/${community.value!.path}/${channel.value!.title}`,
 		{},
 		{ detach: true }
 	);
@@ -116,15 +113,15 @@ function onLoadedNew() {
 function onPostUnfeatured(eventItem: EventItemModel, communityInput: CommunityModel) {
 	if (
 		feed?.value &&
-		channel.value === routeStore.frontpageChannel &&
-		community.value.id === communityInput.id
+		channel.value === frontpageChannel.value &&
+		community.value!.id === communityInput.id
 	) {
 		feed.value.remove([eventItem]);
 	}
 }
 
 function onPostRejected(eventItem: EventItemModel, communityInput: CommunityModel) {
-	if (feed?.value && community.value.id === communityInput.id) {
+	if (feed?.value && community.value!.id === communityInput.id) {
 		feed.value.remove([eventItem]);
 	}
 }
@@ -132,9 +129,9 @@ function onPostRejected(eventItem: EventItemModel, communityInput: CommunityMode
 function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannelModel) {
 	if (
 		feed?.value &&
-		community.value.id === movedTo.community_id &&
-		!isVirtualChannel(routeStore, channel.value) &&
-		channel.value.title !== movedTo.title
+		community.value!.id === movedTo.community_id &&
+		!isVirtualChannel(channel.value!) &&
+		channel.value!.title !== movedTo.title
 	) {
 		feed.value.remove([eventItem]);
 	}
@@ -143,12 +140,12 @@ function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannel
 
 <template>
 	<div>
-		<AppBlockedNotice :community="community" />
+		<AppBlockedNotice :community="community!" />
 
 		<AppPostAddButton
 			v-if="shouldShowPostAdd"
-			:community="community"
-			:channel="channel"
+			:community="community!"
+			:channel="channel!"
 			:placeholder="placeholderText"
 			@add="emit('add-post', $event)"
 		/>
@@ -161,7 +158,7 @@ function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannel
 						:to="{
 							name: 'communities.view.channel',
 							params: {
-								channel: channel.title,
+								channel: channel!.title,
 							},
 						}"
 						:class="{
@@ -177,7 +174,7 @@ function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannel
 						:to="{
 							name: 'communities.view.channel',
 							params: {
-								channel: channel.title,
+								channel: channel!.title,
 							},
 							query: {
 								sort: 'hot',
@@ -204,8 +201,8 @@ function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannel
 				@move-channel-post="onPostMovedChannel"
 				@load-new="onLoadedNew"
 			/>
-			<div v-else-if="channel !== routeStore.frontpageChannel">
-				<div v-if="channel.canPost" class="alert">
+			<div v-else-if="channel !== frontpageChannel">
+				<div v-if="channel!.canPost" class="alert">
 					<b>{{ $gettext(`There are no posts here yet.`) }}</b>
 					{{
 						$gettext(`What are you waiting for? %{ message } Make people happy.`, {
@@ -213,7 +210,7 @@ function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannel
 						})
 					}}
 				</div>
-				<div v-else-if="channel.is_archived">
+				<div v-else-if="channel!.is_archived">
 					<AppIllustration :asset="illNoCommentsSmall">
 						<p>
 							{{ $gettext(`Shhh. This channel is archived.`) }}

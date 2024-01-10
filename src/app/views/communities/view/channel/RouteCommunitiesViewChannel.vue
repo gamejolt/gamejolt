@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineAsyncComponent, toRef } from 'vue';
+import { defineAsyncComponent } from 'vue';
 import { router } from '../../..';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
@@ -8,7 +8,7 @@ import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
-import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
+import { useCommunityRouteStore } from '../view.store';
 
 const RouteCommunitiesViewChannelFeed = defineAsyncComponent(() =>
 	asyncRouteLoader(router, import('./RouteCommunitiesViewChannelFeed.vue'))
@@ -38,8 +38,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
-const channel = toRef(() => routeStore.channel);
+const { channel, archivedChannels, getChannelPathFromRoute } = useCommunityRouteStore()!;
 
 createAppRoute({
 	onResolved({ payload }) {
@@ -48,7 +47,7 @@ createAppRoute({
 			if (channel.value) {
 				channel.value.assign(newChannel);
 			} else if (newChannel.is_archived) {
-				routeStore.archivedChannels.push(newChannel);
+				archivedChannels.value.push(newChannel);
 			}
 		}
 	},

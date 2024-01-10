@@ -29,18 +29,13 @@ const props = defineProps({
 });
 
 const { hasUnread } = toRefs(props);
-const routeStore = useCommunityRouteStore()!;
+const { community, channel, sidebarData, channelPath } = useCommunityRouteStore()!;
 const { toggleLeftPane } = useAppStore();
 const { user } = useCommonStore();
 const { activeContextPane } = useSidebarStore();
 const router = useRouter();
 
-const community = toRef(() => routeStore.community);
-const channel = toRef(() => routeStore.channel);
-const sidebarData = toRef(() => routeStore.sidebarData);
-const channelPath = toRef(() => routeStore.channelPath);
-
-const memberCount = toRef(() => community.value.member_count || 0);
+const memberCount = toRef(() => community.value!.member_count || 0);
 const shouldShowModTools = toRef(() => user.value?.isMod === true);
 const shouldShowChannelsMenu = toRef(() => !!activeContextPane.value);
 const isJam = toRef(() => channel.value?.type === 'competition');
@@ -67,7 +62,7 @@ function onClickAbout() {
 	if (sidebarData.value) {
 		showCommunitySidebarModal({
 			sidebarData: sidebarData.value,
-			community: community.value,
+			community: community.value!,
 		});
 	}
 }
@@ -77,7 +72,7 @@ function onClickExtrasOption() {
 }
 
 function copyShareUrl() {
-	const url = getAbsoluteLink(router, community.value.routeLocation);
+	const url = getAbsoluteLink(router, community.value!.routeLocation);
 	copyShareLink(url, 'community');
 
 	Popper.hideAll();
@@ -85,34 +80,33 @@ function copyShareUrl() {
 </script>
 
 <template>
-	<AppTheme class="-community-card" :theme="community.theme">
+	<AppTheme class="-community-card" :theme="community!.theme">
 		<div class="-well">
 			<!-- Thumbnail -->
 			<div class="-thumbnail">
 				<div class="-thumbnail-inner">
 					<AppEditableThumbnail />
 				</div>
-				<AppCommunityVerifiedTick class="-verified" :community="community" />
+				<AppCommunityVerifiedTick class="-verified" :community="community!" />
 			</div>
 
 			<!-- Name / Members -->
 			<div class="-details">
 				<div class="-name">
-					<RouterLink :to="community.routeLocation" class="link-unstyled">
-						{{ community.name }}
+					<RouterLink :to="community!.routeLocation" class="link-unstyled">
+						{{ community!.name }}
 					</RouterLink>
 				</div>
 
 				<div class="-members small">
+					<!-- come back-->
 					<RouterLink
 						v-app-track-event="`community-mobile-header:community-members`"
 						v-translate="{ count: formatNumber(memberCount) }"
 						:translate-n="memberCount"
 						translate-plural="<b>%{count}</b> members"
 						:to="{
-							name: 'communities.view.members',
-							params: { path: community.path },
-						}"
+						name: 'communities.view.members', params: { path: community!.path }, }"
 					>
 						<b>1</b>
 						member
@@ -146,9 +140,9 @@ function copyShareUrl() {
 			<div class="-spacer" />
 
 			<!-- Join / Edit / View -->
-			<div v-if="!community.hasPerms()" class="-controls-item -controls-primary">
+			<div v-if="!community!.hasPerms()" class="-controls-item -controls-primary">
 				<AppCommunityJoinWidget
-					:community="community"
+					:community="community!"
 					block
 					hide-count
 					location="communityPage"
@@ -184,7 +178,7 @@ function copyShareUrl() {
 							v-if="shouldShowModTools"
 							class="list-group-item has-icon"
 							:href="
-								Environment.baseUrl + `/moderate/communities/view/${community.id}`
+								Environment.baseUrl + `/moderate/communities/view/${community!.id}`
 							"
 							target="_blank"
 							@click="onClickExtrasOption"
