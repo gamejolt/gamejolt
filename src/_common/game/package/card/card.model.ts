@@ -369,8 +369,24 @@ export class GamePackageCardModel {
 
 			// Sort.
 			this.extraBuilds.sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
+
 			// Deduplicate by platform (keep first entry).
 			this.extraBuilds = this.extraBuilds.filter((value, index, self) => {
+				// Avoid deduplicating other builds because a single release may
+				// have multiple downloadables marked as "other". e.g.
+				// "soundtrack" and "artbook" and they all need to be visible.
+				//
+				// Note: the backend only returns the "other" builds of the
+				// latest release, so we don't need to worry about deduplicating
+				// across different releases. If we did, we'd have to find a way
+				// to find out which "other" builds are newer versions of which
+				// previous "other" builds in previous releases.
+				if (value.platform === 'other') {
+					return true;
+				}
+
+				// For everything else its enough to dedupe by platform since
+				// we should only display the latest one per package.
 				return self.findIndex(v => v.platform === value.platform) === index;
 			});
 
