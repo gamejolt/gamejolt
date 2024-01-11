@@ -21,7 +21,7 @@ import {
 } from '../../../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import AppCommunityPerms from '../../../../../../components/community/perms/AppCommunityPerms.vue';
-import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/add.vue';
+import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/FormCommunityChannelAdd.vue';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
 import { useCommunityRouteStore } from '../../../view.store';
 import AppCommunitiesEditChannelListItem from './_item/AppCommunitiesEditChannelListItem.vue';
@@ -152,7 +152,7 @@ createAppRoute({});
 				>
 					<FormCommunityChannelAdd
 						:community="community!"
-						:channels="community!.channels"
+						:channels="community!.channels!"
 						:archived-channels="archivedChannels"
 						@submit="onChannelAdded"
 					/>

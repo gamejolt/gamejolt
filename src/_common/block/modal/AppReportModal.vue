@@ -6,7 +6,7 @@ import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import { $gettext } from '../../translate/translate.service';
 import { UserModel } from '../../user/user.model';
-import AppBlockForm from '../form/form.vue';
+import AppBlockForm from '../form/AppBlockForm.vue';
 
 const props = defineProps({
 	user: {

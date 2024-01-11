@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ClientAutoStart } from '../../../../_common/client/safe-exports';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
@@ -16,6 +16,7 @@ import {
 	SettingGameInstallDir,
 	SettingMaxDownloadCount,
 	SettingMaxExtractCount,
+	SettingParallaxBackgrounds,
 	SettingQueueWhenPlaying,
 	SettingRestrictedBrowsing,
 	SettingThemeAlwaysOurs,
@@ -55,6 +56,7 @@ const form: FormController<FormModel> = createForm({
 		form.formModel['restricted_browsing'] = SettingRestrictedBrowsing.get();
 		form.formModel['broadcast_modal'] = SettingBroadcastModal.get();
 		form.formModel['animated_thumbnails'] = SettingAnimatedThumbnails.get();
+		form.formModel['parallax_backgrounds'] = SettingParallaxBackgrounds.get();
 		form.formModel['feed_notifications'] = SettingFeedNotifications.get();
 		form.formModel['theme_dark'] = SettingThemeDark.get();
 		form.formModel['theme_always_ours'] = SettingThemeAlwaysOurs.get();
@@ -83,6 +85,7 @@ function _onChange() {
 	SettingRestrictedBrowsing.set(form.formModel.restricted_browsing);
 	SettingBroadcastModal.set(form.formModel.broadcast_modal);
 	SettingAnimatedThumbnails.set(form.formModel.animated_thumbnails);
+	SettingParallaxBackgrounds.set(form.formModel.parallax_backgrounds);
 	SettingFeedNotifications.set(form.formModel.feed_notifications);
 	SettingThemeDark.set(form.formModel.theme_dark);
 	SettingThemeAlwaysOurs.set(form.formModel.theme_always_ours);
@@ -283,6 +286,18 @@ watch(
 				<p class="help-block">
 					<AppTranslate>
 						Turning this off will show a static image instead of animated thumbnails.
+					</AppTranslate>
+				</p>
+			</AppFormGroup>
+
+			<AppFormGroup name="parallax_backgrounds" :label="$gettext('Parallax backgrounds?')">
+				<template #inline-control>
+					<AppFormControlToggle />
+				</template>
+				<p class="help-block">
+					<AppTranslate>
+						Turning this off will disable the parallax effect on background images while
+						scrolling.
 					</AppTranslate>
 				</p>
 			</AppFormGroup>

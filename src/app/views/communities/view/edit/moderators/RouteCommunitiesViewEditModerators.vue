@@ -19,7 +19,7 @@ import {
 } from '../../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../../utils/array';
-import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/collaborator.vue';
+import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/FormCommunityCollaborator.vue';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 import { useCommunityRouteStore } from '../../view.store';
 

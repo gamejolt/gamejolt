@@ -4,7 +4,8 @@ import { ProfileTileAction } from '../RouteProfileOverview.vue';
 
 export type ProfileStat = {
 	label: string;
-	value: string;
+	value: number;
+	fuzzyThreshold?: number;
 } & ProfileTileAction;
 </script>
 

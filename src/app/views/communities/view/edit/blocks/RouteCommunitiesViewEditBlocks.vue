@@ -17,7 +17,7 @@ import { $gettext } from '../../../../../../_common/translate/translate.service'
 import { UserBlockModel } from '../../../../../../_common/user/block/block.model';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import FormCommunityBlock from '../../../../../components/forms/community/ban/block.vue';
+import FormCommunityBlock from '../../../../../components/forms/community/ban/FormCommunityBlock.vue';
 import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
 import { useCommunityRouteStore } from '../../view.store';
 
