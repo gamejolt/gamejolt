@@ -265,17 +265,17 @@ function _scrollLoop() {
 		return;
 	}
 
-	const startTime = Date.now();
-	if (startTime - _lastScrollTime >= PageScrollSubscriptionTimeout) {
-		const top = Scroll.getScrollTop();
-		if (top !== _lastOnScrollTop) {
-			for (const cb of _onScrollCallbacks) {
-				cb(top);
-			}
-			_lastOnScrollTop = top;
+	// const startTime = Date.now();
+	// if (startTime - _lastScrollTime >= PageScrollSubscriptionTimeout) {
+	const top = Scroll.getScrollTop();
+	if (top !== _lastOnScrollTop) {
+		for (const cb of _onScrollCallbacks) {
+			cb(top);
 		}
-		_lastScrollTime = startTime;
+		_lastOnScrollTop = top;
 	}
+	// _lastScrollTime = startTime;
+	// }
 
 	// Continue looping.
 	window.requestAnimationFrame(_scrollLoop);
