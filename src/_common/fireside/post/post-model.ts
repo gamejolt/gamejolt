@@ -228,10 +228,6 @@ export class FiresidePostModel extends Model implements ContentContainerModel, C
 		return this.videos.length > 0;
 	}
 
-	get hasBackground() {
-		return !!this.background;
-	}
-
 	/**
 	 * This differs from has_article in that it is purely a frontend check, so
 	 * it updates in realtime.
