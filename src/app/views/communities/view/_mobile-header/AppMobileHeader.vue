@@ -15,7 +15,7 @@ import { copyShareLink } from '../../../../../_common/share/share.service';
 import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTheme from '../../../../../_common/theme/AppTheme.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
+import { $gettext, $ngettext } from '../../../../../_common/translate/translate.service';
 import { getAbsoluteLink } from '../../../../../utils/router';
 import { showCommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
 import { useAppStore } from '../../../../store';
@@ -101,14 +101,12 @@ function copyShareUrl() {
 				<div class="-members small">
 					<RouterLink
 						v-app-track-event="`community-mobile-header:community-members`"
-						v-translate="{ count: formatNumber(memberCount) }"
-						:translate-n="memberCount"
-						translate-plural="<b>%{count}</b> members"
 						:to="{
 						name: 'communities.view.members', params: { path: community!.path }, }"
 					>
-						<b>1</b>
-						member
+						<b>{{ formatNumber(memberCount) }}</b>
+						{{ ' ' }}
+						{{ $ngettext(`member`, `members`, memberCount) }}
 					</RouterLink>
 				</div>
 			</div>
