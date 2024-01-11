@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
+import { showCollectibleResourceDetailsModal } from '../collectible/resource-details-modal/modal.service';
 import { EmojiModel } from '../emoji/emoji.model';
-import { showStickerCollectibleModal } from './collectible-modal/modal.service';
 import { StickerModel } from './sticker.model';
 
 const props = defineProps({
@@ -16,7 +16,7 @@ const { data } = toRefs(props);
 function onWrapperClick(event: Event) {
 	if (data?.value) {
 		event.stopPropagation();
-		showStickerCollectibleModal({ item: data.value });
+		showCollectibleResourceDetailsModal({ item: data.value });
 	}
 }
 </script>
