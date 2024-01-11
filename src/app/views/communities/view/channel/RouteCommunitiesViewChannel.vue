@@ -8,7 +8,7 @@ import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
-import { useCommunityRouteStore } from '../view.store';
+import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
 
 const RouteCommunitiesViewChannelFeed = defineAsyncComponent(() =>
 	asyncRouteLoader(router, import('./RouteCommunitiesViewChannelFeed.vue'))
@@ -38,8 +38,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { channel, archivedChannels, getChannelPathFromRoute } = useCommunityRouteStore()!;
-
+const { channel, archivedChannels } = useCommunityRouteStore()!;
 createAppRoute({
 	onResolved({ payload }) {
 		if (payload.channel) {

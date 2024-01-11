@@ -5,8 +5,8 @@ import AppButton from '../../../../../_common/button/AppButton.vue';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import {
-createAppRoute,
-defineAppRouteOptions,
+	createAppRoute,
+	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -20,12 +20,7 @@ import AppCommunitiesViewFeed from '../_feed/AppCommunitiesViewFeed.vue';
 import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { CommunitiesViewChannelDeps } from '../channel/RouteCommunitiesViewChannel.vue';
-import {
-acceptCollaboration,
-declineCollaboration,
-setCommunityMeta,
-useCommunityRouteStore,
-} from '../view.store';
+import { useCommunityRouteStore } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
@@ -41,7 +36,14 @@ export default {
 const { communityStates, joinCommunity } = useAppStore();
 const { user } = useCommonStore();
 const { grid } = useGridStore();
-const routeStore = useCommunityRouteStore()!;
+const {
+	acceptCollaboration,
+	declineCollaboration,
+	community,
+	sidebarData,
+	collaborator,
+	setCommunityMeta,
+} = useCommunityRouteStore()!;
 const route = useRoute();
 const router = useRouter();
 
@@ -49,18 +51,16 @@ const isBootstrapped = ref(false);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 const finishedLoading = ref(false);
 
-const community = toRef(() => routeStore.community);
-const communityState = toRef(() => communityStates.value.getCommunityState(community.value));
-const sidebarData = toRef(() => routeStore.sidebarData!);
+const communityState = toRef(() => communityStates.value.getCommunityState(community.value!));
 
 const collaboratorInvite = toRef(() => {
 	// Just return the collaborator as an "invite" if it's not accepted yet.
-	const { collaborator } = routeStore;
-	return collaborator && !collaborator.isAccepted ? collaborator : null;
+
+	return collaborator.value && !collaborator.value.isAccepted ? collaborator : null;
 });
 
 const canAcceptCollaboration = toRef(
-	() => community.value.is_member || (user.value && user.value.can_join_communities)
+	() => community.value!.is_member || (user.value && user.value.can_join_communities)
 );
 
 const routeTitle = computed(() => {
@@ -94,7 +94,7 @@ watch(
 function loadedNew() {
 	if (communityState.value.hasUnreadFeaturedPosts && user.value) {
 		grid.value?.pushViewNotifications('community-featured', {
-			communityId: community.value.id,
+			communityId: community.value!.id,
 		});
 	}
 }
@@ -114,13 +114,13 @@ async function receiveCollaboration() {
 		return;
 	}
 
-	await acceptCollaboration(routeStore, user.value);
-	joinCommunity(community.value, { grid: grid.value });
+	await acceptCollaboration(user.value);
+	joinCommunity(community.value!, { grid: grid.value });
 	showSuccessGrowl($gettext(`You are now a collaborator on this community!`));
 }
 
 async function rejectCollaboration() {
-	await declineCollaboration(routeStore);
+	await declineCollaboration();
 }
 
 const appRoute = createAppRoute({
@@ -132,7 +132,7 @@ const appRoute = createAppRoute({
 	onResolved({ payload, fromCache }) {
 		feed.value = resolveFeedChannelPayload(
 			feed.value,
-			community.value,
+			community.value!,
 			route,
 			payload,
 			fromCache
@@ -141,12 +141,12 @@ const appRoute = createAppRoute({
 		finishedLoading.value = true;
 
 		if (routeTitle.value) {
-			setCommunityMeta(community.value, routeTitle.value);
+			setCommunityMeta(routeTitle.value);
 		}
 
 		if (!fromCache && user.value) {
 			grid.value?.pushViewNotifications('community-featured', {
-				communityId: community.value.id,
+				communityId: community.value!.id,
 			});
 		}
 	},
@@ -185,7 +185,7 @@ const appRoute = createAppRoute({
 				/>
 			</template>
 			<template #sidebar>
-				<AppCommunitySidebar :sidebar-data="sidebarData" :community="community" />
+				<AppCommunitySidebar :sidebar-data="sidebarData!" :community="community!" />
 			</template>
 		</AppCommunitiesViewPageContainer>
 	</div>

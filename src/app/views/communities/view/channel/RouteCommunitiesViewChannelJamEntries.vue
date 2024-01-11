@@ -23,7 +23,7 @@ import {
 	showCommunityCompetitionEntryModalIdFromHash,
 	watchCommunityCompetitionEntryModalForHash,
 } from '../../../../components/community/competition/entry/modal/modal.service';
-import { useCommunityRouteStore } from '../view.store';
+import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
@@ -34,8 +34,6 @@ export default {
 		resolver: ({ route }) => makeRequest(route),
 	}),
 };
-
-const { competition, getChannelPathFromRoute } = useCommunityRouteStore()!;
 
 function getSeedSessionStorageKey(route: RouteLocationNormalized) {
 	return (
@@ -153,6 +151,7 @@ const props = defineProps({
 	},
 });
 
+const { competition } = useCommunityRouteStore()!;
 const { categories } = toRefs(props);
 const route = useRoute();
 const router = useRouter();

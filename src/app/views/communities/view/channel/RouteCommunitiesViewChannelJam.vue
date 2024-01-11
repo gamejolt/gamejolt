@@ -24,14 +24,11 @@ import AppCommunityCompetitionCountdown from '../../../../components/community/c
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
 import AppCommunityPerms from '../../../../components/community/perms/AppCommunityPerms.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
-import { useCommunityRouteStore } from '../view.store';
+import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
 
 const RouteCommunitiesViewChannelJamEntries = defineAsyncComponent(() =>
 	asyncRouteLoader(router, import('./RouteCommunitiesViewChannelJamEntries.vue'))
 );
-
-const { community, channel, competition, getChannelPathFromRoute, setCommunityMeta } =
-	useCommunityRouteStore()!;
 
 export default {
 	...defineAppRouteOptions({
@@ -48,6 +45,7 @@ export default {
 
 <script lang="ts" setup>
 const { user } = useCommonStore();
+const { community, channel, competition, setCommunityMeta } = useCommunityRouteStore()!;
 
 const canToggleDescription = ref(false);
 const isDescriptionOpen = ref(false);

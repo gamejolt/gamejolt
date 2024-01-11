@@ -26,6 +26,13 @@ export function useCommunityRouteStore() {
 	return inject(CommunityRouteStoreKey);
 }
 
+export function getChannelPathFromRoute(route: RouteLocationNormalized) {
+	if (route.name === routeCommunitiesViewOverview.name) {
+		return CommunityPresetChannelType.FEATURED;
+	}
+	return (route.params.channel as string) || null;
+}
+
 export function createCommunityRouteStore() {
 	const isLoaded = ref(false);
 	const community = ref<CommunityModel | null>();
@@ -144,13 +151,6 @@ export function createCommunityRouteStore() {
 		collaborator.value = null;
 	}
 
-	function getChannelPathFromRoute(route: RouteLocationNormalized) {
-		if (route.name === routeCommunitiesViewOverview.name) {
-			return CommunityPresetChannelType.FEATURED;
-		}
-		return (route.params.channel as string) || null;
-	}
-
 	/**
 	 * Initializes the route metadata for a community page.
 	 */
@@ -231,7 +231,6 @@ export function createCommunityRouteStore() {
 		isVirtualChannel,
 		acceptCollaboration,
 		declineCollaboration,
-		getChannelPathFromRoute,
 		setCommunityMeta,
 		loadArchivedChannels,
 	};
