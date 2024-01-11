@@ -125,7 +125,7 @@ const description = toRef(() => {
 });
 
 const imageUrl = computed(() => {
-	// TODO(sticker-emoji-collectible-info) items without media items are super
+	// TODO(resource-collectible-links) items without media items are super
 	// blurry since we don't have a media_item to check if it's animated. See if
 	// we can merge in https://github.com/gamejolt/gamejolt/pull/1176, or grab
 	// some parts of it, so we can get mediaserverUrl based on the url instead
@@ -409,7 +409,7 @@ const collectibleResourceAcquisition = computed(() => {
 		</template>
 		<AppAlertBox v-else-if="!isLoading">
 			<template v-if="emoji && !emoji.sticker_id">
-				<!-- TODO(sticker-emoji-collectible-info) make sure this is correct -->
+				<!-- TODO(resource-collectible-links) make sure this is correct -->
 				{{ $gettext(`This emoji is available to everyone.`) }}
 			</template>
 			<template v-else>
