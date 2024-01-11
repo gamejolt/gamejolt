@@ -5,6 +5,7 @@ export class EmojiModel implements ModelStoreModel {
 	declare img_url: string;
 	declare prefix: string;
 	declare short_name: string;
+	declare sticker_id: number | undefined;
 
 	update(data: any = {}) {
 		Object.assign(this, data);

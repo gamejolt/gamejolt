@@ -15,7 +15,6 @@ import { storeModelList } from '../../../../_common/model/model-store.service';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppStickerLayerDrawerItem from '../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
 import AppStickerPack, {
 	StickerPackExpiryStyles,
 } from '../../../../_common/sticker/pack/AppStickerPack.vue';
@@ -36,6 +35,7 @@ import { arrayRemove } from '../../../../utils/array';
 import { run } from '../../../../utils/utils';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 import AppBackpackGift from './_backpack/AppBackpackGift.vue';
+import AppBackpackSticker from './_backpack/AppBackpackSticker.vue';
 
 type FormModel = {
 	// nothing
@@ -272,14 +272,11 @@ function onRemoveGift(gift: InventoryShopGiftModel) {
 				</div>
 
 				<div class="_stickers">
-					<AppStickerLayerDrawerItem
+					<AppBackpackSticker
 						v-for="{ sticker, sticker_id, count } in eventStickers"
 						:key="sticker_id"
 						:sticker="sticker"
 						:count="count || undefined"
-						fit-parent
-						no-drag
-						show-mastery
 					/>
 				</div>
 			</div>
@@ -321,14 +318,11 @@ function onRemoveGift(gift: InventoryShopGiftModel) {
 						</div>
 
 						<div class="_stickers">
-							<AppStickerLayerDrawerItem
+							<AppBackpackSticker
 								v-for="{ sticker, sticker_id, count } in stickers"
 								:key="sticker_id"
 								:sticker="sticker"
 								:count="count || undefined"
-								fit-parent
-								no-drag
-								show-mastery
 							/>
 						</div>
 					</template>
@@ -341,14 +335,11 @@ function onRemoveGift(gift: InventoryShopGiftModel) {
 				</div>
 
 				<div class="_stickers">
-					<AppStickerLayerDrawerItem
+					<AppBackpackSticker
 						v-for="{ sticker, sticker_id, count } in generalStickers"
 						:key="sticker_id"
 						:sticker="sticker"
 						:count="count || undefined"
-						fit-parent
-						no-drag
-						show-mastery
 					/>
 				</div>
 			</div>
