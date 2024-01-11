@@ -27,7 +27,7 @@ const props = defineProps({
 
 const { model } = toRefs(props);
 
-const timezoneService = ref<FormTimezoneService<CommunityCompetitionModel> | null>(null);
+const timezoneService = ref<FormTimezoneService<CommunityCompetitionModel> | null>();
 
 // Before and during the competition, start/end dates can be edited.
 const shouldShowSaveButton = computed(() => model!.value.periodNum < CompetitionPeriodVoting);
@@ -78,10 +78,12 @@ const form: FormController<CommunityCompetitionModel> = createForm({
 						</p>
 
 						<AppFormControlSelect>
+							<!-- TODO(component-setup-refactor-forms-1): is the usage of 'as' below is okay? label requires string input.
+							and region appears to be of string type, not sure why it's typed as string | number-->
 							<optgroup
 								v-for="(timezones, region) of timezoneService.timezones"
 								:key="region"
-								:label="region"
+								:label="(region as string)"
 							>
 								<option
 									v-for="timezone of timezones"
