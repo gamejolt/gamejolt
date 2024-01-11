@@ -1,6 +1,11 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, onMounted, ref, toRef, toRefs } from 'vue';
-import { styleBorderRadiusBase, styleFlexCenter, styleWhen } from '../../_styles/mixins';
+import { CSSProperties, PropType, computed, onMounted, ref, toRef, toRefs, watch } from 'vue';
+import {
+	styleBorderRadiusBase,
+	styleFlexCenter,
+	styleMaxWidthForOptions,
+	styleWhen,
+} from '../../_styles/mixins';
 import { kBorderRadiusBase, kFontSizeLarge, kFontSizeSmall } from '../../_styles/variables';
 import { showPurchaseShopProductModal } from '../../app/components/vending-machine/modal/_purchase-modal/modal.service';
 import { arrayAssignAll } from '../../utils/array';
@@ -18,13 +23,15 @@ import AppLoading from '../loading/AppLoading.vue';
 import { getMediaItemImageSrc } from '../media-item/media-item-model';
 import { storeModel, storeModelList } from '../model/model-store.service';
 import AppCircularProgress from '../progress/AppCircularProgress.vue';
+import { Screen } from '../screen/screen-service';
 import AppStickerMastery from '../sticker/AppStickerMastery.vue';
 import AppStickerPack, { StickerPackRatio } from '../sticker/pack/AppStickerPack.vue';
 import { StickerPackModel } from '../sticker/pack/pack.model';
 import { StickerModel } from '../sticker/sticker.model';
 import { kThemeFg10, kThemeFgMuted } from '../theme/variables';
 import { $gettext } from '../translate/translate.service';
-import { AcquisitionMethod, AcquisitionModel, filterAcquisitionMethods } from './acquisition.model';
+import AppCollectibleUnlockedRibbon from './AppCollectibleUnlockedRibbon.vue';
+import { AcquisitionMethod, filterAcquisitionMethods } from './acquisition.model';
 import { CollectibleModel } from './collectible.model';
 import { CollectibleResourceItem } from './resource-details-modal/modal.service';
 
@@ -46,11 +53,15 @@ const emit = defineEmits({
 });
 
 const isLoading = ref(true);
-const loadedData = ref<{
-	acquisitions: AcquisitionModel[];
-	stickerMastery?: number;
-	packs: StickerPackModel[];
-}>();
+const collectible = ref<CollectibleModel>();
+
+const hideCollectibleRibbon = ref(false);
+watch(
+	() => Screen.isPointerMouse,
+	() => {
+		hideCollectibleRibbon.value = false;
+	}
+);
 
 function ifInstance<T>(item: any, constructor: new (...data: any) => T): T | undefined {
 	return item && isInstance(item, constructor) ? item : undefined;
@@ -61,21 +72,32 @@ const emoji = computed(() => ifInstance(item.value, EmojiModel));
 const avatarFrame = computed(() => ifInstance(item.value, AvatarFrameModel));
 const background = computed(() => ifInstance(item.value, BackgroundModel));
 
-const collectibleLoadData = toRef<() => null | { loadUrl: string; loadResourceId: number }>(() => {
+const collectibleLoadData = toRef<
+	() => null | {
+		loadUrl: string;
+		loadResourceFields: Record<string, any>;
+	}
+>(() => {
 	if ((sticker.value || emoji.value) && stickerId.value) {
 		return {
 			loadUrl: `/mobile/sticker`,
-			loadResourceId: stickerId.value,
+			loadResourceFields: {
+				collectible: stickerId.value,
+			},
 		};
 	} else if (avatarFrame.value) {
 		return {
 			loadUrl: `/mobile/avatar-frame`,
-			loadResourceId: avatarFrame.value.id,
+			loadResourceFields: {
+				collectible: { id: avatarFrame.value.id },
+			},
 		};
 	} else if (background.value) {
 		return {
 			loadUrl: `/mobile/background`,
-			loadResourceId: background.value.id,
+			loadResourceFields: {
+				collectible: { id: background.value.id },
+			},
 		};
 	} else {
 		return null;
@@ -83,28 +105,31 @@ const collectibleLoadData = toRef<() => null | { loadUrl: string; loadResourceId
 });
 
 const stickerId = toRef(() => sticker.value?.id ?? emoji.value?.sticker_id);
-const stickerMastery = toRef(() => loadedData.value?.stickerMastery ?? sticker.value?.mastery);
+const stickerMastery = toRef(() => collectible.value?.sticker_mastery ?? sticker.value?.mastery);
 const name = toRef(
 	() =>
-		sticker.value?.name ??
 		emoji.value?.commandString ??
+		collectible.value?.name ??
+		sticker.value?.name ??
 		avatarFrame.value?.name ??
 		background.value?.name
 );
-const description = toRef(
-	() =>
-		sticker.value?.description ??
-		// emoji.value?.description ??
-		avatarFrame.value?.description ??
-		background.value?.description
-);
+const description = toRef(() => {
+	if (collectible.value?.description) {
+		return collectible.value.description;
+	}
+	if ('description' in item.value && item.value.description) {
+		return item.value.description;
+	}
+	return null;
+});
 
 const imageUrl = computed(() => {
-	// TODO(sticker-emoji-collectible-info) emojis are super blurry since we
-	// don't have a media_item to check if it's animated. See if we can merge in
-	// https://github.com/gamejolt/gamejolt/pull/1176, or grab some parts of it,
-	// so we can get mediaserverUrl based on the url instead of making these
-	// other checks required.
+	// TODO(sticker-emoji-collectible-info) items without media items are super
+	// blurry since we don't have a media_item to check if it's animated. See if
+	// we can merge in https://github.com/gamejolt/gamejolt/pull/1176, or grab
+	// some parts of it, so we can get mediaserverUrl based on the url instead
+	// of making these other checks required.
 	const mediaItem = 'media_item' in item.value ? item.value.media_item : undefined;
 	if (mediaItem) {
 		return getMediaItemImageSrc(mediaItem);
@@ -122,22 +147,22 @@ onMounted(async () => {
 		return;
 	}
 
-	const { loadUrl, loadResourceId } = collectibleLoadData.value;
+	const { loadUrl, loadResourceFields } = collectibleLoadData.value;
 
 	try {
-		const response = await Api.sendFieldsRequest(
-			loadUrl,
-			{ collectible: loadResourceId },
-			{ detach: true }
-		);
+		const response = await Api.sendFieldsRequest(loadUrl, loadResourceFields, { detach: true });
 
 		if (!response.collectible) {
 			throw Error('No collectible data returned.');
 		}
 
-		const collectible = storeModel(CollectibleModel, response.collectible);
+		const rawCollectible = Array.isArray(response.collectible)
+			? response.collectible[0]
+			: response.collectible;
+
+		const newCollectible = storeModel(CollectibleModel, rawCollectible);
 		const packIds = filterAcquisitionMethods(
-			collectible.acquisition,
+			newCollectible.acquisition,
 			AcquisitionMethod.PackOpen
 		).map(i => i.sticker_pack_id);
 
@@ -154,16 +179,12 @@ onMounted(async () => {
 				{ detach: true }
 			);
 			arrayAssignAll(packs, storeModelList(StickerPackModel, packsResponse.packs));
+			emit('update:packs', packs);
 		}
 
-		emit('update:packs', packs);
-		loadedData.value = {
-			acquisitions: collectible.acquisition,
-			stickerMastery: collectible.sticker_mastery,
-			packs,
-		};
+		collectible.value = newCollectible;
 	} catch {
-		loadedData.value = undefined;
+		collectible.value = undefined;
 		emit('update:packs', []);
 	}
 	isLoading.value = false;
@@ -195,7 +216,7 @@ const mutedStyles = {
 } satisfies CSSProperties;
 
 const collectibleResourceAcquisition = computed(() => {
-	const acquisitions = loadedData.value?.acquisitions;
+	const acquisitions = collectible.value?.acquisition;
 	// Ignore if we have no shop purchase acquisitions.
 	if (
 		!acquisitions?.length ||
@@ -234,23 +255,46 @@ const collectibleResourceAcquisition = computed(() => {
 		</div>
 
 		<!-- Image -->
-		<div :style="{ width: `100%`, alignSelf: `center`, maxWidth: `200px` }">
-			<AppAspectRatio :ratio="1">
+		<div
+			:style="{
+				width: `100%`,
+				alignSelf: `center`,
+				...styleMaxWidthForOptions({
+					ratio: 1,
+					maxWidth: 320,
+					maxHeight: Screen.height / 3,
+				}),
+			}"
+			@mouseover="Screen.isPointerMouse ? (hideCollectibleRibbon = true) : undefined"
+			@mouseout="Screen.isPointerMouse ? (hideCollectibleRibbon = false) : undefined"
+			@click="
+				Screen.isPointerMouse ? undefined : (hideCollectibleRibbon = !hideCollectibleRibbon)
+			"
+		>
+			<AppAspectRatio
+				:style="{
+					...styleWhen(!!background, {
+						borderRadius: kBorderRadiusBase.px,
+					}),
+				}"
+				:ratio="1"
+			>
 				<AppImgResponsive v-if="imageUrl.isMediaserver" :src="imageUrl.src" />
 				<img
 					v-else
-					:style="[
-						{
-							width: `100%`,
-							height: `auto`,
-						},
-						styleWhen(!!background, {
-							borderRadius: kBorderRadiusBase.px,
-						}),
-					]"
+					:style="{
+						width: `100%`,
+						height: `auto`,
+					}"
 					:src="imageUrl.src"
 					alt=""
 				/>
+
+				<Transition name="fade">
+					<AppCollectibleUnlockedRibbon
+						v-if="collectible?.is_unlocked && !hideCollectibleRibbon"
+					/>
+				</Transition>
 			</AppAspectRatio>
 		</div>
 
@@ -312,8 +356,8 @@ const collectibleResourceAcquisition = computed(() => {
 			stationary
 		/>
 
-		<template v-if="loadedData && (loadedData.packs.length || collectibleResourceAcquisition)">
-			<template v-if="loadedData.packs.length">
+		<template v-if="collectible && (packs.length || collectibleResourceAcquisition)">
+			<template v-if="packs.length">
 				<h2 :style="headingStyles">
 					{{ $gettext(`Packs`) }}
 				</h2>
@@ -325,7 +369,7 @@ const collectibleResourceAcquisition = computed(() => {
 						gap: `8px`,
 					}"
 				>
-					<div v-for="pack in loadedData.packs" :key="pack.id">
+					<div v-for="pack in packs" :key="pack.id">
 						<AppStickerPack
 							v-if="isInstance(pack, StickerPackModel)"
 							:pack="pack"
@@ -374,3 +418,13 @@ const collectibleResourceAcquisition = computed(() => {
 		</AppAlertBox>
 	</div>
 </template>
+
+<style lang="stylus" scoped>
+.fade-enter-active
+.fade-leave-active
+	transition: opacity 200ms $strong-ease-out
+
+.fade-enter-from
+.fade-leave-to
+	opacity: 0
+</style>

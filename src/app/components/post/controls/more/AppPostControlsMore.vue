@@ -3,6 +3,7 @@ import { PropType, computed, toRef, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import { showCollectibleResourceDetailsModal } from '../../../../../_common/collectible/resource-details-modal/modal.service';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
@@ -20,7 +21,6 @@ import {
 } from '../../../../../_common/fireside/post/post-model';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
-import { PurchasableProductType } from '../../../../../_common/inventory/shop/product-owner-helpers';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
 import { showReportModal } from '../../../../../_common/report/modal/modal.service';
@@ -36,7 +36,6 @@ import { showCommunityEjectPostModal } from '../../../community/eject-post/modal
 import { showCommunityMovePostModal } from '../../../community/move-post/modal/modal.service';
 import AppCommunityPerms from '../../../community/perms/AppCommunityPerms.vue';
 import { useGridStore } from '../../../grid/grid-store';
-import { showPurchaseShopProductModal } from '../../../vending-machine/modal/_purchase-modal/modal.service';
 
 const props = defineProps({
 	post: {
@@ -266,17 +265,9 @@ async function togglePin() {
 				</a>
 
 				<template v-if="avatarFrame">
-					<!-- TODO(resource-collectible-links) Open a modal to view
-					details first. Should include a button to open the purchase
-					modal if it has a purchasable acquisition method. -->
 					<a
 						class="list-group-item has-icon"
-						@click="
-							showPurchaseShopProductModal({
-								resource: PurchasableProductType.AvatarFrame,
-								resourceId: avatarFrame.id,
-							})
-						"
+						@click="showCollectibleResourceDetailsModal({ item: avatarFrame })"
 					>
 						<AppJolticon icon="subscribe" />
 						{{ $gettext(`View avatar frame`) }}
@@ -284,15 +275,9 @@ async function togglePin() {
 				</template>
 
 				<template v-if="post.background">
-					<!-- TODO(resource-collectible-links)  -->
 					<a
 						class="list-group-item has-icon"
-						@click="
-							showPurchaseShopProductModal({
-								resource: PurchasableProductType.Background,
-								resourceId: post.background.id,
-							})
-						"
+						@click="showCollectibleResourceDetailsModal({ item: post.background })"
 					>
 						<AppJolticon icon="subscribe" />
 						{{ $gettext(`View background`) }}
