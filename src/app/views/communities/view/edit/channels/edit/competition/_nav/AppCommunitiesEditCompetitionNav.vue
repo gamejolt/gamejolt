@@ -7,7 +7,6 @@ import { useCommunityRouteStore } from '../../../../../view.store';
 
 const { competition } = useCommunityRouteStore()!;
 
-//const competition = toRef(() => routeStore.competition!);
 const canAssignAwards = toRef(
 	() =>
 		competition.value!.is_voting_enabled &&

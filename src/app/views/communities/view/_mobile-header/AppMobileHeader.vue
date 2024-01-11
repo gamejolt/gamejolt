@@ -99,7 +99,6 @@ function copyShareUrl() {
 				</div>
 
 				<div class="-members small">
-					<!-- come back-->
 					<RouterLink
 						v-app-track-event="`community-mobile-header:community-members`"
 						v-translate="{ count: formatNumber(memberCount) }"

@@ -4,8 +4,6 @@ import AppEditableThumbnail from '../_editable-thumbnail/AppEditableThumbnail.vu
 import { useCommunityRouteStore } from '../view.store';
 
 const { community } = useCommunityRouteStore()!;
-
-//const community = toRef(() => routeStore.community);
 </script>
 
 <template>
