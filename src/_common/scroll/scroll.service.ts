@@ -1,5 +1,6 @@
 import { onUnmounted, ref, shallowReadonly, toRef } from 'vue';
 import { arrayRemove } from '../../utils/array';
+import { sleep } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';
 import { AppAutoscrollAnchor } from './auto-scroll/anchor';
 
@@ -171,15 +172,14 @@ export const Scroll = /** @__PURE__ */ new ScrollService();
  * Minimum interval in milliseconds that {@link _onScroll} will assign to
  * {@link PageScrollSubscription.top} refs.
  */
-export const PageScrollSubscriptionTimeout = 1_000 / 30;
+export const PageScrollSubscriptionTimeout = 1_000 / 24;
 
 export type PageScrollSubscription = ReturnType<typeof usePageScrollSubscription>;
 type OnScrollCallback = (top: number) => void;
 
 const _onScrollCallbacks: OnScrollCallback[] = [];
-let _isScrollLooping = false;
+let _isOnScrollBusy = false;
 let _lastOnScrollTop: number | null = null;
-let _lastScrollTime = 0;
 
 /** Should only be used in a setup block. */
 export function usePageScrollSubscription(
@@ -242,41 +242,38 @@ export function usePageScrollSubscription(
 }
 
 function _afterSubscriptionsChanged() {
-	// If we don't have any scroll callbacks, the scroll loop will stop itself.
-	// We don't need to do anything here.
-	if (!_onScrollCallbacks.length) {
-		return;
-	}
+	if (_onScrollCallbacks.length) {
+		window.document.addEventListener('scroll', _onScroll, {
+			passive: true,
+		});
 
-	if (_isScrollLooping) {
-		return;
+		// Need to call _onScroll lazily here, otherwise things may not be
+		// loaded in yet. This can happen if you're on a page that holds the
+		// only subscription, go to a new page, then go back through the
+		// browser.
+		sleep(0).then(() => _onScroll());
+	} else {
+		window.document.removeEventListener('scroll', _onScroll);
+		_lastOnScrollTop = null;
 	}
-
-	// Start us next animation frame so that the page is finished mounting.
-	_isScrollLooping = true;
-	window.requestAnimationFrame(_scrollLoop);
 }
 
-function _scrollLoop() {
-	if (!_onScrollCallbacks.length) {
-		// Don't register another animation frame. Just reset ourselves.
-		_lastOnScrollTop = null;
-		_isScrollLooping = false;
+async function _onScroll() {
+	if (_isOnScrollBusy) {
 		return;
 	}
+	_isOnScrollBusy = true;
 
-	// const startTime = Date.now();
-	// if (startTime - _lastScrollTime >= PageScrollSubscriptionTimeout) {
-	const top = Scroll.getScrollTop();
-	if (top !== _lastOnScrollTop) {
+	// Wait a bit so we don't do this too often.
+	await sleep(PageScrollSubscriptionTimeout);
+
+	let top = 0;
+	if (_onScrollCallbacks.length) {
+		top = Scroll.getScrollTop();
 		for (const cb of _onScrollCallbacks) {
 			cb(top);
 		}
-		_lastOnScrollTop = top;
 	}
-	// _lastScrollTime = startTime;
-	// }
-
-	// Continue looping.
-	window.requestAnimationFrame(_scrollLoop);
+	_lastOnScrollTop = top;
+	_isOnScrollBusy = false;
 }

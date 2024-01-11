@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, ref, toRefs, watch } from 'vue';
-import { styleAbsoluteFill, styleWhen } from '../../_styles/mixins';
-import { usePageScrollSubscription } from '../scroll/scroll.service';
+import { CSSProperties, PropType, computed, ref, toRefs, watch, watchEffect } from 'vue';
+import { PageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
 import { SettingParallaxBackgrounds } from '../settings/settings.service';
 import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
@@ -29,22 +28,44 @@ const root = ref<HTMLElement>();
 
 const shouldParallax = computed(() => enablePageScroll.value && SettingParallaxBackgrounds.get());
 
-// We freeze the tile height for now since it shouldn't really change.
-const tileHeight = background.value.media_item.croppedHeight / background.value.scale;
-const baseStyles = computed(() => getBackgroundCSSProperties(background.value));
+const baseStyles = computed(() => {
+	// We're casting this to CSSStyleDeclaration so that we can more easily
+	// apply to the style property.
+	return {
+		...getBackgroundCSSProperties(background.value),
+		...backgroundStyle?.value,
+	} as CSSStyleDeclaration;
+});
+
+watchEffect(() => {
+	if (!root.value) {
+		return;
+	}
+
+	const _styles = baseStyles.value;
+	for (const key in _styles) {
+		// Don't assign backgroundPosition if we're currently modifying it
+		// through page scroll offset.
+		if (key === 'backgroundPosition' && pageScrollSubscription.isActive.value) {
+			continue;
+		}
+		root.value.style[key] = _styles[key];
+	}
+});
 
 function attachPageOffsetBackgroundStyles(top: number) {
 	if (!root.value) {
 		return;
 	}
-
-	if (!enablePageScroll.value) {
-		root.value.style.transform = `translateY(0)`;
-		return;
+	if (!shouldParallax.value || scrollDirection?.value) {
+		root.value.style.backgroundPosition = baseStyles.value.backgroundPosition;
+		root.value.style.transition = '';
+	} else {
+		root.value.style.backgroundPosition = `center ${top / 5}px`;
+		root.value.style.transition = `background-position ${
+			PageScrollSubscriptionTimeout + 20
+		}ms ease-out`;
 	}
-	top /= 5;
-	top %= tileHeight;
-	root.value.style.transform = `translateY(${top}px)`;
 }
 
 const pageScrollSubscription = usePageScrollSubscription(attachPageOffsetBackgroundStyles, {
@@ -63,24 +84,11 @@ watch(shouldParallax, enabled => {
 <template>
 	<div
 		ref="root"
-		:style="
-			styleWhen(shouldParallax, {
-				...styleAbsoluteFill({ inset: `-${tileHeight}px` }),
-				// We change this a lot when we have the susbcription
-				// active, so let the browser know.
-				willChange: `transform`,
-			})
-		"
-	>
-		<div
-			:class="scrollDirection ? ['_scroll', `_scroll-${scrollDirection}`] : []"
-			:style="{
-				...styleAbsoluteFill(),
-				...baseStyles,
-				...backgroundStyle,
-			}"
-		/>
-	</div>
+		:class="{
+			_scroll: scrollDirection,
+			[`_scroll-${scrollDirection}`]: scrollDirection,
+		}"
+	/>
 </template>
 
 <style lang="stylus" scoped>
