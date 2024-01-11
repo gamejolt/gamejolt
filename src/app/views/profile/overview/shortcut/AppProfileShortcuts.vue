@@ -9,7 +9,7 @@ export type ProfileQuickLink = {
 	icon: Jolticon;
 } & ProfileTileAction;
 
-const itemWidth = 72;
+const itemWidth = 58;
 </script>
 
 <script lang="ts" setup>
@@ -38,7 +38,7 @@ defineProps({
 				  }
 				: {
 						display: `grid`,
-						gridTemplateColumns: `repeat(auto-fill, ${itemWidth}px)`,
+						gridTemplateColumns: `repeat(auto-fit, ${itemWidth}px)`,
 						justifyContent: `space-around`,
 				  }),
 		}"

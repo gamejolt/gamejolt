@@ -92,10 +92,10 @@ if (import.meta.env.SSR) {
 						v-if="loadedBackground"
 						:key="loadedBackground.id"
 						class="_stretch anim-fade-in"
+						:background="background"
 						:background-style="
 							styleWhen(!!backgroundStyle, backgroundStyle!)
 						"
-						:background="background"
 						:scroll-direction="scrollDirection"
 						:enable-page-scroll="enablePageScroll"
 					/>

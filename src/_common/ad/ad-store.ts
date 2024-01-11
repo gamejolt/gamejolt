@@ -9,7 +9,6 @@ import { onRouteChangeAfter } from '../route/route-component';
 import { AdSlot } from './ad-slot-info';
 import { AdAdapter } from './adapter-base';
 import { AdEnthusiastAdapter } from './enthusiast/enthusiast-adapter';
-import { AdProperAdapter } from './proper/proper-adapter';
 
 const logger = createLogger('Ads Store');
 
@@ -55,11 +54,11 @@ export function createAdStore() {
 	const pageSettings = ref<AdSettingsContainer | null>(null);
 	const _defaultSettings = new AdSettingsContainer();
 
-	// const _newAdapter = new AdEnthusiastAdapter();
-	// const adapter: AdAdapter = _newAdapter;
-	// const videoAdapter: AdAdapter = _newAdapter;
-	const adapter: AdAdapter = new AdProperAdapter();
-	const videoAdapter: AdAdapter = new AdEnthusiastAdapter();
+	const _newAdapter = new AdEnthusiastAdapter();
+	const adapter: AdAdapter = _newAdapter;
+	const videoAdapter: AdAdapter = _newAdapter;
+	// const adapter: AdAdapter = new AdProperAdapter();
+	// const videoAdapter: AdAdapter = new AdEnthusiastAdapter();
 
 	const settings = toRef(() => pageSettings.value || _defaultSettings);
 

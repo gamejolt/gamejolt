@@ -6,7 +6,7 @@ import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../_common/user/user.model';
-import FormCommunityBlock from '../../forms/community/ban/block.vue';
+import FormCommunityBlock from '../../forms/community/ban/FormCommunityBlock.vue';
 
 defineProps({
 	community: {

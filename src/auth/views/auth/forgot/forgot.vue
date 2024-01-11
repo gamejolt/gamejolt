@@ -4,7 +4,7 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../_common/route/legacy-route-component';
-import FormRetrieveLogin from '../../../components/forms/retrieve-login/retrieve-login.vue';
+import FormRetrieveLogin from '../../../components/forms/retrieve-login/FormRetrieveLogin.vue';
 
 @Options({
 	name: 'RouteAuthForgot',

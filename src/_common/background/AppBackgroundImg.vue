@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, ref, toRefs, watch } from 'vue';
+import { CSSProperties, PropType, computed, ref, toRefs, watch } from 'vue';
 import { styleAbsoluteFill, styleWhen } from '../../_styles/mixins';
-import { watched } from '../reactivity-helpers';
 import { usePageScrollSubscription } from '../scroll/scroll.service';
+import { SettingParallaxBackgrounds } from '../settings/settings.service';
 import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
 const props = defineProps({
@@ -10,12 +10,12 @@ const props = defineProps({
 		type: Object as PropType<BackgroundModel>,
 		required: true,
 	},
-	scrollDirection: {
-		type: String,
-		default: undefined,
-	},
 	backgroundStyle: {
 		type: Object as PropType<CSSProperties>,
+		default: undefined,
+	},
+	scrollDirection: {
+		type: String,
 		default: undefined,
 	},
 	enablePageScroll: {
@@ -23,13 +23,15 @@ const props = defineProps({
 	},
 });
 
-const { background, scrollDirection, backgroundStyle, enablePageScroll } = toRefs(props);
+const { background, backgroundStyle, scrollDirection, enablePageScroll } = toRefs(props);
 
 const root = ref<HTMLElement>();
 
+const shouldParallax = computed(() => enablePageScroll.value && SettingParallaxBackgrounds.get());
+
 // We freeze the tile height for now since it shouldn't really change.
 const tileHeight = background.value.media_item.croppedHeight / background.value.scale;
-const baseStyles = watched(() => getBackgroundCSSProperties(background.value));
+const baseStyles = computed(() => getBackgroundCSSProperties(background.value));
 
 function attachPageOffsetBackgroundStyles(top: number) {
 	if (!root.value) {
@@ -40,18 +42,16 @@ function attachPageOffsetBackgroundStyles(top: number) {
 		root.value.style.transform = `translateY(0)`;
 		return;
 	}
-
 	top /= 5;
 	top %= tileHeight;
-
 	root.value.style.transform = `translateY(${top}px)`;
 }
 
 const pageScrollSubscription = usePageScrollSubscription(attachPageOffsetBackgroundStyles, {
-	enable: enablePageScroll.value,
+	enable: shouldParallax.value,
 });
 
-watch(enablePageScroll, enabled => {
+watch(shouldParallax, enabled => {
 	if (enabled) {
 		pageScrollSubscription.enable();
 	} else {
@@ -64,7 +64,7 @@ watch(enablePageScroll, enabled => {
 	<div
 		ref="root"
 		:style="
-			styleWhen(pageScrollSubscription.isActive.value, {
+			styleWhen(shouldParallax, {
 				...styleAbsoluteFill({ inset: `-${tileHeight}px` }),
 				// We change this a lot when we have the susbcription
 				// active, so let the browser know.
