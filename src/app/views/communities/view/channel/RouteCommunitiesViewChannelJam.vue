@@ -24,11 +24,14 @@ import AppCommunityCompetitionCountdown from '../../../../components/community/c
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
 import AppCommunityPerms from '../../../../components/community/perms/AppCommunityPerms.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
-import { getChannelPathFromRoute, setCommunityMeta, useCommunityRouteStore } from '../view.store';
+import { useCommunityRouteStore } from '../view.store';
 
 const RouteCommunitiesViewChannelJamEntries = defineAsyncComponent(() =>
 	asyncRouteLoader(router, import('./RouteCommunitiesViewChannelJamEntries.vue'))
 );
+
+const { community, channel, competition, getChannelPathFromRoute, setCommunityMeta } =
+	useCommunityRouteStore()!;
 
 export default {
 	...defineAppRouteOptions({
@@ -44,7 +47,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
 const { user } = useCommonStore();
 
 const canToggleDescription = ref(false);
@@ -53,9 +55,6 @@ const isLoading = ref(true);
 const userEntries = ref<CommunityCompetitionEntryModel[]>([]);
 const categories = ref<CommunityCompetitionVotingCategoryModel[]>([]);
 
-const community = toRef(() => routeStore.community);
-const channel = toRef(() => routeStore.channel);
-const competition = toRef(() => routeStore.competition!);
 const hasSubmittedEntries = toRef(() => userEntries.value.length > 0);
 
 const shouldShowUserSubmissions = computed(() => {
@@ -69,7 +68,7 @@ const shouldShowUserSubmissions = computed(() => {
 	}
 
 	// Can't submit entries when you are blocked from the community.
-	if (community.value.isBlocked) {
+	if (community.value!.isBlocked) {
 		return false;
 	}
 
@@ -90,7 +89,7 @@ const canSubmitEntry = toRef(
 
 const routeTitle = computed(() =>
 	$gettext(`%{ channel } - %{ name } Community on Game Jolt`, {
-		name: community.value.name,
+		name: community.value!.name,
 		channel: channel.value?.displayTitle || '',
 	})
 );
@@ -142,7 +141,7 @@ createAppRoute({
 		isLoading.value = false;
 
 		if (routeTitle.value) {
-			setCommunityMeta(community.value, routeTitle.value);
+			setCommunityMeta(routeTitle.value);
 		}
 	},
 });
@@ -151,12 +150,12 @@ createAppRoute({
 <template>
 	<div>
 		<AppCommunitiesViewPageContainer full>
-			<AppCommunityPerms :community="community" required="community-competitions">
+			<AppCommunityPerms :community="community!" required="community-competitions">
 				<AppButton
 					icon="edit"
 					:to="{
 						name: 'communities.view.edit.channels.competition.overview',
-						params: { id: community.id },
+						params: { id: community!.id },
 					}"
 				>
 					{{ $gettext(`Edit Jam`) }}
@@ -180,7 +179,7 @@ createAppRoute({
 				</div>
 				<div class="-header-end">
 					<div class="-header-meta">
-						<AppCommunityCompetitionCountdown :competition="competition" />
+						<AppCommunityCompetitionCountdown :competition="competition!" />
 					</div>
 					<div v-if="canSubmitEntry" class="-header-actions">
 						<AppButton primary solid @click="onClickSubmit">
@@ -253,7 +252,7 @@ createAppRoute({
 
 				<div v-if="hasSubmittedEntries">
 					<AppCommunityCompetitionEntryGrid
-						:competition="competition"
+						:competition="competition!"
 						:num-placeholders="2"
 						:entries="userEntries"
 						show-remove

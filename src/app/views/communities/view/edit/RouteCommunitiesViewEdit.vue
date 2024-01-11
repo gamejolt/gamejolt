@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, toRef } from 'vue';
+import { computed } from 'vue';
 import { RouterView } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import { CollaboratorModel } from '../../../../../_common/collaborator/collaborator.model';
@@ -9,7 +9,7 @@ import {
 } from '../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { enforceLocation } from '../../../../../utils/router';
-import { updateCommunity, useCommunityRouteStore } from '../view.store';
+import { useCommunityRouteStore } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
@@ -30,19 +30,17 @@ export default {
 };
 </script>
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
-
-const community = toRef(() => routeStore.community);
+const { updateCommunity, community, collaborator } = useCommunityRouteStore()!;
 
 createAppRoute({
 	routeTitle: computed(() =>
 		$gettext(`Edit Community - %{ community }`, {
-			community: community.value.name,
+			community: community.value!.name,
 		})
 	),
 	onResolved({ payload }) {
-		updateCommunity(routeStore, payload.community);
-		routeStore.collaborator = payload.collaboration
+		updateCommunity(payload.community);
+		collaborator.value = payload.collaboration
 			? new CollaboratorModel(payload.collaboration)
 			: null;
 	},

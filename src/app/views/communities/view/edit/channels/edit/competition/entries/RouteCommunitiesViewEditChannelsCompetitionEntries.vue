@@ -113,7 +113,7 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { competition } = useCommunityRouteStore()!;
 const route = useRoute();
 
 const entries = ref<CommunityCompetitionEntryModel[]>([]);
@@ -121,7 +121,6 @@ const entryCount = ref(0);
 const isLoading = ref(true);
 const perPage = ref(50);
 
-const competition = toRef(() => routeStore.competition!);
 const sortIcon = toRef(() => (isSortInAscendingDirection.value ? 'chevron-up' : 'chevron-down'));
 
 const sortDirectionLabel = computed(() =>
@@ -184,7 +183,7 @@ async function onClickRemoveEntry(entry: CommunityCompetitionEntryModel) {
 			await $unhideCommunityCompetitionEntry(entry);
 
 			showSuccessGrowl($gettext(`Entry was readmitted to the jam.`));
-			competition.value.entry_count++;
+			competition.value!.entry_count++;
 		}
 	} else {
 		const result = await showModalConfirm(
@@ -196,7 +195,7 @@ async function onClickRemoveEntry(entry: CommunityCompetitionEntryModel) {
 			await $hideCommunityCompetitionEntry(entry);
 
 			showSuccessGrowl($gettext(`Entry was hidden from the jam.`));
-			competition.value.entry_count--;
+			competition.value!.entry_count--;
 		}
 	}
 }
@@ -221,7 +220,7 @@ createAppRoute({
 		<template v-if="isLoading">
 			<AppLoading centered />
 		</template>
-		<template v-else-if="competition.periodNum === CompetitionPeriodPreComp">
+		<template v-else-if="competition!.periodNum === CompetitionPeriodPreComp">
 			<p>
 				{{
 					$gettext(
@@ -233,8 +232,8 @@ createAppRoute({
 				{{ $gettext(`The Jam starts on:`) }}
 
 				<AppCommunityCompetitionDate
-					:date="competition.starts_on"
-					:timezone="competition.timezone"
+					:date="competition!.starts_on"
+					:timezone="competition!.timezone"
 				/>
 			</p>
 		</template>
@@ -244,7 +243,7 @@ createAppRoute({
 					<p>
 						<span>
 							{{
-								competition.periodNum >= CompetitionPeriodVoting
+								competition!.periodNum >= CompetitionPeriodVoting
 									? $gettext(
 											`No new entries can be submitted to the jam, and none have been submitted during its runtime.`
 									  )
@@ -263,11 +262,11 @@ createAppRoute({
 						<b>%{ count }</b> total entries have been submitted.
 					</span>
 					<br />
-					<template v-if="entryCount > competition.entry_count">
+					<template v-if="entryCount > competition!.entry_count">
 						<span
 							v-translate="{
-								count: entryCount - competition.entry_count,
-								visibleCount: competition.entry_count,
+								count: entryCount - competition!.entry_count,
+								visibleCount: competition!.entry_count,
 							}"
 						>
 							<b>%{ count }</b> have been hidden, resulting in

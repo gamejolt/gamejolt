@@ -27,10 +27,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { archivedChannels, competition, channel } = useCommunityRouteStore()!;
 
-const competition = toRef(() => routeStore.competition);
-const channel = toRef(() => routeStore.channel!);
 const canEditHeader = toRef(() => !!competition.value);
 
 const pageHeaderProps = computed(() => {
@@ -56,7 +54,7 @@ createAppRoute({
 			if (channel.value) {
 				channel.value.assign(newChannel);
 			} else if (newChannel.is_archived) {
-				routeStore.archivedChannels.push(newChannel);
+				archivedChannels.value.push(newChannel);
 			}
 		}
 	},

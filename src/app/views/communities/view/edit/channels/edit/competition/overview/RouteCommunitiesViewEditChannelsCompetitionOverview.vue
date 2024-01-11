@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, toRef } from 'vue';
+import { computed, ref } from 'vue';
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
 import { $publishCommunityChannel } from '../../../../../../../../../_common/community/channel/channel.model';
@@ -31,30 +31,26 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { channel, competition, community } = useCommunityRouteStore()!;
 
 const votingCategories = ref<CommunityCompetitionVotingCategoryModel[]>([]);
 const isLoading = ref(true);
 
-const channel = toRef(() => routeStore.channel!);
-const competition = toRef(() => routeStore.competition!);
-const community = toRef(() => routeStore.community);
-
 const competitionRuntime = computed(
-	() => (competition.value.ends_on - competition.value.starts_on) / 1000
+	() => (competition.value!.ends_on - competition.value!.starts_on) / 1000
 );
 
 const competitionVotingRuntime = computed(
-	() => (competition.value.voting_ends_on - competition.value.ends_on) / 1000
+	() => (competition.value!.voting_ends_on - competition.value!.ends_on) / 1000
 );
 
 /** Shows a warning message when voting categories are enabled, but none are set up. */
 const shouldShowCategoryWarning = computed(
 	() =>
 		!isLoading.value &&
-		competition.value.is_voting_enabled &&
-		competition.value.has_community_voting &&
-		competition.value.voting_type === 'categories' &&
+		competition.value!.is_voting_enabled &&
+		competition.value!.has_community_voting &&
+		competition.value!.voting_type === 'categories' &&
 		votingCategories.value.length === 0
 );
 
@@ -67,7 +63,7 @@ async function onClickPublish() {
 	);
 
 	if (result) {
-		await $publishCommunityChannel(channel.value);
+		await $publishCommunityChannel(channel.value!);
 
 		showSuccessGrowl($gettext(`Your jam has been published!`));
 	}
@@ -93,15 +89,15 @@ createAppRoute({
 		<p class="help-block">
 			<!-- Starts on -->
 			<span>
-				<template v-if="competition.periodNum === 0">
+				<template v-if="competition!.periodNum === 0">
 					{{ $gettext(`Your jam will start in about`) }}
 					{{ ' ' }}
-					<AppTimeAgo without-suffix is-future :date="competition.starts_on" />
+					<AppTimeAgo without-suffix is-future :date="competition!.starts_on" />
 				</template>
 				<template v-else>
 					{{ $gettext(`Your jam started about`) }}
 					{{ ' ' }}
-					<AppTimeAgo :date="competition.starts_on" />
+					<AppTimeAgo :date="competition!.starts_on" />
 				</template>
 			</span>
 
@@ -109,7 +105,7 @@ createAppRoute({
 
 			<!-- Ends on -->
 			<span>
-				<template v-if="competition.periodNum < 2">
+				<template v-if="competition!.periodNum < 2">
 					{{ $gettext(`It will run for about`) }}
 				</template>
 				<template v-else>
@@ -122,8 +118,8 @@ createAppRoute({
 
 			<!-- Voting ends on -->
 			<span>
-				<template v-if="competition.is_voting_enabled">
-					<template v-if="competition.periodNum < 3">
+				<template v-if="competition!.is_voting_enabled">
+					<template v-if="competition!.periodNum < 3">
 						{{ $gettext(`Voting will last for about`) }}
 					</template>
 					<template v-else>
@@ -167,7 +163,7 @@ createAppRoute({
 			</AppButton>
 		</div>
 
-		<div v-if="channel.visibility === 'draft'" class="alert alert-notice">
+		<div v-if="channel!.visibility === 'draft'" class="alert alert-notice">
 			<p>
 				<span v-translate><b>This jam is a draft</b> and only moderators can view it.</span>
 			</p>
@@ -199,7 +195,7 @@ createAppRoute({
 						/>
 					</th>
 					<td>
-						{{ channel.displayTitle }}
+						{{ channel!.displayTitle }}
 					</td>
 				</tr>
 				<tr>
@@ -215,8 +211,8 @@ createAppRoute({
 					</th>
 					<td>
 						<router-link :to="{ name: 'communities.view.channel' }">
-							{{ Environment.baseUrl + '/c/' + community.path + '/'
-							}}<b>{{ channel.title }}</b>
+							{{ Environment.baseUrl + '/c/' + community!.path + '/'
+							}}<b>{{ channel!.title }}</b>
 						</router-link>
 					</td>
 				</tr>
@@ -225,8 +221,8 @@ createAppRoute({
 						{{ $gettext(`Timezone`) }}
 					</th>
 					<td>
-						<template v-if="competition.timezone">
-							{{ competition.timezone }}
+						<template v-if="competition!.timezone">
+							{{ competition!.timezone }}
 							<p class="help-block sans-margin-bottom">
 								{{ $gettext(`All jam times are based off this timezone.`) }}
 							</p>
@@ -246,8 +242,8 @@ createAppRoute({
 					</th>
 					<td>
 						<AppCommunityCompetitionDate
-							:date="competition.starts_on"
-							:timezone="competition.timezone"
+							:date="competition!.starts_on"
+							:timezone="competition!.timezone"
 						/>
 					</td>
 				</tr>
@@ -257,19 +253,19 @@ createAppRoute({
 					</th>
 					<td>
 						<AppCommunityCompetitionDate
-							:date="competition.ends_on"
-							:timezone="competition.timezone"
+							:date="competition!.ends_on"
+							:timezone="competition!.timezone"
 						/>
 					</td>
 				</tr>
-				<tr v-if="competition.is_voting_enabled">
+				<tr v-if="competition!.is_voting_enabled">
 					<th>
 						{{ $gettext(`Voting end date`) }}
 					</th>
 					<td>
 						<AppCommunityCompetitionDate
-							:date="competition.voting_ends_on"
-							:timezone="competition.timezone"
+							:date="competition!.voting_ends_on"
+							:timezone="competition!.timezone"
 						/>
 					</td>
 				</tr>

@@ -23,7 +23,7 @@ import {
 	showCommunityCompetitionEntryModalIdFromHash,
 	watchCommunityCompetitionEntryModalForHash,
 } from '../../../../components/community/competition/entry/modal/modal.service';
-import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
+import { useCommunityRouteStore } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
@@ -34,6 +34,8 @@ export default {
 		resolver: ({ route }) => makeRequest(route),
 	}),
 };
+
+const { competition, getChannelPathFromRoute } = useCommunityRouteStore()!;
 
 function getSeedSessionStorageKey(route: RouteLocationNormalized) {
 	return (
@@ -152,7 +154,6 @@ const props = defineProps({
 });
 
 const { categories } = toRefs(props);
-const routeStore = useCommunityRouteStore()!;
 const route = useRoute();
 const router = useRouter();
 
@@ -164,20 +165,19 @@ const category = ref<string | null>(null);
 const ignoreAwards = ref<boolean | null>(null);
 let hashWatchDeregister: CommunityCompetitionEntryModalHashDeregister | undefined;
 
-const competition = toRef(() => routeStore.competition!);
 const hasCategories = toRef(() => categories.value.length > 0);
 const shouldShowAwardsFirstOption = toRef(
-	() => competition.value.are_results_calculated && competition.value.has_awards
+	() => competition.value!.are_results_calculated && competition.value!.has_awards
 );
 
-const numPlaceholders = computed(() => Math.min(competition.value.entry_count, 6));
+const numPlaceholders = computed(() => Math.min(competition.value!.entry_count, 6));
 
 const canSortBest = computed(
 	() =>
-		competition.value.has_community_voting &&
-		competition.value.is_voting_enabled &&
-		competition.value.period === 'post-comp' &&
-		competition.value.are_results_calculated
+		competition.value!.has_community_voting &&
+		competition.value!.is_voting_enabled &&
+		competition.value!.period === 'post-comp' &&
+		competition.value!.are_results_calculated
 );
 
 const sortOptions = computed(() => {
@@ -212,7 +212,7 @@ const sortOptions = computed(() => {
 });
 
 const selectedSortOption = computed(() => sortOptions.value.find(i => i.sort === sort.value)!);
-const pageCount = computed(() => Math.ceil(competition.value.entry_count / perPage.value));
+const pageCount = computed(() => Math.ceil(competition.value!.entry_count / perPage.value));
 
 const categoryOptions = computed(() => {
 	const options = [
@@ -240,7 +240,7 @@ const selectedCategory = computed(() => categories.value.find(i => i.name === ca
 // That way, they will see their newly added entry in the list of entries instead of
 // having to refresh.
 watch(
-	() => competition.value.entry_count,
+	() => competition.value!.entry_count,
 	() => {
 		if (route.query.sort !== 'new' || route.query.page !== undefined) {
 			Scroll.shouldAutoScroll = false;
@@ -264,8 +264,8 @@ async function reloadPage() {
 
 function handlePayload(payload: any) {
 	entries.value = CommunityCompetitionEntryModel.populate(payload.entries);
-	if (entries.value.length > competition.value.entry_count) {
-		competition.value.entry_count = entries.value.length;
+	if (entries.value.length > competition.value!.entry_count) {
+		competition.value!.entry_count = entries.value.length;
 	}
 	perPage.value = payload.perPage;
 
@@ -323,7 +323,7 @@ createAppRoute({
 
 <template>
 	<div>
-		<template v-if="!competition.entry_count">
+		<template v-if="!competition!.entry_count">
 			<h2 class="section-header">
 				{{ $gettext(`Entries`) }}
 			</h2>
@@ -337,8 +337,8 @@ createAppRoute({
 		<template v-else>
 			<h2 class="section-header">
 				{{
-					$ngettext('%{ count } Entry.', '%{ count } Entries', competition.entry_count, {
-						count: competition.entry_count,
+					$ngettext('%{ count } Entry.', '%{ count } Entries', competition!.entry_count, {
+						count: competition!.entry_count,
 					})
 				}}
 			</h2>
@@ -412,7 +412,7 @@ createAppRoute({
 				</span>
 
 				<AppCommunityCompetitionEntryGrid
-					:competition="competition"
+					:competition="competition!"
 					:num-placeholders="numPlaceholders"
 					:entries="entries"
 					:current-page="page"
@@ -422,7 +422,7 @@ createAppRoute({
 
 				<AppPagination
 					v-if="pageCount > 0"
-					:total-items="competition.entry_count"
+					:total-items="competition!.entry_count"
 					:items-per-page="perPage"
 					:current-page="page"
 				/>

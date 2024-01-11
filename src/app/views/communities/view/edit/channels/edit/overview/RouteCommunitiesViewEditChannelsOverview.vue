@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, toRef } from 'vue';
+import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import {
@@ -30,11 +30,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
-
-const community = toRef(() => routeStore.community);
-const channel = toRef(() => routeStore.channel);
-const archivedChannels = toRef(() => routeStore.archivedChannels);
+const { community, channel, archivedChannels } = useCommunityRouteStore()!;
 
 const route = useRoute();
 const router = useRouter();
@@ -45,12 +41,12 @@ const canArchive = computed(
 	() =>
 		!channel.value!.is_archived &&
 		channel.value!.visibility === 'published' &&
-		community.value.canRemoveChannel
+		community.value!.canRemoveChannel
 );
 
 const shouldShowArchiveOptions = computed(
 	() =>
-		channel.value!.visibility === 'published' && community.value.hasPerms('community-channels')
+		channel.value!.visibility === 'published' && community.value!.hasPerms('community-channels')
 );
 
 function onSubmit(model: CommunityChannelModel) {
@@ -81,8 +77,8 @@ async function onClickArchive() {
 
 		if (payload.success) {
 			archivedChannels.value.push(channel.value!);
-			arrayRemove(community.value.channels!, i => i.id === channel.value!.id);
-			community.value.has_archived_channels = true;
+			arrayRemove(community.value!.channels!, i => i.id === channel.value!.id);
+			community.value!.has_archived_channels = true;
 
 			showSuccessGrowl($gettext(`Channel is now archived.`));
 			Scroll.to(0);
@@ -100,11 +96,11 @@ async function onClickUnarchive() {
 	if (result) {
 		try {
 			await $unarchiveCommunityChannel(channel.value!);
-			community.value.channels!.push(channel.value!);
+			community.value!.channels!.push(channel.value!);
 			arrayRemove(archivedChannels.value, i => i.id === channel.value!.id);
 
 			if (archivedChannels.value.length === 0) {
-				community.value.has_archived_channels = false;
+				community.value!.has_archived_channels = false;
 			}
 
 			showSuccessGrowl($gettext(`Channel was restored from the archive.`));
@@ -135,7 +131,7 @@ createAppRoute({});
 				</h2>
 
 				<FormCommunityChannelEdit
-					:community="community"
+					:community="community!"
 					:model="channel"
 					@submit="onSubmit"
 					@background-change="onBackgroundChange"

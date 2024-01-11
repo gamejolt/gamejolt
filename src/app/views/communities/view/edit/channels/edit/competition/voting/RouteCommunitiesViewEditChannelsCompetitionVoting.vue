@@ -50,9 +50,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
-
-const competition = toRef(() => routeStore.competition!);
+const { competition } = useCommunityRouteStore()!;
 
 const awards = ref<CommunityCompetitionAwardModel[]>([]);
 const votingCategories = ref<CommunityCompetitionVotingCategoryModel[]>([]);
@@ -193,7 +191,7 @@ createAppRoute({
 		<FormCommunityCompetitionVotingToggle
 			v-if="canToggleVoting"
 			ref="toggleForm"
-			:model="competition"
+			:model="competition!"
 			@toggle-not-set-up="onToggleNotSetUp"
 		/>
 
@@ -209,7 +207,7 @@ createAppRoute({
 
 		<template v-if="isEditing">
 			<FormCommunityCompetitionVotingEdit
-				:model="competition"
+				:model="competition!"
 				@cancel="onFormCancel"
 				@submit="onFormSubmit"
 			/>
@@ -343,7 +341,7 @@ createAppRoute({
 							@toggle="isShowingVotingCategoryAdd = !isShowingVotingCategoryAdd"
 						>
 							<FormCommunityCompetitionVotingCategory
-								:competition="competition"
+								:competition="competition!"
 								@submit="onCategoryAddSubmit"
 							/>
 						</AppCardListAdd>
@@ -371,7 +369,7 @@ createAppRoute({
 
 									<template #body>
 										<FormCommunityCompetitionVotingCategory
-											:competition="competition"
+											:competition="competition!"
 											:model="category"
 										/>
 									</template>
@@ -445,7 +443,7 @@ createAppRoute({
 						@toggle="isShowingAwardAdd = !isShowingAwardAdd"
 					>
 						<FormCommunityCompetitionAward
-							:competition="competition"
+							:competition="competition!"
 							@submit="onAwardAddSubmit"
 						/>
 					</AppCardListAdd>
@@ -470,7 +468,7 @@ createAppRoute({
 
 								<template #body>
 									<FormCommunityCompetitionAward
-										:competition="competition"
+										:competition="competition!"
 										:model="award"
 									/>
 								</template>

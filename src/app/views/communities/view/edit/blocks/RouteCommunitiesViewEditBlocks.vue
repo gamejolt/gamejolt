@@ -32,7 +32,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { community } = useCommunityRouteStore()!;
 
 const blocks = ref<UserBlockModel[]>([]);
 const isAdding = ref(false);
@@ -44,7 +44,6 @@ const page = ref(1);
 const sort = ref('blocked-on');
 const sortDirection = ref('desc');
 
-const community = toRef(() => routeStore.community);
 const hasBlocks = toRef(() => blocks.value.length > 0);
 
 const sortIcon = computed(() => {
@@ -70,7 +69,9 @@ function onBlockSubmit() {
 }
 
 async function refetch() {
-	const url = `/web/dash/communities/blocks/${community.value.id}?page=${page.value}&sort=${sort.value}&sort-direction=${sortDirection.value}`;
+	const url = `/web/dash/communities/blocks/${community.value!.id}?page=${page.value}&sort=${
+		sort.value
+	}&sort-direction=${sortDirection.value}`;
 	const payload = await Api.sendRequest(url);
 	blocks.value = UserBlockModel.populate(payload.blocks);
 }
@@ -158,7 +159,7 @@ createAppRoute({
 
 		<AppCardList :is-adding="isAdding">
 			<AppCardListAdd :label="$gettext('Block User')" @toggle="isAdding = !isAdding">
-				<FormCommunityBlock :community="community" @submit="onBlockSubmit" />
+				<FormCommunityBlock :community="community!" @submit="onBlockSubmit" />
 			</AppCardListAdd>
 		</AppCardList>
 		<div class="table-responsive">

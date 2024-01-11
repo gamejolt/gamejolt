@@ -30,7 +30,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { community, collaborator, canEditDescription } = useCommunityRouteStore()!;
 const { leaveCommunity } = useAppStore();
 const { setPageTheme } = useThemeStore();
 const { grid } = useGridStore();
@@ -39,17 +39,14 @@ const router = useRouter();
 
 /* The owner's collaboration is not returned from backend.*/ /* The owner's collaboration is not returned from backend.*/
 
-const community = toRef(() => routeStore.community);
-const collaborator = toRef(() => routeStore.collaborator);
-const canEditDescription = toRef(() => routeStore.canEditDescription);
 const isOwner = toRef(() => collaborator.value === null);
 
 function onDetailsChange() {
 	// If the community path changes, we need to replace the route,
 	// otherwise when navigating to the community view routes, it'll attempt to navigate
 	// to the old name.
-	if (community.value.path !== route.params.path) {
-		const newLocation = enforceLocation(route, { path: community.value.path });
+	if (community.value!.path !== route.params.path) {
+		const newLocation = enforceLocation(route, { path: community.value!.path });
 		if (newLocation) {
 			router.replace(newLocation.location);
 		}
@@ -57,7 +54,7 @@ function onDetailsChange() {
 
 	setPageTheme({
 		key: CommunityThemeKey,
-		theme: community.value.theme || null,
+		theme: community.value!.theme || null,
 	});
 }
 
@@ -71,8 +68,8 @@ async function removeCommunity() {
 		return;
 	}
 
-	await $removeCommunity(community.value);
-	await leaveCommunity(community.value, { grid: grid.value, shouldConfirm: false });
+	await $removeCommunity(community.value!);
+	await leaveCommunity(community.value!, { grid: grid.value, shouldConfirm: false });
 
 	showInfoGrowl(
 		$gettext(`Your community has been removed from the site.`),
@@ -96,7 +93,7 @@ async function performCommunityLeave() {
 	}
 
 	await $removeCollaboratorInvite(collaborator.value);
-	await leaveCommunity(community.value, { grid: grid.value, shouldConfirm: false });
+	await leaveCommunity(community.value!, { grid: grid.value, shouldConfirm: false });
 
 	showSuccessGrowl(
 		$gettext(`You left the community. You will be missed! ;A;`),
@@ -116,7 +113,7 @@ createAppRoute({});
 				<AppAlertDismissable
 					v-if="isOwner"
 					alert-type="info"
-					:dismiss-key="`community-${community.id}.welcome-msg`"
+					:dismiss-key="`community-${community!.id}.welcome-msg`"
 				>
 					<h2 class="section-header">
 						{{ $gettext(`Welcome to your new community! 🎉`) }}
@@ -177,12 +174,12 @@ createAppRoute({});
 				</AppAlertDismissable>
 
 				<!-- Details -->
-				<AppCommunityPerms :community="community" required="community-details">
+				<AppCommunityPerms :community="community!" required="community-details">
 					<h2 class="section-header">
 						{{ $gettext(`Details`) }}
 					</h2>
 
-					<FormCommunity :model="community" @submit="onDetailsChange" />
+					<FormCommunity :model="community!" @submit="onDetailsChange" />
 					<div class="-spacer" />
 
 					<template v-if="canEditDescription && Screen.isMobile">
@@ -190,7 +187,7 @@ createAppRoute({});
 							{{ $gettext(`Edit Description`) }}
 						</h2>
 
-						<FormCommunityDescription :model="community" />
+						<FormCommunityDescription :model="community!" />
 						<div class="-spacer" />
 					</template>
 				</AppCommunityPerms>
@@ -242,7 +239,7 @@ createAppRoute({});
 			<template v-if="canEditDescription && !Screen.isMobile" #sidebar>
 				<h2 class="section-header">{{ $gettext(`Edit Description`) }}</h2>
 
-				<FormCommunityDescription :model="community" />
+				<FormCommunityDescription :model="community!" />
 			</template>
 		</AppCommunitiesViewPageContainer>
 	</div>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
 import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
@@ -18,12 +18,11 @@ const props = defineProps({
 
 const { channel } = toRefs(props);
 
-const routeStore = useCommunityRouteStore()!;
-const community = toRef(() => routeStore.community);
+const { community, archivedChannels } = useCommunityRouteStore()!;
 
 const canRemoveChannel = computed(() => {
 	// Cannot remove when no channel perms
-	if (!community.value.hasPerms('community-channels')) {
+	if (!community.value!.hasPerms('community-channels')) {
 		return false;
 	}
 
@@ -37,31 +36,31 @@ const canRemoveChannel = computed(() => {
 		return true;
 	}
 
-	return community.value.canRemoveChannel;
+	return community.value!.canRemoveChannel;
 });
 
 const canEditChannel = computed(() => {
 	// When it's a competition channel, mods with competition perms can edit.
 	if (
 		channel.value.type === 'competition' &&
-		community.value.hasPerms('community-competitions')
+		community.value!.hasPerms('community-competitions')
 	) {
 		return true;
 	}
 
-	return community.value.hasPerms('community-channels');
+	return community.value!.hasPerms('community-channels');
 });
 
 async function onClickRemoveChannel(channelToRemove: CommunityChannelModel) {
-	await showCommunityRemoveChannelModal(community.value, channelToRemove);
+	await showCommunityRemoveChannelModal(community.value!, channelToRemove);
 
 	if (channelToRemove._removed) {
 		if (channelToRemove.is_archived) {
-			routeStore.archivedChannels = routeStore.archivedChannels.filter(
+			archivedChannels.value = archivedChannels.value.filter(
 				i => i.id !== channelToRemove.id
 			);
 		} else {
-			community.value.channels = community.value.channels!.filter(
+			community.value!.channels = community.value!.channels!.filter(
 				i => i.id !== channelToRemove.id
 			);
 		}

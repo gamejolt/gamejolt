@@ -28,12 +28,11 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { community } = useCommunityRouteStore()!;
 const route = useRoute();
 
 const users = ref<UserModel[]>([]);
 
-const community = toRef(() => routeStore.community);
 const loadUrl = toRef(() => getFetchUrl(route));
 
 createAppRoute({
@@ -48,7 +47,7 @@ createAppRoute({
 
 <template>
 	<AppCommunitiesViewPageContainer full>
-		<div v-if="!community.member_count" class="alert alert-info">
+		<div v-if="!community?.member_count" class="alert alert-info">
 			{{
 				$gettext(`No one is a member of this community yet. Maybe you could be the first!`)
 			}}
