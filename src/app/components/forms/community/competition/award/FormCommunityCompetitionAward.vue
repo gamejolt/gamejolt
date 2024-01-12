@@ -28,6 +28,10 @@ const props = defineProps({
 	...defineFormProps<CommunityCompetitionAwardModel>(),
 });
 
+const emit = defineEmits({
+	submit: () => true,
+});
+
 const { competition, model } = toRefs(props);
 
 const nameAvailabilityUrl = computed(() => {
@@ -51,6 +55,9 @@ const form: FormController<CommunityCompetitionAwardModel> = createForm({
 		if (!form.formModel.community_competition_id) {
 			form.formModel.community_competition_id = competition.value.id;
 		}
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 </script>

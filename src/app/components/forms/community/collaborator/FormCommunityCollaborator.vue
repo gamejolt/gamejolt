@@ -31,6 +31,10 @@ const props = defineProps({
 	...defineFormProps<CollaboratorModel>(),
 });
 
+const emit = defineEmits({
+	submit: () => true,
+});
+
 const { community, model } = toRefs(props);
 
 const form: FormController<CollaboratorModel> = createForm({
@@ -45,6 +49,9 @@ const form: FormController<CollaboratorModel> = createForm({
 		if (model?.value) {
 			form.formModel.username = form.formModel.user!.username;
 		}
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 </script>

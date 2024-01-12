@@ -38,6 +38,10 @@ const props = defineProps({
 	...defineFormProps<CommunityModel>(true),
 });
 
+const emit = defineEmits({
+	submit: () => true,
+});
+
 const { model, presetType } = toRefs(props);
 
 const maxFilesize = ref(0);
@@ -83,6 +87,9 @@ const form: FormController<FormModel> = createForm({
 		}
 
 		return response;
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 

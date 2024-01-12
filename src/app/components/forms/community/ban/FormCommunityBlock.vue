@@ -53,6 +53,10 @@ const props = defineProps({
 	},
 });
 
+const emit = defineEmits({
+	submit: () => true,
+});
+
 const { community, user } = toRefs(props);
 
 const usernameLocked = ref(false);
@@ -129,6 +133,9 @@ const form: FormController<FormModel> = createForm({
 		}
 
 		return response;
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 </script>

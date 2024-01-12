@@ -61,6 +61,10 @@ const props = defineProps({
 	},
 });
 
+const emit = defineEmits({
+	submit: () => true,
+});
+
 const { community, channels, archivedChannels } = toRefs(props);
 
 const { user } = useCommonStore();
@@ -93,6 +97,9 @@ const form: FormController<FormModel> = createForm({
 		form.formModel.permission_posting = 'all';
 		// Used to submit a default timezone for a competition when creating a competition channel.
 		form.formModel.timezone = determine().name();
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 
