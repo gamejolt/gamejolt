@@ -408,8 +408,7 @@ const collectibleResourceAcquisition = computed(() => {
 			</AppButton>
 		</template>
 		<AppAlertBox v-else-if="!isLoading">
-			<template v-if="emoji && !emoji.sticker_id">
-				<!-- TODO(resource-collectible-links) make sure this is correct -->
+			<template v-if="emoji && (!emoji.prefix || emoji.prefix.toLowerCase() === 'gj/')">
 				{{ $gettext(`This emoji is available to everyone.`) }}
 			</template>
 			<template v-else>
