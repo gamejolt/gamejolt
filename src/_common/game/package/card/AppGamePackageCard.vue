@@ -125,11 +125,11 @@ if (sellable.value.pricings.length > 0) {
 	}
 }
 
-function _checkGuestGameRestriction() {
+function _checkGuestGameRestriction(build: GameBuildModel) {
 	const experiment = configGuestGameRestriction;
 	const restriction = experiment.value;
 	// We only want to track engagement for these if they're actually blocking.
-	if (restriction === 'app' && !GJ_IS_DESKTOP_APP && Screen.isDesktop) {
+	if (restriction === 'app' && !GJ_IS_DESKTOP_APP && Screen.isDesktop && !build.is_installer) {
 		trackExperimentEngagement(experiment);
 		showGetAppModal();
 		return restriction;
@@ -159,7 +159,7 @@ function buildClick(build: GameBuildModel, fromExtraSection = false) {
 }
 
 function doBuildClick(build: GameBuildModel, fromExtraSection = false) {
-	const restriction = _checkGuestGameRestriction();
+	const restriction = _checkGuestGameRestriction(build);
 	if (restriction !== 'none') {
 		return;
 	}
@@ -177,7 +177,8 @@ function doBuildClick(build: GameBuildModel, fromExtraSection = false) {
 }
 
 function showPayment(build: GameBuildModel | null, fromExtraSection: boolean) {
-	const restriction = _checkGuestGameRestriction();
+	// TODO(guest-game-restriction) Currently doesn't restrict for "paid" games.
+	const restriction = build ? _checkGuestGameRestriction(build) : 'none';
 	if (restriction !== 'none') {
 		return;
 	}
