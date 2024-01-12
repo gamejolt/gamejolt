@@ -123,31 +123,23 @@ const headerBackgroundImage = computed(() => {
 				</div>
 
 				<div class="-follow-counts small">
-					<RouterLink
-						v-translate="{ count: formatNumber(followingCount) }"
-						:to="{
-							name: 'profile.following',
-							params: { username: user.username },
-						}"
-						:translate-n="followingCount"
-						translate-plural="<b>%{count}</b> following"
-					>
-						<b>1</b>
-						following
-					</RouterLink>
+					<strong>
+						{{
+							$ngettext(`1 following`, `%{ count } following`, followingCount, {
+								count: formatNumber(followingCount),
+							})
+						}}
+					</strong>
+
 					<span class="dot-separator" />
-					<RouterLink
-						v-translate="{ count: formatNumber(followerCount) }"
-						:to="{
-							name: 'profile.followers',
-							params: { username: user.username },
-						}"
-						:translate-n="followerCount"
-						translate-plural="<b>%{count}</b> followers"
-					>
-						<b>1</b>
-						follower
-					</RouterLink>
+
+					<strong>
+						{{
+							$ngettext(`1 follower`, `%{ count } followers`, followerCount, {
+								count: formatNumber(followerCount),
+							})
+						}}
+					</strong>
 				</div>
 
 				<div v-if="sessionUser" class="-follow">
