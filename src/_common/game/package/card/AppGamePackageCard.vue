@@ -3,17 +3,23 @@ import type { Component, PropType } from 'vue';
 import { computed, ref, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
+import { trackExperimentEngagement } from '../../../analytics/analytics.service';
+import { showAuthModal } from '../../../auth/auth-modal.service';
 import AppButton from '../../../button/AppButton.vue';
 import AppCard from '../../../card/AppCard.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
+import { configGuestGameRestriction } from '../../../config/config.service';
 import AppCountdown from '../../../countdown/AppCountdown.vue';
 import AppExpand from '../../../expand/AppExpand.vue';
 import { formatCurrency } from '../../../filters/currency';
 import { formatFilesize } from '../../../filters/filesize';
+import { showGetAppModal } from '../../../get-app-modal/modal.service';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import { LinkedKeyModel } from '../../../linked-key/linked-key.model';
+import { Screen } from '../../../screen/screen-service';
 import { SellablePricingModel } from '../../../sellable/pricing/pricing.model';
 import { SellableModel } from '../../../sellable/sellable.model';
+import { useCommonStore } from '../../../store/common-store';
 import AppTimeAgo from '../../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import AppTranslate from '../../../translate/AppTranslate.vue';
@@ -68,6 +74,7 @@ const props = defineProps({
 });
 
 const { game, package: gamePackage, sellable, releases, builds, accessKey } = toRefs(props);
+const { user: sessionUser } = useCommonStore();
 const router = useRouter();
 
 const showFullDescription = ref(false);
@@ -118,6 +125,27 @@ if (sellable.value.pricings.length > 0) {
 	}
 }
 
+function _checkGuestGameRestriction() {
+	const experiment = configGuestGameRestriction;
+	const restriction = experiment.value;
+	// We only want to track engagement for these if they're actually blocking.
+	if (restriction === 'app' && !GJ_IS_DESKTOP_APP && Screen.isDesktop) {
+		trackExperimentEngagement(experiment);
+		showGetAppModal();
+		return restriction;
+	} else if (restriction === 'login' && !sessionUser.value) {
+		trackExperimentEngagement(experiment);
+		showAuthModal();
+		return restriction;
+	}
+
+	if (restriction === 'none') {
+		trackExperimentEngagement(experiment);
+	}
+	// Treat fallthroughs as no restrictions.
+	return 'none';
+}
+
 function buildClick(build: GameBuildModel, fromExtraSection = false) {
 	// For client, if they clicked in the "options" section, then skip
 	// showing payment form. Just take them directly to site.
@@ -131,6 +159,11 @@ function buildClick(build: GameBuildModel, fromExtraSection = false) {
 }
 
 function doBuildClick(build: GameBuildModel, fromExtraSection = false) {
+	const restriction = _checkGuestGameRestriction();
+	if (restriction !== 'none') {
+		return;
+	}
+
 	let operation = build.type === GameBuildType.Downloadable ? 'download' : 'play';
 	if (build.type === GameBuildType.Rom && fromExtraSection) {
 		operation = 'download';
@@ -144,6 +177,11 @@ function doBuildClick(build: GameBuildModel, fromExtraSection = false) {
 }
 
 function showPayment(build: GameBuildModel | null, fromExtraSection: boolean) {
+	const restriction = _checkGuestGameRestriction();
+	if (restriction !== 'none') {
+		return;
+	}
+
 	showGamePackagePurchaseModal({
 		game: game.value,
 		package: gamePackage.value,
