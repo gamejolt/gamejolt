@@ -1,9 +1,10 @@
 import { defineAsyncComponent } from 'vue';
-import { AvatarFrameModel } from '../../avatar/frame.model';
-import { BackgroundModel } from '../../background/background.model';
-import { EmojiModel } from '../../emoji/emoji.model';
 import { showModal } from '../../modal/modal.service';
-import { StickerModel } from '../../sticker/sticker.model';
+
+import type { AvatarFrameModel } from '../../avatar/frame.model';
+import type { BackgroundModel } from '../../background/background.model';
+import type { EmojiModel } from '../../emoji/emoji.model';
+import type { StickerModel } from '../../sticker/sticker.model';
 
 export type CollectibleResourceItem =
 	| EmojiModel
