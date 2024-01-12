@@ -12,6 +12,7 @@ import { showPurchaseShopProductModal } from '../../app/components/vending-machi
 import { arrayAssignAll } from '../../utils/array';
 import { isInstance } from '../../utils/utils';
 import AppAlertBox from '../alert/AppAlertBox.vue';
+import { trackResourceInfoView } from '../analytics/analytics.service';
 import { Api } from '../api/api.service';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrameModel } from '../avatar/frame.model';
@@ -137,7 +138,49 @@ const imageUrl = computed(() => {
 		: '';
 });
 
+const collectibleResourceAcquisition = computed(() => {
+	const acquisitions = collectible.value?.acquisition;
+	// Ignore if we have no shop purchase acquisitions.
+	if (
+		!acquisitions?.length ||
+		acquisitions.every(i => i.method !== AcquisitionMethod.ShopPurchase)
+	) {
+		return null;
+	}
+
+	let resource: PurchasableProductType;
+	if (avatarFrame.value) {
+		resource = PurchasableProductType.AvatarFrame;
+	} else if (background.value) {
+		resource = PurchasableProductType.Background;
+	} else {
+		return null;
+	}
+
+	return {
+		resource,
+		resourceId: item.value.id,
+	};
+});
+
 onMounted(async () => {
+	const resource = emoji.value
+		? 'Emoji'
+		: sticker.value
+		? 'Sticker'
+		: avatarFrame.value
+		? 'Avatar_Frame'
+		: background.value
+		? 'Background'
+		: null;
+
+	if (resource) {
+		trackResourceInfoView({
+			resource,
+			resourceId: item.value.id,
+		});
+	}
+
 	// Nothing to load.
 	if (!collectibleLoadData.value) {
 		isLoading.value = false;
@@ -211,31 +254,6 @@ const mutedStyles = {
 	fontStyle: `italic`,
 	color: kThemeFgMuted,
 } satisfies CSSProperties;
-
-const collectibleResourceAcquisition = computed(() => {
-	const acquisitions = collectible.value?.acquisition;
-	// Ignore if we have no shop purchase acquisitions.
-	if (
-		!acquisitions?.length ||
-		acquisitions.every(i => i.method !== AcquisitionMethod.ShopPurchase)
-	) {
-		return null;
-	}
-
-	let resource: PurchasableProductType;
-	if (avatarFrame.value) {
-		resource = PurchasableProductType.AvatarFrame;
-	} else if (background.value) {
-		resource = PurchasableProductType.Background;
-	} else {
-		return null;
-	}
-
-	return {
-		resource,
-		resourceId: item.value.id,
-	};
-});
 </script>
 
 <template>
