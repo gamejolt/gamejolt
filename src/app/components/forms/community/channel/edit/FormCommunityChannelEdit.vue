@@ -67,7 +67,7 @@ const form: FormController<FormModel> = createForm({
 	},
 	onSubmitSuccess() {
 		emit('backgroundChange', form.formModel);
-		emit('submit', form.formModel as CommunityChannelModel);
+		emit('submit', form.formModel);
 	},
 });
 
