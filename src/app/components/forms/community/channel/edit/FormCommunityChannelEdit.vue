@@ -39,6 +39,7 @@ const props = defineProps({
 
 const emit = defineEmits({
 	backgroundChange: (_model: CommunityChannelModel) => true,
+	submit: (_model: CommunityChannelModel) => true,
 });
 
 const { community, model } = toRefs(props);
@@ -65,6 +66,7 @@ const form: FormController<FormModel> = createForm({
 	},
 	onSubmitSuccess() {
 		emit('backgroundChange', form.formModel);
+		emit('submit', form.formModel);
 	},
 });
 

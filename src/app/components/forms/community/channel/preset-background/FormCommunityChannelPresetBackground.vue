@@ -38,6 +38,10 @@ const props = defineProps({
 	...defineFormProps<CommunityModel>(true),
 });
 
+const emit = defineEmits({
+	submit: (_model: CommunityModel) => true,
+});
+
 const { model, presetType } = toRefs(props);
 
 const maxFilesize = ref(0);
@@ -50,10 +54,6 @@ const maxHeight = ref(0);
 const background = computed(() => getCommunityChannelBackground(form.formModel, presetType.value));
 
 const crop = computed(() => background.value?.getCrop());
-
-watchEffect(() => {
-	form.formModel.background_crop = crop.value;
-});
 
 const form: FormController<FormModel> = createForm({
 	model,
@@ -84,6 +84,13 @@ const form: FormController<FormModel> = createForm({
 
 		return response;
 	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
+	},
+});
+
+watchEffect(() => {
+	form.formModel.background_crop = crop.value;
 });
 
 function backgroundSelected() {

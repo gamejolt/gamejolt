@@ -13,6 +13,10 @@ interface RetrieveLoginFormModel {
 	email: string;
 }
 
+const emit = defineEmits({
+	submit: () => true,
+});
+
 const invalidEmail = ref(false);
 
 const form: FormController<RetrieveLoginFormModel> = createForm({
@@ -31,6 +35,9 @@ const form: FormController<RetrieveLoginFormModel> = createForm({
 			}
 		}
 		return response;
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 </script>

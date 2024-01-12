@@ -20,6 +20,10 @@ const props = defineProps({
 	},
 });
 
+const emit = defineEmits({
+	submit: () => true,
+});
+
 const { user } = toRefs(props);
 
 const form: FormController<BlockFormModel> = createForm({
@@ -30,6 +34,9 @@ const form: FormController<BlockFormModel> = createForm({
 		};
 
 		return Api.sendRequest('/web/dash/blocks/add', data);
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 </script>

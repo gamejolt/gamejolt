@@ -32,6 +32,10 @@ const props = defineProps({
 	...defineFormProps<CommunityChannelModel>(true),
 });
 
+const emit = defineEmits({
+	submit: (_model: CommunityChannelModel) => true,
+});
+
 const { model } = toRefs(props);
 
 const maxFilesize = ref(0);
@@ -44,12 +48,8 @@ const maxHeight = ref(0);
 const crop = toRef(() => form.formModel.background?.getCrop());
 
 const loadUrl = toRef(
-	() => `/web/dash/communities/channels/save/${form.formModel.community_id}/${form.formModel.id}`
+	() => `/web/dash/communities/channels/save/${model.value.community_id}/${model.value.id}`
 );
-
-watchEffect(() => {
-	form.formModel.background_crop = crop.value;
-});
 
 const form: FormController<FormModel> = createForm({
 	model,
@@ -67,6 +67,13 @@ const form: FormController<FormModel> = createForm({
 	onBeforeSubmit() {
 		form.formModel.crop = form.formModel.background_crop;
 	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
+	},
+});
+
+watchEffect(() => {
+	form.formModel.background_crop = crop.value;
 });
 
 function backgroundSelected() {
