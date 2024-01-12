@@ -9,6 +9,7 @@ import { CommunityModel } from '../../../../../../_common/community/community.mo
 import AppForm, {
 	FormController,
 	createForm,
+	defineFormEmits,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
@@ -62,7 +63,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	submit: () => true,
+	...defineFormEmits<CommunityChannelModel>(),
 });
 
 const { community, channels, archivedChannels } = toRefs(props);
@@ -99,7 +100,7 @@ const form: FormController<FormModel> = createForm({
 		form.formModel.timezone = determine().name();
 	},
 	onSubmitSuccess() {
-		emit('submit');
+		emit('submit', form.formModel);
 	},
 });
 

@@ -7,6 +7,7 @@ import {
 import { CommunityCompetitionModel } from '../../../../../../_common/community/competition/competition.model';
 import AppForm, {
 	createForm,
+	defineFormEmits,
 	defineFormProps,
 	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
@@ -29,7 +30,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	submit: () => true,
+	...defineFormEmits<CommunityCompetitionAwardModel>(),
 });
 
 const { competition, model } = toRefs(props);
@@ -57,7 +58,7 @@ const form: FormController<CommunityCompetitionAwardModel> = createForm({
 		}
 	},
 	onSubmitSuccess() {
-		emit('submit');
+		emit('submit', form.formModel);
 	},
 });
 </script>

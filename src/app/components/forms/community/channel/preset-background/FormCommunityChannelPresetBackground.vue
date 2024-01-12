@@ -10,6 +10,7 @@ import {
 } from '../../../../../../_common/community/community.model';
 import AppForm, {
 	createForm,
+	defineFormEmits,
 	defineFormProps,
 	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
@@ -39,7 +40,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	submit: () => true,
+	...defineFormEmits<CommunityModel>(),
 });
 
 const { model, presetType } = toRefs(props);
@@ -54,10 +55,6 @@ const maxHeight = ref(0);
 const background = computed(() => getCommunityChannelBackground(form.formModel, presetType.value));
 
 const crop = computed(() => background.value?.getCrop());
-
-watchEffect(() => {
-	form.formModel.background_crop = crop.value;
-});
 
 const form: FormController<FormModel> = createForm({
 	model,
@@ -89,8 +86,12 @@ const form: FormController<FormModel> = createForm({
 		return response;
 	},
 	onSubmitSuccess() {
-		emit('submit');
+		emit('submit', form.formModel);
 	},
+});
+
+watchEffect(() => {
+	form.formModel.background_crop = crop.value;
 });
 
 function backgroundSelected() {

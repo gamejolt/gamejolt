@@ -3,7 +3,7 @@ import { PropType, computed, onMounted, ref, toRefs } from 'vue';
 import { arrayRemove } from '../../../utils/array';
 import { Api } from '../../api/api.service';
 import { FiresidePostModel } from '../../fireside/post/post-model';
-import AppForm, { FormController, createForm } from '../../form-vue/AppForm.vue';
+import AppForm, { FormController, createForm, defineFormEmits } from '../../form-vue/AppForm.vue';
 import AppFormButton from '../../form-vue/AppFormButton.vue';
 import AppFormControl from '../../form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
@@ -34,7 +34,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	submit: () => true,
+	...defineFormEmits<FormModel>(),
 });
 
 const { type, resource } = toRefs(props);
@@ -71,7 +71,7 @@ const form: FormController<FormModel> = createForm({
 		maxLengthSource.value = payload.maxLengthSource;
 	},
 	onSubmitSuccess() {
-		emit('submit');
+		emit('submit', form.formModel);
 	},
 });
 

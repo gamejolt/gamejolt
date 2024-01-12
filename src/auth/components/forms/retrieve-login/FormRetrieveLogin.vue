@@ -2,7 +2,11 @@
 import { ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, {
+	createForm,
+	defineFormEmits,
+	FormController,
+} from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -14,7 +18,7 @@ interface RetrieveLoginFormModel {
 }
 
 const emit = defineEmits({
-	submit: () => true,
+	...defineFormEmits<RetrieveLoginFormModel>(),
 });
 
 const invalidEmail = ref(false);
@@ -37,7 +41,7 @@ const form: FormController<RetrieveLoginFormModel> = createForm({
 		return response;
 	},
 	onSubmitSuccess() {
-		emit('submit');
+		emit('submit', form.formModel);
 	},
 });
 </script>

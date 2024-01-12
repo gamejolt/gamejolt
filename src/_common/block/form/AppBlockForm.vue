@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
 import { Api } from '../../api/api.service';
-import AppForm, { FormController, createForm } from '../../form-vue/AppForm.vue';
+import AppForm, { FormController, createForm, defineFormEmits } from '../../form-vue/AppForm.vue';
 import AppFormButton from '../../form-vue/AppFormButton.vue';
 import AppFormGroup from '../../form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../form-vue/controls/AppFormControlToggle.vue';
@@ -21,7 +21,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	submit: () => true,
+	...defineFormEmits<BlockFormModel>(),
 });
 
 const { user } = toRefs(props);
@@ -36,7 +36,7 @@ const form: FormController<BlockFormModel> = createForm({
 		return Api.sendRequest('/web/dash/blocks/add', data);
 	},
 	onSubmitSuccess() {
-		emit('submit');
+		emit('submit', form.formModel);
 	},
 });
 </script>

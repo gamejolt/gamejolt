@@ -9,6 +9,7 @@ import { CommunityModel } from '../../../../../_common/community/community.model
 import AppForm, {
 	FormController,
 	createForm,
+	defineFormEmits,
 	defineFormProps,
 } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
@@ -32,7 +33,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	submit: () => true,
+	...defineFormEmits<CollaboratorModel>(),
 });
 
 const { community, model } = toRefs(props);
@@ -51,7 +52,7 @@ const form: FormController<CollaboratorModel> = createForm({
 		}
 	},
 	onSubmitSuccess() {
-		emit('submit');
+		emit('submit', form.formModel);
 	},
 });
 </script>

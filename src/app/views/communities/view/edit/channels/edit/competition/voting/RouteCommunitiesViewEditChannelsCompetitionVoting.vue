@@ -147,8 +147,8 @@ async function onClickRemoveCategory(category: CommunityCompetitionVotingCategor
 	}
 }
 
-function onAwardAddSubmit($payload: any) {
-	const award = new CommunityCompetitionAwardModel($payload);
+function onAwardAddSubmit(model: CommunityCompetitionAwardModel) {
+	const award = new CommunityCompetitionAwardModel(model);
 	awards.value.push(award);
 	isShowingAwardAdd.value = false;
 }
