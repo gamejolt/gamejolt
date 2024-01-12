@@ -33,6 +33,10 @@ const props = defineProps({
 	},
 });
 
+const emit = defineEmits({
+	submit: () => true,
+});
+
 const { type, resource } = toRefs(props);
 
 const form: FormController<FormModel> = createForm({
@@ -65,6 +69,9 @@ const form: FormController<FormModel> = createForm({
 	onLoad(payload: any) {
 		maxLengthDescription.value = payload.maxLengthDescription;
 		maxLengthSource.value = payload.maxLengthSource;
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 
