@@ -258,7 +258,7 @@ const collectibleResourceAcquisition = computed(() => {
 				alignSelf: `center`,
 				...styleMaxWidthForOptions({
 					ratio: 1,
-					maxWidth: 600,
+					maxWidth: 320,
 					maxHeight: Screen.height / 3,
 				}),
 			}"
