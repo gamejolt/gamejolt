@@ -70,12 +70,6 @@ export function defineFormProps<T>(required?: boolean): RequiredFormProp<T> | Op
 	}
 }
 
-export function defineFormEmits<T>() {
-	return {
-		submit: (_formModel: T) => true,
-	};
-}
-
 export function provideForm(form: FormController) {
 	provide(Key, form);
 }

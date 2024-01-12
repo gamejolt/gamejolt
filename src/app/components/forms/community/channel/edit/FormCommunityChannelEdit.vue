@@ -8,7 +8,6 @@ import { CommunityModel } from '../../../../../../_common/community/community.mo
 import AppForm, {
 	FormController,
 	createForm,
-	defineFormEmits,
 	defineFormProps,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
@@ -40,7 +39,7 @@ const props = defineProps({
 
 const emit = defineEmits({
 	backgroundChange: (_model: CommunityChannelModel) => true,
-	...defineFormEmits<CommunityChannelModel>(),
+	submit: (_model: CommunityChannelModel) => true,
 });
 
 const { community, model } = toRefs(props);

@@ -10,7 +10,6 @@ import {
 } from '../../../../../../_common/community/community.model';
 import AppForm, {
 	createForm,
-	defineFormEmits,
 	defineFormProps,
 	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
@@ -40,7 +39,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	...defineFormEmits<CommunityModel>(),
+	submit: (_model: CommunityModel) => true,
 });
 
 const { model, presetType } = toRefs(props);

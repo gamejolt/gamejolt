@@ -2,11 +2,7 @@
 import { PropType, computed, ref, toRef, toRefs } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppForm, {
-	FormController,
-	createForm,
-	defineFormEmits,
-} from '../../../../../_common/form-vue/AppForm.vue';
+import AppForm, { FormController, createForm } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlError from '../../../../../_common/form-vue/AppFormControlError.vue';
@@ -58,7 +54,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	...defineFormEmits<FormModel>(),
+	submit: () => true,
 });
 
 const { community, user } = toRefs(props);
@@ -139,7 +135,7 @@ const form: FormController<FormModel> = createForm({
 		return response;
 	},
 	onSubmitSuccess() {
-		emit('submit', form.formModel);
+		emit('submit');
 	},
 });
 </script>
