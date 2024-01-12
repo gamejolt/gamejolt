@@ -2,11 +2,12 @@
 import { CSSProperties, PropType, computed, onMounted, ref, toRef, toRefs, watch } from 'vue';
 import {
 	styleBorderRadiusBase,
+	styleChangeBg,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 	styleWhen,
 } from '../../_styles/mixins';
-import { kBorderRadiusBase, kFontSizeLarge, kFontSizeSmall } from '../../_styles/variables';
+import { kBorderRadiusLg, kFontSizeLarge, kFontSizeSmall } from '../../_styles/variables';
 import { showPurchaseShopProductModal } from '../../app/components/vending-machine/modal/_purchase-modal/modal.service';
 import { arrayAssignAll } from '../../utils/array';
 import { isInstance } from '../../utils/utils';
@@ -125,19 +126,15 @@ const description = toRef(() => {
 });
 
 const imageUrl = computed(() => {
-	// TODO(resource-collectible-links) items without media items are super
-	// blurry since we don't have a media_item to check if it's animated. See if
-	// we can merge in https://github.com/gamejolt/gamejolt/pull/1176, or grab
-	// some parts of it, so we can get mediaserverUrl based on the url instead
-	// of making these other checks required.
-	const mediaItem = 'media_item' in item.value ? item.value.media_item : undefined;
-	if (mediaItem) {
-		return getMediaItemImageSrc(mediaItem);
+	// Grab data from the media item if possible.
+	if ('media_item' in item.value && item.value.media_item) {
+		return getMediaItemImageSrc(item.value.media_item).src;
 	}
-	return {
-		src: sticker.value?.img_url || emoji.value?.img_url || avatarFrame.value?.image_url || '',
-		isMediaserver: false,
-	} satisfies ReturnType<typeof getMediaItemImageSrc>;
+	return 'img_url' in item.value
+		? item.value.img_url
+		: 'image_url' in item.value
+		? item.value.image_url
+		: '';
 });
 
 onMounted(async () => {
@@ -261,7 +258,7 @@ const collectibleResourceAcquisition = computed(() => {
 				alignSelf: `center`,
 				...styleMaxWidthForOptions({
 					ratio: 1,
-					maxWidth: 320,
+					maxWidth: 600,
 					maxHeight: Screen.height / 3,
 				}),
 			}"
@@ -273,21 +270,25 @@ const collectibleResourceAcquisition = computed(() => {
 		>
 			<AppAspectRatio
 				:style="{
-					...styleWhen(!!background, {
-						borderRadius: kBorderRadiusBase.px,
-					}),
+					...styleChangeBg('bg-offset'),
+					borderRadius: kBorderRadiusLg.px,
 				}"
 				:ratio="1"
+				:inner-styles="{
+					...styleFlexCenter(),
+					...styleWhen(!background, {
+						padding: `12px`,
+					}),
+				}"
 			>
-				<AppImgResponsive v-if="imageUrl.isMediaserver" :src="imageUrl.src" />
-				<img
-					v-else
+				<AppImgResponsive
+					:src="imageUrl"
 					:style="{
-						width: `100%`,
-						height: `auto`,
+						...styleWhen(!!background, {
+							width: `100%`,
+							maxWidth: `100%`,
+						}),
 					}"
-					:src="imageUrl.src"
-					alt=""
 				/>
 
 				<Transition name="fade">
