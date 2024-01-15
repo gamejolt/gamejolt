@@ -35,7 +35,9 @@ import AppCommunityCompetitionDate from '../../../../../../../../components/comm
 import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/FormCommunityCompetitionAward.vue';
 import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/FormCommunityCompetitionVotingCategory.vue';
 import FormCommunityCompetitionVotingEdit from '../../../../../../../../components/forms/community/competition/voting/edit/FormCommunityCompetitionVotingEdit.vue';
-import FormCommunityCompetitionVotingToggle from '../../../../../../../../components/forms/community/competition/voting/toggle/FormCommunityCompetitionVotingToggle.vue';
+import FormCommunityCompetitionVotingToggle, {
+	FormCommunityCompetitionVotingToggleInterface,
+} from '../../../../../../../../components/forms/community/competition/voting/toggle/FormCommunityCompetitionVotingToggle.vue';
 import { useCommunityRouteStore } from '../../../../../view.store';
 
 export default {
@@ -61,7 +63,9 @@ const activeVotingCategory = ref<CommunityCompetitionVotingCategoryModel | undef
 const isShowingAwardAdd = ref(false);
 const isShowingVotingCategoryAdd = ref(false);
 const isEditing = ref(false);
-const toggleForm = ref<FormCommunityCompetitionVotingToggle>();
+
+// TODO(component-setup-refactor-forms-1): test this
+const toggleForm = ref<FormCommunityCompetitionVotingToggleInterface>();
 
 const hasVotingCategories = toRef(() => votingCategories.value.length > 0);
 const hasAwards = toRef(() => awards.value.length > 0);
@@ -91,9 +95,10 @@ function onToggleNotSetUp() {
 
 function onFormCancel() {
 	isEditing.value = false;
+
 	// Because the form was not submitted, reset voting to disabled when not initialized.
 	if (toggleForm.value && !competition.value!.isVotingSetUp) {
-		toggleForm.value.setField('is_voting_enabled', false);
+		toggleForm.value.form.formModel.is_voting_enabled = false;
 	}
 
 	// Scroll to top of page, because the form got removed and would leave us with an almost

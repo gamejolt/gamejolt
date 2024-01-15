@@ -12,6 +12,10 @@ import AppForm, {
 import AppFormGroup from '../../../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 
+export interface FormCommunityCompetitionVotingToggleInterface {
+	form: FormController<CommunityCompetitionModel>;
+}
+
 const props = defineProps({
 	...defineFormProps<CommunityCompetitionModel>(true),
 });
@@ -39,6 +43,8 @@ async function onToggle() {
 		await form.submit();
 	}
 }
+
+defineExpose<FormCommunityCompetitionVotingToggleInterface>({ form });
 </script>
 
 <template>
