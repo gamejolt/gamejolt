@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs, useSlots } from 'vue';
+import { computed, CSSProperties, PropType, toRefs, useSlots } from 'vue';
 import AppEditableOverlay from '../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';
 import { MediaItemModel } from '../../../_common/media-item/media-item-model';
@@ -59,6 +59,10 @@ const props = defineProps({
 	overrideSlots: {
 		type: Object as PropType<PageHeaderSlots>,
 		default: undefined,
+	},
+	coverHeaderStyles: {
+		type: Object as PropType<CSSProperties>,
+		default: () => ({}),
 	},
 });
 
@@ -128,6 +132,7 @@ const hasControls = computed(() => {
 				'has-cover-buttons': showCoverButtons,
 				'is-editable': coverEditable,
 			}"
+			:style="{ ...coverHeaderStyles }"
 		>
 			<AppEditableOverlay
 				v-if="coverEditable"
@@ -196,10 +201,10 @@ const hasControls = computed(() => {
 			</div>
 
 			<div class="container">
-				<div class="row">
+				<div v-if="$slots.default" class="row">
 					<div :class="colClasses">
 						<div class="page-header-content">
-							<slot />
+							<slot name="default" />
 						</div>
 					</div>
 				</div>

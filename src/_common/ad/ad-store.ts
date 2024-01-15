@@ -9,7 +9,6 @@ import { onRouteChangeAfter } from '../route/route-component';
 import { AdSlot } from './ad-slot-info';
 import { AdAdapter } from './adapter-base';
 import { AdEnthusiastAdapter } from './enthusiast/enthusiast-adapter';
-import { AdProperAdapter } from './proper/proper-adapter';
 
 const logger = createLogger('Ads Store');
 
@@ -18,7 +17,6 @@ const AdStoreKey: InjectionKey<AdStore> = Symbol('ads');
 
 // To show ads on the page for dev, just change this to false.
 export const AdsDisabledDev = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build';
-// export const AdsDisabledDev = false;
 
 const areAdsDisabledForDevice =
 	GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev;
@@ -56,11 +54,11 @@ export function createAdStore() {
 	const pageSettings = ref<AdSettingsContainer | null>(null);
 	const _defaultSettings = new AdSettingsContainer();
 
-	// const _newAdapter = new AdEnthusiastAdapter();
-	// const adapter: AdAdapter = _newAdapter;
-	// const videoAdapter: AdAdapter = _newAdapter;
-	const adapter: AdAdapter = new AdProperAdapter();
-	const videoAdapter: AdAdapter = new AdEnthusiastAdapter();
+	const _newAdapter = new AdEnthusiastAdapter();
+	const adapter: AdAdapter = _newAdapter;
+	const videoAdapter: AdAdapter = _newAdapter;
+	// const adapter: AdAdapter = new AdProperAdapter();
+	// const videoAdapter: AdAdapter = new AdEnthusiastAdapter();
 
 	const settings = toRef(() => pageSettings.value || _defaultSettings);
 

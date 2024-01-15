@@ -11,6 +11,7 @@ import { EventItemModel } from '../../../../../_common/event-item/event-item.mod
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { Navigate } from '../../../../../_common/navigate/navigate.service';
 import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
+import { watched } from '../../../../../_common/reactivity-helpers';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import AppStickerControlsOverlay from '../../../../../_common/sticker/AppStickerControlsOverlay.vue';
 import AppStickerPlacementList from '../../../../../_common/sticker/AppStickerPlacementList.vue';
@@ -219,6 +220,8 @@ function onPostPinned(item: EventItemModel) {
 function onPostUnpinned(item: EventItemModel) {
 	feedInterface.onPostUnpinned(item);
 }
+
+const hydrated = watched(() => feed.isItemHydrated(item.value));
 </script>
 
 <template>
@@ -250,6 +253,7 @@ function onPostUnpinned(item: EventItemModel) {
 					:darken="overlay"
 					:fade-opacity="post.hasAnyMedia ? 0.2 : undefined"
 					bleed
+					:enable-page-scroll="hydrated"
 				>
 					<AppPostHeader
 						:post="post"

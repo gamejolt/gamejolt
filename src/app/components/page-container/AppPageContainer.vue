@@ -1,9 +1,10 @@
 <script lang="ts">
-import { CSSProperties, computed, toRef, toRefs } from 'vue';
+import { CSSProperties, PropType, computed, toRef, toRefs, watch } from 'vue';
 import { ComponentProps } from '../../../_common/component-helpers';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
-import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
+import AppScrollScroller, { createScroller } from '../../../_common/scroll/AppScrollScroller.vue';
+import { styleWhen } from '../../../_styles/mixins';
 import { kGridGutterWidth } from '../../../_styles/variables';
 import { kShellTopNavHeight } from '../../styles/variables';
 
@@ -35,7 +36,8 @@ const props = defineProps({
 	 * scrolling.
 	 */
 	stickySides: {
-		type: Boolean,
+		type: [Boolean, Object] as PropType<boolean | { left?: boolean; right?: boolean }>,
+		default: false,
 	},
 	/**
 	 * Distance between the top of the page contents and the top of a column.
@@ -45,24 +47,81 @@ const props = defineProps({
 		type: Number,
 		default: undefined,
 	},
+	/**
+	 * Prevents the sticky sides from sticking and the scroller from scrolling.
+	 *
+	 * Workaround for sticky side children rebuilding when {@link stickySides}
+	 * changes.
+	 */
+	disableStickySides: {
+		type: [Boolean, Object] as PropType<boolean | { left?: boolean; right?: boolean }>,
+		default: false,
+	},
 });
 
-const { xl, noLeft, noRight, order, stickySides, stickySideTopMargin } = toRefs(props);
+const { xl, noLeft, noRight, order, stickySides, stickySideTopMargin, disableStickySides } =
+	toRefs(props);
+
+const scrollerLeft = createScroller();
+const scrollerRight = createScroller();
+
+watch(
+	disableStickySides,
+	async disableStickySides => {
+		let disableLeft = false;
+		let disableRight = false;
+		if (disableStickySides === true) {
+			disableLeft = true;
+			disableRight = true;
+		} else if (disableStickySides !== false) {
+			disableLeft = disableStickySides.left === true;
+			disableRight = disableStickySides.right === true;
+		}
+
+		// We need to manually scroll to the top when disabling sticky sides,
+		// otherwise the scroller will be stuck wherever we left it.
+		if (disableLeft) {
+			scrollerLeft.scrollTo(0);
+		}
+		if (disableRight) {
+			scrollerRight.scrollTo(0);
+		}
+	},
+	{ immediate: true }
+);
 
 const hasLeftColumn = toRef(() => !noLeft.value && Screen.isLg);
 const hasRightColumn = toRef(() => !noRight.value);
 const shouldCombineColumns = toRef(() => !noLeft.value && !Screen.isLg);
-const useStickySides = toRef(
-	() => stickySides.value && Screen.isDesktop && (hasLeftColumn.value || hasRightColumn.value)
-);
 const stickyTopMargin = toRef(() => stickySideTopMargin?.value ?? 0);
 
-const classes = computed(() => {
+const stickySideData = toRef(() => {
+	if (
+		!Screen.isDesktop ||
+		(!hasLeftColumn.value && !hasRightColumn.value) ||
+		stickySides.value === false
+	) {
+		return {
+			left: false,
+			right: false,
+		};
+	}
 	return {
-		container: !xl.value,
-		'container-xl': xl.value,
-		'-no-left': !hasLeftColumn.value,
-		'-no-right': !hasRightColumn.value,
+		left: stickySides.value === true || stickySides.value.left,
+		right: stickySides.value === true || stickySides.value.right,
+	};
+});
+
+const disabledProps = toRef(() => {
+	if (disableStickySides.value === false) {
+		return {
+			left: false,
+			right: false,
+		};
+	}
+	return {
+		left: disableStickySides.value === true || disableStickySides.value.left,
+		right: disableStickySides.value === true || disableStickySides.value.right,
 	};
 });
 
@@ -81,18 +140,21 @@ const keySuffix = computed(() =>
 	].join('')
 );
 
-const scrollAffixProps = computed<ComponentProps<typeof AppScrollAffix>>(() => {
+const scrollAffixProps = toRef(() => {
 	return {
 		// 1px so things can un-affix if needed.
 		padding: stickyTopMargin.value + 1,
-	};
+	} satisfies ComponentProps<typeof AppScrollAffix>;
 });
 
-const scrollerStyles = computed<CSSProperties>(() => {
-	if (!useStickySides.value) {
-		return {};
-	}
+const scrollerProps = toRef(() => {
+	return {
+		thin: true,
+		overlay: true,
+	} satisfies ComponentProps<typeof AppScrollScroller>;
+});
 
+const stickyScrollerStyles = computed<CSSProperties>(() => {
 	return {
 		marginTop: `-${stickyTopMargin.value}px`,
 		paddingTop: `${stickyTopMargin.value}px`,
@@ -103,21 +165,36 @@ const scrollerStyles = computed<CSSProperties>(() => {
 </script>
 
 <template>
-	<div :class="classes">
+	<div
+		:class="{
+			container: !xl,
+			'container-xl': xl,
+			'-no-left': !hasLeftColumn,
+			'-no-right': !hasRightColumn,
+		}"
+	>
 		<div class="_row">
 			<template v-if="hasLeftColumn">
 				<component
-					:is="useStickySides ? AppScrollAffix : 'div'"
+					:is="stickySideData.left ? AppScrollAffix : 'div'"
 					:key="`left:${keySuffix}`"
 					class="_left-container"
-					v-bind="scrollAffixProps"
+					v-bind="{
+						...(stickySideData.left ? scrollAffixProps : {}),
+						disabled: disabledProps.left,
+					}"
 				>
 					<component
-						:is="useStickySides ? AppScrollScroller : 'div'"
+						:is="stickySideData.left ? AppScrollScroller : 'div'"
 						class="_left-scroller"
-						:style="scrollerStyles"
-						thin
-						overlay
+						:style="{
+							...styleWhen(stickySideData.left, stickyScrollerStyles),
+						}"
+						v-bind="{
+							...scrollerProps,
+							disabled: disabledProps.left,
+							...(stickySideData.left ? { controller: scrollerLeft } : {}),
+						}"
 					>
 						<slot name="left" />
 						<slot name="left-bottom" />
@@ -131,17 +208,25 @@ const scrollerStyles = computed<CSSProperties>(() => {
 
 			<template v-if="hasRightColumn">
 				<component
-					:is="useStickySides ? AppScrollAffix : 'div'"
+					:is="stickySideData.right ? AppScrollAffix : 'div'"
 					:key="`right:${keySuffix}`"
 					class="_right-container"
-					v-bind="scrollAffixProps"
+					v-bind="{
+						...(stickySideData.right ? scrollAffixProps : {}),
+						disabled: disabledProps.right,
+					}"
 				>
 					<component
-						:is="useStickySides ? AppScrollScroller : 'div'"
+						:is="stickySideData.right ? AppScrollScroller : 'div'"
 						class="_right-scroller"
-						:style="scrollerStyles"
-						thin
-						overlay
+						:style="{
+							...styleWhen(stickySideData.right, stickyScrollerStyles),
+						}"
+						v-bind="{
+							...scrollerProps,
+							disabled: disabledProps.right,
+							...(stickySideData.right ? { controller: scrollerRight } : {}),
+						}"
 					>
 						<slot v-if="shouldCombineColumns" name="left" />
 						<slot name="right" v-bind="{ combined: shouldCombineColumns }" />

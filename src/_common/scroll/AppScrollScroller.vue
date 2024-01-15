@@ -1,4 +1,5 @@
 <script lang="ts">
+import type { UseOverlayScrollbarsInstance } from 'overlayscrollbars-vue';
 import { useOverlayScrollbars } from 'overlayscrollbars-vue';
 import { darken, lighten } from 'polished';
 import {
@@ -9,9 +10,11 @@ import {
 	onMounted,
 	provide,
 	ref,
+	shallowReadonly,
 	toRefs,
 	watchPostEffect,
 } from 'vue';
+import { watched } from '../reactivity-helpers';
 import { Screen } from '../screen/screen-service';
 import { DefaultTheme, GrayLight, GraySubtle } from '../theme/theme.model';
 import { useThemeStore } from '../theme/theme.store';
@@ -27,18 +30,24 @@ export function useScroller() {
 
 export function createScroller() {
 	const element = ref<HTMLElement>();
+	const getOverlayInstance = ref<UseOverlayScrollbarsInstance>();
 
 	function scrollTo(
 		offset: number,
 		{ edge, behavior }: ScrollOptions & { edge: 'top' | 'left' } = { edge: 'top' }
 	) {
-		element.value?.scrollTo({ [`${edge}`]: offset, behavior });
+		let target = getOverlayInstance.value?.()?.elements().scrollOffsetElement;
+		if (!(target instanceof HTMLElement)) {
+			target = element.value;
+		}
+		target?.scrollTo({ [`${edge}`]: offset, behavior });
 	}
 
-	return {
+	return shallowReadonly({
 		element,
+		getOverlayInstance,
 		scrollTo,
-	};
+	});
 }
 </script>
 
@@ -47,6 +56,9 @@ const props = defineProps({
 	controller: {
 		type: Object as PropType<ScrollController>,
 		default: () => createScroller(),
+	},
+	disabled: {
+		type: Boolean,
 	},
 	thin: {
 		type: Boolean,
@@ -65,7 +77,7 @@ const props = defineProps({
 	},
 });
 
-const { controller, horizontal, overlay } = toRefs(props);
+const { controller, disabled, horizontal, overlay } = toRefs(props);
 
 provide(Key, controller.value);
 
@@ -73,13 +85,23 @@ const { element } = controller.value;
 const { theme } = useThemeStore();
 const isMounted = ref(import.meta.env.SSR);
 
+const shouldDisable = watched(() => disabled.value, {
+	// There can be some jank when this changes during a scroll event if this
+	// isn't set to `post`, causing the page to jump unexpectedly.
+	flush: 'post',
+});
+
 const [initOverlayScrollbar, getOverlayScrollbarInstance] = useOverlayScrollbars(
 	computed(() => {
 		return {
 			options: {
 				overflow: {
-					x: horizontal.value ? 'scroll' : 'hidden',
-					y: horizontal.value ? 'hidden' : 'scroll',
+					// Unfortunately, disabling like this doesn't allow us to
+					// complete a smooth scroll (or any scroll) once it's
+					// disabled. Any smooth scroll will just stop at some point
+					// during the transition.
+					x: shouldDisable.value ? 'hidden' : horizontal.value ? 'scroll' : 'hidden',
+					y: shouldDisable.value ? 'hidden' : horizontal.value ? 'hidden' : 'scroll',
 				},
 				scrollbars: {
 					autoHide: 'move',
@@ -95,15 +117,23 @@ const [initOverlayScrollbar, getOverlayScrollbarInstance] = useOverlayScrollbars
 	})
 );
 
+function setupOverlayScroller(target: HTMLElement) {
+	initOverlayScrollbar({ target });
+	controller.value.getOverlayInstance.value = getOverlayScrollbarInstance;
+}
+
+function cleanupOverlayScroller() {
+	getOverlayScrollbarInstance()?.destroy();
+	controller.value.getOverlayInstance.value = undefined;
+}
+
 watchPostEffect(onCleanup => {
 	if (element.value && overlay.value) {
-		initOverlayScrollbar({
-			target: element.value,
-		});
+		setupOverlayScroller(element.value);
 	} else {
-		getOverlayScrollbarInstance()?.destroy();
+		cleanupOverlayScroller();
 	}
-	onCleanup(() => getOverlayScrollbarInstance()?.destroy());
+	onCleanup(() => cleanupOverlayScroller());
 });
 
 const actualTheme = computed(() => {

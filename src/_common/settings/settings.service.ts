@@ -91,6 +91,7 @@ export const SettingChatGroupShowMembers = new BooleanSetting('chat-group-show-m
 export const SettingRestrictedBrowsing = new BooleanSetting('restricted-browsing', true);
 export const SettingBroadcastModal = new BooleanSetting('broadcast-modal', true);
 export const SettingAnimatedThumbnails = new BooleanSetting('animated-thumbnails', true);
+export const SettingParallaxBackgrounds = new BooleanSetting('parallax-backgrounds', true);
 export const SettingFeedNotifications = new BooleanSetting('feed-notifications', true);
 // Video Players
 export const SettingVideoPlayerVolume = new NumberSetting('video-player-volume', 1);

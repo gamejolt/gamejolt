@@ -13,7 +13,7 @@ export const routeLibraryCollectionRoutes: RouteRecordRaw[] = routes.map(route =
 	return {
 		name: `library.collection.${route[0]}`,
 		path: route[1],
-		component: () => import('./collection.vue'),
+		component: () => import('./RouteLibraryCollection.vue'),
 		meta: {
 			collectionType: route[0],
 		},

@@ -65,6 +65,10 @@ const props = defineProps({
 		type: Object as PropType<CSSProperties>,
 		default: () => ({}),
 	},
+	tag: {
+		type: String,
+		default: 'div',
+	},
 });
 
 const {
@@ -94,7 +98,7 @@ const href = computed(() => {
 <template>
 	<!-- AppUserAvatarBubble -->
 	<div>
-		<component :is="href ? 'a' : 'div'" :href="href">
+		<component :is="href ? 'a' : tag" :href="href">
 			<AppUserVerifiedWrapper
 				:user="user"
 				:hide-tick="!showVerified"

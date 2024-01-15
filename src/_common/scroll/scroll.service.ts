@@ -1,3 +1,6 @@
+import { onUnmounted, ref, shallowReadonly, toRef } from 'vue';
+import { arrayRemove } from '../../utils/array';
+import { sleep } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';
 import { AppAutoscrollAnchor } from './auto-scroll/anchor';
 
@@ -164,3 +167,113 @@ class ScrollService {
 }
 
 export const Scroll = /** @__PURE__ */ new ScrollService();
+
+/**
+ * Minimum interval in milliseconds that {@link _onScroll} will assign to
+ * {@link PageScrollSubscription.top} refs.
+ */
+export const PageScrollSubscriptionTimeout = 1_000 / 24;
+
+export type PageScrollSubscription = ReturnType<typeof usePageScrollSubscription>;
+type OnScrollCallback = (top: number) => void;
+
+const _onScrollCallbacks: OnScrollCallback[] = [];
+let _isOnScrollBusy = false;
+let _lastOnScrollTop: number | null = null;
+
+/** Should only be used in a setup block. */
+export function usePageScrollSubscription(
+	onScroll: OnScrollCallback,
+	options: {
+		/**
+		 * Determines if the subscription should be active immediately.
+		 */
+		enable?: boolean;
+	} = {}
+) {
+	const isEnabled = ref(false);
+	const isDisposed = ref(false);
+
+	function enable() {
+		if (isDisposed.value) {
+			console.error(`Tried to activate a disposed subscription.`);
+			return;
+		}
+
+		if (isEnabled.value) {
+			return;
+		}
+
+		isEnabled.value = true;
+		_onScrollCallbacks.push(onScroll);
+		if (_lastOnScrollTop !== null) {
+			onScroll(_lastOnScrollTop);
+		}
+		_afterSubscriptionsChanged();
+	}
+
+	function disable() {
+		if (!isEnabled.value) {
+			return;
+		}
+
+		arrayRemove(_onScrollCallbacks, i => i === onScroll);
+		isEnabled.value = false;
+		if (!isDisposed.value) {
+			onScroll(0);
+		}
+		_afterSubscriptionsChanged();
+	}
+
+	onUnmounted(() => {
+		isDisposed.value = true;
+		disable();
+	});
+
+	if (options.enable) {
+		enable();
+	}
+
+	return shallowReadonly({
+		enable,
+		disable,
+		isActive: toRef(() => isEnabled.value && !isDisposed.value),
+	});
+}
+
+function _afterSubscriptionsChanged() {
+	if (_onScrollCallbacks.length) {
+		window.document.addEventListener('scroll', _onScroll, {
+			passive: true,
+		});
+
+		// Need to call _onScroll lazily here, otherwise things may not be
+		// loaded in yet. This can happen if you're on a page that holds the
+		// only subscription, go to a new page, then go back through the
+		// browser.
+		sleep(0).then(() => _onScroll());
+	} else {
+		window.document.removeEventListener('scroll', _onScroll);
+		_lastOnScrollTop = null;
+	}
+}
+
+async function _onScroll() {
+	if (_isOnScrollBusy) {
+		return;
+	}
+	_isOnScrollBusy = true;
+
+	// Wait a bit so we don't do this too often.
+	await sleep(PageScrollSubscriptionTimeout);
+
+	let top = 0;
+	if (_onScrollCallbacks.length) {
+		top = Scroll.getScrollTop();
+		for (const cb of _onScrollCallbacks) {
+			cb(top);
+		}
+	}
+	_lastOnScrollTop = top;
+	_isOnScrollBusy = false;
+}

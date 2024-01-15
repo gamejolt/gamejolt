@@ -32,7 +32,7 @@ import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-
 import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../../../../../utils/array';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
-import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/award.vue';
+import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/FormCommunityCompetitionAward.vue';
 import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/FormCommunityCompetitionVotingCategory.vue';
 import FormCommunityCompetitionVotingEdit from '../../../../../../../../components/forms/community/competition/voting/edit/FormCommunityCompetitionVotingEdit.vue';
 import FormCommunityCompetitionVotingToggle from '../../../../../../../../components/forms/community/competition/voting/toggle/FormCommunityCompetitionVotingToggle.vue';
@@ -147,8 +147,7 @@ async function onClickRemoveCategory(category: CommunityCompetitionVotingCategor
 	}
 }
 
-function onAwardAddSubmit($payload: any) {
-	const award = new CommunityCompetitionAwardModel($payload);
+function onAwardAddSubmit(award: CommunityCompetitionAwardModel) {
 	awards.value.push(award);
 	isShowingAwardAdd.value = false;
 }

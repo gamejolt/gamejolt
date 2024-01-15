@@ -1,26 +1,28 @@
 <script lang="ts">
-import { computed, CSSProperties, inject, InjectionKey, provide, ref, toRef } from 'vue';
-import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
-import { vAppTrackEvent } from '../../../_common/analytics/track-event.directive';
+import {
+	CSSProperties,
+	InjectionKey,
+	Ref,
+	computed,
+	inject,
+	provide,
+	ref,
+	shallowReadonly,
+	toRef,
+} from 'vue';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
-import { showBlockModal } from '../../../_common/block/modal/modal.service';
-import AppButton from '../../../_common/button/AppButton.vue';
 import { Environment } from '../../../_common/environment/environment.service';
-import { formatNumber } from '../../../_common/filters/number';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import AppPopper from '../../../_common/popper/AppPopper.vue';
+import { LinkedAccountModel } from '../../../_common/linked-account/linked-account.model';
+import { watched } from '../../../_common/reactivity-helpers';
 import { Registry } from '../../../_common/registry/registry.service';
-import { showReportModal } from '../../../_common/report/modal/modal.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
-import { copyShareLink } from '../../../_common/share/share.service';
+import { usePageScrollSubscription } from '../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { useThemeStore } from '../../../_common/theme/theme.store';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../_common/translate/translate.service';
-import AppUserDogtag from '../../../_common/user/AppUserDogtag.vue';
-import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
 import {
 	UserFriendshipModel,
 	UserFriendshipState,
@@ -28,37 +30,96 @@ import {
 import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '../../../_common/user/trophy/user-base-trophy.model';
 import { UserModel } from '../../../_common/user/user.model';
-import { kFontFamilyBase } from '../../../_styles/variables';
-import { isUserOnline } from '../../components/chat/client';
-import { showCommentModal } from '../../components/comment/modal/modal.service';
+import { styleWhen } from '../../../_styles/mixins';
+import { buildCSSPixelValue, kFontFamilyBase } from '../../../_styles/variables';
+import { useResizeObserver } from '../../../utils/resize-observer';
+import { ChatClient, isUserOnline } from '../../components/chat/client';
 import { useGridStore } from '../../components/grid/grid-store';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderAvatar from '../../components/page-header/AppPageHeaderAvatar.vue';
-import AppPageHeaderControls from '../../components/page-header/controls/controls.vue';
 import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
+import AppProfileDogtags from './dogtags/AppProfileDogtags.vue';
 
 const ProfileRouteStoreKey: InjectionKey<ProfileRouteStore> = Symbol('profile-route');
 
-type ProfileRouteStore = ReturnType<typeof createProfileRouteStore>;
+export type ProfileRouteStore = ReturnType<typeof createProfileRouteStore>;
 
 export function useProfileRouteStore() {
 	return inject(ProfileRouteStoreKey);
 }
 
-function createProfileRouteStore() {
-	const isOverviewLoaded = ref(false);
+export function provideProfileRouteStore(store: ProfileRouteStore) {
+	provide(ProfileRouteStoreKey, store);
+}
 
+function createProfileRouteStore({
+	header: refHeader,
+	chat,
+	myUser,
+}: {
+	header: Ref<HTMLElement | undefined>;
+	chat: Ref<ChatClient | undefined>;
+	myUser: Ref<UserModel | null | undefined>;
+}) {
 	// We will bootstrap this right away, so it should always be set for use.
 	const user = ref<UserModel>();
+	const isMe = toRef(() => !!myUser.value && !!user.value && myUser.value.id === user.value.id);
 
+	const isOverviewLoaded = ref(false);
 	const gamesCount = ref(0);
 	const communitiesCount = ref(0);
-	const placeholderCommunitiesCount = ref(0);
 	const trophyCount = ref(0);
 	const userFriendship = ref<UserFriendshipModel>();
 	const previewTrophies = ref<UserBaseTrophyModel[]>([]);
+	const hasSales = ref(false);
+	const showFullDescription = ref(false);
+	const canToggleDescription = ref(false);
+	const linkedAccounts = ref<LinkedAccountModel[]>([]);
+
+	const isFriend = toRef(
+		() => userFriendship.value && userFriendship.value.state === UserFriendshipState.Friends
+	);
+
+	const isOnline = computed<null | boolean>(() => {
+		if (!chat.value || !user.value) {
+			return null;
+		}
+		return isUserOnline(chat.value, user.value.id);
+	});
+
+	const shareUrl = toRef(() => {
+		if (!user.value) {
+			return Environment.baseUrl;
+		}
+		return Environment.baseUrl + user.value.url;
+	});
+
+	const _headerHeight = ref(0);
+	const _pageOffsetTop = ref(0);
+	usePageScrollSubscription(
+		top => {
+			_pageOffsetTop.value = top;
+		},
+		{ enable: true }
+	);
+
+	const stickySides = watched(() => {
+		if (_headerHeight.value <= 0) {
+			return false;
+		}
+		return _pageOffsetTop.value >= _headerHeight.value;
+	});
+
+	// Watch for changes with the header so we know how far we need to scroll
+	// before hitting the actual page content.
+	useResizeObserver({
+		target: refHeader,
+		callback([entry]) {
+			_headerHeight.value = entry.contentRect.height;
+		},
+	});
 
 	function _updateUser(newUser?: UserModel) {
 		// If we already have a user, just assign new data into it to keep it
@@ -68,6 +129,10 @@ function createProfileRouteStore() {
 		} else {
 			user.value = newUser;
 		}
+	}
+
+	function _setUserFriendship(friendship?: UserFriendshipModel) {
+		userFriendship.value = friendship;
 	}
 
 	async function sendFriendRequest() {
@@ -140,7 +205,6 @@ function createProfileRouteStore() {
 			isOverviewLoaded.value = false;
 			gamesCount.value = 0;
 			communitiesCount.value = 0;
-			placeholderCommunitiesCount.value = 0;
 			trophyCount.value = 0;
 			userFriendship.value = undefined;
 			previewTrophies.value = [];
@@ -153,7 +217,6 @@ function createProfileRouteStore() {
 
 		gamesCount.value = payload.gamesCount || 0;
 		communitiesCount.value = payload.communitiesCount || 0;
-		placeholderCommunitiesCount.value = payload.placeholderCommunitiesCount || 0;
 		trophyCount.value = payload.trophyCount || 0;
 
 		userFriendship.value = payload.userFriendship
@@ -170,19 +233,25 @@ function createProfileRouteStore() {
 		isOverviewLoaded.value = true;
 	}
 
-	function _setUserFriendship(friendship?: UserFriendshipModel) {
-		userFriendship.value = friendship;
-	}
-
-	return {
+	return shallowReadonly({
 		isOverviewLoaded,
 		user,
+		myUser,
+		isMe,
 		gamesCount,
 		communitiesCount,
-		placeholderCommunitiesCount,
 		trophyCount,
 		userFriendship,
 		previewTrophies,
+		hasSales,
+		showFullDescription,
+		canToggleDescription,
+		linkedAccounts,
+		isFriend,
+		isOnline,
+		shareUrl,
+		stickySides,
+		floatingAvatarSize: buildCSSPixelValue(100),
 		sendFriendRequest,
 		acceptFriendRequest,
 		cancelFriendRequest,
@@ -191,7 +260,7 @@ function createProfileRouteStore() {
 		bootstrapUser,
 		profilePayload,
 		overviewPayload,
-	};
+	});
 }
 
 const ProfileThemeKey = 'profile';
@@ -227,17 +296,17 @@ defineOptions(
 	})
 );
 
-const routeStore = createProfileRouteStore();
-provide(ProfileRouteStoreKey, routeStore);
-
-const { user: routeUser, trophyCount, userFriendship, bootstrapUser, profilePayload } = routeStore;
-
+const header = ref<HTMLElement>();
+const { chat } = useGridStore();
 const { user: myUser } = useCommonStore();
 const { setPageTheme: setThemeStorePageTheme, clearPageTheme } = useThemeStore();
-const { chat } = useGridStore();
+
+const routeStore = createProfileRouteStore({ myUser, header, chat });
+provideProfileRouteStore(routeStore);
+
+const { user: routeUser, bootstrapUser, profilePayload, stickySides } = routeStore;
 
 const route = useRoute();
-const router = useRouter();
 
 /**
  * The cover height changes when we switch to not showing the full cover, so
@@ -245,43 +314,6 @@ const router = useRouter();
  * top again.
  */
 const autoscrollAnchorKey = toRef(() => routeUser.value!.id);
-
-const commentsCount = toRef(() => {
-	if (routeUser.value && routeUser.value.comment_count) {
-		return routeUser.value.comment_count;
-	}
-	return 0;
-});
-
-const canBlock = toRef(
-	() =>
-		routeUser.value &&
-		!routeUser.value.is_blocked &&
-		myUser.value &&
-		routeUser.value.id !== myUser.value.id
-);
-
-const isMe = toRef(() => myUser.value && routeUser.value && myUser.value.id === routeUser.value.id);
-
-const shouldShowFollow = toRef(
-	() =>
-		routeUser.value &&
-		!routeUser.value.is_blocked &&
-		!routeUser.value.blocked_you &&
-		!isMe.value
-);
-
-const shouldShowEdit = toRef(
-	() => myUser.value && routeUser.value && myUser.value.id === routeUser.value.id
-);
-
-const isOnline = computed<null | boolean>(() => {
-	if (!chat.value || !routeUser.value) {
-		return null;
-	}
-
-	return isUserOnline(chat.value, routeUser.value.id);
-});
 
 const { isBootstrapped } = createAppRoute({
 	onInit() {
@@ -306,302 +338,92 @@ function setPageTheme() {
 	});
 }
 
-function showComments() {
-	if (routeUser.value) {
-		showCommentModal({
-			model: routeUser.value,
-			displayMode: 'shouts',
-		});
-	}
-}
-
-function copyShareUrl() {
-	if (!routeUser.value) {
-		return;
-	}
-	const url = Environment.baseUrl + routeUser.value.url;
-	copyShareLink(url, 'user');
-}
-
-function report() {
-	if (routeUser.value) {
-		showReportModal(routeUser.value);
-	}
-}
-
-async function blockUser() {
-	if (routeUser.value) {
-		const result = await showBlockModal(routeUser.value);
-
-		// Navigate away from the page after blocking.
-		if (result) {
-			router.push({
-				name: 'dash.account.blocks',
-			});
-		}
-	}
-}
-
-const headingStyles: CSSProperties = {
+const headingStyles = {
 	marginBottom: `4px`,
 	display: `flex`,
 	alignItems: `center`,
-};
+} satisfies CSSProperties;
 
-const headingUsernameStyles = computed<CSSProperties>(() => ({
+const headingUsernameStyles = {
 	fontSize: `19px`,
 	fontFamily: kFontFamilyBase,
 	fontWeight: `bold`,
 	marginLeft: `8px`,
-}));
+} satisfies CSSProperties;
+
+const coverMaxHeight = watched(() => Math.min(Screen.height * 0.35, 400));
 </script>
 
 <template>
 	<div v-if="routeUser">
-		<!--
-			If this user is banned, we show very little.
-		-->
+		<!-- If they're banned, show very little -->
 		<template v-if="!routeUser.status">
 			<AppPageHeader>
 				<h1 :style="headingStyles">
 					{{ routeUser.display_name }}
 					<small :style="headingUsernameStyles">@{{ routeUser.username }}</small>
 				</h1>
-
-				<div class="text-muted small">
-					{{ $gettext(`Joined`) }}
-					{{ ' ' }}
-					<AppTimeAgo :date="routeUser.created_on" />
-				</div>
 			</AppPageHeader>
 
 			<RouterView />
 		</template>
 		<template v-else>
 			<AppUserBlockOverlay :user="routeUser">
-				<AppPageHeader
-					:cover-media-item="routeUser.header_media_item"
-					:cover-max-height="400"
-					should-affix-nav
-					:autoscroll-anchor-key="autoscrollAnchorKey"
-				>
-					<RouterLink
-						:to="{
-							name: 'profile.overview',
-							params: { username: routeUser.username },
+				<div ref="header">
+					<AppPageHeader
+						:cover-media-item="routeUser.header_media_item"
+						:cover-max-height="coverMaxHeight"
+						should-affix-nav
+						:autoscroll-anchor-key="autoscrollAnchorKey"
+						:style="{
+							...styleWhen(Screen.isMobile && !routeUser.header_media_item, {
+								height: 0,
+								minHeight: 0,
+							}),
+						}"
+						:cover-header-styles="{
+							...styleWhen(Screen.isMobile && !routeUser.header_media_item, {
+								background: `transparent`,
+							}),
 						}"
 					>
-						<h1 :style="headingStyles">
-							{{ routeUser.display_name }}
-							<span :style="headingUsernameStyles">@{{ routeUser.username }}</span>
-						</h1>
-					</RouterLink>
-					<div>
-						<!-- Joined on -->
-						{{ $gettext(`Joined`) }}
-						{{ ' ' }}
-						<AppTimeAgo :date="routeUser.created_on" />
-
-						<template v-if="isBootstrapped">
-							<span class="dot-separator" />
-
-							<!-- Dogtags -->
-							<AppUserDogtag
-								v-for="tag of routeUser.dogtags"
-								:key="tag.text"
-								:tag="tag"
-							/>
-
-							<!-- Friend status -->
-							<span
-								v-if="
-									userFriendship &&
-									userFriendship.state === UserFriendshipState.Friends
-								"
-								v-app-tooltip="$gettext('You are friends! Awwww!')"
-								class="tag tag-highlight"
-							>
-								{{ $gettext(`Friend`) }}
-							</span>
-
-							<!-- Online status -->
-							<template v-if="isOnline !== null">
-								<span
-									v-if="isOnline === false"
-									v-app-tooltip="$gettext('This user is currently offline.')"
-									class="tag"
-								>
-									{{ $gettext(`Offline`) }}
-								</span>
-								<span
-									v-else
-									v-app-tooltip="$gettext('This user is currently online.')"
-									class="tag tag-highlight"
-								>
-									{{ $gettext(`Online`) }}
-								</span>
-							</template>
-
-							<!-- Following status -->
-							<span
-								v-if="routeUser.follows_you"
-								v-app-tooltip="$gettext('This user is following you.')"
-								class="tag tag-highlight"
-							>
-								{{ $gettext(`Follows you`) }}
-							</span>
-						</template>
-					</div>
-
-					<template #spotlight>
-						<AppPageHeaderAvatar :user="routeUser" />
-					</template>
-
-					<template #nav>
-						<nav class="platform-list inline">
-							<ul>
-								<li>
-									<RouterLink
-										:to="{ name: 'profile.overview' }"
-										:class="{ active: route.name === 'profile.overview' }"
-									>
-										{{ $gettext(`Profile`) }}
-									</RouterLink>
-								</li>
-								<li>
-									<RouterLink
-										:to="{ name: 'profile.following' }"
-										active-class="active"
-									>
-										{{ $gettext(`Following`) }}
-										<span class="badge">
-											{{ formatNumber(routeUser.following_count) }}
-										</span>
-									</RouterLink>
-								</li>
-								<li>
-									<RouterLink
-										:to="{ name: 'profile.followers' }"
-										active-class="active"
-									>
-										{{ $gettext(`Followers`) }}
-										<span class="badge">
-											{{ formatNumber(routeUser.follower_count) }}
-										</span>
-									</RouterLink>
-								</li>
-								<!--
-									We only need to show this on mobile.
-								-->
-								<li v-if="routeUser.shouts_enabled && Screen.isMobile">
-									<a @click="showComments()">
-										{{ $gettext(`Shouts`) }}
-										<span class="badge">
-											{{ formatNumber(commentsCount) }}
-										</span>
-									</a>
-								</li>
-								<li>
-									<RouterLink
-										:to="{ name: 'profile.library' }"
-										active-class="active"
-									>
-										{{ $gettext(`Library`) }}
-									</RouterLink>
-								</li>
-								<li>
-									<RouterLink
-										:to="{ name: 'profile.trophies' }"
-										active-class="active"
-									>
-										{{ $gettext(`Trophies`) }}
-										<span class="badge">
-											{{ formatNumber(trophyCount) }}
-										</span>
-									</RouterLink>
-								</li>
-								<li>
-									<AppPopper popover-class="fill-darkest">
-										<a>
-											<AppJolticon icon="ellipsis-v" />
-										</a>
-
-										<template #popover>
-											<div class="list-group list-group-dark">
-												<a
-													v-app-track-event="`copy-link:user`"
-													class="list-group-item has-icon"
-													@click="copyShareUrl"
-												>
-													<AppJolticon icon="link" />
-													{{ $gettext(`Copy link to user`) }}
-												</a>
-												<a
-													v-if="myUser && routeUser.id !== myUser.id"
-													class="list-group-item has-icon"
-													@click="report"
-												>
-													<AppJolticon icon="flag" />
-													{{ $gettext(`Report user`) }}
-												</a>
-												<a
-													v-if="
-														userFriendship &&
-														userFriendship.state ===
-															UserFriendshipState.Friends
-													"
-													class="list-group-item has-icon"
-													@click="routeStore.removeFriend()"
-												>
-													<AppJolticon icon="friend-remove-1" notice />
-													{{ $gettext(`Remove friend`) }}
-												</a>
-												<a
-													v-if="canBlock"
-													class="list-group-item has-icon"
-													@click="blockUser"
-												>
-													<AppJolticon icon="friend-remove-2" notice />
-													{{ $gettext(`Block user`) }}
-												</a>
-												<a
-													v-if="myUser && myUser.permission_level > 0"
-													class="list-group-item has-icon"
-													:href="`${Environment.baseUrl}/moderate/users/view/${routeUser.id}`"
-													target="_blank"
-												>
-													<AppJolticon icon="cog" />
-													{{ $gettext(`Moderate user`) }}
-												</a>
-											</div>
-										</template>
-									</AppPopper>
-								</li>
-							</ul>
-						</nav>
-					</template>
-
-					<template #controls>
-						<AppPageHeaderControls>
-							<AppUserFollowButton
-								v-if="shouldShowFollow"
-								:user="routeUser"
-								block
-								location="profilePage"
-							/>
-							<AppButton
-								v-else-if="shouldShowEdit"
-								primary
-								block
+						<template v-if="!Screen.isMobile" #default>
+							<RouterLink
 								:to="{
-									name: 'dash.account.edit',
+									name: 'profile.overview',
+									params: { username: routeUser.username },
 								}"
 							>
-								{{ $gettext(`Edit profile`) }}
-							</AppButton>
-						</AppPageHeaderControls>
-					</template>
-				</AppPageHeader>
+								<h1 :style="headingStyles">
+									{{ routeUser.display_name }}
+									<span :style="headingUsernameStyles">
+										@{{ routeUser.username }}
+									</span>
+								</h1>
+							</RouterLink>
+							<div>
+								<!-- Joined on -->
+								{{ $gettext(`Joined`) }}
+								{{ ' ' }}
+								<AppTimeAgo :date="routeUser.created_on" />
+
+								<template v-if="isBootstrapped">
+									<span class="dot-separator" />
+
+									<AppProfileDogtags />
+								</template>
+							</div>
+						</template>
+
+						<template #spotlight>
+							<AppPageHeaderAvatar
+								v-if="!Screen.isMobile && !stickySides"
+								class="anim-fade-in"
+								:user="routeUser"
+							/>
+						</template>
+					</AppPageHeader>
+				</div>
 
 				<RouterView />
 			</AppUserBlockOverlay>

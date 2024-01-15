@@ -5,7 +5,7 @@ import { CommunityChannelModel } from '../../../../../_common/community/channel/
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormCommunityChannelBackground from '../../../forms/community/channel/background/background.vue';
+import FormCommunityChannelBackground from '../../../forms/community/channel/background/FormCommunityChannelBackground.vue';
 
 const props = defineProps({
 	channel: {
