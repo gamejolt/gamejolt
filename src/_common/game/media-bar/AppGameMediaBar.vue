@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, nextTick, onUpdated, ref, toRef, toRefs, watch } from 'vue';
+import { PropType, nextTick, onUpdated, ref, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { Analytics } from '../../analytics/analytics.service';
 import { showErrorGrowl } from '../../growls/growls.service';
@@ -27,28 +27,6 @@ const mediaBarHeight = ref(MediaBarItemMaxHeight + 40);
 
 const lightbox = createLightbox(mediaItems);
 
-const activeItem = toRef(() => (lightbox.isShowing ? lightbox.activeItem : null));
-
-watch(activeItem, () => {
-	let hash = '';
-	if (activeItem.value) {
-		const type = activeItem.value.getMediaType();
-
-		if (type === 'image') {
-			hash = '#screenshot-';
-		} else if (type === 'video') {
-			hash = '#video-';
-		} else if (type === 'sketchfab') {
-			hash = '#sketchfab-';
-		}
-		hash += activeItem.value.getModelId();
-	}
-
-	if (router) {
-		router.replace({ hash });
-	}
-});
-
 onUpdated(async () => {
 	// It seems like since we were changing state in the updated event it
 	// wasn't correctly seeing that the check URL updates the state. Using
@@ -75,6 +53,27 @@ function go(index: number) {
 		lightbox.gotoPage(index);
 	} else {
 		lightbox.show(index);
+	}
+	updateRouter();
+}
+
+function updateRouter() {
+	let hash = '';
+	if (lightbox.activeItem) {
+		const type = lightbox.activeItem.getMediaType();
+
+		if (type === 'image') {
+			hash = '#screenshot-';
+		} else if (type === 'video') {
+			hash = '#video-';
+		} else if (type === 'sketchfab') {
+			hash = '#sketchfab-';
+		}
+		hash += lightbox.activeItem.getModelId();
+	}
+
+	if (router) {
+		router.replace({ hash });
 	}
 }
 
