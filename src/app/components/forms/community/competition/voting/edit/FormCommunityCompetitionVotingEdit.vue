@@ -45,7 +45,7 @@ const timezoneService = ref<FormTimezoneService<CommunityCompetitionModel> | nul
 
 const isInitial = toRef(() => !model.value?.isVotingSetUp);
 
-// TODO(component-setup-refactor-forms-1): Keeping as computed as toRef is giving type mismatch error
+// TODO(component-setup-refactor-forms-1): Keeping as computed, as toRef is giving type mismatch error
 const votingUserRestrictionOptions = computed<RadioOption<VotingUserRestriction>[]>(() => {
 	return [
 		{
