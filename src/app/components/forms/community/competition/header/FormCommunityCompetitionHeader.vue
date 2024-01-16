@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRef, toRefs, watch } from 'vue';
+import { ref, toRef, toRefs, watchEffect } from 'vue';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import {
 	$clearCommunityCompetitionHeader,
@@ -25,13 +25,17 @@ import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 
-type FormModel = CommunityCompetitionModel & {
+interface FormModel extends CommunityCompetitionModel {
 	header_crop?: any;
 	crop?: any;
-};
+}
 
 const props = defineProps({
 	...defineFormProps<CommunityCompetitionModel>(true),
+});
+
+const emit = defineEmits({
+	submit: (_model: CommunityCompetitionModel) => true,
 });
 
 const { model } = toRefs(props);
@@ -45,8 +49,6 @@ const maxWidth = ref(0);
 const maxHeight = ref(0);
 
 const crop = toRef(() => (form.formModel.header ? form.formModel.header.getCrop() : undefined));
-
-watch(crop, () => (form.formModel.header_crop = crop.value));
 
 const form: FormController<FormModel> = createForm({
 	model,
@@ -65,6 +67,13 @@ const form: FormController<FormModel> = createForm({
 	onBeforeSubmit() {
 		form.formModel.crop = form.formModel.header_crop;
 	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
+	},
+});
+
+watchEffect(() => {
+	form.formModel.header_crop = crop.value;
 });
 
 async function clearHeader() {

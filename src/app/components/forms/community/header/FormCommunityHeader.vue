@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRef, toRefs, watch } from 'vue';
+import { ref, toRef, toRefs, watchEffect } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import {
 	$clearCommunityHeader,
@@ -34,6 +34,10 @@ const props = defineProps({
 	...defineFormProps<CommunityModel>(true),
 });
 
+const emit = defineEmits({
+	submit: (_model: CommunityModel) => true,
+});
+
 const { model } = toRefs(props);
 
 const maxFilesize = ref(0);
@@ -45,10 +49,6 @@ const maxWidth = ref(0);
 const maxHeight = ref(0);
 
 const crop = toRef(() => (form.formModel.header ? form.formModel.header.getCrop() : undefined));
-
-watch(crop, () => {
-	form.formModel.header_crop = crop.value;
-});
 
 const form: FormController<FormModel> = createForm({
 	model,
@@ -70,6 +70,13 @@ const form: FormController<FormModel> = createForm({
 			form.formModel.crop = crop.value;
 		}
 	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
+	},
+});
+
+watchEffect(() => {
+	form.formModel.header_crop = crop.value;
 });
 
 async function clearHeader() {

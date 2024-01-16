@@ -29,7 +29,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits({
-	submit: (_model: any) => true,
+	submit: (_model: CommunityCompetitionVotingCategoryModel) => true,
 });
 
 const { competition, model } = toRefs(props);
@@ -61,8 +61,6 @@ const form: FormController<CommunityCompetitionVotingCategoryModel> = createForm
 			form.formModel.community_competition_id = competition.value.id;
 		}
 	},
-	// TODO(component-setup-refactor-forms-1): Adding this to support existing behavior of notifying the parent component.
-	// let me know if this is okay.
 	onSubmitSuccess() {
 		if (isAdding) {
 			emit('submit', form.formModel);

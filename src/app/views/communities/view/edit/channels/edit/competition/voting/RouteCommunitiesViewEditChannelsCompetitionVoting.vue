@@ -117,8 +117,8 @@ function onClickChange() {
 	isEditing.value = true;
 }
 
-function onCategoryAddSubmit($payload: any) {
-	const category = new CommunityCompetitionVotingCategoryModel($payload);
+function onCategoryAddSubmit(model: CommunityCompetitionVotingCategoryModel) {
+	const category = new CommunityCompetitionVotingCategoryModel(model);
 	votingCategories.value.push(category);
 	isShowingVotingCategoryAdd.value = false;
 }
