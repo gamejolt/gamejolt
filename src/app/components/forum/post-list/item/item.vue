@@ -25,7 +25,7 @@ import AppScrollInview, {
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import FormForumPost from '../../../forms/forum/post/post.vue';
+import FormForumPost from '../../../forms/forum/post/FormForumPost.vue';
 
 const InviewConfig = new ScrollInviewConfig();
 
