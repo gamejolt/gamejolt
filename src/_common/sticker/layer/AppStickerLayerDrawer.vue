@@ -1,5 +1,23 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import {
+	computed,
+	CSSProperties,
+	nextTick,
+	onBeforeUnmount,
+	onMounted,
+	ref,
+	toRef,
+	watch,
+} from 'vue';
+import {
+	styleBorderRadiusLg,
+	styleCaret,
+	styleChangeBg,
+	styleElevate,
+	styleTextOverflow,
+	styleWhen,
+} from '../../../_styles/mixins';
+import { kBorderRadiusLg, kStrongEaseOut } from '../../../_styles/variables';
 import { showVendingMachineModal } from '../../../app/components/vending-machine/modal/modal.service';
 import { Analytics } from '../../analytics/analytics.service';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
@@ -7,15 +25,17 @@ import AppButton from '../../button/AppButton.vue';
 import { EscapeStack, EscapeStackCallback } from '../../escape-stack/escape-stack.service';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
 import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
-import AppPageIndicator from '../../pagination/AppPageIndicator.vue';
+import AppPageIndicatorCompact from '../../pagination/AppPageIndicatorCompact.vue';
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize, Screen } from '../../screen/screen-service';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
+import { kThemePrimary, kThemePrimaryFg } from '../../theme/variables';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
 import {
 	closeStickerDrawer,
 	commitStickerStoreItemPlacement,
+	setStickerDrawerHeight,
 	setStickerStoreActiveItem,
 	useStickerStore,
 } from '../sticker-store';
@@ -26,8 +46,6 @@ const stickerStore = useStickerStore();
 const {
 	sticker: storeSticker,
 	allStickers: items,
-	stickerSize,
-	drawerHeight,
 	isHoveringDrawer,
 	isDrawerOpen,
 	isDragging,
@@ -36,10 +54,12 @@ const {
 	placedItem,
 	canPlaceChargedStickerOnResource,
 	isChargingSticker,
+	drawerStickerSize,
+	drawerPadding,
+	drawerStickerSpacing,
+	drawerNumRows,
+	drawerCollapsedHeight,
 } = stickerStore;
-
-const _drawerPadding = 8;
-const _stickerSpacing = 8;
 
 let _touchedSticker: StickerModel | null = null;
 let _escapeCallback: EscapeStackCallback | null = null;
@@ -55,104 +75,98 @@ const root = ref<HTMLDivElement>();
 const content = ref<HTMLDivElement>();
 const slider = ref<HTMLDivElement>();
 
-const showPlaceButton = computed(() => !!placedItem.value);
-
-const effectiveStickerSize = computed(() => stickerSize.value + _stickerSpacing);
-
-const drawerNavigationComponent = computed(() => (Screen.isPointerMouse ? 'div' : AppTouch));
-
-const drawerNavigationProps = computed(() =>
-	!Screen.isPointerMouse
-		? {
-				'pan-options': { threshold: 16 },
-		  }
-		: {}
+const showPlaceButton = toRef(() => !!placedItem.value);
+const hasStickers = toRef(() => !!items.value.length);
+const topBarMargin = toRef(() => (Screen.isXs ? `0px` : `4px`));
+const creatorSize = computed(() => Math.max(drawerStickerSize.value * 0.25, 16));
+const drawerMaxHeight = computed(
+	() =>
+		`${
+			drawerPadding.value * 2 +
+			drawerStickerSize.value * drawerNumRows.value +
+			drawerStickerSpacing.value * (Math.floor(drawerNumRows.value) - 1)
+		}px`
 );
+const stickerSheets = computed(() => {
+	const maxPerSheet = maxStickersPerSheet.value;
+	if (maxPerSheet === null) {
+		return [items.value.filter(i => typeof i.count === 'number')];
+	}
 
-const stickerSheets = computed(() => _chunkStickers(items.value));
+	const sheets = [];
+	let currentSheet: StickerStack[] = [];
+	for (const i of items.value) {
+		if (typeof i.count !== 'number') {
+			continue;
+		}
+		currentSheet.push(i);
 
-const hasStickers = computed(() => !!items.value.length);
-
+		if (currentSheet.length >= maxPerSheet) {
+			sheets.push(currentSheet);
+			currentSheet = [];
+		}
+	}
+	if (currentSheet.length > 0) {
+		sheets.push(currentSheet);
+	}
+	return sheets;
+});
 const maxStickersPerSheet = computed(() => {
 	if (Screen.isPointerMouse) {
-		// Don't worry, this is SAFE.
-		return Number.MAX_SAFE_INTEGER;
+		return null;
 	}
-
-	const rows = 2;
-	return _stickersPerRow.value * rows;
+	return _stickersPerRow.value * 2;
 });
 
-const numRowsShowing = computed(() => (Screen.isPointerMouse ? 2.3 : 2));
-
-const styleShell = computed<CSSProperties>(() => {
-	const result: CSSProperties = {
-		transform: `translateY(0)`,
-		left: Screen.isXs ? 0 : '64px',
-		// Max-height of 2 sticker rows
-		maxHeight: Screen.isPointerMouse
-			? `${_drawerPadding * 2 + stickerSize.value * numRowsShowing.value}px`
-			: undefined,
-	};
-
-	// Shift the drawer down when there's an item being dragged and the drawer
-	// container is not being hovered.
-	if (storeSticker.value && !isHoveringDrawer.value && !placedItem.value) {
-		result.transform = `translateY(${drawerHeight.value - stickerSize.value / 2}px)`;
-	}
-
-	return result;
-});
-
-const styleOuter = computed<CSSProperties>(() => {
-	const { stickerSize, isDragging } = stickerStore;
-
+const styleOuter = computed(() => {
 	return {
+		...styleElevate(2),
+		...styleChangeBg('bg'),
 		cursor: isDragging.value ? 'grabbing' : 'default',
-		paddingTop: `${_drawerPadding}px`,
+		paddingTop: drawerPadding.px,
+		margin: `0 auto`,
+		height: `100%`,
+		overflow: `hidden`,
 		// Max-width is unset when Xs (so it can bleed and span the whole
 		// width), with margins of 64px on other breakpoints.
 		maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
-		// Max-height of 2 sticker rows
-		maxHeight: Screen.isPointerMouse
-			? _drawerPadding * 2 + stickerSize.value * numRowsShowing.value + 'px'
-			: undefined,
-	};
+		...styleWhen(Screen.isPointerMouse, {
+			// Max-height of 2 sticker rows
+			maxHeight: drawerMaxHeight.value,
+		}),
+		...styleWhen(Screen.isXs, {
+			width: `100%`,
+		}),
+		...styleWhen(!Screen.isXs, {
+			borderTopLeftRadius: kBorderRadiusLg.px,
+			borderTopRightRadius: kBorderRadiusLg.px,
+		}),
+	} satisfies CSSProperties;
 });
-
-const styleDimensions = computed<CSSProperties>(() => {
-	const { stickerSize } = stickerStore;
-
-	return {
-		minWidth: Screen.isXs ? 'unset' : '400px',
-		minHeight: `${stickerSize.value}px`,
-		maxHeight: Screen.isPointerMouse
-			? _drawerPadding + stickerSize.value * numRowsShowing.value + 'px'
-			: undefined,
-		paddingBottom: `${_drawerPadding}px`,
-	};
-});
-
-const styleSheet = computed<CSSProperties>(() => ({
-	padding: `0 ${_drawerPadding}px`,
-	width: `100%`,
-	height: `100%`,
-}));
-
-const styleStickers = computed<CSSProperties>(() => ({
-	padding: '4px',
-	marginRight: _stickerSpacing + 'px',
-	marginBottom: _stickerSpacing + 'px',
-}));
 
 useEventSubscription(onScreenResize, calculateStickersPerRow);
 
-watch(isLoading, onIsLoadingChange, { immediate: true });
+watch(
+	isLoading,
+	async isLoading => {
+		await nextTick();
+
+		if (!isLoading) {
+			onContentDimensionsChanged();
+			calculateStickersPerRow();
+		}
+	},
+	{ immediate: true }
+);
+
+function closeDrawer() {
+	closeStickerDrawer(stickerStore);
+}
 
 onMounted(() => {
 	calculateStickersPerRow();
 
-	_escapeCallback = () => closeStickerDrawer(stickerStore);
+	_escapeCallback = () => closeDrawer();
 	EscapeStack.register(_escapeCallback);
 });
 
@@ -162,29 +176,6 @@ onBeforeUnmount(() => {
 		_escapeCallback = null;
 	}
 });
-
-function _chunkStickers(stickers: StickerStack[]) {
-	const sheets = [];
-
-	let current: StickerStack[] = [];
-	for (const i of stickers) {
-		if (typeof i.count !== 'number') {
-			continue;
-		}
-		current.push(i);
-
-		if (current.length >= maxStickersPerSheet.value) {
-			sheets.push(current);
-			current = [];
-		}
-	}
-
-	if (current.length > 0) {
-		sheets.push(current);
-	}
-
-	return sheets;
-}
 
 async function onClickPlace() {
 	// Only allow 1 placement request through at a time for each sticker
@@ -199,8 +190,31 @@ async function onClickPlace() {
 	isConfirmingPlacement.value = false;
 }
 
-function onClickMargin() {
+async function calculateStickersPerRow() {
+	await nextTick();
+
+	if (!content.value) {
+		return;
+	}
+
+	const horizontalSpace = content.value.offsetWidth - drawerPadding.value * 2;
+	const roughPerRow = Math.floor(horizontalSpace / drawerStickerSize.value);
+
+	_stickersPerRow.value = Math.floor(
+		(horizontalSpace - drawerStickerSpacing.value * (roughPerRow - 1)) / drawerStickerSize.value
+	);
+}
+
+function onContentDimensionsChanged() {
+	if (showPlaceButton.value || !content.value) {
+		return;
+	}
+	setStickerDrawerHeight(stickerStore, Ruler.height(content.value));
+}
+
+function onClickPurchasePacks() {
 	closeStickerDrawer(stickerStore);
+	showVendingMachineModal({ location: 'sticker-drawer' });
 }
 
 // VueTouch things - START
@@ -209,7 +223,6 @@ function goNext() {
 		_updateSliderOffset();
 		return;
 	}
-
 	sheetPage.value = Math.min(sheetPage.value + 1, stickerSheets.value.length);
 	Analytics.trackEvent('sticker-drawer', 'swipe-next');
 	_updateSliderOffset();
@@ -220,31 +233,27 @@ function goPrev() {
 		_updateSliderOffset();
 		return;
 	}
-
 	sheetPage.value = Math.max(sheetPage.value - 1, 1);
 	Analytics.trackEvent('sticker-drawer', 'swipe-previous');
 	_updateSliderOffset();
 }
 
-function assignTouchedSticker(sticker: StickerStack) {
-	if (!isDrawerOpen.value || storeSticker.value || !sticker.count) {
+function assignTouchedSticker(stickerStack: StickerStack | null) {
+	if (!stickerStack) {
+		_touchedSticker = null;
+		return;
+	} else if (!isDrawerOpen.value || storeSticker.value || !stickerStack.count) {
 		return;
 	}
-
-	_touchedSticker = sticker.sticker;
+	_touchedSticker = stickerStack.sticker;
 }
 
 function onMouseMove(event: MouseEvent) {
 	if (!_touchedSticker) {
 		return;
 	}
-
 	setStickerStoreActiveItem(stickerStore, _touchedSticker, event);
-	resetTouchedSticker();
-}
-
-function resetTouchedSticker() {
-	_touchedSticker = null;
+	assignTouchedSticker(null);
 }
 
 function panStart(event: AppTouchInput) {
@@ -263,12 +272,10 @@ function panMove(event: AppTouchInput) {
 		isSwipingSheets.value = false;
 		return;
 	}
-
 	// In case the animation frame was retrieved after we stopped dragging.
 	if (!isSwipingSheets.value) {
 		return;
 	}
-
 	_updateSliderOffset(event.deltaX);
 }
 
@@ -306,66 +313,82 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 	slider.value!.style.transform = `translate3d( ${pagePx + extraOffsetPx}px, 0, 0 )`;
 }
 // VueTouch things - END
-
-async function calculateStickersPerRow() {
-	await nextTick();
-
-	if (!content.value) {
-		return;
-	}
-
-	_stickersPerRow.value = Math.floor(
-		(content.value.offsetWidth - _drawerPadding * 2) / effectiveStickerSize.value
-	);
-}
-
-async function onIsLoadingChange() {
-	await nextTick();
-
-	if (!isLoading.value) {
-		onContentDimensionsChanged();
-		calculateStickersPerRow();
-	}
-}
-
-function onContentDimensionsChanged() {
-	if (showPlaceButton.value || !content.value) {
-		return;
-	}
-
-	drawerHeight.value = Ruler.height(content.value);
-}
-
-function onClickPurchasePacks() {
-	closeStickerDrawer(stickerStore);
-	showVendingMachineModal({ location: 'sticker-drawer' });
-}
 </script>
 
 <template>
 	<div
 		ref="root"
-		class="sticker-drawer"
-		:class="{ '-touch': !Screen.isPointerMouse }"
-		:style="styleShell"
+		:style="{
+			position: `fixed`,
+			left: Screen.isXs ? 0 : `64px`,
+			right: 0,
+			bottom: 0,
+			display: `flex`,
+			justifyContent: `center`,
+			transition: `transform 250ms ${kStrongEaseOut}`,
+			transform: `translateY(0)`,
+			...styleWhen(Screen.isPointerMouse, {
+				// Max-height of 2 sticker rows
+				maxHeight: drawerMaxHeight,
+			}),
+			...styleWhen(storeSticker && !isHoveringDrawer && !placedItem, {
+				// Shift the drawer down when there's an item being dragged
+				// and the drawer container is not being hovered.
+				transform: `translateY(calc(100% - ${drawerCollapsedHeight.px}))`,
+			}),
+		}"
 		@contextmenu.prevent
 		@mousemove="onMouseMove"
-		@mouseup="resetTouchedSticker()"
-		@touchend="resetTouchedSticker()"
+		@mouseup="assignTouchedSticker(null)"
+		@touchend="assignTouchedSticker(null)"
 	>
-		<div class="-margin" @click="onClickMargin()" />
+		<div :style="{ flex: `auto` }" @click="closeDrawer()" />
 
 		<template v-if="showPlaceButton">
-			<div class="-drawer-outer -drawer-outer-place" :style="styleOuter">
+			<div
+				:style="{
+					...styleOuter,
+					flex: `1 1 100vw`,
+					overflow: `visible`,
+					display: `flex`,
+					gap: `12px`,
+					padding: `12px`,
+					position: `relative`,
+					...styleWhen(!Screen.isXs, {
+						flex: 3,
+						maxWidth: `calc(min(100% - 64px, 500px))`,
+					}),
+				}"
+			>
 				<div
 					v-if="canPlaceChargedStickerOnResource && !isChargingSticker"
-					class="-top-bar"
-					:class="{
-						'-text-overflow': overflowTopBarText,
+					:style="{
+						...styleChangeBg('primary'),
+						color: kThemePrimaryFg,
+						display: `inline-flex`,
+						padding: `8px 12px 8px`,
+						gap: `12px`,
+						position: `absolute`,
+						bottom: `calc(100% + ${topBarMargin})`,
+						zIndex: -1,
+						left: 0,
+						maxWidth: `100%`,
+						...styleWhen(Screen.isXs, {
+							right: 0,
+						}),
+						...styleWhen(!Screen.isXs, styleBorderRadiusLg),
 					}"
 					@click="overflowTopBarText = !overflowTopBarText"
 				>
-					<div class="-top-bar-text">
+					<div
+						:style="{
+							minWidth: 0,
+							maxWidth: `100%`,
+							...styleWhen(overflowTopBarText, {
+								...styleTextOverflow,
+							}),
+						}"
+					>
 						{{ $gettext(`Support your favorite creators with charged stickers!`) }}
 					</div>
 				</div>
@@ -374,14 +397,21 @@ function onClickPurchasePacks() {
 					v-if="!isChargingSticker && canPlaceChargedStickerOnResource"
 					shock-anim="square"
 					:disabled="!canPlaceChargedStickerOnResource"
+					:style="{ position: `relative` }"
 				>
 					<AppButton
-						class="-charge-caret"
 						sparse
 						icon="bolt-unfilled"
 						primary
 						:solid="canPlaceChargedStickerOnResource"
 						@click="isChargingSticker = true"
+					/>
+
+					<div
+						:style="{
+							...styleCaret(kThemePrimary, 'down', '7px'),
+							bottom: `calc(100% + 2px + ${drawerPadding.px})`,
+						}"
 					/>
 				</AppAnimElectricity>
 
@@ -407,42 +437,85 @@ function onClickPurchasePacks() {
 		<div
 			ref="content"
 			v-app-observe-dimensions="onContentDimensionsChanged"
-			class="-drawer-outer anim-fade-in-up"
-			:style="{ ...styleOuter, display: !showPlaceButton ? undefined : 'none' }"
+			class="anim-fade-in-up"
+			:style="{
+				...styleOuter,
+				...styleWhen(showPlaceButton, {
+					display: `none`,
+				}),
+			}"
 		>
 			<AppLoadingFade :is-loading="isLoading">
 				<component
 					:is="Screen.isPointerMouse ? AppScrollScroller : 'div'"
-					:style="styleDimensions"
+					:style="{
+						minWidth: Screen.isXs ? 'unset' : '400px',
+						minHeight: `${drawerStickerSize}px`,
+						paddingBottom: drawerPadding.px,
+						...styleWhen(Screen.isPointerMouse, {
+							// Max-height of 2 sticker rows
+							maxHeight: drawerMaxHeight,
+						}),
+					}"
 				>
 					<AppLoadingFade :is-loading="isLoading">
 						<component
-							:is="drawerNavigationComponent"
-							class="-scroller"
-							v-bind="drawerNavigationProps"
+							:is="Screen.isPointerMouse ? 'div' : AppTouch"
+							:style="{
+								height: `100%`,
+							}"
+							v-bind="
+								Screen.isPointerMouse
+									? {}
+									: {
+											'pan-options': { threshold: 16 },
+									  }
+							"
 							@panstart="panStart"
 							@panmove="panMove"
 							@panend="panEnd"
 						>
-							<div ref="slider" class="-drawer-inner">
+							<div
+								ref="slider"
+								:style="{
+									transition: `transform 300ms ${kStrongEaseOut}`,
+									...styleWhen(!Screen.isPointerMouse, {
+										whiteSpace: `nowrap`,
+										display: `flex`,
+										flexWrap: `nowrap`,
+									}),
+								}"
+							>
 								<template v-if="hasStickers">
 									<div
 										v-for="(sheet, index) in stickerSheets"
 										:key="index"
-										class="-sheet"
-										:style="styleSheet"
+										:style="{
+											padding: `0 ${drawerPadding.px}`,
+											width: `100%`,
+											height: `100%`,
+											display: `flex`,
+											gap: `${drawerStickerSpacing}px`,
+											justifyContent: `space-between`,
+											flexWrap: `wrap`,
+											...styleWhen(!Screen.isPointerMouse, {
+												display: `inline-flex`,
+												flex: `none`,
+											}),
+										}"
 									>
-										<AppStickerLayerDrawerItem
-											v-for="item of sheet"
-											:key="item.sticker.id"
-											:style="styleStickers"
-											:sticker="item.sticker"
-											:count="item.count || undefined"
-											:size="stickerSize"
-											show-creator
-											@mousedown="assignTouchedSticker(item)"
-											@touchstart="assignTouchedSticker(item)"
-										/>
+										<div v-for="item of sheet" :key="item.sticker.id">
+											<AppStickerLayerDrawerItem
+												:sticker="item.sticker"
+												:count="item.count || undefined"
+												:size="drawerStickerSize"
+												show-mastery
+												show-creator
+												:creator-size="creatorSize"
+												@mousedown="assignTouchedSticker(item)"
+												@touchstart="assignTouchedSticker(item)"
+											/>
+										</div>
 									</div>
 								</template>
 								<template v-else-if="hasLoaded">
@@ -472,121 +545,17 @@ function onClickPurchasePacks() {
 								</template>
 							</div>
 						</component>
-						<div v-if="!Screen.isPointerMouse">
-							<AppPageIndicator :count="stickerSheets.length" :current="sheetPage" />
+						<div v-if="!Screen.isPointerMouse" :style="{ marginTop: `8px` }">
+							<AppPageIndicatorCompact
+								:count="stickerSheets.length"
+								:current="sheetPage"
+							/>
 						</div>
 					</AppLoadingFade>
 				</component>
 			</AppLoadingFade>
 		</div>
 
-		<div class="-margin" @click="onClickMargin()" />
+		<div :style="{ flex: `auto` }" @click="closeDrawer()" />
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.sticker-drawer
-	position: fixed
-	left: 0
-	right: 0
-	bottom: 0
-	display: flex
-	justify-content: center
-	transition: transform 250ms $strong-ease-out
-	--top-bar-margin: 4px
-
-	@media $media-xs
-		--top-bar-margin: 0px
-
-.-touch
-	.-drawer-inner
-		white-space: nowrap
-		display: flex
-		flex-wrap: nowrap
-
-	.-sheet
-		display: inline-flex
-		flex: none
-
-.-loading
-	margin: auto
-	padding: 16px 0
-
-.-margin
-	flex: auto
-
-.-scroller
-	height: 100%
-
-.-text-overflow
-	&
-	> *
-		text-overflow()
-
-.-top-bar-text
-	min-width: 0
-	max-width: 100%
-
-.-drawer-outer
-	elevate-2()
-	change-bg('bg')
-	margin: 0 auto
-	height: 100%
-	overflow: hidden
-
-	@media $media-xs
-		width: 100%
-
-.-drawer-outer-place
-	flex: 1 1 100vw
-	overflow: visible
-	display: flex
-	gap: 12px
-	padding: 12px
-	position: relative
-
-@media $media-sm-up
-	.-top-bar
-		rounded-corners-lg()
-
-	.-drawer-outer
-		border-top-left-radius: $border-radius-large
-		border-top-right-radius: $border-radius-large
-
-	.-drawer-outer-place
-		flex: 3
-		max-width: calc(min(100% - 64px, 500px)) !important
-
-.-top-bar
-	display: inline-flex
-	padding: 8px 12px 8px
-	gap: 12px
-	position: absolute
-	bottom: calc(100% + var(--top-bar-margin))
-	z-index: -1
-	left: 0
-	change-bg('primary')
-	theme-prop('color', 'primary-fg')
-	max-width: 100%
-
-	@media $media-xs
-		right: 0
-
-.-drawer-inner
-	transition: transform 300ms $strong-ease-out
-
-.-sheet
-	display: flex
-	justify-content: center
-	flex-wrap: wrap
-
-.-place-button-container
-	display: flex
-	gap: 12px
-
-.-charge-caret::before
-	content: ''
-	position: absolute
-	bottom: calc(100% + 2px + var(--top-bar-margin)) !important
-	caret(color: var(--theme-primary), direction: 'down', size: 7px)
-</style>

@@ -47,6 +47,59 @@ export const styleBorderRadiusLg = {
 } satisfies CSSProperties;
 
 /**
+ * Make a caret! Not for rabbits.
+ */
+export function styleCaret(
+	color: string,
+	direction: 'left' | 'right' | 'down' | 'up' = `left`,
+	size = `3px`
+) {
+	const result = {
+		position: `absolute`,
+		width: `0`,
+		height: `0`,
+		borderTop: `${size} solid transparent`,
+		borderRight: `${size} solid transparent`,
+		borderBottom: `${size} solid transparent`,
+		borderLeft: `${size} solid transparent`,
+		// Reset in case we stacked this mixin.
+		top: `auto`,
+		left: `auto`,
+		right: `auto`,
+		bottom: `auto`,
+		marginTop: `0`,
+		marginLeft: `0`,
+	} satisfies CSSProperties;
+
+	if (direction == 'left' || direction == 'right') {
+		result.top = `50%`;
+		result.marginTop = `-${size}`;
+	} else if (direction == 'up' || direction == 'down') {
+		result.left = `50%`;
+		result.marginLeft = `-${size}`;
+	}
+
+	if (direction == 'left') {
+		result.left = `-${size}`;
+		result.borderRight = `${size} solid ${color}`;
+		result.borderLeft = `none`;
+	} else if (direction == 'up') {
+		result.top = `-${size}`;
+		result.borderBottom = `${size} solid ${color}`;
+		result.borderTop = `none`;
+	} else if (direction == 'right') {
+		result.right = `-${size}`;
+		result.borderLeft = `${size} solid ${color}`;
+		result.borderRight = `none`;
+	} else if (direction == 'down') {
+		result.bottom = `-${size}`;
+		result.borderTop = `${size} solid ${color}`;
+		result.borderBottom = `none`;
+	}
+	return result;
+}
+
+/**
  * Requires inline-block or block for proper styling
  */
 export const styleTextOverflow = {
