@@ -17,7 +17,7 @@ defineProps({
 </script>
 
 <template>
-	<AppStickerCollectibleWrapper :data="sticker">
+	<AppStickerCollectibleWrapper :data="sticker" show-tooltip>
 		<AppStickerLayerDrawerItem
 			:sticker="sticker"
 			:count="count"

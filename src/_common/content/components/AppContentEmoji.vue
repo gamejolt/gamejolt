@@ -42,6 +42,7 @@ if (props.emojiId) {
 	<template v-if="emoji">
 		<AppStickerCollectibleWrapper
 			:data="showDetails && isInstance(emoji, EmojiModel) ? emoji : undefined"
+			:show-tooltip="showDetails"
 		>
 			<AppEmoji :emoji="emoji" />
 		</AppStickerCollectibleWrapper>
