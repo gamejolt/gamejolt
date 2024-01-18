@@ -138,6 +138,7 @@ async function onClickToggleFavorite() {
 							}"
 						>
 							<template v-if="isRandom">
+								<!-- TODO: use "shuffle" icon once available -->
 								<AppJolticon big icon="other-os" />
 								{{ $gettext(`Random`) }}
 							</template>
