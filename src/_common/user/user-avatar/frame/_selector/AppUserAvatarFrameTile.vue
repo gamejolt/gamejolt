@@ -1,15 +1,17 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRef, toRefs } from 'vue';
+import { CSSProperties, PropType, computed, ref, toRef, toRefs } from 'vue';
 import {
 	styleBorderRadiusBase,
 	styleBorderRadiusLg,
 	styleLineClamp,
+	styleWhen,
 } from '../../../../../_styles/mixins';
 import { kBorderWidthLg, kFontSizeSmall, kStrongEaseOut } from '../../../../../_styles/variables';
 import AppAspectRatio from '../../../../aspect-ratio/AppAspectRatio.vue';
 import AppAvatarFrame from '../../../../avatar/AppAvatarFrame.vue';
 import { shorthandReadableTime } from '../../../../filters/duration';
 import AppJolticon from '../../../../jolticon/AppJolticon.vue';
+import { useOnHover } from '../../../../on/useOnHover';
 import {
 	kThemeBgOffset,
 	kThemeBgSubtle,
@@ -17,7 +19,7 @@ import {
 	kThemeGjOverlayNotice,
 } from '../../../../theme/variables';
 import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
-import { UserAvatarFrameModel } from '../frame.model';
+import { UserAvatarFrameModel, toggleFavorite } from '../frame.model';
 
 const props = defineProps({
 	frame: {
@@ -48,7 +50,11 @@ const emit = defineEmits({
 
 const { frame, isPlaceholder, isSelected } = toRefs(props);
 
+const { hoverBinding, hovered } = useOnHover();
 const name = toRef(() => frame?.value?.avatar_frame.name || '');
+
+const canToggleFavorite = computed(() => !!frame?.value);
+const isTogglingFavorite = ref(false);
 
 const rootStyles = computed(() => {
 	return {
@@ -74,6 +80,28 @@ function onClickFrame() {
 	}
 
 	emit('select-tile', frame?.value?.avatar_frame.id || 0);
+}
+
+async function onClickToggleFavorite() {
+	if (!frame?.value) {
+		return;
+	}
+	if (isTogglingFavorite.value) {
+		return;
+	}
+
+	isTogglingFavorite.value = true;
+
+	// Optimistically set the desired result on the model to immediately reflect change.
+	frame.value.is_favorite = !frame.value.is_favorite;
+
+	const response = await toggleFavorite(frame.value);
+	// Write the actual correct value to the model after the request concludes.
+	if (typeof response.is_favorite === 'boolean') {
+		frame.value.is_favorite = response.is_favorite;
+	}
+
+	isTogglingFavorite.value = false;
 }
 </script>
 
@@ -117,11 +145,43 @@ function onClickFrame() {
 								{{ $gettext(`No frame`) }}
 							</template>
 						</div>
-						<AppAvatarFrame v-else :frame="frame.avatar_frame">
-							<AppAspectRatio :ratio="1">
-								<slot name="selected-avatar" />
-							</AppAspectRatio>
-						</AppAvatarFrame>
+						<template v-else>
+							<AppJolticon
+								v-if="canToggleFavorite"
+								v-app-tooltip="$gettext(`Mark as favorite`)"
+								v-bind="{
+									...hoverBinding,
+									style: [
+										{
+											position: `absolute`,
+											top: `-20px`,
+											right: `-20px`,
+											zIndex: 2,
+											filter: `drop-shadow(0 0 4px var(--theme-bg))`,
+											transition: `transform 0.1s ease`,
+										},
+										styleWhen(hovered && !isTogglingFavorite, {
+											transform: `scaleX(1.25) scaleY(1.25)`,
+										}),
+										styleWhen(isTogglingFavorite, {
+											opacity: `0.5`,
+										}),
+										styleWhen(!isTogglingFavorite, {
+											cursor: `pointer`,
+										}),
+									],
+								}"
+								big
+								:icon="frame.is_favorite ? `heart-filled` : `heart`"
+								:notice="frame.is_favorite"
+								@click.stop="onClickToggleFavorite"
+							/>
+							<AppAvatarFrame :frame="frame.avatar_frame">
+								<AppAspectRatio :ratio="1">
+									<slot name="selected-avatar" />
+								</AppAspectRatio>
+							</AppAvatarFrame>
+						</template>
 					</div>
 				</template>
 			</AppAspectRatio>

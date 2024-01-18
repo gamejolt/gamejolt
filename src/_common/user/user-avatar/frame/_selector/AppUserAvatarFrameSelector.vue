@@ -86,12 +86,14 @@ function isSelected(data: UserAvatarFrameModel | 'random' | null) {
 		<template v-else-if="frames.length">
 			<AppUserAvatarFrameTile
 				key="no-frame"
+				class="anim-fade-in-up stagger-fast"
 				:is-selected="isSelected(null)"
 				:expiry-info-key="1"
 				@select-tile="pickFrame"
 			/>
 			<AppUserAvatarFrameTile
 				key="random-frame"
+				class="anim-fade-in-up stagger-fast"
 				:is-selected="isSelected('random')"
 				:is-random="true"
 				:expiry-info-key="1"
@@ -101,6 +103,7 @@ function isSelected(data: UserAvatarFrameModel | 'random' | null) {
 			<AppUserAvatarFrameTile
 				v-for="data of frames"
 				:key="data.avatar_frame.id"
+				class="anim-fade-in-up stagger-fast"
 				:frame="data"
 				:is-placeholder="!form.isLoaded"
 				:is-selected="isSelected(data)"
