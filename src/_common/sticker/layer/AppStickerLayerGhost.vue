@@ -116,12 +116,6 @@ function sliderValueTooltip(value: number) {
 				padding: `4px 8px`,
 			}"
 		>
-			<AppJolticon
-				v-app-tooltip.touchable="$gettext(`Rotate sticker`)"
-				:style="{ margin: 0, fontSize: `24px` }"
-				icon="rotate"
-			/>
-
 			<AppSlider
 				:style="{
 					width: `100px`,
@@ -129,6 +123,12 @@ function sliderValueTooltip(value: number) {
 				:percent="placedItem.rotation"
 				:slider-value-tooltip="sliderValueTooltip"
 				@scrub="placedItem.rotation = $event.percent"
+			/>
+
+			<AppJolticon
+				v-app-tooltip.touchable="$gettext(`Rotate sticker`)"
+				:style="{ margin: 0, fontSize: `24px` }"
+				icon="rotate"
 			/>
 		</div>
 	</div>
