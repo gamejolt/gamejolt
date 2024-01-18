@@ -5,6 +5,7 @@ import { Analytics } from '../../analytics/analytics.service';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppSlider from '../../slider/AppSlider.vue';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppStickerImg from '../AppStickerImg.vue';
 import {
 	assignStickerStoreGhostCallback,
@@ -50,7 +51,7 @@ function updateGhostPosition(pos: { left: number; top: number }) {
 
 const rotation = toRef(() => (placedItem.value ? placedItem.value.rotation * 90 - 45 : 0));
 
-function sliverValueTooltip(value: number) {
+function sliderValueTooltip(value: number) {
 	// Displays -100% to 100%, with 0% at the middle of the slider.
 	return `${value * 2 - 100}%`;
 }
@@ -63,7 +64,6 @@ function sliverValueTooltip(value: number) {
 			position: `absolute`,
 			top: `0`,
 			left: `0`,
-			cursor: `grab`,
 			touchAction: `none`,
 			...styleWhen(!hasData, {
 				visibility: `hidden`,
@@ -82,6 +82,7 @@ function sliverValueTooltip(value: number) {
 		<AppAnimElectricity
 			:style="{
 				zIndex: 1,
+				cursor: `grab`,
 			}"
 			shock-anim="square"
 			:disabled="!isChargingSticker"
@@ -112,21 +113,23 @@ function sliverValueTooltip(value: number) {
 				top: `100%`,
 				transform: `translate(-50%, 16px)`,
 				display: `inline-flex`,
-				gap: `12px`,
 				padding: `4px 8px`,
 			}"
 		>
+			<AppJolticon
+				v-app-tooltip.touchable="$gettext(`Rotate sticker`)"
+				:style="{ margin: 0, fontSize: `24px` }"
+				icon="rotate"
+			/>
+
 			<AppSlider
 				:style="{
 					width: `100px`,
 				}"
 				:percent="placedItem.rotation"
-				:slider-value-tooltip="sliverValueTooltip"
+				:slider-value-tooltip="sliderValueTooltip"
 				@scrub="placedItem.rotation = $event.percent"
 			/>
-
-			<!-- TODO(sticker-drawer-item-enlarge) jolticon -->
-			<AppJolticon :style="{ margin: 0, fontSize: `24px` }" icon="sparkles" />
 		</div>
 	</div>
 </template>
