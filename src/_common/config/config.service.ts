@@ -210,6 +210,17 @@ export const configGuestHomeDiscover = /** @__PURE__ */ new ConfigOptionBoolean(
 	}
 );
 
+export const configGuestGameRestriction = /** @__PURE__ */ new ConfigOptionString(
+	'web_guest_game_restriction',
+	'none',
+	{
+		validValues: ['none', 'login', 'app'],
+		conditions: {
+			authed: false,
+		},
+	}
+);
+
 function _getFirebaseRemoteConfig() {
 	return getRemoteConfig(getFirebaseApp());
 }
