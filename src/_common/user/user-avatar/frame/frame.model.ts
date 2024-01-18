@@ -7,6 +7,7 @@ export class UserAvatarFrameModel implements ModelStoreModel {
 	declare avatar_frame: AvatarFrameModel;
 	declare is_active: boolean;
 	declare expires_on: number | null;
+	declare is_favorite: boolean;
 
 	update(data: any) {
 		Object.assign(this, data);

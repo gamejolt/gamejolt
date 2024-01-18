@@ -17,7 +17,7 @@ import AppUserAvatarFrameSelector from './_selector/AppUserAvatarFrameSelector.v
 import { UserAvatarFrameModel } from './frame.model';
 
 interface FormModel {
-	avatar_frame: number | undefined;
+	avatar_frame: number | 'random' | undefined;
 }
 
 const { user } = useCommonStore();
@@ -29,8 +29,9 @@ const form: FormController<FormModel> = createForm({
 	onLoad(payload) {
 		availableFrames.value = storeModelList(UserAvatarFrameModel, payload.userAvatarFrames);
 
-		form.formModel.avatar_frame =
-			availableFrames.value.find(i => i.is_active)?.avatar_frame.id || 0;
+		form.formModel.avatar_frame = user.value?.randomize_avatar_frame
+			? 'random'
+			: availableFrames.value.find(i => i.is_active)?.avatar_frame.id || 0;
 	},
 	async onSubmit() {
 		return Api.sendRequest(`/web/dash/profile/save`, {

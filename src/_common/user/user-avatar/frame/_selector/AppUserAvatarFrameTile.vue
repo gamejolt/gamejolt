@@ -9,6 +9,7 @@ import { kBorderWidthLg, kFontSizeSmall, kStrongEaseOut } from '../../../../../_
 import AppAspectRatio from '../../../../aspect-ratio/AppAspectRatio.vue';
 import AppAvatarFrame from '../../../../avatar/AppAvatarFrame.vue';
 import { shorthandReadableTime } from '../../../../filters/duration';
+import AppJolticon from '../../../../jolticon/AppJolticon.vue';
 import {
 	kThemeBgOffset,
 	kThemeBgSubtle,
@@ -27,6 +28,9 @@ const props = defineProps({
 		type: Boolean,
 	},
 	isSelected: {
+		type: Boolean,
+	},
+	isRandom: {
 		type: Boolean,
 	},
 	/**
@@ -105,7 +109,13 @@ function onClickFrame() {
 								fontSize: kFontSizeSmall.px,
 							}"
 						>
-							{{ $gettext(`No frame`) }}
+							<template v-if="isRandom">
+								<AppJolticon big icon="other-os" />
+								{{ $gettext(`Random`) }}
+							</template>
+							<template v-else>
+								{{ $gettext(`No frame`) }}
+							</template>
 						</div>
 						<AppAvatarFrame v-else :frame="frame.avatar_frame">
 							<AppAspectRatio :ratio="1">
