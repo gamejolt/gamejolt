@@ -11,7 +11,8 @@ import AppAspectRatio from '../../../../aspect-ratio/AppAspectRatio.vue';
 import AppAvatarFrame from '../../../../avatar/AppAvatarFrame.vue';
 import { shorthandReadableTime } from '../../../../filters/duration';
 import AppJolticon from '../../../../jolticon/AppJolticon.vue';
-import { useOnHover } from '../../../../on/useOnHover';
+import AppOnHover from '../../../../on/AppOnHover.vue';
+import { Screen } from '../../../../screen/screen-service';
 import {
 	kThemeBgOffset,
 	kThemeBgSubtle,
@@ -50,11 +51,13 @@ const emit = defineEmits({
 
 const { frame, isPlaceholder, isSelected } = toRefs(props);
 
-const { hoverBinding, hovered } = useOnHover();
 const name = toRef(() => frame?.value?.avatar_frame.name || '');
 
-const canToggleFavorite = computed(() => !!frame?.value);
+const canToggleFavorite = toRef(() => !!frame?.value);
 const isTogglingFavorite = ref(false);
+const shouldAlwaysShowFavorite = toRef(
+	() => canToggleFavorite.value && (frame?.value?.is_favorite || !Screen.isPointerMouse)
+);
 
 const rootStyles = computed(() => {
 	return {
@@ -108,114 +111,139 @@ async function onClickToggleFavorite() {
 <template>
 	<!-- AppUserAvatarFrameTile -->
 	<div>
-		<div :style="rootStyles" @click="onClickFrame">
-			<!-- Clickable avatar frame tile -->
-			<AppAspectRatio
-				:style="{
-					width: `100%`,
+		<AppOnHover v-slot="{ hoverBinding: hoverBindingTile, hovered: hoveredTile }">
+			<div
+				v-bind="{
+					...hoverBindingTile,
+					style: [rootStyles],
 				}"
-				:ratio="1"
-				show-overflow
+				@click="onClickFrame"
 			>
-				<template v-if="!isPlaceholder">
-					<div
-						:style="{
-							position: `absolute`,
-							left: 0,
-							top: 0,
-							right: 0,
-							bottom: 0,
-							display: `grid`,
-							alignItems: `center`,
-						}"
-					>
+				<!-- Clickable avatar frame tile -->
+				<AppAspectRatio :style="{ width: `100%` }" :ratio="1" show-overflow>
+					<template v-if="!isPlaceholder">
 						<div
-							v-if="!frame"
 							:style="{
-								textAlign: `center`,
-								fontWeight: `bold`,
-								fontSize: kFontSizeSmall.px,
+								position: `absolute`,
+								left: 0,
+								top: 0,
+								right: 0,
+								bottom: 0,
+								display: `grid`,
+								alignItems: `center`,
 							}"
 						>
-							<template v-if="isRandom">
-								<!-- TODO: use "shuffle" icon once available -->
-								<AppJolticon big icon="other-os" />
-								{{ $gettext(`Random`) }}
-							</template>
+							<div
+								v-if="!frame"
+								:style="{
+									textAlign: `center`,
+									fontWeight: `bold`,
+									fontSize: kFontSizeSmall.px,
+								}"
+							>
+								<template v-if="isRandom">
+									<div>
+										<AppJolticon big icon="shuffle" />
+									</div>
+									<div>
+										{{ $gettext(`Random`) }}
+									</div>
+								</template>
+								<template v-else>
+									<div>
+										<AppJolticon big icon="remove" />
+									</div>
+									<div>
+										{{ $gettext(`No frame`) }}
+									</div>
+								</template>
+							</div>
 							<template v-else>
-								{{ $gettext(`No frame`) }}
+								<AppOnHover
+									v-slot="{
+										hoverBinding: hoverBindingIcon,
+										hovered: hoveredIcon,
+									}"
+								>
+									<AppJolticon
+										v-if="canToggleFavorite"
+										v-app-tooltip="
+											frame.is_favorite
+												? $gettext(`Favorite!`)
+												: $gettext(`Mark as favorite`)
+										"
+										v-bind="{
+											...hoverBindingIcon,
+											style: [
+												{
+													display: `none`,
+													position: `absolute`,
+													top: `-20px`,
+													right: `-20px`,
+													zIndex: 2,
+													filter: `drop-shadow(0 0 4px var(--theme-bg))`,
+													transition: `transform 0.1s ease`,
+												},
+												styleWhen(hoveredIcon && !isTogglingFavorite, {
+													transform: `scaleX(1.25) scaleY(1.25)`,
+												}),
+												styleWhen(isTogglingFavorite, {
+													opacity: `0.5`,
+												}),
+												styleWhen(!isTogglingFavorite, {
+													cursor: `pointer`,
+												}),
+												styleWhen(shouldAlwaysShowFavorite || hoveredTile, {
+													display: `block`,
+												}),
+											],
+										}"
+										big
+										:icon="frame.is_favorite ? `heart-filled` : `heart`"
+										:notice="frame.is_favorite"
+										@click.stop="onClickToggleFavorite"
+									/>
+								</AppOnHover>
+								<AppAvatarFrame :frame="frame.avatar_frame">
+									<AppAspectRatio :ratio="1">
+										<slot name="selected-avatar" />
+									</AppAspectRatio>
+								</AppAvatarFrame>
 							</template>
 						</div>
-						<template v-else>
-							<AppJolticon
-								v-if="canToggleFavorite"
-								v-app-tooltip="$gettext(`Mark as favorite`)"
-								v-bind="{
-									...hoverBinding,
-									style: [
-										{
-											position: `absolute`,
-											top: `-20px`,
-											right: `-20px`,
-											zIndex: 2,
-											filter: `drop-shadow(0 0 4px var(--theme-bg))`,
-											transition: `transform 0.1s ease`,
-										},
-										styleWhen(hovered && !isTogglingFavorite, {
-											transform: `scaleX(1.25) scaleY(1.25)`,
-										}),
-										styleWhen(isTogglingFavorite, {
-											opacity: `0.5`,
-										}),
-										styleWhen(!isTogglingFavorite, {
-											cursor: `pointer`,
-										}),
-									],
-								}"
-								big
-								:icon="frame.is_favorite ? `heart-filled` : `heart`"
-								:notice="frame.is_favorite"
-								@click.stop="onClickToggleFavorite"
-							/>
-							<AppAvatarFrame :frame="frame.avatar_frame">
-								<AppAspectRatio :ratio="1">
-									<slot name="selected-avatar" />
-								</AppAspectRatio>
-							</AppAvatarFrame>
-						</template>
-					</div>
-				</template>
-			</AppAspectRatio>
+					</template>
+				</AppAspectRatio>
 
-			<!-- Floating expiry info -->
-			<div
-				v-if="frame && frame.expires_on"
-				:key="expiryInfoKey"
-				:style="{
-					...styleBorderRadiusBase,
-					position: `absolute`,
-					top: `8px`,
-					left: `8px`,
-					padding: `2px 6px`,
-					backgroundColor: `rgba(0, 0, 0, 0.54)`,
-					color: frame.isExpired ? kThemeGjOverlayNotice : `white`,
-					fontWeight: `bold`,
-					fontSize: kFontSizeSmall.px,
-					zIndex: 3,
-					pointerEvents: `none`,
-				}"
-			>
-				{{
-					frame.isExpired
-						? $gettext(`Expired`)
-						: shorthandReadableTime(frame.expires_on, {
-								allowFuture: true,
-								precision: 'rough',
-								nowText: $gettext(`Expired`),
-						  })
-				}}
+				<!-- Floating expiry info -->
+				<div
+					v-if="frame && frame.expires_on"
+					:key="expiryInfoKey"
+					:style="{
+						...styleBorderRadiusBase,
+						position: `absolute`,
+						top: `8px`,
+						left: `8px`,
+						padding: `2px 6px`,
+						backgroundColor: `rgba(0, 0, 0, 0.54)`,
+						color: frame.isExpired ? kThemeGjOverlayNotice : `white`,
+						fontWeight: `bold`,
+						fontSize: kFontSizeSmall.px,
+						zIndex: 3,
+						pointerEvents: `none`,
+					}"
+				>
+					{{
+						frame.isExpired
+							? $gettext(`Expired`)
+							: shorthandReadableTime(frame.expires_on, {
+									allowFuture: true,
+									precision: 'rough',
+									nowText: $gettext(`Expired`),
+							  })
+					}}
+				</div>
 			</div>
-		</div>
+		</AppOnHover>
 
 		<!-- Name -->
 		<div
