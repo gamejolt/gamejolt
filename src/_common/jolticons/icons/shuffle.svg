@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="16px"
+   height="16px"
+   id="svg3753"
+   version="1.1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs3755" />
+  <metadata
+     id="metadata3758">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>T. Gantt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="g834"
+     style="display:inline">
+    <path
+       id="path3"
+       style="color:#000000;fill:#000000;stroke-linejoin:round;-inkscape-stroke:none"
+       d="M 12.021484,0.99414062 C 12.011693,0.99313812 12.004687,0.9953125 12,1 c -0.05759,0.057594 -0.0921,0.9343054 -0.105469,2 H 10 C 9.6849034,2.9998619 9.3881663,3.1482305 9.1992188,3.4003906 L 7.9375,5.0820312 9.1875,6.75 10.5,5 h 1.394531 C 11.907913,6.0649509 11.942436,6.9424356 12,7 12.15,7.1499999 15,4.2999997 15,4 15,3.7093753 12.325023,1.0252182 12.021484,0.99414062 Z M 2,3 A 1,1 0 0 0 1,4 1,1 0 0 0 2,5 h 1.5 l 5.6992188,7.599609 C 9.3881664,12.85177 9.684903,13.000138 10,13 h 1.894531 c 0.01338,1.064951 0.04791,1.942436 0.105469,2 0.15,0.15 3,-2.7 3,-3 0,-0.3 -2.85,-3.1499998 -3,-3 -0.05759,0.057594 -0.0921,0.9343054 -0.105469,2 H 10.5 L 4.8007812,3.4003906 C 4.6118335,3.1482302 4.3150969,2.9998619 4,3 Z M 4.8125,9.25 3.5,11 H 2 a 1,1 0 0 0 -1,1 1,1 0 0 0 1,1 h 2 c 0.3150967,1.38e-4 0.6118338,-0.14823 0.8007812,-0.400391 L 6.0625,10.917969 Z" />
+  </g>
+</svg>
