@@ -58,7 +58,7 @@ function onSubmit(model: CommunityChannelModel) {
 }
 
 function onBackgroundChange(model: CommunityChannelModel) {
-	Object.assign(channel!, model);
+	Object.assign(channel.value!, model);
 }
 
 async function onClickArchive() {

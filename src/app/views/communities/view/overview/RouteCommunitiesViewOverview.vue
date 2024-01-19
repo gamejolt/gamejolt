@@ -56,7 +56,7 @@ const communityState = toRef(() => communityStates.value.getCommunityState(commu
 const collaboratorInvite = toRef(() => {
 	// Just return the collaborator as an "invite" if it's not accepted yet.
 
-	return collaborator.value && !collaborator.value.isAccepted ? collaborator : null;
+	return collaborator.value && !collaborator.value.isAccepted ? collaborator.value : null;
 });
 
 const canAcceptCollaboration = toRef(

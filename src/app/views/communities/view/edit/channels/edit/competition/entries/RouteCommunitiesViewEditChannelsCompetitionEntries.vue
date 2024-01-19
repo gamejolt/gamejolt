@@ -263,14 +263,17 @@ createAppRoute({
 					</span>
 					<br />
 					<template v-if="entryCount > competition!.entry_count">
-						<span
-							v-translate="{
-								count: entryCount - competition!.entry_count,
-								visibleCount: competition!.entry_count,
-							}"
-						>
-							<b>%{ count }</b> have been hidden, resulting in
-							<b>%{ visibleCount }</b> visible entries.
+						<!--TODO(reactive-community-route-store): is this okay or should I do ngettext -->
+						<span>
+							{{
+								$gettext(
+									`%{ count } have been hidden, resulting in %{ visibleCount } visible entries.`,
+									{
+										count: entryCount - competition!.entry_count,
+										visibleCount: competition!.entry_count,
+									}
+								)
+							}}
 						</span>
 					</template>
 					<template v-else>

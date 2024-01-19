@@ -59,8 +59,3 @@ createAppRoute({
 		<RouteCommunitiesViewChannelFeed v-else />
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-container
-	padding-bottom: 0
-</style>

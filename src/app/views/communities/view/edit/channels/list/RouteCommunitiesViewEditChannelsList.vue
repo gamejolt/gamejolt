@@ -180,7 +180,10 @@ createAppRoute({});
 			</AppCardList>
 
 			<template v-if="community!.has_archived_channels">
-				<h3 class="-archived-heading" @click="onClickArchivedChannels">
+				<h3
+					:style="{ marginTop: `24px`, userSelect: `none`, cursor: `pointer` }"
+					@click="onClickArchivedChannels"
+				>
 					<AppJolticon
 						:icon="expandedArchivedChannels ? 'chevron-down' : 'chevron-right'"
 					/>
@@ -209,10 +212,3 @@ createAppRoute({});
 		</AppCommunityPerms>
 	</AppCommunitiesViewPageContainer>
 </template>
-
-<style lang="stylus" scoped>
-.-archived-heading
-	margin-top: 24px
-	user-select: none
-	cursor: pointer
-</style>

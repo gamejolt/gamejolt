@@ -103,7 +103,7 @@ async function onClickArchivedChannels() {
 			@click="toggleLeftPane()"
 		/>
 
-		<h5 class="-heading">
+		<h5 :style="{ marginTop: `24px` }">
 			{{ $gettext(`Channels`) }}
 		</h5>
 
@@ -125,7 +125,10 @@ async function onClickArchivedChannels() {
 		</template>
 
 		<template v-if="community!.has_archived_channels">
-			<h5 class="-heading -archived-heading" @click="onClickArchivedChannels">
+			<h5
+				:style="{ marginTop: `24px`, userSelect: `none`, cursor: `pointer` }"
+				@click="onClickArchivedChannels"
+			>
 				<AppJolticon :icon="expandedArchivedChannels ? 'chevron-down' : 'chevron-right'" />
 				{{ $gettext(`Archived Channels`) }}
 			</h5>
@@ -158,12 +161,3 @@ async function onClickArchivedChannels() {
 		</template>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-heading
-	margin-top: 24px
-
-.-archived-heading
-	user-select: none
-	cursor: pointer
-</style>

@@ -165,7 +165,14 @@ createAppRoute({
 
 		<div v-if="channel!.visibility === 'draft'" class="alert alert-notice">
 			<p>
-				<span v-translate><b>This jam is a draft</b> and only moderators can view it.</span>
+				<span>
+					<!--TODO(reactive-community-route-store): merge both gettext without <b></b> or keep it this way? -->
+					<b>
+						{{ $gettext(`This jam is a draft`) }}
+					</b>
+					{{ ' ' }}
+					{{ $gettext(`and only moderators can view it.`) }}
+				</span>
 			</p>
 			<p>
 				{{

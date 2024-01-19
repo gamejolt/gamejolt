@@ -104,9 +104,18 @@ function copyShareUrl() {
 						:to="{
 						name: 'communities.view.members', params: { path: community!.path }, }"
 					>
-						<b>{{ formatNumber(memberCount) }}</b>
-						{{ ' ' }}
-						{{ $ngettext(`member`, `members`, memberCount) }}
+						<b>
+							{{
+								$ngettext(
+									'%{ memberCount } member',
+									'%{ memberCount } members',
+									memberCount,
+									{
+										memberCount: formatNumber(memberCount),
+									}
+								)
+							}}
+						</b>
 					</RouterLink>
 				</div>
 			</div>

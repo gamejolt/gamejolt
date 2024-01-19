@@ -15,7 +15,8 @@ const route = useRoute();
 const isEditing = computed(() => isEditingCommunity(route));
 
 const canEdit = computed(
-	() => isEditing.value && canEditMedia && route.name === routeCommunitiesViewEditDetails.name
+	() =>
+		isEditing.value && canEditMedia.value && route.name === routeCommunitiesViewEditDetails.name
 );
 
 function showEditAvatar() {

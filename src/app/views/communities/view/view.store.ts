@@ -1,4 +1,4 @@
-import { InjectionKey, computed, inject, ref } from 'vue';
+import { InjectionKey, computed, inject, ref, toRef } from 'vue';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import {
@@ -58,10 +58,10 @@ export function createCommunityRouteStore() {
 		return channels.find(i => i?.title === channelPath.value) || null;
 	});
 
-	const competition = computed(() => channel.value?.competition);
+	const competition = toRef(() => channel.value?.competition);
 	const canEditMedia = computed(() => community.value?.hasPerms('community-media'));
 	const canEditDescription = computed(() => community.value?.hasPerms('community-description'));
-	const isShowingSidebar = computed(() => Screen.isLg);
+	const isShowingSidebar = toRef(() => Screen.isLg);
 
 	function setCommunity(newCommunity: CommunityModel) {
 		isLoaded.value = true;

@@ -39,7 +39,7 @@ const router = useRouter();
 
 /* The owner's collaboration is not returned from backend.*/ /* The owner's collaboration is not returned from backend.*/
 
-const isOwner = toRef(() => collaborator.value === null);
+const isOwner = toRef(() => !collaborator.value);
 
 function onDetailsChange() {
 	// If the community path changes, we need to replace the route,

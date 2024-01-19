@@ -15,7 +15,7 @@ function onChangeSection(path: string) {
 </script>
 
 <template>
-	<nav class="platform-list">
+	<nav class="platform-list" :style="{ marginLeft: `12px` }">
 		<ul>
 			<li @click.capture="onChangeSection('communities.view.edit.details')">
 				<RouterLink
@@ -112,8 +112,3 @@ function onChangeSection(path: string) {
 		</ul>
 	</nav>
 </template>
-
-<style lang="stylus" scoped>
-.platform-list
-	margin-left: 12px
-</style>
