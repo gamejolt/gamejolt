@@ -11,6 +11,7 @@ import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppQuestFrame from '../../quest/AppQuestFrame.vue';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
+import AppStickerImg from '../AppStickerImg.vue';
 import AppStickerMastery from '../AppStickerMastery.vue';
 import { useStickerStore } from '../sticker-store';
 import { StickerModel } from '../sticker.model';
@@ -50,6 +51,10 @@ const props = defineProps({
 	showMastery: {
 		type: Boolean,
 	},
+	creatorSize: {
+		type: Number,
+		default: 16,
+	},
 });
 
 const { sticker, count, size, fitParent, noDrag, hideCount } = toRefs(props);
@@ -71,16 +76,14 @@ const currentStreak = computed(() => {
 });
 
 const itemStyling = computed(() => {
-	const sizeVal = fitParent.value ? '100%' : size.value + 'px';
+	const itemSize = fitParent.value ? '100%' : `${size.value}px`;
 	const result: StyleValue = {
-		width: sizeVal,
-		height: sizeVal,
+		width: itemSize,
+		height: itemSize,
 	};
-
 	if (!noDrag.value) {
 		result.cursor = isDragging.value ? 'grabbing' : 'grab';
 	}
-
 	return result;
 });
 
@@ -125,62 +128,79 @@ const tagStyles: CSSProperties = {
 		<component
 			:is="fitParent ? AppAspectRatio : 'div'"
 			:ratio="1"
-			:style="
-				styleWhen(shouldFade, {
+			:style="{
+				...styleWhen(shouldFade, {
 					opacity: 0.3,
-				})
-			"
+				}),
+			}"
 		>
 			<component :is="sticker.is_event ? AppQuestFrame : 'div'" :style="itemStyling">
 				<template #[slotName]>
-					<div :style="isPeeled ? { filter: `contrast(0)` } : undefined">
-						<img
-							draggable="false"
-							:style="itemStyling"
+					<div
+						:style="{
+							...itemStyling,
+							...styleWhen(isPeeled, {
+								filter: `contrast(0)`,
+							}),
+							...styleWhen(sticker.is_event, {
+								padding: `${size * 0.1}px`,
+							}),
+						}"
+					>
+						<AppStickerImg
+							:style="{
+								width: `100%`,
+								height: `100%`,
+							}"
 							:src="sticker.img_url"
-							@dragstart.prevent
 						/>
 					</div>
 				</template>
 			</component>
 		</component>
 
-		<div v-if="currentStreak > 1" :style="[tagStyles, { top: 0, right: 0 }]">
+		<div
+			v-if="currentStreak > 1"
+			:style="{
+				...tagStyles,
+				top: 0,
+				right: 0,
+			}"
+		>
 			x{{ currentStreak }}
 		</div>
 
 		<div
 			v-if="!hideCount"
-			:style="[
-				tagStyles,
-				{ top: 0, left: 0 },
-				styleWhen(shouldFade, {
+			:style="{
+				...tagStyles,
+				top: 0,
+				left: 0,
+				...styleWhen(shouldFade, {
 					opacity: 0.3,
 				}),
-			]"
+			}"
 		>
 			{{ displayCount }}
 		</div>
 
 		<div
 			v-if="showCreator && sticker.isCreatorSticker && sticker.owner_user"
-			:style="[
-				styleChangeBg('bg-offset'),
-				{
-					position: `absolute`,
-					right: 0,
-					bottom: 0,
-					zIndex: 2,
-					padding: kBorderWidthLg.px,
-					borderRadius: `50%`,
-					pointerEvents: `none`,
-				},
-			]"
+			:style="{
+				...styleChangeBg('bg-offset'),
+				position: `absolute`,
+				right: 0,
+				bottom: 0,
+				zIndex: 2,
+				padding: kBorderWidthLg.px,
+				borderRadius: `50%`,
+				pointerEvents: `none`,
+			}"
 		>
 			<AppUserAvatar
 				:style="{
-					width: `16px`,
-					height: `16px`,
+					width: `${creatorSize}px`,
+					height: `${creatorSize}px`,
 				}"
 				:user="sticker.owner_user"
 				disable-link
@@ -193,9 +213,3 @@ const tagStyles: CSSProperties = {
 		</template>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-rarity
-	font-weight: bold
-	color: white
-</style>

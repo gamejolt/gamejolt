@@ -1,11 +1,24 @@
-import { computed, inject, InjectionKey, Ref, ref, shallowReactive, shallowRef, toRaw } from 'vue';
+import {
+	computed,
+	inject,
+	InjectionKey,
+	Ref,
+	ref,
+	shallowReactive,
+	shallowRef,
+	toRaw,
+	toRef,
+} from 'vue';
+import { buildCSSPixelValue } from '../../_styles/variables';
 import { arrayRemove, numberSort } from '../../utils/array';
+import { clampNumber } from '../../utils/number';
 import { Api } from '../api/api.service';
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { showErrorGrowl } from '../growls/growls.service';
 import { setModalBodyWrapper } from '../modal/modal.service';
 import { storeModel, storeModelList } from '../model/model-store.service';
 import { ModelData } from '../model/model.service';
+import { Screen } from '../screen/screen-service';
 import { $gettext } from '../translate/translate.service';
 import { UserModel } from '../user/user.model';
 import AppStickerLayer from './layer/AppStickerLayer.vue';
@@ -44,16 +57,36 @@ export function createStickerStore(options: { user: Ref<UserModel | null> }) {
 
 	const stickerPacks = ref([]) as Ref<UserStickerPackModel[]>;
 
-	const placedItem = shallowRef<StickerPlacementModel | null>(null);
-	const sticker = shallowRef<StickerModel | null>(null);
-	const streak = shallowRef<StickerStreak | null>(null);
+	const placedItem = ref<StickerPlacementModel | null>(null);
+	const sticker = ref<StickerModel | null>(null);
+	const streak = ref<StickerStreak | null>(null);
 
 	const allStickers = computed(() =>
 		[eventStickers.value, ...creatorStickers.value.values(), generalStickers.value].flat()
 	);
 
 	const drawerHeight = ref(0);
-	const stickerSize = ref(64);
+	const drawerCollapsedHeight = buildCSSPixelValue(48);
+	const drawerPadding = buildCSSPixelValue(8);
+	const drawerStickerSpacing = toRef(() => (Screen.isXs ? 8 : 12));
+	const drawerNumRows = toRef(() => (Screen.isPointerMouse ? 2.8 : 2));
+	const drawerStickerSize = computed(() => {
+		const min = 64;
+		if (Screen.isXs) {
+			return min;
+		}
+
+		const maxDrawerHeight = Screen.height * 0.4;
+		return clampNumber(
+			Math.round(
+				(maxDrawerHeight - drawerPadding.value * 2) / drawerNumRows.value -
+					drawerStickerSpacing.value * (Math.floor(drawerNumRows.value) - 1)
+			),
+			min,
+			100
+		);
+	});
+	const ghostStickerSize = buildCSSPixelValue(64);
 
 	const currentCharge = ref(0);
 	const chargeLimit = ref(7);
@@ -149,7 +182,12 @@ export function createStickerStore(options: { user: Ref<UserModel | null> }) {
 		placedItem,
 		sticker,
 		drawerHeight,
-		stickerSize,
+		drawerPadding,
+		drawerNumRows,
+		drawerStickerSpacing,
+		drawerStickerSize,
+		drawerCollapsedHeight,
+		ghostStickerSize,
 		currentCharge,
 		chargeLimit,
 		chargeCost,
@@ -629,14 +667,14 @@ function _onDragItem(store: StickerStore, event: MouseEvent | TouchEvent) {
 	const {
 		_waitingForFrame,
 		_updateGhostPosition,
-		stickerSize,
+		ghostStickerSize,
+		drawerCollapsedHeight,
 		isHoveringDrawer,
 		drawerHeight,
 		activeLayer,
 	} = store;
 
 	_waitingForFrame.value = false;
-
 	if (!_updateGhostPosition.value) {
 		return;
 	}
@@ -646,16 +684,15 @@ function _onDragItem(store: StickerStore, event: MouseEvent | TouchEvent) {
 		return;
 	}
 
-	const size = stickerSize.value;
-
+	const ghostSize = ghostStickerSize.value;
 	_updateGhostPosition.value({
-		left: pointer.x - size / 2,
-		top: pointer.y - size / 2,
+		left: pointer.x - ghostSize / 2,
+		top: pointer.y - ghostSize / 2,
 	});
 
 	const drawerTop = isHoveringDrawer.value
 		? window.innerHeight - drawerHeight.value
-		: window.innerHeight - size;
+		: window.innerHeight - drawerCollapsedHeight.value;
 
 	if (pointer.clientY > drawerTop) {
 		isHoveringDrawer.value = true;

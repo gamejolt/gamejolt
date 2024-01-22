@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
+import { clampNumber } from '../../utils/number';
 import { Ruler } from '../ruler/ruler-service';
 import { vAppTooltip } from '../tooltip/tooltip-directive';
 
@@ -28,13 +29,18 @@ const props = defineProps({
 	overlay: {
 		type: Boolean,
 	},
+	/** Provided value is 0 to 100. */
+	sliderValueTooltip: {
+		type: Function,
+		default: (value: number) => `${value}%`,
+	},
 });
 
 const emit = defineEmits({
 	scrub: (_: ScrubberCallback) => true,
 });
 
-const { percent, vertical } = toRefs(props);
+const { percent, vertical, sliderValueTooltip } = toRefs(props);
 
 const isDragging = ref(false);
 
@@ -82,7 +88,7 @@ const sliderStyling = computed(() => {
 });
 
 const readableSliderPercentage = computed(() => {
-	return `${_percentFull.value}%`;
+	return sliderValueTooltip.value(_percentFull.value);
 });
 
 onMounted(() => {
@@ -195,7 +201,7 @@ function _setThumbOffset(stage: ScrubberStage, event?: Event) {
 		_percentFull.value = Math.abs(_percentFull.value - scale);
 	}
 
-	const scaledPercent = Math.min(1, Math.max(0, _percentFull.value / scale));
+	const scaledPercent = clampNumber(_percentFull.value / scale, 0, 1);
 	emit('scrub', { percent: scaledPercent, stage: stage });
 }
 

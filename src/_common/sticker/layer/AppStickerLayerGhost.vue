@@ -1,7 +1,12 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, onUnmounted, ref } from 'vue';
+import { onUnmounted, ref, toRef } from 'vue';
+import { styleBorderRadiusLg, styleChangeBg, styleWhen } from '../../../_styles/mixins';
 import { Analytics } from '../../analytics/analytics.service';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
+import AppSlider from '../../slider/AppSlider.vue';
+import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import AppStickerImg from '../AppStickerImg.vue';
 import {
 	assignStickerStoreGhostCallback,
 	setStickerStoreActiveItem,
@@ -9,7 +14,8 @@ import {
 } from '../sticker-store';
 
 const stickerStore = useStickerStore();
-const { stickerSize, placedItem, isDragging, targetController, isChargingSticker } = stickerStore;
+const { ghostStickerSize, placedItem, isDragging, targetController, isChargingSticker } =
+	stickerStore;
 
 const root = ref<HTMLDivElement>();
 
@@ -22,37 +28,7 @@ const hasData = ref(false);
 
 let _removeStickerDragCallback = assignStickerStoreGhostCallback(stickerStore, updateGhostPosition);
 
-const sticker = computed(() => stickerStore.sticker.value!);
-
-const chargeButtonPositionClass = ref<'-charge-left' | '-charge-right'>('-charge-left');
-
-const _itemRotation = computed(() =>
-	placedItem.value ? `rotate(${placedItem.value.rotation * 90 - 45}deg)` : undefined
-);
-
-const itemStyling = computed<CSSProperties>(() => ({
-	transform: _itemRotation.value,
-	width: stickerSize.value + 'px',
-	height: stickerSize.value + 'px',
-}));
-
-const itemClasses = computed(() => {
-	const classes = [];
-
-	if (!hasData.value) {
-		classes.push('-hide');
-	}
-
-	if (isDragging.value) {
-		classes.push('-dragging');
-	}
-
-	if (targetController.value) {
-		classes.push('-uncommitted');
-	}
-
-	return classes;
-});
+const sticker = toRef(() => stickerStore.sticker.value!);
 
 onUnmounted(() => {
 	_removeStickerDragCallback?.();
@@ -69,97 +45,91 @@ function updateGhostPosition(pos: { left: number; top: number }) {
 	}
 
 	const { left, top } = pos;
-	// Move the charge-button to the other side if we're close to the edge of
-	// the screen.
-	chargeButtonPositionClass.value = left < 48 ? '-charge-right' : '-charge-left';
-	root.value!.style.transform = `translate3d(${left}px, ${top}px, 0)`;
+	root.value.style.transform = `translate3d(${left}px, ${top}px, 0)`;
 	hasData.value = true;
+}
+
+const rotation = toRef(() => (placedItem.value ? placedItem.value.rotation * 90 - 45 : 0));
+
+function sliderValueTooltip(value: number) {
+	// Displays -100% to 100%, with 0% at the middle of the slider.
+	return `${value * 2 - 100}%`;
 }
 </script>
 
 <template>
-	<div ref="root" class="sticker-ghost" :class="itemClasses" @click.stop @contextmenu.prevent>
+	<div
+		ref="root"
+		:style="{
+			position: `absolute`,
+			top: `0`,
+			left: `0`,
+			touchAction: `none`,
+			...styleWhen(!hasData, {
+				visibility: `hidden`,
+			}),
+			...styleWhen(isDragging, {
+				filter: `drop-shadow(4px 4px 5px black)`,
+				pointerEvents: `none`,
+			}),
+			...styleWhen(!!targetController, {
+				filter: `drop-shadow(2px 2px 2.5px black)`,
+			}),
+		}"
+		@click.stop
+		@contextmenu.prevent
+	>
 		<AppAnimElectricity
-			class="-img-outer"
+			:style="{
+				zIndex: 1,
+				cursor: `grab`,
+			}"
 			shock-anim="square"
 			:disabled="!isChargingSticker"
 			ignore-asset-padding
 			@mousedown="onStartDrag"
 			@touchstart="onStartDrag"
 		>
-			<img
-				class="-img-inner"
-				draggable="false"
-				style="user-drag: none"
-				:style="itemStyling"
+			<AppStickerImg
+				:style="{
+					display: `block`,
+					userSelect: `none`,
+					...styleWhen(!!placedItem, {
+						transform: `rotate(${rotation}deg)`,
+					}),
+				}"
 				:src="sticker.img_url"
-				@dragstart.prevent
+				:size="ghostStickerSize.value"
 			/>
 		</AppAnimElectricity>
+
+		<div
+			v-if="placedItem"
+			:style="{
+				...styleBorderRadiusLg,
+				...styleChangeBg('bg-offset'),
+				position: `absolute`,
+				left: `50%`,
+				top: `100%`,
+				transform: `translate(-50%, 16px)`,
+				display: `inline-flex`,
+				padding: `4px 8px`,
+			}"
+		>
+			<AppSlider
+				:style="{
+					width: `100px`,
+				}"
+				:percent="placedItem.rotation"
+				:slider-value-tooltip="sliderValueTooltip"
+				@scrub="placedItem.rotation = $event.percent"
+			/>
+
+			<AppJolticon
+				v-app-tooltip.touchable="$gettext(`Rotate sticker`)"
+				:style="{ margin: 0, fontSize: `24px` }"
+				icon="rotate"
+			/>
+		</div>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.sticker-ghost
-	position: absolute
-	top: 0
-	left: 0
-	cursor: grab
-	touch-action: none
-
-.-uncommitted
-	filter: drop-shadow(2px 2px 2.5px black)
-
-.-dragging
-	filter: drop-shadow(4px 4px 5px black)
-	pointer-events: none
-
-.-img-outer
-	z-index: 1
-
-.-img-inner
-	display: block
-	user-select: none
-	width: 100%
-	height: 100%
-
-.-fade-enter-active
-	transition: opacity 250ms $strong-ease-out
-
-.-fade-enter-from
-	opacity: 0
-
-.-fade-enter-to
-	opacity: 1
-
-.-hide
-	visibility: hidden
-
-.-controls
-	rounded-corners()
-	display: flex
-	justify-content: center
-	align-items: center
-	position: absolute
-	top: calc(100% + 8px)
-	z-index: 2
-
-.-charge-button
-	position: absolute
-	bottom: 50%
-
-	&.-charge-left
-		right: 100% + 16px
-
-	&.-charge-right
-		left: 100% + 16px
-
-.-disabled-button-mask
-	img-circle()
-	position: absolute
-	top: 0
-	right: 0
-	bottom: 0
-	left: 0
-	cursor: not-allowed
-</style>
