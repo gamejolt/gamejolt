@@ -12,5 +12,9 @@ defineProps({
 </script>
 
 <template>
-	<AppContentEmoji :emoji-id="contentData.attrs.id" :emoji-type="contentData.attrs.type" />
+	<AppContentEmoji
+		:emoji-id="contentData.attrs.id"
+		:emoji-type="contentData.attrs.type"
+		show-details
+	/>
 </template>

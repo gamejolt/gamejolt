@@ -6,17 +6,10 @@ import { kBorderRadiusBase, kBorderRadiusLg, kBorderRadiusSm } from './variables
  * Helper to make it easier to mix certain styles into a style binding depending
  * on a condition.
  *
- * NOTE: Don't use an array of styles with this if it's used in the `<script>`
- * tag or things will break.
- *
  * @__NO_SIDE_EFFECTS__
  */
-export function styleWhen<T extends CSSProperties>(
-	condition: boolean | null | undefined,
-	style: T
-) {
-	// `Partial<T>` typing is included here so we get some type info on hover.
-	return condition ? style : ({} as Partial<T>);
+export function styleWhen(condition: boolean | null | undefined, style: CSSProperties) {
+	return condition ? style : {};
 }
 
 /**

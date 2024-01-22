@@ -39,7 +39,7 @@ import { ActivityFeedView } from '../../activity/feed/view';
 import { showCommentModal } from '../../comment/modal/modal.service';
 import { showPostEditModal } from '../edit-modal/edit-modal-service';
 import AppPostControlsStats from './AppPostControlsStats.vue';
-import AppPostControlsMore from './more/more.vue';
+import AppPostControlsMore from './more/AppPostControlsMore.vue';
 import AppPostControlsSaveProgress from './save-progress/save-progress.vue';
 import AppPostControlsUserFollow from './user-follow/user-follow.vue';
 

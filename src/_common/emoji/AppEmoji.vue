@@ -63,7 +63,6 @@ const src = computed(() => {
 				maxHeight: emojiBaseSize.px,
 				verticalAlign: `middle`,
 				lineHeight: 1,
-				cursor: `default`,
 			},
 			styleWhen(typeof emoji === 'string', {
 				imageRendering: `pixelated`,

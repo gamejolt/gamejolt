@@ -572,6 +572,15 @@ export function trackGiftAction(
 	});
 }
 
+type ResourceInfoResource = 'Emoji' | 'Sticker' | 'Avatar_Frame' | 'Background';
+
+export function trackResourceInfoView(params: {
+	resource: ResourceInfoResource;
+	resourceId: number;
+}) {
+	_trackEvent('resource_info_view', params);
+}
+
 /**
  * @deprecated This is left here so that old code doesn't break.
  */

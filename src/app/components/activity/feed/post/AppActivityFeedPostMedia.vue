@@ -158,7 +158,7 @@ function onClickFullscreen() {
 			v-if="post.media.length > 1"
 			class="-indicator"
 			:inner-styles="
-				styleWhen(post.hasBackground && post.hasAnyMedia, {
+				styleWhen(!!post.background && post.hasAnyMedia, {
 					...styleBorderRadiusLg,
 					...styleElevate(1),
 					backgroundColor: kThemeBgActual,
