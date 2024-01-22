@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
-import AppStickerCollectibleWrapper from '../../../../../_common/sticker/AppStickerCollectibleWrapper.vue';
 import AppStickerLayerDrawerItem from '../../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
 import { StickerModel } from '../../../../../_common/sticker/sticker.model';
+import AppStickerCollectibleWrapper from '../../../sticker/AppStickerCollectibleWrapper.vue';
 
 defineProps({
 	sticker: {

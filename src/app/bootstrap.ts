@@ -1,5 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 import { bootstrapCommon } from '../_common/bootstrap';
+import { setContentEmojiWrapper } from '../_common/content/components/AppContentEmoji.vue';
 import { setChatInviteComponent } from '../_common/content/content-viewer/components/AppContentViewerChatInvite.vue';
 import { initGamePlayModal } from '../_common/game/play-modal/play-modal.service';
 import { addModalBackdropCheck } from '../_common/modal/AppModal.vue';
@@ -70,6 +71,13 @@ export async function createApp() {
 		() => import('./components/content/components/AppContentChatInvite.vue')
 	);
 	setChatInviteComponent(AppContentChatInview);
+
+	// AppContentEmoji needs this, but lives in _common. Need to assign the
+	// wrapping component here as well.
+	const AppStickerCollectibleWrapper = defineAsyncComponent(
+		() => import('./components/sticker/AppStickerCollectibleWrapper.vue')
+	);
+	setContentEmojiWrapper(AppStickerCollectibleWrapper);
 
 	// PayloadService doesn't play nice with importing certain things.
 	Payload.assignPayloadActionsHandler(handlePayloadActions);

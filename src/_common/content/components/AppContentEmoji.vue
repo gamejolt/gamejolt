@@ -1,12 +1,24 @@
-<script lang="ts" setup>
+<script lang="ts">
+import type { Component } from 'vue';
 import { PropType, ref } from 'vue';
 import { isInstance } from '../../../utils/utils';
 import AppEmoji, { GJ_EMOJIS, emojiBaseSize } from '../../emoji/AppEmoji.vue';
 import { EmojiModel } from '../../emoji/emoji.model';
 import { storeModel } from '../../model/model-store.service';
-import AppStickerCollectibleWrapper from '../../sticker/AppStickerCollectibleWrapper.vue';
 import { useContentOwnerController } from '../content-owner';
 
+// App bootstrap will assign the component we should render.
+let contentEmojiWrapper: any = 'span';
+
+/**
+ * Assigns the component that should wrap the AppContentEmoji.
+ */
+export function setContentEmojiWrapper(newComponent: Component) {
+	contentEmojiWrapper = newComponent;
+}
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	emojiId: {
 		type: Number,
@@ -40,12 +52,13 @@ if (props.emojiId) {
 
 <template>
 	<template v-if="emoji">
-		<AppStickerCollectibleWrapper
+		<component
+			:is="contentEmojiWrapper"
 			:data="showDetails && isInstance(emoji, EmojiModel) ? emoji : undefined"
 			:show-tooltip="showDetails"
 		>
 			<AppEmoji :emoji="emoji" />
-		</AppStickerCollectibleWrapper>
+		</component>
 	</template>
 	<template v-else>
 		<img
