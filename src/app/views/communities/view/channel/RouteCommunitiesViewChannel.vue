@@ -38,7 +38,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { channel, archivedChannels } = useCommunityRouteStore()!;
+const { community, channel, archivedChannels } = useCommunityRouteStore()!;
+
 createAppRoute({
 	onResolved({ payload }) {
 		if (payload.channel) {
@@ -55,7 +56,10 @@ createAppRoute({
 
 <template>
 	<div v-if="channel">
-		<RouteCommunitiesViewChannelJam v-if="channel.type === 'competition'" />
-		<RouteCommunitiesViewChannelFeed v-else />
+		<RouteCommunitiesViewChannelJam
+			v-if="channel.type === 'competition'"
+			:community="community"
+		/>
+		<RouteCommunitiesViewChannelFeed v-else :community="community" :channel="channel" />
 	</div>
 </template>

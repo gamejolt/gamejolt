@@ -1,6 +1,8 @@
 <script lang="ts">
-import { Ref, computed, ref, watch } from 'vue';
+import { PropType, Ref, computed, ref, toRefs, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments } from '../../../../../_common/illustration/illustrations';
@@ -22,7 +24,7 @@ import {
 	resolveFeedChannelPayload,
 } from '../_feed/feed-helpers';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
-import { useCommunityRouteStore } from '../view.store';
+import { isVirtualChannel, setCommunityMeta, useCommunityRouteStore } from '../view.store';
 import { CommunitiesViewChannelDeps } from './RouteCommunitiesViewChannel.vue';
 
 export default {
@@ -36,8 +38,21 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { community, channel, channelPath, isVirtualChannel, setCommunityMeta, allChannel } =
-	useCommunityRouteStore()!;
+const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
+	channel: {
+		type: Object as PropType<CommunityChannelModel>,
+		required: true,
+	},
+});
+
+const { community, channel } = toRefs(props);
+
+const routeStore = useCommunityRouteStore()!;
+const { allChannel } = routeStore;
 const { communityStates } = useAppStore();
 const { grid } = useGridStore();
 const { user } = useCommonStore();
@@ -48,15 +63,11 @@ const feed = ref(null) as Ref<ActivityFeedView | null>;
 const isBootstrapped = ref(false);
 
 const sort = computed(() => getFeedChannelSort(route));
-const communityState = computed(() => communityStates.value.getCommunityState(community.value!));
+const communityState = computed(() => communityStates.value.getCommunityState(community.value));
 
 const routeTitle = computed(() => {
-	if (!channel.value) {
-		return null;
-	}
-
 	const title = $gettext(`%{ name } Community on Game Jolt`, {
-		name: community.value!.name,
+		name: community.value.name,
 	});
 
 	const prefixWith = (prefix: string) => `${prefix} - ${title}`;
@@ -78,13 +89,13 @@ const routeTitle = computed(() => {
 		case 'hot':
 			return prefixWith(
 				$gettext('Hot posts in %{ channel }', {
-					channel: channel.value ? channel.value.displayTitle : channelPath.value!,
+					channel: channel.value.displayTitle,
 				})
 			);
 		case 'new':
 			return prefixWith(
 				$gettext('New posts in %{ channel }', {
-					channel: channel.value ? channel.value.displayTitle : channelPath.value!,
+					channel: channel.value.displayTitle,
 				})
 			);
 	}
@@ -93,14 +104,9 @@ const routeTitle = computed(() => {
 });
 
 watch(
-	() => communityState.value.unreadChannels,
-	() => {
-		if (
-			feed.value &&
-			feed.value.newCount === 0 &&
-			channel.value &&
-			communityState.value.unreadChannels.includes(channel.value.id)
-		) {
+	() => communityState.value?.unreadChannels,
+	unreadChannels => {
+		if (feed.value?.newCount === 0 && unreadChannels?.includes(channel.value.id)) {
 			feed.value.newCount = 1;
 		}
 	},
@@ -112,9 +118,8 @@ function loadedNew() {
 	// It might be read after posts have been loaded in a different client.
 	if (
 		user.value &&
-		channel.value &&
-		!isVirtualChannel(channel.value!) &&
-		communityState.value.unreadChannels.includes(channel.value.id)
+		!isVirtualChannel(routeStore, channel.value!) &&
+		communityState.value?.unreadChannels.includes(channel.value.id)
 	) {
 		pushViewToGrid();
 	}
@@ -122,8 +127,8 @@ function loadedNew() {
 
 function pushViewToGrid() {
 	grid.value?.pushViewNotifications('community-channel', {
-		communityId: community.value!.id,
-		channelId: channel.value?.id,
+		communityId: community.value.id,
+		channelId: channel.value.id,
 	});
 
 	// When the entire community has no unreads left, push that event to grid.
@@ -132,7 +137,7 @@ function pushViewToGrid() {
 	// To set it to false, we push this event through Grid.
 	if (!communityState.value.isUnread) {
 		grid.value?.pushViewNotifications('community-unread', {
-			communityId: community.value!.id,
+			communityId: community.value.id,
 		});
 	}
 }
@@ -156,19 +161,19 @@ const appRoute = createAppRoute({
 	onResolved({ payload, fromCache }) {
 		feed.value = resolveFeedChannelPayload(
 			feed.value,
-			community.value!,
+			community.value,
 			route,
 			payload,
 			fromCache
 		);
 		isBootstrapped.value = true;
 
-		if (!fromCache && user.value && channel.value && !isVirtualChannel(channel.value!)) {
+		if (!fromCache && user.value && !isVirtualChannel(routeStore, channel.value)) {
 			pushViewToGrid();
 		}
 
 		if (routeTitle.value) {
-			setCommunityMeta(routeTitle.value);
+			setCommunityMeta(community.value, routeTitle.value);
 		}
 	},
 });
@@ -181,11 +186,11 @@ const appRoute = createAppRoute({
 				<template v-if="channel === allChannel">
 					{{ $gettext(`All Posts`) }}
 				</template>
-				<template v-else-if="channel">{{ channel.displayTitle }}</template>
-				<small v-if="Screen.isDesktop">{{ ' ' }} in {{ community!.name }}</small>
+				<template v-else>{{ channel.displayTitle }}</template>
+				<small v-if="Screen.isDesktop">{{ ' ' }} in {{ community.name }}</small>
 			</h1>
 
-			<div v-if="channel && channel.visibility === 'draft'">
+			<div v-if="channel.visibility === 'draft'">
 				<AppIllustration :asset="illNoComments">
 					{{
 						$gettext(
@@ -196,6 +201,7 @@ const appRoute = createAppRoute({
 			</div>
 			<AppCommunitiesViewFeed
 				v-else
+				:community="community"
 				:feed="feed"
 				@add-post="onPostAdded"
 				@load-new="loadedNew"

@@ -3,26 +3,32 @@ import { PropType, computed, toRefs } from 'vue';
 import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../../../../_common/community/community.model';
 import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../../../_common/translate/translate.service';
 import { showCommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
-import { useCommunityRouteStore } from '../../../../view.store';
 
 const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
 	channel: {
 		type: Object as PropType<CommunityChannelModel>,
 		required: true,
 	},
+	archivedChannels: {
+		type: Array as PropType<Array<CommunityChannelModel>>,
+		required: true,
+	},
 });
 
-const { channel } = toRefs(props);
-
-const { community, archivedChannels } = useCommunityRouteStore()!;
+const { community, channel, archivedChannels } = toRefs(props);
 
 const canRemoveChannel = computed(() => {
 	// Cannot remove when no channel perms
-	if (!community.value!.hasPerms('community-channels')) {
+	if (!community.value.hasPerms('community-channels')) {
 		return false;
 	}
 
@@ -36,23 +42,23 @@ const canRemoveChannel = computed(() => {
 		return true;
 	}
 
-	return community.value!.canRemoveChannel;
+	return community.value.canRemoveChannel;
 });
 
 const canEditChannel = computed(() => {
 	// When it's a competition channel, mods with competition perms can edit.
 	if (
 		channel.value.type === 'competition' &&
-		community.value!.hasPerms('community-competitions')
+		community.value.hasPerms('community-competitions')
 	) {
 		return true;
 	}
 
-	return community.value!.hasPerms('community-channels');
+	return community.value.hasPerms('community-channels');
 });
 
 async function onClickRemoveChannel(channelToRemove: CommunityChannelModel) {
-	await showCommunityRemoveChannelModal(community.value!, channelToRemove);
+	await showCommunityRemoveChannelModal(community.value, channelToRemove);
 
 	if (channelToRemove._removed) {
 		if (channelToRemove.is_archived) {
@@ -60,9 +66,11 @@ async function onClickRemoveChannel(channelToRemove: CommunityChannelModel) {
 				i => i.id !== channelToRemove.id
 			);
 		} else {
-			community.value!.channels = community.value!.channels!.filter(
-				i => i.id !== channelToRemove.id
-			);
+			if (community.value.channels) {
+				community.value.channels = community.value.channels!.filter(
+					i => i.id !== channelToRemove.id
+				);
+			}
 		}
 	}
 }

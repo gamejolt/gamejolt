@@ -1,9 +1,11 @@
 <script lang="ts">
-import { computed, defineAsyncComponent, ref, toRef } from 'vue';
+import { PropType, computed, defineAsyncComponent, ref, toRef, toRefs } from 'vue';
 import { router } from '../../..';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import { CompetitionPeriodVoting } from '../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
 import { showCommunityCompetitionEntrySubmitModal } from '../../../../../_common/community/competition/entry/submit-modal/submit-modal.service';
@@ -24,7 +26,7 @@ import AppCommunityCompetitionCountdown from '../../../../components/community/c
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
 import AppCommunityPerms from '../../../../components/community/perms/AppCommunityPerms.vue';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
-import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
+import { getChannelPathFromRoute, setCommunityMeta, useCommunityRouteStore } from '../view.store';
 
 const RouteCommunitiesViewChannelJamEntries = defineAsyncComponent(() =>
 	asyncRouteLoader(router, import('./RouteCommunitiesViewChannelJamEntries.vue'))
@@ -44,8 +46,21 @@ export default {
 </script>
 
 <script lang="ts" setup>
+const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
+	channel: {
+		type: Object as PropType<CommunityChannelModel>,
+		required: true,
+	},
+});
+
+const { community, channel } = toRefs(props);
+
+const { competition } = useCommunityRouteStore()!;
 const { user } = useCommonStore();
-const { community, channel, competition, setCommunityMeta } = useCommunityRouteStore()!;
 
 const canToggleDescription = ref(false);
 const isDescriptionOpen = ref(false);
@@ -66,7 +81,7 @@ const shouldShowUserSubmissions = computed(() => {
 	}
 
 	// Can't submit entries when you are blocked from the community.
-	if (community.value!.isBlocked) {
+	if (community.value.isBlocked) {
 		return false;
 	}
 
@@ -81,14 +96,14 @@ const shouldShowUserSubmissions = computed(() => {
 const canSubmitEntry = toRef(
 	() =>
 		competition.value?.period === 'running' &&
-		channel.value?.visibility === 'published' &&
+		channel.value.visibility === 'published' &&
 		!channel.value.is_archived
 );
 
 const routeTitle = computed(() =>
 	$gettext(`%{ channel } - %{ name } Community on Game Jolt`, {
-		name: community.value!.name,
-		channel: channel.value?.displayTitle || '',
+		name: community.value.name,
+		channel: channel.value.displayTitle || '',
 	})
 );
 
@@ -126,6 +141,7 @@ function onEntryRemoved(entry: CommunityCompetitionEntryModel) {
 		competition.value.entry_count--;
 	}
 }
+
 createAppRoute({
 	routeTitle,
 	disableTitleSuffix: true,
@@ -139,7 +155,7 @@ createAppRoute({
 		isLoading.value = false;
 
 		if (routeTitle.value) {
-			setCommunityMeta(routeTitle.value);
+			setCommunityMeta(community.value, routeTitle.value);
 		}
 	},
 });
@@ -147,13 +163,13 @@ createAppRoute({
 
 <template>
 	<div>
-		<AppCommunitiesViewPageContainer full>
-			<AppCommunityPerms :community="community!" required="community-competitions">
+		<AppCommunitiesViewPageContainer v-if="competition" full>
+			<AppCommunityPerms :community="community" required="community-competitions">
 				<AppButton
 					icon="edit"
 					:to="{
 						name: 'communities.view.edit.channels.competition.overview',
-						params: { id: community!.id },
+						params: { id: community.id },
 					}"
 				>
 					{{ $gettext(`Edit Jam`) }}
@@ -167,17 +183,14 @@ createAppRoute({
 						{{ channel.displayTitle }}
 					</h1>
 
-					<div
-						v-if="competition && !competition.hasEnded"
-						class="-header-subtitle text-muted"
-					>
+					<div v-if="!competition.hasEnded" class="-header-subtitle text-muted">
 						Submissions are open <b>{{ formatDate(competition.starts_on) }}</b> to
 						<b>{{ formatDate(competition.ends_on) }}</b>
 					</div>
 				</div>
 				<div class="-header-end">
 					<div class="-header-meta">
-						<AppCommunityCompetitionCountdown :competition="competition!" />
+						<AppCommunityCompetitionCountdown :competition="competition" />
 					</div>
 					<div v-if="canSubmitEntry" class="-header-actions">
 						<AppButton primary solid @click="onClickSubmit">
@@ -187,7 +200,7 @@ createAppRoute({
 				</div>
 			</div>
 
-			<div v-if="channel && channel.description_content" class="sheet sheet-elevate">
+			<div v-if="channel.description_content" class="sheet sheet-elevate">
 				<AppFadeCollapse
 					:collapse-height="500"
 					:is-open="isDescriptionOpen"
@@ -219,7 +232,7 @@ createAppRoute({
 						{{ $gettext(`You have not submitted an entry to this jam... yet?`) }}
 					</p>
 				</template>
-				<template v-else-if="competition && competition.period === 'pre-comp'">
+				<template v-else-if="competition.period === 'pre-comp'">
 					<p class="help-block">
 						{{
 							$gettext(
@@ -228,12 +241,12 @@ createAppRoute({
 						}}
 					</p>
 				</template>
-				<template v-else-if="competition && competition.periodNum >= 2">
+				<template v-else-if="competition.periodNum >= 2">
 					<p class="help-block">
 						{{ $gettext(`The jam has ended and submissions are now closed.`) }}
 					</p>
 				</template>
-				<template v-else-if="channel && channel.visibility === 'draft'">
+				<template v-else-if="channel.visibility === 'draft'">
 					<p v-if="!hasSubmittedEntries" class="help-block">
 						{{
 							$gettext(
@@ -242,7 +255,7 @@ createAppRoute({
 						}}
 					</p>
 				</template>
-				<template v-else-if="channel && channel.is_archived">
+				<template v-else-if="channel.is_archived">
 					<p class="help-block">
 						{{ $gettext(`This channel is archived and entries cannot be submitted.`) }}
 					</p>
@@ -250,7 +263,7 @@ createAppRoute({
 
 				<div v-if="hasSubmittedEntries">
 					<AppCommunityCompetitionEntryGrid
-						:competition="competition!"
+						:competition="competition"
 						:num-placeholders="2"
 						:entries="userEntries"
 						show-remove
@@ -261,8 +274,11 @@ createAppRoute({
 				<br />
 			</template>
 
-			<template v-if="competition && competition.hasStarted">
-				<RouteCommunitiesViewChannelJamEntries :categories="categories" />
+			<template v-if="competition.hasStarted">
+				<RouteCommunitiesViewChannelJamEntries
+					:competition="competition"
+					:categories="categories"
+				/>
 			</template>
 		</AppCommunitiesViewPageContainer>
 	</div>

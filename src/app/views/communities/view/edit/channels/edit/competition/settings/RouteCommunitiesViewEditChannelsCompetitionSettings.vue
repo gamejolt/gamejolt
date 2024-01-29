@@ -18,5 +18,5 @@ createAppRoute({});
 </script>
 
 <template>
-	<FormCommunityCompetitionEdit :model="competition!" />
+	<FormCommunityCompetitionEdit v-if="competition" :model="competition" />
 </template>

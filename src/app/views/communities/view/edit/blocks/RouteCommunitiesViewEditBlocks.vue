@@ -69,9 +69,11 @@ function onBlockSubmit() {
 }
 
 async function refetch() {
-	const url = `/web/dash/communities/blocks/${community.value!.id}?page=${page.value}&sort=${
-		sort.value
-	}&sort-direction=${sortDirection.value}`;
+	if (!community.value) {
+		return;
+	}
+
+	const url = `/web/dash/communities/blocks/${community.value.id}?page=${page.value}&sort=${sort.value}&sort-direction=${sortDirection.value}`;
 	const payload = await Api.sendRequest(url);
 	blocks.value = UserBlockModel.populate(payload.blocks);
 }
@@ -159,7 +161,11 @@ createAppRoute({
 
 		<AppCardList :is-adding="isAdding">
 			<AppCardListAdd :label="$gettext('Block User')" @toggle="isAdding = !isAdding">
-				<FormCommunityBlock :community="community!" @submit="onBlockSubmit" />
+				<FormCommunityBlock
+					v-if="community"
+					:community="community"
+					@submit="onBlockSubmit"
+				/>
 			</AppCardListAdd>
 		</AppCardList>
 		<div class="table-responsive">

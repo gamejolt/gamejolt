@@ -23,7 +23,7 @@ import { $gettext } from '../../../../../../../_common/translate/translate.servi
 import AppCommunityPerms from '../../../../../../components/community/perms/AppCommunityPerms.vue';
 import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/FormCommunityChannelAdd.vue';
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
-import { useCommunityRouteStore } from '../../../view.store';
+import { loadArchivedChannels, updateCommunity, useCommunityRouteStore } from '../../../view.store';
 import AppCommunitiesEditChannelListItem from './_item/AppCommunitiesEditChannelListItem.vue';
 import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.vue';
 
@@ -38,31 +38,30 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const {
-	community,
-	archivedChannels,
-	expandedArchivedChannels,
-	loadedArchivedChannels,
-	loadArchivedChannels,
-	updateCommunity,
-} = useCommunityRouteStore()!;
+const routeStore = useCommunityRouteStore()!;
+const { community, archivedChannels, expandedArchivedChannels, loadedArchivedChannels } =
+	routeStore;
 
-const activeItem = ref<
-	CommunityChannelModel | CommunityModel | CommunityPresetChannelType | undefined
->();
+const activeItem = ref<CommunityChannelModel | CommunityModel | CommunityPresetChannelType>();
 
 const isShowingChannelAdd = ref(false);
 const isLoadingArchivedChannels = ref(false);
 
-const hasFullChannelsPermission = computed(() => community.value!.hasPerms('community-channels'));
+const hasFullChannelsPermission = computed(() => community.value?.hasPerms('community-channels'));
 
 async function saveChannelSort(sortedChannels: CommunityChannelModel[]) {
+	if (!community.value) {
+		return;
+	}
+
 	// Reorder the channels to see the result of the ordering right away.
-	community.value!.channels!.splice(0, community.value!.channels!.length, ...sortedChannels);
+	if (community.value.channels) {
+		community.value.channels.splice(0, community.value.channels.length, ...sortedChannels);
+	}
 
 	const sortedIds = sortedChannels.map(i => i.id);
 	try {
-		await $saveCommunityChannelSort(community.value!.id, sortedIds);
+		await $saveCommunityChannelSort(community.value.id, sortedIds);
 	} catch (e) {
 		console.error(e);
 		showErrorGrowl($gettext(`Could not save channel arrangement.`));
@@ -70,12 +69,16 @@ async function saveChannelSort(sortedChannels: CommunityChannelModel[]) {
 }
 
 async function saveChannelSortArchived(sortedChannels: CommunityChannelModel[]) {
+	if (!community.value) {
+		return;
+	}
+
 	// Reorder the channels to see the result of the ordering right away.
 	archivedChannels.value.splice(0, archivedChannels.value.length, ...sortedChannels);
 
 	const sortedIds = sortedChannels.map(i => i.id);
 	try {
-		await $saveCommunityChannelSortArchived(community.value!.id, sortedIds);
+		await $saveCommunityChannelSortArchived(community.value.id, sortedIds);
 	} catch (e) {
 		console.error(e);
 		showErrorGrowl($gettext(`Could not save channel arrangement.`));
@@ -83,15 +86,17 @@ async function saveChannelSortArchived(sortedChannels: CommunityChannelModel[]) 
 }
 
 function onChannelAdded(channel: CommunityChannelModel) {
-	community.value!.channels!.push(channel);
-	// Close form after adding a channel.
-	isShowingChannelAdd.value = false;
+	if (community.value && community.value.channels) {
+		community.value.channels!.push(channel);
+		// Close form after adding a channel.
+		isShowingChannelAdd.value = false;
+	}
 }
 
-function onPresetListItemSaved(community: CommunityModel) {
+function onPresetListItemSaved(newCommunity: CommunityModel) {
 	// Since the preset channels are stored on the community, we have to let
 	// the routeStore know to update the community with the new information.
-	updateCommunity(community);
+	updateCommunity(routeStore, newCommunity);
 }
 
 function onActivate(item: typeof activeItem.value) {
@@ -109,7 +114,7 @@ async function onClickArchivedChannels() {
 	if (expandedArchivedChannels.value && !loadedArchivedChannels.value) {
 		isLoadingArchivedChannels.value = true;
 
-		await loadArchivedChannels();
+		await loadArchivedChannels(routeStore);
 
 		loadedArchivedChannels.value = true;
 		isLoadingArchivedChannels.value = false;
@@ -119,9 +124,9 @@ createAppRoute({});
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer>
+	<AppCommunitiesViewPageContainer v-if="community">
 		<AppCommunityPerms
-			:community="community!"
+			:community="community"
 			required="community-channels,community-competitions"
 			either
 		>
@@ -139,6 +144,7 @@ createAppRoute({});
 				</p>
 			</div>
 
+			<!--TODO(reactive-community-route-store): CommunityPresetChannelType is not a valid type to be passed down to :active-item -->
 			<AppCardList
 				v-if="hasFullChannelsPermission"
 				:items="communityPresetChannels"
@@ -151,8 +157,9 @@ createAppRoute({});
 					@toggle="isShowingChannelAdd = !isShowingChannelAdd"
 				>
 					<FormCommunityChannelAdd
-						:community="community!"
-						:channels="community!.channels!"
+						v-if="community.channels"
+						:community="community"
+						:channels="community.channels"
 						:archived-channels="archivedChannels"
 						@submit="onChannelAdded"
 					/>
@@ -161,25 +168,29 @@ createAppRoute({});
 				<AppCommunitiesEditChannelListPresetItem
 					v-for="presetType of communityPresetChannels"
 					:key="presetType"
-					:community="community!"
+					:community="community"
 					:preset-type="presetType"
 					@edit="onPresetListItemSaved"
 				/>
 			</AppCardList>
 
 			<AppCardList
-				v-if="community!.channels"
-				:items="community!.channels"
+				v-if="community.channels"
+				:items="community.channels"
 				:is-draggable="hasFullChannelsPermission"
 			>
 				<AppCardListDraggable item-key="id" @change="saveChannelSort">
 					<template #item="{ element: channel }: { element: CommunityChannelModel }">
-						<AppCommunitiesEditChannelListItem :channel="channel" />
+						<AppCommunitiesEditChannelListItem
+							:community="community"
+							:channel="channel"
+							:archived-channels="archivedChannels"
+						/>
 					</template>
 				</AppCardListDraggable>
 			</AppCardList>
 
-			<template v-if="community!.has_archived_channels">
+			<template v-if="community.has_archived_channels">
 				<h3
 					:style="{ marginTop: `24px`, userSelect: `none`, cursor: `pointer` }"
 					@click="onClickArchivedChannels"
@@ -198,7 +209,11 @@ createAppRoute({});
 						>
 							<AppCardListDraggable item-key="id" @change="saveChannelSortArchived">
 								<template #item="{ element: channel }">
-									<AppCommunitiesEditChannelListItem :channel="channel" />
+									<AppCommunitiesEditChannelListItem
+										:community="community"
+										:channel="channel"
+										:archived-channels="archivedChannels"
+									/>
 								</template>
 							</AppCardListDraggable>
 						</AppCardList>

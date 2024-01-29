@@ -20,7 +20,12 @@ import AppCommunitiesViewFeed from '../_feed/AppCommunitiesViewFeed.vue';
 import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { CommunitiesViewChannelDeps } from '../channel/RouteCommunitiesViewChannel.vue';
-import { useCommunityRouteStore } from '../view.store';
+import {
+	acceptCollaboration,
+	declineCollaboration,
+	setCommunityMeta,
+	useCommunityRouteStore,
+} from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
@@ -36,14 +41,10 @@ export default {
 const { communityStates, joinCommunity } = useAppStore();
 const { user } = useCommonStore();
 const { grid } = useGridStore();
-const {
-	acceptCollaboration,
-	declineCollaboration,
-	community,
-	sidebarData,
-	collaborator,
-	setCommunityMeta,
-} = useCommunityRouteStore()!;
+
+const routeStore = useCommunityRouteStore()!;
+const { community, sidebarData, collaborator } = routeStore;
+
 const route = useRoute();
 const router = useRouter();
 
@@ -51,7 +52,9 @@ const isBootstrapped = ref(false);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 const finishedLoading = ref(false);
 
-const communityState = toRef(() => communityStates.value.getCommunityState(community.value!));
+const communityState = toRef(() =>
+	!community.value ? undefined : communityStates.value.getCommunityState(community.value)
+);
 
 const collaboratorInvite = toRef(() => {
 	// Just return the collaborator as an "invite" if it's not accepted yet.
@@ -60,7 +63,7 @@ const collaboratorInvite = toRef(() => {
 });
 
 const canAcceptCollaboration = toRef(
-	() => community.value!.is_member || (user.value && user.value.can_join_communities)
+	() => community.value?.is_member || (user.value && user.value.can_join_communities)
 );
 
 const routeTitle = computed(() => {
@@ -78,13 +81,9 @@ const acceptCollaborationTooltip = computed(() =>
 );
 
 watch(
-	() => communityState.value.hasUnreadFeaturedPosts,
-	() => {
-		if (
-			feed.value &&
-			feed.value.newCount === 0 &&
-			communityState.value.hasUnreadFeaturedPosts
-		) {
+	() => communityState.value?.hasUnreadFeaturedPosts,
+	hasUnreadFeaturedPosts => {
+		if (feed.value?.newCount === 0 && hasUnreadFeaturedPosts) {
 			feed.value.newCount = 1;
 		}
 	},
@@ -92,9 +91,14 @@ watch(
 );
 
 function loadedNew() {
-	if (communityState.value.hasUnreadFeaturedPosts && user.value) {
+	if (
+		community.value &&
+		communityState.value &&
+		communityState.value.hasUnreadFeaturedPosts &&
+		user.value
+	) {
 		grid.value?.pushViewNotifications('community-featured', {
-			communityId: community.value!.id,
+			communityId: community.value.id,
 		});
 	}
 }
@@ -110,17 +114,17 @@ function onPostAdded(post: FiresidePostModel) {
 }
 
 async function receiveCollaboration() {
-	if (!user.value) {
+	if (!user.value || !community.value) {
 		return;
 	}
 
-	await acceptCollaboration(user.value);
-	joinCommunity(community.value!, { grid: grid.value });
+	await acceptCollaboration(routeStore, user.value);
+	joinCommunity(community.value, { grid: grid.value });
 	showSuccessGrowl($gettext(`You are now a collaborator on this community!`));
 }
 
 async function rejectCollaboration() {
-	await declineCollaboration();
+	await declineCollaboration(routeStore);
 }
 
 const appRoute = createAppRoute({
@@ -130,9 +134,13 @@ const appRoute = createAppRoute({
 		finishedLoading.value = false;
 	},
 	onResolved({ payload, fromCache }) {
+		if (!community.value) {
+			return;
+		}
+
 		feed.value = resolveFeedChannelPayload(
 			feed.value,
-			community.value!,
+			community.value,
 			route,
 			payload,
 			fromCache
@@ -141,12 +149,12 @@ const appRoute = createAppRoute({
 		finishedLoading.value = true;
 
 		if (routeTitle.value) {
-			setCommunityMeta(routeTitle.value);
+			setCommunityMeta(community.value, routeTitle.value);
 		}
 
 		if (!fromCache && user.value) {
 			grid.value?.pushViewNotifications('community-featured', {
-				communityId: community.value!.id,
+				communityId: community.value.id,
 			});
 		}
 	},
@@ -154,7 +162,7 @@ const appRoute = createAppRoute({
 </script>
 
 <template>
-	<div>
+	<div v-if="community">
 		<section v-if="collaboratorInvite" class="section section-thin fill-highlight">
 			<div class="container text-center">
 				<p>
@@ -180,12 +188,13 @@ const appRoute = createAppRoute({
 			<template #default>
 				<AppCommunitiesViewFeed
 					:feed="feed"
+					:community="community"
 					@add-post="onPostAdded"
 					@load-new="loadedNew"
 				/>
 			</template>
 			<template #sidebar>
-				<AppCommunitySidebar :sidebar-data="sidebarData!" :community="community!" />
+				<AppCommunitySidebar :sidebar-data="sidebarData!" :community="community" />
 			</template>
 		</AppCommunitiesViewPageContainer>
 	</div>

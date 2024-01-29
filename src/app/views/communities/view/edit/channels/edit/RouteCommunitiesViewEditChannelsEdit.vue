@@ -44,7 +44,10 @@ const pageHeaderProps = computed(() => {
 });
 
 async function onClickEditHeader() {
-	await showCommunityCompetitionHeaderModal(competition.value!);
+	// TODO(reactive-community-route-store): Do I have to return empty promise?
+	if (competition.value) {
+		await showCommunityCompetitionHeaderModal(competition.value!);
+	}
 }
 
 createAppRoute({
@@ -146,7 +149,6 @@ createAppRoute({
 			<template #controls>
 				<AppPageHeaderControls>
 					<AppButton
-						v-if="competition"
 						:to="{
 							name: 'communities.view.channel',
 						}"

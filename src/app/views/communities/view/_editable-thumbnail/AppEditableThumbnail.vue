@@ -1,7 +1,10 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
-import { isEditingCommunity } from '../../../../../_common/community/community.model';
+import {
+	CommunityModel,
+	isEditingCommunity,
+} from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
@@ -9,7 +12,16 @@ import { showCommunityThumbnailModal } from '../../../../components/forms/commun
 import { routeCommunitiesViewEditDetails } from '../edit/details/details.route';
 import { useCommunityRouteStore } from '../view.store';
 
-const { community, canEditMedia } = useCommunityRouteStore()!;
+const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
+});
+
+const { community } = toRefs(props);
+const { canEditMedia } = useCommunityRouteStore()!;
+
 const route = useRoute();
 
 const isEditing = computed(() => isEditingCommunity(route));
@@ -20,7 +32,7 @@ const canEdit = computed(
 );
 
 function showEditAvatar() {
-	showCommunityThumbnailModal(community.value!);
+	showCommunityThumbnailModal(community.value);
 }
 </script>
 
@@ -29,9 +41,9 @@ function showEditAvatar() {
 		<template #overlay>
 			{{ $gettext(`Change`) }}
 		</template>
-		<AppCommunityThumbnailImg :community="community!" />
+		<AppCommunityThumbnailImg :community="community" />
 	</AppEditableOverlay>
-	<RouterLink v-else :to="community!.routeLocation">
-		<AppCommunityThumbnailImg :community="community!" />
+	<RouterLink v-else :to="community.routeLocation">
+		<AppCommunityThumbnailImg :community="community" />
 	</RouterLink>
 </template>

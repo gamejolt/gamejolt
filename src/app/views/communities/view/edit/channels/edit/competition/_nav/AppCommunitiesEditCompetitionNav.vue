@@ -9,14 +9,15 @@ const { competition } = useCommunityRouteStore()!;
 
 const canAssignAwards = toRef(
 	() =>
-		competition.value!.is_voting_enabled &&
-		competition.value!.has_awards &&
-		competition.value!.periodNum >= CompetitionPeriodVoting
+		competition.value &&
+		competition.value.is_voting_enabled &&
+		competition.value.has_awards &&
+		competition.value.periodNum >= CompetitionPeriodVoting
 );
 </script>
 
 <template>
-	<ul>
+	<ul v-if="competition">
 		<li>
 			<RouterLink
 				:to="{
@@ -49,7 +50,7 @@ const canAssignAwards = toRef(
 				<AppJolticon icon="pedestals-numbers" />
 				{{ $gettext(`Voting`) }}
 				&nbsp;
-				<span v-if="competition!.is_voting_enabled" class="tag tag-highlight">
+				<span v-if="competition.is_voting_enabled" class="tag tag-highlight">
 					{{ $gettext(`On`) }}
 				</span>
 				<span v-else class="tag">
@@ -68,7 +69,7 @@ const canAssignAwards = toRef(
 				{{ $gettext(`Entries`) }}
 				&nbsp;
 				<span class="tag">
-					{{ formatNumber(competition!.entry_count) }}
+					{{ formatNumber(competition.entry_count) }}
 				</span>
 			</RouterLink>
 		</li>

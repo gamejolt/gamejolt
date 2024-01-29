@@ -9,7 +9,7 @@ import {
 } from '../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { enforceLocation } from '../../../../../utils/router';
-import { useCommunityRouteStore } from '../view.store';
+import { updateCommunity, useCommunityRouteStore } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
@@ -30,19 +30,20 @@ export default {
 };
 </script>
 <script lang="ts" setup>
-const { updateCommunity, community, collaborator } = useCommunityRouteStore()!;
+const routeStore = useCommunityRouteStore()!;
+const { community, collaborator } = routeStore;
 
 createAppRoute({
 	routeTitle: computed(() =>
 		$gettext(`Edit Community - %{ community }`, {
-			community: community.value!.name,
+			community: community.value?.name || '',
 		})
 	),
 	onResolved({ payload }) {
-		updateCommunity(payload.community);
+		updateCommunity(routeStore, payload.community);
 		collaborator.value = payload.collaboration
 			? new CollaboratorModel(payload.collaboration)
-			: null;
+			: undefined;
 	},
 });
 </script>

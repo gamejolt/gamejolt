@@ -27,7 +27,12 @@ import { useAppStore } from '../../../store/index';
 import AppCommunitiesViewContext from './_context/AppCommunitiesViewContext.vue';
 import AppMobileHeader from './_mobile-header/AppMobileHeader.vue';
 import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
-import { CommunityRouteStoreKey, createCommunityRouteStore } from './view.store';
+import {
+	CommunityRouteStoreKey,
+	createCommunityRouteStore,
+	setChannelPathFromRoute,
+	setCommunity,
+} from './view.store';
 
 export const CommunityThemeKey = 'community';
 
@@ -63,8 +68,6 @@ const {
 	frontpageChannel,
 	sidebarData,
 	collaborator,
-	setCommunity,
-	setChannelPathFromRoute,
 	isShowingSidebar,
 } = routeStore;
 
@@ -125,9 +128,9 @@ createAppRoute({
 	onResolved({ payload }) {
 		const community = new CommunityModel(payload.community);
 
-		setCommunity(community);
+		setCommunity(routeStore, community);
 		sidebarData.value = new CommunitySidebarData(payload);
-		collaborator.value = payload.invite ? new CollaboratorModel(payload.invite) : null;
+		collaborator.value = payload.invite ? new CollaboratorModel(payload.invite) : undefined;
 
 		setActiveCommunity(community);
 		viewCommunity(community);
@@ -160,7 +163,7 @@ createAppRoute({
 watch(
 	() => route,
 	() => {
-		setChannelPathFromRoute(route);
+		setChannelPathFromRoute(routeStore, route);
 	},
 	{ immediate: true, deep: true }
 );
@@ -209,7 +212,13 @@ function showEditHeader() {
 
 			<!-- Mobile Header -->
 			<template v-if="!isShowingSidebar && !isEditing">
-				<AppMobileHeader :has-unread="hasUnreadPosts" />
+				<AppMobileHeader
+					:community="community"
+					:channel="channel"
+					:sidebar-data="sidebarData"
+					:channel-path="channelPath"
+					:has-unread="hasUnreadPosts"
+				/>
 			</template>
 
 			<RouterView />

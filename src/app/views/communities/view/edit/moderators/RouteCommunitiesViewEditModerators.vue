@@ -148,8 +148,9 @@ createAppRoute({
 
 				<template #body>
 					<FormCommunityCollaborator
+						v-if="community"
 						:model="collaborator"
-						:community="community!"
+						:community="community"
 						@submit="onSavedCollaborator"
 					/>
 				</template>
@@ -159,7 +160,11 @@ createAppRoute({
 				:label="$gettext(`Add Collaborator`)"
 				@toggle="isShowingCollaboratorAdd = !isShowingCollaboratorAdd"
 			>
-				<FormCommunityCollaborator :community="community!" @submit="onAddedCollaborator" />
+				<FormCommunityCollaborator
+					v-if="community"
+					:community="community"
+					@submit="onAddedCollaborator"
+				/>
 			</AppCardListAdd>
 		</AppCardList>
 	</AppCommunitiesViewPageContainer>
