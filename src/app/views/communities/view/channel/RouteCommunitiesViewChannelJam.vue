@@ -103,7 +103,7 @@ const canSubmitEntry = toRef(
 const routeTitle = computed(() =>
 	$gettext(`%{ channel } - %{ name } Community on Game Jolt`, {
 		name: community.value.name,
-		channel: channel.value.displayTitle || '',
+		channel: channel.value.displayTitle,
 	})
 );
 
