@@ -1,16 +1,12 @@
 import { inject, InjectionKey, onUnmounted, provide, ref, shallowReadonly, toRef } from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
-import { createLogger } from '../../utils/logging';
 import { objectEquals } from '../../utils/object';
 import { isDynamicGoogleBot } from '../device/device.service';
-import { Environment } from '../environment/environment.service';
 import { Model } from '../model/model.service';
 import { onRouteChangeAfter } from '../route/route-component';
 import { AdSlot } from './ad-slot-info';
 import { AdAdapter } from './adapter-base';
 import { AdEnthusiastAdapter } from './enthusiast/enthusiast-adapter';
-
-const logger = createLogger('Ads Store');
 
 type AdStore = ReturnType<typeof createAdStore>;
 const AdStoreKey: InjectionKey<AdStore> = Symbol('ads');
@@ -29,23 +25,6 @@ export type AdInterface = { display: () => void };
 export class AdSettingsContainer {
 	isPageDisabled = false;
 	resource: Model | null = null;
-}
-
-export const enum AdEvent {
-	View = 'view',
-	Click = 'click',
-}
-
-export const enum AdType {
-	Display = 'display',
-	Video = 'video',
-}
-
-export const enum AdResourceType {
-	None = 1,
-	Game = 2,
-	User = 3,
-	FiresidePost = 4,
 }
 
 export function createAdStore() {
@@ -174,45 +153,4 @@ async function _displayAds(displayedAds: AdInterface[]) {
 	for (const ad of displayedAds) {
 		ad.display();
 	}
-}
-
-export async function sendAdBeacon(
-	event: AdEvent,
-	type: AdType,
-	resource?: string,
-	resourceId?: number
-) {
-	let queryString = '';
-
-	// Cache busting.
-	queryString += 'cb=' + Date.now();
-
-	if (resource) {
-		if (resource === 'Game') {
-			queryString += '&resource_type=' + AdResourceType.Game;
-			queryString += '&resource_id=' + resourceId;
-		} else if (resource === 'User') {
-			queryString += '&resource_type=' + AdResourceType.User;
-			queryString += '&resource_id=' + resourceId;
-		} else if (resource === 'Fireside_Post') {
-			queryString += '&resource_type=' + AdResourceType.FiresidePost;
-			queryString += '&resource_id=' + resourceId;
-		}
-	}
-
-	let path = '/adserver';
-	if (event === AdEvent.Click) {
-		path += '/click';
-	} else {
-		path += `/log/${type}`;
-	}
-
-	if (AdsDisabledDev) {
-		logger.info('Sending ad beacon.', { event, type, resource, resourceId });
-	}
-
-	// This is enough to send the beacon.
-	// No need to add it to the page.
-	const img = window.document.createElement('img');
-	img.src = `${Environment.apiHost}${path}?${queryString}`;
 }
