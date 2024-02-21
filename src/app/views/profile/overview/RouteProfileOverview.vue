@@ -290,7 +290,7 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 									borderRadius: kBorderRadiusLg.px,
 									padding: `8px`,
 								}"
-								size="video"
+								size="rectangle"
 								placement="side"
 							/>
 							<AppSpacer vertical :scale="6" />
@@ -336,7 +336,7 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 									borderRadius: kBorderRadiusLg.px,
 									padding: `8px`,
 								}"
-								size="video"
+								size="rectangle"
 								placement="side"
 							/>
 							<AppSpacer vertical :scale="6" />

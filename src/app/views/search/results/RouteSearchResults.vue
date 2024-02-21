@@ -159,7 +159,7 @@ const slicedRealms = computed(() => {
 							borderRadius: kBorderRadiusLg.px,
 							padding: `8px`,
 						}"
-						size="video"
+						size="rectangle"
 						placement="content"
 					/>
 				</AppScrollAffix>

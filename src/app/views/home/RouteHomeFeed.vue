@@ -302,7 +302,7 @@ const topSpacerHeight = buildCSSPixelValue(58);
 						<AppSpacer vertical :scale="8" />
 					</template>
 
-					<AppAdWidget size="video" placement="side" />
+					<AppAdWidget size="rectangle" placement="side" />
 				</template>
 
 				<!-- Main -->

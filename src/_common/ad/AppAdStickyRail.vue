@@ -26,8 +26,9 @@ const { shouldShow } = useAdStore();
 
 <template>
 	<div :style="{ position: `relative` }">
+		<!-- TODO: Turned off for now until we get new units from proper -->
 		<div
-			v-if="showLeft && shouldShow && Screen.width >= minWidth"
+			v-if="false && showLeft && shouldShow && Screen.width >= minWidth"
 			:style="{
 				position: `absolute`,
 				left: `20px`,
@@ -43,7 +44,7 @@ const { shouldShow } = useAdStore();
 		</div>
 
 		<div
-			v-if="showRight && shouldShow && Screen.width >= minWidth"
+			v-if="false && showRight && shouldShow && Screen.width >= minWidth"
 			:style="{
 				position: `absolute`,
 				right: `20px`,

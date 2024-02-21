@@ -329,8 +329,8 @@ async function reloadPreviewComments() {
 										padding: `8px`,
 										borderRadius: kBorderRadiusLg.px,
 									}"
-									size="video"
-									placement="side"
+									size="rectangle"
+									placement="content"
 								/>
 							</AppScrollAffix>
 							<AppSpacer vertical :scale="4" />

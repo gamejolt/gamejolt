@@ -66,7 +66,7 @@ const id = ++idCounter;
 
 const shouldShowAds = toRef(() => !canReorder.value && showAds.value && globalShouldShowAds.value);
 const isScrollable = toRef(() => (Screen.isXs && scrollable.value) || forceScrollable.value);
-const shouldShowStickyVideoAd = toRef(() => Screen.width >= 2100);
+const shouldShowStickyAd = toRef(() => Screen.width >= 2100);
 
 const rowSize = toRef(() => {
 	if (Screen.isSm) {
@@ -161,7 +161,7 @@ function shouldShowAd(index: number) {
 				<div v-if="Screen.isDesktop && shouldShowAds" class="_game-grid-ad">
 					<div
 						:style="{
-							...styleWhen(shouldShowStickyVideoAd, {
+							...styleWhen(shouldShowStickyAd, {
 								margin: `0 auto`,
 								maxWidth: `400px`,
 							}),
@@ -169,15 +169,12 @@ function shouldShowAd(index: number) {
 					>
 						<AppScrollAffix
 							:style="{ position: `relative`, zIndex: kLayerAds }"
-							:disabled="!shouldShowStickyVideoAd"
+							:disabled="!shouldShowStickyAd"
 							:padding="8"
 							:affixed-styles="{ right: `8px` }"
 						>
 							<div class="_game-grid-ad-inner">
-								<AppAdWidget
-									:size="shouldShowStickyVideoAd ? 'video' : 'rectangle-fix'"
-									placement="content"
-								/>
+								<AppAdWidget size="rectangle" placement="content" />
 							</div>
 						</AppScrollAffix>
 					</div>

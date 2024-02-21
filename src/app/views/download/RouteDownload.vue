@@ -182,12 +182,12 @@ function _releaseAdSettings() {
 		<AppPageContainer xl>
 			<template v-if="Screen.isDesktop" #left>
 				<AppScrollAffix>
-					<AppAdWidget size="skyscraper-1" placement="side" />
+					<AppAdWidget size="rectangle" placement="side" />
 				</AppScrollAffix>
 			</template>
 			<template v-if="Screen.isLg" #right>
 				<AppScrollAffix>
-					<AppAdWidget size="skyscraper-2" placement="side" />
+					<AppAdWidget size="rectangle" placement="side" />
 				</AppScrollAffix>
 			</template>
 			<template #default>
