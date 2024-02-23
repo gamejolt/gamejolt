@@ -33,9 +33,11 @@ import { $gettext } from '../../../../../../../../../_common/translate/translate
 import { arrayRemove } from '../../../../../../../../../utils/array';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
 import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/FormCommunityCompetitionAward.vue';
-import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/category.vue';
-import FormCommunityCompetitionVotingEdit from '../../../../../../../../components/forms/community/competition/voting/edit/edit.vue';
-import FormCommunityCompetitionVotingToggle from '../../../../../../../../components/forms/community/competition/voting/toggle/toggle.vue';
+import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/FormCommunityCompetitionVotingCategory.vue';
+import FormCommunityCompetitionVotingEdit from '../../../../../../../../components/forms/community/competition/voting/edit/FormCommunityCompetitionVotingEdit.vue';
+import FormCommunityCompetitionVotingToggle, {
+	FormCommunityCompetitionVotingToggleInterface,
+} from '../../../../../../../../components/forms/community/competition/voting/toggle/FormCommunityCompetitionVotingToggle.vue';
 import { useCommunityRouteStore } from '../../../../../view.store';
 
 export default {
@@ -61,7 +63,9 @@ const activeVotingCategory = ref<CommunityCompetitionVotingCategoryModel | undef
 const isShowingAwardAdd = ref(false);
 const isShowingVotingCategoryAdd = ref(false);
 const isEditing = ref(false);
-const toggleForm = ref<FormCommunityCompetitionVotingToggle>();
+
+// TODO(component-setup-refactor-forms-1): test this
+const toggleForm = ref<FormCommunityCompetitionVotingToggleInterface>();
 
 const hasVotingCategories = toRef(() => votingCategories.value.length > 0);
 const hasAwards = toRef(() => awards.value.length > 0);
@@ -91,9 +95,10 @@ function onToggleNotSetUp() {
 
 function onFormCancel() {
 	isEditing.value = false;
+
 	// Because the form was not submitted, reset voting to disabled when not initialized.
 	if (toggleForm.value && !competition.value!.isVotingSetUp) {
-		toggleForm.value.setField('is_voting_enabled', false);
+		toggleForm.value.form.formModel.is_voting_enabled = false;
 	}
 
 	// Scroll to top of page, because the form got removed and would leave us with an almost
@@ -112,8 +117,8 @@ function onClickChange() {
 	isEditing.value = true;
 }
 
-function onCategoryAddSubmit($payload: any) {
-	const category = new CommunityCompetitionVotingCategoryModel($payload);
+function onCategoryAddSubmit(model: CommunityCompetitionVotingCategoryModel) {
+	const category = new CommunityCompetitionVotingCategoryModel(model);
 	votingCategories.value.push(category);
 	isShowingVotingCategoryAdd.value = false;
 }
