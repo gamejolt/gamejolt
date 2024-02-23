@@ -7,6 +7,7 @@ import AppAdProper from './AppAdProper.vue';
 
 export const ProperTagUnits = {
 	side: ['side_1', 'side_2'],
+	skyscraper: ['side_rail_dynamic'],
 	leaderboard: ['leaderboard'],
 	content: [
 		'content_1',

@@ -7,17 +7,22 @@ const props = defineProps({
 	...defineAdAdapterComponentProps<AdProperAdapter>(),
 });
 
+const { placement, size } = toRefs(props.adSlot);
+
 const tagPlacement = ref<ProperTagPlacement | null>(null);
 const tagUnit = ref<string | null>(null);
 const tagId = ref<string | null>(null);
+const tagClass = ref<string | null>(null);
 
-const { placement, size } = toRefs(props.adSlot);
 if (placement.value === 'top') {
 	if (size.value === 'leaderboard') {
 		tagPlacement.value = 'leaderboard';
 	} else {
 		tagPlacement.value = 'content';
 	}
+} else if (size.value === 'skyscraper') {
+	tagPlacement.value = 'skyscraper';
+	tagClass.value = 'sovrn-side-rail-dynamic';
 } else {
 	tagPlacement.value = placement.value;
 }
@@ -64,6 +69,6 @@ function _doProperDelete(tagId: string) {
 
 <template>
 	<div v-if="tagId" class="proper-ad-unit">
-		<div :id="`proper-ad-${tagId}`" />
+		<div :id="`proper-ad-${tagId}`" :class="tagClass" />
 	</div>
 </template>

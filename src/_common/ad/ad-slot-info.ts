@@ -1,10 +1,4 @@
-export type AdSlotSize =
-	| 'rectangle'
-	| 'rectangle-fix'
-	| 'leaderboard'
-	| 'video'
-	| 'skyscraper-1'
-	| 'skyscraper-2';
+export type AdSlotSize = 'rectangle' | 'leaderboard' | 'video' | 'skyscraper';
 
 export type AdSlotPlacement = 'content' | 'side' | 'top';
 

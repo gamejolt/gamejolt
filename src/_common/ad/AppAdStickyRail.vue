@@ -26,9 +26,8 @@ const { shouldShow } = useAdStore();
 
 <template>
 	<div :style="{ position: `relative` }">
-		<!-- TODO: Turned off for now until we get new units from proper -->
 		<div
-			v-if="false && showLeft && shouldShow && Screen.width >= minWidth"
+			v-if="showLeft && shouldShow && Screen.width >= minWidth"
 			:style="{
 				position: `absolute`,
 				left: `20px`,
@@ -39,12 +38,12 @@ const { shouldShow } = useAdStore();
 		>
 			<!-- We set the padding to 80 just in case there's a top nav affixed -->
 			<AppScrollAffix :padding="80">
-				<AppAdWidget size="skyscraper-1" placement="side" />
+				<AppAdWidget size="skyscraper" placement="side" />
 			</AppScrollAffix>
 		</div>
 
 		<div
-			v-if="false && showRight && shouldShow && Screen.width >= minWidth"
+			v-if="showRight && shouldShow && Screen.width >= minWidth"
 			:style="{
 				position: `absolute`,
 				right: `20px`,
@@ -55,7 +54,7 @@ const { shouldShow } = useAdStore();
 		>
 			<!-- We set the padding to 80 just in case there's a top nav affixed -->
 			<AppScrollAffix :padding="80">
-				<AppAdWidget size="skyscraper-2" placement="side" />
+				<AppAdWidget size="skyscraper" placement="side" />
 			</AppScrollAffix>
 		</div>
 

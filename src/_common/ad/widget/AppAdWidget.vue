@@ -46,7 +46,7 @@ function _makeAdSlot() {
 				...styleWhen(adSlot.size === 'leaderboard', {
 					minHeight: `115px`,
 				}),
-				...styleWhen(adSlot.size === 'rectangle' || adSlot.size === 'rectangle-fix', {
+				...styleWhen(adSlot.size === 'rectangle', {
 					minHeight: `250px`,
 				}),
 				...styleWhen(adSlot.size === 'video', {
@@ -55,7 +55,7 @@ function _makeAdSlot() {
 				// For debugging ad placements.
 				...styleWhen(GJ_BUILD_TYPE !== 'build', {
 					background: `rgba(255, 0, 0, 0.2)`,
-					...styleWhen(adSlot.size === 'skyscraper-1' || adSlot.size === 'skyscraper-2', {
+					...styleWhen(adSlot.size === 'skyscraper', {
 						minWidth: `160px`,
 						minHeight: `600px`,
 					}),
