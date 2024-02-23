@@ -12,6 +12,11 @@ interface DoSupporterMessageModalOptions {
 	action?: SupporterActionModel;
 }
 
+interface SupporterMessageModalResponse {
+	message: SupporterMessageModel;
+	canSendAll?: boolean;
+}
+
 /**
  * Used to create/edit a thank-you message template, or send an individual
  * thank-you message to a user.
@@ -20,7 +25,7 @@ interface DoSupporterMessageModalOptions {
 export async function showDoSupporterMessageModal(options: DoSupporterMessageModalOptions) {
 	const { action, model } = options;
 
-	return await showModal<SupporterMessageModel>({
+	return await showModal<SupporterMessageModalResponse>({
 		modalId: 'DoSupporterMessage',
 		component: defineAsyncComponent(() => import('./FormSupporterMessage.vue')),
 		props: {

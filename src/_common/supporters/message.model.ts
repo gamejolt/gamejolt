@@ -1,9 +1,11 @@
 import { Model } from '../model/model.service';
 import { UserModel } from '../user/user.model';
+import type { SupporterActionType } from './action.model';
 
 export class SupporterMessageModel extends Model {
 	declare from_user: UserModel;
 	declare to_user: UserModel;
+	declare type: SupporterActionType;
 	declare sent_on: number;
 	declare skipped_on?: number;
 	declare content: string;
@@ -22,7 +24,7 @@ export class SupporterMessageModel extends Model {
 }
 
 export async function $saveSupporterMessageTemplate(model: SupporterMessageModel) {
-	return model.$_save(`/web/dash/creators/supporters/save_template`, 'message', {
+	return model.$_save(`/web/dash/creators/supporters/save-template/${model.type}`, 'message', {
 		data: {
 			message_content: model.content,
 		},

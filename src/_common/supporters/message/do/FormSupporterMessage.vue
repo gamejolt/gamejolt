@@ -40,8 +40,16 @@ const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const isTemplate = computed(() => !action?.value);
 
-const loadUrl = computed(() => `/web/dash/creators/supporters/save-template`);
-const sendUrl = computed(() => `/web/dash/creators/supporters/send-message/${action?.value?.id}`);
+const loadUrl = computed(() => {
+	let type = model?.value?.type ?? action?.value?.type ?? undefined;
+	if (!type) {
+		throw new Error('Expected either model or action to be provided');
+	}
+
+	return `/web/dash/creators/supporters/save-template/${type}`;
+});
+
+const sendUrl = computed(() => `/web/dash/creators/supporters/send-message`);
 
 const form: FormController<SupporterMessageModel> = createForm({
 	model,
@@ -60,15 +68,13 @@ const form: FormController<SupporterMessageModel> = createForm({
 			if (isTemplate.value) {
 				response = await $saveSupporterMessageTemplate(form.formModel);
 			} else {
-				response = await Api.sendRequest(
-					sendUrl.value,
-					{
-						message_content: form.formModel.content,
-					},
-					{
-						detach: true,
-					}
-				);
+				const payload = {
+					action_id: action!.value!.id,
+					type: action!.value!.type,
+					message_content: form.formModel.content,
+				};
+
+				response = await Api.sendRequest(sendUrl.value, payload, { detach: true });
 			}
 
 			if (!response.success) {
@@ -99,7 +105,11 @@ const form: FormController<SupporterMessageModel> = createForm({
 				return;
 			}
 
-			modal.resolve(new SupporterMessageModel(response.message));
+			modal.resolve({
+				message: new SupporterMessageModel(response.message),
+				canSendAll:
+					typeof response.canSendAll === 'boolean' ? response.canSendAll : undefined,
+			});
 		} catch (e) {
 			console.error(e);
 			showErrorGrowl($gettext(`Something went wrong`));

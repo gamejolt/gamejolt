@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRoute } from 'vue-router';
 import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -11,15 +11,21 @@ import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { SupporterActionModel } from '../../../../_common/supporters/action.model';
+import {
+	SupporterActionModel,
+	TYPE_CHARGED_STICKER,
+	TYPE_SHOP_PURCHASE,
+} from '../../../../_common/supporters/action.model';
 import { SupporterMessageModel } from '../../../../_common/supporters/message.model';
 import { showDoSupporterMessageModal } from '../../../../_common/supporters/message/do/modal.service';
+import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { getCurrentServerTime } from '../../../../utils/server-time';
@@ -30,13 +36,16 @@ const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}p
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
-		resolver: () =>
+		deps: { params: ['type'] },
+		resolver: ({ route }) =>
 			Api.sendFieldsRequest('/mobile/dash/creators/supporters', {
 				actions: {
+					type: route.params.type || TYPE_CHARGED_STICKER,
 					perPage: ACTIONS_PER_PAGE,
 				},
-				templateMessage: true,
+				templateMessage: {
+					type: route.params.type || TYPE_CHARGED_STICKER,
+				},
 				replyTimeLimit: true,
 				isSending: true,
 				canSendAll: true,
@@ -46,7 +55,7 @@ export default {
 
 type InitPayload = {
 	actions: any[];
-	templateMessage: string;
+	templateMessage: SupporterMessageModel;
 	replyTimeLimit: number;
 	isSending: boolean;
 	canSendAll: boolean;
@@ -74,6 +83,11 @@ const templateMessage = ref<SupporterMessageModel>({ content: '{}' } as Supporte
 const routeTitle = computed(() => $gettext(`Your Supporters`));
 const sendAllUrl = computed(() => `/web/dash/creators/supporters/send_all`);
 const canSubmitSendAll = computed(() => !isSending.value && canSendAll.value && hasTemplate.value);
+const canSendAllTooltip = computed(() =>
+	canSendAll.value
+		? $gettext('Send your template messages to everyone')
+		: $gettext('Set a template message for all types of support to enable this')
+);
 
 const hasTemplate = computed(() => {
 	const content = templateMessage.value.content;
@@ -83,6 +97,9 @@ const hasTemplate = computed(() => {
 
 	return ContentDocument.fromJson(content).hasContent;
 });
+
+const route = useRoute();
+const supporterActionType = computed(() => route.params.type || TYPE_CHARGED_STICKER);
 
 const { reload } = createAppRoute({
 	routeTitle,
@@ -129,6 +146,7 @@ async function loadMore() {
 	try {
 		const response = await Api.sendFieldsRequest('/mobile/dash/creators/supporters', {
 			actions: {
+				type: supporterActionType.value,
 				perPage: ACTIONS_PER_PAGE,
 				pos: newPos,
 			},
@@ -224,23 +242,29 @@ async function onClickSendAll() {
 }
 
 async function onClickEdit() {
-	const newTemplate = await showDoSupporterMessageModal({
+	const response = await showDoSupporterMessageModal({
 		model: templateMessage.value,
 	});
 
+	const newTemplate = response?.message;
 	if (!newTemplate) {
 		return;
 	}
 
 	templateMessage.value = newTemplate;
+
+	if (response.canSendAll !== undefined) {
+		canSendAll.value = response.canSendAll;
+	}
 }
 
 async function onClickCreateCustom(action: SupporterActionModel) {
-	const sentMessage = await showDoSupporterMessageModal({
+	const response = await showDoSupporterMessageModal({
 		model: action.message,
 		action,
 	});
 
+	const sentMessage = response?.message;
 	if (!sentMessage) {
 		return;
 	}
@@ -269,6 +293,49 @@ function _canThankSupporterAction(action: SupporterActionModel) {
 	<AppShellPageBackdrop>
 		<div class="container">
 			<AppSpacer vertical :scale="10" />
+
+			<AppNavTabList>
+				<ul>
+					<li>
+						<RouterLink
+							:to="{
+								name: 'dash.supporters',
+								params: { type: TYPE_CHARGED_STICKER },
+							}"
+							:class="{
+								active: supporterActionType === TYPE_CHARGED_STICKER,
+							}"
+						>
+							{{ $gettext(`Charged Stickers`) }}
+						</RouterLink>
+					</li>
+					<li>
+						<RouterLink
+							:to="{
+								name: 'dash.supporters',
+								params: { type: TYPE_SHOP_PURCHASE },
+							}"
+							:class="{
+								active: supporterActionType === TYPE_SHOP_PURCHASE,
+							}"
+						>
+							{{ $gettext(`Shop Purchases`) }}
+						</RouterLink>
+					</li>
+				</ul>
+
+				<template #input>
+					<AppButton
+						primary
+						block
+						v-app-tooltip="canSendAllTooltip"
+						:disabled="!canSendAll"
+						@click="onClickSendAll"
+					>
+						{{ $gettext(`Thank everyone`) }}
+					</AppButton>
+				</template>
+			</AppNavTabList>
 
 			<div class="-template">
 				<div class="well sans-margin-bottom fill-bg">
@@ -330,24 +397,25 @@ function _canThankSupporterAction(action: SupporterActionModel) {
 				</AppAlertBox>
 			</AppExpand>
 
-			<div class="-row -flex-wrap">
-				<h1 class="-auto-flex sans-margin-bottom">
-					{{ $gettext(`Latest Supporters`) }}
-				</h1>
-
-				<AppButton
-					v-if="canSubmitSendAll"
-					class="-template-action"
-					style="margin-left: auto"
-					solid
-					primary
-					@click="onClickSendAll"
-				>
-					{{ $gettext(`Thank everyone`) }}
-				</AppButton>
-			</div>
+			<h1 class="sans-margin-bottom">
+				{{ $gettext(`Latest Supporters`) }}
+			</h1>
 
 			<AppSpacer vertical :scale="10" />
+
+			<template v-if="actions.length === 0">
+				<div class="well fill-bg">
+					<h4 class="sans-margin-top">
+						{{ $gettext(`No supporters yet`) }}
+					</h4>
+
+					<div>
+						{{
+							$gettext(`Once you have supporters, you'll be able to thank them here.`)
+						}}
+					</div>
+				</div>
+			</template>
 
 			<template v-for="action of actions" :key="action.id">
 				<div class="-item-wrapper">
@@ -355,6 +423,11 @@ function _canThankSupporterAction(action: SupporterActionModel) {
 						<AppJolticon icon="sticker-filled" />
 
 						{{ $gettext(`Charged sticker`) }}
+					</div>
+					<div v-else-if="action.isShopPurchase" class="-support-type">
+						<AppJolticon icon="marketplace-filled" />
+
+						{{ $gettext(`Shop purchase`) }}
 					</div>
 
 					<div class="-item sheet sheet-offset">
@@ -391,6 +464,25 @@ function _canThankSupporterAction(action: SupporterActionModel) {
 
 								<div class="-resource-content">
 									{{ action.fireside.title }}
+								</div>
+							</template>
+							<template v-else-if="action.shopProductResource">
+								<div class="-subtle-header">
+									<template v-if="action.resource_type === 'Avatar_Frame'">
+										{{ $gettext(`Avatar Frame`) }}
+									</template>
+									<template v-else-if="action.resource_type === 'Sticker_Pack'">
+										{{ $gettext(`Sticker Pack`) }}
+									</template>
+									<template v-else-if="action.resource_type === 'Background'">
+										{{ $gettext(`Background`) }}
+									</template>
+									<template v-else>
+										{{ $gettext(`Shop Item`) }}
+									</template>
+								</div>
+								<div class="-resource-content">
+									{{ action.shopProductResource.name }}
 								</div>
 							</template>
 						</div>
@@ -491,17 +583,6 @@ function _canThankSupporterAction(action: SupporterActionModel) {
 
 .-template-action
 	margin: 0
-
-.-row
-	display: flex
-	gap: 8px
-	align-items: flex-end
-
-.-flex-wrap
-	flex-wrap: wrap
-
-.-auto-flex
-	flex: auto
 
 .-item-wrapper
 	position: relative
