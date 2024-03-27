@@ -33,20 +33,23 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { community } = useCommunityRouteStore()!;
 
 const maxLinkedGames = ref(10);
 const hasMoreGamesToLink = ref(false);
 
-const community = toRef(() => routeStore.community);
-const hasLinkedGames = toRef(() => community.value.games && community.value.games.length > 0);
+const hasLinkedGames = toRef(() => community.value?.games && community.value?.games.length > 0);
 const canLinkNewGames = toRef(
-	() => community.value.games && community.value.games.length < maxLinkedGames.value
+	() => community.value?.games && community.value?.games.length < maxLinkedGames.value
 );
 
 async function saveSort(sortedGames: GameModel[]) {
+	if (!community.value || !community.value.games) {
+		return;
+	}
+
 	// Reorder the games to see the result of the ordering right away.
-	community.value.games!.splice(0, community.value.games!.length, ...sortedGames);
+	community.value.games.splice(0, community.value.games.length, ...sortedGames);
 
 	try {
 		await $saveCommunityGameSort(community.value);
@@ -57,6 +60,10 @@ async function saveSort(sortedGames: GameModel[]) {
 }
 
 async function onClickLinkGame() {
+	if (!community.value) {
+		return;
+	}
+
 	const game = await showCommunityLinkGameModal(community.value);
 	if (!game) {
 		return;
@@ -82,6 +89,10 @@ async function onClickLinkGame() {
 }
 
 async function onClickUnlinkGame(game: GameModel) {
+	if (!community.value) {
+		return;
+	}
+
 	try {
 		const payload = await Api.sendRequest(
 			'/web/dash/communities/games/unlink',
@@ -114,7 +125,7 @@ createAppRoute({
 
 <template>
 	<AppCommunitiesViewPageContainer>
-		<AppCommunityPerms :community="community" required="community-channels">
+		<AppCommunityPerms v-if="community" :community="community" required="community-channels">
 			<h2 class="section-header">
 				{{ $gettext(`Linked Games`) }}
 			</h2>
@@ -158,7 +169,7 @@ createAppRoute({
 
 			<br />
 
-			<AppCardList v-if="hasLinkedGames" :items="community.games" is-draggable>
+			<AppCardList v-if="community && hasLinkedGames" :items="community.games" is-draggable>
 				<AppCardListDraggable item-key="id" @change="saveSort">
 					<template #item="{ element: game }">
 						<AppCardListItem :id="`game-container-${game.id}`" :item="game">

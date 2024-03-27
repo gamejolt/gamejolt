@@ -1,18 +1,23 @@
 <script lang="ts" setup>
-import { toRef } from 'vue';
+import { PropType, toRefs } from 'vue';
 import AppCommunityCardBase from '../../../../../_common/community/card-base/AppCommunityCardBase.vue';
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppEditableThumbnail from '../_editable-thumbnail/AppEditableThumbnail.vue';
-import { useCommunityRouteStore } from '../view.store';
 
-const routeStore = useCommunityRouteStore()!;
+const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
+});
 
-const community = toRef(() => routeStore.community);
+const { community } = toRefs(props);
 </script>
 
 <template>
 	<AppCommunityCardBase :community="community" overflow>
 		<template #thumbnail>
-			<AppEditableThumbnail />
+			<AppEditableThumbnail :community="community" />
 		</template>
 	</AppCommunityCardBase>
 </template>

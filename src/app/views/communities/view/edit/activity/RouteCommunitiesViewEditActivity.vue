@@ -36,17 +36,21 @@ type ActivityItem = {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { community } = useCommunityRouteStore()!;
 
 const items = ref<ActivityItem[]>([]);
 const isAtEnd = ref(false);
 const isLoading = ref(false);
 
 async function loadMore() {
+	if (!community.value) {
+		return;
+	}
+
 	isLoading.value = true;
 	const payload = await Api.sendRequest(
 		'/web/dash/communities/activity/' +
-			routeStore.community.id +
+			community.value.id +
 			'?from=' +
 			items.value[items.value.length - 1].item.added_on,
 		undefined,

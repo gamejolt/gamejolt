@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, provide } from 'vue';
+import { PropType, computed, provide, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
 import { CommunityChannelCardWidth } from '../../../../components/community/channel/card/AppCommunityChannelCard.vue';
@@ -18,6 +18,8 @@ const props = defineProps({
 
 provide(CommunityRouteStoreKey, props.routeStore);
 
+const { routeStore } = toRefs(props);
+const { community, isLoaded: isRouteStoreLoaded } = routeStore.value;
 const { toggleLeftPane } = useAppStore();
 const route = useRoute();
 
@@ -32,17 +34,19 @@ function onChangeSection(path: string) {
 </script>
 
 <template>
-	<div v-if="routeStore.isLoaded" class="sidebar-context-channels">
+	<!--TODO(reactive-community-route-store): community needs to be valid for the whole block?
+		AppNavChannels and AppNavEdit will be skipped also if it's not valid, that's expected right?-->
+	<div v-if="isRouteStoreLoaded && community" class="sidebar-context-channels">
 		<div
 			:style="{
 				maxWidth: `${CommunityChannelCardWidth}px`,
 			}"
 		>
-			<AppCommunitiesViewCard />
+			<AppCommunitiesViewCard :community="community" />
 		</div>
 
-		<AppNavChannels v-if="!isEditing" />
-		<AppNavEdit v-else @change-section="onChangeSection" />
+		<AppNavChannels v-if="!isEditing" :community="community" />
+		<AppNavEdit v-else :community="community" @change-section="onChangeSection" />
 	</div>
 </template>
 

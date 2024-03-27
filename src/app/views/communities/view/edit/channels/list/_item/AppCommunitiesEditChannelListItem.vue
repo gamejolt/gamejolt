@@ -1,25 +1,30 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
 import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
+import { CommunityModel } from '../../../../../../../../_common/community/community.model';
 import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../../../_common/translate/translate.service';
 import { showCommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
-import { useCommunityRouteStore } from '../../../../view.store';
 
 const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
 	channel: {
 		type: Object as PropType<CommunityChannelModel>,
 		required: true,
 	},
+	archivedChannels: {
+		type: Array as PropType<Array<CommunityChannelModel>>,
+		required: true,
+	},
 });
 
-const { channel } = toRefs(props);
-
-const routeStore = useCommunityRouteStore()!;
-const community = toRef(() => routeStore.community);
+const { community, channel, archivedChannels } = toRefs(props);
 
 const canRemoveChannel = computed(() => {
 	// Cannot remove when no channel perms
@@ -57,13 +62,15 @@ async function onClickRemoveChannel(channelToRemove: CommunityChannelModel) {
 
 	if (channelToRemove._removed) {
 		if (channelToRemove.is_archived) {
-			routeStore.archivedChannels = routeStore.archivedChannels.filter(
+			archivedChannels.value = archivedChannels.value.filter(
 				i => i.id !== channelToRemove.id
 			);
 		} else {
-			community.value.channels = community.value.channels!.filter(
-				i => i.id !== channelToRemove.id
-			);
+			if (community.value.channels) {
+				community.value.channels = community.value.channels!.filter(
+					i => i.id !== channelToRemove.id
+				);
+			}
 		}
 	}
 }

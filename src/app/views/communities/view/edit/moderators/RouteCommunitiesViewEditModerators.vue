@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ref, toRef } from 'vue';
+import { ref } from 'vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
@@ -34,13 +34,11 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { community } = useCommunityRouteStore()!;
 
 const collaborators = ref<CollaboratorModel[]>([]);
 const activeCollaborator = ref<CollaboratorModel | undefined>(undefined);
 const isShowingCollaboratorAdd = ref(false);
-
-const community = toRef(() => routeStore.community);
 
 function onAddedCollaborator(collaborator: CollaboratorModel) {
 	isShowingCollaboratorAdd.value = false;
@@ -150,6 +148,7 @@ createAppRoute({
 
 				<template #body>
 					<FormCommunityCollaborator
+						v-if="community"
 						:model="collaborator"
 						:community="community"
 						@submit="onSavedCollaborator"
@@ -161,7 +160,11 @@ createAppRoute({
 				:label="$gettext(`Add Collaborator`)"
 				@toggle="isShowingCollaboratorAdd = !isShowingCollaboratorAdd"
 			>
-				<FormCommunityCollaborator :community="community" @submit="onAddedCollaborator" />
+				<FormCommunityCollaborator
+					v-if="community"
+					:community="community"
+					@submit="onAddedCollaborator"
+				/>
 			</AppCardListAdd>
 		</AppCardList>
 	</AppCommunitiesViewPageContainer>

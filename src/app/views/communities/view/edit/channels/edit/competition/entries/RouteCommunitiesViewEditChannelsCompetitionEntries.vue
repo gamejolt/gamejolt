@@ -113,7 +113,7 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { competition } = useCommunityRouteStore()!;
 const route = useRoute();
 
 const entries = ref<CommunityCompetitionEntryModel[]>([]);
@@ -121,7 +121,6 @@ const entryCount = ref(0);
 const isLoading = ref(true);
 const perPage = ref(50);
 
-const competition = toRef(() => routeStore.competition!);
 const sortIcon = toRef(() => (isSortInAscendingDirection.value ? 'chevron-up' : 'chevron-down'));
 
 const sortDirectionLabel = computed(() =>
@@ -176,6 +175,10 @@ function onClickShowEntry(entry: CommunityCompetitionEntryModel) {
 }
 
 async function onClickRemoveEntry(entry: CommunityCompetitionEntryModel) {
+	if (!competition.value) {
+		return;
+	}
+
 	if (entry.is_removed) {
 		const result = await showModalConfirm(
 			$gettext(`Are you sure you want to readmit this entry to the jam?`)
@@ -221,202 +224,208 @@ createAppRoute({
 		<template v-if="isLoading">
 			<AppLoading centered />
 		</template>
-		<template v-else-if="competition.periodNum === CompetitionPeriodPreComp">
-			<p>
-				{{
-					$gettext(
-						`The jam has not yet begun and has no entries. Check back later when the jam has started.`
-					)
-				}}
-			</p>
-			<p class="help-block">
-				{{ $gettext(`The Jam starts on:`) }}
-
-				<AppCommunityCompetitionDate
-					:date="competition.starts_on"
-					:timezone="competition.timezone"
-				/>
-			</p>
-		</template>
-		<template v-else>
-			<template v-if="entryCount === 0">
-				<AppIllustration :asset="illNoCommentsSmall">
-					<p>
-						<span>
-							{{
-								competition.periodNum >= CompetitionPeriodVoting
-									? $gettext(
-											`No new entries can be submitted to the jam, and none have been submitted during its runtime.`
-									  )
-									: $gettext(
-											`There are currently no submissions entered into the jam yet. Once they are entered, they will show up here.`
-									  )
-							}}
-						</span>
-					</p>
-				</AppIllustration>
-			</template>
-
-			<template v-else>
-				<p class="help-block">
-					<span v-translate="{ count: entryCount }">
-						<b>%{ count }</b> total entries have been submitted.
-					</span>
-					<br />
-					<template v-if="entryCount > competition.entry_count">
-						<span
-							v-translate="{
-								count: entryCount - competition.entry_count,
-								visibleCount: competition.entry_count,
-							}"
-						>
-							<b>%{ count }</b> have been hidden, resulting in
-							<b>%{ visibleCount }</b> visible entries.
-						</span>
-					</template>
-					<template v-else>
-						{{ $gettext(`No entries have been hidden.`) }}
-					</template>
+		<template v-else-if="competition">
+			<template v-if="competition.periodNum === CompetitionPeriodPreComp">
+				<p>
+					{{
+						$gettext(
+							`The jam has not yet begun and has no entries. Check back later when the jam has started.`
+						)
+					}}
 				</p>
+				<p class="help-block">
+					{{ $gettext(`The Jam starts on:`) }}
 
-				<div class="table-responsive">
-					<table class="table">
-						<thead>
-							<tr>
-								<th>
-									<RouterLink
-										v-app-no-autoscroll
-										:to="getSortLocation('name')"
-										class="link-unstyled -header"
-									>
-										<span>{{ $gettext(`Title`) }}</span>
-										<span v-if="currentSort === 'name'">
-											<AppJolticon
-												v-app-tooltip="sortDirectionLabel"
-												:icon="sortIcon"
-											/>
-										</span>
-									</RouterLink>
-								</th>
-								<th>
-									<RouterLink
-										v-app-no-autoscroll
-										:to="getSortLocation('user')"
-										class="link-unstyled -header"
-									>
-										<span>{{ $gettext(`Developer`) }}</span>
-										<span v-if="currentSort === 'user'">
-											<AppJolticon
-												v-app-tooltip="sortDirectionLabel"
-												:icon="sortIcon"
-											/>
-										</span>
-									</RouterLink>
-								</th>
-								<th>
-									<RouterLink
-										v-app-no-autoscroll
-										:to="getSortLocation('time')"
-										class="link-unstyled -header"
-									>
-										<span>{{ $gettext(`Entered`) }}</span>
-										<span v-if="currentSort === 'time'">
-											<AppJolticon
-												v-app-tooltip="sortDirectionLabel"
-												:icon="sortIcon"
-											/>
-										</span>
-									</RouterLink>
-								</th>
-								<th>
-									<RouterLink
-										v-app-no-autoscroll
-										:to="getSortLocation('visibility')"
-										class="link-unstyled -header"
-									>
-										<span>{{ $gettext(`Visibility`) }}</span>
-										<span v-if="currentSort === 'visibility'">
-											<AppJolticon
-												v-app-tooltip="sortDirectionLabel"
-												:icon="sortIcon"
-											/>
-										</span>
-									</RouterLink>
-								</th>
-							</tr>
-						</thead>
+					<AppCommunityCompetitionDate
+						:date="competition.starts_on"
+						:timezone="competition.timezone"
+					/>
+				</p>
+			</template>
+			<template v-else>
+				<template v-if="entryCount === 0">
+					<AppIllustration :asset="illNoCommentsSmall">
+						<p>
+							<span>
+								{{
+									competition.periodNum >= CompetitionPeriodVoting
+										? $gettext(
+												`No new entries can be submitted to the jam, and none have been submitted during its runtime.`
+										  )
+										: $gettext(
+												`There are currently no submissions entered into the jam yet. Once they are entered, they will show up here.`
+										  )
+								}}
+							</span>
+						</p>
+					</AppIllustration>
+				</template>
 
-						<tbody>
-							<tr v-for="entry of entries" :key="entry.id">
-								<th>
-									<a @click="onClickShowEntry(entry)">
-										{{ entry.resource.title }}
-									</a>
-								</th>
-								<td>
-									<RouterLink
-										:to="{
-											name: 'profile.overview',
-											params: { username: entry.resource.developer.username },
-										}"
-										class="-user-link"
-									>
-										<AppUserCardHover :user="entry.resource.developer">
-											<span class="-user-link">
-												<AppUserAvatarImg
-													class="-avatar"
-													:user="entry.resource.developer"
-												/>
-												<span class="-user-link-name">
-													@{{ entry.resource.developer.username }}
-												</span>
-												&nbsp;
-												<AppUserVerifiedTick
-													:user="entry.resource.developer"
+				<template v-else>
+					<p class="help-block">
+						<span v-translate="{ count: entryCount }">
+							<b>%{ count }</b> total entries have been submitted.
+						</span>
+						<br />
+						<template v-if="entryCount > competition.entry_count">
+							<span>
+								{{
+									$gettext(
+										`%{ count } have been hidden, resulting in %{ visibleCount } visible entries.`,
+										{
+											count: entryCount - competition.entry_count,
+											visibleCount: competition.entry_count,
+										}
+									)
+								}}
+							</span>
+						</template>
+						<template v-else>
+							{{ $gettext(`No entries have been hidden.`) }}
+						</template>
+					</p>
+
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>
+										<RouterLink
+											v-app-no-autoscroll
+											:to="getSortLocation('name')"
+											class="link-unstyled -header"
+										>
+											<span>{{ $gettext(`Title`) }}</span>
+											<span v-if="currentSort === 'name'">
+												<AppJolticon
+													v-app-tooltip="sortDirectionLabel"
+													:icon="sortIcon"
 												/>
 											</span>
-										</AppUserCardHover>
-									</RouterLink>
-								</td>
-								<td>
-									<AppTimeAgo :date="entry.added_on" />
-								</td>
-								<td>
-									<AppButton
-										v-app-tooltip="
-											entry.is_removed
-												? $gettext(`Readmit entry into the Jam`)
-												: $gettext(`Hide entry from the Jam`)
-										"
-										sm
-										@click="onClickRemoveEntry(entry)"
-									>
-										{{
-											entry.is_removed
-												? $gettext(`Readmit Entry`)
-												: $gettext(`Hide Entry`)
-										}}
-									</AppButton>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+										</RouterLink>
+									</th>
+									<th>
+										<RouterLink
+											v-app-no-autoscroll
+											:to="getSortLocation('user')"
+											class="link-unstyled -header"
+										>
+											<span>{{ $gettext(`Developer`) }}</span>
+											<span v-if="currentSort === 'user'">
+												<AppJolticon
+													v-app-tooltip="sortDirectionLabel"
+													:icon="sortIcon"
+												/>
+											</span>
+										</RouterLink>
+									</th>
+									<th>
+										<RouterLink
+											v-app-no-autoscroll
+											:to="getSortLocation('time')"
+											class="link-unstyled -header"
+										>
+											<span>{{ $gettext(`Entered`) }}</span>
+											<span v-if="currentSort === 'time'">
+												<AppJolticon
+													v-app-tooltip="sortDirectionLabel"
+													:icon="sortIcon"
+												/>
+											</span>
+										</RouterLink>
+									</th>
+									<th>
+										<RouterLink
+											v-app-no-autoscroll
+											:to="getSortLocation('visibility')"
+											class="link-unstyled -header"
+										>
+											<span>{{ $gettext(`Visibility`) }}</span>
+											<span v-if="currentSort === 'visibility'">
+												<AppJolticon
+													v-app-tooltip="sortDirectionLabel"
+													:icon="sortIcon"
+												/>
+											</span>
+										</RouterLink>
+									</th>
+								</tr>
+							</thead>
 
-				<AppPagination
-					:total-items="entryCount"
-					:current-page="currentPage"
-					:items-per-page="perPage"
-				/>
+							<tbody>
+								<tr v-for="entry of entries" :key="entry.id">
+									<th>
+										<a @click="onClickShowEntry(entry)">
+											{{ entry.resource.title }}
+										</a>
+									</th>
+									<td>
+										<RouterLink
+											:to="{
+												name: 'profile.overview',
+												params: {
+													username: entry.resource.developer.username,
+												},
+											}"
+											class="-user-link"
+										>
+											<AppUserCardHover :user="entry.resource.developer">
+												<span class="-user-link">
+													<AppUserAvatarImg
+														class="-avatar"
+														:user="entry.resource.developer"
+													/>
+													<span class="-user-link-name">
+														@{{ entry.resource.developer.username }}
+													</span>
+													&nbsp;
+													<AppUserVerifiedTick
+														:user="entry.resource.developer"
+													/>
+												</span>
+											</AppUserCardHover>
+										</RouterLink>
+									</td>
+									<td>
+										<AppTimeAgo :date="entry.added_on" />
+									</td>
+									<td>
+										<AppButton
+											v-app-tooltip="
+												entry.is_removed
+													? $gettext(`Readmit entry into the Jam`)
+													: $gettext(`Hide entry from the Jam`)
+											"
+											sm
+											@click="onClickRemoveEntry(entry)"
+										>
+											{{
+												entry.is_removed
+													? $gettext(`Readmit Entry`)
+													: $gettext(`Hide Entry`)
+											}}
+										</AppButton>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 
-				<!-- Probably on a too high page due to editing url. -->
-				<template v-if="entryCount > 0 && entries.length === 0">
-					<h4>
-						{{ $gettext(`Whoops! There are no entries back here...`) }}
-					</h4>
-					<AppButton :to="getFirstPageLocation()" icon="reply">
-						{{ $gettext(`Go back`) }}
-					</AppButton>
+					<AppPagination
+						:total-items="entryCount"
+						:current-page="currentPage"
+						:items-per-page="perPage"
+					/>
+
+					<!-- Probably on a too high page due to editing url. -->
+					<template v-if="entryCount > 0 && entries.length === 0">
+						<h4>
+							{{ $gettext(`Whoops! There are no entries back here...`) }}
+						</h4>
+						<AppButton :to="getFirstPageLocation()" icon="reply">
+							{{ $gettext(`Go back`) }}
+						</AppButton>
+					</template>
 				</template>
 			</template>
 		</template>

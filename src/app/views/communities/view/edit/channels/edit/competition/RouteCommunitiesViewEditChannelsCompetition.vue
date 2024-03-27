@@ -7,7 +7,7 @@ import {
 } from '../../../../../../../../_common/route/route-component';
 import { Timezone } from '../../../../../../../../_common/timezone/timezone.service';
 import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
-import AppCommunitiesEditCompetitionNav from './_nav/nav.vue';
+import AppCommunitiesEditCompetitionNav from './_nav/AppCommunitiesEditCompetitionNav.vue';
 
 export default {
 	...defineAppRouteOptions({

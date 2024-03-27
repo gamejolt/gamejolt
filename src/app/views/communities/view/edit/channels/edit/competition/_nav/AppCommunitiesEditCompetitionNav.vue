@@ -1,97 +1,88 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { toRef } from 'vue';
 import { CompetitionPeriodVoting } from '../../../../../../../../../_common/community/competition/competition.model';
 import { formatNumber } from '../../../../../../../../../_common/filters/number';
+import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
 import { useCommunityRouteStore } from '../../../../../view.store';
 
-@Options({})
-export default class AppCommunitiesEditCompetitionNav extends Vue {
-	routeStore = setup(() => useCommunityRouteStore())!;
+const { competition } = useCommunityRouteStore()!;
 
-	readonly formatNumber = formatNumber;
-
-	get competition() {
-		return this.routeStore.competition!;
-	}
-
-	get canAssignAwards() {
-		return (
-			this.competition.is_voting_enabled &&
-			this.competition.has_awards &&
-			this.competition.periodNum >= CompetitionPeriodVoting
-		);
-	}
-}
+const canAssignAwards = toRef(
+	() =>
+		competition.value &&
+		competition.value.is_voting_enabled &&
+		competition.value.has_awards &&
+		competition.value.periodNum >= CompetitionPeriodVoting
+);
 </script>
 
 <template>
-	<ul>
+	<ul v-if="competition">
 		<li>
-			<router-link
+			<RouterLink
 				:to="{
 					name: 'communities.view.edit.channels.competition.overview',
 				}"
 				exact-active-class="active"
 			>
 				<AppJolticon icon="info-circle" />
-				<AppTranslate>Overview</AppTranslate>
-			</router-link>
+				{{ $gettext(`Overview`) }}
+			</RouterLink>
 		</li>
 		<li>
-			<router-link
+			<RouterLink
 				:to="{
 					name: 'communities.view.edit.channels.competition.settings',
 				}"
 				active-class="active"
 			>
 				<AppJolticon icon="edit" />
-				<AppTranslate>Edit</AppTranslate>
-			</router-link>
+				{{ $gettext(`Edit`) }}
+			</RouterLink>
 		</li>
 		<li>
-			<router-link
+			<RouterLink
 				:to="{
 					name: 'communities.view.edit.channels.competition.voting',
 				}"
 				active-class="active"
 			>
 				<AppJolticon icon="pedestals-numbers" />
-				<AppTranslate>Voting</AppTranslate>
+				{{ $gettext(`Voting`) }}
 				&nbsp;
 				<span v-if="competition.is_voting_enabled" class="tag tag-highlight">
-					<AppTranslate>On</AppTranslate>
+					{{ $gettext(`On`) }}
 				</span>
 				<span v-else class="tag">
-					<AppTranslate>Off</AppTranslate>
+					{{ $gettext(`Off`) }}
 				</span>
-			</router-link>
+			</RouterLink>
 		</li>
 		<li>
-			<router-link
+			<RouterLink
 				:to="{
 					name: 'communities.view.edit.channels.competition.entries',
 				}"
 				active-class="active"
 			>
 				<AppJolticon icon="gamepad" />
-				<AppTranslate>Entries</AppTranslate>
+				{{ $gettext(`Entries`) }}
 				&nbsp;
 				<span class="tag">
 					{{ formatNumber(competition.entry_count) }}
 				</span>
-			</router-link>
+			</RouterLink>
 		</li>
 		<li v-if="canAssignAwards">
-			<router-link
+			<RouterLink
 				:to="{
 					name: 'communities.view.edit.channels.competition.assign-awards',
 				}"
 				active-class="active"
 			>
 				<AppJolticon icon="medal" />
-				<AppTranslate>Assign Awards</AppTranslate>
-			</router-link>
+				{{ $gettext(`Assign Awards`) }}
+			</RouterLink>
 		</li>
 	</ul>
 </template>
