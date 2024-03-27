@@ -154,8 +154,8 @@ createAppRoute({
 		clearActiveCommunity();
 		clearPageTheme(CommunityThemeKey);
 		releasePageAdsSettings(adStore);
-		if (grid.value) {
-			grid.value.deregisterViewingCommunity(community.value!.id);
+		if (grid.value && community.value) {
+			grid.value.deregisterViewingCommunity(community.value.id);
 		}
 	},
 });
