@@ -86,7 +86,7 @@ const heading = computed(() => {
 			<div>
 				{{
 					$gettext(
-						`Premium stickers are animated and available for purchase within premium packs in your shop for joltbux.`
+						`Premium stickers are available for purchase within premium packs in your shop for joltbux. We recommend you upload animated stickers.`
 					)
 				}}
 			</div>

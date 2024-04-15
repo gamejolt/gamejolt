@@ -34,7 +34,7 @@ const { productType, isEditing } = data;
 		<div v-if="productType === ShopDashProductType.Premium">
 			{{
 				$gettext(
-					`Premium avatar frames are animated and available for purchase with joltbux in your shop.`
+					`Premium avatar frames are available for purchase with joltbux in your shop. We recommend you upload animated avatars.`
 				)
 			}}
 		</div>

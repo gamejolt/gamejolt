@@ -661,11 +661,12 @@ const helpDocLink = computed(() => {
 	}
 });
 
-const isAnimated = computed(
+const canBeAnimated = computed(
 	() =>
 		// Sticker packs are not animated no matter what right now.
-		resource !== ShopProductResource.StickerPack &&
-		productType.value === ShopDashProductType.Premium
+		resource !== ShopProductResource.StickerPack
+	// As of 15.04.2024 premium items dont have to be animated.
+	// && productType.value === ShopDashProductType.Premium
 );
 </script>
 
@@ -689,7 +690,7 @@ const isAnimated = computed(
 					<div>
 						{{
 							$gettext(
-								`You can sell premium stickers within premium packs in your shop for joltbux to make money from your supporters. Just remember, they must be animated, go through an approval process, and can't be added to reward packs.`
+								`You can sell premium stickers within premium packs in your shop for joltbux to make money from your supporters. We recommend the stickers to be animated. Just remember, they go through an approval process, and can't be added to reward packs.`
 							)
 						}}
 					</div>
@@ -804,14 +805,12 @@ const isAnimated = computed(
 				<AppFormGroup
 					v-bind="formGroupBindings"
 					name="file"
-					:label="
-						isAnimated ? $gettext(`Upload animated image`) : $gettext(`Upload image`)
-					"
+					:label="$gettext('Upload image')"
 					:optional="isEditing"
 				>
 					<div class="help-block">
-						<div v-if="isAnimated">
-							{{ $gettext(`Your image must be an animated PNG (APNG).`) }}
+						<div v-if="canBeAnimated">
+							{{ $gettext(`Your image must be a PNG or an animated PNG (APNG).`) }}
 						</div>
 						<div v-else>{{ $gettext(`Your image must be a PNG.`) }}</div>
 
