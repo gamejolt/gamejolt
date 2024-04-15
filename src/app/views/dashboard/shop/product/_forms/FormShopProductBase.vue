@@ -664,9 +664,8 @@ const helpDocLink = computed(() => {
 const canBeAnimated = computed(
 	() =>
 		// Sticker packs are not animated no matter what right now.
-		resource !== ShopProductResource.StickerPack
-	// As of 15.04.2024 premium items dont have to be animated.
-	// && productType.value === ShopDashProductType.Premium
+		resource !== ShopProductResource.StickerPack &&
+		productType.value === ShopDashProductType.Premium
 );
 </script>
 
