@@ -84,7 +84,15 @@ if (import.meta.env.SSR) {
 			:media-item="mediaItem"
 			class="_backdrop"
 			:class="{ _bleed: bleed }"
-			:style="backdropStyle"
+			:style="[
+				backdropStyle,
+				{
+					position: `absolute`,
+					zIndex: 0,
+					width: `unset`,
+					height: `unset`,
+				},
+			]"
 		>
 			<div v-if="background" class="_stretch anim-fade-in">
 				<Transition name="fade">
@@ -117,14 +125,10 @@ if (import.meta.env.SSR) {
 
 ._backdrop
 	--background-pos: 0
-	position: absolute
-	z-index: 0
 	left: var(--background-pos)
 	top: var(--background-pos)
 	right: var(--background-pos)
 	bottom: var(--background-pos)
-	width: unset
-	height: unset
 
 ._bleed
 	--background-pos: -($grid-gutter-width-xs / 2 + $border-width-base)
