@@ -23,7 +23,7 @@ export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
-		reloadOn: 'always',
+		reloadOn: 'never',
 		resolver: ({ route }) =>
 			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, _feedUrl())),
 	}),

@@ -77,7 +77,7 @@ function createController() {
 
 export default {
 	...defineAppRouteOptions({
-		reloadOn: 'always',
+		reloadOn: 'never',
 	}),
 };
 </script>

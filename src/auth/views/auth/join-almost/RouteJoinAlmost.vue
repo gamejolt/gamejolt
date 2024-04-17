@@ -9,7 +9,7 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({
-		reloadOn: 'always',
+		reloadOn: 'never',
 	}),
 };
 </script>

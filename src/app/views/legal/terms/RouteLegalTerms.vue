@@ -7,7 +7,7 @@ import { html } from '../../../../lib/terms/terms/global.md';
 
 export default {
 	...defineAppRouteOptions({
-		reloadOn: 'always',
+		reloadOn: 'never',
 	}),
 };
 </script>

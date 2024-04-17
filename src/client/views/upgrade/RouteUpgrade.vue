@@ -11,7 +11,7 @@ import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 
 export default {
 	...defineAppRouteOptions({
-		reloadOn: 'always',
+		reloadOn: 'never',
 	}),
 };
 </script>

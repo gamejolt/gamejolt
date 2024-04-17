@@ -19,7 +19,7 @@ import { RealmRouteStoreKey, createRealmRouteStore } from './view.store';
 
 export default {
 	...defineAppRouteOptions({
-		reloadOn: 'always',
+		reloadOn: { params: ['path'] },
 		resolver: async ({ route }) => Api.sendRequest('/web/realms/' + route.params.path),
 	}),
 };

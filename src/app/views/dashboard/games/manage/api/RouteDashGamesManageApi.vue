@@ -9,7 +9,7 @@ import { Screen } from '../../../../../../_common/screen/screen-service';
 import AppManageGameApiNav from './AppManageGameApiNav.vue';
 export default {
 	...defineAppRouteOptions({
-		reloadOn: 'always',
+		reloadOn: 'never',
 	}),
 };
 </script>

@@ -8,7 +8,7 @@ import butterfliesImage from './butterflies.png';
 
 export default {
 	...defineAppRouteOptions({
-		reloadOn: 'always',
+		reloadOn: 'never',
 	}),
 };
 </script>

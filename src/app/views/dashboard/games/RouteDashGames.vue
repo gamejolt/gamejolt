@@ -4,6 +4,9 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 
 export default {
 	...defineAppRouteOptions({
+		// We are going to always reload all routes in the chain when managing
+		// games so that if the game is updated by a collaborator or in another
+		// tab, the game info will reload.
 		reloadOn: 'always',
 	}),
 };

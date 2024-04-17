@@ -10,7 +10,7 @@ import {
 	name: 'RouteAuthLinkedAccount',
 })
 @OptionsForLegacyRoute({
-	reloadOn: 'always',
+	reloadOn: 'never',
 })
 export default class RouteAuthLinkedAccount extends LegacyRouteComponent {
 	render() {

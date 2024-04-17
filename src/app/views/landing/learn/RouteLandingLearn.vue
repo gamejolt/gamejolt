@@ -11,7 +11,7 @@ const assetPaths = import.meta.glob('./*.(svg|png)', { eager: true, as: 'url' })
 
 export default {
 	...defineAppRouteOptions({
-		reloadOn: 'always',
+		reloadOn: 'never',
 	}),
 };
 </script>

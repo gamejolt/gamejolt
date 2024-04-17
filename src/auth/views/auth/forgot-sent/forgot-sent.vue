@@ -9,7 +9,7 @@ import {
 	name: 'RouteAuthForgotSent',
 })
 @OptionsForLegacyRoute({
-	reloadOn: 'always',
+	reloadOn: 'never',
 })
 export default class RouteAuthForgotSent extends LegacyRouteComponent {
 	get routeTitle() {

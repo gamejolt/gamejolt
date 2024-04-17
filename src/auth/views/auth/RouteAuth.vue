@@ -29,7 +29,7 @@ export function loggedUserBlock() {
 
 export default {
 	...defineAppRouteOptions({
-		reloadOn: 'always',
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/auth/get-customized-page'),
 	}),
 };

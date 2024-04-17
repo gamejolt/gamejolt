@@ -13,7 +13,7 @@ import FormRetrieveLogin from '../../../components/forms/retrieve-login/FormRetr
 	},
 })
 @OptionsForLegacyRoute({
-	reloadOn: 'always',
+	reloadOn: 'never',
 })
 export default class RouteAuthForgot extends LegacyRouteComponent {
 	get routeTitle() {
