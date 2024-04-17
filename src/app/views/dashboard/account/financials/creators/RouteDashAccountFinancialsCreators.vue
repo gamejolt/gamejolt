@@ -17,7 +17,7 @@ import { routeLandingCreators } from '../../../../landing/creators/creators.rout
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 	}),
 	components: { AppAlertBox, AppContactLink, AppIllustration, AppSpacer, RouterLink },
 };

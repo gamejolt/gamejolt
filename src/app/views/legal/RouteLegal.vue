@@ -4,6 +4,7 @@ import { touchUser } from '../../../_common/user/user.model';
 
 export default {
 	...defineAppRouteOptions({
+		reloadOn: 'always',
 		resolver: () => touchUser(),
 	}),
 };

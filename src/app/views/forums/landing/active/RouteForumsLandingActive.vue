@@ -12,7 +12,7 @@ import AppForumTopicList from '../../../../components/forum/topic-list/topic-lis
 export default {
 	...defineAppRouteOptions({
 		cache: true,
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/forums/active-topics'),
 	}),
 };

@@ -7,7 +7,9 @@ import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import butterfliesImage from './butterflies.png';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+	}),
 };
 </script>
 

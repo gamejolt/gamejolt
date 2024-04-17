@@ -21,7 +21,7 @@ import AppDashShopItemAdd from './_item/AppDashShopItemAdd.vue';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => touchUser(),
 	}),
 };

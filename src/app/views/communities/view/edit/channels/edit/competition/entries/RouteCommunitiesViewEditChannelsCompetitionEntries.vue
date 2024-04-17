@@ -42,7 +42,7 @@ type Payload = {
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['id', 'channel'], query: ['sort', 'sort-direction', 'page'] },
+		reloadOn: { params: ['id', 'channel'], query: ['sort', 'sort-direction', 'page'] },
 		resolver: ({ route }) => {
 			const query = [];
 

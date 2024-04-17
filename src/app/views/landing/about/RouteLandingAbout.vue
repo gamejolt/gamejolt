@@ -32,7 +32,9 @@ const staff = arrayShuffle([
 ]);
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+	}),
 };
 </script>
 

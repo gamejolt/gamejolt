@@ -13,7 +13,7 @@ import { SellableModel } from '../../../../../../../../../_common/sellable/sella
 	name: 'RouteDashGamesManageGamePackagesEditWidget',
 })
 @OptionsForLegacyRoute({
-	deps: {},
+	reloadOn: 'never',
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			'/web/dash/developer/games/packages/preview/' +

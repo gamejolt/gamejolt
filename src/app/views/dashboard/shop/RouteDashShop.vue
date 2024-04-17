@@ -11,9 +11,9 @@ import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { RouteLocationRedirect } from '../../../../utils/router';
+import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import RouteLandingCreators from '../../landing/creators/RouteLandingCreators.vue';
 import { createShopDashStore, populateShopDashStoreGroup } from './shop.store';
-import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 
 async function _makeSectionPromise(
 	resource: Exclude<ShopProductResource, ShopProductResource.StickerPack> | 'packs'
@@ -44,7 +44,7 @@ async function fetchOverviewData() {
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: async () => {
 			try {
 				return await fetchOverviewData();

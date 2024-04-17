@@ -11,7 +11,7 @@ import AppCommunitiesEditCompetitionNav from './_nav/nav.vue';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		// A lot of components and displays in the child routes need timezone
 		// info, so just fetch it here.
 		resolver: () => Timezone.getTimezones(),

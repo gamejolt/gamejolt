@@ -30,7 +30,7 @@ export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest(endpoint),
 	}),
 };

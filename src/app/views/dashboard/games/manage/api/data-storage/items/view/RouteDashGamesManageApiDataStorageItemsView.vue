@@ -18,7 +18,7 @@ import { useGameDashRouteController } from '../../../../manage.store';
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['item'] },
+		reloadOn: { params: ['item'] },
 		resolver: ({ route }) =>
 			Api.sendRequest(
 				'/web/dash/developer/games/api/data-storage/' +

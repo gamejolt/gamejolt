@@ -15,7 +15,7 @@ import AppManageGameListScores from '../../_list-scores/list-scores.vue';
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['table'] },
+		reloadOn: { params: ['table'] },
 		resolver: ({ route }) =>
 			Api.sendRequest(
 				'/web/dash/developer/games/api/scores/list-table-scores/' +

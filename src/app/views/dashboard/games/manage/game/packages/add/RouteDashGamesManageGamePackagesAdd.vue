@@ -13,7 +13,9 @@ import FormGamePackage from '../../../../../../../components/forms/game/package/
 import { useGameDashRouteController } from '../../../manage.store';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+	}),
 };
 </script>
 

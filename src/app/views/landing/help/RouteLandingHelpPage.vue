@@ -15,7 +15,7 @@ export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: false,
-		deps: { params: ['category', 'page'] },
+		reloadOn: { params: ['category', 'page'] },
 		resolver: ({ route }) =>
 			Api.sendRequest(`/web/help/page/${route.params.category}/${route.params.page}`),
 	}),

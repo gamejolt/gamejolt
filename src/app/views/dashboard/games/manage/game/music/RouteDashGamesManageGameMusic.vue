@@ -25,7 +25,7 @@ import { useGameDashRouteController } from '../../manage.store';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: ({ route }) =>
 			Api.sendRequest('/web/dash/developer/games/music/' + route.params.id),
 	}),

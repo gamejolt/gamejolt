@@ -8,7 +8,9 @@ import {
 @Options({
 	name: 'RouteAuthForgotSent',
 })
-@OptionsForLegacyRoute()
+@OptionsForLegacyRoute({
+	reloadOn: 'always',
+})
 export default class RouteAuthForgotSent extends LegacyRouteComponent {
 	get routeTitle() {
 		return this.$gettext('Credentials Sent');

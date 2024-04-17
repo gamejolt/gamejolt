@@ -5,7 +5,7 @@ import { touchUser } from '../../../_common/user/user.model';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		// Just make sure the user is loaded in.
 		resolver: () => touchUser(),
 	}),

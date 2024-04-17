@@ -30,7 +30,7 @@ import { routeDashSupporters } from '../supporters/supporters.route';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: async () => {
 			try {
 				// TODO(brand-creators) Make sure this works with brand accounts

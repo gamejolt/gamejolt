@@ -8,7 +8,9 @@ import { html } from '../../../../lib/terms/cookies/global.md';
 const template = html;
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+	}),
 };
 </script>
 

@@ -14,7 +14,7 @@ import { startWizard } from '../manage/manage.store';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		// Make sure they can add a game.
 		resolver: () => Api.sendRequest('/web/dash/developer/games/add'),
 	}),

@@ -25,7 +25,7 @@ import FormShopProductStickerPack from './_forms/FormShopProductStickerPack.vue'
 
 defineOptions(
 	defineAppRouteOptions({
-		deps: {
+		reloadOn: {
 			params: ['resource', 'id'],
 		},
 		// Empty resolver so that the shop store is resolved first.

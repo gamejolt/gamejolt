@@ -38,7 +38,7 @@ const PostThemeKey = 'post';
 @OptionsForLegacyRoute({
 	lazy: true,
 	cache: true,
-	deps: { params: ['slug'], query: ['intent'] },
+	reloadOn: { params: ['slug'], query: ['intent'] },
 	async resolver({ route }) {
 		const intentRedirect = IntentService.checkRoute(route, {
 			intent: 'like-post',

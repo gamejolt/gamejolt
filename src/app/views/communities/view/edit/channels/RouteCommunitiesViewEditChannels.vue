@@ -7,7 +7,7 @@ import {
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 	}),
 };
 </script>

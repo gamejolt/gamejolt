@@ -9,6 +9,7 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 export default {
 	...defineAppRouteOptions({
 		lazy: true,
+		reloadOn: 'always',
 		resolver: ({ route }) => {
 			const { userId, code, type } = route.params;
 			return Api.sendRequest(`/web/auth/authorize/${userId}/${code}/${type}`);

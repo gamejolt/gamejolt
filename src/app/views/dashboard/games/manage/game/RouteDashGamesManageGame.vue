@@ -15,7 +15,9 @@ import AppManageGameMediaBar from './_media-bar/media-bar.vue';
 import AppManageGameNav from './_nav/nav.vue';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+	}),
 };
 </script>
 

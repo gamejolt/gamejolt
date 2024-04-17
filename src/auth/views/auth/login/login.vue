@@ -17,7 +17,7 @@ import { loggedUserBlock } from '../RouteAuth.vue';
 	},
 })
 @OptionsForLegacyRoute({
-	deps: { query: ['intent'] },
+	reloadOn: { query: ['intent'] },
 	async resolver({ route }) {
 		if (route.query.intent === 'approve-login-expired') {
 			showErrorGrowl({

@@ -3,7 +3,7 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 	}),
 };
 </script>

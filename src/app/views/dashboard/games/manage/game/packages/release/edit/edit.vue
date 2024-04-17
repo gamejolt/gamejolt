@@ -26,7 +26,7 @@ import { useGameDashRouteController } from '../../../../manage.store';
 	},
 })
 @OptionsForLegacyRoute({
-	deps: { params: ['packageId', 'releaseId'] },
+	reloadOn: { params: ['packageId', 'releaseId'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			'/web/dash/developer/games/releases/' +

@@ -37,7 +37,7 @@ export default {
 	...defineAppRouteOptions({
 		cache: false,
 		lazy: true,
-		deps: { params: ['feedSection'], query: ['tab', 'feed_last_id'] },
+		reloadOn: { params: ['feedSection'], query: ['tab', 'feed_last_id'] },
 		resolver: ({ route }) =>
 			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route)), undefined, {
 				// Don't error redirect here. It would go to 404 if the user is banned, and prevent us

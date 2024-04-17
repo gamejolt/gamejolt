@@ -9,7 +9,7 @@ import { useCommunityRouteStore } from '../../../../../view.store';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 	}),
 };
 </script>

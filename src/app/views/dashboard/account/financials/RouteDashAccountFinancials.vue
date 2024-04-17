@@ -13,7 +13,7 @@ import { routeDashAccountFinancialsMarketplace } from './marketplace/marketplace
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 	}),
 };
 </script>

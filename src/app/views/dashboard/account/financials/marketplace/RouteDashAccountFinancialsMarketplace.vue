@@ -7,7 +7,7 @@ import FormFinancialsMarketplace from '../../../../../components/forms/financial
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 	}),
 };
 </script>

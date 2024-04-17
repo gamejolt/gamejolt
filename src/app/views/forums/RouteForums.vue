@@ -4,7 +4,9 @@ import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/ro
 import './forums-content.styl';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+	}),
 };
 </script>
 

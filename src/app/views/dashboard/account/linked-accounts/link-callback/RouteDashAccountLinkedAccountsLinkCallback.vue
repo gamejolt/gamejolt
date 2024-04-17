@@ -16,7 +16,7 @@ import { $gettext } from '../../../../../../_common/translate/translate.service'
 
 export default {
 	...defineAppRouteOptions({
-		deps: null,
+		reloadOn: 'always',
 		resolver({ route }) {
 			const url = constructUrl('/web/dash/linked-accounts/link-callback/', route);
 			// Force POST.

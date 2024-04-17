@@ -21,7 +21,7 @@ import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 export default {
 	...defineAppRouteOptions({
 		cache: true,
-		deps: {},
+		reloadOn: 'never',
 		resolver: ({ route }) => Api.sendRequest('/web/discover/games/trophies/' + route.params.id),
 	}),
 };

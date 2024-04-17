@@ -24,7 +24,7 @@ import { useCommunityRouteStore } from '../../view.store';
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['id'] },
+		reloadOn: { params: ['id'] },
 		resolver({ route }) {
 			return Api.sendRequest('/web/dash/communities/games/' + route.params.id);
 		},

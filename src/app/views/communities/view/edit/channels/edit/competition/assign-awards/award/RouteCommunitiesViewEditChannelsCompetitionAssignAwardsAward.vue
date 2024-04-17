@@ -25,7 +25,7 @@ import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../.
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['awardId'] },
+		reloadOn: { params: ['awardId'] },
 		resolver: ({ route }) => makeRequest(route),
 	}),
 };

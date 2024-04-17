@@ -75,7 +75,7 @@ export default {
 	...defineAppRouteOptions({
 		lazy: true,
 		cache: true,
-		deps: { query: ['feed_last_id'] },
+		reloadOn: { query: ['feed_last_id'] },
 		resolver({ route }) {
 			const gameId = parseInt(route.params.id as string);
 			HistoryTick.sendBeacon('game-view', gameId, {

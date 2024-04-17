@@ -31,7 +31,7 @@ import AppStyleguideColor from './color/color.vue';
 	},
 })
 @OptionsForLegacyRoute({
-	deps: {},
+	reloadOn: 'never',
 	resolver: () => touchUser(),
 })
 export default class RouteStyleguide extends LegacyRouteComponent {

@@ -1,6 +1,5 @@
 <script lang="ts">
 import { RouterView } from 'vue-router';
-import { imageGameJoltLogo } from '../../../app/img/images';
 import { Api } from '../../../_common/api/api.service';
 import { redirectToDashboard } from '../../../_common/auth/auth.service';
 import { Connection } from '../../../_common/connection/connection-service';
@@ -12,6 +11,7 @@ import { commonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import AppTranslateLangSelector from '../../../_common/translate/lang-selector/AppTranslateLangSelector.vue';
+import { imageGameJoltLogo } from '../../../app/img/images';
 import AppCoverImg from '../../components/AppCoverImg.vue';
 import AppGameCoverCredits from '../../components/AppGameCoverCredits.vue';
 import { useAuthStore } from '../../store/index';
@@ -29,6 +29,7 @@ export function loggedUserBlock() {
 
 export default {
 	...defineAppRouteOptions({
+		reloadOn: 'always',
 		resolver: () => Api.sendRequest('/web/auth/get-customized-page'),
 	}),
 };

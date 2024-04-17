@@ -18,7 +18,7 @@ import AppProfileTrophiesNav, { TrophyNavGame } from './_nav/AppProfileTrophiesN
 	},
 })
 @OptionsForLegacyRoute({
-	deps: {},
+	reloadOn: 'never',
 	resolver: ({ route }) => Api.sendRequest('/web/profile/trophies/@' + route.params.username),
 })
 export default class RouteProfileTrophies extends LegacyRouteComponent {

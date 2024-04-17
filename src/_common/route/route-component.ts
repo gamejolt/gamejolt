@@ -11,11 +11,22 @@ import { EventTopic } from '../system/event/event-topic';
 
 export type AppRoute = ReturnType<typeof createAppRoute>;
 
+interface ReloadOnParams {
+	params: string[];
+	query?: string[];
+}
+interface ReloadOnQuery {
+	params?: string[];
+	query: string[];
+}
+type ReloadOnDeps = Required<ReloadOnParams & ReloadOnQuery>;
+type ReloadOnPreset = 'always' | 'never';
+
 export interface AppRouteOptions {
 	lazy?: boolean;
 	cache?: boolean;
 	reloadOnHashChange?: boolean;
-	deps?: null | { params?: string[]; query?: string[] };
+	reloadOn: ReloadOnPreset | ReloadOnParams | ReloadOnQuery | ReloadOnDeps;
 	resolver?: (data: { route: RouteLocationNormalized }) => Promise<any>;
 }
 
@@ -451,13 +462,18 @@ function _canSkipRouteUpdate(
 	from: RouteLocationNormalized,
 	to: RouteLocationNormalized
 ) {
-	const deps = _findDeps(resolverOptions, to);
+	const reloadOn = _findReloadOnDependencies(resolverOptions, to);
 
 	// If deps weren't defined then we need to refresh since the route _might_
 	// depend on a changed param/query, or even the route itself (since the same
 	// component may be used across different routes).
-	if (deps === null) {
+	if (reloadOn === 'always') {
 		return false;
+	}
+
+	// If the route is set to never reload, then we can skip the route update.
+	if (reloadOn === 'never') {
+		return true;
 	}
 
 	const changedParams = _getChangedProperties(from.params, to.params);
@@ -466,13 +482,13 @@ function _canSkipRouteUpdate(
 	// Otherwise we should check the params and query against the deps to
 	// see if we actually need to update.
 	for (const param of changedParams) {
-		if (deps.params.indexOf(param) !== -1) {
+		if (reloadOn.params.indexOf(param) !== -1) {
 			return false;
 		}
 	}
 
 	for (const query of changedQuery) {
-		if (deps.query.indexOf(query) !== -1) {
+		if (reloadOn.query.indexOf(query) !== -1) {
 			return false;
 		}
 	}
@@ -480,7 +496,10 @@ function _canSkipRouteUpdate(
 	return true;
 }
 
-function _findDeps(resolverOptions: AppRouteOptionsInternal, to: RouteLocationNormalized) {
+function _findReloadOnDependencies(
+	resolverOptions: AppRouteOptionsInternal,
+	to: RouteLocationNormalized
+): ReloadOnPreset | ReloadOnDeps {
 	const collected = [];
 	let found = false;
 
@@ -500,7 +519,7 @@ function _findDeps(resolverOptions: AppRouteOptionsInternal, to: RouteLocationNo
 	// component as not being able to pull deps so that it reloads for any param
 	// changes. It's the safest bet.
 	if (!found) {
-		return null;
+		return 'always';
 	}
 
 	const params: string[] = [];
@@ -513,15 +532,15 @@ function _findDeps(resolverOptions: AppRouteOptionsInternal, to: RouteLocationNo
 			// the whole chain "dirty" and forces anything below it to resolve
 			// always. It's because we don't know if the params can be ignored
 			// or not.
-			if (!options.deps) {
-				return null;
-			} else {
-				if (options.deps.params) {
-					params.push(...options.deps.params);
+			if (options.reloadOn === 'always') {
+				return options.reloadOn;
+			} else if (typeof options.reloadOn === 'object') {
+				if (options.reloadOn.params) {
+					params.push(...options.reloadOn.params);
 				}
 
-				if (options.deps.query) {
-					query.push(...options.deps.query);
+				if (options.reloadOn.query) {
+					query.push(...options.reloadOn.query);
 				}
 			}
 		}

@@ -11,6 +11,7 @@ import { useProfileRouteStore } from '../../RouteProfile.vue';
 
 defineOptions(
 	defineAppRouteOptions({
+		reloadOn: 'always',
 		resolver: () => Promise.resolve(),
 	})
 );

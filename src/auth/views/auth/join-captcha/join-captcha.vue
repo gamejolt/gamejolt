@@ -14,7 +14,9 @@ import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/widget.vu
 		AppGrecaptchaWidget,
 	},
 })
-@OptionsForLegacyRoute()
+@OptionsForLegacyRoute({
+	reloadOn: 'always',
+})
 export default class RouteJoinCaptcha extends LegacyRouteComponent {
 	authToken: string = null as any;
 

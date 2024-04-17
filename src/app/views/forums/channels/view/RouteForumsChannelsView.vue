@@ -23,7 +23,7 @@ const sort = 'archived';
 export default {
 	...defineAppRouteOptions({
 		cache: true,
-		deps: { params: ['name', 'sort'], query: ['page'] },
+		reloadOn: { params: ['name', 'sort'], query: ['page'] },
 		resolver({ route }) {
 			const sort = 'archived';
 			return Api.sendRequest(

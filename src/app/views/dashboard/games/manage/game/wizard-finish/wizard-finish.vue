@@ -10,7 +10,9 @@ import { useGameDashRouteController } from '../../manage.store';
 @Options({
 	name: 'RouteDashGamesManageGameWizardFinish',
 })
-@OptionsForLegacyRoute()
+@OptionsForLegacyRoute({
+	reloadOn: 'always',
+})
 export default class RouteDashGamesManageGameWizardFinish extends LegacyRouteComponent {
 	routeStore = setup(() => useGameDashRouteController()!);
 

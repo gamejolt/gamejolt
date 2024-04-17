@@ -271,7 +271,7 @@ defineOptions(
 	defineAppRouteOptions({
 		cache: true,
 		lazy: true,
-		deps: { params: ['username'], query: ['intent'] },
+		reloadOn: { params: ['username'], query: ['intent'] },
 		async resolver({ route }) {
 			const intentRedirect = IntentService.checkRoute(
 				route,

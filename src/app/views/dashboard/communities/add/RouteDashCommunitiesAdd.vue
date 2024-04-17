@@ -11,7 +11,7 @@ import AppPageContainer from '../../../../components/page-container/AppPageConta
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => touchUser(),
 	}),
 };

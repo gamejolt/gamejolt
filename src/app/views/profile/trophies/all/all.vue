@@ -20,6 +20,7 @@ import { useProfileRouteStore } from '../../RouteProfile.vue';
 	},
 })
 @OptionsForLegacyRoute({
+	reloadOn: 'always',
 	resolver: ({ route }) => Api.sendRequest('/web/profile/trophies/all/@' + route.params.username),
 })
 export default class RouteProfileTrophiesAll extends LegacyRouteComponent {

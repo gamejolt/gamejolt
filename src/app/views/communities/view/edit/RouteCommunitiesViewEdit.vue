@@ -13,7 +13,7 @@ import { updateCommunity, useCommunityRouteStore } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['id'] },
+		reloadOn: { params: ['id'] },
 		async resolver({ route }) {
 			const payload = await Api.sendRequest('/web/dash/communities/' + route.params.id);
 

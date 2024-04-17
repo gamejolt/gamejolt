@@ -47,7 +47,9 @@ const handles = [
 const assetPaths = import.meta.glob('./*.(svg|png)', { eager: true, as: 'url' });
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+	}),
 };
 </script>
 

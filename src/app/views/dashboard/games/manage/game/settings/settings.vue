@@ -22,7 +22,7 @@ import { useGameDashRouteController } from '../../manage.store';
 	},
 })
 @OptionsForLegacyRoute({
-	deps: { params: ['id'] },
+	reloadOn: { params: ['id'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(`/web/dash/developer/games/settings/view/${route.params.id}`),
 })
