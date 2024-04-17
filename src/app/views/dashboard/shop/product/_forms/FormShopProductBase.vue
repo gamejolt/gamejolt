@@ -65,6 +65,7 @@ import { $gettext } from '../../../../../../_common/translate/translate.service'
 import { styleBorderRadiusLg, styleChangeBg } from '../../../../../../_styles/mixins';
 import { kBorderRadiusBase, kBorderWidthBase } from '../../../../../../_styles/variables';
 import { arrayRemove, arrayUnique, numberSort } from '../../../../../../utils/array';
+import { isAnimatedPng } from '../../../../../../utils/image';
 import { objectOmit } from '../../../../../../utils/object';
 import { assertNever, isInstance, run } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
@@ -115,8 +116,10 @@ export function createShopProductBaseForm<
 	const dashGroup = toRef(() => shopStore.getGroupForResource(resource));
 
 	const productType = ref<ShopDashProductType>();
+	const fileIsAnimated = ref(false);
 	if (baseModel) {
 		productType.value = getShopDashProductType(baseModel);
+		fileIsAnimated.value = baseModel.is_animated;
 	} else if (resource === ShopProductResource.Sticker) {
 		// For stickers we want to allow them to choose, unless they can't edit
 		// the particular types, in which case we want to choose for them.
@@ -133,17 +136,49 @@ export function createShopProductBaseForm<
 
 	const minNameLength = ref(3);
 	const maxNameLength = ref(50);
-	const maxFilesize = ref(5 * 1024 * 1024);
-	const minWidth = ref(100);
-	const maxWidth = ref(400);
-	const minHeight = ref(100);
-	const maxHeight = ref(400);
+
+	const maxFilesizeStatic = ref(5 * 1024 * 1024);
+	const minWidthStatic = ref(100);
+	const maxWidthStatic = ref(400);
+	const minHeightStatic = ref(100);
+	const maxHeightStatic = ref(400);
+
+	const maxFilesizeAnimated = ref(0.5 * 1024 * 1024);
+	const minWidthAnimated = ref(100);
+	const maxWidthAnimated = ref(400);
+	const minHeightAnimated = ref(100);
+	const maxHeightAnimated = ref(400);
+
+	const backgroundDefaultScaling = ref(BackgroundScaling.tile);
+	const backgroundDefaultScaleStatic = ref(BackgroundDefaultScale);
+	const backgroundDefaultScaleAnimated = ref(BackgroundDefaultScale);
+
+	// When a file is selected, these will be set to either the static or
+	// animated values to match if the file is animated or not.
+	const maxFilesizeComputed = toRef(() =>
+		fileIsAnimated.value ? maxFilesizeAnimated.value : maxFilesizeStatic.value
+	);
+	const minWidthComputed = toRef(() =>
+		fileIsAnimated.value ? minWidthAnimated.value : minWidthStatic.value
+	);
+	const maxWidthComputed = toRef(() =>
+		fileIsAnimated.value ? maxWidthAnimated.value : maxWidthStatic.value
+	);
+	const minHeightComputed = toRef(() =>
+		fileIsAnimated.value ? minHeightAnimated.value : minHeightStatic.value
+	);
+	const maxHeightComputed = toRef(() =>
+		fileIsAnimated.value ? maxHeightAnimated.value : maxHeightStatic.value
+	);
+	const backgroundDefaultScaleComputed = toRef(() =>
+		fileIsAnimated.value
+			? backgroundDefaultScaleAnimated.value
+			: backgroundDefaultScaleStatic.value
+	);
+
 	const aspectRatio = ref(1);
 	const canEditFree = ref(false);
 	const canEditPremium = ref(false);
-
-	const backgroundDefaultScaling = ref(BackgroundScaling.tile);
-	const backgroundDefaultScale = ref(BackgroundDefaultScale);
 
 	const isEditing = Boolean(baseModel);
 	const processedFileData = ref() as Ref<{ file: File; url: string } | undefined>;
@@ -218,19 +253,26 @@ export function createShopProductBaseForm<
 
 			assignNonNull(minNameLength, payload.minNameLength);
 			assignNonNull(maxNameLength, payload.maxNameLength);
-			assignNonNull(maxFilesize, payload.maxFilesize);
 
-			assignNonNull(minWidth, payload.minWidth ?? payload.minSize);
-			assignNonNull(maxWidth, payload.maxWidth ?? payload.maxSize);
-			assignNonNull(minHeight, payload.minHeight ?? payload.minSize);
-			assignNonNull(maxHeight, payload.maxHeight ?? payload.maxSize);
+			assignNonNull(maxFilesizeStatic, payload.maxFilesizeStatic);
+			assignNonNull(minWidthStatic, payload.minWidthStatic ?? payload.minSizeStatic);
+			assignNonNull(maxWidthStatic, payload.maxWidthStatic ?? payload.maxSizeStatic);
+			assignNonNull(minHeightStatic, payload.minHeightStatic ?? payload.minSizeStatic);
+			assignNonNull(maxHeightStatic, payload.maxHeightStatic ?? payload.maxSizeStatic);
+
+			assignNonNull(maxFilesizeAnimated, payload.maxFilesizeAnimated);
+			assignNonNull(minWidthAnimated, payload.minWidthAnimated ?? payload.minSizeAnimated);
+			assignNonNull(maxWidthAnimated, payload.maxWidthAnimated ?? payload.maxSizeAnimated);
+			assignNonNull(minHeightAnimated, payload.minHeightAnimated ?? payload.minSizeAnimated);
+			assignNonNull(maxHeightAnimated, payload.maxHeightAnimated ?? payload.maxSizeAnimated);
 
 			assignNonNull(aspectRatio, payload.aspectRatio);
 			assignNonNull(canEditFree, payload.canEditFree);
 			assignNonNull(canEditPremium, payload.canEditPremium);
 
 			assignNonNull(backgroundDefaultScaling, payload.backgroundDefaultScaling);
-			assignNonNull(backgroundDefaultScale, payload.backgroundDefaultScale);
+			assignNonNull(backgroundDefaultScaleStatic, payload.backgroundDefaultScaleStatic);
+			assignNonNull(backgroundDefaultScaleAnimated, payload.backgroundDefaultScaleAnimated);
 
 			// When editing
 
@@ -410,7 +452,10 @@ export function createShopProductBaseForm<
 	// We'll assign to some Refs in here, so don't turn this into a computed.
 	watch(
 		[() => form.formModel.file, () => form.controlErrors.file, changeRequest, existingImgUrl],
-		([file, fileError, latestChange, existingImgUrl]) => {
+		(
+			[file, fileError, latestChange, existingImgUrl],
+			[oldFile, _oldFileError, _oldLatestChange, _oldExistingImgUrl]
+		) => {
 			const url = run(() => {
 				if (!file || fileError || toRaw(file) === toRaw(processedFileData.value?.file)) {
 					// If there's an issue with the temp file or it doesn't
@@ -431,6 +476,20 @@ export function createShopProductBaseForm<
 				}
 				return processedFileData.value.url;
 			});
+
+			// If the file changed, we need to check if it's animated.
+			if (file && toRaw(file) !== toRaw(oldFile)) {
+				run(async () => {
+					const thisIsAnimated = await isAnimatedPng(file);
+					console.log('thisIsAnimated', thisIsAnimated);
+
+					// Check that formModel.file did not change while we were
+					// checking if its animated.
+					if (toRaw(file) === toRaw(form.formModel.file)) {
+						fileIsAnimated.value = thisIsAnimated;
+					}
+				});
+			}
 
 			tempImgUrl.value = url || null;
 		},
@@ -471,11 +530,21 @@ export function createShopProductBaseForm<
 		// Restrictions
 		minNameLength,
 		maxNameLength,
-		maxFilesize,
-		minWidth,
-		maxWidth,
-		minHeight,
-		maxHeight,
+		maxFilesizeComputed,
+		minWidthComputed,
+		maxWidthComputed,
+		minHeightComputed,
+		maxHeightComputed,
+		maxFilesizeStatic,
+		minWidthStatic,
+		maxWidthStatic,
+		minHeightStatic,
+		maxHeightStatic,
+		maxFilesizeAnimated,
+		minWidthAnimated,
+		maxWidthAnimated,
+		minHeightAnimated,
+		maxHeightAnimated,
 		aspectRatio,
 		canEditFree,
 		canEditPremium,
@@ -553,11 +622,11 @@ export function createShopProductBaseForm<
 						if (min !== max) {
 							size = (min + max) / 2;
 						}
-						return size / backgroundDefaultScale.value;
+						return size / backgroundDefaultScaleComputed.value;
 					};
 					tileSize = {
-						width: getSize(minWidth.value, maxWidth.value),
-						height: getSize(minHeight.value, maxHeight.value),
+						width: getSize(minWidthComputed.value, maxWidthComputed.value),
+						height: getSize(minHeightComputed.value, maxHeightComputed.value),
 					};
 					styles.backgroundSize = `${tileSize.width}px ${tileSize?.height}px`;
 				} else {
@@ -599,12 +668,22 @@ const {
 	productType,
 	chooseProductType,
 	setFile,
-	minWidth,
-	maxWidth,
-	minHeight,
-	maxHeight,
+	minWidthComputed,
+	maxWidthComputed,
+	minHeightComputed,
+	maxHeightComputed,
+	minWidthStatic,
+	maxWidthStatic,
+	minHeightStatic,
+	maxHeightStatic,
+	minWidthAnimated,
+	maxWidthAnimated,
+	minHeightAnimated,
+	maxHeightAnimated,
 	aspectRatio,
-	maxFilesize,
+	maxFilesizeComputed,
+	maxFilesizeStatic,
+	maxFilesizeAnimated,
 	minNameLength,
 	maxNameLength,
 	getFieldAvailabilityUrl,
@@ -808,50 +887,181 @@ const canBeAnimated = computed(
 					:optional="isEditing"
 				>
 					<div class="help-block">
-						<div v-if="canBeAnimated">
-							{{ $gettext(`Your image must be a PNG or an animated PNG (APNG).`) }}
-						</div>
-						<div v-else>{{ $gettext(`Your image must be a PNG.`) }}</div>
-
-						<div v-if="minWidth === maxWidth && minHeight === maxHeight">
-							{{
-								$gettext(
-									`Images must be %{ dimensions } (ratio of 1 ÷ %{ denominator }).`,
-									{
-										dimensions: `${minWidth}×${minHeight}`,
-										denominator:
-											aspectRatio === 1
-												? 1
-												: Math.trunc((1 / (maxWidth / maxHeight)) * 100) /
-												  100,
-									}
-								)
-							}}
-						</div>
-						<div v-else>
-							{{
-								$gettext(
-									`Images must be between %{ min } and %{ max } (ratio of 1 ÷ %{ denominator }).`,
-									{
-										min: `${minWidth}×${minHeight}`,
-										max: `${maxWidth}×${maxHeight}`,
-										denominator:
-											aspectRatio === 1
-												? 1
-												: Math.trunc((1 / (maxWidth / maxHeight)) * 100) /
-												  100,
-									}
-								)
-							}}
-						</div>
-
 						<div>
 							{{
+								canBeAnimated
+									? $gettext(
+											`Your image must be a PNG or an animated PNG (APNG).`
+									  )
+									: $gettext(`Your image must be a PNG.`)
+							}}
+						</div>
+
+						<template
+							v-if="
+								!canBeAnimated ||
+								(minWidthStatic === minWidthAnimated &&
+									maxWidthStatic === maxWidthAnimated &&
+									minHeightStatic === minHeightAnimated &&
+									maxHeightStatic === maxHeightAnimated)
+							"
+						>
+							<div
+								v-if="
+									minWidthStatic === maxWidthStatic &&
+									minHeightStatic === maxHeightStatic
+								"
+							>
+								{{
+									$gettext(
+										`Images must be %{ dimensions } (ratio of 1 ÷ %{ denominator }).`,
+										{
+											dimensions: `${minWidthStatic}×${minHeightStatic}`,
+											denominator:
+												aspectRatio === 1
+													? 1
+													: Math.trunc(
+															(1 /
+																(maxWidthStatic /
+																	maxHeightStatic)) *
+																100
+													  ) / 100,
+										}
+									)
+								}}
+							</div>
+							<div v-else>
+								{{
+									$gettext(
+										`Images must be between %{ min } and %{ max } (ratio of 1 ÷ %{ denominator }).`,
+										{
+											min: `${minWidthStatic}×${minHeightStatic}`,
+											max: `${maxWidthStatic}×${maxHeightStatic}`,
+											denominator:
+												aspectRatio === 1
+													? 1
+													: Math.trunc(
+															(1 /
+																(maxWidthStatic /
+																	maxHeightStatic)) *
+																100
+													  ) / 100,
+										}
+									)
+								}}
+							</div>
+						</template>
+						<template v-else>
+							<div
+								v-if="
+									minWidthStatic === maxWidthStatic &&
+									minHeightStatic === maxHeightStatic
+								"
+							>
+								{{
+									$gettext(
+										`Static images must be %{ dimensions } (ratio of 1 ÷ %{ denominator }).`,
+										{
+											dimensions: `${minWidthStatic}×${minHeightStatic}`,
+											denominator:
+												aspectRatio === 1
+													? 1
+													: Math.trunc(
+															(1 /
+																(maxWidthStatic /
+																	maxHeightStatic)) *
+																100
+													  ) / 100,
+										}
+									)
+								}}
+							</div>
+							<div v-else>
+								{{
+									$gettext(
+										`Static images must be between %{ min } and %{ max } (ratio of 1 ÷ %{ denominator }).`,
+										{
+											min: `${minWidthStatic}×${minHeightStatic}`,
+											max: `${maxWidthStatic}×${maxHeightStatic}`,
+											denominator:
+												aspectRatio === 1
+													? 1
+													: Math.trunc(
+															(1 /
+																(maxWidthStatic /
+																	maxHeightStatic)) *
+																100
+													  ) / 100,
+										}
+									)
+								}}
+							</div>
+
+							<div
+								v-if="
+									minWidthAnimated === maxWidthAnimated &&
+									minHeightAnimated === maxHeightAnimated
+								"
+							>
+								{{
+									$gettext(
+										`Animated images must be %{ dimensions } (ratio of 1 ÷ %{ denominator }).`,
+										{
+											dimensions: `${minWidthAnimated}×${minHeightAnimated}`,
+											denominator:
+												aspectRatio === 1
+													? 1
+													: Math.trunc(
+															(1 /
+																(maxWidthAnimated /
+																	maxHeightAnimated)) *
+																100
+													  ) / 100,
+										}
+									)
+								}}
+							</div>
+							<div v-else>
+								{{
+									$gettext(
+										`Animated images must be between %{ min } and %{ max } (ratio of 1 ÷ %{ denominator }).`,
+										{
+											min: `${minWidthAnimated}×${minHeightAnimated}`,
+											max: `${maxWidthAnimated}×${maxHeightAnimated}`,
+											denominator:
+												aspectRatio === 1
+													? 1
+													: Math.trunc(
+															(1 /
+																(maxWidthAnimated /
+																	maxHeightAnimated)) *
+																100
+													  ) / 100,
+										}
+									)
+								}}
+							</div>
+						</template>
+						<div v-if="!canBeAnimated || maxFilesizeStatic === maxFilesizeAnimated">
+							{{
 								$gettext(`Max filesize is %{ filesize }.`, {
-									filesize: formatFilesize(maxFilesize),
+									filesize: formatFilesize(maxFilesizeComputed),
 								})
 							}}
 						</div>
+						<template v-else>
+							<div>
+								{{
+									$gettext(
+										`Max filesize is %{ filesize } for static images and %{ filesizeAnimated } for animated images.`,
+										{
+											filesize: formatFilesize(maxFilesizeStatic),
+											filesizeAnimated: formatFilesize(maxFilesizeAnimated),
+										}
+									)
+								}}
+							</div>
+						</template>
 					</div>
 
 					<div class="help-block">
@@ -864,16 +1074,19 @@ const canBeAnimated = computed(
 						</AppLinkHelp>
 					</div>
 
+					<!-- TODO: looks like the validators are reconstructed too
+					late, or are evaluated too early. errors are caught only for
+					the previous file when fileIsAnimated value changes. -->
 					<AppFormControlUpload
 						:validators="[
-							validateFilesize(maxFilesize),
+							validateFilesize(maxFilesizeComputed),
 							validateImageMinDimensions({
-								width: minWidth,
-								height: minHeight,
+								width: minWidthComputed,
+								height: minHeightComputed,
 							}),
 							validateImageMaxDimensions({
-								width: maxWidth,
-								height: maxHeight,
+								width: maxWidthComputed,
+								height: maxHeightComputed,
 							}),
 							validateImageAspectRatio({ ratio: aspectRatio }),
 						]"

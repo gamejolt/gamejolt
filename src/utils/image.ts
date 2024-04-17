@@ -126,3 +126,36 @@ export function getMediaserverUrlForBounds(
 	}
 	return newSrc;
 }
+
+export async function isAnimatedPng(file: File) {
+	const buff = await file.arrayBuffer();
+	const view = new DataView(buff);
+
+	// Check for PNG header.
+	if (view.getUint32(0) !== 0x89504e47 || view.getUint32(4) !== 0x0d0a1a0a) {
+		return false;
+	}
+
+	// Search for at least two fcTL chunks.
+	let numFrames = 0;
+	let offset = 8;
+	while (offset < view.byteLength) {
+		const chunkLen = view.getUint32(offset);
+		const chunkType = view.getUint32(offset + 4);
+		offset += 8;
+
+		// If chunk type is 'fcTL'
+		if (chunkType === 0x6663544c) {
+			numFrames++;
+
+			if (numFrames > 1) {
+				return true;
+			}
+		}
+
+		// Skip to next chunk. 4 additional bytes for crc.
+		offset += chunkLen + 4;
+	}
+
+	return false;
+}

@@ -24,6 +24,7 @@ export interface ShopProductCommonFields {
 	name: string;
 	description: string | undefined;
 	is_premium: boolean;
+	is_animated: boolean;
 	has_active_sale: boolean;
 	was_approved: boolean;
 }
