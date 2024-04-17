@@ -37,7 +37,11 @@ export function createLightbox(items: Ref<LightboxMediaModel[]>) {
 		return items.value[index.value];
 	});
 
-	onUnmounted(() => lightbox.close());
+	onUnmounted(() => {
+		if (lightbox.isShowing) {
+			lightbox.close();
+		}
+	});
 
 	function gotoPage(newIndex: number) {
 		const newPage = newIndex + 1;
