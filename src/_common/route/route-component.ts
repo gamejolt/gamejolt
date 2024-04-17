@@ -1,6 +1,7 @@
 import { ComponentOptions, MaybeRef, getCurrentInstance, onUnmounted, ref, watch } from 'vue';
 import { NavigationGuardWithThis, RouteLocationNormalized, Router, useRouter } from 'vue-router';
 import { RouteLocationRedirect } from '../../utils/router';
+import { RequireAtLeastOne } from '../../utils/utils';
 import { ensureConfig } from '../config/config.service';
 import { HistoryCache } from '../history/cache/cache.service';
 import { Meta, setMetaTitle } from '../meta/meta-service';
@@ -11,21 +12,16 @@ import { EventTopic } from '../system/event/event-topic';
 
 export type AppRoute = ReturnType<typeof createAppRoute>;
 
-interface ReloadOnParams {
-	params: string[];
-	query?: string[];
-}
-interface ReloadOnQuery {
-	params?: string[];
-	query: string[];
-}
-type ReloadOnDeps = Required<ReloadOnParams & ReloadOnQuery>;
+type ReloadOnDeps = RequireAtLeastOne<{
+	params: [string, ...string[]];
+	query: [string, ...string[]];
+}>;
 type ReloadOnPreset = 'always' | 'never';
 
 export interface AppRouteOptions {
 	lazy?: boolean;
 	cache?: boolean;
-	reloadOn: ReloadOnPreset | ReloadOnParams | ReloadOnQuery | ReloadOnDeps;
+	reloadOn: ReloadOnPreset | ReloadOnDeps;
 	resolver?: (data: { route: RouteLocationNormalized }) => Promise<any>;
 }
 
@@ -470,11 +466,6 @@ function _canSkipRouteUpdate(
 		return false;
 	}
 
-	// If the route is set to never reload, then we can skip the route update.
-	if (reloadOn === 'never') {
-		return true;
-	}
-
 	const changedParams = _getChangedProperties(from.params, to.params);
 	const changedQuery = _getChangedProperties(from.query, to.query);
 
@@ -498,7 +489,7 @@ function _canSkipRouteUpdate(
 function _findReloadOnDependencies(
 	resolverOptions: AppRouteOptionsInternal,
 	to: RouteLocationNormalized
-): ReloadOnPreset | ReloadOnDeps {
+) {
 	const collected = [];
 	let found = false;
 
@@ -526,6 +517,12 @@ function _findReloadOnDependencies(
 	for (const i of collected) {
 		if (i?.appRouteOptions) {
 			const options = i.appRouteOptions || {};
+
+			// If the route component is saying it never wants to reload,
+			// essentially just skip it when trying to find dependencies.
+			if (options.reloadOn === 'never') {
+				continue;
+			}
 
 			// If there is a route resolve, but no deps were defined, it makes
 			// the whole chain "dirty" and forces anything below it to resolve
