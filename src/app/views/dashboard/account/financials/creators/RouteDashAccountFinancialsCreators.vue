@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router';
 import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
 import AppContactLink from '../../../../../../_common/contact-link/AppContactLink.vue';
 import AppIllustration from '../../../../../../_common/illustration/AppIllustration.vue';
+import { illEndOfFeed } from '../../../../../../_common/illustration/illustrations';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
@@ -12,11 +13,12 @@ import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { userCanAccessCreatorForm } from '../../../../../../_common/user/user.model';
 import FormFinancialsCreator from '../../../../../components/forms/financials/FormFinancialsCreator.vue';
-import { illEndOfFeed } from '../../../../../../_common/illustration/illustrations';
 import { routeLandingCreators } from '../../../../landing/creators/creators.route';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		deps: {},
+	}),
 	components: { AppAlertBox, AppContactLink, AppIllustration, AppSpacer, RouterLink },
 };
 </script>

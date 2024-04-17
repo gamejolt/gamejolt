@@ -9,7 +9,9 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import { $gettext } from '../../../../_common/translate/translate.service';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		deps: null,
+	}),
 };
 </script>
 

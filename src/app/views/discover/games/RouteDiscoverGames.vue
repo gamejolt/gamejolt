@@ -5,7 +5,9 @@ import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		deps: {},
+	}),
 };
 </script>
 

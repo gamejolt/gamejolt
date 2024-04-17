@@ -6,7 +6,9 @@ import {
 import FormFinancialsMarketplace from '../../../../../components/forms/financials/FormFinancialsMarketplace.vue';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		deps: {},
+	}),
 };
 </script>
 

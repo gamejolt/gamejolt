@@ -12,7 +12,9 @@ import { routeDashAccountFinancialsCreators } from './creators/creators.route';
 import { routeDashAccountFinancialsMarketplace } from './marketplace/marketplace.route';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		deps: {},
+	}),
 };
 </script>
 

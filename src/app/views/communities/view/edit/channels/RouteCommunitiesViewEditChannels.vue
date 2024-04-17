@@ -6,7 +6,9 @@ import {
 } from '../../../../../../_common/route/route-component';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		deps: {},
+	}),
 };
 </script>
 
