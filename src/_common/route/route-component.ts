@@ -25,7 +25,6 @@ type ReloadOnPreset = 'always' | 'never';
 export interface AppRouteOptions {
 	lazy?: boolean;
 	cache?: boolean;
-	reloadOnHashChange?: boolean;
 	reloadOn: ReloadOnPreset | ReloadOnParams | ReloadOnQuery | ReloadOnDeps;
 	resolver?: (data: { route: RouteLocationNormalized }) => Promise<any>;
 }
