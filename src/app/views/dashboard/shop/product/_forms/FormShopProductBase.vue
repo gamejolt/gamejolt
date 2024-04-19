@@ -453,7 +453,10 @@ export function createShopProductBaseForm<
 	// We'll assign to some Refs in here, so don't turn this into a computed.
 	watch(
 		[() => form.formModel.file, () => form.controlErrors.file, changeRequest, existingImgUrl],
-		([file, fileError, latestChange, existingImgUrl]) => {
+		(
+			[file, fileError, latestChange, existingImgUrl],
+			[oldFile, _oldFileError, _oldLatestChange, _oldExistingImgUrl]
+		) => {
 			const url = run(() => {
 				if (!file || fileError || toRaw(file) === toRaw(processedFileData.value?.file)) {
 					// If there's an issue with the temp file or it doesn't
@@ -474,6 +477,21 @@ export function createShopProductBaseForm<
 				}
 				return processedFileData.value.url;
 			});
+
+			if (file && toRaw(file) !== toRaw(oldFile)) {
+				run(async () => {
+					const thisIsAnimated = await isAnimatedPng(file);
+
+					// Check that formModel.file did not change while we were
+					// checking if its animated.
+					if (toRaw(file) === toRaw(form.formModel.file)) {
+						fileIsAnimated.value = thisIsAnimated;
+						await nextTick();
+						form.clearErrors();
+						form.validate();
+					}
+				});
+			}
 
 			tempImgUrl.value = url || null;
 		},
@@ -539,22 +557,7 @@ export function createShopProductBaseForm<
 		/** Temporary image url that we can use before upload. */
 		tempImgUrl,
 		setFile(file: File | File[] | null | undefined) {
-			const targetFile = Array.isArray(file) ? file[0] : file || undefined;
-			// form.formModel.file = targetFile;
-
-			// We delay setting the file on the form model until we've checked
-			// if its animated or not because we need to update fileIsAnimated
-			// at the same tick as the file is set, otherwise the form
-			// validation will kick in before fileIsAnimated is set.
-			if (targetFile) {
-				run(async () => {
-					const thisIsAnimated = await isAnimatedPng(targetFile);
-					fileIsAnimated.value = thisIsAnimated;
-					await nextTick();
-					form.clearErrors();
-					form.validate();
-				});
-			}
+			form.formModel.file = Array.isArray(file) ? file[0] : file || undefined;
 		},
 		assignNonNull,
 		isEditing,
