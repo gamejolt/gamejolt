@@ -4,6 +4,7 @@ import {
 	PropType,
 	Ref,
 	computed,
+	nextTick,
 	onUnmounted,
 	ref,
 	shallowReadonly,
@@ -452,10 +453,7 @@ export function createShopProductBaseForm<
 	// We'll assign to some Refs in here, so don't turn this into a computed.
 	watch(
 		[() => form.formModel.file, () => form.controlErrors.file, changeRequest, existingImgUrl],
-		(
-			[file, fileError, latestChange, existingImgUrl],
-			[oldFile, _oldFileError, _oldLatestChange, _oldExistingImgUrl]
-		) => {
+		([file, fileError, latestChange, existingImgUrl]) => {
 			const url = run(() => {
 				if (!file || fileError || toRaw(file) === toRaw(processedFileData.value?.file)) {
 					// If there's an issue with the temp file or it doesn't
@@ -464,7 +462,7 @@ export function createShopProductBaseForm<
 					if (media) {
 						return media.is_animated ? media.img_url : media.mediaserver_url;
 					}
-					return existingImgUrl;
+					return existingImgUrl ?? tempImgUrl.value;
 				}
 
 				// Create a temporary URL for the file so we can display before upload.
@@ -476,20 +474,6 @@ export function createShopProductBaseForm<
 				}
 				return processedFileData.value.url;
 			});
-
-			// If the file changed, we need to check if it's animated.
-			if (file && toRaw(file) !== toRaw(oldFile)) {
-				run(async () => {
-					const thisIsAnimated = await isAnimatedPng(file);
-					console.log('thisIsAnimated', thisIsAnimated);
-
-					// Check that formModel.file did not change while we were
-					// checking if its animated.
-					if (toRaw(file) === toRaw(form.formModel.file)) {
-						fileIsAnimated.value = thisIsAnimated;
-					}
-				});
-			}
 
 			tempImgUrl.value = url || null;
 		},
@@ -555,7 +539,29 @@ export function createShopProductBaseForm<
 		/** Temporary image url that we can use before upload. */
 		tempImgUrl,
 		setFile(file: File | File[] | null | undefined) {
-			form.formModel.file = Array.isArray(file) ? file[0] : file || undefined;
+			const targetFile = Array.isArray(file) ? file[0] : file || undefined;
+			// form.formModel.file = targetFile;
+
+			// We delay setting the file on the form model until we've checked
+			// if its animated or not because we need to update fileIsAnimated
+			// at the same tick as the file is set, otherwise the form
+			// validation will kick in before fileIsAnimated is set.
+			if (targetFile) {
+				run(async () => {
+					const thisIsAnimated = await isAnimatedPng(targetFile);
+					console.log('thisIsAnimated', thisIsAnimated);
+					fileIsAnimated.value = thisIsAnimated;
+					await nextTick();
+					console.log('waited for next tick, validating');
+					form.clearErrors();
+					form.validate();
+					// nextTick(() => {
+					// 	form.clearErrors();
+					// 	form.triggerChanged();
+					// 	form.validate();
+					// });
+				});
+			}
 		},
 		assignNonNull,
 		isEditing,
@@ -596,6 +602,7 @@ export function createShopProductBaseForm<
 			return acc;
 		}, [] as string[]),
 		getBackgroundSize(data?: BaseModel | string) {
+			console.log('Invoked getBackgroundSize');
 			let styles = {
 				backgroundRepeat: 'repeat',
 				backgroundImage: ``,
@@ -689,6 +696,17 @@ const {
 	getFieldAvailabilityUrl,
 	changeRequest,
 } = props.data;
+
+// provideFormControlHooks({
+// 	beforeApplyValue(controller, value) {
+// 		if (!controller.id.value?.endsWith('-file')) {
+// 			return value;
+// 		}
+
+// 		console.log('applying value for file control', value);
+// 		return value;
+// 	},
+// });
 
 const productTypeSelectorStyle: CSSProperties = {
 	...styleBorderRadiusLg,

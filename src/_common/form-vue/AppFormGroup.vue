@@ -72,6 +72,7 @@ function createFormGroup({
 
 		const { controlVal, validators } = control.value!;
 
+		// console.log('running validators for', name.value);
 		for (const validator of validators.value) {
 			const result = await validator(controlVal.value);
 

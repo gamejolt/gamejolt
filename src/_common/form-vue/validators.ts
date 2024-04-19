@@ -367,9 +367,9 @@ export const validateFileAccept =
  * Validates that each file has a filesize less than or equal to the given
  * filesize in bytes.
  */
-export const validateFilesize =
-	(maxFilesize: number): FormValidator<File | File[]> =>
-	async files => {
+export const validateFilesize = (maxFilesize: number): FormValidator<File | File[]> => {
+	// console.log('Building validateFilesize validator with maxFilesize:', maxFilesize);
+	return async files => {
 		const result = await _validateFiles(files, i => i.size > 0 && i.size <= maxFilesize);
 		if (!result) {
 			return {
@@ -382,6 +382,7 @@ export const validateFilesize =
 
 		return null;
 	};
+};
 
 /**
  * Validates that each file has dimensions that fit within a given min
@@ -424,9 +425,20 @@ export const validateImageMinDimensions =
  * Validates that each file has dimensions that fit within a given max
  * width/height.
  */
-export const validateImageMaxDimensions =
-	({ width, height }: { width?: number; height?: number }): FormValidator<File | File[]> =>
-	async files => {
+export const validateImageMaxDimensions = ({
+	width,
+	height,
+}: {
+	width?: number;
+	height?: number;
+}): FormValidator<File | File[]> => {
+	// console.log(
+	// 	'Building validateImageMaxDimensions validator with width:',
+	// 	width,
+	// 	'height:',
+	// 	height
+	// );
+	return async files => {
 		if (!width && !height) {
 			throw new Error(`Must have either a width or a height passed in to validate.`);
 		}
@@ -458,6 +470,7 @@ export const validateImageMaxDimensions =
 
 		return null;
 	};
+};
 
 export const validateImageAspectRatio =
 	({ ratio }: { ratio: number }): FormValidator<File | File[]> =>
