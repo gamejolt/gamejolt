@@ -78,7 +78,6 @@ export function createFormControl<T>({
 	});
 
 	const validators = computed(() => {
-		// console.log('recomputing validators for', groupName.value);
 		const validators: FormValidator[] = [...inputValidators.value];
 
 		if (!optional.value && !alwaysOptional) {

@@ -549,17 +549,10 @@ export function createShopProductBaseForm<
 			if (targetFile) {
 				run(async () => {
 					const thisIsAnimated = await isAnimatedPng(targetFile);
-					console.log('thisIsAnimated', thisIsAnimated);
 					fileIsAnimated.value = thisIsAnimated;
 					await nextTick();
-					console.log('waited for next tick, validating');
 					form.clearErrors();
 					form.validate();
-					// nextTick(() => {
-					// 	form.clearErrors();
-					// 	form.triggerChanged();
-					// 	form.validate();
-					// });
 				});
 			}
 		},
@@ -602,7 +595,6 @@ export function createShopProductBaseForm<
 			return acc;
 		}, [] as string[]),
 		getBackgroundSize(data?: BaseModel | string) {
-			console.log('Invoked getBackgroundSize');
 			let styles = {
 				backgroundRepeat: 'repeat',
 				backgroundImage: ``,
@@ -696,17 +688,6 @@ const {
 	getFieldAvailabilityUrl,
 	changeRequest,
 } = props.data;
-
-// provideFormControlHooks({
-// 	beforeApplyValue(controller, value) {
-// 		if (!controller.id.value?.endsWith('-file')) {
-// 			return value;
-// 		}
-
-// 		console.log('applying value for file control', value);
-// 		return value;
-// 	},
-// });
 
 const productTypeSelectorStyle: CSSProperties = {
 	...styleBorderRadiusLg,
