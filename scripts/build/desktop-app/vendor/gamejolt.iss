@@ -41,7 +41,7 @@ CloseApplications=force
 RestartApplications=no
 CloseApplicationsFilter=GameJoltClient.exe
 WizardSmallImageFile={{ICON_DIR}}\win-installer-clyde.bmp
-SignTool=signtool
+; SignTool=signtool
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

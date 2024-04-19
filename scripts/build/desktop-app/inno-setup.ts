@@ -46,13 +46,13 @@ export async function buildInnoSetup(options: {
 	await writeFile(scriptFilepath, script, { encoding: 'utf8' });
 
 	await execFile('iscc.exe', [
-		'/Ssigntool=' +
-			shellEscape(path.join(vendorDir, 'signtool.exe')) +
-			' sign /f ' +
-			shellEscape(options.certFile) +
-			' /p ' +
-			options.certPw +
-			' /tr http://timestamp.digicert.com $f',
+		// '/Ssigntool=' +
+		// 	shellEscape(path.join(vendorDir, 'signtool.exe')) +
+		// 	' sign /f ' +
+		// 	shellEscape(options.certFile) +
+		// 	' /p ' +
+		// 	options.certPw +
+		// 	' /tr http://timestamp.digicert.com $f',
 		'/Q',
 		scriptFilepath,
 	]);
