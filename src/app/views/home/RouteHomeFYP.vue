@@ -6,12 +6,12 @@ import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { configFYPExperiment } from '../../../_common/config/config.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import { illNoComments } from '../../../_common/illustration/illustrations';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
 import { AppActivityFeedLazy } from '../../components/lazy';
-import { illNoComments } from '../../../_common/illustration/illustrations';
 import { routeDiscoverHome } from '../discover/home/home.route';
 import { RouteActivityFeedController } from './RouteHomeFeed.vue';
 
@@ -23,6 +23,7 @@ export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
+		reloadOn: 'never',
 		resolver: ({ route }) =>
 			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, _feedUrl())),
 	}),

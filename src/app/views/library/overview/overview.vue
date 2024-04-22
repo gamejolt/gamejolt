@@ -24,7 +24,7 @@ import { useLibraryStore } from '../../../store/library';
 	},
 })
 @OptionsForLegacyRoute({
-	deps: {},
+	reloadOn: 'never',
 })
 export default class RouteLibraryOverview extends LegacyRouteComponent {
 	store = setup(() => useAppStore());

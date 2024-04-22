@@ -15,7 +15,7 @@ import AppForumRules from '../../../../components/forum/rules/rules.vue';
 export default {
 	...defineAppRouteOptions({
 		cache: true,
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/forums'),
 	}),
 };

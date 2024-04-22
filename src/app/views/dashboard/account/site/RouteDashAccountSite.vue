@@ -12,7 +12,7 @@ import AppSitesManagePage from '../../../../components/sites/manage-page/manage-
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/dash/sites'),
 	}),
 };

@@ -34,6 +34,7 @@ export default {
 	...defineAppRouteOptions({
 		lazy: true,
 		cache: true,
+		reloadOn: 'always',
 		async resolver({ route }) {
 			const location = checkGameFilteringRoute(route);
 			if (location) {

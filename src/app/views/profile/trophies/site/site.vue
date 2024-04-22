@@ -20,7 +20,7 @@ import { useProfileRouteStore } from '../../RouteProfile.vue';
 	},
 })
 @OptionsForLegacyRoute({
-	deps: {},
+	reloadOn: 'never',
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/profile/trophies/site/@' + route.params.username),
 })

@@ -10,6 +10,7 @@ import { routeDashAccountReferrals } from './referrals/referrals.route';
 
 export default {
 	...defineAppRouteOptions({
+		reloadOn: 'never',
 		resolver: () => touchUser(),
 	}),
 };

@@ -21,7 +21,7 @@ import { ManageGameThemeKey, createGameDashRouteController } from './manage.stor
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['id'], query: ['intent'] },
+		reloadOn: { params: ['id'], query: ['intent'] },
 		async resolver({ route }) {
 			const intentRedirect = IntentService.checkRoute(route, {
 				intent: 'accept-game-collaboration',

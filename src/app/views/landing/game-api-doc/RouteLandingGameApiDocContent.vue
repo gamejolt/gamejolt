@@ -9,6 +9,7 @@ const paths = import.meta.glob<ViteMarkdownExport>('../../../../lib/doc-game-api
 
 export default {
 	...defineAppRouteOptions({
+		reloadOn: 'always',
 		async resolver({ route }) {
 			console.log(route.params.path);
 			// First check the path as is, then check with "index".

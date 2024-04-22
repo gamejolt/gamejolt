@@ -22,6 +22,7 @@ import { RouteLocationRedirect } from '../../../../utils/router';
 	},
 })
 @OptionsForLegacyRoute({
+	reloadOn: 'always',
 	async resolver({ route }) {
 		if (!import.meta.env.SSR) {
 			const pollingToken = sessionStorage.getItem('login-polling-token');

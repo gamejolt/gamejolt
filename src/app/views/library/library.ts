@@ -11,7 +11,7 @@ import { touchUser } from '../../../_common/user/user.model';
 	name: 'RouteLibrary',
 })
 @OptionsForLegacyRoute({
-	deps: {},
+	reloadOn: 'never',
 	// Make sure the children know if we're logged in or not.
 	resolver: () => touchUser(),
 })

@@ -13,7 +13,7 @@ import { $gettext } from '../../../../../../../../../_common/translate/translate
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['id', 'channel'] },
+		reloadOn: { params: ['id', 'channel'] },
 		resolver: ({ route }) =>
 			Api.sendRequest(
 				`/web/dash/communities/competitions/awards/${route.params.id}/${route.params.channel}`

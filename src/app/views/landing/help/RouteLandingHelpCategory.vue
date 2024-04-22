@@ -20,7 +20,7 @@ export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: false,
-		deps: { params: ['category'] },
+		reloadOn: { params: ['category'] },
 		resolver: () => Api.sendRequest(`/web/help/categories`),
 	}),
 };

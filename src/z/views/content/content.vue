@@ -22,7 +22,7 @@ import { touchUser } from '../../../_common/user/user.model';
 	},
 })
 @OptionsForLegacyRoute({
-	deps: { params: ['resource', 'resource-Id'] },
+	reloadOn: { params: ['resource', 'resource-Id'] },
 	async resolver({ route }) {
 		await touchUser();
 

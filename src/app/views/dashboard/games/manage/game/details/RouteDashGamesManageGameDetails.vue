@@ -13,7 +13,9 @@ import FormGame from '../../../../../../components/forms/game/game.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+	}),
 };
 </script>
 

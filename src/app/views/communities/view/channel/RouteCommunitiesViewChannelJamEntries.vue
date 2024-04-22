@@ -27,7 +27,7 @@ import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {
+		reloadOn: {
 			params: ['path', 'channel'],
 			query: ['sort', 'page', 'category', 'ignore-awards'],
 		},

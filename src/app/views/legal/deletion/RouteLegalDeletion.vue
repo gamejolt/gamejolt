@@ -5,7 +5,9 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import { html } from '../../../../lib/terms/deletion/global.md';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+	}),
 };
 </script>
 

@@ -20,6 +20,7 @@ import { imageGameJoltLogo } from '../../img/images';
 
 export default {
 	...defineAppRouteOptions({
+		reloadOn: 'never',
 		resolver: async () => {
 			const payload = await Api.sendRequest('/web/touch');
 

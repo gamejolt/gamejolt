@@ -20,7 +20,7 @@ import AppGamePackagePreview from './AppGamePackagePreview.vue';
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['hash'] },
+		reloadOn: { params: ['hash'] },
 		resolver: ({ route }) => Api.sendRequest('/web/dash/purchases/order/' + route.params.hash),
 	}),
 };

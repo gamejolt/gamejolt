@@ -5,7 +5,7 @@ import { useCommonStore } from '../../../_common/store/common-store';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 	}),
 };
 </script>

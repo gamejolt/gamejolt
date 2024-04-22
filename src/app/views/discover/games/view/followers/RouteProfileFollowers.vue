@@ -18,7 +18,7 @@ export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
-		deps: {},
+		reloadOn: 'never',
 		resolver: ({ route }) => Api.sendRequest(getFetchUrl(route)),
 	}),
 };

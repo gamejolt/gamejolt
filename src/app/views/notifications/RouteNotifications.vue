@@ -24,7 +24,7 @@ export const NOTIFICATION_FILTER_FIELD = 'notificationTypes';
 export default {
 	...defineAppRouteOptions({
 		lazy: true,
-		deps: { query: ['feed_last_id', NOTIFICATION_FILTER_QUERY] },
+		reloadOn: { query: ['feed_last_id', NOTIFICATION_FILTER_QUERY] },
 		resolver: ({ route }) =>
 			Api.sendRequest(
 				ActivityFeedService.makeFeedUrl(route, '/web/dash/activity/notifications'),

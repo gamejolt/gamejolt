@@ -29,7 +29,7 @@ export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
-		deps: CommunitiesViewChannelDeps,
+		reloadOn: CommunitiesViewChannelDeps,
 		resolver: ({ route }) => doFeedChannelPayload(route),
 	}),
 };

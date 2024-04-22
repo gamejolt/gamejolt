@@ -10,7 +10,7 @@ export default {
 	...defineAppRouteOptions({
 		cache: false,
 		lazy: false,
-		deps: { params: ['path'] },
+		reloadOn: { params: ['path'] },
 		async resolver({ route }) {
 			// Fetch redirect target.
 			const payload = await Api.sendRequest(`/web/help/redirect/${route.params.path}`);

@@ -28,7 +28,7 @@ export const CommunitiesViewChannelDeps = {
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['path', 'channel'] },
+		reloadOn: { params: ['path', 'channel'] },
 		resolver: ({ route }) => {
 			const channel = getChannelPathFromRoute(route);
 			return Api.sendRequest(`/web/communities/view-channel/${route.params.path}/${channel}`);

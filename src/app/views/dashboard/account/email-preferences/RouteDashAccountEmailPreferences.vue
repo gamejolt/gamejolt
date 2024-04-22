@@ -13,7 +13,7 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 export default {
 	...defineAppRouteOptions({
-		deps: { query: ['intent'] },
+		reloadOn: { query: ['intent'] },
 		async resolver({ route }) {
 			const intentRedirect = IntentService.checkRoute(route, {
 				intent: 'unsubscribe',

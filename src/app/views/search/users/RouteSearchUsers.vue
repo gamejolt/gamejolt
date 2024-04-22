@@ -10,6 +10,7 @@ import { useSearchRouteController } from '../RouteSearch.vue';
 export default {
 	...defineAppRouteOptions({
 		cache: true,
+		reloadOn: 'always',
 		resolver: ({ route }) =>
 			sendSearch(getQuery(route, 'q') ?? '', {
 				type: 'user',

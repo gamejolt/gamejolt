@@ -16,7 +16,9 @@ import AppGameOgrs from '../../../../../../components/game/ogrs/ogrs.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+	}),
 };
 </script>
 

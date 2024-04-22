@@ -36,7 +36,7 @@ type TrophyEntry = {
 	},
 })
 @OptionsForLegacyRoute({
-	deps: {},
+	reloadOn: 'never',
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/profile/trophies/overview/@' + route.params.username),
 })

@@ -14,7 +14,7 @@ import { useAccountRouteController } from '../../RouteDashAccount.vue';
 export default {
 	...defineAppRouteOptions({
 		cache: true,
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/dash/purchases'),
 	}),
 };

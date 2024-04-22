@@ -28,7 +28,7 @@ export default {
 	...defineAppRouteOptions({
 		cache: false,
 		lazy: false,
-		deps: { query: ['tab', 'feed_last_id'] },
+		reloadOn: { query: ['tab', 'feed_last_id'] },
 		resolver: ({ route }) =>
 			Api.sendRequest(ActivityFeedService.makeFeedUrl(route, getFetchUrl(route))),
 	}),

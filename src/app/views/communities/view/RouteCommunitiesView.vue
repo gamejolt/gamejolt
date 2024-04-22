@@ -39,7 +39,7 @@ export const CommunityThemeKey = 'community';
 export default {
 	...defineAppRouteOptions({
 		cache: true,
-		deps: { params: ['path'] },
+		reloadOn: { params: ['path'] },
 		async resolver({ route }) {
 			const payload = await Api.sendRequest('/web/communities/view/' + route.params.path);
 

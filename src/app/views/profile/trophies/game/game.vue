@@ -33,7 +33,7 @@ type CompletionData = {
 	},
 })
 @OptionsForLegacyRoute({
-	deps: { params: ['id'] },
+	reloadOn: { params: ['id'] },
 	async resolver({ route }) {
 		const payload = await Api.sendRequest(
 			'/web/profile/trophies/game/@' + route.params.username + '/' + route.params.id

@@ -44,7 +44,7 @@ function validateString(str: string | string[]): string {
 export default {
 	...defineAppRouteOptions({
 		cache: true,
-		deps: { params: ['slug', 'id'], query: ['page'] },
+		reloadOn: { params: ['slug', 'id'], query: ['page'] },
 		async resolver({ route }) {
 			HistoryTick.sendBeacon('forum-topic', parseInt(validateString(route.params.id), 10));
 

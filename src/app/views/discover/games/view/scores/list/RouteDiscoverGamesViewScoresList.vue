@@ -24,7 +24,7 @@ import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 export default {
 	...defineAppRouteOptions({
 		cache: true,
-		deps: { params: ['tableId', 'type'], query: ['page'] },
+		reloadOn: { params: ['tableId', 'type'], query: ['page'] },
 		resolver({ route }) {
 			let query = '';
 			if (parseInt(route.query.page as string, 10) > 1) {

@@ -10,8 +10,8 @@ import { imageGems } from '../../../../../_common/img/images';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import {
-createAppRoute,
-defineAppRouteOptions,
+	createAppRoute,
+	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -24,7 +24,7 @@ import marketplaceImage from './marketplace.png';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: () =>
 			Api.sendFieldsRequest('/mobile/me', {
 				marketplaceWalletBalance: true,

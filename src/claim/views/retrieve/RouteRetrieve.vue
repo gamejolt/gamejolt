@@ -24,6 +24,7 @@ type Payload = SuccessPayload | ErrorPayload | undefined;
 
 defineOptions(
 	defineAppRouteOptions({
+		reloadOn: 'always',
 		async resolver({ route }): Promise<Payload> {
 			let type: 'game' | 'bundle' | undefined;
 			let key = '';

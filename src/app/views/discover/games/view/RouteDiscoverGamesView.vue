@@ -346,7 +346,7 @@ export default {
 	...defineAppRouteOptions({
 		lazy: true,
 		cache: true,
-		deps: { params: ['slug', 'id'], query: ['intent'] },
+		reloadOn: { params: ['slug', 'id'], query: ['intent'] },
 		async resolver({ route }) {
 			HistoryTick.trackSource('Game', parseInt(route.params.id as string));
 
