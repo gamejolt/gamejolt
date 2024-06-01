@@ -64,7 +64,7 @@ import AppAnalyticsReportUserGrid from './_report/AppAnalyticsReportUserGrid.vue
 export default {
 	...defineAppRouteOptions({
 		cache: false,
-		deps: {
+		reloadOn: {
 			params: ['resource', 'resourceId', 'metricKey'],
 			query: ['viewAs', 'period', 'year', 'month'],
 		},

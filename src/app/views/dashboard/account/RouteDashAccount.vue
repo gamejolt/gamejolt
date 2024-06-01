@@ -47,7 +47,7 @@ function createController() {
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		// We want to reload this data every time we come into this section.
 		resolver: () => Api.sendRequest('/web/dash/account'),
 	}),

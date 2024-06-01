@@ -16,7 +16,7 @@ const assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/marketplace'),
 	}),
 };

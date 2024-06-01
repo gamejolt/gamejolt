@@ -8,7 +8,9 @@ import FormCommunityCompetitionEdit from '../../../../../../../../components/for
 import { useCommunityRouteStore } from '../../../../../view.store';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+	}),
 };
 </script>
 

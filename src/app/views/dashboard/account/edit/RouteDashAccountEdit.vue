@@ -15,7 +15,7 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 	}),
 };
 </script>

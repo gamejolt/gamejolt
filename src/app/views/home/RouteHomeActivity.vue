@@ -20,6 +20,7 @@ defineOptions(
 	defineAppRouteOptions({
 		cache: true,
 		lazy: true,
+		reloadOn: 'never',
 		resolver: ({ route }) => {
 			let url = '/web/dash/activity/activity';
 

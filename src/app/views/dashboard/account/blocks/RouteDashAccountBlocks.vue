@@ -24,7 +24,7 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		lazy: false,
 		resolver: () => Api.sendRequest('/web/dash/blocks'),
 	}),

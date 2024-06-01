@@ -64,6 +64,7 @@ export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/dash/home'),
 	}),
 };

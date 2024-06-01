@@ -14,7 +14,9 @@ import socialImage from './social.png';
 const assetPaths = import.meta.glob('./*.(svg|jpg|png)', { eager: true, as: 'url' });
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+	}),
 };
 </script>
 

@@ -25,7 +25,9 @@ import AppCommunitiesViewPageContainer from '../../../../_page-container/page-co
 import { useCommunityRouteStore } from '../../../../view.store';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+	}),
 };
 </script>
 

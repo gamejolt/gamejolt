@@ -5,8 +5,8 @@ import AppButton from '../../../../../_common/button/AppButton.vue';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import {
-createAppRoute,
-defineAppRouteOptions,
+	createAppRoute,
+	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
@@ -21,17 +21,17 @@ import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-h
 import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
 import { CommunitiesViewChannelDeps } from '../channel/RouteCommunitiesViewChannel.vue';
 import {
-acceptCollaboration,
-declineCollaboration,
-setCommunityMeta,
-useCommunityRouteStore,
+	acceptCollaboration,
+	declineCollaboration,
+	setCommunityMeta,
+	useCommunityRouteStore,
 } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
-		deps: CommunitiesViewChannelDeps,
+		reloadOn: CommunitiesViewChannelDeps,
 		resolver: ({ route }) => doFeedChannelPayload(route),
 	}),
 };

@@ -24,6 +24,7 @@ import FormPayment from '../../components/forms/FormPayment.vue';
 
 export default {
 	...defineAppRouteOptions({
+		reloadOn: 'always',
 		resolver: ({ route }) => Api.sendRequest('/web/checkout/' + route.params.orderHash),
 	}),
 };

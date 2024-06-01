@@ -16,7 +16,7 @@ const FormSettingsDev = defineAsyncComponent(
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => touchUser(),
 	}),
 };

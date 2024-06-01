@@ -40,7 +40,7 @@ import { useGameDashRouteController } from '../../../manage.store';
 	},
 })
 @OptionsForLegacyRoute({
-	deps: {},
+	reloadOn: 'never',
 	resolver: ({ route }) =>
 		Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id),
 })

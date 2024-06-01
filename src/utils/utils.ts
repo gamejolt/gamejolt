@@ -190,3 +190,10 @@ type PrivateKeys<T> = {
 }[keyof T];
 
 export type HidePrivateKeys<T> = Omit<T, PrivateKeys<T>>;
+
+/**
+ * Utility type that requires at least one of the keys in T to be present.
+ */
+export type RequireAtLeastOne<T> = {
+	[K in keyof T]-?: Required<Pick<T, K>> & Partial<T>;
+}[keyof T];

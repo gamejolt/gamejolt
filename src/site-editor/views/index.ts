@@ -18,6 +18,7 @@ import { useSiteEditorStore } from '../store/index';
 @OptionsForLegacyRoute({
 	lazy: false,
 	cache: false,
+	reloadOn: 'always',
 	resolver({ route }) {
 		const siteId = parseInt(route.query.id as string, 10);
 		return Api.sendRequest(`/web/dash/sites/editor/${siteId}`);

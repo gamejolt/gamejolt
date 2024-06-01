@@ -10,7 +10,9 @@ import { imageJolt } from '../../../img/images';
 const assetPaths = import.meta.glob('./*.(svg|png)', { eager: true, as: 'url' });
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+	}),
 };
 </script>
 

@@ -16,6 +16,7 @@ function validateString(str: string | string[]): string {
 
 export default {
 	...defineAppRouteOptions({
+		reloadOn: 'never',
 		async resolver({ route }) {
 			if (ValidActions.indexOf(validateString(route.params.action)) === -1) {
 				return buildPayloadErrorForStatusCode(404);

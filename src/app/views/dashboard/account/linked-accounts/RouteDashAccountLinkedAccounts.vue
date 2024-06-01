@@ -20,7 +20,7 @@ import { showUserSetPasswordModal } from '../../../../components/user/set-passwo
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/dash/linked-accounts?resource=User'),
 	}),
 };

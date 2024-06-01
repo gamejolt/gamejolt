@@ -9,7 +9,9 @@ import nav from '../../../../lib/doc-game-api/v1.x/nav.json';
 import { imageJolt } from '../../../img/images';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+	}),
 };
 </script>
 

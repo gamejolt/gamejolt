@@ -40,7 +40,7 @@ import { useCommunityRouteStore } from '../../../../../view.store';
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['id', 'channel'] },
+		reloadOn: { params: ['id', 'channel'] },
 		resolver: ({ route }) =>
 			Api.sendRequest(
 				`/web/dash/communities/competitions/voting/${route.params.id}/${route.params.channel}`

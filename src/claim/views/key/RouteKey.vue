@@ -17,6 +17,7 @@ import AppKeyGame from './AppKeyGame.vue';
 
 defineOptions(
 	defineAppRouteOptions({
+		reloadOn: 'always',
 		resolver: async ({ route }) => {
 			let url = '/claim/view/' + route.params.accessKey;
 

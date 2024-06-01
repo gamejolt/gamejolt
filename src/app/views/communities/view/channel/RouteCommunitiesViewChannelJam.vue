@@ -32,7 +32,7 @@ const RouteCommunitiesViewChannelJamEntries = defineAsyncComponent(() =>
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['path', 'channel'] },
+		reloadOn: { params: ['path', 'channel'] },
 		resolver: ({ route }) => {
 			const channel = getChannelPathFromRoute(route);
 			return Api.sendRequest(

@@ -16,7 +16,9 @@ import {
 		AppLoading,
 	},
 })
-@OptionsForLegacyRoute()
+@OptionsForLegacyRoute({
+	reloadOn: 'always',
+})
 export default class RouteAuthLinkedAccountPoll extends LegacyRouteComponent {
 	token = '';
 	isPolling = true;

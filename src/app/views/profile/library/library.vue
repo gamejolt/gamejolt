@@ -18,7 +18,7 @@ import { useProfileRouteStore } from '../RouteProfile.vue';
 	},
 })
 @OptionsForLegacyRoute({
-	deps: {},
+	reloadOn: 'never',
 	resolver: ({ route }) => Api.sendRequest('/web/library/@' + route.params.username),
 })
 export default class RouteProfileLibrary extends LegacyRouteComponent {

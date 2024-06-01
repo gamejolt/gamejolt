@@ -26,7 +26,7 @@ export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: false,
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/help'),
 	}),
 	components: { AppLinkExternal },

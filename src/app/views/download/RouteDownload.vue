@@ -32,7 +32,7 @@ const DownloadDelay = 10_000;
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['type'], query: ['game_id', 'build_id'] },
+		reloadOn: { params: ['type'], query: ['game_id', 'build_id'] },
 		async resolver({ route }) {
 			const getQuery = (name: string) =>
 				typeof route.query[name] != 'string' || !route.query[name]

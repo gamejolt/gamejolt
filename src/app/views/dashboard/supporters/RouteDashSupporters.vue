@@ -30,7 +30,7 @@ const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}p
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: () =>
 			Api.sendFieldsRequest('/mobile/dash/creators/supporters', {
 				actions: {

@@ -12,6 +12,7 @@ import { loggedUserBlock } from '../RouteAuth.vue';
 
 export default {
 	...defineAppRouteOptions({
+		reloadOn: 'never',
 		resolver: async () => loggedUserBlock(),
 	}),
 };

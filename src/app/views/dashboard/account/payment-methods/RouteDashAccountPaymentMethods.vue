@@ -12,7 +12,7 @@ import AppUserPaymentSourceCard from '../../../../components/user/payment-source
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/dash/payment-methods'),
 	}),
 };

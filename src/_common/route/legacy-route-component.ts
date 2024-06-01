@@ -12,7 +12,7 @@ import {
  * composition API now instead.
  * @deprecated
  */
-export function OptionsForLegacyRoute(options: AppRouteOptions = {}) {
+export function OptionsForLegacyRoute(options: AppRouteOptions) {
 	return createDecorator(componentOptions => {
 		Object.assign(componentOptions, defineAppRouteOptions(options));
 	});

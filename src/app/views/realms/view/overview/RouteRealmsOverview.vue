@@ -16,6 +16,7 @@ import { useRealmRouteStore } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
+		reloadOn: { params: ['path'] },
 		resolver: ({ route }) =>
 			Promise.all([
 				Api.sendRequest('/web/realms/' + route.params.path),

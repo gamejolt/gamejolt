@@ -12,7 +12,9 @@ import FormRetrieveLogin from '../../../components/forms/retrieve-login/FormRetr
 		FormRetrieveLogin,
 	},
 })
-@OptionsForLegacyRoute()
+@OptionsForLegacyRoute({
+	reloadOn: 'never',
+})
 export default class RouteAuthForgot extends LegacyRouteComponent {
 	get routeTitle() {
 		return this.$gettext('Retrieve Login Credentials');

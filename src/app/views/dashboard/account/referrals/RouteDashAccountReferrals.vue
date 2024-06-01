@@ -23,7 +23,7 @@ import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: () =>
 			Api.sendFieldsRequest('/mobile/dash/creators/referral', {
 				referrals: true,

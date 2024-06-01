@@ -12,7 +12,7 @@ import AppLibraryInstalledGame from './AppLibraryInstalledGame.vue';
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 	}),
 };
 </script>

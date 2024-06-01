@@ -12,7 +12,7 @@ import { ManageGameThemeKey, useGameDashRouteController } from '../../manage.sto
 
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: ({ route }) =>
 			Api.sendRequest('/web/dash/developer/games/media/' + route.params.id),
 	}),

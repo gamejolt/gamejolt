@@ -32,6 +32,7 @@ const REALM_COL_XS = 2;
 export default {
 	...defineAppRouteOptions({
 		cache: true,
+		reloadOn: 'always',
 		resolver: ({ route }) => sendSearch(getQuery(route, 'q') ?? ''),
 	}),
 };

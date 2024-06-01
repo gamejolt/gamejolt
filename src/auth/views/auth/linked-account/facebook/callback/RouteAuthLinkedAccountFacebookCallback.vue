@@ -18,6 +18,7 @@ import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
 export default {
 	...defineAppRouteOptions({
 		lazy: true,
+		reloadOn: 'always',
 		resolver({ route }) {
 			const { code, state } = route.query;
 			return Api.sendRequest(

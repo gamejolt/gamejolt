@@ -33,7 +33,9 @@ const communityPresetChannels = [
 ];
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+	}),
 };
 </script>
 

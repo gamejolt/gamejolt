@@ -15,6 +15,7 @@ import FormOnboardingRealms from '../../components/forms/onboarding/FormOnboardi
 
 export default {
 	...defineAppRouteOptions({
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/onboarding'),
 	}),
 };

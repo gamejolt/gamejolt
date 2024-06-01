@@ -10,7 +10,7 @@ import FormChangePassword from '../../../../components/forms/change-password/cha
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 export default {
 	...defineAppRouteOptions({
-		deps: {},
+		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/dash/account/has-password'),
 	}),
 };

@@ -20,7 +20,7 @@ import { useGameDashRouteController } from '../../../../manage.store';
 
 export default {
 	...defineAppRouteOptions({
-		deps: { params: ['table', 'score'] },
+		reloadOn: { params: ['table', 'score'] },
 		resolver: ({ route }) =>
 			Api.sendRequest(
 				'/web/dash/developer/games/api/scores/' + route.params.id + '/' + route.params.score

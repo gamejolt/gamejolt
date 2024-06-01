@@ -1,16 +1,18 @@
 <script lang="ts">
 import { computed } from 'vue';
-import { illMaintenance } from '../../../_common/illustration/illustrations';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { ClientUpdater } from '../../../_common/client/client-updater.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
+import { illMaintenance } from '../../../_common/illustration/illustrations';
 import AppProgressBar from '../../../_common/progress/AppProgressBar.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 
 export default {
-	...defineAppRouteOptions({}),
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+	}),
 };
 </script>
 

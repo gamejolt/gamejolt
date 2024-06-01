@@ -44,7 +44,7 @@ import { useGameDashRouteController } from '../../manage.store';
 	},
 })
 @OptionsForLegacyRoute({
-	deps: { params: ['keyGroupId'] },
+	reloadOn: { params: ['keyGroupId'] },
 	resolver: ({ route }) =>
 		Api.sendRequest(
 			`/web/dash/developer/games/key-groups/${route.params.id}/${route.params.keyGroupId}`

@@ -21,7 +21,7 @@ import AppWeplayLogo from '../../components/weplay/logo/AppWeplayLogo.vue';
 	},
 })
 @OptionsForLegacyRoute({
-	deps: {},
+	reloadOn: 'never',
 	resolver: () => touchUser(),
 })
 export default class RouteWeplay extends LegacyRouteComponent {

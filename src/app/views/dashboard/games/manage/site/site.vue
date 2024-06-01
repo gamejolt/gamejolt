@@ -19,7 +19,7 @@ import { useGameDashRouteController } from '../manage.store';
 	},
 })
 @OptionsForLegacyRoute({
-	deps: {},
+	reloadOn: 'never',
 	resolver: ({ route }) => Api.sendRequest('/web/dash/sites/' + route.params.id),
 })
 export default class RouteDashGamesManageSite extends LegacyRouteComponent {
