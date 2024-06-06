@@ -465,7 +465,7 @@ export function createShopProductBaseForm<
 					if (media) {
 						return media.is_animated ? media.img_url : media.mediaserver_url;
 					}
-					return existingImgUrl ?? tempImgUrl.value;
+					return existingImgUrl;
 				}
 
 				// Create a temporary URL for the file so we can display before upload.
