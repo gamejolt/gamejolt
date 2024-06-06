@@ -16,6 +16,7 @@ export class StickerPackModel implements ModelStoreModel, ShopProductCommonField
 
 	// Shop fields
 	declare is_premium: boolean;
+	declare is_animated: boolean;
 	declare has_active_sale: boolean;
 	declare was_approved: boolean;
 	declare added_on: number | undefined;

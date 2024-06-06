@@ -36,7 +36,7 @@ const { productType, isEditing } = data;
 			<div>
 				{{
 					$gettext(
-						`Premium backgrounds are animated and available for purchase with joltbux in your shop.`
+						`Premium backgrounds are available for purchase with joltbux in your shop. We recommend you upload animated backgrounds.`
 					)
 				}}
 			</div>
