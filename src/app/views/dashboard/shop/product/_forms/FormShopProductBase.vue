@@ -1076,9 +1076,6 @@ const canBeAnimated = computed(
 						</AppLinkHelp>
 					</div>
 
-					<!-- TODO: looks like the validators are reconstructed too
-					late, or are evaluated too early. errors are caught only for
-					the previous file when fileIsAnimated value changes. -->
 					<AppFormControlUpload
 						:validators="[
 							validateFilesize(maxFilesizeComputed),
