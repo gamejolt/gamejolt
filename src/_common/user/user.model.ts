@@ -66,6 +66,7 @@ export class UserModel
 	declare friend_requests_enabled: boolean;
 	declare liked_posts_enabled?: boolean;
 	declare mentions_setting?: number;
+	declare randomize_avatar_frame?: boolean;
 
 	declare created_on: number;
 
