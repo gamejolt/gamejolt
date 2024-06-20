@@ -27,10 +27,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { archivedChannels, competition, channel } = useCommunityRouteStore()!;
 
-const competition = toRef(() => routeStore.competition);
-const channel = toRef(() => routeStore.channel!);
 const canEditHeader = toRef(() => !!competition.value);
 
 const pageHeaderProps = computed(() => {
@@ -46,7 +44,10 @@ const pageHeaderProps = computed(() => {
 });
 
 async function onClickEditHeader() {
-	await showCommunityCompetitionHeaderModal(competition.value!);
+	// TODO(reactive-community-route-store): Do I have to return empty promise?
+	if (competition.value) {
+		await showCommunityCompetitionHeaderModal(competition.value!);
+	}
 }
 
 createAppRoute({
@@ -56,7 +57,7 @@ createAppRoute({
 			if (channel.value) {
 				channel.value.assign(newChannel);
 			} else if (newChannel.is_archived) {
-				routeStore.archivedChannels.push(newChannel);
+				archivedChannels.value.push(newChannel);
 			}
 		}
 	},
@@ -148,7 +149,6 @@ createAppRoute({
 			<template #controls>
 				<AppPageHeaderControls>
 					<AppButton
-						v-if="competition"
 						:to="{
 							name: 'communities.view.channel',
 						}"

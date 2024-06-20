@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../_common/api/api.service';
@@ -20,6 +20,10 @@ import AppBlockedNotice from '../_blocked-notice/AppBlockedNotice.vue';
 import { isVirtualChannel, useCommunityRouteStore } from '../view.store';
 
 const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
 	// It's optional since it may not have loaded into the page yet. In that
 	// case, we show a placeholder and wait.
 	feed: {
@@ -33,13 +37,12 @@ const emit = defineEmits({
 	'load-new': () => true,
 });
 
-const { feed } = toRefs(props);
+const { feed, community } = toRefs(props);
+
 const routeStore = useCommunityRouteStore()!;
+const { channel, frontpageChannel } = routeStore;
 const { user } = useCommonStore();
 const route = useRoute();
-
-const community = toRef(() => routeStore.community);
-const channel = toRef(() => routeStore.channel!);
 
 const tab = computed(() => {
 	if (route.query.sort === 'hot') {
@@ -49,7 +52,7 @@ const tab = computed(() => {
 });
 
 const shouldShowPostAdd = computed(() => {
-	if (community.value.isBlocked) {
+	if (community.value.isBlocked || !channel.value) {
 		return false;
 	}
 
@@ -72,7 +75,7 @@ const shouldShowPostAdd = computed(() => {
 });
 
 const shouldShowTabs = computed(() => {
-	if (channel.value === routeStore.frontpageChannel) {
+	if (channel.value === frontpageChannel.value) {
 		return false;
 	}
 
@@ -103,9 +106,13 @@ const noPostsMessage = computed(() => {
 });
 
 function onLoadedNew() {
+	if (!channel.value) {
+		return;
+	}
+
 	// Mark the community/channel as read after loading new posts.
 	Api.sendRequest(
-		`/web/communities/mark-as-read/${community.value.path}/${channel.value.title}`,
+		`/web/communities/mark-as-read/${community.value.path}/${channel.value!.title}`,
 		{},
 		{ detach: true }
 	);
@@ -116,15 +123,15 @@ function onLoadedNew() {
 function onPostUnfeatured(eventItem: EventItemModel, communityInput: CommunityModel) {
 	if (
 		feed?.value &&
-		channel.value === routeStore.frontpageChannel &&
-		community.value.id === communityInput.id
+		channel.value === frontpageChannel.value &&
+		community.value!.id === communityInput.id
 	) {
 		feed.value.remove([eventItem]);
 	}
 }
 
 function onPostRejected(eventItem: EventItemModel, communityInput: CommunityModel) {
-	if (feed?.value && community.value.id === communityInput.id) {
+	if (feed?.value && community.value!.id === communityInput.id) {
 		feed.value.remove([eventItem]);
 	}
 }
@@ -132,7 +139,8 @@ function onPostRejected(eventItem: EventItemModel, communityInput: CommunityMode
 function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannelModel) {
 	if (
 		feed?.value &&
-		community.value.id === movedTo.community_id &&
+		channel.value &&
+		community.value!.id === movedTo.community_id &&
 		!isVirtualChannel(routeStore, channel.value) &&
 		channel.value.title !== movedTo.title
 	) {
@@ -146,14 +154,14 @@ function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannel
 		<AppBlockedNotice :community="community" />
 
 		<AppPostAddButton
-			v-if="shouldShowPostAdd"
+			v-if="shouldShowPostAdd && channel"
 			:community="community"
 			:channel="channel"
 			:placeholder="placeholderText"
 			@add="emit('add-post', $event)"
 		/>
 
-		<AppNavTabList v-if="shouldShowTabs">
+		<AppNavTabList v-if="shouldShowTabs && channel">
 			<ul>
 				<li>
 					<RouterLink
@@ -204,7 +212,7 @@ function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannel
 				@move-channel-post="onPostMovedChannel"
 				@load-new="onLoadedNew"
 			/>
-			<div v-else-if="channel !== routeStore.frontpageChannel">
+			<div v-else-if="channel && channel !== frontpageChannel">
 				<div v-if="channel.canPost" class="alert">
 					<b>{{ $gettext(`There are no posts here yet.`) }}</b>
 					{{

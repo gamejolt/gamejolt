@@ -32,7 +32,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
+const { community, collaborator, canEditDescription } = useCommunityRouteStore()!;
 const { leaveCommunity } = useAppStore();
 const { setPageTheme } = useThemeStore();
 const { grid } = useGridStore();
@@ -41,12 +41,13 @@ const router = useRouter();
 
 /* The owner's collaboration is not returned from backend.*/ /* The owner's collaboration is not returned from backend.*/
 
-const community = toRef(() => routeStore.community);
-const collaborator = toRef(() => routeStore.collaborator);
-const canEditDescription = toRef(() => routeStore.canEditDescription);
-const isOwner = toRef(() => collaborator.value === null);
+const isOwner = toRef(() => !collaborator.value);
 
 function onDetailsChange() {
+	if (!community.value) {
+		return;
+	}
+
 	// If the community path changes, we need to replace the route,
 	// otherwise when navigating to the community view routes, it'll attempt to navigate
 	// to the old name.
@@ -64,6 +65,10 @@ function onDetailsChange() {
 }
 
 async function removeCommunity() {
+	if (!community.value) {
+		return;
+	}
+
 	const result = await showModalConfirm(
 		$gettext(
 			`Are you sure you want to permanently remove your community? Once it's gone, it's gone forever.`
@@ -85,7 +90,7 @@ async function removeCommunity() {
 }
 
 async function performCommunityLeave() {
-	if (!collaborator.value) {
+	if (!community.value || !collaborator.value) {
 		return;
 	}
 
@@ -113,7 +118,7 @@ createAppRoute({});
 
 <template>
 	<div>
-		<AppCommunitiesViewPageContainer>
+		<AppCommunitiesViewPageContainer v-if="community">
 			<template #default>
 				<AppAlertDismissable
 					v-if="isOwner"

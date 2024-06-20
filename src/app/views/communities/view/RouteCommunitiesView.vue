@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, provide, reactive, ref, watch } from 'vue';
+import { computed, provide, ref, watch } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import {
 	AdSettingsContainer,
@@ -17,7 +17,7 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import { ContextPane, useSidebarStore } from '../../../../_common/sidebar/sidebar.store';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { useThemeStore } from '../../../../_common/theme/theme.store';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { enforceLocation } from '../../../../utils/router';
 import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
 import { showCommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
@@ -28,8 +28,8 @@ import AppCommunitiesViewContext from './_context/AppCommunitiesViewContext.vue'
 import AppMobileHeader from './_mobile-header/AppMobileHeader.vue';
 import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
 import {
-	CommunityRouteStore,
 	CommunityRouteStoreKey,
+	createCommunityRouteStore,
 	setChannelPathFromRoute,
 	setCommunity,
 } from './view.store';
@@ -57,8 +57,19 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = reactive(new CommunityRouteStore()) as CommunityRouteStore;
+const routeStore = createCommunityRouteStore();
 provide(CommunityRouteStoreKey, routeStore);
+
+const {
+	community,
+	channel,
+	canEditMedia,
+	channelPath,
+	frontpageChannel,
+	sidebarData,
+	collaborator,
+	isShowingSidebar,
+} = routeStore;
 
 const { communityStates, setActiveCommunity, clearActiveCommunity, viewCommunity } = useAppStore();
 const { grid, whenGridBootstrapped } = useGridStore();
@@ -71,23 +82,20 @@ const route = useRoute();
 
 const contextPane = ref<ContextPane | null>(null);
 
-const community = computed(() => routeStore.community);
 const isEditing = computed(() => isEditingCommunity(route));
-const competitionHeader = computed(() => routeStore.channel?.competition?.header ?? null);
-const coverMediaItem = computed(() => competitionHeader.value ?? community.value.header ?? null);
+const competitionHeader = computed(() => channel.value?.competition?.header ?? null);
+const coverMediaItem = computed(() => competitionHeader.value ?? community.value!.header ?? null);
 const coverEditable = computed(
 	() =>
-		isEditing.value &&
-		routeStore.canEditMedia &&
-		route.name === routeCommunitiesViewEditDetails.name
+		isEditing.value && canEditMedia.value && route.name === routeCommunitiesViewEditDetails.name
 );
 const hasUnreadPosts = computed(
-	() => communityStates.value.getCommunityState(community.value).isUnread
+	() => communityStates.value.getCommunityState(community.value!).isUnread
 );
-const isFrontpage = computed(() => routeStore.channelPath === routeStore.frontpageChannel.title);
+const isFrontpage = computed(() => channelPath.value === frontpageChannel.value?.title);
 
 const isShowingHeader = computed(() => {
-	if (routeStore.channel?.type === 'competition') {
+	if (channel.value?.type === 'competition') {
 		return !!competitionHeader.value && !isEditing.value;
 	}
 
@@ -121,8 +129,8 @@ createAppRoute({
 		const community = new CommunityModel(payload.community);
 
 		setCommunity(routeStore, community);
-		routeStore.sidebarData = new CommunitySidebarData(payload);
-		routeStore.collaborator = payload.invite ? new CollaboratorModel(payload.invite) : null;
+		sidebarData.value = new CommunitySidebarData(payload);
+		collaborator.value = payload.invite ? new CollaboratorModel(payload.invite) : undefined;
 
 		setActiveCommunity(community);
 		viewCommunity(community);
@@ -146,7 +154,7 @@ createAppRoute({
 		clearActiveCommunity();
 		clearPageTheme(CommunityThemeKey);
 		releasePageAdsSettings(adStore);
-		if (grid.value) {
+		if (grid.value && community.value) {
 			grid.value.deregisterViewingCommunity(community.value.id);
 		}
 	},
@@ -163,11 +171,11 @@ watch(
 async function _getCommunityBootstrap() {
 	// When this is the first route the user enters, grid might not be bootstrapped yet.
 	const grid = await whenGridBootstrapped();
-	grid.queueRequestCommunityBootstrap(community.value.id);
+	grid.queueRequestCommunityBootstrap(community.value!.id);
 }
 
 function showEditHeader() {
-	showCommunityHeaderModal(community.value);
+	showCommunityHeaderModal(community.value!);
 }
 </script>
 
@@ -182,8 +190,8 @@ function showEditHeader() {
 				@toggle="showEditHeader()"
 			>
 				<template #overlay>
-					<AppTranslate v-if="!coverMediaItem">Upload Header</AppTranslate>
-					<AppTranslate v-else>Change Header</AppTranslate>
+					<span v-if="!coverMediaItem">{{ $gettext(`Upload Header`) }}</span>
+					<span v-else>{{ $gettext(`Change Header`) }}</span>
 				</template>
 
 				<!-- If no cover media, reserve space with a min-height. -->
@@ -203,8 +211,14 @@ function showEditHeader() {
 			</div>
 
 			<!-- Mobile Header -->
-			<template v-if="!routeStore.isShowingSidebar && !isEditing">
-				<AppMobileHeader :has-unread="hasUnreadPosts" />
+			<template v-if="!isShowingSidebar && !isEditing">
+				<AppMobileHeader
+					:community="community"
+					:channel="channel"
+					:sidebar-data="sidebarData"
+					:channel-path="channelPath"
+					:has-unread="hasUnreadPosts"
+				/>
 			</template>
 
 			<RouterView />

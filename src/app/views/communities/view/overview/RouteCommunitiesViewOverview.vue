@@ -41,7 +41,10 @@ export default {
 const { communityStates, joinCommunity } = useAppStore();
 const { user } = useCommonStore();
 const { grid } = useGridStore();
+
 const routeStore = useCommunityRouteStore()!;
+const { community, sidebarData, collaborator } = routeStore;
+
 const route = useRoute();
 const router = useRouter();
 
@@ -49,18 +52,18 @@ const isBootstrapped = ref(false);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 const finishedLoading = ref(false);
 
-const community = toRef(() => routeStore.community);
-const communityState = toRef(() => communityStates.value.getCommunityState(community.value));
-const sidebarData = toRef(() => routeStore.sidebarData!);
+const communityState = toRef(() =>
+	!community.value ? undefined : communityStates.value.getCommunityState(community.value)
+);
 
 const collaboratorInvite = toRef(() => {
 	// Just return the collaborator as an "invite" if it's not accepted yet.
-	const { collaborator } = routeStore;
-	return collaborator && !collaborator.isAccepted ? collaborator : null;
+
+	return collaborator.value && !collaborator.value.isAccepted ? collaborator.value : null;
 });
 
 const canAcceptCollaboration = toRef(
-	() => community.value.is_member || (user.value && user.value.can_join_communities)
+	() => community.value?.is_member || (user.value && user.value.can_join_communities)
 );
 
 const routeTitle = computed(() => {
@@ -78,13 +81,9 @@ const acceptCollaborationTooltip = computed(() =>
 );
 
 watch(
-	() => communityState.value.hasUnreadFeaturedPosts,
-	() => {
-		if (
-			feed.value &&
-			feed.value.newCount === 0 &&
-			communityState.value.hasUnreadFeaturedPosts
-		) {
+	() => communityState.value?.hasUnreadFeaturedPosts,
+	hasUnreadFeaturedPosts => {
+		if (feed.value?.newCount === 0 && hasUnreadFeaturedPosts) {
 			feed.value.newCount = 1;
 		}
 	},
@@ -92,7 +91,12 @@ watch(
 );
 
 function loadedNew() {
-	if (communityState.value.hasUnreadFeaturedPosts && user.value) {
+	if (
+		community.value &&
+		communityState.value &&
+		communityState.value.hasUnreadFeaturedPosts &&
+		user.value
+	) {
 		grid.value?.pushViewNotifications('community-featured', {
 			communityId: community.value.id,
 		});
@@ -110,7 +114,7 @@ function onPostAdded(post: FiresidePostModel) {
 }
 
 async function receiveCollaboration() {
-	if (!user.value) {
+	if (!user.value || !community.value) {
 		return;
 	}
 
@@ -130,6 +134,10 @@ const appRoute = createAppRoute({
 		finishedLoading.value = false;
 	},
 	onResolved({ payload, fromCache }) {
+		if (!community.value) {
+			return;
+		}
+
 		feed.value = resolveFeedChannelPayload(
 			feed.value,
 			community.value,
@@ -154,7 +162,7 @@ const appRoute = createAppRoute({
 </script>
 
 <template>
-	<div>
+	<div v-if="community">
 		<section v-if="collaboratorInvite" class="section section-thin fill-highlight">
 			<div class="container text-center">
 				<p>
@@ -180,12 +188,13 @@ const appRoute = createAppRoute({
 			<template #default>
 				<AppCommunitiesViewFeed
 					:feed="feed"
+					:community="community"
 					@add-post="onPostAdded"
 					@load-new="loadedNew"
 				/>
 			</template>
 			<template #sidebar>
-				<AppCommunitySidebar :sidebar-data="sidebarData" :community="community" />
+				<AppCommunitySidebar :sidebar-data="sidebarData!" :community="community" />
 			</template>
 		</AppCommunitiesViewPageContainer>
 	</div>

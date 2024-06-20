@@ -3,6 +3,7 @@ import { PropType, computed, ref, toRef, toRefs, watch } from 'vue';
 import { RouteLocationNormalized, RouterLink, useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
+import { CommunityCompetitionModel } from '../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/community/competition/voting-category/voting-category.model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
@@ -23,7 +24,7 @@ import {
 	showCommunityCompetitionEntryModalIdFromHash,
 	watchCommunityCompetitionEntryModalForHash,
 } from '../../../../components/community/competition/entry/modal/modal.service';
-import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
+import { getChannelPathFromRoute } from '../view.store';
 
 export default {
 	...defineAppRouteOptions({
@@ -149,10 +150,13 @@ const props = defineProps({
 		type: Array as PropType<CommunityCompetitionVotingCategoryModel[]>,
 		required: true,
 	},
+	competition: {
+		type: Object as PropType<CommunityCompetitionModel>,
+		required: true,
+	},
 });
 
-const { categories } = toRefs(props);
-const routeStore = useCommunityRouteStore()!;
+const { categories, competition } = toRefs(props);
 const route = useRoute();
 const router = useRouter();
 
@@ -164,7 +168,6 @@ const category = ref<string | null>(null);
 const ignoreAwards = ref<boolean | null>(null);
 let hashWatchDeregister: CommunityCompetitionEntryModalHashDeregister | undefined;
 
-const competition = toRef(() => routeStore.competition!);
 const hasCategories = toRef(() => categories.value.length > 0);
 const shouldShowAwardsFirstOption = toRef(
 	() => competition.value.are_results_calculated && competition.value.has_awards

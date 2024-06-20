@@ -1,4 +1,4 @@
-import { InjectionKey, inject } from 'vue';
+import { InjectionKey, computed, inject, ref, shallowReadonly, toRef } from 'vue';
 import { RouteLocationNormalized } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';
 import {
@@ -20,151 +20,87 @@ import { CommunitySidebarData } from '../../../components/community/sidebar/side
 import { routeCommunitiesViewOverview } from './overview/overview.route';
 
 export const CommunityRouteStoreKey: InjectionKey<CommunityRouteStore> = Symbol('community-route');
+export type CommunityRouteStore = ReturnType<typeof createCommunityRouteStore>;
 
 export function useCommunityRouteStore() {
 	return inject(CommunityRouteStoreKey);
-}
-
-export class CommunityRouteStore {
-	isLoaded = false;
-	community: CommunityModel = null as any;
-	frontpageChannel: CommunityChannelModel = null as any;
-	allChannel: CommunityChannelModel = null as any;
-	channelPath: null | string = null;
-
-	sidebarData: null | CommunitySidebarData = null;
-	collaborator: null | CollaboratorModel = null;
-
-	/** Gets populated when visiting an archived channel (just one) or viewing them in the sidebar/edit section. */
-	archivedChannels: CommunityChannelModel[] = [];
-	expandedArchivedChannels = false;
-	loadedArchivedChannels = false;
-
-	get channel() {
-		const channels = [
-			this.frontpageChannel,
-			this.allChannel,
-			...(this.community.channels || []),
-			...this.archivedChannels,
-		];
-		return channels.find(i => i.title === this.channelPath) || null;
-	}
-
-	get competition() {
-		return this.channel?.competition;
-	}
-
-	get canEditMedia() {
-		return this.community.hasPerms('community-media');
-	}
-
-	get canEditDescription() {
-		return this.community.hasPerms('community-description');
-	}
-
-	get isShowingSidebar() {
-		return Screen.isLg;
-	}
-}
-
-export function setCommunity(store: CommunityRouteStore, community: CommunityModel) {
-	store.isLoaded = true;
-
-	// When the community changes, reset archive channel settings.
-	if (store.community?.id !== community.id) {
-		store.archivedChannels = [];
-		store.loadedArchivedChannels = false;
-		store.expandedArchivedChannels = false;
-	}
-
-	store.community = community;
-	_updateChannels(store);
-}
-
-export function updateCommunity(store: CommunityRouteStore, community: any) {
-	store.community.assign(community);
-	_updateChannels(store);
-}
-
-/**
- * The preset channels are fake channels created from the community and have to
- * be refreshed anytime the community is modified.
- */
-function _updateChannels(store: CommunityRouteStore) {
-	const { community } = store;
-	// Generated channels.
-	const commonFields = {
-		community_id: community.id,
-		added_on: community.added_on,
-		sort: 0,
-		permissions: true,
-	};
-	store.frontpageChannel = new CommunityChannelModel({
-		title: CommunityPresetChannelType.FEATURED,
-		background: community.featured_background,
-		...commonFields,
-	});
-	store.allChannel = new CommunityChannelModel({
-		title: CommunityPresetChannelType.ALL,
-		background: community.all_background,
-		...commonFields,
-	});
-}
-
-export function setChannelPathFromRoute(
-	store: CommunityRouteStore,
-	route: RouteLocationNormalized
-) {
-	store.channelPath = getChannelPathFromRoute(route);
-}
-
-export function isVirtualChannel(store: CommunityRouteStore, channel: CommunityChannelModel) {
-	return [store.frontpageChannel, store.allChannel].includes(channel);
-}
-
-export async function acceptCollaboration(store: CommunityRouteStore, currentUser: UserModel) {
-	const invite = store.collaborator;
-	if (!invite) {
-		return;
-	}
-
-	await $acceptCollaboratorInvite(invite);
-	const { community, sidebarData } = store;
-
-	// Accepting the collaboration also automatically follow you to the
-	// community. To avoid sending the api request needlessly we update the
-	// community model before calling joinCommunity.
-
-	community.perms = invite.perms;
-	community.is_member = true;
-
-	// Add the user to the list of collaborators.
-	if (currentUser && sidebarData) {
-		// When there are hidden collaborators because the list hasn't been
-		// fully expanded, just increase the number. The new collaborator
-		// will be loaded when clicking Load More.
-		if (sidebarData.collaboratorCount > sidebarData.collaborators.length) {
-			sidebarData.collaboratorCount++;
-		} else {
-			sidebarData.collaborators.push(currentUser);
-		}
-	}
-}
-
-export async function declineCollaboration(store: CommunityRouteStore) {
-	if (!store.collaborator) {
-		return;
-	}
-
-	await $removeCollaboratorInvite(store.collaborator);
-	store.collaborator = null;
 }
 
 export function getChannelPathFromRoute(route: RouteLocationNormalized) {
 	if (route.name === routeCommunitiesViewOverview.name) {
 		return CommunityPresetChannelType.FEATURED;
 	}
+
 	return (route.params.channel as string) || null;
+}
+
+export function setCommunity(store: CommunityRouteStore, newCommunity: CommunityModel) {
+	store.isLoaded.value = true;
+
+	// When the community changes, reset archive channel settings.
+	if (store.community.value?.id !== newCommunity.id) {
+		store.archivedChannels.value = [];
+		store.loadedArchivedChannels.value = false;
+		store.expandedArchivedChannels.value = false;
+	}
+
+	store.community.value = newCommunity;
+	_updateChannels(store);
+}
+
+export function updateCommunity(store: CommunityRouteStore, community: any) {
+	store.community.value?.assign(community);
+	_updateChannels(store);
+}
+
+export function setChannelPathFromRoute(
+	store: CommunityRouteStore,
+	route: RouteLocationNormalized
+) {
+	store.channelPath.value = getChannelPathFromRoute(route) || null;
+}
+
+export function isVirtualChannel(store: CommunityRouteStore, channel: CommunityChannelModel) {
+	return [store.frontpageChannel.value, store.allChannel.value].includes(channel);
+}
+
+export async function acceptCollaboration(store: CommunityRouteStore, currentUser: UserModel) {
+	const invite = store.collaborator.value;
+	const { community, sidebarData } = store;
+
+	if (!invite || !community.value || !sidebarData.value) {
+		return;
+	}
+
+	await $acceptCollaboratorInvite(invite);
+
+	// Accepting the collaboration also automatically follow you to the
+	// community. To avoid sending the api request needlessly we update the
+	// community model before calling joinCommunity.
+
+	community.value.perms = invite.perms;
+	community.value.is_member = true;
+
+	// Add the user to the list of collaborators.
+	if (currentUser && sidebarData) {
+		// When there are hidden collaborators because the list hasn't been
+		// fully expanded, just increase the number. The new collaborator
+		// will be loaded when clicking Load More.
+		if (sidebarData.value.collaboratorCount > sidebarData.value.collaborators.length) {
+			sidebarData.value.collaboratorCount++;
+		} else {
+			sidebarData.value.collaborators.push(currentUser);
+		}
+	}
+}
+
+export async function declineCollaboration(store: CommunityRouteStore) {
+	if (!store.collaborator.value) {
+		return;
+	}
+
+	await $removeCollaboratorInvite(store.collaborator.value);
+	store.collaborator.value = undefined;
 }
 
 /**
@@ -195,8 +131,12 @@ export function setCommunityMeta(community: CommunityModel, title: string) {
 }
 
 export async function loadArchivedChannels(store: CommunityRouteStore) {
+	if (!store.community.value) {
+		return;
+	}
+
 	const payload = await Api.sendRequest(
-		`/web/communities/fetch-archived-channels/` + store.community.path
+		`/web/communities/fetch-archived-channels/` + store.community.value.path
 	);
 	if (payload.channels) {
 		const channels = CommunityChannelModel.populate(payload.channels);
@@ -205,19 +145,94 @@ export async function loadArchivedChannels(store: CommunityRouteStore) {
 		// or push. The channel could already be there when it got added through viewing
 		// it from the channel view endpoint.
 		for (const channel of channels) {
-			const existingChannel = store.archivedChannels.find(i => i.id === channel.id);
+			const existingChannel = store.archivedChannels.value.find(i => i.id === channel.id);
 			if (existingChannel) {
 				existingChannel.assign(channel);
 			} else {
-				store.archivedChannels.push(channel);
+				store.archivedChannels.value.push(channel);
 			}
 		}
 
 		// Because of assign/push possibly messing up sort, sort now.
-		store.archivedChannels = store.archivedChannels.sort((a, b) => numberSort(a.sort, b.sort));
+		store.archivedChannels.value = store.archivedChannels.value.sort((a, b) =>
+			numberSort(a.sort, b.sort)
+		);
 	} else {
 		// This can happen when an archived channel gets removed while viewing the sidebar.
-		store.archivedChannels = [];
-		store.community.has_archived_channels = false;
+		store.archivedChannels.value = [];
+		store.community.value.has_archived_channels = false;
 	}
+}
+
+/**
+ * The preset channels are fake channels created from the community and have to
+ * be refreshed anytime the community is modified.
+ */
+function _updateChannels(store: CommunityRouteStore) {
+	// Generated channels.
+	const commonFields = {
+		community_id: store.community.value!.id,
+		added_on: store.community.value!.added_on,
+		sort: 0,
+		permissions: true,
+	};
+	store.frontpageChannel.value = new CommunityChannelModel({
+		title: CommunityPresetChannelType.FEATURED,
+		background: store.community.value!.featured_background,
+		...commonFields,
+	});
+	store.allChannel.value = new CommunityChannelModel({
+		title: CommunityPresetChannelType.ALL,
+		background: store.community.value!.all_background,
+		...commonFields,
+	});
+}
+
+export function createCommunityRouteStore() {
+	const isLoaded = ref(false);
+	const community = ref<CommunityModel>();
+	const frontpageChannel = ref<CommunityChannelModel>();
+	const allChannel = ref<CommunityChannelModel>();
+	const channelPath = ref<string | null>(null);
+
+	const sidebarData = ref<CommunitySidebarData>();
+	const collaborator = ref<CollaboratorModel>();
+
+	/** Gets populated when visiting an archived channel (just one) or viewing them in the sidebar/edit section. */
+	const archivedChannels = ref<CommunityChannelModel[]>([]);
+	const expandedArchivedChannels = ref(false);
+	const loadedArchivedChannels = ref(false);
+
+	const channel = computed(() => {
+		const channels = [
+			frontpageChannel.value,
+			allChannel.value,
+			...(community.value?.channels || []),
+			...archivedChannels.value,
+		];
+		return channels.find(i => i?.title === channelPath.value);
+	});
+
+	const competition = toRef(() => channel.value?.competition);
+	const canEditMedia = computed(() => community.value?.hasPerms('community-media'));
+	const canEditDescription = computed(() => community.value?.hasPerms('community-description'));
+	const isShowingSidebar = toRef(() => Screen.isLg);
+
+	return shallowReadonly({
+		isLoaded,
+		community,
+		frontpageChannel,
+		allChannel,
+		channelPath,
+		sidebarData,
+		collaborator,
+		archivedChannels,
+		expandedArchivedChannels,
+		loadedArchivedChannels,
+		channel,
+		competition,
+		canEditMedia,
+		canEditDescription,
+		isShowingSidebar,
+	});
 }

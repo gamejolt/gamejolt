@@ -1,7 +1,10 @@
 <script lang="ts" setup>
-import { computed, toRef } from 'vue';
+import { PropType, computed, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
-import { isEditingCommunity } from '../../../../../_common/community/community.model';
+import {
+	CommunityModel,
+	isEditingCommunity,
+} from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
@@ -9,18 +12,23 @@ import { showCommunityThumbnailModal } from '../../../../components/forms/commun
 import { routeCommunitiesViewEditDetails } from '../edit/details/details.route';
 import { useCommunityRouteStore } from '../view.store';
 
-const routeStore = useCommunityRouteStore()!;
-const route = useRoute();
+const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
+});
 
-const community = toRef(() => routeStore.community);
+const { community } = toRefs(props);
+const { canEditMedia } = useCommunityRouteStore()!;
+
+const route = useRoute();
 
 const isEditing = computed(() => isEditingCommunity(route));
 
 const canEdit = computed(
 	() =>
-		isEditing.value &&
-		routeStore.canEditMedia &&
-		route.name === routeCommunitiesViewEditDetails.name
+		isEditing.value && canEditMedia.value && route.name === routeCommunitiesViewEditDetails.name
 );
 
 function showEditAvatar() {

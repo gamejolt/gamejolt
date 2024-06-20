@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, toRef } from 'vue';
+import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import {
@@ -32,27 +32,28 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
-
-const community = toRef(() => routeStore.community);
-const channel = toRef(() => routeStore.channel);
-const archivedChannels = toRef(() => routeStore.archivedChannels);
+const { community, channel, archivedChannels } = useCommunityRouteStore()!;
 
 const route = useRoute();
 const router = useRouter();
 
-const canEditDescription = computed(() => channel.value!.type === 'competition');
+const canEditDescription = computed(() => channel.value?.type === 'competition');
 
 const canArchive = computed(
 	() =>
-		!channel.value!.is_archived &&
-		channel.value!.visibility === 'published' &&
+		community.value &&
+		channel.value &&
+		!channel.value.is_archived &&
+		channel.value.visibility === 'published' &&
 		community.value.canRemoveChannel
 );
 
 const shouldShowArchiveOptions = computed(
 	() =>
-		channel.value!.visibility === 'published' && community.value.hasPerms('community-channels')
+		community.value &&
+		channel.value &&
+		channel.value.visibility === 'published' &&
+		community.value.hasPerms('community-channels')
 );
 
 function onSubmit(model: CommunityChannelModel) {
@@ -64,26 +65,29 @@ function onSubmit(model: CommunityChannelModel) {
 }
 
 function onBackgroundChange(model: CommunityChannelModel) {
-	Object.assign(channel!, model);
+	if (channel.value) {
+		Object.assign(channel.value, model);
+	}
 }
 
 async function onClickArchive() {
-	if (!canArchive.value) {
+	if (!canArchive.value || !channel.value || !community.value) {
 		return;
 	}
 
 	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to archive the channel %{ channel }?`, {
-			channel: channel.value!.displayTitle,
+			channel: channel.value.displayTitle,
 		})
 	);
 
 	if (result) {
-		const payload = await $archiveCommunityChannel(channel.value!);
+		const payload = await $archiveCommunityChannel(channel.value);
 
 		if (payload.success) {
-			archivedChannels.value.push(channel.value!);
-			arrayRemove(community.value.channels!, i => i.id === channel.value!.id);
+			archivedChannels.value.push(channel.value);
+			// TODO(reactive-community-route-store): Why the above channel validation check is not enough here?
+			arrayRemove(community.value.channels!, i => i.id === channel.value?.id);
 			community.value.has_archived_channels = true;
 
 			showSuccessGrowl($gettext(`Channel is now archived.`));
@@ -93,17 +97,21 @@ async function onClickArchive() {
 }
 
 async function onClickUnarchive() {
+	if (!channel.value || !community.value) {
+		return;
+	}
+
 	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to restore the channel %{ channel } from the archive?`, {
-			channel: channel.value!.displayTitle,
+			channel: channel.value.displayTitle,
 		})
 	);
 
 	if (result) {
 		try {
-			await $unarchiveCommunityChannel(channel.value!);
-			community.value.channels!.push(channel.value!);
-			arrayRemove(archivedChannels.value, i => i.id === channel.value!.id);
+			await $unarchiveCommunityChannel(channel.value);
+			community.value.channels!.push(channel.value);
+			arrayRemove(archivedChannels.value, i => i.id === channel.value?.id);
 
 			if (archivedChannels.value.length === 0) {
 				community.value.has_archived_channels = false;
@@ -129,7 +137,7 @@ createAppRoute({});
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer full>
+	<AppCommunitiesViewPageContainer v-if="community && channel" full>
 		<div class="row">
 			<div class="col-md-8">
 				<h2 class="section-header">
@@ -138,7 +146,7 @@ createAppRoute({});
 
 				<FormCommunityChannelEdit
 					:community="community"
-					:model="channel!"
+					:model="channel"
 					@submit="onSubmit"
 					@background-change="onBackgroundChange"
 				/>
@@ -147,7 +155,7 @@ createAppRoute({});
 					<h2>
 						{{ $gettext(`Edit Description`) }}
 					</h2>
-					<FormCommunityChannelDescription :model="channel!" />
+					<FormCommunityChannelDescription :model="channel" />
 				</template>
 			</div>
 		</div>
@@ -156,7 +164,7 @@ createAppRoute({});
 				<div class="row">
 					<div class="col-md-8">
 						<div class="well fill-offset">
-							<template v-if="!channel!.is_archived">
+							<template v-if="!channel.is_archived">
 								<h4 class="section-header">
 									{{ $gettext(`Archive Channel`) }}
 								</h4>

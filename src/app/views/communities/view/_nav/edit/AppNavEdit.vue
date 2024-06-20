@@ -1,16 +1,21 @@
 <script lang="ts" setup>
-import { toRef } from 'vue';
+import { PropType, toRefs } from 'vue';
+import { CommunityModel } from '../../../../../../_common/community/community.model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import AppCommunityPerms from '../../../../../components/community/perms/AppCommunityPerms.vue';
-import { useCommunityRouteStore } from '../../view.store';
+
+const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
+});
+
+const { community } = toRefs(props);
 
 const emit = defineEmits({
 	changeSection: (_path: string) => true,
 });
-
-const routeStore = useCommunityRouteStore()!;
-
-const community = toRef(() => routeStore.community);
 
 function onChangeSection(path: string) {
 	emit('changeSection', path);
@@ -18,7 +23,7 @@ function onChangeSection(path: string) {
 </script>
 
 <template>
-	<nav class="platform-list">
+	<nav class="platform-list" :style="{ marginLeft: `12px` }">
 		<ul>
 			<li @click.capture="onChangeSection('communities.view.edit.details')">
 				<RouterLink
@@ -115,8 +120,3 @@ function onChangeSection(path: string) {
 		</ul>
 	</nav>
 </template>
-
-<style lang="stylus" scoped>
-.platform-list
-	margin-left: 12px
-</style>

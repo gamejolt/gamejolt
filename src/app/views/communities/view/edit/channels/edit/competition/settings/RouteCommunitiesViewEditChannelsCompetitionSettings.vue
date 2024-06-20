@@ -1,5 +1,4 @@
 <script lang="ts">
-import { toRef } from 'vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
@@ -15,13 +14,11 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const routeStore = useCommunityRouteStore()!;
-
-const competition = toRef(() => routeStore.competition!);
+const { competition } = useCommunityRouteStore()!;
 
 createAppRoute({});
 </script>
 
 <template>
-	<FormCommunityCompetitionEdit :model="competition" />
+	<FormCommunityCompetitionEdit v-if="competition" :model="competition" />
 </template>

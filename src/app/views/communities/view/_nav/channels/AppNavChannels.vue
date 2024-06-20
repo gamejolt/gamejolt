@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, toRef } from 'vue';
+import { PropType, computed, ref, toRefs } from 'vue';
 import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
@@ -10,15 +10,27 @@ import AppCommunityChannelCard from '../../../../../components/community/channel
 import { useAppStore } from '../../../../../store';
 import { loadArchivedChannels, useCommunityRouteStore } from '../../view.store';
 
+const props = defineProps({
+	community: {
+		type: Object as PropType<CommunityModel>,
+		required: true,
+	},
+});
+
+const { community } = toRefs(props);
+
 const { user } = useCommonStore();
 const { toggleLeftPane, communities, communityStates } = useAppStore();
 const routeStore = useCommunityRouteStore()!;
 
-const community = toRef(() => routeStore.community);
-const frontpageChannel = toRef(() => routeStore.frontpageChannel);
-const allChannel = toRef(() => routeStore.allChannel);
-const activeChannel = toRef(() => routeStore.channel);
-const archivedChannels = toRef(() => routeStore.archivedChannels);
+const {
+	frontpageChannel,
+	allChannel,
+	channel: activeChannel,
+	archivedChannels,
+	expandedArchivedChannels,
+	loadedArchivedChannels,
+} = routeStore;
 
 const isLoadingArchivedChannels = ref(false);
 
@@ -63,15 +75,15 @@ async function onClickArchivedChannels() {
 		return;
 	}
 
-	routeStore.expandedArchivedChannels = !routeStore.expandedArchivedChannels;
+	expandedArchivedChannels.value = !expandedArchivedChannels.value;
 
 	// Load in archived channels.
-	if (routeStore.expandedArchivedChannels && !routeStore.loadedArchivedChannels) {
+	if (expandedArchivedChannels.value && !loadedArchivedChannels.value) {
 		isLoadingArchivedChannels.value = true;
 
 		await loadArchivedChannels(routeStore);
 
-		routeStore.loadedArchivedChannels = true;
+		loadedArchivedChannels.value = true;
 		isLoadingArchivedChannels.value = false;
 	}
 }
@@ -80,6 +92,7 @@ async function onClickArchivedChannels() {
 <template>
 	<div>
 		<AppCommunityChannelCard
+			v-if="frontpageChannel"
 			:community="community"
 			:path="frontpageChannel.title"
 			:label="$gettext(`Frontpage`)"
@@ -90,6 +103,7 @@ async function onClickArchivedChannels() {
 		/>
 
 		<AppCommunityChannelCard
+			v-if="allChannel"
 			:community="community"
 			:path="allChannel.title"
 			sort="hot"
@@ -100,7 +114,7 @@ async function onClickArchivedChannels() {
 			@click="toggleLeftPane()"
 		/>
 
-		<h5 class="-heading">
+		<h5 :style="{ marginTop: `24px` }">
 			{{ $gettext(`Channels`) }}
 		</h5>
 
@@ -122,18 +136,16 @@ async function onClickArchivedChannels() {
 		</template>
 
 		<template v-if="community.has_archived_channels">
-			<h5 class="-heading -archived-heading" @click="onClickArchivedChannels">
-				<AppJolticon
-					:icon="routeStore.expandedArchivedChannels ? 'chevron-down' : 'chevron-right'"
-				/>
+			<h5
+				:style="{ marginTop: `24px`, userSelect: `none`, cursor: `pointer` }"
+				@click="onClickArchivedChannels"
+			>
+				<AppJolticon :icon="expandedArchivedChannels ? 'chevron-down' : 'chevron-right'" />
 				{{ $gettext(`Archived Channels`) }}
 			</h5>
 
 			<template
-				v-if="
-					routeStore.expandedArchivedChannels ||
-					(activeChannel && activeChannel.is_archived)
-				"
+				v-if="expandedArchivedChannels || (activeChannel && activeChannel.is_archived)"
 			>
 				<template v-if="archivedChannels.length">
 					<AppCommunityChannelCard
@@ -160,12 +172,3 @@ async function onClickArchivedChannels() {
 		</template>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-heading
-	margin-top: 24px
-
-.-archived-heading
-	user-select: none
-	cursor: pointer
-</style>
