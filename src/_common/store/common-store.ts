@@ -1,4 +1,6 @@
 import { computed, inject, InjectionKey, ref, Ref } from 'vue';
+import { loadScript } from '../../utils/utils';
+import { isDynamicGoogleBot } from '../device/device.service';
 import { EmojiGroupModel } from '../emoji/emoji-group.model';
 import { Environment } from '../environment/environment.service';
 import '../model/model.service';
@@ -34,6 +36,8 @@ export function createCommonStore() {
 	const userBootstrappedPromise = new Promise<void>(resolve => {
 		_resolveUserBootstrapped = resolve;
 	});
+
+	const lazyLoadedGlobalScripts = ref(new Map<string, Promise<unknown>>());
 
 	const reactionsData = ref(new Map()) as Ref<Map<number, EmojiGroupData>>;
 	const reactionsCursor = ref<string>();
@@ -150,6 +154,54 @@ export function createCommonStore() {
 		}
 	}
 
+	/**
+	 * Lazy loads an external script by url by adding it as a <script> tag to the document head.
+	 *
+	 * Notes:
+	 * - Scripts will only be required once.
+	 * - Scripts by default do not load in SSR.
+	 * - Scripts by default do not load for GoogleBot.
+	 *
+	 * @return A promise that resolves when the script has been loaded.
+	 */
+	async function lazyLoadGlobalScript(
+		src: string,
+		{ allowSSR, allowGoogleBot }: { allowSSR?: boolean; allowGoogleBot?: boolean } = {
+			allowSSR: false,
+			allowGoogleBot: false,
+		}
+	) {
+		if (lazyLoadedGlobalScripts.value.has(src)) {
+			return lazyLoadedGlobalScripts.value.get(src);
+		}
+
+		if (!allowSSR && import.meta.env.SSR) {
+			return Promise.resolve(null);
+		}
+
+		if (!allowGoogleBot && isDynamicGoogleBot()) {
+			return Promise.resolve(null);
+		}
+
+		let deferredResolve = (value: unknown) => {};
+		let deferredReject = (reason?: any) => {};
+		const deferred = new Promise((resolve, reject) => {
+			deferredResolve = resolve;
+			deferredReject = reject;
+		});
+
+		lazyLoadedGlobalScripts.value.set(src, deferred);
+		try {
+			await loadScript(src);
+			deferredResolve(true);
+		} catch (e) {
+			lazyLoadedGlobalScripts.value.delete(src);
+			deferredReject(e);
+		}
+
+		return deferred;
+	}
+
 	return {
 		user,
 		userBootstrapped,
@@ -167,6 +219,7 @@ export function createCommonStore() {
 		setError,
 		clearError,
 		redirect,
+		lazyLoadGlobalScript,
 		coinBalance,
 		joltbuxBalance,
 		showInitialPackWatermark,
