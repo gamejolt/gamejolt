@@ -119,7 +119,6 @@ export class GridClient {
 	isGuest = false;
 	channels: Channel[] = [];
 	bootstrapReceived = false;
-	bootstrapTimestamp = 0;
 	bootstrapDelay = 1;
 	chat: ChatClient | null = null;
 	notificationChannel: GridNotificationChannel | null = null;
@@ -275,7 +274,6 @@ export class GridClient {
 
 		this.connected = false;
 		this.bootstrapReceived = false;
-		this.bootstrapTimestamp = 0;
 
 		this.notificationChannel = null;
 		this.commentChannel = null;

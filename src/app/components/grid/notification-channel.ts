@@ -33,7 +33,6 @@ interface ChargeData {
 interface JoinPayload {
 	hasNewFriendRequests: boolean;
 	hasUnreadNotifications: boolean;
-	lastNotificationTime: number;
 	notificationCount: number;
 	activityUnreadCount: number;
 	activityUnreadCounts: { [countId: string]: number };
@@ -181,7 +180,6 @@ export function createGridNotificationChannel(
 				cost,
 			});
 
-			client.bootstrapTimestamp = payload.lastNotificationTime;
 			client.bootstrapReceived = true;
 
 			// communities - has unread posts?
