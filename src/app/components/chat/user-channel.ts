@@ -28,7 +28,7 @@ export type ChatUserChannel = ReturnType<typeof createChatUserChannel>;
 interface JoinPayload {
 	user: UnknownModelData;
 	friends: UnknownModelData[];
-	notifications: Record<string, number>;
+	notifications: Record<string, number | boolean>;
 	groups: UnknownModelData[];
 }
 
@@ -103,8 +103,11 @@ export function createChatUserChannel(
 			);
 
 			client.notifications.clear();
-			for (const [roomId, count] of Object.entries(response.notifications)) {
-				client.notifications.set(+roomId, count);
+			for (const [roomId, countOrBool] of Object.entries(response.notifications)) {
+				client.notifications.set(
+					+roomId,
+					typeof countOrBool === 'number' ? countOrBool > 0 : countOrBool === true
+				);
 			}
 		},
 

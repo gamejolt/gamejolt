@@ -12,11 +12,11 @@ import { AppConfigLoaded } from '../../../_common/config/loaded';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
+import AppNotificationBlip from '../../../_common/notification/AppNotificationBlip.vue';
 import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
 import { Screen } from '../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../_common/store/common-store';
 import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
-import { kThemeGjOverlayNotice } from '../../../_common/theme/variables';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import { styleWhen } from '../../../_styles/mixins';
 import { imageGameJoltLogo, imageJolt } from '../../img/images';
@@ -106,24 +106,17 @@ trackExperimentEngagement(configShowStoreInMoreMenu);
 					@click="toggleCbarMenu()"
 				>
 					<AppJolticon icon="menu" />
-					<div
-						v-if="chat && chat.roomNotificationsCount > 0"
-						class="-notification-chat notification-tag tag tag-highlight"
-					>
-						{{ chat.roomNotificationsCount }}
-					</div>
-					<div
-						v-else-if="showInitialPackWatermark || questActivityIds.size > 0"
+					<AppNotificationBlip
+						v-if="
+							chat?.roomHasNotifications ||
+							showInitialPackWatermark ||
+							questActivityIds.size > 0
+						"
 						:style="{
-							width: `16px`,
-							height: `16px`,
-							pointerEvents: `none`,
 							position: `absolute`,
 							zIndex: 2,
 							top: 0,
 							right: 0,
-							borderRadius: `50%`,
-							background: kThemeGjOverlayNotice,
 						}"
 					/>
 				</a>
@@ -304,12 +297,6 @@ trackExperimentEngagement(configShowStoreInMoreMenu);
 
 		&.active
 			min-width: var(--shell-cbar-width)
-
-		.-notification-chat
-			pointer-events: none
-			position: absolute
-			top: 0
-			right: 0
 
 .-section-icon
 	position: relative

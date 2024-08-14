@@ -68,7 +68,7 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 			<AppShellCbarItem
 				class="-control"
 				:highlight="highlight"
-				:notification-count="chat?.roomNotificationsCount || 0"
+				:show-blip="chat?.roomHasNotifications"
 				:is-active="visibleLeftPane === 'chat'"
 				is-control
 			>

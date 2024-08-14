@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
-import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import AppNotificationBlip from '../../../../_common/notification/AppNotificationBlip.vue';
 import { kThemeBacklight, kThemeBacklightFg } from '../../../../_common/theme/variables';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -32,7 +32,7 @@ const roomId = computed(() =>
 
 const user = computed(() => (item.value instanceof ChatUser ? item.value : null));
 const isActive = computed(() => chat.value.activeRoomId === roomId.value);
-const notificationsCount = computed(() => chat.value.notifications.get(roomId.value) || 0);
+const hasNotification = computed(() => !!chat.value.notifications.get(roomId.value));
 
 const isOnline = computed(() => {
 	if (!chat.value || !user.value) {
@@ -148,10 +148,8 @@ async function leaveRoom() {
 			<span v-if="meta" class="tiny text-muted">{{ meta }}</span>
 		</template>
 
-		<template v-if="notificationsCount" #trailing>
-			<span class="badge badge-overlay-notice">
-				{{ formatNumber(notificationsCount) }}
-			</span>
+		<template v-if="hasNotification" #trailing>
+			<AppNotificationBlip v-if="hasNotification" />
 		</template>
 
 		<template #popover>

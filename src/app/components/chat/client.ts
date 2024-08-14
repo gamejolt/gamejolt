@@ -55,7 +55,7 @@ export class ChatClient {
 
 	// The following are indexed by room ID.
 	roomChannels = new Map<number, ChatRoomChannel>();
-	notifications = new Map<number, number>();
+	notifications = new Map<number, boolean>();
 	isFocused = true;
 
 	/**
@@ -91,12 +91,13 @@ export class ChatClient {
 		}
 	}
 
-	get roomNotificationsCount() {
-		let count = 0;
-		for (const roomCount of this.notifications.values()) {
-			count += roomCount;
+	get roomHasNotifications() {
+		for (const hasNotification of this.notifications.values()) {
+			if (hasNotification) {
+				return true;
+			}
 		}
-		return count;
+		return false;
 	}
 }
 
@@ -172,8 +173,7 @@ export function newChatNotification(chat: ChatClient, roomId: number) {
 		return;
 	}
 
-	const current = chat.notifications.get(roomId);
-	chat.notifications.set(roomId, current ? current + 1 : 1);
+	chat.notifications.set(roomId, true);
 }
 
 export function queueChatMessage(room: ChatRoomModel, type: ChatMessageType, content: string) {

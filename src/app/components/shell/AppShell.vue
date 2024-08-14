@@ -51,7 +51,7 @@ const route = useRoute();
 
 initShellRoutes();
 
-const totalChatNotificationsCount = computed(() => chat.value?.roomNotificationsCount ?? 0);
+const hasChatNotification = computed(() => chat.value?.roomHasNotifications === true);
 const ssrShouldShowSidebar = computed(
 	() => import.meta.env.SSR && String(route.name).indexOf('communities.view') === 0
 );
@@ -94,11 +94,11 @@ watch(hasCbar, async () => {
 });
 
 // Keep the title up to date with notification counts.
-watch([totalChatNotificationsCount, unreadActivityCount, hasUnreadNotifications], () => {
-	Meta.notificationsCount =
-		unreadActivityCount.value +
-		(hasUnreadNotifications.value ? 1 : 0) +
-		totalChatNotificationsCount.value;
+watch([hasChatNotification, unreadActivityCount, hasUnreadNotifications], () => {
+	let count = unreadActivityCount.value;
+	count += hasChatNotification.value ? 1 : 0;
+	count += hasUnreadNotifications.value ? 1 : 0;
+	Meta.notificationsCount = count;
 });
 </script>
 
