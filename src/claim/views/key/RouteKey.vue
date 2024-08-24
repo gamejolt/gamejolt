@@ -116,8 +116,7 @@ async function claim(resource: GameModel | GameBundleModel) {
 			location =
 				Environment.wttfBaseUrl + `/library/bundle/${resource.slug}/${resource.id}/games`;
 		} else if (resource instanceof GameModel) {
-			location =
-				Environment.wttfBaseUrl + `/profile/${user.value.slug}/${user.value.id}/owned`;
+			location = Environment.wttfBaseUrl + `/@${user.value.username}/owned`;
 		}
 
 		if (location) {
