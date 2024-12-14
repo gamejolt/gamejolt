@@ -1,12 +1,14 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
+import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
 	setPageAdsSettings,
 	useAdStore,
 } from '../../../_common/ad/ad-store';
+import AppAdGptTakeover from '../../../_common/ad/gpt/AppAdGptTakeover.vue';
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
 import { isDynamicGoogleBot } from '../../../_common/device/device.service';
@@ -162,6 +164,8 @@ function _releaseAdSettings() {
 </script>
 
 <template>
+	<AppAdTakeoverBackground class="_takeover" />
+
 	<section
 		v-if="isBootstrapped"
 		class="section"
@@ -170,79 +174,89 @@ function _releaseAdSettings() {
 			paddingTop: kLineHeightComputed.px,
 		}"
 	>
-		<AppAdWidget
-			v-if="!Screen.isMobile"
-			:style="{
-				marginBottom: `16px`,
-			}"
-			size="leaderboard"
-			placement="top"
-		/>
+		<div class="_takeover-float">
+			<AppAdWidget
+				v-if="!Screen.isMobile"
+				:style="{
+					marginBottom: `16px`,
+				}"
+				size="leaderboard"
+				placement="top"
+			/>
+		</div>
 
 		<AppPageContainer xl>
 			<template v-if="Screen.isDesktop" #left>
 				<AppScrollAffix>
-					<AppAdWidget size="rectangle" placement="side" />
+					<!-- TODO: When we want to show a normal rectangle, put this back -->
+					<div class="_takeover-float">
+						<AppAdGptTakeover />
+						<!-- <AppAdWidget size="rectangle" placement="side" /> -->
+					</div>
 				</AppScrollAffix>
 			</template>
 			<template v-if="Screen.isLg" #right>
 				<AppScrollAffix>
-					<AppAdWidget size="rectangle" placement="side" />
+					<div class="_takeover-float">
+						<AppAdWidget size="rectangle" placement="side" />
+					</div>
 				</AppScrollAffix>
 			</template>
 			<template #default>
-				<h2
-					class="section-header"
-					:style="{
-						display: `flex`,
-						flexDirection: `row`,
-						justifyContent: `space-between`,
-						marginBottom: 0,
-						// We do it this way so that the header doesn't jump when the loading disappears.
-						height: `36px`,
-					}"
-				>
-					<span>
-						<template v-if="type === 'build'">
-							{{ $gettext(`Downloading %{ game }...`, { game: game.title }) }}
-						</template>
-						<template v-else-if="type === 'soundtrack'">
-							{{
-								$gettext(`Downloading soundtrack for %{ game }...`, {
-									game: game.title,
-								})
-							}}
-						</template>
-					</span>
+				<div class="_takeover-float">
+					<h2
+						class="section-header"
+						:style="{
+							display: `flex`,
+							flexDirection: `row`,
+							justifyContent: `space-between`,
+							marginBottom: 0,
+							// We do it this way so that the header doesn't jump when the loading disappears.
+							height: `36px`,
+						}"
+					>
+						<span>
+							<template v-if="type === 'build'">
+								{{ $gettext(`Downloading %{ game }...`, { game: game.title }) }}
+							</template>
+							<template v-else-if="type === 'soundtrack'">
+								{{
+									$gettext(`Downloading soundtrack for %{ game }...`, {
+										game: game.title,
+									})
+								}}
+							</template>
+						</span>
 
-					<div v-if="!started">
-						<AppLoading :hide-label="true" :style="{ marginBottom: 0 }" />
-					</div>
-				</h2>
+						<div v-if="!started">
+							<AppLoading :hide-label="true" :style="{ marginBottom: 0 }" />
+						</div>
+					</h2>
 
-				<p class="small text-muted">
-					{{ $gettext(`Your download will begin in just a moment...`) }}
-				</p>
+					<p class="small text-muted">
+						{{ $gettext(`Your download will begin in just a moment...`) }}
+					</p>
 
-				<AppSpacer vertical :scale="2" />
+					<AppSpacer vertical :scale="2" />
 
-				<!-- <AppAdWidget size="video" placement="content" /> -->
+					<!-- <AppAdWidget size="video" placement="content" /> -->
 
-				<h2>
-					{{ $gettext(`You may also like`) }}
-				</h2>
+					<h2>
+						{{ $gettext(`You may also like`) }}
+					</h2>
 
-				<div class="scrollable-grid-xs">
-					<div class="row">
-						<div
-							v-for="recommendedGame of games"
-							:key="recommendedGame.id"
-							class="scrollable-grid-item col-xs-10 col-sm-6"
-						>
-							<AppGameThumbnail
-								v-app-track-event="'recommended-games:click:download'"
-								:game="recommendedGame"
-							/>
+					<div class="scrollable-grid-xs">
+						<div class="row">
+							<div
+								v-for="recommendedGame of games"
+								:key="recommendedGame.id"
+								class="scrollable-grid-item col-xs-10 col-sm-6"
+							>
+								<AppGameThumbnail
+									v-app-track-event="'recommended-games:click:download'"
+									:game="recommendedGame"
+								/>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -250,3 +264,12 @@ function _releaseAdSettings() {
 		</AppPageContainer>
 	</section>
 </template>
+
+<style lang="stylus" scoped>
+._takeover
+	z-index: 0
+
+._takeover-float
+	position: relative
+	z-index: 1
+</style>
