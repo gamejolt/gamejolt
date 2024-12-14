@@ -71,7 +71,7 @@ function onClick() {
 </script>
 
 <template>
-	<div :id="`div-gpt-ad-takeover`" />
+	<div :id="`div-gpt-ad-takeover`" :style="{ display: `none` }" />
 
 	<a
 		v-if="fgSrc && bgSrc && href"
