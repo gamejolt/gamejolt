@@ -313,26 +313,28 @@ const topSpacerHeight = buildCSSPixelValue(58);
 
 				<!-- Main -->
 				<template #default>
-					<AppHomeFeedMenu
-						v-if="Screen.isDesktop"
-						:tabs="tabs"
-						:active-tab="activeFeedTab"
-					/>
+					<div :style="{ position: `relative` }">
+						<AppHomeFeedMenu
+							v-if="Screen.isDesktop"
+							:tabs="tabs"
+							:active-tab="activeFeedTab"
+						/>
 
-					<!-- Realm feed will handle its own add button. -->
-					<AppPostAddButton @add="onPostAdded" />
+						<!-- Realm feed will handle its own add button. -->
+						<AppPostAddButton @add="onPostAdded" />
 
-					<template v-if="Screen.isMobile">
-						<template v-if="!Screen.isXs && featuredItem">
-							<AppHomeFeaturedBanner :featured-item="featuredItem" />
-							<AppSpacer vertical :scale="4" />
+						<template v-if="Screen.isMobile">
+							<template v-if="!Screen.isXs && featuredItem">
+								<AppHomeFeaturedBanner :featured-item="featuredItem" />
+								<AppSpacer vertical :scale="4" />
+							</template>
+
+							<AppHomeFeedMenu :tabs="tabs" :active-tab="activeFeedTab" />
 						</template>
 
-						<AppHomeFeedMenu :tabs="tabs" :active-tab="activeFeedTab" />
-					</template>
-
-					<RouteHomeActivity v-if="activeFeedTab === HOME_FEED_ACTIVITY" />
-					<RouteHomeFyp v-else-if="activeFeedTab === HOME_FEED_FYP" />
+						<RouteHomeActivity v-if="activeFeedTab === HOME_FEED_ACTIVITY" />
+						<RouteHomeFyp v-else-if="activeFeedTab === HOME_FEED_FYP" />
+					</div>
 				</template>
 			</AppPageContainer>
 		</section>
