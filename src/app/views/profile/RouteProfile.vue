@@ -11,6 +11,7 @@ import {
 	toRef,
 } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
+import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
 import { Api } from '../../../_common/api/api.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { LinkedAccountModel } from '../../../_common/linked-account/linked-account.model';
@@ -369,6 +370,8 @@ const coverMaxHeight = watched(() => Math.min(Screen.height * 0.35, 400));
 		</template>
 		<template v-else>
 			<AppUserBlockOverlay :user="routeUser">
+				<AppAdTakeoverBackground />
+
 				<div ref="header">
 					<AppPageHeader
 						:cover-media-item="routeUser.header_media_item"

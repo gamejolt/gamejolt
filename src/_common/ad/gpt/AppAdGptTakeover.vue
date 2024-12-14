@@ -3,7 +3,7 @@ import { onBeforeUnmount, onMounted, ref, Teleport } from 'vue';
 import { styleAbsoluteFill } from '../../../_styles/mixins';
 import { useAdStore } from '../ad-store';
 
-const { takeoverAdapter: adapter } = useAdStore();
+const { takeoverAdapter: adapter, hasTakeover } = useAdStore();
 
 const fgSrc = ref('');
 const bgSrc = ref('');
@@ -27,6 +27,8 @@ onBeforeUnmount(() => {
 		const slot = adapter.getTakeoverGptSlot();
 		googletag.pubads().clear([slot]);
 	});
+
+	hasTakeover.value = false;
 });
 
 function showTakeover(event: MessageEvent) {
@@ -50,6 +52,8 @@ function showTakeover(event: MessageEvent) {
 	if (!data.fgImg || !data.bgImg || !data.destUrl || !data.clickUrl || !data.impressionUrl) {
 		return;
 	}
+
+	hasTakeover.value = true;
 
 	fgSrc.value = data.fgImg;
 	bgSrc.value = data.bgImg;

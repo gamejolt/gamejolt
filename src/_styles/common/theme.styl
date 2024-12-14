@@ -1,5 +1,14 @@
 /**
  * Dark Mode
  */
-.theme-dark, .fill-gray, .fill-dark, .fill-darker, .fill-darkest, .fill-black
+.theme-dark
+.fill-gray
+.fill-dark
+.fill-darker
+.fill-darkest
+.fill-black
 	theme-dark()
+
+// The fills above already change the color.
+.theme-dark
+	theme-prop('color', 'fg')

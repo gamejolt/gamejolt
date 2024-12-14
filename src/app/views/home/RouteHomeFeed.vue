@@ -3,6 +3,7 @@ import { computed, defineAsyncComponent, provide, Ref, ref, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
 import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
+import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
 import AppAdGptTakeover from '../../../_common/ad/gpt/AppAdGptTakeover.vue';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -207,32 +208,36 @@ const topSpacerHeight = buildCSSPixelValue(58);
 					<template v-if="Screen.isDesktop">
 						<div :style="{ height: topSpacerHeight.px }" />
 
-						<AppStickerChargeCard
-							header-charge
-							elevate
-							header-spacer-height="6px"
-							allow-fully-charged-text
-							:is-loading="isLoadingCharge"
-						/>
-						<AppSpacer vertical :scale="8" />
-
-						<template v-if="user">
-							<AppDailyQuests
-								disable-on-expiry
-								single-row
-								:force-loading="isLoadingQuests"
+						<AppAdTakeoverFloat allow-theme-change>
+							<AppStickerChargeCard
+								header-charge
+								elevate
+								header-spacer-height="6px"
+								allow-fully-charged-text
+								:is-loading="isLoadingCharge"
 							/>
+							<AppSpacer vertical :scale="8" />
 
-							<AppSpacer
-								v-if="isQuestStoreLoading || dailyQuests.length > 0"
-								vertical
-								:scale="8"
-							/>
-						</template>
+							<template v-if="user">
+								<AppDailyQuests
+									disable-on-expiry
+									single-row
+									:force-loading="isLoadingQuests"
+								/>
 
-						<AppInviteCard :user="user!" elevate />
+								<AppSpacer
+									v-if="isQuestStoreLoading || dailyQuests.length > 0"
+									vertical
+									:scale="8"
+								/>
+							</template>
+						</AppAdTakeoverFloat>
 
-						<template v-if="hasGamesSection">
+						<AppAdTakeoverFloat>
+							<AppInviteCard :user="user!" elevate />
+						</AppAdTakeoverFloat>
+
+						<AppAdTakeoverFloat v-if="hasGamesSection" allow-theme-change>
 							<div class="clearfix">
 								<div class="pull-right">
 									<AppButton
@@ -293,7 +298,7 @@ const topSpacerHeight = buildCSSPixelValue(58);
 									{{ $gettext(`Show all`) }}
 								</a>
 							</p>
-						</template>
+						</AppAdTakeoverFloat>
 					</template>
 				</template>
 
@@ -313,13 +318,15 @@ const topSpacerHeight = buildCSSPixelValue(58);
 
 				<!-- Main -->
 				<template #default>
-					<div :style="{ position: `relative` }">
+					<AppAdTakeoverFloat allow-theme-change>
 						<AppHomeFeedMenu
 							v-if="Screen.isDesktop"
 							:tabs="tabs"
 							:active-tab="activeFeedTab"
 						/>
+					</AppAdTakeoverFloat>
 
+					<AppAdTakeoverFloat>
 						<!-- Realm feed will handle its own add button. -->
 						<AppPostAddButton @add="onPostAdded" />
 
@@ -334,7 +341,7 @@ const topSpacerHeight = buildCSSPixelValue(58);
 
 						<RouteHomeActivity v-if="activeFeedTab === HOME_FEED_ACTIVITY" />
 						<RouteHomeFyp v-else-if="activeFeedTab === HOME_FEED_FYP" />
-					</div>
+					</AppAdTakeoverFloat>
 				</template>
 			</AppPageContainer>
 		</section>

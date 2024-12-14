@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRef, toRefs } from 'vue';
+import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppButtonGroup from '../../../../_common/button/AppButtonGroup.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -69,60 +70,67 @@ function showAboutModal() {
 </script>
 
 <template>
-	<AppButtonGroup v-if="routeUser" :row="collapse">
-		<div
-			:style="{
-				width: `100%`,
-				display: `flex`,
-				columnGap: `4px`,
-				flex: `auto`,
-			}"
-		>
-			<AppUserFollowButton
-				v-if="shouldShowFollow"
-				:user="routeUser"
-				:icon="routeUser.is_following ? 'check' : undefined"
-				hide-count
-				block
-				location="profilePage"
-			/>
-			<AppButton
-				v-else-if="isMe"
-				primary
-				block
-				:to="{
-					name: 'dash.account.edit',
+	<AppAdTakeoverFloat allow-theme-change>
+		<AppButtonGroup v-if="routeUser" :row="collapse">
+			<div
+				:style="{
+					width: `100%`,
+					display: `flex`,
+					columnGap: `4px`,
+					flex: `auto`,
 				}"
 			>
-				{{ $gettext(`Edit profile`) }}
-			</AppButton>
-
-			<AppProfileShortcutExtras v-if="!collapse" :style="{ flex: `none` }" />
-		</div>
-
-		<div
-			:style="{
-				width: `100%`,
-				display: `flex`,
-				columnGap: `4px`,
-				flex: `auto`,
-			}"
-		>
-			<template v-if="collapse">
-				<AppButton block @click="showAboutModal()">
-					{{ $gettext(`About`) }}
+				<AppUserFollowButton
+					v-if="shouldShowFollow"
+					:user="routeUser"
+					:icon="routeUser.is_following ? 'check' : undefined"
+					hide-count
+					block
+					location="profilePage"
+				/>
+				<AppButton
+					v-else-if="isMe"
+					primary
+					block
+					:to="{
+						name: 'dash.account.edit',
+					}"
+				>
+					{{ $gettext(`Edit profile`) }}
 				</AppButton>
-			</template>
-			<template v-else>
-				<AppButton v-if="canAddAsFriend" block @click="sendFriendRequest()">
-					{{ $gettext(`Send friend request`) }}
-				</AppButton>
-				<AppButton v-else-if="canMessage" block icon="user-messages" @click="openMessaging">
-					{{ $gettext(`Message`) }}
-				</AppButton>
-			</template>
-		</div>
 
-		<AppProfileShortcutExtras v-if="collapse" :style="{ flex: `none` }" />
-	</AppButtonGroup>
+				<AppProfileShortcutExtras v-if="!collapse" :style="{ flex: `none` }" />
+			</div>
+
+			<div
+				:style="{
+					width: `100%`,
+					display: `flex`,
+					columnGap: `4px`,
+					flex: `auto`,
+				}"
+			>
+				<template v-if="collapse">
+					<AppButton block @click="showAboutModal()">
+						{{ $gettext(`About`) }}
+					</AppButton>
+				</template>
+				<template v-else>
+					<AppButton v-if="canAddAsFriend" block @click="sendFriendRequest()">
+						{{ $gettext(`Send friend request`) }}
+					</AppButton>
+					<AppButton
+						v-else-if="canMessage"
+						block
+						icon="user-messages"
+						@click="openMessaging"
+					>
+						{{ $gettext(`Message`) }}
+					</AppButton>
+				</template>
+			</div>
+
+			<AppProfileShortcutExtras v-if="collapse" :style="{ flex: `none` }" />
+		</AppButtonGroup>
+	</AppAdTakeoverFloat>
 </template>

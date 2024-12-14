@@ -1,6 +1,7 @@
 <script lang="ts">
 import { Ref, computed, ref } from 'vue';
 import { RouteLocationNormalized, RouterLink, useRoute, useRouter } from 'vue-router';
+import AppAdTakeoverFloat from '../../../../../_common/ad/AppAdTakeoverFloat.vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { EventItemModel } from '../../../../../_common/event-item/event-item.model';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
@@ -136,7 +137,7 @@ function onPostPublished(eventItem: EventItemModel) {
 </script>
 
 <template>
-	<div>
+	<AppAdTakeoverFloat>
 		<!-- Spawn day -->
 		<AppUserSpawnDay :user="user" @post-add="onPostAdded" />
 
@@ -242,5 +243,5 @@ function onPostPublished(eventItem: EventItemModel) {
 				</p>
 			</AppIllustration>
 		</template>
-	</div>
+	</AppAdTakeoverFloat>
 </template>

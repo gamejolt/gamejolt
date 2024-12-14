@@ -51,6 +51,8 @@ export function createAdStore() {
 		return true;
 	});
 
+	const hasTakeover = ref(false);
+
 	const c = shallowReadonly({
 		adapter,
 		takeoverAdapter,
@@ -59,6 +61,7 @@ export function createAdStore() {
 		pageSettings,
 		settings,
 		shouldShow,
+		hasTakeover,
 	});
 	provide(AdStoreKey, c);
 

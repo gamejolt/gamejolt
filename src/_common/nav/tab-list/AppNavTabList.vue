@@ -77,7 +77,7 @@ defineProps({
 
 		& > li
 			// We save the actual BG color outside the <a> so that we can use
-			// it to override the hover styling when the <a> is active.
+			// it to override the default/hover styling for the <a> tag.
 			--bg-save: var(--theme-bg-actual)
 			display: inline-block
 			margin: 0
@@ -92,6 +92,7 @@ defineProps({
 			& > a
 				theme-prop('color', 'fg')
 				theme-prop('border-color', 'bg-subtle')
+				background-color: var(--bg-save)
 				display: inline-block
 				padding: $tab-list-padding-v $tab-list-padding-h
 				margin: 0 3px

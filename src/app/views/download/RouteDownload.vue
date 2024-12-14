@@ -2,6 +2,7 @@
 import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
 import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
+import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
@@ -164,7 +165,7 @@ function _releaseAdSettings() {
 </script>
 
 <template>
-	<AppAdTakeoverBackground class="_takeover" />
+	<AppAdTakeoverBackground />
 
 	<section
 		v-if="isBootstrapped"
@@ -174,7 +175,7 @@ function _releaseAdSettings() {
 			paddingTop: kLineHeightComputed.px,
 		}"
 	>
-		<div class="_takeover-float">
+		<AppAdTakeoverFloat>
 			<AppAdWidget
 				v-if="!Screen.isMobile"
 				:style="{
@@ -183,27 +184,27 @@ function _releaseAdSettings() {
 				size="leaderboard"
 				placement="top"
 			/>
-		</div>
+		</AppAdTakeoverFloat>
 
 		<AppPageContainer xl>
 			<template v-if="Screen.isDesktop" #left>
 				<AppScrollAffix>
 					<!-- TODO: When we want to show a normal rectangle, put this back -->
-					<div class="_takeover-float">
+					<AppAdTakeoverFloat>
 						<AppAdGptTakeover />
 						<!-- <AppAdWidget size="rectangle" placement="side" /> -->
-					</div>
+					</AppAdTakeoverFloat>
 				</AppScrollAffix>
 			</template>
 			<template v-if="Screen.isLg" #right>
 				<AppScrollAffix>
-					<div class="_takeover-float">
+					<AppAdTakeoverFloat>
 						<AppAdWidget size="rectangle" placement="side" />
-					</div>
+					</AppAdTakeoverFloat>
 				</AppScrollAffix>
 			</template>
 			<template #default>
-				<div class="_takeover-float">
+				<AppAdTakeoverFloat allow-theme-change>
 					<h2
 						class="section-header"
 						:style="{
@@ -259,17 +260,8 @@ function _releaseAdSettings() {
 							</div>
 						</div>
 					</div>
-				</div>
+				</AppAdTakeoverFloat>
 			</template>
 		</AppPageContainer>
 	</section>
 </template>
-
-<style lang="stylus" scoped>
-._takeover
-	z-index: 0
-
-._takeover-float
-	position: relative
-	z-index: 1
-</style>

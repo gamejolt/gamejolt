@@ -1,6 +1,8 @@
 <script lang="ts">
 import { Ref, ref, toRef } from 'vue';
 import { RouteLocationRaw, RouterView, useRoute, useRouter } from 'vue-router';
+import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
+import AppAdGptTakeover from '../../../../_common/ad/gpt/AppAdGptTakeover.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -47,7 +49,6 @@ import AppGameListPlaceholder from '../../../components/game/list/AppGameListPla
 import { useGridStore } from '../../../components/grid/grid-store';
 import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import AppUserKnownFollowers from '../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 import AppProfileActionButtons from './AppProfileActionButtons.vue';
 import AppProfileInfoCard from './AppProfileInfoCard.vue';
@@ -103,8 +104,6 @@ const communities = ref<CommunityModel[]>([]);
 const supportersData = ref() as Ref<
 	{ supporters: TopSupporter[]; ownSupport: OwnSupport } | undefined
 >;
-const knownFollowers = ref<UserModel[]>([]);
-const knownFollowerCount = ref(0);
 
 let permalinkWatchDeregister: CommentThreadModalPermalinkDeregister | undefined = undefined;
 
@@ -115,9 +114,6 @@ const routeTitle = toRef(() => {
 	return null;
 });
 
-const shouldShowKnownFollowers = toRef(
-	() => !!myUser.value && isOverviewLoaded.value && !isMe.value
-);
 const userBlockedYou = toRef(() => routeUser.value && routeUser.value.blocked_you);
 
 createAppRoute({
@@ -191,13 +187,6 @@ createAppRoute({
 
 				removeQuery(router, 'invite');
 			}
-		}
-
-		if (payload.knownFollowers) {
-			knownFollowers.value = UserModel.populate(payload.knownFollowers);
-		}
-		if (payload.knownFollowerCount) {
-			knownFollowerCount.value = payload.knownFollowerCount;
 		}
 
 		overviewPayload(payload);
@@ -277,49 +266,51 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 					:sticky-side-top-margin="40"
 				>
 					<template #left>
-						<template v-if="Screen.isMd">
-							<AppProfileActionButtons />
+						<AppAdTakeoverFloat>
+							<template v-if="Screen.isMd">
+								<AppProfileActionButtons />
 
-							<AppSpacer vertical :scale="4" />
-							<AppAdWidget
+								<AppSpacer vertical :scale="4" />
+								<AppAdWidget
+									:style="{
+										...styleChangeBg('bg'),
+										...styleElevate(3),
+										// Can't change this, needs to be at least 300px wide.
+										minWidth: `300px`,
+										borderRadius: kBorderRadiusLg.px,
+										padding: `8px`,
+									}"
+									size="rectangle"
+									placement="side"
+								/>
+								<AppSpacer vertical :scale="6" />
+							</template>
+
+							<!-- Stats, Shortcuts, Bio -->
+							<AppProfileInfoCard
 								:style="{
-									...styleChangeBg('bg'),
-									...styleElevate(3),
-									// Can't change this, needs to be at least 300px wide.
-									minWidth: `300px`,
-									borderRadius: kBorderRadiusLg.px,
-									padding: `8px`,
+									position: `relative`,
+									zIndex: 2,
 								}"
-								size="rectangle"
-								placement="side"
+								:card-styles="{
+									...styleWhen(Screen.isMobile, {
+										borderTopLeftRadius: 0,
+										borderTopRightRadius: 0,
+									}),
+								}"
+								:show-avatar="showSidebarAvatar"
 							/>
-							<AppSpacer vertical :scale="6" />
-						</template>
 
-						<!-- Stats, Shortcuts, Bio -->
-						<AppProfileInfoCard
-							:style="{
-								position: `relative`,
-								zIndex: 2,
-							}"
-							:card-styles="{
-								...styleWhen(Screen.isMobile, {
-									borderTopLeftRadius: 0,
-									borderTopRightRadius: 0,
-								}),
-							}"
-							:show-avatar="showSidebarAvatar"
-						/>
-
-						<!-- Top supporters -->
-						<template v-if="supportersData && supportersData.supporters.length">
-							<AppTopSupportersCard
-								:supporters="supportersData.supporters"
-								:own-support="supportersData.ownSupport"
-								inset-header
-							/>
-							<br v-if="Screen.isDesktop" />
-						</template>
+							<!-- Top supporters -->
+							<template v-if="supportersData && supportersData.supporters.length">
+								<AppTopSupportersCard
+									:supporters="supportersData.supporters"
+									:own-support="supportersData.ownSupport"
+									inset-header
+								/>
+								<br v-if="Screen.isDesktop" />
+							</template>
+						</AppAdTakeoverFloat>
 					</template>
 
 					<template #right>
@@ -327,7 +318,8 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 							<AppProfileActionButtons />
 
 							<AppSpacer vertical :scale="4" />
-							<AppAdWidget
+							<AppAdGptTakeover />
+							<!-- <AppAdWidget
 								:style="{
 									...styleChangeBg('bg'),
 									...styleElevate(3),
@@ -338,7 +330,7 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 								}"
 								size="rectangle"
 								placement="side"
-							/>
+							/> -->
 							<AppSpacer vertical :scale="6" />
 						</template>
 
@@ -349,14 +341,11 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 							<AppInviteCard v-else :user="myUser" />
 						</template>
 
-						<AppUserKnownFollowers
-							v-if="shouldShowKnownFollowers"
-							:users="knownFollowers"
-							:count="knownFollowerCount"
-						/>
-
 						<!-- Developer's Games -->
-						<template v-if="Screen.isDesktop && gamesCount > 0">
+						<AppAdTakeoverFloat
+							v-if="Screen.isDesktop && gamesCount > 0"
+							allow-theme-change
+						>
 							<AppSpacer vertical :scale="6" />
 
 							<div class="clearfix">
@@ -385,7 +374,7 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 								:games="games"
 								event-label="profile"
 							/>
-						</template>
+						</AppAdTakeoverFloat>
 					</template>
 
 					<template #default>
