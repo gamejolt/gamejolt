@@ -1,11 +1,15 @@
 import { getCurrentServerTime } from './server-time';
 export type RequireContextMap = { [k: string]: string };
 
-export function loadScript(src: string) {
+export function loadScript(src: string, { crossOrigin }: { crossOrigin?: string } = {}) {
 	return new Promise((resolve, reject) => {
 		const script = window.document.createElement('script');
 		script.type = 'text/javascript';
 		script.async = true;
+
+		if (crossOrigin) {
+			script.crossOrigin = crossOrigin;
+		}
 
 		const docHead = window.document.head || window.document.getElementsByTagName('head')[0];
 		docHead.appendChild(script);

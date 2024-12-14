@@ -226,7 +226,7 @@ function _releaseAdSettings() {
 
 				<AppSpacer vertical :scale="2" />
 
-				<AppAdWidget size="video" placement="content" />
+				<!-- <AppAdWidget size="video" placement="content" /> -->
 
 				<h2>
 					{{ $gettext(`You may also like`) }}

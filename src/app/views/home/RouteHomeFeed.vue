@@ -2,7 +2,8 @@
 import { computed, defineAsyncComponent, provide, Ref, ref, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
-import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
+import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
+import AppAdGptTakeover from '../../../_common/ad/gpt/AppAdGptTakeover.vue';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
@@ -191,6 +192,8 @@ const topSpacerHeight = buildCSSPixelValue(58);
 
 <template>
 	<AppShellPageBackdrop>
+		<AppAdTakeoverBackground />
+
 		<section class="section">
 			<AppPageContainer
 				xl
@@ -303,7 +306,9 @@ const topSpacerHeight = buildCSSPixelValue(58);
 						<AppSpacer vertical :scale="8" />
 					</template>
 
-					<AppAdWidget size="rectangle" placement="side" />
+					<!-- TODO: When we want to show a normal rectangle, put this back -->
+					<!-- <AppAdWidget size="rectangle" placement="side" /> -->
+					<AppAdGptTakeover />
 				</template>
 
 				<!-- Main -->

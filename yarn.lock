@@ -813,6 +813,11 @@
     "@types/jsonfile" "*"
     "@types/node" "*"
 
+"@types/google-publisher-tag@1.20241202.0":
+  version "1.20241202.0"
+  resolved "https://registry.yarnpkg.com/@types/google-publisher-tag/-/google-publisher-tag-1.20241202.0.tgz#62022e614b39d59d4f1b59c01eb7ff4b646dc147"
+  integrity sha512-Ws+7aEVlsa62mfoPx8S32JMhQgUsfLNMcniiGeYoRmcYZK3D+6uSw2X1IzibeB2nyKgh4X5k+MP14r7D0dNMoQ==
+
 "@types/grecaptcha@2.0.35":
   version "2.0.35"
   resolved "https://registry.yarnpkg.com/@types/grecaptcha/-/grecaptcha-2.0.35.tgz#f63fcd8f11e0aa62b6d8746267142440d8d89975"

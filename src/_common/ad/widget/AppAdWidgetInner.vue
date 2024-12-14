@@ -1,11 +1,7 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, PropType, ref, toRef, toRefs } from 'vue';
 import { AdSlot } from '../ad-slot-info';
-import { addAd, AdInterface, chooseAdAdapterForSlot, removeAd, useAdStore } from '../ad-store';
-
-function _generateSlotId() {
-	return Math.random() + '';
-}
+import { addAd, AdInterface, removeAd, useAdStore } from '../ad-store';
 
 const props = defineProps({
 	adSlot: {
@@ -16,6 +12,7 @@ const props = defineProps({
 
 const { adSlot } = toRefs(props);
 const adStore = useAdStore();
+const { adapter } = adStore;
 
 /**
  * We change this as the route changes. This way we can tell any of the ad
@@ -23,8 +20,7 @@ const adStore = useAdStore();
  */
 const slotId = ref('');
 
-const adapter = toRef(() => chooseAdAdapterForSlot(adStore, adSlot.value));
-const adComponent = toRef(() => adapter.value.component(adSlot.value));
+const adComponent = toRef(() => adapter.component(adSlot.value));
 
 /**
  * The [AdsController] will call into this to display the ad when needed (when
@@ -45,6 +41,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
 	removeAd(adStore, ad);
 });
+
+function _generateSlotId() {
+	return String(Math.random());
+}
 </script>
 
 <template>

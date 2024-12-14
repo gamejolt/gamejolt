@@ -4,9 +4,8 @@ import { objectEquals } from '../../utils/object';
 import { isDynamicGoogleBot } from '../device/device.service';
 import { Model } from '../model/model.service';
 import { onRouteChangeAfter } from '../route/route-component';
-import { AdSlot } from './ad-slot-info';
 import { AdAdapter } from './adapter-base';
-import { AdEnthusiastAdapter } from './enthusiast/enthusiast-adapter';
+import { AdGptAdapter } from './gpt/gpt-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';
 
 type AdStore = ReturnType<typeof createAdStore>;
@@ -36,7 +35,7 @@ export function createAdStore() {
 	const _defaultSettings = new AdSettingsContainer();
 
 	const adapter: AdAdapter = new AdProperAdapter();
-	const videoAdapter: AdAdapter = new AdEnthusiastAdapter();
+	const takeoverAdapter: AdGptAdapter = new AdGptAdapter();
 
 	const settings = toRef(() => pageSettings.value || _defaultSettings);
 
@@ -54,7 +53,7 @@ export function createAdStore() {
 
 	const c = shallowReadonly({
 		adapter,
-		videoAdapter,
+		takeoverAdapter,
 		routeResolved,
 		ads,
 		pageSettings,
@@ -75,8 +74,8 @@ export function createAdStore() {
 		// changed.
 		if (_didRouteChange(from, to)) {
 			adapter.onBeforeRouteChange();
-			if (adapter !== videoAdapter) {
-				videoAdapter.onBeforeRouteChange();
+			if (adapter !== takeoverAdapter) {
+				takeoverAdapter.onBeforeRouteChange();
 			}
 			routeResolved.value = false;
 		}
@@ -90,8 +89,8 @@ export function createAdStore() {
 
 		routeResolved.value = true;
 		adapter.onRouteChanged();
-		if (adapter !== videoAdapter) {
-			videoAdapter.onRouteChanged();
+		if (adapter !== takeoverAdapter) {
+			takeoverAdapter.onRouteChanged();
 		}
 		_displayAds(Array.from(ads.value));
 	});
@@ -124,13 +123,6 @@ export function setPageAdsSettings({ pageSettings }: AdStore, container: AdSetti
 
 export function releasePageAdsSettings({ pageSettings }: AdStore) {
 	pageSettings.value = null;
-}
-
-export function chooseAdAdapterForSlot({ videoAdapter, adapter }: AdStore, slot: AdSlot) {
-	if (slot.size === 'video') {
-		return videoAdapter;
-	}
-	return adapter;
 }
 
 export function addAd(c: AdStore, ad: AdInterface) {
