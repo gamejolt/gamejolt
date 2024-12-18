@@ -2,6 +2,7 @@
 import { computed, inject, InjectionKey, provide, ref } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import AppAdStickyRail from '../../../_common/ad/AppAdStickyRail.vue';
+import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
 import AppExpand from '../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../_common/filters/number';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
@@ -107,6 +108,8 @@ const noResults = computed(() => {
 </script>
 
 <template>
+	<AppAdTakeoverBackground />
+
 	<AppPageHeader should-affix-nav :hide-nav="!hasSearch">
 		<template v-if="Screen.isXs">
 			<label>

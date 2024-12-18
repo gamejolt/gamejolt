@@ -2,6 +2,7 @@
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppAdStickyRail from '../../../../_common/ad/AppAdStickyRail.vue';
+import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
 import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
@@ -61,103 +62,107 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 	<div id="games" class="game-listing">
 		<section class="section section-thin">
 			<template v-if="showAds && globalShouldShowAds">
-				<AppAdWidget size="leaderboard" placement="top" />
-				<AppSpacer vertical :scale="6" />
+				<AppAdTakeoverFloat>
+					<AppAdWidget size="leaderboard" placement="top" />
+					<AppSpacer vertical :scale="6" />
+				</AppAdTakeoverFloat>
 			</template>
 
 			<AppAdStickyRail show-left>
 				<div class="container-xl">
-					<AppNavTabList v-if="!hideSectionNav">
-						<ul>
-							<li v-if="includeFeaturedSection">
-								<RouterLink
-									v-app-no-autoscroll
-									v-app-track-event="`game-list:section-selector:featured`"
-									:to="{ name: $route.name!, params: { section: null } }"
-									:class="{ active: !$route.params.section }"
-								>
-									{{ $gettext(`Featured`) }}
-								</RouterLink>
-							</li>
-							<li>
-								<RouterLink
-									v-app-no-autoscroll
-									v-app-track-event="`game-list:section-selector:hot`"
-									:to="{ name: $route.name!, params: { section: 'hot' } }"
-									:class="{ active: $route.params.section === 'hot' }"
-								>
-									{{ $gettext(`Hot`) }}
-								</RouterLink>
-							</li>
-							<li>
-								<RouterLink
-									v-app-no-autoscroll
-									v-app-track-event="`game-list:section-selector:best`"
-									:to="{ name: $route.name!, params: { section: 'best' } }"
-									:class="{ active: $route.params.section === 'best' }"
-								>
-									{{ $gettext(`Best`) }}
-								</RouterLink>
-							</li>
-							<li>
-								<RouterLink
-									v-app-no-autoscroll
-									v-app-track-event="`game-list:section-selector:new`"
-									:to="{ name: $route.name!, params: { section: 'new' } }"
-									:class="{ active: $route.params.section === 'new' }"
-								>
-									{{ $gettext(`New`) }}
-								</RouterLink>
-							</li>
-						</ul>
-					</AppNavTabList>
+					<AppAdTakeoverFloat>
+						<AppNavTabList v-if="!hideSectionNav">
+							<ul>
+								<li v-if="includeFeaturedSection">
+									<RouterLink
+										v-app-no-autoscroll
+										v-app-track-event="`game-list:section-selector:featured`"
+										:to="{ name: $route.name!, params: { section: null } }"
+										:class="{ active: !$route.params.section }"
+									>
+										{{ $gettext(`Featured`) }}
+									</RouterLink>
+								</li>
+								<li>
+									<RouterLink
+										v-app-no-autoscroll
+										v-app-track-event="`game-list:section-selector:hot`"
+										:to="{ name: $route.name!, params: { section: 'hot' } }"
+										:class="{ active: $route.params.section === 'hot' }"
+									>
+										{{ $gettext(`Hot`) }}
+									</RouterLink>
+								</li>
+								<li>
+									<RouterLink
+										v-app-no-autoscroll
+										v-app-track-event="`game-list:section-selector:best`"
+										:to="{ name: $route.name!, params: { section: 'best' } }"
+										:class="{ active: $route.params.section === 'best' }"
+									>
+										{{ $gettext(`Best`) }}
+									</RouterLink>
+								</li>
+								<li>
+									<RouterLink
+										v-app-no-autoscroll
+										v-app-track-event="`game-list:section-selector:new`"
+										:to="{ name: $route.name!, params: { section: 'new' } }"
+										:class="{ active: $route.params.section === 'new' }"
+									>
+										{{ $gettext(`New`) }}
+									</RouterLink>
+								</li>
+							</ul>
+						</AppNavTabList>
 
-					<template v-if="!hideFilters">
-						<div class="-filtering-well">
-							<AppGameFilteringWidget :filtering="filtering" />
-						</div>
+						<template v-if="!hideFilters">
+							<div class="-filtering-well">
+								<AppGameFilteringWidget :filtering="filtering" />
+							</div>
 
-						<div class="clearfix">
-							<AppGameFilteringTags :filtering="filtering" />
-						</div>
-						<br />
-					</template>
+							<div class="clearfix">
+								<AppGameFilteringTags :filtering="filtering" />
+							</div>
+							<br />
+						</template>
 
-					<template v-if="listing.isBootstrapped">
-						<template v-if="listing.gamesCount">
-							<AppLoadingFade :is-loading="isLoading">
-								<slot />
-							</AppLoadingFade>
+						<template v-if="listing.isBootstrapped">
+							<template v-if="listing.gamesCount">
+								<AppLoadingFade :is-loading="isLoading">
+									<slot />
+								</AppLoadingFade>
 
-							<template v-if="!listing.loadInfinitely || GJ_IS_SSR">
-								<AppPagination
-									class="text-center"
-									:items-per-page="listing.perPage"
-									:total-items="listing.gamesCount"
-									:current-page="listing.currentPage"
-									@pagechange="Scroll.to('games', { animate: false })"
-								/>
-							</template>
-							<template v-else-if="!listing.reachedEnd">
-								<AppScrollInview
-									v-if="!listing.isLoadingMore"
-									:config="InviewConfig"
-									@inview="emit('load')"
-								/>
-								<AppLoading v-else centered />
+								<template v-if="!listing.loadInfinitely || GJ_IS_SSR">
+									<AppPagination
+										class="text-center"
+										:items-per-page="listing.perPage"
+										:total-items="listing.gamesCount"
+										:current-page="listing.currentPage"
+										@pagechange="Scroll.to('games', { animate: false })"
+									/>
+								</template>
+								<template v-else-if="!listing.reachedEnd">
+									<AppScrollInview
+										v-if="!listing.isLoadingMore"
+										:config="InviewConfig"
+										@inview="emit('load')"
+									/>
+									<AppLoading v-else centered />
+								</template>
 							</template>
 						</template>
-					</template>
-					<AppGameGridPlaceholder v-else :num="16" />
+						<AppGameGridPlaceholder v-else :num="16" />
 
-					<div
-						v-if="listing.isBootstrapped && !listing.gamesCount"
-						class="alert alert-notice anim-fade-in-enlarge"
-					>
-						<p>
-							{{ $gettext(`No games match your filters. Zoinks!`) }}
-						</p>
-					</div>
+						<div
+							v-if="listing.isBootstrapped && !listing.gamesCount"
+							class="alert alert-notice anim-fade-in-enlarge"
+						>
+							<p>
+								{{ $gettext(`No games match your filters. Zoinks!`) }}
+							</p>
+						</div>
+					</AppAdTakeoverFloat>
 				</div>
 			</AppAdStickyRail>
 		</section>

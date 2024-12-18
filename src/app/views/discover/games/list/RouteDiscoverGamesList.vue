@@ -1,6 +1,8 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import AppAdTakeoverBackground from '../../../../../_common/ad/AppAdTakeoverBackground.vue';
+import AppAdTakeoverFloat from '../../../../../_common/ad/AppAdTakeoverFloat.vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { formatDate } from '../../../../../_common/filters/date';
 import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
@@ -277,21 +279,25 @@ async function loadMore() {
 
 <template>
 	<div>
-		<AppGameAddBanner v-if="Screen.isDesktop" />
+		<AppAdTakeoverBackground />
 
-		<section v-if="section !== 'by-date'" class="fill-offset">
-			<div class="container-xl">
-				<h2 class="-browse-heading text-center">
-					{{ $gettext(`Browse Games`) }}
-				</h2>
+		<AppAdTakeoverFloat>
+			<AppGameAddBanner v-if="Screen.isDesktop" />
+
+			<section v-if="section !== 'by-date'" class="fill-offset">
+				<div class="container-xl">
+					<h2 class="-browse-heading text-center">
+						{{ $gettext(`Browse Games`) }}
+					</h2>
+				</div>
+				<AppTagList />
+			</section>
+
+			<div v-if="storeBanner" class="container-xl">
+				<br />
+				<AppStoreBanner :banner="storeBanner" />
 			</div>
-			<AppTagList />
-		</section>
-
-		<div v-if="storeBanner" class="container-xl">
-			<br />
-			<AppStoreBanner :banner="storeBanner" />
-		</div>
+		</AppAdTakeoverFloat>
 
 		<AppGameListing
 			v-if="listing && filtering"

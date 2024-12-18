@@ -23,6 +23,8 @@ import AppTranslate from '../../translate/AppTranslate.vue';
 
 <style lang="stylus" scoped>
 .add-game-banner
+	background-color: var(--theme-bg)
+
 	.-row
 		display: flex
 		align-items: center

@@ -2,15 +2,14 @@
 import { PropType, computed, toRef, toRefs } from 'vue';
 import draggable from 'vuedraggable';
 import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
+import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
 import { useAdStore } from '../../../../_common/ad/ad-store';
+import AppAdGptTakeover from '../../../../_common/ad/gpt/AppAdGptTakeover.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
-import { styleWhen } from '../../../../_styles/mixins';
-import { kLayerAds } from '../../../../_styles/variables';
 import AppGameThumbnailControls from '../thumbnail/AppGameThumbnailControls.vue';
 
 export const GameGridRowSizeSm = 2;
@@ -159,7 +158,9 @@ function shouldShowAd(index: number) {
 		<div :class="{ 'scrollable-grid': isScrollable }">
 			<AppAdFeedParent :is-active="shouldShowAds" class="_game-grid-items">
 				<div v-if="Screen.isDesktop && shouldShowAds" class="_game-grid-ad">
-					<div
+					<AppAdGptTakeover />
+
+					<!-- <div
 						:style="{
 							...styleWhen(shouldShowStickyAd, {
 								margin: `0 auto`,
@@ -177,7 +178,7 @@ function shouldShowAd(index: number) {
 								<AppAdWidget size="rectangle" placement="content" />
 							</div>
 						</AppScrollAffix>
-					</div>
+					</div> -->
 				</div>
 
 				<template v-if="canReorder">
@@ -188,16 +189,18 @@ function shouldShowAd(index: number) {
 					>
 						<template #item="{ element }">
 							<div class="_game-grid-item">
-								<AppGameThumbnail
-									v-app-track-event="
-										eventLabel ? 'game-grid:click:' + eventLabel : undefined
-									"
-									:game="element"
-								>
-									<slot name="thumbnail-controls" :game="element">
-										<AppGameThumbnailControls :game="element" />
-									</slot>
-								</AppGameThumbnail>
+								<AppAdTakeoverFloat allow-theme-change>
+									<AppGameThumbnail
+										v-app-track-event="
+											eventLabel ? 'game-grid:click:' + eventLabel : undefined
+										"
+										:game="element"
+									>
+										<slot name="thumbnail-controls" :game="element">
+											<AppGameThumbnailControls :game="element" />
+										</slot>
+									</AppGameThumbnail>
+								</AppAdTakeoverFloat>
 							</div>
 						</template>
 					</draggable>
@@ -216,16 +219,18 @@ function shouldShowAd(index: number) {
 							</div>
 						</div>
 						<div class="_game-grid-item">
-							<AppGameThumbnail
-								v-app-track-event="
-									eventLabel ? 'game-grid:click:' + eventLabel : undefined
-								"
-								:game="game"
-							>
-								<slot name="thumbnail-controls" :game="game">
-									<AppGameThumbnailControls :game="game" />
-								</slot>
-							</AppGameThumbnail>
+							<AppAdTakeoverFloat allow-theme-change>
+								<AppGameThumbnail
+									v-app-track-event="
+										eventLabel ? 'game-grid:click:' + eventLabel : undefined
+									"
+									:game="game"
+								>
+									<slot name="thumbnail-controls" :game="game">
+										<AppGameThumbnailControls :game="game" />
+									</slot>
+								</AppGameThumbnail>
+							</AppAdTakeoverFloat>
 						</div>
 					</template>
 				</template>
