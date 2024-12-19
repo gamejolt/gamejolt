@@ -28,7 +28,6 @@ declare module '@vue/runtime-core' {
 		draggable?: HTMLAttributes['draggable'];
 		tabindex?: HTMLAttributes['tabindex'];
 		placeholder?: HTMLAttributes['placeholder'];
-		onClick?: HTMLAttributes['onClick'];
 		onDragstart?: HTMLAttributes['onDragstart'];
 	}
 }
