@@ -1,4 +1,3 @@
-import ResizeObserver from 'resize-observer-polyfill';
 import { MaybeRef, onBeforeUnmount, unref, watch } from 'vue';
 
 export function useResizeObserver({

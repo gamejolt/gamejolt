@@ -1,6 +1,5 @@
 <script lang="ts">
 import 'prosemirror-view/style/prosemirror.css';
-import ResizeObserver from 'resize-observer-polyfill';
 import {
 	computed,
 	nextTick,

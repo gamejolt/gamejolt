@@ -1,4 +1,3 @@
-import ResizeObserver from 'resize-observer-polyfill';
 import { Directive } from 'vue';
 
 const observers = new WeakMap<HTMLElement, ResizeObserver>();
