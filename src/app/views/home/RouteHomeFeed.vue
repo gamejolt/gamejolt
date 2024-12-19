@@ -4,6 +4,7 @@ import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
 import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
 import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
+import AppAdGpt from '../../../_common/ad/gpt/AppAdGpt.vue';
 import AppAdGptTakeover from '../../../_common/ad/gpt/AppAdGptTakeover.vue';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -318,6 +319,12 @@ const topSpacerHeight = buildCSSPixelValue(58);
 
 				<!-- Main -->
 				<template #default>
+					<AppAdTakeoverFloat v-if="Screen.isXs">
+						<div :style="{ marginTop: `-16px`, marginBottom: `16px` }">
+							<AppAdGpt placement="top" />
+						</div>
+					</AppAdTakeoverFloat>
+
 					<AppAdTakeoverFloat allow-theme-change>
 						<AppHomeFeedMenu
 							v-if="Screen.isDesktop"

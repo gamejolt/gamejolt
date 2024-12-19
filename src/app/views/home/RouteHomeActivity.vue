@@ -108,6 +108,6 @@ function onLoadedNew() {
 				</AppButton>
 			</RouterLink>
 		</div>
-		<AppActivityFeedLazy v-else :feed="feed" show-ads @load-new="onLoadedNew" />
+		<AppActivityFeedLazy v-else :feed="feed" show-ads show-gpt-ads @load-new="onLoadedNew" />
 	</div>
 </template>

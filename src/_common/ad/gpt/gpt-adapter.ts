@@ -5,13 +5,15 @@ import { AdAdapter, AdAdapterHelper } from '../adapter-base';
 import AppAdGptTakeover from './AppAdGptTakeover.vue';
 
 export const AdGptTakeoverSlotId = 'div-gpt-ad-takeover';
+export const AdGptMobileLeaderSlotId = 'div-gpt-ad-1734575238981-0';
+export const AdGptMobileMidpageSlotId = 'div-gpt-ad-1734575381466-0';
 
 export class AdGptAdapter implements AdAdapter {
 	private helper = new AdAdapterHelper();
 
-	private gptSlots = {
-		takeover: undefined as googletag.Slot | undefined,
-	};
+	private takeoverSlot = undefined as googletag.Slot | undefined;
+	private mobileMidpageSlot = undefined as googletag.Slot | undefined;
+	private mobileLeaderSlot = undefined as googletag.Slot | undefined;
 
 	run(cb: () => void) {
 		if (import.meta.env.SSR || isDynamicGoogleBot()) {
@@ -32,9 +34,17 @@ export class AdGptAdapter implements AdAdapter {
 				// fetching ads when display is called.
 				googletag.pubads().disableInitialLoad();
 
-				// Define the ad slot.
-				this.gptSlots.takeover = googletag
+				// Define the ad slots.
+				this.takeoverSlot = googletag
 					.defineOutOfPageSlot('/22547266442/site_takeover', AdGptTakeoverSlotId)!
+					.addService(googletag.pubads());
+
+				this.mobileMidpageSlot = googletag
+					.defineSlot('/22547266442/mobile_mpu', [300, 250], AdGptMobileMidpageSlotId)!
+					.addService(googletag.pubads());
+
+				this.mobileLeaderSlot = googletag
+					.defineSlot('/22547266442/mobile_leader', [320, 100], AdGptMobileLeaderSlotId)!
 					.addService(googletag.pubads());
 
 				googletag.enableServices();
@@ -55,7 +65,15 @@ export class AdGptAdapter implements AdAdapter {
 	onRouteChanged() {}
 
 	getTakeoverGptSlot() {
-		return this.gptSlots.takeover!;
+		return this.takeoverSlot!;
+	}
+
+	getMobileMidpageGptSlot() {
+		return this.mobileMidpageSlot!;
+	}
+
+	getMobileLeaderGptSlot() {
+		return this.mobileLeaderSlot!;
 	}
 
 	component(_slot: AdSlot): Component {

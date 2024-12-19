@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref, Teleport } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { styleAbsoluteFill } from '../../../_styles/mixins';
 import { useAdStore } from '../ad-store';
 

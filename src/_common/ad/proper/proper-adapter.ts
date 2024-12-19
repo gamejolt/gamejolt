@@ -33,9 +33,13 @@ export class AdProperAdapter implements AdAdapter {
 		return AppAdProper;
 	}
 
-	run(cb: () => void) {
+	/**
+	 * Will return true if we are loading the script, or false if the script
+	 * won't be loaded.
+	 */
+	ensureLoaded() {
 		if (import.meta.env.SSR || isDynamicGoogleBot()) {
-			return;
+			return false;
 		}
 
 		this.helper.runOnce(() => {
@@ -53,6 +57,14 @@ export class AdProperAdapter implements AdAdapter {
 			w.propertag.cmd = w.propertag.cmd || [];
 			loadScript('https://global.proper.io/gamejolt.min.js');
 		});
+
+		return true;
+	}
+
+	run(cb: () => void) {
+		if (!this.ensureLoaded()) {
+			return;
+		}
 
 		(window as any).propertag.cmd.push(() => {
 			try {
