@@ -2,6 +2,7 @@
 import { Ref, ref, toRef } from 'vue';
 import { RouteLocationRaw, RouterView, useRoute, useRouter } from 'vue-router';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
+import { AdsGPTEnabledGlobally } from '../../../../_common/ad/ad-store';
 import AppAdGptTakeover from '../../../../_common/ad/gpt/AppAdGptTakeover.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../_common/api/api.service';
@@ -318,19 +319,23 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 							<AppProfileActionButtons />
 
 							<AppSpacer vertical :scale="4" />
-							<AppAdGptTakeover />
-							<!-- <AppAdWidget
-								:style="{
-									...styleChangeBg('bg'),
-									...styleElevate(3),
-									// Can't change this, needs to be at least 300px wide.
-									minWidth: `300px`,
-									borderRadius: kBorderRadiusLg.px,
-									padding: `8px`,
-								}"
-								size="rectangle"
-								placement="side"
-							/> -->
+							<template v-if="AdsGPTEnabledGlobally">
+								<AppAdGptTakeover />
+							</template>
+							<template v-else>
+								<AppAdWidget
+									:style="{
+										...styleChangeBg('bg'),
+										...styleElevate(3),
+										// Can't change this, needs to be at least 300px wide.
+										minWidth: `300px`,
+										borderRadius: kBorderRadiusLg.px,
+										padding: `8px`,
+									}"
+									size="rectangle"
+									placement="side"
+								/>
+							</template>
 							<AppSpacer vertical :scale="6" />
 						</template>
 

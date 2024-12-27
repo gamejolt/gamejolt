@@ -3,13 +3,16 @@ import { PropType, computed, toRef, toRefs } from 'vue';
 import draggable from 'vuedraggable';
 import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import { useAdStore } from '../../../../_common/ad/ad-store';
+import { AdsGPTEnabledGlobally, useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdGptTakeover from '../../../../_common/ad/gpt/AppAdGptTakeover.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
+import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
+import { styleWhen } from '../../../../_styles/mixins';
+import { kLayerAds } from '../../../../_styles/variables';
 import AppGameThumbnailControls from '../thumbnail/AppGameThumbnailControls.vue';
 
 export const GameGridRowSizeSm = 2;
@@ -158,27 +161,30 @@ function shouldShowAd(index: number) {
 		<div :class="{ 'scrollable-grid': isScrollable }">
 			<AppAdFeedParent :is-active="shouldShowAds" class="_game-grid-items">
 				<div v-if="Screen.isDesktop && shouldShowAds" class="_game-grid-ad">
-					<AppAdGptTakeover />
-
-					<!-- <div
-						:style="{
-							...styleWhen(shouldShowStickyAd, {
-								margin: `0 auto`,
-								maxWidth: `400px`,
-							}),
-						}"
-					>
-						<AppScrollAffix
-							:style="{ position: `relative`, zIndex: kLayerAds }"
-							:disabled="!shouldShowStickyAd"
-							:padding="8"
-							:affixed-styles="{ right: `8px` }"
+					<template v-if="AdsGPTEnabledGlobally">
+						<AppAdGptTakeover />
+					</template>
+					<template v-else>
+						<div
+							:style="{
+								...styleWhen(shouldShowStickyAd, {
+									margin: `0 auto`,
+									maxWidth: `400px`,
+								}),
+							}"
 						>
-							<div class="_game-grid-ad-inner">
-								<AppAdWidget size="rectangle" placement="content" />
-							</div>
-						</AppScrollAffix>
-					</div> -->
+							<AppScrollAffix
+								:style="{ position: `relative`, zIndex: kLayerAds }"
+								:disabled="!shouldShowStickyAd"
+								:padding="8"
+								:affixed-styles="{ right: `8px` }"
+							>
+								<div class="_game-grid-ad-inner">
+									<AppAdWidget size="rectangle" placement="content" />
+								</div>
+							</AppScrollAffix>
+						</div>
+					</template>
 				</div>
 
 				<template v-if="canReorder">

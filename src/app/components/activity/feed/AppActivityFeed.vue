@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, inject, PropType, provide, reactive, ref, toRefs } from 'vue';
-import { useAdStore } from '../../../../_common/ad/ad-store';
+import { AdsGPTEnabledGlobally, useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
 import AppAdGpt from '../../../../_common/ad/gpt/AppAdGpt.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
@@ -61,7 +61,7 @@ const props = defineProps({
 	showAds: {
 		type: Boolean,
 	},
-	showGptAds: {
+	gptAdsEnabled: {
 		type: Boolean,
 	},
 });
@@ -231,7 +231,9 @@ function shouldShowAd(index: number) {
 					v-if="shouldShowAd(i)"
 					class="-ad-container well fill-offset full-bleed-xs text-center"
 				>
-					<template v-if="showGptAds && i === 1 && Screen.isXs">
+					<template
+						v-if="AdsGPTEnabledGlobally && gptAdsEnabled && i === 1 && Screen.isXs"
+					>
 						<AppAdGpt placement="midpage" />
 					</template>
 					<template v-else>

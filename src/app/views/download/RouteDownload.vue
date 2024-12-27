@@ -5,6 +5,7 @@ import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground
 import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
 import {
 	AdSettingsContainer,
+	AdsGPTEnabledGlobally,
 	releasePageAdsSettings,
 	setPageAdsSettings,
 	useAdStore,
@@ -189,10 +190,13 @@ function _releaseAdSettings() {
 		<AppPageContainer xl>
 			<template v-if="Screen.isDesktop" #left>
 				<AppScrollAffix>
-					<!-- TODO: When we want to show a normal rectangle, put this back -->
 					<AppAdTakeoverFloat>
-						<AppAdGptTakeover />
-						<!-- <AppAdWidget size="rectangle" placement="side" /> -->
+						<template v-if="AdsGPTEnabledGlobally">
+							<AppAdGptTakeover />
+						</template>
+						<template v-else>
+							<AppAdWidget size="rectangle" placement="side" />
+						</template>
 					</AppAdTakeoverFloat>
 				</AppScrollAffix>
 			</template>

@@ -2,10 +2,12 @@
 import { computed, defineAsyncComponent, provide, Ref, ref, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
+import { AdsGPTEnabledGlobally } from '../../../_common/ad/ad-store';
 import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
 import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
 import AppAdGpt from '../../../_common/ad/gpt/AppAdGpt.vue';
 import AppAdGptTakeover from '../../../_common/ad/gpt/AppAdGptTakeover.vue';
+import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
@@ -312,14 +314,17 @@ const topSpacerHeight = buildCSSPixelValue(58);
 						<AppSpacer vertical :scale="8" />
 					</template>
 
-					<!-- TODO: When we want to show a normal rectangle, put this back -->
-					<!-- <AppAdWidget size="rectangle" placement="side" /> -->
-					<AppAdGptTakeover />
+					<template v-if="AdsGPTEnabledGlobally">
+						<AppAdGptTakeover />
+					</template>
+					<template v-else>
+						<AppAdWidget size="rectangle" placement="side" />
+					</template>
 				</template>
 
 				<!-- Main -->
 				<template #default>
-					<AppAdTakeoverFloat v-if="Screen.isXs">
+					<AppAdTakeoverFloat v-if="AdsGPTEnabledGlobally && Screen.isXs">
 						<div :style="{ marginTop: `-16px`, marginBottom: `16px` }">
 							<AppAdGpt placement="top" />
 						</div>
