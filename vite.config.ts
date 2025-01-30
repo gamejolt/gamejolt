@@ -560,6 +560,14 @@ export default defineConfig(async () => {
 				'global.process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
 				'globalThis.process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
 			}),
+
+			// TODO: These will no longer be needed once we upgrade vite and
+			// vite-plugin-vue.
+			//
+			// https://vuejs.org/api/compile-time-flags.html#configuration-guides
+			__VUE_OPTIONS_API__: 'true',
+			__VUE_PROD_DEVTOOLS__: 'false',
+			__VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'false',
 		},
 
 		...onlyInSSR<ViteUserConfig>({

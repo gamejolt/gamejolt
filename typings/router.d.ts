@@ -1,6 +1,6 @@
 import { AppRouteOptionsInternal } from '../src/_common/route/route-component';
 
-declare module '@vue/runtime-core' {
+declare module 'vue' {
 	interface ComponentCustomOptions {
 		appRouteOptions?: AppRouteOptionsInternal;
 	}

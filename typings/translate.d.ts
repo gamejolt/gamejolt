@@ -4,7 +4,7 @@ import {
 	TranslationContext,
 } from '../src/_common/translate/translate.service';
 
-declare module '@vue/runtime-core' {
+declare module 'vue' {
 	interface ComponentCustomProperties {
 		$gettext: (
 			msgid: string,

@@ -21,7 +21,7 @@ declare global {
 	}
 }
 
-declare module '@vue/runtime-core' {
+declare module 'vue' {
 	interface ComponentCustomProps {
 		id?: HTMLAttributes['id'];
 		title?: HTMLAttributes['title'];
@@ -29,5 +29,10 @@ declare module '@vue/runtime-core' {
 		tabindex?: HTMLAttributes['tabindex'];
 		placeholder?: HTMLAttributes['placeholder'];
 		onDragstart?: HTMLAttributes['onDragstart'];
+	}
+
+	// Allow custom CSS properties.
+	interface CSSProperties {
+		[key: `--${string}`]: string;
 	}
 }
