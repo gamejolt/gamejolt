@@ -347,38 +347,37 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 						</template>
 
 						<!-- Developer's Games -->
-						<AppAdTakeoverFloat
-							v-if="Screen.isDesktop && gamesCount > 0"
-							allow-theme-change
-						>
+						<AppAdTakeoverFloat v-if="Screen.isDesktop && gamesCount > 0">
 							<AppSpacer vertical :scale="6" />
 
-							<div class="clearfix">
-								<div class="pull-right">
-									<AppButton
-										trans
-										:to="{
-											name: 'library.collection.developer',
-											params: { id: routeUser.username },
-										}"
-									>
-										{{ $gettext(`View all`) }}
-										{{ ' ' }}
-										<small>({{ formatNumber(gamesCount) }})</small>
-									</AppButton>
+							<div class="sheet">
+								<div class="clearfix">
+									<div class="pull-right">
+										<AppButton
+											trans
+											:to="{
+												name: 'library.collection.developer',
+												params: { id: routeUser.username },
+											}"
+										>
+											{{ $gettext(`View all`) }}
+											{{ ' ' }}
+											<small>({{ formatNumber(gamesCount) }})</small>
+										</AppButton>
+									</div>
+
+									<h4 class="section-header">
+										{{ $gettext(`Developer's Games`) }}
+									</h4>
 								</div>
 
-								<h4 class="section-header">
-									{{ $gettext(`Developer's Games`) }}
-								</h4>
+								<AppGameListPlaceholder v-if="!isOverviewLoaded" :num="7" />
+								<AppGameList
+									v-else-if="games.length"
+									:games="games"
+									event-label="profile"
+								/>
 							</div>
-
-							<AppGameListPlaceholder v-if="!isOverviewLoaded" :num="7" />
-							<AppGameList
-								v-else-if="games.length"
-								:games="games"
-								event-label="profile"
-							/>
 						</AppAdTakeoverFloat>
 					</template>
 

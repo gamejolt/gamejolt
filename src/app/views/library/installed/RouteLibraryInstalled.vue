@@ -7,6 +7,7 @@ import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
+import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import { useClientLibraryStore } from '../../../store/client-library/index';
 import AppLibraryInstalledGame from './AppLibraryInstalledGame.vue';
 
@@ -32,12 +33,12 @@ createAppRoute({
 </script>
 
 <template>
-	<div>
-		<AppPageHeader>
-			<h1><AppTranslate>Installed Games</AppTranslate></h1>
-			<br />
-		</AppPageHeader>
+	<AppPageHeader>
+		<h1><AppTranslate>Installed Games</AppTranslate></h1>
+		<br />
+	</AppPageHeader>
 
+	<AppShellPageBackdrop>
 		<section class="section">
 			<div class="container">
 				<AppAlertDismissable alert-type="info" dismiss-key="library.install-location-msg">
@@ -69,5 +70,5 @@ createAppRoute({
 				</div>
 			</div>
 		</section>
-	</div>
+	</AppShellPageBackdrop>
 </template>

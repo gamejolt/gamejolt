@@ -1,14 +1,12 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
 import { useAdStore } from '../ad-store';
 import AppAdGptInner from './AppAdGptInner.vue';
 
-defineProps({
-	placement: {
-		type: String as PropType<'top' | 'midpage'>,
-		required: true,
-	},
-});
+type Props = {
+	placement: 'top' | 'midpage';
+};
+
+defineProps<Props>();
 
 const { shouldShow } = useAdStore();
 </script>

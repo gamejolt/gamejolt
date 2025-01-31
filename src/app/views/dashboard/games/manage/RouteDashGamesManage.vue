@@ -17,6 +17,7 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import { AppGamePerms } from '../../../../components/game/perms/perms';
 import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
+import AppShellPageBackdrop from '../../../../components/shell/AppShellPageBackdrop.vue';
 import { ManageGameThemeKey, createGameDashRouteController } from './manage.store';
 
 export default {
@@ -315,6 +316,8 @@ const { isBootstrapped } = createAppRoute({
 			</template>
 		</AppPageHeader>
 
-		<RouterView />
+		<AppShellPageBackdrop>
+			<RouterView />
+		</AppShellPageBackdrop>
 	</div>
 </template>

@@ -1,26 +1,25 @@
 <script lang="ts" setup>
-import { PropType, onBeforeUnmount, onMounted, toRef } from 'vue';
+import { onBeforeUnmount, onMounted, toRef } from 'vue';
 import { useAdStore } from '../ad-store';
 import { AdProperAdapter } from '../proper/proper-adapter';
 import { AdGptMobileLeaderSlotId, AdGptMobileMidpageSlotId } from './gpt-adapter';
 
-const props = defineProps({
-	placement: {
-		type: String as PropType<'top' | 'midpage'>,
-		required: true,
-	},
-});
+type Props = {
+	placement: 'top' | 'midpage';
+};
+
+const { placement } = defineProps<Props>();
 
 const { adapter: properAdapter, takeoverAdapter: adapter } = useAdStore();
 
 function getGptSlot() {
-	return props.placement === 'top'
+	return placement === 'top'
 		? adapter.getMobileLeaderGptSlot()
 		: adapter.getMobileMidpageGptSlot();
 }
 
 const slotId = toRef(() =>
-	props.placement === 'top' ? AdGptMobileLeaderSlotId : AdGptMobileMidpageSlotId
+	placement === 'top' ? AdGptMobileLeaderSlotId : AdGptMobileMidpageSlotId
 );
 
 onMounted(() => {

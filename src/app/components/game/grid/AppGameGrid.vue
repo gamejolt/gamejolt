@@ -195,7 +195,7 @@ function shouldShowAd(index: number) {
 					>
 						<template #item="{ element }">
 							<div class="_game-grid-item">
-								<AppAdTakeoverFloat allow-theme-change>
+								<AppAdTakeoverFloat>
 									<AppGameThumbnail
 										v-app-track-event="
 											eventLabel ? 'game-grid:click:' + eventLabel : undefined
@@ -225,7 +225,7 @@ function shouldShowAd(index: number) {
 							</div>
 						</div>
 						<div class="_game-grid-item">
-							<AppAdTakeoverFloat allow-theme-change>
+							<AppAdTakeoverFloat>
 								<AppGameThumbnail
 									v-app-track-event="
 										eventLabel ? 'game-grid:click:' + eventLabel : undefined

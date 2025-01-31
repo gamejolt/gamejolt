@@ -1,6 +1,16 @@
-import { inject, InjectionKey, onUnmounted, provide, ref, shallowReadonly, toRef } from 'vue';
+import {
+	inject,
+	InjectionKey,
+	onUnmounted,
+	provide,
+	ref,
+	shallowReadonly,
+	shallowRef,
+	toRef,
+} from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
 import { objectEquals } from '../../utils/object';
+import { loadScript } from '../../utils/utils';
 import { isDynamicGoogleBot } from '../device/device.service';
 import { Model } from '../model/model.service';
 import { onRouteChangeAfter } from '../route/route-component';
@@ -21,8 +31,7 @@ const areAdsDisabledForDevice =
 /**
  * Whether or not we're showing GPT takeover ads.
  */
-export const AdsGPTEnabledGlobally = false;
-
+export const AdsGPTEnabledGlobally = true;
 /**
  * This is the interface that our ad components must register with us.
  */
@@ -57,6 +66,8 @@ export function createAdStore() {
 	});
 
 	const hasTakeover = ref(false);
+	const videoAdsLoadPromise = shallowRef<Promise<void> | null>(null);
+	const videoAdsLoaded = ref(false);
 
 	const c = shallowReadonly({
 		adapter,
@@ -67,6 +78,8 @@ export function createAdStore() {
 		settings,
 		shouldShow,
 		hasTakeover,
+		videoAdsLoadPromise,
+		videoAdsLoaded,
 	});
 	provide(AdStoreKey, c);
 
@@ -152,4 +165,22 @@ async function _displayAds(displayedAds: AdInterface[]) {
 	for (const ad of displayedAds) {
 		ad.display();
 	}
+}
+
+export async function loadVideoAdsTag({ videoAdsLoadPromise, videoAdsLoaded }: AdStore) {
+	if (areAdsDisabledForDevice) {
+		return;
+	}
+
+	if (videoAdsLoadPromise.value) {
+		return videoAdsLoadPromise.value;
+	}
+
+	videoAdsLoadPromise.value = loadScript(
+		'https://imasdk.googleapis.com/js/sdkloader/ima3.js'
+	).then(() => {
+		videoAdsLoaded.value = true;
+	});
+
+	return videoAdsLoadPromise.value;
 }

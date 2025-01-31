@@ -845,6 +845,11 @@
   resolved "https://registry.yarnpkg.com/@types/google-publisher-tag/-/google-publisher-tag-1.20241202.0.tgz#62022e614b39d59d4f1b59c01eb7ff4b646dc147"
   integrity sha512-Ws+7aEVlsa62mfoPx8S32JMhQgUsfLNMcniiGeYoRmcYZK3D+6uSw2X1IzibeB2nyKgh4X5k+MP14r7D0dNMoQ==
 
+"@types/google_interactive_media_ads_types@1.20241219.0":
+  version "1.20241219.0"
+  resolved "https://registry.yarnpkg.com/@types/google_interactive_media_ads_types/-/google_interactive_media_ads_types-1.20241219.0.tgz#cc2d33f5f1cb1c32aa984c6d9d8bec2aead6dece"
+  integrity sha512-xH/4+wiD/vpvsHvssGvNWvhtM10869C6sUR4J1zRyRI4iGrg8IUbkSytqVYMvCVn8m241zT4Cij8LjBXkWrqHg==
+
 "@types/grecaptcha@2.0.35":
   version "2.0.35"
   resolved "https://registry.yarnpkg.com/@types/grecaptcha/-/grecaptcha-2.0.35.tgz#f63fcd8f11e0aa62b6d8746267142440d8d89975"
@@ -1851,10 +1856,10 @@ electron-to-chromium@^1.4.17:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.38.tgz#10ea58d73d36b13e78d5024f3b74a352d3958d01"
   integrity sha512-WhHt3sZazKj0KK/UpgsbGQnUUoFeAHVishzHFExMxagpZgjiGYSC9S0ZlbhCfSH2L2i+2A1yyqOIliTctMx7KQ==
 
-eme-encryption-scheme-polyfill@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/eme-encryption-scheme-polyfill/-/eme-encryption-scheme-polyfill-2.1.1.tgz#91c823ed584e8ec5a9f03a6a676def8f80c57a4c"
-  integrity sha512-njD17wcUrbqCj0ArpLu5zWXtaiupHb/2fIUQGdInf83GlI+Q6mmqaPGLdrke4savKAu15J/z1Tg/ivDgl14g0g==
+eme-encryption-scheme-polyfill@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/eme-encryption-scheme-polyfill/-/eme-encryption-scheme-polyfill-2.2.1.tgz#1f9db4ce8690a7150bc1ba80bd1519b8486e3443"
+  integrity sha512-GzgrLuZPYGijd8oaKuBqYv3Tc2oruDZM3V2982KOuy/PA1N3zwMe+/oIXJYfZ3BH3PwW5nONdBBE+VY6jlwbrw==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -3669,12 +3674,12 @@ setprototypeof@1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-shaka-player@4.3.4:
-  version "4.3.4"
-  resolved "https://registry.yarnpkg.com/shaka-player/-/shaka-player-4.3.4.tgz#97c7cb73743884e55a4855f5efe4d116aff83848"
-  integrity sha512-fF90r/57Oxk+SV2cnoEpJxNujNj1gJkudKXVbXEBhgxh5qYu5gdFU+nT2N7jMN71KxQdtXo1NOqdNphudLEEug==
+shaka-player@4.13.1:
+  version "4.13.1"
+  resolved "https://registry.yarnpkg.com/shaka-player/-/shaka-player-4.13.1.tgz#3a9f0021d3def63d829453138159547998225c77"
+  integrity sha512-JUfMVd4aM5lORJSohLTD7dFhMLtu3856eWNxy5mstIuObOpI6A+maLWdehwII6jQYB0Wgp9eMbbk5tHXGQeOhg==
   dependencies:
-    eme-encryption-scheme-polyfill "^2.1.1"
+    eme-encryption-scheme-polyfill "^2.2.1"
 
 shebang-command@^1.2.0:
   version "1.2.0"

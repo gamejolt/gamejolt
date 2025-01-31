@@ -42,3 +42,8 @@ export function defineAdAdapterComponentProps<T extends AdAdapter>() {
 		},
 	} as const;
 }
+
+export type AdAdapterComponentProps<T extends AdAdapter> = {
+	adSlot: AdSlot;
+	adapter: T;
+};

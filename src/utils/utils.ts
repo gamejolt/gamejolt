@@ -2,7 +2,7 @@ import { getCurrentServerTime } from './server-time';
 export type RequireContextMap = { [k: string]: string };
 
 export function loadScript(src: string, { crossOrigin }: { crossOrigin?: string } = {}) {
-	return new Promise((resolve, reject) => {
+	return new Promise<Event>((resolve, reject) => {
 		const script = window.document.createElement('script');
 		script.type = 'text/javascript';
 		script.async = true;

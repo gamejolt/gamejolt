@@ -16,7 +16,6 @@ import { ActivityFeedService } from '../../../../../components/activity/feed/fee
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
 import { AppGamePerms } from '../../../../../components/game/perms/perms';
 import AppPostAddButton from '../../../../../components/post/add-button/AppPostAddButton.vue';
-import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
 import { useGameDashRouteController } from '../manage.store';
 
 function getFetchUrl(route: RouteLocationNormalized) {
@@ -95,7 +94,7 @@ const appRoute = createAppRoute({
 </script>
 
 <template>
-	<AppShellPageBackdrop v-if="isBootstrapped">
+	<template v-if="isBootstrapped">
 		<section class="section">
 			<div class="container">
 				<div class="row">
@@ -182,5 +181,5 @@ const appRoute = createAppRoute({
 				</div>
 			</div>
 		</section>
-	</AppShellPageBackdrop>
+	</template>
 </template>

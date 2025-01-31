@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import { RouterLink } from 'vue-router';
 import { formatCurrency } from '../../filters/currency';
 import { Screen } from '../../screen/screen-service';
@@ -17,26 +17,14 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	linkTo: {
-		type: String,
-		default: '',
-	},
-	hidePricing: {
-		type: Boolean,
-		default: false,
-	},
-	hideControls: {
-		type: Boolean,
-		default: false,
-	},
-});
+type Props = {
+	game: GameModel;
+	linkTo?: string;
+	hidePricing?: boolean;
+	hideControls?: boolean;
+};
 
-const { linkTo, game } = toRefs(props);
+const { game, linkTo = '' } = defineProps<Props>();
 
 const isBootstrapped = ref(import.meta.env.SSR);
 const isHydrated = ref(import.meta.env.SSR);
@@ -44,33 +32,32 @@ const isHydrated = ref(import.meta.env.SSR);
 const shouldAnimate = computed(() => SettingAnimatedThumbnails.get() && isHydrated.value);
 
 const url = computed(() => {
-	if (linkTo.value === 'dashboard') {
-		return game.value.getUrl('dashboard');
-	} else if (linkTo.value) {
-		return linkTo.value;
+	if (linkTo === 'dashboard') {
+		return game.getUrl('dashboard');
+	} else if (linkTo) {
+		return linkTo;
 	}
-
-	return game.value.getUrl();
+	return game.getUrl();
 });
 
-const isOwned = computed(() => game.value.sellable && game.value.sellable.is_owned);
-const sellableType = computed(() => game.value.sellable && game.value.sellable.type);
+const isOwned = toRef(() => game.sellable && game.sellable.is_owned);
+const sellableType = toRef(() => game.sellable && game.sellable.type);
 
-const pricing = computed(() => {
-	if (game.value.sellable && Array.isArray(game.value.sellable.pricings)) {
-		return game.value.sellable.pricings[0];
-	}
-	return undefined;
-});
-
-const saleOldPricing = computed(() => {
-	if (game.value.sellable && Array.isArray(game.value.sellable.pricings)) {
-		return game.value.sellable.pricings[1];
+const pricing = toRef(() => {
+	if (game.sellable && Array.isArray(game.sellable.pricings)) {
+		return game.sellable.pricings[0];
 	}
 	return undefined;
 });
 
-const sale = computed(() => pricing.value && pricing.value.promotional);
+const saleOldPricing = toRef(() => {
+	if (game.sellable && Array.isArray(game.sellable.pricings)) {
+		return game.sellable.pricings[1];
+	}
+	return undefined;
+});
+
+const sale = toRef(() => pricing.value && pricing.value.promotional);
 
 const salePercentageOff = computed(() => {
 	if (pricing.value && saleOldPricing.value) {
@@ -100,62 +87,62 @@ function outView() {
 <template>
 	<RouterLink class="game-thumbnail" :to="url">
 		<AppScrollInview :config="InviewConfig" @inview="inView" @outview="outView">
-			<div v-if="Screen.isLg && isHydrated" class="-controls theme-dark" @click.prevent>
+			<div v-if="Screen.isLg && isHydrated" class="_controls theme-dark" @click.prevent>
 				<slot />
 			</div>
 
 			<AppGameThumbnailImg
-				class="-thumb"
+				class="_thumb"
 				:game="game"
 				:hide-media="!isBootstrapped"
 				:animate="shouldAnimate"
 			/>
 
-			<div class="-meta">
+			<div class="_meta">
 				<div
 					v-if="game._has_packages && !hidePricing"
-					class="-pricing fill-offset"
+					class="_pricing fill-offset"
 					:class="{
-						'-pricing-owned': isOwned,
-						'-pricing-sale': sale,
+						'_pricing-owned': isOwned,
+						'_pricing-sale': sale,
 					}"
 				>
 					<template v-if="!isOwned">
 						<template v-if="sellableType === 'paid'">
-							<div class="-pricing-container">
-								<div v-if="sale" class="-pricing-amount-old">
+							<div class="_pricing-container">
+								<div v-if="sale" class="_pricing-amount-old">
 									{{ oldPricingAmount }}
 								</div>
-								<div class="-pricing-amount">
+								<div class="_pricing-amount">
 									{{ pricingAmount }}
 								</div>
 							</div>
-							<div v-if="sale" class="-pricing-sale-percentage">
+							<div v-if="sale" class="_pricing-sale-percentage">
 								-{{ salePercentageOff }}%
 							</div>
 						</template>
-						<span v-else-if="sellableType === 'pwyw'" class="-pricing-tag">
+						<span v-else-if="sellableType === 'pwyw'" class="_pricing-tag">
 							<AppTranslate>Name Your Price</AppTranslate>
 						</span>
-						<span v-else class="-pricing-tag">
+						<span v-else class="_pricing-tag">
 							<AppTranslate>Free</AppTranslate>
 						</span>
 					</template>
 					<template v-else>
-						<span class="-pricing-tag">
+						<span class="_pricing-tag">
 							<AppTranslate>Owned</AppTranslate>
 						</span>
 					</template>
 				</div>
 
-				<div class="-avatar">
+				<div class="_avatar">
 					<AppUserCardHover :user="game.developer">
 						<AppUserAvatarImg :user="game.developer" />
 					</AppUserCardHover>
 				</div>
 
 				<div
-					class="-dev"
+					class="_dev"
 					:title="`${game.developer.display_name} (@${game.developer.username})`"
 				>
 					{{ game.developer.display_name }}
@@ -164,18 +151,18 @@ function outView() {
 					</small>
 				</div>
 
-				<div class="-title" :title="game.title">
+				<div class="_title" :title="game.title">
 					{{ game.title }}
 				</div>
 
-				<div class="-meta-extra">
+				<div class="_meta-extra">
 					<!-- Don't show if devlog -->
-					<div v-if="game.development_status !== 4" class="-os">
+					<div v-if="game.development_status !== 4" class="_os">
 						<AppGameCompatIcons :game="game" />
 					</div>
 
-					<span class="-tags">
-						<span v-if="game.isUnlisted" class="-tag tag tag-notice">
+					<span class="_tags">
+						<span v-if="game.isUnlisted" class="_tag tag tag-notice">
 							<AppTranslate>Unlisted</AppTranslate>
 						</span>
 					</span>
@@ -189,6 +176,8 @@ function outView() {
 @import './variables'
 
 .game-thumbnail
+	rounded-corners-lg()
+	overflow: hidden
 	position: relative
 	display: block
 	margin-bottom: $grid-gutter-width-xs
@@ -197,14 +186,16 @@ function outView() {
 	@media $media-sm-up
 		margin-bottom: $grid-gutter-width
 
-		.-thumb
-			elevate-0()
+	elevate-0()
 
-		&:hover
-			.-thumb
-				elevate-2()
+	&:hover
+		elevate-2()
 
-.-controls
+._thumb
+	position: relative
+	z-index: 1
+
+._controls
 	position: absolute
 	top: 5px
 	right: 5px
@@ -214,30 +205,33 @@ function outView() {
 	.game-thumbnail:hover &
 		display: block
 
-.-meta
+._meta
+	change-bg('bg')
+	margin-top: -10px
 	position: relative
-	padding-top: $game-thumbnail-meta-spacing
+	padding: $game-thumbnail-meta-spacing
+	padding-top: $game-thumbnail-meta-spacing + -@margin-top
 
-.-avatar
+._avatar
 	float: left
 	width: $game-thumbnail-avatar-size
 	height: $game-thumbnail-avatar-size
 
-.-dev
+._dev
 	text-overflow()
 	theme-prop('color', 'fg-muted')
 	margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
 	font-weight: bold
 	font-size: $font-size-h6
 
-.-title
+._title
 	text-overflow()
 	margin: 0
 	margin-left: $game-thumbnail-avatar-size + $game-thumbnail-meta-spacing
 	line-height: 1.3
 	font-weight: bold
 
-.-meta-extra
+._meta-extra
 	clear: both
 	margin-top: $game-thumbnail-meta-spacing
 	// We show tags and icons in here. We want to make sure that the line
@@ -245,15 +239,15 @@ function outView() {
 	// force it.
 	line-height: 26px
 
-.-os
+._os
 	display: inline-block
 	margin-right: $game-thumbnail-meta-spacing
 
-.-tags
+._tags
 	display: inline-block
 	margin-right: $game-thumbnail-meta-spacing
 
-.-pricing
+._pricing
 	rounded-corners()
 	float: right
 	height: 30px
@@ -287,7 +281,7 @@ function outView() {
 		height: 36px
 		line-height: @height
 
-		.-pricing
+		._pricing
 			&-sale-percentage
 				change-bg('gray')
 				theme-prop('color', 'highlight')
@@ -322,7 +316,7 @@ function outView() {
 				vertical-align: text-bottom
 
 // Text color
-.-title
+._title
 	theme-prop('color', 'fg')
 
 	.game-thumbnail:hover &

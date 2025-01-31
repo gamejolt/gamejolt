@@ -1,16 +1,14 @@
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, PropType, ref, toRef, toRefs } from 'vue';
+import { onBeforeUnmount, onMounted, ref, toRef } from 'vue';
 import { AdSlot } from '../ad-slot-info';
-import { addAd, AdInterface, removeAd, useAdStore } from '../ad-store';
+import { AdInterface, addAd, removeAd, useAdStore } from '../ad-store';
 
-const props = defineProps({
-	adSlot: {
-		type: Object as PropType<AdSlot>,
-		required: true,
-	},
-});
+type Props = {
+	adSlot: AdSlot;
+};
 
-const { adSlot } = toRefs(props);
+const { adSlot } = defineProps<Props>();
+
 const adStore = useAdStore();
 const { adapter } = adStore;
 
@@ -20,7 +18,7 @@ const { adapter } = adStore;
  */
 const slotId = ref('');
 
-const adComponent = toRef(() => adapter.component(adSlot.value));
+const adComponent = toRef(() => adapter.component(adSlot));
 
 /**
  * The [AdsController] will call into this to display the ad when needed (when

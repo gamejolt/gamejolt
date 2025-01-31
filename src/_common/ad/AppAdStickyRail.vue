@@ -5,21 +5,16 @@ import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 import { useAdStore } from './ad-store';
 import AppAdWidget from './widget/AppAdWidget.vue';
 
-defineProps({
-	showLeft: {
-		type: Boolean,
-	},
-	showRight: {
-		type: Boolean,
-	},
+type Props = {
+	showLeft?: boolean;
+	showRight?: boolean;
 	/**
 	 * The minimum width in pixels that the screen must be for the ads to show.
 	 */
-	minWidth: {
-		type: Number,
-		default: 2000,
-	},
-});
+	minWidth?: number;
+};
+
+const { showLeft, showRight, minWidth = 2000 } = defineProps<Props>();
 
 const { shouldShow } = useAdStore();
 </script>

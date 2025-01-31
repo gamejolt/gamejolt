@@ -94,12 +94,12 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 				headerCharge
 					? {}
 					: {
-							'-elevate': elevate,
-							'-decorator': true,
+							_elevate: elevate,
+							_decorator: true,
 					  }
 			"
 		>
-			<div class="-content" :class="{ '-col': headerCharge }">
+			<div class="_content" :class="{ _col: headerCharge }">
 				<div :style="{ width: headerCharge ? '100%' : undefined }">
 					<AppStickerChargeTooltipHandler
 						trigger="hover"
@@ -108,10 +108,10 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 						@show="showTooltip = true"
 						@hide="showTooltip = false"
 					>
-						<component :is="headerCharge ? 'h4' : 'h5'" class="-charge-text">
+						<component :is="headerCharge ? 'h4' : 'h5'" class="_charge-text">
 							<AppTranslate>Charge</AppTranslate>
 
-							<span ref="helpIcon" class="-help-circle-container">
+							<span ref="helpIcon" class="_help-circle-container">
 								<AppStickerChargeTooltipCaret :show="showTooltip">
 									<AppJolticon icon="help-circle" />
 								</AppStickerChargeTooltipCaret>
@@ -140,37 +140,37 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 					:is-loading="isLoading"
 				>
 					<div
-						class="-center-grid"
+						class="_center-grid"
 						:class="
 							!headerCharge
 								? {}
 								: {
-										'-elevate': elevate,
-										'-decorator': true,
+										_elevate: elevate,
+										_decorator: true,
 								  }
 						"
 					>
 						<AppAnimElectricity
-							class="-orbs"
+							class="_orbs"
 							:style="gridStyling"
 							:disabled="!canChargeSticker"
 						>
 							<AppAspectRatio v-for="i of chargeLimit" :key="i" :ratio="1">
 								<img
 									v-if="currentCharge < i"
-									class="-orb-empty"
+									class="_orb-empty"
 									:src="illChargeOrbEmpty.path"
 									draggable="false"
 									alt=""
 								/>
-								<AppAnimChargeOrb v-else class="-abs-fill" use-random-offset />
+								<AppAnimChargeOrb v-else class="_abs-fill" use-random-offset />
 							</AppAspectRatio>
 						</AppAnimElectricity>
 					</div>
 				</AppLoadingFade>
 			</div>
 
-			<div v-if="showFullyChargedText" :class="{ '-small': headerCharge }">
+			<div v-if="showFullyChargedText" :class="{ _small: headerCharge }">
 				<AppSpacer vertical :scale="4" />
 
 				<span>
@@ -193,24 +193,24 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 .sticker-charge-card
 	position: relative
 
-.-decorator
+._decorator
 	rounded-corners-lg()
 	change-bg(bg)
 	padding: var(--padding-v) var(--padding-h)
 
-	&.-elevate
+	&._elevate
 		elevate-1()
 
-.-content
+._content
 	display: inline-flex
 	align-items: center
 
-	&.-col
+	&._col
 		flex-direction: column
 		align-items: flex-start
 		width: 100%
 
-.-charge-text
+._charge-text
 	margin: 0 24px 0 0
 	white-space: nowrap
 	display: inline-flex
@@ -221,26 +221,26 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 		margin: 0 0 0 4px
 		color: var(--theme-fg-muted)
 
-.-abs-fill
+._abs-fill
 	position: absolute
 	top: 0
 	right: 0
 	bottom: 0
 	left: 0
 
-.-orbs
+._orbs
 	flex: auto
 	display: inline-grid
 	gap: 4px
 	min-width: 0
 
-.-orb-empty
+._orb-empty
 	width: 100%
 	height: 100%
 	opacity: 0.25
 	vertical-align: top
 
-.-help-circle-container
+._help-circle-container
 	display: inline-flex
 	margin-left: 4px
 
@@ -250,12 +250,12 @@ const showFullyChargedText = computed(() => allowFullyChargedText.value && canCh
 hr
 	margin: 16px 0
 
-.-center-grid
+._center-grid
 	display: grid
 	justify-content: center
 	width: 100%
 
-.-small
+._small
 	&
 	::v-deep(.jolticon)
 		font-size: $font-size-small

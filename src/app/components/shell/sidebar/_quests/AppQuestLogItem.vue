@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { toRef } from 'vue';
 import AppQuestProgress from '../../../../../_common/quest/AppQuestProgress.vue';
 import AppQuestThumbnail from '../../../../../_common/quest/AppQuestThumbnail.vue';
 import { QuestModel } from '../../../../../_common/quest/quest-model';
@@ -14,37 +14,29 @@ import { useAppStore } from '../../../../store/index';
 import { useQuestStore } from '../../../../store/quest';
 import AppQuestTimer from '../../../quest/AppQuestTimer.vue';
 
-const props = defineProps({
-	quest: {
-		type: Object as PropType<QuestModel>,
-		required: true,
-	},
-	active: {
-		type: Boolean,
-	},
+type Props = {
+	quest: QuestModel;
+	active?: boolean;
 	/**
 	 * Hides the quest type and displays the avatar above the title and progress
 	 * bar.
 	 */
-	compactStack: {
-		type: Boolean,
-	},
-});
+	compactStack?: boolean;
+};
 
-const { quest, active, compactStack } = toRefs(props);
+const { quest } = defineProps<Props>();
 
 const { visibleLeftPane, toggleLeftPane } = useAppStore();
 const { activeQuest } = useQuestStore();
 
-const showProgress = computed(() => !quest.value.isExpired);
-
-const asExpired = computed(() => quest.value.isExpired && !quest.value.has_activity);
+const showProgress = toRef(() => !quest.isExpired);
+const asExpired = toRef(() => quest.isExpired && !quest.has_activity);
 
 function onSelect() {
 	if (visibleLeftPane.value !== 'quests') {
 		toggleLeftPane('quests');
 	}
-	activeQuest.value = quest.value;
+	activeQuest.value = quest;
 }
 </script>
 
@@ -59,7 +51,7 @@ function onSelect() {
 		@click="onSelect"
 	>
 		<div class="_thumb">
-			<AppQuestThumbnail :quest="quest" />
+			<AppQuestThumbnail :quest />
 
 			<div
 				v-if="quest.ends_on && !quest.isDaily && !compactStack"
@@ -99,7 +91,7 @@ function onSelect() {
 					class="_progress"
 					:progress="quest.progress_percent"
 					:max-progress-ticks="100"
-					:is-percent="true"
+					is-percent
 				/>
 			</template>
 		</div>
@@ -115,7 +107,7 @@ function onSelect() {
 	margin-right: -8px
 
 	&:hover
-		background-color: unquote('rgba(var(--theme-bg-rgb), 0.5)')
+		background-color: var(--theme-bg-offset)
 
 	&._expired
 		._title

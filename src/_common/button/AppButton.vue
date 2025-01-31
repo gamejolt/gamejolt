@@ -112,6 +112,7 @@ const { hasSlot } = useDynamicSlots(dynamicSlots);
 		:class="{
 			'-primary': primary,
 			'-trans': trans,
+			'-solid': solid,
 			'-outline': !solid && !trans,
 			'-overlay': overlay,
 			'-circle': circle,

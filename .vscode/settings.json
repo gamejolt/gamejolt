@@ -56,5 +56,8 @@
 	"editor.linkedEditing": true,
 	"editor.semanticHighlighting.enabled": true,
 	"emmet.excludeLanguages": ["markdown", "stylus", "styl"],
-	"vue.updateImportsOnFileMove.enabled": true
+	"vue.updateImportsOnFileMove.enabled": true,
+	"vue.inlayHints.destructuredProps": true,
+	"vue.inlayHints.inlineHandlerLeading": true,
+	"vue.inlayHints.missingProps": true
 }

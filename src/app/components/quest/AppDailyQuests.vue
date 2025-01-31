@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, ref, toRefs, watch } from 'vue';
+import { CSSProperties, computed, ref, toRef, useTemplateRef, watch } from 'vue';
 import AppAnimChargeOrb from '../../../_common/animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../../_common/animation/AppAnimElectricity.vue';
 import { illChargeOrbEmpty } from '../../../_common/animation/slideshow/sheets';
@@ -18,53 +18,29 @@ import { useGridStore } from '../grid/grid-store';
 import AppQuestLogItem from '../shell/sidebar/_quests/AppQuestLogItem.vue';
 import AppQuestTimer from './AppQuestTimer.vue';
 
-const props = defineProps({
+type Props = {
 	/**
 	 * Prevents the quest items from being clicked when we determine them to be
 	 * stale.
 	 */
-	disableOnExpiry: {
-		type: Boolean,
-	},
+	disableOnExpiry?: boolean;
 	/**
 	 * Slices the list of quests to display only 1 row.
 	 */
-	singleRow: {
-		type: Boolean,
-	},
-	activeQuestId: {
-		type: Number,
-		default: undefined,
-	},
-	forceLoading: {
-		type: Boolean,
-	},
+	singleRow?: boolean;
+	activeQuestId?: number;
+	forceLoading?: boolean;
 	/**
 	 * Shows a charge orb with our current and max values. Content shows a
 	 * tooltip explaining charge on hover/focus, depending on pointer type.
 	 */
-	showCharge: {
-		type: Boolean,
-	},
-	/**
-	 *
-	 */
-	constrainChargeTooltip: {
-		type: Boolean,
-	},
-	direction: {
-		type: String as PropType<'row' | 'column'>,
-		default: `row`,
-		validator: val => typeof val === 'string' && ['row', 'column'].includes(val),
-	},
-	gridStyles: {
-		type: Object as PropType<CSSProperties>,
-		default: () => ({}),
-	},
-});
+	showCharge?: boolean;
+	constrainChargeTooltip?: boolean;
+	direction?: 'row' | 'column';
+	gridStyles?: CSSProperties;
+};
 
-const { singleRow, activeQuestId, forceLoading, showCharge, constrainChargeTooltip } =
-	toRefs(props);
+const { singleRow, forceLoading, direction = 'row' } = defineProps<Props>();
 
 // Mark as loading until Grid is fully bootstrapped.
 const { grid } = useGridStore();
@@ -85,13 +61,13 @@ const { dailyQuests, isLoading: isQuestStoreLoading } = questStore;
 
 const { currentCharge, chargeLimit } = useStickerStore();
 
-const chargeOrb = ref<HTMLElement>();
-const header = ref<HTMLElement>();
+const chargeOrb = useTemplateRef('chargeOrb');
+const header = useTemplateRef('header');
 
 const showChargeTooltip = ref(false);
 
-const isLoading = computed(() => isQuestStoreLoading.value || forceLoading.value);
-const hasQuests = computed(() => displayQuests.value.length > 0);
+const isLoading = toRef(() => isQuestStoreLoading.value || forceLoading);
+const hasQuests = toRef(() => displayQuests.value.length > 0);
 
 const displayCharge = computed(() => {
 	if (isLoadingCharge.value) {
@@ -102,7 +78,7 @@ const displayCharge = computed(() => {
 	return `${current}/${chargeLimit.value}`;
 });
 
-const chargeOrbStyle = computed(() => {
+const chargeOrbStyle = toRef(() => {
 	if (!currentCharge.value) {
 		return 'empty';
 	} else if (currentCharge.value < chargeLimit.value) {
@@ -113,7 +89,7 @@ const chargeOrbStyle = computed(() => {
 });
 
 const displayQuests = computed(() => {
-	const limit = singleRow.value ? 3 : undefined;
+	const limit = singleRow ? 3 : undefined;
 	return dailyQuests.value.slice(0, limit);
 });
 
@@ -135,7 +111,7 @@ const questEndsOnDate = computed(() => {
 	return soonestExpiry;
 });
 
-const showPlaceholders = computed(() => {
+const showPlaceholders = toRef(() => {
 	if (isLoading.value) {
 		return displayQuests.value.length === 0;
 	}
@@ -148,7 +124,7 @@ function onRefresh() {
 </script>
 
 <template>
-	<AppLoadingFade v-if="showPlaceholders || hasQuests" :is-loading="isLoading">
+	<AppLoadingFade v-if="showPlaceholders || hasQuests" :is-loading>
 		<div ref="header" class="_header">
 			<slot name="header">
 				<h4 class="section-header" :class="{ h6: Screen.isXs }">
@@ -204,8 +180,8 @@ function onRefresh() {
 					<AppStickerChargeTooltip
 						v-if="chargeOrb"
 						:show="showChargeTooltip"
-						:caret-element="chargeOrb"
-						:width-tracker-element="constrainChargeTooltip ? header : undefined"
+						:caret-element="chargeOrb!"
+						:width-tracker-element="constrainChargeTooltip ? header! : undefined"
 					/>
 				</template>
 

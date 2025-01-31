@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { styleAbsoluteFill } from '../../../_styles/mixins';
+import { styleAbsoluteFill, styleWhen } from '../../../_styles/mixins';
 import { useAdStore } from '../ad-store';
 
 const { takeoverAdapter: adapter, hasTakeover } = useAdStore();
@@ -8,6 +8,7 @@ const { takeoverAdapter: adapter, hasTakeover } = useAdStore();
 const fgSrc = ref('');
 const bgSrc = ref('');
 const href = ref('');
+const sizing = ref('cover');
 let clickUrl = '';
 
 onMounted(() => {
@@ -60,6 +61,10 @@ function showTakeover(event: MessageEvent) {
 	href.value = data.destUrl;
 	clickUrl = data.clickUrl;
 
+	if (data.sizing === 'cover' || data.sizing === 'contain') {
+		sizing.value = data.sizing;
+	}
+
 	const impressionTracker = new Image();
 	impressionTracker.src = data.impressionUrl;
 }
@@ -75,7 +80,9 @@ function onClick() {
 </script>
 
 <template>
-	<div :id="`div-gpt-ad-takeover`" :style="{ display: `none` }" />
+	<div :style="{ display: `none` }">
+		<div id="div-gpt-ad-takeover" />
+	</div>
 
 	<a
 		v-if="fgSrc && bgSrc && href"
@@ -94,8 +101,15 @@ function onClick() {
 				:style="{
 					...styleAbsoluteFill(),
 					backgroundImage: `url(${bgSrc})`,
-					backgroundSize: `cover`,
-					backgroundPosition: `center`,
+					backgroundRepeat: `no-repeat`,
+					...styleWhen(sizing === 'cover', {
+						backgroundSize: `cover`,
+						backgroundPosition: `center`,
+					}),
+					...styleWhen(sizing === 'contain', {
+						backgroundSize: `contain`,
+						backgroundPosition: `top center`,
+					}),
 				}"
 				:href="href"
 				target="_blank"

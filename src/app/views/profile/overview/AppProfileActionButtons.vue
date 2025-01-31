@@ -70,7 +70,7 @@ function showAboutModal() {
 </script>
 
 <template>
-	<AppAdTakeoverFloat allow-theme-change>
+	<AppAdTakeoverFloat>
 		<AppButtonGroup v-if="routeUser" :row="collapse">
 			<div
 				:style="{

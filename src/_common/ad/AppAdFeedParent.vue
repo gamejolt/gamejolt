@@ -4,11 +4,12 @@
  * network which container on the page should be used for loading infinite ads
  * through a feed.
  */
-defineProps({
-	isActive: {
-		type: Boolean,
-	},
-});
+
+type Props = {
+	isActive?: boolean;
+};
+
+defineProps<Props>();
 </script>
 
 <template>

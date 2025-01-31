@@ -1,29 +1,24 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
 import { AdSlot, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
 import { useAdStore } from '../ad-store';
 import AppAdWidgetInner from './AppAdWidgetInner.vue';
 
-const props = defineProps({
-	size: {
-		type: String as PropType<AdSlotSize>,
-		default: 'rectangle',
-	},
-	placement: {
-		type: String as PropType<AdSlotPlacement>,
-		default: 'content',
-	},
-});
+type Props = {
+	size?: AdSlotSize;
+	placement?: AdSlotPlacement;
+};
 
-const { size, placement } = toRefs(props);
+const { size = 'rectangle', placement = 'content' } = defineProps<Props>();
+
 const { shouldShow } = useAdStore();
 
 const adSlot = ref(_makeAdSlot());
 
 // If anything within our props changes, regenerate.
 watch(
-	props,
+	[() => size, () => placement],
 	() => {
 		adSlot.value = _makeAdSlot();
 	},
@@ -31,7 +26,7 @@ watch(
 );
 
 function _makeAdSlot() {
-	return new AdSlot(size.value, placement.value);
+	return new AdSlot(size, placement);
 }
 </script>
 

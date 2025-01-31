@@ -71,7 +71,7 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 			<AppAdStickyRail show-left>
 				<div class="container-xl">
 					<AppAdTakeoverFloat>
-						<AppNavTabList v-if="!hideSectionNav">
+						<AppNavTabList v-if="!hideSectionNav" sans-margin-bottom>
 							<ul>
 								<li v-if="includeFeaturedSection">
 									<RouterLink
@@ -172,7 +172,7 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 <style lang="stylus" scoped>
 .game-listing
 	.-filtering-well
-		change-bg('bg-offset')
+		change-bg('bg')
 		rounded-corners()
 		padding: $font-size-base 16px 0 16px
 

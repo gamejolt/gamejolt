@@ -1,33 +1,31 @@
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref, toRefs } from 'vue';
-import { defineAdAdapterComponentProps } from '../adapter-base';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { AdAdapterComponentProps } from '../adapter-base';
 import { AdProperAdapter, ProperTagPlacement } from './proper-adapter';
 
-const props = defineProps({
-	...defineAdAdapterComponentProps<AdProperAdapter>(),
-});
+type Props = AdAdapterComponentProps<AdProperAdapter>;
 
-const { placement, size } = toRefs(props.adSlot);
+const { adSlot, adapter } = defineProps<Props>();
 
 const tagPlacement = ref<ProperTagPlacement | null>(null);
 const tagUnit = ref<string | null>(null);
 const tagId = ref<string | null>(null);
 const tagClass = ref<string | null>(null);
 
-if (placement.value === 'top') {
-	if (size.value === 'leaderboard') {
+if (adSlot.placement === 'top') {
+	if (adSlot.size === 'leaderboard') {
 		tagPlacement.value = 'leaderboard';
 	} else {
 		tagPlacement.value = 'content';
 	}
-} else if (size.value === 'skyscraper') {
+} else if (adSlot.size === 'skyscraper') {
 	tagPlacement.value = 'skyscraper';
 	tagClass.value = 'sovrn-side-rail-dynamic';
 } else {
-	tagPlacement.value = placement.value;
+	tagPlacement.value = adSlot.placement;
 }
 
-tagUnit.value = props.adapter.getTagUnit(tagPlacement.value);
+tagUnit.value = adapter.getTagUnit(tagPlacement.value);
 if (tagUnit.value) {
 	tagId.value = `gamejolt_${tagUnit.value}`;
 }
@@ -45,7 +43,7 @@ onBeforeUnmount(() => {
 		return;
 	}
 
-	props.adapter.releaseTagUnit(tagPlacement.value, tagUnit.value);
+	adapter.releaseTagUnit(tagPlacement.value, tagUnit.value);
 	_doProperDelete(tagId.value);
 
 	tagPlacement.value = null;
@@ -54,13 +52,13 @@ onBeforeUnmount(() => {
 });
 
 function _doProperDisplay(tagId: string) {
-	props.adapter.run(() => {
+	adapter.run(() => {
 		(window as any).proper_display(tagId);
 	});
 }
 
 function _doProperDelete(tagId: string) {
-	props.adapter.run(() => {
+	adapter.run(() => {
 		(window as any).properDestroyDfpSlot(tagId);
 		(window as any).properDeleteSlot(tagId);
 	});

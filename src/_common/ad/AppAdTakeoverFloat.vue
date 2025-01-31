@@ -1,15 +1,4 @@
-<script lang="ts" setup>
-import { useAdStore } from './ad-store';
-
-defineProps({
-	allowThemeChange: {
-		type: Boolean,
-		default: false,
-	},
-});
-
-const { hasTakeover } = useAdStore();
-</script>
+<script lang="ts" setup></script>
 
 <template>
 	<div
@@ -17,7 +6,6 @@ const { hasTakeover } = useAdStore();
 			position: `relative`,
 			zIndex: `1`,
 		}"
-		:class="{ 'theme-dark': allowThemeChange && hasTakeover }"
 	>
 		<slot />
 	</div>

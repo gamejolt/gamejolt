@@ -129,18 +129,18 @@ make-button-size(size)
 /**
  * Button types
  */
-.button
+.-solid
 	change-bg('fg')
 	color: var(--theme-bg)
 
-.-primary
-	change-bg('bi-bg')
-	color: var(--theme-bi-fg)
+	&.-primary
+		change-bg('bi-bg')
+		color: var(--theme-bi-fg)
 
 .-outline
 	border-color: var(--theme-fg)
 	color: var(--theme-fg)
-	background-color: transparent
+	background-color: var(--theme-bg-actual)
 
 	&.-primary
 		border-color: var(--theme-bi-bg)

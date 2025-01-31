@@ -97,17 +97,16 @@ export function styleCaret(
  */
 export const styleTextOverflow = {
 	overflow: `hidden`,
-
 	whiteSpace: `nowrap`,
 	textOverflow: `ellipsis`,
 } satisfies CSSProperties;
 
-export function styleChangeBg(bg: ThemeColor, important = false): any {
+export function styleChangeBg(bg: ThemeColor, important = false) {
 	return {
 		'--theme-bg-actual': `var(--theme-${bg})`,
 		'--theme-bg-actual-trans': `var(--theme-${bg}-trans)`,
 		backgroundColor: `var(--theme-${bg})` + (important ? ' !important' : ''),
-	};
+	} satisfies CSSProperties;
 }
 
 /**
@@ -115,13 +114,13 @@ export function styleChangeBg(bg: ThemeColor, important = false): any {
  *
  * @param rgb The rgb value to use. Should be in the format of "r, g, b".
  */
-export function styleChangeBgRgba(rgb: string, opacity: number, important = false): any {
+export function styleChangeBgRgba(rgb: string, opacity: number, important = false) {
 	const rgba = `rgba(${rgb}, ${opacity})`;
 	return {
 		'--theme-bg-actual': rgba,
 		'--theme-bg-actual-trans': `rgba(${rgb}, 0)`,
 		backgroundColor: `${rgba}` + (important ? ' !important' : ''),
-	};
+	} satisfies CSSProperties;
 }
 
 /**

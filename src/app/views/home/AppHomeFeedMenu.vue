@@ -1,26 +1,62 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
-import { RouterLink } from 'vue-router';
+import { computed } from 'vue';
+import { RouteLocationRaw, RouterLink } from 'vue-router';
 import { trackHomeFeedSwitch } from '../../../_common/analytics/analytics.service';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { Screen } from '../../../_common/screen/screen-service';
+import { kThemeBg, kThemeBiBg, kThemeBiFg, kThemeNotice } from '../../../_common/theme/variables';
+import { $gettext } from '../../../_common/translate/translate.service';
+import { styleBorderRadiusLg, styleWhen } from '../../../_styles/mixins';
+import { kBorderWidthLg } from '../../../_styles/variables';
+import { assertNever } from '../../../utils/utils';
 import { useAppStore } from '../../store';
-import { HOME_FEED_ACTIVITY, HOME_FEED_FYP, HomeFeedService } from './home-feed.service';
+import { HomeFeedService, HomeFeedTabTypes as HomeFeedTabType } from './home-feed.service';
 
-defineProps({
-	tabs: {
-		type: Array as PropType<string[]>,
-		required: true,
-	},
-	activeTab: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	tabs: HomeFeedTabType[];
+	activeTab: string;
+};
+
+const { tabs } = defineProps<Props>();
 
 const { unreadActivityCount } = useAppStore();
 
-const hasUnreadActivity = computed(() => unreadActivityCount.value > 0);
+const tabData = computed<
+	{
+		tab: HomeFeedTabType;
+		to: RouteLocationRaw;
+		label: string;
+		unread: boolean;
+	}[]
+>(() =>
+	tabs.map(tab => {
+		switch (tab) {
+			case 'activity':
+				return {
+					tab,
+					to: {
+						name: 'home',
+						params: { tab: HomeFeedService.activityTab },
+					},
+					label: $gettext(`Following`),
+					unread: unreadActivityCount.value > 0,
+				};
+
+			case 'fyp':
+				return {
+					tab,
+					to: {
+						name: 'home',
+						params: { tab: HomeFeedService.fypTab },
+					},
+					label: $gettext(`For You`),
+					unread: false,
+				};
+
+			default:
+				assertNever(tab);
+		}
+	})
+);
 
 function onTabClick(path: string, isActive: boolean) {
 	trackHomeFeedSwitch({
@@ -31,73 +67,55 @@ function onTabClick(path: string, isActive: boolean) {
 </script>
 
 <template>
-	<nav class="-menu">
-		<template v-for="tab of tabs" :key="tab">
+	<nav
+		:style="{
+			display: `flex`,
+			gap: `20px`,
+			justifyContent: `center`,
+			marginBottom: `20px`,
+		}"
+	>
+		<template v-for="{ tab, to, label, unread } of tabData" :key="tab">
 			<RouterLink
-				v-if="tab === 'activity'"
-				:to="{
-					name: 'home',
-					params: { tab: HomeFeedService.activityTab },
+				:to
+				class="pressy"
+				:style="{
+					...styleBorderRadiusLg,
+					display: `flex`,
+					alignItems: `center`,
+					padding: `8px 20px`,
+					fontWeight: 700,
+					textAlign: `center`,
+					backgroundColor: kThemeBg,
+					borderWidth: kBorderWidthLg.px,
+					borderStyle: `solid`,
+					...styleWhen(activeTab === tab, {
+						backgroundColor: kThemeBiBg,
+						borderColor: kThemeBiFg,
+						color: kThemeBiFg,
+					}),
+					...styleWhen(Screen.isMobile, {
+						display: `block`,
+						width: `100%`,
+					}),
 				}"
-				class="-menu-tab-item"
-				:class="{
-					active: activeTab === 'activity',
-				}"
-				@click.capture="onTabClick(HOME_FEED_ACTIVITY, activeTab === 'activity')"
+				@click.capture="onTabClick(tab, activeTab === tab)"
 			>
-				<AppTranslate>Following</AppTranslate>
+				{{ label }}
+
 				<span
-					v-if="hasUnreadActivity"
-					class="-unread-tag anim-fade-enter anim-fade-leave"
+					v-if="unread"
+					class="anim-fade-in anim-fade-leave"
+					:style="{
+						backgroundColor: kThemeNotice,
+						borderRadius: `50%`,
+						width: `12px`,
+						height: `12px`,
+						display: `block`,
+						marginLeft: `8px`,
+					}"
 				/>
-			</RouterLink>
-			<RouterLink
-				v-if="tab === 'fyp'"
-				:to="{
-					name: 'home',
-					params: { tab: HomeFeedService.fypTab },
-				}"
-				class="-menu-tab-item"
-				:class="{
-					active: activeTab === 'fyp',
-				}"
-				@click.capture="onTabClick(HOME_FEED_FYP, activeTab === 'fyp')"
-			>
-				<AppTranslate>For You</AppTranslate>
 			</RouterLink>
 		</template>
 	</nav>
-
-	<AppSpacer vertical :scale="6" />
 </template>
-
-<style lang="stylus" scoped>
-.-menu
-	display: flex
-	grid-gap: 40px
-	justify-content: center
-	font-size: 17px
-	font-weight: 700
-
-.-menu-tab-item
-	display: flex
-	align-items: center
-	padding-bottom: 8px
-	border-bottom: 2px solid transparent
-	color: var(--theme-fg)
-
-	&:hover
-		border-bottom-color: var(--theme-link)
-
-	&.active
-		color: var(--theme-link)
-		border-bottom-color: var(--theme-link)
-
-.-unread-tag
-	background-color: var(--theme-link)
-	border-radius: 50%
-	width: 12px
-	height: 12px
-	display: block
-	margin-left: 8px
-</style>
