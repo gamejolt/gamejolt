@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Ref, computed, ref, toRef, watch } from 'vue';
+import { Ref, computed, ref, toRef, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
@@ -53,13 +53,13 @@ const community = toRef(() => routeStore.community);
 const communityState = toRef(() => communityStates.value.getCommunityState(community.value));
 const sidebarData = toRef(() => routeStore.sidebarData!);
 
-const collaboratorInvite = toRef(() => {
+const collaboratorInvite = computed(() => {
 	// Just return the collaborator as an "invite" if it's not accepted yet.
 	const { collaborator } = routeStore;
 	return collaborator && !collaborator.isAccepted ? collaborator : null;
 });
 
-const canAcceptCollaboration = toRef(
+const canAcceptCollaboration = computed(
 	() => community.value.is_member || (user.value && user.value.can_join_communities)
 );
 
@@ -77,19 +77,11 @@ const acceptCollaborationTooltip = computed(() =>
 	canAcceptCollaboration.value ? '' : $gettext(`You are in too many communities.`)
 );
 
-watch(
-	() => communityState.value.hasUnreadFeaturedPosts,
-	() => {
-		if (
-			feed.value &&
-			feed.value.newCount === 0 &&
-			communityState.value.hasUnreadFeaturedPosts
-		) {
-			feed.value.newCount = 1;
-		}
-	},
-	{ immediate: true }
-);
+watchEffect(() => {
+	if (feed.value?.newCount === 0 && communityState.value.hasUnreadFeaturedPosts) {
+		feed.value.newCount = 1;
+	}
+});
 
 function loadedNew() {
 	if (communityState.value.hasUnreadFeaturedPosts && user.value) {

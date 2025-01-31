@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Ref, ref, toRef } from 'vue';
+import { computed, Ref, ref } from 'vue';
 import { RouteLocationRaw, RouterView, useRoute, useRouter } from 'vue-router';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
 import { AdsGPTEnabledGlobally } from '../../../../_common/ad/ad-store';
@@ -8,8 +8,8 @@ import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
-	CommentStoreModel,
 	commentStoreCount,
+	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
 	useCommentStoreManager,
@@ -108,14 +108,15 @@ const supportersData = ref() as Ref<
 
 let permalinkWatchDeregister: CommentThreadModalPermalinkDeregister | undefined = undefined;
 
-const routeTitle = toRef(() => {
+const routeTitle = computed(() => {
 	if (routeUser.value) {
 		return `${routeUser.value.display_name} (@${routeUser.value.username})`;
 	}
 	return null;
 });
 
-const userBlockedYou = toRef(() => routeUser.value && routeUser.value.blocked_you);
+const userBlockedYou = computed(() => routeUser.value && routeUser.value.blocked_you);
+const showSidebarAvatar = computed(() => stickySides.value || Screen.isMobile);
 
 createAppRoute({
 	routeTitle,
@@ -236,8 +237,6 @@ async function onFriendRequestReject() {
 		grid.value?.pushViewNotifications('friend-requests');
 	}
 }
-
-const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 </script>
 
 <template>

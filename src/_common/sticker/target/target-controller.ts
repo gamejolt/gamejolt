@@ -1,9 +1,9 @@
 import {
 	computed,
-	ComputedRef,
 	inject,
 	InjectionKey,
 	MaybeRef,
+	MaybeRefOrGetter,
 	provide,
 	reactive,
 	ref,
@@ -11,10 +11,10 @@ import {
 	shallowReadonly,
 	ShallowRef,
 	shallowRef,
-	unref,
+	toRef,
+	toValue,
 	WritableComputedRef,
 } from 'vue';
-import { MaybeComputedRef } from '../../../utils/vue';
 import { CommentModel } from '../../comment/comment-model';
 import { FiresidePostModel } from '../../fireside/post/post-model';
 import { MediaItemModel } from '../../media-item/media-item-model';
@@ -31,7 +31,7 @@ type StickerTargetModel = FiresidePostModel | MediaItemModel;
 export type StickerTargetController = {
 	isInview: Ref<boolean>;
 	hasLoadedStickers: Ref<boolean>;
-	shouldLoad: ComputedRef<boolean>;
+	shouldLoad: Readonly<Ref<boolean>>;
 	shouldShow: WritableComputedRef<boolean>;
 
 	stickers: Ref<StickerPlacementModel[]>;
@@ -41,35 +41,36 @@ export type StickerTargetController = {
 	children: ShallowRef<StickerTargetController[]>;
 
 	model: StickerTargetModel;
-	parent: ComputedRef<StickerTargetController | null>;
+	parent: Readonly<Ref<StickerTargetController | null>>;
 	isLive: boolean;
 
-	canReceiveCharge: ComputedRef<boolean>;
+	canReceiveCharge: Readonly<Ref<boolean>>;
 };
 
 interface StickerTargetOptions {
-	canReceiveCharge: MaybeComputedRef<boolean>;
-	parent?: MaybeRef<StickerTargetController | null>;
+	canReceiveCharge: MaybeRefOrGetter<boolean>;
+	parent?: MaybeRefOrGetter<StickerTargetController | null>;
 	isLive?: boolean;
 }
 
 export function createStickerTargetController(
 	model: StickerTargetModel,
-	{ canReceiveCharge, parent, isLive = false }: StickerTargetOptions
+	{ isLive = false, ...restOptions }: StickerTargetOptions
 ) {
 	model = reactive(model) as StickerTargetModel;
 	const isInview = ref(false);
 	const hasLoadedStickers = ref(false);
 
-	const refParent = computed(() => unref(parent) || null);
+	const parent = toRef(() => toValue(restOptions.parent) || null);
+	const canReceiveCharge = toRef(restOptions.canReceiveCharge);
 
 	/**
 	 * Note, the AppStickerTarget component is what actually loads the stickers
 	 * in based on this state changing.
 	 */
-	const shouldLoad = computed(() => {
-		return !isLive && shouldShow.value && isInview.value && !hasLoadedStickers.value;
-	});
+	const shouldLoad = computed(
+		() => !isLive && shouldShow.value && isInview.value && !hasLoadedStickers.value
+	);
 
 	const _shouldShow = ref(false);
 	const shouldShow = computed({
@@ -82,7 +83,7 @@ export function createStickerTargetController(
 
 			return Boolean(
 				_shouldShow.value ||
-					refParent.value?.shouldShow.value ||
+					parent.value?.shouldShow.value ||
 					layer.value?.isShowingDrawer.value
 			);
 		},
@@ -112,14 +113,12 @@ export function createStickerTargetController(
 		children,
 		shouldLoad,
 		model,
-		parent: refParent,
+		parent,
 		isLive,
-		canReceiveCharge: computed(() => unref(canReceiveCharge)),
+		canReceiveCharge,
 	});
 
-	if (refParent.value) {
-		refParent.value.children.value.push(c);
-	}
+	parent.value?.children.value.push(c);
 
 	return c;
 }

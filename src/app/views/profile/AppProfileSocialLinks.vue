@@ -1,9 +1,9 @@
 <script lang="ts" setup>
+import { computed } from 'vue';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '../../../_common/link/AppLinkExternal.vue';
 import { LinkedAccountProvider } from '../../../_common/linked-account/linked-account.model';
-import { watched } from '../../../_common/reactivity-helpers';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
@@ -25,7 +25,7 @@ function _getLinkedAccount(provider: LinkedAccountProvider) {
 	return null;
 }
 
-const socialLinks = watched(() => {
+const socialLinks = computed(() => {
 	const items: { label: string; icon: Jolticon; url: string }[] = [];
 	if (!user.value || Screen.isMobile) {
 		return items;

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
@@ -36,14 +36,11 @@ import AppActivityFeedPostMedia from './AppActivityFeedPostMedia.vue';
 import AppActivityFeedPostVideo from './AppActivityFeedPostVideo.vue';
 import AppActivityFeedPostText from './text/AppActivityFeedPostText.vue';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ActivityFeedItem>,
-		required: true,
-	},
-});
+type Props = {
+	item: ActivityFeedItem;
+};
 
-const { item } = toRefs(props);
+const { item } = defineProps<Props>();
 
 const emit = defineEmits({
 	resize: (_height: number) => true,
@@ -55,11 +52,11 @@ const feedInterface = useActivityFeedInterface()!;
 const route = useRoute();
 const router = useRouter();
 
-const eventItem = computed(() => item.value.feedItem as EventItemModel);
+const eventItem = computed(() => item.feedItem as EventItemModel);
 const post = computed(() => eventItem.value.action as FiresidePostModel);
 
 const stickerTargetController = createStickerTargetController(post.value, {
-	canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
+	canReceiveCharge: () => post.value.can_receive_charged_stickers,
 });
 
 provideStickerTargetController(stickerTargetController);
@@ -71,9 +68,9 @@ const queryParams = ref<Record<string, string>>();
 const root = ref<HTMLDivElement>();
 const stickerScroll = ref<HTMLDivElement>();
 
-const isNew = computed(() => feed.isItemUnread(item.value));
+const user = toRef(() => post.value.displayUser);
 
-const user = computed(() => post.value.displayUser);
+const isNew = computed(() => feed.isItemUnread(item));
 
 const communities = computed(() => {
 	const result = [...post.value.communities];
@@ -179,7 +176,7 @@ function onUnhideBlock() {
 
 function scrollToStickers() {
 	// Only scroll up if they've expanded the item.
-	if (stickerScroll.value && feed.isItemOpen(item.value)) {
+	if (stickerScroll.value && feed.isItemOpen(item)) {
 		Scroll.to(stickerScroll.value, { preventDirections: ['down'] });
 	}
 }
@@ -252,48 +249,40 @@ function onPostUnpinned(item: EventItemModel) {
 					bleed
 				>
 					<AppPostHeader
-						:post="post"
+						:post
+						:feed
 						follow-location="feed"
-						:feed="feed"
 						:show-pinned="shouldShowIsPinned"
 						:date-link="linkResolved"
 					/>
 
 					<AppActivityFeedPostVideo
 						v-if="post.hasVideo"
-						:item="item"
-						:post="post"
+						:item
+						:post
 						@query-param="onQueryParam"
 					/>
 
 					<AppActivityFeedPostMedia
 						v-if="post.hasMedia"
-						:item="item"
-						:post="post"
+						:item
+						:post
 						:can-place-sticker="post.canPlaceSticker"
 					/>
 
 					<div ref="stickerScroll" />
-					<AppPostContent
-						:post="post"
-						:sticker-target-controller="stickerTargetController"
-						truncate-links
-					>
+					<AppPostContent :post :sticker-target-controller truncate-links>
 						<AppStickerControlsOverlay>
 							<AppFiresidePostEmbed
 								v-for="embed of post.embeds"
 								:key="embed.id"
-								:embed="embed"
+								:embed
 							/>
 
-							<AppActivityFeedPostText
-								v-if="post.has_article"
-								:item="item"
-								:post="post"
-							/>
+							<AppActivityFeedPostText v-if="post.has_article" :item :post />
 
 							<div v-if="post.hasPoll" class="-poll" @click.stop>
-								<AppPollVoting :post="post" :poll="post.poll" />
+								<AppPollVoting :post :poll="post.poll!" />
 							</div>
 						</AppStickerControlsOverlay>
 					</AppPostContent>
@@ -301,7 +290,7 @@ function onPostUnpinned(item: EventItemModel) {
 					<AppStickerControlsOverlay :hide="!!post.background">
 						<AppStickerPlacementList
 							v-if="!isDynamicGoogleBot()"
-							:sticker-target-controller="stickerTargetController"
+							:sticker-target-controller
 							:supporters="post.supporters"
 							:stickers="post.sticker_counts"
 							@show="scrollToStickers"
@@ -310,18 +299,18 @@ function onPostUnpinned(item: EventItemModel) {
 						<AppContentTargets
 							v-if="communities.length || realms.length"
 							class="-communities -controls-buffer"
-							:communities="communities"
-							:realms="realms"
+							:communities
+							:realms
 							has-links
 						/>
 					</AppStickerControlsOverlay>
 
 					<AppPostControls
 						class="-controls"
-						:post="post"
-						:feed="feed"
-						:item="item"
-						:overlay="overlay"
+						:post
+						:feed
+						:item
+						:overlay
 						show-comments
 						location="feed"
 						event-label="feed"

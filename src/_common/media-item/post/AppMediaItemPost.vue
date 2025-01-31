@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRef, toRefs, unref } from 'vue';
+import { PropType, computed, ref, toRefs, toValue } from 'vue';
 import AppButton from '../../button/AppButton.vue';
 import { useContentFocusService } from '../../content-focus/content-focus.service';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
@@ -54,14 +54,14 @@ const parentStickerTarget = useStickerTargetController();
 const stickerTargetController = ref<StickerTargetController>();
 const isFilled = ref(false);
 
-const shouldShowFullscreenOption = toRef(
+const shouldShowFullscreenOption = computed(
 	() =>
 		restrictDeviceMaxHeight.value &&
 		mediaItem.value.height >= 100 &&
 		mediaItem.value.width >= 100
 );
 
-const stickersDisabled = toRef(() => !isActive.value || !canPlaceSticker.value);
+const stickersDisabled = computed(() => !isActive.value || !canPlaceSticker.value);
 
 const shouldVideoPlay = computed(
 	() => isActive.value && useContentFocusService().hasContentFocus.value
@@ -112,10 +112,9 @@ const deviceMaxHeight = computed(() => {
 });
 
 stickerTargetController.value = createStickerTargetController(mediaItem.value, {
-	parent: computed(() => unref(parentStickerTarget)),
-	canReceiveCharge: computed(
-		() => stickerTargetController.value?.parent.value?.canReceiveCharge.value === true
-	),
+	parent: () => toValue(parentStickerTarget),
+	canReceiveCharge: () =>
+		stickerTargetController.value?.parent.value?.canReceiveCharge.value === true,
 });
 
 async function onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {

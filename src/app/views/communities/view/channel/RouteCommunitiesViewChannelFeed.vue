@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Ref, computed, ref, toRef, watch } from 'vue';
+import { Ref, computed, ref, toRef, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
@@ -95,20 +95,16 @@ const routeTitle = computed(() => {
 	return title;
 });
 
-watch(
-	() => communityState.value.unreadChannels,
-	() => {
-		if (
-			feed.value &&
-			feed.value.newCount === 0 &&
-			channel.value &&
-			communityState.value.unreadChannels.includes(channel.value.id)
-		) {
-			feed.value.newCount = 1;
-		}
-	},
-	{ immediate: true, deep: true }
-);
+watchEffect(() => {
+	if (
+		feed.value &&
+		feed.value.newCount === 0 &&
+		channel.value &&
+		communityState.value.unreadChannels.includes(channel.value.id)
+	) {
+		feed.value.newCount = 1;
+	}
+});
 
 function loadedNew() {
 	// Check that the channel is still unread after loading new posts.

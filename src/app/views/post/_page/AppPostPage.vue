@@ -60,7 +60,7 @@ const router = useRouter();
 
 const stickerTargetController = shallowRef<StickerTargetController>(
 	createStickerTargetController(post.value, {
-		canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
+		canReceiveCharge: () => post.value.can_receive_charged_stickers,
 	})
 );
 

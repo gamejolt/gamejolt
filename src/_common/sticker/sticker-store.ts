@@ -210,6 +210,7 @@ export function createStickerStore(options: { user: Ref<UserModel | null> }) {
 		setChargeData,
 		user,
 	};
+
 	return c;
 }
 

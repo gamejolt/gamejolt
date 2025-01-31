@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, provide, reactive, ref, watch } from 'vue';
+import { computed, provide, reactive, ref, toRef, watchEffect } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import {
 	AdSettingsContainer,
@@ -35,8 +35,10 @@ import {
 } from './view.store';
 
 export const CommunityThemeKey = 'community';
+</script>
 
-export default {
+<script lang="ts" setup>
+defineOptions({
 	...defineAppRouteOptions({
 		cache: true,
 		reloadOn: { params: ['path'] },
@@ -53,10 +55,8 @@ export default {
 			return payload;
 		},
 	}),
-};
-</script>
+});
 
-<script lang="ts" setup>
 const routeStore = reactive(new CommunityRouteStore()) as CommunityRouteStore;
 provide(CommunityRouteStoreKey, routeStore);
 
@@ -71,10 +71,10 @@ const route = useRoute();
 
 const contextPane = ref<ContextPane | null>(null);
 
-const community = computed(() => routeStore.community);
+const community = toRef(() => routeStore.community);
 const isEditing = computed(() => isEditingCommunity(route));
-const competitionHeader = computed(() => routeStore.channel?.competition?.header ?? null);
-const coverMediaItem = computed(() => competitionHeader.value ?? community.value.header ?? null);
+const competitionHeader = toRef(() => routeStore.channel?.competition?.header ?? null);
+const coverMediaItem = toRef(() => competitionHeader.value ?? community.value.header ?? null);
 const coverEditable = computed(
 	() =>
 		isEditing.value &&
@@ -152,13 +152,9 @@ createAppRoute({
 	},
 });
 
-watch(
-	() => route,
-	() => {
-		setChannelPathFromRoute(routeStore, route);
-	},
-	{ immediate: true, deep: true }
-);
+watchEffect(() => {
+	setChannelPathFromRoute(routeStore, route);
+});
 
 async function _getCommunityBootstrap() {
 	// When this is the first route the user enters, grid might not be bootstrapped yet.

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { toRefs } from 'vue';
+import { computed, toRefs } from 'vue';
 import { styleChangeBg } from '../../_styles/mixins';
-import { watched } from '../reactivity-helpers';
 
 const props = defineProps({
 	count: {
@@ -24,7 +23,7 @@ const props = defineProps({
 
 const { count, displayCount, current, index } = toRefs(props);
 
-const size = watched(() => {
+const size = computed(() => {
 	if (index.value === current.value || count.value <= displayCount.value) {
 		return `100%`;
 	}

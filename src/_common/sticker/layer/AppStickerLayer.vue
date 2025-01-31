@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, toRaw, toRefs, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, toRaw, toRefs, watchEffect } from 'vue';
 import { registerContentFocusWatcher } from '../../content-focus/content-focus.service';
 import { useScroller } from '../../scroll/AppScrollScroller.vue';
 import { registerStickerLayer, unregisterStickerLayer, useStickerStore } from '../sticker-store';
@@ -28,15 +28,15 @@ const { activeLayer } = stickerStore;
 const scroller = useScroller();
 
 const layer = createStickerLayerController(stickerStore);
+const { isShowingDrawer, isMask } = layer;
 
-watch(noMask, val => (layer.isMask.value = !val), { immediate: true });
+watchEffect(() => (isMask.value = !noMask.value));
 
 provideStickerLayer(layer);
 registerStickerLayer(stickerStore, layer);
 
 let focusWatcherDeregister: (() => void) | null = null;
 
-const isShowingDrawer = computed(() => layer.isShowingDrawer.value);
 const isActiveMask = computed(
 	() => activeLayer.value && toRaw(activeLayer.value?.preferredMask.value) === toRaw(layer)
 );
