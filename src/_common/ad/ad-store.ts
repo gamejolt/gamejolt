@@ -169,7 +169,7 @@ async function _displayAds(displayedAds: AdInterface[]) {
 
 export async function loadVideoAdsTag({ videoAdsLoadPromise, videoAdsLoaded }: AdStore) {
 	if (areAdsDisabledForDevice) {
-		return;
+		throw new Error(`Ads disabled for device.`);
 	}
 
 	if (videoAdsLoadPromise.value) {

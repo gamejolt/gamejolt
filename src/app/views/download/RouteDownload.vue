@@ -26,6 +26,7 @@ import { buildPayloadErrorForStatusCode } from '../../../_common/payload/payload
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
+import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { kLineHeightComputed } from '../../../_styles/variables';
 import { sleep } from '../../../utils/utils';
@@ -249,11 +250,10 @@ function onVideoAdDone() {
 							</p>
 						</div>
 
-						<AppAdGptVideo
-							v-if="!videoAdDone"
-							@fail="onVideoAdDone"
-							@done="onVideoAdDone"
-						/>
+						<template v-if="!videoAdDone">
+							<AppAdGptVideo @fail="onVideoAdDone" @done="onVideoAdDone" />
+							<AppSpacer vertical :scale="4" />
+						</template>
 
 						<div class="sheet sheet-elevate">
 							<h2 class="sans-margin-top">

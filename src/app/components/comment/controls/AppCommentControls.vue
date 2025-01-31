@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
-$unvoteOnComment,
-$voteOnComment,
-CommentModel,
+	$unvoteOnComment,
+	$voteOnComment,
+	CommentModel,
 } from '../../../../_common/comment/comment-model';
 import { CommentVoteType } from '../../../../_common/comment/vote/vote-model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
@@ -85,15 +85,15 @@ const votingTooltip = computed(() => {
 	}
 });
 
-const hasUpvote = computed(
+const hasUpvote = toRef(
 	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVoteType.Upvote
 );
 
-const hasDownvote = computed(
+const hasDownvote = toRef(
 	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVoteType.Downvote
 );
 
-const showOwnerInteraction = computed(
+const showOwnerInteraction = toRef(
 	() => comment.value.has_owner_like || comment.value.has_owner_reply
 );
 
