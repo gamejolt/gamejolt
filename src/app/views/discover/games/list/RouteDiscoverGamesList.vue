@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import AppAdTakeoverBackground from '../../../../../_common/ad/AppAdTakeoverBackground.vue';
@@ -33,7 +33,7 @@ import { TagsInfo } from '../../../../components/tag/tags-info.service';
 
 const listingKey = 'CachedListing';
 
-export default {
+defineOptions({
 	...defineAppRouteOptions({
 		lazy: true,
 		cache: true,
@@ -48,10 +48,8 @@ export default {
 			return Api.sendRequest('/web/discover/games?' + filtering.getQueryString(route));
 		},
 	}),
-};
-</script>
+});
 
-<script lang="ts" setup>
 const route = useRoute();
 
 const filtering = ref<GameFilteringContainer>();

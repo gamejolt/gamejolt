@@ -3,7 +3,7 @@ import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppAdStickyRail from '../../../../_common/ad/AppAdStickyRail.vue';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import { useAdStore } from '../../../../_common/ad/ad-store';
+import { AdsGPTEnabledGlobally, useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -51,9 +51,7 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	load: () => true,
-});
+const emit = defineEmits<{ load: [] }>();
 
 const { shouldShow: globalShouldShowAds } = useAdStore();
 </script>
@@ -61,7 +59,7 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 <template>
 	<div id="games" class="game-listing">
 		<section class="section section-thin">
-			<template v-if="showAds && globalShouldShowAds">
+			<template v-if="showAds && globalShouldShowAds && !AdsGPTEnabledGlobally">
 				<AppAdTakeoverFloat>
 					<AppAdWidget size="leaderboard" placement="top" />
 					<AppSpacer vertical :scale="6" />
