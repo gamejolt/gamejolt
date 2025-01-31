@@ -76,16 +76,16 @@ const isNew = computed(() => feed.isItemUnread(item.value));
 const user = computed(() => post.value.displayUser);
 
 const communities = computed(() => {
-	const communities = post.value.communities || [];
+	const result = [...post.value.communities];
 
 	// Yoink the feed's main community to show first.
-	const idx = communities.findIndex(fpc => fpc.community.id === feed.mainCommunity?.id);
+	const idx = result.findIndex(fpc => fpc.community.id === feed.mainCommunity?.id);
 	if (idx === -1) {
-		return communities;
+		return result;
 	}
 
-	communities.unshift(...communities.splice(idx, 1));
-	return communities;
+	result.unshift(...result.splice(idx, 1));
+	return result;
 });
 
 const realms = computed(() => post.value.realms.map(i => i.realm));
