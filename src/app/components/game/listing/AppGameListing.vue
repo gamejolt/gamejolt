@@ -1,10 +1,11 @@
 <script lang="ts">
-import { PropType } from 'vue';
+import { computed, toRef } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppAdStickyRail from '../../../../_common/ad/AppAdStickyRail.vue';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
 import { AdsGPTEnabledGlobally, useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
+import { ComponentProps } from '../../../../_common/component-helpers';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
@@ -25,35 +26,29 @@ const InviewConfig = new ScrollInviewConfig();
 </script>
 
 <script lang="ts" setup>
-defineProps({
-	listing: {
-		type: Object as PropType<GameListingContainer>,
-		required: true,
-	},
-	filtering: {
-		type: Object as PropType<GameFilteringContainer>,
-		required: true,
-	},
-	hideFilters: {
-		type: Boolean,
-	},
-	hideSectionNav: {
-		type: Boolean,
-	},
-	includeFeaturedSection: {
-		type: Boolean,
-	},
-	isLoading: {
-		type: Boolean,
-	},
-	showAds: {
-		type: Boolean,
-	},
-});
+type Props = {
+	listing: GameListingContainer;
+	filtering: GameFilteringContainer;
+	hideFilters?: boolean;
+	hideSectionNav?: boolean;
+	includeFeaturedSection?: boolean;
+	isLoading?: boolean;
+	showAds?: boolean;
+};
+
+defineProps<Props>();
 
 const emit = defineEmits<{ load: [] }>();
 
 const { shouldShow: globalShouldShowAds } = useAdStore();
+
+// We essentially don't want to show the sticky rail if we're showing the takeovers.
+const stickyRailComponent = toRef(() => (AdsGPTEnabledGlobally ? 'div' : AppAdStickyRail));
+const stickyRailProps = computed(() =>
+	AdsGPTEnabledGlobally
+		? {}
+		: ({ showLeft: true } satisfies ComponentProps<typeof AppAdStickyRail>)
+);
 </script>
 
 <template>
@@ -66,7 +61,7 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 				</AppAdTakeoverFloat>
 			</template>
 
-			<AppAdStickyRail show-left>
+			<component :is="stickyRailComponent" v-bind="stickyRailProps">
 				<div class="container-xl">
 					<AppAdTakeoverFloat>
 						<AppNavTabList v-if="!hideSectionNav" sans-margin-bottom>
@@ -124,13 +119,16 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 							</div>
 							<br />
 						</template>
+					</AppAdTakeoverFloat>
 
-						<template v-if="listing.isBootstrapped">
-							<template v-if="listing.gamesCount">
-								<AppLoadingFade :is-loading="isLoading">
-									<slot />
-								</AppLoadingFade>
+					<template v-if="listing.isBootstrapped">
+						<template v-if="listing.gamesCount">
+							<!-- Let the game grid itself do its own takeover floats. -->
+							<AppLoadingFade :is-loading="isLoading">
+								<slot />
+							</AppLoadingFade>
 
+							<AppAdTakeoverFloat>
 								<template v-if="!listing.loadInfinitely || GJ_IS_SSR">
 									<AppPagination
 										class="text-center"
@@ -148,10 +146,12 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 									/>
 									<AppLoading v-else centered />
 								</template>
-							</template>
+							</AppAdTakeoverFloat>
 						</template>
-						<AppGameGridPlaceholder v-else :num="16" />
+					</template>
+					<AppGameGridPlaceholder v-else :num="16" />
 
+					<AppAdTakeoverFloat>
 						<div
 							v-if="listing.isBootstrapped && !listing.gamesCount"
 							class="alert alert-notice anim-fade-in-enlarge"
@@ -162,7 +162,7 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 						</div>
 					</AppAdTakeoverFloat>
 				</div>
-			</AppAdStickyRail>
+			</component>
 		</section>
 	</div>
 </template>
