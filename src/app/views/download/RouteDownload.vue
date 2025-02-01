@@ -5,12 +5,10 @@ import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground
 import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
 import {
 	AdSettingsContainer,
-	AdsGPTEnabledGlobally,
 	releasePageAdsSettings,
 	setPageAdsSettings,
 	useAdStore,
 } from '../../../_common/ad/ad-store';
-import AppAdGptTakeover from '../../../_common/ad/gpt/AppAdGptTakeover.vue';
 import AppAdGptVideo from '../../../_common/ad/gpt/AppAdGptVideo.vue';
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
@@ -205,12 +203,12 @@ function onVideoAdDone() {
 				<template v-if="Screen.isDesktop" #left>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
-							<template v-if="AdsGPTEnabledGlobally">
-								<AppAdGptTakeover />
+							<!-- <template v-if="AdsGPTEnabledGlobally">
+								<AppAdGptTakeoverLazy />
 							</template>
-							<template v-else>
-								<AppAdWidget size="rectangle" placement="side" />
-							</template>
+							<template v-else> -->
+							<AppAdWidget size="rectangle" placement="side" />
+							<!-- </template> -->
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>

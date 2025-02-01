@@ -3,7 +3,7 @@ import { computed, Ref, ref } from 'vue';
 import { RouteLocationRaw, RouterView, useRoute, useRouter } from 'vue-router';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
 import { AdsGPTEnabledGlobally } from '../../../../_common/ad/ad-store';
-import AppAdGptTakeover from '../../../../_common/ad/gpt/AppAdGptTakeover.vue';
+import { AppAdGptTakeoverLazy } from '../../../../_common/ad/gpt/AppAdGptTakeoverLazy';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -319,7 +319,7 @@ async function onFriendRequestReject() {
 
 							<AppSpacer vertical :scale="4" />
 							<template v-if="AdsGPTEnabledGlobally">
-								<AppAdGptTakeover />
+								<AppAdGptTakeoverLazy />
 							</template>
 							<template v-else>
 								<AppAdWidget

@@ -2,7 +2,7 @@ import { Component } from 'vue';
 import { isDynamicGoogleBot } from '../../device/device.service';
 import { AdSlot } from '../ad-slot-info';
 import { AdAdapter, AdAdapterHelper } from '../adapter-base';
-import AppAdGptTakeover from './AppAdGptTakeover.vue';
+import { AppAdGptTakeoverLazy } from './AppAdGptTakeoverLazy';
 
 export const AdGptTakeoverSlotId = 'div-gpt-ad-takeover';
 export const AdGptMobileLeaderSlotId = 'div-gpt-ad-1734575238981-0';
@@ -77,6 +77,6 @@ export class AdGptAdapter implements AdAdapter {
 	}
 
 	component(_slot: AdSlot): Component {
-		return AppAdGptTakeover;
+		return AppAdGptTakeoverLazy;
 	}
 }

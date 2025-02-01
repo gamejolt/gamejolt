@@ -1,26 +1,23 @@
-import { MaybeRef, onBeforeUnmount, unref, watch } from 'vue';
+import { MaybeRefOrGetter, onBeforeUnmount, toValue, watchPostEffect } from 'vue';
 
 export function useResizeObserver({
 	target,
 	callback,
 }: {
-	target: MaybeRef<HTMLElement | undefined>;
+	target: MaybeRefOrGetter<HTMLElement | undefined | null>;
 	callback: ResizeObserverCallback;
 }) {
 	let observer: ResizeObserver | undefined;
 
-	const stopWatch = watch(
-		() => unref(target),
-		el => {
-			cleanup();
+	const stopWatch = watchPostEffect(() => {
+		cleanup();
+		const el = toValue(target);
 
-			if (el) {
-				observer = new ResizeObserver(callback);
-				observer.observe(el);
-			}
-		},
-		{ immediate: true, flush: 'post' }
-	);
+		if (el) {
+			observer = new ResizeObserver(callback);
+			observer.observe(el);
+		}
+	});
 
 	function cleanup() {
 		if (observer) {
@@ -30,8 +27,8 @@ export function useResizeObserver({
 	}
 
 	onBeforeUnmount(() => {
-		cleanup();
 		stopWatch();
+		cleanup();
 	});
 
 	return {

@@ -4,7 +4,7 @@ import draggable from 'vuedraggable';
 import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
 import { AdsGPTEnabledGlobally, useAdStore } from '../../../../_common/ad/ad-store';
-import AppAdGptTakeover from '../../../../_common/ad/gpt/AppAdGptTakeover.vue';
+import { AppAdGptTakeoverLazy } from '../../../../_common/ad/gpt/AppAdGptTakeoverLazy';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
@@ -162,7 +162,7 @@ function shouldShowAd(index: number) {
 			<AppAdFeedParent :is-active="shouldShowAds" class="_game-grid-items">
 				<div v-if="Screen.isDesktop && shouldShowAds" class="_game-grid-ad">
 					<template v-if="AdsGPTEnabledGlobally">
-						<AppAdGptTakeover />
+						<AppAdGptTakeoverLazy />
 					</template>
 					<template v-else>
 						<div

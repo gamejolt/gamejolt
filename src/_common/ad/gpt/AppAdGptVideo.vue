@@ -29,6 +29,10 @@ let countdownTimer: NodeJS.Timer | null = null;
 
 let autoplayRequiresMuted = false;
 
+// Not reactive, just helpers to reach in and get the correct values.
+const getClientWidth = () => videoRef.value?.clientWidth || 640;
+const getClientHeight = () => videoRef.value?.clientHeight || 360;
+
 onMounted(async () => {
 	if (!adContainerRef.value || !videoRef.value) {
 		return;
@@ -131,8 +135,8 @@ function autoplayChecksResolved() {
 	adsRequest.adTagUrl =
 		'https://pubads.g.doubleclick.net/gampad/ads?iu=/22547266442/video&description_url=https%3A%2F%2Fgamejolt.com%2Fprivacy%2Fads&tfcd=0&npa=0&sz=400x300%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=&vad_type=linear';
 
-	adsRequest.linearAdSlotWidth = videoRef.value?.clientWidth || 640;
-	adsRequest.linearAdSlotHeight = videoRef.value?.clientHeight || 360;
+	adsRequest.linearAdSlotWidth = getClientWidth();
+	adsRequest.linearAdSlotHeight = getClientHeight();
 
 	// If the autoplay checks completely failed, we'll emit failure and the ad
 	// will be cleaned up. So ad will always autoplay.
@@ -174,7 +178,7 @@ function onAdsManagerLoaded(event: google.ima.AdsManagerLoadedEvent) {
 
 	try {
 		adDisplayContainer.initialize();
-		adsManager.init(640, 360, google.ima.ViewMode.NORMAL);
+		adsManager.init(getClientWidth(), getClientHeight(), google.ima.ViewMode.NORMAL);
 		adsManager.start();
 	} catch (adError) {
 		logger.error('AdsManager initialization failed:', adError);
@@ -204,9 +208,7 @@ useEventSubscription(onScreenResize, () => {
 		return;
 	}
 
-	const width = videoRef.value.clientWidth;
-	const height = videoRef.value.clientHeight;
-	adsManager.resize(width, height, google.ima.ViewMode.NORMAL);
+	adsManager.resize(getClientWidth(), getClientHeight(), google.ima.ViewMode.NORMAL);
 });
 </script>
 

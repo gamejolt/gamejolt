@@ -6,7 +6,7 @@ import { AdsGPTEnabledGlobally } from '../../../_common/ad/ad-store';
 import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
 import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
 import AppAdGpt from '../../../_common/ad/gpt/AppAdGpt.vue';
-import AppAdGptTakeover from '../../../_common/ad/gpt/AppAdGptTakeover.vue';
+import { AppAdGptTakeoverLazy } from '../../../_common/ad/gpt/AppAdGptTakeoverLazy';
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -301,7 +301,7 @@ async function refreshQuests() {
 					</template>
 
 					<template v-if="AdsGPTEnabledGlobally">
-						<AppAdGptTakeover />
+						<AppAdGptTakeoverLazy />
 					</template>
 					<template v-else>
 						<AppAdWidget size="rectangle" placement="side" />
