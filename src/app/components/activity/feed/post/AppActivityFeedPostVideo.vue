@@ -1,8 +1,15 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../../../_common/fireside/post/video/video-model';
+import { Screen } from '../../../../../_common/screen/screen-service';
 import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
+import {
+	kBorderWidthBase,
+	kGridGutterWidth,
+	kGridGutterWidthXs,
+} from '../../../../../_styles/variables';
+import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '../../../post/post-styles';
 import AppActivityFeedVideoPlayer from '../_video-player/AppActivityFeedVideoPlayer.vue';
 import { ActivityFeedItem } from '../item-service';
 
@@ -17,7 +24,7 @@ const props = defineProps({
 	},
 });
 
-const { item, post } = toRefs(props);
+const { post } = toRefs(props);
 
 const emit = defineEmits({
 	'query-param': (_params: Record<string, string>) => true,
@@ -52,14 +59,31 @@ function onVideoProcessingError(err: string | Error) {
 		// processing, so noop.
 	}
 }
+
+const containerStyles = computed(() => {
+	if (Screen.isXs) {
+		const hMargin = `-${kGridGutterWidthXs.value / 2}px` as const;
+		return {
+			marginLeft: hMargin,
+			marginRight: hMargin,
+			marginTop: kPostItemPaddingXsVertical.px,
+		} as const satisfies CSSProperties;
+	} else {
+		const hMargin = `${-kGridGutterWidth.value / 2 + kBorderWidthBase.value}px` as const;
+		return {
+			marginLeft: hMargin,
+			marginRight: hMargin,
+			marginTop: kPostItemPaddingVertical.px,
+		} as const satisfies CSSProperties;
+	}
+});
 </script>
 
 <template>
-	<div class="-spacing">
+	<div :style="containerStyles">
 		<template v-if="!hasVideoProcessingError">
 			<template v-if="!video.is_processing && video.posterMediaItem">
 				<AppActivityFeedVideoPlayer
-					:feed-item="item"
 					:manifests="video.manifestSources"
 					:media-item="video.posterMediaItem"
 					@play="onVideoPlay"
@@ -81,17 +105,3 @@ function onVideoProcessingError(err: string | Error) {
 		</template>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-@import '../variables'
-
-.-spacing
-	margin-left: -($grid-gutter-width-xs / 2)
-	margin-right: @margin-left
-	margin-top: $-item-padding-xs-v
-
-	@media $media-sm-up
-		margin-left: -($grid-gutter-width / 2) + $border-width-base
-		margin-right: @margin-left
-		margin-top: $-item-padding-v
-</style>

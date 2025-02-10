@@ -7,6 +7,7 @@ import AppContentViewer from '../../../_common/content/content-viewer/AppContent
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
 import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
+import { PostContentContainerStyles, PostContentLeadStyles } from './post-styles';
 
 const props = defineProps({
 	post: {
@@ -65,69 +66,31 @@ function toggleLead() {
 </script>
 
 <template>
-	<div class="-container-theme">
-		<div :class="{ '-overlay-post-lead': overlay }">
-			<AppStickerTarget
-				:controller="stickerTargetController"
-				:disabled="!post.canPlaceSticker"
-			>
-				<slot name="content">
-					<!--
-						This shouldn't ever really show a collapser. It's for the
-						jokers that think it would be fun to make a post with a
-						bunch of new lines.
-					-->
-					<component
-						:is="wrapperComponent || AppFadeCollapse"
-						v-bind="componentProps"
-						@require-change="canToggleLeadChanged"
-					>
+	<div :style="PostContentContainerStyles(overlay)">
+		<AppStickerTarget :controller="stickerTargetController" :disabled="!post.canPlaceSticker">
+			<slot name="content">
+				<!--
+				This shouldn't ever really show a collapser. It's for the
+				jokers that think it would be fun to make a post with a
+				bunch of new lines.
+				-->
+				<component
+					:is="wrapperComponent || AppFadeCollapse"
+					v-bind="componentProps"
+					@require-change="canToggleLeadChanged"
+				>
+					<div :style="PostContentLeadStyles">
 						<AppContentViewer
-							class="fireside-post-lead"
 							:source="post.lead_content"
 							:display-rules="displayRules"
 						/>
-					</component>
-				</slot>
-			</AppStickerTarget>
+					</div>
+				</component>
+			</slot>
+		</AppStickerTarget>
 
-			<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
+		<a v-if="canToggleLead" class="hidden-text-expander" @click="toggleLead()" />
 
-			<slot />
-		</div>
+		<slot />
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-@import './common'
-
-.fireside-post-lead
-	margin-top: $-item-padding-xs-v
-
-	@media $media-sm-up
-		margin-top: $-item-padding-v
-
-.-manage
-.fireside-post-lead
-	margin-bottom: $-item-padding-xs-v
-
-	@media $media-sm-up
-		margin-bottom: $-item-padding-v
-
-.-communities
-	white-space: nowrap
-
-.-container-theme
-	--overlay-lead-padding: ($-item-padding-xs / 2)
-
-	@media $media-md-up
-		--overlay-lead-padding: ($-item-padding / 2)
-
-.-overlay-post-lead
-	rounded-corners-lg()
-	change-bg('bg')
-	elevate-1()
-	overflow: hidden
-	padding: 0 var(--overlay-lead-padding)
-	margin: var(--overlay-lead-padding) 0
-</style>

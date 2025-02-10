@@ -10,7 +10,7 @@ type Props = {
 const { adSlot } = defineProps<Props>();
 
 const adStore = useAdStore();
-const { adapter } = adStore;
+const { properAdapter: adapter } = adStore;
 
 /**
  * We change this as the route changes. This way we can tell any of the ad

@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { PropType, computed, ref, toRef, toRefs } from 'vue';
+import { styleWhen } from '../../../../../_styles/mixins';
+import { PostOverlayTextStyles } from '../../../../../app/components/post/post-styles';
 import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';
 import { vAppTrackEvent } from '../../../../analytics/track-event.directive';
 import { vAppAuthRequired } from '../../../../auth/auth-required-directive';
@@ -113,9 +115,7 @@ function showLikers() {
 				v-app-track-event="`fireside-post-like-widget:click`"
 				v-app-auth-required
 				class="-like-button"
-				:class="{
-					'-overlay-text': !liked && overlay,
-				}"
+				:style="styleWhen(!liked && overlay, PostOverlayTextStyles)"
 				icon="heart-filled"
 				circle
 				:trans="trans"
@@ -145,9 +145,9 @@ function showLikers() {
 			:class="{
 				'blip-active': liked,
 				mobile: Screen.isXs,
-				'-overlay-text': overlay,
 				'-highlight': liked,
 			}"
+			:style="styleWhen(overlay, PostOverlayTextStyles)"
 			@click="showLikers()"
 		>
 			{{ likeCount }}
@@ -205,10 +205,6 @@ function showLikers() {
 		&.-right
 			animation-name: dislike-anim-right
 			clip-path: polygon(50% 0%, 50% 100%, 100% 100%, 100% 0%)
-
-.-overlay-text
-	color: white
-	text-shadow: black 1px 1px 4px
 
 .-highlight
 	color: var(--theme-link)

@@ -1,14 +1,22 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, Ref, toRefs } from 'vue';
-import { Analytics } from '../../../../../_common/analytics/analytics.service';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { createLightbox } from '../../../../../_common/lightbox/lightbox-helpers';
 import AppMediaItemPost from '../../../../../_common/media-item/post/AppMediaItemPost.vue';
 import AppEventItemMediaIndicator from '../../../../../_common/pagination/AppPageIndicator.vue';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { kThemeBgActual } from '../../../../../_common/theme/variables';
 import AppTouch, { AppTouchInput } from '../../../../../_common/touch/AppTouch.vue';
 import { styleBorderRadiusLg, styleElevate, styleWhen } from '../../../../../_styles/mixins';
+import { kBorderRadiusLg, kStrongEaseOut } from '../../../../../_styles/variables';
+import {
+	kPostItemPaddingContainer,
+	kPostItemPaddingVertical,
+	kPostItemPaddingXs,
+	kPostItemPaddingXsVertical,
+} from '../../../post/post-styles';
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
 
@@ -47,7 +55,6 @@ function goNext() {
 
 	page.value = Math.min(page.value + 1, post.value.media.length);
 	_updateSliderOffset();
-	Analytics.trackEvent('activity-feed', 'media-next');
 }
 
 function goPrev() {
@@ -58,7 +65,6 @@ function goPrev() {
 
 	page.value = Math.max(page.value - 1, 1);
 	_updateSliderOffset();
-	Analytics.trackEvent('activity-feed', 'media-prev');
 }
 
 async function onItemBootstrapped() {
@@ -109,21 +115,47 @@ function panEnd(event: AppTouchInput) {
 
 function onClickFullscreen() {
 	lightbox.show(page.value - 1);
-	Analytics.trackEvent('activity-feed', 'media-fullscreen');
 }
+
+const vPadding = computed(() =>
+	Screen.isXs ? kPostItemPaddingXsVertical : kPostItemPaddingVertical
+);
 </script>
 
 <template>
-	<div ref="root" class="post-media">
+	<div
+		ref="root"
+		class="post-media"
+		:style="{
+			position: `relative`,
+			marginTop: vPadding.px,
+		}"
+	>
 		<AppTouch
-			class="-lightbox"
 			:pan-options="{ direction: 'horizontal' }"
 			@panstart="panStart"
 			@panmove="pan"
 			@panend="panEnd"
 		>
-			<div class="-container">
-				<div ref="slider" class="-slider">
+			<div
+				:style="{
+					display: `block`,
+					overflow: `hidden`,
+					marginLeft: Screen.isXs
+						? `-${kPostItemPaddingXs.px}`
+						: `-${kPostItemPaddingContainer.px}`,
+					marginRight: Screen.isXs
+						? `-${kPostItemPaddingXs.px}`
+						: `-${kPostItemPaddingContainer.px}`,
+				}"
+			>
+				<div
+					ref="slider"
+					:style="{
+						whiteSpace: `nowrap`,
+						transition: `transform 300ms ${kStrongEaseOut}`,
+					}"
+				>
 					<AppMediaItemPost
 						v-for="(mediaItem, index) of post.media"
 						:key="mediaItem.id"
@@ -140,13 +172,27 @@ function onClickFullscreen() {
 			</div>
 
 			<template v-if="post.media.length > 1">
-				<div class="-prev" :class="{ '-hide': page === 1 }" @click.stop="goPrev">
+				<div
+					class="_prev"
+					:class="{ _hide: page === 1 }"
+					:style="{
+						left: `-${kPostItemPaddingContainer.value}px`,
+						borderTopRightRadius: kBorderRadiusLg.px,
+						borderBottomRightRadius: kBorderRadiusLg.px,
+					}"
+					@click.stop="goPrev"
+				>
 					<AppJolticon icon="chevron-left" />
 				</div>
 
 				<div
-					class="-next"
-					:class="{ '-hide': page === post.media.length }"
+					class="_next"
+					:class="{ _hide: page === post.media.length }"
+					:style="{
+						right: `-${kPostItemPaddingContainer.value}px`,
+						borderTopLeftRadius: kBorderRadiusLg.px,
+						borderBottomLeftRadius: kBorderRadiusLg.px,
+					}"
 					@click.stop="goNext"
 				>
 					<AppJolticon icon="chevron-right" />
@@ -154,61 +200,39 @@ function onClickFullscreen() {
 			</template>
 		</AppTouch>
 
-		<AppEventItemMediaIndicator
-			v-if="post.media.length > 1"
-			class="-indicator"
-			:inner-styles="
-				styleWhen(!!post.background && post.hasAnyMedia, {
-					...styleBorderRadiusLg,
-					...styleElevate(1),
-					backgroundColor: kThemeBgActual,
-					padding: `4px 6px`,
-				})
-			"
-			:count="post.media.length"
-			:current="page"
-		/>
+		<template v-if="post.media.length > 1">
+			<AppSpacer vertical :scale="2" />
+			<AppEventItemMediaIndicator
+				:inner-styles="
+					styleWhen(!!post.background && post.hasAnyMedia, {
+						...styleBorderRadiusLg,
+						...styleElevate(1),
+						backgroundColor: kThemeBgActual,
+						padding: `4px 6px`,
+					})
+				"
+				:count="post.media.length"
+				:current="page"
+			/>
+		</template>
 	</div>
 </template>
 
 <style lang="stylus" scoped>
-@import '../variables'
-
 $-button-size = 60px
 
-.post-media
-	margin-top: $-item-padding-xs-v
-	position: relative
+.post-media:hover
+	._next
+	._prev
+		visibility: visible
+		opacity: 1
 
-	@media $media-sm-up
-		margin-top: $-item-padding-v
-
-	&:hover
-		.-next
-		.-prev
-			visibility: visible
-			opacity: 1
-
-.-container
-	display: block
-	overflow: hidden
-	margin-left: -($-item-padding-xs)
-	margin-right: -($-item-padding-xs)
-
-	@media $media-sm-up
-		margin-left: -($-item-padding-container)
-		margin-right: -($-item-padding-container)
-
-.-slider
-	white-space: nowrap
-	transition: transform 300ms $strong-ease-out
-
-.-hide
+._hide
 	opacity: 0 !important
 	transition: none !important
 
-.-prev
-.-next
+._prev
+._next
 	position: absolute
 	top: 'calc(50% - (%s / 2))' % $-button-size
 	display: flex
@@ -235,17 +259,4 @@ $-button-size = 60px
 
 		> .jolticon
 			color: var(--theme-bi-fg)
-
-.-prev
-	left: -($-item-padding-container)
-	border-top-right-radius: $border-radius-large
-	border-bottom-right-radius: $border-radius-large
-
-.-next
-	right: -($-item-padding-container)
-	border-top-left-radius: $border-radius-large
-	border-bottom-left-radius: $border-radius-large
-
-.-indicator
-	margin-top: 10px
 </style>

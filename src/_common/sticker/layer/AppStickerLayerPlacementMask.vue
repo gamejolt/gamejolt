@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, PropType, ref, toRef, toRefs } from 'vue';
 import { Analytics } from '../../analytics/analytics.service';
 import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import { useScroller } from '../../scroll/AppScrollScroller.vue';
@@ -33,7 +33,7 @@ const _height = ref(0);
 
 const viewbox = computed(() => `0 0 ${_width.value} ${_height.value}`);
 
-const isChargeableResource = computed(() => targetController.value?.canReceiveCharge.value);
+const isChargeableResource = toRef(() => targetController.value?.canReceiveCharge.value);
 const isTargetMine = computed(() => isStickerTargetMine(stickerStore, targetController.value));
 
 function onDimensionsChange([
