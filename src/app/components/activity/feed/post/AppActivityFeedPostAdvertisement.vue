@@ -53,7 +53,7 @@ const vPadding = computed(() =>
 			<AppActivityFeedPostWrapper>
 				<a
 					:style="{
-						...styleAbsoluteFill(),
+						...styleAbsoluteFill({ zIndex: 2 }),
 					}"
 					:href
 					target="_blank"
