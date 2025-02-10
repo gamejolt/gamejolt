@@ -3,9 +3,14 @@ import { computed } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 import { trackHomeFeedSwitch } from '../../../_common/analytics/analytics.service';
 import { Screen } from '../../../_common/screen/screen-service';
-import { kThemeBg, kThemeBiBg, kThemeBiFg, kThemeNotice } from '../../../_common/theme/variables';
+import {
+	kThemeBg,
+	kThemeBiBg,
+	kThemeBiFg,
+	kThemeGjOverlayNotice,
+} from '../../../_common/theme/variables';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { styleBorderRadiusLg, styleWhen } from '../../../_styles/mixins';
+import { styleBorderRadiusLg, styleElevate, styleWhen } from '../../../_styles/mixins';
 import { kBorderWidthLg } from '../../../_styles/variables';
 import { assertNever } from '../../../utils/utils';
 import { useAppStore } from '../../store';
@@ -20,14 +25,14 @@ const { tabs } = defineProps<Props>();
 
 const { unreadActivityCount } = useAppStore();
 
-const tabData = computed<
-	{
-		tab: HomeFeedTabType;
-		to: RouteLocationRaw;
-		label: string;
-		unread: boolean;
-	}[]
->(() =>
+type Tab = {
+	tab: HomeFeedTabType;
+	to: RouteLocationRaw;
+	label: string;
+	unread: boolean;
+};
+
+const tabData = computed(() =>
 	tabs.map(tab => {
 		switch (tab) {
 			case 'activity':
@@ -39,7 +44,7 @@ const tabData = computed<
 					},
 					label: $gettext(`Following`),
 					unread: unreadActivityCount.value > 0,
-				};
+				} satisfies Tab;
 
 			case 'fyp':
 				return {
@@ -50,7 +55,7 @@ const tabData = computed<
 					},
 					label: $gettext(`For You`),
 					unread: false,
-				};
+				} satisfies Tab;
 
 			default:
 				assertNever(tab);
@@ -81,6 +86,7 @@ function onTabClick(path: string, isActive: boolean) {
 				class="pressy"
 				:style="{
 					...styleBorderRadiusLg,
+					position: `relative`,
 					display: `flex`,
 					alignItems: `center`,
 					padding: `8px 20px`,
@@ -107,7 +113,11 @@ function onTabClick(path: string, isActive: boolean) {
 					v-if="unread"
 					class="anim-fade-in anim-fade-leave"
 					:style="{
-						backgroundColor: kThemeNotice,
+						...styleElevate(1),
+						position: `absolute`,
+						top: `-3px`,
+						right: `-3px`,
+						backgroundColor: kThemeGjOverlayNotice,
 						borderRadius: `50%`,
 						width: `12px`,
 						height: `12px`,

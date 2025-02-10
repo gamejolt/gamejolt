@@ -1,37 +1,35 @@
 <script lang="ts" setup>
-defineProps({
-	sparse: {
-		type: Boolean,
-	},
-	circle: {
-		type: Boolean,
-	},
-	block: {
-		type: Boolean,
-	},
-});
+import { styleChangeBg, styleWhen } from '../../_styles/mixins';
+import { kBorderRadiusBase, kButtonMdLineHeight } from '../../_styles/variables';
+
+type Props = {
+	sparse?: boolean;
+	circle?: boolean;
+	block?: boolean;
+};
+
+defineProps<Props>();
 </script>
 
 <template>
-	<div class="button-placeholder" :class="{ sparse, circle, block }" />
+	<div
+		:style="{
+			...styleChangeBg('bg-subtle'),
+			borderRadius: kBorderRadiusBase.px,
+			display: `inline-block`,
+			height: kButtonMdLineHeight.px,
+			verticalAlign: `middle`,
+			width: `75px`,
+			...styleWhen(sparse, {
+				width: kButtonMdLineHeight.px,
+			}),
+			...styleWhen(circle, {
+				borderRadius: `100%`,
+			}),
+			...styleWhen(block, {
+				display: `block`,
+				width: `100%`,
+			}),
+		}"
+	/>
 </template>
-
-<style lang="stylus" scoped>
-.button-placeholder
-	rounded-corners()
-	change-bg('bg-subtle')
-	display: inline-block
-	height: $button-md-line-height
-	vertical-align: middle
-	width: 75px
-
-	&.sparse
-		width: $button-md-line-height
-
-	&.circle
-		img-circle()
-
-	&.block
-		display: block
-		width: 100%
-</style>

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, toRef } from 'vue';
 import { useAdStore } from '../ad-store';
-import { AdProperAdapter } from '../proper/proper-adapter';
 import { AdGptMobileLeaderSlotId, AdGptMobileMidpageSlotId } from './gpt-adapter';
 
 type Props = {
@@ -10,12 +9,12 @@ type Props = {
 
 const { placement } = defineProps<Props>();
 
-const { adapter: properAdapter, takeoverAdapter: adapter } = useAdStore();
+const { properAdapter, gptAdapter } = useAdStore();
 
 function getGptSlot() {
 	return placement === 'top'
-		? adapter.getMobileLeaderGptSlot()
-		: adapter.getMobileMidpageGptSlot();
+		? gptAdapter.getMobileLeaderSlot()
+		: gptAdapter.getMobileMidpageSlot();
 }
 
 const slotId = toRef(() =>
@@ -23,7 +22,7 @@ const slotId = toRef(() =>
 );
 
 onMounted(() => {
-	adapter.run(() => {
+	gptAdapter.run(() => {
 		const gptSlot = getGptSlot();
 		if (!gptSlot) {
 			return;
@@ -35,7 +34,7 @@ onMounted(() => {
 
 	// We need to make sure that proper loads in since it's the one that loads
 	// the script for now.
-	(properAdapter as AdProperAdapter).ensureLoaded();
+	properAdapter.ensureLoaded();
 });
 
 onBeforeUnmount(() => {
@@ -44,7 +43,7 @@ onBeforeUnmount(() => {
 		return;
 	}
 
-	adapter.run(() => {
+	gptAdapter.run(() => {
 		googletag.pubads().clear([gptSlot]);
 	});
 });

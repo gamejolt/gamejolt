@@ -14,7 +14,6 @@ import { loadScript } from '../../utils/utils';
 import { isDynamicGoogleBot } from '../device/device.service';
 import { Model } from '../model/model.service';
 import { onRouteChangeAfter } from '../route/route-component';
-import { AdAdapter } from './adapter-base';
 import { AdGptAdapter } from './gpt/gpt-adapter';
 import { AdProperAdapter } from './proper/proper-adapter';
 
@@ -48,8 +47,8 @@ export function createAdStore() {
 	const pageSettings = ref<AdSettingsContainer | null>(null);
 	const _defaultSettings = new AdSettingsContainer();
 
-	const adapter: AdAdapter = new AdProperAdapter();
-	const takeoverAdapter: AdGptAdapter = new AdGptAdapter();
+	const properAdapter = new AdProperAdapter();
+	const gptAdapter = new AdGptAdapter();
 
 	const settings = toRef(() => pageSettings.value || _defaultSettings);
 
@@ -70,8 +69,8 @@ export function createAdStore() {
 	const videoAdsLoaded = ref(false);
 
 	const c = shallowReadonly({
-		adapter,
-		takeoverAdapter,
+		properAdapter,
+		gptAdapter,
 		routeResolved,
 		ads,
 		pageSettings,
@@ -94,10 +93,8 @@ export function createAdStore() {
 		// since this gets called even if just a simple hash has
 		// changed.
 		if (_didRouteChange(from, to)) {
-			adapter.onBeforeRouteChange();
-			if (adapter !== takeoverAdapter) {
-				takeoverAdapter.onBeforeRouteChange();
-			}
+			properAdapter.onBeforeRouteChange();
+			gptAdapter.onBeforeRouteChange();
 			routeResolved.value = false;
 		}
 		next();
@@ -109,10 +106,8 @@ export function createAdStore() {
 		}
 
 		routeResolved.value = true;
-		adapter.onRouteChanged();
-		if (adapter !== takeoverAdapter) {
-			takeoverAdapter.onRouteChanged();
-		}
+		properAdapter.onRouteChanged();
+		gptAdapter.onRouteChanged();
 		_displayAds(Array.from(ads.value));
 	});
 

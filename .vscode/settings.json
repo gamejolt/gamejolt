@@ -58,6 +58,6 @@
 	"emmet.excludeLanguages": ["markdown", "stylus", "styl"],
 	"vue.updateImportsOnFileMove.enabled": true,
 	"vue.inlayHints.destructuredProps": true,
-	"vue.inlayHints.inlineHandlerLeading": true,
+	"vue.inlayHints.inlineHandlerLeading": false,
 	"vue.inlayHints.missingProps": true
 }

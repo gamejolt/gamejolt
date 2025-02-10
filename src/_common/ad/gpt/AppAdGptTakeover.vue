@@ -3,7 +3,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { styleAbsoluteFill, styleWhen } from '../../../_styles/mixins';
 import { useAdStore } from '../ad-store';
 
-const { takeoverAdapter: adapter, hasTakeover } = useAdStore();
+const { gptAdapter, properAdapter, hasTakeover } = useAdStore();
 
 const fgSrc = ref('');
 const bgSrc = ref('');
@@ -14,18 +14,22 @@ let clickUrl = '';
 onMounted(() => {
 	window.addEventListener('message', showTakeover);
 
-	adapter.run(() => {
-		const slot = adapter.getTakeoverGptSlot();
+	gptAdapter.run(() => {
+		const slot = gptAdapter.getTakeoverSlot();
 		googletag.display(slot);
 		googletag.pubads().refresh([slot]);
 	});
+
+	// We need to make sure that proper loads in since it's the one that loads
+	// the script for now.
+	properAdapter.ensureLoaded();
 });
 
 onBeforeUnmount(() => {
 	window.removeEventListener('message', showTakeover);
 
-	adapter.run(() => {
-		const slot = adapter.getTakeoverGptSlot();
+	gptAdapter.run(() => {
+		const slot = gptAdapter.getTakeoverSlot();
 		googletag.pubads().clear([slot]);
 	});
 
@@ -40,18 +44,11 @@ function showTakeover(event: MessageEvent) {
 
 	const data = event.data;
 
-	if (
-		typeof data.fgImg !== 'string' ||
-		typeof data.bgImg !== 'string' ||
-		typeof data.destUrl !== 'string' ||
-		typeof data.clickUrl !== 'string' ||
-		typeof data.impressionUrl !== 'string'
-	) {
-		return;
-	}
-
-	if (!data.fgImg || !data.bgImg || !data.destUrl || !data.clickUrl || !data.impressionUrl) {
-		return;
+	const checkKeys = ['fgImg', 'bgImg', 'destUrl', 'clickUrl', 'impressionUrl'];
+	for (const key of checkKeys) {
+		if (typeof data[key] !== 'string' || !data[key]) {
+			return;
+		}
 	}
 
 	hasTakeover.value = true;
@@ -91,7 +88,7 @@ function onClick() {
 			alignItems: `center`,
 			justifyContent: `center`,
 		}"
-		:href="href"
+		:href
 		target="_blank"
 		@click="onClick"
 	>
@@ -111,7 +108,7 @@ function onClick() {
 						backgroundPosition: `top center`,
 					}),
 				}"
-				:href="href"
+				:href
 				target="_blank"
 				@click="onClick"
 			/>

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+import { computed, onMounted, PropType, toRefs, useTemplateRef } from 'vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
@@ -25,7 +25,7 @@ const props = defineProps({
 const { item } = toRefs(props);
 const feed = useActivityFeed()!;
 
-const container = ref<HTMLDivElement>();
+const container = useTemplateRef('container');
 
 const isBootstrapped = computed(() => {
 	return feed.isItemBootstrapped(item.value);

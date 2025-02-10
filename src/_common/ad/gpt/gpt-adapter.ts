@@ -1,12 +1,12 @@
-import { Component } from 'vue';
 import { isDynamicGoogleBot } from '../../device/device.service';
-import { AdSlot } from '../ad-slot-info';
 import { AdAdapter, AdAdapterHelper } from '../adapter-base';
-import { AppAdGptTakeoverLazy } from './AppAdGptTakeoverLazy';
 
 export const AdGptTakeoverSlotId = 'div-gpt-ad-takeover';
 export const AdGptMobileLeaderSlotId = 'div-gpt-ad-1734575238981-0';
 export const AdGptMobileMidpageSlotId = 'div-gpt-ad-1734575381466-0';
+
+const NativePostSlotIdPrefix = 'div-gpt-ad-native-post-';
+const NativeSlotCount = 10;
 
 export class AdGptAdapter implements AdAdapter {
 	private helper = new AdAdapterHelper();
@@ -14,6 +14,16 @@ export class AdGptAdapter implements AdAdapter {
 	private takeoverSlot = undefined as googletag.Slot | undefined;
 	private mobileMidpageSlot = undefined as googletag.Slot | undefined;
 	private mobileLeaderSlot = undefined as googletag.Slot | undefined;
+	private nativePostSlotIds: string[] = [];
+	private nativePostSlots = new Map<(typeof this.nativePostSlotIds)[number], googletag.Slot>();
+
+	constructor() {
+		// We construct an array of slot IDs that we'll modify as ad units come
+		// and go.
+		for (let i = 1; i <= NativeSlotCount; ++i) {
+			this.nativePostSlotIds.push(`${NativePostSlotIdPrefix}${i}`);
+		}
+	}
 
 	run(cb: () => void) {
 		if (import.meta.env.SSR || isDynamicGoogleBot()) {
@@ -38,6 +48,17 @@ export class AdGptAdapter implements AdAdapter {
 				this.takeoverSlot = googletag
 					.defineOutOfPageSlot('/22547266442/site_takeover', AdGptTakeoverSlotId)!
 					.addService(googletag.pubads());
+
+				// Make a map of all the native post slot IDs to their actual slots.
+				for (let i = 1; i <= NativeSlotCount; ++i) {
+					const id = `${NativePostSlotIdPrefix}${i}`;
+					this.nativePostSlots.set(
+						id,
+						googletag
+							.defineOutOfPageSlot(`/22547266442/native_post_${i + 1}`, id)!
+							.addService(googletag.pubads())
+					);
+				}
 
 				this.mobileMidpageSlot = googletag
 					.defineSlot('/22547266442/mobile_mpu', [300, 250], AdGptMobileMidpageSlotId)!
@@ -64,19 +85,30 @@ export class AdGptAdapter implements AdAdapter {
 
 	onRouteChanged() {}
 
-	getTakeoverGptSlot() {
+	getTakeoverSlot() {
 		return this.takeoverSlot!;
 	}
 
-	getMobileMidpageGptSlot() {
+	getMobileMidpageSlot() {
 		return this.mobileMidpageSlot!;
 	}
 
-	getMobileLeaderGptSlot() {
+	getMobileLeaderSlot() {
 		return this.mobileLeaderSlot!;
 	}
 
-	component(_slot: AdSlot): Component {
-		return AppAdGptTakeoverLazy;
+	getNativePostSlot() {
+		return this.nativePostSlotIds.shift() ?? null;
+	}
+
+	releaseNativePostSlot(slotId: string) {
+		this.nativePostSlotIds.unshift(slotId);
+	}
+
+	/**
+	 * Will return a GPT slot for the given slot ID if it exists.
+	 */
+	resolveNativePostSlot(slotId: string) {
+		return this.nativePostSlots.get(slotId);
 	}
 }

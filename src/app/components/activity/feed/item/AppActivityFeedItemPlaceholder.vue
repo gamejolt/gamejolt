@@ -1,32 +1,55 @@
 <script lang="ts" setup>
+import { computed } from 'vue';
 import AppButtonPlaceholder from '../../../../../_common/button/AppButtonPlaceholder.vue';
+import { kThemeBgSubtle } from '../../../../../_common/theme/variables';
+import {
+	PostContentContainerStyles,
+	PostContentLeadStyles,
+	PostFeedItemContainerStyles,
+	PostHeaderAvatarStyles,
+	PostHeaderBylineNameStyles,
+	PostHeaderBylineStyles,
+	PostHeaderContentStyles,
+	PostHeaderMetaStyles,
+	PostHeaderStyles,
+	stylePostFeedItem,
+} from '../../../post/post-styles';
+
+const itemStyles = computed(() => stylePostFeedItem({ isHovered: false }));
 </script>
 
 <template>
-	<div class="-container">
-		<div class="-item">
-			<div class="-header">
-				<div class="-header-content">
-					<div class="-header-avatar" />
+	<div :style="PostFeedItemContainerStyles">
+		<div :style="itemStyles">
+			<div :style="PostHeaderStyles">
+				<div :style="PostHeaderContentStyles">
+					<div
+						:style="[
+							PostHeaderAvatarStyles,
+							{ borderRadius: `100%`, backgroundColor: kThemeBgSubtle },
+						]"
+					/>
 
-					<div class="-header-byline">
-						<div class="-header-byline-name">
+					<div :style="PostHeaderBylineStyles">
+						<div :style="PostHeaderBylineNameStyles(false)">
 							<span class="-placeholder-text" style="width: 100px" />
 						</div>
 					</div>
 				</div>
-				<div class="-header-meta">
+				<div :style="PostHeaderMetaStyles">
 					<span class="-placeholder-small" style="width: 75px" />
 				</div>
 			</div>
 
-			<div class="fireside-post-lead">
-				<span class="-placeholder-text" />
-				<span class="-placeholder-text" />
-				<span class="-placeholder-text" style="width: 40%" />
+			<div :style="PostContentContainerStyles(false)">
+				<div :style="PostContentLeadStyles">
+					<span class="-placeholder-text" />
+					<span class="-placeholder-text" />
+					<span class="-placeholder-text" style="width: 40%" />
+				</div>
 			</div>
 
-			<div class="-controls">
+			<div>
 				<AppButtonPlaceholder sparse circle />
 				{{ ' ' }}
 				<AppButtonPlaceholder sparse circle />
@@ -36,15 +59,6 @@ import AppButtonPlaceholder from '../../../../../_common/button/AppButtonPlaceho
 </template>
 
 <style lang="stylus" scoped>
-@import '../post/post'
-
-// Gotta override the border hover styling of event items.
-.-item
-	&
-	&:hover
-		border-color: transparent
-		cursor: default
-
 .-placeholder-text
 	lazy-placeholder-inline()
 

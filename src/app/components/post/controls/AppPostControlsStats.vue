@@ -4,6 +4,8 @@ import { formatNumber } from '../../../../_common/filters/number';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { styleWhen } from '../../../../_styles/mixins';
+import { PostOverlayTextStyles } from '../post-styles';
 
 const props = defineProps({
 	post: {
@@ -34,7 +36,7 @@ const shouldShowStats = computed(() => {
 	<div v-if="shouldShowStats">
 		<template v-if="post.view_count && post.view_count > 0">
 			<AppTranslate
-				:class="{ '-overlay-text': overlay }"
+				:style="styleWhen(overlay, PostOverlayTextStyles)"
 				:translate-n="post.view_count || 0"
 				:translate-params="{ count: formatNumber(post.view_count || 0) }"
 				translate-plural="%{ count } views"
@@ -47,9 +49,3 @@ const shouldShowStats = computed(() => {
 		</template>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-.-overlay-text
-	color: white
-	text-shadow: black 1px 1px 4px
-</style>

@@ -98,7 +98,7 @@ watch(
 	() => post.value.id,
 	() => {
 		stickerTargetController.value = createStickerTargetController(post.value, {
-			canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
+			canReceiveCharge: () => post.value.can_receive_charged_stickers,
 		});
 	}
 );
@@ -329,7 +329,6 @@ function onVideoPlay() {
 </template>
 
 <style lang="stylus" scoped>
-@import '../variables'
 @import '../common'
 
 ._controls-spacing
