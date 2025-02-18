@@ -68,6 +68,7 @@ defineOptions({
 });
 
 const DownloadDelay = 6_000;
+const shouldShowTakeover = AdsGPTEnabledGlobally && false;
 
 const adStore = useAdStore();
 const appPromotionStore = useAppPromotionStore();
@@ -205,7 +206,7 @@ function onVideoAdDone() {
 				<template v-if="Screen.isDesktop" #left>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
-							<template v-if="AdsGPTEnabledGlobally">
+							<template v-if="shouldShowTakeover">
 								<AppAdGptTakeoverLazy />
 							</template>
 							<template v-else>
