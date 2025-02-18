@@ -6,7 +6,13 @@ export const AdGptMobileLeaderSlotId = 'div-gpt-ad-1734575238981-0';
 export const AdGptMobileMidpageSlotId = 'div-gpt-ad-1734575381466-0';
 
 const NativePostSlotIdPrefix = 'div-gpt-ad-native-post-';
-const NativeSlotCount = 10;
+const NativePostAdUnitPrefix = '/22547266442/native_post/native_post_';
+const NativePostCount = 10;
+
+type AdGptNativePostInfo = {
+	id: string;
+	slotId: string;
+};
 
 export class AdGptAdapter implements AdAdapter {
 	private helper = new AdAdapterHelper();
@@ -14,14 +20,17 @@ export class AdGptAdapter implements AdAdapter {
 	private takeoverSlot = undefined as googletag.Slot | undefined;
 	private mobileMidpageSlot = undefined as googletag.Slot | undefined;
 	private mobileLeaderSlot = undefined as googletag.Slot | undefined;
-	private nativePostSlotIds: string[] = [];
-	private nativePostSlots = new Map<(typeof this.nativePostSlotIds)[number], googletag.Slot>();
+	private nativePosts: AdGptNativePostInfo[] = [];
+	private nativePostSlots = new Map<AdGptNativePostInfo['id'], googletag.Slot>();
 
 	constructor() {
 		// We construct an array of slot IDs that we'll modify as ad units come
 		// and go.
-		for (let i = 1; i <= NativeSlotCount; ++i) {
-			this.nativePostSlotIds.push(`${NativePostSlotIdPrefix}${i}`);
+		for (let i = 1; i <= NativePostCount; ++i) {
+			this.nativePosts.push({
+				id: `${NativePostSlotIdPrefix}${i}`,
+				slotId: `${NativePostAdUnitPrefix}${i}`,
+			});
 		}
 	}
 
@@ -49,13 +58,15 @@ export class AdGptAdapter implements AdAdapter {
 					.defineOutOfPageSlot('/22547266442/site_takeover', AdGptTakeoverSlotId)!
 					.addService(googletag.pubads());
 
-				// Make a map of all the native post slot IDs to their actual slots.
-				for (let i = 1; i <= NativeSlotCount; ++i) {
+				// Make a map of all the native post slot IDs to their actual
+				// slots. Don't iterate over the native posts array, since that
+				// gets modified before GPT loads in.
+				for (let i = 1; i <= NativePostCount; ++i) {
 					const id = `${NativePostSlotIdPrefix}${i}`;
 					this.nativePostSlots.set(
 						id,
 						googletag
-							.defineOutOfPageSlot(`/22547266442/native_post_${i + 1}`, id)!
+							.defineOutOfPageSlot(`${NativePostAdUnitPrefix}${i}`, id)!
 							.addService(googletag.pubads())
 					);
 				}
@@ -97,18 +108,18 @@ export class AdGptAdapter implements AdAdapter {
 		return this.mobileLeaderSlot!;
 	}
 
-	getNativePostSlot() {
-		return this.nativePostSlotIds.shift() ?? null;
+	lockNativePost() {
+		return this.nativePosts.shift() ?? null;
 	}
 
-	releaseNativePostSlot(slotId: string) {
-		this.nativePostSlotIds.unshift(slotId);
+	releaseNativePost(slotInfo: AdGptNativePostInfo) {
+		this.nativePosts.unshift(slotInfo);
 	}
 
 	/**
 	 * Will return a GPT slot for the given slot ID if it exists.
 	 */
-	resolveNativePostSlot(slotId: string) {
-		return this.nativePostSlots.get(slotId);
+	resolveNativePostSlot(slotInfo: AdGptNativePostInfo) {
+		return this.nativePostSlots.get(slotInfo.id);
 	}
 }

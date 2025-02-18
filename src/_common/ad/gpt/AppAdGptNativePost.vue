@@ -5,7 +5,7 @@ import { useAdStore } from '../ad-store';
 
 const { gptAdapter, properAdapter } = useAdStore();
 
-const slotId = gptAdapter.getNativePostSlot();
+const slotInfo = gptAdapter.lockNativePost();
 
 // For testing.
 // const mediaSrc = ref('https://m.gjcdn.net/gen/600/39511333-ztgqjfyz-v4.jpg');
@@ -26,12 +26,12 @@ const actionText = ref<string>();
 let clickUrl = '';
 let impressionUrl = '';
 
-if (slotId) {
+if (slotInfo) {
 	onMounted(() => {
 		window.addEventListener('message', showNativePost);
 
 		gptAdapter.run(() => {
-			const slot = gptAdapter.resolveNativePostSlot(slotId);
+			const slot = gptAdapter.resolveNativePostSlot(slotInfo);
 			if (slot) {
 				googletag.display(slot);
 				googletag.pubads().refresh([slot]);
@@ -45,10 +45,10 @@ if (slotId) {
 
 	onBeforeUnmount(() => {
 		window.removeEventListener('message', showNativePost);
-		gptAdapter.releaseNativePostSlot(slotId);
+		gptAdapter.releaseNativePost(slotInfo);
 
 		gptAdapter.run(() => {
-			const slot = gptAdapter.resolveNativePostSlot(slotId);
+			const slot = gptAdapter.resolveNativePostSlot(slotInfo);
 			if (slot) {
 				googletag.pubads().clear([slot]);
 			}
@@ -65,6 +65,7 @@ function showNativePost(event: MessageEvent) {
 	const data = event.data;
 
 	const checkKeys = [
+		'adUnit',
 		'mediaImg',
 		'avatarImg',
 		'displayName',
@@ -77,6 +78,10 @@ function showNativePost(event: MessageEvent) {
 		if (typeof data[key] !== 'string' || !data[key]) {
 			return;
 		}
+	}
+
+	if (data.adUnit !== slotInfo?.slotId) {
+		return;
 	}
 
 	mediaSrc.value = data.mediaImg;
@@ -109,9 +114,9 @@ function trackImpression() {
 </script>
 
 <template>
-	<template v-if="slotId">
+	<template v-if="slotInfo">
 		<div :style="{ display: `none` }">
-			<div :id="slotId" />
+			<div :id="slotInfo.id" />
 		</div>
 
 		<template v-if="mediaSrc && avatarSrc && displayName && leadContent && href">
