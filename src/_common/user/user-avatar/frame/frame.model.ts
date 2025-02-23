@@ -1,4 +1,5 @@
 import { getCurrentServerTime } from '../../../../utils/server-time';
+import { Api } from '../../../api/api.service';
 import { AvatarFrameModel } from '../../../avatar/frame.model';
 import { ModelStoreModel, storeModel } from '../../../model/model-store.service';
 
@@ -7,6 +8,7 @@ export class UserAvatarFrameModel implements ModelStoreModel {
 	declare avatar_frame: AvatarFrameModel;
 	declare is_active: boolean;
 	declare expires_on: number | null;
+	declare is_favorite: boolean;
 
 	update(data: any) {
 		Object.assign(this, data);
@@ -26,4 +28,12 @@ export class UserAvatarFrameModel implements ModelStoreModel {
 		}
 		return getCurrentServerTime() > this.expires_on;
 	}
+}
+
+export async function toggleFavorite(model: UserAvatarFrameModel) {
+	return Api.sendRequest(
+		`/web/dash/avatar/toggle-favorite-frame/${model.avatar_frame.id}`,
+		{},
+		{ detach: true }
+	);
 }
