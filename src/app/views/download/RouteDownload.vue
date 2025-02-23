@@ -68,7 +68,6 @@ defineOptions({
 });
 
 const DownloadDelay = 6_000;
-const shouldShowTakeover = AdsGPTEnabledGlobally && false;
 
 const adStore = useAdStore();
 const appPromotionStore = useAppPromotionStore();
@@ -87,6 +86,9 @@ const videoAdPromise = new Promise<void>(resolve => {
 });
 
 const type = toRef(() => route.params['type'] as 'build' | 'soundtrack');
+
+// Turned off for now.
+const shouldShowTakeover = computed(() => false && AdsGPTEnabledGlobally && Screen.isDesktop);
 
 // Put the first two games as the dev's games, and then fill the rest
 // with recommended.
@@ -191,9 +193,8 @@ function onVideoAdDone() {
 				paddingTop: kLineHeightComputed.px,
 			}"
 		>
-			<AppAdTakeoverFloat>
+			<AppAdTakeoverFloat v-if="!shouldShowTakeover && Screen.isDesktop">
 				<AppAdWidget
-					v-if="!Screen.isMobile"
 					:style="{
 						marginBottom: `16px`,
 					}"
@@ -215,7 +216,7 @@ function onVideoAdDone() {
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>
-				<template v-if="Screen.isLg" #right>
+				<template v-if="!shouldShowTakeover && Screen.isLg" #right>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
 							<AppAdWidget size="rectangle" placement="side" />
@@ -268,10 +269,7 @@ function onVideoAdDone() {
 										:key="recommendedGame.id"
 										class="scrollable-grid-item col-xs-10 col-sm-6"
 									>
-										<AppGameThumbnail
-											v-app-track-event="'recommended-games:click:download'"
-											:game="recommendedGame"
-										/>
+										<AppGameThumbnail :game="recommendedGame" />
 									</div>
 								</div>
 							</div>
