@@ -64,7 +64,7 @@ const props = defineProps({
 	showAds: {
 		type: Boolean,
 	},
-	gptAdsEnabled: {
+	takeoverAdsEnabled: {
 		type: Boolean,
 	},
 });
@@ -81,7 +81,7 @@ const emit = defineEmits({
 	'load-more': () => true,
 });
 
-const { feed, showAds, gptAdsEnabled } = toRefs(props);
+const { feed, showAds, takeoverAdsEnabled } = toRefs(props);
 const { shouldShow: globalShouldShowAds } = useAdStore();
 
 provide(ActivityFeedKey, feed.value);
@@ -117,12 +117,12 @@ const lastPostScrollId = computed(() => feed.value.state.endScrollId);
 const newCount = computed(() => feed.value.newCount);
 const shouldShowAds = computed(() => showAds.value && globalShouldShowAds.value);
 
-// Essentially only one of these will show (depending on the screen size).
-const shouldShowMobileMidpageAd = computed(
-	() => AdsGPTEnabledGlobally && gptAdsEnabled.value && Screen.isXs
+// Only one of these will show (depending on the screen size).
+const shouldShowMobileTakeoverAd = computed(
+	() => AdsGPTEnabledGlobally && takeoverAdsEnabled.value && Screen.isXs
 );
 const shouldShowNativeAds = computed(
-	() => AdsGPTEnabledGlobally && gptAdsEnabled.value && !shouldShowMobileMidpageAd.value
+	() => AdsGPTEnabledGlobally && !shouldShowMobileTakeoverAd.value
 );
 
 function onNewButtonInview() {
@@ -255,7 +255,7 @@ function shouldShowAd(index: number) {
 								  }
 						"
 					>
-						<template v-if="i === 1 && shouldShowMobileMidpageAd">
+						<template v-if="i === 1 && shouldShowMobileTakeoverAd">
 							<AppAdGpt placement="midpage" />
 						</template>
 						<template v-else>
