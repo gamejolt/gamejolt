@@ -2,6 +2,13 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { styleAbsoluteFill, styleWhen } from '../../../_styles/mixins';
 import { useAdStore } from '../ad-store';
+import { AdGptLoginTakeoverSlotId, AdGptSiteTakeoverSlotId } from './gpt-adapter';
+
+type Props = {
+	isLoginPage?: boolean;
+};
+
+const { isLoginPage } = defineProps<Props>();
 
 const { gptAdapter, properAdapter, hasTakeover } = useAdStore();
 
@@ -15,7 +22,7 @@ onMounted(() => {
 	window.addEventListener('message', showTakeover);
 
 	gptAdapter.run(() => {
-		const slot = gptAdapter.getTakeoverSlot();
+		const slot = getSlot();
 		googletag.display(slot);
 		googletag.pubads().refresh([slot]);
 	});
@@ -29,12 +36,16 @@ onBeforeUnmount(() => {
 	window.removeEventListener('message', showTakeover);
 
 	gptAdapter.run(() => {
-		const slot = gptAdapter.getTakeoverSlot();
+		const slot = getSlot();
 		googletag.pubads().clear([slot]);
 	});
 
 	hasTakeover.value = false;
 });
+
+function getSlot() {
+	return isLoginPage ? gptAdapter.getLoginTakeoverSlot() : gptAdapter.getSiteTakeoverSlot();
+}
 
 function showTakeover(event: MessageEvent) {
 	// We're not showing in a safe-frame, so the origin will be the same.
@@ -78,7 +89,7 @@ function onClick() {
 
 <template>
 	<div :style="{ display: `none` }">
-		<div id="div-gpt-ad-takeover" />
+		<div :id="isLoginPage ? AdGptLoginTakeoverSlotId : AdGptSiteTakeoverSlotId" />
 	</div>
 
 	<a

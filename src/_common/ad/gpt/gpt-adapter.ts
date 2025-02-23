@@ -1,7 +1,8 @@
 import { isDynamicGoogleBot } from '../../device/device.service';
 import { AdAdapter, AdAdapterHelper } from '../adapter-base';
 
-export const AdGptTakeoverSlotId = 'div-gpt-ad-takeover';
+export const AdGptSiteTakeoverSlotId = 'div-gpt-ad-site-takeover';
+export const AdGptLoginTakeoverSlotId = 'div-gpt-ad-login-takeover';
 export const AdGptMobileLeaderSlotId = 'div-gpt-ad-1734575238981-0';
 export const AdGptMobileMidpageSlotId = 'div-gpt-ad-1734575381466-0';
 
@@ -17,7 +18,8 @@ type AdGptNativePostInfo = {
 export class AdGptAdapter implements AdAdapter {
 	private helper = new AdAdapterHelper();
 
-	private takeoverSlot = undefined as googletag.Slot | undefined;
+	private siteTakeoverSlot = undefined as googletag.Slot | undefined;
+	private loginTakeoverSlot = undefined as googletag.Slot | undefined;
 	private mobileMidpageSlot = undefined as googletag.Slot | undefined;
 	private mobileLeaderSlot = undefined as googletag.Slot | undefined;
 	private nativePosts: AdGptNativePostInfo[] = [];
@@ -53,9 +55,12 @@ export class AdGptAdapter implements AdAdapter {
 				// fetching ads when display is called.
 				googletag.pubads().disableInitialLoad();
 
-				// Define the ad slots.
-				this.takeoverSlot = googletag
-					.defineOutOfPageSlot('/22547266442/site_takeover', AdGptTakeoverSlotId)!
+				this.siteTakeoverSlot = googletag
+					.defineOutOfPageSlot('/22547266442/site_takeover', AdGptSiteTakeoverSlotId)!
+					.addService(googletag.pubads());
+
+				this.loginTakeoverSlot = googletag
+					.defineOutOfPageSlot('/22547266442/login_takeover', AdGptLoginTakeoverSlotId)!
 					.addService(googletag.pubads());
 
 				// Make a map of all the native post slot IDs to their actual
@@ -96,8 +101,12 @@ export class AdGptAdapter implements AdAdapter {
 
 	onRouteChanged() {}
 
-	getTakeoverSlot() {
-		return this.takeoverSlot!;
+	getSiteTakeoverSlot() {
+		return this.siteTakeoverSlot!;
+	}
+
+	getLoginTakeoverSlot() {
+		return this.loginTakeoverSlot!;
 	}
 
 	getMobileMidpageSlot() {
