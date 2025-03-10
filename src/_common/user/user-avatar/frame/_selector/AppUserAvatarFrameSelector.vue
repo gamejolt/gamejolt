@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onUnmounted, PropType, ref, toRefs } from 'vue';
+import { PropType, onUnmounted, ref, toRefs } from 'vue';
 import { useForm } from '../../../../form-vue/AppForm.vue';
 import {
 	createFormControl,
@@ -30,7 +30,7 @@ const { user } = useCommonStore();
 
 const form = useForm()!;
 
-const { applyValue } = createFormControl<number>({
+const { applyValue } = createFormControl<number | 'random'>({
 	initialValue: user.value?.avatar_frame?.id || 0,
 	alwaysOptional: true,
 	onChange: val => emit('changed', val),
@@ -45,14 +45,18 @@ onUnmounted(() => {
 	clearInterval(interval);
 });
 
-function pickFrame(frameId: number) {
+function pickFrame(option: number | 'random') {
 	if (!form.isLoaded) {
 		return;
 	}
-	applyValue(frameId);
+	applyValue(option);
 }
 
-function isSelected(data: UserAvatarFrameModel | null) {
+function isSelected(data: UserAvatarFrameModel | 'random' | null) {
+	if (data === 'random') {
+		return form.formModel.avatar_frame === 'random';
+	}
+
 	const frameId = data?.avatar_frame.id || 0;
 	return frameId === form.formModel.avatar_frame;
 }
@@ -82,14 +86,24 @@ function isSelected(data: UserAvatarFrameModel | null) {
 		<template v-else-if="frames.length">
 			<AppUserAvatarFrameTile
 				key="no-frame"
+				class="anim-fade-in-up stagger-fast"
 				:is-selected="isSelected(null)"
 				:expiry-info-key="1"
 				@select-tile="pickFrame"
+			/>
+			<AppUserAvatarFrameTile
+				key="random-frame"
+				class="anim-fade-in-up stagger-fast"
+				:is-selected="isSelected('random')"
+				:is-random="true"
+				:expiry-info-key="1"
+				@select-tile="pickFrame('random')"
 			/>
 
 			<AppUserAvatarFrameTile
 				v-for="data of frames"
 				:key="data.avatar_frame.id"
+				class="anim-fade-in-up stagger-fast"
 				:frame="data"
 				:is-placeholder="!form.isLoaded"
 				:is-selected="isSelected(data)"
