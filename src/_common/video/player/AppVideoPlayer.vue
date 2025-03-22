@@ -689,8 +689,9 @@ $-zindex-ui = 2
 	z-index: $-zindex-ui
 
 ._backdrop
-	position: absolute
-	z-index: $-zindex-backdrop
+	// Override the default styling of AppMediaItemBackdrop.
+	position: absolute !important
+	z-index: $-zindex-backdrop !important
 
 ._img
 	max-height: 100%
