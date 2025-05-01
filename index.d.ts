@@ -35,4 +35,8 @@ declare module 'vue' {
 	interface CSSProperties {
 		[key: `--${string}`]: string;
 	}
+
+	interface GlobalComponents {
+		pubguru: HTMLElement;
+	}
 }

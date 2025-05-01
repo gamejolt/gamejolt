@@ -233,9 +233,12 @@ export default defineConfig(async () => {
 			}),
 
 			vue({
-				...onlyInSSR<Partial<VueOptions>>({
-					template: {
-						compilerOptions: {
+				template: {
+					compilerOptions: {
+						// pubguru is a custom element that we use to load the pubguru ad unit.
+						isCustomElement: tag => tag === 'pubguru',
+
+						...onlyInSSR<NonNullable<VueOptions['template']>['compilerOptions']>({
 							// For all directives, we have to transform them when used
 							// in SSR. We usually just want to not process during SSR
 							// since directives are usually for dynamic work.
@@ -253,9 +256,9 @@ export default defineConfig(async () => {
 									'app-tooltip',
 								].map(k => [k, noopDirectiveTransform])
 							),
-						},
+						}),
 					},
-				}),
+				},
 			}),
 			md({
 				mode: [MarkdownMode.HTML],

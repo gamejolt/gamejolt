@@ -15,7 +15,7 @@ import { isDynamicGoogleBot } from '../device/device.service';
 import { Model } from '../model/model.service';
 import { onRouteChangeAfter } from '../route/route-component';
 import { AdGptAdapter } from './gpt/gpt-adapter';
-import { AdProperAdapter } from './proper/proper-adapter';
+import { AdMonetizeMoreAdapter } from './monetizemore/monetizemore-adapter';
 
 type AdStore = ReturnType<typeof createAdStore>;
 const AdStoreKey: InjectionKey<AdStore> = Symbol('ads');
@@ -30,7 +30,7 @@ const areAdsDisabledForDevice =
 /**
  * Whether or not we're showing GPT takeover ads.
  */
-export const AdsGPTEnabledGlobally = true;
+export const AdsGPTEnabledGlobally = false;
 /**
  * This is the interface that our ad components must register with us.
  */
@@ -47,7 +47,7 @@ export function createAdStore() {
 	const pageSettings = ref<AdSettingsContainer | null>(null);
 	const _defaultSettings = new AdSettingsContainer();
 
-	const properAdapter = new AdProperAdapter();
+	const properAdapter = new AdMonetizeMoreAdapter();
 	const gptAdapter = new AdGptAdapter();
 
 	const settings = toRef(() => pageSettings.value || _defaultSettings);
