@@ -98,7 +98,6 @@ function onLoadedNew() {
 			<AppSpacer vertical :scale="10" />
 
 			<RouterLink
-				v-app-track-event="`activity:main-menu:discover`"
 				:to="{
 					name: routeDiscoverHome.name,
 				}"
@@ -108,12 +107,6 @@ function onLoadedNew() {
 				</AppButton>
 			</RouterLink>
 		</div>
-		<AppActivityFeedLazy
-			v-else
-			:feed="feed"
-			show-ads
-			takeover-ads-enabled
-			@load-new="onLoadedNew"
-		/>
+		<AppActivityFeedLazy v-else :feed="feed" show-ads @load-new="onLoadedNew" />
 	</div>
 </template>

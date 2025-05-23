@@ -1,9 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import { AdsGPTEnabledGlobally } from '../../../../_common/ad/ad-store';
-import AppAdTakeoverBackground from '../../../../_common/ad/AppAdTakeoverBackground.vue';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import { AppAdGptTakeoverLazy } from '../../../../_common/ad/gpt/AppAdGptTakeoverLazy';
 import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
@@ -35,7 +32,8 @@ const nextPostLoaded = ref(false);
 const shouldTransitionPosts = ref(false);
 const transitioningPosts = ref(false);
 
-const shouldShowTakeover = computed(() => true && AdsGPTEnabledGlobally && Screen.isDesktop);
+// TODO: Turned off the ability to show login takeovers for now.
+const shouldShowTakeover = false;
 
 const bylinePost = computed(() => {
 	if (!firstPost.value || !secondPost.value) {
@@ -90,7 +88,7 @@ function onPostLoaded(post: FiresidePostModel) {
 
 <template>
 	<div class="-fs theme-dark" :style="{ minHeight: fullscreenHeight }">
-		<template v-if="shouldShowTakeover">
+		<!-- <template v-if="shouldShowTakeover">
 			<AppAdTakeoverBackground />
 
 			<div
@@ -104,7 +102,7 @@ function onPostLoaded(post: FiresidePostModel) {
 					<AppAdGptTakeoverLazy is-login-page />
 				</AppAdTakeoverFloat>
 			</div>
-		</template>
+		</template> -->
 
 		<div
 			class="container -container"

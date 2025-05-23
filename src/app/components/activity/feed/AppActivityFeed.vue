@@ -1,9 +1,7 @@
 <script lang="ts">
 import { computed, inject, PropType, provide, reactive, ref, toRefs } from 'vue';
-import { AdsGPTEnabledGlobally, useAdStore } from '../../../../_common/ad/ad-store';
+import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
-import AppAdGpt from '../../../../_common/ad/gpt/AppAdGpt.vue';
-import AppAdGptNativePost from '../../../../_common/ad/gpt/AppAdGptNativePost.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
@@ -64,9 +62,6 @@ const props = defineProps({
 	showAds: {
 		type: Boolean,
 	},
-	takeoverAdsEnabled: {
-		type: Boolean,
-	},
 });
 
 const emit = defineEmits({
@@ -81,7 +76,7 @@ const emit = defineEmits({
 	'load-more': () => true,
 });
 
-const { feed, showAds, takeoverAdsEnabled } = toRefs(props);
+const { feed, showAds } = toRefs(props);
 const { shouldShow: globalShouldShowAds } = useAdStore();
 
 provide(ActivityFeedKey, feed.value);
@@ -116,14 +111,6 @@ const shouldShowLoadMore = computed(
 const lastPostScrollId = computed(() => feed.value.state.endScrollId);
 const newCount = computed(() => feed.value.newCount);
 const shouldShowAds = computed(() => showAds.value && globalShouldShowAds.value);
-
-// Only one of these will show (depending on the screen size).
-const shouldShowMobileTakeoverAd = computed(
-	() => AdsGPTEnabledGlobally && takeoverAdsEnabled.value && Screen.isXs
-);
-const shouldShowNativeAds = computed(
-	() => AdsGPTEnabledGlobally && !shouldShowMobileTakeoverAd.value
-);
 
 function onNewButtonInview() {
 	isNewButtonInview.value = true;
@@ -239,9 +226,9 @@ function shouldShowAd(index: number) {
 				<AppActivityFeedItem :item="item" />
 
 				<template v-if="shouldShowAd(i)">
-					<AppAdGptNativePost v-if="i === 1 && shouldShowNativeAds" />
+					<!-- TODO: native ads -->
+					<!-- <AppAdGptNativePost v-if="i === 1 && shouldShowNativeAds" /> -->
 					<div
-						v-else
 						class="well fill-offset full-bleed-xs text-center"
 						:style="
 							Screen.isMobile
@@ -255,12 +242,7 @@ function shouldShowAd(index: number) {
 								  }
 						"
 					>
-						<template v-if="i === 1 && shouldShowMobileTakeoverAd">
-							<AppAdGpt placement="midpage" />
-						</template>
-						<template v-else>
-							<AppAdWidget size="rectangle" placement="content" />
-						</template>
+						<AppAdWidget size="rectangle" placement="content" />
 					</div>
 				</template>
 			</div>
@@ -285,7 +267,6 @@ function shouldShowAd(index: number) {
 
 			<div v-if="shouldShowLoadMore" class="page-cut">
 				<AppButton
-					v-app-track-event="`activity-feed:more`"
 					:to="{ query: { feed_last_id: lastPostScrollId } }"
 					trans
 					@click.capture.prevent="loadMoreButton"

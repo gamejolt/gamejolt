@@ -1,11 +1,9 @@
 <script lang="ts">
-import { computed, toRef } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppAdStickyRail from '../../../../_common/ad/AppAdStickyRail.vue';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import { AdsGPTEnabledGlobally, useAdStore } from '../../../../_common/ad/ad-store';
+import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
-import { ComponentProps } from '../../../../_common/component-helpers';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
@@ -41,27 +39,19 @@ defineProps<Props>();
 const emit = defineEmits<{ load: [] }>();
 
 const { shouldShow: globalShouldShowAds } = useAdStore();
-
-// We essentially don't want to show the sticky rail if we're showing the takeovers.
-const stickyRailComponent = toRef(() => (AdsGPTEnabledGlobally ? 'div' : AppAdStickyRail));
-const stickyRailProps = computed(() =>
-	AdsGPTEnabledGlobally
-		? {}
-		: ({ showLeft: true } satisfies ComponentProps<typeof AppAdStickyRail>)
-);
 </script>
 
 <template>
 	<div id="games" class="game-listing">
 		<section class="section section-thin">
-			<template v-if="showAds && globalShouldShowAds && !AdsGPTEnabledGlobally">
+			<template v-if="showAds && globalShouldShowAds">
 				<AppAdTakeoverFloat>
 					<AppAdWidget size="leaderboard" placement="top" />
 					<AppSpacer vertical :scale="6" />
 				</AppAdTakeoverFloat>
 			</template>
 
-			<component :is="stickyRailComponent" v-bind="stickyRailProps">
+			<AppAdStickyRail show-left>
 				<div class="container-xl">
 					<AppAdTakeoverFloat>
 						<AppNavTabList v-if="!hideSectionNav" sans-margin-bottom>
@@ -69,7 +59,6 @@ const stickyRailProps = computed(() =>
 								<li v-if="includeFeaturedSection">
 									<RouterLink
 										v-app-no-autoscroll
-										v-app-track-event="`game-list:section-selector:featured`"
 										:to="{ name: $route.name!, params: { section: null } }"
 										:class="{ active: !$route.params.section }"
 									>
@@ -79,7 +68,6 @@ const stickyRailProps = computed(() =>
 								<li>
 									<RouterLink
 										v-app-no-autoscroll
-										v-app-track-event="`game-list:section-selector:hot`"
 										:to="{ name: $route.name!, params: { section: 'hot' } }"
 										:class="{ active: $route.params.section === 'hot' }"
 									>
@@ -89,7 +77,6 @@ const stickyRailProps = computed(() =>
 								<li>
 									<RouterLink
 										v-app-no-autoscroll
-										v-app-track-event="`game-list:section-selector:best`"
 										:to="{ name: $route.name!, params: { section: 'best' } }"
 										:class="{ active: $route.params.section === 'best' }"
 									>
@@ -99,7 +86,6 @@ const stickyRailProps = computed(() =>
 								<li>
 									<RouterLink
 										v-app-no-autoscroll
-										v-app-track-event="`game-list:section-selector:new`"
 										:to="{ name: $route.name!, params: { section: 'new' } }"
 										:class="{ active: $route.params.section === 'new' }"
 									>
@@ -162,7 +148,7 @@ const stickyRailProps = computed(() =>
 						</div>
 					</AppAdTakeoverFloat>
 				</div>
-			</component>
+			</AppAdStickyRail>
 		</section>
 	</div>
 </template>

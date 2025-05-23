@@ -3,8 +3,7 @@ import { PropType, computed, toRef, toRefs } from 'vue';
 import draggable from 'vuedraggable';
 import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import { AdsGPTEnabledGlobally, useAdStore } from '../../../../_common/ad/ad-store';
-import { AppAdGptTakeoverLazy } from '../../../../_common/ad/gpt/AppAdGptTakeoverLazy';
+import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
@@ -161,30 +160,25 @@ function shouldShowAd(index: number) {
 		<div :class="{ 'scrollable-grid': isScrollable }">
 			<AppAdFeedParent :is-active="shouldShowAds" class="_game-grid-items">
 				<div v-if="Screen.isDesktop && shouldShowAds" class="_game-grid-ad">
-					<template v-if="AdsGPTEnabledGlobally">
-						<AppAdGptTakeoverLazy />
-					</template>
-					<template v-else>
-						<div
-							:style="{
-								...styleWhen(shouldShowStickyAd, {
-									margin: `0 auto`,
-									maxWidth: `400px`,
-								}),
-							}"
+					<div
+						:style="{
+							...styleWhen(shouldShowStickyAd, {
+								margin: `0 auto`,
+								maxWidth: `400px`,
+							}),
+						}"
+					>
+						<AppScrollAffix
+							:style="{ position: `relative`, zIndex: kLayerAds }"
+							:disabled="!shouldShowStickyAd"
+							:padding="8"
+							:affixed-styles="{ right: `8px` }"
 						>
-							<AppScrollAffix
-								:style="{ position: `relative`, zIndex: kLayerAds }"
-								:disabled="!shouldShowStickyAd"
-								:padding="8"
-								:affixed-styles="{ right: `8px` }"
-							>
-								<div class="_game-grid-ad-inner">
-									<AppAdWidget size="rectangle" placement="content" />
-								</div>
-							</AppScrollAffix>
-						</div>
-					</template>
+							<div class="_game-grid-ad-inner">
+								<AppAdWidget size="rectangle" placement="content" />
+							</div>
+						</AppScrollAffix>
+					</div>
 				</div>
 
 				<template v-if="canReorder">
@@ -196,12 +190,7 @@ function shouldShowAd(index: number) {
 						<template #item="{ element }">
 							<div class="_game-grid-item">
 								<AppAdTakeoverFloat>
-									<AppGameThumbnail
-										v-app-track-event="
-											eventLabel ? 'game-grid:click:' + eventLabel : undefined
-										"
-										:game="element"
-									>
+									<AppGameThumbnail :game="element">
 										<slot name="thumbnail-controls" :game="element">
 											<AppGameThumbnailControls :game="element" />
 										</slot>
@@ -226,12 +215,7 @@ function shouldShowAd(index: number) {
 						</div>
 						<div class="_game-grid-item">
 							<AppAdTakeoverFloat>
-								<AppGameThumbnail
-									v-app-track-event="
-										eventLabel ? 'game-grid:click:' + eventLabel : undefined
-									"
-									:game="game"
-								>
+								<AppGameThumbnail :game="game">
 									<slot name="thumbnail-controls" :game="game">
 										<AppGameThumbnailControls :game="game" />
 									</slot>

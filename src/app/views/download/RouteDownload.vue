@@ -5,12 +5,10 @@ import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground
 import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
 import {
 	AdSettingsContainer,
-	AdsGPTEnabledGlobally,
 	releasePageAdsSettings,
 	setPageAdsSettings,
 	useAdStore,
 } from '../../../_common/ad/ad-store';
-import { AppAdGptTakeoverLazy } from '../../../_common/ad/gpt/AppAdGptTakeoverLazy';
 import AppAdGptVideo from '../../../_common/ad/gpt/AppAdGptVideo.vue';
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
@@ -86,9 +84,6 @@ const videoAdPromise = new Promise<void>(resolve => {
 });
 
 const type = toRef(() => route.params['type'] as 'build' | 'soundtrack');
-
-// Turned off for now.
-const shouldShowTakeover = computed(() => false && AdsGPTEnabledGlobally && Screen.isDesktop);
 
 // Put the first two games as the dev's games, and then fill the rest
 // with recommended.
@@ -193,7 +188,7 @@ function onVideoAdDone() {
 				paddingTop: kLineHeightComputed.px,
 			}"
 		>
-			<AppAdTakeoverFloat v-if="!shouldShowTakeover && Screen.isDesktop">
+			<AppAdTakeoverFloat v-if="Screen.isDesktop">
 				<AppAdWidget
 					:style="{
 						marginBottom: `16px`,
@@ -207,19 +202,14 @@ function onVideoAdDone() {
 				<template v-if="Screen.isDesktop" #left>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
-							<template v-if="shouldShowTakeover">
-								<AppAdGptTakeoverLazy />
-							</template>
-							<template v-else>
-								<AppAdWidget size="rectangle" placement="side" />
-							</template>
+							<AppAdWidget size="rectangle" placement="side" />
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>
-				<template v-if="!shouldShowTakeover && Screen.isLg" #right>
+				<template v-if="Screen.isLg" #right>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
-							<AppAdWidget size="rectangle" placement="side" />
+							<AppAdWidget size="skyscraper" placement="side" />
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>

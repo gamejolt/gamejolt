@@ -2,11 +2,8 @@
 import { computed, defineAsyncComponent, provide, Ref, ref, toRef, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
-import { AdsGPTEnabledGlobally } from '../../../_common/ad/ad-store';
 import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
 import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
-import AppAdGpt from '../../../_common/ad/gpt/AppAdGpt.vue';
-import { AppAdGptTakeoverLazy } from '../../../_common/ad/gpt/AppAdGptTakeoverLazy';
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -281,7 +278,6 @@ async function refreshQuests() {
 
 								<p v-if="isShowAllGamesVisible">
 									<a
-										v-app-track-event="`activity:quick-game-all`"
 										class="link-muted"
 										@click="isShowingAllGames = !isShowingAllGames"
 									>
@@ -300,24 +296,12 @@ async function refreshQuests() {
 						<AppSpacer vertical :scale="8" />
 					</template>
 
-					<template v-if="AdsGPTEnabledGlobally">
-						<AppAdGptTakeoverLazy />
-					</template>
-					<template v-else>
-						<AppAdWidget size="rectangle" placement="side" />
-					</template>
+					<AppAdWidget size="rectangle" placement="side" />
 				</template>
 
 				<!-- Main -->
 				<template #default>
 					<AppAdTakeoverFloat>
-						<div
-							v-if="AdsGPTEnabledGlobally && Screen.isXs"
-							:style="{ marginTop: `-16px`, marginBottom: `16px` }"
-						>
-							<AppAdGpt placement="top" />
-						</div>
-
 						<AppPostAddButton @add="onPostAdded" />
 
 						<template v-if="!Screen.isXs && featuredItem">

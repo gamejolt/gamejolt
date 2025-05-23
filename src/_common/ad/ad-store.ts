@@ -28,10 +28,6 @@ const areAdsDisabledForDevice =
 	GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev;
 
 /**
- * Whether or not we're showing GPT takeover ads.
- */
-export const AdsGPTEnabledGlobally = false;
-/**
  * This is the interface that our ad components must register with us.
  */
 export type AdInterface = { display: () => void };
