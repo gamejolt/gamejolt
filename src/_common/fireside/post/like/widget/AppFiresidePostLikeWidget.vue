@@ -3,7 +3,6 @@ import { PropType, computed, ref, toRef, toRefs } from 'vue';
 import { styleWhen } from '../../../../../_styles/mixins';
 import { PostOverlayTextStyles } from '../../../../../app/components/post/post-styles';
 import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';
-import { vAppTrackEvent } from '../../../../analytics/track-event.directive';
 import { vAppAuthRequired } from '../../../../auth/auth-required-directive';
 import AppButton from '../../../../button/AppButton.vue';
 import { formatFuzzynumber } from '../../../../filters/fuzzynumber';
@@ -112,7 +111,6 @@ function showLikers() {
 		<span class="-like">
 			<AppButton
 				v-app-tooltip="tooltip"
-				v-app-track-event="`fireside-post-like-widget:click`"
 				v-app-auth-required
 				class="-like-button"
 				:style="styleWhen(!liked && overlay, PostOverlayTextStyles)"

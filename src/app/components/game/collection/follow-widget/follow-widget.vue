@@ -125,7 +125,6 @@ export default class AppGameCollectionFollowWidget extends Vue {
 	<AppButton
 		v-app-auth-required
 		v-app-tooltip.bottom="tooltip"
-		v-app-track-event="`game-collection-follow:${!isFollowing ? 'follow' : 'unfollow'}`"
 		class="game-collection-follow-widget"
 		primary
 		:icon="icon"

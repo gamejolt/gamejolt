@@ -1,6 +1,5 @@
 <script lang="ts">
 import { ref, toRef } from 'vue';
-import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
@@ -163,11 +162,7 @@ const { isBootstrapped, isLoading } = createAppRoute({
 					</div>
 
 					<div v-if="shouldShowLoadMore" class="page-cut">
-						<AppButton
-							v-app-track-event="`profile-edit-blocks:more`"
-							trans
-							@click="loadMore()"
-						>
+						<AppButton trans @click="loadMore()">
 							{{ $gettext(`Load More`) }}
 						</AppButton>
 					</div>

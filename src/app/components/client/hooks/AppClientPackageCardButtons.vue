@@ -378,13 +378,7 @@ const buildCapability = computed(() => {
 			v-if="card.extraBuilds.length || (localPackage && !localPackage.install_state)"
 			popover-class="fill-darkest"
 		>
-			<AppButton
-				v-app-track-event="`game-package-card:more-options`"
-				class="more-client-options-btn"
-				circle
-				icon="ellipsis-v"
-				trans
-			/>
+			<AppButton class="more-client-options-btn" circle icon="ellipsis-v" trans />
 
 			<template #popover>
 				<div

@@ -119,11 +119,7 @@ function report() {
 
 						<template #popover>
 							<div v-if="game" class="list-group list-group-dark">
-								<a
-									v-app-track-event="`copy-link:game`"
-									class="list-group-item has-icon"
-									@click="copyShareUrl"
-								>
+								<a class="list-group-item has-icon" @click="copyShareUrl">
 									<AppJolticon icon="link" />
 									<AppTranslate>Copy link to game</AppTranslate>
 								</a>

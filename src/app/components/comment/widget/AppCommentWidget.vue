@@ -540,38 +540,22 @@ function sortYou() {
 				<AppNavTabList>
 					<ul>
 						<li>
-							<a
-								v-app-track-event="`comment-widget:change-sort:hot`"
-								:class="{ active: isSortHot }"
-								@click="sortHot()"
-							>
+							<a :class="{ active: isSortHot }" @click="sortHot()">
 								<AppTranslate>Hot</AppTranslate>
 							</a>
 						</li>
 						<li v-if="showTopSorting">
-							<a
-								v-app-track-event="`comment-widget:change-sort:top`"
-								:class="{ active: isSortTop }"
-								@click="sortTop()"
-							>
+							<a :class="{ active: isSortTop }" @click="sortTop()">
 								<AppTranslate>Top</AppTranslate>
 							</a>
 						</li>
 						<li>
-							<a
-								v-app-track-event="`comment-widget:change-sort:new`"
-								:class="{ active: isSortNew }"
-								@click="sortNew()"
-							>
+							<a :class="{ active: isSortNew }" @click="sortNew()">
 								<AppTranslate>New</AppTranslate>
 							</a>
 						</li>
 						<li>
-							<a
-								v-app-track-event="`comment-widget:change-sort:you`"
-								:class="{ active: isSortYou }"
-								@click="sortYou()"
-							>
+							<a :class="{ active: isSortYou }" @click="sortYou()">
 								<AppTranslate>You</AppTranslate>
 							</a>
 						</li>
@@ -591,7 +575,7 @@ function sortYou() {
 			</AppMessageThread>
 
 			<div v-if="shouldShowLoadMore" class="page-cut">
-				<AppButton v-app-track-event="`comment-widget:more`" trans @click="loadMore">
+				<AppButton trans @click="loadMore">
 					<AppTranslate>Load More</AppTranslate>
 				</AppButton>
 			</div>

@@ -48,11 +48,7 @@ async function showAddPlaylistModal() {
 	<div id="shell-sidebar-library">
 		<ul v-if="user" class="shell-nav">
 			<li v-if="GJ_IS_DESKTOP_APP">
-				<RouterLink
-					v-app-track-event="`sidebar:collection:installed`"
-					:to="{ name: 'library.installed' }"
-					active-class="active"
-				>
+				<RouterLink :to="{ name: 'library.installed' }" active-class="active">
 					<span class="shell-nav-icon">
 						<AppJolticon icon="download-box" />
 					</span>
@@ -63,11 +59,7 @@ async function showAddPlaylistModal() {
 			</li>
 
 			<li v-if="developerCollection" class="offline-disable">
-				<RouterLink
-					v-app-track-event="`sidebar:collection:developer`"
-					:to="developerCollection.routeLocation"
-					active-class="active"
-				>
+				<RouterLink :to="developerCollection.routeLocation" active-class="active">
 					<span class="shell-nav-icon">
 						<AppJolticon icon="user" />
 					</span>
@@ -78,11 +70,7 @@ async function showAddPlaylistModal() {
 			</li>
 
 			<li v-if="followedCollection" class="offline-disable">
-				<RouterLink
-					v-app-track-event="`sidebar:collection:followed`"
-					:to="followedCollection.routeLocation"
-					active-class="active"
-				>
+				<RouterLink :to="followedCollection.routeLocation" active-class="active">
 					<span class="shell-nav-icon">
 						<AppJolticon icon="subscribe" />
 					</span>
@@ -93,11 +81,7 @@ async function showAddPlaylistModal() {
 			</li>
 
 			<li v-if="ownedCollection" class="offline-disable">
-				<RouterLink
-					v-app-track-event="`sidebar:collection:owned`"
-					:to="ownedCollection.routeLocation"
-					active-class="active"
-				>
+				<RouterLink :to="ownedCollection.routeLocation" active-class="active">
 					<span class="shell-nav-icon">
 						<AppJolticon icon="heart-filled" />
 					</span>
@@ -119,13 +103,7 @@ async function showAddPlaylistModal() {
 				</div>
 
 				<div class="nav-controls">
-					<AppButton
-						v-app-track-event="`sidebar:playlist-add`"
-						primary
-						block
-						class="offline-disable"
-						@click="showAddPlaylistModal"
-					>
+					<AppButton primary block class="offline-disable" @click="showAddPlaylistModal">
 						<AppTranslate>New Playlist</AppTranslate>
 					</AppButton>
 				</div>

@@ -493,11 +493,7 @@ async function reloadPreviewComments() {
 								</div>
 
 								<div class="page-cut page-cut-no-margin">
-									<AppButton
-										v-app-track-event="`game-profile:show-full-description`"
-										trans
-										@click="toggleDetails()"
-									>
+									<AppButton trans @click="toggleDetails()">
 										{{
 											!showDetails ? $gettext(`Show more`) : $gettext(`Less`)
 										}}

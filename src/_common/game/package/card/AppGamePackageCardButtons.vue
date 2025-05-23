@@ -64,7 +64,6 @@ function click(build: GameBuildModel, fromExtraSection = false) {
 		-->
 		<AppPopper v-if="card.extraBuilds.length" popover-class="fill-darkest">
 			<AppButton
-				v-app-track-event="`game-package-card:more-options`"
 				icon="ellipsis-v"
 				:primary="card.otherOnly"
 				:circle="!card.otherOnly"

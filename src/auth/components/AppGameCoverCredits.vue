@@ -10,7 +10,6 @@ const { coverGame } = useAuthStore();
 <template>
 	<router-link
 		v-if="coverGame"
-		v-app-track-event="`auth-game-cover-credits:click`"
 		class="game-cover-credits link-unstyled"
 		:to="coverGame.getUrl()"
 		:title="coverGame.title"

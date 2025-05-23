@@ -181,7 +181,6 @@ function showLikers() {
 		<span v-app-auth-required>
 			<AppButton
 				v-app-tooltip="votingTooltip"
-				v-app-track-event="`comment-widget:vote-click`"
 				icon="thumbs-up"
 				circle
 				trans
@@ -206,7 +205,6 @@ function showLikers() {
 			<span v-else class="blip-missing" />
 
 			<AppButton
-				v-app-track-event="`comment-widget:vote-click`"
 				icon="thumbs-down"
 				circle
 				trans
@@ -219,7 +217,6 @@ function showLikers() {
 			<AppButton
 				v-if="canReact"
 				v-app-tooltip="$gettext('Add reaction')"
-				v-app-track-event="`comment-widget:add-reaction`"
 				v-app-auth-required
 				class="-control-margin"
 				icon="add-reaction"
@@ -233,7 +230,6 @@ function showLikers() {
 			<span v-if="canReply" v-app-auth-required>
 				<AppButton
 					v-app-tooltip="$gettext(`Reply`)"
-					v-app-track-event="`comment-widget:reply-click`"
 					class="-control-margin"
 					icon="reply"
 					circle

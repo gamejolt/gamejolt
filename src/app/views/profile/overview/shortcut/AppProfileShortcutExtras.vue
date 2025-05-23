@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 import { useRouter } from 'vue-router';
-import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { showBlockModal } from '../../../../../_common/block/modal/modal.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';
@@ -58,11 +57,7 @@ async function blockUser() {
 
 		<template #popover>
 			<div class="list-group list-group-dark">
-				<a
-					v-app-track-event="`copy-link:user`"
-					class="list-group-item has-icon"
-					@click="copyShareUrl"
-				>
+				<a class="list-group-item has-icon" @click="copyShareUrl">
 					<AppJolticon icon="link" />
 					{{ $gettext(`Copy link to user`) }}
 				</a>

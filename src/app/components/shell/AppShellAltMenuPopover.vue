@@ -28,7 +28,6 @@ function showSystemReport() {
 
 <template>
 	<AppPopper
-		v-app-track-event="`top-nav:more-menu:toggle`"
 		popover-class="fill-darkest"
 		placement="bottom-start"
 		hide-on-state-change

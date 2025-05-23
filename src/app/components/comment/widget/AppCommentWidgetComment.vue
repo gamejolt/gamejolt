@@ -306,7 +306,6 @@ function onUnhideBlock() {
 											`Get notifications when people post new replies to this thread.`
 									  )
 							"
-							v-app-track-event="`comment-widget:follow-click`"
 							class="list-group-item has-icon"
 							@click="onFollowClick"
 						>

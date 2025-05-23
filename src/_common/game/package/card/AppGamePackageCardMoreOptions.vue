@@ -27,7 +27,6 @@ function click(build: GameBuildModel) {
 		<a
 			v-for="extraBuild of card.extraBuilds"
 			:key="`${extraBuild.icon}-${extraBuild.build.id}`"
-			v-app-track-event="`game-package-card:more-options:click-option`"
 			class="list-group-item has-icon"
 			@click="click(extraBuild.build)"
 		>

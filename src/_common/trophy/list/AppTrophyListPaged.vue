@@ -113,11 +113,7 @@ watch(
 
 			<AppLoading v-if="isLoading" centered />
 			<div v-else-if="shouldShowLoadMore" class="page-cut">
-				<AppButton
-					v-app-track-event="`profile-trophies:more`"
-					trans
-					@click="onClickLoadMore()"
-				>
+				<AppButton trans @click="onClickLoadMore()">
 					{{ $gettext(`Load More`) }}
 				</AppButton>
 			</div>

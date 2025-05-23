@@ -24,27 +24,17 @@ const url = computed(() => game.value.getUrl());
 
 <template>
 	<div class="game-list-item">
-		<RouterLink
-			v-app-track-event="eventLabel ? 'game-list:click:' + eventLabel : undefined"
-			class="-thumb"
-			:to="url"
-		>
+		<RouterLink class="-thumb" :to="url">
 			<AppGameThumbnailImg :game="game" />
 		</RouterLink>
 
 		<div class="-meta">
-			<RouterLink
-				v-app-track-event="eventLabel ? 'game-list:click:' + eventLabel : undefined"
-				class="-title -spacing link-unstyled"
-				:to="url"
-				:title="game.title"
-			>
+			<RouterLink class="-title -spacing link-unstyled" :to="url" :title="game.title">
 				{{ game.title }}
 			</RouterLink>
 
 			<AppUserCardHover class="-dev -spacing" :user="game.developer">
 				<RouterLink
-					v-app-track-event="eventLabel ? 'game-list:dev:' + eventLabel : undefined"
 					class="link-muted"
 					:to="{
 						name: 'profile.overview',

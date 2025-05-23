@@ -140,7 +140,6 @@ export default class AppAudioPlaylist extends Vue {
 			/>
 
 			<AppButton
-				v-app-track-event="`audio-playlist:click:button`"
 				class="-player-play"
 				sparse
 				:icon="currentSong ? 'pause' : 'play'"
@@ -182,7 +181,6 @@ export default class AppAudioPlaylist extends Vue {
 			>
 				<span class="-playlist-play">
 					<AppButton
-						v-app-track-event="`audio-playlist:click:icon`"
 						sparse
 						trans
 						sm
@@ -192,7 +190,6 @@ export default class AppAudioPlaylist extends Vue {
 				</span>
 				<span class="-playlist-number text-muted">{{ i + 1 }}.</span>
 				<a
-					v-app-track-event="`audio-playlist:click:title`"
 					class="-playlist-title link-unstyled"
 					:title="song.title"
 					@click="toggleSong(song)"

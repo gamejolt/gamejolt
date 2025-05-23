@@ -76,7 +76,7 @@ export default class AppGameFilteringWidget extends Vue {
 			<ul>
 				<li v-for="filter of filters" :key="filter">
 					<AppPopper popover-class="fill-darkest">
-						<a v-app-track-event="`game-filtering:tab-${filter}`">
+						<a>
 							{{ definitions[filter].label }}
 							<template v-if="definitions[filter].type === 'radio'">
 								<span

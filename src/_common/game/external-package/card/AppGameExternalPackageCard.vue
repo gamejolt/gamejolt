@@ -2,7 +2,6 @@
 import { PropType, computed, ref, toRefs } from 'vue';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import { Analytics } from '../../../analytics/analytics.service';
-import { vAppTrackEvent } from '../../../analytics/track-event.directive';
 import AppButton from '../../../button/AppButton.vue';
 import AppCard from '../../../card/AppCard.vue';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
@@ -81,7 +80,6 @@ function gotoExternal() {
 
 			<a
 				v-if="canToggleDescription"
-				v-app-track-event="`game-package-card:show-full-description`"
 				class="hidden-text-expander"
 				@click="showFullDescription = !showFullDescription"
 			/>

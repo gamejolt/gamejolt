@@ -2,7 +2,6 @@
 import { computed, PropType, toRef, toRefs } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { trackGotoCommunity } from '../../analytics/analytics.service';
-import { vAppTrackEvent } from '../../analytics/track-event.directive';
 import AppButton from '../../button/AppButton.vue';
 import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
@@ -88,7 +87,6 @@ function doTrackGotoCommunity() {
 
 				<div class="-member-counts small">
 					<RouterLink
-						v-app-track-event="`community-card:community-members`"
 						v-translate="{ count: formatNumber(memberCount) }"
 						:translate-n="memberCount"
 						translate-plural="<b>%{count}</b> members"
@@ -106,7 +104,6 @@ function doTrackGotoCommunity() {
 					<template v-if="community.hasPerms() && allowEdit">
 						<AppButton
 							v-if="!isEditing"
-							v-app-track-event="`community-card-inline:community-edit`"
 							primary
 							block
 							:to="community.routeEditLocation"
