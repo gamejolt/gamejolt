@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { Screen } from '../../screen/screen-service';
 import { AdAdapterComponentProps } from '../adapter-base';
+import AppAdMonetizeMoreNativePost, { AdNativePostProps } from './AppAdMonetizeMoreNativePost.vue';
 import AppAdMonetizeMoreTakeover, { AdTakeoverProps } from './AppAdMonetizeMoreTakeover.vue';
 import { AdMonetizeMoreAdapter, MonetizeMoreTagPlacement } from './monetizemore-adapter';
 
@@ -10,12 +11,15 @@ type Props = AdAdapterComponentProps<AdMonetizeMoreAdapter>;
 const { adSlot, adapter } = defineProps<Props>();
 
 const takeoverData = ref<AdTakeoverProps | null>(null);
+const nativePostData = ref<AdNativePostProps | null>(null);
 
 onMounted(() => {
-	// Right now, only "side" content can show takeover ads.
-	// TODO: Make this driven by key/values or something.
-	if (adSlot.placement === 'side') {
+	if (adSlot.takeover) {
 		window.addEventListener('message', showTakeover);
+	}
+
+	if (adSlot.nativePost) {
+		window.addEventListener('message', showNativePost);
 	}
 
 	adapter.ensureLoaded();
@@ -23,6 +27,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
 	window.removeEventListener('message', showTakeover);
+	window.removeEventListener('message', showNativePost);
 });
 
 const tagUnit = computed(() => {
@@ -40,12 +45,22 @@ const tagUnit = computed(() => {
 	}
 
 	const unitName = adapter.getDesktopTagUnit(tagPlacement);
-	return Screen.isMobile ? `mobile_${unitName}` : `desktop_${unitName}`;
+	let suffix = '';
+	if (adSlot.takeover) {
+		suffix = '_takeover';
+	} else if (adSlot.nativePost) {
+		suffix = '_native';
+	}
+	return Screen.isMobile ? `mobile_${unitName}${suffix}` : `desktop_${unitName}${suffix}`;
 });
 
 function showTakeover(event: MessageEvent) {
 	// We're not showing in a safe-frame, so the origin will be the same.
-	if (event.origin !== window.location.origin || event.data?.type !== 'AD_TAKEOVER') {
+	if (
+		!adSlot.takeover ||
+		event.origin !== window.location.origin ||
+		event.data?.type !== 'AD_TAKEOVER'
+	) {
 		return;
 	}
 
@@ -66,6 +81,52 @@ function showTakeover(event: MessageEvent) {
 		impressionUrl: data.impressionUrl,
 		sizing: data.sizing === 'cover' || data.sizing === 'contain' ? data.sizing : undefined,
 	};
+
+	// eslint-disable-next-line vue/no-mutating-props
+	adSlot.showingCustom = true;
+}
+
+function showNativePost(event: MessageEvent) {
+	// We're not showing in a safe-frame, so the origin will be the same.
+	if (
+		!adSlot.nativePost ||
+		event.origin !== window.location.origin ||
+		event.data?.type !== 'AD_NATIVE_POST'
+	) {
+		return;
+	}
+
+	const data = event.data;
+
+	const checkKeys = [
+		'adUnit',
+		'mediaImg',
+		'avatarImg',
+		'displayName',
+		'leadContent',
+		'destUrl',
+		'clickUrl',
+		'impressionUrl',
+	];
+	for (const key of checkKeys) {
+		if (typeof data[key] !== 'string' || !data[key]) {
+			return;
+		}
+	}
+
+	nativePostData.value = {
+		mediaImg: data.mediaImg,
+		avatarImg: data.avatarImg,
+		displayName: data.displayName,
+		leadContent: data.leadContent,
+		destUrl: data.destUrl,
+		clickUrl: data.clickUrl,
+		impressionUrl: data.impressionUrl,
+		actionText: typeof data.actionText === 'string' ? data.actionText : undefined,
+	};
+
+	// eslint-disable-next-line vue/no-mutating-props
+	adSlot.showingCustom = true;
 }
 </script>
 
@@ -74,16 +135,9 @@ function showTakeover(event: MessageEvent) {
 		v-if="tagUnit"
 		:key="tagUnit"
 		:data-pg-ad="tagUnit"
-		:style="{ display: takeoverData ? 'none' : undefined }"
+		:style="{ display: takeoverData || nativePostData ? 'none' : undefined }"
 	/>
 
-	<AppAdMonetizeMoreTakeover
-		v-if="takeoverData"
-		:fg-img="takeoverData.fgImg"
-		:bg-img="takeoverData.bgImg"
-		:dest-url="takeoverData.destUrl"
-		:click-url="takeoverData.clickUrl"
-		:impression-url="takeoverData.impressionUrl"
-		:sizing="takeoverData.sizing"
-	/>
+	<AppAdMonetizeMoreTakeover v-if="takeoverData" v-bind="takeoverData" />
+	<AppAdMonetizeMoreNativePost v-else-if="nativePostData" v-bind="nativePostData" />
 </template>

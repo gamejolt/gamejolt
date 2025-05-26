@@ -28,10 +28,6 @@ onBeforeUnmount(() => {
 });
 
 function onClick() {
-	if (!clickUrl) {
-		return;
-	}
-
 	const clickTracker = new Image();
 	clickTracker.src = clickUrl;
 }

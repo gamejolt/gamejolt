@@ -46,7 +46,14 @@ function _generateSlotId() {
 </script>
 
 <template>
-	<div v-if="slotId" :key="slotId" class="ad-widget-inner">
+	<div
+		v-if="slotId"
+		:key="slotId"
+		:style="{
+			// Make sure the ad is able to take up the full width.
+			flex: `auto`,
+		}"
+	>
 		<!-- We completely regenerate it when the slot ID changes -->
 		<!-- Load the ad component for the currently running ad adapter -->
 		<component :is="adComponent" :ad-slot="adSlot" :adapter="adapter" />

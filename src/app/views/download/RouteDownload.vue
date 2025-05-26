@@ -202,14 +202,14 @@ function onVideoAdDone() {
 				<template v-if="Screen.isDesktop" #left>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
-							<AppAdWidget size="rectangle" placement="side" />
+							<AppAdWidget size="rectangle" placement="side" takeover />
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>
 				<template v-if="Screen.isLg" #right>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
-							<AppAdWidget size="skyscraper" placement="side" />
+							<AppAdWidget size="rectangle" placement="side" />
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>

@@ -226,11 +226,12 @@ function shouldShowAd(index: number) {
 				<AppActivityFeedItem :item="item" />
 
 				<template v-if="shouldShowAd(i)">
-					<!-- TODO: native ads -->
-					<!-- <AppAdGptNativePost v-if="i === 1 && shouldShowNativeAds" /> -->
-					<div
-						class="well fill-offset full-bleed-xs text-center"
-						:style="
+					<AppAdWidget
+						size="rectangle"
+						placement="content"
+						:native-post="i === 1"
+						class-override="well fill-offset full-bleed-xs text-center"
+						:style-override="
 							Screen.isMobile
 								? {
 										marginTop: `-${kPostItemPaddingXsVertical.px}`,
@@ -241,9 +242,7 @@ function shouldShowAd(index: number) {
 										marginBottom: kPostItemPaddingVertical.px,
 								  }
 						"
-					>
-						<AppAdWidget size="rectangle" placement="content" />
-					</div>
+					/>
 				</template>
 			</div>
 		</AppAdFeedParent>

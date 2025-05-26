@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { ref, StyleValue, watch } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
 import { AdSlot, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
 import { useAdStore } from '../ad-store';
@@ -8,9 +8,18 @@ import AppAdWidgetInner from './AppAdWidgetInner.vue';
 type Props = {
 	size?: AdSlotSize;
 	placement?: AdSlotPlacement;
+	takeover?: boolean;
+	nativePost?: boolean;
+	classOverride?: string;
+	styleOverride?: StyleValue;
 };
 
-const { size = 'rectangle', placement = 'content' } = defineProps<Props>();
+const {
+	size = 'rectangle',
+	placement = 'content',
+	takeover = false,
+	nativePost = false,
+} = defineProps<Props>();
 
 const { shouldShow } = useAdStore();
 
@@ -26,12 +35,16 @@ watch(
 );
 
 function _makeAdSlot() {
-	return new AdSlot(size, placement);
+	return new AdSlot(size, placement, takeover, nativePost);
 }
 </script>
 
 <template>
-	<div v-if="shouldShow" :style="{ textAlign: `center` }">
+	<div
+		v-if="shouldShow"
+		:class="adSlot.showingCustom ? undefined : classOverride"
+		:style="[{ textAlign: `center` }, adSlot.showingCustom ? undefined : styleOverride]"
+	>
 		<div
 			:style="{
 				display: `flex`,
@@ -44,9 +57,6 @@ function _makeAdSlot() {
 				...styleWhen(adSlot.size === 'rectangle', {
 					minHeight: `250px`,
 				}),
-				...styleWhen(adSlot.size === 'video', {
-					minHeight: `200px`,
-				}),
 				// For debugging ad placements.
 				...styleWhen(GJ_BUILD_TYPE !== 'build', {
 					background: `rgba(255, 0, 0, 0.2)`,
@@ -57,13 +67,7 @@ function _makeAdSlot() {
 				}),
 			}"
 		>
-			<AppAdWidgetInner
-				:style="{
-					// Make sure the ad is able to take up the full width.
-					flex: `auto`,
-				}"
-				:ad-slot="adSlot"
-			/>
+			<AppAdWidgetInner :ad-slot="adSlot" />
 		</div>
 	</div>
 </template>

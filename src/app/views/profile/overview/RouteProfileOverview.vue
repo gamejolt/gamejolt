@@ -280,6 +280,7 @@ async function onFriendRequestReject() {
 									}"
 									size="rectangle"
 									placement="side"
+									takeover
 								/>
 								<AppSpacer vertical :scale="6" />
 							</template>
@@ -327,6 +328,7 @@ async function onFriendRequestReject() {
 								}"
 								size="rectangle"
 								placement="side"
+								takeover
 							/>
 							<AppSpacer vertical :scale="6" />
 						</template>
