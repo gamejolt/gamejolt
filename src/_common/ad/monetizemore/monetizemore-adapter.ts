@@ -5,18 +5,8 @@ import { AdSlot } from '../ad-slot-info';
 import { AdAdapter, AdAdapterHelper } from '../adapter-base';
 import AppAdMonetizeMore from './AppAdMonetizeMore.vue';
 
-export const MonetizeMoreTagUnits = {
-	side: 'halfpage',
-	skyscraper: 'rail',
-	leaderboard: 'billboard',
-	content: 'mpu',
-};
-
-export type MonetizeMoreTagPlacement = keyof typeof MonetizeMoreTagUnits;
-
 export class AdMonetizeMoreAdapter implements AdAdapter {
 	private helper = new AdAdapterHelper();
-	tagUnits = { ...MonetizeMoreTagUnits };
 
 	component(_slot: AdSlot): Component {
 		return AppAdMonetizeMore;
@@ -40,8 +30,4 @@ export class AdMonetizeMoreAdapter implements AdAdapter {
 
 	onBeforeRouteChange() {}
 	onRouteChanged() {}
-
-	getDesktopTagUnit(placement: MonetizeMoreTagPlacement) {
-		return this.tagUnits[placement];
-	}
 }

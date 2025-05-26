@@ -46,7 +46,7 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 		<section class="section section-thin">
 			<template v-if="showAds && globalShouldShowAds">
 				<AppAdTakeoverFloat>
-					<AppAdWidget size="leaderboard" placement="top" />
+					<AppAdWidget unit-name="billboard" />
 					<AppSpacer vertical :scale="6" />
 				</AppAdTakeoverFloat>
 			</template>

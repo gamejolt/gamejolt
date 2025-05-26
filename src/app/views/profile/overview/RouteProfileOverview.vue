@@ -270,7 +270,9 @@ async function onFriendRequestReject() {
 
 								<AppSpacer vertical :scale="4" />
 								<AppAdWidget
-									:style="{
+									unit-name="halfpage"
+									takeover
+									:style-override="{
 										...styleChangeBg('bg'),
 										...styleElevate(3),
 										// Can't change this, needs to be at least 300px wide.
@@ -278,9 +280,6 @@ async function onFriendRequestReject() {
 										borderRadius: kBorderRadiusLg.px,
 										padding: `8px`,
 									}"
-									size="rectangle"
-									placement="side"
-									takeover
 								/>
 								<AppSpacer vertical :scale="6" />
 							</template>
@@ -318,7 +317,9 @@ async function onFriendRequestReject() {
 
 							<AppSpacer vertical :scale="4" />
 							<AppAdWidget
-								:style="{
+								unit-name="halfpage"
+								takeover
+								:style-override="{
 									...styleChangeBg('bg'),
 									...styleElevate(3),
 									// Can't change this, needs to be at least 300px wide.
@@ -326,9 +327,6 @@ async function onFriendRequestReject() {
 									borderRadius: kBorderRadiusLg.px,
 									padding: `8px`,
 								}"
-								size="rectangle"
-								placement="side"
-								takeover
 							/>
 							<AppSpacer vertical :scale="6" />
 						</template>

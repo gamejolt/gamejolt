@@ -190,11 +190,10 @@ function onVideoAdDone() {
 		>
 			<AppAdTakeoverFloat v-if="Screen.isDesktop">
 				<AppAdWidget
-					:style="{
+					unit-name="billboard"
+					:style-override="{
 						marginBottom: `16px`,
 					}"
-					size="leaderboard"
-					placement="top"
 				/>
 			</AppAdTakeoverFloat>
 
@@ -202,14 +201,14 @@ function onVideoAdDone() {
 				<template v-if="Screen.isDesktop" #left>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
-							<AppAdWidget size="rectangle" placement="side" takeover />
+							<AppAdWidget unit-name="halfpage" takeover />
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>
 				<template v-if="Screen.isLg" #right>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
-							<AppAdWidget size="rectangle" placement="side" />
+							<AppAdWidget unit-name="halfpage" />
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>

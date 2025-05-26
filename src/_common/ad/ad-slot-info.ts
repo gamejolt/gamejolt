@@ -1,8 +1,4 @@
-export type AdUnit = 'halfpage' | 'rail' | 'billboard' | 'mpu';
-
-export type AdSlotSize = 'rectangle' | 'leaderboard' | 'video' | 'skyscraper';
-
-export type AdSlotPlacement = 'content' | 'side' | 'top';
+export type AdUnitName = 'halfpage' | 'rail' | 'billboard' | 'mpu';
 
 export class AdSlot {
 	/**
@@ -11,8 +7,7 @@ export class AdSlot {
 	showingCustom = false;
 
 	constructor(
-		public readonly size: AdSlotSize,
-		public readonly placement: AdSlotPlacement,
+		public readonly unitName: AdUnitName,
 		public readonly takeover: boolean,
 		public readonly nativePost: boolean
 	) {}

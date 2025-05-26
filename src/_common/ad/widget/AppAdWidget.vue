@@ -1,41 +1,31 @@
 <script lang="ts" setup>
 import { ref, StyleValue, watch } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
-import { AdSlot, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
+import { AdSlot, AdUnitName } from '../ad-slot-info';
 import { useAdStore } from '../ad-store';
 import AppAdWidgetInner from './AppAdWidgetInner.vue';
 
 type Props = {
-	size?: AdSlotSize;
-	placement?: AdSlotPlacement;
+	unitName: AdUnitName;
 	takeover?: boolean;
 	nativePost?: boolean;
 	classOverride?: string;
 	styleOverride?: StyleValue;
 };
 
-const {
-	size = 'rectangle',
-	placement = 'content',
-	takeover = false,
-	nativePost = false,
-} = defineProps<Props>();
+const { unitName, takeover = false, nativePost = false } = defineProps<Props>();
 
 const { shouldShow } = useAdStore();
 
 const adSlot = ref(_makeAdSlot());
 
 // If anything within our props changes, regenerate.
-watch(
-	[() => size, () => placement],
-	() => {
-		adSlot.value = _makeAdSlot();
-	},
-	{ deep: true }
-);
+watch([() => unitName, () => takeover, () => nativePost], () => {
+	adSlot.value = _makeAdSlot();
+});
 
 function _makeAdSlot() {
-	return new AdSlot(size, placement, takeover, nativePost);
+	return new AdSlot(unitName, takeover, nativePost);
 }
 </script>
 
@@ -51,16 +41,16 @@ function _makeAdSlot() {
 				alignItems: `center`,
 				justifyContent: `center`,
 				margin: `0 auto`,
-				...styleWhen(adSlot.size === 'leaderboard', {
+				...styleWhen(unitName === 'billboard', {
 					minHeight: `115px`,
 				}),
-				...styleWhen(adSlot.size === 'rectangle', {
+				...styleWhen(unitName === 'mpu' || unitName === 'halfpage', {
 					minHeight: `250px`,
 				}),
 				// For debugging ad placements.
 				...styleWhen(GJ_BUILD_TYPE !== 'build', {
 					background: `rgba(255, 0, 0, 0.2)`,
-					...styleWhen(adSlot.size === 'skyscraper', {
+					...styleWhen(unitName === 'rail', {
 						minWidth: `160px`,
 						minHeight: `600px`,
 					}),

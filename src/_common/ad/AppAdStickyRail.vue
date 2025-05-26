@@ -33,7 +33,7 @@ const { shouldShow } = useAdStore();
 		>
 			<!-- We set the padding to 80 just in case there's a top nav affixed -->
 			<AppScrollAffix :padding="80">
-				<AppAdWidget size="skyscraper" placement="side" />
+				<AppAdWidget unit-name="rail" />
 			</AppScrollAffix>
 		</div>
 
@@ -49,7 +49,7 @@ const { shouldShow } = useAdStore();
 		>
 			<!-- We set the padding to 80 just in case there's a top nav affixed -->
 			<AppScrollAffix :padding="80">
-				<AppAdWidget size="skyscraper" placement="side" />
+				<AppAdWidget unit-name="rail" />
 			</AppScrollAffix>
 		</div>
 

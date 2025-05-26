@@ -175,7 +175,7 @@ function shouldShowAd(index: number) {
 							:affixed-styles="{ right: `8px` }"
 						>
 							<div class="_game-grid-ad-inner">
-								<AppAdWidget size="rectangle" placement="content" />
+								<AppAdWidget unit-name="mpu" />
 							</div>
 						</AppScrollAffix>
 					</div>
@@ -210,7 +210,7 @@ function shouldShowAd(index: number) {
 					<template v-for="(game, i) of processedGames" :key="game.id">
 						<div v-if="shouldShowAd(i)" class="_game-grid-ad">
 							<div class="_game-grid-ad-inner">
-								<AppAdWidget size="rectangle" placement="content" />
+								<AppAdWidget unit-name="mpu" />
 							</div>
 						</div>
 						<div class="_game-grid-item">

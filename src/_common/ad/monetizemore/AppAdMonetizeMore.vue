@@ -4,7 +4,7 @@ import { Screen } from '../../screen/screen-service';
 import { AdAdapterComponentProps } from '../adapter-base';
 import AppAdMonetizeMoreNativePost, { AdNativePostProps } from './AppAdMonetizeMoreNativePost.vue';
 import AppAdMonetizeMoreTakeover, { AdTakeoverProps } from './AppAdMonetizeMoreTakeover.vue';
-import { AdMonetizeMoreAdapter, MonetizeMoreTagPlacement } from './monetizemore-adapter';
+import { AdMonetizeMoreAdapter } from './monetizemore-adapter';
 
 type Props = AdAdapterComponentProps<AdMonetizeMoreAdapter>;
 
@@ -31,27 +31,15 @@ onBeforeUnmount(() => {
 });
 
 const tagUnit = computed(() => {
-	let tagPlacement: MonetizeMoreTagPlacement | null = null;
-	if (adSlot.placement === 'top') {
-		if (adSlot.size === 'leaderboard') {
-			tagPlacement = 'leaderboard';
-		} else {
-			tagPlacement = 'content';
-		}
-	} else if (adSlot.size === 'skyscraper') {
-		tagPlacement = 'skyscraper';
-	} else {
-		tagPlacement = adSlot.placement;
-	}
-
-	const unitName = adapter.getDesktopTagUnit(tagPlacement);
 	let suffix = '';
 	if (adSlot.takeover) {
 		suffix = '_takeover';
 	} else if (adSlot.nativePost) {
 		suffix = '_native';
 	}
-	return Screen.isMobile ? `mobile_${unitName}${suffix}` : `desktop_${unitName}${suffix}`;
+	return Screen.isMobile
+		? `mobile_${adSlot.unitName}${suffix}`
+		: `desktop_${adSlot.unitName}${suffix}`;
 });
 
 function showTakeover(event: MessageEvent) {

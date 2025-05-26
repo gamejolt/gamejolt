@@ -151,7 +151,8 @@ const slicedRealms = computed(() => {
 					:padding="Screen.isLg ? 80 : 8"
 				>
 					<AppAdWidget
-						:style="{
+						unit-name="mpu"
+						:style-override="{
 							...styleChangeBg('bg'),
 							...styleElevate(3),
 							minWidth: `300px`,
@@ -160,8 +161,6 @@ const slicedRealms = computed(() => {
 							borderRadius: kBorderRadiusLg.px,
 							padding: `8px`,
 						}"
-						size="rectangle"
-						placement="content"
 					/>
 				</AppScrollAffix>
 

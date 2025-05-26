@@ -296,7 +296,7 @@ async function refreshQuests() {
 						<AppSpacer vertical :scale="8" />
 					</template>
 
-					<AppAdWidget size="rectangle" placement="side" takeover />
+					<AppAdWidget unit-name="halfpage" takeover />
 				</template>
 
 				<!-- Main -->

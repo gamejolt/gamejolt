@@ -318,7 +318,7 @@ function onVideoPlay() {
 							<AppShareCard resource="post" :url="post.url" offset-color />
 						</div>
 
-						<AppAdWidget size="rectangle" placement="side" takeover />
+						<AppAdWidget unit-name="halfpage" takeover />
 
 						<AppPostPageRecommendations :key="post.id" :post="post" />
 					</div>
