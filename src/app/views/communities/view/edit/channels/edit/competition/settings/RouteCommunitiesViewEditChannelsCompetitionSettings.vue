@@ -4,7 +4,7 @@ import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../../../../../_common/route/route-component';
-import FormCommunityCompetitionEdit from '../../../../../../../../components/forms/community/competition/edit/edit.vue';
+import FormCommunityCompetitionEdit from '../../../../../../../../components/forms/community/competition/edit/FormCommunityCompetitionEdit.vue';
 import { useCommunityRouteStore } from '../../../../../view.store';
 
 export default {
