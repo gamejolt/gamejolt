@@ -38,6 +38,11 @@ createAppRoute({});
 								</router-link>
 							</li>
 							<li>
+								<router-link :to="{ name: 'legal.safety' }" active-class="active">
+									<AppTranslate>Child Safety</AppTranslate>
+								</router-link>
+							</li>
+							<li>
 								<router-link :to="{ name: 'legal.cookies' }" active-class="active">
 									<AppTranslate>Cookie Policy</AppTranslate>
 								</router-link>
