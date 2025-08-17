@@ -5,6 +5,7 @@ import AppAnimElectricity from '../../../_common/animation/AppAnimElectricity.vu
 import { illChargeOrbEmpty } from '../../../_common/animation/slideshow/sheets';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
 import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
+import { QuestPriority } from '../../../_common/quest/quest-model.js';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppStickerChargeTooltip from '../../../_common/sticker/charge/AppStickerChargeTooltip.vue';
 import AppStickerChargeTooltipCaret from '../../../_common/sticker/charge/AppStickerChargeTooltipCaret.vue';
@@ -236,6 +237,7 @@ function onRefresh() {
 					v-for="quest of displayQuests"
 					:key="quest.id"
 					:quest="quest"
+					:confetti="quest.priority > QuestPriority.default"
 					:active="activeQuestId === quest.id"
 					:compact-stack="direction === 'row'"
 				/>

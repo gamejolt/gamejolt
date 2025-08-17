@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+import AppConfetti from '../../../../../_common/particle-effects/AppConfetti.vue';
 import AppQuestProgress from '../../../../../_common/quest/AppQuestProgress.vue';
 import AppQuestThumbnail from '../../../../../_common/quest/AppQuestThumbnail.vue';
 import { QuestModel } from '../../../../../_common/quest/quest-model';
@@ -29,9 +30,13 @@ const props = defineProps({
 	compactStack: {
 		type: Boolean,
 	},
+	confetti: {
+		type: Boolean,
+		default: false,
+	},
 });
 
-const { quest, active, compactStack } = toRefs(props);
+const { quest, active, compactStack, confetti } = toRefs(props);
 
 const { visibleLeftPane, toggleLeftPane } = useAppStore();
 const { activeQuest } = useQuestStore();
@@ -58,59 +63,62 @@ function onSelect() {
 		}"
 		@click="onSelect"
 	>
-		<div class="_thumb">
-			<AppQuestThumbnail :quest="quest" />
+		<AppConfetti v-if="confetti" />
+		<div class="_container" :class="{ '_compact-stack': compactStack }">
+			<div class="_thumb">
+				<AppQuestThumbnail :quest="quest" />
 
-			<div
-				v-if="quest.ends_on && !quest.isDaily && !compactStack"
-				:style="{
-					...styleFlexCenter(),
-					marginTop: `6px`,
-				}"
-			>
-				<AppQuestTimer
-					class="fill-offset"
+				<div
+					v-if="quest.ends_on && !quest.isDaily && !compactStack"
 					:style="{
-						...styleBorderRadiusLg,
-						...styleChangeBgRgba('var(--theme-fg-rgb)', 0.05),
-						padding: `1px 6px`,
+						...styleFlexCenter(),
+						marginTop: `6px`,
 					}"
-					:ends-on="quest.ends_on"
-					:now-text="$gettext('Expired')"
 				>
-					<template #ended>
-						{{ $gettext(`Expired`) }}
-					</template>
-				</AppQuestTimer>
+					<AppQuestTimer
+						class="fill-offset"
+						:style="{
+							...styleBorderRadiusLg,
+							...styleChangeBgRgba('var(--theme-fg-rgb)', 0.05),
+							padding: `1px 6px`,
+						}"
+						:ends-on="quest.ends_on"
+						:now-text="$gettext('Expired')"
+					>
+						<template #ended>
+							{{ $gettext(`Expired`) }}
+						</template>
+					</AppQuestTimer>
+				</div>
 			</div>
-		</div>
 
-		<AppSpacer :horizontal="!compactStack" :vertical="compactStack" :scale="4" />
+			<AppSpacer :horizontal="!compactStack" :vertical="compactStack" :scale="4" />
 
-		<div class="_details">
-			<div class="_title">
-				{{ quest.title }}
+			<div class="_details">
+				<div class="_title">
+					{{ quest.title }}
+				</div>
+
+				<template v-if="showProgress">
+					<AppSpacer vertical :scale="3" />
+
+					<AppQuestProgress
+						class="_progress"
+						:progress="quest.progress_percent"
+						:max-progress-ticks="100"
+						:is-percent="true"
+					/>
+				</template>
 			</div>
-
-			<template v-if="showProgress">
-				<AppSpacer vertical :scale="3" />
-
-				<AppQuestProgress
-					class="_progress"
-					:progress="quest.progress_percent"
-					:max-progress-ticks="100"
-					:is-percent="true"
-				/>
-			</template>
 		</div>
 	</a>
 </template>
 
 <style lang="stylus" scoped>
 ._item
-	display: flex
-	padding: 8px
+	position: relative
 	border-radius: $border-radius-large
+	padding: 8px
 	margin-left: -8px
 	margin-right: -8px
 
@@ -128,10 +136,15 @@ function onSelect() {
 			color: var(--theme-fg)
 
 	&._compact-stack
-		flex-direction: column
-		align-items: center
 		margin-left: unset
 		margin-right: unset
+
+._container
+	display: flex
+
+	&._compact-stack
+		flex-direction: column
+		align-items: center
 
 		._progress
 			padding: 0 8px

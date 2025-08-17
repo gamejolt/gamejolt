@@ -4,7 +4,12 @@ import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.se
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments, illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import { QuestModel, QuestRepeatType, QuestSeries } from '../../../../_common/quest/quest-model';
+import {
+	QuestModel,
+	QuestPriority,
+	QuestRepeatType,
+	QuestSeries,
+} from '../../../../_common/quest/quest-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
@@ -198,6 +203,7 @@ onMounted(async () => {
 									v-for="quest of quests"
 									:key="quest.id"
 									:quest="quest"
+									:confetti="quest.priority > QuestPriority.default"
 									:active="activeQuestId === quest.id"
 								/>
 							</div>

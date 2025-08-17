@@ -4,6 +4,8 @@ import { ContentObject } from '../../content-object';
 import { ContentRules } from '../../content-rules';
 import AppContentViewerBlockquote from './AppContentViewerBlockquote.vue';
 import AppContentViewerChatInvite from './AppContentViewerChatInvite.vue';
+import AppContentViewerCodeBlock from './AppContentViewerCodeBlock.vue';
+import AppContentViewerCustomButton from './AppContentViewerCustomButton.vue';
 import AppContentViewerEmbed from './AppContentViewerEmbed.vue';
 import AppContentViewerGif from './AppContentViewerGif.vue';
 import AppContentViewerGJEmoji from './AppContentViewerGJEmoji.vue';
@@ -17,7 +19,6 @@ import AppContentViewerParagraph from './AppContentViewerParagraph.vue';
 import AppContentViewerSpoiler from './AppContentViewerSpoiler.vue';
 import AppContentViewerSticker from './AppContentViewerSticker.vue';
 import AppContentViewerText from './AppContentViewerText.vue';
-import AppContentViewerCodeBlock from './AppContentViewerCodeBlock.vue';
 
 function getComponentType(data: ContentObject): any {
 	switch (data.type) {
@@ -54,6 +55,8 @@ function getComponentType(data: ContentObject): any {
 			return AppContentViewerSticker;
 		case 'chatInvite':
 			return AppContentViewerChatInvite;
+		case 'customButton':
+			return AppContentViewerCustomButton;
 	}
 }
 

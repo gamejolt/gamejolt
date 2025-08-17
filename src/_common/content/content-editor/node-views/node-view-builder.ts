@@ -2,6 +2,7 @@ import { Node } from 'prosemirror-model';
 import { Decoration, EditorView, NodeView } from 'prosemirror-view';
 import { ContentEditorController } from '../content-editor-controller';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
+import { CustomButtonNodeView } from './custom-button';
 import { EmbedNodeView } from './embed';
 import { EmojiNodeView } from './emoji';
 import { GifNodeView } from './gif';
@@ -43,6 +44,11 @@ export function buildEditorNodeViews(c: ContentEditorController): NodeViewList {
 	if (capabilities.emoji) {
 		nodeViews.gjEmoji = function (node, view, getPos) {
 			return new EmojiNodeView(c, node, view, getPos);
+		};
+	}
+	if (capabilities.customButton) {
+		nodeViews.customButton = function (node, view, getPos) {
+			return new CustomButtonNodeView(c, node, view, getPos);
 		};
 	}
 

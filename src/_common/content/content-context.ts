@@ -46,6 +46,7 @@ export enum ContextCapabilityType {
 	Spoiler = 'spoiler',
 	Heading = 'heading',
 	Sticker = 'sticker',
+	CustomButton = 'custom-button',
 }
 
 const contextCapabilityTypes = Object.entries(ContextCapabilityType);
@@ -66,7 +67,8 @@ export class ContextCapabilities {
 			this.list ||
 			this.hr ||
 			this.spoiler ||
-			this.sticker
+			this.sticker ||
+			this.customButton
 		);
 	}
 	get hasAnyText() {
@@ -148,6 +150,9 @@ export class ContextCapabilities {
 	}
 	get sticker() {
 		return this._hasCapability(ContextCapabilityType.Sticker);
+	}
+	get customButton() {
+		return this._hasCapability(ContextCapabilityType.CustomButton);
 	}
 
 	private constructor(

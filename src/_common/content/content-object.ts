@@ -22,7 +22,8 @@ export type ContentObjectType =
 	| 'heading'
 	| 'gif'
 	| 'sticker'
-	| 'chatInvite';
+	| 'chatInvite'
+	| 'customButton';
 
 export class ContentObject extends ContentNode {
 	public type!: ContentObjectType;
@@ -51,6 +52,7 @@ export class ContentObject extends ContentNode {
 			case 'mediaItem':
 			case 'gif':
 			case 'sticker':
+			case 'customButton':
 				return true;
 		}
 
@@ -142,6 +144,7 @@ export class ContentObject extends ContentNode {
 			case 'gif':
 			case 'sticker':
 			case 'chatInvite':
+			case 'customButton':
 				length++;
 				break;
 			case 'embed':
