@@ -3,10 +3,10 @@
  *
  * @__NO_SIDE_EFFECTS__
  */
-export function buildCSSPixelValue(value: number) {
+export function buildCSSPixelValue<T extends number>(value: T) {
 	return Object.freeze({
 		value,
-		get px() {
+		get px(): `${T}px` {
 			return `${value}px`;
 		},
 	});
@@ -79,3 +79,32 @@ export const kLayerBackdrop = 20;
 export const kLayerAds = 19;
 export const kLayerPlayButtonOverlay = 11;
 export const kLayerStickerLayer = kLayerModal + 1;
+
+// Buttons
+export const kButtonIconSize = buildCSSPixelValue(16);
+export const kButtonMdPaddingVertical = buildCSSPixelValue(8);
+export const kButtonMdPaddingHorizontal = buildCSSPixelValue(16);
+export const kButtonMdLineHeight = buildCSSPixelValue(20 + kButtonMdPaddingVertical.value * 2);
+export const kButtonMdIconSpacingRight = buildCSSPixelValue(5);
+export const kButtonMdOutlineBorderSize = kBorderWidthBase;
+export const kButtonMdFontWeight = `bold`;
+export const kButtonMdFontSize = kFontSizeSmall;
+export const kButtonMdBorderRadius = kBorderRadiusBase;
+export const kButtonSmPaddingVertical = buildCSSPixelValue(3);
+export const kButtonSmPaddingHorizontal = buildCSSPixelValue(10);
+export const kButtonSmLineHeight = buildCSSPixelValue(
+	kButtonIconSize.value + kButtonSmPaddingVertical.value * 2
+);
+export const kButtonSmIconSpacingRight = buildCSSPixelValue(3);
+export const kButtonSmOutlineBorderSize = kBorderWidthBase;
+export const kButtonSmFontWeight = `normal`;
+export const kButtonSmFontSize = kFontSizeTiny;
+export const kButtonSmBorderRadius = kBorderRadiusSm;
+export const kButtonLgPaddingVertical = buildCSSPixelValue(18);
+export const kButtonLgPaddingHorizontal = buildCSSPixelValue(35);
+export const kButtonLgLineHeight = buildCSSPixelValue(20 + kButtonLgPaddingVertical.value * 2);
+export const kButtonLgIconSpacingRight = buildCSSPixelValue(8);
+export const kButtonLgOutlineBorderSize = kBorderWidthLg;
+export const kButtonLgFontWeight = `bold`;
+export const kButtonLgFontSize = kFontSizeBase;
+export const kButtonLgBorderRadius = kBorderRadiusLg;

@@ -67,7 +67,6 @@ function filterComparator(item: GameCollectionModel) {
 			class="offline-disable"
 		>
 			<RouterLink
-				v-app-track-event="`sidebar:collection:playlist`"
 				:to="collection.routeLocation"
 				active-class="active"
 				:title="collection.getTitle()"

@@ -1,6 +1,5 @@
 <script lang="ts">
 import { ref } from 'vue';
-import { vAppTrackEvent } from '../../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/AppCommunityActivityItem.vue';
@@ -171,7 +170,7 @@ createAppRoute({
 			<AppLoading centered />
 		</template>
 		<div v-else-if="!isAtEnd" class="page-cut -more">
-			<AppButton v-app-track-event="`community-edit-activity:more`" trans @click="loadMore">
+			<AppButton trans @click="loadMore">
 				{{ $gettext(`Load More`) }}
 			</AppButton>
 		</div>

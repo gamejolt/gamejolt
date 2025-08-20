@@ -119,7 +119,7 @@ export function setChannelPathFromRoute(
 }
 
 export function isVirtualChannel(store: CommunityRouteStore, channel: CommunityChannelModel) {
-	return [store.frontpageChannel, store.allChannel].includes(channel);
+	return channel === store.frontpageChannel || channel === store.allChannel;
 }
 
 export async function acceptCollaboration(store: CommunityRouteStore, currentUser: UserModel) {

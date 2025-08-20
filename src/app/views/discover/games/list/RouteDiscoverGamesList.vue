@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import AppAdTakeoverBackground from '../../../../../_common/ad/AppAdTakeoverBackground.vue';
@@ -25,6 +25,7 @@ import {
 import AppGameGrid from '../../../../components/game/grid/AppGameGrid.vue';
 import AppGameListing from '../../../../components/game/listing/AppGameListing.vue';
 import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
+import AppShellPageBackdrop from '../../../../components/shell/AppShellPageBackdrop.vue';
 import AppStoreBanner from '../../../../components/store-banner/AppStoreBanner.vue';
 import { StoreBannerModel } from '../../../../components/store-banner/store-banner-model';
 import AppTagList from '../../../../components/tag/list/list.vue';
@@ -32,7 +33,7 @@ import { TagsInfo } from '../../../../components/tag/tags-info.service';
 
 const listingKey = 'CachedListing';
 
-export default {
+defineOptions({
 	...defineAppRouteOptions({
 		lazy: true,
 		cache: true,
@@ -47,10 +48,8 @@ export default {
 			return Api.sendRequest('/web/discover/games?' + filtering.getQueryString(route));
 		},
 	}),
-};
-</script>
+});
 
-<script lang="ts" setup>
 const route = useRoute();
 
 const filtering = ref<GameFilteringContainer>();
@@ -278,7 +277,7 @@ async function loadMore() {
 </script>
 
 <template>
-	<div>
+	<AppShellPageBackdrop>
 		<AppAdTakeoverBackground />
 
 		<AppAdTakeoverFloat>
@@ -319,7 +318,7 @@ async function loadMore() {
 
 			<AppGameGrid :games="listing.games" show-ads event-label="browse-games" />
 		</AppGameListing>
-	</div>
+	</AppShellPageBackdrop>
 </template>
 
 <style lang="stylus" scoped>

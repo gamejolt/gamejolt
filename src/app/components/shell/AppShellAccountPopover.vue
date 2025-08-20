@@ -77,7 +77,6 @@ function quit() {
 <template>
 	<AppPopper
 		v-if="user"
-		v-app-track-event="`top-nav:user-menu:toggle`"
 		popover-class="fill-darkest"
 		fixed
 		hide-on-state-change
@@ -92,7 +91,6 @@ function quit() {
 			<div class="account-popover fill-darkest">
 				<div class="list-group-dark">
 					<RouterLink
-						v-app-track-event="`account-popover:profile`"
 						class="list-group-item offline-disable"
 						:to="{ name: 'profile.overview', params: { username: user.username } }"
 					>
@@ -135,14 +133,12 @@ function quit() {
 
 				<div class="list-group-dark">
 					<RouterLink
-						v-app-track-event="`account-popover:profile`"
 						class="list-group-item"
 						:to="{ name: 'profile.overview', params: { username: user.username } }"
 					>
 						<AppTranslate>Profile</AppTranslate>
 					</RouterLink>
 					<RouterLink
-						v-app-track-event="`account-popover:library`"
 						class="list-group-item"
 						:to="{
 							name: GJ_IS_DESKTOP_APP ? 'library.installed' : 'library.overview',
@@ -151,7 +147,6 @@ function quit() {
 						<AppTranslate>Games</AppTranslate>
 					</RouterLink>
 					<RouterLink
-						v-app-track-event="`account-popover:account`"
 						class="list-group-item offline-disable"
 						:to="{
 							name: Screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit',
@@ -161,7 +156,6 @@ function quit() {
 					</RouterLink>
 					<RouterLink
 						v-if="user.is_developer || user.is_creator"
-						v-app-track-event="`account-popover:analytics`"
 						class="list-group-item offline-disable"
 						:to="{
 							name: 'dash.analytics',
@@ -173,18 +167,10 @@ function quit() {
 					>
 						<AppTranslate>Analytics</AppTranslate>
 					</RouterLink>
-					<a
-						v-app-track-event="`account-popover:token`"
-						class="list-group-item offline-disable"
-						@click="showToken"
-					>
+					<a class="list-group-item offline-disable" @click="showToken">
 						<AppTranslate>Game Token</AppTranslate>
 					</a>
-					<a
-						v-app-track-event="`account-popover:dark`"
-						class="list-group-item"
-						@click="toggleDark()"
-					>
+					<a class="list-group-item" @click="toggleDark()">
 						<div class="pull-right -small-text">
 							<AppTranslate v-if="isDark">on</AppTranslate>
 							<AppTranslate v-else>off</AppTranslate>
@@ -242,11 +228,7 @@ function quit() {
 				<div class="-separator" />
 
 				<div class="-session-actions list-group-dark">
-					<a
-						v-app-track-event="`account-popover:logout`"
-						class="-session-action list-group-item"
-						@click="logout"
-					>
+					<a class="-session-action list-group-item" @click="logout">
 						<AppJolticon icon="logout" notice />
 						<AppTranslate>Logout</AppTranslate>
 					</a>

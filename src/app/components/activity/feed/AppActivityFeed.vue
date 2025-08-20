@@ -1,8 +1,7 @@
 <script lang="ts">
 import { computed, inject, PropType, provide, reactive, ref, toRefs } from 'vue';
-import { AdsGPTEnabledGlobally, useAdStore } from '../../../../_common/ad/ad-store';
+import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
-import AppAdGpt from '../../../../_common/ad/gpt/AppAdGpt.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
@@ -19,7 +18,9 @@ import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../_common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import { styleWhen } from '../../../../_styles/mixins';
+import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '../../post/post-styles';
 import AppActivityFeedItem from './item/AppActivityFeedItem.vue';
 import AppActivityFeedNewButton from './new-button/AppActivityFeedNewButton.vue';
 import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from './view';
@@ -59,9 +60,6 @@ const props = defineProps({
 		required: true,
 	},
 	showAds: {
-		type: Boolean,
-	},
-	gptAdsEnabled: {
 		type: Boolean,
 	},
 });
@@ -215,7 +213,7 @@ function shouldShowAd(index: number) {
 			<AppScrollInview :config="InviewConfigShowNew" @inview="onNewButtonInview">
 				<AppExpand v-if="!feed.isLoadingNew" :when="isNewButtonInview">
 					<AppActivityFeedNewButton @click="loadNew()">
-						<AppTranslate>Show new items</AppTranslate>
+						{{ $gettext(`Show new items`) }}
 					</AppActivityFeedNewButton>
 				</AppExpand>
 				<AppLoading v-else class="loading-centered" />
@@ -227,19 +225,24 @@ function shouldShowAd(index: number) {
 			<div v-for="(item, i) of feed.items" :key="item.id" class="-item">
 				<AppActivityFeedItem :item="item" />
 
-				<div
-					v-if="shouldShowAd(i)"
-					class="-ad-container well fill-offset full-bleed-xs text-center"
-				>
-					<template
-						v-if="AdsGPTEnabledGlobally && gptAdsEnabled && i === 1 && Screen.isXs"
-					>
-						<AppAdGpt placement="midpage" />
-					</template>
-					<template v-else>
-						<AppAdWidget size="rectangle" placement="content" />
-					</template>
-				</div>
+				<template v-if="shouldShowAd(i)">
+					<AppAdWidget
+						unit-name="mpu"
+						:native-post="i === 1"
+						class-override="well fill-offset full-bleed-xs text-center"
+						:style-override="
+							Screen.isMobile
+								? {
+										marginTop: `-${kPostItemPaddingXsVertical.px}`,
+										marginBottom: 0,
+								  }
+								: {
+										marginTop: 0,
+										marginBottom: kPostItemPaddingVertical.px,
+								  }
+						"
+					/>
+				</template>
 			</div>
 		</AppAdFeedParent>
 
@@ -253,36 +256,47 @@ function shouldShowAd(index: number) {
 		>
 			<!-- Include the link here for crawlers to easily find it even if we're loading... -->
 			<RouterLink :to="{ query: { feed_last_id: lastPostScrollId } }" @click.capture.prevent>
-				<AppLoading v-if="feed.isLoadingMore" class="-bottom-loading loading-centered" />
+				<AppLoading
+					v-if="feed.isLoadingMore"
+					class="-bottom-loading loading-centered"
+					:style="styleWhen(Screen.isMobile, { marginTop: kPostItemPaddingVertical.px })"
+				/>
 			</RouterLink>
 
 			<div v-if="shouldShowLoadMore" class="page-cut">
 				<AppButton
-					v-app-track-event="`activity-feed:more`"
 					:to="{ query: { feed_last_id: lastPostScrollId } }"
 					trans
 					@click.capture.prevent="loadMoreButton"
 				>
-					<AppTranslate>Load More</AppTranslate>
+					{{ $gettext(`Load More`) }}
 				</AppButton>
 			</div>
 
-			<AppIllustration v-if="feed.reachedEnd" :asset="illEndOfFeed">
-				<p>
-					<AppTranslate>
-						You've found a clearing at the end of this feed. Should you set up camp?
-					</AppTranslate>
-				</p>
-				<p>
-					<AppJolticon icon="arrow-right" />
-					<b><AppTranslate>Yes</AppTranslate></b>
-					<AppJolticon icon="arrow-left" />
-					<br />
-					<AppTranslate>No</AppTranslate>
-				</p>
-			</AppIllustration>
+			<div v-if="feed.reachedEnd" class="sheet sheet-elevate">
+				<AppIllustration :asset="illEndOfFeed">
+					<p>
+						{{
+							$gettext(
+								`You've found a clearing at the end of this feed. Should you set up camp?`
+							)
+						}}
+					</p>
+					<p>
+						<AppJolticon icon="arrow-right" />
+						<b>{{ $gettext(`Yes`) }}</b>
+						<AppJolticon icon="arrow-left" />
+						<br />
+						{{ $gettext(`No`) }}
+					</p>
+				</AppIllustration>
+			</div>
 		</AppScrollInview>
 	</div>
 </template>
 
-<style lang="stylus" scoped src="./feed.styl"></style>
+<style lang="stylus" scoped>
+// Don't show the split for the last item in the list.
+.-item:last-child ::v-deep(.timeline-list-item-split)
+	display: none
+</style>

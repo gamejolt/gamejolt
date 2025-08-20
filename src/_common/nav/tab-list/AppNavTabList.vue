@@ -1,14 +1,20 @@
 <script lang="ts" setup>
 import { Screen } from '../../screen/screen-service';
 
-defineProps({
-	center: Boolean,
-});
+type Props = {
+	center?: boolean;
+	sansMarginBottom?: boolean;
+};
+
+defineProps<Props>();
 </script>
 
 <template>
 	<div>
-		<nav class="tab-list" :class="{ 'tab-list-centered': center }">
+		<nav
+			class="tab-list"
+			:class="{ 'tab-list-centered': center, 'sans-margin-bottom': sansMarginBottom }"
+		>
 			<div class="tab-list-content">
 				<div class="clearfix">
 					<slot />
@@ -94,7 +100,7 @@ defineProps({
 				theme-prop('border-color', 'bg-subtle')
 				background-color: var(--bg-save)
 				display: inline-block
-				padding: $tab-list-padding-v $tab-list-padding-h
+				padding: 8px 20px
 				margin: 0 3px
 				cursor: pointer
 				border-width: $border-width-base

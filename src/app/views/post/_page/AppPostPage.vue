@@ -60,7 +60,7 @@ const router = useRouter();
 
 const stickerTargetController = shallowRef<StickerTargetController>(
 	createStickerTargetController(post.value, {
-		canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
+		canReceiveCharge: () => post.value.can_receive_charged_stickers,
 	})
 );
 
@@ -98,7 +98,7 @@ watch(
 	() => post.value.id,
 	() => {
 		stickerTargetController.value = createStickerTargetController(post.value, {
-			canReceiveCharge: computed(() => post.value.can_receive_charged_stickers),
+			canReceiveCharge: () => post.value.can_receive_charged_stickers,
 		});
 	}
 );
@@ -318,7 +318,7 @@ function onVideoPlay() {
 							<AppShareCard resource="post" :url="post.url" offset-color />
 						</div>
 
-						<AppAdWidget size="rectangle" placement="side" />
+						<AppAdWidget unit-name="halfpage" takeover />
 
 						<AppPostPageRecommendations :key="post.id" :post="post" />
 					</div>
@@ -329,7 +329,6 @@ function onVideoPlay() {
 </template>
 
 <style lang="stylus" scoped>
-@import '../variables'
 @import '../common'
 
 ._controls-spacing

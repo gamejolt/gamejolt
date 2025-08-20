@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRef, toRefs, unref } from 'vue';
+import { computed, CSSProperties, PropType, ref, toRefs, toValue } from 'vue';
 import AppButton from '../../button/AppButton.vue';
 import { useContentFocusService } from '../../content-focus/content-focus.service';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
@@ -9,7 +9,6 @@ import AppResponsiveDimensions, {
 import { Screen } from '../../screen/screen-service';
 import AppStickerTarget from '../../sticker/target/AppStickerTarget.vue';
 import {
-	StickerTargetController,
 	createStickerTargetController,
 	useStickerTargetController,
 } from '../../sticker/target/target-controller';
@@ -50,18 +49,21 @@ const emit = defineEmits({
 const { mediaItem, isActive, restrictDeviceMaxHeight, inline, canPlaceSticker } = toRefs(props);
 
 const parentStickerTarget = useStickerTargetController();
+const stickerTargetController = createStickerTargetController(mediaItem.value, {
+	parent: () => toValue(parentStickerTarget),
+	canReceiveCharge: () => stickerTargetController.parent.value?.canReceiveCharge.value === true,
+});
 
-const stickerTargetController = ref<StickerTargetController>();
 const isFilled = ref(false);
 
-const shouldShowFullscreenOption = toRef(
+const shouldShowFullscreenOption = computed(
 	() =>
 		restrictDeviceMaxHeight.value &&
 		mediaItem.value.height >= 100 &&
 		mediaItem.value.width >= 100
 );
 
-const stickersDisabled = toRef(() => !isActive.value || !canPlaceSticker.value);
+const stickersDisabled = computed(() => !isActive.value || !canPlaceSticker.value);
 
 const shouldVideoPlay = computed(
 	() => isActive.value && useContentFocusService().hasContentFocus.value
@@ -83,19 +85,6 @@ const itemRadius = computed(() => {
 	return Screen.isXs && isFilled.value ? undefined : 'lg';
 });
 
-const itemStyling = computed(() => {
-	const style: any = {};
-
-	if (!import.meta.env.SSR) {
-		Object.assign(style, {
-			maxWidth: mediaItem.value.width + 'px',
-			maxHeight: mediaItem.value.height + 'px',
-		});
-	}
-
-	return style;
-});
-
 const deviceMaxHeight = computed(() => {
 	if (import.meta.env.SSR || !restrictDeviceMaxHeight.value) {
 		return undefined;
@@ -111,13 +100,6 @@ const deviceMaxHeight = computed(() => {
 	return Screen.height * 0.45;
 });
 
-stickerTargetController.value = createStickerTargetController(mediaItem.value, {
-	parent: computed(() => unref(parentStickerTarget)),
-	canReceiveCharge: computed(
-		() => stickerTargetController.value?.parent.value?.canReceiveCharge.value === true
-	),
-});
-
 async function onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {
 	emit('bootstrap');
 
@@ -125,28 +107,32 @@ async function onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {
 }
 
 function onClickImage() {
-	// In feed means we are inline, and we use the fullscreen button to go fullscreen.
+	// Inline means we are in a feed, and we use the fullscreen button to go fullscreen.
 	// Clicking on the image in feed does nothing.
 	// In the post view however, we don't show the button and instead a click anywhere on the image goes fullscreen.
 	if (!inline.value) {
 		emit('fullscreen', mediaItem.value);
 	}
 }
+
+const itemStyling = import.meta.env.SSR
+	? {}
+	: ({
+			maxWidth: mediaItem.value.width + 'px',
+			maxHeight: mediaItem.value.height + 'px',
+	  } as const satisfies CSSProperties);
 </script>
 
 <template>
-	<div class="media-item-post" :class="{ '-inline': inline }" @click="onClickImage">
+	<div class="media-item-post" :class="{ _inline: inline }" @click="onClickImage">
 		<AppResponsiveDimensions
-			class="-media"
-			:class="{
-				'-filled': isFilled,
-			}"
+			class="_media"
 			:ratio="mediaItem.width / mediaItem.height"
 			:max-width="mediaItem.width"
 			:max-height="deviceMaxHeight"
 			@change="onDimensionsChange"
 		>
-			<div v-if="shouldShowFullscreenOption" class="-toolbar">
+			<div v-if="shouldShowFullscreenOption" class="_toolbar">
 				<AppButton
 					v-app-tooltip="$gettext(`Fullscreen`)"
 					overlay
@@ -156,15 +142,15 @@ function onClickImage() {
 					@click="emit('fullscreen', mediaItem)"
 				/>
 			</div>
-			<AppMediaItemBackdrop class="-backdrop" :media-item="mediaItem" :radius="itemRadius">
+			<AppMediaItemBackdrop class="_backdrop" :media-item="mediaItem" :radius="itemRadius">
 				<AppStickerTarget
-					class="-stickers"
+					class="_stickers"
 					:controller="stickerTargetController"
 					:disabled="stickersDisabled"
 				>
 					<AppImgResponsive
 						v-if="!isPostHydrated || !mediaItem.is_animated"
-						class="-img"
+						class="_img"
 						:style="itemStyling"
 						:src="mediaItem.mediaserver_url"
 						alt=""
@@ -172,7 +158,7 @@ function onClickImage() {
 					/>
 					<AppVideo
 						v-else-if="isActive && videoController"
-						class="-video"
+						class="_video"
 						:style="itemStyling"
 						:player="videoController"
 						:should-play="shouldVideoPlay"
@@ -185,23 +171,22 @@ function onClickImage() {
 </template>
 
 <style lang="stylus" scoped>
-.-stickers
+._stickers
 	width: 100%
 	height: 100%
 
-.-video
-	&:after
-		content: 'GIF'
-		rounded-corners()
-		position: absolute
-		right: 8px
-		bottom: 8px
-		padding: 4px 6px
-		background-color: rgba($black, 0.4)
-		color: var(--dark-theme-fg)
-		font-size: $font-size-small
-		font-weight: bold
-		transition: opacity 250ms $strong-ease-out
+._video:after
+	content: 'GIF'
+	rounded-corners()
+	position: absolute
+	right: 8px
+	bottom: 8px
+	padding: 4px 6px
+	background-color: rgba($black, 0.4)
+	color: var(--dark-theme-fg)
+	font-size: $font-size-small
+	font-weight: bold
+	transition: opacity 250ms $strong-ease-out
 
 .media-item-post
 	position: relative
@@ -210,27 +195,27 @@ function onClickImage() {
 	width: 100%
 	max-width: 100% !important
 
-	&.-inline
+	&._inline
 		display: inline-block
 
-	&:not(.-inline)
-		.-img
+	&:not(._inline)
+		._img
 			cursor: zoom-in
 
-	.-media
+	._media
 		margin-left: auto
 		margin-right: auto
 
-	.-backdrop
+	._backdrop
 		change-bg('bg-offset')
 
 	// Set the width to be what AppResponsiveDimensions gives us,
 	// so we don't overflow past what it sets.
-	.-img
-	.-video
+	._img
+	._video
 		width: 100%
 
-	.-toolbar
+	._toolbar
 		position: absolute
 		left: 0
 		right: 0
@@ -246,10 +231,10 @@ function onClickImage() {
 			display: none
 
 	&:hover
-		.-toolbar
+		._toolbar
 			opacity: 1
 
 		@media $media-pointer-mouse
-			.-video:after
+			._video:after
 				opacity: 0
 </style>

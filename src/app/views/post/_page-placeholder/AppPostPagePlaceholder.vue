@@ -42,7 +42,6 @@ import { styleChangeBg } from '../../../../_styles/mixins';
 </template>
 
 <style lang="stylus" scoped>
-@import '../variables'
 @import '../common'
 
 .-col-primary

@@ -1,6 +1,6 @@
 import '@vue/runtime-core';
 
-declare module '@vue/runtime-core' {
+declare module 'vue' {
 	interface ComponentCustomProperties {
 		GJ_SECTION: typeof GJ_SECTION;
 		GJ_ENVIRONMENT: typeof GJ_ENVIRONMENT;

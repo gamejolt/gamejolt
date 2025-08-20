@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+import { computed, onMounted, PropType, ref, toRef, toRefs, useTemplateRef } from 'vue';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { CollaboratorModel } from '../../../../_common/collaborator/collaborator.model';
 import AppCommentBlocked from '../../../../_common/comment/AppCommentBlocked.vue';
@@ -70,12 +70,12 @@ const {
 const isEditing = ref(false);
 const hasBypassedBlock = ref(false);
 
-const scrollTargetElem = ref<HTMLDivElement>();
+const scrollTargetRef = useTemplateRef('scrollTarget');
 
-const isChild = computed(() => !!parent?.value);
-const isActive = computed(() => threadCommentId.value === comment.value.id);
+const isReply = toRef(() => !!parent?.value);
+const isActive = toRef(() => threadCommentId.value === comment.value.id);
 
-const isOwner = computed(() => {
+const isOwner = toRef(() => {
 	if (!resourceOwner.value) {
 		return false;
 	}
@@ -120,7 +120,7 @@ const hasModPermissions = computed(() => {
 	return false;
 });
 
-const canRemove = computed(() => {
+const canRemove = toRef(() => {
 	if (!user.value) {
 		return false;
 	}
@@ -133,7 +133,7 @@ const canRemove = computed(() => {
 	return hasModPermissions.value;
 });
 
-const canPin = computed(() => {
+const canPin = toRef(() => {
 	if (!user.value) {
 		return false;
 	}
@@ -142,16 +142,16 @@ const canPin = computed(() => {
 	return !comment.value.parent_id && hasModPermissions.value;
 });
 
-const shouldShowReplies = computed(() => children.value.length > 0 && showChildren.value);
+const isShowingReplies = toRef(() => children.value.length > 0 && showChildren.value);
 
-const canFollow = computed(() => {
+const canFollow = toRef(() => {
 	// Can't subscribe if...
 	// they aren't logged in
 	// this is a child comment
 	// the resource belongs to them
 	if (!user.value) {
 		return false;
-	} else if (isChild.value) {
+	} else if (isReply.value) {
 		return false;
 	} else if (resourceOwner.value && resourceOwner.value.id === user.value.id) {
 		return false;
@@ -162,7 +162,7 @@ const canFollow = computed(() => {
 
 const blockReason = computed(() => getCommentBlockReason(comment.value));
 
-const shouldBlock = computed(() => {
+const isBlocked = toRef(() => {
 	if (hasBypassedBlock.value || !comment.value) {
 		return false;
 	}
@@ -170,21 +170,21 @@ const shouldBlock = computed(() => {
 	return blockReason.value !== false;
 });
 
-const showReplies = computed(() => !parent?.value && !showChildren.value);
+const showReplies = toRef(() => !parent?.value && !showChildren.value);
 const canReply = computed(() => showReplies.value && canCommentOnModel(model.value, parent?.value));
-const canReact = computed(() => {
+const canReact = toRef(() => {
 	if (comment.value.user.hasAnyBlock === true || parent?.value?.user.hasAnyBlock === true) {
 		return false;
 	}
 	return model.value.canInteractWithComments;
 });
-const canVote = computed(() => model.value.canInteractWithComments);
+const canVote = toRef(() => model.value.canInteractWithComments);
 
 onMounted(() => {
 	// Scroll it into view if it's active.
 	if (isActive.value) {
 		setTimeout(() => {
-			scrollTargetElem.value?.scrollIntoView({ behavior: 'smooth' });
+			scrollTargetRef.value?.scrollIntoView({ behavior: 'smooth' });
 		}, 250);
 	}
 });
@@ -244,13 +244,13 @@ function onUnhideBlock() {
 
 <template>
 	<AppMessageThreadItem
-		:user="shouldBlock ? null : comment.user"
+		:user="isBlocked ? null : comment.user"
 		:date="comment.posted_on"
-		:is-showing-replies="shouldShowReplies"
-		:is-reply="!!parent"
+		:is-showing-replies
+		:is-reply
 		:is-last="isLastInThread"
-		:is-active="isActive"
-		:is-blocked="shouldBlock"
+		:is-active
+		:is-blocked
 	>
 		<template v-if="comment.is_pinned || isOwner || isCollaborator" #tags>
 			<span v-if="comment.is_pinned" class="tag">
@@ -306,7 +306,6 @@ function onUnhideBlock() {
 											`Get notifications when people post new replies to this thread.`
 									  )
 							"
-							v-app-track-event="`comment-widget:follow-click`"
 							class="list-group-item has-icon"
 							@click="onFollowClick"
 						>
@@ -351,24 +350,20 @@ function onUnhideBlock() {
 
 		<template #default>
 			<!--
-				When scrolling an active comment into view, we don't want to target
-				the top of the comment. We want to stop the scroll a bit higher in
-				the viewport, so we hack this scroll target into the DOM and place
-				it higher up than the comment itself.
-				-->
+			When scrolling an active comment into view, we don't want to target
+			the top of the comment. We want to stop the scroll a bit higher in
+			the viewport, so we hack this scroll target into the DOM and place
+			it higher up than the comment itself.
+			-->
 			<div ref="scrollTarget" class="-scroll-target" />
 
 			<template v-if="!isEditing">
-				<AppCommentContent
-					:comment="comment"
-					:content="comment.comment_content"
-					:can-react="canReact"
-				/>
+				<AppCommentContent :comment :can-react :content="comment.comment_content" />
 			</template>
 			<template v-else>
 				<FormCommentLazy
-					:comment="comment"
-					:model="model"
+					:comment
+					:model
 					@submit="commentEdited"
 					@cancel="isEditing = false"
 				/>
@@ -377,23 +372,23 @@ function onUnhideBlock() {
 
 		<template #controls>
 			<AppCommentControls
-				:model="model"
-				:comment="comment"
-				:children="children"
+				:model
+				:comment
+				:children
 				:show-reply="showReplies"
-				:can-reply="canReply"
-				:can-vote="canVote"
-				:can-react="canReact"
+				:can-reply
+				:can-vote
+				:can-react
 			/>
 		</template>
 
 		<!-- Child Comments -->
-		<template v-if="shouldShowReplies" #replies>
-			<!-- Frustrating, but it seems like volar can't figure out the recursion -->
+		<template v-if="isShowingReplies" #replies>
+			<!-- Frustrating, but it seems like vue language server can't figure out the recursion -->
 			<AppCommentWidgetComment
 				v-for="(child, i) of children"
 				:key="child.id"
-				:model="model"
+				:model
 				:comment="child"
 				:parent="comment"
 				:is-last-in-thread="i === children.length - 1"
@@ -402,8 +397,8 @@ function onUnhideBlock() {
 
 		<template #blocked>
 			<AppCommentBlocked
-				v-if="blockReason && shouldBlock"
-				:comment="comment"
+				v-if="blockReason && isBlocked"
+				:comment
 				:reason="blockReason"
 				@show="onUnhideBlock"
 			/>

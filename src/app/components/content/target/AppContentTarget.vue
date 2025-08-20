@@ -1,14 +1,15 @@
 <script lang="ts">
-export const CONTENT_TARGET_HEIGHT = 30;
-</script>
-
-<script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
+import { ComponentProps } from '../../../../_common/component-helpers';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPill from '../../../../_common/pill/AppPill.vue';
 import AppPillBi from '../../../../_common/pill/AppPillBi.vue';
 
+export const CONTENT_TARGET_HEIGHT = 30;
+</script>
+
+<script lang="ts" setup>
 const props = defineProps({
 	noImg: {
 		type: Boolean,
@@ -46,7 +47,7 @@ const emit = defineEmits({
 	click: (_e: MouseEvent) => true,
 });
 
-const component = computed(() => {
+const component = toRef(() => {
 	if (hasRight.value) {
 		return AppPillBi;
 	}
@@ -58,23 +59,17 @@ const componentProps = computed(() => {
 	return {
 		bleedImg: bleedImg?.value,
 		...(hasRight.value
-			? {
+			? ({
 					leftTo: leftTo?.value,
 					rightTo: rightTo?.value,
 					noHover: noHover.value,
-			  }
-			: {
+			  } satisfies ComponentProps<typeof AppPillBi>)
+			: ({
 					to: to?.value,
-			  }),
+			  } satisfies ComponentProps<typeof AppPill>)),
 	};
 });
 
-// NOTE: Check if this is actually used before removing.
-const leadingSlot = computed(() => {
-	return 'img';
-});
-
-// NOTE: Check if this is actually used before removing.
 const contentSlot = computed(() => {
 	if (hasRight.value) {
 		return 'left';
@@ -98,7 +93,7 @@ function onClickRemove() {
 		}"
 		v-bind="componentProps"
 	>
-		<template #[leadingSlot]>
+		<template #img>
 			<span class="-img">
 				<slot name="img" />
 			</span>

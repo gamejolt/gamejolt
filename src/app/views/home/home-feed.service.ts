@@ -4,6 +4,8 @@ import { commonStore } from '../../../_common/store/common-store';
 export const HOME_FEED_FYP = 'fyp' as const;
 export const HOME_FEED_ACTIVITY = 'activity' as const;
 
+export type HomeFeedTabTypes = typeof HOME_FEED_FYP | typeof HOME_FEED_ACTIVITY;
+
 export class HomeFeedService {
 	public static getDefault() {
 		if (shouldUseFYPDefault()) {

@@ -164,7 +164,6 @@ function _removeRequest(request: UserFriendshipModel) {
 	>
 		<a
 			v-app-tooltip.bottom="$gettext(`Friend Requests`)"
-			v-app-track-event="`top-nav:friend-requests:toggle`"
 			class="navbar-item"
 			:class="{ active: isShowing }"
 		>
@@ -218,7 +217,7 @@ function _removeRequest(request: UserFriendshipModel) {
 				<AppTranslate>No friend requests right now.</AppTranslate>
 			</div>
 			<div v-else-if="!isAtEnd" class="page-cut -load-more">
-				<AppButton v-app-track-event="`friend-requests:more`" trans @click="loadMore">
+				<AppButton trans @click="loadMore">
 					<AppTranslate>Load More</AppTranslate>
 				</AppButton>
 			</div>

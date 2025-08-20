@@ -32,6 +32,7 @@ import AppGameListing from '../../../components/game/listing/AppGameListing.vue'
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
+import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import { useAppStore } from '../../../store/index';
 import {
 	libraryEditPlaylist,
@@ -382,7 +383,7 @@ async function loadMore() {
 </script>
 
 <template>
-	<div v-if="collection">
+	<template v-if="collection">
 		<AppPageHeader
 			class="library-collection-header"
 			:hide-nav="type === 'bundle'"
@@ -682,85 +683,87 @@ async function loadMore() {
 			</template>
 		</AppPageHeader>
 
-		<AppGameListing
-			v-if="listing && filtering"
-			:listing="listing"
-			:filtering="filtering"
-			hide-section-nav
-			:is-loading="isLoading"
-			@load="loadMore"
-		>
-			<AppGameGrid
-				v-if="listing"
-				:games="listing.games"
-				event-label="collection-games"
-				:can-reorder="canReorder"
-				@sort="$event => onSortedGames($event)"
+		<AppShellPageBackdrop>
+			<AppGameListing
+				v-if="listing && filtering"
+				:listing="listing"
+				:filtering="filtering"
+				hide-section-nav
+				:is-loading="isLoading"
+				@load="loadMore"
 			>
-				<template
-					v-if="type === 'playlist' || type === 'followed'"
-					#thumbnail-controls="props"
+				<AppGameGrid
+					v-if="listing"
+					:games="listing.games"
+					event-label="collection-games"
+					:can-reorder="canReorder"
+					@sort="$event => onSortedGames($event)"
 				>
-					<AppButton
-						v-if="type === 'playlist' && collection.isOwner"
-						v-app-tooltip="$gettext(`Remove from playlist`)"
-						icon="remove"
-						circle
-						overlay
-						@click="removeFromPlaylist(props.game)"
-					/>
+					<template
+						v-if="type === 'playlist' || type === 'followed'"
+						#thumbnail-controls="props"
+					>
+						<AppButton
+							v-if="type === 'playlist' && collection.isOwner"
+							v-app-tooltip="$gettext(`Remove from playlist`)"
+							icon="remove"
+							circle
+							overlay
+							@click="removeFromPlaylist(props.game)"
+						/>
 
-					<AppButton
-						v-if="type === 'followed' && collection.isOwner"
-						v-app-tooltip="$gettext(`Stop following`)"
-						icon="remove"
-						circle
-						overlay
-						@click="removeFromLibrary(props.game)"
-					/>
-				</template>
-			</AppGameGrid>
-		</AppGameListing>
+						<AppButton
+							v-if="type === 'followed' && collection.isOwner"
+							v-app-tooltip="$gettext(`Stop following`)"
+							icon="remove"
+							circle
+							overlay
+							@click="removeFromLibrary(props.game)"
+						/>
+					</template>
+				</AppGameGrid>
+			</AppGameListing>
 
-		<section v-if="recommendedGames.length" class="section">
-			<div class="container-xl">
-				<div class="clearfix">
-					<h1 class="section-header">
-						{{ $gettext(`Recommended Games`) }}
-					</h1>
-					<div :class="{ 'pull-left': !Screen.isXs }">
-						<p>
-							{{
-								$gettext(
-									`We remixed this playlist into a tasty collection of other games that you may enjoy.`
-								)
-							}}
-						</p>
-						<hr class="underbar" />
+			<section v-if="recommendedGames.length" class="section">
+				<div class="container-xl">
+					<div class="clearfix">
+						<h1 class="section-header">
+							{{ $gettext(`Recommended Games`) }}
+						</h1>
+						<div :class="{ 'pull-left': !Screen.isXs }">
+							<p>
+								{{
+									$gettext(
+										`We remixed this playlist into a tasty collection of other games that you may enjoy.`
+									)
+								}}
+							</p>
+							<hr class="underbar" />
+						</div>
+						<div class="hidden-xs pull-right">
+							<AppButton @click="mixPlaylist(true)">
+								{{ $gettext(`Refresh`) }}
+							</AppButton>
+						</div>
 					</div>
-					<div class="hidden-xs pull-right">
-						<AppButton @click="mixPlaylist(true)">
+
+					<AppLoadingFade :is-loading="isLoadingRecommended">
+						<AppGameGrid
+							:games="recommendedGames"
+							scrollable
+							event-label="collection-games-mix"
+						/>
+					</AppLoadingFade>
+
+					<p class="visible-xs">
+						<AppButton block @click="mixPlaylist(true)">
 							{{ $gettext(`Refresh`) }}
 						</AppButton>
-					</div>
+					</p>
 				</div>
-
-				<AppLoadingFade :is-loading="isLoadingRecommended">
-					<AppGameGrid
-						:games="recommendedGames"
-						scrollable
-						event-label="collection-games-mix"
-					/>
-				</AppLoadingFade>
-
-				<p class="visible-xs">
-					<AppButton block @click="mixPlaylist(true)">
-						{{ $gettext(`Refresh`) }}
-					</AppButton>
-				</p>
-			</div>
-		</section>
-	</div>
+			</section>
+		</AppShellPageBackdrop>
+	</template>
 </template>
 
 <style lang="stylus" scoped>

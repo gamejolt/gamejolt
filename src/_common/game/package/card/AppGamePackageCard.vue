@@ -264,7 +264,6 @@ function copyProviderKey(key: LinkedKeyModel) {
 
 			<a
 				v-if="canToggleDescription"
-				v-app-track-event="`game-package-card:show-full-description`"
 				class="hidden-text-expander"
 				@click="showFullDescription = !showFullDescription"
 			/>

@@ -1,26 +1,26 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
+import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import { AppAuthJoinLazy } from '../../../../_common/lazy';
 import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import { styleWhen } from '../../../../_styles/mixins';
 import { arrayShuffle } from '../../../../utils/array';
 import { useFullscreenHeight } from '../../../../utils/fullscreen';
 import { imageGameJoltLogo } from '../../../img/images';
 import AppHomeFsPost from './_home-slider/AppHomeFsPost.vue';
 import AppHomeFsPostMeta from './_home-slider/AppHomeFsPostMeta.vue';
 
-const props = defineProps({
-	posts: {
-		type: Array as PropType<FiresidePostModel[]>,
-		required: true,
-	},
-});
+type Props = {
+	posts: FiresidePostModel[];
+};
 
-const { posts } = toRefs(props);
+const { posts } = defineProps<Props>();
+
 const fullscreenHeight = useFullscreenHeight();
 
 const shuffledPosts = ref<FiresidePostModel[]>([]);
@@ -32,6 +32,9 @@ const nextPostLoaded = ref(false);
 const shouldTransitionPosts = ref(false);
 const transitioningPosts = ref(false);
 
+// TODO: Turned off the ability to show login takeovers for now.
+const shouldShowTakeover = false;
+
 const bylinePost = computed(() => {
 	if (!firstPost.value || !secondPost.value) {
 		return null;
@@ -41,10 +44,10 @@ const bylinePost = computed(() => {
 });
 
 watch(
-	() => posts.value,
+	() => posts,
 	() => {
-		if (posts.value.length >= 2) {
-			shuffledPosts.value = arrayShuffle([...posts.value]);
+		if (posts.length >= 2) {
+			shuffledPosts.value = arrayShuffle([...posts]);
 			_next();
 		}
 	},
@@ -85,7 +88,26 @@ function onPostLoaded(post: FiresidePostModel) {
 
 <template>
 	<div class="-fs theme-dark" :style="{ minHeight: fullscreenHeight }">
-		<div class="container -content">
+		<!-- <template v-if="shouldShowTakeover">
+			<AppAdTakeoverBackground />
+
+			<div
+				:style="{
+					position: `fixed`,
+					bottom: `20px`,
+					left: `20px`,
+				}"
+			>
+				<AppAdTakeoverFloat>
+					<AppAdGptTakeoverLazy is-login-page />
+				</AppAdTakeoverFloat>
+			</div>
+		</template> -->
+
+		<div
+			class="container -container"
+			:style="styleWhen(!shouldShowTakeover, { position: `relative`, zIndex: 2 })"
+		>
 			<AppThemeSvg
 				v-if="Screen.isXs"
 				class="-logo"
@@ -96,11 +118,17 @@ function onPostLoaded(post: FiresidePostModel) {
 				strict-colors
 			/>
 
-			<div class="-hero-text -text-shadow">
-				Join a growing community of creators and gamers from around the world!
-			</div>
+			<AppAdTakeoverFloat>
+				<div class="-hero-text -text-shadow">
+					{{
+						$gettext(
+							`Join a growing community of creators and gamers from around the world!`
+						)
+					}}
+				</div>
+			</AppAdTakeoverFloat>
 
-			<div class="-auth-island">
+			<div class="-auth-content">
 				<template v-if="Screen.isXs">
 					<div class="-app-buttons">
 						<AppMobileAppButtons justified source="home-hero" />
@@ -108,55 +136,61 @@ function onPostLoaded(post: FiresidePostModel) {
 
 					<div class="-links -text-shadow">
 						<a :href="Environment.authBaseUrl + '/join'">
-							<AppTranslate>Sign up</AppTranslate>
+							{{ $gettext(`Sign up`) }}
 						</a>
 						{{ ' ' }}
-						<AppTranslate>or</AppTranslate>
+						{{ $gettext(`or`) }}
 						{{ ' ' }}
 						<a :href="Environment.authBaseUrl + '/login'">
-							<AppTranslate>Log in</AppTranslate>
+							{{ $gettext(`Log in`) }}
 						</a>
 					</div>
 				</template>
 				<template v-else>
-					<div class="-form">
-						<AppAuthJoinLazy overlay />
-					</div>
+					<AppAdTakeoverFloat>
+						<div class="-desktop-island">
+							<div class="-form">
+								<AppAuthJoin overlay />
+							</div>
 
-					<div class="-trouble-text -text-shadow">
-						<AppTranslate>Already have an account?</AppTranslate>
-						{{ ' ' }}
-						<a :href="Environment.authBaseUrl + '/login'">
-							<AppTranslate>Log in!</AppTranslate>
-						</a>
-					</div>
+							<div class="-trouble-text -text-shadow">
+								{{ $gettext(`Already have an account`) }}
+								{{ ' ' }}
+								<a :href="Environment.authBaseUrl + '/login'">
+									{{ $gettext(`Log in`) }}
+								</a>
+							</div>
+						</div>
 
-					<div class="-app-buttons">
-						<AppMobileAppButtons justified source="home-hero" />
-					</div>
+						<div class="-app-buttons">
+							<AppMobileAppButtons justified source="home-hero" />
+						</div>
+					</AppAdTakeoverFloat>
 				</template>
 			</div>
 		</div>
 
-		<div v-if="firstPost && secondPost" class="-posts">
-			<AppHomeFsPost
-				v-for="post of [firstPost, secondPost]"
-				:key="post.id"
-				class="-post"
-				:class="{ '-transition': transitioningPosts }"
-				:post="post"
-				@loaded="onPostLoaded(post)"
-			/>
-		</div>
+		<template v-if="!shouldShowTakeover">
+			<div v-if="firstPost && secondPost" class="-posts">
+				<AppHomeFsPost
+					v-for="post of [firstPost, secondPost]"
+					:key="post.id"
+					class="-post"
+					:class="{ '-transition': transitioningPosts }"
+					:post="post"
+					@loaded="onPostLoaded(post)"
+				/>
+			</div>
 
-		<transition>
-			<AppHomeFsPostMeta
-				v-if="bylinePost"
-				:key="bylinePost.id"
-				class="-byline anim-fade-enter-up anim-fade-leave"
-				:post="bylinePost"
-			/>
-		</transition>
+			<transition>
+				<AppHomeFsPostMeta
+					v-if="bylinePost"
+					:key="bylinePost.id"
+					class="-byline anim-fade-enter-up anim-fade-leave"
+					:post="bylinePost"
+				/>
+			</transition>
+		</template>
 	</div>
 </template>
 
@@ -172,19 +206,22 @@ function onPostLoaded(post: FiresidePostModel) {
 	color: var(--theme-fg)
 	background-color: var(--theme-bg)
 
-.-content
-	position: relative
+.-container
 	display: flex
 	flex-direction: column
 	align-items: center
 	margin-top: 24px
 	// Take some bottom margin for the fs post meta info
 	margin-bottom: 60px
-	z-index: 2
 
-.-auth-island
+.-auth-content
 	width: 100%
 	max-width: 350px
+
+.-desktop-island
+	rounded-corners-lg()
+	padding: 20px
+	background-color: var(--theme-bg)
 
 .-logo
 	margin-bottom: 24px
@@ -207,7 +244,7 @@ function onPostLoaded(post: FiresidePostModel) {
 		font-weight: bold
 
 .-form
-.-trouble-text
+.-desktop-island
 .-app-buttons
 .-get-app-button
 	margin-bottom: 24px

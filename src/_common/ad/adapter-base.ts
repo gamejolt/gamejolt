@@ -1,9 +1,8 @@
-import type { Component, PropType } from 'vue';
+import type { PropType } from 'vue';
 import { isDynamicGoogleBot } from '../device/device.service';
 import { AdSlot } from './ad-slot-info';
 
 export interface AdAdapter {
-	component(slot: AdSlot): Component;
 	onBeforeRouteChange(): void;
 	onRouteChanged(): void;
 }
@@ -42,3 +41,8 @@ export function defineAdAdapterComponentProps<T extends AdAdapter>() {
 		},
 	} as const;
 }
+
+export type AdAdapterComponentProps<T extends AdAdapter> = {
+	adSlot: AdSlot;
+	adapter: T;
+};

@@ -85,6 +85,6 @@ createAppRoute({
 				</AppButton>
 			</RouterLink>
 		</div>
-		<AppActivityFeedLazy v-else :feed="feed" show-ads gpt-ads-enabled />
+		<AppActivityFeedLazy v-else :feed="feed" show-ads />
 	</div>
 </template>

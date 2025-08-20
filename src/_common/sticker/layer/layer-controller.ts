@@ -1,11 +1,11 @@
 import {
 	computed,
-	ComputedRef,
 	inject,
 	InjectionKey,
 	provide,
 	ref,
 	Ref,
+	shallowReactive,
 	shallowRef,
 	ShallowRef,
 	toRaw,
@@ -26,10 +26,10 @@ export type StickerLayerController = {
 
 	isActive: Ref<boolean>;
 	isMask: Ref<boolean>;
-	isShowingDrawer: ComputedRef<boolean>;
-	canChargeAllTargets: ComputedRef<boolean>;
+	isShowingDrawer: Readonly<Ref<boolean>>;
+	canChargeAllTargets: Readonly<Ref<boolean>>;
 
-	preferredMask: ComputedRef<StickerLayerController>;
+	preferredMask: Readonly<Ref<StickerLayerController>>;
 
 	store: StickerStore;
 };
@@ -59,7 +59,6 @@ export function createStickerLayerController(store: StickerStore) {
 	 * If this is the layer currently showing sticker target rects.
 	 */
 	const _isActiveLayer = computed(() => toRaw(store.activeLayer.value) === toRaw(c));
-
 	const isShowingDrawer = computed(() => store.isDrawerOpen.value && _isActiveLayer.value);
 
 	/**
@@ -97,7 +96,7 @@ export function createStickerLayerController(store: StickerStore) {
 		return c;
 	});
 
-	const c: StickerLayerController = {
+	const c: StickerLayerController = shallowReactive({
 		scroller,
 
 		hoveredTarget,
@@ -112,7 +111,8 @@ export function createStickerLayerController(store: StickerStore) {
 		preferredMask,
 
 		store,
-	};
+	});
+
 	return c;
 }
 

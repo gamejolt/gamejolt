@@ -109,17 +109,12 @@ export default class AppGameSoundtrackCard extends Vue {
 
 		<a
 			v-if="canToggleSoundtrack"
-			v-app-track-event="`game-soundtrack-card:show-all-songs`"
 			class="hidden-text-expander"
 			@click="isShowingSoundtrack = !isShowingSoundtrack"
 		/>
 
 		<div class="card-controls">
-			<AppButton
-				v-app-track-event="`game-soundtrack-card:download`"
-				primary
-				@click="download"
-			>
+			<AppButton primary @click="download">
 				<AppTranslate>Download</AppTranslate>
 				<AppJolticon icon="musical-note-double" class="jolticon-addon" />
 			</AppButton>

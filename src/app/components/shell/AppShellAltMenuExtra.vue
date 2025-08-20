@@ -4,6 +4,7 @@ import { showTranslateLangSelectorModal } from '../../../_common/translate/lang-
 import { routeLandingHelpRedirect } from '../../views/landing/help/help.route';
 import { routeLegalCookies } from '../../views/legal/cookies/cookies.route';
 import { routeLegalPrivacy } from '../../views/legal/privacy/privacy.route';
+import { routeLegalSafety } from '../../views/legal/safety/safety.route';
 import { routeLegalTerms } from '../../views/legal/terms/terms.route';
 
 function showLangSelector() {
@@ -21,13 +22,17 @@ function showLangSelector() {
 		>
 			{{ $gettext(`Support`) }}
 		</RouterLink>
-		<div class="-dot" />
+		<div class="-row-break" />
 		<RouterLink :to="{ name: routeLegalTerms.name }">
 			{{ $gettext(`Terms`) }}
 		</RouterLink>
 		<div class="-dot" />
 		<RouterLink :to="{ name: routeLegalPrivacy.name }">
 			{{ $gettext(`Privacy`) }}
+		</RouterLink>
+		<div class="-dot" />
+		<RouterLink :to="{ name: routeLegalSafety.name }">
+			{{ $gettext(`Child Safety`) }}
 		</RouterLink>
 		<div class="-row-break" />
 		<RouterLink :to="{ name: routeLegalCookies.name }">

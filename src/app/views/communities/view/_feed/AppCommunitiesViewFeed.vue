@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { PropType, computed, toRef, toRefs } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
@@ -157,7 +156,6 @@ function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannel
 			<ul>
 				<li>
 					<RouterLink
-						v-app-track-event="`communities-feed:change-sort:new`"
 						:to="{
 							name: 'communities.view.channel',
 							params: {
@@ -173,7 +171,6 @@ function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannel
 				</li>
 				<li>
 					<RouterLink
-						v-app-track-event="`communities-feed:change-sort:hot`"
 						:to="{
 							name: 'communities.view.channel',
 							params: {

@@ -268,7 +268,7 @@ export class FiresidePostModel extends Model implements ContentContainerModel, C
 	 * Whether we can like, place stickers, or interact with comments on this
 	 * post.
 	 */
-	private get _canInteractWithPost() {
+	get _canInteractWithPost() {
 		if (this.hasAnyBlock || this.isDraft || this.isRemoved) {
 			return false;
 		}

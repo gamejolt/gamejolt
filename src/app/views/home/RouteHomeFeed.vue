@@ -1,12 +1,9 @@
 <script lang="ts">
-import { computed, defineAsyncComponent, provide, Ref, ref, watch } from 'vue';
+import { computed, defineAsyncComponent, provide, Ref, ref, toRef, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { router } from '..';
-import { AdsGPTEnabledGlobally } from '../../../_common/ad/ad-store';
 import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
 import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
-import AppAdGpt from '../../../_common/ad/gpt/AppAdGpt.vue';
-import AppAdGptTakeover from '../../../_common/ad/gpt/AppAdGptTakeover.vue';
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -22,11 +19,8 @@ import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppStickerChargeCard from '../../../_common/sticker/charge/AppStickerChargeCard.vue';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import {
-	buildCSSPixelValue,
-	kGridGutterWidth,
-	kGridGutterWidthXs,
-} from '../../../_styles/variables';
+import { styleTextOverflow } from '../../../_styles/mixins';
+import { kGridGutterWidth, kGridGutterWidthXs } from '../../../_styles/variables';
 import { numberSort } from '../../../utils/array';
 import { fuzzysearch } from '../../../utils/string';
 import { ActivityFeedService } from '../../components/activity/feed/feed-service';
@@ -64,25 +58,25 @@ function createActivityFeedController() {
 	const feed = ref(null) as Ref<ActivityFeedView | null>;
 	return { feed };
 }
+</script>
 
-export default {
+<script lang="ts" setup>
+defineOptions({
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
 		reloadOn: 'never',
 		resolver: () => Api.sendRequest('/web/dash/home'),
 	}),
-};
-</script>
+});
 
-<script lang="ts" setup>
 const { user } = useCommonStore();
 const questStore = useQuestStore();
-const { isLoading: isQuestStoreLoading, dailyQuests } = questStore;
 const route = useRoute();
 
-// Mark as loading until Grid is fully bootstrapped.
 const { grid } = useGridStore();
+
+// Mark as loading until Grid is fully bootstrapped.
 const isLoadingCharge = ref(grid.value?.bootstrapReceived !== true);
 if (isLoadingCharge.value) {
 	watch(
@@ -105,8 +99,8 @@ const isLoadingQuests = ref(true);
 const controller = createActivityFeedController();
 provide('route-activity-feed', controller);
 
-const hasGamesSection = computed(() => games.value.length > 0 && Screen.isLg);
-const hasGameFilter = computed(() => games.value.length > 7);
+const hasGamesSection = toRef(() => games.value.length > 0 && Screen.isLg);
+const hasGameFilter = toRef(() => games.value.length > 7);
 
 const filteredGames = computed(() => {
 	if (gameFilterQuery.value !== '') {
@@ -117,7 +111,7 @@ const filteredGames = computed(() => {
 	return games.value.slice(0, 7);
 });
 
-const isShowAllGamesVisible = computed(() => {
+const isShowAllGamesVisible = toRef(() => {
 	return !isShowingAllGames.value && games.value.length > 7 && gameFilterQuery.value === '';
 });
 
@@ -188,10 +182,6 @@ async function refreshQuests() {
 	await fetchDailyQuests(questStore);
 	isLoadingQuests.value = false;
 }
-
-// We add this margin to try to shift the page content below the For You |
-// Following tabs.
-const topSpacerHeight = buildCSSPixelValue(58);
 </script>
 
 <template>
@@ -209,30 +199,23 @@ const topSpacerHeight = buildCSSPixelValue(58);
 				<!-- Left sidebar -->
 				<template #left>
 					<template v-if="Screen.isDesktop">
-						<div :style="{ height: topSpacerHeight.px }" />
-
-						<AppAdTakeoverFloat allow-theme-change>
+						<AppAdTakeoverFloat>
 							<AppStickerChargeCard
-								header-charge
 								elevate
 								header-spacer-height="6px"
 								allow-fully-charged-text
 								:is-loading="isLoadingCharge"
 							/>
-							<AppSpacer vertical :scale="8" />
+							<AppSpacer vertical :scale="5" />
 
 							<template v-if="user">
-								<AppDailyQuests
-									disable-on-expiry
-									single-row
-									:force-loading="isLoadingQuests"
-								/>
-
-								<AppSpacer
-									v-if="isQuestStoreLoading || dailyQuests.length > 0"
-									vertical
-									:scale="8"
-								/>
+								<div class="sheet elevate-1">
+									<AppDailyQuests
+										disable-on-expiry
+										single-row
+										:force-loading="isLoadingQuests"
+									/>
+								</div>
 							</template>
 						</AppAdTakeoverFloat>
 
@@ -240,116 +223,92 @@ const topSpacerHeight = buildCSSPixelValue(58);
 							<AppInviteCard :user="user!" elevate />
 						</AppAdTakeoverFloat>
 
-						<AppAdTakeoverFloat v-if="hasGamesSection" allow-theme-change>
-							<div class="clearfix">
-								<div class="pull-right">
-									<AppButton
-										v-app-tooltip="$gettext(`Add Game`)"
-										icon="add"
-										circle
-										trans
-										:to="{ name: 'dash.games.add' }"
-									/>
+						<AppAdTakeoverFloat v-if="hasGamesSection">
+							<div class="sheet elevate-1">
+								<div class="clearfix">
+									<div class="pull-right">
+										<AppButton
+											v-app-tooltip="$gettext(`Add Game`)"
+											icon="add"
+											circle
+											trans
+											:to="{ name: 'dash.games.add' }"
+										/>
+									</div>
+									<h4 class="section-header">
+										{{ $gettext(`Manage Games`) }}
+									</h4>
 								</div>
-								<h4 class="section-header">
-									{{ $gettext(`Manage Games`) }}
-								</h4>
+
+								<template v-if="hasGameFilter">
+									<div>
+										<input
+											v-model="gameFilterQuery"
+											type="search"
+											class="form-control"
+											:placeholder="$gettext(`Filter games`)"
+										/>
+									</div>
+									<br />
+								</template>
+
+								<nav class="platform-list">
+									<ul>
+										<li v-for="game of filteredGames" :key="game.id">
+											<RouterLink
+												:to="{
+													name: 'dash.games.manage.game.overview',
+													params: { id: game.id },
+												}"
+												:title="
+													(game.ownerName ? `@${game.ownerName}/` : '') +
+													game.title
+												"
+												:style="styleTextOverflow"
+											>
+												<template v-if="game.ownerName">
+													<small>@{{ game.ownerName }}</small>
+													/
+												</template>
+												{{ game.title }}
+											</RouterLink>
+										</li>
+									</ul>
+								</nav>
+
+								<p v-if="isShowAllGamesVisible">
+									<a
+										class="link-muted"
+										@click="isShowingAllGames = !isShowingAllGames"
+									>
+										{{ $gettext(`Show all`) }}
+									</a>
+								</p>
 							</div>
-
-							<template v-if="hasGameFilter">
-								<div>
-									<input
-										v-model="gameFilterQuery"
-										type="search"
-										class="form-control"
-										:placeholder="$gettext(`Filter games`)"
-									/>
-								</div>
-								<br />
-							</template>
-
-							<nav class="-game-list platform-list">
-								<ul>
-									<li v-for="game of filteredGames" :key="game.id">
-										<RouterLink
-											v-app-track-event="`activity:quick-game`"
-											:to="{
-												name: 'dash.games.manage.game.overview',
-												params: { id: game.id },
-											}"
-											:title="
-												(game.ownerName ? `@${game.ownerName}/` : '') +
-												game.title
-											"
-										>
-											<template v-if="game.ownerName">
-												<small>@{{ game.ownerName }}</small>
-												/
-											</template>
-											{{ game.title }}
-										</RouterLink>
-									</li>
-								</ul>
-							</nav>
-
-							<p v-if="isShowAllGamesVisible">
-								<a
-									v-app-track-event="`activity:quick-game-all`"
-									class="link-muted"
-									@click="isShowingAllGames = !isShowingAllGames"
-								>
-									{{ $gettext(`Show all`) }}
-								</a>
-							</p>
 						</AppAdTakeoverFloat>
 					</template>
 				</template>
 
 				<!-- Right sidebar -->
-				<template v-if="!Screen.isMobile" #right="{ combined }">
-					<div v-if="!combined" :style="{ height: topSpacerHeight.px }" />
-
+				<template v-if="!Screen.isMobile" #right>
 					<template v-if="featuredItem">
 						<AppHomeFeaturedBanner :featured-item="featuredItem" />
 						<AppSpacer vertical :scale="8" />
 					</template>
 
-					<template v-if="AdsGPTEnabledGlobally">
-						<AppAdGptTakeover />
-					</template>
-					<template v-else>
-						<AppAdWidget size="rectangle" placement="side" />
-					</template>
+					<AppAdWidget unit-name="halfpage" takeover />
 				</template>
 
 				<!-- Main -->
 				<template #default>
-					<AppAdTakeoverFloat v-if="AdsGPTEnabledGlobally && Screen.isXs">
-						<div :style="{ marginTop: `-16px`, marginBottom: `16px` }">
-							<AppAdGpt placement="top" />
-						</div>
-					</AppAdTakeoverFloat>
-
-					<AppAdTakeoverFloat allow-theme-change>
-						<AppHomeFeedMenu
-							v-if="Screen.isDesktop"
-							:tabs="tabs"
-							:active-tab="activeFeedTab"
-						/>
-					</AppAdTakeoverFloat>
-
 					<AppAdTakeoverFloat>
-						<!-- Realm feed will handle its own add button. -->
 						<AppPostAddButton @add="onPostAdded" />
 
-						<template v-if="Screen.isMobile">
-							<template v-if="!Screen.isXs && featuredItem">
-								<AppHomeFeaturedBanner :featured-item="featuredItem" />
-								<AppSpacer vertical :scale="4" />
-							</template>
-
-							<AppHomeFeedMenu :tabs="tabs" :active-tab="activeFeedTab" />
+						<template v-if="!Screen.isXs && featuredItem">
+							<AppHomeFeaturedBanner :featured-item="featuredItem" />
 						</template>
+
+						<AppHomeFeedMenu :tabs="tabs" :active-tab="activeFeedTab" />
 
 						<RouteHomeActivity v-if="activeFeedTab === HOME_FEED_ACTIVITY" />
 						<RouteHomeFyp v-else-if="activeFeedTab === HOME_FEED_FYP" />
@@ -359,9 +318,3 @@ const topSpacerHeight = buildCSSPixelValue(58);
 		</section>
 	</AppShellPageBackdrop>
 </template>
-
-<style lang="stylus" scoped>
-.-game-list
-	a
-		text-overflow()
-</style>

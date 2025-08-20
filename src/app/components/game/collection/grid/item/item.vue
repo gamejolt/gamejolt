@@ -28,7 +28,7 @@ export default class AppGameCollectionGridItem extends Vue {
 
 <template>
 	<div class="game-collection-grid-item">
-		<router-link :to="collection.routeLocation" v-app-track-event="eventLabel">
+		<router-link :to="collection.routeLocation">
 			<AppGameCollectionThumbnail :collection="collection" />
 
 			<div class="game-collection-title h4">

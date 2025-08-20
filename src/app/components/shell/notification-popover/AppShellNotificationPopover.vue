@@ -143,7 +143,6 @@ function onClickFilter() {
 	>
 		<a
 			v-app-tooltip.bottom="$gettext(`Notifications`)"
-			v-app-track-event="`top-nav:notifications:toggle`"
 			class="navbar-item"
 			:class="{ active: isNavbarItemActive }"
 			@click.capture="onNavbarItemClick"

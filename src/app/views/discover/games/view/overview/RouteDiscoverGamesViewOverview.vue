@@ -255,14 +255,12 @@ async function reloadPreviewComments() {
 		<section class="section section-thin">
 			<AppAdWidget
 				v-if="globalShouldShowAds && !Screen.isMobile"
-				class="-leaderboard-ad"
-				:style="{
+				unit-name="billboard"
+				:style-override="{
 					paddingBottom: `8px`,
 					marginBottom: kLineHeightComputed.px,
 					borderBottom: `${kBorderWidthSm.px} solid ${kThemeBgSubtle}`,
 				}"
-				size="leaderboard"
-				placement="top"
 			/>
 
 			<AppAdStickyRail show-left>
@@ -322,15 +320,14 @@ async function reloadPreviewComments() {
 								:affixed-styles="styleWhen(Screen.width > 2300, { right: `8px` })"
 							>
 								<AppAdWidget
-									:style="{
+									unit-name="mpu"
+									:style-override="{
 										...styleChangeBg('bg'),
 										...styleElevate(3),
 										minWidth: `300px`,
 										padding: `8px`,
 										borderRadius: kBorderRadiusLg.px,
 									}"
-									size="rectangle"
-									placement="content"
 								/>
 							</AppScrollAffix>
 							<AppSpacer vertical :scale="4" />
@@ -493,11 +490,7 @@ async function reloadPreviewComments() {
 								</div>
 
 								<div class="page-cut page-cut-no-margin">
-									<AppButton
-										v-app-track-event="`game-profile:show-full-description`"
-										trans
-										@click="toggleDetails()"
-									>
+									<AppButton trans @click="toggleDetails()">
 										{{
 											!showDetails ? $gettext(`Show more`) : $gettext(`Less`)
 										}}

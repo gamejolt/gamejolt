@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { formatFuzzynumberOverThreshold } from '../../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../../_common/filters/number';
-import { watched } from '../../../../../_common/reactivity-helpers';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { ProfileStat } from './AppProfileStats.vue';
 
@@ -20,7 +19,7 @@ const props = defineProps({
 
 const { item } = toRefs(props);
 
-const displayData = watched(() => {
+const displayData = computed(() => {
 	const { value, fuzzyThreshold } = item.value;
 	if (fuzzyThreshold && value >= fuzzyThreshold) {
 		return {

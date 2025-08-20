@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
-import { vAppTrackEvent } from '../../analytics/track-event.directive';
 import { useCommonStore } from '../../store/common-store';
 import AppUserCardHover from '../card/AppUserCardHover.vue';
 import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
@@ -32,7 +31,6 @@ const { user: sessionUser } = useCommonStore();
 
 <template>
 	<RouterLink
-		v-app-track-event="`user-list:click:${eventLabel}`"
 		class="user-list-item"
 		:to="{
 			name: 'profile.overview',

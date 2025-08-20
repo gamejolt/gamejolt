@@ -1,5 +1,4 @@
 <script lang="ts">
-import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import AppAdStickyRail from '../../../../_common/ad/AppAdStickyRail.vue';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
@@ -25,35 +24,19 @@ const InviewConfig = new ScrollInviewConfig();
 </script>
 
 <script lang="ts" setup>
-defineProps({
-	listing: {
-		type: Object as PropType<GameListingContainer>,
-		required: true,
-	},
-	filtering: {
-		type: Object as PropType<GameFilteringContainer>,
-		required: true,
-	},
-	hideFilters: {
-		type: Boolean,
-	},
-	hideSectionNav: {
-		type: Boolean,
-	},
-	includeFeaturedSection: {
-		type: Boolean,
-	},
-	isLoading: {
-		type: Boolean,
-	},
-	showAds: {
-		type: Boolean,
-	},
-});
+type Props = {
+	listing: GameListingContainer;
+	filtering: GameFilteringContainer;
+	hideFilters?: boolean;
+	hideSectionNav?: boolean;
+	includeFeaturedSection?: boolean;
+	isLoading?: boolean;
+	showAds?: boolean;
+};
 
-const emit = defineEmits({
-	load: () => true,
-});
+defineProps<Props>();
+
+const emit = defineEmits<{ load: [] }>();
 
 const { shouldShow: globalShouldShowAds } = useAdStore();
 </script>
@@ -63,7 +46,7 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 		<section class="section section-thin">
 			<template v-if="showAds && globalShouldShowAds">
 				<AppAdTakeoverFloat>
-					<AppAdWidget size="leaderboard" placement="top" />
+					<AppAdWidget unit-name="billboard" />
 					<AppSpacer vertical :scale="6" />
 				</AppAdTakeoverFloat>
 			</template>
@@ -71,12 +54,11 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 			<AppAdStickyRail show-left>
 				<div class="container-xl">
 					<AppAdTakeoverFloat>
-						<AppNavTabList v-if="!hideSectionNav">
+						<AppNavTabList v-if="!hideSectionNav" sans-margin-bottom>
 							<ul>
 								<li v-if="includeFeaturedSection">
 									<RouterLink
 										v-app-no-autoscroll
-										v-app-track-event="`game-list:section-selector:featured`"
 										:to="{ name: $route.name!, params: { section: null } }"
 										:class="{ active: !$route.params.section }"
 									>
@@ -86,7 +68,6 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 								<li>
 									<RouterLink
 										v-app-no-autoscroll
-										v-app-track-event="`game-list:section-selector:hot`"
 										:to="{ name: $route.name!, params: { section: 'hot' } }"
 										:class="{ active: $route.params.section === 'hot' }"
 									>
@@ -96,7 +77,6 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 								<li>
 									<RouterLink
 										v-app-no-autoscroll
-										v-app-track-event="`game-list:section-selector:best`"
 										:to="{ name: $route.name!, params: { section: 'best' } }"
 										:class="{ active: $route.params.section === 'best' }"
 									>
@@ -106,7 +86,6 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 								<li>
 									<RouterLink
 										v-app-no-autoscroll
-										v-app-track-event="`game-list:section-selector:new`"
 										:to="{ name: $route.name!, params: { section: 'new' } }"
 										:class="{ active: $route.params.section === 'new' }"
 									>
@@ -126,13 +105,16 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 							</div>
 							<br />
 						</template>
+					</AppAdTakeoverFloat>
 
-						<template v-if="listing.isBootstrapped">
-							<template v-if="listing.gamesCount">
-								<AppLoadingFade :is-loading="isLoading">
-									<slot />
-								</AppLoadingFade>
+					<template v-if="listing.isBootstrapped">
+						<template v-if="listing.gamesCount">
+							<!-- Let the game grid itself do its own takeover floats. -->
+							<AppLoadingFade :is-loading="isLoading">
+								<slot />
+							</AppLoadingFade>
 
+							<AppAdTakeoverFloat>
 								<template v-if="!listing.loadInfinitely || GJ_IS_SSR">
 									<AppPagination
 										class="text-center"
@@ -150,10 +132,12 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 									/>
 									<AppLoading v-else centered />
 								</template>
-							</template>
+							</AppAdTakeoverFloat>
 						</template>
-						<AppGameGridPlaceholder v-else :num="16" />
+					</template>
+					<AppGameGridPlaceholder v-else :num="16" />
 
+					<AppAdTakeoverFloat>
 						<div
 							v-if="listing.isBootstrapped && !listing.gamesCount"
 							class="alert alert-notice anim-fade-in-enlarge"
@@ -172,7 +156,7 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 <style lang="stylus" scoped>
 .game-listing
 	.-filtering-well
-		change-bg('bg-offset')
+		change-bg('bg')
 		rounded-corners()
 		padding: $font-size-base 16px 0 16px
 

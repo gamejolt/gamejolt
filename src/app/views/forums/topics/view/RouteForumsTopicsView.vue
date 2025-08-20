@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
-import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
@@ -257,7 +256,6 @@ createAppRoute({
 
 										<a
 											v-if="canToggleDescription"
-											v-app-track-event="`forum-topic:show-full-post`"
 											class="hidden-text-expander"
 											@click="showFullDescription = !showFullDescription"
 										/>

@@ -8,14 +8,12 @@ import {
 	provide,
 	ref,
 	shallowReadonly,
-	toRef,
 } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
 import { Api } from '../../../_common/api/api.service';
 import { Environment } from '../../../_common/environment/environment.service';
 import { LinkedAccountModel } from '../../../_common/linked-account/linked-account.model';
-import { watched } from '../../../_common/reactivity-helpers';
 import { Registry } from '../../../_common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Screen } from '../../../_common/screen/screen-service';
@@ -66,7 +64,9 @@ function createProfileRouteStore({
 }) {
 	// We will bootstrap this right away, so it should always be set for use.
 	const user = ref<UserModel>();
-	const isMe = toRef(() => !!myUser.value && !!user.value && myUser.value.id === user.value.id);
+	const isMe = computed(
+		() => !!myUser.value && !!user.value && myUser.value.id === user.value.id
+	);
 
 	const isOverviewLoaded = ref(false);
 	const gamesCount = ref(0);
@@ -79,7 +79,7 @@ function createProfileRouteStore({
 	const canToggleDescription = ref(false);
 	const linkedAccounts = ref<LinkedAccountModel[]>([]);
 
-	const isFriend = toRef(
+	const isFriend = computed(
 		() => userFriendship.value && userFriendship.value.state === UserFriendshipState.Friends
 	);
 
@@ -90,7 +90,7 @@ function createProfileRouteStore({
 		return isUserOnline(chat.value, user.value.id);
 	});
 
-	const shareUrl = toRef(() => {
+	const shareUrl = computed(() => {
 		if (!user.value) {
 			return Environment.baseUrl;
 		}
@@ -106,7 +106,7 @@ function createProfileRouteStore({
 		{ enable: true }
 	);
 
-	const stickySides = watched(() => {
+	const stickySides = computed(() => {
 		if (_headerHeight.value <= 0) {
 			return false;
 		}
@@ -314,7 +314,7 @@ const route = useRoute();
  * let's make sure we reset the autoscroll anchor so that it scrolls to the
  * top again.
  */
-const autoscrollAnchorKey = toRef(() => routeUser.value!.id);
+const autoscrollAnchorKey = computed(() => routeUser.value!.id);
 
 const { isBootstrapped } = createAppRoute({
 	onInit() {
@@ -352,7 +352,7 @@ const headingUsernameStyles = {
 	marginLeft: `8px`,
 } satisfies CSSProperties;
 
-const coverMaxHeight = watched(() => Math.min(Screen.height * 0.35, 400));
+const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
 </script>
 
 <template>

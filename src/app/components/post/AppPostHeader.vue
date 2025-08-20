@@ -12,6 +12,17 @@ import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButto
 import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import AppActivityFeedPostTime from '../activity/feed/post/AppActivityFeedPostTime.vue';
 import { ActivityFeedView } from '../activity/feed/view';
+import {
+	PostHeaderAvatarStyles,
+	PostHeaderBylineGameStyles,
+	PostHeaderBylineNameStyles,
+	PostHeaderBylineStyles,
+	PostHeaderBylineUsernameStyles,
+	PostHeaderContentStyles,
+	PostHeaderMetaStyles,
+	PostHeaderStyles,
+	PostHeaderTimeStyles,
+} from './post-styles';
 
 const props = defineProps({
 	post: {
@@ -63,10 +74,10 @@ const shouldShowFollow = computed(() => {
 </script>
 
 <template>
-	<div v-if="user" class="-header">
-		<div class="-header-content">
+	<div v-if="user" :style="PostHeaderStyles">
+		<div :style="PostHeaderContentStyles">
 			<AppUserCardHover :user="user" :disabled="feed && !feed.shouldShowUserCards">
-				<div class="-header-avatar">
+				<div :style="PostHeaderAvatarStyles">
 					<AppUserAvatarBubble
 						:user="user"
 						show-frame
@@ -77,22 +88,20 @@ const shouldShowFollow = computed(() => {
 				</div>
 			</AppUserCardHover>
 
-			<div class="-header-byline">
-				<div class="-header-byline-name" :class="{ '-overlay-text': overlay }">
-					<strong>
-						<RouterLink
-							class="link-unstyled"
-							:class="{ '-overlay-text': overlay }"
-							:to="{
-								name: 'profile.overview',
-								params: { username: user.username },
-							}"
-						>
-							{{ user.display_name }}
-						</RouterLink>
-					</strong>
+			<div :style="PostHeaderBylineStyles">
+				<div :style="PostHeaderBylineNameStyles(overlay)">
+					<RouterLink
+						class="link-unstyled"
+						:class="{ '-overlay-text': overlay }"
+						:to="{
+							name: 'profile.overview',
+							params: { username: user.username },
+						}"
+					>
+						{{ user.display_name }}
+					</RouterLink>
 
-					<small class="text-muted" :class="{ '-overlay-text': overlay }">
+					<span :style="PostHeaderBylineUsernameStyles(overlay)">
 						<RouterLink
 							class="link-unstyled"
 							:to="{
@@ -102,23 +111,24 @@ const shouldShowFollow = computed(() => {
 						>
 							@{{ user.username }}
 						</RouterLink>
-					</small>
+					</span>
 				</div>
 
-				<div v-if="game && !feed?.hideGameInfo" class="-header-byline-game">
-					<strong class="text-muted" :class="{ '-overlay-text': overlay }">
-						<component
-							:is="!!gameUrl ? RouterLink : 'span'"
-							:to="gameUrl"
-							class="link-unstyled"
-						>
-							{{ game.title }}
-						</component>
-					</strong>
+				<div
+					v-if="game && !feed?.hideGameInfo"
+					:style="PostHeaderBylineGameStyles(overlay)"
+				>
+					<component
+						:is="gameUrl ? RouterLink : 'span'"
+						:to="gameUrl"
+						class="link-unstyled"
+					>
+						{{ game.title }}
+					</component>
 				</div>
 			</div>
 		</div>
-		<div class="-header-meta small text-muted">
+		<div :style="PostHeaderMetaStyles">
 			<span v-if="showPinned">
 				<span class="tag">
 					<AppJolticon icon="thumbtack" />
@@ -126,7 +136,7 @@ const shouldShowFollow = computed(() => {
 				</span>
 			</span>
 
-			<span v-if="post.isActive || post.isScheduled" :class="{ '-overlay-text': overlay }">
+			<span v-if="post.isActive || post.isScheduled" :style="PostHeaderTimeStyles(overlay)">
 				<AppActivityFeedPostTime v-if="dateLink" :post="post" :link="dateLink" />
 				<AppTimeAgo v-else :date="post.published_on" strict />
 			</span>
@@ -142,52 +152,3 @@ const shouldShowFollow = computed(() => {
 		</div>
 	</div>
 </template>
-
-<style lang="stylus" scoped>
-@import './common'
-
-$-avatar-size = 40px
-
-.-header
-	display: flex
-	align-items: center
-
-.-header-avatar
-	position: relative
-	flex: none
-	margin-right: $-item-padding-xs
-	width: $-avatar-size
-	height: $-avatar-size
-	line-height: $-avatar-size
-	margin-bottom: 4px
-
-	@media $media-sm-up
-		margin-right: $-item-padding
-
-.-header-content
-	flex: auto
-	display: flex
-	align-items: center
-	overflow: hidden
-
-.-header-byline
-	display: flex
-	flex-direction: column
-	overflow: hidden
-
-.-header-byline-name
-.-header-byline-game
-	text-overflow()
-
-.-header-meta
-	flex: none
-	display: flex
-	align-items: center
-	flex-direction: row
-	grid-gap: 8px
-	margin-left: $-item-padding-xs
-	line-height: $line-height-computed
-
-	@media $media-sm-up
-		margin-left: $-item-padding
-</style>

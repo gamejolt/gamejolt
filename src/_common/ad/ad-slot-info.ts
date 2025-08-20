@@ -1,7 +1,14 @@
-export type AdSlotSize = 'rectangle' | 'leaderboard' | 'video' | 'skyscraper';
-
-export type AdSlotPlacement = 'content' | 'side' | 'top';
+export type AdUnitName = 'halfpage' | 'rail' | 'billboard' | 'mpu';
 
 export class AdSlot {
-	constructor(public readonly size: AdSlotSize, public readonly placement: AdSlotPlacement) {}
+	/**
+	 * Whether this slot is currently showing a native post or takeover ad.
+	 */
+	showingCustom = false;
+
+	constructor(
+		public readonly unitName: AdUnitName,
+		public readonly takeover: boolean,
+		public readonly nativePost: boolean
+	) {}
 }

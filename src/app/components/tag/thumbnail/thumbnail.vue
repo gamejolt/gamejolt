@@ -37,7 +37,7 @@ export default class AppTagThumbnail extends Vue {
 </script>
 
 <template>
-	<router-link v-app-track-event="event" class="tag-thumbnail" :class="{ active }" :to="location">
+	<router-link class="tag-thumbnail" :class="{ active }" :to="location">
 		<div class="-ratio">
 			<div class="-content">
 				<img class="-image" :src="tagInfo.image" alt="" />

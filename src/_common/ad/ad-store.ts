@@ -1,12 +1,20 @@
-import { inject, InjectionKey, onUnmounted, provide, ref, shallowReadonly, toRef } from 'vue';
+import {
+	inject,
+	InjectionKey,
+	onUnmounted,
+	provide,
+	ref,
+	shallowReadonly,
+	shallowRef,
+	toRef,
+} from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
 import { objectEquals } from '../../utils/object';
+import { loadScript } from '../../utils/utils';
 import { isDynamicGoogleBot } from '../device/device.service';
 import { Model } from '../model/model.service';
 import { onRouteChangeAfter } from '../route/route-component';
-import { AdAdapter } from './adapter-base';
-import { AdGptAdapter } from './gpt/gpt-adapter';
-import { AdProperAdapter } from './proper/proper-adapter';
+import { AdMonetizeMoreAdapter } from './monetizemore/monetizemore-adapter';
 
 type AdStore = ReturnType<typeof createAdStore>;
 const AdStoreKey: InjectionKey<AdStore> = Symbol('ads');
@@ -17,11 +25,6 @@ export const AdsDisabledDev = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE ===
 
 const areAdsDisabledForDevice =
 	GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev;
-
-/**
- * Whether or not we're showing GPT takeover ads.
- */
-export const AdsGPTEnabledGlobally = false;
 
 /**
  * This is the interface that our ad components must register with us.
@@ -39,8 +42,7 @@ export function createAdStore() {
 	const pageSettings = ref<AdSettingsContainer | null>(null);
 	const _defaultSettings = new AdSettingsContainer();
 
-	const adapter: AdAdapter = new AdProperAdapter();
-	const takeoverAdapter: AdGptAdapter = new AdGptAdapter();
+	const monetizeMoreAdapter = new AdMonetizeMoreAdapter();
 
 	const settings = toRef(() => pageSettings.value || _defaultSettings);
 
@@ -57,16 +59,19 @@ export function createAdStore() {
 	});
 
 	const hasTakeover = ref(false);
+	const videoAdsLoadPromise = shallowRef<Promise<void> | null>(null);
+	const videoAdsLoaded = ref(false);
 
 	const c = shallowReadonly({
-		adapter,
-		takeoverAdapter,
+		monetizeMoreAdapter,
 		routeResolved,
 		ads,
 		pageSettings,
 		settings,
 		shouldShow,
 		hasTakeover,
+		videoAdsLoadPromise,
+		videoAdsLoaded,
 	});
 	provide(AdStoreKey, c);
 
@@ -81,10 +86,7 @@ export function createAdStore() {
 		// since this gets called even if just a simple hash has
 		// changed.
 		if (_didRouteChange(from, to)) {
-			adapter.onBeforeRouteChange();
-			if (adapter !== takeoverAdapter) {
-				takeoverAdapter.onBeforeRouteChange();
-			}
+			monetizeMoreAdapter.onBeforeRouteChange();
 			routeResolved.value = false;
 		}
 		next();
@@ -96,10 +98,7 @@ export function createAdStore() {
 		}
 
 		routeResolved.value = true;
-		adapter.onRouteChanged();
-		if (adapter !== takeoverAdapter) {
-			takeoverAdapter.onRouteChanged();
-		}
+		monetizeMoreAdapter.onRouteChanged();
 		_displayAds(Array.from(ads.value));
 	});
 
@@ -152,4 +151,22 @@ async function _displayAds(displayedAds: AdInterface[]) {
 	for (const ad of displayedAds) {
 		ad.display();
 	}
+}
+
+export async function loadVideoAdsTag({ videoAdsLoadPromise, videoAdsLoaded }: AdStore) {
+	if (areAdsDisabledForDevice) {
+		throw new Error(`Ads disabled for device.`);
+	}
+
+	if (videoAdsLoadPromise.value) {
+		return videoAdsLoadPromise.value;
+	}
+
+	videoAdsLoadPromise.value = loadScript(
+		'https://imasdk.googleapis.com/js/sdkloader/ima3.js'
+	).then(() => {
+		videoAdsLoaded.value = true;
+	});
+
+	return videoAdsLoadPromise.value;
 }

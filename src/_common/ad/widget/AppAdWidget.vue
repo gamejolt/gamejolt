@@ -1,74 +1,63 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs, watch } from 'vue';
+import { ref, StyleValue, watch } from 'vue';
 import { styleWhen } from '../../../_styles/mixins';
-import { AdSlot, AdSlotPlacement, AdSlotSize } from '../ad-slot-info';
+import { AdSlot, AdUnitName } from '../ad-slot-info';
 import { useAdStore } from '../ad-store';
 import AppAdWidgetInner from './AppAdWidgetInner.vue';
 
-const props = defineProps({
-	size: {
-		type: String as PropType<AdSlotSize>,
-		default: 'rectangle',
-	},
-	placement: {
-		type: String as PropType<AdSlotPlacement>,
-		default: 'content',
-	},
-});
+type Props = {
+	unitName: AdUnitName;
+	takeover?: boolean;
+	nativePost?: boolean;
+	classOverride?: string;
+	styleOverride?: StyleValue;
+};
 
-const { size, placement } = toRefs(props);
+const { unitName, takeover = false, nativePost = false } = defineProps<Props>();
+
 const { shouldShow } = useAdStore();
 
 const adSlot = ref(_makeAdSlot());
 
 // If anything within our props changes, regenerate.
-watch(
-	props,
-	() => {
-		adSlot.value = _makeAdSlot();
-	},
-	{ deep: true }
-);
+watch([() => unitName, () => takeover, () => nativePost], () => {
+	adSlot.value = _makeAdSlot();
+});
 
 function _makeAdSlot() {
-	return new AdSlot(size.value, placement.value);
+	return new AdSlot(unitName, takeover, nativePost);
 }
 </script>
 
 <template>
-	<div v-if="shouldShow" :style="{ textAlign: `center` }">
+	<div
+		v-if="shouldShow"
+		:class="adSlot.showingCustom ? undefined : classOverride"
+		:style="[{ textAlign: `center` }, adSlot.showingCustom ? undefined : styleOverride]"
+	>
 		<div
 			:style="{
 				display: `flex`,
 				alignItems: `center`,
 				justifyContent: `center`,
 				margin: `0 auto`,
-				...styleWhen(adSlot.size === 'leaderboard', {
+				...styleWhen(unitName === 'billboard', {
 					minHeight: `115px`,
 				}),
-				...styleWhen(adSlot.size === 'rectangle', {
+				...styleWhen(unitName === 'mpu' || unitName === 'halfpage', {
 					minHeight: `250px`,
-				}),
-				...styleWhen(adSlot.size === 'video', {
-					minHeight: `200px`,
 				}),
 				// For debugging ad placements.
 				...styleWhen(GJ_BUILD_TYPE !== 'build', {
 					background: `rgba(255, 0, 0, 0.2)`,
-					...styleWhen(adSlot.size === 'skyscraper', {
+					...styleWhen(unitName === 'rail', {
 						minWidth: `160px`,
 						minHeight: `600px`,
 					}),
 				}),
 			}"
 		>
-			<AppAdWidgetInner
-				:style="{
-					// Make sure the ad is able to take up the full width.
-					flex: `auto`,
-				}"
-				:ad-slot="adSlot"
-			/>
+			<AppAdWidgetInner :ad-slot="adSlot" />
 		</div>
 	</div>
 </template>

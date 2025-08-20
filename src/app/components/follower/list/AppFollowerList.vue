@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { PropType, ref, toRef, toRefs, watch } from 'vue';
-import { vAppTrackEvent } from '../../../../_common/analytics/track-event.directive';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
@@ -110,7 +109,7 @@ async function loadMore() {
 
 			<AppLoading v-if="isLoading" centered />
 			<div v-else-if="shouldShowLoadMore" class="page-cut">
-				<AppButton v-app-track-event="`profile-followers:more`" trans @click="loadMore()">
+				<AppButton trans @click="loadMore()">
 					{{ $gettext(`Load More`) }}
 				</AppButton>
 			</div>

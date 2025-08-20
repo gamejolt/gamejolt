@@ -27,7 +27,6 @@ export default class AppGameCollectionList extends Vue {
 		<router-link
 			v-for="collection of collections"
 			:key="collection._id"
-			v-app-track-event="eventLabel"
 			class="list-group-item clearfix"
 			:to="collection.routeLocation"
 			:title="collection.getTitle()"

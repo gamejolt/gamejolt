@@ -44,6 +44,20 @@
 		"prefix": "legacy-model",
 		"body": ["export class ${1:ModelName}Model extends Model {", "\t$0", "}"]
 	},
+	"CSS properties": {
+		"prefix": "styles-object",
+		"body": ["const ${1:some}Styles = {", "\t${2:}", "} as const satisfies CSSProperties;"]
+	},
+	"CSS properties reactive": {
+		"prefix": "styles-reactive",
+		"body": [
+			"const ${1:some}Styles = computed(() => {",
+			"\treturn {",
+			"\t\t${2:}",
+			"\t} as const satisfies CSSProperties;",
+			"});"
+		]
+	},
 	"Pure assignment": {
 		"prefix": "pure",
 		"body": "/** @__PURE__ */"

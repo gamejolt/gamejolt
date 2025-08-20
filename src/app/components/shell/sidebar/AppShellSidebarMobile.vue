@@ -14,11 +14,7 @@ import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 	<div id="shell-sidebar-mobile">
 		<ul v-if="Screen.isXs" class="shell-nav">
 			<li>
-				<RouterLink
-					v-app-track-event="`sidebar:discover`"
-					:to="{ name: 'discover.home' }"
-					active-class="active"
-				>
+				<RouterLink :to="{ name: 'discover.home' }" active-class="active">
 					<span class="shell-nav-icon">
 						<AppJolticon icon="compass-needle" />
 					</span>
@@ -30,7 +26,6 @@ import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 
 			<li>
 				<RouterLink
-					v-app-track-event="`sidebar:store`"
 					:to="{
 						name: 'discover.games.list._fetch',
 						params: { section: null },
@@ -48,7 +43,6 @@ import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
 
 			<li>
 				<RouterLink
-					v-app-track-event="`sidebar:search`"
 					:to="{ name: 'search.results' }"
 					:class="{ active: $route.name && String($route.name).indexOf('search') === 0 }"
 				>

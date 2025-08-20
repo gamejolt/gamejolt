@@ -1,16 +1,18 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRef, toRefs } from 'vue';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import AppContentViewer from '../../../../../../_common/content/content-viewer/AppContentViewer.vue';
+import { CSSProperties, PropType, computed, ref, toRef, toRefs } from 'vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
+import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import {
 	FiresidePostModel,
 	loadArticleIntoPost,
-} from '../../../../../../_common/fireside/post/post-model';
-import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import { Scroll } from '../../../../../../_common/scroll/scroll.service';
-import { ActivityFeedItem } from '../../item-service';
-import { useActivityFeed } from '../../view';
+} from '../../../../../_common/fireside/post/post-model';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
+import { Screen } from '../../../../../_common/screen/screen-service';
+import { Scroll } from '../../../../../_common/scroll/scroll.service';
+import { styleWhen } from '../../../../../_styles/mixins';
+import { kPostItemPaddingContainer } from '../../../post/post-styles';
+import { ActivityFeedItem } from '../item-service';
+import { useActivityFeed } from '../view';
 
 const props = defineProps({
 	item: {
@@ -76,6 +78,15 @@ async function collapse() {
 
 	feed.setItemOpen(item.value, false);
 }
+
+const pageCutStyles = computed(() => {
+	return {
+		...styleWhen(Screen.isDesktop, {
+			marginLeft: `-${kPostItemPaddingContainer.px}`,
+			marginRight: `-${kPostItemPaddingContainer.px}`,
+		}),
+	} as const satisfies CSSProperties;
+});
 </script>
 
 <template>
@@ -87,14 +98,14 @@ async function collapse() {
 		}"
 	>
 		<template v-if="isOpen">
-			<div class="page-cut">
+			<div class="page-cut" :style="pageCutStyles">
 				<div class="-page-cut-content-placeholder" />
 			</div>
 
 			<AppContentViewer :source="post.article_content" disable-lightbox />
 		</template>
 
-		<div class="-page-cut-bottom page-cut">
+		<div class="-page-cut-bottom page-cut" :style="pageCutStyles">
 			<div class="page-cut-content">
 				<AppLoading
 					v-if="isLoading"
@@ -113,13 +124,6 @@ async function collapse() {
 </template>
 
 <style lang="stylus" scoped>
-@import '../../variables'
-
-.page-cut
-	@media $media-sm-up
-		margin-left: -($-item-padding-container)
-		margin-right: -($-item-padding-container)
-
 .-page-cut-bottom
 	margin-bottom: ($line-height-computed / 2)
 

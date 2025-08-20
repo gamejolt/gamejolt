@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { toRef, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
-import { vAppTrackEvent } from '../../../../../_common/analytics/track-event.directive';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/AppCommunityJoinWidget.vue';
 import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
@@ -105,7 +104,6 @@ function copyShareUrl() {
 
 				<div class="-members small">
 					<RouterLink
-						v-app-track-event="`community-mobile-header:community-members`"
 						v-translate="{ count: formatNumber(memberCount) }"
 						:translate-n="memberCount"
 						translate-plural="<b>%{count}</b> members"
@@ -126,7 +124,6 @@ function copyShareUrl() {
 			<!-- Context Menu -->
 			<div v-if="shouldShowChannelsMenu" class="-controls-item -menu">
 				<AppButton
-					v-app-track-event="`community-mobile-header:toggle-context`"
 					icon="menu"
 					trans
 					:sparse="Screen.isXs && shouldShowAbout"
@@ -156,11 +153,7 @@ function copyShareUrl() {
 			</div>
 
 			<!-- About -->
-			<div
-				v-if="shouldShowAbout"
-				v-app-track-event="`community-mobile-header:community-about`"
-				class="-controls-item -about"
-			>
+			<div v-if="shouldShowAbout" class="-controls-item -about">
 				<AppButton trans @click="onClickAbout">
 					{{ $gettext(`About`) }}
 				</AppButton>
@@ -172,11 +165,7 @@ function copyShareUrl() {
 
 				<template #popover>
 					<div class="list-group list-group-dark">
-						<a
-							v-app-track-event="`copy-link:community`"
-							class="list-group-item has-icon"
-							@click="copyShareUrl"
-						>
+						<a class="list-group-item has-icon" @click="copyShareUrl">
 							<AppJolticon icon="link" />
 							{{ $gettext(`Copy link to community`) }}
 						</a>

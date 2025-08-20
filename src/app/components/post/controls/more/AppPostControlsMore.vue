@@ -255,11 +255,7 @@ async function togglePin() {
 
 		<template #popover>
 			<div class="list-group list-group-dark">
-				<a
-					v-app-track-event="`copy-link:post`"
-					class="list-group-item has-icon"
-					@click="copyShareUrl"
-				>
+				<a class="list-group-item has-icon" @click="copyShareUrl">
 					<AppJolticon icon="link" />
 					{{ $gettext(`Copy link to post`) }}
 				</a>

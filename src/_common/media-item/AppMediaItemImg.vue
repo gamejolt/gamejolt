@@ -1,20 +1,16 @@
 <script lang="ts" setup>
-import { PropType, toRef } from 'vue';
+import { computed } from 'vue';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
-import { MediaItemModel, getMediaItemImageSrc } from './media-item-model';
+import { getMediaItemImageSrc, MediaItemModel } from './media-item-model';
 
-const props = defineProps({
-	mediaItem: {
-		type: Object as PropType<MediaItemModel>,
-		required: true,
-	},
-	alt: {
-		type: String,
-		default: '',
-	},
-});
+type Props = {
+	mediaItem: MediaItemModel;
+	alt?: string;
+};
 
-const info = toRef(() => getMediaItemImageSrc(props.mediaItem));
+const { mediaItem, alt = '' } = defineProps<Props>();
+
+const info = computed(() => getMediaItemImageSrc(mediaItem));
 </script>
 
 <template>

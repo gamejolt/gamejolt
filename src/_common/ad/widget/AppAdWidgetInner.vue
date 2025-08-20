@@ -1,18 +1,16 @@
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, PropType, ref, toRef, toRefs } from 'vue';
+import { onBeforeUnmount, onMounted, ref, toRef } from 'vue';
 import { AdSlot } from '../ad-slot-info';
-import { addAd, AdInterface, removeAd, useAdStore } from '../ad-store';
+import { AdInterface, addAd, removeAd, useAdStore } from '../ad-store';
 
-const props = defineProps({
-	adSlot: {
-		type: Object as PropType<AdSlot>,
-		required: true,
-	},
-});
+type Props = {
+	adSlot: AdSlot;
+};
 
-const { adSlot } = toRefs(props);
+const { adSlot } = defineProps<Props>();
+
 const adStore = useAdStore();
-const { adapter } = adStore;
+const { monetizeMoreAdapter: adapter } = adStore;
 
 /**
  * We change this as the route changes. This way we can tell any of the ad
@@ -20,7 +18,7 @@ const { adapter } = adStore;
  */
 const slotId = ref('');
 
-const adComponent = toRef(() => adapter.component(adSlot.value));
+const adComponent = toRef(() => adapter.component(adSlot));
 
 /**
  * The [AdsController] will call into this to display the ad when needed (when
@@ -48,7 +46,14 @@ function _generateSlotId() {
 </script>
 
 <template>
-	<div v-if="slotId" :key="slotId" class="ad-widget-inner">
+	<div
+		v-if="slotId"
+		:key="slotId"
+		:style="{
+			// Make sure the ad is able to take up the full width.
+			flex: `auto`,
+		}"
+	>
 		<!-- We completely regenerate it when the slot ID changes -->
 		<!-- Load the ad component for the currently running ad adapter -->
 		<component :is="adComponent" :ad-slot="adSlot" :adapter="adapter" />

@@ -1,17 +1,19 @@
 <script lang="ts" setup>
-defineProps({
+type Props = {
 	/**
 	 * Extends the overlay 4px past the content on the bottom, rather than being
 	 * inset 4px on the bottom.
 	 */
-	end: { type: Boolean },
-	hide: { type: Boolean },
-});
+	end?: boolean;
+	hide?: boolean;
+};
+
+const { end, hide } = defineProps<Props>();
 </script>
 
 <template>
 	<div class="sticker-controls-overlay">
-		<div v-if="!hide" class="-overlay" :class="{ '-end': end }" />
+		<div v-if="!hide" class="_overlay" :class="{ _end: end }" />
 		<slot />
 	</div>
 </template>
@@ -22,7 +24,7 @@ defineProps({
 	// Needs to be higher than the z-index of AppStickerTarget
 	z-index: 1
 
-	.-overlay
+	._overlay
 		rounded-corners-lg()
 		change-bg('bg')
 		// We want to expand the overlay out to the edges of the post container.
@@ -40,6 +42,6 @@ defineProps({
 			margin-left: -($grid-gutter-width / 2)
 			margin-right: -($grid-gutter-width / 2)
 
-		&.-end
+		&._end
 			bottom: -4px
 </style>

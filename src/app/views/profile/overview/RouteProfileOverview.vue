@@ -1,15 +1,13 @@
 <script lang="ts">
-import { Ref, ref, toRef } from 'vue';
+import { computed, Ref, ref } from 'vue';
 import { RouteLocationRaw, RouterView, useRoute, useRouter } from 'vue-router';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import { AdsGPTEnabledGlobally } from '../../../../_common/ad/ad-store';
-import AppAdGptTakeover from '../../../../_common/ad/gpt/AppAdGptTakeover.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
-	CommentStoreModel,
 	commentStoreCount,
+	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
 	useCommentStoreManager,
@@ -108,14 +106,15 @@ const supportersData = ref() as Ref<
 
 let permalinkWatchDeregister: CommentThreadModalPermalinkDeregister | undefined = undefined;
 
-const routeTitle = toRef(() => {
+const routeTitle = computed(() => {
 	if (routeUser.value) {
 		return `${routeUser.value.display_name} (@${routeUser.value.username})`;
 	}
 	return null;
 });
 
-const userBlockedYou = toRef(() => routeUser.value && routeUser.value.blocked_you);
+const userBlockedYou = computed(() => routeUser.value && routeUser.value.blocked_you);
+const showSidebarAvatar = computed(() => stickySides.value || Screen.isMobile);
 
 createAppRoute({
 	routeTitle,
@@ -236,8 +235,6 @@ async function onFriendRequestReject() {
 		grid.value?.pushViewNotifications('friend-requests');
 	}
 }
-
-const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 </script>
 
 <template>
@@ -273,7 +270,9 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 
 								<AppSpacer vertical :scale="4" />
 								<AppAdWidget
-									:style="{
+									unit-name="halfpage"
+									takeover
+									:style-override="{
 										...styleChangeBg('bg'),
 										...styleElevate(3),
 										// Can't change this, needs to be at least 300px wide.
@@ -281,8 +280,6 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 										borderRadius: kBorderRadiusLg.px,
 										padding: `8px`,
 									}"
-									size="rectangle"
-									placement="side"
 								/>
 								<AppSpacer vertical :scale="6" />
 							</template>
@@ -319,23 +316,18 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 							<AppProfileActionButtons />
 
 							<AppSpacer vertical :scale="4" />
-							<template v-if="AdsGPTEnabledGlobally">
-								<AppAdGptTakeover />
-							</template>
-							<template v-else>
-								<AppAdWidget
-									:style="{
-										...styleChangeBg('bg'),
-										...styleElevate(3),
-										// Can't change this, needs to be at least 300px wide.
-										minWidth: `300px`,
-										borderRadius: kBorderRadiusLg.px,
-										padding: `8px`,
-									}"
-									size="rectangle"
-									placement="side"
-								/>
-							</template>
+							<AppAdWidget
+								unit-name="halfpage"
+								takeover
+								:style-override="{
+									...styleChangeBg('bg'),
+									...styleElevate(3),
+									// Can't change this, needs to be at least 300px wide.
+									minWidth: `300px`,
+									borderRadius: kBorderRadiusLg.px,
+									padding: `8px`,
+								}"
+							/>
 							<AppSpacer vertical :scale="6" />
 						</template>
 
@@ -347,38 +339,37 @@ const showSidebarAvatar = toRef(() => stickySides.value || Screen.isMobile);
 						</template>
 
 						<!-- Developer's Games -->
-						<AppAdTakeoverFloat
-							v-if="Screen.isDesktop && gamesCount > 0"
-							allow-theme-change
-						>
+						<AppAdTakeoverFloat v-if="Screen.isDesktop && gamesCount > 0">
 							<AppSpacer vertical :scale="6" />
 
-							<div class="clearfix">
-								<div class="pull-right">
-									<AppButton
-										trans
-										:to="{
-											name: 'library.collection.developer',
-											params: { id: routeUser.username },
-										}"
-									>
-										{{ $gettext(`View all`) }}
-										{{ ' ' }}
-										<small>({{ formatNumber(gamesCount) }})</small>
-									</AppButton>
+							<div class="sheet">
+								<div class="clearfix">
+									<div class="pull-right">
+										<AppButton
+											trans
+											:to="{
+												name: 'library.collection.developer',
+												params: { id: routeUser.username },
+											}"
+										>
+											{{ $gettext(`View all`) }}
+											{{ ' ' }}
+											<small>({{ formatNumber(gamesCount) }})</small>
+										</AppButton>
+									</div>
+
+									<h4 class="section-header">
+										{{ $gettext(`Developer's Games`) }}
+									</h4>
 								</div>
 
-								<h4 class="section-header">
-									{{ $gettext(`Developer's Games`) }}
-								</h4>
+								<AppGameListPlaceholder v-if="!isOverviewLoaded" :num="7" />
+								<AppGameList
+									v-else-if="games.length"
+									:games="games"
+									event-label="profile"
+								/>
 							</div>
-
-							<AppGameListPlaceholder v-if="!isOverviewLoaded" :num="7" />
-							<AppGameList
-								v-else-if="games.length"
-								:games="games"
-								event-label="profile"
-							/>
 						</AppAdTakeoverFloat>
 					</template>
 

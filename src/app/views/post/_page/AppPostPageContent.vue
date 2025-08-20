@@ -191,7 +191,6 @@ const overlayText: CSSProperties = {
 </template>
 
 <style lang="stylus" scoped>
-@import '../variables'
 @import '../common'
 
 ._game-badge

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { toRef } from 'vue';
 import AppConfetti from '../../../../../_common/particle-effects/AppConfetti.vue';
 import AppQuestProgress from '../../../../../_common/quest/AppQuestProgress.vue';
 import AppQuestThumbnail from '../../../../../_common/quest/AppQuestThumbnail.vue';
@@ -15,41 +15,30 @@ import { useAppStore } from '../../../../store/index';
 import { useQuestStore } from '../../../../store/quest';
 import AppQuestTimer from '../../../quest/AppQuestTimer.vue';
 
-const props = defineProps({
-	quest: {
-		type: Object as PropType<QuestModel>,
-		required: true,
-	},
-	active: {
-		type: Boolean,
-	},
+type Props = {
+	quest: QuestModel;
+	active?: boolean;
 	/**
 	 * Hides the quest type and displays the avatar above the title and progress
 	 * bar.
 	 */
-	compactStack: {
-		type: Boolean,
-	},
-	confetti: {
-		type: Boolean,
-		default: false,
-	},
-});
+	compactStack?: boolean;
+	confetti?: boolean;
+};
 
-const { quest, active, compactStack, confetti } = toRefs(props);
+const { quest, confetti = false } = defineProps<Props>();
 
 const { visibleLeftPane, toggleLeftPane } = useAppStore();
 const { activeQuest } = useQuestStore();
 
-const showProgress = computed(() => !quest.value.isExpired);
-
-const asExpired = computed(() => quest.value.isExpired && !quest.value.has_activity);
+const showProgress = toRef(() => !quest.isExpired);
+const asExpired = toRef(() => quest.isExpired && !quest.has_activity);
 
 function onSelect() {
 	if (visibleLeftPane.value !== 'quests') {
 		toggleLeftPane('quests');
 	}
-	activeQuest.value = quest.value;
+	activeQuest.value = quest;
 }
 </script>
 
@@ -66,7 +55,7 @@ function onSelect() {
 		<AppConfetti v-if="confetti" />
 		<div class="_container" :class="{ '_compact-stack': compactStack }">
 			<div class="_thumb">
-				<AppQuestThumbnail :quest="quest" />
+				<AppQuestThumbnail :quest />
 
 				<div
 					v-if="quest.ends_on && !quest.isDaily && !compactStack"
@@ -106,7 +95,7 @@ function onSelect() {
 						class="_progress"
 						:progress="quest.progress_percent"
 						:max-progress-ticks="100"
-						:is-percent="true"
+						is-percent
 					/>
 				</template>
 			</div>
