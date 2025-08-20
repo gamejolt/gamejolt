@@ -141,7 +141,7 @@ export default class AppUserSpawnDay extends Vue {
 			],
 			{
 				duration: Math.random() * 2000 + 2000,
-				iterations: 1000,
+				iterations: Infinity,
 			}
 		);
 	}

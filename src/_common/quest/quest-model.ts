@@ -40,6 +40,11 @@ export const QuestSeries = {
 	helloWorld: 'hello-world',
 } as const;
 
+export const QuestPriority = {
+	default: 0,
+	high: 1,
+};
+
 export class QuestModel implements ModelStoreModel {
 	declare id: number;
 	declare status: number;
@@ -51,6 +56,7 @@ export class QuestModel implements ModelStoreModel {
 	declare title: string;
 	declare series: string;
 	declare series_display_name: string;
+	declare priority: number;
 	declare repeat_type: string;
 	declare ends_on?: number;
 	declare completion_state: number;

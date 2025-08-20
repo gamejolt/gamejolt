@@ -16,6 +16,7 @@ import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapt
 import { ContentEditorService } from './content-editor.service';
 import buildEditorEvents from './events/build-events';
 import { MediaUploadTask, createMediaUploadTask } from './media-upload-task';
+import { CustomButtonData } from './modals/custom-button/custom-button-modal.service';
 import { SearchResult } from './modals/gif/gif-modal.service';
 import { NodeViewRenderData } from './node-views/base';
 import { buildEditorNodeViews } from './node-views/node-view-builder';
@@ -248,6 +249,7 @@ class ContentEditorScopeCapabilities {
 	spoiler: boolean;
 	hr: boolean;
 	mention: string;
+	customButton: boolean;
 
 	constructor(data?: Partial<ContentEditorScopeCapabilities>) {
 		this.bold = data?.bold ?? false;
@@ -267,6 +269,7 @@ class ContentEditorScopeCapabilities {
 		this.spoiler = data?.spoiler ?? false;
 		this.hr = data?.hr ?? false;
 		this.mention = data?.mention ?? '';
+		this.customButton = data?.customButton ?? false;
 	}
 
 	get hasInlineControls() {
@@ -285,7 +288,8 @@ class ContentEditorScopeCapabilities {
 			this.codeBlock ||
 			this.blockquote ||
 			this.spoiler ||
-			this.hr
+			this.hr ||
+			this.customButton
 		);
 	}
 
@@ -513,6 +517,7 @@ export function editorSyncScope(c: ContentEditorController) {
 					blockquote: contextCapabilities.blockquote,
 					spoiler: contextCapabilities.spoiler,
 					hr: contextCapabilities.hr,
+					customButton: contextCapabilities.customButton,
 			  }
 			: null),
 	});
@@ -911,6 +916,21 @@ export function editorInsertGif(c: ContentEditorController, gif: SearchResult) {
 			service: 'tenor',
 			media: { webm: gif.webm, mp4: gif.mp4, preview: gif.preview },
 			url: gif.url,
+		})
+	);
+}
+
+export function editorInsertCustomButton(
+	c: ContentEditorController,
+	customButton: CustomButtonData
+) {
+	if (!c.capabilities.customButton) {
+		return;
+	}
+
+	_insertNewInlineNode(c, schema =>
+		schema.nodes.customButton.create({
+			id: customButton.customButtonId,
 		})
 	);
 }

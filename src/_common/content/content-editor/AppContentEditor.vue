@@ -37,6 +37,7 @@ import { ContentTempResource } from './content-temp-resource.service';
 import AppContentEditorBlockControls from './controls/AppContentEditorBlockControls.vue';
 import AppContentEditorInsetControls from './controls/AppContentEditorInsetControls.vue';
 import AppContentEditorTextControls from './controls/AppContentEditorTextControls.vue';
+import AppContentEditorControlsCustomButton from './controls/custom-button/AppContentEditorControlsCustomButton.vue';
 import AppContentEditorControlsEmoji from './controls/emoji/AppContentEditorControlsEmoji.vue';
 import AppContentEditorControlsGif from './controls/gif/AppContentEditorControlsGif.vue';
 import AppContentEditorControlsMentionAutocomplete from './controls/mention/AppContentEditorControlsMentionAutocomplete.vue';
@@ -268,8 +269,16 @@ const couldShowGifPanel = computed(() => {
 	return !GJ_IS_MOBILE_APP && contextCapabilities.value.gif;
 });
 
+const couldShowCustomButtonControl = computed(() => {
+	return !GJ_IS_MOBILE_APP && contextCapabilities.value.customButton;
+});
+
 const editorGutterSize = computed(() => {
-	return [couldShowEmojiPanel.value, couldShowGifPanel.value].filter(i => !!i).length;
+	return [
+		couldShowEmojiPanel.value,
+		couldShowGifPanel.value,
+		couldShowCustomButtonControl,
+	].filter(i => !!i).length;
 });
 
 const shouldShowPlaceholder = computed(() => {
@@ -293,6 +302,14 @@ const containerMinHeight = computed(() => {
 const shouldShowGifButton = computed(() => {
 	return (
 		!controller_.value.disabled && contextCapabilities.value.gif && controller_.value.isFocused
+	);
+});
+
+const shouldShowCustomButtonControl = computed(() => {
+	return (
+		!controller_.value.disabled &&
+		contextCapabilities.value.customButton &&
+		controller_.value.isFocused
 	);
 });
 
@@ -490,6 +507,11 @@ function focus() {
 					</transition>
 					<transition name="fade">
 						<AppContentEditorControlsEmoji v-if="shouldShowEmojiPanel" />
+					</transition>
+					<transition name="fade">
+						<AppContentEditorControlsCustomButton
+							v-if="shouldShowCustomButtonControl"
+						/>
 					</transition>
 				</AppContentEditorInsetControls>
 			</AppScrollScroller>
