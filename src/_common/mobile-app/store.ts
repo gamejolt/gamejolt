@@ -46,7 +46,7 @@ function _getDeepLink({ cohort }: AppPromotionStore) {
 	const params = [] as string[];
 	params.push(`ac=${cohort.value ?? 'other'}`);
 
-	return 'https://gamejolt.com/x/deep/?' + params.join('&');
+	return 'https://app.gamejolt.com/x/deep/?' + params.join('&');
 }
 
 export function setAppPromotionCohort(
@@ -69,23 +69,17 @@ export function getAppUrl(
 	store: AppPromotionStore,
 	{ targetStore }: { targetStore?: 'play' | 'app' } = {}
 ) {
-	let desktopLink = 'https://gamejolt.com/app';
-	if (targetStore === 'play') {
-		desktopLink = playStoreUrl;
-	} else if (targetStore === 'app') {
-		desktopLink = appStoreUrl;
+	function addLinkParam(url: string, value: string) {
+		const separator = url.indexOf('?') === -1 ? '?' : '&';
+		return url + separator + 'link=' + encodeURIComponent(value);
 	}
 
-	return (
-		'https://app.gamejolt.com/?' +
-		[
-			'link=' + encodeURIComponent(_getDeepLink(store)),
-			'ofl=' + encodeURIComponent(desktopLink),
-			'apn=com.gamejolt.app',
-			'isi=1546759412',
-			'ibi=com.gamejolt.op',
-			'utm_source=site',
-			'utm_campaign=landing',
-		].join('&')
-	);
+	let link = _getDeepLink(store);
+	if (targetStore === 'play') {
+		link = addLinkParam(link, playStoreUrl);
+	} else if (targetStore === 'app') {
+		link = addLinkParam(link, appStoreUrl);
+	}
+
+	return link;
 }
