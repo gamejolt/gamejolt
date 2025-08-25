@@ -152,24 +152,26 @@ export default class RouteContent extends LegacyRouteComponent {
 			<template v-if="isHydrated">
 				<h2>Edit {{ title }}</h2>
 				<table class="text-muted">
-					<tr>
-						<th><AppTranslate>Source</AppTranslate></th>
-						<td>
-							<a target="_blank" :href="resourceUrl">{{ resourceTitle }}</a>
-						</td>
-					</tr>
-					<tr v-if="ownerName && ownerUrl">
-						<th><AppTranslate>Owner</AppTranslate></th>
-						<td>
-							<a target="_blank" :href="ownerUrl">{{ ownerName }}</a>
-						</td>
-					</tr>
-					<tr>
-						<th><AppTranslate>Last edit</AppTranslate></th>
-						<td>
-							<AppTimeAgo :date="lastEdit" strict />
-						</td>
-					</tr>
+					<tbody>
+						<tr>
+							<th><AppTranslate>Source</AppTranslate></th>
+							<td>
+								<a target="_blank" :href="resourceUrl">{{ resourceTitle }}</a>
+							</td>
+						</tr>
+						<tr v-if="ownerName && ownerUrl">
+							<th><AppTranslate>Owner</AppTranslate></th>
+							<td>
+								<a target="_blank" :href="ownerUrl">{{ ownerName }}</a>
+							</td>
+						</tr>
+						<tr>
+							<th><AppTranslate>Last edit</AppTranslate></th>
+							<td>
+								<AppTimeAgo :date="lastEdit" strict />
+							</td>
+						</tr>
+					</tbody>
 				</table>
 
 				<div class="content-container">
