@@ -1,13 +1,4 @@
-import {
-	inject,
-	InjectionKey,
-	onUnmounted,
-	provide,
-	ref,
-	shallowReadonly,
-	shallowRef,
-	toRef,
-} from 'vue';
+import { inject, InjectionKey, onUnmounted, ref, shallowReadonly, shallowRef, toRef } from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
 import { objectEquals } from '../../utils/object';
 import { loadScript } from '../../utils/utils';
@@ -16,8 +7,8 @@ import { Model } from '../model/model.service';
 import { onRouteChangeAfter } from '../route/route-component';
 import { AdMonetizeMoreAdapter } from './monetizemore/monetizemore-adapter';
 
-type AdStore = ReturnType<typeof createAdStore>;
-const AdStoreKey: InjectionKey<AdStore> = Symbol('ads');
+export type AdStore = ReturnType<typeof createAdStore>;
+export const AdStoreKey: InjectionKey<AdStore> = Symbol('ads');
 
 // To show ads on the page for dev, just change this to false.
 export const AdsDisabledDev = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE === 'serve-build';
@@ -73,7 +64,6 @@ export function createAdStore() {
 		videoAdsLoadPromise,
 		videoAdsLoaded,
 	});
-	provide(AdStoreKey, c);
 
 	if (areAdsDisabledForDevice) {
 		return c;
@@ -169,4 +159,8 @@ export async function loadVideoAdsTag({ videoAdsLoadPromise, videoAdsLoaded }: A
 	});
 
 	return videoAdsLoadPromise.value;
+}
+
+export function setAdsTargetingTags({ monetizeMoreAdapter }: AdStore, tags: string[]) {
+	monetizeMoreAdapter.setTargetingTags(tags);
 }
