@@ -172,5 +172,10 @@ export async function loadVideoAdsTag({ videoAdsLoadPromise, videoAdsLoaded }: A
 }
 
 export function setAdsTargetingTags({ monetizeMoreAdapter }: AdStore, tags: string[]) {
+	if (areAdsDisabledForDevice) {
+		console.info('Not setting ad targeting tags since ads are disabled for device.');
+		return;
+	}
+
 	monetizeMoreAdapter.setTargetingTags(tags);
 }
