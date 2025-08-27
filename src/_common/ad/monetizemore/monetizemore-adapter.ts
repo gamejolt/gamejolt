@@ -30,4 +30,16 @@ export class AdMonetizeMoreAdapter implements AdAdapter {
 
 	onBeforeRouteChange() {}
 	onRouteChanged() {}
+
+	setTargetingTags(tags: string[]) {
+		console.info('Setting MonetizeMore targeting tags:', tags);
+
+		const anyWindow = window as any;
+		anyWindow.pg = anyWindow.pg || {};
+		anyWindow.pg.kvps = anyWindow.pg.kvps || {};
+
+		for (const tag of tags) {
+			anyWindow.pg.kvps[`tt_${tag}`] = '1';
+		}
+	}
 }

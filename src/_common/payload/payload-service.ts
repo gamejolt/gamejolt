@@ -62,7 +62,7 @@ class PayloadService {
 
 	private declare commonStore: CommonStore;
 	private ver?: number = undefined;
-	private payloadActionsHandler: ((payload: any) => void) | null = null;
+	private payloadHandlers: ((payload: any) => void)[] = [];
 
 	init({ commonStore }: { commonStore: CommonStore }) {
 		this.commonStore = commonStore;
@@ -104,8 +104,8 @@ class PayloadService {
 			this.checkPayloadVersion(responseData, options);
 			this.checkPayloadSeo(responseData, options);
 
-			if (this.payloadActionsHandler) {
-				this.payloadActionsHandler(responseData);
+			if (this.payloadHandlers.length) {
+				this.payloadHandlers.forEach(handler => handler(responseData));
 			}
 
 			return responseData.payload;
@@ -265,8 +265,15 @@ class PayloadService {
 		return !!errors?.[errorId];
 	}
 
-	assignPayloadActionsHandler(fn: (payload: any) => void) {
-		this.payloadActionsHandler = fn;
+	addPayloadHandler(fn: (payload: any) => void) {
+		this.payloadHandlers.push(fn);
+	}
+
+	removePayloadHandler(fn: (payload: any) => void) {
+		const index = this.payloadHandlers.indexOf(fn);
+		if (index !== -1) {
+			this.payloadHandlers.splice(index, 1);
+		}
 	}
 }
 
