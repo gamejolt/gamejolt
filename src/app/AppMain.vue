@@ -1,10 +1,13 @@
 <script lang="ts" setup>
 import { onMounted, provide, reactive, watch } from 'vue';
 import { RouterView } from 'vue-router';
+import { createAdStore } from '../_common/ad/ad-store';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
 import AppErrorPage from '../_common/error/page/AppErrorPage.vue';
 import { createAppPromotionStore } from '../_common/mobile-app/store';
 import Onboarding from '../_common/onboarding/onboarding.service';
+import { Payload } from '../_common/payload/payload-service';
+import handlePayloadTargetingTags from '../_common/payload/payload-targeting-tags';
 import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useCommonStore } from '../_common/store/common-store';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
@@ -16,6 +19,9 @@ const appStore = useAppStore();
 const { bootstrap, loadNotificationState, clear, clearNotificationState } = appStore;
 const { user } = useCommonStore();
 const { loadGrid, clearGrid } = useGridStore();
+
+const adStore = createAdStore();
+Payload.addPayloadHandler(payload => handlePayloadTargetingTags({ adStore }, payload));
 
 createAppPromotionStore();
 provide(CommentStoreManagerKey, reactive(new CommentStoreManager()));

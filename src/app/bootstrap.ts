@@ -1,5 +1,4 @@
 import { defineAsyncComponent } from 'vue';
-import { AdStoreKey, createAdStore } from '../_common/ad/ad-store';
 import { bootstrapCommon } from '../_common/bootstrap';
 import { setContentEmojiWrapper } from '../_common/content/components/AppContentEmoji.vue';
 import { setChatInviteComponent } from '../_common/content/content-viewer/components/AppContentViewerChatInvite.vue';
@@ -7,7 +6,6 @@ import { initGamePlayModal } from '../_common/game/play-modal/play-modal.service
 import { addModalBackdropCheck } from '../_common/modal/AppModal.vue';
 import handlePayloadActions from '../_common/payload/payload-actions.service';
 import { Payload } from '../_common/payload/payload-service';
-import handlePayloadTargetingTags from '../_common/payload/payload-targeting-tags';
 import { Registry } from '../_common/registry/registry.service';
 import { Scroll } from '../_common/scroll/scroll.service';
 import { SidebarStoreKey, createSidebarStore } from '../_common/sidebar/sidebar.store';
@@ -50,7 +48,6 @@ export async function createApp() {
 	const gridStore = createGridStore({ appStore });
 	const questStore = createQuestStore({ user: commonStore.user, grid: gridStore.grid });
 	const joltydexStore = createJoltydexStore();
-	const adStore = createAdStore();
 
 	// Section stores.
 	app.provide(SidebarStoreKey, sidebarStore);
@@ -61,7 +58,6 @@ export async function createApp() {
 	app.provide(GridStoreKey, gridStore);
 	app.provide(QuestStoreKey, questStore);
 	app.provide(JoltydexStoreKey, joltydexStore);
-	app.provide(AdStoreKey, adStore);
 
 	if (GJ_IS_DESKTOP_APP) {
 		const { bootstrapClient } = await import('./bootstrap-client');
@@ -85,7 +81,6 @@ export async function createApp() {
 
 	// App-specific payload handling.
 	Payload.addPayloadHandler(handlePayloadActions);
-	Payload.addPayloadHandler(payload => handlePayloadTargetingTags({ adStore }, payload));
 
 	initGamePlayModal({ canMinimize: true });
 
