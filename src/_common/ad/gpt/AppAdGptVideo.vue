@@ -15,6 +15,7 @@ const videoRef = useTemplateRef('video');
 const adContainerRef = useTemplateRef('ad-container');
 
 const adsStore = useAdStore();
+const { targetingTags } = adsStore;
 
 const logger = createLogger('Video Ads');
 
@@ -132,9 +133,17 @@ function autoplayChecksResolved() {
 
 	const adsRequest = new google.ima.AdsRequest();
 
-	adsRequest.adTagUrl =
+	let adTagUrl =
 		'https://pubads.g.doubleclick.net/gampad/ads?iu=/27005478/video&description_url=https%3A%2F%2Fgamejolt.com%2Fprivacy%2Fads&tfcd=0&npa=0&sz=400x300%7C640x480&gdfp_req=1&unviewed_position_start=1&output=vast&env=vp&impl=s&correlator=&vad_type=linear';
 
+	if (targetingTags.value.length > 0) {
+		const customParams = targetingTags.value.map(tag => `${tag}=1`).join('&');
+		const encodedCustomParams = encodeURIComponent(customParams);
+		adTagUrl += `&cust_params=${encodedCustomParams}`;
+		logger.info('Setting IMA targeting parameters in URL:', customParams);
+	}
+
+	adsRequest.adTagUrl = adTagUrl;
 	adsRequest.linearAdSlotWidth = getClientWidth();
 	adsRequest.linearAdSlotHeight = getClientHeight();
 

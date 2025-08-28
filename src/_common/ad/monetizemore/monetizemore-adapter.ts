@@ -39,7 +39,7 @@ export class AdMonetizeMoreAdapter implements AdAdapter {
 		anyWindow.pg.kvps = anyWindow.pg.kvps || {};
 
 		for (const tag of tags) {
-			anyWindow.pg.kvps[`tt_${tag}`] = '1';
+			anyWindow.pg.kvps[tag] = '1';
 		}
 	}
 }
