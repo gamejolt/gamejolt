@@ -1,4 +1,4 @@
-export type AdUnitName = 'halfpage' | 'rail' | 'billboard' | 'mpu';
+export type AdUnitName = 'halfpage' | 'rail' | 'billboard' | 'mpu' | 'video';
 
 export class AdSlot {
 	/**

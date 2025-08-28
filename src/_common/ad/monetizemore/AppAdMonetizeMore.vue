@@ -31,6 +31,11 @@ onBeforeUnmount(() => {
 });
 
 const tagUnit = computed(() => {
+	// Handle special video unit case.
+	if (adSlot.unitName === 'video') {
+		return 'gamejolt.com_OS_OOP';
+	}
+
 	let suffix = '';
 	if (adSlot.takeover) {
 		suffix = '_takeover';

@@ -65,7 +65,7 @@ defineOptions({
 	}),
 });
 
-const DownloadDelay = 6_000;
+const DownloadDelay = 8_000;
 
 const adStore = useAdStore();
 const appPromotionStore = useAppPromotionStore();
@@ -78,6 +78,7 @@ const ownerGames = ref<GameModel[]>([]);
 const recommendedGames = ref<GameModel[]>([]);
 
 const videoAdDone = ref(false);
+const showMonetizeMoreFallback = ref(false);
 let videoAdResolver: () => void;
 const videoAdPromise = new Promise<void>(resolve => {
 	videoAdResolver = resolve;
@@ -174,6 +175,14 @@ function onVideoAdDone() {
 	videoAdDone.value = true;
 	videoAdResolver();
 }
+
+function onVideoAdFail() {
+	// Show MonetizeMore fallback when IMA SDK fails.
+	showMonetizeMoreFallback.value = true;
+
+	// We resolve the video ad promise anyway so that the download can start.
+	onVideoAdDone();
+}
 </script>
 
 <template>
@@ -242,7 +251,11 @@ function onVideoAdDone() {
 						</div>
 
 						<template v-if="!videoAdDone">
-							<AppAdGptVideo @fail="onVideoAdDone" @done="onVideoAdDone" />
+							<AppAdGptVideo @fail="onVideoAdFail" @done="onVideoAdDone" />
+							<AppSpacer vertical :scale="4" />
+						</template>
+						<template v-else-if="showMonetizeMoreFallback">
+							<AppAdWidget unit-name="video" />
 							<AppSpacer vertical :scale="4" />
 						</template>
 
