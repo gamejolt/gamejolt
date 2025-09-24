@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, toRef } from 'vue';
 import AppAlertBox from '../../../alert/AppAlertBox.vue';
 import { Api } from '../../../api/api.service';
-import AppForm, { createForm, FormController } from '../../../form-vue/AppForm.vue';
+import AppForm, { FormController, createForm } from '../../../form-vue/AppForm.vue';
 import AppFormButton from '../../../form-vue/AppFormButton.vue';
 import AppFormGroup from '../../../form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../form-vue/AppFormStickySubmit.vue';
@@ -17,20 +17,23 @@ import AppUserAvatarFrameSelector from './_selector/AppUserAvatarFrameSelector.v
 import { UserAvatarFrameModel } from './frame.model';
 
 interface FormModel {
-	avatar_frame: number | undefined;
+	avatar_frame: number | 'random' | undefined;
 }
 
 const { user } = useCommonStore();
 
 const availableFrames = ref<UserAvatarFrameModel[]>([]);
 
+const showRandomAlert = toRef(() => form?.formModel.avatar_frame === 'random');
+
 const form: FormController<FormModel> = createForm({
 	loadUrl: '/web/dash/profile/save',
 	onLoad(payload) {
 		availableFrames.value = storeModelList(UserAvatarFrameModel, payload.userAvatarFrames);
 
-		form.formModel.avatar_frame =
-			availableFrames.value.find(i => i.is_active)?.avatar_frame.id || 0;
+		form.formModel.avatar_frame = user.value?.randomize_avatar_frame
+			? 'random'
+			: availableFrames.value.find(i => i.is_active)?.avatar_frame.id || 0;
 	},
 	async onSubmit() {
 		return Api.sendRequest(`/web/dash/profile/save`, {
@@ -64,6 +67,13 @@ const form: FormController<FormModel> = createForm({
 				{{
 					$gettext(
 						`It's your spawnday! Congrats! Your spawnday frame is being proudly displayed for the entire day.`
+					)
+				}}
+			</AppAlertBox>
+			<AppAlertBox v-if="showRandomAlert" icon="shuffle" :style="{ marginBottom: '16px' }">
+				{{
+					$gettext(
+						`Each day when you log in, we pick one of your unlocked avatar frames to be your equipped frame. If you've marked certain frames as favorites, we'll only select from that collection.`
 					)
 				}}
 			</AppAlertBox>
