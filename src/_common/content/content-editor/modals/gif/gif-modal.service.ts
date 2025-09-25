@@ -1,5 +1,5 @@
 import { showModal } from '../../../../modal/modal.service';
-import AppContentEditorGifModal from './gif-modal.vue';
+import AppContentEditorGifModal from './AppGifModal.vue';
 
 export type Category = {
 	searchterm: string;

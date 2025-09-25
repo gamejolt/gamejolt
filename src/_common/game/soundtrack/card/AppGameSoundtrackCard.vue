@@ -1,72 +1,54 @@
-<script lang="ts">
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import type { RouteLocationRaw } from 'vue-router';
+<script lang="ts" setup>
+import { ref, watch } from 'vue';
+import { RouteLocationRaw, useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
-import AppAudioPlaylistTS from '../../../audio/playlist/playlist';
-import AppAudioPlaylist from '../../../audio/playlist/playlist.vue';
+import AppAudioPlaylist from '../../../audio/playlist/AppAudioPlaylist.vue';
+import AppButton from '../../../button/AppButton.vue';
 import AppCard from '../../../card/AppCard.vue';
 import { Environment } from '../../../environment/environment.service';
 import { formatNumber } from '../../../filters/number';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import { Navigate } from '../../../navigate/navigate.service';
-import { Screen } from '../../../screen/screen-service';
+import AppTranslate from '../../../translate/AppTranslate.vue';
 import { GameModel } from '../../game.model';
 import { GameSongModel } from '../../song/song.model';
 
-@Options({
-	components: {
-		AppCard,
-		AppFadeCollapse,
-		AppAudioPlaylist,
-	},
-})
-export default class AppGameSoundtrackCard extends Vue {
-	@Prop(Object)
-	game!: GameModel;
+type Props = {
+	game: GameModel;
+	songs: GameSongModel[];
+};
 
-	@Prop(Array)
-	songs!: GameSongModel[];
+const { game, songs } = defineProps<Props>();
 
-	isPlaying = false;
-	isShowingSoundtrack = false;
-	canToggleSoundtrack = false;
+const router = useRouter();
 
-	readonly formatNumber = formatNumber;
-	readonly Screen = Screen;
+const isPlaying = ref(false);
+const isShowingSoundtrack = ref(false);
+const canToggleSoundtrack = ref(false);
 
-	@Watch('isPlaying')
-	onPlayingChanged() {
-		// If we're playing, make sure the full soundtrack is open.
-		if (this.isPlaying) {
-			this.isShowingSoundtrack = true;
-		}
+watch(isPlaying, () => {
+	// If we're playing, make sure the full soundtrack is open.
+	if (isPlaying.value) {
+		isShowingSoundtrack.value = true;
+	}
+});
+
+function download() {
+	const location: RouteLocationRaw = {
+		name: 'download',
+		params: {
+			type: 'soundtrack',
+		},
+		query: { game: game.id + '' },
+	};
+
+	if (GJ_IS_DESKTOP_APP) {
+		// Gotta go past the first char since it's # in client.
+		Navigate.gotoExternal(Environment.baseUrl + router.resolve(location).href.substr(1));
+		return;
 	}
 
-	play() {
-		const playlist = this.$refs.playlist as AppAudioPlaylistTS;
-		if (playlist) {
-			playlist.mainSongButton();
-		}
-	}
-
-	download() {
-		const location: RouteLocationRaw = {
-			name: 'download',
-			params: {
-				type: 'soundtrack',
-			},
-			query: { game: this.game.id + '' },
-		};
-
-		if (GJ_IS_DESKTOP_APP) {
-			// Gotta go past the first char since it's # in client.
-			Navigate.gotoExternal(
-				Environment.baseUrl + this.$router.resolve(location).href.substr(1)
-			);
-			return;
-		}
-
-		this.$router.push(location);
-	}
+	router.push(location);
 }
 </script>
 
@@ -99,7 +81,6 @@ export default class AppGameSoundtrackCard extends Vue {
 				@expand="isShowingSoundtrack = true"
 			>
 				<AppAudioPlaylist
-					ref="playlist"
 					:songs="songs"
 					@play="isPlaying = true"
 					@stop="isPlaying = false"

@@ -12,7 +12,7 @@ import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.v
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import FormGameMaturity from '../../../../../../components/forms/game/maturity/maturity.vue';
-import AppGameOgrs from '../../../../../../components/game/ogrs/ogrs.vue';
+import AppGameOgrs from '../../../../../../components/game/ogrs/AppGameOgrs.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
 export default {

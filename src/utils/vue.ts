@@ -3,6 +3,7 @@ import { shallowRef } from 'vue';
 import { setup } from 'vue-class-component';
 
 export type MaybeComputedRef<T> = ComputedRef<T> | T;
+export type RefOrGetter<T> = Ref<T> | ComputedRef<T> | (() => T);
 
 /**
  * Runs [setup], wrapping the callback value in a [shallowRef].

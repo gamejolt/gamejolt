@@ -7,7 +7,7 @@ import AppLoading from '../../loading/AppLoading.vue';
 import { SiteContentBlockModel } from '../../site/content-block/content-block-model';
 import { SiteModel } from '../../site/site-model';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import FormContentBlockEditor from './editor-form.vue';
+import FormContentBlockEditor from './AppContentBlockEditorForm.vue';
 
 const PreviewDebounce = 3000;
 

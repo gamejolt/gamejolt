@@ -1,4 +1,4 @@
-nodejs 16.20.0
+nodejs 18.20.5
 # Not supported on arm64, understandably.
 #golang 1.10.8
 

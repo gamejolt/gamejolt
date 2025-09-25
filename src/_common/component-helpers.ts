@@ -1,4 +1,12 @@
-import { AllowedComponentProps, PropType, Ref, VNodeProps, computed, type Component } from 'vue';
+import {
+	AllowedComponentProps,
+	PropType,
+	VNodeProps,
+	computed,
+	toValue,
+	type Component,
+} from 'vue';
+import { RefOrGetter } from '../utils/vue';
 
 /**
  * Allows us to get prop typing for a component while excluding internal Vue
@@ -10,7 +18,7 @@ export type ComponentProps<C extends Component> = C extends new (...args: any) =
 	? Omit<InstanceType<C>['$props'], keyof VNodeProps | keyof AllowedComponentProps>
 	: never;
 
-type DynamicSlots<T extends string> = T[] | Record<T, boolean> | boolean;
+export type DynamicSlots<T extends string> = T[] | Record<T, boolean> | boolean;
 type DynamicSlotArray<T extends string> = T[] | Readonly<T[]>;
 
 /**
@@ -49,26 +57,30 @@ export function defineDynamicSlotProps<T extends string>(
  *
  * For use with {@link defineDynamicSlotProps}.
  */
-export function useDynamicSlots<T extends string>(dynamicSlots: Ref<DynamicSlots<T>>) {
+export function useDynamicSlots<T extends string>(dynamicSlots: RefOrGetter<DynamicSlots<T>>) {
 	return {
 		hasSlot(slot: T) {
+			const value = toValue(dynamicSlots);
+
 			// Booleans should be returned directly.
-			if (typeof dynamicSlots.value === 'boolean') {
-				return dynamicSlots.value;
-			} else if (Array.isArray(dynamicSlots.value)) {
-				return dynamicSlots.value.includes(slot);
-			} else if (typeof dynamicSlots.value === 'object') {
-				return dynamicSlots.value[slot];
+			if (typeof value === 'boolean') {
+				return value;
+			} else if (Array.isArray(value)) {
+				return value.includes(slot);
+			} else if (typeof value === 'object') {
+				return value[slot];
 			}
 		},
 		hasAnySlot: computed(() => {
+			const value = toValue(dynamicSlots);
+
 			// Booleans should be returned directly.
-			if (typeof dynamicSlots.value === 'boolean') {
-				return dynamicSlots.value;
-			} else if (Array.isArray(dynamicSlots.value)) {
-				return dynamicSlots.value.length > 0;
-			} else if (typeof dynamicSlots.value === 'object') {
-				return Object.values(dynamicSlots.value).some(i => i);
+			if (typeof value === 'boolean') {
+				return value;
+			} else if (Array.isArray(value)) {
+				return value.length > 0;
+			} else if (typeof value === 'object') {
+				return Object.values(value).some(i => i);
 			}
 		}),
 	};

@@ -1,58 +1,50 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
-import { Analytics } from '../../../../_common/analytics/analytics.service';
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { GameModel } from '../../../../_common/game/game.model';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { SettingRestrictedBrowsing } from '../../../../_common/settings/settings.service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppGameOgrs from '../ogrs/ogrs.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppGameOgrs from '../ogrs/AppGameOgrs.vue';
 
-@Options({
-	components: {
-		AppGameOgrs,
-	},
-})
-export default class AppGameMaturityBlock extends Vue {
-	@Prop(Object) game!: GameModel;
+type Props = {
+	game: GameModel;
+};
 
-	commonStore = setup(() => useCommonStore());
+const { game } = defineProps<Props>();
 
-	get app() {
-		return this.commonStore;
-	}
+const hasBypassed = ref(false);
 
-	private hasBypassed = false;
+const shouldBlock = computed(() => {
+	return (
+		game &&
+		game.tigrs_age === 3 &&
+		!import.meta.env.SSR &&
+		SettingRestrictedBrowsing.get() &&
+		!game.is_following &&
+		!game.hasPerms() &&
+		!hasBypassed.value
+	);
+});
 
-	get shouldBlock() {
-		return (
-			this.game &&
-			this.game.tigrs_age === 3 &&
-			!import.meta.env.SSR &&
-			SettingRestrictedBrowsing.get() &&
-			!this.game.is_following &&
-			!this.game.hasPerms() &&
-			!this.hasBypassed
-		);
-	}
-
-	@Watch('game', { immediate: true })
-	onWatch(newGame: GameModel, oldGame?: GameModel) {
+watch(
+	() => game,
+	(newGame, oldGame) => {
 		if (!oldGame || newGame.id !== oldGame.id) {
-			this.hasBypassed = false;
+			hasBypassed.value = false;
 		}
-	}
+	},
+	{ immediate: true }
+);
 
-	proceed() {
-		this.hasBypassed = true;
-		Scroll.to(0, { animate: false });
-		Analytics.trackEvent('restricted-browsing', 'unblock');
-	}
+function proceed() {
+	hasBypassed.value = true;
+	Scroll.to(0, { animate: false });
+}
 
-	removeRestriction() {
-		SettingRestrictedBrowsing.set(false);
-		this.proceed();
-	}
+function removeRestriction() {
+	SettingRestrictedBrowsing.set(false);
+	proceed();
 }
 </script>
 
@@ -64,9 +56,9 @@ export default class AppGameMaturityBlock extends Vue {
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 						<div class="game-maturity-block">
 							<h4>
-								<AppTranslate
-									>This game is tagged for mature audiences.</AppTranslate
-								>
+								<AppTranslate>
+									This game is tagged for mature audiences.
+								</AppTranslate>
 							</h4>
 							<p>
 								<AppTranslate>

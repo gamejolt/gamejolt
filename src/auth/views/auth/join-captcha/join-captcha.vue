@@ -6,7 +6,7 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../_common/route/legacy-route-component';
-import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/widget.vue';
+import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/AppGrecaptchaWidget.vue';
 
 @Options({
 	name: 'RouteJoinCaptcha',

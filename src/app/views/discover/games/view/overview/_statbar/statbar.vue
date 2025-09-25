@@ -4,7 +4,7 @@ import { Options, Vue } from 'vue-property-decorator';
 import { formatFuzzynumber } from '../../../../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import AppGameRatingWidget from '../../../../../../../_common/game/rating/AppGameRatingWidget.vue';
-import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
+import AppLazyPlaceholder from '../../../../../../../_common/lazy/placeholder/AppLazyPlaceholder.vue';
 import { showLikersModal } from '../../../../../../../_common/likers/modal.service';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';

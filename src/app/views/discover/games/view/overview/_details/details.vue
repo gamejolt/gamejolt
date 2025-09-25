@@ -3,7 +3,7 @@ import { setup } from 'vue-class-component';
 import { Options, Vue } from 'vue-property-decorator';
 import { formatDate } from '../../../../../../../_common/filters/date';
 import { GameCreationToolOther } from '../../../../../../../_common/game/game.model';
-import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
+import AppLazyPlaceholder from '../../../../../../../_common/lazy/placeholder/AppLazyPlaceholder.vue';
 import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 
 @Options({

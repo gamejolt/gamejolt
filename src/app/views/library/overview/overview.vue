@@ -9,8 +9,8 @@ import {
 import { Screen } from '../../../../_common/screen/screen-service';
 import { shallowSetup } from '../../../../utils/vue';
 import { GameCollectionModel } from '../../../components/game/collection/collection.model';
-import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
-import AppGameCollectionList from '../../../components/game/collection/list/list.vue';
+import AppGameCollectionGrid from '../../../components/game/collection/grid/AppGameCollectionGrid.vue';
+import AppGameCollectionList from '../../../components/game/collection/list/AppGameCollectionList.vue';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
 import { useAppStore } from '../../../store';
 import { useLibraryStore } from '../../../store/library';

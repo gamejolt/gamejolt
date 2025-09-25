@@ -8,7 +8,7 @@ import {
 } from '../../../../_common/route/legacy-route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { GameCollectionModel } from '../../../components/game/collection/collection.model';
-import AppGameCollectionGrid from '../../../components/game/collection/grid/grid.vue';
+import AppGameCollectionGrid from '../../../components/game/collection/grid/AppGameCollectionGrid.vue';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 
 @Options({

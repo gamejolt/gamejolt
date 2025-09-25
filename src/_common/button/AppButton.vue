@@ -1,107 +1,62 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { AnchorHTMLAttributes, ButtonHTMLAttributes, computed } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
 import { kJolticonSize } from '../../_styles/variables';
-import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
+import { DynamicSlots, useDynamicSlots } from '../component-helpers';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppCircularProgress from '../progress/AppCircularProgress.vue';
 
-const props = defineProps({
-	tag: {
-		type: String,
-		default: 'button',
-	},
-	primary: {
-		type: Boolean,
-	},
-	trans: {
-		type: Boolean,
-	},
-	solid: {
-		type: Boolean,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	sparse: {
-		type: Boolean,
-	},
-	circle: {
-		type: Boolean,
-	},
-	disabled: {
-		type: Boolean,
-	},
-	lg: {
-		type: Boolean,
-	},
-	sm: {
-		type: Boolean,
-	},
-	block: {
-		type: Boolean,
-	},
-	blockXs: {
-		type: Boolean,
-	},
-	icon: {
-		type: String as PropType<Jolticon>,
-		default: undefined,
-	},
-	iconColor: {
-		type: String as PropType<'primary' | 'notice'>,
-		default: undefined,
-	},
-	fillColor: {
-		type: String as PropType<'overlay-notice'>,
-		default: undefined,
-	},
-	badge: {
-		type: String,
-		default: undefined,
-	},
-	to: {
-		type: null as unknown as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-	href: {
-		type: String,
-		default: undefined,
-	},
-	target: {
-		type: String,
-		default: undefined,
-	},
-	forceHover: {
-		type: Boolean,
-	},
+type Props = {
+	tag?: string;
+	primary?: boolean;
+	trans?: boolean;
+	solid?: boolean;
+	overlay?: boolean;
+	sparse?: boolean;
+	circle?: boolean;
+	disabled?: boolean;
+	lg?: boolean;
+	sm?: boolean;
+	block?: boolean;
+	blockXs?: boolean;
+	icon?: Jolticon;
+	iconColor?: 'primary' | 'notice';
+	fillColor?: 'overlay-notice';
+	badge?: string;
+	to?: RouteLocationRaw;
+	href?: string;
+	target?: string;
+	forceHover?: boolean;
 	/**
 	 * Shows an indeterminate {@link AppCircularProgress} in place of all
 	 * content.
 	 */
-	loading: {
-		type: Boolean,
-	},
+	loading?: boolean;
 	/**
 	 * Allows a custom icon to be built into the button. Does nothing if
 	 * {@link icon} is set.
 	 */
-	...defineDynamicSlotProps(['icon'], false),
-});
+	dynamicSlots?: DynamicSlots<'icon'>;
+};
 
-const { dynamicSlots } = toRefs(props);
+const {
+	tag = 'button',
+	href,
+	to,
+	dynamicSlots = false,
+} = defineProps<Props & (ButtonHTMLAttributes | AnchorHTMLAttributes)>();
 
 const ourTag = computed(() => {
-	if (props.href) {
+	if (href) {
 		return 'a';
-	} else if (props.to) {
+	} else if (to) {
 		return RouterLink;
 	}
-	return props.tag;
+	return tag;
 });
 
-const { hasSlot } = useDynamicSlots(dynamicSlots);
+const { hasSlot } = useDynamicSlots(() => dynamicSlots);
 </script>
 
 <template>
@@ -130,9 +85,9 @@ const { hasSlot } = useDynamicSlots(dynamicSlots);
 				padding: 0,
 			})
 		"
-		:to="to"
-		:href="href"
-		:target="target"
+		:to
+		:href
+		:target
 		:disabled="disabled === true ? 'disabled' : null"
 	>
 		<div v-if="loading" :style="styleFlexCenter()">
@@ -151,7 +106,7 @@ const { hasSlot } = useDynamicSlots(dynamicSlots);
 				v-if="icon"
 				class="-icon"
 				:class="[iconColor ? `-icon-color-${iconColor}` : undefined]"
-				:icon="icon"
+				:icon
 				:big="lg"
 			/>
 			<div v-else-if="hasSlot('icon')" class="-icon" :style="{ display: `inline-block` }">

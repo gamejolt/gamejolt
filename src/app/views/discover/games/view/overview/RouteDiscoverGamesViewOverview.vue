@@ -21,10 +21,10 @@ import AppGameExternalPackageCard from '../../../../../../_common/game/external-
 import { GameModel } from '../../../../../../_common/game/game.model';
 import AppGameMediaBar from '../../../../../../_common/game/media-bar/AppGameMediaBar.vue';
 import AppGamePackageCard from '../../../../../../_common/game/package/card/AppGamePackageCard.vue';
-import AppGameSoundtrackCard from '../../../../../../_common/game/soundtrack/card/card.vue';
+import AppGameSoundtrackCard from '../../../../../../_common/game/soundtrack/card/AppGameSoundtrackCard.vue';
 import { HistoryTick } from '../../../../../../_common/history-tick/history-tick-service';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/placeholder';
+import AppLazyPlaceholder from '../../../../../../_common/lazy/placeholder/AppLazyPlaceholder.vue';
 import { Meta } from '../../../../../../_common/meta/meta-service';
 import { storeModelList } from '../../../../../../_common/model/model-store.service';
 import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
@@ -60,7 +60,7 @@ import {
 import AppGameCommunityBadge from '../../../../../components/game/community-badge/AppGameCommunityBadge.vue';
 import AppGameList from '../../../../../components/game/list/AppGameList.vue';
 import AppGameListPlaceholder from '../../../../../components/game/list/AppGameListPlaceholder.vue';
-import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
+import AppGameOgrs from '../../../../../components/game/ogrs/AppGameOgrs.vue';
 import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPageContainer from '../../../../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../../../../components/post/add-button/AppPostAddButton.vue';
@@ -269,6 +269,7 @@ async function reloadPreviewComments() {
 						<AppDiscoverGamesViewOverviewStatbar />
 
 						<AppShareCard
+							v-if="shareLink"
 							class="-share-card"
 							resource="game"
 							:url="shareLink"
@@ -422,7 +423,7 @@ async function reloadPreviewComments() {
 										/>
 									</div>
 
-									<div v-if="packages.length">
+									<div v-if="game && packages.length">
 										<AppGamePackageCard
 											v-for="pkg of packages"
 											:key="pkg.id"

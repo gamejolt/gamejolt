@@ -1,6 +1,5 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { mixins, Options, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, onMounted, ref, watch } from 'vue';
 import { imageGameJoltClientLogo, imageGameJoltLogo, imageJolt } from '../../../app/img/images';
 import AppForm from '../../form-vue/AppForm.vue';
 import AppFormGroup from '../../form-vue/AppFormGroup.vue';
@@ -8,15 +7,11 @@ import AppFormControlSelect from '../../form-vue/controls/AppFormControlSelect.v
 import AppFormControlTextarea from '../../form-vue/controls/AppFormControlTextarea.vue';
 import AppFormControlTheme from '../../form-vue/controls/AppFormControlTheme.vue';
 import AppFormControlToggle from '../../form-vue/controls/AppFormControlToggle.vue';
-import { BaseForm } from '../../form-vue/form.service';
+import { createForm } from '../../form-vue/AppForm.vue';
 import AppTheme from '../AppTheme.vue';
 import { ThemeModel } from '../theme.model';
 import { useThemeStore } from '../theme.store';
 import AppThemeSvg from './AppThemeSvg.vue';
-
-interface VueColor {
-	hex: string | null;
-}
 
 interface FormModel {
 	file?: string;
@@ -26,97 +21,70 @@ interface FormModel {
 	strictColors?: boolean;
 }
 
-class Wrapper extends BaseForm<FormModel> {}
+const themeStore = useThemeStore();
 
-@Options({
-	components: {
-		AppTheme,
-		AppThemeSvg,
-		AppForm,
-		AppFormGroup,
-		AppFormControlSelect,
-		AppFormControlToggle,
-		AppFormControlTheme,
-		AppFormControlTextarea,
-	},
-})
-export default class AppThemeSvgStyleguide extends mixins(Wrapper) {
-	themeStore = setup(() => useThemeStore());
+const customSvg = ref('');
 
-	customSvg = '';
-	customSelection: VueColor = { hex: null };
+const SvgList = {
+	imageGameJoltLogo,
+	imageGameJoltClientLogo,
+	imageJolt,
+};
 
-	readonly SvgList = {
-		imageGameJoltLogo,
-		imageGameJoltClientLogo,
-		imageJolt,
-	};
-	readonly FillList = [
-		'fill-offset',
-		'fill-backdrop',
-		'fill-bg',
-		'fill-highlight',
-		'fill-notice',
-		'fill-gray',
-		'fill-dark',
-		'fill-darker',
-		'fill-darkest',
-		'fill-black',
-	];
+const FillList = [
+	'fill-offset',
+	'fill-backdrop',
+	'fill-bg',
+	'fill-highlight',
+	'fill-notice',
+	'fill-gray',
+	'fill-dark',
+	'fill-darker',
+	'fill-darkest',
+	'fill-black',
+];
 
-	get file() {
-		return this.formModel.file || 'custom';
+const form = createForm<FormModel>({});
+
+const file = computed(() => form.formModel.value?.file || 'custom');
+const bgColor = computed(() => form.formModel.value?.color || 'fill-offset');
+const theme = computed(() => form.formModel.value?.theme || themeStore.theme);
+const customFile = computed(() => form.formModel.value?.custom || '');
+const strictColors = computed(() => !!form.formModel.value?.strictColors);
+
+onMounted(() => {
+	// Initialize the form fields
+	if (form.formModel.value) {
+		form.formModel.value.file = file.value;
+		form.formModel.value.color = bgColor.value;
+		form.formModel.value.theme = theme.value;
+		form.formModel.value.custom = customFile.value;
+		form.formModel.value.strictColors = false;
 	}
+});
 
-	get bgColor() {
-		return this.formModel.color || 'fill-offset';
-	}
-
-	get theme() {
-		return this.formModel.theme || this.themeStore.theme;
-	}
-
-	get customFile() {
-		return this.formModel.custom || '';
-	}
-
-	get strictColors() {
-		return !!this.formModel.strictColors;
-	}
-
-	mounted() {
-		// Initialize the form fields
-		this.setField('file', this.file);
-		this.setField('color', this.bgColor);
-		this.setField('theme', this.theme);
-		this.setField('custom', this.customFile);
-		this.setField('strictColors', false);
-	}
-
-	parseSvgName(name: string) {
-		try {
-			// This will remove '/assets/' and '.X.svg' from list names,
-			// leaving the plain filename without the file extension or path.
-			return name.split('/assets/')[1].split('.')[0];
-		} catch {
-			return name;
-		}
-	}
-
-	@Watch('customFile')
-	onCustomSvgChange() {
-		// Reset and return if the textarea is empty.
-		if (!this.customFile.length) {
-			return;
-		}
-
-		// Trim the start of the SVG string, otherwise we could have issues processing it.
-		const svgString = this.customFile.trimLeft();
-
-		// Parse the pasted SVG XML into a format that we can pass to AppThemeSvg.
-		this.customSvg = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgString);
+function parseSvgName(name: string) {
+	try {
+		// This will remove '/assets/' and '.X.svg' from list names,
+		// leaving the plain filename without the file extension or path.
+		return name.split('/assets/')[1].split('.')[0];
+	} catch {
+		return name;
 	}
 }
+
+watch(customFile, () => {
+	// Reset and return if the textarea is empty.
+	if (!customFile.value.length) {
+		return;
+	}
+
+	// Trim the start of the SVG string, otherwise we could have issues processing it.
+	const svgString = customFile.value.trimLeft();
+
+	// Parse the pasted SVG XML into a format that we can pass to AppThemeSvg.
+	customSvg.value = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgString);
+});
 </script>
 
 <template>
@@ -173,7 +141,7 @@ export default class AppThemeSvgStyleguide extends mixins(Wrapper) {
 					<AppFormControlTextarea
 						v-if="file === 'custom'"
 						placeholder="Paste an SVG file..."
-						rows="6"
+						:rows="6"
 					/>
 				</AppFormGroup>
 

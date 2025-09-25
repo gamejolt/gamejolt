@@ -1,30 +1,20 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Prop, Vue } from 'vue-property-decorator';
-import { useCommonStore } from '../../../../../_common/store/common-store';
+<script lang="ts" setup>
+import { RouterLink } from 'vue-router';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { GameCollectionModel } from '../collection.model';
 import AppGameCollectionThumbnail from '../thumbnail/AppGameCollectionThumbnail.vue';
 
-@Options({
-	components: {
-		AppGameCollectionThumbnail,
-	},
-})
-export default class AppGameCollectionList extends Vue {
-	@Prop(Array) collections!: GameCollectionModel[];
-	@Prop(String) eventLabel?: string;
+type Props = {
+	collections: GameCollectionModel[];
+	eventLabel?: string;
+};
 
-	commonStore = setup(() => useCommonStore());
-
-	get app() {
-		return this.commonStore;
-	}
-}
+defineProps<Props>();
 </script>
 
 <template>
 	<div class="list-group game-collection-list">
-		<router-link
+		<RouterLink
 			v-for="collection of collections"
 			:key="collection._id"
 			class="list-group-item clearfix"
@@ -33,13 +23,13 @@ export default class AppGameCollectionList extends Vue {
 		>
 			<div class="row">
 				<div class="col-xs-3">
-					<AppGameCollectionThumbnail :collection="collection" :hide-tag="true" />
+					<AppGameCollectionThumbnail :collection="collection" hide-tag />
 				</div>
 				<div class="col-xs-9">
 					<div class="game-collection-title h5">
 						{{ collection.name }}
 
-						<small v-if="collection.from_subscription">
+						<small v-if="collection.from_subscription && collection.owner">
 							{{ ' ' }}
 							<AppTranslate translate-comment="As in made by: / the author is:">
 								by
@@ -49,7 +39,7 @@ export default class AppGameCollectionList extends Vue {
 					</div>
 				</div>
 			</div>
-		</router-link>
+		</RouterLink>
 	</div>
 </template>
 

@@ -5,8 +5,11 @@ import { GameExternalPackageModel } from '../external-package/external-package.m
 import { GameReleaseModel } from '../release/release.model';
 import { GamePackageModel } from './package.model';
 
+type ProcessedGamePackage = GamePackageModel &
+	Required<Pick<GamePackageModel, '_releases' | '_builds' | '_sellable'>>;
+
 export class GamePackagePayloadModel {
-	packages: GamePackageModel[];
+	packages: ProcessedGamePackage[];
 	releases: GameReleaseModel[];
 	builds: GameBuildModel[];
 	launchOptions: GameBuildLaunchOptionModel[];
@@ -15,7 +18,9 @@ export class GamePackagePayloadModel {
 	externalPackages: GameExternalPackageModel[];
 
 	constructor(payload: any) {
-		this.packages = payload.packages ? GamePackageModel.populate(payload.packages) : [];
+		this.packages = payload.packages
+			? (GamePackageModel.populate(payload.packages) as unknown as ProcessedGamePackage[])
+			: [];
 		this.releases = payload.releases ? GameReleaseModel.populate(payload.releases) : [];
 		this.builds = payload.builds ? GameBuildModel.populate(payload.builds) : [];
 		this.launchOptions = payload.launchOptions
