@@ -98,7 +98,7 @@ export const GameBuildPlatformSupportInfo: { [k: string]: PlatformSupport } = {
 		icon: 'linux',
 		tooltip: 'Linux 64-bit',
 		arch: '64',
-		sort: 30,
+		sort: 31,
 	},
 	other: {
 		icon: 'other-os',
