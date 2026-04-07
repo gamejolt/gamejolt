@@ -1,14 +1,27 @@
 <script lang="ts">
-import { computed, Ref } from 'vue';
-import { Emit, mixins, Options, Prop, Watch } from 'vue-property-decorator';
+import { Ref } from 'vue';
+
+export interface FormGameBuildInterface {
+	buildId: number;
+	isDeprecated: Ref<boolean>;
+	save: () => Promise<boolean>;
+}
+</script>
+
+<script lang="ts" setup>
+import { computed, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppCardListItem from '../../../../../_common/card/list/AppCardListItem.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatFilesize } from '../../../../../_common/filters/filesize';
 import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../../_common/filters/number';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import {
 	$saveGameBuild,
 	GameBuildEmulatorInfo,
@@ -29,17 +42,11 @@ import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import AppProgressPoller from '../../../../../_common/progress/poller/AppProgressPoller.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../utils/array';
-import { shallowSetup } from '../../../../../utils/vue';
-import { useFormGameRelease } from '../release/release.vue';
+import { useFormGameRelease } from '../release/FormGameRelease.vue';
 import { showArchiveFileSelectorModal } from './archive-file-selector-modal.service';
-
-export interface FormGameBuildInterface {
-	buildId: number;
-	isDeprecated: Ref<boolean>;
-	save: () => Promise<boolean>;
-}
 
 type GameBuildFormModel = GameBuildModel & {
 	launch_windows: string;
@@ -51,420 +58,341 @@ type GameBuildFormModel = GameBuildModel & {
 	launch_other: string;
 };
 
-class Wrapper extends BaseForm<GameBuildFormModel> {}
+type Props = {
+	game: GameModel;
+	package: GamePackageModel;
+	release: GameReleaseModel;
+	releaseLaunchOptions: GameBuildLaunchOptionModel[];
+	buildDownloadCounts: { [buildId: number]: number };
+	builds: GameBuildModel[];
+	model?: GameBuildModel;
+};
 
-@Options({
-	components: {
-		AppCardListItem,
-		AppExpand,
-		AppProgressPoller,
-		AppProgressBar,
-		AppLoading,
-		AppFormControlToggle,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad {
-	modelClass = GameBuildModel as any;
-	modelSaveHandler = $saveGameBuild;
+const props = defineProps<Props>();
+const { game } = props;
 
-	@Prop(Object)
-	game!: GameModel;
+const emit = defineEmits<{
+	'remove-build': [formModel: GameBuildFormModel];
+	'update-launch-options': [formModel: GameBuildFormModel, launchOptions: any];
+}>();
 
-	@Prop(Object)
-	package!: GamePackageModel;
+const releaseForm = useFormGameRelease()!;
 
-	@Prop(Object)
-	release!: GameReleaseModel;
+const maxFilesize = ref(0);
+const restrictedPlatforms = ref<string[]>([]);
+const forceOther = ref(false);
+const romTypes = ref<string[]>([]);
+const isSettingPlatform = ref(false);
+const prevCount = ref(-1);
+const buildLaunchOptions = ref<GameBuildLaunchOptionModel[]>([]);
+const wasChanged = ref(false);
 
-	@Prop(Array)
-	releaseLaunchOptions!: GameBuildLaunchOptionModel[];
+const GameBuildTypes = {
+	downloadable: GameBuildType.Downloadable,
+	html: GameBuildType.Html,
+	flash: GameBuildType.Flash,
+	unity: GameBuildType.Unity,
+	silverlight: GameBuildType.Silverlight,
+	applet: GameBuildType.Applet,
+	rom: GameBuildType.Rom,
+};
+const GameBuildStatuses = {
+	adding: GameBuildStatus.Adding,
+	active: GameBuildStatus.Active,
+};
+const GameBuildErrors = {
+	missingFields: GameBuildError.MissingFields,
+};
 
-	@Prop(Object)
-	buildDownloadCounts!: {
-		[buildId: number]: number;
-	};
-
-	@Prop(Array)
-	builds!: GameBuildModel[];
-
-	releaseForm = shallowSetup(() => useFormGameRelease()!);
-
-	maxFilesize = 0;
-	restrictedPlatforms: string[] = [];
-	forceOther = false;
-	romTypes: string[] = [];
-	isSettingPlatform = false;
-	prevCount = -1;
-	buildLaunchOptions: GameBuildLaunchOptionModel[] = [];
-	wasChanged = false;
-
-	readonly formatNumber = formatNumber;
-	readonly formatFuzzynumber = formatFuzzynumber;
-	readonly formatFilesize = formatFilesize;
-	readonly GameBuild = GameBuildModel;
-	readonly GameBuildTypes = {
-		downloadable: GameBuildType.Downloadable,
-		html: GameBuildType.Html,
-		flash: GameBuildType.Flash,
-		unity: GameBuildType.Unity,
-		silverlight: GameBuildType.Silverlight,
-		applet: GameBuildType.Applet,
-		rom: GameBuildType.Rom,
-	};
-	readonly GameBuildStatuses = {
-		adding: GameBuildStatus.Adding,
-		active: GameBuildStatus.Active,
-	};
-	readonly GameBuildErrors = {
-		missingFields: GameBuildError.MissingFields,
-	};
-	readonly GameBuildEmulatorInfo = GameBuildEmulatorInfo;
-
-	@Emit('remove-build')
-	emitRemoveBuild(_formModel: GameBuildFormModel) {}
-
-	@Emit('update-launch-options')
-	emitUpdateLaunchOptions(_formModel: GameBuildFormModel, _launchOptions: any) {}
-
-	get loadUrl() {
-		return `/web/dash/developer/games/builds/save/${this.game.id}/${this.package.id}/${
-			this.release.id
-		}/${this.model!.id}`;
-	}
-
-	get pollUrl() {
-		return `/web/dash/developer/games/builds/poll-progress/${this.game.id}/${this.package.id}/${
-			this.release.id
-		}/${this.model!.id}`;
-	}
-
-	get shouldPollProgress() {
-		return this.model && this.model.status === GameBuildStatus.Adding && !this.archiveError;
-	}
-
-	get archiveError() {
-		if (!this.model) {
-			return '';
-		}
-
-		if (this.model.hasError(GameBuildError.InvalidArchive)) {
-			return $gettext(
-				`The archive you uploaded looks corrupted, we can't extract it on our end.`
-			);
-		}
-
-		if (this.model.hasError(GameBuildError.PasswordArchive)) {
-			return $gettext(`The archive you uploaded is password-protected.`);
-		}
-
-		if (this.model.hasError(GameBuildError.NotHtmlArchive)) {
-			return $gettext(
-				`The archive you uploaded doesn't look like a valid html build. We expect a zip with an index.html at the root of the archive.`
-			);
-		}
-
-		return '';
-	}
-
-	get hasBrowserError() {
-		return this.hasCustomError('browser');
-	}
-
-	get isBrowserBased() {
-		return this.model!.isBrowserBased;
-	}
-
-	get hasPlatformsError() {
-		return this.hasCustomError('platforms');
-	}
-
-	get isDeprecated() {
-		return Boolean(
-			this.model &&
-				(this.model.type === GameBuildType.Applet ||
-					this.model.type === GameBuildType.Silverlight)
-		);
-	}
-
-	get platformOptions() {
-		return [
-			{
-				key: 'windows',
-				label: $gettext('Windows'),
-				icon: 'windows',
-			},
-			{
-				key: 'windows_64',
-				label: $gettext('Windows 64-bit'),
-				icon: 'windows',
-			},
-			{
-				key: 'mac',
-				label: $gettext('Mac'),
-				icon: 'mac',
-			},
-			{
-				key: 'mac_64',
-				label: $gettext('Mac 64-bit'),
-				icon: 'mac',
-			},
-			{
-				key: 'linux',
-				label: $gettext('Linux'),
-				icon: 'linux',
-			},
-			{
-				key: 'linux_64',
-				label: $gettext('Linux 64-bit'),
-				icon: 'linux',
-			},
-			{
-				key: 'other',
-				label: $gettext('Other'),
-				icon: 'other-os',
-			},
-		];
-	}
-
-	get platformsValid() {
-		if (!this.model) {
-			return false;
-		}
-
-		if (this.model.type !== GameBuildType.Downloadable) {
-			return true;
-		}
-
-		return (
-			!!this.model.os_windows ||
-			!!this.model.os_mac ||
-			!!this.model.os_linux ||
-			!!this.model.os_windows_64 ||
-			!!this.model.os_mac_64 ||
-			!!this.model.os_linux_64 ||
-			!!this.model.os_other
-		);
-	}
-
-	get availablePlatformOptions() {
-		if (!this.model) {
-			return [];
-		}
-
-		return this.platformOptions.filter(platform => (this.model as any)[`os_${platform.key}`]);
-	}
-
-	get isFitToScreen() {
-		return this.formModel && this.formModel.embed_fit_to_screen;
-	}
-
-	created() {
-		this.form.reloadOnSubmit = true;
-		this.releaseForm.buildForms.value.push({
-			buildId: this.model!.id,
-			isDeprecated: computed(() => this.isDeprecated),
-			save: () => this.save(),
-		});
-	}
-
-	beforeUnmount() {
-		arrayRemove(this.releaseForm.buildForms.value, i => i.buildId === this.model!.id);
-	}
-
+const form: FormController<GameBuildFormModel> = createForm({
+	model: toRef(props, 'model'),
+	modelClass: GameBuildModel as any,
+	modelSaveHandler: $saveGameBuild,
+	reloadOnSubmit: true,
+	loadUrl: computed(
+		() =>
+			`/web/dash/developer/games/builds/save/${game.id}/${props.package.id}/${props.release.id}/${props.model!.id}`
+	),
 	onInit() {
-		this.maxFilesize = 0;
-		this.restrictedPlatforms = [];
-		this.forceOther = false;
-		this.romTypes = [];
-		this.isSettingPlatform = false;
-		this.prevCount = -1;
-		this.buildLaunchOptions = [];
-		this.wasChanged = false;
+		maxFilesize.value = 0;
+		restrictedPlatforms.value = [];
+		forceOther.value = false;
+		romTypes.value = [];
+		isSettingPlatform.value = false;
+		prevCount.value = -1;
+		buildLaunchOptions.value = [];
+		wasChanged.value = false;
 
 		// This populates buildLaunchOptions for the first time.
-		this.onReleaseLaunchOptionsChanged();
-		this.validatePlatforms();
-	}
-
+		onReleaseLaunchOptionsChanged();
+		validatePlatforms();
+	},
 	onLoad(payload: any) {
-		this.maxFilesize = payload.maxFilesize;
-		this.restrictedPlatforms = payload.restrictedPlatforms;
-		this.forceOther = payload.forceOther;
-		this.romTypes = payload.romTypes;
-	}
-
-	remove() {
-		this.emitRemoveBuild(this.model!);
-	}
-
-	// This is called by the release form.
-	public save() {
-		return this.form.submit();
-	}
-
-	isPlatformDisabled(platform: string) {
-		// Restricted by server.
-		if (this.restrictedPlatforms && Array.isArray(this.restrictedPlatforms)) {
-			if (this.restrictedPlatforms.indexOf(platform) !== -1) {
-				return true;
-			}
+		maxFilesize.value = payload.maxFilesize;
+		restrictedPlatforms.value = payload.restrictedPlatforms;
+		forceOther.value = payload.forceOther;
+		romTypes.value = payload.romTypes;
+	},
+	onSubmitSuccess(response: any) {
+		if (game) {
+			game.assign(response.game);
 		}
+	},
+});
 
-		// Can only be other OR a platform.
-		if (platform !== 'other' && this.model!.os_other) {
-			return true;
-		} else if (
-			platform === 'other' &&
-			(this.model!.os_windows ||
-				this.model!.os_mac ||
-				this.model!.os_linux ||
-				this.model!.os_windows_64 ||
-				this.model!.os_mac_64 ||
-				this.model!.os_linux_64)
-		) {
-			return true;
-		}
+const pollUrl = computed(
+	() =>
+		`/web/dash/developer/games/builds/poll-progress/${game.id}/${props.package.id}/${props.release.id}/${props.model!.id}`
+);
 
-		// Can't choose a platform chosen by another build in this package.
-		if (platform !== 'other') {
-			const foundBuild = this.builds.find(value => (value as any)[`os_${platform}`] === true);
-			if (foundBuild && foundBuild.id !== this.model!.id) {
-				return true;
-			}
-		}
+const shouldPollProgress = computed(
+	() => props.model && props.model.status === GameBuildStatus.Adding && !archiveError.value
+);
 
+const archiveError = computed(() => {
+	if (!props.model) {
+		return '';
+	}
+	if (props.model.hasError(GameBuildError.InvalidArchive)) {
+		return $gettext(
+			`The archive you uploaded looks corrupted, we can't extract it on our end.`
+		);
+	}
+	if (props.model.hasError(GameBuildError.PasswordArchive)) {
+		return $gettext(`The archive you uploaded is password-protected.`);
+	}
+	if (props.model.hasError(GameBuildError.NotHtmlArchive)) {
+		return $gettext(
+			`The archive you uploaded doesn't look like a valid html build. We expect a zip with an index.html at the root of the archive.`
+		);
+	}
+	return '';
+});
+
+const hasBrowserError = computed(() => form.hasCustomError('browser'));
+const isBrowserBased = computed(() => props.model!.isBrowserBased);
+const hasPlatformsError = computed(() => form.hasCustomError('platforms'));
+
+const isDeprecated = computed(() =>
+	Boolean(
+		props.model &&
+			(props.model.type === GameBuildType.Applet ||
+				props.model.type === GameBuildType.Silverlight)
+	)
+);
+
+const platformOptions = [
+	{ key: 'windows', label: $gettext('Windows'), icon: 'windows' },
+	{ key: 'windows_64', label: $gettext('Windows 64-bit'), icon: 'windows' },
+	{ key: 'mac', label: $gettext('Mac'), icon: 'mac' },
+	{ key: 'mac_64', label: $gettext('Mac 64-bit'), icon: 'mac' },
+	{ key: 'linux', label: $gettext('Linux'), icon: 'linux' },
+	{ key: 'linux_64', label: $gettext('Linux 64-bit'), icon: 'linux' },
+	{ key: 'other', label: $gettext('Other'), icon: 'other-os' },
+];
+
+const platformsValid = computed(() => {
+	if (!props.model) {
 		return false;
 	}
-
-	async platformChanged(platform: string) {
-		this.isSettingPlatform = true;
-
-		try {
-			const params = [
-				this.game.id,
-				this.package.id,
-				this.release.id,
-				this.model!.id,
-				platform,
-				(this.formModel as any)['os_' + platform] ? 1 : 0,
-			];
-
-			const response = await Api.sendRequest(
-				'/web/dash/developer/games/builds/set-platform/' + params.join('/'),
-				{},
-				{ detach: true }
-			);
-
-			this.model!.assign(response.gameBuild);
-			this.game.assign(response.game);
-
-			// Copy new platforms to the form model.
-			for (const _platform of GameBuildLaunchablePlatforms) {
-				const key = 'os_' + _platform;
-
-				// oh geez
-				this.setField(key as any, (this.model as any)[key]);
-			}
-
-			// Copy new launch options in.
-			this.emitUpdateLaunchOptions(this.model!, response.launchOptions);
-		} catch (err) {
-			console.error(err);
-			showErrorGrowl($gettext('Could not set the platform for some reason.'));
-		} finally {
-			this.isSettingPlatform = false;
-		}
-
-		this.validatePlatforms();
+	if (props.model.type !== GameBuildType.Downloadable) {
+		return true;
 	}
+	return (
+		!!props.model.os_windows ||
+		!!props.model.os_mac ||
+		!!props.model.os_linux ||
+		!!props.model.os_windows_64 ||
+		!!props.model.os_mac_64 ||
+		!!props.model.os_linux_64 ||
+		!!props.model.os_other
+	);
+});
 
-	private validatePlatforms() {
-		if (!this.platformsValid) {
-			this.setCustomError('platforms');
-		} else {
-			this.clearCustomError('platforms');
-		}
+const availablePlatformOptions = computed(() => {
+	if (!props.model) {
+		return [];
 	}
+	return platformOptions.filter(platform => (props.model as any)[`os_${platform.key}`]);
+});
 
-	getExecutablePath(platform: string) {
-		return (this.formModel as any)['launch_' + platform];
-	}
+const isFitToScreen = computed(
+	() => form.formModel && form.formModel.embed_fit_to_screen
+);
 
-	@Watch('releaseLaunchOptions', { deep: true })
-	onReleaseLaunchOptionsChanged() {
-		this.buildLaunchOptions = this.releaseLaunchOptions.filter(
-			launchOption => launchOption.game_build_id === this.model!.id
-		);
+// Register with the release form.
+onMounted(() => {
+	releaseForm.buildForms.value.push({
+		buildId: props.model!.id,
+		isDeprecated: computed(() => isDeprecated.value),
+		save: () => form.submit(),
+	});
+});
 
-		if (this.prevCount === -1) {
-			this.prevCount = this.buildLaunchOptions.length;
-		}
+onBeforeUnmount(() => {
+	arrayRemove(releaseForm.buildForms.value, i => i.buildId === props.model!.id);
+});
 
-		for (const launchOption of this.buildLaunchOptions) {
-			this.setField(('launch_' + launchOption.os) as any, launchOption.executable_path);
-		}
+// Watch release launch options.
+watch(
+	() => props.releaseLaunchOptions,
+	() => onReleaseLaunchOptionsChanged(),
+	{ deep: true }
+);
 
-		this.prevCount = this.buildLaunchOptions.length;
-	}
-
-	@Watch('formModel.embed_width')
-	@Watch('formModel.embed_height')
-	@Watch('formModel.embed_fit_to_screen')
-	onDimensionsChanged() {
+// Watch browser dimensions.
+watch(
+	[
+		() => form.formModel.embed_width,
+		() => form.formModel.embed_height,
+		() => form.formModel.embed_fit_to_screen,
+	],
+	() => {
 		const hasError =
-			this.isBrowserBased &&
-			!this.isFitToScreen &&
-			(!this.formModel.embed_width || !this.formModel.embed_height);
+			isBrowserBased.value &&
+			!isFitToScreen.value &&
+			(!form.formModel.embed_width || !form.formModel.embed_height);
 
 		if (hasError) {
-			this.setCustomError('browser');
+			form.setCustomError('browser');
 		} else {
-			this.clearCustomError('browser');
+			form.clearCustomError('browser');
+		}
+	}
+);
+
+function onReleaseLaunchOptionsChanged() {
+	buildLaunchOptions.value = props.releaseLaunchOptions.filter(
+		launchOption => launchOption.game_build_id === props.model!.id
+	);
+
+	if (prevCount.value === -1) {
+		prevCount.value = buildLaunchOptions.value.length;
+	}
+
+	for (const launchOption of buildLaunchOptions.value) {
+		(form.formModel as any)['launch_' + launchOption.os] = launchOption.executable_path;
+	}
+
+	prevCount.value = buildLaunchOptions.value.length;
+}
+
+function remove() {
+	emit('remove-build', props.model! as GameBuildFormModel);
+}
+
+function isPlatformDisabled(platform: string) {
+	if (restrictedPlatforms.value && Array.isArray(restrictedPlatforms.value)) {
+		if (restrictedPlatforms.value.indexOf(platform) !== -1) {
+			return true;
 		}
 	}
 
-	async openFileSelector(platform: string) {
-		const selected = await showArchiveFileSelectorModal(
-			this.game.id,
-			this.package.id,
-			this.release.id,
-			this.model!.id,
-			this.model!.primary_file.id,
-			platform
+	if (platform !== 'other' && props.model!.os_other) {
+		return true;
+	} else if (
+		platform === 'other' &&
+		(props.model!.os_windows ||
+			props.model!.os_mac ||
+			props.model!.os_linux ||
+			props.model!.os_windows_64 ||
+			props.model!.os_mac_64 ||
+			props.model!.os_linux_64)
+	) {
+		return true;
+	}
+
+	if (platform !== 'other') {
+		const foundBuild = props.builds.find(
+			value => (value as any)[`os_${platform}`] === true
+		);
+		if (foundBuild && foundBuild.id !== props.model!.id) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+async function platformChanged(platform: string) {
+	isSettingPlatform.value = true;
+
+	try {
+		const params = [
+			game.id,
+			props.package.id,
+			props.release.id,
+			props.model!.id,
+			platform,
+			(form.formModel as any)['os_' + platform] ? 1 : 0,
+		];
+
+		const response = await Api.sendRequest(
+			'/web/dash/developer/games/builds/set-platform/' + params.join('/'),
+			{},
+			{ detach: true }
 		);
 
-		if (!selected) {
-			return;
+		props.model!.assign(response.gameBuild);
+		game.assign(response.game);
+
+		// Copy new platforms to the form model.
+		for (const _platform of GameBuildLaunchablePlatforms) {
+			const key = 'os_' + _platform;
+			(form.formModel as any)[key] = (props.model as any)[key];
 		}
 
-		this.setField(('launch_' + platform) as any, selected);
-		this.onBuildFieldChanged();
+		// Copy new launch options in.
+		emit('update-launch-options', props.model! as GameBuildFormModel, response.launchOptions);
+	} catch (err) {
+		console.error(err);
+		showErrorGrowl($gettext('Could not set the platform for some reason.'));
+	} finally {
+		isSettingPlatform.value = false;
 	}
 
-	processPollerResponse(response: any) {
-		// Just copy over the new build data into our current one.
-		this.model!.assign(response.build);
-		if (response.game) {
-			this.game.assign(response.game);
-		}
+	validatePlatforms();
+}
+
+function validatePlatforms() {
+	if (!platformsValid.value) {
+		form.setCustomError('platforms');
+	} else {
+		form.clearCustomError('platforms');
+	}
+}
+
+function getExecutablePath(platform: string) {
+	return (form.formModel as any)['launch_' + platform];
+}
+
+async function openFileSelector(platform: string) {
+	const selected = await showArchiveFileSelectorModal(
+		game.id,
+		props.package.id,
+		props.release.id,
+		props.model!.id,
+		props.model!.primary_file.id,
+		platform
+	);
+
+	if (!selected) {
+		return;
 	}
 
-	/**
-	 * Must be called any time a field changes that we need to show the save
-	 * button for.
-	 */
-	onBuildFieldChanged() {
-		this.wasChanged = true;
-	}
+	(form.formModel as any)['launch_' + platform] = selected;
+	onBuildFieldChanged();
+}
 
-	onSubmitSuccess(response: any) {
-		if (this.game) {
-			this.game.assign(response.game);
-		}
+function processPollerResponse(response: any) {
+	props.model!.assign(response.build);
+	if (response.game) {
+		game.assign(response.game);
 	}
+}
+
+function onBuildFieldChanged() {
+	wasChanged.value = true;
 }
 </script>
 
@@ -755,7 +683,6 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 													:validators="[validateMaxLength(500)]"
 													@changed="onBuildFieldChanged"
 												/>
-												<!--  TODO: this doesn't register when the file is selected to clear the error -->
 
 												<span class="input-group-addon">
 													<a
@@ -778,7 +705,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 									</AppFormGroup>
 								</div>
 
-								<AppExpand :when="serverErrors.launchOptions">
+								<AppExpand :when="form.serverErrors.launchOptions">
 									<div class="alert alert-notice">
 										<strong>
 											<AppTranslate>
@@ -892,7 +819,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 							Unity Right Click Menu
 						-->
 						<AppFormGroup
-							v-if="formModel.type === GameBuildTypes.unity"
+							v-if="form.formModel.type === GameBuildTypes.unity"
 							name="browser_disable_right_click"
 							:label="$gettext(`Disable right click?`)"
 						>
@@ -938,7 +865,7 @@ export default class FormGameBuild extends mixins(Wrapper) implements FormOnLoad
 						</AppExpand>
 					</template>
 
-					<AppFormButton v-if="valid && wasChanged" class="game-build-form-submit-button">
+					<AppFormButton v-if="form.valid && wasChanged" class="game-build-form-submit-button">
 						<AppTranslate>Save Build</AppTranslate>
 					</AppFormButton>
 				</div>
