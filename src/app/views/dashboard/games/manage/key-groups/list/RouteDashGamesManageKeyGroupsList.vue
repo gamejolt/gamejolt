@@ -1,7 +1,23 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
+import {
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../_common/route/route-component';
+
+export default {
+	name: 'RouteDashGamesManageKeyGroupsList',
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+		resolver: ({ route }) =>
+			Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
@@ -12,76 +28,55 @@ import {
 	KeyGroupType,
 } from '../../../../../../../_common/key-group/key-group.model';
 import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../_common/route/legacy-route-component';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/FormGameKeyGroup.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
-@Options({
-	name: 'RouteDashGamesManageKeyGroupsList',
-	components: {
-		AppCardList,
-		AppCardListItem,
-		AppCardListAdd,
-		AppProgressBar,
-		FormGameKeyGroup,
-	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: 'never',
-	resolver: ({ route }) =>
-		Api.sendRequest('/web/dash/developer/games/key-groups/' + route.params.id),
-})
-export default class RouteDashGamesManageKeyGroupsList extends LegacyRouteComponent {
-	routeStore = setup(() => useGameDashRouteController()!);
+const router = useRouter();
+const routeStore = useGameDashRouteController()!;
 
-	get game() {
-		return this.routeStore.game!;
+const game = computed(() => routeStore.game!);
+
+const keyGroups = ref<KeyGroupModel[]>([]);
+const packages = ref<GamePackageModel[]>([]);
+const isAdding = ref(false);
+
+const KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
+const KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
+const KeyGroupTypeEmail = KeyGroupType.Email;
+const KeyGroupTypeUser = KeyGroupType.User;
+
+function onKeyGroupAdded(keyGroup: KeyGroupModel) {
+	router.push({
+		name: 'dash.games.manage.key-groups.edit',
+		params: {
+			keyGroupId: keyGroup.id + '',
+		},
+	});
+}
+
+function divide(left: number | undefined | null, right: number | undefined | null) {
+	if (!right) {
+		return 0;
 	}
 
-	keyGroups: KeyGroupModel[] = [];
-	packages: GamePackageModel[] = [];
-	isAdding = false;
+	return (left || 0) / right;
+}
 
-	readonly formatNumber = formatNumber;
-	readonly KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
-	readonly KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
-	readonly KeyGroupTypeEmail = KeyGroupType.Email;
-	readonly KeyGroupTypeUser = KeyGroupType.User;
-
-	get routeTitle() {
-		if (this.game) {
-			return this.$gettext('Manage Key Groups for %{ game }', {
-				game: this.game.title,
+createAppRoute({
+	routeTitle: computed(() => {
+		if (game.value) {
+			return $gettext('Manage Key Groups for %{ game }', {
+				game: game.value.title,
 			});
 		}
 		return null;
-	}
-
-	routeResolved($payload: any) {
-		this.keyGroups = KeyGroupModel.populate($payload.keyGroups);
-		this.packages = GamePackageModel.populate($payload.packages);
-	}
-
-	onKeyGroupAdded(keyGroup: KeyGroupModel) {
-		this.$router.push({
-			name: 'dash.games.manage.key-groups.edit',
-			params: {
-				keyGroupId: keyGroup.id + '',
-			},
-		});
-	}
-
-	divide(left: number | undefined | null, right: number | undefined | null) {
-		if (!right) {
-			return 0;
-		}
-
-		return (left || 0) / right;
-	}
-}
+	}),
+	onResolved({ payload }) {
+		keyGroups.value = KeyGroupModel.populate(payload.keyGroups);
+		packages.value = GamePackageModel.populate(payload.packages);
+	},
+});
 </script>
 
 <template>
