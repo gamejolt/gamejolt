@@ -1,68 +1,54 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
+import { touchUser } from '../../../_common/user/user.model';
+import {
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../_common/route/route-component';
+
+export default {
+	name: 'RouteStyleguide',
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+		resolver: () => touchUser(),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { computed } from 'vue';
 import AppButtonStyleguide from '../../../_common/button/AppButtonStyleguide.vue';
 import AppJolticonsStyleguide from '../../../_common/jolticons/AppJolticonsStyleguide.vue';
 import AppListGroupStyleguide from '../../../_common/list-group/AppListGroupStyleguide.vue';
 import AppProgressBarStyleguide from '../../../_common/progress/AppProgressBarStyleguide.vue';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../_common/route/legacy-route-component';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { vAppScrollTo } from '../../../_common/scroll/to/to.directive';
 import AppThemeSvgStyleguide from '../../../_common/theme/svg/AppThemeSvgStyleguide.vue';
-import { touchUser } from '../../../_common/user/user.model';
 import AppAvatarFrameStyleguide from './avatar-frame/AppAvatarFrameStyleguide.vue';
 import AppStyleguideColor from './color/AppStyleguideColor.vue';
 
-@Options({
-	name: 'RouteStyleguide',
-	components: {
-		AppScrollAffix,
-		AppButtonStyleguide,
-		AppListGroupStyleguide,
-		AppProgressBarStyleguide,
-		AppStyleguideColor,
-		AppThemeSvgStyleguide,
-		AppJolticonsStyleguide,
-	},
-	directives: {
-		AppScrollTo: vAppScrollTo,
-	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: 'never',
-	resolver: () => touchUser(),
-})
-export default class RouteStyleguide extends LegacyRouteComponent {
-	get routeTitle() {
-		return 'Styleguide';
-	}
+const nav = {
+	buttons: 'Buttons',
+	'list-groups': 'List Groups',
+	'progress-bars': 'Progress Bars',
+	colors: 'Colors',
+	'theme-svg': 'Theme SVG',
+	'avatar-frame': 'Avatar Frame',
+	jolticons: 'Jolticons',
+};
 
-	get nav() {
-		return {
-			buttons: 'Buttons',
-			'list-groups': 'List Groups',
-			'progress-bars': 'Progress Bars',
-			colors: 'Colors',
-			'theme-svg': 'Theme SVG',
-			'avatar-frame': 'Avatar Frame',
-			jolticons: 'Jolticons',
-		};
-	}
+const components = [
+	AppButtonStyleguide,
+	AppListGroupStyleguide,
+	AppProgressBarStyleguide,
+	AppStyleguideColor,
+	AppThemeSvgStyleguide,
+	AppAvatarFrameStyleguide,
+	AppJolticonsStyleguide,
+];
 
-	get components() {
-		return [
-			AppButtonStyleguide,
-			AppListGroupStyleguide,
-			AppProgressBarStyleguide,
-			AppStyleguideColor,
-			AppThemeSvgStyleguide,
-			AppAvatarFrameStyleguide,
-			AppJolticonsStyleguide,
-		];
-	}
-}
+createAppRoute({
+	routeTitle: computed(() => 'Styleguide'),
+});
 </script>
 
 <template>
