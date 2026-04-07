@@ -1,162 +1,131 @@
-<script lang="ts">
-import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import AppGrecaptchaWidget from '../../../auth/components/grecaptcha/widget/widget.vue';
 import { trackLoginCaptcha } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
 import { Environment } from '../../environment/environment.service';
-import { BaseForm, FormOnLoad, FormOnSubmit, FormOnSubmitError } from '../../form-vue/form.service';
-import { validateUsername } from '../../form-vue/validators';
+import AppForm, { createForm } from '../../form-vue/AppForm.vue';
+import AppFormButton from '../../form-vue/AppFormButton.vue';
+import AppFormControl from '../../form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../form-vue/AppFormGroup.vue';
+import { validateMaxLength, validateUsername } from '../../form-vue/validators';
 import { LinkedAccountProvider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
 import AppLoading from '../../loading/AppLoading.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import googleImage from '../google-icon.svg';
 
-class Wrapper extends BaseForm<any> {}
-
-@Options({
-	components: {
-		AppLoading,
-		AppGrecaptchaWidget,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppAuthLoginForm
-	extends mixins(Wrapper)
-	implements FormOnSubmit, FormOnSubmitError, FormOnLoad
-{
-	@Prop(Boolean)
+type Props = {
 	overlay?: boolean;
+};
+const { overlay } = defineProps<Props>();
 
-	captchaToken: string | null = null;
-	captchaResponse: string | null = null;
-	captchaCounter = 0;
-	/** How many attempts the user has until they get blocked. */
-	attempts = 5;
+const emit = defineEmits<{
+	'needs-approved-login': [token: string];
+}>();
 
-	// Errors
-	invalidLogin = false;
-	blockedLogin = false;
-	invalidCaptcha = false;
-	approvedLoginRejected = false;
-	tryAgain = false;
+const router = useRouter();
 
-	@Emit('needs-approved-login')
-	emitNeedsApprovedLogin(_token: string) {}
+const captchaToken = ref<string | null>(null);
+const captchaResponse = ref<string | null>(null);
+const captchaCounter = ref(0);
+/** How many attempts the user has until they get blocked. */
+const attempts = ref(5);
 
-	get loadUrl() {
-		return `/web/auth/login`;
-	}
+const invalidLogin = ref(false);
+const blockedLogin = ref(false);
+const invalidCaptcha = ref(false);
+const approvedLoginRejected = ref(false);
+const tryAgain = ref(false);
 
-	get showForm() {
-		return this.captchaToken === null;
-	}
+const showForm = computed(() => captchaToken.value === null);
 
-	readonly Connection = Connection;
-	readonly Environment = Environment;
-	readonly validateUsername = validateUsername;
-	readonly googleImage = googleImage;
-	readonly Google = LinkedAccountProvider.Google;
-
-	created() {
-		this.form.warnOnDiscard = false;
-	}
-
-	onChanged() {
-		this.resetErrors();
-	}
-
-	resetErrors() {
-		this.invalidLogin = false;
-		this.blockedLogin = false;
-		this.invalidCaptcha = false;
-		this.approvedLoginRejected = false;
-		this.tryAgain = false;
-	}
-
+const form = createForm({
+	warnOnDiscard: false,
+	loadUrl: `/web/auth/login`,
 	onLoad($payload: any) {
-		this.attempts = $payload.attempts;
-	}
-
+		attempts.value = $payload.attempts;
+	},
 	async onSubmit() {
-		this.resetErrors();
+		resetErrors();
 
 		let response;
 
-		if (this.captchaToken) {
-			// Try to solve the captcha.
+		if (captchaToken.value) {
 			response = await Api.sendRequest(
 				`/web/auth/login`,
 				{
-					token: this.captchaToken,
-					captcha: this.captchaResponse,
+					token: captchaToken.value,
+					captcha: captchaResponse.value,
 				},
-				{
-					detach: true,
-				}
+				{ detach: true }
 			);
 
 			if (response.success === true) {
-				trackLoginCaptcha(this.formModel.username, 'solved', this.captchaCounter);
+				trackLoginCaptcha(form.formModel.username, 'solved', captchaCounter.value);
 			}
 		} else {
-			response = await Api.sendRequest('/web/auth/login', this.formModel);
+			response = await Api.sendRequest('/web/auth/login', form.formModel);
 
-			// If we got a token with the response, the server requests us to solve a captcha.
 			if (response.token) {
-				this.captchaToken = response.token;
-				this.captchaCounter++;
-				trackLoginCaptcha(this.formModel.username, 'presented', this.captchaCounter);
+				captchaToken.value = response.token;
+				captchaCounter.value++;
+				trackLoginCaptcha(form.formModel.username, 'presented', captchaCounter.value);
 			}
 		}
 
-		// Handle custom errors.
 		if (response.success === false) {
 			if (response.reason) {
 				switch (response.reason) {
 					case 'invalid-login':
-						this.invalidLogin = true;
+						invalidLogin.value = true;
 						break;
 					case 'blocked':
-						this.blockedLogin = true;
+						blockedLogin.value = true;
 						break;
 					case 'captcha':
-					case 'token': // Technically the session expired, but it's a captcha error.
-						this.invalidCaptcha = true;
-						trackLoginCaptcha(this.formModel.username, 'failed', this.captchaCounter);
+					case 'token':
+						invalidCaptcha.value = true;
+						trackLoginCaptcha(form.formModel.username, 'failed', captchaCounter.value);
 						break;
 					case 'approve-login':
-						this.emitNeedsApprovedLogin(response.loginPollingToken);
+						emit('needs-approved-login', response.loginPollingToken);
 						break;
 					case 'approve-login-rejected':
-						this.approvedLoginRejected = true;
+						approvedLoginRejected.value = true;
 						break;
 					case 'try-again':
-						this.tryAgain = true;
+						tryAgain.value = true;
 						break;
 				}
 			}
 		}
 
 		return response;
-	}
-
-	onRecaptchaResponse(captchaResponse: string) {
-		this.captchaResponse = captchaResponse;
-		this.form.submit();
-	}
-
+	},
 	onSubmitError() {
-		// Any error resets this component to show the form again.
-		this.captchaToken = null;
-	}
+		captchaToken.value = null;
+	},
+});
 
-	linkedChoose(provider: LinkedAccountProvider) {
-		LinkedAccounts.login(this.$router, provider);
-	}
+function resetErrors() {
+	invalidLogin.value = false;
+	blockedLogin.value = false;
+	invalidCaptcha.value = false;
+	approvedLoginRejected.value = false;
+	tryAgain.value = false;
+}
+
+function onRecaptchaResponse(response: string) {
+	captchaResponse.value = response;
+	form.submit();
+}
+
+function linkedChoose(provider: LinkedAccountProvider) {
+	LinkedAccounts.login(router, provider);
 }
 </script>
 
@@ -175,7 +144,7 @@ export default class AppAuthLoginForm
 							type="text"
 							:placeholder="$gettext('Username')"
 							:validators="[validateMaxLength(30), validateUsername()]"
-							@changed="onChanged"
+							@changed="resetErrors"
 						/>
 
 						<AppFormControlErrors />
@@ -186,7 +155,7 @@ export default class AppAuthLoginForm
 							type="password"
 							:placeholder="$gettext('Password')"
 							:validators="[validateMaxLength(300)]"
-							@changed="onChanged"
+							@changed="resetErrors"
 						/>
 
 						<AppFormControlErrors />
@@ -291,7 +260,7 @@ export default class AppAuthLoginForm
 					solid
 					block
 					:disabled="Connection.isClientOffline"
-					@click="linkedChoose(Google)"
+					@click="linkedChoose(LinkedAccountProvider.Google)"
 				>
 					<img :src="googleImage" alt="" />
 					<span><AppTranslate>Sign in with Google</AppTranslate></span>
