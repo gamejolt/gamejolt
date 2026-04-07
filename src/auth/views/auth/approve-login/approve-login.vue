@@ -1,94 +1,89 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
+import { defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { RouteLocationRedirect } from '../../../../utils/router';
+
+export default {
+	name: 'RouteApproveLogin',
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+		async resolver({ route }) {
+			if (!import.meta.env.SSR) {
+				const pollingToken = sessionStorage.getItem('login-polling-token');
+				if (!pollingToken) {
+					return new RouteLocationRedirect({
+						name: 'auth.login',
+						query: { redirect: route.query.redirect || undefined },
+					});
+				}
+
+				sessionStorage.removeItem('login-polling-token');
+				return pollingToken;
+			}
+			return null;
+		},
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import {
 	authOnLogin,
 	getRedirectUrl,
 	redirectToDashboard,
 } from '../../../../_common/auth/auth.service';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { Navigate } from '../../../../_common/navigate/navigate.service';
 import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
-import { RouteLocationRedirect } from '../../../../utils/router';
+import { createAppRoute } from '../../../../_common/route/route-component';
+import { $gettext } from '../../../../_common/translate/translate.service';
 
-@Options({
-	name: 'RouteApproveLogin',
-	components: {
-		AppProgressPoller,
-		AppLoading,
+const route = useRoute();
+
+const pollingToken = ref<string | null>(null);
+const isExpired = ref(false);
+const isRejected = ref(false);
+
+const isPolling = computed(() => !isExpired.value && !isRejected.value);
+
+createAppRoute({
+	routeTitle: $gettext('Approve Login Location'),
+	onResolved({ payload }) {
+		pollingToken.value = payload;
 	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: 'always',
-	async resolver({ route }) {
-		if (!import.meta.env.SSR) {
-			const pollingToken = sessionStorage.getItem('login-polling-token');
-			if (!pollingToken) {
-				return new RouteLocationRedirect({
-					name: 'auth.login',
-					query: { redirect: route.query.redirect || undefined },
-				});
-			}
+});
 
-			sessionStorage.removeItem('login-polling-token');
-			return pollingToken;
+async function onApproved() {
+	authOnLogin('email');
+
+	const location = getRedirectUrl(route.query.redirect as string);
+	if (location) {
+		// TODO(desktop-app-fixes) can this be an external url?
+		Navigate.goto(location);
+		return;
+	}
+
+	redirectToDashboard();
+}
+
+async function onError(e: any) {
+	if (e instanceof Error) {
+		throw e;
+	}
+
+	if (e.status && e.status === 'error' && e.reason) {
+		switch (e.reason) {
+			case 'expired':
+				isExpired.value = true;
+				return;
+
+			case 'rejected':
+				isRejected.value = true;
+				return;
 		}
-		return null;
-	},
-})
-export default class RouteApproveLogin extends LegacyRouteComponent {
-	pollingToken: string | null = null;
-
-	isExpired = false;
-	isRejected = false;
-
-	get routeTitle() {
-		return this.$gettext('Approve Login Location');
 	}
 
-	get isPolling() {
-		return !this.isExpired && !this.isRejected;
-	}
-
-	routeResolved(pollingToken: string | null) {
-		this.pollingToken = pollingToken;
-	}
-
-	async onApproved() {
-		authOnLogin('email');
-
-		const location = getRedirectUrl(this.$route.query.redirect as string);
-		if (location) {
-			// TODO(desktop-app-fixes) can this be an external url?
-			Navigate.goto(location);
-			return;
-		}
-
-		redirectToDashboard();
-	}
-
-	async onError(e: any) {
-		if (e instanceof Error) {
-			throw e;
-		}
-
-		if (e.status && e.status === 'error' && e.reason) {
-			switch (e.reason) {
-				case 'expired':
-					this.isExpired = true;
-					return;
-
-				case 'rejected':
-					this.isRejected = true;
-					return;
-			}
-		}
-
-		console.error('Invalid looking response from polling blocked login', e);
-	}
+	console.error('Invalid looking response from polling blocked login', e);
 }
 </script>
 
