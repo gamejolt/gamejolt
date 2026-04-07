@@ -1,19 +1,19 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { addWeeks, startOfDay, startOfTomorrow } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { setup } from 'vue-class-component';
-import { Emit, Options, Prop, Watch, mixins } from 'vue-property-decorator';
+import { computed, ref, toRef, watch } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { formatCurrency } from '../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../_common/filters/date';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlDate from '../../../../../_common/form-vue/controls/AppFormControlDate.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import {
-	BaseForm,
-	FormOnBeforeSubmit,
-	FormOnLoad,
-} from '../../../../../_common/form-vue/form.service';
 import { GameModel } from '../../../../../_common/game/game.model';
 import {
 	$saveGamePackage,
@@ -31,6 +31,8 @@ import { SellableModel, SellableType } from '../../../../../_common/sellable/sel
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { AppGamePerms } from '../../../game/perms/perms';
 
 type FormGamePackageModel = GamePackageModel & {
@@ -45,137 +47,65 @@ type FormGamePackageModel = GamePackageModel & {
 	has_suggested_price: boolean;
 };
 
-class Wrapper extends BaseForm<FormGamePackageModel> {}
+type Props = {
+	game: GameModel;
+	sellable: SellableModel;
+	model?: GamePackageModel;
+};
 
-@Options({
-	components: {
-		AppFormLegend,
-		AppLoadingFade,
-		AppFormControlToggle,
-		AppFormControlDate,
-		AppGamePerms,
-		AppTimeAgo,
-	},
-})
-export default class FormGamePackage
-	extends mixins(Wrapper)
-	implements FormOnLoad, FormOnBeforeSubmit
-{
-	@Prop(Object)
-	game!: GameModel;
+const props = defineProps<Props>();
+const { game, sellable } = props;
 
-	@Prop(Object)
-	sellable!: SellableModel;
+const emit = defineEmits<{
+	salecancel: [formModel: FormGamePackageModel];
+}>();
 
-	modelClass = GamePackageModel as any;
-	modelSaveHandler = $saveGamePackage;
+const commonStore = useCommonStore();
+const user = computed(() => commonStore.user);
 
-	commonStore = setup(() => useCommonStore());
+const showDescriptionInput = ref(false);
+const isShowingSaleForm = ref(false);
+const now = ref(0);
+const isProcessing = ref(false);
+const startedPrimary = ref(false);
+const hasPrimarySellable = ref(false);
+const minPrice = ref(0);
+const isUserVerified = ref(false);
+const isFangame = ref(false);
+const pricings = ref<SellablePricingModel[]>([]);
+const originalPricing = ref<SellablePricingModel | null>(null);
+const promotionalPricing = ref<SellablePricingModel | null>(null);
+const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] }>({});
 
-	get user() {
-		return this.commonStore.user;
-	}
+const GamePackageVisibilityPublic = GamePackageVisibility.Public;
+const GamePackageVisibilityPrivate = GamePackageVisibility.Private;
 
-	showDescriptionInput = false;
-	isShowingSaleForm = false;
-	now = 0;
-	isProcessing = false;
-	startedPrimary = false;
-	hasPrimarySellable = false;
-	minPrice = 0;
-	isUserVerified = false;
-	isFangame = false;
-	pricings: SellablePricingModel[] = [];
-	originalPricing: SellablePricingModel | null = null;
-	promotionalPricing: SellablePricingModel | null = null;
-	timezones: { [region: string]: (TimezoneData & { label?: string })[] } = {};
-
-	readonly GamePackage = GamePackageModel;
-	readonly formatDate = formatDate;
-	readonly formatCurrency = formatCurrency;
-	readonly GamePackageVisibilityPublic = GamePackageVisibility.Public;
-	readonly GamePackageVisibilityPrivate = GamePackageVisibility.Private;
-
-	@Emit('salecancel')
-	emitSaleCancel(_formModel: FormGamePackageModel) {}
-
-	get hasBuildsPerms() {
-		return this.game && this.game.hasPerms('builds');
-	}
-
-	get hasAllPerms() {
-		return this.game && this.game.hasPerms('all');
-	}
-
-	get hasSalesPerms() {
-		return this.game && this.game.hasPerms('sales');
-	}
-
-	get saleTimezoneOffset() {
-		if (!this.formModel.sale_timezone) {
-			return 0;
+const form: FormController<FormGamePackageModel> = createForm({
+	model: toRef(props, 'model'),
+	modelClass: GamePackageModel as any,
+	modelSaveHandler: $saveGamePackage,
+	reloadOnSubmit: true,
+	loadUrl: computed(() => {
+		const params = [form.formModel.game_id];
+		if (form.method === 'edit') {
+			params.push(form.formModel.id);
 		}
-
-		const saleTz = this.timezoneByName(this.formModel.sale_timezone);
-		if (!saleTz) {
-			console.warn('Could not find timezone offset for: ' + saleTz);
-			return 0;
-		} else {
-			return saleTz.o * 1000;
-		}
-	}
-
-	get saleStartLocal() {
-		if (!this.formModel.sale_start) {
-			return null;
-		}
-
-		return new Date(this.formModel.sale_start);
-	}
-
-	get saleEndLocal() {
-		if (!this.formModel.sale_end) {
-			return null;
-		}
-
-		return new Date(this.formModel.sale_end);
-	}
-
-	get loadUrl() {
-		const params = [this.formModel.game_id];
-		if (this.method === 'edit') {
-			params.push(this.formModel.id);
-		}
-
 		return '/web/dash/developer/games/packages/save/' + params.join('/');
-	}
-
-	@Watch('formModel.has_suggested_price')
-	onSuggestedPriceToggle(state: boolean) {
-		// Just null out the price field if they toggle off suggested price.
-		if (this.formModel.pricing_type === 'pwyw' && !state) {
-			this.setField('price', null);
-		}
-	}
-
-	created() {
-		this.form.reloadOnSubmit = true;
-	}
-
+	}),
 	async onInit() {
-		this.setField('game_id', this.game.id);
+		form.formModel.game_id = game.id;
 
-		this.showDescriptionInput = this.formModel.description ? true : false;
-		this.isShowingSaleForm = false;
-		this.now = Date.now();
+		showDescriptionInput.value = form.formModel.description ? true : false;
+		isShowingSaleForm.value = false;
+		now.value = Date.now();
 
 		// Auto-detect timezone.
-		this.setField('sale_timezone', determine().name());
+		form.formModel.sale_timezone = determine().name();
 
 		// Get timezones list.
-		this.timezones = await Timezone.getGroupedTimezones();
-		for (let region in this.timezones) {
-			for (let tz of this.timezones[region]) {
+		timezones.value = await Timezone.getGroupedTimezones();
+		for (let region in timezones.value) {
+			for (let tz of timezones.value[region]) {
 				let offset = '';
 				if (tz.o > 0) {
 					offset = `+${tz.o / 3600}:00`;
@@ -186,109 +116,136 @@ export default class FormGamePackage
 			}
 		}
 
-		this.isProcessing = false;
-	}
-
+		isProcessing.value = false;
+	},
 	onLoad(payload: any) {
-		this.startedPrimary = !!(this.sellable && this.sellable.primary);
-		this.hasPrimarySellable = payload.hasPrimarySellable;
-		this.minPrice = payload.minPrice || 50;
-		this.isUserVerified = payload.isUserVerified;
-		this.isFangame = payload.isFangame;
-		this.pricings = SellablePricingModel.populate(payload.pricings);
-		this.originalPricing = null;
-		this.promotionalPricing = null;
+		startedPrimary.value = !!(sellable && sellable.primary);
+		hasPrimarySellable.value = payload.hasPrimarySellable;
+		minPrice.value = payload.minPrice || 50;
+		isUserVerified.value = payload.isUserVerified;
+		isFangame.value = payload.isFangame;
+		pricings.value = SellablePricingModel.populate(payload.pricings);
+		originalPricing.value = null;
+		promotionalPricing.value = null;
 
 		// If there is no primary sellable yet, let's mark this as the primary sellable.
-		// This will only be used if they set the pricing type to something other than free.
-		this.setField('primary', false);
-		if (!this.hasPrimarySellable) {
-			this.setField('primary', true);
+		form.formModel.primary = false;
+		if (!hasPrimarySellable.value) {
+			form.formModel.primary = true;
 		}
 
-		this.setField('pricing_type', SellableType.Free);
-		this.setField('sale_start', startOfTomorrow().getTime());
-		this.setField('sale_end', startOfDay(addWeeks(Date.now(), 1)).getTime());
+		form.formModel.pricing_type = SellableType.Free;
+		form.formModel.sale_start = startOfTomorrow().getTime();
+		form.formModel.sale_end = startOfDay(addWeeks(Date.now(), 1)).getTime();
 
-		if (this.method === 'add') {
-			this.setField('visibility', GamePackageVisibility.Public);
+		if (form.method === 'add') {
+			form.formModel.visibility = GamePackageVisibility.Public;
 			if (payload.hasDefaultPackage) {
-				this.setField('title', '');
+				form.formModel.title = '';
 			} else {
-				this.setField('title', this.game.title);
+				form.formModel.title = game.title;
 			}
 		} else {
-			if (!this.formModel.title) {
-				this.setField('title', this.game.title);
+			if (!form.formModel.title) {
+				form.formModel.title = game.title;
 			}
 
-			this.setField('primary', this.sellable.primary);
+			form.formModel.primary = sellable.primary;
 
-			if (this.sellable.type !== 'free') {
-				this.setField('pricing_type', this.sellable.type);
+			if (sellable.type !== 'free') {
+				form.formModel.pricing_type = sellable.type;
 
-				this.originalPricing = getOriginalSellablePricing(this.pricings) || null;
-				this.promotionalPricing = getPromotionalSellablePricing(this.pricings) || null;
+				originalPricing.value = getOriginalSellablePricing(pricings.value) || null;
+				promotionalPricing.value = getPromotionalSellablePricing(pricings.value) || null;
 
-				this.setField(
-					'price',
-					this.originalPricing ? this.originalPricing.amount / 100 : 0
-				);
+				form.formModel.price = originalPricing.value ? originalPricing.value.amount / 100 : 0;
 
-				if (this.promotionalPricing) {
-					this.setField('sale_timezone', this.promotionalPricing.timezone!);
-					this.setField('sale_start', this.promotionalPricing.start!);
-					this.setField('sale_end', this.promotionalPricing.end!);
-					this.setField('sale_price', this.promotionalPricing.amount / 100);
+				if (promotionalPricing.value) {
+					form.formModel.sale_timezone = promotionalPricing.value.timezone!;
+					form.formModel.sale_start = promotionalPricing.value.start!;
+					form.formModel.sale_end = promotionalPricing.value.end!;
+					form.formModel.sale_price = promotionalPricing.value.amount / 100;
 				}
 
-				this.setField('has_suggested_price', !!this.formModel.price);
+				form.formModel.has_suggested_price = !!form.formModel.price;
 			}
 		}
-	}
+	},
+	onBeforeSubmit() {
+		if (form.formModel.sale_start_now) {
+			form.formModel.sale_start = Date.now();
+		}
+	},
+});
 
-	onBeforeSubmit(): void {
-		if (this.formModel.sale_start_now) {
-			this.setField('sale_start', Date.now());
+const hasBuildsPerms = computed(() => game && game.hasPerms('builds'));
+const hasAllPerms = computed(() => game && game.hasPerms('all'));
+const hasSalesPerms = computed(() => game && game.hasPerms('sales'));
+
+const saleTimezoneOffset = computed(() => {
+	if (!form.formModel.sale_timezone) {
+		return 0;
+	}
+	const saleTz = timezoneByName(form.formModel.sale_timezone);
+	if (!saleTz) {
+		console.warn('Could not find timezone offset for: ' + saleTz);
+		return 0;
+	}
+	return saleTz.o * 1000;
+});
+
+const saleStartLocal = computed(() =>
+	form.formModel.sale_start ? new Date(form.formModel.sale_start) : null
+);
+
+const saleEndLocal = computed(() =>
+	form.formModel.sale_end ? new Date(form.formModel.sale_end) : null
+);
+
+watch(
+	() => form.formModel.has_suggested_price,
+	(state: boolean) => {
+		if (form.formModel.pricing_type === 'pwyw' && !state) {
+			form.formModel.price = null;
 		}
 	}
+);
 
-	private timezoneByName(timezone: string) {
-		for (let region in this.timezones) {
-			const tz = this.timezones[region].find(_tz => _tz.i === timezone);
-			if (tz) {
-				return tz;
-			}
+function timezoneByName(timezone: string) {
+	for (let region in timezones.value) {
+		const tz = timezones.value[region].find(_tz => _tz.i === timezone);
+		if (tz) {
+			return tz;
 		}
-		return null;
+	}
+	return null;
+}
+
+async function cancelSale() {
+	const result = await showModalConfirm(
+		$gettext('Are you sure you want to cancel this sale?')
+	);
+
+	if (!result) {
+		return;
 	}
 
-	async cancelSale() {
-		const result = await showModalConfirm(
-			this.$gettext('Are you sure you want to cancel this sale?')
-		);
+	isProcessing.value = true;
 
-		if (!result) {
-			return;
-		}
+	const params = [form.formModel.game_id, form.formModel.id];
+	await Api.sendRequest(
+		'/web/dash/developer/games/packages/cancel-sales/' + params.join('/'),
+		{}
+	);
 
-		this.isProcessing = true;
+	promotionalPricing.value = null;
+	form.formModel.sale_timezone = determine().name();
+	form.formModel.sale_start = null;
+	form.formModel.sale_end = null;
+	form.formModel.sale_price = null;
+	isProcessing.value = false;
 
-		const params = [this.formModel.game_id, this.formModel.id];
-		await Api.sendRequest(
-			'/web/dash/developer/games/packages/cancel-sales/' + params.join('/'),
-			{}
-		);
-
-		this.promotionalPricing = null;
-		this.setField('sale_timezone', determine().name());
-		this.setField('sale_start', null);
-		this.setField('sale_end', null);
-		this.setField('sale_price', null);
-		this.isProcessing = false;
-
-		this.emitSaleCancel(this.formModel);
-	}
+	emit('salecancel', form.formModel);
 }
 </script>
 
@@ -309,7 +266,7 @@ export default class FormGamePackage
 						validateMaxLength(150),
 						validateAvailability({
 							url: `/web/dash/developer/games/packages/check-field-availability/${game.id}/title`,
-							initVal: method === 'edit' ? model.title || game.title : undefined,
+							initVal: form.method === 'edit' ? model?.title || game.title : undefined,
 						}),
 					]"
 					:validate-delay="500"
@@ -518,7 +475,7 @@ export default class FormGamePackage
 			</AppFormGroup>
 
 			<AppFormGroup
-				v-if="formModel.pricing_type === 'pwyw'"
+				v-if="form.formModel.pricing_type === 'pwyw'"
 				name="price"
 				:label="$gettext(`Suggested Price`)"
 				:optional="true"
@@ -537,7 +494,7 @@ export default class FormGamePackage
 								type="currency"
 								step="1"
 								:validators="[validateMinValue(minPrice / 100)]"
-								:disabled="!formModel.has_suggested_price || !hasSalesPerms"
+								:disabled="!form.formModel.has_suggested_price || !hasSalesPerms"
 							/>
 						</div>
 						<AppFormControlErrors />
@@ -546,7 +503,7 @@ export default class FormGamePackage
 			</AppFormGroup>
 
 			<AppFormGroup
-				v-if="formModel.pricing_type === 'paid'"
+				v-if="form.formModel.pricing_type === 'paid'"
 				name="price"
 				:label="$gettext(`Price`)"
 			>
@@ -562,7 +519,7 @@ export default class FormGamePackage
 				<AppFormControlErrors />
 			</AppFormGroup>
 
-			<div v-if="formModel.pricing_type === 'paid'">
+			<div v-if="form.formModel.pricing_type === 'paid'">
 				<AppGamePerms
 					v-if="!promotionalPricing && !isShowingSaleForm"
 					tag="div"
@@ -599,12 +556,12 @@ export default class FormGamePackage
 
 							<AppFormControlSelect>
 								<optgroup
-									v-for="(timezones, region) in timezones"
+									v-for="(tzList, region) in timezones"
 									:key="region"
 									:label="region"
 								>
 									<option
-										v-for="timezone in timezones"
+										v-for="timezone in tzList"
 										:key="timezone.label"
 										:value="timezone.i"
 									>
@@ -638,7 +595,7 @@ export default class FormGamePackage
 							</AppFormGroup>
 
 							<AppFormGroup
-								v-if="!formModel.sale_start_now || promotionalPricing"
+								v-if="!form.formModel.sale_start_now || promotionalPricing"
 								name="sale_start"
 								:hide-label="true"
 							>
@@ -653,7 +610,7 @@ export default class FormGamePackage
 						<AppFormGroup name="sale_end" :label="$gettext(`End`)">
 							<AppFormControlDate
 								:timezone-offset="saleTimezoneOffset"
-								:min-date="formModel.sale_start"
+								:min-date="form.formModel.sale_start"
 							/>
 							<AppFormControlErrors :label="$gettext(`end time`)" />
 						</AppFormGroup>
@@ -666,16 +623,16 @@ export default class FormGamePackage
 									step="1"
 									:validators="[
 										validateMinValue(minPrice / 100),
-										validateMaxValue(formModel.price - 0.01),
+										validateMaxValue(form.formModel.price - 0.01),
 									]"
 								/>
 							</div>
 
-							<p v-if="formModel.price && formModel.sale_price" class="help-block">
+							<p v-if="form.formModel.price && form.formModel.sale_price" class="help-block">
 								{{
 									(
-										((formModel.price - formModel.sale_price) /
-											formModel.price) *
+										((form.formModel.price - form.formModel.sale_price) /
+											form.formModel.price) *
 										100
 									).toFixed(0)
 								}}% off
@@ -737,8 +694,8 @@ export default class FormGamePackage
 								<small class="text-muted">
 									{{
 										(
-											((originalPricing.amount - promotionalPricing.amount) /
-												originalPricing.amount) *
+											((originalPricing!.amount - promotionalPricing.amount) /
+												originalPricing!.amount) *
 											100
 										).toFixed(0)
 									}}% off
@@ -796,8 +753,8 @@ export default class FormGamePackage
 			</AppFormGroup>
 
 			<AppFormButton>
-				<AppTranslate v-if="method === 'add'">Add Package</AppTranslate>
-				<AppTranslate v-else-if="method === 'edit'">Save Package</AppTranslate>
+				<AppTranslate v-if="form.method === 'add'">Add Package</AppTranslate>
+				<AppTranslate v-else-if="form.method === 'edit'">Save Package</AppTranslate>
 			</AppFormButton>
 		</AppLoadingFade>
 	</AppForm>

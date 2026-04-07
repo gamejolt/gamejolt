@@ -9,7 +9,7 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../../../../_common/translate/translate.service';
-import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
+import FormGamePackage from '../../../../../../../components/forms/game/package/FormGamePackage.vue';
 import { useGameDashRouteController } from '../../../manage.store';
 
 export default {

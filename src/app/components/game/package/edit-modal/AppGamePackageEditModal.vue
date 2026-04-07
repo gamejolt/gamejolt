@@ -10,7 +10,7 @@ import {
 	GameDashRouteController,
 	provideGameDashRouteController,
 } from '../../../../views/dashboard/games/manage/manage.store';
-import FormGamePackage from '../../../forms/game/package/package.vue';
+import FormGamePackage from '../../../forms/game/package/FormGamePackage.vue';
 
 const props = defineProps({
 	routeController: {

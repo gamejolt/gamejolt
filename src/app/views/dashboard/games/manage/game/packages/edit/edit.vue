@@ -31,7 +31,7 @@ import { SellableModel } from '../../../../../../../../_common/sellable/sellable
 import AppTimeAgo from '../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { shallowSetup } from '../../../../../../../../utils/vue';
-import FormGamePackage from '../../../../../../../components/forms/game/package/package.vue';
+import FormGamePackage from '../../../../../../../components/forms/game/package/FormGamePackage.vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
 import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
