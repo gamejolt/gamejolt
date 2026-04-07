@@ -1,43 +1,26 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import { formatDate } from '../../../../../../../_common/filters/date';
 import { GameCreationToolOther } from '../../../../../../../_common/game/game.model';
 import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
 import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 
-@Options({
-	components: {
-		AppLazyPlaceholder,
-	},
-})
-export default class AppDiscoverGamesViewOverviewDetails extends Vue {
-	routeStore = setup(() => useGameRouteController()!);
+const routeStore = useGameRouteController()!;
 
-	readonly formatDate = formatDate;
+const game = computed(() => routeStore.game!);
+const linkedAccounts = computed(() => routeStore.linkedAccounts);
 
-	get game() {
-		return this.routeStore.game!;
+const creationTool = computed(() => {
+	if (
+		game.value.creation_tool_human === GameCreationToolOther &&
+		game.value.creation_tool_other
+	) {
+		return game.value.creation_tool_other;
 	}
+	return game.value.creation_tool_human;
+});
 
-	get linkedAccounts() {
-		return this.routeStore.linkedAccounts;
-	}
-
-	get creationTool() {
-		if (
-			this.game.creation_tool_human === GameCreationToolOther &&
-			this.game.creation_tool_other
-		) {
-			return this.game.creation_tool_other;
-		}
-		return this.game.creation_tool_human;
-	}
-
-	get hasLinksSection() {
-		return this.game.web_site;
-	}
-}
+const hasLinksSection = computed(() => game.value.web_site);
 </script>
 
 <template>

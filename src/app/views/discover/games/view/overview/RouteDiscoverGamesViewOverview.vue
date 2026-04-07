@@ -68,7 +68,7 @@ import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBa
 import AppUserKnownFollowers from '../../../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useGameRouteController } from '../RouteDiscoverGamesView.vue';
 import AppDiscoverGamesViewOverviewSupporters from './AppDiscoverGamesViewOverviewSupporters.vue';
-import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
+import AppGameDetails from './_details/AppGameDetails.vue';
 import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
 
 export default {
@@ -475,7 +475,7 @@ async function reloadPreviewComments() {
 									<hr />
 									<div class="row">
 										<div class="col-sm-6">
-											<AppDiscoverGamesViewOverviewDetails :game="game" />
+											<AppGameDetails :game="game" />
 										</div>
 										<div class="col-sm-6">
 											<AppLazyPlaceholder :when="isOverviewLoaded">
