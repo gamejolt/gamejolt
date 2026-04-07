@@ -1,25 +1,6 @@
 <script lang="ts">
 import * as StripeData from 'stripe';
 import { inject, InjectionKey, provide, Ref, ref } from 'vue';
-import { mixins, Options } from 'vue-property-decorator';
-import { Api } from '../../../../../_common/api/api.service';
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { formatCurrency } from '../../../../../_common/filters/currency';
-import { BaseForm, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
-import { Geo } from '../../../../../_common/geo/geo.service';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import {
-	UserStripeManagedAccountModel,
-	UserStripeManagedAccountStatus,
-	UserStripeManagedAccountType,
-} from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { UserModel } from '../../../../../_common/user/user.model';
-import { loadScript } from '../../../../../utils/utils';
-import { shallowSetup } from '../../../../../utils/vue';
-import AppFinancialsManagedAccountCompanyDetails from './AppFinancialsManagedAccountCompanyDetails.vue';
-import AppFinancialsManagedAccountPerson, {
-	AppFinancialsManagedAccountPersonInterface,
-} from './AppFinancialsManagedAccountPerson.vue';
 
 export const StripeFileUploadUrl = 'https://uploads.stripe.com/v1/files';
 
@@ -58,7 +39,7 @@ export function useFormManagedAccount() {
 	return inject(Key, null);
 }
 
-function createFormManagedAccount() {
+export function createFormManagedAccount() {
 	const user = ref() as Ref<UserModel>;
 	const account = ref() as Ref<UserStripeManagedAccountModel>;
 	const stripeMeta = ref() as Ref<StripeMeta>;
@@ -200,174 +181,85 @@ function createFormManagedAccount() {
 	};
 }
 
-class Wrapper extends BaseForm<ManagedAccountFormModel> {}
+// Re-export for type usage
+import {
+	UserStripeManagedAccountModel,
+} from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { UserModel } from '../../../../../_common/user/user.model';
+</script>
 
-@Options({
-	components: {
-		AppLoading,
-		AppExpand,
-		AppFinancialsManagedAccountPerson,
-		AppFinancialsManagedAccountCompanyDetails,
-	},
-})
-export default class FormFinancialsManagedAccount extends mixins(Wrapper) implements FormOnSubmit {
-	scriptLoaded = false;
-	isDataLoaded = false;
+<script lang="ts" setup>
+import { computed, useTemplateRef } from 'vue';
+import { Api } from '../../../../../_common/api/api.service';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
+import { formatCurrency } from '../../../../../_common/filters/currency';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import { Geo } from '../../../../../_common/geo/geo.service';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
+import {
+	UserStripeManagedAccountStatus,
+	UserStripeManagedAccountType,
+} from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { loadScript } from '../../../../../utils/utils';
+import AppFinancialsManagedAccountCompanyDetails from './AppFinancialsManagedAccountCompanyDetails.vue';
+import AppFinancialsManagedAccountPerson, {
+	AppFinancialsManagedAccountPersonInterface,
+} from './AppFinancialsManagedAccountPerson.vue';
 
-	controller = shallowSetup(() => {
-		const c = createFormManagedAccount();
-		provide(Key, c);
-		return c;
-	});
+let scriptLoaded = false;
+const isDataLoaded = ref(false);
 
-	get account() {
-		return this.controller.account.value;
-	}
+const controller = createFormManagedAccount();
+provide(Key, controller);
 
-	get stripe() {
-		return this.controller.stripe.value;
-	}
+const account = computed(() => controller.account.value);
+const stripe = computed(() => controller.stripe.value);
+const stripeMeta = computed(() => controller.stripeMeta.value);
 
-	get stripeMeta() {
-		return this.controller.stripeMeta.value;
-	}
+let stripePublishableKey = '';
+let genericError = ref<boolean | string>(false);
 
-	stripePublishableKey = '';
-	// stripeMeta: StripeMeta = null as any;
-	additionalOwnerIndex = 0;
-	genericError = false;
-	currencies: any[] = [];
+let stripeInst: stripe.Stripe = null as any;
 
-	// user: User = null as any;
-	// account: UserStripeManagedAccount = null as any;
-	// stripe: PayloadStripeData = null as any;
-	stripeInst: stripe.Stripe = null as any;
+const individualRef = useTemplateRef<AppFinancialsManagedAccountPersonInterface>('individual');
+const representativeRef = useTemplateRef<AppFinancialsManagedAccountPersonInterface>('representative');
 
-	readonly Geo = Geo;
-	readonly formatCurrency = formatCurrency;
+const IndividualAccountType = UserStripeManagedAccountType.Individual;
+const CompanyAccountType = UserStripeManagedAccountType.Company;
+const UnverifiedStatus = UserStripeManagedAccountStatus.Unverified;
 
-	readonly IndividualAccountType = UserStripeManagedAccountType.Individual;
-	readonly CompanyAccountType = UserStripeManagedAccountType.Company;
-	readonly UnverifiedStatus = UserStripeManagedAccountStatus.Unverified;
-
-	declare $refs: {
-		individual: AppFinancialsManagedAccountPersonInterface;
-		representative: AppFinancialsManagedAccountPersonInterface;
-	};
-
-	created() {
-		this.form.resetOnSubmit = true;
-	}
-
+const form: FormController<ManagedAccountFormModel> = createForm({
+	resetOnSubmit: true,
 	async onInit() {
-		if (!this.scriptLoaded) {
+		if (!scriptLoaded) {
 			await loadScript('https://js.stripe.com/v3/');
-			this.scriptLoaded = true;
+			scriptLoaded = true;
 		}
 
-		const { user, account, stripe, stripeMeta } = this.controller;
+		const { user, account, stripe, stripeMeta } = controller;
 
-		this.isDataLoaded = false;
+		isDataLoaded.value = false;
 		const payload = await Api.sendRequest('/web/dash/financials/account');
 
 		const stripePayload = payload.stripe as PayloadStripeData;
-		this.stripePublishableKey = stripePayload.publishableKey;
-		this.stripeInst = Stripe(stripePayload.publishableKey);
+		stripePublishableKey = stripePayload.publishableKey;
+		stripeInst = Stripe(stripePayload.publishableKey);
 
 		user.value = new UserModel(payload.user);
 		account.value = new UserStripeManagedAccountModel(payload.account);
 		stripe.value = stripePayload;
 		stripeMeta.value = stripePayload.required;
 
-		this.isDataLoaded = true;
-	}
-
-	get representative() {
-		return this.getByRelationship('representative');
-	}
-
-	get owner() {
-		return this.getByRelationship('owner');
-	}
-
-	getByRelationship(relationship: PersonRelationship) {
-		if (!this.stripe.persons) {
-			return null;
-		}
-
-		for (let personId in this.stripe.persons) {
-			const person = this.stripe.persons[personId];
-			if (person.relationship?.[relationship]) {
-				return person;
-			}
-		}
-
-		return null;
-	}
-
-	// This is only needed after the initial submission in some instances.
-	get requiresVerificationDocument() {
-		const personIds = ['individual'];
-		personIds.push(...Object.keys(this.stripe.persons || {}));
-
-		for (let personId of personIds) {
-			if (
-				this.controller.requiresField(`${personId}.verification.document`) ||
-				this.controller.requiresField(`${personId}.verification.additional_document`)
-			) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	get isVerificationPending() {
-		// If they're in pending state and we don't require more info from them.
-		if (!this.account || this.account.status !== UserStripeManagedAccountStatus.Pending) {
-			return false;
-		}
-
-		return !this.requiresVerificationDocument;
-	}
-
-	get isComplete() {
-		if (!this.account?.is_verified) {
-			return false;
-		}
-
-		const allPersons = Object.values(this.stripe.persons || []);
-		if (this.account.type === UserStripeManagedAccountType.Individual) {
-			allPersons.push(this.stripe.current.individual as any);
-		}
-
-		return allPersons.find(person => person.verification.status !== 'verified') === undefined;
-	}
-
-	async createPiiToken(data: any) {
-		if (!data[`${this.account.type}.id_number`]) {
-			return null;
-		}
-
-		const response = await this.stripeInst.createToken('pii', {
-			personal_id_number: data[`${this.account.type}.id_number`],
-		});
-
-		if (response.error) {
-			throw response.error;
-		}
-
-		return response.token?.id;
-	}
-
+		isDataLoaded.value = true;
+	},
 	async onSubmit() {
 		// We don't want to send the sensitive data to GJ.
-		const data = JSON.parse(JSON.stringify(this.formModel));
+		const data = JSON.parse(JSON.stringify(form.formModel));
 
 		let id;
 		try {
 			const uploadPromises = [];
-			const documentUploadElements = [this.$refs.individual, this.$refs.representative];
+			const documentUploadElements = [individualRef.value, representativeRef.value];
 			for (const ref of documentUploadElements) {
 				if (!ref) {
 					continue;
@@ -375,7 +267,7 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 
 				const { uploadDocuments, namePrefix } = ref;
 
-				const uploadPromise = uploadDocuments(this.stripePublishableKey).then(
+				const uploadPromise = uploadDocuments(stripePublishableKey).then(
 					([idDocumentUploadId, additionalDocumentUploadId]) => {
 						if (idDocumentUploadId) {
 							data[`${namePrefix}.verification.document.front`] = idDocumentUploadId;
@@ -395,13 +287,13 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 				await Promise.all(uploadPromises);
 			}
 
-			this.genericError = false;
+			genericError.value = false;
 
-			id = await this.createPiiToken(data);
+			id = await createPiiToken(data);
 		} catch (err: any) {
 			// Error from Stripe.
 			console.error(err);
-			this.genericError = err.message;
+			genericError.value = err.message;
 
 			// Rethrow to make sure that no "then" blocks below go through.
 			throw err;
@@ -410,16 +302,94 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 		// Override the SSN with the token.
 		// This way the raw SSN never hits our server. Only the token.
 		if (id) {
-			data[`${this.account.type}.id_number`] = id;
+			data[`${account.value.type}.id_number`] = id;
 		}
 
 		const response = await Api.sendRequest('/web/dash/financials/account', data);
 		if (response.success === false) {
-			this.genericError = true;
+			genericError.value = true;
 		}
 
 		return response;
+	},
+});
+
+const representative = computed(() => {
+	return getByRelationship('representative');
+});
+
+const owner = computed(() => {
+	return getByRelationship('owner');
+});
+
+function getByRelationship(relationship: PersonRelationship) {
+	if (!stripe.value.persons) {
+		return null;
 	}
+
+	for (let personId in stripe.value.persons) {
+		const person = stripe.value.persons[personId];
+		if (person.relationship?.[relationship]) {
+			return person;
+		}
+	}
+
+	return null;
+}
+
+// This is only needed after the initial submission in some instances.
+const requiresVerificationDocument = computed(() => {
+	const personIds = ['individual'];
+	personIds.push(...Object.keys(stripe.value.persons || {}));
+
+	for (let personId of personIds) {
+		if (
+			controller.requiresField(`${personId}.verification.document`) ||
+			controller.requiresField(`${personId}.verification.additional_document`)
+		) {
+			return true;
+		}
+	}
+
+	return false;
+});
+
+const isVerificationPending = computed(() => {
+	// If they're in pending state and we don't require more info from them.
+	if (!account.value || account.value.status !== UserStripeManagedAccountStatus.Pending) {
+		return false;
+	}
+
+	return !requiresVerificationDocument.value;
+});
+
+const isComplete = computed(() => {
+	if (!account.value?.is_verified) {
+		return false;
+	}
+
+	const allPersons = Object.values(stripe.value.persons || []);
+	if (account.value.type === UserStripeManagedAccountType.Individual) {
+		allPersons.push(stripe.value.current.individual as any);
+	}
+
+	return allPersons.find(person => person.verification.status !== 'verified') === undefined;
+});
+
+async function createPiiToken(data: any) {
+	if (!data[`${account.value.type}.id_number`]) {
+		return null;
+	}
+
+	const response = await stripeInst.createToken('pii', {
+		personal_id_number: data[`${account.value.type}.id_number`],
+	});
+
+	if (response.error) {
+		throw response.error;
+	}
+
+	return response.token?.id;
 }
 </script>
 
@@ -486,7 +456,7 @@ export default class FormFinancialsManagedAccount extends mixins(Wrapper) implem
 					</AppFormControlSelect>
 					<AppFormControlErrors label="country" />
 
-					<AppExpand :when="!formModel.country_code">
+					<AppExpand :when="!form.formModel.country_code">
 						<br />
 						<div class="alert sans-margin-bottom">
 							<p>

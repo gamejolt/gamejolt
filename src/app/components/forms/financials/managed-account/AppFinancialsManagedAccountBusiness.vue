@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useFormManagedAccount } from './managed-account.vue';
+import { useFormManagedAccount } from './FormFinancialsManagedAccount.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';

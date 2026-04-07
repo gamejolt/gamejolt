@@ -24,7 +24,7 @@ import { UserStripeManagedAccountModel } from '../../../../_common/user/stripe-m
 import { bangRef } from '../../../../utils/vue';
 import AppDeveloperTerms from './AppDeveloperTerms.vue';
 import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
-import FormFinancialsManagedAccount from './managed-account/managed-account.vue';
+import FormFinancialsManagedAccount from './managed-account/FormFinancialsManagedAccount.vue';
 
 interface FormModel {
 	tos_type?: 'developer';

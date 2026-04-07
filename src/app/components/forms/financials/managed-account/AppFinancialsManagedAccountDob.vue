@@ -3,7 +3,7 @@ import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControl
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { useFormManagedAccount } from './managed-account.vue';
+import { useFormManagedAccount } from './FormFinancialsManagedAccount.vue';
 
 defineProps({
 	namePrefix: {

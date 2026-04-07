@@ -3,7 +3,7 @@ import { computed, PropType, toRefs } from 'vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { validateFilesize } from '../../../../../_common/form-vue/validators';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { StripeFileUploadUrl, useFormManagedAccount } from './managed-account.vue';
+import { StripeFileUploadUrl, useFormManagedAccount } from './FormFinancialsManagedAccount.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';

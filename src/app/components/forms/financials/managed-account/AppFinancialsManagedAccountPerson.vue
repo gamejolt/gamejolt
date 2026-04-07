@@ -9,7 +9,7 @@ import AppFinancialsManagedAccountDocument, {
 } from './AppFinancialsManagedAccountDocument.vue';
 import AppFinancialsManagedAccountName from './AppFinancialsManagedAccountName.vue';
 import AppFinancialsManagedAccountSsn from './AppFinancialsManagedAccountSsn.vue';
-import { ManagedAccountFormModel } from './managed-account.vue';
+import { ManagedAccountFormModel } from './FormFinancialsManagedAccount.vue';
 
 export interface AppFinancialsManagedAccountPersonInterface {
 	namePrefix: string;
