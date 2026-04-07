@@ -5,7 +5,7 @@ import { showModal } from '../../../../../../_common/modal/modal.service';
 export async function showCommunityThumbnailModal(community: CommunityModel) {
 	return await showModal<CommunityModel>({
 		modalId: 'CommunityThumbnail',
-		component: defineAsyncComponent(() => import('./modal.vue')),
+		component: defineAsyncComponent(() => import('./FormCommunityThumbnailModal.vue')),
 		props: {
 			community,
 		},

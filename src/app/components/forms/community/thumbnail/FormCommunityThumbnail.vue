@@ -1,77 +1,68 @@
-<script lang="ts">
-import { mixins, Options, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, toRef, watch } from 'vue';
 import {
 	$saveCommunityThumbnail,
 	CommunityModel,
 } from '../../../../../_common/community/community.model';
 import { formatFilesize } from '../../../../../_common/filters/filesize';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
-	BaseForm,
-	FormOnBeforeSubmit,
-	FormOnLoad,
-} from '../../../../../_common/form-vue/form.service';
+	validateFilesize,
+	validateImageMaxDimensions,
+	validateImageMinDimensions,
+} from '../../../../../_common/form-vue/validators';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
 type FormModel = CommunityModel & {
 	thumbnail_crop?: any;
 };
 
-class Wrapper extends BaseForm<FormModel> {}
-
-@Options({
-	components: {
-		AppFormControlUpload,
-		AppFormControlCrop,
+const props = defineProps({
+	model: {
+		type: Object as () => CommunityModel,
+		default: undefined,
 	},
-})
-export default class FormCommunityThumbnail
-	extends mixins(Wrapper)
-	implements FormOnLoad, FormOnBeforeSubmit
-{
-	modelClass = CommunityModel;
-	modelSaveHandler = $saveCommunityThumbnail;
+});
 
-	maxFilesize = 0;
-	minSize = 0;
-	maxSize = 0;
+const maxFilesize = ref(0);
+const minSize = ref(0);
+const maxSize = ref(0);
 
-	readonly formatFilesize = formatFilesize;
-	readonly Screen = Screen;
+const crop = computed(() =>
+	form.formModel.thumbnail ? form.formModel.thumbnail.getCrop() : undefined
+);
 
-	get loadUrl() {
-		return `/web/dash/communities/design/save-thumbnail/${this.model!.id}`;
-	}
-
-	get crop() {
-		return this.formModel.thumbnail ? this.formModel.thumbnail.getCrop() : undefined;
-	}
-
-	@Watch('crop')
-	onCropChange() {
-		this.setField('thumbnail_crop', this.crop);
-	}
-
-	created() {
-		this.form.warnOnDiscard = false;
-		this.form.reloadOnSubmit = true;
-	}
-
+const form: FormController<FormModel> = createForm({
+	modelClass: CommunityModel,
+	modelSaveHandler: $saveCommunityThumbnail,
+	model: toRef(props, 'model'),
+	warnOnDiscard: false,
+	reloadOnSubmit: true,
+	loadUrl: computed(() => `/web/dash/communities/design/save-thumbnail/${props.model!.id}`),
 	onLoad(payload: any) {
-		this.maxFilesize = payload.maxFilesize;
-		this.minSize = payload.minSize;
-		this.maxSize = payload.maxSize;
-	}
-
+		maxFilesize.value = payload.maxFilesize;
+		minSize.value = payload.minSize;
+		maxSize.value = payload.maxSize;
+	},
 	onBeforeSubmit() {
 		// Backend expects this field.
-		this.setField('crop' as any, this.formModel.thumbnail_crop);
-	}
+		(form.formModel as any).crop = form.formModel.thumbnail_crop;
+	},
+});
 
-	thumbnailSelected() {
-		if (this.formModel.file) {
-			this.form.submit();
-		}
+watch(crop, () => {
+	form.formModel.thumbnail_crop = crop.value;
+});
+
+function thumbnailSelected() {
+	if (form.formModel.file) {
+		form.submit();
 	}
 }
 </script>
@@ -81,7 +72,7 @@ export default class FormCommunityThumbnail
 		<AppFormGroup
 			name="file"
 			:label="$gettext(`Upload New Thumbnail`)"
-			:optional="!!formModel.thumbnail"
+			:optional="!!form.formModel.thumbnail"
 		>
 			<p class="help-block">
 				<AppTranslate>Your image must be a PNG or JPG.</AppTranslate>
@@ -112,13 +103,13 @@ export default class FormCommunityThumbnail
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="formModel.thumbnail && !formModel.file"
+			v-if="form.formModel.thumbnail && !form.formModel.file"
 			name="thumbnail_crop"
 			:label="$gettext('Your Uploaded Thumbnail')"
 		>
 			<div class="form-control-static">
 				<AppFormControlCrop
-					:src="formModel.thumbnail.img_url"
+					:src="form.formModel.thumbnail.img_url"
 					:aspect-ratio="1"
 					:min-width="minSize"
 					:min-height="minSize"
@@ -130,7 +121,7 @@ export default class FormCommunityThumbnail
 			</div>
 		</AppFormGroup>
 
-		<template v-if="formModel.thumbnail && form.valid">
+		<template v-if="form.formModel.thumbnail && form.valid">
 			<div>
 				<AppFormButton>
 					<AppTranslate>Save</AppTranslate>

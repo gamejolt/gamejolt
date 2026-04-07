@@ -1,34 +1,32 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { ref } from 'vue';
+import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
-import { BaseModal } from '../../../../../../_common/modal/base';
-import FormCommunityThumbnail from '../thumbnail.vue';
+import AppModal from '../../../../../../_common/modal/AppModal.vue';
+import { useModal } from '../../../../../../_common/modal/modal.service';
+import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
+import FormCommunityThumbnail from '../FormCommunityThumbnail.vue';
 
-@Options({
-	components: {
-		FormCommunityThumbnail,
-	},
-})
-export default class AppCommunityThumbnailModal extends mixins(BaseModal) {
-	@Prop({ type: Object, required: true }) community!: CommunityModel;
+type Props = {
+	community: CommunityModel;
+};
 
-	// We don't want to close the modal after they've uploaded a thumbnail since they can set a crop
-	// after. We want to auto-close it after they've saved the crop, though.
-	previousThumbnailId: number | null = null;
+const { community } = defineProps<Props>();
 
-	created() {
-		if (this.community.thumbnail) {
-			this.previousThumbnailId = this.community.thumbnail.id;
-		}
+const modal = useModal()!;
+
+// We don't want to close the modal after they've uploaded a thumbnail since they can set a crop
+// after. We want to auto-close it after they've saved the crop, though.
+const previousThumbnailId = ref<number | null>(
+	community.thumbnail ? community.thumbnail.id : null
+);
+
+function onSubmit(submittedCommunity: CommunityModel) {
+	const newThumbnailId = (submittedCommunity.thumbnail && submittedCommunity.thumbnail.id) || null;
+	if (previousThumbnailId.value === newThumbnailId) {
+		modal.resolve(community);
 	}
-
-	onSubmit(community: CommunityModel) {
-		const newThumbnailId = (community.thumbnail && community.thumbnail.id) || null;
-		if (this.previousThumbnailId === newThumbnailId) {
-			this.modal.resolve(this.community);
-		}
-		this.previousThumbnailId = newThumbnailId;
-	}
+	previousThumbnailId.value = newThumbnailId;
 }
 </script>
 
