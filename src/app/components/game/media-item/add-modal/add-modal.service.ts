@@ -8,7 +8,7 @@ import { showModal } from '../../../../../_common/modal/modal.service';
 export async function showGameMediaItemAddModal(game: GameModel) {
 	return await showModal<(GameScreenshotModel | GameVideoModel | GameSketchfabModel)[]>({
 		modalId: 'GameMediaItemAdd',
-		component: defineAsyncComponent(() => import('./add-modal.vue')),
+		component: defineAsyncComponent(() => import('./AppGameMediaItemAddModal.vue')),
 		props: {
 			game,
 		},
