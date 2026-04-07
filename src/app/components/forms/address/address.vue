@@ -1,34 +1,34 @@
-<script lang="ts">
-import { mixins, Options, Watch } from 'vue-property-decorator';
-import { BaseForm } from '../../../../_common/form-vue/form.service';
+<script lang="ts" setup>
+import { ref, watch } from 'vue';
+import AppForm, { createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
+import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import { Geo, GeoRegion } from '../../../../_common/geo/geo.service';
 import { $saveUserAddress, UserAddressModel } from '../../../../_common/user/address/address.model';
 
-class Wrapper extends BaseForm<UserAddressModel> {}
+const countries = Geo.getCountries();
+const regions = ref<GeoRegion[] | null>(null);
+let initialLoad = true;
 
-@Options({})
-export default class FormAddress extends mixins(Wrapper) {
-	modelClass = UserAddressModel;
-	modelSaveHandler = $saveUserAddress;
+const form = createForm<UserAddressModel>({
+	modelClass: UserAddressModel,
+	modelSaveHandler: $saveUserAddress,
+});
 
-	countries = Geo.getCountries();
-	regions: GeoRegion[] | null = null;
-	initialLoad = true;
-
-	@Watch('formModel.country')
-	onCountryChange() {
-		this.regions = Geo.getRegions(this.formModel.country || '') || null;
-		if (this.regions) {
-			if (!this.regions.some(r => r.code === this.formModel.region)) {
-				this.setField('region', this.regions[0].code); // Default to first.
-			}
-		} else if (!this.initialLoad) {
-			// accept the initial value in this field
-			this.setField('region', '');
+watch(() => form.formModel.country, () => {
+	regions.value = Geo.getRegions(form.formModel.country || '') || null;
+	if (regions.value) {
+		if (!regions.value.some(r => r.code === form.formModel.region)) {
+			form.formModel.region = regions.value[0].code;
 		}
-		this.initialLoad = false;
+	} else if (!initialLoad) {
+		form.formModel.region = '';
 	}
-}
+	initialLoad = false;
+});
 </script>
 
 <template>
