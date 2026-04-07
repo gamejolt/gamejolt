@@ -19,7 +19,7 @@ import {
 } from '../../../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../../../utils/array';
-import FormGameSong from '../../../../../../components/forms/game/song/song.vue';
+import FormGameSong from '../../../../../../components/forms/game/song/FormGameSong.vue';
 import AppDashGameWizardControls from '../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
 import { useGameDashRouteController } from '../../manage.store';
 

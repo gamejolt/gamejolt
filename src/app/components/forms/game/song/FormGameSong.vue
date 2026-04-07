@@ -1,0 +1,75 @@
+<script lang="ts" setup>
+import { computed, ref, toRef } from 'vue';
+import { formatNumber } from '../../../../../_common/filters/number';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { GameModel } from '../../../../../_common/game/game.model';
+import { $saveGameSong, GameSongModel } from '../../../../../_common/game/song/song.model';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
+
+type Props = {
+	game: GameModel;
+	model?: GameSongModel;
+};
+
+const props = defineProps<Props>();
+const { game } = props;
+
+const maxFilesize = ref(0);
+
+const form: FormController<GameSongModel> = createForm({
+	model: toRef(props, 'model'),
+	modelClass: GameSongModel,
+	modelSaveHandler: $saveGameSong,
+	warnOnDiscard: false,
+	loadUrl: computed(() => `/web/dash/developer/games/music/save/${game.id}`),
+	onInit() {
+		form.formModel.game_id = game.id;
+	},
+	onLoad(payload: any) {
+		maxFilesize.value = payload.maxFilesize;
+	},
+});
+
+const fileLabel = computed(() => {
+	if (form.method === 'add') {
+		return $gettext('Song File');
+	}
+	return $gettext('Change Song File');
+});
+</script>
+
+<template>
+	<AppForm :controller="form">
+		<AppFormGroup name="title" :label="$gettext(`Song Title`)">
+			<AppFormControl type="text" :validators="[validateMaxLength(150)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
+
+		<AppFormGroup name="file" :label="fileLabel" :optional="form.method === 'edit'">
+			<p class="help-block">
+				<AppTranslate
+					:translate-params="{
+						maxFilesize: formatNumber(maxFilesize / 1024 / 1024),
+					}"
+				>
+					Song uploads are currently capped at %{ maxFilesize }MB per file. Only MP3s are
+					supported at this time.
+				</AppTranslate>
+			</p>
+
+			<AppFormControlUpload :validators="[validateFilesize(maxFilesize)]" accept=".mp3" />
+
+			<AppFormControlErrors :label="$gettext(`song`)" />
+		</AppFormGroup>
+
+		<AppFormButton>
+			<AppTranslate>Save Song</AppTranslate>
+		</AppFormButton>
+	</AppForm>
+</template>
