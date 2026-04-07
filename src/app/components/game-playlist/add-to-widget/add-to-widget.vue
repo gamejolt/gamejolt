@@ -5,7 +5,7 @@ import AppButton from '../../../../_common/button/AppButton.vue';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppGamePlaylistAddToPopover from '../add-to-popover/add-to-popover.vue';
+import AppGamePlaylistAddToPopover from '../add-to-popover/AppGamePlaylistAddToPopover.vue';
 
 defineProps({
 	game: {

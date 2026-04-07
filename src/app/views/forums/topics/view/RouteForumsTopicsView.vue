@@ -34,7 +34,7 @@ import AppForumPostList from '../../../../components/forum/post-list/AppForumPos
 import AppForumRules from '../../../../components/forum/rules/AppForumRules.vue';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderAvatar from '../../../../components/page-header/AppPageHeaderAvatar.vue';
-import AppPageHeaderControls from '../../../../components/page-header/controls/controls.vue';
+import AppPageHeaderControls from '../../../../components/page-header/controls/AppPageHeaderControls.vue';
 
 function validateString(str: string | string[]): string {
 	return Array.isArray(str) ? str[0] : str;

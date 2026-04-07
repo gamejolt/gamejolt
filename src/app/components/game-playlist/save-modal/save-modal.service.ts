@@ -5,7 +5,7 @@ import { GameCollectionModel } from '../../game/collection/collection.model';
 export async function showGamePlaylistSaveModal(collection?: GameCollectionModel) {
 	return await showModal<GameCollectionModel>({
 		modalId: 'GamePlaylistSave',
-		component: defineAsyncComponent(() => import('./save-modal.vue')),
+		component: defineAsyncComponent(() => import('./AppGamePlaylistSaveModal.vue')),
 		props: { collection },
 		size: 'sm',
 	});

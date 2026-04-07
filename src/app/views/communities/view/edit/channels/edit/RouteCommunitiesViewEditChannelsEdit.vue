@@ -12,7 +12,7 @@ import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-direct
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import { showCommunityCompetitionHeaderModal } from '../../../../../../components/community/competition/header-modal/header-modal.service';
 import AppPageHeader from '../../../../../../components/page-header/AppPageHeader.vue';
-import AppPageHeaderControls from '../../../../../../components/page-header/controls/controls.vue';
+import AppPageHeaderControls from '../../../../../../components/page-header/controls/AppPageHeaderControls.vue';
 import { useCommunityRouteStore } from '../../../view.store';
 
 export default {

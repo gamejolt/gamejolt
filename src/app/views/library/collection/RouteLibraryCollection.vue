@@ -31,7 +31,7 @@ import AppGameGrid from '../../../components/game/grid/AppGameGrid.vue';
 import AppGameListing from '../../../components/game/listing/AppGameListing.vue';
 import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
-import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
+import AppPageHeaderControls from '../../../components/page-header/controls/AppPageHeaderControls.vue';
 import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
 import { useAppStore } from '../../../store/index';
 import {

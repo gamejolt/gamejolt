@@ -27,7 +27,7 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../_common/user/user.model';
 import { useResizeObserver } from '../../../../utils/resize-observer';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
-import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
+import AppPageHeaderControls from '../../../components/page-header/controls/AppPageHeaderControls.vue';
 import {
 	createSiteAnalyticsReport,
 	SiteAnalyticsReport,
