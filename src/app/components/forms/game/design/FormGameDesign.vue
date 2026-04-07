@@ -1,60 +1,59 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { mixins, Options, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, onUnmounted, toRef, watch } from 'vue';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlTheme from '../../../../../_common/form-vue/controls/AppFormControlTheme.vue';
-import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { $saveGameDesign, GameModel } from '../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { showGameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
 import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
 
-class Wrapper extends BaseForm<GameModel> {}
+type Props = {
+	model?: GameModel;
+};
 
-@Options({
-	components: {
-		AppFormControlTheme,
-		AppEditableOverlay,
-		AppGameThumbnailImg,
-		AppDashGameWizardControls,
-	},
-})
-export default class FormGameDesign extends mixins(Wrapper) {
-	modelClass = GameModel;
-	modelSaveHandler = $saveGameDesign;
+const props = defineProps<Props>();
+const themeStore = useThemeStore();
 
-	themeStore = setup(() => useThemeStore());
+const form: FormController<GameModel> = createForm({
+	model: toRef(props, 'model'),
+	modelClass: GameModel,
+	modelSaveHandler: $saveGameDesign,
+});
 
-	get hasThumbnailError() {
-		return this.hasCustomError('thumbnail');
-	}
+const hasThumbnailError = computed(() => form.hasCustomError('thumbnail'));
 
-	unmounted() {
-		this.themeStore.setFormTheme(null);
-	}
-
-	showEditThumbnail() {
-		showGameThumbnailModal(this.model!);
-	}
-
-	@Watch('model.thumbnail_media_item', { immediate: true })
-	onDimensionsChanged(mediaItem: any) {
+watch(
+	() => props.model?.thumbnail_media_item,
+	(mediaItem: any) => {
 		if (!mediaItem) {
-			this.setCustomError('thumbnail');
+			form.setCustomError('thumbnail');
 		} else {
-			this.clearCustomError('thumbnail');
+			form.clearCustomError('thumbnail');
 		}
-	}
+	},
+	{ immediate: true }
+);
 
-	onThemeChanged() {
-		// Default theme would be the user theme. Don't want to fallback to page theme otherwise
-		// when clearing theme it'll show the page theme.
-		this.themeStore.setFormTheme(
-			this.formModel.theme ?? this.themeStore.userTheme ?? DefaultTheme
-		);
-	}
+onUnmounted(() => {
+	themeStore.setFormTheme(null);
+});
+
+function showEditThumbnail() {
+	showGameThumbnailModal(props.model!);
+}
+
+function onThemeChanged() {
+	// Default theme would be the user theme. Don't want to fallback to page theme otherwise
+	// when clearing theme it'll show the page theme.
+	themeStore.setFormTheme(
+		form.formModel.theme ?? themeStore.userTheme ?? DefaultTheme
+	);
 }
 </script>
 

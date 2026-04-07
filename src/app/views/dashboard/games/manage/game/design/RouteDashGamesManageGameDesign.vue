@@ -7,7 +7,7 @@ import {
 } from '../../../../../../../_common/route/route-component';
 import { useThemeStore } from '../../../../../../../_common/theme/theme.store';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import FormGameDesign from '../../../../../../components/forms/game/design/design.vue';
+import FormGameDesign from '../../../../../../components/forms/game/design/FormGameDesign.vue';
 import { ManageGameThemeKey, useGameDashRouteController } from '../../manage.store';
 
 export default {
