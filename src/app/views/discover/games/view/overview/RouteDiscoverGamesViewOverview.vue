@@ -60,7 +60,7 @@ import {
 import AppGameCommunityBadge from '../../../../../components/game/community-badge/AppGameCommunityBadge.vue';
 import AppGameList from '../../../../../components/game/list/AppGameList.vue';
 import AppGameListPlaceholder from '../../../../../components/game/list/AppGameListPlaceholder.vue';
-import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
+import AppGameOgrs from '../../../../../components/game/ogrs/AppGameOgrs.vue';
 import { AppActivityFeedLazy } from '../../../../../components/lazy';
 import AppPageContainer from '../../../../../components/page-container/AppPageContainer.vue';
 import AppPostAddButton from '../../../../../components/post/add-button/AppPostAddButton.vue';
