@@ -1,20 +1,18 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
-import { BaseModal } from '../../../../../_common/modal/base';
+<script lang="ts" setup>
+import { useModal } from '../../../../../_common/modal/modal.service';
 import { UserAddressModel } from '../../../../../_common/user/address/address.model';
 import FormAddress from '../../../forms/address/FormAddress.vue';
 
-@Options({
-	components: {
-		FormAddress,
-	},
-})
-export default class AppUserAddressEditModal extends mixins(BaseModal) {
-	@Prop(Object) address!: UserAddressModel;
+type Props = {
+	address: UserAddressModel;
+};
 
-	onSaved(address: UserAddressModel) {
-		this.modal.resolve(address);
-	}
+const { address } = defineProps<Props>();
+
+const modal = useModal()!;
+
+function onSaved(savedAddress: UserAddressModel) {
+	modal.resolve(savedAddress);
 }
 </script>
 

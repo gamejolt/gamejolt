@@ -1,29 +1,22 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { UserModel } from '../../../../_common/user/user.model';
 
-@Options({
-	components: {
-		AppProgressBar,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppUserLevelWidget extends Vue {
-	@Prop(Object) user!: UserModel;
+type Props = {
+	user: UserModel;
+};
 
-	readonly formatNumber = formatNumber;
+const { user } = defineProps<Props>();
 
-	get tooltip() {
-		return this.$gettext('%{ percentage }% progress to next level', {
-			percentage: this.user.level_next_percentage,
-		});
-	}
-}
+const tooltip = computed(() => {
+	return $gettext('%{ percentage }% progress to next level', {
+		percentage: user.level_next_percentage,
+	});
+});
 </script>
 
 <template>

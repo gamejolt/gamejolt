@@ -1,30 +1,33 @@
-<script lang="ts">
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { UserModel } from '../../../../_common/user/user.model';
 
-@Options({})
-export default class AppUserBlockOverlay extends Vue {
-	@Prop(Object)
-	user!: UserModel;
+type Props = {
+	user: UserModel;
+};
 
-	private hasBypassed = false;
+const { user } = defineProps<Props>();
 
-	get shouldBlock() {
-		return this.user && this.user.is_blocked && !this.hasBypassed;
-	}
+const hasBypassed = ref(false);
 
-	@Watch('user', { immediate: true })
-	onWatch(newUser: UserModel, oldUser?: UserModel) {
+const shouldBlock = computed(() => {
+	return user && user.is_blocked && !hasBypassed.value;
+});
+
+watch(
+	() => user,
+	(newUser, oldUser) => {
 		if (!oldUser || newUser.id !== oldUser.id) {
-			this.hasBypassed = false;
+			hasBypassed.value = false;
 		}
-	}
+	},
+	{ immediate: true }
+);
 
-	proceed() {
-		this.hasBypassed = true;
-		Scroll.to(0, { animate: false });
-	}
+function proceed() {
+	hasBypassed.value = true;
+	Scroll.to(0, { animate: false });
 }
 </script>
 

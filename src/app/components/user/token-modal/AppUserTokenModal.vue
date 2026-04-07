@@ -1,41 +1,34 @@
-<script lang="ts">
-import { mixins, Options } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { onMounted, ref } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { BaseModal } from '../../../../_common/modal/base';
+import { useModal } from '../../../../_common/modal/modal.service';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import FormToken from '../../forms/token/FormToken.vue';
 
-@Options({
-	components: {
-		AppLoading,
-		AppExpand,
-		FormToken,
-	},
-})
-export default class AppUserTokenModal extends mixins(BaseModal) {
-	token = '';
-	isChanging = false;
+const modal = useModal()!;
 
-	async created() {
-		try {
-			const response = await Api.sendRequest('/web/dash/token');
-			this.token = response.token;
-		} catch (e) {
-			showErrorGrowl($gettext(`Couldn't get your token.`));
-		}
-	}
+const token = ref('');
+const isChanging = ref(false);
 
-	showChangeForm() {
-		this.isChanging = true;
+onMounted(async () => {
+	try {
+		const response = await Api.sendRequest('/web/dash/token');
+		token.value = response.token;
+	} catch (e) {
+		showErrorGrowl($gettext(`Couldn't get your token.`));
 	}
+});
 
-	onTokenChanged(formModel: { token: string }) {
-		this.isChanging = false;
-		this.token = formModel.token;
-	}
+function showChangeForm() {
+	isChanging.value = true;
+}
+
+function onTokenChanged(formModel: { token: string }) {
+	isChanging.value = false;
+	token.value = formModel.token;
 }
 </script>
 

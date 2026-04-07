@@ -5,7 +5,7 @@ import { UserAddressModel } from '../../../../../_common/user/address/address.mo
 export async function showUserAddressEditModal(address: UserAddressModel) {
 	return await showModal<UserAddressModel>({
 		modalId: 'UserAddressEdit',
-		component: defineAsyncComponent(() => import('./edit-modal.vue')),
+		component: defineAsyncComponent(() => import('./AppUserAddressEditModal.vue')),
 		size: 'sm',
 		props: { address },
 		noBackdropClose: true,

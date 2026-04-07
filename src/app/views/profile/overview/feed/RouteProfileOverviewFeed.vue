@@ -21,7 +21,7 @@ import { ActivityFeedService } from '../../../../components/activity/feed/feed-s
 import { ActivityFeedView } from '../../../../components/activity/feed/view';
 import { AppActivityFeedLazy } from '../../../../components/lazy';
 import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
-import AppUserSpawnDay from '../../../../components/user/spawn-day/spawn-day.vue';
+import AppUserSpawnDay from '../../../../components/user/spawn-day/AppUserSpawnDay.vue';
 import { useProfileRouteStore } from '../../RouteProfile.vue';
 
 function checkIsLikeFeed(route: RouteLocationNormalized) {

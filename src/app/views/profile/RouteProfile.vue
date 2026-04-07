@@ -37,7 +37,7 @@ import { useGridStore } from '../../components/grid/grid-store';
 import { IntentService } from '../../components/intent/intent.service';
 import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderAvatar from '../../components/page-header/AppPageHeaderAvatar.vue';
-import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
+import AppUserBlockOverlay from '../../components/user/block-overlay/AppUserBlockOverlay.vue';
 import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
 import AppProfileDogtags from './dogtags/AppProfileDogtags.vue';
 
