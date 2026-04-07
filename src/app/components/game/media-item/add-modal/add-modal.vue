@@ -6,7 +6,7 @@ import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketch
 import { GameVideoModel } from '../../../../../_common/game/video/video.model';
 import { BaseModal } from '../../../../../_common/modal/base';
 import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
-import FormGameImage from '../../../forms/game/image/image.vue';
+import FormGameImage from '../../../forms/game/image/FormGameImage.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
 import FormGameVideo from '../../../forms/game/video/video.vue';
 

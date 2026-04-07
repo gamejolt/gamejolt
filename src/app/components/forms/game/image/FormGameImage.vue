@@ -1,59 +1,56 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, toRef } from 'vue';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { GameModel } from '../../../../../_common/game/game.model';
 import {
 	$saveGameScreenshot,
 	GameScreenshotModel,
 } from '../../../../../_common/game/screenshot/screenshot.model';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
-class Wrapper extends BaseForm<GameScreenshotModel> {}
+type Props = {
+	game: GameModel;
+	model?: GameScreenshotModel;
+};
 
-@Options({
-	components: {
-		AppFormControlUpload,
-	},
-})
-export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad {
-	modelClass = GameScreenshotModel;
-	modelSaveHandler = $saveGameScreenshot;
+const props = defineProps<Props>();
+const { game } = props;
 
-	@Prop(Object) game!: GameModel;
+const maxFilesize = ref(0);
+const maxWidth = ref(0);
+const maxHeight = ref(0);
 
-	maxFilesize = 0;
-	maxWidth = 0;
-	maxHeight = 0;
-
-	get loadUrl() {
-		return `/web/dash/developer/games/media/save/image/${this.game.id}`;
-	}
-
-	created() {
-		this.form.resetOnSubmit = true;
-	}
-
+const form: FormController<GameScreenshotModel> = createForm({
+	model: toRef(props, 'model'),
+	modelClass: GameScreenshotModel,
+	modelSaveHandler: $saveGameScreenshot,
+	resetOnSubmit: true,
+	loadUrl: computed(() => `/web/dash/developer/games/media/save/image/${game.id}`),
 	onInit() {
-		this.setField('game_id', this.game.id);
-	}
-
+		form.formModel.game_id = game.id;
+	},
 	onLoad(payload: any) {
-		this.maxFilesize = payload.maxFilesize;
-		this.maxWidth = payload.maxWidth;
-		this.maxHeight = payload.maxHeight;
-	}
+		maxFilesize.value = payload.maxFilesize;
+		maxWidth.value = payload.maxWidth;
+		maxHeight.value = payload.maxHeight;
+	},
+});
 
-	imagesSelected() {
-		// When images are selected, submit the form immediately.
-		this.form.submit();
-	}
+function imagesSelected() {
+	// When images are selected, submit the form immediately.
+	form.submit();
 }
 </script>
 
 <template>
 	<AppForm :controller="form">
 		<AppFormGroup
-			v-if="method === 'add'"
+			v-if="form.method === 'add'"
 			name="file"
 			:label="$gettext(`Image File`)"
 			:hide-label="true"
@@ -82,7 +79,7 @@ export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="method !== 'add'"
+			v-if="form.method !== 'add'"
 			name="caption"
 			:label="$gettext(`Caption`)"
 			:optional="true"
@@ -96,7 +93,7 @@ export default class FormGameImage extends mixins(Wrapper) implements FormOnLoad
 			</p>
 		</AppFormGroup>
 
-		<AppFormButton v-if="method === 'edit'" show-when-valid>
+		<AppFormButton v-if="form.method === 'edit'" show-when-valid>
 			<AppTranslate>Save</AppTranslate>
 		</AppFormButton>
 	</AppForm>

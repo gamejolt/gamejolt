@@ -10,7 +10,7 @@ import { BaseModal } from '../../../../../_common/modal/base';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Media } from '../../../../views/dashboard/games/manage/manage.store';
-import FormGameImage from '../../../forms/game/image/image.vue';
+import FormGameImage from '../../../forms/game/image/FormGameImage.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
 import FormGameVideo from '../../../forms/game/video/video.vue';
 import { GameMediaItemEditModalRemoveCallback } from './edit-modal.service';
