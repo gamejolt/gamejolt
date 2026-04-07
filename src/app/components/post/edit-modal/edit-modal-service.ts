@@ -18,7 +18,7 @@ export async function showPostEditModal(
 	options = options || {};
 	return await showModal<FiresidePostModel>({
 		modalId: 'PostEdit',
-		component: defineAsyncComponent(() => import('./edit-modal.vue')),
+		component: defineAsyncComponent(() => import('./AppPostEditModal.vue')),
 		noBackdropClose: true,
 		noEscClose: true,
 		size: 'sm',
