@@ -1,56 +1,50 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { GameDevelopmentStatus, GameModel } from '../../../../../_common/game/game.model';
-import { BaseModal } from '../../../../../_common/modal/base';
+import AppModal from '../../../../../_common/modal/AppModal.vue';
+import { useModal } from '../../../../../_common/modal/modal.service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
-@Options({})
-export default class AppGameDevStageConfirmModal extends mixins(BaseModal) {
-	@Prop(Object) game!: GameModel;
-	@Prop(Number) stage!: number;
+type Props = {
+	game: GameModel;
+	stage: number;
+};
 
-	from = '';
-	to = '';
-	action = '';
+const { game, stage } = defineProps<Props>();
 
-	fromTranslated = '';
-	toTranslated = '';
+const modal = useModal()!;
 
-	created() {
-		this.from = this._getStatusString(this.game.development_status);
-		this.to = this._getStatusString(this.stage);
-		this.action = `${this.from}:${this.to}`;
-
-		this.fromTranslated = this._getStatusTranslated(this.game.development_status);
-		this.toTranslated = this._getStatusTranslated(this.stage);
+function getStatusTranslated(s: number) {
+	if (s === GameDevelopmentStatus.Devlog) {
+		return $gettext('devlog-only');
+	} else if (s === GameDevelopmentStatus.Wip) {
+		return $gettext('early access');
 	}
+	return $gettext('complete');
+}
 
-	private _getStatusTranslated(stage: number) {
-		if (stage === GameDevelopmentStatus.Devlog) {
-			return this.$gettext('devlog-only');
-		} else if (stage === GameDevelopmentStatus.Wip) {
-			return this.$gettext('early access');
-		}
-
-		return this.$gettext('complete');
+function getStatusString(s: number) {
+	if (s === GameDevelopmentStatus.Devlog) {
+		return 'devlog';
+	} else if (s === GameDevelopmentStatus.Wip) {
+		return 'wip';
 	}
+	return 'complete';
+}
 
-	private _getStatusString(stage: number) {
-		if (stage === GameDevelopmentStatus.Devlog) {
-			return 'devlog';
-		} else if (stage === GameDevelopmentStatus.Wip) {
-			return 'wip';
-		}
+const from = getStatusString(game.development_status);
+const to = getStatusString(stage);
+const action = `${from}:${to}`;
+const fromTranslated = getStatusTranslated(game.development_status);
+const toTranslated = getStatusTranslated(stage);
 
-		return 'complete';
-	}
+function proceed() {
+	modal.resolve(true);
+}
 
-	proceed() {
-		this.modal.resolve(true);
-	}
-
-	cancel() {
-		this.modal.resolve(false);
-	}
+function cancel() {
+	modal.resolve(false);
 }
 </script>
 

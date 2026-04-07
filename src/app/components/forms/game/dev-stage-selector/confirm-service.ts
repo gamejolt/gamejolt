@@ -5,7 +5,7 @@ import { showModal } from '../../../../../_common/modal/modal.service';
 export async function showGameDevStageSelectorConfirmModal(game: GameModel, stage: number) {
 	return await showModal<boolean>({
 		modalId: 'GameDevStageSelectorConfirm-' + game.id,
-		component: defineAsyncComponent(() => import('./confirm.vue')),
+		component: defineAsyncComponent(() => import('./FormGameDevStageConfirm.vue')),
 		props: { game, stage },
 		size: 'sm',
 	});
