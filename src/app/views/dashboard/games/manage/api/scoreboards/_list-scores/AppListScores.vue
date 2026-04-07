@@ -1,44 +1,39 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
 import { formatDate } from '../../../../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../../../../_common/filters/number';
 import { GameScoreTableModel } from '../../../../../../../../_common/game/score-table/score-table.model';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import AppPopper from '../../../../../../../../_common/popper/AppPopper.vue';
+import { $gettext } from '../../../../../../../../_common/translate/translate.service';
 import {
 	$removeUserGameScore,
 	UserGameScoreModel,
 } from '../../../../../../../../_common/user/game-score/game-score.model';
 
-@Options({
-	components: {
-		AppPopper,
-	},
-})
-export default class AppManageGameListScores extends Vue {
-	@Prop(Object) scoreTable!: GameScoreTableModel;
-	@Prop(Array) scores!: UserGameScoreModel[];
-	@Prop(Boolean) isForUser?: boolean;
+type Props = {
+	scoreTable: GameScoreTableModel;
+	scores: UserGameScoreModel[];
+	isForUser?: boolean;
+};
 
-	@Emit('remove')
-	emitRemove(_score: UserGameScoreModel) {}
+const { scoreTable, scores, isForUser } = defineProps<Props>();
 
-	readonly formatDate = formatDate;
-	readonly formatNumber = formatNumber;
+const emit = defineEmits<{
+	remove: [score: UserGameScoreModel];
+}>();
 
-	async removeScore(score: UserGameScoreModel) {
-		const result = await showModalConfirm(
-			this.$gettext('Are you sure you want to remove this score?')
-		);
+async function removeScore(score: UserGameScoreModel) {
+	const result = await showModalConfirm(
+		$gettext('Are you sure you want to remove this score?')
+	);
 
-		if (!result) {
-			return;
-		}
-
-		await $removeUserGameScore(score);
-
-		this.emitRemove(score);
+	if (!result) {
+		return;
 	}
+
+	await $removeUserGameScore(score);
+
+	emit('remove', score);
 }
 </script>
 

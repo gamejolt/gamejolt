@@ -18,7 +18,7 @@ import { $gettext } from '../../../../../../../../../_common/translate/translate
 import { UserGameScoreModel } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { UserModel } from '../../../../../../../../../_common/user/user.model';
 import { useGameDashRouteController } from '../../../../manage.store';
-import AppManageGameListScores from '../../_list-scores/list-scores.vue';
+import AppListScores from '../../_list-scores/AppListScores.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -140,7 +140,7 @@ const { isBootstrapped } = createAppRoute({
 			</p>
 		</div>
 
-		<AppManageGameListScores
+		<AppListScores
 			v-if="scores.length"
 			:score-table="scoreTable"
 			:scores="scores"

@@ -11,7 +11,7 @@ import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service
 import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
 import { UserGameScoreModel } from '../../../../../../../../../_common/user/game-score/game-score.model';
 import { useGameDashRouteController } from '../../../../manage.store';
-import AppManageGameListScores from '../../_list-scores/list-scores.vue';
+import AppListScores from '../../_list-scores/AppListScores.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -111,7 +111,7 @@ createAppRoute({
 			<p>{{ $gettext(`This table lacks scores, alas.`) }}</p>
 		</div>
 
-		<AppManageGameListScores
+		<AppListScores
 			v-if="scores.length"
 			:score-table="scoreTable"
 			:scores="scores"
