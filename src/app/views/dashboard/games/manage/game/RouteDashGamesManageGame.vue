@@ -11,7 +11,7 @@ import {
 import { Screen } from '../../../../../../_common/screen/screen-service';
 import { showGameHeaderModal } from '../../../../../components/game/header-modal/header-modal.service';
 import { useGameDashRouteController } from '../manage.store';
-import AppManageGameMediaBar from './_media-bar/media-bar.vue';
+import AppGameManageMediaBar from './_media-bar/AppGameManageMediaBar.vue';
 import AppManageGameNav from './_nav/nav.vue';
 
 export default {
@@ -63,7 +63,7 @@ createAppRoute({});
 		</AppExpand>
 
 		<AppExpand :when="route.name === 'dash.games.manage.game.design'">
-			<AppManageGameMediaBar :game="game!" :media-items="media" />
+			<AppGameManageMediaBar :game="game!" :media-items="media" />
 		</AppExpand>
 
 		<div v-if="Screen.isMobile" class="container">

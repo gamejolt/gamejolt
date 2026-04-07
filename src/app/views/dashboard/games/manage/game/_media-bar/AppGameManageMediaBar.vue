@@ -1,6 +1,5 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import draggable from 'vuedraggable';
 import AppEditableOverlay from '../../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { GameModel } from '../../../../../../../_common/game/game.model';
@@ -12,50 +11,40 @@ import { showGameMediaItemAddModal } from '../../../../../../components/game/med
 import { showGameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
 import { Media, useGameDashRouteController } from '../../manage.store';
 
-@Options({
-	components: {
-		draggable,
-		AppScrollScroller,
-		AppGameMediaBarItem,
-		AppEditableOverlay,
+type Props = {
+	game: GameModel;
+	mediaItems: Media[];
+};
+
+const { game, mediaItems } = defineProps<Props>();
+
+const routeStore = useGameDashRouteController()!;
+
+const mediaBarHeight = MediaBarItemMaxHeight + 40;
+const addButtonSize = MediaBarItemMaxHeight;
+
+const draggableItems = computed({
+	get: () => mediaItems,
+	set: (items: Media[]) => {
+		routeStore.saveMediaSort(items);
 	},
-})
-export default class AppManageGameMediaBar extends Vue {
-	@Prop(Object)
-	game!: GameModel;
+});
 
-	@Prop(Array)
-	mediaItems!: Media[];
-
-	routeStore = setup(() => useGameDashRouteController()!);
-
-	mediaBarHeight = MediaBarItemMaxHeight + 40;
-	addButtonSize = MediaBarItemMaxHeight;
-
-	get draggableItems() {
-		return this.mediaItems;
+async function add() {
+	const newItems = await showGameMediaItemAddModal(game);
+	if (newItems) {
+		routeStore.addMedia(newItems);
 	}
+}
 
-	set draggableItems(items: Media[]) {
-		this.routeStore.saveMediaSort(items);
-	}
+async function open(item: Media) {
+	const newItem = await showGameMediaItemEditModal(game, item, () => {
+		routeStore.removeMedia(item);
+	});
 
-	async add() {
-		const newItems = await showGameMediaItemAddModal(this.game);
-		if (newItems) {
-			this.routeStore.addMedia(newItems);
-		}
-	}
-
-	async open(item: Media) {
-		const newItem = await showGameMediaItemEditModal(this.game, item, () => {
-			this.routeStore.removeMedia(item);
-		});
-
-		// Copy properties of new item into old item to update it.
-		if (newItem) {
-			Object.assign(item, newItem);
-		}
+	// Copy properties of new item into old item to update it.
+	if (newItem) {
+		Object.assign(item, newItem);
 	}
 }
 </script>
@@ -105,4 +94,4 @@ export default class AppManageGameMediaBar extends Vue {
 	</AppScrollScroller>
 </template>
 
-<style lang="stylus" src="./media-bar.styl" scoped></style>
+<style lang="stylus" src="./AppGameManageMediaBar.styl" scoped></style>
