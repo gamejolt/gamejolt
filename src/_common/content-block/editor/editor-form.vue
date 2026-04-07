@@ -1,33 +1,33 @@
-<script lang="ts">
-import { mixins, Options, Prop, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { toRef, watch } from 'vue';
+import AppForm, { createForm } from '../../form-vue/AppForm.vue';
+import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../form-vue/AppFormGroup.vue';
 import AppFormControlMarkdown from '../../form-vue/controls/markdown/AppFormControlMarkdown.vue';
-import { BaseForm } from '../../form-vue/form.service';
 import { SiteContentBlockModel } from '../../site/content-block/content-block-model';
 
-class Wrapper extends BaseForm<SiteContentBlockModel> {}
+type Props = {
+	model?: SiteContentBlockModel;
+	mode: 'game' | 'user';
+};
+const { model, mode } = defineProps<Props>();
 
-@Options({
-	components: {
-		AppFormControlMarkdown,
-	},
-})
-export default class FormContentBlockEditor extends mixins(Wrapper) {
-	modelClass = SiteContentBlockModel;
+const form = createForm<SiteContentBlockModel>({
+	warnOnDiscard: false,
+	model: toRef(() => model),
+	modelClass: SiteContentBlockModel,
+});
 
-	@Prop(String) mode!: string;
-
-	@Watch('formModel.content_markdown')
-	onContentChanged(content: string) {
-		if (this.model) {
+watch(
+	() => form.formModel.content_markdown,
+	content => {
+		if (model) {
+			// Keep the source model in sync with form changes.
 			// TODO: why are we setting on the model directly? Is this a bug?
-			(this.model as SiteContentBlockModel).content_markdown! = content;
+			(model as SiteContentBlockModel).content_markdown = content;
 		}
 	}
-
-	created() {
-		this.form.warnOnDiscard = false;
-	}
-}
+);
 </script>
 
 <template>
