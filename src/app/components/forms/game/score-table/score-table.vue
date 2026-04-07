@@ -1,39 +1,43 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { toRef } from 'vue';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import { GameModel } from '../../../../../_common/game/game.model';
 import {
 	$saveGameScoreTable,
 	GameScoreTableModel,
 	GameScoreTableSorting,
 } from '../../../../../_common/game/score-table/score-table.model';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
-class Wrapper extends BaseForm<GameScoreTableModel> {}
+type Props = {
+	game: GameModel;
+	model?: GameScoreTableModel;
+};
 
-@Options({
-	components: {
-		AppFormControlToggle,
-	},
-})
-export default class FormGameScoreTable extends mixins(Wrapper) {
-	@Prop(Object) game!: GameModel;
+const props = defineProps<Props>();
+const { game } = props;
 
-	modelClass = GameScoreTableModel;
-	modelSaveHandler = $saveGameScoreTable;
+const DirectionAscend = GameScoreTableSorting.DirectionAsc;
+const DirectionDescend = GameScoreTableSorting.DirectionDesc;
 
-	readonly DirectionAscend = GameScoreTableSorting.DirectionAsc;
-	readonly DirectionDescend = GameScoreTableSorting.DirectionDesc;
-
+const form: FormController<GameScoreTableModel> = createForm({
+	model: toRef(props, 'model'),
+	modelClass: GameScoreTableModel,
+	modelSaveHandler: $saveGameScoreTable,
 	onInit() {
-		this.setField('game_id', this.game.id);
+		form.formModel.game_id = game.id;
 
-		if (this.method === 'add') {
-			this.setField('unique_scores', true);
-			this.setField('scores_sorting_direction', GameScoreTableSorting.DirectionDesc);
+		if (form.method === 'add') {
+			form.formModel.unique_scores = true;
+			form.formModel.scores_sorting_direction = GameScoreTableSorting.DirectionDesc;
 		}
-	}
-}
+	},
+});
 </script>
 
 <template>

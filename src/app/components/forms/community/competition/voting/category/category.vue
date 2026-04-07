@@ -1,52 +1,52 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, toRef } from 'vue';
 import { CommunityCompetitionModel } from '../../../../../../../_common/community/competition/competition.model';
 import {
 	$saveCommunityCompetitionVotingCategory,
 	CommunityCompetitionVotingCategoryModel,
 } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
+import AppForm, { createForm, FormController } from '../../../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlTextarea from '../../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
-import { BaseForm, FormOnBeforeSubmit } from '../../../../../../../_common/form-vue/form.service';
+import { validateAvailability, validateMaxLength } from '../../../../../../../_common/form-vue/validators';
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
 
-class Wrapper extends BaseForm<CommunityCompetitionVotingCategoryModel> {}
+type Props = {
+	competition: CommunityCompetitionModel;
+	model?: CommunityCompetitionVotingCategoryModel;
+};
 
-@Options({
-	components: {
-		AppFormControlTextarea,
-	},
-})
-export default class FormCommunityCompetitionVotingCategory
-	extends mixins(Wrapper)
-	implements FormOnBeforeSubmit
-{
-	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
+const props = defineProps<Props>();
 
-	modelClass = CommunityCompetitionVotingCategoryModel;
-	modelSaveHandler = $saveCommunityCompetitionVotingCategory;
+const isAdding = computed(() => !props.model);
 
-	get isAdding() {
-		return !this.model;
+const nameAvailabilityUrl = computed(() => {
+	let endpoint =
+		'/web/dash/communities/competitions/voting-categories/check-field-availability/' +
+		props.competition.id;
+
+	if (props.model?.id) {
+		endpoint += '/' + props.model.id;
 	}
 
-	get nameAvailabilityUrl() {
-		let endpoint =
-			'/web/dash/communities/competitions/voting-categories/check-field-availability/' +
-			this.competition.id;
+	return endpoint;
+});
 
-		if (this.model?.id) {
-			endpoint += '/' + this.model.id;
-		}
-
-		return endpoint;
-	}
-
+const form: FormController<CommunityCompetitionVotingCategoryModel> = createForm({
+	modelClass: CommunityCompetitionVotingCategoryModel,
+	modelSaveHandler: $saveCommunityCompetitionVotingCategory,
+	model: toRef(props, 'model'),
 	onBeforeSubmit() {
 		// When creating a new category, this field isn't set yet.
-		if (!this.formModel.community_competition_id) {
-			this.setField('community_competition_id', this.competition.id);
+		if (!form.formModel.community_competition_id) {
+			form.formModel.community_competition_id = props.competition.id;
 		}
-	}
-}
+	},
+});
 </script>
 
 <template>

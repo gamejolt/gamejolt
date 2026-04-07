@@ -1,18 +1,12 @@
-<script lang="ts">
-import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, useTemplateRef } from 'vue';
 import draggable from 'vuedraggable';
 import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControlUpload, {
 	AppFormControlUploadInterface,
 } from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import {
-	BaseForm,
-	FormOnSubmit,
-	FormOnSubmitError,
-	FormOnSubmitSuccess,
-} from '../../../../../_common/form-vue/form.service';
-import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
@@ -23,142 +17,102 @@ interface FormModel {
 	_progress: ApiProgressEvent | null;
 }
 
-class Wrapper extends BaseForm<FormModel> {}
-
-@Options({
-	components: {
-		draggable,
-		AppScrollScroller,
-		AppImgResponsive,
-		AppFormPostMediaItem,
-		AppFormControlUpload,
-		AppLoadingFade,
-	},
-})
-export default class AppFormPostMedia
-	extends mixins(Wrapper)
-	implements FormOnSubmit, FormOnSubmitSuccess, FormOnSubmitError
-{
-	@Prop({ type: Object })
-	post!: FiresidePostModel;
-
-	@Prop(Number)
-	maxFilesize!: number;
-
-	@Prop(Number)
-	maxWidth!: number;
-
-	@Prop(Number)
-	maxHeight!: number;
-
-	@Prop(Array)
-	mediaItems!: MediaItemModel[];
-
-	@Prop(Boolean)
+type Props = {
+	post: FiresidePostModel;
+	maxFilesize: number;
+	maxWidth: number;
+	maxHeight: number;
+	mediaItems: MediaItemModel[];
 	loading?: boolean;
+};
 
-	isDropActive = false;
+const { post, maxFilesize, maxWidth, maxHeight, mediaItems, loading } = defineProps<Props>();
 
-	declare $refs: {
-		upload: AppFormControlUploadInterface;
-	};
+const emit = defineEmits<{
+	upload: [newMediaItems: MediaItemModel[]];
+	error: [reason: string];
+	sort: [mediaItems: MediaItemModel[]];
+	remove: [mediaItem: MediaItemModel];
+}>();
 
-	@Emit('upload')
-	emitUpload(_newMediaItems: MediaItemModel[]) {}
+const isDropActive = ref(false);
 
-	@Emit('error')
-	emitError(_reason: string) {}
+const uploadRef = useTemplateRef<AppFormControlUploadInterface>('upload');
 
-	@Emit('sort')
-	emitSort(_mediaItems: MediaItemModel[]) {}
+const isLoading = computed(() => form.isProcessing || loading);
 
-	@Emit('remove')
-	emitRemove(_mediaItem: MediaItemModel) {}
+const internalItems = computed({
+	get: () => mediaItems,
+	set: (val: MediaItemModel[]) => emit('sort', val),
+});
 
-	get isLoading() {
-		return this.form.isProcessing || this.loading;
-	}
-
-	get internalItems() {
-		return this.mediaItems;
-	}
-
-	set internalItems(mediaItems: MediaItemModel[]) {
-		this.emitSort(mediaItems);
-	}
-
-	created() {
-		this.form.resetOnSubmit = true;
-	}
-
+const form: FormController<FormModel> = createForm({
+	resetOnSubmit: true,
 	onInit() {
-		this.setField('image', null);
-	}
-
-	mediaSelected() {
-		if (this.formModel.image !== null) {
-			this.form.submit();
-		}
-	}
-
-	showSelectMedia() {
-		this.$refs.upload?.showFileSelect();
-	}
-
-	onDragOver(e: DragEvent) {
-		// Don't do anything if not a file drop.
-		if (
-			!e.dataTransfer ||
-			!e.dataTransfer.items.length ||
-			e.dataTransfer.items[0].kind !== 'file'
-		) {
-			return;
-		}
-
-		e.preventDefault();
-		this.isDropActive = true;
-	}
-
-	onDragLeave() {
-		this.isDropActive = false;
-	}
-
-	// File select resulting from a drop onto the input.
-	async onDrop(e: DragEvent) {
-		// Don't do anything if not a file drop.
-		if (
-			!e.dataTransfer ||
-			!e.dataTransfer.items.length ||
-			e.dataTransfer.items[0].kind !== 'file'
-		) {
-			return;
-		}
-
-		e.preventDefault();
-		this.isDropActive = false;
-		this.$refs.upload?.drop(e);
-	}
-
+		form.formModel.image = null;
+	},
 	async onSubmit() {
 		return Api.sendRequest(
-			`/web/posts/manage/add-media/${this.post.id}`,
+			`/web/posts/manage/add-media/${post.id}`,
 			{},
 			{
-				file: this.formModel.image,
-				progress: e => this.setField('_progress', e),
+				file: form.formModel.image,
+				progress: e => (form.formModel._progress = e),
 			}
 		);
-	}
-
+	},
 	onSubmitSuccess(response: any) {
-		this.$refs.upload?.clearAllFiles();
-		this.emitUpload(MediaItemModel.populate(response.mediaItems));
+		uploadRef.value?.clearAllFiles();
+		emit('upload', MediaItemModel.populate(response.mediaItems));
+	},
+	onSubmitError(response: any) {
+		uploadRef.value?.clearAllFiles();
+		emit('error', response.reason);
+	},
+});
+
+function mediaSelected() {
+	if (form.formModel.image !== null) {
+		form.submit();
+	}
+}
+
+function showSelectMedia() {
+	uploadRef.value?.showFileSelect();
+}
+
+function onDragOver(e: DragEvent) {
+	// Don't do anything if not a file drop.
+	if (
+		!e.dataTransfer ||
+		!e.dataTransfer.items.length ||
+		e.dataTransfer.items[0].kind !== 'file'
+	) {
+		return;
 	}
 
-	onSubmitError(response: any) {
-		this.$refs.upload?.clearAllFiles();
-		this.emitError(response.reason);
+	e.preventDefault();
+	isDropActive.value = true;
+}
+
+function onDragLeave() {
+	isDropActive.value = false;
+}
+
+// File select resulting from a drop onto the input.
+async function onDrop(e: DragEvent) {
+	// Don't do anything if not a file drop.
+	if (
+		!e.dataTransfer ||
+		!e.dataTransfer.items.length ||
+		e.dataTransfer.items[0].kind !== 'file'
+	) {
+		return;
 	}
+
+	e.preventDefault();
+	isDropActive.value = false;
+	uploadRef.value?.drop(e);
 }
 </script>
 
@@ -213,7 +167,7 @@ export default class AppFormPostMedia
 								<div class="-item">
 									<AppFormPostMediaItem
 										:item="element"
-										@remove="emitRemove(element)"
+										@remove="emit('remove', element)"
 									/>
 								</div>
 							</template>

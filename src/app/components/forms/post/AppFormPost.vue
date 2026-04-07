@@ -63,7 +63,7 @@ import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatar
 import { arrayRemove } from '../../../../utils/array';
 import AppContentTargets from '../../content/AppContentTargets.vue';
 import { CONTENT_TARGET_HEIGHT } from '../../content/target/AppContentTarget.vue';
-import AppFormPostMedia from './_media/media.vue';
+import AppFormPostMedia from './_media/FormPostMedia.vue';
 import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
 
 type FormPostModel = FiresidePostModel & {
