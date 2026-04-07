@@ -1,6 +1,5 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import { formatFuzzynumber } from '../../../../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import AppGameRatingWidget from '../../../../../../../_common/game/rating/AppGameRatingWidget.vue';
@@ -9,44 +8,16 @@ import { showLikersModal } from '../../../../../../../_common/likers/modal.servi
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 
-@Options({
-	components: {
-		AppLazyPlaceholder,
-		AppGameRatingWidget,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppDiscoverGamesViewOverviewStatbar extends Vue {
-	routeStore = setup(() => useGameRouteController()!);
+const routeStore = useGameRouteController()!;
 
-	readonly formatNumber = formatNumber;
-	readonly formatFuzzynumber = formatFuzzynumber;
+const game = computed(() => routeStore.game);
+const isOverviewLoaded = computed(() => routeStore.isOverviewLoaded);
+const profileCount = computed(() => routeStore.profileCount);
+const userRating = computed(() => routeStore.userRating);
+const likeCount = computed(() => game.value?.like_count ?? 0);
 
-	get game() {
-		return this.routeStore.game;
-	}
-
-	get isOverviewLoaded() {
-		return this.routeStore.isOverviewLoaded;
-	}
-
-	get profileCount() {
-		return this.routeStore.profileCount;
-	}
-
-	get userRating() {
-		return this.routeStore.userRating;
-	}
-
-	get likeCount() {
-		return this.game?.like_count ?? 0;
-	}
-
-	showLikers() {
-		showLikersModal({ count: this.likeCount, resource: this.game });
-	}
+function showLikers() {
+	showLikersModal({ count: likeCount.value, resource: game.value });
 }
 </script>
 

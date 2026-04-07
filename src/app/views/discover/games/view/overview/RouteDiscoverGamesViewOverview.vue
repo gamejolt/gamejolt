@@ -69,7 +69,7 @@ import AppUserKnownFollowers from '../../../../../components/user/known-follower
 import { useGameRouteController } from '../RouteDiscoverGamesView.vue';
 import AppDiscoverGamesViewOverviewSupporters from './AppDiscoverGamesViewOverviewSupporters.vue';
 import AppGameDetails from './_details/AppGameDetails.vue';
-import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
+import AppGameStatbar from './_statbar/AppGameStatbar.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -266,7 +266,7 @@ async function reloadPreviewComments() {
 			<AppAdStickyRail show-left>
 				<AppPageContainer xl>
 					<template #left>
-						<AppDiscoverGamesViewOverviewStatbar />
+						<AppGameStatbar />
 
 						<AppShareCard
 							class="-share-card"
