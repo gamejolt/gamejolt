@@ -1,29 +1,29 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../_common/route/route-component';
+
+export default {
+	name: 'RouteDashGamesManageGameWizardFinish',
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { computed } from 'vue';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import { useGameDashRouteController } from '../../manage.store';
 
-@Options({
-	name: 'RouteDashGamesManageGameWizardFinish',
-})
-@OptionsForLegacyRoute({
-	reloadOn: 'always',
-})
-export default class RouteDashGamesManageGameWizardFinish extends LegacyRouteComponent {
-	routeStore = setup(() => useGameDashRouteController()!);
+const routeStore = useGameDashRouteController()!;
 
-	get canPublish() {
-		return this.routeStore.canPublish;
-	}
+const canPublish = computed(() => routeStore.canPublish);
 
-	get routeTitle() {
-		return this.$gettext('The End Is Not the End');
-	}
-}
+createAppRoute({
+	routeTitle: computed(() => $gettext('The End Is Not the End')),
+});
 </script>
 
 <template>
