@@ -1,50 +1,49 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { toRef } from 'vue';
 import {
 	$inviteCollaborator,
 	CollaboratorModel,
 	CollaboratorRole,
 } from '../../../../../_common/collaborator/collaborator.model';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
-import { BaseForm } from '../../../../../_common/form-vue/form.service';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import { GameModel } from '../../../../../_common/game/game.model';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
-class Wrapper extends BaseForm<CollaboratorModel> {}
+type Props = {
+	game: GameModel;
+	model?: CollaboratorModel;
+};
 
-@Options({
-	components: {
-		AppFormControlPrefix,
-	},
-})
-export default class FormGameCollaborator extends mixins(Wrapper) {
-	modelClass = CollaboratorModel;
-	modelSaveHandler = $inviteCollaborator;
+const props = defineProps<Props>();
+const { game } = props;
 
-	@Prop(Object)
-	game!: GameModel;
+const CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
+const CollaboratorRoleCommunityManager = CollaboratorRole.CommunityManager;
 
-	readonly Collaborator = CollaboratorModel;
-	readonly CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
-	readonly CollaboratorRoleCommunityManager = CollaboratorRole.CommunityManager;
-
-	created() {
-		this.form.resetOnSubmit = true;
-	}
-
+const form: FormController<CollaboratorModel> = createForm({
+	model: toRef(props, 'model'),
+	modelClass: CollaboratorModel,
+	modelSaveHandler: $inviteCollaborator,
+	resetOnSubmit: true,
 	onInit() {
-		this.setField('resource', 'Game');
-		this.setField('resource_id', this.game.id);
+		form.formModel.resource = 'Game' as any;
+		form.formModel.resource_id = game.id;
 
-		if (this.model && this.model.user) {
-			this.setField('username', this.model.user.username);
+		if (props.model && props.model.user) {
+			form.formModel.username = props.model.user.username;
 		}
-	}
-}
+	},
+});
 </script>
 
 <template>
 	<AppForm :controller="form">
-		<AppFormGroup v-if="method === 'add'" name="username" :label="$gettext(`Username`)">
+		<AppFormGroup v-if="form.method === 'add'" name="username" :label="$gettext(`Username`)">
 			<AppFormControlPrefix prefix="@">
 				<AppFormControl
 					:validators="[
@@ -94,8 +93,8 @@ export default class FormGameCollaborator extends mixins(Wrapper) {
 			<AppFormControlErrors />
 		</AppFormGroup>
 
-		<AppFormButton v-if="!!formModel.role">
-			<AppTranslate v-if="method === 'add'">Invite</AppTranslate>
+		<AppFormButton v-if="!!form.formModel.role">
+			<AppTranslate v-if="form.method === 'add'">Invite</AppTranslate>
 			<AppTranslate v-else>Save</AppTranslate>
 		</AppFormButton>
 	</AppForm>

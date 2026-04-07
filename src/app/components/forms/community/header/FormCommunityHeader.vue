@@ -1,92 +1,93 @@
-<script lang="ts">
-import { mixins, Options, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, toRef, watch } from 'vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import {
 	$clearCommunityHeader,
 	$saveCommunityHeader,
 	CommunityModel,
 } from '../../../../../_common/community/community.model';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
-	BaseForm,
-	FormOnBeforeSubmit,
-	FormOnLoad,
-} from '../../../../../_common/form-vue/form.service';
+	validateFilesize,
+	validateImageMaxDimensions,
+	validateImageMinDimensions,
+} from '../../../../../_common/form-vue/validators';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
 type FormModel = CommunityModel & {
 	header_crop?: any;
 };
 
-class Wrapper extends BaseForm<FormModel> {}
-
-@Options({
-	components: {
-		AppFormControlUpload,
-		AppFormControlCrop,
+const props = defineProps({
+	model: {
+		type: Object as () => CommunityModel,
+		default: undefined,
 	},
-})
-export default class FormCommunityHeader
-	extends mixins(Wrapper)
-	implements FormOnLoad, FormOnBeforeSubmit
-{
-	modelClass = CommunityModel;
-	modelSaveHandler = $saveCommunityHeader;
+});
 
-	maxFilesize = 0;
-	minAspectRatio = 0;
-	maxAspectRatio = 0;
-	minWidth = 0;
-	minHeight = 0;
-	maxWidth = 0;
-	maxHeight = 0;
+const maxFilesize = ref(0);
+const minAspectRatio = ref(0);
+const maxAspectRatio = ref(0);
+const minWidth = ref(0);
+const minHeight = ref(0);
+const maxWidth = ref(0);
+const maxHeight = ref(0);
 
-	get loadUrl() {
-		return `/web/dash/communities/design/save_header/${this.model!.id}`;
-	}
+const saveHandler = ref($saveCommunityHeader);
 
-	get crop() {
-		return this.formModel.header ? this.formModel.header.getCrop() : undefined;
-	}
+const crop = computed(() =>
+	form.formModel.header ? form.formModel.header.getCrop() : undefined
+);
 
-	@Watch('crop')
-	onCropChange() {
-		this.setField('header_crop', this.crop);
-	}
-
+const form: FormController<FormModel> = createForm({
+	modelClass: CommunityModel,
+	modelSaveHandler: saveHandler,
+	model: toRef(props, 'model'),
+	loadUrl: computed(() => `/web/dash/communities/design/save_header/${props.model!.id}`),
 	onLoad(payload: any) {
-		this.maxFilesize = payload.maxFilesize;
-		this.minAspectRatio = payload.minAspectRatio;
-		this.maxAspectRatio = payload.maxAspectRatio;
-		this.minWidth = payload.minWidth;
-		this.maxWidth = payload.maxWidth;
-		this.minHeight = payload.minHeight;
-		this.maxHeight = payload.maxHeight;
-	}
-
+		maxFilesize.value = payload.maxFilesize;
+		minAspectRatio.value = payload.minAspectRatio;
+		maxAspectRatio.value = payload.maxAspectRatio;
+		minWidth.value = payload.minWidth;
+		maxWidth.value = payload.maxWidth;
+		minHeight.value = payload.minHeight;
+		maxHeight.value = payload.maxHeight;
+	},
 	onBeforeSubmit() {
-		if (this.modelSaveHandler === $saveCommunityHeader) {
+		if (saveHandler.value === $saveCommunityHeader) {
 			// Backend expects this field.
-			this.setField('crop' as any, this.formModel.header_crop);
+			(form.formModel as any).crop = form.formModel.header_crop;
 		}
+	},
+});
+
+watch(crop, () => {
+	form.formModel.header_crop = crop.value;
+});
+
+async function clearHeader() {
+	const result = await showModalConfirm(
+		$gettext(`Are you sure you want to remove the community header?`)
+	);
+
+	if (result) {
+		saveHandler.value = $clearCommunityHeader;
+		form.submit();
 	}
+}
 
-	async clearHeader() {
-		const result = await showModalConfirm(
-			this.$gettext(`Are you sure you want to remove the community header?`)
-		);
-
-		if (result) {
-			this.modelSaveHandler = $clearCommunityHeader;
-			this.form.submit();
-		}
-	}
-
-	headerSelected() {
-		if (this.formModel.file) {
-			this.modelSaveHandler = $saveCommunityHeader;
-			this.form.submit();
-		}
+function headerSelected() {
+	if (form.formModel.file) {
+		saveHandler.value = $saveCommunityHeader;
+		form.submit();
 	}
 }
 </script>
@@ -96,7 +97,7 @@ export default class FormCommunityHeader
 		<AppFormGroup
 			name="file"
 			:label="$gettext(`Upload New Header`)"
-			:optional="!!formModel.header"
+			:optional="!!form.formModel.header"
 		>
 			<p class="help-block">
 				<AppTranslate>
@@ -135,13 +136,13 @@ export default class FormCommunityHeader
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="formModel.header && !formModel.file"
+			v-if="form.formModel.header && !form.formModel.file"
 			name="header_crop"
 			:label="$gettext(`Crop Current Header`)"
 		>
 			<div class="form-control-static">
 				<AppFormControlCrop
-					:src="formModel.header.img_url"
+					:src="form.formModel.header.img_url"
 					:min-width="minWidth"
 					:min-height="minHeight"
 					:max-width="maxWidth"
@@ -154,7 +155,7 @@ export default class FormCommunityHeader
 			</div>
 		</AppFormGroup>
 
-		<template v-if="formModel.header">
+		<template v-if="form.formModel.header">
 			<AppFormButton>
 				<AppTranslate>Save</AppTranslate>
 			</AppFormButton>

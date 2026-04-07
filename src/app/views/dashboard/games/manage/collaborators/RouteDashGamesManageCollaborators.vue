@@ -19,7 +19,7 @@ import {
 } from '../../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../../utils/array';
-import FormGameCollaborator from '../../../../../components/forms/game/collaborator/collaborator.vue';
+import FormGameCollaborator from '../../../../../components/forms/game/collaborator/FormGameCollaborator.vue';
 import { useGameDashRouteController } from '../manage.store';
 
 export default {

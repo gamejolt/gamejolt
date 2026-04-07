@@ -4,7 +4,7 @@ import { Environment } from '../../../../_common/environment/environment.service
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { $activateSite, SiteModel } from '../../../../_common/site/site-model';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import FormSiteSettings from '../../forms/site/settings/settings.vue';
+import FormSiteSettings from '../../forms/site/settings/FormSiteSettings.vue';
 
 @Options({
 	components: {

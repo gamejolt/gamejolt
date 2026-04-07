@@ -1,24 +1,26 @@
-<script lang="ts">
-import { mixins, Options } from 'vue-property-decorator';
-import { BaseForm } from '../../../../../_common/form-vue/form.service';
+<script lang="ts" setup>
+import { toRef } from 'vue';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import { validateGaTrackingId } from '../../../../../_common/form-vue/validators';
 import { $saveSite, SiteModel } from '../../../../../_common/site/site-model';
 
-class Wrapper extends BaseForm<SiteModel> {}
+type Props = {
+	model?: SiteModel;
+};
 
-@Options({})
-export default class FormSiteSettings extends mixins(Wrapper) {
-	modelClass = SiteModel;
-	modelSaveHandler = $saveSite;
+const { model } = defineProps<Props>();
 
-	readonly validateGaTrackingId = validateGaTrackingId;
-}
+const form: FormController<SiteModel> = createForm({
+	model: toRef(() => model),
+	modelClass: SiteModel,
+	modelSaveHandler: $saveSite,
+});
 </script>
 
 <template>
 	<AppForm :controller="form">
 		<AppFormGroup name="title" :label="$gettext(`Page Title`)" :optional="true">
-			<div v-if="!formModel.game_id" class="help-block">
+			<div v-if="!form.formModel.game_id" class="help-block">
 				<AppTranslate>
 					You can override the default title for your site. This will show in search
 					engines, and in the tab bar of browsers. By default it's your display name.
