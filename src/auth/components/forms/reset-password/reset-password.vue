@@ -1,36 +1,31 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
 import { Api } from '../../../../_common/api/api.service';
 import { Connection } from '../../../../_common/connection/connection-service';
-import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
+import AppForm, { createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
+import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
 
-class Wrapper extends BaseForm<any> {}
+type Props = {
+	userId: number;
+	token: string;
+};
+const { userId, token } = defineProps<Props>();
 
-@Options({})
-export default class FormResetPassword extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop(Number) userId!: number;
-	@Prop(String) token!: string;
-
-	readonly Connection = Connection;
-
-	created() {
-		this.form.warnOnDiscard = false;
-	}
-
+const form = createForm({
+	warnOnDiscard: false,
 	onInit() {
-		this.setField('password', '');
-	}
-
+		form.formModel.password = '';
+	},
 	onSubmit() {
-		// Will return a bad request if the user ID or key is invalid. Since we
-		// checked it in the route component, let's let it process the payload
-		// and show an error page.
-		return Api.sendRequest('/web/auth/reset-password/' + this.userId, {
-			key: this.token,
-			password: this.formModel.password,
+		return Api.sendRequest('/web/auth/reset-password/' + userId, {
+			key: token,
+			password: form.formModel.password,
 		});
-	}
-}
+	},
+});
 </script>
 
 <template>
