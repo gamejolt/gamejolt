@@ -24,7 +24,7 @@ import AppGamePackageCard from '../../../../../../_common/game/package/card/AppG
 import AppGameSoundtrackCard from '../../../../../../_common/game/soundtrack/card/card.vue';
 import { HistoryTick } from '../../../../../../_common/history-tick/history-tick-service';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/placeholder';
+import AppLazyPlaceholder from '../../../../../../_common/lazy/placeholder/AppLazyPlaceholder.vue';
 import { Meta } from '../../../../../../_common/meta/meta-service';
 import { storeModelList } from '../../../../../../_common/model/model-store.service';
 import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
