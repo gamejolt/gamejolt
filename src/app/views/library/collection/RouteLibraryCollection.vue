@@ -24,7 +24,7 @@ import {
 	GameCollectionType,
 	GameCollectionUserTypes,
 } from '../../../components/game/collection/collection.model';
-import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
+import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/AppGameCollectionFollowWidget.vue';
 import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/AppGameCollectionThumbnail.vue';
 import { GameFilteringContainer } from '../../../components/game/filtering/container';
 import AppGameGrid from '../../../components/game/grid/AppGameGrid.vue';
