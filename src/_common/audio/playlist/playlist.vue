@@ -1,130 +1,124 @@
-<script lang="ts">
-import { nextTick } from 'vue';
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, nextTick, ref, useTemplateRef } from 'vue';
 import { formatTime } from '../../filters/time';
 import { GameSongModel } from '../../game/song/song.model';
-import { AppAudioPlayer } from '../player/player';
+import AppAudioPlayer from '../player/AppAudioPlayer.vue';
 import AppAudioScrubber from '../scrubber/AppAudioScrubber.vue';
 
-@Options({
-	components: {
-		AppAudioPlayer,
-		AppAudioScrubber,
-	},
-})
-export default class AppAudioPlaylist extends Vue {
-	@Prop(Array)
-	songs!: GameSongModel[];
+type Props = {
+	songs: GameSongModel[];
+};
+const { songs } = defineProps<Props>();
 
-	currentSong: GameSongModel | null = null;
-	duration = 0;
-	currentTime = 0;
-	pausedSong: GameSongModel | null = null;
-	pausedSongTime = 0;
+const emit = defineEmits<{
+	play: [];
+	stop: [];
+}>();
 
-	readonly formatTime = formatTime;
+const playerRef = useTemplateRef<InstanceType<typeof AppAudioPlayer>>('player');
 
-	declare $refs: {
-		player: AppAudioPlayer;
-	};
+const currentSong = ref<GameSongModel | null>(null);
+const duration = ref(0);
+const currentTime = ref(0);
+const pausedSong = ref<GameSongModel | null>(null);
+const pausedSongTime = ref(0);
 
-	/**
-	 * When we pause the song, we actually unload the song from the DOM. We
-	 * instead store it into the paused song so that we can replay it from where
-	 * it left off. Because of this, we want to use the paused song title if it
-	 * exists.
-	 */
-	get songTitle() {
-		const song = this.currentSong || this.pausedSong;
-		return song ? song.title : this.songs[0].title;
+/**
+ * When we pause the song, we actually unload the song from the DOM. We
+ * instead store it into the paused song so that we can replay it from where
+ * it left off. Because of this, we want to use the paused song title if it
+ * exists.
+ */
+const songTitle = computed(() => {
+	const song = currentSong.value || pausedSong.value;
+	return song ? song.title : songs[0].title;
+});
+
+async function playSong(song: GameSongModel) {
+	currentSong.value = song;
+
+	// If this song was previously paused, and now they're starting it again,
+	// seek to the time they were at.
+	await nextTick();
+	if (currentSong.value === pausedSong.value) {
+		playerRef.value?.seek(pausedSongTime.value);
 	}
 
-	@Emit('play')
-	private async playSong(song: GameSongModel) {
-		this.currentSong = song;
+	pausedSong.value = null;
+	pausedSongTime.value = 0;
+	emit('play');
+}
 
-		// If this song was previously paused, and now they're starting it
-		// again, seek to the time they were at.
-		await nextTick();
-		if (this.currentSong === this.pausedSong) {
-			this.$refs.player.seek(this.pausedSongTime);
+async function pauseSong() {
+	pausedSongTime.value = currentTime.value;
+	pausedSong.value = currentSong.value;
+	currentSong.value = null;
+	await nextTick();
+	emit('stop');
+}
+
+async function resetSong() {
+	currentSong.value = null;
+	await nextTick();
+	await playSong(songs[0]);
+}
+
+async function nextSong() {
+	if (!currentSong.value) {
+		return;
+	}
+
+	// If last song, wrap.
+	if (currentSong.value.id === songs[songs.length - 1].id) {
+		await resetSong();
+	} else {
+		const currentIndex = songs.findIndex(item => item.id === currentSong.value!.id);
+		if (currentIndex !== -1) {
+			await playSong(songs[currentIndex + 1]);
 		}
-
-		this.pausedSong = null;
-		this.pausedSongTime = 0;
 	}
+}
 
-	@Emit('stop')
-	private async pauseSong() {
-		this.pausedSongTime = this.currentTime;
-		this.pausedSong = this.currentSong;
-		this.currentSong = null;
-		await nextTick();
-	}
+function durationEvent(event: { duration: number; currentTime: number }) {
+	duration.value = event.duration;
+	currentTime.value = event.currentTime;
+}
 
-	private async resetSong() {
-		this.currentSong = null;
-		await nextTick();
-		await this.playSong(this.songs[0]);
-	}
-
-	private async nextSong() {
-		if (!this.currentSong) {
-			return;
-		}
-
-		// If last song, wrap.
-		if (this.currentSong.id === this.songs[this.songs.length - 1].id) {
-			await this.resetSong();
+function mainSongButton() {
+	if (!currentSong.value) {
+		if (pausedSong.value) {
+			playSong(pausedSong.value);
 		} else {
-			const currentIndex = this.songs.findIndex(item => item.id === this.currentSong!.id);
-			if (currentIndex !== -1) {
-				await this.playSong(this.songs[currentIndex + 1]);
-			}
+			playSong(songs[0]);
 		}
+	} else {
+		pauseSong();
+	}
+}
+
+function toggleSong(song: GameSongModel) {
+	if (currentSong.value && currentSong.value.id === song.id) {
+		pauseSong();
+	} else {
+		playSong(song);
+	}
+}
+
+async function seek(pos: number) {
+	const seekTime = duration.value * pos;
+	let player = playerRef.value;
+
+	if (!player) {
+		mainSongButton();
+		await nextTick();
+		player = playerRef.value;
 	}
 
-	durationEvent(event: { duration: number; currentTime: number }) {
-		this.duration = event.duration;
-		this.currentTime = event.currentTime;
-	}
+	player?.seek(seekTime);
+}
 
-	mainSongButton() {
-		if (!this.currentSong) {
-			if (this.pausedSong) {
-				this.playSong(this.pausedSong);
-			} else {
-				this.playSong(this.songs[0]);
-			}
-		} else {
-			this.pauseSong();
-		}
-	}
-
-	toggleSong(song: GameSongModel) {
-		if (this.currentSong && this.currentSong.id === song.id) {
-			this.pauseSong();
-		} else {
-			this.playSong(song);
-		}
-	}
-
-	async seek(pos: number) {
-		const seekTime = this.duration * pos;
-		let player = this.$refs.player;
-
-		if (!player) {
-			this.mainSongButton();
-			await nextTick();
-			player = this.$refs.player;
-		}
-
-		player.seek(seekTime);
-	}
-
-	onSongEnded() {
-		this.nextSong();
-	}
+function onSongEnded() {
+	nextSong();
 }
 </script>
 
@@ -201,4 +195,4 @@ export default class AppAudioPlaylist extends Vue {
 	</div>
 </template>
 
-<style lang="stylus" src="./playlist.styl" scoped></style>
+<style lang="stylus" scoped src="./playlist.styl"></style>
