@@ -4,7 +4,7 @@ import { mixins, Options } from 'vue-property-decorator';
 import { BaseModal } from '../../../../_common/modal/base';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { UserModel } from '../../../../_common/user/user.model';
-import FormUserHeader from '../../forms/user-header/header.vue';
+import FormUserHeader from '../../forms/user-header/FormUserHeader.vue';
 
 @Options({
 	components: {

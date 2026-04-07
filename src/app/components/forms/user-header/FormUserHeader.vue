@@ -1,93 +1,86 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { mixins, Options, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, PropType, ref, toRef, watch } from 'vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlCrop from '../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
-	BaseForm,
-	FormOnBeforeSubmit,
-	FormOnLoad,
-} from '../../../../_common/form-vue/form.service';
+	validateFilesize,
+	validateImageMaxDimensions,
+	validateImageMinDimensions,
+} from '../../../../_common/form-vue/validators';
+import AppLinkHelp from '../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { $clearUserHeader, $saveUserHeader, UserModel } from '../../../../_common/user/user.model';
 
 type FormModel = UserModel & {
 	header_crop?: any;
 };
 
-class Wrapper extends BaseForm<FormModel> {}
-
-@Options({
-	components: {
-		AppFormControlUpload,
-		AppFormControlCrop,
+const props = defineProps({
+	model: {
+		type: Object as PropType<UserModel>,
+		default: undefined,
 	},
-})
-export default class FormUserHeader
-	extends mixins(Wrapper)
-	implements FormOnLoad, FormOnBeforeSubmit
-{
-	commonStore = setup(() => useCommonStore());
+});
 
-	get app() {
-		return this.commonStore;
-	}
-	modelClass = UserModel;
-	modelSaveHandler = $saveUserHeader;
+const commonStore = useCommonStore();
 
-	maxFilesize = 0;
-	minAspectRatio = 0;
-	maxAspectRatio = 0;
-	minWidth = 0;
-	minHeight = 0;
-	maxWidth = 0;
-	maxHeight = 0;
+const maxFilesize = ref(0);
+const minAspectRatio = ref(0);
+const maxAspectRatio = ref(0);
+const minWidth = ref(0);
+const minHeight = ref(0);
+const maxWidth = ref(0);
+const maxHeight = ref(0);
 
-	get loadUrl() {
-		return `/web/dash/header/save`;
-	}
+const crop = computed(() =>
+	form.formModel.header_media_item ? form.formModel.header_media_item.getCrop() : undefined
+);
 
-	get crop() {
-		return this.formModel.header_media_item
-			? this.formModel.header_media_item.getCrop()
-			: undefined;
-	}
-
-	@Watch('crop')
-	onCropChange() {
-		this.setField('header_crop', this.crop);
-	}
-
+const form: FormController<FormModel> = createForm({
+	modelClass: UserModel,
+	modelSaveHandler: $saveUserHeader,
+	model: toRef(props, 'model'),
+	loadUrl: `/web/dash/header/save`,
 	onLoad(payload: any) {
-		this.maxFilesize = payload.maxFilesize;
-		this.minAspectRatio = payload.minAspectRatio;
-		this.maxAspectRatio = payload.maxAspectRatio;
-		this.minWidth = payload.minWidth;
-		this.maxWidth = payload.maxWidth;
-		this.minHeight = payload.minHeight;
-		this.maxHeight = payload.maxHeight;
-	}
-
+		maxFilesize.value = payload.maxFilesize;
+		minAspectRatio.value = payload.minAspectRatio;
+		maxAspectRatio.value = payload.maxAspectRatio;
+		minWidth.value = payload.minWidth;
+		maxWidth.value = payload.maxWidth;
+		minHeight.value = payload.minHeight;
+		maxHeight.value = payload.maxHeight;
+	},
 	onBeforeSubmit() {
 		// Backend expects this field.
-		this.setField('crop' as any, this.formModel.header_crop);
-	}
+		(form.formModel as any).crop = form.formModel.header_crop;
+	},
+});
 
-	async clearHeader() {
-		const result = await showModalConfirm(
-			this.$gettext(`Are you sure you want to remove your profile header?`)
-		);
+watch(crop, () => {
+	form.formModel.header_crop = crop.value;
+});
 
-		if (result) {
-			$clearUserHeader(this.formModel);
+function clearHeader() {
+	showModalConfirm($gettext(`Are you sure you want to remove your profile header?`)).then(
+		result => {
+			if (result) {
+				$clearUserHeader(form.formModel);
+			}
 		}
-	}
+	);
+}
 
-	headerSelected() {
-		if (this.formModel.file) {
-			this.form.submit();
-		}
+function headerSelected() {
+	if (form.formModel.file) {
+		form.submit();
 	}
 }
 </script>
@@ -97,7 +90,7 @@ export default class FormUserHeader
 		<AppFormGroup
 			name="file"
 			:label="$gettext(`Upload New Header`)"
-			:optional="!!formModel.header_media_item"
+			:optional="!!form.formModel.header_media_item"
 		>
 			<p class="help-block">
 				<AppTranslate>
@@ -136,13 +129,13 @@ export default class FormUserHeader
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="formModel.header_media_item && !formModel.file"
+			v-if="form.formModel.header_media_item && !form.formModel.file"
 			name="header_crop"
 			:label="$gettext(`Crop Current Header`)"
 		>
 			<div class="form-control-static">
 				<AppFormControlCrop
-					:src="formModel.header_media_item.img_url"
+					:src="form.formModel.header_media_item.img_url"
 					:min-width="minWidth"
 					:min-height="minHeight"
 					:max-width="maxWidth"
@@ -155,7 +148,7 @@ export default class FormUserHeader
 			</div>
 		</AppFormGroup>
 
-		<template v-if="formModel.header_media_item">
+		<template v-if="form.formModel.header_media_item">
 			<AppFormButton>
 				<AppTranslate>Save</AppTranslate>
 			</AppFormButton>
