@@ -18,8 +18,8 @@ export default {
 import { computed, ref } from 'vue';
 import { SiteModel } from '../../../../../../_common/site/site-model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppSitesLinkCard from '../../../../../components/sites/link-card/link-card.vue';
-import AppSitesManagePage from '../../../../../components/sites/manage-page/manage-page.vue';
+import AppSitesLinkCard from '../../../../../components/sites/link-card/AppSitesLinkCard.vue';
+import AppSitesManagePage from '../../../../../components/sites/manage-page/AppSitesManagePage.vue';
 import { useGameDashRouteController } from '../manage.store';
 
 const routeStore = useGameDashRouteController()!;

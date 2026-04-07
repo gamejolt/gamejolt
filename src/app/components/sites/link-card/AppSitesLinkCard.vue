@@ -1,20 +1,16 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
 import AppCard from '../../../../_common/card/AppCard.vue';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { SiteModel } from '../../../../_common/site/site-model';
 
-@Options({
-	components: {
-		AppCard,
-	},
-})
-export default class AppSitesLinkCard extends Vue {
-	@Prop(Object) site!: SiteModel;
+type Props = {
+	site: SiteModel;
+};
 
-	copyLink() {
-		Clipboard.copy(this.site.url);
-	}
+const { site } = defineProps<Props>();
+
+function copyLink() {
+	Clipboard.copy(site.url);
 }
 </script>
 

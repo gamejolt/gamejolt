@@ -1,43 +1,37 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { $deactivateSite, SiteModel, SiteStatus } from '../../../../_common/site/site-model';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppSitesManagePageDomain from './domain.vue';
-import AppSitesManagePageStatic from './static.vue';
-import AppSitesManagePageTemplate from './template.vue';
+import AppSitesManagePageDomain from './AppSitesManagePageDomain.vue';
+import AppSitesManagePageStatic from './AppSitesManagePageStatic.vue';
+import AppSitesManagePageTemplate from './AppSitesManagePageTemplate.vue';
 
-@Options({
-	components: {
-		AppNavTabList,
-		AppSitesManagePageTemplate,
-		AppSitesManagePageStatic,
-		AppSitesManagePageDomain,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppSitesManagePage extends Vue {
-	@Prop(Object) site!: SiteModel;
-	@Prop(Object) game?: GameModel;
+type Props = {
+	site: SiteModel;
+	game?: GameModel;
+};
 
-	get tab() {
-		return this.$route.params.siteTab || 'template';
-	}
+const { site, game } = defineProps<Props>();
 
-	get staticEnabled() {
-		return this.site.status === SiteStatus.Active && this.site.is_static;
-	}
+const route = useRoute();
 
-	get templateEnabled() {
-		return this.site.status === SiteStatus.Active && !this.site.is_static;
-	}
+const tab = computed(() => {
+	return route.params.siteTab || 'template';
+});
 
-	disable() {
-		return $deactivateSite(this.site);
-	}
+const staticEnabled = computed(() => {
+	return site.status === SiteStatus.Active && site.is_static;
+});
+
+const templateEnabled = computed(() => {
+	return site.status === SiteStatus.Active && !site.is_static;
+});
+
+function disable() {
+	return $deactivateSite(site);
 }
 </script>
 

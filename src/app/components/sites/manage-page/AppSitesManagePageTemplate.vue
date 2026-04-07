@@ -1,62 +1,57 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { $activateSite, SiteModel } from '../../../../_common/site/site-model';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import FormSiteSettings from '../../forms/site/settings/FormSiteSettings.vue';
 
-@Options({
-	components: {
-		FormSiteSettings,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppSitesManagePageTemplate extends Vue {
-	@Prop(Object) site?: SiteModel;
-	@Prop(Boolean) enabled?: boolean;
-	@Prop(Boolean) staticEnabled?: boolean;
+type Props = {
+	site?: SiteModel;
+	enabled?: boolean;
+	staticEnabled?: boolean;
+};
 
-	get themeEditorLocation() {
-		return this.getEditorLocation('theme');
+const { site, enabled, staticEnabled } = defineProps<Props>();
+
+const themeEditorLocation = computed(() => {
+	return getEditorLocation('theme');
+});
+
+const contentEditorLocation = computed(() => {
+	return getEditorLocation('content');
+});
+
+const enableTooltip = computed(() => {
+	return staticEnabled
+		? $gettext(
+				'This will disable your static site and use a customizable template instead.'
+		  )
+		: undefined;
+});
+
+function enable() {
+	if (!site) {
+		return;
 	}
 
-	get contentEditorLocation() {
-		return this.getEditorLocation('content');
-	}
-
-	get enableTooltip() {
-		return this.staticEnabled
-			? this.$gettext(
-					'This will disable your static site and use a customizable template instead.'
-			  )
-			: undefined;
-	}
-
-	enable() {
-		if (!this.site) {
-			return;
+	$activateSite(site).catch(e => {
+		if (e.errors && e.errors.domain_in_use) {
+			showErrorGrowl($gettext('Domain is already in use in another site.'));
 		}
+	});
+}
 
-		$activateSite(this.site).catch(e => {
-			if (e.errors && e.errors.domain_in_use) {
-				showErrorGrowl(this.$gettext('Domain is already in use in another site.'));
-			}
-		});
-	}
+function onSettingsSaved() {
+	showSuccessGrowl(
+		$gettext(`Your site settings have been saved.`),
+		$gettext(`Settings Saved`)
+	);
+}
 
-	onSettingsSaved() {
-		showSuccessGrowl(
-			this.$gettext(`Your site settings have been saved.`),
-			this.$gettext(`Settings Saved`)
-		);
-	}
-
-	private getEditorLocation(tab: string) {
-		return Environment.baseUrlInsecure + `/site-editor/${tab}?id=${this.site!.id}`;
-	}
+function getEditorLocation(tab: string) {
+	return Environment.baseUrlInsecure + `/site-editor/${tab}?id=${site!.id}`;
 }
 </script>
 
