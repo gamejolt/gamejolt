@@ -1,6 +1,6 @@
-<script lang="ts">
-import { nextTick } from 'vue';
-import { Emit, mixins, Options } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, nextTick, ref, toRef } from 'vue';
+import AppButton from '../../../../../../../_common/button/AppButton.vue';
 import {
 	$saveCommunityCompetitionVoting,
 	CommunityCompetitionModel,
@@ -9,12 +9,18 @@ import {
 	VotingUserRestriction,
 } from '../../../../../../../_common/community/competition/competition.model';
 import { formatDate } from '../../../../../../../_common/filters/date';
+import AppForm, { createForm, FormController } from '../../../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '../../../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormLegend from '../../../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlDate from '../../../../../../../_common/form-vue/controls/AppFormControlDate.vue';
+import AppFormControlRadio from '../../../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
 import AppFormControlToggle from '../../../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { FormTimezoneService } from '../../../../../../../_common/form-vue/form-timezone.service';
-import { BaseForm } from '../../../../../../../_common/form-vue/form.service';
 import AppLoading from '../../../../../../../_common/loading/AppLoading.vue';
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
 
 type RadioOption<T> = {
 	radioValue: T;
@@ -22,94 +28,79 @@ type RadioOption<T> = {
 	helpText?: string;
 };
 
-class Wrapper extends BaseForm<CommunityCompetitionModel> {}
-
-@Options({
-	components: {
-		AppFormLegend,
-		AppFormControlDate,
-		AppLoading,
-		AppFormControlToggle,
+const props = defineProps({
+	model: {
+		type: Object as () => CommunityCompetitionModel,
+		default: undefined,
 	},
-})
-export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) {
-	modelClass = CommunityCompetitionModel;
-	modelSaveHandler = $saveCommunityCompetitionVoting;
+});
 
-	timezoneService: FormTimezoneService<CommunityCompetitionModel> | null = null;
+const emit = defineEmits<{
+	cancel: [];
+}>();
 
-	readonly formatDate = formatDate;
+const timezoneService = ref<FormTimezoneService<CommunityCompetitionModel> | null>(null);
 
-	@Emit('cancel')
-	emitCancel() {}
+const isInitial = computed(() => !props.model?.isVotingSetUp);
 
-	get isInitial() {
-		return !this.model?.isVotingSetUp;
+const votingUserRestrictionOptions = computed<RadioOption<VotingUserRestriction>[]>(() => [
+	{
+		radioValue: 'users',
+		text: $gettext(`Users`),
+		helpText: $gettext(`Anyone with a Game Jolt account can vote.`),
+	},
+	{
+		radioValue: 'participants',
+		text: $gettext(`Participants`),
+		helpText: $gettext(`Only people who have submitted an entry can vote.`),
+	},
+]);
+
+const votingTypeOptions = computed<RadioOption<VotingType>[]>(() => [
+	{
+		radioValue: 'overall',
+		text: $gettext(`Overall`),
+		helpText: $gettext(`Voters assign each entry a single rating.`),
+	},
+	{
+		radioValue: 'categories',
+		text: $gettext(`Categories`),
+		helpText: $gettext(`Voters rate entries in multiple categories that you create.`),
+	},
+]);
+
+const isVotingValid = computed(
+	() => form.formModel.has_community_voting || form.formModel.has_awards
+);
+
+const isValid = computed(() => {
+	if (!form.valid.value) {
+		return false;
 	}
+	return isVotingValid.value;
+});
 
-	get votingUserRestrictionOptions(): RadioOption<VotingUserRestriction>[] {
-		return [
-			{
-				radioValue: 'users',
-				text: this.$gettext(`Users`),
-				helpText: this.$gettext(`Anyone with a Game Jolt account can vote.`),
-			},
-			{
-				radioValue: 'participants',
-				text: this.$gettext(`Participants`),
-				helpText: this.$gettext(`Only people who have submitted an entry can vote.`),
-			},
-		];
-	}
+const canEditDetails = computed(() => props.model!.periodNum < CompetitionPeriodVoting);
 
-	get votingTypeOptions(): RadioOption<VotingType>[] {
-		return [
-			{
-				radioValue: 'overall',
-				text: this.$gettext(`Overall`),
-				helpText: this.$gettext(`Voters assign each entry a single rating.`),
-			},
-			{
-				radioValue: 'categories',
-				text: this.$gettext(`Categories`),
-				helpText: this.$gettext(
-					`Voters rate entries in multiple categories that you create.`
-				),
-			},
-		];
-	}
-
-	get isVotingValid() {
-		return this.formModel.has_community_voting || this.formModel.has_awards;
-	}
-
-	get isValid() {
-		if (!this.valid) {
-			return false;
-		}
-
-		return this.isVotingValid;
-	}
-
-	get canEditDetails() {
-		return this.model!.periodNum < CompetitionPeriodVoting;
-	}
-
+const form: FormController<CommunityCompetitionModel> = createForm({
+	modelClass: CommunityCompetitionModel,
+	modelSaveHandler: $saveCommunityCompetitionVoting,
+	model: toRef(props, 'model'),
 	async onInit() {
-		if (this.isInitial) {
+		if (isInitial.value) {
 			// End date plus 1 day.
-			this.setField('voting_ends_on', this.formModel.ends_on + 1000 * 60 * 60 * 24);
+			form.formModel.voting_ends_on = form.formModel.ends_on + 1000 * 60 * 60 * 24;
 			await nextTick();
-			this.form.changed = false;
+			form.changed.value = false;
 		}
 
-		this.timezoneService = new FormTimezoneService(this.form);
-		await this.timezoneService.load(true);
-	}
+		timezoneService.value = new FormTimezoneService(form);
+		await timezoneService.value.load(true);
+	},
+});
 
-	onClickCancel() {
-		this.emitCancel();
-	}
+function onClickCancel() {
+	emit('cancel');
 }
 </script>
 
@@ -134,7 +125,7 @@ export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) 
 
 					<AppFormControlDate
 						:timezone-offset="timezoneService.activeTimezoneOffset"
-						:min-date="formModel.ends_on"
+						:min-date="form.formModel.ends_on"
 					/>
 					<AppFormControlErrors />
 				</AppFormGroup>
@@ -158,7 +149,7 @@ export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) 
 							<AppFormControlToggle />
 						</AppFormGroup>
 
-						<template v-if="formModel.has_community_voting">
+						<template v-if="form.formModel.has_community_voting">
 							<AppFormGroup
 								name="voting_user_restriction"
 								:label="$gettext(`Who can vote?`)"
@@ -242,5 +233,3 @@ export default class FormCommunityCompetitionVotingEdit extends mixins(Wrapper) 
 		</AppForm>
 	</div>
 </template>
-
-<style lang="stylus" scoped></style>
