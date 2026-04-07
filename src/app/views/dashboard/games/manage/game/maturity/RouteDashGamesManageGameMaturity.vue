@@ -11,7 +11,7 @@ import { Screen } from '../../../../../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.vue';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import FormGameMaturity from '../../../../../../components/forms/game/maturity/maturity.vue';
+import FormGameMaturity from '../../../../../../components/forms/game/maturity/FormGameMaturity.vue';
 import AppGameOgrs from '../../../../../../components/game/ogrs/ogrs.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
