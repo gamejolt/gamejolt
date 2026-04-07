@@ -1,108 +1,89 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { mixins, Options } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, toRef } from 'vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { BaseForm, FormOnLoad } from '../../../../_common/form-vue/form.service';
 import { validateUrlPath } from '../../../../_common/form-vue/validators';
 import { $saveGame, GameModel } from '../../../../_common/game/game.model';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppGameDevStageSelector from './dev-stage-selector/AppGameDevStageSelector.vue';
 import AppDashGameWizardControls from './wizard-controls/AppDashGameWizardControls.vue';
 
-class Wrapper extends BaseForm<GameModel> {}
+type Props = {
+	model?: GameModel;
+};
 
-@Options({
-	components: {
-		AppFormControlToggle,
-		AppExpand,
-		AppDashGameWizardControls,
-		AppGameDevStageSelector,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
-	commonStore = setup(() => useCommonStore());
+const props = defineProps<Props>();
+const commonStore = useCommonStore();
 
-	get app() {
-		return this.commonStore;
-	}
+const account = ref<any>(null);
+const categories = ref<any>(null);
+const engines = ref<any>(null);
 
-	// We need to reset all the "is published", "has builds" stuff.
-	modelClass = GameModel;
-	modelSaveHandler = $saveGame;
-
-	account: any = null;
-	categories: any = null;
-	engines: any = null;
-
-	readonly validateUrlPath = validateUrlPath;
-
-	get hasAllPerms() {
-		// If we're currently adding the game - we automatically have permission for it.
-		if (this.method === 'add') {
-			return true;
-		}
-
-		return this.model?.hasPerms('all');
-	}
-
-	get hasBuildsPerms() {
-		// If we're currently adding the game - we automatically have permission for it.
-		if (this.method === 'add') {
-			return true;
-		}
-
-		return this.model?.hasPerms('builds');
-	}
-
-	get hasSalesPerms() {
-		// If we're currently adding the game - we automatically have permission for it.
-		if (this.method === 'add') {
-			return true;
-		}
-
-		return this.model?.hasPerms('sales');
-	}
-
-	get loadUrl() {
+const form: FormController<GameModel> = createForm({
+	model: toRef(props, 'model'),
+	modelClass: GameModel,
+	modelSaveHandler: $saveGame,
+	loadUrl: computed(() => {
 		let url = '/web/dash/developer/games/save';
-		if (this.method === 'edit') {
-			url += '/' + this.model!.id;
+		if (form.method === 'edit') {
+			url += '/' + props.model!.id;
 		}
 		return url;
-	}
-
-	get stage() {
-		if (this.formModel.development_status === undefined) {
-			return 'dev-status';
-		}
-		return 'details';
-	}
-
+	}),
 	onInit() {
-		this.form.resetOnSubmit = true;
+		form.resetOnSubmit = true;
 
-		if (this.method === 'add') {
-			this.setField('referrals_enabled', true);
+		if (form.method === 'add') {
+			form.formModel.referrals_enabled = true;
 
 			// No need to reset on submit during game add. It causes a flicker.
-			this.form.resetOnSubmit = false;
+			form.resetOnSubmit = false;
 		}
-	}
-
+	},
 	onLoad(payload: any) {
-		this.account = payload.account;
-		this.categories = payload.categories;
-		this.engines = payload.engines;
-	}
+		account.value = payload.account;
+		categories.value = payload.categories;
+		engines.value = payload.engines;
+	},
+});
 
-	selectStage(stage: number) {
-		this.setField('development_status', stage);
+const hasAllPerms = computed(() => {
+	if (form.method === 'add') {
+		return true;
 	}
+	return props.model?.hasPerms('all');
+});
+
+const hasBuildsPerms = computed(() => {
+	if (form.method === 'add') {
+		return true;
+	}
+	return props.model?.hasPerms('builds');
+});
+
+const hasSalesPerms = computed(() => {
+	if (form.method === 'add') {
+		return true;
+	}
+	return props.model?.hasPerms('sales');
+});
+
+const stage = computed(() => {
+	if (form.formModel.development_status === undefined) {
+		return 'dev-status';
+	}
+	return 'details';
+});
+
+function selectStage(s: number) {
+	form.formModel.development_status = s;
 }
 </script>
 
@@ -156,7 +137,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 							<AppTranslate>Game Page URL</AppTranslate>
 							<code>
 								<span>gamejolt.com/</span>
-								<b>{{ formModel.path?.toLowerCase() || '_' }}</b>
+								<b>{{ form.formModel.path?.toLowerCase() || '_' }}</b>
 								<span>/{{ model?.id || 'id' }}</span>
 							</code>
 						</div>
@@ -188,7 +169,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 					<AppFormControlErrors />
 				</AppFormGroup>
 
-				<AppExpand :when="formModel.creation_tool === 'other'">
+				<AppExpand :when="form.formModel.creation_tool === 'other'">
 					<AppFormGroup
 						name="creation_tool_other"
 						:label="$gettext(`Other Engine/Language/Tool`)"
@@ -286,7 +267,7 @@ export default class FormGame extends mixins(Wrapper) implements FormOnLoad {
 			</fieldset>
 
 			<AppDashGameWizardControls>
-				<AppFormButton v-if="method === 'edit'">
+				<AppFormButton v-if="form.method === 'edit'">
 					<AppTranslate>Save Details</AppTranslate>
 				</AppFormButton>
 			</AppDashGameWizardControls>

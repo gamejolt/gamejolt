@@ -9,7 +9,7 @@ import {
 } from '../../../../../_common/route/route-component';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormGame from '../../../../components/forms/game/game.vue';
+import FormGame from '../../../../components/forms/game/FormGame.vue';
 import { startWizard } from '../manage/manage.store';
 
 export default {
