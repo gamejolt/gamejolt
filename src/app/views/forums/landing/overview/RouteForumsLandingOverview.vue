@@ -10,7 +10,7 @@ import {
 } from '../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppForumChannelList from '../../../../components/forum/channel-list/channel-list.vue';
-import AppForumRules from '../../../../components/forum/rules/rules.vue';
+import AppForumRules from '../../../../components/forum/rules/AppForumRules.vue';
 
 export default {
 	...defineAppRouteOptions({

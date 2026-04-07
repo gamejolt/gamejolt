@@ -14,7 +14,7 @@ import { Screen } from '../../../../../_common/screen/screen-service';
 import { Scroll } from '../../../../../_common/scroll/scroll.service';
 import { $gettext, $ngettext } from '../../../../../_common/translate/translate.service';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/AppForumBreadcrumbs.vue';
-import AppForumRules from '../../../../components/forum/rules/rules.vue';
+import AppForumRules from '../../../../components/forum/rules/AppForumRules.vue';
 import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
 

@@ -1,10 +1,7 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { ref } from 'vue';
 
-@Options({})
-export default class AppForumRules extends Vue {
-	isShowingRules = false;
-}
+const isShowingRules = ref(false);
 </script>
 
 <template>
