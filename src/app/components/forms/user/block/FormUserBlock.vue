@@ -1,62 +1,49 @@
-<script lang="ts">
-import { mixins, Options } from 'vue-property-decorator';
+<script lang="ts" setup>
 import { Api } from '../../../../../_common/api/api.service';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlError from '../../../../../_common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import {
-	BaseForm,
-	FormOnSubmit,
-	FormOnSubmitSuccess,
-} from '../../../../../_common/form-vue/form.service';
+import { validateAvailability, validateMaxLength } from '../../../../../_common/form-vue/validators';
 import { showInfoGrowl } from '../../../../../_common/growls/growls.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
-interface FormModel {
+type FormModel = {
 	username: string;
 	removeComments: boolean;
-}
+};
 
-class Wrapper extends BaseForm<FormModel> {}
-
-@Options({
-	components: {
-		AppFormControlToggle,
-		AppFormControlPrefix,
-	},
-})
-export default class FormUserBlock
-	extends mixins(Wrapper)
-	implements FormOnSubmit, FormOnSubmitSuccess
-{
-	created() {
-		this.form.resetOnSubmit = true;
-	}
-
+const form: FormController<FormModel> = createForm({
+	resetOnSubmit: true,
 	onSubmit() {
-		return Api.sendRequest(`/web/dash/blocks/add`, this.formModel);
-	}
-
+		return Api.sendRequest(`/web/dash/blocks/add`, form.formModel);
+	},
 	onSubmitSuccess(response: any) {
 		if (response.success) {
-			if (this.formModel.removeComments) {
+			if (form.formModel.removeComments) {
 				showInfoGrowl({
 					message: $gettext(
 						'You blocked %{ user }! It might take a few moments for their comments/shouts to disappear',
 						{
-							user: this.formModel.username,
+							user: form.formModel.username,
 						}
 					),
 				});
 			} else {
 				showInfoGrowl({
 					message: $gettext('You blocked %{ user }!', {
-						user: this.formModel.username,
+						user: form.formModel.username,
 					}),
 				});
 			}
 		}
-	}
-}
+	},
+});
 </script>
 
 <template>

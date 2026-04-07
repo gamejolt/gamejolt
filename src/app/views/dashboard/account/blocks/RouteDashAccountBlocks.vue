@@ -18,7 +18,7 @@ import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick
 import { UserBlockModel } from '../../../../../_common/user/block/block.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { arrayRemove } from '../../../../../utils/array';
-import FormUserBlock from '../../../../components/forms/user/block/block.vue';
+import FormUserBlock from '../../../../components/forms/user/block/FormUserBlock.vue';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 
 export default {
