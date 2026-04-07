@@ -2,7 +2,7 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { GamePlaylistModel } from '../../../../_common/game-playlist/game-playlist.model';
 import { BaseModal } from '../../../../_common/modal/base';
-import FormPlaylist from '../../forms/playlist/playlist.vue';
+import FormPlaylist from '../../forms/playlist/FormPlaylist.vue';
 import { GameCollectionModel } from '../../game/collection/collection.model';
 
 @Options({
