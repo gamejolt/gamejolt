@@ -1,7 +1,25 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
+import {
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../_common/route/route-component';
+
+export default {
+	name: 'RouteDashGamesManageKeyGroupsEdit',
+	...defineAppRouteOptions({
+		reloadOn: { params: ['keyGroupId'] },
+		resolver: ({ route }) =>
+			Api.sendRequest(
+				`/web/dash/developer/games/key-groups/${route.params.id}/${route.params.keyGroupId}`
+			),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { Clipboard } from '../../../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../../../_common/environment/environment.service';
 import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
@@ -19,152 +37,125 @@ import {
 import { $removeKey, KeyModel } from '../../../../../../../_common/key/key-model';
 import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
 import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../_common/route/legacy-route-component';
 import AppTimeAgo from '../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../../../utils/array';
 import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/FormGameKeyGroupAddKeys.vue';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/FormGameKeyGroup.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
-@Options({
-	name: 'RouteDashGamesManageKeyGroupsEdit',
-	components: {
-		AppProgressBar,
-		AppExpand,
-		AppTimeAgo,
-		FormGameKeyGroup,
-		FormGameKeyGroupAddKeys,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: { params: ['keyGroupId'] },
-	resolver: ({ route }) =>
-		Api.sendRequest(
-			`/web/dash/developer/games/key-groups/${route.params.id}/${route.params.keyGroupId}`
-		),
-})
-export default class RouteDashGamesManageKeyGroupsEdit extends LegacyRouteComponent {
-	routeStore = setup(() => useGameDashRouteController()!);
+const route = useRoute();
+const router = useRouter();
+const routeStore = useGameDashRouteController()!;
 
-	get game() {
-		return this.routeStore.game!;
+const game = computed(() => routeStore.game!);
+
+const keyGroup = ref<KeyGroupModel>(null as any);
+const packages = ref<GamePackageModel[]>([]);
+const keys = ref<KeyModel[]>([]);
+
+const isShowingAddKeys = ref(false);
+
+const search = ref({
+	filter: '',
+	state: 'all',
+});
+
+const KeyGroupTypeUser = KeyGroupType.User;
+const KeyGroupTypeEmail = KeyGroupType.Email;
+
+async function searchKeys() {
+	const response = await Api.sendRequest(
+		'/web/dash/developer/games/key-groups/search-keys/' +
+			`${route.params.id}/${route.params.keyGroupId}`,
+		search.value
+	);
+
+	keys.value = KeyModel.populate(response.keys);
+}
+
+function copyKeyLink(key: KeyModel) {
+	Clipboard.copy(`${Environment.baseUrl}/claim/${key.key}`);
+}
+
+function onNewKeysAdded() {
+	appRoute.reload();
+	isShowingAddKeys.value = false;
+}
+
+async function removeGroup(kg: KeyGroupModel) {
+	const resolved = await showModalConfirm(
+		$gettext(
+			'Are you sure you want to remove this key group? All keys within this key group will be invalidated. Any access that users may have gained from these keys will be revoked. This can not be reversed.'
+		),
+		$gettext('Remove key group?')
+	);
+
+	if (!resolved) {
+		return;
 	}
 
-	keyGroup: KeyGroupModel = null as any;
-	packages: GamePackageModel[] = [];
-	keys: KeyModel[] = [];
+	try {
+		await $removeKeyGroup(kg);
+	} catch (e) {
+		showErrorGrowl($gettext('Could not remove key group for some reason.'));
+		return;
+	}
 
-	isShowingAddKeys = false;
+	showSuccessGrowl(
+		$gettext('The key group has been removed.'),
+		$gettext('Removed Key Group')
+	);
 
-	search = {
-		filter: '',
-		state: 'all',
-	};
+	router.push({
+		name: 'dash.games.manage.key-groups.list',
+	});
+}
 
-	readonly formatNumber = formatNumber;
-	readonly Environment = Environment;
-	readonly KeyGroupTypeUser = KeyGroupType.User;
-	readonly KeyGroupTypeEmail = KeyGroupType.Email;
+async function removeKey(key: KeyModel) {
+	const resolved = await showModalConfirm(
+		$gettext(
+			`Are you sure you want to remove this key? This will revoke this key's access, or anyone that has claimed this key. This can not be reversed.`
+		),
+		$gettext('Remove key?')
+	);
 
-	get routeTitle() {
-		if (this.keyGroup) {
-			return this.$gettext('Edit Key Group: %{ name }', {
-				name: this.keyGroup.name,
+	if (!resolved) {
+		return;
+	}
+
+	try {
+		await $removeKey(key);
+	} catch (e) {
+		showErrorGrowl($gettext('Could not remove key for some reason.'));
+		return;
+	}
+
+	showSuccessGrowl($gettext('The key has been removed.'), $gettext('Removed Key'));
+
+	arrayRemove(keys.value, k => k.id === key.id);
+}
+
+const appRoute = createAppRoute({
+	routeTitle: computed(() => {
+		if (keyGroup.value) {
+			return $gettext('Edit Key Group: %{ name }', {
+				name: keyGroup.value.name,
 			});
 		}
 		return null;
-	}
-
-	routeResolved($payload: any) {
-		this.keyGroup = new KeyGroupModel($payload.keyGroup);
-		this.packages = GamePackageModel.populate($payload.packages);
-		this.keys = KeyModel.populate($payload.keys);
-	}
-
-	async searchKeys() {
-		const response = await Api.sendRequest(
-			'/web/dash/developer/games/key-groups/search-keys/' +
-				`${this.$route.params.id}/${this.$route.params.keyGroupId}`,
-			this.search
-		);
-
-		this.keys = KeyModel.populate(response.keys);
-	}
-
-	copyKeyLink(key: KeyModel) {
-		Clipboard.copy(`${Environment.baseUrl}/claim/${key.key}`);
-	}
-
-	onNewKeysAdded() {
-		// Gotta reload to show the new keys.
-		this.reloadRoute();
-		this.isShowingAddKeys = false;
-	}
-
-	async removeGroup(keyGroup: KeyGroupModel) {
-		const resolved = await showModalConfirm(
-			this.$gettext(
-				'Are you sure you want to remove this key group? All keys within this key group will be invalidated. Any access that users may have gained from these keys will be revoked. This can not be reversed.'
-			),
-			this.$gettext('Remove key group?')
-		);
-
-		if (!resolved) {
-			return;
-		}
-
-		try {
-			await $removeKeyGroup(keyGroup);
-		} catch (e) {
-			showErrorGrowl(this.$gettext('Could not remove key group for some reason.'));
-			return;
-		}
-
-		showSuccessGrowl(
-			this.$gettext('The key group has been removed.'),
-			this.$gettext('Removed Key Group')
-		);
-
-		this.$router.push({
-			name: 'dash.games.manage.key-groups.list',
-		});
-	}
-
-	async removeKey(key: KeyModel) {
-		const resolved = await showModalConfirm(
-			this.$gettext(
-				`Are you sure you want to remove this key? This will revoke this key's access, or anyone that has claimed this key. This can not be reversed.`
-			),
-			this.$gettext('Remove key?')
-		);
-
-		if (!resolved) {
-			return;
-		}
-
-		try {
-			await $removeKey(key);
-		} catch (e) {
-			showErrorGrowl(this.$gettext('Could not remove key for some reason.'));
-			return;
-		}
-
-		showSuccessGrowl(this.$gettext('The key has been removed.'), this.$gettext('Removed Key'));
-
-		arrayRemove(this.keys, k => k.id === key.id);
-	}
-}
+	}),
+	onResolved({ payload }) {
+		keyGroup.value = new KeyGroupModel(payload.keyGroup);
+		packages.value = GamePackageModel.populate(payload.packages);
+		keys.value = KeyModel.populate(payload.keys);
+	},
+});
 </script>
 
 <template>
-	<section v-if="isRouteBootstrapped" class="section">
+	<section v-if="appRoute.isBootstrapped.value" class="section">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-10 col-md-7 col-lg-6">
