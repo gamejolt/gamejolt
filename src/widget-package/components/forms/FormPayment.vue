@@ -21,7 +21,7 @@ interface FormModel {
 }
 
 const { payment, checkout, ...store } = useWidgetPackageStore();
-const { user } = setup(() => useCommonStore());
+const { user } = useCommonStore();
 
 const isShowingAddress = ref(false);
 const paymentMethod = ref<PaymentData['method']>('cc-stripe');
