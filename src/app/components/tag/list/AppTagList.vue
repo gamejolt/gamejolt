@@ -1,8 +1,8 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { TagInfo, TagsInfo } from '../tags-info.service';
-import AppTagThumbnail from '../thumbnail/thumbnail.vue';
+import AppTagThumbnail from '../thumbnail/AppTagThumbnail.vue';
 
 const FeaturedTags = [
 	'action',
@@ -31,27 +31,23 @@ const FeaturedTags = [
 	'sports',
 ];
 
-@Options({
-	components: {
-		AppScrollScroller,
-		AppTagThumbnail,
-	},
-})
-export default class AppTagList extends Vue {
-	@Prop({ type: String, default: 'global' }) eventCat!: string;
+type Props = {
+	eventCat?: string;
+};
 
-	get tags() {
-		const tags: TagInfo[] = [];
-		for (const tag of FeaturedTags) {
-			const info = TagsInfo.tags.find(i => i.id === tag);
-			if (info) {
-				tags.push(info);
-			}
+const { eventCat = 'global' } = defineProps<Props>();
+
+const tags = computed(() => {
+	const result: TagInfo[] = [];
+	for (const tag of FeaturedTags) {
+		const info = TagsInfo.tags.find(i => i.id === tag);
+		if (info) {
+			result.push(info);
 		}
-
-		return tags;
 	}
-}
+
+	return result;
+});
 </script>
 
 <template>

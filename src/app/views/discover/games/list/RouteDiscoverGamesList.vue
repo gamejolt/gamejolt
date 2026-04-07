@@ -28,7 +28,7 @@ import { GameListingContainer } from '../../../../components/game/listing/listin
 import AppShellPageBackdrop from '../../../../components/shell/AppShellPageBackdrop.vue';
 import AppStoreBanner from '../../../../components/store-banner/AppStoreBanner.vue';
 import { StoreBannerModel } from '../../../../components/store-banner/store-banner-model';
-import AppTagList from '../../../../components/tag/list/list.vue';
+import AppTagList from '../../../../components/tag/list/AppTagList.vue';
 import { TagsInfo } from '../../../../components/tag/tags-info.service';
 
 const listingKey = 'CachedListing';
