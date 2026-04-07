@@ -11,7 +11,7 @@ import {
 } from '../../../../../../../_common/route/legacy-route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
-import FormGameSettings from '../../../../../../components/forms/game/settings/settings.vue';
+import FormGameSettings from '../../../../../../components/forms/game/settings/FormGameSettings.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
 @Options({

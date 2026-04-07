@@ -1,35 +1,30 @@
-<script lang="ts">
-import { mixins, Options } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, toRef } from 'vue';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
-import { validateGaTrackingId } from '../../../../../_common/form-vue/validators';
 import { $saveGameSettings, GameModel } from '../../../../../_common/game/game.model';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
 
-class Wrapper extends BaseForm<GameModel> {}
+type Props = {
+	model?: GameModel;
+};
 
-@Options({
-	components: {
-		AppFormControlToggle,
-		AppDashGameWizardControls,
-	},
-})
-export default class FormGameSettings extends mixins(Wrapper) implements FormOnLoad {
-	modelClass = GameModel;
-	modelSaveHandler = $saveGameSettings;
+const props = defineProps<Props>();
 
-	hasPackagesForSale = false;
+const hasPackagesForSale = ref(false);
 
-	readonly validateGaTrackingId = validateGaTrackingId;
-
-	get loadUrl() {
-		return `/web/dash/developer/games/settings/save/${this.model!.id}`;
-	}
-
+const form: FormController<GameModel> = createForm({
+	model: toRef(props, 'model'),
+	modelClass: GameModel,
+	modelSaveHandler: $saveGameSettings,
+	loadUrl: computed(() => `/web/dash/developer/games/settings/save/${props.model!.id}`),
 	onLoad(payload: any) {
-		this.hasPackagesForSale = payload.hasPackagesForSale;
-	}
-}
+		hasPackagesForSale.value = payload.hasPackagesForSale;
+	},
+});
 </script>
 
 <template>
