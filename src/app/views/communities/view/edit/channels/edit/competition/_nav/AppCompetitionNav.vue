@@ -1,28 +1,19 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import { CompetitionPeriodVoting } from '../../../../../../../../../_common/community/competition/competition.model';
 import { formatNumber } from '../../../../../../../../../_common/filters/number';
 import { useCommunityRouteStore } from '../../../../../view.store';
 
-@Options({})
-export default class AppCommunitiesEditCompetitionNav extends Vue {
-	routeStore = setup(() => useCommunityRouteStore())!;
+const routeStore = useCommunityRouteStore()!;
 
-	readonly formatNumber = formatNumber;
+const competition = computed(() => routeStore.competition!);
 
-	get competition() {
-		return this.routeStore.competition!;
-	}
-
-	get canAssignAwards() {
-		return (
-			this.competition.is_voting_enabled &&
-			this.competition.has_awards &&
-			this.competition.periodNum >= CompetitionPeriodVoting
-		);
-	}
-}
+const canAssignAwards = computed(
+	() =>
+		competition.value.is_voting_enabled &&
+		competition.value.has_awards &&
+		competition.value.periodNum >= CompetitionPeriodVoting
+);
 </script>
 
 <template>
