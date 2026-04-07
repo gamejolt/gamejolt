@@ -1,28 +1,28 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
+import { defineAppRouteOptions } from '../../../../_common/route/route-component';
+
+export default {
+	name: 'RouteAuthForgot',
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { useRouter } from 'vue-router';
+import { createAppRoute } from '../../../../_common/route/route-component';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import FormRetrieveLogin from '../../../components/forms/retrieve-login/FormRetrieveLogin.vue';
 
-@Options({
-	name: 'RouteAuthForgot',
-	components: {
-		FormRetrieveLogin,
-	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: 'never',
-})
-export default class RouteAuthForgot extends LegacyRouteComponent {
-	get routeTitle() {
-		return this.$gettext('Retrieve Login Credentials');
-	}
+const router = useRouter();
 
-	onSubmitted() {
-		this.$router.push({ name: 'auth.forgot-sent' });
-	}
+createAppRoute({
+	routeTitle: $gettext('Retrieve Login Credentials'),
+});
+
+function onSubmitted() {
+	router.push({ name: 'auth.forgot-sent' });
 }
 </script>
 
