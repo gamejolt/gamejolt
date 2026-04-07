@@ -1,8 +1,17 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
 import { Api } from '../../../../_common/api/api.service';
-import { BaseForm, FormOnSubmit } from '../../../../_common/form-vue/form.service';
-import { validateMatch } from '../../../../_common/form-vue/validators';
+import AppForm, { createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlError from '../../../../_common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
+import { validateMatch, validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
+
+type Props = {
+	requiresOld?: boolean;
+};
+const { requiresOld = true } = defineProps<Props>();
 
 type FormModel = {
 	old_password: string;
@@ -10,33 +19,21 @@ type FormModel = {
 	confirm_password: string;
 };
 
-class Wrapper extends BaseForm<FormModel> {}
-
-@Options({})
-export default class FormChangePassword extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop({ type: Boolean, default: true })
-	requiresOld!: boolean;
-
-	readonly validateMatch = validateMatch;
-
-	created() {
-		this.form.warnOnDiscard = false;
-		this.form.resetOnSubmit = true;
-	}
-
+const form = createForm<FormModel>({
+	warnOnDiscard: false,
+	resetOnSubmit: true,
 	onInit() {
-		this.setField('old_password', '');
-		this.setField('password', '');
-		this.setField('confirm_password', '');
-	}
-
+		form.formModel.old_password = '';
+		form.formModel.password = '';
+		form.formModel.confirm_password = '';
+	},
 	onSubmit() {
 		return Api.sendRequest('/web/dash/account/set-password', {
-			old_password: this.formModel.old_password,
-			password: this.formModel.password,
+			old_password: form.formModel.old_password,
+			password: form.formModel.password,
 		});
-	}
-}
+	},
+});
 </script>
 
 <template>
@@ -72,7 +69,7 @@ export default class FormChangePassword extends mixins(Wrapper) implements FormO
 				:validators="[
 					validateMinLength(4),
 					validateMaxLength(300),
-					validateMatch(formModel.password),
+					validateMatch(form.formModel.password),
 				]"
 				validate-on-blur
 			/>
