@@ -17,7 +17,7 @@ import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { numberSort } from '../../../../../utils/array';
-import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/cast.vue';
+import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/FormCommunityCompetitionVotingCast.vue';
 
 const props = defineProps({
 	competition: {
