@@ -5,7 +5,7 @@ import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCov
 import { MediaItemModel } from '../../../_common/media-item/media-item-model';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
-import { AppAutoscrollAnchor } from '../../../_common/scroll/auto-scroll/anchor';
+import AppAutoscrollAnchor from '../../../_common/scroll/auto-scroll/AppAutoscrollAnchor.vue';
 import './page-header-content.styl';
 
 interface PageHeaderSlots {
