@@ -25,7 +25,7 @@ import FormCommunityChannelAdd from '../../../../../../components/forms/communit
 import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
 import { loadArchivedChannels, updateCommunity, useCommunityRouteStore } from '../../../view.store';
 import AppCommunitiesEditChannelListItem from './_item/AppCommunitiesEditChannelListItem.vue';
-import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.vue';
+import AppChannelPresetItem from './_preset-item/AppChannelPresetItem.vue';
 
 const communityPresetChannels = [
 	CommunityPresetChannelType.FEATURED,
@@ -153,7 +153,7 @@ createAppRoute({});
 					/>
 				</AppCardListAdd>
 
-				<AppCommunitiesEditChannelListPresetItem
+				<AppChannelPresetItem
 					v-for="presetType of communityPresetChannels"
 					:key="presetType"
 					:community="community"

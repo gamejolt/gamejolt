@@ -1,51 +1,45 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import {
 	CommunityModel,
 	CommunityPresetChannelType,
 	getCommunityChannelBackground,
 } from '../../../../../../../../_common/community/community.model';
+import { $gettext } from '../../../../../../../../_common/translate/translate.service';
 import { assertNever } from '../../../../../../../../utils/utils';
 import AppCommunityChannelCardEdit from '../../../../../../../components/community/channel/card/edit/AppCommunityChannelCardEdit.vue';
 import { showCommunityChannelPresetBackgroundModal } from '../../../../../../../components/community/channel/preset-background-modal/preset-background-modal.service';
 
-@Options({
-	components: {
-		AppCardListItem,
-		AppCommunityChannelCardEdit,
-	},
-})
-export default class AppCommunitiesEditChannelListPresetItem extends Vue {
-	@Prop({ type: Object, required: true }) community!: CommunityModel;
-	@Prop({ type: String, required: true }) presetType!: CommunityPresetChannelType;
+type Props = {
+	community: CommunityModel;
+	presetType: CommunityPresetChannelType;
+};
 
-	@Emit('edit') emitEdit() {}
+const { community, presetType } = defineProps<Props>();
 
-	get elementId() {
-		return `channel-container-${this.presetType}`;
+const emit = defineEmits<{
+	edit: [];
+}>();
+
+const elementId = computed(() => `channel-container-${presetType}`);
+
+const label = computed(() => {
+	switch (presetType) {
+		case CommunityPresetChannelType.ALL:
+			return $gettext(`All Posts`);
+		case CommunityPresetChannelType.FEATURED:
+			return $gettext(`Frontpage`);
 	}
 
-	// eslint-disable-next-line getter-return
-	get label() {
-		switch (this.presetType) {
-			case CommunityPresetChannelType.ALL:
-				return this.$gettext(`All Posts`);
-			case CommunityPresetChannelType.FEATURED:
-				return this.$gettext(`Frontpage`);
-		}
+	assertNever(presetType);
+});
 
-		assertNever(this.presetType);
-	}
+const background = computed(() => getCommunityChannelBackground(community, presetType));
 
-	get background() {
-		return getCommunityChannelBackground(this.community, this.presetType);
-	}
-
-	async onClickEditBackground() {
-		await showCommunityChannelPresetBackgroundModal(this.community, this.presetType);
-		this.emitEdit();
-	}
+async function onClickEditBackground() {
+	await showCommunityChannelPresetBackgroundModal(community, presetType);
+	emit('edit');
 }
 </script>
 
