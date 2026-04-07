@@ -2,7 +2,7 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { BaseModal } from '../../../../../_common/modal/base';
 import { UserAddressModel } from '../../../../../_common/user/address/address.model';
-import FormAddress from '../../../forms/address/address.vue';
+import FormAddress from '../../../forms/address/FormAddress.vue';
 
 @Options({
 	components: {

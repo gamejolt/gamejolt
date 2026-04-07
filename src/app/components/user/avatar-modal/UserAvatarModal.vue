@@ -4,7 +4,7 @@ import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import FormUserAvatarFrame from '../../../../_common/user/user-avatar/frame/FormUserAvatarFrame.vue';
-import FormAvatar from '../../forms/avatar/avatar.vue';
+import FormAvatar from '../../forms/avatar/FormAvatar.vue';
 
 const modal = useModal()!;
 const { user } = useCommonStore();

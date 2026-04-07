@@ -6,7 +6,7 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormChangePassword from '../../../../components/forms/change-password/change-password.vue';
+import FormChangePassword from '../../../../components/forms/change-password/FormChangePassword.vue';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
 export default {
 	...defineAppRouteOptions({

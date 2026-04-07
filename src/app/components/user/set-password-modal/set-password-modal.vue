@@ -1,7 +1,7 @@
 <script lang="ts">
 import { mixins, Options } from 'vue-property-decorator';
 import { BaseModal } from '../../../../_common/modal/base';
-import FormSetPassword from '../../forms/set-password/set-password.vue';
+import FormSetPassword from '../../forms/set-password/FormSetPassword.vue';
 
 @Options({
 	components: {
