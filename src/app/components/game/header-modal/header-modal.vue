@@ -2,7 +2,7 @@
 import { mixins, Options, Prop } from 'vue-property-decorator';
 import { GameModel } from '../../../../_common/game/game.model';
 import { BaseModal } from '../../../../_common/modal/base';
-import FormGameHeader from '../../forms/game/header/header.vue';
+import FormGameHeader from '../../forms/game/header/FormGameHeader.vue';
 
 @Options({
 	components: {

@@ -1,94 +1,84 @@
-<script lang="ts">
-import { mixins, Options, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, toRef, watch } from 'vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import {
-	BaseForm,
-	FormOnBeforeSubmit,
-	FormOnLoad,
-} from '../../../../../_common/form-vue/form.service';
 import {
 	$clearGameHeader,
 	$saveGameHeader,
 	GameModel,
 } from '../../../../../_common/game/game.model';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
 type FormModel = GameModel & {
 	header_crop?: any;
 };
 
-class Wrapper extends BaseForm<FormModel> {}
+type Props = {
+	model?: GameModel;
+};
 
-@Options({
-	components: {
-		AppFormControlUpload,
-		AppFormControlCrop,
-	},
-})
-export default class FormGameHeader
-	extends mixins(Wrapper)
-	implements FormOnLoad, FormOnBeforeSubmit
-{
-	modelClass = GameModel;
-	modelSaveHandler = $saveGameHeader;
+const props = defineProps<Props>();
 
-	maxFilesize = 0;
-	minAspectRatio = 0;
-	maxAspectRatio = 0;
-	minWidth = 0;
-	minHeight = 0;
-	maxWidth = 0;
-	maxHeight = 0;
+const maxFilesize = ref(0);
+const minAspectRatio = ref(0);
+const maxAspectRatio = ref(0);
+const minWidth = ref(0);
+const minHeight = ref(0);
+const maxWidth = ref(0);
+const maxHeight = ref(0);
 
-	get loadUrl() {
-		return `/web/dash/developer/games/header/save/${this.model!.id}`;
-	}
-
-	get crop() {
-		return this.formModel.header_media_item
-			? this.formModel.header_media_item.getCrop()
-			: undefined;
-	}
-
-	@Watch('crop')
-	onCropChange() {
-		this.setField('header_crop', this.crop);
-	}
-
+const form: FormController<FormModel> = createForm({
+	model: toRef(props, 'model'),
+	modelClass: GameModel,
+	modelSaveHandler: $saveGameHeader,
+	loadUrl: computed(() => `/web/dash/developer/games/header/save/${props.model!.id}`),
 	onLoad(payload: any) {
-		this.maxFilesize = payload.maxFilesize;
-		this.minAspectRatio = payload.minAspectRatio;
-		this.maxAspectRatio = payload.maxAspectRatio;
-		this.minWidth = payload.minWidth;
-		this.maxWidth = payload.maxWidth;
-		this.minHeight = payload.minHeight;
-		this.maxHeight = payload.maxHeight;
-	}
-
+		maxFilesize.value = payload.maxFilesize;
+		minAspectRatio.value = payload.minAspectRatio;
+		maxAspectRatio.value = payload.maxAspectRatio;
+		minWidth.value = payload.minWidth;
+		maxWidth.value = payload.maxWidth;
+		minHeight.value = payload.minHeight;
+		maxHeight.value = payload.maxHeight;
+	},
 	onBeforeSubmit() {
 		// Backend expects this field.
-		this.setField('crop' as any, this.formModel.header_crop);
+		(form.formModel as any).crop = form.formModel.header_crop;
+	},
+});
+
+const crop = computed(() =>
+	form.formModel.header_media_item
+		? form.formModel.header_media_item.getCrop()
+		: undefined
+);
+
+watch(crop, () => {
+	form.formModel.header_crop = crop.value;
+});
+
+async function clearHeader() {
+	const result = await showModalConfirm(
+		$gettext(`Are you sure you want to remove your game header?`)
+	);
+
+	if (result) {
+		const payload = await $clearGameHeader(props.model!);
+		// Overwrite the base model's header media item here.
+		props.model?.assign(payload.game);
 	}
+}
 
-	async clearHeader() {
-		const result = await showModalConfirm(
-			this.$gettext(`Are you sure you want to remove your game header?`)
-		);
-
-		if (result) {
-			const payload = await $clearGameHeader(this.model!);
-			// Overwrite the base model's header media item here.
-			// This needs to be done because this form does not resolve (and may never resolve)
-			// after cleaning a header. Need to ensure that the base model's header gets cleared.
-			this.model?.assign(payload.game);
-		}
-	}
-
-	headerSelected() {
-		if (this.formModel.file) {
-			this.form.submit();
-		}
+function headerSelected() {
+	if (form.formModel.file) {
+		form.submit();
 	}
 }
 </script>
@@ -98,7 +88,7 @@ export default class FormGameHeader
 		<AppFormGroup
 			name="file"
 			:label="$gettext(`Upload New Header`)"
-			:optional="!!formModel.header_media_item"
+			:optional="!!form.formModel.header_media_item"
 		>
 			<p class="help-block">
 				<AppTranslate>
@@ -139,11 +129,11 @@ export default class FormGameHeader
 		<AppFormGroup
 			name="header_crop"
 			:label="$gettext(`Crop Current Header`)"
-			v-if="formModel.header_media_item && !formModel.file"
+			v-if="form.formModel.header_media_item && !form.formModel.file"
 		>
 			<div class="form-control-static">
 				<AppFormControlCrop
-					:src="formModel.header_media_item.img_url"
+					:src="form.formModel.header_media_item.img_url"
 					:min-width="minWidth"
 					:min-height="minHeight"
 					:max-width="maxWidth"
@@ -156,7 +146,7 @@ export default class FormGameHeader
 			</div>
 		</AppFormGroup>
 
-		<template v-if="formModel.header_media_item">
+		<template v-if="form.formModel.header_media_item">
 			<AppFormButton>
 				<AppTranslate>Save</AppTranslate>
 			</AppFormButton>
