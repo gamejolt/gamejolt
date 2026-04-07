@@ -8,7 +8,7 @@ import {
 import AppButton from '../../../_common/button/AppButton.vue';
 import { AppClientHistoryNavigator } from '../../../_common/client/safe-exports';
 import { configShowStoreInMoreMenu } from '../../../_common/config/config.service';
-import { AppConfigLoaded } from '../../../_common/config/loaded';
+import AppConfigLoaded from '../../../_common/config/AppConfigLoaded.vue';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Environment } from '../../../_common/environment/environment.service';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
