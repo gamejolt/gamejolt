@@ -1,46 +1,42 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
-import AppAuthLogin from '../../../../_common/auth/login/AppAuthLogin.vue';
+import { defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { locationRedirectFromRoute } from '../../../../utils/router';
 import { loggedUserBlock } from '../RouteAuth.vue';
 
-@Options({
+export default {
 	name: 'RouteAuthLogin',
-	components: {
-		AppAuthLogin,
-	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: { query: ['intent'] },
-	async resolver({ route }) {
-		if (route.query.intent === 'approve-login-expired') {
-			showErrorGrowl({
-				sticky: true,
-				message: $gettext('This login attempt has expired. Try again.'),
-			});
-			return locationRedirectFromRoute(route, {}, { intent: undefined });
-		}
+	...defineAppRouteOptions({
+		reloadOn: { query: ['intent'] },
+		async resolver({ route }) {
+			if (route.query.intent === 'approve-login-expired') {
+				showErrorGrowl({
+					sticky: true,
+					message: $gettext('This login attempt has expired. Try again.'),
+				});
+				return locationRedirectFromRoute(route, {}, { intent: undefined });
+			}
 
-		return loggedUserBlock();
-	},
-})
-export default class RouteAuthLogin extends LegacyRouteComponent {
-	redirect = '';
+			return loggedUserBlock();
+		},
+	}),
+};
+</script>
 
-	get routeTitle() {
-		return this.$gettext('Log in to Game Jolt');
-	}
+<script lang="ts" setup>
+import { useRoute } from 'vue-router';
+import AppAuthLogin from '../../../../_common/auth/login/AppAuthLogin.vue';
+import { createAppRoute } from '../../../../_common/route/route-component';
+import { $gettext } from '../../../../_common/translate/translate.service';
 
-	routeCreated() {
-		this.redirect = (this.$route.query.redirect as string) || '';
-	}
-}
+const route = useRoute();
+
+const redirect = route.query.redirect as string || '';
+
+createAppRoute({
+	routeTitle: $gettext('Log in to Game Jolt'),
+});
 </script>
 
 <template>
