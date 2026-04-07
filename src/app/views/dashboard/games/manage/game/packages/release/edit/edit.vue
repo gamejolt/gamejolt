@@ -16,7 +16,7 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../../../../../../_common/route/legacy-route-component';
-import FormGameRelease from '../../../../../../../../components/forms/game/release/release.vue';
+import FormGameRelease from '../../../../../../../../components/forms/game/release/FormGameRelease.vue';
 import { useGameDashRouteController } from '../../../../manage.store';
 
 @Options({
