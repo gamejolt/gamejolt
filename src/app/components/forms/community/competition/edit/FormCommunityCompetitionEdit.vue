@@ -1,46 +1,46 @@
-<script lang="ts">
-import { mixins, Options } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, toRef } from 'vue';
 import {
-$saveCommunityCompetition,
-CommunityCompetitionModel,
-CompetitionPeriodVoting,
+	$saveCommunityCompetition,
+	CommunityCompetitionModel,
+	CompetitionPeriodVoting,
 } from '../../../../../../_common/community/competition/competition.model';
 import { formatDate } from '../../../../../../_common/filters/date';
+import AppForm, { createForm, FormController } from '../../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormControlSelect from '../../../../../../_common/form-vue/AppFormControlSelect.vue';
+import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormLegend from '../../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlDate from '../../../../../../_common/form-vue/controls/AppFormControlDate.vue';
 import { FormTimezoneService } from '../../../../../../_common/form-vue/form-timezone.service';
-import { BaseForm } from '../../../../../../_common/form-vue/form.service';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
+import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 import AppCommunityCompetitionDate from '../../../../community/competition/date/AppCommunityCompetitionDate.vue';
 
-class Wrapper extends BaseForm<CommunityCompetitionModel> {}
-
-@Options({
-	components: {
-		AppFormLegend,
-		AppFormControlDate,
-		AppLoading,
-		AppCommunityCompetitionDate,
+const props = defineProps({
+	model: {
+		type: Object as () => CommunityCompetitionModel,
+		default: undefined,
 	},
-})
-export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
-	modelClass = CommunityCompetitionModel;
-	modelSaveHandler = $saveCommunityCompetition;
+});
 
-	timezoneService: FormTimezoneService<CommunityCompetitionModel> | null = null;
+const timezoneService = ref<FormTimezoneService<CommunityCompetitionModel> | null>(null);
 
-	readonly formatDate = formatDate;
+const shouldShowSaveButton = computed(
+	() => props.model!.periodNum < CompetitionPeriodVoting
+);
 
-	get shouldShowSaveButton() {
-		// Before and during the competition, start/end dates can be edited.
-		return this.model!.periodNum < CompetitionPeriodVoting;
-	}
-
+const form: FormController<CommunityCompetitionModel> = createForm({
+	modelClass: CommunityCompetitionModel,
+	modelSaveHandler: $saveCommunityCompetition,
+	model: toRef(props, 'model'),
 	async onInit() {
-		this.timezoneService = new FormTimezoneService(this.form);
-		await this.timezoneService.load(true);
-	}
-}
+		timezoneService.value = new FormTimezoneService(form);
+		await timezoneService.value.load(true);
+	},
+});
 </script>
 
 <template>
@@ -113,7 +113,7 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 						<AppFormControlDate
 							:timezone-offset="timezoneService.activeTimezoneOffset"
 							:min-date="timezoneService.now"
-							:max-date="formModel.ends_on"
+							:max-date="form.formModel.ends_on"
 						/>
 						<AppFormControlErrors />
 					</template>
@@ -141,9 +141,9 @@ export default class FormCommunityCompetitionEdit extends mixins(Wrapper) {
 
 						<AppFormControlDate
 							:timezone-offset="timezoneService.activeTimezoneOffset"
-							:min-date="formModel.starts_on"
+							:min-date="form.formModel.starts_on"
 							:max-date="
-								formModel.is_voting_enabled ? formModel.voting_ends_on : undefined
+								form.formModel.is_voting_enabled ? form.formModel.voting_ends_on : undefined
 							"
 						/>
 						<AppFormControlErrors />
