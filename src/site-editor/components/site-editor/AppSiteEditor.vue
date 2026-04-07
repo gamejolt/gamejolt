@@ -1,103 +1,72 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppContentBlockEditor from '../../../_common/content-block/editor/AppContentBlockEditor.vue';
 import { showSuccessGrowl } from '../../../_common/growls/growls.service';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import AppThemeSelector from '../../../_common/theme/selector/AppThemeSelector.vue';
 import AppThemeEditor from '../../../_common/theme/theme-editor/AppThemeEditor.vue';
+import { $gettext } from '../../../_common/translate/translate.service';
 import { useSiteEditorStore } from '../../store/index';
 
-@Options({
-	components: {
-		AppLoading,
-		AppThemeSelector,
-		AppThemeEditor,
-		AppContentBlockEditor,
-	},
-})
-export default class AppSiteEditor extends Vue {
-	store = setup(() => useSiteEditorStore());
+const store = useSiteEditorStore();
+const router = useRouter();
+const route = useRoute();
 
-	get tab() {
-		return this.store.tab;
-	}
+const tab = computed(() => store.tab);
+const site = computed(() => store.site);
+const templates = computed(() => store.siteTemplates);
+const currentTemplateId = computed(() => store.currentTemplateId);
+const theme = computed(() => store.siteTheme);
+const isLoaded = computed(() => store.isLoaded);
+const isDirty = computed(() => store.isDirty);
+const siteUrl = computed(() => site.value?.url);
+const confirmMessage = computed(() =>
+	$gettext('You have unsaved changes. Are you sure you want to discard them?')
+);
 
-	get site() {
-		return this.store.site;
-	}
+onMounted(() => {
+	router.beforeEach((_to, _from, next) => {
+		if (!canLeave()) {
+			return next(false);
+		}
+		store.clearIsDirty();
+		next();
+	});
 
-	get templates() {
-		return this.store.siteTemplates;
-	}
+	window.onbeforeunload = () => {
+		if (isDirty.value) {
+			return confirmMessage.value;
+		}
+	};
+});
 
-	get currentTemplateId() {
-		return this.store.currentTemplateId;
-	}
+function themeEdited(themeData: any) {
+	store.setThemeData(themeData);
+}
 
-	get theme() {
-		return this.store.siteTheme;
-	}
+function contentEdited() {
+	store.setContentEdited();
+}
 
-	get isLoaded() {
-		return this.store.isLoaded;
-	}
+function canLeave() {
+	return !isDirty.value || confirm(confirmMessage.value);
+}
 
-	get isDirty() {
-		return this.store.isDirty;
-	}
+async function save() {
+	const data = {
+		template_id: currentTemplateId.value,
+		theme: theme.value!.data,
+		content_blocks: site.value!.content_blocks,
+	};
 
-	get siteUrl() {
-		return this.site?.url;
-	}
+	store.clearIsDirty();
+	await Api.sendRequest(`/web/dash/sites/editor-save/${site.value!.id}`, data, {
+		sanitizeComplexData: false,
+	});
 
-	get confirmMessage() {
-		return this.$gettext('You have unsaved changes. Are you sure you want to discard them?');
-	}
-
-	mounted() {
-		this.$router.beforeEach((_to, _from, next) => {
-			if (!this.canLeave()) {
-				return next(false);
-			}
-			this.store.clearIsDirty();
-			next();
-		});
-
-		window.onbeforeunload = () => {
-			if (this.isDirty) {
-				return this.confirmMessage;
-			}
-		};
-	}
-
-	themeEdited(themeData: any) {
-		this.store.setThemeData(themeData);
-	}
-
-	contentEdited() {
-		this.store.setContentEdited();
-	}
-
-	canLeave() {
-		return !this.isDirty || confirm(this.confirmMessage);
-	}
-
-	async save() {
-		const data = {
-			template_id: this.currentTemplateId,
-			theme: this.theme!.data,
-			content_blocks: this.site!.content_blocks,
-		};
-
-		this.store.clearIsDirty();
-		await Api.sendRequest(`/web/dash/sites/editor-save/${this.site!.id}`, data, {
-			sanitizeComplexData: false,
-		});
-
-		showSuccessGrowl(this.$gettext('Your site has been saved.'), this.$gettext('Site Saved'));
-	}
+	showSuccessGrowl($gettext('Your site has been saved.'), $gettext('Site Saved'));
 }
 </script>
 
@@ -116,7 +85,7 @@ export default class AppSiteEditor extends Vue {
 										:to="{
 											name: 'editor',
 											params: { tab: 'theme' },
-											query: $route.query,
+											query: route.query,
 										}"
 										active-class="active"
 									>
@@ -129,7 +98,7 @@ export default class AppSiteEditor extends Vue {
 										:to="{
 											name: 'editor',
 											params: { tab: 'content' },
-											query: $route.query,
+											query: route.query,
 										}"
 										active-class="active"
 									>
