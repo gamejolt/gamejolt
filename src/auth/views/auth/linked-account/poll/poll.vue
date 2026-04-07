@@ -1,58 +1,56 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
+import { defineAppRouteOptions } from '../../../../../_common/route/route-component';
+
+export default {
+	name: 'RouteAuthLinkedAccountPoll',
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { Client } from '../../../../../_common/client/safe-exports';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppProgressPoller from '../../../../../_common/progress/poller/AppProgressPoller.vue';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../_common/route/legacy-route-component';
+import { createAppRoute } from '../../../../../_common/route/route-component';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
-@Options({
-	name: 'RouteAuthLinkedAccountPoll',
-	components: {
-		AppProgressPoller,
-		AppLoading,
+const route = useRoute();
+const router = useRouter();
+
+const token = ref('');
+const isPolling = ref(true);
+
+createAppRoute({
+	routeTitle: $gettext('Waiting for Login'),
+	onInit() {
+		token.value = route.params.token as string;
 	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: 'always',
-})
-export default class RouteAuthLinkedAccountPoll extends LegacyRouteComponent {
-	token = '';
-	isPolling = true;
+});
 
-	get routeTitle() {
-		return this.$gettext(`Waiting for Login`);
+function completed(response: any) {
+	const validProviders = ['facebook', 'twitch', 'google'];
+	const provider = response.provider;
+	if (validProviders.indexOf(provider) !== -1) {
+		router.push({
+			name: `auth.linked-account.${provider}.callback`,
+			query: { code: response.code, state: token.value },
+		});
 	}
 
-	routeCreated() {
-		this.token = this.$route.params.token;
-	}
+	isPolling.value = false;
 
-	completed(response: any) {
-		// Redirect them off to complete their social login like normal.
+	// Focus back to the Client.
+	Client?.show();
+}
 
-		const validProviders = ['facebook', 'twitch', 'google'];
-		const provider = response.provider;
-		if (validProviders.indexOf(provider) !== -1) {
-			this.$router.push({
-				name: `auth.linked-account.${provider}.callback`,
-				query: { code: response.code, state: this.token },
-			});
-		}
-
-		this.isPolling = false;
-
-		// Focus back to the Client.
-		Client?.show();
-	}
-
-	failed() {
-		showErrorGrowl(this.$gettext(`Couldn't authorize.`), this.$gettext(`Authorization Failed`));
-		this.$router.push({ name: 'auth.login' });
-	}
+function failed() {
+	showErrorGrowl($gettext(`Couldn't authorize.`), $gettext(`Authorization Failed`));
+	router.push({ name: 'auth.login' });
 }
 </script>
 
