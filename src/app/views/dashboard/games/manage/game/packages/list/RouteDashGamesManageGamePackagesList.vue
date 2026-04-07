@@ -1,6 +1,23 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../_common/api/api.service';
+import {
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../../_common/route/route-component';
+
+export default {
+	name: 'RouteDashGamesManageGamePackagesList',
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+		resolver: ({ route }) =>
+			Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import AppCardList from '../../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
@@ -13,129 +30,94 @@ import {
 } from '../../../../../../../../_common/game/package/package.model';
 import { showSuccessGrowl } from '../../../../../../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../../_common/route/legacy-route-component';
 import { SellableModel } from '../../../../../../../../_common/sellable/sellable.model';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../../../../../_common/translate/translate.service';
 import { arrayIndexBy } from '../../../../../../../../utils/array';
-import { shallowSetup } from '../../../../../../../../utils/vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
 import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../../manage.store';
 
-@Options({
-	name: 'RouteDashGamesManageGamePackagesList',
-	components: {
-		AppCardList,
-		AppCardListItem,
-		AppDashGameWizardControls,
-		AppGamePerms,
-		AppCardListDraggable,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: 'never',
-	resolver: ({ route }) =>
-		Api.sendRequest('/web/dash/developer/games/packages/' + route.params.id),
-})
-export default class RouteDashGamesManageGamePackagesList extends LegacyRouteComponent {
-	routeStore = shallowSetup(() => useGameDashRouteController()!);
+const router = useRouter();
+const routeStore = useGameDashRouteController()!;
 
-	get game() {
-		return this.routeStore.game.value!;
+const game = computed(() => routeStore.game.value!);
+
+const packages = ref<GamePackageModel[]>([]);
+const sellables = ref<{ [x: number]: SellableModel }>({});
+
+const GamePackage = GamePackageModel;
+const GamePackageVisibilityPrivate = GamePackageVisibility.Private;
+
+const hasAllPerms = computed(() => game.value.hasPerms('all'));
+const hasBuildsPerms = computed(() => game.value.hasPerms('builds'));
+const packagesSort = computed(() => packages.value.map(i => i.id));
+
+function saveSort(pkgs: GamePackageModel[]) {
+	packages.value = pkgs;
+	$saveGamePackageSort(game.value.id, packagesSort.value);
+}
+
+async function addPackage() {
+	const newPackage = await showGamePackageEditModal(routeStore);
+	if (newPackage instanceof GamePackageModel) {
+		packages.value.push(newPackage);
+	}
+}
+
+async function removePackage(pkg: GamePackageModel) {
+	const result = await showModalConfirm(
+		$gettext(
+			'Are you sure you want to remove this package? All of the releases and builds it contains will be removed as well.'
+		)
+	);
+
+	if (!result) {
+		return;
 	}
 
-	packages: GamePackageModel[] = [];
-	sellables: { [x: number]: SellableModel } = {};
+	await $removeGamePackage(pkg, game.value);
 
-	readonly GamePackage = GamePackageModel;
-	readonly formatCurrency = formatCurrency;
-	readonly GamePackageVisibilityPrivate = GamePackageVisibility.Private;
+	showSuccessGrowl(
+		$gettext('The game package has been removed.'),
+		$gettext('Package Removed')
+	);
 
-	get hasAllPerms() {
-		return this.game.hasPerms('all');
-	}
+	appRoute.reload();
+}
 
-	get hasBuildsPerms() {
-		return this.game.hasPerms('builds');
-	}
-
-	get packagesSort() {
-		return this.packages.map(i => i.id);
-	}
-
-	get routeTitle() {
-		if (this.game) {
-			return this.$gettext('Manage Packages for %{ game }', {
-				game: this.game.title,
+const appRoute = createAppRoute({
+	routeTitle: computed(() => {
+		if (game.value) {
+			return $gettext('Manage Packages for %{ game }', {
+				game: game.value.title,
 			});
 		}
 		return null;
-	}
-
-	routeResolved($payload: any) {
-		if ($payload.packages && !$payload.packages.length) {
-			if (this.game.hasPerms('all')) {
-				this.$router.replace({
+	}),
+	onResolved({ payload }) {
+		if (payload.packages && !payload.packages.length) {
+			if (game.value.hasPerms('all')) {
+				router.replace({
 					name: 'dash.games.manage.game.packages.add',
 					params: {
-						id: this.game.id + '',
+						id: game.value.id + '',
 					},
 				});
 			}
-			this.packages = [];
-			this.sellables = {};
+			packages.value = [];
+			sellables.value = {};
 			return;
 		}
 
-		this.packages = GamePackageModel.populate($payload.packages);
-		this.sellables = arrayIndexBy<SellableModel>(
-			SellableModel.populate($payload.sellables),
+		packages.value = GamePackageModel.populate(payload.packages);
+		sellables.value = arrayIndexBy<SellableModel>(
+			SellableModel.populate(payload.sellables),
 			'game_package_id'
 		);
-	}
-
-	saveSort(packages: GamePackageModel[]) {
-		this.packages = packages;
-		$saveGamePackageSort(this.game.id, this.packagesSort);
-	}
-
-	async addPackage() {
-		const newPackage = await showGamePackageEditModal(this.routeStore);
-		if (newPackage instanceof GamePackageModel) {
-			this.packages.push(newPackage);
-		}
-	}
-
-	async removePackage(pkg: GamePackageModel) {
-		const result = await showModalConfirm(
-			this.$gettext(
-				'Are you sure you want to remove this package? All of the releases and builds it contains will be removed as well.'
-			)
-		);
-
-		if (!result) {
-			return;
-		}
-
-		await $removeGamePackage(pkg, this.game);
-
-		showSuccessGrowl(
-			this.$gettext('The game package has been removed.'),
-			this.$gettext('Package Removed')
-		);
-
-		// We have to do a refresh since a new package may have been chosen as
-		// the primary sellable.
-		this.reloadRoute();
-	}
-}
+	},
+});
 </script>
 
 <template>
