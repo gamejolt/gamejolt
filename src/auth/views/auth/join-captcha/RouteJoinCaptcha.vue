@@ -16,7 +16,7 @@ import { Api } from '../../../../_common/api/api.service';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { createAppRoute } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/widget.vue';
+import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/AppGrecaptchaWidget.vue';
 
 const router = useRouter();
 

@@ -3,7 +3,7 @@ import { RouteConfig } from 'vue-router';
 export const routeAuthApproveLogin: RouteConfig = {
 	name: 'auth.approve-login',
 	path: '/login/approve',
-	component: () => import('./approve-login.vue'),
+	component: () => import('./RouteApproveLogin.vue'),
 	meta: {
 		hideCoverImage: true,
 	},

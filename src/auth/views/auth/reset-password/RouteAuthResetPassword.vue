@@ -21,7 +21,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { createAppRoute } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import FormResetPassword from '../../../components/forms/reset-password/reset-password.vue';
+import FormResetPassword from '../../../components/forms/reset-password/FormResetPassword.vue';
 
 const route = useRoute();
 const router = useRouter();

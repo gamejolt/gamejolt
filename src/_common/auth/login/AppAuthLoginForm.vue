@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import AppGrecaptchaWidget from '../../../auth/components/grecaptcha/widget/widget.vue';
+import AppGrecaptchaWidget from '../../../auth/components/grecaptcha/widget/AppGrecaptchaWidget.vue';
 import { trackLoginCaptcha } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';

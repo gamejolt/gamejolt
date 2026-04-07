@@ -13,7 +13,7 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AuthLinkedAccountProcessing from '../../_processing/processing.vue';
+import AuthLinkedAccountProcessing from '../../_processing/AuthLinkedAccountProcessing.vue';
 
 export default {
 	...defineAppRouteOptions({

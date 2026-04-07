@@ -3,7 +3,7 @@ import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
 import type { RouteLocationRaw } from 'vue-router';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppAudioPlaylistTS from '../../../audio/playlist/playlist';
-import AppAudioPlaylist from '../../../audio/playlist/playlist.vue';
+import AppAudioPlaylist from '../../../audio/playlist/AppAudioPlaylist.vue';
 import AppCard from '../../../card/AppCard.vue';
 import { Environment } from '../../../environment/environment.service';
 import { formatNumber } from '../../../filters/number';

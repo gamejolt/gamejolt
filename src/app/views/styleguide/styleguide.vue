@@ -10,7 +10,7 @@ import {
 } from '../../../_common/route/legacy-route-component';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import { vAppScrollTo } from '../../../_common/scroll/to/to.directive';
-import AppThemeSvgStyleguide from '../../../_common/theme/svg/svg-styleguide.vue';
+import AppThemeSvgStyleguide from '../../../_common/theme/svg/AppThemeSvgStyleguide.vue';
 import { touchUser } from '../../../_common/user/user.model';
 import AppAvatarFrameStyleguide from './avatar-frame/AppAvatarFrameStyleguide.vue';
 import AppStyleguideColor from './color/color.vue';

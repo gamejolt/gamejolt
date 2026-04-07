@@ -3,7 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeAuthJoinCaptcha: RouteRecordRaw = {
 	name: 'auth.join-captcha',
 	path: '/join/captcha',
-	component: () => import('./join-captcha.vue'),
+	component: () => import('./RouteJoinCaptcha.vue'),
 	meta: {
 		hideCoverImage: true,
 	},
