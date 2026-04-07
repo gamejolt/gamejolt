@@ -23,7 +23,7 @@ import {
 } from '../../../../../../_common/form-vue/validators';
 import { showCommunityChannelBackgroundModal } from '../../../../community/channel/background-modal/background-modal.service';
 import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/AppCommunityChannelCardEdit.vue';
-import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
+import AppFormCommunityChannelPermissions from '../_permissions/FormCommunityChannelPermissions.vue';
 
 interface FormModel extends CommunityChannelModel {
 	permission_posting?: string;

@@ -1,28 +1,15 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
-import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../../../../_common/form-vue/AppFormControlError.vue';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlRadio from '../../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
+import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 
-@Options({
-	components: {
-		AppFormControl,
-		AppFormGroup,
-		AppFormControlError,
-		AppFormControlErrors,
-		AppFormControlRadio,
-	},
-})
-export default class AppFormCommunityChannelPermissions extends Vue {
-	get permissionPostingOptions() {
-		return {
-			all: this.$gettext('Everyone'),
-			mods: this.$gettext('Collaborators only'),
-		};
-	}
-}
+const permissionPostingOptions = computed(() => ({
+	all: $gettext('Everyone'),
+	mods: $gettext('Collaborators only'),
+}));
 </script>
 
 <template>

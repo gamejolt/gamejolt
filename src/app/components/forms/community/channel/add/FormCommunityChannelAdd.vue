@@ -24,7 +24,7 @@ import {
 } from '../../../../../../_common/form-vue/validators';
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
+import AppFormCommunityChannelPermissions from '../_permissions/FormCommunityChannelPermissions.vue';
 
 interface FormModel extends CommunityChannelModel {
 	permission_posting?: string;
