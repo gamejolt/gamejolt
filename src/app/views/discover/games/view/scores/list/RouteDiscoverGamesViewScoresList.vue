@@ -17,8 +17,8 @@ import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import { UserGameScoreModel } from '../../../../../../../_common/user/game-score/game-score.model';
-import AppScoreList from '../../../../../../components/score/list/list.vue';
-import AppScoreboardSelector from '../../../../../../components/score/scoreboard-selector/scoreboard-selector.vue';
+import AppScoreList from '../../../../../../components/score/list/AppScoreList.vue';
+import AppScoreboardSelector from '../../../../../../components/score/scoreboard-selector/AppScoreboardSelector.vue';
 import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 
 export default {

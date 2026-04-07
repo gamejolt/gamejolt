@@ -1,6 +1,5 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
@@ -11,95 +10,77 @@ import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import { UserGameScoreModel } from '../../../../_common/user/game-score/game-score.model';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppScoreList from '../list/list.vue';
-import AppScoreboardSelector from '../scoreboard-selector/scoreboard-selector.vue';
+import AppScoreList from '../list/AppScoreList.vue';
+import AppScoreboardSelector from '../scoreboard-selector/AppScoreboardSelector.vue';
 
-@Options({
-	components: {
-		AppTimeAgo,
-		AppScoreboardSelector,
-		AppScoreList,
-		AppUserAvatar,
-	},
-})
-export default class AppScoreOverview extends Vue {
-	@Prop(Object)
-	game!: GameModel;
-	@Prop(Object)
+type Props = {
+	game: GameModel;
 	initialPayload?: any;
-	@Prop({ type: String, default: 'full' })
-	size!: 'full' | 'small';
+	size?: 'full' | 'small';
+};
 
-	commonStore = setup(() => useCommonStore());
+const { game, initialPayload, size = 'full' } = defineProps<Props>();
 
-	get app() {
-		return this.commonStore;
-	}
+const { user: appUser } = useCommonStore();
 
-	scoreTables: GameScoreTableModel[] = [];
-	scoreTable: GameScoreTableModel | null = null;
-	scores: UserGameScoreModel[] = [];
-	userBestScore: UserGameScoreModel | null = null;
-	userScorePlacement = 0;
-	userScoreExperience = 0;
+const scoreTables = ref<GameScoreTableModel[]>([]);
+const scoreTable = ref<GameScoreTableModel | null>(null);
+const scores = ref<UserGameScoreModel[]>([]);
+const userBestScore = ref<UserGameScoreModel | null>(null);
+const userScorePlacement = ref(0);
+const userScoreExperience = ref(0);
 
-	readonly Screen = Screen;
-	readonly formatNumber = formatNumber;
+const scoresLeft = computed(() => {
+	return scores.value.filter((_score, i) => i % 2 === 0);
+});
 
-	// Even.
-	get scoresLeft() {
-		return this.scores.filter((_score, i) => i % 2 === 0);
-	}
+const scoresRight = computed(() => {
+	return scores.value.filter((_score, i) => i % 2 === 1);
+});
 
-	// Odd.
-	get scoresRight() {
-		return this.scores.filter((_score, i) => i % 2 === 1);
-	}
+// created equivalent
+if (initialPayload) {
+	processPayload(initialPayload);
+} else {
+	changeTable();
+}
 
-	created() {
-		if (this.initialPayload) {
-			this.processPayload(this.initialPayload);
-		} else {
-			this.changeTable();
+watch(
+	() => initialPayload,
+	() => {
+		if (initialPayload) {
+			processPayload(initialPayload);
 		}
 	}
+);
 
-	@Watch('initialPayload')
-	onChange() {
-		if (this.initialPayload) {
-			this.processPayload(this.initialPayload);
-		}
+function processPayload(payload: any) {
+	scoreTables.value = payload.scoreTables
+		? GameScoreTableModel.populate(payload.scoreTables)
+		: [];
+	scoreTable.value = payload.scoreTable ? new GameScoreTableModel(payload.scoreTable) : null;
+	scores.value = payload.scores ? UserGameScoreModel.populate(payload.scores) : [];
+	userBestScore.value = payload.scoresUserBestScore
+		? new UserGameScoreModel(payload.scoresUserBestScore)
+		: null;
+	userScorePlacement.value = payload.scoresUserScorePlacement || 0;
+	userScoreExperience.value = payload.scoresUserScoreExperience || 0;
+}
+
+async function changeTable(table?: GameScoreTableModel) {
+	Popper.hideAll();
+
+	if (table && scoreTable.value && table.id === scoreTable.value.id) {
+		return;
 	}
 
-	private processPayload(payload: any) {
-		this.scoreTables = payload.scoreTables
-			? GameScoreTableModel.populate(payload.scoreTables)
-			: [];
-		this.scoreTable = payload.scoreTable ? new GameScoreTableModel(payload.scoreTable) : null;
-		this.scores = payload.scores ? UserGameScoreModel.populate(payload.scores) : [];
-		this.userBestScore = payload.scoresUserBestScore
-			? new UserGameScoreModel(payload.scoresUserBestScore)
-			: null;
-		this.userScorePlacement = payload.scoresUserScorePlacement || 0;
-		this.userScoreExperience = payload.scoresUserScoreExperience || 0;
+	let url = '/web/discover/games/scores/overview/' + game.id;
+	if (table) {
+		url += '/' + table.id;
 	}
 
-	async changeTable(table?: GameScoreTableModel) {
-		Popper.hideAll();
-
-		// Only if not current table.
-		if (table && this.scoreTable && table.id === this.scoreTable.id) {
-			return;
-		}
-
-		let url = '/web/discover/games/scores/overview/' + this.game.id;
-		if (table) {
-			url += '/' + table.id;
-		}
-
-		const payload = await Api.sendRequest(url);
-		this.processPayload(payload);
-	}
+	const payload = await Api.sendRequest(url);
+	processPayload(payload);
 }
 </script>
 
@@ -146,7 +127,7 @@ export default class AppScoreOverview extends Vue {
 			User Best Score
 			Only show if logged in.
 			-->
-			<div v-if="app.user" class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''">
+			<div v-if="appUser" class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''">
 				<div class="score-overview-user-best">
 					<h4 class="section-header">
 						<AppTranslate>Your Best Score</AppTranslate>
@@ -154,7 +135,7 @@ export default class AppScoreOverview extends Vue {
 
 					<div class="row">
 						<div class="col-sm-3 hidden-xs">
-							<AppUserAvatar :user="app.user" />
+							<AppUserAvatar :user="appUser" />
 						</div>
 
 						<div
@@ -217,7 +198,7 @@ export default class AppScoreOverview extends Vue {
 				<div class="score-overview-top">
 					<h4
 						:class="{
-							'section-header': !app.user || (Screen.isDesktop && size === 'full'),
+							'section-header': !appUser || (Screen.isDesktop && size === 'full'),
 						}"
 					>
 						<AppTranslate>Best Scores</AppTranslate>
