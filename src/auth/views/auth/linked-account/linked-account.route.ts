@@ -7,7 +7,7 @@ import { routeAuthLinkedAccountTwitchCallback } from './twitch/callback/callback
 export const routeAuthLinkedAccount: RouteRecordRaw = {
 	name: 'auth.linked-account',
 	path: '/auth',
-	component: () => import('./linked-account'),
+	component: () => import('./linked-account.vue'),
 	meta: {
 		hideCoverImage: true,
 	},
