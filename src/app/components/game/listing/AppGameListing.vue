@@ -16,7 +16,7 @@ import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppGameFilteringTags from '../filtering/AppGameFilteringTags.vue';
 import { GameFilteringContainer } from '../filtering/container';
-import AppGameFilteringWidget from '../filtering/widget.vue';
+import AppGameFilteringWidget from '../filtering/AppGameFilteringWidget.vue';
 import AppGameGridPlaceholder from '../grid/AppGameGridPlaceholder.vue';
 import { GameListingContainer } from './listing-container-service';
 
