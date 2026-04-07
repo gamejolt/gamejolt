@@ -1,48 +1,43 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../_common/api/api.service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../_common/route/route-component';
+
+export default {
+	name: 'RouteDashGamesManageSite',
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+		resolver: ({ route }) => Api.sendRequest('/web/dash/sites/' + route.params.id),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
 import { SiteModel } from '../../../../../../_common/site/site-model';
+import { $gettext } from '../../../../../../_common/translate/translate.service';
 import AppSitesLinkCard from '../../../../../components/sites/link-card/link-card.vue';
 import AppSitesManagePage from '../../../../../components/sites/manage-page/manage-page.vue';
 import { useGameDashRouteController } from '../manage.store';
 
-@Options({
-	name: 'RouteDashGamesManageSite',
-	components: {
-		AppSitesLinkCard,
-		AppSitesManagePage,
+const routeStore = useGameDashRouteController()!;
+
+const game = computed(() => routeStore.game!);
+
+const site = ref<SiteModel>(null as any);
+
+const appRoute = createAppRoute({
+	routeTitle: computed(() => $gettext('Manage Site')),
+	onResolved({ payload }) {
+		site.value = new SiteModel(payload.site);
 	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: 'never',
-	resolver: ({ route }) => Api.sendRequest('/web/dash/sites/' + route.params.id),
-})
-export default class RouteDashGamesManageSite extends LegacyRouteComponent {
-	routeStore = setup(() => useGameDashRouteController()!);
-
-	get game() {
-		return this.routeStore.game!;
-	}
-
-	site: SiteModel = null as any;
-
-	get routeTitle() {
-		return this.$gettext('Manage Site');
-	}
-
-	routeResolved($payload: any) {
-		this.site = new SiteModel($payload.site);
-	}
-}
+});
 </script>
 
 <template>
-	<section v-if="isRouteBootstrapped" class="section">
+	<section v-if="appRoute.isBootstrapped.value" class="section">
 		<div class="container">
 			<template v-if="!game.path">
 				<div class="alert">
