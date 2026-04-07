@@ -1,8 +1,8 @@
-<script lang="ts">
-import { Options, Prop, Vue, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { ref, useTemplateRef, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
+import { useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
-import AppAudioPlaylistTS from '../../../audio/playlist/playlist';
 import AppAudioPlaylist from '../../../audio/playlist/AppAudioPlaylist.vue';
 import AppCard from '../../../card/AppCard.vue';
 import { Environment } from '../../../environment/environment.service';
@@ -12,61 +12,47 @@ import { Screen } from '../../../screen/screen-service';
 import { GameModel } from '../../game.model';
 import { GameSongModel } from '../../song/song.model';
 
-@Options({
-	components: {
-		AppCard,
-		AppFadeCollapse,
-		AppAudioPlaylist,
-	},
-})
-export default class AppGameSoundtrackCard extends Vue {
-	@Prop(Object)
-	game!: GameModel;
+type Props = {
+	game: GameModel;
+	songs: GameSongModel[];
+};
+const { game, songs } = defineProps<Props>();
 
-	@Prop(Array)
-	songs!: GameSongModel[];
+const router = useRouter();
+const playlistRef = useTemplateRef<InstanceType<typeof AppAudioPlaylist>>('playlist');
 
-	isPlaying = false;
-	isShowingSoundtrack = false;
-	canToggleSoundtrack = false;
+const isPlaying = ref(false);
+const isShowingSoundtrack = ref(false);
+const canToggleSoundtrack = ref(false);
 
-	readonly formatNumber = formatNumber;
-	readonly Screen = Screen;
+watch(isPlaying, () => {
+	if (isPlaying.value) {
+		isShowingSoundtrack.value = true;
+	}
+});
 
-	@Watch('isPlaying')
-	onPlayingChanged() {
-		// If we're playing, make sure the full soundtrack is open.
-		if (this.isPlaying) {
-			this.isShowingSoundtrack = true;
-		}
+function play() {
+	playlistRef.value?.mainSongButton();
+}
+
+function download() {
+	const location: RouteLocationRaw = {
+		name: 'download',
+		params: {
+			type: 'soundtrack',
+		},
+		query: { game: game.id + '' },
+	};
+
+	if (GJ_IS_DESKTOP_APP) {
+		// Gotta go past the first char since it's # in client.
+		Navigate.gotoExternal(
+			Environment.baseUrl + router.resolve(location).href.substr(1)
+		);
+		return;
 	}
 
-	play() {
-		const playlist = this.$refs.playlist as AppAudioPlaylistTS;
-		if (playlist) {
-			playlist.mainSongButton();
-		}
-	}
-
-	download() {
-		const location: RouteLocationRaw = {
-			name: 'download',
-			params: {
-				type: 'soundtrack',
-			},
-			query: { game: this.game.id + '' },
-		};
-
-		if (GJ_IS_DESKTOP_APP) {
-			// Gotta go past the first char since it's # in client.
-			Navigate.gotoExternal(
-				Environment.baseUrl + this.$router.resolve(location).href.substr(1)
-			);
-			return;
-		}
-
-		this.$router.push(location);
-	}
+	router.push(location);
 }
 </script>
 

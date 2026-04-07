@@ -120,6 +120,8 @@ async function seek(pos: number) {
 function onSongEnded() {
 	nextSong();
 }
+
+defineExpose({ mainSongButton });
 </script>
 
 <template>
