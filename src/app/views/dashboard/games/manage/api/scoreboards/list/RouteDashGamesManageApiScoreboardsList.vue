@@ -21,7 +21,7 @@ import {
 } from '../../../../../../../../_common/route/route-component';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../../../_common/translate/translate.service';
-import FormGameScoreTable from '../../../../../../../components/forms/game/score-table/score-table.vue';
+import FormGameScoreTable from '../../../../../../../components/forms/game/score-table/FormGameScoreTable.vue';
 import { useGameDashRouteController } from '../../../manage.store';
 
 export default {
