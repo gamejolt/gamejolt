@@ -1,8 +1,17 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { ref } from 'vue';
 import { Api, ApiProgressEvent } from '../../api/api.service';
+import AppForm, { createForm } from '../../form-vue/AppForm.vue';
+import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
 import AppFormControlUpload from '../../form-vue/controls/upload/AppFormControlUpload.vue';
-import { BaseForm, FormOnLoad, FormOnSubmit } from '../../form-vue/form.service';
+import AppFormGroup from '../../form-vue/AppFormGroup.vue';
+import { validateFilesize, validateImageMaxDimensions } from '../../form-vue/validators';
+
+type Props = {
+	type: string;
+	parentId: number;
+};
+const { type, parentId } = defineProps<Props>();
 
 interface FormModel {
 	type: string;
@@ -11,58 +20,33 @@ interface FormModel {
 	_progress: ApiProgressEvent | null;
 }
 
-class Wrapper extends BaseForm<FormModel> {}
+const maxFilesize = ref(0);
+const maxWidth = ref(0);
+const maxHeight = ref(0);
 
-@Options({
-	components: {
-		AppFormControlUpload,
-	},
-})
-export default class FormThemeEditorImage
-	extends mixins(Wrapper)
-	implements FormOnLoad, FormOnSubmit
-{
-	@Prop(String) type!: string;
-	@Prop(Number) parentId!: number;
-
-	maxFilesize = 0;
-	maxWidth = 0;
-	maxHeight = 0;
-
-	get loadUrl() {
-		return `/web/dash/media-items`;
-	}
-
-	get loadData() {
-		return this.formModel;
-	}
-
-	created() {
-		this.form.warnOnDiscard = false;
-		this.form.resetOnSubmit = true;
-	}
-
+const form = createForm<FormModel>({
+	warnOnDiscard: false,
+	resetOnSubmit: true,
+	loadUrl: '/web/dash/media-items',
 	onInit() {
-		this.setField('type', this.type);
-		this.setField('parent_id', this.parentId);
-	}
-
+		form.formModel.type = type;
+		form.formModel.parent_id = parentId;
+	},
 	onLoad(response: any) {
-		this.maxFilesize = response.maxFilesize;
-		this.maxWidth = response.maxWidth;
-		this.maxHeight = response.maxHeight;
-	}
-
-	submit() {
-		this.form.submit();
-	}
-
+		maxFilesize.value = response.maxFilesize;
+		maxWidth.value = response.maxWidth;
+		maxHeight.value = response.maxHeight;
+	},
 	onSubmit() {
-		return Api.sendRequest('/web/dash/media-items/add-one', this.formModel, {
-			file: this.formModel.file,
-			progress: event => this.setField('_progress', event),
+		return Api.sendRequest('/web/dash/media-items/add-one', form.formModel, {
+			file: form.formModel.file,
+			progress: event => (form.formModel._progress = event),
 		});
-	}
+	},
+});
+
+function submit() {
+	form.submit();
 }
 </script>
 
