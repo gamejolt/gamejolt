@@ -6,7 +6,7 @@ import { routeProfileTrophiesSite } from './site/site.route';
 
 export const routeProfileTrophies: RouteRecordRaw = {
 	path: 'trophies',
-	component: () => import('./trophies.vue'),
+	component: () => import('./RouteProfileTrophies.vue'),
 	children: [
 		routeProfileTrophiesOverview,
 		routeProfileTrophiesAll,
