@@ -1,15 +1,16 @@
-<script lang="ts">
-import { mixins, Options, Watch } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import { formatFilesize } from '../../../../_common/filters/filesize';
 import AppFormControlCrop from '../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import {
-	BaseForm,
-	FormOnBeforeSubmit,
-	FormOnLoad,
-} from '../../../../_common/form-vue/form.service';
+import AppForm, { createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormControlError from '../../../../_common/form-vue/AppFormControlError.vue';
+import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
+import { validateFilesize, validateImageMaxDimensions, validateImageMinDimensions } from '../../../../_common/form-vue/validators';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { $clearUserAvatar, $saveUserAvatar, UserModel } from '../../../../_common/user/user.model';
@@ -18,80 +19,56 @@ type FormModel = UserModel & {
 	avatar_crop?: any;
 };
 
-class Wrapper extends BaseForm<FormModel> {}
+const maxFilesize = ref(0);
+const minSize = ref(0);
+const maxSize = ref(0);
 
-@Options({
-	components: {
-		AppFormControlUpload,
-		AppFormControlCrop,
-		AppFormControlToggle,
-	},
-})
-export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, FormOnBeforeSubmit {
-	modelClass = UserModel;
-	modelSaveHandler = $saveUserAvatar;
-
-	maxFilesize = 0;
-	minSize = 0;
-	maxSize = 0;
-
-	readonly formatFilesize = formatFilesize;
-	readonly Screen = Screen;
-
-	get loadUrl() {
-		return `/web/dash/avatar/save`;
-	}
-
-	get hasAvatar() {
-		return !!this.formModel.avatar_media_item;
-	}
-
-	get crop() {
-		return this.formModel.avatar_media_item
-			? this.formModel.avatar_media_item.getCrop()
-			: undefined;
-	}
-
-	@Watch('crop')
-	onCropChange() {
-		this.setField('avatar_crop', this.crop);
-	}
-
-	created() {
-		this.form.warnOnDiscard = false;
-		this.form.reloadOnSubmit = true;
-	}
-
+const form = createForm<FormModel>({
+	modelClass: UserModel,
+	modelSaveHandler: $saveUserAvatar,
+	warnOnDiscard: false,
+	reloadOnSubmit: true,
+	loadUrl: '/web/dash/avatar/save',
 	onLoad(payload: any) {
-		this.maxFilesize = payload.maxFilesize;
-		this.minSize = payload.minSize;
-		this.maxSize = payload.maxSize;
-	}
-
+		maxFilesize.value = payload.maxFilesize;
+		minSize.value = payload.minSize;
+		maxSize.value = payload.maxSize;
+	},
 	onBeforeSubmit() {
-		// Backend expects this field.
-		this.setField('crop' as any, this.formModel.avatar_crop);
-	}
+		form.formModel.crop = form.formModel.avatar_crop;
+	},
+});
 
-	avatarSelected() {
-		if (this.formModel.file) {
-			this.form.submit();
-		}
-	}
+const hasAvatar = computed(() => !!form.formModel.avatar_media_item);
 
-	async clearAvatar() {
-		const result = await showModalConfirm(
-			this.$gettext(`Are you sure you want to remove your avatar?`)
-		);
+const crop = computed(() =>
+	form.formModel.avatar_media_item
+		? form.formModel.avatar_media_item.getCrop()
+		: undefined
+);
 
-		if (result) {
-			$clearUserAvatar(this.formModel);
-		}
-	}
+watch(crop, () => {
+	form.formModel.avatar_crop = crop.value;
+});
 
-	gravatarToggled() {
-		Api.sendRequest('/web/dash/avatar/gravatar', this.formModel);
+function avatarSelected() {
+	if (form.formModel.file) {
+		form.submit();
 	}
+}
+
+async function clearAvatar() {
+	const result = await showModalConfirm(
+		`Are you sure you want to remove your avatar?`
+	);
+
+	if (result) {
+		$clearUserAvatar(form.formModel);
+	}
+}
+
+function gravatarToggled() {
+	Api.sendRequest('/web/dash/avatar/gravatar', form.formModel);
 }
 </script>
 
@@ -123,13 +100,13 @@ export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, F
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="formModel.avatar_media_item && !formModel.file"
+			v-if="form.formModel.avatar_media_item && !form.formModel.file"
 			name="avatar_crop"
 			:label="$gettext('Your Uploaded Avatar')"
 		>
 			<div class="form-control-static">
 				<AppFormControlCrop
-					:src="formModel.avatar_media_item.img_url"
+					:src="form.formModel.avatar_media_item.img_url"
 					:aspect-ratio="1"
 					:min-width="minSize"
 					:min-height="minSize"
@@ -141,7 +118,7 @@ export default class FormAvatar extends mixins(Wrapper) implements FormOnLoad, F
 			</div>
 		</AppFormGroup>
 
-		<template v-if="formModel.avatar_media_item && form.valid">
+		<template v-if="form.formModel.avatar_media_item && form.valid">
 			<div>
 				<AppFormButton>
 					<AppTranslate>Save</AppTranslate>
