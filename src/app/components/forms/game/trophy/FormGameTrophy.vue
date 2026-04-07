@@ -1,8 +1,13 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, ref, toRef } from 'vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import { BaseForm, FormOnLoad } from '../../../../../_common/form-vue/form.service';
 import { GameModel } from '../../../../../_common/game/game.model';
 import {
 	$clearGameTrophyImage,
@@ -12,90 +17,66 @@ import {
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { BaseTrophyDifficulty } from '../../../../../_common/trophy/base-trophy.model';
-class Wrapper extends BaseForm<GameTrophyModel> {}
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
-@Options({
-	components: {
-		AppImgResponsive,
-		AppFormControlToggle,
-		AppFormControlUpload,
-	},
-})
-export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoad {
-	@Prop(Object) game!: GameModel;
-	@Prop(Number) difficulty!: number;
+type Props = {
+	game: GameModel;
+	difficulty: number;
+	model?: GameTrophyModel;
+};
 
-	modelClass = GameTrophyModel;
-	modelSaveHandler = $saveGameTrophy;
+const props = defineProps<Props>();
+const { game, difficulty } = props;
 
-	maxFilesize = 0;
-	maxWidth = 0;
-	maxHeight = 0;
+const maxFilesize = ref(0);
+const maxWidth = ref(0);
+const maxHeight = ref(0);
 
-	get loadUrl() {
-		return `/web/dash/developer/games/api/trophies/save/${this.game.id}`;
-	}
-
-	get difficultyOptions() {
-		return [
-			{
-				label: this.$gettext('Bronze'),
-				value: BaseTrophyDifficulty.Bronze,
-			},
-			{
-				label: this.$gettext('Silver'),
-				value: BaseTrophyDifficulty.Silver,
-			},
-			{
-				label: this.$gettext('Gold'),
-				value: BaseTrophyDifficulty.Gold,
-			},
-			{
-				label: this.$gettext('Platinum'),
-				value: BaseTrophyDifficulty.Platinum,
-			},
-		];
-	}
-
-	created() {
-		this.form.resetOnSubmit = true;
-	}
-
+const form: FormController<GameTrophyModel> = createForm({
+	model: toRef(props, 'model'),
+	modelClass: GameTrophyModel,
+	modelSaveHandler: $saveGameTrophy,
+	resetOnSubmit: true,
+	loadUrl: computed(() => `/web/dash/developer/games/api/trophies/save/${game.id}`),
 	onInit() {
-		this.setField('game_id', this.game.id);
+		form.formModel.game_id = game.id;
 
 		// If we're adding, set some defaults.
-		if (this.method === 'add') {
-			this.setField('difficulty', this.difficulty);
-			this.setField('secret', false);
+		if (form.method === 'add') {
+			form.formModel.difficulty = difficulty;
+			form.formModel.secret = false;
 		}
-	}
-
+	},
 	onLoad(payload: any) {
-		this.maxFilesize = payload.maxFilesize;
-		this.maxWidth = payload.maxWidth;
-		this.maxHeight = payload.maxHeight;
+		maxFilesize.value = payload.maxFilesize;
+		maxWidth.value = payload.maxWidth;
+		maxHeight.value = payload.maxHeight;
+	},
+});
+
+const difficultyOptions = computed(() => [
+	{ label: $gettext('Bronze'), value: BaseTrophyDifficulty.Bronze },
+	{ label: $gettext('Silver'), value: BaseTrophyDifficulty.Silver },
+	{ label: $gettext('Gold'), value: BaseTrophyDifficulty.Gold },
+	{ label: $gettext('Platinum'), value: BaseTrophyDifficulty.Platinum },
+]);
+
+async function clearImage() {
+	const result = await showModalConfirm(
+		$gettext('Are you sure you want to clear this trophy image?')
+	);
+
+	if (!result) {
+		return;
 	}
 
-	async clearImage() {
-		const result = await showModalConfirm(
-			this.$gettext('Are you sure you want to clear this trophy image?')
-		);
+	// It's important we save on the base model!
+	await $clearGameTrophyImage(props.model!);
 
-		if (!result) {
-			return;
-		}
-
-		// It's important we save on the base model!
-		// This way we don't overwrite the form model with the current values from the server.
-		// They may have made changes and just want to clear the image and then save their form.
-		// Doing it in this order allows them to do that.
-		await $clearGameTrophyImage(this.model!);
-
-		// Copy just the differences that we want.
-		this.setField('has_thumbnail', this.model!.has_thumbnail);
-		this.setField('img_thumbnail', this.model!.img_thumbnail);
-	}
+	// Copy just the differences that we want.
+	form.formModel.has_thumbnail = props.model!.has_thumbnail;
+	form.formModel.img_thumbnail = props.model!.img_thumbnail;
 }
 </script>
 
@@ -104,13 +85,13 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 		<!--
 			Show the current image if there is one.
 		-->
-		<div v-if="formModel.has_thumbnail" class="form-group">
+		<div v-if="form.formModel.has_thumbnail" class="form-group">
 			<label class="control-label">
 				<AppTranslate>Current Trophy Image</AppTranslate>
 			</label>
 
 			<AppImgResponsive
-				:src="formModel.img_thumbnail"
+				:src="form.formModel.img_thumbnail"
 				:alt="$gettext('Current Trophy Image')"
 			/>
 
@@ -124,7 +105,7 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 		</div>
 
 		<!-- TODO(vue3) translate-comment="Refers to a difficulty level. How easy/hard it is to accomplish." -->
-		<AppFormGroup v-if="method === 'edit'" name="difficulty" :label="$gettext(`Difficulty`)">
+		<AppFormGroup v-if="form.method === 'edit'" name="difficulty" :label="$gettext(`Difficulty`)">
 			<AppFormControlSelect>
 				<option v-for="item of difficultyOptions" :key="item.label" :value="item.value">
 					{{ item.label }}
@@ -136,7 +117,7 @@ export default class FormGameTrophy extends mixins(Wrapper) implements FormOnLoa
 		<AppFormGroup
 			name="file"
 			:label="
-				!formModel.has_thumbnail
+				!form.formModel.has_thumbnail
 					? $gettext('Trophy Image')
 					: $gettext('Change Trophy Image')
 			"

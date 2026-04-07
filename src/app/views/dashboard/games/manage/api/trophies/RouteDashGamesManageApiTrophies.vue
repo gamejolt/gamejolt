@@ -25,7 +25,7 @@ import {
 	BaseTrophyDifficulty,
 } from '../../../../../../../_common/trophy/base-trophy.model';
 import AppTrophyThumbnail from '../../../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
-import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
+import FormGameTrophy from '../../../../../../components/forms/game/trophy/FormGameTrophy.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
 const trophyLabels = {
