@@ -1,47 +1,44 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
+import { defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Api } from '../../../../_common/api/api.service';
+
+export default {
+	name: 'RouteAuthResetPassword',
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+		// Will return a 404 if the key isn't correct for this user.
+		resolver: ({ route }) =>
+			Api.sendRequest('/web/auth/check-reset-key/' + route.params.userId, {
+				key: route.params.token,
+			}),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
+import { createAppRoute } from '../../../../_common/route/route-component';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import FormResetPassword from '../../../components/forms/reset-password/reset-password.vue';
 
-@Options({
-	name: 'RouteAuthResetPassword',
-	components: {
-		FormResetPassword,
-	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: 'always',
-	// Will return a 404 if the key isn't correct for this user.
-	resolver: ({ route }) =>
-		Api.sendRequest('/web/auth/check-reset-key/' + route.params.userId, {
-			key: route.params.token,
-		}),
-})
-export default class RouteAuthResetPassword extends LegacyRouteComponent {
-	get userId() {
-		return parseInt(this.$route.params.userId, 10);
-	}
+const route = useRoute();
+const router = useRouter();
 
-	get token() {
-		return this.$route.params.token;
-	}
+const userId = computed(() => parseInt(route.params.userId as string, 10));
+const token = computed(() => route.params.token as string);
 
-	get routeTitle() {
-		return this.$gettext('Reset Password');
-	}
+createAppRoute({
+	routeTitle: $gettext('Reset Password'),
+});
 
-	onSubmitted() {
-		showSuccessGrowl(
-			this.$gettext('Your password has been reset. Now you can log in with your new one.'),
-			this.$gettext('Password Changed')
-		);
-		this.$router.push({ name: 'auth.login' });
-	}
+function onSubmitted() {
+	showSuccessGrowl(
+		$gettext('Your password has been reset. Now you can log in with your new one.'),
+		$gettext('Password Changed')
+	);
+	router.push({ name: 'auth.login' });
 }
 </script>
 
