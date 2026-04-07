@@ -11,7 +11,7 @@ import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-s
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { Media } from '../../../../views/dashboard/games/manage/manage.store';
 import FormGameImage from '../../../forms/game/image/FormGameImage.vue';
-import FormGameSketchfab from '../../../forms/game/sketchfab/sketchfab.vue';
+import FormGameSketchfab from '../../../forms/game/sketchfab/FormGameSketchfab.vue';
 import FormGameVideo from '../../../forms/game/video/video.vue';
 import { GameMediaItemEditModalRemoveCallback } from './edit-modal.service';
 
