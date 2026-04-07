@@ -6,7 +6,7 @@ import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import { BaseModal } from '../../../../_common/modal/base';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import FormToken from '../../forms/token/token.vue';
+import FormToken from '../../forms/token/FormToken.vue';
 
 @Options({
 	components: {
