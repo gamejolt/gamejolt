@@ -12,7 +12,7 @@ import { Screen } from '../../../../../../_common/screen/screen-service';
 import { showGameHeaderModal } from '../../../../../components/game/header-modal/header-modal.service';
 import { useGameDashRouteController } from '../manage.store';
 import AppGameManageMediaBar from './_media-bar/AppGameManageMediaBar.vue';
-import AppManageGameNav from './_nav/nav.vue';
+import AppGameManageNav from './_nav/AppGameManageNav.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -69,7 +69,7 @@ createAppRoute({});
 		<div v-if="Screen.isMobile" class="container">
 			<br />
 			<AppNavTabList>
-				<AppManageGameNav />
+				<AppGameManageNav />
 			</AppNavTabList>
 		</div>
 
@@ -78,7 +78,7 @@ createAppRoute({});
 				<div class="row">
 					<div v-if="Screen.isDesktop" class="col-md-2">
 						<nav class="platform-list">
-							<AppManageGameNav />
+							<AppGameManageNav />
 						</nav>
 					</div>
 					<div class="col-xs-12 col-md-10">

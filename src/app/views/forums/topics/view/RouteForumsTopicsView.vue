@@ -29,7 +29,7 @@ import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
 import { enforceLocation } from '../../../../../utils/router';
 import FormForumTopic from '../../../../components/forms/forum/topic/FormForumTopic.vue';
-import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
+import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/AppForumBreadcrumbs.vue';
 import AppForumPostList from '../../../../components/forum/post-list/post-list.vue';
 import AppForumRules from '../../../../components/forum/rules/rules.vue';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';

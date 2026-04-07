@@ -1,40 +1,19 @@
-<script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import { GameModel } from '../../../../../../../_common/game/game.model';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../manage.store';
-import AppManageGameNavRequired from './required.vue';
+import AppGameManageNavRequired from './required.vue';
 
-@Options({
-	components: {
-		AppManageGameNavRequired,
-		AppGamePerms,
-	},
-})
-export default class AppManageGameNav extends Vue {
-	routeStore = setup(() => useGameDashRouteController()!);
-	commonStore = setup(() => useCommonStore());
+const routeStore = useGameDashRouteController()!;
+const commonStore = useCommonStore();
 
-	get game() {
-		return this.routeStore.game!;
-	}
+const game = computed(() => routeStore.game!);
+const isWizard = computed(() => routeStore.isWizard);
+const canPublish = computed(() => routeStore.canPublish);
 
-	get isWizard() {
-		return this.routeStore.isWizard;
-	}
-
-	get canPublish() {
-		return this.routeStore.canPublish;
-	}
-
-	get app() {
-		return this.commonStore;
-	}
-
-	Game = GameModel;
-}
+const Game = GameModel;
 </script>
 
 <template>
@@ -59,7 +38,7 @@ export default class AppManageGameNav extends Vue {
 					}"
 					active-class="active"
 				>
-					<AppManageGameNavRequired :is-complete="true" />
+					<AppGameManageNavRequired :is-complete="true" />
 					<AppTranslate>Details</AppTranslate>
 				</router-link>
 			</AppGamePerms>
@@ -71,7 +50,7 @@ export default class AppManageGameNav extends Vue {
 					}"
 					active-class="active"
 				>
-					<AppManageGameNavRequired :is-complete="game.hasDescription" />
+					<AppGameManageNavRequired :is-complete="game.hasDescription" />
 					<AppTranslate>Description</AppTranslate>
 				</router-link>
 			</AppGamePerms>
@@ -83,7 +62,7 @@ export default class AppManageGameNav extends Vue {
 					}"
 					active-class="active"
 				>
-					<AppManageGameNavRequired :is-complete="!!game.thumbnail_media_item" />
+					<AppGameManageNavRequired :is-complete="!!game.thumbnail_media_item" />
 					<AppTranslate>Design</AppTranslate>
 				</router-link>
 			</AppGamePerms>
@@ -104,7 +83,7 @@ export default class AppManageGameNav extends Vue {
 							$route.name.indexOf('dash.games.manage.game.packages') === 0,
 					}"
 				>
-					<AppManageGameNavRequired
+					<AppGameManageNavRequired
 						v-if="!game._is_devlog"
 						:is-complete="game.has_active_builds"
 					/>
@@ -119,7 +98,7 @@ export default class AppManageGameNav extends Vue {
 					}"
 					active-class="active"
 				>
-					<AppManageGameNavRequired :is-complete="!!game.tigrs_age" />
+					<AppGameManageNavRequired :is-complete="!!game.tigrs_age" />
 					<AppTranslate>Maturity</AppTranslate>
 				</router-link>
 			</AppGamePerms>

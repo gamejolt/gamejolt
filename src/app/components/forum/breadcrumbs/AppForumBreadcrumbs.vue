@@ -1,13 +1,13 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
 import { ForumChannelModel } from '../../../../_common/forum/channel/channel.model';
 
-@Options({})
-export default class AppForumBreadcrumbs extends Vue {
-	@Prop(Object) channel?: ForumChannelModel;
-	@Prop(String) sort?: string;
-	@Prop(String) page?: string;
-}
+type Props = {
+	channel?: ForumChannelModel;
+	sort?: string;
+	page?: string;
+};
+
+const { channel, sort, page } = defineProps<Props>();
 </script>
 
 <template>
