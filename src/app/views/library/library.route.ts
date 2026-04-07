@@ -7,6 +7,6 @@ const children: RouteRecordRaw[] = [routeLibraryOverview, ...routeLibraryCollect
 export const routeLibrary: RouteRecordRaw = {
 	name: 'library',
 	path: '/library',
-	component: () => import('./library'),
+	component: () => import('./RouteLibrary.vue'),
 	children,
 };
