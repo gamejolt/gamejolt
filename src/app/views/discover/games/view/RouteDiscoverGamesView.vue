@@ -61,7 +61,7 @@ import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick
 import { UserModel } from '../../../../../_common/user/user.model';
 import { enforceLocation } from '../../../../../utils/router';
 import AppGameMaturityBlock from '../../../../components/game/maturity-block/AppGameMaturityBlock.vue';
-import { AppGamePerms } from '../../../../components/game/perms/AppGamePerms.vue';
+import AppGamePerms from '../../../../components/game/perms/AppGamePerms.vue';
 import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderAvatar from '../../../../components/page-header/AppPageHeaderAvatar.vue';

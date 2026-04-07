@@ -16,7 +16,7 @@ import {
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import AppCommunityPerms from '../../../../../../components/community/perms/AppCommunityPerms.vue';
-import { AppGamePerms } from '../../../../../../components/game/perms/AppGamePerms.vue';
+import AppGamePerms from '../../../../../../components/game/perms/AppGamePerms.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
 export default {

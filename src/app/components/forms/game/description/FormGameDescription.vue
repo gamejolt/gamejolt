@@ -21,7 +21,7 @@ import {
 import { $saveGameDescription, GameModel } from '../../../../../_common/game/game.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { AppGamePerms } from '../../../game/perms/AppGamePerms.vue';
+import AppGamePerms from '../../../game/perms/AppGamePerms.vue';
 import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
 import AppFormGameDescriptionTags from './tags/AppFormGameDescriptionTags.vue';
 

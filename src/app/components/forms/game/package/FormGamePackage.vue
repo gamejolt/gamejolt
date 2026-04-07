@@ -33,7 +33,7 @@ import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { AppGamePerms } from '../../../game/perms/AppGamePerms.vue';
+import AppGamePerms from '../../../game/perms/AppGamePerms.vue';
 
 type FormGamePackageModel = GamePackageModel & {
 	primary: boolean;
