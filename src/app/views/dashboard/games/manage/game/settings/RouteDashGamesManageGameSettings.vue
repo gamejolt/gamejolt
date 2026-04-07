@@ -1,82 +1,64 @@
 <script lang="ts">
-import { setup } from 'vue-class-component';
-import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../_common/api/api.service';
+import {
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../_common/route/route-component';
+
+export default {
+	name: 'RouteDashGamesManageGameSettings',
+	...defineAppRouteOptions({
+		reloadOn: { params: ['id'] },
+		resolver: ({ route }) =>
+			Api.sendRequest(`/web/dash/developer/games/settings/view/${route.params.id}`),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
 import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
 import { GameStatus } from '../../../../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../_common/route/legacy-route-component';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import FormGameSettings from '../../../../../../components/forms/game/settings/FormGameSettings.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
-@Options({
-	name: 'RouteDashGamesManageGameSettings',
-	components: {
-		FormGameSettings,
-		AppExpand,
-	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: { params: ['id'] },
-	resolver: ({ route }) =>
-		Api.sendRequest(`/web/dash/developer/games/settings/view/${route.params.id}`),
-})
-export default class RouteDashGamesManageGameSettings extends LegacyRouteComponent {
-	routeStore = setup(() => useGameDashRouteController()!);
-	commonStore = setup(() => useCommonStore());
+const routeStore = useGameDashRouteController()!;
+const { user } = useCommonStore();
 
-	get user() {
-		return this.commonStore.user;
-	}
+const game = computed(() => routeStore.game!);
+const isWizard = computed(() => routeStore.isWizard);
 
-	get game() {
-		return this.routeStore.game!;
-	}
+const hasCompetitionEntries = ref(false);
 
-	get isWizard() {
-		return this.routeStore.isWizard;
-	}
+const isUnlisted = computed(() => game.value.status === GameStatus.Hidden);
+const isCanceled = computed(() => game.value.canceled);
+const isCollaborator = computed(() => user.value!.id !== game.value.developer.id);
 
-	hasCompetitionEntries = false;
+function onSaved() {
+	showSuccessGrowl(
+		$gettext('Your game settings have been saved.'),
+		$gettext('Settings Saved')
+	);
+	Scroll.to(0);
+}
 
-	get routeTitle() {
-		if (this.game) {
-			return this.$gettext('Settings for %{ game }', {
-				game: this.game.title,
+createAppRoute({
+	routeTitle: computed(() => {
+		if (game.value) {
+			return $gettext('Settings for %{ game }', {
+				game: game.value.title,
 			});
 		}
 		return null;
-	}
-
-	get isUnlisted() {
-		return this.game.status === GameStatus.Hidden;
-	}
-
-	get isCanceled() {
-		return this.game.canceled;
-	}
-
-	get isCollaborator() {
-		return this.user!.id !== this.game.developer.id;
-	}
-
-	routeResolved($payload: any) {
-		this.hasCompetitionEntries = $payload.hasCompetitionEntries;
-	}
-
-	onSaved() {
-		showSuccessGrowl(
-			this.$gettext('Your game settings have been saved.'),
-			this.$gettext('Settings Saved')
-		);
-		Scroll.to(0);
-	}
-}
+	}),
+	onResolved({ payload }) {
+		hasCompetitionEntries.value = payload.hasCompetitionEntries;
+	},
+});
 </script>
 
 <template>
