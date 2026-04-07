@@ -8,7 +8,7 @@ import { BaseModal } from '../../../../../_common/modal/base';
 import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import FormGameImage from '../../../forms/game/image/FormGameImage.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/FormGameSketchfab.vue';
-import FormGameVideo from '../../../forms/game/video/video.vue';
+import FormGameVideo from '../../../forms/game/video/FormGameVideo.vue';
 
 @Options({
 	components: {
