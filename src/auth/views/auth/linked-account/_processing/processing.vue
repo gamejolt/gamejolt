@@ -1,13 +1,5 @@
-<script lang="ts">
-import { Options, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-
-@Options({
-	components: {
-		AppLoading,
-	},
-})
-export default class AuthLinkedAccountProcessing extends Vue {}
 </script>
 
 <template>
