@@ -13,7 +13,7 @@ import { vAppScrollTo } from '../../../_common/scroll/to/to.directive';
 import AppThemeSvgStyleguide from '../../../_common/theme/svg/AppThemeSvgStyleguide.vue';
 import { touchUser } from '../../../_common/user/user.model';
 import AppAvatarFrameStyleguide from './avatar-frame/AppAvatarFrameStyleguide.vue';
-import AppStyleguideColor from './color/color.vue';
+import AppStyleguideColor from './color/AppStyleguideColor.vue';
 
 @Options({
 	name: 'RouteStyleguide',
