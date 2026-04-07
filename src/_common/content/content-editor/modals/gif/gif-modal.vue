@@ -1,13 +1,11 @@
-<script lang="ts">
-import { nextTick } from 'vue';
-import { mixins, Options } from 'vue-property-decorator';
-import { shallowSetup } from '../../../../../utils/vue';
+<script lang="ts" setup>
+import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue';
 import { Api } from '../../../../api/api.service';
 import { showErrorGrowl } from '../../../../growls/growls.service';
 import AppJolticon from '../../../../jolticon/AppJolticon.vue';
 import AppLoading from '../../../../loading/AppLoading.vue';
 import { AppModalInterface } from '../../../../modal/AppModal.vue';
-import { BaseModal } from '../../../../modal/base';
+import { useModal } from '../../../../modal/modal.service';
 import { Ruler } from '../../../../ruler/ruler-service';
 import { Screen } from '../../../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../../../scroll/AppScrollScroller.vue';
@@ -15,278 +13,253 @@ import { $gettext } from '../../../../translate/translate.service';
 import { Category, SearchResult } from './gif-modal.service';
 import mascotImage from './mascot-complete.png';
 
-// This is a module variable so that it only fetches once.
+// Module-level cache so categories are only fetched once.
 let categoriesCache: Category[] | undefined;
 
-@Options({
-	components: {
-		AppLoading,
-		AppScrollScroller,
-	},
-})
-export default class AppContentEditorGifModal extends mixins(BaseModal) {
-	private searchTimeout: NodeJS.Timer | null = null;
-	categories: Category[] = [];
-	searchResults: SearchResult[] = [];
-	searchValue = '';
-	loadingCategories = true;
-	isLoading = false;
-	loadedGifs = [] as string[];
-	// To make sure parallel search requests don't step on each other, this keeps the last term, so all previous searches will cancel.
-	currentSearchTerm = '';
-	currentSearchPage = 0;
-	maxPages = 3;
-	perPage = 12;
-	isLastPage = false;
-	hasError = false;
-	contentScroller = shallowSetup(() => createScroller());
+const modal = useModal()!;
 
-	readonly Screen = Screen;
-	readonly mascotImage = mascotImage;
+const modalComponentRef = useTemplateRef<AppModalInterface>('modalComponent');
+const searchInputRef = useTemplateRef<HTMLInputElement>('searchInput');
 
-	declare $refs: {
-		modalComponent: AppModalInterface;
-		searchInput: HTMLInputElement;
-	};
+const contentScroller = createScroller();
 
-	get shouldShowResetButton() {
-		return this.searchValue.length > 0;
-	}
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
-	get shouldShowCategories() {
-		return this.searchValue === '';
-	}
+const categories = ref<Category[]>([]);
+const searchResults = ref<SearchResult[]>([]);
+const searchValue = ref('');
+const loadingCategories = ref(true);
+const isLoading = ref(false);
+const loadedGifs = ref<string[]>([]);
+// To make sure parallel search requests don't step on each other, this keeps
+// the last term, so all previous searches will cancel.
+const currentSearchTerm = ref('');
+const currentSearchPage = ref(0);
+const maxPages = ref(3);
+const perPage = ref(12);
+const isLastPage = ref(false);
+const hasError = ref(false);
 
-	get reachedLastPage() {
-		return this.currentSearchPage === this.maxPages || this.isLastPage;
-	}
+const shouldShowResetButton = computed(() => searchValue.value.length > 0);
+const shouldShowCategories = computed(() => searchValue.value === '');
+const reachedLastPage = computed(
+	() => currentSearchPage.value === maxPages.value || isLastPage.value
+);
+const shouldShowMoreButton = computed(
+	() => Screen.isXs && searchValue.value.length > 0 && !isLoading.value
+);
+const isFavorites = computed(
+	() => currentSearchTerm.value.toLowerCase().trim() === 'favorites'
+);
 
-	get shouldShowMoreButton() {
-		return Screen.isXs && this.searchValue.length > 0 && !this.isLoading;
-	}
+onMounted(async () => {
+	await populateCategories();
 
-	get isFavorites() {
-		return this.currentSearchTerm.toLowerCase().trim() === 'favorites';
-	}
+	// Wait for the categories to be loaded. The input is disabled until they are.
+	// Then wait a tick to make sure the `disabled` state goes away.
+	// Inputs cannot be focused until they are no longer disabled.
+	await nextTick();
 
-	async mounted() {
-		await this.populateCategories();
+	searchInputRef.value?.focus();
+});
 
-		// Wait for the categories to be loaded. The input is disabled until they are.
-		// Then wait a tick to make sure the `disabled` state goes away.
-		// Inputs cannot be focused until they are no longer disabled.
-		await nextTick();
-
-		// Focus now.
-		this.$refs.searchInput.focus();
-	}
-
-	private async populateCategories() {
-		if (categoriesCache === undefined) {
-			try {
-				const payload = await Api.sendRequest('/web/content/tenor/categories', undefined, {
-					detach: true,
-				});
-				if (payload.categories) {
-					categoriesCache = payload.categories;
-					for (let i = 0; i < categoriesCache!.length; i++) {
-						categoriesCache![i].index = i;
-					}
-				}
-			} catch (error) {
-				console.error(error);
-				this.hasError = true;
-			}
-		}
-		this.categories = categoriesCache!;
-		this.loadingCategories = false;
-	}
-
-	private async startSearch() {
-		const term = this.searchValue;
-		this.currentSearchTerm = term;
-		const url =
-			'/web/content/tenor/search?q=' +
-			encodeURIComponent(term) +
-			'&page=' +
-			this.currentSearchPage;
-
+async function populateCategories() {
+	if (categoriesCache === undefined) {
 		try {
-			const payload = await Api.sendRequest(url, undefined, { detach: true });
-			if (this.currentSearchTerm === term) {
-				if (payload.maxPages) {
-					this.maxPages = payload.maxPages;
+			const payload = await Api.sendRequest('/web/content/tenor/categories', undefined, {
+				detach: true,
+			});
+			if (payload.categories) {
+				categoriesCache = payload.categories;
+				for (let i = 0; i < categoriesCache!.length; i++) {
+					categoriesCache![i].index = i;
 				}
-				if (payload.perPage) {
-					this.perPage = payload.perPage;
-				}
-
-				if (payload.results) {
-					this.isLastPage =
-						payload.results.length === 0 || payload.results.length < this.perPage;
-
-					for (const result of payload.results) {
-						if (this.searchResults.every(i => i.id !== result.id)) {
-							this.searchResults.push(result);
-						}
-					}
-					for (let i = 0; i < this.searchResults.length; i++) {
-						this.searchResults[i].index = i;
-					}
-				}
-
-				this.isLoading = false;
-
-				// After getting more items, wait for items to build and check
-				// if we should load again.
-				await nextTick();
-				this.onContainerScroll();
 			}
 		} catch (error) {
 			console.error(error);
-			this.hasError = true;
+			hasError.value = true;
 		}
 	}
+	categories.value = categoriesCache!;
+	loadingCategories.value = false;
+}
 
-	onSearchInput(e: Event) {
-		if (this.searchValue === '') {
-			this.searchResults = [];
-		}
+async function startSearch() {
+	const term = searchValue.value;
+	currentSearchTerm.value = term;
+	const url =
+		'/web/content/tenor/search?q=' +
+		encodeURIComponent(term) +
+		'&page=' +
+		currentSearchPage.value;
 
-		const value = (e.target! as HTMLInputElement).value;
-		this.searchValue = value;
-		let timeoutDelay = 200;
+	try {
+		const payload = await Api.sendRequest(url, undefined, { detach: true });
+		if (currentSearchTerm.value === term) {
+			if (payload.maxPages) {
+				maxPages.value = payload.maxPages;
+			}
+			if (payload.perPage) {
+				perPage.value = payload.perPage;
+			}
 
-		if (this.searchTimeout) {
-			clearTimeout(this.searchTimeout);
-			this.searchTimeout = null;
-			timeoutDelay += 200;
-		}
+			if (payload.results) {
+				isLastPage.value =
+					payload.results.length === 0 || payload.results.length < perPage.value;
 
-		if (this.searchResults.length === 0) {
-			this.isLoading = true;
-		}
-
-		this.searchTimeout = setTimeout(() => {
-			this.currentSearchPage = 0;
-			this.isLoading = true;
-			this.searchResults = [];
-			this.scrollToTop();
-			this.startSearch();
-		}, timeoutDelay);
-	}
-
-	onSearchKeyDown(e: KeyboardEvent) {
-		if (e.key === 'Enter') {
-			this.scrollToTop();
-
-			this.isLoading = true;
-			this.searchResults = [];
-			this.startSearch();
-		}
-	}
-
-	onClickReset() {
-		this.searchValue = '';
-		this.currentSearchPage = 0;
-		this.scrollToTop();
-	}
-
-	onClickCategory(searchTerm: string) {
-		this.searchValue = searchTerm;
-		this.scrollToTop();
-
-		this.isLoading = true;
-		this.searchResults = [];
-		this.startSearch();
-	}
-
-	isGifLoading(id: string) {
-		return !this.loadedGifs.includes(id);
-	}
-
-	onGifLoaded(id: string) {
-		this.loadedGifs.push(id);
-	}
-
-	scrollToTop() {
-		// This has a v-if around it when loading, so it may not be in the DOM.
-		this.contentScroller.scrollTo(0);
-		this.$refs.modalComponent.scrollTo(0);
-	}
-
-	onContainerScroll() {
-		if (!this.isLoading && this.searchValue.length > 0 && !this.reachedLastPage) {
-			const container = this.contentScroller.element.value;
-			if (container) {
-				const height = Ruler.height(container);
-				if (container.scrollHeight < container.scrollTop + height + 100) {
-					this.loadNextPage();
+				for (const result of payload.results) {
+					if (searchResults.value.every((i: SearchResult) => i.id !== result.id)) {
+						searchResults.value.push(result);
+					}
+				}
+				for (let i = 0; i < searchResults.value.length; i++) {
+					searchResults.value[i].index = i;
 				}
 			}
+
+			isLoading.value = false;
+
+			// After getting more items, wait for items to build and check
+			// if we should load again.
+			await nextTick();
+			onContainerScroll();
 		}
+	} catch (error) {
+		console.error(error);
+		hasError.value = true;
+	}
+}
+
+function onSearchInput(e: Event) {
+	if (searchValue.value === '') {
+		searchResults.value = [];
 	}
 
-	loadNextPage() {
-		this.currentSearchPage++;
-		this.isLoading = true;
-		this.startSearch();
+	const value = (e.target! as HTMLInputElement).value;
+	searchValue.value = value;
+	let timeoutDelay = 200;
+
+	if (searchTimeout) {
+		clearTimeout(searchTimeout);
+		searchTimeout = null;
+		timeoutDelay += 200;
 	}
 
-	onClickSearchResult(searchResult: SearchResult) {
-		// Run this async
-		// Also don't care about whether this succeeds or not.
-		Api.sendRequest(
-			'/web/content/tenor/register-share/' + searchResult.id,
-			{},
-			{
-				detach: true,
+	if (searchResults.value.length === 0) {
+		isLoading.value = true;
+	}
+
+	searchTimeout = setTimeout(() => {
+		currentSearchPage.value = 0;
+		isLoading.value = true;
+		searchResults.value = [];
+		scrollToTop();
+		startSearch();
+	}, timeoutDelay);
+}
+
+function onSearchKeyDown(e: KeyboardEvent) {
+	if (e.key === 'Enter') {
+		scrollToTop();
+		isLoading.value = true;
+		searchResults.value = [];
+		startSearch();
+	}
+}
+
+function onClickReset() {
+	searchValue.value = '';
+	currentSearchPage.value = 0;
+	scrollToTop();
+}
+
+function onClickCategory(searchTerm: string) {
+	searchValue.value = searchTerm;
+	scrollToTop();
+	isLoading.value = true;
+	searchResults.value = [];
+	startSearch();
+}
+
+function isGifLoading(id: string) {
+	return !loadedGifs.value.includes(id);
+}
+
+function onGifLoaded(id: string) {
+	loadedGifs.value.push(id);
+}
+
+function scrollToTop() {
+	contentScroller.scrollTo(0);
+	modalComponentRef.value?.scrollTo(0);
+}
+
+function onContainerScroll() {
+	if (!isLoading.value && searchValue.value.length > 0 && !reachedLastPage.value) {
+		const container = contentScroller.element.value;
+		if (container) {
+			const height = Ruler.height(container);
+			if (container.scrollHeight < container.scrollTop + height + 100) {
+				loadNextPage();
 			}
-		).then();
+		}
+	}
+}
 
-		this.modal.resolve(searchResult);
+function loadNextPage() {
+	currentSearchPage.value++;
+	isLoading.value = true;
+	startSearch();
+}
+
+function onClickSearchResult(searchResult: SearchResult) {
+	// Run async, don't care about success.
+	Api.sendRequest(
+		'/web/content/tenor/register-share/' + searchResult.id,
+		{},
+		{ detach: true }
+	).then();
+
+	modal.resolve(searchResult);
+}
+
+function onRetry() {
+	hasError.value = false;
+	currentSearchPage.value = 0;
+	currentSearchTerm.value = '';
+	isLastPage.value = false;
+	categories.value = [];
+	categoriesCache = undefined;
+	searchValue.value = '';
+	isLoading.value = false;
+	searchResults.value = [];
+	loadedGifs.value = [];
+
+	if (searchTimeout) {
+		clearTimeout(searchTimeout);
+		searchTimeout = null;
 	}
 
-	onRetry() {
-		this.hasError = false;
+	loadingCategories.value = true;
+	populateCategories();
+}
 
-		// Reset entire state
-		this.currentSearchPage = 0;
-		this.currentSearchTerm = '';
-		this.isLastPage = false;
-		this.categories = [];
-		categoriesCache = undefined;
-		this.searchValue = '';
-		this.isLoading = false;
-		this.searchResults = [];
-		this.loadedGifs = [];
+async function toggleFavorite(searchResult: SearchResult) {
+	const toggleTo = !searchResult.favorite;
+	searchResult.favorite = toggleTo;
 
-		if (this.searchTimeout) {
-			clearTimeout(this.searchTimeout);
-			this.searchTimeout = null;
-		}
-
-		this.loadingCategories = true;
-		this.populateCategories();
-	}
-
-	async toggleFavorite(searchResult: SearchResult) {
-		const toggleTo = !searchResult.favorite;
-		searchResult.favorite = toggleTo;
-
-		const url =
-			`/web/content/tenor/` +
-			(toggleTo ? 'add-favorite' : 'remove-favorite') +
-			`/${searchResult.id}`;
-		const response = await Api.sendRequest(url, {});
-		if (!response.success) {
-			showErrorGrowl(
-				$gettext(
-					`Sorry, you have reached the maximum number of favorite GIFs. To add more, please remove some from your Favorites list.`
-				)
-			);
-			searchResult.favorite = !toggleTo;
-		}
+	const url =
+		`/web/content/tenor/` +
+		(toggleTo ? 'add-favorite' : 'remove-favorite') +
+		`/${searchResult.id}`;
+	const response = await Api.sendRequest(url, {});
+	if (!response.success) {
+		showErrorGrowl(
+			$gettext(
+				`Sorry, you have reached the maximum number of favorite GIFs. To add more, please remove some from your Favorites list.`
+			)
+		);
+		searchResult.favorite = !toggleTo;
 	}
 }
 </script>
@@ -430,4 +403,4 @@ export default class AppContentEditorGifModal extends mixins(BaseModal) {
 	</AppModal>
 </template>
 
-<style lang="stylus" src="./gif-modal.styl" scoped></style>
+<style lang="stylus" scoped src="./gif-modal.styl"></style>
