@@ -27,7 +27,7 @@ import AppTimeAgo from '../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { arrayRemove } from '../../../../../../../utils/array';
 import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/FormGameKeyGroupAddKeys.vue';
-import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
+import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/FormGameKeyGroup.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
 @Options({

@@ -16,7 +16,7 @@ import {
 	LegacyRouteComponent,
 	OptionsForLegacyRoute,
 } from '../../../../../../../_common/route/legacy-route-component';
-import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/key-group.vue';
+import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/FormGameKeyGroup.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
 @Options({
