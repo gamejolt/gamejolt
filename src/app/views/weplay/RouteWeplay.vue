@@ -1,36 +1,29 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
-import AppCard from '../../../_common/card/AppCard.vue';
+import { touchUser } from '../../../_common/user/user.model';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../_common/route/route-component';
+
+export default {
+	name: 'RouteWeplay',
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+		resolver: () => touchUser(),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { computed } from 'vue';
+import AppCard from '../../../_common/card/AppCard.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { touchUser } from '../../../_common/user/user.model';
 import AppWeplayLogo from '../../components/weplay/logo/AppWeplayLogo.vue';
 
-@Options({
-	name: 'RouteWeplay',
-	components: {
-		AppCard,
-		AppWeplayLogo,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: 'never',
-	resolver: () => touchUser(),
-})
-export default class RouteWeplay extends LegacyRouteComponent {
-	readonly Screen = Screen;
-
-	get routeTitle() {
-		return 'Stajoltia';
-	}
-}
+createAppRoute({
+	routeTitle: computed(() => 'Stajoltia'),
+});
 </script>
 
 <template>
