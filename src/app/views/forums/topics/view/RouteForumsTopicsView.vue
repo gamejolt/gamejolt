@@ -30,7 +30,7 @@ import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick
 import { enforceLocation } from '../../../../../utils/router';
 import FormForumTopic from '../../../../components/forms/forum/topic/FormForumTopic.vue';
 import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/AppForumBreadcrumbs.vue';
-import AppForumPostList from '../../../../components/forum/post-list/post-list.vue';
+import AppForumPostList from '../../../../components/forum/post-list/AppForumPostList.vue';
 import AppForumRules from '../../../../components/forum/rules/AppForumRules.vue';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
 import AppPageHeaderAvatar from '../../../../components/page-header/AppPageHeaderAvatar.vue';

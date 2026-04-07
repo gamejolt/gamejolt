@@ -1,24 +1,17 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
 import { ForumPostModel } from '../../../../_common/forum/post/post.model';
 import { ForumTopicModel } from '../../../../_common/forum/topic/topic.model';
 import AppMessageThread from '../../../../_common/message-thread/AppMessageThread.vue';
-import AppForumPostListItem from './item/item.vue';
+import AppForumPostListItem from './item/AppForumPostListItem.vue';
 
-@Options({
-	components: {
-		AppMessageThread,
-		AppForumPostListItem,
-	},
-})
-export default class AppForumPostList extends Vue {
-	@Prop(Object) topic!: ForumTopicModel;
-	@Prop(Array) posts!: ForumPostModel[];
-	@Prop(String) sort!: string;
+type Props = {
+	topic: ForumTopicModel;
+	posts: ForumPostModel[];
+	sort: string;
+	userPostCounts: any;
+};
 
-	// No longer showing this.
-	@Prop(Object) userPostCounts!: any;
-}
+const { topic, posts, sort, userPostCounts } = defineProps<Props>();
 </script>
 
 <template>
