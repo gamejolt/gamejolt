@@ -10,7 +10,7 @@ import { BaseModal } from '../../../../_common/modal/base';
 import { RealmModel } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import { VideoStatus } from '../../forms/post/_video/video.vue';
+import { VideoStatus } from '../../forms/post/_video/FormPostVideo.vue';
 import AppFormPost from '../../forms/post/AppFormPost.vue';
 import AppPostAddPlaceholder from '../add-placeholder/AppPostAddPlaceholder.vue';
 
