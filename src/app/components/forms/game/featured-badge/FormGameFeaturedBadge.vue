@@ -1,77 +1,76 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
-import { BaseForm } from '../../../../../_common/form-vue/form.service';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import { GameModel } from '../../../../../_common/game/game.model';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
 interface FormModel {
 	color: string;
 	size: Record<'width' | 'height', string>;
 }
 
-class Wrapper extends BaseForm<FormModel> {}
+type Props = {
+	game: GameModel;
+};
 
-@Options({})
-export default class FormGameFeaturedBadge extends mixins(Wrapper) {
-	@Prop({ type: Object, required: true }) game!: GameModel;
+const { game } = defineProps<Props>();
 
-	get colorOptions() {
-		return [
-			{
-				key: 'black',
-				label: this.$gettext(`dark`),
-			},
-			{
-				key: 'white',
-				label: this.$gettext(`light`),
-			},
-		];
-	}
+const form: FormController<FormModel> = createForm({
+	warnOnDiscard: false,
+	onInit() {
+		form.formModel.color = colorOptions[0].key;
+		form.formModel.size = sizeOptions[0].key;
+	},
+});
 
-	get sizeOptions() {
-		return [
-			{
-				key: {
-					width: '312px',
-					height: '204px',
-				},
-				label: this.$gettext(`Large (312x204)`),
-			},
-			{
-				key: {
-					width: '156px',
-					height: '102px',
-				},
-				label: this.$gettext(`Small (156x102)`),
-			},
-		];
-	}
+const colorOptions = [
+	{
+		key: 'black',
+		label: $gettext(`dark`),
+	},
+	{
+		key: 'white',
+		label: $gettext(`light`),
+	},
+];
 
-	get previewImage() {
-		return {
-			src: `https://gamejolt.com/img/badge/featured/${this.formModel.color}.png`,
-			alt: `Follow ${this.game.title} on Game Jolt`,
-			size: this.formModel.size,
-		};
-	}
+const sizeOptions = [
+	{
+		key: {
+			width: '312px',
+			height: '204px',
+		},
+		label: $gettext(`Large (312x204)`),
+	},
+	{
+		key: {
+			width: '156px',
+			height: '102px',
+		},
+		label: $gettext(`Small (156x102)`),
+	},
+];
 
-	get processedTag() {
-		const gameUrl = `href="${Environment.baseUrl}/games/${this.game.path}/${this.game.id}"`;
-		const imgSize = `width="${this.formModel.size.width}" height="${this.formModel.size.height}"`;
-		const imgAlt = `alt="${this.previewImage.alt.replace(/"/g, '&quot;')}"`;
+const previewImage = computed(() => ({
+	src: `https://gamejolt.com/img/badge/featured/${form.formModel.color}.png`,
+	alt: `Follow ${game.title} on Game Jolt`,
+	size: form.formModel.size,
+}));
 
-		return `<a ${gameUrl}><img ${imgSize} src="${this.previewImage.src}" ${imgAlt} /></a>`;
-	}
+const processedTag = computed(() => {
+	const gameUrl = `href="${Environment.baseUrl}/games/${game.path}/${game.id}"`;
+	const imgSize = `width="${form.formModel.size.width}" height="${form.formModel.size.height}"`;
+	const imgAlt = `alt="${previewImage.value.alt.replace(/"/g, '&quot;')}"`;
 
-	created() {
-		this.setField('color', this.colorOptions[0].key);
-		this.setField('size', this.sizeOptions[0].key);
-	}
+	return `<a ${gameUrl}><img ${imgSize} src="${previewImage.value.src}" ${imgAlt} /></a>`;
+});
 
-	onClickCopy() {
-		Clipboard.copy(this.processedTag);
-	}
+function onClickCopy() {
+	Clipboard.copy(processedTag.value);
 }
 </script>
 
