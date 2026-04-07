@@ -1,57 +1,58 @@
 <script lang="ts">
-import { Options, Watch } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../../_common/api/api.service';
-import { Environment } from '../../../../../../../../../_common/environment/environment.service';
 import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../../../_common/route/legacy-route-component';
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../../../_common/route/route-component';
+
+export default {
+	name: 'RouteDashGamesManageGamePackagesEditWidget',
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+		resolver: ({ route }) =>
+			Api.sendRequest(
+				'/web/dash/developer/games/packages/preview/' +
+					route.params.id +
+					'/' +
+					route.params.packageId
+			),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { ref, watch } from 'vue';
+import { Environment } from '../../../../../../../../../_common/environment/environment.service';
 import { Screen } from '../../../../../../../../../_common/screen/screen-service';
 import { SellableModel } from '../../../../../../../../../_common/sellable/sellable.model';
 
-@Options({
-	name: 'RouteDashGamesManageGamePackagesEditWidget',
-})
-@OptionsForLegacyRoute({
-	reloadOn: 'never',
-	resolver: ({ route }) =>
-		Api.sendRequest(
-			'/web/dash/developer/games/packages/preview/' +
-				route.params.id +
-				'/' +
-				route.params.packageId
-		),
-})
-export default class RouteDashGamesManageGamePackagesEditWidget extends LegacyRouteComponent {
-	sellable: SellableModel | null = null;
-	theme: string = null as any;
-	widgetUrl = '';
-	widgetCode = '';
+const sellable = ref<SellableModel | null>(null);
+const theme = ref<string>(null as any);
+const widgetUrl = ref('');
+const widgetCode = ref('');
 
-	readonly Screen = Screen;
-
-	routeResolved($payload: any) {
-		this.sellable = $payload.sellable ? new SellableModel($payload.sellable) : null;
-		this.theme = ''; // Default to dark.
+watch(theme, () => {
+	if (!sellable.value) {
+		return;
 	}
 
-	@Watch('theme')
-	onThemeChanged() {
-		if (!this.sellable) {
-			return;
-		}
-
-		this.widgetUrl = Environment.widgetHost + '/package/v1?key=' + this.sellable.key;
-		if (this.theme === 'light') {
-			this.widgetUrl += '&theme=light';
-		}
-
-		this.widgetCode =
-			'<iframe src="' +
-			this.widgetUrl +
-			'" frameborder="0" width="500" height="245"></iframe>';
+	widgetUrl.value = Environment.widgetHost + '/package/v1?key=' + sellable.value.key;
+	if (theme.value === 'light') {
+		widgetUrl.value += '&theme=light';
 	}
-}
+
+	widgetCode.value =
+		'<iframe src="' +
+		widgetUrl.value +
+		'" frameborder="0" width="500" height="245"></iframe>';
+});
+
+createAppRoute({
+	onResolved({ payload }) {
+		sellable.value = payload.sellable ? new SellableModel(payload.sellable) : null;
+		theme.value = ''; // Default to dark.
+	},
+});
 </script>
 
 <template>
