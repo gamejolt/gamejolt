@@ -5,7 +5,7 @@ import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/gro
 import { SiteBuildModel } from '../../../../_common/site/build/build-model';
 import { SiteModel } from '../../../../_common/site/site-model';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import FormDashSiteBuild from '../../forms/site/build/build.vue';
+import FormDashSiteBuild from '../../forms/site/build/FormSiteBuild.vue';
 
 @Options({
 	components: {

@@ -1,62 +1,47 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { ref } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import { BaseForm, FormOnLoad, FormOnSubmit } from '../../../../../_common/form-vue/form.service';
 import { SiteBuildModel } from '../../../../../_common/site/build/build-model';
 import { SiteModel } from '../../../../../_common/site/site-model';
 
-class Wrapper extends BaseForm<SiteBuildModel> {}
+type Props = {
+	site: SiteModel;
+};
 
-@Options({
-	components: {
-		AppFormControlUpload,
-	},
-})
-export default class FormDashSiteBuild extends mixins(Wrapper) implements FormOnLoad, FormOnSubmit {
-	modelClass = SiteBuildModel;
-	// Handled through onSubmit.
-	// modelSaveHandler = undefined;
+const { site } = defineProps<Props>();
 
-	@Prop(Object) site!: SiteModel;
+const maxFilesize = ref(0);
 
-	maxFilesize = 0;
-	progress = 0;
-
-	get loadUrl() {
-		return `/web/dash/sites/upload-build/${this.site.id}`;
-	}
-
-	created() {
-		this.form.warnOnDiscard = false;
-		this.form.resetOnSubmit = true;
-	}
-
+const form: FormController<SiteBuildModel> = createForm({
+	modelClass: SiteBuildModel,
+	warnOnDiscard: false,
+	resetOnSubmit: true,
+	loadUrl: `/web/dash/sites/upload-build/${site.id}`,
 	onInit() {
-		this.setField('file', null);
-		this.setField('site_id', this.site.id);
-	}
-
+		form.formModel.file = null;
+		form.formModel.site_id = site.id;
+	},
 	onLoad(payload: any) {
-		this.maxFilesize = payload.maxFilesize;
-	}
-
-	onFileSelect() {
-		this.form.submit();
-	}
-
+		maxFilesize.value = payload.maxFilesize;
+	},
 	onSubmit() {
 		return Api.sendRequest(
-			`/web/dash/sites/upload-build/${this.site.id}`,
+			`/web/dash/sites/upload-build/${site.id}`,
 			{},
 			{
-				file: this.formModel.file,
+				file: form.formModel.file,
 				progress: event => {
-					this.setField('_progress', event);
+					form.formModel._progress = event;
 				},
 			}
 		);
-	}
+	},
+});
+
+function onFileSelect() {
+	form.submit();
 }
 </script>
 
