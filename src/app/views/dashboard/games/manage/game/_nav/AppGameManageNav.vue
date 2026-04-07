@@ -4,7 +4,7 @@ import { GameModel } from '../../../../../../../_common/game/game.model';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import { AppGamePerms } from '../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../manage.store';
-import AppGameManageNavRequired from './required.vue';
+import AppGameManageNavRequired from './AppGameManageNavRequired.vue';
 
 const routeStore = useGameDashRouteController()!;
 const commonStore = useCommonStore();

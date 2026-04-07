@@ -1,15 +1,11 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 
-@Options({
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppManageGameNavRequired extends Vue {
-	@Prop(Boolean) isComplete?: boolean;
-}
+type Props = {
+	isComplete?: boolean;
+};
+
+const { isComplete } = defineProps<Props>();
 </script>
 
 <template>
