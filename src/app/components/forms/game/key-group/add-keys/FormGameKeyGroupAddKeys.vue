@@ -1,40 +1,36 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
 import { Api } from '../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../_common/filters/number';
-import { BaseForm, FormOnSubmit } from '../../../../../../_common/form-vue/form.service';
+import AppForm, { createForm, FormController } from '../../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
 import { KeyGroupModel, KeyGroupType } from '../../../../../../_common/key-group/key-group.model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 
-class Wrapper extends BaseForm<any> {}
+type Props = {
+	keyGroup: KeyGroupModel;
+};
 
-@Options({
-	components: {
-		AppExpand,
-	},
-})
-export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements FormOnSubmit {
-	@Prop(Object) keyGroup!: KeyGroupModel;
+const { keyGroup } = defineProps<Props>();
 
-	readonly formatNumber = formatNumber;
-	readonly KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
-	readonly KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
-	readonly KeyGroupTypeEmail = KeyGroupType.Email;
-	readonly KeyGroupTypeUser = KeyGroupType.User;
+const KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
+const KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
+const KeyGroupTypeEmail = KeyGroupType.Email;
+const KeyGroupTypeUser = KeyGroupType.User;
 
-	created() {
-		this.form.warnOnDiscard = false;
-	}
-
+const form: FormController<any> = createForm({
+	warnOnDiscard: false,
 	onSubmit() {
 		return Api.sendRequest(
 			`/web/dash/developer/games/key-groups/add-keys/` +
-				`${this.keyGroup.game_id}/${this.keyGroup.id}`,
-			this.formModel
+				`${keyGroup.game_id}/${keyGroup.id}`,
+			form.formModel
 		);
-	}
-}
+	},
+});
 </script>
 
 <template>
@@ -81,7 +77,7 @@ export default class FormGameKeyGroupAddKeys extends mixins(Wrapper) implements 
 			<AppFormControlErrors />
 		</AppFormGroup>
 
-		<AppExpand :when="serverErrors['num-keys']">
+		<AppExpand :when="form.serverErrors['num-keys']">
 			<div class="alert alert-notice">
 				{{
 					$gettext(`You can only have a max of %{ max } keys in a single key group.`, {
