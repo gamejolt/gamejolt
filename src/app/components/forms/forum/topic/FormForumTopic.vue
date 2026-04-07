@@ -1,8 +1,8 @@
-<script lang="ts">
-import { Emit, mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { toRef } from 'vue';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
-import { BaseForm } from '../../../../../_common/form-vue/form.service';
 import {
 	validateContentMaxLength,
 	validateContentNoActiveUploads,
@@ -11,41 +11,36 @@ import {
 import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';
 import { $saveForumTopic, ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 
-class Wrapper extends BaseForm<ForumTopicModel> {}
+type Props = {
+	model?: ForumTopicModel;
+	channel: ForumChannelModel;
+};
 
-@Options({
-	components: {
-		AppFormControlContent,
-	},
-})
-export default class FormForumTopic extends mixins(Wrapper) {
-	@Prop(Object) channel!: ForumChannelModel;
+const { model, channel } = defineProps<Props>();
 
-	modelClass = ForumTopicModel;
-	modelSaveHandler = $saveForumTopic;
+const emit = defineEmits<{
+	cancel: [];
+}>();
 
-	readonly validateContentRequired = validateContentRequired;
-	readonly validateContentMaxLength = validateContentMaxLength;
-	readonly validateContentNoActiveUploads = validateContentNoActiveUploads;
+const capabilities = ContextCapabilities.fromPayloadList([]);
 
-	capabilities = ContextCapabilities.fromPayloadList([]);
-
-	@Emit('cancel')
-	emitCancel() {}
-
+const form: FormController<ForumTopicModel> = createForm({
+	model: toRef(() => model),
+	modelClass: ForumTopicModel,
+	modelSaveHandler: $saveForumTopic,
 	onInit() {
-		this.setField('channel_id', this.channel.id);
+		form.formModel.channel_id = channel.id;
 
-		if (this.method === 'edit' && this.model) {
-			this.setField('text_content', this.model.main_post.text_content);
+		if (form.method === 'edit' && model) {
+			form.formModel.text_content = model.main_post.text_content;
 		} else {
-			this.setField('text_content', '');
+			form.formModel.text_content = '';
 		}
-	}
+	},
+});
 
-	onCancel() {
-		this.emitCancel();
-	}
+function onCancel() {
+	emit('cancel');
 }
 </script>
 
@@ -69,11 +64,11 @@ export default class FormForumTopic extends mixins(Wrapper) {
 		</AppFormGroup>
 
 		<AppFormButton>
-			<AppTranslate v-if="method === 'add'">Add Topic</AppTranslate>
-			<AppTranslate v-if="method === 'edit'">Save</AppTranslate>
+			<AppTranslate v-if="form.method === 'add'">Add Topic</AppTranslate>
+			<AppTranslate v-if="form.method === 'edit'">Save</AppTranslate>
 		</AppFormButton>
 
-		<AppButton v-if="method === 'edit'" trans @click="onCancel">
+		<AppButton v-if="form.method === 'edit'" trans @click="onCancel">
 			<AppTranslate>Cancel</AppTranslate>
 		</AppButton>
 	</AppForm>
