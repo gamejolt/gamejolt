@@ -1,6 +1,5 @@
-<script lang="ts" s setup>
+<script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { setup } from 'vue-class-component';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { formatCurrency } from '../../../_common/filters/currency';
 import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';

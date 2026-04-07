@@ -1,22 +1,20 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, useSlots } from 'vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 
-@Options({})
-export default class AppCommunitiesViewPageContainer extends Vue {
-	@Prop({ type: Boolean, default: false })
-	full!: boolean;
+type Props = {
+	full?: boolean;
+};
 
-	readonly Screen = Screen;
+const { full = false } = defineProps<Props>();
 
-	get sidebarHasContent() {
-		return !!this.$slots.sidebar;
-	}
+const slots = useSlots();
 
-	get shouldShowSidebar() {
-		return Screen.isLg || (Screen.isMd && this.sidebarHasContent);
-	}
-}
+const sidebarHasContent = computed(() => !!slots.sidebar);
+
+const shouldShowSidebar = computed(
+	() => Screen.isLg || (Screen.isMd && sidebarHasContent.value)
+);
 </script>
 
 <template>

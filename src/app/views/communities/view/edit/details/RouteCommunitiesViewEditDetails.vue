@@ -21,7 +21,7 @@ import FormCommunityDescription from '../../../../../components/forms/community/
 import { useGridStore } from '../../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../../store';
 import { CommunityThemeKey } from '../../RouteCommunitiesView.vue';
-import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+import AppCommunityPageContainer from '../../_page-container/AppCommunityPageContainer.vue';
 import { useCommunityRouteStore } from '../../view.store';
 
 export default {
@@ -113,7 +113,7 @@ createAppRoute({});
 
 <template>
 	<div>
-		<AppCommunitiesViewPageContainer>
+		<AppCommunityPageContainer>
 			<template #default>
 				<AppAlertDismissable
 					v-if="isOwner"
@@ -246,7 +246,7 @@ createAppRoute({});
 
 				<FormCommunityDescription :model="community" />
 			</template>
-		</AppCommunitiesViewPageContainer>
+		</AppCommunityPageContainer>
 	</div>
 </template>
 

@@ -18,7 +18,7 @@ import { UserBlockModel } from '../../../../../../_common/user/block/block.model
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import FormCommunityBlock from '../../../../../components/forms/community/ban/FormCommunityBlock.vue';
-import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+import AppCommunityPageContainer from '../../_page-container/AppCommunityPageContainer.vue';
 import { useCommunityRouteStore } from '../../view.store';
 
 export default {
@@ -140,7 +140,7 @@ createAppRoute({
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer full>
+	<AppCommunityPageContainer full>
 		<h2 class="section-header">
 			{{ $gettext(`Blocked Users`) }}
 		</h2>
@@ -268,7 +268,7 @@ createAppRoute({
 			prevent-url-change
 			@pagechange="onPageChanged"
 		/>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>
 
 <style lang="stylus" scoped>

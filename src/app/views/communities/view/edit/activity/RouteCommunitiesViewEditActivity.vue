@@ -14,7 +14,7 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+import AppCommunityPageContainer from '../../_page-container/AppCommunityPageContainer.vue';
 import { useCommunityRouteStore } from '../../view.store';
 
 export default {
@@ -142,7 +142,7 @@ createAppRoute({
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer full>
+	<AppCommunityPageContainer full>
 		<h2 class="section-header">
 			{{ $gettext(`Audit Log`) }}
 		</h2>
@@ -174,7 +174,7 @@ createAppRoute({
 				{{ $gettext(`Load More`) }}
 			</AppButton>
 		</div>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>
 
 <style lang="stylus" scoped>

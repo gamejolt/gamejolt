@@ -9,7 +9,7 @@ import { getDatalistOptions } from '../../../../../_common/settings/datalist-opt
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { REASON_OTHER } from '../../../../../_common/user/action-reasons';
-import FormCommunityEjectPost, { FormModel } from '../form/form.vue';
+import FormCommunityEjectPost, { EjectPostFormModel as FormModel } from '../form/FormCommunityEjectPost.vue';
 import { CommunityEjectPostModalResult } from './modal.service';
 
 const props = defineProps({

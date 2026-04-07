@@ -19,7 +19,7 @@ import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { showCommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
 import AppCommunityPerms from '../../../../../components/community/perms/AppCommunityPerms.vue';
-import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+import AppCommunityPageContainer from '../../_page-container/AppCommunityPageContainer.vue';
 import { useCommunityRouteStore } from '../../view.store';
 
 export default {
@@ -113,7 +113,7 @@ createAppRoute({
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer>
+	<AppCommunityPageContainer>
 		<AppCommunityPerms :community="community" required="community-channels">
 			<h2 class="section-header">
 				{{ $gettext(`Linked Games`) }}
@@ -203,5 +203,5 @@ createAppRoute({
 				</AppCardListDraggable>
 			</AppCardList>
 		</AppCommunityPerms>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>

@@ -21,7 +21,7 @@ import { $gettext } from '../../../../../../../../_common/translate/translate.se
 import { arrayRemove } from '../../../../../../../../utils/array';
 import FormCommunityChannelDescription from '../../../../../../../components/forms/community/channel/description/FormCommunityChannelDescription.vue';
 import FormCommunityChannelEdit from '../../../../../../../components/forms/community/channel/edit/FormCommunityChannelEdit.vue';
-import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
+import AppCommunityPageContainer from '../../../../_page-container/AppCommunityPageContainer.vue';
 import { useCommunityRouteStore } from '../../../../view.store';
 
 export default {
@@ -129,7 +129,7 @@ createAppRoute({});
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer full>
+	<AppCommunityPageContainer full>
 		<div class="row">
 			<div class="col-md-8">
 				<h2 class="section-header">
@@ -204,5 +204,5 @@ createAppRoute({});
 				</div>
 			</section>
 		</template>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>

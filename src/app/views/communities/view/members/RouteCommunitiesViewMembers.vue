@@ -8,7 +8,7 @@ import {
 } from '../../../../../_common/route/route-component';
 import { UserModel } from '../../../../../_common/user/user.model';
 import AppFollowerList from '../../../../components/follower/list/AppFollowerList.vue';
-import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
+import AppCommunityPageContainer from '../_page-container/AppCommunityPageContainer.vue';
 import { useCommunityRouteStore } from '../view.store';
 
 function getFetchUrl(route: RouteLocationNormalized) {
@@ -47,7 +47,7 @@ createAppRoute({
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer full>
+	<AppCommunityPageContainer full>
 		<div v-if="!community.member_count" class="alert alert-info">
 			{{
 				$gettext(`No one is a member of this community yet. Maybe you could be the first!`)
@@ -59,5 +59,5 @@ createAppRoute({
 			:initial-users="users"
 			:count="community.member_count || 0"
 		/>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>

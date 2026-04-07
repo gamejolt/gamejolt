@@ -23,7 +23,7 @@ import { arrayRemove } from '../../../../../utils/array';
 import AppCommunityCompetitionCountdown from '../../../../components/community/competition/countdown/AppCommunityCompetitionCountdown.vue';
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
 import AppCommunityPerms from '../../../../components/community/perms/AppCommunityPerms.vue';
-import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
+import AppCommunityPageContainer from '../_page-container/AppCommunityPageContainer.vue';
 import { getChannelPathFromRoute, setCommunityMeta, useCommunityRouteStore } from '../view.store';
 
 const RouteCommunitiesViewChannelJamEntries = defineAsyncComponent(() =>
@@ -150,7 +150,7 @@ createAppRoute({
 
 <template>
 	<div>
-		<AppCommunitiesViewPageContainer full>
+		<AppCommunityPageContainer full>
 			<AppCommunityPerms :community="community" required="community-competitions">
 				<AppButton
 					icon="edit"
@@ -267,7 +267,7 @@ createAppRoute({
 			<template v-if="competition && competition.hasStarted">
 				<RouteCommunitiesViewChannelJamEntries :categories="categories" />
 			</template>
-		</AppCommunitiesViewPageContainer>
+		</AppCommunityPageContainer>
 	</div>
 </template>
 

@@ -22,7 +22,7 @@ import {
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import AppCommunityPerms from '../../../../../../components/community/perms/AppCommunityPerms.vue';
 import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/FormCommunityChannelAdd.vue';
-import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
+import AppCommunityPageContainer from '../../../_page-container/AppCommunityPageContainer.vue';
 import { loadArchivedChannels, updateCommunity, useCommunityRouteStore } from '../../../view.store';
 import AppCommunitiesEditChannelListItem from './_item/AppCommunitiesEditChannelListItem.vue';
 import AppChannelPresetItem from './_preset-item/AppChannelPresetItem.vue';
@@ -114,7 +114,7 @@ createAppRoute({});
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer>
+	<AppCommunityPageContainer>
 		<AppCommunityPerms
 			:community="community"
 			required="community-channels,community-competitions"
@@ -204,7 +204,7 @@ createAppRoute({});
 				</template>
 			</template>
 		</AppCommunityPerms>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>
 
 <style lang="stylus" scoped>

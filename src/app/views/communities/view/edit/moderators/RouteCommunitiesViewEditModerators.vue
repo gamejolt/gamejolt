@@ -20,7 +20,7 @@ import {
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../../../../utils/array';
 import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/FormCommunityCollaborator.vue';
-import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
+import AppCommunityPageContainer from '../../_page-container/AppCommunityPageContainer.vue';
 import { useCommunityRouteStore } from '../../view.store';
 
 export default {
@@ -94,7 +94,7 @@ createAppRoute({
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer>
+	<AppCommunityPageContainer>
 		<h2 class="section-header">
 			{{ $gettext(`Collaborators`) }}
 		</h2>
@@ -164,5 +164,5 @@ createAppRoute({
 				<FormCommunityCollaborator :community="community" @submit="onAddedCollaborator" />
 			</AppCardListAdd>
 		</AppCardList>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>

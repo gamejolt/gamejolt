@@ -21,7 +21,7 @@ import {
 	getFeedChannelSort,
 	resolveFeedChannelPayload,
 } from '../_feed/feed-helpers';
-import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
+import AppCommunityPageContainer from '../_page-container/AppCommunityPageContainer.vue';
 import { isVirtualChannel, setCommunityMeta, useCommunityRouteStore } from '../view.store';
 import { CommunitiesViewChannelDeps } from './RouteCommunitiesViewChannel.vue';
 
@@ -179,7 +179,7 @@ const appRoute = createAppRoute({
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer>
+	<AppCommunityPageContainer>
 		<template #default>
 			<h1 class="section-header" :class="{ 'h2 -text-overflow': Screen.isMobile }">
 				<template v-if="channel === routeStore.allChannel">
@@ -205,7 +205,7 @@ const appRoute = createAppRoute({
 				@load-new="loadedNew"
 			/>
 		</template>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>
 
 <style lang="stylus" scoped>

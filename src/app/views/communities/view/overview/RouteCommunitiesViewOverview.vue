@@ -18,7 +18,7 @@ import { useGridStore } from '../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../store/index';
 import AppCommunitiesViewFeed from '../_feed/AppCommunitiesViewFeed.vue';
 import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
-import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
+import AppCommunityPageContainer from '../_page-container/AppCommunityPageContainer.vue';
 import { CommunitiesViewChannelDeps } from '../channel/RouteCommunitiesViewChannel.vue';
 import {
 	acceptCollaboration,
@@ -168,7 +168,7 @@ const appRoute = createAppRoute({
 			</div>
 		</section>
 
-		<AppCommunitiesViewPageContainer>
+		<AppCommunityPageContainer>
 			<template #default>
 				<AppCommunitiesViewFeed
 					:feed="feed"
@@ -179,6 +179,6 @@ const appRoute = createAppRoute({
 			<template #sidebar>
 				<AppCommunitySidebar :sidebar-data="sidebarData" :community="community" />
 			</template>
-		</AppCommunitiesViewPageContainer>
+		</AppCommunityPageContainer>
 	</div>
 </template>

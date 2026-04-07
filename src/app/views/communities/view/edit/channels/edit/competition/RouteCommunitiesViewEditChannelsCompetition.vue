@@ -6,7 +6,7 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../../../../_common/route/route-component';
 import { Timezone } from '../../../../../../../../_common/timezone/timezone.service';
-import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
+import AppCommunityPageContainer from '../../../../_page-container/AppCommunityPageContainer.vue';
 import AppCompetitionNav from './_nav/AppCompetitionNav.vue';
 
 export default {
@@ -24,7 +24,7 @@ createAppRoute({});
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer full>
+	<AppCommunityPageContainer full>
 		<AppNavTabList>
 			<AppCompetitionNav />
 		</AppNavTabList>
@@ -34,5 +34,5 @@ createAppRoute({});
 				<RouterView />
 			</div>
 		</div>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>
