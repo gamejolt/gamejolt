@@ -5,7 +5,7 @@ import { GameModel } from '../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { SiteModel } from '../../../../_common/site/site-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
-import FormSiteDomain from '../../forms/site/domain/domain.vue';
+import FormSiteDomain from '../../forms/site/domain/FormSiteDomain.vue';
 
 @Options({
 	components: {

@@ -1,7 +1,7 @@
-<script lang="ts">
-import { mixins, Options, Prop } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, toRef } from 'vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { BaseForm } from '../../../../../_common/form-vue/form.service';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import { validateDomain } from '../../../../../_common/form-vue/validators';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { $saveDomainSite, SiteModel } from '../../../../../_common/site/site-model';
@@ -11,37 +11,29 @@ interface FormModel extends SiteModel {
 	type?: string;
 }
 
-class Wrapper extends BaseForm<FormModel> {}
+type Props = {
+	model?: SiteModel;
+	user: UserModel;
+	game?: GameModel;
+};
 
-@Options({
-	components: {
-		AppExpand,
-	},
-})
-export default class FormSiteDomain extends mixins(Wrapper) {
-	@Prop(Object) user!: UserModel;
-	@Prop(Object) game?: GameModel;
+const { model, user, game } = defineProps<Props>();
 
-	modelClass = SiteModel;
-	modelSaveHandler = $saveDomainSite;
+const form: FormController<FormModel> = createForm({
+	model: toRef(() => model),
+	modelClass: SiteModel,
+	modelSaveHandler: $saveDomainSite,
+});
 
-	readonly validateDomain = validateDomain;
+const ioUrl = computed(() => createUrl('gamejolt.io'));
+const afUrl = computed(() => createUrl('indie.af'));
 
-	get ioUrl() {
-		return this.createUrl('gamejolt.io');
+function createUrl(baseDomain: string) {
+	let url = user.username.toLowerCase() + `.<strong>${baseDomain}</strong>`;
+	if (game) {
+		url += '/' + game.path;
 	}
-
-	get afUrl() {
-		return this.createUrl('indie.af');
-	}
-
-	private createUrl(baseDomain: string) {
-		let url = this.user.username.toLowerCase() + `.<strong>${baseDomain}</strong>`;
-		if (this.game) {
-			url += '/' + this.game.path;
-		}
-		return url;
-	}
+	return url;
 }
 </script>
 
@@ -83,7 +75,7 @@ export default class FormSiteDomain extends mixins(Wrapper) {
 			</div>
 		</AppFormGroup>
 
-		<AppExpand :when="formModel.domain_type === 'domain'">
+		<AppExpand :when="form.formModel.domain_type === 'domain'">
 			<AppFormGroup name="domain" :label="$gettext(`Domain`)">
 				<AppFormControl
 					placeholder="example.com"
