@@ -1,21 +1,21 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../_common/route/legacy-route-component';
+import { defineAppRouteOptions } from '../../../../_common/route/route-component';
 
-@Options({
+export default {
 	name: 'RouteAuthForgotSent',
-})
-@OptionsForLegacyRoute({
-	reloadOn: 'never',
-})
-export default class RouteAuthForgotSent extends LegacyRouteComponent {
-	get routeTitle() {
-		return this.$gettext('Credentials Sent');
-	}
-}
+	...defineAppRouteOptions({
+		reloadOn: 'never',
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { createAppRoute } from '../../../../_common/route/route-component';
+import { $gettext } from '../../../../_common/translate/translate.service';
+
+createAppRoute({
+	routeTitle: $gettext('Credentials Sent'),
+});
 </script>
 
 <template>
