@@ -1,5 +1,5 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed } from 'vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { ForumCategoryModel } from '../../../../_common/forum/category/category.model';
 import { ForumChannelModel } from '../../../../_common/forum/channel/channel.model';
@@ -11,40 +11,30 @@ import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { arrayIndexByFunc } from '../../../../utils/array';
 
-@Options({
-	components: {
-		AppUserCardHover,
-		AppUserAvatar,
-		AppTimeAgo,
-		AppUserVerifiedTick,
-	},
-})
-export default class AppForumChannelList extends Vue {
-	@Prop(Object) category!: ForumCategoryModel;
-	@Prop(Array) channels!: ForumChannelModel[];
-	@Prop({ type: Array, default: [] })
-	latestPosts!: ForumPostModel[];
-	@Prop(Number) postCountPerPage!: number;
+type Props = {
+	category: ForumCategoryModel;
+	channels: ForumChannelModel[];
+	latestPosts?: ForumPostModel[];
+	postCountPerPage: number;
+};
 
-	readonly formatNumber = formatNumber;
-	readonly Screen = Screen;
+const { category, channels, latestPosts = [], postCountPerPage } = defineProps<Props>();
 
-	get indexedPosts() {
-		return arrayIndexByFunc(this.latestPosts, item => item.topic!.channel_id);
+const indexedPosts = computed(() => {
+	return arrayIndexByFunc(latestPosts, item => item.topic!.channel_id);
+});
+
+function getPostPage(post: ForumPostModel) {
+	if (!postCountPerPage) {
+		return undefined;
 	}
 
-	getPostPage(post: ForumPostModel) {
-		if (!this.postCountPerPage) {
-			return undefined;
-		}
-
-		const page = Math.ceil((post.topic.replies_count || 0) / this.postCountPerPage);
-		if (page === 1) {
-			return undefined;
-		}
-
-		return page;
+	const page = Math.ceil((post.topic.replies_count || 0) / postCountPerPage);
+	if (page === 1) {
+		return undefined;
 	}
+
+	return page;
 }
 </script>
 
