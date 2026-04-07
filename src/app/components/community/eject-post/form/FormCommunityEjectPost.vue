@@ -4,7 +4,7 @@ import { CommunityModel } from '../../../../../_common/community/community.model
 import { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import { validateMaxLength } from '../../../../../_common/form-vue/validators';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import {
 	getCommunityEjectPostReasons,
 	REASON_OTHER,
@@ -26,8 +26,6 @@ const { community } = defineProps<Props>();
 const emit = defineEmits<{
 	change: [form: EjectPostFormModel];
 }>();
-
-const { $gettext } = useCommonStore();
 
 const otherOptions = ref<string[]>([]);
 
