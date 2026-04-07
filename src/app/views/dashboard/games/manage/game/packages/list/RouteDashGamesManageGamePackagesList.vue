@@ -36,7 +36,7 @@ import { $gettext } from '../../../../../../../../_common/translate/translate.se
 import { arrayIndexBy } from '../../../../../../../../utils/array';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
 import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
-import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
+import { AppGamePerms } from '../../../../../../../components/game/perms/AppGamePerms.vue';
 import { useGameDashRouteController } from '../../../manage.store';
 
 const router = useRouter();

@@ -15,7 +15,7 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { getAbsoluteLink } from '../../../../../utils/router';
 import { showCommentModal } from '../../../../components/comment/modal/modal.service';
-import { AppGamePerms } from '../../../../components/game/perms/perms';
+import { AppGamePerms } from '../../../../components/game/perms/AppGamePerms.vue';
 import { useGameRouteController } from './RouteDiscoverGamesView.vue';
 
 const { game, trophiesCount, hasScores, primaryScoreTable } = useGameRouteController()!;

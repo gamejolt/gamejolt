@@ -14,7 +14,7 @@ import AppActivityFeed from '../../../../../components/activity/feed/AppActivity
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
-import { AppGamePerms } from '../../../../../components/game/perms/perms';
+import { AppGamePerms } from '../../../../../components/game/perms/AppGamePerms.vue';
 import AppPostAddButton from '../../../../../components/post/add-button/AppPostAddButton.vue';
 import { useGameDashRouteController } from '../manage.store';
 

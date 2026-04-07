@@ -5,7 +5,7 @@ import { showModal } from '../../../../_common/modal/modal.service';
 export async function showGameThumbnailModal(game: GameModel) {
 	return await showModal<GameModel>({
 		modalId: 'GameThumbnail',
-		component: defineAsyncComponent(() => import('./thumbnail-modal.vue')),
+		component: defineAsyncComponent(() => import('./AppGameThumbnailModal.vue')),
 		props: {
 			game,
 		},
