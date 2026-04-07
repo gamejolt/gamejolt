@@ -1,190 +1,178 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
+import { computed, onMounted, ref } from 'vue';
 import { Api } from '../../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../../_common/button/AppButton.vue';
 import { CommunityCompetitionModel } from '../../../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntryModel } from '../../../../../../../_common/community/competition/entry/entry.model';
 import { CommunityCompetitionEntryVoteModel } from '../../../../../../../_common/community/competition/entry/vote/vote.model';
 import { CommunityCompetitionVotingCategoryModel } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import { numberSort } from '../../../../../../../utils/array';
 
-@Options({
-	components: {
-		AppLoadingFade,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class FormCommunityCompetitionVotingCast extends Vue {
-	@Prop({ type: Object, required: true }) entry!: CommunityCompetitionEntryModel;
-	@Prop({ type: Object, required: true }) competition!: CommunityCompetitionModel;
+type Props = {
+	entry: CommunityCompetitionEntryModel;
+	competition: CommunityCompetitionModel;
+	votingCategories?: CommunityCompetitionVotingCategoryModel[];
+	initialVotes?: CommunityCompetitionEntryVoteModel[];
+};
 
-	@Prop({ type: Array, default: () => [] })
-	votingCategories!: CommunityCompetitionVotingCategoryModel[];
+const { entry, competition, votingCategories = [], initialVotes = [] } = defineProps<Props>();
 
-	@Prop({ type: Array, default: () => [] })
-	initialVotes!: CommunityCompetitionEntryVoteModel[];
+const votes = ref<CommunityCompetitionEntryVoteModel[]>([]);
+const hoveredRatings = ref<number[]>([]);
+const hasVoted = ref(false);
+const isSaving = ref(false);
 
-	votes: CommunityCompetitionEntryVoteModel[] = [];
-	hoveredRatings: number[] = [];
-	hasVoted = false;
-	isSaving = false;
-
-	readonly formatNumber = formatNumber;
-
-	get overallRating() {
-		// With overall rating type, there is only 1 vote, which is also the overall.
-		if (this.competition.voting_type === 'overall') {
-			return this.votes[0].rating;
-		}
-
-		const validVoteCount = this.votes.filter(i => i.rating > 0).length;
-		if (validVoteCount === 0) {
-			return 0;
-		}
-		const sum = this.votes.reduce((a, b) => a + b.rating, 0);
-		return sum / validVoteCount;
+const overallRating = computed(() => {
+	// With overall rating type, there is only 1 vote, which is also the overall.
+	if (competition.voting_type === 'overall') {
+		return votes.value[0].rating;
 	}
 
-	get isSaveButtonEnabled() {
-		return this.overallRating > 0 && !this.isSaving;
+	const validVoteCount = votes.value.filter(i => i.rating > 0).length;
+	if (validVoteCount === 0) {
+		return 0;
 	}
+	const sum = votes.value.reduce((a, b) => a + b.rating, 0);
+	return sum / validVoteCount;
+});
 
-	get sortedVotingCategories() {
-		return this.votingCategories.sort((a, b) => numberSort(a.sort, b.sort));
-	}
+const isSaveButtonEnabled = computed(() => overallRating.value > 0 && !isSaving.value);
 
-	created() {
-		this.hasVoted = this.initialVotes.length > 0;
-		this.votes.push(...this.initialVotes);
+const sortedVotingCategories = computed(() =>
+	[...votingCategories].sort((a, b) => numberSort(a.sort, b.sort))
+);
 
-		this.fillVotes();
-	}
+// Initialize on created
+hasVoted.value = initialVotes.length > 0;
+votes.value.push(...initialVotes);
+fillVotes();
 
-	fillVotes() {
-		if (this.competition.voting_type === 'categories') {
-			for (const votingCategory of this.votingCategories) {
-				if (
-					!this.votes.some(
-						i => i.community_competition_voting_category_id === votingCategory.id
-					)
-				) {
-					const vote = new CommunityCompetitionEntryVoteModel({
-						community_competition_voting_category_id: votingCategory.id,
-						community_competition_entry_id: this.entry.id,
-						rating: 0,
-					});
-					this.votes.push(vote);
-				}
-
-				this.hoveredRatings.push(0);
+function fillVotes() {
+	if (competition.voting_type === 'categories') {
+		for (const votingCategory of votingCategories) {
+			if (
+				!votes.value.some(
+					i => i.community_competition_voting_category_id === votingCategory.id
+				)
+			) {
+				const vote = new CommunityCompetitionEntryVoteModel({
+					community_competition_voting_category_id: votingCategory.id,
+					community_competition_entry_id: entry.id,
+					rating: 0,
+				});
+				votes.value.push(vote);
 			}
-		} else {
-			if (this.votes.length === 0) {
-				this.votes.push(
-					new CommunityCompetitionEntryVoteModel({
-						community_competition_voting_category_id: null,
-						community_competition_entry_id: this.entry.id,
-						rating: 0,
-					})
-				);
-			}
-			this.hoveredRatings.push(0);
+
+			hoveredRatings.value.push(0);
 		}
-	}
-
-	isCategoryVote(votingCategory: CommunityCompetitionVotingCategoryModel | null, i: number) {
-		const votingCategoryId = votingCategory?.id || null;
-		const vote = this.votes.find(
-			i => i.community_competition_voting_category_id === votingCategoryId
-		);
-		if (!vote) {
-			return false;
+	} else {
+		if (votes.value.length === 0) {
+			votes.value.push(
+				new CommunityCompetitionEntryVoteModel({
+					community_competition_voting_category_id: null,
+					community_competition_entry_id: entry.id,
+					rating: 0,
+				})
+			);
 		}
+		hoveredRatings.value.push(0);
+	}
+}
 
-		return vote.rating >= i;
+function isCategoryVote(votingCategory: CommunityCompetitionVotingCategoryModel | null, i: number) {
+	const votingCategoryId = votingCategory?.id || null;
+	const vote = votes.value.find(
+		v => v.community_competition_voting_category_id === votingCategoryId
+	);
+	if (!vote) {
+		return false;
 	}
 
-	isCategoryNA(votingCategory: CommunityCompetitionVotingCategoryModel) {
-		const vote = this.votes.find(
-			i => i.community_competition_voting_category_id === votingCategory.id
-		);
-		return !vote || vote.rating === 0;
-	}
+	return vote.rating >= i;
+}
 
-	onRatingMouseEnter(votingCategory: CommunityCompetitionVotingCategoryModel | null, i: number) {
-		if (votingCategory === null) {
-			this.hoveredRatings[0] = i;
-		} else {
-			const index = this.votingCategories.indexOf(votingCategory);
-			this.hoveredRatings[index] = i;
+function isCategoryNA(votingCategory: CommunityCompetitionVotingCategoryModel) {
+	const vote = votes.value.find(
+		v => v.community_competition_voting_category_id === votingCategory.id
+	);
+	return !vote || vote.rating === 0;
+}
+
+function onRatingMouseEnter(votingCategory: CommunityCompetitionVotingCategoryModel | null, i: number) {
+	if (votingCategory === null) {
+		hoveredRatings.value[0] = i;
+	} else {
+		const index = votingCategories.indexOf(votingCategory);
+		hoveredRatings.value[index] = i;
+	}
+}
+
+function onRatingMouseLeave(votingCategory: CommunityCompetitionVotingCategoryModel | null) {
+	if (votingCategory === null) {
+		hoveredRatings.value[0] = 0;
+	} else {
+		const index = votingCategories.indexOf(votingCategory);
+		hoveredRatings.value[index] = 0;
+	}
+}
+
+function isCategoryRatingHovered(
+	votingCategory: CommunityCompetitionVotingCategoryModel | null,
+	i: number
+) {
+	const index = votingCategory === null ? 0 : votingCategories.indexOf(votingCategory);
+	return hoveredRatings.value[index] >= i;
+}
+
+function onClickRating(votingCategory: CommunityCompetitionVotingCategoryModel | null, i: number) {
+	const votingCategoryId = votingCategory?.id || null;
+	const vote = votes.value.find(
+		v => v.community_competition_voting_category_id === votingCategoryId
+	);
+	vote!.rating = i;
+}
+
+async function onClickSave() {
+	isSaving.value = true;
+
+	const data = {} as any;
+	if (competition.voting_type === 'categories') {
+		for (const vote of votes.value) {
+			data['vote_' + vote.community_competition_voting_category_id] = vote.rating;
 		}
+	} else {
+		data['vote'] = votes.value[0].rating;
 	}
 
-	onRatingMouseLeave(votingCategory: CommunityCompetitionVotingCategoryModel | null) {
-		if (votingCategory === null) {
-			this.hoveredRatings[0] = 0;
-		} else {
-			const index = this.votingCategories.indexOf(votingCategory);
-			this.hoveredRatings[index] = 0;
-		}
-	}
+	const payload = await Api.sendRequest(
+		`/web/communities/competitions/voting/cast/${entry.id}`,
+		data
+	);
+	votes.value = CommunityCompetitionEntryVoteModel.populate(payload.votes);
+	fillVotes();
+	hasVoted.value = true;
 
-	isCategoryRatingHovered(
-		votingCategory: CommunityCompetitionVotingCategoryModel | null,
-		i: number
-	) {
-		const index = votingCategory === null ? 0 : this.votingCategories.indexOf(votingCategory);
-		return this.hoveredRatings[index] >= i;
-	}
+	isSaving.value = false;
 
-	onClickRating(votingCategory: CommunityCompetitionVotingCategoryModel | null, i: number) {
-		const votingCategoryId = votingCategory?.id || null;
-		const vote = this.votes.find(
-			i => i.community_competition_voting_category_id === votingCategoryId
-		);
-		vote!.rating = i;
-	}
+	showSuccessGrowl($gettext(`Your vote for this entry was cast!`));
+}
 
-	async onClickSave() {
-		this.isSaving = true;
+async function onClickClear() {
+	isSaving.value = true;
 
-		const data = {} as any;
-		if (this.competition.voting_type === 'categories') {
-			for (const vote of this.votes) {
-				data['vote_' + vote.community_competition_voting_category_id] = vote.rating;
-			}
-		} else {
-			data['vote'] = this.votes[0].rating;
-		}
+	await Api.sendRequest(`/web/communities/competitions/voting/clear/${entry.id}`, {});
+	votes.value = [];
+	fillVotes();
+	hasVoted.value = false;
 
-		const payload = await Api.sendRequest(
-			`/web/communities/competitions/voting/cast/${this.entry.id}`,
-			data
-		);
-		this.votes = CommunityCompetitionEntryVoteModel.populate(payload.votes);
-		this.fillVotes();
-		this.hasVoted = true;
-
-		this.isSaving = false;
-
-		showSuccessGrowl(this.$gettext(`Your vote for this entry was cast!`));
-	}
-
-	async onClickClear() {
-		this.isSaving = true;
-
-		await Api.sendRequest(`/web/communities/competitions/voting/clear/${this.entry.id}`, {});
-		this.votes = [];
-		this.fillVotes();
-		this.hasVoted = false;
-
-		this.isSaving = false;
-	}
+	isSaving.value = false;
 }
 </script>
 

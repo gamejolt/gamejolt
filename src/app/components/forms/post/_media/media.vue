@@ -16,7 +16,7 @@ import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
-import AppFormPostMediaItem from './item/item.vue';
+import AppFormPostMediaItem from './item/FormPostMediaItem.vue';
 
 interface FormModel {
 	image: File[] | null;

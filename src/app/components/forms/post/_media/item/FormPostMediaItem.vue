@@ -1,35 +1,26 @@
-<script lang="ts">
-import { Emit, Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
 import AppImgResponsive from '../../../../../../_common/img/AppImgResponsive.vue';
 import { MediaItemModel } from '../../../../../../_common/media-item/media-item-model';
 
-@Options({
-	components: {
-		AppImgResponsive,
-	},
-})
-export default class AppFormPostMediaItem extends Vue {
-	@Prop(Object)
-	item!: MediaItemModel;
+type Props = {
+	item: MediaItemModel;
+};
 
-	width = 'auto';
-	height = 'auto';
+const { item } = defineProps<Props>();
 
-	@Emit('remove')
-	emitRemove() {}
+const emit = defineEmits<{
+	remove: [];
+}>();
 
-	created() {
-		const dimensions = this.item.getDimensions(300, 130);
-		this.width = dimensions.width + 'px';
-		this.height = dimensions.height + 'px';
-	}
-}
+const dimensions = item.getDimensions(300, 130);
+const width = dimensions.width + 'px';
+const height = dimensions.height + 'px';
 </script>
 
 <template>
 	<div class="-item" :style="{ width, height }">
 		<div class="-controls theme-dark">
-			<AppButton icon="remove" overlay sparse @click.capture="emitRemove()" />
+			<AppButton icon="remove" overlay sparse @click.capture="emit('remove')" />
 		</div>
 
 		<AppImgResponsive :src="item.mediaserver_url" alt="" />
