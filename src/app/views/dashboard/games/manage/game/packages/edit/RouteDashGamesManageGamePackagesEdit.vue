@@ -1,6 +1,25 @@
 <script lang="ts">
-import { Options } from 'vue-property-decorator';
 import { Api } from '../../../../../../../../_common/api/api.service';
+import {
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../../_common/route/route-component';
+
+export default {
+	name: 'RouteDashGamesManageGamePackagesEdit',
+	...defineAppRouteOptions({
+		reloadOn: { params: ['packageId'] },
+		resolver: ({ route }) =>
+			Api.sendRequest(
+				'/web/dash/developer/games/packages/' + route.params.id + '/' + route.params.packageId
+			),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import AppCard from '../../../../../../../../_common/card/AppCard.vue';
 import AppExpand from '../../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../../_common/filters/number';
@@ -23,191 +42,151 @@ import AppLoading from '../../../../../../../../_common/loading/AppLoading.vue';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import AppProgressPoller from '../../../../../../../../_common/progress/poller/AppProgressPoller.vue';
-import {
-	LegacyRouteComponent,
-	OptionsForLegacyRoute,
-} from '../../../../../../../../_common/route/legacy-route-component';
 import { SellableModel } from '../../../../../../../../_common/sellable/sellable.model';
 import AppTimeAgo from '../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
-import { shallowSetup } from '../../../../../../../../utils/vue';
+import { $gettext } from '../../../../../../../../_common/translate/translate.service';
 import FormGamePackage from '../../../../../../../components/forms/game/package/FormGamePackage.vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
 import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import { AppGamePerms } from '../../../../../../../components/game/perms/perms';
 import { useGameDashRouteController } from '../../../manage.store';
 
-@Options({
-	name: 'RouteDashGamesManageGamePackagesEdit',
-	components: {
-		AppTimeAgo,
-		AppNavTabList,
-		AppLoading,
-		AppGamePackageCard,
-		AppCard,
-		AppExpand,
-		FormGamePackage,
-		AppDashGameWizardControls,
-		AppProgressPoller,
-		AppGamePerms,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-@OptionsForLegacyRoute({
-	reloadOn: { params: ['packageId'] },
-	resolver: ({ route }) =>
-		Api.sendRequest(
-			'/web/dash/developer/games/packages/' + route.params.id + '/' + route.params.packageId
-		),
-})
-export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteComponent {
-	routeStore = shallowSetup(() => useGameDashRouteController()!);
+const router = useRouter();
+const routeStore = useGameDashRouteController()!;
 
-	get game() {
-		return this.routeStore.game.value!;
+const game = computed(() => routeStore.game.value!);
+
+const pkg = ref<GamePackageModel>(null as any);
+const sellable = ref<SellableModel>(null as any);
+const releases = ref<GameReleaseModel[]>([]);
+
+const previewPackage = ref<GamePackageModel | null>(null);
+const previewSellable = ref<SellableModel | null>(null);
+const previewData = ref<GamePackagePayloadModel | null>(null);
+const buildsProcessingCount = ref(0);
+const isLoadingPreview = ref(false);
+const isAddingRelease = ref(false);
+
+const GameRelease = GameReleaseModel;
+const GamePackageVisibilityPublic = GamePackageVisibility.Public;
+const GameReleaseStatusHidden = GameReleaseStatus.Hidden;
+const GameReleaseStatusPublished = GameReleaseStatus.Published;
+
+const hasBuildsPerms = computed(() => game.value && game.value.hasPerms('builds'));
+const hasAnalyticsPerms = computed(() => game.value && game.value.hasPerms('analytics'));
+
+async function loadPreview() {
+	isLoadingPreview.value = true;
+
+	const response = await Api.sendRequest(
+		'/web/dash/developer/games/packages/preview/' +
+			pkg.value.game_id +
+			'/' +
+			pkg.value.id,
+		null,
+		{ detach: true }
+	);
+
+	previewData.value = new GamePackagePayloadModel(response);
+	previewSellable.value = response.sellable ? new SellableModel(response.sellable) : null;
+	previewPackage.value = previewData.value.packages.find(i => i.id === pkg.value.id) || null;
+	buildsProcessingCount.value = response.buildsProcessingCount || 0;
+	isLoadingPreview.value = false;
+
+	if (previewSellable.value) {
+		previewSellable.value.is_owned = false;
 	}
+}
 
-	package: GamePackageModel = null as any;
-	sellable: SellableModel = null as any;
-	releases: GameReleaseModel[] = [];
+function onBuildsProcessed(response: any) {
+	loadPreview();
 
-	previewPackage: GamePackageModel | null = null;
-	previewSellable: SellableModel | null = null;
-	previewData: GamePackagePayloadModel | null = null;
-	buildsProcessingCount = 0;
-	isLoadingPreview = false;
-	isAddingRelease = false;
-
-	readonly GameRelease = GameReleaseModel;
-	readonly formatNumber = formatNumber;
-	readonly GamePackageVisibilityPublic = GamePackageVisibility.Public;
-	readonly GameReleaseStatusHidden = GameReleaseStatus.Hidden;
-	readonly GameReleaseStatusPublished = GameReleaseStatus.Published;
-
-	get hasBuildsPerms() {
-		return this.game && this.game.hasPerms('builds');
+	if (response.game) {
+		game.value.assign(response.game);
 	}
+}
 
-	get hasAnalyticsPerms() {
-		return this.game && this.game.hasPerms('analytics');
-	}
+async function editPackage() {
+	await showGamePackageEditModal(routeStore, pkg.value, sellable.value);
+	loadPreview();
+}
 
-	get routeTitle() {
-		if (this.game && this.package) {
-			return this.$gettext(`Edit Package %{ package } - %{ game }`, {
-				game: this.game.title,
-				package: this.package.title || this.game.title,
-			});
-		}
-		return null;
-	}
+async function newRelease() {
+	isAddingRelease.value = true;
 
-	routeResolved($payload: any) {
-		this.package = new GamePackageModel($payload.package);
-		this.sellable = new SellableModel($payload.sellable);
-		this.releases = GameReleaseModel.populate($payload.releases);
-
-		this.previewData = null;
-		this.previewPackage = null;
-
-		this.loadPreview();
-	}
-
-	async loadPreview() {
-		this.isLoadingPreview = true;
-
+	try {
 		const response = await Api.sendRequest(
-			'/web/dash/developer/games/packages/preview/' +
-				this.package.game_id +
+			'/web/dash/developer/games/releases/create-stub/' +
+				pkg.value.game_id +
 				'/' +
-				this.package.id,
-			null,
+				pkg.value.id,
+			{},
 			{ detach: true }
 		);
 
-		// We pull all new stuff for the preview so that we don't step on the form.
-		this.previewData = new GamePackagePayloadModel(response);
-		this.previewSellable = response.sellable ? new SellableModel(response.sellable) : null;
-		this.previewPackage = this.previewData.packages.find(i => i.id === this.package.id) || null;
-		this.buildsProcessingCount = response.buildsProcessingCount || 0;
-		this.isLoadingPreview = false;
-
-		// Clear out any "bought" status in the sellable so it always shows as if we haven't bought it yet.
-		if (this.previewSellable) {
-			this.previewSellable.is_owned = false;
-		}
-	}
-
-	onBuildsProcessed(response: any) {
-		this.loadPreview();
-
-		if (response.game) {
-			this.game.assign(response.game);
-		}
-	}
-
-	async editPackage() {
-		// Keep our preview in sync.
-		await showGamePackageEditModal(this.routeStore, this.package, this.sellable);
-		this.loadPreview();
-	}
-
-	async newRelease() {
-		this.isAddingRelease = true;
-
-		try {
-			const response = await Api.sendRequest(
-				'/web/dash/developer/games/releases/create-stub/' +
-					this.package.game_id +
-					'/' +
-					this.package.id,
-				{},
-				{ detach: true }
-			);
-
-			this.$router.push({
-				name: 'dash.games.manage.game.packages.release.edit',
-				params: {
-					packageId: this.package.id + '',
-					releaseId: response.newReleaseId + '',
-				},
-			});
-		} catch (e) {
-			showErrorGrowl(this.$gettext(`Could not create new release.`));
-			this.isAddingRelease = false;
-		}
-	}
-
-	async removeRelease(release: GameReleaseModel) {
-		const result = await showModalConfirm(
-			this.$gettext(
-				'Are you sure you want to remove this release? All of its builds will be removed as well.'
-			)
-		);
-
-		if (!result) {
-			return;
-		}
-
-		await $removeGameRelease(release, this.game);
-
-		showSuccessGrowl(
-			this.$gettext('The release and its builds have been removed from the package.'),
-			this.$gettext('Release Removed')
-		);
-
-		const index = this.releases.findIndex(i => i.id === release.id);
-		if (index !== -1) {
-			this.releases.splice(index, 1);
-		}
+		router.push({
+			name: 'dash.games.manage.game.packages.release.edit',
+			params: {
+				packageId: pkg.value.id + '',
+				releaseId: response.newReleaseId + '',
+			},
+		});
+	} catch (e) {
+		showErrorGrowl($gettext(`Could not create new release.`));
+		isAddingRelease.value = false;
 	}
 }
+
+async function removeRelease(release: GameReleaseModel) {
+	const result = await showModalConfirm(
+		$gettext(
+			'Are you sure you want to remove this release? All of its builds will be removed as well.'
+		)
+	);
+
+	if (!result) {
+		return;
+	}
+
+	await $removeGameRelease(release, game.value);
+
+	showSuccessGrowl(
+		$gettext('The release and its builds have been removed from the package.'),
+		$gettext('Release Removed')
+	);
+
+	const index = releases.value.findIndex(i => i.id === release.id);
+	if (index !== -1) {
+		releases.value.splice(index, 1);
+	}
+}
+
+const appRoute = createAppRoute({
+	routeTitle: computed(() => {
+		if (game.value && pkg.value) {
+			return $gettext(`Edit Package %{ package } - %{ game }`, {
+				game: game.value.title,
+				package: pkg.value.title || game.value.title,
+			});
+		}
+		return null;
+	}),
+	onResolved({ payload }) {
+		pkg.value = new GamePackageModel(payload.package);
+		sellable.value = new SellableModel(payload.sellable);
+		releases.value = GameReleaseModel.populate(payload.releases);
+
+		previewData.value = null;
+		previewPackage.value = null;
+
+		loadPreview();
+	},
+});
 </script>
 
 <template>
-	<div v-if="isRouteBootstrapped">
+	<div v-if="appRoute.isBootstrapped.value">
 		<nav class="breadcrumb">
 			<ul>
 				<li>
@@ -224,7 +203,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteCom
 								Package
 							</AppTranslate>
 						</span>
-						{{ package.title || game.title }}
+						{{ pkg.title || game.title }}
 					</span>
 				</li>
 			</ul>
@@ -263,7 +242,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteCom
 			<div class="row">
 				<div class="col-sm-8">
 					<div
-						v-if="game._is_devlog && package.visibility === GamePackageVisibilityPublic"
+						v-if="game._is_devlog && pkg.visibility === GamePackageVisibilityPublic"
 						class="alert alert-notice"
 					>
 						<AppJolticon icon="notice" />
@@ -290,7 +269,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteCom
 						:class="{
 							'section-header': !(
 								game._is_devlog &&
-								package.visibility === GamePackageVisibilityPublic
+								pkg.visibility === GamePackageVisibilityPublic
 							),
 						}"
 					>
@@ -317,7 +296,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteCom
 
 						<template v-if="buildsProcessingCount > 0">
 							<AppProgressPoller
-								:url="`/web/dash/developer/games/packages/poll-processing-builds/${game.id}/${package.id}/${buildsProcessingCount}`"
+								:url="`/web/dash/developer/games/packages/poll-processing-builds/${game.id}/${pkg.id}/${buildsProcessingCount}`"
 								@complete="onBuildsProcessed($event)"
 							/>
 
@@ -389,7 +368,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteCom
 											:to="{
 												name: 'dash.games.manage.game.packages.release.edit',
 												params: {
-													packageId: package.id,
+													packageId: pkg.id,
 													releaseId: release.id,
 												},
 											}"
@@ -475,7 +454,7 @@ export default class RouteDashGamesManageGamePackagesEdit extends LegacyRouteCom
 										:to="{
 											name: 'dash.games.manage.game.packages.release.edit',
 											params: {
-												packageId: package.id,
+												packageId: pkg.id,
 												releaseId: release.id,
 											},
 										}"
