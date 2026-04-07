@@ -1,5 +1,4 @@
-<script lang="ts">
-import { Options, Prop, Vue } from 'vue-property-decorator';
+<script lang="ts" setup>
 import { formatNumber } from '../../../../_common/filters/number';
 import { ForumTopicModel } from '../../../../_common/forum/topic/topic.model';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -9,38 +8,26 @@ import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vu
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 
-@Options({
-	components: {
-		AppTimeAgo,
-		AppUserCardHover,
-		AppUserAvatar,
-		AppUserVerifiedTick,
-	},
-	directives: {
-		AppTooltip: vAppTooltip,
-	},
-})
-export default class AppForumTopicList extends Vue {
-	@Prop(Array) topics!: ForumTopicModel[];
-	@Prop(String) sort!: string;
-	@Prop(Boolean) useUpvotes!: boolean;
-	@Prop(Number) postCountPerPage!: number;
+type Props = {
+	topics: ForumTopicModel[];
+	sort: string;
+	useUpvotes: boolean;
+	postCountPerPage: number;
+};
 
-	readonly formatNumber = formatNumber;
-	readonly Screen = Screen;
+const { topics, sort, useUpvotes, postCountPerPage } = defineProps<Props>();
 
-	getPostPage(topic: ForumTopicModel) {
-		if (!this.postCountPerPage) {
-			return undefined;
-		}
-
-		const page = Math.ceil((topic.replies_count || 0) / this.postCountPerPage);
-		if (page === 1) {
-			return undefined;
-		}
-
-		return page;
+function getPostPage(topic: ForumTopicModel) {
+	if (!postCountPerPage) {
+		return undefined;
 	}
+
+	const page = Math.ceil((topic.replies_count || 0) / postCountPerPage);
+	if (page === 1) {
+		return undefined;
+	}
+
+	return page;
 }
 </script>
 

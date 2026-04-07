@@ -7,7 +7,7 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
+import AppForumTopicList from '../../../../components/forum/topic-list/AppForumTopicList.vue';
 
 export default {
 	...defineAppRouteOptions({
