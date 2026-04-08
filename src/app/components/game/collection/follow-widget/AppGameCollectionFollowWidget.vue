@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import AppButton from '../../../../../_common/button/AppButton.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { computed } from 'vue';
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import { formatNumber } from '../../../../../_common/filters/number';
@@ -29,8 +31,7 @@ const emit = defineEmits<{
 
 const { user } = useCommonStore();
 const libraryStore = useLibraryStore();
-
-const collections = computed(() => libraryStore.collections.value);
+const { collections } = libraryStore;
 
 const isFollowing = computed(() => {
 	if (collection.type === GameCollectionType.Developer) {
@@ -104,7 +105,7 @@ async function onClick() {
 		v-app-tooltip.bottom="tooltip"
 		class="game-collection-follow-widget"
 		primary
-		:icon="icon"
+		:icon="(icon as any)"
 		:circle="circle"
 		:overlay="overlay"
 		:block="block"

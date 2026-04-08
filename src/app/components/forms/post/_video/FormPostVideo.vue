@@ -14,6 +14,12 @@ export const enum VideoStatus {
 </script>
 
 <script lang="ts" setup>
+import { validateFilesize } from '../../../../../_common/form-vue/validators';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { computed, ref, useTemplateRef, watch } from 'vue';
 import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
@@ -27,7 +33,6 @@ import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlUpload, {
 	AppFormControlUploadInterface,
 } from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import { vAppFocusWhen } from '../../../../../_common/form-vue/focus-when.directive';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
@@ -405,7 +410,7 @@ async function onDeleteUpload() {
 				<AppVideoPlayer
 					class="-video-player"
 					context="feed"
-					:media-item="videoMediaItem"
+					:media-item="videoMediaItem!"
 					:manifests="videoManifestSources"
 				/>
 			</template>

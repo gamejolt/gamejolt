@@ -14,7 +14,7 @@ const { user } = defineProps<Props>();
 
 const tooltip = computed(() => {
 	return $gettext('%{ percentage }% progress to next level', {
-		percentage: user.level_next_percentage,
+		percentage: user.level_next_percentage ?? 0,
 	});
 });
 </script>
@@ -28,17 +28,17 @@ const tooltip = computed(() => {
 		<div class="user-level-widget-experience fill-offset text-right">
 			<div class="stat-big stat-big-smaller">
 				<div class="stat-big-label">Current EXP</div>
-				<div class="stat-big-digit">{{ formatNumber(user.experience) }} EXP</div>
+				<div class="stat-big-digit">{{ formatNumber(user.experience ?? 0) }} EXP</div>
 			</div>
 			<div class="stat-big stat-big-smaller">
 				<div class="stat-big-label">Next Level in</div>
-				<div class="stat-big-digit">{{ formatNumber(user.experience_next) }} EXP</div>
+				<div class="stat-big-digit">{{ formatNumber(user.experience_next ?? 0) }} EXP</div>
 			</div>
 		</div>
 		<AppProgressBar
 			class="user-level-widget-progress"
 			thin
-			:percent="user.level_next_percentage"
+			:percent="user.level_next_percentage ?? 0"
 			v-app-tooltip="tooltip"
 		/>
 	</div>

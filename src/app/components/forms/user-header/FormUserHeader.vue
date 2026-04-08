@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { computed, PropType, ref, toRef, watch } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
@@ -14,7 +15,6 @@ import {
 } from '../../../../_common/form-vue/validators';
 import AppLinkHelp from '../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { $clearUserHeader, $saveUserHeader, UserModel } from '../../../../_common/user/user.model';
@@ -30,7 +30,9 @@ const props = defineProps({
 	},
 });
 
-const commonStore = useCommonStore();
+const emit = defineEmits<{
+	submit: [user: UserModel];
+}>();
 
 const maxFilesize = ref(0);
 const minAspectRatio = ref(0);
@@ -61,6 +63,9 @@ const form: FormController<FormModel> = createForm({
 	onBeforeSubmit() {
 		// Backend expects this field.
 		(form.formModel as any).crop = form.formModel.header_crop;
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 

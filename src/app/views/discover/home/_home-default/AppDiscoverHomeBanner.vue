@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { computed, PropType, toRefs } from 'vue';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/AppCommunityJoinWidget.vue';
 import AppGameFollowWidget from '../../../../../_common/game/follow-widget/AppGameFollowWidget.vue';

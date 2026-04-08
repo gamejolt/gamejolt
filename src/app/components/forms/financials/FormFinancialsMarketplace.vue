@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { computed, ref } from 'vue';
 import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../_common/api/api.service';

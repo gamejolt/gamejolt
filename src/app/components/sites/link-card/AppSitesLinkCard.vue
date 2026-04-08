@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCard from '../../../../_common/card/AppCard.vue';
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { SiteModel } from '../../../../_common/site/site-model';

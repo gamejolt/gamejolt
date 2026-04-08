@@ -28,7 +28,7 @@ const props = defineProps({
 const { labelClass, hideLabel, small, tinyLabelMargin } = toRefs(props);
 
 const form = useForm()!;
-const { name, label, optional } = useFormGroup()!;
+const { name, optional } = useFormGroup()!;
 
 const labelClasses = computed(() => [
 	labelClass?.value,

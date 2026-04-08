@@ -79,7 +79,7 @@ const showFullDescription = ref(false);
 const currentPage = ref(1);
 const perPage = ref(0);
 
-const sort = computed(() => route.query.sort);
+const sort = computed(() => route.query.sort as string);
 
 function editTopic() {
 	isEditingTopic.value = true;

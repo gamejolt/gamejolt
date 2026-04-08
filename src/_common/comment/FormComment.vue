@@ -96,7 +96,7 @@ const form: FormController<FormModel> = createForm({
 		form.formModel.comment_content = _comment?.comment_content ?? '';
 		form.formModel.resource = _comment?.resource ?? getCommentModelResourceName(model.value);
 		form.formModel.resource_id = _comment?.resource_id ?? model.value.id;
-		form.formModel.parent_id = _comment?.parent_id ?? parentId?.value;
+		form.formModel.parent_id = _comment?.parent_id ?? parentId?.value ?? 0;
 
 		// Wait for errors, then clear them.
 		await nextTick();
@@ -170,7 +170,7 @@ const onlyFriends = computed(
 		<AppAlertBox icon="notice">
 			<AppTranslate
 				v-if="onlyFriends"
-				:translate-params="{ user: postModel?.displayUser?.username }"
+				:translate-params="{ user: postModel?.displayUser?.username ?? '' }"
 			>
 				Only friends of @%{ user } can comment.
 			</AppTranslate>

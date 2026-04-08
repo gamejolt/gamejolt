@@ -21,6 +21,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../../../../_common/translate/AppTranslate.vue';
 import { ref, watch } from 'vue';
 import { Environment } from '../../../../../../../../../_common/environment/environment.service';
 import { Screen } from '../../../../../../../../../_common/screen/screen-service';

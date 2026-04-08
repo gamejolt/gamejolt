@@ -40,7 +40,7 @@ class HistoryTickService {
 			return;
 		}
 
-		return new Promise(resolve => {
+		return new Promise<void>(resolve => {
 			const queryParams: string[] = [];
 
 			// Cache busting.
@@ -94,8 +94,8 @@ class HistoryTickService {
 
 			// Always resolve.
 			img.onload = img.onerror = () => {
-				delete img.onload;
-				delete img.onerror;
+				delete (img as any).onload;
+				delete (img as any).onerror;
 				resolve();
 			};
 

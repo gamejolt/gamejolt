@@ -1,22 +1,24 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { computed, ref, watch } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
-import { formatFilesize } from '../../../../_common/filters/filesize';
 import AppFormControlCrop from '../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import AppForm, { createForm } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlError from '../../../../_common/form-vue/AppFormControlError.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import { validateFilesize, validateImageMaxDimensions, validateImageMinDimensions } from '../../../../_common/form-vue/validators';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { Screen } from '../../../../_common/screen/screen-service';
 import { $clearUserAvatar, $saveUserAvatar, UserModel } from '../../../../_common/user/user.model';
 
 type FormModel = UserModel & {
 	avatar_crop?: any;
+	crop?: any;
 };
 
 const maxFilesize = ref(0);
@@ -38,8 +40,6 @@ const form = createForm<FormModel>({
 		form.formModel.crop = form.formModel.avatar_crop;
 	},
 });
-
-const hasAvatar = computed(() => !!form.formModel.avatar_media_item);
 
 const crop = computed(() =>
 	form.formModel.avatar_media_item

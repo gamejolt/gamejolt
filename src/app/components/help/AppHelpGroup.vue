@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 import { routeLandingHelpPage } from '../../views/landing/help/help.route';
@@ -21,7 +22,7 @@ defineProps({
 	<div class="list-group anim-fade-in-enlarge">
 		<div class="list-group-item" :class="{ 'has-icon': category.icon }">
 			<h3 class="list-group-item-heading">
-				<AppJolticon v-if="category.icon" :icon="category.icon" notice />
+				<AppJolticon v-if="category.icon" :icon="(category.icon as any)" notice />
 				{{ category.name }}
 			</h3>
 		</div>

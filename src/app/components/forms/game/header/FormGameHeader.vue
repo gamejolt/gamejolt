@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
+import { validateFilesize, validateImageMinDimensions, validateImageMaxDimensions } from '../../../../../_common/form-vue/validators';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import { computed, ref, toRef, watch } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';

@@ -9,7 +9,8 @@ const { build, username, token, javaArchive, javaCodebase, embedWidth, embedHeig
 
 <template>
 	<div v-if="build" style="margin: 0 auto; text-align: center">
-		<applet
+		<component
+			:is="'applet'"
 			:code="build.java_class_name"
 			:archive="javaArchive"
 			:codebase="javaCodebase"
@@ -39,6 +40,6 @@ const { build, username, token, javaArchive, javaCodebase, embedWidth, embedHeig
 					style="border-style: none"
 				/>
 			</AppLinkExternal>
-		</applet>
+		</component>
 	</div>
 </template>

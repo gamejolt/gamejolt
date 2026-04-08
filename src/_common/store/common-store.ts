@@ -183,8 +183,8 @@ export function createCommonStore() {
 			return Promise.resolve(null);
 		}
 
-		let deferredResolve = (value: unknown) => {};
-		let deferredReject = (reason?: any) => {};
+		let deferredResolve = (_value: unknown) => {};
+		let deferredReject = (_reason?: any) => {};
 		const deferred = new Promise((resolve, reject) => {
 			deferredResolve = resolve;
 			deferredReject = reject;

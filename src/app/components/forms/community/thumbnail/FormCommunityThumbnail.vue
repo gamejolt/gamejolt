@@ -1,10 +1,10 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { computed, ref, toRef, watch } from 'vue';
 import {
 	$saveCommunityThumbnail,
 	CommunityModel,
 } from '../../../../../_common/community/community.model';
-import { formatFilesize } from '../../../../../_common/filters/filesize';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';

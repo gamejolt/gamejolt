@@ -282,7 +282,7 @@ function onMarkRead() {
 													"
 													:source="
 														(notification.action_model as MentionModel).comment
-															?.comment_content
+															?.comment_content || ''
 													"
 												/>
 												<AppContentViewer
@@ -291,7 +291,7 @@ function onMarkRead() {
 														NotificationType.SupporterMessage
 													"
 													:source="
-														(notification.action_model as SupporterActionModel).message?.content
+														(notification.action_model as SupporterActionModel).message?.content || ''
 													"
 												/>
 												<span

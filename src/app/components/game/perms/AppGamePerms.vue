@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, h, useSlots } from 'vue';
+import { computed } from 'vue';
 import { Perm } from '../../../../_common/collaborator/collaboratable';
 import { GameModel } from '../../../../_common/game/game.model';
 import { useGameDashRouteController } from '../../../views/dashboard/games/manage/manage.store';
@@ -12,7 +12,7 @@ type Props = {
 	debug?: boolean;
 };
 
-const { game, required = '', either, tag = 'span', debug } = defineProps<Props>();
+const { game, required = '', either, tag = 'span' } = defineProps<Props>();
 
 const gameRouteStore = useGameDashRouteController();
 
@@ -22,7 +22,7 @@ const targetGame = computed(() => {
 	}
 
 	if (gameRouteStore) {
-		return gameRouteStore.game;
+		return gameRouteStore.game.value;
 	}
 
 	return undefined;

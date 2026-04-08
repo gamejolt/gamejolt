@@ -34,13 +34,6 @@ const imgTagUrl = computed(() => {
 	return assetPaths[`./${imgTag.value}-tag.svg`];
 });
 
-const imgTagHeight = computed(() => {
-	if (full) {
-		return 100;
-	}
-
-	return 16;
-});
 </script>
 
 <template>

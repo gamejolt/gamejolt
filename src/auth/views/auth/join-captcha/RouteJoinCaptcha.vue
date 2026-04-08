@@ -10,6 +10,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Api } from '../../../../_common/api/api.service';

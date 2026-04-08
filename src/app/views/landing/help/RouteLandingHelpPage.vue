@@ -23,6 +23,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 const page = ref<HelpPageModel>();
 
 const { user } = useCommonStore();

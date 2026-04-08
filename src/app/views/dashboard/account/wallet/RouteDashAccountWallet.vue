@@ -41,6 +41,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 const { heading } = useAccountRouteController()!;
 
 const marketplaceWalletBalance = ref(0);

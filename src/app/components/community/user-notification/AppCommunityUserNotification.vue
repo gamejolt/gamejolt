@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { PropType, computed, toRef, toRefs } from 'vue';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';

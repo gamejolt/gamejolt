@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { computed } from 'vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';

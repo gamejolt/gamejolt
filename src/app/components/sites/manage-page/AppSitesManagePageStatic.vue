@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { computed } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
@@ -78,7 +80,7 @@ async function activateBuild() {
 						</AppTranslate>
 					</p>
 
-					<FormDashSiteBuild v-if="!site.build" :site="site" @submit="onBuildAdded" />
+					<FormDashSiteBuild v-if="site && !site.build" :site="site" @submit="onBuildAdded" />
 
 					<AppButton
 						v-else
@@ -94,7 +96,7 @@ async function activateBuild() {
 		<div v-else>
 			<h2><AppTranslate>Upload a New Build</AppTranslate></h2>
 
-			<FormDashSiteBuild :site="site" @submit="onBuildAdded" />
+			<FormDashSiteBuild :site="site!" @submit="onBuildAdded" />
 		</div>
 	</div>
 </template>

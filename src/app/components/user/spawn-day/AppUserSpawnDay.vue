@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { formatDistanceStrict } from 'date-fns';
 import { computed, nextTick, onMounted, useTemplateRef } from 'vue';
 import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
@@ -73,17 +76,6 @@ async function showNewPost() {
 	}
 
 	emit('post-add', post);
-}
-
-function reset(elem: HTMLDivElement) {
-	const width = Math.random() * 10;
-	const height = width * 0.4;
-	elem.style.width = width + 'px';
-	elem.style.height = height + 'px';
-	elem.style.top = '-150px';
-	elem.style.left = Math.random() * 100 + '%';
-	elem.style.opacity = (Math.random() + 0.5).toString();
-	drop(elem);
 }
 
 async function drop(elem: HTMLDivElement) {

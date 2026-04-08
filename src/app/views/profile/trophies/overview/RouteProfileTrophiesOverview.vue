@@ -16,6 +16,10 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import { computed, ref } from 'vue';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { useCommonStore } from '../../../../../_common/store/common-store';
@@ -38,7 +42,7 @@ type TrophyEntry = {
 	trophies: UserBaseTrophyModel[];
 };
 
-const routeStore = useProfileRouteStore()!;
+const { user } = useProfileRouteStore()!;
 const { user: appUser } = useCommonStore();
 
 const trophyEntries = ref<TrophyEntry[]>([]);
@@ -46,8 +50,6 @@ const trophyEntries = ref<TrophyEntry[]>([]);
 const canLoadMore = ref(false);
 const isLoadingMore = ref(false);
 let pageSize: number | undefined;
-
-const user = computed(() => routeStore.user);
 
 const hasTrophies = computed(() => trophyEntries.value.length > 0);
 
@@ -280,8 +282,8 @@ createAppRoute({
 								v-for="userTrophy of entry.trophies"
 								:key="userTrophy.id"
 								class="-trophy-thumb"
-								:trophy="userTrophy.trophy"
-								:no-highlight="isLoggedInUser"
+								:trophy="userTrophy.trophy!"
+								:no-highlight="!!isLoggedInUser"
 								@click="onClickTrophy(userTrophy)"
 							/>
 						</div>

@@ -178,7 +178,7 @@ function setFiles(files: File[] | File | null | undefined) {
 }
 
 function isAscii(str: string) {
-	return /^[\000-\177]*$/.test(str);
+	return /^[\x00-\x7f]*$/.test(str);
 }
 
 /**
@@ -231,7 +231,7 @@ async function getFiles(e: DragEvent) {
 	let files: File[] = [];
 
 	const items = e.dataTransfer ? e.dataTransfer.items : null;
-	if (items && items.length > 0 && items[0].webkitGetAsEntry) {
+	if (items && items.length > 0 && typeof items[0].webkitGetAsEntry === 'function') {
 		const num = items.length;
 		for (let i = 0; i < num; ++i) {
 			const item = items[i];

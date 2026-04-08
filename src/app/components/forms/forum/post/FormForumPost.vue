@@ -1,10 +1,14 @@
 <script lang="ts" setup>
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { nextTick, toRef } from 'vue';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
 import {
-	validateContentMaxLength,
 	validateContentNoActiveUploads,
 	validateContentRequired,
 } from '../../../../../_common/form-vue/validators';

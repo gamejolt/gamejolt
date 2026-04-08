@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 import { nextTick, toRef } from 'vue';
 import {
 	$setVotingEnabledOnCommunityCompetition,
@@ -7,7 +8,6 @@ import {
 import AppForm, { createForm, FormController } from '../../../../../../../_common/form-vue/AppForm.vue';
 import AppFormGroup from '../../../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
 
 const props = defineProps({
 	model: {
@@ -26,12 +26,18 @@ const form: FormController<CommunityCompetitionModel> = createForm({
 	model: toRef(props, 'model'),
 });
 
+function setField<K extends keyof CommunityCompetitionModel>(field: K, value: CommunityCompetitionModel[K]) {
+	(form.formModel as any)[field] = value;
+}
+
+defineExpose({ setField });
+
 async function onToggle() {
 	if (!props.model!.isVotingSetUp) {
 		emit('toggle-not-set-up');
 		// No change to the actual model should be counted.
 		await nextTick();
-		form.changed.value = false;
+		form.changed = false;
 	} else {
 		// Submit toggle.
 		await form.submit();
@@ -50,7 +56,7 @@ async function onToggle() {
 				</span>
 			</p>
 
-			<AppFormControlToggle :disabled="form.isProcessing.value" @changed="onToggle" />
+			<AppFormControlToggle :disabled="form.isProcessing" @changed="onToggle" />
 		</AppFormGroup>
 	</AppForm>
 </template>

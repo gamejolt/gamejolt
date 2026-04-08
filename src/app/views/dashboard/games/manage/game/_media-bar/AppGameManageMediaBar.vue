@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
 import { computed } from 'vue';
 import draggable from 'vuedraggable';
 import AppEditableOverlay from '../../../../../../../_common/editable-overlay/AppEditableOverlay.vue';

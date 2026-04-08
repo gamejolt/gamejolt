@@ -11,7 +11,7 @@ type Props = {
 	userPostCounts: any;
 };
 
-const { topic, posts, sort, userPostCounts } = defineProps<Props>();
+const { topic, posts, userPostCounts } = defineProps<Props>();
 </script>
 
 <template>

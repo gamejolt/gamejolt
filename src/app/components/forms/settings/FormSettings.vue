@@ -30,6 +30,7 @@ type FormModel = {
 	restricted_browsing: boolean;
 	broadcast_modal: boolean;
 	animated_thumbnails: boolean;
+	parallax_backgrounds: boolean;
 	feed_notifications: boolean;
 	game_install_dir: string;
 	queue_when_playing: boolean;
@@ -56,7 +57,7 @@ const form: FormController<FormModel> = createForm({
 		form.formModel['restricted_browsing'] = SettingRestrictedBrowsing.get();
 		form.formModel['broadcast_modal'] = SettingBroadcastModal.get();
 		form.formModel['animated_thumbnails'] = SettingAnimatedThumbnails.get();
-		form.formModel['parallax_backgrounds'] = SettingParallaxBackgrounds.get();
+		form.formModel.parallax_backgrounds = SettingParallaxBackgrounds.get();
 		form.formModel['feed_notifications'] = SettingFeedNotifications.get();
 		form.formModel['theme_dark'] = SettingThemeDark.get();
 		form.formModel['theme_always_ours'] = SettingThemeAlwaysOurs.get();

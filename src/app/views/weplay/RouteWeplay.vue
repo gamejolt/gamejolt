@@ -15,8 +15,9 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppButton from '../../../_common/button/AppButton.vue';
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { computed } from 'vue';
-import AppCard from '../../../_common/card/AppCard.vue';
 import { Screen } from '../../../_common/screen/screen-service';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 import AppWeplayLogo from '../../components/weplay/logo/AppWeplayLogo.vue';

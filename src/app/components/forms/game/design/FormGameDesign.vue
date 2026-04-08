@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import { computed, onUnmounted, toRef, watch } from 'vue';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
@@ -52,7 +53,7 @@ function onThemeChanged() {
 	// Default theme would be the user theme. Don't want to fallback to page theme otherwise
 	// when clearing theme it'll show the page theme.
 	themeStore.setFormTheme(
-		form.formModel.theme ?? themeStore.userTheme ?? DefaultTheme
+		form.formModel.theme ?? themeStore.userTheme.value ?? DefaultTheme
 	);
 }
 </script>
@@ -98,7 +99,7 @@ function onThemeChanged() {
 							<AppTranslate v-else>Change Thumbnail</AppTranslate>
 						</span>
 					</template>
-					<AppGameThumbnailImg animate :game="model" />
+					<AppGameThumbnailImg animate :game="model!" />
 				</AppEditableOverlay>
 			</div>
 		</div>

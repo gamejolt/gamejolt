@@ -1,15 +1,16 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
+import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
+import AppLinkExternal from '../../../../../../../_common/link/AppLinkExternal.vue';
 import { computed } from 'vue';
 import { formatDate } from '../../../../../../../_common/filters/date';
 import { GameCreationToolOther } from '../../../../../../../_common/game/game.model';
-import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
+import AppLazyPlaceholder from '../../../../../../../_common/lazy/placeholder/AppLazyPlaceholder.vue';
 import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 
 const routeStore = useGameRouteController()!;
 
-const game = computed(() => routeStore.game!);
-const linkedAccounts = computed(() => routeStore.linkedAccounts);
-
+const game = computed(() => routeStore.game.value!);
 const creationTool = computed(() => {
 	if (
 		game.value.creation_tool_human === GameCreationToolOther &&

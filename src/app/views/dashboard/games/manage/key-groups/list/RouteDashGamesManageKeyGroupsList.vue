@@ -16,6 +16,9 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../../../../_common/button/AppButton.vue';
+import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
@@ -35,7 +38,7 @@ import { useGameDashRouteController } from '../../manage.store';
 const router = useRouter();
 const routeStore = useGameDashRouteController()!;
 
-const game = computed(() => routeStore.game!);
+const game = computed(() => routeStore.game.value!);
 
 const keyGroups = ref<KeyGroupModel[]>([]);
 const packages = ref<GamePackageModel[]>([]);
@@ -231,7 +234,7 @@ createAppRoute({
 								@toggle="isAdding = !isAdding"
 							>
 								<FormGameKeyGroup
-									:game="game"
+									:game="game!"
 									:packages="packages"
 									@submit="onKeyGroupAdded"
 								/>

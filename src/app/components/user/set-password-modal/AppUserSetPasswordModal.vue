@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import AppModal from '../../../../_common/modal/AppModal.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import FormSetPassword from '../../forms/set-password/FormSetPassword.vue';
 

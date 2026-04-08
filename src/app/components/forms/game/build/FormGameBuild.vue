@@ -9,12 +9,15 @@ export interface FormGameBuildInterface {
 </script>
 
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
+import { validateMaxLength } from '../../../../../_common/form-vue/validators';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppFormControlCheckbox from '../../../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
 import { computed, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppCardListItem from '../../../../../_common/card/list/AppCardListItem.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatFilesize } from '../../../../../_common/filters/filesize';
-import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
@@ -104,8 +107,8 @@ const GameBuildErrors = {
 	missingFields: GameBuildError.MissingFields,
 };
 
-const form: FormController<GameBuildFormModel> = createForm({
-	model: toRef(props, 'model'),
+const form: FormController<GameBuildFormModel> = createForm<GameBuildFormModel>({
+	model: toRef(props, 'model') as Ref<GameBuildFormModel | undefined>,
 	modelClass: GameBuildModel as any,
 	modelSaveHandler: $saveGameBuild,
 	reloadOnSubmit: true,
@@ -362,10 +365,6 @@ function validatePlatforms() {
 	}
 }
 
-function getExecutablePath(platform: string) {
-	return (form.formModel as any)['launch_' + platform];
-}
-
 async function openFileSelector(platform: string) {
 	const selected = await showArchiveFileSelectorModal(
 		game.id,
@@ -397,7 +396,7 @@ function onBuildFieldChanged() {
 </script>
 
 <template>
-	<AppCardListItem class="game-build-form" force-active :item="model">
+	<AppCardListItem v-if="model" class="game-build-form" force-active :item="model">
 		<a class="card-remove" @click="remove()">
 			<AppJolticon icon="remove" />
 		</a>

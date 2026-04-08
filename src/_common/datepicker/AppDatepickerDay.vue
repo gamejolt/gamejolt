@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import AppJolticon from '../jolticon/AppJolticon.vue';
 import { computed, reactive, toRefs } from 'vue';
 import { arrayChunk } from '../../utils/array';
 import { formatDate } from '../filters/date';

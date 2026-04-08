@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../translate/translate-directive';
 import { PropType, onMounted, ref, toRefs } from 'vue';
 import { Api } from '../../../../api/api.service';
 import AppButton from '../../../../button/AppButton.vue';

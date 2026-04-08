@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import AppModal from '../../../../_common/modal/AppModal.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { computed, ref, watch } from 'vue';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
 import { BackgroundModel } from '../../../../_common/background/background.model';
@@ -68,7 +71,7 @@ function onBackgroundChange(bg?: BackgroundModel) {
 	<AppModal>
 		<AppBackground
 			class="-background"
-			:background="background"
+			:background="background || undefined"
 			:darken="overlay"
 			:backdrop-style="
 				Screen.isXs

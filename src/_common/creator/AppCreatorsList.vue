@@ -95,7 +95,7 @@ const placeholderCount = computed(() => {
 			<slot name="left" />
 
 			<template v-if="isLoading">
-				<template v-for="i of placeholderCount" :key="i">
+				<template v-for="_i of placeholderCount" :key="_i">
 					<div class="-creator-card">
 						<AppPostCardPlaceholder :aspect-ratio="AppCreatorCardAspectRatio" />
 					</div>

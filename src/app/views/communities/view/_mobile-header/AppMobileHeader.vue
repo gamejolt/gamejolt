@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { toRef, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import AppButton from '../../../../../_common/button/AppButton.vue';

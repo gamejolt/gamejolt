@@ -74,7 +74,7 @@ createAppRoute({
 
 							<span class="dot-separator hidden-xs" />
 
-							<AppSocialFacebookLike />
+							<AppSocialFacebookLike url="https://gamejolt.com/landing/indieaf" />
 						</div>
 						<br />
 

@@ -34,7 +34,7 @@ function click(build: GameBuildModel, fromExtraSection = false) {
 	<div class="game-package-card-app-buttons">
 		<AppButton v-if="card.browserBuild" primary @click="click(card.browserBuild!)">
 			<AppTranslate>Play</AppTranslate>
-			<AppJolticon class="jolticon-addon" :icon="card.showcasedBrowserIcon" />
+			<AppJolticon class="jolticon-addon" :icon="(card.showcasedBrowserIcon as any)" />
 		</AppButton>
 
 		{{ ' ' }}
@@ -52,7 +52,7 @@ function click(build: GameBuildModel, fromExtraSection = false) {
 			<small class="hidden-xs">
 				({{ formatFilesize(card.primaryBuild.primary_file.filesize) }})
 			</small>
-			<AppJolticon class="jolticon-addon" :icon="card.showcasedOsIcon" />
+			<AppJolticon class="jolticon-addon" :icon="(card.showcasedOsIcon as any)" />
 		</AppButton>
 
 		{{ ' ' }}

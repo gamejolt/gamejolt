@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import AppJolticon from '../jolticon/AppJolticon.vue';
 import { computed, onMounted, PropType, toRefs } from 'vue';
 import AppGrowlDynamic from './AppGrowlDynamic.vue';
 import './growl-content.styl';

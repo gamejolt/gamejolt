@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { PropType, computed, nextTick, ref, toRefs, watch } from 'vue';
+import { type Ref, PropType, computed, nextTick, ref, toRefs, watch } from 'vue';
 import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { BackgroundModel } from '../../../../_common/background/background.model';
@@ -166,9 +166,9 @@ const scrollingKey = ref(1);
 const uploadingVideoStatus = ref(VideoStatus.IDLE);
 const isShowingMoreOptions = ref(false);
 
-const form: FormController<FormPostModel> = createForm({
-	model,
-	modelClass: FiresidePostModel,
+const form: FormController<FormPostModel> = createForm<FormPostModel>({
+	model: model as Ref<FormPostModel | undefined>,
+	modelClass: FiresidePostModel as any,
 	loadUrl: computed(() => `/web/posts/manage/save/${model.value.id}`),
 	onInit: async () => {
 		const _model = model.value;

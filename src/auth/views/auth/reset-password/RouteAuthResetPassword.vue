@@ -16,6 +16,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';

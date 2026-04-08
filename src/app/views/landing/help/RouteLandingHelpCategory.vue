@@ -27,6 +27,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 interface PayloadCategory {
 	category: HelpCategoryModel;
 	pages: HelpPageModel[];

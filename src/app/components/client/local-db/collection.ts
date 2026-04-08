@@ -156,7 +156,7 @@ export class Collection<T extends LocalDbModel<T>> {
 
 		const emptyGroups: DataGroups<T> = {};
 		for (const field in this.data.groups) {
-			emptyGroups[field] = {};
+			(emptyGroups as any)[field] = {};
 		}
 		this.data = { version: this.data.version, objects: {}, groups: emptyGroups };
 	}
@@ -204,7 +204,7 @@ export class Collection<T extends LocalDbModel<T>> {
 		}
 
 		instance.hydrate();
-		return instance;
+		return instance as unknown as T;
 	}
 
 	/**

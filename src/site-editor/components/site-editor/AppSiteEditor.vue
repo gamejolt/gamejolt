@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../_common/button/AppButton.vue';
 import { computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
@@ -14,13 +16,13 @@ const store = useSiteEditorStore();
 const router = useRouter();
 const route = useRoute();
 
-const tab = computed(() => store.tab);
-const site = computed(() => store.site);
-const templates = computed(() => store.siteTemplates);
-const currentTemplateId = computed(() => store.currentTemplateId);
-const theme = computed(() => store.siteTheme);
-const isLoaded = computed(() => store.isLoaded);
-const isDirty = computed(() => store.isDirty);
+const tab = computed(() => store.tab.value);
+const site = computed(() => store.site.value);
+const templates = computed(() => store.siteTemplates.value);
+const currentTemplateId = computed(() => store.currentTemplateId.value);
+const theme = computed(() => store.siteTheme.value);
+const isLoaded = computed(() => store.isLoaded.value);
+const isDirty = computed(() => store.isDirty.value);
 const siteUrl = computed(() => site.value?.url);
 const confirmMessage = computed(() =>
 	$gettext('You have unsaved changes. Are you sure you want to discard them?')
@@ -145,7 +147,7 @@ async function save() {
 							<div v-for="templateId of [currentTemplateId]" :key="templateId">
 								<AppThemeEditor
 									window-id="site-editor-iframe"
-									:resource-id="site?.id"
+									:resource-id="site!.id"
 									:template="templateId"
 									:theme="theme?.data"
 									@change="themeEdited"
@@ -161,8 +163,8 @@ async function save() {
 					<div class="well">
 						<AppContentBlockEditor
 							window-id="site-editor-iframe"
-							:site="site"
-							:content-block="site?.content_blocks?.[0]"
+							:site="site!"
+							:content-block="site!.content_blocks![0]"
 							@change="contentEdited"
 						/>
 					</div>

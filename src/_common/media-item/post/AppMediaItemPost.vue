@@ -154,7 +154,7 @@ const itemStyling = import.meta.env.SSR
 						:style="itemStyling"
 						:src="mediaItem.mediaserver_url"
 						alt=""
-						ondragstart="return false"
+						@dragstart.prevent
 					/>
 					<AppVideo
 						v-else-if="isActive && videoController"

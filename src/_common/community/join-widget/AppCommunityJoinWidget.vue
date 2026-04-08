@@ -77,7 +77,7 @@ async function onClick() {
 				grid: grid.value,
 				location: location.value,
 			});
-		} catch (e) {
+		} catch (e: any) {
 			console.log(e);
 			let message = $gettext(`Something has prevented you from joining this community.`);
 			if (e.errors && e.errors['limit-reached']) {

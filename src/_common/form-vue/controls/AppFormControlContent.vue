@@ -82,7 +82,6 @@ const {
 	maxHeight,
 	displayRules,
 	focusEnd,
-	focusToken,
 } = toRefs(props);
 
 const emit = defineEmits({

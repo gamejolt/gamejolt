@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useCommonStore } from '../../../../../_common/store/common-store';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { GameCollectionModel } from '../collection.model';
 import AppGameCollectionThumbnail from '../thumbnail/AppGameCollectionThumbnail.vue';
 
@@ -8,9 +8,7 @@ type Props = {
 	eventLabel?: string;
 };
 
-const { collections, eventLabel } = defineProps<Props>();
-
-const { user } = useCommonStore();
+const { collections } = defineProps<Props>();
 </script>
 
 <template>
@@ -35,7 +33,7 @@ const { user } = useCommonStore();
 							<AppTranslate translate-comment="As in made by: / the author is:">
 								by
 							</AppTranslate>
-							{{ ' @' + collection.owner.username }}
+							{{ ' @' + collection.owner?.username }}
 						</small>
 					</div>
 				</div>

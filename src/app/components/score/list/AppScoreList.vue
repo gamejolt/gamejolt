@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Environment } from '../../../../_common/environment/environment.service';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';

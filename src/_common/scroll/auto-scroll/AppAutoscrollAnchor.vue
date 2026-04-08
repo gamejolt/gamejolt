@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, watch } from 'vue';
+import { onMounted, onUnmounted, useTemplateRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { Ruler } from '../../ruler/ruler-service';
 import { AutoscrollAnchorState, Scroll } from '../scroll.service';

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../translate/translate-directive';
 import { PropType } from 'vue';
 import AppButton from '../button/AppButton.vue';
 import AppTranslate from '../translate/AppTranslate.vue';

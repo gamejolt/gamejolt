@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 import { computed, nextTick, ref, toRef } from 'vue';
 import AppButton from '../../../../../../../_common/button/AppButton.vue';
 import {
@@ -8,7 +9,6 @@ import {
 	VotingType,
 	VotingUserRestriction,
 } from '../../../../../../../_common/community/competition/competition.model';
-import { formatDate } from '../../../../../../../_common/filters/date';
 import AppForm, { createForm, FormController } from '../../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -74,7 +74,7 @@ const isVotingValid = computed(
 );
 
 const isValid = computed(() => {
-	if (!form.valid.value) {
+	if (!form.valid) {
 		return false;
 	}
 	return isVotingValid.value;
@@ -91,7 +91,7 @@ const form: FormController<CommunityCompetitionModel> = createForm({
 			// End date plus 1 day.
 			form.formModel.voting_ends_on = form.formModel.ends_on + 1000 * 60 * 60 * 24;
 			await nextTick();
-			form.changed.value = false;
+			form.changed = false;
 		}
 
 		timezoneService.value = new FormTimezoneService(form);
@@ -161,7 +161,6 @@ function onClickCancel() {
 								>
 									<label>
 										<AppFormControlRadio
-											type="radio"
 											:value="option.radioValue"
 										/>
 										{{ option.text }}
@@ -179,7 +178,6 @@ function onClickCancel() {
 								>
 									<label>
 										<AppFormControlRadio
-											type="radio"
 											:value="option.radioValue"
 										/>
 										{{ option.text }}

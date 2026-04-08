@@ -18,6 +18,10 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../../../../_common/button/AppButton.vue';
+import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
+import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Clipboard } from '../../../../../../../_common/clipboard/clipboard-service';
@@ -49,7 +53,7 @@ const route = useRoute();
 const router = useRouter();
 const routeStore = useGameDashRouteController()!;
 
-const game = computed(() => routeStore.game!);
+const game = computed(() => routeStore.game.value!);
 
 const keyGroup = ref<KeyGroupModel>(null as any);
 const packages = ref<GamePackageModel[]>([]);
@@ -163,7 +167,7 @@ const appRoute = createAppRoute({
 						<AppTranslate>Edit Key Group</AppTranslate>
 					</h2>
 
-					<FormGameKeyGroup :game="game" :packages="packages" :model="keyGroup" />
+					<FormGameKeyGroup :game="game!" :packages="packages" :model="keyGroup" />
 				</div>
 				<div class="col-sm-10 col-md-4 col-md-offset-1 col-lg-5">
 					<div v-if="keyGroup.type === KeyGroupTypeEmail" class="alert">
@@ -299,7 +303,7 @@ const appRoute = createAppRoute({
 						<tr>
 							<th>
 								<AppTranslate
-									translate-cocmment="Refers to a game's key group's key"
+									translate-comment="Refers to a game's key group's key"
 								>
 									Key
 								</AppTranslate>

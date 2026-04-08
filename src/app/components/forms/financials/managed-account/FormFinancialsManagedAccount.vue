@@ -189,10 +189,17 @@ import { UserModel } from '../../../../../_common/user/user.model';
 </script>
 
 <script lang="ts" setup>
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
+import AppLinkExternal from '../../../../../_common/link/AppLinkExternal.vue';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import { computed, useTemplateRef } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { formatCurrency } from '../../../../../_common/filters/currency';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import { Geo } from '../../../../../_common/geo/geo.service';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
@@ -214,8 +221,6 @@ provide(Key, controller);
 
 const account = computed(() => controller.account.value);
 const stripe = computed(() => controller.stripe.value);
-const stripeMeta = computed(() => controller.stripeMeta.value);
-
 let stripePublishableKey = '';
 let genericError = ref<boolean | string>(false);
 
@@ -316,10 +321,6 @@ const form: FormController<ManagedAccountFormModel> = createForm({
 
 const representative = computed(() => {
 	return getByRelationship('representative');
-});
-
-const owner = computed(() => {
-	return getByRelationship('owner');
 });
 
 function getByRelationship(relationship: PersonRelationship) {

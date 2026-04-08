@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { formatNumber } from '../../../../_common/filters/number';
 import { ForumTopicModel } from '../../../../_common/forum/topic/topic.model';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -15,7 +18,7 @@ type Props = {
 	postCountPerPage: number;
 };
 
-const { topics, sort, useUpvotes, postCountPerPage } = defineProps<Props>();
+const { topics, sort, postCountPerPage } = defineProps<Props>();
 
 function getPostPage(topic: ForumTopicModel) {
 	if (!postCountPerPage) {
@@ -114,7 +117,7 @@ function getPostPage(topic: ForumTopicModel) {
 							Follower
 						</span>
 					</div>
-					<div v-if="Screen.isDesktop" class="col-md-3 text-muted small">
+					<div v-if="Screen.isDesktop && topic.latest_post" class="col-md-3 text-muted small">
 						<div class="forum-topic-list-item-latest-post clearfix">
 							<div class="forum-topic-list-item-latest-post-avatar">
 								<AppUserCardHover :user="topic.latest_post.user">

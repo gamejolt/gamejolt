@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../translate/translate-directive';
 import { computed, toRefs } from 'vue';
 import AppCard from '../card/AppCard.vue';
 import { formatNumber } from '../filters/number';

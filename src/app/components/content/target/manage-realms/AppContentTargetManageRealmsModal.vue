@@ -321,7 +321,7 @@ const debounceSearchInput = debounce(() => {
 								overlay-content
 								no-sheet
 								no-follow
-								ondragstart="return false"
+								@dragstart.prevent
 								@click="toggleRealmSelection(realm)"
 							/>
 

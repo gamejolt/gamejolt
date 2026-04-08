@@ -61,7 +61,7 @@ const activeVotingCategory = ref<CommunityCompetitionVotingCategoryModel | undef
 const isShowingAwardAdd = ref(false);
 const isShowingVotingCategoryAdd = ref(false);
 const isEditing = ref(false);
-const toggleForm = ref<FormCommunityCompetitionVotingToggle>();
+const toggleForm = ref<InstanceType<typeof FormCommunityCompetitionVotingToggle>>();
 
 const hasVotingCategories = toRef(() => votingCategories.value.length > 0);
 const hasAwards = toRef(() => awards.value.length > 0);

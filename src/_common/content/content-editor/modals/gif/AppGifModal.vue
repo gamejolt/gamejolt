@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import AppModal from '../../../../modal/AppModal.vue';
+import AppButton from '../../../../button/AppButton.vue';
+import AppTranslate from '../../../../translate/AppTranslate.vue';
 import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue';
 import { Api } from '../../../../api/api.service';
 import { showErrorGrowl } from '../../../../growls/growls.service';
@@ -179,14 +182,6 @@ function onClickCategory(searchTerm: string) {
 	isLoading.value = true;
 	searchResults.value = [];
 	startSearch();
-}
-
-function isGifLoading(id: string) {
-	return !loadedGifs.value.includes(id);
-}
-
-function onGifLoaded(id: string) {
-	loadedGifs.value.push(id);
 }
 
 function scrollToTop() {

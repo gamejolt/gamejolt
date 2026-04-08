@@ -18,8 +18,7 @@ const embedSrc = computed(() => `https://sketchfab.com/models/${props.modelId}/e
 		scrolling="no"
 		frameborder="no"
 		allow="autoplay; fullscreen; vr"
-		mozallowfullscreen="true"
-		webkitallowfullscreen="true"
+		allowfullscreen="true"
 		sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
 		:src="embedSrc"
 	/>

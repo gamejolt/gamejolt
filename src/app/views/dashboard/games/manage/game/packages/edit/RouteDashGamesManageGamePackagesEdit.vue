@@ -18,10 +18,14 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../../../_common/translate/AppTranslate.vue';
+import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
+import AppButton from '../../../../../../../../_common/button/AppButton.vue';
+import AppLinkHelp from '../../../../../../../../_common/link/AppLinkHelp.vue';
+import { TranslateDirective as vTranslate } from '../../../../../../../../_common/translate/translate-directive';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AppCard from '../../../../../../../../_common/card/AppCard.vue';
-import AppExpand from '../../../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../../../_common/filters/number';
 import AppGamePackageCard from '../../../../../../../../_common/game/package/card/AppGamePackageCard.vue';
 import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';
@@ -46,7 +50,6 @@ import { SellableModel } from '../../../../../../../../_common/sellable/sellable
 import AppTimeAgo from '../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../../../_common/translate/translate.service';
-import FormGamePackage from '../../../../../../../components/forms/game/package/FormGamePackage.vue';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
 import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import AppGamePerms from '../../../../../../../components/game/perms/AppGamePerms.vue';
@@ -54,8 +57,7 @@ import { useGameDashRouteController } from '../../../manage.store';
 
 const router = useRouter();
 const routeStore = useGameDashRouteController()!;
-
-const game = computed(() => routeStore.game.value!);
+const { game } = routeStore;
 
 const pkg = ref<GamePackageModel>(null as any);
 const sellable = ref<SellableModel>(null as any);
@@ -68,7 +70,6 @@ const buildsProcessingCount = ref(0);
 const isLoadingPreview = ref(false);
 const isAddingRelease = ref(false);
 
-const GameRelease = GameReleaseModel;
 const GamePackageVisibilityPublic = GamePackageVisibility.Public;
 const GameReleaseStatusHidden = GameReleaseStatus.Hidden;
 const GameReleaseStatusPublished = GameReleaseStatus.Published;
@@ -286,12 +287,12 @@ const appRoute = createAppRoute({
 					<AppLoading v-if="isLoadingPreview" />
 					<template v-else>
 						<AppGamePackageCard
-							v-if="previewPackage"
+							v-if="previewPackage && previewSellable"
 							:game="game"
-							:sellable="previewSellable"
+							:sellable="previewSellable!"
 							:package="previewPackage"
-							:releases="previewPackage ? previewPackage._releases : null"
-							:builds="previewPackage ? previewPackage._builds : null"
+							:releases="previewPackage._releases ?? []"
+							:builds="previewPackage._builds ?? []"
 						/>
 
 						<template v-if="buildsProcessingCount > 0">
@@ -411,7 +412,7 @@ const appRoute = createAppRoute({
 											<AppTranslate>Scheduled</AppTranslate>
 										</span>
 										{{ ' ' }}
-										<AppTimeAgo :date="release.scheduled_for" without-suffix />
+										<AppTimeAgo :date="release.scheduled_for!" without-suffix />
 									</template>
 								</template>
 

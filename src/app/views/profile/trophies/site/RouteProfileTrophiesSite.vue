@@ -17,24 +17,20 @@ export default {
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppTrophyCard from '../../../../../_common/trophy/AppTrophyCard.vue';
 import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
 import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { useProfileRouteStore } from '../../RouteProfile.vue';
 
-const routeStore = useProfileRouteStore()!;
+const { user } = useProfileRouteStore()!;
 
 const trophies = ref<UserBaseTrophyModel[]>([]);
 
-const user = computed(() => routeStore.user);
-
 const hasTrophies = computed(() => trophies.value.length > 0);
 
-const listLoadMoreUrl = computed(
-	() => `/web/profile/trophies/site/@${user.value!.username}`
-);
+const listLoadMoreUrl = computed(() => `/web/profile/trophies/site/@${user.value!.username}`);
 
 createAppRoute({
 	routeTitle: computed(() => {

@@ -18,6 +18,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../_common/button/AppButton.vue';
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { ContextCapabilities } from '../../../_common/content/content-context';
@@ -66,13 +68,6 @@ const canSubmit = computed(() => {
 		return false;
 	}
 	return logReason.value.length > 0 || !requireLog.value;
-});
-
-const routeTitle = computed(() => {
-	if (isHydrated.value) {
-		return 'Edit ' + title.value;
-	}
-	return null;
 });
 
 const hasErrors = computed(() => errors.value.length > 0);
@@ -174,8 +169,8 @@ async function submit() {
 					<AppContentEditor
 						class="content-editor-moderate"
 						:value="contentJson"
-						:content-context="contentContext"
-						:capabilities="contentCapabilities"
+						:content-context="contentContext as any"
+						:capabilities="contentCapabilities!"
 						:model-data="{
 							type: 'resource',
 							resource: resourceType,

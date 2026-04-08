@@ -99,6 +99,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 const {
 	game,
 	browserBuilds,
@@ -271,7 +272,7 @@ async function reloadPreviewComments() {
 						<AppShareCard
 							class="-share-card"
 							resource="game"
-							:url="shareLink"
+							:url="shareLink ?? ''"
 							bleed-padding
 						/>
 
@@ -426,8 +427,8 @@ async function reloadPreviewComments() {
 										<AppGamePackageCard
 											v-for="pkg of packages"
 											:key="pkg.id"
-											:game="game"
-											:sellable="pkg._sellable"
+											:game="game!"
+											:sellable="pkg._sellable!"
 											:package="pkg"
 											:releases="pkg._releases"
 											:builds="pkg._builds"

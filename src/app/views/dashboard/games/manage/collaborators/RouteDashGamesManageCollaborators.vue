@@ -167,7 +167,7 @@ createAppRoute({
 							<template #body>
 								<FormGameCollaborator
 									:model="collaborator"
-									:game="game"
+									:game="game!"
 									@submit="onSaved"
 								/>
 							</template>
@@ -177,7 +177,7 @@ createAppRoute({
 							:label="$gettext(`Add Collaborator`)"
 							@toggle="isAdding = !isAdding"
 						>
-							<FormGameCollaborator :game="game" @submit="onAdded" />
+							<FormGameCollaborator :game="game!" @submit="onAdded" />
 						</AppCardListAdd>
 					</AppCardList>
 				</div>

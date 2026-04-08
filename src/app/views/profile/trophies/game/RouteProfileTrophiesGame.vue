@@ -29,11 +29,12 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppButton from '../../../../../_common/button/AppButton.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { computed, ref } from 'vue';
 import { GameModel } from '../../../../../_common/game/game.model';
 import AppGameThumbnail from '../../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTrophyCard from '../../../../../_common/trophy/AppTrophyCard.vue';
 import AppTrophyCompletion from '../../../../../_common/trophy/AppTrophyCompletion.vue';
 import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
@@ -47,14 +48,12 @@ type CompletionData = {
 	achievedCount: number;
 };
 
-const routeStore = useProfileRouteStore()!;
+const { user } = useProfileRouteStore()!;
 const { user: appUser } = useCommonStore();
 
 const game = ref<GameModel | null>(null);
 const trophies = ref<UserBaseTrophyModel[]>([]);
 const completion = ref<CompletionData | null>(null);
-
-const user = computed(() => routeStore.user);
 
 const listLoadMoreUrl = computed(() => {
 	if (game.value) {
@@ -99,7 +98,7 @@ createAppRoute({
 					:total="completion.totalCount"
 					:achieved="completion.achievedCount"
 					:experience="completion.experience"
-					:is-logged-in-user="isLoggedInUser"
+					:is-logged-in-user="!!isLoggedInUser"
 				/>
 				<p>
 					<AppButton :to="game.routeLocation">
@@ -120,7 +119,7 @@ createAppRoute({
 			</div>
 		</div>
 		<hr class="hidden-xs" />
-		<AppTrophyListPaged :initial-trophies="trophies" :url="listLoadMoreUrl" />
+		<AppTrophyListPaged :initial-trophies="trophies" :url="listLoadMoreUrl ?? ''" />
 	</div>
 </template>
 

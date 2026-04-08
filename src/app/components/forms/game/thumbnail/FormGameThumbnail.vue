@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, watch } from 'vue';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
+import { type Ref, computed, PropType, ref, toRef, watch } from 'vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -37,10 +38,10 @@ const maxWidth = ref(0);
 const maxHeight = ref(0);
 const cropAspectRatio = ref(0);
 
-const form: FormController<FormModel> = createForm({
-	modelClass: GameModel,
+const form: FormController<FormModel> = createForm<FormModel>({
+	modelClass: GameModel as any,
 	modelSaveHandler: $saveGameThumbnail,
-	model: toRef(props, 'game'),
+	model: toRef(props, 'game') as Ref<FormModel | undefined>,
 	warnOnDiscard: false,
 	resetOnSubmit: true,
 	loadUrl: computed(() => `/web/dash/developer/games/thumbnail/save/${props.game.id}`),

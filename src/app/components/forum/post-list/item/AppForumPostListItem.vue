@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../../_common/button/AppButton.vue';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { computed, nextTick, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { Api } from '../../../../../_common/api/api.service';
@@ -12,7 +16,6 @@ import { ForumPostModel } from '../../../../../_common/forum/post/post.model';
 import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
 import AppMessageThread from '../../../../../_common/message-thread/AppMessageThread.vue';
-import AppMessageThreadAdd from '../../../../../_common/message-thread/AppMessageThreadAdd.vue';
 import AppMessageThreadItem from '../../../../../_common/message-thread/AppMessageThreadItem.vue';
 import { $readNotification } from '../../../../../_common/notification/notification-model';
 import AppPopper from '../../../../../_common/popper/AppPopper.vue';
@@ -37,7 +40,7 @@ type Props = {
 	isLastInThread?: boolean;
 };
 
-const { topic, post, isReply, showReplies, isLastInThread } = defineProps<Props>();
+const { topic, post, isReply, isLastInThread } = defineProps<Props>();
 
 const { user: appUser } = useCommonStore();
 const route = useRoute();
@@ -174,7 +177,7 @@ function copyPermalink() {
 			>
 				<AppJolticon
 					class="middle"
-					:icon="'chevron-' + (!showingParent ? 'right' : 'down')"
+					:icon="('chevron-' + (!showingParent ? 'right' : 'down') as any)"
 				/>
 				<span v-translate="{ user: post.replied_to.display_name }">
 					In response to

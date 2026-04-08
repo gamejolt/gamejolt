@@ -21,7 +21,7 @@ export class GrecaptchaSdk {
 						js.type = 'text/javascript';
 						js.src =
 							'https://www.google.com/recaptcha/api.js?onload=grecaptchaOnLoaded&render=explicit';
-						js.onerror = err => reject('Failed to load recaptcha api: ' + err.message);
+						js.onerror = err => reject('Failed to load recaptcha api: ' + (err as any).message);
 						fjs.parentNode!.insertBefore(js, fjs);
 					}
 				};

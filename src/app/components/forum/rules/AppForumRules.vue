@@ -1,7 +1,4 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
-
-const isShowingRules = ref(false);
 </script>
 
 <template>

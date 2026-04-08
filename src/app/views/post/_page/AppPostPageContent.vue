@@ -173,7 +173,7 @@ const overlayText: CSSProperties = {
 						<AppTranslate>Scheduled</AppTranslate>
 					</span>
 					{{ ' ' }}
-					<AppTimeAgo :date="post.scheduled_for" strict without-suffix />
+					<AppTimeAgo :date="post.scheduled_for!" strict without-suffix />
 				</template>
 				<span v-else-if="post.isDraft" class="tag" style="vertical-align: middle">
 					<AppTranslate>Draft</AppTranslate>

@@ -83,10 +83,10 @@ function onChannelAdded(channel: CommunityChannelModel) {
 	isShowingChannelAdd.value = false;
 }
 
-function onPresetListItemSaved(community: CommunityModel) {
+function onPresetListItemSaved() {
 	// Since the preset channels are stored on the community, we have to let
 	// the routeStore know to update the community with the new information.
-	updateCommunity(routeStore, community);
+	updateCommunity(routeStore, community.value);
 }
 
 function onActivate(item: typeof activeItem.value) {
@@ -137,7 +137,7 @@ createAppRoute({});
 			<AppCardList
 				v-if="hasFullChannelsPermission"
 				:items="communityPresetChannels"
-				:active-item="activeItem"
+				:active-item="(activeItem as any)"
 				:is-adding="isShowingChannelAdd"
 				@activate="onActivate"
 			>

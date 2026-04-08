@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { computed, onMounted, ref } from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { vAppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';

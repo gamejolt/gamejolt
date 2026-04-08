@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import { computed, ref, toRef } from 'vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
@@ -7,9 +8,8 @@ import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { validateUrlPath } from '../../../../_common/form-vue/validators';
+import { validateUrlPath, validateMaxLength, validateAvailability } from '../../../../_common/form-vue/validators';
 import { $saveGame, GameModel } from '../../../../_common/game/game.model';
-import { useCommonStore } from '../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppGameDevStageSelector from './dev-stage-selector/AppGameDevStageSelector.vue';
@@ -20,8 +20,6 @@ type Props = {
 };
 
 const props = defineProps<Props>();
-const commonStore = useCommonStore();
-
 const account = ref<any>(null);
 const categories = ref<any>(null);
 const engines = ref<any>(null);

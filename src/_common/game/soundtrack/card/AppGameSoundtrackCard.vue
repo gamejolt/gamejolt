@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-import { ref, useTemplateRef, watch } from 'vue';
+import AppTranslate from '../../../translate/AppTranslate.vue';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
+import AppButton from '../../../button/AppButton.vue';
+import { ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
@@ -8,7 +11,6 @@ import AppCard from '../../../card/AppCard.vue';
 import { Environment } from '../../../environment/environment.service';
 import { formatNumber } from '../../../filters/number';
 import { Navigate } from '../../../navigate/navigate.service';
-import { Screen } from '../../../screen/screen-service';
 import { GameModel } from '../../game.model';
 import { GameSongModel } from '../../song/song.model';
 
@@ -19,8 +21,6 @@ type Props = {
 const { game, songs } = defineProps<Props>();
 
 const router = useRouter();
-const playlistRef = useTemplateRef<InstanceType<typeof AppAudioPlaylist>>('playlist');
-
 const isPlaying = ref(false);
 const isShowingSoundtrack = ref(false);
 const canToggleSoundtrack = ref(false);
@@ -30,10 +30,6 @@ watch(isPlaying, () => {
 		isShowingSoundtrack.value = true;
 	}
 });
-
-function play() {
-	playlistRef.value?.mainSongButton();
-}
 
 function download() {
 	const location: RouteLocationRaw = {

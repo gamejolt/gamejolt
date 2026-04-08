@@ -4,7 +4,7 @@ import { RouteLocationNormalized, useRoute } from 'vue-router';
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { NotificationFeedTypes } from '../../../_common/notification/notification-model';
+import { NotificationFeedTypes, NotificationType } from '../../../_common/notification/notification-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
@@ -48,7 +48,7 @@ function getNotificationTypesFromQuery(route: RouteLocationNormalized, queryKey:
 	if (queryData && typeof queryData === 'string') {
 		const initialFilters = queryData
 			.split(',')
-			.filter(i => SUPPORTED_NOTIFICATION_FEED_TYPES.includes(i));
+			.filter(i => SUPPORTED_NOTIFICATION_FEED_TYPES.includes(i as NotificationType));
 
 		if (initialFilters.length) {
 			notificationTypes = initialFilters;

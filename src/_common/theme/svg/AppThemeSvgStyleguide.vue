@@ -26,7 +26,7 @@ const form = createForm<FormModel>({
 	onInit() {
 		form.formModel.file = form.formModel.file || 'custom';
 		form.formModel.color = form.formModel.color || 'fill-offset';
-		form.formModel.theme = form.formModel.theme || themeStore.theme;
+		form.formModel.theme = form.formModel.theme || themeStore.theme.value;
 		form.formModel.custom = form.formModel.custom || '';
 		form.formModel.strictColors = false;
 	},
@@ -34,7 +34,7 @@ const form = createForm<FormModel>({
 
 const file = computed(() => form.formModel.file || 'custom');
 const bgColor = computed(() => form.formModel.color || 'fill-offset');
-const theme = computed(() => form.formModel.theme || themeStore.theme);
+const theme = computed(() => form.formModel.theme || themeStore.theme.value || undefined);
 const customFile = computed(() => form.formModel.custom || '');
 const strictColors = computed(() => !!form.formModel.strictColors);
 

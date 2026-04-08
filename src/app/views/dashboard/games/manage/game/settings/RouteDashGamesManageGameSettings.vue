@@ -16,8 +16,10 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../../../../_common/button/AppButton.vue';
+import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 import { computed, ref } from 'vue';
-import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
 import { GameStatus } from '../../../../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
@@ -29,7 +31,7 @@ import { useGameDashRouteController } from '../../manage.store';
 const routeStore = useGameDashRouteController()!;
 const { user } = useCommonStore();
 
-const game = computed(() => routeStore.game!);
+const game = computed(() => routeStore.game.value!);
 const isWizard = computed(() => routeStore.isWizard);
 
 const hasCompetitionEntries = ref(false);
@@ -65,7 +67,7 @@ createAppRoute({
 	<div class="row">
 		<div class="col-md-8">
 			<template v-if="!isCollaborator">
-				<FormGameSettings :model="game" @submit="onSaved" />
+				<FormGameSettings :model="game!" @submit="onSaved" />
 
 				<br />
 			</template>

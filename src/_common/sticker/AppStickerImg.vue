@@ -22,7 +22,7 @@ defineProps({
 		:height="size"
 		:alt="alt"
 		draggable="false"
-		onmousedown="return false;"
+		@mousedown.prevent
 		@dragstart.prevent
 	/>
 </template>

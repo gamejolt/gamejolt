@@ -81,7 +81,7 @@ const mappedEntries = computed(() =>
 		</div>
 
 		<AppScrollScroller v-if="mappedEntries.length" class="-list-scroller" thin>
-			<template v-for="{ key, item } of mappedEntries" :key="key">
+			<template v-for="{ key: _key, item } of mappedEntries" :key="_key">
 				<slot v-bind="{ item }" />
 			</template>
 

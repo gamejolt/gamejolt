@@ -1,15 +1,15 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 import { computed, ref, toRef } from 'vue';
 import {
 	$saveCommunityCompetition,
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
 } from '../../../../../../_common/community/competition/competition.model';
-import { formatDate } from '../../../../../../_common/filters/date';
 import AppForm, { createForm, FormController } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlSelect from '../../../../../../_common/form-vue/AppFormControlSelect.vue';
+import AppFormControlSelect from '../../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormLegend from '../../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlDate from '../../../../../../_common/form-vue/controls/AppFormControlDate.vue';
@@ -75,7 +75,7 @@ const form: FormController<CommunityCompetitionModel> = createForm({
 							<optgroup
 								v-for="(timezones, region) of timezoneService.timezones"
 								:key="region"
-								:label="region"
+								:label="String(region)"
 							>
 								<option
 									v-for="timezone of timezones"

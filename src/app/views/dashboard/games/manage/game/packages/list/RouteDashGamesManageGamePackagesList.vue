@@ -16,6 +16,10 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../../../_common/translate/AppTranslate.vue';
+import AppLinkHelp from '../../../../../../../../_common/link/AppLinkHelp.vue';
+import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
+import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AppCardList from '../../../../../../../../_common/card/list/AppCardList.vue';
@@ -41,13 +45,11 @@ import { useGameDashRouteController } from '../../../manage.store';
 
 const router = useRouter();
 const routeStore = useGameDashRouteController()!;
-
-const game = computed(() => routeStore.game.value!);
+const { game } = routeStore;
 
 const packages = ref<GamePackageModel[]>([]);
 const sellables = ref<{ [x: number]: SellableModel }>({});
 
-const GamePackage = GamePackageModel;
 const GamePackageVisibilityPrivate = GamePackageVisibility.Private;
 
 const hasAllPerms = computed(() => game.value.hasPerms('all'));
@@ -114,7 +116,7 @@ const appRoute = createAppRoute({
 		packages.value = GamePackageModel.populate(payload.packages);
 		sellables.value = arrayIndexBy<SellableModel>(
 			SellableModel.populate(payload.sellables),
-			'game_package_id'
+			'game_package_id' as any
 		);
 	},
 });

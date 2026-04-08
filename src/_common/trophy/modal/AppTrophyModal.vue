@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../translate/translate-directive';
 import { PropType, computed, onMounted, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 import { Api } from '../../api/api.service';

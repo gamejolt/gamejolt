@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { computed, PropType, toRefs } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
@@ -371,7 +372,7 @@ const buildCapability = computed(() => {
 			@click="buildClick(card.browserBuild!)"
 		>
 			<AppTranslate>Quick Play</AppTranslate>
-			<AppJolticon :icon="card.showcasedBrowserIcon" />
+			<AppJolticon :icon="(card.showcasedBrowserIcon as any)" />
 		</AppButton>
 
 		<AppPopper

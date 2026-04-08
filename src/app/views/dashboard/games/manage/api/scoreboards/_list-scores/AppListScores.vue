@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../../../_common/translate/AppTranslate.vue';
+import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
 import { formatDate } from '../../../../../../../../_common/filters/date';
 import { formatNumber } from '../../../../../../../../_common/filters/number';
 import { GameScoreTableModel } from '../../../../../../../../_common/game/score-table/score-table.model';
@@ -16,7 +18,7 @@ type Props = {
 	isForUser?: boolean;
 };
 
-const { scoreTable, scores, isForUser } = defineProps<Props>();
+const { scores, isForUser } = defineProps<Props>();
 
 const emit = defineEmits<{
 	remove: [score: UserGameScoreModel];

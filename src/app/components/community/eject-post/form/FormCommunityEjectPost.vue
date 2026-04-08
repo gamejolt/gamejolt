@@ -1,4 +1,10 @@
 <script lang="ts" setup>
+import AppForm from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { computed, ref, watch } from 'vue';
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';

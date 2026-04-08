@@ -175,7 +175,7 @@ function onBlur() {
 			action="/search"
 			method="GET"
 			role="search"
-			onsubmit="return false"
+			@submit.prevent
 		>
 			<div class="-input">
 				<label :for="`search-input-${inputId}`" class="sr-only">

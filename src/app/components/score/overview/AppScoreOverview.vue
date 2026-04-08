@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { computed, ref, watch } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import { formatNumber } from '../../../../_common/filters/number';
@@ -115,7 +118,7 @@ async function changeTable(table?: GameScoreTableModel) {
 			<div class="col-xs-12" :class="size === 'full' ? 'col-lg-6' : ''">
 				<AppScoreboardSelector
 					v-if="scoreTables.length > 1"
-					:current-table="scoreTable"
+					:current-table="scoreTable!"
 					:tables="scoreTables"
 					@select="changeTable"
 				/>

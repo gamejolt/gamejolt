@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import AppButton from '../../button/AppButton.vue';
+import AppTranslate from '../AppTranslate.vue';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
 import AppSpacer from '../../spacer/AppSpacer.vue';

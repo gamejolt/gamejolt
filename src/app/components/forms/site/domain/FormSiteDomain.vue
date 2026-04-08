@@ -1,10 +1,18 @@
 <script lang="ts" setup>
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import { computed, toRef } from 'vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import { validateDomain } from '../../../../../_common/form-vue/validators';
+import { validateDomain, validateMaxLength, validateAvailability } from '../../../../../_common/form-vue/validators';
 import { GameModel } from '../../../../../_common/game/game.model';
+import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { $saveDomainSite, SiteModel } from '../../../../../_common/site/site-model';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../../_common/user/user.model';
 
 interface FormModel extends SiteModel {
@@ -23,6 +31,12 @@ const form: FormController<FormModel> = createForm({
 	model: toRef(() => model),
 	modelClass: SiteModel,
 	modelSaveHandler: $saveDomainSite,
+	onSubmitSuccess() {
+		showSuccessGrowl(
+			$gettext(`Your domain settings have been saved.`),
+			$gettext(`Domain Saved`)
+		);
+	},
 });
 
 const ioUrl = computed(() => createUrl('gamejolt.io'));

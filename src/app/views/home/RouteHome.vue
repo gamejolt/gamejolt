@@ -25,7 +25,7 @@ const RouteDiscoverHome = defineAsyncComponent(() =>
 export default {
 	...defineAppRouteOptions({
 		lazy: true,
-		reloadOn: { query: IntentService.APPROVED_LOGIN_QUERY_PARAMS },
+		reloadOn: { query: IntentService.APPROVED_LOGIN_QUERY_PARAMS as [string, ...string[]] },
 		resolver: async ({ route }) => {
 			const intentRedirect = IntentService.checkApprovedLoginIntent(route);
 			if (intentRedirect) {

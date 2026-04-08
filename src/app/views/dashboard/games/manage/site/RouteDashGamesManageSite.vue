@@ -15,6 +15,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { computed, ref } from 'vue';
 import { SiteModel } from '../../../../../../_common/site/site-model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
@@ -24,7 +26,7 @@ import { useGameDashRouteController } from '../manage.store';
 
 const routeStore = useGameDashRouteController()!;
 
-const game = computed(() => routeStore.game!);
+const game = computed(() => routeStore.game.value!);
 
 const site = ref<SiteModel>(null as any);
 
@@ -66,7 +68,7 @@ const appRoute = createAppRoute({
 			<div class="row">
 				<div class="col-lg-8">
 					<div :class="{ '-disabled': !game.path }">
-						<AppSitesManagePage :site="site" :game="game" />
+						<AppSitesManagePage :site="site" :game="game!" />
 					</div>
 				</div>
 				<div class="col-lg-4">

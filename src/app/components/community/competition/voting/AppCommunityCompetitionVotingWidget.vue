@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { PropType, computed, ref, toRef, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';

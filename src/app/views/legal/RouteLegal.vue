@@ -11,6 +11,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 createAppRoute({});
 </script>
 

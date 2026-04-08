@@ -35,7 +35,7 @@ const shouldScroll = computed(() => Screen.isXs);
 					</template>
 
 					<template #fallback>
-						<template v-for="i of 4" :key="i">
+						<template v-for="_i of 4" :key="_i">
 							<div class="-post">
 								<AppPostCardPlaceholder />
 							</div>

@@ -113,6 +113,7 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 </script>
 
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../../../../../_common/translate/translate-directive';
 const routeStore = useCommunityRouteStore()!;
 const route = useRoute();
 

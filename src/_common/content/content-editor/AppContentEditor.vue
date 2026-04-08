@@ -151,6 +151,7 @@ const {
 	focusEnd,
 	focusToken,
 } = toRefs(props);
+void name;
 
 const emit = defineEmits({
 	submit: () => true,
@@ -208,7 +209,6 @@ focusToken?.value?.register({
 });
 
 let focusWatcher: FocusWatcher | null = null;
-let resizeObserver: ResizeObserver | null = null;
 
 /**
  * If no model id if gets passed in, we store a temp model's id here.
@@ -370,7 +370,6 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
 	focusWatcher?.destroy();
-	resizeObserver?.disconnect();
 });
 
 async function reset(shouldFocus = focusEnd.value) {

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { validateMinValue, validateMaxValue, validateMaxLength } from '../../../../../../_common/form-vue/validators';
+import AppFormControlTextarea from '../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../_common/filters/number';
@@ -47,8 +49,8 @@ const form: FormController<any> = createForm({
 				type="number"
 				step="1"
 				min="1"
-				:max="20000 - keyGroup.key_count"
-				:validators="[validateMinValue(1), validateMaxValue(20000 - keyGroup.key_count)]"
+				:max="20000 - (keyGroup.key_count ?? 0)"
+				:validators="[validateMinValue(1), validateMaxValue(20000 - (keyGroup.key_count ?? 0))]"
 			/>
 			<AppFormControlErrors />
 		</AppFormGroup>

@@ -47,7 +47,7 @@ function onSubmitted(gamePackage: GamePackageModel) {
 		<div class="modal-body">
 			<FormGamePackage
 				:model="gamePackage"
-				:game="routeController.game"
+				:game="routeController.game.value!"
 				:sellable="sellable"
 				@submit="onSubmitted"
 			/>

@@ -26,6 +26,9 @@ export { createFormGameRelease };
 </script>
 
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
+import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { computed, ref, toRef } from 'vue';
@@ -37,7 +40,7 @@ import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControl
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlDate from '../../../../../_common/form-vue/controls/AppFormControlDate.vue';
-import { validateSemver } from '../../../../../_common/form-vue/validators';
+import { validateSemver, validateMaxLength, validateAvailability } from '../../../../../_common/form-vue/validators';
 import { $removeGameBuild, GameBuildModel } from '../../../../../_common/game/build/build.model';
 import { GameBuildLaunchOptionModel } from '../../../../../_common/game/build/launch-option/launch-option.model';
 import { GameModel } from '../../../../../_common/game/game.model';
@@ -302,7 +305,7 @@ function timezoneByName(timezone: string) {
 					:model="build"
 					:game="game"
 					:package="props.package"
-					:release="model"
+					:release="model!"
 					:release-launch-options="launchOptions"
 					:builds="builds"
 					:build-download-counts="buildDownloadCounts"
@@ -323,7 +326,7 @@ function timezoneByName(timezone: string) {
 						type="downloadable"
 						:game="game"
 						:package="props.package"
-						:release="model"
+						:release="model!"
 						@submit="onBuildAdded"
 					/>
 				</div>
@@ -337,7 +340,7 @@ function timezoneByName(timezone: string) {
 						type="browser"
 						:game="game"
 						:package="props.package"
-						:release="model"
+						:release="model!"
 						:builds="builds"
 						@submit="onBuildAdded"
 					/>
@@ -388,7 +391,7 @@ function timezoneByName(timezone: string) {
 						<optgroup
 							v-for="(timezoneData, region) of timezones"
 							:key="region"
-							:label="region"
+							:label="String(region)"
 						>
 							<option
 								v-for="timezone of timezoneData"

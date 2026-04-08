@@ -22,8 +22,6 @@ type Props = {
 
 const props = defineProps<Props>();
 
-const isAdding = computed(() => !props.model);
-
 const nameAvailabilityUrl = computed(() => {
 	let endpoint =
 		'/web/dash/communities/competitions/voting-categories/check-field-availability/' +

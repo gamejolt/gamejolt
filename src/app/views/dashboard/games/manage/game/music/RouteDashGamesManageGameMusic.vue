@@ -131,7 +131,7 @@ const { isBootstrapped } = createAppRoute({
 
 								<template #body>
 									<FormGameSong
-										:game="game"
+										:game="game!"
 										:model="song"
 										@submit="onSongEdited"
 									/>
@@ -141,7 +141,7 @@ const { isBootstrapped } = createAppRoute({
 					</AppCardListDraggable>
 
 					<AppCardListAdd :label="$gettext('Add Song')" @toggle="isAdding = !isAdding">
-						<FormGameSong :game="game" @submit="onSongAdded" />
+						<FormGameSong :game="game!" @submit="onSongAdded" />
 					</AppCardListAdd>
 				</AppCardList>
 			</AppLoadingFade>

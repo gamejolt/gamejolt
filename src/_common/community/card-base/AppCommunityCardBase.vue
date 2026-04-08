@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../translate/translate-directive';
 import { computed, PropType, toRef, toRefs } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { trackGotoCommunity } from '../../analytics/analytics.service';

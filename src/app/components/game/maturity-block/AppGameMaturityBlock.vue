@@ -1,10 +1,11 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { computed, ref, watch } from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { GameModel } from '../../../../_common/game/game.model';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { SettingRestrictedBrowsing } from '../../../../_common/settings/settings.service';
-import { useCommonStore } from '../../../../_common/store/common-store';
 import AppGameOgrs from '../ogrs/AppGameOgrs.vue';
 
 type Props = {
@@ -12,8 +13,6 @@ type Props = {
 };
 
 const { game } = defineProps<Props>();
-
-const { user } = useCommonStore();
 
 const hasBypassed = ref(false);
 

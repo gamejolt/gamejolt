@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import AppButton from '../button/AppButton.vue';
 defineProps({
 	compact: {
 		type: Boolean,

@@ -21,11 +21,9 @@ import { GameCollectionModel } from '../../../components/game/collection/collect
 import AppGameCollectionGrid from '../../../components/game/collection/grid/AppGameCollectionGrid.vue';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 
-const routeStore = useProfileRouteStore()!;
+const { user } = useProfileRouteStore()!;
 
 const collections = ref<GameCollectionModel[]>([]);
-
-const user = computed(() => routeStore.user);
 
 createAppRoute({
 	routeTitle: computed(() => {

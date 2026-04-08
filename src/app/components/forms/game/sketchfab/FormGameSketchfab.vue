@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { validatePattern } from '../../../../../_common/form-vue/validators';
 import { computed, toRef } from 'vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';

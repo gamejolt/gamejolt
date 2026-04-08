@@ -291,7 +291,8 @@ createAppRoute({
 
 								<template #body>
 									<FormGameTrophy
-										:game="game"
+										:game="game!"
+										:difficulty="difficulty"
 										:model="trophy"
 										@submit="onTrophyEdited"
 									/>
@@ -305,7 +306,7 @@ createAppRoute({
 						@toggle="isAdding[difficulty] = !isAdding[difficulty]"
 					>
 						<FormGameTrophy
-							:game="game"
+							:game="game!"
 							:difficulty="difficulty"
 							@submit="onTrophyAdded"
 						/>

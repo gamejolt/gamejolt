@@ -177,13 +177,13 @@ Object.assign(chartOptions.value, JSON.parse(JSON.stringify(chartOptionsTemplate
 Object.assign(ourColors.value, JSON.parse(JSON.stringify(globalColors.value)));
 
 if (type.value === 'line') {
-	_mergeOptions(lineChartOptionsTemplate);
+	_mergeOptions(lineChartOptionsTemplate as any);
 } else if (type.value === 'doughnut') {
-	_mergeOptions(doughnutChartOptionsTemplate);
+	_mergeOptions(doughnutChartOptionsTemplate as any);
 }
 
 if (backgroundVariant.value) {
-	_mergeOptions(backgroundVariantChartOptionsTemplate);
+	_mergeOptions(backgroundVariantChartOptionsTemplate as any);
 
 	ourColors.value[0] = {
 		borderWidth: 1,

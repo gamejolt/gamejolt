@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// @ts-ignore
 import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { computed, ref, toRef } from 'vue';
 import { Api } from '../../api/api.service';

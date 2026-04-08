@@ -1,12 +1,13 @@
 <script lang="ts" setup>
+import AppTranslate from '../../translate/AppTranslate.vue';
+import AppButton from '../../button/AppButton.vue';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AppGrecaptchaWidget from '../../../auth/components/grecaptcha/widget/AppGrecaptchaWidget.vue';
 import { trackLoginCaptcha } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
 import { Connection } from '../../connection/connection-service';
-import { Environment } from '../../environment/environment.service';
-import AppForm, { createForm } from '../../form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../form-vue/AppForm.vue';
 import AppFormButton from '../../form-vue/AppFormButton.vue';
 import AppFormControl from '../../form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
@@ -15,7 +16,6 @@ import { validateMaxLength, validateUsername } from '../../form-vue/validators';
 import { LinkedAccountProvider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
 import AppLoading from '../../loading/AppLoading.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import googleImage from '../google-icon.svg';
 
 type Props = {
@@ -43,7 +43,7 @@ const tryAgain = ref(false);
 
 const showForm = computed(() => captchaToken.value === null);
 
-const form = createForm({
+const form: FormController = createForm({
 	warnOnDiscard: false,
 	loadUrl: `/web/auth/login`,
 	onLoad($payload: any) {

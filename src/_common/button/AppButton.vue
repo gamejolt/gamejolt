@@ -90,6 +90,10 @@ const props = defineProps({
 	...defineDynamicSlotProps(['icon'], false),
 });
 
+const emit = defineEmits<{
+	click: [event: MouseEvent];
+}>();
+
 const { dynamicSlots } = toRefs(props);
 
 const ourTag = computed(() => {
@@ -109,6 +113,7 @@ const { hasSlot } = useDynamicSlots(dynamicSlots);
 		:is="ourTag"
 		type="button"
 		class="button"
+		@click="emit('click', $event)"
 		:class="{
 			'-primary': primary,
 			'-solid': solid,

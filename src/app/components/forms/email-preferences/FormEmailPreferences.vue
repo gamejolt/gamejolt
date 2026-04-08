@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, ref, toRefs } from 'vue';
+import { type Ref, computed, PropType, ref, toRefs } from 'vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
@@ -37,10 +37,10 @@ const { user } = toRefs(props);
 
 const isTogglingEmails = ref(false);
 
-const form: FormController<FormModel> = createForm({
-	modelClass: UserModel,
+const form: FormController<FormModel> = createForm<FormModel>({
+	modelClass: UserModel as any,
 	modelSaveHandler: $saveUserEmailPreferences,
-	model: user,
+	model: user as Ref<FormModel | undefined>,
 	onInit() {
 		const notifications = [];
 		for (const i of notificationTypes.value) {
@@ -196,7 +196,6 @@ async function toggleEmails(state: boolean) {
 				<AppFormGroup
 					name="notify_gj_news"
 					:label="$gettext(`News and product changes`)"
-					disabled
 				>
 					<template #inline-control>
 						<AppFormControlToggle :disabled="emailsDisabled" />

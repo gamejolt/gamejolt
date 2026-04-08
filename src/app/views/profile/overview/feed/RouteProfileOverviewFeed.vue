@@ -139,7 +139,7 @@ function onPostPublished(eventItem: EventItemModel) {
 <template>
 	<AppAdTakeoverFloat>
 		<!-- Spawn day -->
-		<AppUserSpawnDay :user="user" @post-add="onPostAdded" />
+		<AppUserSpawnDay :user="user!" @post-add="onPostAdded" />
 
 		<AppPostAddButton v-if="isOwner" @add="onPostAdded" />
 

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { computed, ref, toRef, watch } from 'vue';
+import { validateFilesize } from '../../../../../_common/form-vue/validators';
+import { type Ref, computed, ref, toRef, watch } from 'vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -36,8 +37,8 @@ const forceOther = ref(false);
 const romTypes = ref<string[]>([]);
 let browserTypes: { [ext: string]: string } = {};
 
-const form: FormController<NewGameBuildFormModel> = createForm({
-	model: toRef(props, 'model'),
+const form: FormController<NewGameBuildFormModel> = createForm<NewGameBuildFormModel>({
+	model: toRef(props, 'model') as Ref<NewGameBuildFormModel | undefined>,
 	modelClass: GameBuildModel as any,
 	modelSaveHandler: $saveGameBuild,
 	reloadOnSubmit: true,
@@ -92,7 +93,7 @@ const browserTypeValid = computed(() => {
 
 	const accept = Object.entries(browserTypes)
 		.filter(entry => {
-			return releaseTypes.indexOf(entry[1]) === -1;
+			return releaseTypes.indexOf(entry[1] as GameBuildType) === -1;
 		})
 		.map(entry => entry[0]);
 

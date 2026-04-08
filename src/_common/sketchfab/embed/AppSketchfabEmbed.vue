@@ -118,10 +118,8 @@ async function recalculateDimensions() {
 				nwdisable
 				nwfaketop
 				frameborder="0"
-				allowvr
+				allow="vr; fullscreen"
 				allowfullscreen
-				mozallowfullscreen
-				webkitallowfullscreen
 				:width="width"
 				:height="height"
 				:src="embedUrl"

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { PropType, ref, toRef, toRefs } from 'vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';

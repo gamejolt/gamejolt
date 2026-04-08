@@ -1,19 +1,16 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../../../../_common/button/AppButton.vue';
 import { computed } from 'vue';
-import { GameModel } from '../../../../../../../_common/game/game.model';
-import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import AppGamePerms from '../../../../../../components/game/perms/AppGamePerms.vue';
 import { useGameDashRouteController } from '../../manage.store';
 import AppGameManageNavRequired from './AppGameManageNavRequired.vue';
 
 const routeStore = useGameDashRouteController()!;
-const commonStore = useCommonStore();
 
-const game = computed(() => routeStore.game!);
+const game = computed(() => routeStore.game.value!);
 const isWizard = computed(() => routeStore.isWizard);
 const canPublish = computed(() => routeStore.canPublish);
-
-const Game = GameModel;
 </script>
 
 <template>
@@ -80,7 +77,7 @@ const Game = GameModel;
 					:class="{
 						active:
 							$route.name &&
-							$route.name.indexOf('dash.games.manage.game.packages') === 0,
+							String($route.name).indexOf('dash.games.manage.game.packages') === 0,
 					}"
 				>
 					<AppGameManageNavRequired

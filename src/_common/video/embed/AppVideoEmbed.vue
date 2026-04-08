@@ -111,8 +111,6 @@ async function recalculateDimensions() {
 				nwdisable
 				nwfaketop
 				frameborder="0"
-				webkitallowfullscreen
-				mozallowfullscreen
 				allowfullscreen
 				:width="width"
 				:height="height"
@@ -125,8 +123,6 @@ async function recalculateDimensions() {
 				nwdisable
 				nwfaketop
 				frameborder="0"
-				webkitallowfullscreen
-				mozallowfullscreen
 				allowfullscreen
 				:width="width"
 				:height="height"

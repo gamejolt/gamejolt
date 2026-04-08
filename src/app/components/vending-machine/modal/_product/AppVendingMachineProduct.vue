@@ -96,7 +96,7 @@ const readableEndsOn = computed(() => {
 	});
 });
 
-const parentRatio = 1 ?? (1 + StickerPackRatio) / 2;
+const parentRatio = 1;
 const nameFontSize = kFontSizeSmall;
 </script>
 

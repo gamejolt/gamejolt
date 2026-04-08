@@ -1,6 +1,7 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { Api } from '../../../../_common/api/api.service';
-import AppForm, { createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlError from '../../../../_common/form-vue/AppFormControlError.vue';
@@ -19,7 +20,7 @@ type FormModel = {
 	confirm_password: string;
 };
 
-const form = createForm<FormModel>({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	resetOnSubmit: true,
 	onInit() {

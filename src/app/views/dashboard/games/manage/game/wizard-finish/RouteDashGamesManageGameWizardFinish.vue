@@ -13,6 +13,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../../../../_common/button/AppButton.vue';
 import { computed } from 'vue';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import { useGameDashRouteController } from '../../manage.store';

@@ -231,7 +231,7 @@ createAppRoute({
 
 								<template #body>
 									<FormGameScoreTable
-										:game="game"
+										:game="game!"
 										:model="scoreTable"
 										@submit="onTableEdited"
 									/>
@@ -244,7 +244,7 @@ createAppRoute({
 						:label="$gettext(`Add Scoreboard`)"
 						@toggle="isAdding = !isAdding"
 					>
-						<FormGameScoreTable :game="game" @submit="onTableAdded" />
+						<FormGameScoreTable :game="game!" @submit="onTableAdded" />
 					</AppCardListAdd>
 				</AppCardList>
 			</div>

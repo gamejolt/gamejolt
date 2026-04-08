@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { computed, PropType, ref, toRefs, watch } from 'vue';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../_common/content/content-document';
@@ -142,7 +143,7 @@ function skipAutotag() {
 			class="-tags"
 			:text="tagText"
 			:tags="tags"
-			:content="contentDocument"
+			:content="contentDocument!"
 			@tag="addTag($event)"
 		/>
 

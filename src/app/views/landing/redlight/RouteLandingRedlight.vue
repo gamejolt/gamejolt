@@ -123,7 +123,7 @@ createAppRoute({
 
 					<span class="dot-separator hidden-xs" />
 
-					<AppSocialFacebookLike />
+					<AppSocialFacebookLike url="https://gamejolt.com/landing/redlight" />
 				</div>
 			</div>
 		</section>
@@ -298,7 +298,7 @@ createAppRoute({
 
 								<span class="dot-separator hidden-xs" />
 
-								<AppSocialFacebookLike />
+								<AppSocialFacebookLike url="https://gamejolt.com/landing/redlight" />
 							</div>
 						</div>
 					</div>

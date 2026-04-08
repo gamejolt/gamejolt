@@ -34,7 +34,7 @@ watch(
 	<AppForm :controller="form">
 		<AppFormGroup name="content_markdown" :label="$gettext('Content')" hide-label>
 			<AppFormControlMarkdown
-				:markdown-mode="mode + '-site'"
+				:markdown-mode="(mode + '-site') as 'game-site' | 'user-site'"
 				media-item-type="sites-content-image"
 			/>
 

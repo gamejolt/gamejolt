@@ -97,7 +97,7 @@ class ClientUpdaterService {
 				// the check if its already in progress. Something weird is going on.
 				//
 				// Either way, this is an error we should be able to tolerate and just try syncing with joltron's state again.
-				if (err && err.message === 'Already running an update') {
+				if (err && (err as any).message === 'Already running an update') {
 					await this.queryUpdaterState(updaterInstance);
 				} else {
 					throw err;

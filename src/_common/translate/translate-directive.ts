@@ -27,7 +27,7 @@ export const TranslateDirective: Directive<unknown, TranslationContext> = {
 		el.dataset.msgid = msgid;
 		el.dataset.currentLanguage = getTranslationLang();
 
-		_updateTranslation(el, binding, vnode);
+		_updateTranslation(el, binding, vnode as any);
 	},
 	updated(el: HTMLElement, binding, vnode) {
 		let shouldUpdate = false;
@@ -42,7 +42,7 @@ export const TranslateDirective: Directive<unknown, TranslationContext> = {
 		}
 
 		if (shouldUpdate) {
-			_updateTranslation(el, binding, vnode);
+			_updateTranslation(el, binding, vnode as any);
 		}
 	},
 };

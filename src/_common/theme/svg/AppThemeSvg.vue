@@ -63,9 +63,9 @@ const processedSvg = computed(() => {
 		let grays = String(svgData).match(SvgGraysRegex);
 
 		if (grays) {
-			grays = arrayUnique(grays);
+			const uniqueGrays = arrayUnique(grays);
 
-			for (const gray of grays) {
+			for (const gray of uniqueGrays) {
 				svgData = svgData.replace(gray, '#' + actualTheme.value.tintColor(gray, 0.04));
 			}
 		}

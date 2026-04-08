@@ -1,19 +1,15 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
 import { computed } from 'vue';
 import { formatFuzzynumber } from '../../../../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import AppGameRatingWidget from '../../../../../../../_common/game/rating/AppGameRatingWidget.vue';
-import { AppLazyPlaceholder } from '../../../../../../../_common/lazy/placeholder/placeholder';
+import AppLazyPlaceholder from '../../../../../../../_common/lazy/placeholder/AppLazyPlaceholder.vue';
 import { showLikersModal } from '../../../../../../../_common/likers/modal.service';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 
-const routeStore = useGameRouteController()!;
-
-const game = computed(() => routeStore.game);
-const isOverviewLoaded = computed(() => routeStore.isOverviewLoaded);
-const profileCount = computed(() => routeStore.profileCount);
-const userRating = computed(() => routeStore.userRating);
+const { game, isOverviewLoaded, profileCount, userRating } = useGameRouteController()!;
 const likeCount = computed(() => game.value?.like_count ?? 0);
 
 function showLikers() {

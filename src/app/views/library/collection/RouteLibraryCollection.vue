@@ -686,8 +686,8 @@ async function loadMore() {
 		<AppShellPageBackdrop>
 			<AppGameListing
 				v-if="listing && filtering"
-				:listing="listing"
-				:filtering="filtering"
+				:listing="listing as any"
+				:filtering="filtering as any"
 				hide-section-nav
 				:is-loading="isLoading"
 				@load="loadMore"

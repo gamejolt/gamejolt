@@ -183,7 +183,7 @@ function claim() {
 					v-for="pkg of packagePayload.packages"
 					:key="pkg.id"
 					:game="game"
-					:sellable="pkg._sellable"
+					:sellable="pkg._sellable!"
 					:package="pkg"
 					:releases="pkg._releases"
 					:builds="pkg._builds"

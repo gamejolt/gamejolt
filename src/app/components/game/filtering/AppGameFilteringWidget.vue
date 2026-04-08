@@ -1,9 +1,9 @@
 <script lang="ts" setup>
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { reactive } from 'vue';
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
 import { GameFilteringContainer } from './container';
 
 type Props = {
@@ -11,8 +11,6 @@ type Props = {
 };
 
 const { filtering } = defineProps<Props>();
-
-const { user } = useCommonStore();
 
 const hovered: Record<string, any> = reactive({});
 

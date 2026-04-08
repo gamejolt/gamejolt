@@ -10,6 +10,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { createAppRoute } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';
 

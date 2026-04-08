@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../translate/translate-directive';
 import { computed, PropType, toRef, toRefs } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 import { formatDate } from '../../filters/date';

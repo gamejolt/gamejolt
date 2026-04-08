@@ -127,11 +127,11 @@ function assignAll(value: boolean) {
 					@click.capture.stop="toggleField(option)"
 				>
 					<AppFormGroup
-						v-if="notificationLabels[option]"
+						v-if="(notificationLabels as Record<string, string>)[option]"
 						class="-group"
 						:name="option"
 						label-class="-group-link"
-						:label="notificationLabels[option]"
+						:label="(notificationLabels as Record<string, string>)[option]"
 					>
 						<template #inline-control>
 							<AppFormControlToggle />

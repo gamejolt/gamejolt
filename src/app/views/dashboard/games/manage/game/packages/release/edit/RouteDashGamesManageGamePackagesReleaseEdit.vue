@@ -23,6 +23,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../../../../_common/translate/AppTranslate.vue';
+import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { GameBuildModel } from '../../../../../../../../../_common/game/build/build.model';
@@ -40,9 +42,7 @@ import FormGameRelease from '../../../../../../../../components/forms/game/relea
 import { useGameDashRouteController } from '../../../../manage.store';
 
 const router = useRouter();
-const routeStore = useGameDashRouteController()!;
-
-const game = computed(() => routeStore.game!);
+const { game } = useGameDashRouteController()!;
 
 const pkg = ref<GamePackageModel>(null as any);
 const release = ref<GameReleaseModel>(null as any);
@@ -72,7 +72,7 @@ async function unpublishRelease(releaseItem: GameReleaseModel) {
 		return;
 	}
 
-	await $unpublishGameRelease(releaseItem, game.value);
+	await $unpublishGameRelease(releaseItem, game.value!);
 
 	showSuccessGrowl(
 		$gettext('The release has been unpublished and is now hidden.'),
@@ -91,7 +91,7 @@ async function removeRelease(releaseItem: GameReleaseModel) {
 		return;
 	}
 
-	await $removeGameRelease(releaseItem, game.value);
+	await $removeGameRelease(releaseItem, game.value!);
 
 	showSuccessGrowl(
 		$gettext('The release and its builds have been removed from the package.'),
@@ -182,7 +182,7 @@ const appRoute = createAppRoute({
 			<div class="col-lg-9">
 				<FormGameRelease
 					:model="release"
-					:game="game"
+					:game="game!"
 					:package="pkg"
 					:builds="builds"
 					:launch-options="launchOptions"

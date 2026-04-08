@@ -13,6 +13,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { computed } from 'vue';
 import { Connection } from '../../../../_common/connection/connection-service';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -21,17 +23,9 @@ import { GameCollectionModel } from '../../../components/game/collection/collect
 import AppGameCollectionGrid from '../../../components/game/collection/grid/AppGameCollectionGrid.vue';
 import AppGameCollectionList from '../../../components/game/collection/list/AppGameCollectionList.vue';
 import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
-import { useAppStore } from '../../../store';
 import { useLibraryStore } from '../../../store/library';
 
-const store = useAppStore();
-const libraryStore = useLibraryStore();
-
-const isBootstrapped = computed(() => store.isBootstrapped);
-const followedCollection = computed(() => libraryStore.followedCollection.value);
-const developerCollection = computed(() => libraryStore.developerCollection.value);
-const ownedCollection = computed(() => libraryStore.ownedCollection.value);
-const collections = computed(() => libraryStore.collections.value);
+const { followedCollection, developerCollection, ownedCollection, collections } = useLibraryStore();
 
 const mainCollections = computed(() => {
 	const main: GameCollectionModel[] = [];

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 import { computed } from 'vue';
-import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { GameCollectionModel } from '../../collection.model';
 import AppGameCollectionThumbnail from '../../thumbnail/AppGameCollectionThumbnail.vue';
 
@@ -9,9 +10,7 @@ type Props = {
 	eventLabel?: string;
 };
 
-const { collection, eventLabel } = defineProps<Props>();
-
-const { user } = useCommonStore();
+const { collection } = defineProps<Props>();
 
 const notOwner = computed(() => {
 	return collection.from_subscription || !collection.isOwner;
@@ -27,7 +26,7 @@ const notOwner = computed(() => {
 				<template v-if="collection.type === 'developer'">
 					<span
 						v-if="notOwner"
-						v-translate="{ developer: '@' + collection.owner.username }"
+						v-translate="{ developer: '@' + collection.owner?.username }"
 					>
 						Games Made
 						<small>by %{ developer }</small>
@@ -35,21 +34,21 @@ const notOwner = computed(() => {
 					<AppTranslate v-else> Your Games </AppTranslate>
 				</template>
 				<template v-else-if="collection.type === 'followed'">
-					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner.username }">
+					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner?.username }">
 						Games Followed
 						<small>by %{ user }</small>
 					</span>
 					<AppTranslate v-else> Your Followed Games </AppTranslate>
 				</template>
 				<template v-else-if="collection.type === 'owned'">
-					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner.username }">
+					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner?.username }">
 						Games Owned
 						<small>by %{ user }</small>
 					</span>
 					<AppTranslate v-else> Your Owned Games </AppTranslate>
 				</template>
 				<template v-else-if="collection.type === 'recommended'">
-					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner.username }">
+					<span v-if="notOwner" v-translate="{ user: '@' + collection.owner?.username }">
 						Daily Mix
 						<small>for %{ user }</small>
 					</span>

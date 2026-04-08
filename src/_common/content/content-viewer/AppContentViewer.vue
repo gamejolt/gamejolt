@@ -40,7 +40,7 @@ const viewerStyleClass = computed(() => {
 	return controller.value.context + '-content';
 });
 
-const content = computed(() => doc.value?.content ?? []);
+const content = computed(() => doc.value ? ([...doc.value.content] as any[]) : []);
 const context = computed(() => doc.value!.context);
 const capabilities = computed(() => ContextCapabilities.getPlaceholder());
 const contentRules = computed(() => displayRules?.value);

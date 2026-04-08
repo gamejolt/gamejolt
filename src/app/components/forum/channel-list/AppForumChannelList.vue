@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { computed } from 'vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { ForumCategoryModel } from '../../../../_common/forum/category/category.model';
@@ -18,7 +20,7 @@ type Props = {
 	postCountPerPage: number;
 };
 
-const { category, channels, latestPosts = [], postCountPerPage } = defineProps<Props>();
+const { channels, latestPosts = [], postCountPerPage } = defineProps<Props>();
 
 const indexedPosts = computed(() => {
 	return arrayIndexByFunc(latestPosts, item => item.topic!.channel_id);

@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { computed, ref, watch } from 'vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { UserModel } from '../../../../_common/user/user.model';

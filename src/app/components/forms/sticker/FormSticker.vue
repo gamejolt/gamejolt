@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { computed, CSSProperties, onUnmounted, ref, Ref, toRaw, toRefs } from 'vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -387,7 +388,7 @@ async function onClickIsActive() {
 							:src="imgUrl"
 							draggable="false"
 							style="user-select: none"
-							ondragstart="return false"
+							@dragstart.prevent
 						/>
 						<div
 							v-else

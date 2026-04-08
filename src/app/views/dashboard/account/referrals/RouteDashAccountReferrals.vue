@@ -33,6 +33,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 interface EarnedRevenue {
 	currency: string;
 	amount: number;

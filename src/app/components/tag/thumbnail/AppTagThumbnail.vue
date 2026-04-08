@@ -9,7 +9,7 @@ type Props = {
 	eventCat?: string;
 };
 
-const { tag, eventCat = 'global' } = defineProps<Props>();
+const { tag, eventCat: _eventCat = 'global' } = defineProps<Props>();
 
 const route = useRoute();
 
@@ -35,9 +35,6 @@ const active = computed(() => {
 	);
 });
 
-const event = computed(() => {
-	return `${eventCat || 'global'}:tag-list:${tagInfo.value.id}`;
-});
 </script>
 
 <template>

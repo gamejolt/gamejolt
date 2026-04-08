@@ -95,7 +95,7 @@ function onClickPack() {
 							}"
 							alt=""
 							draggable="false"
-							ondragstart="return false"
+							@dragstart.prevent
 							@imgloadchange="loadedImage = $event"
 						/>
 					</AppMediaItemBackdrop>

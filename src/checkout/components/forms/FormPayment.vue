@@ -132,8 +132,9 @@ const form: FormController<FormModel> = createForm({
 				address_zip: form.formModel.postcode,
 			};
 
-			const response = await new Promise<StripeCardTokenResponse>((resolve, reject) => {
-				window.Stripe.card.createToken(formData, (_status, stripeResponse) => {
+			const response = await new Promise<any>((resolve, reject) => {
+				// @ts-ignore
+			window.Stripe.card.createToken(formData, (_status: any, stripeResponse: any) => {
 					if (stripeResponse.error) {
 						stripeError.value = stripeResponse.error.message;
 						reject(stripeResponse);

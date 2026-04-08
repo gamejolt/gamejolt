@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../_common/translate/translate-directive';
 import { computed, PropType, toRefs } from 'vue';
 import { formatDuration } from '../../../_common/filters/duration';
 import AppProgressBar from '../../../_common/progress/AppProgressBar.vue';

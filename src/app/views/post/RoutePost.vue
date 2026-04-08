@@ -83,7 +83,7 @@ function setPageTheme() {
 }
 
 createAppRoute({
-	disableRouteTitleSuffix: true,
+	disableTitleSuffix: true,
 	routeTitle: computed(() => {
 		if (!post.value) {
 			return null;

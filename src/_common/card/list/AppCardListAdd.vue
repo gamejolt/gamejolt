@@ -24,7 +24,7 @@ const { isAdding } = useCardList()!;
 
 <template>
 	<div class="card-list-item card-list-add" :class="{ active: isAdding }">
-		<AppButton primary block :solid="isAdding" :icon="icon" @click="emit('toggle')">
+		<AppButton primary block :solid="isAdding" :icon="(icon as any)" @click="emit('toggle')">
 			{{ label }}
 		</AppButton>
 

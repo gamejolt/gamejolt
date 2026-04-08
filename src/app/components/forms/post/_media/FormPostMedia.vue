@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+import { validateFilesize, validateImageMaxDimensions } from '../../../../../_common/form-vue/validators';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import { computed, ref, useTemplateRef } from 'vue';
 import draggable from 'vuedraggable';
 import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';

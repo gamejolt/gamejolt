@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { Api, ApiProgressEvent } from '../../api/api.service';
-import AppForm, { createForm } from '../../form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../form-vue/AppForm.vue';
 import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
 import AppFormControlUpload from '../../form-vue/controls/upload/AppFormControlUpload.vue';
 import AppFormGroup from '../../form-vue/AppFormGroup.vue';
@@ -24,7 +24,7 @@ const maxFilesize = ref(0);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
 
-const form = createForm<FormModel>({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	resetOnSubmit: true,
 	loadUrl: '/web/dash/media-items',

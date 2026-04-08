@@ -57,6 +57,7 @@ function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '')
 </script>
 
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../../../../../../_common/translate/translate-directive';
 const emit = defineEmits({
 	assign: (_awardId: number) => true,
 	unassign: (_awardId: number) => true,
@@ -288,7 +289,7 @@ createAppRoute({
 			</p>
 
 			<input
-				:key="route.params.awardId"
+				:key="String(route.params.awardId)"
 				type="text"
 				class="form-control -filter-input"
 				:placeholder="$gettext(`Filter entries...`)"

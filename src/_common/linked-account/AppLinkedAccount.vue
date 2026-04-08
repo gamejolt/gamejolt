@@ -103,15 +103,15 @@ function onLink() {
 					{{ $gettext(`Link Now`) }}
 				</AppButton>
 			</template>
-			<template v-else>
+			<template v-else-if="account">
 				<p>
 					<strong v-if="platformLink">
 						<a :href="platformLink" target="_blank">
-							{{ account.name }}
+							{{ account!.name }}
 						</a>
 					</strong>
 					<span v-else>
-						{{ account.name }}
+						{{ account!.name }}
 					</span>
 				</p>
 

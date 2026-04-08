@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// @ts-ignore
 import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { ref, toRefs, watch } from 'vue';
 import AppButton from '../button/AppButton.vue';

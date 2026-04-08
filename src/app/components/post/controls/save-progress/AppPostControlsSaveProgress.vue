@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { ref } from 'vue';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';

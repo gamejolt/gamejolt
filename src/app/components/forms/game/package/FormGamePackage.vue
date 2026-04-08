@@ -1,7 +1,14 @@
 <script lang="ts" setup>
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
+import { validateMaxLength, validateAvailability, validateMinValue, validateMaxValue } from '../../../../../_common/form-vue/validators';
+import AppFormControlTextarea from '../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
+import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
+import AppFormControlCheckbox from '../../../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
 import { addWeeks, startOfDay, startOfTomorrow } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { computed, ref, toRef, watch } from 'vue';
+import { type Ref, computed, ref, toRef, watch } from 'vue';
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { formatCurrency } from '../../../../../_common/filters/currency';
@@ -49,7 +56,7 @@ type FormGamePackageModel = GamePackageModel & {
 
 type Props = {
 	game: GameModel;
-	sellable: SellableModel;
+	sellable?: SellableModel;
 	model?: GamePackageModel;
 };
 
@@ -61,7 +68,7 @@ const emit = defineEmits<{
 }>();
 
 const commonStore = useCommonStore();
-const user = computed(() => commonStore.user);
+const user = commonStore.user;
 
 const showDescriptionInput = ref(false);
 const isShowingSaleForm = ref(false);
@@ -80,8 +87,8 @@ const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] 
 const GamePackageVisibilityPublic = GamePackageVisibility.Public;
 const GamePackageVisibilityPrivate = GamePackageVisibility.Private;
 
-const form: FormController<FormGamePackageModel> = createForm({
-	model: toRef(props, 'model'),
+const form: FormController<FormGamePackageModel> = createForm<FormGamePackageModel>({
+	model: toRef(props, 'model') as Ref<FormGamePackageModel | undefined>,
 	modelClass: GamePackageModel as any,
 	modelSaveHandler: $saveGamePackage,
 	reloadOnSubmit: true,
@@ -150,10 +157,10 @@ const form: FormController<FormGamePackageModel> = createForm({
 				form.formModel.title = game.title;
 			}
 
-			form.formModel.primary = sellable.primary;
+			form.formModel.primary = sellable!.primary;
 
-			if (sellable.type !== 'free') {
-				form.formModel.pricing_type = sellable.type;
+			if (sellable!.type !== 'free') {
+				form.formModel.pricing_type = sellable!.type;
 
 				originalPricing.value = getOriginalSellablePricing(pricings.value) || null;
 				promotionalPricing.value = getPromotionalSellablePricing(pricings.value) || null;
@@ -558,7 +565,7 @@ async function cancelSale() {
 								<optgroup
 									v-for="(tzList, region) in timezones"
 									:key="region"
-									:label="region"
+									:label="String(region)"
 								>
 									<option
 										v-for="timezone in tzList"
@@ -610,7 +617,7 @@ async function cancelSale() {
 						<AppFormGroup name="sale_end" :label="$gettext(`End`)">
 							<AppFormControlDate
 								:timezone-offset="saleTimezoneOffset"
-								:min-date="form.formModel.sale_start"
+								:min-date="form.formModel.sale_start ?? undefined"
 							/>
 							<AppFormControlErrors :label="$gettext(`end time`)" />
 						</AppFormGroup>
@@ -623,7 +630,7 @@ async function cancelSale() {
 									step="1"
 									:validators="[
 										validateMinValue(minPrice / 100),
-										validateMaxValue(form.formModel.price - 0.01),
+										validateMaxValue((form.formModel.price ?? 0) - 0.01),
 									]"
 								/>
 							</div>
@@ -643,7 +650,7 @@ async function cancelSale() {
 					</fieldset>
 				</div>
 				<div v-else-if="promotionalPricing" class="well fill-offset full-bleed">
-					<div v-if="promotionalPricing.start > now" class="alert">
+					<div v-if="promotionalPricing.start! > now" class="alert">
 						<AppTranslate>A sale is currently scheduled.</AppTranslate>
 					</div>
 					<div v-else class="alert alert-highlight">
@@ -668,9 +675,9 @@ async function cancelSale() {
 						<tr>
 							<th><AppTranslate>Start</AppTranslate></th>
 							<td>
-								{{ formatDate(saleStartLocal, 'medium') }}
+								{{ formatDate(saleStartLocal ?? new Date(), 'medium') }}
 								<AppTimeAgo
-									:date="promotionalPricing.start"
+									:date="promotionalPricing.start ?? 0"
 									is-future
 									class="text-muted small"
 								/>
@@ -679,9 +686,9 @@ async function cancelSale() {
 						<tr>
 							<th><AppTranslate>End</AppTranslate></th>
 							<td>
-								{{ formatDate(saleEndLocal, 'medium') }}
+								{{ formatDate(saleEndLocal ?? new Date(), 'medium') }}
 								<AppTimeAgo
-									:date="promotionalPricing.end"
+									:date="promotionalPricing.end ?? 0"
 									is-future
 									class="text-muted small"
 								/>
