@@ -29,6 +29,10 @@ type Props = {
 const props = defineProps<Props>();
 const { game } = props;
 
+const emit = defineEmits<{
+	submit: [collaborator: CollaboratorModel];
+}>();
+
 const CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
 const CollaboratorRoleCommunityManager = CollaboratorRole.CommunityManager;
 
@@ -44,6 +48,9 @@ const form: FormController<CollaboratorModel> = createForm({
 		if (props.model && props.model.user) {
 			form.formModel.username = props.model.user.username;
 		}
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 </script>

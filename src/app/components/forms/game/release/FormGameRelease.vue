@@ -85,6 +85,7 @@ const { game } = props;
 const emit = defineEmits<{
 	'unpublish-release': [release: GameReleaseFormModel];
 	'remove-release': [release: GameReleaseFormModel];
+	submit: [formModel: GameReleaseFormModel];
 }>();
 
 const controller = (() => {
@@ -120,6 +121,7 @@ const form: FormController<GameReleaseFormModel> = createForm({
 		if (game) {
 			game.assign(response.game);
 		}
+		emit('submit', form.formModel);
 	},
 });
 

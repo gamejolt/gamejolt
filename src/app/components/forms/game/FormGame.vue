@@ -25,6 +25,11 @@ type Props = {
 };
 
 const props = defineProps<Props>();
+
+const emit = defineEmits<{
+	submit: [model: GameModel];
+}>();
+
 const account = ref<any>(null);
 const categories = ref<any>(null);
 const engines = ref<any>(null);
@@ -54,6 +59,9 @@ const form: FormController<GameModel> = createForm({
 		account.value = payload.account;
 		categories.value = payload.categories;
 		engines.value = payload.engines;
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 

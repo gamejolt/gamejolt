@@ -25,6 +25,10 @@ type Props = {
 
 const { keyGroup } = defineProps<Props>();
 
+const emit = defineEmits<{
+	submit: [];
+}>();
+
 const KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
 const KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
 const KeyGroupTypeEmail = KeyGroupType.Email;
@@ -37,6 +41,9 @@ const form: FormController<any> = createForm({
 			`/web/dash/developer/games/key-groups/add-keys/` + `${keyGroup.game_id}/${keyGroup.id}`,
 			form.formModel
 		);
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 </script>

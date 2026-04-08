@@ -32,6 +32,10 @@ type Props = {
 
 const props = defineProps<Props>();
 
+const emit = defineEmits<{
+	submit: [build: NewGameBuildFormModel];
+}>();
+
 const maxFilesize = ref(0);
 const restrictedPlatforms = ref<string[]>([]);
 const forceOther = ref(false);
@@ -73,6 +77,9 @@ const form: FormController<NewGameBuildFormModel> = createForm<NewGameBuildFormM
 				browserTypes[ext] = GameBuildType.Rom;
 			}
 		}
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 

@@ -1,11 +1,5 @@
 <script lang="ts">
 import { Ref } from 'vue';
-
-export interface FormGameBuildInterface {
-	buildId: number;
-	isDeprecated: Ref<boolean>;
-	save: () => Promise<boolean>;
-}
 import { computed, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue';
 
 import { Api } from '../../../../../_common/api/api.service';
@@ -48,6 +42,13 @@ import { TranslateDirective as vTranslate } from '../../../../../_common/transla
 import { arrayRemove } from '../../../../../utils/array';
 import { useFormGameRelease } from '../release/FormGameRelease.vue';
 import { showArchiveFileSelectorModal } from './archive-file-selector-modal.service';
+
+// TODO(migration): Can do do this instead through exposing functions on the game build form?
+export interface FormGameBuildInterface {
+	buildId: number;
+	isDeprecated: Ref<boolean>;
+	save: () => Promise<boolean>;
+}
 </script>
 
 <script lang="ts" setup>
@@ -77,6 +78,7 @@ const { game } = props;
 const emit = defineEmits<{
 	'remove-build': [formModel: GameBuildFormModel];
 	'update-launch-options': [formModel: GameBuildFormModel, launchOptions: any];
+	submit: [response: any];
 }>();
 
 const releaseForm = useFormGameRelease()!;
@@ -142,6 +144,7 @@ const form: FormController<GameBuildFormModel> = createForm<GameBuildFormModel>(
 		if (game) {
 			game.assign(response.game);
 		}
+		emit('submit', response);
 	},
 });
 

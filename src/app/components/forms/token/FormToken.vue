@@ -18,6 +18,10 @@ type Props = {
 
 const { token } = defineProps<Props>();
 
+const emit = defineEmits<{
+	submit: [formModel: FormModel];
+}>();
+
 const form: FormController<FormModel> = createForm({
 	onInit() {
 		form.formModel.token = token;
@@ -27,6 +31,7 @@ const form: FormController<FormModel> = createForm({
 	},
 	onSubmitSuccess(response: any) {
 		form.formModel.token = response.token;
+		emit('submit', form.formModel);
 	},
 });
 </script>

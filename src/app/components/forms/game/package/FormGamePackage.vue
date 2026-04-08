@@ -71,6 +71,7 @@ const { game, sellable } = props;
 
 const emit = defineEmits<{
 	salecancel: [formModel: FormGamePackageModel];
+	submit: [formModel: FormGamePackageModel];
 }>();
 
 const commonStore = useCommonStore();
@@ -190,6 +191,9 @@ const form: FormController<FormGamePackageModel> = createForm<FormGamePackageMod
 		if (form.formModel.sale_start_now) {
 			form.formModel.sale_start = Date.now();
 		}
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 

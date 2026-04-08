@@ -38,6 +38,10 @@ type Props = {
 const props = defineProps<Props>();
 const { game, difficulty } = props;
 
+const emit = defineEmits<{
+	submit: [trophy: GameTrophyModel];
+}>();
+
 const maxFilesize = ref(0);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
@@ -61,6 +65,9 @@ const form: FormController<GameTrophyModel> = createForm({
 		maxFilesize.value = payload.maxFilesize;
 		maxWidth.value = payload.maxWidth;
 		maxHeight.value = payload.maxHeight;
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 

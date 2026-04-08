@@ -35,6 +35,10 @@ const props = defineProps({
 	},
 });
 
+const emit = defineEmits<{
+	submit: [community: CommunityModel];
+}>();
+
 const maxFilesize = ref(0);
 const minAspectRatio = ref(0);
 const maxAspectRatio = ref(0);
@@ -66,6 +70,9 @@ const form: FormController<FormModel> = createForm({
 			// Backend expects this field.
 			(form.formModel as any).crop = form.formModel.header_crop;
 		}
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 

@@ -38,6 +38,10 @@ type Props = {
 const props = defineProps<Props>();
 const { game, packages } = props;
 
+const emit = defineEmits<{
+	submit: [keyGroup: KeyGroupModel];
+}>();
+
 const GamePackageVisibilityPrivate = GamePackageVisibility.Private;
 const KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
 const KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
@@ -54,6 +58,7 @@ const form: FormController<KeyGroupModel> = createForm({
 	},
 	onSubmitSuccess(response: any) {
 		game.assign(response.game);
+		emit('submit', form.formModel);
 	},
 });
 

@@ -21,10 +21,17 @@ type Props = {
 
 const { model } = defineProps<Props>();
 
+const emit = defineEmits<{
+	submit: [site: SiteModel];
+}>();
+
 const form: FormController<SiteModel> = createForm({
 	model: toRef(() => model),
 	modelClass: SiteModel,
 	modelSaveHandler: $saveSite,
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
+	},
 });
 </script>
 

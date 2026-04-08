@@ -26,6 +26,10 @@ type Props = {
 const props = defineProps<Props>();
 const { game } = props;
 
+const emit = defineEmits<{
+	submit: [table: GameScoreTableModel];
+}>();
+
 const DirectionAscend = GameScoreTableSorting.DirectionAsc;
 const DirectionDescend = GameScoreTableSorting.DirectionDesc;
 
@@ -40,6 +44,9 @@ const form: FormController<GameScoreTableModel> = createForm({
 			form.formModel.unique_scores = true;
 			form.formModel.scores_sorting_direction = GameScoreTableSorting.DirectionDesc;
 		}
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 </script>

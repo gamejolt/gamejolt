@@ -26,6 +26,10 @@ type Props = {
 const props = defineProps<Props>();
 const { game } = props;
 
+const emit = defineEmits<{
+	submit: [sketchfab: GameSketchfabModel];
+}>();
+
 const SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;
 
 const form: FormController<GameSketchfabModel> = createForm({
@@ -43,6 +47,9 @@ const form: FormController<GameSketchfabModel> = createForm({
 	},
 	onBeforeSubmit() {
 		form.formModel.sketchfab_id = sketchfabId.value;
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 

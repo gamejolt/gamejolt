@@ -31,6 +31,10 @@ type Props = {
 const props = defineProps<Props>();
 const { game } = props;
 
+const emit = defineEmits<{
+	submit: [video: FormModel];
+}>();
+
 const form: FormController<FormModel> = createForm({
 	model: toRef(props, 'model'),
 	modelClass: GameVideoModel,
@@ -48,6 +52,9 @@ const form: FormController<FormModel> = createForm({
 				form.formModel._url = 'https://www.youtube.com/watch?v=' + form.formModel.url;
 			}
 		}
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 

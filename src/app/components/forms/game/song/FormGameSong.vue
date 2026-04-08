@@ -22,6 +22,10 @@ type Props = {
 const props = defineProps<Props>();
 const { game } = props;
 
+const emit = defineEmits<{
+	submit: [song: GameSongModel];
+}>();
+
 const maxFilesize = ref(0);
 
 const form: FormController<GameSongModel> = createForm({
@@ -35,6 +39,9 @@ const form: FormController<GameSongModel> = createForm({
 	},
 	onLoad(payload: any) {
 		maxFilesize.value = payload.maxFilesize;
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 
