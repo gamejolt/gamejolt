@@ -1,16 +1,4 @@
 <script lang="ts">
-export const enum VideoStatus {
-	/** No video is being uploaded */
-	IDLE = 'idle',
-	/** The video file is being uploaded to the Game Jolt server */
-	UPLOADING = 'uploading',
-	/** The uploaded video file is being processed */
-	PROCESSING = 'processing',
-	/** The video upload and processing is completed and the video can be viewed */
-	COMPLETE = 'complete',
-	/** The video upload encountered some error */
-	ERROR = 'error',
-}
 import { computed, ref, useTemplateRef, watch } from 'vue';
 
 import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
@@ -40,6 +28,21 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppVideoPlayer from '../../../../../_common/video/player/AppVideoPlayer.vue';
 import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
 
+export const enum VideoStatus {
+	/** No video is being uploaded */
+	IDLE = 'idle',
+	/** The video file is being uploaded to the Game Jolt server */
+	UPLOADING = 'uploading',
+	/** The uploaded video file is being processed */
+	PROCESSING = 'processing',
+	/** The video upload and processing is completed and the video can be viewed */
+	COMPLETE = 'complete',
+	/** The video upload encountered some error */
+	ERROR = 'error',
+}
+</script>
+
+<script lang="ts" setup>
 interface FormModel {
 	video: File | null;
 	_progress: ApiProgressEvent | null;

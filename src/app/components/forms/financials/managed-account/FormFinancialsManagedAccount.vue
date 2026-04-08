@@ -1,6 +1,31 @@
 <script lang="ts">
 import * as StripeData from 'stripe';
-import { inject, InjectionKey, provide, Ref, ref } from 'vue';
+import { computed, inject, InjectionKey, provide, Ref, ref, useTemplateRef } from 'vue';
+
+import { Api } from '../../../../../_common/api/api.service';
+import AppExpand from '../../../../../_common/expand/AppExpand.vue';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
+import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
+import { Geo } from '../../../../../_common/geo/geo.service';
+import AppLinkExternal from '../../../../../_common/link/AppLinkExternal.vue';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import {
+	UserStripeManagedAccountModel,
+	UserStripeManagedAccountStatus,
+	UserStripeManagedAccountType,
+} from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { UserModel } from '../../../../../_common/user/user.model';
+import { loadScript } from '../../../../../utils/utils';
+import AppFinancialsManagedAccountCompanyDetails from './AppFinancialsManagedAccountCompanyDetails.vue';
+import AppFinancialsManagedAccountPerson, {
+	AppFinancialsManagedAccountPersonInterface,
+} from './AppFinancialsManagedAccountPerson.vue';
 
 export const StripeFileUploadUrl = 'https://uploads.stripe.com/v1/files';
 
@@ -180,35 +205,9 @@ export function createFormManagedAccount() {
 		getStripeField,
 	};
 }
+</script>
 
-// Re-export for type usage
-import { computed, useTemplateRef } from 'vue';
-
-import { Api } from '../../../../../_common/api/api.service';
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
-import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import { Geo } from '../../../../../_common/geo/geo.service';
-import AppLinkExternal from '../../../../../_common/link/AppLinkExternal.vue';
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { UserStripeManagedAccountModel } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import {
-	UserStripeManagedAccountStatus,
-	UserStripeManagedAccountType,
-} from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { UserModel } from '../../../../../_common/user/user.model';
-import { loadScript } from '../../../../../utils/utils';
-import AppFinancialsManagedAccountCompanyDetails from './AppFinancialsManagedAccountCompanyDetails.vue';
-import AppFinancialsManagedAccountPerson, {
-	AppFinancialsManagedAccountPersonInterface,
-} from './AppFinancialsManagedAccountPerson.vue';
-
+<script lang="ts" setup>
 let scriptLoaded = false;
 const isDataLoaded = ref(false);
 
